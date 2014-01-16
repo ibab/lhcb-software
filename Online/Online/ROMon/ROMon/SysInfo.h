@@ -45,6 +45,11 @@ namespace ROMon  {
     /// Combine the process readings from 2 iterations
     int combineProcessInfo();
 
+  private:
+    /// Private copy constructor
+    SysInfo(const SysInfo&) {}
+    /// Private assignment operator
+    SysInfo& operator=(const SysInfo&) { return *this; }
   public:
     /// Default constructor
     SysInfo(NodeStats* buff, size_t len, int nbuffs);

@@ -222,7 +222,7 @@ int Monitor::optparse (const char* c)  {
     cont = 0;
     break;
   case 'i':        /*      buffer_id        */  
-    iret = sscanf(c+1,"=%s",m_buffID);
+    iret = ::sscanf(c+1,"=%s",m_buffID);
     if( iret != 1 )      {
       ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Buffer identifier parameter.\n");
       ::exit(0);

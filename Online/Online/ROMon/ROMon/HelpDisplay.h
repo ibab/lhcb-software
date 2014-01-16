@@ -33,6 +33,11 @@ namespace ROMon {
    *   @author M.Frank
    */
   class HelpDisplay : public InternalDisplay {
+  private:
+    /// Private copy constructor
+  HelpDisplay(const HelpDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    HelpDisplay& operator=(const HelpDisplay&) { return *this; }
   public:
     /// Initializing constructor with default file
     HelpDisplay(InternalDisplay* parent, const std::string& title, const std::string& tag);

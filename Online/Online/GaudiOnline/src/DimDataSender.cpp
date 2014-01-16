@@ -38,7 +38,7 @@ namespace LHCb  {
       m_svcID = ::dis_add_cmnd((char*)nam.c_str(),(char*)"C",i_req_receive_handler,(long)this);
       if ( !m_target.empty() )  {
         char req[256];
-        ::sprintf(req,"EVENT_SOURCE:%s",RTL::processName().c_str());
+        ::snprintf(req,sizeof(req),"EVENT_SOURCE:%s",RTL::processName().c_str());
         nam = m_target + "/EventSource";
         int ret = ::dic_cmnd_service((char*)nam.c_str(),req,::strlen(req)+1);
         if ( 1 != ret )  {

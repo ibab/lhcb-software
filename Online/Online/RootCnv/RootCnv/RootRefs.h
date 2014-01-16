@@ -40,12 +40,14 @@ namespace Gaudi {
     }
     /// Assignment operator
     RootRef& operator=(const RootRef& c)  {
-      dbase     = c.dbase;
-      container = c.container;
-      link      = c.link;
-      clid      = c.clid;
-      svc       = c.svc;
-      entry     = c.entry;
+      if ( this != &c )  {
+	dbase     = c.dbase;
+	container = c.container;
+	link      = c.link;
+	clid      = c.clid;
+	svc       = c.svc;
+	entry     = c.entry;
+      }
       return *this;
     }
     /// Reset data content

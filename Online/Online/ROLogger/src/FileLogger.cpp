@@ -77,7 +77,8 @@ FileLogger::FileLogger(int argc, char** argv)
   }
   m_id = UpiSensor::instance().newID();
   title = "Error logger:"+partition;
-  ::strcpy(m_msgSeverity,s_SevList[m_severity-1]);
+  ::strncpy(m_msgSeverity,s_SevList[m_severity-1],sizeof(m_msgSeverity));
+  m_msgSeverity[sizeof(m_msgSeverity)-1]=0;
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,title.c_str(),RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_add_comment(CMD_COM1,    "Current output file:","");
@@ -120,9 +121,9 @@ FILE* FileLogger::openOutput() {
   tm* now = ::localtime(&tim);
   ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d.log",now);
   if ( m_useTimeForName )
-    ::sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
+    ::snprintf(txt,sizeof(txt),"%s_%s",m_outdir.c_str(),tmbuff);
   else
-    ::sprintf(txt,"%s.log",m_outdir.c_str());
+    ::snprintf(txt,sizeof(txt),"%s.log",m_outdir.c_str());
   if ( m_output ) ::fclose(m_output);
   if ( ::stat64Func(txt,&st) == 0 ) {
     ::lib_rtl_output(LIB_RTL_INFO,"The output file: %s  exists already. Reconnecting.....",txt);
@@ -248,7 +249,7 @@ void FileLogger::handle(const Event& ev) {
     return;
   case CMD_UPDATE_RUNNUMBER: {
     char text[32];
-    ::sprintf(text,"%ld",ev.iocData<long>());
+    ::snprintf(text,sizeof(text),"%ld",ev.iocData<long>());
     newRunNumber(text);
     }
     return;

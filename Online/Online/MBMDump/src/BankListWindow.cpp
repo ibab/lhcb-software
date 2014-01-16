@@ -47,11 +47,11 @@ void BankListWindow::build()  {
     unsigned int eid = m_banks[cnt].first;
     const RawBank* b = m_banks[cnt].second;
     if ( b->magic() != RawBank::MagicPattern )  {
-      ::sprintf(txt,"EID:%u -> Corrpted data structures at %p - No magic pattern",eid,(void*)b);
+      ::snprintf(txt,sizeof(txt),"EID:%u -> Corrpted data structures at %p - No magic pattern",eid,(void*)b);
       addComment(C_BANKS+cnt,txt);
       break;
     }
-    ::sprintf(txt," %8u %-16s %2d %8d %5d %7d %8p",
+    ::snprintf(txt,sizeof(txt)," %8u %-16s %2d %8d %5d %7d %8p",
 	      eid,RawEventPrintout::bankType(b->type()).c_str(),
 	      b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     //if ( (cnt%10) != 0 )  {

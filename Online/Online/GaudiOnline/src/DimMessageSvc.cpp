@@ -28,7 +28,7 @@ void * LHCb::DimBuffer::makeBuffer (int typ, const std::string& src, const std::
   m->typ  = typ;
   m->size = msg.length();
   strncpy(m->src, src.c_str(), src_len);
-  strcpy(m->msg, msg.c_str());
+  strncpy(m->msg, msg.c_str(), m->size);
   m->msg[m->size] = 0;
   m->src[src_len] = 0;
   return m_data.m_buffer;

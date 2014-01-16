@@ -10,20 +10,20 @@ using namespace std;
 
 ostream& ROMon::operator<<(ostream& os, const ROMon::Memory& m) {
   char text[132];
-  sprintf(text,"Memory:%d Free:%d Cache:%5d Active:%d Inactive:%d",
+  ::snprintf(text,sizeof(text),"Memory:%d Free:%d Cache:%5d Active:%d Inactive:%d",
           m.memTotal,m.memFree,m.cached,m.active,m.inactive);
   return os << text;
 }
 
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU::Stat& s) {
   char text[132];
-  sprintf(text,"User:%4.1f%% Sys:%4.1f%% IO:%4.1f%% irq:%4.1f%% sirq:%4.1f%%",
+  ::snprintf(text,sizeof(text),"User:%4.1f%% Sys:%4.1f%% IO:%4.1f%% irq:%4.1f%% sirq:%4.1f%%",
           s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
   return os << text;
 }
 ostream& ROMon::operator<<(ostream& os, const ROMon::CPU& c) {
   char text[132];
-  sprintf(text,"    Clock:%5.0f Cache:%5d kB Bogo:%4.2f ",c.clock,c.cache,c.bogomips);
+  ::snprintf(text,sizeof(text),"    Clock:%5.0f Cache:%5d kB Bogo:%4.2f ",c.clock,c.cache,c.bogomips);
   return os << text << c.stats;
 }
 
@@ -48,17 +48,17 @@ ostream& ROMon::operator<<(ostream& os, const ROMon::Process& p) {
   bool noutgid = ::strncmp(p.utgid,"N/A",3)==0;
   const char *opt = noutgid ? p.cmd : "", *utgid = noutgid ? "N/A: " : p.utgid;
   if ( p.cpu > 99.9 )
-    sprintf(text,"    %5d %5d %4.0f %4.1f %6.0f %6.0f %4d %-16s %s%s",
+    ::snprintf(text,sizeof(text),"    %5d %5d %4.0f %4.1f %6.0f %6.0f %4d %-16s %s%s",
             p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
   else
-    sprintf(text,"    %5d %5d %4.1f %4.1f %6.0f %6.0f %4d %-16s %s%s",
+    ::snprintf(text,sizeof(text),"    %5d %5d %4.1f %4.1f %6.0f %6.0f %4d %-16s %s%s",
             p.pid,p.ppid,p.cpu,p.mem,p.vsize,p.rss,p.threads,p.owner,utgid,opt);
   return os << text;
 }
 
 ostream& ROMon::operator<<(ostream& os, const ROMon::Procset& s) {
   char text[132];
-  sprintf(text,"          %5s %5s %4s %4s %6s %6s %-4s %-16s %s","PID","PPID","%CPU","%MEM","VSize","RSS","#Thr","Owner","UTGID");
+  ::snprintf(text,sizeof(text),"          %5s %5s %4s %4s %6s %6s %-4s %-16s %s","PID","PPID","%CPU","%MEM","VSize","RSS","#Thr","Owner","UTGID");
   os << "  Node:"  << s.name << " " << s.processes.size() 
      << " Last update:" << s.time << "." << s.millitm << endl
      << text << endl;

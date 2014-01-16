@@ -33,7 +33,7 @@ PubArea::PubArea(const char* name)   {
     throw std::runtime_error("PubArea::PubArea: Failed to create lock:"+lck_name);
   }
   ::lib_rtl_get_node_name(m_node, 32);
-  ::sprintf(LocalProcess,"PID.%06d",lib_rtl_pid());
+  ::snprintf(LocalProcess,sizeof(LocalProcess),"PID.%06d",lib_rtl_pid());
   m_locked = 0;
   m_remote = 0;
   //................................................. Initializing data structures
@@ -125,7 +125,8 @@ int PubArea::AllocateSlot(int typ, int SSize, void* &slot)
   ind->SlotSize   = ReqSize;
   PubAreaPrint(0,0,"%s New slot created with index %d!",me,head->NumIndex);
 Alloc:
-  strcpy(ind->SlotProcess,LocalProcess);
+  strncpy(ind->SlotProcess,LocalProcess,sizeof(ind->SlotProcess));
+  ind->SlotProcess[sizeof(ind->SlotProcess)-1]=0;
   slot = (void*)((char*)(m_ptr) + ind->SlotOffset);
   return UnLock();
 }
@@ -177,17 +178,15 @@ int PubArea::LinkPubArea(char* Node)    {
     if (status==PA_SUCCESS) {
       m_ptr = m_remote;
       m_header = (PubAreaHeader *)(m_ptr);
-      m_index  =
-        (PubAreaIndex *)((char*)(m_ptr) + sizeof(PubAreaHeader));
+      m_index  = (PubAreaIndex *)((char*)(m_ptr) + sizeof(PubAreaHeader));
       CheckStamp();
       return PA_SUCCESS;
     }
     else  {
-      m_ptr       = 0;
+      m_ptr    = 0;
       m_header = 0;
       m_index  = 0;
-      PubAreaPrint(3,0,
-        "PubArea::LinkPubArea: Failed to get pubarea from %s",Node);
+      PubAreaPrint(3,0,"PubArea::LinkPubArea: Failed to get pubarea from %s",Node);
       return PA_FAILURE;
     }
   }
@@ -196,12 +195,12 @@ int PubArea::LinkPubArea(char* Node)    {
   if (status==PA_SUCCESS)  {
     m_ptr = m_remote;
     m_header = (PubAreaHeader *)(m_ptr);
-    m_index  =
-      (PubAreaIndex *)((char*)(m_ptr) + sizeof(PubAreaHeader));
+    m_index  = (PubAreaIndex *)((char*)(m_ptr) + sizeof(PubAreaHeader));
     ConvertPubAreafromOS9();
     CheckStamp();
     //................................... Rewrite the node name just in case...
-    strcpy(m_header->NodeName,Node);
+    strncpy(m_header->NodeName,Node,sizeof(m_header->NodeName));
+    m_header->NodeName[sizeof(m_header->NodeName)-1] = 0;
     return PA_SUCCESS;
   }
   m_ptr    = 0;
@@ -284,15 +283,19 @@ int PubArea::InitPubArea(int Size)  {
   }
 
   PubAreaHeader *h = m_header;
-  strcpy(h->PubAreaStamp,PA_STAMP);
+  strncpy(h->PubAreaStamp,PA_STAMP,sizeof(h->PubAreaStamp));
+  h->PubAreaStamp[sizeof(h->PubAreaStamp)-1]=0;
   h->MagicWord = 1234;
 #ifdef _OSK
   strcpy(h->OpSys,"OSK\0");
 #else
   strcpy(h->OpSys,"VMS\0");
 #endif
-  ::strcpy(h->NodeName,m_node);
-  ::strcpy(h->Name,m_name.c_str());
+  h->OpSys[sizeof(h->OpSys)-1]=0;
+  ::strncpy(h->NodeName,m_node,sizeof(h->NodeName));
+  h->NodeName[sizeof(h->NodeName)-1]=0;
+  ::strncpy(h->Name,m_name.c_str(),sizeof(h->Name));
+  h->Name[sizeof(h->Name)-1]=0;
   h->PubAreaBufferOffset = Size;
   h->AreaSize = Size; 
   h->NumIndex = 1;
@@ -300,7 +303,8 @@ int PubArea::InitPubArea(int Size)  {
   i->SlotType = 0;
   i->SlotSize = 0;
   i->SlotOffset = 0;
-  ::strcpy(i->SlotProcess,LocalProcess);
+  ::strncpy(i->SlotProcess,LocalProcess,sizeof(i->SlotProcess));
+  i->SlotProcess[sizeof(i->SlotProcess)-1] = 0;
   i->InUse = 1;
   status = UnLock();
   if (status!=PA_SUCCESS)   {
@@ -342,7 +346,8 @@ int PubArea::RefreshPubArea() {
     return  PA_FAILURE;
   }
   //................................. Get the node name from the PubArea itself 
-  strcpy(ReqNode, m_header->NodeName);
+  strncpy(ReqNode, m_header->NodeName,sizeof(ReqNode));
+  ReqNode[sizeof(ReqNode)]=0;
   //...... Return if local node is requested (refresh is only needed for remote)
   if (strcmp(ReqNode,m_node)==0) return PA_SUCCESS;
   //...................................... Request a new copy of the public area
@@ -396,8 +401,9 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...
   // Get the PADEBUG variable from the process environement variable
   if ( Tmp == (char*)~0x0 ) {
     Tmp = ::getenv("PADEBUG");
-    char Logical[10];
-    ::strcpy(Logical,Tmp != 0 ? Tmp : "4");
+    char Logical[32];
+    ::strncpy(Logical,Tmp != 0 ? Tmp : "4",sizeof(Logical));
+    Logical[sizeof(Logical)-1]=0;
     ::sscanf(Logical,"%d",&PaDebug);
   }
   // if PADEBUG is zero all messages are printed
@@ -514,13 +520,14 @@ int PubArea::CheckStamp() {
 int PubArea::Lock() {
   ::lib_rtl_lock(m_lock);
   m_locked = 1;
-  strcpy(m_header->LockPrcName,LocalProcess);
+  strncpy(m_header->LockPrcName,LocalProcess,sizeof(m_header->LockPrcName));
+  m_header->LockPrcName[sizeof(m_header->LockPrcName)-1]=0;
   return PA_SUCCESS;
 }
 
 int PubArea::UnLock()   {
   m_locked = 0;
-  strcpy(m_header->LockPrcName,"");
+  m_header->LockPrcName[0] = 0;
   ::lib_rtl_unlock(m_lock);
   return PA_SUCCESS;
 }

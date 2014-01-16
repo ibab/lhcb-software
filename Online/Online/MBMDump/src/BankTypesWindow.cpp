@@ -45,7 +45,7 @@ BankTypesWindow::BankTypesWindow(BaseMenu* par,int cmd_id, const Format& f, Bank
   int cnt = 0;
   for(BankMap::iterator i=m_map.begin(); i != m_map.end(); ++i, ++cnt)  {
     const RawBank* bank = (*i).second.first;
-    ::sprintf(txt,"  %-16s %2d %8d %11d",
+    ::snprintf(txt,sizeof(txt),"  %-16s %2d %8d %11d",
       RawEventPrintout::bankType(bank->type()).c_str(),bank->type(),
       (*i).first.second,(*i).second.second);
     addCommand(C_TYPES+cnt,txt);

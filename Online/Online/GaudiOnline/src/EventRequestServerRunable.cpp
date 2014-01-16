@@ -72,8 +72,8 @@ StatusCode EventRequestServerRunable::sendEvent()  {
     if ( sc==DataTransfer::NET_SUCCESS )   {
       ++m_sendCount;
       if ( m_sendCount != m_mbmCount ) {
-	char txt[32];
-	sprintf(txt,"  [%d - %d]",m_sendCount, m_mbmCount);
+	char txt[64];
+	::snprintf(txt,sizeof(txt),"  [%d - %d]",m_sendCount, m_mbmCount);
 	m_mbmCount = m_sendCount = 0;
 	info("Event request handler: Internal counter mismatch:"+(*i).first+txt);
       }

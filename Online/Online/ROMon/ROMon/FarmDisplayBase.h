@@ -105,6 +105,11 @@ namespace ROMon {
     /// Partition name for filtering output
     std::string m_partition;
 
+  private:
+    /// Private copy constructor
+    BufferDisplay(const BufferDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    BufferDisplay& operator=(const BufferDisplay&) { return *this; }
   public:
     /// Initializing constructor
     BufferDisplay(InternalDisplay* parent, const std::string& title, const std::string& part_name="");
@@ -130,6 +135,13 @@ namespace ROMon {
     int m_node;
     /// Node name if running standalone
     std::string m_nodeName;
+
+  private:
+    /// Private copy constructor
+    CtrlNodeDisplay(const CtrlNodeDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    CtrlNodeDisplay& operator=(const CtrlNodeDisplay&) { return *this; }
+
   public:
     /// Initializing constructor
     CtrlNodeDisplay(InternalDisplay* parent, const std::string& title);

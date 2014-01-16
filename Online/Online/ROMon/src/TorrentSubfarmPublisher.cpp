@@ -42,11 +42,18 @@ namespace ROMon {
 
 namespace {
   template <class T> struct _Svc : public TorrentSubfarmPublisher::_BaseSvc {
+  protected:
     int id, flag;
     size_t buffLen;
     char* buff;
     std::string name;
     FMCMonListener& info;
+  private:
+    /// Private copy constructor
+    _Svc(const _Svc&) {}
+    /// Private assignment operator
+    _Svc& operator=(const _Svc&) { return *this; }
+  public:
     _Svc(FMCMonListener& i, size_t l, const std::string& nam, int flg=0)
       : id(0), flag(flg), buffLen(l), buff(0), name(nam), info(i) {
       buffLen *= (1024*8); // *8 for 64 node farms

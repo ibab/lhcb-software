@@ -38,7 +38,6 @@ namespace ROMon {
    */
   class MonitoringDisplay : public ClusterDisplay  {
   protected:
-
     /// Reference to the Relay info display
     MonitorDisplay*          m_relay;
 
@@ -56,6 +55,12 @@ namespace ROMon {
 
     /// Name pof relay node
     std::string              m_relayNode;
+
+  private:
+    /// Private copy constructor
+  MonitoringDisplay(const MonitoringDisplay&) : ClusterDisplay(0,0) {}
+    /// Private assignment operator
+    MonitoringDisplay& operator=(const MonitoringDisplay&) { return *this; }
 
   public:
     struct Stream {

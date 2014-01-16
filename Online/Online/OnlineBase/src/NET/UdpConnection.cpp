@@ -19,7 +19,8 @@ void UdpNetworkAddress::setHostName() {
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   struct hostent *he = ::gethostbyaddr((char*)&m_addr.sin_addr,sizeof(m_addr.sin_addr),AF_INET);
-  ::strcpy(m_cHost, ( he == 0 ) ? inet_ntoa(m_addr.sin_addr) : he->h_name);
+  ::strncpy(m_cHost, ( he == 0 ) ? ::inet_ntoa(m_addr.sin_addr) : he->h_name, sizeof(m_cHost));
+  m_cHost[sizeof(m_cHost)-1]=0;
 }
 
 UdpConnection::UdpConnection ( const char* service )  {
@@ -32,7 +33,8 @@ UdpConnection::UdpConnection ( const char* service )  {
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  ::strcpy(m_service,service);
+  ::strncpy(m_service,service,sizeof(m_service));
+  m_service[sizeof(m_service)-1]=0;
   initialize( (Port)servicePort(Service()) );
 }
 
@@ -45,7 +47,7 @@ UdpConnection::UdpConnection ( UdpConnection::Port port )  {
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  ::sprintf(m_service,"UDPservice_%d",port);
+  ::snprintf(m_service,sizeof(m_service),"UDPservice_%d",port);
   initialize( htons(port) );
 }
 

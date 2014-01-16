@@ -9,8 +9,10 @@ extern "C" int pubareas_formatslot(int argc,char** argv)  {
   int Type = 0;
   char Format[16];
   const char* name = "Unknown";
-  if ( !((argc--==4)&&(sscanf(argv[3],"%s",Format)==1)) ) 
-    strcpy(Format,"10I");
+  if ( !((argc--==4)&&(sscanf(argv[3],"%s",Format)==1)) )  {
+    strncpy(Format,"10I",sizeof(Format));
+    Format[sizeof(Format)-1]=0;
+  }
   if ( !((argc==3) && (sscanf(argv[2],"%d",&Type)==1)) ) Type = 1;
   if (argc==2) { name = argv[1]; argc--; }
 

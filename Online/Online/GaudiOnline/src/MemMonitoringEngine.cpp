@@ -140,7 +140,8 @@ void MemMonitoringEngine::i_publishItem(CSTR owner_name, CSTR nam, CSTR dsc, int
   }
   s->type  = typ;
   s->value = var;
-  ::strcpy(s->name,n.c_str());
+  ::strncpy(s->name,n.c_str(),sizeof(s->name));
+  s->name[sizeof(s->name)-1] = 0;
   if ( typ == HISTOGRAM )  {
     DataObject* obj = dynamic_cast<DataObject*>((Service*)s->value);
     IRegistry*  reg = obj ? obj->registry() : 0;

@@ -56,6 +56,11 @@ namespace ROMon {
     /// Pointer with data to benchmark structure
     FarmBenchStats* m_stat;
 
+  private:
+    /// Private copy constructor
+    BenchmarkDisplay(const BenchmarkDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    BenchmarkDisplay& operator=(const BenchmarkDisplay&) { return *this; }
   public:
     /// Initializing constructor
     BenchmarkDisplay(InternalDisplay* parent, int mode, const std::string& node, int height=62,int width=132);

@@ -278,7 +278,7 @@ void MessageLogger::printHistory(const string& pattern) {
   }
   for(size_t e=messages.size(), j=e>numMsg ? e-numMsg : 0; j<e; ++j, ++displayed)  
     printMessage(messages[j], false);
-  ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
+  ::snprintf(text,sizeof(text),"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
             match,"messages matched the request:",node_pattern.c_str(),
             msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
   printMessage(text,true);
@@ -306,31 +306,31 @@ void MessageLogger::summarizeHistory() {
   }
   for(DataMap::const_iterator j=data.begin(); j!=data.end();++j)  {
     const vector<int>& v = (*j).second;
-    ::sprintf(text,"%s %-12s sent %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s msgs.",
-      "Summary>    [ALWAYS]",(*j).first.c_str(),
-      v[1], "VERBOSE",
-      v[2], "DEBUG",
-      v[3], "INFO",
-      v[4], "WARNING",
-      v[5], "ERROR",
-      v[6], "FATAL",
-      v[7], "ALWAYS");
+    ::snprintf(text,sizeof(text),"%s %-12s sent %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s msgs.",
+	       "Summary>    [ALWAYS]",(*j).first.c_str(),
+	       v[1], "VERBOSE",
+	       v[2], "DEBUG",
+	       v[3], "INFO",
+	       v[4], "WARNING",
+	       v[5], "ERROR",
+	       v[6], "FATAL",
+	       v[7], "ALWAYS");
     printMessage(text,true);
   }
-  ::sprintf(text,"Summary>    [ALWAYS] Analysed a total of %d messages.",num_msg);
+  ::snprintf(text,sizeof(text),"Summary>    [ALWAYS] Analysed a total of %d messages.",num_msg);
   printMessage(text,true);
 }
 
 string MessageLogger::getSummary() {
   char text[255];
-  ::sprintf(text,"Total: %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s Messages.",
-    m_numMsg[1], "VERBOSE",
-    m_numMsg[2], "DEBUG",
-    m_numMsg[3], "INFO",
-    m_numMsg[4], "WARNING",
-    m_numMsg[5], "ERROR",
-    m_numMsg[6], "FATAL",
-    m_numMsg[7], "ALWAYS");
+  ::snprintf(text,sizeof(text),"Total: %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s Messages.",
+	     m_numMsg[1], "VERBOSE",
+	     m_numMsg[2], "DEBUG",
+	     m_numMsg[3], "INFO",
+	     m_numMsg[4], "WARNING",
+	     m_numMsg[5], "ERROR",
+	     m_numMsg[6], "FATAL",
+	     m_numMsg[7], "ALWAYS");
   return text;
 }
 
@@ -408,11 +408,12 @@ void MessageLogger::setMessageSeverity(const string& severity) {
     m_severity = MessageLine::Msg_Always;
     break;
   default:
-    ::sprintf(text,"severity>   [ALWAYS] .... Keep old message severity level of %d",m_severity);
+    ::snprintf(text,sizeof(text),"severity>   [ALWAYS] .... Keep old message severity level of %d",m_severity);
     printMessage(text,true);
     return;
   }
-  ::sprintf(text,"severity>   [ALWAYS] .... New message severity level is %d [%s]",m_severity,severity.c_str());
+  ::snprintf(text,sizeof(text),"severity>   [ALWAYS] .... New message severity level is %d [%s]",
+	     m_severity,severity.c_str());
   printMessage(text,true);
 }
 

@@ -59,6 +59,9 @@ namespace ROMon {
     int               m_svc2;
     /// Timestamp with last update
     time_t            m_lastUpdate;
+
+    /// Default constructor used by private subclass copy constructors
+    InternalDisplay() {}
   public:
 
     /// Access to pasteboard

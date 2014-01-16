@@ -86,6 +86,11 @@ namespace ROMon {
     std::string          m_name;
     /// Re-use cluster line as information provider
     FarmStatClusterLine* m_line;
+  private:
+    /// Private copy constructor
+    FarmStatClusterDisplay(const FarmStatClusterDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    FarmStatClusterDisplay& operator=(const FarmStatClusterDisplay&) { return *this; }
   public:
     /// Initializing constructor
     FarmStatClusterDisplay(InternalDisplay* parent, const std::string& node, int height=68,int width=172);

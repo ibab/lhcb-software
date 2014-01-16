@@ -92,7 +92,7 @@ namespace LHCb  {
     virtual StatusCode rearmNetRequest(const RecvEntry& src)  {
       char req[256];
       MsgStream log(msgSvc(),name());
-      ::sprintf(req,"EVENT_REQUEST:%s",RTL::processName().c_str());
+      ::snprintf(req,sizeof(req),"EVENT_REQUEST:%s",RTL::processName().c_str());
       std::string svc = src.service + "/EventRequest";
       log << MSG::DEBUG << "Sending event request to:" << svc << " -> " << req << endmsg;
       if ( 1 == ::dic_cmnd_service((char*)svc.c_str(),(void*)req,::strlen(req)+1) )

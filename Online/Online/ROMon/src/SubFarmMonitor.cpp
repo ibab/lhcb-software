@@ -22,7 +22,9 @@ namespace ROMon {
         Task() : input(0), output(0), pid(-1), state(TASK_FSM_STATE_DEAD) {}
         Task(const Task& t) : input(t.input), output(t.output), pid(t.pid), state(t.state) {}
         Task& operator=(const Task& t) {
-          input = t.input; output=t.output; pid=t.pid; state = t.state; return *this; 
+	  if ( this == &t ) return *this;
+          input = t.input; output=t.output; pid=t.pid; state = t.state;
+	  return *this; 
         }
       };
       typedef std::map<std::string,Task> Clients;

@@ -30,7 +30,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
   const DataBlock& d = par->evtData();
   MEPEVENT* e  = (MEPEVENT*)d.start;
   MEPEvent* me = (MEPEvent*)e->data;
-  ::sprintf(txt,"MEP Event: size %ld Bytes  [MBM size:%ld Bytes]",
+  ::snprintf(txt,sizeof(txt),"MEP Event: size %ld Bytes  [MBM size:%ld Bytes]",
 	    long(me->size()), long(d.length*sizeof(int)));
   addComment(C_COM1,txt);
   unsigned int eid_h = 0, pid = 0, cnt = 0;
@@ -38,7 +38,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
     eid_h = mf->eventID();
     if ( pid == 0 )  {
       pid = mf->partitionID();
-      ::sprintf(txt,"Partition ID: %4X",pid);
+      ::snprintf(txt,sizeof(txt),"Partition ID: %4X",pid);
       addComment(C_COM2,"");
       addComment(C_COM3," Hit return on Multi Event Fragment for details");
       addComment(C_COM4,"");
@@ -47,7 +47,7 @@ MEPWindow::MEPWindow(DisplayMenu* par,int cmd_id, const Format& f)
       addComment(C_COM7,"| #    Size Packing  EidH Start      End           |");
       addComment(C_COM8,"+--------------------------------------------------+");
     }
-    sprintf(txt,"%3u:%7ld %7ld %5u %10p %10p",
+    snprintf(txt,sizeof(txt),"%3u:%7ld %7ld %5u %10p %10p",
 	    cnt,long(mf->size()),long(mf->packing()),eid_h,mf->start(),mf->end());
     addCommand(C_MULTIFRAGS+cnt,txt);
   }

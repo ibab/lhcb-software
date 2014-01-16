@@ -36,7 +36,8 @@ namespace LHCb  {
       ::dis_get_client(buff);
       char* p = ::strchr(buff,'@');
       if ( p ) *p = 0;
-      ::strcat(buff,"/Event");
+      ::strncat(buff,"/Event",sizeof(buff));
+      buff[sizeof(buff)-1] = 0;
       return buff;
     }
     static std::string i_server_name() {
@@ -44,7 +45,8 @@ namespace LHCb  {
       ::dic_get_server(buff);
       char* p = ::strchr(buff,'@');
       if ( p ) *p = 0;
-      ::strcat(buff,"/Event");
+      ::strncat(buff,"/Event",sizeof(buff));
+      buff[sizeof(buff)-1] = 0;
       return buff;
     }
     /// DIM command handler for receiving event request

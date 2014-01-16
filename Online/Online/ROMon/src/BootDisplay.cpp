@@ -338,9 +338,9 @@ void BootDisplay::display(const BootClusterLine* line) {
     txt[1] = n[0];
     txt[2] = n[1];
     if ( ::strncmp(n,c->name,::strlen(c->name)+2) == 0 )
-      ::sprintf(txt," %s ",n);
+      ::snprintf(txt,sizeof(txt)," %s ",n);
     else
-      ::sprintf(txt," %s ",n+::strlen(n)-2);
+      ::snprintf(txt,sizeof(txt)," %s ",n+::strlen(n)-2);
     ::scrc_put_chars(m_display,txt,col,pos,xp,0);
     xp += ::strlen(txt)+1;
   }
@@ -534,7 +534,7 @@ void BootDisplay::update(const void* address) {
         m_clusters.insert(make_pair(n,l));
       }
     }
-    ::sprintf(txt,"Total number of boot clusters:%d %50s",
+    ::snprintf(txt,sizeof(txt),"Total number of boot clusters:%d %50s",
               int(m_clusters.size()),"<CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,1,BOOTLINE_START,1);
   }

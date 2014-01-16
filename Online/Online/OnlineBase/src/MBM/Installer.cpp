@@ -232,7 +232,7 @@ int MBM::Installer::install()  {
     if ( 0 == buffs->buffers[i].used )  {
       buffs->buffers[i].used = 1;
       buffs->buffers[i].size = ctrl->buff_size;
-      ::strcpy(buffs->buffers[i].name, m_bm->bm_name);
+      ::snprintf(buffs->buffers[i].name,sizeof(buffs->buffers[i].name),"%s",m_bm->bm_name);
       buffs->nbuffer++;
       lib_rtl_declare_exit (_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
       lib_rtl_declare_rundown(_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));

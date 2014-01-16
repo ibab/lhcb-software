@@ -48,8 +48,9 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
   int cnt = 0;
   if ( 0 == m_parent ) m_parent = this;
   m_id = UpiSensor::instance().newID();
-  ::sprintf(m_wildNode,"%s*",m_name.c_str());
-  ::strcpy(m_wildMessage,"*");
+  ::snprintf(m_wildNode,sizeof(m_wildNode),"%s*",m_name.c_str());
+  ::strncpy(m_wildMessage,"*",sizeof(m_wildNode));
+  m_wildNode[sizeof(m_wildNode)-1] = 0;
   ::upic_open_detached_menu(m_id,0,0,"Error logger",m_name.c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
   m_nodeList = new const char*[m_nodes.size()+1];

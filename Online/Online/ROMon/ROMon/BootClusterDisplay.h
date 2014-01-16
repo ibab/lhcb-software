@@ -36,6 +36,11 @@ namespace ROMon {
   class BootClusterDisplay : public InternalDisplay {
     /// Node name
     std::string  m_name;
+  private:
+    /// Private copy constructor
+  BootClusterDisplay(const BootClusterDisplay&) : InternalDisplay() {}
+    /// Private assignment operator
+    BootClusterDisplay& operator=(const BootClusterDisplay&)  { return *this; }
   public:
     /// Initializing constructor
     BootClusterDisplay(InternalDisplay* parent, const std::string& node, int height=55,int width=132);

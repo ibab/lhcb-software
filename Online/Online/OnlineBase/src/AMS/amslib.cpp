@@ -153,35 +153,31 @@ void amsc_full_name (char *dest, const char *src, size_t length, int style) {
     int n = q - src;
     strncpy(host, src, n);
     host[n] = 0;
-    strcpy(proc, q + 2);
+    strncpy(proc, q + 2, sizeof(proc));
+    proc[sizeof(proc)-1] = 0;
   }
   else if ((q = strchr_safe(src,'@')))  {  // found INTERNET style source name 
     int n = q - src;
     strncpy(proc, src, n);
     proc[n] = 0;
-    strcpy(host, q + 1);
+    strncpy(host, q + 1, sizeof(host));
+    host[sizeof(host)-1] = 0;
   }
   else  {                            // Source is process name only 
-    strcpy(proc, src);
-    strcpy(host, _ams.hostName);
+    strncpy(proc, src, sizeof(proc));
+    proc[sizeof(proc)-1] = 0;
+    strncpy(host, _ams.hostName, sizeof(host));
+    host[sizeof(host)-1] = 0;
   }
-  if (style == DECNET_STYLE)  {      // Build full name 
-    strcpy(full, host);
-    strcat(full, "::");
-    strcat(full, proc);
-  }
-  else  {
-    strcpy(full, proc);
-    strcat(full, "@");
-    strcat(full, host);
-  }
+  if (style == DECNET_STYLE)         // Build full name 
+    ::snprintf(full,sizeof(full),"%s::%s",host,proc);
+  else
+    ::snprintf(full,sizeof(full),"%s@%s",proc,host);
+
   // Check destination buffer size (truncate output if necessary) 
-  if (length > strlen (full))
-    strcpy(dest, full);
-  else  {
-    strncpy(dest, full, length - 1);
-    dest [length - 1] = 0;
-  }
+  strncpy(dest, full, length - 1);
+  dest [length - 1] = 0;
+
   // Upper or lowercase depending on style; trim blanks
   for(char *p = dest; *p; ++p)  {
     *p = char((style == DECNET_STYLE ) ? ::toupper(*p) : ::tolower(*p));

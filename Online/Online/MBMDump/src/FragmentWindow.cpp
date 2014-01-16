@@ -25,7 +25,7 @@ FragmentWindow::FragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPF
   char txt[256];
   openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
   addCommand(C_DISMISS,"Dismiss");
-  ::sprintf(txt," MEP Fragment:Size:%7ld EID:%5d Start:0x%8p End:0x%8p",
+  ::snprintf(txt,sizeof(txt)," MEP Fragment:Size:%7ld EID:%5d Start:0x%8p End:0x%8p",
     long(f->size()),f->eventID(),f->start(),f->end());
   addComment(C_COM1,txt);
   addComment(C_COM2,"");
@@ -38,9 +38,9 @@ FragmentWindow::FragmentWindow(BaseMenu* par,int cmd_id, const Format& fmt, MEPF
   const RawBank* l = f->last();
   for(RawBank* b=f->first(); b<l; b=f->next(b), cnt++) {
     checkRawBank(b);
-    ::sprintf(txt," %-12s %2d %8d %5d %7d %p",
-      RawEventPrintout::bankType(b->type()).c_str(),
-      b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
+    ::snprintf(txt,sizeof(txt)," %-12s %2d %8d %5d %7d %p",
+	       RawEventPrintout::bankType(b->type()).c_str(),
+	       b->type(),b->sourceID(),b->version(),b->size(),(void*)b);
     addCommand(C_BANKS+cnt,txt);
   }
   addCommand(C_DISMISS2,"Dismiss");

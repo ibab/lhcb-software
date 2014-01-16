@@ -101,8 +101,9 @@ int amsuc_subscribe_death(const char* source, unsigned int facility, void* /* pa
     _INSQTI( fac, deadfac_list );        
   }
   fac->conv_fac = facility;
-  memset(fac->source,0,sizeof(fac->source));
-  strcpy (fac->source, source);
+  ::memset(fac->source,0,sizeof(fac->source));
+  ::strncpy (fac->source, source,sizeof(fac->source));
+  fac->source[sizeof(fac->source)-1] = 0;
   fac->srclen	= srclen;
   return AMS_SUCCESS;
 }

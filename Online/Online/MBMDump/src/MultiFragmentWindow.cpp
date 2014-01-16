@@ -31,18 +31,18 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   openDetached(0,0,"Display window"," MEP Multi Fragment structure ",procName());
   addCommand(C_DISMISS,"Dismiss");
   addCommand(C_SHOWBANKS,"Show all banks");
-  ::sprintf(txt,"Multi event fragment with partition ID: %4X",mf->partitionID());
+  ::snprintf(txt,sizeof(txt),"Multi event fragment with partition ID: %4X",mf->partitionID());
   addComment(C_COM1,txt);
   addComment(C_COM2,"    Size Packing  EidH Start      End");
-  ::sprintf(txt," %7ld %7ld %5u %10p %10p",
-    long(mf->size()),long(mf->packing()),mf->eventID(),mf->start(),mf->end());
+  ::snprintf(txt,sizeof(txt)," %7ld %7ld %5u %10p %10p",
+	     long(mf->size()),long(mf->packing()),mf->eventID(),mf->start(),mf->end());
   addComment(C_COM2,txt);
   RTL::IPHeader* ip = (RTL::IPHeader*)mf->ipHeader();
-  ::sprintf(txt,"    IP header: HLV:%02X TOS:%02X Len:%04X ID:%04X FragOff:%04X TTL:%02X",
-    ip->hlv,ip->tos,ip->tot_len,ip->id, ip->frag_off,ip->ttl);
+  ::snprintf(txt,sizeof(txt),"    IP header: HLV:%02X TOS:%02X Len:%04X ID:%04X FragOff:%04X TTL:%02X",
+	     ip->hlv,ip->tos,ip->tot_len,ip->id, ip->frag_off,ip->ttl);
   addComment(C_COM3,txt);
-  ::sprintf(txt,"               Protocol:%02X Chk:%04X Saddr:%-15s Daddr:%-15s",
-    ip->protocol,ip->check,inet_ntoa(*(in_addr*)&ip->saddr),inet_ntoa(*(in_addr*)&ip->daddr));
+  ::snprintf(txt,sizeof(txt),"               Protocol:%02X Chk:%04X Saddr:%-15s Daddr:%-15s",
+	     ip->protocol,ip->check,inet_ntoa(*(in_addr*)&ip->saddr),inet_ntoa(*(in_addr*)&ip->daddr));
   addComment(C_COM4, txt);
   addComment(C_COM5, "");
   addComment(C_COM6, " Hit return on fragment to see banks");
@@ -52,7 +52,7 @@ MultiFragmentWindow::MultiFragmentWindow(BaseMenu* par,int cmd_id, const Format&
   addComment(C_COM10,"+-----------------------------------------+");
   int cnt = 0;
   for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f), ++cnt) {
-    ::sprintf(txt,"%3d:%7ld %5d %10p %10p",
+    ::snprintf(txt,sizeof(txt),"%3d:%7ld %5d %10p %10p",
 	      cnt,long(f->size()),f->eventID(),f->start(),f->end());
     addCommand(C_FRAGS+cnt,txt);
   }
@@ -85,7 +85,7 @@ void MultiFragmentWindow::handleMenu(int cmd_id)    {
         for (f = m_frag->first(); f<m_frag->last(); f=m_frag->next(f), ++cnt) {
           if ( cmd_id == cnt )   {
             output("Found MEP Fragment:Size:%7d EID:%5d Start:%10p End:%10p",
-              f->size(),f->eventID(),f->start(),f->end());
+		   f->size(),f->eventID(),f->start(),f->end());
             replace(m_fragWindow,new FragmentWindow(this,cmd_id,m_fmt,f));
             return;
           }

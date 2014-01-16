@@ -87,15 +87,16 @@ void MessageWindow::update(const void* data) {
           for(size_t k=0; k<s.nodes.size(); ++k) {
             const Alarm* al = s.nodes[k];
             color = al->color();
-            ::sprintf(text,"%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
-                      al->message(),al->description.c_str());
+            ::snprintf(text,sizeof(text),
+		       "%-13s %-12s %s %s",al->node.c_str(),al->time().c_str(),
+		       al->message(),al->description.c_str());
             ::scrc_put_chars(m_display,text,color,++line,1,1);
           }
         }
         else  {
           const Alarm* al = s.nodes[0];
           color = al->color();
-          ::sprintf(text,"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
+          ::snprintf(text,sizeof(text),"%-4d %-8s %-12s %s",int(s.nodes.size()),"alarms",
                     al->time().c_str(),al->message());
           set<string> opts;
           for(size_t k=0; k<s.nodes.size(); ++k) {
@@ -139,7 +140,7 @@ AlarmDisplay::AlarmDisplay(int argc, char** argv)
   ::scrc_create_display (&m_display, m_height, m_width, BOLD, ON, m_title.c_str());
   show(2,2);
   ::strftime(txt,sizeof(txt),"%b %d %Y    %H:%M:%S",::localtime(&tm));
-  ::sprintf(buff,"  Partition: %s     %s",m_name.c_str(),txt);
+  ::snprintf(buff,sizeof(buff),"  Partition: %s     %s",m_name.c_str(),txt);
   ::scrc_put_chars(m_display,buff,BOLD,1,2,1);
   ::scrc_end_pasteboard_update(m_pasteboard);
   ::scrc_set_cursor(m_display, 2, 10);
@@ -245,7 +246,7 @@ void AlarmDisplay::handleAlarm(const std::string& alarm) {
   time_t tm = time(0);
   char txt[64], buff[132];
   ::strftime(txt,sizeof(txt),"%b %d %Y    %H:%M:%S",::localtime(&tm));
-  ::sprintf(buff,"  Partition: %s     %s",m_name.c_str(),txt);
+  ::snprintf(buff,sizeof(buff),"  Partition: %s     %s",m_name.c_str(),txt);
   ::scrc_begin_pasteboard_update (m_pasteboard);
   ::scrc_put_chars(m_display,buff,BOLD,1,2,1);
   m_alarmDisplay->update(&summary);

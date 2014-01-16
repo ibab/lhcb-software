@@ -74,7 +74,7 @@ void BufferDisplay::update(const void* data) {
         const Buffers& buffs = *(*n).buffers();
 	//bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-        ::sprintf(txt,"MBM Monitor display for node:%s  [%s]  %s %s",
+        ::snprintf(txt,sizeof(txt),"MBM Monitor display for node:%s  [%s]  %s %s",
 		  (*n).name,name,partitioned ? "Partition:""" : "",
 		  partitioned ? m_partition.c_str() : "");
         ::scrc_set_border(m_display,txt,BLUE|INVERSE);
@@ -84,11 +84,11 @@ void BufferDisplay::update(const void* data) {
 	  if ( partitioned )  {
 	    if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
 	  }
-          ::sprintf(name," Buffer \"%s\"",bnam);
-          ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
+          ::snprintf(name,sizeof(name)," Buffer \"%s\"",bnam);
+          ::snprintf(txt,sizeof(txt),"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-          ::sprintf(txt,"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%d]",
+          ::snprintf(txt,sizeof(txt),"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%d]",
                     "",long((c.bm_size*c.bytes_p_Bit)/1024), long((c.i_space*c.bytes_p_Bit)/1024), 
                     c.i_users, c.p_umax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
@@ -102,7 +102,7 @@ void BufferDisplay::update(const void* data) {
       }
     }
     if ( line > 1 ) {
-      ::sprintf(txt,"%-26s%5s%6s %4s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
+      ::snprintf(txt,sizeof(txt),"%-26s%5s%6s %4s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,0);
       ::scrc_put_chars(m_display,txt,INVERSE,line,3+m_display->cols/2,1);
     }
@@ -136,13 +136,13 @@ void BufferDisplay::update(const void* data) {
             const char* cnam = (partitioned) ? _procNam(m_partition,c.name) : c.name;
 	    if ( cnam ) {
 	      if ( c.type == 'C' )
-		::sprintf(txt,"%-26s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
+		::snprintf(txt,sizeof(txt),"%-26s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
 			  sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
 	      else if ( c.type == 'P' )
-		::sprintf(txt,"%-26s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
+		::snprintf(txt,sizeof(txt),"%-26s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
 			  sstat[(size_t)c.state],c.events,"",bnam);
 	      else
-		::sprintf(txt,"%-26s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
+		::snprintf(txt,sizeof(txt),"%-26s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
 	      key = bnam;
 	      key += c.name;
 	      entries[key] = txt;
@@ -159,12 +159,12 @@ void BufferDisplay::update(const void* data) {
     
     for(size_t i=0,len=lines.size(),cnt=len/2+(len%2),j=cnt; i<cnt; ++i, ++j)  {
       if ( j<len ) {
-        ::sprintf(name,"%%-%ds  %%-%ds",m_display->cols/2,m_display->cols/2);
-        ::sprintf(txt,name,lines[i].c_str(),lines[j].c_str());
+        ::snprintf(name,sizeof(name),"%%-%ds  %%-%ds",m_display->cols/2,m_display->cols/2);
+        ::snprintf(txt,sizeof(txt),name,lines[i].c_str(),lines[j].c_str());
       }
       else {
-        ::sprintf(name,"%%-%ds",m_display->cols);
-        ::sprintf(txt,name,lines[i].c_str());
+        ::snprintf(name,sizeof(name),"%%-%ds",m_display->cols);
+        ::snprintf(txt,sizeof(txt),name,lines[i].c_str());
       }
       ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
     }

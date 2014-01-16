@@ -224,7 +224,7 @@ const char* RTL::errorString(int status)  {
     ::LocalFree( lpMessageBuffer ); 
   }
   else {
-    sprintf(s,"RTL Error: Unknown error code: %08X",status);
+    ::snprintf(s,sizeof(s),"RTL Error: Unknown error code: %08X",status);
   }
   return s;
 }
@@ -394,7 +394,7 @@ int lib_rtl_start_debugger()    {
   _asm int 3
 #else
   char txt[128];
-  ::sprintf(txt,"ddd --pid=%d &",lib_rtl_pid()); 
+  ::snprintf(txt,sizeof(txt),"ddd --pid=%d &",lib_rtl_pid()); 
   ::system(txt);
   ::lib_rtl_sleep(5000);  // Sleep a few seconds to allow 
                           // to attach the debugger
@@ -432,7 +432,7 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   tmp = ::lib_rtl_getenv("UTGID");
   if ( !tmp ) tmp = ::lib_rtl_getenv("PROCESSNAME");
   if ( !tmp ) tmp = ::lib_rtl_getenv("PROCESS");
-  if ( !tmp ) { sprintf(buff,"P%06d",lib_rtl_pid()); tmp=buff;}
+  if ( !tmp ) { ::snprintf(buff,sizeof(buff),"P%06d",lib_rtl_pid()); tmp=buff;}
   ::str_trim(tmp, buff2, &resultant_length);
   ::strncpy(process, buff2, len);
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
@@ -458,14 +458,15 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
     char n[64], nn[70];
     if ( 0 == ::gethostname (n,sizeof(n)) )  {
       if ( strchr(n,'.') != 0 ) *strchr(n,'.') = 0;
-      ::strncpy(nn,n,sizeof(n));
-      ::strcat(nn,"-d");
+      ::strncpy(nn,n,sizeof(nn));
+      nn[sizeof(nn)-1] = 0;
+      ::strncat(nn,"-d",3);
       hostent* h = ::gethostbyname(nn);
       if ( h ) {
         tmp = inet_ntoa(*(in_addr*)h->h_addr);
       }
       else {
-	::strcat(nn,"1");
+	::strncat(nn,"1",3);
 	if ( (h=::gethostbyname(nn)) ) {
 	  tmp = inet_ntoa(*(in_addr*)h->h_addr);
 	}

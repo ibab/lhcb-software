@@ -58,7 +58,12 @@ struct PoolDbTokenWrap {
   /// Equality operator
   bool operator==(const PoolDbTokenWrap& c) const {    return token == c.token;  }
   /// Assignment operator
-  PoolDbTokenWrap& operator=(const PoolDbTokenWrap& wrp)  {    token = wrp.token;    return *this;  }
+  PoolDbTokenWrap& operator=(const PoolDbTokenWrap& wrp)  {
+    if ( this != &wrp )  {
+      token = wrp.token;
+    }
+    return *this;
+  }
 };
 
 /** @class PoolDbLinkManager PoolDbLinkManager.h GaudiPoolDb/PoolDbLinkManager.h

@@ -63,14 +63,14 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const string
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   m_id = UpiSensor::instance().newID();
-  ::strcpy(m_name,part.empty() ? "LHCb" : part.c_str());
-  ::strcpy(m_node,"*");
-  ::strcpy(m_process,"*");
-  ::strcpy(m_component,"*");
-  ::strcpy(m_message,"*");
-  ::strcpy(m_severity,s_SevList[2]);
-  ::strcpy(m_logDir,LOG_DIR);
-  ::strcpy(m_outFileName,"Output.dat");
+  ::snprintf(m_name,sizeof(m_name),part.empty() ? "LHCb" : part.c_str());
+  ::snprintf(m_node,sizeof(m_node),"*");
+  ::snprintf(m_process,sizeof(m_process),"*");
+  ::snprintf(m_component,sizeof(m_component),"*");
+  ::snprintf(m_message,sizeof(m_message),"*");
+  ::snprintf(m_severity,sizeof(m_severity),s_SevList[2]);
+  ::snprintf(m_logDir,sizeof(m_logDir),LOG_DIR);
+  ::snprintf(m_outFileName,sizeof(m_outFileName),"Output.dat");
   ::strftime(m_endTime,sizeof(m_endTime),s_timeFmt,now);
   ::strftime(m_startTime,sizeof(m_startTime),s_timeFmt,now);
 
@@ -134,7 +134,7 @@ void ErrShowDisplay::getFiles(Files& files)  {
       char fmt[1024];
       struct dirent *dp;
       dirname += "/";
-      ::sprintf(fmt,"%s_%%Y.%%m.%%d-%%H.%%M.%%S.log",m_name);
+      ::snprintf(fmt,sizeof(fmt),"%s_%%Y.%%m.%%d-%%H.%%M.%%S.log",m_name);
       while ((dp=readdir(dir)) != 0) {
         time_t now = ::str2time(dp->d_name,fmt);
         if ( now >= begin && now <= end ) {
@@ -172,7 +172,7 @@ void ErrShowDisplay::processFile(const string& fname, FILE* output) {
     f.setUtgidMatch     (m_process,  (unsigned char)flag);
     f.setComponentMatch (m_component,(unsigned char)flag);
     f.setMessageMatch   (m_message,  (unsigned char)flag);
-    ::sprintf(text,"Logger output:%s from %s to %s",fname.c_str(),m_startTime,m_endTime);
+    ::snprintf(text,sizeof(text),"Logger output:%s from %s to %s",fname.c_str(),m_startTime,m_endTime);
     ioc.send(m_msg,CMD_START,new string(text));
     ::memcpy(tim,m_startTime+7,4);
     tim[4] = ' ';
@@ -197,7 +197,7 @@ void ErrShowDisplay::processFile(const string& fname, FILE* output) {
           }
         }
       }
-      // ::sprintf(text,"Rejected: %d %s %d %d",(int)now,tim,(int)begin,(int)end);
+      // ::snprintf(text,sizeof(text),"Rejected: %d %s %d %d",(int)now,tim,(int)begin,(int)end);
       // ioc.send(m_msg,CMD_SHOW,new string(text));
     }
     return;
@@ -243,11 +243,12 @@ void ErrShowDisplay::saveMessages() {
     showMessages(outFile);
     ::fclose(outFile);
     ::strftime(txt,sizeof(txt),"%b%d-%H%M%S [ALWAYS] Output file written:",now);
-    ::strcat(txt,m_outFileName);
+    ::strncat(txt,m_outFileName,sizeof(txt)-strlen(txt));
+    txt[sizeof(txt)-1]=0;
     IocSensor::instance().send(m_msg,CMD_SHOW,new string(txt));
     return;
   }
-  ::sprintf(txt,"Cannot open file %s: %s",m_outFileName,::strerror(errno));
+  ::snprintf(txt,sizeof(txt),"Cannot open file %s: %s",m_outFileName,::strerror(errno));
   IocSensor::instance().send(m_msg,CMD_SHOW,new string(txt));
   ::upic_write_message2(txt);
 }

@@ -83,8 +83,10 @@ namespace MBMDump  {
 FileMainMenu::FileMainMenu() :  m_io(0), m_dispMenu(0)
 {
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
-  strcpy(m_name,"file://mdf.dat");
-  strcpy(m_buffType,buff_types[2]);
+  ::strncpy(m_name,"file://mdf.dat",sizeof(m_name));
+  ::strncpy(m_buffType,buff_types[2],sizeof(m_buffType));
+  m_name[sizeof(m_name)-1] = 0;
+  m_buffType[sizeof(m_buffType)-1] = 0;
   openMenu(0,0,"Event Dump","General purpose MBM Dump",procName()); 
   addCommand(C_PROC,     "Set file name           ");
   setParam  (m_buffType, 1,"%10s",buff_types[2],0,0,buff_types,num_types,1);

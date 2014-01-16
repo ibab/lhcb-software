@@ -103,6 +103,11 @@ namespace PyRPC  {
     _Cont(A a, B b, C c, D d, E e, F f, G g, H h);
     /// Default destructor
     virtual ~_Cont();
+    /// Assignment operator
+    _Cont& operator=(const _Cont& c)  {
+      if ( this != &c ) this->_ContBase::operator=(c);
+      return *this;
+    }
     /// Retrieve string representation of the object
     std::string str() const;
     /// Load the object from the string representation
@@ -386,7 +391,11 @@ namespace PyRPC  {
     MethodResponse(const std::string& values);
     /// Copy constructor
     MethodResponse(const MethodResponse& r) : values(r.values) {}
-    
+    /// Assignment operator
+    MethodResponse& operator=(const MethodResponse& c)  {
+      if ( this != &c ) values = c.values;
+      return *this;
+    }
     /// Add new response entry from string
     void add(const std::string& val);
     /// Check if error occurred

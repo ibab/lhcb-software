@@ -218,7 +218,7 @@ int TanInterface::setInquireAddr(const char* node, NetworkChannel::Address& sin,
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
-  memcpy(&sin,&m_sinudp,sizeof(m_sintcp));
+  ::memcpy(&sin,&m_sinudp,sizeof(m_sintcp));
   sin.sin_port = htons(m_sintcp.sin_port);
   return TAN_SS_SUCCESS;
 }
@@ -234,14 +234,16 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     s = 0;
     if (node != 0)  {
       ::strncpy (node, name, n = p - name);
-      node [n] = 0;
+      node[n] = 0;
     }
-    if (proc!= 0) ::strcpy (proc, p + 2);
+    if (proc!= 0)  {
+      ::strncpy (proc, p + 2, 128);
+    }
   }
   else if ( 0 != (p=::strchr(name,'@')) )    {
     s = 1;
     if (node != 0)  {                         // INTERNET STYLE
-      ::strcpy (node, p + 1);
+      ::strncpy (node, p + 1, 64);
     }
     if (proc!= 0)   {
       ::strncpy (proc, name, n = p-name);
@@ -249,8 +251,8 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     }
   }
   else    {
-    if (node != 0) ::strcpy (node, m_pcHostName);
-    if (proc != 0) ::strcpy (proc, name);
+    if (node != 0) ::strncpy (node, m_pcHostName, 128);
+    if (proc != 0) ::strncpy (proc, name, 128);
   }
   for(char* q=node; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);
   for(char* q=proc; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);

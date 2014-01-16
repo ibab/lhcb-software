@@ -68,6 +68,17 @@ namespace ROLogger {
     MessageLine(const MessageLine& copy);
     /// Standard destructor
     ~MessageLine() {}
+    /// Assignment operator
+    MessageLine& operator=(const MessageLine& c)  {
+      if ( &c != this )  {
+	m_buff = c.m_buff;
+	m_type = c.m_type;
+	m_utgid = c.m_utgid;
+	m_comp = c.m_comp;
+	m_mess = c.m_mess;
+      }
+      return *this;
+    }
     std::string date() const      {  return m_buff.substr(DATE_START,DATE_LEN);                             }
     std::string severity() const  {  return m_buff.substr(SEV_START,m_buff.find("]",SEV_START)-SEV_START);  }
     std::string node()  const     {  return m_buff.substr(NOD_START,m_buff.find(":",NOD_START)-NOD_START);  }

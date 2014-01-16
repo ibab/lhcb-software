@@ -48,20 +48,20 @@ int MBM::Dumper::optparse (const char* c)   {
     All = 1;
     break;
   case 'i':      /*      buffer_id        */   
-    iret = sscanf(c+1,"=%s",buff_id);
+    iret = ::sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )      {
-      lib_rtl_output(LIB_RTL_ALWAYS,"Error reading Buffer identifier parameter.\n");
-      exit(0);
+      ::lib_rtl_output(LIB_RTL_ALWAYS,"Error reading Buffer identifier parameter.\n");
+      ::exit(0);
     }
     bm_id = buff_id;
     break;
   case '?':
   default:
   case 'h':
-    lib_rtl_output(LIB_RTL_ALWAYS,"bm - Buffer Manager Monitor                 \n");
-    lib_rtl_output(LIB_RTL_ALWAYS,"Options:                                    \n");
-    lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<bm_name>   Select Buffer Identifier \n");
-    lib_rtl_output(LIB_RTL_ALWAYS,"    -a           Dumper all table entries   \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"bm - Buffer Manager Monitor                 \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"Options:                                    \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -i=<bm_name>   Select Buffer Identifier \n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a           Dumper all table entries   \n");
     exit(0);
     break;
   }

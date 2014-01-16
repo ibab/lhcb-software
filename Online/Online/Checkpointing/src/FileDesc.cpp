@@ -23,7 +23,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
   hasData = 0;
   _pad    = 0;
   // Read the symbolic link so we get the filename that's open on the fd
-  ::sprintf(procfdname, "/proc/self/fd/%d",fdnum);
+  ::snprintf(procfdname, sizeof(procfdname), "/proc/self/fd/%d",fdnum);
   name_len = (int)mtcp_sys_readlink(procfdname,name,sizeof(name)-1);
   if (name_len < 0) {
     mtcp_output(MTCP_ERROR,"FileHandler: error reading %s: %s\n",procfdname,strerror(errno));

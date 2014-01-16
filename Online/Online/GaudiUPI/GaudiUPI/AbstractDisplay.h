@@ -50,6 +50,10 @@ public:
   DisplayText ( int width = 1 ) : m_board(width,' ') {  }
   DisplayText ( const DisplayText& copy )  : m_board(copy.m_board) {  }
   virtual ~DisplayText()        {     }
+  DisplayText& operator=(const DisplayText& c)  {
+    if ( this != &c ) m_board = c.m_board;
+    return *this;
+  }
   int width() const             {    return m_board.length();  }
   operator const std::string& () const  {    return m_board;  }
   DisplayText& pad(const char c = ' ');
@@ -64,6 +68,10 @@ public:
   DisplayBoard (int width, int video = DISPLAY_NORMAL );
   DisplayBoard (const DisplayBoard& copy );
   virtual ~DisplayBoard ( void );
+  DisplayBoard& operator=(const DisplayBoard& c)  {
+    if ( this != &c ) { m_video = c.m_video; m_change = c.m_change; }
+    return *this;
+  }
   DisplayBoard& set(const std::string& txt, int video = DISPLAY_NORMAL);
   bool changed() const {
     return m_change;
@@ -123,6 +131,15 @@ public:
   virtual ~AbstractDisplay() {}
   //  Standard destructor
   //      Arguments: None
+  AbstractDisplay& operator=(const AbstractDisplay& c)  {
+    if ( this != &c ) { 
+      m_height = c.m_height;
+      m_width = c.m_width;
+      m_status = c.m_status;
+      m_id = c.m_id;
+    }
+    return *this;
+  }
   virtual int id() const     {    return m_id;                            }
   size_t height() const      {    return m_height;                        }
   size_t width() const       {    return m_width;                         }
@@ -152,11 +169,11 @@ protected:
   DisplayLabel m_label;
 public:
   static AbstractSubDisplay* create (const AbstractDisplay& data);
-  DisplayLabel& label()         {     return m_label;   }
-  AbstractMainDisplay* parent() {     return m_parent;   }
-  size_t x() const              {     return m_x;  }
-  size_t y() const              {     return m_y;  }
-  size_t currentLine() const    {    return m_currLine;  }
+  DisplayLabel& label()         {     return m_label;    }
+  AbstractMainDisplay* parent() {     return m_parent;    }
+  size_t x() const              {     return m_x;         }
+  size_t y() const              {     return m_y;         }
+  size_t currentLine() const    {     return m_currLine;  }
   virtual int map();
   virtual int close();
   virtual int flush();

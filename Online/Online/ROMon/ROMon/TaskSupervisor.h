@@ -39,8 +39,17 @@ namespace ROMon {
       PVSSProject() : eventMgr(false), dataMgr(false), distMgr(false), fsmSrv(false), devHdlr(false) {}
       PVSSProject(const PVSSProject& c) : name(c.name), eventMgr(c.eventMgr),
            dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
-      PVSSProject& operator=(const PVSSProject& c)
-      { name=c.name; eventMgr=c.eventMgr; dataMgr=c.dataMgr; distMgr=c.distMgr; fsmSrv=c.fsmSrv; devHdlr=c.devHdlr;return *this;}
+      PVSSProject& operator=(const PVSSProject& c)   { 
+	if ( this != &c )  {
+	  name=c.name; 
+	  eventMgr=c.eventMgr; 
+	  dataMgr=c.dataMgr;
+	  distMgr=c.distMgr;
+	  fsmSrv=c.fsmSrv;
+	  devHdlr=c.devHdlr;
+	}
+	return *this;
+      }	
       bool operator==(const PVSSProject& c) const
       { return name==c.name && eventMgr==c.eventMgr && dataMgr==c.dataMgr && distMgr==c.distMgr && fsmSrv==c.fsmSrv && devHdlr==c.devHdlr; }
       bool operator<(const PVSSProject& c) const
@@ -114,7 +123,14 @@ namespace ROMon {
     Cluster() {}
     Cluster(const std::string& n,const std::string&s): name(n), status(s) {}
     Cluster(const Cluster& n) : name(n.name), status(n.status), nodes(n.nodes) {}
-
+    Cluster& operator=(const Cluster& c)  {
+      if ( this != &c )  {
+	name   = c.name;
+	status = c.status;
+	nodes  = c.nodes;
+      }
+      return *this;
+    }
   };
 
   /* @class Inventory TaskSupervisor.h ROMon/TaskSupervisor.h

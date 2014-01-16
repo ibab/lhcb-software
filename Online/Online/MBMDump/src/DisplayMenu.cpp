@@ -261,8 +261,10 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_DMP: // For displaying the EVENT
       m_currData = m_evtData;
       m_fmt  = m_fmtDataWindow->fmt();
-      ::sprintf(down_title,"   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
-              m_currData.number,m_currData.mask[0],m_currData.mask[1],m_currData.mask[2],m_currData.mask[3],m_currData.length);
+      ::snprintf(down_title,sizeof(down_title),
+		 "   Evtype %3d    Trigger mask %08X %08X %08X %08X   Length %5d (words) ",
+		 m_currData.number,m_currData.mask[0],m_currData.mask[1],m_currData.mask[2],
+		 m_currData.mask[3],m_currData.length);
       output("Got event....   %d --> %s",++evt,down_title);
       handleMenu(C_TOP);
       break;
@@ -376,13 +378,13 @@ int DisplayMenu::format_line(int first_word, char *c)  {
   tmp[0] = wrd[0] = 0;
   // Column one : nothing, offset or row number
   if(m_fmt.column_one_flag == 1)
-    ::sprintf(tmp,"%4d  ",first_word);
+    ::snprintf(tmp,sizeof(tmp),"%4d  ",first_word);
   else if(m_fmt.column_one_flag == 2)
-    ::sprintf(tmp,"%4d  ",(first_word/m_fmt.words_per_line)+1);
+    ::snprintf(tmp,sizeof(tmp),"%4d  ",(first_word/m_fmt.words_per_line)+1);
   // Main format
   for(i=0; (first_word + i < m_currData.length) && (i < m_fmt.words_per_line); ++i){
     // Concatenate
-    ::sprintf(wrd,m_fmt.fmt[i],*(m_currData.start + first_word + i));
+    ::snprintf(wrd,sizeof(wrd),m_fmt.fmt[i],*(m_currData.start + first_word + i));
     ::strncat(tmp,wrd,10);
     if(m_fmt.ascii_flag){   // ascii representation
       rconv(wrd2,*(m_currData.start + first_word + i));
@@ -395,9 +397,9 @@ int DisplayMenu::format_line(int first_word, char *c)  {
     if(i < m_fmt.words_per_line)
       for(j=i*10+6;j<46;j++) *(tmp+j)=' ';
   }
-  ::strcpy(c,tmp);
-  ::strcat(c,"   ");
-  ::strcat(c,asc);
+  ::strncpy(c,tmp,sizeof(tmp));
+  ::strncat(c,"   ",4);
+  ::strncat(c,asc,sizeof(asc));
   return i;                 // Return no. words read
 }
 

@@ -28,6 +28,11 @@ namespace ROMon {
     size_t      m_len;
     void*       m_buff;
     time_t      m_modified;
+  private:
+    /// Private copy constructor
+    DimFilePublish(const DimFilePublish&) {}
+    /// Private assignment operator
+    DimFilePublish& operator=(const DimFilePublish&) { return *this; }
   public:
     /// Standard constructor
     DimFilePublish(int argc, char** argv);

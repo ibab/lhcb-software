@@ -127,7 +127,7 @@ void Logger::handle(const Event& ev) {
     return;
   case CMD_UPDATE_RUNNUMBER:   {
     char text[64];
-    ::sprintf(text,"R:%ld",ev.iocData());
+    ::snprintf(text,sizeof(text),"R:%ld",ev.iocData());
     sendData(text);
     return;
   }

@@ -81,6 +81,11 @@ namespace ROMon {
   class RunDBCollector {
   private:
     ROMonGblBuffer* m_gbl;
+  private:
+    /// Private copy constructor
+    RunDBCollector(const RunDBCollector&) {}
+    /// Private assignment operator
+    RunDBCollector& operator=(const RunDBCollector&) { return *this; }
   public:
     RunDBCollector();
     ~RunDBCollector();

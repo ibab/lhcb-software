@@ -40,6 +40,12 @@ namespace ROMon {
   class MessageWindow : public InternalDisplay {
   protected:
     int m_level;
+
+  private:
+    /// Private copy constructor
+  MessageWindow(const MessageWindow&) : InternalDisplay() {}
+    /// Private assignment operator
+    MessageWindow& operator=(const MessageWindow&) { return *this; }
   public:
     /// Initializing constructor
     MessageWindow(AlarmDisplay* parent, const std::string& title, int height, int width, int lvl);

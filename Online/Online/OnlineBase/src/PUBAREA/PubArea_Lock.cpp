@@ -16,9 +16,7 @@ extern "C" int pubarea_lock(int argc,char** argv)  {
      printf("PubArea_Lock: Failed to lock pubarea\n");
      return(status);
    }
-
-   char dummy[20];
    printf("<<< Press any key to unlock the publishing area >>>\n");
-   gets(dummy);
+   ::getc(stdin);
    return(0);
 }

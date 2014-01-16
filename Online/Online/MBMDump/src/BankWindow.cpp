@@ -25,11 +25,12 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
 : BaseMenu(par), m_parentCmd(cmd_id), m_fmt(f)
 {
   char txt[256], tmp[32];
+  const unsigned int *data = b->data(), *end = b->end<unsigned int>();
+
   openDetached(0,0,"Display window"," MEP Fragment structure ",procName());
   addCommand(C_DISMISS,"Dismiss");
-  ::sprintf(txt,"RawBank  %s",RawEventPrintout::bankHeader(b).c_str());
+  ::snprintf(txt,sizeof(txt),"RawBank  %s",RawEventPrintout::bankHeader(b).c_str());
   addComment(C_COM1,txt);
-  const unsigned int *data = b->data(), *end = b->end<unsigned int>();
   txt[0] = 0;
 
   int nw = m_fmt.words_per_line;
@@ -49,12 +50,12 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
       memset(txt,' ',sizeof(txt));
       // 0=nothing,1=offset,2=line number
       if(m_fmt.column_one_flag == 1)  {
-        sprintf(tmp,"%4d",(int)((char*)data-(char*)b->data()));
+        ::snprintf(tmp,sizeof(tmp),"%4d",(int)((char*)data-(char*)b->data()));
         memcpy(txt+3,tmp,4);
       }
       else if(m_fmt.column_one_flag == 2)  {
-        sprintf(tmp,"%4d",(int)((data-b->data())/m_fmt.words_per_line));
-        memcpy(txt+3,tmp,4);
+        ::snprintf(tmp,sizeof(tmp),"%4d",(int)((data-b->data())/m_fmt.words_per_line));
+        ::memcpy(txt+3,tmp,4);
       }
       else  {
         cw = 2;
@@ -62,9 +63,9 @@ BankWindow::BankWindow(BaseMenu* par,int cmd_id, const Format& f, const RawBank*
       txt[cw+nw*fw+dw+aw*nw] = 0;
       cnt = 0;
     }
-    sprintf(tmp,m_fmt.fmt[cnt],*data);
+    ::snprintf(tmp,sizeof(tmp),m_fmt.fmt[cnt],*data);
     // sprintf(tmp,"%08X",*data);
-    memcpy(&txt[cw+cnt*fw],tmp,strlen(tmp));
+    ::memcpy(&txt[cw+cnt*fw],tmp,strlen(tmp));
     if ( m_fmt.ascii_flag )  {
       rconv(tmp,*data);
       ::memcpy(&txt[cw+fw*nw+dw+aw*cnt],tmp,4);

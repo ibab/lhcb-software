@@ -53,8 +53,7 @@ FilterDisplay::FilterDisplay(Interactor* parent, Interactor* msg, Interactor* hi
   static const char* hist[] = {"[History]"};
   static const char* mess[] = {"[Messages]"};
   m_id = UpiSensor::instance().newID();
-  ::memset(m_file,0,sizeof(m_file));
-  ::strcpy(m_file,"Logfilters.txt");
+  ::snprintf(m_file,sizeof(m_file),"Logfilters.txt");
   ::upic_open_window();
   ::upic_open_detached_menu(m_id,0,0,"Filter Editor",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
@@ -88,10 +87,9 @@ FilterDisplay::~FilterDisplay()  {
 /// Add all commands to build filters
 void FilterDisplay::addCommands() {
   int cmd_id = CMD_COMLAST;
-  ::memset(m_node,0,sizeof(m_node));
-  ::strcpy(m_node[0],"*");
-  ::strcpy(m_node[1],s_filterType[3]);
-  ::strcpy(m_node[2],s_matchType[0]);
+  ::snprintf(m_node[0],sizeof(m_node[0]),"*");
+  ::snprintf(m_node[1],sizeof(m_node[1]),s_filterType[3]);
+  ::snprintf(m_node[2],sizeof(m_node[2]),s_matchType[0]);
   ::upic_set_param(m_node[0], 1, "A37", m_node,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " Node      match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_node[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -100,9 +98,9 @@ void FilterDisplay::addCommands() {
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, "           logic ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
 
   ::memset(m_utgid,0,sizeof(m_utgid));
-  ::strcpy(m_utgid[0],"*");
-  ::strcpy(m_utgid[1],s_filterType[3]);
-  ::strcpy(m_utgid[2],s_matchType[0]);
+  ::snprintf(m_utgid[0],sizeof(m_utgid[0]),"*");
+  ::snprintf(m_utgid[1],sizeof(m_utgid[1]),s_filterType[3]);
+  ::snprintf(m_utgid[2],sizeof(m_utgid[2]),s_matchType[0]);
   ::upic_set_param(m_utgid[0], 1, "A37", m_utgid,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " UTGID     match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_utgid[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -111,9 +109,9 @@ void FilterDisplay::addCommands() {
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, "           logic ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
 
   ::memset(m_comp,0,sizeof(m_comp));
-  ::strcpy(m_comp[0],"*");
-  ::strcpy(m_comp[1],s_filterType[3]);
-  ::strcpy(m_comp[2],s_matchType[0]);
+  ::snprintf(m_comp[0],sizeof(m_comp[0]),"*");
+  ::snprintf(m_comp[1],sizeof(m_comp[1]),s_filterType[3]);
+  ::snprintf(m_comp[2],sizeof(m_comp[2]),s_matchType[0]);
   ::upic_set_param(m_comp[0], 1, "A37", m_comp,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " COMPONENT match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_comp[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -122,9 +120,9 @@ void FilterDisplay::addCommands() {
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, "           logic ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
 
   ::memset(m_mess,0,sizeof(m_mess));
-  ::strcpy(m_mess[0],"*");
-  ::strcpy(m_mess[1],s_filterType[3]);
-  ::strcpy(m_mess[2],s_matchType[0]);
+  ::snprintf(m_mess[0],sizeof(m_mess[0]),"*");
+  ::snprintf(m_mess[1],sizeof(m_mess[1]),s_filterType[3]);
+  ::snprintf(m_mess[2],sizeof(m_mess[2]),s_matchType[0]);
   ::upic_set_param(m_mess[0], 1, "A37", m_mess,  0,0,0,0,0);
   ::upic_insert_command(m_id,CMD_COM2,++cmd_id, " MESSAGE   match:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_mess[1], 1, "A37", s_filterType[3],0,0,s_filterType,sizeof(s_filterType)/sizeof(s_filterType[0]),1);
@@ -187,13 +185,13 @@ void FilterDisplay::addFilter(const Filter& f)   {
   cmd += 5;
   m_filters.push_back(make_pair(cmd,f));
   cmd0 = cmd;
-  ::sprintf(text,"Filter match: Node: [%d]  %s",f.match()[Filter::NODE],f.node.c_str());
+  ::snprintf(text,sizeof(text),"Filter match: Node: [%d]  %s",f.match()[Filter::NODE],f.node.c_str());
   ::upic_insert_comment(m_id,CMD_COM1,++cmd,text,"");
-  ::sprintf(text,"             UTGID: [%d]  %s",f.match()[Filter::UTGID],f.utgid.c_str());
+  ::snprintf(text,sizeof(text),"             UTGID: [%d]  %s",f.match()[Filter::UTGID],f.utgid.c_str());
   ::upic_insert_comment(m_id,CMD_COM1,++cmd,text,"");
-  ::sprintf(text,"         Component: [%d]  %s",f.match()[Filter::COMPONENT],f.component.c_str());
+  ::snprintf(text,sizeof(text),"         Component: [%d]  %s",f.match()[Filter::COMPONENT],f.component.c_str());
   ::upic_insert_comment(m_id,CMD_COM1,++cmd,text,"");
-  ::sprintf(text,"           Message: [%d]  %s",f.match()[Filter::MESSAGE],f.message.c_str());
+  ::snprintf(text,sizeof(text),"           Message: [%d]  %s",f.match()[Filter::MESSAGE],f.message.c_str());
   ::upic_insert_comment(m_id,CMD_COM1,++cmd,text,"");
   ::upic_insert_command(m_id,CMD_COM1, cmd0, "------------- Remove Filter above -------------","");
 }

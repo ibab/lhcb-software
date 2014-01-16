@@ -121,7 +121,13 @@ namespace Gaudi  {
       /// Copy constructor
       ContainerSection(const ContainerSection& s) : start(s.start), length(s.length) {}
       /// Assignment operator to copy objects
-      ContainerSection& operator=(const ContainerSection& s) { start=s.start;length=s.length; return *this;}
+      ContainerSection& operator=(const ContainerSection& s) {
+	if ( this != &s ) {
+	  start=s.start;
+	  length=s.length; 
+	}
+	return *this;
+      }
       /// The start entry of the section
       int start;
       /// The length of the section

@@ -45,6 +45,15 @@ namespace ROLogger {
     ~LogFileEntry()     {    
       if ( fd != 0 ) ::close(fd);
     }
+    LogFileEntry& operator=(const LogFileEntry& c)  {
+      if ( &c != this )  {
+	data = c.data;
+	pointer = c.pointer;
+	fd = c.fd;
+	remainder = c.remainder;
+      }
+      return *this;
+    }
     int open(const string& fn, bool begin) {
       fd = ::open(fn.c_str(),O_RDONLY);
       pointer = begin ? 0 : data.st_size;
@@ -59,14 +68,11 @@ namespace ROLogger {
 }
 
 string PVSSLogger::_prefix(const string& tag) const {
-  char prefix[132];
+  char prefix[132], tmp[64];
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
-  ::strftime(prefix,sizeof(prefix),"%b%d-%H%M%S[",now);
-  ::strcat(prefix,tag.c_str());
-  ::strcat(prefix,"] ");
-  ::strcat(prefix,m_node.c_str());
-  ::strcat(prefix,": ");
+  ::strftime(tmp,sizeof(tmp),"%b%d-%H%M%S",now);
+  ::snprintf(prefix,sizeof(prefix),"%s[%s] %s: ",tmp,tag.c_str(),m_node.c_str());
   return prefix;
 }
 

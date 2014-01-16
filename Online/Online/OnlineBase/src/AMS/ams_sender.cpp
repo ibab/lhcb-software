@@ -34,30 +34,30 @@ extern "C" int amsc_sender(int argc, char **argv)  {
 
   if ( length<=0 ) length=10;
   wmessage = new char[length];
-  printf (" Starting ams test task (%s) \n",amsname.c_str());
-  strcpy(source,target.c_str());
-  printf(" task %s: size %d  facility:%d turns:%d\n",source,length,int(facility),loop);
-  int sc = amsc_init (amsname.c_str());
+  ::printf (" Starting ams test task (%s) \n",amsname.c_str());
+  ::snprintf(source,sizeof(source),target.c_str());
+  ::printf(" task %s: size %d  facility:%d turns:%d\n",source,length,int(facility),loop);
+  int sc = ::amsc_init (amsname.c_str());
   if (sc != AMS_SUCCESS)  {
-    printf ("Can't initialise ams\n");
-    exit (sc);
+    ::printf ("Can't initialise ams\n");
+    ::exit (sc);
   }
-  amsc_get_node( node );
+  ::amsc_get_node( node );
 
   // receive some messages and bounce them
   for (int i=0; loop > 0; --loop, ++i)  {
     //if ( (i%5) == 0 ) lib_rtl_sleep(1);
     wsize =  length;
     fill (wmessage, wsize);
-    sc = amsc_send_message (wmessage, wsize, source, facility, 0);
+    sc = ::amsc_send_message (wmessage, wsize, source, facility, 0);
     if (sc != AMS_SUCCESS)  {
-      printf("amsc_send_message Failed: Error=%d\n",sc);
+      ::printf("amsc_send_message Failed: Error=%d\n",sc);
     }
     if (i % 100 == 0) printf ("%d\n", i);
   }
-  printf("Hit key+Enter to exit ...");
-  getchar();
-  amsc_close();
+  ::printf("Hit key+Enter to exit ...");
+  ::getchar();
+  ::amsc_close();
   delete [] wmessage;
   return 0;
 }

@@ -123,11 +123,14 @@ _ContBase::~_ContBase()  {
   data = 0;
 }
 
-_ContBase& _ContBase::operator=(const _ContBase& c)  
-{ return copy(&c.data);                   }
+_ContBase& _ContBase::operator=(const _ContBase& c)   { 
+  if ( this != &c ) return copy(&c.data);
+  return *this;
+}
 
-void _ContBase::add(const Arg& a)  
-{ ((list<Arg>*)data)->push_back(a);       }
+void _ContBase::add(const Arg& a)  {
+  ((list<Arg>*)data)->push_back(a);
+}
 
 _ContBase& _ContBase::copy(const void* data_ptr)  {
   if ( data_ptr != data )  {

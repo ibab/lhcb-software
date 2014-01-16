@@ -61,9 +61,11 @@ namespace LHCb  {
       Recipient(NetworkDataHandler* h, const std::string& n, long id)
       : name(n), identifier(id), handler(h) {}
       Recipient& operator=(const Recipient& e)  {
-        name = e.name;
-        identifier = e.identifier;
-        handler = e.handler;
+	if ( this != &e )  {
+	  name = e.name;
+	  identifier = e.identifier;
+	  handler = e.handler;
+	}
         return *this;
       }
     };
@@ -74,8 +76,10 @@ namespace LHCb  {
       RecvEntry(NetworkDataHandler* h, const std::string& n,MBM::Producer* p)
       : Recipient(h,n,0), producer(p) {}
       RecvEntry& operator=(const RecvEntry& e)  {
-        Recipient::operator=(e);
-        producer = e.producer;
+	if ( this != &e )  {
+	  Recipient::operator=(e);
+	  producer = e.producer;
+	}
         return *this;
       }
     };

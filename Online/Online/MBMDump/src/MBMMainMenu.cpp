@@ -30,9 +30,9 @@ MBMMainMenu::MBMMainMenu()
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   int num_names = sizeof(buff_names)/sizeof(buff_names[0]);
 
-  strcpy(m_name,procName());
-  strcpy(m_buffName,buff_names[0]);
-  strcpy(m_buffType,buff_types[0]);
+  ::snprintf(m_name,sizeof(m_name),procName());
+  ::snprintf(m_buffName,sizeof(m_buffName),buff_names[0]);
+  ::snprintf(m_buffType,sizeof(m_buffType),buff_types[0]);
   openMenu  (0,0,"Event Dump","General purpose MBM Dump",procName()); 
   setParam(m_name,    1,"%16s",procName(),0,0,0,0,0);
   addCommand(C_PROC,     "Process name :  ^^^^^^^^^^^^^^^^");

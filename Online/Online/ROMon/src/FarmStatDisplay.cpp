@@ -344,7 +344,7 @@ void FarmStatDisplay::display(const FarmStatClusterLine* line) {
   for(FarmStatClusterLine::_CI::const_iterator ci=line->cpuData().begin(); ci != line->cpuData().end(); ++ci)  {
     const char* n = (*ci).first.c_str();
     bool is_ctrl = ::strncmp(n,nam,::strlen(nam)+2) == 0;
-    ::sprintf(txt+len," %s ",n+(is_ctrl ? 0 : ::strlen(n)-2));
+    ::snprintf(txt+len,sizeof(txt)-len," %s ",n+(is_ctrl ? 0 : ::strlen(n)-2));
     len = ::strlen(txt);
   }
   ::scrc_put_chars(m_display,nam,(pos==m_posCursor?BLUE|INVERSE:NORMAL)|BOLD,pos,STATLINE_START,0);
@@ -487,7 +487,7 @@ void FarmStatDisplay::handle(const Event& ev) {
     case CMD_SHOW: {
       char txt[256];
       time_t now = ::time(0);
-      size_t len = ::sprintf(txt,"Total number of subfarms:%d",int(m_clusters.size()));
+      size_t len = ::snprintf(txt,sizeof(txt),"Total number of subfarms:%d",int(m_clusters.size()));
       ::strftime(&txt[len],sizeof(txt)-len,"    %H:%M:%S",::localtime(&now));      
       DisplayUpdate update(this);
       ::scrc_put_chars(m_display,txt,BOLD,1,STATLINE_START,1);

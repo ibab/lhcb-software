@@ -143,10 +143,10 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
         get_bm_list();
         dumpBuffers(o);
         std::string text = buff.str();
-        sprintf(reply, "HTTP/1.0 200 OK\n"
-          "Content-Type: text/html\n"
-          "Content-Length: %d\n"
-          "\n",int(text.length()));
+        ::snprintf(reply, sizeof(reply), "HTTP/1.0 200 OK\n"
+		   "Content-Type: text/html\n"
+		   "Content-Length: %d\n"
+		   "\n",int(text.length()));
         std::string result = reply;
         result += text;
         num_byte = chan.send(result.c_str(),result.length());

@@ -449,6 +449,7 @@ string CheckpointSvc::buildChildUTGID(int which) const {
   const string& node = RTL::nodeNameShort();
   string n = m_utgid;
   if ( !n.empty() ) {
+    char txt[1024];
     string_replace(n,"%PP",upper(m_partition));
     string_replace(n,"%P",m_partition);
     string_replace(n,"%p",lower(m_partition));
@@ -458,8 +459,7 @@ string CheckpointSvc::buildChildUTGID(int which) const {
     string_replace(n,"%TT",upper(m_taskType));
     string_replace(n,"%T",m_taskType);
     string_replace(n,"%t",lower(m_taskType));
-    char txt[1024];
-    ::sprintf(txt,n.c_str(),which+m_firstChild);
+    ::snprintf(txt,sizeof(txt),n.c_str(),which+m_firstChild);
     n = txt;
   }
   else {
@@ -739,7 +739,7 @@ int CheckpointSvc::forkChild(int which) {
   }
   else if (pid < 0)    {        // failed to fork
     char text[256];
-    ::sprintf(text,"[ERROR] Failed to fork child:%s %s\n",utgid.c_str(),::strerror(errno));
+    ::snprintf(text,sizeof(text),"[ERROR] Failed to fork child:%s %s\n",utgid.c_str(),::strerror(errno));
     ::write(STDOUT_FILENO,text,strlen(text));
     ::_exit(EXIT_FAILURE);
   }
@@ -751,7 +751,7 @@ int CheckpointSvc::execChild() {
   for(int j=0; j<3; ++j) {
     if (dup2(j,j) < 0) {
       char text[256];
-      ::sprintf(text,"[ERROR] Severe error dup fd:%d %s\n",j,::strerror(errno));
+      ::snprintf(text,sizeof(text),"[ERROR] Severe error dup fd:%d %s\n",j,::strerror(errno));
       ::write(STDOUT_FILENO,text,strlen(text));
     }
   }
@@ -761,8 +761,8 @@ int CheckpointSvc::execChild() {
   if ( m_childSessions ) {
     pid_t sid = ::setsid();
     if (sid < 0) {
-      char text[256];
-      ::sprintf(text,"[ERROR] Cannot assign process group to child: %s\n",::strerror(errno));
+      char text[1024];
+      ::snprintf(text,sizeof(text),"[ERROR] Cannot assign process group to child: %s\n",::strerror(errno));
       ::write(STDOUT_FILENO,text,strlen(text));
       ::_exit(EXIT_FAILURE);
     }

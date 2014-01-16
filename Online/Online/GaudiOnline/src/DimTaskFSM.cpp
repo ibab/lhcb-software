@@ -219,7 +219,7 @@ void DimTaskFSM::output(int /* level */, const char* s)  {
 StatusCode DimTaskFSM::printErr(int flag, const char* format, ...)  {
   va_list args;
   char buffer[1024];
-  sprintf(buffer,"Error: ");
+  ::snprintf(buffer,sizeof(buffer),"Error: ");
   va_start(args, format);
   size_t len = ::vsnprintf(&buffer[7], sizeof(buffer)-8, format, args);
   va_end(args);

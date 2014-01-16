@@ -124,7 +124,7 @@ namespace LHCb  {
       cout << endl;
 #endif
       ::pthread_sigmask(SIG_SETMASK,&m_blockMask,0);
-      ::sprintf(text,"TIMEOUT during event processing after %d milliseconds",m_timeout);
+      ::snprintf(text,sizeof(text),"TIMEOUT during event processing after %d milliseconds",m_timeout);
       ++m_timeoutCount;
       m_incidentSvc->fireIncident(Incident(text,"DAQ_TIMEOUT"));
       if ( m_printTrace )  {

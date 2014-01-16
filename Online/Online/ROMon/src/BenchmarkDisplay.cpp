@@ -52,12 +52,14 @@ namespace {
     {tm[0]=c.tm[0];tm[1]=c.tm[1];}
 #ifndef __INTEL_COMPILER
     ClientStat& operator=(const ClientStat& c) {
-      timesqr = c.timesqr; 
-      time    = c.time; 
-      nevt    = c.nevt; 
-      last    = c.last;
-      tm[0]   = c.tm[0]; 
-      tm[1]   = c.tm[1];
+      if ( this != &c )  {
+	timesqr = c.timesqr; 
+	time    = c.time; 
+	nevt    = c.nevt; 
+	last    = c.last;
+	tm[0]   = c.tm[0]; 
+	tm[1]   = c.tm[1];
+      }
       return *this;
     }
 #endif
@@ -231,21 +233,21 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
     updateStats(ns);
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
     ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&t1));
-    ::sprintf(txt,"      Benchmark display of node:%s subfarm:%s %s",m_name.c_str(),ns.name,text1);
+    ::snprintf(txt,sizeof(txt),"      Benchmark display of node:%s subfarm:%s %s",m_name.c_str(),ns.name,text1);
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
     ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
-    ::sprintf(txt,"      <CTRL-H for Help>, <CTRL-E to exit>");
+    ::snprintf(txt,sizeof(txt),"      <CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
     ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
     ::scrc_put_chars(m_display,"   Detailed View:",BOLD|BLUE,++line,3,1);
     ::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
 
-    ::sprintf(txt,"%-32s%25s%25s%25s",
+    ::snprintf(txt,sizeof(txt),"%-32s%25s%25s%25s",
 	      //           0123456789012345678901   0123456789012345678901   01234567890123456789012
 	      "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-    ::sprintf(txt,"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
+    ::snprintf(txt,sizeof(txt),"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
 	      "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
 
@@ -288,7 +290,7 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	    if      ( bnam == "Events"   ) ;
 	    else if ( bnam == "Send"     ) p += 25;
 	    else if ( bnam == "Overflow" ) p += 25+25;
-	    len = ::sprintf(txt,"%s",cnam);
+	    len = ::snprintf(txt,sizeof(txt),"%s",cnam);
 	    txt[len]=' ';
 	    len = append(p, &cs);
 	    p[len]=' ';
@@ -299,11 +301,11 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
 	::scrc_put_chars(m_display,"   Summary Overview:",BOLD|BLUE,++line,3,1);
 	::scrc_put_chars(m_display,"",BOLD|BLUE,++line,3,1);
-	::sprintf(txt,"%-32s%25s%25s%25s",
+	::snprintf(txt,sizeof(txt),"%-32s%25s%25s%25s",
 		  //           0123456789012345678901   0123456789012345678901   01234567890123456789012
 		  "Task name","---- Events Buffer ---","----- Send Buffer ----"," -- Overflow Buffer ---");
 	::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-	::sprintf(txt,"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
+	::snprintf(txt,sizeof(txt),"%-32s  %10s %5s %6s  %10s %5s %6s  %10s %5s %6s ",
 		  "[UTGID]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]","[Events]","[ms]","[ms]");
 	::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
 	for(j=ns_tot.begin(); j!=ns_tot.end();++j)   {
@@ -319,7 +321,7 @@ int BenchmarkDisplay::updateNode(const Nodeset& ns) {
 	    if      ( bnam == "Events"   ) ;
 	    else if ( bnam == "Send"     ) p += 25;
 	    else if ( bnam == "Overflow" ) p += 25+25;
-	    len = ::sprintf(txt,"%s",cnam);
+	    len = ::snprintf(txt,sizeof(txt),"%s",cnam);
 	    txt[len]=' ';
 	    len = append(p, &cs);
 	    p[len]=' ';
@@ -347,26 +349,26 @@ int BenchmarkDisplay::updateSubfarm(const Nodeset& ns) {
 
     ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
     ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&t1));
-    ::sprintf(txt,"      Benchmark display of subfarm:%s %s  [%d nodes]",ns.name,text1,ns.nodes.size());
+    ::snprintf(txt,sizeof(txt),"      Benchmark display of subfarm:%s %s  [%d nodes]",ns.name,text1,ns.nodes.size());
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
     ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
-    ::sprintf(txt,"      <CTRL-H for Help>, <CTRL-E to exit>");
+    ::snprintf(txt,sizeof(txt),"      <CTRL-H for Help>, <CTRL-E to exit>");
     ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
     ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 
-    size_t len = ::sprintf(txt,"%-11s","Buffer/Task");
+    size_t len = ::snprintf(txt,sizeof(txt),"%-11s","Buffer/Task");
     len += ::sprintf(txt+len," %23s "," --- Events/MEPRx ---");
     len += ::sprintf(txt+len," %23s "," - Events/GauchoJob -");
     len += ::sprintf(txt+len," %23s "," ---- Send/DiskWR ---");
     len += ::sprintf(txt+len," %23s "," ---- OverflowWR ----");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-    len = ::sprintf(txt,"%-10s ","");
+    len = ::snprintf(txt,sizeof(txt),"%-10s ","");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","Events","Mean","Sigma");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","Events","Mean","Sigma");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","Events","Mean","Sigma");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","Events","Mean","Sigma");
     ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-    len = ::sprintf(txt,"%-10s ","Node name");
+    len = ::snprintf(txt,sizeof(txt),"%-10s ","Node name");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","","[ms]","[ms]");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","","[ms]","[ms]");
     len += ::sprintf(txt+len,"   %8s %5s %6s ","","[ms]","[ms]");
@@ -421,30 +423,30 @@ int BenchmarkDisplay::updateFarm(const Nodeset& ns) {
   m_last = ::time(0);
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
   ::strftime(text1,sizeof(text1),"%H:%M:%S",::localtime(&t1));
-  ::sprintf(txt,"      Benchmark display of HLT farm of partition:%s %s",m_name.c_str(), text1);
+  ::snprintf(txt,sizeof(txt),"      Benchmark display of HLT farm of partition:%s %s",m_name.c_str(), text1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,txt,BOLD,++line,3,1);
-  ::sprintf(txt,"      <CTRL-H for Help>, <CTRL-E to exit>");
+  ::snprintf(txt,sizeof(txt),"      <CTRL-H for Help>, <CTRL-E to exit>");
   ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 
-  size_t len = ::sprintf(txt,"%-11s","");
-  len += ::sprintf(txt+len," %23s "," -- Events/MEPRx ----");
-  len += ::sprintf(txt+len," %23s "," - Events/GauchoJob -");
-  len += ::sprintf(txt+len," %23s "," ---- Send/DiskWR ---");
-  len += ::sprintf(txt+len," %23s "," ---- OverflowWR ----");
+  size_t len = ::snprintf(txt,sizeof(txt),"%-11s","");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %23s "," -- Events/MEPRx ----");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %23s "," - Events/GauchoJob -");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %23s "," ---- Send/DiskWR ---");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %23s "," ---- OverflowWR ----");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-  len = ::sprintf(txt,"%-10s ","Subfarm");
-  len += ::sprintf(txt+len," %10s %5s %6s ","Events","Mean","Sigma");
-  len += ::sprintf(txt+len," %10s %5s %6s ","Events","Mean","Sigma");
-  len += ::sprintf(txt+len," %10s %5s %6s ","Events","Mean","Sigma");
-  len += ::sprintf(txt+len," %10s %5s %6s ","Events","Mean","Sigma");
+  len = ::snprintf(txt,sizeof(txt),"%-10s ","Subfarm");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","Events","Mean","Sigma");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","Events","Mean","Sigma");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","Events","Mean","Sigma");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","Events","Mean","Sigma");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
-  len = ::sprintf(txt,"%-10s ","Name");
-  len += ::sprintf(txt+len," %10s %5s %6s ","","[ms]","[ms]");
-  len += ::sprintf(txt+len," %10s %5s %6s ","","[ms]","[ms]");
-  len += ::sprintf(txt+len," %10s %5s %6s ","","[ms]","[ms]");
-  len += ::sprintf(txt+len," %10s %5s %6s ","","[ms]","[ms]");
+  len = ::snprintf(txt,sizeof(txt),"%-10s ","Name");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","","[ms]","[ms]");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","","[ms]","[ms]");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","","[ms]","[ms]");
+  len += ::snprintf(txt+len,sizeof(txt)-len," %10s %5s %6s ","","[ms]","[ms]");
   ::scrc_put_chars(m_display,txt,MAGENTA,++line,3,1);
   ::scrc_put_chars(m_display,"",NORMAL,++line,3,1);
 

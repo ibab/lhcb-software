@@ -691,6 +691,11 @@ namespace MBMDump  {
     char* fileName()  {  return m_fileName;  }
     /// Virtual overload to handle menu interaction(s)
     void handleMenu(int cmd_id);
+  private:
+    /// Private copy constructor
+    FileMenu(const FileMenu&) : BaseMenu() {}
+    /// Private assignment operator
+    FileMenu& operator=(const FileMenu&) { return *this; }
   };
 
   class FileMainMenu : public BaseMenu, virtual public EventInput  {
@@ -738,6 +743,11 @@ namespace MBMDump  {
     virtual int getEvent(struct DataBlock *event);
     /// On accept new file name
     void acceptFile(const char* fnam);
+  private:
+    /// Private copy constructor
+    FileMainMenu(const FileMainMenu&) : BaseMenu() {}
+    /// Private assignment operator
+    FileMainMenu& operator=(const FileMainMenu&) { return *this; }
   };
 
   struct Constants {

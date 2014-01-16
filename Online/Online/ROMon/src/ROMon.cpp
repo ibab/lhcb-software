@@ -101,14 +101,16 @@ FSMTask::FSMTask(const FSMTask& copy) {
 }
 
 FSMTask& FSMTask::operator=(const FSMTask& copy) {
-  strncpy(name,copy.name,sizeof(name));
-  name[sizeof(name)-1]=0;
-  processID   = copy.processID;
-  state       = copy.state;
-  targetState = copy.targetState;
-  metaState   = copy.metaState;
-  lastCmd     = copy.lastCmd;
-  doneCmd     = copy.doneCmd;
+  if ( this != &copy )  {
+    ::strncpy(name,copy.name,sizeof(name));
+    name[sizeof(name)-1]=0;
+    processID   = copy.processID;
+    state       = copy.state;
+    targetState = copy.targetState;
+    metaState   = copy.metaState;
+    lastCmd     = copy.lastCmd;
+    doneCmd     = copy.doneCmd;
+  }
   return *this;
 }
 //==============================================================================

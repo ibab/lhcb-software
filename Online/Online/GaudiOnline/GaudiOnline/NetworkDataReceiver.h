@@ -63,13 +63,15 @@ namespace LHCb  {
       RecvEntry(NetworkDataReceiver* h, const std::string& n, const std::string& s, long id)
       : name(n), service(s), identifier(id), handler(h), buffer(0), size(0) {}
       RecvEntry& operator=(const RecvEntry& e)  {
-        name = e.name;
-        service = e.service;
-        identifier = e.identifier;
-        handler = e.handler;
-        buffer = e.buffer;
-        size = e.size;
-        return *this;
+	if ( this != &e )  {
+	  name = e.name;
+	  service = e.service;
+	  identifier = e.identifier;
+	  handler = e.handler;
+	  buffer = e.buffer;
+	  size = e.size;
+	}
+	return *this;
       }
     };
     typedef std::vector<RecvEntry>                Receivers;

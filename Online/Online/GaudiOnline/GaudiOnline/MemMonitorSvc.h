@@ -151,6 +151,13 @@ namespace LHCb  {
       Items() {}
       Items(CSTR o) : std::set<Item*>(), owner(o) {}
       Items(const Items& c) : std::set<Item*>(c), owner(c.owner) {}
+      Items& operator=(const Items& c)  {
+	if ( this != &c )   {
+	  this->std::set<Item*>::operator=(c);
+	  owner = c.owner;
+	}
+	return *this;
+      }
     };
     typedef std::map<Client,Items> ClientMap;
     typedef std::pair<ClientMap::iterator,Items::iterator> RegInfo;

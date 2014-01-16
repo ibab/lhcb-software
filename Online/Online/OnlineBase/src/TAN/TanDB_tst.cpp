@@ -29,12 +29,12 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   for ( int i = 0; i < num_task; i++ )  {
     // Insert entry
     TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
-    sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
+    ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d",i);
     db.allocatePort (e);
 
     // Insert alias(s)
     for ( int j = 0; j < i; j++ )  {
-      sprintf(e->_Message()._Name(),"MYTASK_%02d_%02d",i,j);
+      ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d_%02d",i,j);
       db.insertAlias (e);
     }
   }
@@ -77,8 +77,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
     for ( int i = 0; i < num_task; i++ )  {
       // Insert entry
       TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
-      sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
-      strcpy(msg._Name(),e->_Message()._Name());
+      ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d",i);
+      ::snprintf(msg._Name(),sizeof(msg.m_name),e->_Message()._Name());
       NetworkChannel::Port port = db.allocatePort (e);
       NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
@@ -88,8 +88,8 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
 
       // Insert alias(s)
       for ( int j = 0; j < i; j++ )  {
-        sprintf(e->_Message()._Name(),"MYTASK_%02d_%02d",i,j);
-        strcpy(msg._Name(),e->_Message()._Name());
+        ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d_%02d",i,j);
+	::snprintf(msg._Name(),sizeof(msg.m_name),e->_Message()._Name());
         int status = db.insertAlias (e);
         NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
@@ -103,7 +103,7 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
     //      fflush(stdout);
     //      scanf("%c",&buff[0]);
     for ( int i = 0; i < num_task; i++ )    {
-      sprintf(buff,"MYTASK_%02d",i);
+      ::snprintf(buff,sizeof(buff),"MYTASK_%02d",i);
       TANDB_ENTRY* e = db.FindEntry ( buff );
       db.Close( e );
     }

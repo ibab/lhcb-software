@@ -281,14 +281,14 @@ void GaudiTask::stopRunable() {
     cancel();
     if ( eventThread() )  {
       if ( m_handle && i>2 ) {
-	::sprintf(txt,"Kill runable thread to get out of event loop.");
+	::snprintf(txt,sizeof(txt),"Kill runable thread to get out of event loop.");
 	output(MSG::WARNING,txt);
 	::lib_rtl_kill_thread(m_handle,SIGINT);
       }
       ::lib_rtl_sleep(500);
     }
     if ( !eventThread() ) break;
-    ::sprintf(txt,"Retry No. %d to cancel runable thread......",i);
+    ::snprintf(txt,sizeof(txt),"Retry No. %d to cancel runable thread......",i);
     output(MSG::WARNING,txt);
   }
 }

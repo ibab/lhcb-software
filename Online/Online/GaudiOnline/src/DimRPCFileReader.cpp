@@ -154,9 +154,9 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
     info("Error decoding "+in);
     return;
   }
-  char infostring[200];
+  char infostring[1024];
   const Command::Data& c = m_command->data;
-  ::sprintf(infostring,"%s command: parameters: Filename: %s FID: %i", 
+  ::snprintf(infostring,sizeof(infostring),"%s command: parameters: Filename: %s FID: %i", 
 	    c.name.c_str(), c.file.c_str(), c.fileID);
   info(infostring);
   SmartIF<IProperty> prp(m_evtSelector);

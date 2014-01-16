@@ -524,10 +524,10 @@ int TanDataBase::Close (TanDataBase::Entry *ce)   {
 int TanDataBase::Dump( std::ostream& os )  {
   char text[1024];
   const char *func;
-  ::sprintf(text,"NameServer Database entry dump: #Allocated %d With port:%d",
+  ::snprintf(text,sizeof(text),"NameServer Database entry dump: #Allocated %d With port:%d",
     _pData->_allocated,_pData->_ports);
   os << text << std::endl;
-  ::sprintf(text,"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s",
+  ::snprintf(text,sizeof(text),"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s",
     "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   os << text << std::endl;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
@@ -557,7 +557,7 @@ int TanDataBase::Dump( std::ostream& os )  {
             func = "-----";
             break;
         }
-        ::sprintf(text,"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s",
+        ::snprintf(text,sizeof(text),"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s",
           e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
           func, htonl(e.m_msg._Length()), e.m_msg._Name(),
           inet_ntoa(e.m_msg.address()));
@@ -577,7 +577,7 @@ int TanDataBase::Dump( std::ostream& os )  {
             case TanMessage::DUMP:           func = "DUMPDB";      break;
             default:                         func = "-----";       break;
           }
-          ::sprintf(text,"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s",
+          ::snprintf(text,sizeof(text),"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s",
             ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
             func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
           os << text << std::endl;

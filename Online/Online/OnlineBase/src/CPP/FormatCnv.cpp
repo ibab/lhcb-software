@@ -194,13 +194,15 @@ void DataStructure::Dump( )    {
 
 //------------------------------------------------------------------------------
 DataStructure& DataStructure::operator = ( const DataStructure& f )   {
-  if( f.curr_size > alloc_size )  {
-    delete array;
-    array = new DataElem[ f.alloc_size ];
-    alloc_size = f.alloc_size;
+  if ( this != &f )  {
+    if( f.curr_size > alloc_size )  {
+      delete array;
+      array = new DataElem[ f.alloc_size ];
+      alloc_size = f.alloc_size;
+    }
+    curr_size = f.curr_size;
+    for(int i = 0; i < curr_size; i++) array[i] = f.array[i];
   }
-  curr_size = f.curr_size;
-  for(int i = 0; i < curr_size; i++) array[i] = f.array[i];
   return *this;
 }
 //------------------------------------------------------------------------------
@@ -229,15 +231,15 @@ DataStructure& DataStructure::operator *= ( int factor )  {
 DataStructure::operator char* ( ) {
   static char* str = 0;
   char f[] = "IAFD";
-
+  size_t len = curr_size*6;
   if( str ) delete str;
-  str = new char[ curr_size*6 ];
+  str = new char[len];
   char* s = str;
-  s += sprintf( s, "(");
+  s += ::snprintf( s, len-(s-str),"(");
   for (int i = 0; i < curr_size; i++ )  {
-    s += sprintf( s, "%d%c,", array[i].length, f[array[i].type]); 
+    s += ::snprintf( s, len-(s-str), "%d%c,", array[i].length, f[array[i].type]); 
   }
-  sprintf( s - 1, ")");
+  ::snprintf( s - 1, len-(s-str), ")");
   return str;
 }
 

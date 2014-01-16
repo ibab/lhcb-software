@@ -163,15 +163,16 @@ DialogMainDisplay::~DialogMainDisplay()
 
 int DialogMainDisplay::print (const string& printer)  {
   char TheFile[132];
-  char *text = new char[width()], *label = new char[width()];
+  size_t w = width();
+  char *text = new char[width()], *label = new char[w];
   FILE *destination = stdout;
   if ( !printer.empty() ) {
-    sprintf(TheFile,"display_prt_%X.txt",lib_rtl_pid());
-    destination = fopen(TheFile,"w");
+    ::snprintf(TheFile,sizeof(TheFile),"display_prt_%X.txt",lib_rtl_pid());
+    destination = ::fopen(TheFile,"w");
     if ( destination == 0 ) destination = stdout;
   }
   for(size_t line = 0; line <= height()+1; line++) {
-    memset(text,' ',width());
+    ::memset(text,' ',width());
     for(Children::iterator i=children().begin(); i!=children().end(); ++i)  {
       DialogSubDisplay& child((DialogSubDisplay&)**i);
       int bord = child.label().Border();
@@ -180,39 +181,40 @@ int DialogMainDisplay::print (const string& printer)  {
       size_t high = child.height();
       size_t wid  = child.width();
       const string& l = child.label();
-      strcpy(label,l.c_str());
+      ::strncpy(label,l.c_str(),w);
+      label[w-1] = 0;
       if ( bord & DISPLAY_BORDER_LINE ) {
         wid -= 2;
         ypos--;
         high++;
         if ( line == ypos || line == ypos+high )  {
           if ( bord & DISPLAY_BORDER_LINE ) {
-            memset(&text[xpos], '-', wid);
+            ::memset(&text[xpos], '-', wid);
             text[xpos-1] = text[xpos+wid] = '+';
           }
           if ( bord & DISPLAY_BOTTOM_BORDER && line == ypos+high )
-            memcpy(&text[xpos],label,min(strlen(label),wid+1));
+            ::memcpy(&text[xpos],label,min(strlen(label),wid+1));
           else if ( bord & DISPLAY_TOP_BORDER && line == ypos )
-            memcpy(&text[xpos],label,min(strlen(label),wid+1));
+            ::memcpy(&text[xpos],label,min(strlen(label),wid+1));
         }
         else if ( line > ypos && line <= ypos + high )  {
           const string& s = child.buffer(line-ypos-1);
-          memcpy(&text[xpos-1],s.c_str(),wid+1);
+          ::memcpy(&text[xpos-1],s.c_str(),wid+1);
           text[xpos-1] = text[xpos+wid] = '|';
         }
       }
       else if ( line >= ypos && line < ypos + high ) {
         const string& s = child.buffer(line-ypos);
-        memcpy(&text[xpos-1],s.c_str(),wid);
+        ::memcpy(&text[xpos-1],s.c_str(),wid);
       }
     }
     text[width()] = 0;
-    fputs(text,destination);
-    fputs("\n",destination);
+    ::fputs(text,destination);
+    ::fputs("\n",destination);
   }
   if ( destination != stdout ) {
     string ThePrinterQueue(printer.empty() ? "LWACR$TEXT_132" : printer);
-    fclose(destination);
+    ::fclose(destination);
     if ( !ThePrinterQueue.empty() ) {
       //int status = utl_print_file ( TheFile, ThePrinterQueue );
     }

@@ -60,7 +60,7 @@ extern "C" int amsc_bounce(int argc, char **argv)  {
   ::printf (" Starting ams test task (%s) %s for %d turns\n",
 	    (fanout) ? "Sender" : "Reader", amsname.c_str(),loop);
   if (fanout)  {
-    ::strcpy(source,target.c_str());
+    ::snprintf(source,sizeof(source),target.c_str());
     ::printf(" task %s: size %d\n",source,length);
   }
   int ams_status = amsc_init (amsname.c_str());
