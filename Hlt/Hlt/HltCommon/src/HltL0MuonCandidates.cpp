@@ -4,7 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include <algorithm>
-#include "boost/foreach.hpp"
 #include "Event/L0DUBase.h"
 #include "Event/L0DUReport.h"
 #include "Event/L0MuonCandidate.h"
@@ -33,9 +32,9 @@ HltL0MuonCandidates::HltL0MuonCandidates( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator, false )
   , m_selection(*this)
-  , m_maker(0)
-  , m_pt(0)
-  , m_ptMax(0)
+  , m_maker(nullptr)
+  , m_pt(nullptr)
+  , m_ptMax(nullptr)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("L0Channel", m_l0Channel );
@@ -43,7 +42,7 @@ HltL0MuonCandidates::HltL0MuonCandidates( const std::string& name,
   setProperty("HistoDescriptor","{ 'Pt'    : ('Pt',   0.,6000.,100)"
                                 ", 'PtMax' : ('PtMax',0.,6000.,100)"
                                 "}");
-  m_selection.declareProperties( boost::assign::map_list_of( 1,std::string("TES:")+L0MuonCandidateLocation::Default) );
+  m_selection.declareProperties( std::map<int,std::string>{ { 1, std::string{"TES:"}+L0MuonCandidateLocation::Default } } );
 }
 //=============================================================================
 // Destructor
@@ -76,17 +75,14 @@ StatusCode HltL0MuonCandidates::initialize() {
 
 std::vector<int>
 HltL0MuonCandidates::generateCutList(const LHCb::L0DUChannel& channel) {
-  const LHCb::L0DUElementaryCondition::Map& conditions = channel.elementaryConditions();
-  typedef std::vector<std::string> map_t;
-  static map_t map = boost::assign::list_of(std::string( "Muon1(Pt)"))
-                                           (std::string("DiMuon(Pt)"));
+  static const std::vector<std::string> map{ "Muont1(Pt)", "DiMuon(Pt)" };
+
+  const auto& conditions = channel.elementaryConditions();
   std::vector<int> cuts;
-  for (LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
-       condition!=conditions.end(); ++condition) {
-         std::string data = condition->second->data()->name();
-         for (map_t::const_iterator i = map.begin();i!=map.end();++i ) {
-            if (data!=*i) continue;
-            cuts.push_back( condition->second->threshold() );
+  for (const auto& condition : conditions ) {
+         const auto& data = condition.second->data()->name();
+         for (const auto& i : map ) {
+            if (i==data) cuts.push_back( condition.second->threshold() );
          }
   }
   return cuts;
@@ -100,8 +96,8 @@ StatusCode HltL0MuonCandidates::execute() {
   if (m_l0Channel!="AllMuon") {
       //@TODO: only update cuts on L0 TCK change...
       LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
-      const LHCb::L0DUChannel::Map& channels = l0->configuration()->channels();
-      LHCb::L0DUChannel::Map::const_iterator channel  = channels.find(m_l0Channel);
+      const auto& channels = l0->configuration()->channels();
+      auto channel  = channels.find(m_l0Channel);
       if (channel == channels.end()) {
                 error() << "could not find requested l0 channel " << m_l0Channel<< endmsg;
                 return StatusCode::FAILURE;
@@ -122,7 +118,7 @@ StatusCode HltL0MuonCandidates::execute() {
 
 
   double ptMax = -1.;
-  BOOST_FOREACH(const L0MuonCandidate* l0muon, *m_selection.input<1>()) {
+  for (auto l0muon: *m_selection.input<1>()) {
     bool pass = ( cuts.empty() || ( (l0muon->encodedPt()&0x7F) > cuts[0] ) ); // encodedPt is signed 
     if (!pass)  continue;
 
@@ -133,7 +129,7 @@ StatusCode HltL0MuonCandidates::execute() {
     }
     fill(m_pt,l0muon->pt(),1.);
     if (l0muon->pt()>ptMax) ptMax = l0muon->pt();
-    std::auto_ptr<Track> track( new Track() );
+    std::unique_ptr<Track> track( new Track() );
     StatusCode sc = m_maker->makeTrack(*l0muon,*track);
     if (sc.isFailure()) return sc;
     //TODO: pushes both into IHltDataSvc and into TES (muons)
@@ -167,18 +163,16 @@ namespace {
 //=============================================================================
 bool HltL0MuonCandidates::checkClone(const L0MuonCandidate* muon)
 {
-  MuonTileID tileM1 = muon->muonTileIDs(0).front();
-  MuonTileID tileM2 = muon->muonTileIDs(1).front();
+  auto tileM1 = muon->muonTileIDs(0).front();
+  auto tileM2 = muon->muonTileIDs(1).front();
 
-  BOOST_FOREACH(const Track* t, *m_selection.output() ) {
-    const std::vector< LHCb::LHCbID >& ids= t->lhcbIDs();
+  for (auto t: *m_selection.output()) {
+    const auto& ids= t->lhcbIDs();
 
-    std::vector<LHCb::LHCbID>::const_iterator oldTileM1 = 
-        std::find_if( ids.begin(), ids.end(), isInMuonStation(0));
+    auto oldTileM1 = std::find_if( ids.begin(), ids.end(), isInMuonStation(0));
     if (oldTileM1 == ids.end() || !(*oldTileM1 == tileM1) ) continue; // not found, or no match...
 
-    std::vector<LHCb::LHCbID>::const_iterator oldTileM2 =
-        std::find_if( ids.begin(), ids.end(), isInMuonStation(1));
+    auto oldTileM2 = std::find_if( ids.begin(), ids.end(), isInMuonStation(1));
     if (oldTileM2 != ids.end() &&   *oldTileM2 == tileM2 ) return true; // found, and match...
   }
   return false;

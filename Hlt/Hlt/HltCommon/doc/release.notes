@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-01-16 - Gerhard Raven
+ - use some C++11 goodies
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
