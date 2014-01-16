@@ -31,10 +31,6 @@ defaultConfig = {
       'KpiVXCHI2NDOF'      : 9.0           # dimensionless
     , 'MuonPID'            : -3.0          # dimensionless
     , 'DimuonUPPERMASS'    : 7100.0        # MeV
-    , 'InclDimuLOWERMASS'  : 3870.0        # MeV
-    , 'InclDimuUPPERMASS'  : 5400.0        # MeV
-    , 'InclDiMuCORRM_MIN'  : 0.0           # MeV
-    , 'InclDiMuCORRM_MAX'  : 15000.0       # MeV
     , 'Pi0MINPT'           : 800.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
@@ -84,12 +80,15 @@ defaultConfig = {
     'Dimu_Dau_MaxIPCHI2'  :   9.0,
 
     # Incl (dimu) cuts
-    'InclDimu_FlightChi2'     : 100.0,
-    'InclDimu_Dau_MaxIPCHI2'  :   9.0,
-    'InclDiMu_VertexCHI2'     :   6.0,
-    'InclDiMu_DIRA'           : -0.95,
-    'InclDiMu_CCbarPrescale'  :   0.1,
-      
+    'InclDimu_FlightChi2'     :   100.0,
+    'InclDimu_Dau_MaxIPCHI2'  :     9.0,
+    'InclDiMu_VertexCHI2'     :     6.0,
+    'InclDiMu_DIRA'           :   -0.90,
+    'InclDiMu_CCbarPrescale'  :    0.07,
+    'InclDimuLOWERMASS'       :  3870.0, # MeV
+    'InclDimuUPPERMASS'       :  5800.0, # MeV
+    'InclDiMuCORRM_MIN'       :     0.0, # MeV
+    'InclDiMuCORRM_MAX'       : 15000.0, # MeV
     # Track cuts
     'Track_CHI2nDOF'      :    5.0,
     'Track_GhostProb'     :    0.4,  
@@ -298,9 +297,10 @@ class B2XMuMuConf(LineBuilder) :
         #self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
 
         self.Dimuon = self.__Dimuon__(config)
-        self.InclDimuHighQ2 = self.__InclDimuHighQ2__(config,doWS=True)
+        self.InclDimuHighQ2 = self.__InclDimuHighQ2__(config,doWS=True,
+                                                      doCCbar=False)
         self.InclDimuCCbar = self.__InclDimuHighQ2__(config,doWS=False,
-                                                           doCCbar=True)        
+                                                     doCCbar=True)        
         self.Protons = self.__Protons__(config)
         self.Kaons = self.__Kaons__(config)
         self.Pions = self.__Pions__(config)       

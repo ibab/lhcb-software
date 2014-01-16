@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-16 - Konstantinos A. Petridis
+ - Tidying up dictionary of B2XMuMu relating to inclusive Xmumu lines
+
 ! 2014-01-16 - Mat Charles
  - Patches to StrippingXibStarToXibZero.py (added two new modes suggested by Anton)
 
