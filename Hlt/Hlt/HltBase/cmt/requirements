@@ -67,3 +67,4 @@ private
   use $(LHCbAlgs_use)
 end_private
 
+macro genreflex_cmd "$(HOME)/MOORE/Hlt_v21r0/InstallArea/x86_64-slc6-gcc48-opt/scripts/genreflex"

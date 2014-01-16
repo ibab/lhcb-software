@@ -71,7 +71,6 @@ StatusCode HltAlgorithm::sysInitialize() {
 }
 
 StatusCode HltAlgorithm::sysFinalize() {
-  BOOST_FOREACH( CallBack* i, m_callbacks ) delete i ; 
   m_callbacks.clear();
   return HltBaseAlg::sysFinalize();
 }
@@ -108,7 +107,7 @@ StatusCode HltAlgorithm::sysExecute() {
 }
 
 StatusCode HltAlgorithm::beginExecute() {
-  if ( m_outputSelection == 0 ) {
+  if ( !m_outputSelection ) {
       error() << " no output selection !!" << endmsg;
       return StatusCode::FAILURE;
   }
@@ -116,7 +115,7 @@ StatusCode HltAlgorithm::beginExecute() {
   setFilterPassed(false);
 
   // we always process callbacks first...
-  BOOST_FOREACH( CallBack* i, m_callbacks ) { 
+  for( auto& i: m_callbacks ) { 
     StatusCode status = i->execute();
     if (!status) {
 
@@ -135,16 +134,15 @@ StatusCode HltAlgorithm::beginExecute() {
 
 StatusCode HltAlgorithm::endExecute() {
   //TODO: add flushbacks here...
-  size_t n = m_outputSelection->size();
+  auto n = m_outputSelection->size();
   counter("#candidates accepted") += n ; 
   // for non-counting triggers, this must be done explicity by hand!!!
   if (n>=m_minNCandidates) m_outputSelection->setDecision(true); 
   setDecision( m_outputSelection->decision() );
 
   if (produceHistos()) {
-      for (IMap::const_iterator it = m_in.begin();
-           it != m_in.end(); ++it) {
-        fill(m_inputHistos[it->second->id()],it->second->size(),1.);
+      for (const auto&  i : m_in) {
+        fill(m_inputHistos[i.second->id()],i.second->size(),1.);
       }
       fill(m_outputHisto,m_outputSelection->size(),1.);
   }
@@ -161,16 +159,16 @@ bool HltAlgorithm::verifyInput()
 {
   if (!m_requireInputsToBeValid) return true;
   bool ok = true;
-  for (IMap::const_iterator i = m_in.begin(); i!= m_in.end();++i) {
+  for (auto& i : m_in) {
     // propagate error status!
-    if (i->second->error()) m_outputSelection->setError(true);
-    ok = ok &&  i->second->decision() ;
+    if (i.second->error()) m_outputSelection->setError(true);
+    ok = ok &&  i.second->decision() ;
     if (msgLevel(MSG::DEBUG)) 
-      debug() << " input " << i->second->id()
-              << " decision " << i->second->decision() 
-              << " process status " << i->second->processed() 
-              << " error status " << i->second->error() 
-              << " candidates " << i->second->size() << endmsg;
+      debug() << " input " << i.second->id()
+              << " decision " << i.second->decision() 
+              << " process status " << i.second->processed() 
+              << " error status " << i.second->error() 
+              << " candidates " << i.second->size() << endmsg;
   }
 
   if (!ok) {
@@ -180,12 +178,12 @@ bool HltAlgorithm::verifyInput()
     warning() << endmsg;
     warning() << " Empty input or false input selection!" << endmsg;
     warning() << " Most likely due to a misconfiguration" << endmsg;
-    for (IMap::const_iterator i = m_in.begin() ; i!=m_in.end(); ++i ) {
-      warning() << " input selection " << i->second->id()
-                << " decision " << i->second->decision()
-                << " processed " << i->second->processed()
-                << " error " << i->second->error()
-                << " candidates " << i->second->size() << endmsg;      
+    for (const auto& i : m_in) {
+      warning() << " input selection " << i.second->id()
+                << " decision " << i.second->decision()
+                << " processed " << i.second->processed()
+                << " error " << i.second->error()
+                << " candidates " << i.second->size() << endmsg;      
     }
     warning() << endmsg;
     warning() << endmsg;
@@ -264,9 +262,7 @@ StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel) const{
     }
     m_outputSelection = sel;
     std::vector<const Hlt::Selection*> sels;
-    for (IMap::const_iterator i=m_in.begin();i!=m_in.end();++i) {
-          sels.push_back(i->second);
-    }
+    for (const auto& i : m_in ) sels.push_back(i.second);
     sel->addInputSelectionIDs( sels.begin(), sels.end() );
     if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endmsg;
     if (regSvc()->registerOutput(sel,this).isFailure()) {
@@ -284,17 +280,13 @@ StatusCode HltAlgorithm::registerTESInput(const Gaudi::StringKey& key, const Hlt
 }
 StatusCode HltAlgorithm::registerTESInput(const Gaudi::StringKey& key) const 
 {
-
-  StatusCode sc = regSvc()->registerTESInput(key,this);
+  auto sc = regSvc()->registerTESInput(key,this);
   if ( sc.isFailure() ) 
   { return Error ( "Unable to register INPUT TES location '" + 
                    key.str() + "'" , sc ) ; }
 
-  LVct::const_iterator ifind = 
-    std::find ( m_tes.begin() , m_tes.end() , key ) ;
-  if ( m_tes.end () != ifind ) { return StatusCode::SUCCESS ;}        // RETURN 
-  //
-  m_tes.push_back ( key ) ;
+  auto ifind = std::find ( m_tes.begin() , m_tes.end() , key ) ;
+  if ( m_tes.end () == ifind ) m_tes.push_back ( key ) ;
   return StatusCode::SUCCESS ;
 }
 
@@ -304,8 +296,7 @@ HltAlgorithm::tes
   const Hlt::IUnit::Key&       location   ) const 
 {
   // check the location
-  LVct::const_iterator ifind = std::find
-    ( m_tes.begin() , m_tes.end  () , location ) ;
+  auto ifind = std::find( m_tes.begin() , m_tes.end  () , location ) ;
   //
   Assert ( m_tes.end() != ifind , 
            "tes: anuthorized access to TES -data" ) ;

@@ -3,6 +3,7 @@
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
+#include <memory>
 #include "HltBase/IHltUnit.h"
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
@@ -14,8 +15,6 @@
 #include "boost/mpl/if.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/casts.hpp"
-
-
 
 /** @class HltAlgorithm 
  *  
@@ -69,7 +68,7 @@ public:
         const Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
                                   this->registerTESSelection<T>(Gaudi::StringKey(key.str().substr(4))) :
                                   selection(key)->template down_cast<T>();
-        if (sel==0) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
+        if (!sel) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
         return *sel;
   }
 
@@ -109,14 +108,15 @@ private:
   template <typename T> 
   const Hlt::TSelection<T>* registerTESSelection(const Gaudi::StringKey& key) {
        // must ALWAYS add a callback to our stack for this 
-       StatusCode sc = registerTESInput(key);
+       auto sc = registerTESInput(key);
        if (sc.isFailure()) {
             throw GaudiException("Failed to register TES Selection",key.str(),StatusCode::FAILURE);
        }
        typedef HltAlgorithm::TESSelectionCallBack<Hlt::TSelection<T> > cb_t;
-       cb_t *cb = new cb_t(key,*this);
-       m_callbacks.push_back( cb );
-       return cb->selection();
+       std::unique_ptr<cb_t> cb{  new cb_t{ key, *this } };
+       auto ret = cb->selection();
+       m_callbacks.emplace_back( std::move(cb) );
+       return ret;
   }
 
   // must inputs be valid?
@@ -161,34 +161,34 @@ private:
     virtual StatusCode execute()  = 0;
   };
 
-
-
-
   template<typename T>
   class TESSelectionCallBack : boost::noncopyable, public CallBack {
-          
+      std::unique_ptr<T>  m_selection;
+      GaudiAlgorithm& m_parent;
   public:
-      TESSelectionCallBack(const Gaudi::StringKey& key,GaudiAlgorithm &parent) 
-       : m_selection(new T(key)),m_parent(parent) 
+      TESSelectionCallBack(Gaudi::StringKey&& key,GaudiAlgorithm &parent) 
+       : m_selection{new T{std::move(key)}}
+       , m_parent{parent} 
       { }
-      ~TESSelectionCallBack() { delete m_selection; }
-      const T *selection() const { return m_selection; }
+      TESSelectionCallBack(const Gaudi::StringKey& key,GaudiAlgorithm &parent) 
+       : m_selection{new T{key}}
+       , m_parent(parent) 
+      { }
+
+      ~TESSelectionCallBack() { }
+      const T *selection() const { return m_selection.get(); }
 
       StatusCode execute() {
         m_selection->clean(); //TODO: check if/why this is needed??
-        typedef typename T::candidate_type::Range range_type;
-        //range_type obj =  m_parent.get<range_type>( m_parent.evtSvc(), m_selection->id().str() );
-        //m_selection->insert( m_selection->end(), obj.begin(), obj.end() );
-        m_parent.get<range_type>( m_parent.evtSvc(), m_selection->id().str() ) >> *m_selection;
+        m_parent.get<typename T::candidate_type::Range>( m_parent.evtSvc()
+                                                       , m_selection->id().str() )
+            >> *m_selection;
         m_selection->setDecision( !m_selection->empty() ); // force it processed...
         return StatusCode::SUCCESS;
       }
-  private:
-      T*  m_selection;
-      GaudiAlgorithm& m_parent;
   };
 
-  std::vector<CallBack*> m_callbacks;
+  std::vector<std::unique_ptr<CallBack>> m_callbacks;
 
 };
 

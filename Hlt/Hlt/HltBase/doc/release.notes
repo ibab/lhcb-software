@@ -4,6 +4,11 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-01-16 - Gerhard Raven
+ - HltStage: make C++11 constructions invisible to gccxml
+ - misc. C++11 changes (add move constructors, use nullptr, range-based for
+   loops... )
+
 ! 2014-01-15 - Gerhard Raven
  - HltStage: avoid double lookups in Cache when retrieving an item
    (note: requires C++11, as I'm being lazy and used auto)

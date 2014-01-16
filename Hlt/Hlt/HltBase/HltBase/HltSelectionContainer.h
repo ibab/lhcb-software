@@ -1,7 +1,6 @@
 // $Id: HltSelectionContainer.h,v 1.7 2009-12-24 14:13:19 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
-#include <vector>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "HltBase/HltSelection.h"
@@ -12,8 +11,10 @@
 #include "boost/utility.hpp"
 #include "boost/tuple/tuple.hpp"
 #include "boost/static_assert.hpp"
-#include "boost/assign/list_of.hpp"
+// #include "boost/assign/list_of.hpp"
+#include <vector>
 #include <utility>
+#include <memory>
 #include <cassert>
 #include <map>
 //
@@ -50,7 +51,7 @@ namespace Hlt {
                 typedef Candidate                  candidate_type;
                 selection_type*                    selection;
                 Gaudi::StringKey                   property;
-                data_() : selection(0) {}
+                data_() : selection(nullptr) {}
         };
 
         template <typename Candidate> struct cdata_ {
@@ -58,7 +59,7 @@ namespace Hlt {
                 typedef Candidate                        candidate_type;
                 selection_type*                          selection;
                 Gaudi::StringKey                         property;
-                cdata_() : selection(0) {}
+                cdata_() : selection(nullptr) {}
         };
 
         
@@ -67,7 +68,7 @@ namespace Hlt {
         public:
             retrieve_(HltAlgorithm &owner) : m_owner(owner) {}
             template <typename U> void operator()(U& u) {
-                if(u.selection!=0) { 
+                if(u.selection) { 
                      throw GaudiException( m_owner.name()+"::retrieve_ selection already present..","",StatusCode::FAILURE);
                 }
                 u.selection = &m_owner.retrieveTSelection<typename U::candidate_type>(u.property);
@@ -77,22 +78,23 @@ namespace Hlt {
         };
         
         /// zero
-        struct zero_ { template <typename U> void operator()(U& u) { u.selection = 0; } };
+        struct zero_ { template <typename U> void operator()(U& u) { u.selection = nullptr; } };
         //
         /// declare property -- this fixes the naming convention for properties!
         template <unsigned N>
         class declare_ {
         public:
-            declare_(HltAlgorithm &alg, std::map<int,std::string> defaults) : m_alg(alg), m_counter(0),m_defs(defaults) {}
+            declare_(HltAlgorithm &alg, std::map<int,std::string>&& defaults) : m_alg(alg), m_counter(0u),m_defs(std::move(defaults)) {}
+            // declare_(HltAlgorithm &alg, const std::map<int,std::string>& defaults) : m_alg(alg), m_counter(0u),m_defs(defaults) {}
             template <typename U> void operator()(U& t) {
                 std::string def = m_defs[m_counter];
                 if (m_counter==0) {
                     t.property = Gaudi::StringKey( def.empty() ? m_alg.name() : def ); // set default output name...
                     m_alg.declareProperty( "OutputSelection",t.property );
                 } else {
-                    std::string prop( "InputSelection" );
+                    std::string prop{ "InputSelection" };
                     if (N>2) prop += boost::lexical_cast<std::string>(m_counter);
-                    if (!def.empty()) t.property= Gaudi::StringKey(def); // set default input name...
+                    if (!def.empty()) t.property = Gaudi::StringKey(def); // set default input name...
                     m_alg.declareProperty( prop,
                                            t.property ); //TODO: add callback, locked as soon as corresponding TSelection* is non-zero...
                                                          //TODO: add help entry
@@ -120,12 +122,12 @@ namespace Hlt {
         public:
             typedef std::map<int,std::string> map_t;
             void declareProperties( map_t defaults = map_t() ){
-                declare_<boost::tuples::length<T>::value> x(m_owner,defaults); for_each_selection(m_data,x); 
+                declare_<boost::tuples::length<T>::value> x(m_owner,std::move(defaults)); for_each_selection(m_data,x); 
             }
             // could move to postInitialize hook
             void registerSelection() {
                 typename helper_<0>::data_type& d = boost::get<0>(m_data);
-                if (d.selection!=0) {
+                if (d.selection) {
                     throw GaudiException( m_owner.name()+"::registerSelection selection already present..","",StatusCode::FAILURE);
                 }
                 d.selection = &m_owner.registerTSelection<typename helper_<0>::candidate_type>(d.property);
@@ -205,12 +207,10 @@ namespace Hlt {
         SelectionContainer1(HltAlgorithm& owner) : detail::SelectionContainer_<boost::tuple< detail::data_<T1> > > (owner) {}
     };
 
-
-
     // 0 is a special case of 1 ;-): no input, one output, but output has no explicit candidates...
     class SelectionContainer0 : boost::noncopyable {
     public:
-        SelectionContainer0(HltAlgorithm& owner) : m_output(0), m_owner(owner) {}
+        SelectionContainer0(HltAlgorithm& owner) : m_output(nullptr), m_owner(owner) {}
         void declareProperties() { 
             m_property = Gaudi::StringKey( m_owner.name() ); // set default output name to the instance name of the algorithm
             m_owner.declareProperty("OutputSelection",m_property); 
