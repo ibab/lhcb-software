@@ -147,8 +147,13 @@ namespace Hlt
   inline const bool& Cache::info<bool>(const StringKey& key,
                                        const bool& def) const 
   {
+#ifdef __GCCXML__
+    throw "GCCXML stub -- should never be run!";
+    return def;
+#else 
     auto i = m_boolean_store.find(key);
     return i != m_boolean_store.end() ? i->second : def ;
+#endif
   }
   // ==========================================================================
   // Integer
@@ -174,8 +179,13 @@ namespace Hlt
   inline const int& Cache::info<int>(const StringKey& key,
                                      const int& def) const 
   {
+#ifdef __GCCXML__
+    throw "GCCXML stub -- should never be run!";
+    return def;
+#else 
     auto i = m_integer_store.find(key);
     return i != m_integer_store.end() ? i->second : def ;
+#endif
   }
   // ==========================================================================
   // Double
@@ -199,8 +209,13 @@ namespace Hlt
   inline const double& Cache::info<double>(const StringKey& key,
                                            const double& def)  const 
   {
+#ifdef __GCCXML__
+    throw "GCCXML stub -- should never be run!";
+    return def;
+#else 
     auto i = m_double_store.find(key);
     return i != m_double_store.end() ? i->second : def ;
+#endif
   }
   // ==========================================================================
   // String
@@ -226,8 +241,13 @@ namespace Hlt
   inline const std::string& Cache::info<std::string>(const StringKey& key,
                                                      const std::string& def) const 
   {
+#ifdef __GCCXML__
+    throw "GCCXML stub -- should never be run!";
+    return def;
+#else 
     auto i = m_string_store.find(key);
     return i != m_string_store.end() ? i->second : def ;
+#endif
   }
   // =========================================================================
   inline bool Cache::has(const StringKey& key) const 
