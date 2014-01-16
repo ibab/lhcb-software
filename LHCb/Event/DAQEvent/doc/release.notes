@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-01-16 - Sebastian Neubert
+ - Added HltTrackingReports RawBank type
+
 !========================= DAQEvent v9r13 2013-09-30 =========================
 ! 2013-09-25 - Tim Evans
  - Add VPDigit RawBank to RawBank types 
