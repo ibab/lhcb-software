@@ -237,13 +237,13 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
       node[n] = 0;
     }
     if (proc!= 0)  {
-      ::strncpy (proc, p + 2, 128);
+      ::strcpy (proc, p + 2);
     }
   }
   else if ( 0 != (p=::strchr(name,'@')) )    {
     s = 1;
     if (node != 0)  {                         // INTERNET STYLE
-      ::strncpy (node, p + 1, 64);
+      ::strcpy (node, p + 1);
     }
     if (proc!= 0)   {
       ::strncpy (proc, name, n = p-name);
@@ -251,8 +251,8 @@ void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
     }
   }
   else    {
-    if (node != 0) ::strncpy (node, m_pcHostName, 128);
-    if (proc != 0) ::strncpy (proc, name, 128);
+    if (node != 0) ::strcpy (node, m_pcHostName);
+    if (proc != 0) ::strcpy (proc, name);
   }
   for(char* q=node; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);
   for(char* q=proc; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);
