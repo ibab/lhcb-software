@@ -3,7 +3,7 @@
 # Maintainer : Mathieu Perrin-Terrin
 #============================================================================
 package           IncTopoVert
-version           v1r1p1
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,6 +14,8 @@ branches          cmt doc src IncTopoVert
 # Packages needed to compile and link the application
 #============================================================================
 use GaudiAlg     v*
+use  GaudiConfUtils        v* -no_auto_imports
+use  DaVinciKernel         v* Phys
 use RecEvent     v* Event
 use LHCbMath     v* Kernel
 # These are for the trigger
