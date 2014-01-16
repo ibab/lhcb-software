@@ -4,6 +4,13 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-01-16 - Anton Poluektov 
+ - Added ExtraInfoSelections argument to StrippingLine to specify the top-level 
+   selection(s) for which to store ExtraInfo. 
+   If None (default), use top-level selection of the line. 
+   Otherwise, the list of (Merged)Selections should be provided as in the 
+   case of ExtraInfoDaughters. 
+
 ! 2014-01-14 - Anton Poluektov 
  - Added two more arguments for StrippingLine related to ExtraInfo. 
    These are needed only if one wants to store the ExtraInfo for 

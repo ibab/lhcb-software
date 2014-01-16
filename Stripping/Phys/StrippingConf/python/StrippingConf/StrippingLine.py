@@ -321,6 +321,7 @@ class StrippingLine(object):
                    HDRLocation = None,           # if None, defined by stream name
                    EnableFlavourTagging = False, # If True, run FlavourTaggingTool to store FT info
                    ExtraInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+                   ExtraInfoSelections = None,   # Input selections for ExtraInfo tools. If None, use the top-level selection of the line
                    ExtraInfoDaughters = None,    # Daughter selections for which store ExtraInfo. If None, use only the top selection.
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
@@ -364,6 +365,7 @@ class StrippingLine(object):
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
         self.ExtraInfoTools = ExtraInfoTools
+        self.ExtraInfoSelections = ExtraInfoSelections
         self.ExtraInfoDaughters = ExtraInfoDaughters
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
 
@@ -433,6 +435,18 @@ class StrippingLine(object):
     def isAppended( self ) : 
 	return self._appended
 
+    def selectionsToLocations(self, selList) : 
+	locList = []
+    	for sel in selList : 
+    	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' : 
+        	fullPath = "/Event/" + sel.outputLocation()
+        	locList += [ fullPath ]
+#                print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
+    	    else : 
+        	raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
+        	      (type(sel).__name__, self.name() )
+        return locList
+
     def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) : 
         
         if self._HDRLocation == None : 
@@ -474,19 +488,13 @@ class StrippingLine(object):
 	if self.ExtraInfoTools : 
 	    from Configurables import AddExtraInfo
 	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
-    	    extraInfoAlg.Inputs = [ self.outputLocation() ] 
+	    if self.ExtraInfoSelections : 
+    		extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
+    	    else : 
+    		extraInfoAlg.Inputs = [ self.outputLocation() ]
             if self.ExtraInfoDaughters : 
         	extraInfoAlg.MaxLevel = self.ExtraInfoRecursionLevel
-        	daughtersList = []
-        	for sel in self.ExtraInfoDaughters : 
-        	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' : 
-        		fullPath = "/Event/" + sel.outputLocation()
-        		daughtersList += [ fullPath ]
-                        print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
-        	    else : 
-        		raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
-        		      (type(sel).__name__, self.name() )
-    		extraInfoAlg.DaughterLocations = daughtersList
+    		extraInfoAlg.DaughterLocations = self.selectionsToLocations( self.ExtraInfoDaughters )
             else : 
         	extraInfoAlg.MaxLevel = 0
         	
@@ -498,7 +506,6 @@ class StrippingLine(object):
         	toolName = "Tool%d" % toolNum
         	module = __import__("Configurables", globals(), locals(), [ toolType ] )
         	toolClass = getattr( module, toolType )
-                localName = "ExtraInfo" + self.name() + "." + toolName
         	extraInfoAlg.addTool( toolClass, toolName )
         	toolInstance = getattr( extraInfoAlg, toolName )
         	for property,value in itool.iteritems() : 
