@@ -36,7 +36,7 @@ void MBM::Requirement::parse(const std::string& reqstring)
   for(int i=0; i<ikey; i++ )  {
     char* keyw = ::strtok(items[i],"=");
     if ( !keyw ) break;
-    for (unsigned int j=0;j<::strlen(keyw);j++)  {
+    for (unsigned int j=0;j<strlen(keyw);j++)  {
       keyw[j] = char(::toupper(keyw[j]));
     }
     char* values = ::strtok(NULL,"=");
