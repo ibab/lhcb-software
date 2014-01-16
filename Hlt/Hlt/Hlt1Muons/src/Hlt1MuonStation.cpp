@@ -5,9 +5,6 @@
 // STL
 #include <vector>
 
-// boost
-#include <boost/foreach.hpp>
-
 // Gaudi
 #include <GaudiKernel/Range.h>
 
@@ -33,15 +30,14 @@ using std::vector;
 using std::exception;
 
 //=============================================================================
-Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, const int station,
+Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
                                   const vector< double >& regions )
-   : m_muonDet( det ), m_station( station )
+   : m_muonDet{ det }
+   , m_station{ station }
+   , m_z{ det->getStationZ(station) }
+   , m_nRegionsX{ regions.size() - 1 }
+   , m_nRegionsY{ 7u }
 {
-   m_z = det->getStationZ( station );
-
-   m_nRegionsX = regions.size() - 1;
-   m_nRegionsY = 7;
-
    m_hits.resize( nRegions() );
    m_regions.reserve( nRegions() );
 
@@ -53,8 +49,8 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, const int station,
       for( unsigned int j = 0; j < m_nRegionsY; ++j ) {
          const unsigned int id = ( i - 1 ) * m_nRegionsY + j;
          double ymin = m_ymin + j * m_dy;
-         m_regions.push_back( Hlt1MuonRegion( id, regions[ i - 1], regions[ i ],
-                                              ymin, ymin + m_dy ) );
+         m_regions.emplace_back( id, regions[ i - 1], regions[ i ],
+                                              ymin, ymin + m_dy );
       }
    }
 }
@@ -67,21 +63,19 @@ Hlt1MuonStation::~Hlt1MuonStation()
 } 
 
 //=============================================================================
-Hlt1MuonHitRange Hlt1MuonStation::hits( const double xmin,
-                                        const unsigned int region ) const
+Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin,
+                                        unsigned int region ) const
 {
-   Hlt1MuonHits::const_iterator it = m_hits[ region ].begin(),
-      end = m_hits[ region ].end();
-   for ( ; it != end; ++it ) {
-      const Hlt1MuonHit* hit = *it;
-      double x = hit->x() + hit->dx() / 2.;
-      if ( x > xmin ) break;
-   }
-   return Hlt1MuonHitRange( it, end );
+   auto it = std::find_if( m_hits[region].begin(),m_hits[region].end(),
+                           [=](const Hlt1MuonHit* hit) { 
+                                double x = hit->x() + hit->dx() / 2.;
+                                return  x > xmin;
+                           } );
+   return Hlt1MuonHitRange( it, m_hits[region].end() );
 }
 
 //=============================================================================
-Hlt1MuonHitRange Hlt1MuonStation::hits( const unsigned int region ) const
+Hlt1MuonHitRange Hlt1MuonStation::hits( unsigned int region ) const
 {
    return range( m_hits[ region ] );
 }
@@ -89,10 +83,8 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( const unsigned int region ) const
 //=============================================================================
 void Hlt1MuonStation::clearHits()
 {
-   BOOST_FOREACH( Hlt1MuonHits& hits, m_hits ) {
-      BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
-         delete hit;
-      }
+   for( Hlt1MuonHits& hits: m_hits ) {
+      for( Hlt1MuonHit* hit: hits ) delete hit;
       hits.clear();
    }
 }
@@ -100,25 +92,19 @@ void Hlt1MuonStation::clearHits()
 //=============================================================================
 void Hlt1MuonStation::setHits( const Hlt1MuonHits& hits )
 {
-   BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
-      addHit( hit );
-   }
+   for( Hlt1MuonHit* hit: hits ) addHit( hit );
 }
 
 //=============================================================================
 void Hlt1MuonStation::addHit( Hlt1MuonHit* hit )
 {
-   double x = hit->x();
-   unsigned int xr = 0;
+   int index = int( ( hit->y() - m_ymin ) / m_dy );
    try {
-      xr = xRegion( x );
+      index +=  m_nRegionsY * xRegion( hit->x() );
    } catch ( const exception& ) {
       return;
    }
-   double y = hit->y();
-   int yr = int( ( y - m_ymin ) / m_dy );
-   int index = m_nRegionsY * xr + yr;
-   m_hits[ index ].push_back( hit );
+   m_hits[index].push_back( hit );
 }
 
 //=============================================================================

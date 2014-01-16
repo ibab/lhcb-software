@@ -25,29 +25,20 @@ class Hlt1MuonStation {
 public: 
    
    /// Standard constructor
-   Hlt1MuonStation( DeMuonDetector* det, const int station,
+   Hlt1MuonStation( DeMuonDetector* det, int station,
                     const std::vector< double >& regions ); 
 
    virtual ~Hlt1MuonStation( ); ///< Destructor
 
-   double z() const
-   { 
-      return m_z;
-   }
+   double z() const { return m_z; }
 
-   unsigned int station() const
-   {
-      return m_station;
-   }
+   unsigned int station() const { return m_station; }
 
-   Hlt1MuonHitRange hits( const double xmin, const unsigned int region ) const;
+   Hlt1MuonHitRange hits( double xmin, unsigned int region ) const;
 
-   Hlt1MuonHitRange hits( const unsigned int region ) const;
+   Hlt1MuonHitRange hits( unsigned int region ) const;
 
-   unsigned int nRegions() const
-   {
-      return m_nRegionsX * m_nRegionsY;
-   }
+   unsigned int nRegions() const { return m_nRegionsX * m_nRegionsY; }
    
    const Hlt1MuonRegion& region( const unsigned int id ) const
    {
