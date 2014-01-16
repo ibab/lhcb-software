@@ -18,60 +18,28 @@
 class Hlt1MuonHit {
 
 public:
+   Hlt1MuonHit() = delete;
 
    Hlt1MuonHit( const LHCb::MuonTileID& tile,
-                const double x, const double dx,
-                const double y, const double dy,
-                const double z, const double dz )
-      : m_tile( tile ), m_station( tile.station() ),
-        m_x( x ), m_dx( dx ),
-        m_y( y ), m_dy( dy ),
-        m_z( z ), m_dz( dz )
-   {
-
-   }
+                double x, double dx,
+                double y, double dy,
+                double z, double dz )
+      : m_tile{ tile }, m_station{ tile.station() },
+        m_x{ x }, m_dx{ dx },
+        m_y{ y }, m_dy{ dy },
+        m_z{ z }, m_dz{ dz }
+   { }
 
    virtual ~Hlt1MuonHit() {}
 
-   const LHCb::MuonTileID& tile() const
-   {
-      return m_tile;
-   }
-
-   unsigned int station() const
-   {
-      return m_station;
-   }
-
-   double x() const
-   {
-      return m_x;
-   }
-
-   double dx() const
-   {
-      return m_dx;
-   }
-
-   double y() const
-   {
-      return m_y;
-   }
-
-   double dy() const
-   {
-      return m_dy;
-   }
-
-   double z() const
-   {
-      return m_z;
-   }
-
-   double dz() const
-   {
-      return m_dz;
-   }
+   const LHCb::MuonTileID& tile() const { return m_tile; }
+   unsigned int station() const { return m_station; }
+   double x()  const { return m_x; }
+   double dx() const { return m_dx; }
+   double y()  const { return m_y; }
+   double dy() const { return m_dy; }
+   double z()  const { return m_z; }
+   double dz() const { return m_dz; }
 
    /// operator new
    static void* operator new ( size_t size )
@@ -100,10 +68,6 @@ protected:
    double m_dy;
    double m_z;
    double m_dz;
-
-private:
-   
-   Hlt1MuonHit();
    
 };
 

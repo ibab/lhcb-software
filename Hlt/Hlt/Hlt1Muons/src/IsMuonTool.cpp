@@ -45,7 +45,6 @@ IsMuonTool::IsMuonTool(const string& type,
      m_occupancy( 5, 0 ), m_regionHits( 4 )
 {
    declareInterface< ITracksFromTrack >( this );
-
 }
 
 //=============================================================================
@@ -126,7 +125,7 @@ IsMuonTool::~IsMuonTool()
 
 //=============================================================================
 StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track &track,
-                                       std::vector< LHCb::Track * > &tracks )
+                                        std::vector< LHCb::Track * > &tracks )
 {
    // Clear temporary storage
    m_occupancy.assign( 5, 0 );
@@ -137,25 +136,20 @@ StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track &track,
    extrapolateTrack( track );
 
    // track is in acceptance? Track has minimum momentum?
-   if ( !preSelection( track ) ) {
-      return StatusCode::SUCCESS;
-   }
+   if ( !preSelection( track ) ) return StatusCode::SUCCESS;
 
    // find the coordinates in the fields of interest
    findHits( track );
 
-   if ( !isMuon( track.p() ) ) {
-      return StatusCode::SUCCESS;
-   } else {
+   if ( isMuon( track.p() ) ) {
       // Add found hits to track
       LHCb::Track* output = track.clone();
       tracks.push_back( output  );
-      BOOST_FOREACH( const Hlt1MuonHit* hit, m_hits ) {
-         LHCb::LHCbID id( hit->tile() );
-         output->addToLhcbIDs( id );
+      for( const Hlt1MuonHit* hit: m_hits ) {
+         output->addToLhcbIDs( LHCb::LHCbID{ hit->tile() } );
       }
-      return StatusCode::SUCCESS;
    }
+   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -214,32 +208,24 @@ void IsMuonTool::findHits( const LHCb::Track& track )
 
    // Start from 1 because M1 does not matter for IsMuon
    for ( unsigned int s = 1 ; s < m_nStations; ++s ) {
-      const Hlt1MuonStation& station = m_hitManager->station( s );
+      const auto& station = m_hitManager->station( s );
 
-      BOOST_FOREACH( Hlt1ConstMuonHits& hits, m_regionHits ) {
-         hits.clear();
-      }
+      //TODO/FIXME:  why is m_regionHits not a local variable??
+      for( auto& hits: m_regionHits ) hits.clear();
 
       // Convert Hlt1 regions to standard muon station regions
       for( unsigned int r = 0; r < station.nRegions(); ++r ) {
          // Get hits
-         Hlt1MuonHitRange hits = m_hitManager->hits( - m_regionOuterX[ s ], s, r );
-         BOOST_FOREACH( const Hlt1MuonHit* hit, hits ) {
-            const LHCb::MuonTileID& tile = hit->tile();
-            m_regionHits[ tile.region() ].push_back( hit );
+         for( auto* hit : m_hitManager->hits( - m_regionOuterX[ s ], s, r )) {
+            m_regionHits[ hit->tile().region() ].push_back( hit );
          }
       }
 
       for ( unsigned int region = 0; region < m_nRegions; ++region ) {
-         
          const double foiXDim = m_foiFactor * foiX( s, region, track.p() );
          const double foiYDim = m_foiFactor * foiY( s, region, track.p() );
 
-         const Hlt1ConstMuonHits& hits = m_regionHits[ region ];
-         for ( Hlt1ConstMuonHits::const_iterator it = hits.begin(), end = hits.end();
-               it != end; ++it ) {
-            
-            const Hlt1MuonHit* hit = *it;
+         for ( auto hit : m_regionHits[ region ] ) { 
             double x  = hit->x();
             double y  = hit->y();
 

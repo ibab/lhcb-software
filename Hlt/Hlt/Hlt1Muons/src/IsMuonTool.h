@@ -85,6 +85,8 @@ private:
    std::vector< unsigned int > m_occupancy;
 
    Hlt1ConstMuonHits m_hits;
+   // FIXME:TODO -- can this be a local variable in findHits???
+   // FIXME:TODO -- replace by std::array<Hlt1ConstMuonHits,4> m_regionHits;
    std::vector< Hlt1ConstMuonHits > m_regionHits;
 
    // Helper methods

@@ -3,11 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-// boost
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
-#include <boost/assign/list_of.hpp>
-
 // from Gaudi
 #include <GaudiKernel/ToolFactory.h>
 #include <GaudiKernel/SystemOfUnits.h>
@@ -37,7 +32,6 @@
 // Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY( Hlt, HltVeloIsMuon )
 
-using boost::assign::list_of;
 using std::vector;
 
 //=============================================================================
@@ -45,9 +39,10 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type,
                                    const std::string& name,
                                    const IInterface* parent )
    : base_class( type, name , parent ),
-     m_hitManager( 0 ), m_fieldSvc( 0 ),
-     m_nStations( 5 ), m_nRegions( 4 ),
-     m_magnetHit( 0 ), m_seeds( 0 )
+     m_hitManager{ nullptr }, m_fieldSvc{ nullptr },
+     m_order { 3u,4u,5u,2u },
+     m_nStations{ 5u }, m_nRegions{ 4u },
+     m_magnetHit{ nullptr }, m_seeds{ 0 }
 {
    declareInterface< ITracksFromTrack >( this );
 
@@ -70,8 +65,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type,
 
    declareProperty( "SetQOverP", m_setQOverP = false );
    
-   std::vector<unsigned int> tmp=list_of( 3 )( 4 )( 5 )( 2 );
-   m_order = tmp;
 
    m_regionFoIX.reserve( m_nRegions );
    m_regionFoIY.reserve( m_nRegions );
@@ -117,11 +110,11 @@ StatusCode Hlt::HltVeloIsMuon::initialize()
    }
 
    // Condition pointers
-   Condition* FoIFactor = 0;
-   Condition* xFOIParameters = 0;
-   Condition* yFOIParameters = 0;
-   Condition* preSelMomentum = 0; 
-   Condition* momentumCuts = 0;
+   Condition* FoIFactor = nullptr;
+   Condition* xFOIParameters = nullptr;
+   Condition* yFOIParameters = nullptr;
+   Condition* preSelMomentum = nullptr; 
+   Condition* momentumCuts = nullptr;
 
    // Register conditions
    registerCondition< HltVeloIsMuon >( "Conditions/ParticleID/Muon/FOIfactor", FoIFactor );
@@ -170,7 +163,7 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
    clean();
 
    // Make a Candidate from the track
-   std::auto_ptr< Candidate > veloSeed( new Candidate( &seed ) );
+   std::unique_ptr< Candidate > veloSeed( new Candidate( &seed ) );
 
    unsigned int seedStation = m_order[ 0 ] - 1;
    findSeeds( veloSeed.get(), seedStation );
@@ -182,7 +175,7 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
 
    ConstCandidates goodCandidates;   
 
-   BOOST_FOREACH( Candidate* c, m_seeds ) { 
+   for( Candidate* c: m_seeds ) { 
       addHits( c );
       if ( msgLevel(MSG::DEBUG)) {
          debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
@@ -199,11 +192,11 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
    }
 
    if ( m_setQOverP ) {
-      ConstCandidates::const_iterator best = std::min_element
-         (goodCandidates.begin(), goodCandidates.end(),
-          boost::bind(std::less<double>(), 
-                      boost::bind( &Candidate::chi2DoF, _1 ),
-                      boost::bind( &Candidate::chi2DoF, _2 )));
+      auto best = std::min_element( goodCandidates.begin()
+                                  , goodCandidates.end()
+                                  , [](const Candidate* lhs, const Candidate* rhs) { 
+                                      return lhs->chi2DoF() < rhs->chi2DoF(); 
+                                    });
       if ( best != goodCandidates.end() ) {
          LHCb::Track* out = seed.clone();
          const Candidate* c = *best;
@@ -229,10 +222,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
    double yMagnet = 0., errYMagnet = 0.;
    veloSeed->yStraight( zMagnet, yMagnet, errYMagnet );
 
-   LHCb::MuonTileID id;
-   m_magnetHit = new Hlt1MuonHit( id, xMagnet, errXMagnet,
-                                  yMagnet, errYMagnet,
-                                  zMagnet, 0. );
+   m_magnetHit = new Hlt1MuonHit{ LHCb::MuonTileID{} 
+                                , xMagnet, errXMagnet
+                                , yMagnet, errYMagnet
+                                , zMagnet, 0. };
 
    double dSlope = dtx( m_minMomentum );
    const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -261,7 +254,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
       debug() << "Hits in seed station:" << endmsg;
       for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
          Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
-         BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+         for( Hlt1MuonHit* hit: hits ) {
             debug() << hit->x() << " " << hit->y() << endmsg;
          }
       }
@@ -275,7 +268,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
       Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
       if ( msgLevel(MSG::DEBUG) ) {
          debug() << "Hits in seed region " << r << ":" << endmsg;
-         BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+         for( Hlt1MuonHit* hit: hits ) {
             debug() << hit->x() << " " << hit->y() << endmsg;
          }
       }
@@ -283,10 +276,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
       if ( hits.empty() ) continue; 
 
       // add seed hits to container
-      BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+      for( Hlt1MuonHit* hit: hits ) {
          if ( hit->x() > xMax ) break;
          if ( hit->y() > yMax || hit->y() < yMin ) continue;
-         Candidate* seed = new Candidate( *veloSeed );
+         Candidate* seed = new Candidate{ *veloSeed };
          seed->addHit( m_magnetHit );
          seed->addHit( hit );
 
@@ -346,7 +339,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
          const Hlt1MuonRegion& region = station.region( r );
          if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
          Hlt1MuonHitRange hits = m_hitManager->hits( xMin, s, r );
-         BOOST_FOREACH( Hlt1MuonHit* hit, hits ) {
+         for( Hlt1MuonHit* hit: hits ) {
             if ( hit->x() > xMax ) break;
 
             // Take the actual FoI into account
@@ -375,9 +368,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
       if ( nMissed > m_maxMissed ) break;
    }
    // If a new candidate is good, fit it.
-   if ( nMissed <= m_maxMissed ) {
-      fitCandidate( seed );
-   }
+   if ( nMissed <= m_maxMissed ) fitCandidate( seed );
 }
 
 //=============================================================================
@@ -387,7 +378,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
 
    double sumWeights = 0., sumZ = 0., sumX = 0., sumTmp2 = 0.;
 
-   BOOST_FOREACH( const Hlt1MuonHit* hit, hits ) {
+   for( const Hlt1MuonHit* hit: hits ) {
       double err = hit->dx() / 2.;
       double weight = 1.0 / ( err * err );
       sumWeights += weight;
@@ -397,7 +388,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
    double ZOverWeights = sumZ / sumWeights;
 
    double b = 0;
-   BOOST_FOREACH( const Hlt1MuonHit* hit, hits ) {
+   for( const Hlt1MuonHit* hit: hits ) {
       double err = hit->dx() / 2.;
       double tmp = ( hit->z() - ZOverWeights ) / err;
       sumTmp2 += tmp * tmp;
@@ -410,7 +401,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
    // double errB = sqrt( 1. / sumTmp2 );
 
    double chi2 = 0.;
-   BOOST_FOREACH( const Hlt1MuonHit* hit, hits ) {
+   for( const Hlt1MuonHit* hit: hits ) {
       double err = hit->dx() / 2.;
       double tmp = ( hit->x() - a - b * hit->z() ) / err;
       chi2 += tmp * tmp;
@@ -427,10 +418,10 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
 void Hlt::HltVeloIsMuon::clean()
 {
    // delete leftover seeds
-   BOOST_FOREACH( Candidate* candidate, m_seeds ) { delete candidate; }
+   for( Candidate* candidate: m_seeds ) { delete candidate; }
    m_seeds.clear();
    delete m_magnetHit;
-   m_magnetHit = 0;
+   m_magnetHit = nullptr;
 }
 
 //=============================================================================

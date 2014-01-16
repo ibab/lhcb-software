@@ -15,9 +15,9 @@
 
 // local
 #include "Hlt1MuonHit.h"
+#include "Hlt1MuonStation.h"
 
 class Hlt1MuonRegion;
-class Hlt1MuonStation;
 class DeMuonDetector;
 
 static const InterfaceID IID_Hlt1MuonHitManager ( "Hlt1MuonHitManager", 1, 0 );
@@ -70,7 +70,7 @@ private:
 
    std::vector< std::vector< double > > m_regions;
    
-   std::vector< Hlt1MuonStation* > m_stations;
+   std::vector< Hlt1MuonStation > m_stations;
    std::vector< bool > m_prepared;
 
    LHCb::MuonCoords* m_muonCoords;

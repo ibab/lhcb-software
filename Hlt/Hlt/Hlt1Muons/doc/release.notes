@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-16 - Gerhard Raven
+ - use (some) C++11 features -- functionality remains invariant
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 

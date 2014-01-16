@@ -69,7 +69,7 @@ private:
    ILHCbMagnetSvc* m_fieldSvc;
 
    // Data members
-   std::vector< unsigned int > m_order;
+   std::array< unsigned int, 4 > m_order;
    unsigned int m_nRegions;
 
    // Temporary storage
@@ -77,11 +77,11 @@ private:
    Candidates   m_seeds;
 
    // Helper methods
-   void findSeeds( const Candidate* seed, const unsigned int seedStation );
+   void findSeeds( const Candidate& seed, const unsigned int seedStation );
 
-   void addHits( Candidate* seed );
+   void addHits( Candidate& seed );
 
-   void fitCandidate( Candidate* seed ) const;
+   void fitCandidate( Candidate& seed ) const;
 
    void clean();
 

@@ -2,9 +2,6 @@
 // from Gaudi
 #include <GaudiKernel/ToolFactory.h>
 
-// boost
-#include <boost/foreach.hpp>
-
 // local
 #include "PatMatchL0MuonTool.h"
 
@@ -172,9 +169,6 @@ void PatMatchL0MuonTool::makeTrack( const LHCb::Track& velo,
    output.addInfo( LHCb::Track::MatchChi2, chi2 );
 
    //== add new LHCbIDs
-   BOOST_FOREACH( const LHCb::LHCbID& id, seed.lhcbIDs() ) {
-      output.addToLhcbIDs( id );
-   }      
+   for( const LHCb::LHCbID& id: seed.lhcbIDs() ) output.addToLhcbIDs( id );
         
-   return;
 }
