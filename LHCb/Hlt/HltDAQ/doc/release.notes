@@ -3,6 +3,12 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
+! 2014-01-16 - Sebastian Neubert
+ - Added Writer and Decoder for Tracks
+ - see task #48807
+ - Added unit testing support
+ - added HltDAQcore library to hold core en/decoder functions (so far only for HltTrackingCoder)  
+ - these changes depend on an updated RawEvent (to include tha HltTrackingReports RawBank type)
 
 !========================= HltDAQ v3r0 2013-12-09 =========================
 ! 2013-12-05 - Rob Lambert
