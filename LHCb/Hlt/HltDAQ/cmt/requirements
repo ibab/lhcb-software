@@ -68,7 +68,7 @@ apply_pattern    linker_library library=HltDAQcore
 #=========================================================================
 # unit test application building rule
 #=========================================================================
-application      utestTrackingCoder -import=Boost   ../src/utest/utestTrackingCoder.cxx
+application      utestTrackingCoder -import=Boost   ../src/utest/utestTrackingCoder.cpp
 macro_append     utestTrackingCoder_dependencies " HltDAQcore "
 
 
