@@ -104,13 +104,14 @@ namespace LoKi
     virtual StatusCode distance 
     ( const LHCb::Particle*   particle ,
       const LHCb::VertexBase* vertex   , 
-      double&                 imppar   ) const 
+      double&                 imppar   , 
+      const bool              allow    ) const 
     {
       StatusCode sc = check ( particle , vertex ) ;
       if ( sc.isFailure() ) { return sc ; }                           // RETURN 
       // make the proper evaluations 
       Gaudi::XYZVector impact ;
-      sc = _distance ( *particle , *vertex , impact ) ;
+      sc = _distance ( *particle , *vertex , impact , allow ) ;
       imppar = impact.R() ;
       return sc ;                                                     // RETURN 
     }
@@ -127,13 +128,14 @@ namespace LoKi
     ( const LHCb::Particle*   particle ,
       const LHCb::VertexBase* vertex   , 
       double&                 imppar   , 
-      double&                 chi2     ) const 
+      double&                 chi2     , 
+      const bool              allow    ) const 
     {
       StatusCode sc = check ( particle , vertex ) ;
       if ( sc.isFailure() ) { return sc ; }                          // RETURN 
       // make the proper evaluations 
       Gaudi::XYZVector impact ;
-      sc = _distance ( *particle , *vertex , impact , &chi2 ) ;
+      sc = _distance ( *particle , *vertex , impact , allow , &chi2 ) ;
       imppar = impact.R() ;
       return sc ;                                                    // RETURN 
     }
@@ -157,13 +159,14 @@ namespace LoKi
     virtual StatusCode distance 
     ( const LHCb::Particle*   particle ,
       const Gaudi::XYZPoint&  point    , 
-      double&                 imppar   ) const 
+      double&                 imppar   , 
+      const bool              allow    ) const 
     { 
       StatusCode sc = check ( particle ) ;
       if ( sc.isFailure() ) { return sc ; }                           // RETURN 
       // make the proper evaluations 
       Gaudi::XYZVector impact ;
-      sc = _distance ( *particle , point , impact ) ;
+      sc = _distance ( *particle , point , impact , allow ) ;
       imppar = impact.R() ;
       return sc ;                                                     // RETURN 
     }
@@ -180,13 +183,14 @@ namespace LoKi
     ( const LHCb::Particle*   particle ,
       const Gaudi::XYZPoint&  point    , 
       double&                 imppar   , 
-      double&                 chi2     ) const 
+      double&                 chi2     , 
+      const bool              allow    ) const 
     { 
       StatusCode sc = check ( particle ) ;
       if ( sc.isFailure() ) { return sc ; }                         // RETURN 
       // make the proper evaluations 
       Gaudi::XYZVector impact ;
-      sc = _distance ( *particle , point , impact , &chi2 ) ;
+      sc = _distance ( *particle , point , impact , allow , &chi2 ) ;
       imppar = impact.R() ;
       return sc ;                                                    // RETURN 
     }
@@ -210,12 +214,13 @@ namespace LoKi
     virtual StatusCode distance 
     ( const LHCb::Particle*   particle ,
       const Gaudi::XYZPoint&  point    , 
-      Gaudi::XYZVector&       impact   ) const 
+      Gaudi::XYZVector&       impact   , 
+      const bool              allow    ) const 
     { 
       StatusCode sc = check ( particle ) ;
       if ( sc.isFailure() ) { return sc ; }                           // RETURN 
       // make the proper evaluations 
-      sc = _distance ( *particle , point , impact ) ;
+      sc = _distance ( *particle , point , impact , allow ) ;
       return sc ;                                                     // RETURN 
     }
     // ========================================================================    
@@ -229,12 +234,13 @@ namespace LoKi
     virtual StatusCode distance 
     ( const LHCb::Particle*   particle ,
       const LHCb::VertexBase* vertex   , 
-      Gaudi::XYZVector&       impact   ) const 
+      Gaudi::XYZVector&       impact   , 
+      const bool              allow    ) const 
     { 
       StatusCode sc = check ( particle ) ;
       if ( sc.isFailure() ) { return sc ; }                           // RETURN 
       // make the proper evaluations 
-      sc = _distance ( *particle , *vertex , impact ) ;
+      sc = _distance ( *particle , *vertex , impact , allow ) ;
       return sc ;                                                     // RETURN 
     }
     // ========================================================================    
@@ -350,14 +356,15 @@ namespace LoKi
      *  @return status code 
      */
     virtual StatusCode distance 
-    ( const LHCb::Particle* p1   , 
-      const LHCb::Particle* p2   , 
-      double&               dist ) const 
+    ( const LHCb::Particle* p1    , 
+      const LHCb::Particle* p2    , 
+      double&               dist  , 
+      const bool            allow ) const 
     {
       StatusCode sc = check ( p1 , p2 ) ;
       if ( sc.isFailure() ) { return sc ; }                    // RETURN 
       // make the real calculations 
-      return _distance ( *p1 , *p2 , dist ) ;                  // RETURN  
+      return _distance ( *p1 , *p2 , dist , allow ) ;         // RETURN  
     }
     // ========================================================================
     /** The method for evaluation of the scalar distance between two particles, 
@@ -370,15 +377,16 @@ namespace LoKi
      *  @return status code 
      */
     virtual StatusCode distance 
-    ( const LHCb::Particle* p1   , 
-      const LHCb::Particle* p2   ,
-      double&               dist , 
-      double&               chi2 ) const 
+    ( const LHCb::Particle* p1    , 
+      const LHCb::Particle* p2    ,
+      double&               dist  , 
+      double&               chi2  , 
+      const bool            allow ) const 
     { 
       StatusCode sc = check ( p1 , p2 ) ;
       if ( sc.isFailure() ) { return sc ; }                      // RETURN 
       // make the real calculations 
-      return _distance ( *p1 , *p2 , dist , &chi2 ) ;            // RETURN 
+      return _distance ( *p1 , *p2 , dist , allow , &chi2 ) ;    // RETURN 
     }
     // ========================================================================
     /// @}
@@ -626,10 +634,11 @@ namespace LoKi
      *  @return status code 
      */
     StatusCode _distance 
-    ( const LHCb::Particle&   particle     ,
-      const LHCb::VertexBase& vertex       , 
-      Gaudi::XYZVector&       imppar       , 
-      double*                 chi2     = 0 ) const ;
+    ( const LHCb::Particle&   particle         ,
+      const LHCb::VertexBase& vertex           , 
+      Gaudi::XYZVector&       imppar           , 
+      const bool              allow            ,
+      double*                 chi2     = 0     ) const ;
     // ========================================================================
     /** The method for the evaluation of the impact parameter ("distance") 
      *  vector of the particle with respect to the fixed vertex  
@@ -643,6 +652,7 @@ namespace LoKi
     ( const LHCb::Particle&   particle     ,
       const Gaudi::XYZPoint&  point        , 
       Gaudi::XYZVector&       imppar       , 
+      const bool              allow        , 
       double*                 chi2     = 0 ) const;
     // ========================================================================
     /** The method for evaluation of the scalar distance between two particles, 
@@ -658,6 +668,7 @@ namespace LoKi
     ( const LHCb::Particle& p1       , 
       const LHCb::Particle& p2       ,
       double&               dist     , 
+      const bool            allow    , 
       double*               chi2 = 0 ) const ;
     // ========================================================================
     /** the method for the evaluation of "path"-distance
@@ -783,10 +794,11 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
   const LHCb::VertexBase& vertex   , 
   Gaudi::XYZVector&       impact   , 
+  const bool              allow    , 
   double*                 chi2     ) const 
 {
   // 
-  if ( allowTransitions () )
+  if ( allow )
   {
     // the first particle
     LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
@@ -855,8 +867,42 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
 ( const LHCb::Particle&   particle ,
   const Gaudi::XYZPoint&  point    , 
   Gaudi::XYZVector&       impact   , 
+  const bool              allow    , 
   double*                 chi2     ) const 
 { 
+  //
+  //
+  if ( allow )
+  {
+    // the first particle
+    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
+    switch ( type1 ) 
+    {
+    case LoKi::KalmanFilter::GammaLikeParticle   : ;
+    case LoKi::KalmanFilter::DiGammaLikeParticle :
+      {
+        impact =  Gaudi::XYZVector() ;
+        if ( 0 != chi2 ) { *chi2 = 0 ; }
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
+        return StatusCode::SUCCESS ;                                    // RETURN 
+      }
+    case LoKi::KalmanFilter::ShortLivedParticle : 
+      {
+        const LHCb::VertexBase* v1 = particle.endVertex() ;
+        if ( 0 == v1 ) { break ; }  
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->VD" ) ; }
+        // make the real calculations 
+        double dist   = 0 ;
+        StatusCode sc = i_distance ( *v1 , point , dist , chi2 ) ;
+        impact        = v1->position() - point ;
+        return sc ;
+      } 
+    default: ;
+    }    
+  }
+  //
+  //
+  //
   using namespace Gaudi::Math::Operators ;
   
   // make the fast evaluation:
@@ -885,13 +931,14 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
  */
 // ============================================================================
 StatusCode LoKi::TrgDistanceCalculator::_distance
-( const LHCb::Particle& p1   , 
-  const LHCb::Particle& p2   ,
-  double&               dist , 
-  double*               chi2 ) const 
+( const LHCb::Particle& p1    , 
+  const LHCb::Particle& p2    ,
+  double&               dist  , 
+  const bool            allow , 
+  double*               chi2  ) const 
 {
   //
-  if ( allowTransitions () )
+  if ( allow )
   {
     // the first particle
     LoKi::KalmanFilter::ParticleType type1 = particleType_ ( p1 ) ;
@@ -912,7 +959,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
         if ( printStat() && msgLevel ( MSG::INFO ) ) { ++counter ( "DOCA->IP" ) ; }
         // make the proper evaluations 
         Gaudi::XYZVector impact ;
-        StatusCode sc  = _distance ( p2 , *v1 , impact , chi2 ) ;
+        StatusCode sc  = _distance ( p2 , *v1 , impact , allow , chi2 ) ;
         dist           = impact.R() ;
         return sc  ;                                                    // RETURN 
       } 
@@ -937,7 +984,7 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
         if ( printStat() && msgLevel ( MSG::INFO ) ) { ++counter ( "DOCA->IP" ) ; }
         // make the proper evaluations 
         Gaudi::XYZVector impact ;
-        StatusCode sc  = _distance ( p1 , *v2 , impact , chi2 ) ;
+        StatusCode sc  = _distance ( p1 , *v2 , impact , allow , chi2 ) ;
         dist           = impact.R() ;
         return sc ;                                                    // RETURN 
       }

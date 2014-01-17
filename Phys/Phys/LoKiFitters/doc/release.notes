@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-17 - Vanya Belyaev
+
+ - *DistanceCalculators :
+     add an optional argument to allow the transitions between categories
 
 !========================= LoKiFitters v4r8 2014-01-10 =========================
 

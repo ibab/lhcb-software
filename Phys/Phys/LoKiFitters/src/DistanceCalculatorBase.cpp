@@ -59,8 +59,6 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   , m_extrapolatorName ( "TrackMasterExtrapolator:PUBLIC" )
 // The state provider  tool itself 
   , m_extrapolator     ( 0 ) /// The extrapolator
-// allow transitions between different categories ?
-  , m_allowTransitions ( false )  // allow transitions between categories ?
 {
   // ==========================================================================
   declareProperty 
@@ -76,9 +74,6 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   declareProperty 
     ( "TrackExtrapolator"  , m_extrapolatorName   , 
       "The Track Extrapolator    tool to be used" );
-  declareProperty 
-    ( "AllowTransitions"   , m_allowTransitions   , 
-      "allow transitions between different categrories" );
   // ==========================================================================
 }
 // ============================================================================

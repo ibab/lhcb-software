@@ -424,9 +424,6 @@ namespace LoKi
                                       const double       z ) const 
     { return t.closestState ( z ) ; }
     // ========================================================================
-    /// allow intercategory transtions ? 
-    bool allowTransitions() const { return m_allowTransitions ; }
-    // ========================================================================    
   protected: 
     // ========================================================================
     /** Standard constructor
@@ -469,9 +466,6 @@ namespace LoKi
     std::string  m_extrapolatorName ; // The name of track extrapolator
     /// The state provider itself  
     mutable ITrackExtrapolator* m_extrapolator ; // The extrapolator itself 
-    // =======================================================================
-    /// allow transitions between different categories ?
-    bool  m_allowTransitions ; // allow transitions between categories ?
     // =======================================================================
   }; 
   // ==========================================================================
