@@ -1,6 +1,16 @@
 #ifndef ADDEXTRAINFO_H 
 #define ADDEXTRAINFO_H 1
 
+#include <algorithm>
+#include <string>
+#include <sstream>
+
+// Include files 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Property.h"
+
+#include "Kernel/IExtraInfoTool.h"
+
 #include "Kernel/DaVinciAlgorithm.h"
 
 /** @class AddExtraInfo AddExtraInfo.h
