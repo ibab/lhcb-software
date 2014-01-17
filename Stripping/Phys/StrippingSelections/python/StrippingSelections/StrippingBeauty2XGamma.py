@@ -37,7 +37,7 @@ __all__ = ( 'B2Quasi2BodyConf',
 config_params = {'B2XG2piPrescale'        : 1.,
                  'B2XG2piCNVPrescale'     : 1.,
                  'B2XGpiKsPrescale'       : 1.,
-                 
+
                  'B2XG3piPrescale'        : 1.,
                  'B2XG3piCNVPrescale'     : 1.,
                  'B2XG2pipi0MPrescale'    : 1.,
@@ -49,7 +49,7 @@ config_params = {'B2XG2piPrescale'        : 1.,
                  'B2XG3pipi0MPrescale'    : 1.,
                  'B2XG3pipi0RPrescale'    : 1.,
                  'B2XG2pi2KsPrescale'     : 1.,
-                 
+
                  'B2XGLambdapiPrescale'   : 1.,
                  'B2XGLambda2piPrescale'  : 1.,
                  'B2XGLambda3piPrescale'  : 1.,
@@ -126,7 +126,7 @@ class Beauty2XGammaConf(LineBuilder) :
     """
     Builder for Beauty2XGamma
     """
-    
+
     __configuration_keys__ = ( 'B2XG2piPrescale',
                                'B2XG2piCNVPrescale',
                                'B2XGpiKsPrescale',
@@ -171,20 +171,20 @@ class Beauty2XGammaConf(LineBuilder) :
                                'B2XGBMaxCorrM',
                                'B2XGBVtxChi2DOF',
                                'B2XGBVtxMaxIPChi2')
-    
+
     __confdict__={}
-    
+
     def __init__(self, name, config) :
         self.name = name
         self.__confdict__ = config_params
         LineBuilder.__init__(self, name, config)
-        
+
         # Generic track (pi) = h
         _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < %(B2XGTrkChi2DOF)s)& (MIPCHI2DV(PRIMARY) > %(B2XGTrkMinIPChi2)s) & (TRGHOSTPROB < %(B2XGTrkGhostProb)s) & (PT > %(B2XGTrkMinPT)s) & (P > %(B2XGTrkMinP)s)" % self.__confdict__ )
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdAllNoPIDsPions])
-        
+
         # Neutral Pions, both merged and resolved
         _Pi0Sel = FilterDesktop(Code = "(PT > 1000*MeV)" % self.__confdict__ )
         self.MergedPi0 = Selection( 'MergedPi0Sel' + self.name,
@@ -199,11 +199,11 @@ class Beauty2XGammaConf(LineBuilder) :
         self.Kshort = Selection( 'KS0Sel' + self.name,
                                  Algorithm = _KS0Sel,
                                  RequiredSelections = [mergedKshorts])
-        
+
         # Lambdas
         mergedLambdas = MergedSelection('MergedLambdas',RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles"),DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")])
         _LambdaSel = FilterDesktop(Code = "(PT > %(B2XGResMinPT)s)  & in_range( %(B2XGResMinMass)s ,ADMASS('Lambda0'), %(B2XGResMaxMass)s )" % self.__confdict__ )
-        
+
         self.Lambda = Selection( 'LambdaSel' + self.name,
                                  Algorithm = _LambdaSel,
                                  RequiredSelections = [mergedLambdas])
@@ -217,8 +217,8 @@ class Beauty2XGammaConf(LineBuilder) :
                                             IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                             MaxDocaCut = config['B2XGResDocaMax'],
                                             VtxChi2DOFCut = config['B2XGResVtxChi2DOF'] )
-        
-        
+
+
         # h + Ks0
         self.DiTrackList_wKS0 = makeDiTrackList_wKS0( name="Track_wKs0ForRadiativeB" + self.name,
                                                       trkList=self.TrackList,
@@ -230,7 +230,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                       IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                       MaxDocaCut = config['B2XGResDocaMax'],
                                                       VtxChi2DOFCut = config['B2XGResVtxChi2DOF'] )
-        
+
         # hhh built as h + h + h
         self.TriTrackList = makeTriTrackList( name="TriTracksForRadiativeB" + self.name,
                                               trkList=self.TrackList,
@@ -258,8 +258,8 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                                       IPChi2MinCut = config['B2XGResIPCHI2Min'],
 #                                                       MaxDocaCut = config['B2XGResDocaMax']
 #                                                       )
-        
-        
+
+
         # hh + Ks0 [built as hh + Ks0]
         self.TriTrackList_wKS0 = makeTriTrackList_wKS0( name="DiTracks_wKS0ForRadiativeB" + self.name,
                                                         ksList=self.Kshort,
@@ -273,7 +273,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                         IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                         MaxDocaCut = config['B2XGResDocaMax']
                                                         )
-        
+
         # hh + merged pi0
         self.TriTrackList_wpi0M = makeTriTrackList_wpi0M( name="DiTracks_wpi0_merged_ForRadiativeB" + self.name,
                                                           pi0List=self.MergedPi0,
@@ -287,7 +287,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                           IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                           MaxDocaCut = config['B2XGResDocaMax']
                                                           )
-        
+
         # hh + resolved pi0
         self.TriTrackList_wpi0R = makeTriTrackList_wpi0R( name="DiTracks_wpi0_resolved_ForRadiativeB" + self.name,
                                                           pi0List=self.ResolvedPi0,
@@ -301,7 +301,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                           IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                           MaxDocaCut = config['B2XGResDocaMax']
                                                           )
-        
+
         # hhhh (built as h+h+h+h)
         self.FourTrackList = makeFourTrackList( name="FourTracksForRadiativeB" + self.name,
                                                 trkList=self.TrackList,
@@ -341,7 +341,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                           IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                           MaxDocaCut = config['B2XGResDocaMax']
                                                           )
-        
+
         # hhKs0Ks0 (built as hKs0+hKs0)
         self.FourTrackList_w2KS0 = makeFourTrackList_w2KS0( name="DiTracks_w2KS0ForRadiativeB" + self.name,
                                                             diTrkList = self.DiTrackList_wKS0,
@@ -354,8 +354,8 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                             MaxDocaCut = config['B2XGResDocaMax']
                                                             )
-        
-        
+
+
         # hhh + merged pi0
         self.FourTrackList_wpi0M = makeFourTrackList_wpi0M( name="TriTracks_wpi0_merged_ForRadiativeB" + self.name,
                                                             pi0List=self.MergedPi0,
@@ -369,7 +369,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                             MaxDocaCut = config['B2XGResDocaMax']
                                                             )
-        
+
         # hhh + resolved pi0
         self.FourTrackList_wpi0R = makeFourTrackList_wpi0R( name="TriTracks_wpi0_resolved_ForRadiativeB" + self.name,
                                                             pi0List=self.ResolvedPi0,
@@ -383,7 +383,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             IPChi2MinCut = config['B2XGResIPCHI2Min'],
                                                             MaxDocaCut = config['B2XGResDocaMax']
                                                             )
-        
+
         #####################################################################################################################################
         ################################# STRIPPING LINES BUILT BELOW #######################################################################
         #####################################################################################################################################
@@ -400,7 +400,7 @@ class Beauty2XGammaConf(LineBuilder) :
         self.ConvPhoton = Selection( 'ConvPhoton' + self.name,
                                      Algorithm = _ConvPhotonSel,
                                      RequiredSelections = [mergedConvPhotons])
-        
+
         B2XG2piName = self.name + "2pi_"
         self.RadiativeB2XG2pi = makeB2B2XG2piGamma( B2XG2piName,
                                                     diTrkList=self.DiTrackList,
@@ -413,7 +413,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                     MinSumPtCut = config['B2XGBSumPtMin'],
                                                     MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                     VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG2piLine = StrippingLine( B2XG2piName+"Line",
                                           prescale = config['B2XG2piPrescale'],
                                           selection = tisTosSelection(self.RadiativeB2XG2pi),
@@ -432,13 +432,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                           MinSumPtCut = config['B2XGBSumPtMin'],
                                                           MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                           VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG2piCNVLine = StrippingLine( B2XG2piCNVName+"Line",
                                              prescale = config['B2XG2piCNVPrescale'],
                                              selection = tisTosSelection(self.RadiativeB2XG2piCNV),
                                              EnableFlavourTagging = True,
                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
         B2XGpiKsName = self.name + "pi_Ks0_"
         self.RadiativeB2XGpiKs = makeB2B2XGpiKsGamma( B2XGpiKsName,
                                                       diTrkList=self.DiTrackList_wKS0,
@@ -451,7 +451,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                       MinSumPtCut = config['B2XGBSumPtMin'],
                                                       MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                       VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XGpiKsLine = StrippingLine( B2XGpiKsName+"Line",
                                            prescale = config['B2XGpiKsPrescale'],
                                            selection = tisTosSelection(self.RadiativeB2XGpiKs),
@@ -470,13 +470,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                      MinSumPtCut = config['B2XGBSumPtMin'],
                                                      MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                      VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG3piLine = StrippingLine( B2XG3piName+"Line",
                                           prescale = config['B2XG3piPrescale'],
                                           selection = tisTosSelection(self.RadiativeB2XG3pi),
                                           EnableFlavourTagging = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
 #         B2XG3pi_altName = self.name + "3pi_alt_"
 #         self.RadiativeB2XG3pi_alt = makeB2B2XG3piGamma ( B2XG3pi_altName,
 #                                                          triTrkList=self.TriTrackList_alt,
@@ -489,13 +489,13 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                                          MinSumPtCut = config['B2XGBSumPtMin'],
 #                                                          MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
 #                                                          VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
 #         self.B2XG3pi_altLine = StrippingLine( B2XG3pi_altName+"Line",
 #                                               prescale = config['B2XG3piPrescale'],
 #                                               selection = tisTosSelection(self.RadiativeB2XG3pi_alt),
 #                                               EnableFlavourTagging = True,
 #                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
 
         B2XG3piCNVName = self.name + "3piGammaCNV_"
         self.RadiativeB2XG3piCNV = makeB2B2XG3piGamma ( B2XG3piCNVName,
@@ -509,13 +509,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                         MinSumPtCut = config['B2XGBSumPtMin'],
                                                         MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                         VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG3piCNVLine = StrippingLine( B2XG3piCNVName+"Line",
                                              prescale = config['B2XG3piCNVPrescale'],
                                              selection = tisTosSelection(self.RadiativeB2XG3piCNV),
                                              EnableFlavourTagging = True,
                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
         B2XG2piKsName = self.name + "2pi_Ks0_"
         self.RadiativeB2XG2piKs = makeB2B2XG2piKsGamma ( B2XG2piKsName,
                                                          triTrkList=self.TriTrackList_wKS0,
@@ -534,7 +534,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                             selection = tisTosSelection(self.RadiativeB2XG2piKs),
                                             EnableFlavourTagging = True,
                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
         B2XG2pipi0MName = self.name + "2pi_pi0M_"
         self.RadiativeB2XG2pipi0M = makeB2B2XG2pipi0Gamma ( B2XG2pipi0MName,
                                                             triTrkList=self.TriTrackList_wpi0M,
@@ -547,14 +547,14 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             MinSumPtCut = config['B2XGBSumPtMin'],
                                                             MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                             VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG2pipi0MLine = StrippingLine( B2XG2pipi0MName+"Line",
                                               prescale = config['B2XG2pipi0MPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG2pipi0M),
                                               EnableFlavourTagging = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
-        
+
+
         B2XG2pipi0RName = self.name + "2pi_pi0R_"
         self.RadiativeB2XG2pipi0R = makeB2B2XG2pipi0Gamma ( B2XG2pipi0RName,
                                                             triTrkList=self.TriTrackList_wpi0R,
@@ -567,7 +567,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             MinSumPtCut = config['B2XGBSumPtMin'],
                                                             MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                             VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG2pipi0RLine = StrippingLine( B2XG2pipi0RName+"Line",
                                               prescale = config['B2XG2pipi0RPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG2pipi0R),
@@ -586,13 +586,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                      MinSumPtCut = config['B2XGBSumPtMin'],
                                                      MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                      VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG4piLine = StrippingLine( B2XG4piName+"Line",
                                           prescale = config['B2XG4piPrescale'],
                                           selection = tisTosSelection(self.RadiativeB2XG4pi),
                                           EnableFlavourTagging = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
 #         B2XG4pi_2rhoName = self.name + "4pi_2rho_"
 #         self.RadiativeB2XG4pi_2rho = makeB2B2XG4piGamma ( B2XG4pi_2rhoName,
 # #                                                               fourTrkListPions=self.FourTrackListPions,
@@ -606,7 +606,7 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                                           MinSumPtCut = config['B2XGBSumPtMin'],
 #                                                           MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
 #                                                           VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
 #         self.B2XG4pi_2rhoLine = StrippingLine( B2XG4pi_2rhoName+"Line",
 #                                                prescale = config['B2XG4piPrescale'],
 #                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho),
@@ -625,7 +625,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                          MinSumPtCut = config['B2XGBSumPtMin'],
                                                          MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                          VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG3piKsLine = StrippingLine( B2XG3piKsName+"Line",
                                             prescale = config['B2XG3piKsPrescale'],
                                             selection = tisTosSelection(self.RadiativeB2XG3piKs),
@@ -644,8 +644,8 @@ class Beauty2XGammaConf(LineBuilder) :
                                                         MinSumPtCut = config['B2XGBSumPtMin'],
                                                         MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                         VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
-        
+
+
         self.B2XG2pi2KsLine = StrippingLine( B2XG2pi2KsName+"Line",
                                              prescale = config['B2XG2pi2KsPrescale'],
                                              selection = tisTosSelection(self.RadiativeB2XG2pi2Ks),
@@ -664,13 +664,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             MinSumPtCut = config['B2XGBSumPtMin'],
                                                             MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                             VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG3pipi0MLine = StrippingLine( B2XG3pipi0MName+"Line",
                                               prescale = config['B2XG3pipi0MPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG3pipi0M),
                                               EnableFlavourTagging = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-                                                
+
         B2XG3pipi0RName = self.name + "3pi_pi0R_"
         self.RadiativeB2XG3pipi0R = makeB2B2XG3pipi0Gamma ( B2XG3pipi0RName,
                                                             fourTrkList=self.FourTrackList_wpi0R,
@@ -683,13 +683,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                             MinSumPtCut = config['B2XGBSumPtMin'],
                                                             MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                             VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XG3pipi0RLine = StrippingLine( B2XG3pipi0RName+"Line",
                                               prescale = config['B2XG3pipi0RPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG3pipi0R),
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )#,
         #                                              EnableFlavourTagging = True )
-        
+
         B2XGLambdapiName = self.name + "pi_Lambda_"
         self.RadiativeB2XGLambdapi = makeB2B2XGLambdapiGamma ( B2XGLambdapiName,
                                                                trkList=self.TrackList,
@@ -709,7 +709,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                selection = tisTosSelection(self.RadiativeB2XGLambdapi),
                                                EnableFlavourTagging = True,
                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
         B2XGLambda2piName = self.name + "2pi_Lambda_"
         self.RadiativeB2XGLambda2pi = makeB2B2XGLambda2piGamma ( B2XGLambda2piName,
                                                                  diTrkList=self.DiTrackList,
@@ -723,13 +723,13 @@ class Beauty2XGammaConf(LineBuilder) :
                                                                  MinSumPtCut = config['B2XGBSumPtMin'],
                                                                  MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                                  VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XGLambda2piLine = StrippingLine( B2XGLambda2piName+"Line",
                                                 prescale = config['B2XGLambda2piPrescale'],
                                                 selection = tisTosSelection(self.RadiativeB2XGLambda2pi) ,
                                                 EnableFlavourTagging = True,
                                                 ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
+
         B2XGLambda3piName = self.name + "3pi_Lambda_"
         self.RadiativeB2XGLambda3pi = makeB2B2XGLambda3piGamma ( B2XGLambda3piName,
                                                                  triTrkList=self.TriTrackList,
@@ -743,7 +743,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                                  MinSumPtCut = config['B2XGBSumPtMin'],
                                                                  MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
                                                                  VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
         self.B2XGLambda3piLine = StrippingLine( B2XGLambda3piName+"Line",
                                                 prescale = config['B2XGLambda3piPrescale'],
                                                 selection = tisTosSelection(self.RadiativeB2XGLambda3pi),
@@ -762,25 +762,25 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                                                MinSumPtCut = config['B2XGBSumPtMin'],
 #                                                                MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
 #                                                                VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
-        
+
 #         self.B2XGLbLambdaLine = StrippingLine( B2XGLbLambdaName+"Line",
 #                                                prescale = config['B2XGLbLambdaPrescale'],
 #                                                selection = tisTosSelection(self.RadiativeB2XGLbLambda),
 #                                                EnableFlavourTagging = True,
 #                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-        
-        
+
+
         self.registerLine(self.B2XG2piLine)
         self.registerLine(self.B2XG2piCNVLine)
         self.registerLine(self.B2XGpiKsLine)
-        
+
         self.registerLine(self.B2XG3piLine)
 #        self.registerLine(self.B2XG3pi_altLine)
         self.registerLine(self.B2XG3piCNVLine)
         self.registerLine(self.B2XG2pipi0RLine)
         self.registerLine(self.B2XG2pipi0MLine)
         self.registerLine(self.B2XG2piKsLine)
-        
+
         self.registerLine(self.B2XG4piLine)
 #        self.registerLine(self.B2XG4pi_2rhoLine)
         self.registerLine(self.B2XG3piKsLine)
@@ -791,7 +791,7 @@ class Beauty2XGammaConf(LineBuilder) :
         self.registerLine(self.B2XGLambdapiLine)
         self.registerLine(self.B2XGLambda2piLine)
         self.registerLine(self.B2XGLambda3piLine)
-                                                                                                                                                
+
 def makeDiTrackList( name,
                      trkList,
                      MinPTCut,
@@ -806,13 +806,13 @@ def makeDiTrackList( name,
     """
     _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
     _diTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
 
     _combineDiTrack = CombineParticles( DecayDescriptor="[rho(770)0 -> pi+ pi-]cc",
                                         CombinationCut = _diTrackPreVertexCuts,
                                         MotherCut = _diTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineDiTrack,
                      RequiredSelections = [ trkList ] )
@@ -835,11 +835,11 @@ def makeDiTrackList_wKS0( name,
 
     _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
     _diTrackPostVertexCuts += " & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineDiTrack = CombineParticles( DecayDescriptor="[rho(770)+ -> pi+ KS0]cc",
                                         CombinationCut = _diTrackPreVertexCuts,
                                         MotherCut = _diTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineDiTrack,
                      RequiredSelections = [ trkList , ksList ] )
@@ -860,13 +860,13 @@ def makeTriTrackList( name,
     _TriTrackPreVertexCuts = hasTopoChild()
     _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ trkList ] )
@@ -887,13 +887,13 @@ def makeTriTrackList_alt( name,
     """
     _TriTrackPreVertexCuts = " (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_1(1270)+ -> rho(770)0 pi+]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ trkList,ditrkList ] )
@@ -915,13 +915,13 @@ def makeTriTrackList_wKS0( name,
     """
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID =='rho(770)0') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineTriTrack = CombineParticles( DecayDescriptor="[K*_2(1430)0 -> rho(770)0 KS0]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ ksList,ditrkList ] )
@@ -943,13 +943,13 @@ def makeTriTrackList_wpi0M( name,
     _TriTrackPreVertexCuts = hasTopoChild()
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineTriTrack = CombineParticles( DecayDescriptor="eta -> rho(770)0 pi0",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ pi0List,ditrkList ] )
@@ -971,13 +971,13 @@ def makeTriTrackList_wpi0R( name,
 #    _TriTrackPreVertexCuts = hasTopoChild()
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineTriTrack = CombineParticles( DecayDescriptor="eta -> rho(770)0 pi0",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ pi0List,ditrkList ] )
@@ -998,13 +998,13 @@ def makeFourTrackList( name,
     _FourTrackPreVertexCuts = hasTopoChild()
     _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineFourTrack = CombineParticles( DecayDescriptor="[f_2(1270) -> pi+ pi+ pi- pi-]cc",
                                           CombinationCut = _FourTrackPreVertexCuts,
                                           MotherCut = _FourTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineFourTrack,
                      RequiredSelections = [ trkList  ] )
@@ -1024,9 +1024,9 @@ def makeFourTrackListPions( name,
     """
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ID=='rho(770)0'),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineFourTracks = CombineParticles( DecayDescriptor="f_2(1270) -> rho(770)0 rho(770)0",
                                            CombinationCut = _FourTrackPreVertexCuts,
                                            MotherCut = _FourTrackPostVertexCuts )
@@ -1049,16 +1049,16 @@ def makeFourTrackList_w2KS0( name,
     """
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,((ID=='rho(770)+') | (ID=='rho(770)-')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineFourTracks = CombineParticles( DecayDescriptor="[f_2(1270) -> rho(770)+ rho(770)-]cc",
                                            CombinationCut = _FourTrackPreVertexCuts,
                                            MotherCut = _FourTrackPostVertexCuts )
     return Selection(name,
                      Algorithm = _combineFourTracks,
                      RequiredSelections = [diTrkList])
-                                        
+
 
 def makeFourTrackList_wKS0( name,
                            ksList,
@@ -1076,13 +1076,13 @@ def makeFourTrackList_wKS0( name,
     """
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID =='K_1(1270)+') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ KS0]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ ksList,tritrkList ] )
@@ -1105,17 +1105,17 @@ def makeFourTrackList_wpi0M( name,
 #    _FourTrackPreVertexCuts = hasTopoChild()
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineFourTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ pi0]cc",
                                           CombinationCut = _FourTrackPreVertexCuts,
                                           MotherCut = _FourTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineFourTrack,
                      RequiredSelections = [ pi0List,tritrkList ] )
-                                    
+
 def makeFourTrackList_wpi0R( name,
                              pi0List,
                              tritrkList,
@@ -1132,13 +1132,13 @@ def makeFourTrackList_wpi0R( name,
     """
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
-    
+
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
-    
+
     _combineFourTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ pi0]cc",
                                           CombinationCut = _FourTrackPreVertexCuts,
                                           MotherCut = _FourTrackPostVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineFourTrack,
                      RequiredSelections = [ pi0List,tritrkList ] )
@@ -1163,17 +1163,17 @@ def makeB2B2XG2piGamma( name,
     """
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
-    
+
+
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
     _B2B2XG2piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG2pi = CombineParticles( DecayDescriptor="[B0 -> rho(770)0 gamma]cc",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
                                           CombinationCut = _B2B2XG2piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG2pi,
                      RequiredSelections = [ diTrkList,photons ] )
@@ -1195,16 +1195,16 @@ def makeB2B2XG2piGammaCNV( name,
     """
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG2piPreVertexCuts += "& (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
-    
+
+
     _B2B2XG2piPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG2pi = CombineParticles( DecayDescriptor="[B0 -> rho(770)0 gamma]cc",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
                                           CombinationCut = _B2B2XG2piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG2pi,
                      RequiredSelections = [ diTrkList,CNVphotons ] )
@@ -1224,19 +1224,19 @@ def makeB2B2XGpiKsGamma( name,
     """
     Charmless B2XG to pi+Ks0 selection with missing mass
     """
-    
+
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
     _B2B2XG2piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG2pi = CombineParticles( DecayDescriptor="[B+ -> rho(770)+ gamma]cc",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
                                           CombinationCut = _B2B2XG2piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG2pi,
                      RequiredSelections = [ diTrkList,photons ] )
@@ -1256,18 +1256,18 @@ def makeB2B2XG3piGamma( name,
     """
     Charmless B2XG to 3pi selection with missing mass
     """
-    
+
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG3piPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B+ -> K_1(1270)+ gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ triTrkList, photons ] )
@@ -1287,19 +1287,19 @@ def makeB2B2XG2piKsGamma( name,
     """
     Charmless B2XG to 2pi+Ks0 selection with missing mass
     """
-    
+
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K*_2(1430)0') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
-    _B2B2XG3piPostVertexCuts = hasHighTopoChild() 
+
+    _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> K*_2(1430)0 gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ triTrkList, photons ] )
@@ -1318,19 +1318,19 @@ def makeB2B2XG2pipi0Gamma( name,
     """
     Charmless B2XG to 2pi+ pi0 selection with missing mass
     """
-    
+
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='eta')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> eta gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ triTrkList, photons ] )
@@ -1349,19 +1349,19 @@ def makeB2B2XG4piGamma( name,
     """
     Charmless B2XG to 4pi (a group of three tracks with an additional one) selection with missing mass
     """
-    
+
     _B2B2XG4piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG4piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC| (ID=='f_2(1270)') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG4piPostVertexCuts = hasHighTopoChild()
     _B2B2XG4piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG4piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG4piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG4pi = CombineParticles( DecayDescriptor="[B0 -> f_2(1270) gamma]cc",
                                           MotherCut = _B2B2XG4piPostVertexCuts,
                                           CombinationCut = _B2B2XG4piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG4pi,
                      RequiredSelections = [ fourTrkList, photons ] )
@@ -1380,19 +1380,19 @@ def makeB2B2XG3piKsGamma( name,
     """
     Charmless B2XG to 3pi+Ks0 selection with missing mass
     """
-    
+
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_2(1770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> K_2(1770)+ gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ fourTrkList, photons ] )
@@ -1411,19 +1411,19 @@ def makeB2B2XG3pipi0Gamma( name,
     """
     Charmless B2XG to 3pi+merged pi0 selection with missing mass
     """
-    
+
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_2(1770)+')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B+ -> K_2(1770)+ gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ fourTrkList, photons ] )
@@ -1443,19 +1443,19 @@ def makeB2B2XGLambdapiGamma( name,
     """
     Charmless B to pi Lambda gamma selection with missing mass
     """
-    
+
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XGLambdapi = CombineParticles( DecayDescriptor="[B+ -> Lambda0 gamma pi+]cc",
                                                MotherCut = _B2B2XGLambdaPostVertexCuts,
                                                CombinationCut = _B2B2XGLambdaPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XGLambdapi,
                      RequiredSelections = [ lambdas, photons, trkList ] )
@@ -1476,19 +1476,19 @@ def makeB2B2XGLambda2piGamma( name,
     """
     Charmless B to 2pi Lambda gamma selection with missing mass
     """
-    
+
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='rho(770)0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XGLambda = CombineParticles( DecayDescriptor="[B0 -> Lambda0 gamma rho(770)0]cc",
                                              MotherCut = _B2B2XGLambdaPostVertexCuts,
                                              CombinationCut = _B2B2XGLambdaPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XGLambda,
                      RequiredSelections = [ lambdas, photons, diTrkList ] )
@@ -1508,19 +1508,19 @@ def makeB2B2XGLambda3piGamma( name,
     """
     Charmless B to 3pi Lambda gamma selection with missing mass
     """
-    
+
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
-    
+
     _combineB2B2XGLambda = CombineParticles( DecayDescriptor="[B+ -> Lambda0 gamma K_1(1270)+]cc",
                                              MotherCut = _B2B2XGLambdaPostVertexCuts,
                                              CombinationCut = _B2B2XGLambdaPreVertexCuts )
-    
+
     return Selection(name,
                      Algorithm = _combineB2B2XGLambda,
                      RequiredSelections = [ lambdas, photons, triTrkList ] )
@@ -1539,15 +1539,15 @@ def makeB2B2XGLambda3piGamma( name,
 #     """
 #     Charmless Lambda_b0 to Lambda gamma selection with missing mass
 #     """
-    
+
 #     _B2Lb2XGLambdaPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-    
+
 #     _B2Lb2XGLambdaPostVertexCuts = "in_range( 0 ,M, 10000*MeV )"
-    
+
 #     _combineB2Lb2XGLambda = CombineParticles( DecayDescriptor="[Lambda_b0 -> Lambda0 gamma]cc",
 #                                               MotherCut = _B2Lb2XGLambdaPostVertexCuts,
 #                                               CombinationCut = _B2Lb2XGLambdaPreVertexCuts )
-    
+
 #     return Selection(name,
 #                      Algorithm = _combineB2Lb2XGLambda,
 #                      RequiredSelections = [ lambdas, photons ] )
