@@ -4,6 +4,10 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!====================== MooreScripts v1r1 2014-01-17 ==========================
+! 2014-01-17 - Rob Lambert
+ - Remove install_tck_manifest, no longer needed.
+
 !====================== MooreScripts v1r0 2013-10-30 ==========================
 ! 2013-10-22 - Rob Lambert
  - Split the PostInstall script into two, now it only makes the EFF files
