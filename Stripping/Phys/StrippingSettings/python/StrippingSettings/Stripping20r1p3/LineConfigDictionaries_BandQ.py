@@ -17,35 +17,44 @@ from GaudiKernel.SystemOfUnits import *
 CC2DD = {        
     'WGs'               : ['BandQ'],
     'BUILDERTYPE'       : 'CC2DDConf',
-    'CONFIG'   :  {'D0MassWin'               : "60*MeV",
-                   'D0PT'                    : "0*MeV",
-                   'D0VtxChi2Ndof'           : 10,
-                   'D0Bpvdira'               : -10.,
-                   'D0Bpvdls'                : 4.,
-                   'D0daughterBpvIpChi2'     : 3.,
-                   'D0daughterPT'            : "500*MeV",
-                   'D0daughterP'             : "5*GeV",
-                   'D0daughterTrkChi2'       : 3,
-                   'D0daughterTrkGhostProb'  : 0.3,
-                   'D0daughterKaonPIDK'      : 5,
-                   'D0daughterPionPIDK'      : 10,
-############################
-                   'DpmMassWin'              : "60*MeV",
-                   'DpmPT'                   : "0*MeV",
-                   'DpmVtxChi2Ndof'          : 10,
-                   'DpmBpvdira'              : -10.,
-                   'DpmBpvdls'               : 4.,
-                   'DpmdaughterBpvIpChi2'    : 3.,
+    'CONFIG'   :  {
+######## D0 / D~0 -> K pi cuts
+                   'D0MassWin'     : "60*MeV",
+                   'D0PT'          : "1000*MeV",
+                   'D0VtxChi2Ndof' : 10,
+                   'D0Bpvdira'     : -10.,
+                   'D0Bpvdls'      : 4.,
+                   'D0daughterBpvIpChi2'    : 4.,
+                   'D0daughterPT'           : "600*MeV",
+                   'D0daughterP'            : "5*GeV",
+                   'D0daughterTrkChi2'      : 3,
+                   'D0daughterTrkGhostProb' : 0.3,
+### ProbNN conditions
+                   'D0daughterKaonProbNNk'  : 0.1,
+                   'D0daughterPionProbNNpi' : 0.1,
+######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
+                   'DpmMassWin'     : "60*MeV",
+                   'DpmPT'          : "1000*MeV",
+                   'DpmVtxChi2Ndof' : 10,
+                   'DpmBpvdira'     : -10.,
+                   'DpmBpvdls'      : 4.,
+                   'DpmdaughterBpvIpChi2'    : 4.,
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
                    'DpmdaughterTrkChi2'      : 3,
                    'DpmdaughterTrkGhostProb' : 0.3,
-                   'DpmdaughterKaonPIDK'     : 5,
-                   'DpmdaughterPionPIDK'     : 10,
+### ProbNN conditions
+                   'DpmdaughterKaonProbNNk'  : 0.1,
+                   'DpmdaughterPionProbNNpi' : 0.1,
+######## psi(3779) -> D D  cuts
+#                   'CCMassCut'     : "(AM<5000*MeV)",
 # no mass constraint
-                   'CCMassCut'               : "(AM>0)",
-                   'CCVtxChi2Ndof'           : 10,
-                   },
+                   'CCMassCut'      : "(AM>0)",
+                   'CCVtxChi2Ndof'  : 10,
+                   'CCMaxD0ChildPT' : "1500*MeV",
+                   'CCMaxD0TreePT'  : "1200*MeV",
+                   'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
+                 },
     'STREAMS' : [
         'CharmCompleteEvent' 
         ],
@@ -149,9 +158,9 @@ Xic2HHH = {
 }   
 
 
-### ###############################################################
-### ### StrippingXibStarToXibZero
-### ###------------------------------------------------------------
+###############################################################
+### StrippingXibStarToXibZero
+###------------------------------------------------------------
 ### Defined in: StrippingXibStarToXibZero.py
 ### Proponent:  matthew.john.charles@cern.ch
 ### Motivation: FCNC searches, Xib* searches, selection tuning
@@ -162,13 +171,16 @@ Xic2HHH = {
 XibStarToXibZero = {
     'WGs'           : ['BandQ'],
     'BUILDERTYPE'   : 'XibStarBuilder',
-    'CONFIG'        : {  'LongTrackGEC' : 300
-                          , 'prescale'  : 1.0
-                          , 'prescaleControlHadronic' : 1.0
-                          , 'prescaleControlMuonic' : 1.0
+    'CONFIG'        : {  
+                        'LongTrackGEC'              : 300
+                        , 'prescaleSignalDefault'   : 1.0
+                        , 'prescaleSignalJpsi'      : 1.0
+                        , 'prescaleControlHadronic' : 0.1
+                        , 'prescaleControlMuonic'   : 1.0
+                        , 'XibStar_PT_Min'          : 2500.0*MeV
                       },
     'STREAMS' : [
-        'Charm' 
+        'Bhadron' 
         ],
 }
 
@@ -179,7 +191,7 @@ XibStarToXibZero = {
 ### Defined in:                 StrippingPromptCharm.py
 ### Proponent:                  Ivan.Belyaev@cern.ch
 ### Motivation:                 coherent stripping of stable charm hadrons
-### Documentation:              Presentation expected on 2014-01-16 (P&P)
+### Documentation: https://indico.cern.ch/conferenceDisplay.py?confId=270130
 #########################################################
 
 PromptCharm = {
