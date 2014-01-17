@@ -127,6 +127,9 @@ class BW_BW : public DalitzEventAccess, virtual public ILineshape{
 
   virtual bool isWeakDecay() const;
 
+  /**
+     Unnormalised Blatt-Weisskopf Barrier Factors
+  */
   virtual double Fr_PDG_BL();
   virtual double Fr_BELLE(double prSquared);
   virtual double Fr_BELLE_Max();

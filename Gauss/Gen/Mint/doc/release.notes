@@ -6,13 +6,17 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2014-01-17 - Jeremy
+ - Lineshape of Breit_wigner now multiplied by the unnormalised Barrier Factors instead of the normalised versions
+  . The Breit-Wigner mass-dependent width itself still uses the normalised version as it should
+
 ! 2014-01-16 - Jeremy
  - Fixed an issue where the PDG mass of a non-resonant particle was set to 999
   . This led to the breakup momentum of the D0, q0_D0 being negative and then reset to 0
   . This led to a wrong barrier factor
   . In the case of non-resonant particles, the reconstructed mass is now used
 
-! 2014-01-06 - Jeremy
+! 2014-01-08 - Jeremy
  - Added a new class DalitzMCMC that allows MC generation using a Markov Chain algorithm
   . Note that small samples of DalitzMCMC are inherently biased
   . Generate a huge sample of MCMC first, then draw events randomly from that

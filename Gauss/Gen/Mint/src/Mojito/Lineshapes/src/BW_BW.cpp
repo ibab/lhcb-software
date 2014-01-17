@@ -1039,7 +1039,8 @@ std::complex<double> BW_BW::getVal(){
       }
       return 1;
     }
-    double returnVal = Fr(); // this is where Lauren's is different, I think.
+    //double returnVal = Fr(); //Old version uses unnormalised Barrier Factors
+    const double returnVal = Fr_PDG_BL();
     if(dbThis && (returnVal > 2 || returnVal < 0.5)){
       cout << " BW_BW for " 
 	   << _theDecay.oneLiner() << endl; // dbg
@@ -1065,7 +1066,8 @@ std::complex<double> BW_BW::getVal(){
 	 << "\n    > EvtGenValue " << EvtGenValue()
 	 << endl;
   }
-  std::complex<double> returnVal = Fr()*BreitWigner();
+  //std::complex<double> returnVal = Fr()*BreitWigner(); //Unnormalised BFs
+  const std::complex<double> returnVal = Fr_PDG_BL()*BreitWigner();
   if(dbThis) cout << " value = " << returnVal 
        << "|A|^2 | " << returnVal.real()*returnVal.real() 
 	       + returnVal.imag()*returnVal.imag()
