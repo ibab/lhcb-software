@@ -141,7 +141,7 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   int evtCount = -1;
   int etyp = EVENT_TYPE_MEP;
   string name = "producer", buff="Events";
-  string fname = "../cmt/mepData_0.dat";
+  string fname = "mepData_0.dat";
   bool async = cli.getopt("asynchronous",1) != 0;
   bool debug = cli.getopt("debug",1) != 0;
   bool unused = cli.getopt("mapunused",1) != 0;

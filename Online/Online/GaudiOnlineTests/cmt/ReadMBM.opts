@@ -1,2 +1,0 @@
-#include "$GAUDIONLINEROOT/options/ReadMBM.opts"
-ApplicationMgr.Dlls += "GaudiOnline";

@@ -281,7 +281,9 @@ extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
   const char *a7[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtServer('OUT',True)");
   const char *a8[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender('Receiver')");
   const char *a9[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runNetCons('EvtServ',1,0.0005)");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=1000",0};
+  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", 
+		       "mep2mbm_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=1000",
+		       "-input=Events","-file=mepData_0.dat",0};
   const char *asum[] ={"libOnlineKernel.so", "mbm_summary",0};
 
   Process::setDebug(true);  

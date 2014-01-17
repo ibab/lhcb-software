@@ -17,5 +17,5 @@ start_py_task Moore_TMO   "import GaudiOnlineTests;GaudiOnlineTests.runMBMReadTi
 #start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #
-# export UTGID=${NODENAME}/prod_0; $gaudi_run libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
+# export UTGID=${NODENAME}/prod_0; $gaudi_run libGaudiOnline.so mep2mbm_producer -n=prod_0 -p=333 -s=500 -r=2
 tail -n 3 ${0}
