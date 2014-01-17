@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-17 - Anton Poluektov 
+ - Added B0->D(*) Ks h lines to Beauty2Charm
+
 ! 2014-01-17 - Lucio Anderlini (for Yury Shcheglov)
  - Commtted new version of StrippingXic2HHH.py
 

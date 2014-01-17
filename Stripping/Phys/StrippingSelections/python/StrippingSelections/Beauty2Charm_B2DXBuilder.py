@@ -75,6 +75,7 @@ class B2DXBuilder(object):
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB02DstH('Dst2D0Pi_D2KSHHLL',self.dst.d0pi_kshh_ll)
         self._makeB02DstH('Dst2D0Pi_D2KSHHDD',self.dst.d0pi_kshh_dd)
+	self._makeB02DstKsH('Dst2D0Pi', self.dst.d0pi)
         # B -> D0(HHHH) X
         self._makeB2D0H('D2HHHH',self.d.hhhh) # B+- -> D0(HHHH) H+-
         self._makeB2D0H('D2HHHHWS',self.d.hhhh_ws)
@@ -192,12 +193,16 @@ class B2DXBuilder(object):
                   'B02DPiPi0Resolved': ["[B0 -> D- pi+ pi0]cc"],
                   'B02DKsPiDD' : ["[B0 -> D- pi+ KS0]cc"],
                   'B02DKsPiLL' : ["[B0 -> D- pi+ KS0]cc"],
+                  'B02DKsKDD' : ["[B0 -> D- K+ KS0]cc"],
+                  'B02DKsKLL' : ["[B0 -> D- K+ KS0]cc"],
                   'B02DKPi0Merged' : ["[B0 -> D- K+ pi0]cc"],
                   'B02DKPi0Resolved' : ["[B0 -> D- K+ pi0]cc"]}
         inputs = {'B02DPiPi0Merged': d2x+self.topoPions+self.pi0['Merged'],
                   'B02DPiPi0Resolved': d2x+self.topoPions+self.pi0['Resolved'],
                   'B02DKsPiDD' : d2x+self.topoPions+self.ks['DD'],
                   'B02DKsPiLL' : d2x+self.topoPions+self.ks['LL'],
+                  'B02DKsKDD' : d2x+self.topoKaons+self.ks['DD'],
+                  'B02DKsKLL' : d2x+self.topoKaons+self.ks['LL'],
                   'B02DKPi0Merged' : d2x+self.topoKaons+self.pi0['Merged'],
                   'B02DKPi0Resolved' : d2x+self.topoKaons+self.pi0['Resolved']}
         b02dhh_rs = makeB2XSels(decays,dname,inputs,config)
@@ -205,6 +210,8 @@ class B2DXBuilder(object):
                   'B02DPiPi0ResolvedWS': ["[B0 -> D- pi- pi0]cc"],
                   'B02DKsPiDDWS' : ["[B0 -> D- pi- KS0]cc"],
                   'B02DKsPiLLWS' : ["[B0 -> D- pi- KS0]cc"],
+                  'B02DKsKDDWS' : ["[B0 -> D- K- KS0]cc"],
+                  'B02DKsKLLWS' : ["[B0 -> D- K- KS0]cc"],
                   'B02DKPi0MergedWS' : ["[B0 -> D- K- pi0]cc"],
                   'B02DKPi0ResolvedWS' : ["[B0 -> D- K- pi0]cc"]}
         inputs = {'B02DPiPi0MergedWS': d2x+self.topoPions+self.pi0['Merged'],
@@ -212,6 +219,8 @@ class B2DXBuilder(object):
                   +self.pi0['Resolved'],
                   'B02DKsPiDDWS' : d2x+self.topoPions+self.ks['DD'],
                   'B02DKsPiLLWS' : d2x+self.topoPions+self.ks['LL'],
+                  'B02DKsKDDWS' : d2x+self.topoKaons+self.ks['DD'],
+                  'B02DKsKLLWS' : d2x+self.topoKaons+self.ks['LL'],
                   'B02DKPi0MergedWS' : d2x+self.topoKaons+self.pi0['Merged'],
                   'B02DKPi0ResolvedWS' : d2x+self.topoKaons\
                   +self.pi0['Resolved']}
@@ -360,6 +369,38 @@ class B2DXBuilder(object):
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
         self.lines.append(ProtoLine(b2dsth,1.0))
                                     
+    def _makeB02DstKsH(self,dname,d2x):
+        '''Makes B0 -> D*+- H-+ Ks0'''
+        decays = {
+                  'B02DstarKsPiDD': ["B0 -> D*(2010)- KS0 pi+","B0 -> D*(2010)+ KS0 pi-"],
+                  'B02DstarKsKDD' : ["B0 -> D*(2010)- KS0 K+","B0 -> D*(2010)+ KS0 K-"],
+                  'B02DstarKsPiLL': ["B0 -> D*(2010)- KS0 pi+","B0 -> D*(2010)+ KS0 pi-"],
+                  'B02DstarKsKLL' : ["B0 -> D*(2010)- KS0 K+","B0 -> D*(2010)+ KS0 K-"]
+                 }
+        inputs = {
+                  'B02DstarKsPiDD': d2x+self.topoPions + self.ks['DD'],
+                  'B02DstarKsKDD' : d2x+self.topoKaons + self.ks['DD'],
+                  'B02DstarKsPiLL': d2x+self.topoPions + self.ks['LL'],
+                  'B02DstarKsKLL' : d2x+self.topoKaons + self.ks['LL'] 
+                 }
+        b2dstksh_rs = makeB2XSels(decays,dname,inputs,self.config,True,False)
+        self.lines.append(ProtoLine(b2dstksh_rs,1.0))
+
+        decays = {
+                  'B02DstarKsPiDDWS': ["B0 -> D*(2010)- KS0 pi-","B0 -> D*(2010)+ KS0 pi+"],
+                  'B02DstarKsKDDWS' : ["B0 -> D*(2010)- KS0 K-","B0 -> D*(2010)+ KS0 K+"],
+                  'B02DstarKsPiLLWS': ["B0 -> D*(2010)- KS0 pi-","B0 -> D*(2010)+ KS0 pi+"],
+                  'B02DstarKsKLLWS' : ["B0 -> D*(2010)- KS0 K-","B0 -> D*(2010)+ KS0 K+"]
+                 }
+        inputs = {
+                  'B02DstarKsPiDDWS': d2x+self.topoPions + self.ks['DD'],
+                  'B02DstarKsKDDWS' : d2x+self.topoKaons + self.ks['DD'],
+                  'B02DstarKsPiLLWS': d2x+self.topoPions + self.ks['LL'],
+                  'B02DstarKsKLLWS' : d2x+self.topoKaons + self.ks['LL'] 
+                 }
+        b2dstksh_ws = makeB2XSels(decays,dname,inputs,self.config,True,False)
+        self.lines.append(ProtoLine(b2dstksh_ws,0.1))
+
     def _makeB02D0HH(self,dname,d2x,presc=1.0):
         '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
         decays = {'B02D0PiPi' : ["B0 -> D0 rho(770)0"],
