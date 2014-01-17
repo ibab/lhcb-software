@@ -595,22 +595,26 @@ LoKi::AParticles::VertexChi2::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
-LoKi::AParticles::MaxDOCA::MaxDOCA ( const IDistanceCalculator*  doca  ) 
- : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
+LoKi::AParticles::MaxDOCA::MaxDOCA 
+( const IDistanceCalculator*  doca  , 
+  const bool                  allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
-( const LoKi::Interface<IDistanceCalculator>& doca  ) 
- : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
+( const LoKi::Interface<IDistanceCalculator>& doca  ,
+  const bool                                  allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCA::MaxDOCA
-( const std::string& doca  ) 
-  : LoKi::AParticles::MaxDOCA::DOCA ( 1 , 1 , doca ) 
+( const std::string& doca  ,
+  const bool         allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -632,27 +636,32 @@ LoKi::AParticles::MaxDOCA::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCA::fillStream ( std::ostream& s ) const 
-{ return s << "AMAXDOCA('" << toolName() << "')" ; }
+{ return s << "AMAXDOCA('" 
+           << toolName() << "',"
+           << ( allow() ? "True" : "False" ) 
+           << "')" ; }
 
 
 // ============================================================================
 // constructor from the tool and threshold 
 // ============================================================================
 LoKi::AParticles::MaxDOCACut::MaxDOCACut 
-( const double          threshold ,
-  const IDistanceCalculator*  doca      ) 
+( const double                threshold ,
+  const IDistanceCalculator*  doca      ,
+  const bool                  allow     ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( 1 , 1 , doca ) 
+  , m_doca      ( 1 , 1 , doca , allow ) 
   , m_threshold ( threshold )
 {}
 // ============================================================================
 // constructor from the tool and threshold 
 // ============================================================================
 LoKi::AParticles::MaxDOCACut::MaxDOCACut
-( const double                           threshold ,
-  const LoKi::Interface<IDistanceCalculator>& doca )
+( const double                                threshold ,
+  const LoKi::Interface<IDistanceCalculator>& doca      ,
+  const bool                                  allow     ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( 1 , 1 , doca ) 
+  , m_doca      ( 1 , 1 , doca , allow ) 
   , m_threshold ( threshold )
 {}
 // ============================================================================
@@ -660,9 +669,10 @@ LoKi::AParticles::MaxDOCACut::MaxDOCACut
 // ============================================================================
 LoKi::AParticles::MaxDOCACut::MaxDOCACut
 ( const double       threshold ,
-  const std::string& doca      )
+  const std::string& doca      ,
+  const bool         allow     ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
-  , m_doca      ( 1 , 1 , doca ) 
+  , m_doca      ( 1 , 1 , doca , allow ) 
   , m_threshold ( threshold )
 {}
 // ============================================================================
@@ -691,28 +701,33 @@ std::ostream&
 LoKi::AParticles::MaxDOCACut::fillStream ( std::ostream& s ) const 
 { return s << "ACUTDOCA(" 
            << m_threshold << ",'" 
-           << toolName() << "')" ; }
+           << toolName()  << "',"
+           << ( allow() ? "True" : "False" ) 
+           << "')" ; }
 
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2 
-( const IDistanceCalculator*  doca  ) 
-  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca ) 
+( const IDistanceCalculator*  doca  , 
+  const bool                  allow )
+  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:L
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
-( const LoKi::Interface<IDistanceCalculator>& doca  ) 
-  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca ) 
+( const LoKi::Interface<IDistanceCalculator>& doca  , 
+  const bool                                  allow )
+  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:L
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2::MaxDOCAChi2
-( const std::string& doca  ) 
-  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca ) 
+( const std::string& doca  ,
+  const bool         allow )
+  : LoKi::AParticles::DOCAChi2 ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -734,32 +749,38 @@ LoKi::AParticles::MaxDOCAChi2::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2::fillStream ( std::ostream& s ) const 
-{ return s << "AMAXDOCACHI2('" << toolName () << "')" ; }
+{ return s << "AMAXDOCACHI2('" 
+           << toolName () << "',"
+           << ( allow() ? "True" : "False" )
+           << "')" ; }
 
 
 // ============================================================================
 // constructor from the tool and threshold 
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut 
-( const double          threshold ,
-  const IDistanceCalculator*  doca      ) 
-  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
+( const double                threshold ,
+  const IDistanceCalculator*  doca      , 
+  const bool                  allow     )
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca , allow  ) 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
-( const double                           threshold ,
-  const LoKi::Interface<IDistanceCalculator>& doca )
-  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
+( const double                                threshold ,
+  const LoKi::Interface<IDistanceCalculator>& doca      ,
+  const bool                                  allow     )
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool and threshold 
 // ============================================================================
 LoKi::AParticles::MaxDOCAChi2Cut::MaxDOCAChi2Cut
-( const double                           threshold ,
-  const std::string& doca )
-  : LoKi::AParticles::MaxDOCACut ( threshold , doca ) 
+( const double       threshold ,
+  const std::string& doca      ,
+  const bool         allow     )
+  : LoKi::AParticles::MaxDOCACut ( threshold , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -786,7 +807,9 @@ LoKi::AParticles::MaxDOCAChi2Cut::operator()
 std::ostream& 
 LoKi::AParticles::MaxDOCAChi2Cut::fillStream ( std::ostream& s ) const 
 { return s << "ACUTDOCACHI2(" << m_threshold << ",'" 
-           << toolName ()  << "')" ; }
+           << toolName ()  << "',"
+           << ( allow() ? "True" : "False" )
+           << "')" ; }
 // ============================================================================
 /*  constructor with daughter index (starts from 1).
  *  E.g. for 2-body decays it could be 1 or 2 
@@ -1130,31 +1153,34 @@ LoKi::AParticles::AbsDeltaMass::fillStream( std::ostream& s ) const
 // constructor from two indices and the tool 
 // ============================================================================
 LoKi::AParticles::DOCA::DOCA 
-( const size_t               i1 , 
-  const size_t               i2 , 
-  const IDistanceCalculator* dc ) 
+( const size_t               i1    , 
+  const size_t               i2    , 
+  const IDistanceCalculator* dc    , 
+  const bool                 allow ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval ( i1 , i2 , dc ) 
+  , m_eval ( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool 
 // ============================================================================
 LoKi::AParticles::DOCA::DOCA 
-( const size_t                                i1 , 
-  const size_t                                i2 , 
-  const LoKi::Interface<IDistanceCalculator>& dc ) 
+( const size_t                                i1    , 
+  const size_t                                i2    , 
+  const LoKi::Interface<IDistanceCalculator>& dc    ,
+  const bool                                  allow ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval ( i1 , i2 , dc ) 
+  , m_eval ( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::AParticles::DOCA::DOCA 
-( const size_t       i1 , 
-  const size_t       i2 , 
-  const std::string& nick ) 
+( const size_t       i1    , 
+  const size_t       i2    , 
+  const std::string& nick  ,
+  const bool         allow ) 
   : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
-  , m_eval ( i1 , i2 , nick ) 
+  , m_eval ( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -1184,7 +1210,9 @@ std::ostream& LoKi::AParticles::DOCA::fillStream ( std::ostream& s ) const
 { return s << "ADOCA(" 
            << m_eval.firstIndex  () << "," 
            << m_eval.secondIndex () << ",'" 
-           <<        toolName    () << "')" ; }
+           <<        toolName    () << "',"
+           << ( allow() ? "True" : "False" )
+           << "')" ; }
 // ============================================================================
 
 
@@ -1192,28 +1220,31 @@ std::ostream& LoKi::AParticles::DOCA::fillStream ( std::ostream& s ) const
 // constructor from two indices and the tool 
 // ============================================================================
 LoKi::AParticles::DOCAChi2::DOCAChi2
-( const size_t               i1 , 
-  const size_t               i2 , 
-  const IDistanceCalculator* dc ) 
-  : LoKi::AParticles::DOCA ( i1 , i2 , dc ) 
+( const size_t               i1    , 
+  const size_t               i2    , 
+  const IDistanceCalculator* dc    ,
+  const bool                 allow ) 
+  : LoKi::AParticles::DOCA ( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool 
 // ============================================================================
 LoKi::AParticles::DOCAChi2::DOCAChi2 
-( const size_t                                i1 , 
-  const size_t                                i2 , 
-  const LoKi::Interface<IDistanceCalculator>& dc ) 
-  : LoKi::AParticles::DOCA ( i1 , i2 , dc ) 
+( const size_t                                i1    , 
+  const size_t                                i2    , 
+  const LoKi::Interface<IDistanceCalculator>& dc    , 
+  const bool                                  allow ) 
+  : LoKi::AParticles::DOCA ( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::AParticles::DOCAChi2::DOCAChi2 
-( const size_t       i1 , 
-  const size_t       i2 , 
-  const std::string& nick ) 
-  : LoKi::AParticles::DOCA ( i1 , i2 , nick ) 
+( const size_t       i1    , 
+  const size_t       i2    , 
+  const std::string& nick  ,
+  const bool         allow ) 
+  : LoKi::AParticles::DOCA ( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -1242,29 +1273,35 @@ std::ostream& LoKi::AParticles::DOCAChi2::fillStream ( std::ostream& s ) const
 { return s << "ADOCACHI2(" 
            << m_eval.firstIndex  () << "," 
            << m_eval.secondIndex () << ",'" 
-           <<        toolName    () << "')" ; }
+           <<        toolName    () << "',"
+           << ( allow() ? "True" : "False" )
+           << "')" ; }
 // ============================================================================
 
 
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
-LoKi::AParticles::MinDOCA::MinDOCA ( const IDistanceCalculator*  doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+LoKi::AParticles::MinDOCA::MinDOCA
+( const IDistanceCalculator*  doca  , 
+  const bool                  allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MinDOCA::MinDOCA
-( const LoKi::Interface<IDistanceCalculator>& doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+( const LoKi::Interface<IDistanceCalculator>& doca  ,
+  const bool                                  allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // constructor from the tool:
 // ============================================================================
 LoKi::AParticles::MinDOCA::MinDOCA
-( const std::string& doca  ) 
-  : LoKi::AParticles::DOCA ( 1 , 1 , doca ) 
+( const std::string& doca  ,
+  const bool         allow ) 
+  : LoKi::AParticles::DOCA ( 1 , 1 , doca , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -1293,7 +1330,10 @@ LoKi::AParticles::MinDOCA::operator()
 // ============================================================================
 std::ostream& 
 LoKi::AParticles::MinDOCA::fillStream ( std::ostream& s ) const 
-{ return s << "AMINDOCA('" << toolName() << "')" ; }
+{ return s << "AMINDOCA('" 
+           << toolName()  << "',"
+           << ( allow() ? "True" : "False" )
+           << "')" ; }
 
 
 // ============================================================================
