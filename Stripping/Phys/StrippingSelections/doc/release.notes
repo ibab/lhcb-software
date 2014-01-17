@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2014-01-03 - Lucio Anderlini (for Andrea Bizzeti)
+ - Updated StrippingCC2DD.py. 
 
 ! 2014-01-17 - Albert Puig
  - Added the new inclusive radiative Stripping from Pablo.

@@ -5,45 +5,53 @@ Module for construction of CC->D D, where CC is a particle decaying to D D
                                     or one of their antipartciles
 '''
 
-__author__ = ['Lucio Anderlini, Andrea Bizzeti']
-__date__ = '2014-01-03'
-__version__ = '$Revision: 0.1 $'
+__author__ = ['Lucio Anderlini e Andrea Bizzeti']
+__date__ = '2014-01-17'
+__version__ = '$Revision: 0.2f $'
 
 __all__ = ('CC2DDConf',
            'makeD02HH',
-           'makeDp2HHH')
+           'makeDp2HHH',
+           'makeDs2HHH')
 
 
-config_default =  {'D0MassWin'     : "60*MeV",
-                   'D0PT'          : "0*MeV",
+config_default =  {
+######## D0 / D~0 -> K pi cuts
+                   'D0MassWin'     : "60*MeV",
+                   'D0PT'          : "1000*MeV",
                    'D0VtxChi2Ndof' : 10,
                    'D0Bpvdira'     : -10.,
                    'D0Bpvdls'      : 4.,
-###                   'D0daughterMinIpChi2'    : 3.,   # identical to BpvIPChi2 ???
-                   'D0daughterBpvIpChi2'    : 3.,
-                   'D0daughterPT'           : "500*MeV",
+                   'D0daughterBpvIpChi2'    : 4.,
+                   'D0daughterPT'           : "600*MeV",
                    'D0daughterP'            : "5*GeV",
                    'D0daughterTrkChi2'      : 3,
                    'D0daughterTrkGhostProb' : 0.3,
-                   'D0daughterKaonPIDK'     : 5,
-                   'D0daughterPionPIDK'     : 10,
-############################
+### ProbNN conditions
+                   'D0daughterKaonProbNNk'  : 0.1,
+                   'D0daughterPionProbNNpi' : 0.1,
+######## Dplus/Dminus -> Kpipi cuts, used also for D_s+/D_s- ->KKpi
                    'DpmMassWin'     : "60*MeV",
-                   'DpmPT'          : "0*MeV",
+                   'DpmPT'          : "1000*MeV",
                    'DpmVtxChi2Ndof' : 10,
                    'DpmBpvdira'     : -10.,
                    'DpmBpvdls'      : 4.,
-                   'DpmdaughterBpvIpChi2'    : 3.,
+                   'DpmdaughterBpvIpChi2'    : 4.,
                    'DpmdaughterPT'           : "500*MeV",
                    'DpmdaughterP'            : "5*GeV",
                    'DpmdaughterTrkChi2'      : 3,
                    'DpmdaughterTrkGhostProb' : 0.3,
-                   'DpmdaughterKaonPIDK' : 5,
-                   'DpmdaughterPionPIDK' : 10,
-#                   'CCMassCut' : "(AM<5000*MeV)",
+### ProbNN conditions
+                   'DpmdaughterKaonProbNNk'  : 0.1,
+                   'DpmdaughterPionProbNNpi' : 0.1,
+######## psi(3779) -> D D  cuts
+#                   'CCMassCut'     : "(AM<5000*MeV)",
 # no mass constraint
-                   'CCMassCut' : "(AM>0)",
-                   'CCVtxChi2Ndof' : 10,
+                   'CCMassCut'      : "(AM>0)",
+                   'CCVtxChi2Ndof'  : 10,
+                   'CCMaxD0ChildPT' : "1500*MeV",
+                   'CCMaxD0TreePT'  : "1200*MeV",
+                   'CCMaxD0MinTreeIpChi2'   : "0.",    ## unused for the moment
                    }
 
 from Gaudi.Configuration import *
@@ -64,8 +72,10 @@ class CC2DDConf(LineBuilder) :
                               'D0daughterTrkChi2',
                               'D0daughterTrkGhostProb',
                               'D0daughterBpvIpChi2',
-                              'D0daughterKaonPIDK',
-                              'D0daughterPionPIDK',
+###                              'D0daughterKaonPIDK',
+###                              'D0daughterPionPIDK',
+                              'D0daughterKaonProbNNk',
+                              'D0daughterPionProbNNpi',
 ####
                               'DpmMassWin',
                               'DpmPT',
@@ -77,11 +87,16 @@ class CC2DDConf(LineBuilder) :
                               'DpmdaughterP',
                               'DpmdaughterTrkChi2',
                               'DpmdaughterTrkGhostProb',
-                              'DpmdaughterKaonPIDK',
-                              'DpmdaughterPionPIDK',
-###
+###                              'DpmdaughterKaonPIDK',
+###                              'DpmdaughterPionPIDK',
+                              'DpmdaughterKaonProbNNk',
+                              'DpmdaughterPionProbNNpi',
+####
                               'CCMassCut',
                               'CCVtxChi2Ndof',
+                              'CCMaxD0ChildPT',
+                              'CCMaxD0TreePT',  
+                              'CCMaxD0MinTreeIpChi2',
                               )
 
     def __init__(self, name, config) :
@@ -99,8 +114,10 @@ class CC2DDConf(LineBuilder) :
                                      D0daughterTrkChi2  = config['D0daughterTrkChi2'],
                                      D0daughterTrkGhostProb = config['D0daughterTrkGhostProb'],
                                      D0daughterBpvIpChi2    = config['D0daughterBpvIpChi2'],
-                                     D0daughterKaonPIDK = config['D0daughterKaonPIDK'],
-                                     D0daughterPionPIDK = config['D0daughterPionPIDK'],
+###                                     D0daughterKaonPIDK     = config['D0daughterKaonPIDK'],
+###                                     D0daughterPionPIDK     = config['D0daughterPionPIDK'],
+                                     D0daughterKaonProbNNk  = config['D0daughterKaonProbNNk'],
+                                     D0daughterPionProbNNpi = config['D0daughterPionProbNNpi'],
                                    )
 
         self.selDp2HHH = makeDp2HHH( 'DpFor'+name, 
@@ -114,15 +131,38 @@ class CC2DDConf(LineBuilder) :
                                      DpmdaughterTrkChi2      = config['DpmdaughterTrkChi2'],
                                      DpmdaughterTrkGhostProb = config['DpmdaughterTrkGhostProb'],
                                      DpmdaughterBpvIpChi2    = config['DpmdaughterBpvIpChi2'],
-                                     DpmdaughterKaonPIDK     = config['DpmdaughterKaonPIDK'],
-                                     DpmdaughterPionPIDK     = config['DpmdaughterPionPIDK'],
+###                                     DpmdaughterKaonPIDK     = config['DpmdaughterKaonPIDK'],
+###                                     DpmdaughterPionPIDK     = config['DpmdaughterPionPIDK'],
+                                     DpmdaughterKaonProbNNk  = config['DpmdaughterKaonProbNNk'],
+                                     DpmdaughterPionProbNNpi = config['DpmdaughterPionProbNNpi'],
+                                   )
+
+        self.selDs2HHH = makeDs2HHH( 'DsFor'+name, 
+                                     DpmMassWin     = config['DpmMassWin'],
+                                     DpmPT          = config['DpmPT'],
+                                     DpmVtxChi2Ndof = config['DpmVtxChi2Ndof'],
+                                     DpmBpvdira     = config['DpmBpvdira'],
+                                     DpmBpvdls      = config['DpmBpvdls'],
+                                     DpmdaughterPT           = config['DpmdaughterPT'],
+                                     DpmdaughterP            = config['DpmdaughterP'],
+                                     DpmdaughterTrkChi2      = config['DpmdaughterTrkChi2'],
+                                     DpmdaughterTrkGhostProb = config['DpmdaughterTrkGhostProb'],
+                                     DpmdaughterBpvIpChi2    = config['DpmdaughterBpvIpChi2'],
+###                                     DpmdaughterKaonPIDK     = config['DpmdaughterKaonPIDK'],
+###                                     DpmdaughterPionPIDK     = config['DpmdaughterPionPIDK'],
+                                     DpmdaughterKaonProbNNk  = config['DpmdaughterKaonProbNNk'],
+                                     DpmdaughterPionProbNNpi = config['DpmdaughterPionProbNNpi'],
                                    )
 
         self.selCC2DD = makeCC2DD(name,  
                                   D0Sel    = self.selD02HH,
                                   DplusSel = self.selDp2HHH,
-                                  CCMassCut     = config['CCMassCut'],
-                                  CCVtxChi2Ndof = config['CCVtxChi2Ndof'],
+                                  DsSel    = self.selDs2HHH,
+                                  CCMassCut      = config['CCMassCut'],
+                                  CCVtxChi2Ndof  = config['CCVtxChi2Ndof'],
+                                  CCMaxD0ChildPT = config['CCMaxD0ChildPT'],
+                                  CCMaxD0TreePT  = config['CCMaxD0TreePT'],
+                                  CCMaxD0MinTreeIpChi2 = config['CCMaxD0MinTreeIpChi2'],
                                  )
 
         self.myLine = StrippingLine(name+"Line",
@@ -134,8 +174,13 @@ class CC2DDConf(LineBuilder) :
         self.registerLine(self.myLine)
 
 
-def makeD02HH(name, D0MassWin, D0PT, D0VtxChi2Ndof, D0Bpvdira, D0Bpvdls, D0daughterPT, D0daughterP, D0daughterTrkChi2,
-                    D0daughterTrkGhostProb, D0daughterBpvIpChi2, D0daughterKaonPIDK, D0daughterPionPIDK ) :
+def makeD02HH(name, D0MassWin, D0PT, D0VtxChi2Ndof, D0Bpvdira, D0Bpvdls,
+                    D0daughterPT, D0daughterP, D0daughterTrkChi2,
+                    D0daughterTrkGhostProb, D0daughterBpvIpChi2,
+###                    D0daughterKaonPIDK, D0daughterPionPIDK,
+                    D0daughterKaonProbNNk, D0daughterPionProbNNpi, 
+              ) :
+
     """
     Create and return a D0 -> K pi 
     """
@@ -144,25 +189,36 @@ def makeD02HH(name, D0MassWin, D0PT, D0VtxChi2Ndof, D0Bpvdira, D0Bpvdls, D0daugh
     _motherCuts += "& (BPVDIRA>%(D0Bpvdira)s) & (BPVDLS>%(D0Bpvdls)s)" % locals()
     _daughtersCuts = "(PT> %(D0daughterPT)s) & (P>%(D0daughterP)s) & (TRCHI2DOF<%(D0daughterTrkChi2)s) " % locals()
     _daughtersCuts += "& (TRGHP<%(D0daughterTrkGhostProb)s) & (BPVIPCHI2()>%(D0daughterBpvIpChi2)s)" % locals()
-    _KCutsPIDK     = "&(PIDK>%(D0daughterKaonPIDK)s)" % locals()
-    _PiCutsPIDK    = "&(PIDK<%(D0daughterPionPIDK)s)" % locals()
-    _KCuts    = _daughtersCuts + _KCutsPIDK
-    _PiCuts   = _daughtersCuts + _PiCutsPIDK
+###    _KCutsPID     = "&( (PIDK>%(D0daughterKaonPIDK)s) | (PROBNNk>%(D0daughterKaonProbNNk)s) )" % locals()
+###    _PiCutsPID    = "&( (PIDK<%(D0daughterPionPIDK)s) | (PROBNNpi>%(D0daughterPionProbNNpi)s) )" % locals()
+    _KCutsPID     = "&(PROBNNk>%(D0daughterKaonProbNNk)s)" % locals()
+    _PiCutsPID    = "&(PROBNNpi>%(D0daughterPionProbNNpi)s)" % locals()
+    _KCuts    = _daughtersCuts + _KCutsPID
+    _PiCuts   = _daughtersCuts + _PiCutsPID
     _D0Filter = CombineParticles( DecayDescriptor = "[D0 -> K- pi+]cc",
                                   MotherCut = _motherCuts,
                                   DaughtersCuts =  { "pi+" : _PiCuts, "K+" : _KCuts }
                                   )
 
-    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
-    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+#    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+#    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseANNKaons/Particles")
+    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLooseANNPions/Particles")
 
     return Selection (name,
                       Algorithm = _D0Filter,
                       RequiredSelections = [_stdTightKaons, _stdTightPions])
 
 
-def makeDp2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls, DpmdaughterBpvIpChi2, DpmdaughterKaonPIDK, DpmdaughterPionPIDK,
-                     DpmdaughterPT, DpmdaughterP, DpmdaughterTrkChi2, DpmdaughterTrkGhostProb ) :
+
+
+def makeDp2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls,
+                     DpmdaughterPT, DpmdaughterP, DpmdaughterTrkChi2,
+                     DpmdaughterTrkGhostProb, DpmdaughterBpvIpChi2,
+###                     DpmdaughterKaonPIDK, DpmdaughterPionPIDK,
+                     DpmdaughterKaonProbNNk, DpmdaughterPionProbNNpi,
+               ) :
+
     """
     Create and return a D+ -> K- pi+ pi+
     """
@@ -171,10 +227,12 @@ def makeDp2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls, D
     _DpmotherCuts += "& (BPVDIRA>%(DpmBpvdira)s) & (BPVDLS > %(DpmBpvdls)s)" % locals()
     _DpdaughtersCuts  = "(PT>%(DpmdaughterPT)s) & (P>%(DpmdaughterP)s) & (TRCHI2DOF<%(DpmdaughterTrkChi2)s) " % locals()
     _DpdaughtersCuts += "& (TRGHP<%(DpmdaughterTrkGhostProb)s) & (BPVIPCHI2()>%(DpmdaughterBpvIpChi2)s)" % locals()
-    _DpKCutsPIDK  = "&(PIDK>%(DpmdaughterKaonPIDK)s)" % locals()
-    _DpPiCutsPIDK = "&(PIDK<%(DpmdaughterPionPIDK)s)" % locals()
-    _DpKCuts  = _DpdaughtersCuts + _DpKCutsPIDK
-    _DpPiCuts = _DpdaughtersCuts + _DpPiCutsPIDK
+###    _KCutsPID     = "&( (PIDK>%(DpmdaughterKaonPIDK)s) | (PROBNNk>%(DpmdaughterKaonProbNNk)s) )" % locals()
+###    _PiCutsPID    = "&( (PIDK<%(DpmdaughterPionPIDK)s) | (PROBNNpi>%(DpmdaughterPionProbNNpi)s) )" % locals()
+    _KCutsPID     = "&(PROBNNk>%(DpmdaughterKaonProbNNk)s)" % locals()
+    _PiCutsPID    = "&(PROBNNpi>%(DpmdaughterPionProbNNpi)s)" % locals()
+    _DpKCuts  = _DpdaughtersCuts + _KCutsPID
+    _DpPiCuts = _DpdaughtersCuts + _PiCutsPID
 
     _DplusFilter = CombineParticles( DecayDescriptor = "[D+ -> K- pi+ pi+]cc",
                                   MotherCut = _DpmotherCuts,
@@ -189,38 +247,95 @@ def makeDp2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls, D
                       RequiredSelections = [_stdTightKaons, _stdTightPions])
 
 
+
+
+def makeDs2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls,
+                     DpmdaughterPT, DpmdaughterP, DpmdaughterTrkChi2,
+                     DpmdaughterTrkGhostProb, DpmdaughterBpvIpChi2,
+###                     DpmdaughterKaonPIDK, DpmdaughterPionPIDK,
+                     DpmdaughterKaonProbNNk, DpmdaughterPionProbNNpi,
+              ) :
+
+    """
+    Create and return a D_s+ -> K- pi+ pi+
+    """
+
+    _DsmotherCuts  = "(ADMASS('D+')<%(DpmMassWin)s) & (PT> %(DpmPT)s) & (VFASPF(VCHI2PDOF) < %(DpmVtxChi2Ndof)s) " % locals()
+    _DsmotherCuts += "& (BPVDIRA>%(DpmBpvdira)s) & (BPVDLS > %(DpmBpvdls)s)" % locals()
+    _DsdaughtersCuts  = "(PT>%(DpmdaughterPT)s) & (P>%(DpmdaughterP)s) & (TRCHI2DOF<%(DpmdaughterTrkChi2)s) " % locals()
+    _DsdaughtersCuts += "& (TRGHP<%(DpmdaughterTrkGhostProb)s) & (BPVIPCHI2()>%(DpmdaughterBpvIpChi2)s)" % locals()
+###    _KCutsPID     = "&( (PIDK>%(DpmdaughterKaonPIDK)s) | (PROBNNk>%(DpmdaughterKaonProbNNk)s) )" % locals()
+###    _PiCutsPID    = "&( (PIDK<%(DpmdaughterPionPIDK)s) | (PROBNNpi>%(DpmdaughterPionProbNNpi)s) )" % locals()
+    _KCutsPID     = "&(PROBNNk>%(DpmdaughterKaonProbNNk)s)" % locals()
+    _PiCutsPID    = "&(PROBNNpi>%(DpmdaughterPionProbNNpi)s)" % locals()
+    _DsKCuts  = _DsdaughtersCuts + _KCutsPID
+    _DsPiCuts = _DsdaughtersCuts + _PiCutsPID
+
+    _DsFilter = CombineParticles( DecayDescriptor = "[D_s+ -> K- K+ pi+]cc",
+                                  MotherCut = _DsmotherCuts,
+                                  DaughtersCuts =  { "pi+" : _DsPiCuts, "K+" : _DsKCuts }
+                                  )
+
+    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+
+    return Selection (name,
+                      Algorithm = _DsFilter,
+                      RequiredSelections = [_stdTightKaons, _stdTightPions])
+
+
 def makeCC2DD(name,
                    D0Sel,
                    DplusSel,
+                   DsSel,
                    CCMassCut,
-                   CCVtxChi2Ndof
+                   CCVtxChi2Ndof,
+                   CCMaxD0ChildPT,
+                   CCMaxD0TreePT,
+                   CCMaxD0MinTreeIpChi2,
                    ) :
     """
     Create and return a X -> DD  Selection Object, with  D = D0(Kpi) or Dp(Kpipi)
     Arguments:
     name          : name of the Selection.
-    D0Sel         : D0 -> HH Selection object.
+    D0Sel         : (D0 -> HH; Dplus,Ds -> HHH) Selection object.
     CCMassCut     : CC invariant mass cuts (not used)
     CCVtxChi2Ndof : CC vertex Chi2/Ndof cut
+    CCMaxD0ChildPT  : highest PT between D0 and D~0
+    CCMaxD0TreePT   : highest PT between all D0/D~0 daughters
+    CCMaxD0MinTreeIpChi2 : max between D0/D~0 minima of daughter's MINIPCHI2
     """
 
     ###_motherCuts = "(ALL)" 
-    _motherCuts = "(VFASPF(VCHI2PDOF)<%(CCVtxChi2Ndof)s)" % locals()
-    _combinationCuts = CCMassCut
+    _motherCuts  = "(VFASPF(VCHI2PDOF)<%(CCVtxChi2Ndof)s)" % locals()
+    _motherCuts += "&(MAXTREE(ISBASIC,PT)>%(CCMaxD0TreePT)s)" % locals()
+    _combinationCuts  = CCMassCut
+    _combinationCuts += "&(AMAXCHILD(PT)>%(CCMaxD0ChildPT)s)" % locals()
+##    _combinationCuts += "&(AMAXCHILD(MINTREE(BPVIPCHI2()))>%(CCMaxD0MinTreeIpChi2)s)" % locals()  ## unused for the moment
+
     #print 'makeBs2JpsiPhi', name, 'MotherCuts:', _motherCuts
-    _X = CombineParticles( DecayDescriptors = [ "psi(3770) -> D0 D~0",
-                                                "psi(3770) -> D+ D-",
-                                               "[psi(3770) -> D0 D0]cc",
-                                               "[psi(3770) -> D+ D+]cc", 
-                                               "[psi(3770) -> D0 D+]cc",
-                                               "[psi(3770) -> D0 D-]cc",
+    _X = CombineParticles( DecayDescriptors = [ ### pure particle-(anti)particle
+                  "psi(3770) -> D0 D~0",
+                 "[psi(3770) -> D0 D0]cc",      ### C=2,       Q=0
+                  "psi(3770) -> D+ D-",
+                 "[psi(3770) -> D+ D+]cc",      ### C=2,       Q=+2
+                  "psi(3770) -> D_s+ D_s-",
+                 "[psi(3770) -> D_s+ D_s+]cc",  ### C=2, S=2,  Q=+2
+                  #################################  mixed (without Ds)
+                 "[psi(3770) -> D0 D-]cc",      ###            Q=-1
+                 "[psi(3770) -> D0 D+]cc",      ### C=2,       Q=+1
+                  #################################  mixed (with Ds)
+                 "[psi(3770) -> D0 D_s-]cc",    ###      S=-1, Q=-1
+                 "[psi(3770) -> D+ D_s-]cc",    ###      S=-1, Q=0
+                 "[psi(3770) -> D0 D_s+]cc",    ### C=2, S=1,  Q=+1
+                 "[psi(3770) -> D+ D_s+]cc",    ### C=2, S=1,  Q=+2
                                                ],
                            MotherCut = _motherCuts,
                            CombinationCut = _combinationCuts
                            )
 
     DSel = MergedSelection ( name + "MergedDSelection",
-                             RequiredSelections = [D0Sel, DplusSel]
+                             RequiredSelections = [D0Sel, DplusSel, DsSel]
                            )
 
     return Selection ( name,
