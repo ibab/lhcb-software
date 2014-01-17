@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-17 - Roberta Cardinale
+	- Added StrippingB2pphh.py with B2ppKK, B2pppipi, B2ppKpi lines
+
 ! 2014-01-17 - Anton Poluektov 
  - Added B0->D(*) Ks h lines to Beauty2Charm
 
