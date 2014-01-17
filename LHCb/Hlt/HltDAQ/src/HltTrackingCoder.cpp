@@ -1,14 +1,14 @@
-// Include files 
+// Include files
 #include <functional>
 #include <algorithm>
 
 // local
-#include "core/HltTrackingCoder.h" 
+#include "HltTrackingCoder.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for Track en/decoding functions 
+// Implementation file for Track en/decoding functions
 // to be used by the HltTrackingWriter and HltTrackingDecoder
 // Both functions are implemented here in the same file in order to
 // keep them in synch easily.
@@ -16,10 +16,10 @@ using namespace LHCb;
 // Unit tests for these functions are in utestTrackingCoder.cxx
 //
 // Track rawbank format:
-// 
+//
 //  For each track:
 //  (nLhHCbIDs, ID0, ID1, ... IDn)
-//   
+//
 //  tracks are just concatenated
 //
 // 20014-01-14 : Sebastian Neubert
@@ -29,7 +29,7 @@ using namespace LHCb;
 void
 encodeTracks(const LHCb::Tracks* tracks,
 	     std::vector<unsigned int>& rawBank){
-  
+
   for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
       LHCb::Track* Tr = (*pItr);
       unsigned int nhits= Tr->nLHCbIDs();
@@ -37,7 +37,7 @@ encodeTracks(const LHCb::Tracks* tracks,
 
       // behold the awesomness of C++11 functional programming
       // here use the C++ "map" functional transform together with a C++ Lambda construct to fill the LHCbIDs into the bank
-      transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });    
+      transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });
 
   }
 }
@@ -63,8 +63,8 @@ decodeTracks(const std::vector<unsigned int>& rawBank,
     tracks->add(track);
 
   }
-    
+
   return tracks->size();
-} 
+}
 
 

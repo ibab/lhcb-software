@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-01-17 - Marco Clemencic
+ - Updated CMake configuration.
+ - Minor fix to HltTrackingCoder.cpp.
+
 ! 2014-01-17 - Sebastian Neubert
  - Nested unittest suite under hltdaqtests suite
  - test executable called without relative path

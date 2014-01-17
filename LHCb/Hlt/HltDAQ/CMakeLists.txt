@@ -27,3 +27,9 @@ gaudi_add_module(HltDAQ
                  INCLUDE_DIRS Boost AIDA
                  LINK_LIBRARIES Boost DetCondLib DetDescLib DAQEventLib HltEvent GaudiAlgLib GaudiKernel HltInterfaces LoKiHltLib)
 
+gaudi_add_unit_test(utestTrackingCoder
+                    src/utest/utestTrackingCoder.cpp src/HltTrackingCoder.cpp
+                    LINK_LIBRARIES GaudiKernel HltEvent
+                    TYPE Boost)
+
+gaudi_add_test(QMTest QMTEST)
