@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-17 - Albert Puig
+ - Added the new inclusive radiative Stripping from Pablo.
+
 ! 2014-01-16 - Mat Charles
  - Patches to StrippingXibStarToXibZero.py (added more handles to control rate if needed)
 
