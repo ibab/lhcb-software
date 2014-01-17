@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-17 - Lucio Anderlini (BandQ)
+ - New dictionaries for XibStar and CC2DD lines
+
 ! 2014-01-17 - Anton Poluektov 
  - Update B2OC config 
 
