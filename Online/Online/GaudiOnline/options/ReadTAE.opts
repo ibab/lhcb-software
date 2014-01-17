@@ -11,13 +11,12 @@ EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 RawDataCnvSvc.EventsBefore           = 5;
 RawDataCnvSvc.EventsAfter            = 4;
 EventSelector.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-EventSelector.Input                  = "MEP";
+EventSelector.Input                  = "Events";
 EventSelector.Decode                 = false;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
-MEPManager.Buffers                   = { "MEP", "SEND" };
-MEPManager.PartitionBuffers          = false;
-MEPManager.MapUnusedBuffers          = false;
+MEPManager.Buffers                   = { "Events", "Send" };
+MEPManager.PartitionBuffers          = true;
 //
 // Prescale events declared to RESULT buffer
 //
@@ -25,6 +24,6 @@ ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
 SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::RawEvent2MBMMergerAlg/TAEOutput"};
 Prescaler.PercentPass                = 100;
 Prescaler.OutputLevel                = 4;
-TAEOutput.Buffer                     = "SEND";
+TAEOutput.Buffer                     = "Send";
 TAEOutput.DataType                   = 1;
 TAEOutput.Compress                   = 0;

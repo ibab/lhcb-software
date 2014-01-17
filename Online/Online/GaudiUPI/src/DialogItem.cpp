@@ -246,9 +246,9 @@ DialogItem::operator char*()  {
     strncpy(v,m_def.data()->_char,sizeof(v));
   }
   else if ( isInteger() )
-    snprintf(v,sizeof(v),"%d",m_def.data()->_int[0]);
+    ::snprintf(v,sizeof(v),"%d",m_def.data()->_int[0]);
   else if ( isReal() )
-    snprintf(v,sizeof(v),"%f",m_def.data()->_float[0]);
+    ::snprintf(v,sizeof(v),"%f",m_def.data()->_float[0]);
   v[sizeof(v)-1]=0;
   return &v[0];
 }
@@ -258,12 +258,13 @@ DialogItem::operator string()   {
   if      ( isString()  )   {
     size_t siz = sizeof(m_def.data()->_char);
     str_trim(m_def.data()->_char,m_def.data()->_char,&siz);
-    strncpy(v,m_def.data()->_char,sizeof(v));
+    ::strncpy(v,m_def.data()->_char,sizeof(v));
+    v[sizeof(v)-1] = 0;
   }
   else if ( isInteger() )
-    snprintf(v,sizeof(v),"%d",m_def.data()->_int[0]);
+    ::snprintf(v,sizeof(v),"%d",m_def.data()->_int[0]);
   else if ( isReal() )
-    snprintf(v,sizeof(v),"%f",m_def.data()->_float[0]);
+    ::snprintf(v,sizeof(v),"%f",m_def.data()->_float[0]);
   return &v[0];
 }
 

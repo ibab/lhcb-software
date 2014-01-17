@@ -85,26 +85,22 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   ProcessGroup pg;
   const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()");
-  const char *a2[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSendBuffer()");
-  const char *a3[] =CLASS1("MEPConverter.opts");
-  const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder(errBuffer=None)");
-  const char *a5[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)");
-  const char *a6[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=5000",0};
+  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)");
+  const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)");
+  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep2mbm_producer",
+		       "-n=prod_0","-p=333","-s=500","-r=2","-c=5000",
+		       "-input=Events","-file=mepData_0.dat",0};
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("MEPInit_0",  command(),a1,out.c_str()));
-  pg.add(p[1]=new Process("SNDInit_0",  command(),a2,out.c_str()));
   pg.start();
   ::lib_rtl_sleep(8000);
-  pg.add(p[2] =new Process("EvtProd_0", command(),a3,out.c_str()));
-  pg.add(p[3] =new Process("EvtHold_0", command(),a4,out.c_str()));
-  pg.add(p[4] =new Process("Moore_0",   command(),a5,out.c_str()));
-  pg.add(p[5] =new Process("Moore_1",   command(),a5,out.c_str()));
-  pg.add(p[6] =new Process("Moore_2",   command(),a5,out.c_str()));
-  pg.add(p[7] =new Process("Moore_3",   command(),a5,out.c_str()));
-  pg.add(p[8] =new Process("Moore_4",   command(),a5,out.c_str()));
-  pg.add(p[9] =new Process("Cons_0",    command(),a6,out.c_str()));
+  pg.add(p[1] =new Process("Moore_0",   command(),a3,out.c_str()));
+  pg.add(p[2] =new Process("Moore_1",   command(),a3,out.c_str()));
+  pg.add(p[3] =new Process("Moore_2",   command(),a3,out.c_str()));
+  pg.add(p[4] =new Process("Moore_3",   command(),a3,out.c_str()));
+  pg.add(p[5] =new Process("Moore_4",   command(),a3,out.c_str()));
+  pg.add(p[6] =new Process("Cons_0",    command(),a4,out.c_str()));
 
   cout << "Starting processes ..... " << endl;
   pg.start();
@@ -129,7 +125,9 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   ProcessGroup pg;
   const char *a1[] =CLASS1("TAEBuffers.opts");
   const char *a2[] =CLASS1("ReadTAE.opts");
-  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep_producer","-n=prod_0","-p=333","-s=500","-r=2","-c=5000","-file=taeData_0.dat",0};
+  const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep2mbm_producer",
+		       "-n=TAEprod_0","-p=333","-s=500","-r=2","-c=5000","-file=taeData_0.dat",
+		       "-input=Events_LHCb",0};
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("TAEBuffers_0",command(),a1,out.c_str()));

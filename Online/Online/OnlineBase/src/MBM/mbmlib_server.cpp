@@ -793,6 +793,23 @@ int mbmsrv_map_memory(const char* bm_name, BufferMemory* bm)  {
   return MBM_ERROR;
 }
 
+int mbmsrv_send_include_error(ServerBMID bm, MSG& msg, int status)   {
+  MSG::include_t& inc = msg.data.include;
+  const char* bm_name = bm->bm_name;           // buffer manager name 
+  const char* name    = inc.name;              // client name
+  char fifo_name[256];
+  msg.status = status;
+  ::snprintf(fifo_name,sizeof(fifo_name),"/tmp/bm_%s_%s",bm_name,name);
+  int fifo = ::open(fifo_name, O_NONBLOCK | O_WRONLY );
+  if ( fifo != -1 )   {
+    _mbmsrv_reply(bm,msg,fifo);
+    ::close(fifo);
+    return MBM_NO_REPLY;
+  }
+  ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to open the answer fifo %s.\n",name,fifo_name);
+  return MBM_NO_REPLY;
+}
+
 /**
  * \function int mbmsrv_include
  * \author Nicolas R.
@@ -809,10 +826,10 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   const char* name    = inc.name;              // client name
   LOCK lock(bm->lockid);
 
-  USER*       u      = _mbmsrv_ualloc(bm);     // find free user slot
+  USER*       u       = _mbmsrv_ualloc(bm);     // find free user slot
   if (u == 0)  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to allocate user slot of %s for %s.\n",bm_name,name);
-    return MBM_ERROR;
+    return mbmsrv_send_include_error(bm,msg,MBM_NO_FREE_US); // Typical use case: Too many users
   }
   u->pid           = inc.pid;
   u->partid        = inc.partid;
@@ -840,7 +857,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   ::snprintf(u->fifoName,sizeof(u->fifoName),"/tmp/bm_%s_%s",bm->bm_name,name);
   if( -1 == (u->fifo = ::open(u->fifoName, O_NONBLOCK | O_WRONLY ))) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to open the answer fifo %s.\n",name,u->fifoName);
-    return MBM_ERROR;
+    return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL); // We can try again, but no big hope....
   }
   else if ( -1 == (::fcntl(u->fifo,F_SETFL,::fcntl(u->fifo,F_GETFL)|O_NONBLOCK)) ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to set fifo descriptor %s NON-Blocking.\n",name,u->fifoName);
@@ -851,7 +868,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   epoll.data.fd = u->fifo;
   if ( 0 > ::epoll_ctl(bm->clientfd, EPOLL_CTL_ADD,u->fifo,&epoll) ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to client fifo %s to epoll descriptor.\n",u->fifoName);
-    return MBM_ERROR;
+    return mbmsrv_send_include_error(bm,msg,MBM_INTERNAL);
   }
   return MBM_NORMAL;
 }
