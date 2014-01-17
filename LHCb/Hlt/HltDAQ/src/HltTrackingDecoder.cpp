@@ -1,5 +1,6 @@
 // Include files 
 #include "boost/format.hpp"
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -9,6 +10,7 @@
 // local
 #include "HltTrackingDecoder.h"
 #include "HltTrackingWriter.h"
+#include "HltTrackingCoder.h"
 
 #include "Event/Track.h"
 
@@ -101,26 +103,34 @@ StatusCode HltTrackingDecoder::execute() {
   }  
 
   // create output container and put it on TES
-  //HltTracking* outputSummary = new HltTracking();
-  //put( outputSummary, m_outputHltTrackingLocation );
-
-  // create output container for Object Summaries and put it on TES
-  //LHCb::HltObjectSummary::Container* objectSummaries = new HltObjectSummary::Container();
-  // put( objectSummaries, m_outputHltTrackingLocation.value() + "/Candidates" );
-
+  LHCb::Tracks* outputTracks = new LHCb::Tracks();
+  put( outputTracks, m_outputHltTrackLocation );
 
   // ----------------------------------------------------------
   // get the bank from RawEvent
   // ----------------------------------------------------------
 
-  // const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltTracking );
-  // if( !hltselreportsRawBanks.size() ){
-  //   return Warning( " No HltTracking RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
-  // }
-  // const RawBank* hltselreportsRawBank0 = *(hltselreportsRawBanks.begin());
-  // if( hltselreportsRawBank0->version() > kVersionNumber ){
-  //   Warning( " HltTracking RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
-  // }
+  const std::vector<RawBank*> hltTrackingRawBanks = rawEvent->banks( RawBank::HltTrackingReports );
+  if( !hltTrackingRawBanks.size() ){
+    return Warning( " No HltTrackingReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  }
+
+  // Check version number to make sure we are on the same page here (this should go to the decoder function? 
+   const RawBank* hltTrackingRawBank0 = *(hltTrackingRawBanks.begin());
+   if( hltTrackingRawBank0->version() > kVersionNumber ){
+     Warning( " HltTrackingReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
+   }
+
+   // -------------------------------------------------------
+   // do the actual decoding 
+   // -------------------------------------------------------
+
+   //for_each(hltTrackingRawBanks.begin(),hltTrackingRawBanks.end(),[](RawBank* bank){ decodeTracks(bank,outputTracks);});
+   //for(RawBank* bank : hltTrackingRawBanks){
+   //  decodeTracks(bank->,outputTracks);
+   // }
+
+
 
   // if ( msgLevel(MSG::VERBOSE) ){
 
@@ -136,13 +146,6 @@ StatusCode HltTrackingDecoder::execute() {
   // } 
 
 
-  // if( errors ){
-  //   hltTrackingBank.deleteBank();
-  //   return Error("Quiting because of the possible data corruption", StatusCode::SUCCESS, 100 );
-  // }
-
-
-  
 
   // if ( msgLevel(MSG::VERBOSE) ){
 

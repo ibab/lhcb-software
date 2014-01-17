@@ -8,7 +8,7 @@ version           v3r0
 #=========================================================================
 # Structure, i.e. directories to process.
 #=========================================================================
-branches          cmt doc src core tests xml
+branches          cmt doc src tests xml
 #=========================================================================
 # Used packages
 #=========================================================================
@@ -45,32 +45,23 @@ apply_pattern god_headers files=../xml/*.xml
 macro HltDAQObj2Doth_GODflags " -s ../src/ " \
       WIN32                   " -s ..\src\ "
 
-# ================ own includes ===============================================
-apply_pattern install_more_includes  more=core
-
 
 #=========================================================================
 # Component library building rule
 #=========================================================================
 library          HltDAQ    ../src/*.cpp -import=AIDA
-library          HltDAQcore ../src/core/*.cpp
-
 
 #=========================================================================
 # define component library link options
 #=========================================================================
 apply_pattern    component_library library=HltDAQ
-macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem) -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"
-
-apply_pattern    linker_library library=HltDAQcore
 
 
 #=========================================================================
 # unit test application building rule
 #=========================================================================
-application      utestTrackingCoder -import=Boost   ../src/utest/utestTrackingCoder.cpp
-macro_append     utestTrackingCoder_dependencies " HltDAQcore "
-
+application      utestTrackingCoder -import=Boost   ../src/utest/utestTrackingCoder.cpp ../src/HltTrackingCoder.cpp
+macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem) -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"
 
 private
 # Work around to be able to compile with Gaudi v22r5

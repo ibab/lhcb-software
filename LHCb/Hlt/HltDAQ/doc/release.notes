@@ -8,6 +8,8 @@
  - Nested unittest suite under hltdaqtests suite
  - test executable called without relative path
  - fixed file extension of utestHltTrackingCoder.cpp
+ - reverted package to work without additional HltDAQcore library
+   test executable directly compiles with the sources needed
 
 ! 2014-01-16 - Sebastian Neubert
  - Added Writer and Decoder for Tracks

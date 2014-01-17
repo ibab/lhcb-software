@@ -2,6 +2,6 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>utestTrackingCoder.exe</text></argument>
   <argument name="validator"><text>
-stderr.find("*** No errors detected");
+# ignore messages on stderr
 </text></argument>
 </extension>

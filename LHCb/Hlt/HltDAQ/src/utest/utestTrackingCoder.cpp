@@ -2,7 +2,7 @@
 #define BOOST_TEST_MODULE utestTrackingCoder
 #include <boost/test/unit_test.hpp>
 
-#include "core/HltTrackingCoder.h"
+#include "../HltTrackingCoder.h"
 #include <vector>
 #include "Event/Track.h"
 #include "Kernel/LHCbID.h"
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(encode)
 {
   vector<unsigned int> rawBank;
   encodeTracks(&m_tracks,rawBank);
-  BOOST_CHECK(rawBank.size() == m_rawbank.size() );
+  BOOST_CHECK(rawBank.size() == m_rawbank.size()  );
   BOOST_CHECK(rawBank == m_rawbank );
 }
 
