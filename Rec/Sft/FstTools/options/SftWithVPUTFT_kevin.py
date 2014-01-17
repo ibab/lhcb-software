@@ -27,7 +27,7 @@ importOptions('$FSTTOOLSROOT/options/Sft.py')
 
 # set input
 Brunel().InputType = 'DST'
-input_path = '/home/kdungs/data/timing/'
+input_path = '/group/online/data_hlt'
 input_files = glob(path.join(input_path, '*.xdst'))
 IOHelper().inputFiles(input_files)
 
@@ -47,15 +47,20 @@ for algo in algos:
 
 # set up CondDB
 CondDB().Upgrade = True
-CondDB().AllLocalTagsByDataType = ['VP_Compact_Pocofoam+UT', 'FT']
+CondDB().AllLocalTagsByDataType = [
+    'VP_UVP+RICH_2019+UT_UUT',
+    'FT_StereoAngle5',
+    'Muon_NoM1',
+    'Calo_NoSPDPRS'
+]
 
 # set up Brunel
 Brunel().PrintFreq = 1000
 Brunel().EvtMax = 10000
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
-Brunel().CondDBtag = 'simcond-20121001-vc-md100'
-Brunel().DDDBtag = 'dddb-20130408'
+Brunel().CondDBtag = 'sim-20130830-vc-md100'
+Brunel().DDDBtag = "dddb-20131025"
 Brunel().MCLinksSequence = ['Unpack', 'Tr']
 Brunel().MCCheckSequence = ['Pat']
 
