@@ -4,6 +4,13 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-17 - Lucio Anderlini (BandQ)
+ - Config for BandQ lines
+  . Xic2HHH (Yury Shch.)
+  . PromptCharm (Vanya)
+  . CC2DD (Andrea Bizzeti)
+ - dbase updated for testing
+
 ! 2014-01-12 - Anton Poluektov 
  - Config for B2OC WG (in Stripping20r0p3)
 

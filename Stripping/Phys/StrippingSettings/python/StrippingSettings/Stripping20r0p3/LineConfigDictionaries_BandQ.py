@@ -1,8 +1,16 @@
 # Line config dictionaries for BandQ WG
 # 
 
-
 from GaudiKernel.SystemOfUnits import *
+
+#########################################################
+### StrippingCC2DD
+### -----------------------------------------------------
+### Defined in:                 StrippingCC2DD.py
+### Proponent:                  Andrea.Bizzeti@fi.infn.it
+### Motivation:                 Low PT 2x charm, psi(3770)
+### Documentation:              https://indico.cern.ch/conferenceDisplay.py?confId=269979
+#########################################################
 
 CC2DD = {        
     'WGs'               : ['BandQ'],
@@ -40,3 +48,152 @@ CC2DD = {
         'CharmCompleteEvent' 
         ],
 }   
+ 
+
+####################################################
+### StrippingXic2HHH
+###-------------------------------------------------
+### Defined in: StrippingXic2HHH.py
+### Proponent:  Yury.Shcheglov@cern.ch
+### Motivation: Xic studies and pentaquark searches
+### Documentation:
+###  (Yury Shcheglov 2014-01-14 wrote:)  
+###  1) Measurements ratios of the production  rates
+###    R(pT)= N(Xic->p+\phi(KK)) / N( Lc->p+\phi(KK)) -
+###  new doubly Cabbibo supressed decay Xic->p+phi to the  
+###  known Lc->p+phi decay and  
+###  R (pT) = N(Xic->p + Kstar(Kpi)) / N( Lc->p +  Kstar(Kpi)) 
+###  - used to cross-check the pT distribution  shape of the first ratio;
+###  
+###  2) pentaquark search (both, long-lived charmed pentaquark Beta+ and
+###  pentaquark Theta+ (recently JLab reported peak at M = 1540 MeV);
+###  
+###  The preliminary result for the measurement of the  rates ratios
+###  shows the some difference  in the pT shape of
+###  the ratios    N(Xic->p+\phi(KK)) / N( Lc->p+\phi(KK)) and
+###  N(Xic->p + Kstar(Kpi)) / N( Lc->p +  Kstar(Kpi))  at the range  pT = 4-7 GeV. 
+###  But experimental errors for the first ratio are large enough 
+###  and it will be good to increase statistic for  the Xic->p+\phi(KK).
+###  
+###  For this goal from the stripping lines were rejected 
+###  too tight cuts connected with kaons IPCHI2, which were 
+###  found non-effective to suppress the background. 
+###  Besides we refused from the tight DIRA cut to avoid 
+###  correlation between pT and lifetime particle. 
+###  Additionally, to keep  a reasonable retention 
+###  factor in the  stripping lines, results of ANN for 
+###  the particle identification ( PROBNNp(pi,K)) 
+###  were used in the event selections. 
+###  Besides, all  pT restrictions were 
+###  choosen  more loose for all stripping lines.
+###  
+###  All efforts above give us a hope to reduce in 1.5-2 times our
+###  experimental errors in the ratio N(Xic->p+\phi(KK)) / N( Lc->p+\phi(KK)) and 
+###  to increase the sensitivity to the possible pentaquarks contributions due 
+###  to more large statistics  for the signal.  
+###  The common idea of all our modifications in the streeping lines is 
+###  to keep signal efficiencies as high as it is a possible and 
+###  simultaneously to keep possible systematic errors of 
+###  measurements at the  some reasonable level. 
+###
+##################################################
+
+
+Xic2HHH = {
+    'WGs'           : ['BandQ'],
+    'BUILDERTYPE'   : 'StrippingXic2HHHConf',
+    'CONFIG'        : {  'Daug_All_PT_MIN'          : 300.0 * MeV
+                        , 'Daug_P_MIN'              : 3000.0 * MeV
+                        , 'Daug_TRCHI2DOF_MAX'      : 10.0
+                        , 'Daug_1of3_BPVIPCHI2_MIN' : 0.5
+                        , 'Proton_PIDp_MIN'         : 10.0 
+                        , 'K_IPCHI2_MIN'            : 0.0 
+                        , 'Comb_MASS_MIN'           : 1950.0 * MeV 
+                        , 'Comb_MASS_MAX'           : 2800.0 * MeV 
+                        , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
+                        , 'Xic_PT_MIN'              : 1500.0 * MeV
+                        , 'Xic_VCHI2VDOF_MAX'       : 8.0
+                        , 'Xic_BPVVDCHI2_MIN'       : 0.0
+                        , 'Xic_BPVDIRA_MIN'         : 0.9
+                        , 'Xic_BPVIPCHI2_MAX'       : 10.
+                        , 'Xic_BPVLTIME_MAX'        : 0.0025 * ns
+                        , 'Xic_BPVLTIME_MIN'        : 0.0002 * ns
+                        , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
+                        , 'PrescaleXic2PKPi'        : 1.0
+                        , 'PostscaleXic2PKPi'       : 1.0
+                        , 'PrescaleXic2PKK'         : 1.0
+                        , 'PostscaleXic2PKK'        : 1.0
+                        , 'PrescaleXic2PV0'         : 1.0
+                        , 'PostscaleXic2PV0'        : 1.0
+                        , 'PrescaleXic2KLam'        : 0.0 
+                        , 'PostscaleXic2KLam'       : 0.0 
+                        , 'ExtraInfoTools' : [
+                            { "Type" : "ConeVariables", 
+                              "ConeAngle" : 1.5, 
+                              "ConeNumber" : 1, 
+                              "Variables" : ['angle', 'mult', 'ptasy']
+                            }, 
+                            { "Type" : "ConeVariables", 
+                              "ConeAngle" : 15., 
+                              "ConeNumber" : 2, 
+                              "Variables" : ['angle', 'mult', 'ptasy']
+                            }, 
+                            { "Type" : "VertexIsolation"}
+                        ] 
+                       },
+    'STREAMS' : [
+        'Charm' 
+        ],
+}   
+
+
+### ###############################################################
+### ### StrippingXibStarToXibZero
+### ###------------------------------------------------------------
+### Defined in: StrippingXibStarToXibZero.py
+### Proponent:  matthew.john.charles@cern.ch
+### Motivation: FCNC searches, Xib* searches, selection tuning
+### Documentation:  
+###   https://indico.cern.ch/conferenceDisplay.py?confId=269979
+###############################################################
+
+XibStarToXibZero = {
+    'WGs'           : ['BandQ'],
+    'BUILDERTYPE'   : 'XibStarBuilder',
+    'CONFIG'        : {  'LongTrackGEC' : 300
+                          , 'prescale'  : 1.0
+                          , 'prescaleControlHadronic' : 1.0
+                          , 'prescaleControlMuonic' : 1.0
+                      },
+    'STREAMS' : [
+        'Charm' 
+        ],
+}
+
+
+
+#########################################################
+### StrippingPromptCharm
+### -----------------------------------------------------
+### Defined in:                 StrippingPromptCharm.py
+### Proponent:                  Ivan.Belyaev@cern.ch
+### Motivation:                 coherent stripping of stable charm hadrons
+### Documentation:              Presentation expected on 2014-01-16 (P&P)
+#########################################################
+
+PromptCharm = {
+    'WGs'           : ['BandQ'],
+    'BUILDERTYPE'   : 'StrippingPromptCharmConf',
+    'CONFIG'        : { 'D0Prescale'       : 0.05 ,
+                        'D+Prescale'       : 0.05 ,
+                        'D*Prescale'       : 0.1  ,
+                        'DsPrescale'       : 0.5  ,
+                      },
+    'STREAMS' : [
+        'Charm' 
+        ],
+}
+
+
+
+
