@@ -59,12 +59,14 @@ namespace LoKi
       // ======================================================================
       /// constructor from the particle and the tool  
       ClosestApproach 
-      ( const LHCb::Particle*                  particle , 
-        const LoKi::Vertices::ImpactParamTool& tool     ) ;
+      ( const LHCb::Particle*                  particle       , 
+        const LoKi::Vertices::ImpactParamTool& tool           , 
+        const bool                             allow  = false ) ;
       /// constructor from the particle and the tool  
       ClosestApproach 
       ( const LoKi::Vertices::ImpactParamTool& tool     ,
-        const LHCb::Particle*                  particle ) ;
+        const LHCb::Particle*                  particle , 
+        const bool                             allow  = false ) ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  ClosestApproach* clone() const 
       { return new ClosestApproach(*this) ; }
@@ -97,6 +99,11 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      /// allow transitions between categories?  
+      bool allow() const { return m_allow ; } // allow transitions between categories?  
+      // ======================================================================
+    public:
+      // ======================================================================
       /// accessor to the particle 
       const LHCb::Particle* particle() const 
       { return m_particle ; }
@@ -113,6 +120,8 @@ namespace LoKi
       // ======================================================================
       /// the particle 
       mutable const LHCb::Particle* m_particle ;
+      /// allo transitions ?
+      bool                          m_allow    ;
       // ======================================================================
     } ;
     // ========================================================================

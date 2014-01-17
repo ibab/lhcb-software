@@ -41,7 +41,8 @@
 // ============================================================================
 LoKi::Particles::ClosestApproach::ClosestApproach
 ( const LHCb::Particle*                  particle , 
-  const LoKi::Vertices::ImpactParamTool& tool     )
+  const LoKi::Vertices::ImpactParamTool& tool     ,
+  const bool                             allow    )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
@@ -51,7 +52,8 @@ LoKi::Particles::ClosestApproach::ClosestApproach
 // ============================================================================
 LoKi::Particles::ClosestApproach::ClosestApproach
 (  const LoKi::Vertices::ImpactParamTool& tool     ,
-   const LHCb::Particle*                  particle )
+   const LHCb::Particle*                  particle ,
+   const bool                             allow    )
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
@@ -71,7 +73,7 @@ LoKi::Particles::ClosestApproach::distance_
   //
   double dist = LoKi::Constants::InvalidDistance ;
   //
-  StatusCode sc = tool() -> distance ( p1 , p2 , dist ) ;
+  StatusCode sc = tool() -> distance ( p1 , p2 , dist , m_allow ) ;
   //
   if ( sc.isFailure ()  ) 
   { 
@@ -102,7 +104,7 @@ LoKi::Particles::ClosestApproach::chi2_
   double dist     = LoKi::Constants::InvalidDistance ;
   double chi2     = LoKi::Constants::InvalidChi2     ;
   //
-  StatusCode sc = tool() -> distance ( p1 , p2 , dist , chi2 ) ;
+  StatusCode sc = tool() -> distance ( p1 , p2 , dist , chi2 , m_allow ) ;
   //
   if ( sc.isFailure ()  ) 
   { 

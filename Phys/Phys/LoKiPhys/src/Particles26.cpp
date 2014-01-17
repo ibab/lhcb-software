@@ -69,11 +69,12 @@ namespace
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCA::DOCA
-( const size_t               i1 ,
-  const size_t               i2 ,
-  const IDistanceCalculator* dc )
+( const size_t               i1    ,
+  const size_t               i2    ,
+  const IDistanceCalculator* dc    ,
+  const bool                 allow ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-  , m_eval ( s_PARTICLE , dc )
+  , m_eval   ( s_PARTICLE , dc , allow )
   , m_first  ( i1 )
   , m_second ( i2 )
   , m_nick   ("")
@@ -82,11 +83,12 @@ LoKi::Particles::DOCA::DOCA
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCA::DOCA
-( const size_t                                i1 ,
-  const size_t                                i2 ,
-  const LoKi::Interface<IDistanceCalculator>& dc )
+( const size_t                                i1    ,
+  const size_t                                i2    ,
+  const LoKi::Interface<IDistanceCalculator>& dc    , 
+  const bool                                  allow ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-  , m_eval   ( s_PARTICLE , dc )
+  , m_eval   ( s_PARTICLE , dc , allow )
   , m_first  ( i1 )
   , m_second ( i2 )
   , m_nick   ( "" )
@@ -95,11 +97,12 @@ LoKi::Particles::DOCA::DOCA
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::Particles::DOCA::DOCA
-( const size_t       i1 ,
-  const size_t       i2 ,
-  const std::string& nick )
+( const size_t       i1    ,
+  const size_t       i2    ,
+  const std::string& nick  ,
+  const bool         allow ) 
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-  , m_eval   ( s_PARTICLE , s_TOOL )
+  , m_eval   ( s_PARTICLE , s_TOOL , allow )
   , m_first  ( i1   )
   , m_second ( i2   )
   , m_nick   ( nick )
@@ -141,8 +144,11 @@ LoKi::Particles::DOCA::operator()
 // OPTIONAL: nice printout
 // ============================================================================
 std::ostream& LoKi::Particles::DOCA::fillStream ( std::ostream& s ) const
-{ return s << "DOCA(" << firstIndex() << "," << secondIndex() << ",'"
-           << toolName () << "')" ; }
+{  return s << "DOCA("     << firstIndex() << "," << secondIndex() << ",'"
+            << toolName () << "',"
+            << ( allow() ?  "True" : "False" ) 
+            << ")" ; 
+}
 // ============================================================================
 // get toolname 
 // ============================================================================
@@ -159,7 +165,7 @@ StatusCode LoKi::Particles::DOCA::loadTool () const
     /// finally set the tool
     setTool ( dc ) ;
   }
-  Assert( !(!tool()) , "Uanbel to locate tool!" ) ;
+  Assert( !(!tool()) , "Unable to locate tool!" ) ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -173,26 +179,29 @@ StatusCode LoKi::Particles::DOCA::loadTool () const
 LoKi::Particles::DOCAChi2::DOCAChi2
 ( const size_t               i1 ,
   const size_t               i2 ,
-  const IDistanceCalculator* dc )
-  : LoKi::Particles::DOCA( i1 , i2 , dc ) 
+  const IDistanceCalculator* dc ,
+  const bool                 allow ) 
+  : LoKi::Particles::DOCA( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCAChi2::DOCAChi2
-( const size_t                                i1 ,
-  const size_t                                i2 ,
-  const LoKi::Interface<IDistanceCalculator>& dc )
-  : LoKi::Particles::DOCA( i1 , i2 , dc ) 
+( const size_t                                i1    ,
+  const size_t                                i2    ,
+  const LoKi::Interface<IDistanceCalculator>& dc    ,
+  const bool                                  allow ) 
+  : LoKi::Particles::DOCA( i1 , i2 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::Particles::DOCAChi2::DOCAChi2
-( const size_t       i1 ,
-  const size_t       i2 ,
-  const std::string& nick )
-  : LoKi::Particles::DOCA( i1 , i2 , nick ) 
+( const size_t       i1    ,
+  const size_t       i2    ,
+  const std::string& nick  ,
+  const bool         allow ) 
+  : LoKi::Particles::DOCA( i1 , i2 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -232,31 +241,34 @@ LoKi::Particles::DOCAChi2::operator()
 // ============================================================================
 std::ostream& LoKi::Particles::DOCAChi2::fillStream ( std::ostream& s ) const
 { return s << "DOCACHI2(" << firstIndex() << "," << secondIndex() << ",'"
-           << toolName () << "')" ; }
+           << toolName () << "',"
+           << ( allow() ? "True" : "False" ) 
+           << ")" ; }
 // ============================================================================
-
-
 
 // ============================================================================
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCAMax::DOCAMax
-( const IDistanceCalculator* dc )
-  : LoKi::Particles::DOCA( 1 , 1 , dc ) 
+( const IDistanceCalculator* dc    , 
+  const bool                 allow )
+  : LoKi::Particles::DOCA( 1 , 1 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool
 // ============================================================================
 LoKi::Particles::DOCAMax::DOCAMax
-( const LoKi::Interface<IDistanceCalculator>& dc )
-  : LoKi::Particles::DOCA( 1 , 1 , dc ) 
+( const LoKi::Interface<IDistanceCalculator>& dc    ,
+  const bool                                  allow )
+  : LoKi::Particles::DOCA( 1 , 1 , dc , allow ) 
 {}
 // ============================================================================
 // constructor from two indices and the tool nickname
 // ============================================================================
 LoKi::Particles::DOCAMax::DOCAMax
-( const std::string& nick )
-  : LoKi::Particles::DOCA( 1 , 1 , nick ) 
+( const std::string& nick ,
+  const bool         allow )
+  : LoKi::Particles::DOCA( 1 , 1 , nick , allow ) 
 {}
 // ============================================================================
 // MANDATORY: the only one essential method
@@ -287,7 +299,9 @@ LoKi::Particles::DOCAMax::operator()
 // OPTIONAL: nice printout
 // ============================================================================
 std::ostream& LoKi::Particles::DOCAMax::fillStream ( std::ostream& s ) const
-{ return s << "DOCAMAX(" << "'" << toolName () << "')" ; }
+{ return s << "DOCAMAX(" << "'" << toolName () << "',"
+           << ( allow() ? "True" : "False" ) 
+           << ")" ; }
 // ============================================================================
 
 // ============================================================================

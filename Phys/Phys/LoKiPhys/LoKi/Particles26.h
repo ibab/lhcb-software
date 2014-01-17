@@ -41,15 +41,18 @@ namespace LoKi
       /// constructor from two indices and the tool
       DOCA ( const size_t                                i1 ,
              const size_t                                i2 ,
-             const IDistanceCalculator*                  dc ) ;
+             const IDistanceCalculator*                  dc , 
+             const bool                                  allow = true ) ;
       /// constructor from two indices and the tool
       DOCA ( const size_t                                i1 ,
              const size_t                                i2 ,
-             const LoKi::Interface<IDistanceCalculator>& dc ) ;
+             const LoKi::Interface<IDistanceCalculator>& dc ,
+             const bool                                  allow = true ) ;
       /// constructor from two indices and the tool nick-name
-      DOCA ( const size_t       i1        ,
-             const size_t       i2        ,
-             const std::string& nick = "" ) ;
+      DOCA ( const size_t       i1           ,
+             const size_t       i2           ,
+             const std::string& nick = ""    ,
+             const bool         allow = true ) ;
       /// MANDATORY: virtual destructor
       virtual ~DOCA() {}
       // MANDATORY: clone method ('virtual constructor')
@@ -144,6 +147,9 @@ namespace LoKi
       // ======================================================================
       void setSecond ( const size_t i2 ) const { m_second = i2 ; }
       // ======================================================================
+      /// allow transtions?
+      bool allow() const { return m_eval.allow () ;  }
+      // ======================================================================
     public:
       // ======================================================================
       /// set the tool
@@ -174,7 +180,7 @@ namespace LoKi
       /// the second index
       mutable size_t m_second ; // the second index
       /// the tool nick
-      std::string  m_nick   ; // the tool nick
+      std::string  m_nick     ; // the tool nick
       // ======================================================================
     } ;
     // ========================================================================
@@ -195,15 +201,18 @@ namespace LoKi
       /// constructor from two indices and the tool
       DOCAChi2 ( const size_t                                i1 ,
                  const size_t                                i2 ,
-                 const IDistanceCalculator*                  dc ) ;
+                 const IDistanceCalculator*                  dc ,
+                 const bool                                  allow = true ) ;
       /// constructor from two indices and the tool
       DOCAChi2 ( const size_t                                i1 ,
                  const size_t                                i2 ,
-                 const LoKi::Interface<IDistanceCalculator>& dc ) ;
+                 const LoKi::Interface<IDistanceCalculator>& dc ,
+                 const bool                                  allow = true ) ;
       /// constructor from two indices and the tool nick-name
-      DOCAChi2 ( const size_t       i1        ,
-                 const size_t       i2        ,
-                 const std::string& nick = "" ) ;
+      DOCAChi2 ( const size_t       i1           ,
+                 const size_t       i2           ,
+                 const std::string& nick  = ""   ,
+                 const bool         allow = true ) ;
       /// MANDATORY: virtual destructor
       virtual ~DOCAChi2() {}
       // MANDATORY: clone method ('virtual constructor')
@@ -232,11 +241,14 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the tool
-      DOCAMax ( const IDistanceCalculator*                  dc ) ;
+      DOCAMax ( const IDistanceCalculator*                  dc , 
+                const bool                                  allow = true ) ;
       /// constructor from two the tool
-      DOCAMax ( const LoKi::Interface<IDistanceCalculator>& dc ) ;
+      DOCAMax ( const LoKi::Interface<IDistanceCalculator>& dc , 
+                const bool                                  allow = true ) ;
       /// constructor from the tool nick-name
-      DOCAMax ( const std::string& nick = ""                   ) ;
+      DOCAMax ( const std::string& nick  = ""   ,
+                const bool         allow = true ) ;
       /// MANDATORY: virtual destructor
       virtual ~DOCAMax() {}
       // MANDATORY: clone method ('virtual constructor')
@@ -291,14 +303,14 @@ namespace LoKi
     public:
       // ======================================================================
       /// Constructor from the daughter index & tool 
-      ChildIP ( const size_t               index     , 
-                const IDistanceCalculator* tool  = 0 ) ;
+      ChildIP ( const size_t               index        , 
+                const IDistanceCalculator* tool  = 0    ) ;
       /// Constructor from the daughter index & tool 
-      ChildIP ( const size_t                                index     , 
-                const LoKi::Interface<IDistanceCalculator>& tool      ) ;
+      ChildIP ( const size_t                                index , 
+                const LoKi::Interface<IDistanceCalculator>& tool  ) ;
       /// Constructor from the daughter index & nick 
-      ChildIP ( const size_t                                index     , 
-                const std::string&                          nick      ) ;
+      ChildIP ( const size_t               index     , 
+                const std::string&         nick      ) ;
       /// MANDATORY: virtual destructor
       virtual ~ChildIP ();
       /// MANDATORY: clone method ("virtual constructor")
