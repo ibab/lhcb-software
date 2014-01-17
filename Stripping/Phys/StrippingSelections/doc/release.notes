@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2014-01-17 - Jason Andrews
+ - Updated StrippingBu2rho0rhoPlus.py: added ExtraInfoTools to lines
+
 ! 2014-01-03 - Lucio Anderlini (for Andrea Bizzeti)
  - Updated StrippingCC2DD.py. 
 

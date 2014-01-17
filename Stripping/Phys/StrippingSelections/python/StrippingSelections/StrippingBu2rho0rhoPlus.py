@@ -141,6 +141,13 @@ class StrippingBu2rho0rhoPlusConf(LineBuilder) :
         _BuMgdCombCuts = "(AM > %(BuMgdCombMassMin)s) & (AM < %(BuMgdCombMassMax)s)" % locals()["config"]
         _BuMgdMotherCuts = ("(M > %(BuMgdMothMassMin)s) & (M < %(BuMgdMothMassMax)s) & (VFASPF(VCHI2/VDOF) < %(BuMgdMinVChi2Dof)s)"
                             " & (BPVDIRA > %(BuMgdMinDira)s)") % locals()["config"]
+
+        _extraInfoList = [ { "Type" : "ConeVariables",
+                             "ConeAngle"  : 1.0,
+                             "ConeNumber" : 3,
+                             "Variables"  : [ 'angle', 'mult', 'ptasy' ] },
+                           { "Type" : "VertexIsolation" }
+                           ]
         
         ### shared particles -------------------------------------------------------------------------------
         _trackFilter = FilterDesktop( Code = _trackCuts )
@@ -181,6 +188,7 @@ class StrippingBu2rho0rhoPlusConf(LineBuilder) :
                                                          HLT = _hltFilter,
                                                          FILTER = _resVoidFilter,
                                                          checkPV = True,
+                                                         ExtraInfoTools = _extraInfoList,
                                                          selection = self.stripCandResolved
                                                          )
             
@@ -211,6 +219,7 @@ class StrippingBu2rho0rhoPlusConf(LineBuilder) :
                                                        HLT = _hltFilter,
                                                        FILTER = _mgdVoidFilter,
                                                        checkPV = True,
+                                                       ExtraInfoTools = _extraInfoList,
                                                        selection = self.stripCandMerged
                                                        )
         
