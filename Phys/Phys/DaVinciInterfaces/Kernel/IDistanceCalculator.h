@@ -50,7 +50,7 @@ class GAUDI_API IDistanceCalculator : virtual public IAlgTool
 public:
   // ==========================================================================
   /// interface machinery
-  DeclareInterfaceID(IDistanceCalculator, 4, 0);
+  DeclareInterfaceID(IDistanceCalculator, 5, 0);
   // ==========================================================================
 public:
   // ==========================================================================
@@ -92,12 +92,14 @@ public:
    *  @param particle (input) pointer to the particle 
    *  @param vertex   (input) pointer to the vertex 
    *  @param imppar   (output) the value of impact parameter ("distance") 
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
-  ( const LHCb::Particle*   particle ,
-    const LHCb::VertexBase* vertex   , 
-    double&                 imppar   ) const = 0 ;
+  ( const LHCb::Particle*   particle         ,
+    const LHCb::VertexBase* vertex           , 
+    double&                 imppar           , 
+    const bool              allow    = false ) const = 0 ;
   // ==========================================================================
   /** The method for the evaluation of the impact parameter ("distance")
    *  of the particle with respect to some vertex and its \f$\chi^2\f$-significance
@@ -138,13 +140,15 @@ public:
    *                  It is defined as the increase of the chi2 of the PV 
    *                  vertex fit when one adds the track into the vertex. 
    *                  It behaves almost like (IP/IP_error)^2
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
-  ( const LHCb::Particle*   particle ,
-    const LHCb::VertexBase* vertex   , 
-    double&                 imppar   , 
-    double&                 chi2     ) const = 0 ;
+  ( const LHCb::Particle*   particle        ,
+    const LHCb::VertexBase* vertex          , 
+    double&                 imppar          , 
+    double&                 chi2            , 
+    const bool              allow   = false ) const = 0 ;
   // ==========================================================================
   /// @}
   // ==========================================================================
@@ -190,12 +194,14 @@ public:
    *  @param particle (input) pointer to the particle 
    *  @param point    (input) the fixed point 
    *  @param imppar   (output) the value of impact parameter ("distance") 
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::Particle*   particle ,
     const Gaudi::XYZPoint&  point    , 
-    double&                 imppar   ) const = 0 ;
+    double&                 imppar   , 
+    const bool              allow    = false ) const = 0 ;
   // ==========================================================================
   /** the basic method for the evaluation of the impact parameter ("distance")
    *  of the particle with respect to some vertex and 
@@ -239,13 +245,15 @@ public:
    *                  It is defined as the increase of the chi2 of the PV 
    *                  vertex fit when one adds the track into the vertex.
    *                  It behaves almost like (IP/IP_error)^2               
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::Particle*   particle ,
     const Gaudi::XYZPoint&  point    , 
     double&                 imppar   , 
-    double&                 chi2     ) const = 0 ;
+    double&                 chi2     , 
+    const bool              allow    = false ) const = 0 ;
   // ==========================================================================
   /// @}
   // ==========================================================================
@@ -290,12 +298,14 @@ public:
    *  @param particle (INPUT) pointer to the particle 
    *  @param point    (INPUT) the fixed point 
    *  @param impvec   (INPUT) the vector value of impact parameter
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::Particle*   particle ,
     const Gaudi::XYZPoint&  point    ,
-    Gaudi::XYZVector&       impvec   ) const = 0 ;
+    Gaudi::XYZVector&       impvec   , 
+    const bool              allow    = false ) const = 0 ;
   // ==========================================================================
   /** the basic method for the evaluation of the impact parameter vector 
    *  vector of the particle with respect to some vertex 
@@ -330,12 +340,14 @@ public:
    *  @param particle (INPUT) pointer to the particle 
    *  @param vertex   (INPUT) the vertex 
    *  @param impvec   (INPUT) the vector value of impact parameter
+   *  @param allow    (input) allow transition to VD category?
    *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::Particle*   particle ,
     const LHCb::VertexBase* vertex   ,
-    Gaudi::XYZVector&       impvec   ) const = 0 ;
+    Gaudi::XYZVector&       impvec   , 
+    const bool              allow    = false ) const = 0 ;
   // ==========================================================================
   /// @}
   // ==========================================================================
@@ -535,15 +547,17 @@ public:
    * 
    *  @endcode 
    *
-   *  @param p1 (input) the pointer to the first particle 
-   *  @param p2 (input) the pointer to the second particle 
-   *  @param dist (output) the shortest distance between two trajectories  
+   *  @param p1     (input)  the pointer to the first particle 
+   *  @param p2     (input)  the pointer to the second particle 
+   *  @param dist   (output) the shortest distance between two trajectories  
+   *  @param allow  (input)  allow transition to IP category?
    *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::Particle* p1   , 
     const LHCb::Particle* p2   , 
-    double&               dist ) const = 0 ;
+    double&               dist , 
+    const bool            allow = false ) const = 0 ;
   // ==========================================================================
   /** The method for evaluation of the scalar distance between two particles, 
    *  aka "distance of the closest approach" and also its 
@@ -569,17 +583,19 @@ public:
    * 
    *  @endcode 
    *
-   *  @param p1 (input) the pointer to the first particle 
-   *  @param p2 (input) the pointer to the second particle 
-   *  @param dist (output) the shortest diostance between trajectories   
-   *  @param chi2 (output) chi2-estimate for the separation significance
+   *  @param p1     (input)  the pointer to the first particle 
+   *  @param p2     (input)  the pointer to the second particle 
+   *  @param dist   (output) the shortest diostance between trajectories   
+   *  @param chi2   (output) chi2-estimate for the separation significance
+   *  @param allow  (input)  allow transition to IP category?
    *  @return status code 
    */
   virtual StatusCode distance 
-  ( const LHCb::Particle* p1   , 
-    const LHCb::Particle* p2   ,
-    double&               dist , 
-    double&               chi2 ) const = 0 ;
+  ( const LHCb::Particle* p1             , 
+    const LHCb::Particle* p2             ,
+    double&               dist           , 
+    double&               chi2           ,
+    const bool            allow  = false ) const = 0 ;
   // ==========================================================================
   /// @} 
   // ==========================================================================
