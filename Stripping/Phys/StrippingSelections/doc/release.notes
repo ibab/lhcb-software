@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-16 - Mat Charles
+ - Patches to StrippingXibStarToXibZero.py (added more handles to control rate if needed)
+
 ! 2014-01-17 - Roberta Cardinale
 	- Added StrippingB2pphh.py with B2ppKK, B2pppipi, B2ppKpi lines
 
