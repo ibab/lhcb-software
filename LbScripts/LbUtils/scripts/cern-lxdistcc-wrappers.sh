@@ -39,8 +39,8 @@ setup_gcc() {
 
 setup_clang() {
 
-        _version=$1
-        case ${_version} in
+        _clang_version=$1
+        case ${_clang_version} in
           3.3) setup_gcc 4.8.1 ;;
           *)   setup_gcc 4.6.3 ;;
         esac
@@ -48,7 +48,7 @@ setup_clang() {
         _platform=${LCG_hostos:-$(hostos)}
         _external=${LCG_external_area:-/afs/cern.ch/sw/lcg/external}
 
-        _prefix="${_external}/llvm/${_version}"
+        _prefix="${_external}/llvm/${_clang_version}"
         _bin="${_prefix}/${_platform}/bin"
         _lib="${_prefix}/${_platform}/lib64"
         LD_LIBRARY_PATH=$(echo $LD_LIBRARY_PATH | sed 's-[^:]*/llvm/[^:]*:\?--g')
