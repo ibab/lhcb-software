@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+! 2014-01-17 - Marco Clemencic
+ - Added CMake configuration file.
+
 </PRE><H1><A NAME=v21r0>2014-01-10 MooreSys v21r0</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r4 stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2.
 

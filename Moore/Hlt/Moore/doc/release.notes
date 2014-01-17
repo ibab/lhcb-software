@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-01-17 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= Moore v21r0 2014-01-14 =========================
 ! 2014-01-14 - Rob Lambert
  - Fix up a lot of the test results, 
