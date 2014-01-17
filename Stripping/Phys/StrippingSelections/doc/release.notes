@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-17 - Lucio Anderlini (for Yury Shcheglov)
+ - Commtted new version of StrippingXic2HHH.py
+
 ! 2014-01-16 - Marc Olivier Bettler
  - added StrippingKshort2MuMuMuMu.py for Mike Sokoloff
 
