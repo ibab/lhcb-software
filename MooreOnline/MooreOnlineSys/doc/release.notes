@@ -3,6 +3,14 @@ Package     : MooreOnlineSys
 Package Coordinator : R. Lambert
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v21r0>2014-01-17 MooreOnlineSys v21r0</A></H1><PRE>
+
+Second prototype release of MooreOnline, the online wrapper project for Moore.
+Moore Online depends on Moore v21r0 and Online v5r6.
+
+A new installer has been provided temporarily at ~rlambert/public/forEric/TinstallMoore.sh
+
+
 </PRE><H1><A NAME=v20r4>2013-10-30 MooreOnlineSys v20r4</A></H1><PRE>
 
 First release of the Online wrapper project for Moore. MooreOnline has the same version as the underlying Moore version for simplicity/transparency.
