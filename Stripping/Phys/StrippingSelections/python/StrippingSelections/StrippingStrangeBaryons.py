@@ -29,7 +29,7 @@ from GaudiKernel.SystemOfUnits import MeV
 
 
 config_default = { #PID cuts
-                   'PreScale'   : 0.01,
+                   'PreScale'   : 1,
                    'checkPV'   : True,
                    'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')",
                    'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
