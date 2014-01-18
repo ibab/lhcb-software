@@ -38,7 +38,7 @@ confB2XuMuNu = StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.c
 ### Delta_ACP, a_sl, B-fractions etc...
 from StrippingSelections import StrippingB2DMuNuX
 confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
-#SL_stream.appendLines( confB2DMuNuX.lines() )
+SL_stream.appendLines( confB2DMuNuX.lines() )
 
 ### B->D tau(->mu) nu 
 from StrippingSelections import StrippingB2DMuForTauMu
@@ -88,8 +88,8 @@ from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
 # Configure the stripping using the same options as in Reco06-Stripping10
-#sc = StrippingConf( Streams = [ SL_stream,Dimuon_stream,PID_stream , Charm_stream],
-sc = StrippingConf( Streams = [ BHad_stream ], #SL_stream,Dimuon_stream,Charm_stream,BHad_stream
+ActiveStreams = [SL_stream]
+sc = StrippingConf( Streams = ActiveStreams,
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )

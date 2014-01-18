@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2013-01-18 - Mika Vesterinen and Marian Stahl
+ - Update StrippingB2DMuNuX.py with improvements to asls lines
+
 ! 2014-01-17 - Jason Andrews
  - Updated StrippingBu2rho0rhoPlus.py: added ExtraInfoTools to lines
 
