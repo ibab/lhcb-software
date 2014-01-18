@@ -7,8 +7,7 @@ from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from JetAccessories.JetMaker_Config import JetMakerConf
-from Configurables import LoKi__FastJetMaker, LoKi__JetMaker
-from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions
+from StandardParticles import StdNoPIDsPions, StdJets
 from math import cos
 
 # Define the default configuration.
@@ -18,9 +17,7 @@ config_Dijets = {
     # HLT properties.
     "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
     # Track properties.
-    "TRK"   : {"CONTAINER"     : StdAllNoPIDsPions,
-                                            # The track container to use.
-               "MAX_MULT"      : 250,       # Multiplicity.
+    "TRK"   : {"MAX_MULT"      : 250,       # Multiplicity.
                "MIN_P"         : 5*GeV,     # Momentum.
                "MIN_PT"        : 500*MeV,   # Transverse momentum.
                "MIN_MIPCHI2DV" : 16,        # Impact parameter chi-squared.
@@ -39,7 +36,7 @@ config_Dijets = {
     "JET"   : {"CONTAINER"     : None,      # The jet container to use.
                "JEC"           : False,     # If no container, apply JEC.
                "R"             : 0.7,       # If no container, set jet radius.
-               "MIN_PT"        : 15*GeV},   # Transverse momentum.
+               "MIN_PT"        : 19*GeV},   # Transverse momentum.
     # Pair of secondary vertices properties.
     "DISVR" : {"MAX_COSDPHI"   : 0,         # Cos of transverse angle.
                "MAX_COSDALPHA" : 0.99,      # Cos of opening angle.
@@ -78,21 +75,30 @@ class DijetsConf(LineBuilder):
                               'from LoKiCore.functions    import *']}
 
         # Select the particles.
-        trks   = self._create_trks([config["TRK"]["CONTAINER"]])
+        pions = Selection(name + "StdNoPIDsPionsSelection",
+                               Algorithm = FilterDesktop(),
+                               RequiredSelections = [StdNoPIDsPions])
+        trks   = self._create_trks([StdNoPIDsPions])
         svrs   = self._create_svrs([trks])
         jets   = (self._create_jets() if config["JET"]["CONTAINER"] is None
                   else config["JET"]["CONTAINER"])
         disvrs = self._create_disvrs([svrs])
         dijets = self._create_dijets([disvrs, jets])
         
+        # The dummy pion selection line (for timing only).
+        line_pions = StrippingLine(name + "StdNoPIDsPionsLine",
+                                   prescale = 1.0,
+                                   HLT = hlt,
+                                   FILTER = flt,
+                                   selection = pions)
+        self.registerLine(line_pions)
+
         # The di-jet line.
-        line_dijets = StrippingLine(
-            name + "Line",
-            prescale = 1.0,
-            HLT = hlt,
-            FILTER = flt,
-            selection = dijets
-            )
+        line_dijets = StrippingLine(name + "Line",
+                                    prescale = 1.0,
+                                    HLT = hlt,
+                                    FILTER = flt,
+                                    selection = dijets)
         self.registerLine(line_dijets)
 
         # The pre-scaled di-jet line.
@@ -146,24 +152,14 @@ class DijetsConf(LineBuilder):
 
     # Create the jets.
     def _create_jets(self):
-        jets =  LoKi__JetMaker(
-            self._name + "JetsMaker",
-            JetMaker = 'LoKi__FastJetMaker',
-            JetID = False,
-            Associate2Vertex = True,
-            ApplyJEC = self._config["JET"]["JEC"],
-            Inputs = ['Phys/StdLoosePhotons/Particles',
-                      'Phys/StdAllNoPIDsPions/Particles']
-            )
-        jets.addTool(LoKi__FastJetMaker)
-        jets.LoKi__FastJetMaker.Type = 2                             
-        jets.LoKi__FastJetMaker.RParameter = self._config["JET"]["R"]
-        jets.LoKi__FastJetMaker.PtMin = self._config["JET"]["MIN_PT"]
-        jets.LoKi__FastJetMaker.Recombination = 0                    
-        return Selection(self._name + "JetsSelection" ,
+        pfps = DataOnDemand(Location = "Phys/PFParticles/Particles")
+        jets = JetMakerConf(
+            self._name + "StdJets",
+            R = self._config["JET"]["R"],
+            JetEnergyCorrection = self._config["JET"]["JEC"]).algorithms[0]
+        return Selection(self._name + "JetsSelection",
                          Algorithm = jets,
-                         RequiredSelections = [StdAllNoPIDsPions, 
-                                               StdLoosePhotons])
+                         RequiredSelections = [pfps])
 
     # Create the di-svrs.
     def _create_disvrs(self, inputs):
