@@ -239,8 +239,8 @@ def makeDp2HHH(name, DpmMassWin, DpmPT, DpmVtxChi2Ndof, DpmBpvdira, DpmBpvdls,
                                   DaughtersCuts =  { "pi+" : _DpPiCuts, "K+" : _DpKCuts }
                                   )
 
-    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
-    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")
+    _stdTightKaons = DataOnDemand(Location = "Phys/StdAllLooseANNKaons/Particles")
+    _stdTightPions = DataOnDemand(Location = "Phys/StdAllLooseANNPions/Particles")
 
     return Selection (name,
                       Algorithm = _DplusFilter,
