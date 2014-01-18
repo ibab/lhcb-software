@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-18 - Lucio Anderlini (BandQ)
+  - Updated dictionaries for CC2DD
+
 ! 2014-01-18 - Mat Charles
  - Config for some charm lines (Xicc)
 
