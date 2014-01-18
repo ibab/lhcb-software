@@ -117,7 +117,9 @@ import StrippingInclbJets
 import StrippingLLP2MuX
 import StrippingHighPtGamma
 import StrippingWMuJets
+import StrippingWmuAKTJets
 import StrippingWeJets
+import StrippingWeAKTJets
 import StrippingBjets
 import StrippingDijets
 import StrippingH24MuLines
