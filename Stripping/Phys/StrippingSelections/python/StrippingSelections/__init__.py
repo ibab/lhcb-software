@@ -54,7 +54,6 @@ import StrippingBs2PhiKst0
 import StrippingB2CharmoniumX_6H
 import StrippingBs2Q2B
 import StrippingB2JpsiKShh
-import StrippingLb2PhipK
 
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
@@ -111,6 +110,7 @@ import StrippingDiPhotonDiMuon
 import StrippingA1MuMu
 import StrippingHighPtTopo
 import StrippingStrangeBaryons
+import StrippingStrangeBaryonsNoPID
 import StrippingDisplVertices
 import StrippingHighPtJets
 import StrippingInclbJets
@@ -119,6 +119,9 @@ import StrippingHighPtGamma
 import StrippingWMuJets
 import StrippingWeJets
 import StrippingBjets
+import StrippingDijets
+import StrippingH24MuLines
+import StrippingH24MuSameMassLine
 
 import StrippingMiniBias
 import StrippingProtonIonMinBias
