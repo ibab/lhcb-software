@@ -20,6 +20,7 @@ use LoKiArrayFunctors   v* Phys
 use VeloDet             v* Det
 use TrackKernel         v* Tr
 use JetAccessories      v* Phys
+use HltEvent            v* Event
 
 # ============================================================================
 # Component library building rule
