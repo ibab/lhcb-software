@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef PARTICLEFLOW4JETS_H
-#define PARTICLEFLOW4JETS_H 1
+#ifndef PARTICLEFLOW_H
+#define PARTICLEFLOW_H 1
 
 // Include files
 // from Gaudi
@@ -65,27 +65,30 @@ private:
 
   StatusCode loadDatas() ;
 
-  StatusCode preprocessDatas(LHCb::Particles& PFParticles , Particle2Vertex::WTable& table ) ;
+  StatusCode preprocessDatas( std::vector<LHCb::PFParticle*>& PFParticles );// , Particle2Vertex::WTable& table ) ;
 
   int tagTrack( const LHCb::Track* track );
 
   void relate2Vertex(const LHCb::Particle* p , Particle2Vertex::WTable& table);
 
-  StatusCode updatePFCaloClusters( LHCb::PFParticle& theParticle );
+  StatusCode updatePFCaloClusters( LHCb::PFParticle& theParticle, unsigned int seedID = 0 );
 
   StatusCode treatProtoParticles( std::string pptype,
-                                  LHCb::Particles& PFParticles,
-                                  Particle2Vertex::WTable& table );
+                                  std::vector<LHCb::PFParticle*>& PFParticles);
+  //,
+  //                              Particle2Vertex::WTable& table );
 
-  StatusCode treatPi0s( int pptype , LHCb::Particles& PFParticles);
+  StatusCode treatPi0s( int pptype , std::vector<LHCb::PFParticle*>& PFParticles);
 
-  StatusCode treatPhotons( LHCb::Particles& PFParticles );
+  StatusCode treatPhotons( std::vector<LHCb::PFParticle*>& PFParticles );
 
-  StatusCode treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles& PFParticles ,
+  /*StatusCode treatNeutralHadronsAndIsolatedPhotons( std::vector<LHCb::PFParticle*>& PFParticles ,
                                                     LHCb::CaloHypos& PFCaloHypos,
-                                                    LHCb::ProtoParticles& PFProtoParticles );
+                                                    LHCb::ProtoParticles& PFProtoParticles );*/
 
-  StatusCode treatNeutralRecovery( LHCb::Particles& PFParticles );
+  StatusCode treatNeutralHadronsAndIsolatedPhotons( std::vector<LHCb::PFParticle*>& PFParticles );
+
+  StatusCode treatNeutralRecovery( std::vector<LHCb::PFParticle*>& PFParticles );
 
   StatusCode checkClustersForNeutralRecovery( LHCb::PFParticle& theParticle ,
                                               const LHCb::Calo2Track::IClusTrTable2D::InverseType::Range& ecalAssoc,
@@ -95,7 +98,7 @@ private:
 
   StatusCode createHiddenNeutral( const std::vector<LHCb::PFCaloCluster*>& clusters,
                                   const std::vector<const LHCb::PFParticle*>& particles,
-                                  LHCb::Particles& PFParticles );
+                                  std::vector<LHCb::PFParticle*>& PFParticles );
 
   int numberOfSaturatedCells( const LHCb::CaloCluster* cluster );
 
@@ -105,7 +108,7 @@ private:
 
   ITrackSelector * m_trSel;                                      ///< The track selector tool
 
-  IHitExpectation* m_ttExpectation;                          ///< The TT hit expectation tool
+  //IHitExpectation* m_ttExpectation;                          ///< The TT hit expectation tool
 
   std::string m_clust2TrLocationECAL;   ///< Location of the Tr 2 ECAL cluster relation table
 
@@ -230,4 +233,4 @@ private:
 
 };
 
-#endif // PARTICLEFLOW4JETS_H
+#endif // PARTICLEFLOW_H

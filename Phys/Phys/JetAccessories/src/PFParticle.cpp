@@ -16,7 +16,7 @@
 //=============================================================================
 // Constructor for neutral hadron particles
 //=============================================================================
-
+/*
 LHCb::PFParticle::PFParticle( const std::vector<const LHCb::CaloCluster*>& clusters ,
                               const LHCb::ProtoParticle * pp ) : Particle() {
   double x(0.),y(0.),z(0.),e(0.);
@@ -49,7 +49,7 @@ LHCb::PFParticle::PFParticle( const std::vector<const LHCb::CaloCluster*>& clust
   this->setParticleID( LHCb::ParticleID(22) );
   this->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
   this->setMomentum( Gaudi::XYZTVector(px,py,pz,e) ) ;
-}
+  }*/
 //=============================================================================
 // Constructor for neutral recovery particles
 //=============================================================================

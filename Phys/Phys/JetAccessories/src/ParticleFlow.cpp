@@ -50,7 +50,7 @@ ParticleFlow::ParticleFlow( const std::string& name,
                             ISvcLocator* pSvcLocator)
 : GaudiTupleAlg ( name , pSvcLocator )
   , m_trSel ( 0 )
-  , m_ttExpectation ( 0 )
+  //, m_ttExpectation ( 0 )
   , m_clust2TrLocationECAL ( LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context()) )
   , m_clust2TrLocationHCAL ( "Rec/Calo/HcalClusterMatch" )
   //, m_p2s ( 0 )
@@ -184,8 +184,8 @@ StatusCode ParticleFlow::initialize() {
     m_trSel = tool<ITrackSelector>( m_trSelType, "TrackSelector", this );
 
   // get the TT Hit expectation tool
-  if(m_ttExpectation == 0)
-    m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  //if(m_ttExpectation == 0)
+  //  m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
 
   // setup the vertex to particle association
   m_pf2verticesLocation = m_PFOutputLocation ;
@@ -266,23 +266,8 @@ StatusCode ParticleFlow::initialize() {
   info()<<"|--> OnlyBestCaloMatchForNR        : " <<  m_onlyBest <<endmsg;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  info()<<"The new PF code for no meme leak"<<endmsg;
+  
   // For the E/p parametrisation
   m_ECALElectron_Data = new TF1("ECALElectron_Data","(-2.87675e-01 )*exp(-1.89536e-04*x)+8.86869e-01");
   m_ECALElectron_MC = new TF1("ECALElectron_MC","( -4.38526e-01 )*exp(-1.24658e-03*x)+7.22256e-01");
@@ -309,6 +294,8 @@ StatusCode ParticleFlow::execute() {
    *
    *
    */
+  verbose()<<"tag 1"<<endreq;
+  
   using namespace LHCb::Calo2Track;
 
   setFilterPassed(false);
@@ -320,31 +307,37 @@ StatusCode ParticleFlow::execute() {
   m_particleContainers.clear();
   m_PFCaloClusters.clear();
 
+  verbose()<<"tag 2"<<endreq;
   // Load the different usefull containers
   if ( ! this->loadDatas() ){
     return Warning("Could not load datas");
   }
 
+  verbose()<<"tag 3"<<endreq;
   // Create the output container
-  LHCb::Particles* PFParticles = new LHCb::Particles();
-  put( PFParticles , m_PFOutputLocation );
+  std::vector<LHCb::PFParticle*> PFParticles;
+  LHCb::Particles* PFParticles_ToSave = new LHCb::Particles();
+  put( PFParticles_ToSave , m_PFOutputLocation );
 
+  verbose()<<"tag 4"<<endreq;
   // Create the particle to vertex relation table
   Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
   put( table, m_pf2verticesLocation );
 
+  verbose()<<"tag 5"<<endreq;
   // Some staff for newly created particles
-  LHCb::ProtoParticles* PFProtoParticles = new LHCb::ProtoParticles();
-  put( PFProtoParticles , m_protoPF );
-  LHCb::CaloHypos* PFCaloHypos = new LHCb::CaloHypos();
-  put( PFCaloHypos , m_calohypoPF );
+  //LHCb::ProtoParticles* PFProtoParticles = new LHCb::ProtoParticles();
+  //put( PFProtoParticles , m_protoPF );
+  //LHCb::CaloHypos* PFCaloHypos = new LHCb::CaloHypos();
+  //put( PFCaloHypos , m_calohypoPF );
 
   // Sort and mark the composite particles and/or candidates to ban
-  if ( ! this->preprocessDatas( *PFParticles , *table ) ){
+  if ( ! this->preprocessDatas( PFParticles )){//, *table ) ){
     return Warning("Could not treat composite particles");
   }
 
 
+  verbose()<<"tag 6"<<endreq;
   //************************************************
   // Start the core of the algorithm
   //************************************************
@@ -352,52 +345,81 @@ StatusCode ParticleFlow::execute() {
   // Standard protoparticles
   if( m_protoParticles.count("Charged") > 0.5 ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on charged particles" << endmsg;
-    StatusCode sc = treatProtoParticles( "Charged" , *PFParticles , *table );
+    StatusCode sc = treatProtoParticles( "Charged" , PFParticles );//, *table );
   }
+  verbose()<<"tag 7"<<endreq;
 
   // Home made Velo protoparticles
   if( m_protoParticles.count("Velo") > 0.5 ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on Velo particles" << endmsg;
-    StatusCode sc = treatProtoParticles( "Velo" ,  *PFParticles , *table );
+    StatusCode sc = treatProtoParticles( "Velo" ,  PFParticles);// , *table );
   }
 
+  verbose()<<"tag 8"<<endreq;
   // Merged Pi0
   verbose()<<"count MergedPi0 "<<m_particleContainers.count("MergedPi0")<<endreq;
   if (m_particleContainers.count("MergedPi0") > 0.5 ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on Merged Pi0" << endmsg;
-    treatPi0s(LHCb::PFParticle::MergedPi0, *PFParticles );
+    treatPi0s(LHCb::PFParticle::MergedPi0, PFParticles );
   }
 
+  verbose()<<"tag 9"<<endreq;
   // Resolved Pi0
   verbose()<<"count ResolvedPi0 "<<m_particleContainers.count("ResolvedPi0")<<endreq;
   if (m_particleContainers.count("ResolvedPi0") > 0.5 ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on Resolved Pi0" << endmsg;
-    treatPi0s(LHCb::PFParticle::ResolvedPi0, *PFParticles );
+    treatPi0s(LHCb::PFParticle::ResolvedPi0, PFParticles );
   }
 
+  verbose()<<"tag 10"<<endreq;
   /// Loop over Photons, if clusters are not tagged yet, use and tag
   if (m_particleContainers.count("Photons") > 0.5 ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on Photons" << endmsg;
-    treatPhotons( *PFParticles );
+    treatPhotons( PFParticles );
   }
+  verbose()<<"tag 11"<<endreq;
   /// Loop over the HCAL cluster and create neutral Hadrons
   if (m_useHCAL ){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the loop on HCAL clusters" << endmsg;
-    treatNeutralHadronsAndIsolatedPhotons( *PFParticles , *PFCaloHypos, *PFProtoParticles );
+    //treatNeutralHadronsAndIsolatedPhotons( PFParticles , *PFCaloHypos, *PFProtoParticles );
+    treatNeutralHadronsAndIsolatedPhotons( PFParticles );
   }
+  verbose()<<"tag 12"<<endreq;
   /// Perform Neutral recovery
   if (m_neutralRecovery){
     if ( msgLevel(MSG::DEBUG) ) debug() << "==> Start the neutral recovery" << endmsg;
-    treatNeutralRecovery( *PFParticles );
+    treatNeutralRecovery( PFParticles );
   }
-  // Write the particle 2 vertex table
-
+  verbose()<<"Before deleting copying"<<endreq;
+  
+  // Loop over PFParticles, convert to Particles, if charged or V0 fill the vertex association. 
+  for (std::vector<LHCb::PFParticle*>::const_iterator i_pfp = PFParticles.begin() ; PFParticles.end()!= i_pfp ; ++i_pfp ){
+    LHCb::Particle* newPart = new LHCb::Particle(*(*i_pfp));
+    verbose()<<"Extrainfo: "<<newPart->info(900,-1.)<<endreq;
+    if ((newPart->info(900,-1.)>1. && newPart->info(900,-1.)<10.)||(newPart->info(900,-1.)>100. && newPart->info(900,-1.)<1000.)){
+      verbose()<<"Found a chargd particle, extra info has been copied"<<endreq;
+      this->relate2Vertex( newPart , *table );
+    }
+    PFParticles_ToSave->insert( newPart ); 
+  }
+  verbose()<<"Copying and inserting finnished"<<endreq;
+  
   // MONITORING: check all cluster are used, check there is no double counting between tracks, and between neutral calo clusters and neutral recovery clusters
   // Delete the PFCaloClusters
   for (std::map< unsigned int ,  LHCb::PFCaloCluster* >::iterator i_pfClu = m_PFCaloClusters.begin();
        m_PFCaloClusters.end() != i_pfClu ; ++i_pfClu){
+    verbose()<< (*i_pfClu).second<<endreq;
     delete ( (*i_pfClu).second );
   }
+  verbose()<<"Deleting PFCaloClusters finnished"<<endreq;
+  for (std::vector<LHCb::PFParticle*>::const_iterator i_pfp = PFParticles.begin() ; PFParticles.end()!= i_pfp ; ++i_pfp ){
+    //for (LHCb::Particles::const_iterator i_pfp = PFParticles->begin() ; PFParticles->end()!= i_pfp ; ++i_pfp ){
+    verbose()<<(*i_pfp)->PFType()<<" "<<(*i_pfp)<<endreq;
+    delete (*i_pfp);
+  }
+  verbose()<<"Deleting PFParticles components finnished"<<endreq;
+  //delete PFParticles;
+  //verbose()<<"Deleting PFParticles finnished"<<endreq;
   setFilterPassed ( true ) ;
   return StatusCode::SUCCESS;
 }
@@ -415,7 +437,7 @@ StatusCode ParticleFlow::finalize() {
 //=============================================================================
 //  Update the list of Calo cluster for charged particles
 //=============================================================================
-StatusCode ParticleFlow::updatePFCaloClusters( LHCb::PFParticle& theParticle )
+StatusCode ParticleFlow::updatePFCaloClusters( LHCb::PFParticle& theParticle , unsigned int seedID )
 {
   /**
    *
@@ -426,7 +448,7 @@ StatusCode ParticleFlow::updatePFCaloClusters( LHCb::PFParticle& theParticle )
    * The status of the PFCaloCluster is also updated ( discard it from neutral recovery for example )
    *
    */
-
+  
   verbose()<<"Type in updatePFCaloClusters "<<theParticle.PFType()<<endreq;
   // Case of normal charged particles / composite daugthers and ChargedInfMomentum
   if( ( theParticle.PFType() > LHCb::PFParticle::Charged &&  theParticle.PFType() < LHCb::PFParticle::Neutral )
@@ -439,13 +461,17 @@ StatusCode ParticleFlow::updatePFCaloClusters( LHCb::PFParticle& theParticle )
       Warning("this is not a proper charged particle");
       return StatusCode::FAILURE;
     }
+    verbose()<<"tag UPF ch 1"<<endreq;
     const LHCb::Track * track = theParticle.proto()->track();
     // Treat the ECAL Cluster first
     LHCb::Calo2Track::IClusTrTable2D::InverseType::Range ecalRange = m_tableTrECAL->inverse()->relations ( track ) ;
     LHCb::Calo2Track::IClusTrTable2D::InverseType::Range hcalRange ;
+    verbose()<<"tag UPF ch 2"<<endreq;
     if( m_useHCAL ) hcalRange = m_tableTrHCAL->inverse()->relations ( track ) ;
+    verbose()<<"tag UPF ch 3"<<endreq;
     this->checkClustersForNeutralRecovery( theParticle , ecalRange, hcalRange );
 
+    verbose()<<"tag UPF ch 4"<<endreq;
     return StatusCode::SUCCESS;
   }
   // Case of Charged0Momentum
@@ -457,15 +483,29 @@ StatusCode ParticleFlow::updatePFCaloClusters( LHCb::PFParticle& theParticle )
             || theParticle.PFType()== LHCb::PFParticle::BadPhotonMatchingT ||theParticle.PFType()== LHCb::PFParticle::BadPhoton || theParticle.PFType()== LHCb::PFParticle::IsolatedPhoton ){
     verbose()<<"Neutral in updatePFCaloClusters "<<theParticle.PFType()<<endreq;
     if ( theParticle.PFType() == LHCb::PFParticle::ResolvedPi0 ){
+      
+      verbose()<<"tag UPF n 1"<<endreq;
       m_PFCaloClusters[theParticle.daughtersVector()[0]->proto()->calo()[0]->clusters()[0].target()->seed().all()]
         ->setStatus( LHCb::PFCaloCluster::Used );
+      verbose()<<"tag UPF n 2"<<endreq;
       m_PFCaloClusters[theParticle.daughtersVector()[1]->proto()->calo()[0]->clusters()[0].target()->seed().all()]
         ->setStatus( LHCb::PFCaloCluster::Used );
+      verbose()<<"tag UPF n 3"<<endreq;
       return StatusCode::SUCCESS;
     }
     //m_PFCaloClusters[theParticle.proto()->calo()[0]->clusters ()[0].target()->seed().all()]->updateParticleList(&theParticle);
     //if(theParticle.PFType() != LHCb::PFParticle::BadPhoton)
+    if ( theParticle.PFType() == LHCb::PFParticle::IsolatedPhoton || theParticle.PFType() == LHCb::PFParticle::NeutralHadron){
+      verbose()<<"tag UPF n 4"<<endreq;
+      m_PFCaloClusters[seedID]->setStatus( LHCb::PFCaloCluster::Used );
+      verbose()<<"tag UPF n 5"<<endreq;
+      return StatusCode::SUCCESS;
+    }
+
+      verbose()<<"tag UPF n 6"<<endreq;
     m_PFCaloClusters[theParticle.proto()->calo()[0]->clusters ()[0].target()->seed().all()]->setStatus( LHCb::PFCaloCluster::Used );
+
+      verbose()<<"tag UPF n 7"<<endreq;
 
     return StatusCode::SUCCESS;
   }
@@ -645,7 +685,7 @@ StatusCode ParticleFlow::loadDatas() {
 // Preprocess the containers ( treat banned candidates and composite particles)
 //=============================================================================
 
-StatusCode ParticleFlow::preprocessDatas( LHCb::Particles& PFParticles , Particle2Vertex::WTable& table ) {
+StatusCode ParticleFlow::preprocessDatas( std::vector<LHCb::PFParticle*>& PFParticles ){//, Particle2Vertex::WTable& table ) {
   /**
    * Function the preprocess the inputs (treat banned candidates and composite particles)
    *
@@ -724,32 +764,16 @@ StatusCode ParticleFlow::preprocessDatas( LHCb::Particles& PFParticles , Particl
       }
       if (!overlap){
         LHCb::PFParticle* theParticle = new LHCb::PFParticle( *comp );
-        /* Not needed anymore
-           int PFType = LHCb::PFParticle::Composite;
-           if ( theParticle->particleID().isHadron() && theParticle->particleID().hasBottom() )
-           PFType = LHCb::PFParticle::B;
-           if ( theParticle->particleID().isHadron() && theParticle->particleID().hasCharm() )
-           PFType = LHCb::PFParticle::D;
-           if ( theParticle->particleID().abspid() == 310 || theParticle->particleID().abspid() == 3122 )
-           PFType = LHCb::PFParticle::V0;
-           theParticle->setPFType(PFType);
-        */
-        /* this is not done anymore directly but through the daughter particles
-           this->updatePFCaloClusters(theParticle);
-        */
-        this->relate2Vertex( theParticle , table );
-        PFParticles.insert( theParticle );
+        //this->relate2Vertex( theParticle , table );
+        PFParticles.push_back( theParticle );
         // Ban the unbanned
         for (LHCb::Particle::ConstVector::const_iterator i_p = daughters.begin();daughters.end()!=i_p;++i_p){
           if ((*i_p)->proto()==NULL) continue;
           if ((*i_p)->proto()->track()==NULL) continue;
           m_trackKeyToBan[(*i_p)->proto()->track()->key()]=(*i_p)->proto()->track();
-          // URGENT also create particles from the daughters...
-          // so that those are the ones that can be updated to PFCaloClusters
-          // and then need to be deleted... or not so treat that in LoKiJets
           LHCb::PFParticle* theDaugtherParticle = new LHCb::PFParticle( *(*i_p) , true );
           this->updatePFCaloClusters(*theDaugtherParticle);
-          PFParticles.insert( theDaugtherParticle );
+          PFParticles.push_back( theDaugtherParticle );
         }
       }
     }
@@ -782,7 +806,7 @@ void ParticleFlow::relate2Vertex( const LHCb::Particle* p
 //=============================================================================
 // Treat and save the charged protoparticles
 //=============================================================================
-StatusCode ParticleFlow::treatProtoParticles( std::string pptype , LHCb::Particles& PFParticles , Particle2Vertex::WTable& table){
+StatusCode ParticleFlow::treatProtoParticles( std::string pptype , std::vector<LHCb::PFParticle*>& PFParticles ){// , Particle2Vertex::WTable& table){
   /**
    * Function treating the charged protparticles
    *
@@ -810,8 +834,9 @@ StatusCode ParticleFlow::treatProtoParticles( std::string pptype , LHCb::Particl
     else{
       verbose()<<"In treat protoparticles "<<theParticle->particleID()<<endreq;
       this->updatePFCaloClusters( *theParticle );
-      this->relate2Vertex( theParticle , table );
-      PFParticles.insert( theParticle );
+      // Turns the PFParticle into Particle
+      //this->relate2Vertex( theParticle , table );
+      PFParticles.push_back( theParticle );
     }
   }
   return StatusCode::SUCCESS;
@@ -820,7 +845,7 @@ StatusCode ParticleFlow::treatProtoParticles( std::string pptype , LHCb::Particl
 //=============================================================================
 // Treat and save the Pi0s
 //=============================================================================
-StatusCode ParticleFlow::treatPi0s ( int pftype , LHCb::Particles& PFParticles){
+StatusCode ParticleFlow::treatPi0s ( int pftype , std::vector<LHCb::PFParticle*>& PFParticles){
   /**
    * Function treating the pi0
    *
@@ -890,7 +915,7 @@ StatusCode ParticleFlow::treatPi0s ( int pftype , LHCb::Particles& PFParticles){
     LHCb::PFParticle* theParticle = new LHCb::PFParticle(*pi0,false, pftype);
     this->updatePFCaloClusters( *theParticle );
     theParticle->setNSaturatedCellsECAL( nSatCell );
-    PFParticles.insert(theParticle);
+    PFParticles.push_back(theParticle);
   }
   return StatusCode::SUCCESS;
 }
@@ -898,7 +923,7 @@ StatusCode ParticleFlow::treatPi0s ( int pftype , LHCb::Particles& PFParticles){
 //=============================================================================
 // Treat and save the Photons
 //=============================================================================
-StatusCode ParticleFlow::treatPhotons ( LHCb::Particles& PFParticles){
+StatusCode ParticleFlow::treatPhotons ( std::vector<LHCb::PFParticle*>& PFParticles){
   /**
    * Function treating the photons
    *
@@ -933,14 +958,14 @@ StatusCode ParticleFlow::treatPhotons ( LHCb::Particles& PFParticles){
             PFType = LHCb::PFParticle::Photon;
           }
           // Clone the original particle
-          LHCb::PFParticle* theParticle = new LHCb::PFParticle(*((*photon).clone()));
+          LHCb::PFParticle* theParticle = new LHCb::PFParticle(*photon);
           theParticle->setPFType(PFType);
           int nSatCell = this->numberOfSaturatedCells( hypoClusters[0].target() );
           // Update the cluster
           this->updatePFCaloClusters( *theParticle );
           theParticle->setNSaturatedCellsECAL( nSatCell );
           // Save the particle
-          PFParticles.insert(theParticle);
+          PFParticles.push_back(theParticle);
           continue ;
         }
       }
@@ -952,20 +977,21 @@ StatusCode ParticleFlow::treatPhotons ( LHCb::Particles& PFParticles){
     if( photon->pt() < m_minPhotonEt && PFType == LHCb::PFParticle::Photon  ) continue;
     if( photon->pt() < m_minBadPhotonEt && PFType == LHCb::PFParticle::BadPhoton ) continue;
     if( photon->pt() < m_minBadPhotonMatchingTEt && PFType == LHCb::PFParticle::BadPhotonMatchingT ) continue;
-    LHCb::PFParticle* theParticle = new LHCb::PFParticle(*((*photon).clone()));
+    LHCb::PFParticle* theParticle = new LHCb::PFParticle(*photon);
     int nSatCell = this->numberOfSaturatedCells( hypoClusters[0].target() );
     theParticle->setNSaturatedCellsECAL( nSatCell );
     theParticle->setPFType(PFType);
     verbose()<<"Type in photons: "<<PFType<<" "<<theParticle->PFType()<<" "<<theParticle->info(900,-1000.)<<endreq;
     this->updatePFCaloClusters( *theParticle );
     // Save the particle
-    PFParticles.insert(theParticle);
+    PFParticles.push_back(theParticle);
   }
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles& PFParticles , LHCb::CaloHypos& PFCaloHypos, LHCb::ProtoParticles& PFProtoParticles ){
+//StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( std::vector<LHCb::PFParticle*>& PFParticles , LHCb::CaloHypos& PFCaloHypos, LHCb::ProtoParticles& PFProtoParticles ){
+StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( std::vector<LHCb::PFParticle*>& PFParticles ){
   /**
    * Function to treat the HCAL clusters not matching to any track.
    *
@@ -976,6 +1002,8 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
   for (std::map< unsigned int ,  LHCb::PFCaloCluster* >::iterator iclu = m_PFCaloClusters.begin(); m_PFCaloClusters.end() != iclu ; ++iclu){
     if ( (*iclu).second->seed().calo() != CaloCellCode::HcalCalo ) {
       if ( (*iclu).second->status() != LHCb::PFCaloCluster::Available ) continue;
+      
+      verbose()<<"tag aa"<<endreq;
       const LHCb::CaloCluster::Position clupos = (*iclu).second->position();
       double x = clupos.x() , y = clupos.y() , z = clupos.z();
       double px = (*iclu).second->e()*x/sqrt(x*x + y*y + z*z);
@@ -987,6 +1015,7 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
         continue;
       }
       // Make the CaloHypo
+      /*
       LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
       hypo->addToClusters((*iclu).second );
       hypo->setHypothesis ( LHCb::CaloHypo::Photon );
@@ -997,22 +1026,37 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
       LHCb::ProtoParticle* NewProto = new LHCb::ProtoParticle();
       NewProto->addToCalo(hypo);
       // Make a new Particle
-      PFProtoParticles.insert(NewProto);
+      PFProtoParticles.insert(NewProto);*/
+      verbose()<<"tag a"<<endreq;
+      unsigned int cellID = (*iclu).second->seed().all();
+      
+      verbose()<<"tag a bis"<<endreq;
+      
       LHCb::PFParticle* theParticle = new LHCb::PFParticle( );
-      theParticle->setProto(NewProto);
+      //theParticle->setProto(NULL);
+      verbose()<<"tag b"<<endreq;
       theParticle->setParticleID( LHCb::ParticleID(22) );
+      verbose()<<"tag c"<<endreq;
       theParticle->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
+      verbose()<<"tag d"<<endreq;
       theParticle->setMomentum( Gaudi::XYZTVector(px,py,pz,(*iclu).second->e()) ) ;
+      verbose()<<"tag e"<<endreq;
       theParticle->setPFType(LHCb::PFParticle::IsolatedPhoton);
+      verbose()<<"tag f"<<endreq;
       // Update the caloClusters container
-      this->updatePFCaloClusters( *theParticle );
+      this->updatePFCaloClusters( *theParticle , cellID );
+      verbose()<<"tag i"<<endreq;
       int nSatCell = this->numberOfSaturatedCells( (*iclu).second );
+      verbose()<<"tag j"<<endreq;
       theParticle->setNSaturatedCellsECAL( nSatCell );
-      PFParticles.insert(theParticle);
+      verbose()<<"tag k"<<endreq;
+      PFParticles.push_back(theParticle);
+      verbose()<<"tag l"<<endreq;
     }
     else{
 
       // Create
+      verbose()<<"tagX aa"<<endreq;
       const LHCb::CaloCluster::Position clupos = (*iclu).second->position();
       double x = clupos.x() , y = clupos.y() , z = clupos.z();
       double px = (*iclu).second->e()*x/sqrt(x*x + y*y + z*z);
@@ -1037,8 +1081,9 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
         }
         continue;
       }
+      
       // Make the CaloHypo
-      LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
+      /*LHCb::CaloHypo* hypo = new LHCb::CaloHypo();
       hypo->addToClusters((*iclu).second );
       hypo->setHypothesis ( LHCb::CaloHypo::NeutralHadron );
       for ( unsigned ii = 0; ii<(*iclu).second->entries().size() ; ++ii )
@@ -1048,18 +1093,34 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
       LHCb::ProtoParticle* NewProto = new LHCb::ProtoParticle();
       NewProto->addToCalo(hypo);
       // Make a new Particle
-      PFProtoParticles.insert(NewProto);
+      verbose()<<"tagX aa"<<endreq;
+      verbose()<<"tagX aa"<<endreq;
+      PFProtoParticles.insert(NewProto);*/
+      verbose()<<"tagX a"<<endreq;
       LHCb::PFParticle* theParticle = new LHCb::PFParticle( );
-      theParticle->setProto(NewProto);
+
+      verbose()<<"tagX a bis"<<endreq;
+      unsigned int cellID = (*iclu).second->seed().all();
+      
+      //theParticle->setProto(NewProto);
+      verbose()<<"tagX b"<<endreq;
       theParticle->setParticleID( LHCb::ParticleID(22) );
+      verbose()<<"tagX c"<<endreq;
       theParticle->setReferencePoint( Gaudi::XYZPoint(0.,0.,0.)  );
+      verbose()<<"tagX d"<<endreq;
       theParticle->setMomentum( Gaudi::XYZTVector(px,py,pz,(*iclu).second->e()) ) ;
+      verbose()<<"tagX e"<<endreq;
       theParticle->setPFType(LHCb::PFParticle::NeutralHadron);
       // Update the caloClusters container
-      this->updatePFCaloClusters( *theParticle );
+      verbose()<<"tagX f"<<endreq;
+      this->updatePFCaloClusters( *theParticle , cellID);
+      verbose()<<"tagX g"<<endreq;
       int nSatCell = this->numberOfSaturatedCells( (*iclu).second );
+      verbose()<<"tagX h"<<endreq;
       theParticle->setNSaturatedCellsHCAL( nSatCell );
-      PFParticles.insert(theParticle);
+      verbose()<<"tagX i"<<endreq;
+      PFParticles.push_back(theParticle);
+      verbose()<<"tagX j"<<endreq;
     }
   }
   return StatusCode::SUCCESS;
@@ -1069,7 +1130,7 @@ StatusCode ParticleFlow::treatNeutralHadronsAndIsolatedPhotons( LHCb::Particles&
 // Treat the remaining clusters and save them as particles
 //=============================================================================
 
-StatusCode ParticleFlow::treatNeutralRecovery( LHCb::Particles& PFParticles ){
+StatusCode ParticleFlow::treatNeutralRecovery( std::vector<LHCb::PFParticle*>& PFParticles ){
   /**
    * Function to do the neutral recovery
    *
@@ -1183,7 +1244,7 @@ StatusCode ParticleFlow::treatNeutralRecovery( LHCb::Particles& PFParticles ){
 
 StatusCode ParticleFlow::createHiddenNeutral( const std::vector<LHCb::PFCaloCluster*>& clusters,
                                               const std::vector<const LHCb::PFParticle*>& particles,
-                                              LHCb::Particles& PFParticles )
+                                              std::vector<LHCb::PFParticle*>& PFParticles )
 {
   // Loop over the particles. For each one get the most probable response as function of the associated cluster and its direction
   // Get the direction and Energy of each cluster
@@ -1219,7 +1280,7 @@ StatusCode ParticleFlow::createHiddenNeutral( const std::vector<LHCb::PFCaloClus
       LHCb::PFParticle* theParticle = new LHCb::PFParticle( Barycenter , oldEnergy);
       theParticle->setNSaturatedCellsHCAL( nSatCellHCAL );
       theParticle->setNSaturatedCellsECAL( nSatCellECAL );
-      PFParticles.insert( theParticle );
+      PFParticles.push_back( theParticle );
     }
   }
   return StatusCode::SUCCESS;
@@ -1304,7 +1365,7 @@ Gaudi::Vector6 ParticleFlow::expectedEnergy(const LHCb::PFParticle* p ){
   // TODO... treat if (removing the E + 2 sigma???)
   //}
   else{
-    always()<<"Track type: "<<theType<<endreq;
+    verbose()<<"Track type: "<<theType<<endreq;
     Warning("Undefined case in neutral recovery "); // Might be a neutral particle....
   }
   ///// RECHECK this one....

@@ -157,8 +157,8 @@ namespace LHCb {
     };
 
     /// Neutral Hadron Particle Constructor
-    PFParticle( const std::vector<const CaloCluster*>& clusters , 
-                const ProtoParticle * pp  );
+    //PFParticle( const std::vector<const CaloCluster*>& clusters , 
+    //            const ProtoParticle * pp  );
     /// Neutral Recovery  Particle Constructor
     PFParticle( const Gaudi::Vector6& barycenter , const double oldEnergy );
     /// Charged Particle Constructor
