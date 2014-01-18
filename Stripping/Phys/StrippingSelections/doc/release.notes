@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-18 - Ronan Wallace
+ - Update of StrippingStrangeBaryons.py returning to pp prescales.
+ - Update of StrippingLowMult.py increasing scope of CEP lines.
+ - New StrippingStrangeBaryonsNoPID.py.
+ - New StrippingDijet.py (no particle flow).
+ - New StrippingH24MuLines.py and StrippingH24MuSameMassLine.py.
+ - Added relevant import statements to __init__.py for new lines.
 
 ! 2014-01-18 - Lucio Anderlini (for Andrea Bizzeti)
  - Updated StrippingCC2DD.py. 
