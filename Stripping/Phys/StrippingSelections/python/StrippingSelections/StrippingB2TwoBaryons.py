@@ -7,9 +7,9 @@ Authors: Eduardo Rodrigues
 """
 
 ########################################################################
-__author__ = ['Eduardo Rodrigues']
-__date__ = '22/03/2012'
-__version__ = '$Revision: 1.5 $'
+__author__ = ['Eduardo Rodrigues', 'John Beddow']
+__date__ = '18/01/2014'
+__version__ = '$Revision: 1.6 $'
 
 __all__ = ('B2TwoBaryonLines',
            'makeB2PPbar')
@@ -36,9 +36,22 @@ default_config = { 'PrescaleB2PPbar'   : 1,
                    'BPTB2PPbar'        : 1100,
                    'BIPChi2B2PPbar'    : 16,
                    'BDIRA'             : 0.9997,
-                   'MaxGhostProb'      : 0.4
-                 }
-
+                   'MaxGhostProb'      : 0.4,
+                   'ExtraInfoTools'    : [ { "Type" : "ConeVariables"
+                                             , "ConeAngle" : 0.6
+                                             , "ConeNumber" : 1
+                                             , "Variables" : ['angle', 'mult', 'ptasy']},
+                                           { "Type" : "ConeVariables"
+                                             , "ConeAngle" : 0.8
+                                             , "ConeNumber" : 2
+                                             , "Variables" : ['angle', 'mult', 'ptasy']},
+                                           { "Type" : "ConeVariables"
+                                             , "ConeAngle" : 1.0
+                                             , "ConeNumber" : 3
+                                             , "Variables" : ['angle', 'mult', 'ptasy']},
+                                           {'Type' : 'VertexIsolation'}
+                                           ]                   
+                   }
 
 class B2TwoBaryonLines( LineBuilder ) :
     """Class defining the Bd,s -> baryon antibaryon stripping line"""
@@ -56,7 +69,8 @@ class B2TwoBaryonLines( LineBuilder ) :
                                'BPTB2PPbar',
                                'BIPChi2B2PPbar',
                                'BDIRA',
-                               'MaxGhostProb'
+                               'MaxGhostProb',
+                               'ExtraInfoTools'
                              )
     
     def __init__( self,name,config ) :        
@@ -83,8 +97,9 @@ class B2TwoBaryonLines( LineBuilder ) :
         
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
                                           prescale = config['PrescaleB2PPbar'],
-                                          selection = self.B2PPbar )
-        
+                                          selection = self.B2PPbar,
+                                          ExtraInfoTools = config['ExtraInfoTools'],
+                                          ExtraInfoDaughters = [self.B2PPbar])
         
         self.registerLine(self.lineB2PPbar)    
 

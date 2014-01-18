@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-18 - John Beddow
+ - Update of StrippingB2TwoBaryons.py: added ExtraInfoTools to lines 
+
 ! 2014-01-18 - Ronan Wallace
  - Update of StrippingStrangeBaryons.py returning to pp prescales.
  - Update of StrippingLowMult.py increasing scope of CEP lines.
