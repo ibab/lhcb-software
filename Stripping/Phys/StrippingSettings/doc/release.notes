@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2014-01-18 - Andrea Contu
+  - Config for Charm Lines in Stripping20rXp3
+
 ! 2014-01-18 - Lucio Anderlini (BandQ)
   - Updated dictionaries for CC2DD
 
