@@ -246,7 +246,8 @@ bool PrVeloUTChecker::bAncestor(const LHCb::MCParticle* mcPart) const
    bool fromB = false;
    const LHCb::MCParticle* mother = mcPart->mother();
    while ( mother !=0 && fromB == false) {
-      fromB = mother->particleID().hasBottom();
+      fromB = mother->particleID().hasBottom() && 
+        ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() );
       mother = mother->mother();
    }
    return fromB;
