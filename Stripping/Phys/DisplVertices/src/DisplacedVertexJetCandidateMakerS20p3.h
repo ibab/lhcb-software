@@ -1,8 +1,6 @@
 #ifndef DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKERS20P3_H
 #define DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKERS20P3_H 1
 
-#include "GaudiKernel/ToolHandle.h"
-
 #include "Kernel/DaVinciAlgorithm.h"
 
 #include "Kernel/IJetMaker.h"
@@ -19,7 +17,7 @@
  * are filtered using the input cut code, and partitioned according to the
  * specified IP and IPCHI2 cut values.
  * Next, jets are reconstructed using the jet maker tool,
- * their energy is corrected using a JEC tool
+ * their energy is corrected using a JEC tool (particle refitter with nickname "JEC")
  * and the JetID variables are calculated.
  * Then the JetID selection is applied using the code,
  * and the remaining jets, if there are enough, are combined into a new candidate,
@@ -53,7 +51,6 @@ private: // TODO clean up and reorder
   LoKi::Types::Cut ISPERVINPUT;
   LoKi::Types::Cut ISALLVINPUT;
   LoKi::Types::Cut HASPOINTINGINFO;
-  ToolHandle<IDistanceCalculator> m_dist;
   double m_maxIP2DV;
   double m_minIp2PV;
   double m_minIpChi22PV;
@@ -61,18 +58,22 @@ private: // TODO clean up and reorder
   LoKi::Types::Fun BestPVIPChi2;
   LoKi::Types::Fun MinPVIP;
 
-  ToolHandle<IJetMaker> m_jetMaker;
+  const IDistanceCalculator* m_dist;
 
-  ToolHandle<IParticleReFitter> m_JEC;
+  std::string m_jetMakerName;
+  const IJetMaker* m_jetMaker;
+
+  const IParticleReFitter* m_JECtool;
 
   // JET ID
-  ToolHandle<IExtraInfoTool> m_jetIDInfoTool;
+  std::string m_jetIDInfoToolName;
+  IExtraInfoTool* m_jetIDInfoTool;
   void addJetIDInfo( LHCb::Particle* jet );
   std::string m_jetIDCode;
   LoKi::Types::Cut JETIDCUT;
 
   unsigned int m_minJet;                               ///< Minimum number of jets per candidates
-  ToolHandle<IParticleCombiner>        m_combiner    ; ///< The combiner
+  const IParticleCombiner* m_combiner;
   std::string m_candPIDName;
   const LHCb::ParticleProperty* m_candProp;
   bool makeCandidate( const LHCb::Particle::Vector& daughters, const LHCb::Particle* strippingCandidate );

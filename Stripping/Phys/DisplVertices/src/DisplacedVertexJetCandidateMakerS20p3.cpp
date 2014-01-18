@@ -42,11 +42,15 @@ DisplacedVertexJetCandidateMakerS20p3::DisplacedVertexJetCandidateMakerS20p3
   , ISPERVINPUT    (_PBOOL(false))
   , ISALLVINPUT    (_PBOOL(false))
   , HASPOINTINGINFO(_PBOOL(false))
-  , m_dist("LoKi::DistanceCalculator")
   // TODO: below can probably be removed, or moved into a dedicated tool
   , BestPVIPChi2   (_PDOUBLE(-1.0))
   , MinPVIP        (_PDOUBLE(-1.0))
+  , m_dist         (0)
+  , m_jetMaker     (0)
+  , m_JECtool      (0)
+  , m_jetIDInfoTool(0)
   , JETIDCUT       (_PBOOL(false))
+  , m_combiner     (0)
 {
   declareProperty("Factory"             , m_factory = "LoKi::Hybrid::Tool/HybridFactory:PUBLIC"
                  , "The Type/Name for C++/Python Hybrid Factory"
@@ -73,19 +77,15 @@ DisplacedVertexJetCandidateMakerS20p3::DisplacedVertexJetCandidateMakerS20p3
                  , "Maximum IPChi2 to displaced vertex, for downstream part");
 
   // Jet making and selection
-  declareProperty("JetMaker"            , m_jetMaker = ToolHandle<IJetMaker>("LoKi::FastJetMaker", this, true)
+  declareProperty("JetMaker"            , m_jetMakerName = "LoKi::FastJetMaker"
                  , "Jet-maker tool handle (IJetMaker interface)") ;
-  declareProperty("JEC"                 , m_JEC = ToolHandle<IParticleReFitter>("PerPVOffsetJECS20p3", this, true)
-                 , "JEC tool");
-  declareProperty("JetIDTool"           , m_jetIDInfoTool = ToolHandle<IExtraInfoTool>("AddJetIDInfoS20p3", this, true)
+  declareProperty("JetIDTool"           , m_jetIDInfoToolName = "AddJetIDInfoS20p3"
                  , "IExtraInfoTool to use for filling the JetID variables");
   declareProperty("JetIDCut"            , m_jetIDCode = "PALL"
                  , "JetID cut"
                  )->declareUpdateHandler( &DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts, this );
   // Candidate
   declareProperty("MinNumberOfJets"     , m_minJet = 1, "Minimum number of jets per candidates");
-  declareProperty("ParticleCombiner"    , m_combiner = ToolHandle<IParticleCombiner>("MomentumCombiner", this, true)
-                 , "Combiner to be used (jets -> candidate)"                        ) ;
   declareProperty("CandidatePID"        , m_candPIDName = "~chi_10"
                  , "ParticleID for the candidates");
 }
@@ -124,16 +124,14 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::initialize()
   sc = updateCuts();
   if (sc.isFailure()) { return Error("Error from updateCuts", sc); }
 
-  sc = m_dist.retrieve();
-  if (sc.isFailure()) { return Error("Could not retrieve IDistanceCalculator", sc); }
-  sc = m_jetMaker.retrieve();
-  if (sc.isFailure()) { return Error("Could not retrieve IJetMaker", sc); }
-  sc = m_JEC.retrieve();
-  if (sc.isFailure()) { return Error("Could not retrieve IParticleReFitter for JEC", sc); }
-  sc = m_jetIDInfoTool.retrieve();
-  if (sc.isFailure()) { return Error("Could not retrieve IExtraInfoTool for JetID", sc); }
-  sc = m_combiner.retrieve();
-  if (sc.isFailure()) { return Error("Could not retrieve IParticleCombiner", sc); }
+  m_dist = distanceCalculator("LoKi");
+  m_jetMaker = tool<IJetMaker>( m_jetMakerName, this );
+  if ( m_jetMaker == 0 ) { return Error("Could not retrieve IJetMaker", sc); }
+  m_JECtool = particleReFitter("JEC");
+  if ( m_JECtool == 0 ) { return Error("Could not retrieve IParticleReFitter for JEC", sc); }
+  m_jetIDInfoTool = tool<IExtraInfoTool>( m_jetIDInfoToolName, this );
+  if ( m_jetIDInfoTool == 0 ) { return Error("Could not retrieve IExtraInfoTool for JetID", sc); }
+  m_combiner = particleCombiner("MomentumCombiner");
 
   BestPVIPChi2 = BPVIPCHI2("")  ;
   MinPVIP      = MINIPWITHDV("")  ;
@@ -162,12 +160,6 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::finalize()
   BestPVIPChi2    = _PDOUBLE(-1.0);
   MinPVIP         = _PDOUBLE(-1.0);
   JETIDCUT        = _PBOOL(false);
-
-  m_dist.release().ignore();
-  m_jetMaker.release().ignore();
-  m_JEC.release().ignore();
-  m_jetIDInfoTool.release().ignore();
-  m_combiner.release().ignore();
 
   return DaVinciAlgorithm::finalize();
 }
@@ -224,85 +216,89 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::execute()
   StatusCode sc;
   BOOST_FOREACH( const LHCb::Particle* dvCand, particles() ) {
     const LHCb::Vertex* vertex = dvCand->endVertex();
-    // Prepare inputs
-    IJetMaker::Input jetInputs;
-    BOOST_FOREACH( const LHCb::Particle* pfPart, allPFInputs ) {
-      if ( ISGOODINPUT(pfPart) ) {
-        if ( ISALLVINPUT(pfPart) ) {
-          jetInputs.push_back(pfPart);
-        } else if ( ISPERVINPUT(pfPart) ) {
-          if ( HASTRACK(pfPart) && ISDOWN(pfPart) ) {
-            sc = m_dist->distance( pfPart, vertex, t_ip, t_chi2 );
-            if ( sc.isSuccess() && ( t_chi2 <= m_maxIpChi22DVDown ) ) {
+    if ( vertex == 0 ) {
+      Warning("Input candidate without endVertex -> skipping");
+    } else {
+      // Prepare inputs
+      IJetMaker::Input jetInputs;
+      BOOST_FOREACH( const LHCb::Particle* pfPart, allPFInputs ) {
+        if ( ISGOODINPUT(pfPart) ) {
+          if ( ISALLVINPUT(pfPart) ) {
+            jetInputs.push_back(pfPart);
+          } else if ( ISPERVINPUT(pfPart) ) {
+            if ( HASTRACK(pfPart) && ISDOWN(pfPart) ) {
+              sc = m_dist->distance( pfPart, vertex, t_ip, t_chi2 );
+              if ( sc.isSuccess() && ( t_chi2 <= m_maxIpChi22DVDown ) ) {
+                jetInputs.push_back(pfPart);
+              }
+            } else {
+              // tracks with velo segment and (all) composites
+
+              // NOTE this can be done cleaner
+              if ( BestPVIPChi2(pfPart) < m_minIpChi22PV )
+                continue;
+
+              double iptopv = MinPVIP(pfPart) ;
+              if ( iptopv < m_minIp2PV )
+                continue;
+
+              sc = m_dist->distance( pfPart, vertex, t_ip, t_chi2 );
+              if ( sc.isFailure() || ( t_ip > m_maxIP2DV ) )
+                continue;
+              // partition with respect to PV
+              if ( t_ip > iptopv )
+                continue;
+
               jetInputs.push_back(pfPart);
             }
           } else {
-            // tracks with velo segment and (all) composites
-
-            // NOTE this can be done cleaner
-            if ( BestPVIPChi2(pfPart) < m_minIpChi22PV )
-              continue;
-
-            double iptopv = MinPVIP(pfPart) ;
-            if ( iptopv < m_minIp2PV )
-              continue;
-
-            sc = m_dist->distance ( pfPart, vertex, t_ip, t_chi2 );
-            if ( sc.isFailure() || ( t_ip > m_maxIP2DV ) )
-              continue;
-            // partition with respect to PV
-            if ( t_ip > iptopv )
-              continue;
-
-            jetInputs.push_back(pfPart);
+            Warning("PF input of unknown type");
           }
+        }
+      } // END gather inputs NOTE can move this to a separate method for readability
+
+      // Now make the jets
+      IJetMaker::Jets jets;
+      sc = m_jetMaker->makeJets( jetInputs, jets );
+      if (sc.isFailure()) { return Error ( "Error from jet maker" , sc ) ; }
+      if (msgLevel(MSG::DEBUG)) { debug() << "input size " << jetInputs.size() << " jet size " << jets.size() << endmsg; }
+
+      std::vector<LHCb::Particle*> goodJets; // NOTE should cleanup jets AND their endvertices if not keeping them
+      goodJets.reserve(jets.size());
+      while ( !jets.empty() ) {
+        std::auto_ptr<LHCb::Particle> jet(jets.back());
+        jets.pop_back();
+
+        addJetIDInfo(jet.get());
+
+        m_JECtool->reFit(*(jet.get()));
+
+        if ( HASPOINTINGINFO(jet.get()) && JETIDCUT(jet.get()) ) {
+          if (msgLevel(MSG::DEBUG)) { debug() << "Good jet, keeping for candidate" << endmsg; }
+          jet->setReferencePoint(vertex->position());
+          // jet endVertex = stripping vertex but with jet daughters
+          std::auto_ptr<LHCb::Vertex> jetVertex(new LHCb::Vertex());
+          jetVertex->setPosition(vertex->position());
+          jetVertex->setCovMatrix(vertex->covMatrix());
+          jetVertex->setChi2(vertex->chi2());
+          jetVertex->setNDoF(vertex->nDoF());
+          jetVertex->setOutgoingParticles(jet->daughters());
+          jet->setEndVertex(jetVertex.release());
+          goodJets.push_back(jet.release());
         } else {
-          Warning("PF input of unknown type");
+          debug() << "Jet without PV info (or failing JetID)" << endmsg;
         }
       }
-    } // END gather inputs NOTE can move this to a separate method for readability
 
-    // Now make the jets
-    IJetMaker::Jets jets;
-    sc = m_jetMaker->makeJets( jetInputs, jets );
-    if (sc.isFailure()) { return Error ( "Error from jet maker" , sc ) ; }
-    if (msgLevel(MSG::DEBUG)) { debug() << "input size " << jetInputs.size() << " jet size " << jets.size() << endmsg; }
-
-    std::vector<LHCb::Particle*> goodJets; // NOTE should cleanup jets AND their endvertices if not keeping them
-    goodJets.reserve(jets.size());
-    while ( !jets.empty() ) {
-      std::auto_ptr<LHCb::Particle> jet(jets.back());
-      jets.pop_back();
-
-      addJetIDInfo(jet.get());
-
-      m_JEC->reFit(*(jet.get()));
-
-      if ( HASPOINTINGINFO(jet.get()) && JETIDCUT(jet.get()) ) {
-        if (msgLevel(MSG::DEBUG)) { debug() << "Good jet, keeping for candidate" << endmsg; }
-        jet->setReferencePoint(vertex->position());
-        // jet endVertex = stripping vertex but with jet daughters
-        std::auto_ptr<LHCb::Vertex> jetVertex(new LHCb::Vertex());
-        jetVertex->setPosition(vertex->position());
-        jetVertex->setCovMatrix(vertex->covMatrix());
-        jetVertex->setChi2(vertex->chi2());
-        jetVertex->setNDoF(vertex->nDoF());
-        jetVertex->setOutgoingParticles(jet->daughters());
-        jet->setEndVertex(jetVertex.release());
-        goodJets.push_back(jet.release());
-      } else {
-        debug() << "Jet without PV info (or failing JetID)" << endmsg;
-      }
-    }
-
-    // make a candidate out of the good jets
-    if ( ( goodJets.size() >= m_minJet ) && makeCandidate( goodJets, dvCand ) ) {
-      setFilterPassed(true);
-    } else { // clean up
-      if (msgLevel(MSG::DEBUG)) { debug() << "Not enough good jets, cleaning up" << endmsg; }
-      BOOST_FOREACH( LHCb::Particle* j, goodJets ) {
-        delete j->endVertex();
-        delete j;
+      // make a candidate out of the good jets
+      if ( ( goodJets.size() >= m_minJet ) && makeCandidate( goodJets, dvCand ) ) {
+        setFilterPassed(true);
+      } else { // clean up
+        if (msgLevel(MSG::DEBUG)) { debug() << "Not enough good jets, cleaning up" << endmsg; }
+        BOOST_FOREACH( LHCb::Particle* j, goodJets ) {
+          delete j->endVertex();
+          delete j;
+        }
       }
     }
   }
@@ -327,6 +323,14 @@ bool DisplacedVertexJetCandidateMakerS20p3::makeCandidate( const LHCb::Particle:
     candidate->setReferencePoint(strippingCandidate->endVertex()->position());
     candidate->setEndVertex(strippingCandidate->endVertex());
     candidate->setParticleID(m_candProp->particleID());
+    // copy extra infos from vertexing, if present
+    for ( int iKey = 51; iKey < 58; ++iKey ) {
+      if ( strippingCandidate->hasInfo(iKey) ) {
+        candidate->addInfo(iKey, strippingCandidate->info(iKey, -1.));
+      }
+    }
+    candidate->addInfo(58, strippingCandidate->measuredMass());
+
     if (msgLevel(MSG::DEBUG)) { debug() << "Saving candidate " << *candidate << endmsg; }
 
     /* markNewTree (DaVinci::Utils::findDecayTree in fact) checks

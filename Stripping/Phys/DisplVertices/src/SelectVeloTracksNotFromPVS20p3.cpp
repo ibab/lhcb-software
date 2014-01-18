@@ -36,6 +36,7 @@ DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPVS20p3 )
 SelectVeloTracksNotFromPVS20p3::SelectVeloTracksNotFromPVS20p3( const std::string& name ,
                                                       ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name , pSvcLocator )
+  , m_uniqueSegmentSelector(0)
 {
   declareProperty( "Inputs"
                    , m_TracksLocations
@@ -78,7 +79,7 @@ SelectVeloTracksNotFromPVS20p3::SelectVeloTracksNotFromPVS20p3( const std::strin
                    , "Minimal number of output tracks required to accept the event" );
 
   declareProperty( "UniqueVeloSegmentSelector"
-                   , m_uniqueSegmentSelector = ToolHandle<ITrackUniqueSegmentSelector>("TrackUniqueSegmentSelectorS20p3", this)
+                   , m_uniqueSegmentSelectorName = "TrackUniqueSegmentSelectorS20p3"
                    , "Unique Velo segment selector tool handle" );
 }
 //=============================================================================
@@ -93,8 +94,8 @@ StatusCode SelectVeloTracksNotFromPVS20p3::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
-  sc = m_uniqueSegmentSelector.retrieve();
-  if ( sc.isFailure() ) { return Error("Could not retrieve unique Velo segment selector", sc); }
+  m_uniqueSegmentSelector = tool<ITrackUniqueSegmentSelector>( m_uniqueSegmentSelectorName, this );
+  if ( m_uniqueSegmentSelector == 0 ) { return Error("Could not retrieve unique Velo segment selector", sc); }
 
   m_inputTracks.reserve(500);
   m_tracksWithUniqueVelo.reserve(500);
@@ -216,8 +217,6 @@ StatusCode SelectVeloTracksNotFromPVS20p3::execute()
 StatusCode SelectVeloTracksNotFromPVS20p3::finalize()
 {
   if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  m_uniqueSegmentSelector.release().ignore();
 
   return GaudiAlgorithm::finalize();
 }

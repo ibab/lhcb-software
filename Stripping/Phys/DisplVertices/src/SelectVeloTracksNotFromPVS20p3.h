@@ -5,7 +5,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/ToolHandle.h"
 
 #include "Kernel/ITrackUniqueSegmentSelector.h"
 
@@ -65,6 +64,7 @@ private:
   bool m_verbose;
 
   // unique segment selector
-  ToolHandle<ITrackUniqueSegmentSelector> m_uniqueSegmentSelector;
+  std::string m_uniqueSegmentSelectorName;
+  const ITrackUniqueSegmentSelector* m_uniqueSegmentSelector;
 };
 #endif // HLTDISPLVERTICES_SELECTVELOTRACKSNOTFROMPVS20p3_H
