@@ -55,6 +55,9 @@ namespace {
                   , "Input RecVertex containers" );
 
   // PV selection
+  declareProperty("RequireUpstreamPV"
+                  , m_requireUpstreamPV = true
+                  , "Require a PV upstream of the candidate in a fiducial volumee (MinZ,MaxZ, MaxRho, #tracks)");
   declareProperty("FirstPVMaxRho"
                   , m_FirstPVMaxRho = 0.3*Gaudi::Units::mm
                   , "Maximal rho position of the \"most upstream\" PV" );
@@ -368,7 +371,7 @@ StatusCode LLParticlesFromRecVertices::execute()
   int nInputVertices = 0;
   int nAcceptedVertices = 0;
 
-  if ( upPVZ != LoKi::Constants::HugeDistance ) {
+  if ( ( ! m_requireUpstreamPV ) || upPVZ != LoKi::Constants::HugeDistance ) {
     ++counter("#events with upPVZ");
 
     LHCb::RecVertex::Range recVertices;
@@ -383,7 +386,7 @@ StatusCode LLParticlesFromRecVertices::execute()
         BOOST_FOREACH( const LHCb::RecVertex* rv, recVertices )
         {
           if (m_verbose) { printRecVertexCandidateSummary( verbose(), rv, upPVZ ); }
-          if ( m_VERTEXCUT(rv) && ( m_Z(rv) >= upPVZ ) ) {
+          if ( m_VERTEXCUT(rv) && ( ( ! m_requireUpstreamPV ) || ( m_Z(rv) >= upPVZ ) ) ) {
             if ( RecVertex2Particle(rv) ) { ++nAcceptedVertices; }
           }
         }

@@ -69,6 +69,7 @@ private:
   double m_FirstPVMaxRho;
   double m_FirstPVMinZ;
   double m_FirstPVMaxZ;
+  bool m_requireUpstreamPV;
 
   bool m_useVeloTracks;                   ///< Maximum track Chi2 for long daughter tracks
   bool m_verticesFromVeloOnly;            ///< Hlt (Velo-only) or Stripping (Rec/Track/Best) vertexing
