@@ -4,6 +4,16 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-19 - Ricardo Vazquez Gomez, Mike Williams
+ - Modifications to the Inflaton lines added.
+ * The module has been rewriten and it's called now StrippingDarkBoson.py 
+ * More modular and easier to introduce changes and mantain  
+ * Lines added to look for a detached pipi or KK couple in the channel B+ -> K+ U(pipi,KK), where U is the dark boson
+ * Lines added for a complete Kpi or KK invariant mass spectra in the decays Bd -> Kpi U(mumu), Bs -> KK U(mumu)
+ * Added control channels B+ -> JpsiK+ and Bd -> JpsiK*
+ * All lines have a LL and a DD version
+ * The Beauty2Charm_LoKiCuts.py module has been modified to addapt to the StrippingDarkBoson.py
+
 ! 2014-01-19 - Thomas Blake
  - Several changes for rare decay lines
  * Added import of Kshort2MuMuMuMu, Kshort2PiPiMuMu, Kshort2eePiPi to __init__ 

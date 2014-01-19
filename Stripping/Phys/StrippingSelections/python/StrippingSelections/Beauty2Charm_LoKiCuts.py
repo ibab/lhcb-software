@@ -56,7 +56,10 @@ class LoKiCuts(object):
                 'CL'        : 'CL', 
                 'TRGHP'     : 'TRGHP',
                 'DZ1'       : ' (CHILD(VFASPF(VZ), 1) - VFASPF(VZ))',
-                'DZ2'       : ' (CHILD(VFASPF(VZ), 2) - VFASPF(VZ))'
+                'DZ2'       : ' (CHILD(VFASPF(VZ), 2) - VFASPF(VZ))',
+                'PROBNNK'   : 'PROBNNK',
+                'PROBNNpi'  : 'PROBNNpi',
+                'PIDmu'     : 'PIDmu',
                 }
     
     def __init__(self,cuts,config):
