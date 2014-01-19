@@ -4,6 +4,9 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-01-19 - Marco Clemencic
+ - Fixed compilation problem after the change in IDataSelector (in Gaudi).
+
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
 

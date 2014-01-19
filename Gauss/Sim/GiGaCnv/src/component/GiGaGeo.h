@@ -11,12 +11,14 @@
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 
+// from Gaudi
+#include "GaudiKernel/IDataSelector.h"
+
 // Forward declarations
 class G4VPhysicalVolume;
 class G4VSolid;
 class G4LogicalVolume;
 
-class IDataSelector;
 class SolidBoolean;
 
 class IGiGaSensDet;

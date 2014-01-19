@@ -21,7 +21,6 @@ class    IGiGaSvc;
 namespace LHCb {
   class    IParticlePropertySvc;
 }
-class    IDataSelector;
 
 /** @class GiGaKine GiGaKine.h
  *

@@ -8,7 +8,6 @@
 // from Gaudi 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IRegistry.h"
