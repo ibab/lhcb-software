@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( B2KShhBDTSelection )
+DECLARE_TOOL_FACTORY( B2KShhBDTSelection );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -161,7 +161,9 @@ bool B2KShhBDTSelection::set (const LHCb::Particle *p) const
 	
 	const int absKsID = 310;
 	const int absPiID = 211;
-	const int absKID = 321;
+
+	bool found_first_daug = false;
+	int found_daug_id     = 0;
 
 	for( int i=0; i<3; i++ )
 	{
@@ -173,14 +175,48 @@ bool B2KShhBDTSelection::set (const LHCb::Particle *p) const
 		{
 			pKs = daughter;
 		}
-		else if( absID==absKID )
-		{
-			ph1 = daughter;
-		}
 		else if( absID==absPiID )
 		{
-			ph2 = daughter;
+			if ( id > 0 )
+			{
+				if ( found_first_daug == false )
+				{
+					ph1 = daughter;
+					found_first_daug = true;
+					found_daug_id = id;
+				} 
+				else
+				{
+					if ( found_daug_id < 0 )
+					{
+						ph1 = daughter;
+					} else 
+					{
+						ph2 = daughter;
+					}
+				}
+			}
+			else 
+			{
+				if ( found_first_daug == false )
+				{
+					ph2 = daughter;
+					found_first_daug = true;
+					found_daug_id = id;
+				} 
+				else
+				{
+					if ( found_daug_id > 0 )
+					{
+						ph2 = daughter;
+					} else 
+					{
+						ph1 = daughter;
+					}
+				}
+			}
 		}
+
 		else
 		{
 			Error("LHCb::Particle* has Unknown ID");

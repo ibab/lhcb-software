@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2014-01-19 - Stefano Perazzini
+ - Updated B2KShhBDTSelection.cpp
+
 ! 2013-12-20 - Marco Clemencic
  - Fixed CMake configuration.
 
