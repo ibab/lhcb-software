@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-19 - Marc Olivier Bettler
+ - Added lines for K0S -> 4muons as module StrippingK0S24X.py
+ - Added import for StrippingK0S24X to __init__
+
 ! 2014-01-19 - Ricardo Vazquez Gomez, Mike Williams
  - Modifications to the Inflaton lines added.
  * The module has been rewriten and it's called now StrippingDarkBoson.py 

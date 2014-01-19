@@ -176,6 +176,7 @@ import StrippingChargedHyperons
 import StrippingKshort2MuMuMuMu
 import StrippingKshort2PiPiMuMu
 import StrippingKshort2eePiPi
+import StrippingK0S24X
 
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
@@ -212,8 +213,8 @@ import StrippingZ02TauTau
 import StrippingX2D0D0
 import StrippingCC2DD
 import StrippingB2XTau
-import StrippingZVTOP
 
+import StrippingK0S24X
 import StrippingK0s2MuMuLines
 import StrippingTau2PMuMu
 import StrippingVeryDetachedJPsiLines
