@@ -37,20 +37,20 @@ config_params =  {#'MuonP'         : 3000. ,    #MeV
                   
                   'hhmm_MaxDimuonMass' : 400. , # MeV
                   'hhmm_KS0_MassWin' : 1500., #MeV
-                  'hhmm_DMAXDOCA' : 0.6, # mm
+                  'hhmm_DMAXDOCA' : 0.8, # mm
                   'hhmm_DIRA' : 0., #adimensional
-                  'hhmm_KsMotherMass_min' : 450. , #MeV
-                  'hhmm_MinIP_dist' : 0.5, #mm
+                  'hhmm_KsMotherMass_min' : 400. , #MeV
+                  'hhmm_MinIP_dist' : 1., #mm
                   'hhmm_lifetimeCut': 0.05*89.53*2.9979e-01, #
                   
                   'mmmm_MaxDimuonMass' : 400. , # MeV
                   'mmmm_KS0_MassWin' : 1500., #MeV
-                  'mmmmL_DMAXDOCA' : 1., # mm
-                  'mmmmD_DMAXDOCA' : 5., # mm
+                  'mmmmL_DMAXDOCA' : 10., # mm
+                  'mmmmD_DMAXDOCA' : 20., # mm
                   'mmmm_DIRA' : 0., #adimensional
-                  'mmmm_KsMotherMass_min' : 450. , #MeV
-                  'mmmmL_MinIP_dist' : 0.5, #mm
-                  'mmmmD_MinIP_dist' : 0.6, #mm
+                  'mmmm_KsMotherMass_min' : 400. , #MeV
+                  'mmmmL_MinIP_dist' : 20., #mm
+                  'mmmmD_MinIP_dist' : 20., #mm
                   'mmmm_lifetimeCut': 0.05*89.53*2.9979e-01, #
                   
                   'K0S2PiPiMuMuLinePrescale'  : 1 ,
@@ -280,8 +280,8 @@ def makeKshort2MuMuMuMu(name, muonSel, KS0_MassWin, MaxDimuonMass, DMAXDOCA, DIR
     #print _combcut
     _mothercut   = "(BPVDIRA > %(DIRA)s) & "\
                    "((BPVVDSIGN*M/P) > %(lifetimeCut)s ) & "\
+                   "(MIPDV(PRIMARY)< %(MinIP_dist)s *mm) & "\
                    "(M > %(KsMotherMass_min)s *MeV) " %locals()
-                   #"(MIPDV(PRIMARY)< %(MinIP_dist)s *mm) & "\
 
     #print _mothercut
 
