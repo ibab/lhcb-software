@@ -265,8 +265,7 @@ StatusCode ParticleFlow::initialize() {
   info()<<"|--> BanInfMomentumFromNR          : " <<  m_doNotUseInfMominNR  <<endmsg;
   info()<<"|--> OnlyBestCaloMatchForNR        : " <<  m_onlyBest <<endmsg;
 
-
-  info()<<"The new PF code for no meme leak"<<endmsg;
+  //info()<<"The new PF code for no meme leak"<<endmsg;
   
   // For the E/p parametrisation
   m_ECALElectron_Data = new TF1("ECALElectron_Data","(-2.87675e-01 )*exp(-1.89536e-04*x)+8.86869e-01");

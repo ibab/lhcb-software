@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-01-19 - Victor Coco
+ - Remove temporary print-out
+
 ! 2014-01-18 - Victor Coco
  - Remove the protparticle creation for neutral hadrons
    Reogranise the way PF particles are saved (copied to particle first)
