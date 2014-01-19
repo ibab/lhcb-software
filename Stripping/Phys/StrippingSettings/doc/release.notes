@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-19 - Ronan Wallace (QEE)
+  - Change to H24Mu config dictionaries for Stripping20r{0,1}p3.
+
 ! 2014-01-19 - Mika Vesterinen (Semileptonics)
   - Dictionaries for Semileptonics in Stripping20r{0,1}p3.
 
