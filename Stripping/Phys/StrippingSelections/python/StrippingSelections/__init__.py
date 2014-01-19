@@ -208,6 +208,7 @@ import StrippingZ02TauTau
 import StrippingX2D0D0
 import StrippingCC2DD
 import StrippingB2XTau
+import StrippingZVTOP
 
 import StrippingK0s2MuMuLines
 import StrippingTau2PMuMu

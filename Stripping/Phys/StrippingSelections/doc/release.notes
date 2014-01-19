@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2014-01-19 - Giampiero Mancinelli
+- Added ZVTOP based B->tautau and high mass lines in StrippingZVTOP.py
+- Heavily changed B->tautau, B->taumu, and control samples lines in StrippingB2XTau.py
 
 ! 2014-01-18 - John Beddow
  - Update of StrippingB2TwoBaryons.py: added ExtraInfoTools to lines 
