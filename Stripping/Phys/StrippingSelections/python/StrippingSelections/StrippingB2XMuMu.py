@@ -360,37 +360,40 @@ class B2XMuMuConf(LineBuilder) :
                                daughters = self.DeclaredDaughters,  
                                conf = config)
 
-        self.HadronicB = self.__HadronicB__( daughters = self.DeclaredDaughters,  
+        self.HadronicB = self.__HadronicB__( daughters = self.DeclaredDaughters, 
                                              conf = config )
-        # standard lines
-        self.line = StrippingLine(
-            self.name+"_Line",
-            prescale = 1,
-            FILTER = {
-            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-            'Preambulo' : [
-            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
-            ]
-            },
-            algos=[self.Bs]
-            )
+
+        if config['DECAYS']:
+            # standard lines
+            self.line = StrippingLine(
+                self.name+"_Line",
+                prescale = 1,
+                FILTER = {
+                'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+                'Preambulo' : [
+                "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+                ]
+                },
+                algos=[self.Bs]
+                )
         
-        self.registerLine(self.line)
+            self.registerLine(self.line)
 
-        # hadronic lines
-        self.hadronic_line =  StrippingLine(
-            self.name+"_HadronicLine",
-            prescale = 1,
-            FILTER = {
-            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-            'Preambulo' : [
-            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
-            ]
-            },
-            algos=[self.HadronicB]
-            )
-
-        self.registerLine( self.hadronic_line )
+        if config['HADRONICDECAYS']:
+            # hadronic lines
+            self.hadronic_line =  StrippingLine(
+                self.name+"_HadronicLine",
+                prescale = 1,
+                FILTER = {
+                'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+                'Preambulo' : [
+                "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+                ]
+                },
+                algos=[self.HadronicB]
+                )
+            
+            self.registerLine( self.hadronic_line )
 
         # inclusive dimuon line
         self.inclusive_DiMuHighQ2_line =  StrippingLine(

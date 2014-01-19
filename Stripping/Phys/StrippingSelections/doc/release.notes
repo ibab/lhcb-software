@@ -3,6 +3,13 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2014-01-19 - Thomas Blake
+ - Several changes for rare decay lines
+ * Added import of Kshort2MuMuMuMu, Kshort2PiPiMuMu, Kshort2eePiPi to __init__ 
+ * Fixed bugs in Bu2LLK and B2XMuMu 
+ * Added StrippingKshort2PiPiMuMu.py
+
 ! 2014-01-19 - Carla Marin Benito
 - Added Ks2pipiee line
 

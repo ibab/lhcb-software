@@ -65,7 +65,8 @@ class Bu2LLKConf(LineBuilder) :
         ,  'UpperMass'           
         ,  'Bu2eeKLinePrescale'
         ,  'Bu2mmKLinePrescale'
-        ,  'Bu2meKLinePrescale'  
+        ,  'Bu2meKLinePrescale'
+        ,  'ExtraInfoTools'
       )
     
     def __init__(self, name, config):

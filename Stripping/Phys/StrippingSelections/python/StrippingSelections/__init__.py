@@ -171,7 +171,11 @@ import StrippingB2Xic2815Sc2455
 
 ## the following two module names added December 13, 2013  M. Sokoloff
 import StrippingChargedHyperons
-import StrippingKshort2MuMuPiPi
+#import StrippingKshort2MuMuPiPi
+
+import StrippingKshort2MuMuMuMu
+import StrippingKshort2PiPiMuMu
+import StrippingKshort2eePiPi
 
 #import StrippingBu3hFrom2h
 import StrippingB2HHPi0
