@@ -26,7 +26,9 @@ from Configurables import LoKi__VoidFilter as VoidFilter
 
 config_default = {
     'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-    'CombMass12Max'         : 4700.0,
+    'CombMass12Max_kk'         : 4700.0,
+    'CombMass12Max_kpi'         : 5000.0,
+    'CombMass12Max_pipi'         : 5350.0,
     'd_achi2doca12'             : 20.0,
     'd_achi2doca13'             : 20.0,
     'd_achi2doca14'             : 20.0,
@@ -62,7 +64,9 @@ default_name = "B2pphh"
 
 class B2pphhConf(LineBuilder) :
     __configuration_keys__ = ( 'MaxTrSIZE',      
-                               'CombMass12Max',
+                               'CombMass12Max_kk',
+                               'CombMass12Max_kpi',
+                               'CombMass12Max_pipi',
                                'd_achi2doca12',
                                'd_achi2doca13',
                                'd_achi2doca14',
@@ -159,7 +163,7 @@ class B2pphhConf(LineBuilder) :
         Bppkk = self.createCombinationSel (OutputList = "ppkk" + self.name,
                                            DecayDescriptor  = "B_s0 -> p+ p~- K+ K-",
                                            DaughterLists = [self.ProtonForB2pphh, self.KaonForB2pphh],
-                                           Combination12Cut = "((AM < %(CombMass12Max)s*MeV) & (ASUM(PT)> %(p_PTSUM)s * MeV) & (ASUM(P)> %(p_PSUM)s*MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s ) & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))"%self.config,
+                                           Combination12Cut = "((AM < %(CombMass12Max_kk)s*MeV) & (ASUM(PT)> %(p_PTSUM)s * MeV) & (ASUM(P)> %(p_PSUM)s*MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s ) & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))"%self.config,
                                            Combination123Cut = "((AM < %(CombMass123Max)s * MeV)  & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))"%self.config,
                                            PreVertexCuts = " ((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range ( %(CombMassMin)s * GeV , AM , %(CombMassMax)s * GeV)) & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3,4) < %(d_achi2doca34)s ))" %self.config,
                                            PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s * MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV )))" %self.config)
@@ -179,7 +183,7 @@ class B2pphhConf(LineBuilder) :
         Bppkpi = self.createCombinationSel (OutputList = "ppkpi" + self.name,
                                             DecayDescriptor  = "[B0 -> p+ p~- K+ pi-]cc",
                                             DaughterLists = [self.ProtonForB2pphh, self.PionForB2pphh, self.KaonForB2pphh],
-                                            Combination12Cut = "((AM < %(CombMass12Max)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
+                                            Combination12Cut = "((AM < %(CombMass12Max_kpi)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
                                             Combination123Cut = "((AM < %(CombMass123Max)s * MeV)  & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))" %self.config,
                                             PreVertexCuts = "((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range (%(CombMassMin)s * GeV , AM , %(CombMassMax)s * GeV))  & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3, 4) < %(d_achi2doca34)s ))" %self.config,
                                             PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-') | (ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s*MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config)         
@@ -196,7 +200,7 @@ class B2pphhConf(LineBuilder) :
         Bpppipi = self.createCombinationSel (OutputList = "Bpppipi" + self.name,
                                              DecayDescriptor  = "B0 -> p+ p~- pi+ pi-",
                                              DaughterLists = [self.ProtonForB2pphh, self.PionForB2pphh],
-                                             Combination12Cut = "((AM < %(CombMass12Max)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
+                                             Combination12Cut = "((AM < %(CombMass12Max_pipi)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
                                              Combination123Cut = "((AM < %(CombMass123Max)s * MeV) & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))" %self.config,
                                              PreVertexCuts = "((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range( %(CombMassMin)s *GeV, AM , %(CombMassMax)s *GeV))  & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3, 4) < %(d_achi2doca34)s ))" %self.config,
                                              PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s* MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range ( %(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config)
