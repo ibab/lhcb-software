@@ -90,7 +90,7 @@ class H24MuLineConf(LineBuilder) :
     simpleLine    : Stripping line made from selSimple
     detachedLine  : Stripping line made from selDetached
     looseLine     : Stripping line made from selLoose
-    lines         : list of lines:  [ promptLine, detachedLine, looseLine ]
+    lines         : list of lines:  [ promptLine, simpleLine, detachedLine, looseLine ]
     
     """
  
@@ -153,32 +153,66 @@ class H24MuLineConf(LineBuilder) :
         self.selSimple = self.makeDefault(simple_name,type = 1)
         self.selDetached = self.makeDefault(detached_name,type = 2)
         self.selLoose = self.makeDefault(loose_name,type = 3)
+
+        ExtraInfoTools = [{'Type' : 'ConeVariables',
+                           'ConeNumber' : 1,
+                           'ConeAngle' : 1.0,
+                           'Variables' : ['angle', 'mult','p','pt',
+                                          'ptasy','pasy']},
+                          {'Type' : 'ConeVariables', 
+                           'ConeNumber' : 2, 
+                           'ConeAngle' : 1.5, 
+                           'Variables' : ['angle', 'mult','p','pt',
+                                          'ptasy','pasy']},
+                          {'Type' : 'ConeVariables',
+                           'ConeNumber' : 3,
+                           'ConeAngle' : 2.0,
+                           'Variables' : ['angle', 'mult','p','pt',
+                                          'ptasy','pasy']},
+                          
+                          {'Type' : 'VertexIsolation'}]
+
+        ExtraInfoDaughters = {"prompt"  : [getattr(self,"A1"+prompt_name)],
+                              "simple"  : [getattr(self,"A1"+simple_name)],
+                              "detached": [getattr(self,"A1"+detached_name)],
+                              "loose"   : [getattr(self,"A1"+loose_name)]}
         
         self.promptLine = StrippingLine(prompt_name+"Line",
                                         prescale = config['PromptLinePrescale'],
                                         postscale = config['DefaultPostscale'],
-                                        algos = [ self.selPrompt ]
+#                                        algos = [ self.selPrompt ],
+                                        selection = self.selPrompt,
+                                        ExtraInfoTools = ExtraInfoTools,
+                                        ExtraInfoSelections = ExtraInfoDaughters["prompt"],
                                         )
 
         self.simpleLine = StrippingLine(simple_name+"Line",
                                         prescale = config['SimpleLinePrescale'],
                                         postscale = config['DefaultPostscale'],
-                                        algos = [ self.selSimple ]
+#                                        algos = [ self.selSimple ],
+                                        selection = self.selSimple,
+                                        ExtraInfoTools = ExtraInfoTools,
+                                        ExtraInfoSelections = ExtraInfoDaughters["simple"],
                                         )
 
 
         self.detachedLine = StrippingLine(detached_name+"Line",
                                           prescale = config['DetachedLinePrescale'],
                                           postscale = config['DefaultPostscale'],
-                                          algos = [ self.selDetached ]
+#                                          algos = [ self.selDetached ],
+                                          selection = self.selDetached,
+                                          ExtraInfoTools = ExtraInfoTools,
+                                          ExtraInfoSelections = ExtraInfoDaughters["detached"],
                                           )
         
         self.looseLine = StrippingLine(loose_name+"Line",
-                                            prescale = config['LooseLinePrescale'],
-                                            postscale = config['DefaultPostscale'],
-                                            algos = [ self.selLoose ]
-                                            )
-
+                                       prescale = config['LooseLinePrescale'],
+                                       postscale = config['DefaultPostscale'],
+#                                       algos = [ self.selLoose ],
+                                       selection = self.selLoose,
+                                       ExtraInfoTools = ExtraInfoTools,
+                                       ExtraInfoSelections = ExtraInfoDaughters["loose"],
+                                       )
 
         self.registerLine(self.promptLine)
         self.registerLine(self.simpleLine)
@@ -287,6 +321,7 @@ class H24MuLineConf(LineBuilder) :
         from Configurables import OfflineVertexFitter
         
         SelA1 = self.makeA1("A1"+name,type)
+        setattr(self,"A1"+name,SelA1)
         
         H25 = CombineParticles("Combine_H25"+name)
         H25.DecayDescriptor = "[H_10 -> KS0 KS0]cc"
