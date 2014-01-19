@@ -2,13 +2,74 @@
 #  Line config dictionaries for Semileptonic WG
 #
 
+Lb2pMuNu = {
+    'BUILDERTYPE'       : 'Lb2pMuNuBuilder',
+    'CONFIG'    :{
+    "GEC_nLongTrk"        : 250.   ,#adimensional
+    "TRGHOSTPROB"         : 0.35   ,#adimensional
+    #Muon Cuts
+    "MuonGHOSTPROB"       : 0.35   ,#adimensional
+    "MuonTRCHI2"          : 4.     ,#adimensional
+    "MuonP"               : 3000.  ,#MeV
+    "MuonPT"              : 1600.  ,#MeV
+    "MuonMINIPCHI2"       : 12.    ,#adminensional
+    #Proton Cuts 
+    "ProtonTRCHI2"        : 6.     ,#adimensional
+    "ProtonP"             : 15000. ,#MeV
+    "ProtonPT"            : 1000.  ,#MeV
+    "ProtonPIDK"          : 0.     ,#adimensional 
+    "ProtonPIDp"          : 5.     ,#adimensional
+    "ProtonMINIPCHI2"     : 16.    ,#adminensional
+    #B Mother Cuts
+    "BVCHI2DOF"           : 4.     ,#adminensional
+    "BDIRA"               : 0.999  ,#adminensional
+    "BFDCHI2HIGH"         : 150.   ,#adimensional
+    "BPVIPChi2"           : 25.    ,#adminensional  
+    "pMuMassLow"          : 2250.  ,#MeV
+    "pMuMassLowTight"     : 2900.  ,#MeV
+    "pMuMassUpper"        : 5600.  ,#MeV
+    "pMuPT"               : 1500.  ,#MeV
+    "PassymLow"           : -0.4   ,#adminensional
+    "PassymLower"         : -0.65  ,#adimensional
+    "PassymUpper"         : 0.0     #adimensional
+    },
+    'STREAMS' : ['Semileptonic'],
+    'WGs'    : ['Semileptonic']
+    }
+
+B2DHForTauMu = {
+    'BUILDERTYPE' : 'B2DHForTauMuconf',
+    'CONFIG' :  {
+        "MINIPCHI2"     : 45.0    # adimensiional 
+        ,"MINIPCHI2LOOSE"     : 9.0    # adimensiional 
+        ,"GhostProb"     : 0.5     # adimensional  
+        ,"KaonPIDK"      : 4.0    # adimensiional
+        ,"PionPIDKTight" : 2.0    # adimensiional
+        ,"MuonIPCHI2"    : 45.00   # adimensiional
+        ,"KPiPT"         : 300.0  # MeV
+        ,"DSumPT"        : 1400.0 # MeV
+        ,"DsDIRA"        : 0.9998   # adimensiional
+        ,"DsFDCHI2"      : 250.0  # adimensiional
+        ,"DsMassWin"     : 80.0   # MeV
+        ,"DsAMassWin"    : 100.0  # MeV
+        ,"DsVCHI2DOF"    : 4.0    # adimensiional
+        ,"PIDmu"         : 2.0   # adimensiional
+        ,"BDIRA"         : 0.9995  #adimensiional
+        ,"BFDCHI2"         : 50.0  #adimensiional
+        ,"BVCHI2DOF"     : 6.0    # adimensiional
+        ,"SPDmax"        : 600    # adimensiional
+        },
+    'STREAMS' : ['BhadronCompleteEvent'],
+    'WGs'    : ['Semileptonic']
+    }
+
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
     'CONFIG' :  {
         "GEC_nLongTrk" : 250 # adimensional
         ,"TRGHOSTPROB" : 0.5 # adimensional
         ,"MuonGHOSTPROB" : 0.5 #adimensional
-        ,"PrescalD0Mu"    : 1.0  # for D0->KPi line
+        ,"PrescalD0Mu"    : 0.5  # for D0->KPi line
         ,"PrescalDsPi_fakes" : 1.0  # for Bs->(Ds->PhiPi)Pi for Fakes line
         ,"MINIPCHI2"     : 9.0    # adimensiional
         ,"TRCHI2"        : 4.0    # adimensiional
@@ -49,116 +110,67 @@ B2DMuNuX = {
         ,"FakePionP_Tight": 6.0    # GeV,
         ,"BMassMin" : 3.1 #GeV
         ,"BMassMax" : 5.1 #GeV
+        ### new cuts for asls (2014-01-14-Marian Stahl)
+        ### Muon cuts 
+        ,"MuonPTloose"        : 600.0    #MeV
+        #### Hadron cuts
+        ,"KPiPTloose"         : 150.0    #MeV 
+        ,"KPiPTOpt"           : 380.0    #MeV 
+        ,"KPiP"               : 1.5      #GeV (was hidden in the script before, changed it from 2 to 1.5)
+        ### Kaon cuts
+        ,"KaonPIDKKKPiOpt"    : 5.0      #adimensional
+        ,"KaonPIDKPhiPi"      : 0.0      #adimensional
+        ### Pion cuts
+        ,"PionPIDKloose"      : 20.0     #adimensional (changed from 10)
+        ,"PionPIDKKKPiOpt"    : 12.0     #adimensional (changed from 10)
+        ,"PionPIDK3PiOpt"     : 9.0     #adimensional (changed from 10)
+        #### D combination cuts
+        ,"DsFDCHI2loose"      : 20.0     #adimensional
+        ,"DsVCHI2DOFOpt"      : 7.0      #adimensional
+        ,"DsVCHI2DOFloose"    : 8.0      #adimensional
+        ,"DDocaChi2Maxloose"  : 30       #adimensional
+        ,"PhiMassMin"         : 979.455 #MeV
+        ,"PhiMassMax"         : 1059.455 #MeV 
+        ,"KStarMassMin"       : 805.94   #MeV
+        ,"KStarMassMax"       : 985.94   #MeV 
+        ##### B combination cuts
+        ,"BDIRAloose"         : 0.99     #adimensional (changed from 0.999)
+        ,"BVCHI2DOFloose"     : 20.0     #adimensional (changed from 6)
+        ,"DZloose"            : -3.0     #mm (changed from 0)
+        ,"DZKStarK"           : -1.0     #mm (changed from 0)
+        ,"DZKKPiOpt"          : -0.2     #mm (changed from 0)
+        ,"BMassMinloose"      : 0        #GeV  (changed from 3.1)
+        ,"BMassMaxloose"      : 1000     #GeV  (changed from 5.1)
+        ,"TISTOSSpecs"        : {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0} #multidimensional
+        ,"TISTOSSpecsPhiPi"   : {'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,'Hlt2.*IncPhi.*Decision%TOS':0} #multidimensional  
         },
     'STREAMS' : {
-        'Charm' : [
-            'Strippingb2D0MuXB2DMuNuXLine',
-            'StrippingDstarOfb2D0MuXB2DMuNuXLine',
-            'Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine']
+        'Semileptonic' : [
+            'Strippingb2DsPhiPiMuXB2DMuNuXLine',
+            'Strippingb2DsKStarKMuXB2DMuNuXLine',   
+            'Strippingb2DsKKPiMuXB2DMuNuXLine',
+            'Strippingb2Ds3PiMuXB2DMuNuXLine']
         },
     'WGs'    : ['Semileptonic']
-    }
-
-B2XuMuNu = {
-    'BUILDERTYPE' : 'B2XuMuNuBuilder',
-    'CONFIG' : {
-        "GEC_nLongTrk"        : 250.  , #adimensional
-        "TRGHOSTPROB"         : 0.5    ,#adimensional
-        #Muons
-        "MuonGHOSTPROB"       : 0.5    ,#adimensional
-        "MuonTRCHI2"          : 4.    ,#adimensional
-        "MuonP"               : 3000. ,#MeV
-        "MuonPTight"          : 6000. ,#MeV
-        "MuonPT"              : 1000. ,#MeV
-        "MuonPTTight"         : 1500. ,#MeV
-        "MuonPIDK"            : 0.    ,#adimensional
-        "MuonPIDmu"           : 3.    ,#adimensional
-        "MuonPIDp"            : 0.    ,#adimensional
-        "MuonMINIPCHI2"       : 12    ,#adminensional
-        #Xu
-        #K channel
-        "KaonTRCHI2"          : 6.   ,#adimensional
-        "KaonP"               : 3000. ,#MeV
-        "KaonPT"              : 800.  ,#MeV
-        "KaonPIDK"            : 5.    ,#adimensional 
-        "KaonPIDmu"           : 0.    ,#adimensional
-        "KaonPIDp"            : 0.    ,#adimensional
-        "KaonMINIPCHI2"       : 16     ,#adminensional
-        #Rho channel
-        "RhoMassWindow"       : 150.  ,#MeV
-        "RhoMassWindowMin1SB" : 300.  ,#MeV
-        "RhoMassWindowMax1SB" : 620.  ,#MeV
-        "RhoMassWindowMin2SB" : 920.  ,#MeV
-        "RhoMassWindowMax2SB" : 1200. ,#MeV
-        "RhoVCHI2DOF"         : 6     ,#adimensional
-        "RhoPT"               : 500.  ,#MeV
-        "RhoLeadingPionPT"    : 800.  ,#MeV
-        "RhoMINIPCHI2"        : 4     ,#adimensional
-        "RhoChPionPT"         : 300.  ,#MeV
-        "RhoChPionTRCHI2"     : 10.   ,#MeV
-        "RhoChPionPIDK"       : -10.  ,#adminensional
-        #    "RhoFDCHI2"           : 100.  ,#adimensional
-        #    "RhoFD"               : 6     ,#mm
-        #    "RhoIPMin"            : 0.3   ,#mm    
-        "RhoDIRA"             : 0.9   ,#adimensional
-        "RhoChPionMINIPCHI2"  : 9.    ,#adimensional
-        #Kshort Daughter Cuts
-        "KS0DaugP"            : 2000. ,#MeV
-        "KS0DaugPT"           : 250.  ,#MeV
-        "KS0DaugTrackChi2"    : 4.    ,#adimensional
-        "KS0DaugMIPChi2"      : 50.   ,#adimensional
-        #Kshort cuts
-        "KSMajoranaCutFDChi2" : 100.  ,#adimensional
-        "KS0VertexChi2"       : 10.   ,#adimensional
-        "KS0PT"               : 700.  ,#adimensional
-        "KsLLMaxDz"           : 650.  ,#mm
-        "KsLLCutFD"           : 20.   ,#mm
-        "KSLLMassLow"         : 456.  ,#MeV
-        "KSLLMassHigh"        : 536.  ,#MeV
-        "KSLLCutFDChi2"       : 100.  ,#adimensional
-        "KS0MIPChi2"          : 8.    ,#adimensional
-        #Kstar Pion Daughter Cuts
-        "KstarChPionPT"       : 100.  ,#MeV
-        "KstarChPionP"        : 2000. ,#MeV
-        "KstarChPionTRCHI2"   : 10.   ,#adimensional
-        "KstarChPionMINIPCHI2": 9.    ,#adimensional
-        "KstarChPionPIDK"     : -10.  ,#adminensional
-        #B Mother Cuts
-        "BVCHI2DOF"           : 4.    ,#adminensional
-        "BVCHI2DOFTight"      : 2.    ,#adminensional
-        "BDIRA"               : 0.99  ,#adminensional
-        "BDIRATight"          : 0.999  ,#adminensional
-        "BFDCHI2HIGH"         : 100.  ,#adimensional
-        "BFDCHI2Tight"        : 120.  ,#adimensional
-        #B Mass Minima
-        "KMuMassLowTight"     : 1500. ,#MeV
-        "RhoMuMassLowTight"   : 2000. ,#MeV
-        "KshMuMassLowTight"   : 3000. ,#MeV
-        "KstarMuMassLowTight" : 2500. ,#MeV
-        #
-        "XMuMassUpper"        : 5500. ,#MeV
-        "XMuMassUpperHigh"    : 6500. ,#MeV
-        "Enu"                 : 1850. ,#MeV
-        "EnuK"                : 2000. ,#MeV
-        'KshZ'                : 0.    #mm
-        },
-    'STREAMS' : ['Semileptonic'],
-    'WGs'    : ['Semileptonic'] 
     }
 
 PhiToKSKS = {
     'BUILDERTYPE' : 'PhiToKSKSAllLinesConf',
     'CONFIG' :  {
-        "prescale_PhiToKK" : 0.01,
+        "prescale_PhiToKK" : 0.001,
         "prescale_PhiToKsKs" : 1.0,
-        "prescale_JPsiToKK" : 0.05,
+        "prescale_PhiToMuMu" : 0.01,
+        "prescale_JPsiToKK" : 0.01,
         "prescale_JPsiToKsKs" : 1.0,
         "GEC_nLongTrk" : 250,
         "DoDTF" : True,
-        "GHOSTPROB_MAX" : 0.35, #adimensional
-        "K_PTMIN" : 200, #MeV
-        "K_PIDK_MIN" : 7, #adimensional
-        "K_IPCHI2_MAX" : 9, #adimensional
+        "GHOSTPROB_MAX" : 0.35, #adimensional 
+        "K_PTMIN" : 200, #MeV                                                                                                                                                
+        "K_PIDK_MIN" : 7, #adimensional                                                                                                                  
+        "K_IPCHI2_MAX" : 9, #adimensional                                                                                                                                
+        "Mu_PTMIN" : 200, #MeV                                                                                                                                   
+        "Mu_PIDmu_MIN" : 0, #adimensional                                                                                                                 
+        "Mu_IPCHI2_MAX" : 9, #adimensional   "prescale_PhiToKK" : 0.01,
         "KS_LL_PTMIN" : 200, #MeV
         "KS_LL_MASS_WINDOW" : 50, #MeV
         "KS_LL_FD_MIN" : 10.0, #mm
@@ -182,7 +194,10 @@ PhiToKSKS = {
         "JPsi_VCHI2NDOF_MAX" : 6, #adimensional
         "JPsi_IPCHI2_MAX" : 9 #adimensional
         },
-    'STREAMS' : ['Charm'],
+    'STREAMS' : {
+        'Charm':['StrippingPhiToKSKS_PhiToKKLine',
+                 'StrippingPhiToKSKS_PhiToMuMuLine']
+        },
     'WGs'    : ['Semileptonic']
     }
 
