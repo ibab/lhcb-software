@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-01-19 - Giampiero Mancinelli
+- Heavily changed StdLooseDetachedTau list for B->tautau, B->taumu in StdLooseDetachedTau.py
+
 !========================= CommonParticles v8r17 2013-12-18 =========================
 
 
