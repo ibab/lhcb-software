@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-19 - Ronan Wallace (QEE)
+  - Dictionaries for QEE in Stripping20r{0,1}p3.
 
 ! 2014-01-18 - Andrea Contu
   - Config for Charm Lines in Stripping20rXp3
