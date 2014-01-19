@@ -303,7 +303,6 @@ H24MuLines = {
     'HmaxDOCA_loose'         : 1000000, #mm
     'HpT_loose'              : 300, #MeV
     'HVchi2_loose'           : 50
-    
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'Leptonic' ]
