@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-01-10 - Pieter David
  - Restore old algorithms
  - For backwards-incompatibly changed algorithms, rename the new version

@@ -4,6 +4,7 @@
 gaudi_subdir(DisplVertices v7r16)
 
 gaudi_depends_on_subdirs(Det/VeloDet
+                         Event/HltEvent
                          Phys/DaVinciKernel
                          Phys/LoKiPhys
                          Phys/LoKiTracks
@@ -15,7 +16,8 @@ gaudi_add_module(DisplVertices
                  src/*.cpp
                  INCLUDE_DIRS AIDA
                  LINK_LIBRARIES VeloDetLib DaVinciKernelLib LoKiPhysLib
-                                LoKiTracksLib LoKiArrayFunctorsLib TrackKernel)
+                                LoKiTracksLib LoKiArrayFunctorsLib TrackKernel
+                                HltEvent)
 
 gaudi_install_python_modules()
 
