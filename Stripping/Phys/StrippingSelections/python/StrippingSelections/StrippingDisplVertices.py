@@ -10,7 +10,6 @@ __all__ = ( 'DisplVerticesLinesConf' )
 from Gaudi.Configuration import *
 from GaudiKernel import SystemOfUnits as units
 from LHCbKernel.Configuration import DEBUG, VERBOSE
-from GaudiConf.Manipulations import addPrivateToolFromString
 
 import logging
 logger = logging.getLogger(__name__)
@@ -26,6 +25,16 @@ from Configurables import LoKi__HDRFilter  as HltFilter
 from Configurables import LoKi__ODINFilter as ODINFilter
 
 from StrippingSelections.DisplVertices_Utils import SelectionPatPV3DWrapper
+
+def addPrivateToolAndGet( motherConf, toolConfType, name=None ):
+    from GaudiKernel.Configurable import Configurable
+    if not issubclass(toolConfType, Configurable) or not isinstance(motherConf, Configurable):
+        logger.fatal("addPrivateToolAndGet: first argument should be a configurable instance, second a configurable class")
+        return
+    if name is None:
+        name = toolConfType.__name__
+    motherConf.addTool(toolConfType, name=name)
+    return getattr(motherConf, name)
 
 
 # constants
@@ -362,16 +371,17 @@ class DisplVerticesLinesConf(LineBuilder):
         jetCandidateAlg.MinIPChi22PV = 20.
         jetCandidateAlg.MaxIPChi22DVDown = 30.
 
-        jetMaker = addPrivateToolFromString( jetCandidateAlg, "LoKi__FastJetMaker" )
-        jetCandidateAlg.JetMaker = jetMaker
+        from Configurables import LoKi__FastJetMaker
+        jetMaker = addPrivateToolAndGet( jetCandidateAlg, LoKi__FastJetMaker )
+        jetCandidateAlg.JetMaker = jetMaker.getTitleName()
         jetMaker.Type = 2 # anti-kt
         jetMaker.RParameter = 0.7
         jetMaker.PtMin = 5.*units.GeV
         jetMaker.Recombination = 0
         jetMaker.JetID = 98
 
-        jecName = "PerPVOffsetJECS20p3/JEC"
-        jecTool = addPrivateToolFromString( jetCandidateAlg, jecName )
+        from Configurables import PerPVOffsetJECS20p3
+        jecTool = addPrivateToolAndGet( jetCandidateAlg, PerPVOffsetJECS20p3, name="JEC" )
         jetCandidateAlg.ParticleReFitters["JEC"] = jecTool.getTitleName()
         jecTool.Apply = False
         jecTool.HistoPath = "JEC"
@@ -381,7 +391,8 @@ class DisplVerticesLinesConf(LineBuilder):
         if jecFile not in hSvc.Input:
             hSvc.Input.append(jecFile)
 
-        jetIDTool = addPrivateToolFromString( jetCandidateAlg, "AddJetIDInfoS20p3/JetIDInfo" )
+        from Configurables import AddJetIDInfoS20p3
+        jetIDTool = addPrivateToolAndGet( jetCandidateAlg, AddJetIDInfoS20p3, name="JetIDInfo" )
         jetCandidateAlg.JetIDTool = jetIDTool.getTitleName()
 
         jetCandidateAlg.JetIDCut = ( JetIDCut if JetIDCut is not None
@@ -432,16 +443,16 @@ class DisplVerticesLinesConf(LineBuilder):
                                            )
 
         # Displaced Vertex reconstruction with best tracks (dominated by those with a Velo segment)
-        from Configurables import PatPV3D
+        from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, LSAdaptPVFitter
 
         withVeloVertexAlg = PatPV3D( "%sWithVeloVertexAlg" % self.name() )
-        withVeloVertexFinder = addPrivateToolFromString(withVeloVertexAlg, "PVOfflineTool")
+        withVeloVertexFinder = addPrivateToolAndGet(withVeloVertexAlg, PVOfflineTool)
         withVeloVertexFinder.PVsChi2Separation = 0
         withVeloVertexFinder.PVsChi2SeparationLowMult = 0
-        withVeloSeeder = addPrivateToolFromString(withVeloVertexFinder, "PVSeed3DTool" )
+        withVeloSeeder = addPrivateToolAndGet(withVeloVertexFinder, PVSeed3DTool )
         withVeloVertexFinder.PVSeedingName = withVeloSeeder.getTitleName()
         withVeloSeeder.MinCloseTracks = 3
-        withVeloFitter = addPrivateToolFromString(withVeloVertexFinder, "LSAdaptPV3DFitter" )
+        withVeloFitter = addPrivateToolAndGet(withVeloVertexFinder, LSAdaptPV3DFitter)
         withVeloVertexFinder.PVFitterName = withVeloFitter.getTitleName()
         withVeloFitter.maxIP2PV       = 2.0*units.mm
         withVeloFitter.MinTracks      = 4
@@ -484,16 +495,16 @@ class DisplVerticesLinesConf(LineBuilder):
 
         # Displaced Vertex reconstruction from downstream tracks
         downVertexAlg = PatPV3D( "%sDownVertexAlg" % self.name() )
-        downVertexFinder = addPrivateToolFromString( downVertexAlg, "PVOfflineTool" )
+        downVertexFinder = addPrivateToolAndGet( downVertexAlg, PVOfflineTool )
         downVertexFinder.RequireVelo = False
         downVertexFinder.PVsChi2Separation = 0
         downVertexFinder.PVsChi2SeparationLowMult = 0
-        downSeeder = addPrivateToolFromString( downVertexFinder, "PVSeed3DTool" )
+        downSeeder = addPrivateToolAndGet( downVertexFinder, PVSeed3DTool )
         downVertexFinder.PVSeedingName  = downSeeder.getTitleName()
         downSeeder.TrackPairMaxDistance = 2.0*units.mm
         downSeeder.zMaxSpread           = 20.0*units.mm
         downSeeder.MinCloseTracks       = 4
-        downFitter = addPrivateToolFromString( downVertexFinder, "LSAdaptPVFitter" )
+        downFitter = addPrivateToolAndGet( downVertexFinder, LSAdaptPVFitter )
         downVertexFinder.PVFitterName = downFitter.getTitleName()
         downFitter.MinTracks          = 4
         downFitter.maxChi2            = 400.0
