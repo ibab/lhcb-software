@@ -34,7 +34,6 @@ class DstConf(LHCbConfigurableUser):
        , "OutputName"      : ""
        , "SpilloverPaths"  : [ "Prev", "PrevPrev", "Next", "NextNext" ]
        , "DataType"        : ""
-       , "Persistency"     : None
        , "WriteFSR"        : True
        , "SplitRawEventOutput" : 2.0 #split raw event from Stripping 20
          }
@@ -51,7 +50,6 @@ class DstConf(LHCbConfigurableUser):
        ,'OutputName'      : """ Name of the output file, for MDF writing """
        ,'SpilloverPaths'  : """ Paths to write to XDST if available on input file """
        ,'DataType'        : """ Flag for backward compatibility with old data """
-       ,'Persistency'     : """ Overwrite the default persistency with something else. """
        ,'WriteFSR'        : """ Flags whether to write out an FSR """
        ,"SplitRawEventOutput" : "Which version fo the split raw event to write out, default 2.0, same as Reco 14/Stripping 20 DSTs"
        }
@@ -213,10 +211,7 @@ class DstConf(LHCbConfigurableUser):
         else:
             outputFile = IOHelper().undressFile( writer.getProp("Output") )
         # Add to the ApplicationMgr with corresct output persistency
-        persistency=None
-        if hasattr( self, "Persistency" ):
-            persistency=self.getProp("Persistency")
-        IOHelper(persistency,persistency).outStream( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
+        IOHelper().outStream( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
 
     def _doWriteMDF( self, items ):
         """

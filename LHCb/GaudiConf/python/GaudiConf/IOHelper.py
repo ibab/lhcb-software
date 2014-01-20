@@ -19,8 +19,7 @@ class IOHelper(object):
     ioh = IOHelper(Input=None,Output=None)
 
     "ioh" is now an instance of the helper which can be used in many places
-    Defaults to POOL and POOL at the moment.
-    At some point we will change the default to ROOT and ROOT.
+    Defaults to ROOT.
 
     1) check if root framework is possible:
         IOHelper().isRootSupported()
@@ -134,31 +133,16 @@ class IOHelper(object):
             if Output.upper() not in self._outputSvcTypDict:
                 raise ValueError, Output+' output persistency not known'
             self._outputPersistency=Output.upper()
-
-        if self._outputPersistency == 'POOL':
-            if self._inputPersistency == 'ROOT':
-                if Output is not None:
-                    raise TypeError( "Cannot write POOL file when reading with RootCnv" )
-                else:
-                    print "# ROOT input requested. Forcing ROOT output"
-                    self._outputPersistency = 'ROOT'
-
-        if self._outputPersistency == 'ROOT':
-            if self._inputPersistency == 'POOL':
-                print "# ROOT output file requested. Forcing reading of POOL input files with RootCnv"
-                self._inputPersistency = 'ROOT'
-
+        
+        if self._outputPersistency == "POOL" or self._inputPersistency == "POOL":
+            raise ValueError("POOL is completely deprecated, fix your options or use an older software stack")
+        
         if self._inputPersistency=='ROOT' or self._outputPersistency=='ROOT':
             if not self.isRootSupported():
                 raise TypeError("ROOT persistency is not supported in this Application version"+
                                 "Ask your release manager for details or change to POOL")
-
-        if self._inputPersistency=='POOL' or self._outputPersistency=='POOL':
-            if not self.isPoolSupported():
-                raise TypeError("POOL persistency is not supported in this Application version"+
-                                "Ask your release manager for details or change to ROOT")
-
-        if self._outputPersistency=="FSR" and self._inputPersistency not in ['ROOT','POOL']:
+        
+        if self._outputPersistency=="FSR" and self._inputPersistency not in ['ROOT']:
             raise TypeError("FSR is not a proper persistency type. To configure services, you would need to specify a proper type.")
 
     ###############################################################
@@ -219,7 +203,7 @@ class IOHelper(object):
         return False
 
     def _persistencyType(self,svcstring):
-        '''Helper:  Returns either ROOT POOL or MDF'''
+        '''Helper:  Returns either ROOT or MDF'''
 
         for service in self._knownPerServices:
             if service in svcstring:
@@ -403,9 +387,8 @@ class IOHelper(object):
     
     def isPoolSupported(self):
         '''Services: Check if the POOL services exist in this version'''
-        import Configurables
-        return (hasattr(Configurables, "PoolDbCnvSvc") and hasattr(Configurables, "PoolDbCacheSvc"))
-
+        return False
+    
     def svcTypString(self,IO):
         '''Services:  given the IO type, return the selection string for the active services'''
         IO=self.__chooseIO(IO)
@@ -445,21 +428,6 @@ class IOHelper(object):
             
             self._doConfFileRecords(fileSvc)
         
-        if self._inputPersistency == 'POOL' or self._outputPersistency == 'POOL':
-            from Configurables import (PoolDbCnvSvc, PoolDbCacheSvc)
-            evtSvc  = PoolDbCnvSvc( "PoolRootEvtCnvSvc",     DbType = "POOL_ROOT",     EnableIncident = 1 )
-            keySvc  = PoolDbCnvSvc( "PoolRootKeyEvtCnvSvc",  DbType = "POOL_ROOTKEY",  EnableIncident = 1 )
-            treeSvc = PoolDbCnvSvc( "PoolRootTreeEvtCnvSvc", DbType = "POOL_ROOTTREE", EnableIncident = 1 )
-            EventPersistencySvc().CnvServices += [ evtSvc, treeSvc, keySvc ]
-
-            cacheSvc = PoolDbCacheSvc( Dlls        = ["lcg_RootStorageSvc", "GaudiKernelDict"],
-                                       OutputLevel = 4,
-                                       DomainOpts  = ["Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong"]
-                                       )
-            ApplicationMgr().ExtSvc += [ cacheSvc, evtSvc, keySvc, treeSvc ]
-            fileSvc = PoolDbCnvSvc( "FileRecordCnvSvc", DbType = "POOL_ROOTTREE" )
-            self._doConfFileRecords(fileSvc)
-
         # Always enable reading/writing of MDF
         EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
 
@@ -977,9 +945,9 @@ class IOHelper(object):
 
         #FSRs have a different output service
         FSRIO=None
-        if self._outputPersistency in ["ROOT","POOL"]:
+        if self._outputPersistency in ["ROOT"]:
             FSRIO=IOHelper(self._outputPersistency,"FSR")
-        elif self._inputPersistency in ["ROOT","POOL"]:
+        elif self._inputPersistency in ["ROOT"]:
             FSRIO=IOHelper(self._inputPersistency,"FSR")
         else:
             raise TypeError("Something odd has occurred when setting FSRs")
@@ -1019,14 +987,13 @@ class IOExtension(object):
     from GaudiConf import IOExtension
     iox = IOExtension(Persistency=None)
 
-    Persistency is then persistency type to use for Root-type files (ROOT/POOL)
+    Persistency is then persistency type to use for Root-type files (ROOT)
     the default from IOHelper is maintained if None is passed.
 
     examples:
 
     1) building an EventSelector from a list of files of mixed types:
         evtsel=IOExtension().inputFiles(filelist)
-        evtsel=IOExtension("POOL").inputFiles(filelist)
         evtsel=iox.inputFiles(filelist)
 
     2) adding a simple OutputStream to the OutStream of Application Manager
@@ -1074,7 +1041,7 @@ class IOExtension(object):
     def __init__(self, Persistency=None):
         '''
         Initialise with persistency, which is the persistency to use for
-        detected root-type files (POOL/ROOT)
+        detected root-type files (ROOT)
         '''
         if Persistency is not None:
             #check the persistency is valid
@@ -1130,12 +1097,12 @@ class IOExtension(object):
 
     def detectMinType(self, files):
         '''Extensions:  from a list of files determine the minimal persistency required
-        This will either be MDF or (POOL/ROOT)
+        This will either be MDF or (ROOT)
 
-        If POOL/ROOT is ecountered, but IOExtension was initialized with the
+        If ROOT is ecountered, but IOExtension was initialized with the
         other persistency, a TypeError is raised.
 
-        If any one of the files is POOL/ROOT return POOL/ROOT
+        If any one of the files is ROOT return ROOT
         Only if all the files are MDF return MDF
         '''
         for file in files:

@@ -23,8 +23,6 @@ def testType(ioh):
     ioh.debugIO()
 
 persistencies=["ROOT","MDF"]
-if IOHelper().isPoolSupported():
-    persistencies.append("POOL")
 
 for Persistency in persistencies:
     print "====================="

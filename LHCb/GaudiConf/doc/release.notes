@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-01-20 - Rob Lambert
+ - Remove Persistency option from DSTConf/DigiConf
+ - remove pool test suite, no reason to have it any longer
+ - remove Pool from IOHelper
+
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL data
 

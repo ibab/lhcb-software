@@ -27,7 +27,6 @@ class DigiConf(LHCbConfigurableUser):
        , "Detectors"      : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
        , "DataType"       : ""
        , "OutputName"     : ""
-       , "Persistency"    : None
        , "WriteFSR"       : False
          }
 
@@ -43,7 +42,6 @@ class DigiConf(LHCbConfigurableUser):
        ,'Detectors'     : """ Active subdetectors """
        ,'DataType'      : """ Flag for backward compatibility with old data """
        ,'OutputName'    : """ Name of the output file """
-       ,'Persistency'   : """ Overwrite the default persistency with something else. """
        ,'WriteFSR'      : """ Flags whether to write out an FSR """
        }
 
@@ -80,10 +78,7 @@ class DigiConf(LHCbConfigurableUser):
             outputFile = IOHelper().undressFile( writer.getProp("Output") )
 
         # Add to the ApplicationMgr with correct output persistency
-        persistency=None
-        if hasattr( self, "Persistency" ):
-            persistency=self.getProp("Persistency")
-        algs = IOHelper(persistency,persistency).outputAlgs( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
+        algs = IOHelper().outputAlgs( outputFile, "OutputStream/"+self.getProp("Writer"), self.getProp("WriteFSR") )
         for alg in algs:
             ApplicationMgr().OutStream.insert( 0, alg )
 

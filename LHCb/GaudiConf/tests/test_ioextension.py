@@ -63,8 +63,6 @@ def testthisiox(iox):
 
 
 persistencies=[None, "ROOT"]
-if IOHelper().isPoolSupported():
-    persistencies.append("POOL")
 
 for persistency in persistencies:
     print '============================='
