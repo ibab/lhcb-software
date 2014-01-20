@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2014-01-19 - William Sutcliffe
+ - Added 3 new lines for Stripping Lb2pmunu in StrippingLb2pMuNuVub.py
+ - Added import for StrippingLb2pMuNuVub to __init__
+
 ! 2014-01-19 - Marc Olivier Bettler
  - Added lines for K0S -> 4muons as module StrippingK0S24X.py
  - Added import for StrippingK0S24X to __init__
