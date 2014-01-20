@@ -59,7 +59,12 @@ StatusCode PrTrackAssociator::initialize() {
 StatusCode PrTrackAssociator::execute() {
 
   // Retrieve the MCParticles
-  LHCb::MCParticles* mcParts = get<LHCb::MCParticles> ( LHCb::MCParticleLocation::Default );
+  LHCb::MCParticles* mcParts = getIfExists<LHCb::MCParticles> ( LHCb::MCParticleLocation::Default );
+  if ( NULL == mcParts ) {
+    if( msgLevel(MSG::ERROR) ) error() << "MCParticles at " << LHCb::MCParticleLocation::Default << "' do not exist" <<endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   // Get the LHCbID to MCParticle linker
   LinkedTo<LHCb::MCParticle> idLinker( evtSvc(), msgSvc(), "Pr/LHCbID" );
 
@@ -68,7 +73,12 @@ StatusCode PrTrackAssociator::execute() {
     trackContainers.push_back( m_singleContainer );
   } else {
     //== Scan the root directory and make a list of containers to process.
-    DataObject* root = get<DataObject*>( m_rootOfContainers );
+    DataObject* root =  getIfExists<DataObject*>( m_rootOfContainers );
+    if ( NULL == root ) {
+      if( msgLevel(MSG::ERROR) ) error() << "Root-of-Containers directory " <<   m_rootOfContainers << "' does not exist. Skipping." <<endmsg;
+      return StatusCode::SUCCESS;
+    }
+
     unsigned int trackContainerId = LHCb::Track::classID() + 0x60000;
     SmartIF<IDataManagerSvc> mgr( eventSvc() );
     typedef std::vector<IRegistry*> Leaves;
@@ -94,7 +104,11 @@ StatusCode PrTrackAssociator::execute() {
       debug() << "processing container: " << *itS << endreq ;
 
     // Retrieve the Tracks
-    LHCb::Tracks* tracks = get<LHCb::Tracks> ( *itS );
+    LHCb::Tracks* tracks = getIfExists<LHCb::Tracks> ( *itS );
+    if ( NULL == tracks ) {
+      if( msgLevel(MSG::DEBUG) ) debug() << "No tracks in container " <<  *itS << "' . Skipping." <<endmsg;
+      continue;
+    }
 
     // Create the Linker table from Track to MCParticle
     // Sorted by decreasing weight, so first retrieved has highest weight

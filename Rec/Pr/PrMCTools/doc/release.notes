@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Michel De Cian
+- Replace 'get' with 'getIfExists' in PrTrackAssociator to allow a more behaved exiting of the code if the container does not exists.
+
 ! 2014-01-18 - Michel De Cian
 -  Fix behaviour of flag 'fromB' in PrVeloUTChecker to only include B baryons and mesons, and not particles from string fragmentation of b quarks (now consistent with PrChecker)
 
