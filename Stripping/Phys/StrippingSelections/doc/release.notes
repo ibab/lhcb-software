@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-20 - Thomas Blake
+ - Updated __init__.py for RD imports
 
 ! 2014-01-19 - William Sutcliffe
  - Added 3 new lines for Stripping Lb2pmunu in StrippingLb2pMuNuVub.py
