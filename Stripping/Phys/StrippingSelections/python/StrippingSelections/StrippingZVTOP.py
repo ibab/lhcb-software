@@ -162,7 +162,7 @@ class ZVTOP_Conf(LineBuilder) :
                                             config  = config)
     #
     self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
-                                        HLT = config['HltFilter'],
+                                        #    HLT = config['HltFilter'],
                                         #    self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
                                         prescale    = config['B2TauTau_LinePrescale'],
                                         postscale   = config['B2TauTau_LinePostscale'],
