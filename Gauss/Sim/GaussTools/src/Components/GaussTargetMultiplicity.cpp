@@ -289,10 +289,11 @@ void GaussTargetMultiplicity::PostUserTrackingAction ( const G4Track* track )
 	debug() << "Ended at (x,y,z) "<<ended_at_x<<" "<<ended_at_y<<" "<<ended_at_z<< endmsg;
 	*/
 	
-	
-	const G4Step* tstep = track->GetStep();
-	G4StepPoint* post = tstep->GetPostStepPoint();
-	G4StepPoint* pre  = tstep->GetPreStepPoint();
+	// The following three lines commented to avoid compilation warnings. SE.
+	//const G4Step* tstep = track->GetStep();
+	//G4StepPoint* post = tstep->GetPostStepPoint();
+  //	G4StepPoint* pre  = tstep->GetPreStepPoint();
+
 	//debug() << "track step "<<tstep<< endmsg;
 	//debug() << "track step post z position  "<< post->GetPosition().z()<< endmsg;
 	//debug() << "track step pre z position   "<< pre->GetPosition().z()<< endmsg;
