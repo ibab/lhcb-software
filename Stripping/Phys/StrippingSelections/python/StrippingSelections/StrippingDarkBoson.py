@@ -399,6 +399,7 @@ def makeEESS():
     eess.DiElectronMassMin = 0
     eess.DiElectronPtMin = 250
     eess.ElectronPtMin = 100
+    eess.OppositeSign = False
     return Selection('EESSDarkBosonSel',Algorithm=eess)
 
 def filterKst():
