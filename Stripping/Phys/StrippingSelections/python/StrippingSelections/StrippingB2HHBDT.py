@@ -30,13 +30,13 @@ default_config = {
            'TrChi2'          : 3,
            'TrGhostProb'     : 0.5,
            'CombMassLow'     : 4600,
-           'CombMassHigh'    : 6000,
+           'CombMassHigh'    : 6400,
            'DOCA'            : 0.1,
            'BPT'             : 1200,
            'BIP'             : 0.12,
            'BTAU'            : 0.0006,
            'MassLow'         : 4800,
-           'MassHigh'        : 5800,
+           'MassHigh'        : 6200,
            'BDTCut'          : -0.3,
            'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
            }

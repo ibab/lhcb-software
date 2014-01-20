@@ -239,6 +239,8 @@ import StrippingD2HHBDT
 import StrippingB2DHHHForBXX
 import StrippingB2KSKpi
 import StrippingButo5h
+import StrippingBu2rho0rhoPlus
+import StrippingB2pphh
 
 import StrippingBs2D0KS0
 import StrippingB2LambdaMuLines
