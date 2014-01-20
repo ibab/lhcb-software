@@ -4,9 +4,9 @@
  *
  */
 
-#include "../component/CondDBCompression.h"
-
 #include <boost/python.hpp>
+
+#include "../component/CondDBCompression.h"
 
 namespace {
   inline std::string defaultCompress(const std::string& s) {
