@@ -20,11 +20,11 @@ apply_pattern     install_more_includes   more=GaussTools
 
 # Linker library building rule
 #============================================================================
-library           GaussToolsLib           Lib/*.cpp
+library           GaussToolsLib           Lib/*.cpp 
 
 # Component library building rule
 #============================================================================
-library           GaussTools              Components/*.cpp       
+library           GaussTools              Components/*.cpp  -import=AIDA   
 
 # define linker and component library link options
 #============================================================================

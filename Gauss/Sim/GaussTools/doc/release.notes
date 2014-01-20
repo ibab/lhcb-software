@@ -3,6 +3,10 @@
 ! Responsible	  : Gloria Corti, Silvia MIGLIORANZI
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
+2014-01-20 - Sajan Easo
+ - Added the files GaussTargetMultiplicity.cpp, GaussTargetMultiplicity.h from 
+   Luca Pescatore for cross-section, radiation length studies.
+ - To compile these modified the requirements file to add  -import=AIDA 
 
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
