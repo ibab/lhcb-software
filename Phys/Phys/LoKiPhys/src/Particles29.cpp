@@ -33,7 +33,7 @@
 LoKi::Particles::DHCoplanarity::DHCoplanarity()
   : LoKi::AuxDesktopBase () 
   , LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
-{ Warning (" Obsolete functor BPVDVDOCA - to be removed *soon*" ) ;}
+{ }
 // ============================================================================
 // MANDATORY : virtual destrcutor 
 // ============================================================================
