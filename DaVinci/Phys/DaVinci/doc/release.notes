@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Rob Lambert
+ - Remove persistency option from DaVinci
+ - remove ETC options form DaVinci
+ 
+
 !========================= DaVinci v33r9 2013-12-18 ===========================
 
 ! 2013-11-18 - Rob Lambert

@@ -30,8 +30,6 @@ class DaVinci(LHCbConfigurableUser) :
         , "DDDBtag"            : ""              # Tag for DDDB. Default as set in DDDBConf for DataType
         , "CondDBtag"          : ""              # Tag for CondDB. Default as set in DDDBConf for DataType
         , "DQFLAGStag"         : ""              # Tag for DQFLAGS. Default as set in DDDBConf for DataType
-        # Persistency
-        , "Persistency"        : None            # ROOT or POOL, steers the setup of services
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
         , "InputType"          : "DST"           # 'DST', 'DIGI', 'RDST', 'MDST' or 'XDST'. Nothing means the input type is compatible with being a DST. 
@@ -39,7 +37,6 @@ class DaVinci(LHCbConfigurableUser) :
         # Output
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
         , "TupleFile"          : ""              # Name of output Tuple file
-        , "ETCFile"            : ""              # Name of output ETC file
         , "WriteFSR"           : True            # Flags whether to write out an FSR
         # DQ
         , "IgnoreDQFlags"      : False           # If False (default), process only events with good DQ. 
@@ -72,11 +69,9 @@ class DaVinci(LHCbConfigurableUser) :
         , 'EnableUnpack'       : """Explicitly enable/disable unpacking for input data (if specified) """
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
-        , "ETCFile"            : """ Write name of output ETC file."""
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
         , 'IgnoreDQFlags'      : """ If False, process only events with good DQ. Default is False """
         #, "IgnoredDQFlags"     : """ List of DQ flags to ignore. Default is empty, so events flagged bad for any reason are rejected (Unless IgnoreDQFlags=True) """
-        , "Persistency"        : """ ROOT or POOL, steers the setup of services """
         , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
         , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
@@ -131,7 +126,7 @@ class DaVinci(LHCbConfigurableUser) :
         if dataType not in self.__known_datatypes__ :
             raise TypeError( "Invalid DataType '%s'" %dataType )
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST", "XDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "RDST", "MDST", "SDST", "XDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
         if ( dataType in [ "MC09" ] ):
             if not self.getProp("Simulation"):
@@ -146,16 +141,6 @@ class DaVinci(LHCbConfigurableUser) :
         if self.getProp("Simulation") and self.getProp('Lumi') :
             log.warning('Lumi not valid for Simulation. Setting Lumi = False')
             self.setProp('Lumi', False )
-
-        persistency=None
-        if hasattr(self, "Persistency"):
-            persistency=self.getProp("Persistency")
-        else:
-            from GaudiConf import IOHelper
-            persistency=IOHelper()._inputPersistency
-        
-        if (inputType in ["ETC"] or ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" )) and persistency=="ROOT":
-            raise TypeError, "The reading/writing of ETC is no longer supported in the ROOT framework. Contact your release manager for details."
         
 ################################################################################
 # Configure slaves
@@ -320,9 +305,6 @@ class DaVinci(LHCbConfigurableUser) :
             from GaudiConf import IOHelper
             
             persistency=None
-            if hasattr(self, "Persistency"):
-                persistency=self.getProp("Persistency")
-            
             inputType = self.getProp( "InputType" ).upper()
             if inputType == "MDF" : persistency = "MDF"
             #support connection strings and lists of files
@@ -337,10 +319,7 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Tune initialisation 
         """
-        if hasattr(self,"Persistency"):
-            self.setOtherProps(LHCbApp(),["Persistency"])
-            self.setOtherProps(DstConf(),["Persistency"])
-
+        
         # Input data type
         inputType = self.getProp( "InputType" ).upper()
 
@@ -388,54 +367,7 @@ class DaVinci(LHCbConfigurableUser) :
             NTupleSvc().Output      += [ tupleStr ]
             # NTupleSvc().OutputLevel  = 1
             
-        if ( self.isPropertySet('ETCFile') and self.getProp("ETCFile") != "" ):
-            if ( self.getProp("WriteFSR") ):
-                self._etcfsr(self.getProp("ETCFile"))
-            self._etc(self.getProp("ETCFile"))
-
 ################################################################################
-# ETC
-#
-    def _etc(self,etcFile):
-        """
-        write out an ETC
-        """
-        from Configurables import TagCollectionSvc
-        tcname = "EvtTupleSvc"
-        ets = TagCollectionSvc(tcname)
-        ets.Output += [ "EVTCOL DATAFILE='"+etcFile+"' TYP='POOL_ROOTTREE' OPT='RECREATE' " ]
-        ets.OutputLevel = 1 
-        ApplicationMgr().ExtSvc  += [ ets ]
-        #
-        from Configurables import EvtCollectionStream
-        tagW = EvtCollectionStream("TagWriter")
-        # this somehow matches CollectionName
-        log.info("Did not defined itemlist for ETC.")
-#        tagW.ItemList = iList
-        tagW.EvtDataSvc = tcname
-        
-        from Configurables import Sequencer
-        seq = Sequencer("SeqWriteTag")
-        ApplicationMgr().OutStream += [ tagW ]
-
-################################################################################
-# ETC + FSR - write fsr to etc file
-#
-    def _etcfsr(self, fsrFile):
-        """
-        write out the FSR
-        it is IMPERATIVE to define the FSR outputstream before the etc
-        """
-        # Output stream
-        FSRWriter = RecordStream( "FileRecords",
-                                  ItemList         = [ "/FileRecords#999" ],
-                                  EvtDataSvc       = "FileRecordDataSvc",
-                                  Output           = "DATAFILE='"+fsrFile+"' TYP='POOL_ROOTTREE'",
-                                  )
-
-        # Write the FSRs to the same file as the events
-        ApplicationMgr().OutStream += [ FSRWriter ]
-        
 ################################################################################
 # Main sequence
 #
@@ -549,11 +481,10 @@ class DaVinci(LHCbConfigurableUser) :
     def _setAncestorDepth(self) :
         """
         Calculate depth of ancestry for input files and set IODataManager().AgeLimit accordingly.
-        Set to 1 for InputType = 'ETC', 'RDST' or 'SDST' and 0 for others.
+        Set to 1 for InputType = 'RDST' or 'SDST' and 0 for others.
         """
         if not IODataManager().isPropertySet('AgeLimit') :
-            depthMap = { 'ETC'  : 1,
-                         'RDST' : 1,
+            depthMap = { 'RDST' : 1,
                          'SDST' : 1  }
             inputType = self.getProp('InputType').upper()
             IODataManager().setProp('AgeLimit', depthMap.get(inputType, 0))
