@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-20 - Xabier Cid Vidal
+ - Edited KsMuMu line to add the possibility to cut in Ks and muons pT
+
+
 ! 2014-01-20 - Thomas Blake
  - Updated __init__.py for RD imports
 

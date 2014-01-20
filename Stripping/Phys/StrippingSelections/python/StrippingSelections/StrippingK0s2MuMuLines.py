@@ -50,8 +50,17 @@ class K0s2MuMuLinesConf(LineBuilder) :
                               'NoMuIDLinePostscale',
                               'K0s2mmLinePrescale',
                               'K0s2mmLinePostscale',
-                             
+                              'minMuPT',
+                              'minKsPT'                            
                               )
+
+    
+    # 2012 DiMuonDetached Hlt2Line
+    # getTCKInfo(0x40990042)
+    # ('Physics_June2012', 'MOORE_v14r6')
+    # dump(0x40990042,lines="Hlt2DiMuonDetached")
+    # (MM>0*MeV)& (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY)) > 25 )& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < 4 ) & (PT>600*MeV) & (MINTREE('mu-'==ABSID,PT)>300*MeV) & (VFASPF(VCHI2PDOF)<8 )& (BPVDLS>7 )
+
     
     #### This is the dictionary of all tunable cuts ########
     config_default={
@@ -59,7 +68,10 @@ class K0s2MuMuLinesConf(LineBuilder) :
         'NoMuIDLinePostscale'   : 1,
         'K0s2mmLinePrescale'  : 1,
         'K0s2mmLinePostscale'  : 1,
-        
+        #'minMuPT' : 300,  #MeV
+        #'minKsPT' : 600,  #MeV
+        'minMuPT' : 0,  #MeV
+        'minKsPT' : 0,  #MeV
         }                
     
     
@@ -72,8 +84,8 @@ class K0s2MuMuLinesConf(LineBuilder) :
         norm_name=name+'NoMuID'
         
 
-        self.NoMuID = makeNoMuID(norm_name)
-        self.MuID = makeK0s2mm(name)
+        self.NoMuID = makeNoMuID(norm_name, config["minMuPT"], config["minKsPT"])
+        self.MuID = makeK0s2mm(name , config["minMuPT"], config["minKsPT"])
 
        
         self.NoMuIDLine = StrippingLine(norm_name+"Line",
@@ -93,7 +105,7 @@ class K0s2MuMuLinesConf(LineBuilder) :
         self.registerLine(self.MuIDLine)
        
 
-def makeNoMuID(name) :
+def makeNoMuID(name,mupt=0,kspt=0) :
     """
     default K0s2mumu selection object
     starts from Phys/StdNoPIDsMuons
@@ -111,12 +123,13 @@ def makeNoMuID(name) :
     K0s2MuMuNoMuID.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     K0s2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     K0s2MuMuNoMuID.ReFitPVs = True
-    K0s2MuMuNoMuID.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)> 100.)&(TRCHI2DOF < 5 )" }
+    K0s2MuMuNoMuID.DaughtersCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)> 100.)&(TRCHI2DOF < 5 ) & (PT >"+str(mupt)+" * MeV )" }
     K0s2MuMuNoMuID.CombinationCut = "(ADAMASS('KS0')<100*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
+    
 
-    K0s2MuMuNoMuID.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>400) & (M<600))"
-   
+    K0s2MuMuNoMuID.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>400) & (M<600) & (PT > "+str(kspt)+" * MeV))"
+    
                              
     _stdNoPIDsPions = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles")
 
@@ -125,7 +138,7 @@ def makeNoMuID(name) :
                       RequiredSelections = [ _stdNoPIDsPions])
 
 
-def makeK0s2mm(name) :
+def makeK0s2mm(name,mupt = 0, kspt = 0) :
     """
     K0s2mumu selection object
     with muon Id and wide mass window
@@ -143,11 +156,11 @@ def makeK0s2mm(name) :
     K0s2MuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     K0s2MuMu.OfflineVertexFitter.useResonanceVertex = False
     K0s2MuMu.ReFitPVs = True
-    K0s2MuMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 100.)&(TRCHI2DOF < 5 )" }
+    K0s2MuMu.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 100.)&(TRCHI2DOF < 5 ) & (PT >"+str(mupt)+" * MeV)" }
     K0s2MuMu.CombinationCut ="(ADAMASS('KS0')<1000*MeV)"\
-                                   "& (AMAXDOCA('')<0.3*mm)"
+                              "& (AMAXDOCA('')<0.3*mm)"
 
-    K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>450))"
+    K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>450) & (PT > "+str(kspt)+" * MeV))"
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
