@@ -2,37 +2,32 @@
 #  Line config dictionaries for Semileptonic WG
 #
 
-Lb2pMuNu = {
-    'BUILDERTYPE'       : 'Lb2pMuNuBuilder',
+Lb2pMuNuVub = {
+    'BUILDERTYPE'       : 'Lb2pMuNuVubBuilder',
     'CONFIG'    :{
-    "GEC_nLongTrk"        : 250.   ,#adimensional
-    "TRGHOSTPROB"         : 0.35   ,#adimensional
-    #Muon Cuts
-    "MuonGHOSTPROB"       : 0.35   ,#adimensional
-    "MuonTRCHI2"          : 4.     ,#adimensional
-    "MuonP"               : 3000.  ,#MeV
-    "MuonPT"              : 1600.  ,#MeV
-    "MuonMINIPCHI2"       : 12.    ,#adminensional
-    #Proton Cuts 
-    "ProtonTRCHI2"        : 6.     ,#adimensional
-    "ProtonP"             : 15000. ,#MeV
-    "ProtonPT"            : 1000.  ,#MeV
-    "ProtonPIDK"          : 0.     ,#adimensional 
-    "ProtonPIDp"          : 5.     ,#adimensional
-    "ProtonMINIPCHI2"     : 16.    ,#adminensional
-    #B Mother Cuts
-    "BVCHI2DOF"           : 4.     ,#adminensional
-    "BDIRA"               : 0.999  ,#adminensional
-    "BFDCHI2HIGH"         : 150.   ,#adimensional
-    "BPVIPChi2"           : 25.    ,#adminensional  
-    "pMuMassLow"          : 2250.  ,#MeV
-    "pMuMassLowTight"     : 2900.  ,#MeV
-    "pMuMassUpper"        : 5600.  ,#MeV
-    "pMuPT"               : 1500.  ,#MeV
-    "PassymLow"           : -0.4   ,#adminensional
-    "PassymLower"         : -0.65  ,#adimensional
-    "PassymUpper"         : 0.0     #adimensional
-    },
+        "GEC_nLongTrk"        : 250.   ,#adimensional
+        "TRGHOSTPROB"         : 0.35   ,#adimensional
+        #Muon Cuts
+        "MuonGHOSTPROB"       : 0.35   ,#adimensional
+        "MuonTRCHI2"          : 4.     ,#adimensional
+        "MuonP"               : 3000.  ,#MeV
+        "MuonPT"              : 1500.  ,#MeV
+        "MuonMINIPCHI2"       : 16.    ,#adminensional
+        #Proton Cuts 
+        "ProtonTRCHI2"        : 6.     ,#adimensional
+        "ProtonP"             : 15000. ,#MeV
+        "ProtonPT"            : 1000.  ,#MeV
+        "ProtonPIDK"          : 10.     ,#adimensional 
+        "ProtonPIDp"          : 10.     ,#adimensional
+        "ProtonMINIPCHI2"     : 16.    ,#adminensional
+        #B Mother Cuts
+        "BVCHI2DOF"           : 4.     ,#adminensional
+        "BDIRA"               : 0.9994  ,#adminensional
+        "BFDCHI2HIGH"         : 150.   ,#adimensional
+        "pMuMassLower"        : 1000.  ,#MeV
+        "pMuPT"               : 1500.  ,#MeV
+        "pMuMCORR"            : 4000.   #MeV
+        },
     'STREAMS' : ['Semileptonic'],
     'WGs'    : ['Semileptonic']
     }

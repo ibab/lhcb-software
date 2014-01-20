@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-20 - Mika Vesterinen (Semileptonics)
+  - Updated Dictionaries for Semileptonics in Stripping20r{0,1}p3 to include new Vub module.
+
 ! 2014-01-19 - Ronan Wallace (QEE)
   - Change to H24Mu config dictionaries for Stripping20r{0,1}p3.
 
