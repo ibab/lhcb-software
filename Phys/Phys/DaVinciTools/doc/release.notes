@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-01-20 - Chris Jones
+ - Various minor cleanups to VertexIsolation.
+
 ! 2014-01-20 - Albert Puig
  - Lowered verbosity of VertexIsolation.
 

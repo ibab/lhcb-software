@@ -36,7 +36,7 @@ StatusCode AddExtraInfo::initialize()
         iTool != m_toolNames.end(); ++iTool )
   {
     IExtraInfoTool* t = tool<IExtraInfoTool>(*iTool,this);
-    if (t)
+    if ( t )
     {
       m_tools.push_back(t);
     }
