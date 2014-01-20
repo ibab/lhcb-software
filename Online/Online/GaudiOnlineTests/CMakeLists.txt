@@ -20,3 +20,5 @@ find_package(PythonLibs)
 find_package(AIDA)
 
 gaudi_add_test(QMTest QMTEST)
+
+gaudi_env(SET GAUDIONLINE_OPTS "\${GAUDIONLINEROOT}/options")

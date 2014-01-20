@@ -19,6 +19,7 @@ RawBankSizes.HltDecReports=(100,0.0,1000.0,0,-1,"HLT");
 RawBankSizes.HltLumiSummary=(5,0.0,100.0,0,-1,"HLT");
 RawBankSizes.HltRoutingBits=(10,0.0,100.0,0,-1,"HLT");
 RawBankSizes.HltSelReports=(500,0.0,100000.0,0,5,"HLT");
+RawBankSizes.HltTrackingReports=(100,0.0,10000.0,0,1024,"Unknown");
 RawBankSizes.HltVertexReports=(50,0.0,200.0,0,-1,"HLT");
 RawBankSizes.IT=(100,0.0,12000.0,0,80,"IT");
 RawBankSizes.ITError=(50,0.0,600.0,0,128,"IT");

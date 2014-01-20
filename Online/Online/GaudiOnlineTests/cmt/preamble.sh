@@ -4,15 +4,14 @@ killall GaudiOnlineExe.exe
 #killall gentest.exe
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
-export TAN_PORT=YES
-export TAN_NODE=$HOSTNAME
+export TAN_PORT=YES;
+export TAN_NODE=`hostname -s`;
 if test -z "${DIM_DNS_NODE}";
 then
-    export DIM_DNS_NODE=$HOSTNAME;
+    export DIM_DNS_NODE=`hostname -s`;
 fi;
 #
 export OPTS=$GAUDIONLINEROOT/options
-export GAUDIONLINE_OPTS=$GAUDIONLINEROOT/options
 
 export msg_svc=LHCb::FmcMessageSvc
 export msg_svc=MessageSvc
@@ -31,9 +30,9 @@ export Class2_task="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -tasktype=LHC
 export MINITERM='xterm  -ls -132 -geometry 132x12 -title '
 export BIGTERM='xterm  -ls -132 -geometry 132x65 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
-#export MINITERM=echo
 export HOST=`hostname -s`;
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`;
+export NODENAME=${HOST%%.*};
 if test "$NODENAME" = "storeio01";
 then
   ### Running on storeio01:
@@ -42,22 +41,25 @@ then
   export TAN_NODE=${DATAINTERFACE};
   echo "DATAINTERFACE ${DATAINTERFACE}";
 fi;
-if test -z "${PYOPTS}";
-  then
-    export PYOPTS=${GAUDIONLINEROOT}/python
-    export PYTHONPATH=${PYOPTS}:${PYTHONPATH}
-fi;
+#if test -z "${PYOPTS}";
+#  then
+#    export PYOPTS=${GAUDIONLINEROOT}/python
+#    export PYTHONPATH=${PYOPTS}:${PYTHONPATH}
+#fi;
 #
 start_py_task()
 {
-  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}_${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
-  ##bash -c "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+    $MINITERM ${1}@${HOST} -e "export UTGID=${NODENAME}_${1}; exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+}
+py_task()
+{
+    bash -c "export UTGID=${NODENAME}_${1}; exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
 }
 start_gaudi_task()
 {
-  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}_${1}; `which python` -c \"${2}\";"&
+  $MINITERM ${1}@${HOST} -e "UTGID=${NODENAME}_${1}; `which python` -c \"${2}\";"&
 }
 start_python_prompt()
 {
-  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}_${1} `which python` "&
+  $MINITERM ${1}@${HOST} -e "UTGID=${NODENAME}_${1} `which python` "&
 }
