@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-20 - Thomas Blake
+ - First commit of RD lines for 20r0p3 and 20r1p3
+
 ! 2014-01-20 - Mika Vesterinen (Semileptonics)
   - Updated Dictionaries for Semileptonics in Stripping20r{0,1}p3 to include new Vub module.
 
