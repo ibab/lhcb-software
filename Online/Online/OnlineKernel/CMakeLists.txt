@@ -28,6 +28,9 @@ gaudi_add_executable(onlinekernel_test        main/wt.cpp LINK_LIBRARIES ${CMAKE
 # for backward compatibility
 gaudi_alias(test.exe onlinekernel_test.exe)
 
+# Disable generation of ConfUserDB (must be done before gaudi_install_python_modules)
+set_directory_properties(PROPERTIES CONFIGURABLE_USER_MODULES None)
+
 gaudi_install_python_modules()
 
 gaudi_add_test(QMTest QMTEST)
