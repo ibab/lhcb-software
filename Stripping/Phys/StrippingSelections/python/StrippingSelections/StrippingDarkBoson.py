@@ -27,6 +27,9 @@ from StandardParticles import StdAllLooseGammaLL, StdAllLooseGammaDD, \
     StdAllLooseElectrons, StdLooseAllPhotons#, StdDiElectronFromTracks
 from Configurables import SubstitutePID
 from copy import deepcopy
+from CommonParticles.Utils import *
+from Configurables import DiElectronMaker,ProtoParticleCALOFilter
+
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -368,8 +371,6 @@ def filterEE(which,econf,xconf,inputs):
                      RequiredSelections=[sel])
 
 def makeEEdd(config):
-    from CommonParticles.Utils import *
-    from Configurables import DiElectronMaker,ProtoParticleCALOFilter
     eedd = DiElectronMaker('EEDDForDarkBoson')
     eedd.Particle = "KS0"
     selector = trackSelector(eedd, trackTypes=["Downstream"]) 
@@ -389,8 +390,6 @@ def makeEEdd(config):
                      RequiredSelections=[sel])
 
 def makeEESS():
-    from CommonParticles.Utils import *
-    from Configurables import DiElectronMaker,ProtoParticleCALOFilter
     eess = DiElectronMaker('EESSForDarkBoson')
     eess.Particle = "J/psi(1S)"
     selector = trackSelector(eess, trackTypes=["Long"]) 
