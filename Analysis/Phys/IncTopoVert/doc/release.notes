@@ -4,6 +4,9 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2013-12-20 - Marco Clemencic
  - Fixed CMake configuration.
 
