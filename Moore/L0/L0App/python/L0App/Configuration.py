@@ -22,7 +22,6 @@ class L0App(LHCbConfigurableUser):
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "ReplaceL0Banks" : False # remove existing banks first?
-        , 'Persistency' :  None #Root or Pool?
         , 'TCK' : '' #"Can be a L0TCK or a full TCK, it doesn't matter"
         , "outputFile" :       '' # output filename
         , 'WriteFSR'    :  True #copy FSRs as required
@@ -36,7 +35,6 @@ class L0App(LHCbConfigurableUser):
         , "DDDBtag" :  "Databse tag, default as set in DDDBConf for DataType"
         , "CondDBtag" : "Databse tag, default as set in DDDBConf for DataType"
         , "ReplaceL0Banks" : "Remove existing banks first?"
-        , 'Persistency' :  "Root or Pool?"
         , 'TCK' : "Can be a L0TCK or a full TCK, it doesn't matter"
         , "outputFile" :       'output filename, automatically selects MDF or InputCopyStream'
         , 'WriteFSR'    :  'copy FSRs as required'
@@ -71,13 +69,7 @@ class L0App(LHCbConfigurableUser):
         if not fname : return
         writer = None
         
-        #retrieve the persistency
-        persistency=None
-        if hasattr(self, "Persistency"):
-            if self.getProp("Persistency") is not None:
-                persistency=self.getProp("Persistency")
-        from GaudiConf import IOExtension, IOHelper
-        iox=IOExtension(persistency)
+        iox=IOExtension()
         
         #check the file type and use MDF writer or InputCopyStream
         if iox.detectFileType(fname) == 'MDF'  : 
@@ -92,14 +84,14 @@ class L0App(LHCbConfigurableUser):
         else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer")
-            IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
+            IOHelper().outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
     
     def __apply_configuration__(self):
         
         #print "WAAAAAAAAAAAAAHHHHHHHHHHHHHHHH"
         
         ############## Set other properties ###########
-        self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'Persistency', 'CondDBtag','DDDBtag'] )
+        self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'CondDBtag','DDDBtag'] )
         
         ApplicationMgr().AppName="L0App within Moore"
         
