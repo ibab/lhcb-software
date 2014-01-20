@@ -4,7 +4,6 @@ from Configurables import Moore
 ############# Moore config taken from printout at the top of the sequence ############
 
 Moore().UseDBSnapshot= False;
-Moore().Persistency= 'ROOT';
 Moore().outputFile= 'SwimmingTest.dst';
 Moore().DataType= '2012';
 Moore().DDDBtag= 'head-20120413'; #from RunDB

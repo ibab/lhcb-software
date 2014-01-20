@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-01-20 - Rob Lambert
+ - Remove the Persistency option
+
 ! 2014-01-17 - Marco Clemencic
  - Added CMake configuration file.
 

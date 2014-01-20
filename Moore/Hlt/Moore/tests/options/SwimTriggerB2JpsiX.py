@@ -23,7 +23,6 @@ Swimming().TCK = '0x00a10044'
 #Swimming().TCK = '0x00a30044'
 #For v14r11
 #Swimming().TCK = '0x00ab0046'
-Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
 #For v14r2
 #Swimming().OutputFile = 'SwimTrigDST_v14r2.dst'

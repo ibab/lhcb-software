@@ -119,7 +119,6 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
-        , 'Persistency' :  None #Root or Pool?
         , 'WriteFSR'    :  True #copy FSRs as required
         #########################################
         # Mandatory options to consider
@@ -200,7 +199,6 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          'Data type, can be 2010, 2012, etc.'
         , "DDDBtag" :          'database tag, default as set in DDDBConf for DataType'
         , "CondDBtag" :        'database tag, default as set in DDDBConf for DataType'
-        , 'Persistency' :      'Formerly used to decide between Pool and Root, not needed any longer'
         , 'WriteFSR'    :      'copy FSRs if required'
         #########################################
         # Mandatory options to consider
@@ -451,12 +449,8 @@ class Moore(LHCbConfigurableUser):
         if not files:
             return
         
-        persistency=None
-        if hasattr(self, "Persistency"):
-            if self.getProp("Persistency") is not None:
-                persistency=self.getProp("Persistency")
         from GaudiConf import IOExtension
-        IOExtension(persistency).inputFiles(files,clear=True)
+        IOExtension().inputFiles(files,clear=True)
         
     def _setRawEventLocations(self):
         """
@@ -498,11 +492,8 @@ class Moore(LHCbConfigurableUser):
         
         #retrieve the persistency
         persistency=None
-        if hasattr(self, "Persistency"):
-            if self.getProp("Persistency") is not None:
-                persistency=self.getProp("Persistency")
         from GaudiConf import IOExtension, IOHelper
-        iox=IOExtension(persistency)
+        iox=IOExtension()
         
         #check the file type and use MDF writer or InputCopyStream
         if iox.detectFileType(fname) == 'MDF'  : 
@@ -762,31 +753,10 @@ class Moore(LHCbConfigurableUser):
 
     def _definePersistency(self):
         
-        #configure persistency services
-        persistency=None
-
         #online, do the minimum possible, of only setting up MDF
         if self.getProp("RunOnline") :
-            persistency="MDF"
-        else:
-            #offline is more complicated, depending on the options
-            if hasattr(self, "Persistency"):
-                if self.getProp("Persistency") is not None:
-                    persistency=self.getProp("Persistency")
-            
-            
-            #could use IOExtension to determine the minimum persistency.
-            #but then GaudiCards would be problematic!
-            #from GaudiConf import IOExtension
-            #iox=IOExtension(persistency)
-            #minpersistency=iox.detectMinType([self.getProp("outputFile")]+self.getProp("inputFiles"))
-            #
-            #if minpersistency=="MDF":
-            #    persistency="MDF"
-        
-        if persistency is not None:
-            LHCbApp().setProp("Persistency",persistency)
-
+            LHCbApp().setProp("Persistency","MDF")
+    
     def _split(self, useTCK ): 
         if not self.getProp('Split') : return
         def hlt1_only() :

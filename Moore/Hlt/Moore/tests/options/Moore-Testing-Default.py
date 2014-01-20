@@ -10,7 +10,6 @@ from Configurables import Moore
 ############# Moore config taken from printout at the top of the sequence ############
 
 Moore().UseDBSnapshot= False;
-Moore().Persistency= 'ROOT';
 Moore().outputFile= 'Test.dst';
 Moore().DataType= '2012';
 Moore().DDDBtag= 'dddb-20120831'; #from RunDB
