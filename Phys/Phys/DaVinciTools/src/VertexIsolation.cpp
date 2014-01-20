@@ -224,7 +224,7 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
     m_particlesToVertex.pop_back() ;
     if ( !sc )
     {
-      Warning("Failed to fit vertex").ignore() ;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to fit vertex" << endmsg ;
     }
     else
     {
