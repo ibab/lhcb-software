@@ -3,7 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+
 - Configuration Changes
+   . Deprecate Persistency option (Rob Lambert)
    . Changed import of utDigi.opts to utDigi.py
    . import ttDigi.py and itDigi.py rather than their .opts equivalents 
    . line added to stop RichMaPmt from digitising spillover hits

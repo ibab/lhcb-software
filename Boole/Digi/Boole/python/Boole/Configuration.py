@@ -50,7 +50,6 @@ class Boole(LHCbConfigurableUser):
         ,"MoniSequence"        : []
         ,"FilterSequence"      : []
         ,"EnablePack"          : True
-        ,"Persistency"         : None
         ,"SiG4EnergyDeposit"   : False
         }
 
@@ -86,7 +85,6 @@ class Boole(LHCbConfigurableUser):
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
        ,'EnablePack'   : """ Turn on/off packing of the data (where appropriate/available) """
-       ,'Persistency'  : """ Overwrite the default persistency with something else. """
        ,'SiG4EnergyDeposit': """ Modelling of energy loss for silicon trackers from Geant4 or in-house."""
         }
 
@@ -108,10 +106,7 @@ class Boole(LHCbConfigurableUser):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["CondDBtag","DDDBtag","DataType"])
         LHCbApp().Simulation = True
-        if hasattr( self, "Persistency" ):
-            self.setOtherProps(LHCbApp(),["Persistency"])
-            self.setOtherProps(DigiConf(),["Persistency"])
-
+        
     def setLHCbAppDetectors(self):
         from Configurables import LHCbApp
         # If detectors set in LHCbApp then use those        
