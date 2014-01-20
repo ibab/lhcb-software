@@ -60,6 +60,7 @@ class LoKiCuts(object):
                 'PROBNNK'   : 'PROBNNK',
                 'PROBNNpi'  : 'PROBNNpi',
                 'PIDmu'     : 'PIDmu',
+                'HASVERTEX' : 'HASVERTEX',
                 }
     
     def __init__(self,cuts,config):

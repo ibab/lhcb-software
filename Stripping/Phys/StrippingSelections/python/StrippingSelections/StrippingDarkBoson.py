@@ -1,6 +1,6 @@
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 '''
-Dark Bosons (ALPs, inflatons, etc)
+Dark Bosons (ALPs, inflatons, WTFs, etc)
 
 Author: M. Williams
 '''
@@ -345,7 +345,7 @@ class DarkBosonConf(LineBuilder):
 def filterInputs(which,conf,inputs):
     keys = [key.split('_')[0] for key in conf.keys()]    
     code = LoKiCuts(keys,conf).code()
-    code = LoKiCuts.combine(['INMUON',code])
+    #code = LoKiCuts.combine(['INMUON',code])
     #print "filterInputs: ", which, code
     return Selection(which+'DarkBosonFilter',Algorithm=FilterDesktop(Code=code),
                      RequiredSelections=inputs)
@@ -357,7 +357,7 @@ def filterEE(which,econf,xconf,inputs):
             % econf['MIPCHI2DV_MIN']
     code += " & (MINTREE('e+'==ABSID,PT) > %s)" % econf['PT_MIN']
     code += " & (MAXTREE('e+'==ABSID,TRGHP) < %s)" % econf['TRGHP_MAX']
-    code = LoKiCuts.combine([code,LoKiCuts(['BPVVDCHI2','VCHI2DOF'],
+    code = LoKiCuts.combine([code,LoKiCuts(['HASVERTEX','BPVVDCHI2','VCHI2DOF'],
                                            xconf).code()])
     #print "filterEE: ", code
     sel = Selection(which+'FilterEEDarkBosonFilter',
@@ -384,7 +384,7 @@ def makeEEdd(config):
     eedd.ElectronPIDcut = config['PID']['E']['PIDe_MIN']
     
     sel = Selection('EEDDDarkBosonSel',Algorithm=eedd)
-    code = LoKiCuts(['BPVVDCHI2','VCHI2DOF'],config['V']).code()
+    code = LoKiCuts(['HASVERTEX','BPVVDCHI2','VCHI2DOF'],config['V']).code()
     #print 'makeEEdd', code
     return Selection('FilterEEDDDarkBoson',Algorithm=FilterDesktop(Code=code),
                      RequiredSelections=[sel])
@@ -414,7 +414,7 @@ def makeX(which,config,dec,inputs):
     if(which.find('DD') < 0): 
         comboCuts += " & (ACUTDOCA(0.2*mm,''))"
     comboCuts += "& (ADOCACHI2CUT(25,''))"
-    momCuts = LoKiCuts(['BPVVDCHI2','VCHI2DOF'],config).code()
+    momCuts = LoKiCuts(['HASVERTEX','BPVVDCHI2','VCHI2DOF'],config).code()
     momCuts = LoKiCuts.combine(['(BPVDIRA > 0)',momCuts])
     x = CombineParticles(DecayDescriptors=[dec],
                          CombinationCut=comboCuts,MotherCut=momCuts)
@@ -426,7 +426,7 @@ def makeJ(config,inputs):
     comboCuts = "(ADAMASS('J/psi(1S)') < %s)" % config['ADAMASS_MAX']    
     comboCuts += " & (ACUTDOCA(0.2*mm,''))"
     comboCuts += "& (ADOCACHI2CUT(25,''))"
-    momCuts = LoKiCuts(['VCHI2DOF'],config).code()
+    momCuts = LoKiCuts(['HASVERTEX','VCHI2DOF'],config).code()
     momCuts = LoKiCuts.combine(['(BPVDIRA > 0)',momCuts])
     j = CombineParticles(DecayDescriptors=['J/psi(1S) -> mu+ mu-'],
                          CombinationCut=comboCuts,MotherCut=momCuts)
@@ -436,7 +436,7 @@ def makeJ(config,inputs):
 
 def makeRho(inputs):
     comboCuts = "(AM > 550*MeV) & (AM < 1050*MeV) & ADOCACHI2CUT(25,'')"
-    momCuts = "(VFASPF(VCHI2/VDOF)<10) & (MIPCHI2DV(PRIMARY)> 16)"
+    momCuts = "(VFASPF(VCHI2/VDOF)<10) & (MIPCHI2DV(PRIMARY)> 16) & HASVERTEX"
     momCuts += " & (M > 600*MeV) & (M < 1000*MeV)"
     rho = CombineParticles(DecayDescriptors=['rho(770)0 -> pi+ pi-'],
                            CombinationCut=comboCuts,MotherCut=momCuts)
@@ -448,7 +448,7 @@ def makeRho(inputs):
 
 def makeB(name,decays,inputs,config):
     comboCuts = LoKiCuts(['AM','SUMPT'],config).code()
-    momCuts = LoKiCuts(['PT','VCHI2DOF','BPVLTIME','BPVIPCHI2'],config).code()
+    momCuts = LoKiCuts(['HASVERTEX','PT','VCHI2DOF','BPVLTIME','BPVIPCHI2'],config).code()
     cuts = '(BPVDIRA > 0) & '
     cuts += '(NINGENERATION(ISBASIC & (MIPCHI2DV(PRIMARY) < %s),1)==0)' \
             % config['HAD_MINIPCHI2_MIN']
