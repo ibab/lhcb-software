@@ -3,6 +3,10 @@
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
+!2014-01-20 - Sajan Easo
+ - Added two options files TargetMaterialGun.py for Target studies,
+   ParticleGunRich.py for RICH studies
+
 
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
