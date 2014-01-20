@@ -5074,8 +5074,12 @@ def _rf_print_ ( rfile , opts = '') :
     #
     return rfile.GetName()
     
-ROOT.TFile.__repr__ = _rf_print_
-    
+ROOT.TFile.__repr__    = _rf_print_
+
+ROOT.TFile.name        = ROOT.TFile.GetName
+ROOT.TFile.__getitem__ = ROOT.TFile.Get 
+ROOT.TFile.__getattr__ = ROOT.TFile.Get 
+
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
 # =============================================================================
