@@ -51,9 +51,9 @@ struct ExampleTracks {
     tr->addToLhcbIDs(LHCbID(17));
     m_tracks.add(tr);
 
-    vector<unsigned int> bank = {3,1,3,5,
-				 3,2,4,6,
-				 4,7,11,13,17};
+    vector<unsigned int> bank = {3,  1,3,5,
+				 3,  2,4,6,
+				 4,  7,11,13,17};
     m_rawbank = bank;
   }
 
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(encode)
 BOOST_AUTO_TEST_CASE(decode)
 {
   Tracks tracks;
-  BOOST_CHECK(decodeTracks(m_rawbank,&tracks) == m_tracks.size());
+  BOOST_CHECK(decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks) == m_tracks.size());
   BOOST_CHECK(tracks.size() == m_tracks.size() );
   BOOST_CHECK(equalTracks(&tracks,&m_tracks));
 }
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(en_de_code)
   vector<unsigned int> rawBank;
   encodeTracks(&m_tracks,rawBank);
   Tracks tracks;
-  decodeTracks(m_rawbank,&tracks);
+  decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks);
   BOOST_CHECK(equalTracks(&tracks,&m_tracks));
 }
 

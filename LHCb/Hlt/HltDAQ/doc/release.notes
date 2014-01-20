@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-01-20 - Sebastian Neubert
+ - New signature for the decodeTracks function: 
+   now it takes a pointer to the rawBank data as delivered by RawBank::data()
+ - Updated unit tests
+ - HltTrackingDecoder implemented.
+
 ! 2014-01-17 - Marco Clemencic
  - Updated CMake configuration.
  - Minor fix to HltTrackingCoder.cpp.

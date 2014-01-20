@@ -25,11 +25,14 @@
  */
 
 void
-encodeTracks(const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBank);
+encodeTracks(const LHCb::Tracks* tracks,                 // Input track container
+	     std::vector<unsigned int>& rawBank);        // Output RawBank body
 
 unsigned int
 // returns number of decoded tracks
-decodeTracks(const std::vector<unsigned int>& rawBank, LHCb::Tracks* tracks);
+decodeTracks(unsigned int* rawBank,                      // Input pointer to rawBank body
+	     unsigned int nentries,                      // Input number of entries in rawBank
+	     LHCb::Tracks* tracks);                      // Output track container
 
 
 #endif // HLTTRACKINGCODER_H 

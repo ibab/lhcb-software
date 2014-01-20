@@ -21,6 +21,9 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltTrackingDecoder
 //
+// The actual decoding of tracks is delegated 
+// to the functions in HltTrackingCoder.
+//
 // 2014-01-16 : Sebastian Neubert
 //-----------------------------------------------------------------------------
 
@@ -115,63 +118,20 @@ StatusCode HltTrackingDecoder::execute() {
     return Warning( " No HltTrackingReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
   }
 
-  // Check version number to make sure we are on the same page here (this should go to the decoder function? 
+  // Check version number to make sure we are on the same page here (this should go to the decoder function?)
    const RawBank* hltTrackingRawBank0 = *(hltTrackingRawBanks.begin());
    if( hltTrackingRawBank0->version() > kVersionNumber ){
      Warning( " HltTrackingReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
    }
 
    // -------------------------------------------------------
-   // do the actual decoding 
+   // do the actual decoding: see HltTrackingCoder.cpp
    // -------------------------------------------------------
 
-   //for_each(hltTrackingRawBanks.begin(),hltTrackingRawBanks.end(),[](RawBank* bank){ decodeTracks(bank,outputTracks);});
-   //for(RawBank* bank : hltTrackingRawBanks){
-   //  decodeTracks(bank->,outputTracks);
-   // }
+   for(RawBank* bank : hltTrackingRawBanks){
+     decodeTracks(bank->data(),bank->size(),outputTracks);
+   }
 
-
-
-  // if ( msgLevel(MSG::VERBOSE) ){
-
-  //   // print created bank and subbanks inside
-  //   verbose() << hltTrackingBank << endmsg;
-    
-  //   verbose() << HltSelRepRBHits( hltTrackingBank.subBankFromID( HltSelRepRBEnums::kHitsID ) ) << endmsg;
-  //   verbose() << HltSelRepRBObjTyp( hltTrackingBank.subBankFromID( HltSelRepRBEnums::kObjTypID ) ) << endmsg;
-  //   verbose() << HltSelRepRBSubstr( hltTrackingBank.subBankFromID( HltSelRepRBEnums::kSubstrID ) ) << endmsg;
-  //   verbose() << HltSelRepRBStdInfo( hltTrackingBank.subBankFromID( HltSelRepRBEnums::kStdInfoID ) ) << endmsg;
-  //   verbose() << HltSelRepRBExtraInfo( hltTrackingBank.subBankFromID( HltSelRepRBEnums::kExtraInfoID ) ) << endmsg;
-
-  // } 
-
-
-
-  // if ( msgLevel(MSG::VERBOSE) ){
-
-  //   verbose() << " ======= HltTracking size= " << outputSummary->size() << endmsg;  
-  //   verbose() << *outputSummary << endmsg;
-
-  //   verbose() << " ======= HltObjectSummary container size= " << objectSummaries->size() << endmsg;
-  //   for( HltObjectSummary::Container::const_iterator ppHos=objectSummaries->begin();
-  //        ppHos!=objectSummaries->end();++ppHos){
-  //     const HltObjectSummary* pHos=*ppHos;    
-  //     verbose() << " key " << pHos->index();
-  //     std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
-  //     if( selby.size() ){
-  //       verbose() << " selectedAsCandidateBy= ";       
-  //       for( std::vector<std::string>::const_iterator i=selby.begin();i!=selby.end();++i){
-  //         verbose() << *i << " ";
-  //       }
-  //       std::pair<std::string,int> pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
-  //       if( pvInfo.second > -1 ){
-  //         verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
-  //       }
-  //     }     
-  //     verbose() << *pHos << endmsg;    
-  //   }
-    
-  // }
 
  return StatusCode::SUCCESS;
 }
@@ -189,10 +149,10 @@ StatusCode HltTrackingDecoder::finalize() {
 //=============================================================================
     
   
-float HltTrackingDecoder::floatFromInt(unsigned int i)
-{
-        union IntFloat { unsigned int mInt; float mFloat; };
-        IntFloat a; a.mInt=i;
-        return a.mFloat;
-}
+// float HltTrackingDecoder::floatFromInt(unsigned int i)
+// {
+//         union IntFloat { unsigned int mInt; float mFloat; };
+//         IntFloat a; a.mInt=i;
+//         return a.mFloat;
+// }
 

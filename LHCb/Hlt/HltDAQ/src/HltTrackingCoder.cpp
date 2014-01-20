@@ -2,8 +2,9 @@
 #include <functional>
 #include <algorithm>
 
+
 // local
-#include "HltTrackingCoder.h"
+#include "HltTrackingCoder.h" 
 
 using namespace LHCb;
 
@@ -21,6 +22,7 @@ using namespace LHCb;
 //  (nLhHCbIDs, ID0, ID1, ... IDn)
 //
 //  tracks are just concatenated
+//  The RawBank is terminated with an entry nLHCbIDS=0 
 //
 // 20014-01-14 : Sebastian Neubert
 //-----------------------------------------------------------------------------
@@ -45,20 +47,25 @@ encodeTracks(const LHCb::Tracks* tracks,
 
 unsigned int
 // returns number of decoded tracks
-decodeTracks(const std::vector<unsigned int>& rawBank,
+decodeTracks(unsigned int* rawBankData,
+	     unsigned int nentries,
 	     LHCb::Tracks* tracks){
-
-  std::vector<unsigned int>::const_iterator rawit=rawBank.begin();
-  while(rawit!=rawBank.end()){
+  // due to the way the RawBank presents ist data we have 
+  // to loop over the data in the old fashioned way
+  // so we use a pointer"iterator"
+  unsigned int* rawit=rawBankData;
+  unsigned int k=0;
+  while(k<nentries){
+    // read number of IDs in track
+    unsigned int nid= rawit[k];
     // Start a new track
     Track* track=new Track();
-    // read number of IDs in track
-    unsigned int nid= *rawit;
     // advance iterator to point at first LHCbID
-    rawit++;
+    //rawit+=sizeof(unsigned int);
+    ++k;
     for(unsigned int i=0;i<nid;i++){
-      track->addToLhcbIDs(LHCbID(*rawit));
-      rawit++;
+      track->addToLhcbIDs(LHCbID(rawit[k]));
+      ++k; //rawit+=sizeof(unsigned int);
     }
     tracks->add(track);
 
