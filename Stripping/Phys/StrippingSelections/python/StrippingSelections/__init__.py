@@ -221,6 +221,7 @@ import StrippingVeryDetachedJPsiLines
 import StrippingInflaton2MuMuLine
 import StrippingTau23MuLines
 import StrippingLb2pMuNu
+import StrippingLb2pMuNuVub
 
 import StrippingLFVLines
 import StrippingBu2K1MuMu
