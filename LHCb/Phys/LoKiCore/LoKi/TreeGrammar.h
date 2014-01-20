@@ -67,6 +67,11 @@ namespace Decays
         {
           res = Tree_(value, stable);
         }    
+
+        // Trying to fix %= in semantic action
+        void operator()(Tree_& left, Tree_& right) const {
+          left %= right;
+        }
         // ====================================================================
       };
       // ======================================================================
@@ -128,7 +133,7 @@ namespace Decays
           >> expression[qi::_val += qi::_1] // the first child (mandatory!) 
           >> *( expression[qi::_val += qi::_1] 
                 |                           // children 
-                (qi::lit("{") >> expression [qi::_val %= qi::_1] >> "}" ) 
+                (qi::lit("{") >> expression [op(qi::_val, qi::_1)] >> "}" ) 
                 )  // optional
           >> -(qi::lit("...")[qi::_val += true]) // inclusive 
           >> ')' ;   
