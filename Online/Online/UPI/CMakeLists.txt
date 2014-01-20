@@ -19,4 +19,7 @@ set_property(TARGET UPIR APPEND PROPERTY COMPILE_DEFINITIONS REMOTE)
 gaudi_add_dictionary(UPI dict/dictionary.h dict/dictionary.xml
                      LINK_LIBRARIES UPI)
 
+# Disable generation of ConfUserDB (must be done before gaudi_install_python_modules)
+set_directory_properties(PROPERTIES CONFIGURABLE_USER_MODULES None)
+
 gaudi_install_python_modules()

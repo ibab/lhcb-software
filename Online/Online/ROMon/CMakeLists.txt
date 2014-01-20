@@ -19,6 +19,9 @@ gaudi_add_library(XMLRPC rpc/*.cpp
                   NO_PUBLIC_HEADERS
                   LINK_LIBRARIES OnlineKernel)
 
+# Disable generation of ConfUserDB (must be done before gaudi_install_python_modules)
+set_directory_properties(PROPERTIES CONFIGURABLE_USER_MODULES None)
+
 gaudi_install_python_modules()
 
 gaudi_env(SET ROMONDATA \${ROMONROOT}/xml)

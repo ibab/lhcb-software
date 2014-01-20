@@ -10,6 +10,8 @@ gaudi_depends_on_subdirs(DAQ/MDF
 find_package(ROOT COMPONENTS Reflex)
 find_package(Boost)
 
+gaudi_install_headers(GaudiSerialize)
+
 include_directories(${ROOT_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 reflex_generate_dictionary(GaudiSerialize
                            dict/Serialize_dict.h dict/Serialize_dict.xml)

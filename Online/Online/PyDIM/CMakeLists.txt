@@ -15,4 +15,7 @@ gaudi_add_python_module(dimc dimmodule.cpp
 gaudi_add_python_module(dimcpp dimcppmodule.cpp
                         LINK_LIBRARIES dim)
 
+# Disable generation of ConfUserDB (must be done before gaudi_install_python_modules)
+set_directory_properties(PROPERTIES CONFIGURABLE_USER_MODULES None)
+
 gaudi_install_python_modules()
