@@ -2,6 +2,7 @@
 ## Line config dictionaries for Charmless WG
 ##
 
+from GaudiKernel.SystemOfUnits import *
 
 ##
 ## StrippingB2HHBDT.py
