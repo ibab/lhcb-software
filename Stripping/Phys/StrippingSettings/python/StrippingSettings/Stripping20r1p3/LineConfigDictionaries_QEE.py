@@ -155,8 +155,7 @@ LowMult = {
        'StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_K3Pi_line',
        'StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPiPi0R_line',
        'StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiLL_line',
-       'StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiDD_line  ',     
-      ]
+       'StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiDD_line']
      }
     }
 

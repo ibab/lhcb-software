@@ -26,10 +26,7 @@ B2HHBDT = {
                       'BDTCut'          : -0.3,
                       'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHBDTLine',
-                                   ''],
-                      'BhadronCompleteEvent' : []
-                    }
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHBDTLine']}
     }
 
 ##
@@ -76,9 +73,7 @@ Bu2rho0rhoPlus = {
                       "PrescaleBu2rho0rhoPlusMerged"   : 1.0
                     },
     'STREAMS'     : { 'Bhadron' : ['StrippingBu2rho0rhoPlusMergedLine',
-                                   'StrippingBu2rho0rhoPlusResolvedLine'],
-                      'BhadronCompleteEvent' : []
-                    }
+                                   'StrippingBu2rho0rhoPlusResolvedLine']}
     }
 
 ##
@@ -97,10 +92,7 @@ Lb2PhipK = {
                       'BsVertexCHI2pDOF'    : 15,       # adimensional
                       'BsMassWindow'        : 300,      # MeV/cc
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingLb2PhipKLine',
-                                   ''],
-                      'BhadronCompleteEvent' : []
-                    }
+    'STREAMS'     : { 'Bhadron' : ['StrippingLb2PhipKLine']}
     }
 
 ##
@@ -182,15 +174,13 @@ Bc2XK = {
                       # =========================================================================
                     },
     'STREAMS'     : { 'Bhadron' : ['StrippingBc2KstKBc2XK',
-                                   'StrippingBc2PhiKBc2XK'],
-                      'BhadronCompleteEvent' : []
-                    }
+                                   'StrippingBc2PhiKBc2XK']}
     }
 
 ##
 ## StrippingB2pphh.py
 ##
-B2pph = {
+B2pphh = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'B2pphhConf',
     'CONFIG'      : { 'MaxTrSIZE'          : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
@@ -226,11 +216,9 @@ B2pph = {
                       'Prescalepppipi'     : 1.0,
                       'Prescaleppkpi'      : 1.0
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2pph_kk',
-                                   'StrippingB2pphh_kpi',
-                                   'StrippingB2pphh_pipi'],
-                      'BhadronCompleteEvent' : []
-                    }
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2pphh_kkLine',
+                                   'StrippingB2pphh_kpiLine',
+                                   'StrippingB2pphh_pipiLine']}
     }
 
 ##
@@ -268,9 +256,7 @@ B2TwoBaryons = {
                                               {'Type' : 'VertexIsolation'}
                                             ]
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2TwoBaryonsB2PPbarLine'],
-                      'BhadronCompleteEvent' : []
-                    }
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2TwoBaryonsB2PPbarLine']}
     }
 
 
