@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "GaudiKernel/System.h"
+
 #include "MVADictTools/TMVATransform.h"
 
 ///-------- Basic Test: can we instantiate an object and call a method? ---
@@ -12,7 +14,9 @@ bool inittest()
   TMVATransform tmva;
   TMVATransform::optmap options;
   options["Name"]="test";
-  options["XMLFile"]="../../options/TestPhi2KK.xml";
+  
+  options["XMLFile"] = System::getEnv("MVADICTTOOLSROOT")
+                         + "/tests/qmtest/../../options/TestPhi2KK.xml";
   return tmva.Init(options,std::cout);
 }
  

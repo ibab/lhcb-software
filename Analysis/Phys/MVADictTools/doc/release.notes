@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-01-20 - Marco Clemencic
+ - Modified unit test to work from an arbitrary directory.
+
 !========================= MVADictTools v1r2p1 2013-12-18 =========================
 
 ! 2013-11-15 - Marco Clemencic
