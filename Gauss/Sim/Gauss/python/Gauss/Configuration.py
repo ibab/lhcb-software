@@ -108,7 +108,6 @@ class Gauss(LHCbConfigurableUser):
         ,"EnablePack"        : True
         ,"DataPackingChecks" : True
         ,"WriteFSR"          : True
-        ,"Persistency"       : None
         ,"Debug"             : False
         ,"BeamPipe" : "BeamPipeOn" # _beamPipeSwitch = 1
         ,"ReplaceWithGDML"   : [ { "volsToReplace" : [], "gdmlFile" : "" } ]
@@ -133,7 +132,6 @@ class Gauss(LHCbConfigurableUser):
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
        ,'DataPackingChecks' : """ Flag to turn on or off the running of some test algorithms to check the quality of the data packing """
        ,"WriteFSR"       : """Add file summary record, default True"""
-       ,"Persistency"    : """ROOT or POOL persistency, overwrite the default"""
        ,"BeamPipe"       : """Switch for beampipe definition; BeamPipeOn: On everywhere, BeamPipeOff: Off everywhere, BeamPipeInDet: Only in named detectors """
        ,"ReplaceWithGDML": """Replace a list of specified volumes with GDML description from file provided """
        }
@@ -1705,19 +1703,6 @@ class Gauss(LHCbConfigurableUser):
 
 
     ##
-    def definePersistency(self):
-        """
-        ROOT or POOL propagated to LHCbApp
-        """
-        
-        persistency=None
-        
-        if hasattr( self, "Persistency" ):
-            persistency=self.getProp("Persistency")
-
-        if persistency is not None:
-            LHCbApp().setProp("Persistency",persistency)
-
 
 #"""
 #
@@ -2070,11 +2055,7 @@ class Gauss(LHCbConfigurableUser):
         else:
             outputFile=self.outputName() + fileExtension
         
-        persistency=None
-        
-        if hasattr( self, "Persistency" ):
-            persistency=self.getProp("Persistency")
-        IOHelper(persistency,persistency).outStream( outputFile, simWriter, self.getProp("WriteFSR") )
+        IOHelper().outStream( outputFile, simWriter, self.getProp("WriteFSR") )
         
         simWriter.RequireAlgs.append( 'GaussSequencer' )
         if not FileCatalog().isPropertySet("Catalogs"):
@@ -3183,10 +3164,7 @@ class Gauss(LHCbConfigurableUser):
         
         #propagate info to SimConf
         self.propagateSimConf()
-
-        #Setup persistency services
-        self.definePersistency()
-
+        
         #Construct Crossing List
         crossingList = self.defineCrossingList()
 

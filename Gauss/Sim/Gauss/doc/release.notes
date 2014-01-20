@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-20-01 - Rob Lambert
+ - Suppress Persistency option, not needed any longer.
+
 !========================== Gauss v46r6 2013-02-03 ===========================
 ! 2013-12-03 - Gloria Corti
  - Insert use of LHAPDFSets to fix here the major version
