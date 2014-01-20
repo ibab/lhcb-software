@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to Configuration.py (Rob Lambert)
+  . remove Persistency option
+
 - Changes to Configuration.py
   . Remove never used UpgradeDets slot
   . Clean up propagation to LHCbApp of Detectors slot
