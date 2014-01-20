@@ -46,7 +46,7 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   min->SetMaxFunctionCalls(m_max_finder_max_iteration); // for Minuit/Minuit2
   min->SetMaxIterations(10000);  // for GSL
   min->SetTolerance(m_max_finder_min_step);
-  min->SetPrintLevel(0);
+  min->SetPrintLevel(-1);
 
   // VfForMax Vf(this);
 
@@ -64,8 +64,26 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   min->SetVariable(1,"y",variable[1], step[1]);
   min->SetVariable(2,"z",variable[2], step[2]);
 
+  // temp - to limits minuit2 printouts - waiting for a real fix
+  // Minuit2:mini seems to sporadically send mysterious std messages which we
+  // cannot control... So forcibly intercept them all here and send to /dev/null
+  int original_stdout(0), original_stderr(0);
+  original_stdout = dup(fileno(stdout));
+  fflush(stdout);
+  freopen("/dev/null","w",stdout);
+  original_stderr = dup(fileno(stderr));
+  fflush(stderr);
+  freopen("/dev/null","w",stderr);
+
   min->Minimize();
 
+// put std back to normal
+  fflush(stdout);
+  dup2(original_stdout,fileno(stdout));
+  close(original_stdout);
+  fflush(stderr);
+  dup2(original_stderr,fileno(stderr));
+  close(original_stderr);
 
   const double *xs = min->X();
   PMax.SetXYZ(xs[0],xs[1],xs[2]);

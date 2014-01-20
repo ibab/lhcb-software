@@ -4,8 +4,15 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+
+! 2014-01-20 - Julien Cogan
+ - Fix warnings
+
 ! 2014-01-20 - Marco Clemencic
  - Fixed CMake configuration.
+
+! 2014-01-16 - Julien Cogan
+ - Add new algorithm to select Tau->3pi for the stripping
 
 ! 2013-12-20 - Marco Clemencic
  - Fixed CMake configuration.

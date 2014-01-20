@@ -136,7 +136,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::XYZVector  imp;
     StatusCode Sc_m_Geom = m_Geom->distance((*it),vv,imp);
     if(Sc_m_Geom == StatusCode::FAILURE  || imp.X()!=imp.X()) {
-      warning()<<"m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()="<<imp.X()<<endmsg;
+      Warning("m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()=",StatusCode::SUCCESS,20);
       continue;
     }
 
@@ -152,7 +152,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::SymMatrix3x3 errPos3D;
     StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
     if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-      warning()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
+      Warning("m_Trans->position return failed status code or NaN!  errPos3D[0][0]=",StatusCode::SUCCESS,20);
       continue;
     }
 
@@ -187,9 +187,10 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
 
 
     //Invert the 2-D Covariance Matrix
+
     bool isInv = errPos.Invert();
     if (!isInv || errPos[0][0]!=errPos[0][0]) {
-      warning()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
+      Warning("Covariance matrice could not be inverted !!  errPos[0][0]=",StatusCode::SUCCESS,20);
       continue;
     }
     //debug()<<" Covariance Matrix :"<<errPos<<endmsg;
@@ -201,23 +202,21 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
 
 
     if(CpC<0){
-      warning()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"
-               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<errPos<<endmsg;
+      debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"       <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<endmsg;
       continue;
     }
     if(CpC>40) {
-      //warning()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
+      //debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
       continue;
     }
 
     double tmpSumGaussT = exp(-0.5*CpC);
-
+    
     if(tmpSumGaussT != tmpSumGaussT) {
-      warning()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC
-               <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
-
+      debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC     <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
+      
       continue;
-
+      
     }
 
     SumGaussT += exp(-0.5*CpC);
@@ -253,7 +252,7 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     Gaudi::XYZVector  imp;
     StatusCode Sc_m_Geom = m_Geom->distance((*it),vv,imp);
     if(Sc_m_Geom == StatusCode::FAILURE  || imp.X()!=imp.X()) {
-      warning()<<"m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()="<<imp.X()  <<endmsg;
+      debug()<<"m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()="<<imp.X()  <<endmsg;
       continue;
     }
 
@@ -262,7 +261,7 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     Gaudi::SymMatrix3x3 errPos3D;
     StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
     if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-      warning()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
+      debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
       continue;
     }
 
@@ -277,7 +276,7 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     //Invert the 2-D Covariance Matrix
     bool isInv = errPos.Invert();
     if (!isInv || errPos[0][0]!=errPos[0][0]) {
-      warning()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
+      debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
       continue;
     }
 
@@ -286,20 +285,18 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     CpC = ROOT::Math::Similarity(errPos,Simp);
 
     if(CpC<0){
-      warning()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"
-               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<errPos<<endmsg;
+      debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<errPos<<endmsg;
       continue;
     }
     if(CpC>40) {
-      //warning()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
+      debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
       continue;
     }
 
     double tmpSumGaussT = exp(-0.5*CpC);
 
     if(tmpSumGaussT != tmpSumGaussT) {
-      warning()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC
-               <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
+      debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC              <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
 
       continue;
 
@@ -579,7 +576,7 @@ void VertexFunctionTool::setParam(TString name, double value){
   else if (name=="ResolverCut") m_resolver_cut =value;
   else if (name=="ResolverMinStep") m_resolver_min_step =value;
   else if (name=="ResolverMaxIteration") m_resolver_max_iteration =value;
-  else warning()<<name<< " is not a valid parameter name"<<endmsg;
+  //  else Warning()<<name<< " is not a valid parameter name"<<endmsg;
   debug()<<name<< " set to "<<value<<endmsg;
 
 }
@@ -697,7 +694,7 @@ Gaudi::XYZVector VertexFunctionTool::computeGradientAt(Gaudi::XYZPoint & P) {
       Gaudi::SymMatrix3x3 errPos3D;
       StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
       if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-        warning()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
+        debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
         continue;
       }
 
@@ -727,7 +724,7 @@ Gaudi::XYZVector VertexFunctionTool::computeGradientAt(Gaudi::XYZPoint & P) {
       Simp[1]=imp.Y();
       bool isInv = errPos.Invert();
       if (!isInv || errPos[0][0]!=errPos[0][0]) {
-        warning()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
+        debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
         continue;
       }
       double CpC = ROOT::Math::Similarity(errPos,Simp);

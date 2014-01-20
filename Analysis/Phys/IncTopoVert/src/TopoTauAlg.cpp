@@ -122,7 +122,7 @@ StatusCode TopoTauAlg::execute() {
       StatusCode sc2 = m_Geom->distance((it_ptrk),(*iv),imp,impchi2);
       if (sc2.isFailure() ) 
       {    
-      warning()<<"m_Geom problems"<<endreq;    
+      Warning("m_Geom problems",StatusCode::SUCCESS,20);    
       continue;
       }
       if (impchi2<ipsall) {
@@ -160,7 +160,7 @@ StatusCode TopoTauAlg::execute() {
       StatusCode sc2 = m_Geom->distance((it_ptrk),(*iv),imp,impchi2);
       if (sc2.isFailure() ) 
       {    
-      warning()<<"m_Geom problems"<<endreq;    
+      Warning("m_Geom problems",StatusCode::SUCCESS,20);    
       continue;
       }
       if (impchi2<ipsall) {

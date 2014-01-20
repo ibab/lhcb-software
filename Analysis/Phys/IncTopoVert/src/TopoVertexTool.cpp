@@ -117,7 +117,7 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks
   std::vector<const LHCb::Track*>  vf_tracks ;
   getVertexFunctionTracks(vf_tracks);
   if (vf_tracks.size()==0) {
-    warning()<<"The Vertex Function has no tracks!"<<endmsg;
+    Warning("The Vertex Function has no tracks!",StatusCode::SUCCESS,20);
   }
 
   cleanUpResult();
@@ -308,7 +308,7 @@ StatusCode TopoVertexTool::step5()
     LHCb::RecVertex * vertex = m_trackVertexer->fit(tracks);
 
     if (vertex)  m_vertices.push_back(vertex);
-    else warning() << "TopoVertexTool:: fit didn't converge" <<endmsg;
+    else Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20); 
   }
   return StatusCode::SUCCESS;
 }
