@@ -35,8 +35,9 @@
 
 #include "RichFlatFormatSmartIDData.icpp"
 
-using namespace Rich::DAQ;
-
+namespace Rich {
+  namespace DAQ {
+    
 // LHCb1 types
 template class HPDDataBankImp<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer> ;
 template class RichNonZeroSuppDataV1::RichNonZeroSuppData<RichDAQ_LHCb1::LHCb1,RichDAQ_LHCb1::Header,RichDAQ_LHCb1::Footer>;
@@ -69,3 +70,6 @@ template class RichZeroSuppDataV4::RichZeroSuppData<RichDAQ_LHCb5::LHCb5,RichDAQ
 // FlatList formats
 template class HPDDataBankImp<RichDAQ_FlatList::FlatList,RichDAQ_FlatList::Header,RichDAQ_FlatList::Footer> ;
 template class RichFlatFormatSmartIDData<RichDAQ_FlatList::FlatList,RichDAQ_FlatList::Header,RichDAQ_FlatList::Footer>;
+
+  } // namespace DAQ
+} // namespace Rich

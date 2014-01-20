@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Marco Clemencic
+ - Fixed compilation with Clang 3.3.
+
 !========================= RichDAQ v3r41 2013-06-03 =========================
 ! 2013-05-20 - Chris Jones
  - Import Rich::DAQ::RawBufferToRichDigitsAlg from Rich/RichAlgorithms
