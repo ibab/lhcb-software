@@ -31,28 +31,28 @@ Lb->p mu nu exclusive reconstruction
 ## 
 
 """
-Lb->p mu nu exclusive reconstruction. 
+  Lb->p mu nu exclusive reconstruction. 
 
-Stripping lines for the charmless semileptonic decay Lambda_b -> p mu nu.
+  Stripping lines for the charmless semileptonic decay Lambda_b -> p mu nu.
 
-The lines will lead to a  measurement of the differential branching
-of Lb -> p mu nu as a function of q^2. 
+  The lines will lead to a  measurement of the differential branching
+  of Lb -> p mu nu as a function of q^2. 
 
-This together with form factor predictions from either light cone
-sum rules or lattice QCD will allow an exclusive determination of |Vub|.
+  This together with form factor predictions from either light cone
+  sum rules or lattice QCD will allow an exclusive determination of |Vub|.
  
-Four lines are included:
-One pair of which is optimised for low q^2 values where predictions from
-light cone sum rules are most accurate.  This pair is further broken down
-into 2 lines for opposite sign and same sign (SS) combinations.
-  
-The other pair is optimised for high  q^2 values where predictions from
-lattice QCD are most accurate.  Again this pair is further broken down
-into 2 lines for opposite sign and same sign (SS) combinations.
+  Three lines are included:
+  Two of which strip the opposite sign (right sign) proton and muon and combinations.
+  One of which has no prescale and strips protons and muons with a corrected mass >
+  4 GeV.  The other line is prescaled by a factor of 0.5 and strips < 4 GeV in corrected
+  mass.  This exploits the fact that the corrected mass for Lb->pmunu peaks at the Lambda_b
+  mass.  The final line strips same sign proton and muon cominations over the whole corrected 
+  mass region.  This will be ussed to extract shapes for the combinatorial background.
 
-Stripping XX, with requirements that the
-rate <0.05% and timing <0.5ms/evt.
-Last modification $Date: 2013-March-28 $
+  Stripping XX, with requirements that the
+  rate <0.05% and timing <0.5ms/evt.
+
+  Last modification $Date: 2014-January-19 $
                by $Author: William $
 """
 
