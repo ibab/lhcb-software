@@ -4,6 +4,10 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2014-01-21 - Marco Cattaneo
+ - Follow removal of POOL services for reading POOL files
+   (see https://savannah.cern.ch/task/?49581)
+
 !========================= IOExample v4r11 2013-06-03 =========================
 ! 2013-05-06 - Marco Cattaneo
  - Fix references following changes to DoD for DST unpacking
