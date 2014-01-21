@@ -6198,7 +6198,6 @@ double Gaudi::Math::Bernstein2DSym::par
   return par ( k ) ;
 }
 
-
 // ============================================================================
 // constructor from the order
 // ============================================================================
@@ -6207,21 +6206,9 @@ Gaudi::Math::Positive::Positive
   const double              xmin ,
   const double              xmax )
   : std::unary_function<double,double> ()
-//
   , m_bernstein ( N , xmin , xmax )
-  , m_phases    ( N , 0 )
-  , m_phi0      ( N , 0 )
-  , m_sin2      ( N , 0 )
+  , m_sphere    ( N + 1 ) 
 {
-  //
-  _phi0_ ( m_phi0 ) ;
-  //
-  for ( unsigned short i = 0 ; i < N ; ++i )
-  {
-    const double s = std::sin ( m_phi0[i] ) ;
-    m_sin2 [ i ] = s * s ;
-  }
-  //
   updateBernstein () ;
 }
 // ============================================================================
@@ -6234,19 +6221,8 @@ Gaudi::Math::Positive::Positive
   : std::unary_function<double,double> ()
 //
   , m_bernstein ( pars.size () , xmin , xmax )
-  , m_phases    ( pars             )
-  , m_phi0      ( pars.size () , 0 )
-  , m_sin2      ( pars.size () , 0 )
+  , m_sphere    ( pars.size () ) 
 {
-  //
-  _phi0_ ( m_phi0 ) ;
-  //
-  for ( unsigned int i =  0 ; i < m_phases.size() ; ++i )
-  {
-    const double s = std::sin ( m_phases[i]  + m_phi0 [ i ] ) ;
-    m_sin2 [ i ]   = s * s ;
-  }
-  //
   updateBernstein () ;
 }
 // ============================================================================
@@ -6255,42 +6231,32 @@ Gaudi::Math::Positive::Positive
 bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value )
 {
   //
-  if (  k >= m_phases.size() )         { return false ; } // FALSE
+  const bool update = m_sphere.setPhi ( k , value ) ;
+  if ( !update ) { return false ; }   // no actual change 
   //
-  if ( s_equal ( value , par ( k ) ) ) { return false ; }
+  return updateBernstein () ;
+}
+// ============================================================================
+// get the parameter value
+// ============================================================================
+double Gaudi::Math::Positive::par ( const unsigned short k ) const 
+{
   //
-  const double s  = std::sin ( value + m_phi0[k] ) ;
-  const double s2 =  s * s ;
+  const double sk = m_sphere.sin_phi ( k ) ;
+  const double ck = m_sphere.cos_phi ( k ) ;
+  const double dk = m_sphere.delta   ( k ) ;
   //
-  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
-  //
-  m_phases [ k ] = value ;
-  m_sin2   [ k ] = s2    ;
-  //
-  return updateBernstein ( k ) ;
+  return std::atan2 ( sk , ck ) - dk ;
 }
 // =============================================================================
 // update bernstein coefficients
 // =============================================================================
-bool Gaudi::Math::Positive::updateBernstein ( const unsigned int k )
+bool Gaudi::Math::Positive::updateBernstein ()
 {
   //
-  double psin2 = 1 ;
-  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
-  //
   bool update = false ;
-  const std::size_t np = npars() + 1 ;
-  for ( unsigned int i = k ; i < npars() ; ++i )
-  {
-    const double sin2 = m_sin2   [i] ;
-    const double cos2 = 1 - sin2     ;
-    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
-    update  = up || update ;
-    psin2  *= sin2 ;
-  }
-  //
-  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
-  update  = up || update ;
+  for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
   //
   return update ;
 }
@@ -6312,19 +6278,8 @@ Gaudi::Math::Positive2D::Positive2D
   : std::binary_function<double,double,double> ()
 //
   , m_bernstein (   nX , nY , xmin , xmax , ymin , ymax ) 
-  , m_phases    ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
-  , m_phi0      ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
-  , m_sin2      ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
+  , m_sphere    ( ( nX + 1 ) * ( nY + 1 ) - 1 )
 {
-  //
-  _phi0_ ( m_phi0 ) ;
-  //
-  for ( unsigned short i = 0 ; i < m_sin2.size() ; ++i )
-  {
-    const double s = std::sin ( m_phi0[i] ) ;
-    m_sin2 [ i ] = s * s ;
-  }
-  //
   updateBernstein () ;
 }
 // ============================================================================
@@ -6335,46 +6290,35 @@ bool Gaudi::Math::Positive2D::setPar
   const double       value )
 {
   //
-  if (  k >= m_phases.size() )         { return false ; } // FALSE
+  const bool update = m_sphere.setPhi ( k , value ) ;
+  if ( !update ) { return false ; }   // no actual change 
   //
-  if ( s_equal ( value , par ( k ) ) ) { return false ; }
-  //
-  const double s  = std::sin ( value + m_phi0[k] ) ;
-  const double s2 =  s * s ;
-  //
-  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
-  //
-  m_phases [ k ] = value ;
-  m_sin2   [ k ] = s2    ;
-  //
-  return updateBernstein ( k ) ;
+  return updateBernstein () ;
 }
 // =============================================================================
 // update bernstein coefficients
 // =============================================================================
-bool Gaudi::Math::Positive2D::updateBernstein ( const unsigned int k )
+bool Gaudi::Math::Positive2D::updateBernstein ()
 {
   //
-  double psin2 = 1 ;
-  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
-  //
   bool update = false ;
-  const std::size_t np = ( m_bernstein.nX () + 1 ) * ( m_bernstein.nY () + 1 ) ;
-  for ( unsigned int i = k ; i < npars() ; ++i )
-  {
-    const double sin2 = m_sin2   [i] ;
-    const double cos2 = 1 - sin2     ;
-    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
-    update  = up || update ;
-    psin2  *= sin2 ;
-  }
-  //
-  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
-  update  = up || update ;
+  for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
   //
   return update ;
 }
 // ============================================================================
+// get the parameter value
+// ============================================================================
+double Gaudi::Math::Positive2D::par ( const unsigned int k ) const 
+{
+  //
+  const double sk = m_sphere.sin_phi ( k ) ;
+  const double ck = m_sphere.cos_phi ( k ) ;
+  const double dk = m_sphere.delta   ( k ) ;
+  //
+  return std::atan2 ( sk , ck ) - dk ;
+}
 
 // ============================================================================
 // constructor from the order
@@ -6386,19 +6330,8 @@ Gaudi::Math::Positive2DSym::Positive2DSym
   : std::binary_function<double,double,double> ()
 //
   , m_bernstein (   N , xmin , xmax ) 
-  , m_phases    ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
-  , m_phi0      ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
-  , m_sin2      ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
+  , m_sphere    ( ( N + 1 ) * ( N + 2 ) / 2 - 1  )
 {
-  //
-  _phi0_ ( m_phi0 ) ;
-  //
-  for ( unsigned short i = 0 ; i < m_sin2.size() ; ++i )
-  {
-    const double s = std::sin ( m_phi0[i] ) ;
-    m_sin2 [ i ] = s * s ;
-  }
-  //
   updateBernstein () ;
 }
 // ============================================================================
@@ -6409,52 +6342,36 @@ bool Gaudi::Math::Positive2DSym::setPar
   const double       value )
 {
   //
-  if (  k >= m_phases.size() )         { return false ; } // FALSE
+  const bool update = m_sphere.setPhi ( k , value ) ;
+  if ( !update ) { return false ; }   // no actual change 
   //
-  if ( s_equal ( value , par ( k ) ) ) { return false ; }
-  //
-  const double s  = std::sin ( value + m_phi0[k] ) ;
-  const double s2 =  s * s ;
-  //
-  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
-  //
-  m_phases [ k ] = value ;
-  m_sin2   [ k ] = s2    ;
-  //
-  return updateBernstein ( k ) ;
+  return updateBernstein () ;
 }
 // =============================================================================
 // update bernstein coefficients
 // =============================================================================
-bool Gaudi::Math::Positive2DSym::updateBernstein ( const unsigned int k )
+bool Gaudi::Math::Positive2DSym::updateBernstein ()
 {
   //
-  double psin2 = 1 ;
-  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
   //
   bool update = false ;
-  const std::size_t np = ( m_bernstein.nX () + 1 ) * ( m_bernstein.nY () + 1 ) ;
-  for ( unsigned int i = k ; i < npars() ; ++i )
-  {
-    const double sin2 = m_sin2   [i] ;
-    const double cos2 = 1 - sin2     ;
-    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
-    update  = up || update ;
-    psin2  *= sin2 ;
-  }
-  //
-  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
-  update  = up || update ;
+  for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
   //
   return update ;
 }
 // ============================================================================
-
-
-
-
-
-
+// get the parameter value
+// ============================================================================
+double Gaudi::Math::Positive2DSym::par ( const unsigned int  k ) const 
+{
+  //
+  const double sk = m_sphere.sin_phi ( k ) ;
+  const double ck = m_sphere.cos_phi ( k ) ;
+  const double dk = m_sphere.delta   ( k ) ;
+  //
+  return std::atan2 ( sk , ck ) - dk ;
+}
 
 // ============================================================================
 // Student-T 

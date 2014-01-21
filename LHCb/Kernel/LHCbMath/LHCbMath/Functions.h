@@ -15,6 +15,10 @@
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
 // ============================================================================
+// Local
+// ============================================================================
+#include "LHCbMath/NSphere.h"
+// ============================================================================
 /** @file LHCbMath/Functions.h
  *
  *  set of useful math-functions
@@ -376,15 +380,14 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get number of parameters
-      std::size_t npars () const { return m_phases.size() ; }
+      std::size_t npars () const { return m_sphere.nPhi () ; }
       /// set k-parameter
       bool setPar       ( const unsigned short k , const double value ) ;
       /// set k-parameter
       bool setParameter ( const unsigned short k , const double value )
       { return setPar   ( k , value ) ; }
-      /// get the parameter value
-      double  par       ( const unsigned short k ) const
-      { return ( k < m_phases.size() ) ? m_phases [k] : 0.0 ; }
+      /// get the parameter value 
+      double  par       ( const unsigned short k ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -403,23 +406,21 @@ namespace Gaudi
       /// get the integral between xmin and xmax
       double integral () const { return m_bernstein.integral() ; }
       /// get the underlying Bernstein polynomial
-      const Gaudi::Math::Bernstein& bernstein() const { return m_bernstein ; }
+      const Gaudi::Math::Bernstein& bernstein () const { return m_bernstein ; }
+      /// get the parameter sphere 
+      const Gaudi::Math::NSphere&   sphere    () const { return m_sphere    ; }
       // ======================================================================
     private:
       // ======================================================================
       /// update bernstein coefficinects
-      bool updateBernstein ( const unsigned int i = 0 ) ;
+      bool updateBernstein () ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual bernstein polynomial
       Gaudi::Math::Bernstein m_bernstein ; // the actual bernstein polynomial
-      /// the external parameters
-      std::vector<double>    m_phases ;
-      /// the starting phases
-      std::vector<double>    m_phi0   ;
-      /// sin^2 for parameters
-      std::vector<double>    m_sin2   ;
+      /// arameters sphere 
+      Gaudi::Math::NSphere   m_sphere    ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -3970,15 +3971,14 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get number of parameters
-      std::size_t npars () const { return m_phases.size() ; }
+      std::size_t npars () const { return m_sphere.nPhi () ; }
       /// set k-parameter
       bool setPar       ( const unsigned int k , const double value ) ;
       /// set k-parameter
       bool setParameter ( const unsigned int k , const double value )
       { return setPar   ( k , value ) ; }
       /// get the parameter value
-      double  par       ( const unsigned int k ) const
-      { return ( k < m_phases.size() ) ? m_phases [k] : 0.0 ; }
+      double  par       ( const unsigned int k ) const ;
       /// get the parameter value
       double  parameter ( const unsigned int k ) const { return par ( k ) ; }
       // ======================================================================
@@ -4004,18 +4004,14 @@ namespace Gaudi
     private:
       // ======================================================================
       /// update bernstein coefficients 
-      bool updateBernstein ( const unsigned int i = 0 ) ;
+      bool updateBernstein () ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual bernstein polynomial
       Gaudi::Math::Bernstein2D m_bernstein ; // the actual bernstein polynomial
-      /// the external parameters
-      std::vector<double>    m_phases ;
-      /// the starting phases
-      std::vector<double>    m_phi0   ;
-      /// sin^2 for parameters
-      std::vector<double>    m_sin2   ;
+      /// the external parameter sphere 
+      Gaudi::Math::NSphere     m_sphere    ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -4136,15 +4132,14 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get number of parameters
-      std::size_t npars () const { return m_phases.size() ; }
+      std::size_t npars () const { return m_sphere.nPhi () ; }
       /// set k-parameter
       bool setPar       ( const unsigned int k , const double value ) ;
       /// set k-parameter
       bool setParameter ( const unsigned int k , const double value )
       { return setPar   ( k , value ) ; }
       /// get the parameter value
-      double  par       ( const unsigned int k ) const
-      { return ( k < m_phases.size() ) ? m_phases [k] : 0.0 ; }
+      double  par       ( const unsigned int k ) const ;
       /// get the parameter value
       double  parameter ( const unsigned int k ) const { return par ( k ) ; }
       /// get lower/upper edges
@@ -4166,24 +4161,17 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// update bernstein coefficinects
-      bool updateBernstein ( const unsigned int i = 0 ) ;
+      /// update bernstein coefficients 
+      bool updateBernstein () ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual bernstein polynomial
       Gaudi::Math::Bernstein2DSym m_bernstein ; // the actual bernstein polynomial
-      /// the external parameters
-      std::vector<double>    m_phases ;
-      /// the starting phases
-      std::vector<double>    m_phi0   ;
-      /// sin^2 for parameters
-      std::vector<double>    m_sin2   ;
+      /// Parameter sphere 
+      Gaudi::Math::NSphere        m_sphere ;
       // ======================================================================
     } ;
-
-
-
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================

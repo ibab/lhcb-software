@@ -29,6 +29,7 @@
 #include "LHCbMath/Chi2Solution.h"
 #include "LHCbMath/Chi2Fit.h"
 #include "LHCbMath/Spline.h"
+#include "LHCbMath/NSphere.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

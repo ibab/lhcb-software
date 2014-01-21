@@ -8,6 +8,10 @@
 
 ! 2014-01-21 - Vanya Belyaev
 
+ - improve positive polinomials with n-sphere parameterization 
+
+! 2014-01-21 - Vanya Belyaev
+
  - ValueWithError
     minor fix to resolve python ambguities 
 

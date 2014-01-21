@@ -97,6 +97,7 @@
   <class name    = "Gaudi::Math::Parabola"     />
   <class name    = "Gaudi::Math::ParabolaErr"  />
   <function pattern = "Gaudi::Math::Splines::*"  />
+  <class name    = "Gaudi::Math::NSphere"        />
   
   <class name    = "Gaudi::Math::Splines::DATA"    />
   <class name    = "Gaudi::Math::Splines::PAIR"    />
