@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-21 - Simone Stracka, Flavio Archilli
+- Added lines for B->K1(->omega(782) K)mumu in StrippingB2XMuMu.py
+
 ! 2014-01-21 - Xabier Cid Vidal
  - Ks2mumu: split signal line in left sideband + signal region. Sideband line is now prescaled
  - Kspi0mumu: tighten the cuts a bit to reduce the rate

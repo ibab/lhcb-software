@@ -32,6 +32,7 @@ defaultConfig = {
     , 'MuonPID'            : -3.0          # dimensionless
     , 'DimuonUPPERMASS'    : 7100.0        # MeV
     , 'Pi0MINPT'           : 800.0         # MeV
+    , 'Pi0ForOmegaMINPT'   : 500.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
     , 'KstarplusWINDOW'    : 300.0         # MeV      
@@ -74,6 +75,17 @@ defaultConfig = {
     'Kstar_MinIPCHI2'     :    0.0,
     'Kstar_FlightChi2'    :    9.0,
     'Kstar_Dau_MaxIPCHI2' :    9.0,
+
+    # Omega cuts         
+    'Omega_MassWin'       :   100, #MeV
+    'Omega_CombMassWin'   :   200, #MeV
+    'OmegaChi2Prob'       : 0.00001,  # dimensionless               
+
+    #K1->OmegaK cuts
+    'K12OmegaK_MassLow'   :   300, #MeV
+    'K12OmegaK_MassHigh'  :  2500, #MeV
+    'K12OmegaK_CombMassLow'   :   400, #MeV
+    'K12OmegaK_CombMassHigh'  :  2400, #MeV
     
     # JPsi (dimu) cuts
     'Dimu_FlightChi2'     :   9.0,
@@ -130,8 +142,10 @@ defaultConfig = {
                               "[B+ -> J/psi(1S) a_1(1260)+]cc",             
                               "[B+ -> J/psi(1S) K_1(1270)+]cc",             
                               "[B+ -> J/psi(1S) K_2(1770)+]cc",
-                              "B0 -> J/psi(1S) K_1(1270)0"
-                              ]
+                              "B0 -> J/psi(1S) K_1(1270)0",
+                              "[B+ -> J/psi(1S) K_1(1400)+]cc", 
+                              "B0 -> J/psi(1S) K_1(1400)0"
+                             ]
 
       }
 
@@ -156,6 +170,7 @@ class B2XMuMuConf(LineBuilder) :
         , 'InclDiMuCORRM_MIN'
         , 'InclDiMuCORRM_MAX'
         , 'Pi0MINPT'
+        , 'Pi0ForOmegaMINPT'
         , 'DplusLOWERMASS'
         , 'DplusUPPERMASS'
         , 'KstarplusWINDOW'
@@ -201,6 +216,17 @@ class B2XMuMuConf(LineBuilder) :
         'Kstar_MinIPCHI2',
         'Kstar_FlightChi2',
         'Kstar_Dau_MaxIPCHI2',
+
+        # Omega cuts         
+        'Omega_MassWin',
+        'Omega_CombMassWin',
+        'OmegaChi2Prob',
+
+        #K1->OmegaK cuts
+        'K12OmegaK_MassLow',
+        'K12OmegaK_MassHigh',
+        'K12OmegaK_CombMassLow',
+        'K12OmegaK_CombMassHigh',
 
         # JPsi (dimu) cuts
         'Dimu_FlightChi2',
@@ -309,6 +335,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Dzero = self.__Dzero__(config)
         self.Lambda = self.__Lambda__(config)
         self.Pi0 = self.__Pi0__(config)
+        self.Pi0ForOmega = self.__Pi0ForOmega__(config)
         self.Rho = self.__Rho__(self.Pions, config)
         self.F2 = self.__F2__(self.Rho, config)
         self.Phi = self.__Phi__(self.Rho, config)
@@ -317,6 +344,9 @@ class B2XMuMuConf(LineBuilder) :
         self.Kstar2KsPi = self.__Kstar2KsPi__(self.Kshort, self.Pions, config)
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
         self.Rho2PiPi0 = self.__Rho2PiPi0__(self.Pions, self.Pi0, config)
+        self.Omega2PiPiPi0 = self.__Omega2PiPiPi0__(self.Pions, self.Pi0ForOmega, config)
+        self.K12OmegaK = self.__K12OmegaK__(self.Kaons, self.Omega2PiPiPi0, config)
+        self.K12OmegaKS = self.__K12OmegaKS__(self.Kshort, self.Omega2PiPiPi0, config)
         self.Dstar = self.__Dstar__(config)
         self.A1 = self.__A1__(self.Pions, config)
         self.K1 = self.__K1__(self.A1, config)
@@ -334,6 +364,7 @@ class B2XMuMuConf(LineBuilder) :
             'pi+'           : [ self.Pions ] ,
             'K*(892)+'      : [ self.Kstar2KsPi, self.Kstar2KPi0 ],
             'rho(770)+'     : [ self.Rho2PiPi0 ],
+            'omega(782)'    : [ self.Omega2PiPiPi0 ],
             'D+'            : [ self.Dplus ] ,
             'D*(2010)+'     : [ self.Dstar ] ,
             'Lambda0'       : [ self.Lambda ] ,
@@ -342,7 +373,9 @@ class B2XMuMuConf(LineBuilder) :
             'a_1(1260)'     : [ self.A1 ],
             'K_1(1270)'     : [ self.K1 ],
             'K_2(1770)'     : [ self.K2 ],
-            'K_1(1270)0'    : [ self.K10 ]
+            'K_1(1270)0'    : [ self.K10 ],
+            'K_1(1400)'     : [ self.K12OmegaK ],
+            'K_1(1400)0'    : [ self.K12OmegaKS ]
             }
 
         self.DeclaredDaughters = [] 
@@ -655,7 +688,36 @@ class B2XMuMuConf(LineBuilder) :
         return _sel
 
 
+    def __Pi0ForOmegaCuts__(self, conf):
+        """
+        Returns the KaonPion cut string
+        """
+        
+        _Pi0Cuts = """
+        (PT > %(Pi0ForOmegaMINPT)s )
+        """ % conf
+        return _Pi0Cuts
 
+    
+    def __Pi0ForOmega__(self, conf):
+        """
+        Filter Pi0 from Std Pi0
+        """
+        _pi0resolved = AutomaticData(Location = 'Phys/StdLooseResolvedPi0/Particles')
+        _pi0merged = AutomaticData(Location = 'Phys/StdLooseMergedPi0/Particles')
+        _filter_pi0resolved = FilterDesktop(Code = self.__Pi0ForOmegaCuts__(conf) )
+        _filter_pi0merged = FilterDesktop(Code = self.__Pi0ForOmegaCuts__(conf)  )
+        _selpi0resolved = Selection("Selection_"+self.name+"_pi0foromegaresolved",
+                                    RequiredSelections = [ _pi0resolved ] ,
+                                    Algorithm = _filter_pi0resolved)
+        _selpi0merged = Selection("Selection_"+self.name+"_pi0foromegamerged",
+                                  RequiredSelections = [ _pi0merged ] ,
+                                  Algorithm = _filter_pi0merged)
+        _sel = MergedSelection("Selection_"+self.name+"_pi0foromega",
+                               RequiredSelections = [ _selpi0resolved,_selpi0merged ])
+        return _sel
+
+    
     def __Kstar2KPi0__( self, Kaons, Pi0, conf):
         """
         Make K*(892)+ -> K+ pi0 
@@ -689,6 +751,67 @@ class B2XMuMuConf(LineBuilder) :
                                        Algorithm = _rhoConf,
                                        RequiredSelections = [ Pions, Pi0 ] )
         return _selRHO2PIPIZERO
+
+
+    def __Omega2PiPiPi0__( self, Pions, Pi0, conf):
+        """
+        Make omega -> pi+ pi- pi0 
+        """
+        _omega2pipipizero = CombineParticles()
+        _omega2pipipizero.DecayDescriptor = "omega(782) -> pi+ pi- pi0"
+        _omega2pipipizero.CombinationCut = "(ADAMASS('omega(782)') < %(Omega_CombMassWin)s * MeV) " %conf
+                         #"(ADOCACHI2CUT(20.,''))" 
+                                                
+        _omega2pipipizero.MotherCut = "(ADMASS('omega(782)') < %(Omega_MassWin)s *MeV) & " \
+                                      "(VFASPF(VPCHI2)> %(OmegaChi2Prob)s )"  %conf
+                         
+                                 
+
+        _omegaConf = _omega2pipipizero.configurable("Combine_"+self.name+"_PiPiPi0")
+        _omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+                                                 
+        _selOMEGA2PIPIPIZERO = Selection( "Selection_"+self.name+"_omega2pipipizero",
+                                       Algorithm = _omegaConf,
+                                       RequiredSelections = [ Pions, Pi0 ] )
+        return _selOMEGA2PIPIPIZERO
+
+
+    def __K12OmegaK__(self, K, Omega, conf):
+        """
+        Make a K1-> Omega(782) K+
+        """      
+        _k12omegak = CombineParticles()
+        _k12omegak.DecayDescriptor = "[K_1(1400)+ -> K+ omega(782)]cc"
+        _k12omegak.CombinationCut = "(AM > %(K12OmegaK_MassLow)s * MeV) & (AM < %(K12OmegaK_MassHigh)s * MeV)" %conf
+        _k12omegak.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
+        
+        _k12omegakConf = _k12omegak.configurable("Combine_"+self.name+"_OmegaK")
+        _k12omegakConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+
+                            
+        
+        _selK12OMEGAK = Selection( "Selection_"+self.name+"_k12omegak",
+                                     Algorithm = _k12omegak,
+                                     RequiredSelections = [ K, Omega ] )
+        return _selK12OMEGAK
+
+
+    def __K12OmegaKS__(self, Kshort, Omega, conf):
+        """
+        Make a K1-> Omega(782) K+
+        """      
+        _k12omegaks = CombineParticles()
+        _k12omegaks.DecayDescriptor = "[K_1(1400)+ -> KS0 omega(782)]cc"
+        _k12omegaks.CombinationCut = "(AM > %(K12OmegaK_MassLow)s * MeV) & (AM < %(K12OmegaK_MassHigh)s * MeV)" %conf
+        _k12omegaks.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
+
+        _k12omegaksConf = _k12omegaks.configurable("Combine_"+self.name+"_OmegaKs")
+        _k12omegaksConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+                
+        _selK12OMEGAKS = Selection( "Selection_"+self.name+"_k12omegaks",
+                                     Algorithm = _k12omegaks,
+                                     RequiredSelections = [ Kshort, Omega ] )
+        return _selK12OMEGAKS
 
 
     def __KpiCuts__(self, conf):
