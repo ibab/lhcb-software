@@ -293,7 +293,12 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   tcharm.setOmega(omega);
   tcharm.setDecision(decision);
   tcharm.setType( Tagger::OS_Charm ); 
+
+  // add charm candidate and daughters to tagger particles
   tcharm.addToTaggerParts(thecharm->part);
+  const SmartRefVector<Particle>& charmDaus = thecharm->part->daughters();
+  for( SmartRefVector<Particle>::const_iterator idau = charmDaus.begin(); idau != charmDaus.end(); ++idau)
+    tcharm.addToTaggerParts(*idau);
   
   return tcharm;
   
