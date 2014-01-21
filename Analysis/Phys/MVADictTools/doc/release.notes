@@ -4,6 +4,10 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-01-21 - Chris Jones
+ - Add a workaround to the requirements file to fix missing GSL symbols
+   during linking.
+
 ! 2014-01-20 - Marco Clemencic
  - Modified unit test to work from an arbitrary directory.
 
