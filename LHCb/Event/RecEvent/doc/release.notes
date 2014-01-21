@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2014-01-21 - Marco Clemencic
+ - Excluded dictionary for SMatrix<double,9,9> because already present in
+   Relax.
+
 !========================= RecEvent v2r48 2013-07-17 =========================
 ! 2013-06-19 - Marco Clemencic
  - Fixed generation of dictionary for Gaudi::SymMatrix9x9.
