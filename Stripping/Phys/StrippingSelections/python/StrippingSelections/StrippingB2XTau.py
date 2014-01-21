@@ -75,11 +75,21 @@ config_params =  {
   'B2DD_LinePostscale'            : 1,
   'B2TauMu_TOSLinePrescale'       : 1,
   'B2TauMu_TOSLinePostscale'      : 1,
-  'B2DMu_LinePrescale'            : 0.5,
+  'B2DMu_LinePrescale'            : 1.,
   'B2DMu_LinePostscale'           : 1,
   'B2DPi_LinePrescale'            : 1,
   'B2DPi_LinePostscale'           : 1,
-  }
+  'B2TauTau_SameSign_TOSLinePrescale'      : 0.5,
+  'B2TauTau_SameSign_TOSLinePostscale'     : 1,
+  'B2DD_SameSign_LinePrescale'             : 0.5,
+  'B2DD_SameSign_LinePostscale'            : 1,
+  'B2TauMu_SameSign_TOSLinePrescale'       : 0.5,
+  'B2TauMu_SameSign_TOSLinePostscale'      : 1,
+  'B2DMu_SameSign_LinePrescale'            : 1.,
+  'B2DMu_SameSign_LinePostscale'           : 1,
+  'B2DPi_SameSign_LinePrescale'            : 0.5,
+  'B2DPi_SameSign_LinePostscale'           : 1,
+                    }
 
 __all__ = ('B2XTauConf')
 
@@ -114,7 +124,7 @@ class B2XTauConf(LineBuilder) :
   DD_SS_Line     = None 
   TauTau_piSS_TOSLine = None
   TauMu_piSS_TOSLine = None
-  
+ 
   __configuration_keys__ = (
                             'PT_HAD_ALL_FINAL_STATE',
                             'P_HAD_ALL_FINAL_STATE',
@@ -181,7 +191,17 @@ class B2XTauConf(LineBuilder) :
                             'B2DMu_LinePrescale',
                             'B2DMu_LinePostscale',
                             'B2DPi_LinePrescale',
-                            'B2DPi_LinePostscale'
+                            'B2DPi_LinePostscale',
+                            'B2TauTau_SameSign_TOSLinePrescale',
+                            'B2TauTau_SameSign_TOSLinePostscale',
+                            'B2DD_SameSign_LinePrescale',
+                            'B2DD_SameSign_LinePostscale',
+                            'B2TauMu_SameSign_TOSLinePrescale',
+                            'B2TauMu_SameSign_TOSLinePostscale',
+                            'B2DMu_SameSign_LinePrescale',
+                            'B2DMu_SameSign_LinePostscale',
+                            'B2DPi_SameSign_LinePrescale',
+                            'B2DPi_SameSign_LinePostscale'
                             )
   
   def __init__(self, name, config):
@@ -251,15 +271,15 @@ class B2XTauConf(LineBuilder) :
 
     self.TauTau_SS_TOSLine = StrippingLine(name+"_TauTau_SameSign_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2TauTau_TOSLinePrescale'],
-                                           postscale   = config['B2TauTau_TOSLinePostscale'],
+                                           prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
+                                           postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauTauSS",selB2TauTauSS)
 #                                           selection   = selB2TauTauSS
                                            )
     self.TauTau_piSS_TOSLine    = StrippingLine(name+"_TauTau_piSS_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2TauTau_TOSLinePrescale'],
-                                           postscale   = config['B2TauTau_TOSLinePostscale'],
+                                           prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
+                                           postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauTaupiSS",selB2TauTaupiSS)
 #                                           selection = selB2TauTau
                                            )
@@ -273,8 +293,8 @@ class B2XTauConf(LineBuilder) :
                                            )
     self.DD_SS_Line     = StrippingLine(name+"_DD_SameSign_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2DD_LinePrescale'],
-                                           postscale   = config['B2DD_LinePostscale'],
+                                           prescale    = config['B2DD_SameSign_LinePrescale'],
+                                           postscale   = config['B2DD_SameSign_LinePostscale'],
 #                                           selection   = self._makeTOS(name+"_TOSForDDSS",selB2DDSS)
                                            selection   = selB2DDSS
                                            )
@@ -295,8 +315,8 @@ class B2XTauConf(LineBuilder) :
    
     self.TauMu_SS_TOSLine  = StrippingLine(name+"_TauMu_SameSign_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2TauMu_TOSLinePrescale'],
-                                           postscale   = config['B2TauMu_TOSLinePostscale'],
+                                           prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
+                                           postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauMuSS",selB2TauMuSS)
 #                                           selection   = selB2TauMuSS
                                            )
@@ -320,8 +340,8 @@ class B2XTauConf(LineBuilder) :
                                            )
     self.DPi_SS_Line    = StrippingLine(name+"_DPi_SameSign_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2DPi_LinePrescale'],
-                                           postscale   = config['B2DPi_LinePostscale'],
+                                           prescale    = config['B2DPi_SameSign_LinePrescale'],
+                                           postscale   = config['B2DPi_SameSign_LinePostscale'],
                                            selection   = selB2DPiSS
                                            )
     #
@@ -580,7 +600,7 @@ class B2XTauConf(LineBuilder) :
     """
       Tau filter
       """
-    _cut =       "(PT > 0*MeV)"
+    _cut =       "(PT > 0*MeV) "
     
     _preambulo = [ "c1c2c3 = ((('pi+') == ABSID) | (('K+') == ABSID))" ,
                    "ipsm    = MINTREE( c1c2c3 , MIPCHI2DV(PRIMARY) )"]
