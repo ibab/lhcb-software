@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-21 - Marc Olivier Bettler
+ - in StrippingK0S24X.py: 
+   * removing the redondant StrippingK0S24XPiPiMuMuLine lines.
+   * tighten the cuts on the StrippingK0S24XMuMuMuMuD and StrippingK0S24XMuMuMuMuL lines: the rate is now negligible. 
+
 ! 2014-01-21 - Ricardo Vazquez Gomez
  - Tight the IP chi2 cuts for the Kpipi line in the StrippingDarkBoson.py module to reduce the rate.
 
