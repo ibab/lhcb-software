@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2014-01-21 - Stefania Vecchi
+ - Added a protection on null pointers 
+ - Enabled writing of SSpionBDT
 
 !========================= DecayTreeTuple v4r6 2013-12-18 =========================
 

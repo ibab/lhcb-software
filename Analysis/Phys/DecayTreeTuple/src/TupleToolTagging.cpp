@@ -58,7 +58,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_tagger_map[(int)Tagger::OS_Electron]="OS_Electron";
   m_tagger_map[(int)Tagger::OS_Kaon]="OS_Kaon";
   m_tagger_map[(int)Tagger::SS_Kaon]="SS_Kaon";
-  m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";
+  m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";  
+  //m_tagger_map[(int)Tagger::SS_PionBDT]="SS_PionBDT";
   m_tagger_map[(int)Tagger::VtxCharge]="VtxCharge";
   m_tagger_map[(int)Tagger::Topology]="Topology";
   m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
@@ -79,6 +80,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_activeTaggers.push_back("OS_Kaon");
   m_activeTaggers.push_back("SS_Kaon");
   m_activeTaggers.push_back("SS_Pion");
+  //  m_activeTaggers.push_back("SS_PionBDT");
   m_activeTaggers.push_back("VtxCharge");
   m_activeTaggers.push_back("OS_nnetKaon");
   m_activeTaggers.push_back("SS_nnetKaon");
@@ -90,20 +92,25 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   declareProperty("StoreTaggersInfo", m_extendedTagging = false);
 
   declareProperty("ActiveTaggers", m_activeTaggers );
-  // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
+  declareProperty("useFTonDST", m_useFTonDST = false );
 
 
 }//=============================================================================
 
 StatusCode TupleToolTagging::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-
+  if( msgLevel( MSG::DEBUG ) ){
+    if( m_useFTonDST ) debug() << " Going to write Tagging informations written on DST " << endreq;
+    else debug() << " Going to rerun FT !!!! (Ignore informations written on DST) " << endreq;
+  }
+  
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   //if (m_dva==NULL) return Error("Couldn't get parent DVAlgorithm",
   //                           StatusCode::FAILURE);
   m_dist = m_dva->distanceCalculator();
 
-  m_fitter = tool<IVertexFit>("OfflineVertexFitter");
+  //m_fitter = tool<IVertexFit>("OfflineVertexFitter");
+  m_fitter = tool<IVertexFit>("LoKi::VertexFitter");
 
   //if null string, get parent DVA, else use own private tool
   if(m_toolName == "" && m_dva!=NULL) m_tagging = m_dva->flavourTagging();
@@ -134,14 +141,25 @@ VerboseData TupleToolTagging::getVerboseData(const LHCb::Particle *particle, con
         data.pt = particle->momentum().Pt();
         data.theta = particle->momentum().theta();
         data.phi = particle->momentum().phi();
-        data.pid_e = proto->info(LHCb::ProtoParticle::CombDLLe, -1000);
-        data.pid_mu = proto->info(LHCb::ProtoParticle::CombDLLmu, -1000);
-        data.pid_k = proto->info(LHCb::ProtoParticle::CombDLLk, -1000);
-        data.pid_p = proto->info(LHCb::ProtoParticle::CombDLLp, -1000);
-
+        if(proto!=NULL) 
+        {
+          
+          data.pid_e = proto->info(LHCb::ProtoParticle::CombDLLe, -1000);
+          data.pid_mu = proto->info(LHCb::ProtoParticle::CombDLLmu, -1000);
+          data.pid_k = proto->info(LHCb::ProtoParticle::CombDLLk, -1000);
+          data.pid_p = proto->info(LHCb::ProtoParticle::CombDLLp, -1000);
+        }
+        else
+        {
+          data.pid_e  = -999;
+          data.pid_mu = -999;
+          data.pid_k  = -999;
+          data.pid_p  = -999;
+        }
         // ip wrt the B primary vertex
         const VertexBase *primVtxB = m_dva->bestVertex(B);
-        StatusCode test = m_dist->distance(particle, primVtxB, data.ip, data.chi2);
+        StatusCode test = StatusCode::FAILURE;
+        if ( primVtxB!=NULL) test = m_dist->distance(particle, primVtxB, data.ip, data.chi2);
         if ( !test )
         {
           data.ip   = -1;
@@ -150,16 +168,21 @@ VerboseData TupleToolTagging::getVerboseData(const LHCb::Particle *particle, con
 
         // ip wrt the B decay vertex
         const VertexBase *decayVtxB = B->endVertex();
-        test = m_dist->distance (particle, decayVtxB, data.bip, data.bchi2);
+        test = StatusCode::FAILURE;
+
+        if ( decayVtxB!=NULL) test = m_dist->distance (particle, decayVtxB, data.bip, data.bchi2);
         if ( !test )
         {
           data.bip   = -1;
           data.bchi2 = -1;
         }
 
-        Vertex vtx;    
+
+
+
+        Vertex vtx;
         test = m_fitter->fit(vtx,*B,*particle);    
-        if( !test ) data.bp_chi2 = -1.;
+        if( !test  ) data.bp_chi2 = -1.;
         else data.bp_chi2 = vtx.chi2()/(float)vtx.nDoF();
 
         return data;
@@ -193,25 +216,24 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   StatusCode sc=StatusCode::SUCCESS;
 
   boost::replace_all( loc, "/Particles", "/FlavourTags" );
-
-  if( exist < LHCb::FlavourTags > (loc,IgnoreRootInTES))
-	tags = get< LHCb::FlavourTags > (loc,IgnoreRootInTES );
-
-  if (tags){
-	for(FlavourTags::const_iterator it = tags->begin(); it != tags->end(); ++it) {
-	  if( P != (**it).taggedB()) continue;
-		theTag =  **it;
-		check = true;
-	}
-	if (!check) sc = StatusCode::FAILURE;
+  if( m_useFTonDST ) {
+    if( exist < LHCb::FlavourTags > (loc,IgnoreRootInTES))
+      tags = get< LHCb::FlavourTags > (loc,IgnoreRootInTES );
   }
-  else{
+  
+  if (tags) {
+    for(FlavourTags::const_iterator it = tags->begin(); it != tags->end(); ++it) {
+      if( P != (**it).taggedB()) continue;
+      theTag =  **it;
+      check = true;
+    }
+    if (!check) sc = StatusCode::FAILURE;
+  } else {
     const VertexBase* v = m_dva->bestVertex( mother );
     const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
     if( !vtx ){
       sc = m_tagging->tag( theTag, P );
-    }
-    else {
+    } else {
       sc = m_tagging->tag( theTag, P, vtx );
     }
   }
@@ -226,8 +248,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
     omega = theTag.omega(); // predicted wrong tag fraction.
     decOS = theTag.decisionOS();
     omegaOS = theTag.omegaOS(); // predicted wrong tag fraction.
-  }
-  else {
+  } else {
     Warning("The tagging algorithm failed");
   }
 

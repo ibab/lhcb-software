@@ -100,7 +100,7 @@ private:
   std::map<std::string, int> m_tagger_rmap;///<reverse, map of string to enum
   
   std::vector<std::string> m_activeTaggers; ///<List of active taggers
-  bool m_extendedTagging;
+  bool m_extendedTagging, m_useFTonDST;
   VerboseData getVerboseData(const LHCb::Particle *p, const LHCb::Particle *B);
 };
 
