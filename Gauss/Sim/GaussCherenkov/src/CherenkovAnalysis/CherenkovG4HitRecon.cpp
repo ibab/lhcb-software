@@ -280,7 +280,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           const G4ThreeVector & LocalHitCoord = aHit->GetLocalPos();
          // G4int aPmtNum =    aHit-> GetCurHpdNum();
           G4int aPmtNum =    aHit-> CurPmtNum();
-          G4int aPmtModuleNum =  aHit-> CurModuleNum();
+          // G4int aPmtModuleNum =  aHit-> CurModuleNum(); // Unused variable
           G4int aPmtLensFlag= aHit->pdWithLens() ;
           
 

@@ -653,11 +653,11 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
 
 
     newHit -> setCurrentHitAsDuplicate( FlagThisHitAsDuplicate);
-    int NumHitsInCurHC =0;
+    //int NumHitsInCurHC =0; // Unused variable
     
     if(EnableThisHitStore) {
       
-     NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
+      //NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit ); // Unused variable
 
       if(m_RichPmtAviodDuplicateHitsActivate || m_RichPmtFlagDuplicateHitsActivate ) { 
          m_RichPmtAlreadyHit[CurrentPmtNumber]=true;

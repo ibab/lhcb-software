@@ -125,7 +125,7 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   G4int NumtotnoradiatorRich2=0;
   G4int Numtotnoradiator=0;
 
-  G4int NumAgelPrim  = 0;
+  // G4int NumAgelPrim  = 0; // Unused variable
   G4int  NumC4F10Prim = 0;
   G4int NumCf4Prim= 0;
 
