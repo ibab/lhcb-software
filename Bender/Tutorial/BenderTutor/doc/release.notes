@@ -7,6 +7,9 @@
 ! Purpose     : Start-Up tutorial for Bender 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! ======================== BenderTutor v20r0 2012-07-10 =======================
 
 ! 2012-06-17 - Vanya Belyaev

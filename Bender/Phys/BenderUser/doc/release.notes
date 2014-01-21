@@ -5,6 +5,9 @@
 ! Purpose     : Template Package for Bender-based analysis algorithms 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! ====================== Phys/BenderUser v20r0 2012-07-10 =====================
 
 ! ====================== Phys/BenderUser v18r0 2010-09-26 =====================

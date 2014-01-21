@@ -22,6 +22,9 @@
 ! ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 ! -----------------------------------------------------------------------------
 
+! 2014-01-21 - Marco Clemencic
+ - Added CMake configuration file.
+
 !  ====================== Ex/BenderExample v20r0 2012-05-10 ==================
 
 ! 2012-07-10 - Vanya Belyaev

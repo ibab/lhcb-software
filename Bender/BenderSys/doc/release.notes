@@ -23,6 +23,10 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+! 2014-01-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
 <A NAME=v22r11> 2013-12-22 Bender v22r11 based on the DaVinci v33r9</A>
 
 It is very similar to to v22r10
