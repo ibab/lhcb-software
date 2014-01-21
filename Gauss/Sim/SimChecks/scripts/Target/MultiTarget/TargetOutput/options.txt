@@ -1,0 +1,48 @@
+
+
+#Set path where data tuples are stored
+
+inputPath: /afs/cern.ch/user/s/seaso/cmtuser/Gauss_v46r5/Sim/SimChecks/scripts/Target/MultiTarget/TargetOutput
+
+#Set path where you want your output
+
+outputPath: ./
+
+#Select with plot you want to produce: TOTAL (total cross section vs energy), INEL (inelastic cross section vs energy), MULTI (multiplicity vs energy)
+
+finalPlot: TOTAL
+
+#Set "plotdata" to 1 if you want to plot on your graphs COMPASS data, where available (p, pbar in Al and Be total cross section), in caso of ratios this will plot the PDG ratios 
+
+plotData: 0
+
+#Set "Ratios" to 1 if you want the ratio between two particle guns, useful to make ratios particle/antiparticle
+#NB: ATTENTION!! If doRatio = 1 in order for this to work you have to list the pguns in sequence "particle, antiparticle, particle, antiparticle, ecc"
+#NB: Ratio will be done only for first material and thickness
+
+doRatios: 0
+
+#Set "print" to 1 if you want to print histograms with PDG ID od daughters, 0 if not (all histograms are saved in rootfiles anyway)
+
+print: 0
+
+#Set the models to use
+N.B.:No more than 2 models per analysis if you put more the rest will be ignored
+
+Models: QGSP_BERT 
+
+#Set the particle guns you want to use: "Piplus", "Piminus", "Kplus", "Kminus", "p", "pbar" are available
+
+ParticleGuns: Piminus 
+
+#Set the energies of your particles in GeV: any energy available, write just number without units
+
+Energies: 1 5 
+
+#Set the materials in which you want to fire your particles: "Al", "Be", "Cu", "Si", "Pb" are available
+
+Materials: Al 
+
+#Set the thicknesses of this material in mm, write just number without units
+
+Thicknesses: 1 
