@@ -7,6 +7,10 @@
 ! 2014-01-21 - Marco Cattaneo
  - Follow removal of POOL services for reading POOL files
    (see https://savannah.cern.ch/task/?49581)
+ - Remove i686-slc5-gcc43 references, no longer supported
+ - Move all test files previously in Castor to CERN-SWTEST (EOS) and access
+   them via TestFilesDB. Requires PRConfig > v1r7
+ - Add PRConfig depedency for QMTests
 
 !========================= IOExample v4r11 2013-06-03 =========================
 ! 2013-05-06 - Marco Cattaneo

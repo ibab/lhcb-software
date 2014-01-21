@@ -17,6 +17,8 @@ private
   use RELAX               v* LCG_Interfaces
   macro CASTOR_use "" QMTest "CASTOR v* LCG_Interfaces"
   use $(CASTOR_use)
+  macro PRConfig_use "" QMTest "PRConfig v* -no_auto_imports"
+  use $(PRConfig_use)
   apply_pattern QMTest
 end_private
 

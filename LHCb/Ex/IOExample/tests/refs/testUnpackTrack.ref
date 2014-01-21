@@ -1,13 +1,71 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
+# Warning, guessing type of SDST to be ROOT use IOHelper instead to avoid this warning
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/testUnpackTrack.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency    = None
+# |-DataType       = '2011'  (default: '2012')
+# |-DDDBtag        = 'head-20110302'  (default: '')
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = False  (default: False)
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'head-20110622'  (default: '')
+# |-Monitors       = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType   = '2011'  (default: '2012')
+# |-DbRoot     = 'conddb:/lhcb.xml'
+# |-AutoTags   = False
+# |-Simulation = False  (default: False)
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                   = False
+# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
+# |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
+# |-LogFile                   = ''
+# |-EnableRunChangeHandler    = False
+# |-Tags                      = {}  (default: {})
+# |-LatestLocalTagsByDataType = []  (default: [])
+# |-AllLocalTagsByDataType    = []  (default: [])
+# |-PartitionName             = 'LHCb'
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
+# |-Overrides                 = []  (default: [])
+# |-Simulation                = False  (default: False)
+# |-QueryGranularity          = 0
+# |-UseOracle                 = False
+# |-LatestGlobalTagByDataType = ''
+# |-UseDBSnapshot             = False
+# |-DisableLFC                = False
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
+# |-UseLatestTags             = []  (default: [])
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
+# skipping configuration of XMLSummary
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr(GaudiCoreSvc v1r0)
-                                          running on lxbuild163.cern.ch on Tue Jan 24 16:25:05 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v2r1)
+                                          running on lxplus0015 on Tue Jan 21 16:59:02 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/00011652_00000001_1-evt-18641to18650.sdst?svcClass=default' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/swtest/Reco10-sdst-10events/00011652_00000001_1-evt-18641to18650.sdst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -28,9 +86,9 @@ EventLoopMgr         INFO No more events in event selection
 ApplicationMgr       INFO Application Manager Stopped successfully
 UnpackTrack       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnpackedTracks"                              |        10 |       8025 |     802.50 |     1462.1 |      52.000 |      5161.0 |
+ | "# Unpacked Tracks"                             |        10 |       8025 |     802.50 |     1462.1 |      52.000 |      5161.0 |
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:06359AA1-B8B6-E011-BBAA-003048C9CD62 [root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/00011652_00000001_1-evt-18641to18650.sdst?svcClass=default]
+RootCnvSvc           INFO Disconnected data IO:06359AA1-B8B6-E011-BBAA-003048C9CD62 [root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/swtest/Reco10-sdst-10events/00011652_00000001_1-evt-18641to18650.sdst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

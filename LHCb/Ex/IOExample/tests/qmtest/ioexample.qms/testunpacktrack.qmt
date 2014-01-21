@@ -4,7 +4,9 @@
   <argument name="args"><set><text>../options/testUnpackTrack.py</text></set></argument>
   <argument name="reference"><text>../refs/testUnpackTrack.ref</text></argument>
   <argument name="validator"><text>
-from GaudiConf.QMTest.LHCbExclusions import preprocessor
+from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
+preprocessor = LHCbPreprocessor + \
+LineSkipper(['/lhcb/swtest/Reco10-sdst-10events/00011652_00000001_1-evt-18641to18650.sdst'])
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>

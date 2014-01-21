@@ -1,12 +1,9 @@
 # Test of UnpackTrack on SDST contaning a track with more than 65k LHCbIDs
-from GaudiConf.IOHelper import IOHelper
-
-from Gaudi.Configuration import *
-from Configurables import DstConf, DumpTracks, UnpackTrack
+from PRConfig import TestFileDB
+from Gaudi.Configuration import ApplicationMgr
+from Configurables import DumpTracks, UnpackTrack
 
 upkTr = UnpackTrack()
 ApplicationMgr().TopAlg += [ upkTr, DumpTracks() ]
 
-ioh = IOHelper()
-ioh.setupServices()
-ioh.inputFiles(['PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/00011652_00000001_1-evt-18641to18650.sdst?svcClass=default'])
+TestFileDB.test_file_db["Reco10-sdst-10events"].run()

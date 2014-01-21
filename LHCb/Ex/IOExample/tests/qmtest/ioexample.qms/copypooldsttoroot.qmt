@@ -5,7 +5,10 @@
   <argument name="reference"><text>../refs/POOLDst.ref</text></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
-preprocessor = LHCbPreprocessor
+preprocessor = LHCbPreprocessor + \
+LineSkipper(['/lhcb/swtest/MC09-pool-dst/00001820_00000001.dst']) + \
+LineSkipper( 'DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc') + \
+LineSkipper( 'DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml')
 validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
