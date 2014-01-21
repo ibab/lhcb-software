@@ -18,7 +18,7 @@ library Writer *.cpp -import=DAQEvent -import=ROOT
 
 apply_pattern linker_library library=Writer
 apply_pattern ld_library_path
-apply_pattern generate_rootmap library=Writer
+apply_pattern generate_componentslist library=Writer
 
 private
 use GaudiSvc v*

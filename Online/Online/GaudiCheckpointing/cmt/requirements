@@ -16,7 +16,7 @@ apply_pattern install_python_modules
 # ==================== component libraries ==================================
 library  GaudiCheckpointing  *.cpp
 apply_pattern linker_library         library=GaudiCheckpointing
-apply_pattern generate_rootmap       library=GaudiCheckpointing
+apply_pattern generate_componentslist       library=GaudiCheckpointing
 apply_pattern generate_configurables library=GaudiCheckpointing
 macro_append  GaudiCheckpointing_shlibflags ' -lCheckpointing ' WIN32 ''
 macro cppoptimized_s ' -g -O0 ' WIN32 ''

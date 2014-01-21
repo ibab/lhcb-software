@@ -10,7 +10,7 @@ apply_pattern install_more_includes more=GaudiUPI
 # ==================== component libraries ==================================
 library GaudiUPI  *.cpp
 apply_pattern component_library library=GaudiUPI
-apply_pattern generate_rootmap library=GaudiUPI
+apply_pattern generate_componentslist library=GaudiUPI
 apply_pattern ld_library_path
 # ==================== private use only =====================================
 private

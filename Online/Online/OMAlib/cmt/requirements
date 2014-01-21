@@ -22,7 +22,7 @@ apply_pattern install_more_includes more=OMAlib
 
 library OMAlib  $(OMALIBROOT)/src/*.cpp  $(OMALIBROOT)/algorithms/*.cpp
 apply_pattern linker_library  library=OMAlib
-apply_pattern generate_rootmap library=OMAlib
+apply_pattern generate_componentslist library=OMAlib
 
 macro_append OMAlib_shlibflags " -lHist  -lGraf -lRIO -lMathCore " WIN32 " libHist.lib libGraf.lib libRIO.lib libMathCore.lib"
 

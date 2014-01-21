@@ -1,6 +1,10 @@
 Package: GaudiCheckpointing
 Author:  Markus Frank
 
+! 2014-01-21 - Marco Clemencic
+ - Fixed problem in requirements to use the new GaudiPluginService:
+    replaced generate_rootmap with generate_componentslist
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 
