@@ -24,6 +24,12 @@ class ILHAupFortranTool ;
  *  @date   2007-06-28
  */
 class Pythia8Production : public GaudiTool, virtual public IProductionTool {
+private:
+  // XML Log file to store cross-sections 
+  ICounterLogFile * m_xmlLogTool ; 
+
+  IBeamTool * m_beamTool ;
+
 public:
   typedef std::vector<std::string> CommandVector ;
   
@@ -102,9 +108,6 @@ protected:
 
 private:
 
-  // XML Log file to store cross-sections 
-  ICounterLogFile * m_xmlLogTool ; 
-
   /// get pythai8Id from the PP
   int getPythia8ID( const LHCb::ParticleProperty * thePP ) ;
 
@@ -116,7 +119,6 @@ private:
     
   // Beam tool 
   std::string m_beamToolName ;
-  IBeamTool * m_beamTool ; 
   BeamToolForPythia8 * m_pythiaBeamTool; ///< beam tool for Pythia8
   
   std::vector<int> m_pdtlist ;

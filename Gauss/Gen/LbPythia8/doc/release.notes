@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-01-21 - Paul Szczypka
+ - Changes to remove warnings:
+   . Pythia8Gun.cpp: (un)signed comparison, loop var type change
+   . Pythia8Production.h: reordering of declarations in class definition
+
 ! 2014-01-08 - Paul Szczypka
  - Removed loop from Pythia8Production.cpp which did nothing.
 
