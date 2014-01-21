@@ -105,7 +105,8 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   {
     // Get the particles
     LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(*iLocation+"/Particles") ;
-    if (msgLevel(MSG::DEBUG)) debug() << "Got " << particles.size() << " particles from " << *iLocation << endreq ;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "Got " << particles.size() << " particles from " << *iLocation << endreq ;
     if ( particles.empty() ) { continue; }
 
     // Loop over the particles and take the ones we can use for vertexing
@@ -121,7 +122,8 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
       bool isSignal = false ;
       for ( LHCb::Particle::ConstVector::const_iterator iSignal = m_particlesToVertex.begin();
             iSignal != m_particlesToVertex.end();
-            ++iSignal ) {
+            ++iSignal ) 
+      {
         if ( (*iSignal)->proto() == (*iParticle)->proto() ) { isSignal = true ; break ; }
       }
       if ( isSignal ) continue ;

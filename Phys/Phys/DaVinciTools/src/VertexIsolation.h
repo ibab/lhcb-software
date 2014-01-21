@@ -43,8 +43,11 @@ namespace LHCb {
  *
  */
 
-class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool {
- public:
+class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool
+{
+
+public:
+
   /// Standard constructor
   VertexIsolation( const std::string& type,
                    const std::string& name,
@@ -63,16 +66,16 @@ class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool {
 
   virtual ~VertexIsolation( ); ///< Destructor
 
- protected:
+private:
 
   /// Check if a pure CALO Particle
-  inline  bool isPureNeutralCalo(const LHCb::Particle* P)const
-    {
-      LHCb::CaloParticle caloP(  (LHCb::Particle*) P );
-      return caloP.isPureNeutralCalo();
-    };  // Helpers
+  inline bool isPureNeutralCalo(const LHCb::Particle* P)const
+  {
+    LHCb::CaloParticle caloP(  (LHCb::Particle*) P );
+    return caloP.isPureNeutralCalo();
+  }  // Helpers
 
- private:
+private:
 
   int    m_nPartDeltaChi2Win ;
   int    m_nPartChi2Win ;
@@ -94,11 +97,15 @@ class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool {
   const IVertexFit*          m_pVertexFit;
   double                     m_chi2 ;
 
- public:
+public:
+
   // Structure of isolation vars
-   struct IsolationResult {
+  struct IsolationResult
+  {
     // Constructor with defaults
-     IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0), smallestChi2(-1), smallestDeltaChi2(-1), bestParticle(NULL){} ;
+    IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0), 
+                         smallestChi2(-1), smallestDeltaChi2(-1), 
+                         bestParticle(NULL) {} 
     // Members
     int             nCompatibleDeltaChi2, nCompatibleChi2 ;
     double          smallestChi2, smallestDeltaChi2 ;
