@@ -1,0 +1,127 @@
+// $Id:$
+// ============================================================================
+#ifndef LHCBMATH_NSPHERE_H 
+#define LHCBMATH_NSPHERE_H 1
+// ============================================================================
+// Include files
+// ============================================================================
+// STD & STL
+// ============================================================================
+#include <vector>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
+namespace Gaudi 
+{
+  // ==========================================================================
+  namespace Math 
+  {
+    // ==========================================================================
+    /** @class NSphere NSphere.h LHCbMath/NSphere.h
+     *  
+     *
+     *  @author Vanya Belyaev
+     *  @date   2014-01-21
+     */
+    class GAUDI_API NSphere 
+    {
+    public: 
+      // ======================================================================
+      /** Standard constructor
+       *  @param nPhases  dimensionality of N-sphere 
+       *  @param bias     use the rotated sphere? 
+       */
+      NSphere ( const unsigned short nPhases        ,
+                const bool           rotated = true ) ;
+      
+      /// desctructor 
+      ~NSphere() ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      unsigned int nX      () const { return nPhi() + 1       ; } 
+      unsigned int nPhi    () const { return m_sin_phi.size() ; } 
+      bool         rotated () const { return m_rotated        ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get x_i coefficient:               0 <= i < nX  
+      inline double x        ( const unsigned short index ) const ;      
+      /// get x_i coefficient squared        0 <= i < nX 
+      inline double x2       ( const unsigned short index ) const ;
+      inline double xsquared ( const unsigned short index ) const 
+      { return x2 ( index ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double sin_phi   ( const unsigned short index ) const 
+      { return index < nPhi() ? m_sin_phi[index] : 0.0 ; }
+      // ======================================================================
+      double cos_phi   ( const unsigned short index ) const 
+      { return index < nPhi() ? m_cos_phi[index] : 0.0 ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** set new value for phi(i)      
+       *  @param index (input) the index (0 <= index < nPhi)
+       *  @param valeu new value to be set 
+       *  @return true is new valeu is really set 
+       */
+      bool setPhi     ( const unsigned short index , 
+                        const double         value ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get biases to equalize the data 
+      double delta    ( const unsigned short index ) const  
+      { return m_rotated && ( index < nPhi() ) ? m_delta [index] : 0.0 ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// bias to equalize the x_i 
+      bool                m_rotated ; // rotated sphere ?
+      /// the phase biases for rotated sphere 
+      std::vector<double> m_delta   ; // the phase biases for rotated sphere 
+      /// vector of sin(phi)
+      std::vector<double> m_sin_phi ; // vector of sin(phi)
+      /// vector of cos(phi)
+      std::vector<double> m_cos_phi ; // vector of cos(phi)
+      // ======================================================================
+    };
+    // ========================================================================
+  } //                                         The end of namespace Gaudi::Math
+  // ==========================================================================
+} //                                                 The end of namespace Gaudi
+// ============================================================================
+// get x_i coefficient:               0 <= i < nX  
+// ============================================================================
+inline double Gaudi::Math::NSphere::x 
+( const unsigned short index ) const 
+{
+  if      ( nX () <= index ) { return 0                ; } // invalid 
+  else if ( nX () == 1     ) { return 1                ; } // trivial 
+  else if ( 0     == index ) { return m_cos_phi[index] ; } // x_0 
+  //
+  /// get index as phi 
+  const unsigned short phi_i = index - 1 ;
+  double xi =  ( nPhi () == phi_i ) ? 1.0 : m_cos_phi[phi_i] ;
+  for  ( unsigned short j = 0 ; j < phi_i ; ++j ) { xi *= m_sin_phi[j] ; }
+  //
+  return xi ;  
+}
+// ============================================================================
+// get x_i coefficient squared        0 <= i < nX 
+// ============================================================================
+inline double Gaudi::Math::NSphere::x2 
+( const unsigned short index ) const  
+{
+  const double xi = x ( index ) ;
+  return xi * xi ;
+}
+// ============================================================================
+// The END 
+// ============================================================================
+#endif // LHCBMATH_NSPHERE_H
+// ============================================================================
