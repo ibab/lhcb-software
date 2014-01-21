@@ -46,8 +46,8 @@ config = {
     "KBhard" : { # K directly from B only for B -> KS0(pipi) K
     'TRCHI2DOF_MAX' : 3,
     'PT_MIN'        : '250*MeV',
-    'P_MIN'         : '2000*MeV',
-    'MIPCHI2DV_MIN' : 9,
+    'P_MIN'         : '3000*MeV',
+    'MIPCHI2DV_MIN' : 36,
     'TRGHP_MAX'     : 0.3,
     'PROBNNK_MIN'   : 0.2,
     },
@@ -62,7 +62,7 @@ config = {
     "KX" : { # K from X
     'TRCHI2DOF_MAX' : 3,
     'PT_MIN'        : '250*MeV', 
-    'P_MIN'         : '0*MeV',
+    'P_MIN'         : '3000*MeV',
     'MIPCHI2DV_MIN' : 25, 
     'TRGHP_MAX'     : 0.3,
     'PROBNNK_MIN'   : 0.1 
@@ -70,10 +70,10 @@ config = {
     "PiX" : { # pi from X
     'TRCHI2DOF_MAX' : 3,
     'PT_MIN'        : '250*MeV', 
-    'P_MIN'         : '0*MeV',
-    'MIPCHI2DV_MIN' : 25, 
+    'P_MIN'         : '3000*MeV',
+    'MIPCHI2DV_MIN' : 36, 
     'TRGHP_MAX'     : 0.3,
-    'PROBNNpi_MIN'  : 0.65 
+    'PROBNNpi_MIN'  : 0.6 
     },
     "KDX" : { # K DOWN from X
     'TRCHI2DOF_MAX' : 4,

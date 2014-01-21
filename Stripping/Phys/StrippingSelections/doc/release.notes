@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-21 - Ricardo Vazquez Gomez
+ - Tight the IP chi2 cuts for the Kpipi line in the StrippingDarkBoson.py module to reduce the rate.
+
 ! 2014-01-20 - Xabier Cid Vidal
  - Edited KsMuMu line to add the possibility to cut in Ks and muons pT
 
