@@ -64,11 +64,10 @@ __all__     = (
     )
 # =============================================================================
 import ROOT
-##from   GaudiPython.Bindings   import gbl as cpp
 ##
 import PyCintex
 cpp = PyCintex.makeNamespace('')
-
+# 
 import LHCbMath.Types
 Gaudi          = cpp.Gaudi
 VE             = Gaudi.Math.ValueWithError
@@ -76,6 +75,7 @@ SE             = cpp.StatEntity
 ValueWithError = Gaudi.Math.ValueWithError
 binomEff       = Gaudi.Math.binomEff
 import math, sys
+from array import array
 # =============================================================================
 # logging 
 # =============================================================================
@@ -3741,11 +3741,7 @@ def axis_bins ( bins         ) :
     # 
     assert ( 1 < len ( bins ) )
     #
-    from numpy import array
-    #
-    return ROOT.TAxis ( 
-        len ( bins ) - 1 , array ( bins , dtype='d' )
-        ) 
+    return ROOT.TAxis ( len ( bins ) - 1 , array ( 'd' , bins ) ) 
 
 # =============================================================================
 ## prepare "slice" for the axis
@@ -3811,12 +3807,10 @@ def _h1_getslice_ ( h1 , i , j ) :
     edges = axis.edges ()
     edges = edges [i-1:j]
     
-    from numpy import array
-     
     typ = h1.__class__ 
     result = typ ( hID  ()       ,
                    h1.GetTitle() ,
-                   len ( edges ) - 1 , array ( edges , dtype='d' ) )
+                   len ( edges ) - 1 , array ( 'd' , edges ) )
     
     result.Sumw2()
     result += h1
@@ -3848,12 +3842,10 @@ def h1_axis ( axis           ,
     # 
     bins  = axis.edges()
     #
-    from numpy import array
-    #
     typ = ROOT.TH1D if double else ROOT.TH1F
     return typ ( name  ,
                  title ,
-                 len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
+                 len ( bins ) - 1 , array ( 'd' , bins ) ) 
 
 
 # =============================================================================
@@ -3883,13 +3875,11 @@ def h2_axes ( x_axis            ,
     x_bins  = x_axis.edges()
     y_bins  = y_axis.edges()
     #
-    from numpy import array
-    #
     typ = ROOT.TH2D if double else ROOT.TH2F
     return typ ( name  ,
                  title ,
-                 len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
-                 len ( y_bins ) - 1 , array ( y_bins , dtype='d' ) ) 
+                 len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
+                 len ( y_bins ) - 1 , array ( 'd' , y_bins ) ) 
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
@@ -5142,8 +5132,7 @@ def _mn_exec_ ( self , command , *args ) :
         args = [0]
         logger.warning ( 'TMinuit::execute: empty vector replaced with  %s ' % args ) 
         
-    import array
-    arglist = array.array ( 'd' , [ i for i in args ]  )
+    arglist = array ( 'd' , [ i for i in args ]  )
     ierr    = ROOT.Long   ( 0 )
     #        
     self.mnexcm ( command , arglist , len(arglist) , ierr )
@@ -5284,9 +5273,8 @@ def _mn_add_par_ ( self    , name      ,
     ## 
     if step < 0 : step = abs ( 0.01 * start ) 
     ##
-    import array
-    starts  = array.array ( 'd' , 1 * [ start ] )
-    steps   = array.array ( 'd' , 1 * [ step  ] )
+    starts  = array ( 'd' , 1 * [ start ] )
+    steps   = array ( 'd' , 1 * [ step  ] )
     #
     ipar    = len ( self ) 
     ierr    = ROOT.Long   ( 0 )
@@ -5472,8 +5460,7 @@ def _mn_cov_ ( self , size = -1 , root = False ) :
     if size <= 0 : size = len ( self )
     size = min ( size , len ( self ) ) 
     #
-    import array
-    matrix = array.array ( 'd' , [ 0 for i in range(0, size * size) ]  )
+    matrix = array ( 'd' , [ 0 for i in range(0, size * size) ]  )
     self.mnemat ( matrix , size )
     #
     if   1 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix1x1 ()

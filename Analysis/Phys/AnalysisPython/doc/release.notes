@@ -5,8 +5,13 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-01-20 - Vanya Belyaev
+
+ - substitute numpy.array with array.array 
+
 ! 2014-01-12 - Vanya Belyaev
  - many minor fixes 
+
 
 !========================= AnalysisPython v2r25 2013-12-18 =========================
 

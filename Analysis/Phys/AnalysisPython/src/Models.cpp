@@ -2997,7 +2997,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   : RooAbsPdf ( name , title ) 
 //
   , m_x        ( "x"       , "Observable"   , this , x    ) 
-  , m_phis     ( "phi"     , "Coefficients" , this )
+  , m_phis     ( "phi"     , "Coefficients" , this ) 
 //
   , m_iterator ( 0 ) 
 //
@@ -3005,9 +3005,10 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   , m_positive ( phis.getSize() , low , high ) 
 {
   //
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  TIterator*   tmp  = phis.createIterator() ;
+  RooAbsArg*   coef = 0 ;
+  unsigned     num  = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3109,9 +3110,10 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   , m_positive ( phis.getSize() , ps.lowEdge() , ps.highEdge() ) 
 {
   //
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  TIterator*   tmp  = phis.createIterator() ;
+  RooAbsArg*   coef = 0 ;
+  unsigned     num  = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3119,6 +3121,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   }
   delete tmp ;
   //
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
 // destructor 
@@ -3159,8 +3162,6 @@ Double_t Analysis::Models::PhaseSpacePol::evaluate () const
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
-  std::vector<double> sin2phi ;
-  //
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
@@ -3191,7 +3192,7 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
   const unsigned short nX        , 
   const unsigned short nY        ,
   RooArgList&          phis      ) 
-  : RooAbsPdf ( name , title ) 
+  : RooAbsPdf  ( name , title ) 
   , m_x        ( "x"       , "Observable-X" , this , x ) 
   , m_y        ( "y"       , "Observable-Y" , this , y ) 
   , m_phis     ( "phis"    , "Coefficients" , this     )
@@ -3201,9 +3202,9 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
   , m_positive ( nX , nY , x.getMin() , x.getMax() , y.getMin() , y.getMax() ) 
 {
   //
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  unsigned int num = 0 ;
+  TIterator*   tmp  = phis.createIterator() ;
+  RooAbsArg*   coef = 0 ;
+  unsigned int num  = 0 ;
   while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
@@ -3260,8 +3261,6 @@ Double_t Analysis::Models::Poly2DPositive::evaluate() const
   //
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
-  //
-  std::vector<double> sin2phi ;
   //
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
@@ -3527,8 +3526,8 @@ Analysis::Models::PSnl2DPol::PSnl2DPol
   
   TIterator* tmp  = phis.createIterator() ;
   RooAbsArg* coef = 0 ;
-  unsigned num = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
+  unsigned   num  = 0 ;
+  while ( ( coef  = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
