@@ -24,8 +24,8 @@ class Physics_September2012( object ):
 
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
-    @author J. Albrecht, V. Gligorov
-    @date 2012-04-17
+    @author J. Albrecht, V. Gligorov, S. Lohn
+    @date 2014-01-21
     """
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds', 'L0TCK' )
