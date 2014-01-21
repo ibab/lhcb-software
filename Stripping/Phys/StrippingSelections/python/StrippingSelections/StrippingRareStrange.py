@@ -5,7 +5,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Francesco Dettori','Andrea Contu']
 __date__ = '16/01/2014'
-__version__ = '$Revision: 1.0 $'
+__version__ = '$Revision: 1.1 $'
 
 __all__ = ('RareStrangeLinesConf',
            'config_default',
@@ -34,15 +34,16 @@ from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.PhysicalConstants import c_light
 from StandardParticles import StdAllNoPIDsPions, StdNoPIDsDownPions, StdLoosePions, StdLooseDownMuons
 
+
 config_default={
         'Postscale'           :1,
         'SigmaPMuMuPrescale' : 0.,
         'SigmaPMuMuDownPrescale' :1,
         'SigmaPEEPrescale' : 0.,
-        'SigmaPEEDownPrescale' :1,
+        'SigmaPEEDownPrescale' : 0.1,
         'SigmaPMuMuLFVPrescale' :0.,
         'SigmaPMuMuLFVDownPrescale' :1,
-        'KPiPiPiPrescale' : 0.1,
+        'KPiPiPiPrescale' : 0.01,
         'KPiPiPiMassMeasPrescale' :1,
         'KPiMuMuPrescale' :1,
         'KPiMuMuLFVPrescale' :1,
@@ -90,28 +91,26 @@ config_default={
         'KDauMinIpChi2Down' : 5,
         'KVDPVMinDown' : 500,
         'KVDPVMaxDown' : 2500,
-        #Kaons stuff 
-        'KMaxDOCAMassMeas' : 3.,
+        #Kaons stuff
+          'KMaxDOCAMassMeas' : 2.,
         'KMinPTMassMeas' : 300 ,
         'KMassWinMassMeas' : 50,
         'KMinDIRAMassMeas' : 0.9998,
         'KMaxIpChi2MassMeas' : 25,
-        'KVtxChi2MassMeas': 20,
-        'KMinVDChi2MassMeas' : 48,
-        'KDauMinIpChi2MassMeas' : 4, 
+        'KVtxChi2MassMeas': 10,
+        'KMinVDChi2MassMeas' : 100,
+        'KDauMinIpChi2MassMeas' : 8, 
         #Kaons stuff downstream
         'KMaxDOCAMassMeasDown' : 9999.,
-        'KMinPTMassMeasDown' : 200 ,
+        'KMinPTMassMeasDown' : 250 ,
         'KMassWinMassMeasDown' : 100,
         'KMinDIRAMassMeasDown' : 0.999,
         'KVtxChi2MassMeasDown': 20,
-        'KMinVDChi2MassMeasDown' : 36,
+        'KMinVDChi2MassMeasDown' : 64,
         'KDauMinIpChi2MassMeasDown' : 4, 
-        'KVDPVMinMassMeasDown' : 700,
-        'KVDPVMaxMassMeasDown' : 2300
-
-        
-        }                
+        'KVDPVMinMassMeasDown' : 900,
+        'KVDPVMaxMassMeasDown' : 2200
+        }
 
 #============================================================
 # Line builder 
