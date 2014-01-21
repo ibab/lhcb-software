@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-01-21 - Jason Andrews
+ - updated AlignmentComparisonPlots.py for compatibility with Pieter's timezone updates
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 

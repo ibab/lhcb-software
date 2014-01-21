@@ -164,12 +164,12 @@ def plotAlignmentParametersHeat( det
         else:
             globalSince = inputAlignments[1][2]
             globalUntil = until
-        alignmentOne = AlignmentsWithIOVs( connection, [ det ], globalSince, globalUntil, tag )
+        alignmentOne = AlignmentsWithIOVs( connection, [ det ], globalSince, globalUntil, defaultTag=tag )
         alignmentTwo = alignmentOne
     else:
-        alignmentOne = AlignmentsWithIOVs( connection, [ det ], since, until, tag )
+        alignmentOne = AlignmentsWithIOVs( connection, [ det ], since, until, defaultTag=tag )
         name, connection, since, until, tag = inputAlignments[1]
-        alignmentTwo = AlignmentsWithIOVs( connection, [ det ], since, until, tag )
+        alignmentTwo = AlignmentsWithIOVs( connection, [ det ], since, until, defaultTag=tag )
     name, connection, since, until, tag = inputAlignments[1]
     timePeriodsTwo = prepareTimePeriods(connection, since, until, tag)
 
@@ -206,6 +206,7 @@ def plotAlignmentParametersHeat( det
                         logging.debug("-> removing -pi from %s..." % parameter)
                         parameter = parameter + pi
                         logging.debug("         ...it's now %s" % parameter)
+                    # update and convert to mrad
                     parameters[j] = parameter * 1000
             difference = parameters[0] - parameters[1]
             logging.debug("diff is %s" % difference)
@@ -217,6 +218,7 @@ def plotAlignmentParametersHeat( det
     # generate layer fill list by matching detectorTuple element name slices to the layer name
     for layer in layers:
         print "Processing layer %s" % layer
+        MaxDiffs[layer] = {}
         layerFillList = []
         _elementLayer = lambda cellNumber: nameSplit[1] + "/" + nameSplit[cellNumber]
         if det in ("OT", "TT"):
@@ -239,14 +241,15 @@ def plotAlignmentParametersHeat( det
             diffMin = min( diffsList )
             diffRange = max(abs(diffMax),abs(diffMin))
             # copy this to return to scanner
-            if dof not in MaxDiffs:
-                MaxDiffs[dof] = {}
+            # if dof not in MaxDiffs:
+            #     MaxDiffs[dof] = {}
             logging.debug("diffMax is %s and diffMin is %s" % ( diffMax, diffMin ))
             if ( abs(diffMax) > abs(diffMin) ):
-                MaxDiffs[dof][layer] = copy.copy(diffMax)
+                # MaxDiffs[dof][layer] = copy.copy(diffMax)
+                MaxDiffs[layer][dof] = copy.copy(diffMax)
             else:
-                MaxDiffs[dof][layer] = copy.copy(diffMin)
-#            MaxDiffs[dof][layer] = copy.copy(diffRange)
+                # MaxDiffs[dof][layer] = copy.copy(diffMin)
+                MaxDiffs[layer][dof] = copy.copy(diffMin)
             # set units and precision cutoff
             if dof.startswith("T"):
                 units = "(mm)"
