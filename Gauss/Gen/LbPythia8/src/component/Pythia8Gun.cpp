@@ -190,7 +190,7 @@ StatusCode Pythia8Gun::generateEvent( HepMC::GenEvent * theEvent ,
   // ** IMPORTANT **: Need to reset the existing event before crafting a custom one.
   m_pythia->event.reset();
 
-  for(std::vector<int>::size_type i=0; i<m_listPdg.size(); ++i){
+  for(size_t i=0; i<m_listPdg.size(); ++i){
     id    = m_listPdg.at(i);
     m     = m_pythia->particleData.m0(id);
     e     = generateValue(m_energyGenMode , m_energyMean, m_energySigma , m_energyMin , m_energyMax);
