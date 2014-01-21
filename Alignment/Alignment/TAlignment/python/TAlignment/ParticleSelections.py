@@ -77,6 +77,31 @@ def protoParticlesFromHLTSelSequence( Name, HltDecision,
     return seq
 
 ##################################################################
+# Defines a minimal RICH sequence for running pion and kaon ID
+##################################################################
+def MinimalRichSequence():
+    # Tweak a little bit RICH
+    from Configurables import Escher,GaudiSequencer,RichRecSysConf,RecSysConf
+    richSeqName         = Escher()._instanceName(RichRecSysConf)
+    richSeq             = GaudiSequencer(richSeqName+"Seq")
+    richSeq.MeasureTime = True
+    richConf            = RichRecSysConf(RecSysConf().richRecConfName)
+    richConf.DataType   = Escher().getProp( "DataType" )
+    richConf.Context    = "HLT"
+    #enable 'fast' PID settings
+    richConf.PidConfig          = "FastGlobal"
+    # only consider the Pion and Kaon hypos (instead of the full list. This means you will
+    # only have DLL(K-pi) available, but if that is all you need its OK).
+    richConf.Particles    = [ "pion","kaon" ]
+    #turn off trackless ring finding
+    richConf.TracklessRingAlgs  = []
+    #richConf.trackConfig().InputTracksLocation = '/Rec/Track/PidTracks'
+    # Set the sequence to run the RICH PID in
+    richConf.setProp("RecoSequencer",richSeq)
+    return
+
+
+##################################################################
 # Create a selection based on HLT D0->Kpi
 ##################################################################
 def defaultHLTD0Selection():
@@ -125,24 +150,8 @@ def defaultHLTD0Selection():
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
     
-     # Tweak a little bit RICH
-    from Configurables import Escher,RichRecSysConf,RecSysConf
-    richSeqName         = Escher()._instanceName(RichRecSysConf)
-    richSeq             = GaudiSequencer(richSeqName+"Seq")
-    richSeq.MeasureTime = True
-    richConf            = RichRecSysConf(RecSysConf().richRecConfName)
-    richConf.DataType   = Escher().getProp( "DataType" )
-    richConf.Context    = "HLT"
-    #enable 'fast' PID settings
-    richConf.PidConfig          = "FastGlobal"
-    # only consider the Pion and Kaon hypos (instead of the full list. This means you will
-    # only have DLL(K-pi) available, but if that is all you need its OK).
-    richConf.Particles    = [ "pion","kaon" ]
-    #turn off trackless ring finding
-    richConf.TracklessRingAlgs  = []
-    #richConf.trackConfig().InputTracksLocation = '/Rec/Track/PidTracks'
-    # Set the sequence to run the RICH PID in
-    richConf.setProp("RecoSequencer",richSeq)
+    # Tweak a little bit RICH
+    MinimalRichSequence()
 
     # now create the D0->K-Pi+ candidates
     from Configurables import FilterDesktop
@@ -245,24 +254,8 @@ def defaultHLTDstarSelection():
     trackseq.Members.append( LokiFilter ( 'BestTrackFilter' ,
                                           Code = "1 < CONTAINS ( 'Rec/Track/Best' )" ) )
     
-     # Tweak a little bit RICH
-    from Configurables import Escher,RichRecSysConf,RecSysConf
-    richSeqName         = Escher()._instanceName(RichRecSysConf)
-    richSeq             = GaudiSequencer(richSeqName+"Seq")
-    richSeq.MeasureTime = True
-    richConf            = RichRecSysConf(RecSysConf().richRecConfName)
-    richConf.DataType   = Escher().getProp( "DataType" )
-    richConf.Context    = "HLT"
-    #enable 'fast' PID settings
-    richConf.PidConfig          = "FastGlobal"
-    # only consider the Pion and Kaon hypos (instead of the full list. This means you will
-    # only have DLL(K-pi) available, but if that is all you need its OK).
-    richConf.Particles    = [ "pion","kaon" ]
-    #turn off trackless ring finding
-    richConf.TracklessRingAlgs  = []
-    #richConf.trackConfig().InputTracksLocation = '/Rec/Track/PidTracks'
-    # Set the sequence to run the RICH PID in
-    richConf.setProp("RecoSequencer",richSeq)
+    # Tweak a little bit RICH
+    MinimalRichSequence()
 
     # now create the D0->K-Pi+ candidates
     from Configurables import FilterDesktop

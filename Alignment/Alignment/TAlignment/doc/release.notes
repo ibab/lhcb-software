@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2014-01-21 - Maurizio Martinelli
+ - ParticleSelection.py: created a function for tweaking the PID sequence.
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 
