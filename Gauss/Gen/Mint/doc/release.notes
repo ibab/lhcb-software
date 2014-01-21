@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2014-01-21 - Jeremy
+ - Fixed an issue with the LASS function where the units of the Breit-Wigner were different to the non-resonant component
+
 ! 2014-01-17 - Jeremy
  - Lineshape of Breit_wigner now multiplied by the unnormalised Barrier Factors instead of the normalised versions
   . The Breit-Wigner mass-dependent width itself still uses the normalised version as it should

@@ -45,20 +45,22 @@ double Lass::q0() const{
   if(q02 > 0) qu0=sqrt(q02);
   return qu0;
 }
+
 complex<double> Lass::BG(){
-  double M_Kpi  = BW_BW::mumsRecoMass();
-  if(M_Kpi > bgCutOff()) return 0;
-  if(q() <=0 ) return 0;
+  const double M_Kpi = BW_BW::mumsRecoMass();
 
-  complex<double> den(q()*cotDeltaBg(), -q());
-  
-  double M_0    = BW_BW::mumsPDGMass();
-  double Gamma0 = BW_BW::mumsWidth();
-  
-  double num = M_Kpi;
-  double myNormalisation = q0()/(M_0*M_0*Gamma0);
+  if( M_Kpi > bgCutOff() ) return 0;
+  if( q() <=0 ) return 0;
 
-  return num * myNormalisation / den;
+  const complex<double> den( q()*cotDeltaBg(), -q() );
+
+  const double M_0    = BW_BW::mumsPDGMass();
+  const double Gamma0 = BW_BW::mumsWidth();
+
+  const double num = M_Kpi;
+  const double myNormalisation = q0()/(M_0*M_0*Gamma0);
+
+  return num * myNormalisation / den * GeV*GeV;
 }
 
 double Lass::paraA() const{
