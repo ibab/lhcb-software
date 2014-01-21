@@ -964,7 +964,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::log
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
 }
 // ============================================================================
-/*  make a sum two elements taking into acocunt the 
+/*  make a sum two elements taking into account the 
  *  correlation coefficient  
  *  @param a  (input) the first value 
  *  @param b  (input) the second value 
@@ -1004,6 +1004,22 @@ Gaudi::Math::ValueWithError Gaudi::Math::sum
   //
   return ValueWithError ( v , ac2 + bc2 + 2 * r * std::sqrt ( ac2 * bc2 ) ) ;    
 }
+// ============================================================================
+/*  make a sum two elements taking into account the 
+ *  correlation coefficient  
+ *  @param a  (input) the first value 
+ *  @param b  (input) the second value 
+ *  @param c  (input) the correlation coefficient
+ *  @return a+b 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2012-11-09
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::sum2
+( const Gaudi::Math::ValueWithError& a , 
+  const Gaudi::Math::ValueWithError& b , 
+  const double                       c ) 
+{ return sum ( a , b , c ) ; }
 // ============================================================================
 /*  make a difference  two elements taking into acocunt the 
  *  correlation coefficient  
@@ -1250,6 +1266,18 @@ Gaudi::Math::sum
   return ini ;
   //
 }
+// ============================================================================
+/*  get the sum of the vector 
+ *  @param vct the vector
+ *  @param ini the intial value 
+ *  @return the sum over the vector 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::accumulate  
+( const std::vector<Gaudi::Math::ValueWithError>& vct , 
+  Gaudi::Math::ValueWithError                     ini ) 
+{ return sum ( vct , ini ) ; }
 // ============================================================================
 /*  get the sum of absolute values for the vector 
  *  @param vct the vector

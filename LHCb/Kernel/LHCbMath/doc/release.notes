@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-01-21 - Vanya Belyaev
+
+ - ValueWithError
+    minor fix to resolve python ambguities 
+
 ! 2014-01-13 - Vanya Belyaev
  - a bit more functions 
 

@@ -123,6 +123,8 @@
   <function name = "Gaudi::Math::asym"            />
   <function name = "Gaudi::Math::frac"            />
   <function name = "Gaudi::Math::sum"             />
+  <function name = "Gaudi::Math::sum2"            />
+  <function name = "Gaudi::Math::accumulate"      />
   <function name = "Gaudi::Math::subtract"        />
   <function name = "Gaudi::Math::diff"            />
   <function name = "Gaudi::Math::mult"            />

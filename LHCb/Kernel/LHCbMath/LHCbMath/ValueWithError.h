@@ -540,6 +540,21 @@ namespace Gaudi
       const ValueWithError& b     , 
       const double          c = 0 ) ;
     // ========================================================================
+    /** make a sum two elements taking into account the 
+     *  correlation coefficient  
+     *  @param a  (input) the first value 
+     *  @param b  (input) the second value 
+     *  @param c  (input) the correlation coefficient
+     *  @return a+b 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2012-11-09
+     */
+    GAUDI_API 
+    ValueWithError  sum2 
+    ( const ValueWithError& a     , 
+      const ValueWithError& b     , 
+      const double          c = 0 ) ;
+    // ========================================================================
     /** make a subtraction of two elements taking into account the 
      *  correlation coefficient  
      *  @param a  (input) the first value 
@@ -634,6 +649,16 @@ namespace Gaudi
      */
     GAUDI_API 
     ValueWithError sum 
+    ( const std::vector<ValueWithError>& vct                    , 
+      ValueWithError                     ini = ValueWithError() ) ;
+    // ========================================================================    
+    /** get the sum of the vector 
+     *  @param vct the vecor
+     *  @param ini the intial value 
+     *  @return the sum over the vector 
+     */
+    GAUDI_API 
+    ValueWithError accumulate 
     ( const std::vector<ValueWithError>& vct                    , 
       ValueWithError                     ini = ValueWithError() ) ;
     // ========================================================================    
