@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-21 - Xabier Cid Vidal
+ - Ks2mumu: split signal line in left sideband + signal region. Sideband line is now prescaled
+ - Kspi0mumu: tighten the cuts a bit to reduce the rate
+
 ! 2014-01-21 - Marc Olivier Bettler
  - in StrippingK0S24X.py: 
    * removing the redondant StrippingK0S24XPiPiMuMuLine lines.

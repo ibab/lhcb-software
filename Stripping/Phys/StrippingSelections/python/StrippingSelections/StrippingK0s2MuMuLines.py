@@ -21,6 +21,8 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
+## limit of sideband
+MSB = "465"
 
 class K0s2MuMuLinesConf(LineBuilder) :
     """
@@ -50,10 +52,11 @@ class K0s2MuMuLinesConf(LineBuilder) :
                               'NoMuIDLinePostscale',
                               'K0s2mmLinePrescale',
                               'K0s2mmLinePostscale',
+                              'K0s2mmSBLinePrescale',
+                              'K0s2mmSBLinePostscale',
                               'minMuPT',
-                              'minKsPT'                            
+                              'minKsPT'
                               )
-
     
     # 2012 DiMuonDetached Hlt2Line
     # getTCKInfo(0x40990042)
@@ -68,13 +71,15 @@ class K0s2MuMuLinesConf(LineBuilder) :
         'NoMuIDLinePostscale'   : 1,
         'K0s2mmLinePrescale'  : 1,
         'K0s2mmLinePostscale'  : 1,
+        'K0s2mmSBLinePrescale'  : 0.1,
+        'K0s2mmSBLinePostscale'  : 1,
         #'minMuPT' : 300,  #MeV
         #'minKsPT' : 600,  #MeV
         'minMuPT' : 0,  #MeV
         'minKsPT' : 0,  #MeV
         }                
     
-    
+
     def __init__(self, 
                  name = 'K0s2MuMu',
                  config = None) :
@@ -85,7 +90,8 @@ class K0s2MuMuLinesConf(LineBuilder) :
         
 
         self.NoMuID = makeNoMuID(norm_name, config["minMuPT"], config["minKsPT"])
-        self.MuID = makeK0s2mm(name , config["minMuPT"], config["minKsPT"])
+        self.MuID = makeK0s2mm(name , config["minMuPT"], config["minKsPT"],"sig")
+        self.MuIDSB = makeK0s2mm(name+"SB" , config["minMuPT"], config["minKsPT"],"sb")
 
        
         self.NoMuIDLine = StrippingLine(norm_name+"Line",
@@ -93,6 +99,14 @@ class K0s2MuMuLinesConf(LineBuilder) :
                                             postscale = config['NoMuIDLinePostscale'],
                                             algos = [ self.NoMuID ]
                                             )
+
+
+        self.MuIDSBLine = StrippingLine(name+"SBLine",
+                                        prescale = config['K0s2mmSBLinePrescale'],
+                                        postscale = config['K0s2mmSBLinePostscale'],
+                                        algos = [ self.MuIDSB ]
+                                        )
+        
         
         self.MuIDLine = StrippingLine(name+"Line",
                                       prescale = config['K0s2mmLinePrescale'],
@@ -103,6 +117,7 @@ class K0s2MuMuLinesConf(LineBuilder) :
         
         self.registerLine(self.NoMuIDLine)
         self.registerLine(self.MuIDLine)
+        self.registerLine(self.MuIDSBLine)
        
 
 def makeNoMuID(name,mupt=0,kspt=0) :
@@ -138,7 +153,7 @@ def makeNoMuID(name,mupt=0,kspt=0) :
                       RequiredSelections = [ _stdNoPIDsPions])
 
 
-def makeK0s2mm(name,mupt = 0, kspt = 0) :
+def makeK0s2mm(name,mupt = 0, kspt = 0, optm = 0) :
     """
     K0s2mumu selection object
     with muon Id and wide mass window
@@ -160,7 +175,10 @@ def makeK0s2mm(name,mupt = 0, kspt = 0) :
     K0s2MuMu.CombinationCut ="(ADAMASS('KS0')<1000*MeV)"\
                               "& (AMAXDOCA('')<0.3*mm)"
 
-    K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>450) & (PT > "+str(kspt)+" * MeV))"
+    if optm=="sig": K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>"+MSB+") & (PT > "+str(kspt)+" * MeV))"
+    elif optm=="sb":
+        K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>350) & (M<"+MSB+") & (PT > "+str(kspt)+" * MeV))"
+    else: K0s2MuMu.MotherCut = "((BPVDIRA>0) & ((BPVVDSIGN*M/P) > 0.1*89.53*2.9979e-01) & (MIPDV(PRIMARY)<0.4*mm) & (M>450) & (PT > "+str(kspt)+" * MeV))"
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 

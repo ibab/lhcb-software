@@ -24,7 +24,7 @@ config_default={
     'SignalLinePostscale'   : 1,
     'SidebandLinePrescale'  : 0.2,
     'SidebandLinePostscale' : 1,
-    "muIpChi2"              : 25,
+    "muIpChi2"              : 36,#25,
     "muTrChi2Dof"           : 5,
     "KSsignalminMass"       : 300,
     "KSsignalmaxMass"       : 600,
@@ -32,8 +32,8 @@ config_default={
     "KSsidebmaxMass"        : 1000,
     "KSdoca"                : 0.3,
     "KSdira"                : 0,
-    "KSlife"                : 0.05*89.53,
-    "KSip"                  : 1
+    "KSlife"                : 0.06*89.53,#0.05*89.53,
+    "KSip"                  : 0.9#1
     }                
   
 
