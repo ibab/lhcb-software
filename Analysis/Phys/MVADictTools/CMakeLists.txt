@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(MVADictTools v1r2p1)
 
-gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors)
+gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
+                         Phys/DaVinciInterfaces)
 
 find_package(ROOT COMPONENTS TMVA)
 
@@ -16,11 +17,11 @@ gaudi_add_library(MVADictToolsLib
 
 gaudi_add_module(MVADictTools
                  src/component/*.cpp
-		 INCLUDE_DIRS ROOT
+		 INCLUDE_DIRS ROOT 
                  LINK_LIBRARIES ROOT MVADictToolsLib LoKiArrayFunctorsLib)
 
 gaudi_add_unit_test(utesttmva src/applications/utesttmva.cxx
-		    INCLUDE_DIRS ROOT
+		    INCLUDE_DIRS ROOT 
                     LINK_LIBRARIES ROOT MVADictToolsLib LoKiArrayFunctorsLib
                     TYPE Boost)
 

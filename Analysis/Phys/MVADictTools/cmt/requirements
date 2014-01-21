@@ -14,6 +14,7 @@ include_path      none
 #============================================================================
 # Used packages.
 #============================================================================
+use   DaVinciInterfaces  v*    Phys
 use   LoKiPhys           v*    Phys
 use   LoKiArrayFunctors  v*    Phys
 use   ROOT               v*    LCG_Interfaces -no_auto_imports
