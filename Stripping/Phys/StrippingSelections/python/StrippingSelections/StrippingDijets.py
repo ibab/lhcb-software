@@ -11,8 +11,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from JetAccessories.JetMaker_Config import JetMakerConf
 from Configurables import LoKi__FastJetMaker, LoKi__JetMaker
-from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions
-from math import cos
+from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
 
 # Define the default configuration.
 config_Dijets = {
@@ -21,9 +20,7 @@ config_Dijets = {
     # HLT properties.
     "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
     # Track properties.
-    "TRK"   : {"CONTAINER"     : StdAllNoPIDsPions,
-                                            # The track container to use.
-               "MAX_MULT"      : 250,       # Multiplicity.
+    "TRK"   : {"MAX_MULT"      : 250,       # Multiplicity.
                "MIN_P"         : 5*GeV,     # Momentum.
                "MIN_PT"        : 500*MeV,   # Transverse momentum.
                "MIN_MIPCHI2DV" : 16,        # Impact parameter chi-squared.
@@ -39,10 +36,10 @@ config_Dijets = {
                "MAX_M"         : 7*GeV,     # Combined mass.
                "MIN_SUM_PT"    : 2*GeV},    # Scalar sum of transverse momenta.
     # Fully reconstructed jet properties.
-    "JET"   : {"CONTAINER"     : None,      # The jet container to use.
+    "JET"   : {"STDJETS"       : False,     # Flag to use StdJets container.
                "PF"            : True,      # Flag to use particle flow.
-               "JEC"           : False,     # If no container, apply JEC.
-               "R"             : 0.7,       # If no container, set jet radius.
+               "JEC"           : False,     # If no STDJETS, apply JEC.
+               "R"             : 0.7,       # If no STDJETS, set jet radius.
                "MIN_PT"        : 19*GeV},   # Transverse momentum.
     # Pair of secondary vertices properties.
     "DISVR" : {"MAX_COSDPHI"   : 0,         # Cos of transverse angle.
@@ -50,7 +47,7 @@ config_Dijets = {
                "MIN_M"         : 2*GeV,     # Combined mass.
                "MIN_SUM_PT"    : 10*GeV},   # Scalar sum of transverse momenta.
     # Pair of jets properties.
-    "DIJET" : {"MAX_COSDPHI"   : cos(2.5)}  # Cos of transverse angle.
+    "DIJET" : {"MAX_COSDPHI"   : -0.8}      # Cos of transverse angle.
     }
 
 # Define the class for the di-jet stripping.
@@ -82,10 +79,10 @@ class DijetsConf(LineBuilder):
                               'from LoKiCore.functions    import *']}
 
         # Select the particles.
-        trks   = self._create_trks([config["TRK"]["CONTAINER"]])
+        trks   = self._create_trks([StdAllNoPIDsPions])
         svrs   = self._create_svrs([trks])
-        jets   = (self._create_jets() if config["JET"]["CONTAINER"] is None
-                  else config["JET"]["CONTAINER"])
+        jets   = (self._create_jets() if config["JET"]["STDJETS"] is False
+                  else StdJets)
         disvrs = self._create_disvrs([svrs])
         dijets = self._create_dijets([disvrs, jets])
         
