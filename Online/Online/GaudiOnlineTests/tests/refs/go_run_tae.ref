@@ -1,3 +1,4 @@
+Python options:-opt=command=import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer(partitionBuffers=True)
 Parent: Started process:TAEBuffers_0 output redirected to:/dev/null
 Starting processes .....
 Parent: Started process:TAE_0 output redirected to:/dev/null
@@ -16,16 +17,22 @@ Child: Starting process:MBMsummary_0
 ======================== MBM Bufer summary for buffer "Events_LHCb" ========================
 
  Buffer "Events_LHCb"       Events: Produced:5000 Seen:5000 Pending:0 Max:100
-                            Space(kB):[Tot:6998 Free:6998] Users:[Tot:5 Max:10]
+                            Space(kB):[Tot:6998 Free:6998] Users:[Tot:5 Max:32]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
 
  CONS_ONE              14d    C                             5000   100   1 Events_LHCb
 
+======================== MBM Bufer summary for buffer "Overflow_LHCb" ========================
+
+ Buffer "Overflow_LHCb"     Events: Produced:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:199 Free:199] Users:[Tot:0 Max:32]
+
+
 ======================== MBM Bufer summary for buffer "Send_LHCb" ========================
 
- Buffer "Send_LHCb"         Events: Produced:5000 Seen:0 Pending:0 Max:100
-                            Space(kB):[Tot:6993 Free:6993] Users:[Tot:5 Max:14]
+ Buffer "Send_LHCb"         Events: Produced:5000 Seen:0 Pending:0 Max:500
+                            Space(kB):[Tot:199 Free:199] Users:[Tot:5 Max:32]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
 
