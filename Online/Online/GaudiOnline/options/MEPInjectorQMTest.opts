@@ -22,14 +22,6 @@ MessageSvc.OutputLevel= 3;
 Injector.HLTNodes = {"127.0.0.1"};//@OnlineEnv.Injector_Nodes;
 Injector.Tell1Boards = @QMDAQEnv.IPSrc;
 
-//{
-//  "192.169.11.80", "vetellc30", "",
-//  "192.169.10.3", "tttell03", "",
-//  "192.169.12.4", "ottella04", "",
-//  "192.169.9.5", "mutellc05", "",
-//  "192.169.14.4", "r1ukl104", ""
-//};
-
 //@OnlineEnv.Tell1Boards;
 Injector.OdinIf = "127.0.0.1";//@OnlineEnv.Injector_odinIF_Name;  //inj01-d2
 Injector.HLTIf = "127.0.0.1";//@OnlineEnv.Injector_farmIF_Name;   //inj01-d1

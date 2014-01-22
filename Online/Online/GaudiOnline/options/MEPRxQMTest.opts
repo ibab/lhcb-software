@@ -7,11 +7,10 @@
 //
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 #include "./QMDAQEnv.opts"
-OnlineEnv.PartititonID   = 98303;
 ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
-ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
+ApplicationMgr.ExtSvc        += { "MonitorSvc/MonitorSvc" };
 MessageSvc.OutputLevel      = 4;
-//MessageSvc.LoggerOnly  = false;
+//
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -23,8 +22,7 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.Buffers                   = { "Events" };
 MEPManager.PartitionBuffers          = true;
-MessageSvc.OutputLevel   = 1;
-Runable.OutputLevel      = 1;
+Runable.OutputLevel      = 3;
 Runable.MEPBuffers       = 1;          // concurrently built events
 Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
 Runable.partitionID      = @OnlineEnv.PartitionID;

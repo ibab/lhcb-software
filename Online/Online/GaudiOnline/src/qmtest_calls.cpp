@@ -363,7 +363,8 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   ::lib_rtl_sleep(3500);
 
   cout << "Stopping processes ..... " << endl;
-  ::lib_rtl_sleep(3000);
+  ::lib_rtl_sleep(20000);
+  collect_summary(0,0);
 
   readproc->stop();
   ::lib_rtl_sleep(1000);

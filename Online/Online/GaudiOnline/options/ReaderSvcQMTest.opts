@@ -1,7 +1,6 @@
 // 
 // SliceReaderSvc.opts
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
@@ -11,14 +10,12 @@ ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
 
 ApplicationMgr.OutputLevel = 5;
-Reader1.OutputLevel = 3;
-MessageSvc.OutputLevel= 3;
-Reader1.InputFiles={
-    "/group/online/jc/inputevents.raw"
-};
-Reader1.Loop= false;
-Reader1.BufferName  = "OUT_LHCb";//@OnlineEnv.Reader1_Buffer;
-Reader1.PartitionID = @OnlineEnv.PartitionID;
+Reader1.OutputLevel        = 3;
+MessageSvc.OutputLevel     = 3;
+Reader1.InputFiles         = {  "inputevents.raw"  };
+Reader1.Loop               = false;
+Reader1.BufferName         = "OUT_LHCb";
+Reader1.PartitionID        = @OnlineEnv.PartitionID;
 Reader1.Requirements         = {
   "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
