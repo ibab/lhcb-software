@@ -90,8 +90,11 @@ def addModuleToDbase(stripping, confModule, verbose = False) :
         print 'Storing', goodNames, 'in database',  dbName
     for k in goodNames :
         if not k in db.keys() :
-            if verbose : print 'Store', k, 'in', dbName
-            db[k]=confModule.__dict__[k]
+            config_dict = confModule.__dict__[k]
+            if isinstance(config_dict, dict) : 
+        	if verbose : print 'Store', k, 'in', dbName
+        	print config_dict
+        	db[k]=config_dict
         else :
             print 'Key', k, 'already in database', dbName
 

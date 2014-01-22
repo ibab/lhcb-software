@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-22 - Anton Poluektov 
+  - Modification of python/Utils.py to avoid storing any objects in the 
+    config database other than configuration dictionaries
+
 ! 2014-22-01 - Ronan Wallace
   - New DiJet config in LineConfigDictionaries_QEE.py to avoid import statements. Stripping20r{0,1}p3
 
