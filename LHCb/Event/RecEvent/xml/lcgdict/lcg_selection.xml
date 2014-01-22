@@ -13,5 +13,6 @@
       <method proto_pattern="*::operator=(double const&amp;)"/>
       <method proto_pattern="*::SMatrix(double const&amp;)"/>
     </class>
+    <class name="ROOT::Math::SMatrix<double,9,9,ROOT::Math::MatRepSym<double,9> >"/>
   </exclusion>
 </lcgdict>

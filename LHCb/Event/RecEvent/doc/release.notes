@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-22 - Marco Clemencic
+ - Fixed selection to work with both ROOT 5 and 6.
+
+! 2014-01-22 - Marco Clemencic
  - Reverted the change in the dictionary exclusion because it breaks the
    compilation.
 
