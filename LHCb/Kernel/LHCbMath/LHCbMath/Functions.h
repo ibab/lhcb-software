@@ -387,7 +387,8 @@ namespace Gaudi
       bool setParameter ( const unsigned short k , const double value )
       { return setPar   ( k , value ) ; }
       /// get the parameter value 
-      double  par       ( const unsigned short k ) const ;
+      double  par       ( const unsigned short k ) const 
+      { return m_sphere.par ( k ) ; }
       // ======================================================================
     public:
       // ======================================================================

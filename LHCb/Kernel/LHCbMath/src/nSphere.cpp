@@ -41,6 +41,7 @@ Gaudi::Math::NSphere::NSphere
   const bool           rotated ) 
   : m_rotated ( rotated ) 
   , m_delta   (  N ,  0 ) 
+  , m_phases  (  N ,  0 ) 
   , m_sin_phi (  N ,  0 ) 
   , m_cos_phi (  N ,  1 ) 
 { 
@@ -51,9 +52,10 @@ Gaudi::Math::NSphere::NSphere
     for ( unsigned short  i = 0 ; i < N ; ++i )
     {
       const double ni = N - i ;
-      m_delta   [i] = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;
-      m_sin_phi [i] = std::sin   ( m_delta[i] ) ;
-      m_cos_phi [i] = std::cos   ( m_delta[i] ) ;      
+      m_delta   [i] = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;      
+      const double phase = m_phases [i] + m_delta[i] ;
+      m_sin_phi [i] = std::sin   ( phase ) ;
+      m_cos_phi [i] = std::cos   ( phase ) ;      
     }
   }
   //
@@ -65,24 +67,24 @@ Gaudi::Math::NSphere::~NSphere() {}
 // ============================================================================
 // set new value for phi(i)      0 <= i < nPhi
 // ============================================================================
-bool Gaudi::Math::NSphere::setPhi 
+bool Gaudi::Math::NSphere::setPhase 
 ( const unsigned short index , 
   const double         value ) 
 {
   // 
   if ( nPhi() <= index ) { return false ; } // no change in unphysical phases 
   //
-  const double di   = m_rotated ? delta ( index ) : 0.0 ;
+  if ( s_equal ( m_phases[index] , value ) ) { return false ; }
   //
-  const double sinv = std::sin ( value + di ) ;
-  const double cosv = std::cos ( value + di ) ;
   //
-  // 
-  if ( s_equal ( sinv , m_sin_phi [ index ] ) && 
-       s_equal ( cosv , m_cos_phi [ index ] ) ) { return false ; } // nothing to change
+  const double di     = m_rotated ? m_delta [ index ] : 0.0 ;
+  const double phase  = value + di ;
+  const double sinv   = std::sin ( phase ) ;
+  const double cosv   = std::cos ( phase ) ;
   //
-  m_sin_phi [ index ] = sinv ;
-  m_cos_phi [ index ] = cosv ;
+  m_phases  [ index ] = value ;
+  m_sin_phi [ index ] = sinv  ;
+  m_cos_phi [ index ] = cosv  ;
   //
   return true ;
 }

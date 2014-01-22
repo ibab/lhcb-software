@@ -57,10 +57,18 @@ namespace Gaudi
     public:
       // ======================================================================
       double sin_phi   ( const unsigned short index ) const 
-      { return index < nPhi() ? m_sin_phi[index] : 0.0 ; }
+      { return index < nPhi() ? m_sin_phi [index] : 0.0 ; }
       // ======================================================================
       double cos_phi   ( const unsigned short index ) const 
-      { return index < nPhi() ? m_cos_phi[index] : 0.0 ; }
+      { return index < nPhi() ? m_cos_phi [index] : 0.0 ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double phase     ( const unsigned short index ) const 
+      { return index < nPhi() ? m_phases  [index] : 0.0 ; }
+      // ======================================================================
+      double par       ( const unsigned short index ) const 
+      { return phase ( index ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -69,7 +77,7 @@ namespace Gaudi
        *  @param valeu new value to be set 
        *  @return true is new valeu is really set 
        */
-      bool setPhi     ( const unsigned short index , 
+      bool setPhase   ( const unsigned short index , 
                         const double         value ) ;
       // ======================================================================
     public:
@@ -84,6 +92,8 @@ namespace Gaudi
       bool                m_rotated ; // rotated sphere ?
       /// the phase biases for rotated sphere 
       std::vector<double> m_delta   ; // the phase biases for rotated sphere 
+      /// the phases  
+      std::vector<double> m_phases  ; // the phases 
       /// vector of sin(phi)
       std::vector<double> m_sin_phi ; // vector of sin(phi)
       /// vector of cos(phi)

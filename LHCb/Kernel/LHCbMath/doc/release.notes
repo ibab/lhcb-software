@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Vanya Belyaev
+ - fix bug in NSphere+Positive 
+
 ! 2014-01-21 - Vanya Belyaev
 
  - improve positive polinomials with n-sphere parameterization 

@@ -6207,7 +6207,7 @@ Gaudi::Math::Positive::Positive
   const double              xmax )
   : std::unary_function<double,double> ()
   , m_bernstein ( N , xmin , xmax )
-  , m_sphere    ( N + 1 ) 
+  , m_sphere    ( N ) 
 {
   updateBernstein () ;
 }
@@ -6224,6 +6224,10 @@ Gaudi::Math::Positive::Positive
   , m_sphere    ( pars.size () ) 
 {
   updateBernstein () ;
+  //
+  // if ( m_bernstein.npars() != m_sphere.nX() ) 
+  // { std::cerr << " MISMATCH-(1)-!!! " << std::endl ; }
+  //
 }
 // ============================================================================
 // set k-parameter
@@ -6231,22 +6235,10 @@ Gaudi::Math::Positive::Positive
 bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value )
 {
   //
-  const bool update = m_sphere.setPhi ( k , value ) ;
+  const bool update = m_sphere.setPhase ( k , value ) ;
   if ( !update ) { return false ; }   // no actual change 
   //
   return updateBernstein () ;
-}
-// ============================================================================
-// get the parameter value
-// ============================================================================
-double Gaudi::Math::Positive::par ( const unsigned short k ) const 
-{
-  //
-  const double sk = m_sphere.sin_phi ( k ) ;
-  const double ck = m_sphere.cos_phi ( k ) ;
-  const double dk = m_sphere.delta   ( k ) ;
-  //
-  return std::atan2 ( sk , ck ) - dk ;
 }
 // =============================================================================
 // update bernstein coefficients
@@ -6255,15 +6247,16 @@ bool Gaudi::Math::Positive::updateBernstein ()
 {
   //
   bool update = false ;
-  for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
-  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
+  for ( unsigned short ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
+  {
+    const bool updated = m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ;
+    update = updated || update ;
+  }
+  //
   //
   return update ;
 }
 // ============================================================================
-
-
-
 
 // ============================================================================
 // constructor from the order
@@ -6290,7 +6283,7 @@ bool Gaudi::Math::Positive2D::setPar
   const double       value )
 {
   //
-  const bool update = m_sphere.setPhi ( k , value ) ;
+  const bool update = m_sphere.setPhase ( k , value ) ;
   if ( !update ) { return false ; }   // no actual change 
   //
   return updateBernstein () ;
@@ -6342,7 +6335,7 @@ bool Gaudi::Math::Positive2DSym::setPar
   const double       value )
 {
   //
-  const bool update = m_sphere.setPhi ( k , value ) ;
+  const bool update = m_sphere.setPhase ( k , value ) ;
   if ( !update ) { return false ; }   // no actual change 
   //
   return updateBernstein () ;
