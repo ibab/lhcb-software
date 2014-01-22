@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-22 - Vanya Belyaev
+ - fix complilation warnings 
+
 ! 2014-01-17 - Vanya Belyaev
  - DOCA* make use of updated IDistanceCalculator interface 
 

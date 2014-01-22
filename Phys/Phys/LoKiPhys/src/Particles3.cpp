@@ -46,6 +46,7 @@ LoKi::Particles::ClosestApproach::ClosestApproach
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
+  , m_allow    ( allow    ) 
 {}
 // ============================================================================
 //  constructor from the particle and the tool  
@@ -57,6 +58,7 @@ LoKi::Particles::ClosestApproach::ClosestApproach
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , LoKi::Vertices::ImpactParamTool ( tool ) 
   , m_particle ( particle ) 
+  , m_allow    ( allow    ) 
 {}
 // ============================================================================
 LoKi::Particles::ClosestApproach::result_type 
