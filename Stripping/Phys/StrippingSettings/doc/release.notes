@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-01-22 - Anton Poluektov 
+  - Copy Stripping20r0p3 config for B2OC to Stripping20r1p3
+
+! 2014-01-22 - Anton Poluektov 
   - Modification of python/Utils.py to avoid storing any objects in the 
     config database other than configuration dictionaries
 
