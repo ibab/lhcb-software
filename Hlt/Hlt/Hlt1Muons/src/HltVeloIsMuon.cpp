@@ -198,14 +198,14 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track &seed,
                                       return lhs->chi2DoF() < rhs->chi2DoF(); 
                                     });
       if ( best != goodCandidates.end() ) {
-         LHCb::Track* out = seed.clone();
+         auto out = std::unique_ptr<LHCb::Track>{ seed.clone() };
          const Candidate* c = *best;
          
          LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
          double down = m_fieldSvc->isDown() ? -1 : 1;
          double q = down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
          state->setQOverP( q / c->p() );
-         tracks.push_back( out );
+         tracks.push_back( out.release() );
       }
    }
    return StatusCode::SUCCESS;

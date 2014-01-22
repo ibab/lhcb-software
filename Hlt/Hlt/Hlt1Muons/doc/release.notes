@@ -4,6 +4,12 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - more C++11 
+ - use addSortedToLhcbIDs to add sorted list in one shot instead of addToLhcbIDs
+   to add individual hits
+ - make Hlt1MuonHit a concrete class, add 'final' specifier, do not copy stationid
+
 ! 2014-01-16 - Gerhard Raven
  - use (some) C++11 features -- functionality remains invariant
 

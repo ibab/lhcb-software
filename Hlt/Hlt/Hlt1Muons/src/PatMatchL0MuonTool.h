@@ -36,7 +36,6 @@ public:
    virtual ~PatMatchL0MuonTool( ); ///< Destructor
    
    virtual StatusCode initialize(); ///< Initialization
-   virtual StatusCode finalize  (); ///< Finalization
    
    /// Function for matching in Hlt
    StatusCode match( const LHCb::Track& veloTrack,

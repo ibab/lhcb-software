@@ -27,9 +27,8 @@ public:
 
    /// Standard constructor
    Candidate( const LHCb::Track* track, const Hlt1MuonHits& hits )
+       : m_hits(hits.begin(),hits.end())
    {
-      m_hits.resize( hits.size() );
-      std::copy( hits.begin(), hits.end(), m_hits.begin() );
       init( track );
    }
 
@@ -75,10 +74,7 @@ public:
 
    virtual ~Candidate( ) {}; ///< Destructor
 
-   const LHCb::Track* track() const
-   {
-      return m_track;
-   }
+   const LHCb::Track* track() const { return m_track; }
 
    void xStraight( const double z, double& x, double& errX ) const
    {
@@ -94,35 +90,12 @@ public:
       errY = dz * sqrt( m_errTy2 );
    }
 
-   double tx() const
-   {
-      return m_tx;
-   }
-
-   double ty() const
-   {
-      return m_ty;
-   }
-
-   double errTx2() const
-   {
-      return m_errTx2;
-   }
-
-   double errTy2() const
-   {
-      return m_errTy2;
-   }
-
-   double tx2() const
-   {
-      return m_tx2;
-   }
-
-   double ty2() const
-   {
-      return m_ty2;
-   }
+   double tx() const { return m_tx; }
+   double ty() const { return m_ty; }
+   double errTx2() const { return m_errTx2; }
+   double errTy2() const { return m_errTy2; }
+   double tx2() const { return m_tx2; }
+   double ty2() const { return m_ty2; }
 
    double sinTrack() const
    {
@@ -134,90 +107,29 @@ public:
       return 1. / sqrt( 1 + m_ty2 );
    }
 
-   Hlt1ConstMuonHits::iterator hitsBegin()
-   {
-      return m_hits.begin();
-   }
+   Hlt1ConstMuonHits::iterator hitsBegin() { return m_hits.begin(); }
+   Hlt1ConstMuonHits::iterator hitsEnd()   { return m_hits.end(); }
 
-   Hlt1ConstMuonHits::iterator hitsEnd()
-   {
-      return m_hits.end();
-   }
-
-   void addHit( const Hlt1MuonHit* hit )
-   {
-      m_hits.push_back( hit );
-   }
-
-   Hlt1ConstMuonHits& hits()
-   {
-      return m_hits;
-   }
-
-   const Hlt1ConstMuonHits& hits() const
-   {
-      return m_hits;
-   }
+   void addHit( const Hlt1MuonHit* hit ) { m_hits.push_back( hit ); }
+   Hlt1ConstMuonHits& hits() { return m_hits; }
+   const Hlt1ConstMuonHits& hits() const { return m_hits; }
 
    double sin() const 
    {   
       return sqrt( 1 - 1 / ( 1 + m_tx2 + m_ty2 ) );
    }
 
-   double& slope()
-   {
-      return m_slope;
-   }
-   
-   double slope() const
-   {
-      return m_slope;
-   }
-
-   double& p()
-   {
-      return m_p;
-   }
-   
-   double p() const
-   {
-      return m_p;
-   }
-
-   bool& fitted()
-   {
-      return m_fitted;
-   }
-
-   bool fitted() const
-   {
-      return m_fitted;
-   }
-
-   double& chi2()
-   {
-      return m_chi2;
-   }
-
-   double chi2() const
-   {
-      return m_chi2;
-   }
-
-   double chi2DoF() const
-   {
-      return m_chi2 / m_nDoF;
-   }
-
-   unsigned int& nDoF()
-   {
-      return m_nDoF;
-   }
-
-   unsigned int nDoF() const
-   {
-      return m_nDoF;
-   }
+   double& slope() { return m_slope; }
+   double slope() const { return m_slope; }
+   double& p() { return m_p; }
+   double p() const { return m_p; }
+   bool& fitted() { return m_fitted; }
+   bool fitted() const { return m_fitted; }
+   double& chi2() { return m_chi2; }
+   double chi2() const { return m_chi2; }
+   double chi2DoF() const { return m_chi2 / m_nDoF; }
+   unsigned int& nDoF() { return m_nDoF; }
+   unsigned int nDoF() const { return m_nDoF; }
 
    /// operator new
    static void* operator new ( size_t size )

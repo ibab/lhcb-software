@@ -103,7 +103,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track &seed,
    clean();
 
    // Make a Candidate from the track
-   std::unique_ptr< Candidate > veloSeed{ new Candidate{ &seed } };
+   auto veloSeed = std::unique_ptr< Candidate >{ new Candidate{ &seed } };
 
    unsigned int seedStation = m_order[ 0 ] - 1;
    findSeeds( *veloSeed, seedStation );
@@ -265,10 +265,11 @@ void MatchVeloMuon::addHits( Candidate& seed )
       for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
          const Hlt1MuonRegion& region = station.region( r );
          if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
-         Hlt1MuonHitRange hits = m_hitManager->hits( xMin, s, r );
-         for( Hlt1MuonHit* hit: hits ) {
+
+         for( const Hlt1MuonHit* hit:  m_hitManager->hits( xMin, s, r ) ) {
             if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
+
             double dist2 =  ( xMuon - hit->x() ) * ( xMuon - hit->x() )
                           + ( yMuon - hit->y() ) * ( yMuon - hit->y() ) ;
             if ( !closest || dist2 < minDist2 ) {
@@ -294,23 +295,24 @@ void MatchVeloMuon::fitCandidate( Candidate& candidate ) const
 {
    const Hlt1ConstMuonHits& hits = candidate.hits();
 
-   double sumWeights = 0., sumZ = 0., sumX = 0., sumTmp2 = 0.;
+   double sumWeights = 0., sumZ = 0., sumX = 0.;
 
    for( const Hlt1MuonHit* hit: hits ) {
-      double err = hit->dx() / 2.;
-      double weight = 1.0 / ( err * err );
+      double dx = hit->dx() ;
+      double weight = 4.0 / ( dx * dx );
       sumWeights += weight;
       sumZ += hit->z() * weight;
       sumX += hit->x() * weight;
    }
    double ZOverWeights = sumZ / sumWeights;
 
-   double b = 0;
+   double sumTmp2 = 0.;
+   double b = 0.;
    for( const Hlt1MuonHit* hit: hits ) {
       double err = hit->dx() / 2.;
       double tmp = ( hit->z() - ZOverWeights ) / err;
       sumTmp2 += tmp * tmp;
-      b += tmp * hit->x() / err;
+      b       += tmp * hit->x() / err;
    }
 
    b /= sumTmp2;

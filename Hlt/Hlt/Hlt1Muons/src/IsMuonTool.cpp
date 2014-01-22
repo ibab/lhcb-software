@@ -80,11 +80,11 @@ StatusCode IsMuonTool::initialize()
    }
 
    // Condition pointers
-   Condition* foiFactor = 0;
-   Condition* xFOIParameters = 0;
-   Condition* yFOIParameters = 0;
-   Condition* preSelMomentum = 0; 
-   Condition* momentumCuts = 0;
+   Condition* foiFactor = nullptr;
+   Condition* xFOIParameters = nullptr;
+   Condition* yFOIParameters = nullptr;
+   Condition* preSelMomentum = nullptr; 
+   Condition* momentumCuts = nullptr;
 
    // Register conditions
    registerCondition< IsMuonTool >( "Conditions/ParticleID/Muon/FOIfactor", foiFactor );

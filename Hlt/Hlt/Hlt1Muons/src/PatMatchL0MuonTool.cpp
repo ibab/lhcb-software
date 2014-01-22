@@ -61,15 +61,6 @@ StatusCode PatMatchL0MuonTool::initialize()
    return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PatMatchL0MuonTool::finalize()
-{
-   debug() << "==> Finalize" << endmsg;
-  
-   return GaudiTool::finalize();
-}
 
 //=============================================================================
 double PatMatchL0MuonTool::getChi2Match(const LHCb::Track& velo,
@@ -169,6 +160,5 @@ void PatMatchL0MuonTool::makeTrack( const LHCb::Track& velo,
    output.addInfo( LHCb::Track::MatchChi2, chi2 );
 
    //== add new LHCbIDs
-   for( const LHCb::LHCbID& id: seed.lhcbIDs() ) output.addToLhcbIDs( id );
-        
+   output.addSortedToLhcbIDs( seed.lhcbIDs() );
 }

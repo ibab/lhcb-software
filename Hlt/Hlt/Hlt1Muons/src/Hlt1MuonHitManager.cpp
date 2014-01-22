@@ -26,28 +26,28 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( Hlt1MuonHitManager );
 
-using std::make_pair;
 using std::vector;
 using std::sort;
 using std::pair;
 
-template<typename iterator_>
-struct iter_pair_range : std::pair<iterator_,iterator_> {
-    using super = std::pair<iterator_,iterator_>;
-    using super::super; // delegate c'tor
-    using iterator = iterator_;
-    iterator begin() const { return this->first;  }
-    iterator end()   const { return this->second; }
-};
+namespace {
+    template <typename iterator_>
+    struct iter_pair_range : pair<iterator_,iterator_> {
+        using super = pair<iterator_,iterator_>;
+        using super::super; // delegate c'tor
+        using iterator = iterator_;
+        iterator begin() const { return this->first;  }
+        iterator end()   const { return this->second; }
+    };
 
-template<typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range(Iter&& begin, I2&& end)
-{ return { std::forward<Iter>(begin), std::forward<I2>(end) }; }
+    template<typename Iter, typename I2> // I2 must be convertable to Iter
+    iter_pair_range<typename std::decay<Iter>::type> make_range(Iter&& begin, I2&& end)
+    { return { std::forward<Iter>(begin), std::forward<I2>(end) }; }
 
-template<typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range(std::pair<Iter,I2>&& p)
-{ return { std::forward<std::pair<Iter,I2>>(p) }; }
-
+    template<typename Iter, typename I2> // I2 must be convertable to Iter
+    iter_pair_range<typename std::decay<Iter>::type> make_range(pair<Iter,I2>&& p)
+    { return { std::forward<pair<Iter,I2>>(p) }; }
+}
 
 //=============================================================================
 Hlt1MuonHitManager::Hlt1MuonHitManager(const std::string& type,
@@ -163,11 +163,9 @@ void Hlt1MuonHitManager::prepareHits( const unsigned int station )
    }
 
    // Sort the hits
-   std::sort( m_hits.begin()
-            , m_hits.end()
-            , [](const Hlt1MuonHit* lhs,const Hlt1MuonHit* rhs) { 
-                return lhs->x() < rhs->x() ;
-              } );
+   std::sort( std::begin(m_hits), std::end(m_hits)
+            , [](const Hlt1MuonHit* lhs,const Hlt1MuonHit* rhs) 
+              { return lhs->x() < rhs->x(); } );
 
    // Put the hits in the station
    m_stations[ station ].setHits( m_hits );
@@ -186,7 +184,7 @@ void Hlt1MuonHitManager::loadCoords()
 
    for ( auto coord : *m_muonCoords) {
       auto station = coord->key().station();
-      m_coords.insert( make_pair( station, coord ) );
+      m_coords.insert( { station, coord } );
       m_nHits[ station ] += 1;
    }
 

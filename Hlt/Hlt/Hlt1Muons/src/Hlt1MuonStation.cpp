@@ -35,7 +35,7 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
    : m_muonDet{ det }
    , m_station{ station }
    , m_z{ det->getStationZ(station) }
-   , m_nRegionsX{ regions.size() - 1 }
+   , m_nRegionsX( regions.size() - 1 ) // narrowing from unsigned long -> unsigned int
    , m_nRegionsY{ 7u }
 {
    m_hits.resize( nRegions() );
@@ -116,8 +116,6 @@ inline unsigned int Hlt1MuonStation::xRegion( const double x )
       const Hlt1MuonRegion& region = m_regions[ m_nRegionsY * i ];
       if ( x < region.xmax() ) break;
    }
-   if ( i == m_nRegionsX ) {
-      throw std::exception();
-   }
+   if ( i == m_nRegionsX ) throw std::exception();
    return i;
 }

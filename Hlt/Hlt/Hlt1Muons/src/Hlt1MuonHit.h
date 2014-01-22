@@ -15,7 +15,8 @@
  *  @author Roel Aaij
  *  @date   2010-12-02
  */
-class Hlt1MuonHit {
+class Hlt1MuonHit final  // please do not inherit from this class...
+{
 
 public:
    Hlt1MuonHit() = delete;
@@ -24,16 +25,15 @@ public:
                 double x, double dx,
                 double y, double dy,
                 double z, double dz )
-      : m_tile{ tile }, m_station{ tile.station() },
-        m_x{ x }, m_dx{ dx },
-        m_y{ y }, m_dy{ dy },
-        m_z{ z }, m_dz{ dz }
+      : m_tile{ tile }
+      , m_x{ x }, m_dx{ dx }
+      , m_y{ y }, m_dy{ dy }
+      , m_z{ z }, m_dz{ dz }
    { }
 
-   virtual ~Hlt1MuonHit() {}
 
    const LHCb::MuonTileID& tile() const { return m_tile; }
-   unsigned int station() const { return m_station; }
+   unsigned int station() const { return m_tile.station(); }
    double x()  const { return m_x; }
    double dx() const { return m_dx; }
    double y()  const { return m_y; }
@@ -57,11 +57,10 @@ public:
          ::operator delete(p);
    }
   
-protected:
+private:
 
    LHCb::MuonTileID m_tile;
 
-   unsigned int m_station;
    double m_x;
    double m_dx;
    double m_y;
