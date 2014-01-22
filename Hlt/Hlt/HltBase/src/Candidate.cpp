@@ -32,7 +32,7 @@ namespace
   /** @var e_EMPTY
    *  the empty string 
    */
-  const std::string s_EMPTY = ""  ;
+  const Hlt::NamedEntry s_EMPTY { std::string{} } ;
   // ==========================================================================
 }
 // ============================================================================
@@ -48,9 +48,8 @@ Hlt::Candidate::~Candidate() {}
 // ============================================================================
 void Hlt::Candidate::removeFromStages(const Hlt::Stage* value)
 {
-  SmartRef<Hlt::Stage> ref(value);
-  SmartRefVector<Hlt::Stage>::iterator iter =
-    std::remove(m_stages.begin(), m_stages.end(), ref);
+  auto iter = std::remove( m_stages.begin(), m_stages.end()
+                         , SmartRef<Hlt::Stage>{value});
   m_stages.erase(iter, m_stages.end());
 }
 // ===========================================================================
@@ -59,16 +58,14 @@ void Hlt::Candidate::removeFromStages(const Hlt::Stage* value)
 void Hlt::Candidate::setStages( const SmartRefVector<Hlt::Stage>& value ) 
 {
   m_stages.clear() ;
-  for ( SmartRefVector<Hlt::Stage>::const_iterator istage = value.begin() ;
-        value.end() != istage ; ++istage ) { addToStages ( *istage ); }
+  for ( auto& istage : value ) addToStages( istage );
 }
 // ===========================================================================
 // Add to (pointer) reference to the stages
 // ===========================================================================
 void Hlt::Candidate::addToStages ( const Hlt::Stage* value ) 
 { 
-  if ( 0 != value ) 
-  {
+  if ( value ) {
     m_stages.push_back ( value ) ;
     m_stages.back()->setOwner ( this ) ;
   }
@@ -78,19 +75,19 @@ void Hlt::Candidate::addToStages ( const Hlt::Stage* value )
 // ===========================================================================
 const Hlt::Candidate::Worker& 
 Hlt::Candidate::lastWorker() const
-{ return m_workers.empty() ? s_EMPTY : m_workers.back() ; }
+{ return !m_workers.empty() ?  m_workers.back() : s_EMPTY ; }
 // ===========================================================================
 // Add worker
 // ===========================================================================
 void Hlt::Candidate::addToWorkers ( const INamedInterface* worker ) 
-{ if ( 0 != worker ) { m_workers.push_back ( worker -> name() ) ; }  }
+{ if ( worker ) { m_workers.emplace_back( *worker ) ; }  }
 // ===========================================================================
 // Has stage ? 
 // ===========================================================================
 bool Hlt::Candidate::hasStage ( const Hlt::Stage* stage ) const
 {
   return 
-    0 != stage && 
+    stage && 
     m_stages.end() != std::find ( m_stages.begin () , 
                                   m_stages.end   () , 
                                   SmartRef<Hlt::Stage> ( stage  ) ) ;
@@ -116,7 +113,7 @@ std::ostream& Hlt::Candidate::fillStream(std::ostream& s) const
 std::ostream& Gaudi::Utils::toStream 
 ( const Hlt::Candidate* c , std::ostream& s ) 
 {
-  if ( 0 == c ){ return s << "<NULL>" ; }
+  if ( !c ) return s << "<NULL>" ;
   return c->fillStream ( s ) ;
 }
 // ============================================================================
@@ -128,15 +125,14 @@ std::ostream& Gaudi::Utils::toStream
  *     - 0 corresponds to the current stage , 
  *     - negative value corresponds to initiator stage 
  *     - positive value corresponds to step-back in history
- *  @return the obejct 
+ *  @return the object 
  */
 // ============================================================================
 const ContainedObject*
 Hlt::Candidate::get_( const int slot ) const 
 {
-  const Hlt::Stage* _stage = this->get<Stage>( slot ) ;
-  if ( 0 == _stage ) { return 0 ; }                                 // RETURN 
-  return _stage->get_ () ;
+  auto* _stage = this->get<Stage>( slot ) ;
+  return _stage ? _stage->get_ () : nullptr ;
 }  
 // ============================================================================
 

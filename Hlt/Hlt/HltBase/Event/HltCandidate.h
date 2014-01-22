@@ -21,6 +21,7 @@
 // HltBase 
 // ============================================================================
 #include "Event/HltStage.h"
+#include "Event/NamedEntry.h"
 // ============================================================================
 #ifdef _WIN32
 // ============================================================================
@@ -87,7 +88,7 @@ namespace Hlt
     /// Phases iterator (const)
     typedef SmartRefVector<Hlt::Stage>::const_iterator StagesConstIterator;
     /// Worker (Algorithm name) 
-    typedef std::string Worker;
+    typedef Hlt::NamedEntry Worker;
     /// Workers (Algorithm names) 
     typedef std::vector<Worker> Workers;
     /// Workers iterator (const)
@@ -108,7 +109,11 @@ namespace Hlt
   public: // standard accessors 
     // ========================================================================
     /// Add worker
-    void addToWorkers ( const std::string&     worker ) { m_workers.push_back(worker) ; }
+    void addToWorkers ( const std::string&     worker ) 
+    { m_workers.push_back(worker) ; } 
+    // TODO: once we get rid of gccxml, drop version above...
+    // void addToWorkers( std::string worker ) 
+    // { m_workers.emplace_back( std::move(worker) ) ; }
     /// Add worker
     void addToWorkers ( const INamedInterface* worker ) ;
     /// Get the initial stage

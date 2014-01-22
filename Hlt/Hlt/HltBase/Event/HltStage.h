@@ -32,6 +32,7 @@
 // =============================================================================
 // HltBase 
 // =============================================================================
+#include "Event/NamedEntry.h"
 #include "Event/HltMultiTrack.h"
 #include "Event/HltL0DiMuonCandidate.h"
 #include "HltBase/Cache.h"
@@ -106,7 +107,7 @@ namespace Hlt
     /// For uniform access to containers in TES (KeyedContainer,SharedContainer)
     typedef Gaudi::NamedRange_<ConstVector> Range;
     /// the actual type of history 
-    typedef std::vector<std::string> History;
+    typedef std::vector<Hlt::NamedEntry> History;
     // ========================================================================
     /** @class Lock Event/HltStage.h
      *  Locker class for stage
@@ -137,7 +138,9 @@ namespace Hlt
     public:
       // ======================================================================
       /// add the entries to the history 
-      const History& addToHistory ( const std::string& entry   ) ;
+      const History& addToHistory ( std::string entry   ) ;
+      /// add the entries to the history 
+      const History& addToHistory ( const INamedInterface& iface ) ;
       /// add the entries to the history 
       const History& addToHistory ( const History&     entries ) ;
       // ======================================================================

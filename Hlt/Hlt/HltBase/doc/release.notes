@@ -6,6 +6,9 @@
 
 ! 2014-01-22 - Gerhard Raven
  - more misc C++11 changes
+ - replace string as history/worker with dedicated pair<INamedInterface*,string>,
+   see https://savannah.cern.ch/task/?49598
+
 
 ! 2014-01-16 - Gerhard Raven
  - HltStage: make C++11 constructions invisible to gccxml

@@ -36,7 +36,7 @@ Hlt::Stage::~Stage() {}
 // ============================================================================
 Hlt::Stage::Lock::Lock (  Stage* stage , const INamedInterface* locker) 
 { 
-  if (0 == stage || 0 == locker) 
+  if ( !stage || !locker) 
   { 
     throw GaudiException("Stage or locker is null","Stage::Lock::Lock",
                          StatusCode::FAILURE);
@@ -49,12 +49,19 @@ Hlt::Stage::Lock::Lock (  Stage* stage , const INamedInterface* locker)
 Hlt::Stage::Lock::~Lock () { m_stage->_unlock (m_locker); }
 // ============================================================================
 const Hlt::Stage::History& 
-Hlt::Stage::Lock::addToHistory ( const std::string& entry ) 
+Hlt::Stage::Lock::addToHistory ( std::string entry ) 
 {
-  History& _history = m_stage->m_history ; 
-  _history.push_back ( entry ) ;
-  //
-  return m_stage->history() ;
+  History& history = m_stage->m_history ; 
+  history.emplace_back( std::move(entry) ) ;
+  return history;
+}
+// ============================================================================
+const Hlt::Stage::History& 
+Hlt::Stage::Lock::addToHistory ( const INamedInterface& iface ) 
+{
+  History& history = m_stage->m_history ; 
+  history.emplace_back( iface ) ;
+  return history;
 }
 // ============================================================================
 const Hlt::Stage::History& 
@@ -63,7 +70,6 @@ Hlt::Stage::Lock::addToHistory
 {
   History& _history = m_stage->m_history ; 
   _history.insert( _history.end() , history.begin() , history.end() );
-  //
   return m_stage->history() ;
 }
 // ============================================================================
@@ -78,13 +84,13 @@ void Hlt::Stage::_checkLock() const
 void Hlt::Stage::SetAllToNull() 
 {
   _checkLock();
-  m_track               = 0 ;
-  m_rec_vertex          = 0 ;
-  m_l0_calo_candidate   = 0 ; 
-  m_l0_muon_candidate   = 0 ; 
-  m_multitrack          = 0 ;
-  m_l0_dimuon_candidate = 0 ;
-  m_stage               = 0 ;
+  m_track               = nullptr ;
+  m_rec_vertex          = nullptr ;
+  m_l0_calo_candidate   = nullptr ; 
+  m_l0_muon_candidate   = nullptr ; 
+  m_multitrack          = nullptr ;
+  m_l0_dimuon_candidate = nullptr ;
+  m_stage               = nullptr ;
 }
 // ============================================================================
 const ContainedObject* Hlt::Stage::_get() const 
@@ -98,13 +104,13 @@ const ContainedObject* Hlt::Stage::_get() const
   if ( is<Hlt::L0DiMuonCandidate> () ) return get<Hlt::L0DiMuonCandidate> () ;
   if ( is<Hlt::Stage>             () ) return get<Hlt::Stage>             () ;
   //
-  return 0;
+  return nullptr;
 }
 // ============================================================================
 void Hlt::Stage::_lock ( const INamedInterface* locker ) 
 {
   if (locked()) 
-  { throw GaudiException("Stage already locked","Stage::_lock", StatusCode::FAILURE); }
+  { throw GaudiException{"Stage already locked","Stage::_lock", StatusCode::FAILURE}; }
   //
   m_locker = const_cast<INamedInterface*> (locker) ;
   // m_history.push_back (locker->name());
@@ -121,7 +127,7 @@ void Hlt::Stage::_unlock (const INamedInterface* locker)
   //
   m_history.push_back ( locker->name() );
   //
-  m_locker = 0 ;
+  m_locker = nullptr ;
 }
 // ============================================================================
 std::ostream& Hlt::Stage::fillStream(std::ostream& s) const 
@@ -155,14 +161,14 @@ std::ostream& Hlt::Stage::fillStream(std::ostream& s) const
 void  Hlt::Stage::setOwner ( const Hlt::Candidate* c ) 
 {
   //
-  if ( 0 == c ) 
+  if ( !c ) 
   {
     throw GaudiException ( "Invalid Hlt::Candidate" ,
                            "Stage::setOwner"        ,
                            StatusCode::FAILURE      ) ;
   }
   //
-  if ( 0 != m_owner && c != m_owner ) 
+  if ( m_owner && c != m_owner ) 
   {
     throw GaudiException ( "Owner is already set"   ,
                            "Stage::setOwner"        ,
@@ -190,7 +196,7 @@ Hlt::Stage::Type Hlt::Stage::stageType() const
 std::ostream& Gaudi::Utils::toStream 
 ( const Hlt::Stage* c , std::ostream& s ) 
 {
-  if ( 0 == c ){ return s << "<NULL>" ; }
+  if ( !c ) return s << "<NULL>" ;
   return c->fillStream ( s ) ;
 }
 // ============================================================================
