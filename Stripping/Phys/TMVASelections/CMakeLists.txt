@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TMVASelections
 ################################################################################
-gaudi_subdir(TMVASelections v1r6)
+gaudi_subdir(TMVASelections v1r7)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiKernel
