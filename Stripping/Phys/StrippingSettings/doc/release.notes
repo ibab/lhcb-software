@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-22-01 - Ronan Wallace
+  - New DiJet config in LineConfigDictionaries_QEE.py to avoid import statements. Stripping20r{0,1}p3
+
 ! 2014-20-01 - Stefano Perazzini
   - Updated LineConfigDictionaries_Charmless.py for Stripping20r{0,1}p3
 
