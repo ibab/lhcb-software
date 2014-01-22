@@ -10,8 +10,6 @@ StrippingSelections file containing the line builder instance.
       PromptCharm = { ... }
 """
 from GaudiKernel.SystemOfUnits import GeV,MeV, mm
-from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions
-from math import cos
 #LowMult
 LowMult = {
     'BUILDERTYPE'  : 'LowMultConf',
@@ -224,9 +222,7 @@ Dijets = {
     # HLT properties.
     "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
     # Track properties.
-    "TRK"   : {"CONTAINER"     : StdAllNoPIDsPions,
-                                            # The track container to use.
-               "MAX_MULT"      : 250,       # Multiplicity.
+    "TRK"   : {"MAX_MULT"      : 250,       # Multiplicity.
                "MIN_P"         : 5*GeV,     # Momentum.
                "MIN_PT"        : 500*MeV,   # Transverse momentum.
                "MIN_MIPCHI2DV" : 16,        # Impact parameter chi-squared.
@@ -242,10 +238,10 @@ Dijets = {
                "MAX_M"         : 7*GeV,     # Combined mass.
                "MIN_SUM_PT"    : 2*GeV},    # Scalar sum of transverse momenta.
     # Fully reconstructed jet properties.
-    "JET"   : {"CONTAINER"     : None,      # The jet container to use.
+    "JET"   : {"STDJETS"       : False,     # Flag to use StdJets container.
                "PF"            : True,      # Flag to use particle flow.
-               "JEC"           : False,     # If no container, apply JEC.
-               "R"             : 0.7,       # If no container, set jet radius.
+               "JEC"           : False,     # If no STDJETS, apply JEC.
+               "R"             : 0.7,       # If no STDJETS, set jet radius.
                "MIN_PT"        : 19*GeV},   # Transverse momentum.
     # Pair of secondary vertices properties.
     "DISVR" : {"MAX_COSDPHI"   : 0,         # Cos of transverse angle.
@@ -253,7 +249,7 @@ Dijets = {
                "MIN_M"         : 2*GeV,     # Combined mass.
                "MIN_SUM_PT"    : 10*GeV},   # Scalar sum of transverse momenta.
     # Pair of jets properties.
-    "DIJET" : {"MAX_COSDPHI"   : cos(2.5)}  # Cos of transverse angle.
+    "DIJET" : {"MAX_COSDPHI"   : -0.8}      # Cos of transverse angle.
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'BhadronCompleteEvent' ]
