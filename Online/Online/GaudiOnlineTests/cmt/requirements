@@ -20,6 +20,7 @@ use  RootCnv       v* Online
 ###use Writer         v* Online
 #use Brunel v* Rec
 
+set GaudiOnlineExe   "GaudiOnlineExe.exe"
 set GAUDIONLINE_OPTS "${GAUDIONLINEROOT}/options"
 apply_pattern ld_library_path
 

@@ -3,31 +3,36 @@
 #    Checked and revised for new buffer manager  17/01/2014 M.Frank
 #
 . `dirname ${0}`/preamble.sh
-#rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
-export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 #
-$MINITERM TAEinit@${HOST}   -e "export UTGID=${NODENAME}_TAEBuffers;exec -a \${UTGID} $Class1_task -opts=$OPTS/TAEBuffers.opts"&
-$MINITERM MBMInit@${HOST}   -e "export UTGID=${NODENAME}_MBMInit;   exec -a \${UTGID} $Class1_task -opts=$OPTS/MBMinit.opts"&
-$MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}_TANServer; exec -a \${UTGID} $gaudi_run libOnlineKernel.so tan_nameserver -a -tcp -d"&
-#
-sleep 4
+start_opts_task  MEPInit $OPTS/MEPInit.opts
+start_gaudi_task TANServ libOnlineKernel.so tan_nameserver -a -tcp -d
+start_tan_server;
 #
 #  Monitors:
-$BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}_MBMMon;  exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
-$BIGTERM TANMon@${HOST}     -e "export UTGID=${NODENAME}_TANMon;  exec -a \${UTGID} $gaudi_run libOnlineKernel.so tanmon -c"&
-$MINITERM Receiver@${HOST}  -e "export UTGID=${NODENAME}_Receiver;exec -a \${UTGID} $Class1_task -opt=$OPTS/MDFReceiver.opts"&
-sleep 2
 #
-$MINITERM TMA_0@${HOST}     -e "export UTGID=${NODENAME}_TMA_0;   exec -a \${UTGID} $Class1_task -opt=$OPTS/ReadTAE.opts"&
-$MINITERM TMA_1@${HOST}     -e "export UTGID=${NODENAME}_TMA_1;   exec -a \${UTGID} $Class1_task -opt=$OPTS/ReadTAE.opts"&
-$MINITERM TMA_2@${HOST}     -e "export UTGID=${NODENAME}_TMA_2;   exec -a \${UTGID} $Class1_task -opt=$OPTS/ReadTAE.opts"&
-$MINITERM Sender@${HOST}    -e "export UTGID=${NODENAME}_Sender; export TAE_RECEIVER=${NODENAME}_Receiver; exec -a \${UTGID} $Class1_task -opt=$OPTS/TAESender.opts"&
-$MINITERM TAEWriter@${HOST} -e "export UTGID=${NODENAME}_TAEWriter; exec -a \${UTGID} $Class1_task -opt=$OPTS/TAEWriter.opts"&
-#export UTGID=TMA_$$
-#$Class1_task -opt=$OPTS/TAESender.opts &
+start_mbmmon;
+start_tanmon;
 #
 sleep 2
 #
-# $BIGTERM MBMDump@${HOST} -e "export UTGID=MBMDump; $gaudi_run libMBMDump.so mbmdump" &
-# export UTGID=${NODENAME}_prod_0; $gaudi_run libGaudiOnline.so mep2mbm_producer -n=prod_0 -p=333 -s=500 -r=2
+start_opts_task  Receiver $OPTS/MDFReceiver.opts;
+#
+start_opts_task TMA_0  $OPTS/ReadTAE.opts;
+start_opts_task TMA_1  $OPTS/ReadTAE.opts;
+start_opts_task TMA_2  $OPTS/ReadTAE.opts;
+#
+sleep 2
+#
+export RECEIVER=${NODENAME}_Receiver;
+start_opts_task  Sender      $OPTS/MDFSender.opts;
+export OUTPUT_FILE="file://taeOutput.dat";
+export OUTPUT_FILE="/dev/null";
+start_opts_task  Writer      $OPTS/DiskWR.opts;
+#
+if test ! -f ./taeData_0.dat;
+then
+    `dirname ${0}`/CreateMEP.sh -tae
+fi;
+# start_mbmdump;
+# start_tae;
 tail -n 3 ${0}

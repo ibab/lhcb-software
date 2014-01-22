@@ -3,50 +3,48 @@ echo "All args: $*"
 . preamble.sh
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #
-start_py_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()"
-start_py_task MbmOutput "import GaudiOnlineTests;GaudiOnlineTests.runOutBuffer()"
+start_py_task MepInit   "import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer(partitionBuffers=True)"
 #
-$MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${UTGID} $gaudi_run libOnlineKernel.so tan_nameserver -a -tcp -d"&
-#$MINITERM ROCollect@${HOST} -e "export UTGID=${NODENAME}/ROCollect; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_collect -gbl=ROMonitor -size=64 -delay=500 -verbose"&
-#$MINITERM ROPublish@${HOST} -e "export UTGID=${NODENAME}/ROPublish; exec -a \${UTGID} $gaudi_run libGaudiOnline.so romon_dimserver -gbl=ROMonitor -size=64 -delay=500 -verbose"&
+start_tan_server;
 #
 sleep 6
 #
 #  Monitors:
 #
-$BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
-#$BIGTERM TANMon@${HOST}     -e "export UTGID=${NODENAME}/TANMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so tanmon -c"&
+start_mbmmon;
+#start_tanmon;
 #
-start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_2     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-start_py_task Moore_3     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_4    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_5    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_6    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
-#start_py_task Moore_7    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
+start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+start_py_task Moore_2     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+start_py_task Moore_3     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+#start_py_task Moore_4    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+#start_py_task Moore_5    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+#start_py_task Moore_6    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
+#start_py_task Moore_7    "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(partitionBuffers=True)"
 #
 sleep 3
-start_py_task Receiver "import GaudiOnlineTests;GaudiOnlineTests.runReceiver()"
-#start_py_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('OUT',True,False,'./mdfOutput.dat')"
-start_py_task EvtServ   "import GaudiOnlineTests;GaudiOnlineTests.runEvtServer('OUT',True)"
+start_py_task Receiver "import GaudiOnlineTests;GaudiOnlineTests.runReceiver(buffer='Overflow',partitionBuffers=True)"
+start_py_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Overflow',partitionBuffers=True,decode=False,output='/dev/null')"
+start_py_task EvtServ   "import GaudiOnlineTests;GaudiOnlineTests.runEvtServer(buffer='Overflow',partitionBuffers=True)"
 #
 sleep 4
 #
-start_py_task Sender1 "import GaudiOnlineTests;GaudiOnlineTests.runSender('${NODENAME}_Receiver')"
-start_py_task Sender2 "import GaudiOnlineTests;GaudiOnlineTests.runSender('${NODENAME}_Receiver')"
+start_py_task Sender1 "import GaudiOnlineTests;GaudiOnlineTests.runSender('${NODENAME}_Receiver',partitionBuffers=True)"
+start_py_task Sender2 "import GaudiOnlineTests;GaudiOnlineTests.runSender('${NODENAME}_Receiver',partitionBuffers=True)"
 #
 start_py_task EvtCons1 "import GaudiOnlineTests;GaudiOnlineTests.runNetCons('${NODENAME}_EvtServ',1,0.01)"
-#start_py_task EvtCons2 "import GaudiOnlineTests;GaudiOnlineTests.runNetCons('${NODENAME}_EvtServ',1,0.01)"
+start_py_task EvtCons2 "import GaudiOnlineTests;GaudiOnlineTests.runNetCons('${NODENAME}_EvtServ',1,0.01)"
 #
 # Testing panormaix interface:
 #start_gaudi_task Panoramix "import PanoramixSim;PanoramixSim.run('${NODENAME}/EvtServ')"
 #
-#
-#
+if test ! -f ./mepData_0.dat;
+then
+    `dirname ${0}`/CreateMEP.sh
+fi;
 #
 # For debugging enable this and disable any other
-#$MINITERM Sender@${HOST}    -e "export UTGID=${NODENAME}_DbgTask   ; cat gaudi.gdb; gdb -x gaudi.gdb $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe" &
-# $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}_MBMDump; $gaudi_run libMBMDump.so mbmdump" &
-# export UTGID=${NODENAME}_prod_0; $gaudi_run libGaudiOnline.so mep2mbm_producer -n=prod_0 -p=333 -s=500 -r=2
+# start_mbmdump;
+# start_meps;
 tail -n 3 ${0}
