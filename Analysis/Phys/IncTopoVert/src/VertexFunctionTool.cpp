@@ -226,8 +226,8 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     //std::cout<<"VfAt \t\t"<<index<< " gauss tube:"<< exp(-0.5*CpC)<<"  sum: "<<SumGaussT<<"  sum2: "<<SumGaussTSquared
     //                  << "  Vf: "<<SumGaussT-SumGaussTSquared/SumGaussT <<std::endl;
   }
-  if(SumGaussT == 0. ) return 0.;
   delete vv;
+  if(SumGaussT == 0. ) return 0.;
   return SumGaussT-SumGaussTSquared/SumGaussT ;
 
 }
