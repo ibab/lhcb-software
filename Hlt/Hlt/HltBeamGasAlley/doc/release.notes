@@ -4,6 +4,10 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - replace BOOST_FOREACH with C++11 range-based for
+ - replace explicit loops with STL algorithms + lambda
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 

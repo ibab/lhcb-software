@@ -108,14 +108,13 @@ double BeamGasProtoVertex::sigmaBad(double z) const {
 
 
 template <typename ITER>
-void BeamGasProtoVertex::printVector(ITER begin, ITER end, const std::string& theText) const {
-  if ( msgLevel(MSG::DEBUG) ) debug() << theText << "\nVector Size = " << end-begin << "  Contents:" << "\n";
-  while (begin!=end)  
-  {
-    if ( msgLevel(MSG::DEBUG) ) debug() <<"   " << *begin++ << "\n";
-  }
-  
-  if ( msgLevel(MSG::DEBUG) ) debug() << endmsg;
+void BeamGasProtoVertex::printVector(ITER begin, ITER end, const std::string& theText) const 
+{
+  if ( !msgLevel(MSG::DEBUG) ) return;
+  std::stringstream s;
+  s << theText << "\nVector Size = " << end-begin << "  Contents:" << "\n";
+  std::copy(begin,end,std::ostream_iterator<typename ITER::reference>(s,"\n"));
+  debug() << s.str() << endmsg;
 }
 
 //### function to look for a proto vertex
@@ -192,11 +191,12 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
     }
     // get the mean and sigma of the extended sample
     else {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Extension: going to use start/end indices" << indStartExt-begin << "/" << indEndExt-begin  << endmsg;
-      if ( msgLevel(MSG::DEBUG) ) debug() << "End index =" << end - begin << endmsg;
-      if ( msgLevel(MSG::DEBUG) ) debug() << ">>><<< end-1 and end elements :" << *(end-1) << "   " << *end << endmsg;
-
-      if ( msgLevel(MSG::DEBUG) ) printVector(indStartExt, indEndExt, "*** Extended Sample ***");
+      if ( msgLevel(MSG::DEBUG) ) {
+          debug() << "Extension: going to use start/end indices" << indStartExt-begin << "/" << indEndExt-begin  << endmsg;
+          debug() << "End index =" << end - begin << endmsg;
+          debug() << ">>><<< end-1 and end elements :" << *(end-1) << "   " << *end << endmsg;
+          printVector(indStartExt, indEndExt, "*** Extended Sample ***");
+      }
       getMeanAndSigma(indStartExt, indEndExt, mean_sample, sigma_sample);
       if ( msgLevel(MSG::DEBUG) ) debug() << "Extension Mean And Sigma: " << mean_sample << " / " << sigma_sample << endmsg;
 
@@ -204,16 +204,17 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
       double SIGMA_BAD = sigmaBad(mean_sample);
       if ( msgLevel(MSG::DEBUG) ) debug() << "###SigmaBad is " << SIGMA_BAD << endmsg;
       if ( sigma_sample > SIGMA_BAD || sigma_sample < 0 ) {
-	if ( msgLevel(MSG::DEBUG) ) debug() << "Sigma not good. Starting new Main Step." << endmsg;                                                                                                          
-	indStartMS += stepSize1();
-	continue;
-      }
-      else {
-	AccOK = true;
-	indStartMS = end; // stop the while loop
-	// by construction the sample size is = minTracksToAcc() = stepSize1()+stepSize2() 
-	if ( msgLevel(MSG::DEBUG) ) debug() << "Good sigma after the extension." << endmsg;
-        if ( msgLevel(MSG::DEBUG) ) debug() << "\n\nEVENT ACCEPTED" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Sigma not good. Starting new Main Step." << endmsg;                                                                                                          
+        indStartMS += stepSize1();
+        continue;
+      } else {
+        AccOK = true;
+        indStartMS = end; // stop the while loop
+        // by construction the sample size is = minTracksToAcc() = stepSize1()+stepSize2() 
+        if ( msgLevel(MSG::DEBUG) ) {
+            debug() << "Good sigma after the extension." << endmsg;
+            debug() << "\n\nEVENT ACCEPTED" << endmsg;
+        }
       }
     }
 
@@ -221,27 +222,30 @@ void BeamGasProtoVertex::findProtoVertex(ITER begin, ITER end) {
     if (AccOK) {
       if ( msgLevel(MSG::DEBUG) ) debug() << "Currently #tracks in the proto vertex = " << std::distance(indStartExt,indEndExt) << " / " << minTracksToAccept() << endmsg;
       if ( std::distance(indStartExt, indEndExt) == minTracksToAccept() ) {
-        if ( msgLevel(MSG::DEBUG) ) debug() << "Track Indices of found Peak (first/last) : " << std::distance(begin,indStartExt) <<  " / " << std::distance(begin,indEndExt) << endmsg;
-        if ( msgLevel(MSG::DEBUG) ) debug() << "Their z positions : " << *indStartExt <<  " / " << *(indEndExt-1)<< endmsg;
+        if ( msgLevel(MSG::DEBUG) ) {
+            debug() << "Track Indices of found Peak (first/last) : " << std::distance(begin,indStartExt) <<  " / " << std::distance(begin,indEndExt) << endmsg;
+            debug() << "Their z positions : " << *indStartExt <<  " / " << *(indEndExt-1)<< endmsg;
+        }
 
         // In case the output track selection is not filled yet
-	// add the tracks of the selected z-sample
-	if ( m_trackSelection.output()->size() < minTracksToAccept() ) {
-	  // Need the following, to handle both the increasing and decreasing sorting
-	  double zSelMin = std::min( *indStartExt, *(indEndExt-1) ) - 0.001;
-	  double zSelMax = std::max( *indStartExt, *(indEndExt-1) ) + 0.001;
-	  const Hlt::TSelection<LHCb::Track>* BGtracks = m_trackSelection.input<1>();
-	  for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
-	    if ( (*itT) != NULL ) {
-	      if ((*itT)->hasStateAt(LHCb::State::ClosestToBeam)) {
-		double zOfTrack = (*itT)->stateAt(LHCb::State::ClosestToBeam)->z();
-		if (zOfTrack > zSelMin && zOfTrack < zSelMax) m_trackSelection.output()->push_back( *itT );
-	      }
-	    }
-	  }
-	  if ( msgLevel(MSG::DEBUG) ) debug() << "Filled outputSelection. Size = " << m_trackSelection.output()->size() << endmsg;
-	  if ( msgLevel(MSG::DEBUG) ) debug() << "Z Sel Min and Max = " << zSelMin << " / " << zSelMax << endmsg;
-	}
+        // add the tracks of the selected z-sample
+        if ( m_trackSelection.output()->size() < minTracksToAccept() ) {
+          // Need the following, to handle both the increasing and decreasing sorting
+          double zSelMin = std::min( *indStartExt, *(indEndExt-1) ) - 0.001;
+          double zSelMax = std::max( *indStartExt, *(indEndExt-1) ) + 0.001;
+          std::copy_if( std::begin(*m_trackSelection.input<1>()), std::end(*m_trackSelection.input<1>())
+                      , std::back_inserter( *m_trackSelection.output() )
+                      , [&](const LHCb::Track *trk) {
+                            if (!trk || !trk->hasStateAt(LHCb::State::ClosestToBeam)) return false;
+                            double zOfTrack = trk->stateAt(LHCb::State::ClosestToBeam)->z();
+                            return (zOfTrack > zSelMin && zOfTrack < zSelMax) ;
+                        });
+
+          if ( msgLevel(MSG::DEBUG) ) {
+             debug() << "Filled outputSelection. Size = " << m_trackSelection.output()->size() << endmsg;
+             debug() << "Z Sel Min and Max = " << zSelMin << " / " << zSelMax << endmsg;
+          }
+        }
       }
     }
 
@@ -273,14 +277,14 @@ StatusCode BeamGasProtoVertex::execute() {
   // Loop over the tracks and fill the vector with the Z positions (use the tracks state ClosestToBeam)
   // Write down only the tracks which pass the z-position cuts (can be different for the different lines)
   std::vector<double> vectZPos;
-  for ( Hlt::TSelection<LHCb::Track>::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) {
-    if ( (*itT) != NULL ) {
-      if ( (*itT)->hasStateAt(LHCb::State::ClosestToBeam) ) {
-	const LHCb::State* firstState = (*itT)->stateAt(LHCb::State::ClosestToBeam);
-	if ( passZCuts(firstState->z()) ) vectZPos.push_back( firstState->z() );
-      }
-    }
-  }
+  std::for_each(BGtracks->begin(),BGtracks->end()
+              ,[&](const LHCb::Track* trk) {
+                    if ( trk && trk->hasStateAt(LHCb::State::ClosestToBeam) ) {
+                        double z = trk->stateAt(LHCb::State::ClosestToBeam)->z();
+                        if ( passZCuts(z) ) vectZPos.push_back(z);
+                    }
+                    return;
+               });
   if ( msgLevel(MSG::DEBUG) ) debug() << "Number of tracks passing the z-cut = " << vectZPos.size()  << endmsg;
 
   // In case there are not enough tracks : reject the event
