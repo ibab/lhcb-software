@@ -84,9 +84,9 @@ StatusCode HltCosmicsOT::execute()
 	    // check for at least 2 hits
 	    if (hits.begin() + 1 >= hits.end()) continue;
 	    // calculate sum of straw numbers
-	    unsigned long sum = 0ul;
-	    BOOST_FOREACH(const LHCb::OTLiteTime& hit, hits)
-		sum += hit.channel().straw();
+	    unsigned long sum = std::accumulate( std::begin(hits), std::end(hits), 0ul
+                                           , [](unsigned long x, const LHCb::OTLiteTime& hit) 
+                                             { return x + hit.channel().straw(); } );
 	    sum &= 0x7ful; // remainder when dividing by 128
 	    if (sum < m_tolstraws || 0x80ul - sum < m_tolstraws) {
 		// we have hits in two neighbouring straws, return early
