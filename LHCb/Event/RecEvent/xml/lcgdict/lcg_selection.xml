@@ -9,7 +9,9 @@
   <class name = "LHCb::RecVertex::TrackWithWeightVector" />
   <class name = "Gaudi::SymMatrix9x9" />
   <exclusion>
-    <!-- class excluded because the dictionary is already present in RELAX -->
-    <class pattern="ROOT::Math::SMatrix&lt;double,9,9,*&gt;"/>
+    <class pattern="ROOT::Math::SMatrix&lt;double,9,9,*&gt;">
+      <method proto_pattern="*::operator=(double const&amp;)"/>
+      <method proto_pattern="*::SMatrix(double const&amp;)"/>
+    </class>
   </exclusion>
 </lcgdict>
