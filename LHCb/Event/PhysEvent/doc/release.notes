@@ -2,6 +2,8 @@
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
+! 2014-01-22 - Stefania Vecchi & Mirco Dorigo
+ - Added SS_PionBDT tagger type in Tagger.xml and Tagger.h
 
 !========================= PhysEvent v11r23 2013-12-09 =========================
 ! 2013-11-30 - Stefania Vecchi
