@@ -122,7 +122,7 @@ def evtMerger(buffer='Events',name='Writer',location='/Event/DAQ/RawEvent',routi
   merger.RoutingBits      = routing
   merger.Silent           = silent
   return merger
-  
+
 #------------------------------------------------------------------------------------------------
 def fidManip(name,action,datatype,location):
   manip                   = Configs.LHCb__FIDManipAlg(name)
@@ -440,8 +440,8 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   return _application('NONE',extsvc=[monSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------
-def hltApp(partID, partName, percent, print_freq, delay=None, buffers=['IN','OUT'], decode=False, type=None, event_type=None):
-  mepMgr               = mepManager(partID,partName,buffers)
+def hltApp(partID, partName, percent, print_freq, delay=None, buffers=['IN','OUT'], decode=False, type=None, event_type=None, partitionBuffers=False):
+  mepMgr               = mepManager(partID,partName,buffers,partitionBuffers)
   mepMgr.HandleSignals = True
   runable              = evtRunable(mepMgr)
   if event_type is None:

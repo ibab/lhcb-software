@@ -38,7 +38,7 @@ namespace LHCb  {
 
   class MEPManager;
 
-  /** Class definition of EventServerRunable.
+  /** @class EventServerRunable EventServerRunable.h GaudiOnline/EventServerRunable.h
     *
     * Runable to serve independent network clients with event
     * data. requests are purely served on demand ie. each
@@ -90,8 +90,6 @@ namespace LHCb  {
     int                  m_consState;
     /// Property: Print delivery after each m_printNum events sent
     int                  m_printNum;
-    /// Flag to indicate if a MBM request is currently pending
-    bool                 m_reqActive;
 
   public:
     /// Standard Constructor

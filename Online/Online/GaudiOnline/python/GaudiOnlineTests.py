@@ -9,7 +9,8 @@ def _run(app,prt=print_config):              return (app,end_config(prt))
 def runDimReader(buffer):                    return _run(dimFileReaderApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
 # HLT sender with input from MEP RESULT buffer, with decoding of fragments.
-def runSender(target):                       return _run(dataSenderApp(pid,pnam,target,'Send',partitionBuffers=False,decode=False,request='ONE'))
+def runSender(target,partitionBuffers=False):
+  return _run(dataSenderApp(pid,pnam,target,'Send',partitionBuffers=partitionBuffers,decode=False,request='ONE'))
 #------------------------------------------------------------------------------------------------
 # Typical sender with input from partitioned buffers, no MEP decoding.
 def runDataSender(target,buffer,req='ALL'):  return _run(dataSenderApp(pid,pnam,target,buffer,True,False,req))
@@ -24,14 +25,11 @@ def runReproSender(target,buffer,req='ALL'):
   return _run(res)
 #------------------------------------------------------------------------------------------------
 # Data receiver task; puts data into buffer 'buffer'
-def runReceiver(buffer='OUT'):               return _run(dataReceiverApp(pid,pnam,buffer,True))
+def runReceiver(buffer='OUT',partitionBuffers=True):
+  return _run(dataReceiverApp(pid,pnam,buffer,partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
-def runEvtProd():                            return _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001,errors=2))
-#------------------------------------------------------------------------------------------------
-def runEvtHolder(errBuffer='OUT'):           return _run(mepHolderApp(pid,pnam,errBuffer,True))
-#------------------------------------------------------------------------------------------------
-def runMBMRead(percent=1,print_freq=0.0001):
-  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,buffers=['Events','Send'],type='ONE',decode=True,event_type=1))
+def runMBMRead(percent=1,print_freq=0.0001,partitionBuffers=False):
+  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,buffers=['Events','Send'],type='ONE',decode=True,event_type=1,partitionBuffers=partitionBuffers))
   #return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
 #------------------------------------------------------------------------------------------------
 def runMBMReadTimeout(percent=1,print_freq=0.0001):
@@ -106,8 +104,8 @@ def runOutBuffer(partitionBuffers=True):
 def runSendBuffer(partitionBuffers=False):
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Send -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
-def runRecBuffer():
-  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Events -c -s=8096 -e=64 -u=64 -i=Output -c',partitionBuffers=True))
+def runRecBuffer(partitionBuffers=True):
+  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Events -c -s=8096 -e=64 -u=64 -i=Output -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
 def runRecBuffer2():
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=10 -u=64 -i=Input -c -s=8096 -e=10 -u=64 -i=Output -c -s=8096 -e=10 -u=64 -i=Recv -c -s=8096 -e=5 -u=64 -i=Send -c ',partitionBuffers=True))
@@ -137,9 +135,9 @@ def runPanoramixSim(source,load=1,print_freq=1.0):
   app.OutputLevel = 2
   return _run(app,True)
 #------------------------------------------------------------------------------------------------
-def runMepBuffer():
+def runMepBuffer(partitionBuffers=True):
   flags = '-s=7000 -e=100 -u=32 -b=12 -f -i=Events -c -s=200 -e=500 -u=32 -f -i=Send -c -s=200 -e=100 -u=32 -f -i=Overflow -c'
-  return _run(mbmInitApp(pid,pnam,flags))
+  return _run(mbmInitApp(pid,pnam,flags,partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
 #  New HLT architecture with Hlt1 and Hlt2 separation
 #------------------------------------------------------------------------------------------------

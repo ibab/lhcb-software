@@ -28,6 +28,7 @@ namespace {
     ::printf("mep_prod_a -opt [-opt]\n");
     ::printf("    -n(ame)=<name>         buffer member name\n");
     ::printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
+    ::printf("    -i(nput)=<name>        Buffer name to place data.\n");
     ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
     ::printf("    -c(ount)=<number>      Number of events to be sent. default: unlimited\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");

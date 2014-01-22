@@ -42,12 +42,11 @@ struct PubAreaHeader    {
     int  PubAreaBufferOffset;//....................... Offset to the buffer area
     int  AreaSize; //................................. Size of the area in bytes
     int  NumIndex; //..................................... Number of index slots
-    char LockPrcName[32]; //.................................... Locking Process
+    char LockPrcName[64]; //.................................... Locking Process
     char PubAreaStamp[5]; //................. Identifier of the Public Area 'PA'
-    char OpSys[4]; //.............................. Operating system: VMS or OS9
-    char NodeName[32]; //................ Node name where the module was created
-    char Name[32];     //............................Name of the publishing area
-    char Spare[10]; //.................................. Reserved for future use
+    char OpSys[11]; //.............................. Operating system: VMS or OS9
+    char NodeName[64]; //................ Node name where the module was created
+    char Name[64];     //............................Name of the publishing area
 };
 
 // ********************
@@ -62,7 +61,7 @@ struct PubAreaIndex   {
   int SlotSize; //................................  Size of slot to be allocated
   int SlotOffset; //................................ Pointer to slot buffer area
   int InUse; //.............. Cleared when the slot is empty and ready for reuse
-  char SlotProcess[20]; //.................. Name of process allocating the slot
+  char SlotProcess[64]; //.................. Name of process allocating the slot
 };
 
 // ***************
@@ -80,8 +79,7 @@ protected:
   PubAreaHeader *m_header;         //.......Pointer to the header of the PubArea
   PubAreaIndex  *m_index;         //........... Pointer to the first index entry
   int m_locked; //.................. Set when the process has locked the pubarea
-  char m_spare[32];   //.................................... Spare for later use
-  char m_node[32];    //................................. Name of the local node
+  char m_node[64];    //................................. Name of the local node
   DataStructure* m_hdrFmt; //.......... Format of the header used for conversion
   DataStructure* m_idxFmt; //..... Format of the index entry used for conversion
   DataStructure* m_idxBuffer[PA_MAX_INDEX]; //...... Formats of the buffer areas

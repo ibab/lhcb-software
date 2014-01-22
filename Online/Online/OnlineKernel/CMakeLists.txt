@@ -34,3 +34,4 @@ set_directory_properties(PROPERTIES CONFIGURABLE_USER_MODULES None)
 gaudi_install_python_modules()
 
 gaudi_add_test(QMTest QMTEST)
+##gaudi_env(SET gentest_exe   "`which gentest.exe`")

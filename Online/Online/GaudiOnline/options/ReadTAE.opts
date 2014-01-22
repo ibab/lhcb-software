@@ -1,29 +1,6 @@
-#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"};
-ApplicationMgr.TopAlg               += { "StoreExplorerAlg","LHCb::MEPTester/Tester" };
-ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.001;
-EventDataSvc.RootCLID                = 1;
-EventDataSvc.EnableFaultHandler      = true ;
-EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+#include "$GAUDIONLINEROOT/options/ReadMBM.opts"
+ApplicationMgr.TopAlg               += { "LHCb::MEPTester/Tester" };
 RawDataCnvSvc.EventsBefore           = 5;
 RawDataCnvSvc.EventsAfter            = 4;
-EventSelector.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
-EventSelector.Input                  = "Events";
 EventSelector.Decode                 = false;
-MEPManager.PartitionID               = @OnlineEnv.PartitionID;
-MEPManager.PartitionName             = @OnlineEnv.PartitionName;
-MEPManager.Buffers                   = { "Events", "Send" };
-MEPManager.PartitionBuffers          = true;
-//
-// Prescale events declared to RESULT buffer
-//
-ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
-SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::RawEvent2MBMMergerAlg/TAEOutput"};
 Prescaler.PercentPass                = 100;
-Prescaler.OutputLevel                = 4;
-TAEOutput.Buffer                     = "Send";
-TAEOutput.DataType                   = 1;
-TAEOutput.Compress                   = 0;

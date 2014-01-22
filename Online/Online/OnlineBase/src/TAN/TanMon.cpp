@@ -58,13 +58,19 @@ extern "C" int tanmon( int argc, char* argv[])   {
   }
   terminal_response();
   do  {
+    char text[132];
     std::stringstream s;
     time(&curr);
     clear_scr; bold; inverse; 
-    cursor(2,30);  printf("T A N   M O N I T O R");
+    cursor(1,25);  printf("                                                       ");
+    cursor(2,25);  printf("                 T A N   M O N I T O R                 ");
+    cursor(3,25);  printf("                                                       ");
     plain;      
-    cursor(4,30);
-    ::puts(ctime(&curr));      
+    cursor(4,20);
+    ::puts(ctime(&curr));          
+    cursor(4,40);
+    ::snprintf(text,sizeof(text),"%s  PID:%d  %s",RTL::nodeName().c_str(),::lib_rtl_pid(),RTL::processName().c_str());
+    ::puts(text);
     cursor(5,1);
     TanDataBase::Instance().Dump(s);
     ::puts(s.str().c_str());

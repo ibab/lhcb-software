@@ -15,7 +15,7 @@ Created           :  5-AUG-1996 by A.Pacheco
 
 #include "PA.h" //............. The pubarea class and structure definitions
 
-static char LocalProcess[32] = "\0";
+static char LocalProcess[64] = "\0";
 #include "RTL/rtl.h"
 
 PubArea::PubArea(const char* name)   {
@@ -340,16 +340,16 @@ int PubArea::CreatePubArea(int Size /* in bytes */)   {
 }
 
 int PubArea::RefreshPubArea() {
-  char ReqNode[32];
+  char ReqNode[64];
   if (m_header==0)   {
     PubAreaPrint(3,0,"PubArea::RefreshPubArea: PubArea does not exist");
     return  PA_FAILURE;
   }
   //................................. Get the node name from the PubArea itself 
-  strncpy(ReqNode, m_header->NodeName,sizeof(ReqNode));
-  ReqNode[sizeof(ReqNode)]=0;
+  strncpy(ReqNode, m_header->NodeName, sizeof(ReqNode));
+  ReqNode[sizeof(ReqNode)-1]=0;
   //...... Return if local node is requested (refresh is only needed for remote)
-  if (strcmp(ReqNode,m_node)==0) return PA_SUCCESS;
+  if ( strcmp(ReqNode,m_node) == 0 ) return PA_SUCCESS;
   //...................................... Request a new copy of the public area
   int status = LinkPubArea(ReqNode);
   if (status!=PA_SUCCESS)  { 
@@ -401,7 +401,7 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...
   // Get the PADEBUG variable from the process environement variable
   if ( Tmp == (char*)~0x0 ) {
     Tmp = ::getenv("PADEBUG");
-    char Logical[32];
+    char Logical[64];
     ::strncpy(Logical,Tmp != 0 ? Tmp : "4",sizeof(Logical));
     Logical[sizeof(Logical)-1]=0;
     ::sscanf(Logical,"%d",&PaDebug);

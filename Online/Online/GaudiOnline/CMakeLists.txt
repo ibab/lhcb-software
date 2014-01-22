@@ -24,3 +24,6 @@ gaudi_install_python_modules()
 
 gaudi_add_executable(GaudiOnlineExe  main/main.cpp       LINK_LIBRARIES GaudiKernel tcmalloc ${CMAKE_DL_LIBS})
 gaudi_add_executable(GaudiCheckpoint main/checkpoint.cpp LINK_LIBRARIES GaudiKernel OnlineBase tcmalloc ${CMAKE_DL_LIBS})
+
+##gaudi_env(SET GaudiOnlineExe       "`which GaudiOnlineExe.exe`")
+##gaudi_env(SET GaudiCheckpointExe   "`which GaudiCheckpoint.exe`")

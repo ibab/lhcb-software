@@ -1,9 +1,0 @@
-#include "$GAUDIONLINEROOT/options/Main.opts"
-#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
-MEPInit.InitFlags        = "-s=7000 -e=100 -u=10 -b=12 -f -i=Events -c -s=7000 -e=100 -u=14 -f -i=Send -c";
-MEPInit.PartitionBuffers = true;
-MEPInit.PartitionID      = @OnlineEnv.PartitionID;
-MEPInit.PartitionName    = @OnlineEnv.PartitionName;
-MessageSvc.OutputLevel     = 4;
-Runable.Wait               = 1;  // 1 if daemon; 3 if in main

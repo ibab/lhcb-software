@@ -7,13 +7,12 @@
 #include "./QMDAQEnv.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPInjector/Injector";
-ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
+ApplicationMgr.SvcOptMapping         =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
-ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
-ApplicationMgr.OutputLevel = 5;
+ApplicationMgr.ExtSvc		    += { "MonitorSvc" };
+ApplicationMgr.OutputLevel           = 5;
 Injector.OutputLevel = 3;
 MessageSvc.OutputLevel= 3;
 
@@ -53,7 +52,7 @@ Injector.TestLimit=50;
 
 Injector.ARPME = false;
 
-Injector.BufferNames = {"PERA"}; //@OnlineEnv.Injector_Readers;
+Injector.BufferNames = {"Out_LHCb"}; //@OnlineEnv.Injector_Readers;
 
 Injector.BufferOptions = {
  "-s=10000", 

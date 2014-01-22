@@ -6,8 +6,8 @@ ApplicationMgr.Runable               = "LHCb::EventServerRunable/Runable";
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 
 Runable.REQ = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
-Runable.Input                        = "OUT";
-MEPManager.Buffers                   = { "OUT" };
+Runable.Input                        = "Send";
+MEPManager.Buffers                   = { "Send" };
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionBuffers          = true;

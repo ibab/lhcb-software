@@ -25,38 +25,32 @@
  */
 namespace LHCb  {
 
-  /** Class definition of EventRequestServerRunable.
+  /** @class EventRequestServerRunable EventRequestServerRunable.h GaudiOnline/EventRequestServerRunable.h
     *
     * Runable to serv independent network clients with event
     * data. requests are purely served on demand ie. each
     * client has to ask for every event to be processed.
+    * 
+    * Contrary to the base class only events the request type 
+    * of the server requirement is served. Clients can only get 
+    * events without specifying special trigger masks etc.
     *
     *  @author Markus Frank
     *  @version 1.0
     */
   class EventRequestServerRunable : public EventServerRunable  {
-    /// Consistemncy check counter for events sent
-    int   m_sendCount;
-    /// Consistemncy check counter for events retrieved
-    int   m_mbmCount;
-    /// Get next client from queue
-    DataTransfer::netentry_t* getClient();
   public:
     /// Standard Constructor
     EventRequestServerRunable(const std::string& nam, ISvcLocator* svcLoc);
     /// Standard Destructor
     virtual ~EventRequestServerRunable();
-    /// IService implementation: initialize the service
-    virtual StatusCode initialize();
-    /// IService implementation: finalize the service
-    virtual StatusCode finalize();
+    /// IService implementation: start the service
+    virtual StatusCode start();
 
     /// Rescan client tables, reformulate possibly pending requests and renew the request
     virtual void restartRequests();
     /// Send event data to a list of waiting clients
     virtual StatusCode sendEvent();
-    /// IRunable implementation : Run the class implementation
-    virtual StatusCode run();
   };
 }      // End namespace LHCb
 #endif // GAUDISVC_EVENTREQUESTSERVERRUNABLE_H

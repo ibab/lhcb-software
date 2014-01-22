@@ -84,12 +84,12 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   ProcessGroup pg;
-  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()");
-  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0)");
-  const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None)");
+  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer(partitionBuffers=True)");
+  const char *a3[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMBMRead(percent=100.0,partitionBuffers=True)");
+  const char *a4[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runSender(target=None,partitionBuffers=True)");
   const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep2mbm_producer",
 		       "-n=prod_0","-p=333","-s=500","-r=2","-c=5000",
-		       "-input=Events","-file=mepData_0.dat",0};
+		       "-input=Events_LHCb","-file=mepData_0.dat",0};
 
   Process::setDebug(true);  
   pg.add(p[0]=new Process("MEPInit_0",  command(),a1,out.c_str()));
@@ -123,7 +123,7 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   ProcessGroup pg;
-  const char *a1[] =CLASS1("TAEBuffers.opts");
+  const char *a1[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer(partitionBuffers=True)");
   const char *a2[] =CLASS1("ReadTAE.opts");
   const char *aprod[]={"libGaudiOnline.so", "OnlineStart", "libGaudiOnline.so", "mep2mbm_producer",
 		       "-n=TAEprod_0","-p=333","-s=500","-r=2","-c=5000","-file=taeData_0.dat",
@@ -341,11 +341,10 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = "";//"/dev/null";
   string host = RTL::nodeNameShort();
-  const char *injclass[] =CLASS1("MEPInjectorQMTest.opts");
-  const char *readclass[] =CLASS1("ReaderSvcQMTest.opts");
-  const char *meprxclass[] =CLASS1("MEPRxQMTest.opts");
-//  const char *mepinitclass[] =CLASS1_PY("import GaudiOnlineTests;GaudiOnlineTests.runMepBuffer()");
-  const char *mepinitclass[] =CLASS1("MEPInitQMTest.opts");
+  const char *injclass[] = CLASS1("MEPInjectorQMTest.opts");
+  const char *readclass[] = CLASS1("ReaderSvcQMTest.opts");
+  const char *meprxclass[] = CLASS1("MEPRxQMTest.opts");
+  const char *mepinitclass[] = CLASS1("MEPInit.opts");
   std::vector<std::string> args;
 
   Process::setDebug(true);
@@ -357,17 +356,13 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
 
   mepinitproc->start();
   ::lib_rtl_sleep(3500);
- 
   meprxproc->start();
- 
   injproc->start();
   ::lib_rtl_sleep(3500);
   readproc->start();
-
   ::lib_rtl_sleep(3500);
 
   cout << "Stopping processes ..... " << endl;
-
   ::lib_rtl_sleep(3000);
 
   readproc->stop();
@@ -378,7 +373,6 @@ extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
   ::lib_rtl_sleep(1000); 
   mepinitproc->stop();
   ::lib_rtl_sleep(1000); 
-  
 
   readproc->wait(Process::WAIT_BLOCK);
   injproc->wait(Process::WAIT_BLOCK); 

@@ -88,7 +88,7 @@ StatusCode EventServerRunable::initialize()   {
   net_subscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT,handle_req,handle_death);
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
-  m_reqActive = false;
+  //::lib_rtl_clear_event(m_suspend);
   return sc;
 }
 
@@ -108,7 +108,6 @@ StatusCode EventServerRunable::start()   {
   m_request.parse(m_req);
   m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_mepMgr->partitionID());
   m_consState = WAIT_REQ;
-  restartRequests();
   return sc;
 }
 
@@ -119,6 +118,7 @@ StatusCode EventServerRunable::stop()   {
     return error("Failed to stop service base class.");
   }
   if ( m_consumer ) {
+    m_consumer->delRequest(m_request);
     delete m_consumer;
   }
   m_consumer = 0;
@@ -168,7 +168,7 @@ void EventServerRunable::handle(const Incident& inc)    {
         m_mepMgr->cancel();
       }
     }
-    ::lib_rtl_set_event(m_suspend);
+    ::lib_rtl_clear_event(m_suspend);
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_consState = m_recipients.empty() ? WAIT_REQ : WAIT_EVT;
@@ -202,6 +202,7 @@ void EventServerRunable::removeTarget(const string& src)   {
 
 /// Handle request from new network data consumer
 void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hdr)   {
+  bool empty;
   char buff[2048];
   string src = hdr.name;
   MBM::Requirement* r = (MBM::Requirement*)buff;
@@ -210,13 +211,14 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
     //info("Got event request from "+src);
     try {
       ::lib_rtl_lock(m_lock);
+      empty = m_recipients.empty();
 #ifdef EventServerRunable_USE_MAP
       m_recipients[src] = make_pair(*r,e);
 #else
       m_recipients.push_back(make_pair(src,make_pair(*r,e)));
 #endif
-      if ( FSMState() == Gaudi::StateMachine::RUNNING ) restartRequests();
-      else if ( m_consumer )  restartRequests();
+      if ( empty && m_consState != DONE ) ::lib_rtl_set_event(m_suspend);
+      //info("Received event request from "+src);
     }
     catch(...) {
       info("Exception in handleEventRequest from "+src);
@@ -239,25 +241,13 @@ void EventServerRunable::restartRequests()  {
       m_request.vetomask[k] &= r.vetomask[k];
     }
   }
-  if ( m_reqActive ) {
-    if ( m_consumer ) m_consumer->delRequest(old);
-    m_reqActive = false;
-  }
-  if ( m_recipients.empty() )  {
-    //m_consumer->pause();
-    if ( m_consState != WAIT_REQ ) {
-      m_consState = WAIT_REQ;
-      ::lib_rtl_clear_event(m_suspend);
+  //debug("restartRequests: Recipients:%d\n", int(m_recipients.size()));
+  if ( m_consumer )   {
+    m_consumer->delRequest(old);
+    if ( m_recipients.size() > 0 )  {
+      m_consumer->addRequest(m_request);
+      m_consState = WAIT_EVT;
     }
-  }
-  else  {
-    m_consumer->addRequest(m_request);
-    m_reqActive = true;
-    if ( m_consState == WAIT_EVT ) {
-      m_consumer->cancel();
-    }
-    else if ( m_consState == WAIT_REQ )
-      ::lib_rtl_set_event(m_suspend);
   }
 }
 
@@ -283,24 +273,42 @@ StatusCode EventServerRunable::sendEvent()  {
     ++i;
   }
   m_consumer->freeEvent();
+  if ( m_recipients.empty() )  {
+    m_consumer->delRequest(m_request);
+  }
   return cnt>0 ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 /// IRunable implementation : Run the class implementation
 StatusCode EventServerRunable::run()   {
   int sc;
+  bool empty;
   int printN = 0;
   while ( 1 )  {
     ::lib_rtl_lock(m_lock);
     switch(m_consState)  {
       case WAIT_REQ:
-        ::lib_rtl_unlock(m_lock);
-        ::lib_rtl_wait_for_event(m_suspend);
+	//info("Wait for event requests......");
         if ( m_consState == DONE )  {
 	  info("End of event requests reached. Stopping...");
+	  ::lib_rtl_clear_event(m_suspend);
+	  ::lib_rtl_unlock(m_lock);
           return StatusCode::SUCCESS;
         }
-        m_consState = WAIT_EVT;
+	empty = m_recipients.empty();
+	if ( empty ) ::lib_rtl_clear_event(m_suspend);
+	// Unlock now and allow for new requests being added
+        ::lib_rtl_unlock(m_lock);
+	if ( empty && m_consState != DONE ) {
+	  ::lib_rtl_wait_for_event(m_suspend);
+	}
+	// Check if we got a cancel in the meantime
+        if ( m_consState == DONE )  {
+	  info("End of event requests reached. Stopping...");
+	  ::lib_rtl_clear_event(m_suspend);
+          return StatusCode::SUCCESS;
+        }
+	restartRequests();
         break;
       case WAIT_EVT:
         ::lib_rtl_unlock(m_lock);
@@ -323,12 +331,13 @@ StatusCode EventServerRunable::run()   {
 	    }
             net_unlock(netPlug(),lock);
             lock = 0;
-            restartRequests();
+	    m_consState = WAIT_REQ;
             ::lib_rtl_unlock(m_lock);
           }
           catch(...)  {
 	    info("Exception....");
             if ( lock ) net_unlock(netPlug(),lock);
+	    m_consState = WAIT_REQ;
             ::lib_rtl_unlock(m_lock);
           }
         }

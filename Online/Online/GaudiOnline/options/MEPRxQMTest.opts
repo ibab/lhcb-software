@@ -4,37 +4,38 @@
 // $Id: MEPRxQMTest.opts,v 1.1 2010-03-08 18:27:00 garnierj Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
+//
+#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 #include "./QMDAQEnv.opts"
 OnlineEnv.PartititonID   = 98303;
 ApplicationMgr.SvcOptMapping += { "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
 ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
-ApplicationMgr.Dlls     += { "Gaucho" };
 MessageSvc.OutputLevel      = 4;
 //MessageSvc.LoggerOnly  = false;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
-ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
-ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPRxSvc/Runable" };
+ApplicationMgr.SvcOptMapping         =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPRxSvc/Runable" };
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
-MEPManager.PartitionID               = 98303;
-MEPManager.Buffers                   = { "MEP" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.Buffers                   = { "Events" };
+MEPManager.PartitionBuffers          = true;
 MessageSvc.OutputLevel   = 1;
-//MessageSvc.LoggerOnly  = true;
 Runable.OutputLevel      = 1;
 Runable.MEPBuffers       = 1;          // concurrently built events
-Runable.maxBadPktRatio   = 0.1;     // maximum fraction of erroneous packets during sampling time before going into state ERROR
-Runable.pktSamplingCount = 100;  // number of packets to sample to determine error ratio
 Runable.maxMsForGetSpace = 100;  // milliseconds to wait to get buffer memory from BM
-Runable.partitionID      = 98303;       
-Runable.MEPBufSize       = 21000000;
+Runable.partitionID      = @OnlineEnv.PartitionID;
+Runable.partitionName    = @OnlineEnv.PartitionName;
+Runable.partitionBuffers = true;
+Runable.MEPBufSize       = 2000000;
 Runable.refCount         = 2;
 //Runable.RTTCCompat       = false;       // for RTTC backward compatibility
 Runable.sockBuf           = 30000000;     // receive socket size
-Runable.maxEventAge=1000;
-Runable.IPSrc=@QMDAQEnv.IPSrc;
-Runable.LocalTest=true;
-Runable.SrcTestPort=@QMDAQEnv.SrcTestPort;
-Runable.DestTestPort=@QMDAQEnv.DestTestPort;
+Runable.maxEventAge  = 1000;
+Runable.IPSrc        = @QMDAQEnv.IPSrc;
+Runable.LocalTest    = true;
+Runable.SrcTestPort  = @QMDAQEnv.SrcTestPort;
+Runable.DestTestPort = @QMDAQEnv.DestTestPort;
