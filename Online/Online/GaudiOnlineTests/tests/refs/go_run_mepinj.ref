@@ -1,0 +1,210 @@
+Starting processes .....
+Parent: Started process:MEPInit_0
+Child: Starting process:MEPInit_0
+PID 5588 - Wed Jan 22 20:39:14 2014 - (ERROR) Server Connecting to DIM_DNS on ecs01.lbdaq.cern.ch: Connection refused
+Commencing autostart sequence...
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/Main.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/OnlineEnvironment.opts
+JobOptionsSvc        INFO # (2,1): OnlineEnv.PartitionID = 333
+JobOptionsSvc        INFO # (3,1): OnlineEnv.PartitionName = "LHCb"
+JobOptionsSvc        INFO # (4,1): OnlineEnv.MonitorSvcType = "LHCb::MemMonitorSvc/MonitorSvc"
+JobOptionsSvc        INFO # (5,1): ApplicationMgr.ExtSvc = ["LHCb::MemMonitorSvc/MonitorSvc", "LHCb::DimMonitoringEngine/MonitoringEngine"]
+JobOptionsSvc        INFO # (7,1): ApplicationMgr.SvcOptMapping += ["LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
+JobOptionsSvc        INFO # (13,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPInit.opts
+JobOptionsSvc        INFO # (3,1): ApplicationMgr.ExtSvc += ["LHCb::MEPManager/MEPInit"]
+JobOptionsSvc        INFO # (4,1): MEPInit.InitFlags = "-s=7000 -e=100 -u=64 -b=12 -f -i=Events -c -s=1500 -e=100 -u=14 -f -i=Send -c -s=1500 -e=100 -u=32 -f -i=Overflow -c -s=1000 -e=100 -u=14 -f -i=OUT -c"
+JobOptionsSvc        INFO # (5,1): MEPInit.PartitionID = @OnlineEnv.PartitionID
+JobOptionsSvc        INFO # (6,1): MEPInit.PartitionName = @OnlineEnv.PartitionName
+JobOptionsSvc        INFO # (7,1): MEPInit.PartitionBuffers = 1
+JobOptionsSvc        INFO # (8,1): MessageSvc.OutputLevel = 4
+JobOptionsSvc        INFO # (9,1): Runable.Wait = 3
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPInit.opts
+Parent: Started process:MEPRx_0
+Parent: Started process:MEPInj_0
+Child: Starting process:MEPRx_0
+Child: Starting process:MEPInj_0
+PID 5600 - Wed Jan 22 20:39:18 2014 - (ERROR) Server Connecting to DIM_DNS on ecs01.lbdaq.cern.ch: Connection refused
+PID 5601 - Wed Jan 22 20:39:18 2014 - (ERROR) Server Connecting to DIM_DNS on ecs01.lbdaq.cern.ch: Connection refused
+Commencing autostart sequence...
+Commencing autostart sequence...
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/Main.opts
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/Main.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/OnlineEnvironment.opts
+JobOptionsSvc        INFO # (2,1): OnlineEnv.PartitionID = 333
+JobOptionsSvc        INFO # (3,1): OnlineEnv.PartitionName = "LHCb"
+JobOptionsSvc        INFO # (4,1): OnlineEnv.MonitorSvcType = "LHCb::MemMonitorSvc/MonitorSvc"
+JobOptionsSvc        INFO # (5,1): ApplicationMgr.ExtSvc = ["LHCb::MemMonitorSvc/MonitorSvc", "LHCb::DimMonitoringEngine/MonitoringEngine"]
+JobOptionsSvc        INFO # (7,1): ApplicationMgr.SvcOptMapping += ["LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
+JobOptionsSvc        INFO # (13,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/./QMDAQEnv.opts
+JobOptionsSvc        INFO # (3,1): QMDAQEnv.SrcTestPort = 45198
+JobOptionsSvc        INFO # (4,1): QMDAQEnv.DestTestPort = 45144
+JobOptionsSvc        INFO # (7,1): QMDAQEnv.IPSrc = ["192.169.11.80", "vetellc30", "", "192.169.10.3", "tttell03", "", "192.169.12.4", "ottella04", "", "192.169.9.5", "mutellc05", "", "192.169.14.4", "r1ukl104", ""]
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPRxQMTest.opts
+JobOptionsSvc        INFO # (10,1): ApplicationMgr.SvcOptMapping += ["Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
+JobOptionsSvc        INFO # (11,1): ApplicationMgr.ExtSvc += ["MonitorSvc/MonitorSvc"]
+JobOptionsSvc        INFO # (12,1): MessageSvc.OutputLevel = 4
+JobOptionsSvc        INFO # (14,1): ApplicationMgr.HistogramPersistency = "NONE"
+JobOptionsSvc        INFO # (15,1): ApplicationMgr.EvtSel = "NONE"
+JobOptionsSvc        INFO # (16,1): ApplicationMgr.EventLoop = "LHCb::OnlineRunable/EmptyEventLoop"
+JobOptionsSvc        INFO # (17,1): ApplicationMgr.Runable = "LHCb::MEPRxSvc/Runable"
+JobOptionsSvc        INFO # (18,1): ApplicationMgr.SvcOptMapping = ["LHCb::OnlineRunable/EmptyEventLoop", "LHCb::MEPRxSvc/Runable"]
+JobOptionsSvc        INFO # (19,1): ApplicationMgr.ExtSvc = ["IncidentSvc"]
+JobOptionsSvc        INFO # (20,1): ApplicationMgr.ExtSvc += ["MonitorSvc"]
+JobOptionsSvc        INFO # (21,1): MEPManager.PartitionID = @OnlineEnv.PartitionID
+JobOptionsSvc        INFO # (22,1): MEPManager.PartitionName = @OnlineEnv.PartitionName
+JobOptionsSvc        INFO # (23,1): MEPManager.Buffers = ["Events"]
+JobOptionsSvc        INFO # (24,1): MEPManager.PartitionBuffers = 1
+JobOptionsSvc        INFO # (25,1): Runable.OutputLevel = 3
+JobOptionsSvc        INFO # (26,1): Runable.MEPBuffers = 1
+JobOptionsSvc        INFO # (27,1): Runable.maxMsForGetSpace = 100
+JobOptionsSvc        INFO # (28,1): Runable.partitionID = @OnlineEnv.PartitionID
+JobOptionsSvc        INFO # (29,1): Runable.partitionName = @OnlineEnv.PartitionName
+JobOptionsSvc        INFO # (30,1): Runable.partitionBuffers = 1
+JobOptionsSvc        INFO # (31,1): Runable.MEPBufSize = 2000000
+JobOptionsSvc        INFO # (32,1): Runable.refCount = 2
+JobOptionsSvc        INFO # (34,1): Runable.sockBuf = 30000000
+JobOptionsSvc        INFO # (35,1): Runable.maxEventAge = 1000
+JobOptionsSvc        INFO # (36,1): Runable.IPSrc = @QMDAQEnv.IPSrc
+JobOptionsSvc        INFO # (37,1): Runable.LocalTest = 1
+JobOptionsSvc        INFO # (38,1): Runable.SrcTestPort = @QMDAQEnv.SrcTestPort
+JobOptionsSvc        INFO # (39,1): Runable.DestTestPort = @QMDAQEnv.DestTestPort
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPRxQMTest.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/./QMDAQEnv.opts
+JobOptionsSvc        INFO # (3,1): QMDAQEnv.SrcTestPort = 45198
+JobOptionsSvc        INFO # (4,1): QMDAQEnv.DestTestPort = 45144
+JobOptionsSvc        INFO # (7,1): QMDAQEnv.IPSrc = ["192.169.11.80", "vetellc30", "", "192.169.10.3", "tttell03", "", "192.169.12.4", "ottella04", "", "192.169.9.5", "mutellc05", "", "192.169.14.4", "r1ukl104", ""]
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPInjectorQMTest.opts
+JobOptionsSvc        INFO # (8,1): ApplicationMgr.HistogramPersistency = "NONE"
+JobOptionsSvc        INFO # (9,1): ApplicationMgr.EvtSel = "NONE"
+JobOptionsSvc        INFO # (10,1): ApplicationMgr.EventLoop = "LHCb::OnlineRunable/EmptyEventLoop"
+JobOptionsSvc        INFO # (11,1): ApplicationMgr.Runable = "LHCb::MEPInjector/Injector"
+JobOptionsSvc        INFO # (12,1): ApplicationMgr.SvcOptMapping = ["LHCb::OnlineRunable/EmptyEventLoop", "LHCb::MEPInjector/Injector"]
+JobOptionsSvc        INFO # (13,1): ApplicationMgr.ExtSvc = ["IncidentSvc"]
+JobOptionsSvc        INFO # (14,1): ApplicationMgr.ExtSvc += ["MonitorSvc"]
+JobOptionsSvc        INFO # (15,1): ApplicationMgr.OutputLevel = 5
+JobOptionsSvc        INFO # (16,1): Injector.OutputLevel = 3
+JobOptionsSvc        INFO # (17,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # (22,1): Injector.HLTNodes = ["127.0.0.1"]
+JobOptionsSvc        INFO # (23,1): Injector.Tell1Boards = @QMDAQEnv.IPSrc
+JobOptionsSvc        INFO # (26,1): Injector.OdinIf = "127.0.0.1"
+JobOptionsSvc        INFO # (27,1): Injector.HLTIf = "127.0.0.1"
+JobOptionsSvc        INFO # (28,1): Injector.OdinIPAddr = "127.0.0.1"
+JobOptionsSvc        INFO # (33,1): Injector.PartitionID = 98303
+JobOptionsSvc        INFO # (36,1): Injector.TimeOut = 1000
+JobOptionsSvc        INFO # (38,1): Injector.AutoMode = 1
+JobOptionsSvc        INFO # (39,1): Injector.HLTIPAddrTo = "127.0.0.1"
+JobOptionsSvc        INFO # (40,1): Injector.LocalTest = 1
+JobOptionsSvc        INFO # (41,1): Injector.SrcTestPort = @QMDAQEnv.SrcTestPort
+JobOptionsSvc        INFO # (42,1): Injector.DestTestPort = @QMDAQEnv.DestTestPort
+JobOptionsSvc        INFO # (43,1): Injector.TestLimit = 50
+JobOptionsSvc        INFO # (45,1): Injector.ARPME = 0
+JobOptionsSvc        INFO # (47,1): Injector.BufferNames = ["Out_LHCb"]
+JobOptionsSvc        INFO # (49,1): Injector.BufferOptions = ["-s=10000", "-e=100", "-u=20", "-b=15", "-f"]
+JobOptionsSvc        INFO # (57,1): Injector.Requirements = ["EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"]
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/MEPInjectorQMTest.opts
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Configured successfully
+Injector          SUCCESS virtual StatusCode LHCb::MEPInjector::initialize()
+Injector            ERROR File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[219] initBuffers() :Invalid buffer manager name: Out_LHCb, please use TRG[0-7]
+Injector            ERROR File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[220] initBuffers() :Trying to continue with other configured buffers.
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[254] initBuffers() :Buffer initialized
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[415] initialize() :Allocated MEPs :
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[416] initialize() :192.169.11.80; 192.169.10.3; 192.169.12.4; 192.169.9.5; 192.169.14.4;
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[417] initialize() :Number : 5
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+MonitorSvc           INFO MonitorSvc: Got incident from:MEPInj_0: APP_RUNNING
+Injector          SUCCESS virtual StatusCode LHCb::MEPInjector::run()
+Injector            ERROR File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[743] getEvent() :No input to get event from ...
+Injector            ERROR File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[1196] readThenSend() : Reading an event from the buffer managers
+Injector            ERROR End of run due to error  in StatusCode LHCb::MEPInjector::injectorProcessing():/afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp:(1165)
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[1166] injectorProcessing() :140189472089856, pid:5601
+Injector             INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/MEPInjector.cpp[2610] run() :End of injection : End of run
+Parent: Started process:Reader_0
+Child: Starting process:Reader_0
+PID 5611 - Wed Jan 22 20:39:21 2014 - (ERROR) Server Connecting to DIM_DNS on ecs01.lbdaq.cern.ch: Connection refused
+Commencing autostart sequence...
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/Main.opts
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/OnlineEnvironment.opts
+JobOptionsSvc        INFO # (2,1): OnlineEnv.PartitionID = 333
+JobOptionsSvc        INFO # (3,1): OnlineEnv.PartitionName = "LHCb"
+JobOptionsSvc        INFO # (4,1): OnlineEnv.MonitorSvcType = "LHCb::MemMonitorSvc/MonitorSvc"
+JobOptionsSvc        INFO # (5,1): ApplicationMgr.ExtSvc = ["LHCb::MemMonitorSvc/MonitorSvc", "LHCb::DimMonitoringEngine/MonitoringEngine"]
+JobOptionsSvc        INFO # (7,1): ApplicationMgr.SvcOptMapping += ["LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager"]
+JobOptionsSvc        INFO # (13,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # =======> /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/ReaderSvcQMTest.opts
+JobOptionsSvc        INFO # (4,1): ApplicationMgr.HistogramPersistency = "NONE"
+JobOptionsSvc        INFO # (5,1): ApplicationMgr.EvtSel = "NONE"
+JobOptionsSvc        INFO # (6,1): ApplicationMgr.EventLoop = "LHCb::OnlineRunable/EmptyEventLoop"
+JobOptionsSvc        INFO # (7,1): ApplicationMgr.Runable = "LHCb::SLICEReaderSvc/Reader1"
+JobOptionsSvc        INFO # (8,1): ApplicationMgr.SvcOptMapping = ["LHCb::OnlineRunable/EmptyEventLoop", "LHCb::SLICEReaderSvc/Reader1"]
+JobOptionsSvc        INFO # (9,1): ApplicationMgr.ExtSvc = ["IncidentSvc"]
+JobOptionsSvc        INFO # (10,1): ApplicationMgr.ExtSvc += ["MonitorSvc"]
+JobOptionsSvc        INFO # (12,1): ApplicationMgr.OutputLevel = 5
+JobOptionsSvc        INFO # (13,1): Reader1.OutputLevel = 3
+JobOptionsSvc        INFO # (14,1): MessageSvc.OutputLevel = 3
+JobOptionsSvc        INFO # (15,1): Reader1.InputFiles = ["inputevents.raw"]
+JobOptionsSvc        INFO # (16,1): Reader1.Loop = 0
+JobOptionsSvc        INFO # (17,1): Reader1.BufferName = "OUT_LHCb"
+JobOptionsSvc        INFO # (18,1): Reader1.PartitionID = @OnlineEnv.PartitionID
+JobOptionsSvc        INFO # (19,1): Reader1.Requirements = ["EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"]
+JobOptionsSvc        INFO Job options successfully read in from /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/options/ReaderSvcQMTest.opts
+ApplicationMgr       INFO Application Manager Configured successfully
+Reader1              INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/SLICEReaderSvc.cpp[196] initialize() : INITIALISATION DONE
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+MonitorSvc           INFO MonitorSvc: Got incident from:Reader_0: APP_RUNNING
+Reader1           SUCCESS Got incident:Reader_0 of type DAQ_ENABLE
+Reader1              INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/SLICEReaderSvc.cpp[416] run() : Reader running
+Reader1              INFO File: /afs/cern.ch/work/f/frankb/cmtuser/ONLINE/ONLINE_HEAD/Online/GaudiOnline/src/SLICEReaderSvc.cpp[359] readFile() : Reading file inputevents.raw
+[ERROR] (ExitSignalHandler) RTL:Handled signal: 11 [SIGSEGV] Old action:0x7f5b8201ee2f Mem:0x5 Code:00000001
+[INFO] mbmlib: Finished emergency shutdown of buffer OUT_LHCb
+Stopping processes .....
+Parent: Started process:MBMsummary_0
+Child: Starting process:MBMsummary_0
++++++ MBM buffer section sucessfully mapped.
+
+======================== MBM Bufer summary for buffer "Events_LHCb" ========================
+
+ Buffer "Events_LHCb"       Events: Produced:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:6998 Free:5042] Users:[Tot:1 Max:64]
+
+ Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
+ MEPRx000              14d    P                0     0                                Events_LHCb
+
+======================== MBM Bufer summary for buffer "OUT_LHCb" ========================
+
+ Buffer "OUT_LHCb"          Events: Produced:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:999 Free:999] Users:[Tot:0 Max:14]
+
+
+======================== MBM Bufer summary for buffer "Overflow_LHCb" ========================
+
+ Buffer "Overflow_LHCb"     Events: Produced:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:1498 Free:1498] Users:[Tot:1 Max:32]
+
+ Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
+ MEPRx000              14d    ?                                                       Overflow_LHCb
+
+======================== MBM Bufer summary for buffer "Send_LHCb" ========================
+
+ Buffer "Send_LHCb"         Events: Produced:0 Seen:0 Pending:0 Max:100
+                            Space(kB):[Tot:1498 Free:1498] Users:[Tot:0 Max:14]
+
+
++++++ MBM summary finished.
+waitpid() 'MBMsummary_0' exited: Status=1
+Summary task finished work..
+All processes finished work..
+[ERROR] (ExitSignalHandler) RTL:Handled signal: 15 [SIGTERM] Old action:(nil) Mem:0x73e8000015c2 Code:00000000
+[INFO] mbmlib: Finished emergency shutdown of buffer Overflow_LHCb
+[INFO] mbmlib: Finished emergency shutdown of buffer Events_LHCb
+waitpid() 'Reader_0' exited: Status=1
+waitpid() 'MEPInj_0' exited: Status=0
+waitpid() 'MEPRx_0' exited: Status=0
+waitpid() 'MEPInit_0' exited: Status=0
+All processes finished work..
