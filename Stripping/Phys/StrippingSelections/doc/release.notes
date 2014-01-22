@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r32 2014-01-22 =========================
+
 ! 2014-01-21 - Simone Stracka, Flavio Archilli
 - Added lines for B->K1(->omega(782) K)mumu in StrippingB2XMuMu.py
 
