@@ -27,8 +27,8 @@
 // ============================================================================
 Hlt::IRegister::Lock::Lock 
 (       Hlt::IRegister*  reg , const IAlgorithm* alg ) 
-  : m_register  ( reg ) 
-  , m_algorithm ( alg ) 
+  : m_register  { reg } 
+  , m_algorithm { alg } 
 {
   // ==========================================================================
   if ( !m_register ) 
@@ -94,7 +94,7 @@ Hlt::IRegister:: ~IRegister() {}
 // ============================================================================
 const InterfaceID& Hlt::IRegister::interfaceID() 
 {
-  static const InterfaceID s_IID ("Hlt::IRegister" , 2 , 0 ) ;
+  static const InterfaceID s_IID {"Hlt::IRegister" , 2 , 0 } ;
   return s_IID ;
 }
 // ============================================================================  

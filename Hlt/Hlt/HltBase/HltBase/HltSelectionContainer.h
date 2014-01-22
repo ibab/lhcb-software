@@ -85,7 +85,6 @@ namespace Hlt {
         class declare_ {
         public:
             declare_(HltAlgorithm &alg, std::map<int,std::string>&& defaults) : m_alg(alg), m_counter(0u),m_defs(std::move(defaults)) {}
-            // declare_(HltAlgorithm &alg, const std::map<int,std::string>& defaults) : m_alg(alg), m_counter(0u),m_defs(defaults) {}
             template <typename U> void operator()(U& t) {
                 std::string def = m_defs[m_counter];
                 if (m_counter==0) {

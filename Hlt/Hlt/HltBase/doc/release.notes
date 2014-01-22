@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - more misc C++11 changes
+
 ! 2014-01-16 - Gerhard Raven
  - HltStage: make C++11 constructions invisible to gccxml
  - misc. C++11 changes (add move constructors, use nullptr, range-based for

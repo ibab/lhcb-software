@@ -46,11 +46,11 @@ class HltBase : public BASE {
 public:
 
   // Algorithm constructor
-  HltBase( const std::string& name, ISvcLocator* pSvcLocator );
+  HltBase( std::string name, ISvcLocator* pSvcLocator );
 
   // Tool constructor
-  HltBase ( const std::string& type   ,
-            const std::string& name   ,
+  HltBase ( std::string type   ,
+            std::string name   ,
             const IInterface*  parent );
   
   // destructor

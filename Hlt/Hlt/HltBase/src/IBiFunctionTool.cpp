@@ -15,7 +15,7 @@
 const InterfaceID& ITrackBiFunctionTool::interfaceID() 
 { 
   static const InterfaceID 
-    s_ITrackBiFunctionTool ( "ITrackBiFunctionTool", 2 , 0 );
+    s_ITrackBiFunctionTool { "ITrackBiFunctionTool", 2 , 0 };
   return s_ITrackBiFunctionTool;
 }
 // ============================================================================
@@ -31,7 +31,7 @@ ITrackBiFunctionTool::~ITrackBiFunctionTool() {}
 const InterfaceID& ITrackVertexBiFunctionTool::interfaceID() 
 { 
   static const InterfaceID 
-    s_ITrackVertexBiFunctionTool ( "ITrackVertexBiFunctionTool", 2 , 0 );
+    s_ITrackVertexBiFunctionTool { "ITrackVertexBiFunctionTool", 2 , 0 };
   return s_ITrackVertexBiFunctionTool;
 }
 // ============================================================================
@@ -47,7 +47,7 @@ ITrackVertexBiFunctionTool::~ITrackVertexBiFunctionTool() {}
 const InterfaceID& IVertexBiFunctionTool::interfaceID() 
 { 
   static const InterfaceID 
-    s_IVertexBiFunctionTool ( "IVertexBiFunctionTool", 2 , 0 );
+    s_IVertexBiFunctionTool { "IVertexBiFunctionTool", 2 , 0 };
   return s_IVertexBiFunctionTool;
 }
 // ============================================================================

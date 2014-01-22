@@ -17,9 +17,9 @@
 template <class EBASE>
 void HltBase<EBASE>::hltBaseConstructor() {
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
-  m_hltANNSvc = 0;
-  m_regSvc =0;
-  m_hltSvc =0;
+  m_hltANNSvc = nullptr;
+  m_regSvc =nullptr;
+  m_hltSvc =nullptr;
 
 }
 
@@ -34,11 +34,10 @@ StatusCode HltBase<EBASE>::initialize() {
 
   if (EBASE::produceHistos()) {
       const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
-      for (std::map<std::string, Gaudi::Histo1DDef>::const_iterator 
-             it = hdes.begin(); it != hdes.end(); it++){
-          EBASE::book(it->second);
+      for (auto&  i : hdes) {
+          EBASE::book(i.second);
           EBASE::debug() << " booking histogram from descriptor " 
-                         << it->second << endmsg;
+                         << i.second << endmsg;
       }
   }
   return StatusCode::SUCCESS;
@@ -52,10 +51,10 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
   AIDA::IHistogram1D* histo = 0;
   if (!EBASE::produceHistos()) return histo;
 
-  const std::map<std::string,Gaudi::Histo1DDef>& values = m_histoDescriptor.value();
-  std::map<std::string,Gaudi::Histo1DDef>::const_iterator i = values.find(title);
+  const auto& values = m_histoDescriptor.value();
+  auto i = values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
-                                           : Gaudi::Histo1DDef(title,x0,xf,nbins);
+                                           : Gaudi::Histo1DDef{title,x0,xf,nbins};
   EBASE::debug() << " booking histogram  " << hd << endmsg;
   return EBASE::book(hd);
 }
@@ -66,7 +65,7 @@ AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
 template <class EBASE>
 Hlt::IRegister* HltBase<EBASE>::regSvc() const 
 {
-  if ( 0 == m_regSvc ) m_regSvc = EBASE::template svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  if ( !m_regSvc ) m_regSvc = EBASE::template svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
   return m_regSvc ;
 }
 // ============================================================================
@@ -75,13 +74,13 @@ Hlt::IRegister* HltBase<EBASE>::regSvc() const
 template <class EBASE>
 Hlt::IData* HltBase<EBASE>::hltSvc() const 
 {
-  if ( 0 == m_hltSvc ) m_hltSvc = EBASE::template svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  if ( !m_hltSvc ) m_hltSvc = EBASE::template svc<Hlt::IData> ( "Hlt::Service" , true ) ;
   return m_hltSvc ;
 }
 
 template <class EBASE>
 IANNSvc& HltBase<EBASE>::annSvc() const {
-  if (m_hltANNSvc == 0) m_hltANNSvc = EBASE::template svc<IANNSvc>("HltANNSvc",true);
+  if ( !m_hltANNSvc ) m_hltANNSvc = EBASE::template svc<IANNSvc>("HltANNSvc",true);
   return *m_hltANNSvc;
 }
 
@@ -89,23 +88,19 @@ IANNSvc& HltBase<EBASE>::annSvc() const {
 template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
 {
-  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(Gaudi::StringKey(std::string("InfoID")),infoname);
-  if(!i) {
-	EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
-	return 0;
-  }
- return i->second;
+  auto  i =  annSvc().value(Gaudi::StringKey(std::string{"InfoID"}),infoname);
+  if (i) return i->second;
+  EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
+  return 0;
 }
 
 template <class EBASE>
 std::string HltBase<EBASE>::hltInfoName(int id) 
 {
-  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(Gaudi::StringKey(std::string("InfoID")),id);
-  if(!i) {
-	EBASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
-	return "UNKNOWN";
-  }
-  return i->first;
+  auto  i =  annSvc().value(Gaudi::StringKey(std::string{"InfoID"}),id);
+  if(i) return i->first;
+  EBASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
+  return "UNKNOWN";
 }
 
 template <class EBASE>
@@ -134,8 +129,6 @@ template<class EBASE>
 void HltBase<EBASE>::printInfo(const std::string& title,
                                const GaudiUtils::VectorMap<int,double>& vmap) {
   EBASE::info() << title;
-  for (GaudiUtils::VectorMap<int,double>::const_iterator i = vmap.begin(); 
-       i != vmap.end(); ++i)
-    EBASE::info() << hltInfoName(i->first) << " = " << i->second << "; \t";
+  for (auto& i : vmap ) EBASE::info() << hltInfoName(i.first) << " = " << i.second << "; \t";
   EBASE::info() << endmsg;
 }

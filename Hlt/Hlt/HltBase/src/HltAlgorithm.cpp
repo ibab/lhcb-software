@@ -16,13 +16,13 @@ namespace bl = boost::lambda;
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 // ============================================================================
-HltAlgorithm::HltAlgorithm( const std::string& name,
+HltAlgorithm::HltAlgorithm( std::string name,
                             ISvcLocator* pSvcLocator,
                             bool requireInputsToBeValid )
-  : HltBaseAlg ( name , pSvcLocator )
-  , m_requireInputsToBeValid(requireInputsToBeValid)
-  , m_outputSelection(0)
-  , m_outputHisto(0)
+  : HltBaseAlg ( std::move(name) , pSvcLocator )
+  , m_requireInputsToBeValid{requireInputsToBeValid}
+  , m_outputSelection{nullptr}
+  , m_outputHisto{nullptr}
 {
   declareProperty("RequirePositiveInputs", m_requireInputsToBeValid );
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
@@ -38,14 +38,14 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
 HltAlgorithm::~HltAlgorithm()
 {
-  delete m_outputSelection; m_outputSelection = 0;
+  delete m_outputSelection; m_outputSelection = nullptr;
 } 
 
 StatusCode HltAlgorithm::queryInterface 
 (const InterfaceID& iid, void** ppvi ) 
 {
   /// valid placeholder?
-  if ( 0 == ppvi ) { return StatusCode::FAILURE ; }
+  if ( !ppvi ) { return StatusCode::FAILURE ; }
   /// 
   if ( Hlt::IUnit::interfaceID() == iid ) { 
     *ppvi = static_cast<Hlt::IUnit*>( this ) ; 
@@ -65,7 +65,7 @@ StatusCode HltAlgorithm::sysInitialize() {
   // lightweight and less invasive) than the alternative.
   // Note that while GaudiAlgorithm registers the context svc
   // in sysExectute, it doesn't do so in sysInitialize...
-  Gaudi::Utils::AlgContext sentry( contextSvc(), this );
+  Gaudi::Utils::AlgContext sentry{ contextSvc(), this };
   Hlt::IRegister::Lock lock(regSvc(),this);
   return HltBaseAlg::sysInitialize();
 }
@@ -98,9 +98,7 @@ StatusCode HltAlgorithm::sysExecute() {
   if (sc.isFailure()) return sc;
   sc = endExecute();
 
-  if (switchOff && produced) {
-     setProduceHistos(true);
-  }
+  if (switchOff && produced) setProduceHistos(true);
 
   return sc;
 
@@ -206,15 +204,6 @@ void HltAlgorithm::setDecision(bool accept) {
 }
 
 
-class cmp_by_id {
-public:
-    cmp_by_id(const Hlt::Selection& sel) : m_id( sel.id() ) {}
-    template <typename T>
-    bool operator()(const T& i) { return  i.second->id() == m_id; }
-private:
-    Gaudi::StringKey m_id;
-};
-
 // TODO: switch selection & declareInput around...
 const Hlt::Selection* HltAlgorithm::declareInput(const Gaudi::StringKey& key, const Hlt::IUnit::Client&) const {
     return selection(key);
@@ -223,6 +212,16 @@ const Hlt::Selection* HltAlgorithm::declareInput(const Gaudi::StringKey& key, co
 const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& key, const Hlt::IUnit::Client&) const {
     return selection(key);
 }
+
+class cmp_by_id {
+public:
+    cmp_by_id(const Hlt::Selection& sel) : m_id( sel.id() ) {}
+    template <typename T>
+    bool operator()(const T& i) { return m_id == i.second->id() ; }
+private:
+    Gaudi::StringKey m_id;
+};
+
 
 const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& selname) const {
     Assert(!selname.empty()," selection(): no selection name");
@@ -234,12 +233,12 @@ const Hlt::Selection* HltAlgorithm::selection(const Gaudi::StringKey& selname) c
         
     }
     const Hlt::Selection* sel = hltSvc()->selection(selname,this);
-    if (sel == 0 ) {
+    if ( !sel ) {
       error() << " failed to retrieve input " << selname << endmsg;
       Assert(0," selection:, failed to retrieve input!");
     }
-    if (std::find_if(m_in.begin(), m_in.end(), cmp_by_id(*sel))==m_in.end() ) {
-      m_in.insert(std::make_pair(sel->id(),sel));
+    if (std::none_of(std::begin(m_in),std::end(m_in), cmp_by_id(*sel))) {
+      m_in.insert({sel->id(),sel});
       if (produceHistos()) {
         bool ok = m_inputHistos.find(sel->id()) == m_inputHistos.end();
         Assert(ok, "selection(): already input selection "+sel->id().str());
@@ -256,12 +255,12 @@ StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel, const Hlt::IUnit::C
 }
   
 StatusCode HltAlgorithm::registerOutput(Hlt::Selection* sel) const{
-    if (m_outputSelection!=0) {
+    if (m_outputSelection) {
         error() << "attempt to register a 2nd output selection: " << sel->id() << " already have " << m_outputSelection->id() << endmsg;
         return StatusCode::FAILURE;
     }
     m_outputSelection = sel;
-    std::vector<const Hlt::Selection*> sels;
+    std::vector<const Hlt::Selection*> sels; sels.reserve(m_in.size());
     for (const auto& i : m_in ) sels.push_back(i.second);
     sel->addInputSelectionIDs( sels.begin(), sels.end() );
     if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endmsg;
@@ -309,5 +308,5 @@ Hlt::Selection* HltAlgorithm::retrieve  ( const Hlt::IUnit::Client& /* client */
                                           const Gaudi::StringKey&    /* key    */ ) const 
 {
       Error("retrieve(): not implemented ") ;
-      return 0 ;
+      return nullptr ;
 }

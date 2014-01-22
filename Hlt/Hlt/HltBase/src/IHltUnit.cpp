@@ -17,7 +17,7 @@
 const InterfaceID& Hlt::IUnit::interfaceID() 
 {
   // the unique interafcx eidentifier 
-  static const InterfaceID s_IID ( "Hlt::IUnit" , 1 , 0 ) ;
+  static const InterfaceID s_IID { "Hlt::IUnit" , 1 , 0 } ;
   // 
   return s_IID ;
 }

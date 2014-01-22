@@ -3,14 +3,14 @@
 #include "GaudiAlg/GaudiHistoTool.h"
 
 template<> 
-HltBase<GaudiHistoAlg>::HltBase( const std::string& name,
-				 ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+HltBase<GaudiHistoAlg>::HltBase( std::string name,
+                                 ISvcLocator* pSvcLocator)
+  : GaudiHistoAlg ( std::move(name) , pSvcLocator )
 { hltBaseConstructor(); }
 
 template <>
-HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
-                                  const std::string& name   ,
+HltBase<GaudiHistoAlg>::HltBase ( std::string type   ,
+                                  std::string name   ,
                                   const IInterface*  parent )
   : GaudiHistoAlg("ERROR",0)
 {
@@ -19,18 +19,18 @@ HltBase<GaudiHistoAlg>::HltBase ( const std::string& type   ,
 }
 
 template<>
-HltBase<GaudiHistoTool>::HltBase( const std::string& name,
+HltBase<GaudiHistoTool>::HltBase( std::string name,
                                   ISvcLocator* pSvcLocator)
-  : GaudiHistoTool ( "ERROR", "ERROR", 0 )
+  : GaudiHistoTool( "ERROR", "ERROR", 0 )
 {
   fatal() << " invalid algoritm constructor : name " << name
           << " svclocator " << pSvcLocator << endmsg;
 }
 
 template<>
-HltBase<GaudiHistoTool>::HltBase ( const std::string& type   ,
-                                   const std::string& name   ,
+HltBase<GaudiHistoTool>::HltBase ( std::string type   ,
+                                   std::string name   ,
                                    const IInterface*  parent )
-  : GaudiHistoTool(type,name,parent)
+  : GaudiHistoTool(std::move(type),std::move(name),parent)
 { hltBaseConstructor(); }
 

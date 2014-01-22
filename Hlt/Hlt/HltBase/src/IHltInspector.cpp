@@ -25,7 +25,7 @@ Hlt::IInspector::~IInspector(){}
 // ============================================================================
 const InterfaceID& Hlt::IInspector::interfaceID() 
 {
-  static const InterfaceID s_IID ( "Hlt::IInspector" , 2 , 0 ) ;
+  static const InterfaceID s_IID { "Hlt::IInspector" , 2 , 0 } ;
   return s_IID ; 
 }
 // ============================================================================

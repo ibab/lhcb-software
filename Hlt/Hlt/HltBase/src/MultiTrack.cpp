@@ -52,21 +52,20 @@ const CLID& Hlt::MultiTrack::classID() { return Hlt::CLID_MultiTrack; }
 void Hlt::MultiTrack::setTracks ( const Hlt::MultiTrack::Tracks& tracks ) 
 {
   m_tracks = tracks  ;
-  const LHCb::Track* t = 0 ;
-  removeFromTracks ( t ) ;
+  removeFromTracks ( nullptr ) ;
 }
 // ============================================================================
 // Add to (pointer) reference to the stages
 // ============================================================================
 void Hlt::MultiTrack::addToTracks ( const LHCb::Track* track  ) 
-{ if ( 0 != track ){ m_tracks.push_back ( track ) ; } }
+{ if ( track ){ m_tracks.push_back ( track ) ; } }
 // ============================================================================
 // Remove from  reference to the tarcks
 // ============================================================================
 void Hlt::MultiTrack::removeFromTracks ( const LHCb::Track* track  ) 
 {
-  SmartRef<LHCb::Track> ref ( track ) ;
-  Tracks::iterator it = std::remove ( m_tracks.begin() , m_tracks.end() , ref ) ;
+  auto it = std::remove ( m_tracks.begin() , m_tracks.end() 
+                        , SmartRef<LHCb::Track>{ track } ) ;
   m_tracks.erase ( it , m_tracks.end() ) ;
 }
 // ============================================================================
@@ -74,17 +73,12 @@ void Hlt::MultiTrack::removeFromTracks ( const LHCb::Track* track  )
 // ============================================================================
 bool Hlt::MultiTrack::hasTrack ( const LHCb::Track* track ) const 
 {
-  SmartRef<LHCb::Track> ref ( track ) ;
-  return 
-    0 != track && 
+  return track && 
     m_tracks.end() != std::find ( m_tracks.begin () , 
-                                  m_tracks.end   () , ref ) ;
+                                  m_tracks.end   () , 
+                                  SmartRef<LHCb::Track>{ track } ) ;
 }
 // ============================================================================
-
-
-
-
 
 // ============================================================================
 // The END 

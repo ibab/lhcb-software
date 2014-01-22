@@ -18,9 +18,12 @@
 class ParabolaHypothesis : virtual public Tf::IStationSelector {
 public: 
   /// Standard constructor
-  ParabolaHypothesis( double my , double cy , double ax , double bx , double cx,
-                      double dx, double dy ) :
-	  m_y(my), m_cy(cy), m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_dy(dy)
+  ParabolaHypothesis( double my, double cy 
+                    , double ax, double bx, double cx
+                    , double dx, double dy ) 
+      : m_y(my),  m_cy(cy)
+      , m_ax(ax), m_bx(bx), m_cx(cx)
+      , m_dx(dx), m_dy(dy)
   { }
 
   Tf::XYSearchWindow searchWindow(double zz) const
@@ -28,14 +31,17 @@ public:
     double z = zz;
     double y =               m_y * z + m_cy;
     double x = (m_ax * z + m_bx) * z + m_cx;
-    return Tf::XYSearchWindow(x - m_dx, x + m_dx, y - m_dy, y + m_dy);
+#ifdef __GCCXML__
+    return Tf::XYSearchWindow( x - m_dx, x + m_dx, y - m_dy, y + m_dy );
+#else
+    return { x - m_dx, x + m_dx, y - m_dy, y + m_dy };
+#endif
   }
 
   void getValidity(double& zmin, double& zmax) const
   {
-    zmin = double(StateParameters::ZBegT);
-    zmax = double(StateParameters::ZEndT);
-    return;
+    zmin = StateParameters::ZBegT;
+    zmax = StateParameters::ZEndT;
   }
 
 private:

@@ -38,7 +38,7 @@ class HltAlgorithm : public HltBaseAlg,
 public:
 
   // Standard constructor
-  HltAlgorithm( const std::string& name, ISvcLocator* pSvcLocator, bool requireInputsToBeValid=true );
+  HltAlgorithm( std::string name, ISvcLocator* pSvcLocator, bool requireInputsToBeValid=true );
 
   // Standard destructor
   virtual ~HltAlgorithm( ); 

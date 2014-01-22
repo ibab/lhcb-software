@@ -20,7 +20,7 @@ Hlt::IData::~IData(){}
 // ============================================================================
 const InterfaceID& Hlt::IData::interfaceID() 
 {
-  static const InterfaceID s_IID ( "Hlt::IData" , 2 , 0 ) ;
+  static const InterfaceID s_IID { "Hlt::IData" , 2 , 0 } ;
   return s_IID ; 
 }
 
