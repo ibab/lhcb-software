@@ -3,6 +3,11 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2014-01-22 - Marco Clemencic
+ - Minor change in the inheritance tree of Element.
+   Removed the keyword virtual which was not needed and exposed a bug in ROOT6.
+   https://sft.its.cern.ch/jira/browse/ROOT-5840
+
 !========================= DetDesc v18r32p1 2013-06-03 =========================
 ! 2013-05-26 - Marco Cattaneo
  - Fix trivial gcc48 warnings

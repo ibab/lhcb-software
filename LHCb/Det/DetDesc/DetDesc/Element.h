@@ -18,7 +18,7 @@ class Isotope;
     @author Radovan Chytracek
     @author Vanya Belyaev 
 */
-class Element : virtual public Material
+class Element : public Material
 {
 public:
   ///
