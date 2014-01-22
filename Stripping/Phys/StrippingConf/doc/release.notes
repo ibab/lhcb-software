@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r10 2014-01-22 =========================
+
 ! 2014-01-16 - Anton Poluektov 
  - Added ExtraInfoSelections argument to StrippingLine to specify the top-level 
    selection(s) for which to store ExtraInfo. 
