@@ -2529,9 +2529,10 @@ def _h2_isub_ ( h1 , h2 ) :
     return _h2_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 
-
-def _h2_box_  ( self , opts = '' ) : return self.Draw( opts + 'box' )
-def _h2_lego_ ( self , opts = '' ) : return self.Draw( opts + 'lego')
+def _h2_box_   ( self , opts = '' ) : return self.Draw ( opts + ' box'   )
+def _h2_lego_  ( self , opts = '' ) : return self.Draw ( opts + ' lego'  )
+def _h2_surf_  ( self , opts = '' ) : return self.Draw ( opts + ' surf'  )
+def _h2_surf2_ ( self , opts = '' ) : return self.Draw ( opts + ' surf2' )
 
 for t in ( ROOT.TH2F , ROOT.TH2D ) : 
     
@@ -2561,6 +2562,8 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
 
     t .  box     = _h2_box_
     t .  lego    = _h2_lego_
+    t .  surf    = _h2_surf_
+    t .  surf2   = _h2_surf2_
 
 
 # =============================================================================
