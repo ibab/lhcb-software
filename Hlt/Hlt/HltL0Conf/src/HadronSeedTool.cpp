@@ -53,29 +53,19 @@ HadronSeedTool::HadronSeedTool( const std::string& type,
   , m_l0ConfExtrapolator(0)
   , m_magFieldSvc(0)
   , m_DataStore(0)
-  ,  m_fieldOff(false)
+  , m_fieldOff(false)
 {
   //resolutions w/o calo decoding --> only region 3,4 (HCal) sensible
-  std::vector<double> tmplx2=boost::assign::list_of(0.)(0.)(0.)(1849.)(8281.);
-  std::vector<double> tmply2=boost::assign::list_of(0.)(0.)(0.)(1521.)(6400.);
-  std::vector<double> tmpltx2=boost::assign::list_of(0.)(0.)(0.)(8.1e-5)(1.69e-4);
-  std::vector<double> tmplty2=boost::assign::list_of(0.)(0.)(0.)(3.6e-5)(1.e-4);
-  
-  declareProperty("l0SigmaX2", m_l0SigmaX2 =  tmplx2);
-  declareProperty("l0SigmaY2", m_l0SigmaY2 =  tmply2);
-  declareProperty("l0SigmaTx2", m_l0SigmaTx2 =  tmpltx2);
-  declareProperty("l0SigmaTy2", m_l0SigmaTy2 = tmplty2);
+  declareProperty("l0SigmaX2",  m_l0SigmaX2  = {0.,0.,0.,1849.,8281. } );
+  declareProperty("l0SigmaY2",  m_l0SigmaY2  = {0.,0.,0.,1521.,6400. } );
+  declareProperty("l0SigmaTx2", m_l0SigmaTx2 = {0.,0.,0.,8.1e-5,1.69e-4 } );
+  declareProperty("l0SigmaTy2", m_l0SigmaTy2 = {0.,0.,0.,3.6e-5,1.e-4 } );
+
   //improved resolutions with decoded calo cells
-  std::vector<double> tmpx2=boost::assign::list_of(441.)(441.)(1600.)(729.)(2601.);
-  std::vector<double> tmpy2=boost::assign::list_of(196.)(169.)(625.)(625.)(2704.);
-  std::vector<double> tmptx2=boost::assign::list_of(2.5e-5)(3.6e-5)(1.44e-4)(4.9e-5)(2.56e-4);
-  std::vector<double> tmpty2=boost::assign::list_of(4.9e-5)(1.e-4)(1.e-4)(6.4e-5)(1.44e-4);
-  
-  
-  declareProperty("sigmaX2", m_sigmaX2 =  tmpx2);
-  declareProperty("sigmaY2", m_sigmaY2 =  tmpy2);
-  declareProperty("sigmaTx2", m_sigmaTx2 = tmptx2);
-  declareProperty("sigmaTy2", m_sigmaTy2 =  tmpty2);
+  declareProperty("sigmaX2",  m_sigmaX2  = { 441.,441.,1600.,729.,2601.} );
+  declareProperty("sigmaY2",  m_sigmaY2  = { 196.,169.,625.,625.,2704.} );
+  declareProperty("sigmaTx2", m_sigmaTx2 = { 2.5e-5,3.6e-5,1.44e-4,4.9e-5,2.56e-4} );
+  declareProperty("sigmaTy2", m_sigmaTy2 = { 4.9e-5,1.e-4,1.e-4,6.4e-5,1.44e-4} );
 
   declareProperty("debugMode", m_debugMode = false );
   declareProperty("decodeCalos",m_decodeCalos = false );
@@ -381,8 +371,8 @@ StatusCode HadronSeedTool::getECalBarycenter(double& x, double& y, double& z, do
 
 int HadronSeedTool::ECALpart( double x , double y ) const
 {
-  if ( 0. == x && 0. == y ) return -1;
+  if      ( 0. == x         && 0. == y         ) return -1;
   else if ( fabs(x) <  650. && fabs(y) <  650. ) return 0;
   else if ( fabs(x) < 1940. && fabs(y) < 1450. ) return 1;
-  else return 2;
+  else                                           return 2;
 }

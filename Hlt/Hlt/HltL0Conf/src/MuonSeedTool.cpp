@@ -37,13 +37,13 @@ DECLARE_TOOL_FACTORY( MuonSeedTool );
 MuonSeedTool::MuonSeedTool( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_fieldOff(false)
-    , m_iPosTool(0)
-    , m_magFieldSvc(0)
-    , m_momentumTool(0)
-    , m_DataStore(0)
-    ,m_recalculateP(0)
+  : GaudiTool ( type, name , parent )
+  , m_fieldOff{false}
+  , m_iPosTool{nullptr}
+  , m_magFieldSvc{nullptr}
+  , m_momentumTool{nullptr}
+  , m_DataStore{nullptr}
+  , m_recalculateP{false}
 {
   declareInterface<IMuonSeedTool>(this);
 
@@ -52,26 +52,17 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
   declareProperty("momentumToolName",m_momentumToolName="FastMomentumEstimate");
 
   //resolution for track hypothesis taken from muon stations M1 and M2 
-  std::vector<double> tmpx2=boost::assign::list_of(64.)(225.)(841.)(2916.);
-  std::vector<double> tmpy2=boost::assign::list_of(36.)(100.)(400.)(1600.);
-  std::vector<double> tmptx2=boost::assign::list_of(9.e-6)(16.e-6)(49.e-6)(169.e-6);
-  std::vector<double> tmpty2=boost::assign::list_of(16.e-6)(36.e-6)(64e-6)(100.e-6);
-  
-  declareProperty("sigmaX2", m_sigmaX2 = tmpx2);
-  declareProperty("sigmaY2", m_sigmaY2 =  tmpy2);
-  declareProperty("sigmaTx2", m_sigmaTx2 =  tmptx2);
-  declareProperty("sigmaTy2", m_sigmaTy2 =  tmpty2);
+  declareProperty("sigmaX2",  m_sigmaX2  = {64.,225.,841.,2916.} );
+  declareProperty("sigmaY2",  m_sigmaY2  = {36.,100.,400.,1600.} );
+  declareProperty("sigmaTx2", m_sigmaTx2 = {9.e-6,16.e-6,49.e-6,169.e-6} );
+  declareProperty("sigmaTy2", m_sigmaTy2 = {16.e-6,36.e-6,64e-6,100.e-6} );
 
   //resolution for track hypothesis taken from muon stations M2 and M3 
-  std::vector<double> tmpx2N=boost::assign::list_of(484.)(1849.)(7396.)(25600.);
-  std::vector<double> tmpy2N=boost::assign::list_of(81.)(529.)(1936.)(2209.);
-  std::vector<double> tmptx2N=boost::assign::list_of(16.e-6)(64.e-6)(225e-6)(529.e-6);
-  std::vector<double> tmpty2N=boost::assign::list_of(16.e-6)(49.e-6)(64e-6)(100.e-6);
-  
-  declareProperty("sigmaX2NoM1", m_sigmaX2NoM1 = tmpx2N );
-  declareProperty("sigmaY2NoM1", m_sigmaY2NoM1 =  tmpy2N);
-  declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 =  tmptx2N);
-  declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 =  tmpty2N);
+  declareProperty("sigmaX2NoM1",  m_sigmaX2NoM1  =  {484.,1849.,7396.,25600.} );
+  declareProperty("sigmaY2NoM1",  m_sigmaY2NoM1  =  {81.,529.,1936.,2209.} );
+  declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 =  {16.e-6,64.e-6,225e-6,529.e-6} );
+  declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 =  {16.e-6,49.e-6,64e-6,100.e-6} );
+
   declareProperty("recalculateP", m_recalculateP = true );
 }
 //=============================================================================
@@ -85,9 +76,7 @@ MuonSeedTool::~MuonSeedTool() {}
 StatusCode MuonSeedTool::initialize() 
 {
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()){
-    return sc;
-  }
+  if (sc.isFailure()) return sc;
   
   m_iPosTool=tool<IMuonFastPosTool>( "MuonFastPosTool" );
   m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
@@ -134,7 +123,6 @@ StatusCode MuonSeedTool::updateField()
 StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
                                     LHCb::Track& outputTrack )
 {
-
   outputTrack.setType( LHCb::Track::Muon );
   outputTrack.addToAncestors( inputTrack );
   outputTrack.setFlag( Track::L0Candidate,false ); 
@@ -142,26 +130,22 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   //prepare state here, with defaults to be updated
   //attach to track at the end
   LHCb::State seedState;
-  seedState.setState( inputTrack.firstState().x() , 
-		      inputTrack.firstState().y() ,
-		      inputTrack.firstState().z() ,
-		      inputTrack.firstState().tx() , 
-		      inputTrack.firstState().ty() ,
-		      inputTrack.firstState().qOverP() );
+  const auto& firstState = inputTrack.firstState();
+  seedState.setState( firstState.x() , 
+		              firstState.y() ,
+		              firstState.z() ,
+		              firstState.tx() , 
+		              firstState.ty() ,
+		              firstState.qOverP() );
   
   //copy lhcbids from inputTrack to outputTrack
-  std::vector<LHCb::LHCbID> lhcbIDs=inputTrack.lhcbIDs();
   MuonTileID tileM2 ;
   MuonTileID tileM3 ;
-
-  std::vector< LHCb::LHCbID >::const_iterator id;
-  for(id = lhcbIDs.begin() ; id < lhcbIDs.end() ; id++ ){
-    
-    if(id->isMuon()){
-      //explicit cast from MuonTileId to LHCb id
-      outputTrack.addToLhcbIDs( LHCbID( id->muonID() ) );
-      if( id->muonID().station()==1) tileM2 = id->muonID();
-      if( id->muonID().station()==2) tileM3 = id->muonID();
+  for(auto& id : inputTrack.lhcbIDs() ) {
+    if(id.isMuon()){
+      outputTrack.addToLhcbIDs( LHCbID{ id.muonID() } );
+      if( id.muonID().station()==1) tileM2 = id.muonID();
+      if( id.muonID().station()==2) tileM3 = id.muonID();
     }
   }
   if(!(tileM2.isValid()&&tileM3.isValid())){   
@@ -181,7 +165,9 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
     return StatusCode::SUCCESS;
   }
   
-  double xM2,xM3,yM2,yM3,zM2,zM3,dx,dy,dz;
+  double xM2 ,yM2 ,zM2;
+  double xM3 ,yM3 ,zM3;
+  double dx,dy,dz;
   
   StatusCode sc = m_iPosTool->calcTilePos(tileM2,xM2,dx,yM2,dy,zM2,dz);   
   if(!sc){
@@ -197,10 +183,9 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
     return StatusCode::SUCCESS; 
   }
 
-  double dxdz   = (xM2 - xM3)/ ( zM2 - zM3);
-  double dydz   = yM2 / double(zM2);
+  double dxdz   = !m_fieldOff ? ( (xM2 - xM3)/ ( zM2 - zM3) ) : (xM2 / zM2) ;
+  double dydz   = yM2 / zM2;
  
-  if(m_fieldOff) dxdz   = xM2 / double(zM2);
 
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
   double qOverP = inputTrack.firstState().qOverP();
@@ -237,36 +222,33 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
 StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
                                     LHCb::Track& outputTrack )
 {
-  std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
-  std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
-  std::vector<MuonTileID> mpads3 = muonL0Cand.muonTileIDs(2); 
-
-  LHCb::LHCbID id1 = LHCbID( mpads1.front() ); 
-  LHCb::LHCbID id2 = LHCbID( mpads2.front() ); 
-  LHCb::LHCbID id3 = LHCbID( mpads3.front() ); 
-
-  outputTrack.addToLhcbIDs( id1 );
-  outputTrack.addToLhcbIDs( id2 );
-  outputTrack.addToLhcbIDs( id3 );
-  outputTrack.setType(LHCb::Track::Muon);
-  outputTrack.setFlag(Track::L0Candidate,true);
-
   //prepare state here, with defaults to be updated
   //attach to track at the end
   LHCb::State seedState;
   seedState.setState( 0,0,0,0,0,0);
-  
+
+
+  std::vector<MuonTileID> mpads1 = muonL0Cand.muonTileIDs(0); 
+  outputTrack.addToLhcbIDs( LHCbID{ mpads1.front() } ); 
+
+  std::vector<MuonTileID> mpads2 = muonL0Cand.muonTileIDs(1); 
+  outputTrack.addToLhcbIDs( LHCbID{ mpads2.front() } ); 
   MuonTileID mpad2 = mpads2.front();
- 
-  int regionL0Cand;
-  if (mpad2){
-    regionL0Cand = mpad2.region();
-  }
-  else{
+
+  if (!mpad2) {
     if(msgLevel(MSG::DEBUG)) debug ()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
     outputTrack.addToStates(seedState);
     return StatusCode::SUCCESS;
   }
+
+  std::vector<MuonTileID> mpads3 = muonL0Cand.muonTileIDs(2); 
+  outputTrack.addToLhcbIDs( LHCbID{ mpads3.front() } ); 
+
+  outputTrack.setType(LHCb::Track::Muon);
+  outputTrack.setFlag(Track::L0Candidate,true);
+
+ 
+  int regionL0Cand = mpad2.region();
 
   double x , y, z;
   double dx, dy, dz;
@@ -277,12 +259,8 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   bool hasM1 = false;
   
   StatusCode sc;
-  for( std::vector<MuonTileID>::iterator it = (mpads1.begin());
-       it != (mpads1.end()) ; 
-       ++it ) {
-      
-    numberOfTiles++;
-    MuonTileID mpad1 = *it;
+  for( MuonTileID mpad1 : mpads1 ) { 
+    ++numberOfTiles;
     if( mpad1.isValid() 
         && 0 == mpad1.station() 
         && m_useM1                 ){
@@ -291,7 +269,7 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
       sc = m_iPosTool->calcTilePos( mpad1,x, dx,y, dy,z, dz );
       if (!sc) {
         if(msgLevel(MSG::DEBUG)) debug ()<<"Unable to get Position for M1"<<endmsg;
-	outputTrack.addToStates(seedState);
+	    outputTrack.addToStates(seedState);
         continue;
       }
       
@@ -303,9 +281,10 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   }//loop M1 tiles
   
   if( hasM1 ) {
-    xM1 = xM1 / double(numberOfTiles);
-    yM1 = yM1 / double(numberOfTiles);
-    zM1 = zM1 / double(numberOfTiles);
+    double N = 1.0/double(numberOfTiles);
+    xM1 *= N;
+    yM1 *= N;
+    zM1 *= N;
   }
   
   double xM2 , yM2, zM2;
@@ -340,8 +319,7 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
     stateCov(2,2) = m_sigmaTx2[regionL0Cand];
     stateCov(3,3) = m_sigmaTy2[regionL0Cand];
     stateCov(4,4) = 8.41e-6;
-  }
-  else{
+  } else{
     //no valid M1 info available -> bigger uncertainties
     dxdz   = (xM3 - xM2)/ ( zM3 - zM2);
     dydz = yM2/  zM2;
@@ -353,12 +331,12 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
     stateCov(4,4) = 8.41e-6;
   }
 
-  if(m_fieldOff) dxdz = xM2 / double(zM2);
+  if (m_fieldOff) dxdz = xM2 / zM2;
 
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
 
   double L0p = fabs( muonL0Cand.pt()/sin(muonL0Cand.theta()) ) ;
-  double L0pt = muonL0Cand.pt();//get pt with sign!
+  double L0pt =      muonL0Cand.pt();//get pt with sign!
   double L0q    = (L0pt == 0) ? 0.0 : -1.*L0pt/fabs(L0pt);
   double qOverP = L0q / L0p;
     

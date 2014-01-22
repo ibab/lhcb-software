@@ -272,8 +272,8 @@ int L0ConfExtrapolator::getCaloRegion(double stateX,
   double x = std::abs(stateX);
   double y = std::abs(stateY);
   // two small tables to look up HCAL/ECAL region boundaries
-  static const double xpos[] = { 650., 1940., 3880., 2101., 4202., -1. };
-  static const double ypos[] = { 650., 1450., 2420., 1838., 3414., -1. };
+  static const double xpos[] = { 650., 1940., 3880.,   2101., 4202., -1. };
+  static const double ypos[] = { 650., 1450., 2420.,   1838., 3414., -1. };
 
   // depending on ECAL/HCAL+ECAL seeding, the starting offset into the
   // table is different

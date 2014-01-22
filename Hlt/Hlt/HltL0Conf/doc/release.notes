@@ -3,6 +3,8 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+! 2014-01-22 - Gerhard Raven
+ - misc C++11 changes
 
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
