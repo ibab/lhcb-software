@@ -132,6 +132,8 @@ void BTagging::performTagging(const std::string & location)
           case Tagger::OS_Kaon     : tts="OS_Kaon";     break;
           case Tagger::SS_Kaon     : tts="SS_Kaon";     break;
           case Tagger::SS_Pion     : tts="SS_Pion";     break;
+          case Tagger::SS_PionBDT  : tts="SS_PionBDT";  break;
+          case Tagger::SS_Proton   : tts="SS_Proton";  break;
           case Tagger::jetCharge   : tts="jetCharge";   break;
           case Tagger::OS_jetCharge: tts="OS_jetCharge";break;
           case Tagger::SS_jetCharge: tts="SS_jetCharge";break;

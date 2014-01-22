@@ -6,6 +6,16 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Stefania Vecchi and Mirco Dorigo
+ - Commit a new tagger: SSpion BDT (based on the work presented by Antonio F.
+   at the PPTS 20/01/2014)
+ - In BTaggingTool, set the new taggers enabled by Default
+ - In CombineTaggersProbability: disable by default the combination with the SS_PionBDT 
+
+! 2014-01-21 - Riccardo Cenci
+ - In TaggerCharmTool: save also the Charm daughter particles in the list of tagging
+   tracks
+
 ! 2014-01-15 - Marco Cattaneo
  - Remove support for VL
 

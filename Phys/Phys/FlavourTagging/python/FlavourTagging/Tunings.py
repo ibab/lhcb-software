@@ -22,6 +22,7 @@ tunings = {
 
         "EnableCharmTagger": "True",
         "EnableProtonTagger": "True",
+        "EnablePionBDTTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -232,6 +233,7 @@ tunings = {
 
         "EnableCharmTagger": "False",
         "EnableProtonTagger": "False",
+        "EnablePionBDTTagger": "False",
 
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
@@ -439,6 +441,7 @@ tunings = {
 
         "EnableCharmTagger": "False",
         "EnableProtonTagger": "False",
+        "EnablePionBDTTagger": "False",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -762,6 +765,7 @@ tunings = {
 
         "EnableCharmTagger": "True",
         "EnableProtonTagger": "True",
+        "EnablePionBDTTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -968,6 +972,7 @@ tunings = {
 
         "EnableCharmTagger": "True",
         "EnableProtonTagger": "True",
+        "EnablePionBDTTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed

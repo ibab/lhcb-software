@@ -107,7 +107,7 @@ private:
   IParticleDescendants* m_descend;
 
   ITagger *m_taggerMu,    *m_taggerEle,   *m_taggerKaon,     *m_taggerVtxCh,     *m_taggerJetS;
-  ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerNNetKaon, *m_taggerNNetKaonS, *m_taggerProtonS;
+  ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerNNetKaon, *m_taggerNNetKaonS, *m_taggerProtonS, *m_taggerPionBDTS;
   ITagger *m_taggerCharm;
   ICombineTaggersTool *m_combine;
   IPVReFitter* m_pvReFitter;
@@ -122,7 +122,7 @@ private:
   std::string m_ForceSignalID;
 
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
-  bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
+  bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge,m_EnablePionBDTSS;
   bool m_EnableJetSame,m_EnableNNetKaonOS,m_EnableNNetKaonSS;
   bool m_EnableProtonSS;
   bool m_EnableCharm;

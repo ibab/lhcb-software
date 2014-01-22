@@ -65,7 +65,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   for( int i = 0; i != vtgsize; ++i ) 
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
-    if( vtg.at(i)->type() == (Tagger::SS_Pion) || 
+    if( vtg.at(i)->type() == (Tagger::SS_Pion) || vtg.at(i)->type() == (Tagger::SS_PionBDT) ||
         vtg.at(i)->type() == (Tagger::SS_Proton) || 
         vtg.at(i)->type() == (Tagger::SS_Kaon) || 
         vtg.at(i)->type() == (Tagger::SS_nnetKaon) 

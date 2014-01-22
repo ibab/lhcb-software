@@ -45,14 +45,15 @@ GaudiTool ( type, name, parent )
   declareProperty( "EnableKaonOSTagger",      m_EnableKaonOS  = true );
   declareProperty( "EnableKaonSSTagger",      m_EnableKaonSS  = true );
   declareProperty( "EnablePionTagger",        m_EnablePionSS  = true );
+  declareProperty( "EnablePionBDTTagger",     m_EnablePionBDTSS  = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
   // NNet tagging algorithms
   declareProperty( "EnableNNetKaonOSTagger",  m_EnableNNetKaonOS  = true );
   declareProperty( "EnableNNetKaonSSTagger",  m_EnableNNetKaonSS  = true );
   // SSproton taggin
-  declareProperty( "EnableProtonTagger",      m_EnableProtonSS  = false );
-  declareProperty( "EnableCharmTagger",       m_EnableCharm    = false );
+  declareProperty( "EnableProtonTagger",      m_EnableProtonSS  = true );
+  declareProperty( "EnableCharmTagger",       m_EnableCharm    = true );
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
 
@@ -67,7 +68,7 @@ GaudiTool ( type, name, parent )
   m_taggerMu = m_taggerEle=m_taggerKaon = NULL;
   m_taggerKaonS = m_taggerPionS = m_taggerVtxCh = NULL;
   m_taggerNNetKaonS = m_taggerNNetKaon = NULL;
-  m_taggerProtonS = NULL;
+  m_taggerProtonS = NULL;   m_taggerPionBDTS = NULL;
   m_taggerCharm = NULL;
 }
 
@@ -92,6 +93,8 @@ StatusCode BTaggingTool::initialize()
   m_taggerKaonS = tool<ITagger> ("TaggerKaonSameTool", this);
 
   m_taggerPionS = tool<ITagger> ("TaggerPionSameTool", this);
+
+  m_taggerPionBDTS = tool<ITagger> ("TaggerPionBDTSameTool", this);
 
   m_taggerVtxCh = tool<ITagger> ("TaggerVertexChargeTool", this);
 
@@ -221,7 +224,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   ///Choose Taggers ------------------------------------------------------
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
 
-  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS, nnetkaon, nnetkaonS, protonS, charm;
+  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS, nnetkaon, nnetkaonS, protonS, charm, pionBDTS;
 
   if(m_EnableMuon)            muon = m_taggerMu    -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableKaonOS)          kaon = m_taggerKaon  -> tag(AXB, RecVert, allVtx, vtags);
@@ -230,6 +233,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(m_EnableKaonSS)         kaonS = m_taggerKaonS -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableNNetKaonSS) nnetkaonS = m_taggerNNetKaonS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnablePionSS)         pionS = m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnablePionBDTSS)         pionBDTS = m_taggerPionBDTS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)         jetS = m_taggerJetS  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge)   vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableProtonSS)     protonS = m_taggerProtonS-> tag(AXB, RecVert, allVtx, vtags);
@@ -242,6 +246,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   taggers.push_back(&kaon);
   taggers.push_back(&kaonS);
   taggers.push_back(&pionS);
+  taggers.push_back(&pionBDTS);
   taggers.push_back(&vtxCh);
   taggers.push_back(&nnetkaon);
   taggers.push_back(&nnetkaonS);
@@ -291,6 +296,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
             << std::setw(6) << kaonS.omega()
             << std::setw(3) << pionS.decision()<<" "
             << std::setw(6) << pionS.omega()
+            << std::setw(3) << pionBDTS.decision()<<" "
+            << std::setw(6) << pionBDTS.omega()
             << std::setw(3) << vtxCh.decision()<<" "
             << std::setw(6) << vtxCh.omega()
             << std::setw(3) << nnetkaon.decision()<<" "
