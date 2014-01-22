@@ -26,14 +26,15 @@ DECLARE_ALGORITHM_FACTORY( CollectLumiData );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CollectLumiData::CollectLumiData( const std::string& name,
+CollectLumiData::CollectLumiData( std::string name,
                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( std::move(name) , pSvcLocator )
+  , m_iRZVelo { LHCb::LumiCounters::Unknown }
+  , m_iPV3D   { LHCb::LumiCounters::Unknown }
 {
-  declareProperty( "RZVeloContainer",      m_RZVeloContainerName =    "Hlt/Track/RZVelo");
-  declareProperty( "PV3DContainer",        m_PV3DContainerName   =    "Hlt/Vertex/PV3D");
-
-  declareProperty( "OutputContainer",      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
+  declareProperty( "RZVeloContainer", m_RZVeloContainerName =    "Hlt/Track/RZVelo");
+  declareProperty( "PV3DContainer",   m_PV3DContainerName   =    "Hlt/Vertex/PV3D");
+  declareProperty( "OutputContainer", m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 
 }
 //=============================================================================
@@ -50,21 +51,15 @@ StatusCode CollectLumiData::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  info() << "RZVeloContainer     " << m_RZVeloContainerName << endmsg;
-  info() << "PV3DContainer       " << m_PV3DContainerName   << endmsg;
-
-  info() << "OutputContainer     " << m_OutputContainerName << endmsg;
-
-
   // ------------------------------------------
-  int m_iPV3D = LHCb::LumiCounters::counterKeyToType("PV3D");
+  m_iPV3D = LHCb::LumiCounters::counterKeyToType("PV3D");
   if ( m_iPV3D == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounters not found: " << "PV3D" <<  endmsg;
   } else {
     info() << "LumiCounters::PV3D key value: " << m_iPV3D << endmsg;
   }
 
-  int m_iRZVelo = LHCb::LumiCounters::counterKeyToType("RZVelo");
+  m_iRZVelo = LHCb::LumiCounters::counterKeyToType("RZVelo");
   if ( m_iRZVelo == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounters not found: " << "RZVelo" <<  endmsg;
   } else {
@@ -81,102 +76,38 @@ StatusCode CollectLumiData::initialize() {
 //=============================================================================
 StatusCode CollectLumiData::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-  m_printing_verbose = msgLevel( MSG::VERBOSE );
-  m_printing_debug   = msgLevel( MSG::DEBUG );
-  m_printing_info    = msgLevel( MSG::INFO );
+  // printing
+  bool m_printing_verbose = msgLevel( MSG::VERBOSE );
+  bool m_printing_debug   = msgLevel( MSG::DEBUG );
+  bool m_printing_info    = msgLevel( MSG::INFO );
 
   // ------------------------------------------
   // create output container on the TES
-  m_HltLumiSummary = new LHCb::HltLumiSummary();
-  // locate them in the TES
-  put(m_HltLumiSummary, m_OutputContainerName); 
+  LHCb::HltLumiSummary* sum = getOrCreate<LHCb::HltLumiSummary,LHCb::HltLumiSummary>(m_OutputContainerName);
 
   // ------------------------------------------
   // load the track objects
-  int n_RZVelo =  0;
-  const LHCb::Tracks* __m_RZVelo = getIfExists<LHCb::Tracks>(m_RZVeloContainerName);
-  if ( NULL == __m_RZVelo)
-  {
-    if (m_printing_info) 
-      info() << m_RZVeloContainerName << " not found" << endmsg ;
-  } 
-  else 
-  {
-    // get the container
-    m_RZVelo = __m_RZVelo;//get<LHCb::Tracks>(m_RZVeloContainerName);
-    
-    n_RZVelo =  m_RZVelo->size() ;
-    if (m_printing_verbose) 
-      verbose() << "found " << n_RZVelo << " RZVelo tracks." << endmsg ;
-  }
-  m_nRZVelo = n_RZVelo;
-  if ( m_printing_debug ) debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endmsg ;
+  // ------------------------------------------
+  const LHCb::Tracks* RZVelo = getIfExists<LHCb::Tracks>(m_RZVeloContainerName);
+  int n_RZVelo = RZVelo ? RZVelo->size() :  -1;
+  sum->addInfo( m_iRZVelo, n_RZVelo);
+
+  if (m_printing_info && n_RZVelo < 0 ) info() << m_RZVeloContainerName << " not found" << endmsg ;
+  if (m_printing_verbose)            verbose() << "found " << n_RZVelo << " RZVelo tracks." << endmsg ;
+  if ( m_printing_debug )              debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endmsg ;
 
   // ------------------------------------------
   // load the vertex objects
-  int n_PV3D =  0;
-  const LHCb::RecVertices* __m_PV3D = get<LHCb::RecVertices>(m_PV3DContainerName);
-  if ( NULL == __m_PV3D)
-  {
-    if (m_printing_info) 
-      info() << m_PV3DContainerName << " not found" << endmsg ;
-  } 
-  else 
-  {  
-    m_PV3D = __m_PV3D;
-    if ( !m_PV3D ) 
-    {
-      
-      err() << "Could not find location " 
-            <<  m_PV3DContainerName << endmsg;
-      return StatusCode::FAILURE ;
-    }
-    n_PV3D =  m_PV3D->size() ;
-    if (m_printing_verbose) 
-      verbose() << "found " << n_PV3D << " PV3D vertices." << endmsg ;
-  }
-  m_nPV3D = n_PV3D;
+  // ------------------------------------------
+  const LHCb::RecVertices* PV3D = get<LHCb::RecVertices>(m_PV3DContainerName);
+  int n_PV3D =  n_PV3D = PV3D->size() ;
+  sum->addInfo( m_iPV3D, n_PV3D);
+
+  if (n_PV3D < 0 && m_printing_info ) info() << m_PV3DContainerName << " not found" << endmsg ;
+  if (m_printing_verbose)  verbose() << "found " << n_PV3D << " PV3D vertices." << endmsg;
   if ( m_printing_debug ) debug() << "There are " << n_PV3D << " vertices in " << m_PV3DContainerName <<  endmsg ;
 
-  // ------------------------------------------
-  // fill the output container
-  collect();
-
-  // ------------------------------------------
   setFilterPassed(true);
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CollectLumiData::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-
-
-//=============================================================================
-//  Collect
-//=============================================================================
-void CollectLumiData::collect() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Collect" << endmsg;
-
-  // initialize output class
-  LHCb::HltLumiSummary* hltLS=m_HltLumiSummary;
-
-  // add tracks
-  hltLS->addInfo( m_iRZVelo, m_nRZVelo);
-  
-  // add vertices
-  hltLS->addInfo( m_iPV3D, m_nPV3D);
-
 }

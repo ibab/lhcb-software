@@ -17,7 +17,6 @@ public:
 
   virtual StatusCode initialize();
   virtual StatusCode execute   ();
-  virtual StatusCode finalize  ();
 protected:
   std::string m_CounterName;
   std::string m_InputSelectionName;

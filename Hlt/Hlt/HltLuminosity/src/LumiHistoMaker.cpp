@@ -1,7 +1,6 @@
 // $Id: LumiHistoMaker.cpp,v 1.13 2009-09-30 07:24:56 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/LumiCounters.h"
 
@@ -111,16 +110,11 @@ StatusCode LumiHistoMaker::execute() {
 
   // fill histos
   for ( unsigned int i = 0; i < m_Histos.size(); ++i) {
-    std::string cname = m_names[i];
-    int counter = m_keys[i];
-    AIDA::IHistogram1D *histo = m_Histos[i];
-    AIDA::IHistogram1D *thresholdHisto = m_ThresholdHistos[i];
-    int ivalue = m_HltLumiSummary->info(counter,-1);
-    fill(histo, (double) ivalue, 1.);
-    double digit=0;
-    if ( ivalue > m_Thresholds[i] ) digit=1.;
-    fill(thresholdHisto, digit, 1.);
-    if ( msgLevel(MSG::DEBUG) ) debug() << "histo:" << cname << " value " << ivalue << " threshold " << digit<< endmsg;
+    auto  value = m_HltLumiSummary->info( m_keys[i],-1);
+    fill( m_Histos[i], value, 1.);
+    auto  digit = (value > m_Thresholds[i] ? 1 : 0 );
+    fill(m_ThresholdHistos[i], digit, 1.);
+    if ( msgLevel(MSG::DEBUG) ) debug() << "histo:" << m_names[i] << " value " << value << " threshold " << digit<< endmsg;
   }
   
   counter("#HistoInputs") += 1;

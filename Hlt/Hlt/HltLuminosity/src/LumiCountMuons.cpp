@@ -1,5 +1,5 @@
+#include <algorithm>
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/L0MuonCandidate.h"
 #include "Event/HltLumiSummary.h"
@@ -34,7 +34,7 @@ StatusCode LumiCountMuons::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   debug() << "CounterName: "     << boost::format("%20s")%m_CounterName         << " "
-	  << "InputSelection: "  << boost::format("%20s")%m_InputSelectionName  << " "
+          << "InputSelection: "  << boost::format("%20s")%m_InputSelectionName  << " "
           << "OutputContainer: " << boost::format("%20s")%m_OutputContainerName << " "
           << "Threshold: "       << boost::format("%20g")%m_Threshold           << endmsg;
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
@@ -47,37 +47,24 @@ StatusCode LumiCountMuons::initialize() {
 }
 //=============================================================================
 StatusCode LumiCountMuons::execute() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  int nCand = 0;
+
+  setFilterPassed(true);
+
   LHCb::L0MuonCandidates* cands = getIfExists<LHCb::L0MuonCandidates>(m_InputSelectionName);
-  if ( NULL == cands ) 
-  {
-    if (msgLevel(MSG::DEBUG)) debug() << m_InputSelectionName << " not found" << endmsg ;
-  } 
-  else 
-  {    
-    //LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>(m_InputSelectionName);
-    //if ( !cands ) 
-    //{ 
-    //  err() << "Could not find location " <<  m_InputSelectionName << endmsg;
-    //  return StatusCode::FAILURE ;
-    //}
-    LHCb::L0MuonCandidates::const_iterator itcand;
-    for ( itcand=cands->begin(); itcand!=cands->end(); ++itcand)
-      if ((*itcand)->pt() > m_Threshold) ++nCand;
+  // FIXME/TODO: is L0MuonCandidate signed or unsigned????
+  int   nCand = cands ? std::count_if( cands->begin(), cands->end()
+                                     , [&](const LHCb::L0MuonCandidate* c) 
+                                       { return c->pt() > m_Threshold; } )
+                      : -1 ;
+  if ( msgLevel(MSG::DEBUG)) {
+    //TODO: count how often we failed, and print in finalize...
+    if ( nCand < 0 ) debug() << m_InputSelectionName << " not found" << endmsg ;
+    debug() << "There are " << nCand << " muons with Pt>" << m_Threshold << " in " << m_InputSelectionName <<  endmsg ;
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCand << " muons with Pt>" << m_Threshold << " in " << m_InputSelectionName <<  endmsg ;
 
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
   sums->addInfo(m_Counter, nCand); // add track counter
 
-  setFilterPassed(true);
 
   return StatusCode::SUCCESS;
 }
-//=============================================================================
-StatusCode LumiCountMuons::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();
-}
-

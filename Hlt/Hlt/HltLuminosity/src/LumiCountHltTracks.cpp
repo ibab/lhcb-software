@@ -1,7 +1,6 @@
 // $Id: LumiCountHltTracks.cpp,v 1.12 2010-03-28 12:48:59 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/Track.h"
 #include "Event/HltLumiSummary.h"
@@ -75,9 +74,6 @@ StatusCode LumiCountHltTracks::initialize() {
   }
   // ------------------------------------------
 
-
-  if (sc.isFailure()) return sc;
-
   return sc;
 };
 
@@ -86,16 +82,10 @@ StatusCode LumiCountHltTracks::initialize() {
 //=============================================================================
 StatusCode LumiCountHltTracks::execute() {
 
-  // load the track objects
-  int nCounter =  m_input->size();
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
-
-  // get container
-  LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
-  // add track counter
-  sums->addInfo( m_Counter, nCounter);
+  // get container, and add track counter
+  LHCb::HltLumiSummary* sum = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
+  sum->addInfo( m_Counter, m_input->size() );
 
   setFilterPassed(true);
-
   return StatusCode::SUCCESS;
 }

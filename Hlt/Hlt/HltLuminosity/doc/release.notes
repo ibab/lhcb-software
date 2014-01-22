@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - simplify some logic
+ - simplify code using STL + C++11 lambdas
+
 ! 2014-01-09 - Marco Clemencic
  - Fixed memory management and initialization/finalization logic in LumiPutResult.
 

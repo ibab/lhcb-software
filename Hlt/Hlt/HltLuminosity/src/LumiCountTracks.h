@@ -18,21 +18,15 @@ class LumiCountTracks : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   LumiCountTracks( const std::string& name, ISvcLocator* pSvcLocator );
-
   virtual ~LumiCountTracks( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
-  std::string m_InputSelectionName;
-  const LHCb::Tracks* m_InputContainer;
-  std::string m_CounterName;
-  int m_Counter;
-
-  std::string m_OutputContainerName;
-
 private:
-
+  std::string m_InputSelectionName;
+  std::string m_CounterName;
+  std::string m_OutputContainerName;
+  int m_Counter;
 };
 #endif // LUMICOUNTTRACKS_H

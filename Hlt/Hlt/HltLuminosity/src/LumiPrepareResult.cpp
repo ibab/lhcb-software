@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/HltLumiResult.h"
 // local
@@ -29,7 +28,6 @@ LumiPrepareResult::LumiPrepareResult( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "OutputContainer", m_OutputContainerName = LHCb::HltLumiResultLocation::Default );
-
 }
 //=============================================================================
 // Destructor

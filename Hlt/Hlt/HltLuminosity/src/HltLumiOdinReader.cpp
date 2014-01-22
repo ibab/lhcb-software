@@ -54,32 +54,21 @@ StatusCode HltLumiOdinReader::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltLumiOdinReader::execute() {
-
-
   // get ODIN
   LHCb::ODIN* odin= getIfExists<LHCb::ODIN> (LHCb::ODINLocation::Default);;
-  if( NULL==odin)
-  {
-    StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
-    return sc;
+  if( !odin) {
+    return Error("ODIN cannot be loaded",StatusCode::FAILURE);
   }
 
-  std::stringstream bxType("");
-  std::stringstream trType("");
-  bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
-  trType << (LHCb::ODIN::TriggerType) odin->triggerType();
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+      std::stringstream bxType("");
+      bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
+      std::stringstream trType("");
+      trType << (LHCb::ODIN::TriggerType) odin->triggerType();
+      debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endmsg;
+  }
   m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltLumiOdinReader::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << " Entering the finalize " << endmsg;
-  return HltAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

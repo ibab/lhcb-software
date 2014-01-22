@@ -24,7 +24,6 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( LumiCountTracks );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -75,19 +74,13 @@ StatusCode LumiCountTracks::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // load the track objects
-  int nCounter =  0;
-  m_InputContainer = getIfExists<LHCb::Tracks>(m_InputSelectionName);
-  if ( NULL==m_InputContainer )
-  {
-    if (msgLevel(MSG::DEBUG)) debug() << m_InputSelectionName << " not found" << endmsg ;
-  } 
-  else 
-  {
-    nCounter = m_InputContainer->size() ;
-    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " tracks." << endmsg ;
-  }
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
+  const LHCb::Tracks* container = getIfExists<LHCb::Tracks>(m_InputSelectionName);
+  int   nCounter = container ?  container->size() : -1 ;
 
+  if (msgLevel(MSG::DEBUG)) {
+      if (nCounter<0) debug() << m_InputSelectionName << " not found" << endmsg ;
+      else            debug() << "There are " << nCounter << " tracks in " << m_InputSelectionName <<  endmsg ;
+  }
 
   // get container
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
@@ -98,4 +91,3 @@ StatusCode LumiCountTracks::execute() {
 
   return StatusCode::SUCCESS;
 }
-

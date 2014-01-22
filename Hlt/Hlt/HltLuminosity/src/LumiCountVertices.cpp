@@ -31,7 +31,7 @@ DECLARE_ALGORITHM_FACTORY( LumiCountVertices );
 // Standard constructor, initializes variables
 //=============================================================================
 LumiCountVertices::LumiCountVertices( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+                                      ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputSelection" ,      m_InputSelectionName);
@@ -76,20 +76,13 @@ StatusCode LumiCountVertices::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // load the track objects
-  int nCounter =  0;
-  m_InputContainer = getIfExists<LHCb::RecVertices>(m_InputSelectionName);
-  if ( NULL==m_InputContainer ){
-    if (msgLevel(MSG::DEBUG))debug() << m_InputSelectionName << " not found" << endmsg ;
-  } 
-  else 
-  {
-    
-    nCounter = m_InputContainer->size() ;
-    if (msgLevel(MSG::DEBUG)) verbose() << "found " << nCounter << " vertices." << endmsg ;
-  }
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endmsg ;
+  const LHCb::RecVertices* container = getIfExists<LHCb::RecVertices>(m_InputSelectionName);
+  int  nCounter = container ? container->size() : -1;
 
+  if (msgLevel(MSG::DEBUG)) {
+      if (nCounter<0) debug() << m_InputSelectionName << " not found" << endmsg ;
+      else            debug() << "There are " << nCounter << " vertices in " << m_InputSelectionName <<  endmsg ;
+  }
 
   // get container
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
@@ -100,16 +93,3 @@ StatusCode LumiCountVertices::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode LumiCountVertices::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
-

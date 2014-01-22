@@ -24,15 +24,13 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   std::string m_InputSelectionName;
-  const LHCb::RecVertices* m_InputContainer;
   std::string m_CounterName;
+  std::string m_OutputContainerName;
   int m_Counter;
 
-  std::string m_OutputContainerName;
 
 private:
 

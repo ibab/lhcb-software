@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/L0DUReport.h"
 #include "Event/HltLumiSummary.h"
@@ -51,25 +50,22 @@ StatusCode LumiFromL0DU::initialize() {
   if ( msgLevel(MSG::DEBUG) ) { 
       debug() << "==> Initialize" << endmsg;
 
-      debug() << "InputSelection:    " << m_InputSelectionName  << " "
-             << "OutputContainer:   " << m_OutputContainerName << endmsg;
+      debug() << "InputSelection: " << m_InputSelectionName  << " "
+             << "OutputContainer: " << m_OutputContainerName << endmsg;
   }
 
   //TODO: properly hook this into a property -- either use updateHandler, or custom property type...
-  for (std::map<std::string,std::string>::const_iterator i = m_CounterValueProperty.begin();
-       i!=m_CounterValueProperty.end();
-       ++i) {
-            int counter = LHCb::LumiCounters::counterKeyToType(i->first);
+  for (auto& i : m_CounterValueProperty) {
+            int counter = LHCb::LumiCounters::counterKeyToType(i.first);
             if (msgLevel(MSG::DEBUG)) { 
-                debug() << " adding " << i->second << " as " << i->first << " ("<< counter<< ")"<< endmsg;
+                debug() << " adding " << i.second << " as " << i.first << " ("<< counter<< ")"<< endmsg;
             }
             if ( counter == LHCb::LumiCounters::Unknown ) {
-                error() << "LumiCounter " << i->first <<  " not known " <<endmsg;
+                error() << "LumiCounter " << i.first <<  " not known " <<endmsg;
                 return StatusCode::FAILURE;
             }
-            m_CounterValue.push_back( std::make_pair(counter,i->second) );
+            m_CounterValue.emplace_back( counter,i.second );
   }
- 
   return StatusCode::SUCCESS;
 }
 
@@ -77,24 +73,15 @@ StatusCode LumiFromL0DU::initialize() {
 // Main execution
 //=============================================================================
 StatusCode LumiFromL0DU::execute() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
+  setFilterPassed(true);
   // get/create ouput
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
   // get input
-  const LHCb::L0DUReport*  report = get<LHCb::L0DUReport>( m_InputSelectionName );
-  //TODO: check validty of L0DUReport!
-  for (std::vector<std::pair<int,std::string> >::const_iterator i = m_CounterValue.begin() ;i!= m_CounterValue.end();++i) {
+  const LHCb::L0DUReport* report = getIfExists<LHCb::L0DUReport>( m_InputSelectionName );
+  for (auto& i : m_CounterValue ) {
       // get the value using its name from the fromRawReport
-      double value = report->dataValue(i->second);
-      if (msgLevel(MSG::DEBUG)) debug() << "found value from the L0DU report for " << i->second << " " << value << endmsg ;
-
       // add counter (must be integer, so we force it to be so...
-      sums->addInfo( i->first, (int)value);
+      sums->addInfo( i.first, report ? (int)report->dataValue(i.second) : -1 );
   }
-
-  setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
-

@@ -1,6 +1,7 @@
 // $Id: HltLumiFillRawBuffer.cpp,v 1.5 2009-02-18 13:11:13 panmanj Exp $
 // Include files 
 // from Gaudi
+#include <algorithm>
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/HltLumiSummary.h"
@@ -50,7 +51,6 @@ StatusCode HltLumiFillRawBuffer::initialize() {
   m_nbEvents    = 0;
   m_totDataSize = 0;
   m_bank.reserve(20);
-  m_bankType  = LHCb::RawBank::HltLumiSummary;
   m_LastKey = LHCb::LumiCounters::LastGlobal;
 
   return StatusCode::SUCCESS;
@@ -67,16 +67,14 @@ StatusCode HltLumiFillRawBuffer::execute() {
 
   //== Build the data banks
   fillDataBankShort( );
-  
-  int totDataSize = 0;
 
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  // set source, type, version 
-  rawEvent->addBank( 0, m_bankType, 0, m_bank );   
-  totDataSize += m_bank.size();
+  //             set source, type,                     version 
+  rawEvent->addBank( 0, LHCb::RawBank::HltLumiSummary, 0, m_bank );   
+  int totDataSize = m_bank.size();
 
   m_totDataSize += totDataSize;
-  m_nbEvents++;
+  ++m_nbEvents;
 
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << "Bank size: ";
@@ -86,17 +84,13 @@ StatusCode HltLumiFillRawBuffer::execute() {
 
   if ( MSG::VERBOSE >= msgLevel() ) {
     verbose() << "DATA bank : " << endmsg;
-    int kl = 0;
-    std::vector<unsigned int>::const_iterator itW;
-    
-    for ( itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
-      verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
-      kl++;
-      if ( 0 == kl%4 ) verbose() << endmsg;
+    int kl{0};
+    for (auto&  W : m_bank ) {
+      verbose() << format ( " %8x %11d   ", W, W );
+      if ( 0 == ++kl%4 ) verbose() << endmsg;
     }
-      verbose() << endmsg ;
+    verbose() << endmsg ;
   }
- 
   return StatusCode::SUCCESS;
 };
 
@@ -119,30 +113,23 @@ StatusCode HltLumiFillRawBuffer::finalize() {
 void HltLumiFillRawBuffer::fillDataBankShort ( ) {
   
   LHCb::HltLumiSummary* HltLumiSummary = getIfExists<LHCb::HltLumiSummary>(m_inputBank);
-  if ( NULL!=HltLumiSummary )
-  {
+  if ( HltLumiSummary ) {
     
     if ( msgLevel(MSG::DEBUG) ) debug() << m_inputBank << " found" << endmsg ;
 
     for ( int iKey = 0; iKey < m_LastKey; ++iKey ) {
       // check for existing counters
-      int s_value = HltLumiSummary->info((int) iKey, -1);
+      int s_value = HltLumiSummary->info( iKey, -1);
       if (s_value != -1) {
-        // handle overflow
-        int i_value = 0xFFFF;
-        if (s_value < 0xFFFF) i_value = (int) s_value;
-        unsigned int word = ( iKey << 16 ) + ( i_value & 0xFFFF );
-        m_bank.push_back( word );
+        // protect against overflow
+        m_bank.push_back( ( iKey << 16 ) | std::min( unsigned(s_value), 0xFFFFu ) );
         if ( MSG::VERBOSE >= msgLevel() ) {
-          verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey, i_value ) << endmsg;
+          verbose() << format ( " %8x %11d %11d %11d ", m_bank.back(), m_bank.back(), iKey, s_value ) << endmsg;
         }
       }
     }
-  }
-  else  {
+  } else  {
     error() << m_inputBank << " not found" << endmsg ;
   }
-  
-  
 };
 //=============================================================================

@@ -1,5 +1,5 @@
+#include <cmath>
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/Track.h"
 #include "Event/Vertex.h"
@@ -20,9 +20,9 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 DECLARE_ALGORITHM_FACTORY( LumiCountVeloWithZRCuts );
 
-LumiCountVeloWithZRCuts::LumiCountVeloWithZRCuts( const std::string& name,
+LumiCountVeloWithZRCuts::LumiCountVeloWithZRCuts( std::string name,
 									      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) {
+  : GaudiAlgorithm ( std::move(name) , pSvcLocator ) {
   declareProperty( "TrackCounterName"    , m_TrackCounterName = "Velo"   );
   declareProperty( "VertexCounterName"   , m_VertexCounterName = "Vertex");
   declareProperty( "TrackInputSelection" , m_TrackInputSelectionName  = "TES:Hlt/Track/Lumi" );
@@ -48,20 +48,14 @@ StatusCode LumiCountVeloWithZRCuts::initialize() {
   m_TrackCounter  = LHCb::LumiCounters::counterKeyToType(m_TrackCounterName );
   m_VertexCounter = LHCb::LumiCounters::counterKeyToType(m_VertexCounterName);
   
-  if ( m_TrackCounter == LHCb::LumiCounters::Unknown ) 
-  {
+  if ( m_TrackCounter == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounter not found with name: " << m_TrackCounterName <<  endmsg;
-  } 
-  else 
-  {
+  } else {
     if (msgLevel(MSG::DEBUG)) debug() << m_TrackCounterName << " value: " << m_TrackCounter << endmsg;
   }
-  if ( m_VertexCounter == LHCb::LumiCounters::Unknown ) 
-  {
+  if ( m_VertexCounter == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounter not found with name: " << m_VertexCounterName <<  endmsg;
-  } 
-  else 
-  {
+  } else {
     if (msgLevel(MSG::DEBUG)) debug() << m_VertexCounterName << " value: " << m_VertexCounter << endmsg;
   }
   return StatusCode::SUCCESS;
@@ -69,40 +63,33 @@ StatusCode LumiCountVeloWithZRCuts::initialize() {
 //=============================================================================
 StatusCode LumiCountVeloWithZRCuts::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  int nTr = 0;
-  int nVx = 0;
   
-  LHCb::Tracks*      trCands = getIfExists<LHCb::Tracks>     (m_TrackInputSelectionName);
-  LHCb::RecVertices* vxCands = getIfExists<LHCb::RecVertices>(m_VertexInputSelectionName);
-  
-  if ( NULL==trCands || NULL==vxCands ) 
-  {
-    if (msgLevel(MSG::DEBUG)) debug() << m_TrackInputSelectionName << " or " << m_VertexInputSelectionName << " not found" << endmsg ;
-  }
-  else 
-  {    
-    for (LHCb::Tracks::const_iterator      itr=trCands->begin(); itr!=trCands->end(); ++itr)
-      if ( abs((*itr)->position().z()) < m_AbsZCut &&
-	   ((*itr)->position().x() * (*itr)->position().x() + (*itr)->position().y() * (*itr)->position().y()) < m_RCut*m_RCut ) ++nTr;
-    for (LHCb::RecVertices::const_iterator ivx=vxCands->begin(); ivx!=vxCands->end(); ++ivx)
-      if ( abs((*ivx)->position().z()) < m_AbsZCut &&
-	   ((*ivx)->position().x() * (*ivx)->position().x() + (*ivx)->position().y() * (*ivx)->position().y()) < m_RCut*m_RCut ) ++nVx;
-  }
-  
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nTr << " VELO tracks   inside abs(z)<" << m_AbsZCut << " and R<" << m_RCut << " in " << m_TrackInputSelectionName  <<  endmsg ;
-  if (msgLevel(MSG::DEBUG)) debug() << "There are " << nVx << " VELO vertices inside abs(z)<" << m_AbsZCut << " and R<" << m_RCut << " in " << m_VertexInputSelectionName <<  endmsg ;
-
   LHCb::HltLumiSummary* sums = getOrCreate<HltLumiSummary,HltLumiSummary>(m_OutputContainerName);
+  setFilterPassed(true);
+
+  LHCb::Tracks*      trCands = getIfExists<LHCb::Tracks>     (m_TrackInputSelectionName);
+  int nTr = trCands ? std::count_if( std::begin(*trCands), std::end(*trCands)
+                                   , [&](const LHCb::Track* trk) {
+                                      return  std::fabs(trk->position().z())    < m_AbsZCut 
+                                                    &&  trk->position().Perp2() < m_RCut*m_RCut ;
+                                     } )
+                    : -1 ;
   sums->addInfo(m_TrackCounter,  nTr); // add track  counter
+
+  LHCb::RecVertices* vxCands = getIfExists<LHCb::RecVertices>(m_VertexInputSelectionName);
+  int nVx = vxCands ? std::count_if( std::begin(*vxCands), std::end(*vxCands) 
+                                   , [&](const LHCb::RecVertex* vtx) {
+                                        return std::fabs(vtx->position().z())    < m_AbsZCut 
+                                                     &&  vtx->position().Perp2() < m_RCut*m_RCut ;
+                                      } )
+                    : -1 ;
   sums->addInfo(m_VertexCounter, nVx); // add vertex counter
 
-  setFilterPassed(true);
+  
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "There are " << nTr << " VELO tracks   inside abs(z)<" << m_AbsZCut << " and R<" << m_RCut << " in " << m_TrackInputSelectionName  <<  endmsg ;
+    debug() << "There are " << nVx << " VELO vertices inside abs(z)<" << m_AbsZCut << " and R<" << m_RCut << " in " << m_VertexInputSelectionName <<  endmsg ;
+  }
 
   return StatusCode::SUCCESS;
 }
-//=============================================================================
-StatusCode LumiCountVeloWithZRCuts::finalize() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();
-}
-

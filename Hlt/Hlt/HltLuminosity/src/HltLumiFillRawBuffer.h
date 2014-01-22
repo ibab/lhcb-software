@@ -37,7 +37,6 @@ private:
   double m_totDataSize;
   int m_nbEvents;
   std::vector<unsigned int> m_bank;
-  LHCb::RawBank::BankType m_bankType;  
 
 };
 #endif // HLTLUMIFILLRAWBUFFER_H

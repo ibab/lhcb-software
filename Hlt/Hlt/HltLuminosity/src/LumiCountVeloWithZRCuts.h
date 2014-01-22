@@ -12,12 +12,11 @@
  */
 class LumiCountVeloWithZRCuts : public GaudiAlgorithm {
 public: 
-  LumiCountVeloWithZRCuts( const std::string& name, ISvcLocator* pSvcLocator );
+  LumiCountVeloWithZRCuts( std::string name, ISvcLocator* pSvcLocator );
   virtual ~LumiCountVeloWithZRCuts( );
 
   virtual StatusCode initialize();
   virtual StatusCode execute   ();
-  virtual StatusCode finalize  ();
 protected:
   std::string m_TrackCounterName, m_VertexCounterName;
   std::string m_TrackInputSelectionName, m_VertexInputSelectionName;

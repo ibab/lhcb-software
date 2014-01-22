@@ -1,7 +1,6 @@
 // $Id: LumiHistoCollector.cpp,v 1.7 2009-09-30 07:24:56 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
 #include "Event/ODIN.h"

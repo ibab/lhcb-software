@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/IAlgManager.h"
 
 #include "Event/LumiCounters.h"
 #include "Event/HltLumiResult.h"
@@ -64,16 +63,15 @@ StatusCode LumiPutResult::initialize() {
 
   int i=0;
   for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
-    if ( iKey != LHCb::LumiCounters::Unknown ) {
-      // declare all possible counters
-      std::string name = LHCb::LumiCounters::counterKeyToString(iKey);
-      m_infoKeys[i] = iKey;
-      // announce the values
-      declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[i], "mean of "+name);
-      declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[i], "fraction over threshold of "+name);
-      info() << "counter " << name << " declared at " << i << " with key " << m_infoKeys[i] << endmsg;
-      i++;
-    }
+    if ( iKey == LHCb::LumiCounters::Unknown ) continue;
+    // declare all possible counters
+    std::string name = LHCb::LumiCounters::counterKeyToString(iKey);
+    m_infoKeys[i] = iKey;
+    // announce the values
+    declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[i], "mean of "+name);
+    declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[i], "fraction over threshold of "+name);
+    info() << "counter " << name << " declared at " << i << " with key " << m_infoKeys[i] << endmsg;
+    ++i;
   }
 
   return StatusCode::SUCCESS;
@@ -94,9 +92,8 @@ StatusCode LumiPutResult::execute() {
     double mean = result->info(key+100, -10000.);
     if ( mean != -10000. ) { 
       m_means[i] = mean;
-      double threshold = result->info(key+200, -10000.);
-      m_thresholds[i] = threshold;
-       if ( msgLevel(MSG::DEBUG) ) debug() << "Key: " << key << " mean: " << mean << " threshold " << threshold << endmsg;
+      m_thresholds[i] = result->info(key+200, -10000.);
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Key: " << key << " mean: " << mean << " threshold " << m_thresholds[i] << endmsg;
     }
   }
 

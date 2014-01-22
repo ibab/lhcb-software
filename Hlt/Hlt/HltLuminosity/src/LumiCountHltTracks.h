@@ -29,14 +29,14 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
+private:
   
   const Hlt::Selection* m_input;
   Gaudi::StringKey   m_InputSelectionName;
   std::string m_CounterName;
+  std::string m_OutputContainerName;
   int m_Counter;
 
-  std::string m_OutputContainerName;
 
 };
 #endif // LUMICOUNTHLTTRACKS_H
