@@ -4,6 +4,8 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+!========================= MVADictTools v1r3 2014-01-22 =========================
+
 ! 2014-01-21 - Chris Jones
  - Add a workaround to the requirements file to fix missing GSL symbols
    during linking.
