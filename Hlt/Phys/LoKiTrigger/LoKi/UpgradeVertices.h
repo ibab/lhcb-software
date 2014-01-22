@@ -57,24 +57,22 @@ namespace LoKi
        *  @param config  the tool configuration
        */
       UpgradeVertices
-      ( const std::string&              output  ,  // output selection name/key
+      ( std::string              output  ,  // output selection name/key
         const LoKi::Hlt1::UpgradeConf&  config  ,  //             configuration
-              bool                      allow1Fail =
-        false                                   ,
-        const std::string&              clonedTracksLocation =
-        "Hlt/Track/Tmp"                         ) ;
+        bool                      allow1Fail = false                                   ,
+        std::string              clonedTracksLocation = "Hlt/Track/Tmp" 
+      ) ;
       // ======================================================================
       /** constructor from all configuration parameters
        *  @param output  the output selection name
        *  @param config  the tool configuration
        */
       UpgradeVertices
-      ( const std::string&              output  ,  // output selection name/key
+      ( std::string              output  ,  // output selection name/key
         const LoKi::Hlt1::UpgradeTool&  config  ,  //             configuration
-              bool                      allow1Fail =
-        false                                   ,
-        const std::string&              clonedTracksLocation =
-        "Hlt/Track/Tmp"                         ) ;
+        bool                      allow1Fail = false                                   ,
+        std::string              clonedTracksLocation = "Hlt/Track/Tmp"                         
+      ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor
       virtual ~UpgradeVertices () ;

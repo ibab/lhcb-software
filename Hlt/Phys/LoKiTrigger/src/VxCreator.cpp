@@ -189,7 +189,6 @@ size_t LoKi::Hlt1::VxCreator::make
   
   typedef LHCb::Track::ConstVector   Tracks   ;
   typedef LoKi::Combiner_<Tracks>    Combiner ;
-  typedef Combiner::Range            Range    ;
   
   const Hlt::VertexCreator           creator    ;
   const LoKi::Hlt1::Utils::CmpTrack  compare = LoKi::Hlt1::Utils::CmpTrack()  ;
@@ -198,8 +197,8 @@ size_t LoKi::Hlt1::VxCreator::make
   
   /// create the combiner & fill it with data 
   Combiner loop ;
-  loop.add ( Range ( tracks1 )  ) ;
-  loop.add ( Range ( tracks2 )  ) ;
+  loop.add ( { tracks1 }  ) ;
+  loop.add ( { tracks2 }  ) ;
   
   // make the combinations 
   for ( ; loop.valid() ; loop.next() ) 

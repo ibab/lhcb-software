@@ -3,6 +3,12 @@
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+! 2014-11-22 - Gerhard Raven
+ - minor C++11 changes
+ - fix bug in TrMatch: if a candidate matched multiple seeds, it would be copied
+   over for _each_ matching seed instead of once.
+ - adapt to changes in HltBase: use dedicated pair<INamedInterface*,string> as
+   history and worker entry
 
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.

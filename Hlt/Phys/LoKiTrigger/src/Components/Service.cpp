@@ -16,75 +16,75 @@
 // ============================================================================
 #include "LoKi/ILoKiSvc.h"
 // ============================================================================
-// Local 
+// Local
 // ============================================================================
 #include "Service.h"
 // ============================================================================
 /** @file
- *  Implemetation file for class Hlt::Service 
+ *  Implemetation file for class Hlt::Service
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-03-18
  */
 // ============================================================================
-/* Standard constructor (protected) 
- *  @param name the service instance name 
- *  @param pSvc service locator 
+/* Standard constructor (protected)
+ *  @param name the service instance name
+ *  @param pSvc service locator
  */
 // ============================================================================
-Hlt::Service::Service 
-( const std::string& name ,                            // service instance name 
-  ISvcLocator*       pSvc ) :                          //       Service Locator 
-  ::Service ( name , pSvc )                            //        the base class 
+Hlt::Service::Service
+( const std::string& name ,                            // service instance name
+  ISvcLocator*       pSvc ) :                          //       Service Locator
+  ::Service ( name , pSvc )                            //        the base class
   //
-  , m_msgStream ()                                  // the local message stream  
+  , m_msgStream {}                                  // the local message stream
   //
-  , m_frozen    ( false )            // the global glag to disable registration 
+  , m_frozen    { false }            // the global glag to disable registration
 //
-  , m_lockers (   )                                   //     the current locker 
-  , m_locked  (   )                                   //    the list of lockers 
+  , m_lockers {   }                                   //     the current locker
+  , m_locked  {   }                                   //    the list of lockers
 //
-  /// THE MAJOR STORAGE OF SELECTIONS, the map { id -> selection } 
-  , m_selections ()                          // THE MAJOR STORAGE OF SELECTIONS 
+  /// THE MAJOR STORAGE OF SELECTIONS, the map { id -> selection }
+  , m_selections {}                          // THE MAJOR STORAGE OF SELECTIONS
   //
-  , m_outputs    ()                      // structure for the output selections 
-  , m_inputs     ()                      // structure for the input  selections 
+  , m_outputs    {}                      // structure for the output selections
+  , m_inputs     {}                      // structure for the input  selections
   //
-  , m_incSvc    ( 0 ) 
-  , m_annSvc    ( 0 )
-//  
-  , m_pedantic  ( true  ) 
-  , m_anonymous ( false )
-  , m_spy       ( false )
+  , m_incSvc    { nullptr }
+  , m_annSvc    { nullptr }
 //
-  , m_cntMap    ( ) 
-  , m_cntEvent  ( false ) 
-  , m_statPrint ( false ) 
+  , m_pedantic  { true  }
+  , m_anonymous { false }
+  , m_spy       { false }
+//
+  , m_cntMap    { }
+  , m_cntEvent  { false }
+  , m_statPrint { false }
 {
   // Perform the pedantic checks of everything
-  declareProperty 
-    ( "Pedantic"       , 
-      m_pedantic       , 
+  declareProperty
+    ( "Pedantic"       ,
+      m_pedantic       ,
       "Perform the pedantic checks of everything" ) ;
-  // Allow anonymous access to selections 
-  declareProperty 
-    ( "AllowAnonymous" , 
-      m_anonymous      , 
+  // Allow anonymous access to selections
+  declareProperty
+    ( "AllowAnonymous" ,
+      m_anonymous      ,
       "Allow anonymous access to selections" ) ;
-  // Spy ? 
-  declareProperty 
-    ( "Spy"       , m_spy , "Spy mode" ) ;  
-  // PrintStatistics 
-  declareProperty 
-    ( "StatPrint" , m_statPrint , "Print Statistics" ) 
+  // Spy ?
+  declareProperty
+    ( "Spy"       , m_spy , "Spy mode" ) ;
+  // PrintStatistics
+  declareProperty
+    ( "StatPrint" , m_statPrint , "Print Statistics" )
     -> declareUpdateHandler
     ( &Hlt::Service::printStatHandler, this  ) ;
 }
 // ============================================================================
-// produce the error message 
+// produce the error message
 // ============================================================================
-StatusCode Hlt::Service::Error 
-( const std::string& message , 
-  const StatusCode&  sc      ) const 
+StatusCode Hlt::Service::Error
+( const std::string& message ,
+  const StatusCode&  sc      ) const
 {
   MsgStream& msg = err() ;
   //
@@ -97,14 +97,14 @@ StatusCode Hlt::Service::Error
   //
   msg << endmsg ;
   //
-  return sc ;  
+  return sc ;
 }
 // ============================================================================
-// produce the warning message 
+// produce the warning message
 // ============================================================================
 StatusCode Hlt::Service::Warning
-( const std::string& message , 
-  const StatusCode&  sc      ) const 
+( const std::string& message ,
+  const StatusCode&  sc      ) const
 {
   MsgStream& msg = warning () ;
   //
@@ -117,95 +117,95 @@ StatusCode Hlt::Service::Warning
   //
   msg << endmsg ;
   //
-  return sc ;  
+  return sc ;
 }
 // ============================================================================
-// throw the exception 
+// throw the exception
 // ============================================================================
-void Hlt::Service::Exception 
-( const std::string& message , 
-  const StatusCode&  sc      ) const 
+void Hlt::Service::Exception
+( const std::string& message ,
+  const StatusCode&  sc      ) const
 { throw GaudiException ( name() + " " + message , "Hlt::Service" , sc ) ; }
 // ============================================================================
-/*  query the interface 
- *  @see IInterface 
- *  @param iid the uniqye interface ID 
- *  @param ppi (OUTPUT) the interface 
- *  @return status code 
+/*  query the interface
+ *  @see IInterface
+ *  @param iid the uniqye interface ID
+ *  @param ppi (OUTPUT) the interface
+ *  @return status code
  */
 // ============================================================================
 StatusCode Hlt::Service::queryInterface
 (  const InterfaceID& iid ,
-   void**             ppi ) 
+   void**             ppi )
 {
   // check the placeholder:
-  if ( 0 == ppi ) { return StatusCode::FAILURE ; }
+  if ( !ppi ) { return StatusCode::FAILURE ; }
   // "switch"
   // Hlt Register ?
-  if      ( Hlt::IRegister    ::interfaceID () == iid ) 
-  { 
+  if      ( Hlt::IRegister    ::interfaceID () == iid )
+  {
     *ppi =  static_cast<Hlt::IRegister*>    ( this )      ;
     addRef() ;
-    return StatusCode::SUCCESS ;                                       // RETURN 
+    return StatusCode::SUCCESS ;                                       // RETURN
   }
   // Hlt Data ?
-  else if ( Hlt::IData        ::interfaceID () == iid ) 
-  { 
-    *ppi =  static_cast<Hlt::IData*>        ( this )      ; 
+  else if ( Hlt::IData        ::interfaceID () == iid )
+  {
+    *ppi =  static_cast<Hlt::IData*>        ( this )      ;
     addRef() ;
-    return StatusCode::SUCCESS ;                                       // RETURN 
+    return StatusCode::SUCCESS ;                                       // RETURN
   }
   // Hlt Inspector ?
-  else if ( Hlt::IInspector   ::interfaceID () == iid ) 
-  { 
+  else if ( Hlt::IInspector   ::interfaceID () == iid )
+  {
     *ppi =  static_cast<Hlt::IInspector*>   ( this )      ;
     addRef() ;
-    return StatusCode::SUCCESS ;                                       // RETURN 
+    return StatusCode::SUCCESS ;                                       // RETURN
   }
   // "Assigned Names & Numbers"?
-  else if ( IANNSvc           ::interfaceID () == iid ) 
+  else if ( IANNSvc           ::interfaceID () == iid )
   {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // "Assigned Names"?
-  else if ( IANSvc            ::interfaceID () == iid ) 
+  else if ( IANSvc            ::interfaceID () == iid )
   {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   //   LoKi ?
-  else if ( LoKi::ILoKiSvc    ::interfaceID () == iid ) 
+  else if ( LoKi::ILoKiSvc    ::interfaceID () == iid )
   {      return lokiSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // Incident listener?
-  else if ( IIncidentListener ::interfaceID () == iid ) 
-  { 
+  else if ( IIncidentListener ::interfaceID () == iid )
+  {
     *ppi =  static_cast<IIncidentListener*> ( this )      ;
     addRef() ;
-    return StatusCode::SUCCESS ;                                      // RETURN 
+    return StatusCode::SUCCESS ;                                      // RETURN
   }
-  
-  // try basic interfaces form the base class 
-  StatusCode sc = ::Service::queryInterface ( iid , ppi ) ;           // RETURN 
-  if ( sc.isSuccess () && 0 != *ppi ) { return sc ; }
-  
+
+  // try basic interfaces form the base class
+  StatusCode sc = ::Service::queryInterface ( iid , ppi ) ;           // RETURN
+  if ( sc.isSuccess () && *ppi ) { return sc ; }
+
   // try to get something indirectly from LoKi service
   sc = lokiSvc () -> queryInterface ( iid , ppi ) ;
-  if (  sc.isSuccess() && 0 != *ppi ) { return sc ; }                 // REUTRN
-  
-  // try basic interfaces form the base class 
-  return ::Service::queryInterface ( iid , ppi ) ;                    // RETURN 
+  if (  sc.isSuccess() && *ppi ) { return sc ; }                      // RETURN
+
+  // try basic interfaces form the base class
+  return ::Service::queryInterface ( iid , ppi ) ;                    // RETURN
 }
 // ============================================================================
-/*  standard initialization 
- *  @see IService 
- *  @return status code 
+/*  standard initialization
+ *  @see IService
+ *  @return status code
  */
 // ============================================================================
-StatusCode Hlt::Service::initialize () 
+StatusCode Hlt::Service::initialize ()
 {
-  // initialize the base 
+  // initialize the base
   StatusCode sc = ::Service::initialize () ;
   if ( sc.isFailure() ) { return StatusCode::FAILURE ; }              // RETURN
-  // check LoKi Service 
+  // check LoKi Service
   lokiSvc() ;
-  // check Assigned Numbers & Names service 
+  // check Assigned Numbers & Names service
   annSvc () ;
-  // check Incident Service & subscribe the incident 
+  // check Incident Service & subscribe the incident
   incSvc () -> addListener ( this , IncidentType::BeginEvent ) ;
   incSvc () -> addListener ( this , IncidentType::EndEvent   ) ;
   incSvc () -> addListener ( this , IncidentType::BeginRun   ) ;
@@ -213,12 +213,12 @@ StatusCode Hlt::Service::initialize ()
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-// access to incident service 
+// access to incident service
 // ============================================================================
-IIncidentSvc* Hlt::Service::incSvc() const 
+IIncidentSvc* Hlt::Service::incSvc() const
 {
   if ( m_incSvc.validPointer() ) { return m_incSvc ; }
-  IIncidentSvc* svc  = 0 ;
+  IIncidentSvc* svc { nullptr };
   StatusCode sc = service ( "IncidentSvc" , svc , true ) ;
   Assert ( sc.isSuccess ()         , "Unable to locate IncidentSvc" , sc ) ;
   m_incSvc = svc ;
@@ -226,12 +226,12 @@ IIncidentSvc* Hlt::Service::incSvc() const
   return m_incSvc ;
 }
 // ============================================================================
-// access to "Assigned Numbers and Names" service 
+// access to "Assigned Numbers and Names" service
 // ============================================================================
-IANNSvc* Hlt::Service::annSvc() const 
+IANNSvc* Hlt::Service::annSvc() const
 {
   if ( m_annSvc.validPointer()  ) { return m_annSvc ; }
-  IANNSvc* svc = 0 ;
+  IANNSvc* svc { nullptr } ;
   StatusCode sc = service ( "HltANNSvc" , svc , true ) ;
   Assert ( sc.isSuccess ()         , "Unable to locate HltANNSvc" , sc ) ;
   m_annSvc = svc ;
@@ -239,12 +239,12 @@ IANNSvc* Hlt::Service::annSvc() const
   return m_annSvc ;
 }
 // ============================================================================
-// access to "Assigned Numbers and Names" service 
+// access to "Assigned Numbers and Names" service
 // ============================================================================
-LoKi::ILoKiSvc* Hlt::Service::lokiSvc() const 
+LoKi::ILoKiSvc* Hlt::Service::lokiSvc() const
 {
   if ( m_lokiSvc.validPointer()  ) { return m_lokiSvc ; }
-  LoKi::ILoKiSvc* svc = 0 ;
+  LoKi::ILoKiSvc* svc { nullptr } ;
   StatusCode sc = service ( "LoKiSvc" , svc , true ) ;
   Assert ( sc.isSuccess ()         , "Unable to locate LoKiSvc" , sc ) ;
   m_lokiSvc = svc ;
@@ -253,13 +253,13 @@ LoKi::ILoKiSvc* Hlt::Service::lokiSvc() const
 }
 // ============================================================================
 /*  standard finalization
- *  @see IService 
- *  @return status code 
+ *  @see IService
+ *  @return status code
  */
 // ============================================================================
-StatusCode Hlt::Service::finalize () 
+StatusCode Hlt::Service::finalize ()
 {
-  // @TODO Hlt::Service::finalize: print here some statistics 
+  // @TODO Hlt::Service::finalize: print here some statistics
   //
   if  ( m_statPrint ) { printStat ( MSG::ALWAYS ) ; }
   //
@@ -270,43 +270,42 @@ StatusCode Hlt::Service::finalize ()
   m_locked     . clear   () ;
   m_lockers    . clear   () ;
   //
-  // unsubscribe the incidents 
+  // unsubscribe the incidents
   if ( m_incSvc.validPointer() ) { m_incSvc -> removeListener ( this ) ; }
-  // release the services 
+  // release the services
   m_incSvc  . release () ;
   m_annSvc  . release () ;
   m_lokiSvc . release () ;
-  // finalize the base class 
+  // finalize the base class
   return ::Service::finalize () ;
-}  
+}
 // ============================================================================
 // handle the incidents
 // ============================================================================
-void Hlt::Service::handle ( const Incident& inc ) 
+void Hlt::Service::handle ( const Incident& inc )
 {
-  if ( !m_frozen ) 
+  if ( !m_frozen )
   {
     MsgStream& msg = msgStream ( MSG::INFO ) ;
     msg <<  "The Service is frozen! No further registrations are allowed!" <<endmsg ;
-    if ( !m_lockers.empty() ) 
+    if ( !m_lockers.empty() )
     { Error ("Service is going to be frozen, but it is locked!") ; }
     //
     m_frozen = true ;
-  } 
+  }
   //
   if      ( IncidentType::BeginEvent == inc.type() ) { m_cntEvent = true ; }
-  else if ( IncidentType::  EndEvent == inc.type() ) 
+  else if ( IncidentType::  EndEvent == inc.type() )
   {
     // ======================================================
-    // clear all selections at end of the event 
-    for ( SelMap::iterator isel = m_selections.begin() ; 
-          m_selections.end() != isel ; ++isel ) 
+    // clear all selections at end of the event
+    for ( auto&  isel : m_selections )
     {
-      Hlt::Selection* sel = isel->second ;
-      if ( 0 != sel ) 
+      Hlt::Selection* sel = isel.second ;
+      if ( sel )
       {
         //
-        if ( m_cntEvent ) 
+        if ( m_cntEvent )
         {
           CntMap::mapped_type& cnts = m_cntMap[ sel->id() ] ;
           StatEntity&          rate = cnts.first  ;
@@ -316,7 +315,7 @@ void Hlt::Service::handle ( const Incident& inc )
           if ( 0 < sel->size() ) { size += sel -> size () ; }
         }
         //
-        sel -> clean () ; 
+        sel -> clean () ;
       }
     }
     //
@@ -325,32 +324,32 @@ void Hlt::Service::handle ( const Incident& inc )
   //
 }
 // ============================================================================
-// Handler for statistics printout 
+// Handler for statistics printout
 // ============================================================================
 void Hlt::Service::printStatHandler  ( Property& /* theProp */ )
 {
-  // no action if not yet initialized 
+  // no action if not yet initialized
   if ( this -> FSMState() < Gaudi::StateMachine::INITIALIZED ) { return ; }
   if ( m_statPrint    ) { this -> printStat ( MSG::ALWAYS ) ; }
 }
 // ============================================================================
-// Print statistics 
+// Print statistics
 // ============================================================================
-namespace 
+namespace
 {
   // ==========================================================================
   // the header row for counters printout
-  const std::string s_header  = 
+  const std::string s_header  =
     " |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |" ;
   // format for regular statistical printout rows
-  const std::string s_format1 = 
+  const std::string s_format1 =
     " | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |" ;
   // format for "efficiency" statistical printout rows
-  const std::string s_format2 = 
+  const std::string s_format2 =
     " |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |" ;
   const std::string s_line    = " +" + std::string(128,'-') + '+';
   // ==========================================================================
-} //                                                 end of anonymous namespace 
+} //                                                 end of anonymous namespace
 // ============================================================================
 std::size_t Hlt::Service::printStat( const MSG::Level level ) const
 {
@@ -360,30 +359,28 @@ std::size_t Hlt::Service::printStat( const MSG::Level level ) const
   //
   msg << "Number of counters : "  << m_cntMap.size() ;
   //
-  // Size-counter 
+  // Size-counter
   //
-  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;  
-  for ( CntMap::const_iterator entry = m_cntMap.begin() ;
-        m_cntMap.end() != entry ; ++entry )
+  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;
+  for ( const auto &entry : m_cntMap )
   {
     msg << std::endl
         << Gaudi::Utils::formatAsTableRow
-      ( entry -> first                ,
-        entry -> second.second        ,
+      ( entry .  first                ,
+        entry .  second.second        ,
         false                         ,
         s_format1                     , s_format2 ) ;
   }
   //
-  // Rate counters 
+  // Rate counters
   //
-  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;  
-  for ( CntMap::const_iterator entry = m_cntMap.begin() ;
-        m_cntMap.end() != entry ; ++entry )
+  msg << std::endl << s_line << std::endl << s_header << std::endl << s_line ;
+  for ( auto& entry : m_cntMap )
   {
     msg << std::endl
         << Gaudi::Utils::formatAsTableRow
-      ( "acc: " + entry -> first.str() ,
-        entry -> second.first          ,
+      ( "acc: " + entry .  first.str() ,
+        entry .  second.first          ,
         true                           ,
         s_format1                      , s_format2 ) ;
   }
@@ -398,5 +395,5 @@ std::size_t Hlt::Service::printStat( const MSG::Level level ) const
 typedef Hlt::Service _Hlt_Service ;
 DECLARE_SERVICE_FACTORY(_Hlt_Service)
 // ============================================================================
-// The END 
+// The END
 // ============================================================================

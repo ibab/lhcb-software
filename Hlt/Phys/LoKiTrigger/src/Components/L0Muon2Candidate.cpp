@@ -29,10 +29,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  * @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  * @date 2010-08-01
  *  
@@ -72,7 +68,7 @@ namespace Hlt
      *  @param pSvc pointer to Service Locator 
      */
     L0Muon2Candidate
-    ( const std::string& name ,                  //     algorithm instance name 
+    ( std::string        name ,                  //     algorithm instance name 
       ISvcLocator*       pSvc ) ;                 //  pointer to Service Locator 
     /// virtual and protected destructor 
     virtual ~L0Muon2Candidate () ;
@@ -107,11 +103,11 @@ namespace Hlt
  */
 // ============================================================================
 Hlt::L0Muon2Candidate::L0Muon2Candidate
-( const std::string& name ,                  //     algorithm instance name 
+( std::string        name ,                  //     algorithm instance name 
   ISvcLocator*       pSvc )                  //  pointer to Service Locator 
   : Hlt::Base   ( name , pSvc ) 
-  , m_selection ( 0    ) 
-  , m_output    ( name ) 
+  , m_selection ( nullptr    ) 
+  , m_output    ( std::move(name) ) 
   , m_input     ( LHCb::L0MuonCandidateLocation ::Default ) 
 //
 {
@@ -137,7 +133,7 @@ StatusCode Hlt::L0Muon2Candidate::initialize ()
   StatusCode sc = Hlt::Base::initialize () ;
   if ( sc.isFailure() ) { return sc ; }                          // REUTRN
   /// Lock the service to enable the output selection registration 
-  Hlt::IRegister::Lock lock ( regSvc() , this ) ;
+  Hlt::IRegister::Lock lock { regSvc() , this } ;
   /// register TES input selection
   sc = lock -> registerTESInput ( m_input     , this ) ;
   Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
@@ -161,7 +157,7 @@ StatusCode Hlt::L0Muon2Candidate::initialize ()
 StatusCode Hlt::L0Muon2Candidate::execute  () 
 {
   // some sanity checks:
-  Assert ( 0 != m_selection , "Invalid Local pointer to selection" ) ;
+  Assert ( m_selection , "Invalid Local pointer to selection" ) ;
   if ( !m_selection->empty() ) { Warning("Local selection is not empty!") ; }
   
   // get all L0 Muons from TES  
@@ -174,11 +170,9 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
   Hlt::Stage::Container*      stages    =  hltStages     () ;
   
   // loop over L0 candidates:
-  for ( L0Muons::const_iterator imuon = l0muons->begin() ; 
-        l0muons->end() != imuon ; ++imuon ) 
+  for ( const LHCb::L0MuonCandidate* muon :  *l0muons )
   {
-    const LHCb::L0MuonCandidate* muon = *imuon ;
-    if ( 0 == muon ) { continue ; }                                  // CONTINUE 
+    if ( !muon ) { continue ; }                                  // CONTINUE 
     //                                          
     // create the new candidate:
     Hlt::Candidate* candidate = new Hlt::Candidate() ;
@@ -194,7 +188,7 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
     candidate  -> addToStages ( stage ) ;  // add stage to candidate 
     
     // lock the stage!
-    Hlt::Stage::Lock lock ( stage , this ) ;
+    Hlt::Stage::Lock lock { stage , this } ;
     lock.addToHistory ( m_input ) ;
     stage->set (  muon ) ;
     
@@ -217,7 +211,7 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
 // ============================================================================
 StatusCode Hlt::L0Muon2Candidate::finalize () 
 {
-  m_selection = 0 ;
+  m_selection = nullptr ;
   return Hlt::Base::finalize () ;
 }
 // ============================================================================

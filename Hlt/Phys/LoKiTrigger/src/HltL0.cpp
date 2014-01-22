@@ -26,10 +26,6 @@
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *   
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-03-23
  *
@@ -42,9 +38,9 @@
 LoKi::L0::L0CaloCut::L0CaloCut
 ( const L0DUBase::CaloType::Type type ) 
   : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
-  , m_type         ( type  )
-  , m_hasThreshold ( false )
-  , m_threshold    ( -1    ) 
+  , m_type         { type  }
+  , m_hasThreshold { false }
+  , m_threshold    { -1    } 
 {}
 // ============================================================================
 // constructor 
@@ -53,9 +49,9 @@ LoKi::L0::L0CaloCut::L0CaloCut
 ( const L0DUBase::CaloType::Type type      , 
   const int                      threshold ) 
   : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
-  , m_type         ( type      )
-  , m_hasThreshold ( true      )
-  , m_threshold    ( threshold ) 
+  , m_type         { type      }
+  , m_hasThreshold { true      }
+  , m_threshold    { threshold } 
 {}
 // ============================================================================
 // constructor 
@@ -63,8 +59,8 @@ LoKi::L0::L0CaloCut::L0CaloCut
 LoKi::L0::L0CaloCut::L0CaloCut () 
   : LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate () 
   // , m_type         (       ) Visual C++ does not like this line...
-  , m_hasThreshold ( false )
-  , m_threshold    ( -1    ) 
+  , m_hasThreshold { false }
+  , m_threshold    { -1    } 
 {}
 // ============================================================================
 // assignement 
@@ -98,7 +94,7 @@ LoKi::L0::L0CaloCut::operator()
   ( LoKi::L0::L0CaloCut::argument calo) const 
 {
   return 
-    ( 0      != calo         ) && 
+    (           calo         ) && 
     ( m_type == calo->type() ) && 
     ( !m_hasThreshold || m_threshold <= calo->etCode() ) ;
 } 
@@ -115,21 +111,21 @@ std::ostream& LoKi::L0::L0CaloCut::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::L0::L0MuonCut::L0MuonCut ( const std::string& t ) 
+LoKi::L0::L0MuonCut::L0MuonCut ( std::string t ) 
   : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate () 
-  , m_type ( t ) 
-  , m_hasThreshold ( false )
-  , m_threshold    ( -1    ) 
+  , m_type { std::move(t) } 
+  , m_hasThreshold { false }
+  , m_threshold    { -1    } 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::L0::L0MuonCut::L0MuonCut ( const std::string& t         , 
+LoKi::L0::L0MuonCut::L0MuonCut ( std::string t         , 
                                  const int          threshold ) 
   : LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate () 
-  , m_type ( t ) 
-  , m_hasThreshold ( true      )
-  , m_threshold    ( threshold ) 
+  , m_type { std::move(t) } 
+  , m_hasThreshold { true      }
+  , m_threshold    { threshold } 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -163,7 +159,7 @@ LoKi::L0::L0MuonCut::operator()
   ( LoKi::L0::L0MuonCut::argument muon ) const 
 {
   return
-    ( 0      != muon         ) && 
+    (           muon         ) && 
     ( !m_hasThreshold || m_threshold < (muon->encodedPt()&0x7F) ) ;
 } 
 // ============================================================================
@@ -191,13 +187,12 @@ StatusCode LoKi::L0::getElementaryL0Data
   LoKi::L0::Data&             data    ) 
 {
   data.clear() ;
-  if ( 0 == config ) { return L0Config_Invalid ; }                   // RETURN 
+  if ( !config ) { return L0Config_Invalid ; }                   // RETURN 
   const LHCb::L0DUChannel::Map& channels = config->channels() ;
-  LHCb::L0DUChannel::Map::const_iterator ichannel = channels.find(channel);
+  auto ichannel = channels.find(channel);
   if ( channels.end() == ichannel ) { return L0Channel_Unknown ; }    // RETURN 
   //
-  return getElementaryL0Data 
-    ( ichannel -> second , names , data ) ;
+  return getElementaryL0Data( ichannel -> second , names , data ) ;
 }
 // ============================================================================
 /*  get the elementary data for the given channel by names 
@@ -213,25 +208,22 @@ StatusCode LoKi::L0::getElementaryL0Data
   LoKi::L0::Data&          data  ) 
 {
   data.clear() ;
-  if ( 0 == channel ) { return L0Channel_Invalid ; }                  // RETURN 
+  if ( !channel ) { return L0Channel_Invalid ; }                  // RETURN 
   // get the conditions 
   const LHCb::L0DUElementaryCondition::Map& conditions =
     channel->elementaryConditions() ;  
   // loop over elementary conditions:
-  for ( LHCb::L0DUElementaryCondition::Map::const_iterator
-          condition = conditions.begin();
-        condition!=conditions.end(); ++condition )
+  for ( const auto & condition : conditions )
   {
     // Retrieve const   L0DU Elementary data
-    const LHCb::L0DUElementaryCondition* elementary = condition->second ;
-    if ( 0 == elementary  ) { return L0Condition_Invalid ; }          // RETURN
+    const LHCb::L0DUElementaryCondition* elementary = condition.second ;
+    if ( !elementary  ) { return L0Condition_Invalid ; }          // RETURN
     // get the data 
     const LHCb::L0DUElementaryData* edata = elementary->data() ;
-    if ( 0 == edata       ) { return L0Data_Invalid      ; }          // RETURN 
+    if ( !edata       ) { return L0Data_Invalid      ; }          // RETURN 
     // find the corresponding data & fill the output map
-    for ( Names::const_iterator iname = names.begin() ; 
-          names.end() != iname ; ++iname ) 
-    { if ( edata->name() == *iname ) { data[ *iname ] = elementary ; } }  // NB!
+    for ( const auto& name : names )
+    { if ( edata->name() == name ) { data[ name ] = elementary ; } }  // NB!
   }
   return StatusCode::SUCCESS ;                                        // RETURN
 }
@@ -274,28 +266,21 @@ StatusCode LoKi::L0::getL0Cuts
   LoKi::L0::L0CaloCuts&          cuts    ) 
 {
   cuts.clear() ;
-  if ( 0 == channel ) { return L0Channel_Invalid ; }                  // RETURN
-  // get all conditions:
-  const LHCb::L0DUElementaryCondition::Map& conditions = 
-    channel->elementaryConditions() ;
-  // loop over elementary conditions:
-  for ( LHCb::L0DUElementaryCondition::Map::const_iterator condition = conditions.begin();
-        condition!=conditions.end(); ++condition )
+  if ( !channel ) { return L0Channel_Invalid ; }                  // RETURN
+  // get all conditions and loop over the elementary conditions:
+  for ( const auto& condition : channel->elementaryConditions() )
   {
     // Retrieve const   L0DU Elementary data
-    const LHCb::L0DUElementaryCondition* elementary = condition->second ;
-    if ( 0 == elementary  ) { return L0Condition_Invalid ; }          // RETURN
+    const LHCb::L0DUElementaryCondition* elementary = condition.second ;
+    if ( !elementary  ) { return L0Condition_Invalid ; }          // RETURN
     // get the data 
-    const LHCb::L0DUElementaryData* edata = elementary->data() ;
-    if ( 0 == edata       ) { return L0Data_Invalid      ; }          // RETURN 
+    auto  edata = elementary->data() ;
+    if ( !edata       ) { return L0Data_Invalid      ; }          // RETURN 
     // find the corresponding data & fill the output map
-    for ( CaloTypes::const_iterator itype = types.begin() ; 
-          types.end() != itype ; ++itype ) 
-    { 
-      if ( edata->name() !=  itype->first ) { continue ; }          // CONTINUE 
+    for ( const auto& type : types ) { 
+      if ( edata->name() !=  type.first ) { continue ; }          // CONTINUE 
       // 
-      cuts.push_back  
-        ( L0CaloCut ( itype -> second , elementary -> threshold () ) ) ; // NB!
+      cuts.emplace_back( type.second , elementary -> threshold () ) ; // NB!
     } 
   }
   return StatusCode::SUCCESS ;                                        // RETURN  
@@ -313,9 +298,9 @@ StatusCode LoKi::L0::getL0Cuts
   LoKi::L0::L0CaloCuts&      cuts    ) 
 {
   cuts.clear() ;
-  CaloTypes::const_iterator itype = types.find ( channel ) ;
+  auto itype = types.find ( channel ) ;
   if ( types.end() == itype ) { return L0Channel_InvalidMap ; }       // RETURN 
-  cuts.push_back ( L0CaloCut ( itype->second ) ) ;
+  cuts.emplace_back( itype->second  ) ;
   return StatusCode::SUCCESS ;                                        // RETURN 
 }
 // ============================================================================
@@ -337,24 +322,19 @@ StatusCode LoKi::L0::getL0Cuts
   const LHCb::L0DUElementaryCondition::Map& conditions =
     channel->elementaryConditions() ;  
   // loop over elementary conditions:
-  for ( LHCb::L0DUElementaryCondition::Map::const_iterator
-          condition = conditions.begin();
-        condition!=conditions.end(); ++condition )
-  {
+  for ( const auto& condition : conditions ) {
     // Retrieve const   L0DU Elementary data
-    const LHCb::L0DUElementaryCondition* elementary = condition->second ;
-    if ( 0 == elementary  ) { return L0Condition_Invalid ; }          // RETURN
+    const LHCb::L0DUElementaryCondition* elementary = condition.second ;
+    if ( !elementary  ) { return L0Condition_Invalid ; }          // RETURN
     // get the data 
-    const LHCb::L0DUElementaryData* edata = elementary->data() ;
-    if ( 0 == edata       ) { return L0Data_Invalid      ; }          // RETURN 
+    auto  edata = elementary->data() ;
+    if ( !edata       ) { return L0Data_Invalid      ; }          // RETURN 
     // find the corresponding data & fill the output map
-    for ( Names::const_iterator iname = names.begin() ; 
-          names.end() != iname ; ++iname ) 
+    for ( const auto& name : names )
     { 
-      if ( edata->name() != *iname ) { continue ; }                 // CONTINUE
+      if ( edata->name() != name ) { continue ; }                 // CONTINUE
       // get L0 muon cut
-      cuts.push_back 
-        (  L0MuonCut ( *iname , elementary->threshold () ) ) ;           // NB!  
+      cuts.emplace_back(   name , elementary->threshold () ) ;           // NB!  
     }  
   }
   return StatusCode::SUCCESS ;                                        // RETURN
@@ -375,9 +355,9 @@ StatusCode LoKi::L0::getL0Cuts
   LoKi::L0::L0MuonCuts&      cuts    ) 
 {
   cuts.clear() ;
-  if ( 0 == config ) { return L0Config_Invalid ; }                    // RETURN 
+  if ( !config ) { return L0Config_Invalid ; }                    // RETURN 
   const LHCb::L0DUChannel::Map& channels = config->channels() ;
-  LHCb::L0DUChannel::Map::const_iterator ichannel = channels.find(channel);
+  auto ichannel = channels.find(channel);
   if ( channels.end() == ichannel ) { return L0Channel_Unknown ; }    // RETURN 
   //
   return getL0Cuts ( ichannel -> second , names , cuts ) ;            // RETURN 

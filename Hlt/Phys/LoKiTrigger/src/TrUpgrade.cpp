@@ -38,10 +38,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *   ``No Vanya's lines are allowed in LHCb/Gaudi software.'' 
- *
  *  Version           $Revision$
  *  Last modification $Date$
  *                 by $Author$
@@ -56,11 +52,11 @@
  */
 // ============================================================================
 LoKi::Hlt1::Upgrade::Upgrade 
-( const std::string&             output  ,         // output selection name/key 
+( std::string                    output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink      ( output ) 
+  , m_sink      { std::move(output) } 
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -69,11 +65,11 @@ LoKi::Hlt1::Upgrade::Upgrade
  */
 // ============================================================================
 LoKi::Hlt1::Upgrade::Upgrade 
-( const std::string&             output  ,         // output selection name/key 
+( std::string                    output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::UpgradeTool ( config ) 
-  , m_sink      ( output ) 
+  , m_sink      { std::move(output) } 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -84,7 +80,7 @@ LoKi::Hlt1::Upgrade::~Upgrade(){}
 // ============================================================================
 LoKi::Hlt1::Upgrade* 
 LoKi::Hlt1::Upgrade::clone() const 
-{ return new LoKi::Hlt1::Upgrade ( *this ) ; }
+{ return new LoKi::Hlt1::Upgrade { *this } ; }
 // ============================================================================
 // OPTIONAL:: nice printout 
 // ============================================================================
@@ -118,9 +114,9 @@ LoKi::Hlt1::Upgrade::operator()
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( const std::string&             output  ,         // output selection name/key 
+( std::string                    output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( output , config ) 
+  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -129,9 +125,9 @@ LoKi::Hlt1::UpgradeTracks::UpgradeTracks
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks::UpgradeTracks 
-( const std::string&             output  ,         // output selection name/key 
+( std::string                    output  ,         // output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( output , config ) 
+  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -142,7 +138,7 @@ LoKi::Hlt1::UpgradeTracks::~UpgradeTracks(){}
 // ============================================================================
 LoKi::Hlt1::UpgradeTracks* 
 LoKi::Hlt1::UpgradeTracks::clone() const 
-{ return new LoKi::Hlt1::UpgradeTracks ( *this ) ; }
+{ return new LoKi::Hlt1::UpgradeTracks { *this } ; }
 // ============================================================================
 // OPTIONAL:: nice printout 
 // ============================================================================
@@ -178,10 +174,10 @@ LoKi::Hlt1::UpgradeTracks::operator()
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const int                      index   ,   //   track index for upgrade  
+( std::string                    output  ,         // output selection name/key 
+  int                            index   ,         //   track index for upgrade  
   const LoKi::Hlt1::UpgradeConf& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( output , config ) 
+  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -191,10 +187,10 @@ LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeMultiTracks::UpgradeMultiTracks 
-( const std::string&             output  ,         // output selection name/key 
-  const int                      index   ,   //   track index for upgrade  
+( std::string                    output  ,         // output selection name/key 
+  int                            index   ,   //   track index for upgrade  
   const LoKi::Hlt1::UpgradeTool& config  )         //             configuration 
-  : LoKi::Hlt1::Upgrade( output , config ) 
+  : LoKi::Hlt1::Upgrade( std::move(output) , config ) 
   , m_index ( index ) 
 {}
 // ============================================================================
@@ -206,7 +202,7 @@ LoKi::Hlt1::UpgradeMultiTracks::~UpgradeMultiTracks(){}
 // ============================================================================
 LoKi::Hlt1::UpgradeMultiTracks* 
 LoKi::Hlt1::UpgradeMultiTracks::clone() const 
-{ return new LoKi::Hlt1::UpgradeMultiTracks ( *this ) ; }
+{ return new LoKi::Hlt1::UpgradeMultiTracks { *this } ; }
 // ============================================================================
 // OPTIONAL:: nice printout 
 // ============================================================================

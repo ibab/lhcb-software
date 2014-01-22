@@ -1,5 +1,4 @@
-// $Id$
-// ============================================================================
+// $Id$ // ============================================================================
 // Include files 
 // ============================================================================
 // boost
@@ -31,10 +30,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @date 2008-11-10 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
@@ -44,12 +39,12 @@
 LoKi::Hlt1::Selection::Selection 
 ( const Hlt::TSelection<Hlt::Candidate>* selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( selection )
-  , m_selName   ()
-  , m_cut ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
-  , m_trivial ( true ) 
+  , m_selection { selection }
+  , m_selName   {}
+  , m_cut { LoKi::Constant<const Hlt::Candidate*,bool>{ true } }
+  , m_trivial { true } 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Selection>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Selection>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
 }
 // ============================================================================
@@ -58,138 +53,138 @@ LoKi::Hlt1::Selection::Selection
 LoKi::Hlt1::Selection::Selection 
 ( const Hlt::Selection* sel ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0 ) 
-  , m_selName   ( )
-  , m_cut       ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
-  , m_trivial   ( true ) 
+  , m_selection { nullptr }
+  , m_selName   { }
+  , m_cut       { LoKi::Constant<const Hlt::Candidate*,bool>{ true } }
+  , m_trivial   { true }
 {
-  Assert ( 0 != sel , "Hlt::Selection* points to NULL!" ) ;
+  Assert ( sel , "Hlt::Selection* points to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::HltCandidate>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<LHCb::HltCandidate>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&    selection ) 
+( std::string    selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( LoKi::Constant<const Hlt::Candidate*,bool> ( true ) )
-  , m_trivial   ( true ) 
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection) }
+  , m_cut       { LoKi::Constant<const Hlt::Candidate*,bool>{ true } }
+  , m_trivial   { true }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection*                  points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&                                           selection ,
+( std::string                                                  selection ,
   const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut       )
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( cut )
-  , m_trivial   ( false ) 
+  , m_selection { nullptr   }
+  , m_selName   { std::move(selection) }
+  , m_cut       { cut }
+  , m_trivial   { false }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection                   points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection                   points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&                                           selection ,
+( std::string                                                  selection ,
   const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&     cut       , 
   const int                                                    slot      ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( LoKi::Candidates::StageCut ( cut , slot ) )
-  , m_trivial   ( false ) 
+  , m_selection { nullptr   }
+  , m_selName   { std::move(selection) }
+  , m_cut       { LoKi::Candidates::StageCut ( cut , slot ) }
+  , m_trivial   { false }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection*                  points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&                                           selection  ,
+( std::string                                                         selection,
   const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut , 
-  const int                                                    slot       ) 
+  int                                                                 slot     ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
-  , m_trivial   ( false ) 
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection) }
+  , m_cut       { LoKi::Candidates::SlotCut ( cut , slot ) }
+  , m_trivial   { false }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection*                  points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&                                           selection  ,
+( std::string                                               selection  ,
   const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut , 
-  const int                                                    slot       ) 
+  int                                                       slot       ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
-  , m_trivial   ( false ) 
+  , m_selection { nullptr   }
+  , m_selName   { std::move(selection) }
+  , m_cut       { LoKi::Candidates::SlotCut ( cut , slot ) }
+  , m_trivial   { false }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection*                  points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Selection::Selection 
-( const std::string&                                           selection  ,
+( std::string                                                  selection  ,
   const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&    cut        , 
   const int                                                    slot       ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
-  , m_cut       ( LoKi::Candidates::SlotCut ( cut , slot ) )
-  , m_trivial   ( false ) 
+  , m_selection { nullptr   }
+  , m_selName   { std::move(selection) }
+  , m_cut       { LoKi::Candidates::SlotCut ( cut , slot ) }
+  , m_trivial   { false }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* points to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection*                  points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection*                  points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<Hlt::Candidate> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -197,18 +192,18 @@ LoKi::Hlt1::Selection::Selection
 LoKi::Hlt1::Selection::result_type
 LoKi::Hlt1::Selection::operator() () const 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
   //
   // trivial cut ?
   if ( m_trivial ) 
-  { return result_type ( m_selection->begin () , m_selection->end   () ) ; }
+  { return { m_selection->begin () , m_selection->end   () } ; }
   //
   result_type result_;
   result_.reserve ( m_selection->size() ) ;
   //
-  LoKi::select ( m_selection -> begin ()        , 
-                 m_selection -> end   ()        , 
-                 std::back_inserter ( result_ ) , m_cut ) ;
+  std::copy_if ( std::begin(*m_selection), std::end(*m_selection)
+               , std::back_inserter ( result_ ) 
+               , m_cut ) ;
   //
   return result_;
 }
@@ -228,10 +223,10 @@ std::ostream& LoKi::Hlt1::Selection::fillStream ( std::ostream& s ) const
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::Sink::Sink
-( const std::string&    selection ) 
+( std::string  selection ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
-  , m_selection ( 0         )
-  , m_selName   ( selection ) 
+  , m_selection { nullptr   }
+  , m_selName   { std::move(selection) } 
 {
   if ( active() ) 
   {
@@ -239,7 +234,7 @@ LoKi::Hlt1::Sink::Sink
     Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
     // declare the selection  
     m_selection = unit->declareOutput<Hlt::Candidate> ( selName(), *this ) ;
-    Assert ( 0 != m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+    Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
   }
 }
 // ============================================================================
@@ -252,16 +247,12 @@ LoKi::Hlt1::Sink::operator()
   // sink is deactivated? 
   if ( !active() ) { return a ; } // RETURN 
   //
-  Assert ( 0 != m_selection , 
-           "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<Hlt::Candidate>* points to NULL!" ) ;  
   //
-  for ( Hlt::Candidate::ConstVector::const_iterator ia = a.begin() ; 
-        a.end() != ia ; ++ia ) 
-  {
-    const Hlt::Candidate* t = *ia ;
-    if ( 0 == t ) { continue ; }
-    m_selection->push_back ( t ) ;
-  }
+  std::copy_if( std::begin(a),std::end(a)
+              , std::back_inserter(*m_selection)
+              , [](const Hlt::Candidate* c) { return c != nullptr; } 
+              );
   //
   return a ;
 }
@@ -273,17 +264,15 @@ std::ostream& LoKi::Hlt1::Sink::fillStream ( std::ostream& s ) const
 // ============================================================================
 
 
-
-
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
 ( const Hlt::TSelection<LHCb::Track>* selection ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_selection ( selection )
+  , m_selection { selection }
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
 }
 // ============================================================================
@@ -292,29 +281,29 @@ LoKi::Hlt1::TrSelection::TrSelection
 LoKi::Hlt1::TrSelection::TrSelection 
 ( const Hlt::Selection* sel ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_selection ( 0 ) 
+  , m_selection { nullptr } 
 {
-  Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
+  Assert ( sel , "Hlt::Selection* point to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::Track> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::TrSelection::TrSelection 
-( const std::string&    selection ) 
+( std::string        selection ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection) } 
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection                points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection                points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::Track> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -322,7 +311,7 @@ LoKi::Hlt1::TrSelection::TrSelection
 LoKi::Hlt1::TrSelection::result_type
 LoKi::Hlt1::TrSelection::operator() () const 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
   return result_type ( m_selection->begin () , m_selection->end() ) ;
 }
 // ============================================================================
@@ -338,16 +327,16 @@ std::ostream& LoKi::Hlt1::TrSelection::fillStream ( std::ostream& s ) const
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::TrRegister::TrRegister 
-( const std::string&    selection ) 
+( std::string    selection ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Pipe () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection) }
 {
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   // declare the selection  
   m_selection = unit->declareOutput<LHCb::Track> ( selName(), *this ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::Track>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -356,15 +345,12 @@ LoKi::Hlt1::TrRegister::result_type
 LoKi::Hlt1::TrRegister::operator() 
   ( LoKi::Hlt1::TrRegister::argument a ) const 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::Track>* point to NULL!" ) ;  
+  Assert (  m_selection , "Hlt::TSelection<LHCb::Track>* point to NULL!" ) ;  
   //
-  for ( LHCb::Track::ConstVector::const_iterator ia = a.begin() ; 
-        a.end() != ia ; ++ia ) 
-  {
-    const LHCb::Track* t = *ia ;
-    if ( 0 == t ) { continue ; }
-    m_selection->push_back ( t ) ;
-  }
+  std::copy_if( std::begin(a),std::end(a)
+              , std::back_inserter(*m_selection)
+              , [](const LHCb::Track* t) { return t != nullptr; } 
+              );
   //
   return a ;
 }
@@ -383,9 +369,9 @@ std::ostream& LoKi::Hlt1::TrRegister::fillStream ( std::ostream& s ) const
 LoKi::Hlt1::VxSelection::VxSelection 
 ( const Hlt::TSelection<LHCb::RecVertex>* selection ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_selection ( selection )
+  , m_selection { selection }
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
   m_selName = m_selection->id() ;
 }
 // ============================================================================
@@ -394,29 +380,29 @@ LoKi::Hlt1::VxSelection::VxSelection
 LoKi::Hlt1::VxSelection::VxSelection 
 ( const Hlt::Selection* sel ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_selection ( 0 ) 
+  , m_selection { nullptr }
 {
-  Assert ( 0 != sel , "Hlt::Selection* point to NULL!" ) ;
+  Assert ( sel , "Hlt::Selection* point to NULL!" ) ;
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::RecVertex> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;
   m_selName = m_selection->id() ; 
 }
 // ============================================================================
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::VxSelection::VxSelection 
-( const std::string&    selection ) 
+( std::string    selection ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_selection ( 0 )
-  , m_selName ( selection )
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection) }
 {
   // get selection form the Hlt Unit/Hlt Data service 
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   const Hlt::Selection* sel = unit->declareInput ( selection , *this ) ;
-  Assert ( 0 != sel         , "Hlt::Selection                points to NULL!" ) ;  
+  Assert ( sel         , "Hlt::Selection                points to NULL!" ) ;  
   m_selection = LoKi::Hlt1::Utils::cast<LHCb::RecVertex> ( sel ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -424,12 +410,11 @@ LoKi::Hlt1::VxSelection::VxSelection
 LoKi::Hlt1::VxSelection::result_type
 LoKi::Hlt1::VxSelection::operator() () const 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
   result_type out;
   out.reserve( m_selection->size() );
-  BOOST_FOREACH( const LHCb::RecVertex* rv, *m_selection ) {
-     out.push_back( static_cast< const LHCb::VertexBase* >( rv ) );
-  }
+  std::copy( std::begin(*m_selection), std::end(*m_selection)
+           , std::back_inserter(out) );
   return out;
 }
 // ============================================================================
@@ -444,16 +429,16 @@ std::ostream& LoKi::Hlt1::VxSelection::fillStream ( std::ostream& s ) const
 // constructor from the selection 
 // ============================================================================
 LoKi::Hlt1::VxSink::VxSink 
-( const std::string&    selection ) 
+( std::string    selection ) 
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Pipe () 
-  , m_selection ( 0 )
-  , m_selName ( selection ) 
+  , m_selection { nullptr }
+  , m_selName   { std::move(selection)  }
 {
   SmartIF<Hlt::IUnit> unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
   Assert ( !(!unit) , "Hlt::IUnit* point to NULL" ) ;
   // declare the selection  
   m_selection = unit->declareOutput<LHCb::RecVertex> ( selName() , *this ) ;
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* points to NULL!" ) ;  
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -462,11 +447,11 @@ LoKi::Hlt1::VxSink::result_type
 LoKi::Hlt1::VxSink::operator() 
   ( LoKi::Hlt1::VxSink::argument a ) const 
 {
-  Assert ( 0 != m_selection , "Hlt::TSelection<LHCb::RecVertex>* point to NULL!" ) ;  
+  Assert ( m_selection , "Hlt::TSelection<LHCb::RecVertex>* point to NULL!" ) ;  
   //
-  BOOST_FOREACH( const LHCb::VertexBase* vx, a ) {
+  for( const LHCb::VertexBase* vx : a ) {
      const LHCb::RecVertex* rvx = dynamic_cast< const LHCb::RecVertex* >( vx );
-     Assert( 0 != rvx, "VertexBase is not a RecVertex" );
+     Assert(  rvx, "VertexBase is not a RecVertex" );
      m_selection->push_back( rvx );
   }
   //
@@ -483,12 +468,12 @@ std::ostream& LoKi::Hlt1::VxSink::fillStream ( std::ostream& s ) const
 // constructor from the key and cuts 
 // ============================================================================
 LoKi::Hlt1::TrTESInput::TrTESInput
-( const std::string&         key  , 
+( std::string                key  , 
   const LoKi::Types::TrCuts& cuts ) 
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( cuts ) 
+  , m_unit {      }
+  , m_key  { std::move(key)  }
+  , m_cut  { cuts } 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -504,11 +489,11 @@ LoKi::Hlt1::TrTESInput::TrTESInput
 // ============================================================================
 LoKi::Hlt1::TrTESInput::TrTESInput
 ( const LoKi::Types::TrCuts& cuts ,
-  const std::string&         key  )
+  std::string                key  )
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( cuts ) 
+  , m_unit {      } 
+  , m_key  { std::move( key )  }
+  , m_cut  { cuts } 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -523,11 +508,11 @@ LoKi::Hlt1::TrTESInput::TrTESInput
 // constructor from the key and 
 // ============================================================================
 LoKi::Hlt1::TrTESInput::TrTESInput
-( const std::string&         key  )
+( std::string         key  )
   : LoKi::BasicFunctors<const LHCb::Track*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( LoKi::Constant<const LHCb::Track*,bool>( true ) ) 
+  , m_unit {      }
+  , m_key  { std::move(key) }
+  , m_cut  { LoKi::Constant<const LHCb::Track*,bool>{ true } } 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -556,15 +541,13 @@ LoKi::Hlt1::TrTESInput::operator() () const
   // get the data from unit 
   typedef LHCb::Track::Container TRACKS ;
   const TRACKS* tracks = m_unit -> tesData<TRACKS>( *this , m_key ) ;
-  Assert ( 0 != tracks , "Unable to pick up data from TESInput" ) ;
+  Assert ( tracks , "Unable to pick up data from TESInput" ) ;
   result_type output ;
   output.reserve ( tracks->size() ) ; 
   /// select the tracks
-  LoKi::apply_filter  
-    ( tracks -> begin () , 
-      tracks -> end   () , 
-      m_cut.func ()      , 
-      std::back_inserter ( output ) ) ;
+  LoKi::apply_filter( tracks -> begin() , tracks -> end() 
+                    , m_cut.func() 
+                    , std::back_inserter ( output ) ) ;
   // 
   return output ;
 }
@@ -580,12 +563,12 @@ std::ostream& LoKi::Hlt1::TrTESInput::fillStream ( std::ostream& s ) const
 // constructor from the key and cuts 
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
-( const std::string&                                 key  , 
+( std::string                                        key  , 
   const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts )
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( cuts ) 
+  , m_unit {      }
+  , m_key  { std::move(key)  }
+  , m_cut  { cuts }
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -601,11 +584,11 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
 ( const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts ,
-  const std::string&                                 key  )
+  std::string                                        key  )
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( cuts ) 
+  , m_unit {      }
+  , m_key  { std::move(key)  }
+  , m_cut  { cuts }
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -620,11 +603,11 @@ LoKi::Hlt1::RvTESInput::RvTESInput
 // constructor from the key and 
 // ============================================================================
 LoKi::Hlt1::RvTESInput::RvTESInput
-( const std::string&         key  )
+( std::string         key  )
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Source () 
-  , m_unit (      ) 
-  , m_key  ( key  ) 
-  , m_cut  ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) ) 
+  , m_unit {      }
+  , m_key  { std::move(key)  } 
+  , m_cut  { LoKi::Constant<const LHCb::VertexBase*,bool>{ true } } 
 {
   // get the unit :
   SmartIF<Hlt::IUnit> _unit = LoKi::Hlt1::Utils::getUnit ( *this ) ;
@@ -653,15 +636,13 @@ LoKi::Hlt1::RvTESInput::operator() () const
   // get the data from unit 
   typedef LHCb::RecVertex::Container VERTICES ;
   const VERTICES* vertices = m_unit -> tesData<VERTICES>( *this , m_key ) ;
-  Assert ( 0 !=   vertices , "Unable to pick up data from TESInput" ) ;
+  Assert ( vertices , "Unable to pick up data from TESInput" ) ;
   result_type output ;
   output.reserve ( vertices->size() ) ; 
   /// select the tracks
-  LoKi::apply_filter  
-    ( vertices -> begin () , 
-      vertices -> end   () , 
-      m_cut.func ()      , 
-      std::back_inserter ( output ) ) ;
+  LoKi::apply_filter( vertices->begin() , vertices->end() 
+                    , m_cut.func()
+                    , std::back_inserter ( output ) ) ;
   // 
   return output ;
 }

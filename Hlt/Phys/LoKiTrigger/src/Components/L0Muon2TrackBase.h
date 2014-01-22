@@ -71,7 +71,7 @@ namespace Hlt
      *  @param pSvc pointer to Service Locator 
      */
     L0Muon2TrackBase
-    ( const std::string& name ,                  //     algorithm instance name 
+    ( std::string        name ,                  //     algorithm instance name 
       ISvcLocator*       pSvc ) ;                //  pointer to Service Locator
     /// virtual and protected destructor 
     virtual ~L0Muon2TrackBase () ;
@@ -79,9 +79,9 @@ namespace Hlt
   private:
     // ========================================================================
     /// the default constructor is disabled 
-    L0Muon2TrackBase () ;             // the default constructor is disabled 
+    L0Muon2TrackBase () = delete ;             // the default constructor is disabled 
     /// the copy constructor is disabled 
-    L0Muon2TrackBase ( const L0Muon2TrackBase& ) ; // no copy constructor
+    L0Muon2TrackBase ( const L0Muon2TrackBase& ) = delete ; // no copy constructor
     /// the assignement operator is disabled 
     L0Muon2TrackBase& operator=( const L0Muon2TrackBase& ) ;
     // ========================================================================
@@ -107,15 +107,15 @@ namespace Hlt
       LHCb::Track::Container*      muons     ) const  
     {
       // create the track 
-      std::auto_ptr<LHCb::Track> track( new LHCb::Track()  ) ;
+      std::unique_ptr<LHCb::Track> track( new LHCb::Track()  ) ;
       StatusCode sc = m_maker->makeTrack( l0muon , *track ) ;
       if ( sc.isFailure() ) 
       { 
         Error ( "Error from IMuonSeedTool" , sc ) ; 
-        track.reset() ;
+        track.reset(nullptr) ;
       }
       //
-      if ( 0 != track.get()  ) { muons -> insert ( track.get() ) ; }
+      if ( track.get()  ) { muons -> insert ( track.get() ) ; }
       //
       return track.release() ;  
     }
@@ -125,8 +125,7 @@ namespace Hlt
     // ========================================================================
     IMuonSeedTool* maker() const 
     {
-      if ( 0 != m_maker ) { return m_maker ; }
-      m_maker = tool<IMuonSeedTool>( m_makerName , this ) ; 
+      if ( !m_maker ) m_maker = tool<IMuonSeedTool>( m_makerName , this ) ; 
       return m_maker ;
     }
     // ========================================================================

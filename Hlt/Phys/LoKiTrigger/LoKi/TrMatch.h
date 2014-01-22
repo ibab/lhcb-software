@@ -79,7 +79,7 @@ namespace LoKi
        *  @param config (INPUT) the actual configuration 
        */
       Match 
-      ( const std::string&           output  ,   //   output selection name/key 
+      ( std::string                  output  ,   //   output selection name/key 
         const Source&                tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /** constructor 
@@ -88,8 +88,8 @@ namespace LoKi
        *  @param config (INPUT) the actual configuration 
        */
       Match 
-      ( const std::string&           output  ,   //   output selection name/key 
-        const std::string&           tracks2 ,   //   selection name  
+      ( std::string                  output  ,   //   output selection name/key 
+        std::string                  tracks2 ,   //   selection name  
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual desctructor 
       virtual ~Match() ;
@@ -113,6 +113,15 @@ namespace LoKi
       /// the output selection 
       const std::string& output () const { return m_sink.output() ; }
       // ======================================================================
+      void addStage( Hlt::Candidate &candidate
+                   , const Hlt::Candidate& cand1 ) const;
+      // ======================================================================
+      void addStage( Hlt::Candidate &candidate
+                   , const LHCb::Track& track ) const;
+
+      // ======================================================================
+      Hlt::Candidate* createCandidate( const Hlt::Candidate& cand1
+                                     , const LHCb::Track& track) const;
     private:
       // ======================================================================
       /// souce of tracks to be matched 
@@ -144,13 +153,13 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       Match2 
-      ( const std::string&           output  ,   //   output selection name/key 
+      ( std::string                  output  ,   //   output selection name/key 
         const Source&                tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// constructor 
       Match2 
-      ( const std::string&           output  ,   //   output selection name/key 
-        const std::string&           tracks2 ,   //   tracks to be matched with 
+      ( std::string                  output  ,   //   output selection name/key 
+        std::string                  tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual destructor 
       virtual ~Match2() ;
@@ -193,7 +202,7 @@ namespace LoKi
         const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
       /// constructor 
       FilterMatch 
-      ( const std::string&           candidates ,   //   candidates for matching 
+      ( std::string                  candidates ,   //   candidates for matching 
         const LoKi::Hlt1::MatchConf& config     ) ; //        tool configuration 
       /// MANDATORY: virtual desctructor 
       virtual ~FilterMatch() ;
@@ -246,7 +255,7 @@ namespace LoKi
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// constructor 
       FilterMatch2 
-      ( const std::string&           tracks2 ,   //   tracks to be matched with 
+      ( std::string                  tracks2 ,   //   tracks to be matched with 
         const LoKi::Hlt1::MatchConf& config  ) ; //          tool configuration 
       /// MANDATORY: virtual destructor 
       virtual ~FilterMatch2() ;

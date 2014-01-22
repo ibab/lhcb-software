@@ -31,10 +31,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2008-11-12
  *
@@ -61,10 +57,6 @@ namespace LoKi
      *  This file is part of LoKi project: 
      *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
      * 
-     *  By usage of this code one clearly states the disagreement 
-     *  with the campain of Dr.O.Callot et al.: 
-     *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-     *
      *  @see LoKi::Hlt1::TrUpgrade
      *  @see ITracksFromTrack
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -85,14 +77,14 @@ namespace LoKi
        *  @param ptOrder   order in pt ?
        */
       UpgradeConf 
-      ( const std::string&        trTool   ,    //   ITrackFromTrack  tool name
-        const std::string&        address  ,    //   TES location of the tracks 
-        const LHCb::Track::Types  trType   ,    //                   track type 
-        const bool                owner    ,    //                      owner ? 
-        const bool                moveIDs  ,    //               transfer IDs ? 
-        const bool                moveAncs ,    //       transfer anscendents ? 
-        const bool                moveInfo ,    //        transfer extra info ?
-        const bool                ptOrder  ) ;  //                   order pt ?
+      ( std::string         trTool   ,    //   ITrackFromTrack  tool name
+        std::string         address  ,    //   TES location of the tracks 
+        LHCb::Track::Types  trType   ,    //                   track type 
+        bool                owner    ,    //                      owner ? 
+        bool                moveIDs  ,    //               transfer IDs ? 
+        bool                moveAncs ,    //       transfer anscendents ? 
+        bool                moveInfo ,    //        transfer extra info ?
+        bool                ptOrder  ) ;  //                   order pt ?
       // ======================================================================
       /** constructor 
        *  @param trTool the name of ITracksFromTrack tool 
@@ -105,14 +97,14 @@ namespace LoKi
        *  @param ptOrder   order in pt ?
        */
       UpgradeConf 
-      ( const std::string&        trTool   ,    //   ITrackFromTrack  tool name
-        const std::string&        address  ,    //   TES location of the tracks 
-        const LHCb::Track::Types  trType   ,    //                   track type 
-        const bool                owner    ,    //                      owner ? 
-        const bool                moveIDs  ,    //               transfer IDs ? 
-        const bool                moveAncs ,    //       transfer anscendents ? 
-        const bool                moveInfo ,    //        transfer extra info ?
-        const bool                ptOrder  , 
+      ( std::string         trTool   ,    //   ITrackFromTrack  tool name
+        std::string         address  ,    //   TES location of the tracks 
+        LHCb::Track::Types  trType   ,    //                   track type 
+        bool                owner    ,    //                      owner ? 
+        bool                moveIDs  ,    //               transfer IDs ? 
+        bool                moveAncs ,    //       transfer anscendents ? 
+        bool                moveInfo ,    //        transfer extra info ?
+        bool                ptOrder  , 
         const LoKi::Functor<const LHCb::Track*,bool>& cut ) ;  //       functor
       // ======================================================================
     public:

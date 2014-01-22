@@ -62,14 +62,14 @@ LoKi::Tracks::DeltaE::result_type
 LoKi::Tracks::DeltaE::operator() 
   ( LoKi::Tracks::DeltaE::argument t ) const 
 { 
-  if ( 0 ==  t )
+  if ( !t )
   {
     Error ( "LHCb::Track* points to NULL, return -inf" ) ;
     return LoKi::Constants::NegativeInfinity ;                // RETURN
   }
   // get the state:
   const LHCb::State* s  = t->stateAt(LHCb::State::MidHCal) ;
-  if ( 0 == s ) 
+  if ( !s ) 
   { 
     Warning("No state at MidHcal, return +inf") ;
     return LoKi::Constants::PositiveInfinity ;                // RETURN

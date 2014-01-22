@@ -49,10 +49,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2009-03-30
  * 
@@ -89,11 +85,11 @@ namespace
 // constructor from delta-cut  and list of p-cuts
 // ============================================================================
 LoKi::Tracks::MuonDeltaP::MuonDeltaP
-( const double               delta ,
-  const std::vector<double>& cuts  ) 
+( double                     delta ,
+  std::vector<double>        cuts  ) 
   : LoKi::TrackTypes::TrCuts () 
-  , m_deltaP ( delta ) 
-  , m_pCuts  ( cuts  ) 
+  , m_deltaP { delta }
+  , m_pCuts  { std::move(cuts)  } 
 {
   Assert ( m_pCuts.size() == s_nRegions     ,
            "Invalid numbef of Muon-regions" ) ;  
@@ -102,10 +98,10 @@ LoKi::Tracks::MuonDeltaP::MuonDeltaP
 // constructor from delta-cut  
 // ============================================================================
 LoKi::Tracks::MuonDeltaP::MuonDeltaP
-( const double               delta ) 
+( double               delta ) 
   : LoKi::TrackTypes::TrCuts () 
-  , m_deltaP ( delta ) 
-  , m_pCuts  ( s_muonDeltaP_pCuts , s_muonDeltaP_pCuts + s_nRegions ) 
+  , m_deltaP { delta }
+  , m_pCuts  { s_muonDeltaP_pCuts , s_muonDeltaP_pCuts + s_nRegions }
 {
   Assert ( m_pCuts.size() == s_nRegions     ,
            "Invalid numbef of Muon-regions" ) ;  
@@ -114,10 +110,10 @@ LoKi::Tracks::MuonDeltaP::MuonDeltaP
 // constructor from the list of p-cuts
 // ============================================================================
 LoKi::Tracks::MuonDeltaP::MuonDeltaP
-( const std::vector<double>& cuts  ) 
+( std::vector<double> cuts  ) 
   : LoKi::TrackTypes::TrCuts () 
-  , m_deltaP ( s_muonDeltaP_delta ) 
-  , m_pCuts  ( cuts ) 
+  , m_deltaP { s_muonDeltaP_delta } 
+  , m_pCuts  { std::move(cuts) }
 {
   Assert ( m_pCuts.size() == s_nRegions     ,
            "Invalid numbef of Muon-regions" ) ;  
@@ -127,8 +123,8 @@ LoKi::Tracks::MuonDeltaP::MuonDeltaP
 // ============================================================================
 LoKi::Tracks::MuonDeltaP::MuonDeltaP()
   : LoKi::TrackTypes::TrCuts () 
-  , m_deltaP ( s_muonDeltaP_delta ) 
-  , m_pCuts  ( s_muonDeltaP_pCuts , s_muonDeltaP_pCuts + s_nRegions ) 
+  , m_deltaP { s_muonDeltaP_delta }
+  , m_pCuts  { s_muonDeltaP_pCuts , s_muonDeltaP_pCuts + s_nRegions }
 {
   Assert ( m_pCuts.size() == s_nRegions     ,
            "Invalid numbef of Muon-regions" ) ;  
@@ -145,7 +141,7 @@ LoKi::Tracks::MuonDeltaP::result_type
 LoKi::Tracks::MuonDeltaP::operator() 
   ( LoKi::Tracks::MuonDeltaP::argument t ) const 
 {
-  if ( 0 == t ) 
+  if ( !t ) 
   {
     Error ("LHCb::Track* points to NULL, return 'false'") ;
     return false ;  
@@ -155,7 +151,7 @@ LoKi::Tracks::MuonDeltaP::operator()
   if ( t->ancestors().empty() ) { return false ; }                     // RETURN 
   // get the oldest ancestor
   const LHCb::Track* old = t->ancestors().front() ;
-  if ( 0 == old               ) { return false ; }                     // RETURN
+  if ( !old                  ) { return false ; }                     // RETURN
   // get the momentum of the oldest ancestor:
   const double pNew = t  -> p () ;
   if ( 0 >= pNew             ) { return false ; }                     // RETURN 
@@ -174,12 +170,16 @@ LoKi::Tracks::MuonDeltaP::operator()
     // get all IDs from the track 
     const LHCbIDs& ids = t->lhcbIDs() ;
     
-    // loop over all IDs in backward direction (why???) and find muon tile
-    using namespace boost::lambda ;
-    LHCbIDs::const_reverse_iterator itile = 
-      std::find_if ( ids.rbegin() , ids.rend () ,
-                     bind( &LHCb::LHCbID::isMuon , _1 ) ) ;
-    if ( ids.rend() == itile ) { return false ; }                     // RETURN
+    // loop over all IDs in backward direction 
+    // (why??? - because muon hits are typically at the back,
+    //         - so we can early abort the search in case of a positive
+    //         - and in case of negative, it doesn't matter which direction
+    //         - on uses, as everything needs to be checked...
+    // and find muon tile
+    auto itile = std::find_if( ids.rbegin() , ids.rend () 
+                             , [](const LHCb::LHCbID& id) 
+                               { return id.isMuon(); } );
+    if ( itile == ids.rend() ) { return false ; }                     // RETURN
     
     const LHCb::MuonTileID tile = itile->muonID() ;
     const unsigned int muReg = tile.region() ;
@@ -189,7 +189,7 @@ LoKi::Tracks::MuonDeltaP::operator()
     //
   }
   
-  // and finally : 
+  // and finally :
   return true ;                                                       // RETURN 
 }
 // ============================================================================
@@ -224,9 +224,9 @@ std::ostream& LoKi::Tracks::MuonDeltaP::fillStream
 LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
 ( const Hlt::TSelection<LHCb::RecVertex>* selection  ) 
   : LoKi::TrackTypes::TrFunc () 
-  , m_vertices      ( selection ) 
-  , m_vxcut         ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) )
-  , m_vxcut_trivial ( true      ) 
+  , m_vertices      { selection }
+  , m_vxcut         { LoKi::Constant<const LHCb::VertexBase*,bool>{ true } }
+  , m_vxcut_trivial { true      } 
 {}
 // ============================================================================
 // constructor from vertex selection & cuts 
@@ -235,30 +235,30 @@ LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp
 ( const Hlt::TSelection<LHCb::RecVertex>*            selection  , 
   const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
   : LoKi::TrackTypes::TrFunc () 
-  , m_vertices      ( selection ) 
-  , m_vxcut         ( cuts      )
-  , m_vxcut_trivial ( false     ) 
+  , m_vertices      { selection }
+  , m_vxcut         { cuts      }
+  , m_vxcut_trivial { false     } 
 {}
 // ============================================================================
 // constructor from vertex selection 
 // ============================================================================
 LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
-( const std::string& selection  ) 
+( std::string selection  ) 
   : LoKi::TrackTypes::TrFunc () 
-  , m_vertices      ( selection ) 
-  , m_vxcut         ( LoKi::Constant<const LHCb::VertexBase*,bool>( true ) )
-  , m_vxcut_trivial ( true      ) 
+  , m_vertices      { std::move(selection) } 
+  , m_vxcut         { LoKi::Constant<const LHCb::VertexBase*,bool>{ true } }
+  , m_vxcut_trivial { true      }
 {}
 // ============================================================================
 // constructor from vertex selection & cuts 
 // ============================================================================
 LoKi::Tracks::Hlt1TrackMinIp::Hlt1TrackMinIp 
-( const std::string&                                 selection  , 
+( std::string                                        selection  , 
   const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
   : LoKi::TrackTypes::TrFunc () 
-  , m_vertices      ( selection ) 
-  , m_vxcut         ( cuts      )
-  , m_vxcut_trivial ( false     ) 
+  , m_vertices      { std::move(selection) } 
+  , m_vxcut         { cuts      }
+  , m_vxcut_trivial { false     } 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -287,7 +287,7 @@ namespace
     // ========================================================================
     inline double operator() ( const LHCb::VertexBase* vertex ) const 
     {
-      if ( 0 == vertex    ) { return LoKi::Constants::PositiveInfinity ; }
+      if (     !vertex    ) { return LoKi::Constants::PositiveInfinity ; }
       //
       StatusCode sc = LoKi::FastVertex::distance 
         ( m_track , vertex , m_impact , true ) ;
@@ -323,7 +323,7 @@ namespace
     // ========================================================================
     inline double operator() ( const LHCb::VertexBase* vertex ) const 
     {
-      if ( 0 == vertex    ) { return LoKi::Constants::PositiveInfinity ; }
+      if (     !vertex    ) { return LoKi::Constants::PositiveInfinity ; }
       //
       double impact = 0 ;
       double ipchi2 = 0 ;
@@ -354,7 +354,7 @@ LoKi::Tracks::Hlt1TrackMinIp::result_type
 LoKi::Tracks::Hlt1TrackMinIp::operator() 
   ( LoKi::Tracks::Hlt1TrackMinIp::argument t ) const 
 {
-  if ( 0 == t ) 
+  if ( !t ) 
   {
     Error ("LHCb::Track* points to NULL, return negative infinity ") ;
     return LoKi::Constants::NegativeInfinity ;  
@@ -364,7 +364,7 @@ LoKi::Tracks::Hlt1TrackMinIp::operator()
   //
   const Selection* s = selection() ;
   //
-  Assert ( 0 != s , "Invalid Hlt::Selection!" ) ;
+  Assert ( s , "Invalid Hlt::Selection!" ) ;
   //
   if ( s -> empty() ) { return LoKi::Constants::PositiveInfinity ; }
   //
@@ -405,22 +405,22 @@ LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
 LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
 ( const Hlt::TSelection<LHCb::RecVertex>*            selection  , 
   const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
-  : LoKi::Tracks::Hlt1TrackMinIp ( selection , cuts ) 
+  : LoKi::Tracks::Hlt1TrackMinIp( selection , cuts ) 
 {}
 // ============================================================================
 // constructor from vertex selection 
 // ============================================================================
 LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
-( const std::string& selection  ) 
-  : LoKi::Tracks::Hlt1TrackMinIp ( selection ) 
+( std::string selection  ) 
+  : LoKi::Tracks::Hlt1TrackMinIp( std::move(selection) ) 
 {}
 // ============================================================================
 // constructor from vertex selection & cuts 
 // ============================================================================
 LoKi::Tracks::Hlt1TrackMinIpChi2::Hlt1TrackMinIpChi2
-( const std::string&                                 selection  , 
+( std::string                                        selection  , 
   const LoKi::Functor<const LHCb::VertexBase*,bool>& cuts       ) 
-  : LoKi::Tracks::Hlt1TrackMinIp ( selection , cuts ) 
+  : LoKi::Tracks::Hlt1TrackMinIp( std::move(selection) , cuts ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -448,7 +448,7 @@ LoKi::Tracks::Hlt1TrackMinIpChi2::result_type
 LoKi::Tracks::Hlt1TrackMinIpChi2::operator() 
   ( LoKi::Tracks::Hlt1TrackMinIpChi2::argument t ) const 
 {
-  if ( 0 == t ) 
+  if ( !t ) 
   {
     Error ( "LHCb::Track* points to NULL, return negative infinity ") ;
     return LoKi::Constants::NegativeInfinity ;  
@@ -458,7 +458,7 @@ LoKi::Tracks::Hlt1TrackMinIpChi2::operator()
   //
   const Selection* s = selection() ;
   //
-  Assert ( 0 != s , "Invalid Hlt::Selection!" ) ;
+  Assert ( s , "Invalid Hlt::Selection!" ) ;
   //
   if ( s -> empty() ) { return LoKi::Constants::PositiveInfinity ; }
   //

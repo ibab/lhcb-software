@@ -30,10 +30,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  * @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  * @date 2010-11-18
  *  
@@ -73,8 +69,8 @@ namespace Hlt
      *  @param pSvc pointer to Service Locator 
      */
     Track2Candidate
-    ( const std::string& name ,                  //     algorithm instance name 
-      ISvcLocator*       pSvc ) ;                 //  pointer to Service Locator 
+    ( std::string        name ,                  //     algorithm instance name 
+      ISvcLocator*       pSvc ) ;                //  pointer to Service Locator 
     /// virtual and protected destructor 
     virtual ~Track2Candidate () ;
     // ========================================================================
@@ -122,21 +118,21 @@ namespace Hlt
  */
 // ============================================================================
 Hlt::Track2Candidate::Track2Candidate
-( const std::string& name ,                  //     algorithm instance name 
+( std::string        name ,                  //     algorithm instance name 
   ISvcLocator*       pSvc )                  //  pointer to Service Locator 
   : Hlt::Base   ( name , pSvc ) 
-  , m_selection ( 0    ) 
-  , m_output    ( name ) 
-  , m_input     ( "<UNDEFINED>") 
+  , m_selection { nullptr     } 
+  , m_output    { std::move(name) } 
+  , m_input     { "<UNDEFINED>" } 
 //
-  , m_code      ( "<UNSPECIFIED>" )
-  , m_factory   ( "LoKi::Hybrid::TrackFunctorFactory/TrackFactory:PUBLIC" ) 
-  , m_preambulo ()
-  , m_cut       ( LoKi::Constant<const LHCb::Track*,bool> ( false ) )
+  , m_code      { "<UNSPECIFIED>" }
+  , m_factory   { "LoKi::Hybrid::TrackFunctorFactory/TrackFactory:PUBLIC" } 
+  , m_preambulo {}
+  , m_cut       { LoKi::Constant<const LHCb::Track*,bool> { false } }
 //
-  , m_code_updated      ( true ) 
-  , m_factory_updated   ( true ) 
-  , m_preambulo_updated ( true ) 
+  , m_code_updated      { true } 
+  , m_factory_updated   { true } 
+  , m_preambulo_updated { true } 
 // 
 {
   declareProperty 
@@ -204,7 +200,7 @@ StatusCode Hlt::Track2Candidate::decode ()
     tool<LoKi::ITrackFunctorFactory> ( m_factory , this ) ;
   // construct the preambulo 
   std::string _preambulo ;
-  for ( std::vector<std::string>::const_iterator iline = 
+  for ( auto iline = 
           m_preambulo.begin() ; m_preambulo.end() != iline ; ++iline ) 
   { 
     if ( m_preambulo.begin() != iline ) { _preambulo += "\n" ; }
@@ -234,7 +230,7 @@ StatusCode Hlt::Track2Candidate::initialize ()
   Assert ( sc.isSuccess () , "Unable to decode the Code : " + m_code ) ;
   //
   /// Lock the service to enable the output selection registration 
-  Hlt::IRegister::Lock lock ( regSvc() , this ) ;
+  Hlt::IRegister::Lock lock { regSvc() , this } ;
   /// register TES input selection
   sc = lock -> registerTESInput ( m_input     , this ) ;
   Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
@@ -265,7 +261,7 @@ StatusCode Hlt::Track2Candidate::execute  ()
   }
   //
   // some sanity checks:
-  Assert ( 0 != m_selection , "Invalid Local pointer to selection" ) ;
+  Assert ( m_selection , "Invalid Local pointer to selection" ) ;
   if ( !m_selection->empty() ) { Warning("Local selection is not empty!") ; }
   
   // get all L0 Muons from TES  
@@ -278,12 +274,10 @@ StatusCode Hlt::Track2Candidate::execute  ()
   Hlt::Stage::Container*      stages     =  hltStages    () ;
   
   // loop over tracks
-  for ( Tracks::const_iterator itrack = tracks->begin() ; 
-        tracks->end() != itrack ; ++itrack) 
+  for ( const LHCb::Track *track : *tracks ) 
   {
-    const LHCb::Track* track = *itrack ;
     // filter it! 
-    if ( 0 == track || ! m_cut ( track ) ) { continue ; } // CONTINUE 
+    if ( !track || ! m_cut ( track ) ) { continue ; } // CONTINUE 
     //
     //
     // create the new candidate:
@@ -301,7 +295,7 @@ StatusCode Hlt::Track2Candidate::execute  ()
     candidate  -> addToStages ( stage ) ;  // add stage to candidate 
     
     // lock the stage!
-    Hlt::Stage::Lock lock ( stage , this ) ;
+    Hlt::Stage::Lock lock { stage , this } ;
     lock.addToHistory ( m_input ) ;
     stage->set ( track ) ;
     
@@ -324,7 +318,7 @@ StatusCode Hlt::Track2Candidate::execute  ()
 // ============================================================================
 StatusCode Hlt::Track2Candidate::finalize () 
 {
-  m_selection = 0 ;
+  m_selection = nullptr ;
   return Hlt::Base::finalize () ;
 }
 // ============================================================================

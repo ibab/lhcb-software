@@ -30,15 +30,15 @@
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( const std::string&             output   ,   //      output selection name/key 
+( std::string                    output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config   ,   //                  configuration 
   const LoKi::Hlt1::VxCreator&   creator  ,   //                 vertex creator 
-  const std::string&             location )   //  location of upgraded vertices
+  std::string                    location )   //  location of upgraded vertices
   : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config  ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     ( output   ) 
-  , m_location ( location ) 
+  , m_sink     { std::move( output   )  }
+  , m_location { std::move( location )  }
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -47,15 +47,15 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( const std::string&             output   ,   //      output selection name/key 
+( std::string                    output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeConf& config   ,   //                  configuration 
-  const std::string&             location ,   //  location of upgraded vertices
+  std::string                    location ,   //  location of upgraded vertices
   const LoKi::Hlt1::VxCreator&   creator  )   //                 vertex creator 
   : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config  ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     ( output   ) 
-  , m_location ( location ) 
+  , m_sink     { std::move( output   )  }
+  , m_location { std::move( location )  }
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -64,15 +64,15 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( const std::string&             output   ,   //      output selection name/key 
+( std::string                    output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config   ,   //                  configuration 
-  const std::string&             location ,   // location of upgdarded vertices
+  std::string                    location ,   // location of upgdarded vertices
   const LoKi::Hlt1::VxCreator&   creator  )   //                 vertex creator 
   : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     ( output   ) 
-  , m_location ( location ) 
+  , m_sink     { std::move( output   )  }
+  , m_location { std::move( location )  }
 {}
 // ============================================================================
 /*  constructor from all configuration parameters 
@@ -81,15 +81,15 @@ LoKi::Hlt1::VxUpgrade::VxUpgrade
  */
 // ============================================================================
 LoKi::Hlt1::VxUpgrade::VxUpgrade 
-( const std::string&             output   ,   //      output selection name/key 
+( std::string                    output   ,   //      output selection name/key 
   const LoKi::Hlt1::UpgradeTool& config   ,   //                  configuration 
   const LoKi::Hlt1::VxCreator&   creator  ,   //                 vertex creator 
-  const std::string&             location )   // location of upgdarded vertices
+  std::string                    location )   // location of upgdarded vertices
   : LoKi::BasicFunctors<const LHCb::RecVertex*>::Pipe() 
   , LoKi::Hlt1::UpgradeTool ( config ) 
   , LoKi::Hlt1::VxCreator   ( creator ) 
-  , m_sink     ( output   ) 
-  , m_location ( location ) 
+  , m_sink     { std::move( output   )  }
+  , m_location { std::move( location )  }
 {}
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -99,7 +99,7 @@ LoKi::Hlt1::VxUpgrade::operator()
   ( LoKi::Hlt1::VxUpgrade::argument a ) const 
 {
 
-  Assert ( 0 != alg() , "GaudiAlgorithm* points to NULL!" ) ;
+  Assert ( alg() , "GaudiAlgorithm* points to NULL!" ) ;
   
   typedef LHCb::RecVertex::Container    Vertices ;
   typedef std::vector<const LHCb::RecVertex*> INPUT    ;
@@ -117,16 +117,15 @@ LoKi::Hlt1::VxUpgrade::operator()
   CONST_OUTPUT output ;
   SINK_OUTPUT sink ;
   // loop over all input vertices 
-  for ( INPUT::const_iterator ivx = a.begin() ; a.end() != ivx ; ++ivx ) 
+  for ( const LHCb::RecVertex* vx  :  a )
   {
-    const LHCb::RecVertex* vx = *ivx ;
-    if ( 0 == vx ) { Error ( "LHCb::RecVertex* points to NULL, skip it") ; continue ; } 
+    if ( !vx ) { Error ( "LHCb::RecVertex* points to NULL, skip it") ; continue ; } 
     
     const TRKs& tracks = vx -> tracks () ;
     if ( 2 != tracks.size() ) { Error ( " nTrack !=  2, skip it!  ") ; continue ; }
     const LHCb::Track* tr1 = tracks[0] ;
     const LHCb::Track* tr2 = tracks[1] ;
-    if ( 0 == tr1 || 0 == tr2 ) 
+    if ( !tr1 || !tr2 ) 
     { Error ( "LHCb::Track* points to NULL, skip it") ; continue ; } 
     
     // upgrade the first track 
@@ -150,20 +149,13 @@ LoKi::Hlt1::VxUpgrade::operator()
     { Warning ("Error from make(), skip " , sc ) ; continue ;  } // CONTINUE
     if ( moveInfo() ) 
     {
-      for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout ) 
-      {
-        (*iout)->setExtraInfo ( vx -> extraInfo () ) ;    
-      }  
+      for ( const auto& i : out ) i->setExtraInfo ( vx -> extraInfo () ) ;
     }
     // add vertices into the global list of vertices 
-    BOOST_FOREACH( const LHCb::RecVertex* rv, out ) {
-       sink.push_back( static_cast< const LHCb::VertexBase* >( rv ) );
-    }
+    std::copy( std::begin(out), std::end(out), std::back_inserter(sink) );
     output.insert( output.end(), out.begin(), out.end() );
     // add vertices into the TES constainer  -- this is where the ownership goes!!
-    for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout )  {
-        vertices -> insert ( *iout ) ; 
-    }
+    for ( const auto&  i : out ) vertices -> insert ( i ) ; 
     // ========================================================================
   } // end of the loop over all vertices 
   //

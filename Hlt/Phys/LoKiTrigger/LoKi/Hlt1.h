@@ -71,31 +71,31 @@ namespace LoKi
       /// constructor from the selection 
       Selection ( const Hlt::Selection*                  selection ) ;
       /// constructor from the selection 
-      Selection ( const std::string&                     selection ) ;
+      Selection ( std::string                            selection ) ;
       /// constructor from the selection & criteria 
       Selection
-      ( const std::string&                                           selection , 
+      ( std::string                                                  selection , 
         const LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate& cut       ) ;
       /// constructor from the selection & criteria 
       Selection
-      ( const std::string&                                           selection , 
+      ( std::string                                                  selection , 
         const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate&     cut       ,
-        const int                                                    slot = 0  ) ;
+        int                                                          slot = 0  ) ;
       /// constructor from the selection & criteria 
       Selection
-      ( const std::string&                                           selection  , 
+      ( std::string                                                  selection  , 
         const LoKi::BasicFunctors<const LHCb::L0MuonCandidate*>::Predicate& cut , 
-        const int                                                    slot = -1  ) ;
+        int                                                          slot = -1  ) ;
       /// constructor from the selection & criteria 
       Selection
-      ( const std::string&                                           selection  , 
+      ( std::string                                                  selection  , 
         const LoKi::BasicFunctors<const LHCb::L0CaloCandidate*>::Predicate& cut ,
-        const int                                                    slot = -1  ) ;
+        int                                                          slot = -1  ) ;
       /// constructor from the selection & criteria 
       Selection
-      ( const std::string&                                           selection , 
+      ( std::string                                                  selection , 
         const LoKi::BasicFunctors<const LHCb::Track*>::Predicate&    cut       , 
-        const int                                                    slot =  0 ) ;
+        int                                                          slot =  0 ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Selection() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -150,7 +150,7 @@ namespace LoKi
       /** constructor from the selection name 
        *  @attenttion empty selection name decativates the sink
        */
-      Sink ( const std::string&  selection ) ;
+      Sink ( std::string  selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Sink () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -206,7 +206,7 @@ namespace LoKi
       /// constructor from the selection 
       TrSelection ( const Hlt::TSelection<LHCb::Track>* selection ) ;
       /// constructor from the selection 
-      TrSelection ( const std::string&  selection ) ;
+      TrSelection ( std::string           selection ) ;
       /// constructor from the selection 
       TrSelection ( const Hlt::Selection* selection ) ;
       /// MANDATORY: virtual destructor 
@@ -254,7 +254,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the selection 
-      TrRegister ( const std::string&  selection ) ;
+      TrRegister ( std::string  selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~TrRegister() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -303,7 +303,7 @@ namespace LoKi
       /// constructor from the selection 
       VxSelection ( const Hlt::TSelection<LHCb::RecVertex>* selection ) ;
       /// constructor from the selection 
-      VxSelection ( const std::string&  selection ) ;
+      VxSelection ( std::string           selection ) ;
       /// constructor from the selection 
       VxSelection ( const Hlt::Selection* selection ) ;
       /// MANDATORY: virtual destructor 
@@ -351,7 +351,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the selection 
-      VxSink ( const std::string&  selection ) ;
+      VxSink ( std::string  selection ) ;
       /// MANDATORY: virtual destructor 
       virtual ~VxSink() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -396,13 +396,13 @@ namespace LoKi
     public: 
       // ======================================================================
       /// constructor from the key and cuts 
-      TrTESInput ( const std::string&         key  , 
+      TrTESInput ( std::string                key  , 
                    const LoKi::Types::TrCuts& cuts ) ;
       /// constructor from the key aand cuts 
       TrTESInput ( const LoKi::Types::TrCuts& cuts ,
-                   const std::string&         key  ) ;
+                   std::string                key  ) ;
       /// constructor from the key and cuts 
-      TrTESInput ( const std::string&         key  ) ;
+      TrTESInput ( std::string                key  ) ;
       /// MANDATORY: virtual destructor
       virtual ~TrTESInput () ;                      // MANDATORY: virtual destructor
       // ======================================================================
@@ -450,13 +450,13 @@ namespace LoKi
     public: 
       // ======================================================================
       /// constructor from the key and cuts 
-      RvTESInput ( const std::string&         key  , 
+      RvTESInput ( std::string                key  , 
                    const LoKi::Functor<const LHCb::VertexBase*,bool>&  cuts ) ;
       /// constructor from the key aand cuts 
       RvTESInput ( const LoKi::Functor<const LHCb::VertexBase*,bool>&  cuts ,
-                   const std::string&         key  ) ;
+                   std::string                key  ) ;
       /// constructor from the key and cuts 
-      RvTESInput ( const std::string&         key  ) ;
+      RvTESInput ( std::string                key  ) ;
       /// MANDATORY: virtual destructor
       virtual ~RvTESInput () ;                 // MANDATORY: virtual destructor
       // ======================================================================

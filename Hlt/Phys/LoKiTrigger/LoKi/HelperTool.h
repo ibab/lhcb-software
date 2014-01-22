@@ -135,7 +135,7 @@ namespace LoKi
       inline LHCb::Track::Container* storedTracks 
       ( const std::string& location ) const 
       {
-        if ( 0 == m_hlt_tracks ) { _createTracks ( location ) ; }
+        if ( ! m_hlt_tracks ) { m_hlt_tracks = _createTracks ( location ) ; }
         return m_hlt_tracks ;
       }
       // ======================================================================
@@ -144,25 +144,25 @@ namespace LoKi
       /// get new candidate 
       inline Hlt::Candidate*  newCandidate     () const 
       {
-        if ( 0 == m_hlt_candidates  ) { _createCandidates  () ; }
+        if ( !m_hlt_candidates  ) { m_hlt_candidates = _createCandidates  () ; }
         return _create<Hlt::Candidate> ( m_hlt_candidates   ) ;
       }
       /// get new stage 
       inline Hlt::Stage*      newStage         () const 
       {
-        if ( 0 == m_hlt_stages       ) { _createStages      () ; }
+        if ( !m_hlt_stages      ) { m_hlt_stages = _createStages      () ; }
         return _create<Hlt::Stage>      ( m_hlt_stages     ) ;
       }
       /// get new multitrack
       inline Hlt::MultiTrack* newMultiTrack    () const 
       {
-        if ( 0 == m_hlt_multitracks ) { _createMultiTracks () ; }
+        if ( ! m_hlt_multitracks ) { m_hlt_multitracks = _createMultiTracks () ; }
         return _create<Hlt::MultiTrack> ( m_hlt_multitracks ) ;
       }
       /// get new vertex 
       inline LHCb::RecVertex* newRecVertex     () const 
       {
-        if ( 0 == m_hlt_recvertices ) { _createRecVertices () ; }
+        if ( !m_hlt_recvertices ) { m_hlt_recvertices = _createRecVertices () ; }
         return _create<LHCb::RecVertex> ( m_hlt_recvertices ) ;
       }
       // ======================================================================
@@ -170,10 +170,10 @@ namespace LoKi
       // ======================================================================
       inline bool _store ( const LHCb::RecVertex* v ) const 
       {
-        if ( 0 == v                     ) { return false ; } 
-        if ( 0 != v->parent()           ) { return true  ; } 
-        if ( 0 == m_hlt_recvertices     ) { _createRecVertices () ; }        
-        if ( 0 == m_hlt_recvertices     ) { return false ; }
+        if ( !v                     ) { return false ; } 
+        if ( v->parent()            ) { return true  ; } 
+        if ( !m_hlt_recvertices     ) { m_hlt_recvertices = _createRecVertices () ; }        
+        if ( !m_hlt_recvertices     ) { return false ; }
         //
         LHCb::RecVertex* _v = const_cast<LHCb::RecVertex*> ( v ) ;
         _add_ ( _v , m_hlt_recvertices ) ;

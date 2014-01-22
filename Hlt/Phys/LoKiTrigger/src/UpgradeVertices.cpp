@@ -35,13 +35,13 @@
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( const std::string&              output     ,     // output selection name/key
+( std::string              output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeConf&  config     ,     //             configuration
-        bool                      allow1Fail ,
-  const std::string&              clonedTracksLocation )
-  : LoKi::Hlt1::Upgrade   ( output, config )
-  , m_allow1Fail          ( allow1Fail     )
-  , m_clonedTracksLocation( clonedTracksLocation )
+  bool                      allow1Fail ,
+  std::string              clonedTracksLocation )
+  : LoKi::Hlt1::Upgrade   ( std::move(output), config )
+  , m_allow1Fail          { allow1Fail     }
+  , m_clonedTracksLocation{ std::move(clonedTracksLocation) }
 { if ( m_allow1Fail ) { retrieveFailKey() ; } }
 // ============================================================================
 /* constructor from all configuration parameters
@@ -50,13 +50,13 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
  */
 // ============================================================================
 LoKi::Hlt1::UpgradeVertices::UpgradeVertices
-( const std::string&              output     ,     // output selection name/key
+( std::string              output     ,     // output selection name/key
   const LoKi::Hlt1::UpgradeTool&  config     ,     //             configuration
-        bool                      allow1Fail ,
-  const std::string&              clonedTracksLocation )
+  bool                     allow1Fail ,
+  std::string              clonedTracksLocation )
   : LoKi::Hlt1::Upgrade( output, config )
-  , m_allow1Fail          ( allow1Fail     )
-  , m_clonedTracksLocation( clonedTracksLocation )
+  , m_allow1Fail          { allow1Fail     }
+  , m_clonedTracksLocation{ std::move(clonedTracksLocation) }
 { if ( m_allow1Fail ) { retrieveFailKey() ; } }
 // ============================================================================
 // Retrieve ExtraInfo key for failed tracks
@@ -64,8 +64,8 @@ LoKi::Hlt1::UpgradeVertices::UpgradeVertices
 void LoKi::Hlt1::UpgradeVertices::retrieveFailKey ()
 {
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
-  const std::string infoIDName = "HltUnit/" + alg()->name();
-  boost::optional<IANNSvc::minor_value_type> _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName ) ;
+  const std::string infoIDName { "HltUnit/" + alg()->name() };
+  auto _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName ) ;
   Assert( _info , " request for unknown Info ID : " + infoIDName ) ;
   m_failKey = _info->second;
 }
@@ -117,7 +117,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::upgradeVertices
 {
   //
   Assert ( !(!upgradeTool()) , "ITracksFromTrack* points to NULL!" ) ;
-  Assert ( 0 != alg()        , "GaudiAlgorithm*   points to NULL!" ) ;
+  Assert ( alg()             , "GaudiAlgorithm*   points to NULL!" ) ;
   //
   LHCb::Track::Container* otracks = storedTracks ( address () ) ;
   //
@@ -126,10 +126,10 @@ StatusCode LoKi::Hlt1::UpgradeVertices::upgradeVertices
         input.end() != iseed ; ++iseed )
   {
     const Hlt::Candidate* candidate = *iseed ;
-    if ( 0 == candidate )
+    if ( !candidate )
     { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE
     const Hlt::Stage*     stage  = candidate->currentStage() ;
-    if ( 0 == stage     )
+    if ( !stage     )
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE
     //
     // upgrade single track
@@ -159,27 +159,24 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
   Hlt::Candidate::ConstVector&       output       ,
   LHCb::Track::Container*            otracks      ) const
 {
-  typedef SmartRefVector<LHCb::Track>   TRKs     ;
-  typedef LHCb::Track::ConstVector      TRACKS   ;
-  typedef std::vector<LHCb::RecVertex*> OUTPUT   ;
   //
-  if ( 0 == input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
+  if ( !input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
   //
   const Hlt::Stage* stage = input->currentStage() ;
-  if ( 0 == stage || !stage->is<LHCb::RecVertex> () )
+  if ( !stage || !stage->is<LHCb::RecVertex> () )
   { return Error ( "Invalid Hlt::Stage*" ) ; }
   //
   const LHCb::RecVertex* inputVertex = stage->get<LHCb::RecVertex> () ;
   //
-  const TRKs& tracks = inputVertex -> tracks();
+  const auto& tracks = inputVertex -> tracks();
   if ( 2 != tracks.size() ) { return Error ( " nTrack != 2, skip it! " ) ; }
   const LHCb::Track* tr1 = tracks[0] ;
   const LHCb::Track* tr2 = tracks[1] ;
-  if ( 0 == tr1 || 0 == tr2 )
+  if ( !tr1 || !tr2 )
   { return Error ( "LHCb::Track* points to NULL, skip it") ; }
 
-  TRACKS tracks1 ;
-  TRACKS tracks2 ;
+  auto tracks1 = LHCb::Track::ConstVector{};
+  auto tracks2 = LHCb::Track::ConstVector{};
   if ( ! m_allow1Fail ) {
 
     // upgrade the first track
@@ -242,19 +239,16 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
 
   if ( tracks1.empty() || tracks2.empty() ) { return StatusCode::SUCCESS ; }
 
-  OUTPUT out;
+  auto  out = std::vector<LHCb::RecVertex*>{};
   StatusCode sc = make ( tracks1 , tracks2 , out );
   if ( sc.isFailure() )
   { return Error ( "Error from vertex creation, skip", sc, 0 ) ; }
 
   //
   // Process output vertices, create a new candidate for vertices (beyond the first ??)
-  for ( OUTPUT::const_iterator iout = out.begin() ;
-        out.end() != iout ; ++iout ) {
+  for ( auto iout = out.begin() ; out.end() != iout ; ++iout ) {
      const LHCb::RecVertex* vx = *iout ;
-     if ( 0 == vx ) {
-        continue ;
-     }
+     if ( !vx ) continue ;
      //
      Hlt::Candidate* _input = 0;
      if ( iout == out.begin() ) {
@@ -270,7 +264,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
         Hlt::Stage* stage1 = newStage() ;
         _input -> addToStages ( stage1 ) ;
         //
-        Hlt::Stage::Lock lock1 ( stage1, upgradeTool() ) ;
+        Hlt::Stage::Lock lock1{ stage1, upgradeTool() } ;
         lock1.addToHistory ( input->workers() ) ;
         // lock1.addToHistory ( myName() ) ;
         stage1 -> set ( stage ) ; // add stage into stage as initiator
@@ -279,7 +273,7 @@ StatusCode LoKi::Hlt1::UpgradeVertices::_i_upgrade_recvertex_j
         // Add the new stage to the candidate
         Hlt::Stage* newstage = newStage() ;
         //
-        Hlt::Stage::Lock lock ( newstage , upgradeTool() ) ;
+        Hlt::Stage::Lock lock { newstage , upgradeTool() } ;
         newstage -> set( vx ) ; // add vertex to the stage
         _input   -> addToStages ( newstage ) ;
      }
@@ -309,18 +303,16 @@ size_t LoKi::Hlt1::UpgradeVertices::make
                      vertices.size() + n1*n2       ) ;
 
   typedef LHCb::Track::ConstVector   Tracks   ;
-  typedef LoKi::Combiner_<Tracks>    Combiner ;
-  typedef Combiner::Range            Range    ;
 
-  const Hlt::VertexCreator           creator    ;
-  const LoKi::Hlt1::Utils::CmpTrack  compare = LoKi::Hlt1::Utils::CmpTrack()  ;
+  const Hlt::VertexCreator           creator{};
+  const LoKi::Hlt1::Utils::CmpTrack  compare{};
 
   const size_t size = vertices.size() ;
 
   /// create the combiner & fill it with data
-  Combiner loop ;
-  loop.add ( Range ( tracks1 )  ) ;
-  loop.add ( Range ( tracks2 )  ) ;
+  auto loop =  LoKi::Combiner_<Tracks>{};
+  loop.add ( { tracks1 }  ) ;
+  loop.add ( { tracks2 }  ) ;
 
   // make the combinations
   for ( ; loop.valid() ; loop.next() )
@@ -333,9 +325,9 @@ size_t LoKi::Hlt1::UpgradeVertices::make
     const LHCb::Track* second = tracks[1] ;
 
     // skip invalid
-    if ( 0 == first || 0 == second      ) { continue ; }              // CONTINUE
+    if ( !first || !second      ) { continue ; }              // CONTINUE
     // skip the same
-    if ( first == second                ) { continue ; }              // CONTINUE
+    if ( first == second        ) { continue ; }              // CONTINUE
     // reduce the double count :
     if ( same && !compare ( first , second ) ) { continue ; }         // CONTINUE
 
@@ -343,13 +335,13 @@ size_t LoKi::Hlt1::UpgradeVertices::make
     if ( HltUtils::matchIDs ( *first , *second ) ) { continue ; }     // CONTINUE
 
     // create the vertex
-    LHCb::RecVertex* vertex = newRecVertex();
+    std::unique_ptr<LHCb::RecVertex> vertex{  newRecVertex() };
 
     /// fill it with some information
     creator ( *first , *second , *vertex ) ;
 
     // good vertex! add it to the outptu container
-    vertices.push_back ( vertex ) ;
+    vertices.push_back ( vertex.release() ) ;
 
   }  // end of loop over all combinations
   //

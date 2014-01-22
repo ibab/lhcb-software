@@ -38,10 +38,6 @@
  *  This file is part of LoKi project: 
  *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
  * 
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2010-10-28
  *
@@ -57,17 +53,17 @@
 LoKi::Hlt1::MatchTool::MatchTool 
 ( const LoKi::Hlt1::MatchConf&         config  )   //        tool configuration 
   : LoKi::Hlt1::HelperTool ( 1 ) 
-  , m_config     ( config  )
-  , m_match      (         )
-  , m_match2     (         )
-  , m_recoID     ( 0       )
+  , m_config     { config  }
+  , m_match      {         }
+  , m_match2     {         }
+  , m_recoID     { 0       }
 // 
-  , m_invert     ( false   )
+  , m_invert     { false   }
 {  
   // retrive the tool 
   IAlgTool* t = alg()->tool<IAlgTool> ( mTool() ) ;
   //
-  Assert ( 0 != t , "Can't aquire the tool!" );
+  Assert ( t , "Can't aquire the tool!" );
   //
   SmartIF<ITrackMatch>                i_1 ( t ) ;
   if ( i_1 ) { m_match  = i_1.get () ; }
@@ -81,8 +77,7 @@ LoKi::Hlt1::MatchTool::MatchTool
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   //
   { // recoID 
-    boost::optional<IANNSvc::minor_value_type> info = 
-      ann->value( Gaudi::StringKey(std::string("InfoID")) , mTool()  );
+    auto info = ann->value( Gaudi::StringKey(std::string("InfoID")) , mTool()  );
     Assert( info , " request for unknown Info ID : " + mTool() );
     //
     m_recoID = info->second ;
@@ -101,15 +96,15 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   const LHCb::Track* tr2 ) const 
 {
   // ==========================================================================
-  if ( 0 == tr1 || 0 == tr2 ) { return 0 ; }                          // RETURN 
+  if ( !tr1 || !tr2 ) { return nullptr ; }                            // RETURN 
   // ==========================================================================
   /// get new track 
-  std::auto_ptr<LHCb::Track> track3 ( new LHCb::Track() ) ;
+  std::unique_ptr<LHCb::Track> track3 ( new LHCb::Track() ) ;
   // the actual track matching
   double q1 = 0 ;
   double q2 = 0 ;
   StatusCode sc = match() -> match ( *tr1 , *tr2 , *track3 , q1 , q2 ) ;
-  if ( sc.isFailure() ) { return 0 ; }                               // RETURN
+  if ( sc.isFailure() ) { return nullptr ; }                          // RETURN
   //
   // move info ? 
   if ( moveInfo () ) 
@@ -119,13 +114,13 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   }        
   ///
   LHCb::Track* track = track3.release() ;
-  if ( 0 == track->parent() ) 
+  if ( !track->parent() ) 
   { storedTracks ( address() )->insert ( track ); }
   //
   // do not put "bad" match into stream 
-  if ( !m_config ( track )  ) { return 0 ; }                    // RETURN 
+  if ( !m_config ( track )  ) { return nullptr ; }                    // RETURN 
   //
-  return track ;                                                // RETURN 
+  return track ;                                                      // RETURN 
 }
 // ============================================================================
 /*  perform the track matching 
@@ -139,23 +134,23 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
   const Hlt::Candidate* cand  ) const 
 {
   //
-  if ( 0 == track || 0 == cand ) { return 0 ; }                       // RETURN
+  if ( !track || !cand ) { return nullptr ; }                         // RETURN
   //
   // it is track <--> track match! 
   if ( !m_match2 ) 
   {
     const LHCb::Track* track2  = cand->get<LHCb::Track> () ;
-    if ( 0 == track2  ) { return 0 ; }                                // RETURN
+    if ( !track2  ) { return nullptr ; }                              // RETURN
     return match ( track , track2 ) ;                                 // RETURN 
   }
   //
   /// get new track 
-  LHCb::Track* track3 = new LHCb::Track();
+  LHCb::Track* track3 { new LHCb::Track()  }; // where does the ownership go???
   // the actual track matching
   double q1 = 0 ;
   double q2 = 0 ;
   StatusCode sc = match2() -> match ( *track , *cand , *track3 , q1 , q2 ) ;
-  if ( sc.isFailure() ) { return 0 ; }                                // RETURN
+  if ( sc.isFailure() ) { return nullptr ; }                           // RETURN
   
   // move info ? 
   if ( moveInfo () ) 
@@ -163,11 +158,11 @@ const LHCb::Track* LoKi::Hlt1::MatchTool::match
      Hlt::MergeInfo ( *track , *track3 ) ;
   }        
   ///
-  if ( 0 == track3->parent() ) 
+  if ( !track3->parent() )   //TODO/FIXME where does ownership go if this fails???
   { storedTracks ( address() )->insert ( track3 ); }
   //
   // do not put "bad" match into stream 
-  if ( !m_config ( track3 )  ) { return 0 ; }                         // RETURN
+  if ( !m_config ( track3 )  ) { return nullptr ; }                   // RETURN
   //
   return track3;                                                      // RETURN
   //
@@ -183,8 +178,7 @@ bool LoKi::Hlt1::MatchTool::matched
 ( const LHCb::Track*    track , 
   const Hlt::Candidate* cand  ) const 
 {
-  //
-  if ( 0 == track || 0 == cand ) { return false  ; }                   // RETURN
+  if ( !track || !cand ) { return false  ; }                   // RETURN
   //
   Assert ( !(!match2()) , "Invalid setup!" ) ;
   //
@@ -192,7 +186,6 @@ bool LoKi::Hlt1::MatchTool::matched
   double q1 = 0;
   double q2 = 0;
   return match2() -> match ( track, cand, q1, q2 );
-  //
 }
 
 // ============================================================================

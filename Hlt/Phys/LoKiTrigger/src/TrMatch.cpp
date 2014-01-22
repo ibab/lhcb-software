@@ -16,29 +16,73 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-11-17
  */
+
+
+void
+LoKi::Hlt1::Match::addStage( Hlt::Candidate &candidate
+                           , const Hlt::Candidate& cand1 ) const
+{
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage() ;
+        candidate.addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock { stage , match() } ;
+        //
+        lock.addToHistory ( cand1.workers() ) ;
+        // lock.addToHistory ( myName ()  ) ;
+        stage -> set ( cand1.currentStage() ) ;
+}
+
+void 
+LoKi::Hlt1::Match::addStage( Hlt::Candidate &candidate
+                           , const LHCb::Track& track ) const
+{
+        /// get new stage 
+        Hlt::Stage*     stage   = newStage() ;
+        candidate.addToStages ( stage ) ;
+        /// lock new stage:
+        Hlt::Stage::Lock lock { stage , match() } ;
+        // lock.addToHistory ( myName () ) ;
+        stage -> set ( &track ) ;
+}
+
+Hlt::Candidate* 
+LoKi::Hlt1::Match::createCandidate(const Hlt::Candidate& cand1, const LHCb::Track& track) const
+{
+      /// create new candidate:
+      Hlt::Candidate* candidate = newCandidate () ;
+      candidate -> addToWorkers ( alg() ) ;
+      //  1. "initiator" stage - copy the first candidate:
+      addStage( *candidate, cand1 );
+      //  2. "regular" stage : track
+      addStage( *candidate, track );
+
+      return candidate;
+}
+
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match::Match 
-( const std::string&           output  ,   //   output selection name/key 
+( std::string                  output  ,   //   output selection name/key 
   const Source&                tracks2 ,   //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )   //          tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
-  , m_source2    ( tracks2 ) 
-  , m_sink       ( output  ) 
+  , m_source2    { tracks2 } 
+  , m_sink       { std::move(output)  }
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match::Match 
-( const std::string&           output  ,   //   output selection name/key 
-  const std::string&           tracks2 ,   //   tracks to be matched with 
+( std::string                  output  ,   //   output selection name/key 
+  std::string                  tracks2 ,   //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )   //          tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
-  , m_source2    ( LoKi::Hlt1::Selection ( tracks2 ) ) 
-  , m_sink       ( output  ) 
+  , m_source2    { LoKi::Hlt1::Selection{ std::move(tracks2) } }
+  , m_sink       { std::move( output  )  }
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -48,7 +92,7 @@ LoKi::Hlt1::Match::~Match(){}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::Match* LoKi::Hlt1::Match::clone() const 
-{ return new LoKi::Hlt1::Match ( *this ) ; }
+{ return new LoKi::Hlt1::Match { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -56,81 +100,55 @@ LoKi::Hlt1::Match::result_type
 LoKi::Hlt1::Match::operator() 
   ( LoKi::Hlt1::Match::argument a ) const 
 {
+  Assert ( alg() , "Invalid setup" ) ;
   //
-  Assert ( 0 != alg() , "Invalid setup" ) ;
-  //
-  typedef result_type                CANDIDATES ;
-  typedef CANDIDATES::const_iterator ITERATOR   ;
-
   // the output selection 
-  CANDIDATES       output ;
+  result_type       output ;
   //
   if ( a.empty() ) { return output ; }                              // RETURN
   
   // get the tracks from the second source 
-  const CANDIDATES cand_  = source()() ;
+  const result_type cand_  = source()() ;
   
   // input selections:
-  const CANDIDATES* arg1 = &a     ;
-  const CANDIDATES* arg2 = &cand_ ;
+  auto* arg1 = &a     ;
+  auto* arg2 = &cand_ ;
   
   /// swap the arguments (if needed) 
   if  ( invert() ) { std::swap ( arg1 , arg2 ) ; }
   
-  for ( ITERATOR icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
-  {
-    const Hlt::Candidate* cand1 = *icand1 ;
-    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
-    const LHCb::Track*    trk1  = cand1->get<LHCb::Track> () ;
-    if ( 0 == trk1  ) { continue ; }                              // CONTINUE  
-    //
-    for ( ITERATOR icand2 = arg2->begin() ; arg2->end() != icand2 ; ++icand2 ) 
-    {
-      const Hlt::Candidate* cand2 = *icand2 ;
-      if ( 0 == cand2 ) { continue ; }                            // CONITNUE 
-      //
-      // match track & candidate 
-      const LHCb::Track* track = match ( trk1 , cand2 ) ;
-      if ( 0 == track ) { continue ; }                            // CONTINUE 
-      //
-      /// get new candidate:
-      Hlt::Candidate* candidate = newCandidate () ;
-      candidate -> addToWorkers ( alg() ) ;
-      //
-      {
-        //
-        // 1. "initiator" stage - copy the first candidate:
-        //
-        /// get new stage 
-        Hlt::Stage*     stage   = newStage     () ;
-        candidate -> addToStages ( stage ) ;
-        /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , match () ) ;
-        //
-        lock.addToHistory ( cand1->workers() ) ;
-        // lock.addToHistory ( myName ()  ) ;
-        stage -> set ( cand1->currentStage() ) ;
-      }
-      //
-      {
-        //
-        //  2. "regular" stage : track
-        //
-        /// get new stage 
-        Hlt::Stage*     stage   = newStage     () ;
-        candidate -> addToStages ( stage ) ;
-        /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , match () ) ;
-        // lock.addToHistory ( myName () ) ;
-        stage    -> set ( track ) ;
-      }
-      //
-      // add new candidate to the output:
-      output.push_back ( candidate ) ;
-      //
-    } //                              end of the loop over the second container
-    // ========================================================================
-  } //                                end of the loop over the first  container 
+  auto createAndAppend = [&]( const Hlt::Candidate& c1
+                            , const LHCb::Track*    t2 )
+  { if (t2) output.push_back( createCandidate(c1,*t2) ) ; };
+
+#if 0
+  struct appendIf { // back_inserter, but only if valid...
+     result_type& output_;
+     appendIf( output ) : output_(output) {}
+     appendIf& operator++() { return *this; }
+     appendIf& operator=(Hlt::Candidate* rhs) { if (rhs) output_.push_back(rhs); return *this; }
+  };
+
+  std::tranform( std::begin(*arg2), std::end(*arg2)
+               , appendIf(output);
+               , [&]( const Hlt::Candidate *c2)
+                 { auto*  t2 = ( c2 ? match(trk1,c2)   : nullptr );
+                   return t2 ? createCandidate(*cand1,*t2) : nullptr; 
+                 } );
+
+#endif
+
+  std::for_each( std::begin(*arg1), std::end(*arg2)
+               , [&](const Hlt::Candidate *c1)
+                 { auto* t1 = c1 ? c1->get<LHCb::Track> () : nullptr ;
+                   if ( !t1 ) return ;
+                   std::for_each( std::begin(*arg2), std::end(*arg2)
+                                , [&](const Hlt::Candidate *c2)
+                                  { createAndAppend( *c1
+                                                   , c2 ? match(t1,c2)
+                                                        : nullptr ) ;
+                                  } );
+                 } );
   // ==========================================================================
   // register the selection in Hlt Data Service 
   return !m_sink ? output : m_sink ( output ) ;                       // RETURN 
@@ -150,10 +168,10 @@ std::ostream& LoKi::Hlt1::Match::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match2::Match2 
-( const std::string&           output  ,         //   output selection name/key 
+( std::string                output  ,         //   output selection name/key 
   const Source&              tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::Match ( output , tracks2 , config ) 
+  : LoKi::Hlt1::Match ( std::move(output) , tracks2 , config ) 
 {
   setInverted ( true ) ;
 }
@@ -161,10 +179,10 @@ LoKi::Hlt1::Match2::Match2
 // constructor 
 // ============================================================================
 LoKi::Hlt1::Match2::Match2 
-( const std::string&           output  ,         //   output selection name/key 
-  const std::string&           tracks2 ,         //   tracks to be matched with 
+( std::string                  output  ,         //   output selection name/key 
+  std::string                  tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::Match ( output , tracks2 , config ) 
+  : LoKi::Hlt1::Match ( std::move(output) , std::move(tracks2) , config ) 
 {
   setInverted ( true ) ;
 }
@@ -176,7 +194,7 @@ LoKi::Hlt1::Match2::~Match2(){}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::Match2* LoKi::Hlt1::Match2::clone() const 
-{ return new LoKi::Hlt1::Match2 ( *this ) ; }
+{ return new LoKi::Hlt1::Match2 { *this } ; }
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
@@ -204,11 +222,11 @@ LoKi::Hlt1::FilterMatch::FilterMatch
 // constructor 
 // ============================================================================
 LoKi::Hlt1::FilterMatch::FilterMatch
-( const std::string&           candidates ,   //   candidates for matching 
+( std::string                  candidates ,   //   candidates for matching 
   const LoKi::Hlt1::MatchConf& config     )   //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe ()
   , LoKi::Hlt1::MatchTool ( config )
-  , m_source     (  LoKi::Hlt1::Selection ( candidates  ) ) 
+  , m_source     {  LoKi::Hlt1::Selection{ std::move(candidates)  } } 
 {
   Assert ( !(!match2() ) , "Invalid setup!" ) ;
 }
@@ -221,7 +239,7 @@ LoKi::Hlt1::FilterMatch::~FilterMatch(){}
 // ============================================================================
 LoKi::Hlt1::FilterMatch*
 LoKi::Hlt1::FilterMatch::clone() const 
-{ return new LoKi::Hlt1::FilterMatch ( *this ) ; }
+{ return new LoKi::Hlt1::FilterMatch { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -229,44 +247,30 @@ LoKi::Hlt1::FilterMatch::result_type
 LoKi::Hlt1::FilterMatch::operator() 
   ( LoKi::Hlt1::Match::argument a ) const 
 {
-  //
-  typedef result_type                CANDIDATES ;
-  typedef CANDIDATES::const_iterator ITERATOR   ;
-  
   // the output selection 
-  CANDIDATES       output ;
+  result_type       output ;
   //
   if ( a.empty() ) { return output ; }                              // RETURN
-  
+
   // get the tracks from the second source 
-  const CANDIDATES cand_  = source()() ;
-  
+  const result_type cand_  = source()() ;
+
   // input selections:
-  const CANDIDATES* arg1 = &a     ;
-  const CANDIDATES* arg2 = &cand_ ;
+  auto* arg1 = &a     ;
+  auto* arg2 = &cand_;
   
   /// swap the arguments (if needed) 
   if  ( invert() ) { std::swap ( arg1 , arg2 ) ; }
   //
-  for ( ITERATOR icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
-  {
-    const Hlt::Candidate* cand1 = *icand1 ;
-    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
-    const LHCb::Track*    trk1  = cand1->get<LHCb::Track> () ;
-    if ( 0 == trk1  ) { continue ; }                              // CONTINUE  
-    //
-    for ( ITERATOR icand2 = arg2->begin() ; arg2->end() != icand2 ; ++icand2 ) 
-    {
-      const Hlt::Candidate* cand2 = *icand2 ;
-      if ( 0 == cand2 ) { continue ; }                            // CONITNUE 
-      //
-      if ( matched ( trk1 , cand2 ) )
-      { output.push_back ( cand1 ) ; }
-      //
-    } //                              end of the loop over the second container
-    // ========================================================================
-  } //                                end of the loop over the first  container 
-  // ==========================================================================
+  std::copy_if( std::begin(*arg1), std::end(*arg1)
+              , std::back_inserter(output)
+              , [&](const Hlt::Candidate *c1) 
+                { auto* t1 = c1 ? c1->get<LHCb::Track>() : nullptr ;
+                  return t1 && std::any_of( std::begin(*arg2), std::end(*arg2)
+                                          , [&](const Hlt::Candidate* c2) 
+                                            { return c2 && matched(t1,c2); });
+                } ) ;
+  //
   return output  ;                                                    // RETURN 
   // ==========================================================================
 }
@@ -295,9 +299,9 @@ LoKi::Hlt1::FilterMatch2::FilterMatch2
 // constructor 
 // ============================================================================
 LoKi::Hlt1::FilterMatch2::FilterMatch2 
-( const std::string&           tracks2 ,         //   tracks to be matched with 
+( std::string                  tracks2 ,         //   tracks to be matched with 
   const LoKi::Hlt1::MatchConf& config  )         //          tool configuration 
-  : LoKi::Hlt1::FilterMatch ( tracks2 , config ) 
+  : LoKi::Hlt1::FilterMatch ( std::move(tracks2) , config ) 
 {
   setInverted ( true ) ;
 }
@@ -309,7 +313,7 @@ LoKi::Hlt1::FilterMatch2::~FilterMatch2(){}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::FilterMatch2* LoKi::Hlt1::FilterMatch2::clone() const 
-{ return new LoKi::Hlt1::FilterMatch2 ( *this ) ; }
+{ return new LoKi::Hlt1::FilterMatch2 { *this } ; }
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
@@ -325,5 +329,3 @@ std::ostream& LoKi::Hlt1::FilterMatch2::fillStream ( std::ostream& s ) const
 // ============================================================================
 // The END 
 // ============================================================================
-
-

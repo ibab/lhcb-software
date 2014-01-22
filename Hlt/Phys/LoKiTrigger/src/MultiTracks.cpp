@@ -19,10 +19,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
  *  @date 2011-03-27
  *
@@ -38,20 +34,20 @@ LoKi::Candidates::MtFun::MtFun
   const unsigned int                                       index , 
   const double                                             bad   ) 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
-  , m_fun   ( fun   ) 
-  , m_index ( index ) 
-  , m_bad   ( bad   )
+  , m_fun   { fun   } 
+  , m_index { index } 
+  , m_bad   { bad   }
 {}
 // ============================================================================
 // constructor form the functor, index  
 // ============================================================================
 LoKi::Candidates::MtFun::MtFun 
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun   ,
-  const unsigned int                                       index )
+  unsigned int                                             index )
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Function () 
-  , m_fun   ( fun   ) 
-  , m_index ( index ) 
-  , m_bad   ( LoKi::Constants::NegativeInfinity )
+  , m_fun   { fun   }
+  , m_index { index }
+  , m_bad   { LoKi::Constants::NegativeInfinity }
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -71,22 +67,19 @@ LoKi::Candidates::MtFun::operator()
   ( LoKi::Candidates::MtFun::argument t ) const 
 {
   // 
-  if ( 0 == t ) 
-  {
+  if ( !t ) {
     Error("Hlt::Candidate points to NULL, return 'bad") ;
     return m_bad ;
   }
   //
-  const Hlt::MultiTrack* mt = t->get<Hlt::MultiTrack> () ;
+  auto mt = t->get<Hlt::MultiTrack> () ;
   //
-  if ( 0 == mt ) 
-  {
+  if ( !mt ) {
     Error ( "Hlt::Candidate is not Hlt::MultiTrack, return 'bad" ) ;
     return m_bad ;
   }
   //
-  if ( mt->tracks().size() < m_index + 1 ) 
-  {
+  if ( mt->tracks().size() < m_index + 1 ) {
     Error ( "Hlt::MultiTrack, invalid tarck-index, return 'bad" ) ;
     return m_bad ;
   }  

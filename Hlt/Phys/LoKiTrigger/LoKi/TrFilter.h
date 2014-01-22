@@ -46,8 +46,8 @@ namespace LoKi
           *  @param output  the output selection name 
           *  @param config  the tool configuration 
           */
-         FilterTracks( const std::string& output,     // output selection name/key 
-                       const std::string& tool );     //            tool type/name
+         FilterTracks( std::string output,     // output selection name/key 
+                       std::string tool );     //            tool type/name
          /// MANDATORY: virtual destructor 
          virtual ~FilterTracks() ;
          /// MANDATORY: clone method ("virtual constructor")

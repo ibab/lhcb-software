@@ -35,10 +35,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
@@ -258,7 +254,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       TrFun ( const LoKi::TrackTypes::TrFunc& fun , 
-              const double                    bad ) ;      
+              double                          bad ) ;      
       /// constructor 
       TrFun ( const LoKi::TrackTypes::TrFunc& fun ) ;
       /// MANDATORY: virtual destructor 
@@ -295,7 +291,7 @@ namespace LoKi
       // ======================================================================
       /// consttuctor 
       TrCut ( const LoKi::TrackTypes::TrCuts& fun , 
-              const bool                      bad ) ;      
+              bool                            bad ) ;      
       /// constructor 
       TrCut ( const LoKi::TrackTypes::TrCuts& fun ) ;
       /// MANDATORY: virtual destructor 
@@ -355,7 +351,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the algorithm name
-      History ( const std::string& alg ) ;
+      History ( std::string alg ) ;
       /// MANDATORY: virtual descructor 
       virtual ~History() ;
       /// MANDATORY: clone method ("virtual destructor")
@@ -388,7 +384,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the algorithm name substring
-      HistorySub ( const std::string& alg ) ;
+      HistorySub ( std::string alg ) ;
       /// MANDATORY: virtual descructor 
       virtual ~HistorySub () ;
       /// MANDATORY: clone method ("virtual destructor")
@@ -417,8 +413,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      HasCache ( const std::string&       key , 
-                 const Hlt::Cache::Values typ ) ;      
+      HasCache ( std::string        key , 
+                 Hlt::Cache::Values typ ) ;      
       /// MANDATORY: virtual destructor 
       virtual ~HasCache () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -454,8 +450,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      Cache1 ( const std::string&  key , 
-              const double        def ) ;
+      Cache1 ( std::string  key , 
+               double       def ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Cache1 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -491,8 +487,8 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the key and data type
-      Cache2 ( const std::string&  key , 
-               const bool          def ) ;
+      Cache2 ( std::string  key , 
+               bool         def ) ;
       /// MANDATORY: virtual destructor 
       virtual ~Cache2 () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -563,7 +559,7 @@ namespace LoKi
       /// constructor from the predicate and the fake integer argument 
       Cut_
       ( const typename LoKi::BasicFunctors<const TYPE*>::Predicate& cut , 
-        const int /* a */ )
+        int /* a */ )
         : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate ()
         , m_cut  ( cut  )
       {}
@@ -589,19 +585,23 @@ namespace LoKi
       bool filterStage ( const Hlt::Stage* stage ) const 
       {
         //
-        if ( 0 == stage ) 
-        {
+        if ( !stage ) {
           Error ( "Invalid Stage, return false" ) ;
           return false ;                                         // RETURN 
         }
         //
         // get the object from the stage 
         //
-        const TYPE* obj = stage->get<TYPE>() ;
+#ifdef __GCCXML__
+        throw std::string("THIS SHOULD NEVER EVER HAPPEN: GCC_XML dummy stub ");
+        return false;
+#else
+        auto obj = stage->get<TYPE>() ;
         //
         // use the actual predicate for VALID stage :
         //
-        return ( 0 != obj ) && m_cut.fun ( obj ) ;  
+        return  obj && m_cut.fun ( obj ) ;  
+#endif
       } 
       // ======================================================================
     private:
@@ -658,13 +658,13 @@ namespace LoKi
     /// helper function to create the predicate 
     template <class TYPE>
     inline Cut_<TYPE> cut_ 
-    ( const LoKi::Functor<const TYPE*,bool>& cut , const int fake )
+    ( const LoKi::Functor<const TYPE*,bool>& cut , int fake )
     { return Cut_<TYPE> ( cut , fake ) ; }
     /// helper function to create the predicate 
     inline 
     Cut_<Hlt::MultiTrack> cut_ 
     ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal&    cut     , 
-      const int                                              /* fake */ ) 
+      int                                                    /* fake */ ) 
     { return LoKi::Stages::Cut_<Hlt::MultiTrack> ( cut ) ; }      
     // ========================================================================
     /** @class Fun_
@@ -681,7 +681,7 @@ namespace LoKi
       /// constructor from the function and "bad"-value 
       Fun_
       ( const typename LoKi::BasicFunctors<const TYPE*>::Function& fun , 
-        const double                                               bad )
+        double                                                     bad )
         : LoKi::BasicFunctors<const Hlt::Stage*>::Function ()
         , m_fun  ( fun )
         , m_bad  ( bad )
@@ -708,15 +708,20 @@ namespace LoKi
       double evalStage ( const Hlt::Stage* stage ) const 
       {
         //
-        if ( 0 == stage ) 
+        if ( !stage ) 
         {
           Error ( "Invalid Stage, return 'bad'" ) ;
           return m_bad ;                                         // RETURN 
         }
+#ifdef __GCCXML__ 
+        throw std::string("THIS SHOULD NEVER EVER HAPPEN: GCC_XML dummy stub");
+        return false;
+#else 
         // get the object from the stage 
-        const TYPE* obj = stage->get<TYPE>() ;
+        auto obj = stage->get<TYPE>() ;
         // use the actual predicate for VALID stage :
-        return ( 0 != obj ) ? m_fun.fun ( obj ) : m_bad ;
+        return obj ? m_fun.fun ( obj ) : m_bad ;
+#endif
       } 
       // ======================================================================
     private:
@@ -741,7 +746,7 @@ namespace LoKi
       /// constructor from the function and "bad"-value 
       Fun_
       ( const LoKi::BasicFunctors<const LHCb::Track*>::FunVal& fun , 
-        const double                                           bad ) ;
+        double                                                 bad ) ;
       /// MANDATORY: virtual destructor
       virtual ~Fun_() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -967,10 +972,7 @@ namespace LoKi
      *  @code
      *  
      *   const TS_HISTORY_RE ok ( "Hlt1.*MuonDecision" ) ;
-     *
-     *
      *   const Hlt::Stage* stage = ... ;
-     *
      *   const bool ok = has ( stage ) ;
      *
      *  @endcode 
@@ -987,10 +989,7 @@ namespace LoKi
      *  @code
      *  
      *   const TS_HASHCACHE has ( "MyPT" , Hlt::Cache::Double ) ;
-     *
-     *
      *   const Hlt::Stage* stage = ... ;
-     *
      *   const bool ok = has ( stage ) ;
      *
      *  @endcode 
@@ -1007,9 +1006,7 @@ namespace LoKi
      *  @code
      *  
      *   const TS_CACHE_DOUBLE fun ( "MyPT" , -1 * GeV ) ;
-     *
      *   const Hlt::Stage* stage = ... ;
-     *
      *   const double pt = fun ( stage ) ;
      *
      *  @endcode 
@@ -1026,9 +1023,7 @@ namespace LoKi
      *  @code
      *  
      *   const TS_CACHE_DOUBLE fun ( "MyPT" , -1 * GeV ) ;
-     *
      *   const Hlt::Stage* stage = ... ;
-     *
      *   const double pt = fun ( stage ) ;
      *
      *  @endcode 
@@ -1045,9 +1040,7 @@ namespace LoKi
      *  @code
      *  
      *   const TS_CACHE_BOOL fun ( "MyPT" , -1 * GeV ) ;
-     *
      *   const Hlt::Stage* stage = ... ;
-     *
      *   const bool ok = fun ( stage ) ;
      *
      *  @endcode 

@@ -20,9 +20,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
  *  @date 2008-11-12 
  *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
  *
@@ -34,46 +31,46 @@
 // constructor 
 // ============================================================================
 LoKi::Hlt1::UpgradeConf::UpgradeConf 
-( const std::string&        trTool   ,     //        ITrackFromTrack  tool name
-  const std::string&        address  ,     //   TES location of upgraded tracks 
-  const LHCb::Track::Types  trType   ,     //                        track type 
-  const bool                owner    ,     //                           owner ? 
-  const bool                moveIDs  ,     //                    transfer IDs ? 
-  const bool                moveAncs ,     //            transfer anscendents ? 
-  const bool                moveInfo ,     //             transfer extra info ?
-  const bool                ptOrder  )     //                         order pt?
+( std::string         trTool   ,     //        ITrackFromTrack  tool name
+  std::string         address  ,     //   TES location of upgraded tracks 
+  LHCb::Track::Types  trType   ,     //                        track type 
+  bool                owner    ,     //                           owner ? 
+  bool                moveIDs  ,     //                    transfer IDs ? 
+  bool                moveAncs ,     //            transfer anscendents ? 
+  bool                moveInfo ,     //             transfer extra info ?
+  bool                ptOrder  )     //                         order pt?
   : LoKi::Hlt1::TrackTool () 
-  , m_trTool   ( trTool   ) 
-  , m_address  ( address  )
-  , m_trType   ( trType   )
-  , m_owner    ( owner    )
-  , m_moveIDs  ( moveIDs  ) 
-  , m_moveAncs ( moveAncs ) 
-  , m_moveInfo ( moveInfo ) 
-  , m_ptOrder  ( ptOrder  )
+  , m_trTool   { std::move(trTool)   }
+  , m_address  { std::move(address)  }
+  , m_trType   { trType   }
+  , m_owner    { owner    }
+  , m_moveIDs  { moveIDs  } 
+  , m_moveAncs { moveAncs } 
+  , m_moveInfo { moveInfo } 
+  , m_ptOrder  { ptOrder  }
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::UpgradeConf::UpgradeConf 
-( const std::string&        trTool   ,     //        ITrackFromTrack  tool name
-  const std::string&        address  ,     //   TES location of upgraded tracks 
-  const LHCb::Track::Types  trType   ,     //                        track type 
-  const bool                owner    ,     //                           owner ? 
-  const bool                moveIDs  ,     //                    transfer IDs ? 
-  const bool                moveAncs ,     //            transfer anscendents ? 
-  const bool                moveInfo ,     //             transfer extra info ?
-  const bool                ptOrder  ,     //                         order pt?
+( std::string         trTool   ,     //        ITrackFromTrack  tool name
+  std::string         address  ,     //   TES location of upgraded tracks 
+  LHCb::Track::Types  trType   ,     //                        track type 
+  bool                owner    ,     //                           owner ? 
+  bool                moveIDs  ,     //                    transfer IDs ? 
+  bool                moveAncs ,     //            transfer anscendents ? 
+  bool                moveInfo ,     //             transfer extra info ?
+  bool                ptOrder  ,     //                         order pt?
   const LoKi::Functor<const LHCb::Track*,bool>& cut )   //       functor
   : LoKi::Hlt1::TrackTool ( cut ) 
-  , m_trTool   ( trTool   ) 
-  , m_address  ( address  )
-  , m_trType   ( trType   )
-  , m_owner    ( owner    )
-  , m_moveIDs  ( moveIDs  ) 
-  , m_moveAncs ( moveAncs ) 
-  , m_moveInfo ( moveInfo ) 
-  , m_ptOrder  ( ptOrder  )
+  , m_trTool   { std::move(trTool)  } 
+  , m_address  { std::move(address) }
+  , m_trType   { trType   }
+  , m_owner    { owner    }
+  , m_moveIDs  { moveIDs  } 
+  , m_moveAncs { moveAncs } 
+  , m_moveInfo { moveInfo } 
+  , m_ptOrder  { ptOrder  }
 //
 {}  
 // ============================================================================

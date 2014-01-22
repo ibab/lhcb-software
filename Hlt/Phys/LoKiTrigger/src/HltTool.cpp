@@ -21,9 +21,9 @@
  */
 // =============================================================================
 LoKi::Hlt1::Tool::Tool 
-( const std::string& tool , 
-  const bool         flag ) 
-  : m_tool   ( tool ) 
+( std::string  tool , 
+  bool         flag ) 
+  : m_tool   ( std::move(tool) ) 
   , m_public ( flag ) 
 {}
 // =============================================================================
@@ -44,9 +44,9 @@ std::string LoKi::Hlt1::Tool::toString    () const
  */
 // =============================================================================
 LoKi::Hlt1::TrackFunction::TrackFunction 
-( const std::string& tool , 
-  const bool         flag ) 
-  : LoKi::Hlt1::Tool ( tool , flag ) {}
+( std::string  tool , 
+  bool         flag ) 
+  : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool TL
 // ============================================================================
@@ -71,9 +71,9 @@ std::ostream& LoKi::Hlt1::TrackFunction::fillStream  ( std::ostream& s ) const
  */
 // =============================================================================
 LoKi::Hlt1::TrackBiFunction::TrackBiFunction 
-( const std::string& tool , 
-  const bool         flag ) 
-  : LoKi::Hlt1::Tool ( tool , flag ) {}
+( std::string tool , 
+  bool        flag ) 
+  : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
 // ============================================================================
@@ -100,9 +100,9 @@ std::ostream& LoKi::Hlt1::TrackBiFunction::fillStream
  */
 // =============================================================================
 LoKi::Hlt1::MatchTVelo::MatchTVelo
-( const std::string& tool , 
-  const bool         flag ) 
-  : LoKi::Hlt1::Tool ( tool , flag ) {}
+( std::string tool , 
+  bool        flag ) 
+  : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
 // ============================================================================
@@ -128,9 +128,9 @@ std::ostream& LoKi::Hlt1::MatchTVelo::fillStream
  */
 // =============================================================================
 LoKi::Hlt1::TrackVertexFunction::TrackVertexFunction
-( const std::string& tool , 
-  const bool         flag ) 
-  : LoKi::Hlt1::Tool ( tool , flag ) {}
+( std::string tool , 
+  bool        flag ) 
+  : LoKi::Hlt1::Tool ( std::move(tool) , flag ) {}
 // ============================================================================
 // constructor from the tool T
 // ============================================================================

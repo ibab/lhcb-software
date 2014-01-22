@@ -26,10 +26,10 @@
 // ============================================================================
 LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::Hlt_TrackCutAsRecVertexCut_Any
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
-  const bool useExtraInfo                                       )
+  bool useExtraInfo                                             )
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate()
-  , m_cut          ( cut )
-  , m_useExtraInfo ( useExtraInfo )
+  , m_cut          { cut }
+  , m_useExtraInfo { useExtraInfo }
 { 
   if ( useExtraInfo ) { retrieveFailKey() ; } 
 }
@@ -45,8 +45,8 @@ void LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::retrieveFailKey()
   Assert ( alg == ialg , "GaudiAlgorithm is not *my* IAlgorithm" ) ;
   // get the InfoID from HltANNSvc
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
-  const std::string infoIDName = "HltUnit/" + alg->name() ;
-  boost::optional<IANNSvc::minor_value_type> _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName );
+  const std::string infoIDName { "HltUnit/" + alg->name() };
+  auto _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName );
   Assert( _info , " request for unknown Info ID : " + infoIDName );
   m_extraInfoKey = _info->second;
 
@@ -64,14 +64,13 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::operator()
   const LHCb::VertexBase* vb = v ;
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
   //
-  if ( 0 == rv ) 
+  if ( !rv ) 
   {
     Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
   }
   //
-  BOOST_FOREACH( SmartRef<LHCb::Track> tr, rv->tracks() )
-  {
+  for( auto& tr: rv->tracks() ) {
     if ( ! m_useExtraInfo ) {
       ret = ret || ( m_cut( tr ) );
     } else {
@@ -79,7 +78,7 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::operator()
         result_type pass = m_cut( tr );
         ret = ret || pass;
         if ( ! pass ) {
-          tr->addInfo( m_extraInfoKey, 1. );
+          const_cast<LHCb::Track*>(tr.data())->addInfo( m_extraInfoKey, 1. );
         }
       }
     }
@@ -99,15 +98,15 @@ LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::result_type
 LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::operator()
   ( LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_All::argument v ) const
 {
-  result_type ret = true;
   const LHCb::VertexBase* vb = v ;
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
-  if( 0 == rv )
+  if( !rv )
   {
     Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
   }
-  SmartRefVector<LHCb::Track>::const_iterator it = rv->tracks().begin();
+  result_type ret = true;
+  auto it = rv->tracks().begin();
   while ( ret && ( it != rv->tracks().end() ) ) {
     ret = m_cut( *it );
     ++it;

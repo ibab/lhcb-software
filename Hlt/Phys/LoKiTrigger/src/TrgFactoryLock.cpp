@@ -29,8 +29,7 @@ LoKi::Hybrid::TrgFactoryLock::TrgFactoryLock
 ( LoKi::ITrgFunctorAntiFactory* tool ) 
   : m_tool ( tool ) 
 {
-  LoKi::Hybrid::TrgEngineActor& actor = 
-    LoKi::Hybrid::TrgEngineActor::instance() ;
+  auto& actor = LoKi::Hybrid::TrgEngineActor::instance() ;
   // connect the tool to the actor 
   StatusCode sc = actor.connectTool ( m_tool.getObject () ) ;  
   if ( sc.isFailure () ) 
@@ -44,8 +43,7 @@ LoKi::Hybrid::TrgFactoryLock::TrgFactoryLock
 // ============================================================================
 LoKi::Hybrid::TrgFactoryLock::~TrgFactoryLock()
 {
-  LoKi::Hybrid::TrgEngineActor& actor = 
-    LoKi::Hybrid::TrgEngineActor::instance() ;
+  auto& actor = LoKi::Hybrid::TrgEngineActor::instance() ;
   // connect the tool to the actor 
   StatusCode sc = actor.releaseTool ( m_tool.getObject () ) ;  
   if ( sc.isFailure () ) 

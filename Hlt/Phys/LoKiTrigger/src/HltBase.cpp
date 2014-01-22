@@ -27,9 +27,9 @@ Hlt::Base::Base
   ISvcLocator*       pSvc )                     //   pointer to Service Locator 
   : GaudiHistoAlg( name , pSvc )
   // services 
-  , m_regSvc ( 0 ) 
-  , m_hltSvc ( 0 )
-  , m_annSvc ( 0 )
+  , m_regSvc ( nullptr ) 
+  , m_hltSvc ( nullptr )
+  , m_annSvc ( nullptr )
 {
   // 
   Assert ( setProperty ( "RegisterForContextService" , true ).isSuccess() ,
@@ -53,8 +53,8 @@ StatusCode Hlt::Base::initialize ()
   // locate LoKi Service 
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
   // check other importat services 
-  Assert ( 0 != hltSvc() , "Unable to aquire Hlt Data     Service" ) ;
-  Assert ( 0 != regSvc() , "Unable to aquire Hlt Register Service" ) ;
+  Assert ( hltSvc() , "Unable to aquire Hlt Data     Service" ) ;
+  Assert ( regSvc() , "Unable to aquire Hlt Register Service" ) ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -64,8 +64,8 @@ StatusCode Hlt::Base::initialize ()
 StatusCode Hlt::Base::finalize () 
 {
   // disable the services 
-  m_regSvc = 0 ;
-  m_hltSvc = 0 ;
+  m_regSvc = nullptr ;
+  m_hltSvc = nullptr ;
   // finalize the base class 
   return GaudiHistoAlg::finalize () ;
 }
@@ -74,8 +74,7 @@ StatusCode Hlt::Base::finalize ()
 // ============================================================================
 Hlt::IRegister* Hlt::Base::regSvc() const 
 {
-  if ( 0 != m_regSvc ) { return m_regSvc ; }
-  m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  if ( !m_regSvc ) m_regSvc = svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
   return m_regSvc ;
 }
 // ============================================================================
@@ -83,8 +82,7 @@ Hlt::IRegister* Hlt::Base::regSvc() const
 // ============================================================================
 Hlt::IData* Hlt::Base::hltSvc() const 
 {
-  if ( 0 != m_hltSvc ) { return m_hltSvc ; }
-  m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  if ( !m_hltSvc ) m_hltSvc = svc<Hlt::IData> ( "Hlt::Service" , true ) ;
   return m_hltSvc ;
 }
 // ============================================================================
@@ -92,8 +90,7 @@ Hlt::IData* Hlt::Base::hltSvc() const
 // ============================================================================
 IANNSvc*   Hlt::Base::annSvc() const 
 {
-  if ( 0 != m_annSvc ) { return m_annSvc ; }
-  m_annSvc = svc<IANNSvc>       ( "Hlt::Service" , true ) ;
+  if ( !m_annSvc ) m_annSvc = svc<IANNSvc>       ( "Hlt::Service" , true ) ;
   return m_annSvc ;
 }
 // ============================================================================
@@ -102,8 +99,7 @@ IANNSvc*   Hlt::Base::annSvc() const
 int Hlt::Base::hltInfoID 
 ( const std::string& name ) const 
 {
-  boost::optional<IANNSvc::minor_value_type> i =  
-    annSvc() -> value ( Gaudi::StringKey(std::string("InfoID")) , name ) ;
+  auto i = annSvc()->value( Gaudi::StringKey(std::string("InfoID")) , name ) ;
   Assert ( i, " request for unknown Info ID" ) ;
   return i->second;
 }
@@ -111,10 +107,9 @@ int Hlt::Base::hltInfoID
 // number -> name   for "InfoID" using IANNSvc
 // ============================================================================
 std::string Hlt::Base::hltInfoName 
-( const int id ) const  
+( int id ) const  
 {
-  boost::optional<IANNSvc::minor_value_type> i =  
-    annSvc() -> value ( Gaudi::StringKey(std::string("InfoID")) , id );
+  auto i = annSvc()->value( Gaudi::StringKey(std::string("InfoID")) , id );
   Assert( i, " request for unknown Info ID");
   return i->first;
 }
@@ -165,4 +160,3 @@ Hlt::MultiTrack::Container*     Hlt::Base::hltMultiTracks
 // ============================================================================
 // The END 
 // ============================================================================
-

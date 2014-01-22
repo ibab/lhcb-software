@@ -53,11 +53,11 @@
  */
 // ============================================================================
 LoKi::Hlt1::FilterTracks::FilterTracks
-( const std::string& output    ,                   // output selection name/key 
-  const std::string& toolName  )                   //                 tool name
+( std::string output    ,                   // output selection name/key 
+  std::string toolName  )                   //                 tool name
    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
-   , m_sink( output   )
-   , m_tool( toolName )
+   , m_sink( std::move(output)   )
+   , m_tool( std::move(toolName) )
 {
    // get GaudiAlgorithm 
    GaudiAlgorithm* alg = LoKi::Hlt1::Utils::getGaudiAlg( *this ); 
@@ -74,8 +74,7 @@ LoKi::Hlt1::FilterTracks::FilterTracks
    /// get the service 
    SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
 
-   boost::optional<IANNSvc::minor_value_type> info 
-     = ann->value( Gaudi::StringKey(std::string("InfoID")), tool() );
+   auto info = ann->value( Gaudi::StringKey(std::string("InfoID")), tool() );
    Assert( info , "request for unknown Info ID :" + tool() );
 
    m_recoID = info->second;
@@ -111,14 +110,14 @@ LoKi::Hlt1::FilterTracks::operator()
       return !m_sink ? output : m_sink ( output ); 
    }
 
-   BOOST_FOREACH( const Hlt::Candidate* candidate, a ) {
-      if ( 0 == candidate ) {
+   for( const Hlt::Candidate* candidate: a ) {
+      if ( !candidate ) {
          Error ( "Invalid Hlt::Candidate, skip it!");
          continue;
       }
 
       const Hlt::Stage*     stage  = candidate->currentStage(); 
-      if ( 0 == stage ) {
+      if ( !stage ) {
          Error ( "Invalid Hlt::Stage,     skip it!");
          continue;
       }

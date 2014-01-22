@@ -25,10 +25,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
@@ -56,8 +52,8 @@ LoKi::Stages::IsTrack::result_type
 LoKi::Stages::IsTrack::operator() 
   ( LoKi::Stages::IsTrack::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage* points to NULL, return false " ) ; }
-  return 0 != a ? a->is<LHCb::Track>() : false ;
+  if ( !a ) { Error ("Hlt::Stage* points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::Track>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -83,8 +79,8 @@ LoKi::Stages::IsL0Muon::result_type
 LoKi::Stages::IsL0Muon::operator() 
   ( LoKi::Stages::IsL0Muon::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<LHCb::L0MuonCandidate>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::L0MuonCandidate>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -110,8 +106,8 @@ LoKi::Stages::IsL0DiMuon::result_type
 LoKi::Stages::IsL0DiMuon::operator() 
   ( LoKi::Stages::IsL0DiMuon::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<Hlt::L0DiMuonCandidate>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<Hlt::L0DiMuonCandidate>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -137,8 +133,8 @@ LoKi::Stages::IsL0Calo::result_type
 LoKi::Stages::IsL0Calo::operator() 
   ( LoKi::Stages::IsL0Calo::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<LHCb::L0CaloCandidate>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::L0CaloCandidate>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -164,8 +160,8 @@ LoKi::Stages::IsVertex::result_type
 LoKi::Stages::IsVertex::operator() 
   ( LoKi::Stages::IsVertex::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<LHCb::RecVertex>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::RecVertex>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -193,8 +189,8 @@ LoKi::Stages::IsMultiTrack::result_type
 LoKi::Stages::IsMultiTrack::operator() 
   ( LoKi::Stages::IsMultiTrack::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<Hlt::MultiTrack>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<Hlt::MultiTrack>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -221,8 +217,8 @@ LoKi::Stages::IsStage::result_type
 LoKi::Stages::IsStage::operator() 
   ( LoKi::Stages::IsStage::argument a ) const 
 {
-  if ( 0 == a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
-  return 0 != a ? a->is<Hlt::Stage>() : false ;
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<Hlt::Stage>() : false ;
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -249,7 +245,7 @@ LoKi::Stages::Type::result_type
 LoKi::Stages::Type::operator() 
   ( LoKi::Stages::Type::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   { 
     Error ("Hlt::Stage points to NULL, return Unknown" ) ; 
     return Hlt::Stage::Unknown ;
@@ -270,10 +266,10 @@ std::ostream& LoKi::Stages::Type::fillStream ( std::ostream& s ) const
 // ============================================================================
 LoKi::Stages::TrFun::TrFun
 ( const LoKi::TrackTypes::TrFunc& fun , 
-  const double                    bad )
+  double                          bad )
   : LoKi::BasicFunctors<const Hlt::Stage*>::Function () 
-  , m_fun ( fun ) 
-  , m_bad ( bad ) 
+  , m_fun { fun } 
+  , m_bad { bad } 
 {}
 // ============================================================================
 // constructor 
@@ -302,14 +298,14 @@ LoKi::Stages::TrFun::operator()
   ( LoKi::Stages::TrFun::argument a ) const
 {
   //
-  if ( 0 == a ) 
+  if ( !a ) 
   { 
     Error ("Hlt::Stage points to NULL, return 'bad'" ) ; 
     return m_bad ;
   }
   //
-  const LHCb::Track* track = a->get<LHCb::Track>() ;  
-  if ( 0 == track ) 
+  auto track = a->get<LHCb::Track>() ;  
+  if ( !track ) 
   { 
     Error ("LHCb::Track* points to NULL, return 'bad'" ) ; 
     return m_bad ;
@@ -368,14 +364,14 @@ LoKi::Stages::TrCut::operator()
   ( LoKi::Stages::TrCut::argument a ) const
 {
   //
-  if ( 0 == a ) 
+  if ( !a ) 
   { 
     Error ("Hlt::Stage points to NULL, return 'bad'" ) ; 
     return m_bad ;
   }
   //
   const LHCb::Track* track = a->get<LHCb::Track>() ;  
-  if ( 0 == track ) 
+  if ( !track ) 
   { 
     Error ("LHCb::Track* points to NULL, return 'bad'" ) ; 
     return m_bad ;
@@ -414,7 +410,7 @@ LoKi::Stages::Locked::result_type
 LoKi::Stages::Locked::operator() 
   ( LoKi::Stages::Locked::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return false " ) ; 
     return false ;
@@ -433,9 +429,9 @@ std::ostream& LoKi::Stages::Locked::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructot from the algorithm name
 // ============================================================================
-LoKi::Stages::History::History ( const std::string& alg ) 
+LoKi::Stages::History::History ( std::string alg ) 
   :  LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
-  , m_algorithm ( alg ) 
+  , m_algorithm ( std::move(alg) ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -454,12 +450,12 @@ LoKi::Stages::History::result_type
 LoKi::Stages::History::operator() 
   ( LoKi::Stages::History::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return false " ) ; 
     return false ;
   }
-  const Hlt::Stage::History& history = a->history() ;
+  auto& history = a->history() ;
   return history.end() != std::find ( history.begin () , 
                                       history.end   () , 
                                       m_algorithm      ) ;
@@ -477,8 +473,8 @@ std::ostream& LoKi::Stages::History::fillStream ( std::ostream& s ) const
 // ============================================================================
 // constructor from the algorithm name
 // ============================================================================
-LoKi::Stages::HistorySub::HistorySub ( const std::string& alg ) 
-  :  LoKi::Stages::History ( alg ) 
+LoKi::Stages::HistorySub::HistorySub ( const std::string alg ) 
+  :  LoKi::Stages::History ( std::move(alg) ) 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -497,17 +493,15 @@ LoKi::Stages::HistorySub::result_type
 LoKi::Stages::HistorySub::operator() 
   ( LoKi::Stages::HistorySub::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return false " ) ; 
     return false ;
   }
-  const Hlt::Stage::History& history = a->history() ;
-  for ( Hlt::Stage::History::const_iterator item = history.begin() ; 
-        history.end() != item ; ++item ) 
+  for ( const auto& item : a->history() ) 
   {
-    if ( m_algorithm.size() <= item->size() && 
-         std::string::npos != item->find ( m_algorithm ) ) { return true ; }
+    if ( m_algorithm.size() <= item.size() && 
+         std::string::npos != item.find ( m_algorithm ) ) { return true ; }
   }
   return false ;
 }
@@ -546,17 +540,15 @@ LoKi::Stages::HistoryRegex::result_type
 LoKi::Stages::HistoryRegex::operator() 
   ( LoKi::Stages::HistoryRegex::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return false " ) ; 
     return false ;
   }
   //
-  const Hlt::Stage::History& history = a->history() ;
-  for ( Hlt::Stage::History::const_iterator item = history.begin() ; 
-        history.end() != item ; ++item ) 
+  for ( const auto& item : a->history() )
   {
-    if ( boost::regex_match ( *item , m_expression ) ) { return true ; }
+    if ( boost::regex_match ( item.str() , m_expression ) ) { return true ; }
   }
   //
   return false ;
@@ -577,11 +569,11 @@ std::ostream& LoKi::Stages::HistoryRegex::fillStream ( std::ostream& s ) const
 // constructor from the key and data type
 // ============================================================================
 LoKi::Stages::HasCache::HasCache
-( const std::string&       key , 
-  const Hlt::Cache::Values typ ) 
+( std::string        key , 
+  Hlt::Cache::Values typ ) 
   : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate () 
-  , m_key ( key )
-  , m_typ ( typ ) 
+  , m_key { std::move(key) }
+  , m_typ { typ } 
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -600,14 +592,14 @@ LoKi::Stages::HasCache::result_type
 LoKi::Stages::HasCache::operator() 
   ( LoKi::Stages::HasCache::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return false " ) ; 
     return false ;
   }
   //
   if       ( Hlt::Cache::Bool    == m_typ )  
-  { return a -> hasInfo_< Hlt::CacheValues<Hlt::Cache::Bool >::Type > ( m_key ) ; }
+  { return a -> hasInfo_< Hlt::CacheValues<Hlt::Cache::Bool >::Type>( m_key ) ; }
   else if  ( Hlt::Cache::Int     == m_typ )  
   { return a -> hasInfo_<Hlt::CacheValues<Hlt::Cache::Int   >::Type>( m_key ) ; }
   else if  ( Hlt::Cache::Double  == m_typ )  
@@ -637,11 +629,11 @@ std::ostream& LoKi::Stages::HasCache::fillStream ( std::ostream& s ) const
 // constructor from the key and data type
 // ============================================================================
 LoKi::Stages::Cache1::Cache1
-( const std::string&  key , 
-  const double        def ) 
+( std::string  key , 
+  double       def ) 
   : LoKi::BasicFunctors<const Hlt::Stage*>::Function()
-  , m_key ( key ) 
-  , m_def ( def )
+  , m_key { std::move(key) } 
+  , m_def { def }
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -660,7 +652,7 @@ LoKi::Stages::Cache1::result_type
 LoKi::Stages::Cache1::operator() 
   ( LoKi::Stages::Cache1::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return default" ) ; 
     return m_def ;
@@ -678,11 +670,11 @@ std::ostream& LoKi::Stages::Cache1::fillStream ( std::ostream& s ) const
 // constructor from the key and data type
 // ============================================================================
 LoKi::Stages::Cache2::Cache2
-( const std::string&  key , 
-  const bool          def ) 
+( std::string  key , 
+  bool         def ) 
   : LoKi::BasicFunctors<const Hlt::Stage*>::Predicate()
-  , m_key ( key ) 
-  , m_def ( def )
+  , m_key { std::move(key) }
+  , m_def { def }
 {}
 // ============================================================================
 // MANDATORY: virtual destructor 
@@ -701,7 +693,7 @@ LoKi::Stages::Cache2::result_type
 LoKi::Stages::Cache2::operator() 
   ( LoKi::Stages::Cache2::argument a ) const 
 {
-  if ( 0 == a ) 
+  if ( !a ) 
   {
     Error ("Hlt::Stage* points to NULL, return default" ) ; 
     return m_def ;
@@ -741,7 +733,7 @@ bool LoKi::Stages::Cut_<Hlt::MultiTrack>::filterStage
 ( const Hlt::Stage* stage ) const 
 {
   //
-  if ( 0 == stage ) 
+  if ( !stage ) 
   {
     Error ( "Invalid Stage, return false" ) ;
     return false ;                                         // RETURN 
@@ -749,17 +741,17 @@ bool LoKi::Stages::Cut_<Hlt::MultiTrack>::filterStage
   //
   // get the object from the stage 
   //
-  const Hlt::MultiTrack* obj = stage->get<Hlt::MultiTrack>() ;
+  auto obj = stage->get<Hlt::MultiTrack>() ;
   //
-  if ( 0 == obj ) 
+  if ( !obj ) 
   {
     Error ( "Hlt::Stage is NOT Hlt::MultiTrack, return false" ) ;
     return false ;                                         // RETURN 
     
   }
   //
-  return m_cut.fun ( LHCb::Track::ConstVector ( obj->tracks().begin() , 
-                                                obj->tracks().end  () ) ) ;
+  return m_cut.fun ( LHCb::Track::ConstVector{ obj->tracks().begin() , 
+                                               obj->tracks().end  () } ) ;
 } 
 // ============================================================================
 // OPTIONAL: the ince printout 
@@ -790,7 +782,7 @@ double LoKi::Stages::Fun_<Hlt::MultiTrack>::evalStage
 ( const Hlt::Stage* stage ) const 
 {
   //
-  if ( 0 == stage ) 
+  if ( !stage ) 
   {
     Error ( "Invalid Stage, return 'bad'" ) ;
     return m_bad ;                                         // RETURN 
@@ -798,17 +790,17 @@ double LoKi::Stages::Fun_<Hlt::MultiTrack>::evalStage
   //
   // get the object from the stage 
   //
-  const Hlt::MultiTrack* obj = stage->get<Hlt::MultiTrack>() ;
+  auto obj = stage->get<Hlt::MultiTrack>() ;
   //
-  if ( 0 == obj ) 
+  if ( !obj ) 
   {
     Error ( "Hlt::Stage is NOT Hlt::MultiTrack, return 'bad'" ) ;
     return m_bad ;                                         // RETURN 
     
   }
   //
-  return m_fun.fun ( LHCb::Track::ConstVector ( obj->tracks().begin() , 
-                                                obj->tracks().end  () ) ) ;
+  return m_fun.fun ( LHCb::Track::ConstVector { obj->tracks().begin() , 
+                                                obj->tracks().end  () } ) ;
 }
 // ============================================================================
 // OPTIONAL: the ince printout 

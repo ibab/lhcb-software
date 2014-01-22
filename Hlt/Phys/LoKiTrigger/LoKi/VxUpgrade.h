@@ -27,10 +27,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-03-31
  * 
@@ -64,11 +60,11 @@ namespace LoKi
        *  @param location TES location of upgraded vertices 
        */
       VxUpgrade 
-      ( const std::string&             output    ,// output selection name/key 
+      ( std::string                    output    ,// output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config    ,//             configuration 
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()                 ,//            vertex creator  
-        const std::string&             location  = 
+        std::string             location  = 
         "Hlt1/Vertex/VertexUpgradeBank"  ) ; //   location of upgraded vertices
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
@@ -77,9 +73,9 @@ namespace LoKi
        *  @param location TES location of upgraded vertices 
        */
       VxUpgrade 
-      ( const std::string&             output    ,// output selection name/key 
+      ( std::string                    output    ,// output selection name/key 
         const LoKi::Hlt1::UpgradeConf& config    ,//             configuration 
-        const std::string&             location  ,//         upgraded vertices
+        std::string                    location  ,//         upgraded vertices
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()                 ) ; //          vertex creator  
       /** constructor from all configuration parameters 
@@ -87,20 +83,20 @@ namespace LoKi
        *  @param config  the tool configuration 
        */
       VxUpgrade 
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const LoKi::Hlt1::UpgradeTool& config  ,   //             configuration 
         const LoKi::Hlt1::VxCreator&   creator   =
         LoKi::Hlt1::VxCreator ()               ,//            vertex creator  
-        const std::string&             location  = 
+        std::string                    location  = 
         "Hlt1/Vertex/VertexUpgradeBank"  ) ; // location of upgdarded vertices
       /** constructor from all configuration parameters 
        *  @param output  the output selection name 
        *  @param config  the tool configuration 
        */
       VxUpgrade 
-      ( const std::string&             output   ,  // output selection name/key 
+      ( std::string                    output   ,  // output selection name/key 
         const LoKi::Hlt1::UpgradeTool& config   ,  //             configuration 
-        const std::string&             location ,  //         upgraded vertices
+        std::string                    location ,  //         upgraded vertices
         const LoKi::Hlt1::VxCreator&   creator  =
         LoKi::Hlt1::VxCreator ()                ) ;//            vertex creator  
       // ======================================================================

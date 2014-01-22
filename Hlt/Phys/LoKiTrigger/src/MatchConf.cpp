@@ -22,15 +22,15 @@
  */
 // ============================================================================
 LoKi::Hlt1::MatchConf::MatchConf 
-( const std::string&       mTool    ,   //                ITrackMatch tool name  
-  const std::string&       address  ,   //       TES location of matched tracks
-  const LHCb::Track::Types trType   ,   //                           Track type 
-  const bool               moveIDs  ,   //                       transfer IDs ? 
-  const bool               moveAncs ,   //                 transfer ancestors ? 
-  const bool               moveInfo )   //                transfer Extra Info ? 
+( std::string        mTool    ,   //                ITrackMatch tool name  
+  std::string        address  ,   //       TES location of matched tracks
+  LHCb::Track::Types trType   ,   //                           Track type 
+  bool               moveIDs  ,   //                       transfer IDs ? 
+  bool               moveAncs ,   //                 transfer ancestors ? 
+  bool               moveInfo )   //                transfer Extra Info ? 
   : LoKi::Hlt1::TrackTool ()
-  , m_mTool    ( mTool    ) 
-  , m_address  ( address  ) 
+  , m_mTool    ( std::move(mTool)    ) 
+  , m_address  ( std::move(address)  ) 
   , m_trType   ( trType   ) 
   , m_moveIDs  ( moveIDs  ) 
   , m_moveAncs ( moveAncs ) 
@@ -47,16 +47,16 @@ LoKi::Hlt1::MatchConf::MatchConf
  */
 // ============================================================================
 LoKi::Hlt1::MatchConf::MatchConf 
-( const std::string&       mTool    ,   //                ITrackMatch tool name  
-  const std::string&       address  ,   //       TES location of matched tracks
-  const LHCb::Track::Types trType   ,   //                           Track type 
-  const bool               moveIDs  ,   //                       transfer IDs ? 
-  const bool               moveAncs ,   //                 transfer ancestors ? 
-  const bool               moveInfo ,   //                transfer Extra Info ? 
+( std::string        mTool    ,   //                ITrackMatch tool name  
+  std::string        address  ,   //       TES location of matched tracks
+  LHCb::Track::Types trType   ,   //                           Track type 
+  bool               moveIDs  ,   //                       transfer IDs ? 
+  bool               moveAncs ,   //                 transfer ancestors ? 
+  bool               moveInfo ,   //                transfer Extra Info ? 
   const LoKi::Functor<const LHCb::Track*,bool>& cut ) //                 filter 
   : LoKi::Hlt1::TrackTool ( cut )
-  , m_mTool    ( mTool    ) 
-  , m_address  ( address  ) 
+  , m_mTool    ( std::move(mTool)    ) 
+  , m_address  ( std::move(address)  ) 
   , m_trType   ( trType   ) 
   , m_moveIDs  ( moveIDs  ) 
   , m_moveAncs ( moveAncs ) 

@@ -153,7 +153,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       VxMaker 
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// MANTATOY: virtual destructor 
       virtual ~VxMaker() ;      
@@ -197,13 +197,13 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       VxMaker2 
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const Source&                  tracks2 ,   // tracks to be matched with 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// constructor 
       VxMaker2 
-      ( const std::string&             output  ,   // output selection name/key 
-        const std::string&             tracks2 ,   // tracks to be matched with 
+      ( std::string                    output  ,   // output selection name/key 
+        std::string                    tracks2 ,   // tracks to be matched with 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// MANTATOY: virtual destructor 
       virtual ~VxMaker2 () ;      
@@ -249,7 +249,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       VxMaker3 
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const Source&                  tracks1 ,   //       the first selection 
         const Source&                  tracks2 ,   //       the first selection 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
@@ -299,7 +299,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       VxMaker4 
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// MANTATORY: virtual destructor 
       virtual ~VxMaker4 () ;      
@@ -335,13 +335,13 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       DiTrackMaker
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const Source&                  tracks2 ,   // tracks to be matched with 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// constructor 
       DiTrackMaker 
-      ( const std::string&             output  ,   // output selection name/key 
-        const std::string&             tracks2 ,   // tracks to be matched with 
+      ( std::string                    output  ,   // output selection name/key 
+        std::string                    tracks2 ,   // tracks to be matched with 
         const LoKi::Hlt1::VxMakerConf& config  ) ; //        tool configuration 
       /// MANTATOY: virtual destructor 
       virtual ~DiTrackMaker() ;      
@@ -395,7 +395,7 @@ namespace LoKi
       // ======================================================================
       /// constructor 
       DiTrackMaker2
-      ( const std::string&             output  ,   // output selection name/key 
+      ( std::string                    output  ,   // output selection name/key 
         const bool                     neutral ,    // charge-neutral pairs? 
         const LoKi::Hlt1::VxMakerConf& config  ) ;  //       tool configuration 
       /// MANTATOY: virtual destructor 

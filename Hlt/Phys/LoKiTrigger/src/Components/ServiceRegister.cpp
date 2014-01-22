@@ -21,7 +21,7 @@
 StatusCode Hlt::Service::lock   ( const IAlgorithm* alg ) 
 {
   // invalid algoritm ? 
-  if ( 0 == alg      ) 
+  if ( !alg      ) 
   { return Error ( "lock : IAlgorithm* points to NULL"  , 
                    Lock_Invalid_Algorithm     )  ; }                 // RETURN 
   // all transactions are disabled ?
@@ -57,7 +57,7 @@ StatusCode Hlt::Service::lock   ( const IAlgorithm* alg )
 StatusCode Hlt::Service::unlock ( const IAlgorithm* alg ) 
 {
   // invalid algoritm ? 
-  if      ( 0 == alg       ) 
+  if      ( !alg       ) 
   { return Error ( "unlock : IAlgorithm* points to NULL" , 
                    Lock_Invalid_Algorithm     )  ; }                 // RETURN 
   else if ( m_lockers.empty()  ) 
@@ -87,10 +87,10 @@ StatusCode Hlt::Service::registerOutput
   const IAlgorithm*       producer  )               //             producer 
 {
   // ==========================================================================
-  if      ( 0 == producer  ) 
+  if      ( ! producer  ) 
   { return Error ( "registerOutput: invald producer" , 
                    Register_Invalid_Producer          ) ; }           // RETURN
-  else if ( 0 == selection ) 
+  else if ( ! selection ) 
   { return Error ( "registerOutput: invalid seelction for producer '" + 
                    producer->name() + "'" , 
                    Register_Invalid_Selection         ) ;  }          // RETURN  
@@ -116,10 +116,10 @@ StatusCode Hlt::Service::registerOutput
   }
   // ==========================================================================
   // finally insert it!
-  OutputMap::iterator ifind = m_outputs.find ( producer ) ;
+  auto ifind = m_outputs.find ( producer ) ;
   if ( m_outputs.end() == ifind ) 
   {
-    m_outputs.insert ( producer , SelMap() ) ;
+    m_outputs.insert ( producer , SelMap{} ) ;
     ifind = m_outputs.find ( producer ) ;
   }
   // insert it! 
@@ -148,7 +148,7 @@ StatusCode Hlt::Service::registerInput
   const IAlgorithm*       consumer  )               //            consumer 
 {
   // ==========================================================================
-  if      ( 0 == consumer  ) 
+  if      ( !consumer  ) 
   { return Error ( "registerInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
   else if ( m_lockers.empty()  ) 
@@ -178,7 +178,7 @@ StatusCode Hlt::Service::registerInput
   //     }
   //   }
   { // check it if is not in the list of own input selections 
-    InputMap::iterator iin = m_inputs.find ( consumer ) ;
+    auto iin = m_inputs.find ( consumer ) ;
     if ( m_inputs.end() == iin ) 
     {
       m_inputs.insert ( consumer , SelMap() );
@@ -219,7 +219,7 @@ StatusCode Hlt::Service::registerTESInput
   const IAlgorithm*       consumer  )                 //            consumer   
 {
   // ==========================================================================
-  if      ( 0 == consumer     ) 
+  if      ( !consumer     ) 
   { return Error ( "registerTESInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
   else if ( m_lockers.empty() ) 
@@ -230,13 +230,13 @@ StatusCode Hlt::Service::registerTESInput
                    + m_lockers.back()->name() + "'" , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
   //
-  TESMap::const_iterator intes = m_tesmap.find ( consumer ) ;
+  auto intes = m_tesmap.find ( consumer ) ;
   if ( m_tesmap.end() == intes ) 
   {
     m_tesmap.insert ( consumer , TESLocs() ) ;
     intes = m_tesmap.find ( consumer ) ;
   }
-  TESLocs::const_iterator iin = intes->second.find ( location ) ;
+  auto iin = intes->second.find ( location ) ;
   if ( intes->second.end() != iin )
   { Warning ( "registerTESInput: the input location '" 
               + location.str() + 

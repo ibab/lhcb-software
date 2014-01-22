@@ -2,6 +2,8 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+#include <numeric>
+// ============================================================================
 // Event 
 // ============================================================================
 #include "Event/RecVertex.h"
@@ -29,10 +31,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2010-08-01
  *
@@ -49,7 +47,7 @@ LoKi::RecVertices::MaxDOCA::~MaxDOCA () {}
 // ============================================================================
 LoKi::RecVertices::MaxDOCA*
 LoKi::RecVertices::MaxDOCA::clone() const 
-{ return new LoKi::RecVertices::MaxDOCA ( *this ) ; }
+{ return new LoKi::RecVertices::MaxDOCA { *this } ; }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -57,8 +55,7 @@ LoKi::RecVertices::MaxDOCA::result_type
 LoKi::RecVertices::MaxDOCA::operator() 
   ( LoKi::RecVertices::MaxDOCA::argument v ) const 
 {
-  if ( 0 == v ) 
-  {
+  if ( !v ) {
     Error ("LHCb::VertexBase* points to NULL, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
   }
@@ -66,22 +63,19 @@ LoKi::RecVertices::MaxDOCA::operator()
   const LHCb::VertexBase* vb = v ;
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
   //
-  if ( 0 == rv ) 
-  {
+  if ( !rv ) {
     Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
   }
   //
-  typedef SmartRefVector<LHCb::Track> TRACKS   ;
-  typedef TRACKS::const_iterator      ITERATOR ;
-  //
-  const TRACKS& tracks = rv->tracks() ;
+  const auto& tracks = rv->tracks() ;
   //
   double docamax  = LoKi::Constants::NegativeInfinity ;
-  for ( ITERATOR i = tracks.begin() ; tracks.end() != i ; ++i ) 
+  for ( auto i = tracks.begin() ; tracks.end() != i ; ++i ) 
   {
-    for ( ITERATOR j = i + 1 ; tracks.end() != j ; ++j ) 
-    { docamax = std::max ( docamax , doca ( *i , *j ) ) ; }
+    auto oper = [&](double x, const SmartRef<LHCb::Track>& j) 
+                { return std::max( x, doca(*i,j) ); } ;
+    docamax = std::accumulate( i+1, std::end(tracks), docamax, oper );
   }
   // 
   return docamax ;
@@ -94,13 +88,12 @@ double LoKi::RecVertices::MaxDOCA::doca
   const LHCb::Track* t2 ) const 
 {
   //
-  if ( 0  == t1 || 0 == t2 ) { return LoKi::Constants::PositiveInfinity ; }
-  if ( t1 == t2            ) { return 0 ; }
+  if ( !t1 || !t2 ) { return LoKi::Constants::PositiveInfinity ; }
+  if ( t1 == t2   ) { return 0 ; }
   //
   double _doca  = LoKi::Constants::NegativeInfinity ;
   //
-  StatusCode sc = 
-    LoKi::FastVertex::distance ( t1 , t2 , _doca , true ) ;
+  StatusCode sc = LoKi::FastVertex::distance ( t1 , t2 , _doca , true ) ;
   if ( sc.isFailure() ) {  return LoKi::Constants::PositiveInfinity ;  }
   //
   return _doca ; 
@@ -113,8 +106,8 @@ double LoKi::RecVertices::MaxDOCA::docachi2
   const LHCb::Track* t2 ) const 
 {
   //
-  if ( 0  == t1 || 0 == t2 ) { return LoKi::Constants::PositiveInfinity ; }
-  if ( t1 == t2            ) { return 0 ; }
+  if ( !t1 || !t2 ) { return LoKi::Constants::PositiveInfinity ; }
+  if ( t1 == t2   ) { return 0 ; }
   //
   double _doca = LoKi::Constants::NegativeInfinity ;
   double _chi2 = LoKi::Constants::NegativeInfinity ;
@@ -136,7 +129,7 @@ StatusCode LoKi::RecVertices::MaxDOCA::distance
   double&            chi2 ) const
 {
   //
-  if ( 0  == t1 || 0 == t2 ) { return StatusCode::FAILURE ;  }
+  if ( !t1 || !t2 ) { return StatusCode::FAILURE ;  }
   //
   if ( t1 == t2 ) 
   { 
@@ -153,12 +146,12 @@ StatusCode LoKi::RecVertices::MaxDOCA::distance
 bool LoKi::RecVertices::MaxDOCA::check
 ( const LHCb::Track* t1      , 
   const LHCb::Track* t2      , 
-  const double       docamax , 
-  const double       chi2max ) const 
+  double             docamax , 
+  double             chi2max ) const 
 {
   //
-  if ( 0  == t1 || 0 == t2 ) { return false ; }
-  if ( t1 == t2 )            { return true  ; }
+  if ( !t1 || !t2 ) { return false ; }
+  if ( t1 == t2   ) { return true  ; }
   //
   return 
     LoKi::FastVertex::checkDistance ( t1 , t2 , docamax , chi2max ) ;
@@ -181,7 +174,7 @@ LoKi::RecVertices::MaxDOCAChi2::~MaxDOCAChi2 () {}
 // ============================================================================
 LoKi::RecVertices::MaxDOCAChi2*
 LoKi::RecVertices::MaxDOCAChi2::clone() const 
-{ return new LoKi::RecVertices::MaxDOCAChi2 ( *this ) ; }
+{ return new LoKi::RecVertices::MaxDOCAChi2 { *this } ; }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -189,7 +182,7 @@ LoKi::RecVertices::MaxDOCAChi2::result_type
 LoKi::RecVertices::MaxDOCAChi2::operator() 
   ( LoKi::RecVertices::MaxDOCAChi2::argument v ) const 
 {
-  if ( 0 == v ) 
+  if ( !v ) 
   {
     Error ("LHCb::VertexBase* points to NULL, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
@@ -198,22 +191,20 @@ LoKi::RecVertices::MaxDOCAChi2::operator()
   const LHCb::VertexBase* vb = v ;
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
   //
-  if ( 0 == rv ) 
+  if ( !rv ) 
   {
     Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return PositiveInfinity");
     return LoKi::Constants::PositiveInfinity ;
   }
   //
-  typedef SmartRefVector<LHCb::Track> TRACKS   ;
-  typedef TRACKS::const_iterator      ITERATOR ;
-  //
-  const TRACKS& tracks = rv->tracks() ;
+  const auto& tracks = rv->tracks() ;
   //
   double chi2max  = LoKi::Constants::NegativeInfinity ;
-  for ( ITERATOR i = tracks.begin() ; tracks.end() != i ; ++i ) 
+  for ( auto  i = tracks.begin() ; tracks.end() != i ; ++i ) 
   {
-    for ( ITERATOR j = i + 1 ; tracks.end() != j ; ++j ) 
-    { chi2max = std::max ( chi2max , docachi2 ( *i , *j ) ) ; }
+    auto oper = [&](double x, const SmartRef<LHCb::Track>& j) 
+                { return std::max( x, docachi2(*i,j) ); } ;
+    chi2max  = std::accumulate( i+1, std::end(tracks), chi2max, oper );
   }
   // 
   return chi2max ;
@@ -233,8 +224,8 @@ LoKi::RecVertices::MaxDOCAChi2::fillStream ( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::RecVertices::DOCACut::DOCACut
-( const double docamax ,   // max(DOCA)       (negative: no cut)
-  const double chi2max )  // max(chi2(DOCA)) (negative: no cut)
+( double docamax ,   // max(DOCA)       (negative: no cut)
+  double chi2max )  // max(chi2(DOCA)) (negative: no cut)
   : LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate () 
   , m_docamax ( docamax )
   , m_chi2max ( chi2max )
@@ -248,7 +239,7 @@ LoKi::RecVertices::DOCACut::~DOCACut () {}
 // ============================================================================
 LoKi::RecVertices::DOCACut*
 LoKi::RecVertices::DOCACut::clone() const 
-{ return new LoKi::RecVertices::DOCACut ( *this ) ; }
+{ return new LoKi::RecVertices::DOCACut { *this } ; }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -256,7 +247,7 @@ LoKi::RecVertices::DOCACut::result_type
 LoKi::RecVertices::DOCACut::operator() 
   ( LoKi::RecVertices::DOCACut::argument v ) const 
 {
-  if ( 0 == v ) 
+  if ( !v ) 
   {
     Error ("LHCb::VertexBase* points to NULL, return false");
     return false ;
@@ -265,21 +256,19 @@ LoKi::RecVertices::DOCACut::operator()
   const LHCb::VertexBase* vb = v ;
   const LHCb::RecVertex*  rv = dynamic_cast<const LHCb::RecVertex*> ( vb ) ;
   //
-  if ( 0 == rv ) 
+  if ( !rv ) 
   {
     Error ("LHCb::VertexBase* is not LHCb::RecVertex*, return false");
     return false ;
   }
   //
-  typedef SmartRefVector<LHCb::Track> TRACKS   ;
-  typedef TRACKS::const_iterator      ITERATOR ;
   //
-  const TRACKS& tracks = rv->tracks() ;
+  const auto& tracks = rv->tracks() ;
   if ( tracks.empty() )        { return false ; }          // RETURN
   //
-  for ( ITERATOR i = tracks.begin() ; tracks.end() != i ; ++i ) 
+  for ( auto i = tracks.begin() ; tracks.end() != i ; ++i ) 
   {
-    for ( ITERATOR j = i + 1 ; tracks.end() != j ; ++j ) 
+    for ( auto j = i + 1 ; tracks.end() != j ; ++j ) 
     { if ( !check ( *i , *j ) ) { return false ; } }      // RETURN 
   }
   // 
@@ -291,7 +280,6 @@ LoKi::RecVertices::DOCACut::operator()
 std::ostream&
 LoKi::RecVertices::DOCACut::fillStream ( std::ostream& s ) const 
 { return s << "RV_DOCACUT(" << m_docamax << "," << m_chi2max << ")" ; }
-
 
 
 // ============================================================================

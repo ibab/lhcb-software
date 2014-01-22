@@ -47,8 +47,8 @@ namespace LoKi
        *  @param flag public?
        */
       Tool 
-      ( const std::string& tool          , 
-        const bool         flag  = false ) ;
+      ( std::string  tool          , 
+        bool         flag  = false ) ;
       /// virtual destructor 
       virtual ~Tool() {}
       // ======================================================================      
@@ -104,8 +104,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackFunction 
-      ( const std::string& tool          , 
-        const bool         flag  = false ) ;
+      ( std::string tool          , 
+        bool        flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackFunction ( const LoKi::Hlt1::Tool& tool ) ;
@@ -138,8 +138,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackBiFunction 
-      ( const std::string& tool          , 
-        const bool         flag  = false ) ;
+      ( std::string tool          , 
+        bool        flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackBiFunction ( const LoKi::Hlt1::Tool& tool ) ;
@@ -172,8 +172,8 @@ namespace LoKi
        *  @param flag public?
        */
       MatchTVelo
-      ( const std::string& tool          , 
-        const bool         flag  = false ) ;
+      ( std::string tool          , 
+        bool        flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       MatchTVelo ( const LoKi::Hlt1::Tool& tool ) ;
@@ -206,8 +206,8 @@ namespace LoKi
        *  @param flag public?
        */
       TrackVertexFunction 
-      ( const std::string& tool          , 
-        const bool         flag  = false ) ;
+      ( std::string tool          , 
+        bool        flag  = false ) ;
       // ======================================================================
       /// constructor from the tool 
       TrackVertexFunction ( const LoKi::Hlt1::Tool& tool ) ;

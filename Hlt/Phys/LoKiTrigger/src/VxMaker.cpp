@@ -43,10 +43,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2010-10-28
  *
@@ -58,8 +54,8 @@
 namespace 
 {
   // ==========================================================================
-  const Gaudi::StringKey s_CHI2 = Gaudi::StringKey ( "Chi2" ) ;
-  const Gaudi::StringKey s_DOCA = Gaudi::StringKey ( "DOCA" ) ;
+  const Gaudi::StringKey s_CHI2  { std::string{"Chi2"} } ;
+  const Gaudi::StringKey s_DOCA  { std::string{"DOCA"} } ;
   // ==========================================================================
 }
 // ============================================================================
@@ -105,23 +101,21 @@ LoKi::Hlt1::VxMakerBase::makeVertex
   doca = LoKi::Constants::NegativeInfinity ;
   chi2 = LoKi::Constants::NegativeInfinity ;
   //
-  if ( 0      == track1 || 
-       0      == track2 ||
-       track1 == track2 )                       { return 0 ; } // RETURN 
+  if ( !track1 || !track2 || track1 == track2 ) { return nullptr ; } // RETURN 
   //
   // apply cuts for the first track 
-  if ( apply && !track1cut ( track1 ) )         { return 0 ;  } // RETURN
+  if ( apply && !track1cut ( track1 ) )         { return nullptr ;  } // RETURN
   // apply cuts for the first track 
-  if ( apply && !track2cut ( track2 ) )         { return 0 ;  } // RETURN 
+  if ( apply && !track2cut ( track2 ) )         { return nullptr ;  } // RETURN 
   //
   // make vertex 
   // 
   const LHCb::RecVertexHolder holder = LoKi::FastVertex::makeVertex
     ( track1 , track2 , docamax() , chi2max() , doca , chi2 , true ) ;
   //
-  if (         !holder    )                     { return 0 ; } // RETURN 
+  if (         !holder    )                     { return nullptr ; } // RETURN 
   //
-  if ( !vxcut ( holder )  )                     { return 0 ; } // RETURN 
+  if ( !vxcut ( holder )  )                     { return nullptr ; } // RETURN 
   //
   _store ( holder ) ; // ATTENTION! 
   //
@@ -135,7 +129,7 @@ bool LoKi::Hlt1::VxMakerBase::checkVertex
   const LHCb::Track* track2 , 
   const bool         apply  ) const 
 {
-  if ( 0 == track1 || 0 == track2     ) { return false ; }
+  if ( !track1 || !track2     ) { return false ; }
   //
   // apply cuts for thr first track 
   if ( apply && !track1cut ( track1 ) ) { return false ;  }
@@ -152,11 +146,11 @@ bool LoKi::Hlt1::VxMakerBase::checkVertex
 // constructor 
 // ============================================================================
 LoKi::Hlt1::VxMaker::VxMaker 
-( const std::string&                 output  ,   // output selection name/key 
+( std::string                        output  ,   // output selection name/key 
   const LoKi::Hlt1::VxMakerConf&     config  )   //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::VxMakerBase ( config ) 
-  , m_sink    ( output  ) 
+  , m_sink    { std::move(output)  } 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -166,7 +160,7 @@ LoKi::Hlt1::VxMaker::~VxMaker () {}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::VxMaker* LoKi::Hlt1::VxMaker::clone() const 
-{ return new LoKi::Hlt1::VxMaker ( *this ) ; }
+{ return new LoKi::Hlt1::VxMaker { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -175,10 +169,9 @@ LoKi::Hlt1::VxMaker::operator()
   ( LoKi::Hlt1::VxMaker::argument a ) const 
 {
   //
-  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  Assert ( alg() ,  "Invalid setup!" ) ;
   //
   typedef result_type                CANDIDATES ;
-  typedef CANDIDATES::const_iterator ITERATOR   ;
   //
   if ( a.empty()  ) { return result_type () ; } // no action for EMPTY input   
   // 
@@ -190,22 +183,22 @@ LoKi::Hlt1::VxMaker::operator()
   //
   CANDIDATES       output ;
   //
-  for ( ITERATOR icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
+  for ( auto  icand1 = arg1->begin() ; arg1->end() != icand1 ; ++icand1 ) 
   {
     const Hlt::Candidate* cand1 = *icand1 ;
-    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
+    if ( !cand1 ) { continue ; }                              // CONTINUE 
     //
     const Hlt::MultiTrack* mtrack = cand1->get<Hlt::MultiTrack> () ;
     //
-    if ( 0 == mtrack                  ) { continue ; }           // CONTINUE 
+    if ( !mtrack                  ) { continue ; }           // CONTINUE 
     //
     if ( 2 != mtrack->tracks().size() ) { continue ; }           // CONTIUNE 
     //
     const LHCb::Track* trk1 = mtrack->tracks()[0] ;
-    if ( 0 == trk1                    ) { continue ; }           // CONITNUE 
+    if ( !trk1                    ) { continue ; }           // CONITNUE 
     //
     const LHCb::Track* trk2 = mtrack->tracks()[1] ;
-    if ( 0 == trk2                    ) { continue ; }           // CONITNUE 
+    if ( !trk2                    ) { continue ; }           // CONITNUE 
     //
     // make vertex ? 
     //
@@ -214,7 +207,7 @@ LoKi::Hlt1::VxMaker::operator()
     const LHCb::RecVertex* vertex = makeVertex 
       ( trk1 , trk2 , doca , chi2 , false ) ;
     //
-    if ( 0 == vertex ) { continue ; }                            // CONTINUE 
+    if ( !vertex ) { continue ; }                            // CONTINUE 
     //
     // start new candidate:
     //
@@ -229,7 +222,7 @@ LoKi::Hlt1::VxMaker::operator()
       Hlt::Stage*     stage   = newStage  () ;
       candidate -> addToStages ( stage ) ;
       /// lock new stage:
-      Hlt::Stage::Lock lock ( stage , alg () ) ;
+      Hlt::Stage::Lock lock { stage , alg () } ;
       //
       lock.addToHistory ( cand1->workers() ) ;
       // lock.addToHistory ( myName()         ) ;
@@ -244,7 +237,7 @@ LoKi::Hlt1::VxMaker::operator()
       Hlt::Stage*     stage   = newStage () ;
       candidate -> addToStages ( stage ) ;
       /// lock new stage:
-      Hlt::Stage::Lock lock ( stage , alg() ) ;
+      Hlt::Stage::Lock lock { stage , alg() } ;
       // lock.addToHistory ( myName()         ) ;
       stage    -> set ( vertex ) ;
       stage    -> updateInfo ( s_DOCA , doca ) ;
@@ -277,21 +270,21 @@ std::ostream& LoKi::Hlt1::VxMaker::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::VxMaker2::VxMaker2 
-( const std::string&                  output  ,   // output selection name/key 
+( std::string                         output  ,   // output selection name/key 
   const LoKi::Hlt1::VxMaker2::Source& tracks2 ,   // tracks to be matched with 
   const LoKi::Hlt1::VxMakerConf&      config  )   //        tool configuration 
-  : LoKi::Hlt1::VxMaker ( output , config )   
-  , m_source2 ( tracks2 )
+  : LoKi::Hlt1::VxMaker ( std::move(output) , config )   
+  , m_source2 { tracks2 }
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::VxMaker2::VxMaker2 
-( const std::string&                output  ,   // output selection name/key 
-  const std::string&                tracks2 ,   // tracks to be matched with 
+( std::string                       output  ,   // output selection name/key 
+  std::string                       tracks2 ,   // tracks to be matched with 
   const LoKi::Hlt1::VxMakerConf&    config  )   //        tool configuration 
-  : LoKi::Hlt1::VxMaker ( output , config )   
-  , m_source2    ( LoKi::Hlt1::Selection ( tracks2 ) ) 
+  : LoKi::Hlt1::VxMaker { std::move(output) , config }
+  , m_source2    { LoKi::Hlt1::Selection ( std::move(tracks2) ) } 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -301,7 +294,7 @@ LoKi::Hlt1::VxMaker2::~VxMaker2 () {}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::VxMaker2* LoKi::Hlt1::VxMaker2::clone() const 
-{ return new LoKi::Hlt1::VxMaker2 ( *this ) ; }
+{ return new LoKi::Hlt1::VxMaker2 { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -310,7 +303,7 @@ LoKi::Hlt1::VxMaker2::operator()
   ( LoKi::Hlt1::VxMaker2::argument a ) const 
 {
   //
-  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  Assert ( alg() ,  "Invalid setup!" ) ;
   //
   typedef result_type                CANDIDATES ;
   typedef CANDIDATES::const_iterator ITERATOR   ;
@@ -420,13 +413,13 @@ std::ostream& LoKi::Hlt1::VxMaker2::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::VxMaker3::VxMaker3 
-( const std::string&                   output  ,  // output selection name/key 
+( std::string                          output  ,  // output selection name/key 
   const LoKi::Hlt1::VxMaker3::Source&  tracks1 ,  //       the first selection 
   const LoKi::Hlt1::VxMaker3::Source&  tracks2 ,  //       the first selection 
   const LoKi::Hlt1::VxMakerConf&       config  )  //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Source () 
   , m_source1 ( tracks1 ) 
-  , m_vxmaker ( output , tracks2 , config ) 
+  , m_vxmaker ( std::move(output) , tracks2 , config ) 
 {}
 // ============================================================================
 // MANTATORY: virtual destructor 
@@ -438,7 +431,7 @@ LoKi::Hlt1::VxMaker3::~VxMaker3(){}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::VxMaker3* LoKi::Hlt1::VxMaker3::clone() const 
-{ return new LoKi::Hlt1::VxMaker3 ( *this ) ; }
+{ return new LoKi::Hlt1::VxMaker3 { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -463,9 +456,9 @@ std::ostream& LoKi::Hlt1::VxMaker3::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::VxMaker4::VxMaker4 
-( const std::string&                  output  ,   // output selection name/key 
+( std::string                         output  ,   // output selection name/key 
   const LoKi::Hlt1::VxMakerConf&      config  )   //        tool configuration 
-  : LoKi::Hlt1::VxMaker ( output , config )   
+  : LoKi::Hlt1::VxMaker ( std::move(output) , config )   
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -476,7 +469,7 @@ LoKi::Hlt1::VxMaker4::~VxMaker4 () {}
 // ============================================================================
 LoKi::Hlt1::VxMaker4* 
 LoKi::Hlt1::VxMaker4::clone() const 
-{ return new LoKi::Hlt1::VxMaker4 ( *this ) ; }
+{ return new LoKi::Hlt1::VxMaker4 { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -501,19 +494,19 @@ LoKi::Hlt1::VxMaker4::operator()
   for ( ITERATOR icand1 = arg->begin() ; arg->end() != icand1 ; ++icand1 ) 
   {
     const Hlt::Candidate* cand1 = *icand1 ;
-    if ( 0 == cand1 ) { continue ; }                              // CONTINUE 
+    if ( !cand1 ) { continue ; }                              // CONTINUE 
     const LHCb::Track*    trk1  = cand1->get<LHCb::Track> () ;
     //
     if ( !track1cut ( trk1 ) ) { continue ; }                     // CONTINUE 
     //
-    if ( 0 == trk1  ) { continue ; }                              // CONTINUE
+    if ( !trk1  ) { continue ; }                              // CONTINUE
     //
     for ( ITERATOR icand2 =  icand1 + 1 ; arg -> end() != icand2 ; ++icand2 ) 
     {
       const Hlt::Candidate* cand2 = *icand2 ;
-      if ( 0 == cand2 ) { continue ; }                            // CONITNUE 
+      if ( !cand2 ) { continue ; }                            // CONITNUE 
       const LHCb::Track*    trk2  = cand2->get<LHCb::Track> () ;
-      if ( 0 == trk2  ) { continue ; }                            // CONTINUE 
+      if ( !trk2  ) { continue ; }                            // CONTINUE 
       //
       if ( !track2cut ( trk2 ) ) { continue ; }                   // CONTINUE 
       //
@@ -524,7 +517,7 @@ LoKi::Hlt1::VxMaker4::operator()
       const LHCb::RecVertex* vertex = 
         makeVertex ( trk1 , trk2 , doca , chi2 , false ) ;
       //
-      if ( 0 == vertex ) { continue ; }                            // CONTINUE 
+      if ( !vertex ) { continue ; }                            // CONTINUE 
       //
       // start new candidate:
       Hlt::Candidate* candidate = newCandidate() ;
@@ -538,7 +531,7 @@ LoKi::Hlt1::VxMaker4::operator()
         Hlt::Stage*     stage   = newStage     () ;
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        Hlt::Stage::Lock lock { stage , alg () } ;
         //
         lock.addToHistory ( cand1->workers() ) ;
         // lock.addToHistory ( myName()         ) ;
@@ -553,7 +546,7 @@ LoKi::Hlt1::VxMaker4::operator()
         Hlt::Stage*     stage   = newStage     () ;
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , alg() ) ;
+        Hlt::Stage::Lock lock { stage , alg() } ;
         // lock.addToHistory ( myName()         ) ;
         stage    -> set ( vertex ) ;
         stage    -> updateInfo ( s_DOCA , doca ) ;
@@ -587,25 +580,25 @@ std::ostream& LoKi::Hlt1::VxMaker4::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker::DiTrackMaker 
-( const std::string&                       output  ,   // output selection name/key 
+( std::string                              output  ,   // output selection name/key 
   const LoKi::Hlt1::DiTrackMaker::Source&  tracks2 ,   // tracks to be matched with 
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::VxMakerBase ( config ) 
   , m_source2 ( tracks2 ) 
-  , m_sink    ( output  ) 
+  , m_sink    ( std::move(output)  ) 
 {}
 // ============================================================================
 // constructor 
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker::DiTrackMaker 
-( const std::string&                       output  ,   // output selection name/key 
-  const std::string&                       tracks2 ,   // tracks to be matched with 
+( std::string                              output  ,   // output selection name/key 
+  std::string                              tracks2 ,   // tracks to be matched with 
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::VxMakerBase ( config ) 
-  , m_source2    ( LoKi::Hlt1::Selection ( tracks2 ) ) 
-  , m_sink       ( output  ) 
+  , m_source2    { LoKi::Hlt1::Selection { std::move(tracks2) } } 
+  , m_sink       { std::move(output)  }
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -615,7 +608,7 @@ LoKi::Hlt1::DiTrackMaker::~DiTrackMaker () {}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker* LoKi::Hlt1::DiTrackMaker::clone() const 
-{ return new LoKi::Hlt1::DiTrackMaker ( *this ) ; }
+{ return new LoKi::Hlt1::DiTrackMaker { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -624,7 +617,7 @@ LoKi::Hlt1::DiTrackMaker::operator()
   ( LoKi::Hlt1::DiTrackMaker::argument a ) const 
 {
   //
-  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  Assert ( alg() ,  "Invalid setup!" ) ;
   //
   typedef result_type                CANDIDATES ;
   typedef CANDIDATES::const_iterator ITERATOR   ;
@@ -677,7 +670,7 @@ LoKi::Hlt1::DiTrackMaker::operator()
         Hlt::Stage*     stage   = newStage     () ;
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        Hlt::Stage::Lock lock { stage , alg () } ;
         //
         lock.addToHistory ( cand1->workers() ) ;
         // lock.addToHistory ( myName()         ) ;
@@ -692,7 +685,7 @@ LoKi::Hlt1::DiTrackMaker::operator()
         Hlt::Stage*     stage   = newStage     () ;
         candidate -> addToStages ( stage ) ;
         /// lock new stage:
-        Hlt::Stage::Lock lock ( stage , alg () ) ;
+        Hlt::Stage::Lock lock { stage , alg () } ;
         // lock.addToHistory ( myName()         ) ;
         //
         Hlt::MultiTrack* mtrack = newMultiTrack() ;
@@ -733,13 +726,13 @@ std::ostream& LoKi::Hlt1::DiTrackMaker::fillStream ( std::ostream& s ) const
 // constructor 
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker2::DiTrackMaker2 
-( const std::string&                       output  ,   // output selection name/key 
-  const bool                               neutral ,
+( std::string                              output  ,   // output selection name/key 
+  bool                                     neutral ,
   const LoKi::Hlt1::VxMakerConf&           config  )   //        tool configuration 
   : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe () 
   , LoKi::Hlt1::VxMakerBase ( config ) 
-  , m_sink    ( output  ) 
-  , m_neutral ( neutral ) 
+  , m_sink    { std::move(output)  } 
+  , m_neutral { neutral } 
 {}
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -749,7 +742,7 @@ LoKi::Hlt1::DiTrackMaker2::~DiTrackMaker2 () {}
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
 LoKi::Hlt1::DiTrackMaker2* LoKi::Hlt1::DiTrackMaker2::clone() const 
-{ return new LoKi::Hlt1::DiTrackMaker2 ( *this ) ; }
+{ return new LoKi::Hlt1::DiTrackMaker2 { *this } ; }
 // ============================================================================
 // the only one important method 
 // ============================================================================
@@ -758,7 +751,7 @@ LoKi::Hlt1::DiTrackMaker2::operator()
   ( LoKi::Hlt1::DiTrackMaker2::argument a ) const 
 {
   //
-  Assert ( 0 != alg() ,  "Invalid setup!" ) ;
+  Assert ( alg() ,  "Invalid setup!" ) ;
   //
   typedef result_type                CANDIDATES ;
   typedef CANDIDATES::const_iterator ITERATOR   ;
