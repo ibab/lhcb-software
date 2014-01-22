@@ -59,7 +59,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_tagger_map[(int)Tagger::OS_Kaon]="OS_Kaon";
   m_tagger_map[(int)Tagger::SS_Kaon]="SS_Kaon";
   m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";  
-  //m_tagger_map[(int)Tagger::SS_PionBDT]="SS_PionBDT";
+  m_tagger_map[(int)Tagger::SS_PionBDT]="SS_PionBDT";
   m_tagger_map[(int)Tagger::VtxCharge]="VtxCharge";
   m_tagger_map[(int)Tagger::Topology]="Topology";
   m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
@@ -80,7 +80,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_activeTaggers.push_back("OS_Kaon");
   m_activeTaggers.push_back("SS_Kaon");
   m_activeTaggers.push_back("SS_Pion");
-  //  m_activeTaggers.push_back("SS_PionBDT");
+  m_activeTaggers.push_back("SS_PionBDT");
   m_activeTaggers.push_back("VtxCharge");
   m_activeTaggers.push_back("OS_nnetKaon");
   m_activeTaggers.push_back("SS_nnetKaon");
