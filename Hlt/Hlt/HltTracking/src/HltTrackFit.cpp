@@ -26,7 +26,7 @@ HltTrackFit::HltTrackFit( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-, m_fit(0)
+  , m_fit{nullptr}
 {
   declareInterface<ITracksFromTrack>(this);
   declareProperty("FitterName", m_fitName = "TrackMasterFitter/Fit");
@@ -42,22 +42,16 @@ HltTrackFit::~HltTrackFit()
 StatusCode HltTrackFit::initialize() 
 {
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()) return sc;
-  if ( msgLevel(MSG::DEBUG) ) debug() << " ===> initialize HltTrackFit" << endmsg;
-
- m_fit = tool<ITrackFitter>(m_fitName, this);
-
- return sc;
+  if (sc.isSuccess()) m_fit = tool<ITrackFitter>(m_fitName, this);
+  return sc;
 }
 
 //=============================================================================
-StatusCode HltTrackFit::tracksFromTrack(
-		const LHCb::Track& seed,
-		std::vector<LHCb::Track*>& tracks )
+StatusCode HltTrackFit::tracksFromTrack( const LHCb::Track& seed,
+		                                 std::vector<LHCb::Track*>& tracks )
 {
-  std::auto_ptr<LHCb::Track> tr( seed.clone() );
-  StatusCode sc = StatusCode::SUCCESS;
-  sc = m_fit->fit( *tr );
+  std::unique_ptr<LHCb::Track> tr( seed.clone() );
+  StatusCode sc = m_fit->fit( *tr );
   if( sc.isFailure() ) {
      warning() << "Fit failed." << endmsg;
   } else {

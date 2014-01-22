@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - small C++11 changes
+
 !========================= HltTracking v11r0 2014-01-10 =========================
 ! 2014-01-09 - Sebastian Neubert
  - Configured HLT1 and HLT2 to both use the standard (offline) FastVelo algorithm 

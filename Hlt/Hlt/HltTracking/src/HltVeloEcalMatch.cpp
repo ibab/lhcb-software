@@ -117,12 +117,11 @@ double HltVeloEcalMatch::ecal_cell_size(const Track& ctrack) {
 
   static const double cellSizeECal[3] = { 121.7, 60.85, 40.56 };
     // get LHCbID of coresponding L0CaloCandidate
-  std::vector< LHCb::LHCbID >  lista=   ctrack.lhcbIDs ();
   int ids_ecal = 0;
   double siz_ecal =0.;
-  for (std::vector< LHCb::LHCbID >::iterator itid = lista.begin(); itid != lista.end(); itid++) {
-    if( ! itid->isCalo() ) continue;
-    LHCb::CaloCellID cid = itid->caloID();
+  for (const auto& id : ctrack.lhcbIDs() ) {
+    if( ! id.isCalo() ) continue;
+    LHCb::CaloCellID cid = id.caloID();
     if ( cid.calo() != 2 ) continue;
     int area = cid.area();
     if (area < 0 || area > 2 ) continue;

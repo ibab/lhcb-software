@@ -48,18 +48,14 @@ StatusCode HltGuidedForward::tracksFromTrack(const LHCb::Track& track,
   
   StatusCode sc = StatusCode::SUCCESS;
 
-  const LHCb::Track& velo = *(track.ancestors().front());
-  const LHCb::Track& calo = *(track.ancestors().back());
+  const LHCb::Track* velo = track.ancestors().front();
+  const LHCb::Track* calo = track.ancestors().back();
 
-  FwdHypothesis tp = m_l0ConfExtrapolator->getFwdHypothesis(velo,calo,
+  FwdHypothesis tp = m_l0ConfExtrapolator->getFwdHypothesis(*velo,*calo,
                                                             m_nSigma);
   m_hitMan->prepareHitsInWindow(tp);
-  
-  sc = m_forwardTool->tracksFromTrack(velo,tracks);
-  for (std::vector<LHCb::Track*>::iterator it = tracks.begin();
-       it != tracks.end(); ++it)
-    (*it)->addToAncestors(&calo);
-  
+  sc = m_forwardTool->tracksFromTrack(*velo,tracks);
+  for (auto& tr : tracks) tr->addToAncestors(calo);
   m_hitMan->clearHits();
   
   return sc;

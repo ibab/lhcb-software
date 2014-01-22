@@ -127,9 +127,8 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
     // transfer the momentum
     const std::vector<LHCb::State*>& allStates = matchedTrack.states();
     if ( msgLevel(MSG::DEBUG) ) debug() << " N states " << allStates.size() << endmsg;
-    for(std::vector< LHCb::State* >::const_iterator 
-          itState =allStates.begin();itState<allStates.end();itState++){
-      if((*itState)->qOverP() == 0) (*itState)->setQOverP(qOverP);
+    for( auto i : allStates ) {
+      if(i->qOverP() == 0) i->setQOverP(qOverP);
     }
 
     return StatusCode::SUCCESS;    
