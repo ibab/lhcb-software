@@ -4,16 +4,19 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r3 2014-01-22 =========================
+
 ! 2014-01-19 - Victor Coco
- - Remove temporary print-out
+ - Remove temporary print-out.
 
 ! 2014-01-18 - Victor Coco
  - Remove the protparticle creation for neutral hadrons
-   Reogranise the way PF particles are saved (copied to particle first)
-	 Fix mem leak from new LHCb::PFParticle(oldpart.clone())
+   Reogranise the way PF particles are saved (copied to particle first).
+   Fix mem leak from new LHCb::PFParticle(oldpart.clone()).
 
 ! 2014-01-09 - Pieter David
- - Add header file (and dictionary) with enums used in ParticleFlow and jet reconstruction
+ - Add header file (and dictionary) with enums used in ParticleFlow and jet
+   reconstruction.
 
 !========================= JetAccessories v3r2 2013-12-18 =========================
 
