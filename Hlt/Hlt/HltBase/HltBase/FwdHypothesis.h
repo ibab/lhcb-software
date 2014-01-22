@@ -23,24 +23,22 @@ public:
                  double ay , double by, 
                  double errx , double erry, 
                  double zRef ) :
-	  m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_ay(ay), m_by(by),
-	  m_errx(errx), m_erry(erry), m_zRef(zRef)
+	  m_ax{ax}, m_bx{bx}, m_cx{cx}, m_dx{dx}, m_ay{ay}, m_by{by},
+	  m_errx{errx}, m_erry{erry}, m_zRef{zRef}
   { }
   
   Tf::XYSearchWindow searchWindow(double z) const
   {
-    double dz = double(z) - m_zRef;
+    double dz = z - m_zRef;
     double x = m_ax + (m_bx + dz * (m_cx + dz * m_dx)) * dz;
     double y = m_ay + dz * m_by;
-
-    return Tf::XYSearchWindow(x - m_errx, x + m_errx, y - m_erry, y + m_erry);
+    return { x - m_errx, x + m_errx, y - m_erry, y + m_erry };
   }
 
   void getValidity(double& zmin, double& zmax) const
   {
-    zmin = double(StateParameters::ZBegT);
-    zmax = double(StateParameters::ZEndT);
-    return;
+    zmin = StateParameters::ZBegT;
+    zmax = StateParameters::ZEndT;
   }
   
 
