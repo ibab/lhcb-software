@@ -24,8 +24,8 @@ class ConfigTreeEditor : public GaudiTool,
                          virtual public IConfigTreeEditor 
 {
 public:
-   ConfigTreeEditor( const std::string& type,
-                     const std::string& name,
+   ConfigTreeEditor( std::string type,
+                     std::string name,
                      const IInterface* parent );
    ~ConfigTreeEditor();
 

@@ -4,6 +4,12 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-01-22 - Gerhard Raven
+ - ConfigTreeEditor:
+    o replace boost::bind and boost::lambda with C++11
+    o replace explict loops with STL + lambda
+    o replace auto_ptr with unique_ptr
+
 ! 2014-01-16 - Gerhard Raven
  - use some C++11 goodies
 

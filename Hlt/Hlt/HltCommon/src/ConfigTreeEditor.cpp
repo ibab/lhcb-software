@@ -22,17 +22,9 @@ using namespace std;
 using namespace boost;
 
 //C++11 from our own twiki page...
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#include <functional>
-using std::bind;
-using namespace std::placeholders;
-#else
-#include <boost/lambda/bind.hpp>
-using namespace boost::lambda;
-#endif
 
 namespace {
-    static const std::string empty;
+    static const std::string empty{};
 };
 
 /////////Utility class for easy manipulation of configurations/////////////////////////////
@@ -51,10 +43,10 @@ public:
    public:
         Lookup(IPropertyConfigSvc& r) : m_r(r) {};
         const ConfigTreeNode *node(const ConfigTreeNode::digest_type& id) {
-            NodeMap_t::iterator i = m_nodes.find(id);
+            auto i = m_nodes.find(id);
             if (i==m_nodes.end()) {
-                     const ConfigTreeNode *cn = m_r.resolveConfigTreeNode(id);
-                     pair<NodeMap_t::iterator,bool> r = m_nodes.insert(make_pair( id, cn));
+                     auto cn = m_r.resolveConfigTreeNode(id);
+                     auto r = m_nodes.insert(make_pair( id, cn));
                      assert(r.second);
                      i = r.first;
             }
@@ -62,19 +54,18 @@ public:
         }
 
         const PropertyConfig *leaf(const PropertyConfig::digest_type& id) {
-            ConfigMap_t::iterator i = m_config.find(id);
+            auto i = m_config.find(id);
             if (i==m_config.end()) {
-                     const PropertyConfig *pc = m_r.resolvePropertyConfig(id);
-                     pair<ConfigMap_t::iterator,bool> r = m_config.insert(make_pair( id, pc));
-                     assert(r.second);
-                     i = r.first;
+                auto r = m_config.insert({id, m_r.resolvePropertyConfig(id)});
+                assert(r.second);
+                i = r.first;
             }
             return i->second;
         }
         ConfigTree     *tree(const ConfigTreeNode::digest_type& id, ConfigTree* parent) {
-            TreeMap_t::iterator i = m_trees.find(id);
+            auto i = m_trees.find(id);
             if (i==m_trees.end()) {
-                 pair<TreeMap_t::iterator,bool> r = m_trees.insert( make_pair( id, new ConfigTree( id, parent) ) );
+                 auto r = m_trees.insert( {id, new ConfigTree{ id, parent } } );
                  assert(r.second);
                  i = r.first;
             } else {
@@ -94,11 +85,11 @@ public:
 
    // constructor for the nodes inside the tree
    ConfigTree(const ConfigTreeNode::digest_type& in, ConfigTree* parent  ) 
-    : m_lookup(0)
-    , m_ownedLeaf(0)
-    , m_root(0)
-    , m_leaf(0)
-    , m_origDigest(in)
+    : m_lookup{nullptr}
+    , m_ownedLeaf{nullptr}
+    , m_root{nullptr}
+    , m_leaf{nullptr}
+    , m_origDigest{in}
    {
         assert(parent!=0);
         addParent(parent);
@@ -114,9 +105,9 @@ public:
          // it into the 'root' node.
    ConfigTree(const ConfigTreeNode::digest_type& in, IPropertyConfigSvc& r, const std::string& label = empty )
     : m_lookup( new ConfigTree::Lookup(r) )
-    , m_ownedLeaf(0)
+    , m_ownedLeaf{nullptr}
     , m_root(this)
-    , m_leaf(0)
+    , m_leaf{nullptr}
     , m_origDigest(in)
    {
         addParent((ConfigTree*)0);
@@ -129,8 +120,8 @@ public:
    }
 
    void addParent(ConfigTree *parent) {
-        if (parent!=0) { 
-            assert( root()==0 ||  root() == parent->root() ); // must be same tree...
+        if (parent) { 
+            assert( !root() ||  root() == parent->root() ); // must be same tree...
             if (find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
                 // std::cout << " configTree("<<m_origDigest<< ")::addParent("<<parent->m_origDigest<<") already present.."  << std::endl;
             } else {
@@ -144,7 +135,7 @@ public:
    }
 
    void addLeaf() {
-        const ConfigTreeNode *c = lookupConfigTreeNode( m_origDigest );
+        auto c = lookupConfigTreeNode( m_origDigest );
         assert(c!=0);
         m_label = c->label();
         if ( !c->leaf().invalid() ) {
@@ -154,13 +145,14 @@ public:
    }
 
    void addDeps() {
-        const ConfigTreeNode *c = lookupConfigTreeNode( m_origDigest );
-        for (ConfigTreeNode::NodeRefs::const_iterator i = c->nodes().begin(); i != c->nodes().end(); ++i ) {
-            m_deps.push_back( lookupConfigTree( *i, this ) );  // lookup returns a pointer to either a 'new' ConfigTree instance,
-                                                             // or to an existing one, adding 'this' to the list of parents of it.
-                                                             // It is done this way because the graph may contain cycles...
-        }
-
+        // lookup returns a pointer to either a 'new' ConfigTree instance,
+        // or to an existing one, adding 'this' to the list of parents of it.
+        // It is done this way because the graph may contain cycles...
+        auto c = lookupConfigTreeNode( m_origDigest );
+        std::transform( std::begin(c->nodes()),std::end(c->nodes())
+                      , std::back_inserter(m_deps)
+                      , [&](const ConfigTreeNode::digest_type& i) { return lookupConfigTree(i,this); } 
+                      );
    }
 
    ~ConfigTree() { }
@@ -168,9 +160,9 @@ public:
    void visit( ConfigTree::Visitor& visitor ) const {
         visitor.pre(*this);
         if (visitor.descend(*this)) {
-              for_each(m_deps.begin(),
-                       m_deps.end(),
-                       bind(&ConfigTree::visit,_1,boost::ref(visitor)));
+              for_each( m_deps.begin(), m_deps.end()
+                      , [&](const ConfigTree* tree) 
+                        { tree->visit(visitor); } );
         }
         visitor.post(*this);
    }
@@ -180,14 +172,17 @@ public:
                                                    : w.writePropertyConfig(*m_leaf) );
        assert(m_leaf==0||!lr.invalid());
        ConfigTreeNode::NodeRefs nr;
-       for (vector<ConfigTree*>::const_iterator i = m_deps.begin(); i!= m_deps.end(); ++i ) {
-            ConfigTreeNode::digest_type d = (*i)->write(w);
-            assert(!d.invalid());
-            nr.push_back(d);
-       }
+       std::transform( std::begin(m_deps),std::end(m_deps)
+                     , std::back_inserter(nr)
+                     , [&](ConfigTree* tree) 
+                       { auto d = tree->write(w);
+                         assert(!d.invalid()); 
+                         return d; 
+                       }
+                     );
        const ConfigTreeNode *c = lookupConfigTreeNode( m_origDigest );
        assert(c!=0);
-       auto_ptr<ConfigTreeNode> nc( c->clone( lr,nr, m_label ) );
+       unique_ptr<ConfigTreeNode> nc{ c->clone( lr,nr, m_label ) };
        return w.writeConfigTreeNode( *nc );
    }
 
@@ -203,9 +198,9 @@ public:
    
    ConfigTree* findNodeWithLeaf(const string& name) {
        if ( m_leaf && m_leaf->name() == name )  return this;
-       for ( vector<ConfigTree*>::const_iterator i  = m_deps.begin(); i!=m_deps.end();++i) {  
-            ConfigTree *f = (*i)->findNodeWithLeaf(name);
-            if (f!=0) return f;
+       for ( auto& i : m_deps ) {
+            ConfigTree *f = i->findNodeWithLeaf(name);
+            if (f) return f;
        }
        return 0;
    }
@@ -216,7 +211,7 @@ public:
    bool updateLeaf(const T& key2value) { // T::value_type must be pair<string,string>, representing (key,value)
            PropertyConfig update = m_leaf->copyAndModify(key2value.begin(),key2value.end());
            if (!update.digest().valid()) return false;
-           m_ownedLeaf.reset( new PropertyConfig(update));
+           m_ownedLeaf.reset( new PropertyConfig{update} );
            m_leaf = m_ownedLeaf.get();
            return true;
    }
@@ -226,11 +221,11 @@ private:
 
    Lookup& lookup() {
         assert( (m_root==this && m_lookup.get()!=0 ) || (m_root!=this && m_lookup.get()==0 ));
-        return m_lookup.get()!=0 ? *m_lookup : root()->lookup();
+        return m_lookup.get() ? *m_lookup : root()->lookup();
    }
 
-   auto_ptr<Lookup>               m_lookup;
-   auto_ptr<PropertyConfig>       m_ownedLeaf;
+   unique_ptr<Lookup>             m_lookup;
+   unique_ptr<PropertyConfig>     m_ownedLeaf;
    vector<ConfigTree*>            m_parents;
    vector<ConfigTree*>            m_deps;
    vector<ConfigTree*>            m_ownedDeps;
@@ -247,15 +242,15 @@ DECLARE_TOOL_FACTORY( ConfigTreeEditor );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ConfigTreeEditor::ConfigTreeEditor( const string& type,
-                                    const string& name,
+ConfigTreeEditor::ConfigTreeEditor( string type,
+                                    string name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_propertyConfigSvc(0)
-  , m_configAccessSvc(0)
+  : GaudiTool ( std::move(type), std::move(name), parent )
+  , m_propertyConfigSvc{nullptr}
+  , m_configAccessSvc{nullptr}
 {
   declareInterface<IConfigTreeEditor>(this);
-  declareProperty( "ConfigAccessSvc",  s_configAccessSvc = "ConfigTarFileAccessSvc"  );
+  declareProperty( "ConfigAccessSvc",    s_configAccessSvc   = "ConfigTarFileAccessSvc"  );
   declareProperty( "PropertyConfigSvc",  s_propertyConfigSvc = "PropertyConfigSvc"  );
 }
 //=============================================================================
@@ -283,17 +278,22 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
 {
    ConfigTree tree( in, *m_propertyConfigSvc, label );
    typedef multimap<string,pair<string,string> > map_t;
-   map_t::const_iterator i = updates.begin();
+   auto i = updates.begin();
    while ( i!=updates.end() ) {
          ConfigTree* node = tree.findNodeWithLeaf(i->first);
-         if (node==0) {
+         if (!node) {
             error() << " could not locate requested leaf with name " << i->first << endmsg; 
             return ConfigTreeNode::digest_type::createInvalid();
          }
          // grab entire range matching this one
-         map_t::const_iterator j = updates.upper_bound(i->first);
+         auto j = updates.upper_bound(i->first);
          vector<pair<string,string> > mods;
-         for (;i!=j;++i) mods.push_back(i->second);
+         std::transform( i,j
+                       , std::back_inserter(mods)
+                       , [](const multimap<string,pair<string,string>>::value_type& mod) 
+                         { return mod.second; } 
+                       );
+         i=j;
          node->updateLeaf(mods);
    }
    return tree.write( *m_configAccessSvc );
@@ -305,16 +305,16 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
                                  const string& label) const {
 
    multimap<string,pair<string,string> >  mm;
-   for (vector<string>::const_iterator i = updates.begin(); i!=updates.end(); ++i) {
+   for (auto& i : updates) {
        //TODO: use common code in PropertyConfig for parsing updates...
-       string::size_type c = i->find(':');
+       auto c = i.find(':');
        Assert(c != string::npos ) ;
-       string lhs = i->substr(0,c);
-       string rhs = i->substr(c+1,string::npos);
-       string::size_type d = lhs.rfind('.');
-       string comp = lhs.substr(0,d);
-       string key  = lhs.substr(d+1,string::npos);
-       mm.insert( make_pair( comp, make_pair(key, rhs ) ) );
+       auto lhs = i.substr(0,c);
+       auto rhs = i.substr(c+1,string::npos);
+       auto d = lhs.rfind('.');
+       auto comp = lhs.substr(0,d);
+       auto key  = lhs.substr(d+1,string::npos);
+       mm.insert( { comp, { key, rhs } } );
    }
    return updateAndWrite( in, mm, label );
 }
@@ -325,14 +325,14 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
                                  const string& label) const {
 
    multimap<string,pair<string,string> >  mm;
-   for (map<string,vector<string> >::const_iterator i = updates.begin(); i!=updates.end(); ++i) {
-       for (vector<string>::const_iterator j = i->second.begin(); j!=i->second.end();++j) {
+   for (auto& i : updates) {
+       for (auto& j : i.second) {
             //TODO: use common code in PropertyConfig for parsing updates...
-           string::size_type c = j->find(':');
+           auto c = j.find(':');
            Assert(c != string::npos ) ;
-           string key = j->substr(0,c);
-           string value = j->substr(c+1,string::npos);
-           mm.insert( make_pair( i->first, make_pair(key, value ) ) );
+           auto key = j.substr(0,c);
+           auto value = j.substr(c+1,string::npos);
+           mm.insert( make_pair( i.first, make_pair(key, value ) ) );
        }
    }
    return updateAndWrite( in, mm, label );
