@@ -4,8 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2014-01-23 Thomas Blake
-	- Commit of RD lines
+! 2013-01-23 - Stefano Perazzini
+ - Corrected some line names in LineConfigDict_Charmless.py for Stripping20r{0,1}p3
+
+! 2014-01-23 - Thomas Blake
+ - Commit of RD lines
 
 ! 2014-01-22 - Anton Poluektov 
   - Copy Stripping20r0p3 config for B2OC to Stripping20r1p3

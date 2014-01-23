@@ -174,7 +174,7 @@ Bc2XK = {
                       # =========================================================================
                     },
     'STREAMS'     : { 'Bhadron' : ['StrippingBc2KstKBc2XK',
-                                   'StrippingBc2PhiKBc2XK']}
+                                   'StrippingBc2phiKBc2XK']}
     }
 
 ##
