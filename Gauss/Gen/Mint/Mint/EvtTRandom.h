@@ -16,6 +16,7 @@ namespace MINT {
   class IEvtRandom
   {
   public:
+    virtual ~IEvtRandom(){};
     virtual void SetSeed(UInt_t seed)=0;
     virtual UInt_t GetSeed() const=0;
     virtual double Rndm(Int_t i)=0;

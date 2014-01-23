@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2014-01-22 - Matt
+ - Fixed compile warning in DalitzBoxSet.cpp L78 _ready(_ready) -> _ready(other._ready)
+ - Fixed compile warning in EvtTRandom.h by adding virtual destructor.
+
 ! 2014-01-21 - Jeremy
  - Fixed an issue with the LASS function where the units of the Breit-Wigner were different to the non-resonant component
 
