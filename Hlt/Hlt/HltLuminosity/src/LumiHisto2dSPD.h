@@ -1,5 +1,5 @@
 // $Id: LumiHisto2dSPD.h,v 1.1 2009-01-27 21:21:39 aperezca Exp $
-#ifndef LUMIHISTO2DSPD_H 
+#ifndef LUMIHISTO2DSPD_H
 #define LUMIHISTO2DSPD_H 1
 
 // Include files
@@ -13,7 +13,7 @@
 #include "Event/RawEvent.h"
 #include "Event/L0DUBase.h"
 // from CaloDAQ
-#include "CaloDAQ/ICaloTriggerAdcsFromRaw.h" 
+#include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"
 #include "CaloDAQ/ICaloTriggerBitsFromRaw.h"
 // from DAQEvent
 #include "Event/RawEvent.h"
@@ -28,33 +28,31 @@
 //#include "GaudiAlg/GaudiHistoID.h"
 
 /** @class LumiHisto2dSPD LumiHisto2dSPD.h
- *  
+ *
  *
  *  @author Antonio Maria Perez Calero Yzquierdo
  *  @date   2009-01-27
  */
-class LumiHisto2dSPD : public Calo2Dview {
-public: 
-  /// Standard constructor
-  LumiHisto2dSPD( const std::string& name, ISvcLocator* pSvcLocator );
+class LumiHisto2dSPD : public Calo2Dview
+{
+  public:
+    /// Standard constructor
+    LumiHisto2dSPD( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~LumiHisto2dSPD( ); ///< Destructor
+    virtual ~LumiHisto2dSPD(); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+    virtual StatusCode initialize(); ///< Algorithm initialization
+    virtual StatusCode execute();    ///< Algorithm execution
+    virtual StatusCode finalize();   ///< Algorithm finalization
 
-private:
-  
-  //AIDA::IHistogram2D* HistoSPD;
-  //Calo2Dview 
-  
-  // Calo Data Provider
-  ICaloDataProvider* m_daq;
-  // Names
-  std::string m_readoutTool;
-  std::string m_htitle;
+  private:
+    // AIDA::IHistogram2D* HistoSPD;
+    // Calo2Dview
 
-
+    // Calo Data Provider
+    ICaloDataProvider* m_daq;
+    // Names
+    std::string m_readoutTool;
+    std::string m_htitle;
 };
 #endif // LUMIHISTO2DSPD_H

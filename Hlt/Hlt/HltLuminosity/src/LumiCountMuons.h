@@ -1,4 +1,4 @@
-#ifndef LUMICOUNTMUONS_H 
+#ifndef LUMICOUNTMUONS_H
 #define LUMICOUNTMUONS_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -10,18 +10,20 @@
  *
  *  (copied from LumiCountTracks)
  */
-class LumiCountMuons : public GaudiAlgorithm {
-public: 
-  LumiCountMuons( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~LumiCountMuons( );
+class LumiCountMuons : public GaudiAlgorithm
+{
+  public:
+    LumiCountMuons( const std::string& name, ISvcLocator* pSvcLocator );
+    virtual ~LumiCountMuons();
 
-  virtual StatusCode initialize();
-  virtual StatusCode execute   ();
-protected:
-  std::string m_CounterName;
-  std::string m_InputSelectionName;
-  std::string m_OutputContainerName;
-  double m_Threshold;
-  int m_Counter;
+    virtual StatusCode initialize();
+    virtual StatusCode execute();
+
+  protected:
+    std::string m_CounterName;
+    std::string m_InputSelectionName;
+    std::string m_OutputContainerName;
+    double m_Threshold;
+    int m_Counter;
 };
 #endif

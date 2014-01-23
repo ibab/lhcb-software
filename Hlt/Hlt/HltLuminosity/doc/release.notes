@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-01-23 - Gerhard Raven
+ - run clang-format to consistently format the code
+
 ! 2014-01-22 - Gerhard Raven
  - simplify some logic
  - simplify code using STL + C++11 lambdas
