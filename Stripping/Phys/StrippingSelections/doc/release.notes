@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-01-23 - Stefano Perazzini
+ - Added StrippingBc2XK in __init__.py
+
 ! 2014-01-23 - Pablo Ruiz Valls
  - Tightened pi0 cuts in StrippingBeauty2XGamma
  - Renamed Converted photon lines for consistency
