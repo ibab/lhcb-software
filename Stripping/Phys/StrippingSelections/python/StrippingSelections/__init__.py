@@ -256,6 +256,9 @@ import StrippingDarkBoson
 import StrippingZVTOP
 import StrippingK0s2Pi0MuMuLines
 
+import StrippingB2DHForTauMu
+
+
 from sys import modules as _modules
 _this = _modules[__name__]
 
