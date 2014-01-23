@@ -114,17 +114,11 @@ class GAUDI_API Candidate : public ContainedObject {
     void addToWorkers( const INamedInterface *worker );
     /// Get the initial stage
     const Hlt::Stage *initiatorStage() const {
-        if ( m_stages.empty() ) {
-            return NULL;
-        };
-        return m_stages.front();
+        return !m_stages.empty() ? m_stages.front().data() : 0;
     }
     /// Get the current stage
     const Hlt::Stage *currentStage() const {
-        if ( m_stages.empty() ) {
-            return NULL;
-        };
-        return m_stages.back();
+        return m_stages.empty() ?  m_stages.back().data() : 0;
     }
     /// Last worker (algorithm name)
     const Worker &lastWorker() const;
@@ -148,45 +142,45 @@ class GAUDI_API Candidate : public ContainedObject {
     bool hasStage( const Hlt::Stage *stage ) const;
     // ========================================================================
   public: // standard
-          // ========================================================================
-          /** easy accessors to various  underlying objects
-*
-*  @code
-*
-*   const Hlt::Candidate* candidate = ... ;
-*
-*   // get the stage
-*  const Hlt::Stage* stage = candidate->get<Hlt::Stage>() ;
-*
-*   // get the L0diMuon
-*  const Hlt::L0Dimuon* dimuon = candidate->get<Hlt::Stage>() ;
-*
-*  @endcode
-*
-*  @param slot the slot to be used for data extraction
-*     - 0 corresponds to the current stage ,
-*     - negative value corresponds to initiator stage
-*     - positive value corresponds to step-back in history
-*  @return the obejct
-*/
+   // ========================================================================
+   /** easy accessors to various  underlying objects
+    *
+    *  @code
+    *
+    *   const Hlt::Candidate* candidate = ... ;
+    *
+    *   // get the stage
+    *  const Hlt::Stage* stage = candidate->get<Hlt::Stage>() ;
+    *
+    *   // get the L0diMuon
+    *  const Hlt::L0Dimuon* dimuon = candidate->get<Hlt::Stage>() ;
+    *
+    *  @endcode
+    *
+    *  @param slot the slot to be used for data extraction
+    *     - 0 corresponds to the current stage ,
+    *     - negative value corresponds to initiator stage
+    *     - positive value corresponds to step-back in history
+    *  @return the obejct
+    */
     template <class TYPE> const TYPE *get( const int slot = 0 ) const;
     // ========================================================================
   public: // python-friendly access
-          // ========================================================================
-          /** easy accessor to various  underlying objects through bypassin
-*  of stage-object
-*  @see Hlt::Stage::get_
-*  @see Hlt::Candidate::get
-*  @param slot the slot to be used for data extraction
-*     - 0 corresponds to the current stage ,
-*     - negative value corresponds to initiator stage
-*     - positive value corresponds to step-back in history
-*  @return the obejct
-*/
+    // ========================================================================
+    /** easy accessor to various  underlying objects through bypassin
+     *  of stage-object
+     *  @see Hlt::Stage::get_
+     *  @see Hlt::Candidate::get
+     *  @param slot the slot to be used for data extraction
+     *     - 0 corresponds to the current stage ,
+     *     - negative value corresponds to initiator stage
+     *     - positive value corresponds to step-back in history
+     *  @return the obejct
+     */
     const ContainedObject *get_( const int slot = 0 ) const;
     // ========================================================================
   public: // standard
-          // ========================================================================
+    // ========================================================================
 #ifndef GOD_NOALLOC
     /// operator new
     static void *operator new( size_t size ) {
@@ -212,7 +206,7 @@ class GAUDI_API Candidate : public ContainedObject {
     static void operator delete( void *p, void *pObj ) {
         ::operator delete( p, pObj );
     }
-// ========================================================================
+    // ========================================================================
 #endif
     // ========================================================================
   private: // the data
@@ -223,24 +217,24 @@ class GAUDI_API Candidate : public ContainedObject {
     SmartRefVector<Hlt::Stage> m_stages; // Reference to the stages
     // ========================================================================
 }; // class Candidate
-// ==========================================================================
+// ============================================================================
 /// Definition of vector container type for Candidate
 typedef Hlt::Candidate::Container Candidates;
-// ==========================================================================
+// ============================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
 namespace Gaudi {
-// ==========================================================================
+// ============================================================================
 namespace Utils {
-// ========================================================================
+// ============================================================================
 /// print-out
 GAUDI_API
 std::ostream &toStream( const Hlt::Candidate *c, std::ostream &s );
 /// print-out
 GAUDI_API
 std::ostream &toStream( const Hlt::Stage *c, std::ostream &s );
-// ========================================================================
-} //                                            end of namespace Gaudi::Utils
+// ============================================================================
+} //                                              end of namespace Gaudi::Utils
   // ==========================================================================
 } //                                                     end of namespace Gaudi
 // ============================================================================
@@ -249,9 +243,9 @@ std::ostream &toStream( const Hlt::Stage *c, std::ostream &s );
 #include "Event/HltStage.h"
 // ============================================================================
 namespace Hlt {
-// ===========================================================================
+// ============================================================================
 // implementation of various methods for simple access
-// ===========================================================================
+// ============================================================================
 /** get the stage from the Hlt Candidate
  *  @param slot the slot to be used for data extraction
  *     - 0 corresponds to the current stage ,
@@ -261,11 +255,10 @@ namespace Hlt {
  */
 template <> inline const Hlt::Stage *Candidate::get<Stage>( const int slot ) const {
     if ( 0 == slot ) {
-        return currentStage();
-    } // current
-    else if ( 0 > slot ) {
-        return initiatorStage();
-    } // initator
+        return currentStage(); // current
+    } else if ( 0 > slot ) {
+        return initiatorStage(); // initator
+    }
     //
     if ( (unsigned)slot >= m_stages.size() ) return 0;
     //
@@ -282,8 +275,7 @@ template <> inline const Hlt::Stage *Candidate::get<Stage>( const int slot ) con
 template <>
 inline const LHCb::Track *Candidate::get<LHCb::Track>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<LHCb::Track>();
+    return _stage ? _stage->get<LHCb::Track>() : 0;
 }
 // ==========================================================================
 /** get the vertex from the Hlt Candidate
@@ -297,8 +289,7 @@ template <>
 inline const LHCb::RecVertex *
 Hlt::Candidate::get<LHCb::RecVertex>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<LHCb::RecVertex>();
+    return _stage ? _stage->get<LHCb::RecVertex>() : 0;
 }
 // ==========================================================================
 /** get the vertex from the Hlt Candidate
@@ -312,8 +303,7 @@ template <>
 inline const LHCb::VertexBase *
 Hlt::Candidate::get<LHCb::VertexBase>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<LHCb::VertexBase>();
+    return _stage ? _stage->get<LHCb::VertexBase>() : 0;
 }
 // ==========================================================================
 /** get the L0CaloCandidate from the Hlt Candidate
@@ -327,10 +317,7 @@ template <>
 inline const LHCb::L0CaloCandidate *
 Hlt::Candidate::get<LHCb::L0CaloCandidate>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( 0 == _stage ) {
-        return 0;
-    } // RETURN
-    return _stage->get<LHCb::L0CaloCandidate>();
+    return _stage ? _stage->get<LHCb::L0CaloCandidate>() : 0;
 }
 // ==========================================================================
 /** get the L0MuonCandidate from the Hlt Candidate
@@ -344,8 +331,7 @@ template <>
 inline const LHCb::L0MuonCandidate *
 Hlt::Candidate::get<LHCb::L0MuonCandidate>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<LHCb::L0MuonCandidate>();
+    return _stage ? _stage->get<LHCb::L0MuonCandidate>() : 0;
 }
 // ==========================================================================
 /** get the Multi-track from the Hlt Candidate
@@ -359,8 +345,7 @@ template <>
 inline const Hlt::MultiTrack *
 Hlt::Candidate::get<Hlt::MultiTrack>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<Hlt::MultiTrack>();
+    return _stage ? _stage->get<Hlt::MultiTrack>() : 0;
 }
 // ==========================================================================
 /** get the L0DiMuonCandidate from the Hlt Candidate
@@ -374,8 +359,7 @@ template <>
 inline const Hlt::L0DiMuonCandidate *
 Hlt::Candidate::get<Hlt::L0DiMuonCandidate>( const int slot ) const {
     const Hlt::Stage *_stage = this->get<Stage>( slot );
-    if ( !_stage ) return 0; // RETURN
-    return _stage->get<Hlt::L0DiMuonCandidate>();
+    return _stage ? _stage->get<Hlt::L0DiMuonCandidate>() : 0;
 }
 // ==========================================================================
 // printout
@@ -384,8 +368,7 @@ inline std::ostream &operator<<( std::ostream &str, const Candidate &obj ) {
 }
 // printout
 inline std::ostream &operator<<( std::ostream &str, const Candidate *obj ) {
-    if ( !obj ) return str << "<NULL>";
-    return obj->fillStream( str );
+    return obj ? obj->fillStream( str ) : ( str << "<NULL>" );
 }
 // ==========================================================================
 } //                                                       end of namespace Hlt
@@ -488,4 +471,3 @@ template <> struct CandidateId2Type<Hlt::Stage::HltStage> {
 // ============================================================================
 #endif /// HltEvent_Candidate_H
 // ============================================================================
-
