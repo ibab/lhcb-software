@@ -3,7 +3,7 @@
 # Maintainer : Bartek , Marcin
 #============================================================================
 package           LbPowheg
-version           v1r0p2
+version           v1r0p3
 
 # Structure, i.e. directories to process. 
 #============================================================================
