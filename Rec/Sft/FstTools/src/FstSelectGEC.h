@@ -2,21 +2,18 @@
  * Defines an algorithm that performs multiplicity cuts.
  * It requires Patrick Robbe's LLTCaloAlg to have run beforehands.
  *
+ * @author: Johannes Albrecht
  * @author: Kevin Dungs
- * @date:   2014-01-19
+ * @date:   2014-01-22
  */
 
 #ifndef __FSTSELECTGEC_H__
 #define __FSTSELECTGEC_H__
 
 #include <string>
-#include "GaudiAlg/GaudiHistoAlg.h"  //MB                                                                                                                                                                                      
 
-
-// from AIDA Histogramming  //MB                                                                                                                                                                                               
-#include "AIDA/IHistogram1D.h"  //MB                                                                                                                                                                                           
-#include "AIDA/IHistogram2D.h"  //MB   
-//#include "GaudiAlg/GaudiAlgorithm.h"
+#include "AIDA/IHistogram1D.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "TrackInterfaces/ITrackSelector.h"
 
 
@@ -24,8 +21,9 @@
  * An algorithm that performs multiplicity cuts.
  * It depends on LLTCaloAlg having run before.
  *
- * @author Kevin Dungs
- * @date   2014-01-17
+ * @author: Johannes Albrecht
+ * @author: Kevin Dungs
+ * @date:   2014-01-22
  */
 class FstSelectGEC : public GaudiHistoAlg {
     public:
@@ -38,7 +36,7 @@ class FstSelectGEC : public GaudiHistoAlg {
         int m_multiplicityCutECAL,  // above these values, events won't pass
             m_multiplicityCutHCAL;
         bool m_doNothing;  // flag that turns off the algorithm
-	AIDA::IHistogram1D * m_nCaloMult;
+	    AIDA::IHistogram1D *m_nCaloMult;
 	
 };
 

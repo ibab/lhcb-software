@@ -2,8 +2,9 @@
  * Implementation of an algorithm that performs multiplicity cuts.
  * It requires Patrick Robbe's LLTCaloAlg to have run beforehands.
  *
+ * @author: Johannes Albrecht
  * @author: Kevin Dungs
- * @date:   2014-01-19
+ * @date:   2014-01-22
  */
 
 #include "Event/L0CaloCandidate.h"
@@ -27,7 +28,7 @@ StatusCode FstSelectGEC::initialize() {
         return sc;
     }
 
-    m_nCaloMult=book(7 , "ECal and HCal multiplicity", 0.,12000.,400);
+    m_nCaloMult = book(7, "ECal and HCal multiplicity", 0., 12000., 400);
 
     if (m_doNothing) {
         info() << "This algorithm is turned off via the DoNothing property."
@@ -70,9 +71,10 @@ StatusCode FstSelectGEC::execute() {
         }
     }
 
-    m_nCaloMult->fill(multECAL+multHCAL);
-    setFilterPassed(
-  	    (multECAL+multHCAL) < (m_multiplicityCutECAL+m_multiplicityCutHCAL)   //     multHCAL < m_multiplicityCutHCAL
+    m_nCaloMult->fill(multECAL+multHCAL);  // Write multiplicity to histogram.
+
+    setFilterPassed(  // multHCAL < m_multiplicityCutHCAL
+  	    (multECAL + multHCAL) < (m_multiplicityCutECAL + m_multiplicityCutHCAL)
     );
 
     return StatusCode::SUCCESS;
