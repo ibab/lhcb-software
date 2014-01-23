@@ -6,27 +6,27 @@
 // ============================================================================
 #include "Event/HltL0DiMuonCandidate.h"
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  // Class ID definition
-  const CLID CLID_L0DiMuonCandidate = 7563;
-  // ==========================================================================
+namespace {
+// ==========================================================================
+// Class ID definition
+const CLID CLID_L0DiMuonCandidate = 7563;
+// ==========================================================================
 }
 // ============================================================================
-// Class ID 
+// Class ID
 // ============================================================================
-const CLID& Hlt::L0DiMuonCandidate::classID()
-{ return CLID_L0DiMuonCandidate; }
+const CLID &Hlt::L0DiMuonCandidate::classID() { return CLID_L0DiMuonCandidate; }
 // ============================================================================
 // Retrieve pointer to class definition structure
 // ============================================================================
-const CLID& Hlt::L0DiMuonCandidate::clID() const
-{ return Hlt::L0DiMuonCandidate::classID(); }
+const CLID &Hlt::L0DiMuonCandidate::clID() const {
+    return Hlt::L0DiMuonCandidate::classID();
+}
 // ============================================================================
-std::ostream& Hlt::L0DiMuonCandidate::fillStream(std::ostream& s) const
-{ return s ; }
+std::ostream &Hlt::L0DiMuonCandidate::fillStream( std::ostream &s ) const {
+    return s;
+}
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 

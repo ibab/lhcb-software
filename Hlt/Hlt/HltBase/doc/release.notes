@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-01-23 - Gerhard Raven
+ - use clang-format to make sure the code is formatted in a uniform way
+   (no changes other than formatting)
+
 ! 2014-01-22 - Gerhard Raven
  - more misc C++11 changes
  - replace string as history/worker with dedicated pair<INamedInterface*,string>,

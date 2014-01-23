@@ -1,5 +1,5 @@
 // $Id: HltBase.h,v 1.27 2010-03-27 22:08:30 graven Exp $
-#ifndef HLTBASE_HLTBASE_H 
+#ifndef HLTBASE_HLTBASE_H
 #define HLTBASE_HLTBASE_H 1
 
 // Include files
@@ -18,97 +18,90 @@
 #include "HltBase/IHltData.h"
 
 /** @class HltBase
- *  
+ *
  *  Provide services to HLT algorithms and tools
  *
  *  Functionality:
- *       Access to HltSvc, Hlt::Data 
+ *       Access to HltSvc, Hlt::Data
  *       Retrieve, register Hlt::Selections
  *       Histogram booking via options
- *       Counters 
+ *       Counters
  *
  *  Options
- *       HistogramDescriptor 
+ *       HistogramDescriptor
  *
  *  @author Hugo Ruiz Perez
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
 namespace LHCb {
-  class Track;
-  class RecVertex;
+class Track;
+class RecVertex;
 }
 
 class ISvcLocator;
 
-template <class BASE>
-class HltBase : public BASE {
-public:
+template <class BASE> class HltBase : public BASE {
+  public:
+    // Algorithm constructor
+    HltBase( std::string name, ISvcLocator *pSvcLocator );
 
-  // Algorithm constructor
-  HltBase( std::string name, ISvcLocator* pSvcLocator );
+    // Tool constructor
+    HltBase( std::string type, std::string name, const IInterface *parent );
 
-  // Tool constructor
-  HltBase ( std::string type   ,
-            std::string name   ,
-            const IInterface*  parent );
-  
-  // destructor
-  virtual ~HltBase( ); ///< Destructor
-  // initialize
-  virtual StatusCode initialize();
-  
-protected:
-  // initialize Histo 
-  AIDA::IHistogram1D* initializeHisto(const std::string& name,
-                              double min = 0., double max = 100., 
-                              int nBins = 100 );
+    // destructor
+    virtual ~HltBase(); ///< Destructor
+    // initialize
+    virtual StatusCode initialize();
 
-  // print info of this container
-  template <class CONT>
-  void printInfo(const std::string& title, const CONT& cont) {
-    BASE::info() << title << cont.size() << endmsg;
-    typedef typename CONT::const_iterator iter;
-    for (iter it = cont.begin(); it != cont.end(); ++it)
-      printInfo(title,*(*it));  
-  }
-  
-  // print info from track
-  void printInfo(const std::string& title, const LHCb::Track& track);
+  protected:
+    // initialize Histo
+    AIDA::IHistogram1D *initializeHisto( const std::string &name, double min = 0.,
+                                         double max = 100., int nBins = 100 );
 
-  // print info from vertex
-  void printInfo(const std::string& title, const LHCb::RecVertex& ver);
+    // print info of this container
+    template <class CONT>
+    void printInfo( const std::string &title, const CONT &cont ) {
+        BASE::info() << title << cont.size() << endmsg;
+        typedef typename CONT::const_iterator iter;
+        for ( iter it = cont.begin(); it != cont.end(); ++it )
+            printInfo( title, *( *it ) );
+    }
 
-  // print info from extraInfo
-  void printInfo(const std::string& title,
-                 const GaudiUtils::VectorMap<int,double>& info);
+    // print info from track
+    void printInfo( const std::string &title, const LHCb::Track &track );
 
-  IANNSvc&        annSvc() const;
-  Hlt::IRegister* regSvc() const ;
-  Hlt::IData*     hltSvc() const ;
+    // print info from vertex
+    void printInfo( const std::string &title, const LHCb::RecVertex &ver );
 
+    // print info from extraInfo
+    void printInfo( const std::string &title,
+                    const GaudiUtils::VectorMap<int, double> &info );
 
-  // returns the ID of the extraInfo by name
-  int hltInfoID(const std::string& name);
+    IANNSvc &annSvc() const;
+    Hlt::IRegister *regSvc() const;
+    Hlt::IData *hltSvc() const;
 
-private:
-  // returns the ID of the extraInfo by name
-  std::string hltInfoName(int id);
+    // returns the ID of the extraInfo by name
+    int hltInfoID( const std::string &name );
 
-  // delegate constructor
-  virtual void hltBaseConstructor();
+  private:
+    // returns the ID of the extraInfo by name
+    std::string hltInfoName( int id );
 
-  // Property to book histogram from options
-  SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
+    // delegate constructor
+    virtual void hltBaseConstructor();
 
-  // hlt data provider service
-  mutable Hlt::IData* m_hltSvc;
-  //
-  // hlt data registration service
-  mutable Hlt::IRegister* m_regSvc;
+    // Property to book histogram from options
+    SimpleProperty<std::map<std::string, Gaudi::Histo1DDef>> m_histoDescriptor;
 
-  // assigned names and numbers service...
-  mutable IANNSvc *m_hltANNSvc;
+    // hlt data provider service
+    mutable Hlt::IData *m_hltSvc;
+    //
+    // hlt data registration service
+    mutable Hlt::IRegister *m_regSvc;
 
+    // assigned names and numbers service...
+    mutable IANNSvc *m_hltANNSvc;
 };
 #endif // HLTBASE_HLTBASE_H

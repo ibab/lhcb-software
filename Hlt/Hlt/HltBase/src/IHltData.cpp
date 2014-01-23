@@ -1,29 +1,28 @@
 // $Id: IHltData.cpp,v 1.1 2009-12-23 10:34:13 graven Exp $
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // HltBase
 // ============================================================================
 #include "HltBase/IHltData.h"
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class Hlt::IData
- *  @date 2009-03-17 
+ *  @date 2009-03-17
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  */
 // ============================================================================
-// virtual & protected destructor 
+// virtual & protected destructor
 // ============================================================================
-Hlt::IData::~IData(){}
+Hlt::IData::~IData() {}
 // ============================================================================
-// Return the unique interface ID 
+// Return the unique interface ID
 // ============================================================================
-const InterfaceID& Hlt::IData::interfaceID() 
-{
-  static const InterfaceID s_IID { "Hlt::IData" , 2 , 0 } ;
-  return s_IID ; 
+const InterfaceID &Hlt::IData::interfaceID() {
+    static const InterfaceID s_IID{"Hlt::IData", 2, 0};
+    return s_IID;
 }
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
