@@ -165,7 +165,7 @@ StatusCode PatKShortChecker::execute() {
     if ( 0 == vert ) continue;
     const LHCb::MCParticle* mother = vert->mother();
     if ( 0 == mother ) continue;
-    if ( !mother->particleID().hasBottom() ) continue;
+    if ( !(mother->particleID().hasBottom() && ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ))) continue;
 
     m_counter[1]++;
 

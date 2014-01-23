@@ -280,7 +280,9 @@ StatusCode PatChecker::execute() {
             if ( 0 != mother->originVertex()->mother() ) {
               if  ( 310 == pid &&
                     2 == part->originVertex()->products().size()  &&
-                    mother->originVertex()->mother()->particleID().hasBottom() ) {
+                    mother->originVertex()->mother()->particleID().hasBottom() &&
+                    ( mother->originVertex()->mother()->particleID().isMeson() ||  
+                      mother->originVertex()->mother()->particleID().isBaryon() )) {
                 fromKsFromB = true;
               }
             }
