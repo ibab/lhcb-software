@@ -10,9 +10,10 @@ using namespace Gaudi::Math;
 using namespace LHCb;
 
 //! retun the closest point between the 2 tracks (first State)
-XYZPoint closestPoint( const Track &track1, const Track &track2 ) {
-    const State &state1 = track1.firstState();
-    const State &state2 = track2.firstState();
+XYZPoint closestPoint( const Track& track1, const Track& track2 )
+{
+    const State& state1 = track1.firstState();
+    const State& state2 = track2.firstState();
     XYZPoint pos1{0., 0., 0.};
     XYZPoint pos2{0., 0., 0.};
     closestPoints( Line<XYZPoint, XYZVector>( state1.position(), state1.slopes() ),
@@ -23,17 +24,19 @@ XYZPoint closestPoint( const Track &track1, const Track &track2 ) {
                     0.5 * ( pos1.z() + pos2.z() )};
 }
 
-void Hlt::VertexCreator::operator()( const LHCb::Track &track1,
-                                     const LHCb::Track &track2,
-                                     LHCb::RecVertex &ver ) const {
+void Hlt::VertexCreator::operator()( const LHCb::Track& track1,
+                                     const LHCb::Track& track2,
+                                     LHCb::RecVertex& ver ) const
+{
     ver.setPosition( closestPoint( track1, track2 ) );
-    ver.addToTracks( const_cast<Track *>( &track1 ) );
-    ver.addToTracks( const_cast<Track *>( &track2 ) );
+    ver.addToTracks( const_cast<Track*>( &track1 ) );
+    ver.addToTracks( const_cast<Track*>( &track2 ) );
 }
 
-XYZVector HltUtils::closestDistance( const Track &track1, const Track &track2 ) {
-    const State &state1 = track1.firstState();
-    const State &state2 = track2.firstState();
+XYZVector HltUtils::closestDistance( const Track& track1, const Track& track2 )
+{
+    const State& state1 = track1.firstState();
+    const State& state2 = track2.firstState();
     XYZPoint pos1{0., 0., 0.};
     XYZPoint pos2{0., 0., 0.};
     typedef Gaudi::Math::Line<Gaudi::XYZPoint, Gaudi::XYZVector> line_t;
@@ -44,9 +47,10 @@ XYZVector HltUtils::closestDistance( const Track &track1, const Track &track2 ) 
 }
 
 //! return the impact parameter significance
-double HltUtils::impactParameterSignificance( const LHCb::RecVertex &vertex,
-                                              const LHCb::Track &track ) {
-    const LHCb::State *state = track.stateAt( LHCb::State::ClosestToBeam );
+double HltUtils::impactParameterSignificance( const LHCb::RecVertex& vertex,
+                                              const LHCb::Track& track )
+{
+    const LHCb::State* state = track.stateAt( LHCb::State::ClosestToBeam );
     if ( !state ) state = &track.firstState();
     XYZVector delta( state->position() - vertex.position() ); // vertex to ref point
     XYZVector dir(
@@ -77,15 +81,16 @@ double HltUtils::impactParameterSignificance( const LHCb::RecVertex &vertex,
     return positive ? ips : -ips;
 }
 
-double HltUtils::vertexMatchIDsFraction( const LHCb::RecVertex &vref,
-                                         const LHCb::RecVertex &v ) {
+double HltUtils::vertexMatchIDsFraction( const LHCb::RecVertex& vref,
+                                         const LHCb::RecVertex& v )
+{
     assert( vref.tracks().size() == 2 );
-    const LHCb::Track &rtrack1 = *( vref.tracks()[0] );
-    const LHCb::Track &rtrack2 = *( vref.tracks()[1] );
+    const LHCb::Track& rtrack1 = *( vref.tracks()[0] );
+    const LHCb::Track& rtrack2 = *( vref.tracks()[1] );
 
     assert( v.tracks().size() == 2 );
-    const LHCb::Track &track1 = *( v.tracks()[0] );
-    const LHCb::Track &track2 = *( v.tracks()[1] );
+    const LHCb::Track& track1 = *( v.tracks()[0] );
+    const LHCb::Track& track2 = *( v.tracks()[1] );
 
     double r11 = HltUtils::matchIDsFraction( rtrack1, track1 );
     double r22 = HltUtils::matchIDsFraction( rtrack2, track2 );
@@ -98,20 +103,27 @@ double HltUtils::vertexMatchIDsFraction( const LHCb::RecVertex &vref,
     return f11 > f12 ? f11 : f12;
 }
 
-namespace {
-struct isMuonStation {
+namespace
+{
+struct isMuonStation
+{
     unsigned int m_station;
+
   public:
-    isMuonStation( unsigned int station ) : m_station( station ) {}
-    bool operator()( const LHCbID &id ) const {
+    isMuonStation( unsigned int station ) : m_station( station )
+    {
+    }
+    bool operator()( const LHCbID& id ) const
+    {
         return ( id.isMuon() && ( id.muonID().station() == m_station ) );
     }
 };
 }
 
-bool HltUtils::doShareM3( const Track &t1, const Track &t2 ) {
-    const std::vector<LHCbID> &l1 = t1.lhcbIDs();
-    const std::vector<LHCbID> &l2 = t2.lhcbIDs();
+bool HltUtils::doShareM3( const Track& t1, const Track& t2 )
+{
+    const std::vector<LHCbID>& l1 = t1.lhcbIDs();
+    const std::vector<LHCbID>& l2 = t2.lhcbIDs();
     // TODO: check whether it makes sense to always do the
     //       shortest list first...
     // if (l1.size()>l2.size()) return doShareM3(t2,t1);

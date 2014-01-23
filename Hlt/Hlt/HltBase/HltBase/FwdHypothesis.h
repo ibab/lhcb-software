@@ -16,29 +16,34 @@
  *  @author Johannes Albrecht
  *  @date   2008-01-21
  */
-class FwdHypothesis : virtual public Tf::IStationSelector {
+class FwdHypothesis : virtual public Tf::IStationSelector
+{
   public:
     /// Standard constructor
     FwdHypothesis( double ax, double bx, double cx, double dx, double ay, double by,
                    double errx, double erry, double zRef )
-        : m_ax{ax},
-          m_bx{bx},
-          m_cx{cx},
-          m_dx{dx},
-          m_ay{ay},
-          m_by{by},
-          m_errx{errx},
-          m_erry{erry},
-          m_zRef{zRef} {}
+        : m_ax{ax}
+        , m_bx{bx}
+        , m_cx{cx}
+        , m_dx{dx}
+        , m_ay{ay}
+        , m_by{by}
+        , m_errx{errx}
+        , m_erry{erry}
+        , m_zRef{zRef}
+    {
+    }
 
-    Tf::XYSearchWindow searchWindow( double z ) const {
+    Tf::XYSearchWindow searchWindow( double z ) const
+    {
         double dz = z - m_zRef;
         double x = m_ax + ( m_bx + dz * ( m_cx + dz * m_dx ) ) * dz;
         double y = m_ay + dz * m_by;
         return {x - m_errx, x + m_errx, y - m_erry, y + m_erry};
     }
 
-    void getValidity( double &zmin, double &zmax ) const {
+    void getValidity( double& zmin, double& zmax ) const
+    {
         zmin = StateParameters::ZBegT;
         zmax = StateParameters::ZEndT;
     }

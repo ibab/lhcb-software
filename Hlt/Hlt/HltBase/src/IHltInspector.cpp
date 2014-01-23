@@ -19,11 +19,14 @@
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
-Hlt::IInspector::~IInspector() {}
+Hlt::IInspector::~IInspector()
+{
+}
 // ============================================================================
 // Return the unique interface ID
 // ============================================================================
-const InterfaceID &Hlt::IInspector::interfaceID() {
+const InterfaceID& Hlt::IInspector::interfaceID()
+{
     static const InterfaceID s_IID{"Hlt::IInspector", 2, 0};
     return s_IID;
 }

@@ -24,10 +24,11 @@
  *  @date   2007-12-12
  */
 
-class IConfigTreeEditor : virtual public INamedInterface {
+class IConfigTreeEditor : virtual public INamedInterface
+{
   public:
     /// Return the interface ID
-    static const InterfaceID &interfaceID();
+    static const InterfaceID& interfaceID();
     virtual ~IConfigTreeEditor();
 
     // given a configuration tree identified by 'in', apply the changes
@@ -37,14 +38,14 @@ class IConfigTreeEditor : virtual public INamedInterface {
     // storage...
     // Failure is indicated by returning an 'invalid' digest.
     virtual ConfigTreeNode::digest_type
-    updateAndWrite( const ConfigTreeNode::digest_type &in,
+    updateAndWrite( const ConfigTreeNode::digest_type& in,
                     const std::multimap<
-                        std::string, std::pair<std::string, std::string> > &updates,
-                    const std::string &label ) const = 0;
+                        std::string, std::pair<std::string, std::string> >& updates,
+                    const std::string& label ) const = 0;
 
     virtual ConfigTreeNode::digest_type
-    updateAndWrite( const ConfigTreeNode::digest_type &in,
-                    const std::vector<std::string> &updates,
-                    const std::string &label ) const = 0;
+    updateAndWrite( const ConfigTreeNode::digest_type& in,
+                    const std::vector<std::string>& updates,
+                    const std::string& label ) const = 0;
 };
 #endif // ICONFIGTREEEDITOR_H

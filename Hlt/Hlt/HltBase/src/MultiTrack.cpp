@@ -27,7 +27,8 @@
  *                 by $Author: ibelyaev $
  */
 // ============================================================================
-namespace Hlt {
+namespace Hlt
+{
 // ==========================================================================
 /// Class ID definition
 const CLID CLID_MultiTrack = 7564;
@@ -36,32 +37,44 @@ const CLID CLID_MultiTrack = 7564;
 // ============================================================================
 // virtual descructor
 // ============================================================================
-Hlt::MultiTrack::~MultiTrack() {}
+Hlt::MultiTrack::~MultiTrack()
+{
+}
 // ============================================================================
-std::ostream &Hlt::MultiTrack::fillStream( std::ostream &s ) const {
+std::ostream& Hlt::MultiTrack::fillStream( std::ostream& s ) const
+{
     return s << "Hlt:MultiTrack(" << m_tracks.size() << ")";
 }
 // ============================================================================
-const CLID &Hlt::MultiTrack::clID() const { return Hlt::MultiTrack::classID(); }
+const CLID& Hlt::MultiTrack::clID() const
+{
+    return Hlt::MultiTrack::classID();
+}
 // ============================================================================
-const CLID &Hlt::MultiTrack::classID() { return Hlt::CLID_MultiTrack; }
+const CLID& Hlt::MultiTrack::classID()
+{
+    return Hlt::CLID_MultiTrack;
+}
 // ============================================================================
 // Update  References to tarcks
 // ============================================================================
-void Hlt::MultiTrack::setTracks( const Hlt::MultiTrack::Tracks &tracks ) {
+void Hlt::MultiTrack::setTracks( const Hlt::MultiTrack::Tracks& tracks )
+{
     m_tracks = tracks;
     removeFromTracks( nullptr );
 }
 // ============================================================================
 // Add to (pointer) reference to the stages
 // ============================================================================
-void Hlt::MultiTrack::addToTracks( const LHCb::Track *track ) {
+void Hlt::MultiTrack::addToTracks( const LHCb::Track* track )
+{
     if ( track ) m_tracks.push_back( track );
 }
 // ============================================================================
 // Remove from  reference to the tarcks
 // ============================================================================
-void Hlt::MultiTrack::removeFromTracks( const LHCb::Track *track ) {
+void Hlt::MultiTrack::removeFromTracks( const LHCb::Track* track )
+{
     auto it = std::remove( m_tracks.begin(), m_tracks.end(),
                            SmartRef<LHCb::Track>{track} );
     m_tracks.erase( it, m_tracks.end() );
@@ -69,7 +82,8 @@ void Hlt::MultiTrack::removeFromTracks( const LHCb::Track *track ) {
 // ============================================================================
 // Has track ?
 // ============================================================================
-bool Hlt::MultiTrack::hasTrack( const LHCb::Track *track ) const {
+bool Hlt::MultiTrack::hasTrack( const LHCb::Track* track ) const
+{
     return track && m_tracks.end() != std::find( m_tracks.begin(), m_tracks.end(),
                                                  SmartRef<LHCb::Track>{track} );
 }

@@ -15,7 +15,8 @@
 // ============================================================================
 // forward declarations
 // ============================================================================
-namespace LHCb {
+namespace LHCb
+{
 class Track;
 class RecVertex;
 }
@@ -26,30 +27,35 @@ class RecVertex;
  *  @author Jose Angel Hernando Morata
  *  @date   2007-12-08
  */
-template <class T1, class T2> class IBiFunctionTool : virtual public IAlgTool {
+template <class T1, class T2>
+class IBiFunctionTool : virtual public IAlgTool
+{
   public:
     // ==========================================================================
     // Return the interface ID
-    static const InterfaceID &interfaceID() {
+    static const InterfaceID& interfaceID()
+    {
         static const InterfaceID s_IBiFunctionTool( "IBiFunctionTool", 1, 1 );
         return s_IBiFunctionTool;
     }
     // ==========================================================================
-    virtual double function( const T1 &t1, const T2 &t2 ) = 0;
+    virtual double function( const T1& t1, const T2& t2 ) = 0;
     // ==========================================================================
   protected:
     // ==========================================================================
     /// virtual and protected destructor
-    virtual ~IBiFunctionTool() {}
+    virtual ~IBiFunctionTool()
+    {
+    }
     // ==========================================================================
 };
 // ============================================================================
-class ITrackBiFunctionTool
-    : virtual public IBiFunctionTool<LHCb::Track, LHCb::Track> {
+class ITrackBiFunctionTool : virtual public IBiFunctionTool<LHCb::Track, LHCb::Track>
+{
   public:
     // ==========================================================================
     /// Return the interface ID
-    static const InterfaceID &interfaceID();
+    static const InterfaceID& interfaceID();
     // ==========================================================================
   protected:
     // ==========================================================================
@@ -59,11 +65,12 @@ class ITrackBiFunctionTool
 };
 // ============================================================================
 class ITrackVertexBiFunctionTool
-    : virtual public IBiFunctionTool<LHCb::Track, LHCb::RecVertex> {
+    : virtual public IBiFunctionTool<LHCb::Track, LHCb::RecVertex>
+{
   public:
     // ==========================================================================
     /// Return the interface ID
-    static const InterfaceID &interfaceID();
+    static const InterfaceID& interfaceID();
     // ==========================================================================
   protected:
     // ==========================================================================
@@ -73,11 +80,12 @@ class ITrackVertexBiFunctionTool
 };
 // ============================================================================
 class IVertexBiFunctionTool
-    : virtual public IBiFunctionTool<LHCb::RecVertex, LHCb::RecVertex> {
+    : virtual public IBiFunctionTool<LHCb::RecVertex, LHCb::RecVertex>
+{
   public:
     // ==========================================================================
     /// Return the interface ID
-    static const InterfaceID &interfaceID();
+    static const InterfaceID& interfaceID();
     // ==========================================================================
   protected:
     // ==========================================================================

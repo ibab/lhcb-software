@@ -14,7 +14,8 @@
 // ============================================================================
 // the unique interface identifier
 // ============================================================================
-const InterfaceID &Hlt::IUnit::interfaceID() {
+const InterfaceID& Hlt::IUnit::interfaceID()
+{
     // the unique interafcx eidentifier
     static const InterfaceID s_IID{"Hlt::IUnit", 1, 0};
     //
@@ -23,7 +24,9 @@ const InterfaceID &Hlt::IUnit::interfaceID() {
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
-Hlt::IUnit::~IUnit() {}
+Hlt::IUnit::~IUnit()
+{
+}
 // ============================================================================
 // The END
 // ============================================================================

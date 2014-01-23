@@ -12,12 +12,13 @@
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 // ============================================================================
-HltAlgorithm::HltAlgorithm( std::string name, ISvcLocator *pSvcLocator,
+HltAlgorithm::HltAlgorithm( std::string name, ISvcLocator* pSvcLocator,
                             bool requireInputsToBeValid )
-    : HltBaseAlg( std::move( name ), pSvcLocator ),
-      m_requireInputsToBeValid{requireInputsToBeValid},
-      m_outputSelection{nullptr},
-      m_outputHisto{nullptr} {
+    : HltBaseAlg( std::move( name ), pSvcLocator )
+    , m_requireInputsToBeValid{requireInputsToBeValid}
+    , m_outputSelection{nullptr}
+    , m_outputHisto{nullptr}
+{
 
     declareProperty( "RequirePositiveInputs", m_requireInputsToBeValid );
     declareProperty( "HistogramUpdatePeriod", m_histogramUpdatePeriod = 0 );
@@ -30,17 +31,19 @@ HltAlgorithm::HltAlgorithm( std::string name, ISvcLocator *pSvcLocator,
     declareProperty( "MinCandidates", m_minNCandidates = 1 );
 }
 
-HltAlgorithm::~HltAlgorithm() {
+HltAlgorithm::~HltAlgorithm()
+{
     delete m_outputSelection;
     m_outputSelection = nullptr;
 }
 
-StatusCode HltAlgorithm::queryInterface( const InterfaceID &iid, void **ppvi ) {
+StatusCode HltAlgorithm::queryInterface( const InterfaceID& iid, void** ppvi )
+{
     /// valid placeholder?
     if ( !ppvi ) return StatusCode::FAILURE;
     ///
     if ( Hlt::IUnit::interfaceID() == iid ) {
-        *ppvi = static_cast<Hlt::IUnit *>( this );
+        *ppvi = static_cast<Hlt::IUnit*>( this );
         addRef();
         return StatusCode::SUCCESS; // RETURN
     }
@@ -48,7 +51,8 @@ StatusCode HltAlgorithm::queryInterface( const InterfaceID &iid, void **ppvi ) {
     return HltBaseAlg::queryInterface( iid, ppvi );
 }
 
-StatusCode HltAlgorithm::sysInitialize() {
+StatusCode HltAlgorithm::sysInitialize()
+{
     // Bypass the initialization if the algorithm
     // has already been initialized.
     if ( Gaudi::StateMachine::INITIALIZED <= FSMState() ) return StatusCode::SUCCESS;
@@ -62,17 +66,20 @@ StatusCode HltAlgorithm::sysInitialize() {
     return HltBaseAlg::sysInitialize();
 }
 
-StatusCode HltAlgorithm::sysFinalize() {
+StatusCode HltAlgorithm::sysFinalize()
+{
     m_callbacks.clear();
     return HltBaseAlg::sysFinalize();
 }
 
-StatusCode HltAlgorithm::restart() {
+StatusCode HltAlgorithm::restart()
+{
     info() << "restart of " << name() << " requested " << endmsg;
     return StatusCode::SUCCESS;
 }
 
-StatusCode HltAlgorithm::sysExecute() {
+StatusCode HltAlgorithm::sysExecute()
+{
 
     StatusCode sc = StatusCode::SUCCESS;
 
@@ -94,7 +101,8 @@ StatusCode HltAlgorithm::sysExecute() {
     return sc;
 }
 
-StatusCode HltAlgorithm::beginExecute() {
+StatusCode HltAlgorithm::beginExecute()
+{
     if ( !m_outputSelection ) {
         error() << " no output selection !!" << endmsg;
         return StatusCode::FAILURE;
@@ -103,7 +111,7 @@ StatusCode HltAlgorithm::beginExecute() {
     setFilterPassed( false );
 
     // we always process callbacks first...
-    for ( auto &i : m_callbacks ) {
+    for ( auto& i : m_callbacks ) {
         StatusCode status = i->execute();
         if ( !status ) {
         }
@@ -120,7 +128,8 @@ StatusCode HltAlgorithm::beginExecute() {
     return ok ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
-StatusCode HltAlgorithm::endExecute() {
+StatusCode HltAlgorithm::endExecute()
+{
     // TODO: add flushbacks here...
     auto n = m_outputSelection->size();
     counter( "#candidates accepted" ) += n;
@@ -129,7 +138,7 @@ StatusCode HltAlgorithm::endExecute() {
     setDecision( m_outputSelection->decision() );
 
     if ( produceHistos() ) {
-        for ( const auto &i : m_in ) {
+        for ( const auto& i : m_in ) {
             fill( m_inputHistos[i.second->id()], i.second->size(), 1. );
         }
 
@@ -143,10 +152,11 @@ StatusCode HltAlgorithm::endExecute() {
     return StatusCode::SUCCESS;
 }
 
-bool HltAlgorithm::verifyInput() {
+bool HltAlgorithm::verifyInput()
+{
     if ( !m_requireInputsToBeValid ) return true;
     bool ok = true;
-    for ( auto &i : m_in ) {
+    for ( auto& i : m_in ) {
         // propagate error status!
         if ( i.second->error() ) m_outputSelection->setError( true );
         ok = ok && i.second->decision();
@@ -164,7 +174,7 @@ bool HltAlgorithm::verifyInput() {
         warning() << endmsg;
         warning() << " Empty input or false input selection!" << endmsg;
         warning() << " Most likely due to a misconfiguration" << endmsg;
-        for ( const auto &i : m_in ) {
+        for ( const auto& i : m_in ) {
             warning() << " input selection " << i.second->id() << " decision "
                       << i.second->decision() << " processed "
                       << i.second->processed() << " error " << i.second->error()
@@ -178,7 +188,8 @@ bool HltAlgorithm::verifyInput() {
     return ok;
 }
 
-void HltAlgorithm::setDecision( bool accept ) {
+void HltAlgorithm::setDecision( bool accept )
+{
     setFilterPassed( accept );
     // the next forces the 'processed' flag to be set -- even if in some
     // cases 'accept' is obtained from m_outputSelection!!!
@@ -190,29 +201,36 @@ void HltAlgorithm::setDecision( bool accept ) {
 }
 
 // TODO: switch selection & declareInput around...
-const Hlt::Selection *
-HltAlgorithm::declareInput( const Gaudi::StringKey &key,
-                            const Hlt::IUnit::Client & ) const {
+const Hlt::Selection* HltAlgorithm::declareInput( const Gaudi::StringKey& key,
+                                                  const Hlt::IUnit::Client& ) const
+{
     return selection( key );
 }
 
-const Hlt::Selection *HltAlgorithm::selection( const Gaudi::StringKey &key,
-                                               const Hlt::IUnit::Client & ) const {
+const Hlt::Selection* HltAlgorithm::selection( const Gaudi::StringKey& key,
+                                               const Hlt::IUnit::Client& ) const
+{
     return selection( key );
 }
 
-class cmp_by_id {
+class cmp_by_id
+{
     Gaudi::StringKey m_id;
 
   public:
-    cmp_by_id( const Hlt::Selection &sel ) : m_id( sel.id() ) {}
-    template <typename T> bool operator()( const T &i ) {
+    cmp_by_id( const Hlt::Selection& sel ) : m_id( sel.id() )
+    {
+    }
+    template <typename T>
+    bool operator()( const T& i )
+    {
         return m_id == i.second->id();
     }
 };
 
-const Hlt::Selection *
-HltAlgorithm::selection( const Gaudi::StringKey &selname ) const {
+const Hlt::Selection*
+HltAlgorithm::selection( const Gaudi::StringKey& selname ) const
+{
     Assert( !selname.empty(), " selection(): no selection name" );
     if ( msgLevel( MSG::DEBUG ) ) debug() << " selection: " << selname << endmsg;
     StatusCode sc = regSvc()->registerInput( selname, this );
@@ -220,7 +238,7 @@ HltAlgorithm::selection( const Gaudi::StringKey &selname ) const {
         error() << " failed to register input " << selname << endmsg;
         Assert( 0, " selection:, failed to register input!" );
     }
-    const Hlt::Selection *sel = hltSvc()->selection( selname, this );
+    const Hlt::Selection* sel = hltSvc()->selection( selname, this );
     if ( !sel ) {
         error() << " failed to retrieve input " << selname << endmsg;
         Assert( 0, " selection:, failed to retrieve input!" );
@@ -230,7 +248,7 @@ HltAlgorithm::selection( const Gaudi::StringKey &selname ) const {
         if ( produceHistos() ) {
             bool ok = m_inputHistos.find( sel->id() ) == m_inputHistos.end();
             Assert( ok, "selection(): already input selection " + sel->id().str() );
-            m_inputHistos[sel->id()] = const_cast<HltAlgorithm *>( this )
+            m_inputHistos[sel->id()] = const_cast<HltAlgorithm*>( this )
                                            ->initializeHisto( sel->id().str() );
         }
         if ( msgLevel( MSG::DEBUG ) )
@@ -241,22 +259,23 @@ HltAlgorithm::selection( const Gaudi::StringKey &selname ) const {
     return sel;
 }
 
-StatusCode
-HltAlgorithm::registerOutput( Hlt::Selection *sel,
-                              const Hlt::IUnit::Client & /*client*/ ) const {
+StatusCode HltAlgorithm::registerOutput( Hlt::Selection* sel,
+                                         const Hlt::IUnit::Client& /*client*/ ) const
+{
     return registerOutput( sel );
 }
 
-StatusCode HltAlgorithm::registerOutput( Hlt::Selection *sel ) const {
+StatusCode HltAlgorithm::registerOutput( Hlt::Selection* sel ) const
+{
     if ( m_outputSelection ) {
         error() << "attempt to register a 2nd output selection: " << sel->id()
                 << " already have " << m_outputSelection->id() << endmsg;
         return StatusCode::FAILURE;
     }
     m_outputSelection = sel;
-    std::vector<const Hlt::Selection *> sels;
+    std::vector<const Hlt::Selection*> sels;
     sels.reserve( m_in.size() );
-    for ( const auto &i : m_in ) sels.push_back( i.second );
+    for ( const auto& i : m_in ) sels.push_back( i.second );
     sel->addInputSelectionIDs( sels.begin(), sels.end() );
     if ( msgLevel( MSG::DEBUG ) )
         debug() << " Output selection " << sel->id() << endmsg;
@@ -264,7 +283,7 @@ StatusCode HltAlgorithm::registerOutput( Hlt::Selection *sel ) const {
         error() << "Failed to add Selection" << sel->id() << endmsg;
         return StatusCode::FAILURE;
     }
-    m_outputHisto = const_cast<HltAlgorithm *>( this )
+    m_outputHisto = const_cast<HltAlgorithm*>( this )
                         ->initializeHisto( "Ncandidates", -0.5, 99.5, 100 );
     if ( msgLevel( MSG::DEBUG ) )
         debug() << " registered selection " << sel->id() << " type "
@@ -272,12 +291,14 @@ StatusCode HltAlgorithm::registerOutput( Hlt::Selection *sel ) const {
     return StatusCode::SUCCESS;
 }
 
-StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey &key,
-                                           const Hlt::IUnit::Client & ) const {
+StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey& key,
+                                           const Hlt::IUnit::Client& ) const
+{
     return registerTESInput( key );
 }
 
-StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey &key ) const {
+StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey& key ) const
+{
     auto sc = regSvc()->registerTESInput( key, this );
     if ( sc.isFailure() ) {
         return Error( "Unable to register INPUT TES location '" + key.str() + "'",
@@ -288,8 +309,9 @@ StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey &key ) const {
     return StatusCode::SUCCESS;
 }
 
-const DataObject *HltAlgorithm::tes( const Hlt::IUnit::Client & /* client  */,
-                                     const Hlt::IUnit::Key &location ) const {
+const DataObject* HltAlgorithm::tes( const Hlt::IUnit::Client& /* client  */,
+                                     const Hlt::IUnit::Key& location ) const
+{
     // check the location
     auto ifind = std::find( m_tes.begin(), m_tes.end(), location );
     //
@@ -298,9 +320,9 @@ const DataObject *HltAlgorithm::tes( const Hlt::IUnit::Client & /* client  */,
     //
 }
 
-Hlt::Selection *
-HltAlgorithm::retrieve( const Hlt::IUnit::Client & /* client */,
-                        const Gaudi::StringKey & /* key    */ ) const {
+Hlt::Selection* HltAlgorithm::retrieve( const Hlt::IUnit::Client& /* client */,
+                                        const Gaudi::StringKey& /* key    */ ) const
+{
     Error( "retrieve(): not implemented " );
     return nullptr;
 }

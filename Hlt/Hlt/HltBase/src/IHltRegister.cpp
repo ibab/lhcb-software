@@ -25,8 +25,9 @@
  *  @param alg the algorithm
  */
 // ============================================================================
-Hlt::IRegister::Lock::Lock( Hlt::IRegister *reg, const IAlgorithm *alg )
-    : m_register{reg}, m_algorithm{alg} {
+Hlt::IRegister::Lock::Lock( Hlt::IRegister* reg, const IAlgorithm* alg )
+    : m_register{reg}, m_algorithm{alg}
+{
     // ==========================================================================
     if ( !m_register ) {
         throw GaudiException( "Hlt::IRegister* points to NULL",
@@ -51,7 +52,8 @@ Hlt::IRegister::Lock::Lock( Hlt::IRegister *reg, const IAlgorithm *alg )
  *  @exception throw exception for invalid Hlt::IRrgister::unlock
  */
 // ============================================================================
-Hlt::IRegister::Lock::~Lock() {
+Hlt::IRegister::Lock::~Lock()
+{
     // ==========================================================================
     if ( !m_register ) {
         throw GaudiException( "Hlt::IRegister* points to NULL",
@@ -74,11 +76,14 @@ Hlt::IRegister::Lock::~Lock() {
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
-Hlt::IRegister::~IRegister() {}
+Hlt::IRegister::~IRegister()
+{
+}
 // ============================================================================
 // Return the unique interface ID
 // ============================================================================
-const InterfaceID &Hlt::IRegister::interfaceID() {
+const InterfaceID& Hlt::IRegister::interfaceID()
+{
     static const InterfaceID s_IID{"Hlt::IRegister", 2, 0};
     return s_IID;
 }

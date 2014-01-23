@@ -14,10 +14,12 @@
 
 static const InterfaceID IID_IL0ConfExtrapolator( "IL0ConfExtrapolator", 1, 0 );
 
-namespace LHCb {
+namespace LHCb
+{
 class Track;
 }
-namespace GAUDI {
+namespace GAUDI
+{
 class XYZPoint;
 }
 
@@ -36,37 +38,41 @@ class XYZPoint;
  *  @author Johannes Albrecht
  *  @date   2008-01-18
  */
-class IL0ConfExtrapolator : virtual public IAlgTool {
+class IL0ConfExtrapolator : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_IL0ConfExtrapolator; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_IL0ConfExtrapolator;
+    }
 
     // provides a third order polynomial for T-decoding
     // parametrization by Olivier Callot
-    virtual FwdHypothesis getFwdHypothesis( const LHCb::Track &veloTrack,
-                                            const LHCb::Track &caloTrack,
+    virtual FwdHypothesis getFwdHypothesis( const LHCb::Track& veloTrack,
+                                            const LHCb::Track& caloTrack,
                                             double nSigma ) const = 0;
 
     // provides a second order polynomial for T-decoding
-    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::Track &seedTrack,
+    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::Track& seedTrack,
                                                       double nSigma ) const = 0;
 
-    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::State &aState,
+    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::State& aState,
                                                       double nSigma ) const = 0;
 
-    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::State &aState,
+    virtual ParabolaHypothesis getParabolaHypothesis( const LHCb::State& aState,
                                                       double nSigmaX,
                                                       double nSigmaY ) const = 0;
 
     // Extrapolates the seed track to the end of T3
-    virtual void muon2T( const LHCb::Track &muonTrack,
-                         LHCb::State &stateAtT ) const = 0;
+    virtual void muon2T( const LHCb::Track& muonTrack,
+                         LHCb::State& stateAtT ) const = 0;
 
-    virtual void ecal2T( const LHCb::Track &ecalTrack, LHCb::State &statePosAtT,
-                         LHCb::State &stateNegAtT ) const = 0;
+    virtual void ecal2T( const LHCb::Track& ecalTrack, LHCb::State& statePosAtT,
+                         LHCb::State& stateNegAtT ) const = 0;
 
-    virtual void hcal2T( const LHCb::Track &ecalTrack, LHCb::State &statePosAtT,
-                         LHCb::State &stateNegAtT ) const = 0;
+    virtual void hcal2T( const LHCb::Track& ecalTrack, LHCb::State& statePosAtT,
+                         LHCb::State& stateNegAtT ) const = 0;
 
     // provides the Calo region for a given position
     // 0: ECal IP, 1: ECal MP, 2: ECal OP

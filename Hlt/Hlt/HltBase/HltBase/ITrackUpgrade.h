@@ -11,7 +11,8 @@
 #include "HltBase/ITrackView.h"
 
 // forward declarations
-namespace LHCb {
+namespace LHCb
+{
 class Track;
 class State;
 class LHCbID;
@@ -28,10 +29,14 @@ static const InterfaceID IID_ITrackUpgrade( "ITrackUpgrade", 3, 0 );
  *  @author Jose A. Hernando
  *  @date   2007-02-08
  */
-class ITrackUpgrade : virtual public IAlgTool {
+class ITrackUpgrade : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_ITrackUpgrade; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_ITrackUpgrade;
+    }
 
     // TODO: replace by different instances for different behaviour...
     //      i.e. remove this, and provide what you want when you do
@@ -40,17 +45,17 @@ class ITrackUpgrade : virtual public IAlgTool {
     // virtual StatusCode setReco(const std::string& name) = 0;
 
     /// upgrade a list of input tracks
-    virtual StatusCode upgrade( const std::vector<const LHCb::Track *> &itracks,
-                                std::vector<LHCb::Track *> &otracks ) = 0;
+    virtual StatusCode upgrade( const std::vector<const LHCb::Track*>& itracks,
+                                std::vector<LHCb::Track*>& otracks ) = 0;
 
     /// upgrade an input track
-    virtual StatusCode upgrade( const LHCb::Track &,
-                                std::vector<LHCb::Track *> &tracks ) = 0;
+    virtual StatusCode upgrade( const LHCb::Track&,
+                                std::vector<LHCb::Track*>& tracks ) = 0;
 
     /// returns the view of the seed track (the volume of search window)
-    virtual std::vector<Tf::IStationSelector *> view( const LHCb::Track &seed ) = 0;
+    virtual std::vector<Tf::IStationSelector*> view( const LHCb::Track& seed ) = 0;
 
     /// return the ids of the hits in the search window
-    virtual std::vector<LHCb::LHCbID> lhcbIDsInView( const LHCb::Track &seed ) = 0;
+    virtual std::vector<LHCb::LHCbID> lhcbIDsInView( const LHCb::Track& seed ) = 0;
 };
 #endif

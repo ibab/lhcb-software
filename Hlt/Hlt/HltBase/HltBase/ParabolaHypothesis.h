@@ -15,20 +15,24 @@
  *  @author Johannes Albrecht
  *  @date   2008-01-18
  */
-class ParabolaHypothesis : virtual public Tf::IStationSelector {
+class ParabolaHypothesis : virtual public Tf::IStationSelector
+{
   public:
     /// Standard constructor
     ParabolaHypothesis( double my, double cy, double ax, double bx, double cx,
                         double dx, double dy )
-        : m_y( my ),
-          m_cy( cy ),
-          m_ax( ax ),
-          m_bx( bx ),
-          m_cx( cx ),
-          m_dx( dx ),
-          m_dy( dy ) {}
+        : m_y( my )
+        , m_cy( cy )
+        , m_ax( ax )
+        , m_bx( bx )
+        , m_cx( cx )
+        , m_dx( dx )
+        , m_dy( dy )
+    {
+    }
 
-    Tf::XYSearchWindow searchWindow( double zz ) const {
+    Tf::XYSearchWindow searchWindow( double zz ) const
+    {
         double z = zz;
         double y = m_y * z + m_cy;
         double x = ( m_ax * z + m_bx ) * z + m_cx;
@@ -39,7 +43,8 @@ class ParabolaHypothesis : virtual public Tf::IStationSelector {
 #endif
     }
 
-    void getValidity( double &zmin, double &zmax ) const {
+    void getValidity( double& zmin, double& zmax ) const
+    {
         zmin = StateParameters::ZBegT;
         zmax = StateParameters::ZEndT;
     }

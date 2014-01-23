@@ -21,7 +21,8 @@
  */
 // ============================================================================
 // anonymous namespace to hide local symbols:
-namespace {
+namespace
+{
 // ===========================================================================
 /** @var CLID_Candidate
  *  Class ID definition
@@ -35,19 +36,24 @@ const Hlt::NamedEntry s_EMPTY{std::string{}};
 // ==========================================================================
 }
 
-
 // ============================================================================
 // Class ID
 // ============================================================================
-const CLID &Hlt::Candidate::classID() { return CLID_Candidate; }
+const CLID& Hlt::Candidate::classID()
+{
+    return CLID_Candidate;
+}
 // ============================================================================
 // Destructor
 // ============================================================================
-Hlt::Candidate::~Candidate() {}
+Hlt::Candidate::~Candidate()
+{
+}
 // ============================================================================
 // remove the stage
 // ============================================================================
-void Hlt::Candidate::removeFromStages( const Hlt::Stage *value ) {
+void Hlt::Candidate::removeFromStages( const Hlt::Stage* value )
+{
     auto iter =
         std::remove( m_stages.begin(), m_stages.end(), SmartRef<Hlt::Stage>{value} );
     m_stages.erase( iter, m_stages.end() );
@@ -55,14 +61,16 @@ void Hlt::Candidate::removeFromStages( const Hlt::Stage *value ) {
 // ===========================================================================
 // Update  Reference to the stages
 // ===========================================================================
-void Hlt::Candidate::setStages( const SmartRefVector<Hlt::Stage> &value ) {
+void Hlt::Candidate::setStages( const SmartRefVector<Hlt::Stage>& value )
+{
     m_stages.clear();
-    for ( auto &istage : value ) addToStages( istage );
+    for ( auto& istage : value ) addToStages( istage );
 }
 // ===========================================================================
 // Add to (pointer) reference to the stages
 // ===========================================================================
-void Hlt::Candidate::addToStages( const Hlt::Stage *value ) {
+void Hlt::Candidate::addToStages( const Hlt::Stage* value )
+{
     if ( value ) {
         m_stages.push_back( value );
         m_stages.back()->setOwner( this );
@@ -71,27 +79,31 @@ void Hlt::Candidate::addToStages( const Hlt::Stage *value ) {
 // ===========================================================================
 // Last worker (algorithm name)
 // ===========================================================================
-const Hlt::Candidate::Worker &Hlt::Candidate::lastWorker() const {
+const Hlt::Candidate::Worker& Hlt::Candidate::lastWorker() const
+{
     return !m_workers.empty() ? m_workers.back() : s_EMPTY;
 }
 // ===========================================================================
 // Add worker
 // ===========================================================================
-void Hlt::Candidate::addToWorkers( const INamedInterface *worker ) {
+void Hlt::Candidate::addToWorkers( const INamedInterface* worker )
+{
     if ( worker ) m_workers.emplace_back( *worker );
 }
 // ===========================================================================
 // Has stage ?
 // ===========================================================================
-bool Hlt::Candidate::hasStage( const Hlt::Stage *stage ) const {
+bool Hlt::Candidate::hasStage( const Hlt::Stage* stage ) const
+{
     return stage && m_stages.end() != std::find( m_stages.begin(), m_stages.end(),
                                                  SmartRef<Hlt::Stage>( stage ) );
 }
 // ============================================================================
 // the output operator
 // ============================================================================
-std::ostream &Hlt::Candidate::fillStream( std::ostream &s ) const {
-    s << "Hlt::Candidate/" << (const void *)this << " : ";
+std::ostream& Hlt::Candidate::fillStream( std::ostream& s ) const
+{
+    s << "Hlt::Candidate/" << (const void*)this << " : ";
     //
     Gaudi::Utils::toStream( m_stages.begin(), m_stages.end(), s, "\n\tStages: [ ",
                             "] ", " ,\n\t\t  " );
@@ -102,7 +114,8 @@ std::ostream &Hlt::Candidate::fillStream( std::ostream &s ) const {
 // ============================================================================
 // printout
 // ============================================================================
-std::ostream &Gaudi::Utils::toStream( const Hlt::Candidate *c, std::ostream &s ) {
+std::ostream& Gaudi::Utils::toStream( const Hlt::Candidate* c, std::ostream& s )
+{
     return c ? c->fillStream( s ) : ( s << "<NULL>" );
 }
 // ============================================================================
@@ -117,8 +130,9 @@ std::ostream &Gaudi::Utils::toStream( const Hlt::Candidate *c, std::ostream &s )
  *  @return the object
  */
 // ============================================================================
-const ContainedObject *Hlt::Candidate::get_( const int slot ) const {
-    auto *_stage = this->get<Stage>( slot );
+const ContainedObject* Hlt::Candidate::get_( const int slot ) const
+{
+    auto* _stage = this->get<Stage>( slot );
     return _stage ? _stage->get_() : nullptr;
 }
 // ============================================================================

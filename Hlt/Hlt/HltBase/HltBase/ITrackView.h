@@ -20,16 +20,20 @@ static const InterfaceID IID_ITrackView( "ITrackView", 1, 0 );
  *  @author Jose Angel Hernando Morata
  *  @date   2008-06-19
  */
-class ITrackView : virtual public IAlgTool {
+class ITrackView : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_ITrackView; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_ITrackView;
+    }
 
     // return view of a track (the volume search window open by this seed track)
-    virtual std::vector<Tf::IStationSelector *> view( const LHCb::Track &seed ) = 0;
+    virtual std::vector<Tf::IStationSelector*> view( const LHCb::Track& seed ) = 0;
 
     // return the hits on the volume search windows of this seed track
-    virtual std::vector<LHCb::LHCbID> lhcbIDsInView( const LHCb::Track &seed ) = 0;
+    virtual std::vector<LHCb::LHCbID> lhcbIDsInView( const LHCb::Track& seed ) = 0;
 
   protected:
   private:

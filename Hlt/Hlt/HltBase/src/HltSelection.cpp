@@ -7,12 +7,17 @@
 #include "Event/HltStage.h"
 #include "Event/HltCandidate.h"
 
-template <typename T> void Hlt::TSelection<T>::clean() {
+template <typename T>
+void Hlt::TSelection<T>::clean()
+{
     Selection::clean();
     m_candidates.clear();
 }
 
-template <typename T> Hlt::TSelection<T>::~TSelection() {}
+template <typename T>
+Hlt::TSelection<T>::~TSelection()
+{
+}
 
 // explicityly instantiate allowed instances...
 template class Hlt::TSelection<LHCb::Track>;

@@ -18,15 +18,20 @@ static const InterfaceID IID_IBiFunctionFactory( "IBiFunctionFactory", 1, 0 );
  *  @author Jose Angel Hernando Morata
  *  @date   2007-11-26
  */
-template <class T1, class T2> class IBiFunctionFactory : virtual public IAlgTool {
+template <class T1, class T2>
+class IBiFunctionFactory : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_IBiFunctionFactory; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_IBiFunctionFactory;
+    }
 
-    virtual bool command( const std::string &command,
-                          const std::string &value = "" ) = 0;
+    virtual bool command( const std::string& command,
+                          const std::string& value = "" ) = 0;
 
-    virtual zen::bifunction<T1, T2> *function( const std::string &functioname ) = 0;
-    virtual zen::bifilter<T1, T2> *filter( const std::string &filtername ) = 0;
+    virtual zen::bifunction<T1, T2>* function( const std::string& functioname ) = 0;
+    virtual zen::bifilter<T1, T2>* filter( const std::string& filtername ) = 0;
 };
 #endif // HLTBASE_IBiFUNCTIONSFACTORY_H

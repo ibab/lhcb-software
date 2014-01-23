@@ -3,7 +3,7 @@
 #ifndef HltEvent_CACHE_H_
 #define HltEvent_CACHE_H_
 // ============================================================================
-// Incldue files
+// Include files
 // ============================================================================
 // STD & STL
 // ============================================================================
@@ -24,7 +24,8 @@
  *  @brief  Cache implementation for stage objects
  */
 // ============================================================================
-namespace Hlt {
+namespace Hlt
+{
 // ==========================================================================
 using Gaudi::StringKey;
 using GaudiUtils::VectorMap;
@@ -42,7 +43,8 @@ using GaudiUtils::VectorMap;
  * @see Hlt::Stage
  */
 // ==========================================================================
-class Cache {
+class Cache
+{
     // ========================================================================
   public:
     // ========================================================================
@@ -66,36 +68,40 @@ class Cache {
      * @brief Check if cache contains value with the specified key
      * @param[in] key
      */
-    bool has( const StringKey &key ) const;
+    bool has( const StringKey& key ) const;
     /**
      * @brief Erase all values with the specified key
      * @param[in] key
      */
-    void erase( const StringKey &key );
+    void erase( const StringKey& key );
     /**
      * @brief Return a list of existent keys
      */
-    const std::vector<const StringKey *> keys() const;
+    const std::vector<const StringKey*> keys() const;
     /// Check if cache contains value with the specified key and type
-    template <typename T> bool has_( const StringKey &key ) const;
+    template <typename T>
+    bool has_( const StringKey& key ) const;
     /** Add value with the specified type and key
      *  @return true if value was added and false if we try insert an existing key
      */
-    template <typename T> bool insert( const StringKey &key, const T &value );
+    template <typename T>
+    bool insert( const StringKey& key, const T& value );
     /** Update value with the specified type and key. If the value with the same
      * key already exists it will be replaced.
      */
-    template <typename T> void update( const StringKey &key, const T &value );
+    template <typename T>
+    void update( const StringKey& key, const T& value );
     /**
      * Get the value associated with the specified type and key.
      * @returns The value associated with the specified type and key. If the such
      * value does not exists def is returned.
      */
-    template <typename T> const T &info( const StringKey &key, const T &def ) const;
+    template <typename T>
+    const T& info( const StringKey& key, const T& def ) const;
     /// Cache to string
     std::string toString() const;
     /// Fill the ASCII output stream
-    std::ostream &fillStream( std::ostream &s ) const;
+    std::ostream& fillStream( std::ostream& s ) const;
     // ========================================================================
   private:
     // ========================================================================
@@ -104,36 +110,47 @@ class Cache {
     DoubleMap m_double_store;
     StringMap m_string_store;
     // ========================================================================
-    template <typename T> void _insert( const StringKey &key, const T &value );
-    template <typename T> void _update( const StringKey &key, const T &value );
+    template <typename T>
+    void _insert( const StringKey& key, const T& value );
+    template <typename T>
+    void _update( const StringKey& key, const T& value );
     // ========================================================================
 }; // Cache
 // ==========================================================================
 template <typename T>
-inline bool Cache::insert( const StringKey &key, const T &value ) {
+inline bool Cache::insert( const StringKey& key, const T& value )
+{
     if ( has( key ) ) return false;
     _insert( key, value );
     return true;
 }
 template <typename T>
-inline void Cache::update( const StringKey &key, const T &value ) {
+inline void Cache::update( const StringKey& key, const T& value )
+{
     erase( key );
     _update( key, value );
 }
 // ==========================================================================
 // Boolean
 // ==========================================================================
-template <> inline bool Cache::has_<bool>( const StringKey &key ) const {
+template <>
+inline bool Cache::has_<bool>( const StringKey& key ) const
+{
     return m_boolean_store.find( key ) != m_boolean_store.end();
 }
-template <> inline void Cache::_insert( const StringKey &key, const bool &value ) {
+template <>
+inline void Cache::_insert( const StringKey& key, const bool& value )
+{
     m_boolean_store.insert( key, value );
 }
-template <> inline void Cache::_update( const StringKey &key, const bool &value ) {
+template <>
+inline void Cache::_update( const StringKey& key, const bool& value )
+{
     m_boolean_store.update( key, value );
 }
 template <>
-inline const bool &Cache::info<bool>( const StringKey &key, const bool &def ) const {
+inline const bool& Cache::info<bool>( const StringKey& key, const bool& def ) const
+{
 #ifdef __GCCXML__
     throw "GCCXML stub -- should never be run!";
     return def;
@@ -145,17 +162,24 @@ inline const bool &Cache::info<bool>( const StringKey &key, const bool &def ) co
 // ==========================================================================
 // Integer
 // ==========================================================================
-template <> inline bool Cache::has_<int>( const StringKey &key ) const {
+template <>
+inline bool Cache::has_<int>( const StringKey& key ) const
+{
     return m_integer_store.find( key ) != m_integer_store.end();
 }
-template <> inline void Cache::_insert( const StringKey &key, const int &value ) {
+template <>
+inline void Cache::_insert( const StringKey& key, const int& value )
+{
     m_integer_store.insert( key, value );
 }
-template <> inline void Cache::_update( const StringKey &key, const int &value ) {
+template <>
+inline void Cache::_update( const StringKey& key, const int& value )
+{
     m_integer_store.update( key, value );
 }
 template <>
-inline const int &Cache::info<int>( const StringKey &key, const int &def ) const {
+inline const int& Cache::info<int>( const StringKey& key, const int& def ) const
+{
 #ifdef __GCCXML__
     throw "GCCXML stub -- should never be run!";
     return def;
@@ -167,18 +191,25 @@ inline const int &Cache::info<int>( const StringKey &key, const int &def ) const
 // ==========================================================================
 // Double
 // ==========================================================================
-template <> inline bool Cache::has_<double>( const StringKey &key ) const {
+template <>
+inline bool Cache::has_<double>( const StringKey& key ) const
+{
     return m_double_store.find( key ) != m_double_store.end();
 }
-template <> inline void Cache::_insert( const StringKey &key, const double &value ) {
+template <>
+inline void Cache::_insert( const StringKey& key, const double& value )
+{
     m_double_store.insert( key, value );
 }
-template <> inline void Cache::_update( const StringKey &key, const double &value ) {
+template <>
+inline void Cache::_update( const StringKey& key, const double& value )
+{
     m_double_store.update( key, value );
 }
 template <>
-inline const double &Cache::info<double>( const StringKey &key,
-                                          const double &def ) const {
+inline const double& Cache::info<double>( const StringKey& key,
+                                          const double& def ) const
+{
 #ifdef __GCCXML__
     throw "GCCXML stub -- should never be run!";
     return def;
@@ -190,20 +221,25 @@ inline const double &Cache::info<double>( const StringKey &key,
 // ==========================================================================
 // String
 // ==========================================================================
-template <> inline bool Cache::has_<std::string>( const StringKey &key ) const {
+template <>
+inline bool Cache::has_<std::string>( const StringKey& key ) const
+{
     return m_string_store.find( key ) != m_string_store.end();
 }
 template <>
-inline void Cache::_insert( const StringKey &key, const std::string &value ) {
+inline void Cache::_insert( const StringKey& key, const std::string& value )
+{
     m_string_store.insert( key, value );
 }
 template <>
-inline void Cache::_update( const StringKey &key, const std::string &value ) {
+inline void Cache::_update( const StringKey& key, const std::string& value )
+{
     m_string_store.update( key, value );
 }
 template <>
-inline const std::string &Cache::info<std::string>( const StringKey &key,
-                                                    const std::string &def ) const {
+inline const std::string& Cache::info<std::string>( const StringKey& key,
+                                                    const std::string& def ) const
+{
 #ifdef __GCCXML__
     throw "GCCXML stub -- should never be run!";
     return def;
@@ -213,43 +249,56 @@ inline const std::string &Cache::info<std::string>( const StringKey &key,
 #endif
 }
 // =========================================================================
-inline bool Cache::has( const StringKey &key ) const {
+inline bool Cache::has( const StringKey& key ) const
+{
     return has_<bool>( key ) || has_<int>( key ) || has_<double>( key ) ||
            has_<std::string>( key );
 }
 // ==========================================================================
-inline void Cache::erase( const StringKey &key ) {
+inline void Cache::erase( const StringKey& key )
+{
     m_boolean_store.erase( key );
     m_integer_store.erase( key );
     m_double_store.erase( key );
     m_string_store.erase( key );
 }
 // ==========================================================================
-inline std::ostream &operator<<( std::ostream &str, const Cache &obj ) {
+inline std::ostream& operator<<( std::ostream& str, const Cache& obj )
+{
     return obj.fillStream( str );
 }
 // ==========================================================================
-inline std::string Cache::toString() const {
+inline std::string Cache::toString() const
+{
     std::ostringstream s;
     fillStream( s );
     return s.str();
 }
 // ==========================================================================
-template <unsigned int> struct CacheValues;
+template <unsigned int>
+struct CacheValues;
 // ==========================================================================
-template <> struct CacheValues<Hlt::Cache::Int> {
+template <>
+struct CacheValues<Hlt::Cache::Int>
+{
     typedef int Type;
 };
 // ==========================================================================
-template <> struct CacheValues<Hlt::Cache::Bool> {
+template <>
+struct CacheValues<Hlt::Cache::Bool>
+{
     typedef bool Type;
 };
 // ==========================================================================
-template <> struct CacheValues<Hlt::Cache::Double> {
+template <>
+struct CacheValues<Hlt::Cache::Double>
+{
     typedef double Type;
 };
 // ==========================================================================
-template <> struct CacheValues<Hlt::Cache::String> {
+template <>
+struct CacheValues<Hlt::Cache::String>
+{
     typedef std::string Type;
 };
 // ==========================================================================

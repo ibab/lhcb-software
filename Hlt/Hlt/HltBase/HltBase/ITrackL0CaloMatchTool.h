@@ -10,7 +10,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // forward declarations
-namespace LHCb {
+namespace LHCb
+{
 class L0CaloCandidate;
 class Track;
 }
@@ -24,12 +25,16 @@ static const InterfaceID IID_ITrackL0CaloMatchTool( "ITrackL0CaloMatchTool", 1, 
  *  @author Jose Angel Hernando Morata
  *  @date   2007-01-11
  */
-class ITrackL0CaloMatchTool : virtual public IAlgTool {
+class ITrackL0CaloMatchTool : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_ITrackL0CaloMatchTool; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_ITrackL0CaloMatchTool;
+    }
 
-    virtual double match( const LHCb::Track &track,
-                          const LHCb::L0CaloCandidate &calo ) = 0;
+    virtual double match( const LHCb::Track& track,
+                          const LHCb::L0CaloCandidate& calo ) = 0;
 };
 #endif // HLTBASE_ITRACKL0CALOMATCHTOOL_H

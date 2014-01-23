@@ -24,10 +24,12 @@
 // ============================================================================
 // Forward declarations
 // ============================================================================
-namespace Hlt {
+namespace Hlt
+{
 // ==========================================================================
 // Namespace for locations in TDS
-namespace MultiTrackLocation {
+namespace MultiTrackLocation
+{
 const std::string Default = "Hlt/MultiTracks";
 }
 // ==========================================================================
@@ -39,13 +41,14 @@ const std::string Default = "Hlt/MultiTracks";
  * created Mon Jun 14 15:57:48 2010
  *
  */
-class MultiTrack : public ContainedObject {
+class MultiTrack : public ContainedObject
+{
     // ========================================================================
   public: // related types
     // ========================================================================
     /// typedef for std::vector of MultiTrack
-    typedef std::vector<MultiTrack *> Vector;
-    typedef std::vector<const MultiTrack *> ConstVector;
+    typedef std::vector<MultiTrack*> Vector;
+    typedef std::vector<const MultiTrack*> ConstVector;
     /// typedef for ObjectVector of MultiTrack
     typedef ObjectVector<MultiTrack> Container;
     /// The container type for shared di-tracks (without ownership)
@@ -58,38 +61,50 @@ class MultiTrack : public ContainedObject {
   public: // constrcuted & desctructor
     // ========================================================================
     /// Default Constructor
-    MultiTrack() {}
+    MultiTrack()
+    {
+    }
     /// Default Destructor
     virtual ~MultiTrack();
     // ========================================================================
     // Retrieve pointer to class definition structure
-    virtual const CLID &clID() const;
-    static const CLID &classID();
+    virtual const CLID& clID() const;
+    static const CLID& classID();
     /// Fill the ASCII output stream
-    virtual std::ostream &fillStream( std::ostream &s ) const;
+    virtual std::ostream& fillStream( std::ostream& s ) const;
     // ========================================================================
   public: // constrcuted & desctructor
     // ========================================================================
     /// get the tracks
-    inline Tracks &tracks() { return m_tracks; }
+    inline Tracks& tracks()
+    {
+        return m_tracks;
+    }
     /// get the tracks
-    inline const Tracks &tracks() const { return m_tracks; }
+    inline const Tracks& tracks() const
+    {
+        return m_tracks;
+    }
     /// Update  References to tarcks
-    void setTracks( const Tracks &tracks );
+    void setTracks( const Tracks& tracks );
     /// Add to (pointer) reference to the stages
-    void addToTracks( const LHCb::Track *track );
+    void addToTracks( const LHCb::Track* track );
     /// Remove from  reference to the tarcks
-    void removeFromTracks( const LHCb::Track *track );
+    void removeFromTracks( const LHCb::Track* track );
     /// Clear  Reference to the tarcks
-    void clearTracks() { m_tracks.clear(); }
+    void clearTracks()
+    {
+        m_tracks.clear();
+    }
     /// Has track ?
-    bool hasTrack( const LHCb::Track *track ) const;
+    bool hasTrack( const LHCb::Track* track ) const;
     // ========================================================================
   public:
 // ========================================================================
 #ifndef GOD_NOALLOC
     /// operator new
-    static void *operator new( size_t size ) {
+    static void* operator new( size_t size )
+    {
         return (
             sizeof( MultiTrack ) == size
                 ? boost::singleton_pool<MultiTrack, sizeof( MultiTrack )>::malloc()
@@ -99,12 +114,14 @@ class MultiTrack : public ContainedObject {
     /// placement operator new
     /// it is needed by libstdc++ 3.2.3 (e.g. in std::vector)
     /// it is not needed in libstdc++ >= 3.4
-    static void *operator new( size_t size, void *pObj ) {
+    static void* operator new( size_t size, void* pObj )
+    {
         return ::operator new( size, pObj );
     }
 
     /// operator delete
-    static void operator delete( void *p ) {
+    static void operator delete( void* p )
+    {
         boost::singleton_pool<MultiTrack, sizeof( MultiTrack )>::is_from( p )
             ? boost::singleton_pool<MultiTrack, sizeof( MultiTrack )>::free( p )
             : ::operator delete( p );
@@ -112,7 +129,8 @@ class MultiTrack : public ContainedObject {
 
     /// placement operator delete
     /// not sure if really needed, but it does not harm
-    static void operator delete( void *p, void *pObj ) {
+    static void operator delete( void* p, void* pObj )
+    {
         ::operator delete( p, pObj );
     }
 #endif
@@ -130,7 +148,8 @@ class MultiTrack : public ContainedObject {
 /// Definition of vector container type for MultiTrack
 typedef ObjectVector<MultiTrack> MultiTracks;
 /// outptu operator
-inline std::ostream &operator<<( std::ostream &str, const MultiTrack &obj ) {
+inline std::ostream& operator<<( std::ostream& str, const MultiTrack& obj )
+{
     return obj.fillStream( str );
 }
 // ==========================================================================

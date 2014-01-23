@@ -33,10 +33,11 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
-class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
+class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
+{
   public:
     // Standard constructor
-    HltAlgorithm( std::string name, ISvcLocator *pSvcLocator,
+    HltAlgorithm( std::string name, ISvcLocator* pSvcLocator,
                   bool requireInputsToBeValid = true );
 
     // Standard destructor
@@ -49,26 +50,27 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
     // restart algorithm
     virtual StatusCode restart();
 
-    StatusCode queryInterface( const InterfaceID &iid, void **ppvi );
+    StatusCode queryInterface( const InterfaceID& iid, void** ppvi );
 
     // retrieve a selection
-    const Hlt::Selection *selection( const Gaudi::StringKey &key ) const;
-    const Hlt::Selection *selection( const Gaudi::StringKey &key,
-                                     const Hlt::IUnit::Client & ) const;
-    const Hlt::Selection *declareInput( const Gaudi::StringKey &,
-                                        const Hlt::IUnit::Client & ) const;
-    StatusCode registerTESInput( const Gaudi::StringKey &,
-                                 const Hlt::IUnit::Client & ) const;
-    StatusCode registerTESInput( const Gaudi::StringKey & ) const;
-    const DataObject *tes( const Hlt::IUnit::Client &,
-                           const Gaudi::StringKey & ) const;
-    Hlt::Selection *retrieve( const Hlt::IUnit::Client &,
-                              const Gaudi::StringKey & ) const;
+    const Hlt::Selection* selection( const Gaudi::StringKey& key ) const;
+    const Hlt::Selection* selection( const Gaudi::StringKey& key,
+                                     const Hlt::IUnit::Client& ) const;
+    const Hlt::Selection* declareInput( const Gaudi::StringKey&,
+                                        const Hlt::IUnit::Client& ) const;
+    StatusCode registerTESInput( const Gaudi::StringKey&,
+                                 const Hlt::IUnit::Client& ) const;
+    StatusCode registerTESInput( const Gaudi::StringKey& ) const;
+    const DataObject* tes( const Hlt::IUnit::Client&,
+                           const Gaudi::StringKey& ) const;
+    Hlt::Selection* retrieve( const Hlt::IUnit::Client&,
+                              const Gaudi::StringKey& ) const;
 
     // retrieve a selection with candidates of type T (e.g. Track)
     template <class T>
-    const Hlt::TSelection<T> &retrieveTSelection( const Gaudi::StringKey &key ) {
-        const Hlt::TSelection<T> *sel =
+    const Hlt::TSelection<T>& retrieveTSelection( const Gaudi::StringKey& key )
+    {
+        const Hlt::TSelection<T>* sel =
             ( key.str().substr( 0, 4 ) == "TES:" )
                 ? this->registerTESSelection<T>(
                       Gaudi::StringKey( key.str().substr( 4 ) ) )
@@ -80,16 +82,18 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
     }
 
     // register an output selection of no candidates
-    Hlt::Selection &registerSelection( const Gaudi::StringKey &key ) {
-        Hlt::Selection *tsel = new Hlt::Selection( key );
+    Hlt::Selection& registerSelection( const Gaudi::StringKey& key )
+    {
+        Hlt::Selection* tsel = new Hlt::Selection( key );
         registerOutput( tsel ).ignore();
         return *tsel;
     }
 
     // register an output selection with candidates of T type (e.g. Track)
     template <typename T>
-    Hlt::TSelection<T> &registerTSelection( const Gaudi::StringKey &key ) {
-        Hlt::TSelection<T> *tsel = new Hlt::TSelection<T>( key );
+    Hlt::TSelection<T>& registerTSelection( const Gaudi::StringKey& key )
+    {
+        Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>( key );
         registerOutput( tsel ).ignore();
         return *tsel;
     }
@@ -111,7 +115,8 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
     StatusCode sysExecute();
 
     template <typename T>
-    const Hlt::TSelection<T> *registerTESSelection( const Gaudi::StringKey &key ) {
+    const Hlt::TSelection<T>* registerTESSelection( const Gaudi::StringKey& key )
+    {
         // must ALWAYS add a callback to our stack for this
         auto sc = registerTESInput( key );
         if ( sc.isFailure() ) {
@@ -138,16 +143,16 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
 
     // set this selection as output, to be monitor, and to decide if the
     // event pass
-    StatusCode registerOutput( Hlt::Selection *sel,
-                               const Hlt::IUnit::Client &client ) const;
-    StatusCode registerOutput( Hlt::Selection *sel ) const;
+    StatusCode registerOutput( Hlt::Selection* sel,
+                               const Hlt::IUnit::Client& client ) const;
+    StatusCode registerOutput( Hlt::Selection* sel ) const;
 
     // (owner!) pointer to the output selection
-    mutable Hlt::Selection *m_outputSelection;
+    mutable Hlt::Selection* m_outputSelection;
 
     /// container of keys
-    typedef GaudiUtils::VectorMap<Key, Hlt::Selection *> OMap;
-    typedef GaudiUtils::VectorMap<Key, const Hlt::Selection *> IMap;
+    typedef GaudiUtils::VectorMap<Key, Hlt::Selection*> OMap;
+    typedef GaudiUtils::VectorMap<Key, const Hlt::Selection*> IMap;
     typedef std::vector<Key> LVct;
     /// keys for all "input"  selections
     mutable IMap m_in; // keys for all "input"  selections
@@ -157,31 +162,45 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit {
     mutable LVct m_tes; // keys for all TES input locations
 
     // map of id of selection and histogram to monitor input candidate
-    mutable std::map<Gaudi::StringKey, AIDA::IHistogram1D *> m_inputHistos;
+    mutable std::map<Gaudi::StringKey, AIDA::IHistogram1D*> m_inputHistos;
 
     // map of the output selection candidates
-    mutable AIDA::IHistogram1D *m_outputHisto;
+    mutable AIDA::IHistogram1D* m_outputHisto;
 
-    struct CallBack {
-        virtual ~CallBack() {}
+    struct CallBack
+    {
+        virtual ~CallBack()
+        {
+        }
         virtual StatusCode execute() = 0;
     };
 
     template <typename T>
-    class TESSelectionCallBack : boost::noncopyable, public CallBack {
+    class TESSelectionCallBack : boost::noncopyable, public CallBack
+    {
         std::unique_ptr<T> m_selection;
-        GaudiAlgorithm &m_parent;
+        GaudiAlgorithm& m_parent;
 
       public:
-        TESSelectionCallBack( Gaudi::StringKey &&key, GaudiAlgorithm &parent )
-            : m_selection{new T{std::move( key )}}, m_parent{parent} {}
-        TESSelectionCallBack( const Gaudi::StringKey &key, GaudiAlgorithm &parent )
-            : m_selection{new T{key}}, m_parent( parent ) {}
+        TESSelectionCallBack( Gaudi::StringKey&& key, GaudiAlgorithm& parent )
+            : m_selection{new T{std::move( key )}}, m_parent{parent}
+        {
+        }
+        TESSelectionCallBack( const Gaudi::StringKey& key, GaudiAlgorithm& parent )
+            : m_selection{new T{key}}, m_parent( parent )
+        {
+        }
 
-        ~TESSelectionCallBack() {}
-        const T *selection() const { return m_selection.get(); }
+        ~TESSelectionCallBack()
+        {
+        }
+        const T* selection() const
+        {
+            return m_selection.get();
+        }
 
-        StatusCode execute() {
+        StatusCode execute()
+        {
             m_selection->clean(); // TODO: check if/why this is needed??
             m_parent.get<typename T::candidate_type::Range>(
                 m_parent.evtSvc(), m_selection->id().str() ) >>

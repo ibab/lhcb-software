@@ -34,20 +34,23 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
-namespace LHCb {
+namespace LHCb
+{
 class Track;
 class RecVertex;
 }
 
 class ISvcLocator;
 
-template <class BASE> class HltBase : public BASE {
+template <class BASE>
+class HltBase : public BASE
+{
   public:
     // Algorithm constructor
-    HltBase( std::string name, ISvcLocator *pSvcLocator );
+    HltBase( std::string name, ISvcLocator* pSvcLocator );
 
     // Tool constructor
-    HltBase( std::string type, std::string name, const IInterface *parent );
+    HltBase( std::string type, std::string name, const IInterface* parent );
 
     // destructor
     virtual ~HltBase(); ///< Destructor
@@ -56,12 +59,13 @@ template <class BASE> class HltBase : public BASE {
 
   protected:
     // initialize Histo
-    AIDA::IHistogram1D *initializeHisto( const std::string &name, double min = 0.,
+    AIDA::IHistogram1D* initializeHisto( const std::string& name, double min = 0.,
                                          double max = 100., int nBins = 100 );
 
     // print info of this container
     template <class CONT>
-    void printInfo( const std::string &title, const CONT &cont ) {
+    void printInfo( const std::string& title, const CONT& cont )
+    {
         BASE::info() << title << cont.size() << endmsg;
         typedef typename CONT::const_iterator iter;
         for ( iter it = cont.begin(); it != cont.end(); ++it )
@@ -69,21 +73,21 @@ template <class BASE> class HltBase : public BASE {
     }
 
     // print info from track
-    void printInfo( const std::string &title, const LHCb::Track &track );
+    void printInfo( const std::string& title, const LHCb::Track& track );
 
     // print info from vertex
-    void printInfo( const std::string &title, const LHCb::RecVertex &ver );
+    void printInfo( const std::string& title, const LHCb::RecVertex& ver );
 
     // print info from extraInfo
-    void printInfo( const std::string &title,
-                    const GaudiUtils::VectorMap<int, double> &info );
+    void printInfo( const std::string& title,
+                    const GaudiUtils::VectorMap<int, double>& info );
 
-    IANNSvc &annSvc() const;
-    Hlt::IRegister *regSvc() const;
-    Hlt::IData *hltSvc() const;
+    IANNSvc& annSvc() const;
+    Hlt::IRegister* regSvc() const;
+    Hlt::IData* hltSvc() const;
 
     // returns the ID of the extraInfo by name
-    int hltInfoID( const std::string &name );
+    int hltInfoID( const std::string& name );
 
   private:
     // returns the ID of the extraInfo by name
@@ -96,12 +100,12 @@ template <class BASE> class HltBase : public BASE {
     SimpleProperty<std::map<std::string, Gaudi::Histo1DDef>> m_histoDescriptor;
 
     // hlt data provider service
-    mutable Hlt::IData *m_hltSvc;
+    mutable Hlt::IData* m_hltSvc;
     //
     // hlt data registration service
-    mutable Hlt::IRegister *m_regSvc;
+    mutable Hlt::IRegister* m_regSvc;
 
     // assigned names and numbers service...
-    mutable IANNSvc *m_hltANNSvc;
+    mutable IANNSvc* m_hltANNSvc;
 };
 #endif // HLTBASE_HLTBASE_H

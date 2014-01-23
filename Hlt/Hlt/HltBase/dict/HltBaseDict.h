@@ -37,8 +37,10 @@
 #pragma warning( disable : 191 ) // type qualifier is meaningless on cast type
 #endif
 // ============================================================================
-namespace {
-struct __Instantiations {
+namespace
+{
+struct __Instantiations
+{
 
     Hlt::Stage::Vector m_s_1;
     Hlt::Stage::ConstVector m_s_2;

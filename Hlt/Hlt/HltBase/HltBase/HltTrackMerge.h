@@ -1,15 +1,19 @@
 
 #include "Event/Track.h"
 
-namespace Hlt {
+namespace Hlt
+{
 
-template <typename T> void MergeInfo( const T &in, T &out ) {
-    for ( const auto &p : in.extraInfo() ) out.addInfo( p.first, p.second );
+template <typename T>
+void MergeInfo( const T& in, T& out )
+{
+    for ( const auto& p : in.extraInfo() ) out.addInfo( p.first, p.second );
 }
 /* merge two tracks (adds info, ids, states)
  *
  */
-inline void TrackMerge( const LHCb::Track &track, LHCb::Track &otrack ) {
+inline void TrackMerge( const LHCb::Track& track, LHCb::Track& otrack )
+{
     // setting ancestors
     otrack.addToAncestors( track );
 

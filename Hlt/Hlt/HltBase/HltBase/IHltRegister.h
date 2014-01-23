@@ -20,22 +20,27 @@
 // ============================================================================
 // forward declarations
 // ============================================================================
-namespace Hlt {
+namespace Hlt
+{
 class Selection;
 }
-namespace Hlt {
-template <class TYPE> class TSelection;
+namespace Hlt
+{
+template <class TYPE>
+class TSelection;
 }
 class IAlgorithm;
 // ============================================================================
-namespace Hlt {
+namespace Hlt
+{
 // ==========================================================================
 /** @class IRegister LoKi/IHltRegister.h
  *  An abstract interface, whch allow register the Hlt-selection(s)
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-03-16
  */
-class IRegister : virtual public IInterface {
+class IRegister : virtual public IInterface
+{
   public:
     // ========================================================================
     /// the actual type of the key
@@ -61,8 +66,8 @@ class IRegister : virtual public IInterface {
     };
     // ========================================================================
   public: // helper class to lock/unlock the transactions
-    // ========================================================================
-    /** helper class to lock properly the transactions
+          // ========================================================================
+          /** helper class to lock properly the transactions
      *
      *  @code
      *
@@ -93,7 +98,8 @@ class IRegister : virtual public IInterface {
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2009-03-16
      */
-    class Lock {
+    class Lock
+    {
         // ====================================================================
       public:
         // ====================================================================
@@ -104,7 +110,7 @@ class IRegister : virtual public IInterface {
          *  @param reg pointer to Hlt::IRegister interface
          *  @param alg the algorithm
          */
-        Lock( IRegister *reg, const IAlgorithm *alg );
+        Lock( IRegister* reg, const IAlgorithm* alg );
         /** destructor (close & unlock transaction)
          *  @exception throw exception for invalid Hlt::IRrgister::unlock
          */
@@ -113,16 +119,19 @@ class IRegister : virtual public IInterface {
       public:
         // ====================================================================
         /// get the access to the registrator  (optional)
-        Hlt::IRegister *operator->() const { return m_register; }
+        Hlt::IRegister* operator->() const
+        {
+            return m_register;
+        }
         // ====================================================================
       private:
         // ====================================================================
         /// default constructor is disabled
         Lock(); // default constructor is disabled
         /// copy constructor is disabled
-        Lock( const Lock & ); // copy constructor is disabled
+        Lock( const Lock& ); // copy constructor is disabled
         /// assignement operator is disabled
-        Lock &operator=( const Lock & ); // assignement operator is disabled
+        Lock& operator=( const Lock& ); // assignement operator is disabled
         // ====================================================================
       private:
         // ====================================================================
@@ -137,8 +146,8 @@ class IRegister : virtual public IInterface {
     friend class Hlt::IRegister::Lock; // Lock is a friend
     // ========================================================================
   public: // the only essential methods:
-    // ========================================================================
-    /** register the output selection during the allowed transaction for
+          // ========================================================================
+          /** register the output selection during the allowed transaction for
      *  locked service
      *  @attention the service much be locked properly during the transaction!
      *  @param selection the selection to be registered
@@ -146,8 +155,8 @@ class IRegister : virtual public IInterface {
      *  @return status code
      */
     virtual StatusCode
-    registerOutput( Hlt::Selection *selection,        // the output selection
-                    const IAlgorithm *producer ) = 0; //             producer
+    registerOutput( Hlt::Selection* selection,        // the output selection
+                    const IAlgorithm* producer ) = 0; //             producer
     /** register the input selection  dirung the allower transactions for
      *  locked service
      *  @attention the service much be locked properly during the transaction!
@@ -156,8 +165,8 @@ class IRegister : virtual public IInterface {
      *  @return status code
      */
     virtual StatusCode
-    registerInput( const Key &selection,             // the input selection
-                   const IAlgorithm *consumer ) = 0; //            consumer
+    registerInput( const Key& selection,             // the input selection
+                   const IAlgorithm* consumer ) = 0; //            consumer
     // =========================================================================
     /** register the query to TES-selection
      *  @attention the service much be locked properly during the transaction!
@@ -166,8 +175,8 @@ class IRegister : virtual public IInterface {
      *  @return Status Code
      */
     virtual StatusCode
-    registerTESInput( const Key &location,              //        TES location
-                      const IAlgorithm *consumer ) = 0; //            consumer
+    registerTESInput( const Key& location,              //        TES location
+                      const IAlgorithm* consumer ) = 0; //            consumer
     // =========================================================================
   protected: // lets be a bit paranoic about the registration
     // =========================================================================
@@ -176,18 +185,18 @@ class IRegister : virtual public IInterface {
      *  @param alg the algorithm which starts the transaction
      *  @param status code
      */
-    virtual StatusCode lock( const IAlgorithm *alg ) = 0;
+    virtual StatusCode lock( const IAlgorithm* alg ) = 0;
     /** end the transaction/unlock the registrator
      *  @see  Hlt::IRegister::Lock
      *  @param alg the algorithm which ends the transaction
      *  @param status code
      */
-    virtual StatusCode unlock( const IAlgorithm *alg ) = 0;
+    virtual StatusCode unlock( const IAlgorithm* alg ) = 0;
     // =========================================================================
   public: // mandatory stuff from the framework
     // ========================================================================
     /// Return the unique interface ID
-    static const InterfaceID &interfaceID(); // the unique interface ID
+    static const InterfaceID& interfaceID(); // the unique interface ID
     // ========================================================================
   protected:
     // ========================================================================

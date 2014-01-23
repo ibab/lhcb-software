@@ -10,7 +10,8 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "HltBase/ParabolaHypothesis.h"
 
-namespace LHCb {
+namespace LHCb
+{
 class State;
 class Track;
 }
@@ -23,15 +24,19 @@ static const InterfaceID IID_ITrackConfirmTool( "ITrackConfirmTool", 1, 0 );
  *  @author Johannes Albrecht
  *  @date   2007-01-26
  */
-class ITrackConfirmTool : virtual public IAlgTool {
+class ITrackConfirmTool : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_ITrackConfirmTool; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_ITrackConfirmTool;
+    }
 
-    virtual StatusCode tracks( const LHCb::State &seedState,
-                               std::vector<LHCb::Track *> &outputTracks ) = 0;
+    virtual StatusCode tracks( const LHCb::State& seedState,
+                               std::vector<LHCb::Track*>& outputTracks ) = 0;
 
-    virtual ParabolaHypothesis prepareT( const LHCb::State &seedState,
-                                         std::vector<LHCb::LHCbID> &ids ) = 0;
+    virtual ParabolaHypothesis prepareT( const LHCb::State& seedState,
+                                         std::vector<LHCb::LHCbID>& ids ) = 0;
 };
 #endif // ITRACKCONFIRMTOOL_H

@@ -11,7 +11,8 @@
 
 static const InterfaceID IID_ICaloSeedTool( "ICaloSeedTool", 1, 0 );
 
-namespace LHCb {
+namespace LHCb
+{
 class L0CaloCandidate;
 class Track;
 }
@@ -22,12 +23,16 @@ class Track;
  *  @author Johannes Albrecht
  *  @date   2007-07-03
  */
-class ICaloSeedTool : virtual public IAlgTool {
+class ICaloSeedTool : virtual public IAlgTool
+{
   public:
     // Return the interface ID
-    static const InterfaceID &interfaceID() { return IID_ICaloSeedTool; }
+    static const InterfaceID& interfaceID()
+    {
+        return IID_ICaloSeedTool;
+    }
 
-    virtual StatusCode makeTrack( const LHCb::L0CaloCandidate &eL0Cand,
-                                  LHCb::Track &seedTrack ) = 0;
+    virtual StatusCode makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
+                                  LHCb::Track& seedTrack ) = 0;
 };
 #endif // HLTBASE_ICALOSEEDTOOL_H

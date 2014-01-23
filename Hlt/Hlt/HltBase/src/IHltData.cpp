@@ -14,11 +14,14 @@
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
-Hlt::IData::~IData() {}
+Hlt::IData::~IData()
+{
+}
 // ============================================================================
 // Return the unique interface ID
 // ============================================================================
-const InterfaceID &Hlt::IData::interfaceID() {
+const InterfaceID& Hlt::IData::interfaceID()
+{
     static const InterfaceID s_IID{"Hlt::IData", 2, 0};
     return s_IID;
 }
