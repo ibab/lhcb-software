@@ -307,8 +307,8 @@ class B2XTauConf(LineBuilder) :
                                            )
     self.TauMu_piSS_TOSLine     = StrippingLine(name+"_TauMu_piSS_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2TauMu_TOSLinePrescale'],
-                                           postscale   = config['B2TauMu_TOSLinePostscale'],
+                                           prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
+                                           postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                            selection   = self._makeTOS(name+"_TOSForTauMupiSS",selB2TauMupiSS)
 #                                           selection   = selB2TauMu
                                            )
