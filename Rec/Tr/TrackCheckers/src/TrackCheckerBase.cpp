@@ -180,7 +180,7 @@ bool TrackCheckerBase::bAncestorWithReconstructibleDaughters(const LHCb::MCParti
   bool fromB = false;
   const LHCb::MCParticle* mother = mcPart->mother();
   while ( mother !=0 && fromB == false) {
-    fromB = mother->particleID().hasBottom();
+    fromB = mother->particleID().hasBottom() && ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() );
     if (fromB && !allDaughtersReconstructible(mother))
 	return false;
     mother = mother->mother();
@@ -194,7 +194,7 @@ bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const
   bool fromB = false;
   const LHCb::MCParticle* mother = mcPart->mother();
   while ( mother !=0 && fromB == false) {
-    fromB = mother->particleID().hasBottom();
+    fromB = mother->particleID().hasBottom() && ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) ;
     mother = mother->mother();
   } // loop
   return fromB;

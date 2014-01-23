@@ -150,8 +150,10 @@ namespace {
         if( vertex.isPrimary() ) rc=0 ;
         else if(vertex.mother()) {
             const LHCb::MCParticle* mother =  vertex.mother() ;
-            if( mother->particleID().hasBottom() ) rc = 3 ;
-            else if( mother->particleID().hasCharm() ) rc = 2 ;
+            if( mother->particleID().hasBottom() && 
+                ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() )) rc = 3 ;
+            else if( mother->particleID().hasCharm() &&  
+                     ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() )) rc = 2 ;
             else if( mother->particleID().hasStrange() ) rc = 1 ;
             else rc = 4;
         }
@@ -356,8 +358,12 @@ StatusCode TrackIPResolutionCheckerNT::execute()
             const LHCb::MCParticle* ulmother = UltOrigVertex ? UltOrigVertex->mother() : 0 ;
             mcOVT = mcVertexType( UltOrigVertex ) ;
             theTuple->column("truepid", mcparticle->particleID().pid() ) ;
-            theTuple->column("ulmotherHasBottom", ulmother && ulmother->particleID().hasBottom() ? 1 : 0 );
-            theTuple->column("ulmotherHasCharm", ulmother && ulmother->particleID().hasCharm() ? 1 : 0 );
+            bool hasBottom =  ulmother && ulmother->particleID().hasBottom() && ( ulmother->particleID().isMeson() 
+                                                                                  ||  ulmother->particleID().isBaryon()); 
+            theTuple->column("ulmotherHasBottom", hasBottom ? 1 : 0 );
+            bool hasCharm =  ulmother && ulmother->particleID().hasCharm() && ( ulmother->particleID().isMeson() 
+                                                                                ||  ulmother->particleID().isBaryon());
+            theTuple->column("ulmotherHasCharm", hasCharm? 1 : 0 );
             theTuple->column("ulmotherHasStrange", ulmother && ulmother->particleID().hasStrange() ? 1 : 0 );
             theTuple->column("truemotherpid", mother ? mother->particleID().pid() : 0 ) ;
             theTuple->column("truevertexpid", ulmother ? ulmother->particleID().pid() : 0 ) ;
