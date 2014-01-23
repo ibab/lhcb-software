@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-23 - Pablo Ruiz Valls
+ - Tightened pi0 cuts in StrippingBeauty2XGamma
+ - Renamed Converted photon lines for consistency
+
 !========================= StrippingSelections v3r32 2014-01-22 =========================
 
 ! 2014-01-21 - Simone Stracka, Flavio Archilli

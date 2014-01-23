@@ -186,7 +186,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                     RequiredSelections = [StdAllNoPIDsPions])
 
         # Neutral Pions, both merged and resolved
-        _Pi0Sel = FilterDesktop(Code = "(PT > 1000*MeV)" % self.__confdict__ )
+        _Pi0Sel = FilterDesktop(Code = "(P > 4000*MeV) & (PT > 1200*MeV)" % self.__confdict__ )
         self.MergedPi0 = Selection( 'MergedPi0Sel' + self.name,
                                     Algorithm = _Pi0Sel,
                                     RequiredSelections = [StdLooseMergedPi0])
@@ -497,7 +497,7 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
 
-        B2XG3piCNVName = self.name + "3piGammaCNV_"
+        B2XG3piCNVName = self.name + "3pi_wCNV_"
         self.RadiativeB2XG3piCNV = makeB2B2XG3piGamma ( B2XG3piCNVName,
                                                         triTrkList=self.TriTrackList,
                                                         photons=self.ConvPhoton,
