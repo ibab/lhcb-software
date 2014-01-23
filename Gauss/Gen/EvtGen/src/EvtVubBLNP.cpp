@@ -1,4 +1,3 @@
-
 //////////////////////////////////////////////////////////////////////
 //
 // Module: EvtVubBLNP.cc
@@ -164,9 +163,11 @@ void EvtVubBLNP::decay(EvtParticle *Bmeson) {
 
   int j;
   
-  EvtParticle *xuhad, *lepton, *neutrino;
+  EvtParticle *xuhad(0), *lepton(0), *neutrino(0);
   EvtVector4R p4;
-  double Pp, Pm, Pl, pdf, EX, sh, El, ml, mpi, ratemax;
+  //double Pp, Pm, Pl, pdf, EX, sh, El, ml, mpi, ratemax;
+  double Pp, Pm, Pl, pdf, EX, sh, ml, mpi, ratemax;
+  double El(0.);
   
   double xhigh, xlow, what;
   

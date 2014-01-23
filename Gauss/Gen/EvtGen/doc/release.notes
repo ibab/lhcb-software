@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-01-23 - Paul Szczypka
+ - Small changes, mainly explicit inits of variables to remove warnings.
+
 !========================== EvtGen v13r11 2014-01-10 ==========================
 ! 2014-01-08 - John Back
  - Corrected parameter checks in EvtSVSCPiso and EvtBto2piCPiso.

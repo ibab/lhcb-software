@@ -240,10 +240,15 @@ void EvtVubBLNPHybrid::decay(EvtParticle *Bmeson) {
 
   int j;
   
-  EvtParticle *xuhad, *lepton, *neutrino;
+  //EvtParticle *xuhad, *lepton, *neutrino;
+  EvtParticle *xuhad(0), *lepton(0), *neutrino(0);
   EvtVector4R p4;
-  double Pp, Pm, Pl, pdf, EX, sh, qsq, El, ml, mpi, ratemax;
+  //double Pp, Pm, Pl, pdf, EX, sh, qsq, El, ml, mpi, ratemax;
+  //double Pp, Pm, Pl, pdf, EX, sh, qsq, El, ml, mpi, ratemax;
+  double EX(0.), sh(0.), El(0.), ml(0.);
+  double Pp, Pm, Pl, pdf, qsq, mpi, ratemax;
   
+
   double xhigh, xlow, what;
   double mX;
  
