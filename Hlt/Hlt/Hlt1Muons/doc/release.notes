@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-23 - Gerhard Raven
+ - run clang-format to unify code formatting
+
 ! 2014-01-22 - Gerhard Raven
  - more C++11 
  - use addSortedToLhcbIDs to add sorted list in one shot instead of addToLhcbIDs

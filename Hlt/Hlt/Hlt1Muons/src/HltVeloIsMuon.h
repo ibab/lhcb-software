@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef MATCHVELOMUON_H 
+#ifndef MATCHVELOMUON_H
 #define MATCHVELOMUON_H 1
 
 // Include files
@@ -17,124 +17,123 @@
 #include "Candidate.h"
 #include "Hlt1MuonHit.h"
 
-namespace LHCb {
-   class Track;
+namespace LHCb
+{
+class Track;
 }
 class Hlt1MuonHitManager;
 class Candidate;
 
-namespace Hlt {
+namespace Hlt
+{
 /** @class HltVeloIsMuon HltVeloIsMuon.h
  *  Look for Muon hits which match a velo track.
  *
  *  @author Roel Aaij
  *  @date   2010-12-02
  */
-class HltVeloIsMuon : 
-   virtual public extends1< GaudiHistoTool, ITracksFromTrack >
+class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
 {
-public: 
+  public:
+    /// Standard constructor
+    HltVeloIsMuon( const std::string& type, const std::string& name,
+                   const IInterface* parent );
 
-   /// Standard constructor
-   HltVeloIsMuon( const std::string& type, 
-                  const std::string& name,
-                  const IInterface* parent );
+    virtual ~HltVeloIsMuon(); ///< Destructor
 
-   virtual ~HltVeloIsMuon( ); ///< Destructor
+    virtual StatusCode initialize();
 
-   virtual StatusCode initialize();
+    virtual StatusCode finalize();
 
-   virtual StatusCode finalize();
+    virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
+                                        std::vector<LHCb::Track*>& tracks );
 
-   virtual StatusCode tracksFromTrack( const LHCb::Track &seed,
-                                       std::vector< LHCb::Track * > &tracks );
-   
-private:
+  private:
+    friend class ToolFactory<HltVeloIsMuon>;
 
-   friend class ToolFactory< HltVeloIsMuon >;
+    // Properties
+    double m_za;
+    double m_zb;
 
-   // Properties
-   double m_za;
-   double m_zb;
+    double m_xWindow;
+    double m_yWindow;
+    double m_FoITolerance;
 
-   double m_xWindow;
-   double m_yWindow;
-   double m_FoITolerance;
+    double m_minMomentum;
+    double m_kickScale;
+    double m_kickOffset;
 
-   double m_minMomentum;
-   double m_kickScale;
-   double m_kickOffset;
+    double m_maxChi2DoFX;
 
-   double m_maxChi2DoFX;
+    unsigned int m_maxMissed;
 
-   unsigned int m_maxMissed;
+    bool m_setQOverP;
 
-   bool m_setQOverP;
+    // Tools and services
+    Hlt1MuonHitManager* m_hitManager;
+    ILHCbMagnetSvc* m_fieldSvc;
 
-   // Tools and services
-   Hlt1MuonHitManager* m_hitManager;
-   ILHCbMagnetSvc* m_fieldSvc;
+    // Data members
+    std::vector<unsigned int> m_order;
+    unsigned int m_nStations;
+    unsigned int m_nRegions;
 
-   // Data members
-   std::vector< unsigned int > m_order;
-   unsigned int m_nStations;
-   unsigned int m_nRegions;
+    // Muon Detector
+    DeMuonDetector* m_det;
 
-   // Muon Detector
-   DeMuonDetector* m_det;
+    // Data from detector description and conditions
+    std::vector<double> m_padSizeX;
+    std::vector<double> m_padSizeY;
 
-   // Data from detector description and conditions
-   std::vector< double > m_padSizeX;
-   std::vector< double > m_padSizeY;
+    // local array of region sizes
+    std::vector<double> m_regionInnerX; // inner edge in abs(x)
+    std::vector<double> m_regionOuterX; // outer edge in abs(x)
+    std::vector<double> m_regionInnerY; // inner edge in abs(y)
+    std::vector<double> m_regionOuterY; // outer edge in abs(y)
 
-   // local array of region sizes
-   std::vector< double > m_regionInnerX; // inner edge in abs(x)
-   std::vector< double > m_regionOuterX; // outer edge in abs(x)
-   std::vector< double > m_regionInnerY; // inner edge in abs(y)
-   std::vector< double > m_regionOuterY; // outer edge in abs(y)
+    // function that defines the field of interest size
+    // formula is p(1) + p(2)*exp(-p(3)*momentum)
+    std::vector<double> m_xFoIParam1;
+    std::vector<double> m_xFoIParam2;
+    std::vector<double> m_xFoIParam3;
+    std::vector<double> m_yFoIParam1;
+    std::vector<double> m_yFoIParam2;
+    std::vector<double> m_yFoIParam3;
 
-   // function that defines the field of interest size
-   // formula is p(1) + p(2)*exp(-p(3)*momentum)
-   std::vector< double > m_xFoIParam1;
-   std::vector< double > m_xFoIParam2;
-   std::vector< double > m_xFoIParam3;
-   std::vector< double > m_yFoIParam1;
-   std::vector< double > m_yFoIParam2;
-   std::vector< double > m_yFoIParam3;
+    double m_preSelMomentum;
+    double m_FoIFactor;
 
-   double m_preSelMomentum;
-   double m_FoIFactor;
+    std::vector<double> m_momentumCuts; // vector of momentum ranges
 
-   std::vector< double > m_momentumCuts; // vector of momentum ranges
+    // Temporary storage
+    Hlt1MuonHit* m_magnetHit;
+    Candidates m_seeds;
 
-   // Temporary storage
-   Hlt1MuonHit* m_magnetHit;
-   Candidates   m_seeds;
+    std::vector<double> m_regionFoIX;
+    std::vector<double> m_regionFoIY;
 
-   std::vector< double > m_regionFoIX;
-   std::vector< double > m_regionFoIY;
+    // Helper methods
+    void findSeeds( const Candidate* seed, const unsigned int seedStation );
 
-   // Helper methods
-   void findSeeds( const Candidate* seed, const unsigned int seedStation );
+    void addHits( Candidate* seed );
 
-   void addHits( Candidate* seed );
+    void fitCandidate( Candidate* seed ) const;
 
-   void fitCandidate( Candidate* seed ) const;
+    void clean();
 
-   void clean();
+    inline double dtx( const double p ) const
+    {
+        return m_kickScale / ( p - m_kickOffset );
+    }
 
-   inline double dtx( const double p ) const {
-      return  m_kickScale / ( p - m_kickOffset );
-   }
+    inline double momentum( const double dtx ) const
+    {
+        return m_kickScale / fabs( dtx ) + m_kickOffset;
+    }
 
-   inline double momentum( const double dtx ) const {
-      return m_kickScale / fabs( dtx ) + m_kickOffset;
-   }
+    double FoIX( const int station, const int region, const double p ) const;
 
-   double FoIX( const int station, const int region, const double p ) const;
-
-   double FoIY( const int station, const int region, const double p ) const;
-
+    double FoIY( const int station, const int region, const double p ) const;
 };
 } // namespace Hlt
 
