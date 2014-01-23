@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-01-23 - Michel De Cian
+ - Fix behaviour of flag 'fromB' and 'fromD' in ChargedProtoANNPIDTupleTool to only include B and C baryons and mesons, and not particles from string fragmentation of b and c quarks.
+
 !========================= ChargedProtoANNPID v2r4 2013-10-01 =======================
 ! 2013-08-12 - Michel De Cian
  - Update ChargedProtoANNPIDTrainingTuple to not terminate the processing if the

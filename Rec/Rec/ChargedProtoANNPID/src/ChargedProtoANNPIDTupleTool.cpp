@@ -154,8 +154,10 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   unsigned int iCount(0); // protect against infinite loops
   while ( mcParent && ++iCount < 99999 )
   {
-    if ( mcParent->particleID().hasBottom() ) { fromB = true; }
-    if ( mcParent->particleID().hasCharm()  ) { fromD = true; }
+    if ( mcParent->particleID().hasBottom() && ( mcParent->particleID().isMeson() 
+                                                 ||  mcParent->particleID().isBaryon()   )) { fromB = true; }
+    if ( mcParent->particleID().hasCharm()  && ( mcParent->particleID().isMeson() 
+                                                 ||  mcParent->particleID().isBaryon()   )) { fromD = true; }
     mcParent = mcParent->mother();
   }
   // Save MC parent info
