@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-01-23 Michel De Cian
+ - Fix behaviour of flag 'fromB' in PrDebugTrackingLosses to only include B baryons and mesons, and not particles from string fragmentation of b quarks.
+
 ! 2014-01-10 - Michel De Cian
  - Add upgrade detector linking to LHCbIDsToMCHits.
 

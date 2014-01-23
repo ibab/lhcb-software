@@ -105,7 +105,8 @@ StatusCode DebugTrackingLosses::execute() {
         if ( mother->particleID().pid() ==   310 ) isStrange = true;
         if ( mother->particleID().pid() ==  3122 ) isStrange = true;
         if ( mother->particleID().pid() == -3122 ) isStrange = true;
-        if ( mother->particleID().hasBottom()    ) isBeauty  = true;
+        if ( mother->particleID().hasBottom()  && 
+             ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() )   ) isBeauty  = true;
       }
       if ( m_fromStrange && !isStrange ) continue;
       if ( m_fromBeauty  && !isBeauty  ) continue;
