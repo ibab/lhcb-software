@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v7r7 2014-01-23 =========================
 ! 2014-01-22 - Paul Szczypka
  - Minor change to Pythia8Gun.cpp (using size_t as loop var now)
 
