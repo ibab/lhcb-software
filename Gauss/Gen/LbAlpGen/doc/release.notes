@@ -5,6 +5,7 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+!========================= LbAlpGen v3r1p1 2014-01-23 =========================
 ! 2014-01-13 - Stephane Tourneur
 - Fix for Gaussv45rx : Fix the way files were opened and closed in alpsho.F
 
