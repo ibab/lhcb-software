@@ -6,6 +6,9 @@
 
 !========================= FTDigitisation v1r7 2013-12-10 =========================
 
+! 2014-23-01 Jacco de Vries
+ - Fixed debug messages and commented out unused instance
+
 ! 2013-12-12 Jacco de Vries
  - Forgot to change some values in previous commit, fixed now
  - Added noise cluster plots

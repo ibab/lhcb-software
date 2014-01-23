@@ -51,7 +51,7 @@ private:
   std::vector<double> m_spillTimes;       ///< Vector of spill arrival times       
 
   // FT Geometry version
-  int m_ftGeomVersion;
+  //int m_ftGeomVersion;
   
   // Fibre properties
   float       m_fiberPropagationTime;   ///< Light propagation time in fiber

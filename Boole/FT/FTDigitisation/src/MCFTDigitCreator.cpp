@@ -301,8 +301,8 @@ MCFTDigitCreator::integrateResponse(const LHCb::MCFTDeposit* ftdeposit)
   }
 
   if ( msgLevel( MSG::DEBUG) )
-    debug() <<format("integrateResponse() : toff=%8.3f response=%8.2f", 
-		     toff, sum)
+    debug() <<format("integrateResponse() : toff=%8.3f responseDir=%8.2f responseRef=%8.2f", 
+		     toff, sum.first, sum.second)
 	    << endmsg;
 
   return sum;
@@ -343,8 +343,8 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
        "ADC counts (reflected);ADC;Number of SiPM channels", 0., 20., 20);
  
   if( msgLevel( MSG::DEBUG) ){
-    debug() <<format("deposit2ADC() : response=%8.3f Gain=%8.3f noise=%4.2f adcCountDir = %4i adcCountRef = %4i",
-                     response, gain, noise, adcCountDir, adcCountRef)
+    debug() <<format("deposit2ADC() : responseDir=%8.3f responseRef=%8.3f Gain=%8.3f noise=%4.2f adcCountDir = %4i adcCountRef = %4i",
+                     response.first, response.second, gain, noise, adcCountDir, adcCountRef)
             << endmsg;
   }
   return adcCountDir+adcCountRef;
