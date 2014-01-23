@@ -16,20 +16,22 @@
  * @author Gerhard Raven
  * @date   2010-02-11
  */
-class GAUDI_API IDirectoryAccess: virtual public IInterface {
-public:
-  /// InterfaceID
-  DeclareInterfaceID(IDirectoryAccess,1,0);
+class GAUDI_API IDirectoryAccess : virtual public IInterface
+{
+  public:
+    /// InterfaceID
+    DeclareInterfaceID( IDirectoryAccess, 1, 0 );
 
-  virtual ~IDirectoryAccess() {} //< Virtual destructor.
+    virtual ~IDirectoryAccess()
+    {
+    } //< Virtual destructor.
 
-  /// Find the URL and returns a list of file entries 
-  /// Returns an empty list if the URL cannot be resolved.
-  virtual std::vector<std::string> listdir(const std::string &url) = 0;
+    /// Find the URL and returns a list of file entries
+    /// Returns an empty list if the URL cannot be resolved.
+    virtual std::vector<std::string> listdir( const std::string& url ) = 0;
 
-  /// Protocols supported by the instance.
-  virtual const std::vector<std::string> &protocols() const = 0;
-
+    /// Protocols supported by the instance.
+    virtual const std::vector<std::string>& protocols() const = 0;
 };
 
 #endif // GaudiKernel_IDirectoryAccess_H

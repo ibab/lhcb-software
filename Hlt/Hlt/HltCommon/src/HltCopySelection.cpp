@@ -1,5 +1,5 @@
 // $Id: HltCopySelection.cpp,v 1.6 2010-03-27 16:29:17 graven Exp $
-// Include files 
+// Include files
 #include <algorithm>
 #include <iterator>
 // from Gaudi
@@ -29,38 +29,39 @@ template class HltCopySelection<LHCb::RecVertex>;
 typedef HltCopySelection<LHCb::RecVertex> HltCopyRecVertexSelection;
 DECLARE_ALGORITHM_FACTORY( HltCopyRecVertexSelection );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 template <typename T>
 HltCopySelection<T>::HltCopySelection( const std::string& name,
-                                    ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
-  , m_selection(*this)
+                                       ISvcLocator* pSvcLocator )
+    : HltAlgorithm( name, pSvcLocator ), m_selection( *this )
 {
-  m_selection.declareProperties( );
+    m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 template <typename T>
-HltCopySelection<T>::~HltCopySelection() {} 
+HltCopySelection<T>::~HltCopySelection()
+{
+}
 
 //=============================================================================
 // Initialization
 //=============================================================================
 template <typename T>
-StatusCode 
-HltCopySelection<T>::initialize() {
-  
-  StatusCode sc = HltAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  m_selection.retrieveSelections();
-  m_selection.registerSelection();
-  counter("#input");
-  // declareInfo("#input",counter("#input"),std::string("Candidates seen by ") + name());
-  return sc;
+StatusCode HltCopySelection<T>::initialize()
+{
+
+    StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+    if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
+    m_selection.retrieveSelections();
+    m_selection.registerSelection();
+    counter( "#input" );
+    // declareInfo("#input",counter("#input"),std::string("Candidates seen by ") +
+    // name());
+    return sc;
 }
 
 //=============================================================================
@@ -68,13 +69,12 @@ HltCopySelection<T>::initialize() {
 //=============================================================================
 
 template <typename T>
-StatusCode 
-HltCopySelection<T>::execute() {
-  counter("#input")  +=  m_selection.template input<1>()->size();
-  m_selection.output()->insert( m_selection.output()->end()
-                              , m_selection.template input<1>()->begin()
-                              , m_selection.template input<1>()->end()
-                              );
-  setFilterPassed( !m_selection.output()->empty() );
-  return StatusCode::SUCCESS;
+StatusCode HltCopySelection<T>::execute()
+{
+    counter( "#input" ) += m_selection.template input<1>()->size();
+    m_selection.output()->insert( m_selection.output()->end(),
+                                  m_selection.template input<1>()->begin(),
+                                  m_selection.template input<1>()->end() );
+    setFilterPassed( !m_selection.output()->empty() );
+    return StatusCode::SUCCESS;
 }
