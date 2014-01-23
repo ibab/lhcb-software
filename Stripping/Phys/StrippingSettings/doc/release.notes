@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r30 2014-01-23 =========================
+
 ! 2014-01-23 - Stefano Perazzini
  - Removed B2XTauZVTOP from RD WG dictionaries
 
