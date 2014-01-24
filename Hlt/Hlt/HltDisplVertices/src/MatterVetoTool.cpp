@@ -27,6 +27,38 @@ using namespace Gaudi::Units ;
 using namespace LHCb ;
 using namespace std ;
 
+namespace {
+    template <typename iterator_>
+    struct iter_pair_range : pair<iterator_,iterator_> {
+        using super = pair<iterator_,iterator_>;
+        using super::super; // delegate c'tor
+        using iterator = iterator_;
+        iterator begin() const { return this->first;  }
+        iterator end()   const { return this->second; }
+    };
+
+    template<typename Iter, typename I2> // I2 must be convertable to Iter
+    iter_pair_range<typename std::decay<Iter>::type> make_range(Iter&& begin, I2&& end)
+    { return { std::forward<Iter>(begin), std::forward<I2>(end) }; }
+
+    template<typename Iter, typename I2> // I2 must be convertable to Iter
+    iter_pair_range<typename std::decay<Iter>::type> make_range(pair<Iter,I2>&& p)
+    { return { std::forward<pair<Iter,I2>>(p) }; }
+
+
+  // (could use std::find_adjacent, but then would have to 
+  //  handle the case where it returns 'end'...)
+    template <typename Iter> 
+    Iter find_z_bin(Iter first, Iter end, double z) {
+      assert( first!=end);
+      auto next = first; ++next;
+      assert( next!=end);
+      for ( ; next != end; ++first, ++next ) {
+          if ( z < 0.5 * ( next->z() + first->z() ) ) break;
+      }
+      return first;
+    }
+}
 
 class MatterVetoTool
     : public virtual IMatterVeto
@@ -64,7 +96,7 @@ protected:
 private:
   // ========================================================================
   // default constructor is disabled 
-  MatterVetoTool () ;
+  MatterVetoTool () = delete ;
   // copy constructor is disabled 
   MatterVetoTool ( const MatterVetoTool& ) ;
   // assignement operator is disabled 
@@ -81,13 +113,8 @@ private:
   std::vector<Gaudi::XYZPoint > m_LeftSensorsCenter;
   std::vector<Gaudi::XYZPoint > m_RightSensorsCenter;
   Condition* m_motionSystem;
-  
-  
-
   // ========================================================================
 };
-
- // end of namespace LoKi 
 
 
 // ============================================================================
@@ -118,20 +145,11 @@ StatusCode MatterVetoTool::initialize()
 // Check if particle vertex is in material
 //=============================================================================
 bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
-  Gaudi::XYZPoint posloc;
-  bool inMat = false;
-  
+
   //move to local Velo half frame
-  if( point.x() < 2. ){ //right half
-    posloc = m_toVeloRFrame * point;
-    inMat = inMat || IsInMaterialBoxRight(posloc);
-  }
-  if (inMat) return inMat;
-  if( point.x() > -2. ){ //left half
-    posloc = m_toVeloLFrame * point;
-    inMat = inMat || IsInMaterialBoxLeft(posloc);
-  }
-  return inMat;
+  //right half OR left half
+  return ( ( point.x()< 2. ) && IsInMaterialBoxRight(m_toVeloRFrame * point) )
+      || ( ( point.x()>-2. ) && IsInMaterialBoxLeft( m_toVeloLFrame * point) );
 }
 
 
@@ -142,14 +160,14 @@ bool MatterVetoTool::isInMatter( const Gaudi::XYZPoint & point ) const {
 //=============================================================================
 StatusCode MatterVetoTool::i_cacheGeo(){  
   //get the Velo geometry
-  string velostr = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
+  string velostr { "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo" };
   const IDetectorElement* lefthalv = getDet<IDetectorElement>( velostr+"Left" );
   const IDetectorElement* righthalv =  getDet<IDetectorElement>( velostr + "Right" );
   const IGeometryInfo* halflgeominfo = lefthalv->geometry();
   const IGeometryInfo* halfrgeominfo = righthalv->geometry();
-  Gaudi::XYZPoint localorigin(0,0,0);
-  Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
-  Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+  const Gaudi::XYZPoint zero{0.,0.,0.};
+  Gaudi::XYZPoint leftcenter  = lefthalv ->geometry()->toGlobal(zero);
+  Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(zero);
   if( msgLevel( MSG::DEBUG ) )
     debug() << "Velo global right half center "
             << rightcenter <<", left half center "<< leftcenter << endmsg;
@@ -158,40 +176,28 @@ StatusCode MatterVetoTool::i_cacheGeo(){
   m_toVeloRFrame = halfrgeominfo->toLocalMatrix() ;
   //m_toGlobalFrame = halfgeominfo->toGlobalMatrix();
   m_toVeloLFrame = halflgeominfo->toLocalMatrix() ;
-  m_LeftSensorsCenter.clear();
-  m_RightSensorsCenter.clear();
+
   DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
-  std::vector< DeVeloRType * >::const_iterator iLeftR= velo->leftRSensorsBegin() ;
-  for(;iLeftR!=velo->leftRSensorsEnd();iLeftR++){
-    if((*iLeftR)->isPileUp())continue;
-    const Gaudi::XYZPoint localCenter(0.,0.,0.);
-    const Gaudi::XYZPoint halfBoxRCenter = 
-      (*iLeftR)->localToVeloHalfBox (localCenter);
-    const DeVeloPhiType * phisens = (*iLeftR)->associatedPhiSensor () ;
-    if(!(*iLeftR)->isPileUp()){
-      const Gaudi::XYZPoint halfBoxPhiCenter = 
-        phisens->localToVeloHalfBox (localCenter);
-      Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
-                                    halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
-                                    halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
-      m_LeftSensorsCenter.push_back(halfBoxCenter);
-    }
+
+  m_LeftSensorsCenter.clear();
+  for( const DeVeloRType *iLeftR : make_range(velo->leftRSensorsBegin(), velo->leftRSensorsEnd()) ) {
+    if(iLeftR->isPileUp())continue;
+    const DeVeloPhiType *phisens = iLeftR->associatedPhiSensor () ;
+
+    Gaudi::XYZPoint halfBoxCenter{ iLeftR->localToVeloHalfBox(zero) };
+    halfBoxCenter += 0.5*(phisens->localToVeloHalfBox(zero)-halfBoxCenter) ;
+
+    m_LeftSensorsCenter.emplace_back( std::move(halfBoxCenter) );
   }
-  std::vector< DeVeloRType * >::const_iterator iRightR = 
-    velo->rightRSensorsBegin() ;
-  for(;iRightR!=velo->rightRSensorsEnd();iRightR++){
-    const Gaudi::XYZPoint localCenter(0.,0.,0.);
-    const Gaudi::XYZPoint halfBoxRCenter = 
-      (*iRightR)->localToVeloHalfBox (localCenter);
-    const DeVeloPhiType * phisens = (*iRightR)->associatedPhiSensor () ;
-    if(!(*iRightR)->isPileUp()){
-      const Gaudi::XYZPoint halfBoxPhiCenter = 
-        phisens->localToVeloHalfBox (localCenter);
-      Gaudi::XYZPoint halfBoxCenter(halfBoxRCenter.x()+(halfBoxPhiCenter.x()-halfBoxRCenter.x())/2,
-                                    halfBoxRCenter.y()+(halfBoxPhiCenter.y()-halfBoxRCenter.y())/2,
-                                    halfBoxRCenter.z()+(halfBoxPhiCenter.z()-halfBoxRCenter.z())/2);
-      m_RightSensorsCenter.push_back(halfBoxCenter);
-    }
+  m_RightSensorsCenter.clear();
+  for( const DeVeloRType *iRightR : make_range(velo->rightRSensorsBegin(), velo->rightRSensorsEnd()) ) {
+    if(iRightR->isPileUp()) continue;
+    const DeVeloPhiType *phisens = iRightR->associatedPhiSensor () ;
+
+    Gaudi::XYZPoint halfBoxCenter{ iRightR->localToVeloHalfBox(zero) };
+    halfBoxCenter += 0.5*(phisens->localToVeloHalfBox(zero) - halfBoxCenter);
+
+    m_RightSensorsCenter.emplace_back(std::move(halfBoxCenter) );
   }//end sensorloop
   return StatusCode::SUCCESS;
   
@@ -204,71 +210,35 @@ StatusCode MatterVetoTool::i_cacheGeo(){
 //=============================================================================
 
 bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
+
+  if ( m_LeftSensorsCenter.size() < 3u ) return false;
+
   // First get the z bin
-  int regModIndex(0);
-  double downlimit(-1000.),uplimit(-1000.);
-  //always()<<m_LeftSensorsCenter.size()-1<<endmsg;
-  if(int(m_LeftSensorsCenter.size())-1<2)return false;
-  for(int mod = 0 ; mod != int(m_LeftSensorsCenter.size())-1; mod++){
-    downlimit=uplimit;
-    uplimit=(m_LeftSensorsCenter[mod].z()+(m_LeftSensorsCenter[mod+1].z()-
-                                           m_LeftSensorsCenter[mod].z())/2);
-    if( point.z()>downlimit && point.z()<uplimit ){
-      regModIndex=mod;
-      continue;
-    }
-  }
-  if(point.z()<800. && point.z()>uplimit)regModIndex=m_LeftSensorsCenter.size()-1;
-  double r = sqrt(pow(point.x()-m_LeftSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_LeftSensorsCenter[regModIndex].y(),2));
-  if ( (r<5. && point.z()<370.) || (r<4.3 && point.z()>370.) ){
-    return false;
-  }
+  Gaudi::XYZVector delta =
+      point - *find_z_bin( m_LeftSensorsCenter.begin(), m_LeftSensorsCenter.end(),
+                           point.z() );
+
+  double r = delta.Rho();
+  if ( r < ( point.z() < 370. ? 5. : 4.3 ) ) return false;
   // Is in the module area
   double halfModuleBoxThickness(1.75);
-  if (point.z()<m_LeftSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
-      && point.z()>m_LeftSensorsCenter[regModIndex].z()-halfModuleBoxThickness){
-    return true;
-  }
+  if ( fabs(delta.z()) <  halfModuleBoxThickness ) return true;
   
   // depending on z:
   // in the region of small corrugation
-  if(point.z()<290. && point.x()-m_LeftSensorsCenter[regModIndex].x()>4){
+  if(point.z()<290. && delta.x()>4){
     // first rather large region, rather small r
-    float smallerCyl = 8.;
-    float RsmallerCyl = 7.;
-    float largerCyl = 11.;
-    float RlargerCyl = 9.;
+    float  smallerCyl {  8. };
+    float RsmallerCyl {  7. };
+    float   largerCyl { 11. };
+    float  RlargerCyl {  9. };
     
-    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>smallerCyl
-       && r < RsmallerCyl ){ 
-      return false;
-    }
-    
-    if(fabs(point.z()-m_LeftSensorsCenter[regModIndex].z())>largerCyl
-       && r < RlargerCyl ){
-      return false;
-    }
+    if(fabs(delta.z())>smallerCyl && r < RsmallerCyl ) return false;
+    if(fabs(delta.z())> largerCyl && r <  RlargerCyl ) return false;
     
   }
-  if(r<12.5 && point.z()<440.){
-    return true;
-  }
-  
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<5.5 && 
-     point.z()<440.){
-    return true;
-  }
-  
-  if(fabs(point.x()-m_LeftSensorsCenter[regModIndex].x())<8.5 && 
-     point.z()>440.){ 
-
-    return true;  
-  }
-  
-  return false;
-
-
-  
+  if (r<12.5 && point.z()<440.) return true;
+  return fabs(delta.x()) < ( point.z()< 440.  ? 5.5 : 8.5 );
 }
 
 //=============================================================================
@@ -277,50 +247,35 @@ bool MatterVetoTool::IsInMaterialBoxLeft(const Gaudi::XYZPoint& point)const{
 //=============================================================================
 
 bool MatterVetoTool::IsInMaterialBoxRight(const Gaudi::XYZPoint& point) const{
+  if(m_RightSensorsCenter.size()<3u)return false;
   // First get the z bin
-  int regModIndex(0);
-  double downlimit(-1000.),uplimit(-1000.);
-  if(int(m_RightSensorsCenter.size())-1<2)return false;
-  for (int mod = 0 ; mod != int(m_RightSensorsCenter.size())-1; mod++){
-    downlimit=uplimit;
-    uplimit=(m_RightSensorsCenter[mod].z()+(m_RightSensorsCenter[mod+1].z()-m_RightSensorsCenter[mod].z())/2);
-    if( point.z()>downlimit && point.z()<uplimit ){
-      regModIndex=mod;
-      continue;
-    }
-  }
-  if(point.z()<800. && point.z()>uplimit)
-    regModIndex=m_RightSensorsCenter.size()-1;
+  Gaudi::XYZVector delta =
+      point - *find_z_bin( m_RightSensorsCenter.begin(), m_RightSensorsCenter.end(),
+                           point.z() );
   // Is in vaccum clean cylinder?
-  double r = sqrt(pow(point.x()-m_RightSensorsCenter[regModIndex].x(),2)+pow(point.y()-m_RightSensorsCenter[regModIndex].y(),2));
+  double r = delta.Rho();
   
   // inner cylinder
-  if ( (r<5. && point.z()<390.) || (r<4.3 && point.z()>390.) ){
-    return false;
-  }
+  if ( r < ( point.z() < 390. ? 5. : 4.3 ) ) return false;
   // is in the module area
   double halfModuleBoxThickness(1.75);
-  if (point.z()<m_RightSensorsCenter[regModIndex].z()+halfModuleBoxThickness 
-      && point.z()>m_RightSensorsCenter[regModIndex].z()-halfModuleBoxThickness) return true;
+  if ( fabs(delta.z()) < +halfModuleBoxThickness )  return true;
   // depending on z:
   // in the region of small corrugation
-  if(point.z()<300. && point.x()-m_RightSensorsCenter[regModIndex].x()<-4){
+  if(point.z()<300. && delta.x()<-4){
     // first rather large region, rather small r
     float smallerCyl = 8.;
     float RsmallerCyl = 7.;
     float largerCyl = 11.;
     float RlargerCyl = 9.;
     
-    if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>smallerCyl
-        && r < RsmallerCyl ) return false;
-    if (fabs(point.z()-m_RightSensorsCenter[regModIndex].z())>largerCyl
-        && r < RlargerCyl ) return false;
+    if (fabs(delta.z())>smallerCyl && r < RsmallerCyl ) return false;
+    if (fabs(delta.z())> largerCyl && r < RlargerCyl  ) return false;
   }
+
   // Is clearly outside RFFoil part
   if (r<12.5 && point.z()<450. ) return true;
-  if (point.z()<450. && fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<5.5)return true;
-  if (fabs(point.x()-m_RightSensorsCenter[regModIndex].x())<8.5 && point.z()>450.) return true;  
-  return false;
+  return  fabs(delta.x()) < ( point.z()<450. ? 5.5 : 8.5 );
 }
 
 

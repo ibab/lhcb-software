@@ -31,7 +31,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   // ExtraInfo indices
   static int Rho;
@@ -43,7 +42,7 @@ public:
 
 private:
   /// Turn a RecVertex into a Particle
-  const LHCb::Particle* RecVertex2Particle( const LHCb::RecVertex* rv );
+  bool RecVertex2Particle( const LHCb::RecVertex* rv, LHCb::ProtoParticles* container );
 
   // Ad-hoc creation of fixed PT Velo-only pions
   double m_piMass;            ///< pion mass
@@ -83,7 +82,6 @@ private:
   const IMatterVeto* m_materialVeto;
 
   std::string m_VeloProtoPLocation;
-  LHCb::ProtoParticles* m_veloProtoParticles;
 
   DeVelo* m_velo;
 

@@ -1,5 +1,5 @@
 // Include files
-#include <boost/foreach.hpp>
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -36,16 +36,15 @@ SelectVeloTracksNotFromPV::SelectVeloTracksNotFromPV( const std::string& name , 
   : GaudiAlgorithm( name , pSvcLocator )
 {
   declareProperty( "Inputs"
-                 , m_TracksLocations
+                 , m_TracksLocations = { "Hlt2/Track/Velo" }
                  , "Input track locations" ) ;
-  m_TracksLocations.push_back("Hlt2/Track/Velo");
 
   declareProperty( "Output"
-                 , m_WithIPTrackLocation = "Hlt2/VeloWithIP/Track"
+                 , m_WithIPTrackLocation = { "Hlt2/VeloWithIP/Track" }
                  , "Output track location" );
 
   declareProperty( "PVLocation"
-                 , m_PVLocation = "Hlt/Vertex/PV3D"
+                 , m_PVLocation = { "Hlt/Vertex/PV3D" }
                  , "Primary Vertex location" );
 
   declareProperty( "RejectSplashEvents"
@@ -134,12 +133,11 @@ StatusCode SelectVeloTracksNotFromPV::execute()
   // If needed, reject splash events immedeately
   if ( m_rejectSplashEvents ) {
     LHCb::ProcStatus* procStat = getIfExists<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
-    if ( NULL != procStat ) 
-    {
-      for( LHCb::ProcStatus::AlgStatusVector::const_iterator iAlg = procStat->algs().begin(); iAlg != procStat->algs().end(); ++iAlg ) {
-        if ( m_debug ) { debug() << "Found ProcStatus entry: " << (*iAlg).first << " (" << (*iAlg).second << ")" << endmsg; }
-        if ( (*iAlg).first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) {
-          if ( m_debug ) { debug() << "==> Rejecting event" << endmsg; }
+    if ( procStat ) {
+      for( auto &alg :  procStat->algs() ) {
+        if ( m_debug ) debug() << "Found ProcStatus entry: " << alg.first << " (" << alg.second << ")" << endmsg; 
+        if ( alg.first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) {
+          if ( m_debug ) debug() << "==> Rejecting event" << endmsg;
           ++counter("#rejected splash");
           return StatusCode::SUCCESS;
         }
@@ -157,7 +155,7 @@ StatusCode SelectVeloTracksNotFromPV::execute()
   put( iptracks, m_WithIPTrackLocation );
 
   int nInput = 0;
-  BOOST_FOREACH( std::string iLocation, m_TracksLocations ) {
+  for( const std::string&  iLocation: m_TracksLocations ) {
     if ( ! exist<LHCb::Tracks>(iLocation) ) {
       return Warning( "No tracks found at " + iLocation, StatusCode::SUCCESS, 1 );
     }
@@ -171,11 +169,11 @@ StatusCode SelectVeloTracksNotFromPV::execute()
     counter("# " + iLocation) += trackContainer.size();
 
     // add all forward tracks passing the MinIP requirement
-    BOOST_FOREACH( const LHCb::Track* iTr, trackContainer ) {
+    for( const LHCb::Track* iTr: trackContainer ) {
       if (m_verbose) { verbose() << "Track " << iTr->key() << " " << ( ( TrBACKWARD(iTr) ) ? "backward" : "forward" ) << endmsg; }
 
       if ( ( ! ( m_removeBackwardTracks && iTr->checkFlag(LHCb::Track::Backward) ) )
-        && ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) )
+        && ( std::none_of( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) )  ) )
       {
         if (m_verbose) { verbose() << "inserting track " << endmsg; }
         iptracks->add(iTr->clone());

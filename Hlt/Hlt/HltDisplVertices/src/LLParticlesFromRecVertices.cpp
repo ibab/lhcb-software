@@ -1,6 +1,5 @@
 // Include files
-// boost
-#include <boost/foreach.hpp>
+#include <algorithm>
 // LoKi
 #include "LoKi/TrackCuts.h"
 #include "LoKi/Hlt1Wrappers.h"
@@ -116,68 +115,50 @@ namespace {
    */
   bool TrHasHitBeforeVertex( const LHCb::Track* tr, const LHCb::VertexBase* vx, DeVelo* velo )
   {
-    double minZ = LoKi::Constants::HugeDistance;
-    double hitZ;
-    BOOST_FOREACH( LHCb::LHCbID id, tr->lhcbIDs() )
-    {
-      if ( id.isVelo() ) {
-        hitZ = velo->sensor( id.veloID() )->z();
-        //std::cout << "Hit at z=" << hitZ << std::endl;
-        if ( hitZ < minZ ) { minZ = hitZ; }
-      }
-    }
+    auto& ids = tr->lhcbIDs();
+    double minZ = std::accumulate( std::begin( ids ), std::end( ids ),
+                                   LoKi::Constants::HugeDistance,
+                                   [&]( double z, const LHCb::LHCbID& id ) 
+                                   { return id.isVelo() 
+                                        ? std::min( z, 
+                                                    velo->sensor( id.veloID() )->z() ) 
+                                        : z;
+    } );
     //std::cout << "Lowest-z hit: " << minZ << std::endl;
     // if first hit is at 6 sigma before the vertex count it
-    return ( ( ( minZ - vx->position().z() ) / vx->covMatrix()(2,2) ) < -5. );
+    return (  ( minZ - vx->position().z() )   < -5. * vx->covMatrix()(2,2) );
   }
 
   /**
    * True if the particle has the Track as a Velo-only track ancestor
    */
-  class IsVeloOnlyAncestor
-  {
+  class IsVeloOnlyAncestor {
+    const LHCb::Track* m_track;    // track to match to
   public:
     IsVeloOnlyAncestor( const LHCb::Track* track )
-    : m_track(track)
-    {}
-    bool operator() ( const LHCb::Particle* part )
-    {
-      if ( part->proto() && ( t_track = part->proto()->track() ) ) {
-        BOOST_FOREACH( t_ancTrack, t_track->ancestors() )
-        {
-          if ( t_ancTrack->checkType(LHCb::Track::Velo) && t_ancTrack->containsLhcbIDs(m_track->lhcbIDs()) ) {
-            return true;
-          }
-        }
-      }
-      return false; // if matched, we already returned "true"
+        : m_track(track) {}
+    bool operator() ( const LHCb::Particle* part ) {
+      const LHCb::Track* t_track = part->proto() ? part->proto()->track() : nullptr;
+      if ( !t_track) return false;
+      const auto& ancestors = t_track->ancestors();
+      const auto& ids = m_track->lhcbIDs();
+      return std::any_of( std::begin(ancestors), std::end(ancestors)
+                         , [&ids](const LHCb::Track* t) {
+                              return t->checkType(LHCb::Track::Velo) && t->containsLhcbIDs(ids);
+                         } );
     }
-  private:
-    const LHCb::Track* m_track;    // track to match to
-    const LHCb::Track* t_track;    // track of the particle to test
-    const LHCb::Track* t_ancTrack; // iterator for particle track ancestors
   };
   /**
    * True if the particle is made from the track
    */
-  class IsTrack
-  {
-  public:
-    IsTrack( const LHCb::Track* track )
-    : m_track(track)
-    {}
-    bool operator() ( const LHCb::Particle* part )
-    {
-      if ( part->proto() && ( t_track = part->proto()->track() ) ) {
-        if ( t_track->containsLhcbIDs( m_track->lhcbIDs() ) ) {
-          return true;
-        }
-      }
-      return false; // if matched, we already returned "true"
-    }
-  private:
+  class IsTrack {
     const LHCb::Track* m_track;    // track to match to
-    const LHCb::Track* t_track;    // track of the particle to test
+  public:
+    IsTrack( const LHCb::Track* track ) : m_track(track) {}
+    bool operator() ( const LHCb::Particle* part ) {
+      const LHCb::Track* t = part->proto() ? part->proto()->track() : nullptr ; 
+      return t && t->containsLhcbIDs( m_track->lhcbIDs() ) ;
+    }
   };
 
   // DEBUG PRINTOUT
@@ -293,8 +274,8 @@ StatusCode LLParticlesFromRecVertices::execute()
 
   setFilterPassed(false); // Mandatory. Set to true if event is accepted.
 
-  m_veloProtoParticles = new LHCb::ProtoParticles();
-  put( m_veloProtoParticles, m_VeloProtoPLocation );
+  LHCb::ProtoParticles* veloProtoParticles = new LHCb::ProtoParticles();
+  put( veloProtoParticles, m_VeloProtoPLocation );
 
   // Get the z of the most upstream PV
   double upPVZ = primaryVertices() >> m_UPPVZ;
@@ -306,24 +287,22 @@ StatusCode LLParticlesFromRecVertices::execute()
   if ( upPVZ != LoKi::Constants::HugeDistance ) {
     ++counter("#events with upPVZ");
 
-    LHCb::RecVertex::Range recVertices;
-    BOOST_FOREACH( std::string rvLoc, m_RVLocations )
-    {
-      
-      if ( ! exist<LHCb::RecVertex::Range>(rvLoc) ) {
+    for( std::string& rvLoc: m_RVLocations ) {
+      LHCb::RecVertex::Range recVertices = getIfExists<LHCb::RecVertex::Range>(rvLoc);
+      if ( !recVertices) {
         return Error("No RecVertices found at " + rvLoc, StatusCode::FAILURE);
       }
-      recVertices = get<LHCb::RecVertex::Range>(rvLoc);
-      if ( ! recVertices.empty() ) {
-        nInputVertices += recVertices.size();
-        BOOST_FOREACH( const LHCb::RecVertex* rv, recVertices )
-        {
-          if (m_verbose) { printRecVertexCandidateSummary( verbose(), rv, upPVZ ); }
-          if ( m_VERTEXCUT(rv) && ( m_Z(rv) > upPVZ ) ) {
-            if ( RecVertex2Particle(rv) ) { ++nAcceptedVertices; }
-          }
-        }
+      if (m_verbose) {
+          for( const LHCb::RecVertex* rv: recVertices )
+          { printRecVertexCandidateSummary( verbose(), rv, upPVZ ); }
       }
+      nInputVertices    += recVertices.size();
+      nAcceptedVertices += std::count_if( std::begin(recVertices), std::end(recVertices)
+                                        , [&](const LHCb::RecVertex *rv) 
+                                          { return m_VERTEXCUT(rv)
+                                                && ( m_Z(rv)>upPVZ ) 
+                                                &&  RecVertex2Particle(rv,veloProtoParticles ); }
+                                        );
     }
   }
 
@@ -336,19 +315,9 @@ StatusCode LLParticlesFromRecVertices::execute()
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode LLParticlesFromRecVertices::finalize() {
-  if( msgLevel( MSG::DEBUG ) ) { debug() << "==> Finalize" << endmsg; }
-
-  return DaVinciAlgorithm::finalize();
-}
-
-
-//=============================================================================
 // Turn RecVertex into Particle
 //=============================================================================
-const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb::RecVertex* rv )
+bool LLParticlesFromRecVertices::RecVertex2Particle( const LHCb::RecVertex* rv, LHCb::ProtoParticles* veloProtoParticles )
 {
   if (m_debug) { debug() << "==> Making LLParticle out of RecVertex" << endmsg; }
 
@@ -366,15 +335,13 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
   int numDaugTracksWithHitsBefore = 0;
   double fractTracksWithHitBeforeVertex;
 
-  BOOST_FOREACH( const LHCb::Track* iVtxTrack, rv->tracks() )
+  for( const LHCb::Track* iVtxTrack: rv->tracks() )
   {
-    LHCb::Particle::ConstVector::const_iterator daugIt = i_particles().end();
-    if ( iVtxTrack->hasVelo() ) { // Vertexing done from the Velo tracks
-      if (m_verbose) { verbose() << "Track has Velo segment, searching in input particle ancestor tracks..." << endmsg; }
-      daugIt = std::find_if( i_particles().begin(), i_particles().end(), IsVeloOnlyAncestor(iVtxTrack) );
-    } else { // Vertexing from the downstream tracks
-      daugIt = std::find_if( i_particles().begin(), i_particles().end(), IsTrack(iVtxTrack) );
-    }
+    if (m_verbose && iVtxTrack->hasVelo()) { verbose() << "Track has Velo segment, searching in input particle ancestor tracks..." << endmsg; }
+
+    // Vertexing done from the Velo tracks, otherwise downstream tracks
+    auto daugIt = iVtxTrack->hasVelo() ? std::find_if( i_particles().begin(), i_particles().end(), IsVeloOnlyAncestor(iVtxTrack) )
+                                       : std::find_if( i_particles().begin(), i_particles().end(), IsTrack(iVtxTrack) );
 
     if ( daugIt != i_particles().end() ) {
       daug = (*daugIt);
@@ -413,20 +380,21 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
 
   if (m_debug) { printLLPCandidateSummary(debug(), m_selectedDaughters.size(), m_selectedVeloDaughters.size(), motherMomentum, numDaugTracksWithHitsBefore, maxDaugE ); }
 
-  LHCb::Particle* prey = NULL;
-  if ( ( motherMomentum.M() > m_LLPMinMass )
+  bool foundPrey = ( ( motherMomentum.M() > m_LLPMinMass )
     && ( ( fractTracksWithHitBeforeVertex =  1.*numDaugTracksWithHitsBefore/(m_selectedDaughters.size()+m_selectedVeloDaughters.size()) ) < m_LLPMaxFractTrWithUpstream )
     && ( maxDaugE/motherMomentum.E() < m_LLPMaxFractEFromOne )
-    ) { // passes all cuts, make the composite
+    ) ;
+    
+  if (foundPrey)  { // passes all cuts, make the composite
     if (m_debug) { debug() << "==> Constructing the particle to put on the TES" << endmsg; }
 
-    LHCb::Vertex* preyVtx = new LHCb::Vertex(rv->position());
+    LHCb::Vertex* preyVtx = new LHCb::Vertex{rv->position()};
     preyVtx->setNDoF(rv->nDoF());
     preyVtx->setChi2(rv->chi2());
     preyVtx->setCovMatrix(rv->covMatrix());
     if (m_verbose) { verbose() << "Created vertex " << (*preyVtx) << " with position " << preyVtx->position() << ", Chi2/NDof=" << preyVtx->chi2() << "/" << preyVtx->nDoF() << " and covariance matrix " << preyVtx->covMatrix() << "\n" << endmsg; }
 
-    prey = new LHCb::Particle(m_LLPID);
+    LHCb::Particle* prey = new LHCb::Particle(m_LLPID);
     prey->setMomentum(motherMomentum);
     prey->setMeasuredMass(motherMomentum.M());
     prey->setMeasuredMassErr(0.);
@@ -448,16 +416,16 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
     if ( m_computeMatterVeto ) { prey->addInfo(LLParticlesFromRecVertices::InMatterVeto, m_materialVeto->isInMatter(preyVtx->position()) ); }
     if (m_verbose) { printSelectedLLP( verbose(), prey, m_computeMatterVeto ); }
 
-    BOOST_FOREACH( const LHCb::Particle* selDaug, m_selectedDaughters )
+    for( const LHCb::Particle* selDaug: m_selectedDaughters )
     {
       preyVtx->addToOutgoingParticles(selDaug);
       prey->addToDaughters(selDaug);
     }
     if (m_verbose) { verbose() << "Added " << m_selectedDaughters.size() << " long daughters" << endmsg; }
-    BOOST_FOREACH( Track4 veloTrackWithMom, m_selectedVeloDaughters )
+    for( Track4 veloTrackWithMom: m_selectedVeloDaughters )
     {
       LHCb::ProtoParticle* protoPion = new LHCb::ProtoParticle();
-      m_veloProtoParticles->add( protoPion );
+      veloProtoParticles->add( protoPion ); // transfer ownership...
       protoPion->setTrack(veloTrackWithMom.first);
       LHCb::Particle* pion = new LHCb::Particle();
       pion->setProto(protoPion);
@@ -471,7 +439,7 @@ const LHCb::Particle* LLParticlesFromRecVertices::RecVertex2Particle( const LHCb
     markNewTree(prey);
   }
 
-  return prey;
+  return foundPrey;
 }
 
 //=============================================================================
