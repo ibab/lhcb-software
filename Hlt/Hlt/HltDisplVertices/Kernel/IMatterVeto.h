@@ -2,13 +2,13 @@
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
 // ============================================================================
-#ifndef KERNEL_IMATTERVETO_H 
+#ifndef KERNEL_IMATTERVETO_H
 #define KERNEL_IMATTERVETO_H 1
 
 // ============================================================================
 // Include files
 // ============================================================================
-// STD & STL 
+// STD & STL
 // ============================================================================
 #include <string>
 #include <vector>
@@ -18,19 +18,19 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/Point3DTypes.h"
 
-class GAUDI_API IMatterVeto : public virtual IAlgTool 
+class GAUDI_API IMatterVeto : public virtual IAlgTool
 {
-public: 
-  // ==========================================================================
-  /// interface machinery 
-  DeclareInterfaceID(IMatterVeto, 1, 0);
-  // ==========================================================================
-public:
-  /// the main method
-  virtual bool isInMatter( const  Gaudi::XYZPoint &point ) const = 0 ;
+  public:
+    // ==========================================================================
+    /// interface machinery
+    DeclareInterfaceID( IMatterVeto, 1, 0 );
+    // ==========================================================================
+  public:
+    /// the main method
+    virtual bool isInMatter( const Gaudi::XYZPoint& point ) const = 0;
 };
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // DAVINCIKERNEL_IMATTERVETO_H
 // ============================================================================

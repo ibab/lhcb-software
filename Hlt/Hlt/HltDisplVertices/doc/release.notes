@@ -7,6 +7,7 @@
 ! 2014-01-24 - Gerhard Raven
  - replace BOOST_FOREACH with range-based for and std::none_of
  - in general, simplify logic, use STL algorithms where possible
+ - run clang-format to unify code layout
 
 ! 2014-01-08 - Marco Clemencic
  - Minor fix to requirements.
