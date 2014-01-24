@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-01-24 - Marco Clemencic
+ - Added CMake configuration file.
+
 !====================== MooreScripts v1r1 2014-01-17 ==========================
 ! 2014-01-17 - Rob Lambert
  - Remove install_tck_manifest, no longer needed.

@@ -3,6 +3,9 @@ Package     : MooreOnlineSys
 Package Coordinator : R. Lambert
 Purpose     : Running and testing Moore in the online environment
 
+! 2014-01-24 - Marco Clemencic
+ - Added CMake configuration file.
+
 </PRE><H1><A NAME=v21r0>2014-01-17 MooreOnlineSys v21r0</A></H1><PRE>
 
 Second prototype release of MooreOnline, the online wrapper project for Moore.
