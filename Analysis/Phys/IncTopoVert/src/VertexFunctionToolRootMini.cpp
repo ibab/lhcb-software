@@ -27,27 +27,29 @@ VertexFunctionToolRootMini::VertexFunctionToolRootMini( const std::string& type,
                                                         const std::string& name,
                                                         const IInterface* parent )
 : VertexFunctionTool ( type, name, parent )
-{ }
+{ 
+  const char* minName = "Minuit2";
+  const char* algoName = "";
+  m_min = ROOT::Math::Factory::CreateMinimizer(minName, algoName);
+}
 
 //=============================================================================
 
 void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZPoint & PMax, double & Max){
+
+  m_min->Clear();
+
+  m_min->SetMaxFunctionCalls(m_max_finder_max_iteration); // for Minuit/Minuit2
+  m_min->SetMaxIterations(10000);  // for GSL
+  m_min->SetTolerance(m_max_finder_min_step);
+  m_min->SetPrintLevel(-1);
 
   //====================================================================
   // This function finds the nearest local maximum around the vertex
   // fitted postion. It uses ROOT standard minimizer.
   //====================================================================
 
-  const char* minName = "Minuit2";
-  const char* algoName = "";
-  //  int randomSeed = -1;
-  ROOT::Math::Minimizer* min =
-    ROOT::Math::Factory::CreateMinimizer(minName, algoName);
-  min->SetMaxFunctionCalls(m_max_finder_max_iteration); // for Minuit/Minuit2
-  min->SetMaxIterations(10000);  // for GSL
-  min->SetTolerance(m_max_finder_min_step);
-  min->SetPrintLevel(-1);
-
+  
   // VfForMax Vf(this);
 
   // ROOT::Math::Functor f(&Vf.computeValueAt2,3);
@@ -59,10 +61,10 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   //starting point
   double variable[3] = {V.position().X(),V.position().Y(),V.position().Z()};
   //std::cout<<"Probe Value Max Functor :"<<f.DoEval(variable)<<std::endl;
-  min->SetFunction(f);
-  min->SetVariable(0,"x",variable[0], step[0]);
-  min->SetVariable(1,"y",variable[1], step[1]);
-  min->SetVariable(2,"z",variable[2], step[2]);
+  m_min->SetFunction(f);
+  m_min->SetVariable(0,"x",variable[0], step[0]);
+  m_min->SetVariable(1,"y",variable[1], step[1]);
+  m_min->SetVariable(2,"z",variable[2], step[2]);
 
   // temp - to limits minuit2 printouts - waiting for a real fix
   // Minuit2:mini seems to sporadically send mysterious std messages which we
@@ -75,7 +77,7 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   fflush(stderr);
   freopen("/dev/null","w",stderr);
 
-  min->Minimize();
+  m_min->Minimize();
 
 // put std back to normal
   fflush(stdout);
@@ -85,14 +87,24 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   dup2(original_stderr,fileno(stderr));
   close(original_stderr);
 
-  const double *xs = min->X();
+  const double *xs = m_min->X();
   PMax.SetXYZ(xs[0],xs[1],xs[2]);
-  Max = -min->MinValue();
+  Max = -m_min->MinValue();
 
-  delete min;
-  
   //info()<<"VertexFunctionToolRootMini::computeValueMax for "<<&V<<" new computation = "<<Max<<endmsg;
+  //delete(min);
+  
+}
 
+StatusCode VertexFunctionToolRootMini::finalize()
+{
+  StatusCode sc = VertexFunctionTool::finalize();
+  if ( sc.isFailure() ) return sc;
+  
+  delete(m_min);
+  
+  return sc;
+  
 }
 
 //=============================================================================

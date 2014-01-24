@@ -23,6 +23,8 @@ public:
                               const IInterface* parent);
   //VertexFunctionToolRootMini( ); 
 
+  StatusCode finalize();
+
   void computeValueMax(LHCb::RecVertex & V, Gaudi::XYZPoint & PMax, double & Max);
   
   virtual ~VertexFunctionToolRootMini( ); ///< Destructor
@@ -30,6 +32,7 @@ public:
 protected:
 
 private:
+  ROOT::Math::Minimizer* m_min;
 
 };
 

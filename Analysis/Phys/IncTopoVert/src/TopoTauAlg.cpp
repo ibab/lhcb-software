@@ -27,7 +27,8 @@ DECLARE_ALGORITHM_FACTORY( TopoTauAlg );
 //=============================================================================
 TopoTauAlg::TopoTauAlg( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator ),
+  m_nEvents(0),m_nAccepted(0),m_nCandidates(0)
 {
   //declareProperty("TrackInputLocation", m_tracksInputLocation = "Rec/Track/Best");
   declareProperty("VFParticlesInputLocation", m_VFparticlesInputLocation = "Phys/StdAllNoPIDsPions/Particles");
