@@ -83,7 +83,7 @@ StatusCode LoKi::HltUnit::registerOutput
   //
   StatusCode sc = regSvc()->registerOutput ( selection , this ) ;
   if ( sc.isFailure() )
-  { return Error ( "Unable to register OUTPUT selection '"
+  { return Error ( "Unable to register OUTPUT selection '" +
                    selection->id().str()+ "'" , sc ) ; }
   //
   // register as "output" selection
@@ -249,8 +249,7 @@ StatusCode LoKi::HltUnit::execute ()
   for ( auto& out : m_out ) { out.second->clean() ; }
  
   /// OPTIONAL: Some decorative monitoring
-  typedef std::map<Gaudi::StringKey,size_t> Sizes  ;
-  Sizes map ;
+  std::map<Gaudi::StringKey,size_t>  map ;
  
   // get the status of all selections
   if ( monitor() )
@@ -317,7 +316,7 @@ StatusCode LoKi::HltUnit::registerTESInput
   //
   StatusCode sc = regSvc()->registerTESInput ( location , this ) ;
   if ( sc.isFailure() )
-  { return Error ( "Unable to register INPUT TES location '"
+  { return Error ( "Unable to register INPUT TES location '" +
                    location.str() + "'" , sc ) ; }
   //
   auto ifind = std::find ( m_tes.begin() , m_tes.end() , location ) ;

@@ -306,15 +306,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeTracks
   //
   LHCb::Track::Container*     otracks = storedTracks ( address () ) ;
   // 
-  // loop over input candidates, upgrade one-by-one 
-  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
-        input.end() != iseed ; ++iseed ) 
-  {
-    const Hlt::Candidate* candidate = *iseed ;
-    if ( 0 == candidate ) 
+  // loop over input candidates, upgrade one-by-one
+  for ( const Hlt::Candidate* candidate : input ) {
+    if ( !candidate ) 
     { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
     const Hlt::Stage*     stage  = candidate->currentStage() ;
-    if ( 0 == stage     )
+    if ( !stage     )
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
     //
     if ( !stage->is<LHCb::Track> () ) 
@@ -349,15 +346,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
   //
   LHCb::Track::Container* otracks = storedTracks ( address () ) ;
   // 
-  // loop over input candidates, upgrade one-by-one 
-  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
-        input.end() != iseed ; ++iseed ) 
-  {
-    const Hlt::Candidate* candidate = *iseed ;
-    if ( 0 == candidate ) 
+  // loop over input candidates, upgrade one-by-one
+  for ( const Hlt::Candidate* candidate : input ) {
+    if ( !candidate ) 
     { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
     const Hlt::Stage*     stage  = candidate->currentStage() ;
-    if ( 0 == stage     )
+    if ( !stage     )
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
     //
     // upgrade single track
@@ -393,15 +387,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeMultiTracks
   //
   LHCb::Track::Container* otracks = storedTracks ( address () ) ;
   // 
-  // loop over input candidates, upgrade one-by-one 
-  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
-        input.end() != iseed ; ++iseed ) 
-  {
-    const Hlt::Candidate* candidate = *iseed ;
-    if ( 0 == candidate ) 
+  // loop over input candidates, upgrade one-by-one
+  for ( const Hlt::Candidate* candidate : input ) {
+    if ( ! candidate ) 
     { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
     const Hlt::Stage*     stage  = candidate->currentStage() ;
-    if ( 0 == stage     )
+    if ( !stage     )
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
     //
     // upgrade single track
@@ -437,15 +428,12 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgradeAll
   //
   LHCb::Track::Container* otracks = storedTracks ( address() ) ;
   // 
-  // loop over input candidates, upgrade one-by-one 
-  for ( Hlt::Candidate::ConstVector::const_iterator iseed = input.begin() ;
-        input.end() != iseed ; ++iseed ) 
-  {
-    const Hlt::Candidate* candidate = *iseed ;
-    if ( 0 == candidate ) 
+  // loop over input candidates, upgrade one-by-one
+  for ( const Hlt::Candidate* candidate : input ) {
+    if ( ! candidate ) 
     { Error ( "Invalid Hlt::Candidate, skip it!") ; continue ; } // CONTINUE 
     const Hlt::Stage*     stage  = candidate->currentStage() ;
-    if ( 0 == stage     )
+    if ( ! stage     )
     { Error ( "Invalid Hlt::Stage,     skip it!") ; continue ; } // CONTINUE 
     //
     // upgrade single track
@@ -484,10 +472,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   LHCb::Track::Container*            otracks    ) const 
 {
   //
-  if ( 0 == input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
+  if ( ! input ) { return Error ( "Hlt::Candidate* points to NULL") ; }
   //
   const Hlt::Stage* stage = input->currentStage() ;
-  if ( 0 == stage || !stage->is<LHCb::Track> () ) 
+  if ( ! stage || !stage->is<LHCb::Track> () ) 
   { return Error ( "Invalid Hlt::Stage*" ) ; }
   //
   const LHCb::Track*    seed = stage->get<LHCb::Track> () ;
@@ -501,9 +489,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ;
         out.end() != iout ; ++iout ) {
      const LHCb::Track* track = *iout ;
-     if ( 0 == track ) {
-        continue ;
-     }
+     if ( ! track ) continue ;
      //
      Hlt::Candidate* _input = 0;
      if ( iout == out.begin() ) {
@@ -554,10 +540,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   return Error  ( "FIXME, check/update this code to the latest" ) ;
   // 
   //
-  if ( 0 == input ) { return Error("Hlt::Candidate points to NULL") ; }
+  if ( !input ) { return Error("Hlt::Candidate points to NULL") ; }
   const Hlt::Stage* stage = input->currentStage() ;
   //
-  if ( 0 == stage || !stage->is<Hlt::MultiTrack> () ) 
+  if ( !stage || !stage->is<Hlt::MultiTrack> () ) 
   { return Error("Invalid Hlt::Stage*" ) ; }
   //
   const Hlt::MultiTrack* multi_track = stage->get<Hlt::MultiTrack> () ;
