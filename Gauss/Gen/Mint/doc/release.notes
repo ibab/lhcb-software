@@ -7,6 +7,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-24 - Jeremy
+ - Move FocusFlatte to Flatte
+ - Deprecate FocusFlatte
+ - Fixed a bug in the new Flatte
+  . When the phase space factor was negative, the phase space factor was returned as a complex number
+  . Should square root the absolute value first, then return as a complex number
+
+! 2014-01-24 - Jeremy
  - Non-resonant "particles" now have an associated barrier factor
 
 ! 2014-01-24 - Matt Coombes

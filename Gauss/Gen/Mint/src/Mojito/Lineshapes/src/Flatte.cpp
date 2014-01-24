@@ -46,40 +46,60 @@ double Flatte::mKPlus(){
   return _KPlusMass;
 }
 
-double Flatte::aSqrtTerm(double m0, double m){
-  bool dbThis=false;
-  double a2 = 1.0 - (2*m0/m)*(2*m0/m);
-  double a=0;
-  if(a2 < 0){
+std::complex<double> Flatte::aSqrtTerm( const double& m0, const double& m ){
+  const bool dbThis=false;
+
+  const double a2 = 1.0 - (2*m0/m)*(2*m0/m);
+  std::complex<double> a;
+  
+  if( a2 < 0 ){
     if(dbThis){
-      cout << "WARNING in Flatte::aSqrtTerm()"
-	   << " sqrt( 1.0 - (2m0/m)^2 ) imaginary"
-	   << " (returning 0)."
-	   << endl;
+      std::cout << "WARNING in Flatte::aSqrtTerm()"
+		<< " sqrt( 1.0 - (2m0/m)^2 ) imaginary"
+		<< " (returning an imaginary number)."
+		<< std::endl;
     }
+    const std::complex<double> i(0.0, 1.0); 
+    a = i * sqrt(fabs(a2));
   }else{
-    a = sqrt(a2);
+    const std::complex<double> unit(1.0, 0.0);
+    a = ((std::complex<double>) sqrt(a2)) * unit;
   }
   return a;
 }
 
-double Flatte::GofM(){
+std::complex<double> Flatte::complexGofM(){
   bool dbThis=false;
 
   double m  = BW_BW::mumsRecoMass();
 
-  double Gpipi = (1./3.) * aSqrtTerm(    mPi0(), m ) 
+  std::complex<double> Gpipi = (1./3.) * aSqrtTerm(    mPi0(), m ) 
     +            (2./3.) * aSqrtTerm( mPiPlus(), m );
 
 
-  double GKK   = (1./2.) * aSqrtTerm(     mK0(), m ) 
+  std::complex<double> GKK   = (1./2.) * aSqrtTerm(     mK0(), m ) 
     +            (1./2.) * aSqrtTerm(  mKPlus(), m );
 
-  double FlatteWidth = gPi() * Gpipi + gK() * GKK;
+  std::complex<double> FlatteWidth = gPi() * Gpipi + gK() * GKK;
   if(dbThis){
-    cout << "Flatte: compare Flatte Width = " << FlatteWidth
+    cout << "LAURENS CLASS Flatte: compare Flatte Width = " << FlatteWidth
 	 << " BW_BW::GofM() " << BW_BW::GofM()
 	 << endl;
   }
   return FlatteWidth;
+}
+
+double Flatte::GofM(){
+  cout << "ERROR Flatte::GofM() called should not have happenned!" <<endl;
+  std::complex<double> val = complexGofM();
+  return abs(val);
+}
+
+std::complex<double> Flatte::BreitWigner() {
+   double mpdg = mumsPDGMass();
+  std::complex<double> i(0.0, 1.0);
+  std::complex<double> invBW = (((std::complex<double>) mpdg*mpdg -
+  mumsRecoMass2()) -  i * mpdg * complexGofM());
+  return 1.*GeV*GeV/invBW;  
+
 }

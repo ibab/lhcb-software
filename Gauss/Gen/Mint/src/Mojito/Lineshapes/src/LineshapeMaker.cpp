@@ -11,7 +11,6 @@
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
 #include "Mint/Flatte.h"
-#include "Mint/FocusFlatte.h"
 #include "Mint/CrystalBarrelFOCUS.h"
 
 #include <iostream>
@@ -84,12 +83,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
       return new BW_BW(*tree, events);
     }
   }else if(abs(tree->getVal().pdg()) == 9010221 ){ // f0(980)
-    if(A_is_in_B("FocusFlatte", lopt)){
-      cout << "LineshapeMaker: "
-	   << "\n\t> returning Flatte lineshape"
-	   << endl;
-      return new FocusFlatte(*tree, events);
-    }else if(A_is_in_B("Flatte", lopt)){
+    if(A_is_in_B("Flatte", lopt)){
       cout << "LineshapeMaker: "
 	   << "\n\t> returning Flatte lineshape"
 	   << endl;
