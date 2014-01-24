@@ -10,6 +10,8 @@
 namespace MINT{
 class IMintGen{
  public:
+  virtual ~IMintGen(){};
+
   virtual void SetInputTextFile(std::string inputFile) = 0;
   virtual void Initalize(const std::vector<int>& pat, TRandom* rnd) = 0;
 
