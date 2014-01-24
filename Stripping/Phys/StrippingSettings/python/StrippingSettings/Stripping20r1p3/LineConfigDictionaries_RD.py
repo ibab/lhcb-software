@@ -386,7 +386,6 @@ B2XTauMicro = {
     'STREAMS' : [ 'Leptonic' ]
     }
 
-"""
 B2XTauZVTOP = { 
     'BUILDERTYPE' : 'ZVTOP_Conf',
     'CONFIG'      : {
@@ -441,8 +440,6 @@ B2XTauZVTOP = {
     'WGs'     : [ 'RD' ],
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
-"""
-
 
 
 BLVLines = { 
