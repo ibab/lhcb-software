@@ -8,7 +8,6 @@
 #include "HltBase/HltAlgorithm.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 
-
 /** @class HltCosmicsOT HltCosmicsOT.h
  *
  * trigger on OT Activity (idea based on a suggestion by Dirk Wiedner)
@@ -21,41 +20,32 @@
  * @author Manuel Tobias Schiller <schiller@physi.uni-heidelberg.de>
  * @date   2009-07-16
  *
- * 2009-09-08 : adapted by Stephan Nies <snies@cern.ch> 
+ * 2009-09-08 : adapted by Stephan Nies <snies@cern.ch>
  *                   and Jesko Merkel <jmerkel@cern.ch>
  *
  */
 
+class HltCosmicsOT : public HltAlgorithm
+{
+  public:
+    /// Standard Constructor
+    HltCosmicsOT( const std::string& name, ISvcLocator* pSvcLocator );
 
-class HltCosmicsOT : public HltAlgorithm {
+    virtual ~HltCosmicsOT(); ///< Destructor
 
-public:
+    virtual StatusCode initialize(); ///< Algorithm initialization
+    virtual StatusCode execute();    ///< Algorithm event execution
 
-	/// Standard Constructor
-	HltCosmicsOT(const std::string& name, ISvcLocator* pSvcLocator);
-
-	virtual ~HltCosmicsOT(); ///< Destructor
-
-	virtual StatusCode initialize(); ///< Algorithm initialization
-	virtual StatusCode    execute(); ///< Algorithm event execution
-	virtual StatusCode   finalize(); ///< Algorithm finalize
-
-
-
-private:
+  private:
     Hlt::SelectionContainer0 m_selections;
 
-	/// decoder so that we can ask quickly if there were any hits
-	IOTRawBankDecoder* m_otdecoder;
-	/// name of raw bank decoder to use
-	std::string m_otdecodername;
-	/// minimum number of hits in OT before we start decoding
-	unsigned m_minhits;
-	/// tolerance of straw sum test
-	unsigned m_tolstraws;
-
-
+    /// decoder so that we can ask quickly if there were any hits
+    IOTRawBankDecoder* m_otdecoder;
+    /// name of raw bank decoder to use
+    std::string m_otdecodername;
+    /// minimum number of hits in OT before we start decoding
+    unsigned m_minhits;
+    /// tolerance of straw sum test
+    unsigned m_tolstraws;
 };
 #endif // INCLUDE_HLTCOSMICSOT_H
-
-// vim: sw=4:tw=78:ft=cpp

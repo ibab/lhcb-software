@@ -4,6 +4,9 @@
 ! Purpose     : Cosmic run specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2014-01-24 - Gerhard Raven
+ - run clang-format to unify layout
+
 ! 2014-01-22 - Gerhard Raven
  - replace BOOST_FOREACH with std::accumulate + lambda
 
