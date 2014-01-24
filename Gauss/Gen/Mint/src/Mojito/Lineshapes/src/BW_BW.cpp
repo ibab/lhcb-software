@@ -1015,12 +1015,14 @@ const GaussFct& BW_BW::gaussianApprox(){
 }
 */
 
-
 std::complex<double> BW_BW::getVal(){
-  bool dbThis=false;
-  if(nonResonant()) return 1;
+  const bool dbThis = false;
 
   resetInternals();
+
+  if( nonResonant() )
+    return Fr_PDG_BL();
+
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
     // of the decay chain from the rest - it could just get
