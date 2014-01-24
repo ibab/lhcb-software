@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-01-24 - Gerhard Raven
+ - switch to range-based for loops
+
 ! 2014-01-23 - Gerhard Raven
  - run clang-format to consistently format the code
 

@@ -42,10 +42,14 @@ LumiHistoCollector::LumiHistoCollector( const std::string& name,
     declareProperty( "HistogramUpdatePeriod", m_histogramUpdatePeriod = 1 );
     declareProperty( "TrendSize", m_trendSize = 100 );
     declareProperty( "TrendInterval", m_trendInterval = 100 );
-    declareProperty( "BXTypes", m_BXTypes );
-    declareProperty( "AddBXTypes", m_addBXTypes );
-    declareProperty( "SubtractBXTypes", m_subtractBXTypes );
-    declareProperty( "InputVariables", m_Variables );
+    declareProperty( "BXTypes",
+                     m_BXTypes = {"BeamCrossing", "Beam1", "Beam2", "NoBeam"} );
+    declareProperty( "AddBXTypes", m_addBXTypes = {"BeamCrossing", "NoBeam"} );
+    declareProperty( "SubtractBXTypes", m_subtractBXTypes = {"Beam1", "Beam2"} );
+    declareProperty( "InputVariables",
+                     m_Variables = {"SPDMult",          "PUMult",
+                                    "CaloEt",           "SPDMult_threshold",
+                                    "PUMult_threshold", "CaloEt_threshold"} );
     declareProperty( "prevDir", m_prevDir = "Previous" );
     declareProperty( "resDir", m_resDir = "Results" );
     declareProperty( "PathBase", m_pathBase = "/stat/Histo" );
@@ -61,37 +65,11 @@ StatusCode LumiHistoCollector::initialize()
     StatusCode sc = HltBaseAlg::initialize();
     if ( sc.isFailure() ) return sc;
 
-    // initialize lists for default behaviour
-    if ( m_BXTypes.empty() ) {
-        m_BXTypes.push_back( "BeamCrossing" );
-        m_BXTypes.push_back( "Beam1" );
-        m_BXTypes.push_back( "Beam2" );
-        m_BXTypes.push_back( "NoBeam" );
-    }
-    if ( m_addBXTypes.empty() ) {
-        m_addBXTypes.push_back( "BeamCrossing" );
-        m_addBXTypes.push_back( "NoBeam" );
-    }
-    if ( m_subtractBXTypes.empty() ) {
-        m_subtractBXTypes.push_back( "Beam1" );
-        m_subtractBXTypes.push_back( "Beam2" );
-    }
-    if ( m_Variables.empty() ) {
-        m_Variables.push_back( "SPDMult" );
-        m_Variables.push_back( "PUMult" );
-        m_Variables.push_back( "CaloEt" );
-        m_Variables.push_back( "SPDMult_threshold" );
-        m_Variables.push_back( "PUMult_threshold" );
-        m_Variables.push_back( "CaloEt_threshold" );
-    }
-
     // set up the hisogram lookup tables and book the result histos
     setupStore();
 
     // get list of all histograms and their directories
-    if ( msgLevel( MSG::DEBUG ) ) {
-        printHistoList();
-    }
+    if ( msgLevel( MSG::DEBUG ) ) printHistoList();
 
     debug() << "Initialised Lumi Histo Collector" << endmsg;
     return sc;
@@ -133,10 +111,8 @@ void LumiHistoCollector::setupStore()
     // loop over requested histogram paths and retrieve them
     int countMaps = 0;
     std::string prefix = "";
-    for ( std::vector<std::string>::iterator iBx = m_BXTypes.begin();
-          iBx != m_BXTypes.end(); ++iBx ) {
+    for ( const std::string& bx : m_BXTypes ) {
         countMaps++;
-        std::string bx = *iBx;
         /* create storage for the existing histograms */
         histoMap* hMap = new histoMap();
         m_histoStore[bx] = hMap;
@@ -229,15 +205,11 @@ StatusCode LumiHistoCollector::analyse()
     }
 
     // take delta from all histos
-    for ( std::vector<std::string>::iterator iVar = m_Variables.begin();
-          iVar != m_Variables.end(); ++iVar ) {
-        std::string var = *iVar;
+    for ( const std::string& var : m_Variables ) {
         AIDA::IHistogram1D* resultHist = m_resultMap[var];
         resultHist->reset();
         double meanR = 0; // for R calculation
-        for ( std::vector<std::string>::iterator iBx = m_BXTypes.begin();
-              iBx != m_BXTypes.end(); ++iBx ) {
-            std::string bx = *iBx;
+        for ( const std::string& bx : m_BXTypes ) {
             histoMap* theMap = m_histoStore[bx];
             histoMap* prevMap = m_previousStore[bx];
             AIDA::IHistogram1D* theHist = ( *theMap )[var];
@@ -277,18 +249,15 @@ StatusCode LumiHistoCollector::analyse()
                         << " from " << theMean << " and " << prevMean << " temp "
                         << tempMean << endmsg;
             double scale = 0; // if histo not wanted scale to zero
-            for ( std::vector<std::string>::iterator iABx = m_addBXTypes.begin();
-                  iABx != m_addBXTypes.end(); ++iABx ) {
-                if ( ( *iABx ) == bx ) {
+            for ( const std::string&  ABx : m_addBXTypes ) {
+                if ( ABx == bx ) {
                     scale = deltaSumAll;
                     meanR += deltaMean;
                     break;
                 }
             }
-            for ( std::vector<std::string>::iterator iSBx =
-                      m_subtractBXTypes.begin();
-                  iSBx != m_subtractBXTypes.end(); ++iSBx ) {
-                if ( ( *iSBx ) == bx ) {
+            for ( const std::string& SBx : m_subtractBXTypes ) {
+                if (  SBx  == bx ) {
                     scale = -1 * deltaSumAll;
                     meanR -= deltaMean;
                     break;
@@ -322,20 +291,16 @@ StatusCode LumiHistoCollector::printHistoList()
     if ( sc.isSuccess() ) {
         std::string m_rootName;
         SmartDataPtr<DataObject> root( m_histogramSvc, m_rootName );
-        std::string store_name = "Unknown";
+        std::string store_name { "Unknown" };
         IRegistry* pReg = root->registry();
         IRegistry* pObj;
         if ( pReg ) {
             SmartIF<IService> isvc( pReg->dataSvc() );
-            if ( isvc ) {
-                store_name = isvc->name();
-            }
+            if ( isvc ) store_name = isvc->name();
         }
         pObj = root->registry();
         SmartIF<IDataManagerSvc> mgr( m_histogramSvc );
-        if ( mgr ) {
-            printHistoLeaf( m_histogramSvc, mgr, pObj );
-        }
+        if ( mgr ) printHistoLeaf( m_histogramSvc, mgr, pObj );
     } else {
         error() << "printHistoList cannot get HistogramDataSvc" << endmsg;
     }
@@ -354,12 +319,10 @@ bool LumiHistoCollector::printHistoLeaf( IHistogramSvc* histogramSvc,
     if ( sc.isSuccess() ) {
         if ( leaves.size() ) {
             // this is a leaf
-            for ( Leaves::const_iterator i = leaves.begin(); i != leaves.end();
-                  i++ ) {
-                const std::string& id = ( *i )->identifier();
-                if ( printHistoLeaf( histogramSvc, mgr, ( *i ) ) ) {
+            for ( auto& i : leaves ) {
+                if ( printHistoLeaf( histogramSvc, mgr, i ) ) {
                     // this is not a histogram
-                    info() << MSG::INFO << "--Node found with id " << id << endmsg;
+                    info() << MSG::INFO << "--Node found with id " << i->identifier() << endmsg;
                 }
             }
         } else {
@@ -377,7 +340,7 @@ ulonglong LumiHistoCollector::gpsTime()
 
     // get ODIN bank
     LHCb::ODIN* odin = getIfExists<LHCb::ODIN>( LHCb::ODINLocation::Default );
-    if ( NULL == odin ) {
+    if ( !odin ) {
         err() << "ODIN cannot be loaded" << endmsg;
 
         // StatusCode sc = Error("ODIN cannot be loaded",StatusCode::FAILURE);
