@@ -117,7 +117,7 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks
   std::vector<const LHCb::Track*>  vf_tracks ;
   getVertexFunctionTracks(vf_tracks);
   if (vf_tracks.size()==0) {
-    Warning("The Vertex Function has no tracks!",StatusCode::SUCCESS,20);
+    Warning("The Vertex Function has no tracks!",StatusCode::SUCCESS,20).ignore();
   }
 
   cleanUpResult();
@@ -133,22 +133,40 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks
   setVertexFunctionParam(); // Just in case some parameters where changed (?, Giampi ?) 
 
   // Start finding algorithm, splitted in 6 steps to ease debugging and method overriding 
-  if (step1().isFailure ()) return Warning("Step1 failed",StatusCode::SUCCESS,20);
+  if (!step1().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step1 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL)     n_sig_track_step[0] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (step2().isFailure ()) return Warning("Step2 failed",StatusCode::SUCCESS,20);
+  if (!step2().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step2 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[1] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (step3().isFailure ()) return Warning("Step3 failed",StatusCode::SUCCESS,20);
+  if (!step3().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step3 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[2] = getNbSignalTrack(m_2tracks_vertices);
 
-  if (step4().isFailure ()) return Warning("Step4 failed",StatusCode::SUCCESS,20);
+  if (!step4().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step4 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[3] = getNbSignalTrack(m_list_of_clusters);
 
-  if (step5().isFailure ()) return Warning("Step5 failed",StatusCode::SUCCESS,20);
+  if (!step5().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step5 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[4] = getNbSignalTrack(m_vertices);
 
-  if (step6().isFailure ()) return Warning("Step6 failed",StatusCode::SUCCESS,20);
+  if (!step6().isSuccess()) {
+    cleanUpFull(); 
+    return Warning("Step6 failed",StatusCode::SUCCESS,20);
+  }
   if (m_MC == true && n_sig_track_step != NULL )     n_sig_track_step[5] = getNbSignalTrack(m_vertices);
 
   cleanUpTemporary();
@@ -179,16 +197,23 @@ StatusCode TopoVertexTool::step1()
     for (std::vector<const LHCb::Track*>::iterator it_ptrk1=begin1; it_ptrk1<m_tracks.end(); ++it_ptrk1){ 
       two_tracks_container.push_back(*it_ptrk1);
       LHCb::RecVertex * vertex = m_trackVertexer->fit(two_tracks_container);
-      two_tracks_container.pop_back();
-
-      if (vertex->chi2() > (2*m_twoTracksVtxChi2Max)){
-        delete vertex;
-        continue;
-      }
+      if (vertex) {
+        
+        two_tracks_container.pop_back();
+        
+        if (vertex->chi2() > (2*m_twoTracksVtxChi2Max)){
+          delete vertex;
+          continue;
+        }
       
-      if (m_vertexFunction->valueAt(*vertex) < m_twoTracksVtxVfMin){
+        if (m_vertexFunction->valueAt(*vertex) < m_twoTracksVtxVfMin){
+          delete vertex;
+          continue;
+        }
+      }
+      else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore();  
         delete vertex;
-        continue;
+        
       }
       
       m_2tracks_vertices.push_back(vertex);
@@ -308,7 +333,9 @@ StatusCode TopoVertexTool::step5()
     LHCb::RecVertex * vertex = m_trackVertexer->fit(tracks);
 
     if (vertex)  m_vertices.push_back(vertex);
-    else Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20); 
+    else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore(); 
+      delete vertex;   
+    }    
   }
   return StatusCode::SUCCESS;
 }
@@ -422,9 +449,15 @@ LHCb::RecVertex * TopoVertexTool::removeHighChisqTracksFromVertex(LHCb::RecVerte
   
   if ( ( max_chi2 > m_TrackVtxChi2Max ) && (updated_tracks.size()>1) ) {
     LHCb::RecVertex * new_vertex = m_trackVertexer->fit(updated_tracks);
-    delete(vertex);
-    vertex = removeHighChisqTracksFromVertex(new_vertex);
-  }
+    if (vertex) {
+      
+      delete(vertex);
+      vertex = removeHighChisqTracksFromVertex(new_vertex);
+    }
+    else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore(); 
+      delete vertex;   
+    }
+  }  
   return vertex;
   
 }

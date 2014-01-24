@@ -89,6 +89,8 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   PMax.SetXYZ(xs[0],xs[1],xs[2]);
   Max = -min->MinValue();
 
+  delete min;
+  
   //info()<<"VertexFunctionToolRootMini::computeValueMax for "<<&V<<" new computation = "<<Max<<endmsg;
 
 }

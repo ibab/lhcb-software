@@ -136,7 +136,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::XYZVector  imp;
     StatusCode Sc_m_Geom = m_Geom->distance((*it),vv,imp);
     if(Sc_m_Geom == StatusCode::FAILURE  || imp.X()!=imp.X()) {
-      Warning("m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()=",StatusCode::SUCCESS,20);
+      Warning("m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()=",StatusCode::SUCCESS,20).ignore();
       continue;
     }
 
@@ -152,7 +152,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::SymMatrix3x3 errPos3D;
     StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
     if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-      Warning("m_Trans->position return failed status code or NaN!  errPos3D[0][0]=",StatusCode::SUCCESS,20);
+      Warning("m_Trans->position return failed status code or NaN!  errPos3D[0][0]=",StatusCode::SUCCESS,20).ignore();
       continue;
     }
 
@@ -190,7 +190,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
 
     bool isInv = errPos.Invert();
     if (!isInv || errPos[0][0]!=errPos[0][0]) {
-      Warning("Covariance matrice could not be inverted !!  errPos[0][0]=",StatusCode::SUCCESS,20);
+      Warning("Covariance matrice could not be inverted !!  errPos[0][0]=",StatusCode::SUCCESS,20).ignore();
       continue;
     }
     //debug()<<" Covariance Matrix :"<<errPos<<endmsg;
@@ -741,6 +741,7 @@ Gaudi::XYZVector VertexFunctionTool::computeGradientAt(Gaudi::XYZPoint & P) {
     }
     d_gradient[xyz]=Sum_d_GaussT-(2.0*Sum_GaussT_d_GaussT*Sum_GaussT-Sum_GaussT_Sq*Sum_d_GaussT)/(Sum_GaussT*Sum_GaussT);
   }
+  delete vv;
   Gaudi::XYZVector gradient(d_gradient[0],d_gradient[1],d_gradient[2]);
   return gradient;
 }
