@@ -165,7 +165,6 @@ void EvtVub::decay( EvtParticle *p ){
   int j;
   // B+ -> u-bar specflav l+ nu
   
-  //EvtParticle *xuhad, *lepton, *neutrino;
   EvtParticle *xuhad(0), *lepton(0), *neutrino(0);
   EvtVector4R p4;
   // R. Faccini 21/02/03
