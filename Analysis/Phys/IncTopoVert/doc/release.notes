@@ -4,15 +4,16 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= IncTopoVert v1r2 2014-01-24 =========================
+
 ! 2014-01-24 - Julien Cogan
- - Modify the VertexFunctionToolRootMini to use a single instance of the minimizer
- - Fix uninitialised values in TopoVertexTool
+ - Modify the VertexFunctionToolRootMini tool to use a single instance of
+   the minimizer.
+ - Fix uninitialised values in TopoVertexTool.
 
 ! 2014-01-24 - Giampiero Mancinelli
  - Fix memory leak in VertexFunctionToolRootMini (minimizer created at each event
- and not deleted)
-
-!========================= IncTopoVert v1r2 2014-01-22 =========================
+   and not deleted).
 
 ! 2014-01-20 - Julien Cogan
  - Fix warnings
