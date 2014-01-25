@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( HltTrackFit );
+DECLARE_TOOL_FACTORY( HltTrackFit )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -18,7 +18,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( HltVeloTCaloMatch );
+DECLARE_TOOL_FACTORY( HltVeloTCaloMatch )
 
 
 //=============================================================================

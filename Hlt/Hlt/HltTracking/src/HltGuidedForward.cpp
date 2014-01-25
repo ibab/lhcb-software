@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( HltGuidedForward );
+DECLARE_TOOL_FACTORY( HltGuidedForward )
 
 
 //=============================================================================
