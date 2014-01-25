@@ -21,7 +21,7 @@ class RawEvent;
 //                     and Jesko Merkel <jmerkel@cern.ch>
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( HltCosmicsOT );
+DECLARE_ALGORITHM_FACTORY( HltCosmicsOT )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -40,7 +40,6 @@ HltCosmicsOT::HltCosmicsOT( const std::string& name, ISvcLocator* pSvcLocator )
 //=============================================================================
 HltCosmicsOT::~HltCosmicsOT()
 {
-    ;
 }
 
 //=============================================================================
@@ -48,8 +47,6 @@ HltCosmicsOT::~HltCosmicsOT()
 //=============================================================================
 StatusCode HltCosmicsOT::initialize()
 {
-    // StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-
     StatusCode sc = HltAlgorithm::initialize();
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
     // m_selections.retrieveSelections();
