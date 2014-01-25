@@ -135,14 +135,6 @@ private:
 
   //std::map< std::string,TMVA::Reader* > m_readers;
   std::map< std::string,IClassifierReader* > m_classifiers;
-  
-  float m_eval_mode;
-  float m_eval_recverts, m_eval_sigBpt, m_eval_ntrks;
-  float m_eval_mm, m_eval_p, m_eval_pt, m_eval_dEta;
-  float m_eval_probchi2, m_eval_tau, m_eval_fd, m_eval_fdchi2, m_eval_bpvdira;
-  float m_eval_maxProbnnGhostDaus, m_eval_kProbnnk, m_eval_kIppvchi2, m_eval_kIpMinchi2;
-  float m_eval_eProbnne, m_eval_muProbnnmu;
-  float m_eval_dstarDm;
 
   ITaggingUtils* m_util;
   ILifetimeFitter*           m_pLifetimeFitter;
