@@ -109,7 +109,7 @@ StatusCode CollectLumiData::execute()
     // load the vertex objects
     // ------------------------------------------
     const LHCb::RecVertices* PV3D = get<LHCb::RecVertices>( m_PV3DContainerName );
-    int n_PV3D = n_PV3D = PV3D->size();
+    int n_PV3D = PV3D->size();
     sum->addInfo( m_iPV3D, n_PV3D );
 
     if ( n_PV3D < 0 && m_printing_info )
