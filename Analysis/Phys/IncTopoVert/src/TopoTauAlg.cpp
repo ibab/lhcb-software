@@ -223,7 +223,8 @@ StatusCode TopoTauAlg::execute() {
       ++m_nCandidates;
       passed = true;
     }
-    else {
+    else 
+    {
       if (abs(sum_charge)!=1) continue;
       if ((*it_vtx)->tracks().size()!=3) continue;
       if (sum_charge==-1) mother.setParticleID(LHCb::ParticleID(15));

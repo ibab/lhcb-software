@@ -211,7 +211,8 @@ StatusCode TopoVertexTool::step1()
           continue;
         }
       }
-      else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore();  
+      else { 
+        Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore();  
         delete vertex;
         
       }
@@ -333,7 +334,8 @@ StatusCode TopoVertexTool::step5()
     LHCb::RecVertex * vertex = m_trackVertexer->fit(tracks);
 
     if (vertex)  m_vertices.push_back(vertex);
-    else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore(); 
+    else { 
+      Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore(); 
       delete vertex;   
     }    
   }
@@ -454,7 +456,8 @@ LHCb::RecVertex * TopoVertexTool::removeHighChisqTracksFromVertex(LHCb::RecVerte
       delete(vertex);
       vertex = removeHighChisqTracksFromVertex(new_vertex);
     }
-    else { Warning("TopoVertexTool:: fit didn't converge",StatusCode::SUCCESS,20).ignore(); 
+    else { 
+      Warning("fit didn't converge",StatusCode::SUCCESS,0).ignore(); 
       delete vertex;   
     }
   }  
