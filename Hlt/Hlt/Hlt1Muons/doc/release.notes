@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-25 - Gerhard Raven
+ - fix clang error
+ - move class members which are compile time constants out of class
+   & use std::array instead of std::vector where possible
+
 ! 2014-01-23 - Gerhard Raven
  - run clang-format to unify code formatting
 

@@ -34,13 +34,15 @@ DECLARE_NAMESPACE_TOOL_FACTORY( Hlt, HltVeloIsMuon )
 
 using std::vector;
 
-
 //=============================================================================
 Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& name,
                                    const IInterface* parent )
     : base_class( type, name, parent )
     , m_hitManager{nullptr}
     , m_fieldSvc{nullptr}
+    , m_order{3u, 4u, 5u, 2u}
+    , m_nStations{5u}
+    , m_nRegions{4u}
     , m_magnetHit{nullptr}
     , m_seeds{0}
 {
@@ -65,8 +67,8 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
 
     declareProperty( "SetQOverP", m_setQOverP = false );
 
-    //m_regionFoIX.reserve( m_nRegions );
-    //m_regionFoIY.reserve( m_nRegions );
+    m_regionFoIX.reserve( m_nRegions );
+    m_regionFoIY.reserve( m_nRegions );
 }
 
 //=============================================================================
@@ -91,8 +93,16 @@ StatusCode Hlt::HltVeloIsMuon::initialize()
 
     m_padSizeX.resize( m_nStations * m_nRegions );
     m_padSizeY.resize( m_nStations * m_nRegions );
+    m_regionInnerX.resize( m_nStations );
+    m_regionOuterX.resize( m_nStations );
+    m_regionInnerY.resize( m_nStations );
+    m_regionOuterY.resize( m_nStations );
 
     for ( unsigned int s = 0; s < m_nStations; ++s ) {
+        m_regionInnerX[s] = m_det->getInnerX( s );
+        m_regionOuterX[s] = m_det->getOuterX( s );
+        m_regionInnerY[s] = m_det->getInnerY( s );
+        m_regionOuterY[s] = m_det->getOuterY( s );
 
         for ( unsigned int r = 0; r < m_nRegions; ++r ) {
             m_padSizeX[s * m_nRegions + r] = m_det->getPadSizeX( s, r );
@@ -275,10 +285,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
         for ( Hlt1MuonHit* hit : hits ) {
             if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
-
             Candidate* seed = new Candidate{*veloSeed};
             seed->addHit( m_magnetHit );
             seed->addHit( hit );
+
             seed->slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
             seed->p() = momentum( seed->slope() - seed->tx() );
 
@@ -304,8 +314,8 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         double zStation = station.z();
 
         // Clear and cache region FoIs
-        // m_regionFoIX.clear(); //FIXME/TODO is this a bug? Clear removes all elements!!!!
-        // m_regionFoIY.clear();
+        m_regionFoIX.clear();
+        m_regionFoIY.clear();
         double maxFoIX = 0;
         double maxFoIY = 0;
         // Find the maximum FoI to use as a search window.
@@ -314,7 +324,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
             const double foiY = m_FoIFactor * FoIY( s, region, seed->p() );
             if ( foiX > maxFoIX ) maxFoIX = foiX;
             if ( foiY > maxFoIY ) maxFoIY = foiY;
-            m_regionFoIX[region] = foiX; //FIXME/TODO so this assign beyond the 'end'!!!!
+            m_regionFoIX[region] = foiX;
             m_regionFoIY[region] = foiY;
         }
 
@@ -329,7 +339,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         const double xMax = xMuon + maxFoIX;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = nullptr;
+        const Hlt1MuonHit* closest = 0;
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             const Hlt1MuonRegion& region = station.region( r );
@@ -340,12 +350,16 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
 
                 // Take the actual FoI into account
                 unsigned int r = hit->tile().region();
-                auto dx = hit->x()-xMuon;
-                auto dy = hit->y()-yMuon;
-                if ( dx > + m_regionFoIX[r] || dx < -m_regionFoIX[r] ||
-                     dy > + m_regionFoIY[r] || dy < -m_regionFoIY[r]  )
+                double xMinFoI = xMuon - m_regionFoIX[r];
+                double xMaxFoI = xMuon + m_regionFoIX[r];
+                double yMinFoI = yMuon - m_regionFoIY[r];
+                double yMaxFoI = yMuon + m_regionFoIY[r];
+                if ( hit->x() > xMaxFoI || hit->x() < xMinFoI ||
+                     hit->y() > yMaxFoI || hit->y() < yMinFoI )
                     continue;
-                auto dist2 =  dx*dx + dy*dy  ; 
+
+                double dist2 = ( xMuon - hit->x() ) * ( xMuon - hit->x() ) +
+                               ( yMuon - hit->y() ) * ( yMuon - hit->y() );
                 if ( !closest || dist2 < minDist2 ) {
                     closest = hit;
                     minDist2 = dist2;

@@ -47,8 +47,12 @@ class Candidate
     void init( const LHCb::Track* track )
     {
         m_track = track;
-        const LHCb::State* state = track->stateAt( LHCb::State::EndVelo );
-        if ( !state ) state = &( track->closestState( 5000 ) );
+        const LHCb::State* state = 0;
+        if ( track->hasStateAt( LHCb::State::EndVelo ) ) {
+            state = track->stateAt( LHCb::State::EndVelo );
+        } else {
+            state = &( track->closestState( 5000 ) );
+        }
         m_x = state->x();
         m_y = state->y();
         m_z = state->z();

@@ -46,7 +46,6 @@ struct iter_pair_range : pair<iterator_, iterator_>
     {
         return this->second;
     }
-
 };
 
 template <typename Iter, typename I2> // I2 must be convertable to Iter
@@ -68,6 +67,16 @@ Hlt1MuonHitManager::Hlt1MuonHitManager( const std::string& type,
                                         const IInterface* parent )
     : GaudiTool( type, name, parent )
     , m_muonDet{nullptr}
+    ,
+    // X region boundaries
+    // Define the regions, the last ones are increased a little to make sure
+    // everything is caught.
+    m_regions{{-3840, -1920, -960, -480, 480, 960, 1920, 3940},
+              {-4800, -1200, -600, 600, 1200, 4900},
+              {-5180, -1292, -644, 644, 1292, 5280},
+              {-5556, -1392, -696, 696, 1392, 5656},
+              {-5952, -1488, -744, 744, 1488, 6052}}
+    , m_muonCoords{nullptr}
     , m_loaded{false}
 {
     declareInterface<Hlt1MuonHitManager>( this );
@@ -75,9 +84,10 @@ Hlt1MuonHitManager::Hlt1MuonHitManager( const std::string& type,
     // declare properties
     declareProperty( "MuonCoordLocation",
                      m_coordLocation = LHCb::MuonCoordLocation::MuonCoords );
+    declareProperty( "MakeClusters", m_makeClusters = false );
 
-    m_nHits.fill(0);
-    m_prepared.reset();
+    m_nHits.resize( 5, 0 );
+    m_prepared.resize( 5, false );
 }
 
 //=============================================================================
@@ -96,20 +106,8 @@ StatusCode Hlt1MuonHitManager::initialize()
     m_muonDet = getDet<DeMuonDetector>( "/dd/Structure/LHCb/DownstreamRegion/Muon" );
     auto stations = m_muonDet->stations();
     m_stations.reserve( stations );
-    assert(stations<=5);
-
-    // X region boundaries
-    // Define the regions, the last ones are increased a little to make sure
-    // everything is caught.
-    const std::array<std::vector<double>, 5> x_regions{
-        {{-3840, -1920, -960, -480, 480, 960, 1920, 3940},
-         {-4800, -1200, -600, 600, 1200, 4900},
-         {-5180, -1292, -644, 644, 1292, 5280},
-         {-5556, -1392, -696, 696, 1392, 5656},
-         {-5952, -1488, -744, 744, 1488, 6052}}};
-
     for ( int i = 0; i < stations; ++i ) {
-        m_stations.emplace_back( m_muonDet, i, x_regions[i] );
+        m_stations.emplace_back( m_muonDet, i, m_regions[i] );
     }
     return sc;
 }
@@ -129,8 +127,9 @@ void Hlt1MuonHitManager::handle( const Incident& incident )
     for ( unsigned int station = 0; station < m_stations.size(); ++station ) {
         if ( m_prepared[station] ) m_stations[station].clearHits();
     }
-    m_prepared.reset();
-    m_nHits.fill( 0 );
+    m_muonCoords = nullptr;
+    m_prepared.assign( 5, false );
+    m_nHits.assign( 5, 0 );
     m_loaded = false;
     m_coords.clear();
 }
@@ -168,7 +167,7 @@ void Hlt1MuonHitManager::prepareHits( const unsigned int station )
 {
     if ( !m_loaded ) loadCoords();
 
-    std::vector<Hlt1MuonHit*> hits; hits.reserve( m_nHits[station] );
+    m_hits.clear();
     for ( const auto& entry : make_range( m_coords.equal_range( station ) ) ) {
         const LHCb::MuonCoord* coord = entry.second;
         double x = 0., dx = 0., y = 0., dy = 0., z = 0., dz = 0.;
@@ -177,32 +176,36 @@ void Hlt1MuonHitManager::prepareHits( const unsigned int station )
             Warning( "Impossible MuonTileID" );
             continue;
         }
-        hits.push_back( new Hlt1MuonHit{coord->key(), x, dx, y, dy, z, dz} );
+        m_hits.push_back( new Hlt1MuonHit{coord->key(), x, dx, y, dy, z, dz} );
     }
 
     // Sort the hits
-    std::sort( std::begin( hits ), std::end( hits ),
+    std::sort( std::begin( m_hits ), std::end( m_hits ),
                []( const Hlt1MuonHit* lhs,
                    const Hlt1MuonHit* rhs ) { return lhs->x() < rhs->x(); } );
 
     // Put the hits in the station
-    m_stations[station].setHits( hits ); // transfer ownership
-    m_prepared.set(station,true);
+    m_stations[station].setHits( m_hits );
+    m_prepared[station] = true;
 }
 
 //=============================================================================
 void Hlt1MuonHitManager::loadCoords()
 {
-    LHCb::MuonCoords* coords = getIfExists<LHCb::MuonCoords>( m_coordLocation );
+    LHCb::MuonCoords* coords = get<LHCb::MuonCoords>( m_coordLocation );
     if ( !coords ) {
         Exception( "Cannot retrieve MuonCoords ", StatusCode::FAILURE );
+    } else {
+        m_muonCoords = coords;
     }
 
-    for ( auto coord : *coords ) {
+    for ( auto coord : *m_muonCoords ) {
         auto station = coord->key().station();
         m_coords.insert( {station, coord} );
-        ++m_nHits[station];
+        m_nHits[station] += 1;
     }
 
+    auto it = max_element( m_nHits.begin(), m_nHits.end() );
+    m_hits.reserve( *it );
     m_loaded = true;
 }

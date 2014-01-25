@@ -33,9 +33,10 @@ using std::exception;
 Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
                                   const vector<double>& regions )
     : m_muonDet{det}
-    , m_z{det->getStationZ( station )}
     , m_station{station}
-    , m_nRegionsX( regions.size() - 1 ) // narrowing : ul -> u 
+    , m_z{det->getStationZ( station )}
+    , m_nRegionsX( regions.size() -
+                   1 ) // narrowing from unsigned long -> unsigned int
     , m_nRegionsY{7u}
 {
     m_hits.resize( nRegions() );
@@ -49,8 +50,8 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
         for ( unsigned int j = 0; j < m_nRegionsY; ++j ) {
             const unsigned int id = ( i - 1 ) * m_nRegionsY + j;
             double ymin = m_ymin + j * m_dy;
-            m_regions.emplace_back( id, regions[i - 1], regions[i]
-                                  , ymin, ymin + m_dy );
+            m_regions.emplace_back( id, regions[i - 1], regions[i], ymin,
+                                    ymin + m_dy );
         }
     }
 }
@@ -67,7 +68,8 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 {
     auto it = std::find_if( m_hits[region].begin(), m_hits[region].end(),
                             [=]( const Hlt1MuonHit* hit ) {
-                            return ( hit->x() + hit->dx() / 2. ) > xmin;
+        double x = hit->x() + hit->dx() / 2.;
+        return x > xmin;
     } );
     return Hlt1MuonHitRange( it, m_hits[region].end() );
 }
@@ -88,6 +90,12 @@ void Hlt1MuonStation::clearHits()
 }
 
 //=============================================================================
+void Hlt1MuonStation::setHits( const Hlt1MuonHits& hits )
+{
+    for ( Hlt1MuonHit* hit : hits ) addHit( hit );
+}
+
+//=============================================================================
 void Hlt1MuonStation::addHit( Hlt1MuonHit* hit )
 {
     int index = int( ( hit->y() - m_ymin ) / m_dy );
@@ -105,11 +113,12 @@ void Hlt1MuonStation::addHit( Hlt1MuonHit* hit )
 //=============================================================================
 inline unsigned int Hlt1MuonStation::xRegion( const double x )
 {
-    // Use the first x region in the regions to test which one we need.
     unsigned int i = 0;
     for ( ; i < m_nRegionsX; ++i ) {
-        if ( x < m_regions[m_nRegionsY * i].xmax() ) return i;
+        // Use the first x region in the regions to test which one we need.
+        const Hlt1MuonRegion& region = m_regions[m_nRegionsY * i];
+        if ( x < region.xmax() ) break;
     }
-    throw std::exception();
+    if ( i == m_nRegionsX ) throw std::exception();
     return i;
 }

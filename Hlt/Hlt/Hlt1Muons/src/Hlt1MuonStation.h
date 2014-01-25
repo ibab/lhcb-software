@@ -49,7 +49,7 @@ class Hlt1MuonStation
         return m_nRegionsX * m_nRegionsY;
     }
 
-    const Hlt1MuonRegion& region( unsigned int id ) const
+    const Hlt1MuonRegion& region( const unsigned int id ) const
     {
         return m_regions[id];
     }
@@ -57,12 +57,9 @@ class Hlt1MuonStation
   private:
     friend class Hlt1MuonHitManager;
 
-    void setHits( const Hlt1MuonHits& hits )
-    {
-        for ( Hlt1MuonHit* hit : hits ) addHit( hit );
-    }
+    void setHits( const Hlt1MuonHits& hits );
 
-    void addHit( Hlt1MuonHit* hit ); // grabs ownership
+    void addHit( Hlt1MuonHit* hit );
 
     inline unsigned int xRegion( const double x );
 
@@ -73,14 +70,14 @@ class Hlt1MuonStation
     std::vector<Hlt1MuonHits> m_hits;
     std::vector<Hlt1MuonRegion> m_regions;
 
-    double m_z;
-    double m_ymin;
-    double m_ymax;
-    double m_dy;
-
     const int m_station;
+    double m_z;
+
     unsigned int m_nRegionsX;
     unsigned int m_nRegionsY;
 
+    double m_ymin;
+    double m_ymax;
+    double m_dy;
 };
 #endif // HLT1MUONSTATION_H

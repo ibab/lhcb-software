@@ -59,20 +59,29 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
     virtual const Hlt1MuonRegion& region( const unsigned int station,
                                           const unsigned int region ) const;
 
+  protected:
   private:
     // Properties
+    bool m_makeClusters;
     std::string m_coordLocation;
 
     // Data members
     DeMuonDetector* m_muonDet;
 
+    std::vector<std::vector<double>> m_regions;
 
     std::vector<Hlt1MuonStation> m_stations;
-    std::bitset<5> m_prepared;
+    std::vector<bool> m_prepared;
 
-    boost::unordered_multimap<unsigned int, const LHCb::MuonCoord*> m_coords;
-    std::array<unsigned int,5> m_nHits;
+    LHCb::MuonCoords* m_muonCoords;
+
+    std::vector<LHCb::MuonTileID*> m_tilesInStation;
+
     bool m_loaded;
+    typedef boost::unordered_multimap<unsigned int, const LHCb::MuonCoord*> coords_t;
+    coords_t m_coords;
+    std::vector<unsigned int> m_nHits;
+    std::vector<Hlt1MuonHit*> m_hits;
 
     // Functions
     void prepareHits( const unsigned int station );
