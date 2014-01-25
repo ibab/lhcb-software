@@ -136,7 +136,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::XYZVector  imp;
     StatusCode Sc_m_Geom = m_Geom->distance((*it),vv,imp);
     if(Sc_m_Geom == StatusCode::FAILURE  || imp.X()!=imp.X()) {
-      Warning("m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()=",StatusCode::SUCCESS,20).ignore();
+      Warning("m_Geom->distance return failed status code or NaN! Track ignore.",StatusCode::SUCCESS,0).ignore();
       continue;
     }
 
@@ -152,7 +152,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
     Gaudi::SymMatrix3x3 errPos3D;
     StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
     if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-      Warning("m_Trans->position return failed status code or NaN!  errPos3D[0][0]=",StatusCode::SUCCESS,20).ignore();
+      Warning("m_Trans->position return failed status code or NaN!",StatusCode::SUCCESS,0).ignore();
       continue;
     }
 
@@ -190,7 +190,7 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
 
     bool isInv = errPos.Invert();
     if (!isInv || errPos[0][0]!=errPos[0][0]) {
-      Warning("Covariance matrice could not be inverted !!  errPos[0][0]=",StatusCode::SUCCESS,20).ignore();
+      Warning("Covariance matrice could not be inverted !!",StatusCode::SUCCESS,0).ignore();
       continue;
     }
     //debug()<<" Covariance Matrix :"<<errPos<<endmsg;
@@ -202,19 +202,22 @@ double VertexFunctionTool::computeValueAt(Gaudi::XYZPoint & P)
 
 
     if(CpC<0){
-      debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"       <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"       
+               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<endmsg;
       continue;
     }
     if(CpC>40) {
-      //debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
+      //if ( msgLevel(MSG::DEBUG) ) debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
       continue;
     }
 
     double tmpSumGaussT = exp(-0.5*CpC);
     
     if(tmpSumGaussT != tmpSumGaussT) {
-      debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC     <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
-      
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC     
+               <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
       continue;
       
     }
@@ -252,7 +255,8 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     Gaudi::XYZVector  imp;
     StatusCode Sc_m_Geom = m_Geom->distance((*it),vv,imp);
     if(Sc_m_Geom == StatusCode::FAILURE  || imp.X()!=imp.X()) {
-      debug()<<"m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()="<<imp.X()  <<endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"m_Geom->distance return failed status code or NaN! Track ignore. imp2.X()="<<imp.X()  <<endmsg;
       continue;
     }
 
@@ -261,7 +265,8 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     Gaudi::SymMatrix3x3 errPos3D;
     StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
     if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-      debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
       continue;
     }
 
@@ -276,7 +281,8 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     //Invert the 2-D Covariance Matrix
     bool isInv = errPos.Invert();
     if (!isInv || errPos[0][0]!=errPos[0][0]) {
-      debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
       continue;
     }
 
@@ -285,19 +291,22 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
     CpC = ROOT::Math::Similarity(errPos,Simp);
 
     if(CpC<0){
-      debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<errPos<<endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"Imp * InvCov TransImp is negative track "<< index <<" skipped !!\n"               
+               <<"    CpC"<< CpC << " Simp x="<< Simp[0]<<"  y="<< Simp[1] << "  Cov ="<<errPos<<endmsg;
       continue;
     }
     if(CpC>40) {
-      debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"CpC>5, "<<CpC<<" contribution set to 0!! "<< endmsg;
       continue;
     }
 
     double tmpSumGaussT = exp(-0.5*CpC);
 
     if(tmpSumGaussT != tmpSumGaussT) {
-      debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC              <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
-
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"NaN in the gauss tube !! "<< SumGaussT<< "  last CpC:"<<CpC              
+               <<"\n Err Mat:"<< errPos <<"\n Imp:\n"<< Simp<< endmsg;
       continue;
 
     }
@@ -381,13 +390,14 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
   double step = m_step;
 
   for (int ite =0; ite<m_max_finder_max_iteration; ite++){
-    debug()<<"iteration :"<<ite<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"iteration :"<<ite<<endmsg;
     //compute the gradient
     Gaudi::XYZPoint CurrentPos(PMax);
     double CurrentVal = Max;
     Gaudi::XYZVector Current_gradient = computeGradientAt(CurrentPos);
     if (Current_gradient.R() < m_max_finder_min_gradient_mag){
-      debug()<<"\tThe potential doesn't vary over reasonable distances: grad_mag = "<< Current_gradient.R()<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"\tThe potential doesn't vary over reasonable distances: grad_mag = "<< Current_gradient.R()<<endmsg;
       break;
     }
     //average the gradient with the previous one
@@ -404,14 +414,15 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
     if(absDist<step){
       Gaudi::XYZVector gradientAtNewPoint = computeGradientAt(PMax);
       if (gradientAtNewPoint.R() > m_max_finder_min_gradient_mag){
-        debug()<<"\tDist is small"<< absDist <<"but gradient at new point is large so MOVE!"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug()<<"\tDist is small"<< absDist <<"but gradient at new point is large so MOVE!"<<endmsg;
         absDist = 2.0*step;
         PMax= CurrentPos + (absDist * gradient);
       }
     }
     Max = computeValueAt(PMax);
 
-    debug()<<"\tNew Value: "<<Max<< "\tOld:"<<CurrentVal<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"\tNew Value: "<<Max<< "\tOld:"<<CurrentVal<<endmsg;
 
     //decide what to do:
 
@@ -419,13 +430,13 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
     if (absDist < m_max_finder_min_step){
       // Return the best known point if it is better than initialPoint
       if (Max > CurrentVal){
-        debug()<<"\tStep too small (max:"<< Max<<")"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"\tStep too small (max:"<< Max<<")"<<endmsg;
         break;
       }
       else {
         PMax = CurrentPos;
         Max = CurrentVal;
-        debug()<<"\tStep too small (max:"<< Max<<")"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"\tStep too small (max:"<< Max<<")"<<endmsg;
         break;
       }
     }
@@ -440,7 +451,7 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
       Gaudi::XYZPoint jumpPoint = CurrentPos + k * gradient;
       double jumpPot = computeValueAt(jumpPoint);
       if (jumpPot< Max){
-        debug()<<"\tMax Finder went too far"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"\tMax Finder went too far"<<endmsg;
         break;
       }
       else {
@@ -461,13 +472,14 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
         jumpPot = computeValueAt(jumpPoint);
         n_step_back+=1;
       }
-      debug()<<"\t step was divided by 2^"<<n_step_back<< " dist_part ="<<absDist* partial_step<<endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"\t step was divided by 2^"<<n_step_back<< " dist_part ="<<absDist* partial_step<<endmsg;
       PMax = jumpPoint;
       Max = jumpPot;
       absDist = absDist*partial_step;
       if (step<absDist){
         step = absDist / 2.0;
-        debug()<<"\tStep Too Large compared to the jump we just made"<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"\tStep Too Large compared to the jump we just made"<<endmsg;
       }
     }
 
@@ -478,11 +490,11 @@ void VertexFunctionTool::computeValueMax(LHCb::RecVertex & V,Gaudi::XYZPoint & P
     if (jumpPot > Max){  // it was better!
       PMax = jumpPoint;
       Max=jumpPot;
-      debug()<<"\tJump Partially ("<< partial_jump <<") go to next Jump"<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"\tJump Partially ("<< partial_jump <<") go to next Jump"<<endmsg;
     }
     if (step<absDist){
       step = absDist / 2.0;
-      debug()<<"\tStep Too Large compared to the jump we just made"<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"\tStep Too Large compared to the jump we just made"<<endmsg;
     }
 
   }
@@ -577,7 +589,7 @@ void VertexFunctionTool::setParam(TString name, double value){
   else if (name=="ResolverMinStep") m_resolver_min_step =value;
   else if (name=="ResolverMaxIteration") m_resolver_max_iteration =value;
   //  else Warning()<<name<< " is not a valid parameter name"<<endmsg;
-  debug()<<name<< " set to "<<value<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<name<< " set to "<<value<<endmsg;
 
 }
 
@@ -694,7 +706,8 @@ Gaudi::XYZVector VertexFunctionTool::computeGradientAt(Gaudi::XYZPoint & P) {
       Gaudi::SymMatrix3x3 errPos3D;
       StatusCode Sc_m_Trans = m_Trans->position(*(*it), P.Z()+imp.Z(), pos, errPos3D);
       if(Sc_m_Trans == StatusCode::FAILURE || errPos3D[0][0]!=errPos3D[0][0]){
-        debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug()<<"m_Trans->position return failed status code or NaN!  errPos3D[0][0]="<<errPos3D[0][0]<<endmsg;
         continue;
       }
 
@@ -717,14 +730,15 @@ Gaudi::XYZVector VertexFunctionTool::computeGradientAt(Gaudi::XYZPoint & P) {
         d_imp[1] = p.Y()*p.Z();
         break;
       }
-      //debug()<< "Imp Analytical: "<<xyz<<" = "<< d_imp[0]<< " ,"<< d_imp[1]<<endmsg;
+      //if ( msgLevel(MSG::DEBUG) ) debug()<< "Imp Analytical: "<<xyz<<" = "<< d_imp[0]<< " ,"<< d_imp[1]<<endmsg;
       Gaudi::SymMatrix2x2  errPos = errPos3D.Sub<Gaudi::SymMatrix2x2>   (0,0);
       ROOT::Math::SVector<double,2> Simp;
       Simp[0]=imp.X();
       Simp[1]=imp.Y();
       bool isInv = errPos.Invert();
       if (!isInv || errPos[0][0]!=errPos[0][0]) {
-        debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug()<<"Covariance matrice could not be inverted !!  errPos[0][0]="<<errPos[0][0] << endmsg;
         continue;
       }
       double CpC = ROOT::Math::Similarity(errPos,Simp);

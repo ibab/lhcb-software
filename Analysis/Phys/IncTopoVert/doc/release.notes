@@ -9,6 +9,7 @@
 ! 2014-01-25 - Chris Jones
  - Downgrade warnings when fit fails to 0 instances printed during the 
    event loop (summary at the end) to minimise size of production logs.
+ - Protect some more debug messages behind if statements, for CPU eff.
 
 ! 2014-01-24 - Julien Cogan
  - Modify the VertexFunctionToolRootMini tool to use a single instance of

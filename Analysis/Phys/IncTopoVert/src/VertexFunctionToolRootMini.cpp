@@ -98,13 +98,9 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
 
 StatusCode VertexFunctionToolRootMini::finalize()
 {
-  StatusCode sc = VertexFunctionTool::finalize();
-  if ( sc.isFailure() ) return sc;
-  
   delete(m_min);
   
-  return sc;
-  
+  return VertexFunctionTool::finalize();
 }
 
 //=============================================================================
