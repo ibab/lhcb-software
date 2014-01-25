@@ -22,7 +22,7 @@
 // 2008-07-22 : Jaap Panman (using the calo as template)
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( HltLumiFillRawBuffer );
+DECLARE_ALGORITHM_FACTORY( HltLumiFillRawBuffer )
 
 //=============================================================================
 // Standard constructor, initializes variables

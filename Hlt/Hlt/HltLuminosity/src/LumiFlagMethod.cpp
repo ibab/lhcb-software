@@ -24,7 +24,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiFlagMethod );
+DECLARE_ALGORITHM_FACTORY( LumiFlagMethod )
 
 //=============================================================================
 // Standard constructor, initializes variables

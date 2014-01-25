@@ -33,7 +33,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiHistoCollector );
+DECLARE_ALGORITHM_FACTORY( LumiHistoCollector )
 
 LumiHistoCollector::LumiHistoCollector( const std::string& name,
                                         ISvcLocator* pSvcLocator )

@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiHistoMaker );
+DECLARE_ALGORITHM_FACTORY( LumiHistoMaker )
 
 LumiHistoMaker::LumiHistoMaker( const std::string& name, ISvcLocator* pSvcLocator )
     : HltBaseAlg( name, pSvcLocator )

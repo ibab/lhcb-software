@@ -17,7 +17,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiPrepareResult );
+DECLARE_ALGORITHM_FACTORY( LumiPrepareResult )
 
 //=============================================================================
 // Standard constructor, initializes variables

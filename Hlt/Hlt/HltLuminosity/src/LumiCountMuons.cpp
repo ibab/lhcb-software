@@ -16,7 +16,7 @@ using namespace LHCb;
 // 2011-03-01 : Vladislav Balagura
 // copied from LumiCountTracks
 //-----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY( LumiCountMuons );
+DECLARE_ALGORITHM_FACTORY( LumiCountMuons )
 
 LumiCountMuons::LumiCountMuons( const std::string& name, ISvcLocator* pSvcLocator )
     : GaudiAlgorithm( name, pSvcLocator )

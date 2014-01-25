@@ -18,7 +18,7 @@ using namespace LHCb;
 // 2011-03-01 : Vladislav Balagura
 // copied from LumiCountMuons
 //-----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY( LumiCountVeloWithZRCuts );
+DECLARE_ALGORITHM_FACTORY( LumiCountVeloWithZRCuts )
 
 LumiCountVeloWithZRCuts::LumiCountVeloWithZRCuts( std::string name,
                                                   ISvcLocator* pSvcLocator )

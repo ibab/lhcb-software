@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( CollectLumiData );
+DECLARE_ALGORITHM_FACTORY( CollectLumiData )
 
 //=============================================================================
 // Standard constructor, initializes variables

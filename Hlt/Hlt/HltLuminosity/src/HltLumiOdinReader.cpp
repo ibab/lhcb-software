@@ -18,7 +18,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltLumiOdinReader );
+DECLARE_ALGORITHM_FACTORY( HltLumiOdinReader )
 
 //=============================================================================
 // Standard constructor, initializes variables

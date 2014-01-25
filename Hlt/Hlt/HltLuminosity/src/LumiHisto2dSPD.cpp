@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LumiHisto2dSPD );
+DECLARE_ALGORITHM_FACTORY( LumiHisto2dSPD )
 
 //=============================================================================
 // Standard constructor, initializes variables
