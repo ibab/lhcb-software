@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-01-25 - Gerhard Raven
+ - simplicy HltGEC a bit...
+
 ! 2014-01-23 - Gerhard Raven
  - run clang-format to unify code formatting
 
