@@ -224,47 +224,6 @@ StatusCode ParticleFlow::initialize() {
   m_ecal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Ecal" );
   m_hcal = getDet<DeCalorimeter> ( "/dd/Structure/LHCb/DownstreamRegion/Hcal" );
 
-  info()<<"key cuts for Particle Flow 4 Jets:"<<endmsg;
-  // Default options are equivalent to StdNoPIDsPions+StdNoPIDsDownPions+StdLoosePhotonAll
-  info()<<"|--> PFOutputLocation              : " <<  m_PFOutputLocation <<endmsg;
-  info()<<"|--> TrackSelectorType             : " <<  m_trSelType <<endmsg;
-  info()<<"|--> PFProtoParticlesOutputLocation: " <<  m_protoPF <<endmsg;
-  info()<<"|--> PFCaloHypoOutputLocation      : " <<  m_calohypoPF<<endmsg;
-  info()<<"|--> MinInfMomentumCut             : " <<  m_cutInfMomTRVal <<endmsg;
-  info()<<"|--> MinInfMomentumCutDown         : " <<  m_cutInfMomTRVal_Down <<endmsg;
-  info()<<"|--> MinInfMomentumCutUp           : " <<  m_cutInfMomTRVal_Up <<endmsg;
-  info()<<"|--> CompositeParticleLocations    : " <<  m_compositeParticleLocations  <<endmsg;
-  info()<<"|--> CandidateToBanLocation        : " <<  m_banCandidatesLocations <<endmsg;
-  info()<<"|--> MaxMatchECALTr                : " <<  m_Chi2ECALCut <<endmsg;
-  info()<<"|--> MaxMatchECALTr_T              : " <<  m_Chi2ECALCutTT  <<endmsg;
-  info()<<"|--> UseHCAL                       : " <<  m_useHCAL <<endmsg;
-  info()<<"|--> MaxMatchHCALLowEValue         : " <<  m_Chi2HCAL0CutEValue <<endmsg;
-  info()<<"|--> MaxMatchHCALHighEValue        : " <<  m_Chi2HCAL1CutEValue <<endmsg;
-  info()<<"|--> MaxMatchHCALTrSmallE          : " <<  m_Chi2HCAL0Cut <<endmsg;
-  info()<<"|--> MaxMatchHCALTrMediumE         : " <<  m_Chi2HCAL1Cut <<endmsg;
-  info()<<"|--> MaxMatchHCALTrLargeE          : " <<  m_Chi2HCAL2Cut  <<endmsg;
-  info()<<"|--> VerticesLocation              : " <<  m_verticesLocation <<endmsg;
-  info()<<"|--> UseVelo                       : " <<  m_useVelo  <<endmsg;
-  info()<<"|--> MinPhotonID4Photon            : " <<  m_photonID4Photon <<endmsg;
-  info()<<"|--> MinPhotonID4PhotonTtrack      : " <<  m_photonID4PhotonTban <<endmsg;
-  info()<<"|--> MinPhotonIDMax4ResolvedPi0    : " <<  m_photonIDMax4ResolvedPi0  <<endmsg;
-  info()<<"|--> MinPhotonIDMin4ResolvedPi0    : " <<  m_photonIDMin4ResolvedPi0 <<endmsg;
-  info()<<"|--> MinHCALE                      : " <<  m_minHCALE  <<endmsg;
-  info()<<"|--> MinHCALEt                     : " <<  m_minHCALEt <<endmsg;
-  info()<<"|--> MinHCALEt4Eta4                : " <<  m_minHCALEt4Eta4 <<endmsg;
-  info()<<"|--> MinIsoPhotonEt                : " <<  m_minIsoPhotonEt <<endmsg;
-  info()<<"|--> MinPhotonEt                   : " <<  m_minPhotonEt <<endmsg;
-  info()<<"|--> MinBadPhotonEt                : " <<  m_minBadPhotonEt <<endmsg;
-  info()<<"|--> MinBadPhotonMatchingTEt       : " <<  m_minBadPhotonMatchingTEt <<endmsg;
-  info()<<"|--> UseTTrackBanning              : " <<  m_banFromTTrack <<endmsg;
-  info()<<"|--> NeutralRecovery               : " <<  m_neutralRecovery <<endmsg;
-  info()<<"|--> MinE                          : " <<  m_MinE <<endmsg;
-  info()<<"|--> MinEt                         : " <<  m_MinEt <<endmsg;
-  info()<<"|--> MC_recovery                   : " <<  m_MC <<endmsg;
-  info()<<"|--> MaximumFracNeutrReco          : " <<  m_maxfractionofE <<endmsg;
-  info()<<"|--> BanInfMomentumFromNR          : " <<  m_doNotUseInfMominNR  <<endmsg;
-  info()<<"|--> OnlyBestCaloMatchForNR        : " <<  m_onlyBest <<endmsg;
-
   //info()<<"The new PF code for no meme leak"<<endmsg;
   
   // For the E/p parametrisation

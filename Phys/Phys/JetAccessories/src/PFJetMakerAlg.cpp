@@ -246,8 +246,8 @@ namespace LoKi
 StatusCode LoKi::PFJetMaker::initialize () 
 {
   StatusCode sc = LoKi::Algo::initialize() ; 
-  
   if ( sc.isFailure() ) { return sc ; }
+
   // Initialize the tool
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
   // Read in the histograms for JEC
@@ -283,7 +283,8 @@ StatusCode LoKi::PFJetMaker::initialize ()
     fatal() << "Distance Calculator Tool could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS ;
+
+  return sc ;
 }
 
 

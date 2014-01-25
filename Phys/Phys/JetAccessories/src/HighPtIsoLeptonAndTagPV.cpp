@@ -37,7 +37,7 @@ DECLARE_ALGORITHM_FACTORY( HighPtIsoLeptonAndTagPV )
 
 
 
-  StatusCode HighPtIsoLeptonAndTagPV::initialize ()
+StatusCode HighPtIsoLeptonAndTagPV::initialize ()
 {
 
   StatusCode sc = DaVinciAlgorithm::initialize();
@@ -60,28 +60,30 @@ DECLARE_ALGORITHM_FACTORY( HighPtIsoLeptonAndTagPV )
   }
 
 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug()<<" ------------------------------------------------------ "<<endmsg;
+    debug()<<" |                                                    | "<<endmsg;
+    debug()<<" |                Prompt Lepton                       | "<<endmsg;
+    debug()<<" |                                                    | "<<endmsg;
+    debug()<<" |              EPFLausanne - 2011                    | "<<endmsg;
+    debug()<<" |             A. Bay & C. Potterat                   | "<<endmsg;
+    debug()<<" |                                                    | "<<endmsg;
+    debug()<<" ------------------------------------------------------ "<<endmsg;
+    debug()<<" |                                                      "<<endmsg;
+    debug()<<" |   parameters:                                        "<<endmsg;
+    debug()<<" |   ISOPromptLeptonID   "<<   m_LeptID                  <<endmsg;
+    debug()<<" |   NoISOPromptLeptonID "<<   m_niLeptID                <<endmsg;
+    debug()<<" |   JetR                "<<   m_LeptRmax                <<endmsg;
+    debug()<<" |   MuPtTrackMin        "<<   m_LeptMuPtTrackMin        <<endmsg;
+    debug()<<" |   ElPtTrackMin        "<<   m_LeptElPtTrackMin        <<endmsg;
+    debug()<<" |   IPmax               "<<   m_LeptIPmax               <<endmsg;
+    debug()<<" |   EJoverEL            "<<   m_LeptEJoverEL            <<endmsg;
+    debug()<<" |                                                      "<<endmsg;
+    debug()<<" ------------------------------------------------------ "<<endmsg;
+  }
 
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" |                Prompt Lepton                       | "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" |              EPFLausanne - 2011                    | "<<std::endl;
-  std::cout<<" |             A. Bay & C. Potterat                   | "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
-  std::cout<<" |                                                      "<<std::endl;
-  std::cout<<" |   parameters:                                        "<<std::endl;
-  std::cout<<" |   ISOPromptLeptonID   "<<   m_LeptID                  <<std::endl;
-  std::cout<<" |   NoISOPromptLeptonID "<<   m_niLeptID                <<std::endl;
-  std::cout<<" |   JetR                "<<   m_LeptRmax                <<std::endl;
-  std::cout<<" |   MuPtTrackMin        "<<   m_LeptMuPtTrackMin        <<std::endl;
-  std::cout<<" |   ElPtTrackMin        "<<   m_LeptElPtTrackMin        <<std::endl;
-  std::cout<<" |   IPmax               "<<   m_LeptIPmax               <<std::endl;
-  std::cout<<" |   EJoverEL            "<<   m_LeptEJoverEL            <<std::endl;
-  std::cout<<" |                                                      "<<std::endl;
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
-
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 
 // ===========================================================================
@@ -144,7 +146,7 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
     LHCb::Particle::Vector LeptonsSelJet;
     LHCb::RecVertex::Vector myPV;
 
-    debug()  << "(*i_pv)               ->position = " << (*i_pv)->position()<< endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()  << "(*i_pv)               ->position = " << (*i_pv)->position()<< endmsg;
 
 
     for (  LHCb::Particle::ConstVector::const_iterator ip = RealParts.begin();
@@ -162,9 +164,9 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
       else{
 
         if (( p->particleID().isLepton()) ){
-          debug()  << "p->particleID().abspid() = " << p->particleID().abspid()<< endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug()  << "p->particleID().abspid() = " << p->particleID().abspid()<< endmsg;
 
-          debug()  << "DaVinciAlgorithm::bestPV(p)->position = " << (DaVinciAlgorithm::bestPV(p))->position()<< endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug()  << "DaVinciAlgorithm::bestPV(p)->position = " << (DaVinciAlgorithm::bestPV(p))->position()<< endmsg;
 
         }
 
@@ -232,7 +234,7 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
       // verbose()  << "p->particleID().abspid( = "<<p->particleID().abspid() << endmsg;
 
       if (!( p->particleID().isLepton()) ) continue;
-      debug()  << "lepton :"<<p->particleID().abspid()<<" (pt :"<<p->pt()<<"): ip / chi2: "<< ipl<<" "<<chi2l<<" "<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug()  << "lepton :"<<p->particleID().abspid()<<" (pt :"<<p->pt()<<"): ip / chi2: "<< ipl<<" "<<chi2l<<" "<<endmsg;
 
       if ( p->particleID().abspid() == 11 )
         if ( p->pt()<m_LeptElPtTrackMin )   continue;
@@ -259,9 +261,9 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
     // and the prompt leptons                 //
     //----------------------------------------//
 
-    debug()  <<"Particle ALL size                       = " << RealParts.size() << endmsg;
-    debug()  <<"Particle ALL size (JetCone)             = " << all.size() << endmsg;
-    debug()  <<"NLeptons for iso test                   = " << LeptonsSel.size() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()  <<"Particle ALL size                       = " << RealParts.size() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()  <<"Particle ALL size (JetCone)             = " << all.size() << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug()  <<"NLeptons for iso test                   = " << LeptonsSel.size() << endmsg;
 
 
 
@@ -287,7 +289,7 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
 
 
         LHCb::Particle P_jet = JetCone(m_LeptRmax,  Gaudi::XYZPoint(p_iso->momentum().Vect()) , p_iso->referencePoint(),m_LeptID , all);
-        debug() << "TEST | ID:  "<< p_iso->particleID().pid() <<" | Pt: "<<  p_iso->pt() <<" | EJ over EL: "<<  P_jet.momentum().E()/p_iso->momentum().E() <<endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "TEST | ID:  "<< p_iso->particleID().pid() <<" | Pt: "<<  p_iso->pt() <<" | EJ over EL: "<<  P_jet.momentum().E()/p_iso->momentum().E() <<endmsg;
 
         if((P_jet.momentum().E()/p_iso->momentum().E()) < m_LeptEJoverEL ){
           LHCb::Particle* P_Jet = P_jet.clone();
@@ -296,9 +298,9 @@ StatusCode HighPtIsoLeptonAndTagPV::execute()
           IsoLeptJet->insert(P_Jet);
           table->relate(p_iso,P_Jet);
           isol++;
-          debug() << "Ilept"<<mv<<"| ID:  "<< p_iso->particleID().pid() <<" | Pt: "<<  p_iso->pt() <<" | EJ over EL: "<<  P_jet.momentum().E()/p_iso->momentum().E() <<endmsg;
-          debug() <<       "       | m  : "<<  p_iso->momentum() << endmsg;
-          debug() <<       "       | eta: "<<   p_iso->momentum().eta() << "  / phi: " <<    p_iso->momentum().phi() <<endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug() << "Ilept"<<mv<<"| ID:  "<< p_iso->particleID().pid() <<" | Pt: "<<  p_iso->pt() <<" | EJ over EL: "<<  P_jet.momentum().E()/p_iso->momentum().E() <<endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug() <<       "       | m  : "<<  p_iso->momentum() << endmsg;
+          if ( msgLevel(MSG::DEBUG) ) debug() <<       "       | eta: "<<   p_iso->momentum().eta() << "  / phi: " <<    p_iso->momentum().phi() <<endmsg;
         }
       }
       mv++;
@@ -361,7 +363,7 @@ LHCb::Particle HighPtIsoLeptonAndTagPV::JetCone(
   //  Range parts = select ( "all" , PALL ) ;
   //  const Particle::ConstVector& parts = PartIP;
   //  const Particle::ConstVector& parts = m_context->desktop()->particles();
-  debug()  <<"Particle size (JetCone)= " << parts.size() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()  <<"Particle size (JetCone)= " << parts.size() << endmsg;
 
   phi = v.phi();  e   = v.eta();
   Gaudi::LorentzVector ptot =  Gaudi::LorentzVector(0., 0., 0. ,0.);

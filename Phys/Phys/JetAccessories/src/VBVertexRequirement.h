@@ -24,7 +24,6 @@ public:
   virtual ~VBVertexRequirement( ); ///< Destructor
 
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 };
 

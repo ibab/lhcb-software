@@ -25,7 +25,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
     // proposed jet ID
@@ -85,14 +84,15 @@ SplitJets::~SplitJets() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode SplitJets::initialize() {
-  StatusCode sc = DaVinciAlgorithm::initialize(); // must be executed first
+StatusCode SplitJets::initialize() 
+{
+  const StatusCode sc = DaVinciAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   if ( 0 == m_combiner ){ m_combiner =  this->particleCombiner("MomentumCombiner") ; }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -210,16 +210,6 @@ StatusCode SplitJets::execute() {
 
   setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode SplitJets::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return DaVinciAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

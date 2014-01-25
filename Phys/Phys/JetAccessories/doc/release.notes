@@ -4,7 +4,15 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-!========================= JetAccessories v3r3 2014-01-22 =========================
+!========================= JetAccessories v3r3 2014-01-25 =========================
+
+! 2014-01-25 - Chris Jones
+ - Various clean ups, for production
+  - Remove excessive info() messages during initialize(). Printed by default anyway
+    at DEBUG level.
+  - Remove cout messages, as these are not permitted.
+  - Various other minor improvements (remove pointless methods).
+  - protect debug() and verbose() printout behind if statement for CPU efficiency.
 
 ! 2014-01-19 - Victor Coco
  - Remove temporary print-out.
