@@ -216,13 +216,13 @@ class SelectionContainer_ : private boost::noncopyable
   private:
     /// apply a functor on each item: recursively walk through the tuple...
     template <typename Function>
-    void for_each_selection( boost::tuples::null_type, Function ) {};
+    void for_each_selection( boost::tuples::null_type, Function ) {}
     template <typename Tuple, typename Function>
     void for_each_selection( Tuple& tuple, Function& f )
     {
         f( tuple.get_head() );
         for_each_selection( tuple.get_tail(), f );
-    };
+    }
 
     // The algorithm which owns us
     HltAlgorithm& m_owner;
