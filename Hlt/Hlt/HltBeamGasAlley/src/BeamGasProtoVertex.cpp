@@ -18,7 +18,7 @@
 // 2011-27-02 : Plamen Hopchev <plamen.hopchev@cern.ch>
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( BeamGasProtoVertex );
+DECLARE_ALGORITHM_FACTORY( BeamGasProtoVertex )
 
 //=============================================================================
 // Standard constructor, initializes variables
