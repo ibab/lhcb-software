@@ -37,7 +37,7 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
                               const IInterface* parent )
     : GaudiHistoTool( type, name, parent )
     , m_fieldSvc{nullptr}
-    , m_order{3u, 4u, 5u, 2u}
+    , m_order{{3u}, {4u}, {5u}, {2u}}
     , m_nRegions{0u}
     , m_magnetHit{nullptr}
     , m_seeds{0}
