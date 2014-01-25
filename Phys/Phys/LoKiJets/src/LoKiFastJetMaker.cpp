@@ -38,9 +38,8 @@ StatusCode LoKi::FastJetMaker::initialize ()
   if ( sc.isFailure() ) { return sc ; }
   //
   svc<LoKi::ILoKiSvc>( "LoKiSvc" , true ) ;
-
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 // ============================================================================
 // prepare the input information
@@ -124,7 +123,7 @@ StatusCode LoKi::FastJetMaker::makeJets
     output.reserve( 0 ) ;
     jets_ = output ;
     if ( statPrint() || msgLevel ( MSG::DEBUG ) )
-    {counter ( "#jets" ) += output.size() ; }
+    { counter ( "#jets" ) += output.size() ; }
     return StatusCode::SUCCESS ;
   }
   // Jets found
@@ -150,7 +149,7 @@ StatusCode LoKi::FastJetMaker::makeJets
  
   if ( jets.empty() )
   { Warning( "No jets from fastjet::ClusterSequence", 
-             StatusCode::SUCCESS ).ignore() ; }
+             StatusCode::SUCCESS, 0 ).ignore() ; }
  
   //
   if ( NULL == m_combiner )
@@ -216,7 +215,6 @@ StatusCode LoKi::FastJetMaker::makeJets
   { counter ( "#jets" ) += output.size() ; }
  
   jets_ = output ;
-
 
   delete clusters ;
  
