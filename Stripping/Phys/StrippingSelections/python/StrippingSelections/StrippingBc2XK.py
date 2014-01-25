@@ -187,7 +187,7 @@ class Bc2XKConf(LineBuilder) :
         
         for line in self._lines_Bc () :
             self.registerLine(line)
-            logger.info ( "Register line: %s" %  line.name () ) 
+            logger.debug ( "Register line: %s" %  line.name () ) 
             
             
     ## get the selection, associated with some nickname name 

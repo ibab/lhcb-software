@@ -241,7 +241,7 @@ class PsiX_BQ_Conf(LineBuilder) :
 
         for line in self._lines_psiX () :
             self.registerLine(line)
-            logger.info ( "Register line: %s" %  line.name () ) 
+            logger.debug ( "Register line: %s" %  line.name () ) 
             
             
     ## get the selection, associated with some nickname name 
