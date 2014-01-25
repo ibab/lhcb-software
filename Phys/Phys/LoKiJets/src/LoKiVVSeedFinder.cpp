@@ -46,40 +46,40 @@ StatusCode LoKi::VVSeedFinder::initialize ()
   }
 
 
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" |     \\  /\\  /                                       | "<<std::endl;
-  std::cout<<" |      \\/  \\/SeedsFinder Tool for Phys Particles     | "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" |       \\  /                                         | "<<std::endl;
-  std::cout<<" |        \\/       EPFLausanne - 2009-11              | "<<std::endl;
-  std::cout<<" |         |        A. Bay & C. Potterat              | "<<std::endl;
-  std::cout<<" |         |                                          | "<<std::endl;
-  std::cout<<" |                                       _     _      | "<<std::endl;
-  std::cout<<" |                                  |   |_||_||_      | "<<std::endl;
-  std::cout<<" |                                  |__ |  | ||__     | "<<std::endl;
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" |                                                     "<<std::endl;
-  std::cout<<" |   VVSeedsFinder parameters: "<<std::endl;
-  std::cout<<" |   SeedID            "<<   m_seedID      <<std::endl;
-  std::cout<<" |   SeedTriplets      "<<   m_Triplets        <<std::endl;
-  std::cout<<" |   SeedRParameter    "<<   m_r            <<std::endl;
-  std::cout<<" |   PtTrackMin        "<<   m_PtTrackMin      <<std::endl;
-  std::cout<<" |   PTrackMin         "<<   m_PTrackMin      <<std::endl;
-  std::cout<<" |   SeedTrkChi2PerDoF "<<   m_TrkChi2DoF     <<std::endl;
-  std::cout<<" |   IPmin             "<<   m_IPmin       <<std::endl;
-  std::cout<<" |   Signif            "<<   m_Signif          <<std::endl;
-  std::cout<<" |   DMK0              "<<   m_DMK0            <<std::endl;
-  std::cout<<" |   TseedVtxMin       "<<   m_TseedVtxMin     <<std::endl;
-  std::cout<<" |   TseedVtxMax       "<<   m_TseedVtxMax     <<std::endl;
-  std::cout<<" |   DtrakMax          "<<   m_DtrakMax        <<std::endl;
-  std::cout<<" |   DeltaRSeeds       "<<   m_DeltaRSeeds     <<std::endl;
-  std::cout<<" |   PtSeedsMin        "<<   m_PtSeedsMin      <<std::endl;
-  std::cout<<" |   PtMergedSeedsMin  "<<   m_PtMergedSeedsMin      <<std::endl;
-  std::cout<<" |                                                      "<<std::endl;
-  std::cout<<" |                                                    | "<<std::endl;
-  std::cout<<" ------------------------------------------------------ "<<std::endl;
+  debug()<<" ------------------------------------------------------ "<<std::endl;
+  debug()<<" |                                                    | "<<std::endl;
+  debug()<<" |     \\  /\\  /                                       | "<<std::endl;
+  debug()<<" |      \\/  \\/SeedsFinder Tool for Phys Particles     | "<<std::endl;
+  debug()<<" |                                                    | "<<std::endl;
+  debug()<<" |       \\  /                                         | "<<std::endl;
+  debug()<<" |        \\/       EPFLausanne - 2009-11              | "<<std::endl;
+  debug()<<" |         |        A. Bay & C. Potterat              | "<<std::endl;
+  debug()<<" |         |                                          | "<<std::endl;
+  debug()<<" |                                       _     _      | "<<std::endl;
+  debug()<<" |                                  |   |_||_||_      | "<<std::endl;
+  debug()<<" |                                  |__ |  | ||__     | "<<std::endl;
+  debug()<<" ------------------------------------------------------ "<<std::endl;
+  debug()<<" |                                                    | "<<std::endl;
+  debug()<<" |                                                     "<<std::endl;
+  debug()<<" |   VVSeedsFinder parameters: "<<std::endl;
+  debug()<<" |   SeedID            "<<   m_seedID      <<std::endl;
+  debug()<<" |   SeedTriplets      "<<   m_Triplets        <<std::endl;
+  debug()<<" |   SeedRParameter    "<<   m_r            <<std::endl;
+  debug()<<" |   PtTrackMin        "<<   m_PtTrackMin      <<std::endl;
+  debug()<<" |   PTrackMin         "<<   m_PTrackMin      <<std::endl;
+  debug()<<" |   SeedTrkChi2PerDoF "<<   m_TrkChi2DoF     <<std::endl;
+  debug()<<" |   IPmin             "<<   m_IPmin       <<std::endl;
+  debug()<<" |   Signif            "<<   m_Signif          <<std::endl;
+  debug()<<" |   DMK0              "<<   m_DMK0            <<std::endl;
+  debug()<<" |   TseedVtxMin       "<<   m_TseedVtxMin     <<std::endl;
+  debug()<<" |   TseedVtxMax       "<<   m_TseedVtxMax     <<std::endl;
+  debug()<<" |   DtrakMax          "<<   m_DtrakMax        <<std::endl;
+  debug()<<" |   DeltaRSeeds       "<<   m_DeltaRSeeds     <<std::endl;
+  debug()<<" |   PtSeedsMin        "<<   m_PtSeedsMin      <<std::endl;
+  debug()<<" |   PtMergedSeedsMin  "<<   m_PtMergedSeedsMin      <<std::endl;
+  debug()<<" |                                                      "<<std::endl;
+  debug()<<" |                                                    | "<<std::endl;
+  debug()<<" ------------------------------------------------------ "<<std::endl;
 
 
 
