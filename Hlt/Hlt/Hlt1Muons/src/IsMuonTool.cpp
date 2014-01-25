@@ -35,12 +35,11 @@ using std::string;
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( IsMuonTool );
 
+
 //=============================================================================
 IsMuonTool::IsMuonTool( const string& type, const string& name,
                         const IInterface* parent )
     : GaudiTool( type, name, parent )
-    , m_nStations( 5 )
-    , m_nRegions( 4 )
     , m_foiFactor( 1. )
     , m_stationZ( m_nStations )
     , m_occupancy( 5, 0 )

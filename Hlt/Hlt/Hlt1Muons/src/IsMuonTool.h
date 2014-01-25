@@ -42,9 +42,8 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
                                         std::vector<LHCb::Track*>& tracks );
 
   private:
-    // data members
-    unsigned int m_nStations;
-    unsigned int m_nRegions;
+    static const unsigned int m_nStations { 5u };
+    static const unsigned int m_nRegions { 4u };
 
     // Muon Detector
     DeMuonDetector* m_det;
