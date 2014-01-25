@@ -37,7 +37,7 @@ public:
   ( const std::string& name ,
     ISvcLocator*       pSvc )
     : GaudiAlgorithm ( name , pSvc )
-  //
+      //
     , m_jetMatcherName (   )
     , m_jetALocation (   )
     , m_jetBLocation (   )
@@ -61,7 +61,6 @@ public:
    *  @return status code
    */
   virtual StatusCode initialize   () ;
-  virtual StatusCode finalize   () ;
   virtual StatusCode execute  () ;
   // ========================================================================
 
@@ -94,10 +93,12 @@ DECLARE_ALGORITHM_FACTORY( Jets2JetsAlg )
 
 StatusCode Jets2JetsAlg::initialize   ()
 {
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
   if( m_jetALocation.empty() || m_jetBLocation.empty() )return Error("No input locations is specified") ;
   if( m_jetMatcherName.empty() || m_jetBLocation.empty() )return Error("No jet matching tool specified") ;
   if (m_output.empty())return Error ( "No OutputTable is specified" ) ;
-  return GaudiAlgorithm::initialize(); // must be executed first
+  return sc;
 }
 
 StatusCode Jets2JetsAlg::execute   ()
@@ -136,12 +137,6 @@ StatusCode Jets2JetsAlg::execute   ()
   setFilterPassed ( true ) ;
 
   return StatusCode::SUCCESS ;
-}
-StatusCode Jets2JetsAlg::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();
 }
 
 // ===========================================================================

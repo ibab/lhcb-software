@@ -33,31 +33,33 @@ StatusCode LoKi::SeedFinder::initialize ()
 
   m_fitter   = tool<IVertexFit>("OfflineVertexFitter");
 
-  info() <<" ------------------------------------------------------ "<<endmsg;
-  info() <<" |                                                    | "<<endmsg;
-  info() <<" |         SeedsFinder Tool for Phys Particles        | "<<endmsg;
-  info() <<" |                                                    | "<<endmsg;
-  info() <<" ------------------------------------------------------ "<<endmsg;
-  info() <<" |                                                    | "<<endmsg;
-  info() <<" |                                                      "<<endmsg;
-  info() <<" |   SeedsFinder parameters: "                           <<endmsg;
-  info() <<" |   SeedID                "<<   m_seedID                    <<endmsg;
-  info() <<" |   SeedTriplets          "<<   m_Triplets                  <<endmsg;
-  info() <<" |   PtTrackMin            "<<   m_PtTrackMin                <<endmsg;
-  info() <<" |   PTrackMin             "<<   m_PTrackMin                 <<endmsg;
-  info() <<" |   TrkChi2PerDoF         "<<   m_TrkChi2DoF                <<endmsg;
-  info() <<" |   IPmin                 "<<   m_IPmin                     <<endmsg;
-  info() <<" |   Signif                "<<   m_Signif                    <<endmsg;
-  info() <<" |   DMK0                  "<<   m_DMK0                      <<endmsg;
-  info() <<" |   TseedVtxMin           "<<   m_TseedVtxMin               <<endmsg;
-  info() <<" |   TseedVtxMax           "<<   m_TseedVtxMax               <<endmsg;
-  info() <<" |   DtrakMax              "<<   m_DtrakMax                  <<endmsg;
-  info() <<" |   PtSeedsMin            "<<   m_PtSeedsMin                <<endmsg;
-  info() <<" |   SeedsVtxMaxChi2PerDoF "<<   m_SeedsMaxChi2DoF           <<endmsg;
-  info() <<" |                                                      "<<endmsg;
-  info() <<" |                                                    | "<<endmsg;
-  info() <<" ------------------------------------------------------ "<<endmsg;
-
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() <<" ------------------------------------------------------ "<<endmsg;
+    debug() <<" |                                                    | "<<endmsg;
+    debug() <<" |         SeedsFinder Tool for Phys Particles        | "<<endmsg;
+    debug() <<" |                                                    | "<<endmsg;
+    debug() <<" ------------------------------------------------------ "<<endmsg;
+    debug() <<" |                                                    | "<<endmsg;
+    debug() <<" |                                                      "<<endmsg;
+    debug() <<" |   SeedsFinder parameters: "                           <<endmsg;
+    debug() <<" |   SeedID                "<<   m_seedID                    <<endmsg;
+    debug() <<" |   SeedTriplets          "<<   m_Triplets                  <<endmsg;
+    debug() <<" |   PtTrackMin            "<<   m_PtTrackMin                <<endmsg;
+    debug() <<" |   PTrackMin             "<<   m_PTrackMin                 <<endmsg;
+    debug() <<" |   TrkChi2PerDoF         "<<   m_TrkChi2DoF                <<endmsg;
+    debug() <<" |   IPmin                 "<<   m_IPmin                     <<endmsg;
+    debug() <<" |   Signif                "<<   m_Signif                    <<endmsg;
+    debug() <<" |   DMK0                  "<<   m_DMK0                      <<endmsg;
+    debug() <<" |   TseedVtxMin           "<<   m_TseedVtxMin               <<endmsg;
+    debug() <<" |   TseedVtxMax           "<<   m_TseedVtxMax               <<endmsg;
+    debug() <<" |   DtrakMax              "<<   m_DtrakMax                  <<endmsg;
+    debug() <<" |   PtSeedsMin            "<<   m_PtSeedsMin                <<endmsg;
+    debug() <<" |   SeedsVtxMaxChi2PerDoF "<<   m_SeedsMaxChi2DoF           <<endmsg;
+    debug() <<" |                                                      "<<endmsg;
+    debug() <<" |                                                    | "<<endmsg;
+    debug() <<" ------------------------------------------------------ "<<endmsg;
+  }
 
   return sc;
 }
@@ -149,11 +151,14 @@ StatusCode LoKi::SeedFinder::makeJets
         double TrkLi =     trk->likelihood();
         double GhostProb = trk->ghostProbability();
         double LongTrk =   trk->type();
-        verbose()  << "addinfo Likelihood = " << TrkLi << endmsg;
-        verbose()  << "addinfo CloneDist  = " << CloneDist<< endmsg;
-        verbose()  << "addinfo GhostProb  = " << GhostProb << endmsg;
-        verbose()  << "addinfo Longb      = " << LongTrk << endmsg;
-        verbose()  << "p Trk   = " <<  trk->momentum() / Gaudi::Units::GeV << endmsg;
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose()  << "addinfo Likelihood = " << TrkLi << endmsg;
+          verbose()  << "addinfo CloneDist  = " << CloneDist<< endmsg;
+          verbose()  << "addinfo GhostProb  = " << GhostProb << endmsg;
+          verbose()  << "addinfo Longb      = " << LongTrk << endmsg;
+          verbose()  << "p Trk   = " <<  trk->momentum() / Gaudi::Units::GeV << endmsg;
+        }
         if(CloneDist < 9999.) testClone++;
         if(TrkLi     < -60. ) testLiHi++;
         if(LongTrk   ==  3  ) testLong++;
@@ -177,7 +182,8 @@ StatusCode LoKi::SeedFinder::makeJets
         for(int k = 0; k< (int)Slopes_flag.size();k++){
           if(Slopes_flag.at(k) == p->slopes()){
             flag_same = true;
-            verbose()  << "same slopes !!  s1: "  <<Slopes_flag.at(k)  << "   s2: " << p->slopes() <<endmsg;
+            if ( msgLevel(MSG::VERBOSE) )
+              verbose()  << "same slopes !!  s1: "  <<Slopes_flag.at(k)  << "   s2: " << p->slopes() <<endmsg;
             break;
           }
         }
@@ -307,7 +313,7 @@ StatusCode LoKi::SeedFinder::makeJets
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Beam line position "<<  BL_P
              <<" direction " << BL_M << endmsg;
-  } 
+  }
   else
   {
     if( msgLevel(MSG::DEBUG) )
@@ -502,13 +508,13 @@ StatusCode LoKi::SeedFinder::makeJets
   // SORT THE SEEDS
   //=============================================================================
 
-  if(m_sort == 1) std::sort(Seeds.begin(), Seeds.end(),sortPt() );
-  if(m_sort == 2) std::sort(Seeds.begin(), Seeds.end(),sortE() );
-  if(m_sort == 3) std::sort(Seeds.begin(), Seeds.end(),sortEta() );
-  if(m_sort == 4) std::sort(Seeds.begin(), Seeds.end(),sortDauPt() );
-  if(m_sort == 5) std::sort(Seeds.begin(), Seeds.end(),sortCHi2NDoF() );
-  if(m_sort == 6) std::sort(Seeds.begin(), Seeds.end(),sortDirAng() );
-  if(m_sort == 7) std::sort(Seeds.begin(), Seeds.end(),sortCOMBO() );
+  if     (m_sort == 1) std::stable_sort(Seeds.begin(), Seeds.end(),sortPt() );
+  else if(m_sort == 2) std::stable_sort(Seeds.begin(), Seeds.end(),sortE() );
+  else if(m_sort == 3) std::stable_sort(Seeds.begin(), Seeds.end(),sortEta() );
+  else if(m_sort == 4) std::stable_sort(Seeds.begin(), Seeds.end(),sortDauPt() );
+  else if(m_sort == 5) std::stable_sort(Seeds.begin(), Seeds.end(),sortCHi2NDoF() );
+  else if(m_sort == 6) std::stable_sort(Seeds.begin(), Seeds.end(),sortDirAng() );
+  else if(m_sort == 7) std::stable_sort(Seeds.begin(), Seeds.end(),sortCOMBO() );
 
   //remove seed who share a track with a higher racked seed
   int myj= 0;
@@ -528,16 +534,18 @@ StatusCode LoKi::SeedFinder::makeJets
     dau11 = Seed1->daughters().at(0).target();
     dau12 = Seed1->daughters().at(1).target();
 
-
-    verbose() << "Seeds  "<<myj<<"| nb of combin Seeds:  "<<   Seed1->weight()<< "  nb part in the jet:  " <<  Seed1->daughtersVector().size() <<"  Pt:  "<<  Seed1->pt() << endmsg;
-    verbose() <<         "        | m  : "<<   Seed1->momentum() << endmsg;
-    verbose() <<         "        | eta: "<<   Seed1->momentum().eta() << "  / phi: " <<    Seed1->momentum().phi() <<endmsg;
-    verbose() <<         "        |dau1: "<<  dau11->pt()<<endmsg;
-    verbose() <<         "        |dau2: "<<  dau12->pt()<<endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Seeds  "<<myj<<"| nb of combin Seeds:  "<<   Seed1->weight()<< "  nb part in the jet:  " <<  Seed1->daughtersVector().size() <<"  Pt:  "<<  Seed1->pt() << endmsg;
+      verbose() <<         "        | m  : "<<   Seed1->momentum() << endmsg;
+      verbose() <<         "        | eta: "<<   Seed1->momentum().eta() << "  / phi: " <<    Seed1->momentum().phi() <<endmsg;
+      verbose() <<         "        |dau1: "<<  dau11->pt()<<endmsg;
+      verbose() <<         "        |dau2: "<<  dau12->pt()<<endmsg;
+    }
 
     if(Seed1->daughters().size()>2){
       dau13 = Seed1->daughters().at(2).target();
-      verbose() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
+      if ( msgLevel(MSG::VERBOSE) ) verbose() <<         "        |dau3: "<<  dau13->pt()<<endmsg;
     }
 
     Gaudi::XYZVector seedd = Gaudi::XYZVector(
@@ -553,13 +561,14 @@ StatusCode LoKi::SeedFinder::makeJets
 
     double combo1 = 1000*1000*(a * Seed1->endVertex()->chi2PerDoF())/(Seed1->daughtersVector().size()*Seed1->pt()*Seed1->pt());
 
-
-    verbose() <<         "        |PAng: "<<   a<<endmsg;
-    verbose() <<         "        |Chi2: "<<   Seed1->endVertex()->chi2()<<endmsg;
-    verbose() <<         "        |nDoF: "<<   Seed1->endVertex()->nDoF()<<endmsg;
-    verbose() <<         "        |C/N : "<<   Seed1->endVertex()->chi2PerDoF()<<endmsg;
-    verbose() <<         "        |COMB: "<<   combo1<<endmsg;
-
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() <<         "        |PAng: "<<   a<<endmsg;
+      verbose() <<         "        |Chi2: "<<   Seed1->endVertex()->chi2()<<endmsg;
+      verbose() <<         "        |nDoF: "<<   Seed1->endVertex()->nDoF()<<endmsg;
+      verbose() <<         "        |C/N : "<<   Seed1->endVertex()->chi2PerDoF()<<endmsg;
+      verbose() <<         "        |COMB: "<<   combo1<<endmsg;
+    }
 
 
     for (IJetMaker::Jets::iterator ijet2 =  SeedsPurged.begin() ;  SeedsPurged.end() != ijet2 ; ++ijet2 ) {
@@ -616,7 +625,7 @@ StatusCode LoKi::SeedFinder::makeJets
 
 
   myj= 0;
-  for ( IJetMaker::Jets::iterator ijet =  SeedsPurged.begin() ;  
+  for ( IJetMaker::Jets::iterator ijet =  SeedsPurged.begin() ;
         SeedsPurged.end() != ijet ; ++ijet )
   {
     LHCb::Particle* pJet = *ijet;
@@ -630,7 +639,7 @@ StatusCode LoKi::SeedFinder::makeJets
               << pJet->daughtersVector().size() <<"  Pt:  "
               << pJet->pt() << endmsg;
       debug() <<         "        | m  : "<<  pJet->momentum() << endmsg;
-      debug() <<         "        | eta: "<<  pJet->momentum().eta() 
+      debug() <<         "        | eta: "<<  pJet->momentum().eta()
               << "  / phi: " <<   pJet->momentum().phi() <<endmsg;
     }
 

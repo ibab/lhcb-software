@@ -7,6 +7,11 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-01-25 - Chris Jones
+ - Sanitise unneccessary info() printout for production.
+ - Replace cout (not allowed) with debug().
+ - Protect debug() and verbose() messages behind if statements.
+
 !========================= LoKiJets v6r9 2013-10-29 =========================
 
 ! 2013-10-10 - Chris Jones

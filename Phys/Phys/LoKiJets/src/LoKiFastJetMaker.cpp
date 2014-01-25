@@ -57,7 +57,7 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
     if ( NULL == p ) { Warning ( "Invalid input particle" ).ignore() ; continue ; }
     jets.push_back ( makeJet( p , to_user_index ( ip - input.begin() ) ) ) ;
   }
- 
+
   //  if(m_type == fastjet::plugin_algorithm)
   //  {
   //     fastjet::JetDefinition::Plugin * plugin;
@@ -66,10 +66,10 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
   //     fastjet::JetDefinition jet_def(plugin);
   //     delete plugin;
   //     return jet_def ;
- 
+
   //}
   //else{
- 
+
   fastjet::JetFinder           finder   = (fastjet::JetFinder)           m_type  ;
   fastjet::RecombinationScheme scheme   = (fastjet::RecombinationScheme) m_recom ;
   fastjet::Strategy            strategy = (fastjet::Strategy)            m_strat ;
@@ -78,26 +78,23 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
       m_r      ,
       scheme   ,
       strategy ) ;
- 
-  static bool s_first = true ;
- 
-  if ( msgLevel ( MSG::DEBUG ) || s_first )
+
+  if ( msgLevel ( MSG::DEBUG ) )
   {
-    info () << "fastjet::JetDefinition:" << std::endl ;
-    info () << jet_def.description()      << endreq    ;
-    s_first = false ;
+    debug() << "fastjet::JetDefinition:" << endmsg ;
+    debug() << jet_def.description()      << endreq    ;
   }
- 
+
   return jet_def ;
   //  }
- 
- 
+
+
 }
 // ===========================================================================
 // find the jets
 // ===========================================================================
-StatusCode LoKi::FastJetMaker::makeJets( const IJetMaker::Input& input_ , 
-                                         const LHCb::RecVertex& /* vtx_ */, 
+StatusCode LoKi::FastJetMaker::makeJets( const IJetMaker::Input& input_ ,
+                                         const LHCb::RecVertex& /* vtx_ */,
                                          IJetMaker::Jets& jets_ ) const
 {
   makeJets(input_, jets_);
@@ -107,15 +104,15 @@ StatusCode LoKi::FastJetMaker::makeJets( const IJetMaker::Input& input_ ,
 StatusCode LoKi::FastJetMaker::makeJets
 ( const IJetMaker::Input& input_ , IJetMaker::Jets& jets_ ) const
 {
- 
+
   StatusCode sc = check() ;
   if ( sc.isFailure() ) { return Error ( "Invalid configuration of fastjet" ) ; }
 
   // input container of "particles"
   Jets_ inputs ;
   // prepare the input dat and define the jets
- 
-  fastjet::JetDefinition jetDef = prepare ( input_ , inputs ) ;  
+
+  fastjet::JetDefinition jetDef = prepare ( input_ , inputs ) ;
 
   if ( inputs.empty() )
   {
@@ -128,9 +125,9 @@ StatusCode LoKi::FastJetMaker::makeJets
   }
   // Jets found
   Jets_ jets ;
- 
+
   fastjet::ClusterSequence* clusters = new fastjet::ClusterSequence( inputs , jetDef ) ;
- 
+
   switch ( m_sort )
   {
   case 3 :
@@ -146,34 +143,34 @@ StatusCode LoKi::FastJetMaker::makeJets
     jets = sorted_by_pt       ( clusters->inclusive_jets ( m_ptmin ) ) ;
     break ;
   }
- 
+
   if ( jets.empty() )
-  { Warning( "No jets from fastjet::ClusterSequence", 
+  { Warning( "No jets from fastjet::ClusterSequence",
              StatusCode::SUCCESS, 0 ).ignore() ; }
- 
+
   //
   if ( NULL == m_combiner )
   { m_combiner = tool<IParticleCombiner> ( m_combinerName , this ) ; }
- 
+
   IJetMaker::Jets  output  ;
   output.reserve( jets.size() ) ;
- 
+
   LoKi::Point3D    point  = LoKi::Point3D( 0 , 0 , 0 ) ;
- 
+
   for ( Jets_::iterator ijet = jets.begin() ; jets.end() != ijet ; ++ijet )
   {
     const Jet& jet = *ijet ;
     const Constituents& constituents = clusters->constituents ( jet ) ;
     if ( constituents.empty() ) { Warning( "Jet is 'empty'!" ).ignore() ; }
-   
+
     LHCb::Particle              pJet ;
     LHCb::Vertex                vJet      ;
     LHCb::Particle::ConstVector daughters ;
-   
+
     pJet.setParticleID     (  LHCb::ParticleID( m_jetID )) ;
-   
+
     pJet.setReferencePoint ( point         ) ;
-   
+
     for ( Constituents::const_iterator ic = constituents.begin() ;
           constituents.end() != ic ; ++ic )
     {
@@ -181,7 +178,7 @@ StatusCode LoKi::FastJetMaker::makeJets
       // find the appropriate input particle
       const int index = from_user_index ( c.user_index() ) ;
       if ( 0 > index || (int) inputs.size() <= index )
-      { Warning ( "Invalid index for a constituent!" ).ignore() ; 
+      { Warning ( "Invalid index for a constituent!" ).ignore() ;
         continue ; } // CONTINUE
       // get the appropriate particle:
       const LHCb::Particle* p = input_[index] ;
@@ -208,16 +205,16 @@ StatusCode LoKi::FastJetMaker::makeJets
                                jet.e  () ) ) ;
     //
     output.push_back ( pJet.clone() ) ;
-  }  
- 
+  }
+
 
   if ( statPrint() || msgLevel ( MSG::DEBUG ) )
   { counter ( "#jets" ) += output.size() ; }
- 
+
   jets_ = output ;
 
   delete clusters ;
- 
+
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
@@ -226,4 +223,4 @@ DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,FastJetMaker)
 // ============================================================================
 // The END
 // ============================================================================
-  
+

@@ -174,7 +174,7 @@ StatusCode LoKi::JetMaker::initialize ()
     }
   }
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 
 
@@ -348,7 +348,7 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
     }
     iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
     itemspt.push_back(pt);
-    for(int ii=0; ii<iitems; ii++) { 
+    for(int ii=0; ii<iitems; ii++) {
       if(itemspt[ii]<pt) {
         float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;
       }
@@ -398,7 +398,7 @@ StatusCode LoKi::JetMaker::JEC( LHCb::Particle* jet )
                                           cor*LoKi::Cuts::PY(jet),
                                           cor*LoKi::Cuts::PZ(jet),
                                           cor*LoKi::Cuts::E(jet) ) );
-  
+
   return SUCCESS;
 
 }
