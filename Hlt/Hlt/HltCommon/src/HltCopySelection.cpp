@@ -19,15 +19,15 @@
 // declaration of the Algorithm Factory
 template class HltCopySelection<LHCb::Particle>;
 typedef HltCopySelection<LHCb::Particle> HltCopyParticleSelection;
-DECLARE_ALGORITHM_FACTORY( HltCopyParticleSelection );
+DECLARE_ALGORITHM_FACTORY( HltCopyParticleSelection )
 
 template class HltCopySelection<LHCb::Track>;
 typedef HltCopySelection<LHCb::Track> HltCopyTrackSelection;
-DECLARE_ALGORITHM_FACTORY( HltCopyTrackSelection );
+DECLARE_ALGORITHM_FACTORY( HltCopyTrackSelection )
 
 template class HltCopySelection<LHCb::RecVertex>;
 typedef HltCopySelection<LHCb::RecVertex> HltCopyRecVertexSelection;
-DECLARE_ALGORITHM_FACTORY( HltCopyRecVertexSelection );
+DECLARE_ALGORITHM_FACTORY( HltCopyRecVertexSelection )
 
 //=============================================================================
 // Standard constructor, initializes variables

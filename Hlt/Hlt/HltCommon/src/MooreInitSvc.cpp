@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_SERVICE_FACTORY( MooreInitSvc );
+DECLARE_SERVICE_FACTORY( MooreInitSvc )
 
 //=============================================================================
 // Standard constructor, initializes variables

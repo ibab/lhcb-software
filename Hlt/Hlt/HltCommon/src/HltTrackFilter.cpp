@@ -292,7 +292,7 @@ void Hlt::TrackFilter::updatePreambulo( Property& /* p */ )
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( Hlt, TrackFilter );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( Hlt, TrackFilter )
 // ============================================================================
 // The END
 // ============================================================================

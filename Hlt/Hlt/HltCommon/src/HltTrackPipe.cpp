@@ -220,7 +220,7 @@ void Hlt::TrackPipe::updatePreambulo( Property& /* p */ )
 // ============================================================================
 // Declaration of the Algorithm Factory
 // ============================================================================
-DECLARE_NAMESPACE_ALGORITHM_FACTORY( Hlt, TrackPipe );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( Hlt, TrackPipe )
 // ============================================================================
 // The END
 // ============================================================================

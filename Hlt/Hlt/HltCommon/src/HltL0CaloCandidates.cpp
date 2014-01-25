@@ -19,7 +19,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates );
+DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates )
 
 //=============================================================================
 // Standard constructor, initializes variables

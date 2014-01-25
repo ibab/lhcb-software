@@ -17,7 +17,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltMoveVerticesForSwimming );
+DECLARE_ALGORITHM_FACTORY( HltMoveVerticesForSwimming )
 
 //=============================================================================
 // Standard constructor, initializes variables

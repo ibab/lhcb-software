@@ -35,7 +35,7 @@ namespace bl = boost::lambda;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltGenConfig );
+DECLARE_ALGORITHM_FACTORY( HltGenConfig )
 
 //=============================================================================
 // Standard constructor, initializes variables

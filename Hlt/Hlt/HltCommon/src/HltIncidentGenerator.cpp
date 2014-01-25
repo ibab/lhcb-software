@@ -27,7 +27,7 @@ class HltIncidentGenerator : public GaudiAlgorithm
 };
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltIncidentGenerator );
+DECLARE_ALGORITHM_FACTORY( HltIncidentGenerator )
 
 //=============================================================================
 // Standard constructor, initializes variables

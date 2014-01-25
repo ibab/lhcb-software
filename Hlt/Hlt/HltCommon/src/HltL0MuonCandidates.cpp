@@ -21,7 +21,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltL0MuonCandidates );
+DECLARE_ALGORITHM_FACTORY( HltL0MuonCandidates )
 
 //=============================================================================
 // Standard constructor, initializes variables

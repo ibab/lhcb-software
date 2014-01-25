@@ -88,7 +88,7 @@ class HltReferenceRateSvc : public Service,
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/ODIN.h"
 
-DECLARE_SERVICE_FACTORY( HltReferenceRateSvc );
+DECLARE_SERVICE_FACTORY( HltReferenceRateSvc )
 
 //=============================================================================
 // IInterface implementation
