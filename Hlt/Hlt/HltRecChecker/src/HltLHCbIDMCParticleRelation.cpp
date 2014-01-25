@@ -11,7 +11,7 @@
 using namespace LHCb;
 
 
-DECLARE_ALGORITHM_FACTORY( HltLHCbIDMCParticleRelation );
+DECLARE_ALGORITHM_FACTORY( HltLHCbIDMCParticleRelation )
 
 HltLHCbIDMCParticleRelation::HltLHCbIDMCParticleRelation(const std::string& name,ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )

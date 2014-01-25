@@ -19,7 +19,7 @@ using namespace LHCb;
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltRecChecker );
+DECLARE_ALGORITHM_FACTORY( HltRecChecker )
 
 HltRecChecker::HltRecChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator)

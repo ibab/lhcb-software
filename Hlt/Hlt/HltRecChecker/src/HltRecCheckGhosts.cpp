@@ -20,7 +20,7 @@ using namespace LHCb;
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltRecCheckGhosts );
+DECLARE_ALGORITHM_FACTORY( HltRecCheckGhosts )
 //=========================================================================================================
 HltRecCheckGhosts::HltRecCheckGhosts( const std::string& name,
                                   ISvcLocator* pSvcLocator)
