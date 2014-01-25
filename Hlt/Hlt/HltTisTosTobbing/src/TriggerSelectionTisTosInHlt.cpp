@@ -48,7 +48,7 @@ namespace {
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TriggerSelectionTisTosInHlt );
+DECLARE_TOOL_FACTORY( TriggerSelectionTisTosInHlt )
 
 
 //=============================================================================

@@ -26,7 +26,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TriggerTisTosInHlt );
+DECLARE_TOOL_FACTORY( TriggerTisTosInHlt )
 
 const std::vector< std::string > TriggerTisTosInHlt::m_empty_selections = std::vector< std::string >();
 
