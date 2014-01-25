@@ -24,7 +24,7 @@ using namespace LoKi::Cuts;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices );
+DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -85,7 +85,7 @@ LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
 
     // output location for Velo protoparticles
     declareProperty( "VeloProtoParticlesLocation",
-                     m_VeloProtoPLocation = "Hlt2/" + this->name() + "/VeloProtoP",
+                     m_VeloProtoPLocation = std::string{"Hlt2/"} + this->name() + "/VeloProtoP",
                      "TES output location for created Velo protoparticles" );
 }
 
@@ -230,9 +230,7 @@ void printSelectedLLP( MsgStream& out, const LHCb::Particle* llp, bool matterVet
 StatusCode LLParticlesFromRecVertices::initialize()
 {
     StatusCode sc = DaVinciAlgorithm::initialize();
-    if ( sc.isFailure() ) {
-        return sc;
-    }
+    if ( sc.isFailure() ) return sc;
 
     m_debug = msgLevel( MSG::DEBUG );
     m_verbose = msgLevel( MSG::VERBOSE );
@@ -542,5 +540,5 @@ LLParticlesFromRecVertices::getDefaultVeloOnlyMomentum( const LHCb::Track* tr )
                   << ", pz=" << pz << " and e=" << e << "." << endmsg;
     }
 
-    return Gaudi::LorentzVector( sx * pz, sy * pz, pz, e );
+    return { sx * pz, sy * pz, pz, e };
 }

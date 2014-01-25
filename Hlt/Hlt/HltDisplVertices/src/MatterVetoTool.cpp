@@ -301,7 +301,7 @@ bool MatterVetoTool::IsInMaterialBoxRight( const Gaudi::XYZPoint& point ) const
 
 // ============================================================================
 /// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MatterVetoTool );
+DECLARE_TOOL_FACTORY( MatterVetoTool )
 // ============================================================================
 // The END
 // ============================================================================

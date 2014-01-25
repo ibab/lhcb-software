@@ -27,7 +27,7 @@ using namespace LoKi::Cuts;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV );
+DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
 
 //=============================================================================
 // Standard constructor, initializes variables
