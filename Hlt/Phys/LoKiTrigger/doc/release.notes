@@ -4,6 +4,10 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-11-25 - Gerhard Raven
+ - run clang-format on some more source files
+ - replace explicit loops  with STL algorithm where possible
+
 ! 2014-11-24 - Gerhard Raven
  - run clang-format on some source files
 

@@ -151,7 +151,7 @@ StatusCode LoKi::HltUnit::decode()
 {
   // ==========================================================================
   // ensure the validity of Hlt registration service
-  Assert ( 0 != regSvc() , "Hlt::IRegister is not available" ) ;
+  Assert ( regSvc() , "Hlt::IRegister is not available" ) ;
   // ==========================================================================
   /// lock the context
   Gaudi::Utils::AlgContext lock1 { this     , contextSvc() } ;

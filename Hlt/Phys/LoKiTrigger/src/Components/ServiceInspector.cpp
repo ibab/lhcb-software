@@ -20,6 +20,22 @@
  *  @date 2009-03-18
  */
 // ============================================================================
+
+const struct {
+    template <typename I1, typename I2> 
+    constexpr const I1& operator()(const std::pair<I1,I2>& p) const { return p.first; }
+    template <typename I1, typename I2> 
+    constexpr I1&& operator()(const std::pair<I1,I2>&& p) const { return std::forward<I1>(p.first); }
+} select1st {} ;
+
+const struct {
+    template <typename I1, typename I2> 
+    constexpr const I2& operator()(const std::pair<I1,I2>& p) const { return p.second; }
+    template <typename I1, typename I2> 
+    constexpr I2&& operator()(const std::pair<I1,I2>&& p) const { return std::forward<I2>(p.second); }
+} select2nd {} ;
+
+// ============================================================================
 /** get the producer for the given selection
  *  @param selection the selection
  *  @return the producer
@@ -56,7 +72,7 @@ const IAlgorithm*  Hlt::Service::producer
   {
     const SelMap& sels = out.second ;
     SelMap::iterator ifind = sels.find ( key );
-    if ( sels.end() != ifind ) { return out.first ; } // RETUTRN
+    if ( sels.end() != ifind )  return out.first ;  // RETUTRN
   }
   // ==========================================================================
   if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
@@ -107,9 +123,8 @@ size_t Hlt::Service::consumers
   // ==========================================================================
   for ( const auto &in : m_inputs )
   {
-    const SelMap& sels = in.second ;
-    SelMap::iterator ifind = sels.find ( key );
-    if ( sels.end() != ifind ) { alglist.push_back ( in.first ) ; }
+    const auto& sels = in.second ;
+    if ( std::end( sels ) != sels.find( key ) ) alglist.push_back( in.first );
   }
   // ==========================================================================
   if ( alglist.empty() )
@@ -174,7 +189,9 @@ size_t Hlt::Service::inputs
   for ( auto &inp : m_inputs )
   {
     if ( algorithm != inp.first->name() ) { continue ; }
-    for ( auto& sel : inp.second ) { selections.push_back ( sel.second ) ; }
+    std::transform( std::begin(inp.second), std::end(inp.second),
+                    std::back_inserter( selections ),
+                    select2nd ) ;
   }
   // ==========================================================================
   if ( selections.empty() )
@@ -201,7 +218,9 @@ size_t Hlt::Service::inputs
   for ( auto& inp : m_inputs )
   {
     if ( algorithm != inp.first->name() ) { continue ; }
-    for ( auto& sel : inp.second ) { selections.push_back ( sel.first ) ; }
+    std::transform( std::begin(inp.second), std::end(inp.second),
+                    std::back_inserter( selections ),
+                    select1st );
   }
   // ==========================================================================
   if ( selections.empty() )
@@ -267,7 +286,9 @@ size_t Hlt::Service::outputs
   for ( auto&  out : m_outputs)
   {
     if ( algorithm != out.first->name() ) { continue ; }
-    for ( auto&  sel : out.second ) { selections.push_back ( sel.second ) ; }
+    std::transform( std::begin(out.second), std::end(out.second),
+                    std::back_inserter( selections ),
+                    select2nd );
   }
   // ==========================================================================
   if ( selections.empty() )
@@ -295,7 +316,9 @@ size_t Hlt::Service::outputs
   for ( auto& out : m_outputs )
   {
     if ( algorithm != out.first->name() ) { continue ; }
-    for ( auto& sel : out.second ) { selections.push_back ( sel.first ) ; }
+    std::transform( std::begin(out.second), std::end(out.second),
+                    std::back_inserter( selections ),
+                    select1st );
   }
   // ==========================================================================
   if ( selections.empty() )
@@ -330,7 +353,7 @@ bool Hlt::Service::hasAlgorithm ( const std::string& alg ) const
   using value_t =  std::pair< const IAlgorithm*
                             , GaudiUtils::VectorMap<Gaudi::StringKey
                                                    , Hlt::Selection*>>;
-  auto pred = [&](const value_t& o ){ return o.first->name()==alg; };
+  auto pred = [&](const value_t& out ){ return out.first->name()==alg; };
   return std::any_of( m_outputs.begin(), m_outputs.end(), pred )   // producer?
      ||  std::any_of( m_inputs.begin(),  m_inputs.end(),  pred ) ; // consumer?
 }
@@ -412,10 +435,7 @@ namespace
       ( const IAlgorithm* alg1 ,
         const IAlgorithm* alg2 ) const
     {
-      return
-        alg1 == alg2 ? false :
-               !alg1 ? true  :
-               !alg2 ? false : alg1->name() < alg2->name() ;
+        return alg1 != alg2 && ( !alg1 || ( alg2 && alg1->name() < alg2->name() ) );
     }
   };
   // ==========================================================================
@@ -430,10 +450,12 @@ size_t Hlt::Service::algorithms ( Hlt::IInspector::AlgList& algs ) const
 {
   algs.clear() ;
   std::set<const IAlgorithm*,_AlgCmp> myalgs ;
-  for  ( InputMap::const_iterator ii = m_inputs .begin() ;
-         m_inputs .end() != ii ; ++ii ) { myalgs.insert ( ii -> first ) ; }
-  for  ( InputMap::const_iterator io = m_outputs.begin() ;
-         m_outputs.end() != io ; ++io ) { myalgs.insert ( io -> first ) ; }
+  std::transform( std::begin(m_inputs), std::end(m_inputs),
+                  std::inserter( myalgs, std::end(myalgs) ),
+                  select1st );
+  std::transform( std::begin(m_outputs), std::end(m_outputs),
+                  std::inserter( myalgs, std::end(myalgs) ),
+                  select1st );
   // sor
   algs.insert ( algs.end() , myalgs.begin() , myalgs.end() ) ;
   //
@@ -445,15 +467,13 @@ size_t Hlt::Service::algorithms ( Hlt::IInspector::AlgList& algs ) const
  *  @return number of selections
  */
 // ============================================================================
-size_t Hlt::Service::selections ( Hlt::IInspector::KeyList& keys ) const
+size_t Hlt::Service::selections( Hlt::IInspector::KeyList& keys ) const
 {
-  keys.clear() ;
-  for ( SelMap::const_iterator ikey = m_selections.begin() ;
-        m_selections.end () != ikey ; ++ikey ) { keys.push_back ( ikey->first ) ; }
-  //
-  std::sort( keys.begin() , keys.end() ) ;
-  //
-  return keys.size() ;
+    keys.clear();
+    std::transform( std::begin( m_selections ), std::end( m_selections ),
+                    std::back_inserter( keys ), select1st );
+    std::sort( keys.begin(), keys.end() );
+    return keys.size();
 }
 // ============================================================================
 /* get the input TES locations for the given reader
@@ -482,10 +502,7 @@ size_t Hlt::Service::readTES
     return 0 ;
   }
   //
-  locations.insert
-    ( locations.end ()         ,
-      intes -> second.begin () ,
-      intes -> second.end   () ) ;
+  locations.insert( locations.end(), intes->second.begin(), intes->second.end() );
   //
   return locations.size() ;                                          // RETURN
 }
@@ -501,14 +518,12 @@ size_t Hlt::Service::readTES
   Hlt::IInspector::KeyList& locations ) const
 {
   locations.clear() ;
-  for ( TESMap::const_iterator imap = m_tesmap.begin() ;
-        m_tesmap.end() != imap ; ++imap )
-  {
-    const IAlgorithm* ialg = imap->first ;
-    if ( !ialg ) { continue ; }                               // CONTINUE
-    if ( ialg->name() == reader )
-    { return readTES ( ialg , locations ) ; }                      // RETURN
-  }
+  auto i = std::find_if( std::begin( m_tesmap ), std::end( m_tesmap ),
+                         [&]( TESMap::const_reference entry ) {
+      auto* ialg = entry.first;
+      return ialg && ialg->name() == reader;
+  } );
+  if (i!=std::end(m_tesmap)) return readTES( i->first, locations) ;  // RETURN
   //
   if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
   { Warning ( "readTES(2) :  no TES-inputs for reader '" + reader + "'") ; }
@@ -527,12 +542,10 @@ size_t Hlt::Service::readers
   AlgList&              alglist   ) const
 {
   alglist.clear() ;
-  for ( TESMap::const_iterator imap = m_tesmap.begin() ;
-        m_tesmap.end() != imap ; ++imap )
-  {
-    TESLocs::const_iterator it = imap->second.find ( location ) ;
-    if ( imap->second.end () == it ) { continue ; }              // CONTINUE
-    alglist.push_back  ( imap->first ) ;
+  for ( const auto& entry :  m_tesmap ) {
+    if ( entry.second.end () != entry.second.find ( location ) )  {
+        alglist.push_back  ( entry.first ) ;
+    }
   }
   if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
   {
@@ -551,8 +564,9 @@ size_t Hlt::Service::readers
 size_t Hlt::Service::allReaders ( AlgList& alglist   ) const
 {
   alglist.clear() ;
-  for ( TESMap::const_iterator imap = m_tesmap.begin() ;
-        m_tesmap.end() != imap ; ++imap ) { alglist.push_back ( imap->first ) ; }
+  std::transform( std::begin(m_tesmap), std::end(m_tesmap),
+                  std::back_inserter( alglist ),
+                  select1st );
   //
   if ( alglist.empty() )
   {
@@ -571,12 +585,8 @@ size_t Hlt::Service::allTES ( KeyList&              locations ) const
 {
   locations.clear() ;
   std::set<std::string> tmp ;
-  for ( TESMap::const_iterator imap = m_tesmap.begin() ;
-        m_tesmap.end() != imap ; ++imap )
-  {
-    const TESLocs& locs = imap->second ;
-    for ( TESLocs::const_iterator it = locs.begin() ; locs.end( )!= it ; ++it )
-    { tmp.insert ( *it ) ; }
+  for ( const auto& entry : m_tesmap ) {
+      tmp.insert( std::begin( entry.second ), std::end( entry.second ) );
   }
   //
   locations.insert ( locations.end() , tmp.begin () , tmp.end () ) ;

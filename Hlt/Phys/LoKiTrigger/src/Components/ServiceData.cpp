@@ -28,7 +28,7 @@ Hlt::Selection* Hlt::Service::retrieve
   const Key&        key      ) const                     //  selection key/name
 {
   // be a little bit paranoic:
-  Assert ( 0 != producer            ,
+  Assert ( producer            ,
            "retrieve: invalid producer"  , Retrieve_Invalid_Producer   ) ;
   // find all registered output selections by the given producer:
   OutputMap::iterator ifind = m_outputs.find ( producer ) ;
@@ -111,7 +111,7 @@ const DataObject* Hlt::Service::tes
   const Key&        location ) const                        // TES-location
 {
   // be a little bit paranoic:
-  Assert ( 0 != reader                  ,
+  Assert ( reader                  ,
            "tes: invalid reader"        , TES_Invalid_Reader   ) ;
   // check in map
   TESMap::const_iterator ifind = m_tesmap.find ( reader  ) ;

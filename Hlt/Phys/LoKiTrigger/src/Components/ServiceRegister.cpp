@@ -90,14 +90,14 @@ StatusCode Hlt::Service::registerOutput
   if      ( ! producer  ) 
   { return Error ( "registerOutput: invald producer" , 
                    Register_Invalid_Producer          ) ; }           // RETURN
-  else if ( ! selection ) 
+  if ( ! selection ) 
   { return Error ( "registerOutput: invalid seelction for producer '" + 
                    producer->name() + "'" , 
                    Register_Invalid_Selection         ) ;  }          // RETURN  
-  else if ( m_lockers.empty()  ) 
+  if ( m_lockers.empty()  ) 
   { return Error ( "registerOutput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_lockers.back () != producer ) 
+  if ( m_lockers.back () != producer ) 
   { return Error ( "registerOutput: the service is locked by '" 
                    + m_lockers.back()->name() + "'"   , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
@@ -108,7 +108,7 @@ StatusCode Hlt::Service::registerOutput
                      + selection->id().str() + 
                      "' is already registered (1) " ,
                      Register_Double_Registration ) ; }                // RETURN
-    else if ( inMap ( selection  ) ) 
+    if ( inMap ( selection  ) ) 
     { return Error ( "registerOutput: the selection '" 
                      + selection->id().str() +
                      "' is already registered (2) " ,
@@ -119,8 +119,9 @@ StatusCode Hlt::Service::registerOutput
   auto ifind = m_outputs.find ( producer ) ;
   if ( m_outputs.end() == ifind ) 
   {
-    m_outputs.insert ( producer , SelMap{} ) ;
-    ifind = m_outputs.find ( producer ) ;
+    auto ret = m_outputs.insert ( producer , SelMap{} ) ;
+    assert(ret.second);
+    ifind = ret.first;
   }
   // insert it! 
   SelMap sels = ifind->second ;
@@ -151,10 +152,10 @@ StatusCode Hlt::Service::registerInput
   if      ( !consumer  ) 
   { return Error ( "registerInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
-  else if ( m_lockers.empty()  ) 
+  if ( m_lockers.empty()  ) 
   { return Error ( "registerInput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_lockers.back() != consumer ) 
+  if ( m_lockers.back() != consumer ) 
   { return Error ( "registerInput: the service is locked by '" 
                    + m_lockers.back()->name() + "'"   , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
@@ -181,8 +182,9 @@ StatusCode Hlt::Service::registerInput
     auto iin = m_inputs.find ( consumer ) ;
     if ( m_inputs.end() == iin ) 
     {
-      m_inputs.insert ( consumer , SelMap() );
-      iin = m_inputs.find ( consumer ) ;
+      auto ins = m_inputs.insert ( consumer , SelMap() );
+      assert (ins.second);
+      iin = ins.first;
     }
     SelMap::iterator i = iin->second.find ( selection ) ;
     if ( iin->second.end() != i && m_pedantic ) 
@@ -222,10 +224,10 @@ StatusCode Hlt::Service::registerTESInput
   if      ( !consumer     ) 
   { return Error ( "registerTESInput: invalid consumer"  , 
                    Register_Invalid_Consumer          ) ; }           // RETURN
-  else if ( m_lockers.empty() ) 
+  if ( m_lockers.empty() ) 
   { return Error ( "registerTESInput: the service is not locked" ,   
                    Register_Invalid_Lock              ) ;  }          // RETURN
-  else if ( m_lockers.back () != consumer ) 
+  if ( m_lockers.back () != consumer ) 
   { return Error ( "registerTESInput: the service is locked by '" 
                    + m_lockers.back()->name() + "'" , 
                    Register_Invalid_Lock              ) ;  }          // RETURN
@@ -233,8 +235,9 @@ StatusCode Hlt::Service::registerTESInput
   auto intes = m_tesmap.find ( consumer ) ;
   if ( m_tesmap.end() == intes ) 
   {
-    m_tesmap.insert ( consumer , TESLocs() ) ;
-    intes = m_tesmap.find ( consumer ) ;
+    auto ins = m_tesmap.insert ( consumer , TESLocs() ) ;
+    assert(ins.second);
+    intes = ins.first;
   }
   auto iin = intes->second.find ( location ) ;
   if ( intes->second.end() != iin )

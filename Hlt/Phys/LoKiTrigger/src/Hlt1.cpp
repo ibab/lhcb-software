@@ -2,10 +2,6 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// boost
-// ============================================================================
-#include <boost/foreach.hpp>
-// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/TrUpgrade.h"
@@ -420,11 +416,13 @@ operator()( LoKi::Hlt1::VxSink::argument a ) const
 {
     Assert( m_selection, "Hlt::TSelection<LHCb::RecVertex>* point to NULL!" );
     //
-    for ( const LHCb::VertexBase* vx : a ) {
+    std::transform( std::begin( a ), std::end( a ),
+                    std::back_inserter( *m_selection ),
+                    [this]( const LHCb::VertexBase* vx ) {
         const LHCb::RecVertex* rvx = dynamic_cast<const LHCb::RecVertex*>( vx );
         Assert( rvx, "VertexBase is not a RecVertex" );
-        m_selection->push_back( rvx );
-    }
+        return rvx;
+    } );
     return a;
 }
 // ============================================================================

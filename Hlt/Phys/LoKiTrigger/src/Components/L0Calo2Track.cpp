@@ -170,14 +170,14 @@ namespace Hlt
     {
       m_types1.clear() ;
       for ( auto&  map : m_type_map1 )
-      { m_types1.insert( map.first, L0DUBase::CaloType::Type( map. second ) ); }
+      { m_types1.insert( map.first, L0DUBase::CaloType::Type( map.second ) ); }
       // no action if not yet initialized
-      if ( Gaudi::StateMachine::INITIALIZED > FSMState()   ) { return ; }
+      if ( Gaudi::StateMachine::INITIALIZED > FSMState()   )  return ; 
       //
-      if ( !msgLevel ( MSG::DEBUG ) && !propsPrint () ) { return ; }
+      if ( !msgLevel ( MSG::DEBUG ) && !propsPrint () )  return ; 
       //
       MsgStream& log = msgLevel( MSG::DEBUG ) ? debug() : info () ;
-      if ( !log.isActive() )      { return ; }                     // RETURN
+      if ( !log.isActive() )       return ;                      // RETURN
       log << " ConditionIDs to be used: " ;
       for (auto&  imap : m_types1 )
       { log << std::endl <<  "'" << imap.first << "' :\t" << imap.second ; }
@@ -197,7 +197,7 @@ namespace Hlt
       //
       if ( !msgLevel ( MSG::DEBUG ) && !propsPrint () ) { return ; }
       MsgStream& log = msgLevel( MSG::DEBUG ) ? debug() : info () ;
-      if ( !log.isActive() )      { return ; }                     // RETURN
+      if ( !log.isActive() )       return ;                      // RETURN
       //
       log << " ChannelsIDs to be used: " ;
       for ( auto&  map : m_types2 )
@@ -279,7 +279,7 @@ StatusCode Hlt::L0Calo2Track::execute  ()
 
   // create the container of tracks and register it in TES
   LHCb::Track::Container* tracks = new LHCb::Track::Container() ;
-  put ( tracks , "Hlt/Track/" + m_selection -> id ().str() );
+  put ( tracks , std::string{"Hlt/Track/"} + m_selection -> id ().str() );
 
   using namespace LoKi::L0 ;
 
@@ -290,12 +290,9 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   if ( 0 != m_L0Channel.find ( "All") )
   {
     const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( m_L0DULocation );
-    StatusCode sc = getL0Cuts
-      ( l0 , m_L0Channel , m_types1 , cuts ) ;
+    StatusCode sc = getL0Cuts ( l0 , m_L0Channel , m_types1 , cuts ) ;
     Assert ( sc.isSuccess () , "Unable to get proper L0CaloCuts" , sc ) ;
-  }
-  else
-  {
+  } else {
     StatusCode sc = getL0Cuts ( m_L0Channel , m_types2 , cuts ) ;
     Assert ( sc.isSuccess () , "Unable to get proper L0CaloCuts"  , sc ) ;
   }
@@ -304,16 +301,14 @@ StatusCode Hlt::L0Calo2Track::execute  ()
   Assert ( !cuts.empty  () , "Invalid size of L0CaloCuts" ) ;
 
   // loop over L0 candidates:
-  for ( L0Calos::const_iterator icalo = l0calos->begin() ;
-        l0calos->end() != icalo ; ++icalo )
+  for ( const LHCb::L0CaloCandidate* calo : *l0calos ) 
   {
-    const LHCb::L0CaloCandidate* calo = *icalo ;
-    if ( !calo ) { continue ; }                                  // CONTINUE
+    if ( !calo )  continue ;                                   // CONTINUE
     //
     bool pass = true ;
     auto icut = cuts.begin();
     while ( pass && cuts.end() != icut ) { pass =  ( *icut++ ) (calo); }
-    if ( !pass     ) { continue ; }                                  // CONTINUE
+    if ( !pass     )  continue ;                                   // CONTINUE
     //
 
     std::unique_ptr<LHCb::Track> track ( new LHCb::Track() );
@@ -352,7 +347,7 @@ void Hlt::L0Calo2Track::addExtras
 
 
   LHCb::State* state = track.stateAt( LHCb::State::MidHCal );
-  if ( 0 != state )
+  if ( state )
   {
     state -> setTx ( ex ) ;                                    // what is it ??
     state -> setTy ( ey ) ;                                    // what is it ??

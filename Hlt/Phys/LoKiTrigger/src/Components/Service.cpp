@@ -149,30 +149,30 @@ StatusCode Hlt::Service::queryInterface
     return StatusCode::SUCCESS ;                                       // RETURN
   }
   // Hlt Data ?
-  else if ( Hlt::IData        ::interfaceID () == iid )
+  if ( Hlt::IData        ::interfaceID () == iid )
   {
     *ppi =  static_cast<Hlt::IData*>        ( this )      ;
     addRef() ;
     return StatusCode::SUCCESS ;                                       // RETURN
   }
   // Hlt Inspector ?
-  else if ( Hlt::IInspector   ::interfaceID () == iid )
+  if ( Hlt::IInspector   ::interfaceID () == iid )
   {
     *ppi =  static_cast<Hlt::IInspector*>   ( this )      ;
     addRef() ;
     return StatusCode::SUCCESS ;                                       // RETURN
   }
   // "Assigned Names & Numbers"?
-  else if ( IANNSvc           ::interfaceID () == iid )
+  if ( IANNSvc           ::interfaceID () == iid )
   {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // "Assigned Names"?
-  else if ( IANSvc            ::interfaceID () == iid )
+  if ( IANSvc            ::interfaceID () == iid )
   {      return  annSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   //   LoKi ?
-  else if ( LoKi::ILoKiSvc    ::interfaceID () == iid )
+  if ( LoKi::ILoKiSvc    ::interfaceID () == iid )
   {      return lokiSvc() -> queryInterface ( iid , ppi ) ; }          // RETURN
   // Incident listener?
-  else if ( IIncidentListener ::interfaceID () == iid )
+  if ( IIncidentListener ::interfaceID () == iid )
   {
     *ppi =  static_cast<IIncidentListener*> ( this )      ;
     addRef() ;
@@ -312,7 +312,7 @@ void Hlt::Service::handle ( const Incident& inc )
           StatEntity&          size = cnts.second ;
           //
           rate += sel -> decision() ;
-          if ( 0 < sel->size() ) { size += sel -> size () ; }
+          if ( !sel->empty() ) { size += sel -> size () ; }
         }
         //
         sel -> clean () ;

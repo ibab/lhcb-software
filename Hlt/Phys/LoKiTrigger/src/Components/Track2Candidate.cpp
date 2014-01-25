@@ -280,19 +280,18 @@ StatusCode Hlt::Track2Candidate::execute  ()
     if ( !track || ! m_cut ( track ) ) { continue ; } // CONTINUE 
     //
     //
-    // create the new candidate:
-    Hlt::Candidate* candidate = new Hlt::Candidate() ;
+    // create the new candidate & add into TES container
+    candidates -> push_back ( new Hlt::Candidate() )  ; 
+    Hlt::Candidate* candidate = candidates->back(); 
     //
     candidate  -> addToWorkers ( m_input ) ;
     candidate  -> addToWorkers ( this    ) ;
-    candidates -> push_back ( candidate )  ; // add candidate into TES constainer 
     //
-    // create the stage
-    Hlt::Stage* stage = new Hlt::Stage() ;
-    // add it into candidate 
-    stages     -> push_back ( stage    )   ;  // add stage  into TES container 
+    // create the stage & add into TES container
+    stages     -> push_back ( new Hlt::Stage() ) ; 
+    Hlt::Stage *stage = stages->back();
     // add it into Candidate! 
-    candidate  -> addToStages ( stage ) ;  // add stage to candidate 
+    candidate  -> addToStages ( stage ) ;
     
     // lock the stage!
     Hlt::Stage::Lock lock { stage , this } ;

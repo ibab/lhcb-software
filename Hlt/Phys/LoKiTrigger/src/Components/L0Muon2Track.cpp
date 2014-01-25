@@ -94,24 +94,22 @@ namespace Hlt
     // ========================================================================
   private:
     // ========================================================================
-    const Hlt::Candidate* checkMuon
-    ( const LHCb::Track*                     muon       ,
-      const Hlt::TSelection<Hlt::Candidate>* candidates ) const
+    const Hlt::Candidate*
+    checkMuon( const LHCb::Track* muon,
+               const Hlt::TSelection<Hlt::Candidate>* candidates ) const
     {
-      if ( !muon       ) { return nullptr ; }
-      if ( !candidates ) { return nullptr ; }
-      for ( const Hlt::Candidate* candidate : *candidates )
-      {
-        if ( !candidate ) { continue ; }
-        typedef  Hlt::Candidate::Stages Stages ;
-        const Stages& stages = candidate->stages() ;
-        for ( const Hlt::Stage* stage : stages )
-        {
-          if ( stage && muon == stage->get<LHCb::Track>() ) { return candidate ; }
-        }
-      }
-      //
-      return nullptr ;
+        if ( !muon ) return nullptr;
+        if ( !candidates ) return nullptr;
+        auto candidate =
+            std::find_if( std::begin( *candidates ), std::end( *candidates ),
+                          [muon]( const Hlt::Candidate* c ) {
+                return c && std::any_of( std::begin( c->stages() ),
+                                         std::end( c->stages() ),
+                                         [muon]( const Hlt::Stage* s ) {
+                                return s && muon == s->get<LHCb::Track>();
+                            } );
+            } );
+        return candidate != std::end( *candidates )  ? *candidate : nullptr;
     }
     // ========================================================================
   private:
