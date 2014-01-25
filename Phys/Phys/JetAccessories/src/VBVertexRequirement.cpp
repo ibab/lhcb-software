@@ -16,7 +16,6 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( VBVertexRequirement )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -24,24 +23,12 @@ VBVertexRequirement::VBVertexRequirement( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : DaVinciAlgorithm ( name , pSvcLocator )
 {
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 VBVertexRequirement::~VBVertexRequirement() {} 
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode VBVertexRequirement::initialize() {
-  StatusCode sc = DaVinciAlgorithm::initialize(); 
-  if ( sc.isFailure() ) return sc;
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // Main execution

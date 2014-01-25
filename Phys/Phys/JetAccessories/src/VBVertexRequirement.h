@@ -13,20 +13,19 @@
  *  @author Albert Bursche
  *  @date   2012-01-27
  */
-class VBVertexRequirement : public DaVinciAlgorithm {
+class VBVertexRequirement : public DaVinciAlgorithm 
+{
+
 public: 
+
   /// Standard constructor
   VBVertexRequirement( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~VBVertexRequirement( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-private:
-
 };
+
 #endif // VBVERTEXREQUIREMENT_H
