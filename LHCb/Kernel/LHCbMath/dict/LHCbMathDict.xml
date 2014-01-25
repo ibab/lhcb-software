@@ -134,10 +134,12 @@
   <function name = "Gaudi::Math::sumabs"          />
   <function name = "Gaudi::Math::abssum"          />
   <function name = "Gaudi::Math::binomEff"        />
+  <function name = "Gaudi::Math::binomEff2"       />
   <function name = "Gaudi::Math::wilsonEff"       />
   <function name = "Gaudi::Math::agrestiCoullEff" />
   <function name = "Gaudi::Math::exclusiveEff"    />
   <function name = "Gaudi::Math::zechEff"         />
+  <function name = "Gaudi::Math::effJackknife"    />
   
   <function name    = "LHCb::Math::round"                  />
   <function name    = "LHCb::Math::isint"                  />

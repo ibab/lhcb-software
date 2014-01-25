@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-01-25 - Vanya Belyaev
+ - add jackknife estimator 
+
 ! 2014-01-22 - Vanya Belyaev
  - fix bug in NSphere+Positive 
 

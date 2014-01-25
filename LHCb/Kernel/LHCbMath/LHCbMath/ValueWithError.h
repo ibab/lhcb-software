@@ -380,55 +380,89 @@ namespace Gaudi
     ( const ValueWithError& a ) ;
     // ========================================================================
     /** evaluate the binomial efficiency for Bernulli scheme 
-     *  @param n (INPUT) number of 'success' 
-     *  @param N (INPUT) total number 
+     *  @param n_success (INPUT) number of 'success' 
+     *  @param N_total    (INPUT) total number 
      *  @return the binomial efficiency 
      */
     GAUDI_API
     ValueWithError binomEff   
-    ( const size_t n , 
-      const size_t N ) ;
+    ( const size_t n_success , 
+      const size_t N_total   ) ;
     // ========================================================================
     /** evaluate the binomial efficiency interval using Wilson's prescription
-     *  @param n (INPUT) number of 'success' 
-     *  @param N (INPUT) total number 
+     *  @param n_success (INPUT) number of 'success' 
+     *  @param N_total   (INPUT) total number 
      *  @return the binomial efficiency 
      */
     GAUDI_API
     ValueWithError wilsonEff   
-    ( const size_t n , 
-      const size_t N ) ;
+    ( const size_t n_success , 
+      const size_t N_total   ) ;
     // ========================================================================
     /** evaluate the binomial efficiency interval 
      *  using Agresti-Coull's prescription
-     *  @param n (INPUT) number of 'success' 
-     *  @param N (INPUT) total number 
+     *  @param n_success (INPUT) number of 'success' 
+     *  @param N_total   (INPUT) total number 
      *  @return the binomial efficiency 
      */
     GAUDI_API
     ValueWithError agrestiCoullEff   
-    ( const size_t n , 
-      const size_t N ) ;
+    ( const size_t n_success , 
+      const size_t N_total   ) ;
     // ========================================================================
     /** simple evaluation of efficiency from statistically independend
      * "exclusive" samples "accepted" and "rejected"
      *  \f$ \varepsilon = \frac{1}{ 1 + \frac{N_{rejected}}{N_accepted}}\f$ 
      *  @param accepted  (IN) accepted sample 
      *  @param rejected  (IN) rejected sample 
+     *  @return the binomial efficiency 
+     *  @see Gaudi::Math::binomEff2
      */
     GAUDI_API 
     ValueWithError exclusiveEff
     ( const ValueWithError& accepted , 
       const ValueWithError& rejected ) ;
     // ========================================================================
+    /** evaluate the binomial efficiency for Bernulli scheme with weights 
+     *  \f[ R = \frac{N_acc}{N_tot} = \frac{N_acc}{N_acc+N_rej} = \left( 1 + \frac{N_rej}{N_acc}\right)^{-1} \f]
+     *  @param nAccepted (INPUT) number of accepted (weighted) events 
+     *  @param nRejected (INPUT) number of rejected (weighted) events 
+     *  @return the binomial efficiency 
+     *  @see Gaudi::Math::exclusiveEff 
+     */
+    GAUDI_API
+    ValueWithError binomEff2   
+    ( const ValueWithError& nAccepted , 
+      const ValueWithError& nRejected ) ;
+    // ========================================================================
     /** simple evaluation of efficiency using Zech's prescription 
-     *  @param accepted  (IN) accepted sub-sample 
-     *  @param total     (IN) total     sample 
+     *  @param n_success (IN) accepted sub-sample 
+     *  @param N_total   (IN) total     sample 
      */
     GAUDI_API 
     ValueWithError zechEff
-    ( const ValueWithError& accepted , 
-      const ValueWithError& total    ) ;
+    ( const ValueWithError& n_success , 
+      const ValueWithError& N_total   ) ;
+    // ========================================================================
+    /** calculate the ratio of weighted to unweighted statistic 
+     *  \f[ R = \frac{N_w}{N}  = \frac{ \sum_1^{N} w_i }{N} \f] 
+     *  using jackknife method:
+     *  \f[ \sigma^2(R) = \left( \sum_1^N w_i^2 - NR^2 \right) / (N-1)^2 \f] 
+     *  @thanks Wouter Hulsbergen 
+     *  @see http://en.wikipedia.org/wiki/Jackknife_%28statistics%29
+     *  The result has proper behaviour : 
+     *  uncertainty in R goes to zero if 
+     *  dispersion on weights go to zero.
+     *  @param   nWeighted (input) statistic of weighted sample 
+     *  @param   n         (input) size      of origial sample 
+     *  @return  ratio R with the proper uncertaities 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+     *  @date 2014-01-25
+     */
+    GAUDI_API 
+    ValueWithError effJackknife  
+    ( const ValueWithError& nWeighted , 
+      const unsigned long   n         ) ;  
     // ========================================================================
     /** evaluate pow(a,b)
      *  @param a (INPUT) the base 

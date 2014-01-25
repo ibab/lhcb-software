@@ -776,12 +776,72 @@ Gaudi::Math::ValueWithError
 Gaudi::Math::exclusiveEff
 ( const Gaudi::Math::ValueWithError& accepted , 
   const Gaudi::Math::ValueWithError& rejected )
+{ return Gaudi::Math::binomEff2 ( accepted , rejected ) ; }
+// ============================================================================
+/*  evaluate the binomial efficiency for Bernulli scheme with weights 
+ *  @param nAccepted (INPUT) number of accepted (weighted) events 
+ *  @param nRejected (INPUT) number of rejected (weighted) events 
+ *  @return the binomial efficiency 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::binomEff2
+( const ValueWithError& nAccepted , 
+  const ValueWithError& nRejected ) 
 {
-  const bool z_a = _zero ( accepted.value() ) ;
-  const bool z_r = _zero ( rejected.value() ) ;
-  return 
-    z_a ? ( z_r ? ValueWithError ( 1, 1 ) : ( 1. - 1. / ( 1. + accepted / rejected ) ) )  :
-    1. / ( 1. + rejected / accepted ) ;
+  const double vA = nAccepted.value() ;
+  const double vR = nRejected.value() ;
+  //
+  const bool zeroA = _zero ( vA      ) ;
+  const bool zeroR = _zero ( vR      ) ;
+  //
+  if ( zeroA && zeroR ) { return ValueWithError ( 1 , -1 ) ; }
+  //
+  const double vB  = vA + vR ;
+  const bool zeroB = _zero ( vB ) ;
+  //
+  if ( zeroB          ) { return ValueWithError ( 0 , -1 ) ; }
+  //
+  double cov2   =  vA * vA * nRejected.cov2() ;
+  cov2         +=  vR * vR * nAccepted.cov2() ;
+  cov2         /=  vB * vB   ;
+  //
+  return ValueWithError ( vA / vB , cov2 ) ;
+}
+// ============================================================================
+/*  calculate the ratio of weighted to unweighted sample with uncertainties
+ *  \f[ R = \frac{N_w}{N}  = \frac{ \sum_1^{N} w_i }{N} \f] 
+ *  using jackknife method:
+ *  \f[ \sigma^2(R) = \left( \sum_1^N w_i^2 - NR^2 \right) / (N-1)^2 \f] 
+ *  @thanks Wouter Hulsbergen 
+ *  @see http://en.wikipedia.org/wiki/Jackknife_%28statistics%29
+ *  The result has proper behaviour : 
+ *  uncertainty in R goes to zero if 
+ *  dispersion on weights go to zero.
+ *  @param   nWeighted (input) statistic of weighted sample 
+ *  @param   n         (input) size      of origial sample 
+ *  @return  ratio R with the proper uncertaities 
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError 
+Gaudi::Math::effJackknife 
+( const ValueWithError& nWeighted , 
+  const unsigned long   n         ) 
+{
+  //
+  if      ( 0 == n ) { return ValueWithError (-1,-1)                   ; }
+  else if ( 1 == n ) { return ValueWithError ( nWeighted.value() , 0 ) ; }
+  //
+  const unsigned long n1 = n - 1 ;
+  //
+  const double r  = nWeighted.value() / n ;
+  //
+  double c2 = nWeighted.cov2 () - r*r*n ;
+  //
+  c2 /= n1 ;
+  c2 /= n1 ;
+  //
+  return ValueWithError ( r , c2 ) ;
 }
 // ============================================================================
 /*  Simple evaluation of efficiency using Zech's prescription 
