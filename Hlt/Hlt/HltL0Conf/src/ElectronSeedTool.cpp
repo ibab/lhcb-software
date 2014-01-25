@@ -23,7 +23,7 @@
 using namespace LHCb;
 
 
-DECLARE_TOOL_FACTORY( ElectronSeedTool );
+DECLARE_TOOL_FACTORY( ElectronSeedTool )
 
 
 // Standard Constructor

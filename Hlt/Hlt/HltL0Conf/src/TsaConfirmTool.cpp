@@ -40,7 +40,7 @@
 using namespace LHCb;
 using namespace Tf::Tsa;
 
-DECLARE_TOOL_FACTORY( TsaConfirmTool );
+DECLARE_TOOL_FACTORY( TsaConfirmTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

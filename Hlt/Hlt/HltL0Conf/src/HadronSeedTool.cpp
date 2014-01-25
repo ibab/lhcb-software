@@ -32,7 +32,7 @@
 using namespace LHCb;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( HadronSeedTool );
+DECLARE_TOOL_FACTORY( HadronSeedTool )
 
 // static constants
 const double HadronSeedTool::zECal = 12830.;
