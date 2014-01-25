@@ -74,7 +74,7 @@ HltGlobalMonitor::histopair::histopair( GaudiHistoAlg& parent, std::string loc,
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor );
+DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor )
 
 // utilities
 

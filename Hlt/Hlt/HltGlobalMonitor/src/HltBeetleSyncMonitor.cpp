@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltBeetleSyncMonitor );
+DECLARE_ALGORITHM_FACTORY( HltBeetleSyncMonitor )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -53,7 +53,7 @@ using namespace Gaudi::Utils::Histos;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltL0GlobalMonitor );
+DECLARE_ALGORITHM_FACTORY( HltL0GlobalMonitor )
 
 // utilities
 
