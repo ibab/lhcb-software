@@ -5,6 +5,9 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2014-01-25 - Gerhard Raven
+ - fix clang error
+
 ! 2014-01-24 - Gerhard Raven
  - run clang-format
 

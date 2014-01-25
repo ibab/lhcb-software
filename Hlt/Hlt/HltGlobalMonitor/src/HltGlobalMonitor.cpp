@@ -224,9 +224,9 @@ StatusCode HltGlobalMonitor::initialize()
         for ( const std::string& s : i.second ) {
             std::string label = s;
             for ( const auto& strip : std::array<std::string,3>{
-                     "Decision", // and of course 'Decision'...
-                     "Hlt1",     // just strip 'Hlt1'
-                     i.first}    // finally try to remove alley prefix
+                     {  "Decision"  // and of course 'Decision'...
+                     ,  "Hlt1"     // just strip 'Hlt1'
+                     , i.first    } }    // finally try to remove alley prefix
                   ) {
                 if ( label != strip ) boost::algorithm::erase_all( label, strip );
             }
@@ -251,9 +251,9 @@ StatusCode HltGlobalMonitor::initialize()
         for ( std::string s : i.second ) {
             std::string label = s;
             for ( const auto& strip : std::array<std::string,3>{
-                     "Decision", // always remove 'Decision'...
-                     "Hlt2",     // and Hlt2
-                     i.first}    // finally try to remove alley prefix
+                     { "Decision" // always remove 'Decision'...
+                     , "Hlt2"     // and Hlt2
+                     , i.first }}    // finally try to remove alley prefix
                   ) {
                 if ( label != strip ) boost::algorithm::erase_all( label, strip );
             }
