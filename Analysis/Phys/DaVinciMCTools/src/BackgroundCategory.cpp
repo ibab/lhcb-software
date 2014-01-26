@@ -578,8 +578,9 @@ BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candida
     //the last mother before this (this assumes quarks have no parents)  
     finalmother = tmpmother;
     tmpmother = finalmother->mother();
-    if (m_ignoreQuarks) {
-        if (abs(tmpmother->particleID().pid())<11) {
+    if (m_ignoreQuarks and tmpmother != NULL) {
+        if ( tmpmother->particleID().hasQuarks() && 
+            !tmpmother->particleID().isHadron() ) {
             return finalmother;
         }
     }
