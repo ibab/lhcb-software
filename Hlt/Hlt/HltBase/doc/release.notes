@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 ! 2014-01-23 - Gerhard Raven
+ - remove HltBase/IBiFunctionFactory.h as it not referenced.
+
+! 2014-01-23 - Gerhard Raven
  - use clang-format to make sure the code is formatted in a uniform way
    (no changes other than formatting)
 
