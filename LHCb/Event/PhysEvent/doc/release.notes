@@ -2,6 +2,9 @@
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
+! 2014-01-26 - Stefania Vecchi & Mirco Dorigo
+ - Put  SS_PionBDT tagger type in Tagger.xml as last one in the list of taggers
+
 ! 2014-01-22 - Stefania Vecchi & Mirco Dorigo
  - Added SS_PionBDT tagger type in Tagger.xml and Tagger.h
 

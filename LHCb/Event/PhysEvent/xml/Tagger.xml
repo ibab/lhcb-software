@@ -17,8 +17,8 @@
         name = "TaggerType"
         desc = "The type of tagger which has produced this decision"
         value= "none, unknown, OS_Muon, OS_Electron, OS_Kaon, 
-                SS_Kaon, SS_Pion, SS_PionBDT, jetCharge, OS_jetCharge, SS_jetCharge, 
-                VtxCharge, Topology, OS_nnetKaon, SS_nnetKaon, SS_Proton, OS_Charm"
+                SS_Kaon, SS_Pion, jetCharge, OS_jetCharge, SS_jetCharge, 
+                VtxCharge, Topology, OS_nnetKaon, SS_nnetKaon, SS_Proton, OS_Charm, SS_PionBDT"
         access="PUBLIC"
      />
 
