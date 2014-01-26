@@ -31,29 +31,34 @@ __date__    = "2011-06-07"
 # =============================================================================
 __all__     = (
     #
-    'cpp'            , ## global C++ namespace 
-    'rootID'         , ## construct the (global) unique ROOT identifier
-    'funcID'         , ## construct the (global) unique ROOT identifier
-    'funID'          , ## construct the (global) unique ROOT identifier
-    'hID'            , ## construct the (global) unique ROOT identifier
-    'histoID'        , ## construct the (global) unique ROOT identifier
+    'cpp'             , ## global C++ namespace 
+    'rootID'          , ## construct the (global) unique ROOT identifier
+    'funcID'          , ## construct the (global) unique ROOT identifier
+    'funID'           , ## construct the (global) unique ROOT identifier
+    'hID'             , ## construct the (global) unique ROOT identifier
+    'histoID'         , ## construct the (global) unique ROOT identifier
     #
-    'VE'             , ## Gaudi::Math::ValueWithError
-    'ValueWithError' , ## Gaudi::Math::ValueWithError
-    'histoGuess'     , ## guess the simple histo parameters
-    'useLL'          , ## use LL for histogram fit?
-    'allInts'        , ## natural histogram with natural entries?
+    'VE'              , ## Gaudi::Math::ValueWithError
+    'ValueWithError'  , ## Gaudi::Math::ValueWithError
+    'histoGuess'      , ## guess the simple histo parameters
+    'useLL'           , ## use LL for histogram fit?
+    'allInts'         , ## natural histogram with natural entries?
     #
-    'binomEff'       , ## calculate binomial efficiency 
-    'binomEff_h1'    , ## calculate binomial efficiency for 1D-histos
-    'binomEff_h2'    , ## calculate binomial efficiency for 2D-ihstos
-    'binomEff_h3'    , ## calculate binomial efficiency for 3D-ihstos
+    'binomEff'        , ## calculate binomial efficiency
+    'binomEff2'       , ## calculate binomial efficiency
+    'zhechEff'        , ## calcualte binomial efficiency using Zech's          prescription
+    'wilsonEff'       , ## calcualte binomial efficiency using Wilson's        prescription
+    'agrestiCoullEff' , ## calcualte binomial efficiency using Agresti-Coull's prescription
     #
-    'makeGraph'      , ## make ROOT Graph from input data
-    'h2_axes'        , ## book 2D-histogram from axes
-    'h1_axis'        , ## book 1D-histogram from axis 
-    'axis_bins'      , ## convert list of bin edges to axis
-    've_adjust'      , ## adjust the efficiency to be in physical range
+    'binomEff_h1'     , ## calculate binomial efficiency for 1D-histos
+    'binomEff_h2'     , ## calculate binomial efficiency for 2D-ihstos
+    'binomEff_h3'     , ## calculate binomial efficiency for 3D-ihstos
+    #
+    'makeGraph'       , ## make ROOT Graph from input data
+    'h2_axes'         , ## book 2D-histogram from axes
+    'h1_axis'         , ## book 1D-histogram from axis 
+    'axis_bins'       , ## convert list of bin edges to axis
+    've_adjust'       , ## adjust the efficiency to be in physical range
     #
     # from Utils
     'memory'         , 
@@ -69,11 +74,16 @@ import PyCintex
 cpp = PyCintex.makeNamespace('')
 # 
 import LHCbMath.Types
-Gaudi          = cpp.Gaudi
-VE             = Gaudi.Math.ValueWithError
-SE             = cpp.StatEntity 
-ValueWithError = Gaudi.Math.ValueWithError
-binomEff       = Gaudi.Math.binomEff
+Gaudi           = cpp.Gaudi
+VE              = Gaudi.Math.ValueWithError
+SE              = cpp.StatEntity 
+ValueWithError  = Gaudi.Math.ValueWithError
+#
+binomEff        = Gaudi.Math.binomEff
+zechEff         = Gaudi.Math.zechEff
+wilsonEff       = Gaudi.Math.wilsonEff
+agrestiCoullEff = Gaudi.Math.agrestiCoullEff
+#
 import math, sys
 from array import array
 # =============================================================================
@@ -1387,20 +1397,24 @@ def allInts ( histo         ,
 ROOT.TH1.allInts = allInts
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs 
+## calculate the efficiency histogram using the binomial erorrs
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def binomEff_h1 ( h1 , h2 ) :
+def binomEff_h1 ( h1 , h2 , func = binomEff ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
     
-    >>> h1 = ...
-    >>> h2 = ...
-    >>> h3 = h1 // h2
+    >>> accepted   = ...
+    >>> total      = ...
+    >>> efficiency = accepted // total
     
     """
-    func = binomEff
-    #
+    # 
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -1428,22 +1442,28 @@ def binomEff_h1 ( h1 , h2 ) :
         
     return result 
 
-ROOT.TH1.  binomEff    = binomEff_h1 
+
+ROOT.TH1F.  binomEff    = binomEff_h1 
+ROOT.TH1D.  binomEff    = binomEff_h1 
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def binomEff_h2 ( h1 , h2 ) :
+def binomEff_h2 ( h1 , h2 , func = binomEff ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
 
-    >>> h1 = ...
-    >>> h2 = ...
-    >>> h3 = h1 // h2
+    >>> accepted   = ...
+    >>> total      = ...
+    >>> efficiency = accepted // total
     
     """
-    func = binomEff
     #
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
@@ -1472,22 +1492,27 @@ def binomEff_h2 ( h1 , h2 ) :
         
     return result 
 
-ROOT.TH2.  binomEff    = binomEff_h2 
+ROOT.TH2F.  binomEff    = binomEff_h2 
+ROOT.TH2D.  binomEff    = binomEff_h2 
 
 # =============================================================================
 ## calculate the efficiency histogram using the binomial erorrs 
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def binomEff_h3 ( h1 , h2 ) :
+def binomEff_h3 ( h1 , h2 , func = binomEff ) :
     """
     Calculate the efficiency histogram using the binomial erorrs
 
-    >>> h1 = ...
-    >>> h2 = ...
-    >>> h3 = h1 // h2
+    >>> accepted   = ...
+    >>> total      = ...
+    >>> efficiency = accepted // total
     
     """
-    func = binomEff
     #
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
@@ -1516,14 +1541,171 @@ def binomEff_h3 ( h1 , h2 ) :
         
     return result 
 
-ROOT.TH3.  binomEff    = binomEff_h3 
-
+ROOT.TH3F.  binomEff    = binomEff_h3 
+ROOT.TH3D.  binomEff    = binomEff_h3 
 
 ROOT.TH1F . __floordiv__  = binomEff_h1 
 ROOT.TH1D . __floordiv__  = binomEff_h1 
 ROOT.TH2F . __floordiv__  = binomEff_h2
 ROOT.TH2D . __floordiv__  = binomEff_h2
-ROOT.TH3  . __floordiv__  = binomEff_h3
+ROOT.TH3F . __floordiv__  = binomEff_h3
+ROOT.TH3D . __floordiv__  = binomEff_h3
+
+
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
+#  @see Gaudi::Math::zechEff
+#  @param h1 histogram of "accepted" sample
+#  @param h2 histogram of "total"    sample 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def zechEff_h1 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    
+    >>> accepted  = ... ##  histogram for accepted sample 
+    >>> total     = ... ##  histogram for total    sample 
+    >>> efficiency = accepted % total
+    
+    """
+    func = zechEff 
+    #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID () )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for i1,x1,y1 in h1.iteritems() :
+        #
+        y2 = h2 ( x1.value() ) 
+        #
+        v  = VE ( func ( y1 , y2 ) )
+        #
+        if v.cov2() < 0 :
+            ## if uncertainty is unphysical, make simple divizion
+            v = y1/y2 
+            #
+        if not v.isfinite() : continue 
+        #
+        result.SetBinContent ( i1 , v.value () ) 
+        result.SetBinError   ( i1 , v.error () )
+        
+    return result 
+
+ROOT.TH1F.  zechEff    = zechEff_h1 
+ROOT.TH1D.  zechEff    = zechEff_h1 
+
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
+#  @see Gaudi::Math::zechEff
+#  @param h1 histogram of "accepted" sample
+#  @param h2 histogram of "total"    sample 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def zechEff_h2 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    
+    >>> accepted  = ... ##  histogram for accepted sample 
+    >>> total     = ... ##  histogram for total    sample 
+    >>> efficiency = accepted % total
+    
+    """
+    func = zechEff 
+    #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID () )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for ix1,iy1,x1,y1,z1 in h1.iteritems() :
+        #
+        z2 = h2 ( x1.value() , y1.value() ) 
+        #
+        v  = VE ( func ( z1 , z2 ) )
+        #
+        if v.cov2() < 0 :
+            ## if uncertainty is unphysical, make simple divizion
+            v = z1/z2 
+            #
+        if not v.isfinite() : continue 
+        #
+        result.SetBinContent ( ix1 , iy1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , v.error () ) 
+        
+    return result 
+
+ROOT.TH2F.  zechEff    = zechEff_h2
+ROOT.TH2D.  zechEff    = zechEff_h2 
+
+# =============================================================================
+## calculate the efficiency histogram using the binomial erorrs
+#  @code 
+#  >>> accepted   = ...
+#  >>> total      = ...
+#  >>> efficiency = acepted // total
+#  @endcode 
+#  @see Gaudi::Math::zechEff
+#  @param h1 histogram of "accepted" sample
+#  @param h2 histogram of "total"    sample 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def zechEff_h3 ( h1 , h2 ) :
+    """
+    Calculate the efficiency histogram using the binomial erorrs
+    
+    >>> accepted  = ... ##  histogram for accepted sample 
+    >>> total     = ... ##  histogram for total    sample 
+    >>> efficiency = accepted % total
+    
+    """
+    func = zechEff 
+    #
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    result = h1.Clone( hID () )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        #
+        v  = VE ( func ( v1 , v2 ) )
+        #
+        if v.cov2() < 0 :
+            ## if uncertainty is unphysical, make simple divizion
+            v = v1/v2 
+            #
+        if not v.isfinite() : continue 
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , v.error () ) 
+
+        
+    return result 
+
+ROOT.TH3F .  zechEff = zechEff_h3
+ROOT.TH3D .  zechEff = zechEff_h3
+
+ROOT.TH1F . __mod__  = zechEff_h1 
+ROOT.TH1D . __mod__  = zechEff_h1 
+ROOT.TH2F . __mod__  = zechEff_h2
+ROOT.TH2D . __mod__  = zechEff_h2
+ROOT.TH3F . __mod__  = zechEff_h3
+ROOT.TH3D . __mod__  = zechEff_h3
 
 # =============================================================================
 ## operation with the histograms 

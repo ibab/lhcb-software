@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-01-26 - Vanya Belyaev
+ - add Zech-prescriptition for efficinecy determination 
+
 ! 2014-01-20 - Vanya Belyaev
 
  - substitute numpy.array with array.array 
