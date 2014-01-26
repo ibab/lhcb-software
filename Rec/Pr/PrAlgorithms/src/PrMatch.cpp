@@ -56,9 +56,18 @@ StatusCode PrMatch::execute()
   put(matchs, m_matchLocation);
   matchs->reserve(200);
  
-  LHCb::Tracks* velos  = get<LHCb::Tracks>( m_veloLocation );
-  LHCb::Tracks* seeds  = get<LHCb::Tracks>( m_seedLocation ); 
+  LHCb::Tracks* velos  = getIfExists<LHCb::Tracks>( m_veloLocation );
+  if ( nullptr == velos ) {
+    error() << "Track container '" << m_veloLocation << "' does not exist" <<endmsg;
+    return StatusCode::SUCCESS;
+  }
   
+  LHCb::Tracks* seeds  = getIfExists<LHCb::Tracks>( m_seedLocation ); 
+  if ( nullptr == seeds ) {
+    error() << "Track container '" << m_seedLocation << "' does not exist" <<endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   StatusCode sc = m_matchTool->match( *velos , *seeds , *matchs);
   
   if(sc.isFailure()) Warning("PrMatchTool failed",sc).ignore();
