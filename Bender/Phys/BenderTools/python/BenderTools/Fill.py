@@ -227,16 +227,18 @@ def treatPions ( self         ,
     sc = tup.column_float ( 'minann_pi'  + suffix , self._min_annpid_Pi ( p ) ) 
     #
     tup.fArrayP (
-        'p_pion'   + suffix          , P   / GeV    ,  
-        'pt_pion'  + suffix          , PT  / GeV    , 
-        'eta_pion' + suffix          , ETA          , 
-        LHCb.Particle.Range ( good ) ,
-        'n_pion'   + suffix          , 10           )
+        'p_pion'     + suffix , P   / GeV    ,  
+        'pt_pion'    + suffix , PT  / GeV    , 
+        'eta_pion'   + suffix , ETA          , 
+        LHCb.Particle.Range ( good )         ,
+        'n_pion'     + suffix , 10           )
     return tup.fArrayP (
-        'pid_pion' + suffix          , PIDpi - PIDK ,  
-        'ann_pion' + suffix          , PROBNNpi     ,  
-        LHCb.Particle.Range ( good ) ,
-        'n_pion'   + suffix          , 10           )
+        'pid_pion'   + suffix , PIDpi - PIDK ,  
+        'ann_pion'   + suffix , PROBNNpi     ,  
+        'ann_pion_P' + suffix , PROBNNK      ,  
+        'ann_pion_K' + suffix , PROBNNp      ,  
+        LHCb.Particle.Range ( good )         ,
+        'n_pion'     + suffix , 10           )
 
 # ==============================================================================
 ## add kaon information into n-tuple
@@ -262,16 +264,18 @@ def treatKaons ( self         ,
     sc = tup.column_float ( 'minann_K' + suffix , self._min_annpid_K  ( p ) ) 
     #
     tup.fArrayP (
-        'p_kaon'   + suffix          , P   / GeV    , 
-        'pt_kaon'  + suffix          , PT  / GeV    , 
-        'eta_kaon' + suffix          , ETA          , 
-        LHCb.Particle.Range ( good ) ,
-        'n_kaon'   + suffix          , 10        )
+        'p_kaon'      + suffix , P   / GeV    , 
+        'pt_kaon'     + suffix , PT  / GeV    , 
+        'eta_kaon'    + suffix , ETA          ,  
+        LHCb.Particle.Range ( good )          ,
+        'n_kaon'      + suffix , 10           )
     return tup.fArrayP (
-        'pid_kaon' + suffix          , PIDK - PIDpi ,  
-        'ann_kaon' + suffix          , PROBNNk      ,  
-        LHCb.Particle.Range ( good ) ,
-        'n_kaon'   + suffix          , 10        )
+        'pid_kaon'    + suffix , PIDK - PIDpi ,  
+        'ann_kaon'    + suffix , PROBNNk      ,
+        'ann_kaon_PI' + suffix , PROBNNpi     ,  
+        'ann_kaon_P'  + suffix , PROBNNp      ,  
+        LHCb.Particle.Range ( good )          ,
+        'n_kaon'      + suffix , 10           )
 
 # ==============================================================================
 ## add proton information into n-tuple
@@ -298,17 +302,19 @@ def treatProtons ( self         ,
     sc = tup.column_float ( 'minann_P'   + suffix , self._min_annpid_P ( p ) ) 
     #
     tup.fArrayP (
-        'p_proton'    + suffix       , P   / GeV , 
-        'pt_proton'   + suffix       , PT  / GeV , 
-        'eta_proton'  + suffix       , ETA       , 
-        LHCb.Particle.Range ( good ) ,
-        'n_proton'    + suffix       , 10        )
+        'p_proton'      + suffix , P   / GeV    , 
+        'pt_proton'     + suffix , PT  / GeV    , 
+        'eta_proton'    + suffix , ETA          , 
+        'ann_proton'    + suffix , PROBNNp      ,
+        LHCb.Particle.Range ( good )            ,
+        'n_proton'      + suffix , 10           )
     return tup.fArrayP (
         'pid_proton_pi' + suffix , PIDp - PIDpi ,
         'pid_proton_K'  + suffix , PIDp - PIDK  ,
-        'ann_proton'    + suffix , PROBNNp      ,
-        LHCb.Particle.Range ( good ) ,
-        'n_proton'    + suffix       , 10        )
+        'ann_proton_PI' + suffix , PROBNNpi     ,
+        'ann_proton_K'  + suffix , PROBNNk      ,
+        LHCb.Particle.Range ( good )            ,
+        'n_proton'      + suffix , 10           )
 
 # ==============================================================================
 ## add photon information into n-tuple
@@ -403,18 +409,18 @@ def treatMuons ( self         ,
     sc = tup.column_float ( 'minann_mu'   + suffix , self._min_annpid_Mu ( p ) ) 
     #
     sc = tup.fArrayP   (
-        'p_mu'       + suffix          , P   / GeV     ,  
-        'pt_mu'      + suffix          , PT  / GeV     , 
-        'eta_mu'     + suffix          , ETA           , 
-        LHCb.Particle.Range ( good ) ,
-        'n_muon'     + suffix ,  10  )
+        'p_mu'       + suffix , P   / GeV     ,  
+        'pt_mu'      + suffix , PT  / GeV     , 
+        'eta_mu'     + suffix , ETA           , 
+        LHCb.Particle.Range ( good )          ,
+        'n_muon'     + suffix ,  10           )
     return tup.fArrayP (
-        'eEcal_mu'   + suffix , self._EcalE      ,
-        'eHcal_mu'   + suffix , self._HcalE      ,
-        'pid_mu'     + suffix , PIDmu - PIDpi    ,  
-        'ann_mu'     + suffix         , PROBNNmu ,  
-        LHCb.Particle.Range ( good )        ,
-        'n_muon'     + suffix , 10          )
+        'eEcal_mu'   + suffix , self._EcalE   ,
+        'eHcal_mu'   + suffix , self._HcalE   ,
+        'pid_mu'     + suffix , PIDmu - PIDpi ,  
+        'ann_mu'     + suffix , PROBNNmu      ,  
+        LHCb.Particle.Range ( good )          ,
+        'n_muon'     + suffix , 10            )
 
 # ==============================================================================
 ## add tracks information into n-tuple
@@ -463,22 +469,21 @@ def treatTracks ( self         ,
     sc = tup.column_float ( 'minKL_track'     + suffix , self._minTrKL         ( p ) )
     sc = tup.column_float ( 'maxAnnGh_track'  + suffix , self._max_anngh_track ( p ) )
     
-    sc = tup.fArrayP (
-        'p_track'     + suffix        , P   / GeV  , 
-        'pt_track'    + suffix        , PT  / GeV  , 
-        'eta_track'   + suffix        , ETA        , 
-        'phi_track'   + suffix        , PHI        ,                        
-        LHCb.Particle.Range ( good )               , 
-        'n_track'     + suffix        , 20         )
+    tup.fArrayP (
+        'p_track'     + suffix , P   / GeV   , 
+        'pt_track'    + suffix , PT  / GeV   , 
+        'eta_track'   + suffix , ETA         , 
+        'phi_track'   + suffix , PHI         ,                        
+        LHCb.Particle.Range ( good )         , 
+        'n_track'     + suffix , 20          )
     
-    sc = tup.fArrayP (
-        'chi2_track'  + suffix        , TRCHI2DOF   ,
-        'PChi2_track' + suffix        , TRPCHI2     , 
-        'ann_track'   + suffix        , PROBNNghost ,                        
-        LHCb.Particle.Range ( good )                , 
-        'n_track'     + suffix        , 20          )
-    
-    return sc
+    return tup.fArrayP (
+        'chi2_track'  + suffix , TRCHI2DOF   ,
+        'PChi2_track' + suffix , TRPCHI2     , 
+        'ann_track'   + suffix , PROBNNghost ,                        
+        'trgh_track'  + suffix , TRGHOSTPROB ,                        
+        LHCb.Particle.Range ( good )         , 
+        'n_track'     + suffix , 20          )
 
 # =============================================================================
 ## add basic kinematical information into N-tuple
@@ -632,17 +637,35 @@ def fillMasses ( self        ,
                                 
                                 _ind6 = LoKi.Particles.InvariantMass.Indices ()
                                 
-                                _ind5 . push_back ( i )
-                                _ind5 . push_back ( j )
-                                _ind5 . push_back ( k )
-                                _ind5 . push_back ( l )
-                                _ind5 . push_back ( m )
-                                _ind5 . push_back ( n )
+                                _ind6 . push_back ( i )
+                                _ind6 . push_back ( j )
+                                _ind6 . push_back ( k )
+                                _ind6 . push_back ( l )
+                                _ind6 . push_back ( m )
+                                _ind6 . push_back ( n )
                                 
                                 m6 = MASS     ( _ind6 )
                                 if args : m6 = DTF_FUN ( m6 , *args )
                                 _ms [ k6 + suffix ]  =   m6
                                 
+                                for o in range ( n + 1 , nc + 1 ) :
+                                    
+                                    k7 = "m%d%d%d%d%d%d" % ( i , j , k , l , m , n , p )
+                                
+                                    _ind7 = LoKi.Particles.InvariantMass.Indices ()
+                                    
+                                    _ind7 . push_back ( i )
+                                    _ind7 . push_back ( j )
+                                    _ind7 . push_back ( k )
+                                    _ind7 . push_back ( l )
+                                    _ind7 . push_back ( m )
+                                    _ind7 . push_back ( n )
+                                    _ind7 . push_back ( o )
+                                    
+                                    m7 = MASS     ( _ind7 )
+                                    if args : m7 = DTF_FUN ( m7 , *args )
+                                    _ms [ k7 + suffix ]  =   m7
+
                                 
     ## finally fill n-tuple 
     for k in _ms :
