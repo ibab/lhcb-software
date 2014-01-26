@@ -32,9 +32,11 @@ namespace Hlt
  *  @author Roel Aaij
  *  @date   2010-12-02
  */
+
 class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
 {
   public:
+    enum { nStations = 5u, nRegions = 4u };
     /// Standard constructor
     HltVeloIsMuon( const std::string& type, const std::string& name,
                    const IInterface* parent );
@@ -73,23 +75,12 @@ class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
     Hlt1MuonHitManager* m_hitManager;
     ILHCbMagnetSvc* m_fieldSvc;
 
-    // Data members
-    std::vector<unsigned int> m_order;
-    unsigned int m_nStations;
-    unsigned int m_nRegions;
-
     // Muon Detector
     DeMuonDetector* m_det;
 
     // Data from detector description and conditions
     std::vector<double> m_padSizeX;
     std::vector<double> m_padSizeY;
-
-    // local array of region sizes
-    std::vector<double> m_regionInnerX; // inner edge in abs(x)
-    std::vector<double> m_regionOuterX; // outer edge in abs(x)
-    std::vector<double> m_regionInnerY; // inner edge in abs(y)
-    std::vector<double> m_regionOuterY; // outer edge in abs(y)
 
     // function that defines the field of interest size
     // formula is p(1) + p(2)*exp(-p(3)*momentum)
@@ -100,17 +91,18 @@ class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
     std::vector<double> m_yFoIParam2;
     std::vector<double> m_yFoIParam3;
 
+    std::vector<double> m_momentumCuts; // vector of momentum ranges
+
     double m_preSelMomentum;
     double m_FoIFactor;
 
-    std::vector<double> m_momentumCuts; // vector of momentum ranges
 
     // Temporary storage
     Hlt1MuonHit* m_magnetHit;
     Candidates m_seeds;
 
-    std::vector<double> m_regionFoIX;
-    std::vector<double> m_regionFoIY;
+    std::array<double,nRegions> m_regionFoIX;
+    std::array<double,nRegions> m_regionFoIY;
 
     // Helper methods
     void findSeeds( const Candidate* seed, const unsigned int seedStation );

@@ -30,6 +30,8 @@ class Hlt1MuonStation
 
     virtual ~Hlt1MuonStation(); ///< Destructor
 
+    enum { nRegionsY = 7u };
+
     double z() const
     {
         return m_z;
@@ -46,10 +48,10 @@ class Hlt1MuonStation
 
     unsigned int nRegions() const
     {
-        return m_nRegionsX * m_nRegionsY;
+        return m_nRegionsX * nRegionsY;
     }
 
-    const Hlt1MuonRegion& region( const unsigned int id ) const
+    const Hlt1MuonRegion& region( unsigned int id ) const
     {
         return m_regions[id];
     }
@@ -57,9 +59,12 @@ class Hlt1MuonStation
   private:
     friend class Hlt1MuonHitManager;
 
-    void setHits( const Hlt1MuonHits& hits );
+    void setHits( const Hlt1MuonHits& hits )
+    {
+        for ( Hlt1MuonHit* hit : hits ) addHit( hit );
+    }
 
-    void addHit( Hlt1MuonHit* hit );
+    void addHit( Hlt1MuonHit* hit ); // grabs ownership
 
     inline unsigned int xRegion( const double x );
 
@@ -70,14 +75,13 @@ class Hlt1MuonStation
     std::vector<Hlt1MuonHits> m_hits;
     std::vector<Hlt1MuonRegion> m_regions;
 
-    const int m_station;
     double m_z;
-
-    unsigned int m_nRegionsX;
-    unsigned int m_nRegionsY;
-
     double m_ymin;
     double m_ymax;
     double m_dy;
+
+    const int m_station;
+    unsigned int m_nRegionsX;
+
 };
 #endif // HLT1MUONSTATION_H

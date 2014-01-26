@@ -35,14 +35,12 @@ using std::string;
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( IsMuonTool );
 
+
 //=============================================================================
 IsMuonTool::IsMuonTool( const string& type, const string& name,
                         const IInterface* parent )
     : GaudiTool( type, name, parent )
-    , m_nStations( 5 )
-    , m_nRegions( 4 )
     , m_foiFactor( 1. )
-    , m_stationZ( m_nStations )
     , m_occupancy( 5, 0 )
     , m_regionHits( 4 )
 {
@@ -60,14 +58,7 @@ StatusCode IsMuonTool::initialize()
     // fill local arrays of pad sizes and region sizes
     m_det = getDet<DeMuonDetector>( "/dd/Structure/LHCb/DownstreamRegion/Muon" );
 
-    m_padSizeX.resize( m_nStations * m_nRegions );
-    m_padSizeY.resize( m_nStations * m_nRegions );
-    m_regionInnerX.resize( m_nStations );
-    m_regionOuterX.resize( m_nStations );
-    m_regionInnerY.resize( m_nStations );
-    m_regionOuterY.resize( m_nStations );
-
-    for ( unsigned int s = 0; s < m_nStations; ++s ) {
+    for ( unsigned int s = 0; s < nStations; ++s ) {
         m_regionInnerX[s] = m_det->getInnerX( s );
         m_regionOuterX[s] = m_det->getOuterX( s );
         m_regionInnerY[s] = m_det->getInnerY( s );
@@ -75,9 +66,9 @@ StatusCode IsMuonTool::initialize()
 
         m_stationZ[s] = m_det->getStationZ( s );
 
-        for ( unsigned int r = 0; r < m_nRegions; ++r ) {
-            m_padSizeX[s * m_nRegions + r] = m_det->getPadSizeX( s, r );
-            m_padSizeY[s * m_nRegions + r] = m_det->getPadSizeY( s, r );
+        for ( unsigned int r = 0; r < nRegions; ++r ) {
+            m_padSizeX[s * nRegions + r] = m_det->getPadSizeX( s, r );
+            m_padSizeY[s * nRegions + r] = m_det->getPadSizeY( s, r );
         }
     }
 
@@ -166,7 +157,7 @@ void IsMuonTool::extrapolateTrack( const LHCb::Track& track )
     const LHCb::State& state = track.closestState( 9450. );
 
     // Project the state into the muon stations
-    for ( unsigned int station = 0; station < m_nStations; ++station ) {
+    for ( unsigned int station = 0; station < nStations; ++station ) {
         // x(z') = x(z) + (dx/dz * (z' - z))
         m_trackX.push_back( state.x() +
                             state.tx() * ( m_stationZ[station] - state.z() ) );
@@ -184,8 +175,8 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
     // Outer acceptance
     if ( !( fabs( m_trackX[0] ) < m_regionOuterX[0] &&
             fabs( m_trackY[0] ) < m_regionOuterY[0] ) ||
-         !( fabs( m_trackX[m_nStations - 1] ) < m_regionOuterX[m_nStations - 1] &&
-            fabs( m_trackY[m_nStations - 1] ) < m_regionOuterY[m_nStations - 1] ) ) {
+         !( fabs( m_trackX[nStations - 1] ) < m_regionOuterX[nStations - 1] &&
+            fabs( m_trackY[nStations - 1] ) < m_regionOuterY[nStations - 1] ) ) {
         // outside M1 - M5 region
         return false;
     }
@@ -193,8 +184,8 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
     // Inner acceptance
     if ( ( fabs( m_trackX[0] ) < m_regionInnerX[0] &&
            fabs( m_trackY[0] ) < m_regionInnerY[0] ) ||
-         ( fabs( m_trackX[m_nStations - 1] ) < m_regionInnerX[m_nStations - 1] &&
-           fabs( m_trackY[m_nStations - 1] ) < m_regionInnerY[m_nStations - 1] ) ) {
+         ( fabs( m_trackX[nStations - 1] ) < m_regionInnerX[nStations - 1] &&
+           fabs( m_trackY[nStations - 1] ) < m_regionInnerY[nStations - 1] ) ) {
         // inside M1 - M5 chamber hole
         return false;
     }
@@ -209,7 +200,7 @@ void IsMuonTool::findHits( const LHCb::Track& track )
     m_hits.clear();
 
     // Start from 1 because M1 does not matter for IsMuon
-    for ( unsigned int s = 1; s < m_nStations; ++s ) {
+    for ( unsigned int s = 1; s < nStations; ++s ) {
         const auto& station = m_hitManager->station( s );
 
         // TODO/FIXME:  why is m_regionHits not a local variable??
@@ -223,7 +214,7 @@ void IsMuonTool::findHits( const LHCb::Track& track )
             }
         }
 
-        for ( unsigned int region = 0; region < m_nRegions; ++region ) {
+        for ( unsigned int region = 0; region < nRegions; ++region ) {
             const double foiXDim = m_foiFactor * foiX( s, region, track.p() );
             const double foiYDim = m_foiFactor * foiY( s, region, track.p() );
 
@@ -282,31 +273,31 @@ bool IsMuonTool::isMuon( const double p ) const
 //=============================================================================
 double IsMuonTool::foiX( const int station, const int region, const double p ) const
 {
-    double dx = m_padSizeX[station * m_nRegions + region] / 2.;
+    double dx = m_padSizeX[station * nRegions + region] / 2.;
 
     if ( p < 1000000. ) {
-        return ( m_xfoiParam1[station * m_nRegions + region] +
-                 m_xfoiParam2[station * m_nRegions + region] *
-                     exp( -m_xfoiParam3[station * m_nRegions + region] * p /
+        return ( m_xfoiParam1[station * nRegions + region] +
+                 m_xfoiParam2[station * nRegions + region] *
+                     exp( -m_xfoiParam3[station * nRegions + region] * p /
                           Gaudi::Units::GeV ) ) *
                dx;
     } else {
-        return m_xfoiParam1[station * m_nRegions + region] * dx;
+        return m_xfoiParam1[station * nRegions + region] * dx;
     }
 }
 
 //=============================================================================
 double IsMuonTool::foiY( const int station, const int region, const double p ) const
 {
-    double dy = m_padSizeY[station * m_nRegions + region] / 2.;
+    double dy = m_padSizeY[station * nRegions + region] / 2.;
 
     if ( p < 1000000. ) {
-        return ( m_yfoiParam1[station * m_nRegions + region] +
-                 m_yfoiParam2[station * m_nRegions + region] *
-                     exp( -m_yfoiParam3[station * m_nRegions + region] * p /
+        return ( m_yfoiParam1[station * nRegions + region] +
+                 m_yfoiParam2[station * nRegions + region] *
+                     exp( -m_yfoiParam3[station * nRegions + region] * p /
                           Gaudi::Units::GeV ) ) *
                dy;
     } else {
-        return m_yfoiParam1[station * m_nRegions + region] * dy;
+        return m_yfoiParam1[station * nRegions + region] * dy;
     }
 }

@@ -4,10 +4,17 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-26 - Gerhard Raven
+ - fix bug in HltVeloIsMuon: it 'clear's a vector, and subsequently writes beyond 
+    the (now zero!) size. It probably intended an 'assign(size(),0)', but that is 
+    redundant, as new values gets assigned explictly to all entries
+ - move class members which are compile time constants out of class
+ - use std::array instead of std::vector where possible
+ - use std::bitset instead of std::vector<bool>
+
+
 ! 2014-01-25 - Gerhard Raven
  - fix clang error
- - move class members which are compile time constants out of class
-   & use std::array instead of std::vector where possible
 
 ! 2014-01-23 - Gerhard Raven
  - run clang-format to unify code formatting

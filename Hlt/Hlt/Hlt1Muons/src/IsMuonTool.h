@@ -42,9 +42,7 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
                                         std::vector<LHCb::Track*>& tracks );
 
   private:
-    // data members
-    unsigned int m_nStations;
-    unsigned int m_nRegions;
+    enum { nStations = 5u, nRegions = 4u };
 
     // Muon Detector
     DeMuonDetector* m_det;
@@ -60,15 +58,16 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     mutable std::vector<double> m_trackY; // position of track in y(mm) in each
                                           // station
 
-    std::vector<double> m_stationZ;
-    std::vector<double> m_padSizeX;
-    std::vector<double> m_padSizeY;
+    std::array<double,nStations> m_stationZ;
+
+    std::array<double,nStations*nRegions> m_padSizeX;
+    std::array<double,nStations*nRegions> m_padSizeY;
 
     // local array of region sizes
-    std::vector<double> m_regionInnerX; // inner edge in abs(x)
-    std::vector<double> m_regionOuterX; // outer edge in abs(x)
-    std::vector<double> m_regionInnerY; // inner edge in abs(y)
-    std::vector<double> m_regionOuterY; // outer edge in abs(y)
+    std::array<double,nStations> m_regionInnerX; // inner edge in abs(x)
+    std::array<double,nStations> m_regionOuterX; // outer edge in abs(x)
+    std::array<double,nStations> m_regionInnerY; // inner edge in abs(y)
+    std::array<double,nStations> m_regionOuterY; // outer edge in abs(y)
 
     // function that defines the field of interest size
     // formula is p(1) + p(2)*exp(-p(3)*momentum)

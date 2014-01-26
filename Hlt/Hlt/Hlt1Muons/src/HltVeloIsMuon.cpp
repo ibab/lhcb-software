@@ -33,6 +33,8 @@
 DECLARE_NAMESPACE_TOOL_FACTORY( Hlt, HltVeloIsMuon )
 
 using std::vector;
+const std::array<unsigned int,4> order{{ 3u, 4u, 5u, 2u }};
+
 
 //=============================================================================
 Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& name,
@@ -40,9 +42,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
     : base_class( type, name, parent )
     , m_hitManager{nullptr}
     , m_fieldSvc{nullptr}
-    , m_order{3u, 4u, 5u, 2u}
-    , m_nStations{5u}
-    , m_nRegions{4u}
     , m_magnetHit{nullptr}
     , m_seeds{0}
 {
@@ -67,8 +66,8 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
 
     declareProperty( "SetQOverP", m_setQOverP = false );
 
-    m_regionFoIX.reserve( m_nRegions );
-    m_regionFoIY.reserve( m_nRegions );
+    //m_regionFoIX.reserve( nRegions );
+    //m_regionFoIY.reserve( nRegions );
 }
 
 //=============================================================================
@@ -91,22 +90,14 @@ StatusCode Hlt::HltVeloIsMuon::initialize()
     // fill local arrays of pad sizes and region sizes
     m_det = getDet<DeMuonDetector>( "/dd/Structure/LHCb/DownstreamRegion/Muon" );
 
-    m_padSizeX.resize( m_nStations * m_nRegions );
-    m_padSizeY.resize( m_nStations * m_nRegions );
-    m_regionInnerX.resize( m_nStations );
-    m_regionOuterX.resize( m_nStations );
-    m_regionInnerY.resize( m_nStations );
-    m_regionOuterY.resize( m_nStations );
+    m_padSizeX.resize( nStations * nRegions );
+    m_padSizeY.resize( nStations * nRegions );
 
-    for ( unsigned int s = 0; s < m_nStations; ++s ) {
-        m_regionInnerX[s] = m_det->getInnerX( s );
-        m_regionOuterX[s] = m_det->getOuterX( s );
-        m_regionInnerY[s] = m_det->getInnerY( s );
-        m_regionOuterY[s] = m_det->getOuterY( s );
+    for ( unsigned int s = 0; s < nStations; ++s ) {
 
-        for ( unsigned int r = 0; r < m_nRegions; ++r ) {
-            m_padSizeX[s * m_nRegions + r] = m_det->getPadSizeX( s, r );
-            m_padSizeY[s * m_nRegions + r] = m_det->getPadSizeY( s, r );
+        for ( unsigned int r = 0; r < nRegions; ++r ) {
+            m_padSizeX[s * nRegions + r] = m_det->getPadSizeX( s, r );
+            m_padSizeY[s * nRegions + r] = m_det->getPadSizeY( s, r );
         }
     }
 
@@ -171,7 +162,7 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track& seed,
     // Make a Candidate from the track
     std::unique_ptr<Candidate> veloSeed( new Candidate( &seed ) );
 
-    unsigned int seedStation = m_order[0] - 1;
+    unsigned int seedStation = order[0] - 1;
     findSeeds( veloSeed.get(), seedStation );
     if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
@@ -285,10 +276,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
         for ( Hlt1MuonHit* hit : hits ) {
             if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
+
             Candidate* seed = new Candidate{*veloSeed};
             seed->addHit( m_magnetHit );
             seed->addHit( hit );
-
             seed->slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
             seed->p() = momentum( seed->slope() - seed->tx() );
 
@@ -305,26 +296,26 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
     double xMagnet = m_magnetHit->x();
 
     unsigned int nMissed = 0;
-    for ( unsigned int i = 1; i < m_order.size(); ++i ) {
+    for ( unsigned int i = 1; i < order.size(); ++i ) {
         // find candidate hits
-        unsigned int s = m_order[i] - 1;
+        unsigned int s = order[i] - 1;
 
         // Get the station we're looking at.
         const Hlt1MuonStation& station = m_hitManager->station( s );
         double zStation = station.z();
 
         // Clear and cache region FoIs
-        m_regionFoIX.clear();
-        m_regionFoIY.clear();
+        // m_regionFoIX.clear(); //FIXME/TODO is this a bug? Clear removes all elements!!!!
+        // m_regionFoIY.clear();
         double maxFoIX = 0;
         double maxFoIY = 0;
         // Find the maximum FoI to use as a search window.
-        for ( unsigned int region = 0; region < m_nRegions; ++region ) {
+        for ( unsigned int region = 0; region < nRegions; ++region ) {
             const double foiX = m_FoIFactor * FoIX( s, region, seed->p() );
             const double foiY = m_FoIFactor * FoIY( s, region, seed->p() );
             if ( foiX > maxFoIX ) maxFoIX = foiX;
             if ( foiY > maxFoIY ) maxFoIY = foiY;
-            m_regionFoIX[region] = foiX;
+            m_regionFoIX[region] = foiX; //FIXME/TODO so this assign beyond the 'end'!!!!
             m_regionFoIY[region] = foiY;
         }
 
@@ -339,7 +330,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         const double xMax = xMuon + maxFoIX;
 
         // Look for the closest hit inside the search window
-        const Hlt1MuonHit* closest = 0;
+        const Hlt1MuonHit* closest = nullptr;
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             const Hlt1MuonRegion& region = station.region( r );
@@ -350,16 +341,12 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
 
                 // Take the actual FoI into account
                 unsigned int r = hit->tile().region();
-                double xMinFoI = xMuon - m_regionFoIX[r];
-                double xMaxFoI = xMuon + m_regionFoIX[r];
-                double yMinFoI = yMuon - m_regionFoIY[r];
-                double yMaxFoI = yMuon + m_regionFoIY[r];
-                if ( hit->x() > xMaxFoI || hit->x() < xMinFoI ||
-                     hit->y() > yMaxFoI || hit->y() < yMinFoI )
+                auto dx = hit->x()-xMuon;
+                auto dy = hit->y()-yMuon;
+                if ( dx > + m_regionFoIX[r] || dx < -m_regionFoIX[r] ||
+                     dy > + m_regionFoIY[r] || dy < -m_regionFoIY[r]  )
                     continue;
-
-                double dist2 = ( xMuon - hit->x() ) * ( xMuon - hit->x() ) +
-                               ( yMuon - hit->y() ) * ( yMuon - hit->y() );
+                auto dist2 =  dx*dx + dy*dy  ; 
                 if ( !closest || dist2 < minDist2 ) {
                     closest = hit;
                     minDist2 = dist2;
@@ -438,16 +425,16 @@ void Hlt::HltVeloIsMuon::clean()
 double Hlt::HltVeloIsMuon::FoIX( const int station, const int region,
                                  const double p ) const
 {
-    double dx = m_padSizeX[station * m_nRegions + region] / 2.;
+    double dx = m_padSizeX[station * nRegions + region] / 2.;
 
     if ( p < 1000000. ) {
-        return ( m_xFoIParam1[station * m_nRegions + region] +
-                 m_xFoIParam2[station * m_nRegions + region] *
-                     exp( -m_xFoIParam3[station * m_nRegions + region] * p /
+        return ( m_xFoIParam1[station * nRegions + region] +
+                 m_xFoIParam2[station * nRegions + region] *
+                     exp( -m_xFoIParam3[station * nRegions + region] * p /
                           Gaudi::Units::GeV ) ) *
                dx;
     } else {
-        return m_xFoIParam1[station * m_nRegions + region] * dx;
+        return m_xFoIParam1[station * nRegions + region] * dx;
     }
 }
 
@@ -455,15 +442,15 @@ double Hlt::HltVeloIsMuon::FoIX( const int station, const int region,
 double Hlt::HltVeloIsMuon::FoIY( const int station, const int region,
                                  const double p ) const
 {
-    double dy = m_padSizeY[station * m_nRegions + region] / 2.;
+    double dy = m_padSizeY[station * nRegions + region] / 2.;
 
     if ( p < 1000000. ) {
-        return ( m_yFoIParam1[station * m_nRegions + region] +
-                 m_yFoIParam2[station * m_nRegions + region] *
-                     exp( -m_yFoIParam3[station * m_nRegions + region] * p /
+        return ( m_yFoIParam1[station * nRegions + region] +
+                 m_yFoIParam2[station * nRegions + region] *
+                     exp( -m_yFoIParam3[station * nRegions + region] * p /
                           Gaudi::Units::GeV ) ) *
                dy;
     } else {
-        return m_yFoIParam1[station * m_nRegions + region] * dy;
+        return m_yFoIParam1[station * nRegions + region] * dy;
     }
 }
