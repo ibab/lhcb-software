@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 # @file BenderTools/GenCuts.py
 #
 # Simple script to get the acceptance of generator cuts

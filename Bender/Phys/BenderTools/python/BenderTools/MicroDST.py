@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 # @file BenderTools/MicroDST.py
 #
 # Helper module to deal with uDST, mainly TisTos'sing for uDst 

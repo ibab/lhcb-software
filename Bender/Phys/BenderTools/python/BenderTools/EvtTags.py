@@ -1,5 +1,7 @@
 #!/usr/bin/env python 
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 ## @file BenderTools/EvtTag.py
 #  The helper Python module for creationof tag-collections 
 #
@@ -26,7 +28,7 @@
 #                 by $Author$ 
 # =============================================================================
 """
-The helper Python module for creationof tag-collections 
+The helper Python module for creation of tag-collections 
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''

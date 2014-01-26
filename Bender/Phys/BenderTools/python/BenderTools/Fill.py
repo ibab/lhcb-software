@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 # @file BenderTools/Fill.py
 #
 # Decorate the algorithm with proper methods to fill n-tuples 

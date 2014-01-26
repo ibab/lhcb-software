@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 # @file BenderTools/TisTos.py
 #
 # Decorate the algorithm with helper methods for TisTosTob'ing 

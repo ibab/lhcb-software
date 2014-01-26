@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # =============================================================================
+# -*- coding: utf-8 -*-
+# =============================================================================
 # @file BenderTools/NoMCdecays.py
 #
 #  Simple script to address "MCDecayTuple does not contain all events" problem
