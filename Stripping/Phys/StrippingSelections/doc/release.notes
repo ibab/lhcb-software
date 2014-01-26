@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-26 - Vanya Belyaev
+ - add StrippingPromptCharm: add pKK final state 
+
 !========================= StrippingSelections v3r32 2014-01-22 =========================
 
 ! 2013-01-23 - Stefano Perazzini

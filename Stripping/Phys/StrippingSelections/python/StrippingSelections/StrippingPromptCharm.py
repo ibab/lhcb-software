@@ -442,6 +442,7 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.Ds             () ,
                  self.Dplus          () ,
                  self.LamC           () ,
+                 self.LamC2pKK       () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
                  self.DiMuon         () ,
@@ -526,6 +527,12 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['LambdaCPrescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'        ] ,
             algos    =     [ self.LamC () ]
+            ) ,
+            StrippingLine (
+            "LambdaC2pKKFor" + self.name() ,
+            prescale = self['LambdaCPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.LamC2pKK () ]
             ) ,
             ## Sigma_c
             StrippingLine (
@@ -828,11 +835,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             )
     
     # =============================================================================
-    # Lambda_C -> ( pKpi ) 
+    # Lambda_c,Xi_c -> ( pKpi ) 
     # =============================================================================
     def LamC ( self ) :
         """
-        Lambda_C -> ( pKpi )  (pre)selection
+        Lambda_c,Xi_c -> ( pKpi )  selection
         """ 
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
         #
@@ -850,20 +857,61 @@ class StrippingPromptCharmConf(LineBuilder) :
             """ ,
             ## 
             CombinationCut = """
-            ( ADAMASS ('Lambda_c+') < 65 * MeV ) &
+            ( ( ADAMASS ( 'Lambda_c+' ) < 65 * MeV ) 
+            | ( ADAMASS ( 'Xi_c+'     ) < 65 * MeV ) ) &
             ( APT            > %s ) & 
             ( ACHI2DOCA(1,3) < 16 ) &
             ( ACHI2DOCA(2,2) < 16 ) 
             """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
             ##
             MotherCut      = """
-            ( chi2vx  < 25 )                   &
-            ( PT      > %s                   ) &
-            ( ADMASS('Lambda_c+') < 55 * MeV ) &
-            ( ctau  > 100 * micrometer       )  
+            ( chi2vx  < 25 )                       &
+            ( PT      > %s                       ) &
+            ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
+            | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
+            ( ctau  > 100 * micrometer           )  
             """ % self [ 'pT(Lc+)']
             )
     
+    # =============================================================================
+    # Lambda_c,Xi_c -> ( pKK ) 
+    # =============================================================================
+    def LamC2pKK ( self ) :
+        """
+        Lambda_c,Xi_c -> ( pKK )  selection
+        """ 
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        #
+        return self.make_selection (
+            'LambdaCpKK' ,
+            DaVinci__N3BodyDecays ,
+            ## inputs 
+            [ self.protons() , self.kaons() ] ,
+            ##
+            DecayDescriptor = " [ Lambda_c+ -> p+ K- K+ ]cc" ,
+            ##
+            Combination12Cut  = """
+            ( AM < 2.5 * GeV      ) &
+            ( ACHI2DOCA(1,2) < 16 ) 
+            """ ,
+            ## 
+            CombinationCut = """
+            ( ( ADAMASS ( 'Lambda_c+' ) < 65 * MeV ) 
+            | ( ADAMASS ( 'Xi_c+'     ) < 65 * MeV ) ) &
+            ( APT            > %s ) & 
+            ( ACHI2DOCA(1,3) < 16 ) &
+            ( ACHI2DOCA(2,2) < 16 ) 
+            """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
+            ##
+            MotherCut      = """
+            ( chi2vx  < 25 )                          &
+            ( PT      > %s                          ) &
+            ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
+            | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
+            ( ctau  > 100 * micrometer       )  
+            """ % self [ 'pT(Lc+)']
+            )
+
     # =============================================================================
     # Sigma_C -> Lambda_C pi selection
     # =============================================================================
