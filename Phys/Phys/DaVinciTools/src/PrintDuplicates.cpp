@@ -16,8 +16,10 @@ PrintDuplicates::PrintDuplicates( const std::string& name,
 : DaVinciAlgorithm ( name , pSvcLocator ),
   m_printDecay ( NULL )
 {
-  declareProperty( "EnergyPrecision", m_dpPrec = 2 ); 
+  declareProperty( "EnergyPrecision", m_dpPrec = 2 );
   declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 1 );
+  declareProperty( "CheckDaughters", m_checkDaughters = true );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -43,7 +45,9 @@ StatusCode PrintDuplicates::execute()
   for ( LHCb::Particle::Range::const_iterator ip = particles().begin();
         ip != particles().end(); ++ip )
   {
-    // compute the has for this decay tree
+    // sanity check
+    if ( !*ip ) continue;
+    // compute the hash for this decay tree
     const std::size_t h = LHCb::HashIDs::hashID( *ip );
     // current have to use energy to take PID swaps into account.
     // Would be better to have the option to include this in the hash. To Do.
@@ -66,14 +70,26 @@ StatusCode PrintDuplicates::execute()
       // do we have any duplicates
       if ( iPH->second.size() > 1 )
       {
-        std::ostringstream mess;
-        mess << "Found " << iPH->second.size()
-             << " duplicate decays in '" << loc << "'";
-        Warning( mess.str(), StatusCode::FAILURE, m_maxPrints+1 );
-        if ( m_countPerLoc[mess.str()]++ < m_maxPrints )
+        // Check the hash values for daughters ?
+        const bool isDup = !m_checkDaughters || checkDaughterHashes(iPH->second);
+        if ( isDup )
         {
-          printDecay()->printTree( iPH->second.begin(), iPH->second.end() );
+          std::ostringstream mess;
+          mess << "Found " << iPH->second.size()
+               << " duplicate decays in '" << loc << "'";
+          Warning( mess.str(), StatusCode::FAILURE, m_maxPrints+1 );
+          if ( m_countPerLoc[mess.str()]++ < m_maxPrints )
+          {
+            printDecay()->printTree( iPH->second.begin(), iPH->second.end() );
+          }
         }
+        // else
+        // {
+        //   std::ostringstream mess;
+        //   mess << "Found " << iPH->second.size()
+        //        << " similar decays in '" << loc << "'";
+        //   Warning( mess.str(), StatusCode::FAILURE, m_maxPrints+1 );
+        // }
       }
     }
 
@@ -81,4 +97,53 @@ StatusCode PrintDuplicates::execute()
 
   setFilterPassed(true);
   return StatusCode::SUCCESS;
+}
+
+bool PrintDuplicates::checkDaughterHashes( const LHCb::Particle::ConstVector & parts ) const
+{
+  std::map< Hashes, unsigned int > hashCount;
+  bool isDuplicate = false;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Performing deep Daughters Hash comparison" << endmsg;
+
+  // Loop over particles
+  for ( LHCb::Particle::ConstVector::const_iterator iP = parts.begin();
+        iP != parts.end(); ++iP )
+  {
+    Hashes hashes;
+    getDauHashes( *iP, hashes );
+    std::sort( hashes.begin(), hashes.end() );
+    if ( msgLevel(MSG::DEBUG) ) debug() << " -> Daughter Hashes : " << hashes << endmsg;
+    isDuplicate = ++(hashCount[hashes]) > 1;
+    if ( isDuplicate ) break;
+  }
+
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Duplicate = " << isDuplicate << endmsg;
+
+  return isDuplicate;
+}
+
+void PrintDuplicates::getDauHashes( const LHCb::Particle * p,
+                                    Hashes& hashes,
+                                    unsigned int depth ) const
+{
+  // protect against infinite recursion
+  if ( depth > 999999 )
+  { Warning( "Infinite recursion in getDauHashes" ).ignore(); return; }
+
+  // loop of daughters
+  const SmartRefVector<LHCb::Particle>& daughters = p->daughters();
+  for ( SmartRefVector<LHCb::Particle>::const_iterator id = daughters.begin();
+        id != daughters.end(); ++id )
+  {
+    if ( !(*id)->isBasicParticle() )
+    {
+      // Add the hash for this to the list
+      hashes.push_back( LHCb::HashIDs::hashID(*id) );
+      // then fill for its daughters
+      getDauHashes( *id, hashes, ++depth );
+    }
+  }
+
 }

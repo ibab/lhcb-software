@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <set>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -18,6 +19,7 @@
 
 // Boost
 #include <boost/math/special_functions/round.hpp>
+#include "boost/functional/hash.hpp"
 
 /** @class PrintDuplicates PrintDuplicates.h
  *
@@ -40,6 +42,10 @@ public:
 
 private:
 
+  typedef std::vector<std::size_t> Hashes;
+
+private:
+
   /// Get TES location for an object
   template<class TYPE>
   inline std::string tesLocation( const TYPE * obj ) const
@@ -58,11 +64,20 @@ private:
     return m_printDecay;
   }
 
+  /// Peform a deep check on the given particles
+  bool checkDaughterHashes( const LHCb::Particle::ConstVector & parts ) const;
+
+  /// get the daughter hashes
+  void getDauHashes( const LHCb::Particle * p,
+                     Hashes& hashes,
+                     unsigned int depth = 0 ) const;
+
 private:
 
   unsigned int m_dpPrec;      ///< Number of d.p. precision to compare energy values to
   IPrintDecay * m_printDecay; ///< Tool to print the decay tree
   unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
+  bool m_checkDaughters;      ///< Check daughters as well as top level Particle
   std::map< std::string, unsigned int > m_countPerLoc; ///< Printout count per TES location
 
 };

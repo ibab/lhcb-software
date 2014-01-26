@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-01-26 - Chris Jones
+ - Improve PrintDuplicates to reject some more false positives, when decays
+   use the same Particles, but at different places in the decay tree.
+
 ! 2014-01-20 - Chris Jones
  - Various minor cleanups to VertexIsolation.
 
