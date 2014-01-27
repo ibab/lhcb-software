@@ -76,7 +76,7 @@ StatusCode PrintDuplicates::execute()
         {
           std::ostringstream mess;
           mess << "Found " << iPH->second.size()
-               << " duplicate decays in '" << loc << "'";
+               << " duplicate Particle(s) in '" << loc << "'";
           Warning( mess.str(), StatusCode::FAILURE, m_maxPrints+1 );
           if ( m_countPerLoc[mess.str()]++ < m_maxPrints )
           {
