@@ -1,3 +1,10 @@
+2014-01-27  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* LbRelease/python/LbRelease/GetPack.py
+	* LbRelease/scripts/branch_package
+	Add support for new branch/version naming pattern.
+	See https://its.cern.ch/jira/browse/LBCORE-364
+
 2013-11-15  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r15p2
