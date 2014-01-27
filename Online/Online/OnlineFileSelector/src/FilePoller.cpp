@@ -7,12 +7,12 @@
 //
 //  ====================================================================
 #include "GaudiKernel/MsgStream.h"
-#include "FilePoller.h"
+#include "OnlineFileSelector/FilePoller.h"
 #include <string>
-#include <dirent>
+#include <dirent.h>
 #include <vector>
 
-#include "dimcpp.cxx"
+#include "dim.hxx"
 
 using namespace std;
 using namespace LHCb;
