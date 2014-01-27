@@ -8,8 +8,8 @@
 #include "Event/RawEvent.h"
 
 // local
-#include "HltTrackingDecoder.h"
-#include "HltTrackingWriter.h"
+#include "HltTrackReportsDecoder.h"
+#include "HltTrackReportsWriter.h"
 #include "HltTrackingCoder.h"
 
 #include "Event/Track.h"
@@ -19,7 +19,7 @@ using namespace LHCb;
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltTrackingDecoder
+// Implementation file for class : HltTrackReportsDecoder
 //
 // The actual decoding of tracks is delegated 
 // to the functions in HltTrackingCoder.
@@ -28,38 +28,38 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltTrackingDecoder )
+DECLARE_ALGORITHM_FACTORY( HltTrackReportsDecoder )
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltTrackingDecoder::HltTrackingDecoder( const std::string& name,
+HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation(""),
-    m_hltANNSvc(0)
+    m_inputRawEventLocation("")
+//m_hltANNSvc(0)
 {
 
-  declareProperty("OutputHltTrackLocation",
-    m_outputHltTrackLocation= "/Hlt/Track/Velo" );  
+  declareProperty("OutputHltTrackReportsLocation",
+    m_outputHltTrackLocation= "/Hlt2/Track/Velo" );  
 
   declareProperty("InputRawEventLocation",
-                  m_inputRawEventLocation);  
+                  m_inputRawEventLocation = LHCb::RawEventLocation::Default);  
 
   declareProperty("SourceID",
-		  m_sourceID= HltTrackingWriter::kSourceID_Dummy );  
+		  m_sourceID= HltTrackReportsWriter::kSourceID_Dummy );  
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltTrackingDecoder::~HltTrackingDecoder() {} 
+HltTrackReportsDecoder::~HltTrackReportsDecoder() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltTrackingDecoder::initialize() {
+StatusCode HltTrackReportsDecoder::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -71,10 +71,10 @@ StatusCode HltTrackingDecoder::initialize() {
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
-  m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
+  //m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
-  if( m_sourceID > HltTrackingWriter::kSourceID_Max ){
-    m_sourceID = m_sourceID & HltTrackingWriter::kSourceID_Max;
+  if( m_sourceID > HltTrackReportsWriter::kSourceID_Max ){
+    m_sourceID = m_sourceID & HltTrackReportsWriter::kSourceID_Max;
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
   }
 
@@ -84,7 +84,7 @@ StatusCode HltTrackingDecoder::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltTrackingDecoder::execute() {
+StatusCode HltTrackReportsDecoder::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -107,39 +107,45 @@ StatusCode HltTrackingDecoder::execute() {
 
   // create output container and put it on TES
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
-  put( outputTracks, m_outputHltTrackLocation );
+  try {
+    put( outputTracks, m_outputHltTrackLocation );
+  }
+  catch(GaudiException ex) {
+    warning() << "Failed to create output location " <<  m_outputHltTrackLocation << endmsg;
+    warning() << ex.message() << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // ----------------------------------------------------------
   // get the bank from RawEvent
   // ----------------------------------------------------------
 
-  const std::vector<RawBank*> hltTrackingRawBanks = rawEvent->banks( RawBank::HltTrackingReports );
-  if( !hltTrackingRawBanks.size() ){
-    return Warning( " No HltTrackingReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  const std::vector<RawBank*> hltTrackReportsRawBanks = rawEvent->banks( RawBank::HltTrackReports);
+  if( !hltTrackReportsRawBanks.size() ){
+    return Warning( " No HltTrackReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
   }
 
   // Check version number to make sure we are on the same page here (this should go to the decoder function?)
-   const RawBank* hltTrackingRawBank0 = *(hltTrackingRawBanks.begin());
-   if( hltTrackingRawBank0->version() > kVersionNumber ){
-     Warning( " HltTrackingReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
+   const RawBank* hltTrackReportsRawBank0 = *(hltTrackReportsRawBanks.begin());
+   if( hltTrackReportsRawBank0->version() > kVersionNumber ){
+     Warning( " HltTrackReportsReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
    }
 
    // -------------------------------------------------------
    // do the actual decoding: see HltTrackingCoder.cpp
    // -------------------------------------------------------
 
-   for(RawBank* bank : hltTrackingRawBanks){
-     decodeTracks(bank->data(),bank->size(),outputTracks);
+   for(RawBank* bank : hltTrackReportsRawBanks){
+     decodeTracks(bank->data(),bank->size()/sizeof(unsigned int),outputTracks);
    }
-
-
+  
  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode HltTrackingDecoder::finalize() {
+StatusCode HltTrackReportsDecoder::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
@@ -149,7 +155,7 @@ StatusCode HltTrackingDecoder::finalize() {
 //=============================================================================
     
   
-// float HltTrackingDecoder::floatFromInt(unsigned int i)
+// float HltTrackReportsDecoder::floatFromInt(unsigned int i)
 // {
 //         union IntFloat { unsigned int mInt; float mFloat; };
 //         IntFloat a; a.mInt=i;

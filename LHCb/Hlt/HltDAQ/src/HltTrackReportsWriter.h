@@ -1,18 +1,18 @@
-// $Id: HltTrackingWriter.h $
-#ifndef HLTTRACKINGWRITER_H 
-#define HLTTRACKINGWRITER_H 1
+// $Id: HltTrackReportsWriter.h $
+#ifndef HLTTRACKREPORTSWRITER_H 
+#define HLTTRACKREPORTSWRITER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-/** @class HltTrackingWriter HltTrackingWriter.h
+/** @class HltTrackReportsWriter HltTrackReportsWriter.h
  *  
  *
  *  @author Sebastian Neubert
  *  @date   2014-01-10
  *
- *  Algorithm to convert HltTracking containers on TES to HLT Raw Bank
+ *  Algorithm to convert Track containers on TES to HLT Raw Bank
  *
  *  Encoding of track information into RawBank
  *  For each track:
@@ -21,7 +21,7 @@
  *  tracks are just concatenated
  *
  */
-class HltTrackingWriter : public GaudiAlgorithm {
+class HltTrackReportsWriter : public GaudiAlgorithm {
 public: 
 
   enum HeaderIDs { kVersionNumber=1 };
@@ -39,9 +39,9 @@ public:
 
 
   /// Standard constructor
-  HltTrackingWriter( const std::string& name, ISvcLocator* pSvcLocator );
+  HltTrackReportsWriter( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltTrackingWriter( ); ///< Destructor
+  virtual ~HltTrackReportsWriter( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution

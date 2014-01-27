@@ -1,7 +1,7 @@
 // Include files
 #include <functional>
 #include <algorithm>
-
+#include <iostream>
 
 // local
 #include "HltTrackingCoder.h" 
@@ -32,6 +32,7 @@ void
 encodeTracks(const LHCb::Tracks* tracks,
 	     std::vector<unsigned int>& rawBank){
 
+  //std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
   for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
       LHCb::Track* Tr = (*pItr);
       unsigned int nhits= Tr->nLHCbIDs();
@@ -54,10 +55,12 @@ decodeTracks(unsigned int* rawBankData,
   // to loop over the data in the old fashioned way
   // so we use a pointer"iterator"
   unsigned int* rawit=rawBankData;
+  //std::cout << "RawBank size = " << nentries << std::endl; 
   unsigned int k=0;
   while(k<nentries){
     // read number of IDs in track
     unsigned int nid= rawit[k];
+    // std::cout << "Nids in track: " <<  nid << std::endl;
     // Start a new track
     Track* track=new Track();
     // advance iterator to point at first LHCbID
@@ -68,7 +71,8 @@ decodeTracks(unsigned int* rawBankData,
       ++k; //rawit+=sizeof(unsigned int);
     }
     tracks->add(track);
-
+    //std::cout << "RawBank entry counter k= " << k << std::endl;
+    // std::cout << "Decoded track: \n" << *track << std::endl;
   }
 
   return tracks->size();

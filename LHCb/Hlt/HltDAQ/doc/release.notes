@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-01-27 - Sebastian Neubert
+ - Renamed TrackingWriter/Decoder to TrackWriter/Decoder
+
 ! 2014-01-20 - Sebastian Neubert
  - New signature for the decodeTracks function: 
    now it takes a pointer to the rawBank data as delivered by RawBank::data()

@@ -1,10 +1,9 @@
-// $Id: HltTrackingWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltTrackReportsWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-// #include "Event/HltTracking.h"
 #include "Event/RawEvent.h"
 #include "Event/Track.h"
 #include "HltTrackingCoder.h"
@@ -12,16 +11,16 @@
 #include <algorithm>
 
 // local
-#include "HltTrackingWriter.h"
+#include "HltTrackReportsWriter.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltTrackingWriter
+// Implementation file for class : HltTrackReportsWriter
 //
 // 2014-1-10 : Sebastian Neubert
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltTrackingWriter )
+DECLARE_ALGORITHM_FACTORY( HltTrackReportsWriter )
 
 
 using namespace LHCb;
@@ -31,7 +30,7 @@ using namespace LHCb;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltTrackingWriter::HltTrackingWriter( const std::string& name,
+HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
@@ -47,12 +46,12 @@ HltTrackingWriter::HltTrackingWriter( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltTrackingWriter::~HltTrackingWriter() {} 
+HltTrackReportsWriter::~HltTrackReportsWriter() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltTrackingWriter::initialize() {
+StatusCode HltTrackReportsWriter::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -71,7 +70,7 @@ StatusCode HltTrackingWriter::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltTrackingWriter::execute() {
+StatusCode HltTrackReportsWriter::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -108,10 +107,9 @@ StatusCode HltTrackingWriter::execute() {
   // calling core encoder function see src/core/HltTrackingCoder.cxx
   encodeTracks(inputTracks,bankBody);
 
-  //unsigned int nbefore=rawEvent->banks(RawBank::HltTrackingReports).size();
   // shift bits in sourceID for the same convention as in HltSelReports
-  rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltTrackingReports, kVersionNumber, bankBody );
-  //unsigned int nafter=rawEvent->banks(RawBank::HltTrackingReports).size();
+  rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltTrackReports, kVersionNumber, bankBody );
+  
 
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " Output:  ";  
