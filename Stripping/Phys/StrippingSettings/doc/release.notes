@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-27 - Thomas Blake
+ - Updated RareStrange and B2XMuMu dictionaries
+
 !========================= StrippingSettings v2r30 2014-01-24 =========================
 
 ! 2014-01-24 - Stefano Perazzini

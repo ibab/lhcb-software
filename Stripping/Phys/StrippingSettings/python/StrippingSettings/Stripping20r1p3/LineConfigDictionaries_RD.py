@@ -99,15 +99,15 @@ B2XMuMu =  {
     ,'UseNoPIDsHadrons'          : True,
 
     # B cuts
-    'B_Comb_MassLow'	  : 4700.0,
-    'B_Comb_MassHigh'     : 6100.0,
-    'B_MassLow'           : 4800.0,
-    'B_MassHigh'          : 6000.0,
+    'B_Comb_MassLow'      : 4800.0,
+    'B_Comb_MassHigh'     : 7100.0,
+    'B_MassLow'           : 4900.0,
+    'B_MassHigh'          : 7000.0,
     'B_VertexCHI2'        :    8.0,
     'B_IPCHI2'            :   16.0,
-    'B_DIRA'              :    0.9999,
+    'B_DIRA'              : 0.9999,
     'B_FlightCHI2'        :  121.0,
-    'B_Dau_MaxIPCHI2'     : 9.0,
+    'B_Dau_MaxIPCHI2'     :    9.0,
 
     # Daughter cuts
     'Dau_VertexCHI2'	  :   12.0,
@@ -171,7 +171,7 @@ B2XMuMu =  {
       
     'Hadronic_Selection'  :   "(M > 5000*MeV)&(M < 5700*MeV)&(INTREE((ABSID == 'K*(892)0')&(M>800*MeV)&(M < 1000*MeV)&(INTREE((ABSID=='K+')&(HASRICH)&(PIDK>-5)))))&((INTREE((ABSID=='rho(770)0')&((M<2800)|(M>3800))&(2 == NINTREE((ABSID=='pi+')&(HASRICH)&(PIDK < 5)&(P>3000*MeV)))))|(INTREE((ABSID=='phi(1020)')&(M<1200*MeV))))" , 
       
-    'DECAYS'              : [ "B0 -> J/psi(1S) K_1(1270)0",   "[B+ -> J/psi(1S) K_1(1400)+]cc"  ],
+    'DECAYS'              : [ "B0 -> J/psi(1S) K_1(1270)0",   "[B+ -> J/psi(1S) K_1(1400)+]cc"  , "B0 -> J/psi(1S) K_1(1400)0" ],
     'HADRONICDECAYS'      : [ ] 
 
     },
@@ -386,6 +386,7 @@ B2XTauMicro = {
     'STREAMS' : [ 'Leptonic' ]
     }
 
+
 B2XTauZVTOP = { 
     'BUILDERTYPE' : 'ZVTOP_Conf',
     'CONFIG'      : {
@@ -440,6 +441,7 @@ B2XTauZVTOP = {
     'WGs'     : [ 'RD' ],
     'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
+
 
 
 BLVLines = { 
@@ -702,24 +704,24 @@ RareStrange = {
     'KVDPVMinDown' : 500,
     'KVDPVMaxDown' : 2500,
     #Kaons stuff
-    'KMaxDOCAMassMeas' : 3.,
+    'KMaxDOCAMassMeas' : 2.,
     'KMinPTMassMeas' : 300 ,
     'KMassWinMassMeas' : 50,
     'KMinDIRAMassMeas' : 0.9998,
     'KMaxIpChi2MassMeas' : 25,
-    'KVtxChi2MassMeas': 20,
-    'KMinVDChi2MassMeas' : 48,
-    'KDauMinIpChi2MassMeas' : 4,
+    'KVtxChi2MassMeas': 10,
+    'KMinVDChi2MassMeas' : 100,
+    'KDauMinIpChi2MassMeas' : 8, 
     #Kaons stuff downstream
     'KMaxDOCAMassMeasDown' : 9999.,
-    'KMinPTMassMeasDown' : 200 ,
+    'KMinPTMassMeasDown' : 250 ,
     'KMassWinMassMeasDown' : 100,
     'KMinDIRAMassMeasDown' : 0.999,
     'KVtxChi2MassMeasDown': 20,
-    'KMinVDChi2MassMeasDown' : 36,
-    'KDauMinIpChi2MassMeasDown' : 4,
-    'KVDPVMinMassMeasDown' : 700,
-    'KVDPVMaxMassMeasDown' : 2300
+    'KMinVDChi2MassMeasDown' : 64,
+    'KDauMinIpChi2MassMeasDown' : 4, 
+    'KVDPVMinMassMeasDown' : 900,
+    'KVDPVMaxMassMeasDown' : 2200
     },
     'WGs' : [ 'RD' ],
     'STREAMS' : [ 'Dimuon' ]
