@@ -239,6 +239,7 @@ function(reflex_dictionary dictionary headerfile selectionfile)
   # ensure that we split on the spaces
   separate_arguments(ARG_OPTIONS)
   reflex_generate_dictionary(${dictionary} ${headerfile} ${selectionfile} OPTIONS ${ARG_OPTIONS})
+  include_directories(${ROOT_INCLUDE_DIR})
   add_library(${dictionary}Dict MODULE ${gensrcdict})
   target_link_libraries(${dictionary}Dict ${ARG_LINK_LIBRARIES} ${ROOT_Reflex_LIBRARY})
   # ensure that *Gen and *Dict are not built at the same time

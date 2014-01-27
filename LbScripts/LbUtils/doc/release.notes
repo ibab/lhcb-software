@@ -1,3 +1,7 @@
+2014-01-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2014-01-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: fixed problem with clang support

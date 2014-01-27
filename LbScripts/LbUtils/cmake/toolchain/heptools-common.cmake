@@ -85,7 +85,11 @@ function(lcg_find_host_compiler)
                  DOC "Host C compiler")
     find_program(LCG_HOST_CXX_COMPILER NAMES c++ g++ cl clang++ icpc CC aCC bcc xlC
                  DOC "Host C++ compiler")
-    mark_as_advanced(LCG_HOST_C_COMPILER LCG_HOST_CXX_COMPILER)
+    # we support only GNU and Intel Fortran compilers
+    find_program(LCG_HOST_Fortran_COMPILER NAMES gfortran gfortran-4 g95 g77
+                                                 ifort ifc efc
+                 DOC "Host Fortran compiler")
+    mark_as_advanced(LCG_HOST_C_COMPILER LCG_HOST_CXX_COMPILER LCG_HOST_Fortran_COMPILER)
     if(LCG_HOST_C_COMPILER MATCHES /cl)
       set(compiler vc)
       execute_process(COMMAND ${LCG_HOST_C_COMPILER} ERROR_VARIABLE versioninfo OUTPUT_VARIABLE out)
@@ -315,19 +319,23 @@ macro(LCG_compiler id flavor version)
       set(compiler_root ${LCG_external}/${flavor}/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
       set(c_compiler_names lcg-gcc-${version})
       set(cxx_compiler_names lcg-g++-${version})
+      set(fortran_compiler_names lcg-gfortran-${version})
     elseif(${flavor} STREQUAL "icc")
       # Note: icc must be in the path already because of the licensing
       set(compiler_root)
       set(c_compiler_names lcg-icc-${version} icc)
       set(cxx_compiler_names lcg-icpc-${version} icpc)
+      set(fortran_compiler_names lcg-ifort-${version} ifort)
     elseif(${flavor} STREQUAL "clang")
       set(compiler_root ${LCG_external}/llvm/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
       set(c_compiler_names lcg-clang-${version} clang)
       set(cxx_compiler_names lcg-clang++-${version} clang++)
+      # FIXME: clang does not come with a Fortran compiler
+      set(fortran_compiler_names lcg-gfortran-4.8.1)
     else()
       message(FATAL_ERROR "Uknown compiler flavor ${flavor}.")
     endif()
-    #message(STATUS "LCG_compiler(${ARGV}) -> '${c_compiler_names}' '${cxx_compiler_names}' ${compiler_root}")
+    #message(STATUS "LCG_compiler(${ARGV}) -> '${c_compiler_names}' '${cxx_compiler_names}' '${fortran_compiler_names}' ${compiler_root}")
     find_program(CMAKE_C_COMPILER
                  NAMES ${c_compiler_names}
                  PATHS ${compiler_root}/bin
@@ -336,7 +344,11 @@ macro(LCG_compiler id flavor version)
                  NAMES ${cxx_compiler_names}
                  PATHS ${compiler_root}/bin
 		 DOC "C++ compiler")
-    #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER}")
+    find_program(CMAKE_Fortran_COMPILER
+                 NAMES ${fortran_compiler_names}
+                 PATHS ${compiler_root}/bin
+		 DOC "Fortran compiler")
+    #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")
   endif()
 endmacro()
 

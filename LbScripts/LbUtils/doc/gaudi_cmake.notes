@@ -1,3 +1,312 @@
+! 2014-01-22 - Marco Clemencic (9a18f44)
+
+ - fixed issue with the environment XML files
+
+   The search path for included XML files must be completely defined before 
+   including the files, otherwise it may happen that an included file is not
+   able to find the files it has to include if it has been relocated.
+
+! 2014-01-20 - Marco Clemencic (bae9a2c)
+
+ - added *.hxx to the allowed headers patterns (needed of LHCb Online)
+
+   
+
+! 2014-01-20 - Marco Clemencic (fc1c571)
+
+ - added WORKING_DIRECTORY option to gaudi_add_test and gaudi_add_unit_test
+
+   
+
+! 2014-01-16 - Marco Clemencic (e38ce4a)
+
+ - Temporarily disable the change in Boost Spirit version.
+
+   The new version, using Phoenix V3, breaks some LHCb code.
+
+
+! 2014-01-14 - Alexander Mazurov (70dfd68)
+
+ - Use Phoenix V3 in Boost Spirit (fixes compilation with Clang 3.3).
+
+   
+
+! 2014-01-13 - Marco Clemencic (cbac384)
+
+ - fixed an issue with gaudi_add_dictionary and re-configure
+
+   When using gaudi_add_dictionary without getting (find_package) ROOT, there
+   was an error on re-configure because ROOT was not re-imported.
+
+! 2014-01-10 - Marco Clemencic (ecd83dd)
+
+ - added correct linker flags for executables
+
+   The options -Wl,--as-needed and -Wl,--no-undefined were missing when linking
+   executables.
+
+! 2014-01-10 - Marco Clemencic (468b45d)
+
+ - allow ccache-swig as ccache command
+
+   ccache-swign is found on lxplus instead of the vanilla ccache
+
+
+! 2013-12-31 - Marco Clemencic (619d0cf)
+
+ - fix include path for Python binary modules
+
+   
+
+! 2013-12-31 - Marco Clemencic (ac033d2)
+
+ - minor fix to C flags
+
+   
+
+! 2013-12-31 - Marco Clemencic (9d664a6)
+
+ - fixed missing include directory for dictionaries
+
+   
+
+! 2013-12-20 - Marco Clemencic (a40db01)
+
+ - add real path of the compiler to the runtime environment
+
+   It is needed for things like ROOT's ACLIC.
+
+! 2013-12-18 - Marco Clemencic (40ac7c9)
+
+ - Introducing changes to support ROOT 6-beta.
+
+   Main changes:
+   * introduction of a new GaudiPluginService
+   * reshuffling of headers used in the dictionaries
+   * workarounds and minor changes in GaudiPython
+
+   Merge branch 'dev/no_reflex'
+
+   * dev/no_reflex: (100 commits)
+    Removed work-around for ROOT-5694
+    Added workaround for SPI-385.
+    Use ROOT6WorkAroundEnabled for workaround for ROOT-5694.
+    Clean-up of some leftover from the autoloading workaround.
+    Added workaround for ROOT-5850.
+    Added workaround for ROOT-5847.
+    Added workaround for ROOT-5836.
+    re-disabled boost::shared_ptr to avoid dependency on ROOT in headers
+    re-enabled boost::shared_ptr for ROOT 5
+    Made public the test event model headers of GaudiExamplesLib
+    Removed unnecessary use of boost::shared_ptr.
+    Replaced boost::shared_ptr with std::shared_ptr when using C++11.
+    add support for data federations
+    ignore warning about classes already in TClassTable in the tests
+    Made the data member of pool::Token transient.
+    removed work-around and made PoolClasses.h public
+    Improved the content of ROOT_INCLUDE_PATH (CMake only).
+    restored order of loading of Pythonizations
+    fix to reference file
+    Override the pattern reflex_dictionary because of an issue with ROOT6.
+    ...
+
+   Conflicts:
+   GaudiAlg/doc/release.notes
+   GaudiAud/doc/release.notes
+   GaudiCommonSvc/doc/release.notes
+   GaudiCoreSvc/doc/release.notes
+   GaudiExamples/doc/release.notes
+   GaudiGSL/doc/release.notes
+   GaudiKernel/doc/release.notes
+   GaudiMP/doc/release.notes
+   GaudiMonitor/doc/release.notes
+   GaudiPartProp/doc/release.notes
+   GaudiPolicy/doc/release.notes
+   GaudiProfiling/doc/release.notes
+   GaudiPython/doc/release.notes
+   GaudiSvc/doc/release.notes
+   GaudiUtils/doc/release.notes
+   PartPropSvc/doc/release.notes
+   RootCnv/doc/release.notes
+   RootHistCnv/doc/release.notes
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7374
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-11-11 - Marco Clemencic (2d3c909)
+
+ - added target HTMLSummary to convert CTest output to HTML
+
+   
+
+! 2013-09-03 - Marco Clemencic (6580ffd)
+
+ - ensure the production of CTest XML results when building with CMake
+
+   The target 'test' of the wrapper Makefile tells ctest to produce the XML 
+   output and the CMake configuration forces the environment variable used to
+   tell QMTest to produce the CTest-equivalent XML.
+
+
+! 2013-11-06 - Marco Clemencic (1be20a9)
+
+ - Improved the content of ROOT_INCLUDE_PATH (CMake only).
+
+   ROOT_INCLUDE_PATH did not contain the path to the headers of the externals.
+
+! 2013-11-01 - Marco Clemencic (650d9ec)
+
+ - Updated to Gaudi v23r10 (and more)
+
+   Merge branch 'master' into dev/no_reflex
+
+   * origin/master: (32 commits)
+    adding forgotten file
+    added the possibilty of changing the compression settings in ROOT files
+    fixed version of Python in heptools-66.cmake
+    removed obsolete configure script (Makefile-cmake.mk is enough)
+    reverted commit d0de49979 (ignore patterns that do not match)
+    enforcing the internal localization to C using LC_ALL
+    updated versions for Gaudi v23r10
+    switched to LCG 66
+    disabled the warning about unused local typedefs in gcc-4.8
+    improved the way CMAKE_MODULE_PATH is set
+    improved FindHepMC to allow components
+    commented out debug message
+    added support for library preloading in genconf (for CMake)
+    adding Fortran support to CMake infrastructure
+    print a warning instead of fail when sources are not found
+    add standard libraries location to rpath
+    fix to ignore CMakeLists.txt files from the build dir
+    modified FindXercesC.cmake to set *_LIBRARY_DIRS
+    fixed to use GaudiProjectConfig.cmake not depending on Gaudi
+    reverted changes to the aida2root test and applied them to aida2rootex
+    ...
+
+   Conflicts:
+   GaudiCoreSvc/doc/release.notes
+   GaudiCoreSvc/src/ApplicationMgr/AlgorithmManager.cpp
+   GaudiExamples/doc/release.notes
+   GaudiExamples/src/testing/TestingAlgs.cpp
+   GaudiKernel/doc/release.notes
+   GaudiMP/doc/release.notes
+   GaudiPolicy/doc/release.notes
+   GaudiPython/doc/release.notes
+   GaudiRelease/doc/release.notes
+   RootHistCnv/doc/release.notes
+   cmake/GaudiProjectConfig.cmake
+   cmake/toolchain/heptools-66.cmake
+
+
+! 2013-11-01 - Marco Clemencic (4216aa6)
+
+ - Override the pattern reflex_dictionary because of an issue with ROOT6.
+
+   
+
+! 2013-10-15 - Marco Clemencic (308f64e)
+
+ - fixed version of Python in heptools-66.cmake
+
+   
+
+! 2013-09-02 - Marco Clemencic (1f99f1f)
+
+ - enable use of distcc+ccache and allow custom build prefix commands
+
+   
+
+! 2013-09-30 - Marco Clemencic (9955ac1)
+
+ - set the environment variable ROOT_INCLUDE_PATH
+
+   Temporarily used by ROOT dictionary system to find headers.
+
+
+! 2013-09-25 - Marco Clemencic (5e48061)
+
+ - reverted commit d0de49979 (ignore patterns that do not match)
+
+   The warning introduced with d0de49979 is preventing the use of generated 
+   sources in libraries. The correct implementation should warn only for real
+   glob paterns and not for plain file names.
+
+
+! 2013-09-24 - Marco Clemencic (ed7ce3a)
+
+ - switched to LCG 66
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+   git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7329
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-09-24 - Marco Clemencic (29b3489)
+
+ - switched to LCG 66
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7329
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-09-24 - Marco Clemencic (3366029)
+
+ - disabled the warning about unused local typedefs in gcc-4.8
+
+   This warning is observed in ~900 Boost files, blinding us to any other 
+   warning.
+
+
+! 2013-09-24 - Marco Clemencic (05b74ef)
+
+ - disabled the warning about unused local typedefs in gcc-4.8
+
+   This warning is observed in ~900 Boost files, blinding us to any other 
+   warning.
+
+! 2013-09-24 - Marco Clemencic (7643294)
+
+ - improved the way CMAKE_MODULE_PATH is set
+
+   Modified the way CMAKE_MODULE_PATH is set, in particular for the used 
+   projects, so that we correctly take into account overriding order.
+
+! 2013-09-20 - Marco Clemencic (99830dc)
+
+ - improved FindHepMC to allow components
+
+   
+
+! 2013-09-20 - Marco Clemencic (4a7cce4)
+
+ - commented out debug message
+
+   
+
+! 2013-09-20 - Marco Clemencic (9ff33f2)
+
+ - added support for library preloading in genconf (for CMake)
+
+   
+
+! 2013-09-20 - Marco Clemencic (b85c2d7)
+
+ - adding Fortran support to CMake infrastructure
+
+   
+
+! 2013-09-19 - Marco Clemencic (d0de499)
+
+ - print a warning instead of fail when sources are not found
+
+   
+
 ! 2013-09-17 - Marco Clemencic (97e42f0)
 
  - add standard libraries location to rpath
@@ -50,6 +359,80 @@
 
    
 
+! 2013-07-27 - Marco Clemencic (4cf7a60)
+
+ - Merge branch 'dev/cmake' into dev/no_reflex
+
+   
+
+! 2013-07-26 - Marco Clemencic (c383087)
+
+ - minor fixes
+
+   
+
+! 2013-07-26 - Marco Clemencic (e99a3f0)
+
+ - Merge branch 'master' into dev/no_reflex
+
+   * master: (23 commits)
+    replaced "#ifdef linux" with "#ifdef __linux"
+    fixes to the versions
+    fixed type in RootCnv version
+    updated versions and release.notes for Gaudi v23r9
+    added FindVDT.cmake module
+    using LCGCMT 65a
+    added test fro bug #101513 (disable raw->raw error msg)
+    fixed bug #101513: Raw->Raw processing should not print an error
+    fixed spurious error message when the import from Configurables fails
+    modified the __init__.py used in builds to support 'python.zip'
+    Patch #5653: Add HistoCountersPrint property to GaudiHistos
+    Patch #5649 :Improvements to debug information in OutputStream
+    updated RootCnv to revision 159500
+    updated the exclusion list in make_patch.py
+    fixed RootCnv CMake configuration
+    added two missing files in RootCnv
+    merged RootCnv v1r20
+    commented out CMake-related "externals" in heptools-65.cmake
+    added test for System::currentTime
+    Fixed CFHEP-78: configurables created after applyConfigurableUser()
+    ...
+
+   Conflicts:
+   GaudiAlg/doc/release.notes
+   GaudiAud/doc/release.notes
+   GaudiCommonSvc/doc/release.notes
+   GaudiCommonSvc/src/PersistencySvc/OutputStream.cpp
+   GaudiCoreSvc/doc/release.notes
+   GaudiExamples/doc/release.notes
+   GaudiKernel/doc/release.notes
+   GaudiPolicy/doc/release.notes
+   GaudiPython/doc/release.notes
+   GaudiSvc/doc/release.notes
+   GaudiUtils/doc/release.notes
+   RootCnv/doc/release.notes
+   RootCnv/src/RootEvtSelector.cpp
+   RootCnv/src/RootNTupleCnv.cpp
+
+
+! 2013-07-23 - Marco Clemencic (fe5508e)
+
+ - fixed an issue with the implicit dependency on GaudiCoreSvc
+
+   Subdirectories producing modules require a dependency on GaudiCoreSvc to be
+   able to generate the text file with the list of components. The dependency
+   is now automatically added when a subdirectory calls gaudi_add_module.
+
+! 2013-07-19 - Marco Clemencic (f072739)
+
+ - really fixed the problem with the dependency on GaudiCoreSvc
+
+   Just checking if the target exists is not enough because module libraries
+   are exported as well as regular libraries, but not usable in the
+   dependencies. Now I check if it is an imported target (if it exists) or a
+   local one.
+
+
 ! 2013-07-19 - Marco Clemencic (4f5db2d)
 
  - check that all the requirements have a matching CMakeLists.txt
@@ -61,6 +444,15 @@
  - fixed mistake in heptools-65a
 
    
+
+! 2013-07-18 - Marco Clemencic (5898c81)
+
+ - fixed a problem with the dependency on GaudiCoreSvc
+
+   GaudiCoreSvc is a module and, as such, its target is not exported. So we can
+   add the dependency on it only if we are going to build it in the current
+   project.
+
 
 ! 2013-07-17 - Marco Clemencic (c9b322b)
 
@@ -81,6 +473,18 @@
     git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7240
    53ecefc3-a64d-0410-9bdf-b8581fa3287e
 
+
+! 2013-07-17 - Marco Clemencic (c71f9d5)
+
+ - new ROOT-free Plugin Service
+
+   
+
+! 2013-07-17 - Marco Clemencic (314829d)
+
+ - fixed a minor dependency problem in genconf targets
+
+   
 
 ! 2013-07-09 - Marco Clemencic (c0c8bde)
 
@@ -128,6 +532,14 @@
    needed to find the externals. This chicken and egg problem is easily solved
    by separating the build infrastructure from the externals.
 
+
+! 2013-07-04 - Marco Clemencic (01aa559)
+
+ - commented out CMake-related "externals" in heptools-65.cmake
+
+   CMake binary and modules should not be in the externals because they are 
+   needed to find the externals. This chicken and egg problem is easily solved
+   by separating the build infrastructure from the externals.
 
 ! 2013-06-25 - Marco Clemencic (1fa219a)
 

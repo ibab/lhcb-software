@@ -70,7 +70,11 @@ if(NOT GAUDI_FLAGS_SET)
         CACHE STRING "Flags used by the compiler during all build types."
         FORCE)
     set(CMAKE_C_FLAGS
-        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long"
+        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Wno-long-long"
+        CACHE STRING "Flags used by the compiler during all build types."
+        FORCE)
+    set(CMAKE_Fortran_FLAGS
+        "-fmessage-length=0 -pipe -Wall -Wextra -Werror=return-type -pthread -pedantic -fsecond-underscore"
         CACHE STRING "Flags used by the compiler during all build types."
         FORCE)
 
@@ -82,11 +86,17 @@ if(NOT GAUDI_FLAGS_SET)
       set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG"
           CACHE STRING "Flags used by the compiler during release builds."
           FORCE)
+      set(CMAKE_Fortran_FLAGS_RELEASE "-O2 -DNDEBUG"
+          CACHE STRING "Flags used by the compiler during release builds."
+          FORCE)
     endif()
 
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND LCG_COMPVERS VERSION_GREATER "47")
       # Use -Og with Debug builds in gcc >= 4.8
       set(CMAKE_CXX_FLAGS_DEBUG "-Og -g"
+          CACHE STRING "Flags used by the compiler during Debug builds."
+          FORCE)
+      set(CMAKE_C_FLAGS_DEBUG "-Og -g"
           CACHE STRING "Flags used by the compiler during Debug builds."
           FORCE)
       set(CMAKE_C_FLAGS_DEBUG "-Og -g"
@@ -100,11 +110,17 @@ if(NOT GAUDI_FLAGS_SET)
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG"
         CACHE STRING "Flags used by the compiler during Release with Debug Info builds."
         FORCE)
+    set(CMAKE_Fortran_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG"
+        CACHE STRING "Flags used by the compiler during Release with Debug Info builds."
+        FORCE)
 
     set(CMAKE_CXX_FLAGS_COVERAGE "--coverage"
         CACHE STRING "Flags used by the compiler during coverage builds."
         FORCE)
     set(CMAKE_C_FLAGS_COVERAGE "--coverage"
+        CACHE STRING "Flags used by the compiler during coverage builds."
+        FORCE)
+    set(CMAKE_Fortran_FLAGS_COVERAGE "--coverage"
         CACHE STRING "Flags used by the compiler during coverage builds."
         FORCE)
 
@@ -114,10 +130,14 @@ if(NOT GAUDI_FLAGS_SET)
     set(CMAKE_C_FLAGS_PROFILE "-pg"
         CACHE STRING "Flags used by the compiler during profile builds."
         FORCE)
+    set(CMAKE_Fortran_FLAGS_PROFILE "-pg"
+        CACHE STRING "Flags used by the compiler during profile builds."
+        FORCE)
+
 
     # The others are already marked as 'advanced' by CMake, these are custom.
-    mark_as_advanced(CMAKE_C_FLAGS_COVERAGE CMAKE_CXX_FLAGS_COVERAGE
-                     CMAKE_C_FLAGS_PROFILE CMAKE_CXX_FLAGS_PROFILE)
+    mark_as_advanced(CMAKE_C_FLAGS_COVERAGE CMAKE_CXX_FLAGS_COVERAGE CMAKE_Fortran_FLAGS_COVERAGE
+                     CMAKE_C_FLAGS_PROFILE CMAKE_CXX_FLAGS_PROFILE CMAKE_Fortran_FLAGS_PROFILE)
 
   endif()
 
@@ -128,6 +148,9 @@ if(NOT GAUDI_FLAGS_SET)
         FORCE)
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
         CACHE STRING "Flags used by the linker during the creation of modules."
+        FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed -Wl,--no-undefined  -Wl,-z,max-page-size=0x1000"
+        CACHE STRING "Flags used by the linker during the creation of executables."
         FORCE)
   endif()
 
@@ -202,7 +225,8 @@ endif()
 
 if (LCG_HOST_ARCH STREQUAL x86_64 AND LCG_ARCH STREQUAL i686)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32")
   set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -m32")
 elseif(NOT LCG_HOST_ARCH STREQUAL LCG_ARCH)
   message(FATAL_ERROR "Cannot build for ${LCG_ARCH} on ${LCG_HOST_ARCH}.")
@@ -214,11 +238,19 @@ if(GAUDI_HIDE_WARNINGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-overloaded-virtual -Wno-char-subscripts -Wno-unused-parameter")
   elseif(LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "4[3-9]|max")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wno-empty-body")
+    if(LCG_COMPVERS MATCHES "48|max")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
+    endif()
   endif()
 endif()
 
 #--- Special flags -------------------------------------------------------------
+# FIXME: enforce the use of Boost Filesystem V3 to be compatible between 1.44 and 1.48
 add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
+# FIXME: enforce the use of Boost Phoenix V3 (V2 does not work with recent compilers)
+#        see http://stackoverflow.com/q/20721486
+#        and http://stackoverflow.com/a/20440238/504346
+#add_definitions(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 
 if((LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max") OR GAUDI_CPP11)
   set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -D__STRICT_ANSI__")
