@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-27 - Ronan Wallace
+ - DisplVertices change some config MinNJetMass and MinNJetTransvMass.
+ - WeAKTJets and WmuAKTJets prescales (1->0.1).
+ - StrippingH24MuLooseLine  and StrippingH24MuSameMassSimple prescales to 0.1.
+ - Dijets line prescaled by factor of two (0.6->0.3).
+
 ! 2014-01-27 - Albert Puig
  - Correct multiple candidates in radiative lines
 
