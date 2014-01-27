@@ -57,9 +57,8 @@ class BranchPackage(Script):
         """
         Tell if the specified version name conforms to the standards.
         """
-        from LbConfiguration.Version import _txt_version_style
-        import re
-        return bool(re.match(_txt_version_style + 'b$', self.version))
+        from LbConfiguration.Version import isValidBranchName
+        return isValidBranchName(self.version)
 
     def main(self):
         """

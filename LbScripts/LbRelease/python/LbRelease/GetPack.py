@@ -832,7 +832,9 @@ class GetPack(Script):
                 else:
                     self.parser.error("package name is required unless '-i' or '--list' is used")
 
-        if (self.project_version or self.requested_package_version or "").endswith('b'):
+        tmpVersion = self.project_version or self.requested_package_version or ""
+        from LbConfiguration.Version import isValidBranchName
+        if isValidBranchName(tmpversion):
             # version ending with 'b' implies --branches
             self.options.branches = True
 

@@ -191,3 +191,13 @@ def ParseSvnVersion(svn_id, url = ""):
         return svn_id
     else:
         return m.group(1)
+
+def isValidBranchName(name):
+    """
+    Checks whether the name passed in argument is a valid branch name.
+    It can either be in the classic for (finishing in b) or with
+    the -branchN syntax
+    """
+    isClassicStyle = bool(re.match(_txt_version_style + 'b$', name))
+    isNewStyle     = bool(re.match(_txt_version_style + '-branch\d*$', name))
+    return isClassicStyle or isNewStyle
