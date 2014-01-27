@@ -28,7 +28,7 @@ config_default={
     'PromptLinePrescale'     : 1,
     'SimpleLinePrescale'     : 1,
     'DetachedLinePrescale'   : 1,
-    'LooseLinePrescale'      : 0.02,
+    'LooseLinePrescale'      : 0.01,
     
     'MuTrackChi2DoF'         : 3,
     'MupTprompt'             : 350,  #MeV
