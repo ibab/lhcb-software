@@ -317,6 +317,7 @@ class ProjectTag(TagCheckerBase):
      - Proj/trunk/cmt -> Proj/tags/PROJ/PROJ_vXrY/cmt
      - Proj/{branches,tags}/PROJ/PROJ_vXb -> Proj/tags/PROJ/PROJ_vXrY
      - Proj/{branches,tags}/PROJ/PROJ_vXb/cmt -> Proj/tags/PROJ/PROJ_vXrY/cmt
+     - 'and the equivalents with cmake instead of cmt'
     and prevent:
      - if the project do not match
      - if the version is not valid
@@ -340,7 +341,7 @@ class ProjectTag(TagCheckerBase):
                     ((lss, lds) in [(3, 5), (4, 4), (5, 5)])
                     and (ds[0] == ss[0]) # same project
                     and ( (lss == 4) # 3 and 5 are acceptable only if we have 'cmt', 'CMakeLists.txt' or 'toolchain.cmake'
-                          or ( ss[-1] == ds[-1] and ss[-1] in ("cmt", "CMakeLists.txt", "toolchain.cmake") ) )
+                          or ( ss[-1] == ds[-1] and ss[-1] in ("cmt", "cmake", "CMakeLists.txt", "toolchain.cmake") ) )
                     # and (ds[1] == "tags") # implicit
                     and (ds[2] == proj) # 'PROJ' subdirectory
                     and ds[3].startswith(proj + "_") # version prefix
