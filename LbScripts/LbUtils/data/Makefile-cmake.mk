@@ -15,7 +15,7 @@
 #     all
 #         (default) build everything
 #  
-#     test
+#     test [*]_
 #         run the declared tests
 #
 #     install
@@ -46,22 +46,34 @@
 # settings
 CMAKE = cmake
 ifneq ($(wildcard $(CURDIR)/toolchain.cmake),)
-override CMAKEFLAGS += -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/toolchain.cmake
+  override CMAKEFLAGS += -DCMAKE_TOOLCHAIN_FILE=$(CURDIR)/toolchain.cmake
 endif
-BUILDDIR := $(CURDIR)/build.$(CMTCONFIG)
+
+ifndef BINARY_TAG
+  ifdef CMAKECONFIG
+    BINARY_TAG=${CMAKECONFIG}
+  else 
+    ifdef CMTCONFIG
+      BINARY_TAG=${CMTCONFIG}
+    endif
+  endif
+endif
+
+BUILDDIR := $(CURDIR)/build.$(BINARY_TAG)
+
 
 # default target
 all:
 
 # deep clean
 purge:
-	$(RM) -r $(BUILDDIR) $(CURDIR)/InstallArea/$(CMTCONFIG)
+	$(RM) -r $(BUILDDIR) $(CURDIR)/InstallArea/$(BINARY_TAG)
 	find $(CURDIR) -name "*.pyc" -exec $(RM) -v \{} \;
 
 # delegate any target to the build directory (except 'purge')
 ifneq ($(MAKECMDGOALS),purge)
 %: $(BUILDDIR)/Makefile FORCE
-	$(MAKE) -C build.$(CMTCONFIG) $*
+	$(MAKE) -C build.$(BINARY_TAG) $*
 endif
 
 # aliases
@@ -73,9 +85,14 @@ configure: $(BUILDDIR)/Makefile
 endif
 	@ # do not delegate further
 
+# This wrapping around the test target is used to ensure the generation of
+# the XML output from ctest. 
+test: $(BUILDDIR)/Makefile
+	$(MAKE) -C build.$(BINARY_TAG) ARGS="-T test $(ARGS)" $@
+
 tests: all
-	-$(MAKE) -C build.$(CMTCONFIG) test
-	$(MAKE) -C build.$(CMTCONFIG) QMTestSummary
+	-$(MAKE) -C build.$(BINARY_TAG) ARGS="-T test" test
+	$(MAKE) -C build.$(BINARY_TAG) QMTestSummary
 
 # ensure that the target are always passed to the CMake Makefile
 FORCE:
