@@ -11,7 +11,7 @@ from StandardParticles import  StdAllLooseMuons, StdJets
 from CommonParticles.Utils import *
 
 ## if you want to prescale this line, please contact X. Cid Vidal before!
-confdict_WmuAKTJets = { 'WmuAKTJets_Prescale'    : 1.0,
+confdict_WmuAKTJets = { 'WmuAKTJets_Prescale'    : 0.1,
                         'WmuAKTJets_Postscale'   : 1.0,
                         'min_mu_pT'              : 10.,
                         'max_mu_pT'              : 200000.,
