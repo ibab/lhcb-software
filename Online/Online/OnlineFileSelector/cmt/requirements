@@ -1,0 +1,24 @@
+#============================================================================
+# Maintainer : Ioannis Chalkiadakis
+#============================================================================
+package           OnlineFileSelector 
+version           v0r1
+#============================================================================
+branches          cmt doc src OnlineFileSelector 
+# dependency list
+use DIM           v* Online
+use GaudiOnline   v* Online
+
+
+apply_pattern install_more_includes more=OnlineFileSelector
+apply_pattern install_python_modules
+
+# ==================== component libraries ==================================
+library  OnlineFileSelector  *.cpp
+apply_pattern component_library   library=OnlineFileSelector
+#apply_pattern generate_rootmap library=OnlineFileSelector
+#apply_pattern generate_configurables library=OnlineFileSelector
+#macro_append OnlineFileSelector_shlibflags ' $(MDFlib_linkopts) -lrt'
+
+private
+# ==================== private test application =============================
