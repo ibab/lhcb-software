@@ -4,6 +4,18 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2014-01-27 - V. Gligorov
+ - Change behaviour of BackgroundCategory when searching for the top level mother
+   in a particle chain. There is now the option (on by default)
+  
+   IgnoreQuarks
+
+   which causes the Cat to ignore any quarks in the chain and return the top level
+   fragmentation product instead. If this option is set to false the user can instead
+   obtain the quark as the top level parent. This could be used, for example, to
+   distinguish between resonant and non-resonant D0+pion combinations coming from the
+   fragmentation chain of a charm quark.
+
 !========================= DaVinciMCTools v10r9 2013-10-02 =========================
 
 ! 2013-08-24 - Chris Jones
