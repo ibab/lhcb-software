@@ -11,7 +11,7 @@ from StandardParticles import StdJets, StdAllNoPIDsElectrons
 from CommonParticles.Utils import *
 
 ## if you want to prescale this line, please contact X. Cid Vidal before!
-confdict_WeAKTJets = { 'WeAKTJets_Prescale'    : 1.0,
+confdict_WeAKTJets = { 'WeAKTJets_Prescale'    : 0.1,
                        'WeAKTJets_Postscale'   : 1.0,
                        'min_e_pT'              : 10.,
                        'max_e_pT'              : 200000.,
