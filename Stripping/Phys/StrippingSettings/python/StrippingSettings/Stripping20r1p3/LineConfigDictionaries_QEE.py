@@ -218,7 +218,7 @@ Dijets = {
     'BUILDERTYPE'  : 'DijetsConf',
     'CONFIG'       : {
     # Prescale for the calibration line.
-    "PRESCALE" : 0.06,
+    "PRESCALE" : 0.03,
     # HLT properties.
     "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
     # Track properties.
@@ -263,7 +263,7 @@ H24MuLines = {
     'PromptLinePrescale'     : 1,
     'SimpleLinePrescale'     : 1,
     'DetachedLinePrescale'   : 1,
-    'LooseLinePrescale'      : 0.02,
+    'LooseLinePrescale'      : 0.01,
     
     'MuTrackChi2DoF'         : 3,
     'MupTprompt'             : 350,  #MeV
@@ -309,7 +309,7 @@ H24MuSameMassLine = {
     'CONFIG'       : {
     'DefaultPostscale'       : 1,
     'PromptLinePrescale'     : 1,
-    'SimpleLinePrescale'     : 1,
+    'SimpleLinePrescale'     : 0.1,
     'DetachedLinePrescale'   : 1,
     
     'MuTrackChi2DoF'         : 3,
@@ -345,7 +345,7 @@ H24MuSameMassLine = {
 WeAKTJets = {
     'BUILDERTYPE'  : 'WeAKTJetsConf',
     'CONFIG'       : {
-    'WeAKTJets_Prescale'    : 1.0,
+    'WeAKTJets_Prescale'    : 0.1,
     'WeAKTJets_Postscale'   : 1.0,
     'min_e_pT'              : 10.,
     'max_e_pT'              : 200000.,
@@ -364,7 +364,7 @@ WeAKTJets = {
 WmuAKTJets = {
     'BUILDERTYPE'  : 'WmuAKTJetsConf',
     'CONFIG'       : {
-    'WmuAKTJets_Prescale'    : 1.0,
+    'WmuAKTJets_Prescale'    : 0.1,
     'WmuAKTJets_Postscale'   : 1.0,
     'min_mu_pT'              : 10.,
     'max_mu_pT'              : 200000.,
@@ -453,8 +453,8 @@ DisplVertices = {
                                     ## Jet-related cuts
                                     , "MinNumJets"           :  2
                                     , "SingleJet"            :  False
-                                    , "MinNJetMass"          :  0.0*GeV
-                                    , "MinNJetTransvMass"    : 20.0*GeV
+                                    , "MinNJetMass"          :  13.0*GeV
+                                    , "MinNJetTransvMass"    : None
                                     , "JetIDCut"             : None
                                     }
       ## jet sequence on top of Hlt2 candidates
