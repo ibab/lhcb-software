@@ -18,6 +18,8 @@ use RecEvent        v*    Event
 use TrackFitEvent   v*    Tr
 use KalmanFilter    v*    Phys
 use TrackInterfaces v*    Tr       # For TT validation tool
+use L0Calo          v*    L0
+use AIDA            v*    LCG_Interfaces
 include_path      none
 #============================================================================
 # Component library building rule

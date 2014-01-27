@@ -41,8 +41,9 @@ class FstConf(LHCbConfigurableUser):
         GaudiSequencer( "RecoHLTSeq" ).Members = [ "FstSequencer/RecoFstSeq" ]
         FstSequencer( "RecoFstSeq" ).ForcePassOK = True
 
-        ## Multiplicity cuts (Kevin Dungs, 2014-01-10)
-        FstSequencer("RecoFstSeq").Members = ["FstSelectGEC"]
+        ## Multiplicity cuts (Kevin Dungs, 2014-01-18)
+        from Configurables import LLTCaloAlg
+        FstSequencer("RecoFstSeq").Members = ["LLTCaloAlg", "FstSelectGEC"]
 
         ## Velo configuration
         if "Velo" == self.getProp("VeloType"):
@@ -215,7 +216,7 @@ class FstConf(LHCbConfigurableUser):
 
             prVeloUT.addTool(TrackMasterFitter, "Fitter")
             prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
-            prVeloUT.Fitter.MeasProvider.IgnoreVL = True
+            #prVeloUT.Fitter.MeasProvider.IgnoreVL = True
             prVeloUT.Fitter.MeasProvider.IgnoreVP = True
             prVeloUT.Fitter.MeasProvider.IgnoreTT = True
             prVeloUT.Fitter.MeasProvider.IgnoreIT = True
