@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-01-27 - Sebastian Neubert
+ - Added TrackReportsWriter
 
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.

@@ -62,6 +62,7 @@ class HltConf(LHCbConfigurableUser):
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
+                , "Split"                          : ''         # Hlt1 or Hlt2 (will also be set by Moore)
                 , "EnableMonitoring"               : False      # enable embedded monitoring in FilterDesktop/CombineParticles
                 , "EnableHltGlobalMonitor"         : True
                 , "EnableHltL0GlobalMonitor"       : True
@@ -70,6 +71,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltSelReports"            : True
                 , "EnableHltVtxReports"            : True
                 , "EnableHltRoutingBits"           : True
+                , "EnableHltTrackReports"          : True
                 , "EnableLumiEventWriting"         : False
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , "SlowHlt1Threshold"              : 500000     # microseconds
@@ -667,6 +669,7 @@ class HltConf(LHCbConfigurableUser):
         from Configurables        import HltSelReportsMaker, HltSelReportsWriter
         from Configurables        import HltDecReportsWriter
         from Configurables        import HltVertexReportsMaker, HltVertexReportsWriter
+        from Configurables        import HltTrackReportsWriter
         from Configurables        import HltRoutingBitsWriter
         from Configurables        import HltLumiWriter
         from Configurables        import DeterministicPrescaler as Prescale
@@ -696,6 +699,10 @@ class HltConf(LHCbConfigurableUser):
         BeetleMonitor.Members += DecodeL0DU.members() + DecodeVELO.members() \
                                  + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
         BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
+
+        # only switch on TrackReports in a split scenario in Hlt1
+        if(self.getProp("Split") != "Hlt1") : self.setProp("EnableHltTrackReports", False) 
+        
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
         from Configurables import Hlt__Line as Line
@@ -706,6 +713,7 @@ class HltConf(LHCbConfigurableUser):
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
+                , ( "EnableHltTrackReports"    , [ HltTrackReportsWriter ] ) # will only be added in split mode see line above!
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
                 , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )
                 )
@@ -730,7 +738,7 @@ class HltConf(LHCbConfigurableUser):
                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
                                       , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                       ])
-                          ] 
+                          ]
         if self.getProp( 'RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter    as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
@@ -760,3 +768,4 @@ class HltConf(LHCbConfigurableUser):
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )
+        
