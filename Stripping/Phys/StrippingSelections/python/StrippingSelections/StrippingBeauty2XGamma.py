@@ -809,7 +809,7 @@ def makeDiTrackList( name,
 
     _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
 
-    _combineDiTrack = CombineParticles( DecayDescriptor="[rho(770)0 -> pi+ pi-]cc",
+    _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
                                         CombinationCut = _diTrackPreVertexCuts,
                                         MotherCut = _diTrackPostVertexCuts )
 
@@ -918,7 +918,7 @@ def makeTriTrackList_wKS0( name,
 
     _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
-    _combineTriTrack = CombineParticles( DecayDescriptor="[K*_2(1430)0 -> rho(770)0 KS0]cc",
+    _combineTriTrack = CombineParticles( DecayDescriptor="K*_2(1430)0 -> rho(770)0 KS0",
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
 
@@ -1001,7 +1001,7 @@ def makeFourTrackList( name,
 
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
-    _combineFourTrack = CombineParticles( DecayDescriptor="[f_2(1270) -> pi+ pi+ pi- pi-]cc",
+    _combineFourTrack = CombineParticles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
                                           CombinationCut = _FourTrackPreVertexCuts,
                                           MotherCut = _FourTrackPostVertexCuts )
 
@@ -1052,7 +1052,7 @@ def makeFourTrackList_w2KS0( name,
 
     _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
-    _combineFourTracks = CombineParticles( DecayDescriptor="[f_2(1270) -> rho(770)+ rho(770)-]cc",
+    _combineFourTracks = CombineParticles( DecayDescriptor="f_2(1270) -> rho(770)+ rho(770)-",
                                            CombinationCut = _FourTrackPreVertexCuts,
                                            MotherCut = _FourTrackPostVertexCuts )
     return Selection(name,
@@ -1170,7 +1170,7 @@ def makeB2B2XG2piGamma( name,
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG2pi = CombineParticles( DecayDescriptor="[B0 -> rho(770)0 gamma]cc",
+    _combineB2B2XG2pi = CombineParticles( DecayDescriptor="B0 -> rho(770)0 gamma",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
                                           CombinationCut = _B2B2XG2piPreVertexCuts )
 
@@ -1201,7 +1201,7 @@ def makeB2B2XG2piGammaCNV( name,
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG2pi = CombineParticles( DecayDescriptor="[B0 -> rho(770)0 gamma]cc",
+    _combineB2B2XG2pi = CombineParticles( DecayDescriptor="B0 -> rho(770)0 gamma",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
                                           CombinationCut = _B2B2XG2piPreVertexCuts )
 
@@ -1296,7 +1296,7 @@ def makeB2B2XG2piKsGamma( name,
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> K*_2(1430)0 gamma]cc",
+    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="B0 -> K*_2(1430)0 gamma",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
 
@@ -1327,7 +1327,7 @@ def makeB2B2XG2pipi0Gamma( name,
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> eta gamma]cc",
+    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="B0 -> eta gamma",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
 
@@ -1358,7 +1358,7 @@ def makeB2B2XG4piGamma( name,
     _B2B2XG4piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG4piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG4pi = CombineParticles( DecayDescriptor="[B0 -> f_2(1270) gamma]cc",
+    _combineB2B2XG4pi = CombineParticles( DecayDescriptor="B0 -> f_2(1270) gamma",
                                           MotherCut = _B2B2XG4piPostVertexCuts,
                                           CombinationCut = _B2B2XG4piPreVertexCuts )
 
@@ -1389,7 +1389,7 @@ def makeB2B2XG3piKsGamma( name,
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B0 -> K_2(1770)+ gamma]cc",
+    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B+ -> K_2(1770)+ gamma]cc",
                                           MotherCut = _B2B2XG3piPostVertexCuts,
                                           CombinationCut = _B2B2XG3piPreVertexCuts )
 
@@ -1485,7 +1485,7 @@ def makeB2B2XGLambda2piGamma( name,
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XGLambda = CombineParticles( DecayDescriptor="[B0 -> Lambda0 gamma rho(770)0]cc",
+    _combineB2B2XGLambda = CombineParticles( DecayDescriptor="B0 -> Lambda0 gamma rho(770)0",
                                              MotherCut = _B2B2XGLambdaPostVertexCuts,
                                              CombinationCut = _B2B2XGLambdaPreVertexCuts )
 

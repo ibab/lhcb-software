@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-27 - Albert Puig
+ - Correct multiple candidates in radiative lines
+
 ! 2014-01-26 - Xabier Cid Vidal
  - Correct multiple candidates in H24MuLines
 
