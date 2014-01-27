@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-01-27 - Sebastian Neubert
+ - Added TrackingOnly setting
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
