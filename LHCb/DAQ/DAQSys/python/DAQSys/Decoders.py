@@ -248,6 +248,8 @@ Decoder("L0DUFromRawTool",
 #for each decoder we have an HLT1, HLT2 and combined version.
 #Decoders look like "Hlt(''/1/2)(Sel/Dec/Vertex)ReportsDecoder"
 
+#Also TrackingDecoder 
+
 #report, the type of report
 for report in ["Dec","Sel","Vertex"]:
     #hlt, which HLT to decode? None=both, 1=Hlt1, 2=Hlt2
@@ -273,6 +275,15 @@ for report in ["Dec","Sel","Vertex"]:
             properties={"SourceID" : hlt}, #None=default(0)
             conf=DecoderDB
             )
+
+        
+Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
+        active=True, banks=["HltTrackReports"],
+        inputs = ["Trigger/RawEvent","DAQ/RawEvent"],
+        outputs={"OutputHltTrackReportsLocation" : "Hlt1/Track/Velo"},
+        properties={"SourceID" : 1}, #None=default(0)
+        conf=DecoderDB
+        )
 
 #is a Routing bits filter really a decoder? it doesn't create output...
 Decoder("HltRoutingBitsFilter",
