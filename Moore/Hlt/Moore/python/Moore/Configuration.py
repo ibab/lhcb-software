@@ -727,7 +727,8 @@ class Moore(LHCbConfigurableUser):
                             , 'ForceSingleL0Configuration'
                             , 'SkipDisabledL0Channels'
                             , 'RequireRoutingBits'
-                            , 'VetoRoutingBits' 
+                            , 'VetoRoutingBits'
+                            , 'Split'
                             ]
                           )
         if self.getProp("OutputLevel")<INFO:
@@ -779,12 +780,18 @@ class Moore(LHCbConfigurableUser):
             seq = gs('Hlt')
             seq.Members = _replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
             # TODO: shunt lumi nano events...
-            # globally prepend a HltDecReportsDecoder for Hlt1...
+            # globally prepend Decoders for Hlt1...
             # TODO: find a better way of doing this... ditto for L0 decoding...
             from DAQSys.Decoders import DecoderDB
+            
             dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decAlg=dec.setup()
             seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
+
+            tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
+            trAlg=tr.setup()
+            seq.Members.insert( seq.Members.index(gs('Hlt2')), trAlg )
+            
             sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
             selAlg=sel.setup()
             seq.Members.insert( seq.Members.index(gs('Hlt2')), selAlg )

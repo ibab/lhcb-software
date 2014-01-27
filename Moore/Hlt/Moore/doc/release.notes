@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-01-27 - Sebastian Neubert
+ - Added trackingonly tests in moore.physics.tracking suite
+ - Added HltTrackReportsDecoder for hlt2_only configuration
+
 ! 2014-01-20 - Rob Lambert
  - Remove the Persistency option
 
