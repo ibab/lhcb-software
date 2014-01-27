@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-01-27 - Sebastian Neubert
+ - Renamed HltTrackingReports --> HltTrackReports
+
 ! 2014-01-16 - Sebastian Neubert
  - Added HltTrackingReports RawBank type
 

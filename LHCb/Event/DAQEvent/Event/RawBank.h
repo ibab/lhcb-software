@@ -122,7 +122,7 @@ namespace LHCb
                    UTError,         // 68
                    UTPedestal,      // 69
 		   VPDigit,	    // 70
-		   HltTrackingReports, // 71
+		   HltTrackReports, // 71
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
