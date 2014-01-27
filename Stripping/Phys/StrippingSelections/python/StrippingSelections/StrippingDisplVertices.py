@@ -114,8 +114,8 @@ config = {
                                       ## Jet-related cuts
                                       , "MinNumJets"           :  2
                                       , "SingleJet"            :  False
-                                      , "MinNJetMass"          :  0.0*units.GeV
-                                      , "MinNJetTransvMass"    : 20.0*units.GeV
+                                      , "MinNJetMass"          :  13.0*units.GeV
+                                      , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : None
                                       }
         ## jet sequence on top of Hlt2 candidates
