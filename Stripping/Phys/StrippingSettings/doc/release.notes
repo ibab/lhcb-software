@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-22-01 - Ronan Wallace
+  - New config for QEE to help reduce bandwidth. Prescales and some other cut changes.
+
 ! 2014-01-27 - Thomas Blake
  - Updated RareStrange and B2XMuMu dictionaries
 
