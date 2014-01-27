@@ -101,7 +101,7 @@ from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions, StdLooseAllP
 name = "Beauty2XGamma"
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
-    return "(TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
+    return "(HASTRACK) & (TRCHI2DOF<3) & (PT > 500*MeV) & (P > 5000*MeV)"
 
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV)"# & (BPVVDCHI2 > 1000)"
@@ -111,7 +111,7 @@ def hasTopoChild():
            +topoKSInputsCuts() +"))"
 
 def highTopoInputsCuts():
-    return "((P>5000*MeV) & (PT>1000*MeV) & (TRCHI2DOF<2.5) & (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
+    return "((HASTRACK) & (P>5000*MeV) & (PT>1000*MeV) & (TRCHI2DOF<2.5) & (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
 def hasHighTopoChild():
     return "INTREE(ISBASIC & "+highTopoInputsCuts()+")"
@@ -180,7 +180,7 @@ class Beauty2XGammaConf(LineBuilder) :
         LineBuilder.__init__(self, name, config)
 
         # Generic track (pi) = h
-        _trkFilter = FilterDesktop(Code = "(TRCHI2DOF < %(B2XGTrkChi2DOF)s)& (MIPCHI2DV(PRIMARY) > %(B2XGTrkMinIPChi2)s) & (TRGHOSTPROB < %(B2XGTrkGhostProb)s) & (PT > %(B2XGTrkMinPT)s) & (P > %(B2XGTrkMinP)s)" % self.__confdict__ )
+        _trkFilter = FilterDesktop(Code = "(HASTRACK) & (TRCHI2DOF < %(B2XGTrkChi2DOF)s)& (MIPCHI2DV(PRIMARY) > %(B2XGTrkMinIPChi2)s) & (TRGHOSTPROB < %(B2XGTrkGhostProb)s) & (PT > %(B2XGTrkMinPT)s) & (P > %(B2XGTrkMinP)s)" % self.__confdict__ )
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdAllNoPIDsPions])
@@ -195,7 +195,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                       RequiredSelections = [StdLooseResolvedPi0])
         # Ks0s
         mergedKshorts = MergedSelection('MergedKshorts',RequiredSelections = [DataOnDemand("Phys/StdLooseKsDD/Particles"), DataOnDemand("Phys/StdLooseKsLL/Particles")])
-        _KS0Sel = FilterDesktop(Code = "(PT > 1000) & (MM > 480*MeV) & (MM < 515*MeV) & (VFASPF(VCHI2/VDOF)<9)" % self.__confdict__ )
+        _KS0Sel = FilterDesktop(Code = "(PT > 1000) & (MM > 480*MeV) & (MM < 515*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF)<9)" % self.__confdict__ )
         self.Kshort = Selection( 'KS0Sel' + self.name,
                                  Algorithm = _KS0Sel,
                                  RequiredSelections = [mergedKshorts])
@@ -396,7 +396,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         # Converted Photons, for the hh[h]+g(-> e+e-) lines
         mergedConvPhotons = MergedSelection('MergedConvertedPhotons', RequiredSelections = [StdAllLooseGammaDD,StdAllLooseGammaLL])
-        _ConvPhotonSel = FilterDesktop(Code = "(MM < 100*MeV) & (VFASPF(VCHI2/VDOF)<9) & (PT >  %(B2XGGammaCNVPTMin)s)" % self.__confdict__ )
+        _ConvPhotonSel = FilterDesktop(Code = "(MM < 100*MeV) & (HASVERTEX) & (VFASPF(VCHI2/VDOF)<9) & (PT >  %(B2XGGammaCNVPTMin)s)" % self.__confdict__ )
         self.ConvPhoton = Selection( 'ConvPhoton' + self.name,
                                      Algorithm = _ConvPhotonSel,
                                      RequiredSelections = [mergedConvPhotons])
@@ -807,7 +807,7 @@ def makeDiTrackList( name,
     _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
     _diTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
+    _diTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
 
     _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
                                         CombinationCut = _diTrackPreVertexCuts,
@@ -833,7 +833,7 @@ def makeDiTrackList_wKS0( name,
     _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
     _diTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
+    _diTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
     _diTrackPostVertexCuts += " & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineDiTrack = CombineParticles( DecayDescriptor="[rho(770)+ -> pi+ KS0]cc",
@@ -861,7 +861,7 @@ def makeTriTrackList( name,
     _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -888,7 +888,7 @@ def makeTriTrackList_alt( name,
     _TriTrackPreVertexCuts = " (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_1(1270)+ -> rho(770)0 pi+]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -916,7 +916,7 @@ def makeTriTrackList_wKS0( name,
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID =='rho(770)0') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="K*_2(1430)0 -> rho(770)0 KS0",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -944,7 +944,7 @@ def makeTriTrackList_wpi0M( name,
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="eta -> rho(770)0 pi0",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -972,7 +972,7 @@ def makeTriTrackList_wpi0R( name,
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="eta -> rho(770)0 pi0",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -999,7 +999,7 @@ def makeFourTrackList( name,
     _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineFourTrack = CombineParticles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
                                           CombinationCut = _FourTrackPreVertexCuts,
@@ -1025,7 +1025,7 @@ def makeFourTrackListPions( name,
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ID=='rho(770)0'),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineFourTracks = CombineParticles( DecayDescriptor="f_2(1270) -> rho(770)0 rho(770)0",
                                            CombinationCut = _FourTrackPreVertexCuts,
@@ -1050,7 +1050,7 @@ def makeFourTrackList_w2KS0( name,
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,((ID=='rho(770)+') | (ID=='rho(770)-')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineFourTracks = CombineParticles( DecayDescriptor="f_2(1270) -> rho(770)+ rho(770)-",
                                            CombinationCut = _FourTrackPreVertexCuts,
@@ -1077,7 +1077,7 @@ def makeFourTrackList_wKS0( name,
     _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID =='K_1(1270)+') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _TriTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineTriTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ KS0]cc",
                                          CombinationCut = _TriTrackPreVertexCuts,
@@ -1106,7 +1106,7 @@ def makeFourTrackList_wpi0M( name,
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineFourTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ pi0]cc",
                                           CombinationCut = _FourTrackPreVertexCuts,
@@ -1133,7 +1133,7 @@ def makeFourTrackList_wpi0R( name,
     _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
-    _FourTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
 
     _combineFourTrack = CombineParticles( DecayDescriptor="[K_2(1770)+ -> K_1(1270)+ pi0]cc",
                                           CombinationCut = _FourTrackPreVertexCuts,
@@ -1166,7 +1166,7 @@ def makeB2B2XG2piGamma( name,
 
 
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG2piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG2piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1197,7 +1197,7 @@ def makeB2B2XG2piGammaCNV( name,
     _B2B2XG2piPreVertexCuts += "& (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
 
-    _B2B2XG2piPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG2piPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1229,7 +1229,7 @@ def makeB2B2XGpiKsGamma( name,
     _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG2piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG2piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1260,7 +1260,7 @@ def makeB2B2XG3piGamma( name,
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
-    _B2B2XG3piPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1292,7 +1292,7 @@ def makeB2B2XG2piKsGamma( name,
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K*_2(1430)0') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1323,7 +1323,7 @@ def makeB2B2XG2pipi0Gamma( name,
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='eta')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1354,7 +1354,7 @@ def makeB2B2XG4piGamma( name,
     _B2B2XG4piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC| (ID=='f_2(1270)') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG4piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG4piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG4piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG4piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG4piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1385,7 +1385,7 @@ def makeB2B2XG3piKsGamma( name,
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_2(1770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1416,7 +1416,7 @@ def makeB2B2XG3pipi0Gamma( name,
     _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='K_2(1770)+')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
-    _B2B2XG3piPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1448,7 +1448,7 @@ def makeB2B2XGLambdapiGamma( name,
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
-    _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
@@ -1481,11 +1481,11 @@ def makeB2B2XGLambda2piGamma( name,
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='rho(770)0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
-    _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
-    _combineB2B2XGLambda = CombineParticles( DecayDescriptor="B0 -> Lambda0 gamma rho(770)0",
+    _combineB2B2XGLambda = CombineParticles( DecayDescriptor="[B0 -> Lambda0 gamma rho(770)0]cc",
                                              MotherCut = _B2B2XGLambdaPostVertexCuts,
                                              CombinationCut = _B2B2XGLambdaPreVertexCuts )
 
@@ -1513,7 +1513,7 @@ def makeB2B2XGLambda3piGamma( name,
     _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
-    _B2B2XGLambdaPostVertexCuts += " & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
     _B2B2XGLambdaPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
 
