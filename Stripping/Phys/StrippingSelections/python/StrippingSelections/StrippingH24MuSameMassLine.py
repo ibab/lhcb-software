@@ -28,7 +28,7 @@ from Configurables import OfflineVertexFitter
 config_default_SameMass = {
     'DefaultPostscale'       : 1,
     'PromptLinePrescale'     : 1,
-    'SimpleLinePrescale'     : 1,
+    'SimpleLinePrescale'     : 0.1,
     'DetachedLinePrescale'   : 1,
     
     'MuTrackChi2DoF'         : 3,
