@@ -16,7 +16,7 @@ from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
 # Define the default configuration.
 config_Dijets = {
     # Prescale for the calibration line.
-    "PRESCALE" : 0.06,
+    "PRESCALE" : 0.03,
     # HLT properties.
     "HLT"   : {"LINE" : "Hlt1TrackMuon"},   # Line to use.
     # Track properties.
