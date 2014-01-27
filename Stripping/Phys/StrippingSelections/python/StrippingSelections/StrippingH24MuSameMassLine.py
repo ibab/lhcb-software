@@ -248,7 +248,7 @@ class H24MuSameMassLineConf(LineBuilder) :
         SelA1 = self.makeA1("A1"+name,type)
         
         H25 = CombineParticles("Combine_H25"+name)
-        H25.DecayDescriptor = "[H_10 -> KS0 KS0]cc"
+        H25.DecayDescriptor = "H_10 -> KS0 KS0"
         H25.DaughtersCuts = {}
 
         # simple: do not cut in pT, cut tighter in DOCA, VCHI2

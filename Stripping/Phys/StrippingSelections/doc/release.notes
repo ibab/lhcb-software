@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-26 - Xabier Cid Vidal
+ - Correct multiple candidates in H24MuLines
+
+
 ! 2014-01-26 - Vanya Belyaev
  - add StrippingPromptCharm: add pKK final state 
 

@@ -324,7 +324,7 @@ class H24MuLineConf(LineBuilder) :
         setattr(self,"A1"+name,SelA1)
         
         H25 = CombineParticles("Combine_H25"+name)
-        H25.DecayDescriptor = "[H_10 -> KS0 KS0]cc"
+        H25.DecayDescriptor = "H_10 -> KS0 KS0"
         H25.DaughtersCuts = {}
 
         # simple: do not cut in pT, cut tighter in DOCA, VCHI2
