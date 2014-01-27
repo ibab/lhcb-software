@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-01-27 - Chris Jones
+ - Another small improvement to PrintDuplicates, to detect false positives
+   due to PID swaps within the decay tree.
+
 ! 2014-01-26 - Chris Jones
  - Improve PrintDuplicates to reject some more false positives, when decays
    use the same Particles, but at different places in the decay tree.

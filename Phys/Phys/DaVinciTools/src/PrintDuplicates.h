@@ -20,6 +20,7 @@
 // Boost
 #include <boost/math/special_functions/round.hpp>
 #include "boost/functional/hash.hpp"
+#include "boost/cstdint.hpp"
 
 /** @class PrintDuplicates PrintDuplicates.h
  *
@@ -42,7 +43,9 @@ public:
 
 private:
 
-  typedef std::vector<std::size_t> Hashes;
+  typedef std::size_t         Hash32;
+  typedef boost::uint64_t     Hash64;
+  typedef std::vector<Hash32> Hashes32;
 
 private:
 
@@ -65,11 +68,21 @@ private:
   }
 
   /// Peform a deep check on the given particles
-  bool checkDaughterHashes( const LHCb::Particle::ConstVector & parts ) const;
+  bool deepHashCheck( const LHCb::Particle::ConstVector & parts ) const;
 
   /// get the daughter hashes
   void getDauHashes( const LHCb::Particle * p,
-                     Hashes& hashes,
+                     Hashes32& hashes,
+                     unsigned int depth = 0 ) const;
+
+  /// Get the hash for a Particle
+  inline Hash32 getLHCbIDsHash( const LHCb::Particle * p ) const
+  {
+    return LHCb::HashIDs::hashID( p );
+  }
+
+  /// Get the 'PID' Hash
+  Hash64 getPIDHash( const LHCb::Particle * p,
                      unsigned int depth = 0 ) const;
 
 private:
@@ -77,7 +90,7 @@ private:
   unsigned int m_dpPrec;      ///< Number of d.p. precision to compare energy values to
   IPrintDecay * m_printDecay; ///< Tool to print the decay tree
   unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
-  bool m_checkDaughters;      ///< Check daughters as well as top level Particle
+  bool m_deepCheck;           ///< Perform a deep check of duplicates
   std::map< std::string, unsigned int > m_countPerLoc; ///< Printout count per TES location
 
 };

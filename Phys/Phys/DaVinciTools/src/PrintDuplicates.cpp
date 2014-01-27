@@ -18,7 +18,7 @@ PrintDuplicates::PrintDuplicates( const std::string& name,
 {
   declareProperty( "EnergyPrecision", m_dpPrec = 2 );
   declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 1 );
-  declareProperty( "CheckDaughters", m_checkDaughters = true );
+  declareProperty( "DeepCheck", m_deepCheck = true );
   //setProperty( "OutputLevel", 1 );
 }
 
@@ -33,7 +33,7 @@ PrintDuplicates::~PrintDuplicates() {}
 StatusCode PrintDuplicates::execute()
 {
 
-  typedef std::map< std::pair<std::size_t,double>, LHCb::Particle::ConstVector > PartHashMap;
+  typedef std::map< std::pair<Hash32,double>, LHCb::Particle::ConstVector > PartHashMap;
   typedef std::map< std::string, PartHashMap > LocHashMap;
 
   // local map for this event
@@ -48,7 +48,7 @@ StatusCode PrintDuplicates::execute()
     // sanity check
     if ( !*ip ) continue;
     // compute the hash for this decay tree
-    const std::size_t h = LHCb::HashIDs::hashID( *ip );
+    const Hash32 h = getLHCbIDsHash( *ip );
     // current have to use energy to take PID swaps into account.
     // Would be better to have the option to include this in the hash. To Do.
     const double e = boost::math::round( dpScale * (*ip)->momentum().e() ) / dpScale;
@@ -71,7 +71,7 @@ StatusCode PrintDuplicates::execute()
       if ( iPH->second.size() > 1 )
       {
         // Check the hash values for daughters ?
-        const bool isDup = !m_checkDaughters || checkDaughterHashes(iPH->second);
+        const bool isDup = !m_deepCheck || deepHashCheck(iPH->second);
         if ( isDup )
         {
           std::ostringstream mess;
@@ -99,24 +99,46 @@ StatusCode PrintDuplicates::execute()
   return StatusCode::SUCCESS;
 }
 
-bool PrintDuplicates::checkDaughterHashes( const LHCb::Particle::ConstVector & parts ) const
+bool PrintDuplicates::deepHashCheck( const LHCb::Particle::ConstVector & parts ) const
 {
-  std::map< Hashes, unsigned int > hashCount;
   bool isDuplicate = false;
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Performing deep Daughters Hash comparison" << endmsg;
 
-  // Loop over particles
-  for ( LHCb::Particle::ConstVector::const_iterator iP = parts.begin();
-        iP != parts.end(); ++iP )
   {
-    Hashes hashes;
-    getDauHashes( *iP, hashes );
-    std::sort( hashes.begin(), hashes.end() );
-    if ( msgLevel(MSG::DEBUG) ) debug() << " -> Daughter Hashes : " << hashes << endmsg;
-    isDuplicate = ++(hashCount[hashes]) > 1;
-    if ( isDuplicate ) break;
+    // First, check the daughters seperately
+    std::map< Hashes32, unsigned int > hashCount;
+
+    // Loop over particles
+    for ( LHCb::Particle::ConstVector::const_iterator iP = parts.begin();
+          iP != parts.end(); ++iP )
+    {
+      Hashes32 hashes;
+      getDauHashes( *iP, hashes );
+      std::sort( hashes.begin(), hashes.end() );
+      if ( msgLevel(MSG::DEBUG) ) debug() << " -> Daughter Hashes : " << hashes << endmsg;
+      isDuplicate = ++(hashCount[hashes]) > 1;
+      if ( isDuplicate ) break;
+    }
+  }
+
+  if ( isDuplicate )
+  {
+    // Got this far. Now (re)test for PID switches
+    isDuplicate = false;
+
+    std::map< Hash64, unsigned int > pidHashCount;
+
+    // Loop over particles
+    for ( LHCb::Particle::ConstVector::const_iterator iP = parts.begin();
+          iP != parts.end(); ++iP )
+    {
+      const Hash64 pidh = getPIDHash(*iP);
+      if ( msgLevel(MSG::DEBUG) ) debug() << " -> PID Hash : " << pidh << endmsg;
+      isDuplicate = ++(pidHashCount[pidh]) > 1;
+      if ( isDuplicate ) break;
+    }
   }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Duplicate = " << isDuplicate << endmsg;
@@ -124,8 +146,52 @@ bool PrintDuplicates::checkDaughterHashes( const LHCb::Particle::ConstVector & p
   return isDuplicate;
 }
 
+PrintDuplicates::Hash64
+PrintDuplicates::getPIDHash( const LHCb::Particle * p,
+                             unsigned int depth ) const
+{
+  Hash64 h = 0;
+
+  // protect against infinite recursion
+  if ( depth > 999999 )
+  { Warning( "Infinite recursion in getPIDHash" ).ignore(); return h; }
+
+  if ( p->isBasicParticle() )
+  {
+
+    // Fill PID type and Particle hash into a single 64 bit number
+    union PIDData
+    {
+      struct
+      {
+        boost::uint32_t pidType : 32;
+        boost::uint32_t hash    : 32;
+      } packed;
+      boost::uint64_t raw;
+    } data;
+    data.packed.pidType = p->particleID().pid();
+    data.packed.hash    = getLHCbIDsHash(p);
+
+    // combine with the overall hash
+    boost::hash_combine( h, data.raw );
+
+  }
+  else
+  {
+    // loop over daughters
+    const SmartRefVector<LHCb::Particle>& daughters = p->daughters();
+    for ( SmartRefVector<LHCb::Particle>::const_iterator id = daughters.begin();
+          id != daughters.end(); ++id )
+    {
+      boost::hash_combine( h, getPIDHash(*id,++depth) );
+    }
+  }
+
+  return h;
+}
+
 void PrintDuplicates::getDauHashes( const LHCb::Particle * p,
-                                    Hashes& hashes,
+                                    Hashes32& hashes,
                                     unsigned int depth ) const
 {
   // protect against infinite recursion
@@ -140,7 +206,7 @@ void PrintDuplicates::getDauHashes( const LHCb::Particle * p,
     if ( !(*id)->isBasicParticle() )
     {
       // Add the hash for this to the list
-      hashes.push_back( LHCb::HashIDs::hashID(*id) );
+      hashes.push_back( getLHCbIDsHash(*id) );
       // then fill for its daughters
       getDauHashes( *id, hashes, ++depth );
     }
