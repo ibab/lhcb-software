@@ -46,6 +46,7 @@ private:
   typedef std::size_t         Hash32;
   typedef boost::uint64_t     Hash64;
   typedef std::vector<Hash32> Hashes32;
+  typedef std::vector<Hash64> Hashes64;
 
 private:
 
@@ -82,7 +83,8 @@ private:
   }
 
   /// Get the 'PID' Hash
-  Hash64 getPIDHash( const LHCb::Particle * p,
+  void getPIDHashes( const LHCb::Particle * p,
+                     Hashes64& hashes,
                      unsigned int depth = 0 ) const;
 
 private:
