@@ -57,7 +57,7 @@ FstSelectGEC().MultiplicityCutHCAL = 599
 from os import getenv
 mcut = getenv('MCUT')
 if mcut:
-    FstSelectGEC().MultiplicityCutHCAL = int(mcut) * 100
+    FstSelectGEC().MultiplicityCutHCAL = int(mcut) * 100 - 1
 
 # detailed output for tracking algos
 # if done run over 2 events
