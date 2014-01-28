@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2014-01-28 - Gerhard Raven
+ - use C++11 to streamline logic in various places
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 

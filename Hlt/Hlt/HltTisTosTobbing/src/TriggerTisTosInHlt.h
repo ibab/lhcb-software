@@ -78,6 +78,8 @@ private:
   std::vector< std::string > m_triggerInput_Selections;
 
   /// all known trigger names 
+  //struct _dummy {} ;
+  // Gaudi::VectorMap< Gaudi::StringKey, _dummy > m_triggerNames;
   std::vector< std::string > m_triggerNames;
 
   /// Inspector 

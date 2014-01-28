@@ -5,6 +5,8 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/StringKey.h"
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
@@ -93,8 +95,7 @@ public:
     
     ++m_reportDepth;
     unsigned int result(0);
-    BOOST_FOREACH( const T* obj, list )
-      { 
+    for( const auto* obj: list ) { 
         result |= tisTos( *obj );
         report << ParticleTisTos::analysisReport( *obj );      
         //      if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;        
@@ -117,6 +118,11 @@ public:
 
 
 protected:
+  template <typename T>
+  std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const Hlt::TSelection<T>&  selection,
+                                                                          unsigned int tisRequirement      = kAnything,
+                                                                          unsigned int tosRequirement      = kAnything,
+                                                                          unsigned int tpsRequirement      = kAnything );
 
   /// get Hlt Summary and configuration
   void getHltSummary();
@@ -133,37 +139,36 @@ protected:
   bool m_newEvent;
 
 private:
+   template <typename T> bool selection( const std::string& selectionName, T action ) ;
 
   // internal Cache of results used as long as the Offline Input remains the same (cache only full classifications)
  
   void clearCache()
   {
-    m_cached_SelectionNames.clear();
     m_cached_tisTosTob.clear();
   }
   
-  void storeInCache(const std::string & selectionName, unsigned int result)
+  void storeInCache(Gaudi::StringKey  name, unsigned int result)
   {
-    m_cached_SelectionNames.push_back(selectionName);
-    m_cached_tisTosTob.push_back(result);
+    auto r = m_cached_tisTosTob.insert( std::move(name), result );
+    if (!r.second) {
+        error() << "impossible: name already in cache" << endmsg;
+    }
   }
   
-  bool findInCache(const std::string & selectionName, unsigned int & result)
+  bool findInCache(const Gaudi::StringKey & selectionName, unsigned int & result)
   {
-    std::vector< std::string >::iterator found =
-      std::find( m_cached_SelectionNames.begin(),m_cached_SelectionNames.end(), selectionName);
-    if( found == m_cached_SelectionNames.end() )return false;
-    int index ( found - m_cached_SelectionNames.begin() );
-    result = m_cached_tisTosTob[index];
-    return true;
+      auto found = m_cached_tisTosTob.find( selectionName );
+      if ( found == m_cached_tisTosTob.end() ) return false;
+      result = found->second;
+      return true;
   }  
 
 
   //  -------------------------- data members --------------------
  
   /// Cache of results for the same Offline Input
-  std::vector< std::string >  m_cached_SelectionNames;
-  std::vector< unsigned int > m_cached_tisTosTob;
+  GaudiUtils::VectorMap< Gaudi::StringKey, unsigned int > m_cached_tisTosTob;
   
   
   /// HltObjectSummary container

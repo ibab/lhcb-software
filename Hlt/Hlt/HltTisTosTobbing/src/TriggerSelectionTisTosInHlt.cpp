@@ -1,10 +1,10 @@
 // $Id: TriggerSelectionTisTosInHlt.cpp,v 1.10 2010-08-17 08:54:52 graven Exp $
-// Include files 
+// Include files
 #include <algorithm>
 #include <vector>
 #include <sstream>
 
-// from Gaudi    
+// from Gaudi
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -20,25 +20,158 @@
 
 using namespace LHCb;
 
-namespace {
+namespace
+{
 
-    // TODO: use transform instead of explicit loop...
-    
-    template<typename T, typename I>
-    std::vector<T*> convert(I i,I end) {
-           std::vector<T*> v; v.reserve( end-i );
-           while (i!=end)  v.push_back( const_cast<T*>( *i++ ) );
-           return v;
+template <typename C,
+          typename T = typename std::remove_const<typename C::candidate_type>::type>
+std::vector<T*> convert( const C& container )
+{
+    std::vector<T*> v;
+    v.reserve( container.size() );
+    std::transform(
+        std::begin( container ), std::end( container ), std::back_inserter( v ),
+        []( typename C::const_reference i ) { return const_cast<T*>( i ); } );
+    return v;
+}
+
+template <typename T, typename C>
+std::vector<T*> convertCandidate( const C& container )
+{
+    std::vector<T*> v;
+    v.reserve( container.size() );
+    std::transform( std::begin( container ), std::end( container ),
+                    std::back_inserter( v ), []( typename C::const_reference i ) {
+        return const_cast<T*>( i->currentStage()->template get<T>() );
+    } );
+    return v;
+}
+
+struct getSummary
+{
+    LHCb::HltObjectSummary::Container& container;
+
+  public:
+    getSummary( LHCb::HltObjectSummary::Container& c ) : container( c )
+    {
     }
 
-    template<typename T, typename I>
-    std::vector<T*> convertCandidate(I i,I end) {
-           std::vector<T*> v; v.reserve( end-i );
-           while (i!=end)  v.push_back( const_cast<T*>( (*i++)->currentStage()->template get<T>() ) );
-           return v;
+    template <typename T>
+    HltObjectSummary* operator()( const T* object )
+    {
+        if ( !object ) return nullptr;
+        auto i = std::find_if( std::begin( container ), std::end( container ),
+                               [object]( const HltObjectSummary* p ) {
+            return p->summarizedObjectCLID() == object->clID() &&
+                   p->summarizedObject() == object;
+        } );
+        HltObjectSummary* hos = ( i != std::end( container ) ? *i : nullptr );
+        if ( !hos ) {
+            container.push_back( new HltObjectSummary() );
+            hos = container.back();
+            hos->setSummarizedObjectCLID( object->clID() );
+            hos->setSummarizedObject( object );
+        }
+        return hos;
     }
-    
+};
 
+struct isTisTos
+{
+    ITriggerSelectionTisTos* parent;
+    unsigned int tisRequirement, tosRequirement, tpsRequirement;
+
+  public:
+    isTisTos( ITriggerSelectionTisTos* p, unsigned int tisReq, unsigned int tosReq,
+              unsigned int tpsReq )
+        : parent{p}
+        , tisRequirement{tisReq}
+        , tosRequirement{tosReq}
+        , tpsRequirement{tpsReq}
+    {
+    }
+
+    template <typename T>
+    bool operator()( const T& object )
+    {
+        unsigned int result = parent->tisTos( object );
+        bool tis = result & ITriggerSelectionTisTos::kTIS;
+        bool tos = result & ITriggerSelectionTisTos::kTOS;
+        bool tps = result & ITriggerSelectionTisTos::kTPS;
+        return ( ( tisRequirement >= ITriggerSelectionTisTos::kAnything ) ||
+                 ( tis == tisRequirement ) ) &&
+               ( ( tosRequirement >= ITriggerSelectionTisTos::kAnything ) ||
+                 ( tos == tosRequirement ) ) &&
+               ( ( tpsRequirement >= ITriggerSelectionTisTos::kAnything ) ||
+                 ( tps == tpsRequirement ) );
+    }
+};
+
+struct applyTus
+{
+    TriggerSelectionTisTosInHlt* parent;
+
+  public:
+    explicit applyTus( TriggerSelectionTisTosInHlt& p ) : parent( &p )
+    {
+    }
+
+    template <typename T>
+    bool operator()( std::vector<T*>&& objects )
+    {
+        return parent->IParticleTisTos::tus(
+            std::forward<std::vector<T*>>( objects ) );
+    }
+    bool operator()( std::vector<std::string>&& dependencies )
+    {
+        return parent->ITriggerSelectionTisTos::tusSelection(
+            std::forward<std::vector<std::string>>( dependencies ) );
+    }
+};
+
+struct applyTis
+{
+    TriggerSelectionTisTosInHlt* parent;
+
+  public:
+    explicit applyTis( TriggerSelectionTisTosInHlt& p ) : parent( &p )
+    {
+    }
+
+    template <typename T>
+    bool operator()( std::vector<T*>&& objects )
+    {
+        return parent->IParticleTisTos::tis(
+            std::forward<std::vector<T*>>( objects ) );
+    }
+    bool operator()( std::vector<std::string>&& dependencies )
+    {
+        return parent->ITriggerSelectionTisTos::tisSelection(
+            std::forward<std::vector<std::string>>( dependencies ) );
+    }
+};
+
+struct applyTos
+{
+    TriggerSelectionTisTosInHlt* parent;
+
+  public:
+    explicit applyTos( TriggerSelectionTisTosInHlt& p ) : parent( &p )
+    {
+    }
+
+    template <typename T>
+    bool operator()( std::vector<T*>&& objects )
+    {
+        return parent->IParticleTisTos::tos(
+            std::forward<std::vector<T*>>( objects ) );
+    }
+    bool operator()( std::vector<std::string>&& dependencies )
+    {
+        return parent->ITriggerSelectionTisTos::tosSelection(
+            std::forward<std::vector<std::string>>( dependencies ) );
+    }
+};
 };
 
 //-----------------------------------------------------------------------------
@@ -50,85 +183,83 @@ namespace {
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( TriggerSelectionTisTosInHlt )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TriggerSelectionTisTosInHlt::TriggerSelectionTisTosInHlt( const std::string& type,
-                                                const std::string& name,
-                                                const IInterface* parent )
-  : ParticleTisTos ( type, name , parent )
-  , m_hltDecReports(0)
-  , m_hltDataSvc(0)
-  , m_hltInspectorSvc(0)
-  , m_objectSummaries(0)
+                                                          const std::string& name,
+                                                          const IInterface* parent )
+    : ParticleTisTos( type, name, parent )
+    , m_hltDecReports{nullptr}
+    , m_hltDataSvc{nullptr}
+    , m_hltInspectorSvc{nullptr}
+    , m_objectSummaries{nullptr}
 {
-  declareInterface<ITriggerSelectionTisTos>(this);
-  
-   declareProperty("HltDecReportsLocation",
-                   m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default); 
-   
-  m_cached_SelectionNames.reserve(500);
-  m_cached_tisTosTob.reserve(500);
+    declareInterface<ITriggerSelectionTisTos>( this );
 
+    declareProperty( "HltDecReportsLocation",
+                     m_HltDecReportsLocation =
+                         LHCb::HltDecReportsLocation::Default );
+
+    m_cached_tisTosTob.reserve( 500 );
 }
-
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TriggerSelectionTisTosInHlt::~TriggerSelectionTisTosInHlt() {} 
+TriggerSelectionTisTosInHlt::~TriggerSelectionTisTosInHlt()
+{
+}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TriggerSelectionTisTosInHlt::initialize() {
-  StatusCode sc = ParticleTisTos::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+StatusCode TriggerSelectionTisTosInHlt::initialize()
+{
+    StatusCode sc = ParticleTisTos::initialize(); // must be executed first
+    if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+    debug() << "==> Initialize" << endmsg;
 
-  IIncidentSvc*                incidentSvc(0);     
-  if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
-  // add listener to be triggered by first BeginEvent
-  bool rethrow = false; bool oneShot = false; long priority = 0;
-  incidentSvc->addListener(this,IncidentType::BeginEvent,priority,rethrow,oneShot);
-  incidentSvc->release();
+    IIncidentSvc* incidentSvc( 0 );
+    if ( !service( "IncidentSvc", incidentSvc ).isSuccess() )
+        return StatusCode::FAILURE;
+    // add listener to be triggered by first BeginEvent
+    bool rethrow = false;
+    bool oneShot = false;
+    long priority = 0;
+    incidentSvc->addListener( this, IncidentType::BeginEvent, priority, rethrow,
+                              oneShot );
+    incidentSvc->release();
 
-  m_hltDataSvc = svc<Hlt::IData>("Hlt::Service",true);
-  m_hltInspectorSvc = svc<Hlt::IInspector>("Hlt::Service",true);
+    m_hltDataSvc = svc<Hlt::IData>( "Hlt::Service", true );
+    m_hltInspectorSvc = svc<Hlt::IInspector>( "Hlt::Service", true );
 
-  m_newEvent =true;
-   
-  setOfflineInput();
-  
-  return StatusCode::SUCCESS;
+    m_newEvent = true;
 
+    setOfflineInput();
+
+    return StatusCode::SUCCESS;
 }
 
-void TriggerSelectionTisTosInHlt::handle(const Incident& ) 
+void TriggerSelectionTisTosInHlt::handle( const Incident& )
 {
-  m_hltDecReports=0;
-
-  setOfflineInput( );
-
-  m_newEvent=true;  
-
-  m_objectSummaries =0;
-  
+    m_hltDecReports = nullptr;
+    setOfflineInput();
+    m_newEvent = true;
+    m_objectSummaries = nullptr;
 }
 
 // ------------------------------------------------------------------------------------
 void TriggerSelectionTisTosInHlt::getHltSummary()
 {
-  if( !m_hltDecReports ){
-    m_hltDecReports = getIfExists<HltDecReports>(m_HltDecReportsLocation);
-    if( NULL==m_hltDecReports )
-    {
-      Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 2 ).setChecked();
-      m_hltDecReports =0;
-    }    
-  }  
+    if ( !m_hltDecReports ) {
+        m_hltDecReports = getIfExists<HltDecReports>( m_HltDecReportsLocation );
+        if ( !m_hltDecReports ) {
+            Error( " No HltDecReports at " + m_HltDecReportsLocation.value(),
+                   StatusCode::FAILURE, 2 ).setChecked();
+        }
+    }
 }
 
 //=============================================================================
@@ -136,407 +267,364 @@ void TriggerSelectionTisTosInHlt::getHltSummary()
 //=============================================================================
 
 // erase previous input ---------------------------------------------------------
-void TriggerSelectionTisTosInHlt::setOfflineInput( )
+void TriggerSelectionTisTosInHlt::setOfflineInput()
 {
-  setSignal();  clearCache();
+    setSignal();
+    clearCache();
 }
-   
 
 //    hit list input ---------------------------------------------------------------
-void TriggerSelectionTisTosInHlt::addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist )
+void TriggerSelectionTisTosInHlt::addToOfflineInput(
+    const std::vector<LHCb::LHCbID>& hitlist )
 {
-  if( addToSignal( hitlist ) )clearCache();
+    if ( addToSignal( hitlist ) ) clearCache();
 }
 
 //    Track input ---------------------------------------------------------------
-void TriggerSelectionTisTosInHlt::addToOfflineInput( const LHCb::Track & track )
+void TriggerSelectionTisTosInHlt::addToOfflineInput( const LHCb::Track& track )
 {
-  if( addToSignal( track ) )clearCache();
+    if ( addToSignal( track ) ) clearCache();
 }
 
-//    Proto-particle input -----------------------------------------------------------------------
-void TriggerSelectionTisTosInHlt::addToOfflineInput( const LHCb::ProtoParticle & protoParticle )
+//    Proto-particle input
+// -----------------------------------------------------------------------
+void TriggerSelectionTisTosInHlt::addToOfflineInput(
+    const LHCb::ProtoParticle& protoParticle )
 {
-  if( addToSignal( protoParticle ) )clearCache();
+    if ( addToSignal( protoParticle ) ) clearCache();
 }
 
-//    Particle input -----------------------------------------------------------------------
-void TriggerSelectionTisTosInHlt::addToOfflineInput( const LHCb::Particle & particle )
+//    Particle input
+// -----------------------------------------------------------------------
+void TriggerSelectionTisTosInHlt::addToOfflineInput( const LHCb::Particle& particle )
 {
-  if( addToSignal( particle ) )clearCache();
+    if ( addToSignal( particle ) ) clearCache();
 }
 
-
- 
 //=============================================================================
-
 
 //=============================================================================
 // -------------- outputs:
 //=============================================================================
 
-
-
 // single complete Trigger Selection TisTos  (define Offline Input before calling)
-unsigned int TriggerSelectionTisTosInHlt::tisTosSelection( const std::string & selectionName )
+unsigned int
+TriggerSelectionTisTosInHlt::tisTosSelection( const std::string& selectionName )
 {
-  unsigned int result=0;
-  if( findInCache( selectionName, result ) )return result;
+    const Gaudi::StringKey name( selectionName );
 
-  getHltSummary();
+    unsigned int result = 0;
+    if ( findInCache( name, result ) ) return result;
 
-  bool decision(false);  
-  // get decision from HltDecReports if can find it
-  bool decFound(false);  
-  if( m_hltDecReports ){
-    const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
-    if( rep ){
-      decision = rep->decision();
-      decFound = true;
-    }    
-  }
-  if( decision )result |= kDecision;  
+    getHltSummary();
 
-  const Gaudi::StringKey name(selectionName);
-  // find producer of the selection
-  const IAlgorithm* producer = m_hltInspectorSvc->producer(name);
-  if( !producer ){storeInCache(selectionName,result); return result;}
-  const Hlt::Selection* sel = m_hltDataSvc->retrieve(producer,name);
-  if( !sel ){ storeInCache(selectionName,result); return result;}
-  // unsuccessful selections not allowed to be TisTossed
-  if( !(sel->decision()) ){ storeInCache(selectionName,result); return result;}
-
-  // it is possible that decision was not stored in HltDecReports if this was an intermediate step, thus
-  //   if not found in HltDecReports, set it here
-  // do not overwrite decisions from HltDecReports, since positive selection could have been killed by postscale
-  if( !decFound )decision=true;
-
-  // classify the decision
-  if( sel->size() > 0 ){
-
-    if( sel->classID() == Hlt::Candidate::classID() ) {
-      const Hlt::TSelection<Hlt::Candidate>& tsel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);   
-      if (tsel.size() >0) {
-          // grab the first one, and pray for a uniform list...
-          const Hlt::Candidate *cand = tsel.front();
-          const Hlt::Stage* stage = cand->currentStage();
-          if ( stage->get<LHCb::Track>() != 0 ) {
-            result = IParticleTisTos::tisTos<Track>( convertCandidate<Track>( tsel.begin(), tsel.end() ));
-          } else if (stage->get<LHCb::RecVertex>()!=0) {
-            result = IParticleTisTos::tisTos<RecVertex>( convertCandidate<RecVertex>( tsel.begin(), tsel.end() ));
-          } else {
-            error() << " got a candidate which is neither Track nor RecVertex... " << endmsg;
-          }
-
-      }
-
-    } else if( sel->classID() == LHCb::Track::classID() ) {
-
-      const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-      if (tsel.size() >0) {
-        result = IParticleTisTos::tisTos<Track>( convert<Track>( tsel.begin(), tsel.end() ));
-      }
-      
-    } else if( sel->classID() == LHCb::RecVertex::classID() ) {
-
-      const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-      if (tsel.size() >0) {
-        result = IParticleTisTos::tisTos<RecVertex>( convert<RecVertex>(tsel.begin(),tsel.end() ) );
-      }
-
-    }  else if( sel->classID() == LHCb::Particle::classID() ) {
-
-      const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-      if( tsel.size() > 0 ){
-        result = IParticleTisTos::tisTos<Particle>(convert<Particle>( tsel.begin(), tsel.end() ));
-      }
-
-    } else {
-      std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(), sel->inputSelectionsIDs().end());
-      if (!dependencies.empty()) {
-        result = ITriggerSelectionTisTos::tisTosSelection(dependencies);        
-      } else {
-        // @TODO: warning: hltDataSvc doesn't know about selInput...
-      }
-
-    }
-  }
-
-  if( decision )result |= kDecision; 
-  storeInCache(selectionName,result);
-  return result;  
-}
-
-
-
-// single complete Trigger Selection TisTos  (define Offline Input before calling)
-std::string TriggerSelectionTisTosInHlt::analysisReportSelection( const std::string & selectionName )
-{
-
-
-  std::ostringstream report;
-  report << offset() << " Selection " + selectionName + " ";  
-
-  unsigned int result=0;
-
-  getHltSummary();
-
-  bool decision(false);  
-  // get decision from HltDecReports if can find it
-  bool decFound(false);  
-  if( m_hltDecReports ){
-    const HltDecReport* rep=m_hltDecReports->decReport( selectionName );
-    if( rep ){
-      decision = rep->decision();
-      decFound = true;
-      report << " HltDecReport decision=" << decision;   
-    }    
-  }
-  if( decision )result |= kDecision;  
-
-  const Gaudi::StringKey name(selectionName);
-  // find producer of the selection
-  const IAlgorithm* producer = m_hltInspectorSvc->producer(name);
-  if( !producer ){ report << "not known to HltInspectorSvc " << std::endl; return report.str();}
-  const Hlt::Selection* sel = m_hltDataSvc->retrieve(producer,name);
-  if( !sel ){ report << "not found in HltDataSvc " << std::endl; return report.str();}
-  // unsuccessful selections not allowed to be TisTossed
-  if( !(sel->decision()) ){ report << "decision=false " << std::endl; return report.str();}
-
-  // it is possible that decision was not stored in HltDecReports if this was an intermediate step, thus
-  //   if not found in HltDecReports, set it here
-  // do not overwrite decisions from HltDecReports, since positive selection could have been killed by postscale
-  if( !decFound )decision=true;
-
-  report << " size " << sel->size() << std::endl;
-
-  if( sel->size() > 0 ){
-
-    if( sel->classID() == LHCb::Track::classID() ) {
-
-      const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-      if (tsel.size() >0) {
-        std::vector<Track*> tracks = convert<Track>(tsel.begin(),tsel.end());
-        report << analysisReport<Track>(tracks);
-        result = IParticleTisTos::tisTos<LHCb::Track>(tracks);
-      }
-      
-    } else if( sel->classID() == LHCb::RecVertex::classID() ) {
-
-      const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-      if (tsel.size() >0) {
-        std::vector<RecVertex*> v = convert<RecVertex>( tsel.begin(), tsel.end() );
-        report<< analysisReport<RecVertex>(v);
-        result = IParticleTisTos::tisTos<RecVertex>(v);
-      }
-
-    }  else if( sel->classID() == LHCb::Particle::classID() ) {
-
-      const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-      if( tsel.size() > 0 ){
-        std::vector<Particle*> p = convert<Particle>( tsel.begin(), tsel.end() );
-
-        report<< analysisReport<Particle>(p);
-        result = IParticleTisTos::tisTos<Particle>(p);
-      }
-
-    } else {
-      std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(), sel->inputSelectionsIDs().end());
-      if (!dependencies.empty()) {
-        report << offset() << " Input Selections Vector size=" << dependencies.size() << std::endl;  
-        ++m_reportDepth;
-        for( std::vector<std::string>::const_iterator iSel=dependencies.begin();iSel!=dependencies.end();++iSel){
-          report << analysisReportSelection( *iSel );
+    bool decision( false );
+    // get decision from HltDecReports if can find it
+    bool decFound( false );
+    if ( m_hltDecReports ) {
+        const HltDecReport* rep = m_hltDecReports->decReport( name.str() );
+        if ( rep ) {
+            decision = rep->decision();
+            decFound = true;
         }
-        --m_reportDepth;
-        result = ITriggerSelectionTisTos::tisTosSelection(dependencies);        
-      } else {
-        report << " not a Track/RecVertex/Particle selection and no Input Selections " << std::endl;        
-      }
-
     }
-  }
-  if( decision )result |= kDecision;  
-  TisTosTob res( result );
-  report << offset() << " Selection " + selectionName + " "  
-         << " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps() 
-         << " decision= " << res.decision() << std::endl;
-  return report.str();
+    if ( decision ) result |= kDecision;
+
+    // find producer of the selection
+    const IAlgorithm* producer = m_hltInspectorSvc->producer( name );
+    const Hlt::Selection* sel =
+        producer ? m_hltDataSvc->retrieve( producer, name ) : nullptr;
+    // unsuccessful selections not allowed to be TisTossed
+    if ( !sel || !sel->decision() ) {
+        storeInCache( name, result );
+        return result;
+    }
+
+    // it is possible that decision was not stored in HltDecReports if this was an
+    // intermediate step, thus
+    //   if not found in HltDecReports, set it here
+    // do not overwrite decisions from HltDecReports, since positive selection could
+    // have been killed by postscale
+    if ( !decFound ) decision = true;
+
+    // classify the decision
+    if ( !sel->empty() ) {
+
+        if ( sel->classID() == Hlt::Candidate::classID() ) {
+            const Hlt::TSelection<Hlt::Candidate>& tsel =
+                dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>( *sel );
+            // grab the first one, and pray for a uniform list...
+            const Hlt::Candidate* cand = tsel.front();
+            const Hlt::Stage* stage = cand->currentStage();
+            if ( stage->get<LHCb::Track>() ) {
+                result = IParticleTisTos::tisTos( convertCandidate<Track>( tsel ) );
+            } else if ( stage->get<LHCb::RecVertex>() ) {
+                result =
+                    IParticleTisTos::tisTos( convertCandidate<RecVertex>( tsel ) );
+            } else {
+                error()
+                    << " got a candidate which is neither Track nor RecVertex... "
+                    << endmsg;
+            }
+
+        } else if ( sel->classID() == LHCb::Track::classID() ) {
+
+            auto& tsel = dynamic_cast<const Hlt::TrackSelection&>( *sel );
+            result = IParticleTisTos::tisTos( convert( tsel ) );
+
+        } else if ( sel->classID() == LHCb::RecVertex::classID() ) {
+
+            auto& tsel = dynamic_cast<const Hlt::VertexSelection&>( *sel );
+            result = IParticleTisTos::tisTos( convert( tsel ) );
+
+        } else if ( sel->classID() == LHCb::Particle::classID() ) {
+
+            auto& tsel =
+                dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>( *sel );
+            result = IParticleTisTos::tisTos( convert( tsel ) );
+
+        } else {
+            std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(),
+                                                   sel->inputSelectionsIDs().end() );
+            if ( !dependencies.empty() ) {
+                result = ITriggerSelectionTisTos::tisTosSelection( dependencies );
+            } else {
+                // @TODO: warning: hltDataSvc doesn't know about selInput...
+            }
+        }
+    }
+
+    if ( decision ) result |= kDecision;
+    storeInCache( name, result );
+    return result;
 }
 
- 
-// fast check for TOS
-#define TOSTISTPS( FUN )\
-{\
-  getHltSummary();\
-  if( m_hltDecReports ){\
-    const HltDecReport* rep=m_hltDecReports->decReport( selectionName );\
-    if( rep ){\
-      if( !(rep->decision()) )return false;      \
-    }    \
-  }\
-  const Gaudi::StringKey name(selectionName);\
-  const IAlgorithm* producer = m_hltInspectorSvc->producer(name);\
-  if( !producer )return false;\
-  const Hlt::Selection* sel = m_hltDataSvc->retrieve(producer,name);\
-  if( !sel )return false;\
-  if( !(sel->decision()) )return false;\
-  if( !(sel->size()) )return false;\
-  if( sel->classID() == Hlt::Candidate::classID() ) {\
-    const Hlt::TSelection<Hlt::Candidate>& tsel = dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>(*sel);   \
-    if (tsel.size() >0) {\
-          const Hlt::Candidate *cand = tsel.front(); \
-          const Hlt::Stage* stage = cand->currentStage(); \
-          if ( stage->get<LHCb::Track>() != 0 ) { \
-            std::vector<Track*> tracks = convertCandidate<Track>(tsel.begin(),tsel.end());\
-            return IParticleTisTos::FUN<LHCb::Track>(tracks);\
-          } else if (stage->get<LHCb::RecVertex>()!=0) {\
-            std::vector<RecVertex*> vertices = convertCandidate<RecVertex>(tsel.begin(),tsel.end());\
-            return IParticleTisTos::FUN<RecVertex>(vertices);\
-          } else {\
-            error() << " got a candidate which is neither Track nor RecVertex... " << endmsg;\
-            return false;\
-          }\
-    }      \
-  } else if( sel->classID() == LHCb::Track::classID() ) {\
-    const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   \
-    if (tsel.size() >0) {\
-      std::vector<Track*> tracks = convert<Track>(tsel.begin(),tsel.end());\
-      return IParticleTisTos::FUN<LHCb::Track>(tracks);\
-    }      \
-  } else if( sel->classID() == LHCb::RecVertex::classID() ) {\
-    const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     \
-    if (tsel.size() >0) {\
-      std::vector<RecVertex*> vertices = convert<RecVertex>(tsel.begin(),tsel.end());\
-      return IParticleTisTos::FUN<RecVertex>(vertices);\
-    }\
-  }  else if( sel->classID() == LHCb::Particle::classID() ) {\
-    const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   \
-    if( tsel.size() > 0 ){\
-      std::vector<Particle*> particles = convert<Particle>(tsel.begin(),tsel.end());\
-      return IParticleTisTos::FUN<Particle>(particles);\
-    }\
-  } else {\
-    std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(), sel->inputSelectionsIDs().end());\
-    if (!dependencies.empty()) {\
-
-bool TriggerSelectionTisTosInHlt::tosSelection( const std::string & selectionName )
-TOSTISTPS( tos )
-      return ITriggerSelectionTisTos::tosSelection(dependencies);        
-    }
-  }
-  return false;  
-}
-
-bool TriggerSelectionTisTosInHlt::tisSelection( const std::string & selectionName )
-TOSTISTPS( tis )
-      return ITriggerSelectionTisTos::tisSelection(dependencies);        
-    }
-  }
-  return false;  
-}
-
-bool TriggerSelectionTisTosInHlt::tusSelection( const std::string & selectionName )
-TOSTISTPS( tus )
-      return ITriggerSelectionTisTos::tusSelection(dependencies);        
-    }
-  }
-  return false;  
-}
-
-// ------------ auxiliary output:  list of LHCbIDs corresponding to present offline input
-std::vector<LHCb::LHCbID> TriggerSelectionTisTosInHlt::offlineLHCbIDs() 
+// single complete Trigger Selection TisTos  (define Offline Input before calling)
+std::string TriggerSelectionTisTosInHlt::analysisReportSelection(
+    const std::string& selectionName )
 {
-  return signal();
+    std::ostringstream report;
+    report << offset() << " Selection " + selectionName + " ";
+    const Gaudi::StringKey name{selectionName};
+
+    unsigned int result = 0;
+
+    getHltSummary();
+
+    bool decision( false );
+    // get decision from HltDecReports if can find it
+    bool decFound( false );
+    if ( m_hltDecReports ) {
+        const HltDecReport* rep = m_hltDecReports->decReport( name.str() );
+        if ( rep ) {
+            decision = rep->decision();
+            decFound = true;
+            report << " HltDecReport decision=" << decision;
+        }
+    }
+    if ( decision ) result |= kDecision;
+
+    // find producer of the selection
+    const IAlgorithm* producer = m_hltInspectorSvc->producer( name );
+    if ( !producer ) {
+        report << "not known to HltInspectorSvc " << std::endl;
+        return report.str();
+    }
+    const Hlt::Selection* sel = m_hltDataSvc->retrieve( producer, name );
+    if ( !sel ) {
+        report << "not found in HltDataSvc " << std::endl;
+        return report.str();
+    }
+    // unsuccessful selections not allowed to be TisTossed
+    if ( !( sel->decision() ) ) {
+        report << "decision=false " << std::endl;
+        return report.str();
+    }
+
+    // it is possible that decision was not stored in HltDecReports if this was an
+    // intermediate step, thus
+    //   if not found in HltDecReports, set it here
+    // do not overwrite decisions from HltDecReports, since positive selection could
+    // have been killed by postscale
+    if ( !decFound ) decision = true;
+
+    report << " size " << sel->size() << std::endl;
+
+    if ( !sel->empty() ) {
+
+        if ( sel->classID() == LHCb::Track::classID() ) {
+
+            auto& tsel = dynamic_cast<const Hlt::TrackSelection&>( *sel );
+            auto tracks = convert( tsel );
+            report << analysisReport( tracks );
+            result = IParticleTisTos::tisTos( tracks );
+
+        } else if ( sel->classID() == LHCb::RecVertex::classID() ) {
+
+            auto& tsel = dynamic_cast<const Hlt::VertexSelection&>( *sel );
+            auto v = convert( tsel );
+            report << analysisReport( v );
+            result = IParticleTisTos::tisTos( v );
+
+        } else if ( sel->classID() == LHCb::Particle::classID() ) {
+
+            auto& tsel =
+                dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>( *sel );
+            auto p = convert( tsel );
+            report << analysisReport( p );
+            result = IParticleTisTos::tisTos( p );
+
+        } else {
+            std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(),
+                                                   sel->inputSelectionsIDs().end() );
+            if ( !dependencies.empty() ) {
+                report << offset()
+                       << " Input Selections Vector size=" << dependencies.size()
+                       << std::endl;
+                ++m_reportDepth;
+                for ( const std::string& isel : dependencies ) {
+                    report << analysisReportSelection( isel );
+                }
+                --m_reportDepth;
+                result = ITriggerSelectionTisTos::tisTosSelection( dependencies );
+            } else {
+                report << " not a Track/RecVertex/Particle selection and no Input "
+                          "Selections " << std::endl;
+            }
+        }
+    }
+    if ( decision ) result |= kDecision;
+    TisTosTob res( result );
+    report << offset() << " Selection " + name.str() + " "
+           << " TIS= " << res.tis() << " TOS= " << res.tos() << " TPS= " << res.tps()
+           << " decision= " << res.decision() << std::endl;
+    return report.str();
 }
 
+// fast check for TOS
+bool TriggerSelectionTisTosInHlt::tosSelection( const std::string& selectionName )
+{
+    return selection( selectionName, applyTos( *this ) );
+}
 
-#define TISTOSSELECTSTORE() \
-      unsigned int result = tisTos(*object);\
-      bool tis,tos,tps;\
-      tis = result & kTIS;\
-      tos = result & kTOS;\
-      tps = result & kTPS;\
-      if(    ((tisRequirement>=kAnything)||(tis==tisRequirement)) \
-             && ((tosRequirement>=kAnything)||(tos==tosRequirement)) \
-             && ((tpsRequirement>=kAnything)||(tps==tpsRequirement)) \
-             ){\
-        HltObjectSummary* hos(0);\
-        for( HltObjectSummarys::iterator ppHos=m_objectSummaries->begin();\
-             ppHos!=m_objectSummaries->end();++ppHos){\
-          HltObjectSummary* pHos(*ppHos);    \
-          if( pHos->summarizedObjectCLID() == object->clID() ){\
-            if( pHos->summarizedObject() == object ) hos = pHos;\
-          }\
-        }\
-        if( !hos ){          \
-          hos = new HltObjectSummary();\
-          m_objectSummaries->push_back(hos);\
-          hos->setSummarizedObjectCLID( object->clID() );\
-          hos->setSummarizedObject(object);\
-        }        \
-        matchedObjectSummaries.push_back( hos );\
-      }\
+bool TriggerSelectionTisTosInHlt::tisSelection( const std::string& selectionName )
+{
+    return selection( selectionName, applyTis( *this ) );
+}
 
+bool TriggerSelectionTisTosInHlt::tusSelection( const std::string& selectionName )
+{
+    return selection( selectionName, applyTus( *this ) );
+}
 
-// ------------  additional functionality:  lists of object summaries for tracks/vertices/particles from trigger selections
+template <typename T>
+bool TriggerSelectionTisTosInHlt::selection( const std::string& selectionName,
+                                             T action )
+{
+    getHltSummary();
+    if ( m_hltDecReports ) {
+        const HltDecReport* rep = m_hltDecReports->decReport( selectionName );
+        if ( rep && !rep->decision() ) return false;
+    }
+    const Gaudi::StringKey name{selectionName};
+    const IAlgorithm* producer = m_hltInspectorSvc->producer( name );
+    const Hlt::Selection* sel =
+        producer ? m_hltDataSvc->retrieve( producer, name ) : nullptr;
+
+    if ( !sel || !sel->decision() || sel->empty() ) return false;
+
+    if ( sel->classID() == Hlt::Candidate::classID() ) {
+        const Hlt::TSelection<Hlt::Candidate>& tsel =
+            dynamic_cast<const Hlt::TSelection<Hlt::Candidate>&>( *sel );
+        const Hlt::Stage* stage = tsel.front()->currentStage();
+        if ( stage->get<LHCb::Track>() ) {
+            return action( convertCandidate<Track>( tsel ) );
+        }
+        if ( stage->get<LHCb::RecVertex>() ) {
+            return action( convertCandidate<RecVertex>( tsel ) );
+        }
+        error() << " got a candidate which is neither Track nor RecVertex... "
+                << endmsg;
+        return false;
+    }
+    auto* tracks = sel->down_cast<LHCb::Track>();
+    if ( tracks ) return action( convert( *tracks ) );
+    auto* vtxs = sel->down_cast<LHCb::RecVertex>();
+    if ( vtxs ) return action( convert( *vtxs ) );
+    auto* parts = sel->down_cast<LHCb::Particle>();
+    if ( parts ) return action( convert( *parts ) );
+    // check dependencies -- if any...
+    return !sel->inputSelectionsIDs().empty() &&
+           action( std::vector<std::string>{sel->inputSelectionsIDs().begin(),
+                                            sel->inputSelectionsIDs().end()} );
+}
+
+// ------------ auxiliary output:  list of LHCbIDs corresponding to present offline
+// input
+std::vector<LHCb::LHCbID> TriggerSelectionTisTosInHlt::offlineLHCbIDs()
+{
+    return signal();
+}
+
+// ------------  additional functionality:  lists of object summaries for
+// tracks/vertices/particles from trigger selections
 //               satisfying TIS, TOS requirements
 
-std::vector<const LHCb::HltObjectSummary*> TriggerSelectionTisTosInHlt::hltSelectionObjectSummaries(
-                      const std::string & selectionName,
-                      unsigned int tisRequirement,
-                      unsigned int tosRequirement,
-                      unsigned int tpsRequirement)
+template <typename T>
+std::vector<const LHCb::HltObjectSummary*>
+TriggerSelectionTisTosInHlt::hltSelectionObjectSummaries(
+    const Hlt::TSelection<T>& sel, unsigned int tisRequirement,
+    unsigned int tosRequirement, unsigned int tpsRequirement )
 {
-  std::vector<const LHCb::HltObjectSummary*> matchedObjectSummaries;
-  
-  getHltSummary();
-  
-  if( NULL==m_objectSummaries ) m_objectSummaries =  getOrCreate<HltObjectSummary::Container,HltObjectSummary::Container>("/Event/Hlt/TriggerSelectionTisTosInHltStore");
-  
-  if( NULL==m_objectSummaries )
-  {
-    error() << " Unable to create summary container object " << endmsg;
-  }  
+    std::vector<const LHCb::HltObjectSummary*> matched;
+    matched.reserve( sel.size() );
+    isTisTos pred{this, tisRequirement, tosRequirement, tpsRequirement};
+    getSummary get_summary{*m_objectSummaries};
+    for ( T* object : convert( sel ) ) {
+        if ( pred( *object ) ) matched.push_back( get_summary( object ) );
+    }
+    return matched;
+}
 
+std::vector<const LHCb::HltObjectSummary*>
+TriggerSelectionTisTosInHlt::hltSelectionObjectSummaries(
+    const std::string& selectionName, unsigned int tisRequirement,
+    unsigned int tosRequirement, unsigned int tpsRequirement )
+{
+    getHltSummary();
+    if ( !m_objectSummaries )
+        m_objectSummaries =
+            getOrCreate<HltObjectSummary::Container, HltObjectSummary::Container>(
+                "/Event/Hlt/TriggerSelectionTisTosInHltStore" );
 
-  const Gaudi::StringKey name(selectionName);
-  // find producer of the selection
-  const IAlgorithm* producer = m_hltInspectorSvc->producer(name);
-  if( !producer )return matchedObjectSummaries;
-  const Hlt::Selection* sel = m_hltDataSvc->retrieve(producer,name);
-  if( !sel )return matchedObjectSummaries;
-  if( !(sel->size()) )return matchedObjectSummaries;
-
-  if( sel->classID() == LHCb::Track::classID() ) {
-
-    const Hlt::TrackSelection& tsel = dynamic_cast<const Hlt::TrackSelection&>(*sel);   
-    std::vector<Track*> objects = convert<Track>(tsel.begin(),tsel.end());
-    for( std::vector<Track*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
-      Track* object= *obj; 
-      TISTOSSELECTSTORE()
+    if ( !m_objectSummaries ) {
+        error() << " Unable to create summary container object " << endmsg;
     }
 
-  } else if( sel->classID() == LHCb::RecVertex::classID() ) {
+    // find producer of the selection
+    const Gaudi::StringKey name{selectionName};
+    const IAlgorithm* producer = m_hltInspectorSvc->producer( name );
+    const Hlt::Selection* sel =
+        producer ? m_hltDataSvc->retrieve( producer, name ) : nullptr;
 
-    const Hlt::VertexSelection& tsel = dynamic_cast<const Hlt::VertexSelection&>(*sel);     
-    std::vector<RecVertex*> objects = convert<RecVertex>(tsel.begin(),tsel.end());
-    for( std::vector<RecVertex*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
-      RecVertex* object= *obj; 
-      TISTOSSELECTSTORE()
+    // dispatch to specifically typed function
+    if ( sel && !sel->empty() ) {
+        if ( sel->classID() == LHCb::Track::classID() ) {
+            return hltSelectionObjectSummaries(
+                dynamic_cast<const Hlt::TrackSelection&>( *sel ), tisRequirement,
+                tosRequirement, tpsRequirement );
+        }
+        if ( sel->classID() == LHCb::RecVertex::classID() ) {
+            return hltSelectionObjectSummaries(
+                dynamic_cast<const Hlt::VertexSelection&>( *sel ), tisRequirement,
+                tosRequirement, tpsRequirement );
+        }
+        if ( sel->classID() == LHCb::Particle::classID() ) {
+            return hltSelectionObjectSummaries(
+                dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>( *sel ),
+                tisRequirement, tosRequirement, tpsRequirement );
+        }
+        // oops...  unknown classID!
     }
-
-
-  } else if( sel->classID() == LHCb::Particle::classID() ) {
-
-    const Hlt::TSelection<LHCb::Particle>& tsel = dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>(*sel);   
-    std::vector<Particle*> objects = convert<Particle>(tsel.begin(),tsel.end());
-    for( std::vector<Particle*>::const_iterator obj=objects.begin();obj!=objects.end();++obj){
-      Particle* object= *obj; 
-      TISTOSSELECTSTORE()      
-    }
-    
-  }
-  
-  return matchedObjectSummaries;
+    return {};
 }
