@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatMatchL0MuonTool );
+DECLARE_TOOL_FACTORY( PatMatchL0MuonTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

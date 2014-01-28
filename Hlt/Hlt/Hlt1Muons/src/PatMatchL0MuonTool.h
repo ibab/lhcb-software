@@ -48,7 +48,6 @@ class PatMatchL0MuonTool : public GaudiTool, virtual public ITrackMatch
 
     // use tool for momentum parametrisation
     std::string m_fastMomentumToolName;
-
     ITrackMomentumEstimate* m_fastMomentumTool;
 
     double m_zMagnet;
@@ -60,7 +59,6 @@ class PatMatchL0MuonTool : public GaudiTool, virtual public ITrackMatch
     double m_dyTol;
     double m_dyTolSlope;
     double m_magnetBend;
-    double m_momentumScale;
     double m_maxChi2;
 };
 #endif // PATMATCHL0MUONTOOL_H

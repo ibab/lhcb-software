@@ -33,7 +33,7 @@ using std::set;
 using std::string;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( IsMuonTool );
+DECLARE_TOOL_FACTORY( IsMuonTool )
 
 
 //=============================================================================

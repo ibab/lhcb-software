@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-01-28 - Gerhard Raven
+ - remove spurious ;
+ - move another compile-time constant class members out of class
+
 ! 2014-01-26 - Gerhard Raven
  - fix bug in HltVeloIsMuon: it 'clear's a vector, and subsequently writes beyond 
     the (now zero!) size. It probably intended an 'assign(size(),0)', but that is 

@@ -67,10 +67,6 @@ class MatchVeloMuon : public GaudiHistoTool, virtual public ITracksFromTrack
     // Services
     ILHCbMagnetSvc* m_fieldSvc;
 
-    // Data members
-    std::array<unsigned int, 4> m_order;
-    unsigned int m_nRegions;
-
     // Temporary storage
     Hlt1MuonHit* m_magnetHit;
     Candidates m_seeds;

@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Hlt1MuonHitManager );
+DECLARE_TOOL_FACTORY( Hlt1MuonHitManager )
 
 using std::vector;
 using std::sort;

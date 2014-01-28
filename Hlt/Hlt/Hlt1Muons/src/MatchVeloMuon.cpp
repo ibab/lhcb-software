@@ -27,18 +27,17 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MatchVeloMuon );
+DECLARE_TOOL_FACTORY( MatchVeloMuon )
 
 using std::vector;
 using std::less;
+const std::array<unsigned int,4> order{{ 3u, 4u, 5u, 2u }};
 
 //=============================================================================
 MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
                               const IInterface* parent )
     : GaudiHistoTool( type, name, parent )
     , m_fieldSvc{nullptr}
-    , m_order{ {3u, 4u, 5u, 2u}}
-    , m_nRegions{0u}
     , m_magnetHit{nullptr}
     , m_seeds{0}
 {
@@ -103,7 +102,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     // Make a Candidate from the track
     auto veloSeed = std::unique_ptr<Candidate>{new Candidate{&seed}};
 
-    unsigned int seedStation = m_order[0] - 1;
+    unsigned int seedStation = order[0] - 1;
     findSeeds( *veloSeed, seedStation );
     if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
 
@@ -131,11 +130,11 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
 
     if ( m_setQOverP ) {
         auto best =
-            std::min_element( goodCandidates.begin(), goodCandidates.end(),
+            std::min_element( std::begin(goodCandidates), std::end(goodCandidates),
                               []( const Candidate* lhs, const Candidate* rhs ) {
                 return lhs->chi2DoF() < rhs->chi2DoF();
             } );
-        if ( best != goodCandidates.end() ) {
+        if ( best != std::end(goodCandidates) ) {
             std::unique_ptr<LHCb::Track> out{seed.clone()};
             out->addToAncestors( seed );
             const Candidate* c = *best;
@@ -238,9 +237,9 @@ void MatchVeloMuon::addHits( Candidate& seed )
     double xMagnet = m_magnetHit->x();
 
     unsigned int nMissed = 0;
-    for ( unsigned int i = 1; i < m_order.size(); ++i ) {
+    for ( unsigned int i = 1; i < order.size(); ++i ) {
         // find candidate hits
-        unsigned int s = m_order[i] - 1;
+        unsigned int s = order[i] - 1;
 
         // Get the station we're looking at.
         const Hlt1MuonStation& station = m_hitManager->station( s );
