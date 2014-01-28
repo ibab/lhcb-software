@@ -16,7 +16,6 @@ PrintDuplicates::PrintDuplicates( const std::string& name,
 : DaVinciAlgorithm ( name , pSvcLocator ),
   m_printDecay ( NULL )
 {
-  declareProperty( "EnergyPrecision", m_dpPrec = 2 );
   declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 1 );
   declareProperty( "DeepCheck", m_deepCheck = true );
   //setProperty( "OutputLevel", 1 );
@@ -33,13 +32,11 @@ PrintDuplicates::~PrintDuplicates() {}
 StatusCode PrintDuplicates::execute()
 {
 
-  typedef std::map< std::pair<Hash32,double>, LHCb::Particle::ConstVector > PartHashMap;
+  typedef std::map< Hash32, LHCb::Particle::ConstVector > PartHashMap;
   typedef std::map< std::string, PartHashMap > LocHashMap;
 
   // local map for this event
   LocHashMap hashMap;
-
-  const unsigned int dpScale = std::pow(10,m_dpPrec);
 
   // Loop over particles and compute hashes
   for ( LHCb::Particle::Range::const_iterator ip = particles().begin();
@@ -49,11 +46,8 @@ StatusCode PrintDuplicates::execute()
     if ( !*ip ) continue;
     // compute the hash for this decay tree
     const Hash32 h = getLHCbIDsHash( *ip );
-    // current have to use energy to take PID swaps into account.
-    // Would be better to have the option to include this in the hash. To Do.
-    const double e = boost::math::round( dpScale * (*ip)->momentum().e() ) / dpScale;
-    // save this energy/hash pair
-    (hashMap[tesLocation(*ip)])[std::make_pair(h,e)] .push_back ( *ip );
+    // save this entry
+    (hashMap[tesLocation(*ip)])[h] .push_back ( *ip );
   }
 
   // Look for duplicates within TES locations

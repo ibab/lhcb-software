@@ -43,7 +43,7 @@ public:
 
 private:
 
-  typedef std::size_t         Hash32;
+  typedef boost::uint32_t     Hash32;
   typedef boost::uint64_t     Hash64;
   typedef std::vector<Hash32> Hashes32;
   typedef std::vector<Hash64> Hashes64;
@@ -89,7 +89,6 @@ private:
 
 private:
 
-  unsigned int m_dpPrec;      ///< Number of d.p. precision to compare energy values to
   IPrintDecay * m_printDecay; ///< Tool to print the decay tree
   unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
   bool m_deepCheck;           ///< Perform a deep check of duplicates
