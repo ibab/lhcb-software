@@ -5,6 +5,10 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2014-01-28 - Gerhard Raven
+ - replace exists / get combination if getIfExists
+ - remove spurious ;
+
 ! 2014-01-25 - Gerhard Raven
  - fix clang error
 

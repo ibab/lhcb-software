@@ -75,7 +75,7 @@ HltL0GlobalMonitor::HltL0GlobalMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltL0GlobalMonitor::~HltL0GlobalMonitor() {};
+HltL0GlobalMonitor::~HltL0GlobalMonitor() {}
 
 //=============================================================================
 // Initialization
@@ -126,7 +126,7 @@ StatusCode HltL0GlobalMonitor::initialize()
     declareInfo( "COUNTER_TO_RATE[L0Accept]", counter( "L0Accept" ), "L0Accept" );
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -261,4 +261,4 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
         fill( m_histL0EnabledHLT1, m_nboflabels - 1, hlt1 );
         fill( m_histL0EnabledHLT2, m_nboflabels - 1, hlt2 );
     }
-};
+}
