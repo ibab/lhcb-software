@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-01-28 - Rob Lambert
+ - Handle the case where decoders are given whose bank is not known in the target format! see task #48807
+ - update the DAQSys test to expect Hlt1/Track/Velo
+
 ! 2014-01-27 - Sebastian Neubert
  - Added HltTrackReportsDecoder
  - Added simple RawEventdump script

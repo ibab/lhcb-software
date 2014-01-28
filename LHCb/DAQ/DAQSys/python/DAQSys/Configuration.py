@@ -74,7 +74,7 @@ class DecodeRawEvent(ConfigurableUser):
             return
         #load dictionary of possible raw event locations
         RawEventFormatConf().loadIfRequired()
-        from RawEventCompat.Configuration import WhereBest, WhereAll
+        from RawEventCompat.Configuration import WhereBest, WhereAll, KnownBanks
         v=self.getProp("OverrideInputs")
         
         if adecoder is None:
@@ -87,10 +87,23 @@ class DecodeRawEvent(ConfigurableUser):
                     if b not in banks:
                         banks.append(b)
             b_locs_toset={}
+            known=KnownBanks(v)
             for b in banks:
-                b_locs_toset[b]=WhereBest(b,v)
+                if b not in known:
+                    #I can't reconfigure it if the bank type is not known!
+                    from DAQSys.DecoderClass import decodersForBank
+                    d=decodersForBank(self.__db__(),b)
+                    if len(d):
+                        names=[di.FullName for di in d]
+                        print "# WARNING: Re-configuration of inputs for "+names.__str__()+" could not be done, because the bank it decodes '"+b+"' does not appear in the list of available banks for target version '"+v+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries"
+                    else:
+                        #there are no decoders for this bank, just ignore it
+                        pass
+                else:
+                    #the bank type is known
+                    b_locs_toset[b]=WhereBest(b,v)
             reset_list={}
-            for b in banks:
+            for b in b_locs_toset:
                 from DAQSys.DecoderClass import decodersForBank, usedDecoders
                 for d in decodersForBank(self.__db__(),b)+usedDecoders(self.__db__(),b):
                     if d.listInputs()[0]!=b_locs_toset[b]:
@@ -106,6 +119,11 @@ class DecodeRawEvent(ConfigurableUser):
             return
         #when a decoder is passed...
         d=adecoder
+        known=KnownBanks(v)
+        #have to skip it if it decodes an unknown bank!
+        for b in d.Banks:
+            if b not in known:
+                raise ValueError("The algorithm "+d.FullName+" should not have been passed into the overrideInputs method, because it decodes '"+b+"' banks which do not exist in the target format version '"+v+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries")
         dest=WhereBest(d.Banks[0],v)
         
         #does it make sense to overwrite these banks?
