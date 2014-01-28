@@ -9,6 +9,8 @@
 #include "CaloUtils/CaloParticle.h"
 // local
 #include "ResolvedPi0Maker.h"
+// STL
+#include <sstream>
 
 /** @file
  *
@@ -34,9 +36,9 @@ DECLARE_ALGORITHM_FACTORY( ResolvedPi0Maker )
  *  @param parent tool parent
  */
 // ============================================================================
-  ResolvedPi0Maker::ResolvedPi0Maker
+ResolvedPi0Maker::ResolvedPi0Maker
 ( const std::string& name,ISvcLocator* pSvcLocator  )
-  : Pi0MakerBase           ( name, pSvcLocator )
+: Pi0MakerBase           ( name, pSvcLocator )
   , m_photonMakerType  ()
   , m_photonMaker      (NULL)
   , m_singlePhotonUse  ()
@@ -59,19 +61,13 @@ ResolvedPi0Maker::~ResolvedPi0Maker() {}
 StatusCode ResolvedPi0Maker::initialize    ()
 {
   // initialize the base class
-  StatusCode sc = Pi0MakerBase::initialize();
-  if( sc.isFailure() ) { return Error(" Unable to initialize Pi0MakerBase",sc);}
+  const StatusCode sc = Pi0MakerBase::initialize();
+  if ( sc.isFailure() ) { return Error(" Unable to initialize Pi0MakerBase",sc);}
 
   // Retrieve PhotonMaker tool
   m_photonMaker = tool< ICaloParticleMaker>( m_photonMakerType ,  this ) ;
 
-  return StatusCode::SUCCESS ;
-}
-// ============================================================================
-
-StatusCode ResolvedPi0Maker::finalize      ()
-{
-  return Pi0MakerBase::finalize ();
+  return sc ;
 }
 
 // ============================================================================
@@ -83,7 +79,8 @@ StatusCode ResolvedPi0Maker::finalize      ()
 StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 {
   // avoid some long names
-  if( !pi0s.empty() ){
+  if( !pi0s.empty() )
+  {
     Warning( "makeParticles(): extend non-empty vector of Particles" ).ignore() ;
   }
 
@@ -94,9 +91,10 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   LHCb::Particle::Vector photons;
   StatusCode sc = m_photonMaker->makeParticles(photons);
   if (!sc) return sc;
-  if( 0 == photons.size() ) {
-    Warning("PhotonMaker return empty container - No resolved "+ m_pid + " to be created").ignore();
-    return StatusCode::SUCCESS;
+  if ( photons.empty() ) 
+  {
+    return Warning( "PhotonMaker return empty container - No resolved "+ m_pid + " to be created",
+                    StatusCode::SUCCESS, 0 );
   }
 
   unsigned long nGamma = photons.size() ;
@@ -119,13 +117,13 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
         part=ip;
       }
     }
-    orderedPhotons.push_back( std::pair< LHCb::CaloParticle , bool > 
+    orderedPhotons.push_back( std::pair< LHCb::CaloParticle , bool >
                               (LHCb::CaloParticle( *part ,m_point , m_pointErr), false) );
     photons.erase(part);
   }
-  if ( 0 != photons.size() ) {
-    err() <<"Photon candidate sorting was wrong..."<<endreq;
-    return StatusCode::FAILURE;
+  if ( !photons.empty() )
+  {
+    return Error( "Photon candidate sorting was wrong..." );
   }
 
   // Make Pi0 candidates from sorted list
@@ -145,7 +143,9 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
       if ( scc.isFailure() ){
         delete pi0;
         nSkip++;
-        warning() << "Unable to fill Resolved " << m_pid << " parameters, skip particle [" << nSkip << "]"<< endreq;
+        std::ostringstream mess;
+        mess << "Unable to fill Resolved " << m_pid << " parameters, skip particle [" << nSkip << "]";
+        Warning(mess.str()).ignore();
         continue;
       }
       // fill container
@@ -169,7 +169,8 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
 
 
       // print out
-      if ( msgLevel(MSG::VERBOSE)){
+      if ( msgLevel(MSG::VERBOSE))
+      {
         verbose() << " ---- Resolved " << m_pid <<" found [" << nPi0 << "]"<< endreq;
         verbose() << "Point   : " << pi0->referencePoint() << endreq;
         verbose() << "Pt("<<m_pid<<") : "  << pi0->momentum().Pt() << endreq;
@@ -192,7 +193,8 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     }
   }
 
-  if (msgLevel(MSG::DEBUG)){
+  if (msgLevel(MSG::DEBUG))
+  {
     debug() << " " << endreq;
     debug() << "-----------------------" << endreq;
     debug() << " Filtered and created :" << endreq;
@@ -233,9 +235,11 @@ StatusCode ResolvedPi0Maker::makePi0(const LHCb::CaloParticle& g1,
   pi0->setMeasuredMass( caloPi0.mass()     ) ;
   pi0->setMeasuredMassErr( caloPi0.emass() ) ;
 
-  if( caloPi0.status() !=0 ){
-    warning() << "CaloParticle status/flag : " << caloPi0.status() << "/" << caloPi0.flag();
-    return StatusCode::FAILURE;
+  if( caloPi0.status() !=0 )
+  {
+    std::ostringstream mess;
+    mess << "CaloParticle status/flag : " << caloPi0.status() << "/" << caloPi0.flag();
+    return Warning( mess.str() );
   }
   return StatusCode::SUCCESS;
 }
@@ -251,8 +255,8 @@ bool ResolvedPi0Maker::selPi0(const LHCb::CaloParticle& g1,
   pi0.addCaloPosition(g2.particle() );
   double bal = fabs( (g1.particle()->momentum().e() - g2.particle()->momentum().e())
                      / (g1.particle()->momentum().e() + g2.particle()->momentum().e() ) );
-  if (fabs(pi0.mass()-m_Mass) < m_MassWin 
-      && pi0.pt() > m_PtCut 
+  if (fabs(pi0.mass()-m_Mass) < m_MassWin
+      && pi0.pt() > m_PtCut
       && ( m_minbal <0 || bal > m_minbal )
       && ( m_maxbal <0 || bal < m_maxbal ) ) isGood=true;
   return isGood;

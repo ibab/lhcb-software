@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-01-28 - Chris Jones
+ - Make a warning message from ResolvedPi0Maker about an empty photon container
+   less dramatic.
+ - Also make some other messages from ResolvedPi0Maker use the Gaudi message 
+   suppression system.
+
 !========================= ParticleMaker v6r8p1 2014-01-13 =========================
 ! 2014-01-08 - Rob Lambert
  - Move always to info printout in finalize to match the other algorithms
