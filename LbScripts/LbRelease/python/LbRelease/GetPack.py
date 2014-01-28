@@ -834,7 +834,7 @@ class GetPack(Script):
 
         tmpVersion = self.project_version or self.requested_package_version or ""
         from LbConfiguration.Version import isValidBranchName
-        if isValidBranchName(tmpversion):
+        if isValidBranchName(tmpVersion):
             # version ending with 'b' implies --branches
             self.options.branches = True
 
