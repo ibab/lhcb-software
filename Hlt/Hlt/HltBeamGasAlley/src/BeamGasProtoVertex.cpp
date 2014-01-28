@@ -39,7 +39,7 @@ BeamGasProtoVertex::BeamGasProtoVertex( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-BeamGasProtoVertex::~BeamGasProtoVertex() {};
+BeamGasProtoVertex::~BeamGasProtoVertex() {}
 
 //=============================================================================
 // Initialization
@@ -74,7 +74,7 @@ StatusCode BeamGasProtoVertex::initialize()
     assert( minTracksToAccept() > 0 );
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Define Member Functions

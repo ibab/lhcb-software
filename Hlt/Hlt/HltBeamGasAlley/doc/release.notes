@@ -4,6 +4,9 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+! 2014-01-28 - Gerhard Raven
+ - remove extraneous ; 
+
 ! 2014-01-23 - Gerhard Raven
  - run clang-format 
 
