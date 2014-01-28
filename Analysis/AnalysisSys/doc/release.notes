@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2014-01-28 - Chris Jones
+ - Remove Phys/IncTopoVert, moved to the Stripping project.
+
 </PRE><H1><A NAME=v11r4>2013-12-18 Analysis v11r4</A></H1><PRE>
 New development release, built against Phys v17r4.
 
