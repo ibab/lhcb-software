@@ -33,7 +33,7 @@ HltLumiOdinReader::HltLumiOdinReader( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltLumiOdinReader::~HltLumiOdinReader() {};
+HltLumiOdinReader::~HltLumiOdinReader() {}
 
 //=============================================================================
 // Initialization
@@ -48,7 +48,7 @@ StatusCode HltLumiOdinReader::initialize()
     m_selection.registerSelection();
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -73,5 +73,5 @@ StatusCode HltLumiOdinReader::execute()
     m_selection.output()->setDecision( true );
 
     return StatusCode::SUCCESS;
-};
+}
 

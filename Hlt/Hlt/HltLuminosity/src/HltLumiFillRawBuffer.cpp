@@ -37,7 +37,7 @@ HltLumiFillRawBuffer::HltLumiFillRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-HltLumiFillRawBuffer::~HltLumiFillRawBuffer() {};
+HltLumiFillRawBuffer::~HltLumiFillRawBuffer() {}
 
 //=============================================================================
 // Initialization
@@ -55,7 +55,7 @@ StatusCode HltLumiFillRawBuffer::initialize()
     m_LastKey = LHCb::LumiCounters::LastGlobal;
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -95,7 +95,7 @@ StatusCode HltLumiFillRawBuffer::execute()
         verbose() << endmsg;
     }
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -109,7 +109,7 @@ StatusCode HltLumiFillRawBuffer::finalize()
                << endmsg;
     }
     return GaudiAlgorithm::finalize(); // must be called after all other actions
-};
+}
 
 //=========================================================================
 //  Fill the data bank, structure: Key (upper 16 bits) + value
@@ -139,5 +139,5 @@ void HltLumiFillRawBuffer::fillDataBankShort()
             }
         }
     }
-};
+}
 //=============================================================================

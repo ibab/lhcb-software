@@ -36,7 +36,7 @@ LumiCountHltTracks::LumiCountHltTracks( const std::string& name,
     declareProperty( "CounterName", m_CounterName );
     declareProperty( "OutputContainer",
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
-};
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -80,7 +80,7 @@ StatusCode LumiCountHltTracks::initialize()
     // ------------------------------------------
 
     return sc;
-};
+}
 
 //=============================================================================
 // Main execution

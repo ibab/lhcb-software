@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-01-28 - Gerhard Raven
+ - remove extraneous ;
+
 ! 2014-01-24 - Gerhard Raven
  - switch to range-based for loops
 
