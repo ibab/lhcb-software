@@ -72,6 +72,14 @@ def _replaceWrap(aloc):
 # Simple python functions
 ####################################################
 
+def KnownBanks(version,locations=None,recodict=None):
+    """Return a list of all the banks that I know the locations of in a given version"""
+    #find dictionaries
+    locations,recodict=_getDict(locations,recodict)
+    #check the options
+    version=_checkv(version, locations,recodict)
+    return locations[version].keys()
+
 def WhereAll(bank,version,locations=None,recodict=None):
     """Return a search path, all possible places to find a bank in a given version"""
     #find dictionaries

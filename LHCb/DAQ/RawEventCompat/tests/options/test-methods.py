@@ -11,6 +11,12 @@ test_locations={
         "Bank_A" : "FooBar",
         "Bank_B" : ["FooBar","Spam"],
         "Bank_C" : "FooBar"
+        },
+    7.0 : {
+        "Bank_A" : "FooBar",
+        "Bank_B" : ["FooBar","Spam"],
+        "Bank_D" : "FooBar",
+        "Bank_E" : "FooBar"
         }
     }
 
@@ -30,6 +36,9 @@ for version in test_versions:
 
 for version in test_locations:
     conf._checkv(version)
+
+if conf.KnownBanks(7.0)!=test_locations[7.0].keys():
+    raise ValueError("KnownBanks method fails!")
 
 if conf.WhereAll("Bank_B",99.0)!=test_locations[99.0]["Bank_B"]:
     raise ValueError("WhereAll method fails")
