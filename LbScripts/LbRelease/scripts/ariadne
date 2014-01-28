@@ -1,7 +1,7 @@
 #!/bin/bash
 
 setup_env () {
-    . SetupProject.sh --silent Tools --runtime LCGCMT --use Ariadne
+    . SetupProject.sh --silent Tools --use Ariadne
 
     if [ "$SetupProjectStatus" != 0 ] ; then
         echo "ERROR: Cannot prepare the environment to use Ariadne."
@@ -10,7 +10,7 @@ setup_env () {
 }
 
 case $1 in
-  add)
+  add | update | isolate | remove )
     command -v cern-get-sso-cookie >/dev/null 2>&1 || { echo >&2 "I need 'cern-get-sso-cookie' package to run but it's not installed. Aborting."; exit 1; }
     cookie_file=/tmp/$USER/ssocookie-ariadne.txt
     cern-get-sso-cookie --krb -u https://ariadne-lhcb.cern.ch/ -o $cookie_file
@@ -19,7 +19,7 @@ case $1 in
     fi    
 
     setup_env
-    ariadne_add.py "${@:2}"
+    ariadne_update.py "$@"
     rm -f $cookie_file
     
     exit 0
@@ -31,7 +31,26 @@ case $1 in
     ;;
 
   *)
-    echo "Usage: $0 { add [OPTIONS] NODE_IDENTIFIER [INSTRUCTION1 [INSTRUCTION2 [...] ]] | q[uery] NODE_IDENTIFIER | help | {add|q[uery]} {-h|--help} }"
+    echo "
+    This is a high-level administration CL tool to manage the Ariadne Knowledge Graph.
+    
+    Syntax, concise:  ariadne DIRECTIVE NODE_IDENTIFIER [INSTRUCTION1 [INSTRUCTION2 [...] ]]
+    Syntax, expanded: ariadne { {add|update} [OPTIONS] NODE_IDENTIFIER [INSTRUCTION1 [INSTRUCTION2 [...] ]] | 
+                                {q[uery]|isolate|remove} NODE_IDENTIFIER | 
+			         help | 
+			        {add|update|q[uery]|isolate|remove} {-h|--help} }"
+    
+    echo "
+    The following ariadne DIRECTIVES can be applied to the Ariadne Knowledge Graph:
+    
+       query     fetch existent graph node, and, optionally, its relationships
+       add       create a new graph node (either with relationships, or without them)
+       update    add or remove relationships of existent graph node
+       isolate   remove all relationships of a graph node in a batch mode (either incomming, outcomming, or both)
+       remove    remove a graph node, together with its relationships
+       
+    See 'ariadne DIRECTIVE -h' for more information on a specific directive.
+    "
     exit 0;;
 
 esac

@@ -1,3 +1,10 @@
+2014-01-28  Illya Shapoval <Illya.Shapoval@cern.ch>
+
+	* scripts/ariadne_add: removed (as obsolete).
+	* scripts/ariadne_query: removed (as obsolete).
+	* scripts/ariadne: environment setup changed,
+	  adapted to new python back-end, help extended.
+
 2014-01-28  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r16
