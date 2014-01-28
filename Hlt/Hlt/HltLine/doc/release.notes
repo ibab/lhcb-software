@@ -5,8 +5,11 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-01-28 - Gerhard Raven
+ - remove extraneous ;, test against 0 
+
 ! 2014-01-25 - Gerhard Raven
-- run clang-format
+ - run clang-format
 
 ! 2014-01-08 - Marco Clemencic
  - Minor fix to requirements.

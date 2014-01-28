@@ -35,7 +35,7 @@ class Line : public ::Selection::Line
     GaudiUtils::VectorMap<Gaudi::StringKey, const Hlt::Selection*> m_selections;
 };
 
-};
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltL0CaloCandidates
@@ -65,21 +65,21 @@ StatusCode Hlt::Line::initialize()
 Hlt::IRegister& Hlt::Line::regSvc() const
 {
     if ( !m_regSvc ) m_regSvc = svc<Hlt::IRegister>( "Hlt::Service" );
-    Assert( m_regSvc != 0, " no Hlt::Service??" );
+    Assert( m_regSvc, " no Hlt::Service??" );
     return *m_regSvc;
 }
 
 Hlt::IData& Hlt::Line::dataSvc() const
 {
     if ( !m_hltSvc ) m_hltSvc = svc<Hlt::IData>( "Hlt::Service" );
-    Assert( m_hltSvc != 0, " no Hlt::Service??" );
+    Assert( m_hltSvc, " no Hlt::Service??" );
     return *m_hltSvc;
 }
 
 Hlt::IInspector& Hlt::Line::inspectionSvc() const
 {
     if ( !m_inspectionSvc ) m_inspectionSvc = svc<Hlt::IInspector>( "Hlt::Service" );
-    Assert( m_inspectionSvc != 0, " no Hlt::Service??" );
+    Assert( m_inspectionSvc, " no Hlt::Service??" );
     return *m_inspectionSvc;
 }
 
