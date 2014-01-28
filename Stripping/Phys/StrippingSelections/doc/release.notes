@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-27 - Xabier Cid Vidal
+ - Correct multiple candidates in StrippingK0sPi0MuMuLines
+
 ! 2014-01-27 - Ronan Wallace
  - DisplVertices change some config MinNJetMass and MinNJetTransvMass.
  - WeAKTJets and WmuAKTJets prescales (1->0.1).

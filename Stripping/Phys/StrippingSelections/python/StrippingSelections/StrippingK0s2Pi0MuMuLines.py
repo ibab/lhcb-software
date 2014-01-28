@@ -132,7 +132,7 @@ class K0s2Pi0MuMuLinesConf(LineBuilder) :
         """
         from Configurables import OfflineVertexFitter
         K0s2Pi0MuMu1 = CombineParticles("Combine"+name)
-        K0s2Pi0MuMu1.DecayDescriptor = "[KS0 -> pi0 J/psi(1S) ]cc"
+        K0s2Pi0MuMu1.DecayDescriptor = "KS0 -> pi0 J/psi(1S)"
         K0s2Pi0MuMu1.addTool( OfflineVertexFitter )
         K0s2Pi0MuMu1.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
         K0s2Pi0MuMu1.OfflineVertexFitter.useResonanceVertex = False
