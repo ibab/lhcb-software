@@ -1,3 +1,7 @@
+2014-01-28  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: Release of v3r16
+
 2014-01-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules
