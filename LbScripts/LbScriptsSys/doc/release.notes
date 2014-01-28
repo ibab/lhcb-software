@@ -1,3 +1,29 @@
+2014-01-28 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r10
+
+	LbConfiguration
+	* LbConfiguration/python/LbConfiguration/Version.py: LBCORE-364, Added
+	new version and branch name patterns
+	* python/LbConfiguration/Platform.py: gcc48 new default for slc6 instead of gcc46
+	* python/LbConfiguration/Repository.py: Added lhcbint SVN repositories,
+	for LHCb internal packages.
+
+	LbRelease
+	* LbRelease/python/LbRelease/GetPack.py
+	* LbRelease/scripts/branch_package
+	Add support for new branch/version naming pattern.
+	See https://its.cern.ch/jira/browse/LBCORE-364
+
+	LbUtils	
+	* cmake: updated CMake support modules
+	* scripts/cern-lxdistcc-wrappers.sh: fixed problem with clang support
+	* python/LbUtils/Path.py: LBCORE-321 Fixed to recognize CVMFS2 filesystems as CVMFS
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r10
+	* scripts/Lbglimpse: Fix by P.Szczypka to handle white spaces
+
 2013-11-15 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r9p2
