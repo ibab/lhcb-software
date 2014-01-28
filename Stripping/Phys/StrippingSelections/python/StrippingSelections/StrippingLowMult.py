@@ -483,6 +483,50 @@ class LowMultConf(LineBuilder) :
                                          D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
                                          )
 
+        self.selDp2KpPipPim = makeD2KPiPi("selDp2KpPipPim",
+                                          decayDesc = [ "D+ -> K+ pi+ pi-" ],
+                                          kaons = self.selKaons,
+                                          pions = self.selPions,
+                                          D2KPiPi_APTmin = config['D2KPiPi_APTmin'],
+                                          D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
+                                          D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
+                                          D2KPiPi_APmin = config['D2KPiPi_APmin'],
+                                          D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
+                                          )
+
+        self.selDm2KmPimPip = makeD2KPiPi("selDm2KmPimPip",
+                                          decayDesc = [ "D- -> K- pi- pi+" ],
+                                          kaons = self.selKaons,
+                                          pions = self.selPions,
+                                          D2KPiPi_APTmin = config['D2KPiPi_APTmin'],
+                                          D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
+                                          D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
+                                          D2KPiPi_APmin = config['D2KPiPi_APmin'],
+                                          D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
+                                          )
+
+        self.selDp2KmPipPip = makeD2KPiPi("selD2pKmPipPip",
+                                          decayDesc = [ "D+ -> K- pi+ pi+" ],
+                                          kaons = self.selKaons,
+                                          pions = self.selPions,
+                                          D2KPiPi_APTmin = config['D2KPiPi_APTmin'],
+                                          D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
+                                          D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
+                                          D2KPiPi_APmin = config['D2KPiPi_APmin'],
+                                          D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
+                                          )
+
+        self.selDm2KpPimPim = makeD2KPiPi("selDm2KpPimPim",
+                                          decayDesc = [ "D- -> K+ pi- pi-" ],
+                                          kaons = self.selKaons,
+                                          pions = self.selPions,
+                                          D2KPiPi_APTmin = config['D2KPiPi_APTmin'],
+                                          D2KPiPi_ADAMASSmax = config['D2KPiPi_ADAMASSmax'],
+                                          D2KPiPi_ADOCAmax = config['D2KPiPi_ADOCAmax'],
+                                          D2KPiPi_APmin = config['D2KPiPi_APmin'],
+                                          D2KPiPi_VtxChi2DoFmax = config['D2KPiPi_VtxChi2DoFmax']
+                                          )
+        
         self.selD2K3Pi = makeD2K3Pi("selD2K3Pi",
                                     decayDesc = [ "[D0 -> K- pi+ pi- pi+]cc" ],
                                     kaons = self.selKaons,
@@ -788,22 +832,40 @@ class LowMultConf(LineBuilder) :
                                            )
         
         self.selD2KmPipPip_D2KmPipPip = makeDD("selD2KmPipPip_D2KmPipPip",
-                                               decayDesc = ["psi(3770) -> D+ D-", "[psi(3770) -> D+ D+]cc"],
-                                               inD_1 = self.selD2KmPipPip,
-                                               inD_2 = self.selD2KmPipPip
+                                               decayDesc = ["psi(3770) -> D+ D-"],
+                                               inD_1 = self.selDp2KmPipPip,
+                                               inD_2 = self.selDm2KpPimPim
                                                )
         
         self.selD2KpPipPim_D2KpPipPim = makeDD("selD2KpPipPim_D2KpPipPim",
-                                               decayDesc = ["psi(3770) -> D+ D-", "[psi(3770) -> D+ D+]cc"],
-                                               inD_1 = self.selD2KpPipPim,
-                                               inD_2 = self.selD2KpPipPim
+                                               decayDesc = ["psi(3770) -> D+ D-"],
+                                               inD_1 = self.selDp2KpPipPim,
+                                               inD_2 = self.selDm2KmPimPip
                                                )
         
         self.selD2KmPipPip_D2KpPipPim = makeDD("selD2KmPipPip_D2KpPipPim",
-                                               decayDesc = ["psi(3770) -> D+ D-", "[psi(3770) -> D+ D+]cc"],
-                                               inD_1 = self.selD2KmPipPip,
-                                               inD_2 = self.selD2KpPipPim
+                                               decayDesc = ["psi(3770) -> D+ D-"],
+                                               inD_1 = self.selDp2KmPipPip,
+                                               inD_2 = self.selDm2KmPimPip
                                                )
+
+        self.selD2KmPipPip_D2KmPipPip_WS = makeDD("selD2KmPipPip_D2KmPipPip_WS",
+                                                  decayDesc = ["[psi(3770) -> D+ D+]cc"],
+                                                  inD_1 = self.selDp2KmPipPip,
+                                                  inD_2 = self.selDm2KpPimPim
+                                                  )
+        
+        self.selD2KpPipPim_D2KpPipPim_WS = makeDD("selD2KpPipPim_D2KpPipPim_WS",
+                                                  decayDesc = ["[psi(3770) -> D+ D+]cc"],
+                                                  inD_1 = self.selDp2KpPipPim,
+                                                  inD_2 = self.selDm2KmPimPip
+                                                  )
+        
+        self.selD2KmPipPip_D2KpPipPim_WS = makeDD("selD2KmPipPip_D2KpPipPim_WS",
+                                                  decayDesc = ["[psi(3770) -> D+ D+]cc"],
+                                                  inD_1 = self.selDp2KmPipPip,
+                                                  inD_2 = self.selDm2KmPimPip
+                                                  )
         
         self.selD2KmPipPip_Dstar2D0Pi_KPi = makeDD("selD2KmPipPip_Dstar2D0Pi_KPi",
                                                    decayDesc = ["[psi(4040) -> D+ D*(2010)-]cc", "[psi(4040) -> D+ D*(2010)+]cc"],
@@ -836,10 +898,16 @@ class LowMultConf(LineBuilder) :
                                                         )
         
         self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi",
-                                                       decayDesc = ["psi(4040) -> D*(2010)+ D*(2010)-", "[psi(4040) -> D*(2010)+ D*(2010)+]cc"],
+                                                       decayDesc = ["psi(4040) -> D*(2010)+ D*(2010)-"],
                                                        inD_1 = self.selDstar2D0Pi_KPi,
                                                        inD_2 = self.selDstar2D0Pi_KPi
                                                        )
+        
+        self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS",
+                                                          decayDesc = ["[psi(4040) -> D*(2010)+ D*(2010)+]cc"],
+                                                          inD_1 = self.selDstar2D0Pi_KPi,
+                                                          inD_2 = self.selDstar2D0Pi_KPi
+                                                          )
         
         self.selDstar2D0Pi_KPi_Dstar2D0Pi_K3Pi = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_K3Pi",
                                                         decayDesc = ["psi(4040) -> D*(2010)+ D*(2010)-", "[psi(4040) -> D*(2010)+ D*(2010)+]cc"],
@@ -1448,6 +1516,36 @@ class LowMultConf(LineBuilder) :
                                                                    )
         self.registerLine(self.LowMultCEP_D2KmPipPip_D2KpPipPim_line)
 
+        self.LowMultCEP_D2KmPipPip_D2KmPipPip_WS_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KmPipPip_WS_line",
+                                                                      prescale = config['LowMultPrescale'],
+                                                                      postscale = config['LowMultPostscale'],
+                                                                      checkPV = False,
+                                                                      FILTER = CEPFilterTracks,
+                                                                      HLT = CEPHLTReq,
+                                                                      algos = [ self.selD2KmPipPip_D2KmPipPip_WS ]
+                                                                      )
+        self.registerLine(self.LowMultCEP_D2KmPipPip_D2KmPipPip_WS_line)
+        
+        self.LowMultCEP_D2KpPipPim_D2KpPipPim_WS_line = StrippingLine(self._myname + "CEP_D2KpPipPim_D2KpPipPim_WS_line",
+                                                                      prescale = config['LowMultPrescale'],
+                                                                      postscale = config['LowMultPostscale'],
+                                                                      checkPV = False,
+                                                                      FILTER = CEPFilterTracks,
+                                                                      HLT = CEPHLTReq,
+                                                                      algos = [ self.selD2KpPipPim_D2KpPipPim_WS ]
+                                                                      )
+        self.registerLine(self.LowMultCEP_D2KpPipPim_D2KpPipPim_WS_line)
+        
+        self.LowMultCEP_D2KmPipPip_D2KpPipPim_WS_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KpPipPim_WS_line",
+                                                                      prescale = config['LowMultPrescale'],
+                                                                      postscale = config['LowMultPostscale'],
+                                                                      checkPV = False,
+                                                                      FILTER = CEPFilterTracks,
+                                                                      HLT = CEPHLTReq,
+                                                                      algos = [ self.selD2KmPipPip_D2KpPipPim_WS ]
+                                                                      )
+        self.registerLine(self.LowMultCEP_D2KmPipPip_D2KpPipPim_WS_line)
+
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_KPi_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_KPi_line",
                                                                        prescale = config['LowMultPrescale'],
                                                                        postscale = config['LowMultPostscale'],
@@ -1507,6 +1605,16 @@ class LowMultConf(LineBuilder) :
                                                                            algos = [ self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi ]
                                                                            )
         self.registerLine(self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_line)
+        
+        self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line",
+                                                                              prescale = config['LowMultPrescale'],
+                                                                              postscale = config['LowMultPostscale'],
+                                                                              checkPV = False,
+                                                                              FILTER = CEPFilterTracks,
+                                                                              HLT = CEPHLTReq,
+                                                                              algos = [ self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS ]
+                                                                              )
+        self.registerLine(self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line)
         
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_K3Pi_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_K3Pi_line",
                                                                             prescale = config['LowMultPrescale'],
