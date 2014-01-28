@@ -1,5 +1,5 @@
 package  StrippingSys
-version           v7r4
+version  v7r4
 
 branches doc cmt tests
 
@@ -12,6 +12,7 @@ use  StandardParticles           v2r2     Phys   # Juan Palacios
 # Internal Packages
 use  DisplVertices 		 v7r16	  Phys	 # Neal Gauvin
 use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
+use  IncTopoVert                 v1r2     Phys   # Mathieu Perrin-Terrin
 
 ####################################################################
 # Stripping packages
