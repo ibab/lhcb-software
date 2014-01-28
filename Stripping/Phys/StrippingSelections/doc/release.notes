@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-27 - Ronan Wallace
+ - Changes to StrippingLowMult.py to avoid nesting of charge conjugate.
+
 ! 2014-01-27 - Xabier Cid Vidal
  - Correct multiple candidates in StrippingK0sPi0MuMuLines
 
