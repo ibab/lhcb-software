@@ -60,24 +60,20 @@ default_config = {'Trk_Chi2'                : 3.0,
                   'Prescale_SameSign'       : 1.0,
                   'Postscale'               : 1.0,
                   'ExtraInfoTools'          : [ { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 0.6
+                                                , "ConeAngle" : 0.8
                                                 , "ConeNumber" : 1
                                                 , "Variables" : ['angle', 'mult', 'ptasy']},
                                                 { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 0.8
+                                                , "ConeAngle" : 1.0
                                                 , "ConeNumber" : 2
                                                 , "Variables" : ['angle', 'mult', 'ptasy']},
                                                 { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 1.0
+                                                , "ConeAngle" : 1.5
                                                 , "ConeNumber" : 3
                                                 , "Variables" : ['angle', 'mult', 'ptasy']},
                                                 { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 1.5
-                                                , "ConeNumber" : 4
-                                                , "Variables" : ['angle', 'mult', 'ptasy']},
-                                                { "Type" : "ConeVariables"
                                                 , "ConeAngle" : 1.7
-                                                , "ConeNumber" : 5
+                                                , "ConeNumber" : 4
                                                 , "Variables" : ['angle', 'mult', 'ptasy']},
                                                 {'Type' : 'VertexIsolation'}
                                                 ]                   

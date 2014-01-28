@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-28 - Rafael Coutinho
+ - Correct cone variable implementation
+
 ! 2014-01-27 - Ronan Wallace
  - Changes to StrippingLowMult.py to avoid nesting of charge conjugate.
 
