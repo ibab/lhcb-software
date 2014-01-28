@@ -1,0 +1,52 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/IncTopoVert
+! Responsible : Mathieu Perrin-Terrin and Julien Cogan
+! Purpose     : Inclusive Vertex Reconstruction
+!-----------------------------------------------------------------------------
+
+!========================= IncTopoVert v1r2 2014-01-25 =========================
+
+! 2014-01-25 - Chris Jones
+ - Downgrade warnings when fit fails to 0 instances printed during the 
+   event loop (summary at the end) to minimise size of production logs.
+ - Protect some more debug messages behind if statements, for CPU eff.
+
+! 2014-01-24 - Julien Cogan
+ - Modify the VertexFunctionToolRootMini tool to use a single instance of
+   the minimizer.
+ - Fix uninitialised values in TopoVertexTool.
+
+! 2014-01-24 - Giampiero Mancinelli
+ - Fix memory leak in VertexFunctionToolRootMini (minimizer created at each event
+   and not deleted).
+
+! 2014-01-20 - Julien Cogan
+ - Fix warnings
+
+! 2014-01-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2014-01-16 - Julien Cogan
+ - Add new algorithm to select Tau->3pi for the stripping
+
+! 2013-12-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
+!========================= IncTopoVert v1r1p1 2013-12-18 =========================
+
+! 2013-11-28 - Marco Clemencic
+ - Fixed CMake configuration.
+
+!========================= IncTopoVert v1r1 2013-10-29 =========================
+
+! 2013-10-17 - Chris Jones
+ - Various clean ups ...
+  + Add missing or incorrect calls to bas class initialize() method from 
+    specialized initalize() implementations.
+  + fix -pedantic warnings.
+
+!===================== IncTopoVert v1r0 2013-08-09 =======================
+
+! 2013-08-09 - Mathieu Perrin-Terrin
+ - First import. Read doxygen for more information
+
