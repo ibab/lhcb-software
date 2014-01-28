@@ -3,6 +3,8 @@
 ! Responsible : Yasmin Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2014-01-28 - Espen Eie Bowen
+ - Add in small wrong side window.
 
 ! 2014-01-26 - Michel De Cian
  - Replace "get" with "getIfExists" in PrMatch.cpp

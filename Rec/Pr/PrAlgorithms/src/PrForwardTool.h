@@ -86,6 +86,9 @@ private:
   bool   m_useMomentumEstimate;
   bool m_Preselection;
   float m_PreselectionPT;
+
+  bool m_useWrongSignWindow;
+  float m_wrongSignPT;
   
   // Working values
   float           m_minXSize;   // current value for the minimal number of X hits.

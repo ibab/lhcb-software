@@ -56,6 +56,8 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
   declareProperty( "UseMomentumEstimate"   , m_useMomentumEstimate = false ); 
   declareProperty( "Preselection"              , m_Preselection              =   false  );
   declareProperty( "PreselectionPT"              , m_PreselectionPT              =   400.* Gaudi::Units::MeV  );
+  declareProperty( "UseWrongSignWindow"    , m_useWrongSignWindow             =  false  );
+  declareProperty( "WrongSignPT"           , m_wrongSignPT              =   2000.* Gaudi::Units::MeV  );
   
 }
 //=============================================================================
@@ -251,13 +253,24 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
 
       float dir = q*magscalefactor*(-1);
 
-      if(dir > 0){
-	xMin = xInZone;
-	xMax = xInZone + xTol;
+      //Extra window to catch wrong sign tracks
+      float xTolWS = 0;
+      if(m_useWrongSignWindow && pt>m_wrongSignPT){
+        float dxRefWS = 
+          3973000. * sqrt( track.slX2() + track.slY2() ) / m_wrongSignPT - 2200. * track.slY2() - 1000. * track.slX2();
+        dxRefWS *= 1.10; //== 10% tolerance
+	
+        xTolWS  = dxRefWS * zZone / m_geoTool->zReference();
+        if ( zZone > m_geoTool->zReference() ) xTolWS = dxRefWS * (zZone - zMag) / ( m_geoTool->zReference() - zMag );
       }
+      if(dir > 0){
+        xMin = xInZone - xTolWS;
+        xMax = xInZone + xTol;
+      }
+      
       else{
-	xMin = xInZone - xTol;
-	xMax = xInZone;
+        xMin = xInZone - xTol;
+        xMax = xInZone + xTolWS;
       }
     }
 
