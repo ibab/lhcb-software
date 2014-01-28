@@ -2530,7 +2530,12 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
   double Prob=0;
   TF1 myF("myF",land,0,m_x*m_nMax,2);
   myF.SetParameters(parNonMu[0],parNonMu[1]);
+#if (ROOT_VERSION_CODE >= ROOT_VERSION(5, 99, 0))
+  // temporary workaround for https://sft.its.cern.ch/jira/browse/ROOT-5985
+  Prob = myF.Integral(0, dist0, 1.e-10);
+#else
   Prob = myF.Integral(0,dist0);
+#endif
 
   if(parNonMu[2]>0){
     if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
