@@ -4,52 +4,70 @@
 ##-----------------------------------------------------------------------------##
 
 {
-  Invalid read of size 4
+  PyObject_Free : Invalid read of size 4
   Memcheck:Addr4
   fun:PyObject_Free
 }
 {
-  Invalid read of size 8
+  PyObject_Free : Invalid read of size 8
   Memcheck:Addr8
   fun:PyObject_Free
 }
 {
-  Use of uninitialised value of size 4
+  PyObject_Free : Use of uninitialised value of size 4
   Memcheck:Value4
   fun:PyObject_Free
 }
 {
-  Use of uninitialised value of size 8
+  PyObject_Free : Use of uninitialised value of size 8
   Memcheck:Value8
   fun:PyObject_Free
 }
 {
-  Conditional jump or move depends on uninitialised value(s)
+  PyObject_Free : Conditional jump or move depends on uninitialised value(s)
   Memcheck:Cond
   fun:PyObject_Free
 }
 {
-  Invalid read of size 4
+  PyObject_Realloc : Invalid read of size 4
   Memcheck:Addr4
   fun:PyObject_Realloc
 }
 {
-  Invalid read of size 8
+  PyObject_Realloc : Invalid read of size 8
   Memcheck:Addr8
   fun:PyObject_Realloc
 }
 {
-  Use of uninitialised value of size 4
+  PyObject_Realloc : Use of uninitialised value of size 4
   Memcheck:Value4
   fun:PyObject_Realloc
 }
 {
-  Use of uninitialised value of size 8
+  PyObject_Realloc : Use of uninitialised value of size 8
   Memcheck:Value8
   fun:PyObject_Realloc
 }
 {
-  Conditional jump or move depends on uninitialised value(s)
+  PyObject_Realloc : Conditional jump or move depends on uninitialised value(s)
   Memcheck:Cond
   fun:PyObject_Realloc
+}
+{
+   _PyObject_GC_Malloc : Possible memory leak
+   Memcheck:Leak
+   fun:malloc
+   fun:_PyObject_GC_Malloc
+}
+{
+   dictresize : Possible memory leak
+   Memcheck:Leak
+   fun:malloc
+   fun:dictresize
+}
+{
+   PyString_FromStringAndSize : Possible memory leak
+   Memcheck:Leak
+   fun:malloc
+   fun:PyString_FromStringAndSize
 }

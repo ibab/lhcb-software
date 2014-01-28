@@ -488,6 +488,14 @@
 }
 
 {
+   XrdOucString::bufalloc(int)
+   Memcheck:Leak
+   fun:malloc
+   fun:realloc
+   fun:_ZN12XrdOucString8bufallocEi
+}
+
+{
    RSA_check_key : uninitialised Conditional
    Memcheck:Cond
    ...
