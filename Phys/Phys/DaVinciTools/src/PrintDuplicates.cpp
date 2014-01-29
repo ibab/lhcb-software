@@ -61,18 +61,19 @@ StatusCode PrintDuplicates::execute()
     for ( PartHashMap::const_iterator iPH = iL->second.begin();
           iPH != iL->second.end(); ++iPH )
     {
+      // The duplicates vector
+      const LHCb::Particle::ConstVector& dups = iPH->second;
+
       // do we have any duplicates
-      if ( iPH->second.size() > 1 )
+      if ( dups.size() > 1 )
       {
-        // make a local copy of the duplicates vector, for futher processing
-        LHCb::Particle::ConstVector dups = iPH->second;
 
         // Check the hash values for daughters ?
         if ( !m_deepCheck ) { report(loc,dups); }
         else
         {
           FilteredDups filtDups;
-          deepHashCheck( iPH->second, filtDups );
+          deepHashCheck( dups, filtDups );
           for ( FilteredDups::const_iterator iD = filtDups.begin();
                 iD != filtDups.end(); ++iD )
           {
