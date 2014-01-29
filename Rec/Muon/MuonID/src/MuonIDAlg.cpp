@@ -13,6 +13,7 @@
 #include "MuonIDAlg.h"
 #include "TF1.h"
 #include <gsl/gsl_math.h>
+#include "Math/ProbFuncMathCore.h"
 
 //boost
 #include <boost/assign/list_of.hpp>
@@ -2528,12 +2529,12 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
   //=====================================================================
 
   double Prob=0;
-  TF1 myF("myF",land,0,m_x*m_nMax,2);
-  myF.SetParameters(parNonMu[0],parNonMu[1]);
 #if (ROOT_VERSION_CODE >= ROOT_VERSION(5, 99, 0))
   // temporary workaround for https://sft.its.cern.ch/jira/browse/ROOT-5985
-  Prob = myF.Integral(0, dist0, 1.e-10);
+  Prob = ROOT::Math::landau_cdf(dist0, parNonMu[1], parNonMu[0]) - ROOT::Math::landau_cdf(0, parNonMu[1], parNonMu[0]);
 #else
+  TF1 myF("myF",land,0,m_x*m_nMax,2);
+  myF.SetParameters(parNonMu[0],parNonMu[1]);
   Prob = myF.Integral(0,dist0);
 #endif
 

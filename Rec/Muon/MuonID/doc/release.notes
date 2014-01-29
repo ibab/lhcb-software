@@ -3,6 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2014-01-29 - Marco Clemencic
+ - Reiteration on the workaround for ROOT-5985 (the first attempt didn't work).
+   https://sft.its.cern.ch/jira/browse/ROOT-5985
+
 ! 2014-01-28 - Marco Clemencic
  - Temporary workaround for a problem with ROOT 6
    https://sft.its.cern.ch/jira/browse/ROOT-5985
