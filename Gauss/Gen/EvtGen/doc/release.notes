@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-01-29 - John Back
+ - Removed mass assertion on GS shape in EvtDalitzReso to allow it to 
+   also be used for charged rho resonances (from Daniel Craik).
+
 !========================== EvtGen v13r12 2014-01-24 ==========================
 ! 2014-01-23 - Paul Szczypka
  - Small changes, mainly explicit inits of variables to remove warnings.

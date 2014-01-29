@@ -247,7 +247,6 @@ EvtComplex EvtDalitzReso::evaluate(const EvtDalitzPoint& x)
       double g = (_g0<=0. || _vd.pD()<=0.)? -_g0 : _g0*_vd.widthFactor(vd);  // running width
       if (_typeN==GS_CLEO || _typeN==GS_CLEO_ZEMACH) {
 	// Gounaris-Sakurai (GS)
-	assert(_massFirst==_massSecond);
 	prop = propGounarisSakurai(_m0,fabs(_g0),_vd.pD(),m,g,vd.p());
       } else {
 	// standard relativistic BW
