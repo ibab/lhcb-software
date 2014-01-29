@@ -22,7 +22,7 @@
 
 namespace LHCb {
   class HltDecReports;
-};
+}
 
 /** @class TriggerSelectionTisTosInHlt TriggerSelectionTisTosInHlt.h
  *  
@@ -87,22 +87,6 @@ public:
    /// analysis report
   std::string analysisReportSelection(const std::string & selectionName);
 
-  template<class T>
-  std::string analysisReport( const std::vector<T*> & list )
-  {
-    std::ostringstream report;
-    report << offset() << " Vector of CLID=" << T::classID() << " size=" << list.size() << std::endl;  
-    
-    ++m_reportDepth;
-    unsigned int result(0);
-    for( const auto* obj: list ) { 
-        result |= tisTos( *obj );
-        report << ParticleTisTos::analysisReport( *obj );      
-        //      if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;        
-      }
-    --m_reportDepth;
-    return report.str();    
-  }
 
   // ------------ auxiliary outputs ---------------------------------
 
@@ -118,6 +102,22 @@ public:
 
 
 protected:
+  template<class T>
+  std::string analysisReports( const std::vector<T*> & list )
+  {
+    std::ostringstream report;
+    report << offset() << " Vector of CLID=" << T::classID() << " size=" << list.size() << std::endl;  
+    
+    ++m_reportDepth;
+    unsigned int result(0);
+    for( const auto* obj: list ) { 
+        result |= tisTos( *obj );
+        report << ParticleTisTos::analysisReport( *obj );      
+        //      if( (result&kTPS) && (result&kTOS) && (result&kTIS) )break;        
+      }
+    --m_reportDepth;
+    return report.str();    
+  }
   template <typename T>
   std::vector<const LHCb::HltObjectSummary*> hltSelectionObjectSummaries( const Hlt::TSelection<T>&  selection,
                                                                           unsigned int tisRequirement      = kAnything,

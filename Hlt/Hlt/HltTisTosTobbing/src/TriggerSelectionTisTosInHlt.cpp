@@ -384,10 +384,9 @@ TriggerSelectionTisTosInHlt::tisTosSelection( const std::string& selectionName )
             result = IParticleTisTos::tisTos( convert( tsel ) );
 
         } else {
-            std::vector<std::string> dependencies( sel->inputSelectionsIDs().begin(),
-                                                   sel->inputSelectionsIDs().end() );
-            if ( !dependencies.empty() ) {
-                result = ITriggerSelectionTisTos::tisTosSelection( dependencies );
+            auto& ids = sel->inputSelectionsIDs();
+            if ( !ids.empty() ) {
+                result = ITriggerSelectionTisTos::tisTosSelection( std::vector<std::string>{ std::begin(ids), std::end(ids) });
             } else {
                 // @TODO: warning: hltDataSvc doesn't know about selInput...
             }
@@ -456,14 +455,14 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection(
 
             auto& tsel = dynamic_cast<const Hlt::TrackSelection&>( *sel );
             auto tracks = convert( tsel );
-            report << analysisReport( tracks );
+            report << analysisReports( tracks );
             result = IParticleTisTos::tisTos( tracks );
 
         } else if ( sel->classID() == LHCb::RecVertex::classID() ) {
 
             auto& tsel = dynamic_cast<const Hlt::VertexSelection&>( *sel );
             auto v = convert( tsel );
-            report << analysisReport( v );
+            report << analysisReports( v );
             result = IParticleTisTos::tisTos( v );
 
         } else if ( sel->classID() == LHCb::Particle::classID() ) {
@@ -471,7 +470,7 @@ std::string TriggerSelectionTisTosInHlt::analysisReportSelection(
             auto& tsel =
                 dynamic_cast<const Hlt::TSelection<LHCb::Particle>&>( *sel );
             auto p = convert( tsel );
-            report << analysisReport( p );
+            report << analysisReports( p );
             result = IParticleTisTos::tisTos( p );
 
         } else {
@@ -555,8 +554,8 @@ bool TriggerSelectionTisTosInHlt::selection( const std::string& selectionName,
     if ( parts ) return action( convert( *parts ) );
     // check dependencies -- if any...
     return !sel->inputSelectionsIDs().empty() &&
-           action( std::vector<std::string>{sel->inputSelectionsIDs().begin(),
-                                            sel->inputSelectionsIDs().end()} );
+           action( std::vector<std::string>{std::begin( sel->inputSelectionsIDs() ),
+                                            std::end( sel->inputSelectionsIDs() )} );
 }
 
 // ------------ auxiliary output:  list of LHCbIDs corresponding to present offline

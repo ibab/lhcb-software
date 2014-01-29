@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2014-01-30 - Gerhard Raven
+ - rename analysisReport( const vector<T*>&) into analysisReports to fix (spurious?) warning 
+   about hiding the virtuals analysisReport( T& ) with T=Vertex,Track,Particle,...
+
 ! 2014-01-28 - Gerhard Raven
  - use C++11 to streamline logic in various places
 
