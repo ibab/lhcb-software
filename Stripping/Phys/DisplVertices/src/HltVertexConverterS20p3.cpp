@@ -8,6 +8,8 @@
 #include "Event/HltSelReports.h"
 #include "Event/Particle.h"
 
+#include "LoKi/Algs.h"
+
 // local
 #include "HltVertexConverterS20p3.h"
 
@@ -95,6 +97,88 @@ namespace {
     LHCb::HltObjectSummary::Info::iterator it = infos.find(key);
     return ( it != infos.end() ) ? TYPE (it->second) : defaultVal;
   }
+
+  // Check equality of HltObjectSummaries
+  class IsSameSummarizedObject
+  {
+    const LHCb::HltObjectSummary& m_ref;
+  public:
+    IsSameSummarizedObject( const LHCb::HltObjectSummary& ref ) : m_ref(ref) {}
+    ~IsSameSummarizedObject() {}
+
+    bool operator() ( const LHCb::HltObjectSummary* other ) const
+    {
+      return equal(*other, m_ref);
+    }
+  private:
+    bool equal( const LHCb::HltObjectSummary& first, const LHCb::HltObjectSummary& second ) const
+    {
+      if ( second.summarizedObjectCLID() != first.summarizedObjectCLID() ) { return false; }
+
+      if ( ! equalNumericalInfo( first, second ) ) { return false; }
+
+      if ( ! equalLHCbIDs(first, second) ) { return false; }
+
+      if ( ! equalSubstructure(first, second) ) { return false; }
+
+      // no difference found
+      return true;
+    }
+
+    bool equalNumericalInfo( const LHCb::HltObjectSummary& first, const LHCb::HltObjectSummary& second ) const
+    {
+      LHCb::HltObjectSummary::Info firstInfo (first.numericalInfoFlattened());
+      LHCb::HltObjectSummary::Info secondInfo(second.numericalInfoFlattened());
+      LHCb::HltObjectSummary::Info::const_iterator firstInfoIt = firstInfo.begin();
+      LHCb::HltObjectSummary::Info::const_iterator firstInfoItEnd = firstInfo.end();
+      LHCb::HltObjectSummary::Info::const_iterator secondInfoItEnd = secondInfo.end();
+      LHCb::HltObjectSummary::Info::const_iterator secondInfoIt;
+      for ( ; firstInfoIt != firstInfoItEnd; ++firstInfoIt ) {
+        secondInfoIt = secondInfo.find(firstInfoIt->first);
+        if ( ( secondInfoIt == secondInfoItEnd ) || ( secondInfoIt->second != firstInfoIt->second ) ) {
+          return false;
+        }
+      }
+      // no difference found
+      return true;
+    }
+
+    bool equalLHCbIDs( const LHCb::HltObjectSummary& first, const LHCb::HltObjectSummary& second ) const
+    {
+      if ( first.lhcbIDs().size() != second.lhcbIDs().size() ) {
+        return false;
+      }
+      if ( ! first.lhcbIDs().empty() ) {
+        std::vector<LHCb::LHCbID> secondIDs(second.lhcbIDsFlattened());
+        BOOST_FOREACH( const LHCb::LHCbID& firstID, first.lhcbIDsFlattened() ) {
+          if ( std::find( secondIDs.begin(), secondIDs.end(), firstID ) == secondIDs.end() ) {
+            return false;
+          }
+        }
+      }
+      // no difference found
+      return true;
+    }
+
+    bool equalSubstructure( const LHCb::HltObjectSummary& first, const LHCb::HltObjectSummary& second ) const
+    {
+      if ( first.substructure().size() != second.substructure().size() ) {
+        return false;
+      }
+      if ( ! first.substructure().empty() ) {
+        SmartRefVector<LHCb::HltObjectSummary> secondSub(second.substructureFlattened());
+        BOOST_FOREACH( const LHCb::HltObjectSummary* firstDaug, first.substructureFlattened() ) {
+          if ( firstDaug ) {
+            if ( LoKi::Algs::find_if( secondSub.begin(), secondSub.end(), IsSameSummarizedObject(*firstDaug) ) == secondSub.end() ) {
+              return false;
+            }
+          }
+        }
+      }
+      // no difference found
+      return true;
+    }
+  };
 }
 
 
@@ -118,7 +202,7 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
   // m**2 = E**2-p**2 => E=sqrt(m**2+1./(ip*ip))
   part->setMeasuredMass(m);
   part->setMomentum(Gaudi::LorentzVector(tx*pz,ty*pz,pz,std::sqrt(m*m+1./(invp*invp))));
-  if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Found particle " << *part << "\nLooking for substructure" << endmsg; }
+  if ( msgLevel(MSG::VERBOSE) ) { verbose() << "Found particle from " << (*summary) << " : " << *part << "\nLooking for substructure" << endmsg; }
 
   if ( summary->substructure().size() == 1 ) {
     SmartRef<LHCb::HltObjectSummary> subSum = summary->substructure()[0];
@@ -236,23 +320,29 @@ StatusCode HltVertexConverterS20p3::execute()
     return Warning("No Hlt SelReports found at "+m_HltSelReportsLocation, StatusCode::FAILURE);
   }
   std::size_t nAcc(0);
+  std::vector<const LHCb::HltObjectSummary*> alreadyRevivedParticles;
   BOOST_FOREACH( const std::string& selection, m_HltLineNames ) {
     const LHCb::HltObjectSummary* objectSummary = selReports->selReport(selection);
     if ( objectSummary != 0 ) {
       BOOST_FOREACH( const LHCb::HltObjectSummary* item, objectSummary->substructureFlattened() ) {
-        if ( item->summarizedObjectCLID() == LHCb::Particle::classID() ) {
-          LHCb::Particle* part = reviveParticle(item, m_recursive);
-          if ( part != 0 ) {
-            ++counter("# candidates loaded from "+selection);
-            ++nAcc;
+        if ( item && ( item->summarizedObjectCLID() == LHCb::Particle::classID() ) ) {
+          ++counter("# candidates loaded from "+selection);
+          if ( LoKi::Algs::find_if( alreadyRevivedParticles.begin(), alreadyRevivedParticles.end(), IsSameSummarizedObject(*item) ) == alreadyRevivedParticles.end() ) {
+            alreadyRevivedParticles.push_back(item);
+            LHCb::Particle* part = reviveParticle(item, m_recursive);
+            if ( part != 0 ) {
+              ++nAcc;
+            }
+          } else {
+            ++counter("# duplicates removed");
           }
         }
       }
     }
   }
+  counter("# candidates accepted") += nAcc;
   if ( nAcc > 0 ) {
     setFilterPassed(true);
-    ++counter("# candidates accepted");
   }
 
   return StatusCode::SUCCESS;

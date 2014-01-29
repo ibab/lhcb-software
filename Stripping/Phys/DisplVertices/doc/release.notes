@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-01-29 - Pieter David
+ - Remove duplicate Hlt2 candidates
+
 !========================= DisplVertices v7r17 2014-01-22 =========================
 
 ! 2014-01-20 - Marco Clemencic
