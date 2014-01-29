@@ -74,12 +74,16 @@ class FstConf(LHCbConfigurableUser):
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
             VPRawBankToLiteCluster("FstVPDecoding").RawEventLocation = "/Event/Other/RawEvent"
             PatPixelTracking("FstPixel").OutputTracksName = self.getProp("RootInTES") + "Track/Velo"
+            # Use Kalman fit to estimate track state at end of the Velo
+            # this is the state used by the UT tracking
+            PatPixelTracking("FstPixel").EndVeloStateKalmanFit = True
+            PatPixelTracking("FstPixel").AddFirstLastMeasurementStatesKalmanFit = True
             
         elif "VL" == self.getProp("VeloType"):
             from Configurables import PrVLTracking
             from Configurables import VLRawBankDecoder
             FstSequencer("RecoFstSeq").Members += ["VLRawBankDecoder/FstVLDecoding",
-                                                  "PrVLTracking/FstVLTracking"]
+                                                   "PrVLTracking/FstVLTracking"]
             # Centrally produced upgrade samples need this fix
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
             VLRawBankDecoder('FstVLDecoding').RawEventLocation = "/Event/Other/RawEvent"
@@ -191,12 +195,11 @@ class FstConf(LHCbConfigurableUser):
             FstForward.InputName = self.getProp("RootInTES") + "Track/VeloFst"
             FstForward.OutputName = self.getProp("RootInTES") + "Track/Forward"
             FstForward.addTool(PrForwardTool)
-            FstForward.PrForwardTool.MinPt = 1250 #self.getProp("MinPt")
+            FstForward.PrForwardTool.MinPt = self.getProp("ForwardMinPt")
             FstForward.PrForwardTool.AddUTHitsToolName = ""
 
-        # Cheated forward tracking which uses MC truth to get
-        # momentum estimate, in the end the VeloUT should
-        # provide that estimate
+        # Forward tracking using the VeloUT to estimate
+        # a tracks momentum
         elif "FT+VeloUT" == self.getProp("TStationType"):
             from Configurables import PrForwardTracking, PrForwardTool
             from Configurables import PrVeloUT
@@ -209,7 +212,7 @@ class FstConf(LHCbConfigurableUser):
             prVeloUT.OutputTracksName = self.getProp("RootInTES") + "Track/VeloUTFst"
             prVeloUT.TimingMeasurement = False
             prVeloUT.removeUsedTracks = False
-            prVeloUT.InputUsedTracksNames = [ ]
+            prVeloUT.InputUsedTracksNames = []
             prVeloUT.fitTracks = False
             prVeloUT.maxChi2 = 1280.
             prVeloUT.AddMomentumEstimate = True
@@ -229,7 +232,7 @@ class FstConf(LHCbConfigurableUser):
             elif self.getProp("VeloType") == "Velo":
                 prVeloUT.Fitter.MeasProvider.IgnoreVelo = False
 
-            PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.0
+            PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.25
             PrVeloUTTool("PrVeloUTTool").maxPseudoChi2 = 1280.
             PrVeloUTTool("PrVeloUTTool").minMomentum = 2000.
             PrVeloUTTool("PrVeloUTTool").minPT = 200.
@@ -237,8 +240,9 @@ class FstConf(LHCbConfigurableUser):
             
             createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
             createUTLiteClusters.DetType = "UT"
+            #createUTLiteClusters.clusterLocation = "Raw/UT/LiteClusters"
             
-            FstSequencer("RecoFstSeq").Members += ["UnpackMCParticle", "UnpackMCVertex",
+            FstSequencer("RecoFstSeq").Members += [#"UnpackMCParticle", "UnpackMCVertex",
                                                    createUTLiteClusters,
                                                    PrVeloUT("PrVeloUT"),
                                                    "FTRawBankDecoder",
@@ -258,8 +262,9 @@ class FstConf(LHCbConfigurableUser):
             # because the UT resolution is not perfect set this to a
             # value less than the lowest pT you want to be able to
             # find, eg: MinPt = 500 and PreselectionPT = 400MeV
-            FstForward.PrForwardTool.PreselectionPT = self.getProp("ForwardMinPt")
+            FstForward.PrForwardTool.PreselectionPT = self.getProp("ForwardMinPt") * 0.8
             FstForward.PrForwardTool.Preselection = True
+            FstForward.PrForwardTool.UseWrongSignWindow = True
             
         else:
             log.warning("Unknown TStationType option '%s' !"%self.getProp("TStationType"))

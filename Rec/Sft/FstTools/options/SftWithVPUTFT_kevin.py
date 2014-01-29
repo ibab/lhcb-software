@@ -27,15 +27,17 @@ from Gaudi.Configuration import *
 importOptions('$APPCONFIGOPTS/Brunel/MC-WithTruth.py')
 importOptions('$FSTTOOLSROOT/options/Sft.py')
 
-# set input
+# set input, no with spillover
 Brunel().InputType = 'DST'
-input_path = '/group/online/data_hlt'
+#input_path = '/group/online/data_hlt'
+input_path = '/group/online/data_hlt/minbias_25ns_spillover'
 input_files = glob(path.join(input_path, '*.xdst'))
 IOHelper().inputFiles(input_files)
 
 # configure trigger emulation
 FstConf().VeloType = 'VP'
 FstConf().TStationType = 'FT+VeloUT'
+#FstConf().TStationType = 'FT'
 FstConf().ForwardMinPt = 500  # MeV, pT cut in FT
 FstConf().TrackFit = ''
 
@@ -50,8 +52,8 @@ for algo in algos:
     algo.DoNothing = True
 
 # set multiplicity cuts
-FstSelectGEC().MultiplicityCutECAL = 1
-FstSelectGEC().MultiplicityCutHCAL = 599
+FstSelectGEC().MultiplicityCutECAL = 10000
+FstSelectGEC().MultiplicityCutHCAL = 10000
 
 # set the mcut via env var for a study
 from os import getenv
@@ -80,11 +82,14 @@ CondDB().AllLocalTagsByDataType = [
 
 # set up Brunel
 Brunel().PrintFreq = 1000
-Brunel().EvtMax = 10000
+Brunel().EvtMax = 3000
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
 Brunel().CondDBtag = 'sim-20130830-vc-md100'
 Brunel().DDDBtag = "dddb-20131025"
+# newer DB tags, here for future reference
+#Brunel().CondDBtag = 'sim-20131108-vc-md100'
+#Brunel().DDDBtag = "dddb-20131108"
 Brunel().MCLinksSequence = ['Unpack', 'Tr']
 Brunel().MCCheckSequence = ['Pat']
 
@@ -98,13 +103,16 @@ def setup_truth_matching():
     GaudiSequencer('CaloBanksHandler').Members = []
     GaudiSequencer('DecodeTriggerSeq').Members = []
     GaudiSequencer('MCLinksTrSeq').Members = [
+        "UnpackMCParticle", "UnpackMCVertex",
         'PrLHCbID2MCParticle',
         'PrTrackAssociator'
     ]
     PrTrackAssociator().RootOfContainers = '/Event/Fst/Track'
+    
     GaudiSequencer("CheckPatSeq").Members = ['PrChecker']
     PrChecker().VeloTracks = '/Event/Fst/Track/Velo'
+    PrChecker().UpTracks = '/Event/Fst/Track/VeloUTFst'
     PrChecker().ForwardTracks = '/Event/Fst/Track/Forward'
-
+    PrChecker().Eta25Cut = True
    
 appendPostConfigAction(setup_truth_matching)
