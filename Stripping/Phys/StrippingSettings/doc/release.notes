@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-29-01 - Stefano Perazzini
+ - Update stripping20r0p3 and stripping20r1p3 dbases
+
 ! 2014-22-01 - Ronan Wallace
   - New config for QEE to help reduce bandwidth. Prescales and some other cut changes.
 
