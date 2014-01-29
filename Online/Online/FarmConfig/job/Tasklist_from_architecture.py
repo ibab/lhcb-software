@@ -116,7 +116,7 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".InDNS = \"<node>\";\n")
             f.write(svc+".OutDNS = \"hlt01\";\n")
             f.write("\n")
-            
+
 
         for s in cntsvc:
             svc = s+"CountAdder"
@@ -171,6 +171,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".AdderClass  = \"hists\";\n");
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
+            f.write(svc+".OutDNS = \"mona08\";\n")
             f.write("\n")
 
         for s in cntsvc:
@@ -181,6 +182,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".AdderClass  = \"Counter\";\n");
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
+            f.write(svc+".OutDNS = \"mona08\";\n")
             f.write("\n")
 
 tasklist = []
