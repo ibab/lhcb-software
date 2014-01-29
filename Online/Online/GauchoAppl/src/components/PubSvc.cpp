@@ -43,6 +43,7 @@ PubSvc::PubSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),m_in
 {
   declareProperty("MyName",          m_MyName       = "");
   declareProperty("InDNS",           m_InputDNS     = "");
+  declareProperty("OutDNS",          m_OutputDNS     = "");
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("TaskPattern",     m_TaskPattern);
   declareProperty("ServicePattern",  m_ServicePattern);
@@ -174,6 +175,15 @@ StatusCode PubSvc::start()
   std::string ddns(dnsnode ? dnsnode : "");
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
+  if (m_OutputDNS.length() != 0)
+  {
+    StringReplace(m_OutputDNS,"<node>",nodename);
+    StringReplace(m_OutputDNS,"<dns>",ddns);
+  }
+  else
+  {
+    m_OutputDNS = ddns;
+  }
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);
@@ -188,6 +198,10 @@ StatusCode PubSvc::start()
   else
   {
     m_adder = new HistAdder((char*)m_myservicename.c_str(), (char*)"Data");
+  }
+  if (m_adder->m_ServiceDns == 0)
+  {
+    m_adder->m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
   }
   m_adder->m_IsEOR = false;
   m_adder->m_expandRate = false;

@@ -41,6 +41,7 @@ public:
   IIncidentSvc             *m_incidentSvc;
 
   std::string m_InputDNS;
+  std::string m_OutputDNS;
   std::string m_PartitionName;
   std::string m_MyName;
   std::string m_TaskPattern;
