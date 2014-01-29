@@ -294,9 +294,9 @@ B2KShh = {
                   'DD_BDTCutValue'          : -0.05,
                   'LD_BDTCutValue'          : -0.05,
                   'LL_BDTCutValue'          : -0.10,
-                  'DD_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_DD.xml',
-                  'LD_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_DD.xml', #same DD weight
-                  'LL_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_LL.xml',
+                  'DD_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_DD.xml',
+                  'LD_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_DD.xml', #same DD weight
+                  'LL_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_LL.xml',
                   'GEC_MaxTracks'           : 250,
                   'Prescale'                : 1.0,
                   'Prescale_SameSign'       : 1.0,
