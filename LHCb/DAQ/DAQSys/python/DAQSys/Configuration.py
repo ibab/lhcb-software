@@ -95,7 +95,7 @@ class DecodeRawEvent(ConfigurableUser):
                     d=decodersForBank(self.__db__(),b)
                     if len(d):
                         names=[di.FullName for di in d]
-                        print "# WARNING: Re-configuration of inputs for "+names.__str__()+" could not be done, because the bank it decodes '"+b+"' does not appear in the list of available banks for target version '"+v+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries"
+                        print "# WARNING: Re-configuration of inputs for "+names.__str__()+" could not be done, because the bank it decodes '"+b+"' does not appear in the list of available banks for target version '"+str(v)+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries"
                     else:
                         #there are no decoders for this bank, just ignore it
                         pass
@@ -123,7 +123,7 @@ class DecodeRawEvent(ConfigurableUser):
         #have to skip it if it decodes an unknown bank!
         for b in d.Banks:
             if b not in known:
-                raise ValueError("The algorithm "+d.FullName+" should not have been passed into the overrideInputs method, because it decodes '"+b+"' banks which do not exist in the target format version '"+v+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries")
+                raise ValueError("The algorithm "+d.FullName+" should not have been passed into the overrideInputs method, because it decodes '"+b+"' banks which do not exist in the target format version '"+str(v)+"' try setting this decoder to active=False and configuring yourself if really needed, or manually editing the contents of the RawEventFormat/Compat dictionaries")
         dest=WhereBest(d.Banks[0],v)
         
         #does it make sense to overwrite these banks?
