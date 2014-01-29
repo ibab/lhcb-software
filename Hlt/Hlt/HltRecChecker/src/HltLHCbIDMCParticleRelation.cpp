@@ -21,7 +21,7 @@ HltLHCbIDMCParticleRelation::HltLHCbIDMCParticleRelation(const std::string& name
                   m_relationLocation = "Hlt/Link/MCParticleLHCbID");
 }
 
-HltLHCbIDMCParticleRelation::~HltLHCbIDMCParticleRelation() {}; 
+HltLHCbIDMCParticleRelation::~HltLHCbIDMCParticleRelation() {}
 
 
 StatusCode HltLHCbIDMCParticleRelation::initialize() {
@@ -31,7 +31,7 @@ StatusCode HltLHCbIDMCParticleRelation::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode HltLHCbIDMCParticleRelation::execute() {
 
@@ -82,7 +82,7 @@ StatusCode HltLHCbIDMCParticleRelation::execute() {
 //     linkIDs(evtSvc(),msgSvc(),"Pat/LHCbID");
   
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode HltLHCbIDMCParticleRelation::finalize() {
 

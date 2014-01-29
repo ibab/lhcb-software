@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2014-01-29 - Gerhard Raven
+ - remove extraneous ;
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
