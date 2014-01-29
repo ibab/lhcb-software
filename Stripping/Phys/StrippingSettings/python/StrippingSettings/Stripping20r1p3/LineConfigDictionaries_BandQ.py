@@ -53,7 +53,7 @@ CC2DD = {
                     'CCMaxD0MinTreeIpChi2'   : "0."    ## unused for the moment
                  },
     'STREAMS' : [
-        'CharmCompleteEvent' 
+        'BhadronCompleteEvent' 
         ],
 }   
  

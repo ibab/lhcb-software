@@ -55,7 +55,7 @@ CC2DD = {
 
                  },
     'STREAMS' : [
-        'CharmCompleteEvent' 
+        'BhadronCompleteEvent' 
         ],
 }   
  
