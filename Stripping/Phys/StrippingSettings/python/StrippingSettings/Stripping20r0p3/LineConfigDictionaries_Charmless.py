@@ -260,15 +260,71 @@ B2TwoBaryons = {
     }
 
 
-
-
-
-
-
-
-
-
-
-
+B2KShh = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2KShhConf',
+    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+                  'Trk_GhostProb'           : 0.3,
+                  'KS_DD_MassWindow'        : 30.0,
+                  'KS_DD_VtxChi2'           : 12.0,
+                  'KS_DD_FDChi2'            : 50.0,
+                  'KS_DD_Pmin'              : 6000.0,
+                  'KS_LL_MassWindow'        : 20.0,
+                  'KS_LL_VtxChi2'           : 12.0,
+                  'KS_LL_FDChi2'            : 80.0,
+                  'KS_LD_MassWindow'        : 25.0,
+                  'KS_LD_VtxChi2'           : 12.0,
+                  'KS_LD_FDChi2'            : 50.0,
+                  'KS_LD_Pmin'              : 6000.0,
+                  'B_Mlow'                  : 1279.0,
+                  'B_Mhigh'                 : 921.0,
+                  'B_APTmin'                : 1000.0,
+                  'BDaug_MedPT_PT'          : 800.0,
+                  'BDaug_MaxPT_IP'          : 0.05,
+                  'BDaug_DD_maxDocaChi2'    : 5.0,
+                  'BDaug_LL_maxDocaChi2'    : 5.0,
+                  'BDaug_LD_maxDocaChi2'    : 5.0,
+                  'BDaug_DD_PTsum'          : 4200.0,
+                  'BDaug_LL_PTsum'          : 3000.0,
+                  'BDaug_LD_PTsum'          : 4200.0,
+                  'B_DD_Dira'               : 0.,
+                  'B_LL_Dira'               : 0.,
+                  'B_LD_Dira'               : 0.,
+                  'KS_FD_Z'                 : 0.,
+                  'DD_BDTCutValue'          : -0.05,
+                  'LD_BDTCutValue'          : -0.05,
+                  'LL_BDTCutValue'          : -0.10,
+                  'DD_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_DD.xml',
+                  'LD_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_DD.xml', #same DD weight
+                  'LL_BDTWeightsFile'       : '/afs/cern.ch/user/r/rsilvaco/public/forTom/B2KShhBDT_LL.xml',
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Prescale_SameSign'       : 1.0,
+                  'Postscale'               : 1.0,
+                  'ExtraInfoTools'          : [ { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 0.8
+                                                , "ConeNumber" : 1
+                                                , "Variables" : ['angle', 'mult', 'ptasy']},
+                                                { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 1.0
+                                                , "ConeNumber" : 2
+                                                , "Variables" : ['angle', 'mult', 'ptasy']},
+                                                { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 1.5
+                                                , "ConeNumber" : 3
+                                                , "Variables" : ['angle', 'mult', 'ptasy']},
+                                                { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 1.7
+                                                , "ConeNumber" : 4
+                                                , "Variables" : ['angle', 'mult', 'ptasy']},
+                                                {'Type' : 'VertexIsolation'}
+                                                ]
+                  },
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2KShhDDSameSignLine',
+                                   'StrippingB2KShhLLSameSignLine',
+                                   'StrippingB2KShhDDLine',
+                                   'StrippingB2KShhLLLine']
+                    }
+    }
 
 

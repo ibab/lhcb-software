@@ -5,6 +5,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-29-01 - Stefano Perazzini
+ - Introduced StrippingB2KShh lines in Stripping20r{0,1}p3
  - Update stripping20r0p3 and stripping20r1p3 dbases
 
 ! 2014-22-01 - Ronan Wallace
