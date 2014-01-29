@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-01-29 - Eric vH
+ - Run setupMoore.sh inside CreateRunEFF.py
+
 ! 2014-01-24 - Marco Clemencic
  - Added CMake configuration file.
 

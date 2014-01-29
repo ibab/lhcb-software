@@ -16,8 +16,8 @@ export NBOFSLAVES=${3:-0}
    
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
-# pick up 'our' setup..., obsolete, now done in advance ...
-# source 
+
+. /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/${CMTCONFIG}/setupMoore.sh;
 
 ####echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
 
