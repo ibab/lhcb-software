@@ -24,7 +24,7 @@ using namespace boost;
 namespace
 {
 static const std::string empty{};
-};
+}
 
 /////////Utility class for easy manipulation of
 ///configurations/////////////////////////////

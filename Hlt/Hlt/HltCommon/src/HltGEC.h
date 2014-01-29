@@ -88,7 +88,6 @@ class GEC : public extends2<GaudiTool, IAccept, ICheckTool>
   private:
     // ========================================================================
     double veloBalance() const;
-    ;
     /// the maximum imbalance of VELO-hits
     double m_maxVeloBalance;
     /// the maximum number of OT-hits

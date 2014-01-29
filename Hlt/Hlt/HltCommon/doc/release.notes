@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-01-29 - Gerhard Raven
+ - fix -Wpedantic warnings
+
 ! 2014-01-25 - Gerhard Raven
  - simplicy HltGEC a bit...
 

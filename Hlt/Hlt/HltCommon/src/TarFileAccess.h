@@ -12,7 +12,7 @@
 namespace TarFileAccess_details
 {
 class TarFile;
-};
+}
 
 class TarFileAccess : public extends1<AlgTool, IFileAccess>
 {

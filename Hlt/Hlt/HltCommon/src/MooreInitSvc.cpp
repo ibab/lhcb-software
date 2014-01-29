@@ -26,8 +26,8 @@ DECLARE_SERVICE_FACTORY( MooreInitSvc )
 //=============================================================================
 MooreInitSvc::MooreInitSvc( const std::string& name, ISvcLocator* pSvcLocator )
     : extends1<Service, IIncidentListener>( name, pSvcLocator )
-    , m_odinTool( "ODINDecodeTool", this )
-    , m_evtSvc( 0 )
+    , m_odinTool{ "ODINDecodeTool", this }
+    , m_evtSvc{ nullptr }
 {
 }
 //=============================================================================
@@ -63,7 +63,7 @@ StatusCode MooreInitSvc::initialize()
         return StatusCode::FAILURE;
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Finalization
@@ -71,7 +71,7 @@ StatusCode MooreInitSvc::initialize()
 StatusCode MooreInitSvc::finalize()
 {
     m_evtSvc->release();
-    m_evtSvc = 0;
+    m_evtSvc = nullptr;
     return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -121,7 +121,7 @@ std::vector<long int> MooreInitSvc::getSeeds( unsigned int seed1, ulonglong seed
     seeds.push_back( 0 );
 
     return seeds;
-};
+}
 
 StatusCode MooreInitSvc::initRndm( std::vector<long int>& seeds )
 {

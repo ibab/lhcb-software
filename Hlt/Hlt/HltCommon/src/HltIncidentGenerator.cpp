@@ -50,7 +50,7 @@ StatusCode HltIncidentGenerator::initialize()
     m_incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
 
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -60,4 +60,4 @@ StatusCode HltIncidentGenerator::execute()
     if ( !m_incident.empty() )
         m_incidentSvc->fireIncident( Incident( name(), m_incident ) );
     return StatusCode::SUCCESS;
-};
+}
