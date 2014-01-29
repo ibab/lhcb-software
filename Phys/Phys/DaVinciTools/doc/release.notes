@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-01-29 - Chris Jones
+ - Yet more bug fixes and improvements to PrintDuplicates.
+
 ! 2014-01-28 - Chris Jones
  - Remove the mass check in PrintDuplicates, as it is no longer required now
    the algorithm properly takes PID swaps into account.

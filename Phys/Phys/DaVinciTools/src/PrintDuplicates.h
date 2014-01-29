@@ -47,6 +47,7 @@ private:
   typedef boost::uint64_t     Hash64;
   typedef std::vector<Hash32> Hashes32;
   typedef std::vector<Hash64> Hashes64;
+  typedef std::vector<LHCb::Particle::ConstVector> FilteredDups;
 
 private:
 
@@ -59,7 +60,7 @@ private:
   }
 
   /// Access print tool on demand
-  inline IPrintDecay * printDecay()
+  inline IPrintDecay * printDecay() const
   {
     if ( !m_printDecay )
     {
@@ -68,28 +69,28 @@ private:
     return m_printDecay;
   }
 
-  /// Peform a deep check on the given particles
-  bool deepHashCheck( const LHCb::Particle::ConstVector & parts ) const;
-
-  /// get the daughter hashes
-  void getDauHashes( const LHCb::Particle * p,
-                     Hashes32& hashes,
-                     unsigned int depth = 0 ) const;
-
   /// Get the hash for a Particle
   inline Hash32 getLHCbIDsHash( const LHCb::Particle * p ) const
   {
     return LHCb::HashIDs::hashID( p );
   }
 
-  /// Get the 'PID' Hash
-  void getPIDHashes( const LHCb::Particle * p,
-                     Hashes64& hashes,
-                     unsigned int depth = 0 ) const;
+  /// Peform a deep check on the given particles
+  void deepHashCheck( const LHCb::Particle::ConstVector & parts,
+                      FilteredDups& filtDups ) const;
+
+  /// get deeep check hashes vector
+  void getDeepHashes( const LHCb::Particle * p,
+                      Hashes64& hashes,
+                      unsigned int depth = 0 ) const;
+
+  /// Report a given vector at a given TES location as duplicates
+  void report( const std::string & loc,
+               const LHCb::Particle::ConstVector & parts );
 
 private:
 
-  IPrintDecay * m_printDecay; ///< Tool to print the decay tree
+  mutable IPrintDecay * m_printDecay; ///< Tool to print the decay tree
   unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
   bool m_deepCheck;           ///< Perform a deep check of duplicates
   std::map< std::string, unsigned int > m_countPerLoc; ///< Printout count per TES location
