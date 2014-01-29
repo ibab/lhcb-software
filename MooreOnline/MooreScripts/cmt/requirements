@@ -70,6 +70,9 @@ apply_pattern install_python_modules
 # define aliases
 alias Moore gaudirun.py
 
+#macro to not strip out paths
+macro strip_script '/group/online/dataflow/cmtuser/dummy_strip_script'
+
 private
 apply_pattern QMTest
 end_private

@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-01-29 - Rob Lambert
+ - Add dummy strip script macro from markus
+
 ! 2014-01-29 - Eric vH
  - Run setupMoore.sh inside CreateRunEFF.py
 
