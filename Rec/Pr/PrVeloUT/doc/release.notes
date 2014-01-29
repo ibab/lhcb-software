@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Espen Eie Bowen
+ - Changed how clustering is done and resulting changes to algorithm.
+
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
 

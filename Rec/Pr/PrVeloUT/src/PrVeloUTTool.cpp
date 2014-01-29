@@ -33,13 +33,11 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
 
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
-  declareProperty("MaxXSize"           , m_maxXSize         = 760. * Gaudi::Units::mm);
-  declareProperty("MaxYSize"           , m_maxYSize         = 600. * Gaudi::Units::mm);
   declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
   // Momentum determination
-  declareProperty("minMomentum"        , m_minMomentum      = 0.8*Gaudi::Units::GeV);
-  declareProperty("minPT"              , m_minPT            = 0.0*Gaudi::Units::GeV);
-  declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 10000.);
+  declareProperty("minMomentum"        , m_minMomentum      = 2*Gaudi::Units::GeV);
+  declareProperty("minPT"              , m_minPT            = 0.2*Gaudi::Units::GeV);
+  declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 1280.);
   declareProperty("maxSolutionsPerTrack"  , m_maxSolutionsPerTrack = 3);
   // Tolerances for extrapolation
   declareProperty("XTolerance"         , m_xTol             = 0.35 * Gaudi::Units::mm);
@@ -47,8 +45,7 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   declareProperty("YTolerance"         , m_yTol             = 0.8  * Gaudi::Units::mm);
   declareProperty("YTolSlope"          , m_yTolSlope        = 0.2);
   // Grouping tolerance
-  declareProperty("DxGroupTol"         , m_dxGroupTol       = 0.8 * Gaudi::Units::mm);
-  declareProperty("DxGroupFactor"      , m_dxGroupFactor    = 0.25);
+  declareProperty("HitTol"         , m_hitTol       = 3.0 * Gaudi::Units::mm);
   declareProperty("PrintVariables"      , m_PrintVariables    = false);
 
 
@@ -82,8 +79,6 @@ StatusCode PrVeloUTTool::initialize ( ) {
   double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
 
   if( m_debug ){
-    debug() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
-    debug() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
     debug() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
     debug() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
     debug() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
@@ -95,15 +90,12 @@ StatusCode PrVeloUTTool::initialize ( ) {
     debug() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
     debug() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
     debug() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-    debug() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
-    debug() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+    debug() << " HitTol             = " << m_hitTol       << " mm " << endmsg;
     debug() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
   }
 
   if(m_PrintVariables)
   {
-    info() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
-    info() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
     info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
     info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
     info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
@@ -116,8 +108,7 @@ StatusCode PrVeloUTTool::initialize ( ) {
     info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
     info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
     info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-    info() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
-    info() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+    info() << " HitTol             = " << m_hitTol       << " mm " << endmsg;
     info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
   }
   
@@ -246,8 +237,8 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
               range.end() != itH; ++itH ) {
 
 
-	 if ((*itH)->hit()->ignore())
-	   continue;
+         if ((*itH)->hit()->ignore())
+           continue;
 
           double xOnTrack = cand.xAtZ( (*itH)->z() );
           double yOnTrack = cand.yAtZ( (*itH)->z() );
@@ -266,13 +257,13 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
           dx = dx * normFact[(*itH)->planeCode()];
           double fabsdx = fabs(dx);
 
-	  if(tol > fabsdx){
+          if(tol > fabsdx){
 
             // Now refine the tolerance in Y
             if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < (*itH)->hit()->yMin() ||
                 yOnTrack - (m_yTol + m_yTolSlope * fabsdx) > (*itH)->hit()->yMax() ) continue;
 
-            cand.storeHit( dx, *itH );
+            cand.storeHit( *itH , (*itH)->planeCode() );
 
           }
         } // over hits
@@ -281,19 +272,14 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
     }
   }
 
-  // Important to sort here: the bestLists assumes hits are sorted
-  cand.sortHits();
-
-  if(m_debug) cand.printLists(debug());
-
   // Numbering warning : layer 0 is the 1st layer
 
   // The choice of clusters for this Velo track: accept several solutions
   std::vector<PrUTHits> theSolutions;
-  theSolutions.reserve(10); // reserve in case of many solutions for this Velo track
+  theSolutions.reserve(100); // reserve in case of many solutions for this Velo track
 
   // Try with 3 or 4 clusters in at least 3 different layers
-  cand.bestLists(m_dxGroupTol, m_dxGroupFactor, theSolutions, msgSvc(), name(), m_debug);
+  cand.bestLists(m_hitTol, theSolutions, msgSvc(), name() );
   if(m_debug){
     debug() << "This Velo track has " << theSolutions.size()
             << " possible solution(s) with 3 or 4 layers fired before clean-up" << endmsg;
@@ -342,37 +328,16 @@ void PrVeloUTTool::saveCandidate(PrUTHits& theClusters,PrVUTTrack& candidate){
 
   // Attach best clusters to the candidate, recompute the scaled dx for each cluster and the mean dx
   int nClusters = 0;
-  double distTot = 0.;
-  double distTotSquare = 0.;
   int maskFiredLayers = 0;
-
-  double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
-
-  std::vector<double> normFact;
-  double dyDz = candidate.slopeY();
-  m_PrUTMagnetTool->dxNormFactorsUT( dyDz,  normFact);
 
   PrUTHits::const_iterator itClus;
   for(itClus = theClusters.begin(); itClus != theClusters.end(); ++itClus){
 
     PrUTHit* cluster = *itClus;
 
-    double xOnTrack = candidate.xAtZ( (*itClus)->z() );
-    double yAt0 = candidate.yAtZ(0);
-    dyDz = candidate.slopeY();
-    updateUTHitForTrack((*itClus),yAt0, dyDz);
-    double dx = (*itClus)->x() - xOnTrack;
-
-    // Scale to the reference reg using exact factors
-    dx = dx * normFact[(*itClus)->planeCode()];
-
-    if(m_debug) debug() << format("%7.2f(%1d) ", dx, cluster->planeCode()) << " " << cluster;
-
     // Add the cluster
-    candidate.storeHit( dx, cluster);
+    candidate.storeHit( cluster );
 
-    distTot += dx;
-    distTotSquare += (dx*dx);
     nClusters++;
 
     // what layers were fired
@@ -383,17 +348,6 @@ void PrVeloUTTool::saveCandidate(PrUTHits& theClusters,PrVUTTrack& candidate){
 
   // Store these clusters to candidate
   candidate.storeClusters();
-
-  double dist = distTot/double(nClusters);
-  candidate.setDx(dist);
-  double distSquare = distTotSquare/double(nClusters);
-  double VarDist = (distSquare - (dist*dist));
-  candidate.setDxVar(VarDist);
-
-  double qop = distToMomentum * dist ;
-  candidate.setQOverP(qop);
-
-  if(m_debug) debug() << " -> Dx: " << candidate.Dx() << " , DxVar: " << candidate.DxVar() << endmsg;
 
   // set what layers were fired
   candidate.setUTLayersFiredMask(maskFiredLayers);
@@ -612,16 +566,6 @@ void PrVeloUTTool::localCleanUp(std::vector<PrVUTTrack>& vttTracks){
       // The same Velo track: local clean-up!
       if(ivttTrB->track() != ivttTrE->track()) continue;
 
-      if(m_debug){
-        debug() << " Same Velo track candidate B has " << ivttTrB->nUTLayersFired() << " layers fired with Dx = "
-                << ivttTrB->Dx() << " , DxVar = " << ivttTrB->DxVar()
-                << endmsg;
-
-        debug() << " Same Velo track candidate E has " << ivttTrE->nUTLayersFired() << " layers fired with Dx = "
-                << ivttTrE->Dx() << " , DxVar = " << ivttTrE->DxVar()
-                << endmsg;
-      }
-
       // If more layers for B
       if(ivttTrB->nUTLayersFired() > ivttTrE->nUTLayersFired()){
         if(m_debug) debug() << "    keep candidate B, since more compatible clusters" << endmsg;
@@ -738,8 +682,6 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
 
   if(m_debug) debug() << "Entering prepareOutputTracks" << endmsg;
 
-  double zMidField = m_PrUTMagnetTool->zMidField();
-
   std::vector<PrVUTTrack>::iterator ivttTrB;
   for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
 
@@ -753,20 +695,10 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
     if(m_debug) debug() << " with n clusters " << candClusters.size() << endmsg;
     if (candClusters.size() == 0) continue;
 
-    if(m_debug){
-      debug() << "Creating Velo-UT candidate with "
-              << candClusters.size() << " UT clusters with dx: " << cand.Dx() << endmsg;
-    }
-
     LHCb::Track* veloTr = cand.track();
-    const LHCb::State& state = veloTr->hasStateAt(LHCb::State::EndVelo) ?
-      *(veloTr->stateAt(LHCb::State::EndVelo)) :
+    const LHCb::State& state = veloTr->hasStateAt(LHCb::State::LastMeasurement) ?
+      *(veloTr->stateAt(LHCb::State::LastMeasurement)) :
       (veloTr->closestState(LHCb::State::EndVelo)) ;
-
-
-    double tx = state.tx();
-    double ty = state.ty();
-    double dist = cand.Dx();
 
     //== Handle states. copy Velo one, add UT.
 
@@ -784,22 +716,21 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
     for ( iState = states.begin() ; iState != states.end() ; ++iState ){
       (*iState)->setQOverP(qop);
     }
-    //== Add a new state...
-    LHCb::State temp;
-    temp.setLocation( LHCb::State::AtTT );
-    temp.setState( cand.xAtZ( m_zMidUT ) + dist,
-                   cand.yAtZ( m_zMidUT ),
-                   m_zMidUT,
-                   tx + dist/(m_zMidUT - zMidField),
-                   ty,
-                   qop );
+    
+    double y_Velo = state.y();
+    double z_Velo = state.z();
+    double ty_Velo = state.ty();
+    
+    double c11,c12,c13,c21,c22,c23;
 
+    c11 = 0.;
+    c12 = 0.;
+    c13 = 0.;
+    c21 = 0.;
+    c22 = 0.;
+    c23 = 0.;
 
-    outTr->addToStates( temp );
-
-    if(m_debug) debug() << " added State " << temp.stateVector()
-                        << " cov \n" << temp.covariance() << endmsg;
-
+    // Adding hits and calculating tx
     for( PrUTHits::const_iterator iClusB = candClusters.begin();
          iClusB != candClusters.end(); ++iClusB){
       (*iClusB)->hit()->setUsed( true );
@@ -810,7 +741,47 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
         debug() << " adding LHCb ID " << format( "%8x", (*iClusB)->hit()->lhcbID().lhcbID() ) << endmsg;
       }
 
-    } // over PrUTCoords
+      PrUTHit* pdigi = (*iClusB);
+
+      double y0 = y_Velo -  ty_Velo * z_Velo;
+      updateUTHitForTrack(pdigi, y0, ty_Velo);
+      
+      double ui = pdigi->x();
+      
+      double ci = pdigi->hit()->cosT();
+      double dz = pdigi->z() - m_zMidUT;
+      double wi = pdigi->hit()->weight();
+      
+      c11 += wi * ci;
+      c12 += wi * ci * dz;
+      c13 += wi * ui;
+      c22 += wi * ci * dz * dz;
+      c23 += wi * ui * dz;
+
+
+    } 
+
+
+    double tx_UT =  (c13*c21-c23*c11)/(c12*c21-c22*c11);
+
+    
+    //== Add a new state...
+    LHCb::State temp;
+    temp.setLocation( LHCb::State::AtTT );
+    temp.setState( cand.xAtZ( m_zMidUT ),
+                   cand.yAtZ( m_zMidUT ),
+                   m_zMidUT,
+                   tx_UT,
+                   ty_Velo,
+                   qop );
+
+
+    outTr->addToStates( temp );
+
+    if(m_debug) debug() << " added State " << temp.stateVector()
+                        << " cov \n" << temp.covariance() << endmsg;
+
+    
 
     outTr->setType( LHCb::Track::Upstream );
     outTr->setHistory( LHCb::Track::PrVeloUT );

@@ -43,11 +43,11 @@ PrVeloUT::PrVeloUT( const std::string& name,
 
   declareProperty("InputTracksName"    , m_inputTracksName);
   declareProperty("OutputTracksName"   , m_outputTracksName);
-  declareProperty("removeUsedTracks"   , m_removeUsedTracks = true); 
+  declareProperty("removeUsedTracks"   , m_removeUsedTracks = false); 
   declareProperty("InputUsedTracksNames"    , m_inputUsedTracksNames);
-  declareProperty("fitTracks"          , m_fitTracks = true);
+  declareProperty("fitTracks"          , m_fitTracks = false);
   declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
-  declareProperty("maxChi2"            , m_maxChi2          = 5.); 
+  declareProperty("maxChi2"            , m_maxChi2          = 1280.); 
   declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
   declareProperty( "TimingMeasurement", m_doTiming = false);
   declareProperty( "AddMomentumEstimate", m_AddMomentumEstimate = false);

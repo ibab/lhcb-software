@@ -98,23 +98,12 @@ StatusCode PrVeloUTFit::fitVUT( LHCb::Track& track ) const
 	m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
 
       if( iclus != m_stLiteContainer->end() ) {
-	Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
-	PrUTHit* pruthit = new PrUTHit( *sthit );
-	sthits.push_back( sthit ) ;
-	hits.push_back( pruthit ) ; 
+        Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
+        PrUTHit* pruthit = new PrUTHit( *sthit );
+        sthits.push_back( sthit ) ;
+        hits.push_back( pruthit ) ; 
 	
-	double xOnTrack = cand.xAtZ( pruthit->z() );
-	//double yOnTrack = cand.yAtZ( pruthit->z() );
-	double yAt0 = cand.yAtZ( 0 );
-	
-	double dyDz = cand.slopeY();
-	
-	updateUTHitForTrack(pruthit,yAt0, dyDz);
-	double dx = pruthit->x() - xOnTrack;
-	
-	// Scale to the reference reg	
-	dx = dx * normFact[pruthit->planeCode()];
-	cand.storeHit( dx, pruthit );
+        cand.storeHit( pruthit );
 	
       } else {
         return Error( "Cannot find lite cluster!" );
@@ -129,14 +118,13 @@ StatusCode PrVeloUTFit::fitVUT( LHCb::Track& track ) const
   double qOverP = cand.qOverP();
   
   double zMidUT    = m_PrUTMagnetTool->zMidUT();
-  double zMidField = m_PrUTMagnetTool->zMidField();
-
+  
   LHCb::State temp;
   temp.setLocation( LHCb::State::AtTT );
-  temp.setState( cand.xAtZ( zMidUT ) + cand.Dx(),
+  temp.setState( cand.xAtZ( zMidUT ),
 		 cand.yAtZ( zMidUT ),
 		 zMidUT,
-		 slX + cand.Dx()/(zMidUT - zMidField),
+		 slX,
 		 slY,
 		 qOverP);
 

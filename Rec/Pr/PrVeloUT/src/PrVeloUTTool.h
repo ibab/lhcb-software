@@ -65,8 +65,6 @@ static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
     double m_maxXSlope;
     double m_maxYSlope;
     double m_centralHoleSize;
-    double m_maxXSize;
-    double m_maxYSize;
     double m_minMomentum;
     double m_minPT;
     double m_maxPseudoChi2;
@@ -75,8 +73,7 @@ static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
     double m_xTolSlope;
     double m_yTol;
     double m_yTolSlope;
-    double m_dxGroupTol;
-    double m_dxGroupFactor;
+    double m_hitTol;
     double m_zMidUT;
 
     Tf::UTStationHitManager<PrUTHit> *      m_utHitManager;

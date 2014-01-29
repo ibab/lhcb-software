@@ -36,31 +36,38 @@
 
       LocalHit() : m_hit(0) {};
 
-      LocalHit( PrUTHit* hit, double dist ) {
+      LocalHit( PrUTHit* hit ) {
         m_hit = hit;
-        m_dist = dist;
-        m_inFourLayersSol = false;
+        m_x = hit->x();
+        m_z = hit->z();
       }
 
       ~LocalHit () { } ;
 
-      double distance() const { return m_dist; }
-      PrUTHit* hit()        { return m_hit; }
+      PrUTHit* hit()   { return m_hit; }
+      float x() const { return m_x; }
+      float z() const { return m_z; }
 
-      void setInFourLayersSolution(bool inFour) { m_inFourLayersSol = inFour; }
-      bool inFourLayersSolution() const { return m_inFourLayersSol; }
-
-      class increasingByDistance  {
+      class increasingX  {
       public:
         bool operator() (const LocalHit& first, const LocalHit& second ) const {
-          return fabs(first.distance()) < fabs(second.distance()) ;
+          return first.x() < second.x() ;
+        }
+      };
+
+      class lowerBoundX  {
+      public:
+        bool operator() (const LocalHit& first, const double value ) const {
+          return first.x() < value ;
         }
       };
 
     private:
-      PrUTHit*  m_hit;
-      double  m_dist;
-      bool    m_inFourLayersSol;
+      PrUTHit* m_hit;
+      float m_x;
+      float m_z;
+
+
     };
 
     typedef std::vector<LocalHit> LocalHits;
@@ -77,10 +84,13 @@
 
       m_origin = trState.position( );
       m_slope  = trState.slopes();
-      m_list.reserve(100);
+      m_list.reserve(4);
       m_clusters.reserve(4); // max of 1 per layer
-      m_dx = 0.;
-      m_dxvar = 0.;
+      m_allHits.resize(4);
+      for(int i = 0; i<4 ; i++){
+        m_allHits[i].reserve(30);
+      }
+      m_fourLayerSolution = false;
       m_qOverP = 0.;
       m_fitFlag = 0;
       m_chi2PerDoF=0.;
@@ -115,25 +125,18 @@
     double yAtZ( double z ) const {
       return m_origin.y() + m_slope.y() * ( z - m_origin.z() ) ;
     }
+    
+    void storeHit( PrUTHit* hit ,double planeCode) {
+      LocalHit dum( hit );
+      m_allHits[planeCode].push_back( dum );
+    }
 
-    void storeHit( double dist, PrUTHit* hit ) {
-      LocalHit dum( hit, dist );
+    void storeHit( PrUTHit* hit ) {
+      LocalHit dum( hit );
       m_list.push_back( dum );
     }
 
-    void sortHits() {
-      std::sort( m_list.begin(), m_list.end(), LocalHit::increasingByDistance() );
-    }
-
-    void setDx(double dx) { m_dx = dx; }
-
     double slopeY() const { return m_slope.y(); }
-
-    double Dx() const { return m_dx; }
-
-    void setDxVar(double dxvar) { m_dxvar = dxvar; }
-
-    double DxVar() const { return m_dxvar; }
 
     void setUTRegionDeadZonesMask(int maskInUTRegionDeadZones) { m_maskInUTRegionDeadZones = maskInUTRegionDeadZones; }
 
@@ -171,221 +174,154 @@
 
     void setFitFlag(int flag) { m_fitFlag = flag; }
     double fitFlag() { return m_fitFlag; }
+    
+    //=========================================================================
+    // Form clusters
+    //=========================================================================
 
+    void formClusters(std::vector<LocalHits> & clusters, double tol, bool forward){
+
+      if(!forward){
+        std::reverse(m_allHits.begin(),m_allHits.end());
+      }
+
+      LocalHits clusterCandidate;
+      clusterCandidate.reserve(4);
+
+      // Loop over First Layer
+      LocalHitIterators ilayer0_end =  m_allHits[0].end();
+      for(LocalHitIterators ilayer0 = m_allHits[0].begin(); ilayer0_end != ilayer0 ; ++ilayer0){
+              
+        float xhitLayer0 = ilayer0->x();
+        float zhitLayer0 = ilayer0->z();
+        
+        // Loop over Second Layer
+        LocalHitIterators ilayer1_end =  m_allHits[1].end();
+        for(LocalHitIterators ilayer1 = m_allHits[1].begin(); ilayer1_end != ilayer1 ; ++ilayer1){
+          
+          float xhitLayer1 = ilayer1->x();
+          float zhitLayer1 = ilayer1->z();
+          float tx = (xhitLayer1 - xhitLayer0)/(zhitLayer1 - zhitLayer0);
+
+          if(fabs(tx)>0.3) continue;
+
+          clusterCandidate.clear();
+          clusterCandidate.push_back(*ilayer0);
+          clusterCandidate.push_back(*ilayer1);
+          
+          //Find upper and lower bounds of tolerance
+          float zhitLayer2 = (*(m_allHits[2].begin())).z();
+          float xextrapLayer2 = xhitLayer1 + tx*(zhitLayer2-zhitLayer1);
+          
+          // Loop over Third Layer
+          LocalHitIterators ilayer2 =  
+            std::lower_bound(m_allHits[2].begin(),m_allHits[2].end(),xextrapLayer2-tol,LocalHit::lowerBoundX());
+          LocalHitIterators ilayer2_end = m_allHits[2].end();
+
+          while(ilayer2!= ilayer2_end && (*ilayer2).x() < xextrapLayer2+tol){
+            
+            clusterCandidate.push_back(*ilayer2);
+            if(!m_fourLayerSolution){  
+              clusters.push_back(clusterCandidate);
+            }
+
+            //Find upper and lower bounds of tolerance
+            float zhitLayer3 = (*(m_allHits[3].begin())).z();
+            float tx4 = ((*ilayer2).x()-(*ilayer1).x())/((*ilayer2).z()-(*ilayer1).z());
+            float xextrapLayer3 = xhitLayer1 + tx4*(zhitLayer3-zhitLayer1);
+            
+            // Loop over Fourth Layer
+            LocalHitIterators ilayer3 =  
+              std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-tol/2.0,LocalHit::lowerBoundX());
+            LocalHitIterators ilayer3_end = m_allHits[3].end();
+              
+            while(ilayer3!= ilayer3_end && (*ilayer3).x() < xextrapLayer3+tol/2.0){
+              
+              if(!m_fourLayerSolution){  
+                m_fourLayerSolution = true;
+                clusters.pop_back();
+              }
+              
+              clusterCandidate.push_back(*ilayer3);
+              clusters.push_back(clusterCandidate);
+              clusterCandidate.pop_back();
+              
+              ++ilayer3;
+            }//layer3
+            clusterCandidate.pop_back();
+            
+            ++ilayer2;
+          }//layer2
+          
+          // Loop over Fourth Layer
+          if(!m_fourLayerSolution){ 
+            
+            //Find upper and lower bounds of tolerance
+            float zhitLayer3 = (*(m_allHits[3].begin())).z();
+            float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
+            
+            LocalHitIterators ilayer3 =  
+              std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-tol,LocalHit::lowerBoundX());
+            LocalHitIterators ilayer3_end = m_allHits[3].end();
+
+            while(ilayer3!= ilayer3_end && (*ilayer3).x() < xextrapLayer3+tol){
+              
+              clusterCandidate.push_back(*ilayer3);
+              clusters.push_back(clusterCandidate);
+              clusterCandidate.pop_back();
+              
+              ++ilayer3;
+            }//layer3
+          }//!m_fourLayerSolution
+        }//layer1
+      }//layer0
+    }//form clusters
+    
+    
     //=========================================================================
     // Select the best list of sorted hits...
     //=========================================================================
-    void bestLists(double tol, double tol_factor,
+    void bestLists(double tol,
                    std::vector<PrUTHits> & hitsSolutions, 
-                   IMessageSvc* msgSvc, std::string source, bool isDebug ){
+                   IMessageSvc* msgSvc, std::string source){
+      
+      MsgStream msg = MsgStream( msgSvc, source );
 
-      // The vector of local hits for bestLists
-      std::vector<std::vector<LocalHitIterators> > LocalHitsLists;
-      LocalHitsLists.reserve(10); // reserve in case of many solutions for this Velo track
-
-      // Vector of local hits without more than 1 on the same layer:
-      std::vector<LocalHitIterators> myLocalHits;
-      myLocalHits.reserve(4); // max of 1 per layer
-
-      // Iterators: begin and end
-      LocalHitIterators itB, itE;
-      LocalHitIterators itStoreB, itStoreE;
-      itB = itE = m_list.begin();
-
-      // Layers 0, 1, 2, 3 and stations 4 (UTa), 5 (UTb)
-      std::vector<LocalHitIterators> stationsLocalHits[6];
-
-      int planeCode;
-      int maskPlanes;
-      int nLayersFired;
-
-      while(itB!= m_list.end()){
-
-        // set tolerances. They depend on distance (i.e. momentum).
-
-        // tolerance for the grouping of clusters in different stations
-        double globalTol      = tol        + tol_factor*fabs(itB->distance());
-
-        // tolerance for the grouping of clusters in the same station
-        double sameStationTol = tol * 0.5  + tol_factor*fabs(itB->distance()) * 0.33333;
-
-        // tolerance for the grouping of clusters on the same layer
-        double  sameLayerTol   = tol * 0.25;
-
-        // Ignore LocalHits already used in a four layers fired solution
-        //      if(!itB->inFourLayersSolution()){
-
-        // Take all. Better for off-line MW
-        if( 1 ){
-
-          // Find the LocalHits
-          itE = itB;
-
-          for(int i = 0; i< 6; ++i) stationsLocalHits[i].clear();
-
-          maskPlanes = 0;
-
-          bool foundSolution = false;
-          nLayersFired = 0;
-
-          while( itE != m_list.end() ){
-
-            // Global tolerance. Hits are sorted, no need for fabs!
-            //   if(globalTol < itE->distance() - itB->distance()) break;
-
-            // Global tolerance. Hits are sorted using fabs
-            // for off-line construct all combinations. MW
-            double db = itB->distance();
-            double de = itE->distance();
-            double dist = fabs(itE->distance() - itB->distance());
-            if(db*de>0.0 && globalTol < dist) break;
-            if(db*de<0.0) {
-              itE++;
-              continue;
-            }
-            // Layer and station to which this hit belongs
-            planeCode = itE->hit()->planeCode();
-
-            // Same station UTa or UTb tolerance
-            if(planeCode<2){ // UTa
-              if(!stationsLocalHits[4].empty()){
-                if(sameStationTol < itE->distance() - stationsLocalHits[4].front()->distance()){
-                  break;
-                } // tolerance
-              }
-            }
-            else{ // UTb
-              if(!stationsLocalHits[5].empty()){
-                if(sameStationTol < itE->distance() - stationsLocalHits[5].front()->distance()){
-                  break;
-                } // tolerance
-              }
-            }
-
-            // Same layer tolerances and maximum of 2 compatible clusters on same layer
-            int n = stationsLocalHits[planeCode].size();
-            // Ignore solution if already 2 clusters on this layer
-	    if(n >= 1) break;
-
-            if(n > 0){
-              if(sameLayerTol < itE->distance() - stationsLocalHits[planeCode].front()->distance()){
-                break;
-              } // tolerance
-            }
-
-            // Fill lists
-            stationsLocalHits[planeCode].push_back(itE); // layers
-            if(planeCode<2) stationsLocalHits[4].push_back(itE); // UTa
-            else stationsLocalHits[5].push_back(itE); // UTb
-
-            // Require 3 or 4 planes to be fired until no more compatible clusters
-            // -> the solution with 4 planes if any is found first
-            maskPlanes |= itE->hit()->mask();
-
-            if(m_LUT[maskPlanes] >= 3){
-
-              // Passes all tolerances and has enough clusters
-              foundSolution = true;
-              itStoreB = itB;
-              itStoreE = itE;
-
-            } // if at least three planes fired
-
-            ++itE;
-          } // itE
-
-          if(foundSolution){
-
-            nLayersFired = m_LUT[maskPlanes];
-
-            if(isDebug){
-              MsgStream msg = MsgStream( msgSvc, source );
-              msg << MSG::DEBUG << "Found a solution with nLayersFired: " << nLayersFired
-                  << " with first hit dist: "
-                  << format(" %6.2f(%1d) ", itStoreB->distance(), itStoreB->hit()->planeCode())
-                  << " , last hit dist: "
-                  << format(" %6.2f(%1d) ", itStoreE->distance(), itStoreE->hit()->planeCode())
-                  << endmsg;
-            }
-
-            // List of local hits. Not more than 2 on the same layer. 
-            // TODO. Decrease to 1 per layer. 2 per layer is historical for UT with overlaping sensors.
-            myLocalHits.clear();
-
-            std::vector<LocalHitIterators>::const_iterator it;
-            for (int j=0; j!=4; ++j ){
-                for (it = stationsLocalHits[j].begin(); it != stationsLocalHits[j].end(); ++it){
-                    
-                    if(nLayersFired == 4) (*it)->setInFourLayersSolution(true);
-                    myLocalHits.push_back(*it);
-                }
-            }
-
-            LocalHitsLists.push_back(myLocalHits);
-          } // foundSolution
-        } // if(!itB->inFourLayersSolution()){
-
-        ++itB;
-      } // itB
-
-      if(isDebug){
-        MsgStream msg = MsgStream( msgSvc, source );
-        msg << MSG::DEBUG << "Number of solutions: " << LocalHitsLists.size() << endmsg;
+      for(unsigned int i = 0;i<m_allHits.size();i++){  
+        std::sort(m_allHits[i].begin(),m_allHits[i].end(),LocalHit::increasingX()); 
       }
+      
+      std::vector<LocalHits>forwardClusters;
+      forwardClusters.reserve(100);
+      formClusters(forwardClusters,tol,true);
 
-      // Now create the different PrUTHit combinations and add them to the vector of solutions
-      std::vector<std::vector<LocalHitIterators> >::iterator iLocalHitsLists;
-      for(iLocalHitsLists = LocalHitsLists.begin(); iLocalHitsLists != LocalHitsLists.end(); ++iLocalHitsLists){
-
-        // The compatible clusters made from these LocalHits
+      if(!m_fourLayerSolution){
+        std::vector<LocalHits>backwardClusters;
+        backwardClusters.reserve(50);
+        formClusters(backwardClusters,tol,false);
+        forwardClusters.insert( forwardClusters.end(), backwardClusters.begin(), backwardClusters.end() );
+      }
+      
+      std::vector<LocalHits>::iterator iLocalHits;
+      for(iLocalHits = forwardClusters.begin(); iLocalHits != forwardClusters.end(); ++iLocalHits){
+   
         PrUTHits hitsCandidate;
         hitsCandidate.reserve(4);
-
-        std::vector<LocalHitIterators>::iterator iSub;
-        for(iSub = (*iLocalHitsLists).begin(); iSub != (*iLocalHitsLists).end(); ++iSub){
-          hitsCandidate.push_back((*iSub)->hit());
+        
+        LocalHits::iterator iSub;
+        for(iSub = (*iLocalHits).begin(); iSub != (*iLocalHits).end(); ++iSub){
+          hitsCandidate.push_back((*iSub).hit());
         }
-
-        if(isDebug){
-          MsgStream msg = MsgStream( msgSvc, source );
-          msg << MSG::DEBUG << "  with hits: ";
-          for(iSub = (*iLocalHitsLists).begin(); iSub != (*iLocalHitsLists).end(); ++iSub){
-            msg << format(" %6.2f(%1d) ", (*iSub)->distance(), (*iSub)->hit()->planeCode());
-          }
-          msg << endmsg;
-        }
-
-        // Add all the solutions
+        
         hitsSolutions.push_back(hitsCandidate);
       }
     } // bestLists
 
-    void printLists( MsgStream& msg ) {
-
-      LocalHitIterators itL;
-
-      /*
-        msg << endmsg << "Hits : ";
-        for ( itL = m_list.begin(); m_list.end() != itL; itL++ ) {
-        LHCb::STChannelID id = (*itL).hit()->lhcbID().stID();
-        }
-      */
-
-      int ll = 10;
-      msg << std::endl << "Hits : ";
-      for ( itL = m_list.begin(); m_list.end() != itL; itL++ ) {
-        double dist = (*itL).distance();
-        msg << format("%6.2f(%1d) ", dist, (*itL).hit()->planeCode());
-        --ll;
-        if ( 0 == ll ) {
-          msg << std::endl << "       ";
-          ll = 10;
-        }
-      }
-      msg << endmsg;
-    }
+    
 
   protected:
+
+    
 
   private:
     LHCb::Track*  m_track;
@@ -393,9 +329,9 @@
     Gaudi::XYZPoint m_origin;
     Gaudi::XYZVector m_slope;
     LocalHits m_list;
+    std::vector<LocalHits> m_allHits;
     PrUTHits m_clusters;
-    double m_dx;
-    double m_dxvar;
+    bool m_fourLayerSolution;
     double m_chi2PerDoF;
     double m_qOverP;
     int m_fitFlag; // 0 = no fit, 1 = p from dx, 2 = simple fit, 3 = Kalman
