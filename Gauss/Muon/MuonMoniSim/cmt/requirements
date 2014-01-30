@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package MuonMoniSim 
-version v2r6p1
+version v3r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
