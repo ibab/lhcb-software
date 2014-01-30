@@ -3,7 +3,11 @@
 #define KERNEL_DVCOMMONBASE_ICPP 1
 
 // ============================================================================
-// Include
+// STL
+// ============================================================================
+#include <sstream>
+// ============================================================================
+// Boost
 // ============================================================================
 #include "boost/lexical_cast.hpp"
 #include "boost/assign/list_of.hpp"
@@ -28,38 +32,38 @@ template <class PBASE>
 DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                                    ISvcLocator* pSvcLocator )
   : extends1<PBASE,IDVAlgorithm>( name , pSvcLocator )
-                                 //
+    //
   , m_particleOutputLocation("")
   , m_vertexFitNames        ()
   , m_vertexFits            ()
-                                 //
+    //
   , m_filterNames           ()
   , m_filters               ()
-                                 //
+    //
   , m_particleCombinerNames ()
   , m_particleCombiners     ()
-                                 //
+    //
   , m_particleReFitterNames ()
   , m_particleReFitters     ()
-                                 //
+    //
   , m_pvReFitterNames       ()
   , m_pvReFitters           ()
-                                 //
+    //
   , m_decayTreeFitterNames  ()
   , m_decayTreeFitters      ()
-                                 //
+    //
   , m_massFitterNames       ()
   , m_massFitters           ()
-                                 //
+    //
   , m_lifetimeFitterNames   ()
   , m_lifetimeFitters       ()
-                                 //
+    //
   , m_directionFitterNames  ()
   , m_directionFitters      ()
-                                 //
+    //
   , m_distanceCalculatorNames  ()
   , m_distanceCalculators      ()
-                                 //
+    //
   , m_checkOverlapName      ( "CheckOverlap:PUBLIC" )
   , m_checkOverlap          ( NULL  )
   , m_taggingToolName       ( "BTaggingTool" )
@@ -387,13 +391,25 @@ void DVCommonBase<PBASE>::initializeLocations()
                   << endmsg;
   }
 
-  // Strip any ending "/Particles"
-  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-        iloc != m_inputLocations.end(); ++iloc )
+  // Check for duplication of locations
   {
-    DaVinci::StringUtils::removeEnding(*iloc,"/Particles");
+    std::sort( m_inputLocations.begin(), m_inputLocations.end() );
+    const std::vector<std::string>::iterator iLoc =
+      std::unique(m_inputLocations.begin(),m_inputLocations.end());
+    if ( iLoc != m_inputLocations.end() )
+    {
+      std::ostringstream mess;
+      mess << "Duplication in Input locations :";
+      for ( auto& i : m_inputLocations ) { mess << " " << i; }
+      this->Warning( mess.str() ).ignore();
+      m_inputLocations.erase( iLoc, m_inputLocations.end() );
+    }
   }
 
+  // Strip any ending "/Particles"
+  for ( auto& loc : m_inputLocations )
+  { DaVinci::StringUtils::removeEnding(loc,"/Particles"); }
+  
   if ( this->msgLevel(MSG::DEBUG) )
   {
     this->debug() << ">>> Initialised P->PV locations "
@@ -520,7 +536,7 @@ StatusCode DVCommonBase<PBASE>::loadEventInput()
   if ( !m_inputLocations.empty() )
   {
     sc = loadParticles();
-    if ( UNLIKELY(!m_p2PVInputLocations.empty()) ) 
+    if ( UNLIKELY(!m_p2PVInputLocations.empty()) )
     {
       sc = sc && loadParticle2PVRelations();
     }
@@ -621,7 +637,7 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
       if ( this->msgLevel(MSG::DEBUG) )
       {
         this->debug() << "Non-existing/empty location " << location;
-        if ( ! this->rootInTES().empty() ) 
+        if ( ! this->rootInTES().empty() )
         { this->debug() << " under " << this->rootInTES(); }
         this->debug() << endmsg;
       }

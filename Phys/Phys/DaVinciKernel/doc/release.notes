@@ -4,6 +4,11 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2014-01-30 - Chris Jones
+ - Add a check to DVCommonBase to test for duplication in the Input particle
+   locations. If duplicates are found, a warning is printed and the duplication 
+   is removed. (Note - Using some c++11 syntax ;) )
+
 !========================= DaVinciKernel v11r5p1 2013-10-29 =========================
 
 ! 2013-10-14 - Chris Jones
