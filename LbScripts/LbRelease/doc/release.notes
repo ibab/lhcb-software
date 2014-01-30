@@ -1,3 +1,7 @@
+2014-01-30  Joel Closier <Joel.Closier@cern.ch>
+
+        * LbRelease/scripts/GridEnv.(c)sh: Remove reference to SLC4
+
 2014-01-28  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* LbRelease/python/LbRelease/GetPack.py: Fixed typo
