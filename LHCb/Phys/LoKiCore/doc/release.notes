@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-01-06 - Marco Clemencic
+ - Added workaround for bug ROOT-5721 (to be removed ASAP).
+   https://sft.its.cern.ch/jira/browse/ROOT-5721
+
 ! 2014-01-20 - Sasha Mazurov
  - Fixed compilation problem with Boost Spirit when using Pheonix V3
    (mandatory in Clang).
