@@ -122,8 +122,6 @@ DECLARE_ALGORITHM_FACTORY( MuonIDAlg )
 
 double land2(Double_t *x, Double_t *par);
 
-double land(Double_t *x, Double_t *par);
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -2526,17 +2524,10 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
   // comment: Returns for a given track of dist0 the probability to be a non-muon;
   // authors: G. Lanfranchi & S. Furcas,
   // date:    10/5/09
+  // Modified by Helder Lopes on January 2014 to solve https://sft.its.cern.ch/jira/browse/ROOT-5985
   //=====================================================================
 
-  double Prob=0;
-#if (ROOT_VERSION_CODE >= ROOT_VERSION(5, 99, 0))
-  // temporary workaround for https://sft.its.cern.ch/jira/browse/ROOT-5985
-  Prob = ROOT::Math::landau_cdf(dist0, parNonMu[1], parNonMu[0]) - ROOT::Math::landau_cdf(0, parNonMu[1], parNonMu[0]);
-#else
-  TF1 myF("myF",land,0,m_x*m_nMax,2);
-  myF.SetParameters(parNonMu[0],parNonMu[1]);
-  Prob = myF.Integral(0,dist0);
-#endif
+  double Prob = ROOT::Math::landau_cdf(dist0, parNonMu[1], parNonMu[0]) - ROOT::Math::landau_cdf(0, parNonMu[1], parNonMu[0]);
 
   if(parNonMu[2]>0){
     if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
@@ -2560,130 +2551,133 @@ StatusCode MuonIDAlg::calcLandauNorm(){
   for(int i=1;i<3;i++){parnmu[i]=0;}
   double Norm = -1;
 
-  //===================
-  //  Muons - Region 1
-  //===================
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_1[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin1 out of control");
-  m_MuLanParR1_1[5] = Norm;
+  // For muons, only used if m_dllFlag == 1
+  if(m_dllFlag == 1){
+    //===================
+    //  Muons - Region 1
+    //===================
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_1[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin1 out of control");
+    m_MuLanParR1_1[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_2[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin2 out of control");
-  m_MuLanParR1_2[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_2[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin2 out of control");
+    m_MuLanParR1_2[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_3[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin3 out of control");
-  m_MuLanParR1_3[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_3[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin3 out of control");
+    m_MuLanParR1_3[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_4[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin4 out of control");
-  m_MuLanParR1_4[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_4[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin4 out of control");
+    m_MuLanParR1_4[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_5[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin5 out of control");
-  m_MuLanParR1_5[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_5[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin5 out of control");
+    m_MuLanParR1_5[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_6[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin6 out of control");
-  m_MuLanParR1_6[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_6[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin6 out of control");
+    m_MuLanParR1_6[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR1_7[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin7 out of control");
-  m_MuLanParR1_7[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR1_7[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R1 bin7 out of control");
+    m_MuLanParR1_7[5] = Norm;
 
-  //====================
-  //  Muons - Region 2
-  //====================
+    //====================
+    //  Muons - Region 2
+    //====================
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR2_1[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin1 out of control");
-  m_MuLanParR2_1[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR2_1[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin1 out of control");
+    m_MuLanParR2_1[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR2_2[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin2 out of control");
-  m_MuLanParR2_2[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR2_2[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin2 out of control");
+    m_MuLanParR2_2[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR2_3[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin3 out of control");
-  m_MuLanParR2_3[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR2_3[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin3 out of control");
+    m_MuLanParR2_3[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR2_4[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin4 out of control");
-  m_MuLanParR2_4[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR2_4[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin4 out of control");
+    m_MuLanParR2_4[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR2_5[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin5 out of control");
-  m_MuLanParR2_5[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR2_5[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R2 bin5 out of control");
+    m_MuLanParR2_5[5] = Norm;
 
-  //====================
-  //  Muons - Region 3
-  //====================
+    //====================
+    //  Muons - Region 3
+    //====================
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR3_1[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin1 out of control");
-  m_MuLanParR3_1[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR3_1[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin1 out of control");
+    m_MuLanParR3_1[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR3_2[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin2 out of control");
-  m_MuLanParR3_2[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR3_2[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin2 out of control");
+    m_MuLanParR3_2[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR3_3[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin3 out of control");
-  m_MuLanParR3_3[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR3_3[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin3 out of control");
+    m_MuLanParR3_3[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR3_4[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin4 out of control");
-  m_MuLanParR3_4[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR3_4[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin4 out of control");
+    m_MuLanParR3_4[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR3_5[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin5 out of control");
-  m_MuLanParR3_5[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR3_5[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R3 bin5 out of control");
+    m_MuLanParR3_5[5] = Norm;
 
-  //====================
-  //  Muons - Region 4
-  //====================
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR4_1[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin1 out of control");
-  m_MuLanParR4_1[5] = Norm;
+    //====================
+    //  Muons - Region 4
+    //====================
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR4_2[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin2 out of control");
-  m_MuLanParR4_2[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR4_1[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin1 out of control");
+    m_MuLanParR4_1[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR4_3[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin3 out of control");
-  m_MuLanParR4_3[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR4_2[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin2 out of control");
+    m_MuLanParR4_2[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR4_4[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin4 out of control");
-  m_MuLanParR4_4[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR4_3[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin3 out of control");
+    m_MuLanParR4_3[5] = Norm;
 
-  for(int i=0;i<5;i++){par[i]=m_MuLanParR4_5[i];}
-  Norm = calcNorm(par);
-  if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin5 out of control");
-  m_MuLanParR4_5[5] = Norm;
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR4_4[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin4 out of control");
+    m_MuLanParR4_4[5] = Norm;
 
+    for(int i=0;i<5;i++){par[i]=m_MuLanParR4_5[i];}
+    Norm = calcNorm(par);
+    if (Norm<0 || Norm==0) return Error("normalization of Muon R4 bin5 out of control");
+    m_MuLanParR4_5[5] = Norm;
+  }
 
   //=========================
   //  Non-Muons - Region 1
@@ -2736,13 +2730,10 @@ double MuonIDAlg::calcNorm_nmu(double *par){
   // comment: Calculate Normalizations for non-muons
   // authors: G. Lanfranchi & S. Furcas,
   // date:    10/5/09
+  // Modified by Helder Lopes on January 2014 to solve https://sft.its.cern.ch/jira/browse/ROOT-5985
   //=====================================================================
 
-  double Norm = 0.;
-
-  TF1 myF("myF",land,0,m_x*m_nMax,2);
-  myF.SetParameters(par[0],par[1]);
-  Norm = myF.Integral(0,m_x*m_nMax);
+  double Norm =  ROOT::Math::landau_cdf(m_x*m_nMax,par[1],par[0]) - ROOT::Math::landau_cdf(0.,par[1],par[0]);
 
   return Norm;
 }
@@ -2973,16 +2964,6 @@ double land2(Double_t *x, Double_t *par) {
   Double_t landau1 = TMath::Landau(x[0],par[0],par[1]);
   Double_t landau2 = TMath::Landau(x[0],par[2],par[3]);
   result = (landau1 + par[4]*landau2);
-
-  return result;
-
-}
-
-double land(Double_t *x, Double_t *par) {
-
-  double result = 0;
-  Double_t landau1 = TMath::Landau(x[0],par[0],par[1]);
-  result = landau1;
 
   return result;
 

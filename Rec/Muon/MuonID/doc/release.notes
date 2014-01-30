@@ -3,6 +3,12 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2014-01-30 - J. Helder Lopes
+ - Fixed problem with ROOT 6 (https://sft.its.cern.ch/jira/browse/ROOT-5985): 
+   For non-muon probability use ROOT::Math::landau_cdf. User function land()    
+   removed. For muon probability continue to use TF1 integral, but now only 
+   call it if DLL_flag == 1. 
+
 ! 2014-01-29 - Marco Clemencic
  - Reiteration on the workaround for ROOT-5985 (the first attempt didn't work).
    https://sft.its.cern.ch/jira/browse/ROOT-5985
