@@ -1,4 +1,5 @@
 // $Id: $
+
 #ifndef PRCHECKER_H
 #define PRCHECKER_H 1
 
@@ -11,16 +12,17 @@
 
 
 // local
-#include "PrCounter.h"
-
+//#include "PrCounter.h"
+#include "PrKernel/IPrCounter.h"
 
 class IHistoTool ;
 
 
 /** @class PrChecker PrChecker.h
  *  Check the quality of the pattern, by comparing to MC information
+ *  @modified to include UT hits statistics
  *
- *  @author Olivier Callot
+ *  @author Olivier Callot, Thomas Nikodem
  *  @date   2005-03-29
  */
 class EffCounter {
@@ -68,16 +70,20 @@ private:
   std::string m_downTracks;
   std::string m_upTracks;
   
-  PrCounter* m_velo;
-  PrCounter* m_forward;
-  PrCounter* m_match;
-  PrCounter* m_upTrack;
-  PrCounter* m_tTrack;
-  PrCounter* m_downTrack;
-  PrCounter* m_best;
-  PrCounter* m_bestLong;
-  PrCounter* m_bestDownstream;
+  IPrCounter* m_velo;
+  IPrCounter* m_forward;
+  IPrCounter* m_match;
+  IPrCounter* m_upTrack;
+  IPrCounter* m_tTrack;
+  IPrCounter* m_downTrack;
+  IPrCounter* m_best;
+  IPrCounter* m_bestLong;
+  IPrCounter* m_bestDownstream;
 
+  IPrCounter* m_utForward;
+  IPrCounter* m_utMatch;
+  IPrCounter* m_utbestLong;
+  IPrCounter* m_utDownst;
 
   int  m_writeVeloHistos;      
   int  m_writeForwardHistos;   
@@ -85,14 +91,19 @@ private:
   int  m_writeDownHistos;      
   int  m_writeUpHistos;        
   int  m_writeTTrackHistos;    
-  int  m_writeBestHistos;      
+  int  m_writeBestHistos;
+  int  m_writeBestLongHistos;
+  int  m_writeBestDownstreamHistos;
+  int  m_writeUTHistos;
 
   bool m_eta25cut;             
-
+  bool m_triggerNumbers;
   //== Vector of the counters
-  std::vector<PrCounter*> m_allCounters;
+  std::vector<IPrCounter*> m_allCounters;
+  //std::vector<IPrUTCounter*> m_allUTCounters;
 
   const IHistoTool* m_histoTool;
+
 };
 
 #endif // PRCHECKER_H

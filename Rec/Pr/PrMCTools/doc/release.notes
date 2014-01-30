@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-01-30 - Michel De Cian
+ - Updated PrCounter and PrChecker: Added trigger condition and new efficiency categories. Uses new IPrCounter interface.
+
 ! 2014-01-23 - Michel De Cian
 -  Fix behaviour of flag 'fromB' in PrDebugTrackingLosses to only include B baryons and mesons, and not particles from string fragmentation of b quarks (now consistent with PrChecker)
 
