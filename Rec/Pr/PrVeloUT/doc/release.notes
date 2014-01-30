@@ -3,8 +3,10 @@
 ! Responsible : Jianchun Wang
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
+! 2014-01-30 - Espen Eie Bowen
+ - Changed how x of state atTT is assigned
 
-! 2014-01-13 - Espen Eie Bowen
+! 2014-01-29 - Espen Eie Bowen
  - Changed how clustering is done and resulting changes to algorithm.
 
 ! 2014-01-13 - Marco Cattaneo

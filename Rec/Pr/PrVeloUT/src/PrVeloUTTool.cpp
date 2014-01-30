@@ -761,14 +761,13 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
 
     } 
 
-
-    double tx_UT =  (c13*c21-c23*c11)/(c12*c21-c22*c11);
-
+    double x_UT = (c13*c22-c23*c12)/(c11*c22-c21*c12);
+    double tx_UT = (c13*c21-c23*c11)/(c12*c21-c22*c11);
     
     //== Add a new state...
     LHCb::State temp;
     temp.setLocation( LHCb::State::AtTT );
-    temp.setState( cand.xAtZ( m_zMidUT ),
+    temp.setState( x_UT,
                    cand.yAtZ( m_zMidUT ),
                    m_zMidUT,
                    tx_UT,
