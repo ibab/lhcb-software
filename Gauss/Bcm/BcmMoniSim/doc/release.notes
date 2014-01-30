@@ -1,9 +1,11 @@
 !----------------------------------------------------------------------------
 ! Package     : BcmMoniSim
-! Responsible : Magnus Lieng
+! Author      : Magnus Lieng (Dortmund)
+! Responsible : = Gauss managers =
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
+!======================== BcmMoniSim v2r0 2014-01-30 ========================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
 
