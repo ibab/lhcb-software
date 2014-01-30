@@ -6,7 +6,8 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-! 2014-01-24 - Jeremy
+!=========================== Mint v3r0 2014-01-30 ============================
+! 2014-01-24 - Jeremy 
  - Move FocusFlatte to Flatte
  - Deprecate FocusFlatte
  - Fixed a bug in the new Flatte
@@ -24,11 +25,14 @@
  - Fixed compile warning in EvtTRandom.h by adding virtual destructor.
 
 ! 2014-01-21 - Jeremy
- - Fixed an issue with the LASS function where the units of the Breit-Wigner were different to the non-resonant component
+ - Fixed an issue with the LASS function where the units of the Breit-Wigner 
+   were different to the non-resonant component
 
 ! 2014-01-17 - Jeremy
- - Lineshape of Breit_wigner now multiplied by the unnormalised Barrier Factors instead of the normalised versions
-  . The Breit-Wigner mass-dependent width itself still uses the normalised version as it should
+ - Lineshape of Breit_wigner now multiplied by the unnormalised Barrier Factors 
+   instead of the normalised versions
+  . The Breit-Wigner mass-dependent width itself still uses the normalised 
+    version as it should
 
 ! 2014-01-16 - Jeremy
  - Fixed an issue where the PDG mass of a non-resonant particle was set to 999

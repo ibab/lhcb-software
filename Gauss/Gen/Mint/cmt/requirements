@@ -3,7 +3,7 @@
 # Maintainer : Matt Coombes
 #============================================================================
 package           Mint
-version           v2r2
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
