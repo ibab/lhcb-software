@@ -6,6 +6,9 @@
 
 
 ! 2014-01-30 - Gerhard Raven
+ - use 'almost perfect forwarding' to improve apply{Tis,Tos,Tus}
+
+! 2014-01-29 - Gerhard Raven
  - rename analysisReport( const vector<T*>&) into analysisReports to fix (spurious?) warning 
    about hiding the virtuals analysisReport( T& ) with T=Vertex,Track,Particle,...
 

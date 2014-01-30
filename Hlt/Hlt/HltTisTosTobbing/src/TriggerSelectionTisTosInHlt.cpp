@@ -107,6 +107,9 @@ struct isTisTos
     }
 };
 
+#define DISABLE_IF_CONVERTIBLE( X, Y )                                              \
+    typename std::enable_if<!std::is_convertible<X, Y>::value, void>::type* = nullptr
+
 struct applyTus
 {
     TriggerSelectionTisTosInHlt* parent;
@@ -115,17 +118,14 @@ struct applyTus
     explicit applyTus( TriggerSelectionTisTosInHlt& p ) : parent( &p )
     {
     }
-
-    template <typename T>
-    bool operator()( std::vector<T*>&& objects )
+    bool operator()( const std::vector<std::string>& dependencies )
     {
-        return parent->IParticleTisTos::tus(
-            std::forward<std::vector<T*>>( objects ) );
+        return parent->ITriggerSelectionTisTos::tusSelection( dependencies );
     }
-    bool operator()( std::vector<std::string>&& dependencies )
+    template <typename T, DISABLE_IF_CONVERTIBLE(T, const std::vector<std::string>&)>
+    bool operator()( T&& objects )
     {
-        return parent->ITriggerSelectionTisTos::tusSelection(
-            std::forward<std::vector<std::string>>( dependencies ) );
+        return parent->IParticleTisTos::tus( std::forward<T>( objects ) );
     }
 };
 
@@ -137,42 +137,35 @@ struct applyTis
     explicit applyTis( TriggerSelectionTisTosInHlt& p ) : parent( &p )
     {
     }
-
-    template <typename T>
-    bool operator()( std::vector<T*>&& objects )
+    bool operator()( const std::vector<std::string>& dependencies )
     {
-        return parent->IParticleTisTos::tis(
-            std::forward<std::vector<T*>>( objects ) );
+        return parent->ITriggerSelectionTisTos::tisSelection( dependencies );
     }
-    bool operator()( std::vector<std::string>&& dependencies )
+    template <typename T, DISABLE_IF_CONVERTIBLE(T, const std::vector<std::string>&)>
+    bool operator()( T&& objects )
     {
-        return parent->ITriggerSelectionTisTos::tisSelection(
-            std::forward<std::vector<std::string>>( dependencies ) );
+        return parent->IParticleTisTos::tis( std::forward<T>( objects ) );
     }
 };
 
 struct applyTos
 {
     TriggerSelectionTisTosInHlt* parent;
-
   public:
     explicit applyTos( TriggerSelectionTisTosInHlt& p ) : parent( &p )
     {
     }
-
-    template <typename T>
-    bool operator()( std::vector<T*>&& objects )
+    bool operator()( const std::vector<std::string>& dependencies )
     {
-        return parent->IParticleTisTos::tos(
-            std::forward<std::vector<T*>>( objects ) );
+        return parent->ITriggerSelectionTisTos::tosSelection( dependencies );
     }
-    bool operator()( std::vector<std::string>&& dependencies )
+    template <typename T, DISABLE_IF_CONVERTIBLE(T, const std::vector<std::string>&)>
+    bool operator()( T&& objects )
     {
-        return parent->ITriggerSelectionTisTos::tosSelection(
-            std::forward<std::vector<std::string>>( dependencies ) );
+        return parent->IParticleTisTos::tos( std::forward<T>( objects ) );
     }
 };
-};
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TriggerSelectionTisTosInHlt
