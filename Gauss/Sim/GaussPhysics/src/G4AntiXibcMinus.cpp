@@ -32,7 +32,7 @@ G4AntiXibcMinus * G4AntiXibcMinus::Definition()
                                 3,              +1,             0,
                                 1,              -1,             0,
                                 "baryon", 0,  1, -5242,
-                                false,     1.29e-3*ns,          NULL,
+                                false,     0.5e-3*ns,          NULL,
                                 false, "xi_bc" );
   }
   theInstance = reinterpret_cast<G4AntiXibcMinus*>(anInstance);

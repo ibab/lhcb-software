@@ -32,7 +32,7 @@ G4XibcZero * G4XibcZero::Definition()
                                 3,              +1,             0,
                                 1,              -1,             0,
                                 "baryon", 0,  1, 5142,
-                                false,     1.29e-3*ns,          NULL,
+                                false,     0.5e-3*ns,          NULL,
                                 false, "xi_bc" );
   }
   theInstance = reinterpret_cast<G4XibcZero*>(anInstance);

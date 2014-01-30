@@ -26,6 +26,10 @@
 #include "G4XiccStarPlus.h"
 #include "G4AntiXiccMinus.h"
 #include "G4XiccPlus.h"
+#include "G4AntiXibcMinus.h"
+#include "G4XibcPlus.h"
+#include "G4AntiXibcZero.h"
+#include "G4XibcZero.h"
 #include "G4Neutralino.h"
 #include "G4Neutralino2.h"
 #include "G4CharginoMinus.h"
@@ -76,6 +80,10 @@ void GiGaPhysUnknownParticles::ConstructParticle()
   G4XiccStarPlus::XiccStarPlusDefinition();
   G4AntiXiccMinus::AntiXiccMinusDefinition();
   G4XiccPlus::XiccPlusDefinition();
+  G4AntiXibcMinus::AntiXibcMinusDefinition();
+  G4XibcPlus::XibcPlusDefinition();
+  G4AntiXibcZero::AntiXibcZeroDefinition();
+  G4XibcZero::XibcZeroDefinition();
   G4Neutralino::NeutralinoDefinition();
   G4HiddenValley::HiddenValleyDefinition(); 
   G4Neutralino2::Neutralino2Definition();
