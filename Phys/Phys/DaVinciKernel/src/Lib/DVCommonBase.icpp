@@ -387,29 +387,44 @@ void DVCommonBase<PBASE>::initializeLocations()
 
   if ( this->msgLevel(MSG::DEBUG) )
   {
-    this->debug() << ">>> Initialised locations " << m_inputLocations
+    this->debug() << ">>> Initialised input locations " << m_inputLocations
                   << endmsg;
-  }
-
-  // Check for duplication of locations
-  {
-    std::sort( m_inputLocations.begin(), m_inputLocations.end() );
-    const std::vector<std::string>::iterator iLoc =
-      std::unique(m_inputLocations.begin(),m_inputLocations.end());
-    if ( iLoc != m_inputLocations.end() )
-    {
-      std::ostringstream mess;
-      mess << "Duplication in Input locations :";
-      for ( auto& i : m_inputLocations ) { mess << " " << i; }
-      this->Warning( mess.str() ).ignore();
-      m_inputLocations.erase( iLoc, m_inputLocations.end() );
-    }
   }
 
   // Strip any ending "/Particles"
   for ( auto& loc : m_inputLocations )
-  { DaVinci::StringUtils::removeEnding(loc,"/Particles"); }
-  
+  {
+    DaVinci::StringUtils::removeEnding(loc,"/Particles");
+  }
+
+  // Strip any starting "/Event/"
+  for ( auto& loc : m_inputLocations )
+  {
+    boost::replace_all( loc,"/Event/","");
+  }
+
+  // Check for duplication of locations
+  {
+    // Sort the inputs (needed for the unique call
+    std::sort( m_inputLocations.begin(), m_inputLocations.end() );
+
+    // Move any duplicates to the end of the vector
+    const std::vector<std::string>::iterator iLoc =
+      std::unique(m_inputLocations.begin(),m_inputLocations.end());
+
+    // Are there any duplicates ?
+    if ( iLoc != m_inputLocations.end() )
+    {
+      // Print a warning
+      std::ostringstream mess;
+      mess << "Duplication in Input locations :";
+      for ( auto& i : m_inputLocations ) { mess << " " << i; }
+      this->Warning( mess.str() ).ignore();
+      // remove the duplicates
+      m_inputLocations.erase( iLoc, m_inputLocations.end() );
+    }
+  }
+
   if ( this->msgLevel(MSG::DEBUG) )
   {
     this->debug() << ">>> Initialised P->PV locations "
