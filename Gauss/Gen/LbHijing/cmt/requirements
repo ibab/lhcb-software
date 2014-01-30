@@ -4,7 +4,7 @@
 # Maintainer : Zhenwei Yang
 #============================================================================
 package       LbHijing
-version       v9r0p1
+version       v10r0
 
 
 # Structure, i.e. directories to process. 
