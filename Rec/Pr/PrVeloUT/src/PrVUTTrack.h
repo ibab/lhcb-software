@@ -78,8 +78,8 @@
     PrVUTTrack( LHCb::Track* tr ) {
       m_track  = tr;
       m_fittrack  = 0;
-      const LHCb::State& trState = tr->hasStateAt(LHCb::State::EndVelo) ?
-        *(tr->stateAt(LHCb::State::EndVelo)) :
+      const LHCb::State& trState = tr->hasStateAt(LHCb::State::LastMeasurement) ?
+        *(tr->stateAt(LHCb::State::LastMeasurement)) :
         (tr->closestState(LHCb::State::EndVelo)) ;
 
       m_origin = trState.position( );
@@ -227,15 +227,14 @@
 
             //Find upper and lower bounds of tolerance
             float zhitLayer3 = (*(m_allHits[3].begin())).z();
-            float tx4 = ((*ilayer2).x()-(*ilayer1).x())/((*ilayer2).z()-(*ilayer1).z());
-            float xextrapLayer3 = xhitLayer1 + tx4*(zhitLayer3-zhitLayer1);
+            float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
             
             // Loop over Fourth Layer
             LocalHitIterators ilayer3 =  
-              std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-tol/2.0,LocalHit::lowerBoundX());
+              std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-tol,LocalHit::lowerBoundX());
             LocalHitIterators ilayer3_end = m_allHits[3].end();
               
-            while(ilayer3!= ilayer3_end && (*ilayer3).x() < xextrapLayer3+tol/2.0){
+            while(ilayer3!= ilayer3_end && (*ilayer3).x() < xextrapLayer3+tol){
               
               if(!m_fourLayerSolution){  
                 m_fourLayerSolution = true;
@@ -304,6 +303,10 @@
       
       std::vector<LocalHits>::iterator iLocalHits;
       for(iLocalHits = forwardClusters.begin(); iLocalHits != forwardClusters.end(); ++iLocalHits){
+
+        if(m_fourLayerSolution && (*iLocalHits).size()<4){
+          continue;
+        }
    
         PrUTHits hitsCandidate;
         hitsCandidate.reserve(4);

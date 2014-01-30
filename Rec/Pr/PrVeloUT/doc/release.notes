@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 ! 2014-01-30 - Espen Eie Bowen
+ - Fixed small bug in clustering, change state to LastMeasurement
+
+! 2014-01-30 - Espen Eie Bowen
  - Changed how x of state atTT is assigned
 
 ! 2014-01-29 - Espen Eie Bowen
