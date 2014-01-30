@@ -4,14 +4,15 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+!======================== LbHerwigpp v3r0 2014-01-30 =========================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
 
-!======================== LbHerwig v2r0p1 2013-10-10 =========================
+!======================= LbHerwigpp v2r0p1 2013-10-10 ========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= LbHerwig v2r0 2012-10-19 ==========================
+!======================== LbHerwigpp v2r0 2012-10-19 =========================
 ! 2012-10-19 - Gloria Corti
  - Fix bug in naming of ParticlePropertySvc that was stillpointing to Gaudi
 
@@ -26,7 +27,7 @@
 ! 2012-05-30 - Patrick Robbe
  - HerwigProduction.cpp: adapt to new particle property service
 
-!========================= LbHerwig v1r0 2012-05-14 =========================
+!======================== LbHerwigpp v1r0 2012-05-14 ========================
 ! 2012-05-14 - Gloria Corti
  - First release of Herwigpp in LHCb
 
