@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-01-30 - Vanya Belyaev
+ - add missing descriptors 
+
 ! 2014-01-26 - Vanya Belyaev
  - add Zech-prescriptition for efficinecy determination 
 

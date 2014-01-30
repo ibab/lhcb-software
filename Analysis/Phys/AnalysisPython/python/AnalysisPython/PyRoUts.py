@@ -46,7 +46,7 @@ __all__     = (
     #
     'binomEff'        , ## calculate binomial efficiency
     'binomEff2'       , ## calculate binomial efficiency
-    'zhechEff'        , ## calcualte binomial efficiency using Zech's          prescription
+    'zechEff'         , ## calcualte binomial efficiency using Zech's          prescription
     'wilsonEff'       , ## calcualte binomial efficiency using Wilson's        prescription
     'agrestiCoullEff' , ## calcualte binomial efficiency using Agresti-Coull's prescription
     #
@@ -80,6 +80,7 @@ SE              = cpp.StatEntity
 ValueWithError  = Gaudi.Math.ValueWithError
 #
 binomEff        = Gaudi.Math.binomEff
+binomEff2       = Gaudi.Math.binomEff2
 zechEff         = Gaudi.Math.zechEff
 wilsonEff       = Gaudi.Math.wilsonEff
 agrestiCoullEff = Gaudi.Math.agrestiCoullEff
