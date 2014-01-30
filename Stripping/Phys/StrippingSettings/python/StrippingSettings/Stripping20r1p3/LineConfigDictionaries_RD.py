@@ -724,7 +724,7 @@ RareStrange = {
     'KVDPVMaxMassMeasDown' : 2200
     },
     'WGs' : [ 'RD' ],
-    'STREAMS' : [ 'Dimuon' ]
+    'STREAMS' : [ 'DimuonVELORAW' ]
     }
 
 

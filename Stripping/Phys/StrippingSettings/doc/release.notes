@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-30-01 - Stefano Perazzini
+ - Moved StrippingB2KShhLines from uDST to DST
+ - Introduced DimuonVELORAW stream for RareStrange lines
+
 ! 2014-29-01 - Stefano Perazzini
  - Introduced StrippingB2KShh lines in Stripping20r{0,1}p3
  - Update stripping20r0p3 and stripping20r1p3 dbases

@@ -320,10 +320,12 @@ B2KShh = {
                                                 {'Type' : 'VertexIsolation'}
                                                 ]
                   },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2KShhDDSameSignLine',
+    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingB2KShhDDLine',
+                                                'StrippingB2KShhLLLine',
+                                                'StrippingB2KShhLDLine'],
+                      'Bhadron' : ['StrippingB2KShhDDSameSignLine',
                                    'StrippingB2KShhLLSameSignLine',
-                                   'StrippingB2KShhDDLine',
-                                   'StrippingB2KShhLLLine']
+                                   'StrippingB2KShhLDSameSignLine']
                     }
     }
 
