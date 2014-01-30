@@ -1,9 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Bls/BlsMoniSim
-! Responsible : Vadim Talanov
+! Author      : Vadim Talanov
+! Responsible : = Gauss Managers =
 ! Purpose     : BlsMoniSim package documentation
 !-----------------------------------------------------------------------------
 
+!======================= BlsMoniSim v2r0 2014-01-30 ==========================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
 

@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2009-10-30
-# Maintainer : Vadim Talanov
+# Maintainer : = Gauss Managers =
 #============================================================================
 package           BlsMoniSim
-version           v1r1p1
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
