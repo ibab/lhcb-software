@@ -235,8 +235,12 @@ if '__main__' == __name__ :
     #
     from PhysConf.Filters import LoKi_Filters
     fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s') " % Line )
-
-  
+    
+    InputType = 'DST'
+    if options.MicroDST or 'MDST' == ext : 
+        logger.info ( 'Define input type as micro-DST' )
+        InputType = 'MDST'
+        
     daVinci = DaVinci (
         DataType        = options.DataType         ,
         Simulation      = options.Simulation       ,
@@ -244,12 +248,6 @@ if '__main__' == __name__ :
         InputType       = InputType                ,
         Lumi            = options.Lumi  
         )
-    #
-    ## check input type
-    #
-    if options.MicroDST or 'MDST' == ext : 
-        logger.info ( 'Define input type as micro-DST' )
-        DaVinci.InputType = 'MDST'
     
     if not options.Simulation : 
         if options.DataType in ( '2010' , '2011' , '2012' ) :

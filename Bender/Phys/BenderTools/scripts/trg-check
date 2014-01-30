@@ -29,7 +29,7 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-python -i $BENDERTOOLSROOT/python/BenderTools/CheckTrg.py $* 
+python $BENDERTOOLSROOT/python/BenderTools/CheckTrg.py $* 
 
 # =============================================================================
 # The END 

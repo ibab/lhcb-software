@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-30 - Vanya Belyaev
+ - CheckTrg: fix bug
+   Many thanks to Eduardo! 
+
 
 ! 2014-01-21 - Marco Clemencic
  - Added CMake configuration file.
