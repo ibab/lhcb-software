@@ -922,7 +922,10 @@ protected:
   /// Write an empty Particles container of the same type as that in
   /// saveInTES(). Can be overwritten for specialist actions.
   virtual void writeEmptyTESContainers() ;
-
+  
+  /// handle the update of "Inputs" property"
+  void handleInputsUpdate ( Property& /* p */ ) ;  // update the factory
+  
 private:
 
   std::string m_outputLocation; ///< Output location TES folder.

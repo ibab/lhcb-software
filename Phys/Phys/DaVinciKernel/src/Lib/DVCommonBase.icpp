@@ -1,4 +1,3 @@
-
 #ifndef KERNEL_DVCOMMONBASE_ICPP
 #define KERNEL_DVCOMMONBASE_ICPP 1
 
@@ -86,9 +85,14 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
                          "Output Location of Particles" );
 
   m_inputLocations.clear() ;
+  
+  //
   this->declareProperty( "Inputs",
                          m_inputLocations,
-                         "Input Locations forwarded of Particles" );
+                         "Input Locations forwarded of Particles" ) 
+    // use update handler
+    -> declareUpdateHandler ( &DVCommonBase<PBASE>::handleInputsUpdate , this ) ;
+  
 
   m_p2PVInputLocations.clear() ;
   this->declareProperty( "P2PVInputLocations",
@@ -100,7 +104,7 @@ DVCommonBase<PBASE>::DVCommonBase( const std::string& name,
 
   this->declareProperty( "UseP2PVRelations", m_useP2PV,
                          "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
-
+  
   this->declareProperty( "WriteP2PVRelations", m_writeP2PV,
                          "Write out P->PV relations table to TES. Default: true");
 
@@ -447,7 +451,19 @@ void DVCommonBase<PBASE>::initializeLocations()
   m_tableOutputLocation = m_outputLocation+"/Particle2VertexRelations";
 
 }
-
+// ==============================================================================
+// handle the update of "Inputs" property
+// ==============================================================================
+template <class PBASE>
+void DVCommonBase<PBASE>::handleInputsUpdate ( Property& /* p */ )
+{
+  // no action if not yet initialized
+  // initialize will perform the needed actiom anyway 
+  if ( Gaudi::StateMachine::INITIALIZED > this->FSMState() ) { return ; }
+  // 
+  this->initializeLocations() ;
+  //
+}
 // ============================================================================
 // Load standard tools
 // ============================================================================

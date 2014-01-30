@@ -4,6 +4,10 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2014-01-30 - Vanya Belyaev
+
+ - add update handler for property "Inputs"
+
 ! 2014-01-30 - Chris Jones
  - Add a check to DVCommonBase to test for duplication in the Input particle
    locations. If duplicates are found, a warning is printed and the duplication 
