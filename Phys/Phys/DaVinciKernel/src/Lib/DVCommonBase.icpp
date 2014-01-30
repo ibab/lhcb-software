@@ -395,21 +395,18 @@ void DVCommonBase<PBASE>::initializeLocations()
                   << endmsg;
   }
 
-  // Strip any ending "/Particles"
+  // Clean up the paths
   for ( auto& loc : m_inputLocations )
   {
+    // Strip any ending "/Particles"
     DaVinci::StringUtils::removeEnding(loc,"/Particles");
-  }
-
-  // Strip any starting "/Event/"
-  for ( auto& loc : m_inputLocations )
-  {
+    // Strip any starting "/Event/"
     boost::replace_all( loc,"/Event/","");
   }
 
   // Check for duplication of locations
   {
-    // Sort the inputs (needed for the unique call
+    // Sort the inputs (needed for the unique call)
     std::sort( m_inputLocations.begin(), m_inputLocations.end() );
 
     // Move any duplicates to the end of the vector
@@ -423,7 +420,7 @@ void DVCommonBase<PBASE>::initializeLocations()
       std::ostringstream mess;
       mess << "Duplication in Input locations :";
       for ( auto& i : m_inputLocations ) { mess << " " << i; }
-      this->Warning( mess.str() ).ignore();
+      this->Warning( mess.str(), StatusCode::SUCCESS ).ignore();
       // remove the duplicates
       m_inputLocations.erase( iLoc, m_inputLocations.end() );
     }
