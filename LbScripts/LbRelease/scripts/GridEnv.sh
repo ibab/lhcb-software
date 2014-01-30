@@ -11,14 +11,10 @@ if [ x"$rh" != "x" ]; then
   if [ x"$X509_USER_PROXY" != "x" ]; then
      SAVE_PROXY=$X509_USER_PROXY
   fi
-  if [ "$rh" = "slc4_ia32" ]; then
-      . /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.sh
-  elif [ "$rh" = "slc4_amd64" ]; then
-      . /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.sh
-  elif [ "$rh" = "x86_64-slc5-gcc43-opt" ]; then
-      . /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid_env.sh
+  if [ "$rh" = "x86_64-slc5-gcc43-opt" ]; then
+      . /afs/cern.ch/project/gd/LCG-share/sl5/etc/profile.d/grid_env.sh
   else
-      . /afs/cern.ch/project/gd/LCG-share/sl4/etc/profile.d/grid-env.sh
+      . /afs/cern.ch/project/gd/LCG-share/sl5/etc/profile.d/grid-env.sh
   fi
   if [ x"$SAVE_PROXY" != "x" ]; then
      X509_USER_PROXY=$SAVE_PROXY
