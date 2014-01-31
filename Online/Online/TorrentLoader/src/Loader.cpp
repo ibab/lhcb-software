@@ -17,8 +17,8 @@
 // This is a pure hack, but I do not know how to get out of this otherwise.
 // Somehow the LCG boost libraries are not what libtorrent expects really
 #ifdef  BOOST_FILESYSTEM_VERSION
-#undef  BOOST_FILESYSTEM_VERSION
-#define BOOST_FILESYSTEM_VERSION 2
+//#undef  BOOST_FILESYSTEM_VERSION
+//#define BOOST_FILESYSTEM_VERSION 2
 #endif
 //============= End-of-hack =============
 
@@ -38,6 +38,7 @@ extern "C" {
 #include "libtorrent/session.hpp"
 #include "libtorrent/alert_types.hpp"
 #include "libtorrent/GeoIP.h"
+#include "libtorrent/ip_filter.hpp"
 
 #include <stdexcept>
 #include <cstdlib>
@@ -195,7 +196,8 @@ Main::Main(int argc, char** argv)
   string interface("0.0.0.0"), dir(WORKER_SPACE), publish("ecs04");
   string farm_node, seeder, tracker("plus02"), trk, msk;
   unsigned short first_port = 6881, last_port = 6889;
-  int upload = 0, download = 0, print = LIB_RTL_WARNING, tier=2;
+  int upload = 0, download = 0, tier=2;
+  long print = LIB_RTL_WARNING;
   unsigned long mask = 0;
   vector<string> trackers, seeders;
   RTL::CLI cli(argc,argv,help);
@@ -548,6 +550,7 @@ Session::Session(Interactor*     parent,
   : m_parent(parent), m_session(0), m_thread(0), m_lock(0), m_tier(tier), m_saveDir(save_to), m_trackers(trackers)
 {
   m_alertConfig = 0;
+  m_NUM_hash_failed_alert = 0;
   //ENABLE_ALERT(torrent_finished_alert);
   ENABLE_ALERT(listen_failed_alert);
   ENABLE_ALERT(tracker_warning_alert);
@@ -556,6 +559,7 @@ Session::Session(Interactor*     parent,
   ENABLE_ALERT(file_renamed_alert);
   ENABLE_ALERT(peer_connect_alert);
   //ENABLE_ALERT(peer_blocked_alert);
+  ENABLE_ALERT(hash_failed_alert);
 
   //ENABLE_ALERT();
   m_monitor = enable_monitoring ? 1 : 0;
@@ -815,7 +819,7 @@ int Session::eventPoll(void* arg) {
   return s->handleAlerts();
 }
 
-static bool handle_alerts1(const auto_ptr<alert>& alert, const Session& s) {
+static bool handle_alerts1(const auto_ptr<alert>& alert, const Session& session) {
   try {
     handle_alert<
       state_changed_alert,
@@ -827,6 +831,7 @@ static bool handle_alerts1(const auto_ptr<alert>& alert, const Session& s) {
 	    
       read_piece_alert,
       piece_finished_alert,
+      hash_failed_alert, //  hash for piece XY failed
 	    
       block_downloading_alert,
       block_finished_alert,
@@ -835,7 +840,7 @@ static bool handle_alerts1(const auto_ptr<alert>& alert, const Session& s) {
       tracker_warning_alert,
       tracker_announce_alert,
       tracker_reply_alert
-      >::handle_alert(alert,s);
+      >  handler(alert,session);
     return true;
   }
   catch(const unhandled_alert& h) {
@@ -843,7 +848,7 @@ static bool handle_alerts1(const auto_ptr<alert>& alert, const Session& s) {
   }
 }
 
-static bool handle_alerts2(const auto_ptr<alert>& alert, const Session& s) {
+static bool handle_alerts2(const auto_ptr<alert>& alert, const Session& session) {
   try {
     handle_alert<
       dht_reply_alert,
@@ -862,7 +867,7 @@ static bool handle_alerts2(const auto_ptr<alert>& alert, const Session& s) {
       file_error_alert,
       file_completed_alert,
       file_renamed_alert
-      >::handle_alert(alert,s);
+      >  handler(alert,session);
     return true;
   }
   catch(const unhandled_alert& h) {
@@ -1035,6 +1040,15 @@ void Session::operator()(piece_finished_alert const& a) const {
   }
 }
 
+/// Callback once piece download was done.
+void Session::operator()(hash_failed_alert const& a) const {
+  if ( ERR_ENABLED(hash_failed_alert) ) {
+    ::lib_rtl_output(LIB_RTL_INFO,"%-24s : %s\n",a.what(), a.message().c_str());
+  }
+  ++m_NUM_hash_failed_alert;
+  if ( m_NUM_hash_failed_alert > 100 ) exit(10);
+}
+
 void Session::operator()(file_error_alert const& a) const {
   ::lib_rtl_output(LIB_RTL_INFO,"%-24s : %s\n",a.what(), a.message().c_str());
 }
@@ -1163,7 +1177,8 @@ static void torrent_reply(void* tag, void* buffer, int* size) {
 }
 
 extern "C" int torrent_dimget(int argc, char** argv)  {
-  int timeout = 20000, print = LIB_RTL_WARNING, retry=2;
+  int timeout = 20000, retry=2;
+  long print = LIB_RTL_WARNING;
   string torrent, dns, copy;
 
   RTL::CLI cli(argc,argv,help_dimget);

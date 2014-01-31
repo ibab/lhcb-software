@@ -57,6 +57,7 @@ namespace libtorrent {
 
   class read_piece_alert;
   class piece_finished_alert;
+  class hash_failed_alert;
 
   // Peer alerts
   class peer_error_alert;
@@ -222,9 +223,18 @@ namespace BitTorrent {
       code_unwanted_block_alert    = 1<<26,
 
       // Monitoring alert
-      code_stats_alert             = 1<<27
+      code_stats_alert             = 1<<27,
+
+      // Fatal alert: seems to be unrecoverable: 
+      code_hash_failed_alert       = 1<<28
     };
 
+  public:
+    /// Maximum number of allowed alerts for hash_failed_alert
+    mutable unsigned long    m_NUM_hash_failed_alert;
+    void operator()(libtorrent::hash_failed_alert const& a) const;
+
+  public:
     /// Initializing constructor
     Session(Interactor* parent,
 	    int         tier,
