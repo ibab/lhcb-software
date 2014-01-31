@@ -13,7 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
-! 2014-01-06 - Marco Clemencic
+! 2014-01-31 - Marco Clemencic
+ - Fixed workaround for ROOT-5721 (I forgot that LoKiCore is needed in option
+   files).
+
+! 2014-01-30 - Marco Clemencic
  - Added workaround for bug ROOT-5721 (to be removed ASAP).
    https://sft.its.cern.ch/jira/browse/ROOT-5721
 
