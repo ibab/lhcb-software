@@ -189,7 +189,7 @@ class B2DHForTauMuconf(LineBuilder) :
 
 
     def _Pi2Filter( self ):
-        _decayDescriptors = [ '[rho(770)0 -> pi+ pi-]cc' ]
+        _decayDescriptors = [ 'rho(770)0 -> pi+ pi-' ]
         _combinationCut = "(ADOCACHI2CUT( 20 , ''))" % self.__confdict__
         _motherCut = "(VFASPF(VCHI2/VDOF) < 15) " \
                             "& (BPVVDCHI2 > 30)& (CHILD(MIPCHI2DV(PRIMARY),2) > %(MuonIPCHI2)s) & (CHILD(P,2) > 3.0*GeV)"  % self.__confdict__
