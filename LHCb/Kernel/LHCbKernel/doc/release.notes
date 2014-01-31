@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-01-31 - Chris Jones
+ - Update LbAppInit to only report memory changes when they are greater than
+   some small delta value (16KB by default).
+
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL classes and support for VL
 

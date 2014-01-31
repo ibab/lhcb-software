@@ -125,13 +125,15 @@ private:
   ICondDBInfo*  m_condDBInfo;   ///< Pointer to Info interface of CondDB service
   IEventCounter* m_evtCounter;  ///< Pointer to EventCounter interface
   std::string   m_evtCounterName;  ///< Name of EventCounter tool
-  int  m_eventMax;     ///< Number of events requested (ApplicationMgr.EvtMax)
+  long long  m_eventMax;     ///< Number of events requested (ApplicationMgr.EvtMax)
   std::string   m_appName;      ///< Application Name
   std::string   m_appVersion;   ///< Application Version
 
   unsigned long long m_increment; ///< Number of events to measure memory on
   unsigned long long m_lastMem;   ///< Last memory usage
   unsigned long long m_memPurgeLimit; ///< Memory limit to trigger a purge of the pools
+
+  long long m_minMemDelta; ///< Minimum memory delta to trigger a message
   
 };
 
