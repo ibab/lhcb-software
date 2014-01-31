@@ -3,6 +3,8 @@
 ! Responsible : Feng Zhang
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
+! 2014-01-31 - G Graziani
+ - update grade files at different energies for Xi_bc (0 and +), using 300 bins
 
 !======================== GenXiccData v2r0 2012-11-29 ========================
 ! 2012-11-29 - Zhenwei Yang, Feng Zhang
