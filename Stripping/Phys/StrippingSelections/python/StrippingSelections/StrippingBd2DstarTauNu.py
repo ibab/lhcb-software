@@ -425,14 +425,14 @@ class Bd2DstarTauNuOneLineConf(LineBuilder):
     def __MakeDiPions__(self):
         """
         Selecting pion pairs at first
-        [rho(770)0 -> pi+ pi-]cc, [rho(770)+ -> pi+ pi+]cc
+        rho(770)0 -> pi+ pi-, [rho(770)+ -> pi+ pi+]cc
         As we can cut on di-pion mass well, this cuts down on combinatorics and speeds up the stripping line.
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from PhysSelPython.Wrappers import Selection
         
         PiPiForTau = CombineParticles(
-            DecayDescriptors = ["[rho(770)0 -> pi+ pi-]cc", "[rho(770)+ -> pi+ pi+]cc"],
+            DecayDescriptors = ["rho(770)0 -> pi+ pi-", "[rho(770)+ -> pi+ pi+]cc"],
             CombinationCut = self.DiPionCombCut,
             MotherCut      = self.DiPionCut
             )
@@ -445,7 +445,7 @@ class Bd2DstarTauNuOneLineConf(LineBuilder):
     def __MakeTaus__(self):
         """
         Selecting pion pairs at first
-        [rho(770)0 -> pi+ pi-]cc, [rho(770)+ -> pi+ pi+]cc
+        rho(770)0 -> pi+ pi-, [rho(770)+ -> pi+ pi+]cc
         As we can cut on di-pion mass well, this cuts down on combinatorics and speeds up the stripping line.
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
