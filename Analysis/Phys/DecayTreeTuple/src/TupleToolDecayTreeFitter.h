@@ -139,20 +139,21 @@ public:
                            , const std::string&
                            , Tuples::Tuple& );
 
-
-
 private:
+
   ///  Fill inforation for a given origin vertex
   StatusCode fit(DecayTreeFitter::Fitter& fitter,
                  const LHCb::Particle* P,
                  const LHCb::VertexBase* pv,
                  const std::string& prefix,
                  TupleMap& tMap) const;
+
   ///  Fill lifetime information
   ///  Fill fit inforation for top decay
   StatusCode fillDecay(const DecayTreeFitter::Fitter& fitter,
                        const std::string& prefix,
                        TupleMap& tMap) const;
+
   ///  Fill lifetime information
   StatusCode fillLT(const DecayTreeFitter::Fitter& fitter,
                     const LHCb::Particle* P,
@@ -205,14 +206,23 @@ private:
 
   /// same PV?
   bool samePV(const LHCb::VertexBase*, const LHCb::VertexBase*) const ;
+
   /// sort tracks into a set
   std::set<const LHCb::Track*> sortedTracks(const LHCb::VertexBase*) const ;
 
   /// substitutions
   StatusCode substitute( LHCb::DecayTree& tree);
+
   /// checkMassConstraints
   StatusCode checkMassConstraints(const LHCb::DecayTree& tree);
   
+  /// Get the TES location for a data object
+  template<class TYPE>
+  inline std::string tesLocation( const TYPE * obj ) const
+  {
+    return ( obj && obj->parent() && obj->parent()->registry() ?
+             obj->parent()->registry()->identifier() : "NotInTES" );
+  }
 
 private:
 

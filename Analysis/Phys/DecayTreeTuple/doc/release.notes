@@ -3,6 +3,13 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2014-01-31 - Chris Jones
+ - Fix a couple of minor bugs in TupleToolDecayTreeFitter :-
+  . Invalid check for verbose printout level
+  . Seg. fault when attempting for get the TES location for an object not in
+    the TES.
+
 ! 2014-01-21 - Stefania Vecchi
  - Added a protection on null pointers 
  - Enabled writing of SSpionBDT

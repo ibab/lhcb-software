@@ -519,7 +519,7 @@ bool TupleToolDecayTreeFitter::samePV( const LHCb::VertexBase* vb1,
   std::set<const LHCb::Track*> st2 = sortedTracks(vb2);
 
   const bool inc = std::includes(st1.begin(),st1.end(),st2.begin(),st2.end());
-  if ( UNLIKELY(MSG::VERBOSE))
+  if ( msgLevel(MSG::VERBOSE))
   {
     verbose() << "PV 2 of size " << st2.size() << " is ";
     if (!inc) verbose() << "not ";
@@ -537,12 +537,12 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
   std::vector<const VertexBase*> oriVx;
   if (mother == P){// the origin vertex is the primary.
     const VertexBase* bpv = m_dva->bestVertex( P );
-    if (bpv) 
+    if ( bpv ) 
     {
       oriVx.push_back(bpv);
-      if (UNLIKELY(MSG::VERBOSE)) 
+      if ( msgLevel(MSG::VERBOSE) ) 
         verbose() << "Pushed back bpv " << bpv << " from "
-                  << bpv->parent()->registry()->identifier() << " at "
+                  << tesLocation(bpv) << " at "
                   << bpv->position() << endmsg ;
     }
     else if ( m_constrainToOriginVertex)
@@ -558,9 +558,9 @@ TupleToolDecayTreeFitter::originVertex( const Particle* mother, const Particle* 
       if ( m_storeAnyway || !samePV(*pv,bpv) )
       {
         oriVx.push_back(*pv);
-        if (UNLIKELY(MSG::VERBOSE))
+        if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Pushed back  pv " << *pv << " from "
-                    << (*pv)->parent()->registry()->identifier() << " at "
+                    << tesLocation(*pv) << " at "
                     << (*pv)->position() << endmsg ;
       }
       if ( oriVx.size() >= m_maxPV )
@@ -613,6 +613,7 @@ std::string TupleToolDecayTreeFitter::getName(const int id) const
   //                                      << Decays::escape(prop->name()) << endmsg ;
   return Decays::escape(prop->name());
 }
+
 //=============================================================================
 // Substitute
 //=============================================================================
@@ -622,7 +623,7 @@ StatusCode TupleToolDecayTreeFitter::substitute(LHCb::DecayTree& tree){
   // debugging
   if ( msgLevel(MSG::VERBOSE) || 0==substituted ){
     LHCb::DecayTree::CloneMap mp = tree.cloneMap();
-    for ( LHCb::DecayTree::CloneMap::const_iterator i = mp.begin() ; i != mp.end() ; i++){
+    for ( LHCb::DecayTree::CloneMap::const_iterator i = mp.begin() ; i != mp.end() ; ++i){
       if ( i->first->particleID().pid()==i->second->particleID().pid())
       {
         info() << "A " << getName(i->first->particleID().pid()) << " remains unchanged" << endmsg ;
@@ -635,8 +636,7 @@ StatusCode TupleToolDecayTreeFitter::substitute(LHCb::DecayTree& tree){
   } 
   if (0==substituted) 
   {
-    err() << "No particles have been substituted. Check your substitution options." << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "No particles have been substituted. Check your substitution options." );
   }
   return StatusCode::SUCCESS ;
 }
@@ -659,9 +659,10 @@ StatusCode TupleToolDecayTreeFitter::checkMassConstraints(const LHCb::DecayTree&
     if (found &&  msgLevel(MSG::VERBOSE)) 
       verbose() << "Constraint " << getName(m->pid()) << " was found in tree" << endmsg ;
     if (!found) {
-      err() <<  "Constraint " << getName(m->pid()) 
-            << " was not found in tree. Check your options. Maybe also the substitution options." << endmsg ;
-      return StatusCode::FAILURE ;
+      std::ostringstream mess;
+      mess <<  "Constraint " << getName(m->pid()) 
+           << " was not found in tree. Check your options. Maybe also the substitution options.";
+      return Error( mess.str() ) ;
     }
   }
   return StatusCode::SUCCESS ;
