@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-01-31 - Michel De Cian
+ - Remove VL dependency from PrCounter.
+
 ! 2014-01-30 - Michel De Cian
  - Updated PrCounter and PrChecker: Added trigger condition and new efficiency categories. Uses new IPrCounter interface.
 

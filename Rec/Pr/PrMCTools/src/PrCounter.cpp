@@ -189,7 +189,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
   
   //trackList link tracks related to the MCparticle passed
   if ( LHCb::Track::TypeUnknown == m_trackType ){
-//TODO loop
+    //TODO loop
 
     if ( trackList.size() != 0 ) {
       found = true;
@@ -224,7 +224,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
     nTrue = double( ids.size() );
   } else {
     for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); ids.end() != itId; ++itId ) {
-      if ( (*itId).isVP() || (*itId).isVL() || (*itId).isVelo() ) {
+      if ( (*itId).isVP() || (*itId).isVelo() ) {
         if ( 0 != (m_selectId & 3) ) nTrue += 1.;
       } else if ( (*itId).isTT() || (*itId).isUT() ) {
         if ( 0 != (m_selectId & 4) ) nTrue += 1.;
@@ -249,7 +249,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
                 tr->lhcbIDs().end() != itId; ++itId ) {
             if ( std::find( ids.begin(), ids.end(), *itId ) == ids.end() ) continue;
-            if ( (*itId).isVP() || (*itId).isVL() || (*itId).isVelo() ) {
+            if ( (*itId).isVP() || (*itId).isVelo() ) {
               if ( 0 != (m_selectId & 3) ) nbMeas += 1;
             } else if ( (*itId).isOT() || (*itId).isIT() || (*itId).isFT() ) {
               if ( 0 != (m_selectId & 8) ) nbMeas += 1;
