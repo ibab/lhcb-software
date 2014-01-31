@@ -38,6 +38,10 @@ StatusCode PackParticlesAndVertices::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+  // Only continue if this stream exists for this event
+  DataObject* root = getIfExists<DataObject*>( m_inputStream );
+  if ( NULL == root ) return StatusCode::SUCCESS;
+
   // Class IDs for handled data
   const unsigned int clIdParticles   = 0x60000 + LHCb::CLID_Particle;
   const unsigned int clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
@@ -46,10 +50,6 @@ StatusCode PackParticlesAndVertices::execute()
   const unsigned int clIdPart2Vert   = 0xEA9168DC; // Particle to Vertex relation
   const unsigned int clIdPart2MCPart = 0x7B880798; // Particle to MCParticle relations
   const unsigned int clIdPart2Int    = 0xF94852E4; // Particle to int relations
-
-  // Only continue if this stream exists for this event
-  DataObject* root = getIfExists<DataObject*>( m_inputStream );
-  if ( NULL == root ) return StatusCode::SUCCESS;
 
   // List of data objects TES locations
   std::vector<std::string> names;
@@ -80,6 +80,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( pparts, m_inputStream + LHCb::PackedParticleLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -105,6 +106,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( pverts, m_inputStream + LHCb::PackedVertexLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Vertex containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -130,6 +132,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( pfts, m_inputStream + LHCb::PackedFlavourTagLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process FlavourTag containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -157,6 +160,7 @@ StatusCode PackParticlesAndVertices::execute()
     prverts->setVersion( 2 ); // CRJ - Increment version for new RecVertex with weights
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process RecVertices containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -182,6 +186,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( prels, m_inputStream + LHCb::PackedRelationsLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2Vertex Relation containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -210,6 +215,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( pPartIds, m_inputStream + LHCb::PackedRelationsLocation::P2Int );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2Int Relation containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {
@@ -238,6 +244,7 @@ StatusCode PackParticlesAndVertices::execute()
     put( prels, m_inputStream + LHCb::PackedRelationsLocation::P2MCP );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2MCParticle Relation containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
     for ( std::vector<std::string>::const_iterator itS = names.begin();
           names.end() != itS; ++itS )
     {

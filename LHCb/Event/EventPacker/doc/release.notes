@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-01-31 - Chris Jones
+ - Minor CPU optimisation in PackParticlesAndVertices.cpp
+
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
 
