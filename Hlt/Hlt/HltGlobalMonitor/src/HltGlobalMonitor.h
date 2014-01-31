@@ -186,8 +186,5 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     longlong m_startEvent; // in microseconds
     long m_virtmem;
     int m_gpstimesec;
-    int m_time_ref;
-    int m_scanevents;
-    int m_totaltime;
 };
 #endif // HLTGLOBALMONITOR_H

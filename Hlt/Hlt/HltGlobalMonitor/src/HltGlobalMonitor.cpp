@@ -91,8 +91,6 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
     , m_startEvent( 0 )
     , m_virtmem( 0 )
     , m_gpstimesec( 0 )
-    , m_time_ref( 0 )
-    , m_totaltime( 0 )
 {
     declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
     declareProperty( "HltDecReports", m_HltDecReportsLocation =

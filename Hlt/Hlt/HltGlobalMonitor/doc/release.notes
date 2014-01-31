@@ -5,6 +5,9 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2014-01-31 - Gerhard Raven
+ - fix -Wpedantic warning
+
 ! 2014-01-28 - Gerhard Raven
  - replace exists / get combination if getIfExists
  - remove spurious ;
