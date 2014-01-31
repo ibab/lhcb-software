@@ -4,8 +4,11 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
-! 2014-01-30 - Vanya Belyaev
+! 2014-01-31 - Chris Jones
+ - Split initializeLocations() into seperate initializeInputLocations() and
+   initializeOutputLocations().
 
+! 2014-01-30 - Vanya Belyaev
  - add update handler for property "Inputs"
 
 ! 2014-01-30 - Chris Jones

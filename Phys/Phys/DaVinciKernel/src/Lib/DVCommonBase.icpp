@@ -355,7 +355,8 @@ StatusCode DVCommonBase<PBASE>::initialize ()
 
   m_noPVs = ( m_PVLocation.empty() || m_PVLocation == "None" );
 
-  initializeLocations();
+  initializeInputLocations();
+  initializeOutputLocations();
 
   // load PV processing tools.
 
@@ -386,12 +387,12 @@ StatusCode DVCommonBase<PBASE>::initialize ()
 // ============================================================================
 
 template <class PBASE>
-void DVCommonBase<PBASE>::initializeLocations()
+void DVCommonBase<PBASE>::initializeInputLocations()
 {
 
   if ( this->msgLevel(MSG::DEBUG) )
   {
-    this->debug() << ">>> Initialised input locations " << m_inputLocations
+    this->debug() << ">>> Initialising input locations : " << m_inputLocations
                   << endmsg;
   }
 
@@ -426,9 +427,17 @@ void DVCommonBase<PBASE>::initializeLocations()
     }
   }
 
+}
+
+// ============================================================================
+
+template <class PBASE>
+void DVCommonBase<PBASE>::initializeOutputLocations()
+{
+
   if ( this->msgLevel(MSG::DEBUG) )
   {
-    this->debug() << ">>> Initialised P->PV locations "
+    this->debug() << ">>> Initialising output locations : "
                   << m_p2PVInputLocations << endmsg;
   }
 
@@ -458,7 +467,7 @@ void DVCommonBase<PBASE>::handleInputsUpdate ( Property& /* p */ )
   // initialize will perform the needed actiom anyway 
   if ( Gaudi::StateMachine::INITIALIZED > this->FSMState() ) { return ; }
   // 
-  this->initializeLocations() ;
+  this->initializeInputLocations() ;
   //
 }
 // ============================================================================
@@ -477,7 +486,6 @@ StatusCode DVCommonBase<PBASE>::loadTools()
   }
   return StatusCode::SUCCESS;
 }
-
 // ============================================================================
 // Execute
 // ============================================================================

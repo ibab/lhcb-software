@@ -828,9 +828,11 @@ private:
     return ( useP2PV() ? getRelatedPV(p) : calculateRelatedPV(p) );
   }
 
-  /// Initialise relative Inputs to account for RootInTES
+  /// Initialise relative Inputs 
+  void initializeInputLocations();
+
   /// Initialise Particle->PV relations input locations.
-  void initializeLocations();
+  void initializeOutputLocations();
 
   /// Load all tools.
   /// The base class provides an instance of all type of tools
