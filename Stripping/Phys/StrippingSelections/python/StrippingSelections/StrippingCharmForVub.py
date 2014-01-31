@@ -347,7 +347,7 @@ def makeRho(name,
     _combinationCuts = "(AM < %(Rho_MassMax)s *MeV) "\
         "& (AM > %(Rho_MassMin)s *MeV) " % locals()
     _motherCuts = "(PT > %(Rho_MinPT)s *MeV) " % locals()
-    _Rho = CombineParticles( DecayDescriptor = "[rho(770)0 -> pi- pi+]cc",
+    _Rho = CombineParticles( DecayDescriptor = "rho(770)0 -> pi- pi+",
                             MotherCut = _motherCuts,
                             CombinationCut = _combinationCuts)
 
