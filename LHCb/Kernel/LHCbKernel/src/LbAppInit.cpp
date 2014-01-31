@@ -121,23 +121,22 @@ StatusCode LbAppInit::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode LbAppInit::execute() {
+StatusCode LbAppInit::execute() 
+{
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> LbAppInit()::execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> LbAppInit()::execute" << endmsg;
 
   const unsigned long long nev = eventCounter();
-  const unsigned long long mem = System::virtualMemory();
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "event " << nev << " memory: " << mem << " KB" << endmsg ;
 
   if ( 0 == m_lastMem )
   {
-    m_lastMem = mem;
+    m_lastMem = System::virtualMemory();
   }
   else if ( UNLIKELY( 0 == nev%m_increment && m_increment > 0 ) )
   {
-    const long long memDiff = (long long)(mem-m_lastMem);
-    if ( UNLIKELY( abs(memDiff) > m_minMemDelta ) )
+    const unsigned long long mem     = System::virtualMemory();
+    const          long long memDiff = (long long)(mem-m_lastMem);
+    if ( UNLIKELY( abs(memDiff) >= m_minMemDelta ) )
     {
       info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
              << " (" << memDiff << "KB, " << 100.*memDiff/m_lastMem << "%)"
@@ -148,8 +147,8 @@ StatusCode LbAppInit::execute() {
                << " KB -> Purging pools" << endmsg;
         releaseMemoryPools();
       }
+      m_lastMem = mem;
     }
-    m_lastMem = mem;
   }
 
   return StatusCode::SUCCESS;
