@@ -8,7 +8,7 @@ use LCG_Configuration v*
 use LCG_Settings      v*
 
 include_path none
-macro BitTorrent_home '/group/online/dataflow/cmtuser/libraries/BitTorrent/libtorrent-rasterbar-0.15.10'
+macro BitTorrent_home '/group/online/dataflow/cmtuser/libraries/BitTorrent/libtorrent-0.16.14'
 include_dirs  "$(BitTorrent_home)/include" 
 
 macro BitTorrent_linkopts " -L$(BitTorrent_home)/lib -ltorrent-rasterbar"
