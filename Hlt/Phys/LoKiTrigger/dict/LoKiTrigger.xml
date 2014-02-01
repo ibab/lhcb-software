@@ -29,6 +29,7 @@
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Candidate*>"     />
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Candidate*>"     />
+  <class pattern = "LoKi::Dicts::FuncOps__<*Hlt::Candidate*>"   />
   <class pattern = "LoKi::Dicts::FuncOps_<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::CutsOps_<*Hlt::Candidate*>"    />
   <class pattern = "LoKi::Dicts::MapsOps<*Hlt::Candidate*>"     />
@@ -67,6 +68,7 @@
   <class pattern = "LoKi::Dicts::CutCalls<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::FuncOps<*Hlt::Stage*>"     />
   <class pattern = "LoKi::Dicts::CutsOps<*Hlt::Stage*>"     />
+  <class pattern = "LoKi::Dicts::FuncOps__<*Hlt::Stage*>"   />
   <class pattern = "LoKi::Dicts::FuncOps_<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::CutsOps_<*Hlt::Stage*>"    />
   <class pattern = "LoKi::Dicts::InfoOps<*Hlt::Stage*>"     />

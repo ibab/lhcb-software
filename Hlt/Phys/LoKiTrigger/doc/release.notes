@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+ - add dictionaries for new FuncOps__ 
+
 ! 2014-11-25 - Gerhard Raven
  - run clang-format on some more source files
  - replace explicit loops  with STL algorithm where possible
