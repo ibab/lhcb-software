@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+ - add dicitonaris for new FuncOps__
+
 ! 2014-01-06 - Marco Clemencic
  - Replaced import of GaudiPython with import of cppyy (to allow usage of the
    modules in configuration files).

@@ -54,6 +54,7 @@
   
   <class pattern   = "LoKi::Dicts::FuncOps<*HepMC::*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*HepMC::*>"    />
+  <class pattern   = "LoKi::Dicts::FuncOps__<*HepMC::*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*HepMC::*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*HepMC::*>"   />
 
