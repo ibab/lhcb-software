@@ -34,6 +34,7 @@
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::ProtoParticle*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::ProtoParticle*>"    />
   
+  <class pattern   = "LoKi::Dicts::FuncOps__<*LHCb::ProtoParticle*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::ProtoParticle*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::ProtoParticle*>"   />
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::ProtoParticle*>"    />
