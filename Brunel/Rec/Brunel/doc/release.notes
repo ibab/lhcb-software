@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect new PrCounter / PrChecker (Michel De Cian).
+
 - Changes to Configuration.py (Rob Lambert)
   . remove Persistency option
 
