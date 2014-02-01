@@ -37,6 +37,8 @@
   <class pattern   = "LoKi::Dicts::FuncOps<*Range_*LHCb::Particle*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*Range_*LHCb::Particle*>"    />
 
+  <class pattern   = "LoKi::Dicts::FuncOps__<*Range_*LHCb::Particle*>"  />
+  <class pattern   = "LoKi::Dicts::CutsOps__<*Range_*LHCb::Particle*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*Range_*LHCb::Particle*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*Range_*LHCb::Particle*>"   />
   <class pattern   = "LoKi::Dicts::MapsOps<*Range_*LHCb::Particle*>"    />
