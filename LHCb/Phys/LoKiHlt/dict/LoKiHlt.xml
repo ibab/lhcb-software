@@ -26,6 +26,7 @@
   <class name = "LoKi::Constant<const LHCb::ODIN*,bool>"   />
   
   <class pattern   = "LoKi::Dicts::*Ops<*LHCb::ODIN*>"     />
+  <class pattern   = "LoKi::Dicts::*Ops__<*LHCb::ODIN*>"   />
   <class pattern   = "LoKi::Dicts::*Ops_<*LHCb::ODIN*>"    />
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::ODIN*>"   />
   
@@ -41,6 +42,7 @@
   <class name = "LoKi::Constant<const LHCb::L0DUReport*,bool>"   />
   
   <class pattern   = "LoKi::Dicts::*Ops<*LHCb::L0DUReport*>"     />
+  <class pattern   = "LoKi::Dicts::*Ops__<*LHCb::L0DUReport*>"   />
   <class pattern   = "LoKi::Dicts::*Ops_<*LHCb::L0DUReport*>"    />
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::L0DUReport*>"   />
 
@@ -56,6 +58,7 @@
   <class name = "LoKi::Constant<const LHCb::HltDecReports*,bool>"   />
   
   <class pattern   = "LoKi::Dicts::*Ops<*LHCb::HltDecReports*>"     />
+  <class pattern   = "LoKi::Dicts::*Ops__<*LHCb::HltDecReports*>"   />
   <class pattern   = "LoKi::Dicts::*Ops_<*LHCb::HltDecReports*>"    />
   <class pattern   = "LoKi::Dicts::*Calls<*LHCb::HltDecReports*>"   />
 

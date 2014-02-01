@@ -4,6 +4,10 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+
+ - add dictionaries for new FuncOps__
+
 !========================= LoKiHlt v3r12p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
