@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+ - make few first steps to intorduce configurable parameters 
+
 ! 2014-01-31 - Marco Clemencic
  - Fixed workaround for ROOT-5721 (I forgot that LoKiCore is needed in option
    files).

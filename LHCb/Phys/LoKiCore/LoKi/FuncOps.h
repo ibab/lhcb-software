@@ -41,20 +41,191 @@ namespace LoKi
   namespace Dicts
   {
     // ========================================================================
-    /** @class FuncOps_
-     *  Wrapper class for operations with functions 
+    /** @class FuncOps__
+     *  Wrapper class for basic operations with functions 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-10-07
      */
     template <class TYPE, class TYPE2=TYPE>
-    class FuncOps_ 
+    class FuncOps__ 
     {
-    private:
+    protected:
       // ======================================================================
       typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
       typedef typename LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
       typedef typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
       typedef typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      typedef          LoKi::BasicFunctors<void>::Function               VOID ;
+      typedef          LoKi::Value<TYPE,double>                          VAL  ;
+      // ======================================================================
+    public:   
+      // ======================================================================
+      static Cut __lt__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 <  fun2 ; }
+      static Cut __lt__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 <  fun2 ; }
+      static Cut __lt__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 <  fun2 ; }
+      //
+      static Cut __le__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 <= fun2 ; }
+      static Cut __le__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 <= fun2 ; }
+      static Cut __le__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 <= fun2 ; }
+      //
+      static Cut __gt__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 >  fun2 ; }
+      static Cut __gt__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 >  fun2 ; }
+      static Cut __gt__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 >  fun2 ; }
+      //
+      static Cut __ge__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 >= fun2 ; }
+      static Cut __ge__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 >= fun2 ; }
+      static Cut __ge__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 >= fun2 ; }
+      //
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const int    fun2 ) { return fun1 == fun2 ; }      
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const unsigned int fun2 ) { return fun1 == fun2 ; }
+      //
+      static Cut __eq__     ( const Func&                      fun1 , 
+                              const std::vector<double>&       fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&                      fun1 , 
+                              const std::vector<int>&          fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&                      fun1 , 
+                              const std::vector<unsigned int>& fun2 ) { return fun1 == fun2 ; }
+      static Cut __eq__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 == fun2 ; }
+      //
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const int    fun2 ) { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const unsigned int fun2 ) { return fun1 != fun2 ; }
+      //
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<double>&       fun2 ) 
+      { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<int>&          fun2 ) 
+      { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&                      fun1 , 
+                              const std::vector<unsigned int>& fun2 ) 
+      { return fun1 != fun2 ; }
+      static Cut __ne__     ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 != fun2 ; }
+      //
+      // basic math 
+      //
+      static Fun __add__    ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 + fun2  ; }
+      static Fun __sub__    ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 - fun2  ; }
+      static Fun __mul__    ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 * fun2  ; }
+      static Fun __div__    ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return fun1 / fun2  ; }
+      //
+      static Fun __add__    ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 + fun2  ; }
+      static Fun __sub__    ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 - fun2  ; }      
+      static Fun __mul__    ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 * fun2  ; }
+      static Fun __div__    ( const Func&  fun1 , 
+                              const double fun2 ) { return fun1 / fun2  ; }
+      //
+      static Fun __add__    ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 + VAL ( fun2 ) ; }
+      static Fun __sub__    ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 - VAL ( fun2 ) ; }      
+      static Fun __mul__    ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 * VAL ( fun2 ) ; }
+      static Fun __div__    ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return fun1 / VAL ( fun2 ) ; }
+      //
+      static Fun __pow__    ( const Func&  fun1 , 
+                              const Func&  fun2 ) { return LoKi::pow ( fun1 ,       fun2 )   ; }
+      static Fun __pow__    ( const Func&  fun1 , 
+                              const double fun2 ) { return LoKi::pow ( fun1 ,       fun2 )   ; }
+      static Fun __pow__    ( const Func&  fun1 , 
+                              const int    fun2 ) { return LoKi::pow ( fun1 ,       fun2 )   ; }
+      static Fun __pow__    ( const Func&  fun1 , 
+                              const VOID&  fun2 ) { return LoKi::pow ( fun1 , VAL ( fun2 ) ) ; }
+      
+      // ======================================================================
+      // min
+      // ======================================================================
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   ) 
+      { return    LoKi::min ( f1 , f2 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const double f2   ) 
+      { return    LoKi::min ( f1 , f2 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const VOID&  f2   ) 
+      { return    LoKi::min ( f1 , VAL ( f2 ) ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   ) 
+      { return    LoKi::min ( f1 , f2 , f3 ) ; }
+      // min
+      static Fun __min__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   , 
+                              const Func&  f4   ) 
+      { return    LoKi::min ( f1 , f2 , f3 , f4 ) ; }      
+      // ======================================================================
+      // max
+      // ======================================================================
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   ) 
+      { return    LoKi::max ( f1 , f2 ) ; }
+      static Fun __max__    ( const Func&  f1   , 
+                              const double f2   ) 
+      { return    LoKi::max ( f1 , f2 ) ; }
+      static Fun __max__    ( const Func&  f1   , 
+                              const VOID&  f2   ) 
+      { return    LoKi::max ( f1 , VAL ( f2 ) ) ; }
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   ) 
+      { return    LoKi::max ( f1 , f2 , f3 ) ; }
+      static Fun __max__    ( const Func&  f1   , 
+                              const Func&  f2   , 
+                              const Func&  f3   , 
+                              const Func&  f4   ) 
+      { return    LoKi::max ( f1 , f2 , f3 , f4 ) ; }
+    } ;  
+    // ========================================================================
+    /// speciailazation for void 
+    template <>
+    class FuncOps__<void,void>
+    {
+    protected:
+      // ======================================================================
+      typedef LoKi::BasicFunctors<void>::Function               Func ;
+      typedef LoKi::BasicFunctors<void>::Predicate              Cuts ;
+      typedef LoKi::BasicFunctors<void>::FunctionFromFunction   Fun  ;
+      typedef LoKi::BasicFunctors<void>::PredicateFromPredicate Cut  ;
       // ======================================================================
     public:   
       // ======================================================================
@@ -103,14 +274,11 @@ namespace LoKi
                               const unsigned int fun2 ) { return fun1 != fun2 ; }
       //
       static Cut __ne__     ( const Func&                      fun1 , 
-                              const std::vector<double>&       fun2 ) 
-      { return fun1 != fun2 ; }
+                              const std::vector<double>&       fun2 ) { return fun1 != fun2 ; }
       static Cut __ne__     ( const Func&                      fun1 , 
-                              const std::vector<int>&          fun2 ) 
-      { return fun1 != fun2 ; }
+                              const std::vector<int>&          fun2 ) { return fun1 != fun2 ; }
       static Cut __ne__     ( const Func&                      fun1 , 
-                              const std::vector<unsigned int>& fun2 ) 
-      { return fun1 != fun2 ; }
+                              const std::vector<unsigned int>& fun2 ) { return fun1 != fun2 ; }
       //
       static Fun __add__    ( const Func&  fun1 , 
                               const Func&  fun2 ) { return fun1 + fun2  ; }
@@ -120,64 +288,22 @@ namespace LoKi
                               const Func&  fun2 ) { return fun1 * fun2  ; }
       static Fun __div__    ( const Func&  fun1 , 
                               const Func&  fun2 ) { return fun1 / fun2  ; }
+      //
       static Fun __add__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 + fun2  ; }
       static Fun __sub__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 - fun2  ; }
-
       static Fun __mul__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 * fun2  ; }
       static Fun __div__    ( const Func&  fun1 , 
                               const double fun2 ) { return fun1 / fun2  ; }
-      static Fun __radd__   ( const Func&  fun1 , 
-                              const Func&  fun2 ) { return fun2 + fun1  ; }
-      static Fun __radd__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 + fun1  ; }
-      static Fun __rsub__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 - fun1  ; }
-      static Fun __rmul__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 * fun1  ; }
-      static Fun __rdiv__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 / fun1  ; }
-      // ======================================================================
-      static Fun __neg__    ( const Func&  fun  ) { return -1 * fun         ; }
-      static Fun __abs__    ( const Func&  fun  ) { return LoKi::abs( fun ) ; }
+      //      
       static Fun __pow__    ( const Func&  fun1 , 
                               const Func&  fun2 ) { return LoKi::pow ( fun1 , fun2 ) ; }
       static Fun __pow__    ( const Func&  fun1 , 
                               const double fun2 ) { return LoKi::pow ( fun1 , fun2 ) ; }
       static Fun __pow__    ( const Func&  fun1 , 
                               const int    fun2 ) { return LoKi::pow ( fun1 , fun2 ) ; }
-      static Fun __rpow__   ( const Func&  fun1 , 
-                              const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
-      static Fun __rpow__   ( const Func&  fun1 , 
-                              const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
-      // hand-made pseudo-operators to simplify the treatment of math:
-      static Fun __sin__    ( const Func&  f    ) { return LoKi:: sin   ( f )  ; }
-      static Fun __cos__    ( const Func&  f    ) { return LoKi:: cos   ( f )  ; }
-      static Fun __tan__    ( const Func&  f    ) { return LoKi:: tan   ( f )  ; }
-      static Fun __sinh__   ( const Func&  f    ) { return LoKi:: sinh  ( f )  ; }
-      static Fun __cosh__   ( const Func&  f    ) { return LoKi:: cosh  ( f )  ; }
-      static Fun __tanh__   ( const Func&  f    ) { return LoKi:: tanh  ( f )  ; }
-      static Fun __asin__   ( const Func&  f    ) { return LoKi::asin   ( f )  ; }
-      static Fun __acos__   ( const Func&  f    ) { return LoKi::acos   ( f )  ; }
-      static Fun __atan__   ( const Func&  f    ) { return LoKi::atan   ( f )  ; }
-      static Fun __exp__    ( const Func&  f    ) { return LoKi:: exp   ( f )  ; }
-      static Fun __log__    ( const Func&  f    ) { return LoKi:: log   ( f )  ; }
-      static Fun __log10__  ( const Func&  f    ) { return LoKi:: log10 ( f )  ; }
-      static Fun __sqrt__   ( const Func&  f    ) { return LoKi:: sqrt  ( f )  ; }
-      static Fun __cbrt__   ( const Func&  f    ) { return LoKi:: cbrt  ( f )  ; }
-      static Fun __pow2__   ( const Func&  f    ) { return LoKi:: pow2  ( f )  ; }
-      static Fun __pow3__   ( const Func&  f    ) { return LoKi:: pow3  ( f )  ; }
-      static Fun __pow4__   ( const Func&  f    ) { return LoKi:: pow4  ( f )  ; }
-      static Fun __atan__   ( const Func&  f1   , 
-                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
-      static Fun __atan__   ( const Func&  f1   , 
-                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
-      static Fun __atan2__  ( const Func&  f1   , 
-                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
-      static Fun __atan2__  ( const Func&  f1   , 
-                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
       // ======================================================================
       // min
       // ======================================================================
@@ -217,6 +343,68 @@ namespace LoKi
                               const Func&  f3   , 
                               const Func&  f4   ) 
       { return    LoKi::max ( f1 , f2 , f3 , f4 ) ; }
+    } ;  
+     // ========================================================================
+    /** @class FuncOps_
+     *  Wrapper class for operations with functions 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-10-07
+     */
+    template <class TYPE, class TYPE2=TYPE>
+    class FuncOps_ : public FuncOps__<TYPE,TYPE2> 
+    {
+    protected:
+      // ======================================================================
+      typedef typename FuncOps__<TYPE,TYPE2>::Func                       Func ;
+      typedef typename FuncOps__<TYPE,TYPE2>::Cuts                       Cuts ;
+      typedef typename FuncOps__<TYPE,TYPE2>::Fun                        Fun  ;
+      typedef typename FuncOps__<TYPE,TYPE2>::Cut                        Cut  ;
+      // ======================================================================
+    public:   
+      // ======================================================================
+      // "right" side math. It can't be redefined in base class :-(  
+      static Fun __radd__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 + fun1  ; }
+      static Fun __rsub__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 - fun1  ; }
+      static Fun __rmul__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 * fun1  ; }
+      static Fun __rdiv__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 / fun1  ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      // ======================================================================
+      static Fun __neg__    ( const Func&  fun  ) { return -1 * fun         ; }
+      static Fun __abs__    ( const Func&  fun  ) { return LoKi::abs( fun ) ; }      
+      // hand-made pseudo-operators to simplify the treatment of math:
+      static Fun __sin__    ( const Func&  f    ) { return LoKi:: sin   ( f )  ; }
+      static Fun __cos__    ( const Func&  f    ) { return LoKi:: cos   ( f )  ; }
+      static Fun __tan__    ( const Func&  f    ) { return LoKi:: tan   ( f )  ; }
+      static Fun __sinh__   ( const Func&  f    ) { return LoKi:: sinh  ( f )  ; }
+      static Fun __cosh__   ( const Func&  f    ) { return LoKi:: cosh  ( f )  ; }
+      static Fun __tanh__   ( const Func&  f    ) { return LoKi:: tanh  ( f )  ; }
+      static Fun __asin__   ( const Func&  f    ) { return LoKi::asin   ( f )  ; }
+      static Fun __acos__   ( const Func&  f    ) { return LoKi::acos   ( f )  ; }
+      static Fun __atan__   ( const Func&  f    ) { return LoKi::atan   ( f )  ; }
+      static Fun __exp__    ( const Func&  f    ) { return LoKi:: exp   ( f )  ; }
+      static Fun __log__    ( const Func&  f    ) { return LoKi:: log   ( f )  ; }
+      static Fun __log10__  ( const Func&  f    ) { return LoKi:: log10 ( f )  ; }
+      static Fun __sqrt__   ( const Func&  f    ) { return LoKi:: sqrt  ( f )  ; }
+      static Fun __cbrt__   ( const Func&  f    ) { return LoKi:: cbrt  ( f )  ; }
+      static Fun __pow2__   ( const Func&  f    ) { return LoKi:: pow2  ( f )  ; }
+      static Fun __pow3__   ( const Func&  f    ) { return LoKi:: pow3  ( f )  ; }
+      static Fun __pow4__   ( const Func&  f    ) { return LoKi:: pow4  ( f )  ; }      
+      //
+      static Fun __atan__   ( const Func&  f1   , 
+                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan__   ( const Func&  f1   , 
+                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan2__  ( const Func&  f1   , 
+                              const Func&  f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
+      static Fun __atan2__  ( const Func&  f1   , 
+                              const double f2   ) { return LoKi::atan2 ( f1 , f2 ) ; }
       // ======================================================================
       // modulo
       // ======================================================================
@@ -420,12 +608,12 @@ namespace LoKi
     template <class TYPE, class TYPE2=TYPE>
     class FuncOps : public FuncOps_<TYPE>
     {
-    private:
+    protected:
       // ======================================================================
-      typedef typename LoKi::BasicFunctors<TYPE>::Function               Func ;
-      typedef typename LoKi::BasicFunctors<TYPE>::Predicate              Cuts ;
-      typedef typename LoKi::BasicFunctors<TYPE>::FunctionFromFunction   Fun  ;
-      typedef typename LoKi::BasicFunctors<TYPE>::PredicateFromPredicate Cut  ;
+      typedef typename FuncOps_<TYPE,TYPE2>::Func                        Func ;
+      typedef typename FuncOps_<TYPE,TYPE2>::Cuts                        Cuts ;
+      typedef typename FuncOps_<TYPE,TYPE2>::Fun                         Fun  ;
+      typedef typename FuncOps_<TYPE,TYPE2>::Cut                         Cut  ;
       // ======================================================================
     public:   
       // ======================================================================
