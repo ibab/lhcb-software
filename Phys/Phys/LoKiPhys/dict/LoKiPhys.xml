@@ -103,6 +103,7 @@
   <class pattern   = "LoKi::Dicts::CutCalls<*LHCb::Pa*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::*>"     />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::*>"     />
+  <class pattern   = "LoKi::Dicts::FuncOps__<*LHCb::*>"   />
   <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::*>"    />
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::*>"     />

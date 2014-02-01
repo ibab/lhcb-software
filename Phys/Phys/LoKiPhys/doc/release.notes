@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+ - add dictionaries for new FuncOps__
+
 ! 2014-01-22 - Vanya Belyaev
  - fix complilation warnings 
 
