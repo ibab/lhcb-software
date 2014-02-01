@@ -58,6 +58,7 @@
 
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::MC*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::MC*>"    />
+  <class pattern   = "LoKi::Dicts::FuncOps__<*LHCb::MC*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::MC*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::MC*>"   />
   <class pattern   = "LoKi::Dicts::MapsOps<*LHCb::MC*>"    />
@@ -69,6 +70,7 @@
   <class pattern   = "LoKi::Dicts::PIDOps<LoKi::MC*>"       />
   <class pattern   = "LoKi::Dicts::FunCalls<LHCb::MC*>"     />
   <class pattern   = "LoKi::Dicts::CutCalls<LHCb::MC*>"     />
+
   
   <class pattern   = "LoKi::Hybrid::*"          />
   <class pattern   = "LoKi::IMCHybrid*"         />
