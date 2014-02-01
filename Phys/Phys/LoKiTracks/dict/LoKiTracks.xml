@@ -28,6 +28,7 @@
   <class pattern   = "LoKi::Dicts::FuncOps<*LHCb::T*>"    />
   <class pattern   = "LoKi::Dicts::CutsOps<*LHCb::T*>"    />
 
+  <class pattern   = "LoKi::Dicts::FuncOps__<*LHCb::T*>"  />
   <class pattern   = "LoKi::Dicts::FuncOps_<*LHCb::T*>"   />
   <class pattern   = "LoKi::Dicts::CutsOps_<*LHCb::T*>"   />
 

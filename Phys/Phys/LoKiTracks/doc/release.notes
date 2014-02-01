@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-01 - Vanya Belyaev
+ - add dictionries for new FuncOps__
+
 !========================= LoKiTracks v2r9 2013-10-02 =========================
 
 ! 2013-09-09 - Heinrich Schindler
