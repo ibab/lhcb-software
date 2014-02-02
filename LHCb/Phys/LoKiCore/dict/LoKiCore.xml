@@ -46,6 +46,7 @@
   <class name    = "LoKi::Sort"            />
   <class name    = "LoKi::Timer"           />
   <class name    = "LoKi::DecayChainBase"  />  
+  <class name    = "LoKi::Param"           />
   
   <class name    = "Bender::Welcome"       />
   
@@ -72,6 +73,8 @@
   <enum     name = "Decays::Trees::Arrow" />
   <class    name = "Decays::iTree"      />
   <class    name = "Decays::IDecayNode" />
+
+  <class name    = "LoKi::Parameters::ParamBase"  />
   
   <enum name = "LoKi::Monitoring::Flag"  />
 

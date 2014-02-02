@@ -32,6 +32,7 @@
 #include "LoKi/DecayChainBase.h"
 #include "LoKi/TES.h"
 #include "LoKi/Tensors.h"
+#include "LoKi/Param.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

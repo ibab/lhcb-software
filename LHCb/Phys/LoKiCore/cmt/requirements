@@ -50,8 +50,9 @@ apply_pattern      component_library library=LoKiCore
 apply_pattern      QMTest
 
 # ========================================================================
-private :
-use                RecEvent v* Event -no_auto_imports
+private :       
+use                RecEvent     v* Event -no_auto_imports
+macro_append       Boost_linkopts " $(Boost_linkopts_regex) "
 
 
 # ========================================================================

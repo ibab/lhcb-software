@@ -13,6 +13,26 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-02 - Vanya Belyaev
+
+ - add the notion of "parameters" and operations with them:
+
+   use scalar properties as parameters :
+
+         PT > PARAM('Ptmin') 
+ 
+   use map-like properties as parameters :
+   
+         PT > PARAM('Parameters[Ptmin]') 
+
+  look for scalar property and check regex-pattenn for the algorithm name 
+ 
+         PT > PARAM('Ptmin/.*Line') 
+
+  look for map-like property and check regex-pattens for the algorithm name 
+
+         PT > PARAM('Params[Ptmin]/.*Line') 
+
 ! 2014-02-01 - Vanya Belyaev
  - make few first steps to intorduce configurable parameters 
 
