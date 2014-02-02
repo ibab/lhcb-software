@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti
 #============================================================================
 package SimSvc
-version v5r2p1
+version v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
