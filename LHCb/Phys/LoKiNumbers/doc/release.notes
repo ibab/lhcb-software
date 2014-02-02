@@ -13,8 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-02 - Vanya Belyaev
+ - add defintion of PARAM helper object 
+
 ! 2014-02-01 - Vanya Belyaev
- - bud dictionaries for FuncOps__
+ - build dictionaries for FuncOps__
 
 ! 2013-12-20 - Marco Clemencic
  - Restored backward compatibility to Gaudi v24.

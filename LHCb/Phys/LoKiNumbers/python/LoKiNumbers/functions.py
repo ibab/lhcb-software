@@ -208,6 +208,9 @@ blind     = Gaudi.Math.blind
 ##
 cpp.Rndm
 
+## @see LoKi::Param 
+PARAM  = cpp.LoKi.Param
+
 # =============================================================================
 ## helper function to create ``smart'' RecSumary functor
 #  @see HASRECSUMMARY
