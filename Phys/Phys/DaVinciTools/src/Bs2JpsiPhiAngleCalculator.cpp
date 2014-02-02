@@ -50,7 +50,7 @@ StatusCode Bs2JpsiPhiAngleCalculator::initialize()
   if (msgLevel(MSG::DEBUG)) debug() << "Initializing Angle Calculator Tool"
                                     << endmsg ;
 
-  m_descendants = tool<IParticleDescendants>("ParticleDescendants ",this);
+  m_descendants = tool<IParticleDescendants>("ParticleDescendants", this);
 
   return sc ;
 }

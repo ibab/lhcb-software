@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-02-02 - Marco Clemencic
+ - Fixed problems with some incompatibilities between the new Plugin Service and
+   the old one.
+   Some templated tools are called using explicitly the old naming, and that was
+   not working with the new plugin service.
+
 ! 2014-01-29 - Chris Jones
  - Yet more bug fixes and improvements to PrintDuplicates.
 

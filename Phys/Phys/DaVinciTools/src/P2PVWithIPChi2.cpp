@@ -23,3 +23,8 @@
 typedef GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>  P2PVWithIPChi2;
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( P2PVWithIPChi2 )
+
+#ifdef DECLARE_COMPONENT_WITH_ID
+// backward compatibility with the old PluginService internal names
+DECLARE_COMPONENT_WITH_ID(P2PVWithIPChi2, "GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_")
+#endif
