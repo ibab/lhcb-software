@@ -4,6 +4,7 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GiGaCnv v21r0 2014-02-02 ==========================
 ! 2014-01-19 - Marco Clemencic
  - Fixed compilation problem after the change in IDataSelector (in Gaudi).
 
