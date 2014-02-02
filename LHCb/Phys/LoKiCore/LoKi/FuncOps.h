@@ -195,6 +195,34 @@ namespace LoKi
       static Fun __pow__    ( const Func&  fun1 , 
                               const Para&  fun2 ) { return LoKi::pow ( fun1 , VAL ( PAR ( fun2 ) ) ) ; }
       
+      //
+      // "right" side math.
+      //
+      static Fun __radd__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 + fun1  ; }
+      static Fun __rsub__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 - fun1  ; }
+      static Fun __rmul__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 * fun1  ; }
+      static Fun __rdiv__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 / fun1  ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      //
+      static Fun __radd__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return VAL ( PAR ( fun2 ) ) + fun1  ; }
+      static Fun __rsub__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return VAL ( PAR ( fun2 ) ) - fun1  ; }
+      static Fun __rmul__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return VAL ( PAR ( fun2 ) ) * fun1  ; }
+      static Fun __rdiv__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return VAL ( PAR ( fun2 ) ) / fun1  ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return LoKi::pow ( VAL ( PAR ( fun2 ) )  , fun1 ) ; }
+      // ======================================================================
+
       // ======================================================================
       // min
       // ======================================================================
@@ -370,6 +398,32 @@ namespace LoKi
                               const int    fun2 ) { return LoKi::pow ( fun1 , fun2 ) ; }
       static Fun __pow__    ( const Func&  fun1 , 
                               const Para&  fun2 ) { return LoKi::pow ( fun1 , PAR ( fun2 ) ) ; }
+      //
+      // "right" side math.
+      //
+      static Fun __radd__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 + fun1  ; }
+      static Fun __rsub__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 - fun1  ; }
+      static Fun __rmul__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 * fun1  ; }
+      static Fun __rdiv__   ( const Func&  fun1 , 
+                              const double fun2 ) { return fun2 / fun1  ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+      //
+      static Fun __radd__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return PAR ( fun2 ) + fun1  ; }
+      static Fun __rsub__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return PAR ( fun2 ) - fun1  ; }
+      static Fun __rmul__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return PAR ( fun2 ) * fun1  ; }
+      static Fun __rdiv__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return PAR ( fun2 ) / fun1  ; }
+      static Fun __rpow__   ( const Func&  fun1 , 
+                              const Para&  fun2 ) { return LoKi::pow ( PAR ( fun2 )  , fun1 ) ; }
       // ======================================================================
       // min
       // ======================================================================
@@ -438,19 +492,19 @@ namespace LoKi
       // ======================================================================
     public:   
       // ======================================================================
-      // "right" side math. It can't be redefined in base class :-(  
-      static Fun __radd__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 + fun1  ; }
-      static Fun __rsub__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 - fun1  ; }
-      static Fun __rmul__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 * fun1  ; }
-      static Fun __rdiv__   ( const Func&  fun1 , 
-                              const double fun2 ) { return fun2 / fun1  ; }
-      static Fun __rpow__   ( const Func&  fun1 , 
-                              const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
-      static Fun __rpow__   ( const Func&  fun1 , 
-                              const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+//       // "right" side math. It can't be redefined in base class :-(  
+//       static Fun __radd__   ( const Func&  fun1 , 
+//                               const double fun2 ) { return fun2 + fun1  ; }
+//       static Fun __rsub__   ( const Func&  fun1 , 
+//                               const double fun2 ) { return fun2 - fun1  ; }
+//       static Fun __rmul__   ( const Func&  fun1 , 
+//                               const double fun2 ) { return fun2 * fun1  ; }
+//       static Fun __rdiv__   ( const Func&  fun1 , 
+//                               const double fun2 ) { return fun2 / fun1  ; }
+//       static Fun __rpow__   ( const Func&  fun1 , 
+//                               const double fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
+//       static Fun __rpow__   ( const Func&  fun1 , 
+//                               const int    fun2 ) { return LoKi::pow ( fun2 , fun1 ) ; }
       // ======================================================================
       static Fun __neg__    ( const Func&  fun  ) { return -1 * fun         ; }
       static Fun __abs__    ( const Func&  fun  ) { return LoKi::abs( fun ) ; }      
