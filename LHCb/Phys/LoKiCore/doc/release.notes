@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-03 - Vanya Belyaev
+ - fix complier warning 
+
 ! 2014-02-02 - Vanya Belyaev
 
  - add "right" counter-partners for math-operations with "parameters" 

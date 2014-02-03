@@ -48,6 +48,11 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
+  /** the pattern to imporved for more felxibility 
+   *  @toto imporove it for more felxibility 
+   *  @thanks Alexander MAZUROV 
+   */
   const boost::regex s_pattern ( "(\\w+)\\s*(?:\\[\\s*(\\w+)\\s*\\])?\\s*(?:/\\s*(\\w+))?" );
   //
   bool parse 
@@ -75,7 +80,8 @@ namespace
     // alg = std::string(what[3].first, what[3].second);
     //
     return true ;
-  } ; 
+  } 
+  // ==========================================================================
 }
 // ============================================================================
 // Constructor
