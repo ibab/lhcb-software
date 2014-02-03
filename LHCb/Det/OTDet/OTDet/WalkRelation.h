@@ -13,16 +13,23 @@ namespace OTDet
     double amp;
     double tau;
     double dpt;
+    double dptfactor;
+    double overtau;
+
+    inline double fastTanh(const double x) const;
+    //inline int float2int(const double d ) const;
+    //inline int floattoint(const double d ) const;
+
   public:
     WalkRelation();
-    WalkRelation(double off, double amp, double tau, double dpt);
+    WalkRelation(double doff, double damp, double dtau, double ddpt);
 
     double walk(double l) const;
 
-    double getOff() const { return off; }
-    double getAmp() const { return amp; }
-    double getTau() const { return tau; }
-    double getDpt() const { return dpt; }
+    inline double getOff() const { return off; }
+    inline double getAmp() const { return amp; }
+    inline double getTau() const { return tau; }
+    inline double getDpt() const { return dpt; }
   };
 }
 
