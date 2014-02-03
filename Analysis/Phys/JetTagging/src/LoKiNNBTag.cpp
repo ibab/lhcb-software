@@ -445,7 +445,11 @@ void LoKi::NNBTag::calculateJetVariables()
     Gaudi::LorentzVector pjet = m_jet->momentum();
     Gaudi::XYZVector vtrk(ptrk.x()/ptrk.r(),ptrk.y()/ptrk.r(),ptrk.z()/ptrk.r());
     Gaudi::XYZVector vjet(pjet.x()/pjet.r(),pjet.y()/pjet.r(),pjet.z()/pjet.r());
-    double angle = std::acos(vtrk.Dot(vjet));
+    // ensure dot-product within acos bounds
+    double dot   = vtrk.Dot(vjet);
+    if (dot > 1) dot = 1;
+    else if (dot < -1) dot = -1;
+    double angle = std::acos(dot);
     trk_kt_sum += ptrk.P()*std::sin(angle);
   }
   if ( 0 <  n_with_ip ) {
