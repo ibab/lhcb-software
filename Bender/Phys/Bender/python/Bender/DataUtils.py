@@ -285,7 +285,7 @@ def extendfile1 ( filename , castor = False , grid = None ) :
         filename = 'PFN:root://castorlhcb.cern.ch/%s'                   % filename
 
     elif 0 == filename.find ( '/castor/cern.ch'                 ) :
-        filename = 'PFN:castor:' + filename
+        filename = 'PFN:root:' + filename
 
     elif 0 == filename.find ( '//castor'    ) :
         return extendfile1 ( filename[1:] , castor ) ## RECURSION!
