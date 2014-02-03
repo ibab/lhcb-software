@@ -6,6 +6,7 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+!======================== LbOniaPairs v2r0 2014-02-03 =========================
 ! 2013-12-20 - Marco Clemencic
  - Fixed compilation problem with the latest Gaudi.
 
