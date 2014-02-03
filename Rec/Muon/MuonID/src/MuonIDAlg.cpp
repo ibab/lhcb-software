@@ -2166,6 +2166,11 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
       if (msgLevel(MSG::VERBOSE) ) verbose()  << "           station " << station << " region " << region
                                           << " mapInRegion: " << m_mudet->mapInRegion(station,region ) << endmsg;
 
+      double foiXDim = 0.0;
+      double foiYDim = 0.0;
+      double last_dx = 0.0;
+      double last_dy = 0.0;
+
         std::vector<coordExtent_>::const_iterator itPos;
         for(itPos = m_coordPos[i].begin();
             itPos != m_coordPos[i].end();
@@ -2176,10 +2181,14 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
           double y = itPos->m_y;
           double dy = itPos->m_dy;
 
-
-          // not optimal this should be called only once per station, region
-          double foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
-          double foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
+	  if (last_dx != dx || last_dy != dy)
+	    {
+	      //ideally want to call this only once per station, region
+	      foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
+	      foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
+	      last_dx = dx;
+	      last_dy = dy;
+	    }
 
           // check if the hit is in the window
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
