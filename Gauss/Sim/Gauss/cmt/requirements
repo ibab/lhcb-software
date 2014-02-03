@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti (Patrick Robbe, Paul Szczypka) 
 #============================================================================
 package Gauss
-version v46r6
+version v46r7
 
 #============================================================================
 #-- Structure
