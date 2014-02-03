@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussSys
 ################################################################################
-gaudi_subdir(GaussSys v46r4)
+gaudi_subdir(GaussSys v46r7)
 
 gaudi_depends_on_subdirs(Bcm/BcmMoniSim
                          Bls/BlsMoniSim
@@ -47,7 +47,6 @@ gaudi_depends_on_subdirs(Bcm/BcmMoniSim
                          Sim/SimChecks
                          Sim/SimSvc
                          Tools/ClhepTools
-                         VL/VLMoniSim
                          Velo/VeloGauss
                          Vis/VisSvc
                          Vis/XmlVis)

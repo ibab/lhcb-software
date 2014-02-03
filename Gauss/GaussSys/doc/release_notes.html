@@ -3,8 +3,231 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v46r7">2014-02-03 - GaussSys v46r7</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v36r4 (and Gaudi v24r2)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   Geant4 v95r2p5g4 (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r18,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r12</b>, EvtGenExtras v3r10 and <b>Mint v3r0</b> 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   <b>HidValley v4r0</b? (private LHCb versions)
+</A></H3>
+
+! 2014-02-03 - Gloria Corti
+ - Remove VLMoniSim also from cmake
+
 ! 2014-01-16 - Paul Szczypka
  - Remove VLMoniSim requirement
+
+!========================== Gauss v46r7 2014-02-03 ===========================
+! 2013-20-01 - Rob Lambert
+ - Suppress Persistency option, not needed any longer.
+
+!========================== EvtGen v13r12 2014-01-24 ==========================
+! 2014-01-23 - Paul Szczypka
+ - Small changes, mainly explicit inits of variables to remove warnings.
+
+!========================== EvtGen v13r11 2014-01-10 ==========================
+! 2014-01-08 - John Back
+ - Corrected parameter checks in EvtSVSCPiso and EvtBto2piCPiso.
+   Added getPDGId() to EvtParticle. Added Blatt-Weisskopf barrier factors up 
+   to L=5 in EvtBlattWeisskopf.
+
+! 2013-12-21 - Jack Wimberley
+ - Modified EvtBCVFF again; one of the corrections was incorrect
+
+! 2013-12-21 - Jack Wimberley
+ - Modified EvtBCVFF to correct the Kiselev form factors
+
+!=========================== Mint v3r0 2014-01-30 ============================
+! 2014-01-24 - Jeremy 
+ - Move FocusFlatte to Flatte
+ - Deprecate FocusFlatte
+ - Fixed a bug in the new Flatte
+  . When the phase space factor was negative, the phase space factor was returned as a complex number
+  . Should square root the absolute value first, then return as a complex number
+
+! 2014-01-24 - Jeremy
+ - Non-resonant "particles" now have an associated barrier factor
+
+! 2014-01-24 - Matt Coombes
+ - Fixed compile warning in IMintGen.h by adding virtual destructor.
+
+! 2014-01-22 - Matt
+ - Fixed compile warning in DalitzBoxSet.cpp L78 _ready(_ready) -> _ready(other._ready)
+ - Fixed compile warning in EvtTRandom.h by adding virtual destructor.
+
+! 2014-01-21 - Jeremy
+ - Fixed an issue with the LASS function where the units of the Breit-Wigner 
+   were different to the non-resonant component
+
+! 2014-01-17 - Jeremy
+ - Lineshape of Breit_wigner now multiplied by the unnormalised Barrier Factors 
+   instead of the normalised versions
+  . The Breit-Wigner mass-dependent width itself still uses the normalised 
+    version as it should
+
+! 2014-01-16 - Jeremy
+ - Fixed an issue where the PDG mass of a non-resonant particle was set to 999
+  . This led to the breakup momentum of the D0, q0_D0 being negative and then reset to 0
+  . This led to a wrong barrier factor
+  . In the case of non-resonant particles, the reconstructed mass is now used
+
+! 2014-01-08 - Jeremy
+ - Added a new class DalitzMCMC that allows MC generation using a Markov Chain algorithm
+  . Note that small samples of DalitzMCMC are inherently biased
+  . Generate a huge sample of MCMC first, then draw events randomly from that
+
+!========================= LbAlpGen v3r1p1 2014-01-23 =========================
+! 2014-01-13 - Stephane Tourneur
+ - Fix for Gaussv45rx : Fix the way files were opened and closed in alpsho.F
+
+!========================= LbHidValley v4r0 2014-01-30 ======================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================= LbPowheg v1r0p3 2014-01-23 ========================
+! 2013-12-18 - Marcin Kucharczyk
+ - Add Powheg.py file
+
+!========================= LbPythia8 v7r7 2014-01-23 =========================
+! 2014-01-22 - Paul Szczypka
+ - Minor change to Pythia8Gun.cpp (using size_t as loop var now)
+
+! 2014-01-21 - Paul Szczypka
+ - Changes to remove warnings:
+   . Pythia8Gun.cpp: (un)signed comparison, loop var type change
+   . Pythia8Production.h: reordering of declarations in class definition
+
+! 2014-01-08 - Paul Szczypka
+ - Removed loop from Pythia8Production.cpp which did nothing.
+
+!======================== LbHerwigpp v3r0 2014-01-30 =========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================== LbHijing v10r0 2014-01-30 ==========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================== LbPGuns v4r2 2014-01-23 ==========================
+! 2014-01-20 - Sajan Easo
+ - Added two options files TargetMaterialGun.py for Target studies,
+   ParticleGunRich.py for RICH studies
+
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================= GiGa v21r0 2014-02-02 ============================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================= GiGaCnv v21r0 2014-02-02 ==========================
+! 2014-01-19 - Marco Clemencic
+ - Fixed compilation problem after the change in IDataSelector (in Gaudi).
+
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!=========================== SimSvc v6r0 2014-02-02 ==========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================= GiGaVisUI v6r0 2014-02-02 ===========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================== GaussAlgs v8r0 2014-02-02 ===========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+
+!======================== GaussTools v19r0 2014-02-02 ========================
+! 2014-01-20 - Sajan Easo
+ - Added the files GaussTargetMultiplicity.cpp, GaussTargetMultiplicity.h from 
+   Luca Pescatore for cross-section, radiation length studies.
+ - To compile these modified the requirements file to add  -import=AIDA 
+
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================= GaussRICH v14r1 2014-02-02 ========================
+! 2013-12-18 - Sajan Easo
+ - Added some monitoring histograms
+
+!======================= GaussTracker v7r0 2014-02-02 ========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================= GaussCalo v10r0 2014-02-02 =========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!====================== GaussPhysics v11r0 2014-02-02 ========================
+! 2014-01-08 - Marco Clemencic
+ - Restored GaudiPhysics_load.cpp as GaudiPhysics_factories.cpp
+   (removed by mistake).
+
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!===================== GaussCherenkov v4r2 2014-02-02 ========================
+! 2014-01-21 - Paul Szczypka
+ - Commented out creation of unused variables.
+
+!2013-12-18 - Sajan Easo
+ - Modifications to use mixed set of PMTS (large +standard pixel size) in RICH2
+   in   RichPmtProperties,CkvGeometrySetupUtil,CkvSensDet,CherenkovG4CkvRecon,RichG4ReconTransformPmt,
+   CherenkovG4HitRecon and CherenkovG4HistoFillSet4
+ - Added some prints in RichPmtProperties for reduced set of pmts 
+
+!======================= GaussMonitor v8r0 2014-02-02 ========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================= CaloMoniSim v5r0 2014-01-30 =-========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================== VeloGauss v3r0 2014-01-30 ========================
+! 2013-12-31 - Marco Clemencic
+ - Removed obsolete files.
+
+!======================== MuonMoniSim v3r0 2014-01-30 ========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================== BcmMoniSim v2r0 2014-01-30 ========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!======================= BlsMoniSim v2r0 2014-01-30 ==========================
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
+!========================== SimChecks v1r1 2014-02-02 ========================
+! 2014-01-20 - Sajan Easo
+ - Added the options files to test the Target studies of Luca Pescatore
+
 
 !=============================================================================
 </PRE><H1><A NAME="v46r6">2013-12-03 - GaussSys v46r6</A></H1><PRE>
