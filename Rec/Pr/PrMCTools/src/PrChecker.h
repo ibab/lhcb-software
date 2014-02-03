@@ -80,10 +80,10 @@ private:
   IPrCounter* m_bestLong;
   IPrCounter* m_bestDownstream;
 
-  IPrCounter* m_utForward;
-  IPrCounter* m_utMatch;
-  IPrCounter* m_utbestLong;
-  IPrCounter* m_utDownst;
+  //IPrCounter* m_utForward;
+  //IPrCounter* m_utMatch;
+  //IPrCounter* m_utbestLong;
+  //IPrCounter* m_utDownst;
 
   int  m_writeVeloHistos;      
   int  m_writeForwardHistos;   

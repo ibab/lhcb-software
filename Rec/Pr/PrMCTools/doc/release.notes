@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-02-03 - Michel De Cian
+ - Comment unused member variables in PrChecker.
+
 ! 2014-01-31 - Michel De Cian
  - Remove VL dependency from PrCounter.
 
