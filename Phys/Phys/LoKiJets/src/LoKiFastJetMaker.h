@@ -50,8 +50,6 @@ namespace LoKi
     : public virtual IJetMaker
     , public         GaudiTool
   {
-    // the friend factory fo instantiation
-    friend class ToolFactory<LoKi::FastJetMaker> ;
   public:
     /** The main method: jet-finding procedure
      *
@@ -104,7 +102,6 @@ namespace LoKi
     virtual StatusCode makeJets 
     ( const IJetMaker::Input& input, const LHCb::RecVertex& vtx  , IJetMaker::Jets& jets ) const ;
     // ========================================================================
-  protected:  
     /** the standard constructor
      *
      *  @todo The default values for configuration parameters
