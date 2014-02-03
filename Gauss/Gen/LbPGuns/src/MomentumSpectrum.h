@@ -11,6 +11,8 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 // from ROOT
+#include "TH1.h"
+#include "TH2D.h"
 #include "TH3D.h"
 #include "TFile.h"
 
@@ -23,8 +25,8 @@
  * - InputFile: Name of the file containing the histogram
  * - HistogramPath: Path to the histogram in the file
  * 
- *  @author Michel De Cian
- *  @date   2013-08-29
+ *  @author Dan Johnson (adapted from Michel De Cian)
+ *  @date   2014-02-03
  */
 class MomentumSpectrum : public GaudiTool , virtual public IParticleGunTool {
  public:
@@ -67,7 +69,13 @@ class MomentumSpectrum : public GaudiTool , virtual public IParticleGunTool {
   /// Path of histogram in input file
   std::string m_histoPath;
 
-  TH3D* m_hist;
+	/// Variables used to bin the histogram
+	std::string m_binningVars;
+	
+	/// Histogram pointers (ready for TH2D if using ptpz binning or TH3D if using pxpypz binning
+	TH1* m_hist;
+	TH2D* m_hist2d;
+	TH3D* m_hist3d;
 
 };
 
