@@ -40,7 +40,7 @@ use GenXicc             v2r0p1  Gen
 use LbBcVegPy           v5r1    Gen
 use LbGenXicc           v3r0    Gen
 use LbHidValley         v4r0    Gen
-use LbOniaPairs         v1r2p1  Gen
+use LbOniaPairs         v2r0    Gen
 use LbPowheg            v1r0p3  Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
