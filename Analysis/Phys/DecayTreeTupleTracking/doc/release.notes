@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-02-04 - Francesco Dettori
+ - Fixed bug in TupleToolTrackKink. An Error message replaced by a Warning ignored not to stop the algorithm 
+
 ! 2013-12-20 - Marco Clemencic
  - Fixed CMake configuration.
 

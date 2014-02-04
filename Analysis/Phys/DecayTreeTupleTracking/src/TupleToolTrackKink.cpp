@@ -86,10 +86,8 @@ StatusCode TupleToolTrackKink::fill( const LHCb::Particle*,
   if ( sc.isSuccess() )
   {
     sc = kinkChi2(*track, kinkchi2, zkink);
-  }
-  else
-  {
-    return Error( "Unable to refit track, exiting" );
+  }else{
+    Warning( "Unable to refit track: kinkChi2 will have default value -999" ).ignore();
   }
 
   // First method
@@ -97,7 +95,7 @@ StatusCode TupleToolTrackKink::fill( const LHCb::Particle*,
   test &= tuple->column( prefix+"_TRACK_kinkChi2z", zkink );
 
   // second method
-  double kink_deltaR, kink_deltaR_err, kink_deltaR_z, kink_chi2;
+  double kink_deltaR(-999), kink_deltaR_err(-999), kink_deltaR_z(-999), kink_chi2(-999);
   sc = fitKink(*track,kink_deltaR, kink_deltaR_err, kink_chi2, kink_deltaR_z);
 
   test &= tuple->column( prefix+"_TRACK_kinkFitChi2", kink_chi2);
@@ -193,9 +191,6 @@ StatusCode TupleToolTrackKink::fitKink( const LHCb::Track &input_track,
                                         double &kink_deltaR, double &kink_deltaR_err,
                                         double &kink_chi2, double &kink_z )
 {
-
-  kink_deltaR = -999.;
-  kink_z = -999.;
 
   // Scan in z or in nodes
   const LHCb::TrackFitResult* fitresult = input_track.fitResult();
