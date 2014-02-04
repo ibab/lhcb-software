@@ -3,12 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to references to reflect new PrCounter / PrChecker (Michel De Cian).
-
-- Changes to Configuration.py (Rob Lambert)
-  . remove Persistency option
-
 - Changes to Configuration.py
+  . Remove Persistency option
   . Remove never used UpgradeDets slot
   . Clean up propagation to LHCbApp of Detectors slot
 
@@ -19,6 +15,8 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v44r9
   . Minor adapation for using large + small pmts for RICH upgrade
     (RichRecPhotonTools, RichRecTrackTools)
+  . New PrCounter/PrChecker
+  . Use fast parameterization of tanh in OTDet
 
 </PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
