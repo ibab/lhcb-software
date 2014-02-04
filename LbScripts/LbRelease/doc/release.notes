@@ -1,6 +1,10 @@
+2014-02-04  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r16p2
+
 2014-02-03  Joel Closier <Joel.Closier@cern.ch>
 
-        * LbRelease/scripts/GridEnv.(c)sh: change reference to SLC6
+	* LbRelease/scripts/GridEnv.(c)sh: change reference to SLC6
 
 2014-01-30  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -8,7 +12,7 @@
 
 2014-01-30  Joel Closier <Joel.Closier@cern.ch>
 
-        * LbRelease/scripts/GridEnv.(c)sh: Remove reference to SLC4
+	* LbRelease/scripts/GridEnv.(c)sh: Remove reference to SLC4
 
 2014-01-28  Ben Couturier <Ben.Couturier@cern.ch>
 
