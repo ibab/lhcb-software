@@ -23,6 +23,7 @@ _known_strippings = [
   "Stripping20r1", 
   "Stripping20r0p1",
   "Stripping20r0p2",
+  "Stripping20r0p3",
   "Stripping20r2",
   "Stripping20r3"
 ]
@@ -34,7 +35,8 @@ _duplicate_strippings={ "Stripping13b"        : "Stripping13",
                         "Stripping18b"        : "Stripping18",
                         "Stripping19a"        : "Stripping19", 
                         "Stripping20r1p1"     : "Stripping20r0p1",
-                        "Stripping20r1p2"     : "Stripping20r0p2" }
+                        "Stripping20r1p2"     : "Stripping20r0p2",
+                        "Stripping20r1p3"     : "Stripping20r0p3"}
 
 
 #give a dictionary to describe what each stripping was for
@@ -57,9 +59,11 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping20" : "2012 data reprocessing, promt processing of 2012 data after September TS", 
                  "Stripping20r1" : "2011 data reprocessing with Reco14", 
                  "Stripping20r0p1" : "First incremental restripping of 2012 data", 
-                 "Stripping20r0p2" : "Second incremental restripping of 2012 data", 
+                 "Stripping20r0p2" : "Second incremental restripping of 2012 data",
+                 "Stripping20r0p3" : "Third incremental restripping of 2012 data", 
                  "Stripping20r1p1" : "First incremental restripping 20 2011 data",
                  "Stripping20r1p2" : "Second incremental restripping 20 2011 data",
+                 "Stripping20r1p3" : "Third incremental restripping 20 2011 data",
                  "Stripping20r2" : "Stripping of 2.76 TeV Collision13 data on Rec14",
                  "Stripping20r3" : "Stripping of pA/Ap Collision13 data on Rec14a"
                  }
