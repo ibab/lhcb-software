@@ -1,3 +1,8 @@
+2014-02-04  Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v5r10p2
+        * python/LbLegacy/install_project.py:  release of LbScripts version v7r10p2
+
 2014-01-30  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v5r10p1
