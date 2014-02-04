@@ -5322,7 +5322,7 @@ ROOT.TTree.branches = _rt_branches_
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-02-04
-def _rt_branches_ ( t ) :def _rt_print_ ( t ) :
+def _rt_print_ ( t ) :
     """
     Simplified print out for tree/chain
 
