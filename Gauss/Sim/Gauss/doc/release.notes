@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-02-04 - Paul Szczypka
+ - Purged the VL from Configuration.py
+
 !========================== Gauss v46r7 2014-02-03 ===========================
 ! 2013-20-01 - Rob Lambert
  - Suppress Persistency option, not needed any longer.

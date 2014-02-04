@@ -47,7 +47,6 @@ from Configurables import ( GenerationToSimulation, GiGaFlushAlgorithm,
                             Rich__MC__MCRichHitToMCRichOpPhotAlg)
 from Configurables import ( GenMonitorAlg, MuonHitChecker, MCTruthMonitor,
                             VeloGaussMoni, MCHitMonitor, MCCaloMonitor,
-                            #VLHitMonitor, # Imported near where needed I hope
                             DumpHepMC )
 from Configurables import ( PackMCParticle, PackMCVertex,
                             UnpackMCParticle, UnpackMCVertex,
@@ -63,7 +62,7 @@ from DetCond.Configuration import CondDB
 class Gauss(LHCbConfigurableUser):
 
     __knownDetectors__ = [
-        'velo', 'puveto', 'vp', 'vl',
+        'velo', 'puveto', 'vp',
         'tt' , 'ut',
         'it' , 'sl',
         'ot' , 'ft', 
@@ -141,8 +140,8 @@ class Gauss(LHCbConfigurableUser):
     _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
 
     _incompatibleDetectors = {
-        "Velo"       : [ "Velo", "VL", "VP" ],
-        "VeloPuVeto" : [ "PuVeto", "VL", "VP" ],
+        "Velo"       : [ "Velo", "VP" ],
+        "VeloPuVeto" : [ "PuVeto", "VP" ],
         "TT"         : [ "TT", "UT" ],
         "Muon"       : [ "Muon", "MuonNoM1" ],
         "MuonTorch"  : [ "Muon", "Torch" ]
@@ -531,59 +530,6 @@ class Gauss(LHCbConfigurableUser):
 
 
 
-#"""
-#><<         ><< ><<<<<<<< ><<           ><<<<      ><<             ><<             
-# ><<       ><<  ><<       ><<         ><<    ><<   ><<        ><   ><<             
-#  ><<     ><<   ><<       ><<       ><<        ><< ><<           ><>< ><    ><<    
-#   ><<   ><<    ><<<<<<   ><<       ><<        ><< ><<       ><<   ><<    ><   ><< 
-#    ><< ><<     ><<       ><<       ><<        ><< ><<       ><<   ><<   ><<<<< ><<
-#     ><<<<      ><<       ><<         ><<     ><<  ><<       ><<   ><<   ><        
-#      ><<       ><<<<<<<< ><<<<<<<<     ><<<<      ><<<<<<<< ><<    ><<    ><<<<   
-#"""
-
-
-
-    def defineVLGeo ( self, detPieces ):
-        # remove automatically included beampipe detector elements
-        self.removeBeamPipeElements( "velo" )
-
-        # Temp fix for non-schema VL path in DDDB
-        detPieces['BeforeMagnetRegion'] += ['VL']
-        #detPieces['BeforeMagnetRegion'] += ['VeloLite']
-
-        # Also sort out mis-alignment
-        if self.getProp("DataType") != "Upgrade" :
-            VeloP = self.checkVeloDDDB()
-            # No need to check, this is the case if this is called.
-            # No need to misalign if only PuVeto exits - check me PSZ.
-            if "Velo" in self.getProp('DetectorGeo')['Detectors']:
-                self.veloMisAlignGeometry(VeloP) # To misalign VELO
-
-        pass
-
-
-    def configureVLSim( self, slot, detHits ):
-        region = "BeforeMagnetRegion"
-        det = "VL"
-        moni = GetTrackerHitsAlg(
-            'Get' + det + 'Hits' + slot,
-            MCHitsLocation = 'MC/' + det  + '/Hits',
-            CollectionName = det + 'SDet/Hits',
-            # Temp fix for non-schema VL path in DDDB
-            Detectors = [ '/dd/Structure/LHCb/' + region + '/' + det ]
-            #Detectors = [ '/dd/Structure/LHCb/' + region + '/VeloLite' ]
-            )
-        detHits.Members += [ moni ]
-        pass
-
-
-    def configureVLMoni( self, slot, packCheckSeq, detMoniSeq, checkHits ):
-        checkHits.VeloHits = 'MC/VL/Hits'
-
-        from Configurables import VLHitMonitor
-        detMoniSeq += [ VLHitMonitor("VLHitMonitor" + slot ) ]
-
-        pass
 
 #"""
 #><<         ><< ><<<<<<<< ><<           ><<<<      ><<<<<<<                
@@ -1546,7 +1492,7 @@ class Gauss(LHCbConfigurableUser):
         det = "PuVeto"
         # This is still awful - PSZ
         detextra, detextra1 = 'VeloPu', 'Velo'
-        if not [vdet for vdet in ['VP', 'VL'] if vdet in self.getProp('DetectorSim')['Detectors']]:
+        if 'VP' not in self.getProp('DetectorSim')['Detectors']:
             moni = GetTrackerHitsAlg(
                 'Get' + det + 'Hits' + slot,
                 MCHitsLocation = 'MC/' + det  + '/Hits',
@@ -1559,7 +1505,7 @@ class Gauss(LHCbConfigurableUser):
 
         checkHits.PuVetoHits = 'MC/PuVeto/Hits'
         # Turn off the PuVeto hits if using modified detector
-        if [det for det in ['VP', 'VL'] if det in self.getProp('DetectorSim')['Detectors']]:
+        if 'VP' not in self.getProp('DetectorSim')['Detectors']:
             checkHits.PuVetoHits = ''
 
         from Configurables import DataPacking__Unpack_LHCb__MCPuVetoHitPacker_
@@ -1569,8 +1515,8 @@ class Gauss(LHCbConfigurableUser):
             packCheckSeq.Members += [upPuVe]
 
             from Configurables import DataPacking__Check_LHCb__MCPuVetoHitPacker_
-            # if there's no VP or VL do PuVeto stuff
-            if not [det for det in ['VP', 'VL'] if det in self.getProp('DetectorSim')['Detectors']]:
+            # if there's no VP do PuVeto stuff
+            if 'VP' not in self.getProp('DetectorSim')['Detectors']:
                 cPuVe = DataPacking__Check_LHCb__MCPuVetoHitPacker_("CheckPuVetoHits"+slot)
                 packCheckSeq.Members += [cPuVe]
 
@@ -1740,7 +1686,6 @@ class Gauss(LHCbConfigurableUser):
         if 'Hcal'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['Hcal']
         # PSZ - add upgrade detectors here
         if 'VP'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['VP']
-        if 'VL'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['VL']
         if 'UT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['UT']
         if 'FT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['FT']
         if 'SL'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['SL']
@@ -2227,8 +2172,6 @@ class Gauss(LHCbConfigurableUser):
         # Upgrade detectors below
         elif lDet == "vp":
             self.defineVPGeo( detPieces )
-        elif lDet == "vl":
-            self.defineVLGeo( detPieces )
         elif lDet == "torch":
             self.defineTorchGeo()
         elif lDet == "ft":
@@ -2405,8 +2348,6 @@ class Gauss(LHCbConfigurableUser):
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPSim( slot, detHits )
-        elif det == "vl":
-            self.configureVLSim( slot, detHits )
         elif det == "torch":
             self.configureTorchSim( slot, detHits )
         elif det == "ft":
@@ -2587,8 +2528,6 @@ class Gauss(LHCbConfigurableUser):
         # Upgrade detectors below
         elif det == "vp":
             self.configureVPMoni( slot, packCheckSeq, detMoniSeq, checkHits )
-        elif det == "vl":
-            self.configureVLMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "torch":
             self.configureTorchMoni( slot, packCheckSeq, detMoniSeq, checkHits )
         elif det == "ft":
