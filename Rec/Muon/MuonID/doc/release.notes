@@ -3,6 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2014-02-04 - Christoph Langenbruch
+ - Removed unneeded calls to foiX and foiY in MuonIDAlg::setCoords.
+   This optimisation should have no implications except for performance improvement.
+
 ! 2014-01-30 - J. Helder Lopes
  - Fixed problem with ROOT 6 (https://sft.its.cern.ch/jira/browse/ROOT-5985): 
    For non-muon probability use ROOT::Math::landau_cdf. User function land()    
