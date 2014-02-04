@@ -5256,6 +5256,7 @@ ROOT.TFile.name        = ROOT.TFile.GetName
 ROOT.TFile.__getitem__ = ROOT.TFile.Get 
 ROOT.TFile.__getattr__ = ROOT.TFile.Get 
 
+
 # =============================================================================
 ## get the leaves for the given tree/chain
 #  @see TTree
@@ -5275,23 +5276,20 @@ def _rt_leaves_ ( t ) :
     
     """
     _lst =  t.GetListOfLeaves()
+    _lst = [ l.GetName() for l in _lst ] 
     _lst.sort()
     return tuple( _lst ) 
 
-ROOT.TTree.leaves   = _rf_leaves_
+ROOT.TTree.leaves   = _rt_leaves_
 
 # =============================================================================
 ## get the branches for the given tree/chain
 #  @see TTree
 #  @code
 #
-#  @code
-#
 #  >>> tree = ...
 #  >>> lst = tree.branches()
 #  >>> for b in lst : print b
-#
-#  @endcode 
 #
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -5306,12 +5304,43 @@ def _rt_branches_ ( t ) :
     
     """
     _lst =  t.GetListOfBranches()
+    _lst = [ l.GetName() for l in _lst ] 
     _lst.sort()
     return tuple( _lst ) 
 
-ROOT.TTree.branches = _rf_branches_
+ROOT.TTree.branches = _rt_branches_
 
 
+# =============================================================================
+## simplified printout for TTree/TChain
+#  @see TTree
+#  @code
+#
+#  >>> tree = ...
+#  >>> print tree
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-04
+def _rt_branches_ ( t ) :def _rt_print_ ( t ) :
+    """
+    Simplified print out for tree/chain
+
+    >>> tree = ...
+    >>> print tree
+    """
+    res = "Name: %s " % t.GetName() 
+    if hasattr ( t , 'GetNtrees' ) :
+        res += " Chain/#%d " % t.GetNtrees()
+    _b          = t.branches()
+    res     += "\nBranches: %s" % list(_b)
+    _l          = t.leaves()
+    if _l != _l : res += "\nLeaves: %s" % list(_s)
+    return res
+
+ROOT.TTree.__repr__ = _rt_print_
+ROOT.TTree.__str__  = _rt_print_
+    
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
 # =============================================================================
