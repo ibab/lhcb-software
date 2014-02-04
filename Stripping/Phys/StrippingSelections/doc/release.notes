@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-02-04 - Flavio Archilli
+ - Corrected DecayDescriptor for B0->K10(->omega(782) KS)mumu in StrippingB2XMuMu.py
+
 ! 2014-01-28 - Rafael Coutinho
  - Correct cone variable implementation
 

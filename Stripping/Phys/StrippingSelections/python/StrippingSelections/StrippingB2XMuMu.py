@@ -801,7 +801,7 @@ class B2XMuMuConf(LineBuilder) :
         Make a K1-> Omega(782) K+
         """      
         _k12omegaks = CombineParticles()
-        _k12omegaks.DecayDescriptor = "[K_1(1400)+ -> KS0 omega(782)]cc"
+        _k12omegaks.DecayDescriptor = "K_1(1400)0 -> KS0 omega(782)"
         _k12omegaks.CombinationCut = "(AM > %(K12OmegaK_MassLow)s * MeV) & (AM < %(K12OmegaK_MassHigh)s * MeV)" %conf
         _k12omegaks.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
 
