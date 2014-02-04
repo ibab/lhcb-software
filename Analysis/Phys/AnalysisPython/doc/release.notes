@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-02-04 - Vanya Belyaev
+ - add the accessor functions for leaves and branches 
+
 ! 2014-01-30 - Vanya Belyaev
  - add missing descriptors 
 

@@ -5227,7 +5227,7 @@ ROOT.RooDataHist.__repr__ = _ds_print_
 ROOT.RooDataHist.__len__  = lambda s : s.numEntries() 
 
 # ==============================================================================
-## print ROOT file (altually a combination of ls&Print)
+## print ROOT file (actually a combination of ls&Print)
 #  @code
 #
 #  >>> f = ROOT.TFile(... )
@@ -5255,6 +5255,62 @@ ROOT.TFile.__repr__    = _rf_print_
 ROOT.TFile.name        = ROOT.TFile.GetName
 ROOT.TFile.__getitem__ = ROOT.TFile.Get 
 ROOT.TFile.__getattr__ = ROOT.TFile.Get 
+
+# =============================================================================
+## get the leaves for the given tree/chain
+#  @see TTree
+#  @code
+#
+#  >>> tree = ...
+#  >>> lst = tree.leaves()
+#  >>> for l in lst : print l
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-04
+def _rt_leaves_ ( t ) :
+    """
+    Get the list of leaves names
+    
+    
+    """
+    _lst =  t.GetListOfLeaves()
+    _lst.sort()
+    return tuple( _lst ) 
+
+ROOT.TTree.leaves   = _rf_leaves_
+
+# =============================================================================
+## get the branches for the given tree/chain
+#  @see TTree
+#  @code
+#
+#  @code
+#
+#  >>> tree = ...
+#  >>> lst = tree.branches()
+#  >>> for b in lst : print b
+#
+#  @endcode 
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-04
+def _rt_branches_ ( t ) :
+    """
+    Get the list of branch names
+    
+    >>> tree = ...
+    >>> lst = tree.branches()
+    >>> for b in lst : print b
+    
+    """
+    _lst =  t.GetListOfBranches()
+    _lst.sort()
+    return tuple( _lst ) 
+
+ROOT.TTree.branches = _rf_branches_
+
 
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
