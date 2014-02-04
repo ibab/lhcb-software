@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r30 2014-02-04 =========================
+
 ! 2014-30-01 - Stefano Perazzini
  - Moved StrippingB2KShhLines from uDST to DST
  - Introduced DimuonVELORAW stream for RareStrange lines
@@ -17,8 +19,6 @@
 
 ! 2014-01-27 - Thomas Blake
  - Updated RareStrange and B2XMuMu dictionaries
-
-!========================= StrippingSettings v2r30 2014-01-24 =========================
 
 ! 2014-01-24 - Stefano Perazzini
  - Added back B2XTauZVTOP from RD WG dictionaries
