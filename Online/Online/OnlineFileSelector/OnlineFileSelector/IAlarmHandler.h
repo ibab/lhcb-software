@@ -4,15 +4,13 @@
 // Include files
 // from STL
 #include <string>
-#include <cstdarg>
-#ifdef _WIN32
-#define vsnprintf _vsnprintf
-#endif
 // from Gaudi
-#include "GaudiKernel/IAlgTool.h"
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IInterface.h"
 
-static const InterfaceID IID_IAlarmHandler ( "IAlarmHandler", 1, 0 );
+using namespace std;
+
+
+static const InterfaceID IID_IAlarmHandler ( "IAlarmHandler",1, 0 );
 
 /** @class IAlarmHandler IAlarmHandler.h ichalkia/IAlarmHandler.h
  *  
@@ -21,30 +19,13 @@ static const InterfaceID IID_IAlarmHandler ( "IAlarmHandler", 1, 0 );
  *  @date   2014-01-24
  */
 
-using namespace std
-
-class IAlarmHandler : virtual public IAlgTool {
+class IAlarmHandler : virtual public IInterface {
 public: 
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IAlarmHandler; }
 
-  virtual const StatusCode issueAlarm(const char* source,
-                                      const char* message,...)
-  {
-      if ( err.isActive() )  {
-        va_list args;
-        va_start(args, source);
-        char buff[1024];
-        size_t nSize = vsnprintf(buff, sizeof(buff), source, args);
-        err << buff << endmsg;
-        if ( nSize == sizeof(buff) )  {
-          err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
-        }
-      }
-      return StatusCode::FAILURE;
-      
-  }
+  virtual const StatusCode issueAlarm(const string& msg) = 0;
   
 
 };
