@@ -30,21 +30,8 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
     m_idTool        ( NULL ),
     m_massHypoRings ( NULL ),
     m_ckAngle       ( NULL ),
-    m_richPartProp  ( NULL ),
-    m_scale         ( Rich::NRadiatorTypes, 0 ),
-    m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
-    m_sepGMax       ( Rich::NRadiatorTypes, 0 )
-{
-  m_ckThetaMax[Rich::Aerogel]  = 0.24;
-  m_ckThetaMax[Rich::Rich1Gas] = 0.052;
-  m_ckThetaMax[Rich::Rich2Gas] = 0.03;
-  declareProperty( "CKthetaMax", m_ckThetaMax );
-
-  m_sepGMax[Rich::Aerogel]   = 342;
-  m_sepGMax[Rich::Rich1Gas]  = 75;
-  m_sepGMax[Rich::Rich2Gas]  = 130;
-  declareProperty( "SepGMax", m_sepGMax );
-}
+    m_richPartProp  ( NULL )
+{ }
 
 //=============================================================================
 // Destructor
@@ -67,14 +54,6 @@ StatusCode PhotonRecoUsingCKEstiFromRadius::initialize()
 
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endmsg;
-
-  // loop over radiators
-  for ( Rich::Radiators::const_iterator irad = Rich::radiators().begin();
-        irad != Rich::radiators().end(); ++irad )
-  {
-    // scale factor for each
-    m_scale[*irad] = m_ckThetaMax[*irad] / m_sepGMax[*irad];
-  }
 
   return sc;
 }

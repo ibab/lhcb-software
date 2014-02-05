@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-05 - Chris Jones
+ - Remove some unused data members from RichPhotonRecoUsingCKEstiFromRadius.
+
 ! 2014-01-15 - Chris Jones
  - Clean up a bit the previous changes for different sized PMTs.
 

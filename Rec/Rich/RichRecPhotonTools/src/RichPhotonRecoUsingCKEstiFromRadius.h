@@ -96,10 +96,6 @@ namespace Rich
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
 
-      std::vector<double> m_scale;      ///< Internal cached parameter for speed
-      std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point
-      std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
-
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;
 
