@@ -12,6 +12,7 @@
 #include "Mint/Lass.h"
 #include "Mint/Flatte.h"
 #include "Mint/CrystalBarrelFOCUS.h"
+#include "Mint/Rho0Omega.h"
 
 #include <iostream>
 
@@ -22,6 +23,7 @@ using namespace MINT;
    possible options
    AWAYS_BW
    RHO_OMEGA
+   WRONG_RHOOMEGA
    Flatte
    GS
 */
@@ -58,9 +60,17 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("RHO_OMEGA", lopt)){
       if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"
 		     << endl;
-      
+
+      return new Rho0Omega(*tree, events);
+    }else if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("WRONG_RHOOMEGA", lopt)){
+      if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"
+		     << endl;
+
+      std::cout << "OIII!!!  WARNING!!!!" << std::endl;
+      std::cout << "CrystalBarrelFOCUS has many known issues" << std::endl;
+      std::cout << "Use at your own risk" << std::endl << std::endl;
+
       return new CrystalBarrelFOCUS(*tree, events);
-      //return new BW_BW(*tree, events);
     }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
       if(dbThis) cout << "LineshapeMaker: return GS lineshape" << endl;
       return new GounarisSakurai(*tree, events);

@@ -6,6 +6,15 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-02-05
+ - Deprecate CrystalBallRhoOmega
+ - Create new Rho0Omega lineshape to describe rho-omega mixing
+  . Now the default rho-omega lineshape used by calling RHO_OMEGA in the steering file
+ - Warning added to CrystalBarrelFOCUS
+  . Contains many issues and bugs, only kept for backwards compatibility
+  . Keyword for usage changed to WRONG_RHOOMEGA in the steering file
+  . Hope to deprecate one day
+
 !=========================== Mint v3r0 2014-01-30 ============================
 ! 2014-01-24 - Jeremy 
  - Move FocusFlatte to Flatte
@@ -13,6 +22,7 @@
  - Fixed a bug in the new Flatte
   . When the phase space factor was negative, the phase space factor was returned as a complex number
   . Should square root the absolute value first, then return as a complex number
+  . Changed default values of gpipi and gkk/gpipi to BES values
 
 ! 2014-01-24 - Jeremy
  - Non-resonant "particles" now have an associated barrier factor
