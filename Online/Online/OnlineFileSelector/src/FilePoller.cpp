@@ -8,7 +8,7 @@
 //  ====================================================================
 #include "OnlineFileSelector/FilePoller.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include <queue>
+#include <algorithm>
 #include <string>
 #include <dirent.h>
 #include <stdlib.h>
@@ -17,40 +17,22 @@ using namespace std;
 using namespace LHCb;
 
 
-FilePoller::FilePoller(/*const string& nam,
-                         ISvcLocator* svc,*/
-                       string directory,
-                       int time
-                       ) : /*OnlineService::OnlineService(nam,svc),
-                           m_name(nam),
-                           m_pSvcLocator(svc),*/ //needed? how are they initialized?
-                           m_scanDirectory(directory),
-                           m_alrmTime(time)
+FilePoller::FilePoller(const string& nam,ISvcLocator* svc)
+                           : OnlineService::OnlineService(nam,svc),
+                           m_scanDirectory(),
+                           m_alrmTime()
 {
-  cout << "object instantiated" << endl;
+  declareProperty("scanDirectory",m_scanDirectory);
+  declareProperty("alarmTime",m_alrmTime);
 }
 
-FilePoller::FilePoller(const FilePoller& fileP)
-                      :DimTimer::DimTimer(),
-                       /*OnlineService(m_name,m_pSvcLocator),
-                       m_name(fileP.m_name),
-                       m_pSvcLocator(fileP.m_pSvcLocator),*/
-                       m_scanDirectory(fileP.m_scanDirectory),
-                       m_alrmTime(fileP.m_alrmTime)
-{}
- 
- 
-FilePoller::~FilePoller() {
+FilePoller::~FilePoller() {}
 
- cout << "object destroyed" << endl;
 
-}
-
-/*
-///Implementation of IInterface::queryInterface()
+/// Implementation of IInterface::queryInterface()
 StatusCode FilePoller::queryInterface(const InterfaceID& riid, void** ppvIF) {
-  if(IDirectoryScanner::interfaceID().versionMatch(riid))
-    *ppvIF = (IDirectoryScanner*)this;
+  if(IHandleListenerSvc::interfaceID().versionMatch(riid))
+    *ppvIF = (IHandleListenerSvc*)this;
   else if(IAlarmHandler::interfaceID().versionMatch(riid))
     *ppvIF = (IAlarmHandler*)this;
   else
@@ -81,32 +63,30 @@ StatusCode FilePoller::finalize()  {
   }
   return status;
 }
-*/
+
 
 StatusCode FilePoller::start()
 {
-  StatusCode status = StatusCode::SUCCESS;//OnlineService::start();
+  StatusCode status = OnlineService::start();
   DimTimer::start(FilePoller::m_alrmTime);
   return status;
 }
 
 StatusCode FilePoller::stop()
 {
-  StatusCode status =  StatusCode::SUCCESS;//OnlineService::stop();
+  StatusCode status = OnlineService::stop();
   DimTimer::stop();
-  //find a way to stop the execution of the poller -- maybe if there are no more listeners waiting for a datastream
   return status;
 }
 
 
-/*
 const StatusCode FilePoller::issueAlarm(const string& msg) 
 {
     cout << msg << endl;
     return StatusCode::FAILURE;
 }
 
-*/
+
 StatusCode FilePoller::poller(string scan_path)
 {
   struct dirent d_entry;                  	
@@ -114,31 +94,30 @@ StatusCode FilePoller::poller(string scan_path)
 	int i;	
 	DIR *dir,*nested_dir;
 	char *path,*prev_path;
-  StatusCode status = StatusCode::SUCCESS; //for debugging
+  StatusCode status;
   string n_path,dname;
   
   path = (char*)calloc(sizeof(char),256);
   prev_path = (char*)calloc(sizeof(char),256);
-  if ((!path)||(!prev_path))
-  {  cout << "open error" <<endl;///////////////
-    
-    // status = FilePoller::issueAlarm(OnlineService::name() + "calloc memory problem");
-      return status; 
+  if ((!path)||(!prev_path)){
+    status = FilePoller::issueAlarm(OnlineService::name() + "calloc memory problem");
+    return status; 
   }
 
   path = strncpy(path,scan_path.c_str(),255); //size of scan_path should be < 256
   dir = opendir(path);
   while ((0==readdir_r(dir,&d_entry,&d_res)) && (NULL!=d_res)) {
     
-    prev_path = strncpy(prev_path,path,256); //keep the previous path for the recursion
+    prev_path = strncpy(prev_path,path,256);
     if (!strcmp(d_entry.d_name,".") || !strcmp(d_entry.d_name,".."))
         continue;
     
     dname = string(d_entry.d_name);
-    cout << d_entry.d_name << endl; /////////////
     
     FilePoller::addTofileNames(dname);  //simple, just sth to begin with
+    
     //search for idle listeners to wake them up
+    
     if (d_entry.d_type == DT_DIR) {
 
       n_path = string(path);
@@ -146,24 +125,17 @@ StatusCode FilePoller::poller(string scan_path)
       nested_dir = opendir(n_path.c_str());
       
 		  if (!nested_dir) {
-        cout << "nested open error" <<endl;/////////////
-        //status = FilePoller::issueAlarm(OnlineService::name()+"Error opening directory.");
+          status = FilePoller::issueAlarm(OnlineService::name()+"Error opening directory.");
           return status;
-          
       }
       status = FilePoller::poller(n_path);
-      if (StatusCode::FAILURE == status)
-      {
-        cout << "open error 2" <<endl;
-        // status = FilePoller::issueAlarm(OnlineService::name()+"The poller encountered an error.");
-        return status;
-        
+      if (StatusCode::FAILURE == status) {
+        status = FilePoller::issueAlarm(OnlineService::name()+"The poller encountered an error.");
+         return status;
       }
       i = closedir(nested_dir);
-      if (-1 == i)
-      {
-        cout << "open error 3" << endl;
-        // status = FilePoller::issueAlarm(OnlineService::name()+"Problem closing directory.");
+      if (-1 == i){
+         status = FilePoller::issueAlarm(OnlineService::name()+"Problem closing directory.");
         return status;
       }
     }
@@ -173,48 +145,57 @@ StatusCode FilePoller::poller(string scan_path)
   return StatusCode::SUCCESS;
 }
 
-/*
-StatusCode FilePoller::addListener(IService* Listener)
+
+StatusCode FilePoller::addListener(IAlertSvc* Listener) 
 {
-  FilePoller::m_fileListeners.push(Listener);
+  m_fileListeners.push_back(Listener);
   return StatusCode::SUCCESS;
 }
 
 
-StatusCode FilePoller::remListener()
+StatusCode FilePoller::remListener(IAlertSvc* Listener)
 {
-   if (!FilePoller::m_fileListeners.empty())
+   if (!m_fileListeners.empty())
    {
-     FilePoller::m_fileListeners.pop();
-     return StatusCode::SUCCESS;
+     vector<IAlertSvc*>::iterator del_l = FilePoller::findListener(Listener);
+     if (del_l != m_fileListeners.end())
+     {
+       m_fileListeners.erase(del_l);
+       return StatusCode::SUCCESS;
+     }
    }
-   FilePoller::issueAlarm(OnlineService::name()+"No listeners available.");    
+   return FilePoller::issueAlarm(OnlineService::name()+"No listeners available.");
+}
+
+vector<IAlertSvc*>::iterator FilePoller::findListener(IAlertSvc* Listener)
+{
+  vector<IAlertSvc*>::iterator iter;
+  iter = find(m_fileListeners.begin(),m_fileListeners.end(),Listener);
+  return iter;
+}
+
+
+const StatusCode FilePoller::showListeners()
+{
+  IAlertSvc* Listener; 
+  vector<IAlertSvc*>::iterator iter;
+  
+  if (!m_fileListeners.empty())
+  {
+    for(iter = m_fileListeners.begin(); iter != m_fileListeners.end(); ++iter)
+    {
+      Listener = *iter;
+      if (!Listener)
+        return FilePoller::issueAlarm(OnlineService::name()+"Error retrieving service");
+        cout << Listener->getSvcName() << endl;
+    }
+    return StatusCode::SUCCESS;
+  }
   return StatusCode::FAILURE;
   
 }
 
 
-const StatusCode FilePoller::printListeners()
-{
-  ISvcLocator* Listener; //or ISvcLocator* or OnlineService* ??
-  
-
-  while(!FilePoller::m_fileListeners.empty())
-  {
-    Listener = FilePoller::m_fileListeners.front();
-    
-    SmartIF<IService> pol_list(Listener);
-    if (!pol_list.isValid()) {
-    //  return FilePoller::issueAlarm(OnlineService::name()+"Error retrieving service");
-    }
-    cout << pol_list->name() << endl;
-    
-    
-  }
-  return StatusCode::SUCCESS;
-}
-
-*/
 
   
 void FilePoller::addTofileNames(const string& newFile)
@@ -227,25 +208,12 @@ void FilePoller::remFromfileNames()
   m_fileNames.pop_back();
 }
 
-void FilePoller::setScanDirectory(string directory)
-{
-  m_scanDirectory = directory;
-}
-
-void FilePoller::setAlrmTime(int seconds)
-{
-  m_alrmTime = seconds;
-}
-
 
 void FilePoller::timerHandler()
 {
   DimTimer::stop();
   StatusCode poll_st = FilePoller::poller(FilePoller::m_scanDirectory);
   //If m_fileNames not emprty: invoke dataReady() from a Listener
-  /*cout <<"from vector" <<endl;
-  for (int i=0; i<m_fileNames.size(); i++)
-  cout << m_fileNames[i]<<endl;*/
   FilePoller::start();
 } 
 

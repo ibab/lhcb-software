@@ -3,11 +3,11 @@
 
 // Include files
 #include "GaudiOnline/OnlineService.h"
-#include "IDirectoryScanner.h"
+#include "IHandleListenerSvc.h"
 #include "IAlarmHandler.h"
 #include <vector>
-#include <queue>
 #include "dim.hxx"
+
 /** @class FilePoller FilePoller.h ichalkia/FilePoller.h
  *  
  *
@@ -18,36 +18,29 @@ using namespace std;
 using namespace LHCb;
 
 
-class FilePoller :  public DimTimer,
+class FilePoller :  virtual public DimTimer,
                     public OnlineService,
-                    virtual public IDirectoryScanner,
+                    virtual public IHandleListenerSvc,
                     virtual public IAlarmHandler
 
 {
 
 public:
 
-  ///Standard constructor.
-  FilePoller(  /*const string& nam,
-                 ISvcLocator* svc,*/
-             string directory,
-             int time
-               );
+  /// Standard constructor.
+  FilePoller(const string& nam,ISvcLocator* svc);
   
-  ///Copy constructor.
-  FilePoller(const FilePoller&);
-
-  ///Standard destructor.
+  /// Standard destructor.
   ~FilePoller();
 
-  //IInterface, queryInterface implementation.
-  //virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
+  // IInterface, queryInterface implementation.
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
   
-  ///IOnlineService, start the timer.
-  /*virtual*/ StatusCode start();
+  /// IOnlineService, start the timer.
+  virtual StatusCode start();
 
-  ///IOnlineService, stop the timer.
-  /*virtual*/ StatusCode stop();
+  /// IOnlineService, stop the timer.
+  virtual StatusCode stop();
   
   ///IOnlineService initialize.
   virtual StatusCode initialize();
@@ -55,40 +48,36 @@ public:
   ///IOnlineService finalize.
   virtual StatusCode finalize();
   
-  ///Accessor methods.
-  void setScanDirectory(string );  //keep it??
-  void setAlrmTime(int );          //keep it??
+  /// Accessor methods.
   void addTofileNames(const string& );
   void remFromfileNames();
-
-  ///IDimTimer timer handler method.
+ 
+  /// IDimTimer timer handler method.
   virtual void timerHandler();
 
-  ///IDirectoryScanner poll method.
-  /*virtual*/ StatusCode poller(const string scan_path);
-  /*
- ///IDirectoryScanner add a listener to the queue.
- virtual StatusCode addListener(IService* Listener);
-  
- ///IDirectoryScanner remove a listener from the queue.
- virtual StatusCode remListener();
+  /// Poll method.
+  StatusCode poller(const string scan_path);
 
- ///IDirectoryScanner show the listeners waiting.
- virtual const StatusCode printListeners();  
+  /// IHandleListenerSvc add a listener to the queue.
+ virtual StatusCode addListener(IAlertSvc* Listener);
+
+ /// IHandleListenerSvc find a specific listener.
+ virtual vector<IAlertSvc*>::iterator findListener(IAlertSvc* Listener);
  
- ///IAlarmHandler error response.
+ /// IHandleListenerSvc remove a listener from the queue.
+ virtual StatusCode remListener(IAlertSvc* Listener);
+
+ /// IHandleListenerSvc show the listeners waiting.
+ virtual const StatusCode showListeners();  
+
+ /// IAlarmHandler error response.
  virtual const StatusCode issueAlarm(const string& msg);
-  */
+  
+
 private:
 
 
-  ///Service's name.
-  string m_name;//"OnlineFileSelSvc"  //needed ??
-
-  ///Pointer to service locator;
-  SmartIF<ISvcLocator>  m_pSvcLocator;  // needed ??
-
-  ///The directory to be scanned.
+ ///The directory to be scanned.
   string m_scanDirectory;
 
   ///The period of the scanning process.
@@ -98,7 +87,7 @@ private:
   vector<string>  m_fileNames;
 
   ///The listeners waiting for the files.
-  queue<ISvcLocator*> m_fileListeners;
+  vector<IAlertSvc*> m_fileListeners; ////change ISVCLocator
 
 };
 
