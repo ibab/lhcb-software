@@ -16,12 +16,12 @@ class PatPixelHit {
 public:
   /// Standard constructor
   PatPixelHit() :
-    m_x(0.), m_y(0.), m_z(0.), 
+    m_x(0.), m_y(0.), m_z(0.),
     m_id(0),
     m_wx(0.), m_wy(0.),
     m_module(0),
     m_isUsed(false) {
-  
+
   }
   /// Destructor
   virtual ~PatPixelHit() {}
@@ -38,7 +38,7 @@ public:
     m_wx = 1. / (dx * dx);
     m_wy = 1. / (dy * dy);
     m_module = module;
-    m_isUsed = false; 
+    m_isUsed = false;
   }
 
   LHCb::LHCbID id() const {return m_id;}
@@ -46,7 +46,7 @@ public:
   double y() const {return m_y;}
   double z() const {return m_z;}
   double wx() const {return m_wx;}
-  double wy() const {return m_wx;}
+  double wy() const {return m_wy;}
   int module() const {return m_module;}
   bool isUsed() const {return m_isUsed;}
   void setUsed(const bool flag) {m_isUsed = flag;}
@@ -82,7 +82,7 @@ private:
   double m_wx;
   double m_wy;
   // Module number
-  unsigned int m_module;  
+  unsigned int m_module;
   // Already used by (associated to) a track?
   bool m_isUsed;
 
