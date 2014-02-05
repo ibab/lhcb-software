@@ -4,6 +4,10 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2014-02-05 - Chris Jones
+ - Update the default PVRelator type in DefaultDVToolTypes.h to avoid a 
+   warning from the new plugin service in the upcoming Gaudi release.
+
 ! 2014-01-31 - Chris Jones
  - Split initializeLocations() into seperate initializeInputLocations() and
    initializeOutputLocations().
