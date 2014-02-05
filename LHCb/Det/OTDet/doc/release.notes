@@ -2,6 +2,11 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r10 2014-02-05 =========================
+! 2014-02-05 - Christoph Langenbruch
+ - Using the vdt library for the calculation of the tanh in WalkRelation::walk. 
+   This results in a significant performance increase.
+
 !========================= OTDet v8r10 2013-06-03 =========================
 ! 2013-05-30 - Alexandr Kozlinskiy
  - Implementation of mono-layer alignment ('MonoAlignment' parameters

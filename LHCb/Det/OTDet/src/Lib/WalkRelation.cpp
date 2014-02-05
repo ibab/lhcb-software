@@ -1,5 +1,6 @@
 
 #include "OTDet/WalkRelation.h"
+#include "vdt/exp.h"
 
 #include <math.h>
 #include <iostream>
@@ -43,12 +44,12 @@ namespace OTDet
 
   double WalkRelation::walk(double l) const
   {    
-    //non-optimized version
-    //if(tau == 0) return off;
-    //if(l < 0) l = 0;
-    //  return off + amp * (tanh(l / tau) - 1.0) + dpt * l / 1000.0;
-    //new version with fast tabulated tanh
     l *= (l > 0.0);//only positive values allowed
-    return off + amp * (fastTanh(l * overtau) - 1.0) + l * dptfactor;
+    //for now use vdt (factor 2 improvement)
+    const double exptwox = vdt::fast_exp(2.0* l * overtau);
+    const double fastTanh = (exptwox-1.0)/(exptwox+1.0);
+    return off + amp * (fastTanh - 1.0) + l * dptfactor;
+    //tabulated tanh can give additional improvement
+    //return off + amp * (fastTanh(l * overtau) - 1.0) + l * dptfactor;
   }
 }
