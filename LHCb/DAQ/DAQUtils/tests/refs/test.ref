@@ -1,7 +1,14 @@
+# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/LHCb_HEAD/DAQ/DAQUtils/tests/options/test.opts'
+# ApplicationMgr.TopAlg += { "DAQEventTests::ByteStreamTests",                           "DAQEventTests::DummyRawEventCreator",                           "RawEventDump" };
+# ApplicationMgr.EvtMax = 1;
+# ApplicationMgr.EvtSel = "NONE";
+# EventDataSvc.ForceLeaves = 1;
+# RawEventDump.DumpData = true;
+# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/LHCb_HEAD/DAQ/DAQUtils/tests/options/test.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.6 $
-                                          running on lxbuild120.cern.ch on Thu Oct 16 18:11:05 2008
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v2r1)
+                                          running on lxplus0024 on Thu Feb  6 17:17:41 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DAQEventTests::...   INFO 5
@@ -20,10 +27,10 @@ DAQEventTests::...   INFO 0
 DAQEventTests::...   INFO 0
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
+RawEventDump         INFO banks of type 2(PrsE) discovered in DAQ/RawEvent
 RawEventDump         INFO 9 banks of type 2: [size, source, version, magic]
 RawEventDump         INFO   [32, 0, 1, cbcb] Data follows...
 RawEventDump         INFO    ... [0] [1] [2] [3] [4] [5] [6] [7]
@@ -77,6 +84,7 @@ RawEventDump         INFO    ... [32] [33] [34] [35] [36] [37] [38] [39] [3a] [3
 RawEventDump         INFO    ... [3c] [3d] [3e] [3f] [40] [41] [42] [43] [44] [45]
 RawEventDump         INFO    ... [46] [47]
 RawEventDump         INFO
+RawEventDump         INFO banks of type 15(DAQ) discovered in DAQ/RawEvent
 RawEventDump         INFO 16 banks of type 15: [size, source, version, magic]
 RawEventDump         INFO   [64, 0, 1, cbcb] Data follows...
 RawEventDump         INFO    ... [0] [1] [2] [3] [4] [5] [6] [7] [8] [9]

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>  
+  <argument name="args"><set>
+      <text>--option</text>
+      <text>from Configurables import LHCbApp, RawEventDump; LHCbApp(); from PRConfig import TestFileDB; TestFileDB.test_file_db["S20r0p2_stripped_test"].run(); from Gaudi.Configuration import *; ApplicationMgr().TopAlg+=[RawEventDump()]; LHCbApp().EvtMax=1; RawEventDump().DumpData=True;</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/dumpmultievents.ref</text></argument>
+  <argument name="validator"><text>
+from GaudiConf.QMTest.LHCbExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>

@@ -24,9 +24,31 @@ DECLARE_ALGORITHM_FACTORY(RawEventDump)
 RawEventDump::RawEventDump( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_banks()
+  , m_rawEventLocations()
 {
+  m_rawEventLocations = {LHCb::RawEventLocation::Default,
+                         LHCb::RawEventLocation::Trigger,
+                         LHCb::RawEventLocation::Rich,
+                         LHCb::RawEventLocation::Calo,
+                         LHCb::RawEventLocation::Muon,
+                         LHCb::RawEventLocation::Other,
+                         LHCb::RawEventLocation::Copied,
+                         LHCb::RawEventLocation::Emulated};
+  
+  
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Rich);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Calo);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Muon);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Emulated);
+  
   declareProperty( "DumpData", m_dump = false );
   declareProperty( "RawBanks", m_banks);
+  declareProperty( "RawEventLocations", m_rawEventLocations);
 }
 //=============================================================================
 // Destructor
@@ -37,46 +59,64 @@ RawEventDump::~RawEventDump() {}
 // Main execution
 //=============================================================================
 StatusCode RawEventDump::execute() {
-
-  RawEvent* raw = get<RawEvent>(RawEventLocation::Default);
-  for(int j=0; j<256; ++j)  {
-    RawBank::BankType i = RawBank::BankType(j);
-
-    if( !acceptBank(i) )continue;
-
-    const std::vector<RawBank*>& b = raw->banks(i);
-    if ( b.size() > 0 )  {
-      info() << b.size() << " banks of type " << i << ": [size, source, version, magic]";
-      std::vector<RawBank*>::const_iterator itB;
-      int k = 0;
-      for( itB = b.begin(); itB != b.end(); itB++ ) {
-        if ( ((k++)%4) == 0 ) info() << endmsg << "  " ;
-        const RawBank* r = *itB;
-        info() << "[" << int(r->size()) << ", "
-               << int(r->sourceID()) << ", "
-               << int(r->version()) << ", "
-               << std::hex << r->magic() << "] ";
-        if( m_dump ) {
-          info() << "Data follows...";
-          int cnt = 0;
-          for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  {
-            if ( ((cnt++)%10) == 0 ) info() << endmsg << "   ... " ;
-            info() << "[" << *p << "] ";
+  
+  for (auto loc :  m_rawEventLocations)
+  {
+    //try once with rootInTes
+    RawEvent* raw = getIfExists<RawEvent>(loc);
+    if (!raw)
+    {
+      raw = getIfExists<RawEvent>(loc,false);
+    }
+    if (!raw) continue;
+    
+    for(int j=0; j<256; ++j)  
+    {
+      RawBank::BankType i = RawBank::BankType(j);
+      
+      if( !acceptBank(i) )continue;
+      
+      const std::vector<RawBank*>& b = raw->banks(i);
+      if ( b.size() > 0 )  
+      {
+        info() << "banks of type " << i << "("<< RawBank::typeName(i) << ") discovered in " << loc << endmsg;
+        
+        info() << b.size() << " banks of type " << i << ": [size, source, version, magic]";
+        //std::vector<RawBank*>::const_iterator itB;
+        int k = 0;
+        for( const RawBank* r : b ) 
+        {
+          if ( ((k++)%4) == 0 ) info() << endmsg << "  " ;
+          //const RawBank* r = *itB;
+          info() << "[" << int(r->size()) << ", "
+                 << int(r->sourceID()) << ", "
+                 << int(r->version()) << ", "
+                 << std::hex << r->magic() << "] ";
+          if( m_dump ) 
+          {
+            info() << "Data follows...";
+            int cnt = 0;
+            for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  
+            {
+              if ( ((cnt++)%10) == 0 ) info() << endmsg << "   ... " ;
+              info() << "[" << *p << "] ";
+            }
+            info() << std::dec << endmsg << "  ";
           }
-          info() << std::dec << endmsg << "  ";
         }
+        info() << endmsg;
       }
-      info() << endmsg;
     }
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
 
 bool RawEventDump::acceptBank(LHCb::RawBank::BankType i) {
   if(m_banks.empty())return true;
-  for(std::vector<std::string>::iterator it = m_banks.begin();m_banks.end()!=it;++it){
+  for(std::vector<std::string>::iterator it = m_banks.begin();m_banks.end()!=it;++it)
+  {
     if( *it == LHCb::RawBank::typeName( i ) )return true;
   }
   return false;

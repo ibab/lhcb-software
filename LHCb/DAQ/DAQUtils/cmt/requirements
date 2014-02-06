@@ -17,4 +17,7 @@ private
   use GaudiSvc    v*      -no_auto_imports
   use RELAX       v*  LCG_Interfaces
   apply_pattern QMTest
+  macro SQL_use "" QMTEST "SQLDDDB v* Det --no-auto-imports"
+  macro LHCbAlgs_use "" QMTEST "LHCbAlgs v* Kernel --no-auto-imports"
+  use PRConfig v* 
 end_private
