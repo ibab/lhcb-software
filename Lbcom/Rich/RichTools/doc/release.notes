@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2014-02-06 - Chris Jones
+ - Protect against zero length direction vectors in RayTracing::reflectSpherical
+
 !========================= RichTools v2r42 2013-07-18 =========================
 ! 2013-06-12 - Chris Jones
  - Suppress a gcc 4.8 warning in SnellsLawRefraction

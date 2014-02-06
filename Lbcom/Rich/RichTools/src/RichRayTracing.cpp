@@ -48,6 +48,10 @@ Rich::RayTracing::RayTracing( const std::string& type,
 
   // job options
   declareProperty( "IgnoreSecondaryMirrors", m_ignoreSecMirrs = false );
+  
+  // Debug messages
+  //setProperty( "OutputLevel", 1 );
+
 }
 
 //=============================================================================
@@ -247,9 +251,18 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
   // default result is failure
   LHCb::RichTraceMode::RayTraceResult result = LHCb::RichTraceMode::RayTraceFailed;
 
+  //if ( msgLevel(MSG::VERBOSE) )
+  //  verbose() << "Ray Tracing : " << rich << " Ptn=" << startPoint 
+  //            << " Dir=" << tmpDir << endmsg;
+
   // first, try and reflect of both mirrors
   const bool sc = reflectBothMirrors( rich, tmpPos, tmpDir, photon,
                                       mode, forcedSide );
+
+  //if ( msgLevel(MSG::VERBOSE) )
+  //  verbose() << "  -> After reflectBothMirrors OK=" << sc << " : Ptn=" << tmpPos
+  //            << " Dir=" << tmpDir << endmsg;
+
   if ( sc )
   {
 
@@ -270,6 +283,10 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       // ... yes, then use method to test HPD acceptance (using mode)
       result = m_photoDetPanels[rich][side]->PDWindowPoint( tmpDir,tmpPos,
                                                             hitPosition, smartID, mode );
+      //if ( msgLevel(MSG::VERBOSE) )
+      //  verbose() << "  -> After PDWindowPoint " << hitPosition 
+      //            << " " << smartID << endmsg;
+
     }
     else
     {
@@ -277,6 +294,9 @@ Rich::RayTracing::_traceToDetector ( const Rich::DetectorType rich,
       // NOTE : smartID is not updated any more so will only contain RICH and panel data
       result = m_photoDetPanels[rich][side]->detPlanePoint( tmpPos, tmpDir,
                                                             hitPosition, smartID, mode );
+      //if ( msgLevel(MSG::VERBOSE) )
+      //  verbose() << "  -> After detPlanePoint " << hitPosition 
+      //            << " " << smartID << endmsg;
     }
 
     // Set remaining RichGeomPhoton data
@@ -575,8 +595,13 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
 
-  const Gaudi::XYZVector delta( position - CoC );
   const double a = direction.Mag2();
+  if ( 0 == a )  
+  {
+    Warning( "reflectSpherical: Direction vector has zero length..." ).ignore();
+    return false;
+  }
+  const Gaudi::XYZVector delta( position - CoC );
   const double b = 2. * direction.Dot( delta );
   const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.*a*c;
@@ -589,11 +614,6 @@ Rich::RayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
 
-  // OLD
-  //const Gaudi::XYZVector normal( (position-CoC).Unit() );
-  //direction -= 2.0 * (normal.Dot(direction)) * normal;
-
-  // NEW
   const Gaudi::XYZVector normal( position-CoC );
   direction -= (2.0/normal.Mag2()) * (normal.Dot(direction)) * normal;
 
