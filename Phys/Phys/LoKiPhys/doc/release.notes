@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-06 - Marco Clemencic & Vanya Belyaev
+ - Renamed LoKi::Cuts::STAT to LoKi::Cuts::PSTAT (the former name was already
+   used in LoKi/TES.h).
+
 ! 2014-02-01 - Vanya Belyaev
  - add dictionaries for new FuncOps__
 

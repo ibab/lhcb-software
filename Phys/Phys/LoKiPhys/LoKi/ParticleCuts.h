@@ -5168,7 +5168,7 @@ namespace LoKi
      */
     typedef LoKi::SimpleSwitch<const LHCb::Particle*>                 SSWITCH ;
     // ========================================================================
-    /** @typedef STAT
+    /** @typedef PSTAT
      *  Simple monitoring counter for the functions
      *
      *  @code 
@@ -5179,7 +5179,7 @@ namespace LoKi
      *  // Create the monitored function using the generic counter
      *  // either local counter, or the counter from IStatSvc or ICounterSvc
      *  StatEntity* counter = ... ; ///< the generic counter
-     *  Fun mon = STAT ( fun , counter ) ;
+     *  Fun mon = PSTAT ( fun , counter ) ;
      *
      *  for ( ... ) 
      *    {
@@ -5238,7 +5238,7 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-03-03 
      */        
-    typedef LoKi::Monitoring::Counter<const LHCb::Particle*,double>      STAT ;
+    typedef LoKi::Monitoring::Counter<const LHCb::Particle*,double>      PSTAT ;
     // ========================================================================
     /** @var SUMQ
      *  the trivial evaluator of particle charge 
