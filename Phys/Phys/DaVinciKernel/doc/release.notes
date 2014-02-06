@@ -4,10 +4,6 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
-! 2014-02-05 - Chris Jones
- - Update the default PVRelator type in DefaultDVToolTypes.h to avoid a 
-   warning from the new plugin service in the upcoming Gaudi release.
-
 ! 2014-01-31 - Chris Jones
  - Split initializeLocations() into seperate initializeInputLocations() and
    initializeOutputLocations().
@@ -17,8 +13,8 @@
 
 ! 2014-01-30 - Chris Jones
  - Add a check to DVCommonBase to test for duplication in the Input particle
-   locations. If duplicates are found, a warning is printed and the duplication 
-   is removed. (Note - Using some c++11 syntax ;) )
+   locations. If duplicates are found, a warning is printed and the
+   duplication is removed. ( Note - Using some c++11 syntax ;) )
 
 !========================= DaVinciKernel v11r5p1 2013-10-29 =========================
 
