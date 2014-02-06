@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-02-06 - Rob Lambert
+ - Significantly adapt MooreScripts CreateSetup.py to change the behaviour for stripping paths, now make sure we do leave the online satelite and local MooreOnline in the paths even if others are stripped out.
+
 ! 2014-01-29 - Rob Lambert
  - Add dummy strip script macro from markus
 
