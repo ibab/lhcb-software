@@ -36,16 +36,6 @@ RawEventDump::RawEventDump( const std::string& name,
                          LHCb::RawEventLocation::Copied,
                          LHCb::RawEventLocation::Emulated};
   
-  
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Rich);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Calo);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Muon);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  //m_rawEventLocations.push_back(LHCb::RawEventLocation::Emulated);
-  
   declareProperty( "DumpData", m_dump = false );
   declareProperty( "RawBanks", m_banks);
   declareProperty( "RawEventLocations", m_rawEventLocations);
