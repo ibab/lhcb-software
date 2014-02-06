@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-02-06 - Chris Jones
+ - Add a version of the Stripping20 test with the FPE Auditor enabled.
+
 ! 2014-01-31 - Chris Jones
  - Update stripping references to adapt to various new features in the framework.
 
