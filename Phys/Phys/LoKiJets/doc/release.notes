@@ -7,6 +7,9 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-02-06 - Marco Clemencic
+ - Reverted the workaround because it's now in Gaudi.
+
 ! 2014-02-03 - Marco Clemencic
  - Fixed problems with some incompatibilities between the new Plugin Service and 
    the old one. 

@@ -220,10 +220,6 @@ StatusCode LoKi::FastJetMaker::makeJets
 // ============================================================================
 /// The factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,FastJetMaker)
-#ifdef DECLARE_COMPONENT_WITH_ID
-// FIXME: bacward compatibility with old plugin service internal naming convention
-DECLARE_COMPONENT_WITH_ID(LoKi::FastJetMaker, "LoKi__FastJetMaker")
-#endif
 // ============================================================================
 // The END
 // ============================================================================
