@@ -56,6 +56,8 @@ namespace LHCb {
     std::string m_mooreVsn;
     /// Property: Assumed partition name
     std::string m_partition;
+    /// Property: Script file name for HLT process
+    std::string m_script;
     /// Property: Name of the input buffer of the process class to be sampled
     std::string m_input;
     /// Property: Name of the output buffer of the process class to be sampled
@@ -133,6 +135,7 @@ using namespace RTL;
 
 #include "MBM/Manager.h"
 #include "RTL/ProcessGroup.h"
+#include "RTL/strdef.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -228,10 +231,12 @@ MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)
   declareProperty("Input",                      m_input = "Events");
   declareProperty("Output",                     m_output = "Output");
   declareProperty("MonitorProcess",             m_procName = "_xxxxx_");
+  declareProperty("MonitorScript",              m_script = "");
   declareProperty("MeasuementStartDelay",       m_startDelay=15);
   declareProperty("MeasurementIntervall",       m_intervall=5);
   declareProperty("MeasurementDuration",        m_duration=300);
   declareProperty("OutputFile",                 m_fileName="");
+  declareProperty("MooreOnlineVersion",         m_mooreVsn="");
   ::lib_rtl_install_printer(printout,this);
 }
 
@@ -525,21 +530,24 @@ int MooreTestSvc::readMessages(void* param) {
 
 /// IRunable implementation : Run the class implementation
 StatusCode MooreTestSvc::run()   {
-  string host = RTL::nodeNameShort();
-  string out = m_fifoName;
-  char text[32];
-  ::snprintf(text,sizeof(text),"%d",m_numSlaves);
+  string host = RTL::str_upper(RTL::nodeNameShort());
+  string dns  = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : host.c_str();
+  string out  = m_fifoName;
+  string proc = m_partition+"_"+host+m_procName+"00";
+  char num_slaves[32];
+  ::snprintf(num_slaves,sizeof(num_slaves),"%d",m_numSlaves);
   const char *mepinit[] = {"libGaudiOnline.so", "OnlineTask",
 			   "-tasktype=LHCb::Class1Task",
 			   "-msgsvc=LHCb::FmcMessageSvc",
 			   "-auto",
 			   "-main=../options/Main.opts",
 			   "-opt=../options/Buffers.opts",0};
-  const char *moore[]   = {"runHLT.sh", "Moore_0",
+  const char *moore[]   = {m_script.c_str(), 
+			   proc.c_str(),
 			   m_mooreVsn.c_str(), 
-			   host.c_str(), 
+			   dns.c_str(), 
 			   m_partition.c_str(), 
-			   text,0};
+			   num_slaves,0};
   const char *aprod[]   = {"libGaudiOnline.so", "OnlineTask", 
 			   "-tasktype=LHCb::Class1Task",
 			   "-msgsvc=LHCb::FmcMessageSvc",
@@ -548,23 +556,23 @@ StatusCode MooreTestSvc::run()   {
 			   "-opt=../options/Reader.opts",0};
 
   Process::setDebug(true);  
-  Process* mep = new Process("MEPInit_0",  command(),mepinit,out.c_str());
-  mep->start();
+  Process* mepTask = new Process("MEPInit_0",  command(),mepinit,out.c_str());
+  mepTask->start(true);
 
   /// Wait until the buffers are mapped, then continue
   mapBuffers().ignore();
 
   /// Start the Moore process(es) using a bash script
   ::lib_rtl_sleep(1000);
-  Process* proc = new Process("Moore_0",   "/bin/bash",moore,out.c_str());
-  proc->start();
+  Process* monTask = new Process("Moore_0",   "/bin/bash",moore,out.c_str());
+  monTask->start(true);
 
   /// Wait until all Moore processes are mapped. Then continue
   mapProcesses().ignore();
 
   info("+++++ Starting producer ...... ");
-  Process* prod=new Process("Prod_0",command(),aprod,out.c_str());
-  prod->start();
+  Process* prodTask=new Process("Prod_0",command(),aprod,out.c_str());
+  prodTask->start(true);
 
   if ( m_startDelay > 0 )  {
     for(int i=0; i<m_startDelay; ++i)    {
@@ -596,28 +604,26 @@ StatusCode MooreTestSvc::run()   {
     }
   }
 
+  //::kill(0,SIGTERM);
+  prodTask->killall();
+  monTask->killall();
+  mepTask->killall();
+
+  prodTask->wait(Process::WAIT_BLOCK);
+  monTask->wait(Process::WAIT_BLOCK);
+  mepTask->wait(Process::WAIT_BLOCK);
+
   system(("rm -f /dev/shm/bm_*"+m_partition).c_str());
   system((string("rm -f /dev/shm/bm_buffers")).c_str());
   system(("rm -f /tmp/bm_*"+m_partition+"_*").c_str());
-  ::kill(0,SIGKILL);
+  //::kill(0,SIGKILL);
 
   //cout << "<RETURN> to end data collection: ";
   //  getline(cin,out);
 
-  ::kill(0,SIGTERM);
-  prod->stop();
-  ::lib_rtl_sleep(1000);
-  proc->stop();
-  ::lib_rtl_sleep(1000);
-  mep->stop();
-
-  prod->wait(Process::WAIT_BLOCK);
-  proc->wait(Process::WAIT_BLOCK);
-  mep->wait(Process::WAIT_BLOCK);
-
-  delete prod;
-  delete proc;
-  delete mep;
+  delete prodTask;
+  delete monTask;
+  delete mepTask;
   ::lib_rtl_sleep(10);
   //_exit(0);
   return StatusCode::SUCCESS;
