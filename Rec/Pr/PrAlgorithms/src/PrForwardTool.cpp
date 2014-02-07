@@ -139,7 +139,7 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
     (*itT).setValid( false );
     PrPlaneCounter pc;
     pc.set( m_stereoHits.begin(), m_stereoHits.end() );
-    if ( pc.nbDifferent() + (*itT).hits().size() < m_minTotalHits ) {
+    if ( pc.nbDifferent() + (*itT).hits().size()  < m_minTotalHits  || pc.nbDifferent() < 4 ) {
       if ( m_debug ) info() << "Not enough different layers: " << pc.nbDifferent() + (*itT).hits().size()
                             << " for " << m_minTotalHits << endmsg;
       continue;
@@ -597,6 +597,7 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
     float d2 = sdz * sz2 - sz * sdz2;
 
     float den = (b1 * c2 - b2 * c1 );
+    if(den == 0)return false;
     float db  = (d1 * c2 - d2 * c1 ) / den;
     float dc  = (d2 * b1 - d1 * b2 ) / den;
     float da  = ( sd - db * sz - dc * sz2) / s0;
@@ -639,7 +640,7 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
          maxChi2 > m_maxChi2XProjection ) {
       pc.removeHit( *worst );
       track.hits().erase( worst );
-      if ( pc.nbDifferent() < m_minXSize ) {
+      if ( pc.nbDifferent() < m_minXSize || (hasStereo && pc.nbDifferent() < 7)  ) {
         if ( m_debug ) {
           info() << "  == Not enough layers with hits" << endmsg;
           printTrack( track );
@@ -857,6 +858,7 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
         float d2 = sdz * sz2m - sz * sdz2;
 
         float den = (b1 * c2 - b2 * c1 );
+        if(den == 0)return false;
         float db  = (d1 * c2 - d2 * c1 ) / den;
         float dc  = (d2 * b1 - d1 * b2 ) / den;
         float da  = ( sd - db * sz - dc * sz2 ) / s0;
@@ -876,6 +878,7 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
           sdz  += w * d * z;
         }
         float den = (s0 * sz2 - sz * sz );
+        if(den == 0)return false;
         float da  = (sd * sz2 - sdz * sz ) / den;
         float db  = (sdz * s0 - sd  * sz ) / den;
         track.updateParameters( 0., 0., 0., 0., da, db);
