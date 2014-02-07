@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-02-07 - Marco Clemencic
+ - Fixed a bug in RichRecQCConf exposed by the fix to Gaudi bug #103803.
+
 !========================= RichRecQC v2r63 2013-10-01 =========================
 ! 2013-07-24 - Chris Jones
  - Add some specific tuning options for DataType="Upgrade".

@@ -435,14 +435,14 @@ class RichRecQCConf(RichConfigurableUser):
         # Trackless rings angles
         if "TracklessRingAngles" in monitors :
             from Configurables import RichRecSysConf
-            types = RichRecSysConf().TracklessRingAlgs
+            types = RichRecSysConf('RichOfflineRec').TracklessRingAlgs
             for type in types :
                 self.ringsMoni(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsMoni"))
 
         # Trackless rings peak search
         if "TracklessRingPeakSearch" in monitors :
             from Configurables import RichRecSysConf
-            types = RichRecSysConf().TracklessRingAlgs
+            types = RichRecSysConf('RichOfflineRec').TracklessRingAlgs
             for type in types :
                 self.ringsPeakSearch(type,self.newSeq(sequence,"Rich"+type+"TracklessRingsPeaks"))
 
