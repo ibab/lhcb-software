@@ -130,15 +130,6 @@ double SpinFactor3::getVal(){
   
 }
 
-double SpinFactor3::GSSpinFactor(){
-
-  double m2AC = (p(0) + p(1)).M2();
-  double m2BC = (p(0) + p(2)).M2();
-
-  //     cout << "GS spin factor " << m2AC - m2BC << endl;
-  return (m2AC - m2BC)/(GeV*GeV);
-}
-
 double SpinFactor3::spinOneVal(){
   // parsed as:
   // D -> V P0; V->P1, P2;

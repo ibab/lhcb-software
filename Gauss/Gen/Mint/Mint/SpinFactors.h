@@ -7,8 +7,6 @@
 
 #include "Mint/SpinFactor3.h"
 #include "Mint/SpinFactors4Body.h"
-#include "Mint/GSSpinFactor.h"
-
 
 #endif
 //

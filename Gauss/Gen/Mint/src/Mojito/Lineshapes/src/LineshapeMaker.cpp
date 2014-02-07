@@ -71,7 +71,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
       std::cout << "Use at your own risk" << std::endl << std::endl;
 
       return new CrystalBarrelFOCUS(*tree, events);
-    }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
+    }else if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("GS", lopt)){
       if(dbThis) cout << "LineshapeMaker: return GS lineshape" << endl;
       return new GounarisSakurai(*tree, events);
     }else{

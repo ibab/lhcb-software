@@ -17,7 +17,6 @@ class SpinFactor3 : public SpinFactor{
 
   double nonResVal() const{return 1;}
   double spinZeroVal() const{ return 1;}
-  double GSSpinFactor();
   double spinOneVal();
   double spinTwoVal();
 

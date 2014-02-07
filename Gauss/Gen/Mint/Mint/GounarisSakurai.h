@@ -5,44 +5,78 @@
 
 #include "Mint/ILineshape.h"
 #include "Mint/BW_BW.h"
-#include "Mint/AssociatedDecayTree.h"
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/CLHEPSystemOfUnits.h"
 
-// copied from Jim's DcyGSAmplitude.
-// See also: Gounaris and Sakurai, Rev. Lett. 21, 244
-//           http://link.aps.org/doi/10.1103/PhysRevLett.21.244
-//
 class GounarisSakurai : public BW_BW, virtual public ILineshape{
-
- protected:
-  double d() ;
-  double k(double  mpipi) ;
-  double kprime(double mpipi) ;
-  double h(double mpipi) ;
-  double hprime(double mpipi) ;
-  double den();
-  double sJ();//should be taken to SpinFactor3 one day.
-
-  //  double mumsWidth()const{ return 0.1464*GeV;}// (fixes it to the value in Jim's code)
-
-  virtual double ReBreitWigner();// actually, this is the GS shape
-  virtual double ImBreitWigner();// and not Breit Wigner - will
-  virtual std::complex<double> BreitWigner(); // rename one day.
-  
  public:
-  
-  GounarisSakurai( const AssociatedDecayTree& decay
-		   , IDalitzEventAccess* events)
+  /**
+     Constructor
+     Gounaris-Sakurai lineshape describing the P-wave pipi scattering amplitude
+     Phys. Rev. Lett. 21, 244 (1968)
+   */ 
+  GounarisSakurai( const AssociatedDecayTree& decay,
+		   IDalitzEventAccess* events )
     : BW_BW(decay, events){}
 
+  /**
+     Evaluate Gounaris-Sakurai lineshape
+   */
   virtual std::complex<double> getVal();
 
+  /**
+     Decay Name
+   */
   virtual std::string name() const{
     return "GounarisSakurai("+_theDecay.oneLiner() +")";
   }
 
+  /**
+     Destructor
+   */
   virtual ~GounarisSakurai(){}
+
+ protected:
+  /**
+     Return pi+ breakup momentum in the rest frame of the pi+pi- system
+   */
+  double k( const double& mpipi ) const;
+
+  /**
+     Term from the generalised effective-range formula of the
+     Chew-Mandelstam type
+     Phys. Rev. 119, 467 (1960)
+   */
+  double h( const double& mpipi ) const;
+
+  /**
+     Derivative of h with respect to s
+   */
+  double hprime( const double& mpipi ) const;
+
+  /**
+     Constant depending only on the rho mass
+   */
+  double d() const;
+
+  /**
+     Gounaris-Sakurai numerator
+   */
+  double sJ() const;
+
+  /**
+     Real part of the Gounaris-Sakurai denominator
+   */
+  double ReGSDen() const;
+
+  /**
+     Imaginary part of the Gounaris-Sakurai denominator
+     Outstanding Issue: No barrier factor in the width yet
+   */
+  double ImGSDen() const;
+
+  /**
+     Inverse of the Gounaris-Sakurai denominator
+   */
+  std::complex<double> InvGSDen() const;
 };
 
 #endif

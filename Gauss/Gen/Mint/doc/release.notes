@@ -6,7 +6,12 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-2014-02-05
+2014-02-07 - Jeremy
+ - Bug fix in Gounaris-Sakurai function
+ - Treat GS in the same way as other lineshapes
+  . Deprecate GSSpinFactor
+
+2014-02-05 - Jeremy
  - Deprecate CrystalBallRhoOmega
  - Create new Rho0Omega lineshape to describe rho-omega mixing
   . Now the default rho-omega lineshape used by calling RHO_OMEGA in the steering file
