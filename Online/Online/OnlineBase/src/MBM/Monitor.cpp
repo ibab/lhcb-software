@@ -226,14 +226,14 @@ int Monitor::show_information()
   static const char* head;
   if (rateMode)
   {
-    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s%7s";
+    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s %7s";
     fmt_prod = " %1d/%-34s%5x%7d%5s%6s    %7.3f   %3.0f%32s %7s";
     fmt_cons = " %1d/%-34s%5x%7d%5s%6s                    %7.3f    %7.3f   %3.0f%5s %7s";
     head =    " Srv/Name                        Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
   }
   else
   {
-    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s%7s";
+    fmt_def =  " %1d/%-34s%5x%7d%5s          %40s%5s %7s";
     fmt_prod = " %1d/%-34s%5x%7d%5s%6s%11d   %3.0f%32s %7s";
     fmt_cons = " %1d/%-34s%5x%7d%5s%6s               %12d%11d   %3.0f%5s %7s";
     head =     " Srv/Name                        Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
