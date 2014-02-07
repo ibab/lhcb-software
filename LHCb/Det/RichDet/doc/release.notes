@@ -3,6 +3,9 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+2014-02-07 - Sajan Easo
+ - Fixed minor issue with RICH2 Local PD plane transform definiton for PMts 
+   for plotting the hit coordinates in in the PD plane. Fix is done in DeRichPMTPanel. 
 !2013-12-19 - Sajan Easo
 - Fixed a compilation warning in DeRichHPDPanel.h 
 
