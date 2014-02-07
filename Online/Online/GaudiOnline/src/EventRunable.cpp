@@ -8,14 +8,14 @@
 #include "GaudiOnline/EventRunable.h"
 #include "GaudiOnline/MEPManager.h"
 
-// Instantiation of a static factory class used by clients to create instances of this service
+/// Instantiation of a static factory class used by clients to create instances of this service
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
 using namespace LHCb;
 using namespace std;
 
-// Standard Constructor
+/// Standard Constructor
 EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
   m_receiveEvts(false), m_nerr(0), m_evtCount(0), m_errorFired(false), m_eventTMO(false)
@@ -27,12 +27,12 @@ EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)
   declareProperty("ForceTMOExit",   m_forceTMOExit = 0);
 }
 
-// Standard Destructor
+/// Standard Destructor
 EventRunable::~EventRunable()   
 {
 }
 
-// IInterface implementation : queryInterface
+/// IInterface implementation : queryInterface
 StatusCode EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   {
   if ( IRunable::interfaceID().versionMatch(riid) )  {
     *ppIf = (IRunable*)this;
@@ -42,7 +42,7 @@ StatusCode EventRunable::queryInterface(const InterfaceID& riid, void** ppIf)   
   return OnlineService::queryInterface(riid, ppIf);
 }
 
-// IService implementation: initialize the service
+/// IService implementation: initialize the service
 StatusCode EventRunable::initialize()   {
   StatusCode sc = OnlineService::initialize();
   if ( !sc.isSuccess() )     {
@@ -63,7 +63,7 @@ StatusCode EventRunable::initialize()   {
   return sc;
 }
 
-// IService implementation: finalize the service
+/// IService implementation: finalize the service
 StatusCode EventRunable::finalize()     {
   releaseInterface(m_dataSvc);
   releaseInterface(m_mepMgr);

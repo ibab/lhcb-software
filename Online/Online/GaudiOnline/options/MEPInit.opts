@@ -1,5 +1,5 @@
-#include "$GAUDIONLINEROOT/options/Main.opts"
-#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+#include "Main.opts"
+#include "OnlineEnvironment.opts"
 ApplicationMgr.ExtSvc   += { "LHCb::MEPManager/MEPInit" };
 MEPInit.InitFlags        = "-s=7000 -e=100 -u=64 -b=12 -f -i=Events -c -s=1500 -e=100 -u=14 -f -i=Send -c -s=1500 -e=100 -u=32 -f -i=Overflow -c -s=1000 -e=100 -u=14 -f -i=OUT -c";
 MEPInit.PartitionID      = @OnlineEnv.PartitionID;

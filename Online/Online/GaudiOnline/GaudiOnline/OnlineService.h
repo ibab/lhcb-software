@@ -105,6 +105,7 @@ namespace LHCb  {
     StatusCode errorException(const std::string& msg, const std::exception& e) const;
     StatusCode throwError(const std::string& msg) const;
     StatusCode throwError(const char* msg,...) const;
+    void output(int level, const char* msg,...)   const;
   };
 }      // End namespace gaudi
 #endif // GAUDIONLINE_MONITORINGCLIENT_H

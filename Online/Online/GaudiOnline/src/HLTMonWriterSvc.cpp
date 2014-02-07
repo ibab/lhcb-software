@@ -79,7 +79,7 @@ extern "C"
 // Standard Constructor
 HLTMonWriterSvc::HLTMonWriterSvc(const string& nam, ISvcLocator* svc) :
   OnlineService(nam, svc), m_mepMgr(0), m_consumer(0),
-      m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
+  m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0), m_listlock(PTHREAD_MUTEX_INITIALIZER), m_tid(0)
 {
   m_mepIn =  m_mepOut = m_minAlloc = 0;
   declareProperty("Input", m_input="None");
@@ -93,15 +93,11 @@ HLTMonWriterSvc::HLTMonWriterSvc(const string& nam, ISvcLocator* svc) :
   declareProperty("FileCloseDelay",m_FileCloseDelay=10);
   m_RunList.clear();
   m_texit = false;
-  pthread_mutex_init(&m_listlock,0);
-  pthread_create(&m_tid,NULL,&myCloseFiles,this);
 }
 
 // Standard Destructor
 HLTMonWriterSvc::~HLTMonWriterSvc()
 {
-  pthread_cancel(m_tid);
-  pthread_mutex_destroy(&m_listlock);
 }
 
 // IInterface implementation: Query interface
@@ -160,6 +156,8 @@ StatusCode HLTMonWriterSvc::initialize()
         declareInfo("BytesOut",m_BytesOut=0,"Number of Bytes Writte to File");
         declareInfo("NumberofFiles",m_NumFiles=0,"Total Number of Files");
         this->m_SizeLimit *= 1024*1024;
+	pthread_mutex_init(&m_listlock,0);
+	pthread_create(&m_tid,NULL,&myCloseFiles,this);
         return StatusCode::SUCCESS;
       }
       catch (exception& e)
@@ -174,6 +172,13 @@ StatusCode HLTMonWriterSvc::initialize()
 
 StatusCode HLTMonWriterSvc::finalize()
 {
+  if ( m_tid )   {
+    pthread_cancel(m_tid);
+    m_tid = 0;
+    pthread_mutex_destroy(&m_listlock);
+    m_listlock = PTHREAD_MUTEX_INITIALIZER;
+  }
+
   if (m_consumer)
   {
     delete m_consumer;

@@ -314,6 +314,7 @@ size_t HltBufferedIOReader::scanFiles()   {
           }
           if ( !take_run ) continue;
         }
+        //cout << "SELECT:" << entry->d_name << endl;
         m_files.insert(m_directory + "/" + entry->d_name);
       }
       ::closedir(dir);
@@ -406,9 +407,9 @@ StatusCode HltBufferedIOReader::i_run()  {
     }
     // loop over the events
     while (m_receiveEvts)   {
-      if (file_handle != 0)  {
+      if (file_handle == 0)  {
         file_handle = openFile();
-        if ( file_handle != 0 )   {
+        if ( file_handle == 0 )   {
           files_processed = scanFiles() == 0;
           if ( files_processed )    {
             break;

@@ -211,3 +211,20 @@ void LHCb::OnlineService::debug(const char* msg,...)   const {
     }
   }
 }
+
+void LHCb::OnlineService::output(int level, const char* msg,...)   const {
+  MsgStream err(msgSvc(), name());
+  err << MSG::Level(level);
+  if ( err.isActive() )   {
+    va_list args;
+    va_start(args, msg);
+    char buff[1024];
+    size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
+    err << buff << endmsg;
+    if ( nSize == sizeof(buff) )  {
+      err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
+    }
+  }
+}
+
