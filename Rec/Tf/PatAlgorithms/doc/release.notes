@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-02-07 - Michel De Cian
+ - Fix floating point exception in PatAddTTCoord (negative values in sqrt).
+
 !========================= PatAlgorithms v4r29 2013-11-20 =========================
 ! 2013-11-15 - Sascha Stahl
  - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
