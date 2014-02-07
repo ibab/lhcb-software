@@ -16,7 +16,7 @@ Purpose: LHCb reconstruction program
   . Minor adapation for using large + small pmts for RICH upgrade
     (RichRecPhotonTools, RichRecTrackTools)
   . New PrCounter/PrChecker
-  . Use fast parameterization of tanh in OTDet
+  . Use vdt implementation of tanh in OTDet
 
 </PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
