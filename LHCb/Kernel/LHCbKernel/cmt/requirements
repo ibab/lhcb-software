@@ -49,6 +49,7 @@ apply_pattern linker_library    library=LHCbKernel
 # propagate GOD_NOALLOC to all compilations
 macro_remove cppflags -DGOD_NOALLOC
 macro_append LHCbKernel_cppflags "" \
+                    ROOT_GE_6_00 "" \
                       target-dbg " -DGOD_NOALLOC " \
                            WIN32 " -DGOD_NOALLOC "
 # Disable some compiler warnings in the automatically generated dict code

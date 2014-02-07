@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-02-07 - Marco Clemencic
+ - Enabled temporarily the use Boost allocators also in debug mode when building
+   with ROOT 6, needed to debug ROOT-6015.
+   https://sft.its.cern.ch/jira/browse/ROOT-6015
+
 ! 2014-01-31 - Chris Jones
  - Update LbAppInit to only report memory changes when they are greater than
    some small delta value (16KB by default).
@@ -20,7 +25,7 @@
  - Add VP to LHCbID stream operator
 
 ! 2013-09-09 Heinrich Schindler
- - cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col, 
+ - cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col,
    pixel_hp to row, sensor to module)
 
 !========================= LHCbKernel v14r2 2013-07-17 =========================
@@ -50,7 +55,7 @@
 
 ! 2013-03-26 - Chris Jones
  - Extend the RichSmartID test application to check conversion to and from
-   an LHCbID. 
+   an LHCbID.
  - Fix LHCbID class to use & instead of && in richID().
 
 ! 2013-03-22 - Wouter Hulsbergen
