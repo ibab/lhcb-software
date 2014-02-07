@@ -1,0 +1,27 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#pragma print off
+ApplicationMgr.ExtSvc               += {"MonitorSvc/MonitorSvc"};
+ApplicationMgr.SvcOptMapping        += {"Gaudi::IODataManager/IODataManager" };
+ApplicationMgr.SvcOptMapping        += {"Gaudi::MultiFileCatalog/FileCatalog"};
+ApplicationMgr.SvcOptMapping        += {"LHCb::MEPManager/MEPManager"};
+ApplicationMgr.Runable               = "LHCb::HltBufferedIOReader/Runable";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EventLoopMgr";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.HistogramPersistency  = "NONE";
+//
+//Runable.MEPManager                 = "LHCb::MEPManager/MEPManager";
+Runable.Buffer                       = @OnlineEnv.MEPRx_Output;
+Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
+Runable.Directory                    = "$DATA_DIRECTORY";
+Runable.DeleteFiles                  = false;
+//
+// MEP manager setup:
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.Buffers                   = @OnlineEnv.MEPRx_Buffers;
+MEPManager.ConnectWhen               = "initialize";
+//
+EventLoopMgr.Wait                    = 1;
+#include "$STATIC_OPTS/MessageSvc.opts"

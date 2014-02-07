@@ -1,0 +1,23 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::MooreTestSvc/Runable";
+MessageSvc.OutputLevel               = 3;
+
+Runable.Input                = @OnlineEnv.PassThrough_Input;
+Runable.Output               = @OnlineEnv.PassThrough_Output;
+
+Runable.PartitionID          = @OnlineEnv.PartitionID;
+Runable.PartitionName        = @OnlineEnv.PartitionName;
+Runable.PartitionBuffers     = @OnlineEnv.PartitionBuffers;
+
+Runable.FifoPath             = "/tmp/logSrv.fifo";
+Runable.NumberOfSlaves       = 10;
+Runable.MonitorProcess       = "_PassThrough_";
+Runable.MonitorScript        = "../job/runHLT.sh";
+Runable.MeasuementStartDelay = 15;  // seconds
+Runable.MeasurementIntervall = 5;   // seconds
+Runable.MeasurementDuration  = 110; // seconds
+Runable.OutputFile           = "MooreStats.txt";

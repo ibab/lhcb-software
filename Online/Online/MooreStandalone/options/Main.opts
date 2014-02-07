@@ -1,0 +1,7 @@
+#pragma print off
+#include "$GAUDIONLINEROOT/options/Remap.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 1;
+MessageSvc.OutputLevel               = 4;
+MessageSvc.fifoPath                  = "$LOGFIFO";
