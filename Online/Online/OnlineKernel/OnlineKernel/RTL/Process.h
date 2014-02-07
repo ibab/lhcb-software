@@ -38,6 +38,8 @@ namespace RTL {
 
     /// Send signal to process specified by m_pid
     virtual int sendSignal(int sig);
+    /// Send signal to process specified by -m_pid
+    virtual int sendSignalAll(int sig);
 
   public:
     /// Standard constructor
@@ -78,10 +80,18 @@ namespace RTL {
     
     /// Start process
     virtual int start();
+    /// Send a signal to the process
+    virtual int signal(int signum);
+    /// Send a signal to the process and all its children (SIGTERM)
+    virtual int signalall(int signum);
     /// Terminate the process (SIGTERM)
     virtual int stop();
+    /// Terminate the process and all its children (SIGTERM)
+    virtual int stopall();
     /// Kill the process (SIGKILL)
     virtual int kill();
+    /// Kill the process and its children (SIGKILL)
+    virtual int killall();
     /// Interrupt the process (SIGINT)
     virtual int interrupt();
     /// Wait for process to terminate

@@ -83,6 +83,21 @@ int Process::sendSignal(int sig) {
 #endif
 }
 
+/// Send signal to process specified by m_pid
+int Process::sendSignalAll(int sig) {
+#ifdef __linux
+  if ( m_pid >= 0 ) {
+    int ret = ::kill(-m_pid, sig);
+    if ( ret == 0 ) {
+      return 1;
+    }
+  }
+  return INVALID;
+#else
+  return 0;
+#endif
+}
+
 /// Start process
 int Process::start()    {
   if ( m_pid >= 0 || m_state != INVALID ) {
@@ -144,14 +159,34 @@ int Process::start()    {
   return 0;
 }
 
-/// Terminate the process (SIGTERM)
+/// Send a signal to the process
+int Process::signal(int signum)    {
+  return sendSignal(signum);
+}
+
+/// Send a signal to the process and all its children (SIGTERM)
+int Process::signalall(int signum)    {
+  return sendSignalAll(signum);
+}
+
+ /// Terminate the process (SIGTERM)
 int Process::stop()    {
   return sendSignal(SIGTERM);
+}
+
+/// Terminate the process and all its children (SIGTERM)
+int Process::stopall()    {
+  return sendSignalAll(SIGTERM);
 }
 
 /// Kill the process (SIGKILL)
 int Process::kill()    {
   return sendSignal(SIGKILL);
+}
+
+/// Kill the process and all its children (SIGKILL)
+int Process::killall()    {
+  return sendSignalAll(SIGKILL);
 }
 
 /// Interrupt the process (SIGINT)
