@@ -2,6 +2,8 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2014-02-07 - Mika Vesterinen
+ - Fix the test for the nightlies to work with changes to the Moore configurable for v21r0
 
 ! 2014-01-17 - Marco Clemencic
  - Added CMake configuration file.

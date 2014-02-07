@@ -74,15 +74,17 @@ def find_lines( options, args ):
             output.append( line )
         if options.debug:
             print line
-        
+    
+    print 'finding Hlt1 lines'
     hlt1Lines = set()
     for m in output[ index( output, "HLT1LINES" ) + 1 : index( output, "HLT2LINES" ) ]:
         hlt1Lines.add( m )
 
+    print 'finding Hlt2 lines'
     hlt2Lines = set()
     for m in output[ index( output, "HLT2LINES" ) + 1 : index( output, "ENDLINES" ) ]:
         hlt2Lines.add( m )
-
+    
     return remove( hlt1Lines ), remove( hlt2Lines )
 
 def run( options, args ):
@@ -94,24 +96,37 @@ def run( options, args ):
     # Put the options into a dictionary
     reporterConfig = dict()
     reporterConfig[ 'EvtMax' ] = options.EvtMax
-    reporterConfig[ 'Verbose' ] = options.Verbose
-    reporterConfig[ 'UseDBSnapshot' ] = options.UseDBSnapshot
-    reporterConfig[ 'DDDBtag' ] = options.DDDBtag
-    reporterConfig[ 'CondDBtag' ] = options.CondDBtag
-    reporterConfig[ 'Simulation' ] = options.Simulation
-    reporterConfig[ 'DataType' ] = options.DataType
-    reporterConfig[ 'ThresholdSettings' ] = options.Settings #args[ 0 ]
-    reporterConfig[ 'Input' ]  = EventSelector().Input
-    reporterConfig[ 'Catalogs' ] = FileCatalog().Catalogs
+    #reporterConfig[ 'Verbose' ] = options.Verbose
+    #reporterConfig[ 'UseDBSnapshot' ] = options.UseDBSnapshot
+    #reporterConfig[ 'DDDBtag' ] = options.DDDBtag
+    #reporterConfig[ 'CondDBtag' ] = options.CondDBtag
+    #reporterConfig[ 'Simulation' ] = options.Simulation
+    #reporterConfig[ 'DataType' ] = options.DataType
+    #reporterConfig[ 'ThresholdSettings' ] = options.Settings #args[ 0 ]
+    #reporterConfig[ 'Input' ]  = EventSelector().Input
+    
     from Configurables import Moore
     from Configurables import CondDB
     from Configurables import L0Conf, HltConf
-    reporterConfig["UseTCK"] = False
-    reporterConfig["L0"]=options.L0
-    if options.L0:
-        reporterConfig[ 'ReplaceL0BanksWithEmulated' ] = True
-        reporterConfig["ForceSingleL0Configuration"]=False
+    #reporterConfig["UseTCK"] = False
     reporterConfig[ 'Wait' ] = False     ## Don't wait after each event
+    
+    reporterConfig[ 'Input' ]  = EventSelector().Input
+    reporterConfig[ 'UseDBSnapshot']= False;
+    reporterConfig[ 'Persistency']= 'ROOT';
+    reporterConfig[ 'EnableRunChangeHandler']= False;
+    reporterConfig[ 'WriterRequires']= [];
+    reporterConfig[ 'WriteFSR']= True;
+    reporterConfig[ 'EnableDataOnDemand']= True;
+    reporterConfig[ 'CheckOdin']= False;
+    reporterConfig[ 'InitialTCK']= '0x00790038';
+    reporterConfig[ 'Simulation']= False;
+    reporterConfig[ 'ThresholdSettings']="Commissioning_PassThrough"
+    reporterConfig[ 'ForceSingleL0Configuration ']= False
+    reporterConfig[ 'Catalogs' ] = FileCatalog().Catalogs
+    from Configurables import L0Conf
+    L0Conf().EnsureKnownTCK=False
+    from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
     
     # Find all lines in this configuration
     print 'Determining available lines'

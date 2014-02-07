@@ -47,7 +47,7 @@ def main():
     parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
                        default = 'sim-20090402-vc-md100', help = "CondDBtag to use" )
     parser.add_option( "--settings", action = "store", dest="ThresholdSettings",
-                       default = 'Physics_320Vis_300L0_10Hlt1_Feb10',
+                       default = 'Physics_September2012',
                        help = "ThresholdSettings to use")
     parser.add_option( "-s", "--simulation", action = "store_true", dest = "Simulation",
                        default = False, help = "Run on simulated data")
@@ -66,7 +66,7 @@ def main():
     # Put the options into the Moore configurable
     Moore().ThresholdSettings = options.ThresholdSettings
 
-    Moore().Verbose = options.Verbose
+    #Moore().OutputLevel="VERBOSE" 
     Moore().EvtMax = options.EvtMax
 
     Moore().UseDBSnapshot = options.UseDBSnapshot
