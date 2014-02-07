@@ -1,7 +1,6 @@
 <lcgdict>
   <class name = "DeVP"/>
   <class name = "DeVPSensor"/>
-  <class name = "DeVPSquareType"/>
   <class name = "DeVPNewSensor"/>
   <class name = "std::vector<DeVPSensor*>"/>
   <variable pattern = "DeVPLocation::*"/>
