@@ -150,7 +150,11 @@ StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, 
     std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
     PrUTHits::iterator itEnd = itBeg;
 
-    double maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
+    // -- If |firstProj| > m_majAxProj, the sqrt is ill defined
+    double maxProj = 0;
+    if(fabs(firstProj) < m_majAxProj){
+      maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
+    }
 
     // -- Make "group" of hits which are within a certain distance to the first hit of the group
     while ( itEnd != selected.end() ) {

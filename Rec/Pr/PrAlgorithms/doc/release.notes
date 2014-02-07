@@ -3,6 +3,10 @@
 ! Responsible : Yasmin Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2014-02-07 - Michel De Cian
+ - Fix floating point exception in PrAddUTHitsTool (negative values in sqrt).
+
 ! 2014-02-07 - Thomas Nikodem
  - Fix floating point exceptions with additional if statements.
 
