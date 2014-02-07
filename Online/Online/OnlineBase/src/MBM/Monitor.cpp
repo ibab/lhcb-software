@@ -17,12 +17,12 @@
 #define MBM_IMPLEMENTATION
 #include "MBM/Monitor.h"
 #include "MBM/bmstruct.h"
+#include "MBM/Manager.h"
 #include "CPP/Event.h"
 #include "CPP/TimeSensor.h"
 #include "CPP/Interactor.h"
 
 #include "bm_internals.h"
-#include "Manager.h"
 #include <sys/time.h>
 #ifdef _WIN32
 #define vsnprintf _vsnprintf

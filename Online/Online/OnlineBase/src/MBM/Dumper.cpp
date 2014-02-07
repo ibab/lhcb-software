@@ -1,6 +1,6 @@
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
-#include "Manager.h"
+#include "MBM/Manager.h"
 
 namespace MBM {
   struct Dumper : public Manager {

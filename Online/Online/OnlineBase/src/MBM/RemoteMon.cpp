@@ -9,8 +9,8 @@
 #define MBM_IMPLEMENTATION
 #include "CPP/XMLStream.h"
 #include "MBM/bmstruct.h"
+#include "MBM/Manager.h"
 #include "bm_internals.h"
-#include "Manager.h"
 #include "NET/TcpConnection.h"
 #include "CPP/EventHandler.h"
 #include "WT/wtdef.h"

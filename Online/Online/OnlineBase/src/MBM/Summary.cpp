@@ -6,8 +6,8 @@
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
+#include "MBM/Manager.h"
 #include "bm_internals.h"
-#include "Manager.h"
 
 using namespace MBM;
 using namespace std;

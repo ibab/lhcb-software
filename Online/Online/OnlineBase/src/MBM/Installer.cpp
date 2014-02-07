@@ -230,9 +230,9 @@ int MBM::Installer::install()  {
   }
   for(int i=0; i<buffs->p_bmax; ++i)  {
     if ( 0 == buffs->buffers[i].used )  {
-      buffs->buffers[i].used = 1;
-      buffs->buffers[i].size = ctrl->buff_size;
       ::snprintf(buffs->buffers[i].name,sizeof(buffs->buffers[i].name),"%s",m_bm->bm_name);
+      buffs->buffers[i].size = ctrl->buff_size;
+      buffs->buffers[i].used = 1;
       buffs->nbuffer++;
       lib_rtl_declare_exit (_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));
       lib_rtl_declare_rundown(_mbm_installer_shutdown, new std::pair<void*,int>(buffs,i));

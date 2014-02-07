@@ -1,7 +1,7 @@
 #define MBM_IMPLEMENTATION
 #include "MBM/bmstruct.h"
+#include "MBM/Manager.h"
 #include "bm_internals.h"
-#include "Manager.h"
 #include <stdexcept>
 
 /// A copy constructor cannot be provided

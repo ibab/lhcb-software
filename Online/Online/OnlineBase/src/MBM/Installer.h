@@ -1,7 +1,7 @@
 #ifndef _MBM_INSTALLER_H
 #define _MBM_INSTALLER_H
 
-#include "Manager.h"
+#include "MBM/Manager.h"
 
 /*
  *    MBM Namespace declaration
