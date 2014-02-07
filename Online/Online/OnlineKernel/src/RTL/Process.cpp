@@ -87,7 +87,7 @@ int Process::sendSignal(int sig) {
 int Process::sendSignalAll(int sig) {
 #ifdef __linux
   if ( m_pid >= 0 ) {
-    cout << "Send signal " << sig << " to " << -m_pid << endl;
+    //cout << "Send signal " << sig << " to " << -m_pid << endl;
     int ret = ::kill(-m_pid, sig);
     if ( ret == 0 ) {
       return 1;
