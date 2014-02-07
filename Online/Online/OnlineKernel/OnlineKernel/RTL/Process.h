@@ -79,7 +79,7 @@ namespace RTL {
     void setOutput(const std::string& val) {  m_output = val; }
     
     /// Start process
-    virtual int start();
+    virtual int start(bool new_process_group=false);
     /// Send a signal to the process
     virtual int signal(int signum);
     /// Send a signal to the process and all its children (SIGTERM)

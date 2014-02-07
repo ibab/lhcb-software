@@ -87,6 +87,7 @@ int Process::sendSignal(int sig) {
 int Process::sendSignalAll(int sig) {
 #ifdef __linux
   if ( m_pid >= 0 ) {
+    cout << "Send signal " << sig << " to " << -m_pid << endl;
     int ret = ::kill(-m_pid, sig);
     if ( ret == 0 ) {
       return 1;
@@ -99,7 +100,7 @@ int Process::sendSignalAll(int sig) {
 }
 
 /// Start process
-int Process::start()    {
+int Process::start(bool new_process_group)    {
   if ( m_pid >= 0 || m_state != INVALID ) {
     return 0;
   }
@@ -110,6 +111,11 @@ int Process::start()    {
     string utgid;
     char **e, **env, **arg = new char*[m_args.size()+2];
     //#if 0
+
+    if ( new_process_group )   {
+      ::setpgrp();
+    }
+
     if ( !m_output.empty() ) {
       int fd = ::open(m_output.c_str(),O_WRONLY);
       if ( fd != -1 )  {
