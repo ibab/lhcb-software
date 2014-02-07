@@ -24,7 +24,7 @@ Rho0Omega::Rho0Omega( const AssociatedDecayTree& tree,
 {
 }
 
-std::complex<double> Rho0Omega::getVal(){
+std::complex<double> Rho0Omega::getVal() {
   resetInternals();
 
   const double mpipi = (BW_BW::daughterP4(0)+BW_BW::daughterP4(1)).M()/GeV;
@@ -63,64 +63,64 @@ std::complex<double> Rho0Omega::getVal(){
 
   //Rho0-Omega function
   const std::complex<double> rho0_omega =
-    sqrt(p*q) *
+    Fr_PDG_BL()*sqrt(p*q) *
     (bw_rho0 +
      (GetAOmegatoRho0()*bw_omega*GetEpsCoh()*GetExpiBeta()*off_diag));
 
   return rho0_omega;
 }
 
-void Rho0Omega::print( std::ostream& out ) const{
+void Rho0Omega::print( std::ostream& out ) const {
   out << name();
 }
 
-void Rho0Omega::print( std::ostream& out ){
+void Rho0Omega::print( std::ostream& out ) {
   out << name();
 }
     
-double Rho0Omega::GetAOmegatoRho0() const{
+double Rho0Omega::GetAOmegatoRho0() const {
   return sqrt(_aRatioSq);
 }
 
-double Rho0Omega::GetEpsCoh() const{
+double Rho0Omega::GetEpsCoh() const {
   return _eps_coh;
 }
 
-std::complex<double> Rho0Omega::GetExpiBeta() const{
+std::complex<double> Rho0Omega::GetExpiBeta() const {
   const double beta = _beta;
 
   return std::polar(1.0, beta);
 }
 
-double Rho0Omega::GetDelta() const{
+double Rho0Omega::GetDelta() const {
   return _delta;
 }
 
-double Rho0Omega::GetRho0Mass() const{
+double Rho0Omega::GetRho0Mass() const {
   if(_mRho0 < 0) _mRho0 = ParticlePropertiesList::mass(113)/GeV;
   return _mRho0;
 }
 
-double Rho0Omega::GetOmegaMass() const{
+double Rho0Omega::GetOmegaMass() const {
   if(_mOmega < 0) _mOmega = ParticlePropertiesList::mass(223)/GeV;
   return _mOmega;
 }
 
-double Rho0Omega::GetRho0Width() const{
+double Rho0Omega::GetRho0Width() const {
   if(_GRho0 < 0) _GRho0 = ParticlePropertiesList::width(113)/GeV;
   return _GRho0;
 }
 
-double Rho0Omega::GetOmegaWidth() const{
+double Rho0Omega::GetOmegaWidth() const {
   if(_GOmega < 0) _GOmega = ParticlePropertiesList::width(223)/GeV;
   return _GOmega;
 }
 
-double Rho0Omega::GetPipMass() const{
+double Rho0Omega::GetPipMass() const {
   return _mPip;
 }
 
-double Rho0Omega::Getp( const double& mpipi ) const{
+double Rho0Omega::Getp( const double& mpipi ) const {
   const TLorentzVector p4pipi =
     (BW_BW::daughterP4(0)+BW_BW::daughterP4(1))*(1.0/GeV);
   const TLorentzVector p4init =
@@ -146,7 +146,7 @@ double Rho0Omega::Getp( const double& mpipi ) const{
   return p;
 }
 
-double Rho0Omega::Getq( const double& mpipi ) const{
+double Rho0Omega::Getq( const double& mpipi ) const {
   const double s = mpipi*mpipi;
   const double m2pi = GetPipMass()*GetPipMass();
 
@@ -155,7 +155,7 @@ double Rho0Omega::Getq( const double& mpipi ) const{
   return q;
 }
 
-double Rho0Omega::GetD1( const double& q ) const{
+double Rho0Omega::GetD1( const double& q ) const {
   const double qoverpr = q/_pr;
 
   const double D1 = qoverpr * sqrt(2.0/((qoverpr*qoverpr)+1.0));
@@ -163,11 +163,12 @@ double Rho0Omega::GetD1( const double& q ) const{
   return D1;
 }
 
-double Rho0Omega::GetB1( const double& q, const double& q0 ) const{
+double Rho0Omega::GetB1( const double& q, const double& q0 ) const {
+
   return GetD1(q)/GetD1(q0);
 }
 
-double Rho0Omega::Getrhos( const double& mpipi ) const{
+double Rho0Omega::Getrhos( const double& mpipi ) const {
   const double s = mpipi*mpipi;
   const double m2pi = GetPipMass()*GetPipMass();
 
@@ -177,7 +178,7 @@ double Rho0Omega::Getrhos( const double& mpipi ) const{
 }
 
 double Rho0Omega::GetGammas( const double& mpipi,
-			     const double& m0, const double& Gamma0 ) const{
+			     const double& m0, const double& Gamma0 ) const {
   const double s = mpipi*mpipi;
   const double s0 = m0*m0;
   const double m2pi = GetPipMass()*GetPipMass();
@@ -190,8 +191,7 @@ double Rho0Omega::GetGammas( const double& mpipi,
 
 std::complex<double> Rho0Omega::BW( const double& mpipi,
 				    const double& m0, const double& Gamma0,
-				    const double& q, const double& q0 ) const
-{
+				    const double& q, const double& q0 ) const {
   const double s = mpipi*mpipi;
   const double s0 = m0*m0;
 
@@ -208,7 +208,8 @@ std::complex<double> Rho0Omega::BW( const double& mpipi,
   return bw;
 }
 
-std::ostream& operator<<( std::ostream& out, const Rho0Omega& amp ){
+std::ostream& operator<<( std::ostream& out, const Rho0Omega& amp ) {
   amp.print(out);
+
   return out;
 }
