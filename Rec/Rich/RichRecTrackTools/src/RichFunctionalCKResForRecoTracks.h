@@ -11,8 +11,13 @@
 #ifndef RICHRECTOOLS_RichFunctionalCKResForRecoTracks_H
 #define RICHRECTOOLS_RichFunctionalCKResForRecoTracks_H 1
 
+// STL
+#include <sstream>
+
 // base class
 #include "RichRecBase/RichRecHistoToolBase.h"
+
+// RichDet
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
 #include "RichDet/DeRichPDPanel.h"
@@ -37,9 +42,6 @@
 
 // kernel
 #include "RichKernel/RichGeomFunctions.h"
-
-// boost
-#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -106,7 +108,7 @@ namespace Rich
       }
 
       /// Set flags for geometry, pmt etc.
-      void setUseOfPmtFlags();
+      StatusCode setUseOfPmtFlags();
       
     private: // data
 

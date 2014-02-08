@@ -3,8 +3,16 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
-!2013-12-18 - Sajan Easo
-- Adaption for using mixed set of PMTs (large + standard pixel size) in RICH2 for upgrade
+
+! 2014-02-08 - Chris Jones
+ - Clean up the last commit a little (really needs to be properly reviewed)
+   once we no long need to support various different MaPMT options for the
+   Upgrade...
+ - Remove some hacks neccessary when mixing c++11 and non-c++11 builds.
+
+! 2013-12-18 - Sajan Easo
+ - Adaption for using mixed set of PMTs (large + standard pixel size) in 
+   RICH2 for upgrade.
 
 !========================= RichRecTrackTools v1r35 2013-06-03 ========================
 ! 2013-05-13 - Chris Jones
