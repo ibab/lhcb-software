@@ -46,10 +46,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         # Get the DataType
         dataType = self.getProp("DataType")
 
-        ## if dataType == "Upgrade" :
-        ##     # Shouldn't be needed really. Needs some tuning for the upgrade
-        ##     if not self.isPropertySet("SelectionMode") :
-        ##         self.setProp("SelectionMode","All")
+        # Upgrade ?
+        if dataType == "Upgrade" :
+            if not self.isPropertySet("SelectionMode") :
+                self.setProp( "SelectionMode", "Upgrade-Tight" )
 
         # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
         if "pA" in self.getProp("SpecialData"):
@@ -123,6 +123,30 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
             # ================================================================
 
+        elif selMode == "Upgrade-Tight" :
+            
+            # ================================================================
+            # Photon Predictor cuts
+            # ================================================================
+            # No # sigma cut 
+            creator.Predictor.NSigma         = [  17,     6,    10    ]
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
+            creator.Predictor.MaxTrackROI    = [  540,  110,   165    ]
+            # ================================================================
+
+            # ================================================================
+            # Photon Creator cuts
+            # ================================================================
+            # Allow all photon CK theta values
+            creator.MinAllowedCherenkovTheta = [ 0.150, 0.005, 0.005 ]
+            creator.MaxAllowedCherenkovTheta = [ 0.310, 0.075, 0.035 ]
+            # No # sigma cut
+            creator.NSigma                   = [ 9.0,   5.25,  5.0   ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 1e-15, 1e-15, 1e-15 ]
+            # ================================================================
+
         elif selMode == "Tight" :
             
             # ================================================================
@@ -132,7 +156,7 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             creator.Predictor.NSigma         = [  17,     6,    10    ]
             # Min and max search window for track centre - hit seperation
             creator.Predictor.MinTrackROI    = [  230,    0,     0    ]
-            creator.Predictor.MaxTrackROI    = [  540,   86,    165   ]
+            creator.Predictor.MaxTrackROI    = [  540,   86,   165    ]
             # ================================================================
 
             # ================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2014-02-08 - Chris Jones
+ - Add an explicit tuning of the photon reconstruction for the Upgrade.
+
 ! 2013-12-18 - Marco Cattaneo
  - Add support for 'pA' SpecialData type, to set special GECs developed for
    Reco14r1 reprocessing of 2013 heavy ion data

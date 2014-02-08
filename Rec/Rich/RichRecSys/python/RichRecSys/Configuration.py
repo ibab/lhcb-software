@@ -33,7 +33,7 @@ class RichRecSysConf(RichConfigurableUser):
                                (RichPhotonCreatorConfig,None),
                                (CKThetaResolutionConfig,None)
                                ]
-    
+
     ## Steering options
     __slots__ = {
         "UseCaloMomentumTracks" : False # Use Tracks cloned from originals with P updated using the CALO
