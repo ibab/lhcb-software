@@ -32,47 +32,22 @@ CKthetaBandsPhotonPredictor( const std::string& type,
     m_ckAngle       ( NULL ),
     m_ckRes         ( NULL ),
     m_richPartProp  ( NULL ),
-    m_maxROI        ( Rich::NRadiatorTypes, 0 ),
-    m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
-    m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
-    m_nSigma        ( Rich::NRadiatorTypes, 0 ),
-    m_scale         ( Rich::NRadiatorTypes, 0 ),
-    m_minXlocal     ( Rich::NRadiatorTypes, 0 ),
-    m_minYlocal     ( Rich::NRadiatorTypes, 0 )
+    m_scale         ( Rich::NRadiatorTypes, 0 )
 {
-  using namespace boost::assign;
   using namespace Gaudi::Units;
 
   // interface
   declareInterface<IPhotonPredictor>(this);
 
-  std::vector<double>
-    // default values    Aero    R1Gas   R2Gas
-    t1 =        list_of  (110)   (0)     (0)     ,
-    t2 =        list_of  (390)   (86)    (165)   ,
-    t3 =        list_of  (0.24)  (0.052) (0.03)  ,
-    t4 =        list_of  (342)   (75)    (130)   ,
-    t5 =        list_of  (-1*mm) (-1*mm) (-1*mm) ,
-    t6 =        list_of  (-1*mm) (-1*mm) (-1*mm) ,
-    t7 = (contextContains("HLT"))
-         ?      list_of  (4.5)   (4.5)   (10.5)    // Online
-         :      list_of  (5.5)   (5.5)   (11.5)  ; // Offline
-  m_minROI     = t1;
-  m_maxROI     = t2;
-  m_ckThetaMax = t3;
-  m_sepGMax    = t4;
-  m_minXlocal  = t5;
-  m_minYlocal  = t6;
-  m_nSigma     = t7;
-  
+  // default values                               Aero    R1Gas   R2Gas
   // job options
-  declareProperty( "MinTrackROI", m_minROI );
-  declareProperty( "MaxTrackROI", m_maxROI );
-  declareProperty( "CKthetaMax", m_ckThetaMax );
-  declareProperty( "SepGMax", m_sepGMax );
+  declareProperty( "MinTrackROI", m_minROI     = { 110,   0,       0 } );
+  declareProperty( "MaxTrackROI", m_maxROI     = { 390,  86,     165 } );
+  m_nSigma = { 5.5, 5.5, 11.5 };
+  if ( contextContains("HLT") ) m_nSigma = { 4.5, 4.5, 10.5 };
   declareProperty( "NSigma", m_nSigma );
-  declareProperty( "MinPixelXLocal", m_minXlocal );
-  declareProperty( "MinPixelYLocal", m_minYlocal );
+  declareProperty( "MinPixelXLocal", m_minXlocal = { -1*mm, -1*mm, -1*mm } );
+  declareProperty( "MinPixelYLocal", m_minYlocal = { -1*mm, -1*mm, -1*mm } );
 
 }
 
@@ -83,10 +58,29 @@ StatusCode CKthetaBandsPhotonPredictor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichCherenkovAngle",        m_ckAngle  );
-  acquireTool( "RichRecGeometry",           m_geomTool );
-  acquireTool( "RichCherenkovResolution",   m_ckRes    );
+  acquireTool( "RichCherenkovAngle",          m_ckAngle  );
+  acquireTool( "RichRecGeometry",             m_geomTool );
+  acquireTool( "RichCherenkovResolution",     m_ckRes    );
   acquireTool( "RichParticleProperties",  m_richPartProp );
+
+  // Are we upgrade detector ?
+  DeRich1 * rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
+  const bool isUpgrade = rich1DE->RichGeometryConfig() == 1;
+
+  // Setup scaling parameters
+  std::vector<double> ckThetaMax; // Scaling parameter - Max CK theta point
+  std::vector<double> sepGMax;    // Scaling parameter - Max separation point
+  // RICH1 Gas rings are larger in the upgrade ...
+  if ( !isUpgrade )
+  {
+    ckThetaMax = { 0.24, 0.052, 0.03 };
+    sepGMax    = { 342,  75,     130 };
+  }
+  else
+  {
+    ckThetaMax = { 0.24, 0.052, 0.03 };
+    sepGMax    = { 342,  98.2,   130 };
+  }
 
   // loop over radiators
   for ( int rad = 0; rad < Rich::NRadiatorTypes; ++rad )
@@ -94,7 +88,7 @@ StatusCode CKthetaBandsPhotonPredictor::initialize()
     // cache some numbers
     m_minROI2.push_back( m_minROI[rad]*m_minROI[rad] );
     m_maxROI2.push_back( m_maxROI[rad]*m_maxROI[rad] );
-    m_scale[rad] = (m_ckThetaMax[rad]/m_sepGMax[rad]);
+    m_scale[rad] = (ckThetaMax[rad]/sepGMax[rad]);
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
@@ -146,14 +140,13 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
         const double ckThetaEsti = std::sqrt(sep2)*m_scale[rad];
 
         // Loop over mass hypos and check finer grained boundaries
-        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-              hypo != m_pidTypes.end(); ++hypo )
+        for ( auto hypo : m_pidTypes )
         {
 
           // expected CK theta
-          const double expCKtheta = m_ckAngle->avgCherenkovTheta(segment,*hypo);
+          const double expCKtheta = m_ckAngle->avgCherenkovTheta(segment,hypo);
           // expected CK theta resolution
-          const double expCKres   = m_ckRes->ckThetaResolution(segment,*hypo);
+          const double expCKres   = m_ckRes->ckThetaResolution(segment,hypo);
 
           // is this pixel/segment pair in the accepted range
           if ( fabs(expCKtheta-ckThetaEsti) < m_nSigma[rad]*expCKres )

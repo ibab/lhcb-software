@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-08 - Chris Jones
+ - Add support for Upgrade geometries to RichCKthetaBandsPhotonPredictor.
+
 ! 2014-02-05 - Chris Jones
  - Remove some unused data members from RichPhotonRecoUsingCKEstiFromRadius.
 

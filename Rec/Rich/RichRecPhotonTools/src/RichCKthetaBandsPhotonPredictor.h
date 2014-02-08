@@ -29,12 +29,15 @@
 // RichKernel
 #include "RichKernel/RichPoissonEffFunctor.h"
 
+// RichDet
+#include "RichDet/DeRich1.h"
+
 // GSL
 #include "gsl/gsl_math.h"
 
 // boost
 #include "boost/format.hpp"
-#include "boost/assign/list_of.hpp"
+//#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -98,8 +101,6 @@ namespace Rich
       std::vector<double> m_maxROI;     ///< Max hit radius of interest around track centres
       std::vector<double> m_maxROI2;    ///< Square of m_maxROI
       std::vector<double> m_minROI2;    ///< Square of m_minROI
-      std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point
-      std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
       std::vector<double> m_nSigma;     ///< N sigma for acceptance bands
       std::vector<double> m_scale;      ///< Internal cached parameter for speed
       std::vector<double> m_minXlocal;  ///< Minimum local X coordinate for each radiator
