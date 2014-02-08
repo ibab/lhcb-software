@@ -45,7 +45,6 @@ XiccDaughtersInLHCbAndWithMinPT::XiccDaughtersInLHCbAndWithMinPT( const std::str
   declareProperty( "DecayTool" ,       m_decayToolName   = "EvtGenDecay") ;
   declareProperty( "BaryonState",      m_BaryonState     = "Xi_cc+"); // double heavy baryon to be looked for
   declareProperty( "MinXiccPT",        m_minXiccPT       = 2000 * Gaudi::Units::MeV );
-  m_sigXiccPID = 4412;
 
 }
 
@@ -69,6 +68,7 @@ StatusCode XiccDaughtersInLHCbAndWithMinPT::initialize( ) {
   if ( "" != m_decayToolName )
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
 
+  m_sigXiccPID = m_mapBaryonPID[m_BaryonState];
   m_decayTool -> setSignal( m_sigXiccPID  ) ;
 
   return StatusCode::SUCCESS;

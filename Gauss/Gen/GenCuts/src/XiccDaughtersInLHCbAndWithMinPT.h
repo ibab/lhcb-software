@@ -1,6 +1,8 @@
-#ifndef GENERATORS_XICCDAUGHTERSINLHCB_H 
-#define GENERATORS_XICCDAUGHTERSINLHCB_H 1
+#ifndef GENERATORS_XICCDAUGHTERSINLHCBANDWITHMINPT_H 
+#define GENERATORS_XICCDAUGHTERSINLHCBANDWITHMINPT_H 1
 
+// Include files
+#include "LbGenXicc/QQqBaryons.h"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Transform4DTypes.h"
@@ -20,7 +22,7 @@ class IDecayTool ;
  *  @date   2013-08-19
  */
 
-class XiccDaughtersInLHCbAndWithMinPT : public GaudiTool, virtual public IGenCutTool {
+class XiccDaughtersInLHCbAndWithMinPT : public GaudiTool, public QQqBaryons, virtual public IGenCutTool {
  public:
   /// Standard constructor
   XiccDaughtersInLHCbAndWithMinPT( const std::string& type, 
@@ -84,4 +86,4 @@ private:
   double m_minXiccPT;
 
 };
-#endif // GENERATORS_XICCDAUGHTERSINLHCB_H
+#endif // GENERATORS_XICCDAUGHTERSINLHCBANDWITHMINPT_H

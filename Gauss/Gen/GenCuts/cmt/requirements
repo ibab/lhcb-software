@@ -18,6 +18,7 @@ branches      doc cmt src
 use           GaudiAlg          v*
 use           MCInterfaces      v*                Kernel
 use           LoKiGen           v*                Phys 
+use           LbGenXicc         v*                Gen
 
 #============================================================================
 # Component and linker libraries building rule

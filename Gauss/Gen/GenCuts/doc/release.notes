@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-02-08 - Liang Zhong
+ - Change XiccDaughtersInLHCb.cpp and XiccDaughtersInLHCbAndWithMinPT.cpp to
+   generate other doubly heavy baryons
+
 !========================== GenCuts v3r8 2013-12-02 ========================== 
 ! 2013-11-25 - Jack Wimberley
  - JpsiLeptonInAcceptance.cpp: Add tool to search for J/psi (or psi(2S)), 
