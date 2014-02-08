@@ -16,7 +16,7 @@
 namespace LHCb 
 {
   class State;
-};
+}
 
 /** @class ElectronSeedTool ElectronSeedTool.h
  *  
