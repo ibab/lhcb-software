@@ -83,11 +83,8 @@ StatusCode PhotonGeomMonitor::execute()
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto * segment : *(richSegments()) )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
-
     // apply track selection
     if ( !m_trSelector->trackSelected(segment->richRecTrack()) ) continue;
 
@@ -119,14 +116,14 @@ StatusCode PhotonGeomMonitor::execute()
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
       const Gaudi::XYZPoint& locPos = pixel->radCorrLocalPositions().position(rad);
       const double sepAngle =
-        ( atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),
-                 locPos.y() - segment->pdPanelHitPointLocal().y() ) );
+        ( std::atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),
+                      locPos.y() - segment->pdPanelHitPointLocal().y() ) );
 
       // local position on HPD panels
       const double distFromBeam = std::sqrt((locPos.x()*locPos.x())+(locPos.y()*locPos.y()));
 
       // sep
-      const double sepL = sqrt( m_geomTool->trackPixelHitSep2(segment,pixel) );
+      const double sepL = std::sqrt( m_geomTool->trackPixelHitSep2(segment,pixel) );
 
       plot1D( sepL, hid(rad,"allSep"), "Local Sep. All", tkHitSepMin[rad],tkHitSepMax[rad] );
 

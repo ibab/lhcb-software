@@ -136,10 +136,9 @@ StatusCode PixelPositionMonitor::execute()
     }
 
     // map of hits in each HPD
-    for ( LHCb::RichSmartID::Vector::const_iterator iS = pixel->hpdPixelCluster().smartIDs().begin();
-          iS != pixel->hpdPixelCluster().smartIDs().end(); ++iS )
+    for ( auto sID : pixel->hpdPixelCluster().smartIDs() )
     {
-      pdMap[pdID].push_back( *iS );
+      pdMap[pdID].push_back( sID );
     }
 
     // Position plots

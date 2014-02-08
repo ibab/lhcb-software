@@ -63,9 +63,10 @@ StatusCode TrackResolutionMoni::execute()
   {
     if ( !trackCreator()->newTracks() )
       return Error( "Problem creating RichRecTracks" );
-    debug() << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No tracks found : Created " << richTracks()->size()
+              << " RichRecTracks " << richSegments()->size()
+              << " RichRecSegments" << endmsg;
   }
 
   // Tally number of segments
@@ -80,15 +81,12 @@ StatusCode TrackResolutionMoni::execute()
   const Rich::HistoID hid;
 
   // Iterate over segments
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( auto segment : *(richSegments()) )
   {
 
     // try block for rare exceptions from MCRichSegment
     try
     {
-
-      LHCb::RichRecSegment * segment = *iSeg;
 
       // apply track selection
       if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
@@ -111,8 +109,9 @@ StatusCode TrackResolutionMoni::execute()
       const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
       ++nSegs[rad]; // count segments per radiator
 
-      verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()
-                << " RichRecSegment in " << rad << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()
+                  << " RichRecSegment in " << rad << endmsg;
 
       // Ray traced hit point on PDPanel
       const Gaudi::XYZPoint & pdPoint = segment->pdPanelHitPoint();
