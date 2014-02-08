@@ -3,7 +3,6 @@
 
 // Gaudi
 #include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -29,16 +28,18 @@
 // ============================================================================ 
 DeVP::DeVP(const std::string& name) :  
     DetectorElement(name),
-    m_nSensors(0), m_nLeftSensors(0), m_nRightSensors(0),
-    m_old(true),
-    m_debug(false) {
+    m_nSensors(0), m_msg(NULL) {
 
 } 
 
 // ============================================================================
 /// Destructor
 // ============================================================================ 
-DeVP::~DeVP() {}
+DeVP::~DeVP() {
+
+  if (m_msg) delete m_msg;
+
+}
 
 // ============================================================================
 /// Object identification
@@ -61,14 +62,16 @@ StatusCode DeVP::initialize() {
   if (outputLevel > 0) msgSvc()->setOutputLevel("DeVP", outputLevel);
   delete pmgr;
   if (!sc) return sc;
-  m_debug  = (msgSvc()->outputLevel("DeVP") == MSG::DEBUG);
-
-  MsgStream msg(msgSvc(), "DeVP");
+  m_debug = false;
+  if (msgSvc()->outputLevel("DeVP") == MSG::DEBUG ||
+      msgSvc()->outputLevel("DeVP") == MSG::VERBOSE) {
+    m_debug = true;
+  }
 
   // Initialise the base class.
   sc = DetectorElement::initialize();
   if (sc.isFailure()) { 
-    msg << MSG::ERROR << "Cannot initialize DetectorElement" << endmsg;
+    msg() << MSG::ERROR << "Cannot initialize DetectorElement" << endmsg;
     return sc ; 
   }
 
@@ -76,7 +79,7 @@ StatusCode DeVP::initialize() {
   std::vector<DeVPSensor*> sensors;
   findSensors(this, sensors);
   if (m_debug) {
-    msg << MSG::DEBUG << "Found " << sensors.size() << "sensors" << endmsg; 
+    msg() << MSG::DEBUG << "Found " << sensors.size() << "sensors" << endmsg; 
   }
   std::sort(sensors.begin(), sensors.end(), less_Z());
 
@@ -91,23 +94,23 @@ StatusCode DeVP::initialize() {
   m_sensors.resize(maxSensorNumber + 1, 0);
 
   m_nSensors = 0;
-  m_nLeftSensors = m_nRightSensors = 0;
+  unsigned int nLeftSensors = 0;
+  unsigned int nRightSensors = 0;
   for (it = sensors.begin(); it != sensors.end(); ++it) {
     m_vpSensors.push_back(*it);
     ++m_nSensors;
     if ((*it)->isLeft()) {
       m_leftSensors.push_back(*it);
-      ++m_nLeftSensors;
+      ++nLeftSensors;
     } else {
       m_rightSensors.push_back(*it);
-      ++m_nRightSensors;
+      ++nRightSensors;
     }
     m_sensors[(*it)->sensorNumber()] = *it;
   }
-  if (m_nSensors > 100) m_old = false;
-  msg << MSG::INFO << "There are " << m_nSensors << " sensors "
-                   << "(left: " << m_nLeftSensors 
-                   << ", right: " << m_nRightSensors << ")" << endmsg;
+  msg() << MSG::INFO << "There are " << m_nSensors << " sensors "
+                     << "(left: " << nLeftSensors 
+                     << ", right: " << nRightSensors << ")" << endmsg;
   return StatusCode::SUCCESS;
 
 }
@@ -121,9 +124,8 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
     if ((*it)->isInside(point)) return (*it)->sensorNumber();
   }
-  MsgStream msg(msgSvc(), "DeVP");
-  msg << MSG::ERROR << "No sensitive volume at (" 
-      << point.x() << ", " << point.y() << ", " << point.z() << ")" << endmsg;
+  msg() << MSG::ERROR << "No sensitive volume at (" 
+        << point.x() << ", " << point.y() << ", " << point.z() << ")" << endmsg;
   return -999;
 
 }
@@ -133,8 +135,12 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 // ============================================================================ 
 const DeVPSensor* DeVP::sensor(const Gaudi::XYZPoint& point) const {
   
-  return m_sensors[sensitiveVolumeID(point)];
-  
+  const int sensorNumber = sensitiveVolumeID(point);
+  if (sensorNumber >= 0) { 
+    return m_sensors[sensitiveVolumeID(point)];
+  }
+  return NULL;
+
 }
 
 // ============================================================================
@@ -143,19 +149,18 @@ const DeVPSensor* DeVP::sensor(const Gaudi::XYZPoint& point) const {
 void DeVP::findSensors(IDetectorElement* det,
                        std::vector<DeVPSensor*>& sensors) {
 
-  MsgStream msg(msgSvc(), "DeVP");  
   std::vector<IDetectorElement*> elements = det->childIDetectorElements();
   std::vector<IDetectorElement*>::iterator it;
   for (it = elements.begin(); it != elements.end(); ++it) {
     if (m_debug) {
-      msg << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
-                        << (*it)->name() << endmsg;
+      msg() << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
+                          << (*it)->name() << endmsg;
     }
     DeVPSensor* p = dynamic_cast<DeVPSensor*>(*it);
     if (p) {
       sensors.push_back(p);
       if (m_debug) {
-        msg << MSG::DEBUG << "Storing detector " << (*it)->name() << endmsg;
+        msg() << MSG::DEBUG << "Storing detector " << (*it)->name() << endmsg;
       } 
     }
     findSensors(*it, sensors);

@@ -1,6 +1,9 @@
 #ifndef VPDET_DEVP_H
 #define VPDET_DEVP_H 1
 
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
 // Kernel/LHCbKernel
 #include "Kernel/VPChannelID.h"
 
@@ -9,7 +12,7 @@
 
 /** @class DeVP DeVP.h "VPDet/DeVP.h" 
  *
- *  VP detector element class.
+ *  Detector element class for the VP as a whole.
  * 
  *  @author Victor Coco Victor.Coco@cern.ch 
  *  @date 20/5/2009
@@ -45,10 +48,6 @@ public:
 
   /// Return the number of sensors.
   unsigned int numberSensors() const {return m_nSensors;}
-  /// Return the number of sensors in the left half.
-  unsigned int numberLeftSensors() const {return m_nLeftSensors;}
-  /// Return the number of sensors in the right half.
-  unsigned int numberRightSensors() const {return m_nRightSensors;}
 
   /// Return iterator corresponding to first sensor.
   std::vector<DeVPSensor*>::const_iterator sensorsBegin() const {
@@ -80,11 +79,8 @@ public:
   /// Return pointer to sensor for a given channel ID.
   const DeVPSensor* sensorOfChannel(LHCb::VPChannelID channel) const {
     unsigned int sensorNumber = channel.module();
-    if (!m_old) {
-      // TODO: to be checked!
-      const int ladder = int(channel.chip() / 3);
-      sensorNumber = 4 * sensorNumber + ladder;
-    } 
+    const int ladder = int(channel.chip() / 3);
+    sensorNumber = 4 * sensorNumber + ladder;
     return sensor(sensorNumber);
   }
   /// Return pointer to sensor for a given sensor number.
@@ -107,10 +103,6 @@ private:
 
   /// Number of sensors
   unsigned int m_nSensors;
-  /// Number of sensors on the left side
-  unsigned int m_nLeftSensors;
-  /// Number of sensors on the righ side
-  unsigned int m_nRightSensors;
 
   mutable std::vector<DeVPSensor*> m_sensors;
 
@@ -127,11 +119,16 @@ private:
     }
   };
 
-  // Temporary flag for distinguishing between old and new geometry.
-  bool m_old;
-
+  /// Output level flag
   bool m_debug;
 
+  /// Message stream
+  mutable MsgStream* m_msg;
+  MsgStream& msg() const {
+    if (!m_msg) m_msg = new MsgStream(msgSvc(), "DeVP");
+    return *m_msg;
+  }
+ 
 };
 
 #endif
