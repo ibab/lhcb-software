@@ -130,7 +130,11 @@ public:
   {
     return m_RichPhotoDetConfig;
   }
-  /// Returns the Rich Geometry config type 0=current optics, 1 upgrade optics, 2 horizontal rich1-upgrade optics.
+
+  /** Returns the Rich Geometry config type 0=current optics, 1 upgrade optics, 2 horizontal rich1-upgrade optics.
+   *  CRJ - This should be an enum, not an it ....
+   *        Should also be cleaned up now the horizontal RICH1 is no longer an option
+   */
   inline int RichGeometryConfig() const
   {
     return m_RichGeometryConfig;
