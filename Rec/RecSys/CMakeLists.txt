@@ -19,6 +19,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Pr/PrFitParams
                          Pr/PrKernel
                          Pr/PrMCTools
+                         Pr/PrPixel
                          Pr/PrUtils
                          Pr/PrVeloUT
 			 Rec/ChargedProtoANNPID
@@ -50,7 +51,6 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tf/FastVelo
                          Tf/PatAlgorithms
 			 Tf/PatKernel
-			 Tf/PatPixel 
                          Tf/PatVelo
                          Tf/PatVeloTT
                          Tf/TfKernel

@@ -30,6 +30,7 @@ use PrAlgorithms         v1r8    Pr   # Yasmine Amhis, Sascha Stahl
 use PrFitParams          v1r3    Pr   # Yasmine Amhis
 use PrKernel             v1r3    Pr   # Sascha Stahl
 use PrMCTools            v1r8    Pr   # Sascha Stahl
+use PrPixel              v1r4    Pr   # Tim Head, Heinrich Schindler
 use PrUtils              v1r1    Pr   # Thomas Nikodem
 use PrVeloUT             v1r3    Pr   # Jianchun Wang
 
@@ -66,7 +67,6 @@ use RichRecTrackTools    v1r35   Rich # Chris Jones
 use FastVelo             v1r14   Tf   # David Hutchcroft
 use PatAlgorithms        v4r29   Tf   # Stephanie Hansmann-Menzemer
 use PatKernel            v2r6    Tf   # Stephanie Hansmann-Menzemer
-use PatPixel             v1r4    Tf   # Pavel Jalocha
 use PatVelo              v3r30   Tf   # David Hutchcroft
 use PatVeloTT            v4r1    Tf   # Mariusz Witek
 use TfKernel             v2r24p1 Tf   # Stephanie Hansmann-Menzemer
