@@ -2,7 +2,7 @@
 # Created    : 2011-12-16
 # Maintainer : Heinrich Schindler
 #=========================================================================
-package           PatPixel
+package           PrPixel
 version           v1r4
 
 #=========================================================================
@@ -23,8 +23,8 @@ include_path      none
 #=========================================================================
 # Component library building rule
 #=========================================================================
-library          PatPixel    ../src/*.cpp 
+library          PrPixel    ../src/*.cpp 
 #=========================================================================
 # define component library link options
 #=========================================================================
-apply_pattern    component_library library=PatPixel
+apply_pattern    component_library library=PrPixel

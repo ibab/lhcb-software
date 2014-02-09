@@ -1,7 +1,7 @@
 ################################################################################
-# Package: PatPixel
+# Package: PrPixel
 ################################################################################
-gaudi_subdir(PatPixel v1r4)
+gaudi_subdir(PrPixel v1r4)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent
@@ -11,7 +11,7 @@ gaudi_depends_on_subdirs(Det/VPDet
                          GaudiKernel)
 
 
-gaudi_add_module(PatPixel
+gaudi_add_module(PrPixel
                  src/*.cpp
                  INCLUDE_DIRS AIDA GSL Tf/PatKernel
 		 LINK_LIBRARIES VPDetLib TrackEvent GaudiAlgLib GaudiKernel )

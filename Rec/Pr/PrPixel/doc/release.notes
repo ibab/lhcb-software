@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
-! Package     : Tf/PatPixel
+! Package     : Pr/PrPixel
 ! Responsible : Heinrich Schindler
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
+
+! 2014-02-09 - Heinrich Schindler
+ - Moved package from Tf/PatPixel to Pr/PrPixel
 
 ! 2014-01-09 - Tim Head
  - Restructered code in hottest part of PatPixelTracking
