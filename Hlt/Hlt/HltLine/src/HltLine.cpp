@@ -118,9 +118,9 @@ std::pair<std::string, unsigned> Hlt::Line::id() const
 std::pair<std::string, unsigned> Hlt::Line::SetupID()
 {
     // TODO: do this during initialize, 'lock' updates after initialize...
-    static const std::string major1{ "Hlt1SelectionID" };
-    static const std::string major2{ "Hlt2SelectionID" };
-    const std::string* major = nullptr;
+    static const Gaudi::StringKey major1{ "Hlt1SelectionID" };
+    static const Gaudi::StringKey major2{ "Hlt2SelectionID" };
+    const Gaudi::StringKey* major{ nullptr };
     if ( decisionName().find( "Hlt1" ) != std::string::npos ) {
         major = &major1;
     } else if ( decisionName().find( "Hlt2" ) != std::string::npos ) {
