@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-02-09 - Heinrich Schindler
+ - Remove old linker algorithms
+ - Remove unnecessary dependencies
+
 !========================= VPAssociators v2r3 2013-10-24 =========================
 ! 2013-10-12 - Heinrich Schindler
  - Add simplified digit and cluster linker algorithms to have same number 

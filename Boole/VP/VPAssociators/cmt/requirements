@@ -15,13 +15,10 @@ include_path none
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
-use  VeloEvent     v*  Event
-use  VeloDet       v*  Det
 use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
-use  VPDet    v*  Det
+use  VPDet         v*  Det
 use  GSL           v*  LCG_Interfaces
-use  DAQEvent      v*  Event
 
 # Component library building rule
 #=========================================================================
