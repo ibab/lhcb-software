@@ -75,22 +75,7 @@ namespace Decoder
     throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoAlg> constructor",
                           "Decoder::CommonBase", StatusCode::FAILURE );
   }
-  //----------------------------------------------------------------------------
-  template <>
-  HistoBase<GaudiHistoAlg>::HistoBase( const std::string& name,
-                                       ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
-  {  }
-  template <>
-  HistoBase<GaudiHistoAlg>::HistoBase( const std::string& type,
-                                       const std::string& name,
-                                       const IInterface* parent )
-    : CommonBase<GaudiHistoAlg> ( type, name, parent ) { }
-  template <>
-  HistoBase<GaudiHistoAlg>::HistoBase( long storage_type,
-                                       const CLID& class_type,
-                                       ISvcLocator * svc  )
-    : CommonBase<GaudiHistoAlg> ( storage_type, class_type, svc ) { }
+
   //=============================================================================
 
   //=============================================================================
@@ -119,22 +104,7 @@ namespace Decoder
     throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleAlg> constructor",
                           "Decoder::CommonBase", StatusCode::FAILURE );
   }
-  //----------------------------------------------------------------------------
-  template <>
-  HistoBase<GaudiTupleAlg>::HistoBase( const std::string& name,
-                                       ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
-  {  }
-  template <>
-  HistoBase<GaudiTupleAlg>::HistoBase( const std::string& type,
-                                       const std::string& name,
-                                       const IInterface* parent )
-    : CommonBase<GaudiTupleAlg> ( type, name, parent ) { }
-  template <>
-  HistoBase<GaudiTupleAlg>::HistoBase( long storage_type,
-                                       const CLID& class_type,
-                                       ISvcLocator * svc  )
-    : CommonBase<GaudiTupleAlg> ( storage_type, class_type, svc ) { }
+
   //=============================================================================
 
   //=============================================================================
@@ -191,22 +161,7 @@ namespace Decoder
     throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoTool> constructor",
                           "Decoder::CommonBase", StatusCode::FAILURE );
   }
-  //-----------------------------------------------------------------------------
-  template <>
-  HistoBase<GaudiHistoTool>::HistoBase( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-    : CommonBase<GaudiHistoTool> ( type, name, parent )
-  {  }
-  template <>
-  HistoBase<GaudiHistoTool>::HistoBase( const std::string& name ,
-                                        ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiHistoTool> ( name, pSvcLocator ) { }
-  template <>
-  HistoBase<GaudiHistoTool>::HistoBase( long storage_type,
-                                        const CLID& class_type,
-                                        ISvcLocator * svc )
-    : CommonBase<GaudiHistoTool> ( storage_type, class_type, svc ) { }
+
   //=============================================================================
 
   //=============================================================================
@@ -235,23 +190,7 @@ namespace Decoder
     throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleTool> constructor",
                           "Decoder::CommonBase", StatusCode::FAILURE );
   }
-  //-----------------------------------------------------------------------------
-  template <>
-  HistoBase<GaudiTupleTool>::HistoBase( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent )
-    : CommonBase<GaudiTupleTool> ( type, name, parent )
-  {  }
-  template <>
-  HistoBase<GaudiTupleTool>::HistoBase( const std::string& name ,
-                                        ISvcLocator* pSvcLocator )
-    : CommonBase<GaudiTupleTool> ( name, pSvcLocator ) { }
-  template <>
-  HistoBase<GaudiTupleTool>::HistoBase( long storage_type,
-                                        const CLID& class_type,
-                                        ISvcLocator * svc )
-    : CommonBase<GaudiTupleTool> ( storage_type, class_type, svc ) { }
-  //=============================================================================
+
 
   //=============================================================================
 
