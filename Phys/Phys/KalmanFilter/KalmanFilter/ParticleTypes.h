@@ -47,13 +47,15 @@ namespace LoKi
         /// Unknown/unspecified particle type 
         UnspecifiedParticle = 0 ,          // Unknown/unspecified particle type 
         /// Short-lived (verticing) particles
-        ShortLivedParticle      ,                //        Short-lived particle
+        ShortLivedParticle      ,               //         Short-lived particle
         /// Long-lived/stable particle
-        LongLivedParticle       ,                //  Long-lived/stable particle
+        LongLivedParticle       ,               //   Long-lived/stable particle
         /// Photon-like 
-        GammaLikeParticle       ,                //        Photon-like particle 
+        GammaLikeParticle       ,               //         Photon-like particle 
         /// Di-Photon-like 
-        DiGammaLikeParticle                      //     Di-Photon-like particle 
+        DiGammaLikeParticle     ,               //      Di-Photon-like particle 
+        /// Merged-pi0-like 
+        MergedPi0LikeParticle                   //     Merged-pi0-like particle 
         // ====================================================================
       } ;
     // ========================================================================

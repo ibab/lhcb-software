@@ -23,6 +23,7 @@
 // CaloUtils 
 // ============================================================================
 #include "CaloUtils/CaloMomentum.h"
+#include "CaloUtils/CaloParticle.h"
 // ============================================================================
 // Local
 // ============================================================================
@@ -164,8 +165,9 @@ namespace
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     //
-    if ( LoKi::KalmanFilter::  GammaLikeParticle == type  || 
-         LoKi::KalmanFilter::DiGammaLikeParticle == type   ) 
+    if ( LoKi::KalmanFilter::    GammaLikeParticle == type  || 
+         LoKi::KalmanFilter::  DiGammaLikeParticle == type  || 
+         LoKi::KalmanFilter::MergedPi0LikeParticle == type   ) 
     { 
       Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ; 
       entry.m_vxi ( 0 , 0 ) = s_ERROR2_i [ 0 ] ;
@@ -298,6 +300,13 @@ StatusCode LoKi::KalmanFilter::loadAsDiGamma
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
 { return load ( particle , LoKi::KalmanFilter::DiGammaLikeParticle , entry ) ; }
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::loadAsMergedPi0
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ return load ( particle , LoKi::KalmanFilter::MergedPi0LikeParticle , entry ) ; }
 // ============================================================================
 // transport the particle and update the entry
 // ============================================================================
@@ -886,6 +895,50 @@ StatusCode LoKi::KalmanFilter::transportGamma
   return transportGamma ( entry , pnt , pointCov2 ) ;
 }
 // ============================================================================
+/*  transport merged-pi0-like particles into new point 
+ *  @param entry     (UPDATE) the entry to be transported
+ *  @param point     (INPUT)  new position 
+ *  @param pointCov2 (INPUT)  covariance matrix for new point 
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-03-06
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::transportMergedPi0
+( LoKi::KalmanFilter::Entry& entry     , 
+  const Gaudi::XYZPoint&     point     , 
+  const Gaudi::SymMatrix3x3* pointCov2 )
+{
+  //
+  entry.m_p.setParticleID (  entry.m_p0 -> particleID () ) ;
+  entry.m_p.setProto      (  entry.m_p0 -> proto      () ) ;
+  entry.m_p.setConfLevel  (  entry.m_p0 -> confLevel  () ) ;
+  //
+  int status = 0 ;
+  if ( 0 == pointCov2 ) 
+  {
+    LHCb::CaloParticle calo ( &entry.m_p , point ) ;
+    calo.updateParticle  () ;
+    status = calo.status () ;
+  }
+  else 
+  {
+    LHCb::CaloParticle calo ( &entry.m_p , point , *pointCov2 ) ;
+    calo.updateParticle  () ;
+    status = calo.status () ;
+  }
+  //
+  if( 0 != status )
+  { return StatusCode ( ErrorMergedPi0Update , true ) ; }
+  //
+  // mass and mass uncertainties
+  entry.m_p. setMeasuredMass    ( entry.m_p0-> measuredMass    () ) ; // corrected mass
+  entry.m_p. setMeasuredMassErr ( entry.m_p0-> measuredMassErr () ) ; 
+  //
+  // update the entry properly:
+  return _update ( entry , entry.m_type ) ;
+}
+// ============================================================================
 /*  transport the photon or diphoton  into new point 
  *  @param entry     (UPDATE) the entry to be transported
  *  @param point     (INPUT)  new position 
@@ -900,6 +953,11 @@ StatusCode LoKi::KalmanFilter::transportGamma
   const Gaudi::XYZPoint&     point     , 
   const Gaudi::SymMatrix3x3* pointCov2 ) 
 {
+  //
+  if ( MergedPi0LikeParticle == entry.m_type ) 
+  { return transportMergedPi0 ( entry , point , pointCov2 ) ; }
+  //
+  
   // Gamma-like & Digamma-like entry 
   LHCb::CaloMomentum calo ;
   //

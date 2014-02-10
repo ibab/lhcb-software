@@ -49,8 +49,10 @@ namespace LoKi
       ErrorGammaLikeParticle       = 411 ,  // Error in Gamma-Like particle
       /// Error in "DiGamma-Like" particle  
       ErrorDiGammaLikeParticle     = 412 ,  // Error in DiGamma-Like particle
-      /// Error in Gamma-'tranport' 
-      ErrorGammaTransport          = 413    // Error in Gamma-transport 
+      /// Error in Gamma-'transport' 
+      ErrorGammaTransport          = 413 ,  // Error in Gamma-transport 
+      /// Error in Merged-pi0 update 
+      ErrorMergedPi0Update         = 414    // Error in Merged-pi0-update 
       // ======================================================================
     } ;
     // ========================================================================

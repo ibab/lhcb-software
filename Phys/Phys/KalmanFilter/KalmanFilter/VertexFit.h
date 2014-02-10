@@ -244,8 +244,9 @@ namespace LoKi
       bool special () const 
       {
         return
-          GammaLikeParticle   == m_type || 
-          DiGammaLikeParticle == m_type ;
+          GammaLikeParticle     == m_type || 
+          DiGammaLikeParticle   == m_type || 
+          MergedPi0LikeParticle == m_type  ;
       }
       /// is it the liong lived entry ? 
       bool isType  ( ParticleType t ) const { return t == m_type ; }
@@ -337,6 +338,21 @@ namespace LoKi
      *  Essentially it includes also the proper tarnsformation 
      *  of the covariance matrix of the particle 
      *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2010-11-11
+     */
+    GAUDI_API 
+    StatusCode loadAsMergedPi0
+    ( const LHCb::Particle&      particle , 
+      LoKi::KalmanFilter::Entry& entry    ) ;
+    // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
+     *  Essentially it includes also the proper tarnsformation 
+     *  of the covariance matrix of the particle 
+     *
      *  @attention It is not implemented properly yet! 
      *
      *  @param  particle (input)  the particle to be added 
@@ -401,6 +417,20 @@ namespace LoKi
      */
     GAUDI_API 
     StatusCode transportGamma  
+    ( LoKi::KalmanFilter::Entry& entry         , 
+      const Gaudi::XYZPoint&     point         , 
+      const Gaudi::SymMatrix3x3* pointCov2 = 0 ) ;
+    // ========================================================================
+    /** transport merged-pi0-like particles into new point 
+     *  @param entry     (UPDATE) the entry to be transported
+     *  @param point     (INPUT)  new position 
+     *  @param pointCov2 (INPUT)  covariance matrix for new point 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    GAUDI_API 
+    StatusCode transportMergedPi0
     ( LoKi::KalmanFilter::Entry& entry         , 
       const Gaudi::XYZPoint&     point         , 
       const Gaudi::SymMatrix3x3* pointCov2 = 0 ) ;
