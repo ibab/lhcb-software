@@ -11,6 +11,7 @@
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+#include "Event/HltCandidate.h"
 
 namespace Hlt
 {
@@ -202,6 +203,7 @@ class TSelection : public Selection
 typedef TSelection<LHCb::Track> TrackSelection;
 typedef TSelection<LHCb::RecVertex> VertexSelection;
 typedef TSelection<LHCb::Particle> ParticleSelection;
+typedef TSelection<Hlt::Candidate> CandidateSelection;
 
 template <typename R, typename T>
 void operator>>( const R &range, TSelection<T> &sel ) {

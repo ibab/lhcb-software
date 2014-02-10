@@ -10,8 +10,6 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/utility.hpp"
 #include "boost/tuple/tuple.hpp"
-#include "boost/static_assert.hpp"
-// #include "boost/assign/list_of.hpp"
 #include <vector>
 #include <utility>
 #include <memory>
@@ -52,11 +50,11 @@ namespace detail
 template <typename Candidate>
 struct data_
 {
-    typedef Hlt::TSelection<Candidate> selection_type;
-    typedef Candidate candidate_type;
+    using selection_type =  Hlt::TSelection<Candidate>;
+    using candidate_type =  Candidate;
     selection_type* selection;
     Gaudi::StringKey property;
-    data_() : selection( nullptr )
+    data_() : selection{ nullptr }
     {
     }
 };
@@ -64,11 +62,11 @@ struct data_
 template <typename Candidate>
 struct cdata_
 {
-    typedef const Hlt::TSelection<Candidate> selection_type;
-    typedef Candidate candidate_type;
+    using selection_type = const Hlt::TSelection<Candidate>;
+    using candidate_type = Candidate;
     selection_type* selection;
     Gaudi::StringKey property;
-    cdata_() : selection( nullptr )
+    cdata_() : selection{ nullptr }
     {
     }
 };
@@ -148,23 +146,21 @@ class SelectionContainer_ : private boost::noncopyable
     template <unsigned N>
     struct helper_
     {
-        typedef typename boost::tuples::element<N, T>::type data_type; // tuple(N) ->
+        using data_type = typename boost::tuples::element<N, T>::type; // tuple(N) ->
                                                                        // data<X>
-        typedef typename data_type::candidate_type candidate_type; // data<X> -> X
-        typedef typename data_type::selection_type selection_type; // data<X> ->
+        using candidate_type = typename data_type::candidate_type; // data<X> -> X
+        using selection_type = typename data_type::selection_type; // data<X> ->
                                                                    // TSelection<X>
     };
 
-  protected:
-    // make sure only derived classes can be instantiated...
+  public:
     SelectionContainer_( HltAlgorithm& alg ) : m_owner( alg )
     {
         zero_ x;
         for_each_selection( m_data, x );
     }
 
-  public:
-    typedef std::map<int, std::string> map_t;
+    using map_t =  std::map<int, std::string>;
     void declareProperties( map_t defaults = map_t() )
     {
         declare_<boost::tuples::length<T>::value> x( m_owner,
@@ -174,7 +170,7 @@ class SelectionContainer_ : private boost::noncopyable
     // could move to postInitialize hook
     void registerSelection()
     {
-        typename helper_<0>::data_type& d = boost::get<0>( m_data );
+        auto& d = boost::get<0>( m_data );
         if ( d.selection ) {
             throw GaudiException(
                 m_owner.name() + "::registerSelection selection already present..",
@@ -201,8 +197,8 @@ class SelectionContainer_ : private boost::noncopyable
     template <unsigned N>
     typename helper_<N>::selection_type* input()
     {
-        BOOST_STATIC_ASSERT( N > 0 ); // N=0 corresponds to the output....
-        typename helper_<N>::data_type& d = boost::get<N>( m_data );
+        static_assert( N>0, "input() : N>0 for input -- N=0 corresponds to the required output");
+        auto& d = boost::get<N>( m_data );
         if ( !d.selection->processed() ) {
             m_owner.debug() << "requesting stale selection " << d.selection->id()
                             << endmsg;
@@ -228,71 +224,27 @@ class SelectionContainer_ : private boost::noncopyable
     HltAlgorithm& m_owner;
     // the actual data: a boost::tuple<U1,U2,...UN> where Ui = detail::data_<Ti>
     // with Ti eg. LHCb::Track for a tracklist, LHCb::RecVertex for a vertex list,
-    // etc.
+    // etc; U1 is const, the remainder not...
     T m_data;
 };
 }
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5>
-struct SelectionContainer5
-    : public detail::SelectionContainer_<
-          boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>,
-                       detail::cdata_<T4>, detail::cdata_<T5>>>
-{
-    SelectionContainer5( HltAlgorithm& owner )
-        : detail::SelectionContainer_<
-              boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>,
-                           detail::cdata_<T4>, detail::cdata_<T5>>>( owner )
-    {
-    }
-};
-
-template <typename T1, typename T2, typename T3, typename T4>
-struct SelectionContainer4
-    : public detail::SelectionContainer_<
-          boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>,
-                       detail::cdata_<T4>>>
-{
-    SelectionContainer4( HltAlgorithm& owner )
-        : detail::SelectionContainer_<
-              boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>,
-                           detail::cdata_<T4>>>( owner )
-    {
-    }
-};
-
-template <typename T1, typename T2, typename T3>
-struct SelectionContainer3
-    : public detail::SelectionContainer_<
-          boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>>>
-{
-    SelectionContainer3( HltAlgorithm& owner )
-        : detail::SelectionContainer_<boost::tuple<
-              detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>>>( owner )
-    {
-    }
-};
+template <typename T1>
+using SelectionContainer1 =
+    detail::SelectionContainer_<boost::tuple<detail::data_<T1>>>;
 
 template <typename T1, typename T2>
-struct SelectionContainer2 : public detail::SelectionContainer_<
-                                 boost::tuple<detail::data_<T1>, detail::cdata_<T2>>>
-{
-    SelectionContainer2( HltAlgorithm& owner )
-        : detail::SelectionContainer_<
-              boost::tuple<detail::data_<T1>, detail::cdata_<T2>>>( owner )
-    {
-    }
-};
+using SelectionContainer2 = detail::SelectionContainer_<boost::tuple<detail::data_<T1>, detail::cdata_<T2>>>;
 
-template <typename T1>
-struct SelectionContainer1
-    : public detail::SelectionContainer_<boost::tuple<detail::data_<T1>>>
-{
-    SelectionContainer1( HltAlgorithm& owner )
-        : detail::SelectionContainer_<boost::tuple<detail::data_<T1>>>( owner )
-    {
-    }
-};
+template <typename T1, typename T2, typename T3>
+using SelectionContainer3 = detail::SelectionContainer_< boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>>>;
+
+template <typename T1, typename T2, typename T3, typename T4>
+using SelectionContainer4 = detail::SelectionContainer_<boost::tuple< detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>>>;
+
+template <typename T1, typename T2, typename T3, typename T4, typename T5>
+using SelectionContainer5 = detail::SelectionContainer_< boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>, detail::cdata_<T5>>>;
+
 
 // 0 is a special case of 1 ;-): no input, one output, but output has no explicit
 // candidates...

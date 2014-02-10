@@ -156,9 +156,7 @@ Hlt::IUnit::declareOutput( const Hlt::IUnit::Key& key,
 {
     Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key );
     StatusCode sc = this->registerOutput( selection, client );
-    if ( sc.isSuccess() ) {
-        return selection;
-    } // RETURN
+    if ( sc.isSuccess() ) return selection;  // RETURN
     delete selection;
     return 0;
 }
@@ -174,9 +172,7 @@ const TYPE* Hlt::IUnit::tesData( const Hlt::IUnit::Client& client,
                                  const Hlt::IUnit::Key& location ) const
 {
     const DataObject* obj = this->tes( client, location );
-    if ( 0 == obj ) {
-        return 0;
-    }
+    if ( ! obj ) return 0;
     return dynamic_cast<const TYPE*>( obj );
 }
 // ============================================================================

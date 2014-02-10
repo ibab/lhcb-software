@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-02-10 - Gerhard Raven
+ - simplify SelectionContainer using C++11 
+
 ! 2014-01-23 - Gerhard Raven
  - remove HltBase/IBiFunctionFactory.h as it not referenced.
 
