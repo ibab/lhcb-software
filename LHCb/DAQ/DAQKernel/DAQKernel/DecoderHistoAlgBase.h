@@ -42,7 +42,7 @@ namespace Decoder
     /// Standard constructor
     HistoAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
-      : Decoder::HistoBase<GaudiHistoAlg> ( name, pSvcLocator )
+      : Decoder::CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
     { }
 
   };

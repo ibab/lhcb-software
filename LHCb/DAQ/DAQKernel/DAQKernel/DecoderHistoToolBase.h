@@ -37,7 +37,7 @@ namespace Decoder
    */
   //-----------------------------------------------------------------------------
 
-  class HistoToolBase : public Decoder::HistoBase<GaudiHistoTool>
+  class HistoToolBase : public Decoder::CommonBase<GaudiHistoTool>
   {
 
   public:
