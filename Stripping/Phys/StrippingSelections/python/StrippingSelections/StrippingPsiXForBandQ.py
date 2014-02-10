@@ -162,6 +162,9 @@ _default_configuration_ = {
     'B2Psi6PiPrescale'  : 1.0 ,
     'B2Psi6KPiPrescale' : 1.0 ,
     #
+    'B2Psi7PiPrescale'  : 1.0 ,
+    'B2Psi7KPiPrescale' : 1.0 ,
+    #
     'Lb2PsiPKPrescale'      : 1.0 ,
     'Lb2PsiPPiPrescale'     : 1.0 ,
     'Lb2PsiPKPiPiPrescale'  : 1.0 ,
@@ -486,6 +489,29 @@ class PsiX_BQ_Conf(LineBuilder) :
             HLT             = self [ 'L0DU'    ]          ,
             algos           = [ self.psi_6Kpi ()       ]  ) ,
             #
+            #
+            ## 7h
+            #
+            StrippingLine (
+            "B2Psi7PiFor"   + self.name()                ,
+            prescale        = self ['B2Psi7PiPrescale' ] , 
+            checkPV         = self ['CheckPV']           ,
+            FILTER          = self ['FILTER' ]           ,
+            ODIN            = self ['ODIN'   ]           ,
+            L0DU            = self ['L0DU'   ]           ,
+            HLT             = self ['L0DU'   ]           ,
+            algos           = [ self.psi_7pi ()       ]  ) ,
+            ##
+            StrippingLine (
+            "B2Psi7KPiFor"  + self.name()                 ,
+            prescale        = self [ 'B2Psi7KPiPrescale' ], 
+            checkPV         = self [ 'CheckPV' ]          ,
+            FILTER          = self [ 'FILTER'  ]          ,
+            ODIN            = self [ 'ODIN'    ]          ,
+            L0DU            = self [ 'L0DU'    ]          ,
+            HLT             = self [ 'L0DU'    ]          ,
+            algos           = [ self.psi_7Kpi ()       ]  ) ,
+            #
             ## 1 proton
             #
             StrippingLine (
@@ -632,6 +658,9 @@ class PsiX_BQ_Conf(LineBuilder) :
             ##
             self.psi_6pi      () ,
             self.psi_6Kpi     () ,
+            ##
+            self.psi_7pi      () ,
+            self.psi_7Kpi     () ,
             ##
             self.psi_pK       () ,
             self.psi_ppi      () ,
@@ -1461,6 +1490,150 @@ class PsiX_BQ_Conf(LineBuilder) :
             """ ,
             ## 
             MotherCut       = self._neutralB() 
+            )
+
+
+
+    # ========================================================================
+    # B -> psi(') 7Kpi
+    # ========================================================================
+    def psi_7Kpi ( self ) :
+        """
+        B -> psi(') 6Kpi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N8BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi7KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N8BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptors = [
+            "[B_c+ -> J/psi(1S) K+ pi+ pi+ pi+ pi- pi- pi-]cc" , ## 1K
+            "[B_c+ -> J/psi(1S) K+ pi+ pi+ pi+  K- pi- pi-]cc" , ## 2K
+            "[B_c+ -> J/psi(1S) K+ K+  pi+ pi+  K- pi- pi-]cc" , ## 3K
+            "[B_c+ -> J/psi(1S) K+ K+  pi+ pi+  K-  K- pi-]cc" , ## 4K 
+            "[B_c+ -> J/psi(1S) K+ K+  K+  pi+  K-  K- pi-]cc" , ## 5K 
+            "[B_c+ -> J/psi(1S) K+ K+  K+  pi+  K-  K-  K-]cc" , ## 6K
+            ],
+            ##
+            Combination12Cut     = """ ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut    = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut   = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ , 
+            Combination12345Cut  = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ , 
+            Combination123456Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,6) <  20 ) &
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) & 
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ , 
+            Combination1234567Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,7) <  20 ) &
+            ( ACHI2DOCA(2,7) <  20 ) &
+            ( ACHI2DOCA(3,7) <  20 ) & 
+            ( ACHI2DOCA(4,7) <  20 ) &
+            ( ACHI2DOCA(5,7) <  20 ) &
+            ( ACHI2DOCA(6,7) <  20 ) 
+            """ , 
+            CombinationCut   = """  mbc_acut  &
+            ( ACHI2DOCA(1,8) <  20 ) &
+            ( ACHI2DOCA(2,8) <  20 ) &
+            ( ACHI2DOCA(3,8) <  20 ) &
+            ( ACHI2DOCA(4,8) <  20 ) &
+            ( ACHI2DOCA(5,8) <  20 ) &
+            ( ACHI2DOCA(6,8) <  20 ) &
+            ( ACHI2DOCA(7,8) <  20 ) 
+            """ ,
+            ## 
+            MotherCut       = self._chargedB() 
+            )
+
+
+    # ========================================================================
+    # B -> psi(') 7pi
+    # ========================================================================
+    def psi_7pi ( self ) :
+        """
+        B -> psi(') 7pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N8BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi7Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N8BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor   = "[B_c+ -> J/psi(1S) pi+ pi+ pi+ pi+ pi- pi- pi-]cc" ,
+            ##
+            Combination12Cut  = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut  = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) & 
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ ,            
+            Combination1234Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) & 
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,
+            Combination12345Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) & 
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ ,
+            Combination123456Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,6) <  20 ) & 
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ ,
+            Combination1234567Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,7) <  20 ) & 
+            ( ACHI2DOCA(2,7) <  20 ) &
+            ( ACHI2DOCA(3,7) <  20 ) &
+            ( ACHI2DOCA(4,7) <  20 ) &
+            ( ACHI2DOCA(5,7) <  20 ) &
+            ( ACHI2DOCA(6,7) <  20 ) 
+            """ ,
+            CombinationCut   = """  mbc_acut &
+            ( ACHI2DOCA(1,8) <  20 ) & 
+            ( ACHI2DOCA(2,8) <  20 ) &
+            ( ACHI2DOCA(3,8) <  20 ) &
+            ( ACHI2DOCA(4,8) <  20 ) &
+            ( ACHI2DOCA(5,8) <  20 ) & 
+            ( ACHI2DOCA(6,8) <  20 ) & 
+            ( ACHI2DOCA(7,8) <  20 )
+            """ ,
+            ## 
+            MotherCut       = self._chargedB() 
             )
 
 

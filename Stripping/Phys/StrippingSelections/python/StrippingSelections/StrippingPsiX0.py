@@ -137,6 +137,9 @@ _default_configuration_ = {
     "from GaudiKernel.PhysicalConstants import c_light"        , 
     ## use the embedded cut for chi2(LifetimeFit)<25
     "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
+    "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
+    "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
+    "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
     ## Combination mass-cut for beauty particles 
     "mb0_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
     "mbu_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
@@ -172,6 +175,10 @@ _default_configuration_ = {
     'B2PiPiEtaPrescale'         : 1.0 ,
     'B2PiPiEtaPrimePrescale'    : 1.0 ,
     'B2PiPiOmegaPrescale'       : 1.0 ,
+    #
+    'Bu2PsiKstarPrescale'       : 1.0 ,
+    'Bu2PsiKstarMPrescale'      : 1.0 ,
+    'Bc2PsiRhoPrescale'         : 1.0 ,
     # =========================================================================
     }
 ## ============================================================================
@@ -367,7 +374,9 @@ class PsiX0Conf(LineBuilder) :
             self.b2piomega        () ,
             self.b2pipiomega      () ,
             ## 
-            self.b2Kstar          () ## for extraction of photon efficiency
+            self.bc2rho           () ,
+            self.bu2Kstar         () , ## for extraction of photon efficiency
+            self.bu2KstarM        ()   ## for merged pi0s 
             ]
         
         return self._add_selection ( 'Selections' , sel )
@@ -557,6 +566,27 @@ class PsiX0Conf(LineBuilder) :
             prescale = self['B2PiPiOmegaPrescale'  ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'              ] ,
             algos    = [ self.b2pipiomega ()       ]
+            ) ,
+            ##            
+            StrippingLine (
+            "Bu2PsiKstarFor" + self.name()              ,
+            prescale = self['Bu2PsiKstarPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.bu2Kstar ()          ]
+            ) ,
+            ## 
+            StrippingLine (
+            "Bu2PsiKstarMergedFor" + self.name()     ,
+            prescale = self['Bu2PsiKstarMPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.bu2KstarM ()         ]
+            ) ,
+            ##            
+            StrippingLine (
+            "Bc2PsiRhoFor" + self.name()             ,
+            prescale = self['Bc2PsiRhoPrescale'    ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.bc2rho ()            ]
             ) ,
             ##            
             ]
@@ -1605,9 +1635,9 @@ class PsiX0Conf(LineBuilder) :
             )
     
     # =========================================================================
-    # B -> psi(') ( K* -> Kpi0)
+    # B+ -> psi ( K*+ -> K+ pi0)
     # =========================================================================
-    def b2Kstar ( self ) :
+    def bu2Kstar ( self ) :
         """
         This is just a control line to study
         the reconstruction efficiency for pi0 and gamma
@@ -1617,7 +1647,7 @@ class PsiX0Conf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
         pre_bkst = self.make_selection (
             ## the unique tag 
-            'PreB2Kstar'                  ,
+            'PreBu2PsiKstar'              ,
             ## algorithm type to be used
             DaVinci__N3BodyDecays         ,
             ## inputs 
@@ -1642,17 +1672,110 @@ class PsiX0Conf(LineBuilder) :
             ( ctau_9    > %s ) 
             """ % self['CTAU_Kst'] 
             )
-        
         ##
         from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger2g
         ## 
         return self.make_selection (
-            'B2Kstar'                  ,
+            'Bu2PsiKstar'              ,
             Pi0Veto__Tagger2g          ,
             [ pre_bkst ]               ,
             MassWindow     = 25 * MeV  ,
             MassChi2       = -1        ,
             ExtraInfoIndex = 25020     ## unique ! 
+            )
+
+    # =========================================================================
+    # B+ -> psi ( K* -> K+ pi0-merged)
+    # =========================================================================
+    def bu2KstarM ( self ) :
+        """
+        B+ -> psi ( K* -> K+ pi0-merged )        
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        from StandardParticles                     import StdLooseMergedPi0 as pi0_merged
+        return self.make_selection (
+            ## the unique tag 
+            'Bu2PsiKstarMerged'           ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## inputs 
+            [ self.psi   () , self.kaons () , pi0_merged ] ,
+            ## configuration:
+            DecayDescriptor = "[B+ -> J/psi(1S) K+ pi0 ]cc" ,
+            ## keep only J/psi 
+            DaughtersCuts = { 'J/psi(1S)' : " M < 3.3 * GeV " } ,
+            ## 
+            Combination12Cut = """ ( AM < 7.1 * GeV ) &
+            ( ACHI2DOCA (1,2) < 20 ) 
+            """ ,             
+            CombinationCut = """
+            in_range ( 4.40 * GeV , AM , 7.10 * GeV ) &
+            ( AM23 < 2.5 * GeV ) 
+            """ , 
+            ##
+            MotherCut = """
+            in_range ( 4.45 * GeV , dump1 ( M ) , 7.05 * GeV ) & 
+            ( monitor ( chi2vxndf ) < 10 ) 
+            """
+            )
+    ## ( ctau_9 > %s ) 
+    ## """ % self['CTAU_Kst'] 
+
+    # =========================================================================
+    # B(c) -> psi ( rho+ -> pi+ pi0 )
+    # =========================================================================
+    def bc2rho ( self ) :
+        """
+        Bc+ -> psi ( rho+ -> pi+ pi0 ) in very wide window 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        from StandardParticles                     import StdLoosePions  as loose_pions
+        pre_rho = self.make_selection (
+            ## the unique tag 
+            'PreBc2PsiRho'                ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## inputs 
+            [ self.psi   () , loose_pions , self.pi0  () ] ,
+            ## configuration:
+            DecayDescriptor  = "[B_c+ -> J/psi(1S) pi+ pi0 ]cc" ,
+            ## 
+            DaughtersCuts    = {
+            'J/psi(1S)' :   "    M   < 3.3 * GeV " , ## keep only J/psi 
+            'pi+'       :   "   PT   > 500 * MeV " ,
+            'pi0'       : """
+            (             PT   > 500 * MeV ) &
+            ( CHILD ( 1 , PT ) > 300 * MeV ) &
+            ( CHILD ( 2 , PT ) > 300 * MeV ) 
+            """
+            } ,
+            ## 
+            Combination12Cut = """
+            ( AM < 7.6 * GeV    )  & 
+            ( ACHI2DOCA ( 1 , 2 )  < 10 )  
+            """ ,
+            ##
+            CombinationCut   = """
+            in_range ( 4.4  * GeV , AM , 7.6 * GeV ) &
+            ( AM23 < 2.5 * GeV ) 
+            """ ,
+            ##
+            MotherCut        = """
+            ( chi2vx < 16  ) & 
+            in_range ( 4.45 * GeV , M      ,  7.55 * GeV ) & 
+            in_range ( 90   * um  , ctau_9 ,  5 * mm     )
+            """
+            )
+        ##
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger2g
+        ## 
+        return self.make_selection (
+            'Bc2PsiRho'                ,
+            Pi0Veto__Tagger2g          ,
+            [ pre_rho ]                ,
+            MassWindow     = 25 * MeV  ,
+            MassChi2       = -1        ,
+            ExtraInfoIndex = 25025     ## unique ! 
             )
     
 # =============================================================================

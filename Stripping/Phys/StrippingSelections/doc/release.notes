@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-02-10 - Vanya Belyaev
+ - PsiX0: 
+   add pi0-merged for Fatima
+   PsiX : 
+   add N=8-body decays 
+ 
+
 !========================= StrippingSelections v3r32 2014-02-04 =========================
 
 ! 2014-02-04 - Flavio Archilli
