@@ -31,7 +31,8 @@ importOptions('$FSTTOOLSROOT/options/Sft.py')
 Brunel().InputType = 'DST'
 #input_path = '/group/online/data_hlt'
 input_path = '/group/online/data_hlt/minbias_25ns_spillover'
-input_files = glob(path.join(input_path, '*.xdst'))
+input_files = glob(path.join(input_path, '0*.xdst'))
+#input_files = ["MinBias_spillover_1000.dst"]
 IOHelper().inputFiles(input_files)
 
 # configure trigger emulation
@@ -52,14 +53,22 @@ for algo in algos:
     algo.DoNothing = True
 
 # set multiplicity cuts
-FstSelectGEC().MultiplicityCutECAL = 10000
-FstSelectGEC().MultiplicityCutHCAL = 10000
+FstSelectGEC().MultiplicityCutECAL = 1
+FstSelectGEC().MultiplicityCutHCAL = 999#10000
 
 # set the mcut via env var for a study
 from os import getenv
 mcut = getenv('MCUT')
 if mcut:
     FstSelectGEC().MultiplicityCutHCAL = int(mcut) * 100 - 1
+
+# Use this together with adding the algo to
+# the Fst sequence to write out events after
+# applying the GEC
+#from Configurables import InputCopyStream
+#output_fname = "/group/online/data_hlt/minbias_25ns_spillover/MinBias_spillover_GEC%i.xdst"%(1000)
+#InputCopyStream("DstWriter3").Output = "DATAFILE='PFN:%s'"%(output_fname)
+#InputCopyStream("DstWriter3").OutputLevel = 2
 
 # detailed output for tracking algos
 # if done run over 2 events
@@ -114,5 +123,13 @@ def setup_truth_matching():
     PrChecker().UpTracks = '/Event/Fst/Track/VeloUTFst'
     PrChecker().ForwardTracks = '/Event/Fst/Track/Forward'
     PrChecker().Eta25Cut = True
+    PrChecker().WriteVeloHistos = 2
+    PrChecker().WriteForwardHistos = 2
+    PrChecker().WriteUpHistos  = 2
+
+    # Uncomment to run over events written out
+    # after the GEC cut, for some reason
+    # reading in DSTs we wrote out ourselves is broken
+    #GaudiSequencer("InitReprocSeq").Members = []
    
 appendPostConfigAction(setup_truth_matching)

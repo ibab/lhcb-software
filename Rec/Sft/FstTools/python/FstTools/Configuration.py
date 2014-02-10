@@ -1,12 +1,13 @@
 ## @package FstTools
-#  Test configuration of a First Software Trigger fo rthe LHCb upgrade
-#  @author Olivier Callot
-#  @date   09/10/2012
+#  Test configuration of a First Software Trigger for the LHCb upgrade
+#  @author Tim Head
+#  @date   10/02/2014
 
 __version__ = "0.1"
-__author__  = "Olivier Callot"
+__author__  = "Tim Head"
 
 from Gaudi.Configuration import *
+from Configurables import RichRecSysConf
 from Configurables import LHCbConfigurableUser
 from Configurables import GaudiSequencer, FstSequencer, FstSelectVeloTracks
 from Configurables import FstSelectForwardTracksPartOne, FstSelectForwardTracksPartTwo
@@ -15,6 +16,7 @@ from Configurables import FstSelectForwardTracksPartOne, FstSelectForwardTracksP
 #  Configurable for the Fst simulation for the LHCb upgrade
 #  @author Olivier Callot
 class FstConf(LHCbConfigurableUser):
+    __used_configurables__ = [(RichRecSysConf, "RichReco"),]
     __slots__ = {
         "RootInTES" : "Fst/"
         ,"MinPt"           : 1200.  # MeV
@@ -28,6 +30,7 @@ class FstConf(LHCbConfigurableUser):
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
+        ,"RICHType"        : "HLT2015"
         ,"TStationHits"    : 16
         ,"ForwardMinPt"    : 1250.  # MeV, determines window size in forward tracking
                                     # or rejection cut in forward tracking if momentum
@@ -44,6 +47,14 @@ class FstConf(LHCbConfigurableUser):
         ## Multiplicity cuts (Kevin Dungs, 2014-01-18)
         from Configurables import LLTCaloAlg
         FstSequencer("RecoFstSeq").Members = ["LLTCaloAlg", "FstSelectGEC"]
+
+        ## DST writer
+        from Configurables import InputCopyStream
+        writer = InputCopyStream('DstWriter3')
+        writer.ItemList += [#"Fst#999",
+                            "Link#999",
+                            ]
+        #FstSequencer("RecoFstSeq").Members += [writer]
 
         ## Velo configuration
         if "Velo" == self.getProp("VeloType"):
@@ -126,7 +137,7 @@ class FstConf(LHCbConfigurableUser):
                 FastSTDecoding("FastTTDecoding").DetectorName = "TT"
             else:
                 FstSequencer("RecoFstSeq").Members += ["RawBankToSTLiteClusterAlg/CreateTTLiteClusters"]
-                
+
         FstSequencer("RecoFstSeq").Members += ["FstSelectVeloTracks"]
         FstSelectVeloTracks().InputTracksName = self.getProp("RootInTES") + "Track/Velo"
         FstSelectVeloTracks().OutputTracksName = self.getProp("RootInTES") + "Track/VeloFst"
@@ -283,7 +294,6 @@ class FstConf(LHCbConfigurableUser):
 
         
         if "HltFit" == self.getProp("TrackFit"):
-            print "XXX HltFit"
             from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
             from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
             HltFastFit_name = 'FastFit'
@@ -325,3 +335,37 @@ class FstConf(LHCbConfigurableUser):
         else:
             fwd2.MaxChi2Ndf = -1.
 
+        # RICH related things
+        if "HLT2015" == self.getProp("RICHType"):
+            richRecConfName = "RichReco"
+            rich_seq = GaudiSequencer("RecoRICHSeq")
+            FstSequencer("RecoFstSeq").Members += [rich_seq]
+        
+            # Create the top level Conf object and set some general options
+            richConf = RichRecSysConf(richRecConfName)
+            # Set the sequencer the RICH reco algs should be added to
+            richConf.RecoSequencer = rich_seq
+            richConf.Context = "HLT"
+            richConf.Simulation = True
+            richConf.DataType = "Upgrade"
+            
+            richConf.Radiators = ["Rich1Gas", "Rich2Gas"]
+            richConf.PidConfig = "FullGlobal"
+            richConf.Particles = ["electron", "muon", "pion",
+                                  "kaon", "proton", "belowThreshold"]
+            richConf.TracklessRingAlgs = []
+            richConf.pixelConfig().FindClusters = False
+            richConf.CheckProcStatus = False
+            richConf.InitPixels = True
+            richConf.InitTracks = True
+            richConf.InitPhotons = True
+            richConf.pixelConfig().FindClusters = False
+            # Set cuts on which tracks enter the RICH reco
+            # XXX do we need this? we already only have tracks
+            # XXX above 500MeV
+            #richConf.trackConfig().TrackCuts = self.getProp("RichTrackCuts")
+            #richConf.gpidConfig().TrackCuts = self.getProp("RichTrackCuts")
+        
+            # Input tracks and RICH output locations
+            richConf.trackConfig().InputTracksLocation = self.getProp("RootInTES") + "Track/ForwardFst"
+            richConf.RichPIDLocation = self.getProp("RootInTES") + "/Rich/PIDs"
