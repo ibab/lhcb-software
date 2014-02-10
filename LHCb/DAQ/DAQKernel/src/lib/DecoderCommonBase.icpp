@@ -86,7 +86,7 @@ const LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string l
 {
     if(!loc.size()) return NULL;
 	//try once with rootInTes
-    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
+    const LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
     if (raw) return raw;
     //try once with opposite
     LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
@@ -101,7 +101,7 @@ template <class PBASE>
 const LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
 {
   //try once with cached location
-  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  const LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw) return raw;
   for (auto loc :  m_rawEventLocations)
   {
@@ -118,7 +118,7 @@ template <class PBASE>
 const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
-  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  const LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw && raw->banks(i).size()) return raw->banks(i);
   for (auto loc :  m_rawEventLocations)
   {
