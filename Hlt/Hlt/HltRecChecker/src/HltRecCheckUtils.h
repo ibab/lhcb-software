@@ -30,5 +30,5 @@ namespace MCHlt
   LHCb::RecVertex toOriginVertex(const LHCb::MCParticle& mcpar);
 
 
-};
+}
 #endif // HLTRECCHECKUTILS_H
