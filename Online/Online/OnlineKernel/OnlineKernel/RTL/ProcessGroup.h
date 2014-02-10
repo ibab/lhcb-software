@@ -44,6 +44,8 @@ namespace RTL {
     int removeAll();
     /// Start process group
     virtual int start();
+    /// Start process
+    virtual int start(bool new_process_group);
     /// Wait for process group.end
     virtual int wait(int flag=WAIT_NOBLOCK);
   };

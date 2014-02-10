@@ -78,8 +78,10 @@ namespace RTL {
     /// Access process output device
     void setOutput(const std::string& val) {  m_output = val; }
     
+    /// Start process. Will NOT add new processes to new process group.
+    virtual int start();
     /// Start process
-    virtual int start(bool new_process_group=false);
+    virtual int start(bool new_process_group);
     /// Send a signal to the process
     virtual int signal(int signum);
     /// Send a signal to the process and all its children (SIGTERM)

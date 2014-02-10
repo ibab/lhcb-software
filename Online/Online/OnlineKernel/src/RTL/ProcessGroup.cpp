@@ -35,7 +35,6 @@ Process* ProcessGroup::get(int pid) const {
 
 /// Start process
 int ProcessGroup::start()    {
-#ifdef __linux
   int status = 1;
   for(Processes::iterator i=m_procs.begin(); i!=m_procs.end();++i) {
     int iret = (*i)->start();
@@ -44,9 +43,18 @@ int ProcessGroup::start()    {
     }
   }
   return status;
-#else
-  return 0;
-#endif
+}
+
+/// Start process
+int ProcessGroup::start(bool new_process_group)    {
+  int status = 1;
+  for(Processes::iterator i=m_procs.begin(); i!=m_procs.end();++i) {
+    int iret = (*i)->start(new_process_group);
+    if ( !lib_rtl_is_success(iret) ) {
+      status = iret;
+    }
+  }
+  return status;
 }
 
 /// Wait for process group.end

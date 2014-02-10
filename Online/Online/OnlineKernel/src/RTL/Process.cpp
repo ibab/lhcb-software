@@ -99,6 +99,11 @@ int Process::sendSignalAll(int sig) {
 #endif
 }
 
+/// Start process. Will NOT add new processes to new process group.
+int Process::start()    {
+  return start(false);
+}
+
 /// Start process
 int Process::start(bool new_process_group)    {
   if ( m_pid >= 0 || m_state != INVALID ) {
