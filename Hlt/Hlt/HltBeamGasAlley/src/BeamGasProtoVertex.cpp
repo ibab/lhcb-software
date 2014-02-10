@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( BeamGasProtoVertex )
 //=============================================================================
 BeamGasProtoVertex::BeamGasProtoVertex( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-    : HltAlgorithm( name, pSvcLocator, false ), m_trackSelection( *this )
+    : HltAlgorithm( name, pSvcLocator, false ), m_trackSelection{ *this }
 {
     m_trackSelection.declareProperties();
     declareProperty( "zTracksMin", m_zTrMin = -1200. );
@@ -88,7 +88,7 @@ void BeamGasProtoVertex::getMeanAndSigma( ITER begin, ITER end, double& sMean,
     namespace ba = boost::accumulators;
     typedef ba::accumulator_set<
         double, ba::stats<ba::tag::mean, ba::tag::variance, ba::tag::count>> m012;
-    m012 acc = std::for_each( begin, end, m012() );
+    m012 acc = std::for_each( begin, end, m012{} );
     if ( ba::count( acc ) != 0 ) {
         sMean = ba::mean( acc );
         sSigma = sqrt( ba::variance( acc ) );
@@ -291,8 +291,7 @@ void BeamGasProtoVertex::findProtoVertex( ITER begin, ITER end )
                         const LHCb::State* state =
                             trk ? trk->stateAt( LHCb::State::ClosestToBeam )
                                 : nullptr;
-                        if ( !state ) return false;
-                        return zSelMin < state->z() && state->z() < zSelMax;
+                        return state && zSelMin < state->z() && state->z() < zSelMax;
                     } );
 
                     if ( msgLevel( MSG::DEBUG ) ) {
@@ -364,9 +363,9 @@ StatusCode BeamGasProtoVertex::execute()
     }
 
     // sort the vector with the z positions
-    std::sort( vectZPos.begin(), vectZPos.end() );
+    std::sort( std::begin(vectZPos), std::end(vectZPos) );
     if ( msgLevel( MSG::DEBUG ) ) {
-        printVector( vectZPos.begin(), vectZPos.end(),
+        printVector( std::begin(vectZPos), std::end(vectZPos),
                      "========== All Good Z ==========" );
     }
 
@@ -377,7 +376,7 @@ StatusCode BeamGasProtoVertex::execute()
     if ( msgLevel( MSG::DEBUG ) )
         debug() << "\n\n=================== Running with sorted vector (1) "
                    "===========================" << endmsg;
-    findProtoVertex( vectZPos.begin(), vectZPos.end() );
+    findProtoVertex( std::begin(vectZPos), std::end(vectZPos) );
     if ( m_trackSelection.output()->size() < minTracksToAccept() ) {
         if ( msgLevel( MSG::DEBUG ) )
             debug() << "\n\n=================== Running with reverse_iterator (2) "

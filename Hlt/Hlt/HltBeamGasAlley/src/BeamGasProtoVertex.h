@@ -44,10 +44,10 @@ class BeamGasProtoVertex : public HltAlgorithm
         return stepSize1() + stepSize2();
     } // in case of good variance
 
-    Hlt::SelectionContainer2<LHCb::Track, LHCb::Track> m_trackSelection; // tracks
-                                                                         // we'll be
-                                                                         // looking
-                                                                         // at
+    Hlt::SelectionContainer<LHCb::Track, LHCb::Track> m_trackSelection; // tracks
+                                                                        // we'll be
+                                                                        // looking
+                                                                        // at
     double m_zTrMin;         // minimal possible z-value (z-list will be trimmed)
     double m_zTrMax;         // maximal possible z-value (z-list will be trimmed)
     double m_zTrExclLRLow;   // lower limit of the lumi-region exclusion zone
