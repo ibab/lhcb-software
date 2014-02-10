@@ -60,14 +60,16 @@ LoKi::ParticleClassificator::ParticleClassificator
   , m_gammaLike           ( "gamma" )
   , m_gammaCLike          ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
   , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
+  , m_mergedPi0Like       ( "pi0"   )
 //
   , m_dd_gammaC  (" gamma -> e+ e- ")
   , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
 ///
-  , m_unclassified  ()
-  , m_gamma_like    ()
-  , m_gammaC_like   ()
-  , m_digamma_like  ()
+  , m_unclassified   ()
+  , m_gamma_like     ()
+  , m_gammaC_like    ()
+  , m_digamma_like   ()
+  , m_mergedPi0_like ()
 ///
 {
   // ==========================================================================
@@ -99,15 +101,18 @@ StatusCode LoKi::ParticleClassificator::initialize ()
   // get particle property service 
   m_ppSvc = svc<LHCb::IParticlePropertySvc> ( "LHCb::ParticlePropertySvc" , true );
   // validate  
-  sc = m_longLived.validate  ( m_ppSvc ) ;
+  sc = m_longLived.validate      ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Long-Lived  particles" , sc ) ; }
-  sc = m_shortLived.validate ( m_ppSvc ) ;
+  { return Error ( "Unable to validate Long-Lived       particles" , sc ) ; }
+  sc = m_shortLived.validate     ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Short-Lived particles" , sc ) ; }
-  sc = m_gammaLike.validate  ( m_ppSvc ) ;
+  { return Error ( "Unable to validate Short-Lived      particles" , sc ) ; }
+  sc = m_gammaLike.validate      ( m_ppSvc ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Unable to validate Gamma-Like  particles" , sc ) ; }
+  { return Error ( "Unable to validate Gamma-Like       particles" , sc ) ; }
+  sc = m_mergedPi0Like.validate  ( m_ppSvc ) ;
+  if ( sc.isFailure() ) 
+  { return Error ( "Unable to validate Merged-pi0-Like  particles" , sc ) ; }
   //
   const StatusCode ok = StatusCode( StatusCode::SUCCESS , true ) ;  
   //
@@ -170,13 +175,13 @@ StatusCode LoKi::ParticleClassificator::finalize()
     MsgStream& log = propsPrint () ? info() : debug () ;
     if ( !m_shortLived.accepted().empty() ) 
     {
-      log << "Short-Lived particles : " << std::endl ;
+      log << "Short-Lived      particles : " << std::endl ;
       LHCb::ParticleProperties::printAsTable ( m_shortLived.accepted () , log , m_ppSvc ) ;
       log << endmsg ;
     }
     if ( !m_longLived.accepted().empty() ) 
     {
-      log << "Long-Lived  particles : " << std::endl ;
+      log << "Long-Lived       particles : " << std::endl ;
       LHCb::ParticleProperties::printAsTable ( m_longLived .accepted () , log , m_ppSvc ) ;
       log << endmsg ;
     }
@@ -184,22 +189,30 @@ StatusCode LoKi::ParticleClassificator::finalize()
     // Gamma
     if ( !m_gamma_like.empty() ) 
     {
-      log << "Gamma-like   particles : " << m_gammaLike << std::endl ;
+      log << "Gamma-like       particles : " << m_gammaLike << std::endl ;
       LHCb::ParticleProperties::printAsTable ( m_gamma_like , log , m_ppSvc ) ;
       log << endmsg ;
     }
     // GammaC 
     if ( !m_gammaC_like.empty() ) 
     {
-      log << "GammaC-like   particles : " << m_gammaCLike << std::endl ;
+      log << "Gamma-conv-like  particles : " << m_gammaCLike << std::endl ;
       LHCb::ParticleProperties::printAsTable ( m_gammaC_like , log , m_ppSvc ) ;
       log << endmsg ;
     }
     // DiGamma 
     if ( !m_digamma_like.empty() ) 
     {
-      log << "DiGamma-like  particles : " << m_digammaLike << std::endl ;
+      log << "DiGamma-like     particles : " << m_digammaLike << std::endl ;
       LHCb::ParticleProperties::printAsTable ( m_digamma_like , log , m_ppSvc ) ;
+      log << endmsg ;
+    }
+    //
+    // Merged-pi0 
+    if ( !m_mergedPi0_like.empty() ) 
+    {
+      log << "Merged-pi0-like  particles : " << m_mergedPi0Like << std::endl ;
+      LHCb::ParticleProperties::printAsTable ( m_mergedPi0_like , log , m_ppSvc ) ;
       log << endmsg ;
     }
     //
@@ -254,6 +267,11 @@ LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const
   { 
     m_gamma_like.insert   ( p.particleID () ) ;   
     return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
+  }
+  else if ( m_mergedPi0Like( &p ) )
+  { 
+    m_mergedPi0_like.insert   ( p.particleID () ) ;   
+    return LoKi::KalmanFilter::MergedPi0LikeParticle   ;    // RETURN
   }
   else if ( m_longLived  ( p.particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 

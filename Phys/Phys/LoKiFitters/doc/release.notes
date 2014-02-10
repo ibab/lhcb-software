@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-10 - Vanya Belyaev
+ - particle classifiers: add the proper treatment of merged pi0 case 
+
 ! 2014-01-17 - Vanya Belyaev
 
  - *DistanceCalculators :

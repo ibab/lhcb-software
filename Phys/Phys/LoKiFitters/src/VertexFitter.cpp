@@ -632,9 +632,11 @@ StatusCode LoKi::VertexFitter::add
   switch ( particleType ( particle ) ) 
   {
   case LoKi::KalmanFilter::GammaLikeParticle   :
-    return _Error ( "add: No way to add   Gamma-like" , InvalidParticle ) ; 
+    return _Error ( "add: No way to add      Gamma-like" , InvalidParticle ) ; 
   case LoKi::KalmanFilter::DiGammaLikeParticle : 
-    return _Error ( "add: No way to add DiGamma-like" , InvalidParticle ) ;
+    return _Error ( "add: No way to add    DiGamma-like" , InvalidParticle ) ;
+  case LoKi::KalmanFilter::MergedPi0LikeParticle : 
+    return _Error ( "add: No way to add Merged-Pi0-like" , InvalidParticle ) ;
   default: 
     break ;
   }

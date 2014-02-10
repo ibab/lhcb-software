@@ -133,11 +133,13 @@ namespace LoKi
     /// Short-lived particles 
     mutable Decays::Nodes::ShortLived_        m_shortLived   ;
     /// Gamma-like particles 
-    mutable Decays::Trees::Stable_<const LHCb::Particle*> m_gammaLike    ;
+    mutable Decays::Trees::Stable_<const LHCb::Particle*> m_gammaLike     ;
     /// GammaC-like particles (gamma-> e+ e-)
     mutable Decays::IDecay::Tree              m_gammaCLike   ;
     /// Di-Gamma-like particles ( pi0 -> gamma gamma , eta -> gamma gamma ) 
     mutable Decays::IDecay::Tree              m_digammaLike  ;
+    /// Merged-pi0-like particles 
+    mutable Decays::Trees::Stable_<const LHCb::Particle*> m_mergedPi0Like ;
     // ========================================================================
     /// decay descriptor for gammaC-like particles:
     std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
@@ -147,10 +149,11 @@ namespace LoKi
   private:
     // ========================================================================
     /// Unclassified particles 
-    mutable std::set<LHCb::ParticleID>        m_unclassified ;
-    mutable std::set<LHCb::ParticleID>        m_gamma_like   ;
-    mutable std::set<LHCb::ParticleID>        m_gammaC_like  ;
-    mutable std::set<LHCb::ParticleID>        m_digamma_like ;
+    mutable std::set<LHCb::ParticleID>        m_unclassified   ;
+    mutable std::set<LHCb::ParticleID>        m_gamma_like     ;
+    mutable std::set<LHCb::ParticleID>        m_gammaC_like    ;
+    mutable std::set<LHCb::ParticleID>        m_digamma_like   ;
+    mutable std::set<LHCb::ParticleID>        m_mergedPi0_like ;
     // ========================================================================
   };
   // ==========================================================================
