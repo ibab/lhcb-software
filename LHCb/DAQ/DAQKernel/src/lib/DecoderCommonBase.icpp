@@ -115,7 +115,7 @@ const LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
   return NULL;
 }
 template <class PBASE>
-const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+const std::vector< LHCb::RawBank * > Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
   const LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
@@ -129,6 +129,7 @@ const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawB
           return raw->banks(i);
       }
   }
-  return NULL;
+  //return a bollocks entry? Cannot return by reference because of this... might consider fixing :S
+  return std::vector< LHCb::RawBank * >();
 }
 #endif // DAQKERNEL_DECODERCOMMONBASE_ICPP

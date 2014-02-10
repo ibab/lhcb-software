@@ -77,7 +77,7 @@ namespace Decoder
 
     /** @brief Returns a std::vector of raw banks out of a first raw event containing those banks
      */
-    virtual const std::vector< LHCb::RawBank * > & findFirstRawBank( const LHCb::RawBank::BankType ) const;
+    virtual const std::vector< LHCb::RawBank * > findFirstRawBank( const LHCb::RawBank::BankType ) const;
 
     //get for one location
     virtual const LHCb::RawEvent* tryEventAt( const std::string ) const;
