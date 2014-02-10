@@ -1,3 +1,12 @@
+##############################################################################
+# Option file to run hadronic cross section checks with multiple targets.
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 8/02/2014
+##############################################################################
+
+
+
 import sys
 import os
 import shutil
@@ -5,6 +14,19 @@ import fileinput
 import string
 import subprocess
 
+
+path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
+
+models=['QGSP_BERT']#any present in the version of Gauss you are using es. 'FTFP_BERT','LHEP'
+energies=['3']#any
+materialsTodo=['Al'] # 'Al' 'Be' 'Si'
+thicks=['1']  #in mm 1, 5, 10 (only)
+particlesTodo=['p','pbar'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
+
+
+
+
+#STARTING PROGRAM DO NOT EDIT AFTER THIS POINT
 
 
 def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks) :
@@ -50,36 +72,8 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
        opt_file.write( thick + " ")
 
     opt_file.close()
-    
-    
-#if __name__=='__main__':
-#    path=os.environ['PWD']+'/test'
-#    models=['QGSP_BERT']#,'LHEP','FTFP_BERT'] #any present in the version of Gauas you are using
-#    energies=['1']#, '5', '10', '50', '100'] #any
-#    materialsTodo=['Al']#,'Be','Si'] # 'Al' 'Be' 'Si'
-#    thicks=['1']#,'5']  #in mm 1, 5, 10
-#    particlesTodo=['Piminus', 'Piplus']#, 'Kminus', 'Kplus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
-#    createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
-
 
     
-
-path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
-workpath = os.environ['PWD']#+'../options/General/target'  # where is youroptions file
-
-
-useganga = False  #Do you plan to run this on ganga or locally?
-myversion = 'v46r5' #needed only if you use ganga, running locally you define the verson when you setup gauss
-
-models=['QGSP_BERT']#,'FTFP_BERT','LHEP'] #any present in the version of Gauas you are using
-energies=['1','5']#, '5', '10', '50', '100'] #any
-materialsTodo=['Al'] # 'Al' 'Be' 'Si'
-thicks=['1']  #in mm 1, 5, 10
-#particlesTodo=['p', 'pbar', 'Piminus', 'Piplus', 'Kminus', 'Kplus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
-particlesTodo=['Piminus']#, 'Kminus', 'p', 'pbar']
-
-
-#STARTING PROGRAM DO NOT EDIT AFTER THIS POINT
 
 
 particles = {'Piminus': '-211', 'Piplus': '211', 'Kminus': '-321', 'Kplus': '321', 'p': '2212', 'pbar': '-2212'}
@@ -93,41 +87,6 @@ if not os.path.exists(path):
    os.makedirs(path)
 
 createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
-
-
-#Defining function to run on ganga
-
-def RunOnGanga(workpath, model, energy, thick, material, particle) :
-
-    gs=Gauss(version = myversion,
-    platform = 'x86_64-slc5-gcc43-opt',
-    user_release_area = os.environ['HOME']+'/cmtuser',
-    optsfile = [ workpath + '/Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py', workpath + '/TargetMaterialGunMultiTargetLocalTemporary.py' ] )
-
-    jobtreedir = workpath
-    jobtree.mkdir(jobtreedir)
-    jobtree.cd(jobtreedir)
-
-    d=Dirac()
-    i=Interactive()
-    
-    jobname = model+'-E'+energy+'GeV-T'+thick+'mm-'+material+'-'+particle
-    j=Job(name=jobname, application=gs,backend=d)
-      
-    jobtree.add(j)
-    j.submit()
-     
-    nomefile = 'Multi_' + particle + '_in' + material + '.root'
-    curfile = GetJobFolder(j.id) + '/output/' + nomefile
-    link_name = path + '/' + model + '/E' + energy + 'GeV/T' + thick + 'mm/' + nomefile
-
-    if os.path.exists(link_name) :
-        os.remove(link_name)
-        os.symlink(curfile, link_name)
-
-    os.system( 'sleep 5' )
-
-
 
 
 #Starting jobs submission
@@ -169,40 +128,33 @@ for model in models:
                sub = subprocess.call(['sed', '-i', command, inputfile])
                command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + energy + ' * GeV|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-	       command = 's|ParticleGun.MaterialEval.ZPlane =.*|ParticleGun.MaterialEval.ZPlane = ' + Zplane[material][thick] + '|'
+               command = 's|ParticleGun.MaterialEval.ZPlane =.*|ParticleGun.MaterialEval.ZPlane = ' + Zplane[material][thick] + '|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
                command = 's|ParticleGun.MaterialEval.Zorig =.*|ParticleGun.MaterialEval.Zorig = ' + Zorig[material][thick] + '|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
 
-	       inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
+               inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
                command = 's/Multi.*.root/Multi_' + particle + '_in' + material + '.root/'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-	       command = 's|\"Hadron\":.*, \"Gen|\"Hadron\":'"'"'' + model +''"'"', \"Gen|'
+               command = 's|\"Hadron\":.*, \"Gen|\"Hadron\":'"'"'' + model +''"'"', \"Gen|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
                command = 's|target = \'Target_.*|target = \'Target_'+ thick + 'mm' + material + '\'|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-               
-	       #inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
-               #command = 's|histoFile = \'Multi.*|histoFile = \'Multi_' + particle + '_in' + material + '\'|'
-               #sub = subprocess.call(['sed', '-i', command, inputfile])
-	       
-	       
-	       if(useganga) :
-                   RunOnGanga(workpath, model, energy, thick, material, particle)
-               else :
-                   sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+               command = 's|histoFile = \'Multi.*|histoFile = \'Multi_' + particle + '_in' + material + '\'|'
+               sub = subprocess.call(['sed', '-i', command, inputfile])
+	            
+               sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 
 
-         if(useganga==False) :
-             dest = path+"/"+model+"/E"+energy+"GeV/T"+thick+"mm/"
-             sourcedir = os.environ['PWD']
-             source = os.listdir(sourcedir)
+         dest = path+"/"+model+"/E"+energy+"GeV/T"+thick+"mm/"
+         sourcedir = os.environ['PWD']
+         source = os.listdir(sourcedir)
    
-             for file in source:
-                if file.endswith(".root"):
-                   if os.path.exists(dest+'/'+file):
-                      os.remove(dest+'/'+file)
-                   shutil.move(file,dest)
+         for file in source:
+            if file.endswith(".root"):
+               if os.path.exists(dest+'/'+file):
+                  os.remove(dest+'/'+file)
+               shutil.move(file,dest)
 
 
 log.write('----------------   END  ------------------')

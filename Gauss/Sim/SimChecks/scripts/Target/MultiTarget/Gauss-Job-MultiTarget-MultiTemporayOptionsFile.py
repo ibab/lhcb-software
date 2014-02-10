@@ -1,13 +1,11 @@
-
-
-
 ##############################################################################
-# File for running Gauss with MC09 configuration and beam conditions as in
-# production (5 TeV beams, nu=1, no spill-over)
-#
-# Syntax is:
-#   gaudirun.py Gauss-MC09.py <someInputJobConfiguration>.py
+# Option file to run hadronic cross section checks.
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 8/02/2014
 ##############################################################################
+
+
 
 from Gaudi.Configuration import *
 from Gauss.Configuration import *
@@ -22,25 +20,24 @@ from Configurables import LHCbApp
 from Configurables import DDDBConf
 
 
-#DDDBConf(DbRoot = "$SQLDDDBROOT/db/myDDDB-Upgrade-TargetGeom-January2014/TargetsDet.xml")
-
 target = 'Target_1mmAl'
 
-
 from Configurables import CondDB
+
+DDDBConf().DbRoot="conddb:/TargetsDet.xml"
 CondDB().Upgrade = True
 LHCbApp().DDDBtag   = "dddb-20140120"
 LHCbApp().CondDBtag = "sim-20131108-vc-md100"
 LHCbApp().Simulation = True
 
+#DDDBConf(DbRoot = "/afs/cern.ch/user/s/seaso/public/Simulation/upgrade/Gauss_Target/DB/myDDDB-Upgrade-TargetGeom-January2014/TargetsDet.xml")
 
-Gauss.DetectorGeo = {"Detectors": [ ] }
-Gauss.DetectorSim = {"Detectors": [ ] }
-Gauss.DetectorMoni ={"Detectors": [ ] }
+Gauss.DetectorGeo = { "Detectors": [ ] }
+Gauss.DetectorSim = { "Detectors": [ ] }
+Gauss.DetectorMoni ={ "Detectors": [ ] }
 
 Gauss.DataType = "Upgrade"
 Gauss.PhysicsList = {"Em":'NoCuts', "Hadron":'QGSP_BERT', "GeneralPhys":True, "LHCbPhys":True}
-
 
 
 def targetGeo():
@@ -77,10 +74,7 @@ giga.TrackSeq.GaussTargetMultiplicity.InteractionVolumeString = [target]
 #giga.TrackSeq.GaussTargetMultiplicity.OutputLevel = DEBUG
 
 
-#
-# Options specific for a given job
-# ie. setting of random number seed and name of output files
-#
+
 from Gauss.Configuration import *
 from Configurables import CondDB, LHCbApp, DDDBConf, CondDBAccessSvc
 from Configurables import Gauss
@@ -105,12 +99,13 @@ Gauss().OutputType = 'NONE'
 #  Note that if you do not set it Gauss will make a name based on event type,
 #  number of events and the date
 #idFile = 'Test43r3'
-#HistogramPersistencySvc().OutputFile = idFile+'-histos.root'
-#
+histoFile = 'Multi_pbar_inAl'
+HistogramPersistencySvc().OutputFile = histoFile + '-histos.root'
+
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Piminus_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_pbar_inAl.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
 
