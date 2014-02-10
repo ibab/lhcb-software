@@ -73,14 +73,14 @@ namespace Decoder
 
     /** @brief Returns a pointer to the first RawEvent in the search path
      */
-    virtual const LHCb::RawEvent* findFirstRawEvent( ) const;
+    virtual LHCb::RawEvent* findFirstRawEvent( ) const;
 
     /** @brief Returns a std::vector of raw banks out of a first raw event containing those banks
      */
-    virtual const std::vector< LHCb::RawBank * > findFirstRawBank( const LHCb::RawBank::BankType ) const;
+    virtual const std::vector< LHCb::RawBank * > & findFirstRawBank( const LHCb::RawBank::BankType ) const;
 
     //get for one location
-    virtual const LHCb::RawEvent* tryEventAt( const std::string ) const;
+    virtual LHCb::RawEvent* tryEventAt( const std::string ) const;
     /// Where to look for the raw event
     std::vector<std::string> m_rawEventLocations;
 
@@ -95,6 +95,7 @@ namespace Decoder
     /// whether to use the RootOnTes next time
     mutable bool m_tryRootOnTes;
 
+    std::vector< LHCb::RawBank * > m_emptyRBVec;
   };
 
 }

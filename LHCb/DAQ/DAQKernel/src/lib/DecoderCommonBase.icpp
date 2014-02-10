@@ -37,6 +37,7 @@ void Decoder::CommonBase<PBASE>::initSearch()
   this->declareProperty( "RawEventLocations", m_rawEventLocations, "Search path for the raw event" );
   m_tryRootOnTes=true;
   m_tryFirstRawEventLocation="";
+  m_emptyRBVec.empty();
 }
 
 //=============================================================================
@@ -82,11 +83,11 @@ StatusCode Decoder::CommonBase<PBASE>::finalize()
 // Search methods
 //=============================================================================
 template <class PBASE>
-const LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
+LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
 {
     if(!loc.size()) return NULL;
 	//try once with rootInTes
-    const LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
+    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
     if (raw) return raw;
     //try once with opposite
     raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
@@ -98,10 +99,10 @@ const LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string l
     return NULL;
 }
 template <class PBASE>
-const LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
+LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
 {
   //try once with cached location
-  const LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw) return raw;
   for (auto loc :  m_rawEventLocations)
   {
@@ -118,7 +119,7 @@ template <class PBASE>
 const std::vector< LHCb::RawBank * > Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
-  const LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw && raw->banks(i).size()) return raw->banks(i);
   for (auto loc :  m_rawEventLocations)
   {
@@ -130,6 +131,7 @@ const std::vector< LHCb::RawBank * > Decoder::CommonBase<PBASE>::findFirstRawBan
       }
   }
   //return a bollocks entry? Cannot return by reference because of this... might consider fixing :S
-  return std::vector< LHCb::RawBank * >();
+  m_emptyRBVec.empty();
+  return m_emptyRBVec;
 }
 #endif // DAQKERNEL_DECODERCOMMONBASE_ICPP
