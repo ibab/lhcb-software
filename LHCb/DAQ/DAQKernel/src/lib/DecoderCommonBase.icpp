@@ -87,10 +87,10 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) co
 {
     if(!loc.size()) return NULL;
 	//try once with rootInTes
-    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
+    LHCb::RawEvent* raw = (*this).getIfExists< LHCb::RawEvent >(loc,m_tryRootOnTes);
     if (raw) return raw;
     //try once with opposite
-    raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
+    raw = (*this).getIfExists< LHCb::RawEvent >(loc,!m_tryRootOnTes);
     if (raw)
     {
     	m_tryRootOnTes=!m_tryRootOnTes;
