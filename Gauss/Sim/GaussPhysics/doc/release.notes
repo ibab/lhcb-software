@@ -4,6 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-02-10 - Liang Zhong
+ - Add classes for Xi_cc++ and anti-Xi_cc--, and include them in
+   GiGaPhysUnknownParticles.cpp
+ - Correct the isospin for Xi_cc+ and anti-Xi_cc-, the spin and baryon
+    number for anti-Xi_cc-
+
 !====================== GaussPhysics v11r0 2014-02-02 ========================
 ! 2014-01-08 - Marco Clemencic
  - Restored GaudiPhysics_load.cpp as GaudiPhysics_factories.cpp

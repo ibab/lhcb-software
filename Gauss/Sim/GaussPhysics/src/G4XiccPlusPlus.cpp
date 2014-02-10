@@ -1,18 +1,18 @@
-// $Id: G4AntiXiccMinus.cpp,v 1.1 2011-10-25 14:04:24 Zhenwei Yang Exp $
+// $Id: G4XiccPlusPlus.cpp,v 1.1 2014-02-10 14:04:24 Liang Zhong Exp $
 
-#include "G4AntiXiccMinus.h"
+#include "G4XiccPlusPlus.h"
 #include "G4ParticleTable.hh"
 
 // ######################################################################
-// ###                      AntiXiccMinus                        ###
+// ###                      XiccPlusPlus                        ###
 // ######################################################################
 
-G4AntiXiccMinus * G4AntiXiccMinus::theInstance = 0 ;
+G4XiccPlusPlus * G4XiccPlusPlus::theInstance = 0 ;
 
-G4AntiXiccMinus * G4AntiXiccMinus::Definition()
+G4XiccPlusPlus * G4XiccPlusPlus::Definition()
 {
   if (theInstance !=0) return theInstance;
-  const G4String name = "anti-xi_cc-";
+  const G4String name = "xi_cc++";
   // search in particle table
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
@@ -28,21 +28,21 @@ G4AntiXiccMinus * G4AntiXiccMinus::Definition()
   //             stable         lifetime    decay table
   //             shortlived      subType    anti_encoding
     anInstance = 
-      new G4ParticleDefinition( name ,          3.59798*GeV ,   5.e-10*MeV ,    -1.*eplus ,
-                                1,              -1,             0,
-                                1,              +1,             0,
-                                "baryon",       0,              -1,             -4412,
-                                false,          0.334e-3*ns,    NULL,
-                                false,          "xi_cc" );
+      new G4ParticleDefinition( name ,      3.620*GeV ,  5.e-10*MeV ,  +2.*eplus ,
+                                1,          +1,          0,
+                                1,          +1,          0,
+                                "baryon",   0,           1,            4422,
+                                false,      0.450e-3*ns, NULL,
+                                false,      "xi_cc" );
   }
-  theInstance = reinterpret_cast<G4AntiXiccMinus*>(anInstance);
+  theInstance = reinterpret_cast<G4XiccPlusPlus*>(anInstance);
   return theInstance;
 }
 
-G4AntiXiccMinus * G4AntiXiccMinus::AntiXiccMinusDefinition() {
+G4XiccPlusPlus * G4XiccPlusPlus::XiccPlusPlusDefinition() {
   return Definition( ) ;
 }
 
-G4AntiXiccMinus * G4AntiXiccMinus::AntiXiccMinus() {
+G4XiccPlusPlus * G4XiccPlusPlus::XiccPlusPlus() {
   return Definition( ) ;
 }

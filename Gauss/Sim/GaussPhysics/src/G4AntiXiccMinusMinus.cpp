@@ -1,18 +1,18 @@
-// $Id: G4XiccPlus.cpp,v 1.1 2011-10-25 14:04:24 Zhenwei Yang Exp $
+// $Id: G4AntiXiccMinusMinus.cpp,v 1.1 2014-02-10 14:04:24 Liang Zhong Exp $
 
-#include "G4XiccPlus.h"
+#include "G4AntiXiccMinusMinus.h"
 #include "G4ParticleTable.hh"
 
 // ######################################################################
-// ###                      XiccPlus                        ###
+// ###                      AntiXiccMinusMinus                        ###
 // ######################################################################
 
-G4XiccPlus * G4XiccPlus::theInstance = 0 ;
+G4AntiXiccMinusMinus * G4AntiXiccMinusMinus::theInstance = 0 ;
 
-G4XiccPlus * G4XiccPlus::Definition()
+G4AntiXiccMinusMinus * G4AntiXiccMinusMinus::Definition()
 {
   if (theInstance !=0) return theInstance;
-  const G4String name = "xi_cc+";
+  const G4String name = "anti-xi_cc--";
   // search in particle table
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
@@ -28,21 +28,21 @@ G4XiccPlus * G4XiccPlus::Definition()
   //             stable         lifetime    decay table
   //             shortlived      subType    anti_encoding
     anInstance = 
-      new G4ParticleDefinition( name ,      3.59798*GeV,  5.e-10*MeV ,  +1.*eplus ,
-                                1,          +1,           0,
-                                1,          -1,           0,
-                                "baryon",   0,            1,            4412,
-                                false,      0.334e-3*ns,  NULL,
+      new G4ParticleDefinition( name ,      3.620*GeV ,  5.e-10*MeV ,  -2.*eplus ,
+                                1,          -1,          0,
+                                1,          -1,          0,
+                                "baryon",   0,           -1,           -4422,
+                                false,      0.450e-3*ns, NULL,
                                 false,      "xi_cc" );
   }
-  theInstance = reinterpret_cast<G4XiccPlus*>(anInstance);
+  theInstance = reinterpret_cast<G4AntiXiccMinusMinus*>(anInstance);
   return theInstance;
 }
 
-G4XiccPlus * G4XiccPlus::XiccPlusDefinition() {
+G4AntiXiccMinusMinus * G4AntiXiccMinusMinus::AntiXiccMinusMinusDefinition() {
   return Definition( ) ;
 }
 
-G4XiccPlus * G4XiccPlus::XiccPlus() {
+G4AntiXiccMinusMinus * G4AntiXiccMinusMinus::AntiXiccMinusMinus() {
   return Definition( ) ;
 }
