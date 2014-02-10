@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-02-10 - Marco Clemencic
+ - Fixed hack to debug ROOT-6015 (problem with CMT).
+
 ! 2014-02-07 - Marco Clemencic
  - Enabled temporarily the use Boost allocators also in debug mode when building
    with ROOT 6, needed to debug ROOT-6015.
