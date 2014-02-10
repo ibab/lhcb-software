@@ -2,6 +2,10 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2014-02-10 - Liang Zhong
+ - Simplify the option file GenXicc.py to control the production of Xi_cc+
+   and Xi_cc++ in a coherent way.
+
 !========================= LbGenXicc v3r0 2013-10-10 =========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
