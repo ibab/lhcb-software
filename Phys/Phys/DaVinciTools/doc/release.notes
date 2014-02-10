@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-02-10 - Vanya Belyaev
+ - add N=8-body decays
+
 ! 2014-02-06 - Marco Clemencic
  - Reverted the workaround because it's now in Gaudi.
 
