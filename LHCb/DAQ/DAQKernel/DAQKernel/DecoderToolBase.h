@@ -22,7 +22,7 @@ namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class ToolBase DAQToolBase.h DAQKernel/DAQToolBase.h
+  /** @class ToolBase DAQToolBase.h DAQKernel/DecoderToolBase.h
    *
    *  Abstract base class for DAQ tools providing
    *  some basic functionality.

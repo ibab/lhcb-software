@@ -1,6 +1,6 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQHistoToolBase.h
+/** @file DecoderHistoToolBase.h
  *
  *  Header file for tool base class : DecoderHistoToolBase
  *

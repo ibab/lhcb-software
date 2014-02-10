@@ -1,6 +1,6 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQTupleAlgBase.cpp
+/** @file DecoderTupleAlgBase.cpp
  *
  *  Implementation file for class : DecoderTupleAlgBase
  *

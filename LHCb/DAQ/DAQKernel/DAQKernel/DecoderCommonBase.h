@@ -1,8 +1,8 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQCommonBase.h
+/** @file DecoderCommonBase.h
  *
- *  Header file for DAQ base class : DAQ::CommonBase
+ *  Header file for DAQ base class : Decoder::CommonBase
  *
  *  @author Rob Lambert    Rob.Lambert@cern.ch
  *  @date   2005-08-27

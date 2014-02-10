@@ -1,6 +1,6 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQHistoAlgBase.h
+/** @file DecoderHistoAlgBase.h
  *
  *  Header file for algorithm base class : DecoderHistoAlgBase
  *
@@ -22,7 +22,7 @@ namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class HistoAlgBase DAQHistoAlgBase.h DAQKernel/DAQHistoAlgBase.h
+  /** @class HistoAlgBase DAQHistoAlgBase.h DAQKernel/DecoderHistoAlgBase.h
    *
    *  Abstract base class for DAQ algorithms providing some basic functionality.
    *
@@ -30,7 +30,7 @@ namespace Decoder
    *  functionality from the base class GaudiHistoAlg.
    *
    *  @author Rob Lambert   Rob.Lambert@cern.ch
-   *  @date   05/04/2002
+   *  @date   10/02/2014
    */
   //-----------------------------------------------------------------------------
 

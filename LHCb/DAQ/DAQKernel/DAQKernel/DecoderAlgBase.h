@@ -1,8 +1,8 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQAlgBase.h
+/** @file DecoderAlgBase.h
  *
- *  Header file for algorithm base class : DAQ::AlgBase
+ *  Header file for algorithm base class : Decoder::AlgBase
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002

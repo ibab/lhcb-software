@@ -1,6 +1,6 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQToolBase.cpp
+/** @file DecoderToolBase.cpp
  *
  *  Implementation file for class : DecoderToolBase
  *

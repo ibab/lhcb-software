@@ -15,5 +15,5 @@
 // ============================================================================
 // Force creation of templated classes
 #include "DecoderCommonBase.icpp"
-template class DAQ::CommonBase<GaudiAlgorithm> ;
+template class Decoder::CommonBase<GaudiAlgorithm> ;
 // ============================================================================
