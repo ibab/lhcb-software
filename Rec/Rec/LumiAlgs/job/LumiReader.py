@@ -25,6 +25,9 @@ LumiReader().inputFiles = files
 LumiReader().outputFile =  ofilename
 LumiReader().EvtMax =  20
 LumiReader().Debug =  True 
-LumiReader().OutputLevel =  DEBUG 
+LumiReader().OutputLevel =  DEBUG
+
+from Configurables import RawEventDump
+RawEventDump("InputDump").RawEventLocations=["DAQ/RawEvent"]
 
 EventSelector().PrintFreq = 1

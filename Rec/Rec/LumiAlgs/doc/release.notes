@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-02-10 - Rob Lambert
+ - Adapt test to new properties of RawEventDump
+
 !========================= LumiAlgs v9r0 2013-12-10 =========================
 ! 2013-11-21 - Rob Lambert
  - Adapt to DecoderDB, this is a major change
