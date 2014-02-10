@@ -1,9 +1,9 @@
 ##############################################################################
-# File for running Gauss with MC09 configuration and beam conditions as in
-# production (5 TeV beams, nu=1, no spill-over)
-#
-# Syntax is:
-#   gaudirun.py Gauss-MC09.py <someInputJobConfiguration>.py
+# Option file to run hadronic cross section checks.
+# You may change the terget type: Al, Si, Be available and 1, 5, 10 mm
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 8/02/2014
 ##############################################################################
 
 from Gaudi.Configuration import *
@@ -23,11 +23,10 @@ target = 'Target_10mmAl'
 
 
 from Configurables import CondDB
+DDDBConf().DbRoot="conddb:/TargetsDet.xml"
 CondDB().Upgrade = True
 LHCbApp().DDDBtag   = "dddb-20140120"
 LHCbApp().CondDBtag = "sim-20131108-vc-md100"
-#LHCbApp().DDDBtag   = "dddb-20130808"
-#LHCbApp().CondDBtag = "sim-20130722-vc-md100"
 LHCbApp().Simulation = True
 
 
@@ -72,11 +71,6 @@ giga.TrackSeq.GaussTargetMultiplicity.InteractionVolumeName = [ "/dd/Structure/T
 giga.TrackSeq.GaussTargetMultiplicity.InteractionMaterialName = []
 giga.TrackSeq.GaussTargetMultiplicity.InteractionVolumeString = [target]
 #giga.TrackSeq.GaussTargetMultiplicity.OutputLevel = DEBUG
-
-
-
-
-
 
 
 

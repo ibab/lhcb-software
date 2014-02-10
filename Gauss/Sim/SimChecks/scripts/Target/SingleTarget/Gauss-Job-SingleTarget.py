@@ -1,7 +1,14 @@
-#
-# Options specific for a given job
-# ie. setting of random number seed and name of output files
-#
+##############################################################################
+# Option file to run hadronic cross section checks.
+# You may change here nuber of events generated and name of output files.
+# For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
+# 
+# Last modified: Luca Pescatore, 8/02/2014
+##############################################################################
+
+
+
+
 from Gauss.Configuration import *
 from Configurables import CondDB, LHCbApp, DDDBConf, CondDBAccessSvc
 from Configurables import Gauss
