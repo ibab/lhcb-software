@@ -65,7 +65,7 @@ class TrackFilter : public HltAlgorithm
   private:
     // ========================================================================
     typedef LoKi::TrackTypes::TrCut Predicate;
-    Hlt::SelectionContainer2<LHCb::Track, LHCb::Track> m_selection;
+    Hlt::SelectionContainer<LHCb::Track, LHCb::Track> m_selection;
     // group the following three together...
     class Filter
     {

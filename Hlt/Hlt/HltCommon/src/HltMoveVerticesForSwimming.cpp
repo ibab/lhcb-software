@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "boost/foreach.hpp"
 
 // from Event
 #include "HltMoveVerticesForSwimming.h"
@@ -134,7 +133,7 @@ StatusCode HltMoveVerticesForSwimming::execute()
     // Print the online PVs for debug
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Printing out the input vertices" << endmsg;
-        BOOST_FOREACH( const LHCb::RecVertex * v, *m_selections.input<1>() )
+        for( const LHCb::RecVertex * v: *m_selections.input<1>() )
         {
             debug() << *v << endmsg;
         }
@@ -171,7 +170,7 @@ StatusCode HltMoveVerticesForSwimming::execute()
     // Print the offline PVs for debug
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Printing out the offline vertices" << endmsg;
-        BOOST_FOREACH( const LHCb::RecVertex * v, offPVs )
+        for( const LHCb::RecVertex * v: offPVs )
         {
             debug() << *v << endmsg;
         }
@@ -213,7 +212,7 @@ StatusCode HltMoveVerticesForSwimming::move_PVs( const LHCb::Particle* myB,
     double vtxchi2,minvtxchi2 = 999999999.;
     const LHCb::RecVertex* bestVertex;
     //Get the online PV matching best to the offline PV
-    BOOST_FOREACH(const LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
+    for(const LHCb::RecVertex* vertex: *m_selections.input<1>() ) {
       vtxchi2 = sqrt  (
                           pow(vertex->position().x() - offPV->position().x(),2) +
                           pow(vertex->position().y() - offPV->position().y(),2) +
@@ -228,7 +227,7 @@ StatusCode HltMoveVerticesForSwimming::move_PVs( const LHCb::Particle* myB,
 
     // I know this shouldn't modify the input vertex in the long run,
     // but for now it is easier to do it like this
-    BOOST_FOREACH( const LHCb::RecVertex * vertex, *m_selections.input<1>() )
+    for( const LHCb::RecVertex * vertex: *m_selections.input<1>() )
     {
         if ( msgLevel( MSG::DEBUG ) ) {
             debug() << "The primary vertex is at " << vertex << endmsg;

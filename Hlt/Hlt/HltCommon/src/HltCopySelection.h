@@ -25,7 +25,7 @@ class HltCopySelection : public HltAlgorithm
     virtual StatusCode execute();    ///< Algorithm execution
 
   private:
-    Hlt::SelectionContainer2<T, T> m_selection;
+    Hlt::SelectionContainer<T, T> m_selection;
 };
 
 #endif // HLTCOPYSELECTION_H

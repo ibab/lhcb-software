@@ -1,12 +1,6 @@
 // $Id: HltGenConfig.cpp,v 1.18 2010-05-05 21:07:43 graven Exp $
 // Include files
 #include <algorithm>
-#include "boost/assign/list_of.hpp"
-// #include <boost/type_traits/remove_const.hpp>
-// #include <boost/type_traits/is_const.hpp>
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/bind.hpp"
-#include "boost/lambda/construct.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -25,8 +19,6 @@
 #include "Kernel/PropertyConfig.h"
 
 using namespace std;
-using boost::assign::list_of;
-namespace bl = boost::lambda;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltGenConfig
@@ -42,16 +34,15 @@ DECLARE_ALGORITHM_FACTORY( HltGenConfig )
 //=============================================================================
 HltGenConfig::HltGenConfig( const string& name, ISvcLocator* pSvcLocator )
     : GaudiAlgorithm( name, pSvcLocator )
-    , m_appMgr( 0 )
-    , m_accessSvc( 0 )
-    , m_configSvc( 0 )
+    , m_appMgr{nullptr}
+    , m_accessSvc{nullptr}
+    , m_configSvc{nullptr}
 {
-    std::vector<std::string> tmp = list_of( string( "ToolSvc" ) )(
-        string( "HltANNSvc" ) )( string( "Hlt::Service" ) );
 
-    declareProperty( "ConfigTop",
-                     m_topConfig = std::vector<std::string>( 1, string( "Hlt" ) ) );
-    declareProperty( "ConfigSvc", m_svcConfig = tmp );
+    declareProperty( "ConfigTop", m_topConfig = {string{"Hlt"}} );
+    declareProperty( "ConfigSvc",
+                     m_svcConfig = {string( "ToolSvc" ), string( "HltANNSvc" ),
+                                    string( "Hlt::Service" )} );
     declareProperty( "ConfigAccessSvc", s_accessSvc = "ConfigTarFileAccessSvc" );
     declareProperty( "PropertyConfigSvc", s_configSvc = "PropertyConfigSvc" );
     declareProperty( "HltType", m_hltType );
@@ -104,14 +95,13 @@ HltGenConfig::gatherDependencies( const INamedInterface& obj ) const
     if ( ia.isValid() ) {
         vector<Algorithm*>* subs =
             dynamic_cast<const Algorithm&>( *ia ).subAlgorithms();
-        for ( vector<Algorithm*>::const_iterator dep = subs->begin();
-              dep != subs->end(); ++dep ) {
-            debug() << "adding sub-algorithm " << ( *dep )->name()
-                    << " as dependant to " << obj.name() << endmsg;
-            ConfigTreeNode::digest_type digest = generateConfig( **dep );
+        for ( const Algorithm* dep : *subs ) {
+            debug() << "adding sub-algorithm " << dep->name() << " as dependant to "
+                    << obj.name() << endmsg;
+            ConfigTreeNode::digest_type digest = generateConfig( *dep );
             if ( digest.invalid() ) {
                 error() << "problem creating dependant configuration for "
-                        << ( *dep )->name() << endmsg;
+                        << dep->name() << endmsg;
             }
             depRefs.push_back( digest );
         }
@@ -119,9 +109,8 @@ HltGenConfig::gatherDependencies( const INamedInterface& obj ) const
 
     // check whether this obj uses any private tools -- if so, add them as
     // dependencies
-    pair<Map_t::const_iterator, Map_t::const_iterator> range =
-        findTools( obj.name() );
-    for ( Map_t::const_iterator i = range.first; i != range.second; ++i ) {
+    auto tools = m_toolmap.equal_range( obj.name() );
+    for ( auto i = tools.first; i != tools.second; ++i ) {
         debug() << "adding tool " << i->second->name() << " as dependency of "
                 << obj.name() << endmsg;
         ConfigTreeNode::digest_type digest = generateConfig( *i->second );
@@ -145,9 +134,8 @@ HltGenConfig::generateConfig( const INamedInterface& obj ) const
     // create and write the leaf object
     PropertyConfig currentConfig = m_configSvc->currentConfiguration( obj );
     // check whether there is a modification request for this component...
-    std::map<std::string, std::vector<std::string>>::const_iterator overrule =
-        m_overrule.find( obj.name() );
-    if ( overrule != m_overrule.end() ) {
+    auto overrule = m_overrule.find( obj.name() );
+    if ( overrule != std::end( m_overrule ) ) {
         warning() << " applying overrule to " << obj.name() << " : " << *overrule
                   << endmsg;
         currentConfig = currentConfig.copyAndModify( overrule->second.begin(),
@@ -167,7 +155,7 @@ HltGenConfig::generateConfig( const INamedInterface& obj ) const
 
     // create the tree node for this leaf object, and its dependencies, and write it
     ConfigTreeNode::digest_type nodeRef =
-        m_accessSvc->writeConfigTreeNode( ConfigTreeNode( propRef, depRefs ) );
+        m_accessSvc->writeConfigTreeNode( {propRef, depRefs} );
     if ( nodeRef.invalid() ) {
         error() << "problem writing ConfigTreeNode" << endmsg;
     }
@@ -179,7 +167,7 @@ StatusCode HltGenConfig::getDependencies( I i, I end, R resolver, T inserter ) c
 {
     for ( ; i != end; ++i ) {
         info() << "Generating config for " << *i << endmsg;
-        COMP* comp( 0 );
+        COMP* comp{nullptr};
         if ( !resolver( *i, comp ).isSuccess() ) {
             error() << "Unable to get " << System::typeinfoName( typeid( COMP ) )
                     << " " << *i << endmsg;
@@ -200,23 +188,19 @@ StatusCode HltGenConfig::generateConfig() const
 {
     vector<ConfigTreeNode::digest_type> depRefs;
 
-    typedef StatusCode ( ISvcLocator::*getService_t )(
-        const Gaudi::Utils::TypeNameString&, IService*&, bool );
-
-    getService_t getService = &ISvcLocator::getService;
-
-    std::vector<Gaudi::Utils::TypeNameString> x;
-    std::transform( m_svcConfig.begin(), m_svcConfig.end(), std::back_inserter( x ),
-                    bl::constructor<Gaudi::Utils::TypeNameString>() );
-
+    auto sl = serviceLocator().get();
     StatusCode sc = getDependencies<IService>(
-        x.begin(), x.end(),
-        bl::bind( getService, serviceLocator().get(), bl::_1, bl::_2, false ),
+        std::begin( m_svcConfig ), std::end( m_svcConfig ),
+        [&]( const std::string& name, IService*& svc ) {
+            return sl->getService( Gaudi::Utils::TypeNameString( name ), svc,
+                                   false );
+        },
         std::back_inserter( depRefs ) );
     if ( sc.isFailure() ) return sc;
     sc = getDependencies<IAlgorithm>(
-        m_topConfig.begin(), m_topConfig.end(),
-        bl::bind( &IAlgManager::getAlgorithm, m_appMgr, bl::_1, bl::_2 ),
+        std::begin( m_topConfig ), std::end( m_topConfig ),
+        [&]( const std::string& name,
+             IAlgorithm*& alg ) { return m_appMgr->getAlgorithm( name, alg ); },
         std::back_inserter( depRefs ) );
     if ( sc.isFailure() ) return sc;
 
@@ -240,15 +224,9 @@ StatusCode HltGenConfig::generateConfig() const
     return sc;
 }
 
-std::pair<HltGenConfig::Map_t::const_iterator, HltGenConfig::Map_t::const_iterator>
-HltGenConfig::findTools( const std::string& parent ) const
-{
-    return m_toolmap.equal_range( parent );
-}
-
 void HltGenConfig::onCreate( const IAlgTool* tool )
 {
-    assert( tool != 0 );
+    assert( tool );
     string name = tool->name();
     string key = name.substr( 0, name.rfind( '.' ) );
     debug() << "adding " << key << " -> " << name << endmsg;

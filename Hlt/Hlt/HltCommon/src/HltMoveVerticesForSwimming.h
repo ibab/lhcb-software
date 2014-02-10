@@ -36,7 +36,7 @@ class HltMoveVerticesForSwimming : public HltAlgorithm
   private:
     StatusCode move_PVs( const LHCb::Particle*, LHCb::VertexBase* );
 
-    Hlt::SelectionContainer2<LHCb::RecVertex, LHCb::RecVertex> m_selections;
+    Hlt::SelectionContainer<LHCb::RecVertex, LHCb::RecVertex> m_selections;
 
     double m_swimmingDistance; // How far to move the primary vertex. The sign is
                                // positive if moving in the direction of the B

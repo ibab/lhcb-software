@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "boost/foreach.hpp"
 #include <memory>
 // local
 #include "HltL0CaloCandidates.h"
@@ -81,86 +80,82 @@ StatusCode HltL0CaloCandidates::execute()
 
     // counters
     int nc = 0;
-    int ne = 0;
-    int ng = 0;
-    int nh = 0;
     // create cluster containers and put on TES
     LHCb::CaloCluster::Container* cont_e = new LHCb::CaloCluster::Container();
-    LHCb::CaloCluster::Container* cont_g = new LHCb::CaloCluster::Container();
-    LHCb::CaloCluster::Container* cont_h = new LHCb::CaloCluster::Container();
     put( cont_e, m_TESprefix + "/LowEtElectrons" );
+    LHCb::CaloCluster::Container* cont_g = new LHCb::CaloCluster::Container();
     put( cont_g, m_TESprefix + "/LowEtPhotons" );
+    LHCb::CaloCluster::Container* cont_h = new LHCb::CaloCluster::Container();
     put( cont_h, m_TESprefix + "/HighEtPhotons" );
 
     // loop over l0calocandidates
-    if ( 0 == candidates->size() ) return StatusCode::SUCCESS;
+    if ( candidates->empty() ) return StatusCode::SUCCESS;
 
     std::vector<LHCb::CaloCellID> ids;
 
     // no longer needed (done when producing the candidate on TES)
     // std::stable_sort   ( candidates->begin(),candidates->end(),SortL0CaloByEt());
 
-    BOOST_FOREACH( const L0CaloCandidate * calo, *candidates )
-    {
-        if ( calo->type() == L0DUBase::CaloType::Electron ||
-             calo->type() == L0DUBase::CaloType::Photon ) {
+    for( const L0CaloCandidate * calo: *candidates ) {
+        if ( calo->type() != L0DUBase::CaloType::Electron &&
+             calo->type() != L0DUBase::CaloType::Photon )  continue;
 
-            LHCb::CaloCellID L0id = calo->id();
+        nc++;
 
-            nc++;
-            // Check the cuts
-            bool passHigh = L0CaloCandidateCut(
-                (L0DUBase::CaloType::Type)calo->type(), m_highEtThreshold )( calo );
-            bool passLow = L0CaloCandidateCut(
-                (L0DUBase::CaloType::Type)calo->type(), m_lowEtThreshold )( calo );
-            if ( !passLow ) continue; // passLow => passHigh
-            // Fine, we got a candidate
+
+        // Check the cuts
+        bool passHigh = L0CaloCandidateCut(
+            (L0DUBase::CaloType::Type)calo->type(), m_highEtThreshold )( calo );
+        bool passLow = L0CaloCandidateCut(
+            (L0DUBase::CaloType::Type)calo->type(), m_lowEtThreshold )( calo );
+        if ( !passLow ) continue; // passLow => passHigh
+        // Fine, we got a candidate
+        if ( msgLevel( MSG::DEBUG ) )
+            debug() << "-> Accepted calo candidate with type = " << calo->type()
+                    << " and et = " << calo->et()
+                    << " and etcode = " << calo->etCode() << " and id =" << calo->id()
+                    << endmsg;
+        etMax = std::max( etMax, calo->et() );
+
+
+        // Clusterize
+        std::vector<CaloCluster*> clusters;
+        m_l02CaloTool->clusterize( clusters, calo, m_level );
+        for ( CaloCluster* c : clusters ) {
+
             if ( msgLevel( MSG::DEBUG ) )
-                debug() << "-> Accepted calo candidate with type = " << calo->type()
-                        << " and et = " << calo->et()
-                        << " and etcode = " << calo->etCode() << " and id =" << L0id
+                debug() << "Cluster " << c->e() << " " << c->seed()
                         << endmsg;
-            if ( calo->et() > etMax ) etMax = calo->et();
+            //
+            if ( !checkID( c->seed(), ids ) ) continue;
 
-            // Clusterize
-            std::vector<CaloCluster*> clusters;
-            m_l02CaloTool->clusterize( clusters, calo, m_level );
-            for ( std::vector<CaloCluster*>::iterator ic = clusters.begin();
-                  clusters.end() != ic; ++ic ) {
+            // LowEt photon clusters from L0g+L0e
+            cont_g->insert( c );
 
-                if ( msgLevel( MSG::DEBUG ) )
-                    debug() << "Cluster " << ( *ic )->e() << " " << ( *ic )->seed()
-                            << endmsg;
-                //
-                if ( !checkID( ( *ic )->seed(), ids ) ) continue;
+            if ( msgLevel( MSG::DEBUG ) )
+                debug() << "Inserted  " << clusters.size()
+                        << " lowET photons clusters" << endmsg;
 
-                // LowEt photon clusters from L0g+L0e
-                cont_g->insert( *ic );
-
+            // highEt photon clusters from L0g+L0e
+            if ( passHigh ) {
+                cont_h->insert( c );
                 if ( msgLevel( MSG::DEBUG ) )
                     debug() << "Inserted  " << clusters.size()
-                            << " lowET photons clusters" << endmsg;
-                ng++;
-
-                // highEt photon clusters from L0g+L0e
-                if ( passHigh ) {
-                    cont_h->insert( *ic );
-                    if ( msgLevel( MSG::DEBUG ) )
-                        debug() << "Inserted  " << clusters.size()
-                                << " highET photons clusters" << endmsg;
-                    nh++;
-                }
-                // electron clusters from L0e only
-                if ( calo->type() == L0DUBase::CaloType::Electron ) {
-                    cont_e->insert( *ic );
-                    if ( msgLevel( MSG::DEBUG ) )
-                        debug() << "Inserted  " << clusters.size()
-                                << " lowET electrons clusters" << endmsg;
-                    ne++;
-                }
+                            << " highET photons clusters" << endmsg;
+            }
+            // electron clusters from L0e only
+            if ( calo->type() == L0DUBase::CaloType::Electron ) {
+                cont_e->insert( c );
+                if ( msgLevel( MSG::DEBUG ) )
+                    debug() << "Inserted  " << clusters.size()
+                            << " lowET electrons clusters" << endmsg;
             }
         }
     }
+
+    int ne = cont_e->size();;
+    int ng = cont_g->size();
+    int nh = cont_h->size();
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "-> Put " << nh << " clusters in TES -> "
@@ -184,18 +179,15 @@ StatusCode HltL0CaloCandidates::execute()
 }
 
 //=============================================================================
-
 bool HltL0CaloCandidates::checkID( LHCb::CaloCellID id,
                                    std::vector<LHCb::CaloCellID>& ids )
 {
-    for ( std::vector<LHCb::CaloCellID>::iterator i = ids.begin(); ids.end() != i;
-          ++i ) {
-        if ( id.area() != i->area() || abs( id.col() - i->col() ) > 1 ||
-             abs( id.row() - i->row() ) > 1 )
-            continue;
-        ids.push_back( id );
-        return false;
-    }
+    bool none = std::none_of( std::begin( ids ), std::end( ids ),
+                           [&]( const LHCb::CaloCellID& i ) {
+        return  id.area() == i.area() && 
+                abs( id.col() - i.col() ) <= 1 &&
+                abs( id.row() - i.row() ) <= 1 ;
+    } );
     ids.push_back( id );
-    return true;
+    return none;
 }

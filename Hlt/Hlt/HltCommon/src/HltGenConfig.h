@@ -54,10 +54,7 @@ class HltGenConfig : public GaudiAlgorithm, public IToolSvc::Observer
     StatusCode getDependencies( I begin, I end, R resolver, INS inserter ) const;
 
     // keep track of whom uses which tools
-    typedef std::multimap<std::string, const IAlgTool*> Map_t;
-    Map_t m_toolmap;
-    std::pair<Map_t::const_iterator, Map_t::const_iterator>
-    findTools( const std::string& parent ) const;
+    std::multimap<std::string, const IAlgTool*>  m_toolmap;
 
     // obtain dependencies
     std::vector<PropertyConfig::digest_type>

@@ -30,7 +30,7 @@
 #include "LoKi/ITrackFunctorFactory.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/TrackTypes.h"
-#include "LoKi/apply.h"
+// #include "LoKi/apply.h"
 #include "LoKi/Filters.h"
 #include "LoKi/Streamers.h"
 // ============================================================================
@@ -65,7 +65,7 @@ class TrackPipe : public HltAlgorithm
     // ========================================================================
     typedef LoKi::TrackTypes::TrPipe Pipe;
 
-    Hlt::SelectionContainer2<LHCb::Track, LHCb::Track> m_selection;
+    Hlt::SelectionContainer<LHCb::Track, LHCb::Track> m_selection;
 
     Pipe m_pipe;
 
@@ -97,10 +97,10 @@ const LoKi::TrackTypes::TrPipe s_PIPE = LoKi::Identity<LHCb::Track::ConstVector>
 // ============================================================================
 Hlt::TrackPipe::TrackPipe( const std::string& name, ISvcLocator* pSvcLocator )
     : HltAlgorithm( name, pSvcLocator )
-    , m_selection( *this )
-    , m_pipe( s_PIPE )
-    , m_code_updated( false )
-    , m_preambulo_updated( false )
+    , m_selection{ *this }
+    , m_pipe{ s_PIPE }
+    , m_code_updated{ false }
+    , m_preambulo_updated{ false }
 {
     m_selection.declareProperties();
     declareProperty(
@@ -183,13 +183,9 @@ void Hlt::TrackPipe::updateCode( Property& /* p */ )
     /// mark as "to-be-updated"
     m_code_updated = true;
     // no action if not yet initialized
-    if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) {
-        return;
-    }
+    if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) return;
     // postpone the action
-    if ( !m_preambulo_updated ) {
-        return;
-    }
+    if ( !m_preambulo_updated ) return;
     // perform the actual immediate decoding
     StatusCode sc = decode();
     Assert( sc.isFailure(), "Error from Hlt::TrackPipe::decode()", sc );
@@ -204,13 +200,9 @@ void Hlt::TrackPipe::updatePreambulo( Property& /* p */ )
     /// mark as "to-be-updated"
     m_preambulo_updated = true;
     // no further action if not yet initialized
-    if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) {
-        return;
-    }
+    if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) return;
     // postpone the action
-    if ( !m_code_updated ) {
-        return;
-    }
+    if ( !m_code_updated ) return;
 
     // perform the actual immediate decoding
     StatusCode sc = decode();

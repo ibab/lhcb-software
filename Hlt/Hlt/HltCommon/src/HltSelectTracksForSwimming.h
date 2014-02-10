@@ -31,7 +31,7 @@ class HltSelectTracksForSwimming : public HltAlgorithm
     StatusCode filter_Tracks();
     bool tracksMatchInVelo( const LHCb::Track*, std::vector<unsigned int> );
 
-    Hlt::SelectionContainer2<LHCb::Track, LHCb::Track> m_selections;
+    Hlt::SelectionContainer<LHCb::Track, LHCb::Track> m_selections;
     std::vector<unsigned int> m_offlineTrackIDs;
 };
 

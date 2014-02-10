@@ -513,7 +513,7 @@ bool TarFile::index( std::streamoff offset ) const
              info.name.find( "/CVS/" ) == string::npos &&
              info.name.find( "/.svn/" ) == string::npos ) {
             // TODO: check for duplicates!!
-            m_index.insert( make_pair( Gaudi::StringKey( info.name ), info ) );
+            m_index.insert( { Gaudi::StringKey{ info.name }, info } );
         }
         // round up size to block size, and skip to next header...
         size_t skip = info.size;
@@ -542,10 +542,7 @@ TarFileAccess::TarFileAccess( const std::string& type, const std::string& name,
 
 TarFileAccess::~TarFileAccess()
 {
-    for ( container_t::iterator i = m_tarFiles.begin(); i != m_tarFiles.end();
-          ++i ) {
-        delete i->second; // this closes the files
-    }
+    for ( auto&  i : m_tarFiles ) delete i.second; // this closes the files
     m_tarFiles.clear();
 }
 
@@ -579,8 +576,8 @@ TarFileAccess::resolve( const std::string& url )
     if ( tarFile == m_tarFiles.end() ) {
         tarFile = m_tarFiles.insert(
             tarFile,
-            std::make_pair( what.str( 1 ),
-                            new TarFileAccess_details::TarFile( what.str( 1 ) ) ) );
+            { what.str( 1 ),
+              new TarFileAccess_details::TarFile( what.str( 1 ) ) } );
         // TODO: keep access statistics on open files,
         // and if too many, close the oldest
         // also, maybe we want to move the most recently used
@@ -597,16 +594,12 @@ std::auto_ptr<std::istream> TarFileAccess::open( const std::string& url )
     std::pair<TarFileAccess_details::TarFile*, std::string> resolved =
         resolve( url );
     return std::auto_ptr<std::istream>(
-        resolved.first != 0 ? resolved.first->open( resolved.second ) : 0 );
-    // std::auto_ptr<std::istream> is( resolved.first!=0 ?
-    // resolved.first->open(resolved.second) : 0 ) ;
-    // if (is->get()==0) error() << "Failed to resolve url " << url << endmsg;
-    // return is;
+        resolved.first ? resolved.first->open( resolved.second ) : nullptr );
 }
 
 MsgStream& TarFileAccess::msg( MSG::Level level ) const
 {
-    if ( m_msg.get() == 0 ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
+    if ( !m_msg.get() ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
     return *m_msg << level;
 }
 

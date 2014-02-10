@@ -29,7 +29,7 @@ class HltL0MuonCandidates : public HltAlgorithm
   private:
     std::vector<int> generateCutList( const LHCb::L0DUChannel& channel );
 
-    Hlt::SelectionContainer2<LHCb::Track, LHCb::L0MuonCandidate> m_selection;
+    Hlt::SelectionContainer<LHCb::Track, LHCb::L0MuonCandidate> m_selection;
 
     std::string m_l0Location;
     std::string m_l0Channel;

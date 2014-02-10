@@ -3,7 +3,6 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "boost/foreach.hpp"
 
 // from Event
 #include "HltSelectTracksForSwimming.h"
@@ -67,7 +66,7 @@ StatusCode HltSelectTracksForSwimming::execute()
         verbose() << "About to print out a  mountain of crap" << endmsg;
 
         verbose() << "Printing out the trigger tracks" << endmsg;
-        BOOST_FOREACH( const LHCb::Track * iT, *m_selections.input<1>() )
+        for( const LHCb::Track * iT: *m_selections.input<1>() )
         {
             verbose() << iT << endmsg;
         }
@@ -78,7 +77,7 @@ StatusCode HltSelectTracksForSwimming::execute()
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "About to print out a mountain of crap" << endmsg;
         debug() << "Printing out the output tracks" << endmsg;
-        BOOST_FOREACH( const LHCb::Track * iT, *m_selections.output() )
+        for( const LHCb::Track * iT: *m_selections.output() )
         {
             debug() << iT << endmsg;
         }
@@ -97,7 +96,7 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks()
 
     debug() << "Beginning to match tracks for swimming" << endmsg;
 
-    BOOST_FOREACH( Hlt::TSelection<LHCb::Track>::candidate_type * iT,
+    for( Hlt::TSelection<LHCb::Track>::candidate_type * iT:
                    *m_selections.input<1>() )
     {
         verbose() << "Outputing the current trigger track" << endmsg;

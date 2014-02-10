@@ -111,17 +111,17 @@ HltReferenceRateSvc::~HltReferenceRateSvc()
 HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,
                                           ISvcLocator* pSvcLocator )
     : Service( name, pSvcLocator )
-    , m_incidentSvc( 0 )
-    , m_evtSvc( 0 )
-    , m_toolSvc( 0 )
-    , m_updMgrSvc( 0 )
+    , m_incidentSvc{ nullptr }
+    , m_evtSvc{ nullptr }
+    , m_toolSvc{ nullptr }
+    , m_updMgrSvc{ nullptr }
     , m_decodeOdin( "ODINDecodeTool", this )
-    , m_lumipars( 0 )
-    , m_rate( 0 )
-    , m_first( ~ulonglong( 0 ) )
-    , m_last( 0 )
-    , m_tick( 0 )
-    , m_lastReportedTick( 0 )
+    , m_lumipars{ nullptr }
+    , m_rate{ 0 }
+    , m_first{ ~ulonglong( 0 ) }
+    , m_last{ 0 }
+    , m_tick{ 0 }
+    , m_lastReportedTick{ 0 }
 {
     // by default, we assume 50(beam-beam)+10(beam1)+10(beam2)+10(empty) Hz of lumi
     // triggers
@@ -132,7 +132,7 @@ HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,
 
 MsgStream& HltReferenceRateSvc::msg( MSG::Level level ) const
 {
-    if ( m_msg.get() == 0 ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
+    if ( !m_msg.get() ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
     *m_msg << level;
     return *m_msg;
 }
@@ -142,7 +142,7 @@ StatusCode HltReferenceRateSvc::i_updateConditions()
     report();
     // and update settings
     debug() << "updating lumipars" << endmsg;
-    if ( m_lumipars == 0 ) {
+    if ( !m_lumipars ) {
         warning()
             << "Could not obtain Condition for lumi parameters from conditions DB"
             << endmsg;
@@ -155,7 +155,8 @@ StatusCode HltReferenceRateSvc::i_updateConditions()
     std::vector<double> lumipars =
         m_lumipars->param<std::vector<double>>( "LumiPars" );
     debug() << "got lumipars: " << lumipars << endmsg;
-    m_rate = 1000 * std::accumulate( lumipars.begin(), lumipars.end(), double( 0 ) );
+    m_rate =
+        1000 * std::accumulate( std::begin( lumipars ), std::end( lumipars ), 0. );
     info() << "updated assumed lumi rate to : " << m_rate << " Hz" << endmsg;
     return StatusCode::SUCCESS;
 }
@@ -218,10 +219,10 @@ StatusCode HltReferenceRateSvc::finalize()
 {
     report();
     StatusCode sc = Service::finalize();
-    m_toolSvc->release();
-    m_evtSvc->release();
-    m_incidentSvc->release();
-    if ( m_updMgrSvc != 0 ) m_updMgrSvc->release();
+    m_toolSvc->release(); m_toolSvc = nullptr;
+    m_evtSvc->release();  m_evtSvc = nullptr;
+    m_incidentSvc->release(); m_incidentSvc = nullptr;
+    if ( m_updMgrSvc ) { m_updMgrSvc->release(); m_updMgrSvc = nullptr; }
     return sc;
 }
 
@@ -237,6 +238,6 @@ void HltReferenceRateSvc::handle( const Incident& /*incident*/ )
     }
     if ( odin->triggerType() == LHCb::ODIN::LumiTrigger ) ++m_tick;
     ulonglong gps = odin->gpsTime();
-    if ( gps < m_first ) m_first = gps;
-    if ( gps > m_last ) m_last = gps;
+    m_first = std::min( m_first, gps) ;
+    m_last  = std::max( m_last, gps );
 }
