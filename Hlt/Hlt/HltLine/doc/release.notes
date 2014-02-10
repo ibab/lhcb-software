@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-02-09 - Gerhard Raven
+ - return StatusCode::FAILURE from initialize if no ID can be found for specified
+   decision name
+
+! 2014-02-09 - Gerhard Raven
  - replace internal string to Gaudi::StringKey
 
 ! 2014-01-28 - Gerhard Raven

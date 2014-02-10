@@ -59,6 +59,10 @@ StatusCode Hlt::Line::initialize()
     StatusCode sc = ::Selection::Line::initialize();
     SetupSelections();
     m_id = SetupID();
+    if ( m_id.second==0 ) {
+        error() << " Invalid ID for " << decisionName() << " -- refusing to continue " << endmsg;
+        sc = StatusCode::FAILURE;
+    }
     return sc;
 }
 
@@ -133,7 +137,7 @@ std::pair<std::string, unsigned> Hlt::Line::SetupID()
     auto key = annSvc().value( *major, decisionName() );
 
     if ( !key ) {
-        warning() << " DecisionName=" << decisionName() << " not known under major "
+        error() << " DecisionName=" << decisionName() << " not known under major "
                   << *major << endmsg;
         return {std::string{}, 0};
     }
