@@ -89,7 +89,7 @@ const LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string l
     const LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
     if (raw) return raw;
     //try once with opposite
-    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
+    raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
     if (raw)
     {
     	m_tryRootOnTes=!m_tryRootOnTes;
