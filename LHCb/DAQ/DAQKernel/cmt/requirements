@@ -1,5 +1,5 @@
 #=========================================================================
-# Created    : 2003-11-06
+# Created    : 2014-02-10
 # Maintainer : Rob Lambert
 #=========================================================================
 
@@ -19,7 +19,7 @@ use GaudiUtils         v*
 apply_pattern install_more_includes more=DAQKernel
 
 # ================ linker library ============================================
-library RichKernelLib ../src/lib/*.cpp
+library DAQKernelLib ../src/lib/*.cpp
 apply_pattern linker_library library=DAQKernelLib
 
 

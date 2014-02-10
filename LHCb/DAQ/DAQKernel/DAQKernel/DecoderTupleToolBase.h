@@ -1,46 +1,46 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTupleToolBase.h
+/** @file DAQTupleToolBase.h
  *
- *  Header file for tool base class : RichTupleToolBase
+ *  Header file for tool base class : DAQTupleToolBase
  *
  *  CVS Log :-
- *  $Id: RichTupleToolBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DAQTupleToolBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHTUPLETOOLBASE_H
-#define RICHKERNEL_RICHTUPLETOOLBASE_H 1
+#ifndef DAQKERNEL_DAQTUPLETOOLBASE_H
+#define DAQKERNEL_DAQTUPLETOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleTool.h"
 
 // local
-#include "RichKernel/RichHistoBase.h"
+#include "DAQKernel/DAQHistoBase.h"
 
 // histogramming utilities
-#include "RichKernel/RichHistoID.h"
+#include "DAQKernel/DAQHistoID.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //-----------------------------------------------------------------------------
-  /** @class TupleToolBase RichTupleToolBase.h RichKernel/RichTupleToolBase.h
+  /** @class TupleToolBase DAQTupleToolBase.h DAQKernel/DAQTupleToolBase.h
    *
-   *  Abstract base class for RICH tools providing some basic functionality.
+   *  Abstract base class for DAQ tools providing some basic functionality.
    *
    *  In addition, uses the histogramming and ntupling
    *  functionality from the base class GaudiTupleTool.
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @author Rob Lambert   Rob.Lambert@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
 
-  class TupleToolBase : public Rich::HistoBase<GaudiTupleTool>
+  class TupleToolBase : public DAQ::HistoBase<GaudiTupleTool>
   {
 
   public:
@@ -49,16 +49,11 @@ namespace Rich
     TupleToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : Rich::HistoBase<GaudiTupleTool> ( type, name, parent )
+      : DAQ::HistoBase<GaudiTupleTool> ( type, name, parent )
     { }
 
   };
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::TupleToolBase RichTupleToolBase;
-
-#endif // RICHKERNEL_RICHTUPLETOOLBASE_H
+#endif // DAQKERNEL_DAQTUPLETOOLBASE_H

@@ -1,38 +1,38 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichToolBase.h
+/** @file DAQToolBase.h
  *
- *  Header file for tool base class : Rich::ToolBase
+ *  Header file for tool base class : DAQ::ToolBase
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHTOOLBASE_H
-#define RICHKERNEL_RICHTOOLBASE_H 1
+#ifndef DAQKERNEL_DAQTOOLBASE_H
+#define DAQKERNEL_DAQTOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTool.h"
 
 // local
-#include "RichKernel/RichCommonBase.h"
+#include "DAQKernel/DAQCommonBase.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //-----------------------------------------------------------------------------
-  /** @class ToolBase RichToolBase.h RichKernel/RichToolBase.h
+  /** @class ToolBase DAQToolBase.h DAQKernel/DAQToolBase.h
    *
-   *  Abstract base class for RICH tools providing
+   *  Abstract base class for DAQ tools providing
    *  some basic functionality.
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @author Rob Lambert   Rob.Lambert@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
 
-  class ToolBase : public Rich::CommonBase<GaudiTool>
+  class ToolBase : public DAQ::CommonBase<GaudiTool>
   {
 
   public:
@@ -41,10 +41,10 @@ namespace Rich
     ToolBase( const std::string& type,
               const std::string& name,
               const IInterface* parent )
-      : Rich::CommonBase<GaudiTool> ( type, name, parent ) { }
+      : DAQ::CommonBase<GaudiTool> ( type, name, parent ) { }
 
   };
 
 }
 
-#endif // RICHKERNEL_RICHTOOLBASE_H
+#endif // DAQKERNEL_DAQTOOLBASE_H

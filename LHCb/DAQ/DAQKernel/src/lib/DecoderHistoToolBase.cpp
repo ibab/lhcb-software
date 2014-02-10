@@ -1,23 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHistoToolBase.cpp
+/** @file DAQHistoToolBase.cpp
  *
- *  Implementation file for class : RichHistoToolBase
+ *  Implementation file for class : DAQHistoToolBase
  *
  *  CVS Log :-
- *  $Id: RichHistoToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: DAQHistoToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichHistoToolBase.h"
+#include "DAQKernel/DAQHistoToolBase.h"
 
 // ============================================================================
 // Force creation of templated class
-#include "RichHistoBase.icpp"
-template class Rich::CommonBase < GaudiHistoTool > ;
-template class Rich::HistoBase  < GaudiHistoTool > ;
+#include "DAQCommonBase.icpp"
+template class DAQ::CommonBase < GaudiHistoTool > ;
 // ============================================================================

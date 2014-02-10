@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichCommonConstructors.cpp
+/** @file DAQCommonConstructors.cpp
  *
- *  Implementation of templated constructors for Rich::CommonBase
+ *  Implementation of templated constructors for DAQ::CommonBase
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2004-09-18
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
@@ -16,31 +16,27 @@
 #include "GaudiAlg/GaudiTupleTool.h"
 
 // local
-#include "RichKernel/RichConverter_Imp.h"
-#include "RichKernel/RichCommonBase.h"
-#include "RichKernel/RichHistoBase.h"
+#include "DAQKernel/DAQCommonBase.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //=============================================================================
-  // Implementation of RichCommonBase for GaudiAlgorithm
+  // Implementation of DAQCommonBase for GaudiAlgorithm
   //=============================================================================
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
                                           ISvcLocator* pSvcLocator )
     : GaudiAlgorithm ( name, pSvcLocator )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( const std::string& /* type */,
                                           const std::string& /* name */,
                                           const IInterface* /* parent */ )
     : GaudiAlgorithm ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiAlgorithm> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiAlgorithm> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( long /* storage_type */,
@@ -48,29 +44,27 @@ namespace Rich
                                           ISvcLocator * /* svc */ )
     : GaudiAlgorithm ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiAlgorithm> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiAlgorithm> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //=============================================================================
 
   //=============================================================================
-  // Implementation of RichCommonBase for GaudiHistoAlg
+  // Implementation of DAQCommonBase for GaudiHistoAlg
   //=============================================================================
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
                                          ISvcLocator* pSvcLocator )
     : GaudiHistoAlg ( name, pSvcLocator )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( const std::string& /* type */,
                                          const std::string& /* name */,
                                          const IInterface* /* parent */ )
     : GaudiHistoAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoAlg> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoAlg> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( long /* storage_type */,
@@ -78,17 +72,15 @@ namespace Rich
                                          ISvcLocator * /* svc */ )
     : GaudiHistoAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoAlg> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoAlg> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //----------------------------------------------------------------------------
   template <>
   HistoBase<GaudiHistoAlg>::HistoBase( const std::string& name,
                                        ISvcLocator* pSvcLocator )
     : CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
-  {
-    this -> initRichHistoConstructor();
-  }
+  {  }
   template <>
   HistoBase<GaudiHistoAlg>::HistoBase( const std::string& type,
                                        const std::string& name,
@@ -108,17 +100,15 @@ namespace Rich
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
                                          ISvcLocator* pSvcLocator )
     : GaudiTupleAlg ( name, pSvcLocator )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( const std::string& /* type */,
                                          const std::string& /* name */,
                                          const IInterface* /* parent */ )
     : GaudiTupleAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleAlg> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleAlg> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( long /* storage_type */,
@@ -126,18 +116,15 @@ namespace Rich
                                          ISvcLocator * /* svc */ )
     : GaudiTupleAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleAlg> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleAlg> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //----------------------------------------------------------------------------
   template <>
   HistoBase<GaudiTupleAlg>::HistoBase( const std::string& name,
                                        ISvcLocator* pSvcLocator )
     : CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
-  {
-    this -> initRichHistoConstructor();
-    this -> initRichTupleConstructor();
-  }
+  {  }
   template <>
   HistoBase<GaudiTupleAlg>::HistoBase( const std::string& type,
                                        const std::string& name,
@@ -158,16 +145,14 @@ namespace Rich
                                      const std::string& name,
                                      const IInterface* parent )
     : GaudiTool ( type, name, parent )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiTool>::CommonBase( const std::string& /* name */,
                                      ISvcLocator* /* pSvcLocator */ )
     : GaudiTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTool>::CommonBase( long /* storage_type */,
@@ -175,8 +160,8 @@ namespace Rich
                                      ISvcLocator * /* svc */ )
     : GaudiTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //=============================================================================
 
@@ -188,16 +173,14 @@ namespace Rich
                                           const std::string& name,
                                           const IInterface* parent )
     : GaudiHistoTool ( type, name, parent )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( const std::string& /* name */,
                                           ISvcLocator* /* pSvcLocator */ )
     : GaudiHistoTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( long /* storage_type */,
@@ -205,8 +188,8 @@ namespace Rich
                                           ISvcLocator * /* svc */ )
     : GaudiHistoTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiHistoTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //-----------------------------------------------------------------------------
   template <>
@@ -214,9 +197,7 @@ namespace Rich
                                         const std::string& name,
                                         const IInterface* parent )
     : CommonBase<GaudiHistoTool> ( type, name, parent )
-  {
-    this -> initRichHistoConstructor();
-  }
+  {  }
   template <>
   HistoBase<GaudiHistoTool>::HistoBase( const std::string& name ,
                                         ISvcLocator* pSvcLocator )
@@ -229,23 +210,21 @@ namespace Rich
   //=============================================================================
 
   //=============================================================================
-  // Implementation of RichCommonBase for GaudiTupleTool
+  // Implementation of DAQCommonBase for GaudiTupleTool
   //=============================================================================
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
     : GaudiTupleTool ( type, name, parent )
-  {
-    this -> initRichCommonConstructor();
-  }
+  {  }
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( const std::string& /* name */,
                                           ISvcLocator* /* pSvcLocator */ )
     : GaudiTupleTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( long /* storage_type */,
@@ -253,8 +232,8 @@ namespace Rich
                                           ISvcLocator * /* svc */ )
     : GaudiTupleTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid Rich::CommonBase<GaudiTupleTool> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleTool> constructor",
+                          "DAQ::CommonBase", StatusCode::FAILURE );
   }
   //-----------------------------------------------------------------------------
   template <>
@@ -262,10 +241,7 @@ namespace Rich
                                         const std::string& name,
                                         const IInterface* parent )
     : CommonBase<GaudiTupleTool> ( type, name, parent )
-  {
-    this -> initRichHistoConstructor();
-    this -> initRichTupleConstructor();
-  }
+  {  }
   template <>
   HistoBase<GaudiTupleTool>::HistoBase( const std::string& name ,
                                         ISvcLocator* pSvcLocator )
@@ -277,34 +253,6 @@ namespace Rich
     : CommonBase<GaudiTupleTool> ( storage_type, class_type, svc ) { }
   //=============================================================================
 
-  //=============================================================================
-  // Implementation of RichCommonBase for Converter
-  //=============================================================================
-  template <>
-  CommonBase< Rich::Converter_Imp >::CommonBase( const std::string& /* type */,
-                                                 const std::string& /* name */,
-                                                 const IInterface* /* parent */ )
-    : Rich::Converter_Imp ( 0, CLID_NULL, NULL )
-  {
-    throw GaudiException( "Invalid Rich::CommonBase<Rich::Converter_Imp> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
-  }
-  template <>
-  CommonBase< Rich::Converter_Imp >::CommonBase( const std::string& /* name */,
-                                                 ISvcLocator* /* pSvcLocator */ )
-    : Rich::Converter_Imp ( 0, CLID_NULL, NULL )
-  {
-    throw GaudiException( "Invalid Rich::CommonBase<Rich::Converter_Imp> constructor",
-                          "Rich::CommonBase", StatusCode::FAILURE );
-  }
-  template <>
-  CommonBase< Rich::Converter_Imp >::CommonBase( long storage_type,
-                                                 const CLID &class_type,
-                                                 ISvcLocator *svc )
-    : Rich::Converter_Imp ( storage_type, class_type, svc )
-  {
-    this -> initRichCommonConstructor();
-  }
   //=============================================================================
 
 }

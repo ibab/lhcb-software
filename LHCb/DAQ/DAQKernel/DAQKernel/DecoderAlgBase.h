@@ -1,38 +1,38 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichAlgBase.h
+/** @file DAQAlgBase.h
  *
- *  Header file for algorithm base class : Rich::AlgBase
+ *  Header file for algorithm base class : DAQ::AlgBase
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHALGBASE_H
-#define RICHKERNEL_RICHALGBASE_H 1
+#ifndef DAQKERNEL_DAQALGBASE_H
+#define DAQKERNEL_DAQALGBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // local
-#include "RichKernel/RichCommonBase.h"
+#include "DAQKernel/DAQCommonBase.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //-----------------------------------------------------------------------------
-  /** @class AlgBase RichAlgBase.h RichKernel/RichAlgBase.h
+  /** @class AlgBase DAQAlgBase.h DAQKernel/DAQAlgBase.h
    *
-   *  Abstract base class for RICH algorithms providing
+   *  Abstract base class for DAQ algorithms providing
    *  some basic functionality.
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @author Rob Lambert   Rob.Lambert@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
 
-  class AlgBase : public Rich::CommonBase<GaudiAlgorithm>
+  class AlgBase : public DAQ::CommonBase<GaudiAlgorithm>
   {
     
   public:
@@ -40,10 +40,10 @@ namespace Rich
     /// Standard constructor
     AlgBase( const std::string& name,
              ISvcLocator* pSvcLocator )
-      : Rich::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
+      : DAQ::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
     
   };
   
 }
 
-#endif // RICHKERNEL_RICHALGBASE_H
+#endif // DAQKERNEL_DAQALGBASE_H

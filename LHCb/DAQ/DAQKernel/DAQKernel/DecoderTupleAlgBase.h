@@ -1,46 +1,46 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTupleAlgBase.h
+/** @file DAQTupleAlgBase.h
  *
- *  Header file for algorithm base class : RichTupleAlgBase
+ *  Header file for algorithm base class : DAQTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichTupleAlgBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DAQTupleAlgBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHTUPLEALGBASE_H
-#define RICHKERNEL_RICHTUPLEALGBASE_H 1
+#ifndef DAQKERNEL_DAQTUPLEALGBASE_H
+#define DAQKERNEL_DAQTUPLEALGBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleAlg.h"
 
 // local
-#include "RichKernel/RichHistoBase.h"
+#include "DAQKernel/DAQHistoBase.h"
 
 // histogramming utilities
-#include "RichKernel/RichHistoID.h"
+#include "DAQKernel/DAQHistoID.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //-----------------------------------------------------------------------------
-  /** @class TupleAlgBase RichTupleAlgBase.h RichKernel/RichTupleAlgBase.h
+  /** @class TupleAlgBase DAQTupleAlgBase.h DAQKernel/DAQTupleAlgBase.h
    *
-   *  Abstract base class for RICH algorithms providing some basic functionality.
+   *  Abstract base class for DAQ algorithms providing some basic functionality.
    *
    *  In addition, uses the histogramming and ntupling
    *  functionality from the base class GaudiTupleAlg.
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @author Rob Lambert   Rob.Lambert@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
 
-  class TupleAlgBase : public Rich::HistoBase<GaudiTupleAlg>
+  class TupleAlgBase : public DAQ::HistoBase<GaudiTupleAlg>
   {
 
   public:
@@ -48,16 +48,12 @@ namespace Rich
     /// Standard constructor
     TupleAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
-      : Rich::HistoBase<GaudiTupleAlg> ( name, pSvcLocator )
+      : DAQ::HistoBase<GaudiTupleAlg> ( name, pSvcLocator )
     { }
 
   };
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::TupleAlgBase RichTupleAlgBase;
 
-#endif // RICHKERNEL_RICHTUPLEALGBASE_H
+#endif // DAQKERNEL_DAQTUPLEALGBASE_H

@@ -1,46 +1,46 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHistoToolBase.h
+/** @file DAQHistoToolBase.h
  *
- *  Header file for tool base class : RichHistoToolBase
+ *  Header file for tool base class : DAQHistoToolBase
  *
  *  CVS Log :-
- *  $Id: RichHistoToolBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DAQHistoToolBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Rob Lambert   Rob.Lambert@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHHISTOTOOLBASE_H
-#define RICHKERNEL_RICHHISTOTOOLBASE_H 1
+#ifndef DAQKERNEL_DAQHISTOTOOLBASE_H
+#define DAQKERNEL_DAQHISTOTOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoTool.h"
 
 // local
-#include "RichKernel/RichHistoBase.h"
+#include "DAQKernel/DAQHistoBase.h"
 
 // histogramming utilities
-#include "RichKernel/RichHistoID.h"
+#include "DAQKernel/DAQHistoID.h"
 
-namespace Rich
+namespace DAQ
 {
 
   //-----------------------------------------------------------------------------
-  /** @class HistoToolBase RichHistoToolBase.h RichKernel/RichHistoToolBase.h
+  /** @class HistoToolBase DAQHistoToolBase.h DAQKernel/DAQHistoToolBase.h
    *
-   *  Abstract base class for RICH tools providing some basic functionality.
+   *  Abstract base class for DAQ tools providing some basic functionality.
    *
    *  In addition, uses the histogramming
    *  functionality from the base class GaudiTupleAlg.
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @author Rob Lambert   Rob.Lambert@cern.ch
    *  @date   05/04/2002
    */
   //-----------------------------------------------------------------------------
 
-  class HistoToolBase : public Rich::HistoBase<GaudiHistoTool>
+  class HistoToolBase : public DAQ::HistoBase<GaudiHistoTool>
   {
 
   public:
@@ -49,16 +49,11 @@ namespace Rich
     HistoToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : Rich::HistoBase<GaudiHistoTool> ( type, name, parent )
+      : DAQ::HistoBase<GaudiHistoTool> ( type, name, parent )
     { }
 
   };
 
 }
 
-/** For backwards compatibility
- *  @todo Remove this typedef
- */
-typedef Rich::HistoToolBase RichHistoToolBase;
-
-#endif // RICHKERNEL_RICHHISTOTOOLBASE_H
+#endif // DAQKERNEL_DAQHISTOTOOLBASE_H

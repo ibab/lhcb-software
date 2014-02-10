@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichAlgBase.cpp
+/** @file DAQAlgBase.cpp
  *
- *  Implementation file for class : Rich::AlgBase
+ *  Implementation file for class : DAQ::AlgBase
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichAlgBase.h"
+#include "DAQKernel/DAQAlgBase.h"
 
 // ============================================================================
 // Force creation of templated classes
-#include "RichCommonBase.icpp"
-template class Rich::CommonBase<GaudiAlgorithm> ;
+#include "DAQCommonBase.icpp"
+template class DAQ::CommonBase<GaudiAlgorithm> ;
 // ============================================================================

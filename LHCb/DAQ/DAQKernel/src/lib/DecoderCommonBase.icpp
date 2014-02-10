@@ -1,16 +1,16 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichCommonBase.icpp
+/** @file DAQCommonBase.icpp
  *
- *  Implementation file for RICH base class : Rich::CommonBase
+ *  Implementation file for DAQ base class : DAQ::CommonBase
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2005-08-27
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHCOMMONBASE_ICPP
-#define RICHKERNEL_RICHCOMMONBASE_ICPP 1
+#ifndef DAQKERNEL_DAQCOMMONBASE_ICPP
+#define DAQKERNEL_DAQCOMMONBASE_ICPP 1
 
 // STL
 #include <sstream>
@@ -18,7 +18,7 @@
 #include <algorithm>
 
 // local
-#include "RichKernel/RichCommonBase.h"
+#include "DAQKernel/DAQCommonBase.h"
 
 // Gaudi
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -32,27 +32,24 @@
 // Constructor initialisation
 //=============================================================================
 template <class PBASE>
-void Rich::CommonBase<PBASE>::initRichCommonConstructor()
+void DAQ::CommonBase<PBASE>::initSearch()
 {
-  m_toolReg = NULL;
-  m_jos     = NULL;
-  m_regName = ( this->context().empty() ?
-                "RichToolRegistry" : this->context()+"_RichToolRegistry" );
-  m_deRichTool = NULL;
-  this->declareProperty( "ToolRegistryName", m_regName, "Tool Registry Name" );
+  this->declareProperty( "RawEventLocations", m_rawEventLocations, "Search path for the raw event" );
+  m_tryRootOnTes=true;
+  m_tryFirstRawEventLocation="";
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 template <class PBASE>
-Rich::CommonBase<PBASE>::~CommonBase() {}
+DAQ::CommonBase<PBASE>::~CommonBase() {}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
 template <class PBASE>
-StatusCode Rich::CommonBase<PBASE>::initialize()
+StatusCode DAQ::CommonBase<PBASE>::initialize()
 {
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
@@ -62,7 +59,7 @@ StatusCode Rich::CommonBase<PBASE>::initialize()
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
     this -> debug() << "Initialize" << endmsg;
-
+  if(m_rawEventLocations.size()) m_tryFirstRawEventLocation=m_rawEventLocations[0];
   return sc;
 }
 //=============================================================================
@@ -71,7 +68,7 @@ StatusCode Rich::CommonBase<PBASE>::initialize()
 // Finalisation
 //=============================================================================
 template <class PBASE>
-StatusCode Rich::CommonBase<PBASE>::finalize()
+StatusCode DAQ::CommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
@@ -81,256 +78,57 @@ StatusCode Rich::CommonBase<PBASE>::finalize()
   return PBASE::finalize();
 }
 //=============================================================================
-
 //=============================================================================
-// Access job options service
+// Search methods
 //=============================================================================
 template <class PBASE>
-IJobOptionsSvc* Rich::CommonBase<PBASE>::joSvc() const
+const RawEvent* DAQ::CommonBase<PBASE>::tryEventAt(const std::string loc) const
 {
-  if (!m_jos)
-  { m_jos = this -> template svc<IJobOptionsSvc>( "JobOptionsSvc" ); }
-  return m_jos;
-}
-//=============================================================================
-
-//=============================================================================
-// set properties
-//=============================================================================
-template < class PBASE        >
-template < class PROPERTYTYPE >
-bool Rich::CommonBase<PBASE>::my_setToolProperty( const std::string & name,
-                                                  const std::string & property ) const
-{
-  bool sc = true;
-
-  if ( ! this->joSvc() )
-  {
-    this -> Error( "Null Job Options Service !!" ).ignore();
-    sc = false;
-  }
-  else
-  {
-
-    // full tool name
-    const std::string fullname = "ToolSvc." + name;
-
-    // get properties for this tool name
-    const PROPERTYTYPE * test_sp = this->my_getProperty<PROPERTYTYPE>( fullname, property );
-
-    // If Context not set, set it
-    if ( !test_sp )
+    if(!loc.size()) return NULL;
+	//try once with rootInTes
+    RawEvent* raw = this->getIfExists<RawEvent>(loc,m_tryRootOnTes);
+    if (raw) return raw;
+    //try once with opposite
+    RawEvent* raw = this->getIfExists<RawEvent>(loc,!m_tryRootOnTes);
+    if (raw)
     {
-
-      // do we have a tool registry ?
-      if ( ! this->toolRegistry() )
-      {
-        this -> Error( "Null RichToolRegistry !!" ).ignore();
-        sc = false;
-      }
-      else
-      {
-
-        // get Tool registry OutputLevel
-        const PROPERTYTYPE * ts_sp
-          = this->my_getProperty<PROPERTYTYPE>( this->toolRegistry()->name(), property );
-        if ( ts_sp )
-        {
-          if ( this -> msgLevel(MSG::VERBOSE) )
-          { this -> verbose() << "Setting " << *ts_sp << " for " << fullname << endmsg; }
-          sc = this->joSvc()->addPropertyToCatalogue(fullname,*ts_sp).isSuccess();
-          if ( !sc ) { this -> Error( "Error setting "+property+" for " + fullname ).ignore(); }
-        }
-        else if ( this -> msgLevel(MSG::DEBUG) )
-        {
-          this -> debug() << this->toolRegistry()->name() << " has no " << property << endmsg;
-        }
-
-      } // tool registry OK
-
-    } // tool already has property
-
-  } // JO service OK
-
-  return sc;
+    	m_tryRootOnTes=!m_tryRootOnTes;
+    	return raw;
+    }
+    return NULL;
 }
-
-//=============================================================================
-// get properties
-//=============================================================================
-template < class PBASE        >
-template < class PROPERTYTYPE >
-const PROPERTYTYPE *
-Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
-                                         const std::string & property ) const
+template <class PBASE>
+const RawEvent* DAQ::CommonBase<PBASE>::findFirstRawEvent() const
 {
-  const PROPERTYTYPE * sp = NULL;
-
-  // get properties for this name
-  const std::vector<const Property*> * properties = this->joSvc()->getProperties( name );
-
-  if ( NULL != properties )
+  //try once with cached location
+  RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  if (raw) return raw;
+  for (auto loc :  m_rawEventLocations)
   {
-    if ( this -> msgLevel(MSG::VERBOSE) )
-    { this -> verbose() << "Found " << properties->size() << " Properties for " << name << endmsg; }
-    for ( std::vector<const Property*>::const_reverse_iterator itProp = properties->rbegin();
-          itProp != properties->rend(); ++itProp )
-    {
-      if ( NULL != *itProp )
+      RawEvent* raw = this->tryEventAt(loc);
+      if (raw)
       {
-        if ( this -> msgLevel(MSG::VERBOSE) )
-        { this->verbose() << " -> " << **itProp << endmsg; }
-        if ( property == (*itProp)->name() )
-        {
-          sp = dynamic_cast<const PROPERTYTYPE*>(*itProp);
-          if ( NULL != sp )
-          {
-            if ( this -> msgLevel(MSG::VERBOSE) )
-            { this->verbose() << "  -> Found requested property" << *sp << " for "
-                              << name << endmsg; }
-            break;
-          }
-          else
-          {
-            std::ostringstream mess;
-            mess << "Property " + property + " has wrong type : Expected "
-                 << System::typeinfoName( typeid(PROPERTYTYPE) )
-                 << " Found "
-                 << System::typeinfoName( typeid(**itProp) );
-            this -> Exception( mess.str() );
-          }
-        }
+          m_tryFirstRawEventLocation=loc;
+          return raw;
       }
-      else
-      {
-        this -> Warning( "'"+name+"' has a NULL property ..." ).ignore();
-      }
-    } // loop over properties
   }
-  else
+  return NULL;
+}
+template <class PBASE>
+const std::vector< RawBank * > & DAQ::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+{
+  //try once with cached location
+  RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  if (raw && raw->banks(i).size()) return raw->banks(i);
+  for (auto loc :  m_rawEventLocations)
   {
-    this->debug() << "NULL properties vector found for '" << name << "'" << endmsg;
-  }
-  return sp;
-}
-
-//=============================================================================
-// Sets Properties
-//=============================================================================
-template <class PBASE>
-bool Rich::CommonBase<PBASE>::setProperties( const std::string & name ) const
-{
-  return ( this->my_setToolProperty<StringProperty> ( name , "Context"     ) &&
-           this->my_setToolProperty<StringProperty> ( name , "OutputLevel" ) );
-}
-//=============================================================================
-
-//=============================================================================
-// Sets Properties
-//=============================================================================
-template <class PBASE>
-bool Rich::CommonBase<PBASE>::contextContains( const std::string & str ) const
-{
-  std::string data = this->context();
-  std::transform( data.begin(), data.end(), data.begin(), ::toupper );
-  return ( data.find(str) != std::string::npos );
-}
-//=============================================================================
-
-//=============================================================================
-// Generate a context specific TES location for the given Default location
-//=============================================================================
-template <class PBASE>
-std::string
-Rich::CommonBase<PBASE>::contextSpecificTES( const std::string & loc ) const
-{
-  const int slash = loc.find_last_of( "/" );
-  return ( slash>0 && !this->context().empty() ?
-           loc.substr(0,slash) + "/" +
-           this->context() + "/" + loc.substr(slash+1) : loc );
-}
-//=============================================================================
-
-//=============================================================================
-// Propagate a list oj job options from one object to another
-//=============================================================================
-template <class PBASE>
-StatusCode
-Rich::CommonBase<PBASE>::propagateJobOptions( const std::string & from_name,
-                                              const std::string & to_name,
-                                              const std::vector<std::string> & options,
-                                              const bool overwrite ) const
-{
-  StatusCode sc = StatusCode::SUCCESS;
-
-  // Find the list of set options from the from object
-  const std::vector<const Property*> * from_props = joSvc()->getProperties(from_name);
-  if ( from_props )
-  {
-
-    // Loop over the options
-    for ( std::vector<const Property*>::const_iterator it_prop_from = from_props->begin();
-          it_prop_from != from_props->end(); ++it_prop_from )
-    {
-
-      // Is this option in the list of those to copy ?
-      if ( options.empty() ||
-           std::find(options.begin(),options.end(),(*it_prop_from)->name()) != options.end() )
+      RawEvent* raw = this->tryEventAt(loc);
+      if (raw && raw->banks(i).size())
       {
-
-        if (this->msgLevel(MSG::VERBOSE))
-          this->verbose() << "Found job option '" << (*it_prop_from)->name()
-                          << "' to copy from " << from_name
-                          << " to " << to_name << endmsg;
-
-        bool okToCopy = true;
-        if ( !overwrite )
-        {
-          // get list of already set options for to_name
-          const std::vector<const Property*> * to_props = joSvc()->getProperties(to_name);
-          if ( to_props )
-          {
-            // Search them to see if option is already set
-            for ( std::vector<const Property*>::const_iterator it_prop_to = to_props->begin();
-                  it_prop_to != to_props->end(); ++it_prop_to )
-            {
-              if ( (*it_prop_from)->name() == (*it_prop_to)->name() ) 
-              { 
-                if (this->msgLevel(MSG::VERBOSE))
-                  this->verbose() << " " << to_name 
-                                  << "  -> Already has this option -> Not Setting" 
-                                  << endmsg;
-                okToCopy = false; 
-                break; 
-              }
-            }
-          }
-        }
-
-        if ( okToCopy )
-        {
-          if (this->msgLevel(MSG::VERBOSE))
-            this->verbose() << "  -> Adding option " << (*it_prop_from)->name()
-                            << " to " << to_name << endmsg;
-          const StatusCode add_sc = joSvc()->addPropertyToCatalogue( to_name,
-                                                                     *(*it_prop_from) );
-          if ( add_sc.isFailure() )
-          {
-            this->Error( "Cannot set option '" + (*it_prop_from)->name() +
-                         "' for '" + to_name + "'" ).ignore();
-          }
-          sc = sc && add_sc;
-        }
-
-      } // in list of properties to copy
-
-    } // iterate over from properties
-
-  } // found properties for from_name
-
-  // return final status
-  return sc;
+          m_tryFirstRawEventLocation=loc;
+          return raw->banks(i);
+      }
+  }
+  return NULL;
 }
-//=============================================================================
-
-#endif // RICHKERNEL_RICHCOMMONBASE_ICPP
+#endif // DAQKERNEL_DAQCOMMONBASE_ICPP

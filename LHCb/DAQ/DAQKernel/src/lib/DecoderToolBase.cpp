@@ -1,22 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichToolBase.cpp
+/** @file DAQToolBase.cpp
  *
- *  Implementation file for class : RichToolBase
+ *  Implementation file for class : DAQToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: DAQToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichToolBase.h"
+#include "DAQKernel/DAQToolBase.h"
 
 // ============================================================================
 // Force creation of templated class
-#include "RichCommonBase.icpp"
-template class Rich::CommonBase<GaudiTool> ;
+#include "DAQCommonBase.icpp"
+template class DAQ::CommonBase<GaudiTool> ;
 // ============================================================================

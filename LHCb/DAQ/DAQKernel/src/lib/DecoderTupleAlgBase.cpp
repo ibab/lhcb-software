@@ -1,23 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTupleAlgBase.cpp
+/** @file DAQTupleAlgBase.cpp
  *
- *  Implementation file for class : RichTupleAlgBase
+ *  Implementation file for class : DAQTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichTupleAlgBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: DAQTupleAlgBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @author Rob Lambert    Rob.Lambert@cern.ch
+ *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichTupleAlgBase.h"
+#include "DAQKernel/DAQTupleAlgBase.h"
 
 // ============================================================================
 // Force creation of templated class
-#include "RichHistoBase.icpp"
-template class Rich::CommonBase < GaudiTupleAlg > ;
-template class Rich::HistoBase  < GaudiTupleAlg > ;
+#include "DAQCommonBase.icpp"
+template class DAQ::CommonBase < GaudiTupleAlg > ;
 // ============================================================================
