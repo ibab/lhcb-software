@@ -50,11 +50,11 @@ namespace detail
 template <typename Candidate>
 struct data_
 {
-    using selection_type =  Hlt::TSelection<Candidate>;
-    using candidate_type =  Candidate;
+    using selection_type = Hlt::TSelection<Candidate>;
+    using candidate_type = Candidate;
     selection_type* selection;
     Gaudi::StringKey property;
-    data_() : selection{ nullptr }
+    data_() : selection{nullptr}
     {
     }
 };
@@ -66,7 +66,7 @@ struct cdata_
     using candidate_type = Candidate;
     selection_type* selection;
     Gaudi::StringKey property;
-    cdata_() : selection{ nullptr }
+    cdata_() : selection{nullptr}
     {
     }
 };
@@ -156,11 +156,11 @@ class SelectionContainer_ : private boost::noncopyable
   public:
     SelectionContainer_( HltAlgorithm& alg ) : m_owner( alg )
     {
-        zero_ x;
+        zero_ x{};
         for_each_selection( m_data, x );
     }
 
-    using map_t =  std::map<int, std::string>;
+    using map_t = std::map<int, std::string>;
     void declareProperties( map_t defaults = map_t() )
     {
         declare_<boost::tuples::length<T>::value> x( m_owner,
@@ -185,7 +185,7 @@ class SelectionContainer_ : private boost::noncopyable
     void retrieveSelections()
     {
         // start recursion at 2nd element, because the first is the output
-        retrieve_ x( m_owner );
+        retrieve_ x{m_owner};
         for_each_selection( m_data.get_tail(), x );
     }
     // TODO: check if register/retrieve has been called...
@@ -197,7 +197,9 @@ class SelectionContainer_ : private boost::noncopyable
     template <unsigned N>
     typename helper_<N>::selection_type* input()
     {
-        static_assert( N>0, "input() : N>0 for input -- N=0 corresponds to the required output");
+        static_assert(
+            N > 0,
+            "input() : N>0 for input -- N=0 corresponds to the required output" );
         auto& d = boost::get<N>( m_data );
         if ( !d.selection->processed() ) {
             m_owner.debug() << "requesting stale selection " << d.selection->id()
@@ -212,7 +214,9 @@ class SelectionContainer_ : private boost::noncopyable
   private:
     /// apply a functor on each item: recursively walk through the tuple...
     template <typename Function>
-    void for_each_selection( boost::tuples::null_type, Function ) {}
+    void for_each_selection( boost::tuples::null_type, Function )
+    {
+    }
     template <typename Tuple, typename Function>
     void for_each_selection( Tuple& tuple, Function& f )
     {
@@ -229,24 +233,12 @@ class SelectionContainer_ : private boost::noncopyable
 };
 }
 
-template <typename T1>
-using SelectionContainer1 =
-    detail::SelectionContainer_<boost::tuple<detail::data_<T1>>>;
+template <typename T1, typename... Tn>
+using SelectionContainer = detail::SelectionContainer_<
+    boost::tuple<detail::data_<T1>, detail::cdata_<Tn>...>>;
 
-template <typename T1, typename T2>
-using SelectionContainer2 = detail::SelectionContainer_<boost::tuple<detail::data_<T1>, detail::cdata_<T2>>>;
-
-template <typename T1, typename T2, typename T3>
-using SelectionContainer3 = detail::SelectionContainer_< boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>>>;
-
-template <typename T1, typename T2, typename T3, typename T4>
-using SelectionContainer4 = detail::SelectionContainer_<boost::tuple< detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>>>;
-
-template <typename T1, typename T2, typename T3, typename T4, typename T5>
-using SelectionContainer5 = detail::SelectionContainer_< boost::tuple<detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>, detail::cdata_<T5>>>;
-
-
-// 0 is a special case of 1 ;-): no input, one output, but output has no explicit
+// 0 is a very special case of 1 ;-): no input, one output, but output has no
+// explicit
 // candidates...
 class SelectionContainer0 : boost::noncopyable
 {

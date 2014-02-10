@@ -5,7 +5,9 @@
 !----------------------------------------------------------------------------
 
 ! 2014-02-10 - Gerhard Raven
- - simplify SelectionContainer using C++11 
+ - simplify SelectionContainer{1,2,3,4,5}  using C++11 
+ - replace SelectionContainer{1,2,3,4,5} with a single variadic template
+   called SelectionContinainer.
 
 ! 2014-01-23 - Gerhard Raven
  - remove HltBase/IBiFunctionFactory.h as it not referenced.
