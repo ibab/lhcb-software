@@ -1,0 +1,303 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichHistoBase.icpp
+ *
+ *  Implementation file for RICH base class : Rich::HistoBase
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2009-07-27
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef RICHKERNEL_RichHistoBase_ICPP
+#define RICHKERNEL_RichHistoBase_ICPP 1
+
+// local
+#include "RichKernel/RichHistoBase.h"
+#include "RichKernel/RichException.h"
+
+// Disable warning on windows
+#ifdef _WIN32
+#pragma warning ( disable:4661 ) // incomplete explicit templates
+#endif
+
+// GaudiUtils
+#include "GaudiUtils/HistoLabels.h"
+using namespace Gaudi::Utils::Histos;
+
+// Base class methods
+#include "RichCommonBase.icpp"
+
+//=============================================================================
+// Histogram Constructor initisalisations
+//=============================================================================
+template <class PBASE>
+void Rich::HistoBase<PBASE>::initRichHistoConstructor()
+{
+  m_histosAreBooked = false;
+  this -> declareProperty ( "NBins1DHistos", m_nBins1D = 100 );
+  this -> declareProperty ( "NBins2DHistos", m_nBins2D = 50  );
+  this -> setProperty     ( "HistoTopDir",  "RICH/" );
+}
+
+//=============================================================================
+// Tuple Constructor initisalisations
+//=============================================================================
+template <class PBASE>
+void Rich::HistoBase<PBASE>::initRichTupleConstructor()
+{
+  this -> setProperty ( "NTupleTopDir", "RICH/" );
+  this -> setProperty ( "NTupleLUN",    "RICHTUPLE1" );
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+template <class PBASE>
+Rich::HistoBase<PBASE>::~HistoBase() { }
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = CommonBase<PBASE>::initialize();
+  if ( sc.isFailure() ) return sc;
+
+  // Do stuff ...
+
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// System Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::sysInitialize()
+{
+  // run base clase method
+  StatusCode sc = CommonBase<PBASE>::sysInitialize();
+  if ( sc.isFailure() ) return sc;
+  // as last thing book any histos (only once)
+  if ( !m_histosAreBooked )
+  {
+    sc = prebookHistograms();
+    m_histosAreBooked = true;
+  }
+  // return
+  return sc;
+}
+
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::finalize()
+{
+  // Do stuff ...
+
+  // Finalise base class and return
+  return CommonBase<PBASE>::finalize();
+}
+
+//=============================================================================
+
+template <class PBASE>
+StatusCode Rich::HistoBase<PBASE>::prebookHistograms()
+{
+  // Default implementation does nothing
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+
+template <class PBASE>
+AIDA::IHistogram1D *
+Rich::HistoBase<PBASE>::richHisto1D( const Rich::HistogramID & id,
+                                     const std::string &    title,
+                                     const double             low,
+                                     const double            high,
+                                     const unsigned int      bins,
+                                     const std::string&      xAxisLabel,
+                                     const std::string&      yAxisLabel,
+                                     const BinLabels&        binLabels ) const
+{
+  // Already been booked ?
+  AIDA::IHistogram1D *& h = m_1dhmap.getmap(id.packedData())[id.id()];
+  if ( !h )
+  {
+    // Book the histo
+    h = PBASE::book1D( id.fullid(),
+                       id.fullTitle(title),
+                       low, high, bins );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty()  )
+    {
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !binLabels.empty() )
+    {
+      if ( !setBinLabels( h, binLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IHistogram2D *
+Rich::HistoBase<PBASE>::richHisto2D( const Rich::HistogramID & id,
+                                     const std::string &     title,
+                                     const double             lowX,
+                                     const double            highX,
+                                     const unsigned int      binsX,
+                                     const double             lowY,
+                                     const double            highY,
+                                     const unsigned int      binsY,
+                                     const std::string&      xAxisLabel,
+                                     const std::string&      yAxisLabel,
+                                     const std::string&      zAxisLabel,
+                                     const BinLabels&        xBinLabels,
+                                     const BinLabels&        yBinLabels ) const
+{
+  // Already been booked ?
+  AIDA::IHistogram2D *& h = m_2dhmap.getmap(id.packedData())[id.id()];
+  if ( !h )
+  {
+    // Book the histo
+    h = PBASE::book2D( id.fullid(),
+                       id.fullTitle(title),
+                       lowX, highX, binsX,
+                       lowY, highY, binsY );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty() ||
+         !zAxisLabel.empty()  )
+    {
+      // Bug in GaudiUtils (to be fixed) with no way to set z axis. Ignore for the moment
+      //setAxisLabels( h, xAxisLabel, yAxisLabel, zAxisLabel );
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !xBinLabels.empty() ||
+         !yBinLabels.empty()  )
+    {
+      if ( !setBinLabels( h, xBinLabels, yBinLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IProfile1D *
+Rich::HistoBase<PBASE>::richProfile1D( const Rich::HistogramID & id,
+                                       const std::string &    title,
+                                       const double             low,
+                                       const double            high,
+                                       const unsigned int      bins,
+                                       const std::string&      xAxisLabel,
+                                       const std::string&      yAxisLabel,
+                                       const BinLabels&        binLabels ) const
+{
+  // Already been booked ?
+  AIDA::IProfile1D *& h = m_1dpmap.getmap(id.packedData())[id.id()];
+  if ( !h )
+  {
+    // Book the histo
+    h = PBASE::bookProfile1D( id.fullid(),
+                              id.fullTitle(title),
+                              low, high, bins );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty()  )
+    {
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !binLabels.empty() )
+    {
+      if ( !setBinLabels( h, binLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
+  }
+
+  // return the histo
+  return h;
+}
+
+template <class PBASE>
+AIDA::IProfile2D *
+Rich::HistoBase<PBASE>::richProfile2D( const Rich::HistogramID &  id,
+                                       const std::string &     title,
+                                       const double             lowX,
+                                       const double            highX,
+                                       const unsigned int      binsX,
+                                       const double             lowY,
+                                       const double            highY,
+                                       const unsigned int      binsY,
+                                       const std::string&      xAxisLabel,
+                                       const std::string&      yAxisLabel,
+                                       const std::string&      zAxisLabel,
+                                       const BinLabels&        xBinLabels,
+                                       const BinLabels&        yBinLabels ) const
+{
+  // Already been booked ?
+  AIDA::IProfile2D *& h = m_2dpmap.getmap(id.packedData())[id.id()];
+  if ( !h )
+  {
+    // Book the histo
+    h = PBASE::bookProfile2D( id.fullid(),
+                              id.fullTitle(title),
+                              lowX, highX, binsX,
+                              lowY, highY, binsY );
+    // set the labels
+    if ( !xAxisLabel.empty() ||
+         !yAxisLabel.empty() ||
+         !zAxisLabel.empty()  )
+    {
+      // Bug in GaudiUtils (to be fixed) with no way to set z axis. Ignore for the moment
+      //setAxisLabels( h, xAxisLabel, yAxisLabel, zAxisLabel );
+      if ( !setAxisLabels( h, xAxisLabel, yAxisLabel ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Axis Labels" );
+      }
+    }
+    if ( !xBinLabels.empty() ||
+         !yBinLabels.empty()  )
+    {
+      if ( !setBinLabels( h, xBinLabels, yBinLabels ) )
+      {
+        throw Rich::Exception( "Problem Setting Histogram Bin Labels" );
+      }
+    }
+  }
+
+  // return the histo
+  return h;
+}
+
+#endif // RICHKERNEL_RichHistoBase_ICPP
