@@ -116,7 +116,7 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
   return NULL;
 }
 template <class PBASE>
-const std::vector< LHCb::RawBank * > Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
   LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
