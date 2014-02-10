@@ -79,7 +79,7 @@ StatusCode DeVP::initialize() {
   std::vector<DeVPSensor*> sensors;
   findSensors(this, sensors);
   if (m_debug) {
-    msg() << MSG::DEBUG << "Found " << sensors.size() << "sensors" << endmsg; 
+    msg() << MSG::DEBUG << "Found " << sensors.size() << " sensors" << endmsg; 
   }
   std::sort(sensors.begin(), sensors.end(), less_Z());
 
