@@ -2,33 +2,30 @@
 //-----------------------------------------------------------------------------
 /** @file DAQHistoToolBase.h
  *
- *  Header file for tool base class : DAQHistoToolBase
+ *  Header file for tool base class : DecoderHistoToolBase
  *
  *  CVS Log :-
- *  $Id: DAQHistoToolBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DecoderHistoToolBase.h,v 1.6 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
- *  @date   05/04/2002
+ *  @date   02/10/2014
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQHISTOTOOLBASE_H
-#define DAQKERNEL_DAQHISTOTOOLBASE_H 1
+#ifndef DAQKERNEL_DECODERHISTOTOOLBASE_H
+#define DAQKERNEL_DECODERHISTOTOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoTool.h"
 
 // local
-#include "DAQKernel/DAQHistoBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
-// histogramming utilities
-#include "DAQKernel/DAQHistoID.h"
-
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class HistoToolBase DAQHistoToolBase.h DAQKernel/DAQHistoToolBase.h
+  /** @class HistoToolBase DecoderHistoToolBase.h DAQKernel/DecoderHistoToolBase.h
    *
    *  Abstract base class for DAQ tools providing some basic functionality.
    *
@@ -36,11 +33,11 @@ namespace DAQ
    *  functionality from the base class GaudiTupleAlg.
    *
    *  @author Rob Lambert   Rob.Lambert@cern.ch
-   *  @date   05/04/2002
+   *  @date   10/02/2014
    */
   //-----------------------------------------------------------------------------
 
-  class HistoToolBase : public DAQ::HistoBase<GaudiHistoTool>
+  class HistoToolBase : public Decoder::HistoBase<GaudiHistoTool>
   {
 
   public:
@@ -49,11 +46,11 @@ namespace DAQ
     HistoToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : DAQ::HistoBase<GaudiHistoTool> ( type, name, parent )
+      : Decoder::CommonBase<GaudiHistoTool> ( type, name, parent )
     { }
 
   };
 
 }
 
-#endif // DAQKERNEL_DAQHISTOTOOLBASE_H
+#endif // DAQKERNEL_DECODERHISTOTOOLBASE_H

@@ -1,24 +1,24 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQToolBase.h
+/** @file DecoderToolBase.h
  *
- *  Header file for tool base class : DAQ::ToolBase
+ *  Header file for tool base class : Decoder::ToolBase
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
- *  @date   05/04/2002
+ *  @date   10/02/2014
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQTOOLBASE_H
-#define DAQKERNEL_DAQTOOLBASE_H 1
+#ifndef DAQKERNEL_DECODERTOOLBASE_H
+#define DAQKERNEL_DECODERTOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTool.h"
 
 // local
-#include "DAQKernel/DAQCommonBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
@@ -32,7 +32,7 @@ namespace DAQ
    */
   //-----------------------------------------------------------------------------
 
-  class ToolBase : public DAQ::CommonBase<GaudiTool>
+  class ToolBase : public Decoder::CommonBase<GaudiTool>
   {
 
   public:
@@ -41,10 +41,10 @@ namespace DAQ
     ToolBase( const std::string& type,
               const std::string& name,
               const IInterface* parent )
-      : DAQ::CommonBase<GaudiTool> ( type, name, parent ) { }
+      : Decoder::CommonBase<GaudiTool> ( type, name, parent ) { }
 
   };
 
 }
 
-#endif // DAQKERNEL_DAQTOOLBASE_H
+#endif // DAQKERNEL_DECODERTOOLBASE_H

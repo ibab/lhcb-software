@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQTupleToolBase.cpp
+/** @file DecoderTupleToolBase.cpp
  *
- *  Implementation file for class : DAQTupleToolBase
+ *  Implementation file for class : DecoderTupleToolBase
  *
  *  CVS Log :-
- *  $Id: DAQTupleToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: DecoderTupleToolBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Rob Lambert    Rob.Lambert@cern.ch
  *  @date   2014-02-10
@@ -13,10 +13,10 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "DAQKernel/DAQTupleToolBase.h"
+#include "DAQKernel/DecoderTupleToolBase.h"
 
 // ============================================================================
 // Force creation of templated class
-#include "DAQCommonBase.icpp"
-template class DAQ::CommonBase < GaudiTupleTool > ;
+#include "DecoderCommonBase.icpp"
+template class Decoder::CommonBase < GaudiTupleTool > ;
 // ============================================================================

@@ -2,15 +2,15 @@
 //-----------------------------------------------------------------------------
 /** @file DAQCommonBase.icpp
  *
- *  Implementation file for DAQ base class : DAQ::CommonBase
+ *  Implementation file for DAQ base class : Decoder::CommonBase
  *
  *  @author Rob Lambert    Rob.Lambert@cern.ch
  *  @date   2014-02-10
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQCOMMONBASE_ICPP
-#define DAQKERNEL_DAQCOMMONBASE_ICPP 1
+#ifndef DAQKERNEL_DECODERCOMMONBASE_ICPP
+#define DAQKERNEL_DECODERCOMMONBASE_ICPP 1
 
 // STL
 #include <sstream>
@@ -18,7 +18,7 @@
 #include <algorithm>
 
 // local
-#include "DAQKernel/DAQCommonBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
 // Gaudi
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -32,7 +32,7 @@
 // Constructor initialisation
 //=============================================================================
 template <class PBASE>
-void DAQ::CommonBase<PBASE>::initSearch()
+void Decoder::CommonBase<PBASE>::initSearch()
 {
   this->declareProperty( "RawEventLocations", m_rawEventLocations, "Search path for the raw event" );
   m_tryRootOnTes=true;
@@ -43,13 +43,13 @@ void DAQ::CommonBase<PBASE>::initSearch()
 // Destructor
 //=============================================================================
 template <class PBASE>
-DAQ::CommonBase<PBASE>::~CommonBase() {}
+Decoder::CommonBase<PBASE>::~CommonBase() {}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
 template <class PBASE>
-StatusCode DAQ::CommonBase<PBASE>::initialize()
+StatusCode Decoder::CommonBase<PBASE>::initialize()
 {
   // Execute the base class initialize
   const StatusCode sc = PBASE::initialize();
@@ -68,7 +68,7 @@ StatusCode DAQ::CommonBase<PBASE>::initialize()
 // Finalisation
 //=============================================================================
 template <class PBASE>
-StatusCode DAQ::CommonBase<PBASE>::finalize()
+StatusCode Decoder::CommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
@@ -82,7 +82,7 @@ StatusCode DAQ::CommonBase<PBASE>::finalize()
 // Search methods
 //=============================================================================
 template <class PBASE>
-const RawEvent* DAQ::CommonBase<PBASE>::tryEventAt(const std::string loc) const
+const RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
 {
     if(!loc.size()) return NULL;
 	//try once with rootInTes
@@ -98,7 +98,7 @@ const RawEvent* DAQ::CommonBase<PBASE>::tryEventAt(const std::string loc) const
     return NULL;
 }
 template <class PBASE>
-const RawEvent* DAQ::CommonBase<PBASE>::findFirstRawEvent() const
+const RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
 {
   //try once with cached location
   RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
@@ -115,7 +115,7 @@ const RawEvent* DAQ::CommonBase<PBASE>::findFirstRawEvent() const
   return NULL;
 }
 template <class PBASE>
-const std::vector< RawBank * > & DAQ::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+const std::vector< RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
   RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
@@ -131,4 +131,4 @@ const std::vector< RawBank * > & DAQ::CommonBase<PBASE>::findFirstRawBank(const 
   }
   return NULL;
 }
-#endif // DAQKERNEL_DAQCOMMONBASE_ICPP
+#endif // DAQKERNEL_DECODERCOMMONBASE_ICPP

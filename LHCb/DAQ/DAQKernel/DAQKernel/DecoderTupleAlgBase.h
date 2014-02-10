@@ -1,34 +1,34 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQTupleAlgBase.h
+/** @file DecoderTupleAlgBase.h
  *
- *  Header file for algorithm base class : DAQTupleAlgBase
+ *  Header file for algorithm base class : DecoderTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: DAQTupleAlgBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DecoderTupleAlgBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
- *  @date   05/04/2002
+ *  @date   02/10/2014
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQTUPLEALGBASE_H
-#define DAQKERNEL_DAQTUPLEALGBASE_H 1
+#ifndef DAQKERNEL_DECODERTUPLEALGBASE_H
+#define DAQKERNEL_DECODERTUPLEALGBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleAlg.h"
 
 // local
-#include "DAQKernel/DAQHistoBase.h"
+#include "DAQKernel/DecoderHistoBase.h"
 
 // histogramming utilities
-#include "DAQKernel/DAQHistoID.h"
+#include "DAQKernel/DecoderHistoID.h"
 
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class TupleAlgBase DAQTupleAlgBase.h DAQKernel/DAQTupleAlgBase.h
+  /** @class TupleAlgBase DecoderTupleAlgBase.h DAQKernel/DecoderTupleAlgBase.h
    *
    *  Abstract base class for DAQ algorithms providing some basic functionality.
    *
@@ -36,11 +36,11 @@ namespace DAQ
    *  functionality from the base class GaudiTupleAlg.
    *
    *  @author Rob Lambert   Rob.Lambert@cern.ch
-   *  @date   05/04/2002
+   *  @date   10/02/2014
    */
   //-----------------------------------------------------------------------------
 
-  class TupleAlgBase : public DAQ::HistoBase<GaudiTupleAlg>
+  class TupleAlgBase : public Decoder::HistoBase<GaudiTupleAlg>
   {
 
   public:
@@ -48,7 +48,7 @@ namespace DAQ
     /// Standard constructor
     TupleAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
-      : DAQ::HistoBase<GaudiTupleAlg> ( name, pSvcLocator )
+      : Decoder::HistoBase<GaudiTupleAlg> ( name, pSvcLocator )
     { }
 
   };
@@ -56,4 +56,4 @@ namespace DAQ
 }
 
 
-#endif // DAQKERNEL_DAQTUPLEALGBASE_H
+#endif // DAQKERNEL_DECODERTUPLEALGBASE_H

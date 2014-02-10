@@ -2,26 +2,23 @@
 //-----------------------------------------------------------------------------
 /** @file DAQHistoAlgBase.h
  *
- *  Header file for algorithm base class : DAQHistoAlgBase
+ *  Header file for algorithm base class : DecoderHistoAlgBase
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
- *  @date   05/04/2002
+ *  @date   02/10/2014
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQHISTOALGBASE_H
-#define DAQKERNEL_DAQHISTOALGBASE_H 1
+#ifndef DAQKERNEL_DECODERHISTOALGBASE_H
+#define DAQKERNEL_DECODERHISTOALGBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 // local
-#include "DAQKernel/DAQHistoBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
-// histogramming utilities
-#include "DAQKernel/DAQHistoID.h"
-
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
@@ -37,7 +34,7 @@ namespace DAQ
    */
   //-----------------------------------------------------------------------------
 
-  class HistoAlgBase : public DAQ::HistoBase<GaudiHistoAlg>
+  class HistoAlgBase : public Decoder::CommonBase<GaudiHistoAlg>
   {
 
   public:
@@ -45,11 +42,11 @@ namespace DAQ
     /// Standard constructor
     HistoAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator )
-      : DAQ::HistoBase<GaudiHistoAlg> ( name, pSvcLocator )
+      : Decoder::HistoBase<GaudiHistoAlg> ( name, pSvcLocator )
     { }
 
   };
 
 }
 
-#endif // DAQKERNEL_DAQHISTOALGBASE_H
+#endif // DAQKERNEL_DECODERHISTOALGBASE_H

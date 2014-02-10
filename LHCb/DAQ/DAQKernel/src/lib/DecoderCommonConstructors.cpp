@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 /** @file DAQCommonConstructors.cpp
  *
- *  Implementation of templated constructors for DAQ::CommonBase
+ *  Implementation of templated constructors for Decoder::CommonBase
  *
  *  @author Rob Lambert    Rob.Lambert@cern.ch
  *  @date   2014-02-10
@@ -16,9 +16,9 @@
 #include "GaudiAlg/GaudiTupleTool.h"
 
 // local
-#include "DAQKernel/DAQCommonBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
-namespace DAQ
+namespace Decoder
 {
 
   //=============================================================================
@@ -35,8 +35,8 @@ namespace DAQ
                                           const IInterface* /* parent */ )
     : GaudiAlgorithm ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiAlgorithm> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiAlgorithm> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiAlgorithm>::CommonBase( long /* storage_type */,
@@ -44,8 +44,8 @@ namespace DAQ
                                           ISvcLocator * /* svc */ )
     : GaudiAlgorithm ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiAlgorithm> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiAlgorithm> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //=============================================================================
 
@@ -63,8 +63,8 @@ namespace DAQ
                                          const IInterface* /* parent */ )
     : GaudiHistoAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoAlg> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoAlg> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiHistoAlg>::CommonBase( long /* storage_type */,
@@ -72,8 +72,8 @@ namespace DAQ
                                          ISvcLocator * /* svc */ )
     : GaudiHistoAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoAlg> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoAlg> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //----------------------------------------------------------------------------
   template <>
@@ -107,8 +107,8 @@ namespace DAQ
                                          const IInterface* /* parent */ )
     : GaudiTupleAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleAlg> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleAlg> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTupleAlg>::CommonBase( long /* storage_type */,
@@ -116,8 +116,8 @@ namespace DAQ
                                          ISvcLocator * /* svc */ )
     : GaudiTupleAlg ( "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleAlg> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleAlg> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //----------------------------------------------------------------------------
   template <>
@@ -151,8 +151,8 @@ namespace DAQ
                                      ISvcLocator* /* pSvcLocator */ )
     : GaudiTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTool>::CommonBase( long /* storage_type */,
@@ -160,8 +160,8 @@ namespace DAQ
                                      ISvcLocator * /* svc */ )
     : GaudiTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //=============================================================================
 
@@ -179,8 +179,8 @@ namespace DAQ
                                           ISvcLocator* /* pSvcLocator */ )
     : GaudiHistoTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiHistoTool>::CommonBase( long /* storage_type */,
@@ -188,8 +188,8 @@ namespace DAQ
                                           ISvcLocator * /* svc */ )
     : GaudiHistoTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiHistoTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiHistoTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //-----------------------------------------------------------------------------
   template <>
@@ -223,8 +223,8 @@ namespace DAQ
                                           ISvcLocator* /* pSvcLocator */ )
     : GaudiTupleTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   template <>
   CommonBase<GaudiTupleTool>::CommonBase( long /* storage_type */,
@@ -232,8 +232,8 @@ namespace DAQ
                                           ISvcLocator * /* svc */ )
     : GaudiTupleTool ( "ERROR", "ERROR", NULL )
   {
-    throw GaudiException( "Invalid DAQ::CommonBase<GaudiTupleTool> constructor",
-                          "DAQ::CommonBase", StatusCode::FAILURE );
+    throw GaudiException( "Invalid Decoder::CommonBase<GaudiTupleTool> constructor",
+                          "Decoder::CommonBase", StatusCode::FAILURE );
   }
   //-----------------------------------------------------------------------------
   template <>

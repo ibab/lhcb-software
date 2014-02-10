@@ -9,41 +9,41 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQALGBASE_H
-#define DAQKERNEL_DAQALGBASE_H 1
+#ifndef DAQKERNEL_DECODERALGBASE_H
+#define DAQKERNEL_DECODERALGBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // local
-#include "DAQKernel/DAQCommonBase.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class AlgBase DAQAlgBase.h DAQKernel/DAQAlgBase.h
+  /** @class AlgBase DAQAlgBase.h DAQKernel/DecoderAlgBase.h
    *
    *  Abstract base class for DAQ algorithms providing
    *  some basic functionality.
    *
    *  @author Rob Lambert   Rob.Lambert@cern.ch
-   *  @date   05/04/2002
+   *  @date   02/10/2014
    */
   //-----------------------------------------------------------------------------
 
-  class AlgBase : public DAQ::CommonBase<GaudiAlgorithm>
+  class AlgBase : public Decoder::CommonBase<GaudiAlgorithm>
   {
-    
+
   public:
-    
+
     /// Standard constructor
     AlgBase( const std::string& name,
              ISvcLocator* pSvcLocator )
-      : DAQ::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
-    
+      : Decoder::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
+
   };
-  
+
 }
 
-#endif // DAQKERNEL_DAQALGBASE_H
+#endif // DAQKERNEL_DECODERALGBASE_H

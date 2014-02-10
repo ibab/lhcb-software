@@ -10,10 +10,10 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "DAQKernel/DAQAlgBase.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 // ============================================================================
 // Force creation of templated classes
-#include "DAQCommonBase.icpp"
+#include "DecoderCommonBase.icpp"
 template class DAQ::CommonBase<GaudiAlgorithm> ;
 // ============================================================================

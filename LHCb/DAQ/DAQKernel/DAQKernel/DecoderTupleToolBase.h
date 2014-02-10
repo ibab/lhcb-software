@@ -1,34 +1,34 @@
 
 //-----------------------------------------------------------------------------
-/** @file DAQTupleToolBase.h
+/** @file DecoderTupleToolBase.h
  *
- *  Header file for tool base class : DAQTupleToolBase
+ *  Header file for tool base class : DecoderTupleToolBase
  *
  *  CVS Log :-
- *  $Id: DAQTupleToolBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
+ *  $Id: DecoderTupleToolBase.h,v 1.7 2009-07-27 20:29:01 jonrob Exp $
  *
  *  @author Rob Lambert   Rob.Lambert@cern.ch
- *  @date   05/04/2002
+ *  @date  10/02/2014
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQTUPLETOOLBASE_H
-#define DAQKERNEL_DAQTUPLETOOLBASE_H 1
+#ifndef DAQKERNEL_DECODERTUPLETOOLBASE_H
+#define DAQKERNEL_DECODERTUPLETOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleTool.h"
 
 // local
-#include "DAQKernel/DAQHistoBase.h"
+#include "DAQKernel/DecoderHistoBase.h"
 
 // histogramming utilities
-#include "DAQKernel/DAQHistoID.h"
+#include "DAQKernel/DecoderHistoID.h"
 
-namespace DAQ
+namespace Decoder
 {
 
   //-----------------------------------------------------------------------------
-  /** @class TupleToolBase DAQTupleToolBase.h DAQKernel/DAQTupleToolBase.h
+  /** @class TupleToolBase DecoderTupleToolBase.h DAQKernel/DecoderTupleToolBase.h
    *
    *  Abstract base class for DAQ tools providing some basic functionality.
    *
@@ -36,11 +36,11 @@ namespace DAQ
    *  functionality from the base class GaudiTupleTool.
    *
    *  @author Rob Lambert   Rob.Lambert@cern.ch
-   *  @date   05/04/2002
+   *  @date   02/10/2014
    */
   //-----------------------------------------------------------------------------
 
-  class TupleToolBase : public DAQ::HistoBase<GaudiTupleTool>
+  class TupleToolBase : public Decoder::HistoBase<GaudiTupleTool>
   {
 
   public:
@@ -49,11 +49,11 @@ namespace DAQ
     TupleToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : DAQ::HistoBase<GaudiTupleTool> ( type, name, parent )
+      : Decoder::HistoBase<GaudiTupleTool> ( type, name, parent )
     { }
 
   };
 
 }
 
-#endif // DAQKERNEL_DAQTUPLETOOLBASE_H
+#endif // DAQKERNEL_DECODERTUPLETOOLBASE_H

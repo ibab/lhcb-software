@@ -9,15 +9,15 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef DAQKERNEL_DAQCOMMONBASE_H
-#define DAQKERNEL_DAQCOMMONBASE_H 1
+#ifndef DAQKERNEL_DECODERCOMMONBASE_H
+#define DAQKERNEL_DECODERCOMMONBASE_H 1
 
-namespace DAQ
+namespace Decoder
 {
   using GaudiUtils::operator<<;
 
   //-----------------------------------------------------------------------------
-  /** @class CommonBase DAQCommonBase.h DAQKernel/DAQCommonBase.h
+  /** @class CommonBase DecoderCommonBase.h DAQKernel/DecoderCommonBase.h
    *
    *  Base class providing common functionality for all Decoder tools and algorithms
    *
@@ -97,4 +97,4 @@ namespace DAQ
 
 }
 
-#endif // DAQKERNEL_DAQCOMMONBASE_H
+#endif // DAQKERNEL_DECODERCOMMONBASE_H
