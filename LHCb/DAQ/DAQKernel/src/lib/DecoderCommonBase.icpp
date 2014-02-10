@@ -82,14 +82,14 @@ StatusCode Decoder::CommonBase<PBASE>::finalize()
 // Search methods
 //=============================================================================
 template <class PBASE>
-const RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
+const LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
 {
     if(!loc.size()) return NULL;
 	//try once with rootInTes
-    RawEvent* raw = this->getIfExists<RawEvent>(loc,m_tryRootOnTes);
+    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,m_tryRootOnTes);
     if (raw) return raw;
     //try once with opposite
-    RawEvent* raw = this->getIfExists<RawEvent>(loc,!m_tryRootOnTes);
+    LHCb::RawEvent* raw = this->getIfExists<LHCb::RawEvent>(loc,!m_tryRootOnTes);
     if (raw)
     {
     	m_tryRootOnTes=!m_tryRootOnTes;
@@ -98,14 +98,14 @@ const RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) co
     return NULL;
 }
 template <class PBASE>
-const RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
+const LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
 {
   //try once with cached location
-  RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw) return raw;
   for (auto loc :  m_rawEventLocations)
   {
-      RawEvent* raw = this->tryEventAt(loc);
+      raw = this->tryEventAt(loc);
       if (raw)
       {
           m_tryFirstRawEventLocation=loc;
@@ -115,14 +115,14 @@ const RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
   return NULL;
 }
 template <class PBASE>
-const std::vector< RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
-  RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
+  LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw && raw->banks(i).size()) return raw->banks(i);
   for (auto loc :  m_rawEventLocations)
   {
-      RawEvent* raw = this->tryEventAt(loc);
+      raw = this->tryEventAt(loc);
       if (raw && raw->banks(i).size())
       {
           m_tryFirstRawEventLocation=loc;
