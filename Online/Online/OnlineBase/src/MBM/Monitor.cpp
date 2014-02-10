@@ -29,6 +29,7 @@
 #endif
 #include <utility>
 using namespace MBM;
+using namespace std;
 namespace
 {
   static const char *sstat[17] =
@@ -188,32 +189,38 @@ int Monitor::updateDisplay()
 
 size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)
 {
-  char txt[256];
+  char txt[256], rate1[64], rate2[64], rate3[64];
   ::snprintf(txt, sizeof(txt), " Buffer \"%s\"", name);
+  ::snprintf(rate1, sizeof(rate1), "----");
+  ::snprintf(rate2, sizeof(rate2), "----");
+  ::snprintf(rate3, sizeof(rate3), "----");
   BMMap_t::iterator bmit = m_BMMap.find(name);
-  if (bmit == m_BMMap.end())
-  {
-
+  
+  if (bmit != m_BMMap.end())  {
+    BMSTAT *st = (*bmit).second;
+    ::snprintf(rate1, sizeof(rate1), "%.3f", double(ctr->tot_produced-st->evprod)/deltaTime*1000.0);
+    ::snprintf(rate2, sizeof(rate2), "%.3f", double(ctr->tot_actual-st->evactual)/deltaTime*1000.0);
+    ::snprintf(rate3, sizeof(rate3), "%.3f", double(ctr->tot_seen-st->evcons)/deltaTime*1000.0);
   }
-  BMSTAT *st = (*bmit).second;
   display()->draw_line_normal(
-      "%-26s  Events: Produced:%d (%.3f kHz) Actual:%d (%.3f kHz) Seen:%d (%.3f kHz) Pending:%d Max:%d", txt,
-      ctr->tot_produced,double(ctr->tot_produced-st->evprod)/deltaTime*1000.0,
-      ctr->tot_actual, double(ctr->tot_actual-st->evactual)/deltaTime*1000,
-      ctr->tot_seen,double(ctr->tot_seen-st->evcons)/deltaTime*1000.0,
-      ctr->i_events, ctr->p_emax);
+			      "%-26s  Events: Produced:%d (%s kHz) Actual:%d (%s kHz) Seen:%d (%s kHz) Pending:%d Max:%d",
+			      txt,
+			      ctr->tot_produced,rate1,
+			      ctr->tot_actual,  rate2,
+			      ctr->tot_seen,    rate3,
+			      ctr->i_events, ctr->p_emax);
   display()->draw_line_normal(
-      "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]", "",
-      (ctr->bm_size * ctr->bytes_p_Bit) / 1024,
-      (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax);
+			      "%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]", "",
+			      (ctr->bm_size * ctr->bytes_p_Bit) / 1024,
+			      (ctr->i_space * ctr->bytes_p_Bit) / 1024, ctr->i_users, ctr->p_umax);
 
   display()->draw_line_normal(" Occupancy [Events]:");
   display()->draw_bar(30, display()->currLine() - 1,
-      float(ctr->i_events) / float(ctr->p_emax), display()->width() - 30);
+		      float(ctr->i_events) / float(ctr->p_emax), display()->width() - 30);
   display()->draw_line_normal("           [Space]: ");
   display()->draw_bar(30, display()->currLine() - 1,
-      float(ctr->bm_size - ctr->i_space) / float(ctr->bm_size),
-      display()->width() - 30);
+		      float(ctr->bm_size - ctr->i_space) / float(ctr->bm_size),
+		      display()->width() - 30);
   return 1;
 }
 
@@ -255,10 +262,6 @@ int Monitor::show_information()
     }
   }
   display()->draw_line_reverse(m_numBM <= 0 ? "               No active buffers present" : head);
-  BMMap_t::iterator it;
-  BMSTAT *st;
-  UMap_t::iterator uit;
-  USSTAT *ust;
   for (i = 0; m_numBM > 0 && i < m_buffers->p_bmax; i++)
   {
     if (m_bms[i].m_buff != 0)
@@ -266,8 +269,8 @@ int Monitor::show_information()
       USER *us, *utst = (USER*) ~0x0;
       BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       CONTROL* ctr = dsc->ctrl;
-      it = m_BMMap.find(dsc->bm_name);
-      st = (*it).second;
+      BMMap_t::iterator it = m_BMMap.find(dsc->bm_name);
+      BMSTAT *st = (it != m_BMMap.end()) ? (*it).second : 0;
       for (j = 0, us = dsc->user; j < ctr->p_umax; j++, us++)
       {
         if (us == utst || us == 0)
@@ -276,14 +279,12 @@ int Monitor::show_information()
           continue;
         if (us->busy == 0)
           continue;
-        uit = st->UserMap.find(std::string(us->name));
-        if (uit == st->UserMap.end())
-        {
-          printf("=====>Very Funny. No User Statistics for user %s\n",us->name);
-        }
-        ust = (*uit).second;
-        char spy_val[5] =
-        { ' ', ' ', ' ', ' ', 0 };
+	USSTAT* ust = 0;
+	if ( st )  {
+	  UMap_t::iterator uit = st->UserMap.find(string(us->name));
+	  ust = (uit == st->UserMap.end()) ? 0 : (*uit).second;
+	}
+        char spy_val[5] = { ' ', ' ', ' ', ' ', 0 };
         for (k = 0; k < us->n_req; ++k)
         {
           if (us->req[k].user_type == BM_REQ_USER)
@@ -309,8 +310,9 @@ int Monitor::show_information()
           else
           {
             ::snprintf(line, sizeof(line), fmt_prod, us->serverid, us->name,
-                us->partid, us->pid, "P", sstat[us->state + 1], double(us->ev_produced-ust->evprod)/deltaTime*1000,
-                perc + 0.1, spy_val, dsc->bm_name);
+		       us->partid, us->pid, "P", sstat[us->state + 1], 
+		       ust ? double(us->ev_produced-ust->evprod)/deltaTime*1000 : 0.0,
+		       perc + 0.1, spy_val, dsc->bm_name);
           }
         }
         else if (us->ev_actual > 0 || us->get_ev_calls > 0 || us->n_req > 0)
@@ -321,20 +323,22 @@ int Monitor::show_information()
           if (!rateMode)
           {
             ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
-                us->partid, us->pid, "C", sstat[us->state + 1], us->ev_seen,
-                us->ev_freed, perc + 0.1, spy_val, dsc->bm_name);
+		       us->partid, us->pid, "C", sstat[us->state + 1], us->ev_seen,
+		       us->ev_freed, perc + 0.1, spy_val, dsc->bm_name);
           }
           else
           {
           ::snprintf(line, sizeof(line), fmt_cons, us->serverid, us->name,
-              us->partid, us->pid, "C", sstat[us->state + 1], double(us->ev_seen-ust->evseen)/deltaTime*1000,
-              double(us->ev_freed - ust->evfreed)/deltaTime*1000, perc + 0.1, spy_val, dsc->bm_name);
+		     us->partid, us->pid, "C", sstat[us->state + 1], 
+		     ust ? double(us->ev_seen-ust->evseen)/deltaTime*1000 : 0.0,
+		     ust ? double(us->ev_freed - ust->evfreed)/deltaTime*1000 : 0.0, 
+		     perc + 0.1, spy_val, dsc->bm_name);
           }
         }
         else
         {
           ::snprintf(line, sizeof(line), fmt_def, us->serverid, us->name,
-              us->partid, us->pid, "?", "", spy_val, dsc->bm_name);
+		     us->partid, us->pid, "?", "", spy_val, dsc->bm_name);
         }
         display()->draw_line_normal(line);
       }
@@ -385,11 +389,11 @@ void Monitor::CopyData()
   {
     if (m_buffers->buffers[i].used == 1)
     {
-      it = m_BMMap.find(std::string(m_buffers->buffers[i].name));
+      it = m_BMMap.find(string(m_buffers->buffers[i].name));
       if (it == m_BMMap.end())
       {
         st = new BMSTAT;
-        m_BMMap.insert(std::make_pair(std::string(m_buffers->buffers[i].name), st));
+        m_BMMap.insert(make_pair(string(m_buffers->buffers[i].name), st));
       }
       else
       {
@@ -414,17 +418,17 @@ void Monitor::CopyData()
           continue;
         UMap_t::iterator uit;
         USSTAT *ust;
-        uit = st->UserMap.find(std::string(us->name));
+        uit = st->UserMap.find(string(us->name));
         if (uit == st->UserMap.end())
         {
           ust = new USSTAT;
-          st->UserMap.insert(std::make_pair(std::string(us->name),ust));
+          st->UserMap.insert(make_pair(string(us->name),ust));
         }
         else
         {
           ust = (*uit).second;
         }
-        if (std::string(us->name) != ust->Name)
+        if (string(us->name) != ust->Name)
         {
           ust->Name = us->name;
         }
