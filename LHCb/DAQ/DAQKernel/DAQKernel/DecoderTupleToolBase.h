@@ -19,10 +19,7 @@
 #include "GaudiAlg/GaudiTupleTool.h"
 
 // local
-#include "DAQKernel/DecoderHistoBase.h"
-
-// histogramming utilities
-#include "DAQKernel/DecoderHistoID.h"
+#include "DAQKernel/DecoderCommonBase.h"
 
 namespace Decoder
 {
@@ -40,7 +37,7 @@ namespace Decoder
    */
   //-----------------------------------------------------------------------------
 
-  class TupleToolBase : public Decoder::HistoBase<GaudiTupleTool>
+  class TupleToolBase : public Decoder::CommonBase<GaudiTupleTool>
   {
 
   public:
@@ -49,7 +46,7 @@ namespace Decoder
     TupleToolBase( const std::string& type,
                    const std::string& name,
                    const IInterface* parent )
-      : Decoder::HistoBase<GaudiTupleTool> ( type, name, parent )
+      : Decoder::CommonBase<GaudiTupleTool> ( type, name, parent )
     { }
 
   };
