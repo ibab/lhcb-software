@@ -130,12 +130,10 @@ namespace LHCb {
 
 #endif /* ONLINE_GAUDIONLINE_MOORETESTSVC_H  */
 
-using namespace std;
-using namespace RTL;
-
 #include "MBM/Manager.h"
 #include "RTL/ProcessGroup.h"
 #include "RTL/strdef.h"
+#include "GaudiKernel/SvcFactory.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -153,14 +151,16 @@ using namespace RTL;
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MooreTestSvc)
 
+using namespace std;
+using namespace RTL;
 using namespace LHCb;
 
-static string command() {
-  string cmd = ::getenv("GaudiOnlineExe");
-  return cmd;
-}
-
 namespace {
+  static std::string command() {
+    std::string cmd = ::getenv("GaudiOnlineExe");
+    return cmd;
+  }
+
   struct ManagerImp : public MBM::Manager {
     virtual int  optparse (const char*) { return 1; }
     ManagerImp()                        {  }
@@ -607,14 +607,17 @@ StatusCode MooreTestSvc::run()   {
   //::kill(0,SIGTERM);
   prodTask->killall();
   monTask->killall();
-  mepTask->killall();
 
   prodTask->wait(Process::WAIT_BLOCK);
   monTask->wait(Process::WAIT_BLOCK);
+
+  /// Wait a bit before kill the buffer manager. Allow to close connections
+  ::lib_rtl_sleep(2000);
+  mepTask->stopall();
   mepTask->wait(Process::WAIT_BLOCK);
 
   system(("rm -f /dev/shm/bm_*"+m_partition).c_str());
-  system((string("rm -f /dev/shm/bm_buffers")).c_str());
+  //system((string("rm -f /dev/shm/bm_buffers")).c_str());
   system(("rm -f /tmp/bm_*"+m_partition+"_*").c_str());
   //::kill(0,SIGKILL);
 
