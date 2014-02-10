@@ -36,7 +36,7 @@ private:
 
   StatusCode printTrack(const LHCb::Track*);
 
-  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+  Hlt::SelectionContainer<LHCb::Track,LHCb::Track> m_selections;
 
   std::string m_linkName;
 

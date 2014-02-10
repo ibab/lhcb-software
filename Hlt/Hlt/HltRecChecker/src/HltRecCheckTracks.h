@@ -25,7 +25,7 @@ public:
 
 private:
   
-  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+  Hlt::SelectionContainer<LHCb::Track,LHCb::Track> m_selections;
   std::string m_linkName;
 
   AIDA::IHistogram1D* m_histoGhost;

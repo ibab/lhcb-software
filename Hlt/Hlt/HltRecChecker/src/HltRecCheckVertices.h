@@ -38,7 +38,7 @@ private:
   std::string m_TESInputVerticesName;
   LHCb::RecVertices* m_TESInputVertices;
   
-  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+  Hlt::SelectionContainer<LHCb::Track,LHCb::Track> m_selections;
 
 
   AIDA::IHistogram1D* m_histoNRCV;

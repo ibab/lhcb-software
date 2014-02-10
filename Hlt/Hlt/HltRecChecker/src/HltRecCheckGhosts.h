@@ -76,7 +76,7 @@ private:
   bool checkTrackPart(LHCb::Track*);  
   StatusCode writeNtuple(Tuple&);
 
-  //Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+  //Hlt::SelectionContainer<LHCb::Track,LHCb::Track> m_selections;
 
   LHCb::GhostTrackInfo whatKindOfGhostIsHauntingMyDecay(const LHCb::Particle*);
   ITrackGhostClassification* m_ghostToolLong;

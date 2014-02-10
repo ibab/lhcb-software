@@ -6,6 +6,7 @@
 
 ! 2014-02-10 - Gerhard Raven
  - remove extraneous ;
+ - replace use of SelectionContainer2 with SelectionContainer (follow change in HltBase)
 
 ! 2014-01-29 - Gerhard Raven
  - remove extraneous ;
