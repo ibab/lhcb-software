@@ -101,6 +101,7 @@ namespace MonWriter
   protected:
     /// Reference to MEP manager service
     pthread_mutex_t m_listlock;
+    pthread_t m_tid;
     LHCb::MEPManager *m_mepMgr;
     MBM::Consumer* m_consumer;
     /// Flag indicating that MBM event retrieval is active
@@ -148,6 +149,11 @@ namespace MonWriter
     std::map<unsigned int,RunDesc*> m_RunList;
     std::string m_node;
     int m_FileCloseDelay;
+
+  public:
+    std::list<FileDescr*> m_FileCloseList;
+    bool m_texit;
+
   public:
     /// Standard Constructor
     HLTMonWriterSvc(const std::string& name, ISvcLocator* svc);
@@ -175,6 +181,7 @@ namespace MonWriter
     virtual void handleFileWriteError();
     virtual ssize_t Write(int fd, const void *buf, size_t n);
     virtual void Markclose(FileDescr* d);
+ 
     void LockList(void)
     {
       pthread_mutex_lock(&m_listlock);
@@ -183,9 +190,6 @@ namespace MonWriter
     {
       pthread_mutex_unlock(&m_listlock);
     }
-    std::list<FileDescr*> m_FileCloseList;
-    bool m_texit;
-    pthread_t m_tid;
   };
 } // End namespace LHCb
 #endif //  GAUDIONLINE_MEPCONVERTERSVC_H
