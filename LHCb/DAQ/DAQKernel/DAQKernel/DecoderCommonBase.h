@@ -87,7 +87,8 @@ namespace Decoder
     ///avoid getIfExists name resolution for now
     virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
     {
-    	throw GaudiException( "Don't call this from the baseclass!", StatusCode::FAILURE );
+    	throw GaudiException( "Don't call this from the baseclass!",
+                "Decoder::CommonBase", StatusCode::FAILURE );
     	return NULL;
     }
 
