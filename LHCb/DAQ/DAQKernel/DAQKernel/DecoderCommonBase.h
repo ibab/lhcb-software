@@ -93,14 +93,14 @@ namespace Decoder
     		const std::string& location  ,
     		const bool useRootInTES = true
     		) const
-    { return GaudiCommon<PBASE>::getIfExists<TYPE> ( svc , location , useRootInTES ) ; }
+    { return this->GaudiCommon<PBASE>::getIfExists<TYPE> ( svc , location , useRootInTES ) ; }
 
     /// override getIfExists to aid the name resolution
     template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
     		const std::string& location  ,
     		const bool useRootInTES = true
     		) const
-    { return GaudiCommon<PBASE>::getIfExists<TYPE> ( GaudiCommon<PBASE>::evtSvc() , location , useRootInTES ) ; }
+    { return this->GaudiCommon<PBASE>::getIfExists<TYPE> ( this->GaudiCommon<PBASE>::evtSvc() , location , useRootInTES ) ; }
 
   private: // data
 
