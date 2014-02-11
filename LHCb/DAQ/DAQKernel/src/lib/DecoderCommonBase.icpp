@@ -61,7 +61,7 @@ StatusCode Decoder::CommonBase<PBASE>::initialize()
   if ( this -> msgLevel(MSG::DEBUG) )
     this -> debug() << "Initialize" << endmsg;
   if(m_rawEventLocations.size()) m_tryFirstRawEventLocation=m_rawEventLocations[0];
-  m_tryRootOnTes = (this->m_rootInTES.size() || this->m_rootOnTES.size());
+  m_tryRootOnTes = (this->rootInTES().size()>0);
   return sc;
 }
 //=============================================================================
@@ -89,13 +89,13 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) co
     if(!loc.size()) return NULL;
     //I could also initialize this and store in the class, but I think this is fast enough to do now,
     //at least must be much faster than looking in the rooOnTes a second time
-    bool rootOnTesSensitive = (this->m_rootInTES.size() || this->m_rootOnTES.size());
+    const bool rootOnTesSensitive = (this->rootInTES().size()>0);
 	//try once with rootInTes, if there is a rootIn or rootOn tes defined! Otherwise it is a waste
     LHCb::RawEvent* raw = getIfExists< LHCb::RawEvent >(loc, rootOnTesSensitive && m_tryRootOnTes);
     if (raw) return raw;
     //if there is no root on tes, then I don't need to look there, ever!
     if (!rootOnTesSensitive) return NULL;
-    //try once with opposite
+    //try once with opposite, if I'm sensitive to the rootOnTes
     raw = getIfExists< LHCb::RawEvent >(loc,!m_tryRootOnTes);
     if (raw)
     {
