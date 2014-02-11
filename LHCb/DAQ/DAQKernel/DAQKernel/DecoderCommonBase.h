@@ -87,27 +87,6 @@ namespace Decoder
     /// Initialize search paths
     void initSearch();
 
-    /// override getIfExists to aid the name resolution
-    template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
-    		IDataProviderSvc*  svc ,
-    		const std::string& location  ,
-    		const bool useRootInTES = true
-    		) const
-    {
-    	throw GaudiException( "Invalid call to getIfExists of the baseclass", StatusCode::FAILURE );
-    	return  Gaudi::Utils::GetData<TYPE>::return_type();
-    }
-
-    /// override getIfExists to aid the name resolution
-    template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
-    		const std::string& location  ,
-    		const bool useRootInTES = true
-    		) const
-    {
-    	throw GaudiException( "Invalid call to getIfExists of the baseclass", StatusCode::FAILURE );
-    	return Gaudi::Utils::GetData<TYPE>::return_type();
-    }
-
   private: // data
 
     /// Where to look first, saves the last place I was able to retrieve successfully

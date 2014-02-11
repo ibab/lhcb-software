@@ -91,12 +91,12 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) co
     //at least must be much faster than looking in the rooOnTes a second time
     const bool rootOnTesSensitive = (this->rootInTES().size()>0);
 	//try once with rootInTes, if there is a rootIn or rootOn tes defined! Otherwise it is a waste
-    LHCb::RawEvent* raw = getIfExists< LHCb::RawEvent >(loc, rootOnTesSensitive && m_tryRootOnTes);
+    LHCb::RawEvent* raw = PBASE::getIfExists< LHCb::RawEvent >(loc, rootOnTesSensitive && m_tryRootOnTes);
     if (raw) return raw;
     //if there is no root on tes, then I don't need to look there, ever!
     if (!rootOnTesSensitive) return NULL;
     //try once with opposite, if I'm sensitive to the rootOnTes
-    raw = getIfExists< LHCb::RawEvent >(loc,!m_tryRootOnTes);
+    raw = PBASE::getIfExists< LHCb::RawEvent >(loc,!m_tryRootOnTes);
     if (raw)
     {
     	m_tryRootOnTes=!m_tryRootOnTes;
