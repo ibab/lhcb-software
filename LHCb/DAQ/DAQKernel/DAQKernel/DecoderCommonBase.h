@@ -97,7 +97,7 @@ namespace Decoder
     }
 
     /// Initialize search paths
-    void initSearch();
+    void initRawEventSearch();
 
   private: // data
 

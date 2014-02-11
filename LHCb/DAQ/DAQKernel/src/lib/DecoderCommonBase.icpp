@@ -32,7 +32,7 @@
 // Constructor initialisation
 //=============================================================================
 template <class PBASE>
-void Decoder::CommonBase<PBASE>::initSearch()
+void Decoder::CommonBase<PBASE>::initRawEventSearch()
 {
   this->declareProperty( "RawEventLocations", m_rawEventLocations, "Search path for the raw event" );
   m_tryRootOnTes=true;
