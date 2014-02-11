@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+! 2014-02-11 - Olivier Deschamps
+  - DeCalorimeter.cpp : fix floating point exception in the initialize()
+
 !========================= CaloDet v10r17 2013-09-30 =========================
 ! 2013-09-18 - Olivier Deschamps
   - DeCalorimeter.h : protect vectors access against invalid index

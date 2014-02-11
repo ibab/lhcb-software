@@ -224,9 +224,12 @@ StatusCode DeCalorimeter::initialize()
       LHCb::CaloCellID id = (*ic).cellID() ;
 
       unsigned int Area   = id.area ( ) ;    
-      double thGain = ( maxEtInCenter(Area) / m_cells[id].sine() ) + maxEtSlope(Area);
-      thGain        /= (double) adcMax() ;
-
+      double thGain = 0.;
+      if( ! id.isPin() ){
+        thGain=( maxEtInCenter(Area) / m_cells[id].sine() ) + maxEtSlope(Area);
+        thGain        /= (double) adcMax() ;
+      }
+      
       if( UNLIKELY( msg1.level() <= MSG::VERBOSE ) )
         msg1 << MSG::VERBOSE << "Expected gain   : " << id << " => " 
              <<  cellGain(id) <<  " MeV/ADC " 
