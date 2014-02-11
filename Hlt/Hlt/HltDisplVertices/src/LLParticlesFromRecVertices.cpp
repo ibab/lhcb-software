@@ -32,15 +32,15 @@ DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices )
 LLParticlesFromRecVertices::LLParticlesFromRecVertices( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
     : DaVinciAlgorithm( name, pSvcLocator )
-    , m_pt( 400. )
-    , m_FirstPVMaxRho( 1.5 * Gaudi::Units::mm )
-    , m_FirstPVMaxZ( 150.0 *
-                     Gaudi::Units::mm ) // should accept a PV as soon as there is one
-    , m_RHO( LoKi::Constant<const LHCb::VertexBase*, double>( 0.0 ) )
-    , m_Z( LoKi::Constant<const LHCb::VertexBase*, double>( 0.0 ) )
-    , m_VERTEXCUT( LoKi::Constant<const LHCb::VertexBase*, bool>( false ) )
-    , m_UPPVZ( LoKi::Constant<std::vector<const LHCb::RecVertex*>, double>(
-          LoKi::Constants::HugeDistance ) )
+    , m_pt{ 400. }
+    // , m_FirstPVMaxRho( 1.5 * Gaudi::Units::mm )
+    , m_FirstPVMaxZ{ 150.0 *
+                     Gaudi::Units::mm } // should accept a PV as soon as there is one
+    , m_RHO{ LoKi::Constant<const LHCb::VertexBase*, double>{ 0.0 } }
+    , m_Z{ LoKi::Constant<const LHCb::VertexBase*, double>{ 0.0 } }
+    , m_VERTEXCUT{ LoKi::Constant<const LHCb::VertexBase*, bool>{ false } }
+    , m_UPPVZ{ LoKi::Constant<std::vector<const LHCb::RecVertex*>, double>{
+          LoKi::Constants::HugeDistance } }
 {
     // Vertex "input" location, Inputs is used for the daughters
     declareProperty( "RecVertexLocations", m_RVLocations,

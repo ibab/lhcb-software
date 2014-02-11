@@ -59,7 +59,7 @@ class LLParticlesFromRecVertices : public DaVinciAlgorithm
 
     unsigned int m_FirstPVNumTracks; ///< Allow Velo-only daughters
     // More cut values for the most upstream PV (hard-coded)
-    const double m_FirstPVMaxRho;
+    // const double m_FirstPVMaxRho;
     const double m_FirstPVMaxZ;
 
     bool m_useVeloTracks; ///< Maximum track Chi2 for long daughter tracks
@@ -72,7 +72,7 @@ class LLParticlesFromRecVertices : public DaVinciAlgorithm
     double m_LLPMinMass; ///< Minimal reconstructed mass of the LLP
 
     double m_LLPMinR; ///< Minimal LLP RHO distance to the beam line
-    double m_LLPMaxR; ///< Maximal LLP RHO distance to the beam line
+    // double m_LLPMaxR; ///< Maximal LLP RHO distance to the beam line
 
     int m_LLPMinNumTracks; ///< Minimal number of daughter tracks of the LLP
 
