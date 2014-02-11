@@ -95,6 +95,13 @@ namespace Decoder
     		) const
     { return GaudiCommon<PBASE>::getIfExists<TYPE> ( svc , location , useRootInTES ) ; }
 
+    /// override getIfExists to aid the name resolution
+    template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
+    		const std::string& location  ,
+    		const bool useRootInTES = true
+    		) const
+    { return GaudiCommon<PBASE>::getIfExists<TYPE> ( GaudiCommon<PBASE>::evtSvc() , location , useRootInTES ) ; }
+
   private: // data
 
     /// Where to look first, saves the last place I was able to retrieve successfully
