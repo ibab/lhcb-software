@@ -28,6 +28,12 @@ int& Subopen::isubonly() {
   return s_subopen->isubonly;
 }
 
+// access ichange in common
+int& Subopen::ichange() {
+  init(); // check COMMON is initialized
+  return s_subopen->ichange;
+}
+
 
 
 

@@ -76,9 +76,10 @@ GenXiccProduction::GenXiccProduction( const std::string& type,
   m_defaultGenXiccSettings.push_back( "loggrade igrade 1");
   //                    whether generating on the GRID
   m_defaultGenXiccSettings.push_back( "loggrade iusecurdir 0");
-  //COMMON BLOCK /SUBOPEN/SUBFACTOR,SUBENERGY,ISUBONLY
+  //COMMON BLOCK /SUBOPEN/SUBFACTOR,SUBENERGY,ISUBONLY, ICHANGE
   m_defaultGenXiccSettings.push_back( "subopen subenergy 100.0");//GENERALLY USELESS
   m_defaultGenXiccSettings.push_back( "subopen isubonly 0");
+  m_defaultGenXiccSettings.push_back( "subopen ichange 0");
   //COMMON BLOCK /USERTRAN/IDPP
   m_defaultGenXiccSettings.push_back( "usertran idpp 3"); //=IDWTUP  do not change this, events are reweighted anyway
   //COMMON BLOCK /VEGASINF/NUMBER,NITMX
@@ -243,9 +244,9 @@ StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &theComm
       else return Error(std::string("GenXicc error, counter"));
 			
     else if ( "upcom" == block) // GG : do not override internal settings for quark masses
-      if      ( "pmb" == entry ) {if (0) GenXicc::upcom().pmb()     =fl1;}
-      else if ( "pmc" == entry ) {if (0) GenXicc::upcom().pmc()     =fl1;}
-      else if ( "pmxicc"== entry ) {if (0) GenXicc::upcom().pmxicc()  =fl1;}
+      if      ( "pmb" == entry ) {GenXicc::upcom().pmb()     =fl1;}
+      else if ( "pmc" == entry ) {GenXicc::upcom().pmc()     =fl1;}
+      else if ( "pmxicc"== entry ){GenXicc::upcom().pmxicc()  =fl1;}
       else if ( "ecm" == entry ) {
         if (canChangeState) GenXicc::upcom().ecm()     =fl1;
         else warning() << "You cannot change ecm via GenXiccCommands, please use BeamMomentum option" <<endmsg;
@@ -274,6 +275,7 @@ StatusCode GenXiccProduction::parseGenXiccCommands( const CommandVector &theComm
     else if ( "subopen"==block )
       if       ( "subenergy"==entry)GenXicc::subopen().subenergy()   =fl1;
       else if  ( "isubonly" ==entry)GenXicc::subopen().isubonly()    =int1; 
+      else if  ( "ichange" ==entry)GenXicc::subopen().ichange()    =int1; 
       else return Error (std::string("GenXicc error, subopen"));
     
     else if ( "usertran"==block )

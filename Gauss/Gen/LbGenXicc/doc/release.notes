@@ -2,6 +2,12 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2014-02-11 - Liang Zhong
+ - Add the interface to set the mass of Xicc baryon in GenXiccProduction.cpp
+   A new variable, ichange, is added. If ichange is set to 0, then the default
+   value of the generator will be used. If ichange is set to 1, then the mass
+   of Xicc baryon can be set. 
+
 ! 2014-02-10 - Liang Zhong
  - Simplify the option file GenXicc.py to control the production of Xi_cc+
    and Xi_cc++ in a coherent way.

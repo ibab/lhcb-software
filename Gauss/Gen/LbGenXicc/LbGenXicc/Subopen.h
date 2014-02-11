@@ -20,6 +20,7 @@ public:
   double& subfactor();
   double& subenergy();
   int& isubonly();
+  int& ichange();
 
   inline void init(); // inlined for speed of access (small function)
 
@@ -31,6 +32,7 @@ private:
     double subfactor;
     double subenergy;
     int isubonly; 
+    int ichange; 
   };
   int m_dummy;
   double m_realdummy;
