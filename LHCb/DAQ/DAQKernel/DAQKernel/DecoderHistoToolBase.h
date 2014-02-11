@@ -48,7 +48,12 @@ namespace Decoder
                    const IInterface* parent )
       : Decoder::CommonBase<GaudiHistoTool> ( type, name, parent )
     { }
-
+  protected:
+      ///avoid getIfExists name resolution for now
+      virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
+      {
+      	return GaudiHistoTool::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
+      }
   };
 
 }

@@ -48,6 +48,12 @@ namespace Decoder
       : Decoder::CommonBase<GaudiTupleAlg> ( name, pSvcLocator )
     { }
 
+  protected:
+      ///avoid getIfExists name resolution for now
+      virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
+      {
+      	return GaudiTupleAlg::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
+      }
   };
 
 }

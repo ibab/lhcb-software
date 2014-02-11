@@ -48,7 +48,7 @@ namespace Decoder
     ///avoid getIfExists name resolution for now
     virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
     {
-    	return GaudiHistoAlg::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
+    	return GaudiAlgorithm::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
     }
     /// override getIfExists to aid the name resolution?
     //template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (

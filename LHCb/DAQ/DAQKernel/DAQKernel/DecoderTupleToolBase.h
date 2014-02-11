@@ -49,6 +49,12 @@ namespace Decoder
       : Decoder::CommonBase<GaudiTupleTool> ( type, name, parent )
     { }
 
+  protected:
+      ///avoid getIfExists name resolution for now
+      virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
+      {
+      	return GaudiTupleTool::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
+      }
   };
 
 }
