@@ -42,6 +42,21 @@ namespace Decoder
              ISvcLocator* pSvcLocator )
       : Decoder::CommonBase<GaudiAlgorithm> ( name, pSvcLocator ) { }
 
+  protected:
+    /// override getIfExists to aid the name resolution
+    template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
+    		IDataProviderSvc*  svc ,
+    		const std::string& location  ,
+    		const bool useRootInTES = true
+    		) const
+    { return GaudiAlgorithm::getIfExists<TYPE> ( svc , location , useRootInTES ) ; }
+
+    /// override getIfExists to aid the name resolution
+    template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
+    		const std::string& location  ,
+    		const bool useRootInTES = true
+    		) const
+    { return this->PBASE::getIfExists<TYPE> ( this->GaudiAlgorithm::evtSvc() , location , useRootInTES ) ; }
   };
 
 }
