@@ -47,11 +47,9 @@ public:
   
   double momentum(const LHCb::Track& velotrack,const LHCb::Track& Ttrack);
   
-protected:
 
 private:
 
-  double m_2dx_cut;
   double m_sec_tol;
   double z_magnet_center;
   double m_x_cut;
@@ -61,6 +59,5 @@ private:
 
   ITrackMomentumEstimate* m_fastPTool;
   
-  LHCb::State* m_myState;
 };
 #endif // MATCHTVELOTRACKS_H

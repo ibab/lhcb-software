@@ -188,13 +188,13 @@ bool Hlt::Track2L0CaloMatch::match
   const double         /* quality2 */  ) const 
 {
   // 
-  if ( 0 == track     ) 
+  if ( !track     ) 
   {
     Error( "LHCb::Track*    points to NULL, result false").ignore();
     return false ;                                                    // RETURN 
   }
   //
-  if ( 0 == candidate ) 
+  if ( !candidate ) 
   {
     Error( "Hlt::Candidate* points to NULL, result false").ignore();
     return false ;                                                    // RETURN 
@@ -202,7 +202,7 @@ bool Hlt::Track2L0CaloMatch::match
   //
   // get L0Calo from Hlt-candidate 
   const LHCb::L0CaloCandidate* l0 = candidate->get<LHCb::L0CaloCandidate>() ;
-  if ( 0 == l0 ) 
+  if ( !l0 ) 
   { 
     Error ("HltCandidate is NOT L0Calo!").ignore() ;
     return false ;                                                   // RETURN 
