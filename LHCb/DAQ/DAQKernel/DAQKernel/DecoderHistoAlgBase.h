@@ -45,6 +45,12 @@ namespace Decoder
       : Decoder::CommonBase<GaudiHistoAlg> ( name, pSvcLocator )
     { }
 
+  protected:
+    ///avoid getIfExists name resolution for now
+    virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
+    {
+    	return GaudiHistoAlg::getIfExists<LHCb::RawEvent>(loc,rootOnTes);
+    }
   };
 
 }

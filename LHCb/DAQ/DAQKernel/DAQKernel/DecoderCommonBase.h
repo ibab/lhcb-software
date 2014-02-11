@@ -84,6 +84,13 @@ namespace Decoder
     /// Where to look for the raw event
     std::vector<std::string> m_rawEventLocations;
 
+    ///avoid getIfExists name resolution for now
+    virtual inline LHCb::RawEvent* getIfExistsRaw(const std::string loc, bool rootOnTes=true) const
+    {
+    	throw GaudiException( "Don't call this from the baseclass!", StatusCode::FAILURE );
+    	return NULL;
+    }
+
     /// Initialize search paths
     void initSearch();
 
