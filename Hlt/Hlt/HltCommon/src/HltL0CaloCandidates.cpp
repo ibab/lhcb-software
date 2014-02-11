@@ -26,10 +26,6 @@ DECLARE_ALGORITHM_FACTORY( HltL0CaloCandidates )
 HltL0CaloCandidates::HltL0CaloCandidates( const std::string& name,
                                           ISvcLocator* pSvcLocator )
     : GaudiHistoAlg( name, pSvcLocator )
-    // , m_selection(*this)
-    //, m_tck(0)
-    , m_et( 0 )
-    , m_etMax( 0 )
 {
     declareProperty( "L0DULocation", m_l0Location = L0DUReportLocation::Default );
     declareProperty( "TESOutputPrefix", m_TESprefix = "/Event/Rec/Calo" );

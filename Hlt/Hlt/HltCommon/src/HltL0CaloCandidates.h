@@ -83,9 +83,6 @@ class HltL0CaloCandidates : public GaudiHistoAlg
     // Cuts
     std::map<L0DUBase::CaloType::Type, L0CaloCandidateCut> m_cutsLow;
     std::map<L0DUBase::CaloType::Type, L0CaloCandidateCut> m_cutsHigh;
-    // For histos
-    AIDA::IHistogram1D* m_et;
-    AIDA::IHistogram1D* m_etMax;
     // Tools
     IL0Calo2Calo* m_l02CaloTool;
     // ICaloClusterization* m_clusterTool;

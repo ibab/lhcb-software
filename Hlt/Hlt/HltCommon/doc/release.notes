@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-02-11 - Gerhard Raven
+ - remove unused private fields, unused function
+
 ! 2014-02-10 - Gerhard Raven
  - replace use of SelectionContainer2 by SelectionContainer (follow change in HltBase)
  - replace use of boost::bind with C++11 lambda, BOOST_FOREACH with C++11 range-based for loop

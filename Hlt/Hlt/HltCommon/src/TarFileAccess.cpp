@@ -132,10 +132,12 @@ bool isZero( const struct posix_header& h )
     return i == end;
 }
 
+#if 0
 void zero( struct posix_header& h )
 {
     memset( &h, 0, sizeof( posix_header ) );
 }
+#endif
 
 /* A nice enum with all the possible tar file content types */
 enum TarFileType {
