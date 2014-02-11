@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-02-11 - Rob Lambert
+ - HltDAQ changes for task #49078 reflected in DecoderDB
+
 ! 2014-01-29 - Rob Lambert
  - Wrap v in str(v)
 

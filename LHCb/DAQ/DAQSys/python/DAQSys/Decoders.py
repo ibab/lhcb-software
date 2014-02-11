@@ -267,19 +267,17 @@ for report in ["Dec","Sel","Vertex"]:
             active=True,
             #\/ e.g. HltSelReports
             banks=["Hlt"+report+"Reports"],
-            inputs=["Trigger/RawEvent","DAQ/RawEvent"],
-            #/\ inputs currently cannot be configured,
-            #it's a list not present in constructor :S
+            inputs={"RawEventLocations":None},#["Trigger/RawEvent","DAQ/RawEvent"],
             #\/ e.g. OutputHltSelReportsLocation: Hlt1/SelReports
             outputs={"OutputHlt"+report+"ReportsLocation" : hltname+"/"+report+"Reports"},
             properties={"SourceID" : hlt}, #None=default(0)
             conf=DecoderDB
             )
 
-        
+#Also TrackingDecoder, but don't make it active, it's only used during HLT2 stand-alone!
 Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
-        active=True, banks=["HltTrackReports"],
-        inputs = ["Trigger/RawEvent","DAQ/RawEvent"],
+        active=False, banks=["HltTrackReports"],
+        inputs = {"RawEventLocations":None},#["Trigger/RawEvent","DAQ/RawEvent"],
         outputs={"OutputHltTrackReportsLocation" : "Hlt1/Track/Velo"},
         properties={"SourceID" : 1}, #None=default(0)
         conf=DecoderDB
@@ -288,8 +286,7 @@ Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
 #is a Routing bits filter really a decoder? it doesn't create output...
 Decoder("HltRoutingBitsFilter",
         active=False, banks=["HltRoutingBits"],
-        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
-        #currently cannot be configured properly, it's a list not present in constructor
+        inputs={"RawEventLocations":None},
         conf=DecoderDB)
 
 Decoder("HltLumiSummaryDecoder",
