@@ -13,10 +13,10 @@
 #define DAQKERNEL_DECODERCOMMONBASE_H 1
 
 //disable unused variable warnings which occur for every enum and string in RawEvent.h
-#pragma GCC diagnostic push
-#pragma GCC diagnostic "-Wunused-variable"
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic "-Wunused-variable"
 #include "Event/RawEvent.h"
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
 
 namespace Decoder
 {
