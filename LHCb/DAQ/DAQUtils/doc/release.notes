@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2014-02-11 - Rob Lambert
+ - Assimilate Decoder baseclass for task #49078 into RawEventDump
+
 ! 2014-02-06 - Rob Lambert
  - Add RawEventLocations to RawEventDump, also translate bank types into strings to dump for better clarity, see task #48399
 

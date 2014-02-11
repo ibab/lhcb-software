@@ -23,10 +23,11 @@ DECLARE_ALGORITHM_FACTORY(RawEventDump)
 //=============================================================================
 RawEventDump::RawEventDump( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : Decoder::AlgBase ( name , pSvcLocator )
   , m_banks()
-  , m_rawEventLocations()
+  //, m_rawEventLocations()
 {
+  //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Default,
                          LHCb::RawEventLocation::Trigger,
                          LHCb::RawEventLocation::Rich,
@@ -35,10 +36,11 @@ RawEventDump::RawEventDump( const std::string& name,
                          LHCb::RawEventLocation::Other,
                          LHCb::RawEventLocation::Copied,
                          LHCb::RawEventLocation::Emulated};
+  initRawEventSearch();
   
   declareProperty( "DumpData", m_dump = false );
   declareProperty( "RawBanks", m_banks);
-  declareProperty( "RawEventLocations", m_rawEventLocations);
+  
 }
 //=============================================================================
 // Destructor
@@ -52,12 +54,8 @@ StatusCode RawEventDump::execute() {
   
   for (auto loc :  m_rawEventLocations)
   {
-    //try once with rootInTes
-    RawEvent* raw = getIfExists<RawEvent>(loc);
-    if (!raw)
-    {
-      raw = getIfExists<RawEvent>(loc,false);
-    }
+    RawEvent* raw = tryEventAt(loc);
+    
     if (!raw) continue;
     
     for(int j=0; j<256; ++j)  

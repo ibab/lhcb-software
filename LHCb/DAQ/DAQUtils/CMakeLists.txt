@@ -7,7 +7,8 @@ gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/RecEvent
                          GaudiAlg
                          GaudiKernel
-                         GaudiSvc)
+                         GaudiSvc
+			 DAQ/DAQKernel)
 
 find_package(RELAX)
 
