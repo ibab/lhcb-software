@@ -11,7 +11,7 @@ c...space generator. authors: s.d. ellis, r. kleiss, w.j. stirling
 c...this is version 1.0 - written by r. kleiss modified slightly by 
 c...ian hinchliffe. we make some changes and let it adaptable
 c...up to three final particals. interesting reader can change back
-c...to it's original form easily.
+c...to its original form easily.
 
       subroutine phase_gen(ny,y,et,wt)
       implicit double precision (a-h,o-z)

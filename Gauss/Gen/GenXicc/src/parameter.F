@@ -314,7 +314,7 @@ c... note: bmxicc=baryon xicc mass; pmxicc=xicc diquark mass
 c... note: slqmass=small light quark mass that constitute baryon.
 
 c...whether to get the gg-subprocess information.
-	common/subopen/subfactor,subenergy,isubonly
+	common/subopen/subfactor,subenergy,isubonly,ichange
 
 	logical wronginput
 
@@ -343,13 +343,19 @@ c... slightly bigger than the final baryon mass; so the c and b
 c... quark masses are slightly bigger than that of Phys.Rev.D73,094022(2006).
 c------------------------------------------
       if(mgenxi.eq.1) then  !xicc
-	     pmc0  =1.75d0   ! c quark mass (gev)
-	     pmb0  =1.75d0   ! c quark mass (gev)
-	     pmc   =pmc0 +slqmass/2.0d0   ! c quark mass (gev)
-       pmb   =pmb0 +slqmass/2.0d0   ! c quark mass;
-       bmxicc =pmb0+pmc0            ! baryon (cc) mass (gev)
-       pmxicc =pmb+pmc              ! diquark mass (gev)
-		  end if
+          if(ichange.eq.0) then
+             pmc0  = 1.75d0   ! c quark mass (gev)
+             pmb0  = 1.75d0   ! c quark mass (gev)
+             pmc   = pmc0 +slqmass/2.0d0   ! c quark mass (gev)
+             pmb   = pmb0 +slqmass/2.0d0   ! c quark mass;
+
+             bmxicc = pmb0+pmc0            ! xicc baryon mass (gev)
+             pmxicc = pmb+pmc              ! diquark mass (gev)
+         else if(ichange.eq.1) then
+             bmxicc = pmb+pmc              ! xicc baryon mass (gev)
+             pmxicc = pmb+pmc              ! diquark mass (gev)
+         end if 
+	  end if
 
       if(mgenxi.eq.2) then  !xibc
 	      pmc0  =1.80d0    ! c quark mass (gev)
@@ -358,7 +364,7 @@ c------------------------------------------
         pmb  =pmb0 +slqmass/2.0d0    ! b quark mass;
         bmxicc =pmb0+pmc0            ! baryon xibc mass (gev)
         pmxicc =pmb+pmc              ! diquark (bc) mass (gev)
-			end if
+	   end if
 
       if(mgenxi.eq.3) then  !xibb
 	      pmc0  =5.10d0    ! b quark mass (gev)
