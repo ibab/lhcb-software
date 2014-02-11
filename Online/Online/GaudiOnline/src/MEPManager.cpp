@@ -6,7 +6,6 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/xtoa.h"
 #include "GaudiOnline/MEPManager.h"
@@ -246,5 +245,3 @@ MBM::Consumer* MEPManager::createConsumer(const string& buffer,const string& ins
   }
   return 0;
 }
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPManager)

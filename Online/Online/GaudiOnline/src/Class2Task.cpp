@@ -1,8 +1,6 @@
 #include "GaudiOnline/Class2Task.h"
 #include "CPP/IocSensor.h"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class2Task)
-
 /// Standard constructor
 LHCb::Class2Task::Class2Task(IInterface* svc) : GaudiTask(svc) {
   IOCSENSOR.send(this, STARTUP_DONE);

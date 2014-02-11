@@ -14,15 +14,11 @@
 //
 //====================================================================
 #include "GaudiKernel/Incident.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiOnline/EventServerRunable.h"
 #include "GaudiOnline/MEPManager.h"
 #include "WT/wt_facilities.h"
 #include "RTL/bits.h"
-
-// Instantiation of a static factory class used by clients to create instances of this service
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventServerRunable)
 
 using namespace std;
 using namespace LHCb;

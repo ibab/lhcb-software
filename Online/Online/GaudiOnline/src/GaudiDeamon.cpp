@@ -1,5 +1,4 @@
 #include "GaudiOnline/GaudiDeamon.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/MsgStream.h"
@@ -7,8 +6,6 @@
 #include "GaudiKernel/SmartIF.h"
 #include "WT/wt_facilities.h"
 #include "WT/wtdef.h"
-
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiDeamon)
 
 LHCb::GaudiDeamon::GaudiDeamon(IInterface*) : DimTaskFSM(0), m_appMgr(0)  {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable");

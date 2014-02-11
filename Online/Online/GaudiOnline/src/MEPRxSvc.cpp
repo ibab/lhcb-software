@@ -19,7 +19,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -172,8 +171,6 @@ struct MEPRx {
     int analyzeMEP(MEPHdr *mep, uint &nfrag);
 };
 }
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 
 using namespace LHCb;
 

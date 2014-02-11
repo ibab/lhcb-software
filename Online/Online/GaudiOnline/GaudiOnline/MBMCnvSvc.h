@@ -10,9 +10,6 @@
 #define GAUDIONLINE_MBMCNVSVC_H
 
 #include "MDF/RawDataCnvSvc.h"
-#include "MBM/bmdef.h"
-
-namespace MBM  {  class Producer;  }
 
 /*
  *    LHCb namespace

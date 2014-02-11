@@ -9,14 +9,11 @@
 #include <sys/stat.h>                                              /* open() */
 #include <fcntl.h>                                                 /* open() */
 #include <unistd.h>                                         /* gethostname() */
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/FmcMessageSvc.h"
 #include "RTL/rtl.h"
 #define BUF_SZ 4096
 #define SYSLOG_BUF_SZ 990
 #define NO_FIFO (-1)
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FmcMessageSvc)
 
 /// Constructor
 LHCb::FmcMessageSvc::FmcMessageSvc(const std::string& name,ISvcLocator* svcloc)

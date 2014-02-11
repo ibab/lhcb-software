@@ -18,7 +18,6 @@
 #ifndef _WIN32
 
 #include "GaudiOnline/SLICEReaderSvc.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -52,7 +51,6 @@ using MBM::Requirement;
 
 
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, SLICEReaderSvc)
 using namespace LHCb;
 
 /** Standard constructor

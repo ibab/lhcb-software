@@ -4,7 +4,6 @@
 
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MemMonitorSvc.h"
 #include "AIDA/IAxis.h"
@@ -16,9 +15,6 @@ using namespace AIDA;
 using namespace LHCb;
 using namespace std;
 enum { OFLW = IAxis::OVERFLOW_BIN, UFLW = IAxis::UNDERFLOW_BIN };
-
-// Factory for instantiation of service objects
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitorSvc)
 
 MonitoringEngine::Histogram::Histogram(const string& nam,IMessageSvc* msg,IHistogram* h)
 : m_messageSvc(msg), m_hist(h)

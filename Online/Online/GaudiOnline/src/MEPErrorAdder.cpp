@@ -13,7 +13,6 @@
 #include <algorithm>
 #include <iostream>
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
@@ -40,8 +39,6 @@ template <typename T> static void reset2DCounters(T& cnt, size_t len1, size_t le
     resetCounters(cnt[i],len2);
   }
 }
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPErrorAdder)
 
 using namespace LHCb;
 

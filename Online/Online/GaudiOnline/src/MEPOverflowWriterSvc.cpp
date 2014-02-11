@@ -8,7 +8,6 @@
 //  Author    : Markus Frank
 //
 //  ===========================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Incident.h"
@@ -45,8 +44,6 @@ using MBM::EventDesc;
 using MBM::Requirement;
 using namespace std;
 using namespace LHCb;
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPOverflowWriterSvc)
 
 extern "C"
 {

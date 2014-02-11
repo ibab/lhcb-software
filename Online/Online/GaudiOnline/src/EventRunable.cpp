@@ -2,15 +2,10 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/EventRunable.h"
 #include "GaudiOnline/MEPManager.h"
-
-/// Instantiation of a static factory class used by clients to create instances of this service
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRunable)
 
 using namespace LHCb;
 using namespace std;

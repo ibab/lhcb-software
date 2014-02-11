@@ -8,7 +8,6 @@
 //  Author    : Markus Frank
 //
 //  ===========================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Incident.h"
@@ -46,7 +45,6 @@ using MBM::Requirement;
 using namespace std;
 using namespace LHCb;
 using namespace MonWriter;
-DECLARE_NAMESPACE_SERVICE_FACTORY(MonWriter,HLTMonWriterSvc)
 
 extern "C"
 {

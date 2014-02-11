@@ -16,7 +16,10 @@ find_package(tcmalloc)
 find_package(AIDA)
 
 gaudi_install_headers(GaudiOnline)
-gaudi_add_module(GaudiOnline src/*.cpp
+gaudi_add_library(GaudiOnline src/*.cpp
+                 INCLUDE_DIRS PythonLibs AIDA
+                 LINK_LIBRARIES PythonLibs GaudiKernel dim DAQEventLib MDFLib OnlineKernel)
+gaudi_add_module(GaudiOnlineComp components/*.cpp
                  INCLUDE_DIRS PythonLibs AIDA
                  LINK_LIBRARIES PythonLibs GaudiKernel dim DAQEventLib MDFLib OnlineKernel)
 

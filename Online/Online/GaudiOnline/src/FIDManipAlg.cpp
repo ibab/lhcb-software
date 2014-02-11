@@ -124,9 +124,3 @@ StatusCode FIDManipAlg::execute() {
       return StatusCode::FAILURE;
   }
 }
-
-
-#include "GaudiKernel/AlgFactory.h" 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(FIDManipAlg)
-

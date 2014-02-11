@@ -28,8 +28,6 @@ extern "C" void _PyGILState_Init(PyInterpreterState *, PyThreadState *);
 extern "C" void _PyGILState_Fini();
 #endif
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
-
 using namespace LHCb;
 using namespace std;
 

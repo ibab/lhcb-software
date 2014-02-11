@@ -7,16 +7,14 @@
 //
 //  ====================================================================
 #include "GaudiOnline/MBMMonitorSvc.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/xtoa.h"
+#include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 #include <stdexcept>
 #include <cstdio>
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMMonitorSvc)
 
 void LHCb::MBMMonitorSvc::Client::publish(MBMDescriptor* dsc, const std::string& user)   {
   MBMMonitorSvc* svc = dsc->svc;

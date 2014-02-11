@@ -6,13 +6,13 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiOnline/MBMCnvSvc.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
+#include "MBM/bmdef.h"
 #include "MBM/Producer.h"
 #include "MBM/mepdef.h"
 #include "RTL/rtl.h"
@@ -20,8 +20,6 @@
 
 using MBM::Producer;
 using MBM::EventDesc;
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMCnvSvc)
 
 namespace  {
   Producer* producerFromIODescriptor(void* ioDesc)   {

@@ -1,13 +1,8 @@
 // $Id: PanoramixSim.cpp,v 1.2 2010-09-21 14:28:26 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IAppMgrUI.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiOnline/PanoramixSim.h"
-
-// Instantiation of a static factory class used by clients to create instances of this service
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PanoramixSim)
 
 using namespace LHCb;
 using namespace std;

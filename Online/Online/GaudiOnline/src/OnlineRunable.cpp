@@ -8,15 +8,12 @@
 //  Author    : Markus Frank
 //
 //  ===========================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiOnline/OnlineRunable.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
 #include <cstring>
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 
 // Standard Constructor
 LHCb::OnlineRunable::OnlineRunable(const std::string& nam, ISvcLocator* svc)

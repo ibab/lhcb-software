@@ -8,14 +8,11 @@
 //  Author    : Markus Frank
 //
 //  ===========================================================
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/AMSService.h"
 #include "AMS/amsdef.h"
 #include "WT/wtdef.h"
 #include "RTL/rtl.h"
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AMSService)
 
 // Standard Constructor
 LHCb::AMSService::AMSService(const std::string& nam, ISvcLocator* svc)

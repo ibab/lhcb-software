@@ -99,7 +99,3 @@ StatusCode LHCb::MDFSender::writeBuffer(void* const /* ioDesc */, const void* da
   }
   return StatusCode::SUCCESS;
 }
-
-#include "GaudiKernel/AlgFactory.h"
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFSender)
-

@@ -88,5 +88,3 @@ void LHCb::DimMessageSvc::i_reportMessageEx(const Message& msg, int )    {
   report(msg.getType(), msg.getSource(), msg.getMessage());
 }
 
-#include "GaudiKernel/SvcFactory.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimMessageSvc)

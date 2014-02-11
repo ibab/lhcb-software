@@ -17,14 +17,16 @@ use GaudiKernel   v*
 apply_pattern install_more_includes more=GaudiOnline
 apply_pattern install_python_modules
 
-# ==================== component libraries ==================================
+# ==================== Linker libraries =====================================
 library  GaudiOnline  *.cpp -import=DIM -import=DAQEvent -import=MDF -import=AIDA -import=Python
 apply_pattern linker_library   library=GaudiOnline
-apply_pattern generate_componentslist library=GaudiOnline
-apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
-apply_pattern generate_configurables library=GaudiOnline
-
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) -lrt'
+# ==================== component libraries ==================================
+library GaudiOnlineComp ../components/*.cpp -import=AIDA  -import=DIM -import=DAQEvent -import=MDF 
+apply_pattern component_library library=GaudiOnlineComp
+apply_pattern generate_rootmap library=GaudiOnlineComp
+macro_append GaudiOnlineComp_dependencies  " GaudiOnline "
+apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 
 private
 # ==================== private test application =============================

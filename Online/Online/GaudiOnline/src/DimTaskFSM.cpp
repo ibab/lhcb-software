@@ -18,8 +18,6 @@
 #define ST_NAME_RUNNING     "RUNNING"
 #define ST_NAME_PAUSED      "PAUSED"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
-
 using namespace LHCb;
 
 static ITaskFSM* s_dimtask_instance = 0;

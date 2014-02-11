@@ -12,7 +12,6 @@
 //  Author     : M.Frank
 //====================================================================
 #include "GaudiOnline/NetworkEvtSelector.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
@@ -22,7 +21,6 @@
 #include "MBM/mepdef.h"
 #include "RTL/Lock.h"
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,NetworkEvtSelector)
 using namespace std;
 using namespace LHCb;
 using namespace DataTransfer;

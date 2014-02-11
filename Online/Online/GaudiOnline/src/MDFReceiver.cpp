@@ -7,10 +7,7 @@
 //
 //  ====================================================================
 #include "GaudiOnline/MDFReceiver.h"
-#include "GaudiKernel/AlgFactory.h"
 #include <cstring>
-
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFReceiver)
 
 using namespace LHCb;
 

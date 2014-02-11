@@ -10,11 +10,16 @@
 #define GAUDIONLINE_MBMMONITORSVC_H
 
 #include "GaudiOnline/OnlineService.h"
-#include "MBM/bmstruct.h"
+#include "RTL/rtl.h"
 #include <map>
 
 // Declaration of the interface ID. 
 static const InterfaceID IID_IMBMMonitorSvc("IMBMMonitorSvc", 0, 0); 
+
+struct BUFFERS;
+struct MBMDescriptor;
+struct ServerBMID_t;
+struct USER;
 
 /*
  *    LHCb namespace
@@ -100,7 +105,7 @@ namespace LHCb    {
     struct MBMDescriptor   {
       char              active;
       const char*       name;
-      ServerBMID        id;
+      ServerBMID_t*     id;
       Info              info;
       MBMClients        clients;
       MBMMonitorSvc*    svc;

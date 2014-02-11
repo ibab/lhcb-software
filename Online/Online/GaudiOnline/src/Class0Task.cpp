@@ -1,8 +1,6 @@
 #include "GaudiOnline/Class0Task.h"
 #include "CPP/IocSensor.h"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class0Task)
-
 /// Standard constructor
 LHCb::Class0Task::Class0Task(IInterface* svc) : GaudiTask(svc) {
   m_configured = false;

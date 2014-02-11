@@ -4,15 +4,12 @@
 #include "dis.hxx"
 #include "GaudiOnline/DimMessageSvc.h"
 #include "GaudiOnline/DimErrorLogger.h"
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/Message.h"
 #include "RTL/strdef.h"
 #include "RTL/Lock.h"
 
 // Instantiation of a static factory class used by clients to create instances of this service
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DimErrorLogger)
 
 namespace LHCb  {
   class DnsInfo : public DimInfo  {

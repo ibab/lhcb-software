@@ -15,12 +15,8 @@
 //
 //====================================================================
 // $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventRequestServerRunable.cpp,v 1.3 2008-10-06 11:49:19 frankb Exp $
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/EventRequestServerRunable.h"
 #include "WT/wt_facilities.h"
-
-// Instantiation of a static factory class used by clients to create instances of this service
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,EventRequestServerRunable)
 
 using namespace LHCb;
 

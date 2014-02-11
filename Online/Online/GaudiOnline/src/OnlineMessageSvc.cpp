@@ -1,12 +1,10 @@
 // $Id: OnlineMessageSvc.cpp,v 1.19 2010-11-02 13:02:41 frankb Exp $
 
-#include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
 #include "GaudiOnline/OnlineMessageSvc.h"
 #include "RTL/rtl.h"
 #include <sstream>
 
-//DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineMessageSvc);
 using namespace std;
 using namespace LHCb;
 
