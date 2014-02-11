@@ -7,6 +7,9 @@
 
 - Packages removed: Det/VLDet, VL/VLDAQ (obsolete)
 
+- Packages Added: 
+ . DAQ/DAQKernel v1r0, to hold base classes of decoders, see task #49078
+
 </PRE><H1><A NAME=v36r4>2013-12-10 LHCbSys v36r4</A></H1><PRE>
 This version uses Gaudi v24r2 and LCG_66
 

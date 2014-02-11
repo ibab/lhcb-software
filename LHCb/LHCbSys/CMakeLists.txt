@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Calo/CaloInterfaces
                          Calo/CaloKernel
                          Calo/CaloUtils
+			 DAQ/DAQKernel
                          DAQ/DAQSys
                          DAQ/DAQUtils
                          DAQ/MDF
