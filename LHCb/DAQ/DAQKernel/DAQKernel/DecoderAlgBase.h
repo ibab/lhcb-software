@@ -56,7 +56,7 @@ namespace Decoder
     		const std::string& location  ,
     		const bool useRootInTES = true
     		) const
-    { return this->PBASE::getIfExists<TYPE> ( this->GaudiAlgorithm::evtSvc() , location , useRootInTES ) ; }
+    { return this->GaudiAlgorithm::getIfExists<TYPE> ( this->GaudiAlgorithm::evtSvc() , location , useRootInTES ) ; }
   };
 
 }
