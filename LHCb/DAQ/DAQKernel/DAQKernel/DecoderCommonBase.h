@@ -16,7 +16,7 @@
 
 namespace Decoder
 {
-  using GaudiUtils::operator<<;
+  //using GaudiUtils::operator<<;
 
   //-----------------------------------------------------------------------------
   /** @class CommonBase DecoderCommonBase.h DAQKernel/DecoderCommonBase.h
@@ -73,14 +73,14 @@ namespace Decoder
 
     /** @brief Returns a pointer to the first RawEvent in the search path
      */
-    virtual LHCb::RawEvent* findFirstRawEvent( ) const;
+    LHCb::RawEvent* findFirstRawEvent( ) const;
 
     /** @brief Returns a std::vector of raw banks out of a first raw event containing those banks
      */
-    virtual const std::vector< LHCb::RawBank * > & findFirstRawBank( const LHCb::RawBank::BankType ) const;
+    const std::vector< LHCb::RawBank * > & findFirstRawBank( const LHCb::RawBank::BankType ) const;
 
     //get for one location
-    virtual LHCb::RawEvent* tryEventAt( const std::string ) const;
+    LHCb::RawEvent* tryEventAt( const std::string ) const;
     /// Where to look for the raw event
     std::vector<std::string> m_rawEventLocations;
 
