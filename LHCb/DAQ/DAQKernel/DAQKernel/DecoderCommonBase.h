@@ -93,14 +93,20 @@ namespace Decoder
     		const std::string& location  ,
     		const bool useRootInTES = true
     		) const
-    { return this->PBASE::getIfExists<TYPE> ( svc , location , useRootInTES ) ; }
+    {
+    	throw GaudiException( "Invalid call to getIfExists of the baseclass", StatusCode::FAILURE );
+    	return  Gaudi::Utils::GetData<TYPE>::return_type();
+    }
 
     /// override getIfExists to aid the name resolution
     template < class TYPE  > inline typename Gaudi::Utils::GetData<TYPE>::return_type getIfExists (
     		const std::string& location  ,
     		const bool useRootInTES = true
     		) const
-    { return this->PBASE::getIfExists<TYPE> ( this->PBASE::evtSvc() , location , useRootInTES ) ; }
+    {
+    	throw GaudiException( "Invalid call to getIfExists of the baseclass", StatusCode::FAILURE );
+    	return Gaudi::Utils::GetData<TYPE>::return_type();
+    }
 
   private: // data
 
