@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 #include "Kernel/IANNSvc.h"
 
@@ -17,7 +18,7 @@
  *  Algorithm to translate HltSummary  into HltVertexReports
  *
  */
-class HltVertexReportsDecoder : public GaudiAlgorithm {
+class HltVertexReportsDecoder : public Decoder::AlgBase {
 public:
 
   enum HeaderIDs { kVersionNumber=2 };
@@ -33,13 +34,8 @@ public:
 
 private:
   // ----------------------- data members 
-
   /// location of output
   StringProperty m_outputHltVertexReportsLocation;
-
-  /// location of input
-  std::string m_inputRawEventLocation;
-  std::vector<std::string> m_rawEventLocations;
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  

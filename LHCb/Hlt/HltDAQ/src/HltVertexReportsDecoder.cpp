@@ -37,16 +37,15 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsDecoder )
 //=============================================================================
 HltVertexReportsDecoder::HltVertexReportsDecoder( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ),
-  m_inputRawEventLocation(""),
+: Decoder::AlgBase ( name , pSvcLocator ),
   m_hltANNSvc(0)
 {
-
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
-  declareProperty("InputRawEventLocation",
-                  m_inputRawEventLocation);  
-
   declareProperty("SourceID",
 		  m_sourceID= HltVertexReportsWriter::kSourceID_Dummy );  
 
@@ -61,16 +60,10 @@ HltVertexReportsDecoder::~HltVertexReportsDecoder() {}
 // Initialization
 //=============================================================================
 StatusCode HltVertexReportsDecoder::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
+  
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
   return sc;
 }
@@ -83,21 +76,7 @@ StatusCode HltVertexReportsDecoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get inputs
-  LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
-    //    try RootInTES independent path first
-    if (exist<LHCb::RawEvent>(*iLoc, false)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
-      break;
-    }
-    //   now try RootInTES dependent path
-    if (exist<LHCb::RawEvent>(*iLoc)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc);
-      break;
-    }
-  }
-
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
   if( ! rawEvent ){
     return Error(" No RawEvent found at any location. No HltVertexReports created.");
   }  

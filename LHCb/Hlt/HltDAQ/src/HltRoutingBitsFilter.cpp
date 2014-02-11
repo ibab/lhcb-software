@@ -9,8 +9,10 @@
 #include "Event/RawEvent.h" 
 #include "Event/RawBank.h" 
 
+#include "DAQKernel/DecoderAlgBase.h" 
 
-class HltRoutingBitsFilter : public GaudiAlgorithm {
+
+class HltRoutingBitsFilter : public Decoder::AlgBase {
 public: 
   HltRoutingBitsFilter( const std::string& name, ISvcLocator* pSvcLocator );
   virtual ~HltRoutingBitsFilter( ); ///< Destructor
@@ -18,8 +20,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 private:
   std::vector<unsigned int> m_r,m_v;
-  std::string m_inputRawEventLocation; 
-  std::vector<std::string> m_rawEventLocations;
   
 };
 
@@ -39,13 +39,16 @@ DECLARE_ALGORITHM_FACTORY( HltRoutingBitsFilter )
 //=============================================================================
 HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation("")
+: Decoder::AlgBase ( name , pSvcLocator )
 {
 
   declareProperty("VetoMask", m_v = std::vector<unsigned int>(3, 0x0));
   declareProperty("RequireMask", m_r = std::vector<unsigned int>(3, 0xFFFF));
-  declareProperty("RawEventLocation", m_inputRawEventLocation);
+  
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 
 }
 //=============================================================================
@@ -58,18 +61,13 @@ HltRoutingBitsFilter::~HltRoutingBitsFilter() {
 // Initialisation
 //=============================================================================
 StatusCode HltRoutingBitsFilter::initialize() {
-
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if (m_v.size()!=3) {
     return Error("Property VetoMask should contain exactly 3 unsigned integers");
   }
   if (m_r.size()!=3) {
     return Error("Property RequireMask should contain exactly 3 unsigned integers");
   }
-  m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   return StatusCode::SUCCESS;
 }
@@ -80,20 +78,7 @@ StatusCode HltRoutingBitsFilter::initialize() {
 StatusCode HltRoutingBitsFilter::execute() {
 
   
-  LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
-    //    try RootInTES independent path first
-    if (exist<LHCb::RawEvent>(*iLoc, false)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
-      break;
-    }
-    //   now try RootInTES dependent path
-    if (exist<LHCb::RawEvent>(*iLoc)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc);
-      break;
-    }
-  }
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
   if( ! rawEvent ){
     setFilterPassed(true);
     return Error("No RawEvent found at any location",

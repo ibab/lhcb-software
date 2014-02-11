@@ -36,16 +36,15 @@ DECLARE_ALGORITHM_FACTORY( HltTrackReportsDecoder )
 //=============================================================================
 HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation("")
-//m_hltANNSvc(0)
+: Decoder::AlgBase ( name , pSvcLocator )
 {
+   //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 
   declareProperty("OutputHltTrackReportsLocation",
     m_outputHltTrackLocation= "/Hlt2/Track/Velo" );  
-
-  declareProperty("InputRawEventLocation",
-                  m_inputRawEventLocation = LHCb::RawEventLocation::Default);  
 
   declareProperty("SourceID",
 		  m_sourceID= HltTrackReportsWriter::kSourceID_Dummy );  
@@ -60,17 +59,11 @@ HltTrackReportsDecoder::~HltTrackReportsDecoder() {}
 // Initialization
 //=============================================================================
 StatusCode HltTrackReportsDecoder::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
+  
   //m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   if( m_sourceID > HltTrackReportsWriter::kSourceID_Max ){
@@ -90,17 +83,8 @@ StatusCode HltTrackReportsDecoder::execute() {
 
 
   // get inputs
-  LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; (iLoc != m_rawEventLocations.end()&& rawEvent==0) ; ++iLoc ) {
-    //    try RootInTES independent path first
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc, false);
-    //   now try RootInTES dependent path
-    if (rawEvent==0) {
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc);
-    }
-  }
-
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
+  
   if( ! rawEvent ){
     return Error(" No RawEvent found at any location. No HltTracks created.");
   }  
@@ -149,7 +133,7 @@ StatusCode HltTrackReportsDecoder::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return Decoder::AlgBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

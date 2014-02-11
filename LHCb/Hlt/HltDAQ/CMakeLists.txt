@@ -12,7 +12,8 @@ gaudi_depends_on_subdirs(Det/DetCond
                          GaudiObjDesc
                          Hlt/HltServices
                          Kernel/HltInterfaces
-                         Phys/LoKiHlt)
+                         Phys/LoKiHlt
+			 DAQ/DAQKernel)
 
 find_package(AIDA)
 find_package(Boost COMPONENTS iostreams filesystem)

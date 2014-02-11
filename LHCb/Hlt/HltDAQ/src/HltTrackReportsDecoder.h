@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 //#include "Kernel/IANNSvc.h"
 
@@ -18,7 +19,7 @@
  *  Algorithm to read HltTracks from Raw Data and create containers on TES
  *
  */
-class HltTrackReportsDecoder : public GaudiAlgorithm {
+class HltTrackReportsDecoder : public Decoder::AlgBase {
 public: 
 
   enum HeaderIDs { kVersionNumber=1 };
@@ -38,11 +39,7 @@ private:
 
   /// location of output
   StringProperty m_outputHltTrackLocation;
-
-  /// location of input
-  std::string m_inputRawEventLocation;
-  std::vector<std::string> m_rawEventLocations;
-
+  
   /// location of HltTrackReports (will not be used unless ANNSvc not working) 
   StringProperty m_HltTrackReportsLocation;
 

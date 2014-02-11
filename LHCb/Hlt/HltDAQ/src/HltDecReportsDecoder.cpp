@@ -66,17 +66,16 @@ namespace {
 //=============================================================================
 HltDecReportsDecoder::HltDecReportsDecoder( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation(""),
+  : Decoder::AlgBase ( name , pSvcLocator ),
     m_hltANNSvc(0)
 {
-
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
   declareProperty("OutputHltDecReportsLocation",
-                  m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
-  declareProperty("InputRawEventLocation",
-                  m_inputRawEventLocation);  
-
-
+                  m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);
+  
   declareProperty("SourceID",
 		  m_sourceID= HltDecReportsWriter::kSourceID_Dummy );  
 
@@ -91,17 +90,12 @@ HltDecReportsDecoder::~HltDecReportsDecoder() {}
 // Initialization
 //=============================================================================
 StatusCode HltDecReportsDecoder::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
+  
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
   return StatusCode::SUCCESS;
 }
@@ -113,21 +107,12 @@ StatusCode HltDecReportsDecoder::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; (iLoc != m_rawEventLocations.end() && rawEvent==0); ++iLoc ) {
-    //    try RootInTES independent path first
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc, false);
-    //   now try RootInTES dependent path
-    if(rawEvent==0){
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc);
-      }
-  }
-
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
+  
   // create output container and put it on TES
   HltDecReports* outputSummary = new HltDecReports();
   put( outputSummary, m_outputHltDecReportsLocation );
-
+  
   if( ! rawEvent ){
     return Error(" No RawEvent found at any location. Empty HltDecReports created. ");
   }  
@@ -232,9 +217,7 @@ StatusCode HltDecReportsDecoder::execute() {
 }
 
 template <typename HDRConverter, typename I> 
-int
-HltDecReportsDecoder::decodeHDR(I i, I end,  
-                               HltDecReports& output ) const 
+int HltDecReportsDecoder::decodeHDR(I i, I end,  HltDecReports& output ) const 
 {
    int ret = 0;
    HDRConverter converter;
@@ -246,25 +229,34 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
 
     boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
     unsigned int hltType(HltDecReportsWriter::kSourceID_Hlt2); 
-    if (!selName) {
+    if (!selName) 
+    {
       selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
-    } else {
+    } 
+    else 
+    {
       hltType=HltDecReportsWriter::kSourceID_Hlt1;
     }
-    if( selName ){
+    if( selName )
+    {
       //   skip reports of the wrong type
       bool store(true);
       if( ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt1 ) ||
-	  ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt2 ) ){
-	store = ( hltType == m_sourceID );
+          ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt2 ) )
+      {
+        store = ( hltType == m_sourceID );
       } 
-      if( store ){
-	if( !output.insert( selName->first, dec ).isSuccess() ) {
-	  Error(" Duplicate decision report in storage "+std::string(selName->first), StatusCode::FAILURE, 20 ).ignore();
-	  ++ret;
-	}
+      if( store )
+      {
+        if( !output.insert( selName->first, dec ).isSuccess() ) 
+        {
+          Error(" Duplicate decision report in storage "+std::string(selName->first), StatusCode::FAILURE, 20 ).ignore();
+          ++ret;
+        }
       }
-    } else {
+    }
+    else 
+    {
       std::ostringstream mess;
       mess << " No string key found for trigger decision in storage "
            << " id=" << id;

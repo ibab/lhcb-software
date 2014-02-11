@@ -45,28 +45,21 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsDecoder )
 //=============================================================================
 HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ),
-    m_inputRawEventLocation(""),
+: Decoder::AlgBase ( name , pSvcLocator ),
     m_hltANNSvc(0)
 {
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 
   declareProperty("OutputHltSelReportsLocation",
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
 
-  declareProperty("InputRawEventLocation",
-                  m_inputRawEventLocation);  
-
   declareProperty("SourceID",
 		  m_sourceID= HltSelReportsWriter::kSourceID_Dummy );  
-
-
-  // declareProperty("InputRawEventLocation",
-  //  m_inputRawEventLocation= LHCb::RawEventLocation::Default);
-
-  //      this is no longer used, left not break old configuration options
-  declareProperty("HltDecReportsLocation",
-		  m_HltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
-
+  
+  
 }
 //=============================================================================
 // Destructor
@@ -77,17 +70,11 @@ HltSelReportsDecoder::~HltSelReportsDecoder() {}
 // Initialization
 //=============================================================================
 StatusCode HltSelReportsDecoder::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-  m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-
+  
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   if( m_sourceID > HltSelReportsWriter::kSourceID_Max ){
@@ -107,18 +94,10 @@ StatusCode HltSelReportsDecoder::execute() {
 
 
   // get inputs
-  LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; (iLoc != m_rawEventLocations.end()&& rawEvent==0) ; ++iLoc ) {
-    //    try RootInTES independent path first
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc, false);
-    //   now try RootInTES dependent path
-    if (rawEvent==0) {
-      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc);
-    }
-  }
-
-  if( ! rawEvent ){
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
+  
+  if( ! rawEvent )
+  {
     return Error(" No RawEvent found at any location. No HltSelReports created.");
   }  
 
@@ -688,7 +667,7 @@ StatusCode HltSelReportsDecoder::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return Decoder::AlgBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 #include "Event/HltDecReport.h"
 
 #include "Kernel/IANNSvc.h"
@@ -19,7 +19,7 @@
  *  Algorithm to read HltDecReports from Raw Data and create container on TES
  *
  */
-class HltDecReportsDecoder : public GaudiAlgorithm {
+class HltDecReportsDecoder : public Decoder::AlgBase {
 public: 
   /// Standard constructor
   HltDecReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
@@ -35,16 +35,13 @@ private:
   template <typename HDRConverter,typename I > 
   int decodeHDR(I i, I end,  LHCb::HltDecReports& output) const ;
 
-  /// location of input H
+  /// location of output
   StringProperty m_outputHltDecReportsLocation;
-
-  /// location of input
-  std::string m_inputRawEventLocation;
-  std::vector<std::string> m_rawEventLocations;
-
+  
+  
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
-
+  
   /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
   UnsignedIntegerProperty m_sourceID;
 };
