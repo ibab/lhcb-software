@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-02-11 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================= OTDet v8r10 2014-02-05 =========================
 ! 2014-02-05 - Christoph Langenbruch
  - Using the vdt library for the calculation of the tanh in WalkRelation::walk. 

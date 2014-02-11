@@ -9,11 +9,12 @@ gaudi_depends_on_subdirs(Det/DetDescCnv
 
 find_package(Boost)
 find_package(GSL)
+find_package(VDT)
 
 gaudi_add_library(OTDetLib
                   src/Lib/*.cpp
                   PUBLIC_HEADERS OTDet
-                  INCLUDE_DIRS Boost GSL
+                  INCLUDE_DIRS Boost GSL VDT
                   LINK_LIBRARIES Boost GSL DetDescCnvLib LHCbKernel LHCbMathLib)
 
 gaudi_add_module(OTDet
