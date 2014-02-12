@@ -412,3 +412,114 @@ class ChargedProtoParticleSelection(UniquelyNamedObject,
         for pid in pids :
             if pid not in ProtoParticleSelection.__allowedPIDs :
                 raise Exception(pid+" not in allowed set of PID infos")
+
+
+# ========================================================================
+## helper shortcut fot creation of 1-step selection
+#
+#  It is very simple stuff, but in practice it does save a lot of typing!
+# 
+#  E.g. for 1-step filtering:
+#
+#  @code
+#
+#  from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+#  from StandardParticles                     import StdAllLooseMuons as muons 
+#  from PhysSelPython.Wrappers                import SimpleSelection
+#
+#  good_muons = SimpleSelection (
+#       'GoodMu'          ,
+#       FilterDesktop     ,
+#       input = [ muons ] ,
+#       Code  = " PT>1 * GeV "  ## will be transferred to the algorithm 
+#       )
+#
+#  @endcode
+# 
+#  For 1-step decay 
+#
+#  @code
+#
+#  from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+#  from StandardParticles                     import StdAllLooseMuons as muons 
+#  from PhysSelPython.Wrappers                import SimpleSelection
+#
+#  dimuons = SimpleSelection (
+#       'DiMu'           ,
+#       CombineParticles ,
+#       input = [ muons ] ,
+#       ## the rest of parameters are sent to athe algorithm:
+#       DecayDescriptor = " J/psi(1S) -> mu+ mu-" ,
+#       CombinationCut  = " in_range( 3 * GeV  , AM , 3.2 * GeV )  " ,
+#       MotherCut       = " in_range( 3 * GeV  ,  M , 3.2 * GeV )  " ,
+#       )
+#
+#  @endcode
+# 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-12
+# 
+#  @param name          unique selection name 
+#  @param algotype      type of algorithm to be used
+#  @param inputs        list of input/required selection
+#  @param args          additional arguments to be used for algorithm
+#  @param kwargs        additional arguments to be used for algorithm
+#  @return the selection object
+# 
+def SimpleSelection (
+    name     ,   ## unique selection name 
+    algotype ,   ## type of algorithm to be used
+    inputs   ,   ## list of input/required selections
+    *args    ,   ## additional arguments to be used for algorithm
+    **kwargs ) : ## additional arguments to be used for algorithm
+    """
+    Helper shortcut fot creation of 1-step selection
+
+    It is very simple stuff, but in practice it does save a lot of typing!
+    
+    
+    #  from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+    #  from StandardParticles                     import StdAllLooseMuons as muons 
+    #  from PhysSelPython.Wrappers                import SimpleSelection
+    #
+    #  good_muons = SimpleSelection (
+    #       'GoodMu'          ,
+    #       FilterDesktop     ,
+    #       input = [ muons ] ,
+    #       Code  = ' PT>1 * GeV '  ## will be transferred to the algorithm 
+    #       )
+    #
+
+    For 1-step decay 
+    
+    #
+    #  from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+    #  from StandardParticles                     import StdAllLooseMuons as muons 
+    #  from PhysSelPython.Wrappers                import SimpleSelection
+    #
+    #  dimuons = SimpleSelection (
+    #       'DiMu'           ,
+    #       CombineParticles ,
+    #       input = [ muons ] ,
+    #       ## the rest of parameters are sent to athe algorithm:
+    #       DecayDescriptor = ' J/psi(1S) -> mu+ mu- ' ,
+    #       CombinationCut  = ' in_range( 3 * GeV  , AM , 3.2 * GeV )  ' ,
+    #       MotherCut       = ' in_range( 3 * GeV  ,  M , 3.2 * GeV )  ' ,
+    #       )
+    
+    """
+    #
+    ## create new algorithm or algorothm generator 
+    #
+    alg = algotype ( *args , **kwargs )
+    # 
+    return Selection (
+        name                        , 
+        Algorithm          = alg    ,
+        RequiredSelections = inputs
+        )
+
+
+# ========================================================================
+# The END 
+# ========================================================================
