@@ -59,7 +59,7 @@ m_bankTypeString(""){
  
  declareProperty( "rawEventLocation",  m_rawEventLocation = "", 
                   "OBSOLETE. Use RawEventLocations instead" );
- declareProperty( "RawEventLocations", m_rawEventLocations,
+ declareProperty( "RawEventLocations", m_rawEventLocations={LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
                   "List of possible locations of the RawEvent object in the"
                   " transient store. By default it is LHCb::RawEventLocation::Other,"
                   " LHCb::RawEventLocation::Default.");

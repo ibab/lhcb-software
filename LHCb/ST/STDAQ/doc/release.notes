@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2014-02-12 - Rob Lambert
+ - Initialize the search paths following task task #49078, but don't use
+   the new base classes yet, it looks a little over complicated 
+   for that right now.
+
 !========================= STDAQ v4r3 2013-09-30 =========================
 ! 2013-09-18 - Jianchun Wang
  - Support DB mapping of UT board vs TELL1 ID.
