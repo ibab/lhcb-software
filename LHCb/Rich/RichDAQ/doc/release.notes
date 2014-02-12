@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2014-02-12 - Rob Lambert
+ - Initialize RawEventLocations to a more realistic list.
+
 ! 2014-01-20 - Marco Clemencic
  - Fixed compilation with Clang 3.3.
 

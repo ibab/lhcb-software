@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-12 - Rob Lambert
+ - RichDAQ (small) changes for task #49078 reflected in DecoderDB
+
+! 2014-02-12 - Rob Lambert
  - STDAQ (small) changes for task #49078 reflected in DecoderDB
 
 ! 2014-02-12 - Rob Lambert

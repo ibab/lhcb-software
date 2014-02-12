@@ -61,9 +61,9 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "ActiveRICHes",       m_richIsActive                );
   declareProperty( "PurgeHPDsFailIntegrityTest", m_purgeHPDsFailIntegrity = true );
   declareProperty( "HotPixelsToMask",    m_hotChannels                 );
-  declareProperty( "RawEventLocations",  m_rawEventLocations,
+  declareProperty( "RawEventLocations",  m_rawEventLocations={LHCb::RawEventLocation::Rich, LHCb::RawEventLocation::Default},
                    "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Other,"
+                   " transient store. By default it is LHCb::RawEventLocation::Rich,"
                    " LHCb::RawEventLocation::Default.");
 }
 
@@ -128,15 +128,10 @@ StatusCode RawDataFormatTool::initialize()
   }
 
   // Initialise the RawEvent locations
-  const bool usingDefaultLocation = m_rawEventLocations.empty();
-  if ( std::find( m_rawEventLocations.begin(),
-                  m_rawEventLocations.end(),
-                  LHCb::RawEventLocation::Default ) == m_rawEventLocations.end() )
-  {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back( LHCb::RawEventLocation::Rich    );
-    m_rawEventLocations.push_back( LHCb::RawEventLocation::Default );
-  }
+  const bool usingDefaultLocation = (m_rawEventLocations.size()==2 
+                                     && m_rawEventLocations[0]==LHCb::RawEventLocation::Rich 
+                                     && m_rawEventLocations[1]==LHCb::RawEventLocation::Default);
+  
   if ( !usingDefaultLocation )
   {
     info() << "Using " << m_rawEventLocations << " as search path for the RawEvent object"
