@@ -25,7 +25,7 @@ macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) -lrt'
 library GaudiOnlineComp ../components/*.cpp -import=AIDA  -import=DIM -import=DAQEvent -import=MDF 
 apply_pattern component_library library=GaudiOnlineComp
 apply_pattern generate_rootmap library=GaudiOnlineComp
-macro_append GaudiOnlineComp_dependencies  " GaudiOnline "
+macro_append  GaudiOnlineComp_dependencies  " GaudiOnline "
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 
 private

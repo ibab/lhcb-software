@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #endif
 #include <iostream>
+#include <sstream>
 #include <cerrno>
 
 #include "RTL/DllAccess.h"
@@ -79,9 +80,11 @@ int ProcessGroup::wait(int flag)    {
     if ( pid != -1 ) {
       Process* p = get(pid);
       if ( p && Process::debug() ) {
-	cout << "Process " << p->name() << " ended. Status=" << sc;
-	if ( !p->output().empty() ) cout << " output redirected to:" << p->output();
-	cout << endl;
+	std::stringstream str;
+	str << "Process " << p->name() << " ended. Status=" << sc;
+	if ( !p->output().empty() ) str << " output redirected to:" << p->output();
+	str << endl;
+	::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
       }
     }
     else if ( pid == -1 ) {
@@ -131,6 +134,7 @@ int ProcessGroup::removeAll() {
 extern "C" int rtl_test_process_group(int, char** ) {
   Process *p2;
   ProcessGroup pg;
+  std::stringstream str;
   const char *a1[] = {"5",0}, *a2[]={"10",0}, *a3[]={"15",0};
   pg.add(   new Process("SLEEPER_1","/bin/sleep",a1));
   pg.add(p2=new Process("SLEEPER_2","/bin/sleep",a2));
@@ -139,18 +143,19 @@ extern "C" int rtl_test_process_group(int, char** ) {
   pg.start();
   Process::setDebug(true);
   ::lib_rtl_sleep(200);
-  cout << "Stop process " << p2->name() << endl;
+  str << "Stop process " << p2->name() << endl;
   p2->stop();
   ::lib_rtl_sleep(200);
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
   if ( ::fabs(float(stop-start)) > 14E0 ) {
-    cout << "All processes ended" << endl;
+    str << "All processes ended" << endl;
   }
   else {
-    cout << "Subprocess execution failed." << endl;
+    str << "Subprocess execution failed." << endl;
   }
+  ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   return 0;
 }
 
@@ -177,6 +182,7 @@ extern "C" int rtl_test_process_sleep(int argc, char** argv) {
 extern "C" int rtl_test_sub_processes(int, char** ) {
   Process *p2, *p4, *p6;
   ProcessGroup pg;
+  std::stringstream str;
   const char *a1[]={"rtl_test_process_sleep","4",0}, *a2[]={"rtl_test_process_sleep","5",0};
   const char *a3[]={"rtl_test_process_sleep","6",0}, *a4[]={"rtl_test_process_sleep","7",0};
   const char *a5[]={"rtl_test_process_sleep","8",0}, *a6[]={"rtl_test_process_sleep","9",0};
@@ -194,23 +200,29 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   pg.start();
   time_t start = ::time(0);
   ::lib_rtl_sleep(4000);
-  cout << "Stop process " << p2->name() << endl;
+  str.str("");
+  str << "Stop process " << p2->name() << endl;
+  ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   p2->stop();
   ::lib_rtl_sleep(100);
-  cout << "Stop process " << p4->name() << endl;
+  str.str("");
+  str << "Stop process " << p4->name() << endl;
+  ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   p4->stop();
   ::lib_rtl_sleep(100);
-  cout << "Stop process " << p6->name() << endl;
+  str.str("");
+  str << "Stop process " << p6->name() << endl;
+  ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   p6->stop();
   ::lib_rtl_sleep(15000);
   pg.wait();
   pg.removeAll();
   time_t stop = ::time(0);
-  if ( ::fabs(float(stop-start)) < 30E0 ) {
-    cout << "All processes ended" << endl;
-  }
-  else {
-    cout << "Subprocess execution failed:" << ::fabs(float(stop-start)) << "seconds." << endl;
-  }
+  str.str("");
+  if ( ::fabs(float(stop-start)) < 30E0 )
+    str << "All processes ended" << endl;
+  else
+    str << "Subprocess execution failed:" << ::fabs(float(stop-start)) << "seconds." << endl;
+  ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   return 0;
 }

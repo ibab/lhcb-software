@@ -7,6 +7,7 @@
 #define SIGKILL SIGTERM
 #endif
 #include <iostream>
+#include <sstream>
 #include <cerrno>
 #include "RTL/rtl.h"
 #include "RTL/Process.h"
@@ -87,7 +88,7 @@ int Process::sendSignal(int sig) {
 int Process::sendSignalAll(int sig) {
 #ifdef __linux
   if ( m_pid >= 0 ) {
-    //cout << "Send signal " << sig << " to " << -m_pid << endl;
+    ::lib_rtl_output(LIB_RTL_DEBUG,"Send signal %d to %d",sig,int(-m_pid));
     int ret = ::kill(-m_pid, sig);
     if ( ret == 0 ) {
       return 1;
@@ -143,13 +144,15 @@ int Process::start(bool new_process_group)    {
     for(e=environ,cnt=0; *e; ++e) env[++cnt] = *e;
     env[++cnt] = 0;
     if ( Process::debug() ) {
+      std::stringstream str;
       ::lib_rtl_sleep(10);
-      cout << "Child: Starting process:" << m_name;
+      str << "Child: Starting process:" << m_name;
       //for(size_t i=0; i<m_args.size();++i)
-      //  cout << " " << arg[i+1];
-      //cout << " PID:" << ::lib_rtl_pid();
-      if ( !m_output.empty() ) cout << " output redirected to:" << m_output;
-      cout << endl;
+      //  str << " " << arg[i+1];
+      //str << " PID:" << ::lib_rtl_pid();
+      if ( !m_output.empty() ) str << " output redirected to:" << m_output;
+      str << endl;
+      ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
     }
     ::execve(m_exec.c_str(),arg,env);
     delete [] arg;
@@ -158,9 +161,11 @@ int Process::start(bool new_process_group)    {
   }
   else if (m_pid > 0)   {  // parent process
     if ( Process::debug() ) {
-      cout << "Parent: Started process:" << m_name;
-      if ( !m_output.empty() ) cout << " output redirected to:" << m_output;
-      cout << endl;
+      std::stringstream str;
+      str << "Parent: Started process:" << m_name;
+      if ( !m_output.empty() ) str << " output redirected to:" << m_output;
+      str << endl;
+      ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
     }
     m_state = RUNNING;
     return 1;
@@ -220,19 +225,23 @@ int Process::wait(int flag)    {
   do {
     ret = ::waitpid(m_pid,&m_status,opt);
   } while (ret == -1 && errno == EINTR);
+  std::stringstream str;
   if ( ret == -1 ) {
     return INVALID;
   }
   else if( WIFEXITED(m_status) )      {
-    cout << "waitpid() '" << m_name << "' exited: Status=" << WEXITSTATUS(m_status) << endl;
+    str << "waitpid() '" << m_name << "' exited: Status=" << WEXITSTATUS(m_status) << endl;
     return ENDED;
   }
   else if( WIFSTOPPED(m_status) )      {
     return STOPPED;
   }
   else if( WIFSIGNALED(m_status) )      {
-    cout << "waitpid() '" << m_name << "' exited due to a signal: " << WTERMSIG(m_status) << endl;
+    str << "waitpid() '" << m_name << "' exited due to a signal: " << WTERMSIG(m_status) << endl;
     return ENDED;
+  }
+  if ( str.str().length() > 0 )  {
+    ::lib_rtl_output(LIB_RTL_INFO,str.str().c_str());
   }
   return RUNNING;
 #else

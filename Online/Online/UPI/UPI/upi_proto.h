@@ -91,7 +91,6 @@ int upic_key_action (unsigned int, void*);
 #endif
 
 /*- From UPI_ITEM.C ---------------------------------------------------*/
-
 Item* upic_find_item (Item*,int);
 Item* upic_find_item_row (Item*,int,int*);
 Item* upic_find_next_item (Item*,int*);
@@ -104,7 +103,6 @@ void upic_draw_item (Item*,int);
 #endif
 
 /*- From UPI_MENU.C ---------------------------------------------------*/
-
 Menu* upic_find_menu (int);
 void upic_drop_menu (Menu*);
 int upic_connect_menu (Menu*, int, int);
@@ -116,7 +114,6 @@ void upic_draw_menu (Menu*);
 
 /*- From UPI_MESSAGE.C ------------------------------------------------*/
 void upic_drop_async (Async_line*);
-
 #ifdef SCREEN
 int upic_scroll_message (int);
 int upic_resize_message (Display*,int,int);
@@ -127,7 +124,6 @@ int upic_refresh_message (Async*);
 #endif
 
 /*- From UPI_PAGE.C ---------------------------------------------------*/
-
 int upic_set_items_per_page (int);
 int upic_get_items_per_page (void);
 Page* upic_open_page (void*);
@@ -141,7 +137,6 @@ void upic_draw_title_bar (Display*,const char*,int,int,const char*);
 #endif
 
 /*- From UPI_PARAM.C --------------------------------------------------*/
-
 int upic_get_param (int,int,int,Menu**,Page**,Item**,Param**);
 int upic_refresh_param_page (int);
 int upic_refresh_param_line (int,int);
@@ -175,7 +170,6 @@ void upic_draw_param (Page*,Param*,int,int,int);
 #endif
 
 /*- From UPI_POPUP.C --------------------------------------------------*/
-
 #ifdef SCREEN
 void upic_open_pop_up (Menu*,Param*,int,int);
 void upic_close_pop_up (void);
@@ -184,7 +178,6 @@ void upic_act_on_pop_up (int*,int,int);
 #endif
 
 /*- From UPI_REMOTE.C -------------------------------------------------*/
-
 void upic_net_close ();
 int  upic_net_init (const char* name, char** server, WtRoutine handler, WtRoutine broadcast);
 void upic_net_discard_server ();
@@ -275,20 +268,9 @@ void upir_moving_histo (Histo*);
 void fill_histo (Histo*);
 void upir_copy_histo (Histo*);
 void upir_declare_callback (int,int);
-
 #endif
 
 /*- From UPI_SCREEN.C -------------------------------------------------*/
-
-int upic_set_cursor (int,int,int);
-int upic_set_cursor_and_mark (int,int,int,int);
-int upic_save_screen (FILE**,FILE**);
-int upic_restore_screen (void);
-int upic_begin_update (void);
-int upic_end_update (void);
-int upic_hide_menu (int);
-
-int upic_refresh_screen (void);
 #ifdef SCREEN
 void upic_broadcast_handler (const char*);
 void upic_init_screen (void);
@@ -304,13 +286,7 @@ int upic_page_down (Menu*);
 int upic_go_backward (Menu*);
 #endif
 
-
 /*- From UPI_SYSTEM.C -------------------------------------------------*/
-
-int upic_attach_terminal (void);
-int upic_declare_exit_handler (Routine);
-int upic_declare_ast_handler (Routine);
-int upic_quit (void);
 int upic_set_mode (int);
 int upic_get_mode (void);
 System* upic_get_system (void);
@@ -325,25 +301,12 @@ int upic_disconnect_process (const char*);
 int upic_show_memory (void);
 
 /*- From UPI_TOOLS.C --------------------------------------------------*/
-
-int upic_show_notice (const char*,int,const char**);
-int upic_cancel_notice (void);
-int upic_show_warning (int,const char**);
-int upic_lock_cursor (void);
-int upic_unlock_cursor (void);
-int upic_back_space (int);
-int upic_register_on_keypad (int,int,int);
-int upic_attach_pf1 (int);
-int upic_declare_callback (int,int,Routine,void*);
-
 #ifdef SCREEN
 int upic_valid_keypad (int);
 int upic_branch_on_keypad (int);
 #endif
 
-
 /*- From UPI_WAKE.C ---------------------------------------------------*/
-
 void upic_wakeup (void);
 void upic_set_wakeup (void);
 int upic_test_wakeup (void);

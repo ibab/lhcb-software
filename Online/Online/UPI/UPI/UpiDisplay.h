@@ -36,7 +36,7 @@ namespace UPI {
       int          m_menuID, m_lastCMD;
       char**       m_lines;
       ReallyClose* m_quit;
-      Area         m_area;
+        Area         m_area;
       const Area& area() const                    { return m_area;                       }
       void print_char(int x, int y, int val);
     public:

@@ -186,6 +186,13 @@ void UpiDisplay::handle(const Event& ev) {
   switch(ev.eventtype) {
   case UpiEvent:
     if ( ev.command_id == CMD_CLOSE ) {
+      if ( m_client )   {
+	m_client->handle(ev);
+	return;
+      }
+      if ( 0 == m_quit )   {
+	m_quit = new ReallyClose(m_menuID,CMD_CLOSE);
+      }
       m_quit->invoke();
       return;
     }
@@ -197,7 +204,7 @@ void UpiDisplay::handle(const Event& ev) {
   }
 }
 
-UpiDisplay::UpiDisplay(size_t w, size_t h)  
+UpiDisplay::UpiDisplay(size_t w, size_t h)
 {
   m_area = Area(w,h);
   m_menuID = UpiSensor::newID();
@@ -209,7 +216,7 @@ UpiDisplay::UpiDisplay(size_t w, size_t h)
   m_lastCMD = CMD_CLOSE;
   m_lines = new char*[m_area.height+1];
   for(int i=0; i<=m_area.height; ++i) m_lines[i] = new char[m_area.width+1];
-  m_quit = new ReallyClose(m_menuID,CMD_CLOSE);
+  m_quit = 0;//new ReallyClose(m_menuID,CMD_CLOSE);
 }
 
 
