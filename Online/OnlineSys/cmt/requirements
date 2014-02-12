@@ -23,7 +23,7 @@ use CondDBServer        v1r5     Online
 use Controller          v0r8     Online
 use ControllerTests     v0r2     Online
 use DailyReport         v1r2     Online
-use DefHLTUtils         v1r6     Online
+use DefHLTUtils         v1r7     Online
 use DIM                 v20r7p2  Online
 use FarmConfig          v0r3     Online
 use FarmMonitor         v2r12    Online
