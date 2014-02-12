@@ -415,19 +415,18 @@ class StrippingPromptCharmConf(LineBuilder) :
             kwargs ['Preambulo'        ] = self['Preambulo']
 
         if not kwargs.has_key ( 'ParticleCombiners' ) :
-            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            
+            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' }
+
         #
-        ## create new seleciton
+        ## use "simple-selection"
         #
-        alg = algotype ( *args , **kwargs )
-        # 
-        from PhysSelPython.Wrappers import Selection
-        sel = Selection (
-            sel_name                    , 
-            Algorithm          = alg    ,
-            RequiredSelections = inputs
-            )
+        from PhysSelPython.Wrappers import SimpleSelection
+        sel = SimpleSelection (
+            sel_name ,
+            algotype ,
+            inputs   , 
+            *args    ,
+            **kwargs )
         # 
         return self._add_selection( sel_tag , sel ) 
                            
@@ -852,7 +851,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             DecayDescriptor = " [ Lambda_c+ -> p+  K-  pi+ ]cc" ,
             ##
             Combination12Cut  = """
-            ( AM < 2.5 * GeV      ) &
+            ( AM < 2.6 * GeV      ) &
             ( ACHI2DOCA(1,2) < 16 ) 
             """ ,
             ## 

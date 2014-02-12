@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-02-12 - Vanya Belyaev
+ - PsiX0,PSiX,Promptcharm: make use of "SimpleSelection" wrapper 
+
+
 ! 2014-02-10 - Vanya Belyaev
  - PsiX0: 
    add pi0-merged for Fatima

@@ -306,17 +306,16 @@ class PsiX0Conf(LineBuilder) :
         if not kwargs.has_key( 'ParticleCombiners' ) :
             kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             
-        #
-        ## create new seleciton
-        #
-        alg = algotype ( *args , **kwargs )
         # 
-        from PhysSelPython.Wrappers import Selection
-        sel = Selection (
-            sel_name                    , 
-            Algorithm          = alg    ,
-            RequiredSelections = inputs
-            )
+        ## use "simple-selection"
+        #
+        from PhysSelPython.Wrappers import SimpleSelection
+        sel = SimpleSelection (
+            sel_name ,
+            algotype ,
+            inputs   , 
+            *args    ,
+            **kwargs )
         # 
         return self._add_selection( sel_tag , sel ) 
 
@@ -1714,8 +1713,8 @@ class PsiX0Conf(LineBuilder) :
             """ , 
             ##
             MotherCut = """
-            in_range ( 4.45 * GeV , dump1 ( M ) , 7.05 * GeV ) & 
-            ( monitor ( chi2vxndf ) < 10 ) 
+            in_range ( 4.45 * GeV , M , 7.05 * GeV ) & 
+            ( chi2vxndf < 10 ) 
             """
             )
     ## ( ctau_9 > %s ) 

@@ -704,18 +704,17 @@ class PsiX_BQ_Conf(LineBuilder) :
 
         if not kwargs.has_key ( 'ParticleCombiners' ) :
             kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            
-        #
-        ## create new seleciton
-        #
-        alg = algotype ( *args , **kwargs )
+                          
         # 
-        from PhysSelPython.Wrappers import Selection
-        sel = Selection (
-            sel_name                    , 
-            Algorithm          = alg    ,
-            RequiredSelections = inputs
-            )
+        ## use "simple-selection"
+        #
+        from PhysSelPython.Wrappers import SimpleSelection
+        sel = SimpleSelection (
+            sel_name ,
+            algotype ,
+            inputs   , 
+            *args    ,
+            **kwargs )
         # 
         return self._add_selection( sel_tag , sel ) 
 
