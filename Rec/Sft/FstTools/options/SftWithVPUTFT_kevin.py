@@ -53,6 +53,8 @@ FstConf().ForwardMinPt = 500  # MeV, pT cut in FT
 FstConf().TrackFit = ''#'HltFit'
 # default is no Rich reco, turn on by uncommenting
 #FstConf().RICHType = 'HLT2015'
+FstConf().MuonID = False
+
 
 # use the newly introduced DoNothing property to turn off algorithms
 algos = [
