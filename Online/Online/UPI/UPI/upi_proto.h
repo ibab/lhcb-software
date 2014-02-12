@@ -1,6 +1,8 @@
 #ifndef __UPI_PROTO_H
 #define __UPI_PROTO_H
 #include <cstdio>
+#include "UPI/upi_menu.h"
+
 /* 
         upi_proto.h
          Created           :  2-JAN-1992 by Christian Arnault
@@ -12,6 +14,10 @@ extern "C"  {
 #else
 #define __CXX_CONST 
 #endif
+
+typedef struct HISTO       Histo;
+typedef struct ITEM        Item;
+
 
 /*- From UPI_AST.C ----------------------------------------------------*/
 
@@ -86,26 +92,6 @@ int upic_key_action (unsigned int, void*);
 
 /*- From UPI_ITEM.C ---------------------------------------------------*/
 
-int upic_add_command (int id,  const char* text_0, const char* text_1);
-int upic_add_comment ( int id, const char* text_0, const char* text_1);
-int upic_add_param_line ( int id, const char* text_0, const char* text_1);
-int upic_replace_command ( int menu_id, int id, const char* text_0, const char* text_1);
-int upic_replace_comment (int menu_id, int id, const char* text_0, const char* text_1);
-int upic_replace_param_line (int menu_id, int id, const char* text_0, const char* text_1);
-int upic_delete_comment (int,int);
-int upic_delete_command (int,int);
-int upic_insert_command (int menu_id, int pos, int id, const char* text_0, const char* text_1);
-int upic_insert_comment (int menu_id, int pos, int id, const char* text_0, const char* text_1);
-int upic_insert_param_line (int menu_id, int pos, int id, const char* text_0, const char* text_1);
-int upic_enable_command (int,int);
-int upic_disable_command (int,int);
-int upic_enable_commands(int m, int n, ...);
-int upic_disable_commands(int m, int n, ...);
-int upic_enable_action_routine (int,int,Routine);
-int upic_disable_action_routine (int,int);
-int upic_add_item (int,const char*,const char*,int);
-int upic_replace_item (int,int,const char*,const char*,int);
-int upic_insert_item (int,int,int,const char*,const char*,int);
 Item* upic_find_item (Item*,int);
 Item* upic_find_item_row (Item*,int,int*);
 Item* upic_find_next_item (Item*,int*);
@@ -119,17 +105,8 @@ void upic_draw_item (Item*,int);
 
 /*- From UPI_MENU.C ---------------------------------------------------*/
 
-int upic_open_menu (int,int,int,const char*,const char*,const char*);
-int upic_open_pulldown_menu (int,int,int,const char*,const char*,const char*);
-int upic_open_detached_menu (int,int,int,const char*, const char*,const char*);
-int upic_open_param (int,int,int,const char*,const char*,const char*);
-int upic_close_param (void);
-int upic_close_menu (void);
-int upic_delete_menu (int);
-int upic_erase_menu (int);
 Menu* upic_find_menu (int);
 void upic_drop_menu (Menu*);
-int upic_open_menus (int,int,int,const char*,const char*,const char*,int);
 int upic_connect_menu (Menu*, int, int);
 
 #ifdef SCREEN
@@ -138,12 +115,6 @@ void upic_draw_menu (Menu*);
 #endif
 
 /*- From UPI_MESSAGE.C ------------------------------------------------*/
-int upic_write_message(const char*,const char*);
-int upic_write_message2(const char* fmt, ...);
-int upic_write_rendered_message (const char*, const char*, int render);
-int upic_write_rendered_message_sync (const char* text1, const char* text2, int render);
-int upic_set_message_window (int,int,int,int);
-int upic_get_message_window (int*,int*,int*,int*);
 void upic_drop_async (Async_line*);
 
 #ifdef SCREEN
@@ -159,7 +130,6 @@ int upic_refresh_message (Async*);
 
 int upic_set_items_per_page (int);
 int upic_get_items_per_page (void);
-int upic_change_titles (int,const char*,const char*,const char*);
 Page* upic_open_page (void*);
 void upic_drop_page (Page*);
 
@@ -172,8 +142,6 @@ void upic_draw_title_bar (Display*,const char*,int,int,const char*);
 
 /*- From UPI_PARAM.C --------------------------------------------------*/
 
-int upic_set_param ( const void*, int, const char *, ... );
-int upic_modify_param ( int, int, int, ... );
 int upic_get_param (int,int,int,Menu**,Page**,Item**,Param**);
 int upic_refresh_param_page (int);
 int upic_refresh_param_line (int,int);
@@ -380,19 +348,6 @@ void upic_wakeup (void);
 void upic_set_wakeup (void);
 int upic_test_wakeup (void);
 void upic_reset_wakeup (void);
-
-/*- From UPI_WINDOW.C -------------------------------------------------*/
-
-int upic_open_window (void);
-int upic_open_pulldown_window (void);
-int upic_open_old_window (int);
-int upic_set_window_position (int,int,int);
-int upic_get_window_position (int,int* rols,int* cols);
-int upic_has_screen();
-int upic_get_screen_size(int* rows, int* cols);
-int upic_open_detached_window (void);
-int upic_get_window_size(int menu_id, int* col, int* row);
-int upic_get_screen_size(int* rows, int* cols);
 
 /*- From --------------------------------------------------------------*/
 #ifdef __cplusplus
