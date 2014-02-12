@@ -20,4 +20,8 @@ Runable.MonitorScript        = "../job/runHLT.sh";
 Runable.MeasuementStartDelay = 15;  // seconds
 Runable.MeasurementIntervall = 5;   // seconds
 Runable.MeasurementDuration  = 110; // seconds
-Runable.OutputFile           = "MooreStats.txt";
+Runable.Monitors             = {
+			     "LHCb::MooreFileMonitor/StdoutLogger",
+			     "LHCb::MooreFileMonitor/FileLogger"
+			     };
+FileLogger.Output            = "MooreStats.txt";

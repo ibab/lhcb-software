@@ -21,7 +21,13 @@ use  RootCnv           v* Online
 use GaudiCheckpointing v* Online
 use FarmConfig         v* Online
 use Gaucho             v* Online
-#use Brunel v* Rec
+#use Brunel             v* Rec
+use GaudiUPI           v* Online
+use UPI                v* Online
+
+library MooreStandalone *.cpp
+apply_pattern component_library library=MooreStandalone
+macro_append MooreStandalone_shlibflags ' -lrt'
 
 set GaudiOnlineExe   "GaudiOnlineExe.exe"
 set GAUDIONLINE_OPTS "${GAUDIONLINEROOT}/options"

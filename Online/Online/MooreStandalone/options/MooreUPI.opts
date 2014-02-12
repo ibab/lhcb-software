@@ -1,0 +1,10 @@
+#include "../options/MooreTest.opts"
+Runable.Monitors = {
+		 "LHCb::MooreFileMonitor/FileLogger",
+		 "LHCb::UpiMooreMonitor/UpiEvents",
+		 "LHCb::UpiMooreMonitor/UpiRates",
+		 "LHCb::UpiMooreMonitor/UpiAll" 
+		 };
+UpiEvents.Mode = 1;
+UpiRates.Mode  = 0;
+UpiAll.Mode    = 2;

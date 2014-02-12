@@ -17,5 +17,6 @@ else
     export DATA_DIRECTORY=${MOORESTANDALONEROOT}/cmt;
     export NUMBER_OF_SLAVES=10;
     `which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreTest.opts;
+    #`which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreUPI.opts;
 fi;
 
