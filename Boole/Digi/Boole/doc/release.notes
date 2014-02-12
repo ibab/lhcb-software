@@ -35,6 +35,7 @@ This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
    . Updated upgrade tests to new DB tags after UT changes in DB.
    . Add exclusion for memory change warnings from BooleInit
    . Updated boole-upgrade-baseline-{,25ns,-ut} references
+   . Temp change to move away from castor access protocols to rfio (needs proper fix)
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 
