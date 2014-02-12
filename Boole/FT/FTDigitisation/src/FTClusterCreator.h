@@ -48,6 +48,8 @@ private:
   int  m_nCluster;
   float m_sumCharge;
 
+  bool m_splitPrevNextMoni;
+  int  m_removeITRegion;
 
   int     m_nberOfLostHitFromMap;
   int     m_nberOfKeptHitFromMap;

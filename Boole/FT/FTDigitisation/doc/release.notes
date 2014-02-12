@@ -6,6 +6,11 @@
 
 !========================= FTDigitisation v1r7 2013-12-10 =========================
 
+! 2014-12-02 Jacco de Vries
+ - Added cluster plots for separate noise sources
+ - Separated spillover cluster plots in Prev and Next
+ - Added option to remove the IT region clusters in the FT for tracking eff. studies
+
 ! 2014-23-01 Jacco de Vries
  - Fixed debug messages and commented out unused instance
 

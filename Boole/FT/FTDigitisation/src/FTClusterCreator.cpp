@@ -46,6 +46,8 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 7 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 9 , "Minimal charge to keep cluster ~4 p.e.");
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks, ~2.5 pe.");
+  declareProperty("SplitPrevNextMoni" , m_splitPrevNextMoni = 0 , "In case of spillover, make split Prev/Next plots");
+  declareProperty("RemoveITRegion"    , m_removeITRegion    = 0 , "0 = keep all clusters, 1 = remove IT region, 2 = keep only IT region");
 
 
   m_nberOfLostHitFromMap = 0;
@@ -92,6 +94,14 @@ StatusCode FTClusterCreator::execute() {
   if ( msgLevel(MSG::DEBUG) )
     debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
 
+  // Get the default (signal) spill (to check for spillover cluster origin)
+  const MCHits* mcHits = get<MCHits>(LHCb::MCHitLocation::FT);
+  const MCHits* mcHitsNext = 0;
+  const MCHits* mcHitsPrev = 0;
+  if( m_splitPrevNextMoni ) {
+    mcHitsNext = get<MCHits>("/Event/Next/MC/FT/Hits");
+    mcHitsPrev = get<MCHits>("/Event/Prev/MC/FT/Hits");
+  } 
 
   // define clusters container
   FTClusters *clusterCont = new FTClusters();
@@ -345,23 +355,12 @@ StatusCode FTClusterCreator::execute() {
                   << endmsg;
         }
 
+        
 
-        clusterCont->insert(newCluster);
-
-
-        // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
-        for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
-          mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
-          //           if ( msgLevel( MSG::DEBUG) ) {
-          //             debug() << "Linked ClusterChannel=" << newCluster->channelID()
-          //                     << " to MCIndex="<<i->first->index()
-          //                     << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
-          //                     << endmsg;
-          //           }
-        }
-
-        if( mcHitContributionMap.size() > 0 ) {
-          double largestDeposit = 0;
+        // Get largest MCHit object contributing to cluster
+        if( mcHitContributionMap.size() > 0) {
+          // NOT a noise cluster
+          double largestDeposit = -999;
           const LHCb::MCHit* largestHit = 0; 
           for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
             if(largestDeposit < (i->second)) {
@@ -369,15 +368,93 @@ StatusCode FTClusterCreator::execute() {
               largestHit = (i->first);
             }
           }
-          plot( largestHit -> midPoint().x(), "Cluster_x_position", "Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
-          plot( largestHit -> midPoint().y(), "Cluster_y_position", "Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
-          plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
-              "Cluster_xy_position", "Cluster xy position ; x [mm]; y[mm]",
-              -3500,3500,200, -3000,3000,200);
+
+          // Add cluster to container
+          float ITXcen = 26.45*10., ITXmax = 62.1*10., ITYcen = 10.9*10., ITYmax = 20.7*10.;
+          float hitX = largestHit -> midPoint().x();
+          float hitY = largestHit -> midPoint().y();
+          bool  hitInIT = ( ( hitX < ITXmax && hitX > -ITXmax && hitY < ITYcen && hitY > -ITYcen) ||
+                            ( hitX < ITXcen && hitX > -ITXcen && hitY < ITYmax && hitY > -ITYmax) );
+          if( m_removeITRegion == 0 ||
+            ( m_removeITRegion == 1 && !hitInIT ) ||
+            ( m_removeITRegion == 2 &&  hitInIT ) ) {
+            // if not removing IT region, or xy is NOT in IT region
+            clusterCont -> insert(newCluster);
+
+
+            // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
+            for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
+              mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+              //           if ( msgLevel( MSG::DEBUG) ) {
+              //             debug() << "Linked ClusterChannel=" << newCluster->channelID()
+              //                     << " to MCIndex="<<i->first->index()
+              //                     << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
+              //                     << endmsg;
+              //           }
+            }
+
+
+            // Check if the MCHit belongs to signal spill (for PLOTS)
+            //info() << largestHit -> parent() -> name() << endmsg;
+            if( largestHit -> parent() == mcHits ) {
+              // is no spillover
+              plot( largestHit -> midPoint().x(), "MCCluster_x_position", "MC Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
+              plot( largestHit -> midPoint().y(), "MCCluster_y_position", "MC Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
+                  "MCCluster_xy_position", "MC Cluster xy position ; x [mm]; y[mm]",
+                  -3500,3500,200, -3000,3000,200);
+              plot(newCluster->size(),"MCClusSize","MC Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+              plot(newCluster->charge(),"MCClusCharge","MC Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+              plot(newCluster->channelID().sipmId(), "MCClusSiPMID", "MC Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+            } else {
+              // is spillover
+              plot( largestHit -> midPoint().x(), "SpilloverCluster_x_position", "Spillover Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
+              plot( largestHit -> midPoint().y(), "SpilloverCluster_y_position", "Spillover Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
+                  "SpilloverCluster_xy_position", "Spillover Cluster xy position ; x [mm]; y[mm]",
+                  -3500,3500,200, -3000,3000,200);
+              plot(newCluster->size(),"SpilloverClusSize","Spillover Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+              plot(newCluster->charge(),"SpilloverClusCharge","Spillover Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+              plot(newCluster->channelID().sipmId(), "SpilloverClusSiPMID", "Spillover Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+
+              // check for Prev or Next
+              if ( m_splitPrevNextMoni ) {
+                if ( mcHitsNext == 0 || mcHitsPrev == 0 ) {
+                  info() << "WARNING: SplitPrevNextMoni set to 1 but no spillover locations found!" << endmsg;
+                  break;
+                }
+                if ( largestHit -> parent() == mcHitsNext ) {
+                  plot( largestHit -> midPoint().x(), "SpillNextCluster_x_position", "SpillNext Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
+                  plot( largestHit -> midPoint().y(), "SpillNextCluster_y_position", "SpillNext Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
+                      "SpillNextCluster_xy_position", "SpillNext Cluster xy position ; x [mm]; y[mm]",
+                      -3500,3500,200, -3000,3000,200);
+                  plot(newCluster->size(),"SpillNextClusSize","SpillNext Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+                  plot(newCluster->charge(),"SpillNextClusCharge","SpillNext Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+                  plot(newCluster->channelID().sipmId(), "SpillNextClusSiPMID", "SpillNext Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+                }
+                if ( largestHit -> parent() == mcHitsPrev ) {
+                  plot( largestHit -> midPoint().x(), "SpillPrevCluster_x_position", "SpillPrev Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
+                  plot( largestHit -> midPoint().y(), "SpillPrevCluster_y_position", "SpillPrev Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
+                      "SpillPrevCluster_xy_position", "SpillPrev Cluster xy position ; x [mm]; y[mm]",
+                      -3500,3500,200, -3000,3000,200);
+                  plot(newCluster->size(),"SpillPrevClusSize","SpillPrev Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+                  plot(newCluster->charge(),"SpillPrevClusCharge","SpillPrev Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+                  plot(newCluster->channelID().sipmId(), "SpillPrevClusSiPMID", "SpillPrev Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
+                }
+              }
+            } 
+
+          } // end of if add the non-noise cluster to container
+
+
         } else {
           // no MCHit contributions --> noise cluster
+          clusterCont -> insert(newCluster);
           plot(newCluster->size(),"NoiseClusSize","Noise Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
           plot(newCluster->charge(),"NoiseClusCharge","Noise Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+          plot(newCluster->channelID().sipmId(), "NoiseClusSiPMID", "Noise Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
         }
 
 

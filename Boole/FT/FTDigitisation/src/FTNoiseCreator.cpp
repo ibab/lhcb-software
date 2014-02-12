@@ -83,6 +83,7 @@ StatusCode FTNoiseCreator::initialize() {
   StatusCode sc2 = m_gauss.initialize( randSvc(), Rndm::Gauss(0.0,1.0) );  
   StatusCode sc3 = m_rndmLandau.initialize( randSvc(), Rndm::Landau(39.0, 7.8) ); // from a fit to the MCHit cluster charge
 
+  info() << "Will generate noise: TH_C=" << m_temperature << "; AP_Nu="<< m_nu << endmsg;
 
   return StatusCode::SUCCESS;
 }
