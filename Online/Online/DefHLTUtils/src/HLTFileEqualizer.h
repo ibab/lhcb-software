@@ -61,6 +61,18 @@ class MBMStat
       }
     }
 };
+class PartMBMs
+{
+public:
+  MBMStat Events;
+  MBMStat Overflow;
+  MBMStat Send;
+  MBMStat ProcPerf;
+  MBMStat Events_prev;
+  MBMStat Overflow_prev;
+  MBMStat Send_prev;
+  MBMStat ProcPerf_prev;
+};
 class myNode
 {
   public:
@@ -71,14 +83,16 @@ class myNode
     char m_ROC_state;
     RunMap m_runmap;
     bool m_excl;
-    MBMStat Events;
-    MBMStat Overflow;
-    MBMStat Send;
-    MBMStat ProcPerf;
-    MBMStat Events_prev;
-    MBMStat Overflow_prev;
-    MBMStat Send_prev;
-    MBMStat ProcPerf_prev;
+    PartMBMs AnyPart;
+    PartMBMs LHCb2;
+//    MBMStat Events;
+//    MBMStat Overflow;
+//    MBMStat Send;
+//    MBMStat ProcPerf;
+//    MBMStat Events_prev;
+//    MBMStat Overflow_prev;
+//    MBMStat Send_prev;
+//    MBMStat ProcPerf_prev;
     long ReadTime;
     long ReadTime_prev;
     float m_nodePerformance;
@@ -133,10 +147,12 @@ class HLTFileEqualizer
     DimService *m_NodesRunsFiles;
     DimService *m_StatServ;
     DimService *m_NodesBuffersEvents;
+    DimService *m_NodesBuffersEvents_LHCb2;
     std::string m_servdat;
     std::string m_servdatDiff;
     std::string m_servdatNodesRunsFiles;
     std::string m_servdatNodesBuffersEvents;
+    std::string m_servdatNodesBuffersEvents_LHCb2;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     NodeSet m_BufferrecvNodes;

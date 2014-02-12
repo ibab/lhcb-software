@@ -339,6 +339,7 @@ void HLTFileEqualizer::Analyze()
   m_recvNodes.clear();
 
   m_servdatNodesBuffersEvents.erase();
+  m_servdatNodesBuffersEvents_LHCb2.erase();
   for (NodeSet::iterator nit=m_BufferrecvNodes.begin();nit != m_BufferrecvNodes.end();nit++)
   {
     std::string nname;
@@ -347,31 +348,31 @@ void HLTFileEqualizer::Analyze()
     myNode *nod = (*nodeit).second;
     char Line[1024];
     long dtime = nod->ReadTime-nod->ReadTime_prev;
-    nod->ProcPerf.name = "Input";
-    nod->ProcPerf.produced = nod->Events.produced+nod->Overflow.produced;
-    nod->ProcPerf.seen = nod->Events.seen+nod->Overflow.seen;
-    nod->Events.calcRate(nod->Events_prev,dtime);
-    nod->Overflow.calcRate(nod->Overflow_prev,dtime);
-    nod->Send.calcRate(nod->Send_prev,dtime);
-    nod->ProcPerf.calcRate(nod->ProcPerf_prev,dtime);
+    nod->AnyPart.ProcPerf.name = "Input";
+    nod->AnyPart.ProcPerf.produced = nod->AnyPart.Events.produced+nod->AnyPart.Overflow.produced;
+    nod->AnyPart.ProcPerf.seen = nod->AnyPart.Events.seen+nod->AnyPart.Overflow.seen;
+    nod->AnyPart.Events.calcRate(nod->AnyPart.Events_prev,dtime);
+    nod->AnyPart.Overflow.calcRate(nod->AnyPart.Overflow_prev,dtime);
+    nod->AnyPart.Send.calcRate(nod->AnyPart.Send_prev,dtime);
+    nod->AnyPart.ProcPerf.calcRate(nod->AnyPart.ProcPerf_prev,dtime);
     sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
         nod->m_name.c_str(),
-        nod->Events.name.c_str(),nod->Events.produced,nod->Events.seen,nod->Events.p_rate,nod->Events.s_rate,
-        nod->Overflow.name.c_str(),nod->Overflow.produced,nod->Overflow.seen,nod->Overflow.p_rate,nod->Overflow.s_rate,
-        nod->Send.name.c_str(),nod->Send.produced,nod->Send.seen,nod->Send.p_rate,nod->Send.s_rate,
-        nod->ProcPerf.name.c_str(),nod->ProcPerf.produced,nod->ProcPerf.seen,nod->ProcPerf.p_rate,nod->ProcPerf.s_rate
+        nod->AnyPart.Events.name.c_str(),nod->AnyPart.Events.produced,nod->AnyPart.Events.seen,nod->AnyPart.Events.p_rate,nod->AnyPart.Events.s_rate,
+        nod->AnyPart.Overflow.name.c_str(),nod->AnyPart.Overflow.produced,nod->AnyPart.Overflow.seen,nod->AnyPart.Overflow.p_rate,nod->AnyPart.Overflow.s_rate,
+        nod->AnyPart.Send.name.c_str(),nod->AnyPart.Send.produced,nod->AnyPart.Send.seen,nod->AnyPart.Send.p_rate,nod->AnyPart.Send.s_rate,
+        nod->AnyPart.ProcPerf.name.c_str(),nod->AnyPart.ProcPerf.produced,nod->AnyPart.ProcPerf.seen,nod->AnyPart.ProcPerf.p_rate,nod->AnyPart.ProcPerf.s_rate
         );
     m_servdatNodesBuffersEvents += Line;
     nod->ReadTime_prev = nod->ReadTime;
-    nod->Events_prev = nod->Events;
-    nod->Overflow_prev = nod->Overflow;
-    nod->Send_prev = nod->Send;
-    nod->ProcPerf_prev = nod->ProcPerf;
+    nod->AnyPart.Events_prev = nod->AnyPart.Events;
+    nod->AnyPart.Overflow_prev = nod->AnyPart.Overflow;
+    nod->AnyPart.Send_prev = nod->AnyPart.Send;
+    nod->AnyPart.ProcPerf_prev = nod->AnyPart.ProcPerf;
     if (nod->m_ROC_state == 'Y')
     {
-      if (nod->Overflow.p_rate>0.0)
+      if (nod->AnyPart.Overflow.p_rate>0.0)
       {
-        nod->m_nodePerformance = float(nod->Events.p_rate);
+        nod->m_nodePerformance = float(nod->AnyPart.Events.p_rate);
         nod->m_active = true;
       }
       else
@@ -383,7 +384,60 @@ void HLTFileEqualizer::Analyze()
     {
       nod->m_active = false;
     }
+
+
+
+
+    nod->LHCb2.ProcPerf.name = "Input";
+    nod->LHCb2.ProcPerf.produced = nod->LHCb2.Events.produced+nod->LHCb2.Overflow.produced;
+    nod->LHCb2.ProcPerf.seen = nod->LHCb2.Events.seen+nod->LHCb2.Overflow.seen;
+    nod->LHCb2.Events.calcRate(nod->LHCb2.Events_prev,dtime);
+    nod->LHCb2.Overflow.calcRate(nod->LHCb2.Overflow_prev,dtime);
+    nod->LHCb2.Send.calcRate(nod->LHCb2.Send_prev,dtime);
+    nod->LHCb2.ProcPerf.calcRate(nod->LHCb2.ProcPerf_prev,dtime);
+    sprintf(Line,"%s %s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f,%s/%d/%d/%0.4f/%0.4f|",
+        nod->m_name.c_str(),
+        nod->LHCb2.Events.name.c_str(),nod->LHCb2.Events.produced,nod->LHCb2.Events.seen,nod->LHCb2.Events.p_rate,nod->LHCb2.Events.s_rate,
+        nod->LHCb2.Overflow.name.c_str(),nod->LHCb2.Overflow.produced,nod->LHCb2.Overflow.seen,nod->LHCb2.Overflow.p_rate,nod->LHCb2.Overflow.s_rate,
+        nod->LHCb2.Send.name.c_str(),nod->LHCb2.Send.produced,nod->LHCb2.Send.seen,nod->LHCb2.Send.p_rate,nod->LHCb2.Send.s_rate,
+        nod->LHCb2.ProcPerf.name.c_str(),nod->LHCb2.ProcPerf.produced,nod->LHCb2.ProcPerf.seen,nod->LHCb2.ProcPerf.p_rate,nod->LHCb2.ProcPerf.s_rate
+        );
+    m_servdatNodesBuffersEvents_LHCb2 += Line;
+    nod->ReadTime_prev = nod->ReadTime;
+    nod->LHCb2.Events_prev = nod->LHCb2.Events;
+    nod->LHCb2.Overflow_prev = nod->LHCb2.Overflow;
+    nod->LHCb2.Send_prev = nod->LHCb2.Send;
+    nod->LHCb2.ProcPerf_prev = nod->LHCb2.ProcPerf;
+//    if (nod->m_ROC_state == 'Y')
+//    {
+//      if (nod->LHCb2.Overflow.p_rate>0.0)
+//      {
+//        nod->m_nodePerformance = float(nod->LHCb2.Events.p_rate);
+//        nod->m_active = true;
+//      }
+//      else
+//      {
+//        nod->m_active = false;
+//      }
+//    }
+//    else
+//    {
+//      nod->m_active = false;
+//    }
+
+
+
+
+
+
+
   }
+  m_servdatNodesBuffersEvents_LHCb2 += '\0';
+  m_servdatNodesBuffersEvents += '\0';
+  m_NodesBuffersEvents->setData((void*)m_servdatNodesBuffersEvents.c_str(),m_servdatNodesBuffersEvents.size());
+  m_NodesBuffersEvents->updateService();
+  m_NodesBuffersEvents_LHCb2->setData((void*)m_servdatNodesBuffersEvents_LHCb2.c_str(),m_servdatNodesBuffersEvents_LHCb2.size());
+  m_NodesBuffersEvents_LHCb2->updateService();
   float av_perf=0.0;
   float rms_perf=1000.0;
   float max_perf=0.0;
@@ -426,10 +480,6 @@ void HLTFileEqualizer::Analyze()
     erate_sum2=0.0;
     nnod = 0;
   }
-  m_servdatNodesBuffersEvents += '\0';
-
-  m_NodesBuffersEvents->setData((void*)m_servdatNodesBuffersEvents.c_str(),m_servdatNodesBuffersEvents.size());
-  m_NodesBuffersEvents->updateService();
 //  BufferDump();
   m_BufferrecvNodes.clear();
   dim_unlock();
@@ -471,7 +521,7 @@ void HLTFileEqualizer::BufferDump()
     int indx;
     sscanf(nod->m_name.substr(6,2).c_str(),"%d",&indx);
     char nfil[10];
-    sprintf(nfil,"%4.3f",nod->Events.p_rate);
+    sprintf(nfil,"%4.3f",nod->AnyPart.Events.p_rate);
     line.replace(9+(indx-1)*6,5,nfil);
   }
   fprintf(outf,"\n%s\n",line.substr(0,line.find_last_not_of(" ")+1).c_str());
@@ -527,11 +577,16 @@ void MBMInfoHandler::infoHandler()
       if (nod->ReadTime_prev == 0)
       {
         nod->ReadTime_prev = nod->ReadTime;
-        nod->Events_prev = nod->Events;
-        nod->Overflow_prev = nod->Overflow;
-        nod->Send_prev = nod->Send;
-        nod->ProcPerf.produced = nod->Events.produced+nod->Overflow.produced;
-        nod->ProcPerf.seen = nod->Events.seen+nod->Overflow.seen;
+        nod->AnyPart.Events_prev = nod->AnyPart.Events;
+        nod->AnyPart.Overflow_prev = nod->AnyPart.Overflow;
+        nod->AnyPart.Send_prev = nod->AnyPart.Send;
+        nod->AnyPart.ProcPerf.produced = nod->AnyPart.Events.produced+nod->AnyPart.Overflow.produced;
+        nod->AnyPart.ProcPerf.seen = nod->AnyPart.Events.seen+nod->AnyPart.Overflow.seen;
+        nod->LHCb2.Events_prev = nod->LHCb2.Events;
+        nod->LHCb2.Overflow_prev = nod->LHCb2.Overflow;
+        nod->LHCb2.Send_prev = nod->LHCb2.Send;
+        nod->LHCb2.ProcPerf.produced = nod->LHCb2.Events.produced+nod->LHCb2.Overflow.produced;
+        nod->LHCb2.ProcPerf.seen = nod->LHCb2.Events.seen+nod->LHCb2.Overflow.seen;
       }
       nod->ReadTime = (*n).time;
       nod->ReadTime *= 1000;
@@ -541,26 +596,53 @@ void MBMInfoHandler::infoHandler()
       {
         const Buffers::value_type::Control& c = (*ib).ctrl;
         std::string bnam = (*ib).name;
-        if (bnam == std::string("Events"))
-        {
-//          nod->Events_prev = nod->Events;
-          nod->Events.name = bnam;
-          nod->Events.produced = c.tot_produced;
-          nod->Events.seen  = c.tot_seen;
+        if (bnam.find("LHCb2") == std::string::npos)
+        { //Not LHCb2
+          if (bnam.find("Events") != std::string::npos)
+          {
+  //          nod->Events_prev = nod->Events;
+            nod->AnyPart.Events.name = bnam;
+            nod->AnyPart.Events.produced = c.tot_produced;
+            nod->AnyPart.Events.seen  = c.tot_seen;
+          }
+          else if (bnam.find("Overflow") != std::string::npos)
+          {
+  //          nod->Overflow_prev = nod->Overflow;
+            nod->AnyPart.Overflow.name = bnam;
+            nod->AnyPart.Overflow.produced = c.tot_produced;
+            nod->AnyPart.Overflow.seen  = c.tot_seen;
+          }
+          else if (bnam.find("Output") != std::string::npos)
+          {
+  //          nod->Send_prev = nod->Send;
+            nod->AnyPart.Send.name = bnam;
+            nod->AnyPart.Send.produced = c.tot_produced;
+            nod->AnyPart.Send.seen  = c.tot_seen;
+          }
         }
-        else if (bnam == std::string("Overflow"))
-        {
-//          nod->Overflow_prev = nod->Overflow;
-          nod->Overflow.name = bnam;
-          nod->Overflow.produced = c.tot_produced;
-          nod->Overflow.seen  = c.tot_seen;
-        }
-        else if (bnam == std::string("Send"))
-        {
-//          nod->Send_prev = nod->Send;
-          nod->Send.name = bnam;
-          nod->Send.produced = c.tot_produced;
-          nod->Send.seen  = c.tot_seen;
+        else
+        { //LHCb2
+          if (bnam.find("Events") != std::string::npos)
+          {
+  //          nod->Events_prev = nod->Events;
+            nod->LHCb2.Events.name = bnam;
+            nod->LHCb2.Events.produced = c.tot_produced;
+            nod->LHCb2.Events.seen  = c.tot_seen;
+          }
+          else if (bnam.find("Overflow") != std::string::npos)
+          {
+  //          nod->Overflow_prev = nod->Overflow;
+            nod->LHCb2.Overflow.name = bnam;
+            nod->LHCb2.Overflow.produced = c.tot_produced;
+            nod->LHCb2.Overflow.seen  = c.tot_seen;
+          }
+          else if (bnam.find("Output") != std::string::npos)
+          {
+  //          nod->Send_prev = nod->Send;
+            nod->LHCb2.Send.name = bnam;
+            nod->LHCb2.Send.produced = c.tot_produced;
+            nod->LHCb2.Send.seen  = c.tot_seen;
+          }
         }
       }
     }
@@ -895,6 +977,8 @@ int main(int argc, char **argv)
   elz.m_NodesRunsFiles = m_NodesRunsFiles;
   DimService *m_NodesBuffersEvents = new DimService("HLTFileEqualizer/NodesBuffersEvents", "C",(void*)"\0",1);
   elz.m_NodesBuffersEvents = m_NodesBuffersEvents;
+  DimService *m_NodesBuffersEvents_LHCb2 = new DimService("HLTFileEqualizer/LHCb2/NodesBuffersEvents", "C",(void*)"\0",1);
+  elz.m_NodesBuffersEvents_LHCb2 = m_NodesBuffersEvents_LHCb2;
   float stat[2];
   stat[0] = -1.0;
   stat[1] = 0.0;
