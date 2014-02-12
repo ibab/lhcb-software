@@ -65,7 +65,7 @@ Decoder("DecodePileUpData",
 Decoder("RawBankToSTLiteClusterAlg/createTTLiteClusters",
         active=True, banks=["TT","TTPedestal","TTFull","TTProcFull","TTError"],
         outputs={"clusterLocation":None},
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        inputs={"RawEventLocations" : None},
         required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":None}, set logically in the code, resetting may not work...
@@ -73,7 +73,7 @@ Decoder("RawBankToSTLiteClusterAlg/createTTLiteClusters",
 Decoder("RawBankToSTClusterAlg/createTTClusters",
         active=True, banks=["TT","TTPedestal","TTFull","TTProcFull","TTError"],
         outputs={"clusterLocation":None},
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        inputs={"RawEventLocations" : None},
         required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":None}, set logically in the code, resetting may not work...
@@ -100,14 +100,14 @@ Decoder(tname, active=False,
         conf=DecoderDB)
 
 Decoder(t2name, active=False,
-        inputs={"RawEventLocations":["Rich/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations":None},
         conf=DecoderDB)
 
 #===========IT===========
 Decoder("RawBankToSTLiteClusterAlg/createITLiteClusters",
         active=True, banks=["IT","ITPedestal","ITFull","ITProcFull","ITError"],
         outputs=["Raw/IT/LiteClusters"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        inputs={"RawEventLocations" : None},
         properties={"DetType":"IT"},
         required=["createODIN"],
         conf=DecoderDB)
@@ -116,7 +116,7 @@ Decoder("RawBankToSTLiteClusterAlg/createITLiteClusters",
 Decoder("RawBankToSTClusterAlg/createITClusters",
         active=True, banks=["IT","ITPedestal","ITFull","ITProcFull","ITError"],
         outputs=["Raw/IT/Clusters"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        inputs={"RawEventLocations" : None},
         properties={"DetType":"IT"},
         required=["createODIN"],
         conf=DecoderDB)
