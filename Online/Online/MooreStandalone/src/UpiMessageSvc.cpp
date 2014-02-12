@@ -1,5 +1,5 @@
-#ifndef GAUDIONLINE_FMCMESSAGESVC_H
-#define GAUDIONLINE_FMCMESSAGESVC_H
+#ifndef GAUDIONLINE_GENERICMESSAGESVC_H
+#define GAUDIONLINE_GENERICMESSAGESVC_H
 #include <string>
 
 // Framework include files
@@ -12,17 +12,19 @@
  */
 namespace LHCb  {
 
-  /***************************************************************************/
-  class UpiMessageSvc : public OnlineMessageSvc, virtual public IErrorLogger  {
+  class GenericMessageSvc : public OnlineMessageSvc, virtual public IErrorLogger  {
   public:
     /// Default constructor.
-    UpiMessageSvc(const std::string& name, ISvcLocator* svcloc);
+    GenericMessageSvc(const std::string& name, ISvcLocator* svcloc);
 
     /// Destructor.
-    virtual ~UpiMessageSvc();
+    virtual ~GenericMessageSvc();
 
     /// IInterface implementation : queryInterface
     StatusCode queryInterface(const InterfaceID& riid,void** ppIf);
+
+    /// Implementation of IService::initialize()
+    virtual StatusCode initialize();
 
     /// Implementation of IService::restart()
     virtual StatusCode restart();
@@ -36,37 +38,39 @@ namespace LHCb  {
     /// Implementation of IMessageSvc::ouputLevel(source)
     virtual int outputLevel(const std::string& source)   const;
 
-
   protected:
     /// Implementation of IMessageSvc::reportMessage()
     virtual void i_reportMessageEx(const Message& message,int lvl);
 
-  private:
-    StringProperty m_fifoPath;
+    typedef int(*func_t)(const char*);
+    std::string m_logFuncName;
+    func_t m_logFunc;
   };
-  /***************************************************************************/
 }       // End namespace LHCb
-#endif  // GAUDIONLINE_FMCMESSAGESVC_H
+#endif  // GAUDIONLINE_GENERICMESSAGESVC_H
 
 #include "GaudiKernel/SvcFactory.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,UpiMessageSvc)
+#include <iostream>
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,GenericMessageSvc)
 
-extern "C" int upic_write_message(const char*, const char*);
+using namespace std;
+using namespace LHCb;
 
 /// Constructor
-LHCb::UpiMessageSvc::UpiMessageSvc(const std::string& name,ISvcLocator* svcloc)
+GenericMessageSvc::GenericMessageSvc(const string& name,ISvcLocator* svcloc)
   : OnlineMessageSvc(name,svcloc)
 {
   setErrorLogger(this);
+  declareProperty("LoggerFunction",m_logFuncName);
 }
 
 /// Destructor.
-LHCb::UpiMessageSvc::~UpiMessageSvc()   {
+GenericMessageSvc::~GenericMessageSvc()   {
   setErrorLogger(0);
 }
 
 /// IInterface implementation : queryInterface
-StatusCode LHCb::UpiMessageSvc::queryInterface(const InterfaceID& riid, void **ppIf)  {
+StatusCode GenericMessageSvc::queryInterface(const InterfaceID& riid, void **ppIf)  {
   if( IErrorLogger::interfaceID().versionMatch(riid) )  {
     *ppIf=(IErrorLogger*)this;
     addRef();
@@ -75,13 +79,24 @@ StatusCode LHCb::UpiMessageSvc::queryInterface(const InterfaceID& riid, void **p
   return OnlineMessageSvc::queryInterface(riid,ppIf);
 }
 
+/// Implementation of IService::initialize()
+StatusCode GenericMessageSvc::initialize()   {
+  StatusCode sc = OnlineMessageSvc::initialize();
+  m_logFunc = 0;
+  if ( 1 != System::getProcedureByName(0,m_logFuncName,(System::EntryPoint*)&m_logFunc) )  {
+    cout << "Failed to load logger function:" << m_logFuncName << endl;
+    return StatusCode::FAILURE;
+  }
+  report(MSG::ALWAYS,name(),"Successfully resolved logger function:"+m_logFuncName);
+  return sc;
+}
+
 /// Restart Service 
-StatusCode LHCb::UpiMessageSvc::restart()  {
+StatusCode GenericMessageSvc::restart()  {
   return StatusCode::SUCCESS;
 }
 
-void LHCb::UpiMessageSvc::report(int typ,const std::string& src,const std::string& msg)
-{
+void GenericMessageSvc::report(int typ,const string& src,const string& msg)   {
   if ( typ < m_outputLevel ) return;
   else if ( typ==MSG::ALWAYS && !m_printAlways ) return;
   else {
@@ -90,11 +105,15 @@ void LHCb::UpiMessageSvc::report(int typ,const std::string& src,const std::strin
 		       "[FATAL]", "[ALWAYS]"};
     typ = (typ>=int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
     ::snprintf(text,sizeof(text),"%s %s %s",sl[typ],src.c_str(),msg.c_str());
-    ::upic_write_message(text,"");
+    if ( m_logFunc )  {
+      (*m_logFunc)(text);
+      return;
+    }
+    throw runtime_error("Failed to access logger function:"+m_logFuncName);
   }
 }
 
-void LHCb::UpiMessageSvc::i_reportMessageEx(const Message& msg,int typ)  {
+void GenericMessageSvc::i_reportMessageEx(const Message& msg,int typ)  {
   int typM = msg.getType();
   if (  typM < m_outputLevel || typ < m_outputLevel ) return;
   if ( (typM==MSG::ALWAYS || typ==MSG::ALWAYS) && !m_printAlways) return;
@@ -102,12 +121,12 @@ void LHCb::UpiMessageSvc::i_reportMessageEx(const Message& msg,int typ)  {
 }
 
 /// Implementation of IMessageSvc::ouputLevel()
-int LHCb::UpiMessageSvc::outputLevel()   const {
+int GenericMessageSvc::outputLevel()   const {
   return m_outputLevel;
 }
 
 /// Implementation of IMessageSvc::ouputLevel(source)
-int LHCb::UpiMessageSvc::outputLevel(const std::string& source) const {
+int GenericMessageSvc::outputLevel(const string& source) const {
   ThresholdMap::const_iterator it = m_thresholdMap.find(source);
   int lvl = (it == m_thresholdMap.end()) ? int(m_outputLevel) : (*it).second;
   if ( lvl > m_outputLevel ) return lvl;

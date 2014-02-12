@@ -3,8 +3,6 @@
 //  MooreTestSvc
 //--------------------------------------------------------------------
 //
-//  Package    : GaudiOnline
-//
 //  Description: Runable to run Moore standalone on a single node.
 
 //  Author     : M.Frank
@@ -91,22 +89,22 @@ StatusCode UpiMooreMonitor::initialize()   {
   m_ioc = &IocSensor::instance();
 
   if ( m_mode == 0 )  {
-    ::snprintf(text1,sizeof(text1),"%-16s %15s  %-19s  %s",
+    ::snprintf(text1,sizeof(text1),"%-16s %15s %-19s %s",
 	       "---------------","--Time [msec]--",
 	       "----Input [Hz]----","---Output [Hz]----");
-    ::snprintf(text2,sizeof(text2),"%-16s%8s %7s  %-19s  %s",
+    ::snprintf(text2,sizeof(text2),"%-16s%8s %7s %-19s %s",
 	       "Process name","Total","Delta","Instant Cumulative","Instant Cumulative");
   }
   else if ( m_mode == 1 )  {
-    ::snprintf(text1,sizeof(text1),"%-16s %15s  %-25s  %s",
+    ::snprintf(text1,sizeof(text1),"%-16s %15s %-25s %s",
 	       "---------------","--Time [msec]--",
 	       "-----Events consumed-----","-----Events produced-----");
-    ::snprintf(text2,sizeof(text2),"%-16s%8s %7s    %-26s %s",
+    ::snprintf(text2,sizeof(text2),"%-16s%8s %7s   %-25s %s",
 	       "Process name","Total","Delta",
 	       "Start Previous      Now","Start Previous      Now");
   }
   else if ( m_mode == 2 )  {
-    ::snprintf(text1,sizeof(text1),"%-16s %15s  %-25s %-19s %-26s  %s",
+    ::snprintf(text1,sizeof(text1),"%-16s %15s  %-25s  %-18s %-26s  %s",
 	       "---------------","--Time [msec]--",
 	       "-----Events consumed-----","----Input [Hz]----",
 	       "-----Events produced-----","---Output [Hz]----");
@@ -199,12 +197,12 @@ void UpiMooreMonitor::outputClient(const std::string& name, const MooreTest::Use
   const char* q = p ? strchr_safe(p+1,'_') : name.c_str();
   const char* n = q ? q+1 : p ? p+1 : name.c_str();
   if ( m_mode == 0 )  {
-    ::snprintf(text,sizeof(text),"%-16s %7ld %7ld %8.0f %10.0f %9.0f %10.0f",n,
+    ::snprintf(text,sizeof(text),"%-16s %7ld %7ld%8.0f %10.0f %8.0f %10.0f",n,
 	       long(glob_time_diff*1e3),long(inst_time_diff*1e3),
 	       inst_seen_rate, glob_seen_rate,inst_prod_rate, glob_prod_rate);
   }
   else if ( m_mode == 1 )  {
-    ::snprintf(text,sizeof(text),"%-16s %7ld %7ld %8ld %8ld %8ld %8ld %8ld %8ld",n,
+    ::snprintf(text,sizeof(text),"%-16s %7ld %7ld %7ld %8ld %8ld %7ld %8ld %8ld",n,
 	       long(glob_time_diff*1e3),long(inst_time_diff*1e3),
 	       us.start.evt_seen, us.last.evt_seen, us.now.evt_seen,
 	       us.start.evt_prod, us.last.evt_prod, us.now.evt_prod);

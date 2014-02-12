@@ -17,6 +17,8 @@
 #include "Internals.h"
 #include "GaudiOnline/OnlineService.h"
 #include "GaudiKernel/IRunable.h"
+#include "CPP/Interactor.h"
+#include "CPP/Event.h"
 #include "RTL/rtl.h"
 
 // C/C++ include files
@@ -62,7 +64,7 @@ namespace LHCb {
    *  @author Markus Frank
    *  @version 1.0
    */
-  class MooreTestSvc : public OnlineService, virtual public IRunable   {
+  class MooreTestSvc : public OnlineService, public Interactor, virtual public IRunable   {
   protected:
     typedef MooreTest::UserStats UserStats;
     typedef MooreTest::ResultMonitor ResultMonitor;
@@ -81,8 +83,6 @@ namespace LHCb {
     std::string m_output;
     /// Property: The task name to be sampled
     std::string m_procName;
-    /// Property: containing file name if output should be written to file.
-    std::string m_fileName;
     /// Property: factory name of the result dumper. If empty result goes to stdout
     std::vector<std::string> m_monitorTypes;
     /// Property: Time delay in seconds before measurements start
@@ -97,6 +97,8 @@ namespace LHCb {
     int m_partitionID;
     /// Property: indicate if the buffers are partitioned (ie include the paqrtition name)
     bool m_partitionBuffers;
+    /// Property: enable automatic running with finalization
+    bool m_autoRun;
 
     /// The file descriptor for the communication fifo
     int m_fifo;
@@ -128,6 +130,9 @@ namespace LHCb {
     virtual StatusCode finalize();
     /// IRunable implementation : Run the class implementation
     virtual StatusCode run();
+
+    /// Interactor callback to handle interrupts
+    virtual void handle (const Event& event);
 
     /// Initialize the statistics
     void init_statistics();
@@ -292,6 +297,7 @@ MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)
   declareProperty("MeasurementDuration",        m_duration=300);
   declareProperty("MooreOnlineVersion",         m_mooreVsn="");
   declareProperty("Monitors",                   m_monitorTypes);
+  declareProperty("Auto",                       m_autoRun=true);
 }
 
 /// Standard Destructor
@@ -379,6 +385,16 @@ MBM::Manager* MooreTestSvc::mapBuffer(const std::string& bm_name)  {
     return 0;
   }
   return bm;
+}
+
+void MooreTestSvc::handle (const Event& e)   {
+  switch ( e.eventtype )    {
+  case IocEvent:
+    m_autoRun = true;
+    break;
+  default:
+    break;
+  }
 }
 
 /// Map the MBM buffers to extract all necessary information
@@ -545,7 +561,7 @@ void MooreTestSvc::print_statistics(ResultMonitor* monitor)    {
       monitor->outputClient((*i).first,us);
       sum += us;
     }
-    monitor->outputClient("++++ Grand Total",sum);
+    monitor->outputClient("+++ Grand Total",sum);
     monitor->end();
   }
 }
@@ -642,7 +658,7 @@ StatusCode MooreTestSvc::run()   {
   if ( m_startDelay > 0 )  {
     for(int i=0; i<m_startDelay; ++i)    {
       ::lib_rtl_sleep(1000);
-      if ( ((i+1)%10) == 0 )  {
+      if ( i>0 && (i%10) == 0 )  {
 	info("+++++ Warming up .....  %d seconds now.....",i);
       }
     }
@@ -656,7 +672,8 @@ StatusCode MooreTestSvc::run()   {
       for(vector<ResultMonitor*>::iterator i=m_monitors.begin(); i!=m_monitors.end(); ++i)
 	print_statistics(*i);
     }
-    if ( int(time(0) - start) > m_duration )   {
+    if ( !m_autoRun ) continue;
+    if ( m_autoRun && int(time(0) - start) > m_duration )   {
       info("+++++ The measurement time of %d seconds is reached.",m_duration);
       info("+++++ We are exiting now after %d measurements",i);
       break;
@@ -675,6 +692,11 @@ StatusCode MooreTestSvc::run()   {
   mepTask->stopall();
   mepTask->wait(Process::WAIT_BLOCK);
 
+  delete prodTask;
+  delete monTask;
+  delete mepTask;
+  ::lib_rtl_sleep(10);
+
   system(("rm -f /dev/shm/bm_*"+m_partition).c_str());
   //system((string("rm -f /dev/shm/bm_buffers")).c_str());
   system(("rm -f /tmp/bm_*"+m_partition+"_*").c_str());
@@ -683,10 +705,6 @@ StatusCode MooreTestSvc::run()   {
   //cout << "<RETURN> to end data collection: ";
   //  getline(cin,out);
 
-  delete prodTask;
-  delete monTask;
-  delete mepTask;
-  ::lib_rtl_sleep(10);
   //_exit(0);
   return StatusCode::SUCCESS;
 }
