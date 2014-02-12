@@ -32,6 +32,7 @@ class FstConf(LHCbConfigurableUser):
         ,"TStationType"    : "IT+OT"
         ,"RICHType"        : "" #"HLT2015"
         ,"TrackFit"        : "HltFit"
+        ,"MuonID"          : False 
         ,"TStationHits"    : 16
         ,"ForwardMinPt"    : 1250.  # MeV, determines window size in forward tracking
                                     # or rejection cut in forward tracking if momentum
@@ -370,3 +371,24 @@ class FstConf(LHCbConfigurableUser):
             # Input tracks and RICH output locations
             richConf.trackConfig().InputTracksLocation = self.getProp("RootInTES") + "Track/ForwardFst"
             richConf.RichPIDLocation = self.getProp("RootInTES") + "/Rich/PIDs"
+            
+        
+        if self.getProb("MuonID"):
+    
+            echo "run muon ID. CAUTION: muon ID run on all forward tracks, no selection applied"
+            from MuonID import ConfiguredMuonIDs
+            from Configurables import RawBankReadoutStatusConverter,RawBankReadoutStatusFilter
+            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data="Upgrade")#self.getProp("DataType"),specialData=self.getProp("SpecialData"))
+            MuonIDSeq=cm.getMuonIDSeq()
+            RawBankReadoutStatusConverter("MuonProcStatus").System="Muon"
+            RawBankReadoutStatusConverter("MuonProcStatus").BankTypes=["Muon"]
+            RawBankReadoutStatusFilter("MuonROFilter").BankType=13
+            RawBankReadoutStatusFilter("MuonROFilter").RejectionMask=2067
+            
+            from Configurables import MuonRec, MuonIDAlg
+            MuonIDAlg().TrackLocation          = self.getProp("RootInTES") + "Track/Forward"
+            MuonIDAlg().FindQuality            = False# speed up option - poinless w/o M1
+            
+            FstSequencer("RecoFstSeq").Members += [ "MuonRec",
+                                                    "RawBankReadoutStatusConverter/MuonProcStatus",
+                                                    "RawBankReadoutStatusFilter/MuonROFilter",  MuonIDSeq ]
