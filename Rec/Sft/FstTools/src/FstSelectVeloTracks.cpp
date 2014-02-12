@@ -84,7 +84,6 @@ StatusCode FstSelectVeloTracks::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   LHCb::Tracks* velo = get<LHCb::Tracks>( m_inputTracksName );
-  LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put( selected, m_outputTracksName );
 
@@ -100,6 +99,7 @@ StatusCode FstSelectVeloTracks::execute() {
     return StatusCode::SUCCESS;
   }
   
+  LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   m_nEvents++;
 
   std::vector<LHCb::Track*> largeIP;

@@ -30,14 +30,14 @@ class FstConf(LHCbConfigurableUser):
         ,"VeloType"        : "Velo"
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
-        ,"RICHType"        : "HLT2015"
+        ,"RICHType"        : "" #"HLT2015"
+        ,"TrackFit"        : "HltFit"
         ,"TStationHits"    : 16
         ,"ForwardMinPt"    : 1250.  # MeV, determines window size in forward tracking
                                     # or rejection cut in forward tracking if momentum
                                     # estimate is used
         ,"FastDecoding"    : True   # if false uses the old official decoding
         ,"Compare"         : False  # if using the old decoding, can run the new one and compare the containers
-        ,"TrackFit"        : "HltFit"
         }
 
     def applyConf(self):
@@ -114,7 +114,8 @@ class FstConf(LHCbConfigurableUser):
 
 
         # This is the HLT PatPV3D algorithm
-        else:
+        # XXX debug efficiency loss
+        if False: #else:
             from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
             FstSequencer("RecoFstSeq").Members += ["PatPV3D/HltPVsPV3D"]
             recoPV3D = PatPV3D('HltPVsPV3D' )
@@ -221,12 +222,12 @@ class FstConf(LHCbConfigurableUser):
             prVeloUT = PrVeloUT()
             prVeloUT.InputTracksName = self.getProp("RootInTES") + "Track/VeloFst"
             prVeloUT.OutputTracksName = self.getProp("RootInTES") + "Track/VeloUTFst"
-            prVeloUT.TimingMeasurement = False
-            prVeloUT.removeUsedTracks = False
-            prVeloUT.InputUsedTracksNames = []
-            prVeloUT.fitTracks = False
-            prVeloUT.maxChi2 = 1280.
-            prVeloUT.AddMomentumEstimate = True
+            #prVeloUT.TimingMeasurement = False
+            #prVeloUT.removeUsedTracks = False
+            #prVeloUT.InputUsedTracksNames = []
+            #prVeloUT.fitTracks = False
+            #prVeloUT.maxChi2 = 1280.
+            #prVeloUT.AddMomentumEstimate = True
 
             prVeloUT.addTool(TrackMasterFitter, "Fitter")
             prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
@@ -243,8 +244,8 @@ class FstConf(LHCbConfigurableUser):
             elif self.getProp("VeloType") == "Velo":
                 prVeloUT.Fitter.MeasProvider.IgnoreVelo = False
 
-            PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.25
-            PrVeloUTTool("PrVeloUTTool").maxPseudoChi2 = 1280.
+            #PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.25
+            #PrVeloUTTool("PrVeloUTTool").maxPseudoChi2 = 1280.
             PrVeloUTTool("PrVeloUTTool").minMomentum = 2000.
             PrVeloUTTool("PrVeloUTTool").minPT = 200.
             PrVeloUTTool("PrVeloUTTool").PrintVariables = True

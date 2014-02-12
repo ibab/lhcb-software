@@ -86,7 +86,6 @@ StatusCode FstSelectForwardTracksPartTwo::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   LHCb::Tracks* forward  = get<LHCb::Tracks>( m_inputTracksName );
-  LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put( selected, m_outputTracksName );
 
@@ -101,6 +100,8 @@ StatusCode FstSelectForwardTracksPartTwo::execute() {
     setFilterPassed(true);
     return StatusCode::SUCCESS;
   }
+
+  LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   
   for ( LHCb::Tracks::iterator itT = forward->begin();
         forward->end() != itT; ++itT ) {
