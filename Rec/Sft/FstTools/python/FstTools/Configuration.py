@@ -115,8 +115,7 @@ class FstConf(LHCbConfigurableUser):
 
 
         # This is the HLT PatPV3D algorithm
-        # XXX debug efficiency loss
-        if False: #else:
+        else:
             from Configurables import PatPV3D, PVOfflineTool, LSAdaptPV3DFitter
             FstSequencer("RecoFstSeq").Members += ["PatPV3D/HltPVsPV3D"]
             recoPV3D = PatPV3D('HltPVsPV3D' )

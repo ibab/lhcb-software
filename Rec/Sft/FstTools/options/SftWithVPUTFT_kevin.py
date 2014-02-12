@@ -68,7 +68,7 @@ for algo in algos:
 
 # set multiplicity cuts
 FstSelectGEC().MultiplicityCutECAL = 1
-FstSelectGEC().MultiplicityCutHCAL = 999
+FstSelectGEC().MultiplicityCutHCAL = 999#*10000
 
 # set the mcut via env var for a study
 from os import getenv
@@ -104,8 +104,8 @@ CondDB().AllLocalTagsByDataType = [
 ]
 
 # set up Brunel
-Brunel().PrintFreq = 100
-Brunel().EvtMax = 10000
+Brunel().PrintFreq = 1000
+Brunel().EvtMax = 3000
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
 Brunel().CondDBtag = 'sim-20130830-vc-md100'
@@ -122,17 +122,21 @@ def setup_truth_matching():
         GaudiSequencer,
         PrChecker,
         PrTrackAssociator,
+        TrackIPResolutionChecker,
+        PatPixelTracking,
     )
     GaudiSequencer('CaloBanksHandler').Members = []
     GaudiSequencer('DecodeTriggerSeq').Members = []
     GaudiSequencer('MCLinksTrSeq').Members = [
         "UnpackMCParticle", "UnpackMCVertex",
         'PrLHCbID2MCParticle',
-        'PrTrackAssociator'
+        'PrTrackAssociator',
     ]
     PrTrackAssociator().RootOfContainers = '/Event/Fst/Track'
     
-    GaudiSequencer("CheckPatSeq").Members = ['PrChecker']
+    GaudiSequencer("CheckPatSeq").Members = ['PrChecker',
+                                             TrackIPResolutionChecker(),
+                                             ]
     PrChecker().VeloTracks = '/Event/Fst/Track/Velo'
     PrChecker().UpTracks = '/Event/Fst/Track/VeloUTFst'
     PrChecker().ForwardTracks = '/Event/Fst/Track/Forward'
@@ -141,6 +145,19 @@ def setup_truth_matching():
     PrChecker().WriteForwardHistos = 2
     PrChecker().WriteUpHistos  = 2
 
+    # For this you should check out the head of
+    # Tr/TrackCheckers
+    TrackIPResolutionChecker().TrackContainer = '/Event/Fst/Track/Velo'
+    TrackIPResolutionChecker().PVContainer = '/Event/Fst/Vertices/PV'
+
+    # Decide which Velo stations to use, last 14, last 16, or !last16
+    # Ask Tim about what this does
+    # a copy of the code is in ~thead/public/forTom/TurnOffVelo
+    active14 = "1111111111111111111111111111000000000000000000000000"
+    active16 = "1111111111111111111111111111111100000000000000000000"
+    other16 =  "0000000000000000000000000000000011111111111111111111"
+    #PatPixelTracking("FstPixel").ActiveModules = other16#active16
+    
     # Uncomment to run over events written out
     # after the GEC cut, for some reason
     # reading in DSTs we wrote out ourselves is broken
