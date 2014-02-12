@@ -29,18 +29,15 @@ DECLARE_ALGORITHM_FACTORY( DecodePileUpData )
 //=============================================================================
 DecodePileUpData::DecodePileUpData( const std::string& name,
     ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ), 
+: Decoder::AlgBase ( name , pSvcLocator ), 
   m_rawEvent(0)
 {
   declareProperty("NonZeroSupp", m_isNonZeroSupp=true);
-  declareProperty("RawEventLocation",  m_rawEventLocation = "", 
-                  "OBSOLETE. Use RawEventLocations instead" );
-  declareProperty("RawEventLocations", m_rawEventLocations,
-                  "List of possible locations of the RawEvent object in the"
-                  " transient store. By default it is LHCb::RawEventLocation::Other,"
-                  " LHCb::RawEventLocation::Default.");
   declareProperty("PUClusterLocation", m_PUClusterLocation="Raw/Velo/PUClusters");
   declareProperty("PUClusterNZSLocation", m_PUClusterNZSLocation="Raw/Velo/PUClustersNZS");
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 }
 
 //=============================================================================
@@ -53,25 +50,18 @@ DecodePileUpData::~DecodePileUpData() {}
 //=============================================================================
 StatusCode DecodePileUpData::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  if (m_rawEventLocations.empty()) 
+  {
+    return Error("You need to give me a valid list of locaitons to decode!",StatusCode::FAILURE);
+    
   }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
+  
+  if (m_rawEventLocations[0]!=LHCb::RawEventLocation::Trigger && m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) 
+  {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
@@ -113,7 +103,7 @@ StatusCode DecodePileUpData::execute() {
   }
   else { return ( StatusCode::SUCCESS ); }  
 
-  debug() << "==> DecodePileUp done" << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "==> DecodePileUp done" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -123,16 +113,8 @@ StatusCode DecodePileUpData::getRawEvent() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> getRawEvent()" << endmsg;
 
   // Retrieve the RawEvent:
-  m_rawEvent = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    m_rawEvent = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != m_rawEvent ){
-      if( msgLevel( MSG::DEBUG ) )
-        debug() << "==> RawEvent read-in from location: " << *p << endmsg;
-      break;
-    }
-  }
-
+  m_rawEvent = findFirstRawEvent();
+  
   if( m_rawEvent == NULL ) {
     error() << "Raw Event not found in " << m_rawEventLocations << endmsg;
     VeloClusters* clusters = new LHCb::VeloClusters();
@@ -156,7 +138,7 @@ StatusCode DecodePileUpData::decode() {
   {
     StatusCode nzsBinDecoder=decodePileUpBinaryNZS(banksNZS);
     nzsBinDecoder.ignore();
-    debug() << " decode() : NZS bank decoded " << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << " decode() : NZS bank decoded " << endmsg;
   }
   else Info(" NZS bank empty ");
 
@@ -166,7 +148,7 @@ StatusCode DecodePileUpData::decode() {
   {
     StatusCode binDecoder=decodePileUpBinary(banks); 
     binDecoder.ignore();
-    debug() << " decode() : ZS bank decoded " << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << " decode() : ZS bank decoded " << endmsg;
   }
   else Info(" ZS bank empty ");
 
@@ -182,7 +164,7 @@ StatusCode DecodePileUpData::decodePileUpBinary( const std::vector<LHCb::RawBank
   for ( bi = banks.begin(); bi != banks.end(); bi++) 
   {
     
-    debug() << "************************ decodePileUpBinary ***********" << counter << "********" << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << "************************ decodePileUpBinary ***********" << counter << "********" << endmsg;
     LHCb::RawBank* aBank = *bi;
 
     // --> protect against corrupted banks
@@ -194,7 +176,7 @@ StatusCode DecodePileUpData::decodePileUpBinary( const std::vector<LHCb::RawBank
     // fill in the data container
     unsigned int head = PuTell1::HEADERS_PER_SECTION; // skip the first 2 words (header) of the section
     unsigned int wordTot = (aBank->size() / ( 2 * sizeof(unsigned int) ));
-    debug() << "now some prints...tot numb word is " << wordTot << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << "now some prints...tot numb word is " << wordTot << endmsg;
     Fill( head, wordTot, dataPtr, PuTell1::WORDS_PER_SECTION, m_PUcontainerBee );
     counter++;
   } // loop on PU banks
@@ -208,7 +190,7 @@ StatusCode DecodePileUpData::decodePileUpBinaryNZS( const std::vector<LHCb::RawB
   // loop on PU non zero-supp banks, there should be only 1
   for (std::vector<LHCb::RawBank*>::const_iterator bnzs = banksNZS.begin(); bnzs!= banksNZS.end(); bnzs++) 
   {
-    debug() << "************************ decodePileUpBinaryNZS *********************" << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << "************************ decodePileUpBinaryNZS *********************" << endmsg;
     LHCb::RawBank* aBank = *bnzs;
 
     // --> protect against corrupted banks
@@ -292,16 +274,16 @@ void DecodePileUpData::inizializePUcontainer( PuTell1::DataTable PUcontainerBee 
 void DecodePileUpData::Fill( unsigned int wordIt, unsigned int word_Tot, 
                              unsigned int* data_Ptr, int step, 
                              PuTell1::DataTable PUcontainerBee ){
-  debug() << "******************** Fill() *********************************" << endmsg;
+   if ( msgLevel(MSG::DEBUG) ) debug() << "******************** Fill() *********************************" << endmsg;
   while ( wordIt < word_Tot )
   {
     unsigned int* wordPtr = data_Ptr + wordIt;
-    debug() << "*HARD* DEBUG - FILL  : wordPtr " << wordPtr << " " << binary(*wordPtr) << endmsg;
+     if ( msgLevel(MSG::DEBUG) ) debug() << "*HARD* DEBUG - FILL  : wordPtr " << wordPtr << " " << binary(*wordPtr) << endmsg;
 
     //to take words from the 2nd section
     // step is 34 for the 0 supp bank, 35 for the non-0 supp
     unsigned int* wordPtr2 = wordPtr + step;  
-    debug() << "*HARD* DEBUG - FILL  : wordPtr2 " << wordPtr2 << " " << binary(*wordPtr2) << endmsg;     
+     if ( msgLevel(MSG::DEBUG) ) debug() << "*HARD* DEBUG - FILL  : wordPtr2 " << wordPtr2 << " " << binary(*wordPtr2) << endmsg;     
     switch(wordIt){
       case 2:
         (PUcontainerBee[0][2]).dataWord = *wordPtr;
@@ -505,13 +487,21 @@ StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleDat
       // now append new cluster
       clusters->insert( new LHCb::VeloCluster(lc,adcs), vcid );
 
-      debug()	<< "findPileUpHitsBee : VeloLiteCluster lc(" << fracStrip << ", "
-              << pseudoSize << ", " << hasHighThre << ", with channelId strip "
-              << (lc.channelID()).strip() << endmsg;
-      debug() << "******************** clusters size is " << clusters->size() << ")*********************************" << endmsg;
-
+       if ( msgLevel(MSG::DEBUG) ) 
+       {
+         debug()	<< "findPileUpHitsBee : VeloLiteCluster lc(" 
+                  << fracStrip << ", "
+                  << pseudoSize << ", " 
+                  << hasHighThre << ", with channelId strip "
+                  << (lc.channelID()).strip() << endmsg;
+         debug() << "******************** clusters size is " 
+                 << clusters->size() << ")*********************************" 
+                 << endmsg;
+       }
+       
     } // if checkBee
-    else{
+    else if ( msgLevel(MSG::DEBUG) )
+    {
       if ( OneBeetleData.isOrdered ){
         //not flipped word
         debug() << "No hits found in PU strip i= " << i << endmsg;
@@ -566,13 +556,21 @@ StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetle
       // got all we need, now append new cluster
       clustersNZS->insert( new LHCb::VeloCluster(lc,adcs), vcid );
 
-      debug() 	<< "findPileUpHitsBeeNZS : VeloLiteCluster lc(" << fracStrip << ", " 
-        << pseudoSize << ", " << hasHighThre << ", with channelId strip "
-        << (lc.channelID()).strip() << endmsg;
-      debug() 	<< "******************** clustersNZS size is " << clustersNZS->size() 
-        << ")*********************************" << endmsg;
+       if ( msgLevel(MSG::DEBUG) ) 
+       {
+         debug() 	<< "findPileUpHitsBeeNZS : VeloLiteCluster lc(" 
+                  << fracStrip << ", " 
+                  << pseudoSize << ", " 
+                  << hasHighThre << ", with channelId strip "
+                  << (lc.channelID()).strip() << endmsg;
+         debug() 	<< "******************** clustersNZS size is " 
+                  << clustersNZS->size() 
+                  << ")*********************************" << endmsg;
+       }
+       
     } // if checkBee
-    else{
+    else if ( msgLevel(MSG::DEBUG) ) 
+    {
       if ( OneBeetleData.isOrdered ){
         //not flipped word
         debug() << "No hits found in PU strip i= " << i << endmsg;

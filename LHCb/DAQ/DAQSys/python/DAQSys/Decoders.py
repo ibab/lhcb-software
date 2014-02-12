@@ -17,8 +17,8 @@ Decoder("OdinTimeDecoder/ToolSvc.OdinTimeDecoder",active=False,
         conf=DecoderDB)
 
 Decoder("ODINDecodeTool",active=False,#tool handle??
-        inputs={"RawEventLocations":["Trigger/RawEvent","DAQ/RawEvent"]},
-        outputs={"ODINLocation":"DAQ/ODIN"},
+        inputs={"RawEventLocations":None},
+        outputs={"ODINLocation":None},
         conf=DecoderDB)
 
 #===========VELO===========
@@ -28,7 +28,7 @@ Decoder("ODINDecodeTool",active=False,#tool handle??
 # by RecoTracking.py when rewuired for Brunel, alignment, etc.
 vd=Decoder("DecodeVeloRawBuffer/createBothVeloClusters",
         active=False, banks=["Velo"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         outputs={"VeloClusterLocation" : None, "VeloLiteClustersLocation" : None},
         properties={"DecodeToVeloClusters": True,"DecodeToVeloLiteClusters":True},
         conf=DecoderDB)
@@ -55,7 +55,7 @@ vdLite.Properties["DecodeToVeloLiteClusters"]=True
 #unfortunately the location of these two banks are different in S20, so for now I can only declare the L0PU decoder... needs thought!
 Decoder("DecodePileUpData",
         active=True, banks=["L0PU"],#,"L0PUFull"],
-        inputs={"RawEventLocations" : ["Trigger/RawEvent","Other/RawEvent","DAQ/RawEvent"]},#different from the default!
+        inputs={"RawEventLocations" : None},
         outputs={"PUClusterLocation" : None, "PUClusterNZSLocation": None},
         #properties={"NonZeroSupp": False},
         conf=DecoderDB)

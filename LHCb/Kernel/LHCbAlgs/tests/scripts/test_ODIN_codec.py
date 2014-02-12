@@ -16,7 +16,7 @@ def configure():
     encode.RawEventLocation = rawEventLoc
     decode = ODINDecodeTool()
     decode.ODINLocation = dstOdinLoc
-    decode.RawEventLocation = rawEventLoc
+    decode.RawEventLocations = [rawEventLoc]
     
 
 ## Main function

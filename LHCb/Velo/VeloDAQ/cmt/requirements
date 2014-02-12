@@ -13,6 +13,7 @@ include_path none
 #=========================================================================
 use  VeloDet      v*  Det
 use  DAQEvent     v*  Event
+use  DAQKernel    v*    DAQ
 use  VeloEvent    v*  Event	-no_auto_imports
 use  DigiEvent    v*  Event	-no_auto_imports
 use  SiDAQ        v*  Si	-no_auto_imports

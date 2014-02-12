@@ -1,12 +1,13 @@
 from Gaudi.Configuration import *
 
-from GaudiConf import IOHelper;
-IOHelper().inputFiles(['castor:/castor/cern.ch/user/r/rlambert/testfiles/JustFSR.2010.EW.dst']);
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["2010_justFSR_EW"].run();
 
 from Configurables import LHCbApp;
 LHCbApp().EvtMax=-1;
 LHCbApp().DataType="2010"
 #LHCbApp().Persistency='ROOT';
 
+from GaudiConf import IOHelper
 #IOHelper().outStream("tryRoot.dst","InputCopyStream")
 IOHelper().postConfigDebug()

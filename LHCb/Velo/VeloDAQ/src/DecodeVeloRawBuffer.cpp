@@ -34,7 +34,7 @@ DECLARE_ALGORITHM_FACTORY( DecodeVeloRawBuffer )
 //=============================================================================
 DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ) 
+    : Decoder::AlgBase ( name , pSvcLocator ) 
     , m_forcedBankVersion(0) // there is no version 0, so this means bank version is not enforced
     , m_velo(NULL)
     , m_ignoreErrors(false) 
@@ -43,12 +43,6 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("DecodeToVeloLiteClusters",m_decodeToVeloLiteClusters=true);
   declareProperty("DecodeToVeloClusters",m_decodeToVeloClusters=false);
   declareProperty("DumpVeloClusters",m_dumpVeloClusters=false);
-  declareProperty( "RawEventLocation",  m_rawEventLocation = "", 
-                   "OBSOLETE. Use RawEventLocations instead" );
-  declareProperty( "RawEventLocations", m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Other,"
-                   " LHCb::RawEventLocation::Default.");
   declareProperty("VeloLiteClustersLocation",m_veloLiteClusterLocation=LHCb::VeloLiteClusterLocation::Default);
   declareProperty("VeloClusterLocation",m_veloClusterLocation=LHCb::VeloClusterLocation::Default);
   declareProperty("AssumeChipChannelsInRawBuffer",m_assumeChipChannelsInRawBuffer=false);
@@ -61,6 +55,12 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
 
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
   declareProperty("HideWarnings", m_hideWarnings = true);
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations={LHCb::RawEventLocation::Other, LHCb::RawEventLocation::Default};
+  
+  initRawEventSearch();
+  
+  
 }
 
 
@@ -74,7 +74,7 @@ DecodeVeloRawBuffer::~DecodeVeloRawBuffer() {}
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel( MSG::DEBUG ) ) debug () << "==> Initialise" << endmsg;
@@ -99,21 +99,13 @@ StatusCode DecodeVeloRawBuffer::initialize() {
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  if (m_rawEventLocations.empty()) 
+  {
+    return Error("I can't decode if you don't tell me where to decode to! Fill RawEventLocations!",StatusCode::FAILURE);
   }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
+  
+  if (m_rawEventLocations[0]!=LHCb::RawEventLocation::Other) 
+  {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
@@ -138,14 +130,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
   }
 
   // Retrieve the RawEvent:
-  LHCb::RawEvent* rawEvent = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    rawEvent = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != rawEvent ){
-      break;
-    }
-  }
-
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
+  
   if( rawEvent == NULL ) {
     if( msgLevel( MSG::DEBUG ) )
       debug() << "Raw Event not found in " << m_rawEventLocations << endmsg;

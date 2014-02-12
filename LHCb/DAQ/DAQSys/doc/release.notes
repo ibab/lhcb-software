@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-02-12 - Rob Lambert
+ - ODIN and Velo changes for task #49078 reflected in DecoderDB
+
 ! 2014-02-11 - Rob Lambert
  - HltDAQ changes for task #49078 reflected in DecoderDB
 

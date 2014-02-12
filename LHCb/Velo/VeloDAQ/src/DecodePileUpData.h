@@ -4,6 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 // from TELL1 Kernel:
 #include "Tell1Kernel/VeloDecodeConf.h" 
@@ -32,7 +33,7 @@ namespace PuTell1
   };
 }
 
-class DecodePileUpData : public GaudiAlgorithm {
+class DecodePileUpData : public Decoder::AlgBase {
 public: 
 
   DecodePileUpData( const std::string& name, ISvcLocator* pSvcLocator ); /// Standard constructor
@@ -59,14 +60,7 @@ protected:
 private:
 
   LHCb::RawEvent*       m_rawEvent;    
-
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
   std::string	m_PUClusterLocation;  
   std::string	m_PUClusterNZSLocation;        
   bool          	m_isNonZeroSupp;

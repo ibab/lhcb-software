@@ -4,6 +4,7 @@
 #include <string>
 
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 #include "SiDAQ/SiRawBufferWord.h"
 
@@ -23,7 +24,7 @@ class IIncidentSvc;
  *  @author Chris Parkes
  *  @date   2004-02-02
  */
-class DecodeVeloRawBuffer : public GaudiAlgorithm {
+class DecodeVeloRawBuffer : public Decoder::AlgBase {
 public:
 
   /// Standard constructor
@@ -107,14 +108,7 @@ private:
   bool m_dumpVeloClusters;
 
   unsigned int m_forcedBankVersion; ///< user forced bank version
-
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
   std::string m_veloLiteClusterLocation;
   std::string m_veloClusterLocation;
 

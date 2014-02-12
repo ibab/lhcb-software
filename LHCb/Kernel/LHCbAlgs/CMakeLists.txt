@@ -6,6 +6,7 @@ gaudi_subdir(LHCbAlgs v2r59)
 gaudi_depends_on_subdirs(Det/DDDB
                          Det/DetDesc
                          Event/DAQEvent
+			 DAQ/DAQKernel
                          Event/HltEvent
                          Event/L0Event
                          Event/RecEvent
@@ -22,7 +23,7 @@ find_package(CASTOR) # runtime, only for the tests
 gaudi_add_module(LHCbAlgs
                  src/*.cpp
                  INCLUDE_DIRS Boost
-                 LINK_LIBRARIES Boost DetDescLib DAQEventLib HltEvent L0Event RecEvent TrackEvent GaudiAlgLib LHCbKernel HltInterfaces HltEvent)
+                 LINK_LIBRARIES Boost DetDescLib DAQEventLib DAQKernelLib HltEvent L0Event RecEvent TrackEvent GaudiAlgLib LHCbKernel HltInterfaces HltEvent)
 
 gaudi_install_python_modules()
 

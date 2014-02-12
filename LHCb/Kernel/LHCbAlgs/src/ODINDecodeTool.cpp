@@ -31,12 +31,6 @@ private:
   /// Location in the transient store of the ODIN object.
   std::string m_odinLocation;
 
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
 };
 
 //=============================================================================
@@ -61,16 +55,13 @@ DECLARE_TOOL_FACTORY( ODINDecodeTool )
                                   const std::string& name,
                                   const IInterface* parent )
     : ODINCodecBaseTool(type, name, parent) {
-    declareProperty("ODINLocation", m_odinLocation = "",
+    declareProperty("ODINLocation", 
+                    m_odinLocation = LHCb::ODINLocation::Default,
                     "Location of the ODIN object in the transient store. By "
                     "default is the content of LHCb::ODINLocation::Default.");
-    declareProperty("RawEventLocation", m_rawEventLocation = "",
-                    "Location of the RawEvent object in the transient store. By "
-                    "default is the content of LHCb::RawEventLocation::Default.");
-    declareProperty("RawEventLocations", m_rawEventLocations,
-                    "List of possible locations of the RawEvent object in the"
-                    " transient store. By default it is LHCb::RawEventLocation::Copied,"
-                    " LHCb::RawEventLocation::Default.");
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
   }
 //=============================================================================
 // Destructor
@@ -84,35 +75,13 @@ StatusCode ODINDecodeTool::initialize()
 {
   StatusCode sc = ODINCodecBaseTool::initialize(); // always first
   if (sc.isFailure()) return sc; // error message already printed
-
-  if (m_odinLocation.empty()) 
-  {
-    // use the default
-    m_odinLocation = LHCb::ODINLocation::Default;
-  } 
-  else 
+  
+  if (m_odinLocation!=LHCb::ODINLocation::Default) 
   {
     info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
   }
   
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if ( !m_rawEventLocation.empty() ) 
-  {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
-  }
-
-  if ( std::find( m_rawEventLocations.begin(), 
-                  m_rawEventLocations.end(), 
-                  LHCb::RawEventLocation::Default)
-       == m_rawEventLocations.end() ) 
-  {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) 
+  if (m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) 
   {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
@@ -146,13 +115,7 @@ void ODINDecodeTool::execute()
   }
   
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Getting RawEvent" << endmsg;
-  LHCb::RawEvent* rawEvent = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin();
-       p != m_rawEventLocations.end(); ++p )
-  {
-    rawEvent = getIfExists<LHCb::RawEvent>( evtSvc(), *p );
-    if ( rawEvent ) { break; }
-  }
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
   if (!rawEvent) 
   {
     using namespace GaudiUtils;
@@ -167,7 +130,8 @@ void ODINDecodeTool::execute()
   if ( !odinBanks.empty() ) 
   { // ... good, we can decode it
     odin = this->i_decode(*odinBanks.begin(), odin);
-    if (odin && (!odin->registry())){ // register ODIN object if valid and not yet registered
+    if (odin && (!odin->registry())) // register ODIN object if valid and not yet registered
+    { 
       put(odin, m_odinLocation);
     }
   }

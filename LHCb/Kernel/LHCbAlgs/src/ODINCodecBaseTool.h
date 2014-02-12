@@ -4,6 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "DAQKernel/DecoderToolBase.h"
 #include "GaudiAlg/IGenericTool.h"            // Interface
 #include <vector>
 #include <string>
@@ -30,7 +31,7 @@ namespace LHCb {
  *  @author Marco Clemencic
  *  @date   2009-02-02
  */
-class ODINCodecBaseTool : public GaudiTool, virtual public IGenericTool {
+class ODINCodecBaseTool : public Decoder::ToolBase, virtual public IGenericTool {
 public:
   /// Standard constructor
   ODINCodecBaseTool(const std::string& type,
@@ -40,7 +41,7 @@ public:
   virtual ~ODINCodecBaseTool(); ///< Destructor
 
   /// Initialize the tool
-  virtual inline StatusCode initialize() { return GaudiTool::initialize(); }
+  virtual inline StatusCode initialize() { return Decoder::ToolBase::initialize(); }
 
 protected:
   /// Decode the ODIN RawBank and fill the ODIN object

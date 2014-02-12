@@ -11,6 +11,7 @@
 #include "Event/ODIN.h"
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
+#include "DAQKernel/DecoderToolBase.h"
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -18,7 +19,7 @@
 ODINCodecBaseTool::ODINCodecBaseTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : Decoder::ToolBase ( type, name , parent )
 {
   declareInterface<IGenericTool>(this);
 

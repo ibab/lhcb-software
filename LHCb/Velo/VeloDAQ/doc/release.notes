@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2014-02-12 - Rob Lambert
+ - Adapt velo decoder tools to Decoder base classes, task #49078
+
 !========================= VeloDAQ v6r10 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings and UNINIT_CTOR defects
