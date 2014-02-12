@@ -29,10 +29,16 @@ importOptions('$FSTTOOLSROOT/options/Sft.py')
 
 # set input, no with spillover
 Brunel().InputType = 'DST'
-#input_path = '/group/online/data_hlt'
+
+# MinBias events
 input_path = '/group/online/data_hlt/minbias_25ns_spillover'
 input_files = glob(path.join(input_path, '0*.xdst'))
-#input_files = ["MinBias_spillover_1000.dst"]
+Brunel().DatasetName = "minbias"
+
+# Bs->phiphi events
+#input_files = ['/group/online/data_hlt/bsphiphi_25ns_spillover/00033064_00000026_1.xdst']
+#Brunel().DatasetName = "bsphiphi"
+
 IOHelper().inputFiles(input_files)
 
 # configure trigger emulation
@@ -40,7 +46,13 @@ FstConf().VeloType = 'VP'
 FstConf().TStationType = 'FT+VeloUT'
 #FstConf().TStationType = 'FT'
 FstConf().ForwardMinPt = 500  # MeV, pT cut in FT
-FstConf().TrackFit = ''
+#
+# empty string or None means do not run Rich/Fit
+# fit disabled for the moment by default, if you
+# have the head of Tr/TrackFitter you can enable it
+FstConf().TrackFit = ''#'HltFit'
+# default is no Rich reco, turn on by uncommenting
+#FstConf().RICHType = 'HLT2015'
 
 # use the newly introduced DoNothing property to turn off algorithms
 algos = [
@@ -54,7 +66,7 @@ for algo in algos:
 
 # set multiplicity cuts
 FstSelectGEC().MultiplicityCutECAL = 1
-FstSelectGEC().MultiplicityCutHCAL = 999#10000
+FstSelectGEC().MultiplicityCutHCAL = 999
 
 # set the mcut via env var for a study
 from os import getenv
@@ -90,8 +102,8 @@ CondDB().AllLocalTagsByDataType = [
 ]
 
 # set up Brunel
-Brunel().PrintFreq = 1000
-Brunel().EvtMax = 3000
+Brunel().PrintFreq = 100
+Brunel().EvtMax = 10000
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
 Brunel().CondDBtag = 'sim-20130830-vc-md100'
@@ -130,6 +142,7 @@ def setup_truth_matching():
     # Uncomment to run over events written out
     # after the GEC cut, for some reason
     # reading in DSTs we wrote out ourselves is broken
+    # Use this as well if producing DSTs for Conor
     #GaudiSequencer("InitReprocSeq").Members = []
    
 appendPostConfigAction(setup_truth_matching)
