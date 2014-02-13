@@ -1,3 +1,16 @@
+// $Id: EventServerRunable.h,v 1.7 2008-10-14 08:37:21 frankb Exp $
+//====================================================================
+//  MooreTestSvc
+//--------------------------------------------------------------------
+//
+//  Description: Runable to run Moore standalone on a single node.
+//  Author     : M.Frank
+//====================================================================
+// $Header: $
+#ifndef MOORESTANDALONE_INTERNALS_H
+#define MOORESTANDALONE_INTERNALS_H
+
+#include <map>
 #include <ctime>
 #include <string>
 /*f
@@ -17,15 +30,15 @@ namespace LHCb {
       StatEntry  now;
       UserStats& operator+=(const UserStats& c);
     };
-    class ResultMonitor  {
-    public:
-      ResultMonitor();
-      virtual ~ResultMonitor();
-      virtual void begin() = 0;
-      virtual void end() = 0;
-      virtual void output(const char* buffer) = 0;
-      virtual void outputHeader() = 0;
-      virtual void outputClient(const std::string& name, const UserStats& us) = 0;    
+    typedef std::map<std::string,UserStats> Statistics;
+    enum __global__cmds__
+    {
+      CMD_CLOSE = 99900,
+      CMD_MOORE_EXIT,
+      CMD_ADD_MOORE_CLIENT = 200000,
+      CMD_REMOVE_MOORE_CLIENT = 200001,
+      CMD_UPDATE_MOORE_INFO   = 200002
     };
   }
 }
+#endif // MOORESTANDALONE_INTERNALS_H

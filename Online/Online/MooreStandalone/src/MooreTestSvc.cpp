@@ -25,8 +25,6 @@
 #include <map>
 #include <ctime>
 
-
-
 namespace MBM { class Manager; }
 
 /*
@@ -34,26 +32,24 @@ namespace MBM { class Manager; }
  */
 namespace LHCb {
 
-  class MooreFileMonitor : public Service, public MooreTest::ResultMonitor  {
+  class MooreFileMonitor : public OnlineService  {
   protected:
     /// File descriptor to output file (if set)
     FILE* m_file;
     std::string m_output;
   public:
     typedef MooreTest::UserStats UserStats;
+    typedef MooreTest::Statistics Statistics;
     MooreFileMonitor(const std::string& n, ISvcLocator* svc) 
-      : Service(n,svc), MooreTest::ResultMonitor(), m_file(stdout) 
+      : OnlineService(n,svc), m_file(stdout) 
     {
       declareProperty("Output",m_output="");
     }
     virtual ~MooreFileMonitor();
     StatusCode initialize();
     StatusCode finalize();
-    virtual void begin();
-    virtual void end();
-    virtual void output(const char* buffer);
-    virtual void outputHeader();
-    virtual void outputClient(const std::string& name, const UserStats& us);
+    /// Inform that a new incident has occurred
+    void handle(const Incident& incident);
   };
 
   /** @class MooreTestSvc MooreTestSvc.h MooresStandalone/MooreTestSvc....h
@@ -67,8 +63,8 @@ namespace LHCb {
   class MooreTestSvc : public OnlineService, public Interactor, virtual public IRunable   {
   protected:
     typedef MooreTest::UserStats UserStats;
-    typedef MooreTest::ResultMonitor ResultMonitor;
-    typedef std::map<std::string,UserStats> Statistics;
+    typedef MooreTest::Statistics Statistics;
+
     /// Name of the I/O fifo used by the FmcMessageSvc
     std::string m_fifoName;
     /// Property: Moore version to be used (passed as argument to the 'procname' tasks
@@ -110,11 +106,10 @@ namespace LHCb {
     MBM::Manager*    m_inputBM;
     /// Buffer manager descriptor to collect statistics of the output buffer
     MBM::Manager*    m_outputBM;
-
+    /// Master to reply to
+    Interactor*      m_master;
     /// Extracted statistics
     Statistics       m_stat;
-    /// Reference to result monitor
-    std::vector<ResultMonitor*>   m_monitors;
 
   public:
     /// Standard Constructor
@@ -139,7 +134,7 @@ namespace LHCb {
     /// Update the statistics
     void update_statistics();
     /// Print statistics record
-    void print_statistics(ResultMonitor* monitor);
+    void print_statistics();
     /// Start the logger thread to serve the output
     int startLogger(const std::string&  fifoName);
     /// Map the MBM buffers to extract all necessary information
@@ -156,9 +151,11 @@ namespace LHCb {
 #endif /* ONLINE_GAUDIONLINE_MOORETESTSVC_H  */
 
 #include "MBM/Manager.h"
+#include "CPP/IocSensor.h"
 #include "RTL/ProcessGroup.h"
 #include "RTL/strdef.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/DataIncident.h"
 
 #include <cerrno>
 #include <cstdio>
@@ -210,23 +207,21 @@ UserStats& UserStats::operator+=(const UserStats& us)  {
   return *this;
 }
 
-ResultMonitor::ResultMonitor()  {
-}
-
-ResultMonitor::~ResultMonitor()  {
-}
-
 MooreFileMonitor::~MooreFileMonitor()   {
   if ( m_file && m_file != stdout && m_file != stderr ) ::fclose(m_file);
   m_file = 0;
 }
 
 StatusCode MooreFileMonitor::initialize()   {
-  StatusCode sc = Service::initialize();
+  StatusCode sc = OnlineService::initialize();
+  MsgStream msg(msgSvc(),name());
+  if ( !sc.isSuccess() )   {
+    msg << MSG::ERROR << "Failed to initialize OnlineService  base class." << endmsg;
+    return sc;
+  }
   if ( !m_output.empty() )  {
     FILE* f = ::fopen(m_output.c_str(),"w");
     if ( 0 == f )  {
-      MsgStream msg(msgSvc(),name());
       string err = RTL::errorString();
       msg << MSG::ERROR << "Failed to open statitsics output file:" << m_output
 	  << "  [" << err << "]" << endmsg;
@@ -234,54 +229,55 @@ StatusCode MooreFileMonitor::initialize()   {
     }
     m_file = f;
   }
-  return sc;
+  incidentSvc()->addListener(this,"MOORE_MONITOR");
+  return StatusCode::SUCCESS;
 }
 
 StatusCode MooreFileMonitor::finalize()   {
   if ( m_file && m_file != stdout && m_file != stderr ) ::fclose(m_file);
   m_file = 0;
-  return Service::finalize();
+  incidentSvc()->removeListener(this);
+  return OnlineService::finalize();
 }
 
-void MooreFileMonitor::output(const char* buffer)  {
-  ::fprintf(m_file,"Logger: %s",buffer);
-}
+/// Inform that a new incident has occurred
+void MooreFileMonitor::handle(const Incident& incident)   {
+  ContextIncident<Statistics*>* inc = (ContextIncident<Statistics*>*)&incident;
+  const Statistics& stat = *(inc->tag());
 
-void MooreFileMonitor::begin()  {
-}
-
-void MooreFileMonitor::end()  {
-}
-
-void MooreFileMonitor::outputHeader()  {
-  ::fprintf(m_file,"%-32s %16s %-38s   %-19s   %-38s   %-19s\n",
-	    "-----------------------------","-- Time [msec] -",
+  ::fprintf(m_file,"%-16s %16s %-38s   %-19s   %-38s   %-19s\n",
+	    "---------------","-- Time [msec] -",
 	    "----------- Events consumed ----------"," --- Rates [Hz] ---",
 	    "----------- Events produced ----------"," --- Rates [Hz] ---");
-  ::fprintf(m_file,"%-32s %8s %7s %-38s   %-19s   %-38s   %-19s\n",
+  ::fprintf(m_file,"%-16s %8s %7s %-38s   %-19s   %-38s   %-19s\n",
 	    "Process name","Total","Delta",
 	    "       Start     Previous          Now"," Instant Cumulative",
 	    "       Start     Previous          Now"," Instant Cumulative");
-}
-
-void MooreFileMonitor::outputClient(const std::string& name, const UserStats& us)  {
-  double inst_time_diff = (double(us.now.time.tv_sec-us.last.time.tv_sec)*1e9  + double(us.now.time.tv_nsec-us.last.time.tv_nsec))/1e9;
-  double inst_seen_rate = inst_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_seen-us.last.evt_seen)/inst_time_diff;
-  double inst_prod_rate = inst_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_prod-us.last.evt_prod)/inst_time_diff;
+  for(Statistics::const_iterator i=stat.begin(); i!=stat.end(); ++i)    {
+    const std::string& name = (*i).first;
+    const UserStats& us = (*i).second;
+    double inst_time_diff = (double(us.now.time.tv_sec-us.last.time.tv_sec)*1e9  + double(us.now.time.tv_nsec-us.last.time.tv_nsec))/1e9;
+    double inst_seen_rate = inst_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_seen-us.last.evt_seen)/inst_time_diff;
+    double inst_prod_rate = inst_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_prod-us.last.evt_prod)/inst_time_diff;
   
-  double glob_time_diff = (double(us.now.time.tv_sec-us.start.time.tv_sec)*1e9 + double(us.now.time.tv_nsec-us.start.time.tv_nsec))/1e9;
-  double glob_seen_rate = glob_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_seen-us.start.evt_seen)/glob_time_diff;
-  double glob_prod_rate = glob_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_prod-us.start.evt_prod)/glob_time_diff;
-  //cout << "Diff:" << glob_time_diff << " " << inst_time_diff << endl;
-  ::fprintf(m_file,"%-32s %8ld %7ld %12ld %12ld %12ld %10.0f %10.0f   %12ld %12ld %12ld %10.0f %10.0f\n",name.c_str(),
-	    long(glob_time_diff*1e3),long(inst_time_diff*1e3),
-	    us.start.evt_seen, us.last.evt_seen, us.now.evt_seen, inst_seen_rate, glob_seen_rate,
-	    us.start.evt_prod, us.last.evt_prod, us.now.evt_prod, inst_prod_rate, glob_prod_rate);
+    double glob_time_diff = (double(us.now.time.tv_sec-us.start.time.tv_sec)*1e9 + double(us.now.time.tv_nsec-us.start.time.tv_nsec))/1e9;
+    double glob_seen_rate = glob_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_seen-us.start.evt_seen)/glob_time_diff;
+    double glob_prod_rate = glob_time_diff < numeric_limits<double>::epsilon() ? 0e0 : double(us.now.evt_prod-us.start.evt_prod)/glob_time_diff;
+    //cout << "Diff:" << glob_time_diff << " " << inst_time_diff << endl;
+
+    const char* p = strchr_safe(name.c_str(),'_');
+    const char* q = p ? strchr_safe(p+1,'_') : name.c_str();
+    const char* n = q ? q+1 : p ? p+1 : name.c_str();
+    ::fprintf(m_file,"%-16s %8ld %7ld %12ld %12ld %12ld %10.0f %10.0f   %12ld %12ld %12ld %10.0f %10.0f\n",n,
+	      long(glob_time_diff*1e3),long(inst_time_diff*1e3),
+	      us.start.evt_seen, us.last.evt_seen, us.now.evt_seen, inst_seen_rate, glob_seen_rate,
+	      us.start.evt_prod, us.last.evt_prod, us.now.evt_prod, inst_prod_rate, glob_prod_rate);
+  }
 }
 
 /// Standard Constructor
 MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)   
-  : OnlineService(nam,svcLoc), m_fifo(-1), m_messagePump(0), m_inputBM(0), m_outputBM(0)
+  : OnlineService(nam,svcLoc), m_fifo(-1), m_messagePump(0), m_inputBM(0), m_outputBM(0), m_master(0)
 {
   declareProperty("FifoPath",                   m_fifoName = "/tmp/logSrv.fifo");
   declareProperty("PartitionID",                m_partitionID=333);
@@ -296,7 +292,6 @@ MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)
   declareProperty("MeasurementIntervall",       m_intervall=5);
   declareProperty("MeasurementDuration",        m_duration=300);
   declareProperty("MooreOnlineVersion",         m_mooreVsn="");
-  declareProperty("Monitors",                   m_monitorTypes);
   declareProperty("Auto",                       m_autoRun=true);
 }
 
@@ -334,17 +329,6 @@ StatusCode MooreTestSvc::initialize()   {
     m_input  += "_"+m_partition;
     m_output += "_"+m_partition;
   }
-  for(size_t i=0; i<m_monitorTypes.size(); ++i)  {
-    IService* svc = 0;
-    ResultMonitor* mon = 0;
-    if ( service(m_monitorTypes[i],svc).isSuccess() )  {
-      mon = dynamic_cast<ResultMonitor*>(svc);
-    }
-    if ( 0 == mon )  {
-      return error("Failed to create output logger of type:"+m_monitorTypes[i]);
-    }
-    m_monitors.push_back(mon);
-  }
   return StatusCode::SUCCESS;
 }
 
@@ -367,10 +351,6 @@ StatusCode MooreTestSvc::finalize()     {
     ::lib_rtl_delete_thread(m_messagePump);
     m_messagePump = 0;
   }
-  for(vector<ResultMonitor*>::iterator i=m_monitors.begin(); i!=m_monitors.end();++i)   {
-    IService* svc = dynamic_cast<IService*>(*i);
-    svc->release();
-  }
   return OnlineService::finalize();
 }
 
@@ -390,7 +370,14 @@ MBM::Manager* MooreTestSvc::mapBuffer(const std::string& bm_name)  {
 void MooreTestSvc::handle (const Event& e)   {
   switch ( e.eventtype )    {
   case IocEvent:
-    m_autoRun = true;
+    switch(e.type)  {
+    case MooreTest::CMD_MOORE_EXIT:
+      m_autoRun = true;
+      m_master = (Interactor*)e.data;
+      break;
+    default:
+      break;
+    }
     break;
   default:
     break;
@@ -550,19 +537,16 @@ void MooreTestSvc::update_statistics()   {
 }
 
 /// Print statistics record
-void MooreTestSvc::print_statistics(ResultMonitor* monitor)    {
+void MooreTestSvc::print_statistics()    {
   if ( m_stat.size()>0 )  {
-    UserStats sum;
+    UserStats& sum = m_stat["+++ Grand Total"];
     ::memset(&sum,0,sizeof(sum));
-    monitor->begin();
-    monitor->outputHeader();
     for(Statistics::iterator i=m_stat.begin(); i!=m_stat.end(); ++i)  {
       UserStats& us = (*i).second;
-      monitor->outputClient((*i).first,us);
       sum += us;
     }
-    monitor->outputClient("+++ Grand Total",sum);
-    monitor->end();
+    ContextIncident<Statistics*> inc(name(),"MOORE_MONITOR",&m_stat);
+    incidentSvc()->fireIncident(inc);
   }
 }
 
@@ -666,21 +650,24 @@ StatusCode MooreTestSvc::run()   {
   time_t start = time(0);
   init_statistics();
   for(int i = 0; i < numeric_limits<int>::max(); ++i)  {
-    ::lib_rtl_sleep(m_intervall*1000);
+    for ( int j = 0; j<100; ++j )  {
+      if ( !m_autoRun ) ::lib_rtl_sleep(m_intervall*10);
+      else if ( m_autoRun && int(time(0) - start) > m_duration ) goto Done;
+      else ::lib_rtl_sleep(m_intervall*10);
+    }
     update_statistics();
     if ( i > 0 )   {
-      for(vector<ResultMonitor*>::iterator i=m_monitors.begin(); i!=m_monitors.end(); ++i)
-	print_statistics(*i);
+      print_statistics();
     }
     if ( !m_autoRun ) continue;
     if ( m_autoRun && int(time(0) - start) > m_duration )   {
+    Done:
       info("+++++ The measurement time of %d seconds is reached.",m_duration);
       info("+++++ We are exiting now after %d measurements",i);
       break;
     }
   }
 
-  //::kill(0,SIGTERM);
   prodTask->killall();
   monTask->killall();
 
@@ -701,10 +688,6 @@ StatusCode MooreTestSvc::run()   {
   //system((string("rm -f /dev/shm/bm_buffers")).c_str());
   system(("rm -f /tmp/bm_*"+m_partition+"_*").c_str());
   //::kill(0,SIGKILL);
-
-  //cout << "<RETURN> to end data collection: ";
-  //  getline(cin,out);
-
-  //_exit(0);
+  if ( m_master ) IocSensor::instance().send(m_master,CMD_MOORE_EXIT);
   return StatusCode::SUCCESS;
 }

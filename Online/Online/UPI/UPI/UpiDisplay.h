@@ -7,6 +7,7 @@
 #define UPI_UPIDISPLAY_H
 
 #include <cstdarg>
+#include "CPP/Interactor.h"
 #include "CPP/MonitorDisplay.h"
 
 /*

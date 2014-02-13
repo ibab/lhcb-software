@@ -2,7 +2,8 @@
 
 if test -z "$GaudiOnlineExe";
 then
-    cmt run /bin/bash $0;
+    cd `dirname $0`/../cmt;
+    cmt run "/bin/bash $0 $*";
 else
     export GaudiOnlineExe=`which GaudiOnlineExe.exe`;
     cd ${MOORESTANDALONEROOT}/cmt;
@@ -16,7 +17,44 @@ else
     export MBM_SETUP_OPTIONS=${MOORESTANDALONEROOT}/options/MBM_setup.opts;
     export DATA_DIRECTORY=${MOORESTANDALONEROOT}/cmt;
     export NUMBER_OF_SLAVES=10;
-    `which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreTest.opts;
-    #`which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreUPI.opts;
+    GUI=;
+    HLP=;
+    for i in $*; 
+    do
+	arg=`echo $i | tr a-z 'A-Z'`;
+	if test "$arg" = "-GUI";
+	then 
+	    GUI=upi;
+	elif test "$arg" = "-UPI";
+	then
+	    GUI=upi;
+	elif test "$arg" = "-HELP";
+	then
+	    HLP=yes;
+	elif test "$arg" = "-H";
+	then
+	    HLP=yes;
+	elif test "$arg" = "-?";
+	then
+	    HLP=yes;
+	fi;
+    done;
+
+    if test -n "$HLP";
+    then
+	echo "";
+	echo " Usage: $0 -arg [-args]";
+	echo "   Default/No args: run in scripting mode.";
+	echo "   -upi             Run with terminal gui";
+	echo "   -h(elp) , -?     Get this help.";
+	echo "";
+    elif test "$GUI" = "upi";
+    then
+	echo "Running Moore Benachmark application in UPI mode.";
+	`which gentest.exe` libMooreStandalone.so moore_standalone;
+    else
+	echo "Running Moore Benachmark application in script mode.";
+	`which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreTest.opts;
+    fi;
 fi;
 

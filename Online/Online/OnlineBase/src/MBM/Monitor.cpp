@@ -82,9 +82,9 @@ Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) :
 
 Monitor::~Monitor()
 {
+  TimeSensor::instance().remove(this);
   if (m_display)
     delete m_display;
-  TimeSensor::instance().remove(this);
 }
 
 size_t Monitor::print(void* ctxt, int, const char* format, va_list args)
