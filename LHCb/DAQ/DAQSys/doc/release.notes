@@ -7,6 +7,7 @@
 ! 2014-02-12 - Rob Lambert
  - OTDAQ changes for task #49078 reflected in DecoderDB
  - CaloDAQ changes for task #49078 reflected in DecoderDB
+ - MuonDAQ changes for task #49078 reflected in DecoderDB
 
 ! 2014-02-12 - Rob Lambert
  - RichDAQ (small) changes for task #49078 reflected in DecoderDB

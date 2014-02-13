@@ -11,6 +11,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "Event/MuonODEData.h"
 #include "Event/MuonPPEventInfo.h"
+#include "DAQKernel/DecoderToolBase.h"
 
 #include <string>
 
@@ -20,7 +21,7 @@
  *  @author Alessia Satta
  *  @date   2005-10-18
  */
-class MuonRawBuffer :  public GaudiTool, virtual public IMuonRawBuffer, virtual public IIncidentListener
+class MuonRawBuffer :  public Decoder::ToolBase, virtual public IMuonRawBuffer, virtual public IIncidentListener
 {
 public: 
   /// Standard constructor
@@ -136,9 +137,7 @@ private:
   LHCb::RawBankReadoutStatus m_status;
   LHCb::RawBankReadoutStatus m_statusFull;
   bool m_statusCreated;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
+  
 };
 #endif // MUONRAWBUFFER_H

@@ -64,5 +64,7 @@ private:
   IMuonRawBuffer* m_muonBuffer;  
   bool m_forceResetDAQ;
   int  m_Exccounter;  
+  std::string m_coordOutputLocation;
+  
 };
 #endif // MUONREC_MUONREC_H

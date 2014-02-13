@@ -30,7 +30,7 @@ using namespace LHCb;
 MuonRawBuffer::MuonRawBuffer( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+  : Decoder::ToolBase ( type, name , parent ),
     m_M1Tell1(0),
     m_muonDet(0),
     m_checkTell1HeaderPerformed(false),
@@ -38,11 +38,11 @@ MuonRawBuffer::MuonRawBuffer( const std::string& type,
     m_statusCreated(false)
 {
   declareInterface<IMuonRawBuffer>(this);
-
-  declareProperty( "RawEventLocations",  m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Muon,"
-                   " LHCb::RawEventLocation::Default.");
+  
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Muon, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
   m_NLink=24;
   m_ODEWord=35;
   m_TESChanged=false;
@@ -59,7 +59,7 @@ MuonRawBuffer::~MuonRawBuffer() {}
 
 StatusCode MuonRawBuffer::initialize()
 {
-  StatusCode sc = GaudiTool::initialize() ;
+  StatusCode sc = Decoder::ToolBase::initialize() ;
   if(sc.isFailure())return sc;
 
   m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
@@ -82,21 +82,8 @@ StatusCode MuonRawBuffer::initialize()
   }
 
   clearData();
-
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty();
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Muon);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
-
+  
+  
   return StatusCode::SUCCESS ;
 }
 
@@ -243,20 +230,14 @@ StatusCode MuonRawBuffer::finalize() {
   }
 
   clearData();
-  return GaudiTool::finalize() ;
+  return Decoder::ToolBase::finalize() ;
 }
 
 
 StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
 {
 
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   StatusCode sc= getTile(raw,storage,rootInTES());
@@ -266,13 +247,7 @@ StatusCode MuonRawBuffer::getTile(std::vector<LHCb::MuonTileID>& storage)
 
 StatusCode MuonRawBuffer::getTileAndTDC(std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   StatusCode sc= getTileAndTDC(raw,storage,rootInTES());
@@ -510,13 +485,7 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
 
 StatusCode MuonRawBuffer::getPads(std::vector<LHCb::MuonTileID>& storage)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   // const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
@@ -866,13 +835,7 @@ StatusCode MuonRawBuffer::DecodeDataPad(const LHCb::RawBank* r)
 
 StatusCode MuonRawBuffer::decodeNZSupp(unsigned int tell1Number)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   StatusCode sc=StatusCode::SUCCESS;
@@ -1105,13 +1068,7 @@ unsigned int  MuonRawBuffer::BXCounter(unsigned int tell1Number)
 StatusCode MuonRawBuffer::getNZSupp(std::vector<std::pair<LHCb::MuonTileID,
                                     unsigned int> > & tileAndTDC)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   StatusCode sc= getNZSupp(raw,tileAndTDC,rootInTES());
@@ -1283,13 +1240,7 @@ StatusCode MuonRawBuffer::getPadsInStation(int station,std::vector<std::vector<L
 
 StatusCode MuonRawBuffer::getPads( int tell1,std::vector<LHCb::MuonTileID>& pads)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
@@ -1315,13 +1266,7 @@ StatusCode MuonRawBuffer::getPads( int tell1,std::vector<LHCb::MuonTileID>& pads
 }
 StatusCode MuonRawBuffer::getPads( int tell1)
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
+  LHCb::RawEvent* raw = findFirstRawEvent();
   if( raw == NULL ) return Error("Failed to find raw data");
 
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
@@ -1382,14 +1327,8 @@ std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders
 
 std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders()
 {
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != raw ){
-      break;
-    }
-  }
-
+  LHCb::RawEvent* raw = findFirstRawEvent();
+  
   if( raw == NULL ) {
     Error("Failed to find raw data").ignore();
     std::vector<std::pair<MuonTell1Header, unsigned int> > return_value;

@@ -201,10 +201,20 @@ Decoder(toolname,active=False,
 
 
 #===========MUON===========
+tname="MuonRawBuffer"
+
 Decoder("MuonRec",active=True,banks=["Muon"],
-        outputs=["Raw/Muon/Coords"],
-        inputs=["DAQ/RawEvent"],
-        conf=DecoderDB)#No way to configure input or output!!!
+        outputs={"OutputLocation": None},
+        privateTools=[tname], #used in TAE mode
+        publicTools=[tname+"/ToolSvc."+tname], #used in TAE mode
+        conf=DecoderDB)
+
+tool=Decoder("MuonRawBuffer",active=False,
+             inputs={"RawEventLocations":None},
+             conf=DecoderDB)
+
+tool2=tool.clone(tname+"/ToolSvc."+tname)
+
 
 #TRIGGER ===========L0===========
 Decoder("L0MuonCandidatesFromRaw/L0MuonFromRaw",
@@ -245,8 +255,6 @@ Decoder("L0DUFromRawTool",
 #create them all in a similar way, since they have similar options
 #for each decoder we have an HLT1, HLT2 and combined version.
 #Decoders look like "Hlt(''/1/2)(Sel/Dec/Vertex)ReportsDecoder"
-
-#Also TrackingDecoder 
 
 #report, the type of report
 for report in ["Dec","Sel","Vertex"]:

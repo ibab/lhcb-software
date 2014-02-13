@@ -28,6 +28,8 @@ MuonRec::MuonRec( const std::string& name,
   m_forceResetDAQ=false;
   if(context()=="TAE")  m_forceResetDAQ=true;
   m_Exccounter=0;
+  declareProperty("OutputLocation",m_coordOutputLocation=LHCb::MuonCoordLocation::MuonCoords ,"Where to store the output co-ordinates, defaults to LHCb::MuonCoordLocation::MuonCoords");
+  
 }
 
 //=============================================================================
@@ -118,7 +120,7 @@ StatusCode MuonRec::execute() {
           error()
               << "Failed to map digits to coords in a one to one manner"
               << endmsg;
-          put( coords, LHCb::MuonCoordLocation::MuonCoords );
+          put( coords, m_coordOutputLocation );
           return StatusCode::SUCCESS;
         }
       }else{
@@ -128,14 +130,14 @@ StatusCode MuonRec::execute() {
         if(!sc.isSuccess()){error()
               << "Failed to map digits to coords by crossing strips"
               << endmsg;
-         put( coords, LHCb::MuonCoordLocation::MuonCoords );
+         put( coords, m_coordOutputLocation );
          return StatusCode::SUCCESS;
         }
       }
     }    
   }
   
-  put( coords, LHCb::MuonCoordLocation::MuonCoords );
+  put( coords, m_coordOutputLocation );
   return StatusCode::SUCCESS;
 }
 

@@ -8,6 +8,7 @@ branches src Event MuonDAQ cmt doc
 use MuonKernel  v*    Muon
 use MuonDet     v*    Det
 use DigiEvent   v*    Event	
+use DAQKernel   v*    DAQ	
 use DAQUtils    v*    DAQ
 use DAQEvent    v*    Event
 use RecEvent    v*    Event

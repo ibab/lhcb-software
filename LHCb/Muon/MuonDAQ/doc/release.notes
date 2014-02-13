@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Adapt MuonRawBuffer decoder tool to Decoder base classes, task #49078
+
 !========================= MuonDAQ v4r19 2013-10-23 =========================
 ! 2013-10-21 - Giovanni Passaleva
  - fixed incorrect addressing of TELL1s in case of no M1 in MuonDigitToRawBuffer
