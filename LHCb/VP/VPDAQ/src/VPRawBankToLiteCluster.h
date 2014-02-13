@@ -10,6 +10,7 @@
 #include "Event/VPLiteCluster.h"
 // Local
 #include "VPClusterWord.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 // Forward declarations
 class DeVP;
@@ -24,7 +25,7 @@ namespace LHCb {
  *  @date   2009/12/27
  */
 
-class VPRawBankToLiteCluster : public GaudiAlgorithm {
+class VPRawBankToLiteCluster : public Decoder::AlgBase {
 public:
   /// Standard constructor
   VPRawBankToLiteCluster(const std::string& name,
@@ -45,12 +46,7 @@ void createLiteCluster(
 private:
 
   std::string m_clusterLocation;
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations 
-  std::string m_rawEventLocation;
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
   bool m_isDebug; 
 };
 

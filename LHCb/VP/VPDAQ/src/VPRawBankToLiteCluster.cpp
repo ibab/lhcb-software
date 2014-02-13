@@ -29,17 +29,16 @@ DECLARE_ALGORITHM_FACTORY(VPRawBankToLiteCluster)
 //=============================================================================
 VPRawBankToLiteCluster::VPRawBankToLiteCluster(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm(name, pSvcLocator)
+  : Decoder::AlgBase(name, pSvcLocator)
   , m_isDebug(false)
 {
-  declareProperty( "RawEventLocation",  m_rawEventLocation = "",
-                   "OBSOLETE. Use RawEventLocations instead" );
-  declareProperty( "RawEventLocations", m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Other,"
-                   " LHCb::RawEventLocation::Default.");
+
   declareProperty("ClusterLocation", m_clusterLocation = 
                   VPLiteClusterLocation::Default);
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Other, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 }
 
 //=============================================================================
@@ -51,31 +50,11 @@ VPRawBankToLiteCluster::~VPRawBankToLiteCluster(){}
 // Initialisation
 //=============================================================================
 StatusCode VPRawBankToLiteCluster::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = Decoder::AlgBase::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
- 
-
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
-  }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path 
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
-
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -93,14 +72,8 @@ StatusCode VPRawBankToLiteCluster::execute() {
 
 
   // Retrieve the RawEvent:
-  LHCb::RawEvent* rawEvent = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    rawEvent = getIfExists<LHCb::RawEvent>(*p);
-    if ( NULL != rawEvent ){
-      break;
-    }
-  }
-
+  LHCb::RawEvent* rawEvent = findFirstRawEvent();
+  
   if( NULL == rawEvent ){
     return Warning("Failed to find raw data", StatusCode::SUCCESS,1);
   }

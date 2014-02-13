@@ -285,7 +285,7 @@ for report in ["Dec","Sel","Vertex"]:
 Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
         active=False, banks=["HltTrackReports"],
         inputs = {"RawEventLocations":None},
-        outputs={"OutputHltTrackReportsLocation" : "Hlt1/Track/Velo"},
+        outputs={"OutputHltTrackReportsLocation" : "Hlt/Track/Velo"},
         properties={"SourceID" : 1}, #None=default(0)
         conf=DecoderDB
         )
@@ -305,14 +305,14 @@ Decoder("HltLumiSummaryDecoder",
 #UPGRADE ===========VP===========
 Decoder("VPRawBankToLiteCluster/createVPLiteClusters",
         active=True, banks=["VP"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"ClusterLocation": "Raw/VP/LiteClusters"},
+        inputs={"RawEventLocations" : None},
+        outputs={"ClusterLocation": None},
         conf=DecoderDB)
 
 Decoder("VPRawBankToPartialCluster/createVPClusters",
         active=True, banks=["VP"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"ClusterLocation": "Raw/VP/Clusters"},
+        inputs={"RawEventLocations" : None},
+        outputs={"ClusterLocation": None},
         conf=DecoderDB)
 
 #UPGRADE ===========UT===========

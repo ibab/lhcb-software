@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Adapt VP decoder tool to Decoder base classes, task #49078
+
 !========================= VPDAQ v2r4 2013-09-30 =========================
 ! 2013-09-25 - Tim Evans
  - Added VPDigit raw bank encoding and decoding 
