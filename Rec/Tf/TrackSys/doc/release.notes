@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Heinrich Schindler
+ - Follow renaming of PatPixelTracking to PrPixelTracking
+
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
 
