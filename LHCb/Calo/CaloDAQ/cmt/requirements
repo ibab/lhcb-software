@@ -16,6 +16,7 @@ branches          CaloDAQ cmt doc options src python
 use     GaudiAlg        v*
 use     CaloDet         v*      Det
 use	DAQEvent	v*	Event
+use     DAQKernel       v*      DAQ
 use     DigiEvent       v*      Event
 use     RecEvent        v*      Event
 use	L0Event		v*	Event

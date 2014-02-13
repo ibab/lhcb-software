@@ -24,7 +24,7 @@ DECLARE_TOOL_FACTORY( CaloReadoutTool )
 CaloReadoutTool::CaloReadoutTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : Decoder::ToolBase ( type, name , parent )
   , m_banks(0)
   , m_calo(0)
   , m_packed(false)
@@ -37,13 +37,11 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
   declareProperty( "DetectorSpecificHeader", m_extraHeader = false);
   declareProperty( "CleanWhenCorruption", m_cleanCorrupted = false);
-  declareProperty( "RawLocation",  m_rawEventLocation = "", 
-                   "OBSOLETE. Use RawEventLocations instead" );
-  declareProperty( "RawEventLocations", m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Calo,"
-                   " LHCb::RawEventLocation::Default.");
   m_getRaw = true;
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Calo, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 }
 //=============================================================================
 // Destructor
@@ -55,31 +53,13 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //=========================================================================
 StatusCode CaloReadoutTool::initialize(){
 
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = Decoder::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "==> Initialize " << name() << endmsg;
   IIncidentSvc* inc = incSvc() ;
   if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
   
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
-  }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Calo);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
-
   return sc;
 }
 StatusCode CaloReadoutTool::finalize(){
@@ -97,15 +77,8 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   m_banks = NULL;
 
   // Retrieve the RawEvent:
-  LHCb::RawEvent* rawEvt = NULL ;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    rawEvt = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
-    if ( NULL != rawEvt ){
-      if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + (*p) << endmsg;  
-      break;
-    }
-  }
-
+  LHCb::RawEvent* rawEvt = findFirstRawEvent() ;
+  
   if( rawEvt == NULL ) {
     if( m_first && msgLevel( MSG::DEBUG ) )
       debug() << "WARNING : RawEvent not found at locations: " 

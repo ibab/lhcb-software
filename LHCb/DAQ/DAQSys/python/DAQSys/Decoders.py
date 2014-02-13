@@ -152,7 +152,7 @@ Decoder("CaloDigitsFromRaw/"+name,
 #outputs={"DigitsContainer" : "Raw/Spd/Digits", "AdcsContainer" : "Raw/Spd/Adcs"} #set logically in code, so overwriting here won't actually work
 
 Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : ["Calo/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
 #===========PRS===========
@@ -167,7 +167,7 @@ Decoder("CaloDigitsFromRaw/"+name,
 #outputs={"DigitsContainer" : "Raw/Prs/Digits", "AdcsContainer" : "Raw/Prs/Adcs"} #set logically in code, so overwriting here won't actually work
 
 Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : ["Calo/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
 #===========ECAL===========
@@ -181,7 +181,7 @@ Decoder("CaloZSupAlg/"+name, active=True,
         #outputs={"OutputADCData": "Raw/Ecal/Adcs","OutputDigitData": "Raw/Ecal/Digits"}#set logically in code, so overwriting here won't actually work
 
 Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : ["Calo/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
 
@@ -196,7 +196,7 @@ Decoder("CaloZSupAlg/"+name, active=True,
 #outputs={"OutputADCData": "Raw/Hcal/Adcs","OutputDigitData": "Raw/Hcal/Digits"}#set logically in code, so overwriting here won't actually work
 
 Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : ["Calo/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
 

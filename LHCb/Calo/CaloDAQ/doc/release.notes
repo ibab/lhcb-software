@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Adapt calo decoder tool to Decoder base classes, task #49078
+
 !========================= CaloDAQ v4r36 2013-10-23 =========================
 ! 2013-10-09 - Olivier Deschamps
  -  python/CaloDAQ/CaloDigits.py & Configuration.py : allow to set-up the valid sub-detectors

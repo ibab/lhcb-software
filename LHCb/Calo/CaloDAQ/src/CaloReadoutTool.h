@@ -9,6 +9,7 @@
 #include "GaudiKernel/Incident.h" 
 // from LHCb
 #include "CaloDAQ/ICaloReadoutTool.h"
+#include "DAQKernel/DecoderToolBase.h"
 
 
 
@@ -23,7 +24,7 @@
  *  @date   2007-02-01
  */
 class CaloReadoutTool 
-  : public GaudiTool 
+  : public Decoder::ToolBase 
     , virtual public ICaloReadoutTool 
     , virtual public IIncidentListener{
 public: 
@@ -92,14 +93,8 @@ protected:
   LHCb::RawBank::BankType m_shortType;
   LHCb::RawBank::BankType m_errorType;
   bool m_getRaw;
-
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
+  
   bool m_extraHeader;
   bool m_packed;
   bool m_cleanCorrupted;

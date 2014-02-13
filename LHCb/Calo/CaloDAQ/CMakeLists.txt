@@ -5,6 +5,7 @@ gaudi_subdir(CaloDAQ v4r36)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          DAQ/DAQUtils
+                         DAQ/DAQKernel
                          Det/CaloDet
                          Event/DAQEvent
                          Event/DigiEvent
@@ -15,7 +16,7 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
 gaudi_add_module(CaloDAQ
                  src/*.cpp
                  INCLUDE_DIRS DAQ/DAQUtils Event/DigiEvent
-                 LINK_LIBRARIES CaloUtils CaloDetLib DAQEventLib L0Event RecEvent GaudiAlgLib)
+                 LINK_LIBRARIES CaloUtils CaloDetLib DAQEventLib DAQKernelLib L0Event RecEvent GaudiAlgLib)
 
 gaudi_add_dictionary(CaloDAQ
                      dict/CaloDAQDict.h
