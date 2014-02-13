@@ -19,21 +19,21 @@ if inputType == "MDF":
     datasetName = "SeptTEDData"
     # friday night with the velo - prev2
     EventSelector().Input = [  
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32474/032474_0000081642.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32476/032476_0000081643.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32477/032477_0000081644.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32479/032479_0000081647.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32481/032481_0000081648.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32484/032484_0000081651.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32493/032493_0000081660.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32498/032498_0000081699.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32500/032500_0000081701.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32501/032501_0000081702.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32576/032576_0000081818.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32578/032578_0000081820.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32580/032580_0000081822.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32581/032581_0000081823.raw'  SVC='LHCb::MDFSelector'",
-        "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM//32583/032583_0000081825.raw'  SVC='LHCb::MDFSelector'"
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32474/032474_0000081642.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32476/032476_0000081643.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32477/032477_0000081644.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32479/032479_0000081647.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32481/032481_0000081648.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32493/032493_0000081660.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32498/032498_0000081699.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32500/032500_0000081701.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32501/032501_0000081702.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32576/032576_0000081818.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32578/032578_0000081820.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32580/032580_0000081822.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32581/032581_0000081823.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'",
+        "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/BEAM/32583/032583_0000081825.raw?svcClass=lhcbtape'  SVC='LHCb::MDFSelector'"
         ]
     # Above file requires following special options for Velo
     from Configurables import (RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,

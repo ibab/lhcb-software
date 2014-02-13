@@ -23,5 +23,5 @@ Brunel().DataType = "2009"
 
 # Collisions on 6th December with magnet on and all detectors in readout
 EventSelector().Input = [
-    "DATAFILE='root:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw' SVC='LHCb::MDFSelector'"
+    "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63497/063497_0000000001.raw?svcClass=lhcbtape' SVC='LHCb::MDFSelector'"
     ]

@@ -5,7 +5,7 @@
 
   <File ID="70737DCB-49D9-DB11-A9D4-0002B3B0DEA0">
     <physical>
-      <pfn filetype="ROOT_All" name="castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim"/>
+      <pfn filetype="ROOT_All" name="root://catorlhcb.cern.ch//castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim"/>
     </physical>
     <logical/>
   </File>
@@ -19,21 +19,21 @@
 
   <File ID="C8BF8A5C-A093-DD11-89E2-000CF1F44509">
     <physical>
-      <pfn filetype="ROOT_All" name="/castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/11144101-100ev-20081006.sim"/>
+      <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2008/v35r1/11144101-100ev-20081006.sim"/>
     </physical>
     <logical/>
    </File>
 
   <File ID="620A8970-CFE0-DD11-AA83-000CF1F44509">
     <physical>
-      <pfn filetype="ROOT_All" name="/castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/11144101-100ev-20090112.sim"/>
+      <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v36r1/11144101-100ev-20090112.sim"/>
     </physical>
     <logical/>
    </File>
 
   <File ID="4298ECD3-A723-DE11-BD72-000CF1F44509">
     <physical>
-      <pfn filetype="ROOT_All" name="/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim"/>
+      <pfn filetype="ROOT_All" name="root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim"/>
     </physical>
     <logical/>
    </File>

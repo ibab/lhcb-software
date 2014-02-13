@@ -6,7 +6,7 @@
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>$BRUNELROOT/tests/options/db-global-2010.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp;from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-sim2010'].run(); Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout

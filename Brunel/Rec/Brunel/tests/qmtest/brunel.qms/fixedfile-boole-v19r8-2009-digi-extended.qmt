@@ -8,7 +8,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Boole-v19r8-30000000-100ev-20091112-vc-md100-extended.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="2009";</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-boole-v19r8-2009-extended'].run(); Brunel().InputType="DIGI"; Brunel().DataType="2009";</text>
   </set></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
