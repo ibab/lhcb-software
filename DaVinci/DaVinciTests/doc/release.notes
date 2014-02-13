@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Chris Jones
+ - Try and fix access to csator files, following the depreciation of the 
+   castor: protocol.
+
 ! 2014-02-06 - Chris Jones
  - Enable FPE checking in the Stripping20r0p0 test.
 

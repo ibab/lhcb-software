@@ -26,8 +26,6 @@ DaVinci().HistogramFile = "DVMonitors.root"
 DaVinci().EvtMax = -1
 DaVinci().DataType = "2010" # Default is "DC06"
 DaVinci().InputType = "SDST"
-#EventSelector().Input   = [
-#    "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/Stripping/Brunel-100000ev.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
-    
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
+EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
 FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']

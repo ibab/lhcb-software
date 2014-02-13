@@ -65,7 +65,7 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 from Gaudi.Configuration import * 
 
 EventSelector().Input   = [
-    "DATAFILE='PFN:/castor/cern.ch/grid/lhcb/MC/2010/DST/00008055/0000/00008055_00000053_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+    "DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2010/DST/00008055/0000/00008055_00000053_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 ########################################################################
 DaVinci().EvtMax = 500
 DaVinci().SkipEvents = 0 
