@@ -81,7 +81,9 @@ StatusCode ODINDecodeTool::initialize()
     info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
   }
   
-  if (m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) 
+  if (m_rawEventLocations.empty() or 
+      (m_rawEventLocations[0]!=LHCb::RawEventLocation::Default 
+       and m_rawEventLocations[0]!=LHCb::RawEventLocation::Trigger)) 
   {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }

@@ -14,6 +14,19 @@
 
 countErrorLines({"FATAL":0, "ERROR":2, "WARNING" :0})
 
+# check there are no warnings printed about the configuration
+warnlines=[l for l in stdout.split('\n') if l.strip().startswith("# WARNING:") and "DQFLAGS" not in l]
+if len(warnlines):
+    causes.append("Warning from default configuration found")
+    result["daqsys.gaudirun.warnlines"]=result.Quote("\n\t".join(warnlines))
+
+#check there are no info messages which are not useful!
+infolines=[l for l in stdout.split('\n') if ("INFO" in l) and ("/RawEvent") in l and "L0Emu" not in l]
+
+if len(infolines):
+    causes.append("Useless info from default configuration found")
+    result["daqsys.gaudirun.infolines"]=result.Quote("\n\t".join(infolines))
+
 </text></argument>
 </extension>
 

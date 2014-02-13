@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-13 - Rob Lambert
+ - Suppress silly info printout
+
+! 2014-02-13 - Rob Lambert
  - Adapt calo decoder tool to Decoder base classes, task #49078
 
 !========================= CaloDAQ v4r36 2013-10-23 =========================

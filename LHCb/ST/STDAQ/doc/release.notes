@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Suppress not-needed info print out in initialize for default configurations
+
 ! 2014-02-12 - Rob Lambert
  - Initialize the search paths following task task #49078, but don't use
    the new base classes yet, it looks a little over complicated 

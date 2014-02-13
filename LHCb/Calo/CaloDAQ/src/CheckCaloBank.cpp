@@ -66,7 +66,7 @@ StatusCode CheckCaloBank::initialize() {
   }
 
   // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty();
+  bool usingDefaultLocation = (m_rawEventLocations.empty() ||  LHCb::RawEventLocation::Default==m_rawEventLocations[0] || LHCb::RawEventLocation::Calo==m_rawEventLocations[0]);
   if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
       == m_rawEventLocations.end()) {
     // append the defaults to the search path

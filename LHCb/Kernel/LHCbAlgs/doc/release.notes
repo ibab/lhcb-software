@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Suppress info print out in decoder initialize unless the output really is unexpected.
+
 ! 2014-02-12 - Rob Lambert
  - Adapt odin decoder tool to Decoder base classes, task #49078
 

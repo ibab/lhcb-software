@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-13 - Rob Lambert
+ - Add to test that info/warnings should not be printed from teh default configuration
+
+! 2014-02-13 - Rob Lambert
  - Fix bug in FTDAQ, it always thought it was writing to a completely different location! This is a good reason to homogenize further with the output locations.
 
 ! 2014-02-13 - Rob Lambert

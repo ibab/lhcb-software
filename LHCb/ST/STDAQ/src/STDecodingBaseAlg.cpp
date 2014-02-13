@@ -81,7 +81,12 @@ StatusCode STDecodingBaseAlg::initialize() {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> initialize " << endmsg;
 
   // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  bool usingDefaultLocation = (
+                               m_rawEventLocation.empty() && (m_rawEventLocations[0]==LHCb::RawEventLocation::Default ||
+                               (m_rawEventLocations.size()==2 && 
+                                m_rawEventLocations[0]==LHCb::RawEventLocation::Other &&
+                                m_rawEventLocations[0]==LHCb::RawEventLocation::Default)
+                                                              ) );
   if (! m_rawEventLocation.empty()) {
     warning() << "The rawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
     m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
