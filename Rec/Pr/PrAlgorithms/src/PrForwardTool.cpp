@@ -624,6 +624,7 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
       }
     }
     if ( hasStereo ) nDoF -= 3; // Fitted a parabola...
+    if ( nDoF < 1 )return false;
     track.setChi2( totChi2, nDoF );
     if ( m_debug ) {
       info() << "  -- In fitXProjection, maxChi2 = " << maxChi2 << " totCHi2/nDof " << totChi2/nDoF << endmsg;
@@ -634,7 +635,6 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
       //printTrack( track );
       return true;
     }
-
     doFit = false;
     if ( totChi2/nDoF > m_maxChi2PerDoF  ||
          maxChi2 > m_maxChi2XProjection ) {

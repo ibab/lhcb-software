@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Thomas Nikodem
+ - Fix next floating point exception with if statements.
+
 ! 2014-02-07 - Michel De Cian
  - Fix floating point exception in PrAddUTHitsTool (negative values in sqrt).
 
