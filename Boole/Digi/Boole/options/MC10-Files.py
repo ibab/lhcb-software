@@ -20,11 +20,11 @@ LHCbApp().DDDBtag   = "head-20101206"
 LHCbApp().CondDBtag = "sim-20101210-vc-md100"
 
 # Minimum bias events from Gauss v39r4, default MC10 settings
-datasetName = '30000000-100ev-20110902-MC10'
-
-EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/g/gcorti/Gauss/2010/v39r4/" + datasetName + ".sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db['boole.fixedfile-gauss-v39r4-mc10-sim'].run()
 
 # Default output files names are set up using value Boole().DatasetName property
+datasetName = '30000000-100ev-20110902-MC10'
 Boole().DatasetName = datasetName
 # Redefine defaults by uncommenting one or more of options below 
 

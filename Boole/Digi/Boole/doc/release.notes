@@ -19,6 +19,11 @@ Purpose: LHCb Digitization program
 	. Made FT cluster cuts more intuitive and changed values accordingly
     (FTDigitisation)
 
+- QMTest changes
+  . Migrate input data of boole-mc11 and all MC11 tests to EOS and TestFileDB
+  . Add to BooleExclusion.py a filter on the EventSelector printout of the name
+    of opened files, to future proof tests if file connection string changes
+
 </PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*

@@ -19,12 +19,14 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 LHCbApp().DDDBtag   = "head-20110914"
 LHCbApp().CondDBtag = "sim-20110723-vc-md100"
 
-# Generic b events with spillover from Gauss v40r4, settings as in $APPCONFIGOPTS/Gauss/beam35000GeV-md100-MC11-nu2-50ns.py
-datasetName = 'Gauss-10000000-100ev-20111014'
+# Generic b events with spillover from Gauss v40r4, settings as in $APPCONFIGOPTS/Gauss/Beam35000GeV-md100-MC11-nu2-50ns.py
 
-EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2011/v40r4/" + datasetName + ".sim'"]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db['boole.boole-mc11'].run()
+
 
 # Default output files names are set up using value Boole().DatasetName property
+datasetName = 'Gauss-10000000-100ev-20111014'
 Boole().DatasetName = datasetName
 # Redefine defaults by uncommenting one or more of options below 
 
