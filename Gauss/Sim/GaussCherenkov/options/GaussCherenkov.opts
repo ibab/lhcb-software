@@ -81,10 +81,19 @@ GiGa.TrackSeq.Members      += { "CkvG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 // nominal table/
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichPmtUseNominalQETable= false;
 //  option to use different QE tables. 0= borosilcate QE(default) , 1= UV glass QE, 2= HPD-like QE
+//  deflated QE for test = 8
+//  inflated QE for test =9
+//  2013 spec UV glass   = 10
+//  2013 spec BS glass   = 11
+//
 
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=2;
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=1;
+
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=0;
+
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=8;
+
 
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet3=true;
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet4=true;

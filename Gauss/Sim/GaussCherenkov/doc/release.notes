@@ -4,6 +4,8 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+! 2014-02-13 - Sajan Easo
+- Added options for using more QE tables
 
 !===================== GaussCherenkov v4r2 2014-02-02 ========================
 ! 2014-01-21 - Paul Szczypka

@@ -273,7 +273,7 @@ void RichPmtProperties::InitializePmtProperties( ) {
    //   << "Filled the PMT QE, PSF and Demag tables for  RICH  "<<endreq;
 
 
-      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts Used   MaxNumPmt  = "
                  << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
       
       RichPmtlog << MSG::INFO
@@ -429,6 +429,11 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }else if (m_CurQETableSourceOption == 5)  {m_CurQEMatPathname=RichPmtUBAUVGlassQeffMatTabPropPath;
       }else if (m_CurQETableSourceOption == 6)  {m_CurQEMatPathname=RichPmtSBABorosilicateQeffMatTabPropPath;
       }else if (m_CurQETableSourceOption == 7)  {m_CurQEMatPathname=RichPmtSBAUVGlassQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 8)  {m_CurQEMatPathname=RichPmtDeflatedNominalQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 9)  {m_CurQEMatPathname=RichPmtInflatedNominalQeffMatTabPropPath;
+      }else if (m_CurQETableSourceOption == 10)  {m_CurQEMatPathname=RichPmtQESBAUVGlass2013SpecPropPath;
+      }else if (m_CurQETableSourceOption == 11)  {m_CurQEMatPathname=RichPmtQESBABSGlass2013SpecPropPath;
+
       }
       
     }
@@ -478,11 +483,11 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     int aNumPmtInModule=16;
     
     std::vector<bool> PmtSupFlag(aTotNumPmtRICH,false);
-    G4cout<<" Pmt module supress flags set3 set4 set5 set6 "<< m_ActivatePmtModuleSuppressSet3<<"   "
+    G4cout<<" Pmt module supress Flags set3 set4 set5 set6 "<< m_ActivatePmtModuleSuppressSet3<<"   "
           <<m_ActivatePmtModuleSuppressSet4<<"  "<< m_ActivatePmtModuleSuppressSet5
          <<"   "<< m_ActivatePmtModuleSuppressSet6<< G4endl;
     
-    G4cout<<" Pmt supress flags set0 set1 set2: " 
+    G4cout<<" Pmt supress Flags set0 set1 set2: " 
           << m_ActivatePmtSuppressSet0 <<"   "
           << m_ActivatePmtSuppressSet1 <<"   "
           << m_ActivatePmtSuppressSet2 << G4endl;    

@@ -23,6 +23,16 @@ static const G4String RichPmtSBAUVGlassQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBAUVGlassPmtQuantumEff";
 static const G4String RichPmtSBABorosilicateQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBABorosilicatePmtQuantumEff";
+static const G4String RichPmtDeflatedNominalQeffMatTabPropPath=
+                          "/dd/Materials/RichMaterialTabProperties/DeflatedNominalQuantumEff";
+static const G4String RichPmtInflatedNominalQeffMatTabPropPath=
+                          "/dd/Materials/RichMaterialTabProperties/InflatedNominalQuantumEff";
+
+static const G4String RichPmtQESBAUVGlass2013SpecPropPath = 
+                                 "/dd/Materials/RichMaterialTabProperties/SBAUVGlassPmtQE2013";
+static const G4String RichPmtQESBABSGlass2013SpecPropPath =
+                                 "/dd/Materials/RichMaterialTabProperties/SBABSGlassPmtQE2013";
+
 static const G4String Rich1PhDetSupFramePathSeg = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1PhDetSupFrameH";
 static const G4String Rich1MagShPathLogSeg =  "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH";
 static const G4String Rich1QWPathLogSeg = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1GQuartzW";
