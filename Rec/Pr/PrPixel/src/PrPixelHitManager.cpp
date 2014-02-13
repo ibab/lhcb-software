@@ -3,37 +3,37 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Local
-#include "PatPixelHitManager.h"
+#include "PrPixelHitManager.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatPixelHitManager
+// Implementation file for class : PrPixelHitManager
 //
 // 2012-01-05 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY(PatPixelHitManager)
+DECLARE_TOOL_FACTORY(PrPixelHitManager)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PatPixelHitManager::PatPixelHitManager(const std::string& type,
-                                       const std::string& name,
-                                       const IInterface* parent) :
+PrPixelHitManager::PrPixelHitManager(const std::string& type,
+                                     const std::string& name,
+                                     const IInterface* parent) :
     GaudiTool(type, name, parent), m_useSlopeCorrection(true) {
 
-  declareInterface<PatPixelHitManager>(this);
+  declareInterface<PrPixelHitManager>(this);
 
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-PatPixelHitManager::~PatPixelHitManager() {}
+PrPixelHitManager::~PrPixelHitManager() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PatPixelHitManager::initialize() {
+StatusCode PrPixelHitManager::initialize() {
 
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
@@ -41,8 +41,8 @@ StatusCode PatPixelHitManager::initialize() {
   // Get detector element.
   m_vp = getDet<DeVP>(DeVPLocation::Default);
   // Make sure we are up-to-date on populated VELO stations
-  registerCondition((*(m_vp->leftSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry);
-  registerCondition((*(m_vp->rightSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry);
+  registerCondition((*(m_vp->leftSensorsBegin()))->geometry(), &PrPixelHitManager::rebuildGeometry);
+  registerCondition((*(m_vp->rightSensorsBegin()))->geometry(), &PrPixelHitManager::rebuildGeometry);
   // First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {
@@ -55,7 +55,6 @@ StatusCode PatPixelHitManager::initialize() {
   // Setup the hit pool.
   m_pool.resize(10000);
   m_nextInPool = m_pool.begin();
-  m_maxSize = 0;
   m_eventReady = false;
   return StatusCode::SUCCESS;
 
@@ -64,10 +63,10 @@ StatusCode PatPixelHitManager::initialize() {
 //=========================================================================
 //  Finalize method.
 //=========================================================================
-StatusCode PatPixelHitManager::finalize() {
+StatusCode PrPixelHitManager::finalize() {
 
-  info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
-  std::vector<PatPixelModule*>::iterator itm;
+  // Delete the PrPixelModule instances.
+  std::vector<PrPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) delete *itm;
   }
@@ -78,10 +77,10 @@ StatusCode PatPixelHitManager::finalize() {
 //=========================================================================
 // Rebuild the geometry. Needed in case something changes in the Velo during the run...
 //=========================================================================
-StatusCode PatPixelHitManager::rebuildGeometry() {
+StatusCode PrPixelHitManager::rebuildGeometry() {
 
   // Delete the existing modules.
-  std::vector<PatPixelModule*>::iterator itm;
+  std::vector<PrPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) delete *itm;
   }
@@ -93,8 +92,6 @@ StatusCode PatPixelHitManager::rebuildGeometry() {
   int previousRight = -1;
   std::vector<DeVPSensor*>::const_iterator its;
   for (its = m_vp->sensorsBegin(); m_vp->sensorsEnd() > its; ++its) {
-    //== TO BE DONE === 
-    // if (!(*its)->isReadOut()) continue;
     // Get the number of the module this sensor is on.
     const unsigned int number = (*its)->module();
     if (number < m_modules.size()) {
@@ -106,7 +103,7 @@ StatusCode PatPixelHitManager::rebuildGeometry() {
       }
     }
     // Create a new module and add it to the list.
-    PatPixelModule* module = new PatPixelModule(number, (*its)->isRight());
+    PrPixelModule* module = new PrPixelModule(number, (*its)->isRight());
     module->setZ((*its)->z());
     if ((*its)->isRight()) {
       module->setPrevious(previousRight);
@@ -134,7 +131,7 @@ StatusCode PatPixelHitManager::rebuildGeometry() {
 //=========================================================================
 // Incident handler
 //=========================================================================
-void PatPixelHitManager::handle(const Incident& incident) {
+void PrPixelHitManager::handle(const Incident& incident) {
   if (IncidentType::BeginEvent == incident.type()) {
     this->clearHits();
   }
@@ -143,21 +140,19 @@ void PatPixelHitManager::handle(const Incident& incident) {
 //=========================================================================
 // Clear all the hits from a previous event
 //=========================================================================
-void PatPixelHitManager::clearHits() {
-  int lastSize = m_nextInPool - m_pool.begin();
-  if (lastSize > m_maxSize) m_maxSize = lastSize;
-  std::vector<PatPixelModule*>::iterator itS;
-  for (itS = m_modules.begin(); m_modules.end() != itS; ++itS) {
-    if (*itS) (*itS)->reset();
+void PrPixelHitManager::clearHits() {
+  std::vector<PrPixelModule*>::iterator itm;
+  for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+    if (*itm) (*itm)->reset();
   }
   m_nextInPool = m_pool.begin();
   m_eventReady = false;
 }
 
 //=========================================================================
-//  Convert the LiteClusters to PatPixelHits
+//  Convert the LiteClusters to PrPixelHits
 //=========================================================================
-void PatPixelHitManager::buildHits() {
+void PrPixelHitManager::buildHits() {
 
   if (m_eventReady) return;
   m_eventReady = true;
@@ -179,7 +174,7 @@ void PatPixelHitManager::buildHits() {
     const unsigned int module = itc->channelID().module();
     if (module >= m_modules.size()) break;
     // Get the next object in the pool => here we store the new hit
-    PatPixelHit* hit = &(*(m_nextInPool++));
+    PrPixelHit* hit = &(*(m_nextInPool++));
     // Calculate the 3-D position for this cluster.
     Gaudi::XYZPoint point = position((*itc).channelID(),
                                      (*itc).interPixelFractionX(), 
@@ -194,7 +189,7 @@ void PatPixelHitManager::buildHits() {
 //=========================================================================
 // Calculate global position of a cluster.
 //=========================================================================
-Gaudi::XYZPoint PatPixelHitManager::position(LHCb::VPChannelID id, double dx, double dy) {
+Gaudi::XYZPoint PrPixelHitManager::position(LHCb::VPChannelID id, double dx, double dy) {
 
   const DeVPSensor* sensor = m_vp->sensorOfChannel(id);
   std::pair<double, double> offsets(dx, dy);
@@ -202,19 +197,19 @@ Gaudi::XYZPoint PatPixelHitManager::position(LHCb::VPChannelID id, double dx, do
   // If no correction to be applied, we're done.
   if (!m_useSlopeCorrection) return point;
   double dx_prime = dx, dy_prime = dy;
-  Double_t delta_x = fabs(dx - 0.5);
-  Double_t delta_y = fabs(dy - 0.5);
+  double delta_x = fabs(dx - 0.5);
+  double delta_y = fabs(dy - 0.5);
   if (dx == 0.5 && dy == 0.5) return point;
   if (dx != 0.5) {
-    Double_t slx = fabs(point.x() / point.z());
-    Double_t p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
-    Double_t t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
+    double slx = fabs(point.x() / point.z());
+    double p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
+    double t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
     dx_prime = 0.5 + (dx - 0.5) / delta_x * (p_offset + t_factor * delta_x); 
   }
   if (dy != 0.5) {
-    Double_t sly = fabs(point.y() / point.z());
-    Double_t p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
-    Double_t t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
+    double sly = fabs(point.y() / point.z());
+    double p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
+    double t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
     dy_prime = 0.5 + (dy - 0.5) / delta_y * (p_offset + t_factor * delta_y);
   }
   std::pair<double, double> offsets2(dx_prime, dy_prime);
@@ -225,13 +220,13 @@ Gaudi::XYZPoint PatPixelHitManager::position(LHCb::VPChannelID id, double dx, do
 //=========================================================================
 // Sort hits by X within every module to speed up the track search
 //=========================================================================
-void PatPixelHitManager::sortByX() {
-  std::vector<PatPixelModule*>::iterator itm;
+void PrPixelHitManager::sortByX() {
+  std::vector<PrPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) {
       if (!((*itm)->empty())) {
         std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
-                  PatPixelHit::LowerByX());
+                  PrPixelHit::LowerByX());
         (*itm)->setLastHitX((*itm)->hits().back()->x());
       }
     }

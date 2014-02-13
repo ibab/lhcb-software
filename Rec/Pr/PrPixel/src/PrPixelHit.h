@@ -1,21 +1,21 @@
-#ifndef PATPIXELHIT_H
-#define PATPIXELHIT_H 1
+#ifndef PRPIXELHIT_H
+#define PRPIXELHIT_H 1
 
 // Include files
 #include "Kernel/LHCbID.h"
 #include "GaudiKernel/Point3DTypes.h"
 
-/** @class PatPixelHit PatPixelHit.h
+/** @class PrPixelHit PrPixelHit.h
  *  This defines the VP hits to be used in the pattern recognition.
  *
  *  @author Olivier Callot
  *  @date   2012-01-05
  */
 
-class PatPixelHit {
+class PrPixelHit {
 public:
   /// Standard constructor
-  PatPixelHit() :
+  PrPixelHit() :
     m_x(0.), m_y(0.), m_z(0.),
     m_id(0),
     m_wx(0.), m_wy(0.),
@@ -24,7 +24,7 @@ public:
 
   }
   /// Destructor
-  virtual ~PatPixelHit() {}
+  virtual ~PrPixelHit() {}
 
   void setHit(const LHCb::LHCbID id,
               const Gaudi::XYZPoint& point,
@@ -66,10 +66,10 @@ public:
   }
 
   // Operators for sorting the vectors of pointers to hits
-  struct DecreasingByZ { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() > rhs->z(); } };
-  struct IncreasingByZ { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() < rhs->z(); } };
-  struct LowerByX      { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->x() < rhs->x(); } };
-  struct LowerByY      { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->y() < rhs->y(); } };
+  struct DecreasingByZ { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->z() > rhs->z(); } };
+  struct IncreasingByZ { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->z() < rhs->z(); } };
+  struct LowerByX      { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->x() < rhs->x(); } };
+  struct LowerByY      { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->y() < rhs->y(); } };
 
 private:
   /// Global position
@@ -88,6 +88,7 @@ private:
 
 };
 
-typedef std::vector<PatPixelHit*> PatPixelHits;  // vector of hits
+/// Vector of hits
+typedef std::vector<PrPixelHit*> PrPixelHits;
 
-#endif // PATPIXELHIT_H
+#endif

@@ -1,10 +1,10 @@
 // LHCb
 #include "Event/State.h"
 // Local
-#include "PatPixelTrack.h"
+#include "PrPixelTrack.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatPixelTrack
+// Implementation file for class : PrPixelTrack
 //
 // 2012-01-06 : Olivier Callot
 //-----------------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PatPixelTrack::PatPixelTrack() :
+PrPixelTrack::PrPixelTrack() :
   m_backward(false),
   m_x0(0.), m_tx(0.),
   m_y0(0.), m_ty(0.),
@@ -26,7 +26,7 @@ PatPixelTrack::PatPixelTrack() :
 //=============================================================================
 // Reset and prepare a new track with these two hits
 //=============================================================================
-void PatPixelTrack::set(PatPixelHit* h1, PatPixelHit* h2) {
+void PrPixelTrack::set(PrPixelHit* h1, PrPixelHit* h2) {
   m_backward = false;
   m_hits.clear();
   m_hits.push_back(h1);
@@ -55,7 +55,7 @@ void PatPixelTrack::set(PatPixelHit* h1, PatPixelHit* h2) {
 //=========================================================================
 //  Add a hit to the track. Update fit parameters.
 //=========================================================================
-void PatPixelTrack::addHit(PatPixelHit* hit) {
+void PrPixelTrack::addHit(PrPixelHit* hit) {
 
   m_hits.push_back(hit);
 
@@ -83,9 +83,9 @@ void PatPixelTrack::addHit(PatPixelHit* hit) {
 //=========================================================================
 // Remove a hit from the track. Update fit parameters.
 //=========================================================================
-void PatPixelTrack::removeHit(PatPixelHit* hit) {
+void PrPixelTrack::removeHit(PrPixelHit* hit) {
 
-  PatPixelHits::iterator it = std::find(m_hits.begin(), m_hits.end(), hit);
+  PrPixelHits::iterator it = std::find(m_hits.begin(), m_hits.end(), hit);
   if (it == m_hits.end()) return;
   m_hits.erase(it);
   const double x = hit->x();
@@ -112,7 +112,7 @@ void PatPixelTrack::removeHit(PatPixelHit* hit) {
 //=========================================================================
 // Recompute the track parameters
 //=========================================================================
-void PatPixelTrack::solve() {
+void PrPixelTrack::solve() {
 
   double den = (m_sz2 * m_s0 - m_sz * m_sz);
   if (fabs(den) < 10e-10) den = 1.;
@@ -129,7 +129,7 @@ void PatPixelTrack::solve() {
 //=========================================================================
 //  Return the covariance matrix of the last fit at the specified z
 //=========================================================================
-Gaudi::TrackSymMatrix PatPixelTrack::covariance(double z) {
+Gaudi::TrackSymMatrix PrPixelTrack::covariance(double z) {
 
   Gaudi::TrackSymMatrix cov;
   //== Ad hoc matrix inversion, as it is almost diagonal!
@@ -162,7 +162,7 @@ namespace
   /// Helper function to sort hits
   struct SortDecreasingZ
   { SortDecreasingZ() {}
-    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() > rhs->z(); }
+    bool operator()( const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->z() > rhs->z(); }
   } ;
 
   /// Helper function to filter one hit
@@ -204,13 +204,13 @@ namespace
 // The return value is the chi2 of the fit  
 // ===============================================================================
 double
-PatPixelTrack::fitKalman( LHCb::State& state, int direction, double noise2PerLayer ) const
+PrPixelTrack::fitKalman( LHCb::State& state, int direction, double noise2PerLayer ) const
 {
   // WH: hits are apparently not perfectly sorted. if we really want
   // to use this in the future, we probably want to sort them only
   // once. for now, we sort on every call. since hits seem to be
   // almost sorted in decreasing Z, that's what we'll stick to.
-  PatPixelTrack* nonconstthis = const_cast<PatPixelTrack*>(this) ;
+  PrPixelTrack* nonconstthis = const_cast<PrPixelTrack*>(this) ;
   std::sort( nonconstthis->m_hits.begin(), nonconstthis->m_hits.end(), SortDecreasingZ() ) ;
 
   // assume the hits are sorted, but don't assume anything on the direction of sorting
@@ -226,7 +226,7 @@ PatPixelTrack::fitKalman( LHCb::State& state, int direction, double noise2PerLay
   // we filter x and y simultaneously but take them uncorrelated.
   // filter first the first hit.
 
-  const PatPixelHit* hit = m_hits[firsthit] ;
+  const PrPixelHit* hit = m_hits[firsthit] ;
   double x  = hit->x() ;
   double tx = m_tx ;
   double y  = hit->y() ;

@@ -1,44 +1,44 @@
-#ifndef PATPIXELTRACK_H 
-#define PATPIXELTRACK_H 1
+#ifndef PRPIXELTRACK_H 
+#define PRPIXELTRACK_H 1
 
 // LHCb
 #include "Event/StateVector.h"
 // Local 
-#include "PatPixelHit.h"
+#include "PrPixelHit.h"
 
 namespace LHCb {
   class State;
 }
 
-/** @class PatPixelTrack PatPixelTrack.h
- *  Working tracks, used inside the PatPixelTracking
+/** @class PrPixelTrack PrPixelTrack.h
+ *  Working tracks, used inside the PrPixelTracking
  *
  *  @author Olivier Callot
  *  @date   2012-01-06
  */
 
-class PatPixelTrack {
+class PrPixelTrack {
 
 public: 
   /// Standard constructor
-  PatPixelTrack(); 
+  PrPixelTrack(); 
   /// Destructor
-  virtual ~PatPixelTrack() {}
+  virtual ~PrPixelTrack() {}
   /// Start a seed track from the two given hits
-  void set(PatPixelHit* h1, PatPixelHit* h2);
+  void set(PrPixelHit* h1, PrPixelHit* h2);
   // Set(clear) "a-backward-track" flag
   void setBackward(const bool flag) {m_backward = flag;}
   bool backward() const {return m_backward;}
 
   // Return the list of hits on this track.
-  PatPixelHits& hits() {return m_hits;}
+  PrPixelHits& hits() {return m_hits;}
   // Add a given hit to this track
-  void addHit(PatPixelHit* hit);                                
+  void addHit(PrPixelHit* hit);                                
   // Remove a given hit from this track
-  void removeHit(PatPixelHit* hit);
+  void removeHit(PrPixelHit* hit);
   // Mark the hits of this track as being associated
   void tagUsedHits() {
-    PatPixelHits::iterator ith;
+    PrPixelHits::iterator ith;
     for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
       (*ith)->setUsed(true); 
     }
@@ -46,7 +46,7 @@ public:
   // Count unassociated hits for this track
   int nbUnused() {
     unsigned int nn = 0;
-    PatPixelHits::iterator ith;
+    PrPixelHits::iterator ith;
     for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
       if (!(*ith)->isUsed()) ++nn;
     }
@@ -68,7 +68,7 @@ public:
   double chi2() {
     double ch = 0.;
     int nDoF = -4;
-    PatPixelHits::const_iterator ith;
+    PrPixelHits::const_iterator ith;
     for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
       ch += chi2(*ith);
       nDoF += 2;
@@ -76,7 +76,7 @@ public:
     return ch / nDoF;
   }
   /// Chi2 constribution from a given hit
-  double chi2(PatPixelHit* hit) {
+  double chi2(PrPixelHit* hit) {
     return hit->chi2(m_x0 + m_tx * hit->z(), m_y0 + m_ty * hit->z()); 
   }
   /// Position at given z from straight-line fit
@@ -116,7 +116,7 @@ private:
   /// Backward or forward track
   bool m_backward;     
   /// List of pointers to hits
-  PatPixelHits m_hits;        
+  PrPixelHits m_hits;        
   /// Straight-line fit parameters
   double m_x0;
   double m_tx;
@@ -139,6 +139,7 @@ private:
   void solve();
 };
 
-typedef std::vector<PatPixelTrack> PatPixelTracks; // vector of tracks
+/// Vector of tracks
+typedef std::vector<PrPixelTrack> PrPixelTracks;
 
-#endif // PATPIXELTRACK_H
+#endif

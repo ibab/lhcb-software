@@ -4,21 +4,21 @@
 #include "Event/Track.h"
 #include "Event/StateParameters.h"
 // Local
-#include "PatPixelTracking.h"
+#include "PrPixelTracking.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatPixelTracking
+// Implementation file for class : PrPixelTracking
 //
 // 2011-12-16 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(PatPixelTracking)
+DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PatPixelTracking::PatPixelTracking(const std::string& name,
-                                   ISvcLocator* pSvcLocator) :
+PrPixelTracking::PrPixelTracking(const std::string& name,
+                                 ISvcLocator* pSvcLocator) :
 #ifdef DEBUG_HISTO
     GaudiTupleAlg(name, pSvcLocator),
 #else
@@ -63,18 +63,18 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PatPixelTracking::~PatPixelTracking() {}
+PrPixelTracking::~PrPixelTracking() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PatPixelTracking::initialize() {
+StatusCode PrPixelTracking::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
   // Setup the hit manager.
-  m_hitManager = tool<PatPixelHitManager>("PatPixelHitManager");
+  m_hitManager = tool<PrPixelHitManager>("PrPixelHitManager");
   m_hitManager->useSlopeCorrection(m_useSlopeCorrection);
   // Setup the debug tool.
   if ("" != m_debugToolName) m_debugTool = tool<IPatDebugTool>(m_debugToolName);
@@ -97,7 +97,7 @@ StatusCode PatPixelTracking::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PatPixelTracking::execute() {
+StatusCode PrPixelTracking::execute() {
 
   // Build hits from clusters and sort them by global x within each module. 
   if (m_doTiming) {
@@ -110,7 +110,7 @@ StatusCode PatPixelTracking::execute() {
 
   if (m_isDebug) {
     for (unsigned int i = m_hitManager->firstModule(); m_hitManager->lastModule() >= i; ++i) {
-      PatPixelHits::const_iterator ith;
+      PrPixelHits::const_iterator ith;
       for (ith = m_hitManager->hits(i).begin(); m_hitManager->hits(i).end() != ith; ++ith) {
         printHit(*ith);
       }
@@ -119,7 +119,7 @@ StatusCode PatPixelTracking::execute() {
   if (0 <= m_wantedKey) {
     info() << "--- Looking for track " << m_wantedKey << endmsg;
     for (unsigned int i = m_hitManager->firstModule(); m_hitManager->lastModule() >= i; ++i) {
-      PatPixelHits::const_iterator ith;
+      PrPixelHits::const_iterator ith;
       for (ith = m_hitManager->hits(i).begin(); m_hitManager->hits(i).end() != ith; ++ith) {
         if (matchKey(*ith)) printHit(*ith);
       }
@@ -143,9 +143,9 @@ StatusCode PatPixelTracking::execute() {
 
 #ifdef DEBUG_HISTO
   for (unsigned int i = m_hitManager->firstModule(); i < m_hitManager->lastModule(); ++i) {
-    PatPixelHits::iterator ith;
+    PrPixelHits::iterator ith;
     for (ith = m_hitManager->hits(i).begin(); ith != m_hitManager->hits(i).end(); ++ith) {
-      PatPixelHit* iC = *ith;
+      PrPixelHit* iC = *ith;
       const double x = iC->x();
       const double y = iC->y();
       const double z = iC->z();
@@ -168,7 +168,7 @@ StatusCode PatPixelTracking::execute() {
     const unsigned int nbHitsUsed = m_hitManager->nbHitsUsed();
     plot((100.0*nbHitsUsed)/nbHits, "PercentUsedHitsPerEvent", "Percent of hits assigned to tracks", 0.0, 100.0, 100);
   }
-  for (PatPixelTracks::const_iterator itT = m_tracks.begin(); itT != m_tracks.end(); ++itT) {
+  for (PrPixelTracks::const_iterator itT = m_tracks.begin(); itT != m_tracks.end(); ++itT) {
     if ((*itT).size() <= 3) continue;
     // Calculate radius at first and last hit (assume that hits are sorted by module)
     const double x1 = (*itT).hits.front()->x();
@@ -192,8 +192,8 @@ StatusCode PatPixelTracking::execute() {
 // Extend track towards smaller z, 
 // on both sides of the detector as soon as one hit is missed.
 //=============================================================================
-void PatPixelTracking::extendTrack(const PatPixelHit* h1, 
-                                   const PatPixelHit* h2) {
+void PrPixelTracking::extendTrack(const PrPixelHit* h1, 
+                                  const PrPixelHit* h2) {
 
   // Initially scan every second module (stay on the same side).
   int step = 2;
@@ -202,9 +202,9 @@ void PatPixelTracking::extendTrack(const PatPixelHit* h1,
   // Count modules without hits found.
   unsigned int nbMissed = 0;
   while (next >= 0) {
-    PatPixelModule* module = m_hitManager->module(next);
+    PrPixelModule* module = m_hitManager->module(next);
     // Attempt to add new hits from this module with given tolerances
-    PatPixelHit* h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2);
+    PrPixelHit* h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2);
     if (h3) {
       m_track.addHit(h3);
       // Reset missed hit counter.
@@ -237,42 +237,10 @@ void PatPixelTracking::extendTrack(const PatPixelHit* h1,
 
 }
 
-//=============================================================================
-// Extend track towards larger z.
-//=============================================================================
-void PatPixelTracking::extendTrackOtherSide(const PatPixelHit* h1, 
-                                            const PatPixelHit* h2) {
-
-  // Scan every module.
-  const unsigned int step = 1;
-  unsigned int next = h2->module() + step;
-  // Count modules without hits found.
-  unsigned int nbMissed = 0;
-  while (next <= m_hitManager->lastModule()) {
-    PatPixelModule* module = m_hitManager->module(next); 
-    // Attempt to add new hits from this module with given tolerances
-    PatPixelHit* h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2); 
-    if (h3) {
-      m_track.addHit(h3);
-      // Reset missed hit counter.
-      nbMissed = 0;
-      // Update the pair of hits to be used for extrapolating.
-      h1 = h2;
-      h2 = h3;
-    } else {
-      // No hits found.
-      nbMissed += step;
-    }
-    if (m_maxMissed < nbMissed) break;
-    next -= step;
-  }
-
-}
-
 //=========================================================================
 //  Search starting with a pair of consecutive modules.
 //=========================================================================
-void PatPixelTracking::searchByPair() {
+void PrPixelTracking::searchByPair() {
 
   // Get the range of modules to start search on,
   // starting with the one at largest Z. 
@@ -281,8 +249,8 @@ void PatPixelTracking::searchByPair() {
   for (int sens0 = lastModule; firstModule <= sens0; sens0 -= 1) { 
     // Pick-up the "paired" module one station backwards
     const int sens1 = sens0 - 2;
-    PatPixelModule* module0 = m_hitManager->module(sens0);
-    PatPixelModule* module1 = m_hitManager->module(sens1);
+    PrPixelModule* module0 = m_hitManager->module(sens0);
+    PrPixelModule* module1 = m_hitManager->module(sens1);
     double z0 = module0->z();
     double z1 = module1->z();
     double dz = z0 - z1;
@@ -295,9 +263,9 @@ void PatPixelTracking::searchByPair() {
     const double dxMax = m_maxXSlope * fabs(dz);
     const double dyMax = m_maxYSlope * fabs(dz);
     // Loop over hits in the first module (larger Z) in the pair.
-    PatPixelHits::const_iterator ith0;
-    PatPixelHits::const_iterator last0 = module0->hits().end();
-    PatPixelHits::const_iterator first1 = module1->hits().begin();
+    PrPixelHits::const_iterator ith0;
+    PrPixelHits::const_iterator last0 = module0->hits().end();
+    PrPixelHits::const_iterator first1 = module1->hits().begin();
     for (ith0 = module0->hits().begin(); last0 != ith0; ++ith0) {
       // Skip hits already assigned to tracks.
       if ((*ith0)->isUsed()) continue;                                            
@@ -311,8 +279,8 @@ void PatPixelTracking::searchByPair() {
         printHit(*ith0, "St0");
       }
       // Loop over hits in the second module (smaller Z) in the pair.
-      PatPixelHits::const_iterator ith1;
-      PatPixelHits::const_iterator last1 = module1->hits().end();
+      PrPixelHits::const_iterator ith1;
+      PrPixelHits::const_iterator last1 = module1->hits().end();
       for (ith1 = first1; last1 != ith1; ++ith1) { 
         const double x1 = (*ith1)->x();
         // Skip hits below the X-pos. limit.
@@ -359,6 +327,7 @@ void PatPixelTracking::searchByPair() {
               info() << " -- reject, chi2 " << m_track.chi2() << " too high." << endmsg;
               printTrack(m_track);
             }
+            continue;
           }
         } else {
           if (m_track.nbUnused() < m_fractionUnused * m_track.hits().size()) {
@@ -389,7 +358,7 @@ void PatPixelTracking::searchByPair() {
 //=========================================================================
 //  Convert the local tracks to LHCb tracks
 //=========================================================================
-void PatPixelTracking::makeLHCbTracks() {
+void PrPixelTracking::makeLHCbTracks() {
 
 #ifdef DEBUG_HISTO
   unsigned int nFwd = 0; 
@@ -399,7 +368,7 @@ void PatPixelTracking::makeLHCbTracks() {
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
   put(outputTracks, m_outputLocation);
   unsigned int key = 0;
-  PatPixelTracks::iterator itt;
+  PrPixelTracks::iterator itt;
   for (itt = m_tracks.begin(); m_tracks.end() != itt; ++itt) {
     // Skip 3-hit tracks with double-used hits.
     if ((*itt).hits().size() == 3 && (*itt).nbUnused() != 3) continue; 
@@ -416,7 +385,7 @@ void PatPixelTracking::makeLHCbTracks() {
     // Loop over the hits, add their LHCbIDs to the LHCb track and 
     // find the highest Z.
     double zMax = -1.e9;
-    PatPixelHits::iterator ith;
+    PrPixelHits::iterator ith;
     for (ith = (*itt).hits().begin(); (*itt).hits().end() != ith; ++ith) {
       newTrack->addToLhcbIDs((*ith)->id());
       if ((*ith)->z() > zMax) zMax = (*ith)->z(); 
@@ -535,8 +504,8 @@ void PatPixelTracking::makeLHCbTracks() {
 //=========================================================================
 //  Add hits from the specified module to the track
 //=========================================================================
-PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, double maxScatter,
-                                       const PatPixelHit* h1, const PatPixelHit* h2) {
+PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double maxScatter,
+                                     const PrPixelHit* h1, const PrPixelHit* h2) {
   if (module->empty()) return NULL;
   const double x1 = h1->x();
   const double y1 = h1->y();
@@ -555,7 +524,7 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, doub
   unsigned int hit_start(0);
   unsigned int step(module->hits().size());
   const unsigned int module_nhits(step);
-  const PatPixelHits& module_hits(module->hits());
+  const PrPixelHits& module_hits(module->hits());
   while (2 < step) { // quick skip of hits that are above the X-limit
     step /= 2;
     if ((module_hits[hit_start+step])->x() < xGuess) hit_start += step;
@@ -564,8 +533,8 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, doub
   // Find the hit that matches best.
   unsigned int nFound = 0;
   double bestScatter = maxScatter;
-  PatPixelHit* bestHit = NULL;
-  PatPixelHit* hit(NULL);
+  PrPixelHit* bestHit = NULL;
+  PrPixelHit* hit(NULL);
   for (unsigned int i=hit_start; i<module_nhits; ++i) {
     hit = module_hits[i];
     const double hit_x = hit->x();
@@ -611,37 +580,9 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, doub
 }
 
 //=========================================================================
-// Remove the worst hit until all chi2 are good.
-//=========================================================================
-void PatPixelTracking::removeWorstHit(const double maxChi2) {
-
-  double worstChi2 = 1.e9;
-  while (worstChi2 > maxChi2) {
-    // Find the hit with highest Chi2.
-    worstChi2 = 0.0;                              
-    PatPixelHit* worst = NULL;
-    PatPixelHits::const_iterator ith;
-    for (ith = m_track.hits().begin(); m_track.hits().end() != ith; ++ith) {
-      double myChi2 = m_track.chi2(*ith);
-      if (myChi2 > worstChi2) {
-        worstChi2 = myChi2; 
-        worst = *ith;
-      }
-    }
-    // If highest chi2 is above limit, remove the hit.
-    if (worstChi2 > maxChi2) m_track.removeHit(worst);
-    if (m_debug) {
-      info() << "After worst hit removal" << endmsg;
-      printTrack(m_track);
-    }
-  }
-
-}
-
-//=========================================================================
 // Debug the content of a hit
 //=========================================================================
-void PatPixelTracking::printHit(const PatPixelHit* hit, std::string title) {
+void PrPixelTracking::printHit(const PrPixelHit* hit, std::string title) {
   info() << title;
   info() << format(" module%3d x%8.3f y%8.3f z%8.2f used%2d",
                    hit->module(), hit->x(), hit->y(), hit->z(), hit->isUsed());
@@ -657,8 +598,8 @@ void PatPixelTracking::printHit(const PatPixelHit* hit, std::string title) {
 //=========================================================================
 // Print a track, with distance and chi2
 //=========================================================================
-void PatPixelTracking::printTrack(PatPixelTrack& track) {
-  PatPixelHits::const_iterator ith;
+void PrPixelTracking::printTrack(PrPixelTrack& track) {
+  PrPixelHits::const_iterator ith;
   for (ith = track.hits().begin(); track.hits().end() != ith; ++ith) {
     printHit(*ith);
   }
@@ -667,7 +608,7 @@ void PatPixelTracking::printTrack(PatPixelTrack& track) {
 //=========================================================================
 // Print a hit on a track, with its distance.
 //=========================================================================
-void PatPixelTracking::printHitOnTrack(PatPixelHit* hit, bool ifMatch) {
+void PrPixelTracking::printHitOnTrack(PrPixelHit* hit, bool ifMatch) {
   bool isMatching = matchKey(hit);
   isMatching = (isMatching && ifMatch) || (!isMatching && !ifMatch);
   if (isMatching) printHit(hit, "   ");

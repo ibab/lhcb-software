@@ -4,6 +4,11 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Heinrich Schindler
+ - Renamed PatPixel* to PrPixel*
+ - Bugfix (chi2 cut on short tracks was not applied)
+ - Remove unused functions from PrPixelTracking
+
 ! 2014-02-09 - Heinrich Schindler
  - Moved package from Tf/PatPixel to Pr/PrPixel
 
