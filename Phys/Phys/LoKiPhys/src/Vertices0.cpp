@@ -150,9 +150,13 @@ LoKi::Vertices::VertexDoF::result_type
 LoKi::Vertices::VertexDoF::operator() 
   ( LoKi::Vertices::VertexDoF::argument v ) const 
 {
-  if ( 0 != v ) { return v -> nDoF () ; }                    // RETURN 
-  Error ( " Invalid Vertex, return -1000 " ) ;
-  return -1000 ;                                             // RETURN 
+  if ( 0 == v ) 
+  {
+    Error ( " Invalid Vertex, return -1000 " ) ;
+    return -1000 ;                                             // RETURN 
+  }
+  //
+  return std::max( v->nDoF() , 1 ) ;
 }
 // ============================================================================
 std::ostream& 
