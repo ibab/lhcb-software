@@ -29,7 +29,10 @@ DataOnDemandSvc().AlgMap["Raw/TT/LiteClusters"]   = "RawBankToSTLiteClusterAlg/c
 DataOnDemandSvc().AlgMap["Raw/IT/LiteClusters"]   = "RawBankToSTLiteClusterAlg/createITLiteClusters"
 DataOnDemandSvc().AlgMap["Raw/UT/LiteClusters"]   = "RawBankToSTLiteClusterAlg/createUTLiteClusters"
 DataOnDemandSvc().AlgMap["Raw/OT/Times"]          = "OTTimeCreator"
-DataOnDemandSvc().AlgMap["Raw/FT/RawClusters"]    = FTClusters
+
+#Error in original script! This was actually decoding somewhere else!
+#DataOnDemandSvc().AlgMap["Raw/FT/RawClusters"]    = FTClusters
+DataOnDemandSvc().AlgMap["Raw/FT/LiteClusters"]    = FTClusters
 DataOnDemandSvc().AlgMap["Raw/Muon/Coords"]       = "MuonRec"
 DataOnDemandSvc().AlgMap["DAQ/ODIN"]              = "createODIN"
 DataOnDemandSvc().AlgMap["Raw/Rich/Digits"]       = "Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"

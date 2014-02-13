@@ -12,9 +12,10 @@ branches          cmt doc src
 #=========================================================================
 # Used packages. 
 #=========================================================================
-use    DAQEvent	v*	Event
-use    FTEvent	v*	Event
-use    GaudiAlg v*
+use    DAQEvent	 v*	Event
+use    FTEvent	 v*	Event
+use    DAQKernel v*	DAQ
+use    GaudiAlg  v*
 
 include_path      none
 #=========================================================================

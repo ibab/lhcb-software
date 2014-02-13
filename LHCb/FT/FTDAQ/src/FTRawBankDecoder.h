@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 
 
 /** @class FTRawBankDecoder FTRawBankDecoder.h
@@ -13,7 +14,7 @@
  *  @author Olivier Callot
  *  @date   2012-05-11
  */
-class FTRawBankDecoder : public GaudiAlgorithm {
+class FTRawBankDecoder : public Decoder::AlgBase {
 public: 
   /// Standard constructor
   FTRawBankDecoder( const std::string& name, ISvcLocator* pSvcLocator );
@@ -27,10 +28,7 @@ public:
 protected:
 
 private:
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations 
-  std::string m_rawEventLocation;
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
+  
+  std::string m_outputClusterLocation;
 };
 #endif // FTRAWBANKDECODER_H

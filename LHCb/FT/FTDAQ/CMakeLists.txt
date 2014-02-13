@@ -5,10 +5,11 @@ gaudi_subdir(FTDAQ v1r4)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/FTEvent
+			 DAQ/DAQKernel
                          GaudiAlg)
 
 gaudi_add_module(FTDAQ
                  src/*.cpp
                  INCLUDE_DIRS Event/FTEvent
-                 LINK_LIBRARIES DAQEventLib GaudiAlgLib)
+                 LINK_LIBRARIES DAQEventLib DAQKernelLib GaudiAlgLib)
 

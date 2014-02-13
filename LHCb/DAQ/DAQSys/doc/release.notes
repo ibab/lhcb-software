@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-13 - Rob Lambert
+ - Fix bug in FTDAQ, it always thought it was writing to a completely different location! This is a good reason to homogenize further with the output locations.
+
+! 2014-02-13 - Rob Lambert
  - HltTrackReportsDecoder -> Hlt/Track/Velo (shared location)
 
 ! 2014-02-12 - Rob Lambert
@@ -13,6 +16,7 @@
  - MuonDAQ changes for task #49078 reflected in DecoderDB
  - L0Calo, Muon, Base, DU, DAQ changes for task #49078 reflected in DecoderDB
  - VPDAQ changes for task #49078 reflected in DecoderDB
+ - FTDAQ changes for task #49078 reflected in DecoderDB
 
 ! 2014-02-12 - Rob Lambert
  - RichDAQ (small) changes for task #49078 reflected in DecoderDB

@@ -348,7 +348,6 @@ Decoder("RawBankToSTClusterAlg/createUTClusters",
 #UPGRADE ===========FT===========
 Decoder("FTRawBankDecoder/createFTClusters",
         active=True, banks=["FTCluster"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs=["Raw/FT/RawClusters"],
+        inputs={"RawEventLocations" : None},
+        outputs={"OutputLocation":None},
         conf=DecoderDB)
-#no way to steer the output!!
