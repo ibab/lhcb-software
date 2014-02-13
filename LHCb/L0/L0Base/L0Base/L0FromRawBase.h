@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+#include "DAQKernel/DecoderAlgBase.h"
 
 /** @class L0FromRawBase L0FromRawBase.h
  *  Base class for the L0 banks decoding algorithms
@@ -13,7 +14,7 @@
  *  @author Julien Cogan
  *  @date   2009-10-20
  */
-class L0FromRawBase : public GaudiAlgorithm {
+class L0FromRawBase : public Decoder::AlgBase {
 public: 
   /// Standard constructor
   L0FromRawBase( const std::string& name, ISvcLocator* pSvcLocator );
@@ -47,7 +48,6 @@ protected:
   std::string dataLocation( const std::string & standardLocation ) const {
     return ( rootInTES() + standardLocation + l0context() ) ; } ;
 
-  std::vector<std::string> m_rawEventLocations; ///< List of possible raw event locations
   bool m_writeProcData;    ///< Flag to activate the writing of the processor data
   bool m_writeOnTES;       ///< Flag to activate the writing of the Candidates/Report on the TES
   std::string m_l0context; ///< Suffix appended to the default location in TES

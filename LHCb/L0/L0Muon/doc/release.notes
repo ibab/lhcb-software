@@ -3,6 +3,9 @@
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Adapt all L0 decoder tools to Decoder base classes, task #49078
+
 !========================= L0Muon v9r12 2013-02-14 =========================
 ! 2013-02-05 - Julien Cogan
  - L0MuonOutputs : fix bug discovered by Coverity (was affecting debug print 

@@ -21,7 +21,8 @@ DECLARE_TOOL_FACTORY( L0DUFromRawTool )
 //=============================================================================
 L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
                                   const std::string& name,
-                                  const IInterface* parent ): GaudiTool ( type, name , parent ),
+                                  const IInterface* parent )
+: Decoder::ToolBase ( type, name , parent ),
   m_confTool(NULL),
   m_emuTool(NULL),
   m_condDB(NULL),
@@ -42,8 +43,6 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
 {
   declareInterface<IL0DUFromRawTool>(this);
   
-  declareProperty( "RawLocations"           , m_rawLocations  );
-  declareProperty( "RawLocation"             , m_rawLocation = ""   );
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
   declareProperty( "L0DUConfigProviderType"  , m_configType="L0DUMultiConfigProvider");
@@ -56,11 +55,10 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "Emulate"                 , m_emu  = true);    // EXPERT USAGE
   declareProperty( "StatusOnTES"             , m_stat = true);    // EXPERT USAGE
   declareProperty( "DumpBank"                , m_dumping = -1);   // EXPERT USAGE
-  declareProperty( "UseRootInTES"            , m_useRootInTES = true);
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
   
-  m_rawLocations.push_back( LHCb::RawEventLocation::Trigger );
-  m_rawLocations.push_back( LHCb::RawEventLocation::Default );
-
 }
 //=============================================================================
 // Destructor
@@ -75,7 +73,7 @@ L0DUFromRawTool::~L0DUFromRawTool() {
 StatusCode L0DUFromRawTool::initialize(){
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Initialize" << endmsg;
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = Decoder::ToolBase::initialize();
    if(sc.isFailure())return sc;
 
 
@@ -123,12 +121,7 @@ StatusCode L0DUFromRawTool::initialize(){
   if( m_muonNoZsup ){
     warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endmsg;
   }
-
-  if (m_rawLocation.size()>0) {
-    warning()<< "Using obsolete option RawLocation" << endmsg;
-    m_rawLocations.insert(m_rawLocations.begin(),m_rawLocation);
-  }
-
+  
   return sc;
 }
 
@@ -154,15 +147,10 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
   m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
-  LHCb::RawEvent* rawEvt = NULL ;
-  for (std::vector<std::string>::iterator it = m_rawLocations.begin(); it < m_rawLocations.end();++it) {
-    rawEvt = getIfExists<LHCb::RawEvent>( *it , m_useRootInTES);
-    if( NULL != rawEvt ) break;
-  }
+  LHCb::RawEvent* rawEvt = findFirstRawEvent() ;
   // if not existing complain
   if( NULL == rawEvt ){
-    Warning("rawEvent not found in  '" + Gaudi::Utils::toString(m_rawLocations) +"' locations (use RootInTES ? "+Gaudi::Utils::toString(m_useRootInTES)+")",
-            StatusCode::SUCCESS).ignore();
+    Warning("rawEvent not found in  '" + Gaudi::Utils::toString(m_rawEventLocations) +"' locations", StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      

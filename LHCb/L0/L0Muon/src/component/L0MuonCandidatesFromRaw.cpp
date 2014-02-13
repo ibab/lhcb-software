@@ -121,39 +121,45 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
   //   IChronoStatSvc * svc = chronoSvc();
   //   svc->chronoStart("L0MuonCandidatesFromRaw Execute");
-
+  
   StatusCode sc;
 
   // Scan the list of input location and select the first existing one.
   std::string rawEventLocation;
   if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
     return Error("No valid raw event location found",StatusCode::SUCCESS,50);
-
+  
   // TAE mode
   int tae_size = 0;
-  if (m_enableTAE) {
+  if (m_enableTAE) 
+  {
     LHCb::ODIN* odin = getIfExists<LHCb::ODIN>(LHCb::ODINLocation::Default,IgnoreRootInTES);
     if ( NULL != odin ) {
       // TAE size from odin
       tae_size = int(odin->timeAlignmentEventWindow());
-    } else {
-      Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used"
-              ,StatusCode::FAILURE,50).ignore();
+    } 
+    else 
+    {
+      Warning("ODIN not found at "+LHCb::ODINLocation::Default+", TAE mode requested but not used" ,
+              StatusCode::FAILURE,50).ignore();
     }
   }
 
   int ntae = 0;
-  for (int itae = -1*tae_size; itae<=tae_size; ++itae){
+  for (int itae = -1*tae_size; itae<=tae_size; ++itae)
+  {
     std::string taeInTes = m_tae_items[itae];
 
     // Decode Raw banks
     m_outputTool->setMode(m_mode);
     sc = m_outputTool->decodeRawBanks( taeInTes+rawEventLocation , m_useRootInTES , m_statusOnTES);
-    if ( sc.isFailure() ) { 
+    if ( sc.isFailure() ) 
+    { 
       Warning("Error from decodeRawBanks - skip this time slice"
-                     ,StatusCode::SUCCESS,50);
+              ,StatusCode::SUCCESS,50);
       sc = m_outputTool->releaseRegisters();
-      if ( sc.isFailure() ) {
+      if ( sc.isFailure() ) 
+      {
         return Warning("Fail to release registers - skip the rest of event"
                        ,StatusCode::SUCCESS,50);
       }

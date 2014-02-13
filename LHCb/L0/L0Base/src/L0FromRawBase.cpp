@@ -19,12 +19,12 @@
 //=============================================================================
 L0FromRawBase::L0FromRawBase( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ),
+  : Decoder::AlgBase ( name , pSvcLocator ),
     m_statusOnTES  ( true )
 {
-  m_rawEventLocations.push_back( LHCb::RawEventLocation::Trigger );
-  m_rawEventLocations.push_back( LHCb::RawEventLocation::Default );
-  declareProperty("RawEventLocations", m_rawEventLocations);
+  m_rawEventLocations= {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Default };
+  initRawEventSearch();
+  
   declareProperty("WriteProcData"  , m_writeProcData   = false);
   declareProperty("WriteOnTES"  , m_writeOnTES   = true);
   declareProperty("L0Context"   , m_l0context   = "");

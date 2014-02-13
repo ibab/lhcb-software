@@ -13,6 +13,7 @@
 // from Event
 #include "Event/RawEvent.h"
 #include "Event/RawBankReadoutStatus.h"
+#include "DAQKernel/DecoderToolBase.h"
 
 
 /** @class L0DUFromRawTool L0DUFromRawTool.h
@@ -21,7 +22,7 @@
  *  @author Olivier Deschamps
  *  @date   2007-10-19
  */
-class L0DUFromRawTool : public GaudiTool, virtual public IL0DUFromRawTool {
+class L0DUFromRawTool : public Decoder::ToolBase, virtual public IL0DUFromRawTool {
 public: 
   /// Standard constructor
   L0DUFromRawTool( const std::string& type, 
@@ -66,8 +67,6 @@ private:
   inline bool nextData();
   void putStatusOnTES();
   //
-  std::vector<std::string> m_rawLocations;
-  std::string m_rawLocation;
   std::string m_emulatorType;
   std::string m_configName;
   std::string m_configType;
@@ -112,7 +111,6 @@ private:
   std::vector<unsigned int> m_dump;
   int m_dumping;
   int m_count;
-  bool m_useRootInTES;
   
 };
 #endif // L0DUFROMRAWTOOL_H

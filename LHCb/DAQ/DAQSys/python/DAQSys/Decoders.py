@@ -220,6 +220,7 @@ tool2=tool.clone(tname+"/ToolSvc."+tname)
 Decoder("L0MuonCandidatesFromRaw/L0MuonFromRaw",
         active=True, banks=["L0Muon","L0MuonProcCand"],
         privateTools=["L0MuonOutputs/OutputTool"],
+        required=["createODIN"], #needed in TAE mode
         inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
@@ -243,7 +244,7 @@ Decoder("L0DUFromRawAlg/L0DUFromRaw",
 
 Decoder("L0DUFromRawTool",
         active=False,
-        inputs={"RawLocations" : ["Trigger/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
 #TRIGGER ==========HLT===========
@@ -273,7 +274,7 @@ for report in ["Dec","Sel","Vertex"]:
             active=True,
             #\/ e.g. HltSelReports
             banks=["Hlt"+report+"Reports"],
-            inputs={"RawEventLocations":None},#["Trigger/RawEvent","DAQ/RawEvent"],
+            inputs={"RawEventLocations":None},
             #\/ e.g. OutputHltSelReportsLocation: Hlt1/SelReports
             outputs={"OutputHlt"+report+"ReportsLocation" : hltname+"/"+report+"Reports"},
             properties={"SourceID" : hlt}, #None=default(0)
@@ -283,7 +284,7 @@ for report in ["Dec","Sel","Vertex"]:
 #Also TrackingDecoder, but don't make it active, it's only used during HLT2 stand-alone!
 Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
         active=False, banks=["HltTrackReports"],
-        inputs = {"RawEventLocations":None},#["Trigger/RawEvent","DAQ/RawEvent"],
+        inputs = {"RawEventLocations":None},
         outputs={"OutputHltTrackReportsLocation" : "Hlt1/Track/Velo"},
         properties={"SourceID" : 1}, #None=default(0)
         conf=DecoderDB
@@ -318,7 +319,7 @@ Decoder("VPRawBankToPartialCluster/createVPClusters",
 Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
         active=True, banks=["UT","UTPedestal","UTFull","UTError"],
         outputs=["Raw/UT/LiteClusters"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
         required=["createODIN"],
@@ -329,7 +330,7 @@ Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
 Decoder("RawBankToSTClusterAlg/createUTClusters",
         active=True, banks=["UT","UTPedestal","UTFull","UTError"],
         outputs=["Raw/UT/Clusters"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations" : None},
         #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
         required=["createODIN"],

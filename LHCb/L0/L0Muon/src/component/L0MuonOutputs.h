@@ -36,6 +36,8 @@ public:
 
   /// Decode the L0Muon banks and fill the registers of the converters
   StatusCode decodeRawBanks(std::string rawInputEvent , bool useRootInTES , bool statusOnTES=true);
+  /// Decode the L0Muon banks and fill the registers of the converters
+  StatusCode decodeRawBanks(LHCb::RawEvent * rawEvt , bool statusOnTES=true);
   /// From the registers of the converters, fill the L0Muon banks
   StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates

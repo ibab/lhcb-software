@@ -70,9 +70,10 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::OK ) ;
   
   // Scan the list of input location and select the first existing one.
-  std::string rawEventLocation;
-  if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
-    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+  // no need to do this any longer, the base class takes care of it
+  //std::string rawEventLocation;
+  //if ( selectRawEventLocation(rawEventLocation).isFailure() ) 
+  //  return Error("No valid raw event location found",StatusCode::SUCCESS,50);
 
   LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
   LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
@@ -85,64 +86,67 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
               << endmsg ;
   }
   
-  LHCb::RawEvent* rawEvt = getIfExists<LHCb::RawEvent>(  rawEventLocation  , m_useRootInTES ) ;
-  if ( NULL != rawEvt ) {
-
-    const std::vector<LHCb::RawBank*>& banks = 
-      rawEvt -> banks( LHCb::RawBank::L0Calo );
-    
-    // check presence of error bank
-    const std::vector< LHCb::RawBank* > * errBanks = 
-      &rawEvt -> banks( LHCb::RawBank::L0CaloError ) ;
-
-    if ( ( 0 != errBanks ) && ( 0 != errBanks -> size() ) ) {
-      std::vector< LHCb::RawBank * >::const_iterator it ;
-      for ( it = errBanks->begin() ; errBanks -> end() != it ; ++it ) {
-        readoutStatus.addStatus( (*it) -> sourceID() , 
-                                 LHCb::RawBankReadoutStatus::ErrorBank ) ;
-      }
+  LHCb::RawEvent* rawEvt = findFirstRawEvent();
+  if ( !rawEvt ) 
+    return Error("No valid raw event location found",StatusCode::SUCCESS,50);
+  
+  const std::vector<LHCb::RawBank*>& banks = 
+    rawEvt -> banks( LHCb::RawBank::L0Calo );
+  // check presence of error bank
+  const std::vector< LHCb::RawBank* > * errBanks = 
+    &rawEvt -> banks( LHCb::RawBank::L0CaloError ) ;
+  
+  if ( ( 0 != errBanks ) && ( 0 != errBanks -> size() ) ) 
+  {
+    std::vector< LHCb::RawBank * >::const_iterator it ;
+    for ( it = errBanks->begin() ; errBanks -> end() != it ; ++it ) 
+    {
+      readoutStatus.addStatus( (*it) -> sourceID() , 
+                               LHCb::RawBankReadoutStatus::ErrorBank ) ;
     }
-
-    if ( 0 == banks.size() ) {
-      Error( "L0Calo Bank has not been found" ).ignore() ;
-      readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing ) ;
-      readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Missing ) ;      
-    } else {
-      int sourceZero( 0 ) , sourceOne( 0 ) ;
-
-      // convert the banks to two arrays of ints.
-      data.reserve( banks.size() ) ;
-      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); 
-            banks.end() != itBnk; ++itBnk ) {
-        if ( LHCb::RawBank::MagicPattern != (*itBnk) -> magic() ) {
-          Error( "L0Calo Bank source has bad magic pattern" ).ignore() ;
-          readoutStatus.addStatus( (*itBnk) -> sourceID() , 
-                                   LHCb::RawBankReadoutStatus::Corrupted ) ;
-          continue ;
-        }
-
-        data.push_back( std::vector< unsigned int >( (*itBnk) -> begin< unsigned int >() ,
-                                                     (*itBnk) -> end< unsigned int >() ) ) ;
-        
-        if ( 0 == (*itBnk) -> sourceID() ) ++sourceZero ;
-        else ++sourceOne ;
-      }
-      // Version of the bank
-      version = banks.front() -> version() ;
-      if ( 0 == sourceZero ) 
-        readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing ) ;
-      if ( 0 == sourceOne ) 
-        readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Missing ) ;
-      if ( 1 < sourceZero ) 
-        readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::NonUnique ) ;
-      if ( 1 < sourceOne ) 
-        readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::NonUnique ) ;
-    }
-
-  } else {
-    Warning( "RawEvent not found" ).ignore() ;
   }
+  
+  if ( 0 == banks.size() ) 
+  {
+    Error( "L0Calo Bank has not been found" ).ignore() ;
+    readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing ) ;
+    readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Missing ) ;      
+  } 
+  else 
+  {
+    int sourceZero( 0 ) , sourceOne( 0 ) ;
+    
+    // convert the banks to two arrays of ints.
+    data.reserve( banks.size() ) ;
+    for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); 
+          banks.end() != itBnk; ++itBnk ) 
+    {
+      if ( LHCb::RawBank::MagicPattern != (*itBnk) -> magic() ) 
+      {
+        Error( "L0Calo Bank source has bad magic pattern" ).ignore() ;
+        readoutStatus.addStatus( (*itBnk) -> sourceID() , 
+                                 LHCb::RawBankReadoutStatus::Corrupted ) ;
+        continue ;
+      }
 
+      data.push_back( std::vector< unsigned int >( (*itBnk) -> begin< unsigned int >() ,
+                                                   (*itBnk) -> end< unsigned int >() ) ) ;
+      
+      if ( 0 == (*itBnk) -> sourceID() ) ++sourceZero ;
+      else ++sourceOne ;
+    }
+    // Version of the bank
+    version = banks.front() -> version() ;
+    if ( 0 == sourceZero ) 
+      readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing ) ;
+    if ( 0 == sourceOne ) 
+      readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Missing ) ;
+    if ( 1 < sourceZero ) 
+      readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::NonUnique ) ;
+    if ( 1 < sourceOne ) 
+      readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::NonUnique ) ;
+  }
+  
   m_convertTool -> convertRawBankToTES( data, outFull , out , version , 
                                         readoutStatus ) ;  
 

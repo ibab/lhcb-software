@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/DAQEvent
                          Event/L0Event
                          L0/L0Base
+                         DAQ/DAQKernel
                          L0/L0Interfaces)
 
 find_package(AIDA)
@@ -16,7 +17,7 @@ find_package(AIDA)
 gaudi_add_module(L0DU
                  src/*.cpp
                  INCLUDE_DIRS AIDA L0/L0Interfaces Calo/CaloDAQ
-                 LINK_LIBRARIES CaloUtils CaloDetLib DAQEventLib L0Event L0Base)
+                 LINK_LIBRARIES CaloUtils CaloDetLib DAQKernelLib DAQEventLib L0Event L0Base)
 
 gaudi_install_python_modules()
 
