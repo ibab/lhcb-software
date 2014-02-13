@@ -1839,6 +1839,10 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
     tmpvert->setPosition(refPoint);
     tmpvert->setCovMatrix(posCov);
   }
+  else
+  {
+    Warning( "Particle has no end Vertex !" ).ignore();
+  }
 
   part.setReferencePoint(refPoint);
   part.setPosCovMatrix(posCov);
