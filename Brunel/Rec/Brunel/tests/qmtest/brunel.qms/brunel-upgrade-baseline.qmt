@@ -3,18 +3,16 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Brunel/Default.py</text>
-    <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
-    <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-Baseline-20131029.py</text>
-    <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
-    <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
-    <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20131108"; LHCbApp().CondDBtag="sim-20131108-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Baseline/Baseline.xdigi'"];from Configurables import Brunel; Brunel().DataType  = "Upgrade";</text>
-    </set></argument>
+      <text>$APPCONFIGOPTS/Brunel/Default.py</text>
+      <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
+      <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-Baseline-20131029.py</text>
+      <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
+      <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text></set></argument>
+  <argument name="options"><text>from Brunel.Configuration import *;from Configurables import CondDB;CondDB().Upgrade = True;from Configurables import LHCbApp;LHCbApp().DDDBtag="dddb-20131108";LHCbApp().CondDBtag="sim-20131108-vc-md100";EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Baseline/Baseline.xdigi'"];from Configurables import Brunel;Brunel().DataType  = "Upgrade";</text></argument>
   <argument name="reference"><text>../refs/brunel-upgrade-baseline.ref</text></argument>
   <argument name="error_reference"><text>../refs/brunel-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
-</text></argument>
+  </text></argument>
 </extension>

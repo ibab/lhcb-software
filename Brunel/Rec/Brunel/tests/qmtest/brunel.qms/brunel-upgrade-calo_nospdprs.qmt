@@ -9,9 +9,10 @@
     <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-NoSPDPRS.py</text>
     <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
     <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
-    <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Calo_NoSpdPrs/Calo_NoSpdPrs.xdigi'"];from Configurables import Brunel; Brunel().DataType  = "Upgrade";</text>
     </set></argument>
+  <argument name="options">
+    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Calo_NoSpdPrs/Calo_NoSpdPrs.xdigi'"];from Configurables import Brunel; Brunel().DataType  = "Upgrade";</text>
+  </argument>
   <argument name="reference"><text>../refs/brunel-upgrade-calo_nospdprs.ref</text></argument>
   <argument name="error_reference"><text>../refs/brunel-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
