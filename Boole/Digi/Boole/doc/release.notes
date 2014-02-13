@@ -23,6 +23,8 @@ Purpose: LHCb Digitization program
   . Migrate input data of boole-mc11 and all MC11 tests to EOS and TestFileDB
   . Add to BooleExclusion.py a filter on the EventSelector printout of the name
     of opened files, to future proof tests if file connection string changes
+  . Changed upgrade tests to access castor files properly.
+  . Updated upgrade references.
 
 </PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
