@@ -255,6 +255,15 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     debug() << "Vertex chi2 is " << V.chi2() << " with " << V.nDoF() << " DoF" << endmsg  ;
   }
 
+  // Final sanity check
+  if ( sc.isSuccess() )
+  {
+    if ( V.nDoF() <= 0 )
+    {
+      Warning( "Particle fitted successfully but final EndVertex nDoF<=0 !!" ).ignore();
+    }
+  }
+
   return sc;
 }
 
@@ -1838,10 +1847,6 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
     tmpvert->setNDoF(NDoF);
     tmpvert->setPosition(refPoint);
     tmpvert->setCovMatrix(posCov);
-  }
-  else
-  {
-    Warning( "Particle has no end Vertex !" ).ignore();
   }
 
   part.setReferencePoint(refPoint);
