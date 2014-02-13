@@ -61,9 +61,9 @@ void CaloHypoPacker::pack( const DataVector & hypos,
       pH.cov00 = m_pack.position( err0 );
       pH.cov11 = m_pack.position( err1 );
       pH.cov22 = m_pack.energy  ( err2 );
-      pH.cov10 = m_pack.fraction( pos->covariance()(1,0)/err1/err0 );
-      pH.cov20 = m_pack.fraction( pos->covariance()(2,0)/err2/err0 );
-      pH.cov21 = m_pack.fraction( pos->covariance()(2,1)/err2/err1 );
+      pH.cov10 = m_pack.fraction( pos->covariance()(1,0), err1*err0 );
+      pH.cov20 = m_pack.fraction( pos->covariance()(2,0), err2*err0 );
+      pH.cov21 = m_pack.fraction( pos->covariance()(2,1), err2*err1 );
 
       pH.centX = m_pack.position( pos->center()(0) );
       pH.centY = m_pack.position( pos->center()(1) );
@@ -72,7 +72,7 @@ void CaloHypoPacker::pack( const DataVector & hypos,
       const double serr1 = std::sqrt( pos->spread()(1,1) );
       pH.cerr00 = m_pack.position( serr0 );
       pH.cerr11 = m_pack.position( serr1 );
-      pH.cerr10 = m_pack.fraction( pos->spread()(1,0)/serr1/serr0 );
+      pH.cerr10 = m_pack.fraction( pos->spread()(1,0), serr1*serr0 );
 
     }
 

@@ -27,9 +27,9 @@ void RecVertexPacker::pack( const Data & vert,
   pvert.cov00 = m_pack.position( err0 );
   pvert.cov11 = m_pack.position( err1 );
   pvert.cov22 = m_pack.position( err2 );
-  pvert.cov10 = m_pack.fraction( vert.covMatrix()(1,0)/err1/err0 );
-  pvert.cov20 = m_pack.fraction( vert.covMatrix()(2,0)/err2/err0 );
-  pvert.cov21 = m_pack.fraction( vert.covMatrix()(2,1)/err2/err1 );
+  pvert.cov10 = m_pack.fraction( vert.covMatrix()(1,0), err1*err0 );
+  pvert.cov20 = m_pack.fraction( vert.covMatrix()(2,0), err2*err0 );
+  pvert.cov21 = m_pack.fraction( vert.covMatrix()(2,1), err2*err1 );
 
   //== Store the Tracks and weights
   pvert.firstTrack = pverts.refs().size();

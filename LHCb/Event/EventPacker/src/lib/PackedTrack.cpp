@@ -103,16 +103,16 @@ void TrackPacker::convertState( const LHCb::State& state,
   newState.cov_33 = m_pack.slope   ( err[3] );
   newState.cov_44 = m_pack.energy  ( 1.e5 * fabs(p) * err[4] ); //== 1.e5 * dp/p (*1.e2)
 
-  newState.cov_10 = m_pack.fraction( state.covariance()(1,0)/err[1]/err[0] );
-  newState.cov_20 = m_pack.fraction( state.covariance()(2,0)/err[2]/err[0] );
-  newState.cov_21 = m_pack.fraction( state.covariance()(2,1)/err[2]/err[1] );
-  newState.cov_30 = m_pack.fraction( state.covariance()(3,0)/err[3]/err[0] );
-  newState.cov_31 = m_pack.fraction( state.covariance()(3,1)/err[3]/err[1] );
-  newState.cov_32 = m_pack.fraction( state.covariance()(3,2)/err[3]/err[2] );
-  newState.cov_40 = m_pack.fraction( state.covariance()(4,0)/err[4]/err[0] );
-  newState.cov_41 = m_pack.fraction( state.covariance()(4,1)/err[4]/err[1] );
-  newState.cov_42 = m_pack.fraction( state.covariance()(4,2)/err[4]/err[2] );
-  newState.cov_43 = m_pack.fraction( state.covariance()(4,3)/err[4]/err[3] );
+  newState.cov_10 = m_pack.fraction( state.covariance()(1,0), err[1]*err[0] );
+  newState.cov_20 = m_pack.fraction( state.covariance()(2,0), err[2]*err[0] );
+  newState.cov_21 = m_pack.fraction( state.covariance()(2,1), err[2]*err[1] );
+  newState.cov_30 = m_pack.fraction( state.covariance()(3,0), err[3]*err[0] );
+  newState.cov_31 = m_pack.fraction( state.covariance()(3,1), err[3]*err[1] );
+  newState.cov_32 = m_pack.fraction( state.covariance()(3,2), err[3]*err[2] );
+  newState.cov_40 = m_pack.fraction( state.covariance()(4,0), err[4]*err[0] );
+  newState.cov_41 = m_pack.fraction( state.covariance()(4,1), err[4]*err[1] );
+  newState.cov_42 = m_pack.fraction( state.covariance()(4,2), err[4]*err[2] );
+  newState.cov_43 = m_pack.fraction( state.covariance()(4,3), err[4]*err[3] );
 }
 
 void TrackPacker::unpack( const PackedDataVector & ptracks,

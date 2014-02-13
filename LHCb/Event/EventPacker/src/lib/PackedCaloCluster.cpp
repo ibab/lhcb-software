@@ -48,15 +48,15 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_cov00 = m_pack.position( err0 );
       pclu.pos_cov11 = m_pack.position( err1 );
       pclu.pos_cov22 = m_pack.energy  ( err2 );
-      pclu.pos_cov10 = m_pack.fraction( clu.position().covariance()(1,0)/err1/err0 );
-      pclu.pos_cov20 = m_pack.fraction( clu.position().covariance()(2,0)/err2/err0 );
-      pclu.pos_cov21 = m_pack.fraction( clu.position().covariance()(2,1)/err2/err1 );
+      pclu.pos_cov10 = m_pack.fraction( clu.position().covariance()(1,0), err1*err0 );
+      pclu.pos_cov20 = m_pack.fraction( clu.position().covariance()(2,0), err2*err0 );
+      pclu.pos_cov21 = m_pack.fraction( clu.position().covariance()(2,1), err2*err1 );
       //
       const double serr0 = std::sqrt( clu.position().spread()(0,0) );
       const double serr1 = std::sqrt( clu.position().spread()(1,1) );
       pclu.pos_spread00 = m_pack.position( serr0 );
       pclu.pos_spread11 = m_pack.position( serr1 );
-      pclu.pos_spread10 = m_pack.fraction( clu.position().spread()(1,0)/serr1/serr0 );
+      pclu.pos_spread10 = m_pack.fraction( clu.position().spread()(1,0), serr1*serr0 );
 
       // entries
       pclu.firstEntry = pclus.entries().size();

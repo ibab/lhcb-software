@@ -1,7 +1,10 @@
 #ifndef KERNEL_STANDARDPACKER_H
 #define KERNEL_STANDARDPACKER_H 1
 
-// Include files
+// STL
+#include <cmath>
+
+// Gaudi
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
@@ -60,10 +63,16 @@ public:
     return packDouble( x * Packer::SLOPE_SCALE );
   }
 
-  /** returns an short int for a double fraction */
+  /** returns an short int for a double fraction f */
   short int fraction( const double f ) const
   {
     return shortPackDouble( f * Packer::FRACTION_SCALE );
+  }
+
+  /** returns an short int for a double fraction top/bot */
+  short int fraction( const double top, const double bot ) const
+  {
+    return fraction( fabs(bot) > 0 ? top/bot : 0.0 );
   }
 
   /** returns an int for a double time (TOF) value */
@@ -85,7 +94,7 @@ public:
   }
 
   /** returns an int containing the float value of the double */
-  int fltPacked( const double x  ) const
+  int fltPacked( const double x ) const
   {
     union fltInt { int i; float f; } convert;
     convert.f = (float)x;
