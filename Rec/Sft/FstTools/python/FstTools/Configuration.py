@@ -372,21 +372,23 @@ class FstConf(LHCbConfigurableUser):
             richConf.RichPIDLocation = self.getProp("RootInTES") + "/Rich/PIDs"
             
         
-        if self.getProb("MuonID"):    
+        if self.getProp("MuonID"):    
             print "run muon ID. CAUTION: muon ID run on all forward tracks, no selection applied"
             from MuonID import ConfiguredMuonIDs
-            from Configurables import RawBankReadoutStatusConverter,RawBankReadoutStatusFilter
-            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data="Upgrade")#self.getProp("DataType"),specialData=self.getProp("SpecialData"))
-            MuonIDSeq=cm.getMuonIDSeq()
-            RawBankReadoutStatusConverter("MuonProcStatus").System="Muon"
-            RawBankReadoutStatusConverter("MuonProcStatus").BankTypes=["Muon"]
-            RawBankReadoutStatusFilter("MuonROFilter").BankType=13
-            RawBankReadoutStatusFilter("MuonROFilter").RejectionMask=2067
+            from Configurables import RawBankReadoutStatusConverter, RawBankReadoutStatusFilter
+            cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data="Upgrade")#self.getProp("DataType"),specialData=self.getProp("SpecialData"))
+            MuonIDSeq = cm.getMuonIDSeq()
+            RawBankReadoutStatusConverter("MuonProcStatus").System = "Muon"
+            RawBankReadoutStatusConverter("MuonProcStatus").BankTypes = ["Muon"]
+            RawBankReadoutStatusFilter("MuonROFilter").BankType = 13
+            RawBankReadoutStatusFilter("MuonROFilter").RejectionMask = 2067
             
             from Configurables import MuonRec, MuonIDAlg
-            MuonIDAlg().TrackLocation          = self.getProp("RootInTES") + "Track/Forward"
-            MuonIDAlg().FindQuality            = False# speed up option - poinless w/o M1
+            # XXX should we get the tracks from Track/ForwardFst? Those are after Kfit
+            MuonIDAlg().TrackLocation = self.getProp("RootInTES") + "Track/Forward"
+            MuonIDAlg().FindQuality = False# speed up option - poinless w/o M1
             
-            FstSequencer("RecoFstSeq").Members += [ "MuonRec",
-                                                    "RawBankReadoutStatusConverter/MuonProcStatus",
-                                                    "RawBankReadoutStatusFilter/MuonROFilter",  MuonIDSeq ]
+            FstSequencer("RecoFstSeq").Members += ["MuonRec",
+                                                   "RawBankReadoutStatusConverter/MuonProcStatus",
+                                                   "RawBankReadoutStatusFilter/MuonROFilter",
+                                                   MuonIDSeq]
