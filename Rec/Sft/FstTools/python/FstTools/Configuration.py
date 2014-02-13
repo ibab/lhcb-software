@@ -372,9 +372,8 @@ class FstConf(LHCbConfigurableUser):
             richConf.RichPIDLocation = self.getProp("RootInTES") + "/Rich/PIDs"
             
         
-        if self.getProb("MuonID"):
-    
-            echo "run muon ID. CAUTION: muon ID run on all forward tracks, no selection applied"
+        if self.getProb("MuonID"):    
+            print "run muon ID. CAUTION: muon ID run on all forward tracks, no selection applied"
             from MuonID import ConfiguredMuonIDs
             from Configurables import RawBankReadoutStatusConverter,RawBankReadoutStatusFilter
             cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data="Upgrade")#self.getProp("DataType"),specialData=self.getProp("SpecialData"))
