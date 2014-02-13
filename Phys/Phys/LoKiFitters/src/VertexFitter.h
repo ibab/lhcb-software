@@ -538,7 +538,7 @@ namespace LoKi
       //
       const double rho =
         ( m_seedRhoZmax * ( z - m_seedZmin ) - 
-          m_seedRhoZmin * ( z - m_seedZmax ) ) / ( m_seedZmax - m_seedZmax ) ;
+          m_seedRhoZmin * ( z - m_seedZmax ) ) / ( m_seedZmin - m_seedZmax ) ;
       //
       return rho * rho ;
     }

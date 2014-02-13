@@ -5,6 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-13 - Vanya Belyaev
+
+ - VertexFitter.h: 
+    fix stupid typo/bug, that causes FPE 
+
+
 ! 2014-02-10 - Vanya Belyaev
  - particle classifiers: add the proper treatment of merged pi0 case 
 
