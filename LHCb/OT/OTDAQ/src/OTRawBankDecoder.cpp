@@ -298,7 +298,7 @@ DECLARE_TOOL_FACTORY( OTRawBankDecoder )
 OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
+    : Decoder::ToolBase ( type, name , parent ),
     m_detectordata(0),
     m_otdet(0),
     m_channelmaptool(0),
@@ -314,13 +314,11 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("numberOfBX", m_numberOfBX );
   declareProperty("timePerBX", m_timePerBX );
   declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED );
-  declareProperty( "rawEventLocation",  m_rawEventLocation = "", 
-                   "OBSOLETE. Use RawEventLocations instead" );
-  declareProperty( "RawEventLocations", m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Other,"
-                   " LHCb::RawEventLocation::Default.");
   declareProperty("TimeWindow", m_timewindow );
+  //new for decoders, initialize search path, and then call the base method
+  m_rawEventLocations = {LHCb::RawEventLocation::Other, LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
 }
 //=============================================================================
 // Destructor
@@ -337,7 +335,7 @@ StatusCode OTRawBankDecoder::initialize()
   
   if (msgLevel(MSG::DEBUG)) debug()<<"initializing OTRawBankDecoder"<<endmsg;
   
-  StatusCode sc = GaudiTool::initialize();
+  StatusCode sc = Decoder::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // Setup incident services
@@ -361,24 +359,6 @@ StatusCode OTRawBankDecoder::initialize()
   if( m_forcebankversion != OTBankVersion::UNDEFINED ) {
     warning() << "Forcing bank version to be " << m_forcebankversion << endmsg ;
   }
-
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The rawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
-  }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
   
   info() << " countsPerBX = " << m_countsPerBX 
          << " numberOfBX  = " << m_numberOfBX 
@@ -401,7 +381,7 @@ StatusCode OTRawBankDecoder::finalize()
     delete m_detectordata ;
     m_detectordata=0;
   }
-  return GaudiTool::finalize() ;
+  return Decoder::ToolBase::finalize() ;
 }
 
 //=============================================================================
@@ -587,16 +567,14 @@ StatusCode OTRawBankDecoder::decodeGolHeaders(const LHCb::RawEvent& event) const
 StatusCode OTRawBankDecoder::decodeGolHeaders() const
 {
   // Retrieve the RawEvent:
-  LHCb::RawEvent* raw = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    raw = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
-    if (NULL != raw) break;
-  }
-
-  if( raw == NULL ) {
+  LHCb::RawEvent* raw = findFirstRawEvent();
+  
+  if( raw == NULL ) 
+  {
     Warning("Failed to find raw data").ignore();
   }
-  else {
+  else 
+  {
     decodeGolHeaders( *raw ).ignore() ; ///< Always returns SUCCESS. Might change in the future ;)
   }
 
@@ -648,12 +626,7 @@ StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
   // real solution.
 
   // Retrieve the RawEvent:
-  LHCb::RawEvent* event = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    event = getIfExists<LHCb::RawEvent>(evtSvc(),*p);
-    if( NULL != event ) break;
-  }
-
+  LHCb::RawEvent* event = findFirstRawEvent();
   if( event == NULL ) return Error("Failed to find raw data");
 
   // Get the buffers associated with OT

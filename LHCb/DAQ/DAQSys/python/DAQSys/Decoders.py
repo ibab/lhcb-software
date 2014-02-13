@@ -135,12 +135,10 @@ from GaudiKernel.SystemOfUnits import ns
 rbd=Decoder(ott.PublicTools[0],#tool handle??
         banks=ott.Banks,
         active=False,
-        inputs={"RawEventLocations":["Other/RawEvent","DAQ/RawEvent"]},
+        inputs={"RawEventLocations":None},
         properties={"TimeWindow":(-8.0*ns, 56.0*ns)},
         conf=DecoderDB)
 
-#prbd=rbd.clone("OTRawBankDecoder/ToolSvc.OTRawBankDecoder")
-# copy into PublicTool, actually it's the same instance used in OTTimeCreator
 
 #===========SPD===========
 name="SpdFromRaw" #as in C++

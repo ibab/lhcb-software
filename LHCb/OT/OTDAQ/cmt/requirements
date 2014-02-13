@@ -5,6 +5,7 @@ branches OTDAQ cmt dict doc src options Event
 
 use GaudiAlg    v*
 use DAQEvent	v*      Event
+use DAQKernel   v*    DAQ
 use DigiEvent   v*      Event
 use OTDet	v*	Det
 use GSL         v*      LCG_Interfaces

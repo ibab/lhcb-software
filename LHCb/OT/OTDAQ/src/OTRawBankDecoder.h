@@ -6,6 +6,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "OTDAQ/IOTRawBankDecoder.h"            // Interface
 #include "GaudiKernel/IIncidentListener.h"
+#include "DAQKernel/DecoderToolBase.h"
 
 // Kernel
 #include "OTDet/DeOTModule.h"
@@ -37,7 +38,7 @@ namespace OTRawBankDecoderHelpers
  *  @date   2007-05-30
  */
 
-class OTRawBankDecoder : public GaudiTool,
+class OTRawBankDecoder : public Decoder::ToolBase,
                          virtual public IOTRawBankDecoder,
                          virtual public IIncidentListener
 {
@@ -96,14 +97,7 @@ private:
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
   std::vector<double> m_startReadOutGate;   ///< Start of readout gate
-
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
-
+  
   std::pair<double,double> m_timewindow;    ///< ignore hits outside of this window, only if first < second; if not, use all
   double m_timePerBX;                       ///< Time Per BX
   int  m_countsPerBX;                       ///< Counts per BX

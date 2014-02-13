@@ -3,6 +3,9 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2014-02-13 - Rob Lambert
+ - Adapt OT decoder tool to Decoder base classes, task #49078
+
 !========================= OTDAQ v7r16p1 2013-06-03 =========================
 ! 2013-05-07 - Marco Cattaneo
  - Fix clang32 warnings
