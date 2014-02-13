@@ -19,12 +19,17 @@ class IHistoTool ;
 
 
 /** @class PrChecker PrChecker.h
- *  Check the quality of the pattern, by comparing to MC information
- *  @modified to include UT hits statistics
- *
+ *  Check the quality of the pattern recognition, by comparing to MC information
+ *  Produces efficiency, ghost rate and clone rate numbers.
+ *  Parameters:
+ *   - Eta25Cut: Only consider particles with 2 < eta < 5? (default: false)
+ *   - TriggerNumbers: Give numbers for p > 3GeV, pT > 500 MeV? (default: false)
+ *   - UseElectrons: Take electrons into account in numbers? (default: false)
+ * 
  *  @author Olivier Callot, Thomas Nikodem
- *  @date   2005-03-29
+ *  @date   2014-02-13
  */
+
 class EffCounter {
 public:
   EffCounter() {
@@ -98,6 +103,9 @@ private:
 
   bool m_eta25cut;             
   bool m_triggerNumbers;
+  bool m_useElectrons;
+  
+
   //== Vector of the counters
   std::vector<IPrCounter*> m_allCounters;
   //std::vector<IPrUTCounter*> m_allUTCounters;

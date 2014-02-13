@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-02-13 - Michel De Cian
+ - Update PrChecker with 'electron' flag, to take electrons into account or not.
+
 ! 2014-02-03 - Michel De Cian
  - Comment unused member variables in PrChecker.
 

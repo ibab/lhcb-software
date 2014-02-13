@@ -23,7 +23,6 @@
 // 2005-03-29 : Olivier Callot
 // modified by Wenbin Qian for Upgrade
 // 2013-05-31 : Sascha Stahl, Thomas Nikodem upgraded to write Histograms
-// 2014-01-05 : Paolo Gandini, Modified to include UT hit statistics (needs PrUTCounter)
 //-----------------------------------------------------------------------------
 
 
@@ -37,29 +36,30 @@ DECLARE_ALGORITHM_FACTORY( PrChecker )
 PrChecker::PrChecker( const std::string& name,
                         ISvcLocator* pSvcLocator)
   //: GaudiAlgorithm ( name , pSvcLocator ),
-  : GaudiHistoAlg ( name , pSvcLocator ),
-    m_velo(NULL),
-    m_forward(NULL),
-    m_match(NULL),
-    m_upTrack(NULL),
-    m_tTrack(NULL),
-    m_downTrack(NULL),
-    m_best(NULL),
-    m_bestLong(NULL),
-    m_bestDownstream(NULL),
-    m_writeVeloHistos(-1),
-    m_writeForwardHistos(-1),
-    m_writeMatchHistos(-1),
-    m_writeDownHistos(-1),
-    m_writeUpHistos(-1),
-    m_writeTTrackHistos(-1),
-    m_writeBestHistos(-1),
-    m_writeBestLongHistos(-1),
-    m_writeBestDownstreamHistos(-1),
-    m_writeUTHistos(-1),
-    m_eta25cut(false),
-    m_triggerNumbers(false),
-    m_histoTool(NULL)
+: GaudiHistoAlg ( name , pSvcLocator ),
+  m_velo(NULL),
+  m_forward(NULL),
+  m_match(NULL),
+  m_upTrack(NULL),
+  m_tTrack(NULL),
+  m_downTrack(NULL),
+  m_best(NULL),
+  m_bestLong(NULL),
+  m_bestDownstream(NULL),
+  m_writeVeloHistos(-1),
+  m_writeForwardHistos(-1),
+  m_writeMatchHistos(-1),
+  m_writeDownHistos(-1),
+  m_writeUpHistos(-1),
+  m_writeTTrackHistos(-1),
+  m_writeBestHistos(-1),
+  m_writeBestLongHistos(-1),
+  m_writeBestDownstreamHistos(-1),
+  m_writeUTHistos(-1),
+  m_eta25cut(false),
+  m_triggerNumbers(false),
+  m_useElectrons(false),
+  m_histoTool(NULL)
 {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward    );
@@ -81,7 +81,8 @@ PrChecker::PrChecker( const std::string& name,
  
   declareProperty( "Eta25Cut",           m_eta25cut             = false    );
   declareProperty( "TriggerNumbers",     m_triggerNumbers       = false    );
-
+  declareProperty( "UseElectrons",       m_useElectrons         = false    );
+  
 
 }
 //=============================================================================
@@ -209,7 +210,7 @@ StatusCode PrChecker::initialize()
   m_downTrack->addSelection( "noVelo+UT+T_strange" ,false);
   m_downTrack->addSelection( "noVelo+UT+T_strange>5GeV" ,false);
   m_downTrack->addSelection( "UT+T_fromB" ,false);
-  m_downTrack->addSelection( "UT+T_fromB>5 GeV" ,false);
+  m_downTrack->addSelection( "UT+T_fromB>5GeV" ,false);
   m_downTrack->addSelection( "noVelo+UT+T_fromB" ,false);
   m_downTrack->addSelection( "noVelo+UT+T_fromB>5GeV" ,false);
   m_downTrack->addSelection( "UT+T_SfromDB" ,false);
@@ -260,7 +261,7 @@ StatusCode PrChecker::initialize()
   m_bestDownstream->addSelection( "noVelo+UT+T_strange" ,false);
   m_bestDownstream->addSelection( "noVelo+UT+T_strange>5GeV" ,false);
   m_bestDownstream->addSelection( "UT+T_fromB" ,false);
-  m_bestDownstream->addSelection( "UT+T_fromB>5 GeV" ,false);
+  m_bestDownstream->addSelection( "UT+T_fromB>5GeV" ,false);
   m_bestDownstream->addSelection( "noVelo+UT+T_fromB" ,false);
   m_bestDownstream->addSelection( "noVelo+UT+T_fromB>5GeV" ,false);
   m_bestDownstream->addSelection( "UT+T_SfromDB" ,false);
@@ -398,11 +399,20 @@ StatusCode PrChecker::execute() {
     if( msgLevel(MSG::VERBOSE) ) verbose() << "checking MCPart " << part->key() << endmsg;
 
     //Add Eta Cut!
+    
+    // -- Take electrons into account?
+    bool isElectron = abs( part->particleID().pid() ) == 11;
+    if(m_useElectrons){
+      isElectron = false;
+    }
+    
+      
+
     bool isLong  = trackInfo.hasVeloAndT( part );
-    isLong = isLong && ( abs( part->particleID().pid() ) != 11 ); // and not electron
+    //isLong = isLong && !isElectron; // and not electron
 
     bool isDown  = trackInfo.hasT( part ) &&  trackInfo.hasTT( part );
-    isDown = isDown && ( abs( part->particleID().pid() ) != 11 ); // and not electron
+    //isDown = isDown && !isElectron; // and not electron
     
     bool over5       = 5000. < fabs( part->p() );
     bool trigger     = 3000. < fabs( part->p() ) &&  500. < fabs( part->pt() );
@@ -466,7 +476,8 @@ StatusCode PrChecker::execute() {
         ids.push_back( temp );
       }
     }
-    if( msgLevel(MSG::VERBOSE) ) verbose() << "MCPart " << part->key() << " has " << ids.size() << " LHCbIDs " <<endmsg;
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "MCPart " << part->key() 
+                                           << " has " << ids.size() << " LHCbIDs " <<endmsg;
     //////////////////////////////////////    
 
 
@@ -474,29 +485,29 @@ StatusCode PrChecker::execute() {
 
     std::vector<bool> flags;
     //flags.push_back( true );
-    flags.push_back( eta25 && isInVelo );
-    flags.push_back( eta25 && isLong  );
-    flags.push_back( eta25 && isLong && over5   );
-    flags.push_back( eta25 && isLong && strangeLong );
-    flags.push_back( eta25 && isLong && strangeLong && over5 );
-    flags.push_back( eta25 && isLong && fromB );
-    flags.push_back( eta25 && isLong && fromB && over5 );
+    flags.push_back( eta25 && isInVelo && !isElectron);
+    flags.push_back( eta25 && isLong && !isElectron);
+    flags.push_back( eta25 && isLong && over5 && !isElectron  );
+    flags.push_back( eta25 && isLong && strangeLong && !isElectron);
+    flags.push_back( eta25 && isLong && strangeLong && over5 && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && over5 && !isElectron);
     if(m_triggerNumbers){
-      flags.push_back( eta25 && isLong && fromB  && trigger);
-      flags.push_back( eta25 && isLong && isInUT && fromB && trigger);
+      flags.push_back( eta25 && isLong && fromB  && trigger && !isElectron);
+      flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_velo->countAndPlot(m_histoTool,part,flags,ids,nPrim);
 
     flags.clear();
-    flags.push_back( eta25 && isLong  );
-    flags.push_back( eta25 && isLong && over5   );
-    flags.push_back( eta25 && isLong && strangeLong );
-    flags.push_back( eta25 && isLong && strangeLong && over5 );
-    flags.push_back( eta25 && isLong && fromB );
-    flags.push_back( eta25 && isLong && fromB && over5 );
+    flags.push_back( eta25 && isLong && !isElectron );
+    flags.push_back( eta25 && isLong && over5 && !isElectron  );
+    flags.push_back( eta25 && isLong && strangeLong && !isElectron);
+    flags.push_back( eta25 && isLong && strangeLong && over5 && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && over5 && !isElectron);
     if(m_triggerNumbers){
-      flags.push_back( eta25 && isLong && fromB  && trigger);
-      flags.push_back( eta25 && isLong && isInUT && fromB && trigger);
+      flags.push_back( eta25 && isLong && fromB  && trigger && !isElectron);
+      flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_forward->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_match->countAndPlot(m_histoTool,part,flags,ids,nPrim);
@@ -505,54 +516,54 @@ StatusCode PrChecker::execute() {
 
 
     flags.clear();
-    flags.push_back( eta25 && isInVelo );
-    flags.push_back( eta25 && isInVelo && isInUT  );
-    flags.push_back( eta25 && isInVelo && isInUT && over5);
-    flags.push_back( eta25 && !isLong && isInVelo  );
-    flags.push_back( eta25 && !isLong && isInVelo && isInUT );
-    flags.push_back( eta25 && !isLong && isInVelo && isInUT && over5 );
-    flags.push_back( eta25 && isLong );
-    flags.push_back( eta25 && isLong && over5 );
-    flags.push_back( eta25 && isLong && fromB );
-    flags.push_back( eta25 && isLong && fromB && over5 );
+    flags.push_back( eta25 && isInVelo && !isElectron);
+    flags.push_back( eta25 && isInVelo && isInUT && !isElectron );
+    flags.push_back( eta25 && isInVelo && isInUT && over5 && !isElectron);
+    flags.push_back( eta25 && !isLong && isInVelo && !isElectron );
+    flags.push_back( eta25 && !isLong && isInVelo && isInUT && !isElectron);
+    flags.push_back( eta25 && !isLong && isInVelo && isInUT && over5 && !isElectron);
+    flags.push_back( eta25 && isLong && !isElectron);
+    flags.push_back( eta25 && isLong && over5 && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && over5 && !isElectron);
     if(m_triggerNumbers){
-      flags.push_back( eta25 && isLong && fromB  && trigger);
-      flags.push_back( eta25 && isLong && isInUT && fromB && trigger);
+      flags.push_back( eta25 && isLong && fromB  && trigger && !isElectron);
+      flags.push_back( eta25 && isLong && isInUT && fromB && trigger && !isElectron);
     }
     m_upTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
 
     flags.clear();
-    flags.push_back( eta25 && trackInfo.hasT( part ) );
-    flags.push_back( eta25 && isLong );
-    flags.push_back( eta25 && isLong && over5 );
-    flags.push_back( eta25 && isLong && fromB );
-    flags.push_back( eta25 && isLong && fromB && over5 );
-    flags.push_back( eta25 && strangeDown );
-    flags.push_back( eta25 && strangeDown && over5 );
-    flags.push_back( eta25 && strangeDown && !isInVelo );
-    flags.push_back( eta25 && strangeDown && over5 && !isInVelo );
-    flags.push_back( eta25 && strangeDown && (fromB || fromD) );
-    flags.push_back( eta25 && strangeDown && over5 && (fromB || fromD));
-    flags.push_back( eta25 && strangeDown && !isInVelo && (fromB || fromD) );
-    flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD));
+    flags.push_back( eta25 && trackInfo.hasT( part ) && !isElectron);
+    flags.push_back( eta25 && isLong && !isElectron);
+    flags.push_back( eta25 && isLong && over5 && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && !isElectron);
+    flags.push_back( eta25 && isLong && fromB && over5 && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && !isInVelo && !isElectron);
+    flags.push_back( eta25 && strangeDown && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD) && !isElectron);
     m_tTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
 
 
     flags.clear();
-    flags.push_back( eta25 && isDown );
-    flags.push_back( eta25 && isDown && over5);
-    flags.push_back( eta25 && strangeDown );
-    flags.push_back( eta25 && strangeDown && over5 );
-    flags.push_back( eta25 && strangeDown && !isInVelo );
-    flags.push_back( eta25 && strangeDown && over5 && !isInVelo );
-    flags.push_back( eta25 && isDown && fromB );
-    flags.push_back( eta25 && isDown && fromB && over5 );
-    flags.push_back( eta25 && isDown && fromB && !isInVelo);
-    flags.push_back( eta25 && isDown && fromB && over5 && !isInVelo);
-    flags.push_back( eta25 && strangeDown && (fromB || fromD) );
-    flags.push_back( eta25 && strangeDown && over5 && (fromB || fromD));
-    flags.push_back( eta25 && strangeDown && !isInVelo && (fromB || fromD) );
-    flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD));
+    flags.push_back( eta25 && isDown && !isElectron);
+    flags.push_back( eta25 && isDown && over5 && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && !isInVelo && !isElectron);
+    flags.push_back( eta25 && isDown && fromB && !isElectron);
+    flags.push_back( eta25 && isDown && fromB && over5 && !isElectron);
+    flags.push_back( eta25 && isDown && fromB && !isInVelo && !isElectron);
+    flags.push_back( eta25 && isDown && fromB && over5 && !isInVelo && !isElectron);
+    flags.push_back( eta25 && strangeDown && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && over5 && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && (fromB || fromD) && !isElectron);
+    flags.push_back( eta25 && strangeDown && !isInVelo && over5 && (fromB || fromD) && !isElectron);
     m_downTrack->countAndPlot(m_histoTool,part,flags,ids,nPrim);
     m_bestDownstream->countAndPlot(m_histoTool,part,flags,ids,nPrim);
 
