@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta Alessia.Satta@cern.ch
 ! ========================================================================
 
+! 2014-02-14 - Chris Jones
+ - Protect against sqrt(-number) in MuonHit. 
+   Fixes an exception when using the FPEAuditor.
+
 !========================= MuonInterfaces v1r5 2013-10-01 =========================
 ! 2013-09-18 - Marco Cattaneo
  - Remove unused variable in MuonHit.h

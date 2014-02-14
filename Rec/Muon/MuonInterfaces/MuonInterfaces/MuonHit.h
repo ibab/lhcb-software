@@ -112,16 +112,19 @@ public:
   inline double maxZ() { return m_hit_maxz;} 
 
 private:
+
   void createFromPad(MuonLogPad* mp);
   void recomputePos(std::vector<double> *data, 
                     double* pos, double* dpos,
                     int* clsize, double step);
   void recomputeTime();
+
+private:
+
   std::vector<MuonLogPad*> m_pads;
   std::vector<double> m_padx;
   std::vector<double> m_pady;
   std::vector<double> m_padz;
-  std::vector<MuonLogPad*>::iterator m_ip;
   int m_pid;
   int m_mamy_pid;
   int m_hit_ID;

@@ -157,9 +157,10 @@ void MuonHit::recomputePos(std::vector<double> *data,
       sum2 += (*ip)*(*ip);
     }
   }
-  *pos = sum/np;
+  *pos = ( np>0 ? sum/np : 0.0 );
   if (np>1) {
-    *dpos = sqrt( (sum2-sum*sum/np)/(np*np-np)  );
+    const float tmp = (sum2-sum*sum/np)/(np*np-np);
+    *dpos = ( tmp>0 ? std::sqrt(tmp) : 0.0f );
   }
   *clsize = np;
 }
@@ -170,8 +171,9 @@ void MuonHit::recomputeTime() {
   std::vector<float> times;
   m_mintime=999.;
   m_maxtime=-999.;
-  for (m_ip=m_pads.begin() ; m_ip != m_pads.end(); m_ip++) {
-    if( (*m_ip)->type() == MuonLogPad::XTWOFE) { //consider the two measurements as independent      
+  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ; 
+       m_ip != m_pads.end(); m_ip++) {
+    if( (*m_ip)->type() == MuonLogPad::XTWOFE) { //consider the two measurements as independent
       times.push_back( (*m_ip)->timeX() );
       times.push_back( (*m_ip)->timeY() );
     }
@@ -187,9 +189,10 @@ void MuonHit::recomputeTime() {
     if ((*itime) > m_maxtime) m_maxtime=(*itime);
   }
 
-  m_time = sum/np;
+  m_time = ( np>0 ? sum/np : 0.0f );
   if (np>1) {
-    m_dtime = sqrt( (sum2-sum*sum/np)/(np*np-np)  );
+    const float tmp = (sum2-sum*sum/np)/(np*np-np);
+    m_dtime = ( tmp>0 ? std::sqrt(tmp) : 0.0f );
   }
   else {
     m_dtime = m_pads[0]->dtime();
@@ -260,7 +263,8 @@ int MuonHit::region()
 std::vector<MuonLogHit*> MuonHit::getHits()
 {
   std::vector<MuonLogHit*> out;
-  for (m_ip=m_pads.begin() ; m_ip != m_pads.end(); m_ip++) {
+  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ;
+       m_ip != m_pads.end(); m_ip++) {
     std::vector<MuonLogHit*> padhits = (*m_ip)->getHits();
     out.insert(out.end(), padhits.begin(), padhits.end());
   }
@@ -281,7 +285,8 @@ std::vector<LHCb::MuonTileID*> MuonHit::getTiles()
 
 std::vector<LHCb::MuonTileID*> MuonHit::getLogPadTiles() {
   std::vector<LHCb::MuonTileID*> tiles;
-  for (m_ip=m_pads.begin() ; m_ip != m_pads.end(); m_ip++) {
+  for (std::vector<MuonLogPad*>::iterator m_ip=m_pads.begin() ;
+       m_ip != m_pads.end(); m_ip++) {
     tiles.push_back(const_cast<LHCb::MuonTileID*>((*m_ip)->tile()));
   }
   return tiles;
