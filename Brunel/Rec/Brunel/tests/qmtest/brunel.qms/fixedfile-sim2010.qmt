@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20100624"; LHCbApp().CondDBtag="sim-20100624-vc-md100"; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-sim2010'].run(); Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
+    <text>from Brunel.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-sim2010'].run(); Brunel().InputType="DIGI"; Brunel().DataType="2010"; Brunel().Simulation=True</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout
