@@ -26,6 +26,7 @@
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Property.h"
+#include <cstdlib>
 
 extern "C" void scrc_resetANSI();
 
@@ -54,6 +55,7 @@ enum Commands  {
   COM_START_LINE,
   CMD_START,
   CMD_STOP,
+  CMD_STOP_CLOSE,
   CMD_ENABLE,
   CMD_TERMINATE,
   CMD_REFEED,
@@ -134,6 +136,7 @@ MooreMainMenu::MooreMainMenu()
   m_evtMon(0), m_rateMon(0), m_allMon(0),
   m_svcLocator(0), m_terminate(false)
 {
+  char cwd[PATH_MAX];
   m_id = UpiSensor::newID();
   m_ioc = &IocSensor::instance();
   m_logger = new MessageLogger(this);
@@ -159,14 +162,22 @@ MooreMainMenu::MooreMainMenu()
   ::upic_add_comment(COM_START_LINE,   "-------------------------------","");
   ::upic_add_command(CMD_START,        " Start>","");
   ::upic_add_command(CMD_STOP,         " Stop>","");
+  ::upic_add_command(CMD_STOP_CLOSE,   " Stop and close child menus>","");
   ::upic_add_command(CMD_TERMINATE,    " Terminate>","");
 
   ::upic_close_menu();
   ::upic_disable_command(m_id,CMD_STOP);
+  ::upic_disable_command(m_id,CMD_STOP_CLOSE);
   ::upic_disable_command(m_id,CMD_EVTMON);
   ::upic_disable_command(m_id,CMD_RATEMON);
   ::upic_disable_command(m_id,CMD_ALLMON);
+  ::upic_disable_command(m_id,CMD_MBMMON);
   ::upic_set_cursor(m_id,CMD_PAR_RESULT,0);
+
+  ::snprintf(cwd,sizeof(cwd),"Current working directory: ");
+  ::getcwd(cwd+strlen(cwd),sizeof(cwd)-strlen(cwd));
+  ::upic_write_message(cwd,"");
+
   s_mainMenu = this;
   UpiSensor::instance().add(this,m_id);
 }
@@ -214,6 +225,7 @@ void MooreMainMenu::handleUPI(int cmd, int par, int index)  {
     clean_str(m_myOpts,sizeof(m_myOpts));
     break;
   case CMD_STOP:
+  case CMD_STOP_CLOSE:
   case CMD_START:
   case CMD_MBMMON:
   case CMD_ALLMON:
@@ -243,7 +255,7 @@ void MooreMainMenu::handle (const Event& e)   {
     case CMD_MBMMON:
       if ( 0 == m_mbmMon )   {
 	const char *argv[] = {"Monitor","-s",0};
-	UPI::UpiDisplay* disp =  new UPI::UpiDisplay(132,55);
+	UPI::UpiDisplay* disp =  new UPI::UpiDisplay(132,66);
 	m_mbmMon = new MBM::Monitor(2, (char**)argv, disp);
 	disp->setClient(this);
 	m_mbmMon->monitor();
@@ -274,6 +286,10 @@ void MooreMainMenu::handle (const Event& e)   {
       break;
     case CMD_START:
       startExecution();
+      break;
+    case CMD_STOP_CLOSE:
+      closeMenus();
+      finishExecution();
       break;
     case CMD_STOP:
       finishExecution();
@@ -349,10 +365,12 @@ bool MooreMainMenu::startExecution()   {
     return false;
   }
   ::lib_rtl_sleep(2000);
+  ::upic_enable_command(m_id,CMD_MBMMON);
   ::upic_enable_command(m_id,CMD_EVTMON);
   ::upic_enable_command(m_id,CMD_RATEMON);
   ::upic_enable_command(m_id,CMD_ALLMON);
   ::upic_enable_command(m_id,CMD_STOP);
+  ::upic_enable_command(m_id,CMD_STOP_CLOSE);
   ::upic_set_cursor(m_id,CMD_STOP,0);
   m_ioc->send(this,CMD_REFEED,m_evtMon);
   m_ioc->send(this,CMD_REFEED,m_allMon);
@@ -376,22 +394,27 @@ bool MooreMainMenu::enableTesting()   {
   //::upic_enable_command(m_id,CMD_PAR_RESULT);
   ::upic_enable_command(m_id,CMD_START);
   ::upic_disable_command(m_id,CMD_STOP);
+  ::upic_disable_command(m_id,CMD_STOP_CLOSE);
   ::upic_disable_command(m_id,CMD_EVTMON);
   ::upic_disable_command(m_id,CMD_RATEMON);
   ::upic_disable_command(m_id,CMD_ALLMON);
+  ::upic_disable_command(m_id,CMD_MBMMON);
   ::upic_set_cursor(m_id,CMD_START,0);
   return true;
 }
 
-void MooreMainMenu::terminate()   {
-  if ( m_mbmMon ) delete m_mbmMon;
+/// Close all monitor menues in one go....
+void MooreMainMenu::closeMenus()   {
   if ( m_rateMon ) m_ioc->send(m_rateMon,MooreTest::CMD_CLOSE);
   if ( m_evtMon  ) m_ioc->send(m_evtMon,MooreTest::CMD_CLOSE);
   if ( m_allMon  ) m_ioc->send(m_allMon,MooreTest::CMD_CLOSE);
-  m_mbmMon = 0;
   m_allMon = 0;
   m_evtMon = 0;
   m_rateMon = 0;
+}
+
+void MooreMainMenu::terminate()   {
+  closeMenus();
   m_terminate = true;
   if ( !finishExecution() ) TimeSensor::instance().add(this,1,0);
 }
@@ -446,7 +469,6 @@ bool MooreMainMenu::sendInterrupt(const std::string& service, int code, void* pa
 int MooreMainMenu::run(void* param)   {
   MooreMainMenu* m = (MooreMainMenu*)param;
   int ret = m->runMoore(m->m_myOpts);
-  m->m_ioc->send(m,CMD_ENABLE);
   return ret;
 }
 
@@ -482,6 +504,8 @@ int MooreMainMenu::runMoore(const std::string& opts) {
     // propagate a valid error code in case of failure
     returnCode.setValue(1);
   }
+  m_ioc->send(this,CMD_MBMMON_CLOSE);
+  m_ioc->send(this,CMD_ENABLE);
   return returnCode.value();
 }
 

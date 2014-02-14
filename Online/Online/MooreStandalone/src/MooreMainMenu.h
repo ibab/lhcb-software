@@ -70,6 +70,8 @@ namespace LHCb  {
     virtual void handle (const Event& event);
     /// Destroy windows, but do not destruct object
     void destroy();
+    /// Close all monitor menues in one go....
+    void closeMenus();
     /// Handle termination sequence
     void terminate();
     /// Run Moore application in thread

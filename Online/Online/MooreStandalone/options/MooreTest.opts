@@ -14,7 +14,7 @@ Runable.PartitionName        = @OnlineEnv.PartitionName;
 Runable.PartitionBuffers     = @OnlineEnv.PartitionBuffers;
 //
 Runable.FifoPath             = "/tmp/logSrv.fifo";
-Runable.NumberOfSlaves       = 10;               // Number of slaves to be forked.
+Runable.NumberOfSlaves       = 24;               // Number of slaves to be forked.
 Runable.MonitorProcess       = "_PassThrough_";  // Name match of the processes to be monitored
 Runable.MeasuementStartDelay = 15;  // Duration of the warmup phase in seconds without measurement
 Runable.MeasurementIntervall = 5;   // Interval in seconds between two measurement outputs
