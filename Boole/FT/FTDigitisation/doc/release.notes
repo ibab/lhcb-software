@@ -4,17 +4,19 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
-!========================= FTDigitisation v1r7 2013-12-10 =========================
+! 2014-02-14 - Paul Szczypka
+ - Fixed release notes added after v1r7 tag.
+ - Temp fix for unused variable hitZ in FTClusterCreator.cpp
 
-! 2014-14-02 Jacco de Vries
+! 2014-02-14 Jacco de Vries
  - Fixed some plots
 
-! 2014-12-02 Jacco de Vries
+! 2014-02-12 Jacco de Vries
  - Added cluster plots for separate noise sources
  - Separated spillover cluster plots in Prev and Next
  - Added option to remove the IT region clusters in the FT for tracking eff. studies
 
-! 2014-23-01 Jacco de Vries
+! 2014-01-23 Jacco de Vries
  - Fixed debug messages and commented out unused instance
 
 ! 2013-12-12 Jacco de Vries
@@ -25,6 +27,8 @@
  - Removed some printouts in FTNoiseCreator
  - Edited the plots in MCFTDepositCreator
  - Made FTClusterCreator cluster cuts more intuitive (> --> >=) and changed values accordingly
+
+!========================= FTDigitisation v1r7 2013-12-10 =========================
 
 ! 2013-12-08 Jacco de Vries
  - removed escape character '\%' that gives a warning in cmake

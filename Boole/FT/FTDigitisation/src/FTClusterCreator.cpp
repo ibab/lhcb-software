@@ -381,7 +381,7 @@ StatusCode FTClusterCreator::execute() {
             float ITYwMin = ITYmin + (ITYcen - ITYmin) * m_ITScale;
             float ITYwMax = ITYmin + (ITYmax - ITYmin) * m_ITScale;
             //float FTZmin = 8360.-10., FTZmax = 8725.+10.;
-            float hitX, hitY, hitZ;
+            float hitX, hitY;//, hitZ;
             //const int particleKey = largestHit -> mcParticle() -> key();
             //for( MCHits::const_iterator iterHit = mcHits -> begin(); iterHit != mcHits -> end(); ++iterHit ) {
               // loop over all MCHits in event
@@ -391,7 +391,7 @@ StatusCode FTClusterCreator::execute() {
                 // if this MCHit has the same MCParticle origin as the Cluster MCHit under consideration
                 hitX = cHit -> midPoint().x();
                 hitY = cHit -> midPoint().y();
-                hitZ = cHit -> midPoint().z();
+                //hitZ = cHit -> midPoint().z();
                 //if( hitZ > FTZmin && hitZ < FTZmax ) {
                   // if this MCHit is in T2
                   bool  hitInIT = ( ( hitX < ITXwMax && hitX > -ITXwMax && hitY < ITYwMin && hitY > -ITYwMin) ||
