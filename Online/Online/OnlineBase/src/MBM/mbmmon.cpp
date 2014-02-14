@@ -9,6 +9,7 @@
 
 extern "C" int mbm_mon(int argc , char** argv) {
   MBM::Monitor mon(argc, argv, new AsciiDisplay(""));//Buffer Manager Monitor on "+RTL::nodeName()));
+  ::lib_rtl_install_printer(MBM::Monitor::print, &mon);
   return mon.monitor();
 }
 

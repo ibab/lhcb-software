@@ -50,7 +50,7 @@ namespace LHCb  {
     char  m_myOpts[1024];
     int   m_id;
     FILE* m_log;
-    MBM::Monitor* m_mbmMon;
+    MBM::Monitor*    m_mbmMon;
     UpiMooreMonitor* m_evtMon;
     UpiMooreMonitor* m_rateMon;
     UpiMooreMonitor* m_allMon;
@@ -70,12 +70,21 @@ namespace LHCb  {
     virtual void handle (const Event& event);
     /// Destroy windows, but do not destruct object
     void destroy();
+    /// Handle termination sequence
+    void terminate();
     /// Run Moore application in thread
     int runMoore(const std::string& opts);
+    /// Start test execution
     bool startExecution();
+    /// End test execution
     bool finishExecution();
+    /// Enable commands after test finished/after test got interrupted.
+    bool enableTesting();
+    /// Send interrupt to testing service
     bool sendInterrupt(const std::string& service, int code, void* param=0);
+    /// Handle ON/OFF of monitoring displays
     bool handleMonitor(UpiMooreMonitor*& monitor, int type);
+    /// Reconnect monitor updates after test finished
     bool reconnectMonitor(UpiMooreMonitor* monitor);
     /// Write asynchronous output message
     void write_message(const char* text);

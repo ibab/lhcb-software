@@ -88,7 +88,7 @@ int Process::sendSignal(int sig) {
 int Process::sendSignalAll(int sig) {
 #ifdef __linux
   if ( m_pid >= 0 ) {
-    ::lib_rtl_output(LIB_RTL_DEBUG,"Send signal %d to %d",sig,int(-m_pid));
+    ::lib_rtl_output(LIB_RTL_DEBUG,"Send signal %d to %d\n",sig,int(-m_pid));
     int ret = ::kill(-m_pid, sig);
     if ( ret == 0 ) {
       return 1;
@@ -116,7 +116,8 @@ int Process::start(bool new_process_group)    {
     int cnt = 0;
     string utgid;
     char **e, **env, **arg = new char*[m_args.size()+2];
-    //#if 0
+
+    ::lib_rtl_install_printer(0,0);
 
     if ( new_process_group )   {
       ::setpgrp();
@@ -132,7 +133,7 @@ int Process::start(bool new_process_group)    {
 	::close(fd);
       }
     }
-    //#endif
+
     arg[0] = (char*)m_name.c_str();
     for(size_t i=0; i<m_args.size();++i)
       arg[i+1] = (char*)m_args[i].c_str();

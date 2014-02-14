@@ -270,48 +270,17 @@ void MooreMainMenu::handle (const Event& e)   {
       if ( !handleMonitor(m_allMon,2) ) ::upic_set_cursor(m_id,CMD_ALLMON,0);
       break;
     case CMD_ENABLE:
-      if ( m_log ) ::fclose(m_log);
-      m_log = 0;
-      ::upic_enable_command(m_id,CMD_PAR_LOG);
-      //::upic_enable_command(m_id,CMD_PAR_RESULT);
-      ::upic_enable_command(m_id,CMD_START);
-      ::upic_disable_command(m_id,CMD_STOP);
-      ::upic_disable_command(m_id,CMD_EVTMON);
-      ::upic_disable_command(m_id,CMD_RATEMON);
-      ::upic_disable_command(m_id,CMD_ALLMON);
-      ::upic_set_cursor(m_id,CMD_START,0);
+      enableTesting();
       break;
     case CMD_START:
-      ::upic_disable_command(m_id,CMD_PAR_LOG);
-      //::upic_disable_command(m_id,CMD_PAR_RESULT);
-      ::upic_disable_command(m_id,CMD_START);
-      ::upic_enable_command(m_id,CMD_EVTMON);
-      ::upic_enable_command(m_id,CMD_RATEMON);
-      ::upic_enable_command(m_id,CMD_ALLMON);
-      ::upic_enable_command(m_id,CMD_STOP);
-      ::upic_set_cursor(m_id,CMD_STOP,0);
       startExecution();
-      ::lib_rtl_sleep(2000);
-      m_ioc->send(this,CMD_REFEED,m_evtMon);
-      m_ioc->send(this,CMD_REFEED,m_allMon);
-      m_ioc->send(this,CMD_REFEED,m_rateMon);
       break;
     case CMD_STOP:
       finishExecution();
       break;
     case CMD_TERMINATE:
-      if ( m_mbmMon ) delete m_mbmMon;
-      if ( m_rateMon ) m_ioc->send(m_rateMon,MooreTest::CMD_CLOSE);
-      if ( m_evtMon  ) m_ioc->send(m_evtMon,MooreTest::CMD_CLOSE);
-      if ( m_allMon  ) m_ioc->send(m_allMon,MooreTest::CMD_CLOSE);
-      m_mbmMon = 0;
-      m_allMon = 0;
-      m_evtMon = 0;
-      m_rateMon = 0;
-      m_terminate = true;
-      if ( !finishExecution() ) TimeSensor::instance().add(this,1,0);
+      terminate();
       break;
-
     case CMD_EXIT:
       if ( m_terminate )  {
 	//destroy();
@@ -361,7 +330,14 @@ void MooreMainMenu::write_message(const char* str)   {
 }
 
 bool MooreMainMenu::startExecution()   {
+  ::upic_disable_command(m_id,CMD_PAR_LOG);
+  //::upic_disable_command(m_id,CMD_PAR_RESULT);
+  ::upic_disable_command(m_id,CMD_START);
   ::upic_write_message("+++++ Starting thread with moore execution.......","");
+  if ( m_exec )  {
+    ::lib_rtl_delete_thread(m_exec);
+    m_exec = 0;
+  }
   clean_str(m_logFile,sizeof(m_logFile));
   if ( ::strlen(m_logFile) > 0 )  {
     m_log = ::fopen(m_logFile,"w");
@@ -372,6 +348,15 @@ bool MooreMainMenu::startExecution()   {
     ::upic_write_message(("Failed to start execution thread....  ["+err+"]").c_str(),"");
     return false;
   }
+  ::lib_rtl_sleep(2000);
+  ::upic_enable_command(m_id,CMD_EVTMON);
+  ::upic_enable_command(m_id,CMD_RATEMON);
+  ::upic_enable_command(m_id,CMD_ALLMON);
+  ::upic_enable_command(m_id,CMD_STOP);
+  ::upic_set_cursor(m_id,CMD_STOP,0);
+  m_ioc->send(this,CMD_REFEED,m_evtMon);
+  m_ioc->send(this,CMD_REFEED,m_allMon);
+  m_ioc->send(this,CMD_REFEED,m_rateMon);
   return true;
 }
 
@@ -382,6 +367,33 @@ bool MooreMainMenu::finishExecution()   {
   }
   write_message("CANNOT send STOP command to tester. [Invalid Gaudi-state]");
   return false;
+}
+
+bool MooreMainMenu::enableTesting()   {
+  if ( m_log ) ::fclose(m_log);
+  m_log = 0;
+  ::upic_enable_command(m_id,CMD_PAR_LOG);
+  //::upic_enable_command(m_id,CMD_PAR_RESULT);
+  ::upic_enable_command(m_id,CMD_START);
+  ::upic_disable_command(m_id,CMD_STOP);
+  ::upic_disable_command(m_id,CMD_EVTMON);
+  ::upic_disable_command(m_id,CMD_RATEMON);
+  ::upic_disable_command(m_id,CMD_ALLMON);
+  ::upic_set_cursor(m_id,CMD_START,0);
+  return true;
+}
+
+void MooreMainMenu::terminate()   {
+  if ( m_mbmMon ) delete m_mbmMon;
+  if ( m_rateMon ) m_ioc->send(m_rateMon,MooreTest::CMD_CLOSE);
+  if ( m_evtMon  ) m_ioc->send(m_evtMon,MooreTest::CMD_CLOSE);
+  if ( m_allMon  ) m_ioc->send(m_allMon,MooreTest::CMD_CLOSE);
+  m_mbmMon = 0;
+  m_allMon = 0;
+  m_evtMon = 0;
+  m_rateMon = 0;
+  m_terminate = true;
+  if ( !finishExecution() ) TimeSensor::instance().add(this,1,0);
 }
 
 bool MooreMainMenu::reconnectMonitor(UpiMooreMonitor* s)  {

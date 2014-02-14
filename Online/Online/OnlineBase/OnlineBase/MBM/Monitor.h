@@ -49,6 +49,7 @@ namespace MBM {
     MonitorDisplay*     m_display;
     ShadowBMs_t         *m_shadowBMs;
     BMMap_t             m_BMMap;
+    bool                m_updating;
   public:
     MonitorDisplay* display() { return m_display; }
     virtual int monitor();

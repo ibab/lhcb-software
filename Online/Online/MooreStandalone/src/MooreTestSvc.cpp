@@ -79,6 +79,12 @@ namespace LHCb {
     std::string m_output;
     /// Property: The task name to be sampled
     std::string m_procName;
+    /// Property: Filename of the online "main" property options
+    std::string m_mainOpts;
+    /// Property: Options for the buffer manager setup
+    std::string m_mbmOpts;
+    /// Property: Options for the file reader setup
+    std::string m_rdrOpts;
     /// Property: factory name of the result dumper. If empty result goes to stdout
     std::vector<std::string> m_monitorTypes;
     /// Property: Time delay in seconds before measurements start
@@ -94,7 +100,7 @@ namespace LHCb {
     /// Property: indicate if the buffers are partitioned (ie include the paqrtition name)
     bool m_partitionBuffers;
     /// Property: enable automatic running with finalization
-    bool m_autoRun;
+    int  m_autoRun;
 
     /// The file descriptor for the communication fifo
     int m_fifo;
@@ -279,20 +285,23 @@ void MooreFileMonitor::handle(const Incident& incident)   {
 MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)   
   : OnlineService(nam,svcLoc), m_fifo(-1), m_messagePump(0), m_inputBM(0), m_outputBM(0), m_master(0)
 {
-  declareProperty("FifoPath",                   m_fifoName = "/tmp/logSrv.fifo");
-  declareProperty("PartitionID",                m_partitionID=333);
-  declareProperty("PartitionName",              m_partition="LHCb");
-  declareProperty("NumberOfSlaves",             m_numSlaves=10);
+  declareProperty("FifoPath",                   m_fifoName    = "/tmp/logSrv.fifo");
+  declareProperty("PartitionID",                m_partitionID = 333);
+  declareProperty("PartitionName",              m_partition   = "LHCb");
+  declareProperty("NumberOfSlaves",             m_numSlaves   = 10);
   declareProperty("PartitionBuffers",           m_partitionBuffers=true);
-  declareProperty("Input",                      m_input = "Events");
-  declareProperty("Output",                     m_output = "Output");
-  declareProperty("MonitorProcess",             m_procName = "_xxxxx_");
-  declareProperty("MonitorScript",              m_script = "");
-  declareProperty("MeasuementStartDelay",       m_startDelay=15);
-  declareProperty("MeasurementIntervall",       m_intervall=5);
-  declareProperty("MeasurementDuration",        m_duration=300);
-  declareProperty("MooreOnlineVersion",         m_mooreVsn="");
-  declareProperty("Auto",                       m_autoRun=true);
+  declareProperty("Input",                      m_input       = "Events");
+  declareProperty("Output",                     m_output      = "Output");
+  declareProperty("MonitorProcess",             m_procName    = "_xxxxx_");
+  declareProperty("MonitorScript",              m_script      = "");
+  declareProperty("MeasuementStartDelay",       m_startDelay  = 15);
+  declareProperty("MeasurementIntervall",       m_intervall   = 5);
+  declareProperty("MeasurementDuration",        m_duration    = 300);
+  declareProperty("MooreOnlineVersion",         m_mooreVsn    = "");
+  declareProperty("Auto",                       m_autoRun     = 1);
+  declareProperty("MainOptions",                m_mainOpts    = "../options/Main.opts");
+  declareProperty("MBMOptions",                 m_mbmOpts     = "../options/Buffers.opts");
+  declareProperty("ReaderOptions",              m_rdrOpts     = "../options/Reader.opts");
 }
 
 /// Standard Destructor
@@ -372,7 +381,7 @@ void MooreTestSvc::handle (const Event& e)   {
   case IocEvent:
     switch(e.type)  {
     case MooreTest::CMD_MOORE_EXIT:
-      m_autoRun = true;
+      m_autoRun = 2;
       m_master = (Interactor*)e.data;
       break;
     default:
@@ -599,14 +608,18 @@ StatusCode MooreTestSvc::run()   {
   string dns  = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : host.c_str();
   string out  = m_fifoName;
   string proc = m_partition+"_"+host+m_procName+"00";
+  string main_opts = "-main="+m_mainOpts;
+  string mbm_opts  = "-opt="+m_mbmOpts;
+  string rdr_opts  = "-opt="+m_rdrOpts;
   char num_slaves[32];
   ::snprintf(num_slaves,sizeof(num_slaves),"%d",m_numSlaves);
   const char *mepinit[] = {"libGaudiOnline.so", "OnlineTask",
 			   "-tasktype=LHCb::Class1Task",
 			   "-msgsvc=LHCb::FmcMessageSvc",
 			   "-auto",
-			   "-main=../options/Main.opts",
-			   "-opt=../options/Buffers.opts",0};
+			   main_opts.c_str(),
+			   mbm_opts.c_str(),
+			   0};
   const char *moore[]   = {m_script.c_str(), 
 			   proc.c_str(),
 			   m_mooreVsn.c_str(), 
@@ -617,8 +630,9 @@ StatusCode MooreTestSvc::run()   {
 			   "-tasktype=LHCb::Class1Task",
 			   "-msgsvc=LHCb::FmcMessageSvc",
 			   "-auto",
-			   "-main=../options/Main.opts",
-			   "-opt=../options/Reader.opts",0};
+			   main_opts.c_str(),
+			   rdr_opts.c_str(),
+			   0};
 
   Process::setDebug(true);  
   Process* mepTask = new Process("MEPInit_0",  command(),mepinit,out.c_str());
@@ -639,35 +653,38 @@ StatusCode MooreTestSvc::run()   {
   Process* prodTask=new Process("Prod_0",command(),aprod,out.c_str());
   prodTask->start(true);
 
+  int i;
+  time_t start = time(0);
   if ( m_startDelay > 0 )  {
-    for(int i=0; i<m_startDelay; ++i)    {
-      ::lib_rtl_sleep(1000);
+    for(i=0; i<m_startDelay; ++i)    {
+      for ( int j = 0; j<100; ++j )  {
+	if ( 2 == m_autoRun ) goto Done;
+	::lib_rtl_sleep(10);
+      }
       if ( i>0 && (i%10) == 0 )  {
 	info("+++++ Warming up .....  %d seconds now.....",i);
       }
     }
   }
-  time_t start = time(0);
+  info("+++++ Warming up phase of %d seconds finished. "
+       "Starting the measurement cycle for %d seconds.",m_startDelay,m_duration);
+  start = time(0);   // Restart timer
   init_statistics();
-  for(int i = 0; i < numeric_limits<int>::max(); ++i)  {
+  for(i = 0; m_autoRun != 2 && i < numeric_limits<int>::max(); ++i)  {
     for ( int j = 0; j<100; ++j )  {
-      if ( !m_autoRun ) ::lib_rtl_sleep(m_intervall*10);
-      else if ( m_autoRun && int(time(0) - start) > m_duration ) goto Done;
-      else ::lib_rtl_sleep(m_intervall*10);
+      if ( 2 == m_autoRun ) goto Done;
+      ::lib_rtl_sleep(m_intervall*10);
     }
     update_statistics();
     if ( i > 0 )   {
       print_statistics();
     }
-    if ( !m_autoRun ) continue;
-    if ( m_autoRun && int(time(0) - start) > m_duration )   {
-    Done:
-      info("+++++ The measurement time of %d seconds is reached.",m_duration);
-      info("+++++ We are exiting now after %d measurements",i);
-      break;
-    }
+    if ( m_autoRun == 1 ) continue;
+    else if ( int(time(0) - start) > m_duration ) break;
   }
-
+ Done:
+  info("+++++ The measurement time of %d seconds is reached.",int(time(0) - start));
+  info("+++++ We are exiting now the measurements cycle.",i);
   prodTask->killall();
   monTask->killall();
 

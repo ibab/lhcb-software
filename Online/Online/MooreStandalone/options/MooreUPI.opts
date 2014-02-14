@@ -1,6 +1,5 @@
 #include "../options/MooreTest.opts"
-
-Runable.Auto                = false;
 Runable.MeasurementDuration = 1;
+Runable.Auto                = 1;
 ApplicationMgr.ExtSvc       = { "LHCb::MooreFileMonitor/FileLogger" };
 MessageSvc.LoggerFunction   = "log_write_message";

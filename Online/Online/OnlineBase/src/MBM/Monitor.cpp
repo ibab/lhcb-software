@@ -70,10 +70,10 @@ namespace MBM
 }
 
 Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) :
-    m_bms(0), m_bmid(0), m_bm_all(0), m_buffers(0), m_display(disp)
+  m_bms(0), m_bmid(0), m_bm_all(0), m_buffers(0), m_display(disp), m_updating(false)
+
 {
   m_display->setClient(this);
-  ::lib_rtl_install_printer(print, this);
   rateMode = false;
   LastTime = 0;
   getOptions(argc, argv);
@@ -83,6 +83,8 @@ Monitor::Monitor(int argc, char** argv, MonitorDisplay* disp) :
 Monitor::~Monitor()
 {
   TimeSensor::instance().remove(this);
+  for(int i=0; i<20 && m_updating; ++i)
+    ::lib_rtl_sleep(10);
   if (m_display)
     delete m_display;
 }
@@ -160,16 +162,17 @@ int Monitor::initMonitor()
 
 int Monitor::updateDisplay()
 {
-  if (LastTime == 0)
-  {
-    LastTime = this->myGetTime();
-    get_bm_list();
-    CopyData();
-    drop_bm_list();
-    return 1;
-  }
+  m_updating = true;
   try
   {
+    if (LastTime == 0)      {
+      LastTime = this->myGetTime();
+      get_bm_list();
+      CopyData();
+      drop_bm_list();
+      m_updating = false;
+      return 1;
+    }
     display()->begin_update();
     get_bm_list();
     currentTime = this->myGetTime();
@@ -185,6 +188,7 @@ int Monitor::updateDisplay()
   }
   MonitorDisplay* m_disp = display();
   m_disp->end_update();
+  m_updating = false;
   return 1;
 }
 
