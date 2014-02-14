@@ -50,12 +50,7 @@ def configureHltReportDecoding(trunk) :
     for bank in ["Sel","Dec","Vertex","Track"]:
         for d in decodersForBank(DecoderDB,"Hlt"+bank+"Reports"):
             d.overrideInputs(rawEventLoc)
-            n=[n for n in ["Hlt1","Hlt2"] if n in d.FullName]
-            if len(n):
-                n=n[0]
-            else:
-                n="Hlt"
-            d.overrideOutputs(locationRoot+n+"/"+bank+"Reports")
+            d.overrideOutputs([locationRoot+loc for loc in d.listOutputs()])
 
     #            
     #DataOnDemandSvc().AlgMap[selReportLoc] = selReportsDecoder
