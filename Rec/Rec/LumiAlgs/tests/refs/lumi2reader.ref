@@ -1,13 +1,13 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiReader.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Brunel_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
+# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform/build/REC/REC_HEAD/Rec/LumiAlgs/job/LumiReader.py'
 # applying configuration of LumiReaderConf
 # WARNING: Using default tag head-20110721 for partition DDDB
 # WARNING: Using default tag head-20110614 for partition LHCBCOND
 # WARNING: Using default tag tt-20110126 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v44r9
-                                          running on lxplus0024 on Mon Feb 10 10:17:23 2014
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v2r1)
+                                          running on lxbuild159.cern.ch on Fri Feb 14 05:35:32 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -16,7 +16,7 @@ LumiSeq              INFO Member list: GaudiSequencer/readLumiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.28 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.48 times the speed of a 2.8 GHz Xeon.
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Property update for OutputLevel : new value = 2
 readLumiSeq         DEBUG Initialize base class GaudiCommon<Algorithm>
@@ -71,8 +71,6 @@ readLumiSeq         DEBUG Releasing service 'ApplicationMgr'
 readLumiSeq         DEBUG Releasing service 'JobOptionsSvc'
 readLumiSeq          INFO Member list: createODIN, LoKi::ODINFilter/OdinTriggerTypes, HltLumiSummaryDecoder, GaudiSequencer/filterLumi, LumiFileReader, RawEventDump/InputDump
 readLumiSeq         DEBUG The tool of type 'SequencerTimerTool' has been added with the name 'ToolSvc.SequencerTimerTool'
-ToolSvc.OdinTim...   INFO Using 'DAQ/ODIN' as location of the ODIN object
-ToolSvc.OdinTim...   INFO Using '[Trigger/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
 LoKiSvc           SUCCESS
 
 
@@ -143,9 +141,9 @@ InputDump           DEBUG Property update for OutputLevel : new value = 2
 InputDump           DEBUG Initialize base class GaudiCommon<Algorithm>
 InputDump           DEBUG could not locate CounterSummarySvc, no counter summary will be made
 InputDump           DEBUG List of ALL properties of RawEventDump/InputDump  #properties = 35
-InputDump           DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'DAQ/RawEvent' ]
 InputDump           DEBUG Property ['Name': Value] =  'RawBanks':[  ]
 InputDump           DEBUG Property ['Name': Value] =  'DumpData':True
+InputDump           DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'DAQ/RawEvent' ]
 InputDump           DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 InputDump           DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 InputDump           DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
@@ -178,6 +176,7 @@ InputDump           DEBUG Property ['Name': Value] =  'ErrorCount':0
 InputDump           DEBUG Property ['Name': Value] =  'ErrorMax':1
 InputDump           DEBUG Property ['Name': Value] =  'Enable':True
 InputDump           DEBUG Property ['Name': Value] =  'OutputLevel':2
+InputDump           DEBUG Initialize
 IODataManager       ERROR Referring to existing dataset file:testout.mdf by its physical name.
 IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='file:testout.mdf' SVC='LHCb::MDFSelector' OPT='READ'
@@ -985,6 +984,7 @@ LumiFileReader       INFO Average event size :     4.0 words
 LumiFileReader      DEBUG Finalize base class GaudiAlgorithm
 LumiFileReader      DEBUG Tools to release :
 LumiFileReader      DEBUG Services to release :
+InputDump           DEBUG Finalize
 InputDump           DEBUG Finalize base class GaudiAlgorithm
 InputDump           DEBUG Tools to release :
 InputDump           DEBUG Services to release :
@@ -1019,18 +1019,18 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.28 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.48 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.600 |     0.797 |    0.000       3.8 |      20 |     0.016 |
-ToolSvc.Sequenc...   INFO   createODIN                  |     0.050 |     0.146 |    0.000       1.8 |      20 |     0.003 |
-ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.050 |     0.009 |    0.000       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.014 |    0.000       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.007 |    0.000       0.1 |      20 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.005 |    0.000       0.0 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO readLumiSeq                   |     0.300 |     0.348 |    0.289       1.4 |      20 |     0.007 |
+ToolSvc.Sequenc...   INFO   createODIN                  |     0.100 |     0.049 |    0.021       0.6 |      20 |     0.001 |
+ToolSvc.Sequenc...   INFO   OdinTriggerTypes            |     0.000 |     0.008 |    0.003       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   HltLumiSummaryDecoder       |     0.000 |     0.015 |    0.010       0.1 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO   filterLumi                  |     0.000 |     0.007 |    0.006       0.0 |      20 |     0.000 |
+ToolSvc.Sequenc...   INFO     LumiRandomFilter          |     0.000 |     0.005 |    0.003       0.0 |      20 |     0.000 |
 ToolSvc.Sequenc...   INFO     LumiLowFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.050 |     0.253 |    0.000       1.8 |      20 |     0.005 |
-ToolSvc.Sequenc...   INFO   InputDump                   |     0.250 |     0.358 |    0.000       2.0 |      20 |     0.007 |
+ToolSvc.Sequenc...   INFO   LumiFileReader              |     0.100 |     0.082 |    0.071       0.3 |      20 |     0.002 |
+ToolSvc.Sequenc...   INFO   InputDump                   |     0.100 |     0.177 |    0.166       0.3 |      20 |     0.004 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

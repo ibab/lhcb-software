@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-02-14 - Rob Lambert
+ - Update test references for decoder changes, update to use PRConfig for one test to fix castor: problem
+
 ! 2014-02-10 - Rob Lambert
  - Adapt test to new properties of RawEventDump
 
