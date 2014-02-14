@@ -192,9 +192,15 @@ class DaVinci(LHCbConfigurableUser) :
             analysisinit = AnalysisConf().initSequence()
             initSeqs = [physinit,analysisinit]
         if inputType == 'RDST' :
-            log.info('Setting HltDecReportsDecoder().InputRawEventLocation to "pRec/RawEvent"')
-            from Configurables import HltDecReportsDecoder, ANNDispatchSvc
-            HltDecReportsDecoder().InputRawEventLocation = "pRec/RawEvent"
+            log.info('Setting HltDecReportsDecoders RawEventLocations to ["pRec/RawEvent"]')
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+            for bank in ["Sel","Dec","Vertex","Track"]:
+                for d in decodersForBank(DecoderDB,"Hlt"+dec+"Report"):
+                    d.overrideInputs("pRec/RawEvent")
+                    #d.setup()
+            from Configurables import ANNDispatchSvc
+            
             ANNDispatchSvc().RawEventLocation = "pRec/RawEvent"
 
         return GaudiSequencer('DaVinciEventInitSeq',
