@@ -149,7 +149,7 @@ def uDstConf ( rootInTes        ,
     dod.AlgMap [ reports . Target ] = reports
     
     logger.info  ( "Configure ODIN,Raw,Summary&Reports RootInTES='%s'" % rootInTes )
-    rootInTes + 'DAQ/RawEvent' 
+    rawEventLoc=rootInTes + 'DAQ/RawEvent' 
     from DAQSys.Decoders import DecoderDB
     from DAQSys.DecoderClass import decodersForBank
     for d in decodersForBank(DecoderDB,"L0PU"):
