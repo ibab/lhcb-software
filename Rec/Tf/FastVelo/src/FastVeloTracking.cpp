@@ -1380,28 +1380,30 @@ void FastVeloTracking::makeSpaceTracks( FastVeloTrack& input ) {
         station += stationStep;
         if ( station > 20 ) break;
       }
-      FastVeloTrack temp;
-      temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
-      if ( m_debug ) {
-        info() << "+++ Try with all hits on stations " << s1 << " to " << station
-               << ", minNbPhi " << minNbPhi << endmsg;
-        printTrack( temp );
-      }
-      bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
-      if ( ok ) {
-        //== Overall quality should be good enough...
-        if ( m_maxQFactor < temp.qFactor() ) {
-          if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
-          ok = false;
-        }
-
-        if ( ok ) {  //== Store it.
-          if ( m_debug ) {
-            info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
-            printTrack( temp );
-          }
-          newTracks.push_back( temp );
-        }
+      if( !(all.begin() == all.end()) ){ // skip cases with zero clusters
+	FastVeloTrack temp;
+	temp.setPhiClusters( input, m_cosPhi, m_sinPhi, all.begin(), all.end() );
+	if ( m_debug ) {
+	  info() << "+++ Try with all hits on stations " << s1 << " to " << station
+		 << ", minNbPhi " << minNbPhi << endmsg;
+	  printTrack( temp );
+	}
+	bool ok = temp.removeWorstMultiple( m_maxChi2PerHit, minNbPhi );
+	if ( ok ) {
+	  //== Overall quality should be good enough...
+	  if ( m_maxQFactor < temp.qFactor() ) {
+	    if ( m_debug ) info() << "Rejected , qFactor = " << temp.qFactor() << endreq;
+	    ok = false;
+	  }
+	  
+	  if ( ok ) {  //== Store it.
+	    if ( m_debug ) {
+	      info() << "**** Accepted qFactor : " << temp.qFactor() << " ***" << endmsg;
+	      printTrack( temp );
+	    }
+	    newTracks.push_back( temp );
+	  }
+	}
       }
     }
   }
