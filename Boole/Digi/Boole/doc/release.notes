@@ -14,6 +14,7 @@ Purpose: LHCb Digitization program
      upgrade detector configurations
    . Improve protections for invalid Linker combinations
    . Remove support for VL
+   . Integrate into DecodeRawEvent configurable (task #19106)
 
 - Changes to references to follow changes in underlying packages
 	. Made FT cluster cuts more intuitive and changed values accordingly

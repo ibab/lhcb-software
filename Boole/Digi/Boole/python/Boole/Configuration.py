@@ -7,7 +7,7 @@ __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf,
-                            DigiConf, SimConf, RichDigiSysConf )
+                            DigiConf, SimConf, RichDigiSysConf, DecodeRawEvent )
 
 class Boole(LHCbConfigurableUser):
 
@@ -51,6 +51,7 @@ class Boole(LHCbConfigurableUser):
         ,"FilterSequence"      : []
         ,"EnablePack"          : True
         ,"SiG4EnergyDeposit"   : False
+        ,"SplitRawEventFormat" : None #Where the raw event sits, DAQ/RawEvent!
         }
 
     _propertyDocDct = { 
@@ -92,7 +93,7 @@ class Boole(LHCbConfigurableUser):
     KnownHistOptions   = ["","None","Default","Expert"]
     KnownSpillPaths    = [ "Prev", "PrevPrev", "Next", "NextNext" ]
     
-    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf, RichDigiSysConf ]
+    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf, RichDigiSysConf, DecodeRawEvent ]
 
     __detLinkListDigiConf = []
 
@@ -542,17 +543,14 @@ class Boole(LHCbConfigurableUser):
             self.setOtherProps( L0Conf(), ["DataType"] )
 
             # Force use of DAQ/RawEvent in emulation
-            from Configurables import L0CaloAlg, CaloTriggerAdcsFromRaw, CaloTriggerBitsFromRaw
-            l0Calo = L0CaloAlg("L0Calo")
-            l0Calo.addTool( CaloTriggerAdcsFromRaw, "EcalTriggerAdcTool" )
-            l0Calo.EcalTriggerAdcTool.RawEventLocations = ["DAQ/RawEvent"]
-            l0Calo.addTool( CaloTriggerAdcsFromRaw, "HcalTriggerAdcTool" )
-            l0Calo.HcalTriggerAdcTool.RawEventLocations = ["DAQ/RawEvent"]
-            l0Calo.addTool( CaloTriggerBitsFromRaw, "CaloTriggerBitsFromRaw" )
-            l0Calo.CaloTriggerBitsFromRaw.RawEventLocations = ["DAQ/RawEvent"]
+            #from Configurables import L0CaloAlg, CaloTriggerAdcsFromRaw, CaloTriggerBitsFromRaw
+            from DAQSys.Decoders import DecoderDB
+            l0Calo = DecoderDB["L0CaloAlg/L0Calo"]
+            l0Calo.Active=True
+            l0Calo.setup()
         else:
             raise RuntimeError("TAE not implemented for L0")
-                
+        
 
     def configureFilter(self):
         """
@@ -587,21 +585,19 @@ class Boole(LHCbConfigurableUser):
 
         if "Velo" in linkDets:
             seq = GaudiSequencer("LinkVeloSeq")
-            from Configurables import DecodeVeloRawBuffer
-            decodeVelo = DecodeVeloRawBuffer()
-            decodeVelo.DecodeToVeloClusters     = True
-            decodeVelo.DecodeToVeloLiteClusters = False
-            decodeVelo.RawEventLocations = ["DAQ/RawEvent"]
+            from DAQSys.Decoders import DecoderDB
+            #from Configurables import DecodeVeloRawBuffer
+            decodeVelo = DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].setup()
             seq.Members += [ decodeVelo ]
             seq.Members += [ "VeloCluster2MCHitLinker" ]
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
-
+        
         if "VP" in linkDets:
             from Configurables import VPDigitLinker, VPClusterLinker
             seq = GaudiSequencer("LinkVPSeq")
             seq.Members += [VPDigitLinker()]
             seq.Members += [VPClusterLinker()]
-
+        
         if (det for det in ["TT", "IT", "UT"] if det in linkDets):
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
             if "TT" in linkDets:
@@ -669,22 +665,22 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
         if "Calo" in linkDets:
-            from Configurables import CaloDigitsFromRaw, CaloEnergyFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
+            from Configurables import CaloReCreateMCLinks, CaloDigitMCTruth
             seq = GaudiSequencer("LinkCaloSeq")
-            ecalDecoder = CaloDigitsFromRaw("EcalFromRaw")
-            ecalDecoder.addTool( CaloEnergyFromRaw("EcalFromRawTool" ))
-            ecalDecoder.EcalFromRawTool.RawEventLocations = [ "DAQ/RawEvent" ]
-            seq.Members += [ ecalDecoder ]
-            hcalDecoder = CaloDigitsFromRaw("HcalFromRaw")
-            hcalDecoder.addTool( CaloEnergyFromRaw("HcalFromRawTool" ))
-            hcalDecoder.HcalFromRawTool.RawEventLocations = [ "DAQ/RawEvent" ]
-            seq.Members += [ hcalDecoder ]
+            from DAQSys.Decoders import DecoderDB as ddb
+            from DAQSys.DecoderClass import decodersForBank
+            ecalDecoders = [d.setup() for d in decodersForBank(ddb,"EcalE") if "Trigger" not in d.FullName and "L0" not in d.FullName]
+            seq.Members += ecalDecoders
+            hcalDecoders = [d.setup() for d in decodersForBank(ddb,"HcalE")if "Trigger" not in d.FullName and "L0" not in d.FullName]
+            seq.Members += hcalDecoders
             recreateLinks = CaloReCreateMCLinks()
+            #note that these are defined in the C++ of the decoders, basically impossible to overwrite here
             recreateLinks.Digits   = ["Raw/Ecal/Digits", "Raw/Hcal/Digits" ]
             recreateLinks.MCDigits = ["MC/Ecal/Digits",  "MC/Hcal/Digits" ]
             seq.Members += [ recreateLinks ]
             seq.Members += [ CaloDigitMCTruth("EcalDigitMCTruth") ]
             hcalTruth = CaloDigitMCTruth("HcalDigitMCTruth")
+            #note that these are defined in the C++ of the decoders, basically impossible to overwrite here
             hcalTruth.Input = "Raw/Hcal/Digits"
             hcalTruth.Detector = "/dd/Structure/LHCb/DownstreamRegion/Hcal"
             seq.Members += [ hcalTruth ]
@@ -873,7 +869,18 @@ class Boole(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
-
+    def configureDecoders(self):
+        "Configure decoders in case they are needed in the monitoring"
+        #monitoring and linking needs decoders, but not on demand
+        if not DecodeRawEvent().isPropertySet("OverrideInputs"):
+            v=0.0
+            if self.isPropertySet("SplitRawEventFormat") and self.getProp("SplitRawEventFormat") is not None:
+                v=self.getProp("SplitRawEventFormat")
+            DecodeRawEvent().setProp("OverrideInputs",v)
+        if not DecodeRawEvent().isPropertySet("EvtClockBank"):
+            DecodeRawEvent().setProp("EvtClockBank","")
+        
+    
     def configureMoni(self,moniDets):
         # Set up monitoring
         histOpt = self.getProp("Histograms").capitalize()
@@ -980,16 +987,15 @@ class Boole(LHCbConfigurableUser):
             from Configurables import MCOTDepositMonitor
             GaudiSequencer("MoniOTSeq").Members += [ MCOTDepositMonitor() ]
             if histOpt == "Expert":
-                from Configurables import OTRawBankDecoder
-                OTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
                 importOptions("$OTMONITORROOT/options/Boole.opts")
 
         if "FT" in moniDets:
             from Configurables import MCFTDepositMonitor
             GaudiSequencer("MoniFTSeq").Members += ["MCFTDepositMonitor"]
-            if histOpt == "Expert":
-                from Configurables import FTRawBankDecoder
-                FTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
+            # not needed!
+            #if histOpt == "Expert":
+            #    from Configurables import FTRawBankDecoder
+            #    FTRawBankDecoder().RawEventLocations = ["DAQ/RawEvent"]
 
         if "Rich" in moniDets:
             from Configurables import Rich__MC__Digi__DigitQC
@@ -1034,6 +1040,7 @@ class Boole(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.defineDB()
         self.setLHCbAppDetectors()
+        self.configureDecoders()
         self.defineEvents()
         self.configurePhases()
         self.defineOutput()
