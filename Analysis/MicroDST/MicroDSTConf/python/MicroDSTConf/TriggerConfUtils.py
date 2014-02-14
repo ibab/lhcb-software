@@ -39,8 +39,8 @@ def configureHltReportDecoding(trunk) :
     name = trunkName(trunk)
  
     rawEventLoc  = locationRoot + "DAQ/RawEvent"
-    decReportLoc = locationRoot + "Hlt/DecReports"
-    selReportLoc = locationRoot + "Hlt/SelReports"
+    #decReportLoc = locationRoot + "Hlt/DecReports"
+    #selReportLoc = locationRoot + "Hlt/SelReports"
  
     ANNDispatchSvc().RawEventLocation = rawEventLoc
     ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc(),
