@@ -542,5 +542,9 @@ double AdaptivePVReFitter::getNewWeight( const double x,
 
   const double T = ( i<tsize ? m_temperatures[i] : m_temperatures[tsize-1] );
 
-  return 1.0/(1.0+std::exp((x-m_criticalPoint)/2./T));
+  const double _e = (x-m_criticalPoint)/2./T;
+
+  return ( _e >  500 ? 0.0 :
+           _e < -500 ? 1.0 :
+           1.0/(1.0+std::exp(_e)) );
 }

@@ -4,6 +4,12 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2014-02-14 - Chris Jones
+ - Add a Warning message to OfflineVertexFitter to monitor how often fits
+   are performed that create vertices with nDoF=0 ...
+ - Add protection to AdaptivePVRefitter to protect against over/under flows
+   in std::exp(...) for large exponents. Fixes an FPE exception.
+
 ! 2013-12-19 - Chris Jones
  - Add a warning message when a fit is failed due to the 
    'mass error squared < -999' check.
