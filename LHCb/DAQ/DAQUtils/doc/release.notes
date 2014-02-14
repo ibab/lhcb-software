@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2014-02-14 - Rob Lambert
+ - Bank killer should not kill banks it was not asked explicitly to kill!
+
 ! 2014-02-11 - Rob Lambert
  - Assimilate Decoder baseclass for task #49078 into RawEventDump
 

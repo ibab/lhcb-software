@@ -17,16 +17,19 @@ DECLARE_ALGORITHM_FACTORY( bankKiller )
 // Standard creator, initializes variables
 //=============================================================================
 bankKiller::bankKiller( const std::string& name, ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm       ( name , pSvcLocator            )
+  : Decoder::AlgBase       ( name , pSvcLocator            )
   , m_bankTypes()
   , m_rawEvt(0)
 {
-  declareProperty( "RawEventLocations", m_rawEventLocations,
-                   "List of possible locations of the RawEvent object in the"
-                   " transient store. By default it is LHCb::RawEventLocation::Default");
+  m_rawEventLocations={LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
   declareProperty("BankTypes"     , m_bankTypes, "List of bank names"    ) ;
+  declareProperty("KillFromAll" , m_killFromAll = false, 
+                  "Main behaviour switch. If false (default), kill only banks in the first location found in the search string. If false, kill *all* banks found in the search string." ) ;
   declareProperty("DefaultIsKill" , m_defaultIsKill = false, 
                   "Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks." ) ;
+  
 
 }
 
@@ -40,7 +43,7 @@ bankKiller::~bankKiller() {}
 //=============================================================================
 StatusCode bankKiller::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = Decoder::AlgBase::initialize();
   if( sc.isFailure() ) return sc;
   
   if( m_defaultIsKill ) {
@@ -59,18 +62,18 @@ StatusCode bankKiller::initialize() {
       always() << "bankKiller : all banks of type '" << *ityp << "' will be removed." <<endmsg;
     }
   }
+  if (m_rawEventLocations.empty()) return Error("You didn't give me a list of RawEventLocations to look through",StatusCode::FAILURE);
 
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = m_rawEventLocations.empty();
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the default to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  if (m_killFromAll) 
+  {
+    
+    info() << "Killing banks from everything in '" << m_rawEventLocations <<"'" << endmsg;
   }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  else if (m_rawEventLocations.size()!=1  or m_rawEventLocations[0]!=LHCb::RawEventLocation::Default)
+  {
+    info() << "Killing banks from first raw event in '" << m_rawEventLocations <<"'" << endmsg;
   }
+  
   
   return StatusCode::SUCCESS;
 }
@@ -81,11 +84,30 @@ StatusCode bankKiller::initialize() {
 StatusCode bankKiller::execute() {
 
   m_rawEvt = NULL;
-  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
-    m_rawEvt = getIfExists<LHCb::RawEvent>(*p);
-    if( m_rawEvt != NULL ) break;
+  if (!m_killFromAll)
+  {
+    m_rawEvt = findFirstRawEvent();
+    if( m_rawEvt == NULL ) return Error("Failed to find raw data");
+    auto sc=killFromRawEvent();
+    return sc;
   }
-  if( m_rawEvt == NULL ) return Error("Failed to find raw data");
+  
+  for (auto loc : m_rawEventLocations) 
+  {
+    m_rawEvt = tryEventAt(loc);
+    if( m_rawEvt != NULL ) 
+    {
+      auto sc=killFromRawEvent();
+      if (sc.isFailure()) return sc;
+    }
+    
+  }
+  return StatusCode::SUCCESS;
+  
+}
+
+StatusCode  bankKiller::killFromRawEvent()
+{
 
   if( m_defaultIsKill ) {
     for( unsigned int ibank = 0 ; ibank < (unsigned int) LHCb::RawBank::LastType ; ++ibank){

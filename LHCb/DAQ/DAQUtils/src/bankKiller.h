@@ -8,6 +8,7 @@
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 // from Event
 #include "Event/RawEvent.h"
 
@@ -23,7 +24,7 @@
  *    @date:   O6 Septembre 2006
  */
 
-class bankKiller : public GaudiAlgorithm { 
+class bankKiller : public Decoder::AlgBase { 
   friend class AlgFactory<bankKiller>;
  public:
   
@@ -39,13 +40,16 @@ class bankKiller : public GaudiAlgorithm {
   void  killBankType( LHCb::RawBank::BankType bankType, 
 		      bool warningmsg ); 
   
+  ///. kill all banks with the current m_rawEvent
+  StatusCode  killFromRawEvent( ); 
+  
  private:   
-  /// List of locations to search for the RawEvent where banks to be killed reside.
-  std::vector<std::string> m_rawEventLocations;
-
+  
   std::vector< std::string > m_bankTypes;  ///< List of bank names
   /// Main behaviour switch. If false (default), kill only given banks. If true, kill all BUT given banks.
   bool m_defaultIsKill ;                   
   LHCb::RawEvent* m_rawEvt;
+  //kill from all raw event locations, or just from the first one?
+  bool m_killFromAll ;   
 };
 #endif //    BANKKILLER_H

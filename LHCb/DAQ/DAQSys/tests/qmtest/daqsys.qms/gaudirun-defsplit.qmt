@@ -21,7 +21,7 @@ if len(warnlines):
     result["daqsys.gaudirun.warnlines"]=result.Quote("\n\t".join(warnlines))
 
 #check there are no info messages which are not useful!
-infolines=[l for l in stdout.split('\n') if ("INFO" in l) and ("/RawEvent") in l and "L0Emu" not in l]
+infolines=[l for l in stdout.split('\n') if ("INFO" in l) and ("/RawEvent") in l]# and "L0Emu" not in l]
 
 if len(infolines):
     causes.append("Useless info from default configuration found")
