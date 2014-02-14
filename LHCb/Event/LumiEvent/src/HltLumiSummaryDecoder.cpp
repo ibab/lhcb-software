@@ -21,10 +21,12 @@ DECLARE_ALGORITHM_FACTORY( HltLumiSummaryDecoder )
 //=============================================================================
 HltLumiSummaryDecoder::HltLumiSummaryDecoder( const std::string& name,
 					      ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : Decoder::AlgBase ( name , pSvcLocator )
   , m_totDataSize(0), m_nbEvents(0)
 {
-  declareProperty( "RawEventLocation"    , m_rawEventLocation    = LHCb::RawEventLocation::Default );
+  m_rawEventLocations={LHCb::RawEventLocation::Trigger,LHCb::RawEventLocation::Default};
+  initRawEventSearch();
+  
   declareProperty( "OutputContainerName" , m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
@@ -39,7 +41,7 @@ HltLumiSummaryDecoder::~HltLumiSummaryDecoder() {}
 //=============================================================================
 StatusCode HltLumiSummaryDecoder::initialize()
 {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
@@ -76,7 +78,7 @@ StatusCode HltLumiSummaryDecoder::execute() {
   
   // Retrieve the RawEvent:
   // get data container
-  RawEvent* event = getIfExists<RawEvent>(m_rawEventLocation);
+  RawEvent* event = findFirstRawEvent();
   if( NULL == event ){
     return Warning("RawEvent cannot be loaded",StatusCode::FAILURE);
   }

@@ -4,6 +4,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "DAQKernel/DecoderAlgBase.h"
 // std
 #include <string>
 
@@ -16,7 +17,7 @@
  *  @date   2008-08-01
  */
 
-class HltLumiSummaryDecoder : public GaudiAlgorithm {
+class HltLumiSummaryDecoder : public Decoder::AlgBase {
 public: 
   /// Standard constructor
   HltLumiSummaryDecoder(  const std::string& name, ISvcLocator* pSvcLocator );
@@ -32,7 +33,6 @@ protected:
   
 private:
   // data
-  std::string m_rawEventLocation;           ///< Location where we get the RawEvent
   std::string m_OutputContainerName;
 
   // Statistics  

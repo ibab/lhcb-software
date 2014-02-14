@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(DAQSys v7r3)
 
-gaudi_depends_on_subdirs(Calo/CaloDAQ
+gaudi_depends_on_subdirs(Event/LumiEvent
+			 Calo/CaloDAQ
                          L0/L0Calo
                          L0/L0DU
                          L0/L0Muon

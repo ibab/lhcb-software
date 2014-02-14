@@ -80,13 +80,6 @@ StatusCode STDecodingBaseAlg::initialize() {
   if (sc.isFailure()) return sc;
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> initialize " << endmsg;
 
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = (
-                               m_rawEventLocation.empty() && (m_rawEventLocations[0]==LHCb::RawEventLocation::Default ||
-                               (m_rawEventLocations.size()==2 && 
-                                m_rawEventLocations[0]==LHCb::RawEventLocation::Other &&
-                                m_rawEventLocations[0]==LHCb::RawEventLocation::Default)
-                                                              ) );
   if (! m_rawEventLocation.empty()) {
     warning() << "The rawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
     m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
@@ -99,6 +92,14 @@ StatusCode STDecodingBaseAlg::initialize() {
     m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
   }
 
+  // Initialise the RawEvent locations
+  bool usingDefaultLocation = true;
+  //if (!m_rawEventLocation.empty()) usingDefaultLocation=false;
+  if (m_rawEventLocations.size()>2 || m_rawEventLocations.empty()) usingDefaultLocation=false;
+  if (m_rawEventLocations.size()>0 
+      && m_rawEventLocations[0]!=LHCb::RawEventLocation::Other 
+      && m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) usingDefaultLocation=false;
+  
   if (!usingDefaultLocation) {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }

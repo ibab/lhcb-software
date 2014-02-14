@@ -4,7 +4,7 @@ from Configurables import GaudiSequencer
 from Configurables import EventClockSvc
 
 LHCbApp()
-EventClockSvc(EventTimeDecoder = "OdinTimeDecoder")
+#EventClockSvc(EventTimeDecoder = "OdinTimeDecoder")
 
 mySeq=GaudiSequencer("Decoding")
 mySeq.OutputLevel=VERBOSE

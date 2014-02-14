@@ -327,7 +327,7 @@ Decoder("HltRoutingBitsFilter",
 
 Decoder("HltLumiSummaryDecoder",
         active=True, banks=["HltLumiSummary"],
-        inputs={"RawEventLocation":None},
+        inputs={"RawEventLocations":None},
         outputs={"OutputContainerName":None},
         conf=DecoderDB)
 

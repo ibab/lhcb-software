@@ -5,6 +5,7 @@ branches doc cmt python tests
 
 # LHCb DAQ buffer libraries
 
+use LumiEvent   v*  Event
 use CaloDAQ     v*  Calo
 use L0Calo      v*  L0
 use L0DU        v*  L0

@@ -14,6 +14,7 @@ use   DAQEvent        v* Event
 use   EventBase       v* Event
 use   LHCbKernel      v* Kernel
 use   GaudiAlg        v*
+use   DAQKernel       v* DAQ
 use   GaudiKernel     v*
 private
 use GaudiObjDesc      v* -no_auto_imports

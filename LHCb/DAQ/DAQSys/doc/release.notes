@@ -5,10 +5,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-14 - Rob Lambert
+ - LumiEvent changes for task #49078 reflected in DecoderDB
+ - Suppress printout for STDAQ and reflect this in the tests
+
+! 2014-02-14 - Rob Lambert
  - Add L0Calo to DecoderDB, used in Boole, or maybe also in L0Emulation?
 
 ! 2014-02-13 - Rob Lambert
- - Add to test that info/warnings should not be printed from teh default configuration
+ - Add to test that info/warnings should not be printed from the default configuration
 
 ! 2014-02-13 - Rob Lambert
  - Fix bug in FTDAQ, it always thought it was writing to a completely different location! This is a good reason to homogenize further with the output locations.
