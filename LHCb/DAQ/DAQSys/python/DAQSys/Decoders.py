@@ -242,10 +242,39 @@ Decoder("L0DUFromRawAlg/L0DUFromRaw",
         outputs={"L0DUReportLocation": None, "ProcessorDataLocation": None},
         conf=DecoderDB)
 
+#this is new, really I should let the banks be determined from the sum of lower banks so that I could in the future split up the calo banks
 Decoder("L0DUFromRawTool",
         active=False,
+        banks=['EcalE','EcalTrig','EcalPacked','EcalPackedError',
+               'HcalE','HcalTrig','HcalPacked','HcalPackedError',
+               "PrsE",'PrsTrig',"PrsPacked"],
         inputs={"RawEventLocations" : None},
         conf=DecoderDB)
+
+Decoder("L0CaloAlg/L0Calo",
+        active=False, #false by default, does not run usually, only in Boole?
+        privateTools=["CaloTriggerAdcsFromRaw/EcalTriggerAdcTool","CaloTriggerAdcsFromRaw/HcalTriggerAdcTool","CaloTriggerBitsFromRaw"],
+        conf=DecoderDB)
+
+Decoder("CaloTriggerAdcsFromRaw/EcalTriggerAdcTool",
+        active=False,
+        banks=['EcalE','EcalTrig','EcalPacked','EcalPackedError'],
+        inputs={"RawEventLocations":None},
+        conf=DecoderDB)
+
+Decoder("CaloTriggerAdcsFromRaw/HcalTriggerAdcTool",
+        active=False,
+        banks=['HcalE','HcalTrig','HcalPacked','HcalPackedError'],
+        inputs={"RawEventLocations":None},
+        conf=DecoderDB)
+
+Decoder("CaloTriggerBitsFromRaw",
+        active=False,
+        banks=["PrsE",'PrsTrig',"PrsPacked"],
+        inputs={"RawEventLocations":None},
+        conf=DecoderDB)
+
+        
 
 #TRIGGER ==========HLT===========
 

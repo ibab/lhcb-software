@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-02-14 - Rob Lambert
+ - Add L0Calo to DecoderDB, used in Boole, or maybe also in L0Emulation?
+
 ! 2014-02-13 - Rob Lambert
  - Add to test that info/warnings should not be printed from teh default configuration
 

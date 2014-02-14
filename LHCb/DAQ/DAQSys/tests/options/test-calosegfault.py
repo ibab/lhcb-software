@@ -18,7 +18,9 @@ for k,v in ddb.iteritems():
 
 for b in ["PrsE", "EcalE", "HcalE", "ODIN"]:
     for d in decodersForBank(ddb,b,ignoreActive=True,addRequired=True):
-        d.Active=True
+        #avoid L0CaloAlg tools!
+        if "Trigger" not in d.FullName and "L0" not in d.FullName:
+            d.Active=True
 
 #configure L0TCKs
 importOptions('$L0TCK/L0DUConfig.opts')
