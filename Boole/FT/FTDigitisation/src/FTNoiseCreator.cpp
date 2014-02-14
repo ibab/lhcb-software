@@ -402,7 +402,7 @@ StatusCode FTNoiseCreator::execute() {
     ++addOK;
   }
   std::stable_sort( mcDigitsCont->begin(), mcDigitsCont->end(), LHCb::MCFTDigit::lowerByChannelID );
-  info() << "Succesfully added " << addOK << " noise hits to event (" << addFailed << " failed)" << endmsg;
+  //info() << "Succesfully added " << addOK << " noise hits to event (" << addFailed << " failed)" << endmsg;
   debug() << "mcDigitsCont size after noise: " << mcDigitsCont->size() << endmsg;
 
 

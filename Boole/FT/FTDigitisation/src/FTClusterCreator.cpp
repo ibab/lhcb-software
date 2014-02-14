@@ -48,6 +48,7 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks, ~2.5 pe.");
   declareProperty("SplitPrevNextMoni" , m_splitPrevNextMoni = 0 , "In case of spillover, make split Prev/Next plots");
   declareProperty("RemoveITRegion"    , m_removeITRegion    = 0 , "0 = keep all clusters, 1 = remove IT region, 2 = keep only IT region");
+  declareProperty("ITScale"           , m_ITScale           = 1 , "Scale of IT to be removed / kept (only relevant if RemoveITRegion)");
 
 
   m_nberOfLostHitFromMap = 0;
@@ -99,8 +100,8 @@ StatusCode FTClusterCreator::execute() {
   const MCHits* mcHitsNext = 0;
   const MCHits* mcHitsPrev = 0;
   if( m_splitPrevNextMoni ) {
-    mcHitsNext = get<MCHits>("/Event/Next/MC/FT/Hits");
-    mcHitsPrev = get<MCHits>("/Event/Prev/MC/FT/Hits");
+    mcHitsNext = getIfExists<MCHits>("/Event/Next/MC/FT/Hits");
+    mcHitsPrev = getIfExists<MCHits>("/Event/Prev/MC/FT/Hits");
   } 
 
   // define clusters container
@@ -369,16 +370,47 @@ StatusCode FTClusterCreator::execute() {
             }
           }
 
-          // Add cluster to container
-          float ITXcen = 26.45*10., ITXmax = 62.1*10., ITYcen = 10.9*10., ITYmax = 20.7*10.;
-          float hitX = largestHit -> midPoint().x();
-          float hitY = largestHit -> midPoint().y();
-          bool  hitInIT = ( ( hitX < ITXmax && hitX > -ITXmax && hitY < ITYcen && hitY > -ITYcen) ||
-                            ( hitX < ITXcen && hitX > -ITXcen && hitY < ITYmax && hitY > -ITYmax) );
-          if( m_removeITRegion == 0 ||
-            ( m_removeITRegion == 1 && !hitInIT ) ||
-            ( m_removeITRegion == 2 &&  hitInIT ) ) {
-            // if not removing IT region, or xy is NOT in IT region
+          
+          bool acceptCluster = 1;
+          if( m_removeITRegion != 0 ) {
+            float ITXmin = 99.  , ITYmin = 99. ;
+            float ITXcen = 264.5, ITXmax = 621.;
+            float ITYcen = 109. , ITYmax = 207.;
+            float ITXwMin = ITXmin + (ITXcen - ITXmin) * m_ITScale;
+            float ITXwMax = ITXmin + (ITXmax - ITXmin) * m_ITScale;
+            float ITYwMin = ITYmin + (ITYcen - ITYmin) * m_ITScale;
+            float ITYwMax = ITYmin + (ITYmax - ITYmin) * m_ITScale;
+            //float FTZmin = 8360.-10., FTZmax = 8725.+10.;
+            float hitX, hitY, hitZ;
+            //const int particleKey = largestHit -> mcParticle() -> key();
+            //for( MCHits::const_iterator iterHit = mcHits -> begin(); iterHit != mcHits -> end(); ++iterHit ) {
+              // loop over all MCHits in event
+              //MCHit* cHit = *iterHit;
+              const MCHit* cHit = largestHit;  // avoid loop over all MCHits, just look at current cluster pos
+              //if( cHit -> mcParticle() -> key() == particleKey ) {
+                // if this MCHit has the same MCParticle origin as the Cluster MCHit under consideration
+                hitX = cHit -> midPoint().x();
+                hitY = cHit -> midPoint().y();
+                hitZ = cHit -> midPoint().z();
+                //if( hitZ > FTZmin && hitZ < FTZmax ) {
+                  // if this MCHit is in T2
+                  bool  hitInIT = ( ( hitX < ITXwMax && hitX > -ITXwMax && hitY < ITYwMin && hitY > -ITYwMin) ||
+                                    ( hitX < ITXwMin && hitX > -ITXwMin && hitY < ITYwMax && hitY > -ITYwMax) );
+                  if ( ( m_removeITRegion == 1 &&  hitInIT ) ||
+                       ( m_removeITRegion == 2 && !hitInIT ) ) {
+                    // if this hit is (or isn't) in the T2 IT region
+                    acceptCluster = 0;
+                    plot2D( largestHit->midPoint().x(), largestHit->midPoint().y(),
+                        "MCCluster_rejected","Rejected MCClusters; x [mm]; y [mm]",
+                        -3000, 3000, -2500, 2500, 200, 200 );
+                  }
+                  //break; // only look at first MCHit in T2
+                //}
+              //} // end of if MCParticle ID matches
+            //} // end of MCHit loop
+          } // end of if removeITRegion
+
+          if ( acceptCluster ) {
             clusterCont -> insert(newCluster);
 
 
@@ -398,21 +430,21 @@ StatusCode FTClusterCreator::execute() {
             //info() << largestHit -> parent() -> name() << endmsg;
             if( largestHit -> parent() == mcHits ) {
               // is no spillover
-              plot( largestHit -> midPoint().x(), "MCCluster_x_position", "MC Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
-              plot( largestHit -> midPoint().y(), "MCCluster_y_position", "MC Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot( largestHit -> midPoint().x(), "MCCluster_x_position", "MC Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot( largestHit -> midPoint().y(), "MCCluster_y_position", "MC Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
               plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
                   "MCCluster_xy_position", "MC Cluster xy position ; x [mm]; y[mm]",
-                  -3500,3500,200, -3000,3000,200);
+                  -3000,3000,-2500,2500,200,200);
               plot(newCluster->size(),"MCClusSize","MC Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
               plot(newCluster->charge(),"MCClusCharge","MC Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
               plot(newCluster->channelID().sipmId(), "MCClusSiPMID", "MC Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
             } else {
               // is spillover
-              plot( largestHit -> midPoint().x(), "SpilloverCluster_x_position", "Spillover Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
-              plot( largestHit -> midPoint().y(), "SpilloverCluster_y_position", "Spillover Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot( largestHit -> midPoint().x(), "SpilloverCluster_x_position", "Spillover Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
+              plot( largestHit -> midPoint().y(), "SpilloverCluster_y_position", "Spillover Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
               plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
                   "SpilloverCluster_xy_position", "Spillover Cluster xy position ; x [mm]; y[mm]",
-                  -3500,3500,200, -3000,3000,200);
+                  -3000,3000,-2500,2500,200,200);
               plot(newCluster->size(),"SpilloverClusSize","Spillover Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
               plot(newCluster->charge(),"SpilloverClusCharge","Spillover Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
               plot(newCluster->channelID().sipmId(), "SpilloverClusSiPMID", "Spillover Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
@@ -424,32 +456,32 @@ StatusCode FTClusterCreator::execute() {
                   break;
                 }
                 if ( largestHit -> parent() == mcHitsNext ) {
-                  plot( largestHit -> midPoint().x(), "SpillNextCluster_x_position", "SpillNext Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
-                  plot( largestHit -> midPoint().y(), "SpillNextCluster_y_position", "SpillNext Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot( largestHit -> midPoint().x(), "SpillNextCluster_x_position", "SpillNext Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot( largestHit -> midPoint().y(), "SpillNextCluster_y_position", "SpillNext Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
                   plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
                       "SpillNextCluster_xy_position", "SpillNext Cluster xy position ; x [mm]; y[mm]",
-                      -3500,3500,200, -3000,3000,200);
+                      -3000,3000, -2500,2500,200,200);
                   plot(newCluster->size(),"SpillNextClusSize","SpillNext Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
                   plot(newCluster->charge(),"SpillNextClusCharge","SpillNext Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
                   plot(newCluster->channelID().sipmId(), "SpillNextClusSiPMID", "SpillNext Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
                 }
                 if ( largestHit -> parent() == mcHitsPrev ) {
-                  plot( largestHit -> midPoint().x(), "SpillPrevCluster_x_position", "SpillPrev Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
-                  plot( largestHit -> midPoint().y(), "SpillPrevCluster_y_position", "SpillPrev Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot( largestHit -> midPoint().x(), "SpillPrevCluster_x_position", "SpillPrev Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3000,3000,200 ); 
+                  plot( largestHit -> midPoint().y(), "SpillPrevCluster_y_position", "SpillPrev Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-2500,2500,200 ); 
                   plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
                       "SpillPrevCluster_xy_position", "SpillPrev Cluster xy position ; x [mm]; y[mm]",
-                      -3500,3500,200, -3000,3000,200);
+                      -3000,3000, -2500,2500,200,200);
                   plot(newCluster->size(),"SpillPrevClusSize","SpillPrev Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
                   plot(newCluster->charge(),"SpillPrevClusCharge","SpillPrev Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
                   plot(newCluster->channelID().sipmId(), "SpillPrevClusSiPMID", "SpillPrev Cluster SiPMID; Cluster SiPMID" , 0. , 96. ,96);
                 }
-              }
-            } 
+              } // end of split Prev/Next monitoring
+            } // end of IS spillover 
 
-          } // end of if add the non-noise cluster to container
+          } // end of if accept cluster
 
 
-        } else {
+        } else { // end of if cluster is NO noise cluster
           // no MCHit contributions --> noise cluster
           clusterCont -> insert(newCluster);
           plot(newCluster->size(),"NoiseClusSize","Noise Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
