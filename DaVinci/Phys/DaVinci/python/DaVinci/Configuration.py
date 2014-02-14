@@ -196,7 +196,7 @@ class DaVinci(LHCbConfigurableUser) :
             from DAQSys.Decoders import DecoderDB
             from DAQSys.DecoderClass import decodersForBank
             for bank in ["Sel","Dec","Vertex","Track"]:
-                for d in decodersForBank(DecoderDB,"Hlt"+bank+"Report"):
+                for d in decodersForBank(DecoderDB,"Hlt"+bank+"Reports"):
                     d.overrideInputs("pRec/RawEvent")
                     #d.setup()
             from Configurables import ANNDispatchSvc
