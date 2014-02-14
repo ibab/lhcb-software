@@ -31,7 +31,7 @@ def configureHltReportDecoding(trunk) :
     Fetches DAQ/RawEvent from trunk+DAQ/RawEvent, places reports in trunk + Hlt/DecReports and trunk + Hlt/SelReports respectively. Action is on-demand via the DataOnDemandSvs.
     """
     
-    from Configurables import (ANNDispatchSvc)
+    from Configurables import ANNDispatchSvc
     locationRoot = fixTrunk(trunk)
 
     name = trunkName(trunk)
