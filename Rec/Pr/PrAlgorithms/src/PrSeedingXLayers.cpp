@@ -616,8 +616,12 @@ bool PrSeedingXLayers::fitTrack( PrSeedTrack& track ) {
     float d2 = sdz * sz2 - sz * sdz2;
 
     float den = (b1 * c2 - b2 * c1 );
+    if(fabs(den) < 1e-10) return false;
+    
     float db  = (d1 * c2 - d2 * c1 ) / den;
     float dc  = (d2 * b1 - d1 * b2 ) / den;
+    
+    
     float da  = ( sd - db * sz - dc * sz2 ) / s0;
 
     float day = 0.;

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-14 - Michel De Cian
+ - Update in PrSeedingXLayers, to represent code used for TDR. 
+
+! 2014-02-14 - Michel De Cian
  - Remove PrAddUTCoord, was replaced by PrAddUTHitsTool some time ago.
 
 ! 2014-02-13 - Thomas Nikodem
