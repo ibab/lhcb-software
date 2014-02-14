@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-boole-v19r8-2009-mdf'].run(withDB=False); Brunel().InputType="MDF"; Brunel().DataType="2009"; Brunel().Simulation=True; from Configurables import CondDB; CondDB().LocalTags['SIMCOND']=['simpatch-20100827'];</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20100826"; LHCbApp().CondDBtag="sim-20100831-vc-md100"; from PRConfig import TestFileDB; TestFileDB.test_file_db['brunel.fixedfile-boole-v19r8-2009-mdf'].run(withDB=False); Brunel().InputType="MDF"; Brunel().DataType="2009"; Brunel().Simulation=True; from Configurables import CondDB; CondDB().LocalTags['SIMCOND']=['simpatch-20100827'];</text>
   </set></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
