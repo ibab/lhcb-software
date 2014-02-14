@@ -45,18 +45,16 @@ def configureHltReportDecoding(trunk) :
     ANNDispatchSvc().RawEventLocation = rawEventLoc
     ApplicationMgr().ExtSvc +=  [ DataOnDemandSvc(),
                                   ANNDispatchSvc() ]
- 
-    decReportsDecoder = HltDecReportsDecoder( name = "HltDecReportsDecoder"+name,
-                                              InputRawEventLocation = rawEventLoc,
-                                              OutputHltDecReportsLocation = decReportLoc)
-    selReportsDecoder = HltSelReportsDecoder( name = "HltSelReportsDecoder"+name,
-                                              InputRawEventLocation = rawEventLoc,
-                                              OutputHltSelReportsLocation = selReportLoc,
-                                              HltDecReportsLocation = decReportLoc
-                                              )
- 
-    DataOnDemandSvc().AlgMap[selReportLoc] = selReportsDecoder
-    DataOnDemandSvc().AlgMap[decReportLoc] = decReportsDecoder
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    for bank in ["Sel","Dec","Vertex","Track"]:
+        for d in decodersForBank(DecoderDB,"Hlt"+bank+"Reports"):
+            d.overrideInputs(rawEventLoc)
+            d.overrideOutputs(locationRoot+"Hlt/"+bank+"Reports"):
+
+    #            
+    #DataOnDemandSvc().AlgMap[selReportLoc] = selReportsDecoder
+    #DataOnDemandSvc().AlgMap[decReportLoc] = decReportsDecoder
 
 def configureL0ReportDecoding(trunk) :
     """
