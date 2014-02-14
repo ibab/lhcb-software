@@ -269,8 +269,11 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
 
   double prodx = part->originVertex()->position().X();
   double prody = part->originVertex()->position().Y();
-  double docaz = std::abs(1./part->momentum().Pt()*(prodx*part->momentum().Py() - prody*part->momentum().Px()));
-
+  double docaz = -100.0;
+  if( part->momentum().Pt() > 0.00001){
+    docaz = std::abs(1./part->momentum().Pt()*(prodx*part->momentum().Py() - prody*part->momentum().Px()));
+  }
+  
   const LHCb::MCParticle* mother = part;
   while(mother->mother() != NULL)mother = mother->mother();
   double PVz = mother->originVertex()->position().Z();
