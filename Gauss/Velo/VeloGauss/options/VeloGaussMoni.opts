@@ -1,0 +1,6 @@
+VeloGaussMoni.PrintInfo=false;
+VeloGaussMoni.DetailedMonitor=true;
+VeloGaussMoni.TestMCHit=true;
+VeloGaussMoni.TestPileUpMCHit=true;
+VeloGaussMoni.Print=2;
+VeloGaussMoni.VeloDetLocation="/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
