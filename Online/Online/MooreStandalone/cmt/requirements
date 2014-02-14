@@ -3,26 +3,16 @@
 #============================================================================
 # Internal helper package to reduce dependencies in GaudiOnline iteself
 #============================================================================
-version Close_to_Hell
+version v0r1
 #
-#
-use  GaudiAud      v*
-use  GaudiSvc      v*
-use  GaudiAlg      v*
-###use  GaudiPoolDb   v*
-use  GaudiPython   v*
-use  MDF_ROOT          v* DAQ
-###use  Gaucho         v* Online
-use  GaudiOnline       v* Online
-###use  MBMDump        v* Online
-use  RootCnv           v* Online
-#use GaudiUPI          v* Online
-###use Writer          v* Online
-use GaudiCheckpointing v* Online
-use FarmConfig         v* Online
-use Gaucho             v* Online
-#use Brunel             v* Rec
-use GaudiUPI           v* Online
+use GaudiSvc           v*        -no_auto_imports
+use MDF_ROOT           v* DAQ    -no_auto_imports
+use RootCnv            v* Online -no_auto_imports
+use GaudiCheckpointing v* Online -no_auto_imports
+use FarmConfig         v* Online -no_auto_imports
+use Gaucho             v* Online -no_auto_imports
+use OnlineKernel       v* Online
+use GaudiOnline        v* Online
 use UPI                v* Online
 
 library MooreStandalone *.cpp
