@@ -21,6 +21,10 @@ Purpose: LHCb reconstruction program
     (RichRecPhotonTools, RichRecTrackTools)
   . New PrCounter/PrChecker
   . Use vdt implementation of tanh in OTDet
+  . Follow reduced verbosity in Raw Bank decoders
+  . Follow fixes to floating point exceptions
+  . Follow renaming PatPixel->PrPixel
+
 
 </PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
