@@ -38,7 +38,10 @@ PrSeedingXLayers::PrSeedingXLayers( const std::string& name,
   declareProperty( "MinXPlanes",          m_minXPlanes           = 5                      );
   declareProperty( "MaxChi2PerDoF",       m_maxChi2PerDoF        = 3.0                    );
   declareProperty( "XOnly",               m_xOnly                = false                  );
+  declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 4                      );
   
+  declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002           );
+  declareProperty( "TolTySlope",          m_tolTySlope           = 0.02           );
   declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 2500.           );
   //declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 1000.           );
   
@@ -183,14 +186,14 @@ StatusCode PrSeedingXLayers::execute() {
     if ( m_doTiming ) {
       m_timerTool->start( m_timeXProjection);
     }
-    findXProjections( part );
+    findXProjections2( part );
 
     if ( m_doTiming ) {
       m_timerTool->stop( m_timeXProjection);
       m_timerTool->start( m_timeStereo);
     }
 
-    if ( ! m_xOnly ) addStereo( part );
+    if ( ! m_xOnly ) addStereo2( part );
     if ( m_doTiming ) {
       m_timerTool->stop( m_timeStereo);
     }
@@ -397,7 +400,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
       for ( PrHits::iterator itH = (*itT1).hits().begin(); (*itT1).hits().end() != itH; ++ itH) {
         if ( (*itH)->isUsed() ) ++nUsed;
       }
-      if ( 1 < nUsed ) {
+      if ( 2 < nUsed ) {
         (*itT1).setValid( false );
         continue;
       }
@@ -616,12 +619,9 @@ bool PrSeedingXLayers::fitTrack( PrSeedTrack& track ) {
     float d2 = sdz * sz2 - sz * sdz2;
 
     float den = (b1 * c2 - b2 * c1 );
-    if(fabs(den) < 1e-10) return false;
-    
+    if( fabs(den) < 1e-6 ) return false;
     float db  = (d1 * c2 - d2 * c1 ) / den;
     float dc  = (d2 * b1 - d1 * b2 ) / den;
-    
-    
     float da  = ( sd - db * sz - dc * sz2 ) / s0;
 
     float day = 0.;
@@ -741,4 +741,470 @@ void PrSeedingXLayers::printTrack ( PrSeedTrack& track ) {
     printHit( *itH );
   }
 }
-//=============================================================================
+//=========================================================================
+// modified method to find the x projections
+//=========================================================================
+void PrSeedingXLayers::findXProjections2( unsigned int part ){
+  m_xCandidates.clear();
+  for ( unsigned int iCase = 0 ; 3 > iCase ; ++iCase ) {
+    int firstZone = part;
+    int lastZone  = 22 + part;
+    if ( 1 == iCase ) firstZone = part + 6;
+    if ( 2 == iCase ) lastZone  = 16 + part;
+    
+    PrHitZone* fZone = m_hitManager->zone( firstZone );
+    PrHitZone* lZone = m_hitManager->zone( lastZone  );
+    PrHits& fHits = fZone->hits();
+    PrHits& lHits = lZone->hits();
+    
+        
+    float zRatio =  lZone->z(0.) / fZone->z(0.);
+    
+  
+
+    
+    std::vector<PrHitZone*> xZones;
+    xZones.reserve(12);
+    for ( int kk = firstZone+2; lastZone > kk ; kk += 2 ) {
+      if ( m_hitManager->zone( kk )->isX() ) xZones.push_back( m_hitManager->zone(kk) );
+    }
+    
+    PrHits::iterator itLBeg = lHits.begin();
+
+    // -- Define the iterators for the "in-between" layers
+    std::vector< PrHits::iterator > iterators;
+    iterators.reserve(24);
+    
+    for ( PrHits::iterator itF = fHits.begin(); fHits.end() != itF; ++itF ) {
+      if ( 0 != iCase && (*itF)->isUsed() ) continue;
+      float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
+      float maxXl = (*itF)->x() * zRatio + m_maxIpAtZero * ( zRatio - 1 );
+  
+
+      if ( matchKey( *itF ) ) info() << "Search from " << minXl << " to " << maxXl << endmsg;
+      
+      itLBeg = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX() );
+      while ( itLBeg != lHits.end() && (*itLBeg)->x() < minXl ) {
+        ++itLBeg;
+        if ( lHits.end() == itLBeg ) break;
+      }
+
+      PrHits::iterator itL = itLBeg;
+    
+      while ( itL != lHits.end() && (*itL)->x() < maxXl ) {
+      
+        
+        if ( 0 != iCase && (*itL)->isUsed()) {
+          ++itL;
+          continue;
+        }
+     
+        
+        float tx = ((*itL)->x() - (*itF)->x()) / (lZone->z() - fZone->z() );
+        float x0 = (*itF)->x() - (*itF)->z() * tx;
+      
+        PrHits parabolaSeedHits;
+        parabolaSeedHits.clear();
+        parabolaSeedHits.reserve(5);
+        
+        //loop over first two x zones
+        // --------------------------------------------------------------------------------
+        unsigned int counter = 0; 
+
+        bool skip = true;
+        if( iCase != 0 ) skip = false;
+        
+        
+        for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
+        
+          ++counter;
+
+          // -- to make sure, in case = 0, only x layers of the 2nd T station are used
+          if(skip){
+            skip = false;
+            continue;
+          }
+          
+          
+          if( iCase == 0){
+            if(counter > 3) break;
+          }else{
+            if(counter > 2) break;
+          }
+          
+          
+          
+          float xP   = x0 + (*itZ)->z() * tx;
+          float xMax = xP + 2*fabs(tx)*m_tolXSup + 1.5;
+          float xMin = xP - m_tolXInf;
+        
+          if ( x0 < 0 ) {
+            xMin = xP - 2*fabs(tx)*m_tolXSup - 1.5;
+            xMax = xP + m_tolXInf;
+          }
+         
+          PrHits::iterator itH = std::lower_bound( (*itZ)->hits().begin(), (*itZ)->hits().end(), xMin, lowerBoundX() );
+          for ( ; (*itZ)->hits().end() != itH; ++itH ) {
+            
+            if ( (*itH)->x() < xMin ) continue;
+            if ( (*itH)->x() > xMax ) break;
+            
+            parabolaSeedHits.push_back( *itH );
+          }
+        }
+        // --------------------------------------------------------------------------------
+
+        debug() << "We have " << parabolaSeedHits.size() << " hits to seed the parabolas" << endmsg;
+
+        std::vector<PrHits> xHitsLists;
+        xHitsLists.clear();
+
+
+        // -- float xP   = x0 + (*itZ)->z() * tx;
+        // -- Alles klar, Herr Kommissar?
+        // -- The power of Lambda functions!
+        // -- Idea is to reduce ghosts in very busy events and prefer the high momentum tracks
+        // -- For this, the seedHits are storted according to their distance to the linear extrapolation
+        // -- so that the ones with the least distance can be chosen in the end
+        std::sort( parabolaSeedHits.begin(), parabolaSeedHits.end(), 
+                   [x0,tx](const PrHit* lhs, const PrHit* rhs)
+                   ->bool{return fabs(lhs->x() - (x0+lhs->z()*tx)) <  fabs(rhs->x() - (x0+rhs->z()*tx)); });
+        
+        
+        unsigned int maxParabolaSeedHits = m_maxParabolaSeedHits;
+        if( parabolaSeedHits.size() < m_maxParabolaSeedHits){
+          maxParabolaSeedHits = parabolaSeedHits.size();
+        }
+        
+
+        for(unsigned int i = 0; i < maxParabolaSeedHits; ++i){
+          
+          float a = 0;
+          float b = 0;
+          float c = 0;
+          
+          PrHits xHits;
+          xHits.clear();
+          
+          
+          // -- formula is: x = a*dz*dz + b*dz + c = x, with dz = z - zRef
+          solveParabola( *itF, parabolaSeedHits[i], *itL, a, b, c);
+          
+          debug() << "parabola equation: x = " << a << "*z^2 + " << b << "*z + " << c << endmsg;
+          
+
+          for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
+          
+            float dz = (*itZ)->z() - m_geoTool->zReference();
+            float xAtZ = a*dz*dz + b*dz + c;
+            
+            float xP   = x0 + (*itZ)->z() * tx;
+            float xMax = xAtZ + fabs(tx)*2.0 + 0.5;
+            float xMin = xAtZ - fabs(tx)*2.0 - 0.5;
+                        
+            
+            debug() << "x prediction (linear): " << xP <<  "x prediction (parabola): " << xAtZ << endmsg;
+            
+            
+            // -- Only use one hit per layer, which is closest to the parabola!
+            PrHit* best = nullptr;
+            float bestDist = 10.0;
+            
+            
+            PrHits::iterator itH = std::lower_bound( (*itZ)->hits().begin(), (*itZ)->hits().end(), xMin, lowerBoundX() );
+            for (; (*itZ)->hits().end() != itH; ++itH ) {
+              
+              if ( (*itH)->x() < xMin ) continue;
+              if ( (*itH)->x() > xMax ) break;
+              
+              
+              if( fabs((*itH)->x() - xAtZ ) < bestDist){
+                bestDist = fabs((*itH)->x() - xAtZ );
+                best = *itH;
+              }
+              
+            }
+            if( best != nullptr) xHits.push_back( best );
+          }
+          
+          xHits.push_back( *itF );
+          xHits.push_back( *itL );
+          
+
+          if( xHits.size() < 5) continue;
+          std::sort(xHits.begin(), xHits.end());
+       
+          bool isEqual = false;
+          for( PrHits hits : xHitsLists){
+            if( hits == xHits ){
+              isEqual = true;
+              break;
+            }
+          }
+
+          if( !isEqual ) xHitsLists.push_back( xHits );
+        }
+        
+        
+        debug() << "xHitsLists size before removing duplicates: " << xHitsLists.size() << endmsg;
+        
+        // -- remove duplicates
+        if( xHitsLists.size() > 2){
+          std::sort( xHitsLists.begin(), xHitsLists.end() );
+          xHitsLists.erase( std::unique(xHitsLists.begin(), xHitsLists.end()), xHitsLists.end());
+        }
+        
+        debug() << "xHitsLists size after removing duplicates: " << xHitsLists.size() << endmsg;
+        
+
+        
+        for( PrHits xHits : xHitsLists ){
+          
+          PrSeedTrack temp( part, m_geoTool->zReference(), xHits );
+          
+          bool OK = fitTrack( temp );
+          
+          while ( !OK ) {
+            OK = removeWorstAndRefit( temp );
+          }
+          setChi2( temp );
+          // ---------------------------------------
+  
+          float maxChi2 = m_maxChi2PerDoF + 6*tx*tx;
+          
+
+          if ( OK && 
+               temp.hits().size() >= m_minXPlanes &&
+               temp.chi2PerDoF()  < maxChi2   ) {
+            if ( temp.hits().size() == 6 ) {
+              for ( PrHits::iterator itH = temp.hits().begin(); temp.hits().end() != itH; ++ itH) {
+                (*itH)->setUsed( true );
+              }
+              
+              
+            }
+            
+            m_xCandidates.push_back( temp );
+          }
+          // -------------------------------------
+        }
+        ++itL;
+      }
+    }
+  }
+  
+  
+  std::stable_sort( m_xCandidates.begin(), m_xCandidates.end(), PrSeedTrack::GreaterBySize() );
+
+  //====================================================================
+  // Remove clones, i.e. share more than 2 hits
+  //====================================================================
+  for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {
+    if ( !(*itT1).valid() ) continue;
+    if ( (*itT1).hits().size() != 6 ) {
+      int nUsed = 0;
+      for ( PrHits::iterator itH = (*itT1).hits().begin(); (*itT1).hits().end() != itH; ++ itH) {
+        if ( (*itH)->isUsed()) ++nUsed;
+      }
+      if ( 1 < nUsed ) {
+        (*itT1).setValid( false );
+        continue;
+      }
+    }    
+    
+    for ( PrSeedTracks::iterator itT2 = itT1 + 1; m_xCandidates.end() !=itT2; ++itT2 ) {
+      if ( !(*itT2).valid() ) continue;
+      int nCommon = 0;
+      PrHits::iterator itH1 = (*itT1).hits().begin();
+      PrHits::iterator itH2 = (*itT2).hits().begin();
+      
+      PrHits::iterator itEnd1 = (*itT1).hits().end();
+      PrHits::iterator itEnd2 = (*itT2).hits().end();
+
+      while ( itH1 != itEnd1 && itH2 != itEnd2 ) {
+        if ( (*itH1)->id() == (*itH2)->id() ) {
+          ++nCommon;
+          ++itH1;
+          ++itH2;
+        } else if ( (*itH1)->id() < (*itH2)->id() ) {
+          ++itH1;
+        } else {
+          ++itH2;
+        }
+      }
+      if ( nCommon > 2 ) {
+        if ( (*itT1).hits().size() > (*itT2).hits().size() ) {
+          (*itT2).setValid( false );
+        } else if ( (*itT1).hits().size() < (*itT2).hits().size() ) {
+          (*itT1).setValid( false );
+        } else if ( (*itT1).chi2PerDoF() < (*itT2).chi2PerDoF() ) {
+          (*itT2).setValid( false );
+        } else {
+          (*itT1).setValid( false );
+        }
+      }
+    }
+    if ( m_xOnly ) m_trackCandidates.push_back( *itT1 );
+  }
+}
+//=========================================================================
+// Modified version of adding the stereo layers
+//=========================================================================
+void PrSeedingXLayers::addStereo2( unsigned int part ) {
+  PrSeedTracks xProjections;
+  for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {
+    if ( !(*itT1).valid() ) continue;
+    xProjections.push_back( *itT1 );
+  }
+
+  unsigned int firstZone = part + 2;
+  unsigned int lastZone  = part + 22;
+  for ( PrSeedTracks::iterator itT = xProjections.begin(); xProjections.end() !=itT; ++itT ) {
+    
+    PrHits myStereo;
+    myStereo.reserve(30);
+    for ( unsigned int kk = firstZone; lastZone > kk ; kk+= 2 ) {
+      if ( m_hitManager->zone(kk)->isX() ) continue;
+      float dxDy = m_hitManager->zone(kk)->dxDy();
+      float zPlane = m_hitManager->zone(kk)->z();
+
+      float xPred = (*itT).x( m_hitManager->zone(kk)->z() );
+
+      float xMin = xPred + 2500. * dxDy;
+      float xMax = xPred - 2500. * dxDy;
+      
+      if ( xMin > xMax ) {
+        float tmp = xMax;
+        xMax = xMin;
+        xMin = tmp;
+      }
+      
+
+      PrHits::iterator itH = std::lower_bound( m_hitManager->zone(kk)->hits().begin(),  
+                                               m_hitManager->zone(kk)->hits().end(), xMin, lowerBoundX() );
+      
+      for ( ;
+            m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
+        
+        if ( (*itH)->x() < xMin ) continue;
+        if ( (*itH)->x() > xMax ) break;
+      
+        (*itH)->setCoord( ((*itH)->x() - xPred) / dxDy  / zPlane );
+        
+        if ( 0 == part && (*itH)->coord() < -0.005 ) continue;
+        if ( 1 == part && (*itH)->coord() >  0.005 ) continue;
+
+        myStereo.push_back( *itH );
+      }
+    }
+    std::sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
+
+    PrPlaneCounter plCount;
+    unsigned int firstSpace = m_trackCandidates.size();
+
+    PrHits::iterator itBeg = myStereo.begin();
+    PrHits::iterator itEnd = itBeg + 5;
+    
+    while ( itEnd < myStereo.end() ) {
+    
+      float tolTy = m_tolTyOffset + m_tolTySlope * fabs( (*itBeg)->coord() );
+
+        if ( (*(itEnd-1))->coord() - (*itBeg)->coord() < tolTy ) {
+          while( itEnd+1 < myStereo.end() &&
+                 (*itEnd)->coord() - (*itBeg)->coord() < tolTy ) {
+            ++itEnd;
+          }
+          
+        
+          plCount.set( itBeg, itEnd );
+          if ( 4 < plCount.nbDifferent() ) {
+            PrSeedTrack temp( *itT );
+            for ( PrHits::iterator itH = itBeg; itEnd != itH; ++itH ) temp.addHit( *itH );
+            bool ok = fitTrack( temp );
+            ok = fitTrack( temp );
+            ok = fitTrack( temp );
+            
+        
+            while ( !ok && temp.hits().size() > 10 ) {
+              ok = removeWorstAndRefit( temp );
+            }
+            if ( ok ) {
+              setChi2( temp );
+              
+              float maxChi2 = m_maxChi2PerDoF + 6*temp.xSlope(9000)*temp.xSlope(9000);
+
+              if ( temp.hits().size() > 9 || 
+                   temp.chi2PerDoF() < maxChi2 ) {
+                m_trackCandidates.push_back( temp );
+                
+              }
+              itBeg += 4;
+            }
+          }
+        }
+        ++itBeg;
+        itEnd = itBeg + 5;
+    }
+    
+
+    
+    //=== Remove bad candidates: Keep the best for this input track
+    if ( m_trackCandidates.size() > firstSpace+1 ) {
+      for ( unsigned int kk = firstSpace; m_trackCandidates.size()-1 > kk ; ++kk ) {
+        if ( !m_trackCandidates[kk].valid() ) continue;
+        for ( unsigned int ll = kk + 1; m_trackCandidates.size() > ll; ++ll ) {
+          if ( !m_trackCandidates[ll].valid() ) continue;
+          if ( m_trackCandidates[ll].hits().size() < m_trackCandidates[kk].hits().size() ) {
+            m_trackCandidates[ll].setValid( false );
+          } else if ( m_trackCandidates[ll].hits().size() > m_trackCandidates[kk].hits().size() ) {
+            m_trackCandidates[kk].setValid( false );
+          } else if ( m_trackCandidates[kk].chi2() < m_trackCandidates[ll].chi2() ) {
+            m_trackCandidates[ll].setValid( false );
+          } else {
+            m_trackCandidates[kk].setValid( false );
+          }  
+        }   
+      }
+    }
+    
+  }
+}
+
+
+//=========================================================================
+// Solve parabola
+//========================================================================
+void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c){
+  
+  const float z1 = hit1->z() - m_geoTool->zReference();
+  const float z2 = hit2->z() - m_geoTool->zReference();
+  const float z3 = hit3->z() - m_geoTool->zReference();
+  
+  const float x1 = hit1->x();
+  const float x2 = hit2->x();
+  const float x3 = hit3->x();
+  
+  const double det = (z1*z1)*z2 + z1*(z3*z3) + (z2*z2)*z3 - z2*(z3*z3) - z1*(z2*z2) - z3*(z1*z1);
+  
+  if( det == 0 ){
+    a = 0;
+    b = 0;
+    c = 0;
+    return;
+  }
+  
+  const double det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
+  const double det2 = (z1*z1)*x2 + x1*(z3*z3) + (z2*z2)*x3 - x2*(z3*z3) - x1*(z2*z2) - x3*(z1*z1);
+  const double det3 = (z1*z1)*z2*x3 + z1*(z3*z3)*x2 + (z2*z2)*z3*x1 - z2*(z3*z3)*x1 - z1*(z2*z2)*x3 - z3*(z1*z1)*x2;
+
+  a = det1/det;
+  b = det2/det;
+  c = det3/det;
+  
+  
+
+
+
+
+}
+

@@ -14,11 +14,15 @@
 
 /** @class PrSeedingXLayers PrSeedingXLayers.h
  *  Stand alone seeding for the FT T stations
+ *  This code is a hack which represents the code used for the upgrade tracker TDR
+ *  It needs to be superseded by a proper implementation!
  *
  *  @author Olivier Callot
  *  @date   2013-02-14
- *  2013-03-21 : Yasmine Amhis Modification 
+ *  2013-03-21 : Yasmine Amhis Modification
+ *  2014-02-12 : Michel De Cian (TDR version) 
  */
+
 class PrSeedingXLayers : public GaudiAlgorithm {
 public:
   /// Standard constructor
@@ -62,6 +66,19 @@ protected:
     return false;
   };
 
+  void findXProjections2( unsigned int part );
+  
+  void addStereo2( unsigned int part );
+
+  void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c);
+  
+  bool confirmStereo( PrSeedTrack& xTrack, const unsigned int part);
+  
+
+
+
+
+
   /// Class to find lower bound of x of PrHit
   class lowerBoundX {
   public:
@@ -86,7 +103,8 @@ protected:
     bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
   };
 
-
+  
+  
 private:
   std::string     m_inputName;
   std::string     m_outputName;
@@ -98,6 +116,11 @@ private:
   unsigned int    m_minXPlanes;
   float           m_maxChi2PerDoF;
   bool            m_xOnly;
+  unsigned int    m_maxParabolaSeedHits;
+  
+  float           m_tolTyOffset;
+  float           m_tolTySlope;
+  
   
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;

@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-02-15 - Michel De Cian
+ - Complete incomplete commit for PrSeedingXLayers
+
 ! 2014-02-14 - Michel De Cian
  - Update in PrSeedingXLayers, to represent code used for TDR. 
 
