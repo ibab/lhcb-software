@@ -2,6 +2,10 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-02-15 - Chris Jones
+ - Protect WalkRelation::walk against floating point overflows with large
+   exponents passed to vdt::fast_exp.
+
 ! 2014-02-11 - Marco Clemencic
  - Fixed CMake configuration.
 
