@@ -36,10 +36,10 @@ void ParticlePacker::pack( const Data & part,
     ppart.refz = m_pack.position( part.referencePoint().z() );
 
     // Mom Cov
-    const double merr00 = std::sqrt( part.momCovMatrix()(0,0) );
-    const double merr11 = std::sqrt( part.momCovMatrix()(1,1) );
-    const double merr22 = std::sqrt( part.momCovMatrix()(2,2) );
-    const double merr33 = std::sqrt( part.momCovMatrix()(3,3) );
+    const double merr00 = safe_sqrt( part.momCovMatrix()(0,0) );
+    const double merr11 = safe_sqrt( part.momCovMatrix()(1,1) );
+    const double merr22 = safe_sqrt( part.momCovMatrix()(2,2) );
+    const double merr33 = safe_sqrt( part.momCovMatrix()(3,3) );
     ppart.momCov00 = m_pack.energy( merr00 );
     ppart.momCov11 = m_pack.energy( merr11 );
     ppart.momCov22 = m_pack.energy( merr22 );
@@ -52,9 +52,9 @@ void ParticlePacker::pack( const Data & part,
     ppart.momCov32 = m_pack.fraction( part.momCovMatrix()(3,2), (merr33*merr22) );
 
     // Pos Cov
-    const double perr00 = std::sqrt( part.posCovMatrix()(0,0) );
-    const double perr11 = std::sqrt( part.posCovMatrix()(1,1) );
-    const double perr22 = std::sqrt( part.posCovMatrix()(2,2) );
+    const double perr00 = safe_sqrt( part.posCovMatrix()(0,0) );
+    const double perr11 = safe_sqrt( part.posCovMatrix()(1,1) );
+    const double perr22 = safe_sqrt( part.posCovMatrix()(2,2) );
     ppart.posCov00 = m_pack.position( perr00 );
     ppart.posCov11 = m_pack.position( perr11 );
     ppart.posCov22 = m_pack.position( perr22 );
@@ -176,7 +176,7 @@ void ParticlePacker::unpack( const PackedData       & ppart,
                         m_pack.slope ( ppart.lv_py ) * pz :
                         m_pack.energy( ppart.lv_py ) );
     const double mass = ppart.lv_mass;
-    const double E    = std::sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
+    const double E    = safe_sqrt( (px*px) + (py*py) + (pz*pz) + (mass*mass) );
     part.setMomentum( Gaudi::LorentzVector( px, py, pz, E ) );
 
     // reference point

@@ -42,9 +42,9 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_c0 = m_pack.position( clu.position().center()[0] );
       pclu.pos_c1 = m_pack.position( clu.position().center()[1] );
       //
-      const double err0 = std::sqrt( clu.position().covariance()(0,0) );
-      const double err1 = std::sqrt( clu.position().covariance()(1,1) );
-      const double err2 = std::sqrt( clu.position().covariance()(2,2) );
+      const double err0 = safe_sqrt( clu.position().covariance()(0,0) );
+      const double err1 = safe_sqrt( clu.position().covariance()(1,1) );
+      const double err2 = safe_sqrt( clu.position().covariance()(2,2) );
       pclu.pos_cov00 = m_pack.position( err0 );
       pclu.pos_cov11 = m_pack.position( err1 );
       pclu.pos_cov22 = m_pack.energy  ( err2 );
@@ -52,8 +52,8 @@ void CaloClusterPacker::pack( const DataVector & clus,
       pclu.pos_cov20 = m_pack.fraction( clu.position().covariance()(2,0), err2*err0 );
       pclu.pos_cov21 = m_pack.fraction( clu.position().covariance()(2,1), err2*err1 );
       //
-      const double serr0 = std::sqrt( clu.position().spread()(0,0) );
-      const double serr1 = std::sqrt( clu.position().spread()(1,1) );
+      const double serr0 = safe_sqrt( clu.position().spread()(0,0) );
+      const double serr1 = safe_sqrt( clu.position().spread()(1,1) );
       pclu.pos_spread00 = m_pack.position( serr0 );
       pclu.pos_spread11 = m_pack.position( serr1 );
       pclu.pos_spread10 = m_pack.fraction( clu.position().spread()(1,0), serr1*serr0 );
@@ -223,17 +223,17 @@ StatusCode CaloClusterPacker::check( const Data & dataA,
   // -------------------------------------------------------------------------
   std::vector<double> oDiag, tDiag, oFrac, tFrac;
 
-  oDiag.push_back( std::sqrt(dataA.position().covariance()(0,0)) );
-  oDiag.push_back( std::sqrt(dataA.position().covariance()(1,1)) );
-  oDiag.push_back( std::sqrt(dataA.position().covariance()(2,2)) );
-  oDiag.push_back( std::sqrt(dataA.position().spread()(0,0)) );
-  oDiag.push_back( std::sqrt(dataA.position().spread()(1,1)) );
+  oDiag.push_back( safe_sqrt(dataA.position().covariance()(0,0)) );
+  oDiag.push_back( safe_sqrt(dataA.position().covariance()(1,1)) );
+  oDiag.push_back( safe_sqrt(dataA.position().covariance()(2,2)) );
+  oDiag.push_back( safe_sqrt(dataA.position().spread()(0,0)) );
+  oDiag.push_back( safe_sqrt(dataA.position().spread()(1,1)) );
 
-  tDiag.push_back( std::sqrt(dataB.position().covariance()(0,0)) );
-  tDiag.push_back( std::sqrt(dataB.position().covariance()(1,1)) );
-  tDiag.push_back( std::sqrt(dataB.position().covariance()(2,2)) );
-  tDiag.push_back( std::sqrt(dataB.position().spread()(0,0)) );
-  tDiag.push_back( std::sqrt(dataB.position().spread()(1,1)) );
+  tDiag.push_back( safe_sqrt(dataB.position().covariance()(0,0)) );
+  tDiag.push_back( safe_sqrt(dataB.position().covariance()(1,1)) );
+  tDiag.push_back( safe_sqrt(dataB.position().covariance()(2,2)) );
+  tDiag.push_back( safe_sqrt(dataB.position().spread()(0,0)) );
+  tDiag.push_back( safe_sqrt(dataB.position().spread()(1,1)) );
 
   if ( 5.e-5 < fabs( oDiag[0] - tDiag[0] ) ) ok = false;
   if ( 5.e-5 < fabs( oDiag[1] - tDiag[1] ) ) ok = false;

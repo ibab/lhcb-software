@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-02-15 - Chris Jones
+ - Fix an FPE exception due to sqrt(-number).
+
 ! 2014-02-13 - Chris Jones
  - Fix an FPE exception when a fraction top/bot was packed with bot=0...
 

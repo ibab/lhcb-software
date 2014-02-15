@@ -254,6 +254,10 @@ namespace LHCb
     /// Access the parent algorithm
     GaudiAlgorithm& parent() const { return *m_parent; }
 
+    /// Safe sqrt ...
+    inline double safe_sqrt( const double x ) const
+    { return ( x > 0 ? std::sqrt(x) : 0.0 ); }
+
   private:
 
     /// Standard packing of quantities into integers ...

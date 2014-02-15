@@ -21,9 +21,9 @@ void RecVertexPacker::pack( const Data & vert,
   pvert.z          = m_pack.position( vert.position().z() );
 
   // convariance Matrix
-  const double err0 = std::sqrt( vert.covMatrix()(0,0) );
-  const double err1 = std::sqrt( vert.covMatrix()(1,1) );
-  const double err2 = std::sqrt( vert.covMatrix()(2,2) );
+  const double err0 = safe_sqrt( vert.covMatrix()(0,0) );
+  const double err1 = safe_sqrt( vert.covMatrix()(1,1) );
+  const double err2 = safe_sqrt( vert.covMatrix()(2,2) );
   pvert.cov00 = m_pack.position( err0 );
   pvert.cov11 = m_pack.position( err1 );
   pvert.cov22 = m_pack.position( err2 );

@@ -55,9 +55,9 @@ void CaloHypoPacker::pack( const DataVector & hypos,
       pH.posE = m_pack.energy  ( pos->e() );
 
       // convariance Matrix
-      const double err0 = std::sqrt( pos->covariance()(0,0) );
-      const double err1 = std::sqrt( pos->covariance()(1,1) );
-      const double err2 = std::sqrt( pos->covariance()(2,2) );
+      const double err0 = safe_sqrt( pos->covariance()(0,0) );
+      const double err1 = safe_sqrt( pos->covariance()(1,1) );
+      const double err2 = safe_sqrt( pos->covariance()(2,2) );
       pH.cov00 = m_pack.position( err0 );
       pH.cov11 = m_pack.position( err1 );
       pH.cov22 = m_pack.energy  ( err2 );
@@ -68,8 +68,8 @@ void CaloHypoPacker::pack( const DataVector & hypos,
       pH.centX = m_pack.position( pos->center()(0) );
       pH.centY = m_pack.position( pos->center()(1) );
 
-      const double serr0 = std::sqrt( pos->spread()(0,0) );
-      const double serr1 = std::sqrt( pos->spread()(1,1) );
+      const double serr0 = safe_sqrt( pos->spread()(0,0) );
+      const double serr1 = safe_sqrt( pos->spread()(1,1) );
       pH.cerr00 = m_pack.position( serr0 );
       pH.cerr11 = m_pack.position( serr1 );
       pH.cerr10 = m_pack.fraction( pos->spread()(1,0), serr1*serr0 );
@@ -254,17 +254,17 @@ StatusCode CaloHypoPacker::check( const DataVector & dataA,
       if ( 5.e-5 < fabs( oPos->center()(0) - tPos->center()(0) ) ) isOK = false;
       if ( 5.e-5 < fabs( oPos->center()(1) - tPos->center()(1) ) ) isOK = false;
 
-      oDiag.push_back( std::sqrt(oPos->covariance()(0,0)) );
-      oDiag.push_back( std::sqrt(oPos->covariance()(1,1)) );
-      oDiag.push_back( std::sqrt(oPos->covariance()(2,2)) );
-      oDiag.push_back( std::sqrt(oPos->spread()(0,0)) );
-      oDiag.push_back( std::sqrt(oPos->spread()(1,1)) );
+      oDiag.push_back( safe_sqrt(oPos->covariance()(0,0)) );
+      oDiag.push_back( safe_sqrt(oPos->covariance()(1,1)) );
+      oDiag.push_back( safe_sqrt(oPos->covariance()(2,2)) );
+      oDiag.push_back( safe_sqrt(oPos->spread()(0,0)) );
+      oDiag.push_back( safe_sqrt(oPos->spread()(1,1)) );
 
-      tDiag.push_back( std::sqrt(tPos->covariance()(0,0)) );
-      tDiag.push_back( std::sqrt(tPos->covariance()(1,1)) );
-      tDiag.push_back( std::sqrt(tPos->covariance()(2,2)) );
-      tDiag.push_back( std::sqrt(tPos->spread()(0,0)) );
-      tDiag.push_back( std::sqrt(tPos->spread()(1,1)) );
+      tDiag.push_back( safe_sqrt(tPos->covariance()(0,0)) );
+      tDiag.push_back( safe_sqrt(tPos->covariance()(1,1)) );
+      tDiag.push_back( safe_sqrt(tPos->covariance()(2,2)) );
+      tDiag.push_back( safe_sqrt(tPos->spread()(0,0)) );
+      tDiag.push_back( safe_sqrt(tPos->spread()(1,1)) );
 
       if ( 5.e-5  < fabs( oDiag[0] - tDiag[0] ) ) isOK = false;
       if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
