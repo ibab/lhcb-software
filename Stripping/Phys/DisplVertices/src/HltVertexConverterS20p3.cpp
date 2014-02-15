@@ -189,9 +189,9 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
   LHCb::Particle* ret = 0;
   part->setParticleID(LHCb::ParticleID(getInfo<int>(numericalInfo, "0#Particle.particleID.pid", 0 )));
   part->setReferencePoint(Gaudi::XYZPoint(
-                        getInfo<double>(numericalInfo, "3#Particle.referencePoint.x", 0.),
-                        getInfo<double>(numericalInfo, "4#Particle.referencePoint.y", 0.),
-                        getInfo<double>(numericalInfo, "2#Particle.referencePoint.z", 0.)
+                                          getInfo<double>(numericalInfo, "3#Particle.referencePoint.x", 0.),
+                                          getInfo<double>(numericalInfo, "4#Particle.referencePoint.y", 0.),
+                                          getInfo<double>(numericalInfo, "2#Particle.referencePoint.z", 0.)
                           ));
   double m   (getInfo<double>(numericalInfo, "1#Particle.measuredMass", 0.));
   double tx  (getInfo<double>(numericalInfo, "5#Particle.slopes.x"    , 0.));
@@ -224,13 +224,20 @@ LHCb::Particle* HltVertexConverterS20p3::reviveParticle(const LHCb::HltObjectSum
     vert->setPosition(part->referencePoint());
     vert->setCovMatrix(m_defaultVertexCovMatrix);
     part->setEndVertex(vert.get());
+
     if ( recursive ) {
       BOOST_FOREACH( const SmartRef<LHCb::HltObjectSummary>& daugSum, summary->substructure() ) {
         if ( daugSum->summarizedObjectCLID() == LHCb::Particle::classID() ) {
           if (msgLevel(MSG::VERBOSE)) { verbose() << "-> Daughter particle" << endmsg; }
           const LHCb::Particle* daug = reviveParticle(daugSum, recursive);
-          part->addToDaughters(daug);
-          vert->addToOutgoingParticles(daug);
+          // protection against bad particles
+          if (daug == 0){
+            delete daug;
+          }
+          else{
+            part->addToDaughters(daug);
+            vert->addToOutgoingParticles(daug);
+          }
         } else {
           Warning("Classification failed: >1 substructure entries, but not particles");
         }

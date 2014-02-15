@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-02-14 - Victor Coco
+ - Fix the null pointer daughter particle created by some TCKs
+
 ! 2014-01-29 - Pieter David
  - Remove duplicate Hlt2 candidates
 
