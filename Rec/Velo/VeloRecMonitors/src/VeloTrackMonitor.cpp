@@ -468,10 +468,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     //Evaluation of Number of expected hits per track by interpolation
     int nExpectedHitsInterp = m_expectTool->nExpected(*track,zmin,zmax);
     if(nExpectedHits != 0){
-      double pseudoEfficiency = double(nVeloHits)/double(nExpectedHits);
-      m_track_pseudoeff->fill(pseudoEfficiency);
-      double pseudoEfficiencyInterp = double(nVeloHits)/double(nExpectedHitsInterp);
-      m_track_pseudoeff_int->fill(pseudoEfficiencyInterp);
+      m_track_pseudoeff->fill( nExpectedHits>0 ? double(nVeloHits)/double(nExpectedHits) : 0 );
+      m_track_pseudoeff_int->fill( nExpectedHitsInterp>0 ? 
+                                   double(nVeloHits)/double(nExpectedHitsInterp) : 0 );
     }
 
     //Evaluation of expected hit per sensor
