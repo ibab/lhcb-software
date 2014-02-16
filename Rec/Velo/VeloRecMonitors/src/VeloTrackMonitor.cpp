@@ -469,6 +469,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     int nExpectedHitsInterp = m_expectTool->nExpected(*track,zmin,zmax);
     if(nExpectedHits != 0){
       m_track_pseudoeff->fill( nExpectedHits>0 ? double(nVeloHits)/double(nExpectedHits) : 0 );
+    }
+    if(nExpectedHitsInterp != 0){
       m_track_pseudoeff_int->fill( nExpectedHitsInterp>0 ? 
                                    double(nVeloHits)/double(nExpectedHitsInterp) : 0 );
     }
