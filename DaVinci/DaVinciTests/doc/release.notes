@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-02-16 - Chris Jones
+ - Add Stripping20rXp3 tests.
+ - Enable the FPE Auditor in all stripping, pid and packing tests.
+
 ! 2014-02-13 - Chris Jones
  - Try and fix access to csator files, following the depreciation of the 
    castor: protocol.
@@ -24,7 +28,7 @@
  - Update stripping references to adapt to new messages from the decoders.
 
 ! 2013-12-10 - Stefania Vecchi
- - Add reference of OS_Charm tagger in  tagging.qms/test_tag_mc12.qmt 
+ - Add reference of OS_Charm tagger in tagging.qms/test_tag_mc12.qmt 
 
 ! 2013-12-09 - Stefania Vecchi
  - Updated reference file tagging.qms/test_tag_mc12.qmt according to the change
