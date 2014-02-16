@@ -104,7 +104,7 @@ StatusCode DecodeVeloRawBuffer::initialize() {
     return Error("I can't decode if you don't tell me where to decode to! Fill RawEventLocations!",StatusCode::FAILURE);
   }
   
-  if (m_rawEventLocations[0]!=LHCb::RawEventLocation::Other) 
+  if ((m_rawEventLocations[0]!=LHCb::RawEventLocation::Other and m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) or  m_rawEventLocations.size()>2) 
   {
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }

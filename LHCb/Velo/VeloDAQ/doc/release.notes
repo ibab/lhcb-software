@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2014-02-14 - Rob Lambert
+ - Suppress velo decoder printout for nominal options (DAQ/RawEvent Other/RawEvent)
+
 ! 2014-02-12 - Rob Lambert
  - Adapt velo decoder tools to Decoder base classes, task #49078
 
