@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-16 - Chris Jones
+ - Fix the enabling of the FPEAuditor.
+
 ! 2014-02-13 - Rob Lambert
  - Suppress info print out in decoder initialize unless the output really is unexpected.
 
