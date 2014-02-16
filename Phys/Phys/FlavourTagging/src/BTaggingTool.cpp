@@ -479,7 +479,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
     }
   }
 
-  if( fabs(min_chi2PV/the_chi2PV-1.)>1.e-5 || nPV > 1 )
+  if ( ( fabs(the_chi2PV) > 0 && fabs( min_chi2PV/the_chi2PV - 1.)>1.e-5 ) || nPV > 1 )
   {
     PileUpVtx.clear();
     for(RecVertex::Range::const_iterator jv=verts.begin(); jv!=verts.end(); jv++)

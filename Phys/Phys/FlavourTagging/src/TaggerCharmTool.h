@@ -119,7 +119,12 @@ public:
   
   virtual double getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
   
+private:
 
+  inline double safe_log( const double x ) const
+  {
+    return ( x>0 ? std::log(x) : -9e30 );
+  }
 
 private:
 

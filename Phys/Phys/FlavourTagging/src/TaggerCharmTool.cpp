@@ -451,26 +451,26 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
   inputVals.push_back(part->pt()/GeV);
   inputVals.push_back(part->momentum().Eta() - signalB.momentum().Eta());
 
-  inputVals.push_back(log(cpart->pchi2));      
+  inputVals.push_back(safe_log(cpart->pchi2));      
 
-  inputVals.push_back(log(cpart->tau));      
-  inputVals.push_back(log(cpart->fd));      
+  inputVals.push_back(safe_log(cpart->tau));      
+  inputVals.push_back(safe_log(cpart->fd));      
 
-  inputVals.push_back(log(cpart->fdchi2));      
-  inputVals.push_back(log(1-cpart->bpvdira));      
-  inputVals.push_back(log(cpart->maxProbGhostDaus));      
+  inputVals.push_back(safe_log(cpart->fdchi2));      
+  inputVals.push_back(safe_log(1-cpart->bpvdira));      
+  inputVals.push_back(safe_log(cpart->maxProbGhostDaus));      
 
   if (decay.hasK) {
-    inputVals.push_back(log(1-cpart->kaonProbnnk));      
-    inputVals.push_back(log(cpart->kaonIppvchi2));      
-    inputVals.push_back(log(cpart->kaonIpMinchi2));      
+    inputVals.push_back(safe_log(1-cpart->kaonProbnnk));      
+    inputVals.push_back(safe_log(cpart->kaonIppvchi2));      
+    inputVals.push_back(safe_log(cpart->kaonIpMinchi2));      
   }
  
   if (decay.hasE)
-    inputVals.push_back(log(1-cpart->elecProbnne));      
+    inputVals.push_back(safe_log(1-cpart->elecProbnne));      
 
   if (decay.hasMu)
-    inputVals.push_back(log(1-cpart->muonProbnnmu));
+    inputVals.push_back(safe_log(1-cpart->muonProbnnmu));
 
   if (decay.hasDstar) {
     inputVals.push_back(cpart->dstarDm);
@@ -480,10 +480,10 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
     debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB.pt()/GeV
            <<" m "<<part->measuredMass()/GeV<<" p "<<part->p()/GeV<<" pt "<<part->pt()/GeV
            <<" deta "<<part->momentum().Eta() - signalB.momentum().Eta()
-           <<" logpchi2 "<<log(cpart->pchi2)<<" logtau "<<log(cpart->tau)<<" logfd "<<log(cpart->fd)
-           <<" logfdchi2 "<<log(cpart->fdchi2)<<" logdira "<<log(1-cpart->bpvdira)<<" logmghost "<<log(cpart->maxProbGhostDaus)
-           <<" logkprobk "<<log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<log(cpart->kaonIppvchi2)
-           <<" logprobe "<<log(1-cpart->elecProbnne)<<" logprobmu "<<log(1-cpart->muonProbnnmu)
+           <<" logpchi2 "<<safe_log(cpart->pchi2)<<" logtau "<<safe_log(cpart->tau)<<" logfd "<<safe_log(cpart->fd)
+           <<" logfdchi2 "<<safe_log(cpart->fdchi2)<<" logdira "<<safe_log(1-cpart->bpvdira)<<" logmghost "<<safe_log(cpart->maxProbGhostDaus)
+           <<" logkprobk "<<safe_log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<safe_log(cpart->kaonIppvchi2)
+           <<" logprobe "<<safe_log(1-cpart->elecProbnne)<<" logprobmu "<<safe_log(1-cpart->muonProbnnmu)
            <<" dstarm "<<cpart->dstarDm
            <<endreq;
 
@@ -502,7 +502,7 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
 
   inputVars.push_back("mult"                    ); inputVals.push_back( (double)multiplicity                        );
   inputVars.push_back("nnkrec"                  ); inputVals.push_back( (double)nPV                                 );
-  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)log(signalB.pt()/GeV)              );
+  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)safe_log(signalB.pt()/GeV)              );
   inputVars.push_back("charm_mass"              ); inputVals.push_back( (double)part->measuredMass()/GeV            );
   inputVars.push_back("charm_mode"              ); inputVals.push_back( (double)CharmDecayModeMap[cpart->mode].index);
   inputVars.push_back("charm_bpvdira"           ); inputVals.push_back( (double)cpart->bpvdira                      );
