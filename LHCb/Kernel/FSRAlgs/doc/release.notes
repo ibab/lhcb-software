@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-14 - Marco Clemencic
+ - Change the mergesmallfielstest to use PRCOnfig
+
 ! 2013-07-18 - Marco Clemencic
  - Minor change.
 
