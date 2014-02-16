@@ -450,17 +450,19 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   double the_chi2PV=1000;
   int nPV=0;
 
-  RecVertex::Range::const_iterator jv;
-  for(jv=verts.begin(); jv!=verts.end(); jv++)
+  const double c00 = RecVert->covMatrix()(0,0);
+  const double c11 = RecVert->covMatrix()(1,1);
+  const double c22 = RecVert->covMatrix()(2,2);
+
+  for(RecVertex::Range::const_iterator jv=verts.begin(); jv!=verts.end(); jv++)
   {
     const double dx = RecVert->position().x()-(*jv)->position().x();
     const double dy = RecVert->position().y()-(*jv)->position().y();
     const double dz = RecVert->position().z()-(*jv)->position().z();
 
-    const double chi2PV = 
-      dx * dx / RecVert->covMatrix()(0,0) +
-      dy * dy / RecVert->covMatrix()(1,1) +
-      dz * dz / RecVert->covMatrix()(2,2) ;
+    const double chi2PV = ( ( fabs(c00) > 0 ? dx * dx / c00 : 9e9 ) +
+                            ( fabs(c11) > 0 ? dy * dy / c11 : 9e9 ) +
+                            ( fabs(c22) > 0 ? dz * dz / c22 : 9e9 ) );
     
     if(chi2PV < min_chi2PV) min_chi2PV = chi2PV;
 
@@ -480,14 +482,14 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   if( fabs(min_chi2PV/the_chi2PV-1.)>1.e-5 || nPV > 1 )
   {
     PileUpVtx.clear();
-    for(jv=verts.begin(); jv!=verts.end(); jv++)
+    for(RecVertex::Range::const_iterator jv=verts.begin(); jv!=verts.end(); jv++)
     {
       const double dxx = RecVert->position().x()-(*jv)->position().x();
       const double dyy = RecVert->position().y()-(*jv)->position().y();
       const double dzz = RecVert->position().z()-(*jv)->position().z();
-      const double chi2PV = dxx * dxx / RecVert->covMatrix()(0,0) +
-        dyy * dyy / RecVert->covMatrix()(1,1) +
-        dzz * dzz / RecVert->covMatrix()(2,2);
+      const double chi2PV = ( ( fabs(c00) > 0 ? dxx * dxx / c00 : 9e9 ) +
+                              ( fabs(c11) > 0 ? dyy * dyy / c11 : 9e9 ) +
+                              ( fabs(c22) > 0 ? dzz * dzz / c22 : 9e9 ) );
 
       if(fabs(chi2PV/min_chi2PV -1.)<1.e-5) continue;  // this is the PV
       else PileUpVtx.push_back(*jv);

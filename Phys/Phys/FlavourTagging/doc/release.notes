@@ -6,6 +6,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-02-16 - Chris Jones
+ - Prevent various floating point exceptions (divide by zero etc.) found by
+   enabling the FPEAuditor.
+
 ! 2014-01-25 - Chris Jones
  - Fix Clang 3.3 warnings (unused class data members).
 
