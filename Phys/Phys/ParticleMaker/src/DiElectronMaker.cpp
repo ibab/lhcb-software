@@ -595,7 +595,8 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1,
     ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
   vct /= mass ;
   
-  const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
+  double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
+  if( massErr2 < 0)massErr2 = 0. ; // FPE protection  (rounding ?)
   mother.setMeasuredMassErr ( std::sqrt( massErr2 ) );
 
   if ( msgLevel(MSG::DEBUG) ) 

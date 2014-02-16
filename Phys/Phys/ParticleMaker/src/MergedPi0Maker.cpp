@@ -186,7 +186,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
     double CellSize =  m_calo->cellSize( cellID  );
     double zpos     =  m_calo->cellZ   ( cellID ) ;
     double epi0     =  pi0Momentum.e();
-    double dmin     =  zpos * 2. * m_Mass / epi0 / CellSize;
+    double dmin     =  ( epi0 * CellSize > 0 ) ? zpos * 2. * m_Mass / epi0 / CellSize : +9999.; // rare FPE ( hypo outside Calo acceptance ?)
     if ( m_ggDistCut < dmin                 ){continue;}
 
     ++nSelPp;
