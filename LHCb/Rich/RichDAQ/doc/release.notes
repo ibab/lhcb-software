@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r42 2014-02-17 =========================
 ! 2014-02-12 - Rob Lambert
  - Initialize RawEventLocations to a more realistic list.
 
