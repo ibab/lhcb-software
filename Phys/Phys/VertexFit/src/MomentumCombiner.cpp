@@ -114,7 +114,7 @@ protected:
     const IInterface*  parent )
     : GaudiTool ( type , name , parent )
     , m_transporterName ()
-    , m_transporter     ( 0 )
+    , m_transporter     ( NULL )
   {
     declareInterface<IParticleCombiner> ( this ) ;
     declareProperty ( "Transporter" , m_transporterName ) ;
@@ -173,10 +173,10 @@ StatusCode MomentumCombiner::combine
         daughters.end() != ip ; ++ip )
   {
     const LHCb::Particle* p = *ip ;
-    if ( 0 == p ) { continue ; }
+    if ( NULL == p ) { continue ; }
     //
     const LHCb::Particle* aux = p ;
-    if ( 0 != m_transporter )
+    if ( NULL != m_transporter )
     {
       // assign the temporary particle
       m_tmp = *p ;
@@ -205,11 +205,13 @@ StatusCode MomentumCombiner::combine
   // transsform vector
   Gaudi::Vector4 vct
     ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
-  vct /= mass ;
+  vct /= ( fabs(mass)>0 ? mass : 1e-30 ) ; 
   //
   const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
   //const double massErr2 = ROOT::Math::Product( covariance , vct ) ;
-  mother.setMeasuredMassErr ( sqrt( massErr2 ) ) ;
+  if ( massErr2 < -999 )
+  { Warning( "MassErr^2 < -999 !" ).ignore(); }
+  mother.setMeasuredMassErr ( std::sqrt( fabs(massErr2) ) ) ;
   //
   return StatusCode::SUCCESS ;
 }
