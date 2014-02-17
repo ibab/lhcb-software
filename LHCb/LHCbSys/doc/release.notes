@@ -5,9 +5,8 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-
-</PRE><H1><A NAME=v36r4>2013-12-10 LHCbSys v36r4</A></H1><PRE>
-This version uses Gaudi v24r2 and LCG_66. First version compatible with ROOT6
+</PRE><H1><A NAME=v37r0>2014-02-18 LHCbSys v37r0</A></H1><PRE>
+This version uses Gaudi v25r0 and LCG_66. First version compatible with ROOT6
 
 - Packages removed: Det/VLDet, VL/VLDAQ (obsolete)
 
