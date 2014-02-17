@@ -8,6 +8,8 @@ branches          cmt doc src OnlineFileSelector
 # dependency list
 use DIM           v* Online
 use GaudiOnline   v* Online
+use DAQEvent	  v* Event 
+use MDF		  v* DAQ
 
 
 
@@ -16,11 +18,11 @@ apply_pattern install_python_modules
 
 # ==================== component libraries ==================================
 library  OnlineFileSelector  *.cpp
-#apply_pattern component_library   library=OnlineFileSelector
-apply_pattern linker_library   library=OnlineFileSelector
+apply_pattern component_library   library=OnlineFileSelector
+#apply_pattern linker_library   library=OnlineFileSelector
 
-application  test_OnlineFileSelector ../main/main.cpp
-macro_append test_OnlineFileSelector_dependencies    "OnlineFileSelector"
+#application  test_OnlineFileSelector ../main/main.cpp
+#macro_append test_OnlineFileSelector_dependencies    "OnlineFileSelector"
 
 
 private
