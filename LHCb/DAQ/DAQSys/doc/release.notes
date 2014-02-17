@@ -4,10 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r0 2014-02-17 =========================
 ! 2014-02-17 - Rob Lambert
  - Add non-zero-suppressed banks for the calo (for Boole), and a helper function which can switch between them.
-
-!========================= DAQSys v8r0 2014-02-17 =========================
 
 ! 2014-02-14 - Rob Lambert
  - LumiEvent changes for task #49078 reflected in DecoderDB
