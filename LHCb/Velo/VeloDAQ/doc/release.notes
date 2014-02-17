@@ -3,6 +3,7 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r11 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - Suppress velo decoder printout for nominal options (DAQ/RawEvent Other/RawEvent)
 
