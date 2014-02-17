@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r0 2014-02-17 =========================
 ! 2014-01-20 - Rob Lambert
  - Remove Persistency option from DSTConf/DigiConf
  - remove pool test suite, no reason to have it any longer
@@ -11,7 +12,7 @@
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL data
 
-!========================= GaudiConf v18r0p1 2014-01-10 =========================
+!========================= GaudiConf v18r0p1 2014-01-10 =======================
 ! 2014-01-08 - Rob Lambert
  - Expand property resetting features to also handle tools linked to algorithms.
  - Currently only one level of tools is possible to set, not tools-of-tools, but this is OK for now.
