@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloDet
 ################################################################################
-gaudi_subdir(VeloDet v13r19p1)
+gaudi_subdir(VeloDet v13r20)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Det/DetDescCnv

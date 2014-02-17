@@ -1,9 +1,9 @@
-# ========================================================================
+# ====================================================================
 # Maintained by : Mark Tobin
 #                 David Hutchcroft
 #                 Kurt Rinnert
 package           VeloDet 
-version           v13r19p1
+version           v13r20
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet dict

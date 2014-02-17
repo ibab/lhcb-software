@@ -2,6 +2,7 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!========================= VeloDet v13r20 2014-02-17 =========================
 ! 2013-11-13 - Marco Clemencic
  - Minor change in the tests for VeloAlignCond to work with ROOT 6.
 
