@@ -20,7 +20,10 @@ namespace {
 
   struct AlignProfile
   {
-    AlignProfile(GaudiHistoAlg& alg, const std::string& dir, size_t numelements, const std::string& dofs) 
+    AlignProfile(GaudiHistoAlg& alg, 
+                 const std::string& dir, 
+                 size_t numelements, 
+                 const std::string& dofs)
       : m_dir(dir), m_parent(&alg), m_numelements(numelements)
     {
       for(int i=0; i<6; ++i)
@@ -31,14 +34,14 @@ namespace {
         else
           m_delta[i] = 0 ;
     } ;
-    
+
     void fill( size_t id,
                const LHCb::Node& node,
                const ITrackProjector::Derivatives& deriv)
     {
       double V = node.errMeasure2() ;
       double R = node.errResidual2() ;
-      for(int i=0; i<6; ++i) 
+      for(int i=0; i<6; ++i)
         if(m_delta[i] != 0 ) {
           double Ax = deriv(0,i) ;
           // first compute the weight, which is the 2nd derivative
@@ -55,7 +58,7 @@ namespace {
 
     ~AlignProfile()
     {
-      for(int i=0; i<6; ++i) 
+      for(int i=0; i<6; ++i)
         if(m_delta[i] != 0 ) {
           TProfile* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_delta[i] ) ;
           if(pr) {
@@ -71,7 +74,7 @@ namespace {
           }
         }
     }
-    
+
     static const std::vector<std::string> m_dofnames;
 
     IProfile1D* m_delta[6] ;
@@ -81,10 +84,10 @@ namespace {
   } ;
 
   const std::vector<std::string> AlignProfile::m_dofnames = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz") ;
-  
+
 }
 
-class TrackAlignMonitor : public GaudiHistoAlg 
+class TrackAlignMonitor : public GaudiHistoAlg
 {
 public:
   /** Standard construtor */
@@ -108,25 +111,25 @@ private:
   size_t otUniqueID(const LHCb::OTChannelID& id) {
     return (((id.station()-1)*4 + id.layer())*4 + id.quarter())*9 + id.module() ;
   } ;
-  
+
   size_t veloUniqueID(const LHCb::VeloChannelID& id) {
-    unsigned int station = (id.sensor()%64)/2 ; 
-    unsigned int side    = (id.sensor()%2) ; 
+    unsigned int station = (id.sensor()%64)/2 ;
+    unsigned int side    = (id.sensor()%2) ;
     //unsigned int type    = (id.sensor()/64) ;
     //std::cout << "velo: " << side << " " << station << std::endl ;
     return side * 21 + station ;
   } ;
-  
+
   size_t itUniqueID(const LHCb::STChannelID& id) {
     //std::cout << "it: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
     return (((id.station()-1)*4 + id.layer()-1)*4 + id.detRegion()-1)*7 + id.sector()-1 ;
   }
-  
+
   size_t ttUniqueID(const LHCb::STChannelID& id) {
     //std::cout << "tt: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
     return (((id.station()-1)*2 + id.layer()-1)*3 + id.detRegion()-1)*24 + id.sector()-1 ;
   }
-  
+
   void transformToLocal( ITrackProjector::Derivatives& deriv,
                          const DetectorElement& element ) const ;
 
@@ -147,7 +150,7 @@ private:
   typedef std::map<const DetectorElement*, Matrix6x6> Jacobians ;
   mutable Jacobians m_jacobians ;
 } ;
- 
+
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( TrackAlignMonitor )
 
@@ -156,8 +159,8 @@ DECLARE_ALGORITHM_FACTORY( TrackAlignMonitor )
 //=============================================================================
 TrackAlignMonitor::TrackAlignMonitor( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator ), 
-    m_projector("TrackProjector"), m_velo(0), m_it(0), m_ot(0), m_tt(0)
+: GaudiHistoAlg( name , pSvcLocator ),
+  m_projector("TrackProjector"), m_velo(0), m_it(0), m_ot(0), m_tt(0)
 {
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "UseLocalFrame", m_useLocalFrame = true );
@@ -172,7 +175,7 @@ TrackAlignMonitor::TrackAlignMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackAlignMonitor::~TrackAlignMonitor() 
+TrackAlignMonitor::~TrackAlignMonitor()
 {
 }
 
@@ -180,7 +183,7 @@ TrackAlignMonitor::~TrackAlignMonitor()
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrackAlignMonitor::initialize() 
+StatusCode TrackAlignMonitor::initialize()
 {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if(sc.isFailure()) return sc ;
@@ -195,7 +198,7 @@ StatusCode TrackAlignMonitor::initialize()
 //=============================================================================
 // Finalize
 //=============================================================================
-StatusCode TrackAlignMonitor::finalize() 
+StatusCode TrackAlignMonitor::finalize()
 {
   StatusCode sc = m_projector.release() ;
   if(sc.isFailure()) return sc ;
@@ -208,26 +211,26 @@ StatusCode TrackAlignMonitor::finalize()
 }
 
 StatusCode TrackAlignMonitor::execute()
-{ 
+{
   // make a list of calo positions, depending on the subsystem use clusters or cells
   LHCb::Track::Range tracks = get<LHCb::Track::Range>( m_trackLocation ) ;
 
   //fix by RWL to get rid of stupid nightly warnings about bracketing. 16/11/2009
   BOOST_FOREACH( const LHCb::Track* track, tracks) {
     if( ( (track->hasT() && track->hasVelo() ) ||
-	  track->checkFlag(LHCb::Track::Backward))  &&
-	(track->chi2PerDoF()< m_maxTrackChi2PerDoF)
-	) {
+          track->checkFlag(LHCb::Track::Backward))  &&
+        (track->chi2PerDoF()< m_maxTrackChi2PerDoF)
+        ) {
       BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) {
         if( node->type() == LHCb::Node::HitOnTrack ) {
           const LHCb::Measurement& meas = node->measurement() ;
           // we'll evaluate everything in global coordinates, but to
           // make rotations more meaningful we'll go to the center of
           // the local frame.
-	  
+
           // first ignore global position. we'll do that later
           LHCb::StateVector state(node->state().stateVector(),node->state().z());
-          ITrackProjector::Derivatives deriv = 
+          ITrackProjector::Derivatives deriv =
             m_projector->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) ;
           if( m_useLocalFrame && meas.detectorElement() )
             transformToLocal( deriv, *meas.detectorElement() ) ;
@@ -252,17 +255,17 @@ void TrackAlignMonitor::transformToLocal( ITrackProjector::Derivatives& deriv,
                                           const DetectorElement& element ) const
 {
   Jacobians::iterator it = m_jacobians.find( &element ) ;
-  
+
   // insert a new jacobian if it wasn't there yet
   if( it == m_jacobians.end() ) {
     Gaudi::Transform3D localToGlobal = element.geometry()->toGlobalMatrix() ;
     Matrix6x6 jacobian = DetDesc::getTransformJacobian( localToGlobal ) ;
     //m_jacobians[&element] = jacobian ;
-    std::pair<Jacobians::iterator, bool> location = 
+    std::pair<Jacobians::iterator, bool> location =
       m_jacobians.insert( std::make_pair(&element,jacobian) ) ;
     it = location.first ;
   }
-  
+
   ITrackProjector::Derivatives globalderiv = deriv ;
   deriv = globalderiv * it->second ;
 }

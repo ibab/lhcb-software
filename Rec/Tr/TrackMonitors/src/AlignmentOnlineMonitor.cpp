@@ -38,7 +38,8 @@ namespace {
 
 
   struct ResidualRecorder{
-    ResidualRecorder(GaudiHistoAlg& alg, const std::string& dir, size_t numelements, std::string m_names[42]) 
+    ResidualRecorder(GaudiHistoAlg& alg, const std::string& dir, 
+                     size_t numelements, std::string m_names[42]) 
       : m_dir(dir), m_parent(&alg), m_numelements(numelements) {
       // initialise finalisation histograms
       m_parentMean = alg.book1D("Means","Means",-0.1,0.1,1000);
@@ -68,10 +69,10 @@ namespace {
       for(int i=0; i<m_numelements; i++){
         if(m_residual[i] != 0 ) {
           TH1D* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_residual[i] ) ;
-          m_parentMean->fill(pr->GetMean());
-          m_parentRMS->fill(pr->GetRMS());
-          m_parentSkewness->fill(pr->GetSkewness());
-          m_parentKurtosis->fill(pr->GetKurtosis());
+          m_parentMean    ->fill( pr && pr->GetEntries() > 0 ? pr->GetMean()     : 0.0 );
+          m_parentRMS     ->fill( pr && pr->GetEntries() > 0 ? pr->GetRMS()      : 0.0 );
+          m_parentSkewness->fill( pr && pr->GetEntries() > 0 ? pr->GetSkewness() : 0.0 );
+          m_parentKurtosis->fill( pr && pr->GetEntries() > 0 ? pr->GetKurtosis() : 0.0 );
           /*
           std::cout <<pr->GetName()
           << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()

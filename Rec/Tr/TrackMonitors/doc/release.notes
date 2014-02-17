@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-17 - Chris Jones
+ - Fix some FPE exceptions.
+
 ! 2014-01-15 - Marco Cattaneo
  - Remove support for VL
 
