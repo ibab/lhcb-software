@@ -1,23 +1,23 @@
-# ========================================================================
+# ====================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
-# =========================================================================
+# ====================================================================
 package           LoKiGen
 version           v10r13
 
-# ================ structure ==================================================
+# ================ structure ==============================================
 branches           cmt doc src dict python LoKi 
 
-# ================ dependencies ===============================================
+# ================ dependencies ===========================================
 use   LoKiCore     v*    Phys 
 use   GenEvent     v*    Event
 use   LoKiNumbers  v*    Phys 
    
-# ================ own includes ===============================================
+# ================ own includes ===========================================
 apply_pattern install_more_includes  more=LoKi
 apply_pattern install_python_modules 
 
-# ================ constituents ===============================================
+# ================ constituents ============================================
 library            LoKiGenLib           ../src/*.cpp 
 library            LoKiGen              ../src/Components/*.cpp 
 application        GenDecayGrammarTest  tests/GenDecayGrammarTest.cpp
@@ -36,11 +36,11 @@ macro_append       LoKiGen_dependencies             " LoKiGenLib "
 macro_append       LoKiGenDict_dependencies         " LoKiGenLib " 
 macro_append       GenDecayGrammarTest_dependencies " LoKiGenLib " 
 
-# ================ patterns ==================================================
+# ================ patterns ==============================================
 apply_pattern      linker_library    library=LoKiGenLib
 apply_pattern      component_library library=LoKiGen
 apply_pattern      QMTest
 
-# ========================================================================
+# ====================================================================
 # The END 
-# ========================================================================
+# ====================================================================
