@@ -25,10 +25,10 @@ apply_pattern install_python_modules
 # ==== Auto added tests ====
 apply_pattern    QMTest
 private
-  macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
-  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
-  macro CaloDAQ_use "" QMTest "CaloDAQ v* Calo --no-auto-imports"
-  macro L0DU_use "" QMTest "L0DU v* L0 --no-auto-imports"
+  macro SQL_use "" QMTest "SQLDDDB v* Det  -no_auto_imports"
+  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel  -no_auto_imports"
+  macro CaloDAQ_use "" QMTest "CaloDAQ v* Calo  -no_auto_imports"
+  macro L0DU_use "" QMTest "L0DU v* L0  -no_auto_imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
   use $(CaloDAQ_use)
