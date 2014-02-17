@@ -3,6 +3,12 @@
 ! Responsible : Feng Zhang
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
+! 2014-02-17 - Liang Zhong
+ - Added grade files for Xi_cc++ at an energy of 7 TeV
+ - Update grade files for Xi_cc++ at energies of 8, 13, 14 TeV, since the 
+    hypothetical mass of Xi_cc++ is changed to 3.7 GeV, while the original
+    files were generated assuming the mass of Xi_cc++ to be 3.5 GeV
+
 ! 2014-01-31 - G Graziani
  - update grade files at different energies for Xi_bc (0 and +), using 300 bins
 
