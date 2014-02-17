@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-02-17 - Mika Vesterinen
+ - Bug fix to K*K line in B2DMuNuX module
+
 ! 2014-02-12 - Vanya Belyaev
  - PsiX0,PSiX,Promptcharm: make use of "SimpleSelection" wrapper 
 

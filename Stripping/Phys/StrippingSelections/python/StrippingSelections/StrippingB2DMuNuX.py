@@ -823,9 +823,9 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                "& (M12 > %(PhiMassMin)s *MeV) & (M12 < %(PhiMassMax)s *MeV)" % self.__confdict__
         if _decaymode == "Ds2KStarK":
            _combinationCut += "&(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)"\
-               "& (AM13 > (%(KStarMassMin)s - 10) *MeV) & (AM13 < (%(KStarMassMax)s + 10) *MeV)" % self.__confdict__
+               "& (AM23 > (%(KStarMassMin)s - 10) *MeV) & (AM23 < (%(KStarMassMax)s + 10) *MeV)" % self.__confdict__
            _motherCut += "&(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
-               "& (M13 > %(KStarMassMin)s *MeV) & (M13 < %(KStarMassMax)s *MeV)" % self.__confdict__
+               "& (M23 > %(KStarMassMin)s *MeV) & (M23 < %(KStarMassMax)s *MeV)" % self.__confdict__
         if _decaymode == "Ds2KKPi":
            _daughtersCuts.update({"K+": "(PIDK> %(KaonPIDKKKPiOpt)s) & (PT > %(KPiPTOpt)s *MeV)" % self.__confdict__ ,
                               "pi+": "(PIDK< %(PionPIDKKKPiOpt)s) & (PT > %(KPiPTOpt)s *MeV)" % self.__confdict__ })
