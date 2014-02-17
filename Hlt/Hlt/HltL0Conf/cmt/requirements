@@ -36,5 +36,6 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
+  use PRConfig v* 
 end_private
 

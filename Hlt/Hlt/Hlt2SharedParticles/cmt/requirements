@@ -33,5 +33,6 @@ private
   use $(LHCbAlgs_use)
   use $(CaloDAQ_use)
   use $(L0DU_use)
+  use PRConfig v* 
 end_private
 

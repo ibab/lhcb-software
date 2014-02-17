@@ -26,6 +26,7 @@ use Boost        v*   LCG_Interfaces
 
 private
 use GaudiObjDesc v* -no_auto_imports
+  use PRConfig v* 
 end_private
 
 # include directory
@@ -65,4 +66,5 @@ private
   macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
   use $(SQL_use)
   use $(LHCbAlgs_use)
+  use PRConfig v* 
 end_private
