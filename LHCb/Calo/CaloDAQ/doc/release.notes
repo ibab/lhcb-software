@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r37 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Suppress silly info printout
 
