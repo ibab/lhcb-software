@@ -3,6 +3,8 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+
+!========================= RichDet v16r20 2014-02-17 =========================
 2014-02-07 - Sajan Easo
  - Fixed minor issue with RICH2 Local PD plane transform definiton for PMts 
    for plotting the hit coordinates in in the PD plane. Fix is done in DeRichPMTPanel. 
