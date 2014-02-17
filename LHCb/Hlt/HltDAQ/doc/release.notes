@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v3r1 2014-02-17 =========================
 ! 2014-02-11 - Rob Lambert
  - Assimilate Decoder baseclass for task #49078 into all HLT decoders
 
