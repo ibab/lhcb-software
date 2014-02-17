@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-02-17 - Rob Lambert
+ - Add dependency of TrackSys on DecodeRawEvent, task #50179
+
 ! 2014-02-13 - Heinrich Schindler
  - Follow renaming of PatPixelTracking to PrPixelTracking
 

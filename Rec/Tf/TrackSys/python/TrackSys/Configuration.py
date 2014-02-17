@@ -8,13 +8,18 @@ __version__ = "$Id: Configuration.py,v 1.17 2009-12-10 19:11:14 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
+from Configurables import DecodeRawEvent
 
 ## @class TrackSys
 #  High level configuration for LHCb Tracking software
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 class TrackSys(LHCbConfigurableUser):
-
+    #not actually used in *this* configurable, but used in the tracking
+    #python functions which are sensitive to this configurable
+    #some of which change the active decoders, see task #50179
+    __used_configurables__=[DecodeRawEvent]
+    
     # Steering options
     __slots__ = {
         "ExpertHistos": False # set to True to write out expert histos
