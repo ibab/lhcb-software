@@ -1,5 +1,5 @@
 package           DigiEvent
-version           v3r1
+version           v4r0
 
 branches Event xml cmt doc
 
@@ -11,17 +11,17 @@ use GaudiObjDesc v* -no_auto_imports
 end_private
 
 # Produce Header-Files from XML description
-#============================================================================
+#=====================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
-#============================================================================
+#=====================================================================
 document customdict DigiEventCustomDict ../dict/lcgDict.h
 macro_append DigiEventObj2Dict_dependencies DigiEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
-#============================================================================
+#=====================================================================
 apply_pattern god_dictionary files=../xml/*.xml
 # Disable some compiler warnings in the automatically generated dict code
 macro_append DigiEventDict_cppflags "" \

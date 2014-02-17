@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DigiEvent
 ################################################################################
-gaudi_subdir(DigiEvent v3r1)
+gaudi_subdir(DigiEvent v4r0)
 
 gaudi_depends_on_subdirs(GaudiObjDesc
                          Kernel/LHCbKernel
