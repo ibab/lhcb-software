@@ -2,14 +2,14 @@
 # Maintainer : Marco Cattaneo
 #
 package           RecEvent
-version           v2r48
+version           v2r49
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=====================================================================
 branches          cmt doc xml Event src
 
 # Used packages. 
-#============================================================================
+#=====================================================================
 use EventBase    v*      Event
 use DigiEvent    v*      Event
 use TrackEvent   v*      Event
@@ -20,23 +20,23 @@ use GaudiObjDesc v* -no_auto_imports
 end_private
 
 # Produce Header-Files from XML description
-#============================================================================
+#=====================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
-#============================================================================
+#=====================================================================
 document customdict RecEventCustomDict ../dict/lcgDict.h
 macro_append RecEventObj2Dict_dependencies RecEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
-#============================================================================
+#=====================================================================
 apply_pattern god_dictionary files=../xml/*.xml
 # Disable some compiler warnings in the automatically generated dict code
 macro_append RecEventDict_cppflags "" \
                         target-icc " -wd191"
 
 # Make the linker library
-#============================================================================
+#=====================================================================
 library       RecEvent        *.cpp
 apply_pattern linker_library  library=RecEvent
