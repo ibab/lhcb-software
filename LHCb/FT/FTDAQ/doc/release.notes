@@ -4,6 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r5 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Adapt FT decoder tool to Decoder base classes, task #49078
 
