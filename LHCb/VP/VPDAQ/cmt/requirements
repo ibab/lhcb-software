@@ -2,16 +2,16 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VPDAQ
-version           v2r4
+version           v2r5
 
 # Structure, i.e. directories to process.
-#=========================================================================
+#=====================================================================
 branches          cmt doc src
 
 include_path none
 
 # Used packages
-#=========================================================================
+#=====================================================================
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
@@ -28,6 +28,6 @@ use  SiDAQ         v*  Si
 use  AIDA          v*  LCG_Interfaces -no_auto_imports
 
 # Component library building rule
-#=========================================================================
+#=====================================================================
 library          VPDAQ      ../src/*.cpp -import=AIDA
 apply_pattern component_library library=VPDAQ
