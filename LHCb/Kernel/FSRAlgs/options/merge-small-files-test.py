@@ -3,7 +3,7 @@
 ###################
 
 from PRConfig import TestFileDB
-TestFileDB["R08S14_smallfiles"].run()
+TestFileDB.test_file_db["R08S14_smallfiles"].run()
 
 from Gaudi.Configuration import *
 from GaudiConf import IOHelper
