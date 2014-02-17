@@ -164,6 +164,7 @@ StatusCode MomentumCombiner::combine
   LHCb::Particle&                        mother    ,
   LHCb::Vertex&                       /* vertex */ ) const
 {
+  StatusCode sc = StatusCode::SUCCESS;
   typedef LHCb::Particle::ConstVector PARTICLES ;
   // summed momentum and momentum covariance matrix:
   Gaudi::LorentzVector momentum   ;
@@ -207,13 +208,23 @@ StatusCode MomentumCombiner::combine
     ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
   vct /= ( fabs(mass)>0 ? mass : 1e-30 ) ; 
   //
-  const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
+  double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
   //const double massErr2 = ROOT::Math::Product( covariance , vct ) ;
   if ( massErr2 < -999 )
-  { Warning( "MassErr^2 < -999 !" ).ignore(); }
+  { 
+    Warning( "MassErr^2 < -999 -> Fit aborted" ).ignore(); 
+    sc = StatusCode::FAILURE;
+  }
+  if ( massErr2 < 0 )
+  {
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << " -> Negative MeasuredMassError^2 = " << massErr2
+              << " reset to 0" << endmsg;
+    massErr2 = 0;
+  }
   mother.setMeasuredMassErr ( std::sqrt( fabs(massErr2) ) ) ;
   //
-  return StatusCode::SUCCESS ;
+  return sc ;
 }
 // ============================================================================
 // The END

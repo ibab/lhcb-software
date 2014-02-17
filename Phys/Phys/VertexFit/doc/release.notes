@@ -6,7 +6,9 @@
 
 ! 2014-02-17 - Chris Jones
  - Protect MomentumCombiner from sqrt(-number) FPE due to negative mass
-   error squares (yes, more of them ...). Print a warning if <-999...
+   error squares. 
+ - Fail the fit in MomentumCombiner if MassErr^2<-999 (same as for the 
+   OfflineVertexFitter).
 
 ! 2014-02-14 - Chris Jones
  - Add a Warning message to OfflineVertexFitter to monitor how often fits
