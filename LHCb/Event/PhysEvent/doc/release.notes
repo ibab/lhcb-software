@@ -2,23 +2,25 @@
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
+
+!========================= PhysEvent v11r24 2014-02-17 ========================
 ! 2014-01-26 - Stefania Vecchi & Mirco Dorigo
  - Put  SS_PionBDT tagger type in Tagger.xml as last one in the list of taggers
 
 ! 2014-01-22 - Stefania Vecchi & Mirco Dorigo
  - Added SS_PionBDT tagger type in Tagger.xml and Tagger.h
 
-!========================= PhysEvent v11r23 2013-12-09 =========================
+!========================= PhysEvent v11r23 2013-12-09 ========================
 ! 2013-11-30 - Stefania Vecchi
  - Added SS_Proton and OS_Charm tagger type in Tagger.xml and Tagger.h
 
-!========================= PhysEvent v11r22 2013-08-19 =========================
+!========================= PhysEvent v11r22 2013-08-19 ========================
 
 ! 2013-08-14 - Albert Puig
  - Added 5 new ExtraInfo variables related to the vertex isolation, starting
    on number 7000.
 
-!========================= PhysEvent v11r21 2013-07-17 =========================
+!========================= PhysEvent v11r21 2013-07-17 ========================
 
 ! 2013-07-13 - Stefania Vecchi
  - Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
@@ -29,29 +31,29 @@
  - Added two new Tagger types (OS_nnetKaon and SS_nnetKaon) for two new taggers
  - Dedicate FlavourTaggingIndex=8000 to store FTagging information for private use
 
-!========================= PhysEvent v11r20 2013-06-03 =========================
+!========================= PhysEvent v11r20 2013-06-03 ========================
 ! 2012-05-03 - Chris Jones
  - Change the data members of the Flavour tagging classes, to reduce their
    persistency sizes, by changing ints to short ints and doubles to floats.
    Never been made persistent, so no compatibility issues.
 
-!========================= PhysEvent v11r19 2012-11-26 =========================
+!========================= PhysEvent v11r19 2012-11-26 ========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= PhysEvent v11r18 2012-09-28 =========================
+!========================= PhysEvent v11r18 2012-09-28 ========================
 ! 2012-09-20 - Anton Poluektov 
   - Update enums in Particle.h related to cone variables to match what is written 
     by DaVinciTools/ConeVariables
 
-!========================= PhysEvent v11r17 2012-06-25 =========================
+!========================= PhysEvent v11r17 2012-06-25 ========================
 ! 2012-06-21 - Olivier Deschamps
   - Add enum 'HasBremAdded' to Particle.xml to flag particle with brem-corrected momentum
 
 ! 2012-06-20 - Anton Poluektov 
  - Add enums for cone variables to Particle.xml
 
-!========================= PhysEvent v11r16 2012-05-02 =========================
+!========================= PhysEvent v11r16 2012-05-02 ========================
 ! 2012-04-26 - Chris Jones
  - Provide a custom fillStream method for the Particle and Vertex class, 
    improving on the default G.O.D. generated ones.
@@ -62,14 +64,14 @@
    Particle length scale packing can handle.
  - Add some divide by zero protection to Particle::slopes
 
-!========================= PhysEvent v11r15 2012-02-28 =========================
+!========================= PhysEvent v11r15 2012-02-28 ========================
 ! 2012-02-24 - Anton Poluektov 
  - add enums for EW isolation, up to 4 cone sizes
 
 ! 2012-02-20 - Anton Poluektov 
  - add enums related to isolation information to Particle extraInfo. 
 
-!========================= PhysEvent v11r14 2011-06-14 =========================
+!========================= PhysEvent v11r14 2011-06-14 ========================
 ! 2011-06-04 - Vanya Belyaev
  - add LHCb::Particle::Selection into dictionary 
    it helps with GaudiPython/Bender
@@ -77,7 +79,7 @@
 ! 2011-04-27 - Patrick Koppenburg
  - Remove obsolete FilterCriterionResult. Completes Task #12929.
 
-!========================= PhysEvent v11r13 2011-01-31 =========================
+!========================= PhysEvent v11r13 2011-01-31 ========================
 ! 2011-01-13 - Marco Cattaneo
  - Fix icc warnings
 
