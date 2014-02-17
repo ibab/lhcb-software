@@ -4,18 +4,19 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+!========================= TrackEvent v6r0 2014-02-17 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL measurement types
 
-!========================= TrackEvent v5r23 2013-12-09 =========================
+!========================= TrackEvent v5r23 2013-12-09 ========================
 ! 2013-11-19 - Michel De Cian
  - Add histories for upgrade, remove TrackVeloUT history (not used).
 
-!========================= TrackEvent v5r22 2013-06-03 =========================
+!========================= TrackEvent v5r22 2013-06-03 ========================
 ! 2013-05-27 - Wouter Hulsbergen
  - Added function State::linearTransportTo.
 
-!========================= TrackEvent v5r21 2013-02-04 =========================
+!========================= TrackEvent v5r21 2013-02-04 ========================
 ! 2013-02-01 - Sascha Stahl
  - Added measurement types for VL (R, Phi, LiteR, LitePhi)
 
@@ -28,15 +29,15 @@
 ! 2012-11-29 - Olivier Callot
  - Add FT in the measurment list
 
-!========================= TrackEvent v5r20 2012-11-26 =========================
+!========================= TrackEvent v5r20 2012-11-26 ========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= TrackEvent v5r19 2012-09-28 =========================
+!========================= TrackEvent v5r19 2012-09-28 ========================
 ! 2012-09-13 - Paul Szczypka
  - Rename EVERYTHING from VeloPix to VP or corresponding string.
 
-!========================= TrackEvent v5r18 2012-08-31 =========================
+!========================= TrackEvent v5r18 2012-08-31 ========================
 
 ! 2012-08-31 - Chris Jones
  - Reset the ghost prob and likelihood values back to 999, in Track::reset()
@@ -46,12 +47,12 @@
  - Properly set the ghost prob and likelihood values in LHCb::Track::copy
  - Add a proper copy constructor for LHCb::Track
 
-!========================= TrackEvent v5r17 2012-07-24 =========================
+!========================= TrackEvent v5r17 2012-07-24 ========================
 ! 2012-07-22 - Wouter Hulsbergen
  - Added extra info field for fraction of used OT drifttimes.
    Added a few functions to TrackFitResult.
 
-!========================= TrackEvent v5r16 2012-03-26 =========================
+!========================= TrackEvent v5r16 2012-03-26 ========================
 ! 2012-03-07 - Marco Cattaneo
  - Add dictionary for std::vector<const LHCb::Measurement*>
 
@@ -59,7 +60,7 @@
  - Add dictionaries for std::vector<const LHCb::Node*> and
    Gaudi::Range_<std::vector<const LHCb::Node*> >
 
-!========================= TrackEvent v5r15 2012-02-28 =========================
+!========================= TrackEvent v5r15 2012-02-28 ========================
 ! 2012-02-21 - Wouter Hulsbergen
  - Made Node::chi2 virtual
  - Added measurement type Origin

@@ -1,16 +1,16 @@
-#=========================================================================
+#=====================================================================
 # Created    : 2005-02-10
 # Maintainer : Wouter Hulsbergen
-#=========================================================================
+#=====================================================================
 package           TrackEvent
-version           v5r23
+version           v6r0
 
 # Structure, i.e. directories to process. 
-#=========================================================================
+#=====================================================================
 branches          cmt doc Event xml
 
 # Used packages
-#=========================================================================
+#=====================================================================
 use   LHCbKernel      v*    Kernel
 use   GSL             v*    LCG_Interfaces
 use   Boost           v*    LCG_Interfaces
@@ -19,23 +19,23 @@ use GaudiObjDesc v* -no_auto_imports
 end_private
 
 # Produce Header-Files from XML description
-#=========================================================================
+#=====================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
-#=========================================================================
+#=====================================================================
 document customdict TrackEventCustomDict ../dict/lcgDict.h
 macro_append TrackEventObj2Dict_dependencies TrackEventCustomDict
 
 # Generate dictionaries with lcgdict via GOD
-#=========================================================================
+#=====================================================================
 apply_pattern god_dictionary files=../xml/*.xml
 # Disable some compiler warnings in the automatically generated dict code
 macro_append TrackEventDict_cppflags "" \
                           target-icc " -wd191"
 
 # Make the linker library
-#=========================================================================
+#=====================================================================
 library       TrackEvent        *.cpp
 apply_pattern linker_library	library=TrackEvent
