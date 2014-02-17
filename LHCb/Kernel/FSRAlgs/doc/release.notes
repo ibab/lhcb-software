@@ -1,11 +1,12 @@
 !-----------------------------------------------------------------------------
-! Package     : Rec/LumiAlgs
+! Package     : Rec/FSRAlgs
 ! Responsible : Jaap Panman, Rob Lambert
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
-! 2014-02-14 - Marco Clemencic
- - Change the mergesmallfielstest to use PRCOnfig
+!========================= FSRAlgs v1r5 2014-02-17 =========================
+! 2014-02-14 - Rob Lambert
+ - Change the mergesmallfielstest to use PRConfig
 
 ! 2013-07-18 - Marco Clemencic
  - Minor change.
