@@ -88,7 +88,6 @@ dstWriter = SelDSTWriter( "MyDSTWriter",
 #
 from Configurables import DaVinci
 DaVinci().InputType = 'SDST'
-DaVinci().DataType = "2011"
 DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().HistogramFile = "DVHistos.root"
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
@@ -97,7 +96,8 @@ DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py")
 
 
-from Configurables import DaVinci
 DaVinci().EvtMax=-1
-EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/c/cattanem/testFiles/Brunel-v37r1-069857_0000000006-1000ev.sdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["brunel-v37r1-sdst"].run(configurable=DaVinci(),withDB=False)
+DaVinci().DataType = "2011" #I hope....
 FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']
