@@ -4,6 +4,7 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+!========================= L0Base v2r4 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Adapt all L0 decoder tools to Decoder base classes, task #49078
 
