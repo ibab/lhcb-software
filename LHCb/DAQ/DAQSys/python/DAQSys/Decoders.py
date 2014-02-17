@@ -170,34 +170,46 @@ Decoder(toolname,active=False,
         inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 
-#===========ECAL===========
-name="EcalZSup"#as in C++
-toolname="CaloEnergyFromRaw/"+name+"Tool" #as in C++
+#===========ECAL and HCAL===========
 
-Decoder("CaloZSupAlg/"+name, active=True,
-        privateTools=[toolname],banks=['EcalE','EcalPacked','EcalPackedError'],
-        outputs=["Raw/Ecal/Adcs","Raw/Ecal/Digits"],
-        conf=DecoderDB)
+#ECAL and HCAL use the same algorithms, where the name of the alg
+#decides which detector is decoded!
+#Two versions are needed, one with zero suppression for Brunel and up, one without zero suppression for Boole
+
+dec_calo_zs=[]
+dec_calo_nzs=[]
+
+for cal in ["Ecal","Hcal"]:
+    #first       Zero suppressed (Brunel),      Non-zero suppressed (Boole)
+    for algs in [("CaloZSupAlg","ZSup",True),("CaloDigitsFromRaw","FromRaw",False)]:
+        alg,nametag,zs=algs
+        # \/ e.g. EcalZSup (Brunel) or EcalFromRaw (Boole)
+        name=cal+nametag
+        algname=alg+"/"+name
+        #push into a list for my helper function
+        if zs:
+            dec_calo_zs.append(algname)
+        else:
+            dec_calo_nzs.append(algname)
+        toolname="CaloEnergyFromRaw/"+name+"Tool" #as in C++
+        # Zero suppressed is "active", NZS is "not active", only activated in Boole
+        Decoder(algname, active=zs,
+                privateTools=[toolname],banks=[cal+'E',cal+'Packed',cal+'PackedError'],
+                outputs=["Raw/"+cal+"/Adcs","Raw/"+cal+"/Digits"],
+                conf=DecoderDB)
         #outputs={"OutputADCData": "Raw/Ecal/Adcs","OutputDigitData": "Raw/Ecal/Digits"}#set logically in code, so overwriting here won't actually work
+        
+        Decoder(toolname,active=False,
+                inputs={"RawEventLocations" : None},
+                conf=DecoderDB)
 
-Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : None},
-        conf=DecoderDB)
-
-
-#===========HCAL===========
-name="HcalZSup"#as in C++
-toolname="CaloEnergyFromRaw/"+name+"Tool" #as in C++
-
-Decoder("CaloZSupAlg/"+name, active=True,
-        privateTools=[toolname],banks=['HcalE','HcalPacked','HcalPackedError'],
-        outputs=["Raw/Hcal/Adcs","Raw/Hcal/Digits"],
-        conf=DecoderDB)
-#outputs={"OutputADCData": "Raw/Hcal/Adcs","OutputDigitData": "Raw/Hcal/Digits"}#set logically in code, so overwriting here won't actually work
-
-Decoder(toolname,active=False,
-        inputs={"RawEventLocations" : None},
-        conf=DecoderDB)
+def caloSetZeroSuppressed(ddb, zerosuppression=True,dec_calo_zs=dec_calo_zs,dec_calo_nzs=dec_calo_nzs):
+    """
+    helper function to switch between zero-suppressed and NSZ-banks
+    """
+    for calos,zs in [(dec_calo_zs, True), (dec_calo_nzs, False)]:
+        for adec in calos:
+            ddb[adec].Active=(zerosuppression==zs)
 
 
 #===========MUON===========

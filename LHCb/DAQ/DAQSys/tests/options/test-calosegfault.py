@@ -16,11 +16,17 @@ from DAQSys.Decoders import DecoderDB as ddb
 for k,v in ddb.iteritems():
     v.Active=False
 
+flagged=[]
+
 for b in ["PrsE", "EcalE", "HcalE", "ODIN"]:
     for d in decodersForBank(ddb,b,ignoreActive=True,addRequired=True):
-        #avoid L0CaloAlg tools!
-        if "Trigger" not in d.FullName and "L0" not in d.FullName:
-            d.Active=True
+        flagged.append(d)
+
+for k,v in ddb.iteritems():
+    if v not in flagged:
+        v.Active=False
+
+
 
 #configure L0TCKs
 importOptions('$L0TCK/L0DUConfig.opts')
