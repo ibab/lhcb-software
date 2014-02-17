@@ -22,7 +22,7 @@ from Configurables import DecodeVeloRawBuffer
 # =============================================================================
 def DefaultDecoderToVeloLiteClusters(
     Name                     = 'DecodeVeloRawBufferToVeloLiteClusters',
-    RawEventLocation         = 'DAQ/RawEvent',
+    RawEventLocations        = ['Other/RawEvent','DAQ/RawEvent'],
     VeloClusterLocation      ='Raw/Velo/Clusters',
     DecodeToVeloClusters     = False,
     DecodeToVeloLiteClusters = True
@@ -30,7 +30,7 @@ def DefaultDecoderToVeloLiteClusters(
     
     decoder = DecodeVeloRawBuffer( Name )
     
-    decoder.RawEventLocation         = RawEventLocation
+    decoder.RawEventLocations        = RawEventLocations
     decoder.VeloClusterLocation      = VeloClusterLocation
     decoder.DecodeToVeloClusters     = DecodeToVeloClusters
     decoder.DecodeToVeloLiteClusters = DecodeToVeloLiteClusters
@@ -43,7 +43,7 @@ def DefaultDecoderToVeloLiteClusters(
 # =============================================================================
 def DefaultDecoderToVeloClusters(
     Name                     = 'DecodeVeloRawBufferToVeloClusters',
-    RawEventLocation         = 'DAQ/RawEvent',
+    RawEventLocations        = ['Other/RawEvent','DAQ/RawEvent'],
     VeloClusterLocation      ='Raw/Velo/Clusters',
     DecodeToVeloClusters     = True,
     DecodeToVeloLiteClusters = False
@@ -51,7 +51,7 @@ def DefaultDecoderToVeloClusters(
     
     decoder = DecodeVeloRawBuffer( Name )
     
-    decoder.RawEventLocation         = RawEventLocation
+    decoder.RawEventLocations        = RawEventLocations
     decoder.VeloClusterLocation      = VeloClusterLocation
     decoder.DecodeToVeloClusters     = DecodeToVeloClusters
     decoder.DecodeToVeloLiteClusters = DecodeToVeloLiteClusters
