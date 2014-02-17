@@ -1,9 +1,10 @@
 -----------------------------------------------------------------------------
 ! Package     : Det/VPDet
-! Responsible : Paul Szczypka
+! Responsible : Heinrich Schindler
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v3r0 2014-02-17 =========================
 ! 2014-02-07 - Heinrich Schindler
  - removed DeVPSquareType class
  - moved all functionality from DeVPNewSensor to DeVPSensor

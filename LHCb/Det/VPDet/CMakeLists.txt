@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPDet
 ################################################################################
-gaudi_subdir(VPDet v2r5)
+gaudi_subdir(VPDet v3r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Det/DetDescCnv
