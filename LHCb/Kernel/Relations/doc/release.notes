@@ -4,6 +4,7 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+!========================= Relations v6r2 2014-02-17 =========================
 ! 2014-01-06 - Marco Clemencic
  - Replaced import of GaudiPython with import of cppyy (to allow usage of the
    modules in configuration files).
