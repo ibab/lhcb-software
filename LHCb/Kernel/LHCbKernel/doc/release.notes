@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r0 2014-02-17 ========================
 ! 2014-02-10 - Marco Clemencic
  - Fixed hack to debug ROOT-6015 (problem with CMT).
 
@@ -20,7 +21,7 @@
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL classes and support for VL
 
-!========================= LHCbKernel v14r3 2013-09-30 =========================
+!========================= LHCbKernel v14r3 2013-09-30 ========================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
@@ -31,7 +32,7 @@
  - cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col,
    pixel_hp to row, sensor to module)
 
-!========================= LHCbKernel v14r2 2013-07-17 =========================
+!========================= LHCbKernel v14r2 2013-07-17 ========================
 ! 2013-06-13 - Chris Jones
  - Add a new hash_value method to RichSmartIDHashFuncs.h for Boost 1.53
 
@@ -39,7 +40,7 @@
  - Add virtual destructor to ILHCbMagnetSvc interface class. Fixes gcc48 warning
    virtual-move-assign, see explanation in https://sft.its.cern.ch/jira/CFHEP-87
 
-!========================= LHCbKernel v14r1 2013-06-03 =========================
+!========================= LHCbKernel v14r1 2013-06-03 ========================
 ! 2013-05-16 - Chris Jones
  - Move the RichSmartIDTest code into the src/Test directory (to allow the tests
    directory to instead be used for a new QM test).
@@ -49,7 +50,7 @@
  - Fix LHCbID <-> RichSmartID conversion, which broke when support for MaPMTs
    was added to the RichSmartID class.
 
-!========================= LHCbKernel v14r0 2013-04-29 =========================
+!========================= LHCbKernel v14r0 2013-04-29 ========================
 !  2013-04-16 - Wouter Hulsbergen
  - HitPattern: add VP and VL
 
@@ -64,11 +65,11 @@
 ! 2013-03-22 - Wouter Hulsbergen
  - HitPattern: adapt for FT; merge UT with TT.
 
-!========================= LHCbKernel v13r15 2013-02-04 =========================
+!========================= LHCbKernel v13r15 2013-02-04 =======================
 ! 2013-01-07 - Jianchun Wang
  - Add UT hits
 
-!========================= LHCbKernel v13r14 2012-11-26 =========================
+!========================= LHCbKernel v13r14 2012-11-26 =======================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -84,7 +85,7 @@
 ! 2012-10-12 - Marco Clemencic
  - Fixed Eclipse warnings.
 
-!========================= LHCbKernel v13r13 2012-09-28 =========================
+!========================= LHCbKernel v13r13 2012-09-28 =======================
 ! 2012-09-24 - Jianchun Wang
  - Small modification in STChannelID.xml to avoid warnings
 
@@ -116,7 +117,7 @@
  - Modified LbAppInit for the change in the namespace of
    MemoryPoolAllocatorReleaser.
 
-!========================= LHCbKernel v13r12 2012-07-24 =========================
+!========================= LHCbKernel v13r12 2012-07-24 =======================
 ! 2012-07-20 - Marco Cattaneo
  - In LbAppInit, implement the same checks on memory usage as in DaVinciInit:
    . Print memory increment every "Increment" events if it has changed.
@@ -136,7 +137,7 @@
 ! 2012-07-13 - Marco Clemencic
  - Fixed compilation with Boost 1.50.
 
-!========================= LHCbKernel v13r11 2012-06-25 =========================
+!========================= LHCbKernel v13r11 2012-06-25 =======================
 ! 2012-06-22 - Gloria Corti
  - Put const in getEventCounter method of IEventCounter
  - Introduce use of IEventCounter in LbAppInit base class. The change is made
@@ -150,7 +151,7 @@
  - Moved IEventCounter from LHCbAlgs and added a setEventCounter method to
    override the counter value.
 
-!========================= LHCbKernel v13r10 2012-03-26 =========================
+!========================= LHCbKernel v13r10 2012-03-26 =======================
 ! 2012-03-22 - Chris Jones
  - Add some additional checks to StandardPacker
 
@@ -163,7 +164,7 @@
    Useful for storing detector parameters for the upgrade.
    All parameters in float to minimize memory access.
 
-!========================= LHCbKernel v13r9 2012-02-28 =========================
+!========================= LHCbKernel v13r9 2012-02-28 ========================
 ! 2012-02-28 - Marco Cattaneo
  - Fix requirements to set -DGOD_NOALLOC when tag 'target-dbg' is set, previuosly
    used tag 'debug' that no longer exists
@@ -188,7 +189,7 @@
 ! 2012-02-10 - Marco Clemencic
  - Minor clean up in IAccept.
 
-!========================= LHCbKernel v13r8 2012-01-31 =========================
+!========================= LHCbKernel v13r8 2012-01-31 ========================
 ! 2012-01-31 - Olivier Callot
  - New method in StandardPacker to pack a SmartRef
 
@@ -208,7 +209,7 @@
 ! 2011-12-20 - Marco Cattaneo
  - Fix trivial icc remark
 
-!========================= LHCbKernel v13r7 2011-12-14 =========================
+!========================= LHCbKernel v13r7 2011-12-14 ========================
 ! 2011-11-24 - Chris Jones
  - Extend the RichSmartID class with an 'Undefined' PD type enum
  - Add LHCb::RichSmartID::HPD, LHCb::RichSmartID::MaPMT and
