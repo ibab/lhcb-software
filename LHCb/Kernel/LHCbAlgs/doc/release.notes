@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r0 2014-02-17 =========================
 ! 2014-02-16 - Chris Jones
  - Fix the enabling of the FPEAuditor.
 
