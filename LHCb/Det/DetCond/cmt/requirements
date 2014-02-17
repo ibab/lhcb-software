@@ -1,11 +1,11 @@
-# ========================================================================
+# ====================================================================
 package           DetCond
-version           v12r32
+version           v12r33
 
-# =========== structure =======================================================
+# =========== structure ===================================================
 branches      DetCond doc cmt src
 
-# =========== dependencies ====================================================
+# =========== dependencies ================================================
 use           GaudiKernel       v*
 use           GaudiAlg          v*
 use           COOL              v*      LCG_Interfaces
@@ -19,17 +19,17 @@ use           LHCbKernel        v*      Kernel
 macro_append Boost_linkopts " $(Boost_linkopts_system) "
 
 
-# =========== own includes ====================================================
+# =========== own includes ================================================
 apply_pattern	install_more_includes more=DetCond
 
-#==============================================================================
+#=====================================================================
 # Needed to resolve external symbols
 apply_tag   NEEDS_COOL_FACTORY
 apply_tag   NEEDS_CORAL_RELATIONAL_ACCESS
 # Work-around for a problem in COOL/CORAL requirements files (after fix to bug #41579)
 macro CORAL_linkopts ' $(CORAL_libs) $(CORAL_relacc_libs) '
 
-# =============== LCG Dictionary ==============================================
+# =============== LCG Dictionary ===========================================
 apply_pattern     reflex_dictionary                                     \
                   dictionary=DetCond                                    \
                   headerfiles=$(DETCONDROOT)/src/dict/DetCondDict.h     \
@@ -39,7 +39,7 @@ apply_pattern     reflex_dictionary                                     \
 macro_append DetCondDict_cppflags "" \
                        target-icc " -wd2259"
 
-# =========== constituents =====================================================
+# =========== constituents =================================================
 library       DetCondLib        Lib/*.cpp
 library       DetCond           component/*.cpp ../tests/src/*.cpp
 
@@ -55,7 +55,7 @@ path_prepend PYTHONPATH ${DETCONDROOT}/genConf
 end_private
 apply_pattern install_python_modules
 
-# ========================================================================
+# ====================================================================
 private
 
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "

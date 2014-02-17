@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r33 2014-02-17 =========================
 ! 2013-12-05 - Marco Clemencic
  - Fixed the use of boost::shared_ptr according to the macro COOL_HAS_CPP11 (the
    one used in COOL headers).
