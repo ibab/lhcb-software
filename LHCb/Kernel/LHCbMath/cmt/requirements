@@ -1,18 +1,18 @@
-#=========================================================================
+#=====================================================================
 # Created    : 19/04/2006
 # Maintainer : Vanya Belyaev
-#=========================================================================
+#=====================================================================
 package           LHCbMath
-version           v3r44
+version           v3r45
 
-#=========================================================================
+#=====================================================================
 # Structure, i.e. directories to process. 
-#=========================================================================
+#=====================================================================
 branches cmt doc LHCbMath src dict python tests 
 
-#=========================================================================
+#=====================================================================
 # Used packages
-#=========================================================================
+#=====================================================================
 use GaudiKernel     v*
 use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
@@ -59,15 +59,15 @@ macro_append TestHesse_dependencies   " LHCbMathLib "
 application  TestChi2Fit   ../tests/TestChi2Fit.cpp 
 macro_append TestChi2Fit_dependencies   " LHCbMathLib "
         
-# ================= patterns ================================================
+# ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
-#=======================================================================
+#=====================================================================
 apply_pattern reflex_dictionary                               \
               dictionary=LHCbMath                                 \
               headerfiles=$(LHCBMATHROOT)/dict/LHCbMathDict.h         \
               selectionfile=$(LHCBMATHROOT)/dict/LHCbMathDict.xml     \
               options="-U__MINGW32__"
-#=========================================================================
+#=====================================================================
 
 macro_append LHCbMathDict_dependencies   " LHCbMathLib "
 # Disable some compiler remarks in the automatically generated dict code
@@ -76,7 +76,7 @@ macro_append LHCbMathDict_cppflags "" \
 
 macro        LHCbMath_use_linkopts $(use_linkopts)
 
-#=========================================================================
+#=====================================================================
 private
 # Note: libgslcblas is needed by libgsl, but the link is missing.
 macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
