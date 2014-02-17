@@ -669,6 +669,10 @@ class Boole(LHCbConfigurableUser):
             seq = GaudiSequencer("LinkCaloSeq")
             from DAQSys.Decoders import DecoderDB as ddb
             from DAQSys.DecoderClass import decodersForBank
+            #change the active decoders to the Non-Zero-Suppressed
+            from DAQSys.Decoders import caloSetZeroSuppressed
+            caloSetZeroSuppressed(ddb,False)
+            #get the decoders, but avoid the pitfalls of the trigger-specific versions
             ecalDecoders = [d.setup() for d in decodersForBank(ddb,"EcalE") if "Trigger" not in d.FullName and "L0" not in d.FullName]
             seq.Members += ecalDecoders
             hcalDecoders = [d.setup() for d in decodersForBank(ddb,"HcalE")if "Trigger" not in d.FullName and "L0" not in d.FullName]
