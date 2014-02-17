@@ -5,10 +5,286 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+
+</PRE><H1><A NAME=v36r4>2013-12-10 LHCbSys v36r4</A></H1><PRE>
+This version uses Gaudi v24r2 and LCG_66. First version compatible with ROOT6
+
 - Packages removed: Det/VLDet, VL/VLDAQ (obsolete)
 
 - Packages Added: 
  . DAQ/DAQKernel v1r0, to hold base classes of decoders, see task #49078
+
+- Packages modified: Calo/CaloDAQ v4r37, Calo/CaloUtils v10r3, 
+    DAQ/DAQSys v8r0, DAQ/DAQUtils v1r12, DAQ/RawEventCompat v1r5,
+    Det/CaloDet v10r18, Det/DetCond v12r33, Det/DetDesc v18r33, Det/OTDet v8r11,
+    Det/RichDet v16r20, Det/VeloDet v13r20, Det/VPDet v3r0, Event/DAQEvent v9r14,
+    Event/DigiEvent v4r0, Event/EventAssoc v5r3, Event/EventPacker v4r0,
+    Event/GenEvent v6r10, Event/LinkerInstances v4r0, Event/LumiEvent v3r6,
+    Event/MCEvent v3r0, Event/PhysEvent v11r24, Event/RecEvent v2r49,
+    Event/SwimmingEvent v1r4, Event/TrackEvent v6r0, Ex/IOExample v4r12,
+    FT/FTDAQ v1r5, GaudiConf v19r0, GaudiObjDesc v11r18, Hlt/HltDAQ v3r1,
+    Kernel/FSRAlgs v1r5, Kernel/LHCbAlgs v3r0, Kernel/LHCbKernel v15r0,
+    Kernel/LHCbMath v3r45, Kernel/PartProp v1r17, Kernel/Relations v6r2,
+    L0/L0Base v2r4, L0/L0Calo v11r12, L0/L0DU v10r31, L0/L0Muon v9r13,
+    Muon/MuonDAQ v4r20, OT/OTDAQ v7r17, Phys/LoKiCore v11r17,
+    Phys/LoKiGen v10r14, Phys/LoKiHlt v3r13, Phys/LoKiMC v10r10,
+    Phys/LoKiNumbers v10r5, Rich/RichDAQ v3r42, ST/STDAQ v4r4,
+    Tools/CondDBEntityResolver v5r7, Tools/CondDBUI v3r27,
+    Tools/EventIndexer v1r3, Tr/LHCbTrackInterfaces v2r0, Velo/VeloDAQ v6r11,
+    VP/VPDAQ v2r5
+
+- In DAQ/DAQSys v8r0, Event/DigiEvent v4r0, Event/EventPacker v4r0,
+     Event/LinkerInstances v4r0, Event/MCEvent v3r0, Event/TrackEvent v6r0,
+     GaudiConf v19r0, Kernel/LHCbAlgs v3r0, Kernel/LHCbKernel v15r0,
+     Tr/LHCbTrackInterfaces v2r0
+  . Remove VL support
+
+- In DAQ/DAQSys v8r0
+  . Added HltTrackReportsDecoder -> Hlt/Track/Velo (shared location)
+  . Added simple RawEventdump script
+
+- In DAQ/DAQUtils v1r12
+  . Bank killer should not kill banks it was not asked explicitly to kill!
+
+- In Det/CaloDet v10r18
+  . DeCalorimeter.cpp : fix floating point exception in the initialize()
+
+- In Det/OTDet v8r11
+  . Protect WalkRelation::walk against floating point overflows with large
+    exponents passed to vdt::fast_exp.
+  . Fixed CMake configuration.
+
+- In Det/RichDet v16r20
+  . DeRichPMTPanel: fixed minor issue with RICH2 Local PD plane transform
+    definiton for PMTs for plotting the hit coordinates in in the PD plane.
+  . Adaptation for using large+standard PMTs in RICH2. Modified DeRich,
+    DeRichPMT, DeRichPMTPanel 
+
+- In Det/VPDet v3r0
+  . Removed DeVPSquareType class
+  . Moved all functionality from DeVPNewSensor to DeVPSensor
+  . Removed DeVPNewSensor
+  . Added XmlDeVPSensorCnv.cpp 
+
+- In Event/DAQEvent v9r14
+  . Added HltTrackReports RawBank type
+
+- In Event/EventPacker v4r0
+  . Fix an FPE exception due to sqrt(-number).
+  . Fix an FPE exception when a fraction top/bot was packed with bot=0...
+  . Minor CPU optimisation in PackParticlesAndVertices.cpp
+
+- In Event/PhysEvent v11r24
+  . Added SS_PionBDT tagger type in Tagger.xml and Tagger.h
+
+- In Ex/IOExample v4r12
+  . Follow removal of POOL services for reading POOL files
+    (see https://savannah.cern.ch/task/?49581)
+  . Remove i686-slc5-gcc43 references, no longer supported
+  . Move all test files previously in Castor to CERN-SWTEST (EOS) and access
+    them via TestFilesDB. Requires PRConfig > v1r7
+  . Add PRConfig dependency for QMTests
+
+- In GaudiConf v19r0
+  . Remove Persistency option from DSTConf/DigiConf
+  . Remove POOL test suite, no reason to have it any longer
+  . Remove POOL from IOHelper
+
+- In Hlt/HltDAQ v3r1
+  . Added Writer and Decoder for Tracks, see task #48807
+  . Added unit testing support
+
+- In Kernel/FSRAlgs v1r5
+  . Change the mergesmallfilestest to use PRConfig
+
+- In Kernel/LHCbAlgs v3r0
+  . Fix the enabling of the FPEAuditor in LHCbApp.
+
+- In Kernel/LHCbKernel v15r0
+  . Update LbAppInit to only report memory changes when they are greater than
+    some small delta value (16KB by default).
+  . Avoid calling System::virtualMemory() more often than required in LbAppInit.
+
+- In Kernel/LHCbMath v3r45
+  . Add jackknife estimator 
+  . Improve positive polinomials with n-sphere parameterization 
+  . ValueWithError: minor fix to resolve python ambguities 
+
+- In Phys/LoKiCore v11r17
+  . Add "right" counter-partners for math-operations with "parameters" 
+  . Add the notion of "parameters" and operations with them:
+      use scalar properties as parameters :
+         PT > PARAM('Ptmin')  
+      use map-like properties as parameters :
+         PT > PARAM('Parameters[Ptmin]') 
+      look for scalar property and check regex-pattenn for the algorithm name  
+         PT > PARAM('Ptmin/.*Line')
+      look for map-like property and check regex-pattens for the algorithm name 
+         PT > PARAM('Params[Ptmin]/.*Line') 
+
+- In Phys/LoKiGen v10r14, Phys/LoKiHlt v3r13, Phys/LoKiMC v10r10,
+     Phys/LoKiNumbers v10r5 
+  . add dictionaries for new FuncOps__
+
+- In Phys/LoKiNumbers v10r5
+  . Add defintion of PARAM helper object 
+  . Add tests for and/or operations (see https://savannah.cern.ch/task/?46676)
+
+- In Tools/CondDBEntityResolver v5r7
+  . Use a proper binary Python module to give access to the compression and
+    decompression functions.
+ 
+- In Tools/CondDBUI v3r27
+  . Use the new CondDBCompression Python binary module.
+  . scripts/CondDBBrowser: Force the environment variable 'LC_ALL' to be 'C'
+
+--->>> Changes related to new Decoder base classes, task #49078 <<<---
+
+- In Calo/CaloDAQ v4r37
+  . Adapt calo decoder tool to Decoder base classes, task #49078
+
+- In DAQ/DAQSys v8r0
+  . Many updates to DecoderDB, task #49078
+  . Add to test that info/warnings should not be printed from the default
+    configuration
+  . Handle the case where decoders are given whose bank is not known in the
+    target format! see task #48807
+
+- In DAQ/DAQUtils v1r12
+  . Assimilate Decoder baseclass for task #49078 into RawEventDump
+  . Add RawEventLocations to RawEventDump, also translate bank types into strings
+    to dump for better clarity, see task #48399
+
+- In DAQ/RawEventCompat v1r5
+  . Add a simple method to list all known banks in a given format
+
+- In Event/LumiEvent v3r6
+  . HltLumiSummaryDecoder adapted to follow decoder baseclass task #49078 
+
+- In FT/FTDAQ v1r5
+  . Adapt FT decoder tool to Decoder base classes, task #49078
+
+- In Hlt/HltDAQ v3r1
+  . Assimilate Decoder baseclass for task #49078 into all HLT decoders
+
+- In Kernel/LHCbAlgs v3r0
+  . Suppress info print out in decoder initialize unless the output really
+    is unexpected.
+  . Adapt odin decoder tool to Decoder base classes, task #49078
+
+- In L0/L0Base v2r4, L0/L0Calo v11r12, L0/L0DU v10r31, L0/L0Muon v9r13
+  . Adapt all L0 decoder tools to Decoder base classes, task #49078
+
+- In Muon/MuonDAQ v4r20
+  . Adapt MuonRawBuffer decoder tool to Decoder base classes, task #49078
+
+- In OT/OTDAQ v7r17
+  . Adapt OT decoder tool to Decoder base classes, task #49078
+
+- In Rich/RichDAQ v3r42
+  . Initialize RawEventLocations to a more realistic list.
+
+- In ST/STDAQ v4r4
+  . Suppress not-needed info print out in initialize for default configurations
+  . Initialize the search paths following task #49078, but don't use the new base
+    classes yet
+
+- In Velo/VeloDAQ v6r11
+  . Suppress velo decoder printout for nominal options
+    (DAQ/RawEvent Other/RawEvent)
+  . Adapt velo decoder tools to Decoder base classes, task #49078
+
+- In VP/VPDAQ v2r5
+  . Adapt VP decoder tool to Decoder base classes, task #49078
+
+--->>> Changes to support ROOT 6 (compatible also with ROOT 5) <<<---
+
+- In Calo/CaloUtils v10r3 
+  . Minor fix in Calo2Track.h (needed only when not using Reflex, e.g. ROOT 6).
+
+- In Det/DetCond v12r33
+  . Fixed the use of boost::shared_ptr according to the macro COOL_HAS_CPP11
+    (the one used in COOL headers).
+  . Do not explicitly use boost::shared_ptr.
+    See https://sft.its.cern.ch/jira/browse/ROOT-5806
+
+- In Det/DetDesc v18r33
+  . Minor change in the inheritance tree of Element.
+    Removed the keyword virtual which was not needed and exposed a bug in ROOT6.
+    https://sft.its.cern.ch/jira/browse/ROOT-5840
+
+- In Det/VeloDet v13r20
+  . Minor change in the tests for VeloAlignCond to work with ROOT 6.
+
+- In Event/EventAssoc v5r3, Event/SwimmingEvent v1r4, Kernel/LHCbMath v3r45,
+     Kernel/Relations v6r2
+  . Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
+
+- In Event/EventPacker v4r0
+  . Made the headers for the I/O classes public 
+    (needed to test the migration to ROOT 6).
+
+- In Event/GenEvent v6r10
+  . Minor change to lcg_selection.xml to take into account the fact that
+    GaudiObjDesc sorts the lines when it adds more selections.
+
+- In Event/RecEvent v2r49
+  . Fixed selection to work with both ROOT 5 and 6.
+
+- In GaudiObjDesc v11r18
+  . Modified the generated dictionary header so that the dummy class for the
+    instantiations has a different name for each dictionary (needed in ROOT 6).
+
+- In Kernel/LHCbKernel v15r0
+  . Enabled temporarily the use Boost allocators also in debug mode when building
+    with ROOT 6, needed to debug https://sft.its.cern.ch/jira/browse/ROOT-6015
+
+- In Kernel/LHCbMath v3r45
+  . Added work-around for autoloading dictionary of templates in ROOT 6.
+  . Restore the use of GaudiPython in Types.py and Math.py to facilitate the
+    transition to ROOT 6.
+
+- In Kernel/LHCbMath v3r45, Kernel/PartProp v1r17, Kernel/Relations v6r2,
+     Phys/LoKiCore v11r17, Phys/LoKiGen v10r14
+  . Replaced import of GaudiPython with import of cppyy
+    (to allow usage of the modules in configuration files).
+
+- In Kernel/PartProp v1r17, Kernel/Relations v6r2, Phys/LoKiCore v11r17
+  . Removed unnecessary dependency on Reflex.
+
+- In Kernel/PartProp v1r17, Kernel/Relations v6r2, Phys/LoKiCore v11r17, 
+     Phys/LoKiGen v10r14, Tools/CondDBEntityResolver v5r7, Tools/CondDBUI v3r27
+  . Replaced PyCintex with ROOT (preparing migration to ROOT 6).
+
+- In Phys/LoKiCore v11r17
+  . Added workaround for bug ROOT-5721 (to be removed ASAP).
+    https://sft.its.cern.ch/jira/browse/ROOT-5721
+  . Fixed compilation problem with Boost Spirit when using Pheonix V3
+    (mandatory in Clang).
+  . Added include for boost::smart_ptr.
+
+- In Phys/LoKiMC v10r10
+  . Added some missing destructors (needed for the migration to ROOT 6).
+
+- In Phys/LoKiNumbers v10r5
+  . Added work-around for autoloading dictionary of templates in ROOT 6.
+
+- In Rich/RichDAQ v3r42
+  . Fixed compilation with Clang 3.3.
+
+- In Tools/CondDBEntityResolver v5r7
+  . Modified the dictionary to work with ROOT 6.
+  . Replaced ROOT with cppyy in check_db_compression.py
+
+- In Tools/CondDBEntityResolver v5r7, Tools/CondDBUI v3r27 
+  . Replaced PyCintex with cppyy.
+    See https://sft.its.cern.ch/jira/browse/ROOT-154
+
+- In Tools/EventIndexer v1r3
+  . Modified the invocation of rootcint to work with ROOT 6 too.
+  . Minor change to the tests to work around limitations in the interpreter of
+    the beta version of ROOT 6.
+
 
 </PRE><H1><A NAME=v36r4>2013-12-10 LHCbSys v36r4</A></H1><PRE>
 This version uses Gaudi v24r2 and LCG_66
