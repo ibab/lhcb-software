@@ -1,15 +1,15 @@
-# ========================================================================
+# ====================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
-# ========================================================================
+# ====================================================================
 package           CaloUtils
-version           v10r2
+version           v10r3
 
-# ================= structure =================================================
+# ================= structure =============================================
 branches            cmt doc src python CaloUtils
 
-# ================= dependencies ==============================================
+# ================= dependencies ==========================================
 use GaudiAlg         v*
 use CaloInterfaces   v*      Calo
 use CaloDet          v*      Det
@@ -21,7 +21,7 @@ use DigiEvent        v*      Event
 use L0Event          v*      Event
 use AIDA             v*      LCG_Interfaces -no_auto_imports
 
-# ================= own includes ==============================================
+# ================= own includes ==========================================
 apply_pattern install_more_includes  more=CaloUtils
 apply_pattern install_python_modules
 
@@ -35,6 +35,6 @@ apply_pattern       reflex_dictionary                                     \
                     selectionfile=$(CALOUTILSROOT)/dict/CaloUtils.xml     \
                     options=" -U__MINGW32__ "
 
-# ================= patterns =================================================
+# ================= patterns =============================================
 apply_pattern       linker_library library=CaloUtils
 macro_append CaloUtils_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
