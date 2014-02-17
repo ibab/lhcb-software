@@ -13,8 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r17 2014-02-17 =========================
 ! 2014-02-03 - Vanya Belyaev
- - fix complier warning 
+ - fix compiler warning 
 
 ! 2014-02-02 - Vanya Belyaev
 
