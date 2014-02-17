@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!========================= LumiEvent v3r6 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - HltLumiSummaryDecoder adapted to follow decoder baseclass task #49078 
 
