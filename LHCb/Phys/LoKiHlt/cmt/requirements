@@ -1,14 +1,14 @@
-# ========================================================================
+# ====================================================================
 # Created    : 2008-09-16
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-# ========================================================================
+# ====================================================================
 package           LoKiHlt
-version           v3r12p1
+version           v3r13
         
-# =============== structure ==================================================
+# =============== structure ===============================================
 branches          cmt doc src dict python LoKi 
         
-# =============== dependencies ===============================================
+# =============== dependencies ============================================
 use               LoKiCore          v* Phys 
 use               LoKiNumbers       v* Phys 
 use               DAQEvent          v* Event 
@@ -21,11 +21,11 @@ use               GaudiPython       v*    -no_auto_imports
 use               Python            v*    LCG_Interfaces 
 public
 
-# =============== own includes ===============================================
+# =============== own includes ============================================
 apply_pattern install_more_includes more=LoKi
 apply_pattern install_python_modules
 
-# =============== constituents ===============================================
+# =============== constituents =============================================
 library           LoKiHltLib    ../src/*.cpp 
 library           LoKiHlt       ../src/Components/*.cpp 
 
@@ -42,11 +42,11 @@ apply_pattern    reflex_dictionary                                \
 macro_append LoKiHltDict_cppflags "" \
                        target-icc " -wd177 -wd191"
 
-# =============== patterns ===================================================
+# =============== patterns ===============================================
 apply_pattern    linker_library    library=LoKiHltLib
 apply_pattern    component_library library=LoKiHlt
 apply_pattern    QMTest 
 
-# ========================================================================
+# ====================================================================
 # The END 
-# ========================================================================
+# ====================================================================
