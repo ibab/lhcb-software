@@ -1,34 +1,34 @@
-# ========================================================================
+# ====================================================================
 package           CaloDet 
-version           v10r17
+version           v10r18
 
-# =============== structure ===================================================
+# =============== structure ===============================================
 branches         src cmt doc options CaloDet dict
 
-# =============== used packages ===============================================
+# =============== used packages ===========================================
 use GaudiAlg     v*
 use LHCbKernel   v*     Kernel
 use CaloKernel   v*     Calo 
 use DetDesc      v*     Det 
 
-# =============== own options =================================================
+# =============== own options =============================================
 set CALODETOPTS  ${CALODETROOT}/options
 
-# =============== own includes ================================================
+# =============== own includes ============================================
 apply_pattern install_more_includes more=CaloDet
 
 # =============== link library (base classes) =================================
 library          CaloDetLib        Lib/*.cpp 
 
-# =============== component library ===========================================
+# =============== component library =========================================
 library          CaloDet           component/*.cpp
 
-#================ patterns ===================================================
+#================ patterns ===============================================
 apply_pattern component_library library=CaloDet
 apply_pattern linker_library    library=CaloDetLib
 
 
-# =============== LCG Dictionaries ============================================
+# =============== LCG Dictionaries ==========================================
 apply_pattern     reflex_dictionary                                 \
                   dictionary=CaloDet                                \
                   headerfiles=$(CALODETROOT)/dict/CaloDetDict.h     \
