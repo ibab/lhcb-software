@@ -79,6 +79,12 @@ StatusCode FTClusterCreator::initialize() {
   m_nberOfKeptHitFromMap = 0;
   m_evtNbCluster64 = 0;
 
+  if (m_removeITRegion == 1) {
+    info() << "Will remove IT Region, with IT scale = " << m_ITScale << endmsg;
+  } if (m_removeITRegion == 2) {
+    info() << "Will keep only IT Region, with IT scale = " << m_ITScale << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -373,41 +379,30 @@ StatusCode FTClusterCreator::execute() {
           
           bool acceptCluster = 1;
           if( m_removeITRegion != 0 ) {
+            // Check if in IT region
             float ITXmin = 99.  , ITYmin = 99. ;
             float ITXcen = 264.5, ITXmax = 621.;
             float ITYcen = 109. , ITYmax = 207.;
-            float ITXwMin = ITXmin + (ITXcen - ITXmin) * m_ITScale;
-            float ITXwMax = ITXmin + (ITXmax - ITXmin) * m_ITScale;
-            float ITYwMin = ITYmin + (ITYcen - ITYmin) * m_ITScale;
-            float ITYwMax = ITYmin + (ITYmax - ITYmin) * m_ITScale;
-            //float FTZmin = 8360.-10., FTZmax = 8725.+10.;
-            float hitX, hitY;//, hitZ;
-            //const int particleKey = largestHit -> mcParticle() -> key();
-            //for( MCHits::const_iterator iterHit = mcHits -> begin(); iterHit != mcHits -> end(); ++iterHit ) {
-              // loop over all MCHits in event
-              //MCHit* cHit = *iterHit;
-              const MCHit* cHit = largestHit;  // avoid loop over all MCHits, just look at current cluster pos
-              //if( cHit -> mcParticle() -> key() == particleKey ) {
-                // if this MCHit has the same MCParticle origin as the Cluster MCHit under consideration
+            float ITXcenp = ITXcen * sqrt(m_ITScale);
+            float ITXmaxp = ITXmin + (ITXmax-ITXmin) * m_ITScale;
+            float ITYmaxp = ITYmin + (ITYmax-ITYmin) * sqrt(m_ITScale);
+            float hitX, hitY;
+              const MCHit* cHit = largestHit;  
                 hitX = cHit -> midPoint().x();
                 hitY = cHit -> midPoint().y();
-                //hitZ = cHit -> midPoint().z();
-                //if( hitZ > FTZmin && hitZ < FTZmax ) {
-                  // if this MCHit is in T2
-                  bool  hitInIT = ( ( hitX < ITXwMax && hitX > -ITXwMax && hitY < ITYwMin && hitY > -ITYwMin) ||
-                                    ( hitX < ITXwMin && hitX > -ITXwMin && hitY < ITYwMax && hitY > -ITYwMax) );
+                  bool hitInIT = ( ( hitX > -ITXmaxp && hitX < -ITXmin  && hitY > -ITYcen  && hitY < ITYcen ) || //L
+                                   ( hitX >  ITXmin  && hitX <  ITXmaxp && hitY > -ITYcen  && hitY < ITYcen ) || //R
+                                   ( hitX > -ITXcenp && hitX <  ITXcenp && hitY >  ITYmin  && hitY < ITYmaxp) || //T
+                                   ( hitX > -ITXcenp && hitX <  ITXcenp && hitY > -ITYmaxp && hitY < -ITYmin) || //B
+                                   ( hitX > -ITXmin  && hitX <  ITXmin  && hitY > -ITYmin  && hitY < ITYmin ) ); //C
                   if ( ( m_removeITRegion == 1 &&  hitInIT ) ||
                        ( m_removeITRegion == 2 && !hitInIT ) ) {
-                    // if this hit is (or isn't) in the T2 IT region
+                    // if this hit is (or isn't) in the IT region
                     acceptCluster = 0;
                     plot2D( largestHit->midPoint().x(), largestHit->midPoint().y(),
                         "MCCluster_rejected","Rejected MCClusters; x [mm]; y [mm]",
                         -3000, 3000, -2500, 2500, 200, 200 );
                   }
-                  //break; // only look at first MCHit in T2
-                //}
-              //} // end of if MCParticle ID matches
-            //} // end of MCHit loop
           } // end of if removeITRegion
 
           if ( acceptCluster ) {

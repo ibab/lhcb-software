@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-02-18 - Jacco de Vries
+ - Cleaned up IT removal option in FTClusterCreator
+
 ! 2014-02-14 - Paul Szczypka
  - Fixed release notes added after v1r7 tag.
  - Temp fix for unused variable hitZ in FTClusterCreator.cpp

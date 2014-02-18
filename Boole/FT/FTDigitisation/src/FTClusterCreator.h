@@ -49,7 +49,8 @@ private:
   float m_sumCharge;
 
   bool m_splitPrevNextMoni;
-  int  m_removeITRegion, m_ITScale;
+  int  m_removeITRegion;
+  float m_ITScale;
 
   int     m_nberOfLostHitFromMap;
   int     m_nberOfKeptHitFromMap;
