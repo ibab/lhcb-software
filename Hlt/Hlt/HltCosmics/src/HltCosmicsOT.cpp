@@ -5,7 +5,6 @@
 #include "HltCosmicsOT.h"
 #include "Event/OTLiteTime.h"
 
-#include <boost/foreach.hpp>
 
 namespace LHCb
 {

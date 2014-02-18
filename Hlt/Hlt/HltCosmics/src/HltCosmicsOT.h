@@ -37,7 +37,7 @@ class HltCosmicsOT : public HltAlgorithm
     virtual StatusCode execute();    ///< Algorithm event execution
 
   private:
-    Hlt::SelectionContainer0 m_selections;
+    Hlt::SelectionContainer<void> m_selections;
 
     /// decoder so that we can ask quickly if there were any hits
     IOTRawBankDecoder* m_otdecoder;
