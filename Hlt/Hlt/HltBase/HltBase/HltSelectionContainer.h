@@ -73,12 +73,12 @@ void map_impl( F& f, Tuple& t, index_sequence<I, J...> )
     map_impl( f, t, index_sequence<J...>{} );
 }
 
-/// map functor f on each item in a tuple: starting with f(get<0>), f(get<1>),...
-/// f(get<N-2>), f(get<N-1>)
+/// map functor f on each item in a tuple: 
+/// starting with f(get<0>), f(get<1>),... f(get<N-2>), f(get<N-1>)
 template <typename F, typename Tuple>
 void map( F& f, Tuple& t )
 {
-    return map_impl( f, t, make_index_sequence<std::tuple_size<Tuple>::value>{} );
+    map_impl( f, t, make_index_sequence<std::tuple_size<Tuple>::value>{} );
 }
 
 template <typename Candidate>
