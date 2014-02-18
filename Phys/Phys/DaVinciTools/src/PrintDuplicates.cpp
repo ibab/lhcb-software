@@ -109,7 +109,6 @@ void PrintDuplicates::deepHashCheck( const LHCb::Particle::ConstVector & parts,
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Performing deep hash comparison" << endmsg;
 
-  // First, check the daughters seperately
   typedef std::map< Hashes64, LHCb::Particle::ConstVector > HashCount;
   HashCount hashCount;
 
@@ -134,11 +133,11 @@ void PrintDuplicates::deepHashCheck( const LHCb::Particle::ConstVector & parts,
   }
 
   // Save any duplicates left
-  for ( HashCount::const_iterator iH = hashCount.begin(); 
+  for ( HashCount::const_iterator iH = hashCount.begin();
         iH != hashCount.end(); ++iH )
   {
     if ( iH->second.size() > 1 ) filtDups.push_back( iH->second );
-  } 
+  }
 
 }
 
@@ -151,39 +150,27 @@ PrintDuplicates::getDeepHashes( const LHCb::Particle * p,
   if ( depth > 999999 )
   { Warning( "Infinite recursion in getDeepHashes" ).ignore(); return; }
 
-  if ( p->isBasicParticle() )
+  // Fill PID type and Particle hash into a single 64 bit number
+  union PIDData
   {
-
-    // Fill PID type and Particle hash into a single 64 bit number
-    union PIDData
+    struct
     {
-      struct
-      {
-        Hash32 pidType : 32;
-        Hash32 hash    : 32;
-      } packed;
-      Hash64 raw;
-    } data;
-    data.packed.pidType = p->particleID().pid();
-    data.packed.hash    = getLHCbIDsHash(p);
+      Hash32 pidType : 32;
+      Hash32 hash    : 32;
+    } packed;
+    Hash64 raw;
+  } data;
+  data.packed.pidType = p->particleID().pid();
+  data.packed.hash    = getLHCbIDsHash(p);
 
-    // combine with the overall hash
-    hashes.push_back( data.raw );
+  // Add to the list of hashes
+  hashes.push_back( data.raw );
 
-  }
-  else
+  // Repeat for daughters.
+  for ( SmartRefVector<LHCb::Particle>::const_iterator id = p->daughters().begin();
+        id != p->daughters().end(); ++id )
   {
-
-    // Add the hash for composite to the list
-    hashes.push_back( (Hash64)getLHCbIDsHash(p) );
-
-    // loop over daughters
-    for ( SmartRefVector<LHCb::Particle>::const_iterator id = p->daughters().begin();
-          id != p->daughters().end(); ++id )
-    {
-      getDeepHashes(*id,hashes,++depth);
-    }
-
+    getDeepHashes(*id,hashes,++depth);
   }
 
 }

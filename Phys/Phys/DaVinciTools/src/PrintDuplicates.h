@@ -72,7 +72,7 @@ private:
   /// Get the hash for a Particle
   inline Hash32 getLHCbIDsHash( const LHCb::Particle * p ) const
   {
-    return LHCb::HashIDs::hashID( p );
+    return (Hash32) LHCb::HashIDs::hashID( p );
   }
 
   /// Peform a deep check on the given particles
