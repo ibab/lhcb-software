@@ -39,17 +39,18 @@ namespace {
                const LHCb::Node& node,
                const ITrackProjector::Derivatives& deriv)
     {
-      double V = node.errMeasure2() ;
+      const double V    = node.errMeasure2() ;
+      const double Vinv = ( fabs(V)>0 ? 1.0/V : 9e30 );
       double R = node.errResidual2() ;
       for(int i=0; i<6; ++i)
         if(m_delta[i] != 0 ) {
           double Ax = deriv(0,i) ;
           // first compute the weight, which is the 2nd derivative
           // w = A^T * V^-1 * R * V^-1 * A
-          double halfd2Chi2dX2 = Ax * 1/V * R * 1/V * Ax ;
+          double halfd2Chi2dX2 = Ax * Vinv * R * Vinv * Ax ;
           // now compute the 1 derivative
           if( std::abs(halfd2Chi2dX2) > 1e-15 ) {
-            double halfdChi2dX   = Ax * 1/V * node.residual() ;
+            double halfdChi2dX   = Ax * Vinv * node.residual() ;
             // now fill the profile
             m_delta[i]->fill( id, halfdChi2dX / halfd2Chi2dX2, halfd2Chi2dX2 ) ;
           }
@@ -59,16 +60,20 @@ namespace {
     ~AlignProfile()
     {
       for(int i=0; i<6; ++i)
-        if(m_delta[i] != 0 ) {
+        if(m_delta[i] != 0 ) 
+        {
           TProfile* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_delta[i] ) ;
-          if(pr) {
+          if ( pr ) 
+          {
             IHistogram1D* pull = m_parent->book(m_dir + "/" + m_dofnames[i] + "Pull",
                                                 m_delta[i]->title() + " pull",-5,5) ;
             double xmax = i<=2 ? 0.1 : 0.001 ;
-            IHistogram1D* delta = m_parent->book(m_dir + "/" + m_dofnames[i] + "Delta",
-                                                 m_delta[i]->title(),-xmax,xmax) ;
-            for(int ibin = 1; ibin<=pr->GetNbinsX(); ++ibin) {
-              pull->fill( pr->GetBinContent(ibin) / pr->GetBinError(ibin) ) ;
+            IHistogram1D * delta = m_parent->book(m_dir + "/" + m_dofnames[i] + "Delta",
+                                                  m_delta[i]->title(),-xmax,xmax) ;
+            for(int ibin = 1; ibin<=pr->GetNbinsX(); ++ibin)
+            {
+              pull ->fill( fabs(pr->GetBinError(ibin)) > 0 ?
+                           pr->GetBinContent(ibin)/pr->GetBinError(ibin) : 0.0 ) ;
               delta->fill( pr->GetBinContent(ibin) ) ;
             }
           }

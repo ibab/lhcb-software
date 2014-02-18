@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-18 - Chris Jones
+ - Fix another divide-by-zero PFE in AlignProfile.
+
 ! 2014-02-17 - Chris Jones
  - Fix some FPE exceptions.
 
