@@ -253,8 +253,8 @@ ProtoParticlePacker::check( const DataVector & dataA,
     LHCb::ProtoParticle::ExtraInfo::const_iterator tIt = tExtra.begin();
     for ( kk = 0; tExtra.size() > kk; ++kk, ++oIt, ++tIt ) {
       if ( (*oIt).first != (*tIt).first ) isOK = false;
-      if ( ( (*tIt).second == (*oIt).second ) || 
-	   ( 1.e-7 < fabs( ((*tIt).second - (*oIt).second ) / (*tIt).second ) ) ) isOK = false;
+      if ( ( (*tIt).second == 0 && (*tIt).second != (*oIt).second ) || 
+	   ( (*tIt).second != 0 && 1.e-7 < fabs( ((*tIt).second - (*oIt).second ) / (*tIt).second ) ) ) isOK = false;
     }
 
     if ( !isOK || MSG::DEBUG >= parent().msgLevel() ) 

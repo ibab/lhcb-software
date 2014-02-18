@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-18 - Maurizio Martinelli
+ - I had made an error in the previous commit. Now solved.
+
+! 2014-02-18 - Maurizio Martinelli
  - Fix an FPE exception due to division by zero and a bug in tracks extra info 
   comparison.
 
