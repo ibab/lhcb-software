@@ -44,35 +44,41 @@ namespace detail
 {
 
 template <size_t... I>
-struct index_sequence {} ;
+struct index_sequence
+{
+};
 
 // push N-1 onto the 'pack', lower N by one, and recurse...
-template <size_t N, size_t ...Is>
-struct make_index_sequence : make_index_sequence<N - 1, N - 1, Is...> {};
+template <size_t N, size_t... Is>
+struct make_index_sequence : make_index_sequence<N - 1, N - 1, Is...>
+{
+};
 
 // end of recursion -- 0 items to add...
-template <size_t ... Is>
-struct make_index_sequence<0, Is...> : index_sequence<Is...> {};
+template <size_t... Is>
+struct make_index_sequence<0, Is...> : index_sequence<Is...>
+{
+};
 
 // -- end of recursion
 template <typename F, typename Tuple>
-void map_impl(F& , Tuple& , index_sequence<>)
+void map_impl( F&, Tuple&, index_sequence<> )
 {
 }
 // -- recursively walk through the tuple...
 template <typename F, typename Tuple, size_t I, size_t... J>
-void map_impl(F& f, Tuple& t, index_sequence<I, J...>)
+void map_impl( F& f, Tuple& t, index_sequence<I, J...> )
 {
-    // std::cout << "get<"<< I << ">" << std::endl;
-    f(std::get<I>(t));
-    map_impl(f,t,index_sequence<J...>{} );
+    f( std::get<I>( t ) );
+    map_impl( f, t, index_sequence<J...>{} );
 }
 
-/// map a functor f on each item in a tuple: starting with f(get<0>), f(get<1>),... f(get<N-2>), f(get<N-1>)
+/// map functor f on each item in a tuple: starting with f(get<0>), f(get<1>),...
+/// f(get<N-2>), f(get<N-1>)
 template <typename F, typename Tuple>
 void map( F& f, Tuple& t )
 {
-    return map_impl(f, t, make_index_sequence<std::tuple_size<Tuple>::value>{} ) ;
+    return map_impl( f, t, make_index_sequence<std::tuple_size<Tuple>::value>{} );
 }
 
 template <typename Candidate>
@@ -105,7 +111,7 @@ inline void register_( data_<U>& d, HltAlgorithm& owner )
     d.selection = &owner.registerTSelection<U>( d.property );
 }
 
-template<>
+template <>
 inline void register_( data_<void>& d, HltAlgorithm& owner )
 {
     d.selection = &owner.registerSelection( d.property );
@@ -127,13 +133,16 @@ struct cdata_
 class retrieve_
 {
     HltAlgorithm& m_owner;
+
   public:
     retrieve_( HltAlgorithm& owner ) : m_owner( owner )
     {
     }
     // specialization for output -- do nothing
     template <typename U>
-    void operator()( detail::data_<U>& ) { }
+    void operator()( detail::data_<U>& )
+    {
+    }
 
     // specialization for input -- retrieve
     template <typename U>
@@ -144,8 +153,7 @@ class retrieve_
                                       "::retrieve_ selection already present..",
                                   "", StatusCode::FAILURE );
         }
-        u.selection =
-            &m_owner.retrieveTSelection<U>( u.property );
+        u.selection = &m_owner.retrieveTSelection<U>( u.property );
     }
 };
 
@@ -170,13 +178,12 @@ class declare_
 
   public:
     declare_( HltAlgorithm& alg, std::map<int, std::string>&& defaults )
-        : m_alg( alg ), m_counter{ 0u }, m_defs{ std::move( defaults ) }
+        : m_alg( alg ), m_counter{0u}, m_defs{std::move( defaults )}
     {
     }
     template <typename U>
     void operator()( U& t )
     {
-        // std::cout << "counter = " << m_counter << std::endl;
         std::string def = m_defs[m_counter];
         if ( m_counter == 0 ) {
             t.property = Gaudi::StringKey(
@@ -203,11 +210,11 @@ class SelectionContainer : private boost::noncopyable
     HltAlgorithm& m_owner; // The algorithm which owns us
     using Tuple = std::tuple<detail::data_<T1>, detail::cdata_<Tn>...>;
     Tuple m_data;
-    
+
   public:
     SelectionContainer( HltAlgorithm& alg ) : m_owner( alg )
     {
-        detail::zero_ x{} ;
+        detail::zero_ x{};
         map( x, m_data );
     }
 
@@ -227,24 +234,24 @@ class SelectionContainer : private boost::noncopyable
                 m_owner.name() + "::registerSelection selection already present..",
                 "", StatusCode::FAILURE );
         }
-        register_(d, m_owner);
+        register_( d, m_owner );
     }
 
     // could move to preInitialize hook
     void retrieveSelections()
     {
         detail::retrieve_ x{m_owner};
-        map(x, m_data);
+        map( x, m_data );
     }
     // TODO: check if register/retrieve has been called...
-    typename std::tuple_element<0,Tuple>::type::selection_type* output()
+    typename std::tuple_element<0, Tuple>::type::selection_type* output()
     {
         return std::get<0>( m_data ).selection;
     }
 
     // template <unsigned N, typename std::enable_if< (N>0) >::type*>
     template <unsigned N>
-    typename std::tuple_element<N,Tuple>::type::selection_type* input()
+    typename std::tuple_element<N, Tuple>::type::selection_type* input()
     {
         static_assert(
             N > 0,
