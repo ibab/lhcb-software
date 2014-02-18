@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-02-18 - Gerhard Raven
+ - replace SelectionContainer0 with SelectionContainer<void>
+
 ! 2014-01-28 - Gerhard Raven
  - remove extraneous ;
 

@@ -29,6 +29,6 @@ class HltLumiOdinReader : public HltAlgorithm
     virtual StatusCode execute();    ///< Algorithm execution
 
   private:
-    Hlt::SelectionContainer0 m_selection;
+    Hlt::SelectionContainer<void> m_selection;
 };
 #endif // HLTLUMIODINREADER_H
