@@ -1,14 +1,14 @@
 #============================================================================
 # $Id: requirements,v 1.143 2010-09-10 11:34:50 graven Exp $
-# Created    : 13/09/2013 by R. Lambert
+# Created    : 18/02/2014 by R. Lambert
 # Maintainer : R. Lambert, G. Raven
 #============================================================================
 
 #============================================================================
-package MooreScripts
-version v1r1
+package MooreOnlineConf
+version v1r0
 
-branches doc cmt python scripts tests
+branches doc cmt python options tests
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
