@@ -1,8 +1,9 @@
 #!/bin/bash
 
-if test -z "$GaudiOnlineExe";
+if test -z "${GaudiOnlineExe}";
 then
     cd `dirname $0`/../cmt;
+    echo "Executing executable in proper environment using cmt....";
     cmt run "/bin/bash $0 $*";
 else
     export GaudiOnlineExe=`which GaudiOnlineExe.exe`;
@@ -11,14 +12,15 @@ else
     export STATIC_OPTS=${FARMCONFIGROOT}/options;
     export JOBOPTSEARCHPATH=${MOORESTANDALONEROOT}/options;
     export INFO_OPTIONS=${MOORESTANDALONEROOT}/options/InfoOpts.opts;
-    export LOGFIFO=/tmp/logSrv.fifo;
-    export GaudiOnlineExe=`which GaudiOnlineExe.exe`;
-    export DIM_DNS_NODE=`hostname -s`;
     export MBM_SETUP_OPTIONS=${MOORESTANDALONEROOT}/options/MBM_setup.opts;
     export DATA_DIRECTORY=${MOORESTANDALONEROOT}/cmt;
-    export NUMBER_OF_SLAVES=10;
+    export GaudiOnlineExe=`which GaudiOnlineExe.exe`;
+    export DIM_DNS_NODE=`hostname -s`;
+    export LOGFIFO=/tmp/logSrv.fifo;
     GUI=;
     HLP=;
+    OPTS=../options/MooreTest.opts;
+    OPTS=../options/MooreUPI.opts;
     for i in $*; 
     do
 	arg=`echo $i | tr a-z 'A-Z'`;
@@ -50,11 +52,12 @@ else
 	echo "";
     elif test "$GUI" = "upi";
     then
+	OPTS=../options/MooreUPI.opts;
 	echo "Running Moore Benachmark application in UPI mode.";
-	`which gentest.exe` libMooreStandalone.so moore_standalone;
+	`which gentest.exe` libMooreStandalone.so moore_standalone -options=${OPTS};
     else
 	echo "Running Moore Benachmark application in script mode.";
-	`which gentest.exe` libGaudiKernel.so GaudiMain ../options/MooreTest.opts;
+	`which gentest.exe` libGaudiKernel.so GaudiMain ${OPTS};
     fi;
 fi;
 

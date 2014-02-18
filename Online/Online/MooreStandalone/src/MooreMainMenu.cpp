@@ -31,6 +31,7 @@
 extern "C" void scrc_resetANSI();
 
 using namespace LHCb;
+using namespace std;
 
 static MooreMainMenu* s_mainMenu = 0;
 
@@ -131,7 +132,7 @@ static char* string_copy(char* to, const char* from, size_t len)  {
   return c;
 }
 
-MooreMainMenu::MooreMainMenu() 
+MooreMainMenu::MooreMainMenu(const string& opts) 
 : Interactor(), m_exec(0), m_id(0), m_log(0), m_mbmMon(0), 
   m_evtMon(0), m_rateMon(0), m_allMon(0),
   m_svcLocator(0), m_terminate(false)
@@ -142,7 +143,7 @@ MooreMainMenu::MooreMainMenu()
   m_logger = new MessageLogger(this);
   string_copy(m_resFile,"MooreTest.txt",sizeof(m_resFile));
   string_copy(m_logFile,"MooreTest.log",sizeof(m_logFile));
-  string_copy(m_myOpts,"../options/MooreUPI.opts",sizeof(m_myOpts));
+  string_copy(m_myOpts,opts.c_str(),sizeof(m_myOpts));
   ::upic_open_menu(m_id,0,0,"MooreTest","Standalone","MooreTest");
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
   //::upic_add_comment(COM_RESULT,       "Test Result file name:","");
@@ -360,7 +361,7 @@ bool MooreMainMenu::startExecution()   {
   }
   int ret = ::lib_rtl_start_thread(run,this,&m_exec);
   if ( !lib_rtl_is_success(ret) ) {
-    std::string err = RTL::errorString();
+    string err = RTL::errorString();
     ::upic_write_message(("Failed to start execution thread....  ["+err+"]").c_str(),"");
     return false;
   }
@@ -452,7 +453,7 @@ bool MooreMainMenu::handleMonitor(UpiMooreMonitor*& m, int typ)    {
   return false;
 }
 
-bool MooreMainMenu::sendInterrupt(const std::string& service, int code, void* param)  {
+bool MooreMainMenu::sendInterrupt(const string& service, int code, void* param)  {
   if ( m_svcLocator )   {
     SmartIF<IService> svc = m_svcLocator->service(service,false);
     if ( svc ) {
@@ -472,7 +473,7 @@ int MooreMainMenu::run(void* param)   {
   return ret;
 }
 
-int MooreMainMenu::runMoore(const std::string& opts) {
+int MooreMainMenu::runMoore(const string& opts) {
   Gaudi::setInstance((IAppMgrUI*)0);
   IInterface* iface = Gaudi::createApplicationMgr();
   SmartIF<IProperty>     propMgr ( iface );
@@ -515,16 +516,26 @@ extern "C" int log_write_message(const char* text)   {
   return 0x1;
 }
 
-static void help() {}
+static void help() {
+  ::printf(" Usage: moore_standalone -opt [-opt]\n"
+	   "    -o(ptions)=<file-name>  Main steering options. \n");
+  _exit(0);
+}
 
 extern "C" int moore_standalone(int argc, char** argv)  {
+  string opts;
   RTL::CLI cli(argc, argv, help);
   if ( cli.getopt("debug",1) ) lib_rtl_start_debugger();
+  cli.getopt("options",1,opts);
+
+  if ( opts.empty() )    {
+    help();
+  }
   int status = ::upic_attach_terminal();
   if(status != UPI_NORMAL)
     exit(EXIT_FAILURE);
   Sensor& s = UpiSensor::instance();
-  MooreMainMenu t;
+  MooreMainMenu t(opts);
   ::lib_rtl_install_printer(MooreMainMenu::write_message,&t);
   s.run();
   return 1;

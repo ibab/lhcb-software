@@ -2,4 +2,10 @@
 Runable.MeasurementDuration = 1;
 Runable.Auto                = 1;
 ApplicationMgr.ExtSvc       = { "LHCb::MooreFileMonitor/FileLogger" };
-MessageSvc.LoggerFunction   = "log_write_message";
+//  MessageSvc.LoggerFunction   = "log_write_message";
+
+
+// Running Brunel....
+Runable.NumberOfSlaves       = 10;               // Number of slaves to be forked.
+Runable.MonitorProcess       = "_Brunel_";  // Name match of the processes to be monitored
+Runable.MonitorScript        = "../job/runOnlineBrunel.sh";  // Startup script for the Brunel process

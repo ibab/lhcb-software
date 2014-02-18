@@ -61,7 +61,7 @@ namespace LHCb  {
     bool             m_terminate;
 
     /// Default constructor
-    MooreMainMenu();
+    MooreMainMenu(const std::string& opts);
     /// Default destructor
     virtual ~MooreMainMenu();
     void handleUPI(int cmd, int par, int index);

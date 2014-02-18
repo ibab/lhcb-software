@@ -10,7 +10,6 @@ ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EventLoopMgr";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.HistogramPersistency  = "NONE";
 //
-//Runable.MEPManager                 = "LHCb::MEPManager/MEPManager";
 Runable.Buffer                       = @OnlineEnv.MEPRx_Output;
 Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
 Runable.Directory                    = "$DATA_DIRECTORY";

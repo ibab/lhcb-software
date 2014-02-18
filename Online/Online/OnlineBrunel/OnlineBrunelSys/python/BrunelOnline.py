@@ -64,6 +64,23 @@ def packDST(self,items):
 def configureOutput(self, dstType, withMC, handleLumi):
   pass
 
+def configureForking(appMgr, numChildren):
+  import OnlineEnv
+  from Configurables import LHCb__CheckpointSvc
+  forker = LHCb__CheckpointSvc("CheckpointSvc")
+  forker.NumberOfInstances   = numChildren
+  forker.Partition           = OnlineEnv.PartitionName
+  forker.TaskType            = 'Brunel'
+  forker.UseCores            = False
+  forker.ChildSessions       = False
+  forker.FirstChild          = 0
+  # Sleep in [ms] for each child in batches of 10:
+  forker.ChildSleep          = 500;
+  forker.UtgidPattern        = "%P_%NN_%T_%02d";
+  forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
+  forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
+  appMgr.ExtSvc.append(forker)
+
 #============================================================================================================
 def patchBrunel(true_online_version):
   """
@@ -77,7 +94,7 @@ def patchBrunel(true_online_version):
   import OnlineEnv as Online
   
   brunel = Brunel.Configuration.Brunel()
-
+  """
   try:
     brunel.DDDBtag    = Online.DDDBTag
   except:
@@ -91,12 +108,14 @@ def patchBrunel(true_online_version):
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
 
+  """
   brunel.WriteFSR  = False # This crashes Jaap's stuff
-  brunel.DataType = "2012"
+  brunel.DataType = "2013"
 
   EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
 
+  """
   from Configurables import EventClockSvc
   EventClockSvc().InitialTime = 1322701200000000000
 
@@ -107,13 +126,13 @@ def patchBrunel(true_online_version):
   from Configurables import RichRecSysConf
   rConf = RichRecSysConf("RichOfflineRec")
   rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ] 
-  
+  """
   if true_online_version:
-    brunel.OutputLevel       = 999
+    brunel.OutputLevel       = MSG_ERROR
 #    brunel.OutputLevel       = MSG_INFO
     brunel.PrintFreq         = -1
 
-  if processingType == 'Reprocessing':
+  if True: ####processingType == 'Reprocessing':
     GaudiConf.DstConf.DstConf._doWriteMDF = packDST
     brunel.PackType   = 'MDF'
     brunel.OutputType = 'RDST'
@@ -143,7 +162,7 @@ def patchBrunel(true_online_version):
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
 
   print brunel
-  
+
   return brunel
 
 #============================================================================================================
@@ -154,7 +173,7 @@ def setupOnline():
         @author M.Frank
   """
   import OnlineEnv as Online
-  
+
   buffs = ['Events','Output']
   if processingType == 'Reprocessing':
     buffs = ['Input','Output']
@@ -164,9 +183,13 @@ def setupOnline():
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-
+  numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
+  if os.environ.has_key('NBOFSLAVES'):
+    numChildren = int(os.environ['NBOFSLAVES'])
+  configureForking(app,numChildren)
   mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
-  sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False)
+  mep.ConnectWhen = "start";
+  sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False,event_type=2)
   if requirement:
     print 'Setting requirements:',requirement
     sel.REQ1 = requirement
@@ -235,7 +258,7 @@ debug = not true_online
 
 if not true_online:
   print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
-  requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+  requirement = "EvType=1;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0x0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 br = patchBrunel(true_online)
 setupOnline()
 if true_online: patchMessages()

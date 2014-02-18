@@ -587,6 +587,7 @@ int MooreTestSvc::readMessages(void* param) {
   int fd = test->m_fifo;
   test->info("Logger: Starting message pump....");
   while(1) {
+    ::lib_rtl_sleep(1);
     int sc = ::read(fd,buffer,sizeof(buffer));
     if ( sc >  0 ) {
       buffer[sc-1] = 0;
