@@ -2279,7 +2279,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
       seeds[sta] = hit;
     }
   }
-  slopeguess /= double(npoints);
+  if ( npoints>0 ) { slopeguess /= double(npoints); }
 
   // place hits with largest drift dist. into seeds[0] and seeds[2]
   if ( largestDrift[1] > largestDrift[0] &&
