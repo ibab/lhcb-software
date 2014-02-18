@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r43 2014-02-18 =========================
 ! 2014-02-06 - Chris Jones
  - Protect against zero length direction vectors in RayTracing::reflectSpherical
 

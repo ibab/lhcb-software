@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichTools
 ################################################################################
-gaudi_subdir(RichTools v2r42)
+gaudi_subdir(RichTools v2r43)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Kernel/PartProp
