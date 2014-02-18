@@ -6,18 +6,18 @@
     <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EvtMax=10; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;  Moore().OutputLevel=4;</text>
+    <text>from Configurables import Moore; Moore().EvtMax=10; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;  Moore().OutputLevel=4;Moore().EnableTimer=False;</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
-if len(stdout.split('\n'))&gt;85:
-    causes.append('stdout is too long, aiming for less than 85 lines')
-    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 85 lines, got '+ str(len(stdout.split('\n'))))
+if len(stdout.split('\n'))&gt;75:
+    causes.append('stdout is too long, aiming for less than 75 lines')
+    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 75 lines, got '+ str(len(stdout.split('\n'))))
 
-if len(stdout)&gt;20000:
-    causes.append('stdout is too long, aiming for less than 20k characters')
-    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 20k characters, got '+ str(len(stdout)))
+if len(stdout)&gt;16000:
+    causes.append('stdout is too long, aiming for less than 16k characters')
+    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 16k characters, got '+ str(len(stdout)))
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.

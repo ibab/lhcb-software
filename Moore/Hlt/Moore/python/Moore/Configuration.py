@@ -135,9 +135,9 @@ class Moore(LHCbConfigurableUser):
         #########################################
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
-        , "EnableTimer" :       True
+        , "EnableTimer" :       False
         , "EnableDataOnDemand": False
-        , "OutputLevel" : INFO #if this is set to WARNING (or higher) Moore will become almost silent.
+        , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
                              #if this is set to INFO no changes to default printout is made
         , 'Split'       : '' # HLT1 or HLT2?
@@ -165,7 +165,6 @@ class Moore(LHCbConfigurableUser):
         #########################################
         # Expert options, only set if you know what you are doing
         #########################################
-        , "NbOfSlaves":        0
         , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
         , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
         , "prefetchConfigDir" :'MOORE_v8r8'  # which configurations to prefetch.
@@ -499,18 +498,22 @@ class Moore(LHCbConfigurableUser):
         if iox.detectFileType(fname) == 'MDF'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
             writer = IOHelper("MDF","MDF").outputAlgs(fname
-                                                     ,writer = MDFWriter( 'Writer' , Compress = 0 )
-                                                     ,writeFSR=False)
+                                                       ,writer = MDFWriter( 'Writer' , Compress = 0 )
+                                                       ,writeFSR=False)
             if self.getProp('WriterRequires') :
                 from Configurables import LoKi__VoidFilter as VoidFilter
                 writer = GaudiSequencer( 'WriteSequence'
-                                       , Members = [ VoidFilter( "WriterFilter" 
-                                                               , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                                               , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
-                                                               )
-                                                   ] + writer
-                                       )
-            ApplicationMgr().OutStream.append( writer )
+                                         , Members = [ VoidFilter( "WriterFilter" 
+                                                                   , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
+                                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
+                                                                   )
+                                                       ] + writer
+                                         )
+                #convert to a smegging list consistently
+                writer=[writer]
+            
+            ApplicationMgr().OutStream+=writer
+            
         else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
@@ -556,8 +559,11 @@ class Moore(LHCbConfigurableUser):
 
     def _outputLevel(self) :
         from Configurables import Hlt__Service
-        if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
-        # output levels...
+        if self.getProp("OutputLevel")>=INFO:
+            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
+        else:
+            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = True
+        # Usual output levels for services
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
         XmlParserSvc().OutputLevel                = WARNING
@@ -571,9 +577,14 @@ class Moore(LHCbConfigurableUser):
             level=self.getProp("OutputLevel")
             MessageSvc().OutputLevel = level
             ToolSvc().OutputLevel = level
-            if self.isPropertySet("EnableTimer") and self.getProp("EnableTimer"):
-                raise AttributeError("Timing table is very far from silent, please disable timing if you want to run with lower verbosity")
-            self.setProp("EnableTimer",False)
+            if self.getProp("EnableTimer"):
+                #in the future handle this by outputting a timing file!
+                print "# WARNING: Timing table is very far from silent, please disable timing if you want to run with lower verbosity"
+                from Configurables import TimingAuditor
+                TimingAuditor('TIMER').OutputLevel=INFO
+                TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
+                TimingAuditor('TIMER').TIMER.OutputLevel=INFO
+                SequencerTimerTool().OutputLevel          = INFO
             from Configurables import LoKiSvc
             LoKiSvc().Welcome = False
             #################################################
@@ -613,6 +624,17 @@ class Moore(LHCbConfigurableUser):
                     ApplicationMgr().OutputLevel=INFO
                     EventSelector().OutputLevel=INFO
                 appendPostConfigAction(AppMrgOP)
+
+                #in the future handle this by outputting a timing file!
+                def RestoreTimer():
+                    from Configurables import TimingAuditor, SequencerTimerTool
+                    TimingAuditor('TIMER').OutputLevel=INFO
+                    TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
+                    TimingAuditor('TIMER').TIMER.OutputLevel=INFO
+                    SequencerTimerTool().OutputLevel          = INFO
+                
+                if self.getProp("EnableTimer"):
+                    appendPostConfigAction(RestoreTimer)
                 #################################################
                 # Running from TCK define a similar transform
                 #################################################

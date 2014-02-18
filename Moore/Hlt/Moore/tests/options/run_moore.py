@@ -36,6 +36,7 @@ Moore().UseDBSnapshot = False
 Moore().DDDBtag    = options.DDDBtag
 Moore().CondDBtag  = options.CondDBtag
 Moore().ForceSingleL0Configuration=(not options.multil0)
+Moore().EnableTimer=True
 
 from Configurables import L0MuonAlg
 L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"

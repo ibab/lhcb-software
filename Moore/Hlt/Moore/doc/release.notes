@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-18 - Rob Lambert
+ - Make the default be OutputLevel=4 (only 75 print out lines)
+
 ! 2014-01-27 - Sebastian Neubert
  - Added trackingonly tests in moore.physics.tracking suite
  - Added HltTrackReportsDecoder for hlt2_only configuration
