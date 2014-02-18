@@ -14,7 +14,8 @@ gaudi_depends_on_subdirs(Det/DDDB
                          MooreSys
                          OnlineSys
                          PhysSys
-                         RecSys)
+                         RecSys
+                         MooreOnlineConf)
 
 find_package(HepMC)
 

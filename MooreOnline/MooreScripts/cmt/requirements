@@ -61,6 +61,8 @@ use OnlineSys           v*                  -no_auto_imports
 #-- Moore
 use MooreSys            v*                  -no_auto_imports
 
+#-- MooreOnline
+use MooreOnlineConf     v*
 
 #============================================================================
 #set CORAL_SQLITE_TEMP_STORE_MEMORY yes
