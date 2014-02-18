@@ -6,6 +6,17 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v15r0>2014-02-19 LbcomSys v15r0</A></H1><PRE>
+This version uses Gaudi v25r0 and LHCb v37r0
+
+- Packages modified: Rich/RichTools v2r43, VP/VPAlgorithms v4r2p1
+
+- In Rich/RichTools v2r43
+  . Protect against zero length direction vectors in RayTracing::reflectSpherical
+
+- In VP/VPAlgorithms v4r2p1
+  . Fix UNINIT_CTOR defect
+
 </PRE><H1><A NAME=v14r3>2013-12-11 LbcomSys v14r4</A></H1><PRE>
 This version uses Gaudi v24r2 and LHCb v36r4
 

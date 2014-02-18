@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v14r4
+version           v15r0
 
 branches doc cmt tests
 
@@ -31,7 +31,7 @@ use OTMonitor         v3r7     OT        # Francesco Dettori
 use RichAlgorithms    v1r7     Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
-use RichTools         v2r42    Rich      # Chris Jones
+use RichTools         v2r43    Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r9     Si        # Matt Needham
@@ -50,7 +50,7 @@ use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
 # Velo Pixel
-use VPAlgorithms      v4r2     VP        # Daniel Hynds
+use VPAlgorithms      v4r2p1   VP        # Daniel Hynds
 use VPTools           v2r2     VP        # Heinrich Schindler
 
 # Declare this as a container package
