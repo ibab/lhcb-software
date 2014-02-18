@@ -24,7 +24,7 @@ namespace LHCb
   /** @class HashIDs 
    *
    *  Trivial structure to get the "hash-ID" for some LHCb Event classes
-   *  "Hash-ID" is defiend as hash from all underlying LHCbIDs.
+   *  "Hash-ID" is defined as the hash from all underlying LHCbIDs.
    *
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-11-03
