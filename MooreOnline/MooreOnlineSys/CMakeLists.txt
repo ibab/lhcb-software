@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(MooreOnlineSys v21r0)
 
-gaudi_depends_on_subdirs(MooreScripts)
+gaudi_depends_on_subdirs(MooreScripts
+                         MooreOnlineConf)
 
 
 gaudi_add_test(QMTest QMTEST)
