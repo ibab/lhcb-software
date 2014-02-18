@@ -6,7 +6,7 @@ if os.environ.has_key('TEST_CHECKPOINT'):
   print 'PARTITIONOPTS='+os.environ['CHECKPOINT_DIR']+'/OnlineEnv.opts;'
 elif os.environ.has_key('PARTITIONOPTS'):
   print 'PARTITIONOPTS='+os.environ['PARTITIONOPTS']+';'
-print "RESTARTOPTS="+os.environ['MOOREROOT']+"/options/RestartFromCheckpoint.opts;"
+print "RESTARTOPTS="+os.environ['MOORESCRIPTSROOT']+"/options/RestartFromCheckpoint.opts;"
 print "DIM_DNS_NODE="+os.environ['DIM_DNS_NODE']+';'
 """
 # Forget about all this. the number of children is now passed as an argument to the

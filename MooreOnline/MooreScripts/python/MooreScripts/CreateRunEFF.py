@@ -2,7 +2,7 @@
 def CreateRunMooreOnline_EFF( output, split='' ) :#setup, split='' ) :
     from os import makedirs,chmod
     from os.path import exists, dirname
-    
+
     #print '# INFO: using ' + setup
     print '# INFO: generating '+ output
     target_dir = dirname( output )
@@ -13,7 +13,7 @@ ulimit -v 3221225472
 export PARENT=$1
 export PARTNAME=$2
 export NBOFSLAVES=${3:-0}
-   
+
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
 
@@ -32,7 +32,7 @@ renice 19 -p $$>>/dev/null
 export gaudi_exe="exec -a ${UTGID} ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe"
 
 # Setup the environment to checkpoint, restore, run normally etc. by interpreting the vars from OnlineEnv
-eval `python -c "import Moore.ConfigureShell as c; c.doIt()"`
+eval `python -c "import MooreScripts.ConfigureShell as c; c.doIt()"`
 
 export CHECKPOINT_BIN=${CHECKPOINTINGROOT}/${CMTCONFIG};
 
@@ -58,7 +58,7 @@ elif test "${APP_STARTUP_OPTS}" = "-checkpoint";   ## Not handled by RunInfo. Us
     echo "== File:  ${CHECKPOINT_FILE}"
     echo "== Producing CHECKPOINT file......Please be patient.";
     echo "=============================================================================";
-    python -c "import Moore.ConfigureShell as c; c.doIt()";
+    python -c "import MooreScripts.ConfigureShell as c; c.doIt()";
     echo "=============================================================================";
 elif test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
     then
@@ -74,11 +74,11 @@ elif test "${APP_STARTUP_OPTS}" = "-restore";      ## RunInfo flag=2
 	    echo "== File:  ${CHECKPOINT_FILE}";
 	    echo "== Testing CHECKPOINT file......Please be patient.";
 	    echo "=============================================================================";
-	    python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py;
+	    python ${MOORESCRIPTSROOT}/python/MooreScripts/ConfigureFromCheckpoint.py;
 	    echo exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
 	    echo "=============================================================================";
 	fi;
-	python ${MOOREROOT}/python/Moore/ConfigureFromCheckpoint.py | \\
+	python ${MOORESCRIPTSROOT}/python/MooreScripts/ConfigureFromCheckpoint.py | \\
         exec -a ${UTGID} ${CHECKPOINT_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE};
     else
 	echo " [FATAL] =============================================================================";
@@ -94,15 +94,15 @@ ${gaudi_exe} ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so \\
     -msgsvc=LHCb::FmcMessageSvc \\
     -tasktype=LHCb::Class1Task  \\
     -main=/group/online/dataflow/templates/options/Main.opts \\
-    -opt=command="import Moore.runOnline; Moore.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s )" \\
+    -opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s )" \\
  ${APP_STARTUP_OPTS};
 
     """%({'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )
 
-    from stat import S_IRUSR, S_IRGRP, S_IROTH, S_IWUSR, S_IWGRP, S_IXUSR, S_IXGRP, S_IXOTH 
+    from stat import S_IRUSR, S_IRGRP, S_IROTH, S_IWUSR, S_IWGRP, S_IXUSR, S_IXGRP, S_IXOTH
     import os
     orig = os.stat(output)[0]
-    rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
+    rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH
     if orig|rwxrwxrx != orig :
         print '%s has permissions %d -- want %d instead' % (output,orig,orig|rwxrwxrx)
         try :
