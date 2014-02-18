@@ -3,10 +3,10 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r11 2014-02-18 =========================
 ! 2014-02-17 - David Hutchcroft
  - DefaultVeloRawBufferDecoders.py to use RawEventLocations (used by VETRA nightlies)
 
-!========================= VeloDAQ v6r11 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - Suppress velo decoder printout for nominal options (DAQ/RawEvent Other/RawEvent)
 
