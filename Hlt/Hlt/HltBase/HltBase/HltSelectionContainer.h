@@ -9,9 +9,9 @@
 #include "GaudiKernel/GaudiException.h"
 #include "boost/lexical_cast.hpp"
 #include "boost/utility.hpp"
-#include "boost/tuple/tuple.hpp"
 #include <vector>
 #include <utility>
+#include <tuple>
 #include <memory>
 #include <cassert>
 #include <map>
@@ -37,15 +37,43 @@
 // initialize, and
 //  you can access the selections using output() and input<N>() during execute.
 //
-// an example will go here...
-//
-//
-//
 
 namespace Hlt
 {
 namespace detail
 {
+
+template <size_t... I>
+struct index_sequence {} ;
+
+// push N-1 onto the 'pack', lower N by one, and recurse...
+template <size_t N, size_t ...Is>
+struct make_index_sequence : make_index_sequence<N - 1, N - 1, Is...> {};
+
+// end of recursion -- 0 items to add...
+template <size_t ... Is>
+struct make_index_sequence<0, Is...> : index_sequence<Is...> {};
+
+// -- end of recursion
+template <typename F, typename Tuple>
+void map_impl(F& , Tuple& , index_sequence<>)
+{
+}
+// -- recursively walk through the tuple...
+template <typename F, typename Tuple, size_t I, size_t... J>
+void map_impl(F& f, Tuple& t, index_sequence<I, J...>)
+{
+    // std::cout << "get<"<< I << ">" << std::endl;
+    f(std::get<I>(t));
+    map_impl(f,t,index_sequence<J...>{} );
+}
+
+/// map a functor f on each item in a tuple: starting with f(get<0>), f(get<1>),... f(get<N-2>), f(get<N-1>)
+template <typename F, typename Tuple>
+void map( F& f, Tuple& t )
+{
+    return map_impl(f, t, make_index_sequence<std::tuple_size<Tuple>::value>{} ) ;
+}
 
 template <typename Candidate>
 struct data_
@@ -58,6 +86,30 @@ struct data_
     {
     }
 };
+
+template <>
+struct data_<void>
+{
+    using selection_type = Selection;
+    using candidate_type = void;
+    selection_type* selection;
+    Gaudi::StringKey property;
+    data_() : selection{nullptr}
+    {
+    }
+};
+
+template <typename U>
+inline void register_( data_<U>& d, HltAlgorithm& owner )
+{
+    d.selection = &owner.registerTSelection<U>( d.property );
+}
+
+template<>
+inline void register_( data_<void>& d, HltAlgorithm& owner )
+{
+    d.selection = &owner.registerSelection( d.property );
+}
 
 template <typename Candidate>
 struct cdata_
@@ -74,12 +126,18 @@ struct cdata_
 /// retrieve selection
 class retrieve_
 {
+    HltAlgorithm& m_owner;
   public:
     retrieve_( HltAlgorithm& owner ) : m_owner( owner )
     {
     }
+    // specialization for output -- do nothing
     template <typename U>
-    void operator()( U& u )
+    void operator()( detail::data_<U>& ) { }
+
+    // specialization for input -- retrieve
+    template <typename U>
+    void operator()( detail::cdata_<U>& u )
     {
         if ( u.selection ) {
             throw GaudiException( m_owner.name() +
@@ -87,11 +145,8 @@ class retrieve_
                                   "", StatusCode::FAILURE );
         }
         u.selection =
-            &m_owner.retrieveTSelection<typename U::candidate_type>( u.property );
+            &m_owner.retrieveTSelection<U>( u.property );
     }
-
-  private:
-    HltAlgorithm& m_owner;
 };
 
 /// zero
@@ -103,19 +158,25 @@ struct zero_
         u.selection = nullptr;
     }
 };
+
 //
 /// declare property -- this fixes the naming convention for properties!
 template <unsigned N>
 class declare_
 {
+    HltAlgorithm& m_alg;
+    unsigned int m_counter;
+    std::map<int, std::string> m_defs;
+
   public:
     declare_( HltAlgorithm& alg, std::map<int, std::string>&& defaults )
-        : m_alg( alg ), m_counter( 0u ), m_defs( std::move( defaults ) )
+        : m_alg( alg ), m_counter{ 0u }, m_defs{ std::move( defaults ) }
     {
     }
     template <typename U>
     void operator()( U& t )
     {
+        // std::cout << "counter = " << m_counter << std::endl;
         std::string def = m_defs[m_counter];
         if ( m_counter == 0 ) {
             t.property = Gaudi::StringKey(
@@ -133,74 +194,62 @@ class declare_
         }
         ++m_counter;
     }
-
-  private:
-    HltAlgorithm& m_alg;
-    unsigned int m_counter;
-    std::map<int, std::string> m_defs;
 };
+}
 
-template <typename T>
-class SelectionContainer_ : private boost::noncopyable
+template <typename T1, typename... Tn>
+class SelectionContainer : private boost::noncopyable
 {
-    template <unsigned N>
-    struct helper_
-    {
-        using data_type = typename boost::tuples::element<N, T>::type; // tuple(N) ->
-                                                                       // data<X>
-        using candidate_type = typename data_type::candidate_type; // data<X> -> X
-        using selection_type = typename data_type::selection_type; // data<X> ->
-                                                                   // TSelection<X>
-    };
-
+    HltAlgorithm& m_owner; // The algorithm which owns us
+    using Tuple = std::tuple<detail::data_<T1>, detail::cdata_<Tn>...>;
+    Tuple m_data;
+    
   public:
-    SelectionContainer_( HltAlgorithm& alg ) : m_owner( alg )
+    SelectionContainer( HltAlgorithm& alg ) : m_owner( alg )
     {
-        zero_ x{};
-        for_each_selection( m_data, x );
+        detail::zero_ x{} ;
+        map( x, m_data );
     }
 
     using map_t = std::map<int, std::string>;
     void declareProperties( map_t defaults = map_t() )
     {
-        declare_<boost::tuples::length<T>::value> x( m_owner,
-                                                     std::move( defaults ) );
-        for_each_selection( m_data, x );
+        detail::declare_<std::tuple_size<Tuple>::value> x( m_owner,
+                                                           std::move( defaults ) );
+        map( x, m_data );
     }
     // could move to postInitialize hook
     void registerSelection()
     {
-        auto& d = boost::get<0>( m_data );
+        auto& d = std::get<0>( m_data );
         if ( d.selection ) {
             throw GaudiException(
                 m_owner.name() + "::registerSelection selection already present..",
                 "", StatusCode::FAILURE );
         }
-        d.selection =
-            &m_owner.registerTSelection<typename helper_<0>::candidate_type>(
-                 d.property );
+        register_(d, m_owner);
     }
 
     // could move to preInitialize hook
     void retrieveSelections()
     {
-        // start recursion at 2nd element, because the first is the output
-        retrieve_ x{m_owner};
-        for_each_selection( m_data.get_tail(), x );
+        detail::retrieve_ x{m_owner};
+        map(x, m_data);
     }
     // TODO: check if register/retrieve has been called...
-    typename helper_<0>::selection_type* output()
+    typename std::tuple_element<0,Tuple>::type::selection_type* output()
     {
-        return boost::get<0>( m_data ).selection;
+        return std::get<0>( m_data ).selection;
     }
 
+    // template <unsigned N, typename std::enable_if< (N>0) >::type*>
     template <unsigned N>
-    typename helper_<N>::selection_type* input()
+    typename std::tuple_element<N,Tuple>::type::selection_type* input()
     {
         static_assert(
             N > 0,
             "input() : N>0 for input -- N=0 corresponds to the required output" );
-        auto& d = boost::get<N>( m_data );
+        auto& d = std::get<N>( m_data );
         if ( !d.selection->processed() ) {
             m_owner.debug() << "requesting stale selection " << d.selection->id()
                             << endmsg;
@@ -210,63 +259,6 @@ class SelectionContainer_ : private boost::noncopyable
         }
         return d.selection;
     }
-
-  private:
-    /// apply a functor on each item: recursively walk through the tuple...
-    template <typename Function>
-    void for_each_selection( boost::tuples::null_type, Function )
-    {
-    }
-    template <typename Tuple, typename Function>
-    void for_each_selection( Tuple& tuple, Function& f )
-    {
-        f( tuple.get_head() );
-        for_each_selection( tuple.get_tail(), f );
-    }
-
-    // The algorithm which owns us
-    HltAlgorithm& m_owner;
-    // the actual data: a boost::tuple<U1,U2,...UN> where Ui = detail::data_<Ti>
-    // with Ti eg. LHCb::Track for a tracklist, LHCb::RecVertex for a vertex list,
-    // etc; U1 is const, the remainder not...
-    T m_data;
-};
-}
-
-template <typename T1, typename... Tn>
-using SelectionContainer = detail::SelectionContainer_<
-    boost::tuple<detail::data_<T1>, detail::cdata_<Tn>...>>;
-
-// 0 is a very special case of 1 ;-): no input, one output, but output has no
-// explicit
-// candidates...
-class SelectionContainer0 : boost::noncopyable
-{
-  public:
-    SelectionContainer0( HltAlgorithm& owner )
-        : m_output( nullptr ), m_owner( owner )
-    {
-    }
-    void declareProperties()
-    {
-        m_property = Gaudi::StringKey( m_owner.name() ); // set default output name
-                                                         // to the instance name of
-                                                         // the algorithm
-        m_owner.declareProperty( "OutputSelection", m_property );
-    }
-    void registerSelection()
-    {
-        m_output = &m_owner.registerSelection( m_property );
-    }
-    Selection* output()
-    {
-        return m_output;
-    }
-
-  private:
-    Gaudi::StringKey m_property;
-    Selection* m_output;
-    HltAlgorithm& m_owner;
 };
 }
 

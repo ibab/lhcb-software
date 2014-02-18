@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-02-18 - Gerhard Raven
+ - SelectionContainer0 is now also a specialization of SelectionContainer
+ - replace boost::tuple in SelectionContainer with std::tuple
+
 ! 2014-02-10 - Gerhard Raven
  - simplify SelectionContainer{1,2,3,4,5}  using C++11 
  - replace SelectionContainer{1,2,3,4,5} with a single variadic template
