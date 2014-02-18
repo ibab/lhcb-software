@@ -27,6 +27,7 @@ namespace {
       : m_dir(dir), m_parent(&alg), m_numelements(numelements)
     {
       for(int i=0; i<6; ++i)
+      {
         if( dofs.find(m_dofnames[i]) != std::string::npos )
         {
           // The "G" option is important here.
@@ -38,6 +39,7 @@ namespace {
         {
           m_delta[i] = 0 ;
         }
+      }
     }
 
     void fill( size_t id,
