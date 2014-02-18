@@ -85,7 +85,7 @@ namespace {
             for(int ibin = 1; ibin<=pr->GetNbinsX(); ++ibin)
             {
               pull ->fill( fabs(pr->GetBinError(ibin)) > 0 ?
-                           pr->GetBinContent(ibin)/pr->GetBinError(ibin) : 0.0 ) ;
+                           pr->GetBinContent(ibin)/pr->GetBinError(ibin) : 9e30 ) ;
               delta->fill( pr->GetBinContent(ibin) ) ;
             }
           }
