@@ -69,6 +69,7 @@ This version uses Gaudi v25r0 and LCG_66. First version compatible with ROOT6
   . Added HltTrackReports RawBank type
 
 - In Event/EventPacker v4r0
+  . Fix an FPE exception due to division by zero and a bug in tracks extra info comparison.
   . Fix an FPE exception due to sqrt(-number).
   . Fix an FPE exception when a fraction top/bot was packed with bot=0...
   . Minor CPU optimisation in PackParticlesAndVertices.cpp
