@@ -260,6 +260,7 @@ LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::bestPair(const LHCb
 
 LHCb::GhostTrackInfo::LinkPair TrackGhostClassificationBase::bestPair(const LHCb::GhostTrackInfo::LinkMap& lMap) const{
 
+  if (!(lMap.size())) return LHCb::GhostTrackInfo::LinkPair();
   LHCb::GhostTrackInfo::LinkMap::const_iterator iterMap = lMap.begin();
   double tot = 0.0;
   std::pair<LHCb::MCParticle*,unsigned int> best(0,0);
