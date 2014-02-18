@@ -193,6 +193,7 @@ This version uses Gaudi v25r0 and LCG_66. First version compatible with ROOT6
   . Suppress velo decoder printout for nominal options
     (DAQ/RawEvent Other/RawEvent)
   . Adapt velo decoder tools to Decoder base classes, task #49078
+  . DefaultVeloRawBufferDecoders.py to use RawEventLocations (used by VETRA nightlies)
 
 - In VP/VPDAQ v2r5
   . Adapt VP decoder tool to Decoder base classes, task #49078
