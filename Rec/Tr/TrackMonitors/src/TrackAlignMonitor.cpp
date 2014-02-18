@@ -28,12 +28,17 @@ namespace {
     {
       for(int i=0; i<6; ++i)
         if( dofs.find(m_dofnames[i]) != std::string::npos )
+        {
           // The "G" option is important here.
-          m_delta[i] = alg.bookProfile1D( dir + "/" + m_dofnames[i] + "VsElement", dir + " " + m_dofnames[i] ,
+          m_delta[i] = alg.bookProfile1D( dir + "/" + m_dofnames[i] + "VsElement", 
+                                          dir + " " + m_dofnames[i] ,
                                           -0.5, numelements-0.5, numelements,"G" ) ;
+        }
         else
+        {
           m_delta[i] = 0 ;
-    } ;
+        }
+    }
 
     void fill( size_t id,
                const LHCb::Node& node,
@@ -43,24 +48,29 @@ namespace {
       const double Vinv = ( fabs(V)>0 ? 1.0/V : 9e30 );
       double R = node.errResidual2() ;
       for(int i=0; i<6; ++i)
-        if(m_delta[i] != 0 ) {
+      {
+        if ( m_delta[i] != 0 ) 
+        {
           double Ax = deriv(0,i) ;
           // first compute the weight, which is the 2nd derivative
           // w = A^T * V^-1 * R * V^-1 * A
           double halfd2Chi2dX2 = Ax * Vinv * R * Vinv * Ax ;
           // now compute the 1 derivative
-          if( std::abs(halfd2Chi2dX2) > 1e-15 ) {
-            double halfdChi2dX   = Ax * Vinv * node.residual() ;
+          if( std::abs(halfd2Chi2dX2) > 1e-15 ) 
+          {
+            const double halfdChi2dX   = Ax * Vinv * node.residual() ;
             // now fill the profile
             m_delta[i]->fill( id, halfdChi2dX / halfd2Chi2dX2, halfd2Chi2dX2 ) ;
           }
         }
+      }
     }
 
     ~AlignProfile()
     {
       for(int i=0; i<6; ++i)
-        if(m_delta[i] != 0 ) 
+      {
+        if ( m_delta[i] != 0 ) 
         {
           TProfile* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_delta[i] ) ;
           if ( pr ) 
@@ -78,6 +88,7 @@ namespace {
             }
           }
         }
+      }
     }
 
     static const std::vector<std::string> m_dofnames;
