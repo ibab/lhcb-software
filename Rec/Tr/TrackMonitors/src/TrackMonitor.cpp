@@ -9,6 +9,7 @@
 #include "Event/VeloCluster.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
+#include "Event/VPLiteMeasurement.h"
 #include "Event/KalmanFitResult.h"
 #include "Kernel/HitPattern.h"
 #include "TrackInterfaces/IHitExpectation.h"
@@ -136,18 +137,25 @@ void TrackMonitor::findRefStates(const LHCb::Track& track,
 }
 
 namespace {
-  enum HitType {VeloR=0, VeloPhi, TT, IT, OT, Muon, HitTypeUnknown} ;
-  const std::string HitTypeName[] = {"VeloR","VeloPhi","TT","IT","OT","Muon"} ;
-  double      HitTypeMaxRes[] = {0.1,0.1,0.5,0.5,2.0,10} ;
+  enum HitType {VeloR=0, VeloPhi, VPX, VPY, TT, IT, OT, Muon, HitTypeUnknown} ;
+  const std::string HitTypeName[] = {"VeloR","VeloPhi","VPX","VPY","TT","IT","OT","Muon"} ;
+  double      HitTypeMaxRes[] = {0.1,0.1,0.1,0.1,0.5,0.5,2.0,10} ;
   
-  inline HitType hittypemap( LHCb::Measurement::Type type ) {
+  inline HitType hittypemap( const LHCb::Measurement& meas ) {
+    LHCb::Measurement::Type type = meas.type() ;
+
     HitType rc = HitTypeUnknown ;
     switch( type ) {
     case LHCb::Measurement::Calo:
     case LHCb::Measurement::Origin :
     case LHCb::Measurement::Unknown: rc = HitTypeUnknown ; break ;
-
+      
     case LHCb::Measurement::VPLite:
+      {
+	const LHCb::VPLiteMeasurement* vpmeas = dynamic_cast< const LHCb::VPLiteMeasurement* >(&meas) ;
+	rc = vpmeas && vpmeas->projection()==LHCb::VPLiteMeasurement::X ? VPX : VPY ;
+      }
+      break;
     case LHCb::Measurement::VeloLiteR:
     case LHCb::Measurement::VeloR:   rc = VeloR ; break ;
 
@@ -243,7 +251,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
           // on residual. (e.g. a downstream track with only one
           // active TT hit)
           && (*inode)->errResidual2() > TrackParameters::lowTolerance
-	  && (mtype = hittypemap( (*inode)->measurement().type()) )!=HitTypeUnknown ) {
+	  && (mtype = hittypemap( (*inode)->measurement() ) )!=HitTypeUnknown ) {
 	
 	const std::string& name = HitTypeName[ mtype ] ;
 	const double resmax    = HitTypeMaxRes[ mtype ] ;
@@ -414,34 +422,24 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
       }
     } // iterInfo
 
-    
+
     const LHCb::RecVertices* pvcontainer = 
       getIfExists<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ;
     if ( NULL != pvcontainer ) {
       for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
            ipv != pvcontainer->end(); ++ipv ) {
-	
-        LHCb::State aState;
-        StatusCode sc = extrapolator()->propagate(track,(*ipv)->position().z(),aState );
-	
-        double dx  = aState.x() - (*ipv)->position().x();
-        double dy  = aState.y() - (*ipv)->position().y();
-	
-        double n = (1+aState.tx()*aState.tx()+
-                    aState.ty()*aState.ty());
-        double c = (-dx*aState.tx()-dy*aState.ty())/n;
-        double IPx = dx + c*aState.tx();
-        double IPy = dy + c*aState.ty();	
-	
-        //double invpt = 1.0/track.pt();
-	
-        plot( IPx,type+"/IPx","IPx", -1.0, 1.0, 100);
-        plot( IPy,type+"/IPy","IPy", -1.0, 1.0, 100);
-	
+	// Note: this is all already done in trackvertexmonitor!
+        const LHCb::State* aState = track.stateAt( LHCb::State::ClosestToBeam ) ;
+	if(!aState) aState = &(track.firstState()) ;
+	double dz = (*ipv)->position().z() - aState->z() ;
+        double dx  = aState->x() + dz * aState->tx() - (*ipv)->position().x();
+        double dy  = aState->y() + dz * aState->ty() - (*ipv)->position().y();
+	plot( dx,type+"/IPx","IPx", -1.0, 1.0, 100);
+        plot( dy,type+"/IPy","IPy", -1.0, 1.0, 100);
       }
     }
   }
-   
+  
   LHCb::HitPattern hitpattern( track.lhcbIDs()) ;
   plot( hitpattern.numVeloStations(),
         type+"/NumVeloStations", "Number of traversed stations in Velo", -0.5,21.5, 22) ;

@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-02-19 - Wouter Hulsbergen
+ - TrackAlignMonitor and TrackVertexMonitor: removed some checks for divide-by-zero 
+ - TrackMonitor: removed use of extrapolator; split residuals by x,y for pixel.
+
 ! 2014-02-18 - Chris Jones
  - Fix another divide-by-zero PFE in AlignProfile.
 

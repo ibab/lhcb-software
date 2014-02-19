@@ -47,7 +47,7 @@ namespace {
                const ITrackProjector::Derivatives& deriv)
     {
       const double V    = node.errMeasure2() ;
-      const double Vinv = ( fabs(V)>0 ? 1.0/V : 9e30 );
+      const double Vinv = 1.0/V ;//if this causes an FPE, then I want to know!
       double R = node.errResidual2() ;
       for(int i=0; i<6; ++i)
       {

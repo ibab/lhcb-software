@@ -338,9 +338,9 @@ StatusCode TrackVertexMonitor::execute()
 
         // draw the pull of the difference
         Gaudi::SymMatrix3x3 cov = leftvertex->covMatrix() + rightvertex->covMatrix() ;
-        plot( cov(0,0)>0 ? dx.x()/std::sqrt(cov(0,0)) : 0.0, "PV left-right delta x pull",-5,5) ;
-        plot( cov(1,1)>0 ? dx.y()/std::sqrt(cov(1,1)) : 0.0, "PV left-right delta y pull",-5,5) ;
-        plot( cov(2,2)>0 ? dx.z()/std::sqrt(cov(2,2)) : 0.0, "PV left-right delta z pull",-5,5) ;
+        plot( dx.x()/std::sqrt(cov(0,0)), "PV left-right delta x pull",-5,5) ;
+        plot( dx.y()/std::sqrt(cov(1,1)), "PV left-right delta y pull",-5,5) ;
+        plot( dx.z()/std::sqrt(cov(2,2)), "PV left-right delta z pull",-5,5) ;
         // draw the chisquares
         plot( leftvertex->chi2() / leftvertex->nDoF(), "PV left chisquare per dof",0,10) ;
         plot( rightvertex->chi2() / rightvertex->nDoF(), "PV right chisquare per dof",0,10) ;
@@ -367,9 +367,9 @@ StatusCode TrackVertexMonitor::execute()
 
         // draw the pull of the difference
         Gaudi::SymMatrix3x3 cov = forwardvertex->covMatrix() + backwardvertex->covMatrix() ;
-        plot( cov(0,0)>0 ? dx.x()/std::sqrt(cov(0,0)) : 0.0, "PV forward-backward delta x pull",-5,5) ;
-        plot( cov(1,1)>0 ? dx.y()/std::sqrt(cov(1,1)) : 0.0, "PV forward-backward delta y pull",-5,5) ;
-        plot( cov(2,2)>0 ? dx.z()/std::sqrt(cov(2,2)) : 0.0, "PV forward-backward delta z pull",-5,5) ;
+        plot( dx.x()/std::sqrt(cov(0,0)), "PV forward-backward delta x pull",-5,5) ;
+        plot( dx.y()/std::sqrt(cov(1,1)), "PV forward-backward delta y pull",-5,5) ;
+        plot( dx.z()/std::sqrt(cov(2,2)), "PV forward-backward delta z pull",-5,5) ;
         // draw the chisquares
         plot( forwardvertex->chi2() / forwardvertex->nDoF(), "PV forward chisquare/dof",0,10) ;
         plot( backwardvertex->chi2() / backwardvertex->nDoF(), "PV backward chisquare/dof",0,10) ;
