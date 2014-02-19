@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v27r0>2014-02-20 Boole v27r0</A></H1><PRE>
+This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
 - Configuration Changes
    . Deprecate Persistency option (Rob Lambert)
