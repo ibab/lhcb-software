@@ -4,6 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-19 - Sebastian Neubert
+ - Set HltTrackReportsDecoder active
+ - added options file to switch off valgrind for the configuration phase
+ - added script compareTrackReports.py Required input: log files of
+   HLT1 and HLT2 with TrackReportsWriter/Decoder both set to OutputLevel = VERBOSE.
+   Checks if the tracks are properly recovered in HLT2.
+
 ! 2014-02-18 - Rob Lambert
  - Make the default be OutputLevel=4 (only 75 print out lines)
 

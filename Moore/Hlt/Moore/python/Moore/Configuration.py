@@ -811,7 +811,9 @@ class Moore(LHCbConfigurableUser):
             seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
 
             tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
+            tr.active = True
             trAlg=tr.setup()
+            #trAlg.OutputLevel = VERBOSE
             seq.Members.insert( seq.Members.index(gs('Hlt2')), trAlg )
             
             sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
