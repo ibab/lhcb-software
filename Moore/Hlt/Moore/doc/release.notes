@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-19 - Rob Lambert
+ - Suppress DQFlags warning by expicitly setting the default
+
 ! 2014-02-19 - Sebastian Neubert
  - Set HltTrackReportsDecoder active
  - added options file to switch off valgrind for the configuration phase

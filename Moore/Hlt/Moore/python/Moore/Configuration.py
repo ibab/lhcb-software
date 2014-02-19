@@ -119,6 +119,7 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
+        , "DQFLAGStag" : "latest" # latests in the CondDB for this DataType
         , 'WriteFSR'    :  True #copy FSRs as required
         #########################################
         # Mandatory options to consider
@@ -198,6 +199,7 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          'Data type, can be 2010, 2012, etc.'
         , "DDDBtag" :          'database tag, default as set in DDDBConf for DataType'
         , "CondDBtag" :        'database tag, default as set in DDDBConf for DataType'
+        , "DQFLAGStag" : "database tag for the DQFLAGS partition, does not matter for Moore usually! But setting this to the latest suppresses a silly warning"
         , 'WriteFSR'    :      'copy FSRs if required'
         #########################################
         # Mandatory options to consider
@@ -438,7 +440,24 @@ class Moore(LHCbConfigurableUser):
         # https://savannah.cern.ch/bugs/?94454#comment12
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
-
+    
+    def _configureDQTags(self):
+        from Configurables import CondDB
+        tag=None
+        toset=self.getProp("DQFLAGStag")
+        if not len(toset) or toset=="latest" or toset=="default":
+            from CondDBUI.Admin.TagsFilter import last_gt_lts
+            dqtags = last_gt_lts('DQFLAGS', self.getProp("DataType"))
+            if dqtags:
+                tag=dqtags[0]
+        else:
+            tag=toset
+        if CondDB().isPropertySet("Tags") and 'DQFLAGS' in  CondDB().getProp("Tags") and len(CondDB().getProp("Tags")["DQFLAGS"]):
+            #don't set anything if it has already been set elsewhere
+            pass
+        elif tag:
+            CondDB().Tags=_zipdict(CondDB().Tags,{"DQFLAGS":tag})
+    
     def _configureInput(self):
         files = self.getProp('inputFiles')
         #    #  veto lumi events..
@@ -1012,6 +1031,7 @@ class Moore(LHCbConfigurableUser):
         self._setRawEventLocations()
         
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
+        self._configureDQTags()
         
         if self.getProp('UseTCK') :
             self._config_with_tck()
