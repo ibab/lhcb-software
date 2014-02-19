@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-02-19 - Sebastian Neubert
+ - added TrackInitStateAlg for HLT1 tracks resurrected in HLT2
+
 ! 2014-02-11 - Gerhard Raven
  - remove unused private fields
 

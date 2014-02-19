@@ -1187,14 +1187,18 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         from Configurables      import Tf__PatVeloGeneralTracking
         from Configurables      import Tf__PatVeloSpaceTool, FastVeloTracking
+        from Configurables      import TrackStateInitAlg, TrackStateInitTool
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
         from HltReco        import MinimalVelo
         from HltLine.HltLine    import bindMembers 
         
-
-        FastVelo = True
+        # make these real option!!?
+        FastVelo = False
+        UseHlt1Tracks = True
+        
+        
         veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
-
+    
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
             # For the moment just a dummy setting
@@ -1210,11 +1214,18 @@ class Hlt2Tracking(LHCbConfigurableUser):
             
             #recoVeloExtra.HLT2Complement = True
             bm_members      = MinimalVelo.members() #+ [recoVeloExtra]
+        elif UseHlt1Tracks:
+            veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = veloTracksOutputLocation );
+            veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+            bm_members = [ veloInitFit ]
         else:
             recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                                                   , OutputTracksLocation = veloTracksOutputLocation )
             
             bm_members      = MinimalVelo.members() + [recoVeloGeneral]
+
+            
+            
         bm_output       = veloTracksOutputLocation
     
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
@@ -1242,6 +1253,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
             recoForward.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
+
+        # recoForward.OutputLevel = VERBOSE    
         #JA: TODO: put something in like: if(early data):
         #recoForward.addTool(ConfiguredPR( "Forward" ))
 
@@ -1256,6 +1269,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
+        #recoForward.PatForwardTool.OutputLevel = VERBOSE
      
         if self.getProp("EarlyDataTracking") :
             from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
