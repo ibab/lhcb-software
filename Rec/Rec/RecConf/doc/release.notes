@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r16 2014-02-19 =========================
 ! 2013-12-18 - Marco Cattaneo
  - Add 'pA' to KnownSpecialData 
 
