@@ -4,6 +4,7 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v2r0 2014-02-19 =======================
 ! 2014-02-19 - Wouter Hulsbergen
  - TrackAlignMonitor and TrackVertexMonitor: removed some checks for divide-by-zero 
  - TrackMonitor: removed use of extrapolator; split residuals by x,y for pixel.
@@ -17,7 +18,7 @@
 ! 2014-01-15 - Marco Cattaneo
  - Remove support for VL
 
-!========================= TrackMonitors v1r46 2013-10-01 ========================
+!========================= TrackMonitors v1r46 2013-10-01 ======================
 ! 2013-10-01 - Frederic Dupertuis 
  - Adding some additional verbose plotting to STEfficiency.
 
@@ -32,13 +33,13 @@
    . Produces residual plots to check the alignment in OnlineBrunel
    . ConfiguredTrackMonitors.py : Add  AlignmentOnlineMonitor to sequence
 
-!========================= TrackMonitors v1r45p1 2013-08-01 =========================
+!========================= TrackMonitors v1r45p1 2013-08-01 =====================
 ! 2013-08-01 - Rob Lambert
  - Fix uninitialized variable in ConfiguredTrackMonitors
  - Run all monitors if the LHCbApp property isn't set
 
 
-!========================= TrackMonitors v1r45 2013-07-18 =========================
+!========================= TrackMonitors v1r45 2013-07-18 ======================
 ! 2013-07-03 - Michel De Cian
  - Fix uninitialised variable in TrackMonitor.cpp
 
@@ -49,14 +50,14 @@
  - Fix gcc48 warning
  - Remove empty finalize methods
 
-!========================= TrackMonitors v1r44p1 2013-06-03 ======================
+!========================= TrackMonitors v1r44p1 2013-06-03 =====================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
-!========================= TrackMonitors v1r44 2013-04-30 ========================
+!========================= TrackMonitors v1r44 2013-04-30 ======================
 ! 2013-04-25 - Sascha Stahl
  - Added protections to ConfiguredTrackMonitors in case detector does
    not exist.
@@ -74,7 +75,7 @@
 ! 2013-03-22 - Wouter Hulsbergen
  - fixes in TrackMonitor and TrackVertexMonitor to make them working for upgrade
 
-!========================= TrackMonitors v1r43 2013-03-22 ========================
+!========================= TrackMonitors v1r43 2013-03-22 ======================
 ! 2013-03-18 - Jack Wimberley
 - Fixed accidently deleted portion of release notes
 
@@ -90,7 +91,7 @@
 ! 2013-03-11 - Marco Clemencic 
 - Fixed compilation with C++11. 	 	  
 
-!========================= TrackMonitors v1r42 2013-02-14 ========================
+!========================= TrackMonitors v1r42 2013-02-14 ======================
 ! 2013-01-30 - Jianchun Wang 
 - Add UT Monitor. 
 	 	 
@@ -98,7 +99,7 @@
 - Rebuilding of STEfficiency that is working with TT now.  
 - Fix bin number computed in histoBin of TTTrackMonitor. 
 
-!========================= TrackMonitors v1r41 2012-11-28 =========================
+!========================= TrackMonitors v1r41 2012-11-28 ======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -113,7 +114,7 @@
  - Fix gcc -pedantic warnings
  - One more getIfExists
 
-!========================= TrackMonitors v1r40 2012-07-30 =========================
+!========================= TrackMonitors v1r40 2012-07-30 ======================
 ! 2012-07-27 - Marco Cattaneo
  - Replace separate exist<>() + get<>() calls with getIfExists
  - Fix trivial icc remarks
@@ -123,7 +124,7 @@
    TrackV0Finder. This should take care that online monitoring will
    not suddenly see much dirtier Ks list.
 
-!========================= TrackMonitors v1r39 2012-07-24 =========================
+!========================= TrackMonitors v1r39 2012-07-24 ======================
 ! 2012-07-18 - Rosen Matev
  - Introduced separate options for random suffling and splitting method. New
    splitting method added - MiddlePerVeloHalf.
@@ -140,11 +141,11 @@
    absolute luminosity calibration. Also, added a configurable BGIRecoConf, which
    modifies reconstruction sequences for BGI processing
 
-!========================= TrackMonitors v1r38p1 2012-05-08 =======================
+!========================= TrackMonitors v1r38p1 2012-05-08 =====================
 ! 2012-05-08 - Wouter Hulsbergen
  - Fixed small memory leak in TrackITOverlapMonitor
 
-!========================= TrackMonitors v1r38 2012-03-27 =========================
+!========================= TrackMonitors v1r38 2012-03-27 ======================
 ! 2012-03-19 - Patrick Koppenburg
  - Reduce range of PV chi2 plot
 
@@ -157,16 +158,16 @@
 ! 2012-03-02 - Maurizio Martinelli
  - defined ranges for Z0 and D0 daughters plots in TrackParticleMonitor
 
-!========================= TrackMonitors v1r37 2012-02-28 =========================
+!========================= TrackMonitors v1r37 2012-02-28 ======================
 ! 2012-02-23 - Wouter Hulsbergen
  - extend range of histogram for 'Track:history' flag such that we can actually
    see FastVelo
 
-!========================= TrackMonitors v1r36 2012-01-31 =========================
+!========================= TrackMonitors v1r36 2012-01-31 ======================
 ! 2012-01-27 - Patrick Koppenburg
  - Also do TrackVertexMonitors in online mode, to get PV position in online Brunel
 
-!========================= TrackMonitors v1r35 2011-11-08 =========================
+!========================= TrackMonitors v1r35 2011-11-08 ======================
 ! 2011-10-17 - Marco Cattaneo
  - Fix icc remarks
  - Replace endreq by endmsg
@@ -174,12 +175,12 @@
    17730, 17729, 17728, 17727, 17726, 28264, 28263, 23982, 23979, 23978, 23976, 
    23975, 23074
 
-!========================= TrackMonitors v1r34 2011-09-06 =========================
+!========================= TrackMonitors v1r34 2011-09-06 ======================
 ! 2011-09-05 - Wouter Hulsbergen
  - Added histograms for IT overlap residuals by stack for use in DQ monitoring
  - Add TrackParticleMonitor
 
-!========================= TrackMonitors v1r33 2011-07-27 =========================
+!========================= TrackMonitors v1r33 2011-07-27 ======================
 ! 2011-07-21 - Alexandr Kozlinskiy
  - Added if(msgLevel(MSG::DEBUG)) to all debug messages.
 
@@ -187,11 +188,11 @@
  - ITTrackMonitor: add histogram for overlaps
  - TrackVertexMonitor: introduce cutoff for IP profiles to be more sensitive to mean
 
-!========================= TrackMonitors v1r32 2011-04-05 =========================
+!========================= TrackMonitors v1r32 2011-04-05 ======================
 ! 2011-03-11 - Mariusz Witek
  - Add PV cov matrix to Vertex Compare ntuple
 
-!========================= TrackMonitors v1r31 2011-03-09 =========================
+!========================= TrackMonitors v1r31 2011-03-09 ======================
 ! 2011-03-07 - Mariusz Witek
  - Add Vertex Compare, an algorithm to compare primary vertices from two locations
 
@@ -199,7 +200,7 @@
  - get particles and tracks by range in TrackTune
    (see https://savannah.cern.ch/bugs/?78977)
 
-!========================= TrackMonitors v1r30p1 2010-11-05 =========================
+!========================= TrackMonitors v1r30p1 2010-11-05 =====================
 ! 2010-11-04 - Patrick Koppenburg
  - Fix bug https://savannah.cern.ch/bugs/?74815 in TrackVertexMonitors
 
