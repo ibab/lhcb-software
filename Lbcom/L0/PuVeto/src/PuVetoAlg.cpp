@@ -175,11 +175,11 @@ StatusCode PuVetoAlg::initialize() {
   const DeVeloRType* firstSens=(*(m_velo->pileUpRSensorsBegin()));
   for (int i=0;i<128;i++) {
     m_rCluster[i] = firstSens->rOfStrip(i*4+2); 
-    //if (msgLevel(MSG::DEBUG)) debug() << "Cluster " << i << "  r = " << m_rCluster[i] << endmsg;
   }
 
   for (int i=0;i<128;i++) {
     for (int j=0;j<128;j++) {
+      if( i == j ) continue; // Protect divide by zero, diagonal elements not used
       for (int k=0;k<2;k++) {
         m_binMatrix[k][i][j] = (short int) 
           zBin(TrackZ(m_rCluster[i],m_zSensor[k],m_rCluster[j],m_zSensor[k+2]));

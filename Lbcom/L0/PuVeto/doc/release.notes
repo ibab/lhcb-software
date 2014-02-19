@@ -2,6 +2,10 @@
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+! 2014-02-19 - Marco Cattaneo
+ - PuVetoAlg: Protect divide by zero when initialising diagonal elements of
+   binning matrix (which are in any case not used by the algorithm)
+
 !========================= PuVeto v7r9 2013-02-14 =========================
 ! 2012-12-19 - Marco Cattaneo
  - Fix some more UNINIT_CTOR defects
