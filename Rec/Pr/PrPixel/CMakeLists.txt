@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrPixel
 ################################################################################
-gaudi_subdir(PrPixel v1r4)
+gaudi_subdir(PrPixel v1r5)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent

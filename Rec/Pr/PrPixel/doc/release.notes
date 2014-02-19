@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r5 2014-02-19 =========================
 ! 2014-02-13 - Heinrich Schindler
  - Renamed PatPixel* to PrPixel*
  - Bugfix (chi2 cut on short tracks was not applied)
