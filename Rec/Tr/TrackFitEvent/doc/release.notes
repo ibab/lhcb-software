@@ -4,20 +4,21 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v6r0 2014-02-19 ========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL measurement types
 
-!========================= TrackFitEvent v5r24 2013-10-01 =========================
+!========================= TrackFitEvent v5r24 2013-10-01 =======================
 ! 2013-09-09 - Heinrich Schindler
  - Follow VP detector element and channel ID changes (r162190, 162191) 
 ! 2013-08-23 Heinrich Schindler
  - Remove calls to DeVPSquareType
 
-!========================= TrackFitEvent v5r23 2013-07-24 =========================
+!========================= TrackFitEvent v5r23 2013-07-24 =======================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurement.cpp
 
-!========================= TrackFitEvent v5r22 2013-04-30 =========================
+!========================= TrackFitEvent v5r22 2013-04-30 =======================
 ! 2013-04-15 - Marco Cattaneo and Wouter Hulsbergen
  - Add dependency on Tr/TrackKernel, needed by previous change
 
@@ -28,11 +29,11 @@
 ! 2013-03-25 - Wouter Hulsbergen
  - Fixed small bug in STMeasurement: measurement type set incorrectly for UT.
 
-!========================= TrackFitEvent v5r21 2013-03-22 =========================
+!========================= TrackFitEvent v5r21 2013-03-22 =======================
 ! 2013-03-13 - Heinrich Schindler
  - Cleanup of VL measurements. 
 
-!========================= TrackFitEvent v5r20 2013-02-14 =========================
+!========================= TrackFitEvent v5r20 2013-02-14 =======================
 ! 2013-02-01 - Sascha Stahl
  - Added VL measurements. Copy from Velo measurements.
 
@@ -54,38 +55,38 @@
 ! 2012-11-29 - Olivier Callot
  - Add FTMeasurements (.xml, .cpp)
 
-!========================= TrackFitEvent v5r19 2012-11-28 =========================
+!========================= TrackFitEvent v5r19 2012-11-28 =======================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= TrackFitEvent v5r18 2012-10-01 =========================
+!========================= TrackFitEvent v5r18 2012-10-01 =======================
 ! 20120-09-20 - Paul Szczypka
  - VeloPix to VP renaming
 
-!========================= TrackFitEvent v5r17 2012-07-24 =========================
+!========================= TrackFitEvent v5r17 2012-07-24 =======================
 ! 2012-07-23 - Wouter Hulsbergen
 - added method to KalmanFitResult to compute number of active OTTimes and chi2
   contribution of TT hits
 
-!========================= TrackFitEvent v5r16 2012-03-27 =========================
+!========================= TrackFitEvent v5r16 2012-03-27 =======================
 ! 2012-03-22 - Wouter Hulsbergen
 - implemented faster method to invert transport matrix
 - exploit emptiness of transport matrix in zero B field
 
-!========================= TrackFitEvent v5r15 2012-03-17 =========================
+!========================= TrackFitEvent v5r15 2012-03-17 =======================
 ! 2012-03-16 - Wouter Hulsbergen 
 - bug fix in filter logic: backward state could be in state 'smoothed'
   without having gone through 'filtered'. a real fix requires
   decoupling the smooth state from the filter.
 
-!========================= TrackFitEvent v5r14 2012-02-28 =========================
+!========================= TrackFitEvent v5r14 2012-02-28 =======================
 ! 2012-02-22 - Wouter Hulsbergen
  - adapt KalmanFitResult and FitNode to change in Measurement
 
 ! 2012-02-02 - Wouter Hulsbergen
  - improve speed of FitNode::computeFilteredState
 
-!========================= TrackFitEvent v5r13 2012-01-31 =========================
+!========================= TrackFitEvent v5r13 2012-01-31 =======================
 ! 2012-01-25 - Wouter Hulsbergen
  - fix problem in reinterpret_cast that only appears in optimization in kalmanfitresult
 
@@ -94,7 +95,7 @@
  - add total accumulated chi2 of filter to node. use this in kalmanfitresult
  - add ranges to fitnodes in kalmanfitresult
 
-!========================= TrackFitEvent v5r12 2011-11-08 =========================
+!========================= TrackFitEvent v5r12 2011-11-08 =======================
 ! 2011-10-17 - Victor Coco
  - FitNode.h: protect against NULL pointer in computeClassicalSmoothedState
               (coverity defect 19662)
@@ -103,12 +104,12 @@
  - FitNode.h: remove obsolete member variable, fixes coverity defects
               19690, 19691, 19692
 
-!========================= TrackFitEvent v5r11 2011-07-28 =========================
+!========================= TrackFitEvent v5r11 2011-07-28 =======================
 ! 2011-06-20 - Alexandr Kozlinskiy
  - Use trajector.endRange/beginRange instead of module().wireLingth
    to improve performance.
 
-!========================= TrackFitEvent v5r10 2011-06-15 =========================
+!========================= TrackFitEvent v5r10 2011-06-15 =======================
 ! 2011-05-18 - Alexandr Kozlinskiy
  - Move code from DeOTModule::propagationTime to OTMeasurement::driftTime to
    improve performance
@@ -120,7 +121,7 @@
 ! 2011-05-02 - Wouter Hulsbergen
  - Fix remaining missing fields in KalmanFitResult copy constructor
 
-!========================= TrackFitEvent v5r9 2011-04-27 =========================
+!========================= TrackFitEvent v5r9 2011-04-27 ========================
 ! 2011-04-15 - Victor Coco
  - Fix KalmanFitResult copy constructor from a KalmanFitResult 
 
@@ -128,7 +129,7 @@
  - Fix some initialised variables in constructor of FitNode, KalmanFitResult,
    MuonMeasurements and VeloPixMeasurements
 
-!========================= TrackFitEvent v5r8 2011-04-05 =========================
+!========================= TrackFitEvent v5r8 2011-04-05 ========================
 ! 2011-04-04 - Victor Coco
  - put the check for negative element in the state covariance matrix diagonal only
    in the smoothing step. 
@@ -137,7 +138,7 @@
 ! 2011-04-03 - Victor Coco
  - add a check for negative element in the state covariance matrix diagonal in FitNode
 
-!========================= TrackFitEvent v5r7 2011-02-28 =========================
+!========================= TrackFitEvent v5r7 2011-02-28 ========================
 ! 2011-02-24 - Wouter Hulsbergen
  - bug fix in FitNode: was always putting fit in error mode for classical smoother
 
@@ -147,7 +148,7 @@
 ! 2011-02-04 - Victor Coco
  - fix windows warning (unsigned short instead of ushort)
 
-!========================= TrackFitEvent v5r6 2011-02-02 =========================
+!========================= TrackFitEvent v5r6 2011-02-02 ========================
 ! 2011-02-02 - Victor Coco
  - remove debug std::cout from FitNode Filter.
 
@@ -178,7 +179,7 @@
  - Major modification: all the logic of the fitter is passed in FitNode to allow
    on demand computation.
 
-!========================= TrackFitEvent v5r5 2011-01-17 =========================
+!========================= TrackFitEvent v5r5 2011-01-17 ========================
 ! 2010-12-21 - Victor Coco
  - FitNode: cache the inverse transport matrix when transport matrix is created
 
