@@ -4,26 +4,27 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v2r6 2014-02-19 =====================
 ! 2013-12-13 - Paul Szczypka
  - Add itDigi.py and ttDigi.py
 
-!========================= STDigiAlgorithms v2r5 2013-12-10 =========================
+!========================= STDigiAlgorithms v2r5 2013-12-10 =====================
 ! 2013-12-03 - Jianchun Wang
  - Translate utDigi.opts to utDigi.py
 
 ! 2013-10-29 - Jianchun Wang
  - Revise UT signal pulse shape and crosstalk.
 
-!========================= STDigiAlgorithms v2r4 2012-12-12 =========================
+!========================= STDigiAlgorithms v2r4 2012-12-12 =====================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
  - Fixes to compile with C++11.
 
-!========================= STDigiAlgorithms v2r3 2012-10-03 =========================
+!========================= STDigiAlgorithms v2r3 2012-10-03 =====================
 ! 2012-09-25 - Jianchun Wang
  - Add utDigi.opts to control UT boole simulation
 
-!========================= STDigiAlgorithms v2r2 2012-05-31 =========================
+!========================= STDigiAlgorithms v2r2 2012-05-31 =====================
 ! 2012-05-31 - Marco Cattaneo
  - Use stable_sort in STDigitCreator::genRanNoiseStrips, fixes tiny differences
    between gcc43 and gcc46
