@@ -1,11 +1,11 @@
-# ========================================================================
+# =====================================================================
 package           MuonInterfaces
-version           v1r5
+version           v1r6
 
-# =============== structure ===================================================
+# =============== structure ===============================================
 branches          cmt doc MuonInterfaces src
 
-# =============== dependencies ================================================
+# =============== dependencies ============================================
 use GaudiKernel     v*
 use LHCbKernel      v*    Kernel
 use MuonKernel      v*    Muon
@@ -20,7 +20,7 @@ library MuonInterfacesLib  ../src/Lib/*.cpp
 apply_pattern	  install_more_includes more=MuonInterfaces
  
 
-# =============== LCG Dictionaries ============================================
+# =============== LCG Dictionaries ==========================================
 apply_pattern  reflex_dictionary                                               \
                dictionary=MuonInterfaces                                       \
                headerfiles=$(MUONINTERFACESROOT)/dict/MuonInterfacesDict.h     \
@@ -29,6 +29,6 @@ apply_pattern  reflex_dictionary                                               \
 
 apply_pattern linker_library library=MuonInterfacesLib
 
-# ========================================================================
+# ====================================================================
 # The END 
-# ========================================================================
+# ====================================================================

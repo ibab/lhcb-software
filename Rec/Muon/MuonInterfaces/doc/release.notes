@@ -1,25 +1,26 @@
-! ========================================================================
+! ====================================================================
 ! Package     : MuonInterfaces
-! Responsible : Alessia Satta Alessia.Satta@cern.ch
-! ========================================================================
+! Responsible : Giovanni Passaleva
+! ====================================================================
 
+!========================= MuonInterfaces v1r6 2014-02-19 ======================
 ! 2014-02-14 - Chris Jones
  - Protect against sqrt(-number) in MuonHit. 
    Fixes an exception when using the FPEAuditor.
 
-!========================= MuonInterfaces v1r5 2013-10-01 =========================
+!========================= MuonInterfaces v1r5 2013-10-01 ======================
 ! 2013-09-18 - Marco Cattaneo
  - Remove unused variable in MuonHit.h
 
-!========================= MuonInterfaces v1r4 2013-04-29 =========================
+!========================= MuonInterfaces v1r4 2013-04-29 ======================
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
 
-!========================= MuonInterfaces v1r3 2012-11-26 =========================
+!========================= MuonInterfaces v1r3 2012-11-26 ======================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= MuonInterfaces v1r2p2 2011-11-07 =========================
+!========================= MuonInterfaces v1r2p2 2011-11-07 =====================
 ! 2011-10-11 - Marco Cattaneo
  - Trivial fix to icc remark
 
