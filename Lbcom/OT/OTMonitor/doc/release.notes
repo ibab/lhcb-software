@@ -3,6 +3,7 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+!========================= OTMonitor v3r8 2014-02-19 =========================
 ! 2014-02-19 - Marco Cattaneo
  - protect divide by zero in OTTimeMonitor::finalize()
 
@@ -11,7 +12,7 @@
  - Restore one more fix from v3r5p1
  - Replace endreq by endmsg
 
-!========================= OTMonitor v3r6p1 2013-07-18 =========================
+!========================= OTMonitor v3r6p1 2013-07-18 ========================
 ! 2013-07-06 - Francesco Dettori 
  - Restore v3r5p1 fixes, previously removed by mistake.
 
@@ -19,7 +20,7 @@
 ! 2013-05-27 - Francesco Dettori 
  - Small bug fix in OTChannelMonitor 
 
-!========================= OTMonitor v3r5p1 2013-04-22 =========================
+!========================= OTMonitor v3r5p1 2013-04-22 ========================
 ! 2013-04-22 - Marco Cattaneo
  - Fix trivial UNINIT_CTOR and UNREACHABLE Coverity defects
 
