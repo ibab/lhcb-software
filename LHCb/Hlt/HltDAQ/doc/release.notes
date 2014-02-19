@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-19 - Sebastian Neubert
+ - HltTrackReportsWriter/Decoder added debug output: dumps tracks in verbose mode
+
 !========================= HltDAQ v3r1 2014-02-17 =========================
 ! 2014-02-11 - Rob Lambert
  - Assimilate Decoder baseclass for task #49078 into all HLT decoders

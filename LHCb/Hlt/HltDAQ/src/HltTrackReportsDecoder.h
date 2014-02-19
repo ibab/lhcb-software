@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+
 #include "DAQKernel/DecoderAlgBase.h"
 
 //#include "Kernel/IANNSvc.h"
@@ -48,6 +49,7 @@ private:
 
   /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
   UnsignedIntegerProperty m_sourceID;
+
 
 };
 

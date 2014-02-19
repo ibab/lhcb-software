@@ -123,7 +123,26 @@ StatusCode HltTrackReportsDecoder::execute() {
      decodeTracks(bank->data(),bank->size()/sizeof(unsigned int),outputTracks);
    }
   
- return StatusCode::SUCCESS;
+   // for debug purposes print the contents of the outputLocation
+   if( msgLevel(MSG::VERBOSE) )
+     {
+       verbose() << "----------------------------------------\n";
+       verbose() << " Resurrected tracks: \n"; 
+       LHCb::Tracks::const_iterator pItr;
+       for(pItr = outputTracks->begin(); outputTracks->end() != pItr; ++pItr){
+	 LHCb::Track* Tr = (*pItr);
+	 verbose()  << *Tr << endmsg ;
+	 // also dump IDs
+	 verbose() << "LHCbIDs: [\n"; 
+	 unsigned int nhits= Tr->nLHCbIDs();
+	 for(unsigned int i=0;i<nhits;++i){
+	   verbose() << Tr->lhcbIDs()[i] << ",\n";
+	 }
+	 verbose() << "]" << endmsg;
+       }
+     }
+   
+   return StatusCode::SUCCESS;
 }
 
 //=============================================================================

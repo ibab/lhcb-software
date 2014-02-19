@@ -96,6 +96,14 @@ StatusCode HltTrackReportsWriter::execute() {
     for(pItr = inputTracks->begin(); inputTracks->end() != pItr; ++pItr){
       LHCb::Track* Tr = (*pItr);
       verbose()  << *Tr << endmsg ;
+      // also dump IDs
+      verbose() << "LHCbIDs: [\n"; 
+      unsigned int nhits= Tr->nLHCbIDs();
+      for(unsigned int i=0;i<nhits;++i){
+	verbose() << Tr->lhcbIDs()[i] << ",\n";
+	  }
+      verbose() << "]" << endmsg;
+
     }
     verbose() << "\n----------------------------------------";
     verbose() << endmsg;
