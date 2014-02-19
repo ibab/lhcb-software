@@ -1,0 +1,122 @@
+// Rich specific job options
+// ==========================================================
+// the following line is now in Simulation.opts and is now the default value.
+// GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+// when RichApplyMaxNumCkvPhotPerStepPerRadiator is false the global
+// value as given by RichMaxNumPhotPerCherenkovStep is used fo all radiators.
+// when RichApplyMaxNumCkvPhotPerStepPerRadiator is true the individual value for
+// each radiator as given by RichMaxPhotonsPerCherenkovStepInRich1Agel,
+// RichMaxPhotonsPerCherenkovStepInRich1Gas,RichMaxPhotonsPerCherenkovStepInRich2Gas
+// are used. 
+//
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator=false;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel=900;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
+
+// By setting the following option to false allows to switch off the Scintilation process in CF4 in RICH2,
+// to get a backward compatible version. By default this Scintillation process is switched on 
+// from April 2010 onwards.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichActivateCF4Scintillation=false;
+//
+//  
+// The following options allow the possibility of switching off RICH specific physics processes in order to
+// study the simulation performance of other subdetectors without RICH. By default they are
+// switched on so that RICH is switched on by default. 
+//
+// The following options allow the possibility to 
+// turn on the RICH geometry, but have the RICH specific physics processes switched off at the same time.
+// This is in addition to the possibility of switching off RICH geometry and the RICH physics process.
+// GiGa.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate=true;
+// GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate=true;
+
+
+// to create  'extended output info' for detailed analysis, 
+// (a) uncomment the line in this file with RichVerbose.opts.
+// (b) comment the three lines in this file where   RichOpticalPhotons = "" 
+//      RichSegments=""  and RichTracks         = ""
+// (c) to write these extended info to output tape, in   GaussTape.opts
+//     uncomment the lines /Event/MC/Rich/OpticalPhotons#1, /Event/MC/Rich/Tracks#1
+//     /Event/MC/Rich/Segments#1
+//
+// The following line is to limit max number of steps of a photon so that 
+// it does not make infinite loops by Rayleigh scattering in Aerogel.
+// The default is 5000. When the filter effect is switched off this can
+// be reduced to a smaller value to reduce the cpu time.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonStepNumInRayleigh=1000;  
+//GiGa.ModularPL.GiGaPhysConstructorOp.MaxNumberRayleighScatAllowed=50;  
+//#include "$GAUSSRICHROOT/options/RichVerbose.opts"
+//GiGaGetHitsAlg.RichOpticalPhotons = "";
+//GiGaGetHitsAlg.RichSegments       = "";
+//GiGaGetHitsAlg.RichTracks         = "";
+
+GiGa.StepSeq.Members  += { "RichG4StepAnalysis6/RichStepHpdRefl" } ;
+GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
+//GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
+//GiGa.TrackSeq.Members      += { "RichG4TrackActionAerogelPhoton/RichG4AgelPhot" };
+
+//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEOverRideDB=true;
+//GiGa.TrackSeq.RichG4PhotOpt.RichHpdMaxQEValueWhenOverRideDB=1.0;
+
+//GiGa.TrackSeq.RichG4AgelPhot.ActivateAerogelFilter=true;
+
+// in the following the units are in MeV
+//GiGa.TrackSeq.RichG4AgelPhot.MaxEnergyCutoffNoFilterInAerogel=0.0000065
+//GiGa.TrackSeq.RichG4AgelPhot.MaxEnergyCutoffWithFilterInAerogel=0.0000045;
+//GiGa.TrackSeq.RichG4AgelPhot.MaxEnergyCutoffWithFilterInAerogel=0.0000045;
+// Now for the HPD related options
+// Use of Magnetic field distortions in Hpd: default is set to false, which means not used.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=false; 
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichUseHpdMagDistortions=true; 
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=true;
+// With improved alignemtn the hit smearing is switched off, which is the default.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHitSmearingActivate=false;
+GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true;
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=2.0;
+// reduced scintillation for 2011 data. So the scale factor is set to small value 
+// corresponding to about 1/10 of the normal scintillation.
+GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
+
+// To set the Readout efficiency which empirically seems to depend on Radiator Type, from real data.
+// The default in the C++ is 1.0 which sets 100% readout efficiency for each radiator. 
+// The default for chip efficiency is 0.85 in the code. The total efficiency is
+// readoutEfficiency* chip efficiency
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=1.0;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=1.0;
+
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInAerogel = 0.844;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich1Gas=0.775;
+//GiGa.ModularPL.GiGaPhysConstructorHpd.RichHpdReadOutEffInRich2Gas=0.776;
+
+// Use of PreDc06 PSF parametrization. If true it keeps the PSF as set in the beginning of Dc06.
+// The Default is set to false, which gives slightly worse resolution than that assumed at the beginning of dc06.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= true;
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichPSFPreDc06Flag= false;
+// The HpdQE is by default read from the conditions DB. But if the RichHpdUseNominalQETable is
+// set to true the nominal table from the sqldddb-materials-richmaterialtabproperty.xml is read. This
+// nominal table was used for dc06.
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichHpdUseNominalQETable= false;
+
+// To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
+// and the line with RichEventActionVerbose=3
+//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+// To activate the various analysis which are in GaussRICH 
+// uncomment the line in this file with RichAnalysis.opts
+// and uncomment the various lines in RichAnalysis.opts as needed.
+// This file has the options various StepActions, EventActions, RunActions,
+// histogramming, counters. It also has Cherenkov angle reconstruction 
+// software for resolution studies. The RichAnalysis.opts is not needed
+// for for any standard MC production runs. It is also not needed for any production 
+// runs with 'extended output info'.
+
+#include "$GAUSSRICHROOT/options/RichEfficiency.opts"
+
+//GiGaGeo.HpdSiliconSensDet.RichAviodDuplicateHitsActivate=true;
+//GiGaGeo.HpdSiliconSensDet.RichFlagDuplicateHitsactivate=true
+
+#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+
