@@ -105,6 +105,15 @@ class TrackingOnly( object ):
                                                ,   'AllL0VeloTTForw_TrNTHits'    : 16.
                                                ,   'AllL0VeloTTForw_GEC'         : 'Loose'
                                                ,   'AllL0VeloTTForw_ValidateTT'  : True
+                                               ,   'AllL0LifetimeUnbiased_Velo_Qcut'  : 3.
+                                               ,   'AllL0LifetimeUnbiased_PT'          : 5000.
+                                               ,   'AllL0LifetimeUnbiased_P'           : 15000.
+                                               ,   'AllL0LifetimeUnbiased_TTPT'          : 8000.
+                                               ,   'AllL0LifetimeUnbiased_TTP'           : 20000.
+                                               ,   'AllL0LifetimeUnbiased_TrChi2'      : 3.
+                                               ,   'AllL0LifetimeUnbiased_TrNTHits'    : 16.
+                                               ,   'AllL0LifetimeUnbiased_GEC'         : 'Loose'
+                                               ,   'AllL0LifetimeUnbiased_ValidateTT'  : False
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
                                                , 'Muon_IP'       :     0.100
@@ -252,14 +261,15 @@ class TrackingOnly( object ):
      
 
         return thresholds
+
+      
+ 
                        
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
-    'Hlt2DisplVerticesSingle',
-                ]
+        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent','Hlt2LowMultHadron','Hlt2B2HH']
  
         return hlt2
        
@@ -267,7 +277,7 @@ class TrackingOnly( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0VeloTTForw', 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
+        lines =  [ 'Hlt1TrackAllL0LifetimeUnbiased', 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton', 'Hlt1TrackAllL0', ]
         #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
        
         return lines 
