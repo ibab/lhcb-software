@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-02-19 - Rob Lambert
+ - Expect 4 errors in init_final test.
+
 ! 2014-02-09 - Gerhard Raven
  - return StatusCode::FAILURE from initialize if no ID can be found for specified
    decision name
