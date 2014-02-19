@@ -3,6 +3,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r9 2014-02-19 =========================
 ! 2014-02-04 - Christoph Langenbruch
  - Removed unneeded calls to foiX and foiY in MuonIDAlg::setCoords.
    This optimisation should have no implications except for performance improvement.
