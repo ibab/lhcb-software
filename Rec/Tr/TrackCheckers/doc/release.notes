@@ -4,7 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
-!========================= TrackCheckers v5r0 2014-02-19 =======================
+!========================= TrackCheckers v4r20 2014-02-19 ======================
 ! 2014-01-23 - Michel De Cian
  -  Fix behaviour of flag 'fromB' and 'fromCharm" in TrackCheckerBase and TrackIPResolutionCheckerNT to only include B baryons and mesons, and not particles from string fragmentation of b and c quarks
 

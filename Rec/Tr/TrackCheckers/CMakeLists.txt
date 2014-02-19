@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackCheckers
 ################################################################################
-gaudi_subdir(TrackCheckers v5r0)
+gaudi_subdir(TrackCheckers v4r20)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
