@@ -4,19 +4,20 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= TrackKernel v2r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
 
-!========================= TrackKernel v1r18 2013-10-24 =========================
+!========================= TrackKernel v1r18 2013-10-24 ========================
 ! 2013-10-11 - Wouter Hulsbergen
  - Improved speed of TrackStateVertex
 
-!========================= TrackKernel v1r17 2013-10-01 =========================
+!========================= TrackKernel v1r17 2013-10-01 ========================
 ! 2013-08-13 - Wouter Hulsbergen
  - Improved error handling of TrackStateVertex
  - Changed weights of adaptive fit
 
-!========================= TrackKernel v1r16 2013-07-18 =========================
+!========================= TrackKernel v1r16 2013-07-18 ========================
 ! 2013-06-21 - Wouter Hulsbergen
  - Added fast methods to compute ipchi2, twotrackchi2 and doca to TrackVertexUtils
  - Added constructor that takes two states to TrackStateVertex
@@ -25,7 +26,7 @@
  - Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
    with direct call to SMatrix InvertChol() method. Fixes gcc48 warning
 
-!========================= TrackKernel v1r15 2013-06-03 =========================
+!========================= TrackKernel v1r15 2013-06-03 ========================
 ! 2013-05-28 - Wouter Hulsbergen
  - Fixed old bug in LHCb::TrackTraj::distTo1stError and
    LHCb::TrackTraj::distTo2ndError, exposed by previous commit.
@@ -34,18 +35,18 @@
  - Fix operator precedence order issue for ? and + in 
    LHCb::TrackTraj::distTo1stError and LHCb::TrackTraj::distTo2ndError
 
-!========================= TrackKernel v1r14 2013-04-30 =========================
+!========================= TrackKernel v1r14 2013-04-30 ========================
 ! 2013-04-30 - Sascha Stahl
  - Bugfix for VL.
 
-!========================= TrackKernel v1r13 2013-04-29 =========================
+!========================= TrackKernel v1r13 2013-04-29 ========================
 ! 2013-04-05 - Wouter Hulsbergen
  - TrackCloneData: bug fixes + adapted for upgrade
 
 ! 2013-04-02 - Marco Cattaneo
  - Fix PW.PARAMETER_HIDDEN Coverity defect
 
-!========================= TrackKernel v1r12 2013-02-04 =========================
+!========================= TrackKernel v1r12 2013-02-04 ========================
 ! 2012-12-12 - Marco Cattaneo
  - Add include dependency on DetDesc, introduced by previous change
    (ideally, DetDesc/StaticArray.h should be moved to e.g. GaudiKernel)
@@ -53,14 +54,14 @@
 ! 2012-12-11 - Wouter Hulsbergen
  - Added TrackCloneData
 
-!========================= TrackKernel v1r11 2012-11-26 =========================
+!========================= TrackKernel v1r11 2012-11-26 ========================
 ! 2012-11-21 - Marco Clemencic
  - Fixed a warning (-pedantic).
 
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= TrackKernel v1r10 2012-06-25 =========================
+!========================= TrackKernel v1r10 2012-06-25 ========================
 ! 2012-06-21 - Wouter Hulsbergen
  - Added adaptive fit to TrackStateVertex
 
@@ -72,8 +73,7 @@
    - now copies input states rather than keeping pointers
    - particles with negative masshypo will be ignored for p4
 
-!========================= TrackKernel v1r9p1 2012-03-27 =========================
-
+!========================= TrackKernel v1r9p1 2012-03-27 =======================
 ! 2012-03-27 - Wouter Hulsbergen
  - bug fix in TrackTraj: Backward tracks have states in opposite order
 
