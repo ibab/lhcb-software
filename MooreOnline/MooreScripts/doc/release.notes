@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-02-19 - Rob Lambert
+ - Create directory "install" to hold online install scripts. This will be manually checked out in the HLT account to do the installation.
+
 ! 2014-02-06 - Rob Lambert
  - Significantly adapt MooreScripts CreateSetup.py to change the behaviour for stripping paths, now make sure we do leave the online satelite and local MooreOnline in the paths even if others are stripped out.
 

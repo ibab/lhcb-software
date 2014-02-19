@@ -1,0 +1,29 @@
+This simple directory contains the installation scripts to install Moore in the online environment.
+
+You are not expected to getpack MooreScripts to run these installers, but instead you are expected to simply checkout the directory from svn.
+
+svn checkout `svnpath MooreScripts head`/install install
+
+The only reason this is in svn is so that we can track the changes made to this script, so please *do track the changes made to this script!* by editing the release.notes and choosing an extensive commit message.
+
+Contents:
+- InstallMoore.sh
+- test_install.sh
+- README
+- release.notes
+
+InstallMoore.sh:
+ - script for installing Moore (MooreOnline) on the local cluster.
+ - you do not need any previously setup environment to use this script
+ - you do not need to edit this script, there are options for everything
+ - InstallMoore.sh #no options prints the help and exits
+
+testinstall.sh
+ - script for mimicking the online installation environment for testing 
+   if the installer works or not as provided.
+ - you may need to edit this script for your local use, 
+   to select which version of Moore to test, etc.
+
+To update:
+- if you are reading this file, you already know where this directory is kept
+- cd into the directory and "svn update"

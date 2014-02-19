@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Directory   : MooreScripts/install
+! Responsible : Rob Lambert
+! Purpose     : Installation scripts for Moore
+!-----------------------------------------------------------------------------
+
+! 2014-02-19 - Rob Lambert
+ - First import of the installer from my public area (used to be ~rlambert/public/forEric).
