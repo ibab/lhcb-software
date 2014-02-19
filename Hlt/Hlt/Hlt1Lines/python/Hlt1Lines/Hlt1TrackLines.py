@@ -70,6 +70,18 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'AllL0VeloTTForw_TrNTHits'    : 16.
                     ,   'AllL0VeloTTForw_GEC'         : 'Loose'
                     ,   'AllL0VeloTTForw_ValidateTT'  : False
+                    ,   'AllL0LifetimeUnbiased_Velo_Qcut'  : 3.
+                    ,   'AllL0LifetimeUnbiased_Velo_NHits'  : 9. # not used
+                    ,   'AllL0LifetimeUnbiased_IP'         : 0.100
+                    ,   'AllL0LifetimeUnbiased_PT'          : 2500.
+                    ,   'AllL0LifetimeUnbiased_P'           : 10000.
+                    ,   'AllL0LifetimeUnbiased_TTPT'          : 2500.
+                    ,   'AllL0LifetimeUnbiased_TTP'           : 10000.
+                    ,   'AllL0LifetimeUnbiased_IPChi2'      : 16.
+                    ,   'AllL0LifetimeUnbiased_TrChi2'      : 3.
+                    ,   'AllL0LifetimeUnbiased_TrNTHits'    : 16.
+                    ,   'AllL0LifetimeUnbiased_GEC'         : 'Loose'
+                    ,   'AllL0LifetimeUnbiased_ValidateTT'  : False
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
@@ -98,9 +110,14 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
     def localise_props( self, prefix ):
         ps = self.getProps()
-        lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2",
-                    "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC", 'ValidateTT' ) )
-        return dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
+        # get the list of options belonging to this prefix
+        #myprops = dict( [ ( key, ps[key] 
+        
+        #lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", 
+        #            "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC", 'ValidateTT' ) )
+        return { key.replace(prefix+"_","") : ps[key] for key in ps if key.find(prefix)>=0} 
+
+        #dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
@@ -227,6 +244,71 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             )       
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackVeloTTForw_Unit ]
+
+
+
+
+
+    #
+    def hlt1HighPTLifetimeUnbiased_Streamer( self, name, props ) :
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        props['forward'] = 'PEstiForward' 
+        if props['ValidateTT'] :
+            props['forward'] = "ValidateWithTT >>" + props['forward']  
+
+        lineCode = """ 
+        VeloCandidates
+        >> ( TrNVELOMISS < %(Velo_Qcut)s )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass NVeloMiss', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
+        >>  pET
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
+        >>  ( ( TrPT > %(TTPT)s * MeV ) & \
+        ( TrP  > %(TTP)s  * MeV ) & \
+        ( TrP < 14000000.0 * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TT P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP TT' , LoKi.Monitoring.ContextSvc ) )
+        >>  %(forward)s 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
+        ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
+
+        Preambulo = self.hlt1Track_Preambulo( name )
+        #Preambulo.append("hPPre = Gaudi.Histo1DDef('preP',0,10000)")
+        Preambulo.append("from LoKiCore.functions import *")
+        Preambulo.append("from LoKiPhys.decorators import *")
+        #Preambulo.append("from GaudiPython.HistoUtils import book")              
+        #Preambulo.append("histo = Gaudi.Histo1DDef('Pre VeloTT Pt', 0.0, 10000.0,100)")
+
+        hlt1HighPTLifetimeUnbiased_Unit = HltUnit(
+            'Hlt1'+name+'Unit',
+            ##OutputLevel = 1 ,
+            Preambulo = Preambulo,
+            Code = lineCode
+            )       
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1HighPTLifetimeUnbiased_Unit ]
+
+
+     
+
+    
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -370,6 +452,12 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS"
              , algos = self.hlt1TrackVeloTTForw_Streamer( "TrackAllL0VeloTTForw", self.localise_props("AllL0VeloTTForw"))
+        )       
+        Line ( 'TrackAllL0LifetimeUnbiased'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS"
+             , algos = self.hlt1HighPTLifetimeUnbiased_Streamer( "TrackAllL0LifetimeUnbiased", self.localise_props("AllL0LifetimeUnbiased"))
         )       
         Line ( 'TrackAllL0Tight'
              , prescale = self.prescale

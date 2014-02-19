@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-02-19 - Sebastian Neubert
+ - added Lifetimeunbiased high pt line prototype
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
