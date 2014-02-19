@@ -6,10 +6,15 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v15r0>2014-02-19 LbcomSys v15r0</A></H1><PRE>
+</PRE><H1><A NAME=v15r0>2014-02-20 LbcomSys v15r0</A></H1><PRE>
 This version uses Gaudi v25r0 and LHCb v37r0
 
-- Packages modified: Rich/RichTools v2r43, VP/VPAlgorithms v4r2p1
+- Packages modified: L0/PuVeto v7r10, Rich/RichTools v2r43,
+     VP/VPAlgorithms v4r2p1
+
+- In L0/PuVeto v7r10
+  . PuVetoAlg: Protect divide by zero when initialising diagonal elements of
+    binning matrix
 
 - In Rich/RichTools v2r43
   . Protect against zero length direction vectors in RayTracing::reflectSpherical

@@ -18,7 +18,7 @@ use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
 
 # L0 trigger simulation
 use L0MuonMonitor     v2r3     L0        # Julien Cogan
-use PuVeto            v7r9     L0        # Serena Oggero
+use PuVeto            v7r10    L0        # 
 
 # Muon
 use MuonAssociators   v3r5     Muon      # Alessia Satta
