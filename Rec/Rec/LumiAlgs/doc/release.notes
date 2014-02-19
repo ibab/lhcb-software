@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r1 2014-02-19 =========================
 ! 2014-02-14 - Rob Lambert
  - Update test references for decoder changes, update to use PRConfig for one test to fix castor: problem
 
