@@ -25,7 +25,7 @@ use MuonAssociators   v3r5     Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r6     OT        # Alexandr Kozlinskiy
-use OTMonitor         v3r7     OT        # Francesco Dettori
+use OTMonitor         v3r8     OT        # Francesco Dettori
 
 # Rich
 use RichAlgorithms    v1r7     Rich      # Chris Jones
