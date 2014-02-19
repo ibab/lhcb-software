@@ -95,7 +95,8 @@ StatusCode OTTimeMonitor::execute() {
   
 StatusCode OTTimeMonitor::finalize()
 {
-  double scalePerEvent = 1.0/double(m_nEvents);
+  double scalePerEvent = 1.0;  
+  if( 0 != m_nEvents ) scalePerEvent = 1.0/double(m_nEvents);
   m_occPerModuleHisto->scale(scalePerEvent);
  
   m_decoder.release().ignore();
