@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r64 2014-02-19 =========================
 ! 2014-02-07 - Marco Clemencic
  - Fixed a bug in RichRecQCConf exposed by the fix to Gaudi bug #103803.
 
