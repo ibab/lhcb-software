@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-02-19 - Stefano Perazzini
+ - Updated XMLCatalog for test samples in order to cope
+   with change in EOS path
+
 ! 2014-02-17 - Mika Vesterinen
  - Bug fix to K*K line in B2DMuNuX module
 
@@ -17,7 +21,6 @@
    PsiX : 
    add N=8-body decays 
  
-
 !========================= StrippingSelections v3r32 2014-02-04 =========================
 
 ! 2014-02-04 - Flavio Archilli
