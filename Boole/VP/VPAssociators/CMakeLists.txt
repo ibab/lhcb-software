@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPAssociators
 ################################################################################
-gaudi_subdir(VPAssociators v2r3)
+gaudi_subdir(VPAssociators v2r4)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent

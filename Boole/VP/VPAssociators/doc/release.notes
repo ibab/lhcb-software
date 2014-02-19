@@ -3,29 +3,30 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+!========================= VPAssociators v2r4 2014-02-19 =======================
 ! 2014-02-09 - Heinrich Schindler
  - Remove old linker algorithms
  - Remove unnecessary dependencies
 
-!========================= VPAssociators v2r3 2013-10-24 =========================
+!========================= VPAssociators v2r3 2013-10-24 =======================
 ! 2013-10-12 - Heinrich Schindler
  - Add simplified digit and cluster linker algorithms to have same number 
    of reconstructible tracks in binary in ToT mode
  
-!========================= VPAssociators v2r2p1 2013-10-02 =========================
+!========================= VPAssociators v2r2p1 2013-10-02 ======================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
-!========================= VPAssociators v2r2 2013-07-18 ========================
+!========================= VPAssociators v2r2 2013-07-18 =======================
 ! 2013-06-24 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
  - Remove empty finalize methods
 
-!========================= VPAssociators v2r1 2012-12-12 ========================
+!========================= VPAssociators v2r1 2012-12-12 =======================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= VPAssociators v2r0 2012-10-03 ========================
+!========================= VPAssociators v2r0 2012-10-03 =======================
 ! 2012-09-24 - Paul Szczypka
  - Rename VeloPix to VP in filenames and code.
 
