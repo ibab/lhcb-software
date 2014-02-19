@@ -452,7 +452,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
   if( !RecVert )
   {
-    Error( "No Reconstructed Vertex! -> Skip" )i.gnore();
+    Error( "No Reconstructed Vertex! -> Skip" ).ignore();
     return PileUpVtx;
   }
 
