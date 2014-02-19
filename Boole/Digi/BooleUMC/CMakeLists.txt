@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BooleUMC
 ################################################################################
-gaudi_subdir(BooleUMC v2r3)
+gaudi_subdir(BooleUMC v3r0)
 
 gaudi_depends_on_subdirs(Det/FTDet
                          Det/OTDet
