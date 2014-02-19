@@ -450,11 +450,17 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   double the_chi2PV=1000;
   int nPV=0;
 
+  if( !RecVert )
+  {
+    Error( "No Reconstructed Vertex! -> Skip" )i.gnore();
+    return PileUpVtx;
+  }
+
   const double c00 = RecVert->covMatrix()(0,0);
   const double c11 = RecVert->covMatrix()(1,1);
   const double c22 = RecVert->covMatrix()(2,2);
 
-  for(RecVertex::Range::const_iterator jv=verts.begin(); jv!=verts.end(); jv++)
+  for ( RecVertex::Range::const_iterator jv=verts.begin(); jv!=verts.end(); jv++)
   {
     const double dx = RecVert->position().x()-(*jv)->position().x();
     const double dy = RecVert->position().y()-(*jv)->position().y();
