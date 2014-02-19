@@ -8,6 +8,8 @@
 
 ! 2014-02-19 - Chris Jones
  - Add some additional protection for a possible NULL RecVert.
+ - Disable compiler optimisation (i.e. use -O0) when compiling with clang.
+   To work around an issue with excessive memory usage during compilation.
 
 ! 2014-02-16 - Chris Jones
  - Prevent various floating point exceptions (divide by zero etc.) found by
