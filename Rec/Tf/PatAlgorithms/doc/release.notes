@@ -4,35 +4,36 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r30 2014-02-19 ======================
 ! 2014-02-07 - Michel De Cian
  - Fix floating point exception in PatAddTTCoord (negative values in sqrt).
 
-!========================= PatAlgorithms v4r29 2013-11-20 =========================
+!========================= PatAlgorithms v4r29 2013-11-20 ======================
 ! 2013-11-15 - Sascha Stahl
  - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
 	 was marked as a stereo layer.
 
-!========================= PatAlgorithms v4r28 2013-10-01 =========================
+!========================= PatAlgorithms v4r28 2013-10-01 ======================
 ! 2013-09-24 - Sascha Stahl
  - Fixed bug in PatSeedingTool which disabled protection against hot events 
 	 in the OT when disabling protection against hot events in IT.
 
-!========================= PatAlgorithms v4r27 2013-07-18 =========================
+!========================= PatAlgorithms v4r27 2013-07-18 ======================
 ! 2013-06-18 - Marco Cattaneo
  - Add missing dependency on TrackInterfaces
 
 ! 2013-06-15 - Manuel Tobias Schiller
  - fix segfault in gcc 4.8 optimised build
 
-!========================= PatAlgorithms v4r26p2 2013-06-03 =========================
+!========================= PatAlgorithms v4r26p2 2013-06-03 =====================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
-!========================= PatAlgorithms v4r26p1 2013-04-30 =========================
+!========================= PatAlgorithms v4r26p1 2013-04-30 =====================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= PatAlgorithms v4r26 2013-02-14 =========================
+!========================= PatAlgorithms v4r26 2013-02-14 ======================
 ! 2013-02-05 - Sascha Stahl
  - Moved all UT related code to Pr/PrAlgorithms
 
@@ -46,7 +47,7 @@
  - tiny code cosmetic in PatSeedingTool: reorder properties and replace hard
    coded track location by existing property.
 
-!========================= PatAlgorithms v4r25 2012-11-28 =========================
+!========================= PatAlgorithms v4r25 2012-11-28 ======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -62,7 +63,7 @@
  - Fix an untested debug()
  - Fix UNINIT_CTOR defects
 
-!========================= PatAlgorithms v4r24 2012-06-28 =========================
+!========================= PatAlgorithms v4r24 2012-06-28 ======================
 ! 2012-06-27 - Manuel Tobias Schiller
  - add a flag to activate a workaround for certain problematic properties in
    PatSeedingTool which get their values set wrong when being extracted from
@@ -80,11 +81,11 @@
    expert running the job has explicitly decreed otherwise in his/her job
    options)
 
-!========================= PatAlgorithms v4r23 2012-04-24 =========================
+!========================= PatAlgorithms v4r23 2012-04-24 ======================
 ! 2012-04-24 - Sascha Stahl
  - PatMatchTool : Momentum estimate now protected against failure.
 
-!========================= PatAlgorithms v4r22 2012-04-24 =========================
+!========================= PatAlgorithms v4r22 2012-04-24 ======================
 ! 2012-04-23 - Sascha Stahl
  - PatMatchTool : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
  - PatDownstream : Added option MinMomentum and MinPt to reject tracks with a certain momentum.
@@ -100,20 +101,20 @@ zTTField in the chi2 fit.
    tracking in PatDownstream. Now used seeds and tt hits can be removed
    also in the HLT.
 
-!========================= PatAlgorithms v4r21 2012-04-09 =========================
+!========================= PatAlgorithms v4r21 2012-04-09 ======================
 ! 2012-04-05 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward, flag for left right ambiguity is now reset when
                    collecting hits.Before independence of different iterations 
                    of the Forward tracking was broken.
 
-!========================= PatAlgorithms v4r20 2012-03-16 =========================
-!========================= PatAlgorithms v4r19 2012-03-07 =========================
+!========================= PatAlgorithms v4r20 2012-03-16 ======================
+!========================= PatAlgorithms v4r19 2012-03-07 ======================
 ! 2012-02-23 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.
                     Variable was shadowed, resulting in wrong behaviour of 
                     the algorithm.
 
-!========================= PatAlgorithms v4r18 2012-02-28 =========================
+!========================= PatAlgorithms v4r18 2012-02-28 ======================
 ! 2012-02-23 - Sascha Stahl
  - PatForwardTool: Bug fix in PatForward in part which uses momentum estimate.   
 
@@ -145,7 +146,7 @@ zTTField in the chi2 fit.
    space for hit container
  - work on const correctness (where possible)
 
-!========================= PatAlgorithms v4r17 2012-01-31 =========================
+!========================= PatAlgorithms v4r17 2012-01-31 ======================
 ! 2012-01-31 - Manuel Tobias Schiller
  - PatMatchTool: make sure we copy all three states in T to help the fast fit
    in HLT
@@ -169,7 +170,7 @@ zTTField in the chi2 fit.
    time while only 0.5-1% of efficiency is lost (all momenta, for p > 5GeV, the
    efficiency loss is on the order of 0.1-0.3%)
 
-!========================= PatAlgorithms v4r16 2011-11-25 =========================
+!========================= PatAlgorithms v4r16 2011-11-25 ======================
 ! 2011-11-24 - Michel De Cian
  - Fix in PatAddTTCoord: If chi2 was still much too high with only 3 hits left (in method
    calculateChi2), it went into an infinite loop.
@@ -177,7 +178,7 @@ zTTField in the chi2 fit.
 ! 2011-11-23 - Marco Cattaneo
  - Fix gcc46 warnings and some icc remarks
 
-!========================= PatAlgorithms v4r15 2011-11-08 =========================
+!========================= PatAlgorithms v4r15 2011-11-08 ======================
 ! 2011-09-21 - Manuel Tobias Schiller
  - fix insane TES usage in PatSeedFit reported by Markus Frank today on the
    lhcb-reconstruction mailing list: instead of getting the container of
@@ -186,7 +187,7 @@ zTTField in the chi2 fit.
  - properly initialise a few pointers in the constructor of PatSeedFit while
    I am at it
 
-!========================= PatAlgorithms v4r14 2011-07-27 =========================
+!========================= PatAlgorithms v4r14 2011-07-27 ======================
 ! 2011-07-26 - Marco Cattaneo
  - In PatAlgConf.py, apply global global event cuts taken from
    TrackSys().GlobalCuts to PatSeeding and PatForward. If GEC on Velo hits is
