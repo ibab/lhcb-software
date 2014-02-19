@@ -2,6 +2,7 @@
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
 
+!========================= PuVeto v7r10 2014-02-19 =========================
 ! 2014-02-19 - Marco Cattaneo
  - PuVetoAlg: Protect divide by zero when initialising diagonal elements of
    binning matrix (which are in any case not used by the algorithm)

@@ -2,22 +2,22 @@
 # Maintainer : Serena Oggero
 
 package           PuVeto
-version           v7r9
+version           v7r10
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=====================================================================
 branches          cmt doc src options
 include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
-#============================================================================
+#=====================================================================
 use L0Event   v* Event
 use DAQEvent  v* Event
 use VeloDet   v* Det
 use MCEvent   v* Event
 
 # Component library building rule
-#============================================================================
+#=====================================================================
 library          PuVeto    ../src/*.cpp
 
 apply_pattern component_library library=PuVeto
