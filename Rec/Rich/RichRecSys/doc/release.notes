@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r1 2014-02-19 =========================
 ! 2014-02-08 - Chris Jones
  - Add an explicit tuning of the photon reconstruction for the Upgrade.
 
