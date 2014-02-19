@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r9 2014-02-19 ========================
 ! 2014-02-15 - Michel De Cian
  - Complete incomplete commit for PrSeedingXLayers
 
@@ -28,7 +29,7 @@
 ! 2014-01-26 - Michel De Cian
  - Replace "get" with "getIfExists" in PrMatch.cpp
 
-!========================= PrAlgorithms v1r8 2013-12-10 =========================
+!========================= PrAlgorithms v1r8 2013-12-10 ========================
 ! 2013-12-01 - Michel De Cian
  - Replace all 'Pat' track histories with 'Pr' track histories, fix uninitialized pointers in various PrClasses.
 
@@ -50,14 +51,14 @@
 ! 2013-11-01 - Espen Eie Bowen
  - Implemented the new momentum dependent windows.
 
-!========================= PrAlgorithms v1r7 2013-10-01 =========================
+!========================= PrAlgorithms v1r7 2013-10-01 ========================
 ! 2013-09-05 - Francesco Polci
  - Changed info to debug in PrFTHitManager.cpp
 
 ! 2013-09-04 - Francesco Polci
  - Cleaning the code in PrFTHitManager.cpp
 
-!========================= PrAlgorithms v1r6 2013-07-24 =========================
+!========================= PrAlgorithms v1r6 2013-07-24 ========================
 ! 2013-07-24 - Francesco Polci
  - Added switch between old and new detector needed in PrFTHitManager.cpp
 
@@ -67,7 +68,7 @@
 ! 2013-06-12 - Michel De Cian
  - Fix a coverity warning in PrAddUTCoord.cpp
 
-!========================= PrAlgorithms v1r5 2013-05-28 =========================
+!========================= PrAlgorithms v1r5 2013-05-28 ========================
 ! 2013-05-27 - Sascha Stahl
  - PrForward track now picks up state closest to the end of velo.
  - Bugfix when using momentum estimate.
@@ -75,11 +76,11 @@
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
-!========================= PrAlgorithms v1r4 2013-04-30 =========================
+!========================= PrAlgorithms v1r4 2013-04-30 ========================
 ! 2013-04-22 - Sascha Stahl
  - Added check for backward velo tracks in PrForwardTracking.
 
-!========================= PrAlgorithms v1r3 2013-03-25 =========================
+!========================= PrAlgorithms v1r3 2013-03-25 ========================
 ! 2013-03-25 - Marco Cattaneo
  - Use stable_sort in PrSeedingXLayers, to get same results in gcc43 and gcc46
 
@@ -104,7 +105,7 @@
 ! 2013-02-20 - Olivier Callot
  - New algorithm PrSeedingNew for FT seeding, prototype for tests.
 
-!========================= PrAlgorithms v1r2 2013-02-14 =========================
+!========================= PrAlgorithms v1r2 2013-02-14 ========================
 ! 2013-02-07 - Sascha Stahl
  - Enabled finding of T-Tracks in PrSeeding.
 
@@ -116,11 +117,11 @@
  - New parameterisation of the zone to look at in the T stations for a given Pt.
    The same parameters could be used to rpedict the position if te hmomentum is known.
 
-!========================= PrAlgorithms v1r1 2012-11-28 =========================
+!========================= PrAlgorithms v1r1 2012-11-28 ========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= PrAlgorithms v1r0 2012-10-01 =========================
+!========================= PrAlgorithms v1r0 2012-10-01 ========================
 ! 2012-09-12 - Marco Cattaneo
  - Fix an i686 compilation warning in PrForwardTool.cpp
 
