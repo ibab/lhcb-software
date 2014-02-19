@@ -4,6 +4,7 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r4 2014-02-19 =========================
 ! 2014-01-30 - Michel De Cian
  - Add IPrCounter as interface for PrCounter and PrUTCounter
 
