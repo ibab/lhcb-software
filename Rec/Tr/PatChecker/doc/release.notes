@@ -4,14 +4,15 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r15 2014-02-19 ========================
 ! 2014-01-23 - Michel De Cian
  - Fix behaviour of flag 'fromB' in PatChecker and PatKShortChecker to only include B baryons and mesons, and not particles from string fragmentation of b quarks (now consistent with PrChecker)
 
-!========================= PatChecker v3r14p1 2013-06-03 =========================
+!========================= PatChecker v3r14p1 2013-06-03 =======================
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
-!========================= PatChecker v3r14 2013-02-14 =========================
+!========================= PatChecker v3r14 2013-02-14 ========================
 ! 2013-01-30 - Jianchun Wang
  - Include UT hits in PatLHCbID2MCParticle
 
@@ -19,24 +20,24 @@
  - Change the name of the OTHitCreator from Tf::OTHitCreator to OTHitCreator in 
    PatLHCbID2MCParticle
 
-!========================= PatChecker v3r13 2012-11-28 =========================
+!========================= PatChecker v3r13 2012-11-28 ========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= PatChecker v3r12 2012-05-07 =========================
+!========================= PatChecker v3r12 2012-05-07 ========================
 ! 2012-05-03 - Marco Cattaneo
   - In PrimaryVertexChecker, fix more missing initialisations in RecPVInfo and
     MCPVInfo causing FPE on i686 architecture.
   - Fix Coverity UNINIT_CTOR defects
 
-!========================= PatChecker v3r11 2011-12-15 =========================
+!========================= PatChecker v3r11 2011-12-15 ========================
 ! 2011-12-02 - Marco Cattaneo
  - Fix trivial icc remarks
  - Replace all endreq by endmsg
  - In PrimaryVertexChecker, properly initialize MCPVInfo struct to avoid
    floating point exceptions in debug mode.
 
-!========================= PatChecker v3r10 2011-04-05 =========================
+!========================= PatChecker v3r10 2011-04-05 ========================
 ! 2011-03-21 Wembin Qian
  - Modified PatTTCounter to inherit from a virtual class
 
