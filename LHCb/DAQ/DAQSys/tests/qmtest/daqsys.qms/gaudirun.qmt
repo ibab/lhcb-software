@@ -15,7 +15,7 @@
 countErrorLines({"FATAL":0, "ERROR":2, "WARNING" :0})
 
 # check there are no warnings printed about the configuration
-warnlines=[l for l in stdout.split('\n') if l.strip().startswith("# WARNING:") and "DQFLAGS" not in l]
+warnlines=[l for l in stdout.split('\n') if l.strip().startswith("# WARNING:") and "DQFLAGS" not in l and "cpppy" not in l]
 if len(warnlines):
     causes.append("Warning from default configuration found")
     result["daqsys.gaudirun.warnlines"]=result.Quote("\n\t".join(warnlines))
