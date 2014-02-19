@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r8 2014-02-19 =======================
 ! 2014-02-18 - Jacco de Vries
  - Cleaned up IT removal option in FTClusterCreator
 
@@ -31,7 +32,7 @@
  - Edited the plots in MCFTDepositCreator
  - Made FTClusterCreator cluster cuts more intuitive (> --> >=) and changed values accordingly
 
-!========================= FTDigitisation v1r7 2013-12-10 =========================
+!========================= FTDigitisation v1r7 2013-12-10 =======================
 
 ! 2013-12-08 Jacco de Vries
  - removed escape character '\%' that gives a warning in cmake
@@ -67,14 +68,14 @@
  - Implemented direct and reflected light pulse in the DepositCreator. This is needed for studying spillover.
  - DigitCreator is also modified for matching the new Deposit.
 
-!========================= FTDigitisation v1r6 2013-10-02 =========================
+!========================= FTDigitisation v1r6 2013-10-02 =======================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
 ! 2013-09-18 - Marco Cattaneo
  - Fix unused variable warning
 
-!========================= FTDigitisation v1r5 2013-07-18 =========================
+!========================= FTDigitisation v1r5 2013-07-18 =======================
 ! 2013-07-12 - Eric Cogneras
  - MCFTDepositCreator : adapt the call of function converting 'hit to ftchannel' to have  backward 
    compatibility between old and new detector description
@@ -90,7 +91,7 @@
  - Fix unprotected debug()
  - Remove empty finalize methods
 
-!========================= FTDigitisation v1r4 2013-04-30 =========================
+!========================= FTDigitisation v1r4 2013-04-30 =======================
 ! 2013-04-29 - Eric Cogneras
  - Plot of the number of cluster per SiPM, needed by electronics
  - Debugging information encapsulation
@@ -105,7 +106,7 @@
 ! 2013-03-27 - Eric Cogneras
  - Bug fix : double declaration of variable reported by gcc47
 
-!========================= FTDigitisation v1r3 2013-03-25 =========================
+!========================= FTDigitisation v1r3 2013-03-25 =======================
 ! 2013-03-13 - Eric Cogneras
  - Fix a typo in plot2D call
 
@@ -118,7 +119,7 @@
  - MCHits map from MCFTDigit used to compute the fraction of hit lost in clusterisation 
  - typo correction
 
-!========================= FTDigitisation v1r2 2013-02-15 =========================
+!========================= FTDigitisation v1r2 2013-02-15 =======================
 ! 2013-02-05 - Olivier Callot
  - Set the gain to 25 photoelectrons near SIPM, i.e. before attenuation.
 
@@ -129,7 +130,7 @@
  - Set the default pe/MeV to 86, and teh gain to 2 cx/p.e, add adc Noise (.5 cx)
  - Eric Cogneras added plots to monitor the signals.
 
-!========================= FTDigitisation v1r1 2012-12-12 =========================
+!========================= FTDigitisation v1r1 2012-12-12 =======================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -153,7 +154,7 @@
    Use a gaussian distribution for average > 50.
 
 
-!========================= FTDigitisation v1r0 2012-10-03 =========================
+!========================= FTDigitisation v1r0 2012-10-03 =======================
 ! 2012-08-23 - Olivier Callot
  - Change the sorting function for MCFTDigit. No longer need for the functor class...
 
