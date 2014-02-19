@@ -1,0 +1,1236 @@
+# Restarting with LD_PRELOAD='libtcmalloc.so'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/DaVinci/DV-Stripping20r0p3-Stripping.py'
+Trying to import module StrippingArchive.Stripping13
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping14
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping15
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping16
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
+Trying to import module StrippingArchive.Stripping20
+Trying to import module StrippingArchive.Stripping20r1
+Trying to import module StrippingArchive.Stripping20r0p1
+Trying to import module StrippingArchive.Stripping20r0p2
+Trying to import module StrippingArchive.Stripping20r0p3
+Trying to import module StrippingArchive.Stripping20r2
+Trying to import module StrippingArchive.Stripping20r3
+Creating Bhadron stream with 79 lines
+Creating Semileptonic stream with 7 lines
+Creating BhadronCompleteEvent stream with 27 lines
+Creating Dimuon stream with 42 lines
+Creating DimuonVELORAW stream with 14 lines
+Creating Charm stream with 34 lines
+Creating EW stream with 42 lines
+Creating Leptonic stream with 46 lines
+# Initialising StrippingConf
+# StrippingGlobal appending stream Bhadron
+# StrippingGlobal appending stream Semileptonic
+# StrippingGlobal appending stream BhadronCompleteEvent
+# WARNING: Line StrippingB2XTau_DMu_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTau_DMu_SameSign_Line has zero prescale, skipping
+# StrippingGlobal appending stream Dimuon
+# WARNING: Line StrippingBLVLinesLa2KmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2KmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2DmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2DsmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesB2LcmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2LcpiLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesB2DpiLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesBs2DspiLine has zero prescale, skipping
+# StrippingGlobal appending stream DimuonVELORAW
+# WARNING: Line StrippingRareStrangeSigmaPMuMuLine has zero prescale, skipping
+# WARNING: Line StrippingRareStrangeSigmaPEELine has zero prescale, skipping
+# WARNING: Line StrippingRareStrangeSigmaPMuMuLFVLine has zero prescale, skipping
+# StrippingGlobal appending stream Charm
+# StrippingGlobal appending stream EW
+# StrippingGlobal appending stream Leptonic
+# WARNING: Line StrippingB2XTauMicro_TauTau_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DD_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DPi_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauTau_SameSign_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DD_SameSign_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_SameSign_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DPi_SameSign_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauTau_piSS_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_piSS_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingLowMultMuonLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultMuonLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPP2PPMuMuLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPP2PPMuMuLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLineNoFilter is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLineNoFilter is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPhotonLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KpPipPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2K3Pi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PP_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPimPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKmPipPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKKK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiPiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_D2KmPipPip_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KpPipPim_D2KpPipPim_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_D2KpPipPim_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_KpKm_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_KpKp_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2KPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2PiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_PHI2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2K3PiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PPWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPipPipWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPipPimWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKmPipPipWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKKKWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiPiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_PhiToKsKsLine is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_JPsiToKKLine is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_JPsiToKsKsLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiNoIPD2KPIPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarWSD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSDDD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSLLD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KsPiDDD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KsPiLLD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0MergedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiDDWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0MergedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiLLWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKKD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DPiPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DHHOSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DRho0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKstar0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DPhiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKSDDD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKSLLD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DRhoPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKstarPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarKDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSDDD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSLLD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHWSResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHWSResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHWSMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHWSMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKKPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKKPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKKPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstPiPiPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKPiPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKKPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DD02K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0FULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0D02K3PiUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DDKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0DKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDstKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDstKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2Dst2460DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2Dst2460DKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0st2460D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiNoIPLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiNoIPWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicKXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicKWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicDXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicDWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0DXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0DWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicKPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicPiPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicPiPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicKPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KPiPiXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0PiPiPiXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KPiPiWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0PiPiPiWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2LcDsKLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2LcDsKWSLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02LcDsKPiLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02LcDsKPiWSLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb2D0PD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb02DPD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb02DPWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0PHD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0PHWSD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKKPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarKLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiPiPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarKWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKKPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0D02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0PiD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0KD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0PiWSD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0KWSD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpPiXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpKXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpPiWSXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpKWSXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppKXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppPiXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppKWSXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppPiWSXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiKOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiSSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKKOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiPiPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKKXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKKWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDstDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDstWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcLcBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcLcWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2Lc5PiLc2PKPiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0Lambda0DDD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0Lambda0LLD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2DpKKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2D0pPiPiD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKLTUBD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiNoIPD2KPIPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PPbarD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PPbarD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSDDD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSLLD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KsPiDDD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KsPiLLD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsKDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsKLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsPiDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsPiLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKKD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DPiPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DHHOSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DRho0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKstar0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DPhiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKSDDD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKSLLD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DRhoPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKstarPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsPiDDDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsKDDDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsKLLDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsPiLLDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSDDD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSLLD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2HHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKKPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstKKPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DD02K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0FULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0D02K3PiUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstDstKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2Dst2460DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0st2460D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDoubleTopoLine is declared but not appended to any stream
+# WARNING: Line StrippingPseudoDoubleTopoLine is declared but not appended to any stream
+# WARNING: Line StrippingD02HHTopoTOSLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKpiDCSB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXpipiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXpipiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKKDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXpipiDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DpMuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DMuXKKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXK3PiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXK3PiDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuX3KPiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuX2K2PiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2LcMuXB2DMuNuXLine is declared but not appended to any stream
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/DaVinci/DV-Stripping20r0p3-Stripping.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/DaVinci/DataType-2012.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/DaVinci/DataType-2012.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision12-4TeV-Reco14-FULLDST.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision12-4TeV-Reco14-FULLDST.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/Persistency/Compression-ZLIB-1.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r190/options/Persistency/Compression-ZLIB-1.py'
+# --> Including file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
+# <-- End of file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
+# --> Including file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/EnableFPEAuditor.py'
+# <-- End of file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/EnableFPEAuditor.py'
+# applying configuration of DefaultTrackingCuts
+# /***** User DefaultTrackingCuts/DefaultTrackingCuts ************************************************
+# |-Types = ['Long']  (default: ['Long'])
+# |-Cuts  = {'CloneDistCut': [5000, 9e+99], 'Chi2Cut': [0, 3]}
+# |       (default: {'CloneDistCut': [5000, 9e+99], 'Chi2Cut': [0, 5]})
+# \----- (End of User DefaultTrackingCuts/DefaultTrackingCuts) ---------------------------------------
+# applying configuration of DaVinci
+# DaVinci                   INFO    Applying DaVinci configuration
+# DaVinci                   INFO    /***** User DaVinci/DaVinci ************************************************************************
+|-MainOptions     = ''
+|-TupleFile       = ''
+|-SkipEvents      = 0
+|-Input           = []  (default: [])
+|-DDDBtag         = ''
+|-UserAlgorithms  = []  (default: [])
+|-RootInTES       = ''
+|-DQFLAGStag      = ''
+|-Lumi            = False
+|-MoniSequence    = []  (default: [])
+|-VerboseMessages = False
+|-IgnoreDQFlags   = False
+|-ProductionType  = 'Stripping'  (default: 'None')
+|-PrintFreq       = 10  (default: 1000)
+|-Detectors       = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+|                 (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+|-EvtMax          = 1000  (default: -1)
+|-CondDBtag       = ''
+|-Simulation      = False
+|-DataType        = '2012'  (default: '')
+|-RedoMCLinks     = False
+|-InputType       = 'DST'
+|-HistogramFile   = 'DVHistos.root'  (default: '')
+|-WriteFSR        = True
+|-EnableUnpack    = None
+|-EventPreFilters = []  (default: [])
+\----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# Apply CaloProcessor configuration for ['Digits', 'Clusters'] and ['InAcceptance', 'Match', 'Energy', 'Chi2', 'DLL', 'NeutralPID']
+# CaloDigits onDemand for ['Ecal', 'Hcal', 'Prs', 'Spd']
+# ClusterReco onDemand
+# Configured Ecal Clusters Reco : ClusterReco
+# Configured Calo PIDs           : CaloPIDsCaloPIDsForCaloProcessor
+# CaloProcessor onDemand enabled
+# DaVinci                   INFO    Creating Lumi Algorithms
+# DaVinci                   INFO    No MainOptions specified. DaVinci() will import no options file!
+# DaVinci                   INFO    Creating User Algorithms
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Creating Moni Algorithms
+# DaVinci                   INFO    Append to Moni Sequence has been called
+# /***** User DaVinci/DaVinci ************************************************************************
+# |-MainOptions     = ''
+# |-TupleFile       = ''
+# |-SkipEvents      = 0
+# |-Input           = []  (default: [])
+# |-DDDBtag         = ''
+# |-UserAlgorithms  = []  (default: [])
+# |-RootInTES       = ''
+# |-DQFLAGStag      = ''
+# |-Lumi            = False
+# |-MoniSequence    = []  (default: [])
+# |-VerboseMessages = False
+# |-IgnoreDQFlags   = True  (default: False)
+# |-ProductionType  = 'Stripping'  (default: 'None')
+# |-PrintFreq       = 10  (default: 1000)
+# |-Detectors       = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+# |                 (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-EvtMax          = 1000  (default: -1)
+# |-CondDBtag       = ''
+# |-Simulation      = False
+# |-DataType        = '2012'  (default: '')
+# |-RedoMCLinks     = False
+# |-InputType       = 'DST'
+# |-HistogramFile   = 'DVHistos.root'  (default: '')
+# |-WriteFSR        = True
+# |-EnableUnpack    = ['Reconstruction']  (default: None)
+# |-EventPreFilters = []  (default: [])
+# \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
+# applying configuration of LumiAlgsConf
+# /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
+# |-UseLumiLow        = False
+# |-ForceFullSequence = False
+# |-InputType         = 'DST'
+# |-DataType          = '2012'  (default: '2012')
+# |-SetFSRStatus      = ''
+# |-OutputLevel       = 3
+# |-MergeFSR          = False
+# |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
+# |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
+# |-Simulation        = False
+# |-Context           = 'Offline'
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0xeea0420>  (default: None)
+# |-IgnoreDQFlags     = False
+# \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
+# applying configuration of L0Conf
+# Applying L0Conf
+# L0 on demand activated (rootInTES : )
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts'
+# /***** User L0Conf/L0Conf **************************************************************************
+# |-FullL0MuonDecoding         = True  (default: False)
+# |-verbose                    = False
+# |-LinkSequencer              = None
+# |-DecodeL0                   = False
+# |-ETCSequencer               = None
+# |-L0MuonUseTCKFromData       = None
+# |-RootInTESOnDemand          = ['']  (default: [''])
+# |-ETCOutput                  = 'L0ETC.root'
+# |-EnsureKnownTCK             = True
+# |-EnableL0DecodingOnDemand   = True  (default: False)
+# |-TCK                        = None
+# |-FastL0DUDecoding           = False
+# |-DecodeL0DU                 = False
+# |-ReplayL0DU                 = False
+# |-FilterSequencer            = None
+# |-L0Sequencer                = None
+# |-L0MuonForceLUTVersion      = None
+# |-L0EmulatorContext          = None
+# |-FilterL0                   = False
+# |-RawEventLocations          = []  (default: [])
+# |-EnableTAEOnDemand          = False
+# |-SimulateL0                 = False
+# |-FullPileUpSimulation       = False
+# |-ReplaceL0BanksWithEmulated = False
+# |-ForceSingleL0Configuration = False
+# |-MoniSequencer              = None
+# |-MonitorL0                  = False
+# |-DataType                   = ''
+# |-FilterL0FromRaw            = False
+# |-IgnoreL0MuonCondDB         = None
+# |-L0DecodingContext          = None
+# |-EmulateL0                  = False
+# \----- (End of User L0Conf/L0Conf) -----------------------------------------------------------------
+# applying configuration of PhysConf
+# Applying Phys configuration
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts' already included, ignored.
+# PhysConf: Configuring EventClockSvc to use RecHeader
+# /***** User PhysConf/PhysConf **********************************************************************
+# |-CaloReProcessing  = False
+# |-DataType          = '2012'  (default: '')
+# |-AllowPIDRecalib   = True
+# |-Detectors         = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+# |                   (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-Simulation        = False
+# |-EnableUnpack      = ['Reconstruction']  (default: None)
+# |-InputType         = 'DST'
+# |-AllowPIDRerunning = True
+# \----- (End of User PhysConf/PhysConf) -------------------------------------------------------------
+# applying configuration of MyDSTWriter
+# Configuring BaseDSTWriter
+# /***** User SelDSTWriter/MyDSTWriter ***************************************************************
+# |-MicroDSTElements   = {'default': [<DSTWriters.microdstelements.FindDuplicates object at 0xe7eca90>, <DSTWriters.microdstelements.CloneParticleTrees object at 0xe7ecad0>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0xe7ecb10>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7ecb50>, <DSTWriters.microdstelements.PackStrippingReports object at 0xe7ecb90>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0xe7ecbd0>, <DSTWriters.microdstelements.PackRecObjects object at 0xe7ecc10>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0xe7ecc50>], 'PID': [<DSTWriters.microdstelements.ClonePVs object at 0xe7ec750>, <DSTWriters.microdstelements.FindDuplicates object at 0xe7ec810>, <DSTWriters.microdstelements.CloneParticleTrees object at 0xe7ec850>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0xe7ec890>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7ec8d0>, <DSTWriters.microdstelements.ReFitAndClonePVs object at 0xe7ec910>, <DSTWriters.microdstelements.PackStrippingReports object at 0xe7ec950>, <DSTWriters.microdstelements.PackTrackingClusters object at 0xe7ec990>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0xe7ec9d0>, <DSTWriters.microdstelements.PackRecObjects object at 0xe7eca10>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0xe7eca50>], 'Leptonic': [<DSTWriters.microdstelements.ClonePVs object at 0xe7ec750>, <DSTWriters.microdstelements.FindDuplicates object at 0xe7ec810>, <DSTWriters.microdstelements.CloneParticleTrees object at 0xe7ec850>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0xe7ec890>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7ec8d0>, <DSTWriters.microdstelements.ReFitAndClonePVs object at 0xe7ec910>, <DSTWriters.microdstelements.PackStrippingReports object at 0xe7ec950>, <DSTWriters.microdstelements.PackTrackingClusters object at 0xe7ec990>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0xe7ec9d0>, <DSTWriters.microdstelements.PackRecObjects object at 0xe7eca10>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0xe7eca50>], 'Charm': [<DSTWriters.microdstelements.ClonePVs object at 0xe7ec750>, <DSTWriters.microdstelements.FindDuplicates object at 0xe7ec810>, <DSTWriters.microdstelements.CloneParticleTrees object at 0xe7ec850>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0xe7ec890>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7ec8d0>, <DSTWriters.microdstelements.ReFitAndClonePVs object at 0xe7ec910>, <DSTWriters.microdstelements.PackStrippingReports object at 0xe7ec950>, <DSTWriters.microdstelements.PackTrackingClusters object at 0xe7ec990>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0xe7ec9d0>, <DSTWriters.microdstelements.PackRecObjects object at 0xe7eca10>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0xe7eca50>], 'Bhadron': [<DSTWriters.microdstelements.ClonePVs object at 0xe7ec750>, <DSTWriters.microdstelements.FindDuplicates object at 0xe7ec810>, <DSTWriters.microdstelements.CloneParticleTrees object at 0xe7ec850>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0xe7ec890>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7ec8d0>, <DSTWriters.microdstelements.ReFitAndClonePVs object at 0xe7ec910>, <DSTWriters.microdstelements.PackStrippingReports object at 0xe7ec950>, <DSTWriters.microdstelements.PackTrackingClusters object at 0xe7ec990>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0xe7ec9d0>, <DSTWriters.microdstelements.PackRecObjects object at 0xe7eca10>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0xe7eca50>]}
+# |                    (default: {'default': [<DSTWriters.microdstelements.CloneParticleTrees object at 0xe7e8ed0>, <DSTWriters.microdstelements.ClonePVRelations object at 0xe7e8f10>]})
+# |-RootInTES          = '/Event'
+# |-WriteFSR           = True
+# |-StreamConf         = {'Bhadron': <DSTWriters.streamconf.OutputStreamConf object at 0xbf07f50>, 'default': <DSTWriters.streamconf.OutputStreamConf object at 0xe7ecc90>, 'Dimuon': <DSTWriters.streamconf.OutputStreamConf object at 0xe7eccd0>, 'PID': <DSTWriters.streamconf.OutputStreamConf object at 0xe7ecd50>, 'DimuonVELORAW': <DSTWriters.streamconf.OutputStreamConf object at 0xe7ecd10>, 'Charm': <DSTWriters.streamconf.OutputStreamConf object at 0xbf07f50>, 'Leptonic': <DSTWriters.streamconf.OutputStreamConf object at 0xbf07f50>}
+# |                    (default: {'default': <DSTWriters.streamconf.OutputStreamConf object at 0xe7e8e90>})
+# |-OutputFileSuffix   = '000000'  (default: 'Sel')
+# |-SelectionSequences = [<StrippingConf.StrippingStream.StrippingStream object at 0xb026610>, <StrippingConf.StrippingStream.StrippingStream object at 0xd798650>, <StrippingConf.StrippingStream.StrippingStream object at 0xbc58d90>, <StrippingConf.StrippingStream.StrippingStream object at 0xb38f210>, <StrippingConf.StrippingStream.StrippingStream object at 0xbda89d0>, <StrippingConf.StrippingStream.StrippingStream object at 0xbda8790>, <StrippingConf.StrippingStream.StrippingStream object at 0xbc62b10>, <StrippingConf.StrippingStream.StrippingStream object at 0xbdcea90>]
+# |                    (default: [])
+# \----- (End of User SelDSTWriter/MyDSTWriter) ------------------------------------------------------
+# skipping configuration of RawEventFormatConf
+# skipping configuration of LumiIntegratorConf
+# applying configuration of AnalysisConf
+# Applying Analysis configuration
+# /***** User AnalysisConf/AnalysisConf **************************************************************
+# |-DataType    = '2012'  (default: '')
+# |-RedoMCLinks = False  (default: False)
+# |-Simulation  = False
+# \----- (End of User AnalysisConf/AnalysisConf) -----------------------------------------------------
+# WARNING: Using default tag dddb-20130503-1 for partition DDDB
+# WARNING: Using default tag cond-20131128 for partition LHCBCOND
+# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: something else configured a decoder already, Raw/Spd/Digits CaloDigitsFromRaw/SpdFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/Calo L0CaloCandidatesFromRaw/L0CaloFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/FullCalo L0CaloCandidatesFromRaw/L0CaloFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/L0DUReport L0DUFromRawAlg/L0DUFromRaw
+# WARNING: something else configured a decoder already, Raw/Prs/Digits CaloDigitsFromRaw/PrsFromRaw
+# WARNING: something else configured a decoder already, Raw/Ecal/Digits CaloZSupAlg/EcalZSup
+# WARNING: something else configured a decoder already, Raw/Hcal/Digits CaloZSupAlg/HcalZSup
+# WARNING: something else configured a decoder already, Trig/L0/MuonCtrl L0MuonCandidatesFromRaw/L0MuonFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/MuonBCSU L0MuonCandidatesFromRaw/L0MuonFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/MuonData L0MuonCandidatesFromRaw/L0MuonFromRaw
+# No Writer defined for DIGI
+# WARNING: tool ToolSvc.SequencerTimerTool has non-default configuration! Attributes that differ:
+# WARNING:     OutputLevel = 4 (default = 7)
+# WARNING: tool ToolSvc.OTRawBankDecoder has non-default configuration! Attributes that differ:
+# WARNING:     TimeWindow = (-8.0, 56.0) (default = (999.0, -999.0))
+# WARNING: tool ToolSvc.CoreFactory has non-default configuration! Attributes that differ:
+# WARNING:     Modules = ['LoKiNumbers.decorators', 'LoKiTracks.decorators'] (default = ['LoKiNumbers.decorators'])
+# WARNING: tool ToolSvc.DoubleTopoLine_DT has non-default configuration! Attributes that differ:
+# WARNING:     minAngle = 0.0350877192982 (default = 0.0350877)
+# WARNING:     minMass = 19000.0 (default = 20000.0)
+# WARNING: tool ToolSvc.OTHitCreator has non-default configuration! Attributes that differ:
+# WARNING:     RawBankDecoder = OTRawBankDecoder (default = OTRawBankDecoder)
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to DaVinci version v33r9
+                                          running on lxplus0112 on Wed Feb 19 12:47:37 2014
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersistencySvc           INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc               SUCCESS Detector description database: conddb:/lhcb.xml
+RndmGenSvc.Engine                INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine                INFO Current Seed:1234567 Luxury:3
+RndmGenSvc                       INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.TIMER              INFO This machine has a speed about   1.29 times the speed of a 2.8 GHz Xeon.
+RootCnvSvc                       INFO Setting global ROOT compression to:ZLIB:1
+DaVinciEventSeq                  INFO Member list: DaVinciInit/DaVinciInitAlg, GaudiSequencer/FilteredEventSeq, GaudiSequencer/LumiSeq
+DaVinciInitAlg                SUCCESS ==================================================================
+DaVinciInitAlg                SUCCESS Requested to process 1000 events
+DaVinciInitAlg                SUCCESS ==================================================================
+RootHistSvc                      INFO Writing ROOT histograms to: DVHistos.root
+HistogramPersistencySvc          INFO Added successfully Conversion service:RootHistSvc
+HistogramDataSvc                 INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/JetEnergyCorrections_Reco12_v2.root as JEC
+HistogramDataSvc                 INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/PhotonPdf.root as CaloNeutralPIDs
+HistogramDataSvc                 INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/CaloPIDs_DC09_v1.root as CaloPIDs
+FilteredEventSeq                 INFO Member list: GaudiSequencer/DaVinciEventInitSeq, GaudiSequencer/DaVinciAnalysisSeq
+DaVinciEventInitSeq              INFO Member list: GaudiSequencer/PhysInitSeq, GaudiSequencer/AnalysisInitSeq
+PhysInitSeq                      INFO Member list:
+AnalysisInitSeq                  INFO Member list:
+DaVinciAnalysisSeq               INFO Member list: GaudiSequencer/DaVinciUserSequence, GaudiSequencer/MonitoringSequence
+DaVinciUserSequence              INFO Member list: GaudiSequencer/StrippingGlobal, StrippingTCK, GaudiSequencer/MyDSTWriterMainSeq, InputCopyStream/MDSTDSTWriter, RecordStream/FSRInputCopyStreamMDSTDSTWriter
+# WARNING: using PyCintex as cppyy implementation
+COOLConfSvc                      INFO CORAL Connection Retrial Period set to 60s
+COOLConfSvc                      INFO CORAL Connection Retrial Time-Out set to 900s
+DDDB                             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                             INFO Using TAG "dddb-20130503-1"
+LHCBCOND                         INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND                         INFO Using TAG "cond-20131128"
+ONLINE_2012                      INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012                      INFO Using TAG ""
+MagneticFieldSvc                 INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.down.cdf
+MagneticFieldSvc                 INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.down.cdf
+MagneticFieldSvc                 INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c3.down.cdf
+MagneticFieldSvc                 INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c4.down.cdf
+MagneticFieldSvc                 INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+SeqXibStarToXibZeroCombineXi     INFO OR Member list: GaudiSequencer/SEQ:XibStarToXibZeroCombineXiLLL, GaudiSequencer/SEQ:XibStarToXibZeroCombineXiDDL, GaudiSequencer/SEQ:XibStarToXibZeroCombineXiDDD, FilterDesktop/XibStarToXibZeroCombineXi
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaLL_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, CombineParticles/XibStarToXibZeroCombineXiLLL
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, CombineParticles/XibStarToXibZeroCombineXiDDL
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdNoPIDsDownPions_Particles, FilterDesktop/XibStarToXibZeroPartFilteredDownstreamPions, FilterDesktop/XibStarToXibZeroFilteredDownstreamPions, CombineParticles/XibStarToXibZeroCombineXiDDD
+SeqXibStarToXibZeroCombineL...   INFO OR Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaLL_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, FilterDesktop/XibStarToXibZeroCombineLambda
+SeqXibStarToXibZeroCombineX...   INFO OR Member list: GaudiSequencer/SEQ:XibStarToXibZeroCombineXicPlusToXiPiPi, GaudiSequencer/SEQ:XibStarToXibZeroCombineXicPlusToPKpi, FilterDesktop/XibStarToXibZeroCombineXicPlus
+SEQ:XibStarToXibZeroCombine...   INFO Member list: GaudiSequencer/SeqXibStarToXibZeroCombineXi, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, FilterDesktop/XibStarToXibZeroTightFilteredPions, CombineParticles/XibStarToXibZeroCombineXicPlusToXiPiPi
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseANNProtons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredProtons, FilterDesktop/XibStarToXibZeroGhostFilteredProtons, FilterDesktop/XibStarToXibZeroFilteredProtons, FilterDesktop/XibStarToXibZeroTightFilteredProtons, FilterDesktop/XibStarToXibZeroVeryTightFilteredProtons, LoKi::VoidFilter/SelFilterPhys_StdLooseANNKaons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredKaons, FilterDesktop/XibStarToXibZeroGhostFilteredKaons, FilterDesktop/XibStarToXibZeroFilteredKaons, FilterDesktop/XibStarToXibZeroTightFilteredKaons, FilterDesktop/XibStarToXibZeroVeryTightFilteredKaons, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, FilterDesktop/XibStarToXibZeroTightFilteredPions, CombineParticles/XibStarToXibZeroCombineXicPlusToPKpi
+SeqXibStarToXibZeroCombineX...   INFO OR Member list: GaudiSequencer/SEQ:XibStarToXibZeroCombineXicZeroToXiPi, GaudiSequencer/SEQ:XibStarToXibZeroCombineXicZeroToOmegaK, GaudiSequencer/SEQ:XibStarToXibZeroCombineXicZeroToPKKpi, FilterDesktop/XibStarToXibZeroCombineXicZero
+SEQ:XibStarToXibZeroCombine...   INFO Member list: GaudiSequencer/SeqXibStarToXibZeroCombineXi, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, FilterDesktop/XibStarToXibZeroTightFilteredPions, CombineParticles/XibStarToXibZeroCombineXicZeroToXiPi
+SEQ:XibStarToXibZeroCombine...   INFO Member list: GaudiSequencer/SeqXibStarToXibZeroCombineOmega, LoKi::VoidFilter/SelFilterPhys_StdLooseANNKaons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredKaons, FilterDesktop/XibStarToXibZeroGhostFilteredKaons, FilterDesktop/XibStarToXibZeroFilteredKaons, FilterDesktop/XibStarToXibZeroTightFilteredKaons, CombineParticles/XibStarToXibZeroCombineXicZeroToOmegaK
+SeqXibStarToXibZeroCombineO...   INFO OR Member list: GaudiSequencer/SEQ:XibStarToXibZeroCombineOmegaLLL, GaudiSequencer/SEQ:XibStarToXibZeroCombineOmegaDDL, GaudiSequencer/SEQ:XibStarToXibZeroCombineOmegaDDD, FilterDesktop/XibStarToXibZeroCombineOmega
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaLL_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseANNKaons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredKaons, FilterDesktop/XibStarToXibZeroGhostFilteredKaons, FilterDesktop/XibStarToXibZeroFilteredKaons, CombineParticles/XibStarToXibZeroCombineOmegaLLL
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseANNKaons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredKaons, FilterDesktop/XibStarToXibZeroGhostFilteredKaons, FilterDesktop/XibStarToXibZeroFilteredKaons, CombineParticles/XibStarToXibZeroCombineOmegaDDL
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseDownKaons_Particles, FilterDesktop/XibStarToXibZeroPartFilteredDownstreamKaons, FilterDesktop/XibStarToXibZeroFilteredDownstreamKaons, CombineParticles/XibStarToXibZeroCombineOmegaDDD
+SEQ:XibStarToXibZeroCombine...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseANNProtons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredProtons, FilterDesktop/XibStarToXibZeroGhostFilteredProtons, FilterDesktop/XibStarToXibZeroFilteredProtons, FilterDesktop/XibStarToXibZeroTightFilteredProtons, LoKi::VoidFilter/SelFilterPhys_StdLooseANNKaons_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredKaons, FilterDesktop/XibStarToXibZeroGhostFilteredKaons, FilterDesktop/XibStarToXibZeroFilteredKaons, FilterDesktop/XibStarToXibZeroTightFilteredKaons, LoKi::VoidFilter/SelFilterPhys_StdLooseANNPions_Particles, FilterDesktop/XibStarToXibZeroBaseFilteredPions, FilterDesktop/XibStarToXibZeroGhostFilteredPions, FilterDesktop/XibStarToXibZeroFilteredPions, FilterDesktop/XibStarToXibZeroTightFilteredPions, CombineParticles/XibStarToXibZeroCombineXicZeroToPKKpi
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXibStarToXibZeroCo...   INFO Prescaling events; keeping 0.1 of events
+StrippingXib2Xic0PiWSXic02P...   INFO Prescaling events; keeping 0.1 of events
+StrippingX2LcKPiWSLc2PKPiBe...   INFO Prescaling events; keeping 0.1 of events
+StrippingX2LcKKWSLc2PKPiBea...   INFO Prescaling events; keeping 0.1 of events
+StrippingLb2LcKPiPiWSLc2PKP...   INFO Prescaling events; keeping 0.1 of events
+SeqD2HHHBeauty2Charm             INFO OR Member list: GaudiSequencer/SEQ:D+2HHHBeauty2CharmFilter, GaudiSequencer/SEQ:D-2HHHBeauty2CharmFilter, FilterDesktop/D2HHHBeauty2Charm
+SEQ:D+2HHHBeauty2CharmFilter     INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, CombineParticles/ProtoD+2HHHBeauty2Charm, SubPIDMMFilter/D+2HHHSubPIDSelBeauty2Charm, FilterDesktop/D+2HHHBeauty2CharmFilter
+SEQ:D-2HHHBeauty2CharmFilter     INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, CombineParticles/ProtoD-2HHHBeauty2Charm, SubPIDMMFilter/D-2HHHSubPIDSelBeauty2Charm, FilterDesktop/D-2HHHBeauty2CharmFilter
+StrippingB02D0KPiD2KSHHLLWS...   INFO Prescaling events; keeping 0.1 of events
+SeqD2KsHHWSBeauty2Charm_LL       INFO OR Member list: GaudiSequencer/SEQ:D2KSHHWSPlusLLBeauty2CharmFilter, GaudiSequencer/SEQ:D2KSHHWSMinusLLBeauty2CharmFilter, FilterDesktop/D2KsHHWSBeauty2Charm_LL
+SEQ:D2KSHHWSPlusLLBeauty2Ch...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdLooseKsLL_Particles, FilterDesktop/KS0_LLInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdNoPIDsUpPions_Particles, FilterDesktop/PiUPInputsBeauty2CharmFilter, CombineParticles/ProtoD2KSHHWSPlusLLBeauty2Charm, SubPIDMMFilter/D2KSHHWSPlusSubPIDSelBeauty2CharmLL, FilterDesktop/D2KSHHWSPlusLLBeauty2CharmFilter
+ProtoD2KSHHWSPlusLLBeauty2C...WARNING CombineParticles:: Duplication in Input locations : Phys/KS0_LLInputsBeauty2CharmFilter Phys/PiInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+SEQ:D2KSHHWSMinusLLBeauty2C...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdLooseKsLL_Particles, FilterDesktop/KS0_LLInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdNoPIDsUpPions_Particles, FilterDesktop/PiUPInputsBeauty2CharmFilter, CombineParticles/ProtoD2KSHHWSMinusLLBeauty2Charm, SubPIDMMFilter/D2KSHHWSMinusSubPIDSelBeauty2CharmLL, FilterDesktop/D2KSHHWSMinusLLBeauty2CharmFilter
+ProtoD2KSHHWSMinusLLBeauty2...WARNING CombineParticles:: Duplication in Input locations : Phys/KS0_LLInputsBeauty2CharmFilter Phys/PiInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+SeqX2KPiBeauty2Charm             INFO OR Member list: GaudiSequencer/SEQ:X2KPiBeauty2CharmFilter, GaudiSequencer/SEQ:X2KPiBarBeauty2CharmFilter, FilterDesktop/X2KPiBeauty2Charm
+SEQ:X2KPiBeauty2CharmFilter      INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, FilterDesktop/HHPionsInputsBeauty2CharmFilter, CombineParticles/X2PiPiBeauty2Charm, SubstitutePID/X2KPiBeauty2CharmSel, FilterDesktop/X2KPiBeauty2CharmFilter
+SEQ:X2KPiBarBeauty2CharmFilter   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, FilterDesktop/HHPionsInputsBeauty2CharmFilter, CombineParticles/X2PiPiBeauty2Charm, SubstitutePID/X2KPiBarBeauty2CharmSel, FilterDesktop/X2KPiBarBeauty2CharmFilter
+StrippingB02D0KPiD2KSHHDDWS...   INFO Prescaling events; keeping 0.1 of events
+SeqD2KsHHWSBeauty2Charm_DD       INFO OR Member list: GaudiSequencer/SEQ:D2KSHHWSPlusDDBeauty2CharmFilter, GaudiSequencer/SEQ:D2KSHHWSMinusDDBeauty2CharmFilter, FilterDesktop/D2KsHHWSBeauty2Charm_DD
+SEQ:D2KSHHWSPlusDDBeauty2Ch...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdLooseKsDD_Particles, FilterDesktop/KS0_DDInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdNoPIDsUpPions_Particles, FilterDesktop/PiUPInputsBeauty2CharmFilter, CombineParticles/ProtoD2KSHHWSPlusDDBeauty2Charm, SubPIDMMFilter/D2KSHHWSPlusSubPIDSelBeauty2CharmDD, FilterDesktop/D2KSHHWSPlusDDBeauty2CharmFilter
+ProtoD2KSHHWSPlusDDBeauty2C...WARNING CombineParticles:: Duplication in Input locations : Phys/KS0_DDInputsBeauty2CharmFilter Phys/PiInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+SEQ:D2KSHHWSMinusDDBeauty2C...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/PiInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdLooseKsDD_Particles, FilterDesktop/KS0_DDInputsBeauty2CharmFilter, LoKi::VoidFilter/SelFilterPhys_StdNoPIDsUpPions_Particles, FilterDesktop/PiUPInputsBeauty2CharmFilter, CombineParticles/ProtoD2KSHHWSMinusDDBeauty2Charm, SubPIDMMFilter/D2KSHHWSMinusSubPIDSelBeauty2CharmDD, FilterDesktop/D2KSHHWSMinusDDBeauty2CharmFilter
+ProtoD2KSHHWSMinusDDBeauty2...WARNING CombineParticles:: Duplication in Input locations : Phys/KS0_DDInputsBeauty2CharmFilter Phys/PiInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DKsKDDD2HHHCFPIDBeauty2C...WARNING CombineParticles:: Duplication in Input locations : Phys/D2HHHCFPIDBeauty2CharmFilter Phys/KS0_DDInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DKsKLLD2HHHCFPIDBeauty2C...WARNING CombineParticles:: Duplication in Input locations : Phys/D2HHHCFPIDBeauty2CharmFilter Phys/KS0_LLInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DKsKDDWSD2HHHCF...   INFO Prescaling events; keeping 0.1 of events
+B02DKsKDDWSD2HHHCFPIDBeauty...WARNING CombineParticles:: Duplication in Input locations : Phys/D2HHHCFPIDBeauty2CharmFilter Phys/KS0_DDInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DKsKLLWSD2HHHCF...   INFO Prescaling events; keeping 0.1 of events
+B02DKsKLLWSD2HHHCFPIDBeauty...WARNING CombineParticles:: Duplication in Input locations : Phys/D2HHHCFPIDBeauty2CharmFilter Phys/KS0_LLInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DstarKsPiLLDst2D0PiBeaut...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_LLInputsBeauty2CharmFilter Phys/PiTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DstarKsPiDDDst2D0PiBeaut...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_DDInputsBeauty2CharmFilter Phys/PiTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DstarKsKLLDst2D0PiBeauty...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_LLInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+B02DstarKsKDDDst2D0PiBeauty...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_DDInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DstarKsPiLLWSDs...   INFO Prescaling events; keeping 0.1 of events
+B02DstarKsPiLLWSDst2D0PiBea...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_LLInputsBeauty2CharmFilter Phys/PiTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DstarKsPiDDWSDs...   INFO Prescaling events; keeping 0.1 of events
+B02DstarKsPiDDWSDst2D0PiBea...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_DDInputsBeauty2CharmFilter Phys/PiTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DstarKsKLLWSDst...   INFO Prescaling events; keeping 0.1 of events
+B02DstarKsKLLWSDst2D0PiBeau...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_LLInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+StrippingB02DstarKsKDDWSDst...   INFO Prescaling events; keeping 0.1 of events
+B02DstarKsKDDWSDst2D0PiBeau...WARNING CombineParticles:: Duplication in Input locations : Phys/Dstar2D0PiBeauty2Charm Phys/KS0_DDInputsBeauty2CharmFilter Phys/KTopoInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter Phys/PiUPInputsBeauty2CharmFilter
+TransportSvc                     INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
+TransportSvc                     INFO Recovery of geometry errors is  ENABLED
+StrippingLb2pMuNuVubLowMcor...   INFO Prescaling events; keeping 0.5 of events
+SeqCC2DDMergedDSelection         INFO OR Member list: GaudiSequencer/SEQ:D0ForCC2DD, GaudiSequencer/SEQ:DpForCC2DD, GaudiSequencer/SEQ:DsForCC2DD, FilterDesktop/CC2DDMergedDSelection
+SEQ:D0ForCC2DD                   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllLooseANNKaons_Particles, LoKi::VoidFilter/SelFilterPhys_StdAllLooseANNPions_Particles, CombineParticles/D0ForCC2DD
+SEQ:DpForCC2DD                   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllLooseANNKaons_Particles, LoKi::VoidFilter/SelFilterPhys_StdAllLooseANNPions_Particles, CombineParticles/DpForCC2DD
+SEQ:DsForCC2DD                   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllLooseKaons_Particles, LoKi::VoidFilter/SelFilterPhys_StdAllLoosePions_Particles, CombineParticles/DsForCC2DD
+StrippingWeAKTJetsLinePreSc...   INFO Prescaling events; keeping 0.1 of events
+StrippingDijetsPrescaledLin...   INFO Prescaling events; keeping 0.03 of events
+DisplVerticesJetSingleLowMa...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+DisplVerticesJetSingleHighM...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+DisplVerticesHltCandidates       INFO OR Member list: GaudiSequencer/DisplVerticesHlt2CandFilterTCK0x001c0028-0x002f002c, GaudiSequencer/DisplVerticesHlt2CandFilterTCK0x00340032-0x00730035, GaudiSequencer/DisplVerticesHlt2CandFilterTCK0x00750037-0x007b0038, GaudiSequencer/DisplVerticesHlt2CandFilterTCK0x007e0039-0x0097003d, GaudiSequencer/DisplVerticesHlt2CandFilterTCK0x00990042-0x40000000
+DisplVerticesHlt2CandFilter...   INFO Member list: LoKi::ODINFilter/DisplVerticesODINFilterTCK0x001c0028-0x002f002c, LoKi::HDRFilter/DisplVerticesHltDecisionFilterTCK0x001c0028-0x002f002c, HltVertexConverterS20p3/DisplVerticesHltConverter0x001c0028-0x002f002c
+DisplVerticesHlt2CandFilter...   INFO Member list: LoKi::ODINFilter/DisplVerticesODINFilterTCK0x00340032-0x00730035, LoKi::HDRFilter/DisplVerticesHltDecisionFilterTCK0x00340032-0x00730035, HltVertexConverterS20p3/DisplVerticesHltConverter0x00340032-0x00730035
+DisplVerticesHlt2CandFilter...   INFO Member list: LoKi::ODINFilter/DisplVerticesODINFilterTCK0x00750037-0x007b0038, LoKi::HDRFilter/DisplVerticesHltDecisionFilterTCK0x00750037-0x007b0038, HltVertexConverterS20p3/DisplVerticesHltConverter0x00750037-0x007b0038
+DisplVerticesHlt2CandFilter...   INFO Member list: LoKi::ODINFilter/DisplVerticesODINFilterTCK0x007e0039-0x0097003d, LoKi::HDRFilter/DisplVerticesHltDecisionFilterTCK0x007e0039-0x0097003d, HltVertexConverterS20p3/DisplVerticesHltConverter0x007e0039-0x0097003d
+DisplVerticesHlt2CandFilter...   INFO Member list: LoKi::ODINFilter/DisplVerticesODINFilterTCK0x00990042-0x40000000, LoKi::HDRFilter/DisplVerticesHltDecisionFilterTCK0x00990042-0x40000000, HltVertexConverterS20p3/DisplVerticesHltConverter0x00990042-0x40000000
+DisplVerticesHlt2CandWithJe...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+StrippingB2XTau_TauTau_Same...   INFO Prescaling events; keeping 0.5 of events
+StrippingB2XTau_DD_SameSign...   INFO Prescaling events; keeping 0.5 of events
+StrippingB2XTau_TauMu_SameS...   INFO Prescaling events; keeping 0.5 of events
+StrippingB2XTau_DPi_SameSig...   INFO Prescaling events; keeping 0.5 of events
+StrippingB2XTau_TauTau_piSS...   INFO Prescaling events; keeping 0.5 of events
+StrippingB2XTau_TauMu_piSS_...   INFO Prescaling events; keeping 0.5 of events
+StrippingWmuAKTJetsLinePreS...   INFO Prescaling events; keeping 0.1 of events
+StrippingKS02MuMuNoMuIDLine...   INFO Prescaling events; keeping 0.001 of events
+StrippingKS02MuMuSBLinePreS...   INFO Prescaling events; keeping 0.1 of events
+SeqSelection_B2XMuMu_daughters   INFO OR Member list: GaudiSequencer/SEQ:B2XMuMu_K10_PickDecay, GaudiSequencer/SEQ:B2XMuMu_K1_PickDecay, GaudiSequencer/SEQ:Selection_B2XMuMu_k12omegak, GaudiSequencer/SEQ:Selection_B2XMuMu_k12omegaks, FilterDesktop/Selection_B2XMuMu_daughters
+SEQ:B2XMuMu_K10_PickDecay        INFO Member list: GaudiSequencer/SeqSelection_B2XMuMu_Kshort, LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/Selection_B2XMuMu_StdAllNoPIDsPions, CombineParticles/Selection_B2XMuMu_k10, FilterDesktop/B2XMuMu_K10_PickDecay
+SeqSelection_B2XMuMu_Kshort      INFO OR Member list: GaudiSequencer/SEQ:Selection_B2XMuMu_Ksdd, GaudiSequencer/SEQ:Selection_B2XMuMu_Ksll, FilterDesktop/Selection_B2XMuMu_Kshort
+SEQ:Selection_B2XMuMu_Ksdd       INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKsDD_Particles, FilterDesktop/Selection_B2XMuMu_Ksdd
+SEQ:Selection_B2XMuMu_Ksll       INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKsLL_Particles, FilterDesktop/Selection_B2XMuMu_Ksll
+SEQ:B2XMuMu_K1_PickDecay         INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/Selection_B2XMuMu_StdAllNoPIDsPions, CombineParticles/Selection_B2XMuMu_a1, FilterDesktop/B2XMuMu_A1_PickDecay, SubstitutePID/B2XMuMu_a1k1_SubPIDAlg, SubPIDMMFilter/B2XMuMu_a1k1_SubPIDAlgp, SubPIDMMFilter/B2XMuMu_a1k1_SubPIDAlgm, FilterDesktop/B2XMuMu_K1_PickDecay
+SEQ:Selection_B2XMuMu_k12om...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsKaons_Particles, FilterDesktop/Selection_B2XMuMu_StdAllNoPIDsKaons, LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/Selection_B2XMuMu_StdAllNoPIDsPions, GaudiSequencer/SeqSelection_B2XMuMu_pi0foromega, CombineParticles/Selection_B2XMuMu_omega2pipipizero, CombineParticles/Selection_B2XMuMu_k12omegak
+SeqSelection_B2XMuMu_pi0for...   INFO OR Member list: GaudiSequencer/SEQ:Selection_B2XMuMu_pi0foromegaresolved, GaudiSequencer/SEQ:Selection_B2XMuMu_pi0foromegamerged, FilterDesktop/Selection_B2XMuMu_pi0foromega
+SEQ:Selection_B2XMuMu_pi0fo...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseResolvedPi0_Particles, FilterDesktop/Selection_B2XMuMu_pi0foromegaresolved
+SEQ:Selection_B2XMuMu_pi0fo...   INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseMergedPi0_Particles, FilterDesktop/Selection_B2XMuMu_pi0foromegamerged
+SEQ:Selection_B2XMuMu_k12om...   INFO Member list: GaudiSequencer/SeqSelection_B2XMuMu_Kshort, LoKi::VoidFilter/SelFilterPhys_StdAllNoPIDsPions_Particles, FilterDesktop/Selection_B2XMuMu_StdAllNoPIDsPions, GaudiSequencer/SeqSelection_B2XMuMu_pi0foromega, CombineParticles/Selection_B2XMuMu_omega2pipipizero, CombineParticles/Selection_B2XMuMu_k12omegaks
+StrippingB2XMuMu_InclDiMuCC...   INFO Prescaling events; keeping 0.07 of events
+StrippingK0s2Pi0MuMuSideban...   INFO Prescaling events; keeping 0.2 of events
+StrippingBLVLinesB2LcpLineP...   INFO Prescaling events; keeping 0.2 of events
+StrippingB2KpiX2MuMuSSDarkB...   INFO Prescaling events; keeping 0.1 of events
+StrippingB2KKX2MuMuSSDarkBo...   INFO Prescaling events; keeping 0.1 of events
+StrippingB2KX2MuMuSSDarkBos...   INFO Prescaling events; keeping 0.1 of events
+StrippingB2KX2PiPiSSDarkBos...   INFO Prescaling events; keeping 0.1 of events
+StrippingRareStrangeSigmaPE...   INFO Prescaling events; keeping 0.1 of events
+StrippingRareStrangeKPiPiPi...   INFO Prescaling events; keeping 0.01 of events
+StrippingRareStrangeKPiPiPi...   INFO Prescaling events; keeping 0.1 of events
+StrippingD2KShh_samesignKKL...   INFO Prescaling events; keeping 0.01 of events
+StrippingD2KShh_samesignPPL...   INFO Prescaling events; keeping 0.01 of events
+StrippingD2KShh_samesignKKD...   INFO Prescaling events; keeping 0.01 of events
+StrippingD2KShh_samesignPPD...   INFO Prescaling events; keeping 0.01 of events
+StrippingPhiToKSKS_PhiToKKL...   INFO Prescaling events; keeping 0.001 of events
+StrippingPhiToKSKS_PhiToMuM...   INFO Prescaling events; keeping 0.01 of events
+StrippingD02KpiForPromptCha...   INFO Prescaling events; keeping 0.05 of events
+StrippingDstarForPromptChar...   INFO Prescaling events; keeping 0.1 of events
+StrippingDForPromptCharmPre...   INFO Prescaling events; keeping 0.05 of events
+StrippingDsForPromptCharmPr...   INFO Prescaling events; keeping 0.5 of events
+SeqPromptCharmForPromptCharm     INFO OR Member list: GaudiSequencer/SEQ:SelD02KpiForPromptCharm, GaudiSequencer/SEQ:SelDstarForPromptCharm, GaudiSequencer/SEQ:SelDsForPromptCharm, GaudiSequencer/SEQ:SelDForPromptCharm, GaudiSequencer/SEQ:SelLambdaCForPromptCharm, FilterDesktop/PromptCharmForPromptCharm
+SEQ:SelD02KpiForPromptCharm      INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/SelKaonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, FilterDesktop/SelPionForPromptCharm, CombineParticles/SelD02KpiForPromptCharm
+SEQ:SelDstarForPromptCharm       INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/SelKaonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, FilterDesktop/SelPionForPromptCharm, CombineParticles/SelD02KpiForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdAllLoosePions_Particles, CombineParticles/SelDstarForPromptCharm
+SEQ:SelDsForPromptCharm          INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/SelKaonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, FilterDesktop/SelPionForPromptCharm, DaVinci::N3BodyDecays/SelDsForPromptCharm
+SEQ:SelDForPromptCharm           INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/SelKaonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, FilterDesktop/SelPionForPromptCharm, DaVinci::N3BodyDecays/SelDForPromptCharm
+SEQ:SelLambdaCForPromptCharm     INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseProtons_Particles, FilterDesktop/SelProtonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/SelKaonForPromptCharm, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, FilterDesktop/SelPionForPromptCharm, DaVinci::N3BodyDecays/SelLambdaCForPromptCharm
+StrippingXiccControlXicZero...   INFO Prescaling events; keeping 0.1 of events
+SeqXiccCombineXi                 INFO OR Member list: GaudiSequencer/SEQ:XiccCombineXiLL, GaudiSequencer/SEQ:XiccCombineXiDD, FilterDesktop/XiccCombineXi
+SEQ:XiccCombineXiLL              INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaLL_Particles, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, CombineParticles/XiccCombineXiLL
+SEQ:XiccCombineXiDD              INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdLoosePions_Particles, CombineParticles/XiccCombineXiDD
+StrippingXiccControlXicPlus...   INFO Prescaling events; keeping 0.1 of events
+StrippingH24MuSameMassLineS...   INFO Prescaling events; keeping 0.1 of events
+LowMultCEP_D2KPi_D2KPi_line   WARNING CombineParticles:: Duplication in Input locations : Phys/selD2KPi Phys/selD2KPi
+LowMultCEP_D2K3Pi_D2K3Pi_line WARNING CombineParticles:: Duplication in Input locations : Phys/selD2K3Pi Phys/selD2K3Pi
+LowMultCEP_D2KsPiPiLL_D2KsP...WARNING CombineParticles:: Duplication in Input locations : Phys/selD2KsPiPiLL Phys/selD2KsPiPiLL
+LowMultCEP_D2KsPiPiDD_D2KsP...WARNING CombineParticles:: Duplication in Input locations : Phys/selD2KsPiPiDD Phys/selD2KsPiPiDD
+LowMultCEP_Dstar2D0Pi_KPi_D...WARNING CombineParticles:: Duplication in Input locations : Phys/selDstar2D0Pi_KPi Phys/selDstar2D0Pi_KPi
+StrippingH24MuLinesLooseLin...   INFO Prescaling events; keeping 0.01 of events
+SeqMergedConvertedPhotons        INFO OR Member list: LoKi::VoidFilter/SelFilterPhys_StdAllLooseGammaDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdAllLooseGammaLL_Particles, FilterDesktop/MergedConvertedPhotons
+SeqMergedKshorts                 INFO OR Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKsDD_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseKsLL_Particles, FilterDesktop/MergedKshorts
+SeqMergedLambdas                 INFO OR Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaLL_Particles, LoKi::VoidFilter/SelFilterPhys_StdLooseLambdaDD_Particles, FilterDesktop/MergedLambdas
+SeqMergeBu2LLK_ee                INFO OR Member list: GaudiSequencer/SEQ:KaonsForBu2LLK, GaudiSequencer/SEQ:KstarsForBu2LLK, FilterDesktop/MergeBu2LLK_ee
+SEQ:KaonsForBu2LLK               INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKaons_Particles, FilterDesktop/KaonsForBu2LLK
+SEQ:KstarsForBu2LLK              INFO Member list: LoKi::VoidFilter/SelFilterPhys_StdLooseKstar2Kpi_Particles, FilterDesktop/KstarsForBu2LLK
+SeqMergeBu2LLK_ee2               INFO OR Member list: GaudiSequencer/SEQ:KaonsForBu2LLK, GaudiSequencer/SEQ:KstarsForBu2LLK, FilterDesktop/MergeBu2LLK_ee2
+SeqMergeBu2LLK_mm                INFO OR Member list: GaudiSequencer/SEQ:KaonsForBu2LLK, GaudiSequencer/SEQ:KstarsForBu2LLK, FilterDesktop/MergeBu2LLK_mm
+SeqMergeBu2LLK_me                INFO OR Member list: GaudiSequencer/SEQ:KaonsForBu2LLK, GaudiSequencer/SEQ:KstarsForBu2LLK, FilterDesktop/MergeBu2LLK_me
+StrippingB2KpiX2EESSDarkBos...   INFO Prescaling events; keeping 0.1 of events
+EcalDet.Quality                  INFO Found  43 problematic readout channel(s)
+EcalDet.Quality                  INFO Found  5 channel(s) with 'LED monitoring problem'
+EESSDarkBosonSel                 INFO Particle/AntiParticle to be created : 'J/psi(1S)'/'J/psi(1S)'
+StrippingB2KKX2EESSDarkBoso...   INFO Prescaling events; keeping 0.1 of events
+StrippingB2KX2EESSDarkBoson...   INFO Prescaling events; keeping 0.1 of events
+StrippingB2KX2KKSSDarkBoson...   INFO Prescaling events; keeping 0.1 of events
+MyDSTWriterMainSeq               INFO OR Member list: GaudiSequencer/DSTWriterBhadron, GaudiSequencer/DSTWriterSemileptonic, GaudiSequencer/DSTWriterBhadronCompleteEvent, GaudiSequencer/DSTWriterDimuon, GaudiSequencer/DSTWriterDimuonVELORAW, GaudiSequencer/DSTWriterCharm, GaudiSequencer/DSTWriterEW, GaudiSequencer/DSTWriterLeptonic, with rootInTES '/Event/'
+DSTWriterBhadron                 INFO Member list: RecordStream/FSROutputStreamBhadron_OStream, GaudiSequencer/StrippingSequenceStreamBhadron, MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyPrimaryVertices_Bhadron, PrintDuplicates/FindDuplicates_Bhadron, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_Bhadron, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_Bhadron, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_Bhadron, PVReFitterAlg/ReFitPvs_Bhadron, BestPVAlg/BestPV_Bhadron, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyReFitP2PV_Bhadron, PackDecReport/PackFullStripReps, PackCluster/PackTkClusters_Bhadron, PackParticlesAndVertices/PackPsAndVs_Bhadron, PackProtoParticle/PackChargedProtos_Bhadron, PackProtoParticle/PackNeutralProtos_Bhadron, PackCaloHypo/PackCaloElectrons_Bhadron, PackCaloHypo/PackCaloPhotons_Bhadron, PackCaloHypo/PackCaloMergedPi0s_Bhadron, PackCaloHypo/PackCaloSplitPhotons_Bhadron, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_Bhadron, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_Bhadron, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_Bhadron, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_Bhadron, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_Bhadron, PackRecVertex/PackPVs_Bhadron, PackTrack/PackBestTracks_Bhadron, PackTrack/PackMuonTracks_Bhadron, EmptyEventNodeCleaner/EmptyNodeCleaner_Bhadron, FixInputCopyStream, OutputStream/Bhadron_OStream, with rootInTES '/Event/'
+FileRecordPersistencySvc         INFO Added successfully Conversion service:FileRecordCnvSvc
+FSROutputStreamBhadron_OStream   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.Bhadron.mdst' SVC='FileRecordCnvSvc' OPT='REC'
+EventPersistencySvc              INFO Added successfully Conversion service:RootCnvSvc
+Bhadron_OStream                  INFO Data source: EventDataSvc output: DATAFILE='000000.Bhadron.mdst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterSemileptonic            INFO Member list: RecordStream/FSRInputCopyStreamSemileptonic_OStream, GaudiSequencer/StrippingSequenceStreamSemileptonic, PrintDuplicates/FindDuplicates_Semileptonic, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_Semileptonic, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_Semileptonic, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_Semileptonic, PackDecReport/PackFullStripReps, PackParticlesAndVertices/PackPsAndVs_Semileptonic, PackProtoParticle/PackChargedProtos_Semileptonic, PackProtoParticle/PackNeutralProtos_Semileptonic, PackCaloHypo/PackCaloElectrons_Semileptonic, PackCaloHypo/PackCaloPhotons_Semileptonic, PackCaloHypo/PackCaloMergedPi0s_Semileptonic, PackCaloHypo/PackCaloSplitPhotons_Semileptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_Semileptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_Semileptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_Semileptonic, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_Semileptonic, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_Semileptonic, PackRecVertex/PackPVs_Semileptonic, PackTrack/PackBestTracks_Semileptonic, PackTrack/PackMuonTracks_Semileptonic, EmptyEventNodeCleaner/EmptyNodeCleaner_Semileptonic, FixInputCopyStream, InputCopyStream/Semileptonic_OStream, with rootInTES '/Event/'
+FSRInputCopyStreamSemilepto...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.Semileptonic.dst' SVC='FileRecordCnvSvc' OPT='REC'
+Semileptonic_OStream             INFO Data source: EventDataSvc output: DATAFILE='000000.Semileptonic.dst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterBhadronCompleteEvent    INFO Member list: RecordStream/FSRInputCopyStreamBhadronCompleteEvent_OStream, GaudiSequencer/StrippingSequenceStreamBhadronCompleteEvent, PrintDuplicates/FindDuplicates_BhadronCompleteEvent, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_BhadronCompleteEvent, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_BhadronCompleteEvent, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_BhadronCompleteEvent, PackDecReport/PackFullStripReps, PackParticlesAndVertices/PackPsAndVs_BhadronCompleteEvent, PackProtoParticle/PackChargedProtos_BhadronCompleteEvent, PackProtoParticle/PackNeutralProtos_BhadronCompleteEvent, PackCaloHypo/PackCaloElectrons_BhadronCompleteEvent, PackCaloHypo/PackCaloPhotons_BhadronCompleteEvent, PackCaloHypo/PackCaloMergedPi0s_BhadronCompleteEvent, PackCaloHypo/PackCaloSplitPhotons_BhadronCompleteEvent, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_BhadronCompleteEvent, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_BhadronCompleteEvent, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_BhadronCompleteEvent, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_BhadronCompleteEvent, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_BhadronCompleteEvent, PackRecVertex/PackPVs_BhadronCompleteEvent, PackTrack/PackBestTracks_BhadronCompleteEvent, PackTrack/PackMuonTracks_BhadronCompleteEvent, EmptyEventNodeCleaner/EmptyNodeCleaner_BhadronCompleteEvent, FixInputCopyStream, InputCopyStream/BhadronCompleteEvent_OStream, with rootInTES '/Event/'
+FSRInputCopyStreamBhadronCo...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.BhadronCompleteEvent.dst' SVC='FileRecordCnvSvc' OPT='REC'
+BhadronCompleteEvent_OStream     INFO Data source: EventDataSvc output: DATAFILE='000000.BhadronCompleteEvent.dst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterDimuon                  INFO Member list: RecordStream/FSRInputCopyStreamDimuon_OStream, GaudiSequencer/StrippingSequenceStreamDimuon, PrintDuplicates/FindDuplicates_Dimuon, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_Dimuon, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_Dimuon, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_Dimuon, PackDecReport/PackFullStripReps, PackParticlesAndVertices/PackPsAndVs_Dimuon, PackProtoParticle/PackChargedProtos_Dimuon, PackProtoParticle/PackNeutralProtos_Dimuon, PackCaloHypo/PackCaloElectrons_Dimuon, PackCaloHypo/PackCaloPhotons_Dimuon, PackCaloHypo/PackCaloMergedPi0s_Dimuon, PackCaloHypo/PackCaloSplitPhotons_Dimuon, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_Dimuon, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_Dimuon, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_Dimuon, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_Dimuon, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_Dimuon, PackRecVertex/PackPVs_Dimuon, PackTrack/PackBestTracks_Dimuon, PackTrack/PackMuonTracks_Dimuon, EmptyEventNodeCleaner/EmptyNodeCleaner_Dimuon, FixInputCopyStream, InputCopyStream/Dimuon_OStream, with rootInTES '/Event/'
+FSRInputCopyStreamDimuon_OS...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.Dimuon.dst' SVC='FileRecordCnvSvc' OPT='REC'
+Dimuon_OStream                   INFO Data source: EventDataSvc output: DATAFILE='000000.Dimuon.dst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterDimuonVELORAW           INFO Member list: RecordStream/FSRInputCopyStreamDimuonVELORAW_OStream, GaudiSequencer/StrippingSequenceStreamDimuonVELORAW, PrintDuplicates/FindDuplicates_DimuonVELORAW, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_DimuonVELORAW, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_DimuonVELORAW, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_DimuonVELORAW, PackDecReport/PackFullStripReps, PackParticlesAndVertices/PackPsAndVs_DimuonVELORAW, PackProtoParticle/PackChargedProtos_DimuonVELORAW, PackProtoParticle/PackNeutralProtos_DimuonVELORAW, PackCaloHypo/PackCaloElectrons_DimuonVELORAW, PackCaloHypo/PackCaloPhotons_DimuonVELORAW, PackCaloHypo/PackCaloMergedPi0s_DimuonVELORAW, PackCaloHypo/PackCaloSplitPhotons_DimuonVELORAW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_DimuonVELORAW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_DimuonVELORAW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_DimuonVELORAW, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_DimuonVELORAW, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_DimuonVELORAW, PackRecVertex/PackPVs_DimuonVELORAW, PackTrack/PackBestTracks_DimuonVELORAW, PackTrack/PackMuonTracks_DimuonVELORAW, EmptyEventNodeCleaner/EmptyNodeCleaner_DimuonVELORAW, FixInputCopyStream, InputCopyStream/DimuonVELORAW_OStream, with rootInTES '/Event/'
+FSRInputCopyStreamDimuonVEL...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.DimuonVELORAW.dst' SVC='FileRecordCnvSvc' OPT='REC'
+DimuonVELORAW_OStream            INFO Data source: EventDataSvc output: DATAFILE='000000.DimuonVELORAW.dst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterCharm                   INFO Member list: RecordStream/FSROutputStreamCharm_OStream, GaudiSequencer/StrippingSequenceStreamCharm, MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyPrimaryVertices_Charm, PrintDuplicates/FindDuplicates_Charm, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_Charm, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_Charm, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_Charm, PVReFitterAlg/ReFitPvs_Charm, BestPVAlg/BestPV_Charm, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyReFitP2PV_Charm, PackDecReport/PackFullStripReps, PackCluster/PackTkClusters_Charm, PackParticlesAndVertices/PackPsAndVs_Charm, PackProtoParticle/PackChargedProtos_Charm, PackProtoParticle/PackNeutralProtos_Charm, PackCaloHypo/PackCaloElectrons_Charm, PackCaloHypo/PackCaloPhotons_Charm, PackCaloHypo/PackCaloMergedPi0s_Charm, PackCaloHypo/PackCaloSplitPhotons_Charm, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_Charm, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_Charm, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_Charm, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_Charm, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_Charm, PackRecVertex/PackPVs_Charm, PackTrack/PackBestTracks_Charm, PackTrack/PackMuonTracks_Charm, EmptyEventNodeCleaner/EmptyNodeCleaner_Charm, FixInputCopyStream, OutputStream/Charm_OStream, with rootInTES '/Event/'
+FSROutputStreamCharm_OStream     INFO Data source: FileRecordDataSvc output: DATAFILE='000000.Charm.mdst' SVC='FileRecordCnvSvc' OPT='REC'
+Charm_OStream                    INFO Data source: EventDataSvc output: DATAFILE='000000.Charm.mdst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterEW                      INFO Member list: RecordStream/FSRInputCopyStreamEW_OStream, GaudiSequencer/StrippingSequenceStreamEW, PrintDuplicates/FindDuplicates_EW, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_EW, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_EW, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_EW, PackDecReport/PackFullStripReps, PackParticlesAndVertices/PackPsAndVs_EW, PackProtoParticle/PackChargedProtos_EW, PackProtoParticle/PackNeutralProtos_EW, PackCaloHypo/PackCaloElectrons_EW, PackCaloHypo/PackCaloPhotons_EW, PackCaloHypo/PackCaloMergedPi0s_EW, PackCaloHypo/PackCaloSplitPhotons_EW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_EW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_EW, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_EW, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_EW, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_EW, PackRecVertex/PackPVs_EW, PackTrack/PackBestTracks_EW, PackTrack/PackMuonTracks_EW, EmptyEventNodeCleaner/EmptyNodeCleaner_EW, FixInputCopyStream, InputCopyStream/EW_OStream, with rootInTES '/Event/'
+FSRInputCopyStreamEW_OStream     INFO Data source: FileRecordDataSvc output: DATAFILE='000000.EW.dst' SVC='FileRecordCnvSvc' OPT='REC'
+EW_OStream                       INFO Data source: EventDataSvc output: DATAFILE='000000.EW.dst' SVC='RootCnvSvc' OPT='REC'
+DSTWriterLeptonic                INFO Member list: RecordStream/FSROutputStreamLeptonic_OStream, GaudiSequencer/StrippingSequenceStreamLeptonic, MicroDST::KeyedContainerClonerAlg<LHCb::RecVertex>/CopyPrimaryVertices_Leptonic, PrintDuplicates/FindDuplicates_Leptonic, MicroDST::KeyedContainerClonerAlg<LHCb::Particle>/CopyParticles_Leptonic, MicroDST::KeyedContainerClonerAlg<LHCb::FlavourTag>/CopyFlavourTags_Leptonic, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyP2PV_Particle2VertexRelations_Leptonic, PVReFitterAlg/ReFitPvs_Leptonic, BestPVAlg/BestPV_Leptonic, MicroDST::RelationsClonerAlg<LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> >/CopyReFitP2PV_Leptonic, PackDecReport/PackFullStripReps, PackCluster/PackTkClusters_Leptonic, PackParticlesAndVertices/PackPsAndVs_Leptonic, PackProtoParticle/PackChargedProtos_Leptonic, PackProtoParticle/PackNeutralProtos_Leptonic, PackCaloHypo/PackCaloElectrons_Leptonic, PackCaloHypo/PackCaloPhotons_Leptonic, PackCaloHypo/PackCaloMergedPi0s_Leptonic, PackCaloHypo/PackCaloSplitPhotons_Leptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalClusters_Leptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackHcalClusters_Leptonic, DataPacking::Pack<LHCb::CaloClusterPacker>/PackEcalSplitClusters_Leptonic, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs_Leptonic, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs_Leptonic, PackRecVertex/PackPVs_Leptonic, PackTrack/PackBestTracks_Leptonic, PackTrack/PackMuonTracks_Leptonic, EmptyEventNodeCleaner/EmptyNodeCleaner_Leptonic, FixInputCopyStream, OutputStream/Leptonic_OStream, with rootInTES '/Event/'
+FSROutputStreamLeptonic_OSt...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.Leptonic.mdst' SVC='FileRecordCnvSvc' OPT='REC'
+Leptonic_OStream                 INFO Data source: EventDataSvc output: DATAFILE='000000.Leptonic.mdst' SVC='RootCnvSvc' OPT='REC'
+MDSTDSTWriter                    INFO Data source: EventDataSvc output: DATAFILE='000000.MDST.dst' SVC='RootCnvSvc' OPT='REC'
+FSRInputCopyStreamMDSTDSTWr...   INFO Data source: FileRecordDataSvc output: DATAFILE='000000.MDST.dst' SVC='FileRecordCnvSvc' OPT='REC'
+MonitoringSequence               INFO Member list:
+LumiSeq                          INFO OR Member list: EventAccounting/EventAccount
+EventSelector                    INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/LHCb/Collision12/FULL.DST/00020330/0004/00020330_00042960_1.full.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+ApplicationMgr                   INFO Application Manager Initialized successfully
+ApplicationMgr                   INFO Application Manager Started successfully
+EventSelector                 SUCCESS Reading Event record 1. Record number within stream 1: 1
+MagneticFieldSvc                 INFO Map scaled by factor 1 with polarity internally used: -1 signed relative current: -1
+EcalDet.Quality                  INFO Found  20 problematic readout channel(s)
+EcalDet.Quality                  INFO Found  4 channel(s) with 'LED monitoring problem'
+StdAllNoPIDsProtons              INFO Particle/AntiParticle to be created : 'p+'/'p~-'
+UnpackChargedProtosSeq           INFO Member list: UnpackProtoParticle/UnpackChargedProtos, GaudiSequencer/ProtoParticleCombDLLs, GaudiSequencer/ANNPIDSeq
+ProtoParticleCombDLLs            INFO Member list: TESCheck/CheckChargedProtosExist, ChargedProtoParticleAddMuonInfo/ChargedProtoPAddMuon, ChargedProtoParticleAddRichInfo/ChargedProtoPAddRich, ChargedProtoCombineDLLsAlg/ChargedProtoPCombDLL
+ChargedProtoPCombDLL             INFO Using retuned RICH el and mu DLL values in combined DLLs
+ANNPIDSeq                        INFO Member list: ApplicationVersionFilter/Reco14Filter, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDLongGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDDownstreamGhost, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamElectron, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamMuon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamPion, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamKaon, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamProton, ANNGlobalPID::ChargedProtoANNPIDAlg/ReDoANNPIDUpstreamGhost
+ReDoANNPIDLongElectron           INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=electron
+ReDoANNPIDLongMuon               INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=muon
+ReDoANNPIDLongPion               INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=pion
+ReDoANNPIDLongKaon               INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=kaon
+ReDoANNPIDLongProton             INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=proton
+ReDoANNPIDLongGhost              INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=ghost
+ReDoANNPIDDownstreamElectron     INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=electron
+ReDoANNPIDDownstreamMuon         INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=muon
+ReDoANNPIDDownstreamPion         INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=pion
+ReDoANNPIDDownstreamKaon         INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=kaon
+ReDoANNPIDDownstreamProton       INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=proton
+ReDoANNPIDDownstreamGhost        INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=ghost
+ReDoANNPIDUpstreamElectron       INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=electron
+ReDoANNPIDUpstreamMuon           INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=muon
+ReDoANNPIDUpstreamPion           INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=pion
+ReDoANNPIDUpstreamKaon           INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=kaon
+ReDoANNPIDUpstreamProton         INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=proton
+ReDoANNPIDUpstreamGhost          INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=ghost
+UnpackMuonPIDSeq                 INFO Member list: DataPacking::Unpack<LHCb::MuonPIDPacker>/UnpackMuonPIDs, MuonPIDsFromProtoParticlesAlg/CheckMuonPIDs
+CheckMuonPIDs                    INFO Creating MuonPIDs 'Rec/Muon/MuonPID' from ProtoParticles at 'Rec/ProtoP/Charged'
+UnpackRichPIDSeq                 INFO Member list: DataPacking::Unpack<LHCb::RichPIDPacker>/UnpackRichPIDs, RichPIDsFromProtoParticlesAlg/CheckRichPIDs
+CheckRichPIDs                    INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
+StdAllNoPIDsKaons                INFO Particle/AntiParticle to be created : 'K+'/'K-'
+StdAllNoPIDsPions                INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+StdAllLooseProtons               INFO Particle/AntiParticle to be created : 'p+'/'p~-'
+StdAllLooseMuons                 INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
+StdAllLooseKaons                 INFO Particle/AntiParticle to be created : 'K+'/'K-'
+StdAllLoosePions                 INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+StdNoPIDsDownPions               INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+StdNoPIDsDownProtons             INFO Particle/AntiParticle to be created : 'p+'/'p~-'
+StdAllLooseANNProtons            INFO Particle/AntiParticle to be created : 'p+'/'p~-'
+StdAllLooseANNKaons              INFO Particle/AntiParticle to be created : 'K+'/'K-'
+StdAllLooseANNPions              INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+PropertyConfigSvc                INFO  resolving alias TCK/0x00990042
+ConfigTarFileAccessSvc           INFO  opening /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/TCK/HltTCK/v2r55/config.tar in mode ReadOnly
+PropertyConfigSvc                INFO  resolved TCK/0x00990042 to dacca6485b032a9252b798ff9e0d224b
+ToolSvc.L0DUConfig               INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
+ToolSvc.L0CondDBProvider         INFO Registered RAM(BCID) versions = {}
+ToolSvc.L0DUConfig.Template      INFO --------------- TCK = 0x10000------------------
+ToolSvc.L0DUConfig.Template      INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK
+ToolSvc.L0DUConfig.Template      INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
+ToolSvc.L0DUConfig.TCK_0x0042    INFO --------------- TCK = 0x0042------------------
+ToolSvc.L0DUConfig.TCK_0x0042    INFO **** L0DU Config loading : L0TCK = 0x0042 for slot T0 ==> OK
+ToolSvc.L0DUConfig.TCK_0x0042    INFO Short description :: Same as L0 TCK 0x003D with new lowMult and 32 conditions only
+ToolSvc.L0DUConfig.TCK_0x0042    INFO The configuration 0x0042 matches the hardware limitations
+ToolSvc.L0DUConfig.TCK_0x0042    INFO - Usage : Channels [75.0% ]  |  Conditions [25.0% ]; max/type [75.0% ]; order : OK ; reported  : 32/32
+createVeloLiteClusters           INFO Cancel processing of events with more than 10000 Velo clusters
+StdAllNoPIDsElectrons            INFO Particle/AntiParticle to be created : 'e+'/'e-'
+StdLooseDownMuons                INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
+StdNoPIDsDownElectrons           INFO Particle/AntiParticle to be created : 'e+'/'e-'
+StdAllLooseElectrons             INFO Particle/AntiParticle to be created : 'e+'/'e-'
+StdDiElectronFromTracks          INFO Particle/AntiParticle to be created : 'J/psi(1S)'/'J/psi(1S)'
+StdLooseDownKaons                INFO Particle/AntiParticle to be created : 'K+'/'K-'
+StdAllLooseGammaDD               INFO Particle/AntiParticle to be created : 'gamma'/'gamma'
+StdAllLooseGammaLL               INFO Particle/AntiParticle to be created : 'gamma'/'gamma'
+StdTightMuons                    INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+L0MuonFromRaw                    INFO XML config file = /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r10/data/L0MuonKernel.xml
+HcalDet.Quality                  INFO Found  10 problematic readout channel(s)
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: There is no convergency-III StatusCode=910
+ToolSvc.LoKi::DistanceCalcu...WARNING LoKi::DistanceCalculator:: The WARNING message is suppressed : 'There is no convergency-III' StatusCode=910
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+PFParticles                      INFO Member list: ChargedProtoParticleMaker/VeloProtoPMaker, CellularAutomatonAlg/HcalClusterization, CaloClusterCovarianceAlg/HcalCov, PhotonMatchAlg/Hcal2TrackMatching, ParticleFlow/PF
+HcalCov.HcalCovarTool            INFO  Has initialized with parameters:
+HcalCov.HcalCovarTool            INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Hcal'
+HcalCov.HcalCovarTool            INFO  	 'Resolution'       = ' 'Resolution':0.80000000' from DB
+HcalCov.HcalCovarTool            INFO  	 'GainError'        = ' 'GainError':0.10000000' from DB
+HcalCov.HcalCovarTool            INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.2000000' from DB
+HcalCov.HcalCovarTool            INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000' from DB
+HcalCov.HcalCovarTool            INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
+HcalCov.HcalCovarTool            INFO    Resolution       is 0.8
+HcalCov.HcalCovarTool            INFO    Sigma Gain       is 0.1
+HcalCov.HcalCovarTool            INFO    Coherent Noise   is 0.3
+HcalCov.HcalCovarTool            INFO    InCoherent Noise is 1.2
+HcalCov.HcalCovarTool            INFO
+Hcal2TrackMatching               INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
+HcalZSup                         INFO Calorimeter has 1488 cells. Zsup method 1D Threshold 4
+InHCAL                           INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
+ClusterReco                      INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloSharedCellAlg/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
+CaloDigits                       INFO Member list: CaloDigitsFromRaw/SpdFromRaw, CaloDigitsFromRaw/PrsFromRaw, CaloZSupAlg/EcalZSup, CaloZSupAlg/HcalZSup, with context 'Offline'
+EcalZSup                         INFO Calorimeter has 6016 cells. Zsup method 2D Threshold 20
+EcalCovar.EcalCovarTool          INFO  Has initialized with parameters:
+EcalCovar.EcalCovarTool          INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
+EcalCovar.EcalCovarTool          INFO  	 'Resolution'       = ' 'Resolution':0.10000000' from DB
+EcalCovar.EcalCovarTool          INFO  	 'GainError'        = ' 'GainError':0.010000000' from DB
+EcalCovar.EcalCovarTool          INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.2000000' from DB
+EcalCovar.EcalCovarTool          INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000' from DB
+EcalCovar.EcalCovarTool          INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
+EcalCovar.EcalCovarTool          INFO    Resolution       is 0.1
+EcalCovar.EcalCovarTool          INFO    Sigma Gain       is 0.01
+EcalCovar.EcalCovarTool          INFO    Coherent Noise   is 0.3
+EcalCovar.EcalCovarTool          INFO    InCoherent Noise is 1.2
+EcalCovar.EcalCovarTool          INFO
+ClusterMatch                     INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
+InECAL                           INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
+#--------------------------------------------------------------------------
+#                         FastJet release 3.0.3
+#                 M. Cacciari, G.P. Salam and G. Soyez
+#     A software package for jet finding and analysis at colliders
+#                           http://fastjet.fr
+#
+# Please cite EPJC72(2012)1896 [arXiv:1111.6097] if you use this package
+# for scientific work and optionally PLB641(2006)57 [hep-ph/0512210].
+#
+# FastJet is provided without warranty under the terms of the GNU GPLv2.
+# It uses T. Chan's closest pair algorithm, S. Fortune's Voronoi code
+# and 3rd party plugin jet algorithms. See COPYING file for details.
+#--------------------------------------------------------------------------
+DisplVerticesHlt2CandWithJe...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR The   ERROR message is suppressed : 'LoKi::Vertices::VertexChi2Distance: 	 Invalid Vertex, return 'InvalidChi2'' StatusCode=FAILURE
+StdNoPIDsUpPions                 INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+DaVinciInitAlg                   INFO Memory has changed from 1542784 to 1821900 KB (279116KB, 18.0917%) in last 10 events
+EventSelector                 SUCCESS Reading Event record 11. Record number within stream 1: 11
+ChronoStatSvc                    INFO  Number of skipped events for MemStat-1
+DaVinciInitAlg                   INFO Memory has changed from 1821900 to 1823568 KB (1668KB, 0.0915528%) in last 10 events
+EventSelector                 SUCCESS Reading Event record 21. Record number within stream 1: 21
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+EventSelector                 SUCCESS Reading Event record 31. Record number within stream 1: 31
+DijetsJetsSelection.LoKi__F...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+EventSelector                 SUCCESS Reading Event record 41. Record number within stream 1: 41
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+TaggingElectrons                 INFO Particle/AntiParticle to be created : 'e+'/'e-'
+TaggingMuons                     INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
+TaggingPions                     INFO Particle/AntiParticle to be created : 'pi+'/'pi-'
+StdAllNoPIDsMuons                INFO Particle/AntiParticle to be created : 'mu+'/'mu-'
+SplitClusterReco                 INFO Member list: CaloMergedPi0Alg/SplitClustersRec
+SplitClustersRec                 INFO only SplitClusters to be produced
+SplitClustersRec.Covariance      INFO  Has initialized with parameters:
+SplitClustersRec.Covariance      INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
+SplitClustersRec.Covariance      INFO  	 'Resolution'       = ' 'Resolution':0.10000000' from DB
+SplitClustersRec.Covariance      INFO  	 'GainError'        = ' 'GainError':0.010000000' from DB
+SplitClustersRec.Covariance      INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.2000000' from DB
+SplitClustersRec.Covariance      INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000' from DB
+SplitClustersRec.Covariance      INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
+SplitClustersRec.Covariance      INFO    Resolution       is 0.1
+SplitClustersRec.Covariance      INFO    Sigma Gain       is 0.01
+SplitClustersRec.Covariance      INFO    Coherent Noise   is 0.3
+SplitClustersRec.Covariance      INFO    InCoherent Noise is 1.2
+SplitClustersRec.Covariance      INFO
+createVeloClusters               INFO Cancel processing of events with more than 10000 Velo clusters
+IODataManager                    INFO Referring to dataset 000000.MDST.dst by its file ID:F682B9F7-5B99-E311-B867-02163E00A732
+DaVinciInitAlg                   INFO Memory has changed from 1823568 to 1857992 KB (34424KB, 1.88773%) in last 10 events
+EventSelector                 SUCCESS Reading Event record 51. Record number within stream 1: 51
+EventSelector                 SUCCESS Reading Event record 61. Record number within stream 1: 61
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: distance(III): error from KalmanFilter::step(2) StatusCode=405
+LoKiSvc.REPORT                  ERROR LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2'  StatusCode=405
+ToolSvc.LoKi::DistanceCalcu...  ERROR LoKi::DistanceCalculator:: The   ERROR message is suppressed : 'distance(III): error from KalmanFilter::step(2)' StatusCode=405
+LoKiSvc.REPORT                  ERROR The   ERROR message is suppressed : 'LoKi::Particles::ClosestApproach: 	 IDistanceCalculator::distance Failed, return 'InvalidChi2' ' StatusCode=405
+StdJets.LoKi__FastJetMaker....WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+DisplVerticesJetSingleHighM...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+DaVinciInitAlg                   INFO Memory has changed from 1857992 to 1862604 KB (4612KB, 0.248225%) in last 10 events
+EventSelector                 SUCCESS Reading Event record 71. Record number within stream 1: 71
+EventSelector                 SUCCESS Reading Event record 81. Record number within stream 1: 81
+EventSelector                 SUCCESS Reading Event record 91. Record number within stream 1: 91
+DaVinciInitAlg                   INFO Memory has changed from 1862604 to 1994060 KB (131456KB, 7.05765%) in last 10 events
+EventSelector                 SUCCESS Reading Event record 101. Record number within stream 1: 101
+DisplVerticesJetSingleLowMa...WARNING MomentumCombiner::  Only 4-momenta sum will be used (no ParticleTransporter specified) StatusCode=FAILURE
+EventSelector                 SUCCESS Reading Event record 111. Record number within stream 1: 111
+EventSelector                 SUCCESS Reading Event record 121. Record number within stream 1: 121
+EventSelector                 SUCCESS Reading Event record 131. Record number within stream 1: 131
+LoKiSvc.REPORT                WARNING LoKi::Vertices::SourceDesktop: 	 No input primary vertices from IDVAlgorithm StatusCode=FAILURE
+LoKiSvc.REPORT                WARNING LoKi::Vertices::SourceDesktop: 	 No vertices are selected by 'PRIMARY' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Particles::MinImpParChi2DV: 	Empty list of vertices is loaded! StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Particles::MinImpParChi2DV: 	 Empty list of vertices, return 'InvalidChi2' StatusCode=FAILURE
+LoKiSvc.REPORT                  ERROR LoKi::Particles::MinImpParChi2DV: 	 Empty list of vertices, return 'InvalidChi2' StatusCode=FAILURE
+EventSelector                 SUCCESS Reading Event record 141. Record number within stream 1: 141
+EventSelector                 SUCCESS Reading Event record 151. Record number within stream 1: 151
+EventSelector                 SUCCESS Reading Event record 161. Record number within stream 1: 161
+EventSelector                 SUCCESS Reading Event record 171. Record number within stream 1: 171
+EventSelector                 SUCCESS Reading Event record 181. Record number within stream 1: 181
+EventSelector                 SUCCESS Reading Event record 191. Record number within stream 1: 191

@@ -4,8 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-02-19 - Chris Jones
+ - Update the stripping QM test reference logs.
+
 ! 2014-02-17 - Rob Lambert
- - Update to PRConfig and remove castor: and update some references for the changes in the print out of the decoders
+ - Update to PRConfig and remove castor: and update some references for the
+   changes in the print out of the decoders.
 
 ! 2014-02-16 - Chris Jones
  - Add Stripping20rXp3 tests.
