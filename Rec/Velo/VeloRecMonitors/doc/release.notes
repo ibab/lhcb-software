@@ -4,13 +4,14 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!========================= VeloRecMonitors v2r28 2014-02-19 =====================
 ! 2014-02-16 - Chris Jones
  - Fix divide by 0 FPE in VeloTrackMonitor.
 
 ! 2013-11-06 - Christoph Hombach
  - Uncommented hardcoded cuts for overlap-track selection
 
-!========================= VeloRecMonitors v2r27 2013-10-01 =========================
+!========================= VeloRecMonitors v2r27 2013-10-01 =====================
 ! 2013-09-11 - Marco Cattaneo
  - Remove unnecessary repeated accesses to TES from inside a loop in
    VeloTrackMonitor.cpp
@@ -19,7 +20,7 @@
  - Fixed use of Velo namespace in VeloTrackMonitorNT.cpp, hidden by a leak in
    the macro DECLARE_NAMESPACE_ALGORITHM_FACTORY.
 
-!========================= VeloRecMonitors v2r26 2013-07-18 ======================
+!========================= VeloRecMonitors v2r26 2013-07-18 =====================
 ! 2013-06-24 - Marco Cattaneo
  - Fix clang32 warning
 
@@ -31,7 +32,7 @@
 ! 2013-06-20 - Michel De Cian
  - Fix a warning due to int <-> unsigned int comparison in VeloTrackMonitorNT
 
-!========================= VeloRecMonitors v2r25 2013-06-03 ======================
+!========================= VeloRecMonitors v2r25 2013-06-03 =====================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
  - Fix an UNINIT_CTOR
@@ -39,14 +40,14 @@
 ! 2013-05-24 - Marco Cattaneo
  - Remove unnecessary include that caused unnecessary TrackKernel dependency
 
-!========================= VeloRecMonitors v2r24 2013-04-30 ======================
+!========================= VeloRecMonitors v2r24 2013-04-30 =====================
 ! 2013-04-23 - Chris Jones
  - Remove unneccessary forward declarations that broke clang compilation
 
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= VeloRecMonitors v2r23 2013-02-14 ======================
+!========================= VeloRecMonitors v2r23 2013-02-14 =====================
 ! 2013-01-09 - Silvia Borghi
  - Update in VeloTrackMonitorNT: fix in ev ntuple and fix compilation warning
 
@@ -54,7 +55,7 @@
  - Update in VeloTrackMonitorNT: add ntuple for eta study and other small 
    changes (clean up of the code, delete duplication in the variables)
 
-!========================= VeloRecMonitors v2r22 2012-11-28 ======================
+!========================= VeloRecMonitors v2r22 2012-11-28 =====================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -70,7 +71,7 @@
  - Fix some Coverity warnings
  - Use getIfExists
 
-!========================= VeloRecMonitors v2r21 2012-10-01 ======================
+!========================= VeloRecMonitors v2r21 2012-10-01 =====================
 ! 2012-08-17 - Kurt Rinnert
  - added PU only average occupancy histogram. This allows to display these
    separately online and put different alarms on them. In fact the PU has to
@@ -78,11 +79,11 @@
    the alarms in the online monitoring (online is running an older version as
    of now). So we probably need another histogram with only VELO.
 
-!========================= VeloRecMonitors v2r20 2012-07-24 =========================
+!========================= VeloRecMonitors v2r20 2012-07-24 =====================
 ! 2012-07-20 - Eduardo Rodrigues
  - Added zoom histo for distribution of number of clusters
 
-!========================= VeloRecMonitors v2r19 2012-06-25 =========================
+!========================= VeloRecMonitors v2r19 2012-06-25 =====================
 ! 2012-06-12 - Marius Bjoernstad
  - Updated location for raw event
 
@@ -96,7 +97,7 @@
    add several variables to all the ntuples (per evt, per track, per cluster on track)
    add new ntuple for all clusters (not only the ones associated to a track)
 
-!========================= VeloRecMonitors v2r18 2012-03-27 =========================
+!========================= VeloRecMonitors v2r18 2012-03-27 =====================
 ! 2012-03-17 - Zhou Xing
  - Added new plot for "Low ADC Cluster" monitoring to "VeloTrackMonitor"
    coupling effect of M2 routing line
@@ -107,7 +108,7 @@
    dead/noisy channels more reliable; online plots will be done by setting
    this property in the online jobs to the old default
 
-!========================= VeloRecMonitors v2r17 2012-01-31 =========================
+!========================= VeloRecMonitors v2r17 2012-01-31 =====================
 ! 2012-01-27 - Marius Bjoernstad
  - Added new plot for "high multiplicity, # clusters", with logic to get 
    cluster multiplicity from raw event
