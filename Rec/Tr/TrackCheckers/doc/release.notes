@@ -4,28 +4,29 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!========================= TrackCheckers v5r0 2014-02-19 =======================
 ! 2014-01-23 - Michel De Cian
  -  Fix behaviour of flag 'fromB' and 'fromCharm" in TrackCheckerBase and TrackIPResolutionCheckerNT to only include B baryons and mesons, and not particles from string fragmentation of b and c quarks
 
-!========================= TrackCheckers v4r19 2013-12-10 =========================
+!========================= TrackCheckers v4r19 2013-12-10 ======================
 ! 2013-10-29 - Panagiotis Tsopelas
 ! - Fixed eta range in TrackIPResolutionChecker
 
-!========================= TrackCheckers v4r18 2013-07-18 =========================
+!========================= TrackCheckers v4r18 2013-07-18 ======================
 ! 2013-06-27 - Maurizio Martinelli
  - Fixed coverity defects and optimized TrackOccupChecker
 
 ! 2013-06-05 - Wouter Hulsbergen
  - Split histograms by track type in TrackIPResolutionChecker
 
-!========================= TrackCheckers v4r17 2013-06-03 =========================
+!========================= TrackCheckers v4r17 2013-06-03 ======================
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
 ! 2013-05-01 Paul Seyfert
  - Pick up changes in ITrackGhostClassification
 
-!========================= TrackCheckers v4r16 2013-04-30 =========================
+!========================= TrackCheckers v4r16 2013-04-30 ======================
 ! 2013-xx-xx Wouter and Panagiotis Tsopelas
  - removed some unused constants
  - improved PV monitoring
@@ -34,11 +35,11 @@
  - Added features to the IP tool
  - Added code to distinghuish secondaries, from primaries & from ghosts
 
-!========================= TrackCheckers v4r15 2013-02-14 =========================
+!========================= TrackCheckers v4r15 2013-02-14 ======================
 ! 2013-01-07 - Marco Clemencic
  - Fixed link problem in CMake build.
 
-!========================= TrackCheckers v4r14 2012-11-28 =========================
+!========================= TrackCheckers v4r14 2012-11-28 ======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -48,7 +49,7 @@
 ! 2012-11-21 - Marco Clemencic
  - Fixed -pedantic warnings.
 
-!========================= TrackCheckers v4r13 2012-10-01 =========================
+!========================= TrackCheckers v4r13 2012-10-01 ======================
 ! 2012-09-21 - Paul Szczypka
  - Rename VeloPix to VP
 
