@@ -4,14 +4,15 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackTools v5r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
 
-!========================= TrackTools v4r27 2013-12-10 =========================
+!========================= TrackTools v4r27 2013-12-10 ========================
 ! 2013-12-05 Thomas Bird
  - Added the VP Expectation class
 
-!========================= TrackTools v4r26 2013-10-01 =========================
+!========================= TrackTools v4r26 2013-10-01 ========================
 ! 2013-09-18 - Marco Cattaneo
  - Remove an unused variable
  - Print a Error instead of info() when returning StatusCode::FAILURE
@@ -22,7 +23,7 @@
 ! 2013-08-23 - Heinrich Schindler
  - Remove direct calls to DeVPSquareType
 
-!========================= TrackTools v4r25 2013-07-24 =========================
+!========================= TrackTools v4r25 2013-07-24 ========================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurementProvider.cpp
 
@@ -30,7 +31,7 @@
  - Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
    with direct call to SMatrix InvertChol() method. Fixes gcc48 warning
 
-!========================= TrackTools v4r24 2013-06-05 =========================
+!========================= TrackTools v4r24 2013-06-05 ========================
 ! 2013-06-05 - Giovanni Passaleva
  - Fixes to allow configurations without M1 (e.g. upgrade )
  - Fixed compilation warning
@@ -44,15 +45,15 @@
 ! 2013-05-07 - Paul Seyfert
  - fully remove deprecated property from TrackNNGhostId
 
-!========================= TrackTools v4r23 2013-04-30 =========================
+!========================= TrackTools v4r23 2013-04-30 ========================
 ! 2013-03-24 - Wouter Hulsbergen
  - Adaptations of VeloExpectation and TrackNNGhostId in preparation for change of HitPattern
 
-!========================= TrackTools v4r22 2013-03-22 =========================
+!========================= TrackTools v4r22 2013-03-22 ========================
 ! 2013-02-24 - Heinrich Schindler
  - Bugfix in VLClusterPosition tool (inter-strip fraction)
 
-!========================= TrackTools v4r21 2013-02-14 =========================
+!========================= TrackTools v4r21 2013-02-14 ========================
 ! 2013-02-06 - Sascha Stahl
  - Removed UT stuff from TrackStateInitTool.
  - Fixed missing renaming from TT in UT in UT measurement provider.
@@ -76,7 +77,7 @@
 ! 2012-11-29 - Olivier Callot
  - Add FT measurement provider
 
-!========================= TrackTools v4r20 2012-11-28 =========================
+!========================= TrackTools v4r20 2012-11-28 ========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -92,7 +93,7 @@
 ! 2012-10-24 - Paul Seyfert
  - switch interpolator in TrackNNGhostId from cspline to linear
 
-!========================= TrackTools v4r19 2012-10-01 =========================
+!========================= TrackTools v4r19 2012-10-01 ========================
 ! 2012-09-24 - Marco Cattaneo
  - Fix trivial untested StatusCode in TrackNNGhostID
 
@@ -104,15 +105,15 @@
 ! 2012-09-20 - Paul Szczypka
  - Rename of VeloPix to VP
 
-!========================= TrackTools v4r18 2012-08-28 =========================
+!========================= TrackTools v4r18 2012-08-28 ========================
 ! 2012-08-28 - Chris Jones
  - Fix a bug in the last fix, limiting the output range to 0-1.
 
-!========================= TrackTools v4r17 2012-08-28 =========================
+!========================= TrackTools v4r17 2012-08-28 ========================
 ! 2012-08-23 - Johannes Albrecht & Johann Brehmer 
  - TrackNNGhostId: fix NN output value to range 0-1 
 
-!========================= TrackTools v4r16 2012-08-16 =========================
+!========================= TrackTools v4r16 2012-08-16 ========================
 
 ! 2012-08-16 - Chris Jones
  - Add an iterpolator to TrackNNGhostId to provide a smooth flattening function.
@@ -128,24 +129,24 @@
  - TrackNNGhostId: Create debug() messages only when output level requires it,
    also using UNLIKELY macro
 
-!========================= TrackTools v4r15 2012-05-02 =========================
+!========================= TrackTools v4r15 2012-05-02 ========================
 ! 2012-04-18 - Wouter Hulsbergen
   - StateInitTool: set velo momentum the way it used to be done in TrackPrepareVelo.
     (temporarily?)
 
-!========================= TrackTools v4r14 2012-03-28 =========================
+!========================= TrackTools v4r14 2012-03-28 ========================
 ! 2012-03-27 - Wouter Hulsbergen
   - improve TrackVertexer: use more than just 'firstState' when fitting a set
     of tracks.
 
-!========================= TrackTools v4r13 2012-03-27 =========================
+!========================= TrackTools v4r13 2012-03-27 ========================
 ! 2012-03-13 - Michel De Cian
  - Fixed sign of qOverP on line 161 of FastMomentumEstimate.cpp.
 
 ! 2012-02-28 - Wouter Hulsbergen
  - update of ITTrackSelector for alignment
 
-!========================= TrackTools v4r12 2012-02-28 =========================
+!========================= TrackTools v4r12 2012-02-28 ========================
 ! 2012-02-16 - Wouter Hulsbergen
  - bugfix in TrackStateInitTool for magnet off data
 
@@ -157,7 +158,7 @@
    they eventually get suppressed, and move some info() to debug() (for
    stripping).
 
-!========================= TrackTools v4r11 2012-01-31 =========================
+!========================= TrackTools v4r11 2012-01-31 ========================
 ! 2012-01-10 - Wouter Hulsbergen
  - added missing include to TrackHitCollector
 
