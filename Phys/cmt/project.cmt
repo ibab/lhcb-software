@@ -1,6 +1,6 @@
 project PHYS
 
-use REC	REC_v15r4
+use REC	REC_v16r0
 
 container      PhysSys
 build_strategy	with_installarea
