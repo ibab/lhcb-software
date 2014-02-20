@@ -2,6 +2,11 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/SmartIF.h"
+// ============================================================================
 // PartProp
 // ============================================================================
 #include "Kernel/ParticleProperty.h"
@@ -61,26 +66,45 @@ LoKi::ParticleClassificator::ParticleClassificator
   , m_gammaCLike          ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
   , m_digammaLike         ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
   , m_mergedPi0Like       ( "pi0"   )
-//
+    //
   , m_dd_gammaC  (" gamma -> e+ e- ")
   , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
-///
+    // number of prints 
+  , m_prints               ( 2     )
+    ///
   , m_unclassified   ()
   , m_gamma_like     ()
   , m_gammaC_like    ()
   , m_digamma_like   ()
   , m_mergedPi0_like ()
-///
+    ///
+  , m_myAlg          () 
+  , m_printMyAlg     ( true ) 
+    ///
 {
   // ==========================================================================
   declareProperty 
-    ( "GammaCDecays"  , 
-      m_dd_gammaC     , 
-      "The gammaC-decays" ) ;
+    ( "GammaCDecays"      , 
+      m_dd_gammaC         , 
+      "The gammaC-decays"         ) ;
   declareProperty 
-    ( "DiGammaDecays" , 
-      m_dd_digamma    , 
-      "The di-gamma-decays" ) ;
+    ( "DiGammaDecays"     ,
+      m_dd_digamma        , 
+      "The di-gamma-decays"       ) ;
+  declareProperty 
+    ( "MaxPrints"         , 
+      m_prints            , 
+      "Maximal number of prints " ) ;
+  declareProperty 
+    ( "PrintMyAlg"      , 
+      m_printMyAlg      , 
+      "Print the name of ``associated'' algorithm" ) ;
+  // ==========================================================================
+  if ( 0 != parent ) 
+  {
+    SmartIF<IAlgorithm> alg ( const_cast<IInterface*> ( parent ) ) ;
+    if ( alg.isValid() ) { m_myAlg = alg->name() ; }
+  }
   // ==========================================================================
 } 
 // ============================================================================
@@ -95,6 +119,12 @@ StatusCode LoKi::ParticleClassificator::initialize ()
   /// initialize the base 
   StatusCode sc = GaudiTool::initialize () ; 
   if ( sc.isFailure() ) { return sc ; }                              // RETURN 
+  //
+  if ( 0 != parent()  ) 
+  {
+    SmartIF<IAlgorithm> alg ( const_cast<IInterface*> ( parent() ) ) ;
+    if ( alg.isValid() ) { m_myAlg = alg->name() ; }
+  }  
   //
   svc<IService>( "LoKiSvc" , true ) ;
   //
@@ -159,6 +189,12 @@ StatusCode LoKi::ParticleClassificator::initialize ()
     m_digammaLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
     m_digammaLike = Decays::Trees::Not_<const LHCb::Particle*>( m_digammaLike ) ;
     Warning ( "The special treatment of DiGamma is disabled" , ok ) ;
+  }
+  //
+  if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
+  {
+    m_prints = 10 ;
+    warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
   }
   //
   return StatusCode::SUCCESS ;
@@ -324,8 +360,23 @@ bool LoKi::ParticleClassificator::goodForVertex
   return 2 <= nForVertex ( parts.begin() , parts.end() ) ; 
 }
 // ============================================================================
-
-
+// get the correct algorithm context 
+// ============================================================================
+bool LoKi::ParticleClassificator::getMyAlg () const 
+{
+  m_myAlg = "" ;
+  //
+  const IAlgContextSvc* asvc =  contextSvc () ;
+  if ( 0 == asvc    ) { return false ; }
+  //
+  const IAlgorithm* current = asvc->currentAlg() ;
+  if ( 0 == current ) { return false ; }
+  //
+  m_myAlg = "[" + current->name() + "] " ;
+  //
+  return true ;
+  // ============================================================================
+}
 // ============================================================================
 // The END 
 // ============================================================================

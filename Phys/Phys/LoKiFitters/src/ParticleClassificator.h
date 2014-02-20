@@ -96,6 +96,11 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
+    /// get the correct algorithm context 
+    bool getMyAlg () const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
     /** standard constructor 
      *  @param type   the actual type of the tool 
      *  @param name   the instance name 
@@ -116,6 +121,54 @@ namespace LoKi
     ParticleClassificator ( const ParticleClassificator& ) ; // copy is disabled 
     /// assignement operator is disabled 
     ParticleClassificator& operator=( const ParticleClassificator& ); // disabled 
+    // ========================================================================
+  protected:
+    // ========================================================================
+    inline StatusCode _Warning
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
+      else                                    { m_myAlg.clear () ; }
+      //
+      if       ( m_printMyAlg && errorsPrint() )  
+      { return Warning ( msg + m_myAlg , code , m_prints ) ; }
+      else if  ( errorsPrint() )  
+      { return Warning ( msg           , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { warning () 
+          << "'"       << msg  << "' " << m_myAlg   
+          << " Code =" << code << endmsg ; }
+      //
+      return code ;
+    }
+    // ========================================================================
+    inline StatusCode _Error 
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    {
+      code.setChecked () ;
+      //
+      if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
+      else                                    { m_myAlg.clear () ; }
+      //      
+      if       ( m_printMyAlg && errorsPrint() )  
+      { return Error   ( msg + m_myAlg , code , m_prints ) ; }
+      else if  ( errorsPrint() )  
+      { return Error   ( msg           , code , m_prints ) ; }
+      //
+      if ( msgLevel ( MSG::DEBUG ) ) 
+      { error ()
+          << "'"       << msg  << "' " << m_myAlg   
+          << " Code =" << code << endmsg ; }
+      //
+      return code ;
+    }
+    // ========================================================================
+    const std::string& myAlg() const { return m_myAlg ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -145,6 +198,8 @@ namespace LoKi
     std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
     /// decay descriptor for di-gamma-like particles:
     std::string m_dd_digamma ;  // decay descriptor for di-gamma-like particles
+    /// # of prints 
+    unsigned int m_prints ;                                      // # of prints 
     // ========================================================================
   private:
     // ========================================================================
@@ -154,6 +209,12 @@ namespace LoKi
     mutable std::set<LHCb::ParticleID>        m_gammaC_like    ;
     mutable std::set<LHCb::ParticleID>        m_digamma_like   ;
     mutable std::set<LHCb::ParticleID>        m_mergedPi0_like ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// get the actual algorithm name context 
+    mutable std::string m_myAlg       ;
+    bool                m_printMyAlg  ;
     // ========================================================================
   };
   // ==========================================================================

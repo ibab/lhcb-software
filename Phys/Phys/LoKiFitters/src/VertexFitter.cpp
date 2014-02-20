@@ -771,8 +771,6 @@ LoKi::VertexFitter::VertexFitter
   , m_use_rho_like_branch  ( true   ) // allow "rho+"-like particles ?
 /// The transport tolerance  
   , m_transport_tolerance  ( 10 * Gaudi::Units::micrometer ) 
-/// number of prints 
-  , m_prints               ( 2     )
   , m_massage              (       ) 
 /// pure technical stuff: 
   , m_entries (   ) 
@@ -847,11 +845,6 @@ LoKi::VertexFitter::VertexFitter
       "The tolerance for particle transport" ) ;
   // ========================================================================== 
   declareProperty 
-    ( "MaxPrints"        , 
-      m_prints           , 
-      "Maximal number of prints "        ) ;
-  // ===========================================================================
-  declareProperty 
     ( "Massage"          , 
       m_massage          , 
       "Z-coordiates for downstream track massage" ) ;
@@ -892,12 +885,6 @@ StatusCode LoKi::VertexFitter::initialize()
   if ( sc.isFailure() ) { return sc ; }
   //
   svc<IService>( "LoKiSvc" , true ) ;
-  //
-  if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
-  {
-    m_prints = 10 ;
-    warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
-  }
   //
   if ( m_DistanceChi2 < 0.0005 ) 
   {

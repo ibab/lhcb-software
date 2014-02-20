@@ -45,8 +45,6 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
   : LoKi::ParticleClassificator ( type , name , parent ) 
-// number of prints 
-  , m_prints              ( 10 )
 // The name of particle transporter tool 
   , m_transporterName   ( "ParticleTransporter:PUBLIC" ) /// The name of particle transpoter tool
 // The transporter tool itself 
@@ -62,10 +60,6 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
 {
   // ==========================================================================
   declareProperty 
-    ( "MaxPrints"        , 
-      m_prints           , 
-      "Maximal number of prints " ) ;
-  declareProperty 
     ( "Transporter"        , m_transporterName      , 
       "The Particle Transporter  tool to be used" );
   declareProperty 
@@ -77,7 +71,7 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   // ==========================================================================
 }
 // ============================================================================
-// virtual and protected desctrustor 
+// virtual and protected desctructor 
 // ============================================================================
 LoKi::DistanceCalculatorBase::~DistanceCalculatorBase(){}
 // ============================================================================
@@ -87,12 +81,6 @@ StatusCode LoKi::DistanceCalculatorBase::initialize ()
 {
   StatusCode sc = LoKi::ParticleClassificator::initialize () ;
   if ( sc.isFailure() ) { return sc ; }         // RETURN
-  //
-  if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
-  {
-    m_prints = 10 ;
-    warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
-  }
   //
   return StatusCode::SUCCESS ; 
 }

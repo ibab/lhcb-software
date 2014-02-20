@@ -123,8 +123,10 @@ LoKi::FastVertexFitter::FastVertexFitter
   Assert ( sc.isSuccess() , "Unable to redefine property 'TransportTolerance'" ) ;   
   sc            = setProperty ( "TransportTolerance" , 40 * Gaudi::Units::micrometer ) ;
   Assert ( sc.isSuccess() , "Unable to redefine property 'TransportTolerance'" ) ;   
-  sc            = setProperty ( "MaxPrints"          ,  0 ) ;
+  sc            = setProperty ( "MaxPrints"          ,  0     ) ;
   Assert ( sc.isSuccess() , "Unable to redefine property 'MaxPrints'"          ) ;   
+  sc            = setProperty ( "PrintMyAlg"         ,  false ) ;
+  Assert ( sc.isSuccess() , "Unable to redefine property 'PrintMyAlg'"         ) ;   
 }
 // ============================================================================
 // destructor 

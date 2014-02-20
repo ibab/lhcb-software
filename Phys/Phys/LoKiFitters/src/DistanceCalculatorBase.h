@@ -115,42 +115,6 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    inline StatusCode _Warning
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if ( errorsPrint() ) { return Warning ( msg , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        warning () << "LoKi::DistanceCalculator/Warning : '"
-                   << msg  << "'  Code =" << code << endmsg ;
-      }
-      //
-      return code ;
-    }
-    // ========================================================================
-    inline StatusCode _Error 
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if ( errorsPrint() ) { return Error   ( msg , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        error   () << "LoKi::DistanceCalculator/Error   : '"
-                   << msg  << "'  Code =" << code << endmsg ;
-      }
-      //
-      return code ;
-    }
-    // ========================================================================
-  protected:
-    // ========================================================================
     /// construct the line trajectory from the particle  
     inline Line_  line   ( const LHCb::Particle& particle ) const ;
     /// construct the line trajectory from the track
@@ -449,9 +413,6 @@ namespace LoKi
     // ========================================================================
   private:
     // ========================================================================
-    /// # of prints 
-    unsigned int m_prints ;                                      // # of prints 
-    // ========================================================================    
     /// The name of particle transporter tool 
     std::string  m_transporterName ; // The name of particle transpoter tool    
     /// The particle transporter itself 

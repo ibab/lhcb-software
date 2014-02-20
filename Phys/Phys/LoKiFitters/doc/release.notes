@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-20 - Vanya Belyaev
+
+ - add new proeprty PrintMyAlg (default value "true")
+   to add the name of the related algorithm to the error/warning prints 
+ 
 ! 2014-02-13 - Vanya Belyaev
 
  - VertexFitter.h: 

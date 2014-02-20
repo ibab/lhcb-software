@@ -545,42 +545,6 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    inline StatusCode _Warning
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if ( errorsPrint() ) { return Warning ( msg , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        warning () << "LoKi::VertexFitter/Warning : '"
-                   << msg  << "'  Code =" << code << endmsg ;
-      }
-      //
-      return code ;
-    }
-    // ========================================================================
-    inline StatusCode _Error 
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if ( errorsPrint() ) { return Error   ( msg , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      {
-        error   () << "LoKi::VertexFitter/Error   : '"
-                   << msg  << "'  Code =" << code << endmsg ;
-      }
-      //
-      return code ;
-    }
-    // ========================================================================
-  protected:
-    // ========================================================================
     /// get the transporter 
     inline IParticleTransporter* transporter() const 
     {
@@ -647,8 +611,6 @@ namespace LoKi
     bool m_use_rho_like_branch   ; // allow "rho+"-like particles 
     /// transport tolerance 
     double m_transport_tolerance ; // the transport tolerance 
-    /// # of prints 
-    unsigned int m_prints ;                                      // # of prints 
     // ========================================================================
   private:
     // ========================================================================
