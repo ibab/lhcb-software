@@ -3,6 +3,63 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v12r0>2014-02-20 Analysis v12r0</A></H1><PRE>
+New development release, built against Phys v18r0.
+
+- Packages Updated :-
+   MicroDSTConf, MicroDSTTools, AnalysisPython, DaVinciMCTools,
+   DecayTreeTuple, DecayTreeTupleTracking, DecayTreeTupleTrigger,
+   FlavourTaggingChecker, JetTagging, MVADictTools
+
+In MicroDSTConf :
+ . Use DecoderDB in MicroDSTConf for HLT decoders.
+
+In AnalysisPython :
+ . Add the accessor functions for leaves and branches 
+ . Add missing descriptors. 
+ . Add Zech-prescriptition for efficiency determination. 
+ . Substitute numpy.array with array.array. 
+
+In DaVinciMCTools :
+ . Change behaviour of BackgroundCategory when searching for the top level 
+   mother in a particle chain. There is now the option (on by default) 
+   'IgnoreQuarks' which causes the Cat to ignore any quarks in the chain 
+   and return the top level fragmentation product instead. If this option 
+   is set to false the user can instead obtain the quark as the top level 
+   parent.
+
+In DecayTreeTuple :
+ . Fix a couple of minor bugs in TupleToolDecayTreeFitter :-
+  - Invalid check for verbose printout level
+  - Seg. fault when attempting for get the TES location for an object not in
+    the TES.
+ . Flavourtagging :
+  - Added a protection on null pointers 
+  - Enabled writing of SSpionBDT
+
+In DecayTreeTupleTracking :
+ . Fixed bug in TupleToolTrackKink. An Error message replaced by a Warning
+   ignored not to stop the algorithm. 
+
+In DecayTreeTupleTrigger :
+ . TupleToolTrigger,TupleToolTISTOS: Adapt to split Hlt1/Hlt2 reports
+       (still compatible with old Hlt reports) 
+ . TupleToolTISTOS: Add new properties TPS,TUS,TopParticleOnly (default false)
+                    TIS,TOS (default true)
+
+In JetTagging :
+ . Stopped NNBTag from failing when dot-product out of std::acos bounds.
+
+In MVADictTools :
+ . Add support for Matrixnet models and example of usage
+       (options/mvaDfromB_matrixnet.py)
+ . Add a workaround to the requirements file to fix missing GSL symbols
+   during linking.
+ . Add explicit usage for LoKiArrayFunctors and DaVinciInterfaces.
+   Needed to make sure compilation is done in the correct order when all 
+   packages are in the same project (such as for branch releases).
+ . Modified unit test to work from an arbitrary directory.
+
 ! 2014-01-28 - Chris Jones
  - Remove Phys/IncTopoVert, moved to the Stripping project.
 
