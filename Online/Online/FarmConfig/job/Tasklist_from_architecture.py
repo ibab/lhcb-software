@@ -132,7 +132,7 @@ BusyAdder.ReceiveTimeout          = 3;
     elif level == "3":
         f.write("""#include "$INFO_OPTIONS"
 
-ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
+ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
 
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
@@ -166,7 +166,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
         for s in histsvc:
             svc = s+"HistAdder"
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n");
-            f.write(svc+".TaskPattern = \"HLT[a-z][0-9][0-9]_Adder_(.*);\n");
+            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n");
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n");
             f.write(svc+".AdderClass  = \"hists\";\n");
             f.write(svc+".ReceiveTimeout = 12;\n")
@@ -177,11 +177,66 @@ MonitorSvc.CounterUpdateInterval     = 5;
         for s in cntsvc:
             svc = s+"CountAdder"
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n");
-            f.write(svc+".TaskPattern = \"HLT[a-z][0-9][0-9]_Adder_(.*);\n");
+            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n");
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Counter/\";\n");
             f.write(svc+".AdderClass  = \"Counter\";\n");
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
+            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write("\n")
+    elif level == "4":
+        f.write("""#include "$INFO_OPTIONS"
+
+ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.LoggerOnly                = true;  // Set to false for stdout
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+BusySvc.BogusMips                    = 0.0;
+MonitorSvc.CounterUpdateInterval     = 5;
+
+""")
+        histsvc = []
+        cntsvc = []
+#        histsvc.append("Adder")
+#        cntsvc.append("Busy")
+        for s in tasklist:
+            hsvc = s#+"HistAdder"
+            f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
+            csvc = s#+"CountAdder"
+            f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+csvc+"CountAdder\"};\n")
+            histsvc.append(hsvc)
+            cntsvc.append(csvc)
+        f.write("\n")
+
+        for s in histsvc:
+            svc = s+"HistAdder"
+            f.write(svc+".MyName  = \"<part>_X_"+s\";\n");
+            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n");
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Histos/\";\n");
+            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".ReceiveTimeout = 12;\n")
+            f.write(svc+".InDNS = \"mona08\";\n")
+            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write("\n")
+
+        for s in cntsvc:
+            svc = s+"CountAdder"
+            f.write(svc+".MyName  = \"<part>_X_"+s\";\n");
+            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n");
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Counter/\";\n");
+            f.write(svc+".AdderClass  = \"Counter\";\n");
+            f.write(svc+".ReceiveTimeout = 12;\n")
+            f.write(svc+".InDNS = \"mona08\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
             f.write("\n")
 

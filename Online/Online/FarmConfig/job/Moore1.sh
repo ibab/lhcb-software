@@ -10,4 +10,6 @@
 # =========================================================================
 #
 #. ./PassThrough.sh $*
-. /group/hlt/MOORE/Moore_v20r3p1/InstallArea/scripts/runMooreHlt1Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES}
+###echo "Moore version: ${MOORE_VERSION}";
+. /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt1Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};
+

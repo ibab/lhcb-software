@@ -9,4 +9,5 @@
 #
 # =========================================================================
 #
-. ./PassThrough.sh $*
+#####. ./PassThrough.sh $*
+. /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/runMooreHlt2Online_EFF.sh ${DIM_DNS_NODE} ${PARTITION_NAME} ${NBOFSLAVES};

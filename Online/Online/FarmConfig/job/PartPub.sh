@@ -9,8 +9,8 @@
 #
 # =========================================================================
 #
-export PYTHONPATH=${ONLINE_ENV_DIR}:%{PYTHONPATH}
-export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
-python ./Tasklist_from_architecture.py 3 ${AdderOptsFile}
+#export PYTHONPATH=${ONLINE_ENV_DIR}:%{PYTHONPATH}
+#export AdderOptsFile=/tmp/${PARTITION_NAME}_PublisherOpts.opts
+#python ./Tasklist_from_architecture.py 4 ${AdderOptsFile}
 #export LD_LIBRARY_PATH=/group/online/dataflow/cmtuser/Online_v5r5/InstallArea/x86_64-slc5-gcc46-dbg/lib:$LD_LIBRARY_PATH
-exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
+exec -a ${UTGID} ${Class1_task} -opts=../options/pooper.opts
