@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================= HltConf v10r3 2014-02-20 =========================
 ! 2014-01-27 - Sebastian Neubert
  - Added TrackReportsWriter
 
