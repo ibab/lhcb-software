@@ -5,6 +5,8 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r26 2014-02-20 =========================
+
 ! 2014-02-04 - Vanya Belyaev
  - add the accessor functions for leaves and branches 
 
@@ -12,15 +14,13 @@
  - add missing descriptors 
 
 ! 2014-01-26 - Vanya Belyaev
- - add Zech-prescriptition for efficinecy determination 
+ - add Zech-prescriptition for efficiency determination 
 
 ! 2014-01-20 - Vanya Belyaev
-
  - substitute numpy.array with array.array 
 
 ! 2014-01-12 - Vanya Belyaev
  - many minor fixes 
-
 
 !========================= AnalysisPython v2r25 2013-12-18 =========================
 
