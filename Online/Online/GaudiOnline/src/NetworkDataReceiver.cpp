@@ -110,12 +110,14 @@ StatusCode NetworkDataReceiver::finalize()     {
 // Service overload: Start transition callback
 StatusCode NetworkDataReceiver::start()   {
   m_recvEvents = true;
+  if ( m_prod ) m_prod->clear();
   return OnlineService::start();
 }
 
 // Service overload: Stop transition callback
 StatusCode NetworkDataReceiver::stop()   {
   m_recvEvents = false;
+  if ( m_prod ) m_prod->clear();
   return OnlineService::stop();
 }
 

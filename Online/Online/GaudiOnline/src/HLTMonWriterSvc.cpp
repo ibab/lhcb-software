@@ -76,10 +76,11 @@ extern "C"
 
 // Standard Constructor
 HLTMonWriterSvc::HLTMonWriterSvc(const string& nam, ISvcLocator* svc) :
-  OnlineService(nam, svc), m_listlock(PTHREAD_MUTEX_INITIALIZER), m_tid(0),
+  OnlineService(nam, svc), m_tid(0),
   m_mepMgr(0), m_consumer(0), m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
 {
   m_mepIn =  m_mepOut = m_minAlloc = 0;
+  m_listlock = PTHREAD_MUTEX_INITIALIZER;
   declareProperty("Input", m_input="None");
   declareProperty("PrintFreq", m_freq = 0.);
   declareProperty("Requirements", m_req);
