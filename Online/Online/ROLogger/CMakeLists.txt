@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ROLogger
 ################################################################################
-gaudi_subdir(ROLogger v0r25)
+gaudi_subdir(ROLogger v0r26)
 
 gaudi_depends_on_subdirs(Online/UPI
                          Online/DIM)
