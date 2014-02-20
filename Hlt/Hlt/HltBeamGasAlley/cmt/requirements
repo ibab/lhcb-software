@@ -3,7 +3,7 @@
 # Maintainer : Plamen Hopchev
 #============================================================================
 package           HltBeamGasAlley
-version           v3r1p1
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================

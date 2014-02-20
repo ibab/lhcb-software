@@ -4,6 +4,7 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+!========================= HltBeamGasAlley v4r0 2014-02-20 =========================
 ! 2014-02-10 - Gerhard Raven
  - replace SelectionContainer2 with SelectionContainer (follow change in HltBase)
 
