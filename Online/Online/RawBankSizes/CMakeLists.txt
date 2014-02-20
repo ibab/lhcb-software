@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RawBankSizes
 ################################################################################
-gaudi_subdir(RawBankSizes v2r17)
+gaudi_subdir(RawBankSizes v2r18)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Event/DAQEvent
