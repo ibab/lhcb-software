@@ -5,6 +5,7 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================= HltRawData v4r0p1 2014-02-20 =========================
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
