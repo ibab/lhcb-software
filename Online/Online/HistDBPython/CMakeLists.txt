@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HistDBPython
 ################################################################################
-gaudi_subdir(HistDBPython v1r7)
+gaudi_subdir(HistDBPython v1r8)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Online/OnlineHistDB)
