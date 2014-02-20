@@ -4,6 +4,10 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2014-02-20 - Chris Jones
+ - Fix PVRelator string in DefaultDVToolTypes.h to remove warning with
+   new plugin service (Gaudi v25r0).
+
 ! 2014-01-31 - Chris Jones
  - Split initializeLocations() into seperate initializeInputLocations() and
    initializeOutputLocations().
