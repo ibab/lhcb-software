@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r25 2014-02-20 =========================
+
 ! 2014-02-14 - Rob Lambert
  - Use decoder database in MicroDST.py
 
