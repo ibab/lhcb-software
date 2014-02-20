@@ -142,6 +142,7 @@ static int function(const string & name, stack<double> & par,
   Item item = iter->second;
 
   double pp[MAX_N_PAR];
+  for(int j=0; j<MAX_N_PAR; j++) { pp[j] = 0e0; }
   for(int i=0; i<npar; i++) { pp[i] = par.top(); par.pop(); }
   errno = 0;
   if (item.function == 0)       return EVAL::ERROR_CALCULATION_ERROR;
