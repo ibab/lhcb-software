@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Writer
 ################################################################################
-gaudi_subdir(Writer v1r49)
+gaudi_subdir(Writer v1r50)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Event/DAQEvent
