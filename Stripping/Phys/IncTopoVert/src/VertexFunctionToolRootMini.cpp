@@ -27,7 +27,7 @@ VertexFunctionToolRootMini::VertexFunctionToolRootMini( const std::string& type,
                                                         const std::string& name,
                                                         const IInterface* parent )
 : VertexFunctionTool ( type, name, parent )
-{ 
+{
   const char* minName = "Minuit2";
   const char* algoName = "";
   m_min = ROOT::Math::Factory::CreateMinimizer(minName, algoName);
@@ -35,7 +35,10 @@ VertexFunctionToolRootMini::VertexFunctionToolRootMini( const std::string& type,
 
 //=============================================================================
 
-void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZPoint & PMax, double & Max){
+void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V,
+                                                 Gaudi::XYZPoint & PMax,
+                                                 double & Max)
+{
 
   m_min->Clear();
 
@@ -49,7 +52,7 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   // fitted postion. It uses ROOT standard minimizer.
   //====================================================================
 
-  
+
   // VfForMax Vf(this);
 
   // ROOT::Math::Functor f(&Vf.computeValueAt2,3);
@@ -77,9 +80,13 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   fflush(stderr);
   freopen("/dev/null","w",stderr);
 
-  m_min->Minimize();
+  // CRJ : Protect Minuit call by FPE Guard
+  {
+    FPE::Guard guard( true );
+    m_min->Minimize();
+  }
 
-// put std back to normal
+  // put std back to normal
   fflush(stdout);
   dup2(original_stdout,fileno(stdout));
   close(original_stdout);
@@ -93,13 +100,13 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
 
   //info()<<"VertexFunctionToolRootMini::computeValueMax for "<<&V<<" new computation = "<<Max<<endmsg;
   //delete(min);
-  
+
 }
 
 StatusCode VertexFunctionToolRootMini::finalize()
 {
   delete(m_min);
-  
+
   return VertexFunctionTool::finalize();
 }
 

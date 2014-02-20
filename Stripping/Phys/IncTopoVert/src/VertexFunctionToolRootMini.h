@@ -1,10 +1,12 @@
 // $Id: $
-#ifndef VERTEXFUNCTIONTOOLROOTMINI_H 
+#ifndef VERTEXFUNCTIONTOOLROOTMINI_H
 #define VERTEXFUNCTIONTOOLROOTMINI_H 1
 
 // Include files
 #include "VertexFunctionTool.h"
 
+// LHCB Kernel
+#include "Kernel/FPEGuard.h"
 
 /** @class VertexFunctionToolRootMini VertexFunctionToolRootMini.h
  *   This tool implements IVertexFunctionTool. See the interface class for a description
@@ -15,23 +17,25 @@
  *  @date   2012-10-15
  */
 
-class VertexFunctionToolRootMini : public VertexFunctionTool{
-public: 
+class VertexFunctionToolRootMini : public VertexFunctionTool
+{
+
+public:
+
   /// Standard constructor
-  VertexFunctionToolRootMini( const std::string& type, 
+  VertexFunctionToolRootMini( const std::string& type,
                               const std::string& name,
                               const IInterface* parent);
-  //VertexFunctionToolRootMini( ); 
+  //VertexFunctionToolRootMini( );
 
   StatusCode finalize();
 
   void computeValueMax(LHCb::RecVertex & V, Gaudi::XYZPoint & PMax, double & Max);
-  
+
   virtual ~VertexFunctionToolRootMini( ); ///< Destructor
 
-protected:
-
 private:
+
   ROOT::Math::Minimizer* m_min;
 
 };
@@ -45,8 +49,8 @@ private:
 class Vf_Max : public ROOT::Math::IMultiGenFunction {
 public:
   /** constructor */
- Vf_Max(VertexFunctionTool *ptr) :
-  m_ptr(ptr)
+  Vf_Max(VertexFunctionTool *ptr) :
+    m_ptr(ptr)
   {
   }
 
@@ -56,8 +60,8 @@ public:
   {
     return 3;
   }
-  
-  
+
+
   /** define the actual function */
   double DoEval(const double* x) const
   {
@@ -71,7 +75,7 @@ public:
     return new Vf_Max(m_ptr);
   };
 
- private:
+private:
   VertexFunctionTool *m_ptr;
 };
 
