@@ -2,7 +2,7 @@
 # Package: DIM
 ################################################################################
 
-gaudi_subdir(DIM v1r19)
+gaudi_subdir(DIM v20r7p3)
 
 find_package(X11)
 find_package(Motif)
