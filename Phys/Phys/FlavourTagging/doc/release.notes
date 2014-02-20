@@ -6,6 +6,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v13r5 2014-02-20 =========================
+
 ! 2014-02-19 - Chris Jones
  - Add some additional protection for a possible NULL RecVert.
  - Disable compiler optimisation (i.e. use -O0) when compiling with clang.
