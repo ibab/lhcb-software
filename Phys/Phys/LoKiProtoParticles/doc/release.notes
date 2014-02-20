@@ -6,6 +6,8 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiProtoParticles v2r2 2014-02-20 =========================
+
 ! 2014-02-01 - Vanya Belyaev
  - build dictionries for new FuncOps__
 
