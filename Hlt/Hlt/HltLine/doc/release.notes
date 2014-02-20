@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r0 2014-02-20 =========================
 ! 2014-02-19 - Rob Lambert
  - Expect 4 errors in init_final test.
 
