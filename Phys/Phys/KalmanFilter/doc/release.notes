@@ -5,11 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================= KalmanFilter v1r6 2014-02-20 =========================
+
 ! 2014-02-10 - Vanya Belyaev
-
- - add the proper treatment of merged pi0 case 
-   (many thanks to Olivier Deschamps)
-
+ - Add the proper treatment of merged pi0 case 
+   (many thanks to Olivier Deschamps).
 
 !========================= KalmanFilter v1r5 2013-06-13 =========================
 
