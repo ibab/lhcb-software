@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltCosmics
 ################################################################################
-gaudi_subdir(HltCosmics v1r1p1)
+gaudi_subdir(HltCosmics v1r2)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          Hlt/HltBase

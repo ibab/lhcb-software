@@ -4,6 +4,7 @@
 ! Purpose     : Cosmic run specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================= HltCosmics v1r2 2014-02-20 =========================
 ! 2014-02-18 - Gerhard Raven
  - replace SelectionContainer0 with SelectionContainer<void>
 
