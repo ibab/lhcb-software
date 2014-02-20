@@ -5,35 +5,30 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
-! 2014-02-20 - Vanya Belyaev
+!========================= LoKiFitters v4r9 2014-02-20 =========================
 
- - add new proeprty PrintMyAlg (default value "true")
-   to add the name of the related algorithm to the error/warning prints 
+! 2014-02-20 - Vanya Belyaev
+ - Add new proeprty PrintMyAlg (default value "true")
+   to add the name of the related algorithm to the error/warning prints. 
  
 ! 2014-02-13 - Vanya Belyaev
-
- - VertexFitter.h: 
-    fix stupid typo/bug, that causes FPE 
-
+ - VertexFitter.h: Fix stupid typo/bug, that causes FPE .
 
 ! 2014-02-10 - Vanya Belyaev
- - particle classifiers: add the proper treatment of merged pi0 case 
+ - Particle classifiers: add the proper treatment of merged pi0 case .
 
 ! 2014-01-17 - Vanya Belyaev
-
- - *DistanceCalculators :
-     add an optional argument to allow the transitions between categories
+ - *DistanceCalculators : Add an optional argument to allow the
+                          transitions between categories.
 
 !========================= LoKiFitters v4r8 2014-01-10 =========================
 
 ! 2014-01-10 - Vanya Belyaev
-
- - DistanceCalculator : set AllowTransitions to be False 
-   (many thanks to Wouter and Pieter)
+ - DistanceCalculator : Set AllowTransitions to be False 
+                        (many thanks to Wouter and Pieter)
 
 ! 2013-12-20 - Vanya Belyaev
- - set measured mass error to be 1MeV if it is -1 MeV < mErr < 0 
-
+ - Set measured mass error to be 1MeV if it is -1 MeV < mErr < 0 
 
 !========================= LoKiFitters v4r7 2013-10-29 =========================
 
