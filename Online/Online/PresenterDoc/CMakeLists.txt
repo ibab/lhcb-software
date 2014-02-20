@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PresenterDoc
 ################################################################################
-gaudi_subdir(PresenterDoc v1r0)
+gaudi_subdir(PresenterDoc v1r1)
 
 gaudi_depends_on_subdirs(GaudiAlg)
 
