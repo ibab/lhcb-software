@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "../structure.dtd">
+<DDDB>
+  <catalog name="dd">
+    <conditionref href="originalhlt12.xml#Condition"/>
+    <conditionref href="originalhlt12.xml#Condition2"/>
+  </catalog>
+</DDDB>
