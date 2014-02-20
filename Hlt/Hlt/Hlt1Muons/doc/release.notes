@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Muons v1r7 2014-02-20 =========================
 ! 2014-01-28 - Gerhard Raven
  - remove spurious ;
  - move another compile-time constant class members out of class
