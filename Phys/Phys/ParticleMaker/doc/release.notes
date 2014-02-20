@@ -3,8 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r9 2014-02-20 =========================
+
 ! 2014-02-16 - O. Deschamps
-  - DiElectronMaker, MergedPi0Maker : protect against (rare) FPE 
+ - DiElectronMaker, MergedPi0Maker : protect against (rare) FPE 
 
 ! 2014-01-28 - Chris Jones
  - Make a warning message from ResolvedPi0Maker about an empty photon container
