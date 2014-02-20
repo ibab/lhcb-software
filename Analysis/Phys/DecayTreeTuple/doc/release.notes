@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r7 2014-02-20 =========================
+
 ! 2014-01-31 - Chris Jones
  - Fix a couple of minor bugs in TupleToolDecayTreeFitter :-
   . Invalid check for verbose printout level
