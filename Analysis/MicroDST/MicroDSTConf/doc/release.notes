@@ -5,6 +5,8 @@
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTConf v2r11 2014-02-20 =========================
+
 ! 2014-02-14 - Rob Lambert
  - Use DecoderDB in MicroDSTConf for HLT decoders
 
