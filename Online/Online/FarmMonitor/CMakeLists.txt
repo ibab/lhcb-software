@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FarmMonitor
 ################################################################################
-gaudi_subdir(FarmMonitor v2r12)
+gaudi_subdir(FarmMonitor v2r13)
 
 gaudi_depends_on_subdirs(Online/ROMon
                          Online/DIM
