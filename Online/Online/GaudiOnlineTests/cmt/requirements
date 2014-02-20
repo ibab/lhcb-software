@@ -3,7 +3,7 @@
 #============================================================================
 # Internal helper package to reduce dependencies in GaudiOnline iteself
 #============================================================================
-version Close_to_Hell
+version v1r2
 #
 #
 use  GaudiAud      v*
