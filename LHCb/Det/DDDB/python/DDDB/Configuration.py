@@ -20,13 +20,15 @@ class DDDBConf(ConfigurableUser):
     __slots__ = { "DbRoot"    : "conddb:/lhcb.xml",
                   "DataType"  : "2012",
                   "Simulation": False,
-                  "AutoTags"  : False
+                  "AutoTags"  : False,
+                  "InitialTime" : None
                    }
     _propertyDocDct = {
                        'DbRoot' : """ Root file of the detector description """,
                        'DataType' : """ Symbolic name for the data type. Allowed values: ["2013", "2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
-                       'AutoTags'  : """ Perform automatic resolution of CondDB tags """
+                       'AutoTags'  : """ Perform automatic resolution of CondDB tags """,
+                       'InitialTime' : """ How to set the initial time. None/'Safe' uses a list of dummy times for each year and sets that time. 'Now' uses the current time. Sepcifying a number assumes that is a time in utc."""
                        }
 
     __used_configurables__ = [ CondDB ]
@@ -143,10 +145,28 @@ class DDDBConf(ConfigurableUser):
 
     def __set_init_time__(self, utcDatetime):
         """
-        Configure the initialization time using the lower between the proposed time and
-        the current time
+        Configure the initialization time,
+        depends on the value of self.IntitialTime
+        Default: using the lower between the proposed time and the current time
+        'Now' : use the higher between the current time and the proposed time
+        dateime : use this datetime
         """
-        utcDatetime = min(datetime.utcnow(), utcDatetime)
+        #default situation
+        if self.getProp("InitialTime") is None or (
+            type(self.getProp("InitialTime")) is str  and (
+            self.getProp("InitialTime").lower()=="safe" or not len(self.getProp("InitialTime"))
+            ) ):
+            #default situation
+            utcDatetime = min(datetime.utcnow(), utcDatetime)
+        elif type(self.getProp("InitialTime")) is str and  self.getProp("InitialTime").lower()=="now":
+            #Moore!
+            utcDatetime = max(datetime.utcnow(), utcDatetime)
+        elif self.isPropertySet("InitialTime") and self.getProp("InitialTime") is not None and type(self.getProp("InitialTime")) is type(datetime.utcnow()):
+            utcDatetime = self.getProp("InitialTime")
+        elif  type(self.getProp("InitialTime")) is str:
+            raise NameError("I do not know how to se the time to "+self.getProp("InitialTime"))
+        else:
+            raise TypeError("I don't have a good way to convert type"+str(type( self.getProp("InitialTime")))+" to a datetime, please give me a datetime.datetime object")
         from Configurables import EventClockSvc
         ecs = EventClockSvc()
         # do not overwrite already set values
