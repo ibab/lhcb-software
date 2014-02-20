@@ -7,6 +7,8 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiJets v6r10 2014-02-20 =========================
+
 ! 2014-02-06 - Marco Clemencic
  - Reverted the workaround because it's now in Gaudi.
 
