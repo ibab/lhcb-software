@@ -14,9 +14,14 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-02-20 - Marco Clemencic
+ - Moved the PID operators to the namespace LoKi::MCParticles to fix an issue
+   with ROOT 6.
+   See https://sft.its.cern.ch/jira/browse/ROOT-6044 for details.
+
 !========================= LoKiMC v10r10 2014-02-17 =========================
 ! 2014-02-01 - Vanya Belyaev
- - add dictionary for new FuncOps__ 
+ - add dictionary for new FuncOps__
 
 ! 2013-11-14 - Marco Clemencic
  - Added some missing destructors (needed for the migration to ROOT 6).
