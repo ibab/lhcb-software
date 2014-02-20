@@ -4,6 +4,15 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-02-20 - Chris Jones
+ - Add work around to S20rXp2 stripping tests to ignore stderr messages
+   from Gaudi v25r0, due to the new plugin manage, warning about obsolete
+   syntax for loading tools. e.g.
+      WARNING: requesting factory via old name 'LoKi__FastJetMaker' use 'LoKi::FastJetMaker' instead
+ - Fix typo in stripping QM tests that put the line
+      countErrorLines({"FATAL":0})
+   in the wrong place ...
+
 ! 2014-02-19 - Chris Jones
  - Update the stripping QM test reference logs.
 
