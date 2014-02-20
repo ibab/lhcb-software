@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-20 - Rob Lambert
+ - Propagate time to new property of DDDBConf
+
 ! 2014-02-19 - Rob Lambert
  - Suppress DQFlags warning by expicitly setting the default
 

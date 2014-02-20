@@ -10,7 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
 from Configurables import LHCbApp #L0Conf, L0DUFromRawAlg
-from Configurables import DecodeRawEvent, RawEventFormatConf
+from Configurables import DecodeRawEvent, RawEventFormatConf, DDDBConf
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -106,7 +106,8 @@ class Moore(LHCbConfigurableUser):
     __used_configurables__ = [ HltConf
                              , LHCbApp
                              #, L0Conf
-                             , DecodeRawEvent ]
+                             , DecodeRawEvent
+                             ,  DDDBConf]
 
 
     __slots__ = {
@@ -1018,9 +1019,12 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN
         from DAQSys.Configuration import SetEvtClock
         SetEvtClock("ODIN")
-        from Configurables import EventClockSvc
-        import time
-        EventClockSvc().InitialTime = int(time.time()*1e9)  #now
+        #from Configurables import EventClockSvc
+        #import time
+        #EventClockSvc().InitialTime = int(time.time()*1e9)  #now
+        from Configurables import DDDBConf
+        if not DDDBConf().isPropertySet("InitialTime"):
+            DDDBConf().InitialTime="Now"
         
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
