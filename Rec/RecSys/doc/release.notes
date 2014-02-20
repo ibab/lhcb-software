@@ -5,7 +5,129 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v16r0>2014-02-20 RecSys v16r0</A></H1><PRE>
+This version uses Gaudi v25r0, LHCb v37r0 and Lbcom v15r0
+Contains all changes that were used for Upgrade Tracking TDR results 
+
 - Packages removed:  Pr/PrVL (obsolete)
+- Packages renamed:  Tf/PatPixel -> Pr/PrPixel
+- Packages modified: Muon/MuonID v9r9, Muon/MuonInterfaces v1r6,
+    Pr/PrAlgorithms v1r9, Pr/PrFitParams v2r0, Pr/PrKernel v1r4,
+    Pr/PrMCTools v2r0, Pr/PrPixel v1r5, Pr/PrUtils v2r0, Pr/PrVeloUT v2r0,
+    Rec/ChargedProtoANNPID v2r5, Rec/LumiAlgs v9r1, Rec/RecAlgs v3r0,
+    Rec/RecConf v2r16, Rich/RichRecPhotonTools v1r13, Rich/RichRecQC v2r64,
+    Rich/RichRecSys v5r1, Rich/RichRecTrackTools v1r36, Tf/FastVelo v1r15,
+    Tf/PatAlgorithms v4r30, Tf/TrackSys v9r0, Tr/PatChecker v3r15,
+    Tr/TrackCheckers v4r20, Tr/TrackFitEvent v6r0, Tr/TrackFitter v5r0,
+    Tr/TrackKernel v2r0, Tr/TrackMCTools v3r7, Tr/TrackMonitors v2r0,
+    Tr/TrackProjectors v3r0, Tr/TrackTools v5r0, Tr/TrackUtils v9r2,
+    Velo/VeloRecMonitors v2r28
+
+- In Muon/MuonID v9r9
+  . Removed unneeded calls to foiX and foiY in MuonIDAlg::setCoords.
+    This optimisation should have no implications except for performance
+    improvement.
+  . Fixed problem with ROOT 6 (https://sft.its.cern.ch/jira/browse/ROOT-5985): 
+    For non-muon probability use ROOT::Math::landau_cdf. User function land()    
+    removed. For muon probability continue to use TF1 integral, but now only 
+    call it if DLL_flag == 1. 
+
+- In Muon/MuonInterfaces v1r6
+  . Protect against sqrt(-number) in MuonHit. 
+
+- In Pr/PrAlgorithms v1r9
+  . Update in PrSeedingXLayers, to represent code used for Upgrade Tracking TDR. 
+  . Remove PrAddUTCoord, was replaced by PrAddUTHitsTool some time ago.
+  . Fix several floating point exceptions
+  . Add in small wrong side window.
+  . Replace "get" with "getIfExists" in PrMatch.cpp
+
+- In Pr/PrKernel v1r4
+  . Add IPrCounter as interface for PrCounter and PrUTCounter
+
+- In Pr/PrMCTools v2r0
+  . Update PrCounter to avoid FPE.
+  . Update PrChecker with 'electron' flag, to take electrons into account or not.
+  . Comment unused member variables in PrChecker.
+  . Updated PrCounter and PrChecker: Added trigger condition and new efficiency
+    categories. Uses new IPrCounter interface.
+  . Replace 'get' with 'getIfExists' in PrTrackAssociator to allow better behaved
+    exiting of the code if the container does not exist
+
+- In Pr/PrMCTools v2r0, Rec/ChargedProtoANNPID v2r5, Tr/PatChecker v3r15,
+     Tr/TrackCheckers v4r20, Tr/TrackMCTools v3r7
+  . Fix behaviour of flag 'fromB' to only include B baryons and mesons, and not
+    particles from string fragmentation of b quarks
+
+- In Pr/PrPixel v1r5
+  . Renamed PatPixel* to PrPixel*
+  . Bugfix (chi2 cut on short tracks was not applied)
+  . Remove unused functions from PrPixelTracking
+  . Restructured code in hottest part of PatPixelTracking
+    Precompute the answer to common lookups like whether a module has any hits or
+    the value of the largest X hit.
+
+- In Pr/PrVeloUT v2r0
+  . Fixed small bug in clustering, change state to LastMeasurement
+  . Changed how x of state atTT is assigned
+  . Changed how clustering is done and resulting changes to algorithm.
+
+- In Rec/LumiAlgs v9r1
+  . Update test references for decoder changes, update to use PRConfig for one
+    test to fix castor: problem
+  . Adapt test to new properties of RawEventDump
+
+- In Rec/RecConf v2r16, Rich/RichRecSys v5r1, TrackSys v9r0
+  . Add support for 'pA' SpecialData type, to set special GECs developed for
+    Reco14r1 reprocessing of 2013 heavy ion data
+
+- In Rich/RichRecPhotonTools v1r13, Rich/RichRecTrackTools v1r36
+  . Add support for Upgrade geometries to RichCKthetaBandsPhotonPredictor.
+  . Remove some unused data members from RichPhotonRecoUsingCKEstiFromRadius.
+
+- In Rich/RichRecPhotonTools v1r13, 
+  . Adaptation for using a mixed set of PMTs (large+standard pixel size) in
+    RICH2 for upgrade.
+
+- In Rich/RichRecQC v2r64
+  . Fixed a bug in RichRecQCConf exposed by the fix to Gaudi bug #103803.
+
+- In Rich/RichRecSys v5r1
+  . Add an explicit tuning of the photon reconstruction for the Upgrade.
+
+- In Rich/RichRecTrackTools v1r36
+  . Remove some hacks neccessary when mixing c++11 and non-c++11 builds.
+
+- In Tf/FastVelo v1r15
+  . Fixed harmless FPE when zero phi clusters in overlap region checking
+
+- In Tf/PatAlgorithms v4r30
+  . Fix floating point exception in PatAddTTCoord (negative values in sqrt).
+
+- In Tf/TrackSys v9r0
+  . Add dependency of TrackSys on DecodeRawEvent, task #50179
+  . Follow renaming of PatPixelTracking to PrPixelTracking
+
+- Tr/TrackMCTools v3r7
+  . Protected against an FPE exception due to division by zero.
+  . Add upgrade detector linking to LHCbIDsToMCHits.
+
+- In Tr/TrackMonitors v2r0
+  . TrackMonitor: removed use of extrapolator; split residuals by x,y for pixel.
+  . Fix some FPE exceptions
+
+- In Tr/TrackUtils v9r2
+  . Removed UT from TrackHitAdder since it broke the alignment sequence.
+
+- In Velo/VeloRecMonitors v2r28
+  . Fix divide by 0 FPE in VeloTrackMonitor.
+  . Uncommented hardcoded cuts for overlap-track selection
+
+- In Pr/PrFitParams v2r0, Pr/PrMCTools v2r0, Pr/PrUtils v2r0, Pr/PrVeloUT v2r0,
+     Rec/RecAlgs v3r0, Tf/TrackSys v9r0, Tr/TrackFitEvent v6r0,
+     Tr/TrackFitter v5r0, Tr/TrackKernel v2r0, Tr/TrackMonitors v2r0,
+     Tr/TrackProjectors v3r0, Tr/TrackTools v5r0
+  . Remove support for VL
 
 </PRE><H1><A NAME=v15r4>2013-12-11 RecSys v15r4</A></H1><PRE>
 This version uses Gaudi v24r2, LHCb v36r4 and Lbcom v14r4
