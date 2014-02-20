@@ -4,6 +4,7 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r2 2014-02-20 =========================
 ! 2014-02-19 - Sebastian Neubert
  - Added Hlt1TrackAllL0LifetimeUnbiased prototype line
  - Added Hlt2B2HH line to exercise tracking in HLT2
