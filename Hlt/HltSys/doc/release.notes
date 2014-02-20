@@ -5,8 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
-! 2014-01-15 - Marco Cattaneo
- - Fix configurables test following removal of VL classes
+</PRE><H1><A NAME=v22r0>2014-02-20 HltSys v22r0</A></H1><PRE>
+Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on Rec v17r0 via Phys v18r0. Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
+
+This is the first Moore release which allows C++11 features. Therefore is only available on slc6-gcc48.
+
+C++11 features have been introduced throughout this stack, and this constitutes the majority of changes in this release. Several packages require the new C++11 features of lower projects, and so several packages have had their major versions incremented.
+
+Additionally tracking in the split configuration is beginning to take shape, with the possibility to transfer tracks in a raw bank from Hlt1 to Hlt2. task #48808, task #48807.
+
+Almost every package has been touched to add cmake replacements for the requirements files, and to adjust the tests after the deprecation of the castor: protocol at CERN.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r0
 
 </PRE><H1><A NAME=v21r0>2014-01-06 HltSys v21r0</A></H1><PRE>
 Moore/HLT LS1 development version, LHCb stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2. Aimed to fit the needs of the January 2014 commissioning week.
