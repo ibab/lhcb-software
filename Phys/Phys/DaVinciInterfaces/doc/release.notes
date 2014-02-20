@@ -4,10 +4,11 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
-! 2014-01-17 - Vanya Belyaev
+!========================= DaVinciInterfaces v2r21 2014-02-20 =========================
 
- - IDistanceCalculator 
-    add an optional argument to allow the transitions between categories 
+! 2014-01-17 - Vanya Belyaev
+ - IDistanceCalculator : Add an optional argument to allow the transitions
+                         between categories.
 
 !========================= DaVinciInterfaces v2r20 2013-10-02 =========================
 
