@@ -4,6 +4,11 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTTools v2r10p1 2014-02-20 =========================
+
+! 2014-02-20 - Chris Jones
+ - Improve some debug printout.
+
 !========================= MicroDSTTools v2r10 2013-06-13 =========================
 
 ! 2013-05-05 - Chris Jones
