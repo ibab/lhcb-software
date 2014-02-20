@@ -5,6 +5,7 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+!========================= HltGlobalMonitor v4r2 2014-02-20 =========================
 ! 2014-01-31 - Gerhard Raven
  - fix -Wpedantic warning
 
