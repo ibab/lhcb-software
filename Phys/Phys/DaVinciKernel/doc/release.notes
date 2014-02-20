@@ -4,6 +4,8 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+!========================= DaVinciKernel v11r6 2014-02-20 =========================
+
 ! 2014-02-20 - Chris Jones
  - Fix PVRelator string in DefaultDVToolTypes.h to remove warning with
    new plugin service (Gaudi v25r0).
@@ -13,7 +15,7 @@
    initializeOutputLocations().
 
 ! 2014-01-30 - Vanya Belyaev
- - add update handler for property "Inputs"
+ - Add update handler for property "Inputs"
 
 ! 2014-01-30 - Chris Jones
  - Add a check to DVCommonBase to test for duplication in the Input particle
