@@ -1293,7 +1293,7 @@ int mbmsrv_cancel_request(ServerBMID bm, MSG& msg) {
     _mbmsrv_del_wes(u);
     u->state = S_active;
   }
-  return MBM_NORMAL;
+  return MBM_NO_REPLY;
 }
 
 /// Consumer interface: stop consumer

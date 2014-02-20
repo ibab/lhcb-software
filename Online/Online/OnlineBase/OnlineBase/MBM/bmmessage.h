@@ -121,5 +121,8 @@ struct MBMMessage {
   int write(int fd, void* ptr, size_t len) const;
   int wait(int fd, int* cancelled);
   int communicate(int fdout, int fdin);
+  /// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
+  static int clearFifo(int fd);
+  static const char* typeStr(int typ);
 };
 #endif // ONLINEBASE_MBM_BMMESSAGE_H

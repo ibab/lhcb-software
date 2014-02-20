@@ -80,6 +80,8 @@ extern "C"  {
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
   __MBM_CONST char* mbm_buffer_address(BMID);
+  /// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
+  int mbm_clear(BMID bm);
 
   int  mbm_add_req (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, 
                     int usertype, int freqmode, float freq);

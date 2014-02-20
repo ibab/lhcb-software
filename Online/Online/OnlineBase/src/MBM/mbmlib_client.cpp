@@ -335,8 +335,16 @@ int mbm_exclude (BMID bm)  {
 
 int mbm_cancel_request (BMID bm)   {
   MBM_CHECK_BMID(bm);
+  MSG msg(MSG::CANCEL_REQUEST,bm->user);
   bm->cancelled = true;
-  return _mbm_cons_message(bm,MSG::CANCEL_REQUEST);
+  return msg.write(bm->reqFifo);
+
+}
+
+/// Clear possibly pending messages (e.g. after cancel)
+int mbm_clear(BMID bm) {
+  MBM_CHECK_BMID(bm);
+  return MSG::clearFifo(bm->fifo);
 }
 
 // Consumer routines
@@ -387,6 +395,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* t
   bm->ast_addr  = astadd;
   bm->ast_param = astpar;
   ::memset(trmask,0x0,sizeof(TriggerMask));
+  MSG::clearFifo(bm->fifo);
   return msg.write(bm->reqFifo);
 }
 
@@ -473,14 +482,19 @@ int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpa
   bm->ast_addr  = astadd;
   bm->ast_param = astpar;
   sp.size    = size;
+  MSG::clearFifo(bm->fifo);
   return msg.write(bm->reqFifo);
 }
 
 int mbm_wait_space(BMID bm)    {
   MBM_CHECK_BMID(bm);
-  MSG msg(MSG::GET_SPACE,bm->user);
+  MSG msg(MBM_ERROR,bm->user);
   int status = msg.wait(bm->fifo,&bm->cancelled);
   if ( status == MBM_NORMAL )  {
+    if ( msg.type != MSG::GET_SPACE ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected GET_SPACE",
+		       msg.typeStr(msg.type));
+    }
     MSG::get_space_t& sp = msg.data.get_space;
     char* ptr = bm->buffer_add + sp.offset;
     *bm->evt_ptr  = (int*)ptr;
@@ -491,6 +505,9 @@ int mbm_wait_space(BMID bm)    {
   else if ( MBM_REQ_CANCEL == status )  {
     *bm->evt_ptr  = 0;
     bm->cancelled = false;
+  }
+  else {
+    ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message with bad status",msg.status);
   }
   return status;
 }
@@ -512,6 +529,10 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
   if ( status == MBM_NORMAL ) {
     *free_add  = (bm->buffer_add + evt.freeAddr);
     *free_size = evt.freeSize;
+    if ( msg.type != MSG::DECLARE_EVENT ) {
+      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected DECLARE_EVENT",
+		       msg.typeStr(msg.type));
+    }
   }
   return status;
 }
@@ -547,7 +568,15 @@ int mbm_free_space (BMID bm)   {
 }
 
 int mbm_send_space (BMID bm)    {
-  return _mbm_comm_message(bm, MSG::SEND_SPACE);
+  MBM_CHECK_BMID(bm);
+  MSG msg(MSG::SEND_SPACE,bm->user);
+  int sc = msg.communicate(bm->reqFifo,bm->fifo);
+  if ( msg.type != MSG::SEND_SPACE ) {
+    ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected SEND_SPACE",
+		     msg.typeStr(msg.type));
+  }
+  return sc;
+  //return _mbm_comm_message(bm, MSG::SEND_SPACE);
 }
 
 int mbm_wait_space_a(BMID bm)    {

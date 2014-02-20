@@ -3,7 +3,6 @@
 #include <cerrno>
 #include <poll.h>
 
-#ifdef _DEBUG_MBM_MSG
 namespace {
 #define CHECK(x) case MBMMessage::x : return #x ;
   const char* __msg_type(int typ)  {
@@ -43,13 +42,18 @@ namespace {
     default:      return "Unknown";
     }
   }
+#ifdef _DEBUG_MBM_MSG
   const char* __msg_user(const USER* user)  {
     static char text[32];
     ::snprintf(text,sizeof(text),"%12X",(void*)user);
     return text;
   }
-}
 #endif
+}
+
+const char* MBMMessage::typeStr(int typ) {
+  return __msg_type(typ);
+}
 
 int MBMMessage::read(int fd) {
   int tmp = 0;
@@ -102,6 +106,29 @@ int MBMMessage::write(int fd, void* ptr, size_t len) const {
     if ( sc > 0 ) tmp -= sc;
     else if ( sc == 0 && errno == EINTR ) continue;
     else return MBM_ERROR;
+  }
+  return MBM_NORMAL;
+}
+
+/// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
+int MBMMessage::clearFifo(int fd) {
+  //struct pollfd fds;
+  char buff[sizeof(MBMMessage)];
+  while (1)  {
+    //fds.events  = POLLIN;
+    //fds.revents = POLLIN;
+    //fds.fd      = fd;
+    //int sc = ::poll(&fds,1,5);
+    // Fifo is non-blocking, so just read some junks
+    int sc = ::read(fd,buff,sizeof(MBMMessage));
+    if ( sc > 0 ) {
+      continue;
+    }
+    else if ( sc == -1 && errno == EINTR ) {
+      continue;
+    }
+    //::lib_rtl_output(LIB_RTL_ALWAYS,"Request fifo cleaned up.....\n");
+    return MBM_NORMAL;
   }
   return MBM_NORMAL;
 }
