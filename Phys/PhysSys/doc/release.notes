@@ -3,6 +3,120 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v18r0>2014-02-20 Phys v18r0</A></H1><PRE>
+Development release, based on Rec v16r0, LHCb v37r0 and Gaudi v25r0.
+
+- Packages Updated :
+   DaVinciInterfaces, DaVinciKernel, DaVinciTools, FlavourTagging,
+   JetAccessories, KalmanFilter, LoKiArrayFunctors, LoKiFitters,
+   LoKiJets, LoKiPhys, LoKiProtoParticles, LoKiTracks, ParticleMaker,
+   PhysConf, TisTosTobbing, VertexFit, PhysSelPython
+
+In DaVinciInterfaces :
+ - IDistanceCalculator : Add an optional argument to allow the transitions
+                         between categories.
+
+In DaVinciKernel :
+ . Fix PVRelator string in DefaultDVToolTypes.h to remove warning with
+   new plugin service (Gaudi v25r0).
+ . Add a check to DVCommonBase to test for duplication in the Input particle
+   locations. If duplicates are found, a warning is printed and the
+   duplication is removed. 
+
+In DaVinciTools :
+ . Add Specialised algorithms for N=8-body decays.
+ . Remove the mass check in PrintDuplicates, as it is no longer required now
+   the algorithm properly takes PID swaps into account.
+ . Another small improvement to PrintDuplicates, to detect false positives
+   due to PID swaps within the decay tree.
+ . Improve PrintDuplicates to reject some more false positives, when decays
+   use the same Particles, but at different places in the decay tree.
+ . Modify AddExtraInfo to only store ExtraInfo for the daughter particles 
+   in the specified list of locations when recursing the decay tree. 
+
+In FlavourTagging :
+ . Add some additional protection for a possible NULL RecVert.
+ . Disable compiler optimisation (i.e. use -O0) when compiling with clang.
+   To work around an issue with excessive memory usage during compilation.
+ . Prevent various floating point exceptions (divide by zero etc.) found by
+   enabling the FPEAuditor.
+ . Commit a new tagger: SSpion BDT (based on the work presented by Antonio F.
+   at the PPTS 20/01/2014)
+ . In BTaggingTool, set the new taggers enabled by Default
+ . In CombineTaggersProbability: disable by default the combination with the 
+                                 SS_PionBDT.
+ . In TaggerCharmTool: save also the Charm daughter particles in the list 
+                       of tagging tracks.
+
+In JetAccessories :
+ . Remove the protparticle creation for neutral hadrons
+   Reogranise the way PF particles are saved (copied to particle first).
+   Fix mem leak from new LHCb::PFParticle(oldpart.clone()).
+ . Add header file (and dictionary) with enums used in ParticleFlow and jet
+   reconstruction.
+
+In KalmanFilter :
+ . Add a proper treatment of merged pi0 cases. 
+
+In LoKiArrayFunctors :
+ . Add dictionaries for new FuncOps__ 
+ . DOCA* make use of updated IDistanceCalculator interface.
+
+In LoKiFitters :
+ . Add new proeprty PrintMyAlg (default value "true")
+   to add the name of the related algorithm to the error/warning prints. 
+ . VertexFitter.h: Fix stupid typo/bug, that causes FPE.
+ . Particle classifiers: Add the proper treatment of merged pi0 case .
+ . *DistanceCalculators : Add an optional argument to allow the
+                          transitions between categories.
+ . DistanceCalculator : set AllowTransitions to be False.
+ . Set measured mass error to be 1MeV if it is -1 MeV < mErr < 0
+
+In LoKiJets :
+ . Sanitise unneccessary info() printout for production.
+ . Replace cout (not allowed) with debug().
+ . Protect debug() and verbose() messages behind if statements.
+
+In LoKiPhys :
+ . VDOF : return max(ndof,1) 
+ . Renamed LoKi::Cuts::STAT to LoKi::Cuts::PSTAT (the former name was already
+   used in LoKi/TES.h).
+ . Add dictionaries for new FuncOps__
+ . DOCA* make use of updated IDistanceCalculator interface 
+
+In ParticleMaker :
+ . DiElectronMaker, MergedPi0Maker : protect against (rare) FPE 
+ . Make a warning message from ResolvedPi0Maker about an empty photon container
+   less dramatic.
+ . Also make some other messages from ResolvedPi0Maker use the Gaudi message 
+   suppression system.
+ . Move always to info printout in finalize to match the other algorithms.
+
+In PhysConf :
+ . Use decoder database in MicroDST.py
+
+In TisTosTobbing :
+ . Check RootInTES and absolute locations of reports in TisTosParticleTagger 
+ . Create Hlt1TriggerTis, Hlt2TriggerTisTos to work with split Hlt1,
+   Hlt2 reports. Change TisTosParticleTagger to adopt automatically to split
+   or not-split Hlt reports.
+
+In VertexFit :
+ . Protect MomentumCombiner from sqrt(-number) FPE due to negative mass
+   error squares. 
+ . Fail the fit in MomentumCombiner if MassErr^2<-999 (same as for the 
+   OfflineVertexFitter).
+ . Add a Warning message to OfflineVertexFitter to monitor how often fits
+   are performed that create vertices with nDoF=0 ...
+ . Add protection to AdaptivePVRefitter to protect against over/under flows
+   in std::exp(...) for large exponents. Fixes an FPE exception.
+ . Add a warning message when a fit is failed due to the 
+   'mass error squared < -999' check.
+
+In PhysSelPython :
+ . Wrappers.py : Add simple but useful wrapper "SimpleSelection" 
+                 for in-flight constructon of simple 1-step selection.  
+
 </PRE><H1><A NAME=v17r4>2013-12-18 Phys v17r4</A></H1><PRE>
 Development release, based on Rec v15r4, LHCb v36r4 and Gaudi v24r2..
 
