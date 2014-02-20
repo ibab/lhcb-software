@@ -237,6 +237,10 @@ void FastVeloTrack::setPhiClusters( FastVeloHit* r1, int zone,
   m_zone = zone;
   m_missedSensors = 0;
   m_backward      = 0;
+  // update phi hits with a consistent weight (until fitted must be approx)
+  h1->setPhiWeight(r1->rLocal());
+  h2->setPhiWeight(r1->rLocal());
+  h3->setPhiWeight(r1->rLocal());
   m_phiHits.clear();
   m_phiHits.push_back( h1 );
   m_phiHits.push_back( h2 );
