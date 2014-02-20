@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r17 2014-02-20 =========================
+
 ! 2014-02-17 - Chris Jones
  - Protect MomentumCombiner from sqrt(-number) FPE due to negative mass
    error squares. 
