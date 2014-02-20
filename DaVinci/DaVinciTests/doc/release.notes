@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2014-02-21 - Stefania Vecchi
+  updated n. of total events in tagging.qms/test_tag_mc12.qmt 
 
 ! 2014-02-20 - Chris Jones
  - Add work around to S20rXp2 stripping tests to ignore stderr messages

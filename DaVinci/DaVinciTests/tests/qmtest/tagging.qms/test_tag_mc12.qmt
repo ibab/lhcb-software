@@ -32,7 +32,7 @@ BTaggingChecker                            INFO  **   SS Proton     0.29+-0.58  
 BTaggingChecker                            INFO ---------------------------------------------------------
 BTaggingChecker                            INFO Tagging efficiency =     42 +/- 2.7 %
 BTaggingChecker                            INFO Wrong Tag fraction =     30 +/- 3.9 %
-BTaggingChecker                            INFO EFFECTIVE COMB. TE =    6.5 +/- 2.1 %     (Total events=   344)
+BTaggingChecker                            INFO EFFECTIVE COMB. TE =    6.6 +/- 2.1 %     (Total events=   343)
 BTaggingChecker                         SUCCESS =========================================================
 """, stdout, result, causes, signature_offset = 1)
 countErrorLines({"FATAL":0})
