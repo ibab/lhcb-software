@@ -44,6 +44,14 @@ int MBM::Client::exclude()  {
   return MBM_NORMAL;
 }
 
+// Clean possibly pending messages from the receive fifo (e.g. after a cancel)
+int MBM::Client::clear() {
+  if ( m_bmid != MBM_INV_DESC )  {
+    return mbm_clear(m_bmid);
+  }
+  return MBM_NORMAL;
+}
+
 // Access to process id
 int MBM::Client::pid()  {
   return lib_rtl_pid();

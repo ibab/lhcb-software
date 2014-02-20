@@ -79,6 +79,9 @@ namespace MBM {
     /// Exclude MBM client into buffer
     virtual int exclude();
 
+    // Clean receive fifo
+    virtual int clear();
+
     /// Switch to non-blocking asynchronous execution mode using WT
     virtual void setNonBlocking(int facility, bool subscribe);
 
