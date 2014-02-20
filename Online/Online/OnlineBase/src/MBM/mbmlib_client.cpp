@@ -394,6 +394,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* t
   bm->trmask    = trmask;
   bm->ast_addr  = astadd;
   bm->ast_param = astpar;
+  bm->cancelled = false;
   ::memset(trmask,0x0,sizeof(TriggerMask));
   MSG::clearFifo(bm->fifo);
   return msg.write(bm->reqFifo);
@@ -481,6 +482,7 @@ int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpa
   bm->evt_ptr   = ptr;
   bm->ast_addr  = astadd;
   bm->ast_param = astpar;
+  bm->cancelled = false;
   sp.size    = size;
   MSG::clearFifo(bm->fifo);
   return msg.write(bm->reqFifo);
