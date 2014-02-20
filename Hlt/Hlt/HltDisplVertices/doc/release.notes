@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================= HltDisplVertices v4r1 2014-02-20 =========================
 ! 2014-02-11 - Gerhard Raven
  - remove unused private fields
 

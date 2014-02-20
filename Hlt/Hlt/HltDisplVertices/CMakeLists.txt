@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltDisplVertices
 ################################################################################
-gaudi_subdir(HltDisplVertices v4r0p1)
+gaudi_subdir(HltDisplVertices v4r1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/DetDesc
