@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DailyReport
 ################################################################################
-gaudi_subdir(DailyReport v1r2)
+gaudi_subdir(DailyReport v1r3)
 
 gaudi_depends_on_subdirs(Online/OMAlib)
 
