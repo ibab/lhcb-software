@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-02-21 - Marco Clemencic
+ - Fixes to header guard macros.
+
 !========================= LoKiHlt v3r13 2014-02-17 =========================
 ! 2014-02-01 - Vanya Belyaev
  - add dictionaries for new FuncOps__

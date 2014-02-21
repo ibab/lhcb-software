@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-21 - Marco Clemencic
+ - Fixes to header guard macros.
+
 !========================= LoKiGen v10r14 2014-02-17 =========================
 ! 2014-02-01 - Vanya Belyaev
  - add dicitonaris for new FuncOps__

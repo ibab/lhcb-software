@@ -1,7 +1,7 @@
 // $Id: OdinCuts.h,v 1.3 2010-05-17 16:01:39 ibelyaev Exp $
 // ============================================================================
-#ifndef LOKI_O1CUTS_H 
-#define LOKI_O1CUTS_H 1
+#ifndef LOKI_ODINCUTS_H
+#define LOKI_ODINCUTS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,10 +17,10 @@
  *  @date   2008-09-17
  */
 // ============================================================================
-namespace LoKi 
+namespace LoKi
 {
   // ==========================================================================
-  namespace Cuts 
+  namespace Cuts
   {
     // ========================================================================
     /** @var ODIN_ALL
@@ -29,302 +29,302 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::O1TRUE
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,bool>            ODIN_ALL ( true ) ;
     // ========================================================================
     /** @var ODIN_BUNCH
-     *  Simple accessor to bunch id 
+     *  Simple accessor to bunch id
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int bunchID = ODIN_BUNCH ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::BunchId
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::bunchId
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::BunchId                                      ODIN_BUNCH ;
     // ========================================================================
     /** @var ODIN_BXCURRENT
-     *  Simple accessor to bunch crossing current 
+     *  Simple accessor to bunch crossing current
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int current = ODIN_BXCURRENT ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::BunchCurrent
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::bunchCurrent
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::BunchCurrent                             ODIN_BXCURRENT ;
     // ========================================================================
     /** @typedef ODIN_BXID
      *  simple checker of bx-id, bx-range or bx-list
-     *  @code 
-     *  
+     *  @code
+     *
      *   const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *   const ODIN_BXID goodBx    = ODIN_BXID ( 16 ) ;
      *   const ODIN_BXID goodRange = ODIN_BXID ( 18 , 24  ) ;
-     *   std::vector<unsigned int> lst = ... 
+     *   std::vector<unsigned int> lst = ...
      *   const ODIN_BXID goodList  = ODIN_BXID ( lst ) ;
-     *     
-     *  @endcode 
-     * 
+     *
+     *  @endcode
+     *
      *  @see LoKi::Odin::BxId
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::bunchId
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     typedef LoKi::Odin::BXId                                        ODIN_BXID ;
     // ========================================================================
     /** @var ODIN_BXTYP
-     *  Simple accessor to bunch crossing type 
+     *  Simple accessor to bunch crossing type
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int bxType = ODIN_BXTYP ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::BXType
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::bunchCrossingType
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::BXType                                       ODIN_BXTYP ;
     // ========================================================================
     /** @var ODIN_CALSTEP
      *  Simple accessor to calibration step
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int step = ODIN_CALSTEP ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::CalibrationStep
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::calibrationStep
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::CalibrationStep                            ODIN_CALSTEP ;
     // ========================================================================
     /** @var ODIN_FORCEBIT
-     *  Simple accessor to force bit 
+     *  Simple accessor to force bit
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const bool force = ODIN_FORCEBIT ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
-     *  @see LoKi::Odin::ForceBit 
+     *  @see LoKi::Odin::ForceBit
      *  @see LHCb::ODIN
-     *  @see LHCb::ODIN::forceBit 
+     *  @see LHCb::ODIN::forceBit
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::ForceBit                                  ODIN_FORCEBIT ;
     // ========================================================================
     /** @var ODIN_EVTTYP
-     *  Simple accessor to event type 
+     *  Simple accessor to event type
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int evtType = ODIN_EVTTYP ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::EventType
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::eventType
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::EventType                                   ODIN_EVTTYP ;
     // ========================================================================
     /** @var ODIN_EVTNUMBER
-     *  Simple checkfor event number 
+     *  Simple checkfor event number
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
-     *  // event number 
+     *
+     *  // event number
      *  const ODIN_EVTNUMBER n1 = ODIN_EVTNUMBER ( 1 ) ;
-     * 
-     *  // event range 
+     *
+     *  // event range
      *  const ODIN_EVTNUMBER n2 = ODIN_EVTNUMBER ( 1 , 10 ) ;
      *
      *  // event list
-     *  LoKi::Numbers::EvtNumList lst = ... 
+     *  LoKi::Numbers::EvtNumList lst = ...
      *  const ODIN_EVTNUMBER n3 = ODIN_EVTNUMBER ( lst ) ;
-     * 
+     *
      *  // use it!
-     *  
+     *
      *  const bool ok1 = n1 ( odin ) ;
      *  const bool ok2 = n2 ( odin ) ;
      *  const bool ok3 = n3 ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
-     *  @see LoKi::Odin::EvtNumber 
+     *  @see LoKi::Odin::EvtNumber
      *  @see LHCb::ODIN
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-02-13     
+     *  @date   2012-02-13
      */
     typedef LoKi::Odin::EvtNumber                              ODIN_EVTNUMBER ;
     // ========================================================================
     /** @typedef ODIN_EVT1
-     *  get the event number (modulo)  
+     *  get the event number (modulo)
      *  @code
-     * 
+     *
      *  const ODIN_EVT1 evt = ODIN_EVT1( 1000000000L ) ;
      *
      *  const LHCb::ODIN* odin = ...
-     * 
+     *
      *  const double e = evt ( odin ) ;
      *
      *  @endcode
-     *  @see LoKi::Odin::Evt1 
-     *  @see LHCb::ODIN::eventNumber 
+     *  @see LoKi::Odin::Evt1
+     *  @see LHCb::ODIN::eventNumber
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-04-03     
+     *  @date   2012-04-03
      */
     typedef LoKi::Odin::Evt1                                        ODIN_EVT1 ;
     // ========================================================================
     /** @typedef ODIN_EVT2
-     *  get the event number (integer division) 
+     *  get the event number (integer division)
      *  @code
-     * 
+     *
      *  const ODIN_EVT2 evt = ODIN_EVT2( 1000000000L ) ;
      *
      *  const LHCb::ODIN* odin = ...
-     * 
+     *
      *  const double e = evt ( odin ) ;
      *
      *  @endcode
      *  @see LoKi::Odin::Evt2
-     *  @see LHCb::ODIN::eventNumber 
+     *  @see LHCb::ODIN::eventNumber
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-04-03     
+     *  @date   2012-04-03
      */
     typedef LoKi::Odin::Evt2                                        ODIN_EVT2 ;
     // ========================================================================
     /** @var ODIN_RUNEVT
-     *  Simple checkfor event number 
+     *  Simple checkfor event number
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
-     *  // event number 
+     *
+     *  // event number
      *  LoKi::Numbers::RunEvt e1 = ... ;
      *  const ODIN_RUNEVT n1 = ODIN_RUNEVT ( e1 ) ;
-     * 
-     *  // event range 
+     *
+     *  // event range
      *  LoKi::Numbers::RunEvt begin = ... ;
      *  LoKi::Numbers::RunEvt end   = ... ;
      *  const ODIN_RUNEVT n2 = ODIN_RUNEVT ( begin , end  ) ;
      *
      *  // event list
-     *  LoKi::Numbers::RunEvtList lst = ... 
+     *  LoKi::Numbers::RunEvtList lst = ...
      *  const ODIN_RUNEVT n3 = ODIN_RUNEVT ( lst ) ;
-     * 
+     *
      *  // use it!
-     *  
+     *
      *  const bool ok1 = n1 ( odin ) ;
      *  const bool ok2 = n2 ( odin ) ;
      *  const bool ok3 = n3 ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
-     *  @see LoKi::Odin::RunEvtNumber 
+     *  @see LoKi::Odin::RunEvtNumber
      *  @see LHCb::ODIN
-     *  @see LoKi::Cuts::ODIN_RUNEVTNUMBER 
+     *  @see LoKi::Cuts::ODIN_RUNEVTNUMBER
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-02-13     
+     *  @date   2012-02-13
      */
     typedef LoKi::Odin::RunEvtNumber                              ODIN_RUNEVT ;
     // ========================================================================
     /** @var ODIN_RUNEVT
-     *  Simple checkfor event number 
+     *  Simple checkfor event number
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
-     *  // event number 
+     *
+     *  // event number
      *  LoKi::Numbers::RunEvt e1 = ... ;
      *  const ODIN_RUNEVTNUMBER n1 = ODIN_RUNEVTNUMBER ( e1 ) ;
-     * 
-     *  // event range 
+     *
+     *  // event range
      *  LoKi::Numbers::RunEvt begin = ... ;
      *  LoKi::Numbers::RunEvt end   = ... ;
      *  const ODIN_RUNEVTNUMBER n2 = ODIN_RUNEVTNUMBER ( begin , end  ) ;
      *
      *  // event list
-     *  LoKi::Numbers::RunEvtList lst = ... 
+     *  LoKi::Numbers::RunEvtList lst = ...
      *  const ODIN_RUNEVTNUMBER n3 = ODIN_RUNEVTNUMBER ( lst ) ;
-     * 
+     *
      *  // use it!
-     *  
+     *
      *  const bool ok1 = n1 ( odin ) ;
      *  const bool ok2 = n2 ( odin ) ;
      *  const bool ok3 = n3 ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
-     *  @see LoKi::Odin::RunEvtNumber  
-     *  @see LoKi::Cuts::ODIN_RUNEVT 
+     *  @see LoKi::Odin::RunEvtNumber
+     *  @see LoKi::Cuts::ODIN_RUNEVT
      *  @see LHCb::ODIN
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2012-02-13     
+     *  @date   2012-02-13
      */
     typedef LoKi::Odin::RunEvtNumber                        ODIN_RUNEVTNUMBER ;
     // ========================================================================
     /** @var ODIN_ERRBITS
-     *  Simple accessor to error bits 
+     *  Simple accessor to error bits
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int errBits = ODIN_ERRBITS ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::ErrorBits
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::errorBits
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::ErrorBits                                  ODIN_ERRBITS ;
     // ========================================================================
@@ -334,7 +334,7 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::ODIN_NONE
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,bool>         ODIN_FALSE ( false ) ;
     // ========================================================================
@@ -344,7 +344,7 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::ODIN_FALSE
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,bool>          ODIN_NONE ( false ) ;
     // ========================================================================
@@ -354,7 +354,7 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::ODIN_ZERO
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,double>            ODIN_NULL ( 0 ) ;
     // ========================================================================
@@ -363,44 +363,44 @@ namespace LoKi
      *  @see LoKi::Constant
      *  @see LHCb::ODIN
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,double>             ODIN_ONE ( 1 ) ;
     // ========================================================================
     /** @var ODIN_ORBIT
-     *  Simple accessor to orbit 
+     *  Simple accessor to orbit
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int orbit = ODIN_ORBIT ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::Orbit
      *  @see LHCb::ODIN
-     *  @see LHCb::ODIN::orbitNumber 
+     *  @see LHCb::ODIN::orbitNumber
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::Orbit                                            ODIN_ORBIT ;
     // ========================================================================
     /** @typedef ODIN_PRESCALE
      *  Simple deterministic prescaler.
-     * 
+     *
      *  @code
-     * 
+     *
      *  const ODIN_PRESCALE scale  = ODIN_PRESCALE ( 0.01 , 'some_see_here' ) ;
      *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const bool accept = scale ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::Prescale
-     *  @see DeterministicPrescaler 
+     *  @see DeterministicPrescaler
      *
      *  The idea & code belongs to Gerhard The Great Raven
      *
@@ -410,169 +410,169 @@ namespace LoKi
     typedef LoKi::Odin::Prescale                                ODIN_PRESCALE ;
     // ========================================================================
     /** @var ODIN_ROTYP
-     *  Simple accessor to readout type 
+     *  Simple accessor to readout type
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int roType = ODIN_ROTYP ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::ReadOutType
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::readoutType
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::ReadOutType                                  ODIN_ROTYP ;
     // ========================================================================
-    /** @typedef ODIN_ROUTINGBITS 
-     *  Simple functor tocheck the routing bits 
+    /** @typedef ODIN_ROUTINGBITS
+     *  Simple functor tocheck the routing bits
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const ODIN_ROUTINGBITS bits = ODIN_ROUTINGBITS ( ROUTINGBITS ( 1, 2, 3  ) ) ;
      *
      *  const bool ok = bits ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::BunchId
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::bunchId
-     *  @see LHCb::Cuts::ROUTINGBITS 
+     *  @see LHCb::Cuts::ROUTINGBITS
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     typedef LoKi::Odin::RoutingBits                          ODIN_ROUTINGBITS ;
     // ========================================================================
     /** @var ODIN_RUN
-     *  Simple accessor to run number 
+     *  Simple accessor to run number
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const bool goodRun  = 15389 == ODIN_RUN( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::Run
      *  @see LHCb::ODIN
-     *  @see LHCb::ODIN::runNumber 
+     *  @see LHCb::ODIN::runNumber
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::Run                                            ODIN_RUN ;
     // ========================================================================
-    /** @typedef ODIN_RUNNUMBER 
+    /** @typedef ODIN_RUNNUMBER
      *  simple checker of run, run range and run list:
-     *  @code 
-     *  
+     *  @code
+     *
      *   const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *   const ODIN_RUNNUMBER goodRun   = ODIN_RUNNUMBER ( 345234 ) ;
-     *   std::vector<unsigned int> lst = ... 
+     *   std::vector<unsigned int> lst = ...
      *   const ODIN_RUNNUMBER goodList  = ODIN_RUNNUMBER ( lst ) ;
-     *     
-     *  @endcode 
-     * 
+     *
+     *  @endcode
+     *
      *  @see LoKi::Odin::Run
      *  @see LHCb::ODIN
-     *  @see LHCb::ODIN::runNumber 
+     *  @see LHCb::ODIN::runNumber
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     typedef LoKi::Odin::RunNumber                              ODIN_RUNNUMBER ;
-    // ========================================================================    
+    // ========================================================================
     /** @var ODIN_TCK
-     *  Simple accessor to trigger configuration key 
+     *  Simple accessor to trigger configuration key
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int key = ODIN_TCK ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::TrgConfKey
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::triggerConfigurationKey
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::TrgConfKey                                     ODIN_TCK ;
     // ========================================================================
-    /** @typedef ODIN_TCKEYS 
-     *  simple checker of tck, tck-range or tck-list 
-     *  @code 
-     *  
+    /** @typedef ODIN_TCKEYS
+     *  simple checker of tck, tck-range or tck-list
+     *  @code
+     *
      *   const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *   const ODIN_TCKEYS goodTck   =  ODIN_TCKEYS( 345234 ) ;
      *   const ODIN_TCKEYS goodRange =  ODIN_TCKEYS ( 12143 , 2345135 ) ;
-     *   std::vector<unsigned int> lst = ... 
+     *   std::vector<unsigned int> lst = ...
      *   const ODIN_TCKEYS goodList  =  ODIN_TCKEYS ( lst ) ;
-     *     
-     *  @endcode 
-     * 
+     *
+     *  @endcode
+     *
      *  @see LoKi::Odin::Tck
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::triggerConfigurationKey
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     typedef LoKi::Odin::Tck                                       ODIN_TCKEYS ;
     // ========================================================================
     /** @typedef ODIN_TIME
-     *  Simple check for the time interval for the given event 
-     *  
+     *  Simple check for the time interval for the given event
+     *
      *  @code
-     *  
+     *
      *    const Gaudi::Time& start = ... ;
      *    const Gaudi::Time& stop  = ... ;
      *
-     *    // create the functor 
+     *    // create the functor
      *    const ODIN_TIME ok ( start, stop ) ;
-     * 
-     *    const LHCb::ODIN* odin = ... ; 
+     *
+     *    const LHCb::ODIN* odin = ... ;
      *
      *    const bool inTime = ok ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::InTime
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::EventTime
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
-    typedef LoKi::Odin::InTime                                      ODIN_TIME ;   
+    typedef LoKi::Odin::InTime                                      ODIN_TIME ;
     // ========================================================================
     /** @var ODIN_TRGTYP
-     *  Simple accessor to trigger type 
+     *  Simple accessor to trigger type
      *  @code
-     * 
+     *
      *  const LHCb::ODIN* odin = ... ;
-     * 
+     *
      *  const unsigned int trgType = ODIN_TRGTYP ( odin ) ;
      *
-     *  @endcode 
+     *  @endcode
      *
      *  @see LoKi::Odin::TriggerType
      *  @see LHCb::ODIN
      *  @see LHCb::ODIN::triggerType
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Odin::TriggerType                                 ODIN_TRGTYP ;
     // ========================================================================
@@ -582,7 +582,7 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::ODIN_ALL
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
      const LoKi::Constant<const LHCb::ODIN*,bool>          ODIN_TRUE ( true ) ;
     // ========================================================================
@@ -592,15 +592,15 @@ namespace LoKi
      *  @see LHCb::ODIN
      *  @see LoKi::Cuts::ODIN_NULL
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @date   2008-09-17     
+     *  @date   2008-09-17
      */
     const LoKi::Constant<const LHCb::ODIN*,double>            ODIN_ZERO ( 0 ) ;
     // ========================================================================
-  } //                                              end of namespace LoKi::Cuts 
+  } //                                              end of namespace LoKi::Cuts
   // ==========================================================================
-} //                                                      end of namespace LoKi 
+} //                                                      end of namespace LoKi
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_O1CUTS_H
 // ============================================================================
