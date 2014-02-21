@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-21 - Chris Jones
+ - Reduce MaxPrints from 10 to 2 in DistanceCalculator. Given the introduction
+   of the PrintMyAlg property, 10 is too verbose for stripping jobs.
+
 !========================= LoKiFitters v4r9 2014-02-20 =========================
 
 ! 2014-02-20 - Vanya Belyaev
