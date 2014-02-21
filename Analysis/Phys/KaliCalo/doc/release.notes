@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2014-02-21 - Chris Jones
+ - Update EOS paths.
+
 !========================= KaliCalo v4r14 2013-06-13 =========================
 
 ! 2013-05-09 - Chris Jones
