@@ -3,8 +3,63 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2014-01-13 - Marco Cattaneo
- - Remove VL/VLDigitisation package from requirements.
+</PRE><H1><A NAME=v27r0>2014-02-21 Boole v27r0</A></H1><PRE>
+This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+First version that can be built and run against ROOT 6.
+
+ - Configuration Changes
+   . Import ttDigi.py, itDigi.py, utDigi.py rather than their .opts equivalents 
+   . Stop RichMaPmt from digitising spillover hits
+   . Follow renaming of BuildMCTrackInfoUpgrade to replace old version of
+     BuildMCTrackInfo. Now the same algorithm is used for both current and
+     upgrade detector configurations
+   . Improve protections for invalid Linker combinations
+   . Integrate into DecodeRawEvent configurable (task #19106) 
+
+ - New functionality
+   . Adaptation for using large+standard PMTs in RICH2. (Det/RichDet v16r20)
+
+ - New tuning
+   . Made FT cluster cuts more intuitive and changed values accordingly
+     (FTDigitisation)
+
+ - Performance improvement
+   . Avoid calling System::virtualMemory() more often than required in LbAppInit.
+     (Kernel/LHCbKernel v15r0)
+
+ - Obsolete functionality removed
+   . Remove support for VL upgrade detector
+   . Remove Boole().Persistency option (Digi/Boole v27r0, GaudiConf v19r0)
+   . Moved all functionality from DeVPNewSensor to DeVPSensor and removed
+     removed DeVPNewSensor (Det/VPDet v3r0)
+
+ - Monitoring changes
+   . Update LbAppInit to only report memory changes when they are greater than
+     some small delta value (16KB by default). (Kernel/LHCbKernel v15r0)
+
+ - Bug fixes
+   . Fixed logic of applyConfigurableUsers() (see bug #103803 and bug #103808)
+     (GaudiKernel v30r0)
+   . PuVetoAlg: Protect divide by zero when initialising diagonal elements of
+     binning matrix (L0/PuVeto v7r10)
+   . Protect divide by zero in OTTimeMonitor::finalize() (OT/OTMonitor v3r8)
+   . Protect against zero length direction vectors in RayTracing::reflectSpherical
+     (Rich/RichTools v2r43)
+   . Fix UNINIT_CTOR defect (VP/VPAlgorithms v4r2p1)
+   . DeCalorimeter.cpp : fix floating point exception in the initialize()
+     (Det/CaloDet v10r18)
+   . DeRichPMTPanel: fixed minor issue with RICH2 Local PD plane transform
+     definition for PMTs for plotting the hit coordinates in the PD plane.
+     (Det/RichDet v16r20)
+   . Fix the enabling of the FPEAuditor in LHCbApp (Kernel/LHCbAlgs v3r0)
+
+ - QMTest changes
+   . Migrate input data of boole-mc11 and all MC11 tests to EOS and TestFileDB
+   . Add to BooleExclusion.py a filter on the EventSelector printout of the name
+     of opened files, to future proof tests if file connection string changes
+   . Changed upgrade tests to access castor files properly.
 
 </PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
