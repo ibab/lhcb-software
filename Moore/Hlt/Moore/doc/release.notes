@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-21 - Rob Lambert
+ - Update silent test, now <65 lines, without Muon warnings and without evt-time/DQ warnings.
+
 ! 2014-02-20 - Rob Lambert
  - Propagate time to new property of DDDBConf
 

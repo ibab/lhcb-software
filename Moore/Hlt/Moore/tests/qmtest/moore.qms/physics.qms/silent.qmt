@@ -10,9 +10,9 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
-if len(stdout.split('\n'))&gt;75:
-    causes.append('stdout is too long, aiming for less than 75 lines')
-    result['moore.physics.silent.lines']=result.Quote('Expected less than 75 lines, got '+ str(len(stdout.split('\n'))))
+if len(stdout.split('\n'))&gt;65:
+    causes.append('stdout is too long, aiming for less than 65 lines')
+    result['moore.physics.silent.lines']=result.Quote('Expected less than 65 lines, got '+ str(len(stdout.split('\n'))))
 
 if len(stdout)&gt;16000:
     causes.append('stdout is too long, aiming for less than 16k characters')
