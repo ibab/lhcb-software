@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CondDBServer
 ################################################################################
-gaudi_subdir(CondDBServer v1r5)
+gaudi_subdir(CondDBServer v1r6)
 
 gaudi_depends_on_subdirs(Online/DIM)
 
