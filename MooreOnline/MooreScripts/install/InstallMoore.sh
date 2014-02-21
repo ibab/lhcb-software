@@ -214,7 +214,7 @@ if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK" ]; then
    getpack -p anonymous TCK/HltTCK head 
    actionlist=${actionlist}", getpack of HltTCK"
 else
-   svn update TCK/HltTCK head 
+   svn update TCK/HltTCK 
    skippedlist=${skipppedlist}", getpack of HltTCK because it already existed"
 
    actionlist=${actionlist}", updated HltTCK"
