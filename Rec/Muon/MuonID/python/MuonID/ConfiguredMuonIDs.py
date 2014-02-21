@@ -37,7 +37,10 @@ class ConfiguredMuonIDs():
     ## check if modules exist and load them
     try: exec("from MuonID import "+mod[0]+" as info")
     except:
-      log.warning("ConfiguredMuonIDs: Not available info for DATA=%s,VERSION=%s. Loading default" %(data,version))
+      if version!="def":
+        log.warning("ConfiguredMuonIDs: Not available info for DATA=%s,VERSION=%s. Loading default" %(data,version))
+      else:
+        log.info("ConfiguredMuonIDs: Default seems not available for DATA=%s. Loading older default %s" %(data,mod[2]))
       try: exec("from MuonID import "+mod[1]+" as info")
       except: 
         exec("from MuonID import "+mod[2]+" as info")

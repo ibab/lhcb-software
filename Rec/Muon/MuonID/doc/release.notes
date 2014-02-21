@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2014-02-21 - Rob Lambert
+ - Suppress warnings in the default case. Move the warning to an info message. Default is default and is OK by default.
+
 !========================= MuonID v9r9 2014-02-19 =========================
 ! 2014-02-04 - Christoph Langenbruch
  - Removed unneeded calls to foiX and foiY in MuonIDAlg::setCoords.
