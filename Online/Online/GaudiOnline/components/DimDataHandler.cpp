@@ -36,7 +36,7 @@ namespace LHCb  {
       ::dis_get_client(buff);
       char* p = ::strchr(buff,'@');
       if ( p ) *p = 0;
-      ::strncat(buff,"/Event",sizeof(buff));
+      ::strncat(buff,"/Event",sizeof(buff)-strlen(buff)-1);
       buff[sizeof(buff)-1] = 0;
       return buff;
     }
@@ -45,7 +45,7 @@ namespace LHCb  {
       ::dic_get_server(buff);
       char* p = ::strchr(buff,'@');
       if ( p ) *p = 0;
-      ::strncat(buff,"/Event",sizeof(buff));
+      ::strncat(buff,"/Event",sizeof(buff)-strlen(buff)-1);
       buff[sizeof(buff)-1] = 0;
       return buff;
     }
