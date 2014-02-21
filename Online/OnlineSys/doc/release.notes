@@ -6,6 +6,50 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r5>2014-02-21 OnlineSys v5r7</A></H1>
+<PRE>
+  Use new Gaudi v25r0
+  This release is compatible with the cmake build
+  Updated/new packages:	
+     DAQEvent            v9r14    Event
+     GaudiObjDesc        v11r18
+     Camera              v1r25    Online
+     Checkpointing       v0r15    Online
+     CondDBServer        v1r6     Online
+     Controller          v0r9     Online
+     DailyReport         v1r3     Online
+     DIM                 v20r7p3  Online
+     FarmConfig          v0r4     Online
+     FarmMonitor         v2r13    Online
+     Gaucho              v7r34    Online
+     GauchoAppl          v1r13    Online
+     GaudiCheckpointing  v0r13    Online
+     GaudiOnline         v2r69    Online
+     GaudiOnlineTests    v1r2     Online
+     GaudiRootCnvTests   v1r12    Online
+     GaudiSerialize      v0r12    Online
+     GaudiUPI            v1r17    Online
+     HistDBPython        v1r8     Online
+     InsertDB            v1r10    Online
+     MBMDump             v1r16    Online
+     OnlineBase          v1r20    Online
+     OnlineKernel        v2r14    Online
+     OnlineTools         v1r5     Online
+     OnlineTasks         v1r53    Online
+     Presenter           v3r8     Online
+     PresenterDoc        v1r1     Online
+     PyDIM               v2r13    Online
+     RawBankSizes        v2r18    Online
+     RootCnv             v1r22    Online
+     ROMon               v1r45    Online
+     ROLogger            v0r26    Online
+     Trending            v2r3     Online
+     UPI                 v1r25    Online
+     UPIR                v1r5     Online
+     Writer              v1r50    Online
+     XML                 v0r3     Online
+</PRE>
+
 <H1><A NAME=v5r5>2013-06-12 OnlineSys v5r6</A></H1>
 <PRE>
   Use new Gaudi v24r2
