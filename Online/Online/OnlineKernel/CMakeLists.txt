@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OnlineKernel
 ################################################################################
-gaudi_subdir(OnlineKernel v2r13)
+gaudi_subdir(OnlineKernel v2r14)
 
 gaudi_depends_on_subdirs(Online/OnlineBase)
 
