@@ -24,31 +24,31 @@ protected:
   TcpNetworkChannel*    _pNetwork;
   TanDataBase::Entry*   _pEntry;
 public:
-  Receivehandler ( EventReactor* reactor ) 
+  explicit Receivehandler ( EventReactor* reactor ) 
     : EventHandler(reactor), _pNetwork(0), _pEntry(0)  {
-    }
-    Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
-      : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
-    {
-    }
-    virtual ~Receivehandler() {
-    }
-    TcpNetworkChannel* channel()     {
-      return _pNetwork;
-    }
-    TanDataBase::Entry* _Entry()     {
-      return _pEntry;
-    }
-    void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
-      _pNetwork = chan;
-      _pEntry   = entry;
-    }
-    void _Delete()  {
-      TcpNetworkChannel* chan = channel();
-      chan->cancel();
-      delete chan;
-      delete this;
-    }
+  }
+  Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
+    : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
+  {
+  }
+  virtual ~Receivehandler() {
+  }
+  TcpNetworkChannel* channel()     {
+    return _pNetwork;
+  }
+  TanDataBase::Entry* _Entry()     {
+    return _pEntry;
+  }
+  void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
+    _pNetwork = chan;
+    _pEntry   = entry;
+  }
+  void _Delete()  {
+    TcpNetworkChannel* chan = channel();
+    chan->cancel();
+    delete chan;
+    delete this;
+  }
 };
 
 
@@ -79,7 +79,7 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor
-  NameService( NetworkConnection* ptr = 0, bool verbose = false);
+  explicit NameService( NetworkConnection* ptr = 0, bool verbose = false);
   /// Standard destructor
   virtual ~NameService();
   /// handle Tan request
@@ -116,7 +116,7 @@ class UdpNameService : public NameService {
 public:
   //@Man Public member functions
   /// Standard constructor
-  UdpNameService(bool verbose = false);
+  explicit UdpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~UdpNameService()   {
   }
@@ -160,7 +160,7 @@ public:
   /// Standard constructor with initialization
   TcpNameService(int port, bool verbose = false);
   /// Standard constructor
-  TcpNameService(bool verbose = false);
+  explicit TcpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~TcpNameService();
   /// Overloaded abstract member function: Act on Nameservice requests

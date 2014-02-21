@@ -114,7 +114,7 @@ struct MBMMessage {
   } data;
   unsigned int magic;
 
-  MBMMessage(int typ=INCLUDE, USER* u=0, int stat=MBM_ERROR) 
+  explicit MBMMessage(int typ, USER* u=0, int stat=MBM_ERROR) 
     : user(u), type(typ), status(stat), magic(MAGIC) {}
   int read(int fd);
   int write(int fd) const;

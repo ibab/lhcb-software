@@ -1481,7 +1481,7 @@ int _mbmsrv_watch_clients(ServerBMID bm)   {
 int mbmsrv_dispatch_call(ServerBMID bm, int which)  {
   ServerBMID_t::Server& s = bm->server[which];
   struct epoll_event epoll;
-  MSG msg;
+  MSG msg(0);
 
   while ( !bm->stop )   {
     if ( bm->stop )  {

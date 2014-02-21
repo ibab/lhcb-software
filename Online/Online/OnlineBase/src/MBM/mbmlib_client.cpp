@@ -36,12 +36,14 @@
 #define MBM_CHECK_CONS(bm) if(bm==0 || bm==MBM_INV_DESC || bm->user==0) {return MBM_ILL_CONS;}
 #define MBM_CHECK_BMID(bm) if(bm==0 || bm==MBM_INV_DESC) {return MBM_ERROR;}
 
+#if 0
 static inline int mbm_error(const char* fn, int line)  {  
   ::lib_rtl_output(LIB_RTL_ERROR,"MBM Error:Bad!!!! %s Line:%d.\n",fn,line);
   return MBM_ERROR;  
 }
 //#undef  MBM_ERROR
 //#define MBM_ERROR mbm_error(__FILE__,__LINE__);
+#endif
 
 static qentry_t *desc_head = 0;
 static int reference_count = 0;
@@ -402,7 +404,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int* t
 
 int mbm_wait_event(BMID bm) {
   MBM_CHECK_CONS(bm);
-  MSG msg;
+  MSG msg(0);
   int status = msg.wait(bm->fifo,&bm->cancelled);
   if ( MBM_NORMAL == status ) {
     MSG::get_event_t& evt = msg.data.get_event;
