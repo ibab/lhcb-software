@@ -4,6 +4,9 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2014-02-21 - Rob Lambert
+ - Cannot use None as a default type for things which are ever used in propagateProperty.
+
 ! 2014-02-20 - Rob Lambert
  - Add one property to DDDB which allows for the Moore use case, that the time must be "now".
 
