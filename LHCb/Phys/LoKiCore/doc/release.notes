@@ -13,13 +13,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-02-21 - Marco Clemencic
+ - Moved (correctly) operators inside namespaces (fixed a problem with ROOT 6).
+
 !========================= LoKiCore v11r17 2014-02-17 =========================
 ! 2014-02-03 - Vanya Belyaev
- - fix compiler warning 
+ - fix compiler warning
 
 ! 2014-02-02 - Vanya Belyaev
 
- - add "right" counter-partners for math-operations with "parameters" 
+ - add "right" counter-partners for math-operations with "parameters"
 
 ! 2014-02-02 - Vanya Belyaev
 
@@ -27,22 +30,22 @@
 
    use scalar properties as parameters :
 
-         PT > PARAM('Ptmin') 
- 
+         PT > PARAM('Ptmin')
+
    use map-like properties as parameters :
-   
-         PT > PARAM('Parameters[Ptmin]') 
 
-  look for scalar property and check regex-pattenn for the algorithm name 
- 
-         PT > PARAM('Ptmin/.*Line') 
+         PT > PARAM('Parameters[Ptmin]')
 
-  look for map-like property and check regex-pattens for the algorithm name 
+  look for scalar property and check regex-pattenn for the algorithm name
 
-         PT > PARAM('Params[Ptmin]/.*Line') 
+         PT > PARAM('Ptmin/.*Line')
+
+  look for map-like property and check regex-pattens for the algorithm name
+
+         PT > PARAM('Params[Ptmin]/.*Line')
 
 ! 2014-02-01 - Vanya Belyaev
- - make few first steps to intorduce configurable parameters 
+ - make few first steps to intorduce configurable parameters
 
 ! 2014-01-31 - Marco Clemencic
  - Fixed workaround for ROOT-5721 (I forgot that LoKiCore is needed in option

@@ -867,67 +867,62 @@ namespace Decays
   mark   ( const Decays::iTree_<PARTICLE>& tree )
   { return Decays::Trees::Marked_<PARTICLE> ( tree ) ; }
   // ==========================================================================
-} // end of namespace Decays
-// ============================================================================
-/** Create the "AND" of two trees
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-template <class PARTICLE>
-inline Decays::Trees::And_<PARTICLE>
-operator&&
-( const Decays::iTree_<PARTICLE>& o1 ,
-  const Decays::iTree_<PARTICLE>& o2 )
-{
-  return Decays::Trees::And_<PARTICLE> ( o1 , o2 ) ;
-}
-// ============================================================================
-/** Create the "Or" of two trees
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-template <class PARTICLE>
-inline Decays::Trees::Or_<PARTICLE>
-operator||
-( const Decays::iTree_<PARTICLE>& o1 ,
-  const Decays::iTree_<PARTICLE>& o2 )
-{
-  return Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ;
-}
-// ============================================================================
-/** Create the "Not" for the node
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-template <class PARTICLE>
-inline Decays::Trees::Not_<PARTICLE>
-operator~ ( const Decays::iTree_<PARTICLE>& o )
-{ return Decays::Trees::Not_<PARTICLE> ( o ) ; }
-// ============================================================================
-/** "right" for of equality operator
- *  (needed for std::find)
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-07-07
- */
-template <class PARTICLE>
-inline bool operator==
-( typename Decays::iTree_<PARTICLE>::argument p ,
-  const    Decays::iTree_<PARTICLE>&          t )
-{ return t == p ; }
-// ============================================================================
-/** sequncer operator  (the same as "OR" here)
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-template <class PARTICLE>
-inline Decays::Trees::List_<PARTICLE>
-operator,
+  /** Create the "AND" of two trees
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  template <class PARTICLE>
+  inline Decays::Trees::And_<PARTICLE>
+  operator&&
   ( const Decays::iTree_<PARTICLE>& o1 ,
     const Decays::iTree_<PARTICLE>& o2 )
-{ return Decays::Trees::List_<PARTICLE> ( o1 , o2 ) ; }
-// ============================================================================
-namespace Decays
-{
+  {
+    return Decays::Trees::And_<PARTICLE> ( o1 , o2 ) ;
+  }
+  // ==========================================================================
+  /** Create the "Or" of two trees
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  template <class PARTICLE>
+  inline Decays::Trees::Or_<PARTICLE>
+  operator||
+  ( const Decays::iTree_<PARTICLE>& o1 ,
+    const Decays::iTree_<PARTICLE>& o2 )
+  {
+    return Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ;
+  }
+  // ==========================================================================
+  /** Create the "Not" for the node
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  template <class PARTICLE>
+  inline Decays::Trees::Not_<PARTICLE>
+  operator~ ( const Decays::iTree_<PARTICLE>& o )
+  { return Decays::Trees::Not_<PARTICLE> ( o ) ; }
+  // ==========================================================================
+  /** "right" for of equality operator
+   *  (needed for std::find)
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-07-07
+   */
+  template <class PARTICLE>
+  inline bool operator==
+  ( typename Decays::iTree_<PARTICLE>::argument p ,
+    const    Decays::iTree_<PARTICLE>&          t )
+  { return t == p ; }
+  // ==========================================================================
+  /** sequncer operator  (the same as "OR" here)
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  template <class PARTICLE>
+  inline Decays::Trees::List_<PARTICLE>
+  operator,
+    ( const Decays::iTree_<PARTICLE>& o1 ,
+      const Decays::iTree_<PARTICLE>& o2 )
+  { return Decays::Trees::List_<PARTICLE> ( o1 , o2 ) ; }
   // ==========================================================================
   namespace Trees
   {
