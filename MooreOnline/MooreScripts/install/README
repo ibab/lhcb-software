@@ -16,6 +16,7 @@ InstallMoore.sh:
  - script for installing Moore (MooreOnline) on the local cluster.
  - you do not need any previously setup environment to use this script
  - you do not need to edit this script, there are options for everything
+ - for example --cmtconfig <cmtconfig>
  - InstallMoore.sh #no options prints the help and exits
 
 testinstall.sh
