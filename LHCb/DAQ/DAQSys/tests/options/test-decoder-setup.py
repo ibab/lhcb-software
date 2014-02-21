@@ -24,6 +24,19 @@ for k,decoder in DecoderDB.items():
     if decoder.Active:
         decoder.setup()
 
+#add an alg already into the DoD with the default name
+dec=None
+for k,decoder in DecoderDB.iteritems():
+    if decoder.Active:
+        if k.split('/')[0]==k.split('/')[-1]:
+            dec=decoder
+            break
+if dec is None:
+    raise KeyError("no defaultly named decoders exist :S")
+
+from Configurables import DataOnDemandSvc
+DataOnDemandSvc().AlgMap[dec.listOutputs()[0]]=dec.FullName
+
 #check the configurable
 from Configurables import DecodeRawEvent
 DecodeRawEvent().OverrideInputs="Hlt"

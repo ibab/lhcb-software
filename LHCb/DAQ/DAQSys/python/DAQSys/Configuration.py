@@ -204,7 +204,11 @@ class DecodeRawEvent(ConfigurableUser):
                         testname=DataOnDemandSvc().AlgMap[loc]
                         if type(testname) is not str:
                             testname=testname.getFullName()
-                        if testname==v.FullName:
+                        #handle default names!
+                        if testname==v.FullName or (
+                            testname.split("/")[0]==testname.split("/")[-1]
+                            and v.getFullName().split("/")[0]==v.getFullName().split("/")[-1]
+                            and testname.split("/")[0]==v.getFullName().split("/")[0]):
                             print "# WARNING: something else configured a decoder already, "+loc+" "+testname
                         else:
                             raise AttributeError("At least two different active algs want to write to the same location. Check your DecoderDB! "+loc+": "+testname+" & "+v.FullName)
