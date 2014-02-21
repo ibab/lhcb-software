@@ -4,15 +4,23 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2014-02-21 - Chris Jones
+ - Put an FPE::Guard into DeRichGasRadiator::calcSellmeirRefIndex to protect
+   against a very very weird FPE exception when running clang...
+
 !========================= RichDet v16r20 2014-02-17 =========================
-2014-02-07 - Sajan Easo
+
+! 2014-02-07 - Sajan Easo
  - Fixed minor issue with RICH2 Local PD plane transform definiton for PMts 
-   for plotting the hit coordinates in in the PD plane. Fix is done in DeRichPMTPanel. 
-!2013-12-19 - Sajan Easo
-- Fixed a compilation warning in DeRichHPDPanel.h 
+   for plotting the hit coordinates in in the PD plane. 
+   Fix is done in DeRichPMTPanel. 
+
+! 2013-12-19 - Sajan Easo
+ - Fixed a compilation warning in DeRichHPDPanel.h 
 
 ! 2013-12-18 - Sajan Easo
- - Adaptation for using large+standard PMTS in RICH2. Modified DeRich, DeRichPMT, DeRichPMTPanel 
+ - Adaptation for using large+standard PMTS in RICH2. Modified DeRich, DeRichPMT, 
+   DeRichPMTPanel.
 
 !========================= RichDet v16r19 2013-09-30 =========================
 ! 2013-09-27 - Chris Jones

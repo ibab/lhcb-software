@@ -117,9 +117,10 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
                         const double max,
                         const unsigned int nbins ) const
 {
+  photonMomentumVect.clear();
 
   // check parameters are sane
-  if( max <= min )
+  if ( max <= min )
   {
     error() << "Inadmissible photon energy limits "
             << max << " " << min << endmsg;
@@ -127,7 +128,7 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
   }
   if ( nbins <= 0  ) 
   {
-    error() << "Inadimissible photon energy num bins "
+    error() << "Inadmissible photon energy num bins "
             << nbins << endmsg;
     return StatusCode::FAILURE;
   }
@@ -136,9 +137,10 @@ prepareMomentumVector ( std::vector<double>& photonMomentumVect,
 
   // fill momentum vector
   const double photonEnergyStep = ( max - min ) / (double)nbins;
-  for ( unsigned int ibin = 0; ibin<nbins; ++ibin )
+  for ( unsigned int ibin = 0; ibin < nbins; ++ibin )
   {
-    photonMomentumVect.push_back( min + photonEnergyStep*ibin );
+    const double m = min + ( photonEnergyStep * (double)ibin );
+    photonMomentumVect.push_back( m );
   }
 
   return StatusCode::SUCCESS;

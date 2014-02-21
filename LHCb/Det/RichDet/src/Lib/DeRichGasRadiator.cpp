@@ -16,6 +16,9 @@
 // local
 #include "RichDet/DeRichGasRadiator.h"
 
+// LHCb Kernel
+#include "Kernel/FPEGuard.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : DeRichGasRadiator
 //
@@ -87,8 +90,8 @@ StatusCode DeRichGasRadiator::initialize ( )
     else
     {
       if ( msgLevel(MSG::DEBUG,msg) )
-        msg << MSG::DEBUG 
-            << "Using conditions <GasTemperature> and <GasPressure>" 
+        msg << MSG::DEBUG
+            << "Using conditions <GasTemperature> and <GasPressure>"
             << endmsg;
       foundGasConditions = true;
       HltMode = false;
@@ -160,7 +163,6 @@ StatusCode DeRichGasRadiator::initialize ( )
 //=========================================================================
 StatusCode DeRichGasRadiator::updateProperties ( )
 {
-
   // load parameters
   const double         photonEnergyLowLimit = param<double>("PhotonMinimumEnergy");
   const double        photonEnergyHighLimit = param<double>("PhotonMaximumEnergy");
@@ -231,7 +233,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   else // use the old conditions
   {
     if ( m_pressureCond )
-    { 
+    {
       curPressure = m_pressureCond->param<double>("CurrentPressure");
     }
     else
@@ -240,8 +242,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       return StatusCode::FAILURE;
     }
     if ( m_temperatureCond )
-    { 
-      curTemp     = m_temperatureCond->param<double>("CurrentTemperature"); 
+    {
+      curTemp     = m_temperatureCond->param<double>("CurrentTemperature");
     }
     else
     {
@@ -291,9 +293,17 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     gasFractions = compCond->paramVect<double>("GasFractions");
 
     if ( numOfGases == 1 ) { gasFractions[0] = 1.0; }
+
+    if ( numOfGases != gasNames.size() ||
+         numOfGases != gasFractions.size() )
+    {
+      error() << "# Gases=" << numOfGases << " does match Name/fractions vectors" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
   }
 
-  enum GasRadRef { C4F10_Classic, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture };
+  enum GasRadRef { C4F10_Classic=0, CF4_Classic, CF4_SingleTerm, C3F8_SingleTerm, mixture };
 
   GasRadRef curRadMedium = C4F10_Classic;  // initialize with one of the options.
 
@@ -314,7 +324,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     curRadMedium = C3F8_SingleTerm;
   }
   else if ( material()->name().find("C4F10") != std::string::npos )
-  { 
+  {
     // this check kept for safety.
     curRadMedium   = C4F10_Classic;
     RefTemperature = param<double>("C4F10ReferenceTemp");
@@ -370,11 +380,11 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   else if ( CF4_SingleTerm == curRadMedium )
   {
 
-    AParam      = param<double>("CF4SellMeirAFactor");
-    AMultParam  = param<double>("CF4SellMeirAMultiplicationFactor");
+    AParam      = param<double> ("CF4SellMeirAFactor");
+    AMultParam  = param<double> ("CF4SellMeirAMultiplicationFactor");
     aWaveZero   = param<double> ("CF4SellMeirLambdaZeroFactor");
-    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
-    if(aWaveZero > 1.0)  // typical value when exists = 61.9
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact");
+    if ( aWaveZero > 1.0 )  // typical value when exists = 61.9
     {
       EphyZSq = ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
     }
@@ -385,10 +395,10 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   else if ( C3F8_SingleTerm == curRadMedium )
   {
 
-    AParam      = param<double>("C3F8SellMeirAFactor");
-    AMultParam  = param<double>("C3F8SellMeirAMultiplicationFactor");
-    aWaveZero   = param<double> ("C3F8SellMeirLambdaZeroFactor" );
-    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact"  );
+    AParam      = param<double> ("C3F8SellMeirAFactor");
+    AMultParam  = param<double> ("C3F8SellMeirAMultiplicationFactor");
+    aWaveZero   = param<double> ("C3F8SellMeirLambdaZeroFactor");
+    MomConvWave = param<double> ("PhotonMomentumWaveLengthConvFact");
     if ( aWaveZero > 1.0 ) //typical value when exists=64.4
     {
       EphyZSq = ( MomConvWave / aWaveZero ) * ( MomConvWave / aWaveZero );
@@ -398,15 +408,22 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }
   else if ( mixture == curRadMedium )
   {
-    // same as above but need to get the papameters from the CondDB 
+
+    // same as above but need to get the papameters from the CondDB
     if ( compCond )
     {
-      AParamVect     = compCond->paramVect<double>("SellMeirAFactors");
-      AMultParamVect = compCond->paramVect<double>("SellMeirAMultiplicationFactors");
+      AParamVect     = compCond->paramVect<double> ("SellMeirAFactors");
+      AMultParamVect = compCond->paramVect<double> ("SellMeirAMultiplicationFactors");
       aWaveZeroVect  = compCond->paramVect<double> ("SellMeirLambdaZeroFactors");
       MomConvWave    = param<double> ("PhotonMomentumWaveLengthConvFact"  );
       GasRhoCur      = ( (curPressure/Gaudi::Units::STP_Pressure) *
-                         (Gaudi::Units::STP_Temperature/curTemp)  );
+                         (Gaudi::Units::STP_Temperature/curTemp) );
+      if ( aWaveZeroVect.size() != numOfGases )
+      {
+        error() << "aWaveZeroVect size != # Gases=" << numOfGases << endmsg;
+        return StatusCode::FAILURE;
+      }
+
     }
     else
     {
@@ -422,21 +439,23 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   }  // end if on ref index options
 
   // calculate ref index
-  double nMinus1( 0.0 );
-  for ( unsigned int ibin = 0; ibin<momVect.size(); ++ibin )
+  FPE::Guard guard( true ); /// Protect against weird FPE with clang from the loop below
+  for ( const double e : momVect )
   {
-    const double epho = momVect[ibin]/Gaudi::Units::eV;
 
-    if ( (C4F10_Classic == curRadMedium) || (CF4_Classic == curRadMedium) )
+    double nMinus1( 0.0 );
+    const double epho = e / Gaudi::Units::eV;
+
+    if ( ( C4F10_Classic == curRadMedium ) || ( CF4_Classic == curRadMedium ) )
     {
 
-      const double pfe  = ( (SellF1/( (SellE1* SellE1) - (epho * epho) ) ) +
-                            (SellF2/( (SellE2*SellE2)  - (epho * epho) )) );
-      const double cpfe = SellLorGasFac * (GasRhoCur / GasMolWeight ) * pfe;
-      nMinus1 = scaleFactor * (std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0);
+      const double pfe  = ( ( SellF1 / ( (SellE1*SellE1) - (epho*epho) ) ) +
+                            ( SellF2 / ( (SellE2*SellE2) - (epho*epho) ) ) );
+      const double cpfe = SellLorGasFac * ( GasRhoCur / GasMolWeight ) * pfe;
+      nMinus1 = scaleFactor * ( std::sqrt((1.0+2*cpfe)/(1.0-cpfe)) - 1.0 );
 
     }
-    else if ( (CF4_SingleTerm == curRadMedium) || ( C3F8_SingleTerm == curRadMedium ) )
+    else if ( ( CF4_SingleTerm == curRadMedium ) || ( C3F8_SingleTerm == curRadMedium ) )
     {
 
       nMinus1 =
@@ -447,15 +466,14 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     {
 
       nMinus1 = 0.0;
-      for ( unsigned int gas = 0; gas<numOfGases; ++gas )
+      for ( unsigned int gas = 0; gas < numOfGases; ++gas )
       {
-
-        if ( aWaveZeroVect[gas] > 1.0)  // typical value when exists = 61.9
+        if ( aWaveZeroVect[gas] > 1.0 )  // typical value when exists = 61.9
         {
-          EphyZSq = ( MomConvWave / aWaveZeroVect[gas] ) * ( MomConvWave / aWaveZeroVect[gas] );
+          EphyZSq = std::pow( MomConvWave/aWaveZeroVect[gas], 2 );
         }
         nMinus1 += ( scaleFactor * gasFractions[gas] *
-                     ( (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur) / 
+                     ( (AParamVect[gas]*AMultParamVect[gas]*MomConvWave*MomConvWave*GasRhoCur) /
                        (EphyZSq-(epho*epho)) ) );
       }
 
@@ -467,7 +485,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 
     }  // end if on ref index options
 
-    aTable.push_back( TabulatedProperty::Entry( epho*Gaudi::Units::eV, 1.0+nMinus1 ) );
+    aTable.push_back( TabulatedProperty::Entry( e, 1.0+nMinus1 ) );
 
   } // end loop over bins of photon energy.
 
@@ -492,7 +510,7 @@ DeRichGasRadiator::generateHltRefIndex() const
   // temperature
   if ( m_hltGasParametersCond != m_gasParametersCond )
   {
-    updMgrSvc()->registerCondition( nonConstSelf, 
+    updMgrSvc()->registerCondition( nonConstSelf,
                                     m_hltGasParametersCond.path(),
                                     &DeRichGasRadiator::updateHltProperties );
     const StatusCode sc = updMgrSvc()->update(nonConstSelf);
@@ -540,12 +558,12 @@ StatusCode DeRichGasRadiator::updateHltProperties ( )
   if ( !sc ) return sc;
 
   if ( !m_hltRefIndex )
-  { 
-    m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp ); 
+  {
+    m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp );
   }
   else
-  { 
-    m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp ); 
+  {
+    m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp );
   }
   if ( !m_hltRefIndex->valid() )
   {
@@ -585,7 +603,7 @@ StatusCode DeRichGasRadiator::setupOldGasConditions ( ) {
   if ( hasCondition("GasPressure") && condition("GasPressure") )
   {
     m_pressureCond = condition("GasPressure");
-    updMgrSvc()->registerCondition( this, 
+    updMgrSvc()->registerCondition( this,
                                     m_pressureCond.path(),
                                     &DeRichGasRadiator::updateProperties );
   }
