@@ -14,6 +14,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-02-21 - Marco Clemencic
+ - Moved the PID operators to the namespace LoKi::GenParticles to fix an issue
+   with ROOT 6.
+   See https://sft.its.cern.ch/jira/browse/ROOT-6044 for details.
+
+! 2014-02-21 - Marco Clemencic
  - Fixes to header guard macros.
 
 !========================= LoKiGen v10r14 2014-02-17 =========================
