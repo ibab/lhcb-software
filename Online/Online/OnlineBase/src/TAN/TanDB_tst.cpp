@@ -78,7 +78,7 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       // Insert entry
       TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
       ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d",i);
-      ::snprintf(msg._Name(),sizeof(msg.m_name),e->_Message()._Name());
+      ::snprintf(msg._Name(),sizeof(msg.m_name),"%s",e->_Message()._Name());
       NetworkChannel::Port port = db.allocatePort (e);
       NetworkChannel::Port fnd  = db.findPort(msg);
       if ( fnd != port ) {
@@ -89,7 +89,7 @@ extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
       // Insert alias(s)
       for ( int j = 0; j < i; j++ )  {
         ::snprintf(e->_Message()._Name(),sizeof(e->_Message().m_name),"MYTASK_%02d_%02d",i,j);
-	::snprintf(msg._Name(),sizeof(msg.m_name),e->_Message()._Name());
+	::snprintf(msg._Name(),sizeof(msg.m_name),"%s",e->_Message()._Name());
         int status = db.insertAlias (e);
         NetworkChannel::Port fnd  = db.findPort(msg);
         if ( fnd != port ) {
