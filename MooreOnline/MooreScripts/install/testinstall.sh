@@ -55,7 +55,7 @@ if [ ${useSPopts} -eq 0 ]; then
   echo ${startdir}"/InstallMoore.sh" ${EXPECTV} "--install-location" `pwd`"/MOORE" "--online-satelite" `pwd`"/satelite"
   echo "---------------------------------------------"
 
-  ${startdir}/InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite
+  ${startdir}/InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite 
 
 else
 

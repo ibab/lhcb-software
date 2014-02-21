@@ -309,15 +309,15 @@ cd ../../..
 #######################################################
 #     Make the manifest only if required!
 #######################################################
-python -c "import glob; import os; content=glob.glob('TCK/HltTCK/*/*'); os.system('ls -l TCK/HltTCK'); [os.system('ls -l '+i) for i in content if '/manifest/' not in i]; " > 'InstallArea/checknewmanifest'
+ls -l TCK/HltTCK/config.tar TCK/HltTCK/scripts/* > 'InstallArea/checknewmanifest'
 needtodomanifest="True"
 if [ ! -d TCK/HltTCK/manifest ]; then
     needtodomanifest="True"
-    echo "no manifest dir"
+    #echo "no manifest dir"
 elif [ -f "InstallArea/lastsawmanifest" ]; then
   #test that everything apart from the manifest directory is the same!
   needtodomanifest=`python -c "f1=open('InstallArea/lastsawmanifest'); f2=open('InstallArea/checknewmanifest'); f1l=f1.readlines(); f2l=f2.readlines(); f1.close(); f2.close(); print (f1l!=f2l);"`
-    echo "after the check..."${needtodomanifest}"..."
+    #echo "after the check..."${needtodomanifest}"..."
 fi
 
 if [ ${needtodomanifest} = "False" ]; then
@@ -329,7 +329,7 @@ else
     cd TCK/HltTCK/cmt
     (source ${setupmoore}; cmt createManifest;)
     cd ../../..
-    python -c "import glob; import os; content=glob.glob('TCK/HltTCK/*/*'); os.system('ls -l TCK/HltTCK'); [os.system('ls -l '+i) for i in content if '/manifest/' not in i]; " > 'InstallArea/lastsawmanifest'
+    ls -l TCK/HltTCK/config.tar TCK/HltTCK/scripts/* > 'InstallArea/lastsawmanifest'
 fi
 #######################################################
 #     copy the manifest
