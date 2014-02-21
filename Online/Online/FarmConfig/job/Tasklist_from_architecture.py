@@ -46,21 +46,21 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
-            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n");
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Histos/\";\n");
-            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Histos/\";\n")
+            f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 3;\n")
             f.write("\n")
 
         for s in cntsvc:
             svc = s+"CountAdder"
-            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n");
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n");
-            f.write(svc+".AdderClass  = \"Counter\";\n");
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n")
+            f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 2;\n")
             f.write("\n")
     elif level == "2":
@@ -108,7 +108,7 @@ BusyAdder.ReceiveTimeout          = 3;
         for s in histsvc:
             svc = s+"HistAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
             f.write(svc+".TaskPattern = \"<part>_<node>[0-9][0-9]_NodeAdder_0\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>[0-9][0-9]_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
@@ -165,10 +165,10 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n");
-            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n");
-            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".MyName  = \"<part>_"+s+"_00\";\n")
+            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n")
+            f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
@@ -176,10 +176,10 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in cntsvc:
             svc = s+"CountAdder"
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n");
-            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Counter/\";\n");
-            f.write(svc+".AdderClass  = \"Counter\";\n");
+            f.write(svc+".MyName  = \"<part>_"+s+"_00\";\n")
+            f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Counter/\";\n")
+            f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
@@ -220,10 +220,10 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
-            f.write(svc+".MyName  = \"<part>_X_"+s\";\n");
-            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Histos/\";\n");
-            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".MyName  = \"<part>_X_"+s+"\";\n")
+            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Histos/\";\n")
+            f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"mona08\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
@@ -231,10 +231,10 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in cntsvc:
             svc = s+"CountAdder"
-            f.write(svc+".MyName  = \"<part>_X_"+s\";\n");
-            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Counter/\";\n");
-            f.write(svc+".AdderClass  = \"Counter\";\n");
+            f.write(svc+".MyName  = \"<part>_X_"+s+"\";\n")
+            f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Counter/\";\n")
+            f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"mona08\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
