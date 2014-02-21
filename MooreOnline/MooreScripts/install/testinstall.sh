@@ -3,11 +3,13 @@ echo "============================================="
 echo "TEST SCRIPT: Faking the online deployment structure"
 echo "============================================="
 
-
-export EXPECTV="v21r0" #"HEAD"
+export EXPECTV="HEAD"
 export EXPECTONV="v5r6"
-export SPopts="" #"--nightly lhcb-trigger-dev"
+export SPopts="--nightly lhcb-trigger-dev"
+export useSPopts=1
 echo "testing for MooreOnline "${EXPECTV}" with Online "${EXPECTONV}" and extra options: "${SPopts}
+
+startdir=`pwd`
 
 if [ "$TMPDIR" == "" ]; then export TMPDIR="/tmp/"${USER}; fi; if [ ! -d "$TMPDIR" ]; then mkdir "$TMPDIR"; fi; cd "$TMPDIR";
 
@@ -30,7 +32,11 @@ fi;
 
 cd satelite
 
-(export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh Online ${EXPECTONV} --build-env;)
+if [ $useSPopts -ne 0 ]; then
+    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh Online ${EXPECTONV} --build-env ${SPopts};)
+else
+    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh Online ${EXPECTONV} --build-env;)
+fi
 
 cd ..
 echo "============================================="
@@ -38,20 +44,20 @@ echo "TEST SCRIPT: now trying to run install script"
 echo "============================================="
 
 a=""
-if [ -z ${SPopts} ]; then
+if [ $useSPopts -eq 0 ]; then
   echo "Install command to be run"
   echo "./InstallMoore.sh" ${EXPECTV} "--install-location" `pwd`"/MOORE" "--online-satelite" `pwd`"/satelite"
   echo "---------------------------------------------"
 
-  ./InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite
+  ${startdir}/InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite
 
 else
 
   echo "Install command to be run"
-  echo "./InstallMoore.sh" ${EXPECTV} "--install-location" `pwd`"/MOORE" "--online-satelite" `pwd`"/satelite" "--sp-opts" ${SPopts}
+  echo ${startdir}"/InstallMoore.sh" ${EXPECTV} "--install-location" `pwd`"/MOORE" "--online-satelite" `pwd`"/satelite" "--sp-opts" ${SPopts}
   echo "---------------------------------------------"
 
-  ./InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite --sp-opts ${SPopts}
+  ${startdir}/InstallMoore.sh ${EXPECTV} --install-location `pwd`/MOORE --online-satelite `pwd`/satelite --sp-opts ${SPopts}
 
 fi
 
