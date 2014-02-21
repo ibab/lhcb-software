@@ -33,7 +33,7 @@ macro_append ONLINE_CPPFLAGS " -Wwrite-strings -Wpointer-arith -Wreturn-type -Wu
 macro_append ONLINE_CPPFLAGS " -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
 
 macro_append ONLINE_CPPFLAGS " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend " \
-	target-vc9   " -wd4996 " \
+	target-vc9   " -wd4996 -wd177 " \
 	target-vc7   "" \
 	target-icc   "" \
 	target-gcc   " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend " \
