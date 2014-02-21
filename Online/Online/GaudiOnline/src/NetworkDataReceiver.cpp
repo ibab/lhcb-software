@@ -293,7 +293,7 @@ StatusCode NetworkDataReceiver::declareEventData(RecvEntry& entry)  {
     }
     MsgStream log1(msgSvc(), name());
     // Cannot do anything - must handle and rearm new request
-    log1 << MSG::ERROR << "Failed to get space for buffer manager." << endmsg;
+    log1 << MSG::ERROR << "Failed to get space from buffer manager." << endmsg;
     if ( m_recvEvents && ret != MBM_REQ_CANCEL ) rearmRequest(entry);
     ++m_recvError;
     return StatusCode::SUCCESS;

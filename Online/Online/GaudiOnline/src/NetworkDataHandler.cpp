@@ -197,7 +197,7 @@ StatusCode NetworkDataHandler::rearmBufferSpace(const RecvEntry& src)  {
 StatusCode NetworkDataHandler::rearmNetRequest(const RecvEntry& src)  {
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Sending event request to data source:" << src.name << endmsg;
-  StatusCode sc = sc = sendData(src,s_reqMsg.c_str(),s_reqMsg.length()+1);
+  StatusCode sc = sendData(src,s_reqMsg.c_str(),s_reqMsg.length()+1);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Failed to send request for events from:" << src.name << endmsg;
   }
