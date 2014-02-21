@@ -372,7 +372,7 @@ bool LoKi::ParticleClassificator::getMyAlg () const
   const IAlgorithm* current = asvc->currentAlg() ;
   if ( 0 == current ) { return false ; }
   //
-  m_myAlg = "[" + current->name() + "] " ;
+  m_myAlg = " [" + current->name() + "]" ;
   //
   return true ;
   // ============================================================================
