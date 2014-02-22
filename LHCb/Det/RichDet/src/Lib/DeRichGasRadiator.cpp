@@ -297,8 +297,10 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( numOfGases != gasNames.size() ||
          numOfGases != gasFractions.size() )
     {
-      error() << "# Gases=" << numOfGases 
-              << " does NOT match GasNames/GasFractions vector sizes" << endmsg;
+      error() << "# Gases(" << numOfGases 
+              << ") does NOT match GasNames(" << gasNames.size() 
+              << ")/GasFractions(" << gasFractions.size() << ") vector sizes" 
+              << endmsg;
       return StatusCode::FAILURE;
     }
 
