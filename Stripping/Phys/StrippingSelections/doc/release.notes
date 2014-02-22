@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r33 2014-02-22 =========================
+
+! 2014-02-22 - Stefano Perazzini
+ - Updated test_stream_output_locations.py for testing against Stripping20r0p3
+
 ! 2014-02-19 - Stefano Perazzini
  - Updated XMLCatalog for test samples in order to cope
    with change in EOS path
