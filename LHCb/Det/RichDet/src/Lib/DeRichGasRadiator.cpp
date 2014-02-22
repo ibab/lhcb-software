@@ -297,7 +297,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
     if ( numOfGases != gasNames.size() ||
          numOfGases != gasFractions.size() )
     {
-      error() << "# Gases=" << numOfGases << " does match Name/fractions vectors" << endmsg;
+      error() << "# Gases=" << numOfGases 
+              << " does NOT match GasNames/GasFractions vector sizes" << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -442,7 +443,6 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
   FPE::Guard guard( true ); /// Protect against weird FPE with clang from the loop below
   for ( const double e : momVect )
   {
-
     double nMinus1( 0.0 );
     const double epho = e / Gaudi::Units::eV;
 
