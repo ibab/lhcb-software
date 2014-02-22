@@ -294,8 +294,8 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
 
     if ( numOfGases == 1 ) { gasFractions[0] = 1.0; }
 
-    if ( numOfGases != gasNames.size() ||
-         numOfGases != gasFractions.size() )
+    if ( numOfGases > gasNames.size() ||
+         numOfGases > gasFractions.size() )
     {
       error() << "# Gases(" << numOfGases 
               << ") does NOT match GasNames(" << gasNames.size() 
