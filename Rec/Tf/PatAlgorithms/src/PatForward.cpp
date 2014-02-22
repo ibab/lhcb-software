@@ -26,11 +26,11 @@ PatForward::PatForward( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_fwdTime(0)
-  , m_rawBankDecoder(NULL)
-  , m_tHitManager(NULL)
-  , m_trackSelector(NULL)
-  , m_forwardTool(NULL)
-  , m_timerTool(NULL)
+  , m_rawBankDecoder(nullptr)
+  , m_tHitManager(nullptr)
+  , m_trackSelector(nullptr)
+  , m_forwardTool(nullptr)
+  , m_timerTool(nullptr)
 { 
   declareProperty( "InputTracksName",    m_inputTracksName    = LHCb::TrackLocation::Velo );
   declareProperty( "OutputTracksName",   m_outputTracksName   = LHCb::TrackLocation::Forward);
@@ -67,7 +67,7 @@ StatusCode PatForward::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
-  m_trackSelector = NULL;
+  m_trackSelector = nullptr;
   if (m_trackSelectorName != "None") {
     m_trackSelector = tool<ITrackSelector>(m_trackSelectorName, this);
   }
@@ -101,19 +101,15 @@ bool PatForward::acceptTrack(const LHCb::Track& track) {
 
   if (m_unusedVeloSeeds && ok){
 
-    LHCb::Tracks* veloVetoTracks  = 
-      get<LHCb::Tracks>( m_veloVetoTracksName);
+    LHCb::Tracks* veloVetoTracks  = get<LHCb::Tracks>( m_veloVetoTracksName);
      
     LHCb::Tracks::const_iterator itT =  veloVetoTracks->begin();
     while ((itT != veloVetoTracks->end()) && (ok == true)){
 
-      const SmartRefVector<LHCb::Track>& parents = (*itT)->ancestors();
-      for ( SmartRefVector<LHCb::Track>::const_iterator iterP = parents.begin();
-	    iterP != parents.end(); ++iterP) {
-	const LHCb::Track* testTrack = *iterP;
-	if ( testTrack == &track) ok = false;
-      }       
-      itT++;
+      for ( const LHCb::Track* testTrack : (*itT)->ancestors() ) {
+	        if ( testTrack == &track) ok = false;
+      }
+      ++itT;
     } 
   }
   

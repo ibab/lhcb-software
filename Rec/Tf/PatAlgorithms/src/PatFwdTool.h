@@ -145,7 +145,6 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     
     
     
-  protected:
 
   private:
     ILHCbMagnetSvc*     m_magFieldSvc; 

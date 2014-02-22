@@ -75,7 +75,7 @@ public:
   };
 
 
-protected:
+private:
 
   void buildXCandidatesList( PatFwdTrackCandidate& track );
 
@@ -90,10 +90,18 @@ protected:
 
   void debugFwdHits( PatFwdTrackCandidate& track, MsgStream& msg );
 
-private:
+
+  bool driftInRange( const PatFwdHit& hit )  const {  
+      auto drift = hit.driftDistance(); 
+     return m_minOTDrift < drift && drift < m_maxOTDrift ; 
+  }
+
+  bool driftOK(const PatFwdHit& hit) const {
+    return (hit.hit()->type() != Tf::RegionID::OT) || driftInRange(hit);
+  }
 
   PatFwdTool*                                 m_fwdTool;        ///< Tool to compute extrapolations of tracks
-  Tf::TStationHitManager <PatForwardHit> *   m_tHitManager;    ///< Tool to provide hits
+  Tf::TStationHitManager <PatForwardHit> *    m_tHitManager;    ///< Tool to provide hits
   IAddTTClusterTool*                          m_addTTClusterTool;
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
@@ -143,13 +151,6 @@ private:
   std::vector<PatFwdTrackCandidate> m_candidates;
 
   bool   m_withoutBField;
-
-  static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
-  static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
-  static const unsigned int m_nReg = Tf::RegionID::OTIndex::kNRegions +
-    Tf::RegionID::ITIndex::kNRegions;
-  static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
-  static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
 
   bool   m_nnSwitch;                   // switch on or off NN var. writing
 };

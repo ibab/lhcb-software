@@ -4,11 +4,9 @@
 
 // Include files
 
-#include "TfKernel/HitExtension.h"
 #include "TfKernel/RegionID.h"
-
 #include <algorithm>
-#include "boost/array.hpp"
+#include <array>
 
   /** @class PatFwdRegionCounter PatFwdRegionCounter.h
    *  Simple object to count the hits by region.
@@ -16,20 +14,17 @@
    *  @author Olivier Callot
    *  @date   2005-07-07 Initial version
    *          2007-08-20 Update for A-Team framework  SHM
-   *          2008-05-09 use boost::array instead of std::vector (M. Schiller)
    */
   class PatFwdRegionCounter {
   public:
     virtual ~PatFwdRegionCounter( ) {} ///< Destructor
 
     /// Standard constructor
-    PatFwdRegionCounter( PatFwdHits::const_iterator first,
-	PatFwdHits::const_iterator last )
+    PatFwdRegionCounter( PatFwdHits::const_iterator first, PatFwdHits::const_iterator last )
     {
-      std::fill(m_regionList.begin(), m_regionList.end(), 0);
-      for ( PatFwdHits::const_iterator ith = first; last != ith; ++ith ) {
-        if ( !(*ith)->isSelected() ) continue;
-        ++m_regionList[region(*ith)];
+      m_regionList.fill(0);
+      for ( auto i = first; i != last; ++i ) {
+        if ( (*i)->isSelected() ) ++m_regionList[region(*i)];
       }
     }
 
@@ -58,20 +53,14 @@
     /// return the region with most hits
     int maxRegion() const
     {
-      RegionArray::const_iterator max =
-	std::max_element(m_regionList.begin(), m_regionList.end());
-      if (0 == *max) return -1;
-      return std::distance(m_regionList.begin(), max);
+      auto max = std::max_element(m_regionList.begin(), m_regionList.end());
+      return *max!=0 ?  std::distance(std::begin(m_regionList), max) : -1;
     }
 
-  protected:
 
   private:
-    enum { kNRegions = Tf::RegionID::OTIndex::kNRegions +
-      Tf::RegionID::ITIndex::kNRegions };
-    typedef boost::array< unsigned char, kNRegions > RegionArray;
-
-    RegionArray m_regionList; /// array of counters
+    enum { kNRegions = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions };
+    std::array< unsigned char, kNRegions > m_regionList; /// array of counters
 
     /// helper to compute the region of a hit
     int region(const PatFwdHit* hit) const
