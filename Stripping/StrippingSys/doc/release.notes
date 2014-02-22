@@ -3,6 +3,11 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v7r5 2014-02-22 =========================
+
+! 2014-02-22 - Stefano Perazzini
+ - Updated configurables.ref
+
 ! 2014-01-28 - Chris Jones
  - Add Phys/IncTopoVert package, moved from Analysis due to it being used
    in the Stripping as of v20rXp3.
