@@ -131,7 +131,7 @@ StatusCode PrSeedingXLayers::execute() {
     // -- sort hits according to LHCbID
     for(int i = 0; i < 24; i++){
       PrHitZone* zone = m_hitManager->zone(i);
-      std::sort( zone->hits().begin(),  zone->hits().end(), compLHCbID());
+      std::stable_sort( zone->hits().begin(),  zone->hits().end(), compLHCbID());
     }
     // ------------------------------------------
     
@@ -168,7 +168,7 @@ StatusCode PrSeedingXLayers::execute() {
     // -- sort hits according to x
     for(int i = 0; i < 24; i++){
       PrHitZone* zone = m_hitManager->zone(i);
-      std::sort( zone->hits().begin(),  zone->hits().end(), compX());
+      std::stable_sort( zone->hits().begin(),  zone->hits().end(), compX());
     }
 
 
@@ -494,7 +494,7 @@ void PrSeedingXLayers::addStereo( unsigned int part ) {
         myStereo.push_back( *itH );
       }
     }
-    std::sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
+    std::stable_sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
 
     PrPlaneCounter plCount;
     unsigned int firstSpace = m_trackCandidates.size();
@@ -619,7 +619,7 @@ bool PrSeedingXLayers::fitTrack( PrSeedTrack& track ) {
     float d2 = sdz * sz2 - sz * sdz2;
 
     float den = (b1 * c2 - b2 * c1 );
-    if( fabs(den) < 1e-6 ) return false;
+    if( fabs(den) < 1e-9 ) return false;
     float db  = (d1 * c2 - d2 * c1 ) / den;
     float dc  = (d2 * b1 - d1 * b2 ) / den;
     float da  = ( sd - db * sz - dc * sz2 ) / s0;
@@ -866,7 +866,7 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         // -- Idea is to reduce ghosts in very busy events and prefer the high momentum tracks
         // -- For this, the seedHits are storted according to their distance to the linear extrapolation
         // -- so that the ones with the least distance can be chosen in the end
-        std::sort( parabolaSeedHits.begin(), parabolaSeedHits.end(), 
+        std::stable_sort( parabolaSeedHits.begin(), parabolaSeedHits.end(), 
                    [x0,tx](const PrHit* lhs, const PrHit* rhs)
                    ->bool{return fabs(lhs->x() - (x0+lhs->z()*tx)) <  fabs(rhs->x() - (x0+rhs->z()*tx)); });
         
@@ -932,15 +932,18 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
           
 
           if( xHits.size() < 5) continue;
-          std::sort(xHits.begin(), xHits.end());
+          std::stable_sort(xHits.begin(), xHits.end(), compX());
        
+          
           bool isEqual = false;
+          
           for( PrHits hits : xHitsLists){
             if( hits == xHits ){
               isEqual = true;
               break;
             }
           }
+          
 
           if( !isEqual ) xHitsLists.push_back( xHits );
         }
@@ -949,8 +952,9 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         debug() << "xHitsLists size before removing duplicates: " << xHitsLists.size() << endmsg;
         
         // -- remove duplicates
+        
         if( xHitsLists.size() > 2){
-          std::sort( xHitsLists.begin(), xHitsLists.end() );
+          std::stable_sort( xHitsLists.begin(), xHitsLists.end() );
           xHitsLists.erase( std::unique(xHitsLists.begin(), xHitsLists.end()), xHitsLists.end());
         }
         
@@ -1097,7 +1101,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
         myStereo.push_back( *itH );
       }
     }
-    std::sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
+    std::stable_sort( myStereo.begin(), myStereo.end(), PrHit::LowerByCoord() );
 
     PrPlaneCounter plCount;
     unsigned int firstSpace = m_trackCandidates.size();
@@ -1184,18 +1188,18 @@ void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const
   const float x2 = hit2->x();
   const float x3 = hit3->x();
   
-  const double det = (z1*z1)*z2 + z1*(z3*z3) + (z2*z2)*z3 - z2*(z3*z3) - z1*(z2*z2) - z3*(z1*z1);
+  const float det = (z1*z1)*z2 + z1*(z3*z3) + (z2*z2)*z3 - z2*(z3*z3) - z1*(z2*z2) - z3*(z1*z1);
   
-  if( det == 0 ){
-    a = 0;
-    b = 0;
-    c = 0;
+  if( fabs(det) < 1e-8 ){
+    a = 0.0;
+    b = 0.0;
+    c = 0.0;
     return;
   }
   
-  const double det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
-  const double det2 = (z1*z1)*x2 + x1*(z3*z3) + (z2*z2)*x3 - x2*(z3*z3) - x1*(z2*z2) - x3*(z1*z1);
-  const double det3 = (z1*z1)*z2*x3 + z1*(z3*z3)*x2 + (z2*z2)*z3*x1 - z2*(z3*z3)*x1 - z1*(z2*z2)*x3 - z3*(z1*z1)*x2;
+  const float det1 = (x1)*z2 + z1*(x3) + (x2)*z3 - z2*(x3) - z1*(x2) - z3*(x1);
+  const float det2 = (z1*z1)*x2 + x1*(z3*z3) + (z2*z2)*x3 - x2*(z3*z3) - x1*(z2*z2) - x3*(z1*z1);
+  const float det3 = (z1*z1)*z2*x3 + z1*(z3*z3)*x2 + (z2*z2)*z3*x1 - z2*(z3*z3)*x1 - z1*(z2*z2)*x3 - z3*(z1*z1)*x2;
 
   a = det1/det;
   b = det2/det;
