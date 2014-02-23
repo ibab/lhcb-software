@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-02-23 - Sebastian Neubert
+ - added RevivedVelo which configures sequences for velo track resurrection
+
 ! 2014-02-19 - Sebastian Neubert
  - added TrackInitStateAlg for HLT1 tracks resurrected in HLT2
 

@@ -1189,7 +1189,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables      import Tf__PatVeloSpaceTool, FastVeloTracking
         from Configurables      import TrackStateInitAlg, TrackStateInitTool
         #From HltReco we just get the shared stuff between Hlt1 and Hlt2
-        from HltReco        import MinimalVelo
+        from HltReco        import MinimalVelo, RevivedVelo
+        from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK
         from HltLine.HltLine    import bindMembers 
         
         # make these real option!!?
@@ -1215,9 +1216,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
             #recoVeloExtra.HLT2Complement = True
             bm_members      = MinimalVelo.members() #+ [recoVeloExtra]
         elif UseHlt1Tracks:
-            veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = veloTracksOutputLocation );
-            veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-            bm_members = [ veloInitFit ]
+            bm_members =  RevivedVelo.members() 
+            #veloTracksOutputLocation = RevivedVelo.OutputSelection()
         else:
             recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                                                   , OutputTracksLocation = veloTracksOutputLocation )
