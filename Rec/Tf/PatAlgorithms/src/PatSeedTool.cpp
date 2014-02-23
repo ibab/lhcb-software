@@ -1,13 +1,11 @@
 // Include files
 
 #include <cmath>
+#include <array>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-// from boost
-#include "boost/array.hpp"
-#include "boost/foreach.hpp"
 
 #include "Math/CholeskyDecomp.h"
 
@@ -99,7 +97,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 
     if ( msgLevel( MSG::VERBOSE ) || forceDebug ) {
       MsgStream& msg = info();
-      BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+      for( const PatFwdHit* hit: track.coords() ) {
 	if ( !hit->isSelected() ) continue;
 	printTCoord( msg, track, hit );
 	if ( *worst == hit ) msg << " -- worst";
@@ -160,7 +158,7 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
   for ( unsigned kk = 10 ; kk-- ; ) {
     PatFwdFitParabola  parabola;
     int nHits = 0;
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+    for( const PatFwdHit* hit: track.coords() ) {
       if ( !hit->isSelected() ) continue;
       const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
 
@@ -199,7 +197,7 @@ bool PatSeedTool::fitInitialXProjection (
 {
   // reset ambiguities for OT hits
   unsigned nOT = 0;
-  BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
+  for( PatFwdHit* hit: track.coords() ) {
     if ( !hit->isSelected() ) continue;
     if ( hit->hit()->type() != Tf::RegionID::OT ) continue;
     hit->setRlAmb(0);
@@ -213,9 +211,9 @@ bool PatSeedTool::fitInitialXProjection (
       // we use builtin arrays because we know there are three stations, and
       // the cost of allocating memory dynamically for std::vector is too
       // high
-      boost::array<double, 3> largestDrift = { { 0., 0., 0. } };
-      boost::array<PatFwdHit*, 3> seeds = { { 0, 0, 0 } };
-      BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
+      std::array<double, 3> largestDrift = { { 0., 0., 0. } };
+      std::array<PatFwdHit*, 3> seeds = { { nullptr, nullptr, nullptr } };
+      for( PatFwdHit* hit: track.coords() ) {
 	if ( !hit->isSelected() ) continue;
 	if ( !hit->hit()->isX() ) continue;
 	const int sta = hit->hit()->station();
@@ -252,7 +250,7 @@ bool PatSeedTool::fitInitialXProjection (
 
 	  // get track parameters for current combination
 	  PatFwdFitParabola  parabola;
-	  BOOST_FOREACH( const PatFwdHit* hit, seeds )
+	  for( const PatFwdHit* hit: seeds )
 	    parabola.addPoint( hit->z() - track.z0(),
 		track.distanceWithRL( hit ), hit->hit()->weight() );
 	  if (!parabola.solve()) return false;
@@ -260,7 +258,7 @@ bool PatSeedTool::fitInitialXProjection (
 
 	  // determine chi^2 for current combination
 	  double totChi2 = 0.;
-	  BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+	  for( const PatFwdHit* hit: track.coords() ) {
 	    if ( !hit->isSelected() ) continue;
 	    if ( !hit->hit()->isX() ) continue;
 	    totChi2 += track.chi2Hit( hit );
@@ -282,7 +280,7 @@ bool PatSeedTool::fitInitialXProjection (
   }
   // work out final track parameters
   PatFwdFitParabola parabola;
-  BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+  for( const PatFwdHit* hit: track.coords() ) {
     if ( !hit->isSelected() ) continue;
     if ( !hit->hit()->isX() ) continue;
     const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
@@ -303,7 +301,7 @@ bool PatSeedTool::fitInitialStereoProjection (
 {
   int nStereo = 0;
   PatFwdFitLine firstLine;
-  BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+  for( const PatFwdHit* hit: track.coords() ) {
     if ( hit->hit()->isX() ) continue;
     if ( !hit->isSelected() ) continue;
     const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
@@ -422,7 +420,7 @@ bool PatSeedTool::fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const
     track.getParameters(z0, rhs[0], rhs[0], rhs[1], rhs[2], rhs[0], rhs[0]);
     const double dRatio = (std::abs(rhs[1]) > 1e-42) ? (1e3 * rhs[2] / rhs[1]) : 0.;
     std::fill(mat, mat + 20, 0.);
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+    for( const PatFwdHit* hit: track.coords() ) {
       if ( !hit->isSelected() ) continue;
       if (hit->hit()->isX()) ++nHitsX;
       else ++nHitsStereo;
@@ -499,7 +497,7 @@ bool PatSeedTool::refitStub(PatSeedTrack& track, double dRatio, double arrow) co
   do {
     const double z0 = track.z0();
     std::fill(rhs, rhs + 9, 0.);
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+    for( const PatFwdHit* hit: track.coords() ) {
       const double z = hit->z();
       const double w = hit->hit()->weight();
       const double dz = 1e-3 * (z - z0);

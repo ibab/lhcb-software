@@ -1,6 +1,4 @@
-#include <boost/foreach.hpp>
-#include <boost/array.hpp>
-#include <boost/assign/list_of.hpp>
+#include <array>
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -104,10 +102,10 @@ namespace PatSeedFitUtils {
 
 PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) const
 {
-  boost::array<PatFwdHit*, 4> seedhits = { { 0, 0, 0, 0 } };
+  std::array<PatFwdHit*, 4> seedhits = { { 0, 0, 0, 0 } };
   if (staIT >= 0) {
     // we *know* that we have enough hits in staIT
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    for( PatFwdHit& ihit: hits ) {
       if (ihit.hit()->type() == Tf::RegionID::OT) continue;
       if (staIT != ihit.planeCode() / 4) continue;
       unsigned lay = ihit.planeCode() & 3;
@@ -115,12 +113,12 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     }
   } else {
     // fallback solution: two X, two stereo hits; prefer IT over OT
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    for( PatFwdHit& ihit: hits ) {
       if (ihit.hit()->type() == Tf::RegionID::OT) continue;
       unsigned lay = ihit.planeCode() & 3;
       if (!seedhits[lay]) seedhits[lay] = &ihit;
     }
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    for( PatFwdHit& ihit: hits ) {
       if (ihit.hit()->type() == Tf::RegionID::IT) continue;
       unsigned lay = ihit.planeCode() & 3;
       if (!seedhits[lay]) seedhits[lay] = &ihit;
@@ -131,7 +129,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
   // as possible to avoid numerical problems...
   if (!seedhits[0] || !seedhits[1] || !seedhits[2] || !seedhits[3]) {
     seedhits[0] = seedhits[1] = seedhits[2] = seedhits[3] = 0;
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    for( PatFwdHit& ihit: hits ) {
       bool isX = ihit.hit()->isX();
       if (isX) {
 	if (!seedhits[0])
@@ -190,7 +188,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     tr.getParameters( z0, bx, ax, cx, dx, ay, by);
 
     const bool fitOK = !m_patSeedTool->refitStub(tr, m_dRatio, m_initialArrow);
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+    for( PatFwdHit& ihit: hits ) {
       // if the hit is not on the track, add it
       if (seedhits.end() == 
 	  std::find(seedhits.begin(), seedhits.end(), &ihit))
@@ -211,7 +209,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
 	seedhits[1]->hit()->xAtYEq0()) /
       seedhits[1]->hit()->dxDy() / seedhits[1]->hit()->zAtYEq0();
     tr.setYParams(0., ty);
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) tr.addCoord( &ihit );
+    for( PatFwdHit& ihit: hits ) tr.addCoord( &ihit );
     tr.updateHits();
     tr.getParameters( z0, bx, ax, cx, dx, ay, by);
     // first full fit for the emergency case
@@ -221,7 +219,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
 	tr.setParameters(z0, bx, ax, cx, dx, ay, by);
     }
     // reset ambiguities to make sure next fit starts from scratch
-    BOOST_FOREACH( PatFwdHit& ihit, hits ) ihit.setRlAmb(0);
+    for( PatFwdHit& ihit: hits ) ihit.setRlAmb(0);
   }
   tr.updateHits();
   // new best guess (is typically result from stub fit)
@@ -241,7 +239,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
 void PatSeedFit::makeCluster(std::vector<PatFwdHit>& hits, PatFwdHit& ihit,
 		const PatFwdHit*& in, double& x, double& z, bool& isCluster) const
 {
-  BOOST_FOREACH( PatFwdHit& jhit, hits ) {
+  for( PatFwdHit& jhit: hits ) {
     if (!jhit.hit()->isX()) continue;
     if (ihit.planeCode() != jhit.planeCode()) continue;
     if (&ihit == &jhit) continue;
@@ -273,10 +271,10 @@ void PatSeedFit::makeCluster(std::vector<PatFwdHit>& hits, PatFwdHit& ihit,
 
 PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
 {
-  boost::array<double, 3> x = { { 0., 0., 0. } }, z = { { 0., 0., 0. } };
-  boost::array<const PatFwdHit*, 3> in = { { 0, 0, 0 } };
-  boost::array<bool, 3> isCluster = { { false, false, false } };
-  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+  std::array<double, 3> x = { { 0., 0., 0. } }, z = { { 0., 0., 0. } };
+  std::array<const PatFwdHit*, 3> in = { { 0, 0, 0 } };
+  std::array<bool, 3> isCluster = { { false, false, false } };
+  for( PatFwdHit& ihit: hits ) {
     if (!ihit.hit()->isX()) continue;
     unsigned sta = ihit.planeCode() / 4;
     if (in[sta] && &ihit != in[sta]) {
@@ -316,7 +314,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
       StateParameters::ZMidT, m_dRatio);
   tr.setValid(true);
   // add all the X hits
-  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+  for( PatFwdHit& ihit: hits ) {
     if (!ihit.hit()->isX()) continue;
     tr.addCoord(&ihit);
   }
@@ -329,7 +327,7 @@ PatSeedTrack PatSeedFit::getTrackXY(std::vector<PatFwdHit>& hits) const
   // add all the stereo hits and get rough estimate of y parameters
   double ty = 0.;
   unsigned nStereo = 0;
-  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+  for( PatFwdHit& ihit: hits ) {
     if (ihit.hit()->isX()) continue;
     tr.addCoord(&ihit);
     const double xx = ihit.hit()->xAtYEq0();
@@ -355,8 +353,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 {
 
   // these are the z-positions for the output states
-  std::vector<double> m_zOutputs  =
-    boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT);
+  std::vector<double> m_zOutputs  = {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT};
 
   // if we have not requested the container of STLiteClusters in this event,
   // do so now
@@ -373,7 +370,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   sthits.reserve(lhcbIDs.size());
   othits.reserve(lhcbIDs.size());
 
-  BOOST_FOREACH(LHCb::LHCbID hit, lhcbIDs) {
+  for(LHCb::LHCbID hit: lhcbIDs) {
     if(  hit.detectorType()==LHCb::LHCbID::IT ) {
       LHCb::STChannelID stChan = hit.stID() ;
       const DeSTSector* stSector = m_itDet->findSector( stChan );
@@ -402,12 +399,12 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   }
   std::sort(hits.begin(), hits.end(), PatSeedFitUtils::sortadapter());
 
-  boost::array<unsigned, 12> planectr = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
-  boost::array<unsigned, 12> planectrIT = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
-  boost::array<unsigned, 12> planectrOT = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
+  std::array<unsigned, 12> planectr = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
+  std::array<unsigned, 12> planectrIT = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
+  std::array<unsigned, 12> planectrOT = { { 0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0 } };
   unsigned numStereo = 0, n = 0;
 
-  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+  for( PatFwdHit& ihit: hits ) {
       ihit.setSelected(true);
       ++planectr[ihit.planeCode()];
       if (ihit.hit()->type() == Tf::RegionID::OT)
@@ -498,7 +495,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
   cov(3,3) = m_stateErrorTY2;
   cov(4,4) = sigmaQOverP * sigmaQOverP;
 
-  BOOST_FOREACH( const double z, m_zOutputs ) {
+  for( const double z: m_zOutputs ) {
       temp.setX(pattrack.xAtZ(z));
       temp.setY(pattrack.yAtZ(z));
       temp.setZ(z);

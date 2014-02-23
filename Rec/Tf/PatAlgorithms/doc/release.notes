@@ -3,8 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
 ! 2014-02-22 - Gerhard Raven
  - various C++11 changes resulting in O(5%) speedup of PatForward in Hlt2.
+ - replace boost::array with C++11 std::array, BOOST_FOREACH with C++11 
+   range-based for, and boost::assign::list_of with C++11 list initializers
 
 !========================= PatAlgorithms v4r30 2014-02-19 ======================
 ! 2014-02-07 - Michel De Cian
@@ -12,7 +15,7 @@
 
 !========================= PatAlgorithms v4r29 2013-11-20 ======================
 ! 2013-11-15 - Sascha Stahl
- - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
+ - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where an x layer 
 	 was marked as a stereo layer.
 
 !========================= PatAlgorithms v4r28 2013-10-01 ======================

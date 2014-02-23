@@ -16,7 +16,6 @@
    *  @author Olivier Callot
    *  @date   2005-04-11 Initial version
    *  @date   2007-08-20 Update for A-Team framework
-   *  @date   2008-05-09 Use boost::array instead of std::vector
    */
 
   class PatFwdPlaneCounter final {

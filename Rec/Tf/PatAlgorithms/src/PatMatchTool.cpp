@@ -4,7 +4,6 @@
 #include <map>
 #include <algorithm>
 
-#include <boost/foreach.hpp>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -106,10 +105,10 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
   // build a match-chi^2 sorted table of velo-seed matches
   std::vector<MatchCandidate> cands;
   cands.reserve(4 * std::max(velos.size(), seeds.size()));
-  BOOST_FOREACH(const LHCb::Track* vTr, velos) {
+  for(const LHCb::Track* vTr: velos) {
     if (vTr->checkFlag(LHCb::Track::Backward)) continue;
     if (vTr->checkFlag(LHCb::Track::Invalid)) continue;
-    BOOST_FOREACH(const LHCb::Track* sTr, seeds) {
+    for(const LHCb::Track* sTr: seeds) {
       if (sTr->checkFlag(LHCb::Track::Invalid)) continue;
       const double dist = getChi2Match(*vTr, *sTr);
       if (m_maxChi2 > dist) {
@@ -122,7 +121,7 @@ StatusCode PatMatchTool::match(const LHCb::Tracks& velos,
   // for each track, tag if used or not.
   std::map<const LHCb::Track*,bool> used;
   // convert unused match candidates to tracks
-  BOOST_FOREACH(const MatchCandidate& cand, cands) {
+  for(const MatchCandidate& cand: cands) {
     const LHCb::Track* vTr = cand.vTr();
     const LHCb::Track* sTr = cand.sTr();
 
@@ -287,7 +286,7 @@ void PatMatchTool::makeTrack(const LHCb::Track& velo,
   } else {
     // adjust q/p and its uncertainty
     sigmaQOverP = sigmaQOverP * sigmaQOverP;
-    BOOST_FOREACH(LHCb::State* st, newstates) {
+    for(LHCb::State* st: newstates) {
       st->covariance()(4,4) = sigmaQOverP;
       st->setQOverP(qOverP);
     }

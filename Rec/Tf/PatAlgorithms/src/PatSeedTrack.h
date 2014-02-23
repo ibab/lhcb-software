@@ -8,8 +8,7 @@
 #include <algorithm>
 #include <functional>
 
-#include <boost/array.hpp>
-#include <boost/foreach.hpp>
+#include <array>
 
 #include "PatKernel/PatForwardHit.h"
 #include "TfKernel/RecoFuncs.h"
@@ -34,7 +33,7 @@ class PatSeedTrack {
       kNLayers = Tf::RegionID::OTIndex::kNLayers,
       kNStations = Tf::RegionID::OTIndex::kNStations
     };
-    typedef boost::array<unsigned char, kNPlanes> PlaneArray;
+    typedef std::array<unsigned char, kNPlanes> PlaneArray;
 
   public:
     /// Standard constructor
@@ -257,7 +256,7 @@ class PatSeedTrack {
     TrackRegion trackRegion() const
     {
       unsigned trreg = 0;
-      BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+      for(const PatFwdHit* hit: m_coords) {
 	LHCb::LHCbID id(hit->hit()->lhcbID());
 	if (id.isOT()) trreg |= OT;
 	else trreg |= IT;
@@ -337,7 +336,7 @@ class PatSeedTrack {
 inline int PatSeedTrack::otMonoAsym() const
 { 
   int otMonoAsym = 0;
-  BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+  for(const PatFwdHit* hit: m_coords) {
     LHCb::LHCbID id(hit->hit()->lhcbID());
     if (!id.isOT()) continue;
     LHCb::OTChannelID otid = id.otID();
@@ -384,7 +383,7 @@ inline unsigned PatSeedTrack::nStPlanes() const
 
 inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
 {
-  boost::array<unsigned, kNStations> pps = { { 0, 0, 0 } };
+  std::array<unsigned, kNStations> pps = { { 0, 0, 0 } };
   for (unsigned i = kNPlanes; i--; )
     if (m_planeList[i]) ++pps[i / kNLayers];
   unsigned minPlanes = pps[0], minsta = 0;
@@ -398,7 +397,7 @@ inline unsigned PatSeedTrack::minPlanesPerStation(unsigned* minSta) const
 inline unsigned PatSeedTrack::nbOnSide() const
 { 
   unsigned nb = 0;
-  BOOST_FOREACH(const PatFwdHit* hit, m_coords) {
+  for(const PatFwdHit* hit: m_coords) {
     if (hit->hasNext()) ++nb;
     if (hit->hasPrevious()) ++nb;
   }
@@ -413,7 +412,7 @@ inline unsigned PatSeedTrack::nbHighThreshold() const
 
 inline void PatSeedTrack::updateHits()
 {
-  BOOST_FOREACH( PatFwdHit* hit, m_coords )
+  for( PatFwdHit* hit: m_coords )
     updateHitForTrack(hit, m_ay, m_by);
 }
 

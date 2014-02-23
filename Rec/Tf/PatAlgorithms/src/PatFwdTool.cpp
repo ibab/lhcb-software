@@ -8,7 +8,6 @@
 #include "Event/StateParameters.h"
 
 #include "TfKernel/RecoFuncs.h"
-#include <boost/assign/list_of.hpp>
 
 // local
 #include "PatFwdTool.h"

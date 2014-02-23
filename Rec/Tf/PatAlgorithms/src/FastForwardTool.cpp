@@ -1,7 +1,7 @@
 // Include files
 
 #include <algorithm>
-#include "boost/array.hpp"
+#include <array>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -1055,8 +1055,8 @@ double FastForwardTool::getTTOffset ( PatFwdTrackCandidate& track, bool isDebug 
   for ( itF = ttHits.begin(); itF != ttHits.end() - 3 ;  ++itF ) {
     itL = itF;
     int nbPlanes = 0;
-    boost::array<int, 4> firedPlanes;
-    std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
+    std::array<int, 4> firedPlanes;
+    firedPlanes.fill(0); 
     while ( itL < ttHits.end() &&
             (*itL)->projection() <  (*itF)->projection() + tolMatch
             && nbPlanes < 4 ) {
@@ -1180,8 +1180,8 @@ bool FastForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol )
 
   //== Get a list of hits compatible together, using also the drift distance.
 
-  boost::array<int, 12> nbInPlane;
-  std::fill(nbInPlane.begin(), nbInPlane.end(), 0);
+  std::array<int, 12> nbInPlane;
+  nbInPlane.fill(0);
   double sum = 0.;
   double sw  = 0.;
   for ( itH = temp.begin(); temp.end() > itH; ++itH ) {

@@ -8,7 +8,6 @@
 #include "Event/StateParameters.h"
 
 #include "TfKernel/RecoFuncs.h"
-#include <boost/assign/list_of.hpp>
 
 // local
 #include "FastFwdTool.h"
@@ -38,15 +37,12 @@ FastFwdTool::FastFwdTool( const std::string& type,
 
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT);
 
-  std::vector<double> tmp1 = boost::assign::list_of(StateParameters::ZBegT)
-    (StateParameters::ZMidT)(StateParameters::ZEndT);
-  declareProperty( "ZOutput"          ,m_zOutputs        = tmp1);
+  declareProperty( "ZOutput"          ,m_zOutputs        = {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT});
   
-  std::vector<double> tmp2 = boost::assign::list_of(0.0);
-  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = tmp2);
-  declareProperty( "xParams"         , m_xParams         = tmp2);
-  declareProperty( "yParams"         , m_yParams         = tmp2);
-  declareProperty( "momentumParams"  , m_momentumParams  = tmp2);
+  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = {0.0});
+  declareProperty( "xParams"         , m_xParams         = {0.0});
+  declareProperty( "yParams"         , m_yParams         = {0.0});
+  declareProperty( "momentumParams"  , m_momentumParams  = {0.0});
 
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
@@ -77,25 +73,15 @@ StatusCode FastFwdTool::initialize ( ) {
     m_yParams.clear();
 
     if (m_magFieldSvc->useRealMap()){
-      std::vector<double>
-        t1 = boost::assign::list_of (5208.05) (318.502) (-1223.87) (9.80117e-06) (-304.272),
-        t2 = boost::assign::list_of (17.5815) (-5.94803),
-        t3 = boost::assign::list_of (-979.0) (-0.684947),
-        t4 = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
-      m_zMagnetParams   = t1;
-      m_xParams         = t2;
-      m_yParams         = t3;
-      m_momentumParams  = t4;
+      m_zMagnetParams   =  {5208.05, 318.502, -1223.87, 9.80117e-06, -304.272};
+      m_xParams         =  {17.5815, -5.94803};
+      m_yParams         =  {-979.0, -0.684947};
+      m_momentumParams  =  {1.21174, 0.634127, -0.242116, 0.412728, 2.82916, -20.6599};
     } else {
-      std::vector<double>
-        t1 = boost::assign::list_of (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281),
-        t2 = boost::assign::list_of (16.8238) (-6.35556),
-        t3 = boost::assign::list_of (-970.89) (-0.686028),
-        t4 = boost::assign::list_of (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909);
-      m_zMagnetParams   = t1;
-      m_xParams         = t2;
-      m_yParams         = t3;
-      m_momentumParams  = t4;
+      m_zMagnetParams   =  {5199.31, 334.725, -1283.86, 9.59486e-06, -413.281};
+      m_xParams         =  {16.8238, -6.35556};
+      m_yParams         =  {-970.89, -0.686028};
+      m_momentumParams  =  {1.21909, 0.627841, -0.235216, 0.433811, 2.92798, -21.3909};
     }
   }
 

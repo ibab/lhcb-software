@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <functional>
+#include <array>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -13,10 +14,6 @@
 #include "Event/StateParameters.h"
 
 #include "Event/ProcStatus.h"
-// from boost
-#include <boost/assign/list_of.hpp>
-#include <boost/array.hpp>
-#include <boost/foreach.hpp>
 // local
 #include "PatSeedingTool.h"
 #include "PatFwdFitLine.h"
@@ -60,10 +57,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "OnlyGood",			m_onlyGood		= false  );
   declareProperty( "DiscardChi2",		m_discardChi2		= 1.5      ); 
   declareProperty( "InputTracksName",		m_inputTracksName	= LHCb::TrackLocation::Forward  );
-  {
-    std::vector<double> tmp = boost::assign::list_of(-0.6 * Gaudi::Units::mm)(2.8 * Gaudi::Units::mm);
-    declareProperty( "DriftRadiusRange",		m_driftRadiusRange	= tmp );
-  }
+  declareProperty( "DriftRadiusRange",		m_driftRadiusRange	= {-0.6 * Gaudi::Units::mm,2.8 * Gaudi::Units::mm});
 
   //------------------------------------------------------------------------
   // track model
@@ -91,10 +85,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
   declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
-  {
-    std::vector<double> tmp = boost::assign::list_of(1.0)(-0.2);
-    declareProperty( "QualityWeights",		m_qualityWeights	= tmp );
-  }
+  declareProperty( "QualityWeights",		m_qualityWeights	= { 1.0,-0.2});
   // demands that NDblOTHitsInXSearch out of three layers used for the initial
   // parabola have a hits in both monolayers
   declareProperty( "NDblOTHitsInXSearch",	m_nDblOTHitsInXSearch	= 0 );
@@ -156,10 +147,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "StateErrorTX2",		m_stateErrorTX2		= 6e-5 );
   declareProperty( "StateErrorTY2",		m_stateErrorTY2		= 1e-4 );
   declareProperty( "MomentumToolName",	        m_momentumToolName	= "FastMomentumEstimate" );
-  {
-    std::vector<double> tmp = boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT);
-    declareProperty( "ZOutput",			m_zOutputs		= tmp);
-  }
+  declareProperty( "ZOutput",			m_zOutputs		= {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT});
   
   //------------------------------------------------------------------------
   // options concerning copying the T station part of forward tracks
@@ -347,7 +335,7 @@ unsigned PatSeedingTool::prepareHits()
   // - drift radius out of range
   const PatRange driftRadRange(m_driftRadiusRange[0], m_driftRadiusRange[1]);
   HitRange range = hits();
-  BOOST_FOREACH( PatFwdHit* hit, range ) {
+  for( PatFwdHit* hit: range ) {
     hit->setSelected( true );
     hit->setIgnored( false );
     if (hit->hit()->ignore()){
@@ -380,7 +368,7 @@ unsigned PatSeedingTool::prepareHits()
   // which come from tracks with bad chi2>m_discardChi2
   if (m_onlyGood) {
     LHCb::Tracks* fwdTracks  = get<LHCb::Tracks>( m_inputTracksName );
-    BOOST_FOREACH( const LHCb::Track* tF, *fwdTracks) {
+    for( const LHCb::Track* tF: *fwdTracks) {
       // check for good PatFwd tracks
       // from PatForward fit
       if (tF->fitStatus() == LHCb::Track::Fitted) {
@@ -395,8 +383,8 @@ unsigned PatSeedingTool::prepareHits()
         debug() << "*** Found bad PatFwd track, re-marking hits unused. ";
       const std::vector<LHCb::LHCbID>& ids = tF->lhcbIDs();
       int nHits = 0;
-      BOOST_FOREACH(const LHCb::LHCbID id, ids) {
-        BOOST_FOREACH( PatFwdHit* hit, range ) {
+      for(const LHCb::LHCbID id: ids) {
+        for( PatFwdHit* hit: range ) {
           if (id == hit->hit()->lhcbID()) {
             nHits++;
             // mark hit as unused and exit this loop
@@ -436,7 +424,7 @@ unsigned PatSeedingTool::prepareHits()
       for (unsigned sta = 0; sta < m_nSta; ++sta) {
         for (unsigned lay = 0; lay < m_nLay; ++lay) {
           HitRange range1 = hits(sta, lay, reg);
-          BOOST_FOREACH( const PatFwdHit* hit, range1 ) {
+          for( const PatFwdHit* hit: range1 ) {
             if ( ! hit->isUsed() ) continue;
             debugFwdHit( hit, verbose() );
           }
@@ -465,13 +453,13 @@ void PatSeedingTool::killClonesAndStore(
 
   bool debug = msgLevel( MSG::DEBUG );
   //== Keep only those with less than maxUsedFraction used clusters
-  BOOST_FOREACH( const PatSeedTrack* track, finalSelection) {
+  for( const PatSeedTrack* track: finalSelection) {
     // this is a funny way to implement the cut on the fraction of used
     // hits, but the advantage is that we stop counting early, if the
     // track does not pass the cut
     int maxUsed = int(std::ceil(maxUsedFraction * track->nCoords()));
     unsigned nOT = 0, nIT = 0;
-    BOOST_FOREACH( const PatFwdHit* hit, track->coords() ) {
+    for( const PatFwdHit* hit: track->coords() ) {
       if (hit->hit()->type() == Tf::RegionID::OT) ++nOT;
       else ++nIT;
       if (hit->isUsed() && (0 > --maxUsed)) break;
@@ -495,7 +483,7 @@ void PatSeedingTool::killClonesAndStore(
         p = scaleFactor *(-1) / denom;
       info() << "** Store track, estimated P " << p << " nCoord "
              << track->nCoords() << " chi2 " << track->chi2() << endmsg;
-      BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
+      for( const PatFwdHit* hit: track->coords() )
         debugFwdHit( hit, info() );
     }
     storeTrack( *track, outputTracks );
@@ -694,7 +682,7 @@ void PatSeedingTool::collectPerRegion(
         lowQualTracks.reserve(lowQualTracks.size() + pool.size());
         finalSelection.clear();
         finalSelection.reserve(pool.size());
-        BOOST_FOREACH( PatSeedTrack& track, pool ) {
+        for( PatSeedTrack& track: pool ) {
           // skip tracks for which x part is already invalid
           if ( !track.valid() ) continue;
           // unless y turns out to be ok, default to not valid
@@ -706,12 +694,12 @@ void PatSeedingTool::collectPerRegion(
             // if we're debugging, we can be slow in determining where
             // othertrack is in pool
             int nTrack = 0;
-            BOOST_FOREACH( const PatSeedTrack& tmp, pool ) {
+            for( const PatSeedTrack& tmp: pool ) {
               if (&tmp == &track) break;
               ++nTrack;
             }
             info() << "--- X candidate " << nTrack << endmsg;
-            BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+            for( const PatFwdHit* hit: track.coords() ) {
               info() << format( "dist %7.3f ", track.distance( hit ) );
               debugFwdHit( hit, info() );
             }
@@ -724,7 +712,7 @@ void PatSeedingTool::collectPerRegion(
 
           if ( m_printing ) {
             info() << "--- Initial list of stereo hits " << endmsg;
-            BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+            for( PatFwdHit* hit: stereo ) {
               if ( hit->isIgnored() ) continue;
               restoreCoordinate(hit);
               debugFwdHit( hit, info() );
@@ -740,7 +728,7 @@ void PatSeedingTool::collectPerRegion(
 	  
           if ( m_printing ) {
             info() << "--- After filtering of stereo hits " << endmsg;
-            BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+            for( PatFwdHit* hit: stereo ) {
               if ( hit->isIgnored() ) continue;
               restoreCoordinate(hit);
               debugFwdHit( hit, info() );
@@ -775,7 +763,7 @@ void PatSeedingTool::collectPerRegion(
             if (!isRegionOT(reg)) continue;
             // unless they point nowhere near the vertex
             if (m_maxYAtOriginLowQual < fabs(yAtOrigin)) continue;
-            BOOST_FOREACH(PatFwdHit* hit, stereo)
+            for(PatFwdHit* hit: stereo)
               if ( !hit->isIgnored() ) track.addCoord( hit );
             track.setYParams( y0, sl );
             lowQualTracks.push_back(track);
@@ -784,7 +772,7 @@ void PatSeedingTool::collectPerRegion(
 
           if ( m_printing ) {
             info() << "Fitted line y0 " << y0 << " sl " << sl << endmsg;
-            BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+            for( const PatFwdHit* hit: stereo ) {
               if ( hit->isIgnored() ) continue;
               info() << format( "dist %7.3f ",  hit->projection() - y0 - hit->z() * sl );
               debugFwdHit( hit, info() );
@@ -794,8 +782,8 @@ void PatSeedingTool::collectPerRegion(
           if ( isRegionOT(reg) ) {
             double y = y0 + m_zForYMatch * sl;
             if ( m_centralYOT < fabs(y) ) {
-              boost::array<int, 3> nInStation = { {0, 0, 0} };
-              BOOST_FOREACH( const PatFwdHit* hit, stereo)
+              std::array<int, 3> nInStation = { {0, 0, 0} };
+              for( const PatFwdHit* hit: stereo)
                 if ( !hit->isIgnored() )
                   nInStation[ hit->hit()->station() ]++;
               if (m_minStHitsPerStaOT >
@@ -811,7 +799,7 @@ void PatSeedingTool::collectPerRegion(
             }
           }
 
-          BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+          for( PatFwdHit* hit: stereo ) {
             if ( hit->isIgnored() ) continue;
             track.addCoord( hit );
           }
@@ -850,7 +838,7 @@ void PatSeedingTool::collectPerRegion(
 	    if ( m_printing ) {
 	      info()  << "Too many on side " << track.nbOnSide() << " with only "
 		<< track.nCoords() << " coordinates" << endmsg;
-	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	      for( const PatFwdHit* hit: track.coords() )
 		debugFwdHit( hit, info() );
 	    }
 	    continue;
@@ -1028,7 +1016,7 @@ void PatSeedingTool::collectITOT(
 	      // loose red. chi^2 cut even before we attempt a refit
 	      track.updateHits();
 	      double chi2 = 0.;
-	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	      for( const PatFwdHit* hit: track.coords() )
 		chi2 += track.chi2Hit(hit);
 	      if (chi2 / double(track.nCoords() - 3) > m_itStubLooseChi2) {
 		if ( m_printing )
@@ -1045,7 +1033,7 @@ void PatSeedingTool::collectITOT(
 		continue;
 	      }
 	      chi2 = 0.;
-	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	      for( const PatFwdHit* hit: track.coords() )
 		chi2 += track.chi2Hit(hit);
 	      // if the reduced chi^2 is still bad, we also kill the seed
 	      if (chi2 / double(track.nCoords() - 3) > m_itStubTightChi2) {
@@ -1058,7 +1046,7 @@ void PatSeedingTool::collectITOT(
 
 	      if ( m_printing ) {
           info() << "--- IT point -- " << endmsg;
-          BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+          for( const PatFwdHit* hit: track.coords() )
             debugFwdHit( hit, info() );
 	      }
 	    }
@@ -1223,7 +1211,7 @@ void PatSeedingTool::collectITOT(
       if ( m_printing ) {
 	info() << " --- We have found " << track.nStations() << " stations, fitOK " <<
 	  fitOK << "." << endmsg;
-	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	for( const PatFwdHit* hit: track.coords() )
 	  debugFwdHit( hit, info() );
       }
 
@@ -1303,7 +1291,7 @@ void PatSeedingTool::collectLowQualTracks(
     track.setYParams(0., 0.);
     track.sort();
     stereo.clear();
-    BOOST_FOREACH(PatFwdHit* hit, track.coords()) {
+    for(PatFwdHit* hit: track.coords()) {
       hit->setSelected( true );
       hit->setIgnored( false );
       if (!hit->hit()->isX()) {
@@ -1337,12 +1325,8 @@ void PatSeedingTool::collectLowQualTracks(
     if ( isOT ) {
       double y = y0 + m_zForYMatch * sl;
       if ( m_centralYOT < fabs(y) ) {
-        // we use a C style array here instead of std::vector because we
-        // know exactly how large the array needs to be, and we do not
-        // want to buy the additional cost of dynamically allocating
-        // memory for std::vector's storage
-        boost::array<int, 3> nInStation = { {0, 0, 0} };
-        BOOST_FOREACH(const PatFwdHit* hit, track.coords()) {
+        std::array<int, 3> nInStation = { {0, 0, 0} };
+        for(const PatFwdHit* hit: track.coords()) {
           if ( hit->hit()->isX() ) continue;
           if ( hit->isIgnored() ) continue;
           nInStation[ hit->hit()->station() ]++;
@@ -1377,7 +1361,7 @@ void PatSeedingTool::collectLowQualTracks(
       if ( m_printing ) {
         info()  << "Too many on side " << track.nbOnSide() << " with only "
                 << track.nCoords() << " coordinates" << endmsg;
-        BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+        for( const PatFwdHit* hit: track.coords() )
           debugFwdHit( hit, info() );
       }
       continue;
@@ -1410,14 +1394,14 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "==== Storing track " << outputTracks.size() << endmsg;
-  BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
+  for( PatFwdHit* hit: track.coords() ) {
     out->addToLhcbIDs( hit->hit()->lhcbID() );
     //== Tag used coordinates
     hit->hit()->setStatus(Tf::HitBase::UsedByPatSeeding);
     hit->setIsUsed(true);
   }
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+    for( const PatFwdHit* hit: track.coords() )
       debugFwdHit( hit, debug() );
   }
   // put the chi^2 and NDF of our track fit onto the track (e.g. for use in
@@ -1458,7 +1442,7 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
   cov(3,3) = m_stateErrorTY2;
   cov(4,4) = sigmaQOverP * sigmaQOverP;
 
-  BOOST_FOREACH( const double z, m_zOutputs ) {
+  for( const double z: m_zOutputs ) {
     temp.setX(track.xAtZ(z));
     temp.setY(track.yAtZ(z));
     temp.setZ(z);
@@ -1515,7 +1499,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
 
   if ( printing ) {
     info() << ".. Compare new track:" << endmsg;
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+    for( const PatFwdHit* hit: track.coords() )
       debugFwdHit( hit, info() );
   }
 
@@ -1523,7 +1507,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
   // vector bigger; is 0 if no invalid entry found
   PatSeedTrack* lastInvalidTrack = 0;
   bool stored = false;
-  BOOST_FOREACH( PatSeedTrack& othertrack, pool ) {
+  for( PatSeedTrack& othertrack: pool ) {
     if ( !othertrack.valid() ) {
       lastInvalidTrack = &othertrack;
       continue;
@@ -1537,7 +1521,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
     // but we can stop early if this is the case
     int nCommonMax = int(std::ceil(m_commonXFraction *
                                    std::min(othertrack.nCoords(), track.nCoords())));
-    BOOST_FOREACH( const PatFwdHit* hit1, othertrack.coords() ) {
+    for( const PatFwdHit* hit1: othertrack.coords() ) {
       if ( track.coordEnd() !=
            std::find(track.coordBegin(), track.coordEnd(), hit1) )
         if (0 > --nCommonMax) break;
@@ -1551,7 +1535,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       // if we're debugging, we can be slow in determining where othertrack
       // is in pool
       int nTrack = 0;
-      BOOST_FOREACH( const PatSeedTrack& tmp, pool ) {
+      for( const PatSeedTrack& tmp: pool ) {
         if (&tmp == &othertrack) break;
         ++nTrack;
       }
@@ -1559,7 +1543,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
              << " chi2 " << othertrack.chi2() << " has <= " << nCommonMax2
              << " hit shared with current track of size " << track.nCoords()
              << " chi2 " << track.chi2() << endmsg;
-      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+      for( const PatFwdHit* hit: track.coords() )
         debugFwdHit( hit, info() );
     }
     double qual1 = 0., qual2 = 0.;
@@ -1599,7 +1583,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
   }
   if ( m_printing ) {
     info() << " ****** stored track " << endmsg;
-    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+    for( const PatFwdHit* hit: track.coords() )
       debugFwdHit( hit, info() );
   }
   return;
@@ -1960,7 +1944,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
   }
 
   //== Final refit, as track may have been modified...
-  BOOST_FOREACH( PatSeedTrack& track, pool ) {
+  for( PatSeedTrack& track: pool ) {
     if (!track.valid()) continue;
 
     track.sort();
@@ -2029,9 +2013,8 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
           info() << format( "Stereo in sta%2d lay%2d region%2d xMin %7.2f xmax %7.2f",
                             sta, sLay, testRegion, range.min(), range.max() ) << endmsg;
 
-        boost::array<unsigned char, 20> nDense;
-        if ( m_enforceIsolation )
-          std::fill(nDense.begin(), nDense.end(), 0);
+        std::array<unsigned char, 20> nDense;
+        nDense.fill( 0);
 
         HitRange rangeW = hitsInRange( range, sta, sLay, testRegion);
         HitRange::const_iterator it = rangeW.begin(), end = rangeW.end();
@@ -2225,7 +2208,7 @@ bool PatSeedingTool::findBestRangeCosmics(
       // now, collect hits around predicted position in projection plane
       current.clear();
       current.reserve(stereo.size());
-      BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+      for( PatFwdHit* hit: stereo ) {
         if (fabs(hit->projection() - y0 / hit->z() - ty) > maxRangeSize)
           continue;
         current.push_back(hit);
@@ -2257,12 +2240,12 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
   // we use builtin arrays here because we know how big they need to be,
   // and we do not want the additional cost of allocating memory dynamically
   // for std::vector
-  boost::array<double, 3> largestDrift = { { 0., 0., 0. } };
-  boost::array<PatFwdHit*, 3> seeds;
+  std::array<double, 3> largestDrift = { { 0., 0., 0. } };
+  std::array<PatFwdHit*, 3> seeds = { { nullptr, nullptr, nullptr } };;
   double slopeguess = 0.;
   int npoints = 0;
 
-  BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+  for( PatFwdHit* hit: stereo ) {
     if ( hit->isIgnored() ) continue;
     restoreCoordinate(hit);
     // calculate average slope as first guess for IT or OT without
@@ -2324,7 +2307,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
       sl = (locY2 - locY0) / (z2 - z0);
       y0 = locY0 - sl * z0;
       double chi2 = 0.;
-      BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+      for( const PatFwdHit* hit: stereo ) {
         if ( hit->isIgnored() ) continue;
         double y = hit->projection();
         double dist = y - y0 - hit->z() * sl;
@@ -2355,7 +2338,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
     // bias the fit: add a point at y = z = 0, sigma = 200 mm
     PatFwdFitLine line( 0., 0., 0.25e-4 );
     int nOK = 0;
-    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+    for( const PatFwdHit* hit: stereo ) {
       if ( hit->isIgnored() ) continue;
       double proj = hit->projection();
       double dist = proj - y0 - hit->z() * sl;
@@ -2425,7 +2408,7 @@ void PatSeedingTool::processForwardTracks ( const std::string& location,
   std::vector<LHCb::LHCbID> ids;
   ids.reserve(64);
   // loop over input tracks
-  BOOST_FOREACH( const LHCb::Track* track, *inputTracks ) {
+  for( const LHCb::Track* track: *inputTracks ) {
     ids.clear();
     // copy the LHCbIDs which are either IT or OT hits
     const std::vector<LHCb::LHCbID>& allids = track->lhcbIDs();
@@ -2452,7 +2435,7 @@ void PatSeedingTool::processForwardTracks ( const std::string& location,
         double(std::min(ids.size(), ids2.size()));
       const double maxMissed = (1. - m_forwardCloneMaxShared) *
         double(std::min(ids.size(), ids2.size()));
-      BOOST_FOREACH(const LHCb::LHCbID id, ids) {
+      for(const LHCb::LHCbID id: ids) {
         unsigned nCommon = 0;
         unsigned nMissed = 0;
         if (ids2.end() == std::find(ids2.begin(), ids2.end(), id)) {
@@ -2530,7 +2513,7 @@ StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,
   if (sc.isSuccess() && !outvec.empty()) {
     // copy tracks from outvec to output container
     outputTracks->reserve(outvec.size());
-    BOOST_FOREACH( LHCb::Track* track, outvec )
+    for( LHCb::Track* track: outvec )
       outputTracks->insert(track);
   }
 

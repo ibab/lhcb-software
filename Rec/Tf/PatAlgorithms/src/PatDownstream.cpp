@@ -3,10 +3,6 @@
 #include <algorithm>
 #include <cmath>
 
-// from boost
-#include <boost/assign/list_of.hpp>
-#include <boost/array.hpp>
-#include <boost/foreach.hpp>
 
 // from ROOT
 #include <Math/CholeskyDecomp.h>
@@ -74,18 +70,9 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "minTTx"        , m_minTTx        = 35. *  Gaudi::Units::mm );
   declareProperty( "minTTy"        , m_minTTy        = 35. *  Gaudi::Units::mm );
   // Define parameters for MC09 field, zState = 9410
-  {
-    std::vector<double> tmp = boost::assign::list_of(5376.8)(-3895.12)(309.877)(85527.9);
-    declareProperty( "zMagnetParams" , m_zMagnetParams  = tmp);
-  }
-  {
-    std::vector<double> tmp = boost::assign::list_of(1148.65)(961.786)(5326.81);
-    declareProperty( "momentumParams", m_momentumParams = tmp);
-  }
-  {
-    std::vector<double> tmp =  boost::assign::list_of(5.)(2000.);
-    declareProperty( "yParams"       , m_yParams        = tmp);
-  }
+  declareProperty( "zMagnetParams" , m_zMagnetParams  = { 5376.8,-3895.12,309.877,85527.9});
+  declareProperty( "momentumParams", m_momentumParams = {1148.65,961.786,5326.81});
+  declareProperty( "yParams"       , m_yParams        = {5.,2000.});
 
   declareProperty( "zTT"           , m_zTT           = 2485.* Gaudi::Units::mm );
   declareProperty( "zTTa"          , m_zTTa          = 2350.* Gaudi::Units::mm );
@@ -389,7 +376,7 @@ void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track
         LHCb::Track* tr = (*itT);
         bool store =true;
         if ( m_printing ) debug() << "Seed " << tr->key();
-        BOOST_FOREACH( LHCb::Track* matchTr, *match ) {
+        for( LHCb::Track* matchTr: *match ) {
           const SmartRefVector<LHCb::Track>& ancestors = matchTr->ancestors();
           for ( SmartRefVector<LHCb::Track>::const_iterator itA = ancestors.begin();
                 ancestors.end() != itA; ++itA ) {
@@ -415,7 +402,7 @@ void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track
       }
     }
   } else {  //== Copy tracks without ancestor...
-    BOOST_FOREACH(LHCb::Track* tr, *inTracks) {
+    for(LHCb::Track* tr: *inTracks) {
       //== Ignore tracks with ancestor = forward...
       if ( m_removeUsed && 0 < tr->ancestors().size() ) continue;
       myInTracks.push_back( tr );
@@ -430,7 +417,7 @@ void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track
 //=========================================================================
 void PatDownstream::ttCoordCleanup ( ) {
   Tf::TTStationHitManager<PatTTHit>::HitRange ttCoords = m_ttHitManager->hits();
-  BOOST_FOREACH(PatTTHit* hit, ttCoords)
+  for(PatTTHit* hit: ttCoords)
     hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
   
   //== Tag hit used in forward
@@ -439,7 +426,7 @@ void PatDownstream::ttCoordCleanup ( ) {
       if (m_printing) debug()<<"Remove TT hits from Forward tracks from location "
                              <<m_forwardLocation <<endmsg;
       LHCb::Tracks* tracks = get<LHCb::Tracks>( m_forwardLocation );
-      BOOST_FOREACH(const LHCb::Track* tr, *tracks) {
+      for(const LHCb::Track* tr: *tracks) {
         if (m_removeAll || tr->chi2PerDoF()<m_longChi2) tagUsedTT( tr );
       }
     }
@@ -451,9 +438,9 @@ void PatDownstream::ttCoordCleanup ( ) {
 //=========================================================================
 void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
   Tf::TTStationHitManager<PatTTHit>::HitRange ttCoords = m_ttHitManager->hits();
-  BOOST_FOREACH(LHCb::LHCbID id, tr->lhcbIDs()) {
+  for(LHCb::LHCbID id: tr->lhcbIDs()) {
     if ( !id.isTT() ) continue;
-    BOOST_FOREACH(const PatTTHit* hit, ttCoords) {
+    for(const PatTTHit* hit: ttCoords) {
       if ( hit->hit()->lhcbID() == id ) {
         if (m_printing) debug()<<"tag hit as used "<<hit->hit()->lhcbID()<<endmsg;
         hit->hit()->setStatus( Tf::HitBase::UsedByPatMatch, true );
@@ -488,7 +475,7 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
         const double xReg = track.xAtZ( reg->z() );
         if ( !reg->isXCompatible( xReg, xPredTol ) ) continue;
         Tf::TTStationHitManager<PatTTHit>::HitRange coords = m_ttHitManager->hits( kSta, kLay, kReg );
-        BOOST_FOREACH(PatTTHit* hit, coords) {
+        for(PatTTHit* hit: coords) {
           if (hit->hit()->ignore()) continue;
           if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatMatch ) ) {
             if (m_printing) debug()<<"Skip hit "<<hit->hit()->lhcbID()<<endmsg;
@@ -551,7 +538,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     rhs[2] = 0.;
     int nbUV = 0;
 
-    BOOST_FOREACH(PatTTHit* hit, track.hits()) {
+    for(PatTTHit* hit: track.hits()) {
       double yTrack = track.yAtZ( 0. );
       double tyTr   = track.slopeY();
       updateTTHitForTrack( hit, yTrack, tyTr );
@@ -679,7 +666,7 @@ void PatDownstream::findMatchingHits( PatTTHits& MatchingXHits, PatDownTrack& tr
   //search window = const1/momentum + const2
   const double tol = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolX)) ?
     m_maxWindow : (m_tolX + m_tolMomentum / track.state()->p());
-  BOOST_FOREACH(PatTTHit* hit, m_xHits) {
+  for(PatTTHit* hit: m_xHits) {
     if ( plane != hit->planeCode() ) {
       const double adist = std::abs(track.distance( hit ));
       if ( adist < tol ) MatchingXHits.push_back( hit );
@@ -697,7 +684,7 @@ void PatDownstream::addUVHits ( PatDownTrack& track ) {
   //search window = const1/momentum + const2
   const double tol = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolUV)) ?
     m_maxWindow : (m_tolUV + m_tolMomentum / track.state()->p());
-  BOOST_FOREACH(PatTTHit* hit, m_uvHits) {
+  for(PatTTHit* hit: m_uvHits) {
     const double yTrack = track.yAtZ( 0. );
     const double tyTr   = track.slopeY();
     updateTTHitForTrack( hit, yTrack, tyTr );
@@ -752,7 +739,7 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   int nbHigh = 0;
   int nbUsed = 0;
 
-  BOOST_FOREACH(PatTTHit* hit, track.hits()) {
+  for(PatTTHit* hit: track.hits()) {
     if ( hit->hit()->sthit()->cluster().highThreshold() ) ++nbHigh;
     if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )  ) ++nbUsed;
   }
@@ -793,19 +780,19 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   
   
 
-  BOOST_FOREACH( PatTTHit* hit, bestTrack.hits() ) {
+  for( PatTTHit* hit: bestTrack.hits() ) {
     hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
   }
  
   track.sortFinalHits();
   
-  BOOST_FOREACH( PatTTHit* hit, track.hits() ) {
+  for( PatTTHit* hit: track.hits() ) {
     hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, true );
   }
   
       
   if ( m_printing ) {
-    BOOST_FOREACH(PatTTHit* hit, track.hits()) {
+    for(PatTTHit* hit: track.hits()) {
       LHCb::STChannelID icID = hit->hit()->lhcbID().stID();
       double xCoord = hit->x() ;
       info() << "      TT Clus " 
@@ -890,7 +877,7 @@ void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, 
   }
   
   // adjust q/p and its uncertainty
-  BOOST_FOREACH(LHCb::State* st, newstates) {
+  for(LHCb::State* st: newstates) {
     st->covariance()(4,4) = errQOverP * errQOverP;
     st->setQOverP(QOverP);
   }
@@ -911,7 +898,7 @@ void PatDownstream::fitXProjection( PatTTHits& xHits, PatDownTrack& track, PatTT
   PatDownTrack bestTrack( track );
   PatDownTrack newTrack( track );
   double minChisq = 1000000;
-  BOOST_FOREACH( PatTTHit* hit, xHits) {
+  for( PatTTHit* hit: xHits) {
     newTrack.startNewXCandidate( firstHit );
     newTrack.hits().push_back( hit );
     fitAndRemove( newTrack );
@@ -929,7 +916,7 @@ void PatDownstream::fitXProjection( PatTTHits& xHits, PatDownTrack& track, PatTT
 
 void PatDownstream::addOverlapRegions( PatDownTrack& track ){
   bool hitAdded = false;
-  BOOST_FOREACH( PatTTHit* hit, m_xHits ) {
+  for( PatTTHit* hit: m_xHits ) {
     if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )) continue;
     if ( m_maxDistance > std::abs( track.distance( hit ) ) ) {
       double yTrack = track.yAtZ( hit->z() );

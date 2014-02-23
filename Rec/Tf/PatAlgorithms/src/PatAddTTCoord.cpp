@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <boost/array.hpp>
+#include <array>
 
 // Include files
 // from Gaudi
@@ -146,8 +146,8 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     double firstProj = (*itBeg)->projection();
     goodTT.clear();
     int nbPlane = 0;
-    boost::array<int, 4> firedPlanes;
-    std::fill(firedPlanes.begin(), firedPlanes.end(), 0);
+    std::array<int, 4> firedPlanes;
+    firedPlanes.fill(0);
     PatTTHits::iterator itEnd = itBeg;
 
     // -- If |firstProj| > m_majAxProj, the sqrt is ill defined
@@ -282,8 +282,8 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
   while ( 1.e10 < chi2 && counter < nHits) {
 
     int nDoF = 0;
-    boost::array<int, 4> differentPlanes;
-    std::fill(differentPlanes.begin(), differentPlanes.end(), 0);
+    std::array<int, 4> differentPlanes;
+    differentPlanes.fill(0);
     double worstDiff = -1.0;
     double mat[6], rhs[3];
 

@@ -1,7 +1,7 @@
 
 // Include files
+#include <cmath>
 
-// from boost
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -50,15 +50,6 @@ std::pair<InputIterator,OutputIterator> copy_while( InputIterator first, InputIt
     return { first, out };
 }
 
-template <typename InputIterator, typename OutputIterator, typename Predicate>
-std::pair<InputIterator,OutputIterator> copy_until( InputIterator first, InputIterator last, OutputIterator out, Predicate pred )
-{
-    for( ; first != last && !pred(*first) ; ++first ) { 
-        *out = *first; ++out;
-    }
-    return { first, out };
-}
-
 template <typename Container, typename Arg, typename Ret, Ret(Container::*mf)(Arg)>
 class insert_iterator_adaptor {
   Container *container;
@@ -86,7 +77,7 @@ int nT(const PatFwdTrackCandidate& c) {
     return regions.nbOT() + 2*regions.nbIT();
 }
 
-int nbT(const PatFwdTrackCandidate& c) { return 2*c.nbIT()+c.nbOT(); };
+int nbT(const PatFwdTrackCandidate& c) { return 2*c.nbIT()+c.nbOT(); }
 
 
 
@@ -644,8 +635,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
         //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
         //== displacement also in this projectio.
-        double sign = -1.;
-        if ( regionB->sinT() >0 ) sign = +1;
+
+        double sign = std::copysign( 1., regionB->sinT() );
 
         double minProj = tol;
         if ( region< m_nOTReg ) minProj += 1.5;
