@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2014-02-23 - Chris Jones
+ - Fix some tests added in previous test to demand gas properties vectors are
+   larger or equal to the number of gases in a given micture, rather than
+   exactly equal.
+
 ! 2014-02-21 - Chris Jones
  - Put an FPE::Guard into DeRichGasRadiator::calcSellmeirRefIndex to protect
    against a very very weird FPE exception when running clang...
