@@ -421,7 +421,7 @@ DeRichGasRadiator::calcSellmeirRefIndex ( const std::vector<double>& momVect,
       MomConvWave    = param<double> ("PhotonMomentumWaveLengthConvFact"  );
       GasRhoCur      = ( (curPressure/Gaudi::Units::STP_Pressure) *
                          (Gaudi::Units::STP_Temperature/curTemp) );
-      if ( aWaveZeroVect.size() != numOfGases )
+      if ( numOfGases > aWaveZeroVect.size() )
       {
         error() << "aWaveZeroVect size != # Gases=" << numOfGases << endmsg;
         return StatusCode::FAILURE;
