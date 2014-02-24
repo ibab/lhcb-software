@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-24 - Marco Clemencic
+ - Replaced the use of PyCintex with cppyy to work with ROOT 6.
+
 !========================= LoKiTracks v2r10 2014-02-20 =========================
 
 ! 2014-02-01 - Vanya Belyaev

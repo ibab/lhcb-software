@@ -43,19 +43,15 @@ __version__ = "CVS tag $Name:$, version $Revision$ "
 
 import LoKiCore.decorators as _LoKiCore 
 
-## needed since there is no autoloading of Tracking dictionaries:
-import sys,PyCintex
-
-if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
-else                       : PyCintex.loadDict ( "libTrackEventDict" )  
-
-
 # Namespaces:
 from LoKiCore.basic import cpp, std, LoKi
 LHCb     = cpp.LHCb
 
-
 _T = 'const LHCb::Track*'
+
+## FIXME: needed since there is no autoloading of Tracking dictionaries:
+import cppyy
+cppyy.loadDict('TrackEventDict')
 
 # =============================================================================
 ## "Ordinary" functions for Tracks: "Tr"
