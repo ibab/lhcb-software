@@ -128,6 +128,7 @@ class Moore(LHCbConfigurableUser):
         , 'VetoRoutingBits'    : []
         , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
         , 'WriteFSR'    :  True #copy FSRs as required
+        , 'EnableRunChangeHandler' : False #was only used to set something from condDB
         }
     
     _propertyDocDct={
