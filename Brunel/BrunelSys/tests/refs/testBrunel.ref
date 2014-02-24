@@ -1,6 +1,7 @@
-# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
+# WARNING: using PyCintex as cppyy implementation
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
 # |-Histograms          = 'OfflineFull'
@@ -99,7 +100,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v44r9
-                                          running on lxbuild173.cern.ch on Fri Feb 14 07:12:36 2014
+                                          running on lxplus0109 on Mon Feb 24 10:30:34 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -108,7 +109,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -125,7 +126,6 @@ HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/night
 LumiSeq              INFO OR Member list: GaudiSequencer/LumiCounters, HltRoutingBitsFilter/LumiFilter, HltRoutingBitsFilter/PhysFilter, with context 'Offline'
 LumiCounters         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSequencer/LumiBeamCrossingSeq, GaudiSequencer/LumiBeam1Seq, GaudiSequencer/LumiBeam2Seq, GaudiSequencer/TimeSpanSeq, EventAccounting/EventAccount, with context 'Offline'
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam, with context 'Offline'
-# WARNING: using PyCintex as cppyy implementation
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
@@ -164,7 +164,6 @@ ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Templa
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
 RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloClusters, RawBankToSTClusterAlg/createTTClusters, RawBankToSTLiteClusterAlg/createTTLiteClusters, RawBankToSTLiteClusterAlg/createITLiteClusters, RawBankToSTClusterAlg/createITClusters, with context 'Offline'
 createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
-createBothVeloC...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
@@ -706,7 +705,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.35 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
