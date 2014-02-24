@@ -326,7 +326,7 @@ for report in ["Dec","Sel","Vertex"]:
 Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
         active=False, banks=["HltTrackReports"],
         inputs = {"RawEventLocations":None},
-        outputs={"OutputHltTrackReportsLocation" : "Hlt/Track/Velo"},
+        outputs={"OutputLocation" : "Hlt/Track/Velo"},
         properties={"SourceID" : 1}, #None=default(0)
         conf=DecoderDB
         )
