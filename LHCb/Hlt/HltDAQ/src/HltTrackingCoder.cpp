@@ -70,6 +70,7 @@ decodeTracks(unsigned int* rawBankData,
       track->addToLhcbIDs(LHCbID(rawit[k]));
       ++k; //rawit+=sizeof(unsigned int);
     }
+    track->setType(LHCb::Track::Velo);
     tracks->add(track);
     //std::cout << "RawBank entry counter k= " << k << std::endl;
     // std::cout << "Decoded track: \n" << *track << std::endl;

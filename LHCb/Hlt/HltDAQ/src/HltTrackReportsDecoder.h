@@ -39,7 +39,7 @@ public:
 private:
 
   /// location of output
-  StringProperty m_outputHltTrackLocation;
+  StringProperty m_outputLocation;
   
   /// location of HltTrackReports (will not be used unless ANNSvc not working) 
   StringProperty m_HltTrackReportsLocation;

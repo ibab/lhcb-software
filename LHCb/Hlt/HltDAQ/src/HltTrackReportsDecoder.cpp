@@ -43,8 +43,8 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
   initRawEventSearch();
   
 
-  declareProperty("OutputHltTrackReportsLocation",
-    m_outputHltTrackLocation= "/Hlt2/Track/Velo" );  
+  declareProperty("OutputLocation",
+    m_outputLocation= "/Hlt/Track/Velo" );  
 
   declareProperty("SourceID",
 		  m_sourceID= HltTrackReportsWriter::kSourceID_Dummy );  
@@ -92,10 +92,10 @@ StatusCode HltTrackReportsDecoder::execute() {
   // create output container and put it on TES
   LHCb::Tracks* outputTracks = new LHCb::Tracks();
   try {
-    put( outputTracks, m_outputHltTrackLocation );
+    put( outputTracks, m_outputLocation );
   }
   catch(GaudiException ex) {
-    warning() << "Failed to create output location " <<  m_outputHltTrackLocation << endmsg;
+    warning() << "Failed to create output location " <<  m_outputLocation << endmsg;
     warning() << ex.message() << endmsg;
     return StatusCode::FAILURE;
   }

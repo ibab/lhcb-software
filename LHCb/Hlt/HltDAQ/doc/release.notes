@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-24 - Sebastian Neubert
+ - Renamed TrackReportsDecoder OutputLocation to be findable by bindMember
+ - Added track type = Velo to all tracks (needs reiteration)
+
 ! 2014-02-19 - Sebastian Neubert
  - HltTrackReportsWriter/Decoder added debug output: dumps tracks in verbose mode
 
