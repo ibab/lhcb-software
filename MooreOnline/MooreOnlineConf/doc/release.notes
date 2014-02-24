@@ -3,6 +3,10 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
+! 2014-02-24 - Rob Lambert
+ - First entries into this package
+ - Move a load of the Moore configuration into MooreOnline.
+
 
 ! 2014-02-18 - Rob Lambert
   - Create the package.

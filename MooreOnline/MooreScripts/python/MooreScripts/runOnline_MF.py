@@ -9,25 +9,26 @@ InstallRootLoggingHandler(level = logging.CRITICAL)
 
 
 def start() :
-    from Moore.Configuration import Moore
+    from Moore.Configuration import Moore, MooreExpert
+    from MooreOnlineConf.Configuration import MooreOnline
     import OnlineEnv 
 
-    Moore().RunOnline = True
-    Moore().RunMonitoringFarm = True
+    MooreOnline().RunOnline = True
+    MooreOnline().RunMonitoringFarm = True
 
     # TODO: change 0x4 into 0x10000 (NoBias)
-    Moore().REQ1 = 'EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0'
+    MooreOnline().REQ1 = 'EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0'
 
     ### default database setup
-    Moore().Simulation = False
+    #not needed Moore().Simulation = False
     Moore().DDDBtag    = 'head-20110302'
     Moore().CondDBtag  = 'head-20110318'
-    Moore().UseDBSnapshot = True
-    Moore().IgnoreDBHeartBeat = True
-    Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
-    Moore().HistogrammingLevel = 'Line'
+    #not needed MooreOnline().UseDBSnapshot = True
+    #not needed Moore().IgnoreDBHeartBeat = True
+    MooreOnline().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+    #not needed Moore().HistogrammingLevel = 'Line'
     #Moore().Verbose = True
-
+    
     ### pick up requested DB tags
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag
     if hasattr(OnlineEnv,'DDDBTag')   and OnlineEnv.DDDBTag   : Moore().DDDBtag   = OnlineEnv.DDDBTag

@@ -4,6 +4,10 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-02-24 - Rob Lambert
+ - Moved a lot of online parameters from Moore to MooreOnline()
+ - this needed reflection in the setup scripts.
+
 ! 2014-02-19 - Rob Lambert
  - Create directory "install" to hold online install scripts. This will be manually checked out in the HLT account to do the installation.
 

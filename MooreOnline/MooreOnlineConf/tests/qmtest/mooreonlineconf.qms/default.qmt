@@ -1,0 +1,23 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="exit_code"><integer>1</integer></argument>
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>../options/default-online-env.py</text>
+    <text>--option</text>
+    <text>from Configurables import MooreOnline; MooreOnline();</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+countErrorLines({"FATAL":2,"ERROR":0,"WARNING":0})
+
+checkerr=[s for s in stderr.strip().split('\n') if "openFifo" not in s]
+
+
+if len(checkerr):
+    causes.append("Additional stderr over what I expected")
+    result["mooreonlineconf.default"]=result.Quote("Check stderr")
+
+</text></argument>
+</extension>
+
