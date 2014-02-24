@@ -6,6 +6,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-02-24 - Pieter David
+ - Avoid Hlt1Line TISTOS warning for Hlt1HighPtJetsSinglePVLine: changed
+   algorithm name from "HighPtJetsSinglePVDecision" to
+   "Hlt1HighPtJetsSinglePVDecision"
+
+! 2014-02-24 - Pieter David
  - Remove whitespaces ( "SINK (" -> "SINK(" ) in Hlt1 displaced vertex
    streamers (fixes warnings about TISTOS from Hlt1Line)
 

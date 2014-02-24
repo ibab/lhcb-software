@@ -20,7 +20,7 @@ class Hlt1HighPtJetsSinglePVLinesConf(HltLinesConfigurableUser):
         from HltLine.HltLine import Hlt1Line
         from HltTracking.HltPVs import PV3D
         from Configurables import LoKi__VoidFilter as VoidFilter
-        algCheckVtcs = VoidFilter('HighPtJetsSinglePVDecision', Code = "CONTAINS('Hlt/Vertex/PV3D') == 1" )
+        algCheckVtcs = VoidFilter('Hlt1HighPtJetsSinglePVDecision', Code = "CONTAINS('Hlt/Vertex/PV3D') == 1" )
         channel = self.getProp('L0Channel')
         Hlt1Line('HighPtJetsSinglePV',
                  prescale  = self.prescale,
