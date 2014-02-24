@@ -11,12 +11,14 @@ from Moore.Configuration import Moore
 
 Moore().EvtMax = 1200
 
-Moore().UseDBSnapshot = False
-Moore().ForceSingleL0Configuration = False
-
 from PRConfig.TestFileDB import test_file_db
 input = test_file_db['2012_raw_default']
 input.run(configurable=Moore())
+
+from Configurables import L0MuonAlg
+L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+from Configurables import HltConf
+HltConf().ForceSingleL0Configuration=False
 
 Moore().EnableTimer=True
 from Configurables import TimingAuditor, SequencerTimerTool

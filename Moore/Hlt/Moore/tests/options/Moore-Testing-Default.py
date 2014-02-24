@@ -9,17 +9,13 @@ from Configurables import Moore
 
 ############# Moore config taken from printout at the top of the sequence ############
 
-Moore().UseDBSnapshot= False;
 Moore().outputFile= 'Test.dst';
 Moore().DataType= '2012';
 Moore().DDDBtag= 'dddb-20120831'; #from RunDB
-Moore().EnableRunChangeHandler= False;
 Moore().WriterRequires= [];
-Moore().WriteFSR= True;
 Moore().EnableDataOnDemand= True;
 Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
-Moore().Simulation= False;
 Moore().CondDBtag= 'cond-20120831'; #from RunDB
 Moore().EnableTimer=True
 
@@ -29,10 +25,9 @@ TimingAuditor('TIMER').TIMER.NameSize=150
 
 ########### L0-related things #######################
 
-Moore().ForceSingleL0Configuration = False
-
-from Configurables import L0Conf
+from Configurables import L0Conf,HltConf
 L0Conf().EnsureKnownTCK=False
+HltConf().ForceSingleL0Configuration=False
 
 from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 

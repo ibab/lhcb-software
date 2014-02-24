@@ -9,119 +9,59 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
-from Configurables import LHCbApp #L0Conf, L0DUFromRawAlg
+from Configurables import LHCbApp
 from Configurables import DecodeRawEvent, RawEventFormatConf, DDDBConf
+
+#import helper functions
+try:
+    import Funcs
+except ImportError:
+    import Moore.Funcs as Funcs
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
 
 
-## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
-
-# canonicalize tck  -- eats integer + string, returns canonical string
-def _tck(x) :
-    if type(x) == str and x[0:2] == '0x' : return '0x%08x'%int(x,16)
-    return '0x%08x'%int(x)
-    
-from Gaudi.Configuration import appendPostConfigAction
-
-def fixDQ():
-    from Configurables import CondDBDispatcherSvc
-    c = CondDBDispatcherSvc("MainCondDBReader")
-    del c.Alternatives['/Conditions/DQ']
-#appendPostConfigAction(fixDQ)
-
-def _choose(orig, repl, m):
-    if m!=orig:
-        return m
-    return repl
-
-#Ternary operator not valid for old python versions, replacing...
-_replace = lambda orig, repl, members : [ _choose(orig,repl,m) for m in members ]
-_remove  = lambda remove,     members : [ m for m in members if m.name() not in remove ]
-_remove_re  = lambda re,      members : [ m for m in members if not re.match(m.name()) ]
-
-
-
-## FIXME: how to catch HltUnit's RunAll???
-def _walkAlgorithms( c , descend = [ 'Members','Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale'] ) :
-    for p in descend :
-        if not hasattr(c,p) : continue
-        x = getattr(c,p)
-        import GaudiKernel
-        if isinstance(x,GaudiKernel.Configurable.Configurable) : x = [x]
-        for i in x :
-            for j in _walkAlgorithms(i,descend) : yield j
-    yield c
-def _updateProperties( top, table, value ) :
-    for conf in _walkAlgorithms( top ) :
-        prop = table.get( conf.getType().replace(':','_') , None )
-        if prop : setattr( conf, prop, value )
-
-def _zipdict(dict1,dict2):
+class MooreExpert(LHCbConfigurableUser):
     """
-    return a dictionary with all entries of both dict1 and dict2
-    if entry is a dictionary, recurse, if entry is a list, append
+    Expert options for Moore, hidden from most users by being placed in a
+    different configurable!
     """
-    retdict={}
-    
-    for k,v in dict1.iteritems():
-        #unique to dict 1
-        if k not in dict2:
-            retdict[k]=v
-            #else they are not unique, I need to decide what to do about that...
-        elif type(v) != type(dict2[k]):
-            raise TypeError("Cannot zip dicts with identical entries who differ in type! "+str(type(v))+"!="+str(type(dict2[k]))+" for "+str(k))
-        elif type(v) is dict: 
-            #recurse, transforms are dicts of dicts of dicts...
-            retdict[k]=_zipdict(v,dict2[k])
-        elif type(v) is list:
-            retdict[k]=v+[a for a in dict2[k] if a not in v]
-        else:
-            raise TypeError("No rule to zip entries of type "+str(type(v))+" for "+str(k))
-    
-    for k,v in dict2.iteritems():
-        #unique to dict 2
-        if k not in retdict:
-            retdict[k]=v
-    
-    return retdict
+    __slots__={
+        #########################################
+        # Expert options, only set if you know what you are doing
+        #########################################
+        "prefetchConfigDir" :'MOORE_v14r8'  # which configurations to prefetch
+        , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
+        , 'WriteFSR'    :  True #copy FSRs as required
+        }
 
-def _mergeTransform(trans):
-    """
-    Concatenate transforms into the HltConfigSvc
-    """
-    from Configurables import HltConfigSvc
-    prop="ApplyTransformation"
-    svc=HltConfigSvc()
-    if (svc.getProp(prop) is not None and type(svc.getProp(prop)) is dict and len(svc.getProp(prop))):
-        #if it's already set, or the default is some non-zero dictionary, merge it
-        svc.setProp(prop,_zipdict(svc.getProp(prop),trans))
-    else:
-        #else set it
-        svc.setProp(prop,trans)
+    def __apply_configuration__(self):
+        #don't ever do anything here, this configurable is only used for __reading__ by Moore()!
+        for prop in self.__slots__:
+            if self.isPropertySet(prop) and self.getProp(prop)!=self.getDefaultProperty(prop):
+                log.warning("Hey! You're setting an expert property "+prop+" are you an expert? Let's hope so!")
+        return
+
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ HltConf
                              , LHCbApp
-                             #, L0Conf
                              , DecodeRawEvent
-                             ,  DDDBConf]
-
-
+                             ,  DDDBConf
+                             ,  MooreExpert ]
+    
     __slots__ = {
         #########################################
         # Basic options, used to set LHCbApp
         #########################################
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
-        , "Simulation":        True # True implies use SimCond
-        , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
+        , "Simulation":        False # True implies use SimCond
+        , "DataType":          '2012' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
-        , "DQFLAGStag" : "latest" # latests in the CondDB for this DataType
-        , 'WriteFSR'    :  True #copy FSRs as required
         #########################################
         # Mandatory options to consider
         #########################################
@@ -144,6 +84,7 @@ class Moore(LHCbConfigurableUser):
                              #if this is set to INFO no changes to default printout is made
         , 'Split'       : '' # HLT1 or HLT2?
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
+          , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
         #########################################
         # Options used to make/manipulate TCKs
         #########################################
@@ -156,31 +97,7 @@ class Moore(LHCbConfigurableUser):
         #######################################
         # Options nominally for online running
         #######################################
-        , "NbOfSlaves":        0
         , "RunOnline"         : False
-        , 'EnableMonitoring' : False
-        , "RunMonitoringFarm" : False
-        , "UseDBSnapshot"     : True
-        , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
-        , "PartitionName" : "LHCb"
-        , 'REQ1' : ''
-        #########################################
-        # Expert options, only set if you know what you are doing
-        #########################################
-        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
-        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
-        , "prefetchConfigDir" :'MOORE_v8r8'  # which configurations to prefetch.
-        , "EnableLumiEventWriting"       : True
-        , 'EnableAcceptIfSlow' : False
-        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
-        , 'RequireL0ForEndSequence'     : False
-        , 'SkipHltRawBankOnRejectedEvents' : True
-        , 'HistogrammingLevel' : 'Line'
-        , 'IgnoreDBHeartBeat'  : False
-        , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
-        , 'TimeOutBits'       : 0x200
-        , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
-        , 'VetoRoutingBits'    : []
         #########################################
         # Deprecated former options
         #########################################
@@ -188,6 +105,29 @@ class Moore(LHCbConfigurableUser):
         , "ReplaceL0BanksWithEmulated" : False # rerun L0, deprecated
         , "RunL0Emulator" : False # run L0 emulator for simulation mc production  , deprecated
         , "Verbose" :           True # whether or not to print Hlt sequence, deprecated, please use OutputLevel
+        , 'REQ1' : ''
+        , "PartitionName" : "LHCb"
+        , "RunMonitoringFarm" : False
+        , "NbOfSlaves":        0
+        , 'IgnoreDBHeartBeat'  : False
+        , "UseDBSnapshot"     : True
+        , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
+        , 'EnableMonitoring' : False
+        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
+        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
+        , "prefetchConfigDir" :'MOORE_v14r8'  # which configurations to prefetch.
+        , "EnableLumiEventWriting"       : True
+        , 'EnableAcceptIfSlow' : False
+        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
+        , 'RequireL0ForEndSequence'     : False
+        , 'SkipHltRawBankOnRejectedEvents' : True
+        , 'HistogrammingLevel' : 'Line'
+        , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
+        , 'TimeOutBits'       : 0x200
+        , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
+        , 'VetoRoutingBits'    : []
+        , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
+        , 'WriteFSR'    :  True #copy FSRs as required
         }
     
     _propertyDocDct={
@@ -237,14 +177,10 @@ class Moore(LHCbConfigurableUser):
         #######################################
         # Options nominally for online running
         #######################################
-        , "NbOfSlaves":        "Only for online running"
-        , "RunOnline"         : "Only for online running"
         , 'EnableMonitoring' : "Turn on monitoring"
         , "RunMonitoringFarm" : "Only for online running"
         , "UseDBSnapshot"     : "True for online running, False otherwise"
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions, where to find the DB snapshot"
-        , "PartitionName" : "LHCb, only for online running"
-        , 'REQ1' : 'Option to evt selector used only in online running'
         #########################################
         # Expert options, only set if you know what you are doing
         #########################################
@@ -272,7 +208,30 @@ class Moore(LHCbConfigurableUser):
         }
     
     #for deprecation warnings, a map from deprecated option, to what you should use instead (if anything)
-    __deprecated__={"L0":"L0App","ReplaceL0BanksWithEmulated":"L0App","RunL0Emulator":"L0App","Verbose":"Moore().OutputLevel=VERBOSE"}
+    __deprecated__={"L0":"L0App","ReplaceL0BanksWithEmulated":"L0App",
+                    "RunL0Emulator":"L0App",
+                    "Verbose":"Moore().OutputLevel=VERBOSE",
+                    "REQ1":"MooreOnline", "PartitionName":"MooreOnline",
+                    "RunMonitoringFarm":"MooreOnline",
+                    "NbOfSlaves":"MooreOnline",
+                    "IgnoreHeartBeat":"MooreOnline or CondDB()",
+                    "UseDBSnapshot":"MooreOnline or CondDB()",
+                    "PartitionName":"MooreOnline or CondDB()",
+                    "EnableRunChangeHandler":"MooreOnline or CondDB()"
+                    , 'ForceSingleL0Configuration' : "HltConf"
+                    , 'SkipDisabledL0Channels' : "HltConf"
+                    , "prefetchConfigDir" :'MooreExpert'  
+                    , "EnableLumiEventWriting"       : "HltConf"
+                    , 'EnableAcceptIfSlow' : "HltConf"
+                    , 'RequireL0ForEndSequence' : "HltConf"
+                    , 'SkipHltRawBankOnRejectedEvents' : "HltConf"
+                    , 'HistogrammingLevel' : "HltConf"
+                    , 'TimeOutThreshold'  : "(nothing, never used)"
+                    , 'TimeOutBits'       : "(nothing never used)"
+                    , 'RequireRoutingBits' : "HltConf"
+                    , 'VetoRoutingBits'    : "HltConf"
+                    , "DQFLAGStag" : "MooreExpert"
+                    , 'WriteFSR'    :  "MooreExpert"}
     
     def _configureDataOnDemand(self) :
         if not self.getProp("EnableDataOnDemand") :
@@ -285,167 +244,10 @@ class Moore(LHCbConfigurableUser):
                 ApplicationMgr().ExtSvc.append( dod ) 
     #        importOptions('$STDOPTS/DecodeRawEvent.py')
     
-    def _configureOnline(self) :
-        from Configurables import LoKiSvc
-        LoKiSvc().Welcome = False
-        
-        import OnlineEnv
-
-        self.setProp('UseTCK', True)
-        self._configureDataOnDemand()
-        
-        #from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
-        #done in LHCbApp
-        #EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
-        EventLoopMgr().Warnings = False
-        
-        from Configurables import MonitorSvc
-        MonitorSvc().disableDimPropServer      = 1
-        MonitorSvc().disableDimCmdServer       = 1
-        MonitorSvc().disableMonRate            = 0
-        MonitorSvc().CounterUpdateInterval     = 15
-        
-        app=ApplicationMgr()
-        
-        # setup the histograms and the monitoring service
-        from Configurables import UpdateAndReset
-        app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
-        app.ExtSvc.append( 'MonitorSvc' ) 
-        HistogramPersistencySvc().OutputFile = ''
-        HistogramPersistencySvc().Warnings = False
-        from Configurables import RootHistCnv__PersSvc
-        RootHistCnv__PersSvc().OutputEnabled = False
-        
-        # set up the event selector
-        if 'EventSelector' in allConfigurables : 
-            del allConfigurables['EventSelector']
-        
-        if not self.getProp('RunMonitoringFarm') :
-            ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
-            ## It will not work if these are created before.
-            
-            if OnlineEnv.MooreStartupMode == 1:
-                self._configureOnlineForking()
-            elif OnlineEnv.MooreStartupMode == 2:
-                self._configureOnlineCheckpointing()
-            
-            importOptions('$MBM_SETUP_OPTIONS')
-            mbm_setup = allConfigurables['OnlineEnv']
-            task_type = os.environ['TASK_TYPE']
-            input   = mbm_setup.__getattribute__(task_type+'_Input')   #'Events' 
-            output  = mbm_setup.__getattribute__(task_type+'_Output')  #'Send'
-
-            TAE = OnlineEnv.TAE != 0
-            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
-            mepMgr.PartitionBuffers = True
-            mepMgr.PartitionName    = OnlineEnv.PartitionName
-            mepMgr.PartitionID      = OnlineEnv.PartitionID
-            mepMgr.ConnectWhen      = 'start'
-            
-            app.Runable = OnlineEnv.evtRunable(mepMgr)
-            app.ExtSvc.append(mepMgr)
-            evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
-            evtMerger.DataType = OnlineEnv.MDF_BANKS
-            if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-            else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
-            app.ExtSvc.append(eventSelector)
-
-            OnlineEnv.evtDataSvc()
-            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-
-            # define the send sequence
-            writer =  GaudiSequencer('SendSequence')
-            writer.OutputLevel = OnlineEnv.OutputLevel
-            writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
-            app.TopAlg.append( writer )
-        else :
-            input = 'Events'
-            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
-            app.Runable = OnlineEnv.evtRunable(mepMgr)
-            app.ExtSvc.append(mepMgr)
-            eventSelector = OnlineEnv.mbmSelector(input=input,decode=False)
-            app.ExtSvc.append(eventSelector)
-            OnlineEnv.evtDataSvc()
-            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-        
-        #ToolSvc.SequencerTimerTool.OutputLevel = @OnlineEnv.OutputLevel;          
-        from Configurables import AuditorSvc
-        AuditorSvc().Auditors = []
-        # Now setup the message service
-        self._configureOnlineMessageSvc()
-    
-    def _configureOnlineForking(self):
-        import os, socket, OnlineEnv
-        from Configurables import LHCb__CheckpointSvc
-        numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
-        host = socket.gethostname().split('.')[0].upper()
-        #if host[:3]=='HLT':
-        #  if host[3]=='F': numChildren=23
-        #  if host[3]!='F':
-        #    if len(host)==8:
-        #      id = int(host[6:])
-        #      if id < 12: numChildren=9
-        #      if id > 11: numChildren=23
-        if self.getProp("NbOfSlaves") > 0 : numChildren = self.getProp("NbOfSlaves")
-
-        forker = LHCb__CheckpointSvc("CheckpointSvc")
-        forker.NumberOfInstances   = numChildren
-        forker.Partition           = OnlineEnv.PartitionName
-        forker.TaskType            = os.environ['TASK_TYPE'] ###'GauchoJob'
-        forker.UseCores            = False
-        forker.ChildSessions       = False
-        forker.FirstChild          = 0
-        # Sleep in [ms] for each child in batches of 10:
-        forker.ChildSleep          = 500;
-        forker.UtgidPattern        = "%P_%NN_%T_%02d";
-        forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
-        forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
-        ApplicationMgr().ExtSvc.append(forker)
-    
-    def _configureOnlineCheckpointing(self):
-        pass
-    
-    def _configureOnlineMessageSvc(self):
-        # setup the message service
-        from Configurables import LHCb__FmcMessageSvc as MessageSvc
-        if 'MessageSvc' in allConfigurables :
-            del allConfigurables['MessageSvc']
-        msg=MessageSvc('MessageSvc')
-        app=ApplicationMgr()
-        app.MessageSvcType = msg.getType()
-        app.SvcOptMapping.append( msg.getFullName() )
-        msg.LoggerOnly = True
-        if 'LOGFIFO' not in os.environ :
-            os.environ['LOGFIFO'] = '/tmp/logGaudi.fifo'
-            log.warning( '# WARNING: LOGFIFO was not set -- now set to ' + os.environ['LOGFIFO'] )
-        msg.fifoPath = os.environ['LOGFIFO']
-        import OnlineEnv 
-        msg.OutputLevel = OnlineEnv.OutputLevel
-        #msg.OutputLevel = '2'
-        msg.doPrintAlways = False
-    
-    def _configureDBSnapshot(self):
-        from Configurables import CondDB
-        conddb = CondDB()
-        conddb.Tags =  { "DDDB"    : self.getProp('DDDBtag')
-                       , "LHCBCOND": self.getProp('CondDBtag')
-                       , "SIMCOND" : self.getProp('CondDBtag') 
-                       , "ONLINE"  : 'fake'
-                       }
-        conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
-        self.setOtherProps( conddb, [ 'UseDBSnapshot',
-                                      'DBSnapshotDirectory',
-                                      'PartitionName',
-                                      'EnableRunChangeHandler'])
-                
-        # https://savannah.cern.ch/bugs/?94454#comment12
-        from Configurables import MagneticFieldSvc
-        MagneticFieldSvc().UseSetCurrent = True
-    
     def _configureDQTags(self):
         from Configurables import CondDB
         tag=None
-        toset=self.getProp("DQFLAGStag")
+        toset=MooreExpert().getProp("DQFLAGStag")
         if not len(toset) or toset=="latest" or toset=="default":
             from CondDBUI.Admin.TagsFilter import last_gt_lts
             dqtags = last_gt_lts('DQFLAGS', self.getProp("DataType"))
@@ -457,13 +259,12 @@ class Moore(LHCbConfigurableUser):
             #don't set anything if it has already been set elsewhere
             pass
         elif tag:
-            CondDB().Tags=_zipdict(CondDB().Tags,{"DQFLAGS":tag})
+            CondDB().Tags=Funcs._zipdict(CondDB().Tags,{"DQFLAGS":tag})
     
     def _configureInput(self):
         files = self.getProp('inputFiles')
         #    #  veto lumi events..
         #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
-        self._configureDataOnDemand()
         
         if not files:
             return
@@ -539,7 +340,7 @@ class Moore(LHCbConfigurableUser):
             writer = InputCopyStream("Writer"
                                     , RequireAlgs = self.getProp('WriterRequires')
                                     )
-            IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
+            IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=MooreExpert().getProp('WriteFSR'))
         
 
     def getRelease(self):
@@ -589,7 +390,7 @@ class Moore(LHCbConfigurableUser):
         XmlParserSvc().OutputLevel                = WARNING
         MessageSvc().OutputLevel                  = INFO
         ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
-        SequencerTimerTool().OutputLevel          = WARNING
+        if self.getProp("OutputLevel")>=INFO: SequencerTimerTool().OutputLevel          = WARNING
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         
@@ -651,7 +452,9 @@ class Moore(LHCbConfigurableUser):
                     TimingAuditor('TIMER').OutputLevel=INFO
                     TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
                     TimingAuditor('TIMER').TIMER.OutputLevel=INFO
-                    SequencerTimerTool().OutputLevel          = INFO
+                    from Configurables import Moore
+                    if Moore().OutputLevel<INFO:
+                        SequencerTimerTool().OutputLevel          = INFO
                 
                 if self.getProp("EnableTimer"):
                     appendPostConfigAction(RestoreTimer)
@@ -666,7 +469,15 @@ class Moore(LHCbConfigurableUser):
                              ,"HistoCountersPrint": {"^.*$":'False'}
                              }
                        }
-                _mergeTransform(trans)
+                Funcs._mergeTransform(trans)
+                #restore timing if required
+                if self.getProp("EnableTimer"):
+                    trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}
+                                        }
+                           }
+                    if self.getProp("OutputLevel")<INFO:
+                        trans[".*SequencerTimingTool.*"]={"OutputLevel"        : {"^.*$":str(INFO)}}
+                    Funcs._mergeTransform(trans)
                 from Configurables import HltConfigSvc
                 cfg = HltConfigSvc()
                 #self-defeating warnings!
@@ -738,38 +549,18 @@ class Moore(LHCbConfigurableUser):
         l0dutool   = DecoderDB["L0DUFromRawTool"]
         l0dutool.Properties["StatusOnTES"]=False
         DecoderDB["L0DUFromRawAlg/L0DUFromRaw"].setup()
-        
-        # TODO: nasty hack to insure all L0 algorithms request the right type of config provider...
-        #       should extend the L0 configurable to support this explicitly
-        if self.getProp('ForceSingleL0Configuration') :
-            def _fixL0DUConfigProviderTypes() :
-                from Gaudi.Configuration import allConfigurables
-                for c in allConfigurables.values() :
-                    if hasattr(c,'L0DUConfigProviderType') : c.L0DUConfigProviderType = 'L0DUConfigProvider' 
-                
-            from Gaudi.Configuration import appendPostConfigAction
-            appendPostConfigAction( _fixL0DUConfigProviderTypes )
-        
-
 
     def _config_with_hltconf(self):
         """
         Propagate settings to HltConf
         """
+        
         hltConf = HltConf()
+        
         self.setOtherProps( hltConf,  
                             [ 'ThresholdSettings'
                             , 'DataType'
-                            , 'RequireL0ForEndSequence'
-                            , 'SkipHltRawBankOnRejectedEvents'
-                            , 'HistogrammingLevel' 
                             , 'EnableMonitoring'
-                            , "EnableLumiEventWriting"
-                            , "EnableAcceptIfSlow"
-                            , 'ForceSingleL0Configuration'
-                            , 'SkipDisabledL0Channels'
-                            , 'RequireRoutingBits'
-                            , 'VetoRoutingBits'
                             , 'Split'
                             ]
                           )
@@ -783,7 +574,8 @@ class Moore(LHCbConfigurableUser):
             
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
-        cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
+        from Funcs import _tck
+        cfg = HltConfigSvc( prefetchDir = MooreExpert().getProp('prefetchConfigDir')
                           , initialTCK =  _tck(self.getProp('InitialTCK'))
                           , checkOdin = self.getProp('CheckOdin')
                           , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
@@ -815,7 +607,7 @@ class Moore(LHCbConfigurableUser):
             trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
                       }
-            _mergeTransform(trans)
+            Funcs._mergeTransform(trans)
 
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
@@ -849,6 +641,7 @@ class Moore(LHCbConfigurableUser):
             HltGlobalMonitor().DecToGroupHlt1 = {}
 
             # shunt Hlt1 decreports
+            from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
                              , dict( LoKi__HDRFilter      = 'Location'
                                    , TisTosParticleTagger = 'HltDecReportsInputLocation'
@@ -859,6 +652,7 @@ class Moore(LHCbConfigurableUser):
 
             # shunt Hlt2 decreports
             dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+            from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
                              , dict( Hlt__Line            = 'HltDecReportsLocation'
                                    , HltRoutingBitsWriter = 'Hlt2DecReportsLocation'
@@ -916,15 +710,16 @@ class Moore(LHCbConfigurableUser):
                       , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
                       , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
                       }
-            _mergeTransform(trans)
+            Funcs._mergeTransform(trans)
 
         def hlt1hlt2() :
             from Configurables import GaudiSequencer as gs
+            from Funcs import _updateProperties
             _updateProperties( gs('Hlt2') , dict( TisTosParticleTagger = 'PassOnAll' ) , True)
 
         def hlt1hlt2_tck() : 
             trans = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
-            _mergeTransform(trans)
+            Funcs._mergeTransform(trans)
         
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
@@ -974,32 +769,9 @@ class Moore(LHCbConfigurableUser):
         #todo: put this in a "quiet" option of Moore
         from Configurables import LoKi__DistanceCalculator
         LoKi__DistanceCalculator().MaxPrints=0
-
+        
         if not self.getProp("RunOnline") : self._l0()
-        if self.getProp("RunOnline") : 
-            import OnlineEnv 
-            self.setProp('EnableTimer',False)
-            self.setProp('UseTCK',True)
-            self.setProp('Simulation',False)
-            self.setProp('DataType','2012' )
-            ### TODO: see if 'OnlineEnv' has InitialTCK attibute. If so, set it
-            ## in case of LHCb or FEST, _REQUIRE_ it exists...
-            if hasattr(OnlineEnv,'InitialTCK') :
-                self.setProp('InitialTCK',OnlineEnv.InitialTCK)
-                if not self._setIfNotSet('CheckOdin',True) :
-                    print 'WARNING '*10
-                    print 'WARNING: you are running online, using a TCK, but ignoring ODIN. Are you sure this is really what you want???'
-                    print 'WARNING '*10
-                      
-            # determine the partition we run in, and adapt settings accordingly...
-            if self.getProp('PartitionName') in [ 'FEST', 'LHCb' ] : 
-                self.setProp('InitialTCK',OnlineEnv.InitialTCK)
-                if not self._setIfNotSet('CheckOdin',True) :
-                    print 'WARNING '*10
-                    print 'WARNING: you are running in the %s partition, using a TCK, but ignoring ODIN. Make sure this is really what you want.' % self.getProp('PartitionName')
-                    print 'WARNING '*10
-
-
+        
         from Configurables import MooreInitSvc
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
         #from Configurables import LbAppInit
@@ -1034,7 +806,6 @@ class Moore(LHCbConfigurableUser):
         #set the decoders to read from the default location
         self._setRawEventLocations()
         
-        if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
         self._configureDQTags()
         
         if self.getProp('UseTCK') :
@@ -1045,11 +816,11 @@ class Moore(LHCbConfigurableUser):
             self._split( useTCK = False  )
             
         self._definePersistency()
+        self._configureDataOnDemand()
         
-        if self.getProp("RunOnline") :
-            self._configureOnline()
-        else :
+        if not self.getProp("RunOnline") :
             self._profile()
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
+    

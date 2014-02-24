@@ -30,12 +30,11 @@ from Moore.Configuration import *
 Moore().ThresholdSettings = args[ 0 ]
 Moore().EvtMax = options.EvtMax
 
-Moore().Simulation = False
 #Moore().DataType = options.DataType
-Moore().UseDBSnapshot = False
 Moore().DDDBtag    = options.DDDBtag
 Moore().CondDBtag  = options.CondDBtag
-Moore().ForceSingleL0Configuration=(not options.multil0)
+from Configurables import HltConf
+HltConf().ForceSingleL0Configuration=(not options.multil0)
 Moore().EnableTimer=True
 
 from Configurables import L0MuonAlg

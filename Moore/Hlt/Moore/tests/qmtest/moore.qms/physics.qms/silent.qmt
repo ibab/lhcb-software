@@ -10,13 +10,13 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
-if len(stdout.split('\n'))&gt;65:
-    causes.append('stdout is too long, aiming for less than 65 lines')
-    result['moore.physics.silent.lines']=result.Quote('Expected less than 65 lines, got '+ str(len(stdout.split('\n'))))
+if len(stdout.split('\n'))&gt;60:
+    causes.append('stdout is too long, aiming for less than 60 lines')
+    result['moore.physics.silent.lines']=result.Quote('Expected less than 60 lines, got '+ str(len(stdout.split('\n'))))
 
-if len(stdout)&gt;16000:
-    causes.append('stdout is too long, aiming for less than 16k characters')
-    result['moore.physics.silent.chars']=result.Quote('Expected less than 16k characters, got '+ str(len(stdout)))
+if len(stdout)&gt;15000:
+    causes.append('stdout is too long, aiming for less than 15k characters')
+    result['moore.physics.silent.chars']=result.Quote('Expected less than 15k characters, got '+ str(len(stdout)))
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.

@@ -7,18 +7,18 @@ Moore().UseDBSnapshot= False;
 Moore().outputFile= 'SwimmingTest.dst';
 Moore().DataType= '2012';
 Moore().DDDBtag= 'head-20120413'; #from RunDB
-Moore().EnableRunChangeHandler= False;
 Moore().WriterRequires= [];
-Moore().WriteFSR= True;
 Moore().EnableDataOnDemand= True;
 Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
 Moore().Simulation= False;
 Moore().CondDBtag= 'head-20120420'; #from RunDB
-Moore().ForceSingleL0Configuration = False
 
-from Configurables import L0Conf
+from Configurables import L0Conf, HltConf
 L0Conf().EnsureKnownTCK=False
+HltConf().ForceSingleL0Configuration = False
+from Configurables import L0MuonAlg
+L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 ############# prepend a "killHltSeq" ############
 
