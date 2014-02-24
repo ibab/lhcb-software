@@ -41,10 +41,10 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
    //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
   initRawEventSearch();
-  
 
   declareProperty("OutputLocation",
     m_outputLocation= "/Hlt/Track/Velo" );  
+
 
   declareProperty("SourceID",
 		  m_sourceID= HltTrackReportsWriter::kSourceID_Dummy );  

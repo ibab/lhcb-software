@@ -5,7 +5,9 @@
 #include "../HltTrackingCoder.h"
 #include <vector>
 #include "Event/Track.h"
+#include "Event/State.h"
 #include "Kernel/LHCbID.h"
+#include <iostream>
 using namespace LHCb; 
 using namespace std;
 
@@ -19,6 +21,15 @@ equalTracks(Tracks* tracks, Tracks* reftracks){
       LHCb::Track* Tr = (*pItr);
       LHCb::Track* refTr = (*pRefItr);
       result &= ((Tr->lhcbIDs()) == (refTr->lhcbIDs()));
+      // check the number of states
+      unsigned int nstates=Tr->states().size();
+      if (nstates != (refTr->states().size())) return false;
+      const vector<State*>& states = Tr->states();
+      const vector<State*>& refstates = refTr->states();
+      for(unsigned int i=0;i<nstates;++i){
+	result &= (Tr->states()[i] == refTr->states()[i]);
+      }
+
       pRefItr++; // don't forget to increment reference iterator 
   }// end loop over tracks
   return result;
@@ -50,10 +61,18 @@ struct ExampleTracks {
     tr->addToLhcbIDs(LHCbID(13));
     tr->addToLhcbIDs(LHCbID(17));
     m_tracks.add(tr);
+    // add a State to this track
+    Gaudi::TrackVector v(1,1,1,1,1);
+    Gaudi::TrackSymMatrix cov;
 
-    vector<unsigned int> bank = {3,  1,3,5,
-				 3,  2,4,6,
-				 4,  7,11,13,17};
+    State newYork(v,cov,200.,State::EndVelo);
+    tr->addToStates(newYork);
+
+    
+    // format:                 nIDs  IDs    nStates 
+    vector<unsigned int> bank = {3,  1,3,5, 0,
+				 3,  2,4,6, 0,
+				 4,  7,11,13,17, 1};
     m_rawbank = bank;
   }
 

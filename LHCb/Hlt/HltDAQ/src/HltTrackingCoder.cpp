@@ -5,6 +5,8 @@
 
 // local
 #include "HltTrackingCoder.h" 
+#include "Event/State.h"
+
 
 using namespace LHCb;
 
@@ -42,6 +44,12 @@ encodeTracks(const LHCb::Tracks* tracks,
       // here use the C++ "map" functional transform together with a C++ Lambda construct to fill the LHCbIDs into the bank
       transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });
 
+      // write states
+      // check number of states on track
+      const std::vector<LHCb::State*>& states = Tr->states();
+      //rawBank.push_back(states.size());
+      rawBank.push_back(0);
+      
   }
 }
 
@@ -70,6 +78,15 @@ decodeTracks(unsigned int* rawBankData,
       track->addToLhcbIDs(LHCbID(rawit[k]));
       ++k; //rawit+=sizeof(unsigned int);
     }
+
+    // read number of states
+    unsigned int nstates = rawit[k];
+    ++k;
+    for(unsigned int istate=0;istate<nstates;++istate){
+      LHCb::State state;
+      track->addToStates(state);
+    }
+
     track->setType(LHCb::Track::Velo);
     tracks->add(track);
     //std::cout << "RawBank entry counter k= " << k << std::endl;

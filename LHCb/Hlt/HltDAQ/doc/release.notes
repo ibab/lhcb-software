@@ -5,6 +5,9 @@
 !-------------------------------------------------------------------------------
 
 ! 2014-02-24 - Sebastian Neubert
+ - Perparing persistence of track states
+
+! 2014-02-24 - Sebastian Neubert
  - Renamed TrackReportsDecoder OutputLocation to be findable by bindMember
  - Added track type = Velo to all tracks (needs reiteration)
 
