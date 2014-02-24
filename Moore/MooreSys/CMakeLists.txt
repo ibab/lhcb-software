@@ -1,13 +1,17 @@
 ################################################################################
 # Package: MooreSys
 ################################################################################
-gaudi_subdir(MooreSys v21r0)
+gaudi_subdir(MooreSys v22r0)
 
 gaudi_depends_on_subdirs(Hlt/HltMonitor
                          Hlt/IndependenceTests
                          Hlt/Moore
                          L0/L0App
-                         Phys/Swimming)
+                         Phys/Swimming
+                         DAQ/DAQSys #TEMPORARY
+                         Muon/MuonID #TEMPORARY
+                         Det/DDDB #TEMPORARY
+                         )
 
 
 gaudi_add_test(QMTest QMTEST)

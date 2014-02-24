@@ -1,26 +1,23 @@
 package MooreSys
-version           v21r0
+version           v22r0
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v21r0      Hlt
-use  IndependenceTests   v1r5       Hlt
+use  Moore               v22r0      Hlt
+use  IndependenceTests   v1r6       Hlt
 use  HltMonitor          v1r2	    Hlt   # Diego Martinez
 use  Swimming            v3r0p1     Phys  # Nick Torr
-use  L0App               v2r0       L0    # Rob Lambert
+use  L0App               v2r1       L0    # Rob Lambert
 
 # Bug fixes on top of LHCb v36r4 release stack
 
 #temporary for new features
-use  GaudiConf v18r0p1
-use  DAQSys    v7r3    DAQ
-use  ParticleMaker v6r8p1 Phys
-
-# new split TisTosTobbing
-use  TisTosTobbing v8r0 Phys
+use  DAQSys    v8r0p1    DAQ
+use  DDDB      v1r68     Det
+use  MuonID    v9r10     Muon
 
 # Declare this as a container package
 apply_pattern container_package

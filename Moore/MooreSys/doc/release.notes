@@ -3,9 +3,63 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
-! 2014-01-17 - Marco Clemencic
- - Added CMake configuration file.
+</PRE><H1><A NAME=v22r0>2014-02-24 MooreSys v22r0</A></H1><PRE>
+Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on HLT v22r0, Phys v18r0, Rec v17r0 ... Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
 
+Major Developments:
+  . C++11 :
+    This is the first Moore release which allows C++11 features. 
+    Therefore is only available on slc6-gcc48.
+    C++11 features have been introduced throughout this stack, 
+    and this constitutes the majority of changes in this release. 
+    Several packages require the new C++11 features of lower projects, 
+    and so several packages have had their major versions incremented.
+
+  . Moore().OutputLevel is now WARNING by default
+    By default now Moore will print a lot less output.
+    Too see everything you used to see, try Moore().OutputLevel=INFO
+
+  . Moore's Online-specific parts are moved to the MooreOnline project
+    This means fewer options to Moore, less complicated Moore, and 
+    deprecation warnings in case you try and configure these parts.
+    See MooreOnline v22r0, and the module MooreScripts/MooreOnlineConf
+    which contains the new configurable, MooreOnline()
+    task #48780
+
+Other developments:
+  . Tracking in the HLT1/2 Split:
+    task #48808, task #48807.
+    Tracking in the split configuration is beginning to take shape, 
+    with the possibility to transfer tracks in a raw bank from Hlt1->2.
+
+  . CMAKE dependencies:
+    Almost every package has been touched to add cmake replacements 
+    for the requirements files, 
+
+  . Retirement of "castor:" protocol
+    Required many of the tests to be adjusted to "root:"
+    note that mdf files require "mdf:root:" to be read.
+
+  . Removal of Persistency options of configurables:
+    Moore() and L0App().Persistency have gone, since they are not needed
+    task #49581
+
+Removed packages:
+  . The temporarily included packages, GaudiConf, 
+    Phys/TisTobTobbing and Phys/ParticleMaker, were removed,
+    since they changes are part of the stack.
+
+Added temporary packages:
+  . The following packages were temporarily added.
+  . Det/DDDB: to allow the event-time to be set to Moore prefferred "Now"
+  . Muon/MuonID suppress warning message during configuration
+  . DAQ/DAQSys hande the case where default configurables "Alg/Alg"
+    were not recognised as being the same thing as "Alg"
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r0
+ and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v22r0
 </PRE><H1><A NAME=v21r0>2014-01-10 MooreSys v21r0</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r4 stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2.
 
