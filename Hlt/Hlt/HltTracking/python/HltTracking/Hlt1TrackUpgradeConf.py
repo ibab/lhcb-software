@@ -1,10 +1,3 @@
-# skip any of the next three lines, and we crash trying to instantiate the AppMgr.... ?!?!!!???
-# probably this is needed before Hlt1StreamerConf is imported...
-import PyCintex
-cpp      = PyCintex.makeNamespace('')
-LHCb     = cpp.LHCb
-__tmp = LHCb.Track.Long
-
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
                             PatForwardTool,

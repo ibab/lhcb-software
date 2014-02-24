@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-02-24 - Marco Clemencic
+ - Removed use of PyCintex from configuration files (should not be needed and
+   does not fix any bug).
+
 ! 2014-02-24 - Sebastian Neubert
  - added correct dependencies for using resurrected tracks in PV3D
 
