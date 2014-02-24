@@ -4,6 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r0 2014-02-24 =========================
 ! 2014-02-21 - Rob Lambert
  - Update silent test, now <65 lines, without Muon warnings and without evt-time/DQ warnings.
 
