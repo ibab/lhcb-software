@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2014-02-24 - Stefania Vecchi
+  updated  tagging.qms/test_tag_mc12.qmt 
 ! 2014-02-21 - Stefania Vecchi
   updated n. of total events in tagging.qms/test_tag_mc12.qmt 
 
