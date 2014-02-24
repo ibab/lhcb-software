@@ -27,49 +27,49 @@
 #include "Kernel/NodesPIDs.h"
 #include "Kernel/Symbols.h"
 // ============================================================================
-/** @file 
- *  The implementation file for various decay nodes 
+/** @file
+ *  The implementation file for various decay nodes
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-12
  */
 // ============================================================================
-namespace 
+namespace
 {
   // ==========================================================================
-  /** @var s_SHORTLIVED 
-   *  The default high-edge for c*tau for particle to be considered 
-   *  as "short-lived" particles  
+  /** @var s_SHORTLIVED
+   *  The default high-edge for c*tau for particle to be considered
+   *  as "short-lived" particles
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
-   */  
-  const double s_SHORTLIVED = 0.1 * Gaudi::Units::micrometer ;  
+   */
+  const double s_SHORTLIVED = 0.1 * Gaudi::Units::micrometer ;
   // ==========================================================================
-  /** @var s_LONGLIVED 
-   *  The default low-edge for c*tau for particle to be considered 
-   *  as "short-lived" particles  
+  /** @var s_LONGLIVED
+   *  The default low-edge for c*tau for particle to be considered
+   *  as "short-lived" particles
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
-   */  
-  const double s_LONGLIVED  = s_SHORTLIVED  ;  
+   */
+  const double s_LONGLIVED  = s_SHORTLIVED  ;
   // ==========================================================================
-  /** @var s_STABLE 
-   *  The default low-edge for c*tau for particle to be considered 
-   *  as "stable" particle  
+  /** @var s_STABLE
+   *  The default low-edge for c*tau for particle to be considered
+   *  as "stable" particle
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
-   */  
-  const double s_STABLE     =   1 * Gaudi::Units::meter       ;  
+   */
+  const double s_STABLE     =   1 * Gaudi::Units::meter       ;
   // ==========================================================================
   /** @var s_INFINITY
-   *  The default low-edge for c*tau for particle to be considered 
-   *  as "stable" particle  
+   *  The default low-edge for c*tau for particle to be considered
+   *  as "stable" particle
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-12
-   */  
+   */
   const double s_INFINITY   = 0.5 * std::numeric_limits<double>::max() ;
   // ==========================================================================
   template <class CONTAINER, class T>
-  bool binary_search ( const CONTAINER& cnt , const T& val ) 
+  bool binary_search ( const CONTAINER& cnt , const T& val )
   { return std::binary_search ( cnt.begin () , cnt.end () , val ) ; }
   // =========================================================================
 }
@@ -77,104 +77,104 @@ namespace
 
 
 
+namespace Decays {
+  // ============================================================================
+  /*  Create the "OR" of two nodes
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const Decays::iNode& o1 ,
+    const std::string&         o2 )
+  { return o1 || Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const Decays::iNode& o1 ,
+    const LHCb::ParticleID&    o2 )
+  { return o1 || Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const Decays::iNode& o1 ,
+    const Decays::Decay::Item&   o2 )
+  { return o1 || Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const Decays::iNode&          o1 ,
+    const LHCb::ParticleProperty* o2 )
+  { return o1 || Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const std::string&         o2 ,
+    const Decays::iNode& o1 )
+  { return Decays::Nodes::Pid ( o2 ) || o1 ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const LHCb::ParticleID&    o2 ,
+    const Decays::iNode& o1 )
+  { return Decays::Nodes::Pid ( o2 ) || o1 ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const Decays::Decay::Item&   o2 ,
+    const Decays::iNode& o1 )
+  { return Decays::Nodes::Pid ( o2 ) || o1 ; }
+  // ============================================================================
+  Decays::Nodes::Or operator||
+  ( const LHCb::ParticleProperty* o2 ,
+    const Decays::iNode&          o1 )
+  { return Decays::Nodes::Pid ( o2 ) || o1 ; }
+  // ============================================================================
+  /*  Create the "AND" of two nodes
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-04-12
+   */
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const Decays::iNode& o1 ,
+    const std::string&         o2 )
+  { return o1 && Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const Decays::iNode& o1 ,
+    const LHCb::ParticleID&    o2 )
+  { return o1 && Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const Decays::iNode& o1 ,
+    const Decays::Decay::Item&   o2 )
+  { return o1 && Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const Decays::iNode&          o1 ,
+    const LHCb::ParticleProperty* o2 )
+  { return o1 && Decays::Nodes::Pid ( o2 ) ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const std::string&   o2 ,
+    const Decays::iNode& o1 )
+  { return Decays::Nodes::Pid ( o2 ) && o1 ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const LHCb::ParticleID&  o2 ,
+    const Decays::iNode&     o1 )
+  { return Decays::Nodes::Pid ( o2 ) && o1 ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const Decays::Decay::Item&   o2 ,
+    const Decays::iNode&       o1 )
+  { return Decays::Nodes::Pid ( o2 ) && o1 ; }
+  // ============================================================================
+  Decays::Nodes::And operator&&
+  ( const LHCb::ParticleProperty*    o2 ,
+    const Decays::iNode& o1 )
+  { return Decays::Nodes::Pid ( o2 ) && o1 ; }
+  // ============================================================================
+} // namespace Decays
 
 // ============================================================================
-/*  Create the "OR" of two nodes
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
+// MANDATORY: virtual destructor
 // ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const std::string&         o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const LHCb::ParticleID&    o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode& o1 , 
-  const Decays::Decay::Item&   o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::iNode&          o1 , 
-  const LHCb::ParticleProperty* o2 ) 
-{ return o1 || Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const std::string&         o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const LHCb::ParticleID&    o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const Decays::Decay::Item&   o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-Decays::Nodes::Or operator||
-( const LHCb::ParticleProperty* o2 ,
-  const Decays::iNode&          o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) || o1 ; }
-// ============================================================================
-/*  Create the "AND" of two nodes
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-04-12
- */
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const std::string&         o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const LHCb::ParticleID&    o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode& o1 , 
-  const Decays::Decay::Item&   o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::iNode&          o1 , 
-  const LHCb::ParticleProperty* o2 ) 
-{ return o1 && Decays::Nodes::Pid ( o2 ) ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const std::string&   o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const LHCb::ParticleID&  o2 ,
-  const Decays::iNode&     o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const Decays::Decay::Item&   o2 ,
-  const Decays::iNode&       o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-Decays::Nodes::And operator&&
-( const LHCb::ParticleProperty*    o2 ,
-  const Decays::iNode& o1 ) 
-{ return Decays::Nodes::Pid ( o2 ) && o1 ; }
-// ============================================================================
-
-
-// ============================================================================
-// MANDATORY: virtual destructor 
-// ============================================================================
-Decays::Nodes::Any::~Any() {} 
+Decays::Nodes::Any::~Any() {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
@@ -187,13 +187,13 @@ bool Decays::Nodes::Any::valid() const { return true ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::Any::validate 
-( const LHCb::IParticlePropertySvc* /*svc */ )  const 
+StatusCode Decays::Nodes::Any::validate
+( const LHCb::IParticlePropertySvc* /*svc */ )  const
 { return StatusCode ( StatusCode::SUCCESS , true ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::Any::operator() 
+bool Decays::Nodes::Any::operator()
   ( const LHCb::ParticleID& /* p */ ) const { return true ; }
 // ============================================================================
 
@@ -201,12 +201,12 @@ bool Decays::Nodes::Any::operator()
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::Pid* 
+Decays::Nodes::Pid*
 Decays::Nodes::Pid::clone () const { return new Pid(*this) ; }
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::CC* 
+Decays::Nodes::CC*
 Decays::Nodes::CC::clone () const { return new CC(*this) ; }
 // ============================================================================
 
@@ -292,17 +292,17 @@ Decays::Nodes::SSpin    :: ~SSpin    () {}
 
 
 // ============================================================================
-// xSpin: valid only for reasonable spin 
+// xSpin: valid only for reasonable spin
 bool Decays::Nodes::JSpin::valid () const { return 0 < spin() ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::JSpin::validate 
-( const LHCb::IParticlePropertySvc* /*svc */ )  const 
-{ 
-  return valid() ? 
-    StatusCode ( StatusCode::SUCCESS , true ) : 
-    StatusCode ( InvalidSpin         , true ) ;  
+StatusCode Decays::Nodes::JSpin::validate
+( const LHCb::IParticlePropertySvc* /*svc */ )  const
+{
+  return valid() ?
+    StatusCode ( StatusCode::SUCCESS , true ) :
+    StatusCode ( InvalidSpin         , true ) ;
 }
 // ============================================================================
 
@@ -311,25 +311,25 @@ StatusCode Decays::Nodes::JSpin::validate
 // constructor from the decay item
 // ============================================================================
 Decays::Nodes::Pid::Pid
-( const Decays::Decay::Item&  item ) 
+( const Decays::Decay::Item&  item )
   : Decays::iNode () , m_item ( item ) {}
 // ============================================================================
 // constructor from Particle Property
 // ============================================================================
 Decays::Nodes::Pid::Pid
-( const LHCb::ParticleProperty*      item ) 
+( const LHCb::ParticleProperty*      item )
   : Decays::iNode () , m_item ( item ) {}
 // ============================================================================
 // constructor from ParticleID
 // ============================================================================
 Decays::Nodes::Pid::Pid
-( const LHCb::ParticleID&      item ) 
+( const LHCb::ParticleID&      item )
   : Decays::iNode () , m_item ( item ) {}
 // ============================================================================
 // constructor from Particle name
 // ============================================================================
 Decays::Nodes::Pid::Pid
-( const std::string&           item ) 
+( const std::string&           item )
   : Decays::iNode () , m_item ( item ) {}
 // ============================================================================
 // MANDATORY: check the validity
@@ -338,8 +338,8 @@ bool Decays::Nodes::Pid::valid () const { return 0 !=  m_item.pp () ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::Pid::validate 
-( const LHCb::IParticlePropertySvc* svc ) 
+StatusCode Decays::Nodes::Pid::validate
+( const LHCb::IParticlePropertySvc* svc )
   const { return m_item.validate ( svc ) ; }
 // ============================================================================
 
@@ -348,31 +348,31 @@ StatusCode Decays::Nodes::Pid::validate
 // constructor from the decay item
 // ============================================================================
 Decays::Nodes::CC::CC
-( const Decays::Decay::Item&  item ) 
+( const Decays::Decay::Item&  item )
   : Decays::Nodes::Pid ( item ) {}
 // ============================================================================
 // constructor from Particle Property
 // ============================================================================
 Decays::Nodes::CC::CC
-( const LHCb::ParticleProperty*      item ) 
+( const LHCb::ParticleProperty*      item )
   : Decays::Nodes::Pid ( item ) {}
 // ============================================================================
 // constructor from ParticleID
 // ============================================================================
 Decays::Nodes::CC::CC
-( const LHCb::ParticleID&      item ) 
+( const LHCb::ParticleID&      item )
   : Decays::Nodes::Pid ( item ) {}
 // ============================================================================
 // constructor from Particle name
 // ============================================================================
 Decays::Nodes::CC::CC
-( const std::string&           item ) 
+( const std::string&           item )
   : Decays::Nodes::Pid ( item ) {}
 // ============================================================================
-// constructor from Pid 
+// constructor from Pid
 // ============================================================================
 Decays::Nodes::CC::CC
-( const Decays::Nodes::Pid& item ) 
+( const Decays::Nodes::Pid& item )
   : Decays::Nodes::Pid ( item ) {}
 // ============================================================================
 
@@ -463,96 +463,96 @@ Decays::Nodes::LSpin*
 Decays::Nodes::LSpin::clone() const { return new LSpin(*this) ; }
 
 // ============================================================================
-// constructor from the quark 
+// constructor from the quark
 // ============================================================================
-Decays::Nodes::HasQuark::HasQuark ( LHCb::ParticleID::Quark quark ) 
+Decays::Nodes::HasQuark::HasQuark ( LHCb::ParticleID::Quark quark )
   : Decays::Nodes::Any () , m_quark ( quark ) {}
 // ============================================================================
 // constructor from the 2J+1
 // ============================================================================
-Decays::Nodes::JSpin::JSpin ( const int spin ) 
+Decays::Nodes::JSpin::JSpin ( const int spin )
   : Decays::Nodes::Any () , m_spin ( spin ) {}
 // ============================================================================
 // constructor from the 2S+1
 // ============================================================================
-Decays::Nodes::SSpin::SSpin ( const int spin ) 
+Decays::Nodes::SSpin::SSpin ( const int spin )
   : Decays::Nodes::JSpin ( spin ) {}
 // ============================================================================
 // constructor from the 2L+1
 // ============================================================================
-Decays::Nodes::LSpin::LSpin ( const int spin ) 
+Decays::Nodes::LSpin::LSpin ( const int spin )
   : Decays::Nodes::SSpin ( spin ) {}
 // ============================================================================
 
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Any::fillStream ( std::ostream& s ) const
 { return s << " X " ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Pid::fillStream ( std::ostream& s ) const
 { return s << " " << m_item.name() << " "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::CC::fillStream ( std::ostream& s ) const
 { return s << " [" << item().name() << "]cc "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Meson::fillStream ( std::ostream& s ) const
 { return s << " Meson "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Hadron::fillStream ( std::ostream& s ) const
 { return s << " Hadron "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Baryon::fillStream ( std::ostream& s ) const
 { return s << " Baryon "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Lepton::fillStream ( std::ostream& s ) const
 { return s << " Lepton "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Neutral::fillStream ( std::ostream& s ) const
 { return s << " X0 "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Charged::fillStream ( std::ostream& s ) const
 { return s << " Xq "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Positive::fillStream ( std::ostream& s ) const
 { return s << " X+ "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Negative::fillStream ( std::ostream& s ) const
 { return s << " X- "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Nu::fillStream ( std::ostream& s ) const
 { return s << " Nu "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Ell::fillStream ( std::ostream& s ) const
 { return s << " l "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::EllPlus::fillStream ( std::ostream& s ) const
 { return s << " l+ "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::EllMinus::fillStream ( std::ostream& s ) const
 { return s << " l- "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::Nucleus::fillStream ( std::ostream& s ) const
 { return s << " Nucleus "  ; }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::HasQuark::fillStream ( std::ostream& s ) const
 {
-  switch ( m_quark ) 
+  switch ( m_quark )
   {
   case LHCb::ParticleID::down      : return s << " Xd " ;
   case LHCb::ParticleID::up        : return s << " Xu " ;
@@ -562,13 +562,13 @@ Decays::Nodes::HasQuark::fillStream ( std::ostream& s ) const
   case LHCb::ParticleID::top       : return s << " Xt " ;
   default: ;
   }
-  return s << " HasQuark("  << (int) m_quark << ") " ; 
+  return s << " HasQuark("  << (int) m_quark << ") " ;
 }
 // ============================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::JSpin::fillStream ( std::ostream& s ) const
-{ 
-  switch ( spin() ) 
+{
+  switch ( spin() )
   {
   case 1  : return s << " Scalar "                  ;
   case 2  : return s << " Spinor "                  ;
@@ -578,48 +578,48 @@ Decays::Nodes::JSpin::fillStream ( std::ostream& s ) const
   case 6  : return s << " FiveHalf "                ;
   default : ;
   }
-  return s << " JSpin(" << m_spin << ") " ; 
+  return s << " JSpin(" << m_spin << ") " ;
 }
 // ===========================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::SSpin::fillStream ( std::ostream& s ) const
 { return s << " SSpin(" << spin() << ") " ; }
 // ===========================================================================
-std::ostream& 
+std::ostream&
 Decays::Nodes::LSpin::fillStream ( std::ostream& s ) const
 { return s << " LSpin(" << spin() << ") " ; }
 // ===========================================================================
 
 
 // ============================================================================
-// constructor from c-tau range & Service 
+// constructor from c-tau range & Service
 // ============================================================================
 Decays::Nodes::CTau::CTau
-( const double                      low  , 
+( const double                      low  ,
   const double                      high ,
   const LHCb::IParticlePropertySvc* svc  )
-  : Decays::iNode () 
+  : Decays::iNode ()
   , m_ppSvc       ()
   , m_accepted    ()
   , m_rejected    ()
-  , m_low  ( low  ) 
+  , m_low  ( low  )
   , m_high ( high )
 {
-  if ( 0 != svc ) 
+  if ( 0 != svc )
   { m_ppSvc = const_cast<LHCb::IParticlePropertySvc*>( svc ) ; }
 }
 // ============================================================================
-// MANDATORY : virtual destructor 
+// MANDATORY : virtual destructor
 // ============================================================================
 Decays::Nodes::CTau::~CTau() {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::CTau* Decays::Nodes::CTau::clone() const 
+Decays::Nodes::CTau* Decays::Nodes::CTau::clone() const
 { return new CTau ( *this ) ; }
 // ============================================================================
 // MANDATORY: the specific printout
-std::ostream& Decays::Nodes::CTau::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::CTau::fillStream ( std::ostream& s ) const
 { return s << " CTau(" << low() << "," << high() << ") " ; }
 // ============================================================================
 // MANDATORY: check the validity
@@ -627,275 +627,275 @@ bool Decays::Nodes::CTau::valid () const { return m_ppSvc.isValid() ; }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
-StatusCode Decays::Nodes::CTau::validate 
-( const LHCb::IParticlePropertySvc* svc ) const 
+StatusCode Decays::Nodes::CTau::validate
+( const LHCb::IParticlePropertySvc* svc ) const
 { return setService ( svc ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::CTau::operator() ( const LHCb::ParticleID& pid ) const 
+bool Decays::Nodes::CTau::operator() ( const LHCb::ParticleID& pid ) const
 {
   /// check for accepted pids:
-  if ( binary_search ( accepted () , pid ) ) { return true  ; }        // RETURN 
+  if ( binary_search ( accepted () , pid ) ) { return true  ; }        // RETURN
   /// check for rejected pids:
-  if ( binary_search ( rejected () , pid ) ) { return false ; }        // RETURN 
-  // 
-  // invalid node 
-  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invalid service  
+  if ( binary_search ( rejected () , pid ) ) { return false ; }        // RETURN
+  //
+  // invalid node
+  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invalid service
   // use the service
   const LHCb::ParticleProperty* pp = ppSvc()->find ( pid ) ;
   //
-  if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle 
+  if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle
 
-  // check ctau range 
+  // check ctau range
   const double ctau = pp->ctau() ;
   // final decision
   const bool result = low () <= ctau && ctau <= high() ;
-  
+
   // update the caches:
   if ( result ) { addToAccepted ( pid ) ; }
   else          { addToRejected ( pid ) ; }
-  
+
   return result ;
 }
 // ============================================================================
-void Decays::Nodes::CTau::addToAccepted ( const LHCb::ParticleID& pid ) const 
+void Decays::Nodes::CTau::addToAccepted ( const LHCb::ParticleID& pid ) const
 {
-  PIDs::iterator ifind = 
+  PIDs::iterator ifind =
     std::lower_bound ( m_accepted.begin () , m_accepted.end   () , pid ) ;
-  if ( m_accepted.end() == ifind || pid < (*ifind) ) 
+  if ( m_accepted.end() == ifind || pid < (*ifind) )
   { m_accepted.insert  ( ifind , pid ) ; }
 }
 // ============================================================================
-void Decays::Nodes::CTau::addToRejected ( const LHCb::ParticleID& pid ) const 
+void Decays::Nodes::CTau::addToRejected ( const LHCb::ParticleID& pid ) const
 {
-  PIDs::iterator ifind = 
+  PIDs::iterator ifind =
     std::lower_bound ( m_rejected.begin () , m_rejected.end   () , pid ) ;
-  if ( m_rejected.end() == ifind || pid < (*ifind) ) 
+  if ( m_rejected.end() == ifind || pid < (*ifind) )
   { m_rejected.insert  ( ifind , pid ) ; }
 }
 // ============================================================================
 // MANDATORY: the proper validation of the node
 // ============================================================================
 StatusCode Decays::Nodes::CTau::setService
-( const LHCb::IParticlePropertySvc* svc ) const 
+( const LHCb::IParticlePropertySvc* svc ) const
 {
   // if service is substituted, clear the cache
-  if ( m_ppSvc != svc ) 
+  if ( m_ppSvc != svc )
   {
     m_accepted.clear () ;
     m_rejected.clear () ;
   }
   //
-  if ( 0 != svc ) 
+  if ( 0 != svc )
   { m_ppSvc = const_cast<LHCb::IParticlePropertySvc*>( svc ) ; }
-  else 
+  else
   { IInterface* _x  = 0 ; m_ppSvc = _x ; }
   //
   return StatusCode ( m_ppSvc.isValid ()  ?
-                      StatusCode::SUCCESS : 
+                      StatusCode::SUCCESS :
                       StatusCode::FAILURE , true  ) ;
 }
 // ============================================================================
-// constructor from c-tau range & Service 
+// constructor from c-tau range & Service
 // ============================================================================
 Decays::Nodes::Mass::Mass
-( const double                      low  , 
+( const double                      low  ,
   const double                      high ,
   const LHCb::IParticlePropertySvc* svc  )
-  : Decays::Nodes::CTau ( low , high , svc ) 
+  : Decays::Nodes::CTau ( low , high , svc )
 {}
 // ============================================================================
-// MANDATORY : virtual destructor 
+// MANDATORY : virtual destructor
 // ============================================================================
 Decays::Nodes::Mass::~Mass() {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-Decays::Nodes::Mass* Decays::Nodes::Mass::clone() const 
+Decays::Nodes::Mass* Decays::Nodes::Mass::clone() const
 { return new Mass ( *this ) ; }
 // ============================================================================
 // MANDATORY: the specific printout
-std::ostream& Decays::Nodes::Mass::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::Mass::fillStream ( std::ostream& s ) const
 { return s << " Mass(" << low() << "," << high() << ") " ; }
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::Mass::operator() ( const LHCb::ParticleID& pid ) const 
+bool Decays::Nodes::Mass::operator() ( const LHCb::ParticleID& pid ) const
 {
   /// check for accepted pids:
-  if ( binary_search ( accepted () , pid ) ) { return true  ; }       // RETURN 
+  if ( binary_search ( accepted () , pid ) ) { return true  ; }       // RETURN
   /// check for rejected pids:
-  if ( binary_search ( rejected () , pid ) ) { return false ; }       // RETURN 
-  // 
-  // invalid node 
-  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invaild service  
+  if ( binary_search ( rejected () , pid ) ) { return false ; }       // RETURN
+  //
+  // invalid node
+  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invaild service
   // use the service
   const LHCb::ParticleProperty* pp = ppSvc()->find ( pid ) ;
   //
   if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle
 
-  // check mass range 
+  // check mass range
   const double mass = pp->mass() ;
   // final decision
   const bool result = low () <= mass && mass <= high() ;
-  
+
   if ( result ) { addToAccepted ( pid ) ; }
   else          { addToRejected ( pid ) ; }
-  
+
   return result ;
 }
 // ===========================================================================
 
 
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
-Decays::Nodes::ShortLived_::ShortLived_ 
-( const double                      high , 
-  const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::CTau ( -1 * Gaudi::Units::km , high , svc ) 
+Decays::Nodes::ShortLived_::ShortLived_
+( const double                      high ,
+  const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::CTau ( -1 * Gaudi::Units::km , high , svc )
 {}
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
-Decays::Nodes::ShortLived_::ShortLived_ 
-( const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::CTau ( -1 * Gaudi::Units::km , s_SHORTLIVED , svc ) 
+Decays::Nodes::ShortLived_::ShortLived_
+( const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::CTau ( -1 * Gaudi::Units::km , s_SHORTLIVED , svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destrcutor
 // ===========================================================================
 Decays::Nodes::ShortLived_::~ShortLived_() {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::ShortLived_*
-Decays::Nodes::ShortLived_::clone() const 
+Decays::Nodes::ShortLived_::clone() const
 { return new Decays::Nodes::ShortLived_(*this) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::ShortLived_::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::ShortLived_::fillStream ( std::ostream& s ) const
 {
   if ( LHCb::Math::lomont_compare_double
        ( s_SHORTLIVED , high() , 1000 ) ) { return s << " ShortLived " ; }
-  return s << " ShortLived_( " << high() << ") "  ;  
+  return s << " ShortLived_( " << high() << ") "  ;
 }
 // ===========================================================================
 
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
-Decays::Nodes::LongLived_::LongLived_ 
-( const double                      low  , 
-  const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::CTau ( low        , s_INFINITY , svc ) 
+Decays::Nodes::LongLived_::LongLived_
+( const double                      low  ,
+  const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::CTau ( low        , s_INFINITY , svc )
 {}
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
-Decays::Nodes::LongLived_::LongLived_ 
-( const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::CTau ( s_LONGLIVED , s_INFINITY , svc ) 
+Decays::Nodes::LongLived_::LongLived_
+( const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::CTau ( s_LONGLIVED , s_INFINITY , svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destrcutor
 // ===========================================================================
 Decays::Nodes::LongLived_::~LongLived_() {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::LongLived_*
-Decays::Nodes::LongLived_::clone() const 
+Decays::Nodes::LongLived_::clone() const
 { return new Decays::Nodes::LongLived_(*this) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::LongLived_::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::LongLived_::fillStream ( std::ostream& s ) const
 {
   if ( LHCb::Math::lomont_compare_double
        ( s_LONGLIVED , low() , 1000 ) ) { return s << " LongLived " ; }
-  return s << " LongLived_( " << low () << ") "  ;  
+  return s << " LongLived_( " << low () << ") "  ;
 }
 // ===========================================================================
 
 // ===========================================================================
-// constructor with the service 
+// constructor with the service
 // ===========================================================================
-Decays::Nodes::Stable::Stable 
-( const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::LongLived_ ( s_STABLE , svc ) 
+Decays::Nodes::Stable::Stable
+( const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::LongLived_ ( s_STABLE , svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destructor 
+// MANDATORY: virtual destructor
 // ===========================================================================
 Decays::Nodes::Stable::~Stable() {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::Stable*
-Decays::Nodes::Stable::clone() const 
+Decays::Nodes::Stable::clone() const
 { return new Decays::Nodes::Stable(*this) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::Stable::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::Stable::fillStream ( std::ostream& s ) const
 { return s << " Stable " ; }
 // ===========================================================================
 
 // ===========================================================================
-// constructor with the service 
+// constructor with the service
 // ===========================================================================
-Decays::Nodes::StableCharged::StableCharged 
-( const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::Stable ( svc ) 
+Decays::Nodes::StableCharged::StableCharged
+( const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::Stable ( svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destrcutor
 // ===========================================================================
 Decays::Nodes::StableCharged::~StableCharged() {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::StableCharged*
-Decays::Nodes::StableCharged::clone() const 
+Decays::Nodes::StableCharged::clone() const
 { return new Decays::Nodes::StableCharged (*this ) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::StableCharged::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::StableCharged::fillStream ( std::ostream& s ) const
 { return s << " StableCharged " ; }
 // ===========================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Nodes::StableCharged::operator() 
-  ( const LHCb::ParticleID& pid ) const 
+bool Decays::Nodes::StableCharged::operator()
+  ( const LHCb::ParticleID& pid ) const
 {
   /// check for accepted pids:
-  if ( binary_search ( accepted () , pid ) ) { return true  ; }        // RETURN 
+  if ( binary_search ( accepted () , pid ) ) { return true  ; }        // RETURN
   /// check for rejected pids:
-  if ( binary_search ( rejected () , pid ) ) { return false ; }        // RETURN 
-  // 
-  // invalid node 
-  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invalid service  
+  if ( binary_search ( rejected () , pid ) ) { return false ; }        // RETURN
+  //
+  // invalid node
+  if ( 0 == ppSvc() ) { return false ; }          //  REJECT for invalid service
   // use the service
   const LHCb::ParticleProperty* pp = ppSvc()->find ( pid ) ;
   //
-  if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle 
-  
-  // check ctau range 
+  if ( 0 == pp      ) { return false ; }         // REJECT for invalid dparticle
+
+  // check ctau range
   const double ctau = pp->ctau() ;
-  
-  // final decision : 
+
+  // final decision :
   bool result = ( low () <= ctau && 0 != pid.threeCharge () ) ;
-  
+
   // update the caches:
   if ( result ) { addToAccepted ( pid ) ; }
   else          { addToRejected ( pid ) ; }
-  
+
   return result ;
-  
+
 }
 // ============================================================================
 
@@ -904,85 +904,85 @@ bool Decays::Nodes::StableCharged::operator()
 
 
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
-Decays::Nodes::Light::Light 
-( const double                      high , 
-  const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::Mass ( -1 * Gaudi::Units::TeV , high , svc ) 
+Decays::Nodes::Light::Light
+( const double                      high ,
+  const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::Mass ( -1 * Gaudi::Units::TeV , high , svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destrcutor
 // ===========================================================================
 Decays::Nodes::Light::~Light () {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::Light*
-Decays::Nodes::Light::clone() const 
+Decays::Nodes::Light::clone() const
 { return new Decays::Nodes::Light (*this) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::Light::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::Light::fillStream ( std::ostream& s ) const
 { return s << " Light( " << high () << ") "  ; }
 // ===========================================================================
 
 // ===========================================================================
-// constructor with high edge and service 
+// constructor with high edge and service
 // ===========================================================================
 Decays::Nodes::Heavy::Heavy
-( const double                      low , 
-  const LHCb::IParticlePropertySvc* svc  ) 
-  : Decays::Nodes::Mass ( low , s_INFINITY  , svc ) 
+( const double                      low ,
+  const LHCb::IParticlePropertySvc* svc  )
+  : Decays::Nodes::Mass ( low , s_INFINITY  , svc )
 {}
 // ===========================================================================
-// MANDATORY: virtual destrcutor 
+// MANDATORY: virtual destrcutor
 // ===========================================================================
 Decays::Nodes::Heavy::~Heavy () {}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
 Decays::Nodes::Heavy*
-Decays::Nodes::Heavy::clone() const 
+Decays::Nodes::Heavy::clone() const
 { return new Decays::Nodes::Heavy(*this) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::Heavy::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::Heavy::fillStream ( std::ostream& s ) const
 { return s << " Heavy( " << high () << ") "  ; }
 // ===========================================================================
 
 
 // ===========================================================================
-//  constructor fomr the symbol 
+//  constructor fomr the symbol
 // ===========================================================================
-Decays::Nodes::Symbol::Symbol ( const std::string& s ) 
-  : Decays::iNode() 
-  , m_symbol ( Decays::Nodes::Invalid() ) 
-{ 
+Decays::Nodes::Symbol::Symbol ( const std::string& s )
+  : Decays::iNode()
+  , m_symbol ( Decays::Nodes::Invalid() )
+{
   const Decays::Symbols& sym = Decays::Symbols::instance() ;
   StatusCode sc = sym.symbol ( s , m_symbol ) ;
   sc.ignore() ;
 }
 // ===========================================================================
-// destructor 
+// destructor
 // ===========================================================================
 Decays::Nodes::Symbol::~Symbol (){}
 // ===========================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ===========================================================================
-Decays::Nodes::Symbol* Decays::Nodes::Symbol::clone() const 
+Decays::Nodes::Symbol* Decays::Nodes::Symbol::clone() const
 { return new Decays::Nodes::Symbol ( *this ) ; }
 // ===========================================================================
 // MANDATORY: the only one essential method
 // ===========================================================================
-bool Decays::Nodes::Symbol::operator() ( const LHCb::ParticleID& pid ) const 
+bool Decays::Nodes::Symbol::operator() ( const LHCb::ParticleID& pid ) const
 { return m_symbol.node (  pid ) ; }
 // ===========================================================================
 // MANDATORY: the specific printout
 // ===========================================================================
-std::ostream& Decays::Nodes::Symbol::fillStream ( std::ostream& s ) const 
+std::ostream& Decays::Nodes::Symbol::fillStream ( std::ostream& s ) const
 { return s << m_symbol.node() ; }
 // ===========================================================================
 // MANDATORY: check the validity
@@ -991,8 +991,8 @@ bool Decays::Nodes::Symbol::valid() const { return m_symbol.valid () ; }
 // ===========================================================================
 // MANDATORY: validate
 // ===========================================================================
-StatusCode Decays::Nodes::Symbol::validate 
-( const LHCb::IParticlePropertySvc* svc ) const 
+StatusCode Decays::Nodes::Symbol::validate
+( const LHCb::IParticlePropertySvc* svc ) const
 { return m_symbol.validate ( svc ) ; }
 // ===========================================================================
 
