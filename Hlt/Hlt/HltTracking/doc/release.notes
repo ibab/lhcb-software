@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-02-24 - Sebastian Neubert
+ - added correct dependencies for using resurrected tracks in PV3D
+
 ! 2014-02-23 - Sebastian Neubert
  - added RevivedVelo which configures sequences for velo track resurrection
 
