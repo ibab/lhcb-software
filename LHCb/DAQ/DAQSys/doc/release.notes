@@ -7,6 +7,7 @@
 ! 2014-02-24 - Sebastian Neubert
  - Renamed HltTrackReportsDecoder output location
 
+!========================= DAQSys v8r0p1 2014-02-24 =========================
 ! 2014-02-21 - Rob Lambert
  - Handle the case where default configurables have already been set to the DoD Svc, after report of error by Eric.
 
