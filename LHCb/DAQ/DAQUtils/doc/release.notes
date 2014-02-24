@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2014-02-24 - Marco Cattaneo
+ - Fix requirements to allow standalone running of tests
+
 !========================= DAQUtils v1r12 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - Bank killer should not kill banks it was not asked explicitly to kill!
