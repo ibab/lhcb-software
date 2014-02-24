@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-02-24 - Marco Cattaneo
+ - LHCbExclusions.py: Added exclusion to protect against changes in PFN
+   connection string of input data
+
 !========================= GaudiConf v19r0 2014-02-17 =========================
 ! 2014-01-20 - Rob Lambert
  - Remove Persistency option from DSTConf/DigiConf

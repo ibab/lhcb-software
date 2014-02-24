@@ -16,6 +16,7 @@ preprocessor = normalizeExamples + \
     RegexpReplacer(when = "Connected to database",
         orig = r'"[^"]*/([0-9A-Z_]{1,8})"',
         repl = r'"\1"') + \
+    LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool"]) + \
     LineSkipper(["/PARAM/ParamFiles/"]) + \
     LineSkipper(["INFO Using TAG", "TimingAuditor.T", "RootDBase.open"]) + \
     LineSkipper(["INFO Opened magnetic field file"]) + \
