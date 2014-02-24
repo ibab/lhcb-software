@@ -4,13 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r0 2014-02-24 =========================
 ! 2014-02-24 - Rob Lambert
  - Move a load of the Moore configuration into MooreOnline.
- - Moore goes from 1055 lines to 829 lines, including around 100 lines of deprecated properties which will soon dissapear completely.
+ - Moore goes from 1055 lines to 829 lines, including around 100 lines of deprecated properties which will soon disappear completely.
  - Tests updated for the deprecated properties.
  - might need to bring ForceSingleL0Configuration back again...
 
-!========================= Moore v22r0 2014-02-24 =========================
 ! 2014-02-21 - Rob Lambert
  - Update silent test, now <65 lines, without Muon warnings and without evt-time/DQ warnings.
 
