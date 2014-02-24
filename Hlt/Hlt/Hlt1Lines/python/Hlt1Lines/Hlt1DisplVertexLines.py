@@ -125,7 +125,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
               >>  ( Tr_FASTDOCATOBEAMLINE(5.) > %(DOCABL)s )
               >>  tee ( monitor( TC_SIZE>0, '# events pass DOCABL cut', LoKi.Monitoring.ContextSvc ) )
               >>  tee ( monitor( TC_SIZE  , '# candidates pass DOCABL cut', LoKi.Monitoring.ContextSvc ) )
-              >>  SINK ( 'Hlt1%(name)sTracks' )
+              >>  SINK( 'Hlt1%(name)sTracks' )
               >> ~TC_EMPTY
               """ % properties
           )
@@ -164,7 +164,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
               >>  HLT_TCASRVC_ANY( ( TrCHI2PDOF < %(Tr_CHI2)s ), True )
               >>  tee ( monitor( TC_SIZE>0, '# events pass track CHI2 cut', LoKi.Monitoring.ContextSvc ) )
               >>  tee ( monitor( TC_SIZE  , '# candidates pass track CHI2', LoKi.Monitoring.ContextSvc ) )
-              >>  SINK ( 'Hlt1%(name)sDecision' )
+              >>  SINK( 'Hlt1%(name)sDecision' )
               >> ~TC_EMPTY
               """ % properties
           )

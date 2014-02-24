@@ -5,6 +5,10 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-02-24 - Pieter David
+ - Remove whitespaces ( "SINK (" -> "SINK(" ) in Hlt1 displaced vertex
+   streamers (fixes warnings about TISTOS from Hlt1Line)
+
 !========================= Hlt1Lines v7r2 2014-02-20 =========================
 ! 2014-02-19 - Sebastian Neubert
  - added Lifetimeunbiased high pt line prototype
