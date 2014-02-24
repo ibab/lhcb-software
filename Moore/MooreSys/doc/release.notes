@@ -18,6 +18,8 @@ Major Developments:
   . Moore().OutputLevel is now WARNING by default
     By default now Moore will print a lot less output.
     Too see everything you used to see, try Moore().OutputLevel=INFO
+    By default Moore now prints only some 60 -lines, which will be
+    reduced even further in the next release.
 
   . Moore's Online-specific parts are moved to the MooreOnline project
     This means fewer options to Moore, less complicated Moore, and 
@@ -25,6 +27,13 @@ Major Developments:
     See MooreOnline v22r0, and the module MooreScripts/MooreOnlineConf
     which contains the new configurable, MooreOnline()
     task #48780
+  
+  . Moore's options.
+    Moore has lost over half it's options since v14r8, from 52 to 25 different slots.
+    This campaign makes Moore much simpler to use. Remember:
+    - L0App handles L0
+    - MooreOnline handles Online configuration
+    - Moore handles running HLT1 and/or 2 in an offline-like configuration
 
 Other developments:
   . Tracking in the HLT1/2 Split:
