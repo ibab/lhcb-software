@@ -16,6 +16,8 @@ Additionally tracking in the split configuration is beginning to take shape, wit
 
 Almost every package has been touched to add cmake replacements for the requirements files, and to adjust the tests after the deprecation of the castor: protocol at CERN.
 
+One major change of specific note is that the defaults in HltConf have been changed to reduce the number of parameters the user must know about in Moore/MooreOnline.
+
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r0
 
