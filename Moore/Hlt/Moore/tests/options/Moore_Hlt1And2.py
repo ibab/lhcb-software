@@ -17,7 +17,7 @@ input.run(configurable=Moore())
 
 from Configurables import L0MuonAlg
 L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
-MooreConf().ForceSingleL0Configuration=False
+Moore().ForceSingleL0Configuration=False
 
 Moore().EnableTimer=True
 from Configurables import TimingAuditor, SequencerTimerTool

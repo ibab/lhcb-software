@@ -546,8 +546,8 @@ class Moore(LHCbConfigurableUser):
         self.setOtherProps( hltConf,  
                             [ 'ThresholdSettings'
                             , 'DataType'
-                            , 'EnableMonitoring'
                             , 'Split'
+                            , 'ForceSingleL0Configuration'
                             ]
                           )
         if self.getProp("OutputLevel")<INFO:
