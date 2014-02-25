@@ -20,7 +20,7 @@ using ROOT::Math::CholeskyDecomp;
     /// Standard constructor
     PatFwdFitLine( double z = 0., double x = 0., double w = 0. ) {
       //== First point
-      const double dz = 1.e-3 * z;  // use small numbers
+      const double dz = 1.e-3*z;
       m_mat[0] = w;
       m_mat[1] = w * dz;
       m_mat[2] = w * dz * dz;
@@ -54,9 +54,8 @@ using ROOT::Math::CholeskyDecomp;
 
     double ax() const { return m_sol[0]; }
     double bx() const { return m_sol[1]; }
+    double cx() const { return 0.; }
     double z0() const { return 1.e3 * m_mat[1] / m_mat[0]; }
-
-  protected:
 
   private:
     double m_mat[3]; /// matrix M in Mx = b

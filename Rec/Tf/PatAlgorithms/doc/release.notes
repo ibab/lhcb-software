@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-02-25 - Gerhard Raven
+ - PatForwardTool: factor out common code in buildXCandidatesList
+   and fillStereoList into make_single_region
+ - PatFwdTool: move check on B-field out of loop
+
 ! 2014-02-22 - Gerhard Raven
  - various C++11 changes resulting in O(5%) speedup of PatForward in Hlt2.
  - replace boost::array with C++11 std::array, BOOST_FOREACH with C++11 

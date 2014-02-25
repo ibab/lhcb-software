@@ -8,6 +8,8 @@
 
 #include "PatFwdTrackCandidate.h"
 #include "PatFwdPlaneCounter.h"
+#include "PatFwdFitParabola.h"
+#include "PatFwdFitLine.h"
 #include "PatFwdRegionCounter.h"
 #include "PatKernel/PatForwardHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
@@ -51,11 +53,20 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
 
     bool fitStereoCandidate( PatFwdTrackCandidate& track,
 	double maxChi2, int minPlanes ) const;
-
-    bool fitXProjection ( PatFwdTrackCandidate& track,
+  private:
+    template <typename Curve>
+    bool fitXProjection_ ( PatFwdTrackCandidate& track,
                           PatFwdHits::iterator itBeg,
                           PatFwdHits::iterator itEnd,
                           bool onlyXPlanes  ) const;
+  public:
+    bool fitXProjection ( PatFwdTrackCandidate& track,
+                          PatFwdHits::iterator itBeg,
+                          PatFwdHits::iterator itEnd,
+                          bool onlyXPlanes  ) const {
+    return m_withoutBField ? fitXProjection_<PatFwdFitLine>( track, itBeg, itEnd, onlyXPlanes )
+                           : fitXProjection_<PatFwdFitParabola>( track, itBeg, itEnd, onlyXPlanes );
+    }
 
     void setRlDefault ( PatFwdTrackCandidate& track,
                         PatFwdHits::iterator itBeg,

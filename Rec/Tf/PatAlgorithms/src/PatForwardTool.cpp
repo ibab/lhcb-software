@@ -41,43 +41,65 @@ struct MaxSpread {
     }
 };
 
-template <typename InputIterator, typename OutputIterator, typename Predicate>
-std::pair<InputIterator,OutputIterator> copy_while( InputIterator first, InputIterator last, OutputIterator out, Predicate pred )
-{
-    for( ; first != last && pred(*first) ; ++first ) {
-        *out = *first; ++out;
-    }
-    return { first, out };
+
+ 
+//== Count how many weighted hits
+
+template <typename C>
+int nbT(const C& c) { return 2*c.nbIT()+c.nbOT(); }
+
+int nT(const PatFwdTrackCandidate& c) {
+    return nbT( PatFwdRegionCounter{  std::begin(c), std::end(c) } );
 }
 
-template <typename Container, typename Arg, typename Ret, Ret(Container::*mf)(Arg)>
-class insert_iterator_adaptor {
-  Container *container;
+template <typename Iterator>
+int nbDifferent( Iterator first, Iterator last)  {
+    return PatFwdPlaneCounter{ first, last }.nbDifferent();
+}
+int nbDifferent( const PatFwdTrackCandidate &c) {
+    return nbDifferent( std::begin(c), std::end(c) );
+}
+
+
+class PlaneCounter {
+    PatFwdPlaneCounter counter_;
+    int minPlanes_;
 public:
-  explicit insert_iterator_adaptor(Container &x) : container(&x) {}
-  insert_iterator_adaptor &operator=(Arg value) {
-    ((*container).*mf)(value);
-    return *this;
-  }
-  insert_iterator_adaptor &operator*() { return *this; }
-  insert_iterator_adaptor &operator++() { return *this; }
-  insert_iterator_adaptor &operator++(int) { return *this; }
+    PlaneCounter( PatFwdPlaneCounter counter, int minPlane ) : counter_{ counter }, minPlanes_(minPlane) { }
+    template <typename Iterator>
+    PlaneCounter( Iterator&& first, Iterator&& last, int minPlane ) 
+         : counter_{ std::forward<Iterator>(first) , std::forward<Iterator>(last) }
+         , minPlanes_(minPlane) { }
+
+    PlaneCounter& operator +=( const PatFwdHit* hit ) { counter_.addHit(hit); return *this;}
+    PlaneCounter& operator -=( const PatFwdHit* hit ) { counter_.removeHit(hit);return *this; }
+    bool operator()() const { return  counter_.nbDifferent() >= minPlanes_; }
+    template <typename Iterator>
+    bool isPossible(const Iterator& first, const Iterator& last) const { 
+        return first+ (minPlanes_-1) != last;
+    }
+    int count() const { return counter_.nbDifferent(); }
 };
 
-insert_iterator_adaptor<PatFwdPlaneCounter, const PatFwdHit*, int, &PatFwdPlaneCounter::addHit>
-addHit_iterator(PatFwdPlaneCounter &c)
+//== Try to make a single zone, by removing the first and adding other as
+//   long as the spread and minPlanes conditions are met.
+template <typename Iterator, typename Predicate>
+Iterator make_single_zone(Iterator first, Iterator mid, Iterator last,
+                          PlaneCounter counter,
+                          Predicate predicate) 
 {
-  return insert_iterator_adaptor<PatFwdPlaneCounter, const PatFwdHit*, int, &PatFwdPlaneCounter::addHit>{c};
+    auto i = mid;
+    while ( counter.isPossible( first, mid ) && i != last ) {
+      counter -= *first;
+      ++first;
+      // if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      //   verbose() << " try to extend from itP : " << (*first)->projection()
+      //             << " itF " << (*i)->projection() << endmsg;
+      for (; i!=last && predicate(*first,*i) ; ++i ) counter += *i;
+      if ( counter() ) mid = i;
+    }
+    return mid;
 }
-
-
-//== Count how many weighted hits
-int nT(const PatFwdTrackCandidate& c) {
-    PatFwdRegionCounter regions( std::begin(c), std::end(c) );
-    return regions.nbOT() + 2*regions.nbIT();
-}
-
-int nbT(const PatFwdTrackCandidate& c) { return 2*c.nbIT()+c.nbOT(); }
 
 
 
@@ -280,14 +302,15 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   int maxPlanes = 0;
 
 
-  for ( auto itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
-    PatFwdTrackCandidate& temp = *itL;
+  unsigned nCand = 0;
+  for ( PatFwdTrackCandidate& temp :  xCandidates ) {
+    ++nCand;
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "--- Candidate " << itL - xCandidates.begin()
-              << "  X cord size " << std::distance( std::begin(temp), std::end(temp) )
+      debug() << "--- Candidate " << nCand
+              << "  X cord size " << temp.coords().size() 
               << endmsg;
 
-    for ( PatFwdHit *hit : temp ) hit->setIgnored( false);  // restore normal flag.
+    for ( PatFwdHit *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
     temp.setSelectedCoords( );
 
     double qOverP = 1000. * m_fwdTool->qOverP( temp );  // in 1/GeV
@@ -332,7 +355,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     // Enough stereo planes
     PatFwdPlaneCounter fullCount( std::begin(temp), std::end(temp) );
     int nbY = fullCount.nbStereo();
-    if ( 4 > nbY ) {
+    if ( nbY < 4 ) {
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
         debug() << "Not enough Y planes : " << nbY << endmsg;
       continue;
@@ -380,8 +403,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     goodCandidates.push_back( temp );
 
     //== Update requirement according to already found good solutions...
-    PatFwdPlaneCounter planeCounter( std::begin(temp), std::end(temp) );
-    minPlanes = std::max( minPlanes,   planeCounter.nbDifferent()-1 );
+    minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
   }
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
@@ -412,7 +434,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   //  Now some filtering of tracks, in case of multiple candidates.
   //================================================================================
 
-  if ( 1 < goodCandidates.size()  ) {
+  if ( goodCandidates.size() > 1  ) {
 
     // remove track with sensibly lower number of planes
     int minPlanes = maxPlanes - 1;
@@ -425,14 +447,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     tempCandidates.swap(goodCandidates );
     unsigned ndebug_count = 0;
     for ( const auto& iCand : tempCandidates ) {
-      PatFwdPlaneCounter tmp( std::begin(iCand), std::end(iCand) );
-      if ( tmp.nbDifferent() >= minPlanes ) {
+      auto nbDiff = nbDifferent(iCand);
+      if ( nbDiff >= minPlanes ) {
         goodCandidates.push_back( iCand );
         bestQuality = std::min(bestQuality, iCand.quality() );
       } else {
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "Ignore candidate " << ndebug_count
-                  << " : not enough planes = " << tmp.nbDifferent() << endmsg;
+                  << " : not enough planes = " << nbDiff << endmsg;
       }
       ++ndebug_count;
     }
@@ -692,11 +714,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   //== Select a coherent group
   auto bestList = std::make_pair(temp.end(),temp.end());;
-  int nbDifferent = 0;
+  int inbDifferent = 0;
   double size = 1000.;
 
-  PatFwdHits::iterator itP = temp.begin();
-  while (  itP + (minYPlanes - 1) <  temp.end() ) {
+  PatFwdHits::iterator itP = std::begin(temp);
+  while (  itP + (minYPlanes - 1) <  std::end(temp) ) {
     auto itE = itP + (minYPlanes -1);
 
     // in case of OT, add 1.5 to account for OT drift ambiguities...
@@ -710,55 +732,43 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
     //== If not enough hits in the maximum spread, skip
     if (  !predicate(*itP,*itE) ) { 
-      itP = std::find_if(itP, itE, [&](const PatFwdHit* hit) { return predicate(hit,*itE);});
+      // first increment itP, as we KNOW the current itP fails the predicate..
+      itP = std::find_if(++itP, itE, [&](const PatFwdHit* hit) { return predicate(hit,*itE);});
       if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
         verbose() << "   not enough planes in spread" << endmsg;
       continue;
     }
-
     //== Add all hits inside the maximum spread. If not enough planes, restart
     itE = std::find_if( itE, std::end(temp), [&](const PatFwdHit* hit) { return !predicate(*itP,hit); } );
-    PatFwdPlaneCounter planeCount( itP, itE );
+
+    PlaneCounter planeCount{ itP, itE, minYPlanes };
     //== Enough different planes
-    if ( minYPlanes > planeCount.nbDifferent() ) {
+    if ( !planeCount() ) {
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endmsg;
+        debug() << "   Not enough y planes : " << planeCount.count() << endmsg;
       ++itP;
       continue; 
     }
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << endmsg;
 
     //== Try to make a single zone, by removing the first and adding other as
-    //   long as the spread and minXPlanes conditions are met.
-    auto itB = itP;
-    auto itF = itE;
-    while ( itP + (minYPlanes-1) < itE  && itF < temp.end() ) {
-      planeCount.removeHit( *itP );
-      ++itP;
-      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
-        verbose() << " try to extend from itP : " << (*itP)->projection()
-                  << " itF " << (*itF)->projection() << endmsg;
-      itF = copy_while(
-          itF, temp.end(), addHit_iterator(planeCount),
-          [&](const PatFwdHit *hit) { return predicate(*itP, hit); }).first;
-      if ( minYPlanes <= planeCount.nbDifferent() ) itE = itF;
-    }
+    //   long as the spread and plane count conditions are met.
+    itE = make_single_zone( itP, itE, std::end(temp), std::move(planeCount) , predicate );
 
-    double x1 = (*itB)->projection();
+    double x1 = (*itP)->projection();
     double x2 = (*(itE-1))->projection();
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           x1, x2, itE-itB, pc.nbDifferent(), predicate.spread)
+                           x1, x2, itE-itP, nbDifferent(itP,itE), predicate.spread)
                 << endmsg;
     }
     //== We have the first list. The best one ????
-    PatFwdPlaneCounter cnt( itB, itE );
-    if ( cnt.nbDifferent() >= nbDifferent ) {
-      if ( cnt.nbDifferent() > nbDifferent || x2-x1 < size ) {
-        nbDifferent =  cnt.nbDifferent();
+    auto cnt = nbDifferent( itP, itE );
+    if ( cnt >= inbDifferent ) {
+      if ( cnt > inbDifferent || x2-x1 < size ) {
+        inbDifferent =  cnt;
         size = x2-x1;
-        bestList = { itB, itE } ;
+        bestList = { itP, itE } ;
         //break; /// Keep first one !
       }
     }
@@ -859,8 +869,8 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   double lastEnd = -1.e10;
 
-  PatFwdHits::iterator itP = m_xHitsAtReference.begin();
-  while (  itP + minXPlanes < m_xHitsAtReference.end()  ) {
+  auto itP = std::begin(m_xHitsAtReference);
+  while (  itP + minXPlanes < std::end(m_xHitsAtReference)  ) {
     auto itE = itP + minXPlanes -1;
 
     double spreadSl = ( (*itP)->projection() - xExtrap ) * m_maxSpreadSlopeX;
@@ -870,23 +880,24 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
     //== If not enough hits in the maximum spread, skip
     if ( !predicate(*itP,*itE)  ) {
-      while( !predicate(*itP,*itE) )  ++itP;
+      // first increment itP, as we KNOW the current itP fails the predicate..
+      itP = std::find_if(++itP, itE, [&](const PatFwdHit* hit) { return predicate(hit,*itE);});
       continue;
     }
 
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
                            (*itP)->projection(), (*itE)->projection(),
-                           (*itE)->projection() - (*itP)->projection(), spread )<<endmsg;
+                           (*itE)->projection() - (*itP)->projection(), predicate.spread )<<endmsg;
     }
 
     //== Add all hits inside the maximum spread. If not enough planes, restart
     itE = std::find_if( itE, std::end(m_xHitsAtReference), [&](const PatFwdHit* hit) { return !predicate(*itP,hit); } );
-    PatFwdPlaneCounter planeCount( itP, itE );
+    PlaneCounter planeCount{ itP, itE,  minXPlanes };
     //== Enough different planes
-    if ( minXPlanes > planeCount.nbDifferent() ) {
+    if ( !planeCount() ) {
       if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
-        verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endmsg;
+        verbose() << "   Not enough x planes : " << planeCount.count() << endmsg;
       ++itP;
       continue;
     }
@@ -894,38 +905,27 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
-    auto itB = itP;
-    auto itF = itE;
-    while ( itP + ( minXPlanes -1 ) != itE  && itF != m_xHitsAtReference.end() ) {
-      planeCount.removeHit( *itP );
-      ++itP;
-      itF = copy_while(
-          itF, std::end(m_xHitsAtReference), addHit_iterator(planeCount),
-          [&](const PatFwdHit *hit) { return predicate(*itP, hit); }).first;
-      if ( minXPlanes <= planeCount.nbDifferent() ) itE = itF;
-    }
+    itE = make_single_zone( itP, itE, std::end(m_xHitsAtReference), std::move(planeCount), predicate );
 
-    double x1 = (*itB)->projection();
+    double x1 = (*itP)->projection();
     double x2 = (*(itE-1))->projection();
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           x1, x2, itE-itB, pc.nbDifferent(), spread)
+                           x1, x2, itE-itP, nbDifferent(itP,itE), predicate.spread)
                 << endmsg;
     }
     //== Protect against too dirty area.
-    if ( itE < itB +  m_maxXCandidateSize ) { 
+    if ( itE < itP +  m_maxXCandidateSize ) { 
       //== Try to merge the lists, if the first new point is close to the last one...
       if ( spread > x1 - lastEnd ) {
-        m_candidates.back().addCoords( itB,itE );
+        m_candidates.back().addCoords( itP,itE );
       } else {
-        m_candidates.emplace_back( track.track(), itB,itE );
+        m_candidates.emplace_back( track.track(), itP,itE );
       }
       lastEnd = x2;
     }
     itP = itE;
   }
-
 }
 
 //=============================================================================

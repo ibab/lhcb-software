@@ -154,14 +154,14 @@ public:
   void setNbOT(int nb) { m_nb[1] = nb; }
 
   void setCand1stQuality(double cand1stquality) {
-    m_cand1stquality = cand1stquality;
+    m_candquality[0] = cand1stquality;
   }
-  double cand1stquality() const { return m_cand1stquality; }
+  double cand1stquality() const { return m_candquality[0]; }
 
   void setCand2ndQuality(double cand2ndquality) {
-    m_cand2ndquality = cand2ndquality;
+    m_candquality[1] = cand2ndquality;
   }
-  double cand2ndquality() const { return m_cand2ndquality; }
+  double cand2ndquality() const { return m_candquality[1]; }
 
 private:
   const LHCb::Track *m_track;
@@ -182,9 +182,7 @@ private:
 
   double m_cosAfter{ 1. };
   double m_quality{ 0. };
-  double m_cand1stquality{ 0. };
-  double m_cand2ndquality{ 0. };
-
+  std::array<double,2> m_candquality{{0.,0.}};
   std::array<int,2> m_nb{{ 0, 0 }}; // IT, OT
 
   double m_chi2PerDoF{ 0 };

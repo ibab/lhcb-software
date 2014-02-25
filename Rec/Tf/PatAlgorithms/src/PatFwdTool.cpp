@@ -503,8 +503,8 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 //  Parabolic fit to projection.
 //=========================================================================
-
-bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
+template <typename Curve>
+bool PatFwdTool::fitXProjection_ ( PatFwdTrackCandidate& track,
                                   PatFwdHits::iterator itBeg,
                                   PatFwdHits::iterator itEnd,
                                   bool onlyXPlanes  ) const {
@@ -516,11 +516,7 @@ bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
     double dist = distAtMagnetCenter( track );
     double w    = 1./errCenter;
 
-    PatFwdFitParabola  parabola( dz, dist, w);
-    PatFwdFitLine      line;
-    if (m_withoutBField){
-      line.addPoint(dz,dist,w);
-    }
+    Curve  curve( dz, dist, w);
 
     for (PatFwdHits::iterator itH = itBeg; itEnd != itH ; ++itH ) {
       PatFwdHit* hit = *itH;
@@ -529,26 +525,14 @@ bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
       double dist2 = distanceForFit( track, hit );
       dz    = hit->z() - m_zReference ;
       w     = hit->hit()->weight();
-      if (!m_withoutBField)
-        parabola.addPoint( dz, dist2, w );
-      else {
-        line.addPoint(dz, dist2, w);
-      }
+      curve.addPoint( dz, dist2, w );
     }
 
-    double dax, dbx, dcx;
     
-    if (!m_withoutBField){
-      if (!parabola.solve()) return false;
-      dax = parabola.ax();
-      dbx = parabola.bx();
-      dcx = parabola.cx();   
-    } else {
-      if (!line.solve()) return false;
-      dax = line.ax();
-      dbx = line.bx();
-      dcx = 0.0;    
-    }
+    if (!curve.solve()) return false;
+    double dax = curve.ax();
+    double dbx = curve.bx();
+    double dcx = curve.cx();   
     
 
     track.updateParameters( dax, dbx, dcx );
@@ -564,6 +548,17 @@ bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
   }
   return true;
 }
+
+// explicitly instantiate the two valid versions...
+template bool PatFwdTool::fitXProjection_<PatFwdFitLine> ( PatFwdTrackCandidate& track,
+                          PatFwdHits::iterator itBeg,
+                          PatFwdHits::iterator itEnd,
+                          bool onlyXPlanes  ) const;
+
+template bool PatFwdTool::fitXProjection_<PatFwdFitParabola> ( PatFwdTrackCandidate& track,
+                          PatFwdHits::iterator itBeg,
+                          PatFwdHits::iterator itEnd,
+                          bool onlyXPlanes  ) const;
 
 
 

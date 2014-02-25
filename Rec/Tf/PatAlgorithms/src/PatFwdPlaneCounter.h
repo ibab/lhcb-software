@@ -3,12 +3,15 @@
 #define PATFWDPLANECOUNTER_H 1
 
 // Include files
+#include <algorithm>
+#include <array>
+
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/LineHit.h"
 #include "TfKernel/RegionID.h"
 
-#include <algorithm>
-#include <array>
+#include "PatFwdTrackCandidate.h"
+
 
   /** @class PatFwdPlaneCounter PatFwdPlaneCounter.h
    *  Small class to count how many different planes are in a list.
@@ -21,6 +24,7 @@
   class PatFwdPlaneCounter final {
   public:
 
+    PatFwdPlaneCounter() = delete;
     /// Standard constructor
     template < class Iterator >
     PatFwdPlaneCounter( Iterator first, Iterator last )
@@ -35,6 +39,8 @@
         ++first;
       }
     }
+
+    explicit PatFwdPlaneCounter( const PatFwdTrackCandidate& cand) : PatFwdPlaneCounter( std::begin(cand), std::end(cand) ) {}
 
     /// add a hit to be counted
     template < class Hit >
