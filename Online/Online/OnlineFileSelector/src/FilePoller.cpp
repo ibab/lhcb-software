@@ -7,15 +7,18 @@
 //
 //  ====================================================================
 #include "OnlineFileSelector/FilePoller.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include <algorithm>
+#include "GaudiKernel/ISvcLocator.h"  
+#include "GaudiKernel/SvcFactory.h"
 #include <string>
 #include <dirent.h>
 #include <stdlib.h>
 
+
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FilePoller)
+
 using namespace std;
 using namespace LHCb;
-
 
 FilePoller::FilePoller(const string& nam,ISvcLocator* svc)
                            : OnlineService::OnlineService(nam,svc),
@@ -46,25 +49,25 @@ StatusCode FilePoller::queryInterface(const InterfaceID& riid, void** ppvIF) {
 /// Implementation of IOnlineService::initialize()
 StatusCode FilePoller::initialize()  {
   StatusCode status = OnlineService::initialize();
-  if (!status.isSuccess()) {
-      return status;
-  }
-  cout << m_alrmTime << endl;
-  cout << m_scanDirectory << endl;
   
+  if (!lib_rtl_create_lock(0,&m_listenerLock))
+    return issueAlarm("Problem creating listener list lock.");
+
   return status;
 }
 
 /// Implementation of IOnlineService::finalize()
 StatusCode FilePoller::finalize()  {
   StatusCode status = OnlineService::finalize();
-  if (!status.isSuccess()) {
-      return status;
-  }
+
+  if (!lib_rtl_delete_lock(m_listenerLock))
+    return issueAlarm("Problem deleting listener list lock.");
+  
   return status;
 }
 
 
+/// Implementation of IOnlineService::start()
 StatusCode FilePoller::start()
 {
   StatusCode status = OnlineService::start();
@@ -72,6 +75,7 @@ StatusCode FilePoller::start()
   return status;
 }
 
+/// Implementation of IOnlineService::stop()
 StatusCode FilePoller::stop()
 {
   StatusCode status = OnlineService::stop();
@@ -79,14 +83,14 @@ StatusCode FilePoller::stop()
   return status;
 }
 
-
+/// Implementation of IAlarmHandler.
 const StatusCode FilePoller::issueAlarm(const string& msg) 
 {
-    cout << msg << endl;
+    error(msg);
     return StatusCode::FAILURE;
 }
 
-
+/// Implementation of polling method.
 StatusCode FilePoller::poller(string scan_path)
 {
   struct dirent d_entry;                  	
@@ -97,30 +101,42 @@ StatusCode FilePoller::poller(string scan_path)
   StatusCode status;
   string n_path,dname;
   
-  path = (char*)calloc(sizeof(char),256);
-  prev_path = (char*)calloc(sizeof(char),256);
+  path = (char*)calloc(sizeof(char),1024);
+  prev_path = (char*)calloc(sizeof(char),1024);
   if ((!path)||(!prev_path)){
     status = FilePoller::issueAlarm(OnlineService::name() + "calloc memory problem");
     return status; 
   }
 
-  path = strncpy(path,scan_path.c_str(),255); //size of scan_path should be < 256
+  path = strncpy(path,scan_path.c_str(),1023);//size??
   dir = opendir(path);
+  
+  if ( 0 == dir )  {
+    return error("The directory "+scan_path+" is not valid!");
+  }
+  
   while ((0==readdir_r(dir,&d_entry,&d_res)) && (NULL!=d_res)) {
     
     prev_path = strncpy(prev_path,path,256);
+    if (!prev_path)
+        return error("The directory prev_path is not valid!");
     if (!strcmp(d_entry.d_name,".") || !strcmp(d_entry.d_name,".."))
         continue;
     
     dname = string(d_entry.d_name);
+    n_path = string(path);
     
-    FilePoller::addTofileNames(dname);  //simple, just sth to begin with
-    
-    //search for idle listeners to wake them up
-    
-    if (d_entry.d_type == DT_DIR) {
+    if (d_entry.d_type != DT_DIR) {
+      
+      //Place path of the file in buffer.
+      if (find( m_fileNames.begin(),  m_fileNames.end(),n_path) ==  m_fileNames.end()) 
+      {
+        FilePoller::addTofileNames(n_path);
+      }
+      
+    }
+    else /*if (d_entry.d_type == DT_DIR)*/ {
 
-      n_path = string(path);
       n_path = n_path + "/" + dname;
       nested_dir = opendir(n_path.c_str());
       
@@ -130,7 +146,7 @@ StatusCode FilePoller::poller(string scan_path)
       }
       status = FilePoller::poller(n_path);
       if (StatusCode::FAILURE == status) {
-        status = FilePoller::issueAlarm(OnlineService::name()+"The poller encountered an error.");
+         status = FilePoller::issueAlarm(OnlineService::name()+"The poller encountered an error.");
          return status;
       }
       i = closedir(nested_dir);
@@ -139,49 +155,66 @@ StatusCode FilePoller::poller(string scan_path)
         return status;
       }
     }
+    
     path = strncpy(path,prev_path,255);
+    if (!path)
+        return error("The directory path is not valid!");
   }
   
   return StatusCode::SUCCESS;
 }
 
-
+/// Implementation of IHandleListenerSvc::addListener.
 StatusCode FilePoller::addListener(IAlertSvc* Listener) 
 {
-  m_fileListeners.push_back(Listener);
+  
+  if (lib_rtl_lock(m_listenerLock)) {
+      m_fileListeners.push_back(Listener);
+  }
+  else
+      return FilePoller::issueAlarm("Problem acquiring the lock.");
+  if (!lib_rtl_unlock(m_listenerLock))
+      return FilePoller::issueAlarm("Problem releasing the lock.");
   return StatusCode::SUCCESS;
 }
 
-
+/// Implementation of IHandleListenerSvc::remListener.
 StatusCode FilePoller::remListener(IAlertSvc* Listener)
 {
+  deque<IAlertSvc*>::iterator iter;
+  
+  
+  
+  if (lib_rtl_lock(m_listenerLock)) {
+      
    if (!m_fileListeners.empty())
    {
-     vector<IAlertSvc*>::iterator del_l = FilePoller::findListener(Listener);
-     if (del_l != m_fileListeners.end())
-     {
-       m_fileListeners.erase(del_l);
-       return StatusCode::SUCCESS;
-     }
+     iter = find(m_fileListeners.begin(),m_fileListeners.end(),Listener);
+     if (*iter == m_fileListeners.front()) 
+         m_fileListeners.pop_front();
+     else
+         m_fileListeners.erase(iter);
    }
-   return FilePoller::issueAlarm(OnlineService::name()+"No listeners available.");
+   else 
+     FilePoller::issueAlarm(OnlineService::name()+"No listeners available.");
+   if (!lib_rtl_unlock(m_listenerLock))
+       return FilePoller::issueAlarm("Problem releasing the lock.");
+   return StatusCode::SUCCESS;
+  }
+  return FilePoller::issueAlarm("Problem acquiring the lock.");
 }
 
-vector<IAlertSvc*>::iterator FilePoller::findListener(IAlertSvc* Listener)
-{
-  vector<IAlertSvc*>::iterator iter;
-  iter = find(m_fileListeners.begin(),m_fileListeners.end(),Listener);
-  return iter;
-}
 
-
+/// Implementation of IHandleListenerSvc::showListeners.
 const StatusCode FilePoller::showListeners()
 {
   IAlertSvc* Listener; 
-  vector<IAlertSvc*>::iterator iter;
+  deque<IAlertSvc*>::iterator iter;
+  
   
   if (!m_fileListeners.empty())
   {
+   
     for(iter = m_fileListeners.begin(); iter != m_fileListeners.end(); ++iter)
     {
       Listener = *iter;
@@ -189,32 +222,77 @@ const StatusCode FilePoller::showListeners()
         return FilePoller::issueAlarm(OnlineService::name()+"Error retrieving service");
         cout << Listener->getSvcName() << endl;
     }
+    
+    
     return StatusCode::SUCCESS;
   }
+  FilePoller::issueAlarm("No listeners at the moment.");
   return StatusCode::FAILURE;
   
 }
 
 
-
-  
 void FilePoller::addTofileNames(const string& newFile)
 {
   m_fileNames.push_back(newFile);
 }
 
-void FilePoller::remFromfileNames()
+
+string FilePoller::remFromfileNames()
 {
-  m_fileNames.pop_back();
+  if (!m_fileNames.empty())
+  {
+    string path_file = m_fileNames.front();
+    m_fileNames.pop_front();
+    return path_file;
+  }
+  else 
+  {
+    issueAlarm("No available files.");
+    return "";
+  }
+}
+
+  
+/// Implementation of IHandleListenerSvc::statusReport.
+StatusCode FilePoller::statusReport(StatusCode status)
+{
+  if (StatusCode::FAILURE == status)
+  {
+    // no book-keeping
+  }
+  else if (StatusCode::SUCCESS == status)
+  {
+    // book-keep the file
+  }
+  
+  return status;
+
 }
 
 
+/// Implementation of DimTimer::timerHandler.
 void FilePoller::timerHandler()
 {
+  StatusCode sc;
+  string path_name;
+  
   DimTimer::stop();
   StatusCode poll_st = FilePoller::poller(FilePoller::m_scanDirectory);
-  //If m_fileNames not emprty: invoke dataReady() from a Listener
+  poll_st = showListeners();
+
+  while (!m_fileListeners.empty() && !m_fileNames.empty()){
+    
+    
+      path_name = remFromfileNames();
+      //check if it is book-kept
+      //if not, alertSvc(), if yes, dismiss and pick next file
+      sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
+      sc = remListener(m_fileListeners.front());
+  }
+  
   FilePoller::start();
+
 } 
 
 

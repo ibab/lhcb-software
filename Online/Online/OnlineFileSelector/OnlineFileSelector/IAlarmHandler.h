@@ -7,9 +7,6 @@
 // from Gaudi
 #include "GaudiKernel/IInterface.h"
 
-using namespace std;
-
-
 static const InterfaceID IID_IAlarmHandler ( "IAlarmHandler",1, 0 );
 
 /** @class IAlarmHandler IAlarmHandler.h ichalkia/IAlarmHandler.h
@@ -25,7 +22,7 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IAlarmHandler; }
 
-  virtual const StatusCode issueAlarm(const string& msg) = 0;
+  virtual const StatusCode issueAlarm(const std::string& msg) = 0;
   
 
 };
