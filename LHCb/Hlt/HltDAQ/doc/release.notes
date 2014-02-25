@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-25 - Sebastian Neubert
+ - Added persistence of States to TrackReports
+   only state location and parameters written atm
+
 ! 2014-02-24 - Sebastian Neubert
  - Perparing persistence of track states
 

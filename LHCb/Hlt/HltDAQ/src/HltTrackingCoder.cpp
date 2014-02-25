@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
+
 // local
 #include "HltTrackingCoder.h" 
 #include "Event/State.h"
-
 
 using namespace LHCb;
 
@@ -30,6 +30,16 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 
+// packing macros to put a double into 2 uints
+// from: http://stackoverflow.com/questions/4306577/how-to-get-the-upper-lower-machine-word-of-a-double-according-to-ieee-754-ansi
+#define REP(x) ((union { double v; uint64_t r; }){ x }).r
+#define HI(x) (uint32_t)(REP(x) >> 32)
+#define LO(x) (uint32_t)(REP(x))
+
+#define HILO(u,l) (((uint64_t)u) << 32)|((uint64_t)l)
+#define PER(u,l) ((union {uint64_t r; double v;}){HILO(u,l)}).v
+
+
 void
 encodeTracks(const LHCb::Tracks* tracks,
 	     std::vector<unsigned int>& rawBank){
@@ -47,10 +57,26 @@ encodeTracks(const LHCb::Tracks* tracks,
       // write states
       // check number of states on track
       const std::vector<LHCb::State*>& states = Tr->states();
-      //rawBank.push_back(states.size());
-      rawBank.push_back(0);
+      unsigned int nstates= states.size();
+      rawBank.push_back(nstates);
+      // loop over states and encode locations, parameters and covs
+      for(unsigned int is=0;is<nstates;++is){
+	LHCb::State* state=states[is];
+	// store the state location
+	rawBank.push_back(state->location());
+	// store the parameters
+	Gaudi::TrackVector& par=state->stateVector();
+	for(unsigned int ipar=0;ipar<5;++ipar){
+	  rawBank.push_back(HI(par[ipar]));
+	  rawBank.push_back(LO(par[ipar]));
+	}
+      }
       
+      //rawBank.push_back(0);
+      //std::copy(rawBank.begin(), rawBank.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
   }
+  
+  
 }
 
 
@@ -83,8 +109,18 @@ decodeTracks(unsigned int* rawBankData,
     unsigned int nstates = rawit[k];
     ++k;
     for(unsigned int istate=0;istate<nstates;++istate){
-      LHCb::State state;
-      track->addToStates(state);
+      
+      // add location
+      LHCb::State::Location loc = LHCb::State::Location(rawit[k++]);
+      // add parameters
+      Gaudi::TrackVector par;
+      for(unsigned int ip=0;ip<5;++ip){
+	unsigned int hi=rawit[k++];
+	unsigned int lo=rawit[k++];
+	par[ip]=PER(hi,lo);
+      }
+      Gaudi::TrackSymMatrix cov;
+      track->addToStates(LHCb::State(par,cov,200.,loc));
     }
 
     track->setType(LHCb::Track::Velo);
