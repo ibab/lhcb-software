@@ -17,13 +17,10 @@ from Moore.Configuration import Moore
 
 Moore().ThresholdSettings = 'Physics_draft2012'
 
-Moore().Verbose = True
 Moore().EvtMax = 10000
 
-Moore().UseDBSnapshot = False
 Moore().DDDBtag    = 'hlt-20100906'
 Moore().CondDBtag  = 'hlt-20100906'
-Moore().Simulation = False
 Moore().DataType   = '2010'
 Moore().inputFiles  = [ 'castor:/castor/cern.ch/user/g/graven/raw/74733_0x0025_MB1.raw' ]
 #Moore().inputFiles  = [ '/data/bfys/graven/74733_0x001a002b_MB1.raw' ]

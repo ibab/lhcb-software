@@ -34,6 +34,9 @@ class MooreExpert(LHCbConfigurableUser):
         "prefetchConfigDir" :'MOORE_v14r8'  # which configurations to prefetch
         , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
         , 'WriteFSR'    :  True #copy FSRs as required
+        , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
+        , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
+        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         }
 
     def __apply_configuration__(self):
@@ -71,7 +74,6 @@ class Moore(LHCbConfigurableUser):
         , "UseTCK"     :       False # use TCK instead of options...
         , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
         , "CheckOdin"  :       True  # use TCK from ODIN
-        , 'EnableRunChangeHandler' : False #allow run boundaries and first event to reselect the correct TCK
         #########################################
         # Common options, used to configure Moore
         #########################################
@@ -84,15 +86,13 @@ class Moore(LHCbConfigurableUser):
                              #if this is set to INFO no changes to default printout is made
         , 'Split'       : '' # HLT1 or HLT2?
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
-          , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
+        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
+        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
         #########################################
         # Options used to make/manipulate TCKs
         #########################################
         , "configLabel" :      ''    # label for generated configuration
-        , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
-        , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
-        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "generateConfig" :   False # whether or not to generate a configuration
         #######################################
         # Options nominally for online running
@@ -101,34 +101,34 @@ class Moore(LHCbConfigurableUser):
         #########################################
         # Deprecated former options
         #########################################
-        , "L0"         :       False # run L0, deprecated
-        , "ReplaceL0BanksWithEmulated" : False # rerun L0, deprecated
-        , "RunL0Emulator" : False # run L0 emulator for simulation mc production  , deprecated
-        , "Verbose" :           True # whether or not to print Hlt sequence, deprecated, please use OutputLevel
-        , 'REQ1' : ''
-        , "PartitionName" : "LHCb"
-        , "RunMonitoringFarm" : False
-        , "NbOfSlaves":        0
-        , 'IgnoreDBHeartBeat'  : False
-        , "UseDBSnapshot"     : True
-        , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
-        , 'EnableMonitoring' : False
-        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
-        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
-        , "prefetchConfigDir" :'MOORE_v14r8'  # which configurations to prefetch.
-        , "EnableLumiEventWriting"       : True
-        , 'EnableAcceptIfSlow' : False
-        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
-        , 'RequireL0ForEndSequence'     : False
-        , 'SkipHltRawBankOnRejectedEvents' : True
-        , 'HistogrammingLevel' : 'Line'
-        , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
-        , 'TimeOutBits'       : 0x200
-        , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
-        , 'VetoRoutingBits'    : []
-        , "DQFLAGStag" : "latest" # latest in the CondDB for this DataType
-        , 'WriteFSR'    :  True #copy FSRs as required
-        , 'EnableRunChangeHandler' : False #was only used to set something from condDB
+        , "L0"         :       None # use L0App!
+        , "ReplaceL0BanksWithEmulated" : None # use L0App
+        , "RunL0Emulator" : None # use L0App
+        , "Verbose" :       None # use OutputLevel
+        , 'REQ1' : None # use MooreOnline!
+        , "PartitionName" :  None # use MooreOnline!
+        , "RunMonitoringFarm" :  None # use MooreOnline!
+        , "NbOfSlaves":         None # use MooreOnline!
+        , 'IgnoreDBHeartBeat'  :   None # use CondDB directly or MooreOnline!
+        , "UseDBSnapshot"     : None # use CondDB directly or MooreOnline!
+        , "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
+        , 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
+        , 'SkipDisabledL0Channels' : None # use HltConf directly
+        , "prefetchConfigDir" : None # use MooreExpert
+        , "EnableLumiEventWriting"       : None # use HltConf directly
+        , 'EnableAcceptIfSlow' : None # use HltConf directly
+        , 'RequireL0ForEndSequence'     :  None # use HltConf directly
+        , 'SkipHltRawBankOnRejectedEvents' : None # use HltConf directly
+        , 'HistogrammingLevel' : None # use HltConf directly
+        , 'TimeOutThreshold'  : 10000  # Not used anywhere??
+        , 'TimeOutBits'       : 0x200 # Not used anywhere??
+        , 'RequireRoutingBits' : None # use HltConf
+        , 'VetoRoutingBits'    : None # use HltConf
+        , "DQFLAGStag" : None # use MooreExpert
+        , 'WriteFSR'    :  None # use MooreExpert
+        , 'EnableRunChangeHandler' : None # use CondDB directly, only needed there!
+        , "configAlgorithms" : None # use MooreExpert
+        , "configServices" :  None #use MooreExpert
         }
     
     _propertyDocDct={
@@ -141,8 +141,6 @@ class Moore(LHCbConfigurableUser):
         , "DataType":          'Data type, can be 2010, 2012, etc.'
         , "DDDBtag" :          'database tag, default as set in DDDBConf for DataType'
         , "CondDBtag" :        'database tag, default as set in DDDBConf for DataType'
-        , "DQFLAGStag" : "database tag for the DQFLAGS partition, does not matter for Moore usually! But setting this to the latest suppresses a silly warning"
-        , 'WriteFSR'    :      'copy FSRs if required'
         #########################################
         # Mandatory options to consider
         #########################################
@@ -152,7 +150,6 @@ class Moore(LHCbConfigurableUser):
         , "UseTCK"     :       "use TCK instead of options. Set either this or ThresholdSettings"
         , "InitialTCK" :       'which configuration to use during initialize. If there is no run change hadler enabled, the this will be the only TCK'
         , "CheckOdin"  :       "use TCK from ODIN, need EnableRunChangeHandler"
-        , 'EnableRunChangeHandler' : "allow run boundaries and first event to reselect the correct TCK"
         #########################################
         # Common options, used to configure Moore
         #########################################
@@ -166,73 +163,53 @@ class Moore(LHCbConfigurableUser):
         if this is set to INFO no changes to default printout is made"""
         , 'Split'       : 'HLT1 or HLT2?'
         , "EnableAuditor" :    'put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]'
+        , 'WriterRequires' : "require certain algs for the end sequence [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2"
+        , 'ForceSingleL0Configuration' : "True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)"
         #########################################
         # Options used to make/manipulate TCKs
         #########################################
         , "configLabel" :      'label for generated configuration'
-        , "configAlgorithms" : 'which algorithms to configure (automatically including their children!)..., default [Hlt]'
-        , "configServices" :   "['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)..."
         , "TCKData" :          "'$HLTTCKROOT' # where do we read/write TCK data from/to?"
-        , "TCKpersistency" :   "'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' "
         , "generateConfig" :   "False # whether or not to generate a configuration"
         #######################################
         # Options nominally for online running
         #######################################
-        , 'EnableMonitoring' : "Turn on monitoring"
-        , "RunMonitoringFarm" : "Only for online running"
-        , "UseDBSnapshot"     : "True for online running, False otherwise"
-        , "DBSnapshotDirectory" : "/group/online/hlt/conditions, where to find the DB snapshot"
-        #########################################
-        # Expert options, only set if you know what you are doing
-        #########################################
-        , 'ForceSingleL0Configuration' : "use one single, fixed L0 configuration location (ToolSvc.L0DUConfig), shoucl always be set to true"
-        , 'SkipDisabledL0Channels' : "False # add Hlt1L0xxx even for disabled L0 channels "
-        , "prefetchConfigDir" :"'MOORE_v8r8'  # which configurations to prefetch."
-        , "EnableLumiEventWriting"       : "True"
-        , 'EnableAcceptIfSlow' : "False"
-        , 'WriterRequires' : "[ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2"
-        , 'RequireL0ForEndSequence'     : "False"
-        , 'SkipHltRawBankOnRejectedEvents' : "True"
-        , 'HistogrammingLevel' : 'Line'
-        , 'IgnoreDBHeartBeat'  : "False, needed workaround to avoid certain DB problems"
-        , 'TimeOutThreshold'  : "10000  # milliseconds before giving up, and directing event to time out stream"
-        , 'TimeOutBits'       : "0x200, unsure"
-        , 'RequireRoutingBits' : "[] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]"
-        , 'VetoRoutingBits'    : "[]"
+        , "RunOnline" : "Set now by MooreOnline(), implies we're running with the full online environment"
         #########################################
         # Deprecated former options
         #########################################
-        , "L0"         :       "False # run L0, deprecated"
-        , "ReplaceL0BanksWithEmulated" : "False # rerun L0, deprecated"
-        , "RunL0Emulator" : "False # run L0 emulator for simulation mc production  , deprecated"
-        , "Verbose" :           "True # whether or not to print Hlt sequence, deprecated, please use OutputLevel"
+        # deprecated options require the word DEPRECATED in the documentation description
+        # this will be used to print a deprecation warning
+        , "L0"         :       "None # DEPRECATED. use L0App"
+        , "ReplaceL0BanksWithEmulated" : "None # DEPRECATED.  use L0App"
+        , "RunL0Emulator" : "None # DEPRECATED.  use L0App"
+        , "Verbose" :       "None # DEPRECATED.  use Moore().OutputLevel"
+        , 'REQ1' : "None # DEPRECATED.  use MooreOnline"
+        , "PartitionName" :  "None # DEPRECATED.  use MooreOnline"
+        , "RunMonitoringFarm" :  "None # DEPRECATED.  use MooreOnline"
+        , "NbOfSlaves":         "None # DEPRECATED.  use MooreOnline"
+        , 'IgnoreDBHeartBeat'  :   "None #  DEPRECATED. use CondDB() directly or MooreOnline"
+        , "UseDBSnapshot"     : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
+        , "DBSnapshotDirectory" : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
+        , 'EnableMonitoring' : "None # DEPRECATED.  use HltConf() directly or MooreOnline"
+        , 'SkipDisabledL0Channels' : "None # DEPRECATED.  use HltConf() directly"
+        , "prefetchConfigDir" : "None # use MooreExpert"
+        , "EnableLumiEventWriting"       : "None # DEPRECATED.  use HltConf() directly"
+        , 'EnableAcceptIfSlow' : "None # DEPRECATED.  use HltConf directly"
+        , 'RequireL0ForEndSequence'     :  "None # DEPRECATED.  use HltConf() directly"
+        , 'SkipHltRawBankOnRejectedEvents' : "None #  DEPRECATED. use HltConf() directly"
+        , 'HistogrammingLevel' : "None #  DEPRECATED. use HltConf() directly"
+        , 'TimeOutThreshold'  : "10000  #  DEPRECATED. use (no replacement not used anywhere??)"
+        , 'TimeOutBits'       : "0x200 #  DEPRECATED. use (no replacement not used anywhere??)"
+        , 'RequireRoutingBits' : "None #  DEPRECATED. use HltConf()"
+        , 'VetoRoutingBits'    : "None #  DEPRECATED. use HltConf()"
+        , "DQFLAGStag" : "None #  DEPRECATED. use MooreExpert()"
+        , 'WriteFSR'    :  "None #  DEPRECATED. use MooreExpert()"
+        , 'EnableRunChangeHandler' : "None #  DEPRECATED. use CondDB() directly, only needed there!"
+        , "configAlgorithms" : "None #  DEPRECATED. use MooreExpert()"
+        , "configServices" :  "None # DEPRECATED. use MooreExpert()"
         }
     
-    #for deprecation warnings, a map from deprecated option, to what you should use instead (if anything)
-    __deprecated__={"L0":"L0App","ReplaceL0BanksWithEmulated":"L0App",
-                    "RunL0Emulator":"L0App",
-                    "Verbose":"Moore().OutputLevel=VERBOSE",
-                    "REQ1":"MooreOnline", "PartitionName":"MooreOnline",
-                    "RunMonitoringFarm":"MooreOnline",
-                    "NbOfSlaves":"MooreOnline",
-                    "IgnoreHeartBeat":"MooreOnline or CondDB()",
-                    "UseDBSnapshot":"MooreOnline or CondDB()",
-                    "PartitionName":"MooreOnline or CondDB()",
-                    "EnableRunChangeHandler":"MooreOnline or CondDB()"
-                    , 'ForceSingleL0Configuration' : "HltConf"
-                    , 'SkipDisabledL0Channels' : "HltConf"
-                    , "prefetchConfigDir" :'MooreExpert'  
-                    , "EnableLumiEventWriting"       : "HltConf"
-                    , 'EnableAcceptIfSlow' : "HltConf"
-                    , 'RequireL0ForEndSequence' : "HltConf"
-                    , 'SkipHltRawBankOnRejectedEvents' : "HltConf"
-                    , 'HistogrammingLevel' : "HltConf"
-                    , 'TimeOutThreshold'  : "(nothing, never used)"
-                    , 'TimeOutBits'       : "(nothing never used)"
-                    , 'RequireRoutingBits' : "HltConf"
-                    , 'VetoRoutingBits'    : "HltConf"
-                    , "DQFLAGStag" : "MooreExpert"
-                    , 'WriteFSR'    :  "MooreExpert"}
     
     def _configureDataOnDemand(self) :
         if not self.getProp("EnableDataOnDemand") :
@@ -385,6 +362,11 @@ class Moore(LHCbConfigurableUser):
             if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
         else:
             if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = True
+            #turn off LoKi::Distance print outs, which are very frequent!
+            #todo: put this in a "quiet" option of Moore
+            from Configurables import LoKi__DistanceCalculator
+            LoKi__DistanceCalculator().MaxPrints=0
+        
         # Usual output levels for services
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
@@ -473,12 +455,15 @@ class Moore(LHCbConfigurableUser):
                 Funcs._mergeTransform(trans)
                 #restore timing if required
                 if self.getProp("EnableTimer"):
-                    trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}
-                                        }
-                           }
+                    trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}}}
                     if self.getProp("OutputLevel")<INFO:
                         trans[".*SequencerTimingTool.*"]={"OutputLevel"        : {"^.*$":str(INFO)}}
                     Funcs._mergeTransform(trans)
+                #kill LoKi warnings
+                if self.getProp("OutputLevel")>=INFO:
+                    trans={".*DistanceCalculator.*":{"MaxPrints"        : {"^.*$":"0"}}}
+                    Funcs._mergeTransform(trans)
+                
                 from Configurables import HltConfigSvc
                 cfg = HltConfigSvc()
                 #self-defeating warnings!
@@ -496,9 +481,9 @@ class Moore(LHCbConfigurableUser):
     def _generateConfig(self) :
         from HltConf.ThresholdUtils import Name2Threshold
         settings = Name2Threshold(self.getProp('ThresholdSettings'))
-        svcs = self.getProp("configServices")
-        algs = self.getProp("configAlgorithms")
-        if self.getProp('TCKpersistency').lower() == 'tarfile' :
+        svcs = MooreExpert().getProp("configServices")
+        algs = MooreExpert().getProp("configAlgorithms")
+        if MooreExpert().getProp('TCKpersistency').lower() == 'tarfile' :
             self.getConfigAccessSvc().Mode = 'ReadWrite'
             self.getConfigAccessSvc().OutputLevel = 1
 
@@ -758,18 +743,18 @@ class Moore(LHCbConfigurableUser):
         #       Online requires UseTCK
         # L0 decoding to look in a single place  
         # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
-        #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
+        #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True
+        deprecationwarning=""
         for prop in self.getProperties():
-            if prop in self.__deprecated__:
-                if self.isPropertySet(prop):
-                    warningprint="You are trying to set the deprecated property " + prop
-                    if self.__deprecated__[prop] is not None and len(self.__deprecated__[prop].strip()):
-                        warningprint=warningprint+" please use "+self.__deprecated__[prop]+" instead"
-                    raise AttributeError(warningprint)
-        #turn off LoKi::Distance print outs, which are very frequent!
-        #todo: put this in a "quiet" option of Moore
-        from Configurables import LoKi__DistanceCalculator
-        LoKi__DistanceCalculator().MaxPrints=0
+            if prop in self._propertyDocDct:
+                doc=self._propertyDocDct[prop]
+                if "DEPRECATED" in doc and self.isPropertySet(prop):
+                    deprecationwarning=deprecationwarning+"You are trying to set the deprecated property Moore()." + prop
+                    if " use " in doc and len(doc[doc.find("use"):].strip()):
+                        deprecationwarning=deprecationwarning+" please "+doc[doc.find("use"):].strip()+" instead"
+                    deprecationwarning=deprecationwarning+"\n"
+        if len(deprecationwarning.strip()):
+            raise DeprecationWarning(deprecationwarning.strip())
         
         if not self.getProp("RunOnline") : self._l0()
         

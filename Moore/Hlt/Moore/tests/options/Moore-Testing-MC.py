@@ -1,7 +1,6 @@
 
 from Gaudi.Configuration import *
 from Configurables import Moore
-Moore().WriteFSR= False;
 Moore().Simulation= True;
 from Configurables import LHCbApp;
 LHCbApp().DDDBtag="dddb-20120831";

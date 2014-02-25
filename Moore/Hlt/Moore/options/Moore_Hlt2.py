@@ -21,7 +21,6 @@ Moore().EvtMax = 10000
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 
-Moore().UseDBSnapshot = False
 Moore().ForceSingleL0Configuration = False
 
 from PRConfig.TestFileDB import test_file_db

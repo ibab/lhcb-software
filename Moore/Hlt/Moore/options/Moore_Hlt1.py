@@ -21,17 +21,16 @@ Moore().EvtMax = 10000
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 
-Moore().UseDBSnapshot = False
 Moore().ForceSingleL0Configuration = False
 
 from PRConfig.TestFileDB import test_file_db
 input = test_file_db['2012_raw_default']
 input.run(configurable=Moore()) 
-input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.filenames ]
+#input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.filenames ]# Gerhard, no personal files in a release please!
 Moore().inputFiles = input.filenames
 
 # /data/bfys/graven/0x46
 Moore().WriterRequires = [ 'Hlt1' ]  # default is HltDecisionSequence, which Split = 'Hlt1' will remove (maybe it should remove Hlt2 from HltDecisionSequence instead???)
-Moore().outputFile = '/data/bfys/graven/0x46/hlt1.raw'
+#Moore().outputFile = '/data/bfys/graven/0x46/hlt1.raw'# Gerhard, no personal files in a release please!
 
 Moore().Split = 'Hlt1'

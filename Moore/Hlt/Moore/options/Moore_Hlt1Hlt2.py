@@ -21,12 +21,11 @@ Moore().EvtMax = 1000
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 
-Moore().UseDBSnapshot = False
 Moore().ForceSingleL0Configuration = False
 
 from PRConfig.TestFileDB import test_file_db
 input = test_file_db['2012_raw_default']
-input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.filenames ]
+#input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.filenames ]# what? Gerhard, don't add your own private file locations into a release thanks!
 input.run(configurable=Moore()) 
 Moore().inputFiles = input.filenames
 

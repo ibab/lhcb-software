@@ -25,9 +25,9 @@ TimingAuditor('TIMER').TIMER.NameSize=150
 
 ########### L0-related things #######################
 
-from Configurables import L0Conf,HltConf
+from Configurables import L0Conf
 L0Conf().EnsureKnownTCK=False
-HltConf().ForceSingleL0Configuration=False
+Moore().ForceSingleL0Configuration=False
 
 from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
