@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-25 - Rob Lambert
+ - Modify how deprecated properties are handled, add tests which verify that
+   deprecated properties have really been deprecated!
+
 !========================= Moore v22r0 2014-02-24 =========================
 ! 2014-02-24 - Rob Lambert
  - Move a load of the Moore configuration into MooreOnline.
