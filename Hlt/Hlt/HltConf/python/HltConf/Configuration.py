@@ -58,9 +58,9 @@ class HltConf(LHCbConfigurableUser):
     __slots__ = { "L0TCK"                          : ''
                 , 'ForceSingleL0Configuration'     : True
                 , 'SkipDisabledL0Channels'         : False
-                , "DataType"                       : '2010'
+                , "DataType"                       : '2012'
                 , "Verbose"                        : False      # print the generated Hlt sequence
-                , "HistogrammingLevel"             : 'None'     # or 'Line'
+                , "HistogrammingLevel"             : 'Line'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
                 , "Split"                          : ''         # Hlt1 or Hlt2 (will also be set by Moore)
                 , "EnableMonitoring"               : False      # enable embedded monitoring in FilterDesktop/CombineParticles
@@ -72,14 +72,14 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltVtxReports"            : True
                 , "EnableHltRoutingBits"           : True
                 , "EnableHltTrackReports"          : True
-                , "EnableLumiEventWriting"         : False
+                , "EnableLumiEventWriting"         : True
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , "SlowHlt1Threshold"              : 500000     # microseconds
                 , "SlowHlt2Threshold"              : 5000000     # microseconds
-                , 'RequireL0ForEndSequence'        : True
+                , 'RequireL0ForEndSequence'        : False
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
-                , 'SkipHltRawBankOnRejectedEvents' : False
+                , 'SkipHltRawBankOnRejectedEvents' : True
                 , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"  
                 , 'BeetleSyncMonitorRate'          : 5000
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
