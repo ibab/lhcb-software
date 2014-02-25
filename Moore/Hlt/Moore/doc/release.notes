@@ -6,6 +6,10 @@
 
 !========================= Moore v22r0 2014-02-25 =========================
 ! 2014-02-25 - Rob Lambert
+ - More now prints no errors or warnings during usual running
+ - update all tests to new errors :) i.e. 0 errors
+
+! 2014-02-25 - Rob Lambert
  - Modify how deprecated properties are handled, add tests which verify that
    deprecated properties have really been deprecated!
 

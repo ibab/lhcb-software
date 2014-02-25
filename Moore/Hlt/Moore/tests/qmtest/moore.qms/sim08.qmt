@@ -9,7 +9,7 @@
     <text>from Gaudi.Configuration import *; from Configurables import Moore; Moore().EvtMax=99; from PRConfig import TestFileDB; Moore().CheckOdin = False; Moore().ForceSingleL0Configuration=True; Moore().WriterRequires = [];  TestFileDB.test_file_db["Sim08_2012_L044"].run(Moore(),clear=True); </text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :1})
+countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
 </text></argument>
 </extension>
 

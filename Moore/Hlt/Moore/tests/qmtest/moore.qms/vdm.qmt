@@ -15,7 +15,7 @@ if stdout.find(expected_string) == -1:
     result['moore.vdm.expected_string'] = result.Quote(expected_string)
 
 #ideally no errors, but there is always two when opening every Raw file
-countErrorLines({"FATAL":0,"ERROR":7,"WARNING":1})
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
 from Moore.QMTest.MooreTests import extractEventsFromTiming
 timing,timingdict=extractEventsFromTiming(stdout,'Hlt')

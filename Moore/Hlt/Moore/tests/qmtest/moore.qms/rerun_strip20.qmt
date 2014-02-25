@@ -8,7 +8,7 @@
     <text>from PRConfig import TestFileDB; from Configurables import Moore; TestFileDB.test_file_db['Charm_Strip20_Test'].run(configurable=Moore()); Moore().EvtMax=300;</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :1})
+countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
 </text></argument>
 </extension>
 

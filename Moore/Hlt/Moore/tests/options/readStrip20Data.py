@@ -15,8 +15,8 @@ Moore().CondDBtag= 'head-20120420'; #from RunDB
 from Configurables import L0Conf, HltConf
 L0Conf().EnsureKnownTCK=False
 Moore().ForceSingleL0Configuration = False
-from Configurables import L0MuonAlg
-L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+#from Configurables import L0MuonAlg
+#L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 ############# prepend a "killHltSeq" ############
 

@@ -20,8 +20,7 @@ if len(stdout)&gt;16000:
     result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 16k characters, got '+ str(len(stdout)))
 
 #count error lines, shouldn't be any warnings or errors, ideally
-#error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
-countErrorLines({"FATAL":0,"ERROR":2,"WARNING":1})
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
 </text></argument>
 </extension>

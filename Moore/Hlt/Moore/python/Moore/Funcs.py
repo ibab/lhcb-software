@@ -88,3 +88,10 @@ def _mergeTransform(trans):
     else:
         #else set it
         svc.setProp(prop,trans)
+
+def _minSetFileTypes():
+    from GaudiConf import IOExtension
+    from Gaudi.Configuration import EventSelector
+    from Configurables import Moore
+    files=Moore().inputFiles+EventSelector().Input
+    return IOExtension().detectMinType(files)

@@ -276,8 +276,7 @@ class Moore(LHCbConfigurableUser):
         # if input is MDF, RAW, DIGI, XDIGI, then raise an error,
         # these locations are always "DAQ/RawEvent"
         files = self.getProp('inputFiles')
-        if files is None or not len(files):
-            return
+        files=files+EventSelector().Input
         
         ext=files[0].split('.')[-1].strip().split('?')[0].strip().upper()
         if ext in ["MDF","RAW","DIGI","XDIGI"]:
@@ -357,16 +356,33 @@ class Moore(LHCbConfigurableUser):
         x.Enable = True
 
     def _outputLevel(self) :
+        #firstly explicitly configure things not seen by TCK
         from Configurables import Hlt__Service
         if self.getProp("OutputLevel")>=INFO:
             if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
-        else:
-            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = True
             #turn off LoKi::Distance print outs, which are very frequent!
             #todo: put this in a "quiet" option of Moore
             from Configurables import LoKi__DistanceCalculator
             LoKi__DistanceCalculator().MaxPrints=0
+        else:
+            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = True
+        #this should be OK to do here...
+        from Funcs import _minSetFileTypes
         
+        def suppresswarningifneeded():
+            #histogram warning isn't needed if I didn't want histograms
+            from Configurables import RootHistCnv__PersSvc
+            if RootHistCnv__PersSvc().getProp("OutputFile")=="UndefinedROOTOutputFileName" or not len(RootHistCnv__PersSvc().getProp("OutputFile")):
+                RootHistCnv__PersSvc().OutputEnabled=False
+            if HistogramPersistencySvc().getProp("OutputFile") == '' or not HistogramPersistencySvc().isPropertySet("OutputFile"):
+                HistogramPersistencySvc().Warnings = False
+            #error from IODataManager is pointless when I have MDFs
+            from Funcs import _minSetFileTypes
+            if Moore().getProp("RunOnline") or _minSetFileTypes() in ["MDF","RAW"]:
+                from Configurables import IODataManager
+                IODataManager().DisablePFNWarning=True
+        
+        appendPostConfigAction(suppresswarningifneeded)
         # Usual output levels for services
         ToolSvc().OutputLevel                     = INFO
         from Configurables import XmlParserSvc 
@@ -377,6 +393,11 @@ class Moore(LHCbConfigurableUser):
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         
+        #################################################
+        # If the OutputLevel is >INFO I need to use
+        # Either a postConfigAction or a transform
+        # to suppress the outputs properly
+        #################################################
         if self.getProp("OutputLevel")>INFO:
             level=self.getProp("OutputLevel")
             MessageSvc().OutputLevel = level
@@ -391,6 +412,7 @@ class Moore(LHCbConfigurableUser):
                 SequencerTimerTool().OutputLevel          = INFO
             from Configurables import LoKiSvc
             LoKiSvc().Welcome = False
+            
             #################################################
             # Running from thresholds, use post config action
             #################################################
@@ -583,7 +605,7 @@ class Moore(LHCbConfigurableUser):
         def hlt1_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
-            seq.Members = _replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
+            seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
             ## adapt HltGlobalMonitor for Hlt1 only...
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt2 = {}
@@ -598,7 +620,7 @@ class Moore(LHCbConfigurableUser):
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
-            seq.Members = _replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
+            seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
             # TODO: shunt lumi nano events...
             # globally prepend Decoders for Hlt1...
             # TODO: find a better way of doing this... ditto for L0 decoding...
@@ -620,7 +642,7 @@ class Moore(LHCbConfigurableUser):
             # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
             # remove LumuWriter, LumiStripper
             end = gs('HltEndSequence')
-            end.Members = _remove( ( 'HltL0GlobalMonitor','Hlt1Global','HltLumiWriter','LumiStripper'), end.Members )
+            end.Members = Funcs._remove( ( 'HltL0GlobalMonitor','Hlt1Global','HltLumiWriter','LumiStripper'), end.Members )
 
             ## adapt HltGlobalMonitor for Hlt2 only...
             from Configurables import HltGlobalMonitor

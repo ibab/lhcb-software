@@ -33,12 +33,11 @@ Moore().EvtMax = options.EvtMax
 #Moore().DataType = options.DataType
 Moore().DDDBtag    = options.DDDBtag
 Moore().CondDBtag  = options.CondDBtag
-from Configurables import HltConf
-HltConf().ForceSingleL0Configuration=(not options.multil0)
+Moore().ForceSingleL0Configuration=(not options.multil0)
 Moore().EnableTimer=True
 
-from Configurables import L0MuonAlg
-L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+#from Configurables import L0MuonAlg
+#L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 #take the test data and automatically set with the PRConfig
 from PRConfig import TestFileDB

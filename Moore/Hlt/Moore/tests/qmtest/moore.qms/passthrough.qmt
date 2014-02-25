@@ -13,7 +13,7 @@ if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['moore.passthrough.expected_string'] = result.Quote(expected_string)
 
-countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
 #check that all events are actually passed through?
 #Parse timing table, and check that there is only one entry for HLT 2 and it sees all events (1200)

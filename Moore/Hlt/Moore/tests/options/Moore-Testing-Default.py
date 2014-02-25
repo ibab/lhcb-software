@@ -29,7 +29,7 @@ from Configurables import L0Conf
 L0Conf().EnsureKnownTCK=False
 Moore().ForceSingleL0Configuration=False
 
-from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+#from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 ############# prepend a "killHltSeq" ############
 
