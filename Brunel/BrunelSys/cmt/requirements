@@ -20,4 +20,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use PrAlgorithms v1r9p1 Pr
