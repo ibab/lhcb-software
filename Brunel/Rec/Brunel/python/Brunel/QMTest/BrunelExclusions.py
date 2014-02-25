@@ -3,7 +3,6 @@ from GaudiConf.QMTest.LHCbExclusions import preprocessor as LHCbPreprocessor
 
 preprocessor = LHCbPreprocessor + \
   LineSkipper(["IODataManager       ERROR Referring to existing dataset"]) + \
-  LineSkipper(["EventSelector        INFO Stream:EventSelector.DataStreamTool"]) + \
   LineSkipper(["MagneticFieldSvc     INFO Map scaled by factor"]) + \
   LineSkipper(["MagneticFieldSvc     INFO Opened magnetic field file"]) + \
   LineSkipper(["ToolSvc.PatTTMa...   INFO  No B field detected."]) + \
