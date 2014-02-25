@@ -1,7 +1,7 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_LOKICOREDICT_H 
-#define LOKI_LOKICOREDICT_H 1
+#ifndef LOKI_LOKIALGODICT_H
+#define LOKI_LOKIALGODICT_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -19,7 +19,7 @@
 #ifdef WIN32
 #ifdef CONST
 #undef CONST
-#endif 
+#endif
 #endif
 // ============================================================================
 #ifdef __INTEL_COMPILER
@@ -27,25 +27,25 @@
 #pragma warning(disable:191) // type qualifier is meaningless on cast type
 #endif
 // ============================================================================
-namespace 
+namespace
 {
   // ===========================================================================
   struct __Instantiations
   {
     LoKi::Dicts::ExtFunCalls<LHCb::Particle>   m_c1 ;
-    LoKi::Dicts::ExtFunCalls<LHCb::VertexBase> m_c2 ;    
+    LoKi::Dicts::ExtFunCalls<LHCb::VertexBase> m_c2 ;
     LoKi::Dicts::ExtCutCalls<LHCb::Particle>   m_c3 ;
-    LoKi::Dicts::ExtCutCalls<LHCb::VertexBase> m_c4 ;    
+    LoKi::Dicts::ExtCutCalls<LHCb::VertexBase> m_c4 ;
     //
     LoKi::Dicts::Alg<LoKi::Algo>               m_a1 ;
-    // fictive constructor 
+    // fictive constructor
     __Instantiations();
     ~__Instantiations();
-  } ;    
+  } ;
   // ==========================================================================
-} // end of anonymous namespace 
+} // end of anonymous namespace
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
-#endif // LOKI_LOKICOREDICT_H
+#endif // LOKI_LOKIALGODICT_H
 // ============================================================================
