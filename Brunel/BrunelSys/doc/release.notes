@@ -3,6 +3,93 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v45r0>2014-02-25 Brunel v45r0</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0,
+ Rec v16r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+First version that can be built and run against ROOT 6.
+
+This version contains all tracking code that was used for the upgrade tracking
+TDR studies
+
+- Changes to Configuration
+  . Add 'pA' SpecialData type, to set special GECs developed for Reco14r1
+    reprocessing of 2013 heavy ion data
+    (Rec/RecConf v2r16, Rich/RichRecSys v5r1, Tf/TrackSys v9r0)
+  . Clean up propagation to LHCbApp of Detectors slot
+  . Integrate into DecodeRawEvent configurable (task #19106) 
+  . Renamed PatPixel* to PrPixel*
+
+- New functionality
+  . Adaptation for using large+standard PMTs in RICH2.
+    (Det/RichDet v16r20, Rich/RichRecPhotonTools v1r13)
+  . Add support for Upgrade geometries to RichCKthetaBandsPhotonPredictor.
+    (Rich/RichRecPhotonTools v1r13, Rich/RichRecTrackTools v1r36)
+
+- New tuning
+  . Update in PrSeedingXLayers, to represent code used for Upgrade Tracking TDR. 
+    (Pr/PrAlgorithms v1r9)
+  . Add in small wrong side window (Pr/PrAlgorithms v1r9)
+  . Changed how x of state atTT is assigned (Pr/PrVeloUT v2r0)
+  . Changed how clustering is done and resulting changes to algorithm.
+    (Pr/PrVeloUT v2r0)
+  . Add an explicit tuning of the photon reconstruction for the Upgrade.
+    (Rich/RichRecSys v5r1)
+
+- Performance improvement
+  . Avoid calling System::virtualMemory() more often than required in LbAppInit.
+    (Kernel/LHCbKernel v15r0)
+  . Removed unneeded calls to foiX and foiY in MuonIDAlg::setCoords.
+    (Muon/MuonID v9r9)
+  . Restructured code in hottest part of PatPixelTracking (Pr/PrPixel v1r5)
+  . Use vdt implementation of tanh in OTDet (Det/OTDet v8r11)
+
+- Bug fixes
+  . Chi2 cut on short tracks was not applied (Pr/PrPixel v1r5)
+  . Fixed small bug in clustering, change state to LastMeasurement
+    (Pr/PrVeloUT v2r0)
+  . Fix floating point exceptions 
+    (Det/CaloDet v10r18, Event/EventPacker v4r0, OT/OTMonitor v3r8,
+     Muon/MuonInterfaces v1r6, Pr/PrAlgorithms v1r9, Pr/PrMCTools v2r0,
+     Rich/RichTools v2r43, Tf/FastVelo v1r15, Tf/PatAlgorithms v4r30,
+     Tr/TrackMonitors v2r0, Velo/VeloRecMonitors v2r28)
+  . DeRichPMTPanel: fixed minor issue with RICH2 Local PD plane transform
+    definition for PMTs for plotting the hit coordinates in the PD plane.
+    (Det/RichDet v16r20)
+  . Fix the enabling of the FPEAuditor in LHCbApp (Kernel/LHCbAlgs v3r0)
+  . Fixed logic of applyConfigurableUsers() (see bug #103803 and bug #103808)
+    (GaudiKernel v30r0, RichRecQC v2r64)
+
+- Monitoring changes
+  . Update LbAppInit to only report memory changes when they are greater than
+    some small delta value (16KB by default). (Kernel/LHCbKernel v15r0)
+  . Update PrChecker with 'electron' flag, to take electrons into account or not.
+    (Pr/PrMCTools v2r0)
+  . Updated PrCounter and PrChecker: Added trigger condition and new efficiency
+    categories. (Pr/PrMCTools v2r0, Pr/PrKernel v1r4)
+  . Fix behaviour of flag 'fromB' to only include B baryons and mesons, and not
+    particles from string fragmentation of b quarks
+    (Pr/PrMCTools v2r0, Rec/ChargedProtoANNPID v2r5, Tr/PatChecker v3r15,
+     Tr/TrackCheckers v4r20, Tr/TrackMCTools v3r7)
+  . Add upgrade detector linking to LHCbIDsToMCHits (Tr/TrackMCTools v3r7)
+  . TrackMonitor: removed use of extrapolator; split residuals by x,y for pixel.
+    (Tr/TrackMonitors v2r0)
+
+- Obsolete functionality removed
+  . Remove support for VL upgrade detector
+  . Remove never used UpgradeDets slot
+  . Remove Brunel().Persistency option (Rec/Brunel v45r0, GaudiConf v19r0)
+  . Moved all functionality from DeVPNewSensor to DeVPSensor and removed
+    DeVPNewSensor (Det/VPDet v3r0)
+
+- Changes to example options
+  . Fix 2008 RAW data options following changes to Castor setup at CERN
+
+- Changes to QMTests
+  . repro2013-pa test now sets Brunel().SpecialData += ['pA'] instead of
+    explicitly setting the Reco14r1 GECs
+  . Fix several tests to take input data via TestFileDB
+
 </PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
  Rec v15r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
