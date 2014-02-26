@@ -12,8 +12,9 @@
 #include "TfKernel/UTStationHitManager.h"
 
 // local
+#include "IPrVeloUTTool.h"
 #include "PrKernel/PrUTHit.h"
-
+#include "PrUTMagnetTool.h"
 
   /** @class PrVeloUT PrVeloUT.h
    *
@@ -37,7 +38,6 @@
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   protected:
-    bool acceptTrack(const LHCb::Track& track);
     void removeUsedTracks( std::vector<LHCb::Track*>& veloTracks);
     bool matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused);
 
@@ -48,26 +48,29 @@
         return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
       }
     };
-
-    ITrackSelector* m_trackSelector; // tool to accept a track
+    class compVeloTx  {
+    public:
+      bool operator() (const LHCb::Track* first, const LHCb::Track* second ) {
+        return first->closestState(LHCb::State::EndVelo).tx() < second->closestState(LHCb::State::EndVelo).tx();
+      }
+    };
 
     Tf::UTStationHitManager<PrUTHit> *      m_utHitManager;
 
     std::string m_inputTracksName;    ///< input container name
     std::string m_outputTracksName;   ///< output container name
-    std::string m_trackSelectorName; ///< name of the tool to accept a track
     bool m_removeUsedTracks;
     /// The fitter tool
     std::string m_fitterName;
     ITrackFitter* m_tracksFitter;
-    PrVeloUTTool* m_veloUTTool;
+    IPrVeloUTTool* m_veloUTTool;
     std::vector< std::string > m_inputUsedTracksNames;
-    double m_maxChi2;
+    float m_maxChi2;
     bool m_fitTracks; 
     ISequencerTimerTool* m_timerTool;
     int  m_veloUTTime;
     bool m_doTiming;
-    bool m_AddMomentumEstimate;
+    
   };
 
 #endif // PRVELOUT_H

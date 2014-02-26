@@ -1,9 +1,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
-#include "PrVeloUTTool.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "PrVeloUT.h"
@@ -17,7 +15,6 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PrVeloUT )
-  
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -25,7 +22,6 @@ DECLARE_ALGORITHM_FACTORY( PrVeloUT )
 PrVeloUT::PrVeloUT( const std::string& name,
                       ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
-  m_trackSelector(NULL),
   m_utHitManager(NULL),
   m_tracksFitter(NULL),
   m_veloUTTool(NULL),
@@ -48,9 +44,8 @@ PrVeloUT::PrVeloUT( const std::string& name,
   declareProperty("fitTracks"          , m_fitTracks = false);
   declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
   declareProperty("maxChi2"            , m_maxChi2          = 1280.); 
-  declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
   declareProperty( "TimingMeasurement", m_doTiming = false);
-  declareProperty( "AddMomentumEstimate", m_AddMomentumEstimate = false);
+    
 }
 //=============================================================================
 // Destructor
@@ -64,18 +59,12 @@ StatusCode PrVeloUT::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-
-  m_veloUTTool = tool<PrVeloUTTool>("PrVeloUTTool", "PrVeloUTTool");
+  m_veloUTTool = tool<IPrVeloUTTool>("PrVeloUTTool", this);
   
-  m_trackSelector = NULL;
-  if (m_trackSelectorName != "None")
-    m_trackSelector = tool<ITrackSelector>( m_trackSelectorName, this);
-
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
   m_utHitManager   = tool<Tf::UTStationHitManager <PrUTHit> >("PrUTStationHitManager");
-  
+
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;
 
@@ -99,110 +88,56 @@ StatusCode PrVeloUT::execute() {
   
   m_utHitManager->prepareHits();
 
-
-
   LHCb::Tracks* outputTracks  = new LHCb::Tracks();
   outputTracks->reserve(200);
   put(outputTracks, m_outputTracksName);
 
-
   LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
-
-
-  std::vector<LHCb::Track*> veloTracks;
-
-  // collect tracks pointers in local vector
-  LHCb::Tracks::const_iterator pItr;
-  for(pItr = inputTracks->begin(); inputTracks->end() != pItr; ++pItr){
-    LHCb::Track* veloTr = (*pItr);
-    if (!acceptTrack(*veloTr)) continue;
-    veloTracks.push_back(veloTr);
-  }
-
-  if ( m_removeUsedTracks ) {
-    removeUsedTracks( veloTracks);
+  if( !inputTracks ){
+    warning() << " Input Tracks container: " <<  m_inputTracksName << " is invalid! Skipping" << endmsg;
+    return StatusCode::SUCCESS;
   }
   
-  // reconstruct tracks in UT
-  std::vector<LHCb::Track*>::iterator itv;  
-  std::vector<LHCb::Track*>::iterator itvtmp;  
-
-  std::vector<LHCb::Track*> tmptracks;
-  std::vector<LHCb::Track*> fittracks;
+  std::vector<LHCb::Track*> tmpTracks;
+  tmpTracks.reserve(5);
   
-  for(itv = veloTracks.begin(); itv != veloTracks.end(); ++itv){
-
-    LHCb::Track* velotr = *itv;
- 
-    m_veloUTTool->recoVeloUT(*velotr, tmptracks);
-
-    for (itvtmp = tmptracks.begin(); itvtmp != tmptracks.end(); ++itvtmp ) {
-
-      LHCb::Track* ptr = (*itvtmp);
-      StatusCode sc = StatusCode::SUCCESS;   
-      if (m_fitTracks) {  
-        sc = m_tracksFitter -> fit( *ptr );   
-      }
-      
-      if ( sc == StatusCode::SUCCESS ) {
-        fittracks.push_back(ptr);
-      }
-      else
-	delete ptr;
-
-    }
-
-    // choose best track
-    LHCb::Track* bestTrack = 0;
+  for(LHCb::Track* veloTr: *inputTracks){
     
-    std::vector<LHCb::Track*>::iterator tracks;
-    if(fittracks.size() > 0) {
-      std::sort(fittracks.begin(),fittracks.end(),compChi2());
-      bestTrack = *(fittracks.begin());
-      tracks = fittracks.begin();
-       
-      if(bestTrack) {
-        if(bestTrack->chi2PerDoF() < m_maxChi2) {
-          
-          if(m_AddMomentumEstimate){
-            // qop estimate
-            //Get qop from VeloUT track
-            const LHCb::State& state_VELOUT = bestTrack->hasStateAt(LHCb::State::EndVelo) ?
-              *(bestTrack->stateAt(LHCb::State::EndVelo)) :
-              (bestTrack->closestState(LHCb::State::EndVelo)) ;
-            double qop = state_VELOUT.qOverP();
-            
-            //Find track state for Velo track - will write out qop to it
-            LHCb::Track* veloTr = new LHCb::Track;
-            SmartRefVector<LHCb::Track>& ancestor = bestTrack->ancestors();
-            
-            for( SmartRefVector<LHCb::Track>::iterator trIt = ancestor.begin();
-                 ancestor.end() != trIt; trIt++) {
-              veloTr = *trIt;
-            }
-            
-            // Add the qop estimate to all Velo track states
-            LHCb::Track::StateContainer::const_iterator istate;
-            for( istate = veloTr->states().begin(); istate != veloTr->states().end(); ++istate){
-              (const_cast<LHCb::State*>(*istate))->setQOverP( qop ) ;
-            }
-          }
-          
-          outputTracks->insert(bestTrack);
-          tracks++;
+    m_veloUTTool->recoVeloUT(*veloTr, tmpTracks);
+
+    LHCb::Track* bestTrack = nullptr;
+    
+    float maxChi2 = m_maxChi2;
+
+    for ( LHCb::Track* fitTrack : tmpTracks ) {
+
+      if (m_fitTracks) {  
+        StatusCode sc = m_tracksFitter -> fit( *fitTrack );
+        std::cout << "chi2 after KF " << fitTrack->chi2PerDoF() << std::endl;
+
+        if( !sc ){
+          warning() << "Could not fit track" << endmsg;
+          delete fitTrack;
+          continue;
         }
+        
+      }
+      if( fitTrack->chi2PerDoF() < maxChi2){
+        maxChi2 = fitTrack->chi2PerDoF();
+        bestTrack = fitTrack;
       }
       
-      for (; tracks != fittracks.end(); tracks++){
-        delete (*tracks);
-      }
     }
-    tmptracks.clear();
-    fittracks.clear();
+
+    tmpTracks.clear();
+    
+    if( bestTrack != nullptr){
+      outputTracks->insert(bestTrack);
+    }
   }
-
+  
   if ( m_doTiming ) m_timerTool->stop( m_veloUTTime );
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -211,22 +146,10 @@ StatusCode PrVeloUT::execute() {
 //=============================================================================
 StatusCode PrVeloUT::finalize() {
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-bool PrVeloUT::acceptTrack(const LHCb::Track& track) 
-{
-  bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
-  ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
-  if (m_trackSelector) 
-    ok = ok && (m_trackSelector->accept(track));
-  
-  if(msgLevel(MSG::DEBUG)) debug() << " accept track " << ok << endmsg;
-  return ok;
-}
+
 
 //=========================================================================
 // Remove Velo tracks that has been used by other algorithms
@@ -245,7 +168,6 @@ void PrVeloUT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
     LHCb::Tracks* stracks = get<LHCb::Tracks>(*itTrName);
     if(!stracks) {
       Warning("Tracks not found at given location: ",StatusCode::SUCCESS).ignore(); 
-      if(msgLevel(MSG::DEBUG)) debug() <<"Tracks not found at location: " << *itTrName << endmsg; 
       continue;
     }
 
@@ -256,8 +178,6 @@ void PrVeloUT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
       usedTracks.push_back(str);
     }
   }
-
-  if(msgLevel(MSG::DEBUG)) debug() << " # used tracks to check: " << usedTracks.size() << endmsg;
 
   if( 0 == usedTracks.size() ) return; 
 
@@ -278,7 +198,6 @@ void PrVeloUT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
     }
     if(!found)  tmpTracks.push_back(velocand);  
   }
-  if(msgLevel(MSG::DEBUG)) debug() << " # used tracks found: " << veloTracks.size() - tmpTracks.size() << endmsg;
 
   veloTracks = tmpTracks;
 
@@ -326,8 +245,8 @@ bool PrVeloUT::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused)
     }
   }  
 
-  double rat1 = 0.;
-  double rat2 = 0.;
+  float rat1 = 0.;
+  float rat2 = 0.;
   if(nvelo1) rat1 = 1.0*nCommon/nvelo1;
   if(nvelo2) rat2 = 1.0*nCommon/nvelo2;
 

@@ -2,7 +2,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
 #include "TfKernel/RecoFuncs.h"
 
 // local
@@ -25,28 +24,24 @@ DECLARE_TOOL_FACTORY( PrVeloUTTool )
 PrVeloUTTool::PrVeloUTTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_utHitManager(0)
-  , m_PrUTMagnetTool(0)
+ : IPrVeloUTTool ( type, name , parent )
 {
-  declareInterface<PrVeloUTTool>(this);
+  declareInterface<IPrVeloUTTool>(this);
 
-  declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
-  declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
-  declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
   // Momentum determination
   declareProperty("minMomentum"        , m_minMomentum      = 2*Gaudi::Units::GeV);
   declareProperty("minPT"              , m_minPT            = 0.2*Gaudi::Units::GeV);
-  declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 1280.);
-  declareProperty("maxSolutionsPerTrack"  , m_maxSolutionsPerTrack = 3);
+  declareProperty("maxPseudoChi2"      , m_maxPseudoChi2    = 1280.);
   // Tolerances for extrapolation
-  declareProperty("XTolerance"         , m_xTol             = 0.35 * Gaudi::Units::mm);
-  declareProperty("XTolSlope"          , m_xTolSlope        = 350. * Gaudi::Units::mm);
+  declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
+  declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
+  declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
   declareProperty("YTolerance"         , m_yTol             = 0.8  * Gaudi::Units::mm);
   declareProperty("YTolSlope"          , m_yTolSlope        = 0.2);
   // Grouping tolerance
-  declareProperty("HitTol"         , m_hitTol       = 3.0 * Gaudi::Units::mm);
-  declareProperty("PrintVariables"      , m_PrintVariables    = false);
+  declareProperty("HitTol"             , m_hitTol           = 3.0 * Gaudi::Units::mm);
+  declareProperty("IntraLayerDist"     , m_intraLayerDist   = 15.0 * Gaudi::Units::mm);
+  declareProperty("PrintVariables"     , m_PrintVariables   = false);
 
 
 }
@@ -56,7 +51,7 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
 PrVeloUTTool::~PrVeloUTTool() {}
 
 //=============================================================================
-// Main method for VELOUT track rekonstruction
+// Main method for VELOUT track reconstruction
 //=============================================================================
 //=========================================================================
 //  Initialisation, check parameters
@@ -65,66 +60,57 @@ StatusCode PrVeloUTTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
 
-  m_debug = msgLevel( MSG::DEBUG );
-  m_verbose = msgLevel( MSG::VERBOSE );
-  if( m_debug ) debug() << "==> Initialize" << endmsg;
-
   m_PrUTMagnetTool = tool<PrUTMagnetTool>( "PrUTMagnetTool","PrUTMagnetTool");
 
   // m_zMidUT is a position of normalization plane which should to be close to z middle of UT ( +- 5 cm ).
   // Cashed once in PrVeloUTTool at initialization. No need to update with small UT movement.
   m_zMidUT    = m_PrUTMagnetTool->zMidUT();
   //  zMidField and distToMomentum isproperly recalculated in PrUTMagnetTool when B field changes
-  double zMidField = m_PrUTMagnetTool->zMidField();
-  double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
-
-  if( m_debug ){
-    debug() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
-    debug() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
-    debug() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
-    debug() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
-    debug() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-    debug() << " distToMomentum     = " << distToMomentum               << endmsg;
-    debug() << " zMidField          = " << zMidField          << " mm"  << endmsg;
-    debug() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
-    debug() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
-    debug() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
-    debug() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-    debug() << " HitTol             = " << m_hitTol       << " mm " << endmsg;
-    debug() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
-  }
-
-  if(m_PrintVariables)
-  {
-    info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
-    info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
-    info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+  m_distToMomentum = m_PrUTMagnetTool->averageDist2mom();
+  
+  if(m_PrintVariables){
     info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
     info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
     info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-    info() << " distToMomentum     = " << distToMomentum               << endmsg;
-    info() << " zMidField          = " << zMidField          << " mm"  << endmsg;
-    info() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
-    info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+    info() << " MaxXSlope          = " << m_maxXSlope    << "   "  << endmsg;
+    info() << " MaxYSlope          = " << m_maxYSlope    << "   "  << endmsg;
+    info() << " distToMomentum     = " << m_distToMomentum               << endmsg;
     info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
     info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
     info() << " HitTol             = " << m_hitTol       << " mm " << endmsg;
     info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
   }
   
-  std::vector<double> nfact;
-  for (double dydz = -0.3; dydz < 0.3; dydz+=0.02) {
-    double dxdz = 0.0;
-    m_PrUTMagnetTool->dxNormFactorsUT(dydz, nfact);
-    double dist2mom = m_PrUTMagnetTool->dist2mom(dydz);
-
-    if( m_debug )
-      debug() << format(" val dist2mom %10.4e # %7.2f %7.2f  ratios: %7.3f %7.3f %7.3f %7.3f",
-                        dist2mom, dxdz, dydz, nfact[0],nfact[1],nfact[2],nfact[3]) << endmsg;
-  }
-
-
   m_utHitManager   = tool<Tf::UTStationHitManager <PrUTHit> >("PrUTStationHitManager");
+
+  // -- Event listener
+  m_newEvent = true;
+  incSvc()->addListener(this, IncidentType::BeginEvent);
+  
+  m_normFact.reserve(4);
+  m_invNormFact.reserve(4);
+  
+  m_vuttracks.reserve(50);
+  m_bestCand.reserve(1);
+  
+  m_allClusters.reserve(50);
+  m_clusterCandidate.reserve(4);
+  
+  PrUTHits dummy;
+  dummy.reserve(100);
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+  m_hitsLayers.push_back( dummy );
+
+  m_allHits.push_back( dummy );
+  m_allHits.push_back( dummy );
+  m_allHits.push_back( dummy );
+  m_allHits.push_back( dummy );
 
   return StatusCode::SUCCESS;
 }
@@ -135,242 +121,332 @@ StatusCode PrVeloUTTool::initialize ( ) {
 //=========================================================================
 void PrVeloUTTool::recoVeloUT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks )
 {
+  //Check if it is a new event
+  if(m_newEvent) initEvent();
+  
+  //Remove backward/invalid tracks
+  if(!acceptTrack(velotrack)) return;
 
-  std::vector<PrVUTTrack> vttTracks;
-  getCandidates(velotrack, vttTracks);
-  simpleFitTracks(vttTracks);
-  localCleanUp(vttTracks);
-  selectBestTracks(vttTracks);
-  prepareOutputTracks(vttTracks, outtracks);
+  //Save some variables
+  const LHCb::State& state = velotrack.hasStateAt(LHCb::State::LastMeasurement) ?
+    *(velotrack.stateAt(LHCb::State::LastMeasurement)) :
+    (velotrack.closestState(LHCb::State::EndVelo)) ;
+  
+  m_xVelo = state.x();
+  m_yVelo = state.y();
+  m_zVelo = state.z();
+  m_txVelo = state.tx();
+  m_tyVelo = state.ty();
 
+  //Skip tracks outside 
+  if((fabs(m_txVelo) > m_maxXSlope) || (fabs(m_tyVelo) > m_maxYSlope)) return;
+
+  float xAtMidUT = m_xVelo + m_txVelo*(m_zMidUT-m_zVelo);
+  m_yAtMidUT = m_yVelo + m_tyVelo*(m_zMidUT-m_zVelo);
+  
+  // skip tracks pointing into central hole of UT
+  if(xAtMidUT*xAtMidUT + m_yAtMidUT*m_yAtMidUT < m_centralHoleSize*m_centralHoleSize) return;
+  
+  //clear vectors
+  m_normFact.clear();
+  m_invNormFact.clear();
+  
+  m_vuttracks.clear();
+  m_bestCand.clear();
+  m_foundCand = false;
+  m_fourLayerSolution = false;
+  
+  for(unsigned int i = 0; i < 4; ++i){
+    m_allHits[i].clear();
+  }
+  m_allClusters.clear();
+  
+  //Find deflection values
+  m_PrUTMagnetTool->dxNormFactorsUT( m_tyVelo,  m_normFact);
+  m_invNormFact.resize(m_normFact.size());
+  std::transform(m_normFact.begin(),m_normFact.end(),m_invNormFact.begin(),
+                 [](float normFact){return 1.0/normFact;});
+  
+  //Save some variables
+  float zOrigin =  m_zVelo-m_yVelo/m_tyVelo;
+  m_zKink = m_PrUTMagnetTool->zBdlMiddle(m_tyVelo,zOrigin,m_zVelo);
+  m_bdl= m_PrUTMagnetTool->bdlIntegral(m_tyVelo,zOrigin,m_zVelo);
+  m_yAt0 = m_yVelo + m_tyVelo*(0. - m_zVelo);
+  
+  //
+  //Find VeloUT track candidates
+  //
+  
+  getCandidates(velotrack,outtracks); 
+  
 }
-
 
 //=========================================================================
 // Get all the VeloUT track candidates
 //=========================================================================
-void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack>& vttTracks){
-
-  if(m_debug) debug() << "Entering getCandidates" << endmsg;
+void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks ){
   
-  //===========================================================================
-  //== try to match
-  //===========================================================================
-    
   LHCb::Track* veloTr = &veloTrack;
-  if( m_debug ) debug() << "Input Velo track address: " << veloTr << endmsg;
   
-  const LHCb::State& state = veloTr->hasStateAt(LHCb::State::LastMeasurement) ?
-    *(veloTr->stateAt(LHCb::State::LastMeasurement)) :
-    (veloTr->closestState(LHCb::State::EndVelo)) ;
-
-  double slX = state.tx();
-  double slY = state.ty();
-
-  // skip tracks outside UT
-  if( m_maxXSlope < fabs( slX ) || m_maxYSlope < fabs( slY ) ) return;
+  // Find hits within a search window
+  if(!findHits()) return;
   
-  double xAtMidUT = state.x() + slX*(m_zMidUT-state.z());
-  double yAtMidUT = state.y() + slY*(m_zMidUT-state.z());
-
-  // skip tracks pointing into central hole of UT
-  if(xAtMidUT*xAtMidUT + yAtMidUT*yAtMidUT < m_centralHoleSize*m_centralHoleSize) return;
-
-  double theta = sqrt(slX*slX+slY*slY);
-  // protect against unphysical angles, should not happen
-  if(theta < 0.002) theta = 0.002;
-
-  double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
-
-  double minP = ((m_minPT/theta)>m_minMomentum) ? (m_minPT/theta):m_minMomentum;
-    
-  double maxTol = fabs(1. / ( distToMomentum * minP ));
-
-  if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
-    
-  if( m_debug )   debug() << " Start with the track" << " tx,ty  " << slX << " " << slY  << endmsg;
-
-
-  // The candidate based on the Velo track
-  PrVUTTrack cand( veloTr );
-
-  std::vector<double> normFact;
-  m_PrUTMagnetTool->dxNormFactorsUT( slY,  normFact);
-
-
-  //--------------------------------------------------------------------------
-  // Loop on regions
-  //--------------------------------------------------------------------------
-
-  for (Tf::UTStationID sta=0; sta<m_utHitManager->maxStations(); sta++){
-    for (Tf::UTLayerID lay=0; lay<m_utHitManager->maxLayers(); lay++){
-      for (Tf::UTRegionID reg=0; reg<m_utHitManager->maxRegions(); reg++){
-        if( 0 == m_utHitManager->hits(sta,lay,reg).size()) continue;
-
-
-
-        const Tf::IUTHitCreator::STRegion* regionB = m_utHitManager->region(sta,lay,reg);
-
-        double zUTReg = regionB->z();
-        double x = cand.xAtZ(zUTReg);
-        double y = cand.yAtZ(zUTReg);
-
-        // yTol has a term depending on the momentum
-        // ---> add a term proportional to the maxTol for dx and the refine it when dx will be known
-
-        double xTol = maxTol;
-        double yTol = m_yTol + m_yTolSlope * maxTol;
-        if(regionB->xmax() < x - xTol ||
-           regionB->xmin() > x + xTol) continue;
-        if(regionB->ymax() < y - yTol ||
-           regionB->ymin() > y + yTol) continue;
-
-
-        double tol = maxTol;
-
-        //--------------------------------------------------------------------------
-        // Loop on hits
-        //--------------------------------------------------------------------------
-        Tf::UTStationHitManager<PrUTHit>::HitRange range = m_utHitManager->hits(sta, lay, reg);
-
-       for ( PrUTHits::const_iterator itH = range.begin();
-              range.end() != itH; ++itH ) {
-
-
-         if ((*itH)->hit()->ignore())
-           continue;
-
-          double xOnTrack = cand.xAtZ( (*itH)->z() );
-          double yOnTrack = cand.yAtZ( (*itH)->z() );
-          double yAt0 = cand.yAtZ( 0 );
-
-          double dyDz = cand.slopeY();
-
-
-          updateUTHitForTrack((*itH),yAt0, dyDz);
-          double dx = (*itH)->x() - xOnTrack;
-
-
-
-          // Scale to the reference reg
-
-          dx = dx * normFact[(*itH)->planeCode()];
-          double fabsdx = fabs(dx);
-
-          if(tol > fabsdx){
-
-            // Now refine the tolerance in Y
-            if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < (*itH)->hit()->yMin() ||
-                yOnTrack - (m_yTol + m_yTolSlope * fabsdx) > (*itH)->hit()->yMax() ) continue;
-
-            cand.storeHit( *itH , (*itH)->planeCode() );
-
-          }
-        } // over hits
-
-      } // over regs itL
-    }
-  }
-
-  // Numbering warning : layer 0 is the 1st layer
-
-  // The choice of clusters for this Velo track: accept several solutions
-  std::vector<PrUTHits> theSolutions;
-  theSolutions.reserve(100); // reserve in case of many solutions for this Velo track
-
-  // Try with 3 or 4 clusters in at least 3 different layers
-  cand.bestLists(m_hitTol, theSolutions, msgSvc(), name() );
-  if(m_debug){
-    debug() << "This Velo track has " << theSolutions.size()
-            << " possible solution(s) with 3 or 4 layers fired before clean-up" << endmsg;
-  }
-
-
-
-  // If there is only one candidate for this Velo track: these solution won't be cleaned-up
-  int nSolutions = theSolutions.size();
-  bool unique = (nSolutions == 1);
-
-  // Create the candidates with corresponding best clusters
-  std::vector<PrUTHits>::const_iterator itheSolutions;
-  for(itheSolutions = theSolutions.begin(); itheSolutions != theSolutions.end(); ++itheSolutions){
+  // Form clusters from the selected hits
+  clustering();
+  
+  // Check there is at least one cluster
+  int nClusters = m_allClusters.size();
+  if(nClusters<1) return;
+  
+  // Create VeloUT track candidates
+  for(PrUTHits theClusters : m_allClusters){
 
     PrVUTTrack candidate( veloTr );
 
-    PrUTHits theClusters = *itheSolutions;
-    if( theClusters.size() == 0 ) continue; // catch a possible division by zero in 'saveCandidate'
-    
-    if(m_debug){
-      debug() << " the solution " << itheSolutions - theSolutions.begin()
-              << " has " << (*itheSolutions).size() << " clusters : ";
+    for(PrUTHit* hit : theClusters){ 
+      candidate.storeHit( hit );
     }
-
-    // Attach clusters to candidate, compute mean dx ...
-    saveCandidate(theClusters, candidate);
-
-    // If there is only one candidate for this Velo track
-    candidate.setUnique(unique);
-
     // Add this solution
-    vttTracks.push_back(candidate);
+    m_vuttracks.push_back(candidate);
 
-  } // loop over the solutions for this Velo track
-
-  if(m_debug) debug() << "Leaving getCandidates" << endmsg;
-
-}
-
-
-//=========================================================================
-// Attach clusters to candidate, compute mean dx ...
-//=========================================================================
-void PrVeloUTTool::saveCandidate(PrUTHits& theClusters,PrVUTTrack& candidate){
-
-  // Attach best clusters to the candidate, recompute the scaled dx for each cluster and the mean dx
-  int nClusters = 0;
-  int maskFiredLayers = 0;
-
-  PrUTHits::const_iterator itClus;
-  for(itClus = theClusters.begin(); itClus != theClusters.end(); ++itClus){
-
-    PrUTHit* cluster = *itClus;
-
-    // Add the cluster
-    candidate.storeHit( cluster );
-
-    nClusters++;
-
-    // what layers were fired
-    int mask = 1 << cluster->planeCode();
-    maskFiredLayers |= mask;
-
-  } // for this solution clusters
-
-  // Store these clusters to candidate
-  candidate.storeClusters();
-
-  // set what layers were fired
-  candidate.setUTLayersFiredMask(maskFiredLayers);
-  // set how many were fired
-  candidate.setNUTLayersFired(maskFiredLayers);
-}
-
-
-//=========================================================================
-// Simple fit of vtt candidates
-//=========================================================================
-void PrVeloUTTool::simpleFitTracks(std::vector<PrVUTTrack>& vttTracks) {
-
-  std::vector<PrVUTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    if(ivttTrB->badCandidate()) continue;
-
-    simpleFit(*ivttTrB);
-
+  } // loop over the VeloUT track candidates
+  for(PrVUTTrack cand : m_vuttracks){
+    simpleFit(cand);
   }
 
+  //Write out the best solution
+  if(!m_foundCand) return;
+  prepareOutputTracks(outtracks);
+
 }
+
+//=========================================================================
+//Find hits in a search window
+//=========================================================================
+bool PrVeloUTTool::findHits(){
+
+  float invTheta = vdt::fast_isqrt(m_txVelo*m_txVelo+m_tyVelo*m_tyVelo);
+  // protect against unphysical angles, should not happen
+  if(invTheta > 500.0 ) invTheta = 500.0;
+  
+  float minP = ((m_minPT*invTheta)>m_minMomentum) ? (m_minPT*invTheta):m_minMomentum;
+  
+  float xTol = fabs(1. / ( m_distToMomentum * minP ));
+  float yTol = m_yTol + m_yTolSlope * xTol;
+
+  unsigned int nHits = 0;
+  
+  //--------------------------------------------------------------------------
+  // -- Loop on regions
+  // -- If y > 0, only loop over upper half
+  // -- If y < 0, only loop over lower half
+  //--------------------------------------------------------------------------
+  
+  unsigned int startLoop = 0;
+  unsigned int endLoop = 8;
+  
+  if( m_yAtMidUT > 0.0 ){
+    startLoop = 4;
+  }else{
+    endLoop = 4;
+  }
+  
+  for(unsigned int i = startLoop ; i < endLoop; ++i){
+
+    if( (i == 6 || i == 2) && nHits == 0){
+      return false;
+    }
+    
+    float dxDy   = m_hitsLayers[i].front()->hit()->dxDy();
+    float yLayer = 0.0;
+    float zLayer =  m_hitsLayers[i].front()->z();
+    float xLayer = m_xVelo + m_txVelo*(zLayer - m_zVelo);
+    float yAtZ   = m_yVelo + m_tyVelo*(zLayer - m_zVelo);
+
+    if( yAtZ > 0){
+      yLayer =  yAtZ + yTol;
+    }
+    else{
+      yLayer =  yAtZ - yTol;
+    }
+    
+    // max distance between strips in a layer => 15mm
+    // Hits are sorted at y=0
+    float lowerBoundX = 
+      xLayer - xTol*m_invNormFact[m_hitsLayers[i].front()->planeCode()] - dxDy*yLayer - fabs(m_txVelo)*m_intraLayerDist;
+    
+    auto itEnd =  m_hitsLayers[i].end();
+    auto itH = std::lower_bound( m_iterators[i], itEnd, lowerBoundX, Tf::compByX_LB< PrUTHit >() );
+    
+    for ( ; itH != itEnd; ++itH ){
+      
+      float xOnTrack = m_xVelo + m_txVelo*((*itH)->z() - m_zVelo);
+      updateUTHitForTrack((*itH),m_yAt0, m_tyVelo);
+      float dx = (*itH)->x() - xOnTrack;
+      
+      // -- Scale to the reference reg
+      float normDx = dx * m_normFact[(*itH)->planeCode()];
+
+      if( normDx < -xTol ) continue;
+      if( normDx > xTol ) break;
+      
+      float fabsdx = fabs(normDx);
+      
+      if(xTol > fabsdx){
+      
+        float yOnTrack = m_yVelo + m_tyVelo*((*itH)->z() - m_zVelo);
+        
+        // -- Now refine the tolerance in Y
+        if( yOnTrack + (m_yTol + m_yTolSlope * fabsdx) < (*itH)->hit()->yMin() ||
+            yOnTrack - (m_yTol + m_yTolSlope * fabsdx) > (*itH)->hit()->yMax() ) continue;
+      
+        m_allHits[(*itH)->planeCode()].push_back(*itH);
+        ++nHits;
+
+      }
+    } // over hits
+  } //over layers
+  return true;
+}
+
+//=========================================================================
+// Select the best list of sorted hits...
+//=========================================================================
+void PrVeloUTTool::clustering(){
+
+  //Run clustering in forward direction
+  formClusters(true);
+  
+  //Run clustering in backward direction
+  if(!m_fourLayerSolution){
+    formClusters(false);
+  }
+
+  //remove Clusters with 3 hits
+  if(m_fourLayerSolution){
+    m_allClusters.erase(std::remove_if(m_allClusters.begin(),m_allClusters.end(),
+                                       [](PrUTHits clusters){return clusters.size()<4;}),
+                        m_allClusters.end());
+  }
+  
+} //clustering
+
+//=========================================================================
+// Form clusters
+//=========================================================================
+
+void PrVeloUTTool::formClusters(bool forward){
+  
+  if(!forward){
+    std::reverse(m_allHits.begin(),m_allHits.end());
+  }
+  
+  bool hitsThirdLayer = !(m_allHits[2].empty());
+  bool hitsFourthLayer = !(m_allHits[3].empty());
+
+  // Loop over First Layer
+  for(auto ilayer0 : m_allHits[0]){
+    
+    float xhitLayer0 = ilayer0->x();
+    float zhitLayer0 = ilayer0->z();
+    
+    // Loop over Second Layer
+    for(auto ilayer1 : m_allHits[1]){
+      
+      float xhitLayer1 = ilayer1->x();
+      float zhitLayer1 = ilayer1->z();
+      float tx = (xhitLayer1 - xhitLayer0)/(zhitLayer1 - zhitLayer0);
+
+      if(fabs(tx)>0.3) continue;
+      
+      //Account for space between strips in layers => 15 mm
+      float hitTol = m_hitTol + fabs(tx)*m_intraLayerDist;
+            
+      m_clusterCandidate.clear();
+      m_clusterCandidate.push_back(ilayer0);
+      m_clusterCandidate.push_back(ilayer1);
+      
+      
+      if(hitsThirdLayer){
+      
+        //Find upper and lower bounds of tolerance
+        float zhitLayer2 = (m_allHits[2].front())->z();
+        float xextrapLayer2 = xhitLayer1 + tx*(zhitLayer2-zhitLayer1);
+      
+        // Loop over Third Layer
+        auto ilayer2 =  
+          std::lower_bound(m_allHits[2].begin(),m_allHits[2].end(),xextrapLayer2-hitTol,lowerBoundX());
+        
+        auto ilayer2_end = m_allHits[2].end();
+      
+        while(ilayer2!= ilayer2_end && (*ilayer2)->x() < xextrapLayer2+hitTol){
+        
+          m_clusterCandidate.push_back(*ilayer2);
+          if(!m_fourLayerSolution){  
+            m_allClusters.push_back(m_clusterCandidate);
+          }
+
+          if(!hitsFourthLayer){
+            m_clusterCandidate.pop_back();
+            ++ilayer2;
+            continue;
+          }
+          
+          
+          //Find upper and lower bounds of tolerance
+          float zhitLayer3 = (m_allHits[3].front())->z();
+          float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
+          
+          // Loop over Fourth Layer
+          auto ilayer3 =  
+            std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-hitTol,lowerBoundX());
+          
+          auto ilayer3_end = m_allHits[3].end();
+          
+          while(ilayer3!= ilayer3_end && (*ilayer3)->x() < xextrapLayer3+hitTol){
+            
+            if(!m_fourLayerSolution){  
+              m_fourLayerSolution = true;
+              m_allClusters.pop_back();
+            }
+            
+            m_clusterCandidate.push_back(*ilayer3);
+            m_allClusters.push_back(m_clusterCandidate);
+            m_clusterCandidate.pop_back();
+            
+            ++ilayer3;
+          }//layer3
+          m_clusterCandidate.pop_back();
+          ++ilayer2;
+        }//layer2
+      }
+      // Loop over Fourth Layer
+      if(!m_fourLayerSolution && hitsFourthLayer){ 
+        
+        //Find upper and lower bounds of tolerance
+        float zhitLayer3 = (m_allHits[3].front())->z();
+        float xextrapLayer3 = xhitLayer1 + tx*(zhitLayer3-zhitLayer1);
+        
+        auto ilayer3 =  
+          std::lower_bound(m_allHits[3].begin(),m_allHits[3].end(),xextrapLayer3-hitTol,lowerBoundX());
+
+        auto ilayer3_end = m_allHits[3].end();
+        
+        while(ilayer3!= ilayer3_end && (*ilayer3)->x() < xextrapLayer3+hitTol){
+          
+          m_clusterCandidate.push_back(*ilayer3);
+          m_allClusters.push_back(m_clusterCandidate);
+          m_clusterCandidate.pop_back();
+          
+          ++ilayer3;
+        }//layer3
+      }//!m_fourLayerSolution
+    }//layer1
+  }//layer0
+}//form clusters
+
+
+
 
 //=========================================================================
 // A kind of global track fit in VELO and UT
@@ -383,419 +459,216 @@ void PrVeloUTTool::simpleFitTracks(std::vector<PrVUTTrack>& vttTracks) {
 // Only q/p and chi2 of outTr are modified
 //
 //=========================================================================
-void PrVeloUTTool::simpleFit(PrVUTTrack& vtttr) {
-
-  PrUTHits theHits = vtttr.clusters();
+void PrVeloUTTool::simpleFit(PrVUTTrack& vuttr) {
+  
+  PrUTHits theHits = vuttr.clusters();
   int nHits = theHits.size();
-  if(3>nHits) {
-    return;
-  }
 
-  LHCb::Track* velotr = vtttr.track();
+  m_c11 = 0.;
+  m_c12 = 0.;
+  m_c13 = 0.;
+  m_c21 = 0.;
+  m_c22 = 0.;
+  m_c23 = 0.;
 
-  // Get End Velo state
-  const LHCb::State& pStateVelo = velotr->hasStateAt(LHCb::State::LastMeasurement) ?
-    *(velotr->stateAt(LHCb::State::LastMeasurement)) :
-    (velotr->closestState(LHCb::State::EndVelo)) ;
+  for ( auto hit : theHits){
+    
+    float ui = hit->x();
 
-  // Velo track parameters
-  double xVelo      = pStateVelo.x();
-  double yVelo      = pStateVelo.y();
-  double zVelo      = pStateVelo.z();
-  double xSlopeVelo = pStateVelo.tx();
-  double ySlopeVelo = pStateVelo.ty();
+    float ci = hit->hit()->cosT();
+    float dz = hit->z() - m_zMidUT;
+    float wi = hit->hit()->weight();
 
-  // starting UT track parameters
-  double zUT      = m_zMidUT;
-
-  // get bdl and and z of half bdl for the track
-  double zOrigin =  zVelo-yVelo/ySlopeVelo;
-  double bdl      = m_PrUTMagnetTool->bdlIntegral(ySlopeVelo,zOrigin,zVelo);
-  double zmid     = m_PrUTMagnetTool->zBdlMiddle(ySlopeVelo,zOrigin,zVelo);
-
-  double c11,c12,c13,c21,c22,c23;
-
-  c11 = 0.;
-  c12 = 0.;
-  c13 = 0.;
-  c21 = 0.;
-  c22 = 0.;
-  c23 = 0.;
-
-  double z0 = zUT;
-
-  for ( PrUTHits::const_iterator itH = theHits.begin();
-        theHits.end() != itH; itH++ ) {
-
-    PrUTHit* pdigi = (*itH);
-
-    double y0 = yVelo -  ySlopeVelo * zVelo;
-    updateUTHitForTrack(pdigi, y0, ySlopeVelo);
-
-    double ui = pdigi->x();
-
-    double ci = pdigi->hit()->cosT();
-    double dz = pdigi->z() - z0;
-    double wi = pdigi->hit()->weight();
-
-    c11 += wi * ci;
-    c12 += wi * ci * dz;
-    c13 += wi * ui;
-    c22 += wi * ci * dz * dz;
-    c23 += wi * ui * dz;
+    m_c11 += wi * ci;
+    m_c12 += wi * ci * dz;
+    m_c13 += wi * ui;
+    m_c22 += wi * ci * dz * dz;
+    m_c23 += wi * ui * dz;
   }
   // add chi2 from VELO slope
 
-  double xmid = xVelo + xSlopeVelo*(zmid-zVelo);
+  float xmid = m_xVelo + m_txVelo*(m_zKink-m_zVelo);
   // fixed velo slope error. Momentum dependent error + iteration is unstable
-  double sigmaVeloSlope = 0.10*Gaudi::Units::mrad;
-  double wb = sigmaVeloSlope*(zmid - zVelo);
+  float sigmaVeloSlope = 0.10*Gaudi::Units::mrad;
+  float wb = sigmaVeloSlope*(m_zKink - m_zVelo);
   wb=1./(wb*wb);
-  c11 += wb;
-  c12 += wb*(zmid-z0);
-  c13 += wb*xmid;
-  c22 += wb*(zmid-z0)*(zmid-z0);
-  c23 += wb*xmid*(zmid-z0);
+  m_c11 += wb;
+  m_c12 += wb*(m_zKink-m_zMidUT);
+  m_c13 += wb*xmid;
+  m_c22 += wb*(m_zKink-m_zMidUT)*(m_zKink-m_zMidUT);
+  m_c23 += wb*xmid*(m_zKink-m_zMidUT);
 
-  c21 = c12;
+  m_c21 = m_c12;
 
-  double xUTFit, xSlopeUTFit;  // x pos and slope of track at UT after fit
-  double den=c11*c22-c21*c12;
+  float xUTFit, xSlopeUTFit;  // x pos and slope of track at UT after fit
+  float den=m_c11*m_c22-m_c21*m_c12;
   if(fabs(den)>1.0e-8) {
-    xUTFit      = (c13*c22-c23*c12)/(c11*c22-c21*c12);
-    xSlopeUTFit = (c13*c21-c23*c11)/(c12*c21-c22*c11);
+    xUTFit      = (m_c13*m_c22-m_c23*m_c12)/(m_c11*m_c22-m_c21*m_c12);
+    xSlopeUTFit = (m_c13*m_c21-m_c23*m_c11)/(m_c12*m_c21-m_c22*m_c11);
   }
   else  {
     xUTFit = 0.;
     xSlopeUTFit = 0.;
-    vtttr.setChi2PerDoF(1.0e19);
+    vuttr.setChi2PerDoF(1.0e19);
     return;
   }
 
   // new VELO slope x
-  double xb = xUTFit+xSlopeUTFit*(zmid-zUT);
-  double xSlopeVeloFit = (xb-xVelo)/(zmid-zVelo);
+  float xb = xUTFit+xSlopeUTFit*(m_zKink-m_zMidUT);
+  float xSlopeVeloFit = (xb-m_xVelo)/(m_zKink-m_zVelo);
 
-  double chi2VeloSlope = (xSlopeVelo - xSlopeVeloFit)/sigmaVeloSlope;
+  float chi2VeloSlope = (m_txVelo - xSlopeVeloFit)/sigmaVeloSlope;
   chi2VeloSlope = chi2VeloSlope * chi2VeloSlope;
 
   // calculate final chi2
-  double chi2UT = 0.;
+  float chi2UT = 0.;
 
-  if(m_debug) debug() << " Velo-UT track refit. Points:" << endmsg;
+  for( auto hit : theHits ){
 
-  for ( PrUTHits::const_iterator itH = theHits.begin();
-        theHits.end() != itH; itH++ ) {
-
-    PrUTHit* pdigi = (*itH);
-
-    double zd    = pdigi->z();
-    double xd    = xUTFit + xSlopeUTFit*(zd-zUT);
-    double du    = xd - pdigi->x();
-    double chi2p = (du*du)*pdigi->hit()->weight();
+    float zd    = hit->z();
+    float xd    = xUTFit + xSlopeUTFit*(zd-m_zMidUT);
+    float du    = xd - hit->x();
+    float chi2p = (du*du)*hit->hit()->weight();
     chi2UT += chi2p;
 
-    // debug only
-    if(m_debug){
-      debug()  << format( "  hit at z %7.2f dist %7.3f err %7.3f chi2 %7.3f",
-                          zd, du, sqrt(1./pdigi->hit()->weight()),chi2p )
-               << endmsg;
-    }
   }
-  double chi2Global  = chi2UT + chi2VeloSlope;
-  chi2Global /= double((nHits+1-2));
+  float chi2Global  = chi2UT + chi2VeloSlope;
+  chi2Global /= float((nHits+1-2));
 
   // calculate q/p
-  double sinInX  = xSlopeVeloFit/sqrt(1.+xSlopeVeloFit*xSlopeVeloFit);
-  double sinOutX = xSlopeUTFit/sqrt(1.+xSlopeUTFit*xSlopeUTFit);
+  float sinInX  = xSlopeVeloFit*vdt::fast_isqrt(1.+xSlopeVeloFit*xSlopeVeloFit);
+  float sinOutX = xSlopeUTFit*vdt::fast_isqrt(1.+xSlopeUTFit*xSlopeUTFit);
 
-  double qp=0.;
-  if(fabs(bdl)>1.e-8) {
-    double qpxz2p=1./sqrt(1.+ySlopeVelo*ySlopeVelo);
-    qp=-qpxz2p*(sinInX-sinOutX)/bdl*3.3356/Gaudi::Units::GeV;
-  }
-
-  // Next block commented MC 2011-11-22, these variables are not used anywhere
-  //  double bdlmom=0.;
-  //  if(fabs(sinInX-sinOutX)>1.e-8) {
-  //    double pxz2p=sqrt(1.+ySlopeVelo*ySlopeVelo);
-  //    double pxz=-bdl/(3.3356*(sinInX-sinOutX));
-  //    bdlmom = pxz * pxz2p * Gaudi::Units::GeV;
-  //  }
-
-  if(m_debug) {
-    double mom_orig =0.;
-    if(vtttr.qOverP() != 0.0 ) mom_orig = 1./vtttr.qOverP();
-    double bdlmom2=0.;
-    if(fabs(qp)>1.e-8) bdlmom2 = 1/qp;
-    debug() << " Original / Refit momenta  :" << mom_orig << " " << bdlmom2 << endmsg;
+  float qp=0.;
+  if(fabs(m_bdl)>1.e-8) {
+    float qpxz2p=vdt::fast_isqrt(1.+m_tyVelo*m_tyVelo);
+    qp=-qpxz2p*(sinInX-sinOutX)/m_bdl*3.3356/Gaudi::Units::GeV;
   }
 
   // update track state (qOverP and chiSquared only)
 
-  vtttr.setQOverP(qp);
+  vuttr.setQOverP(qp);
+  vuttr.setChi2PerDoF(chi2Global);
+  vuttr.setXUT(xUTFit);
+  vuttr.setXSlopeUT(xSlopeUTFit);
 
-  vtttr.setChi2PerDoF(chi2Global);
-
-  return;
-
-}
-
-
-//=========================================================================
-// Apply local clean-up for all track candidates based on the same Velo tracks
-//=========================================================================
-void PrVeloUTTool::localCleanUp(std::vector<PrVUTTrack>& vttTracks){
-
-  if(m_debug) debug() << "Entering localCleanUp" << endmsg;
-
-  std::vector<PrVUTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    if(ivttTrB->badCandidate()) continue;
-    if(ivttTrB->nUTLayersFired() == 0) continue; // Ignore candidates with no clusters
-    if(ivttTrB->unique()) continue; // Ignore if only one candidate for a Velo track
-
-    std::vector<PrVUTTrack>::iterator ivttTrE;
-    for(ivttTrE = ivttTrB+1; ivttTrE != vttTracks.end(); ++ivttTrE){
-
-      if(ivttTrE->badCandidate()) continue;
-      if(ivttTrE->nUTLayersFired() == 0) continue; // Ignore candidates with no clusters
-      if(ivttTrE->unique()) continue; // Ignore if only one candidate for a Velo track
-
-      // The same Velo track: local clean-up!
-      if(ivttTrB->track() != ivttTrE->track()) continue;
-
-      // If more layers for B
-      if(ivttTrB->nUTLayersFired() > ivttTrE->nUTLayersFired()){
-        if(m_debug) debug() << "    keep candidate B, since more compatible clusters" << endmsg;
-        ivttTrE->setBadCandidate(true);
-      } // if B has more layers fired
-
-      // Else if more layers for E
-      else if(ivttTrB->nUTLayersFired() < ivttTrE->nUTLayersFired()){
-        if(m_debug) debug() << "    keep candidate E, since more compatible clusters" << endmsg;
-        ivttTrB->setBadCandidate(true);
-      } // if E has more layers fired
-
-      // Else same number of layers fired
-      else{
-        // take the one with smaller chi2.
-        if(ivttTrB->chi2PerDoF() > ivttTrE->chi2PerDoF() ) {
-          ivttTrB->setBadCandidate(true);
-        } else {
-          ivttTrE->setBadCandidate(true);
-        }
-
-      }
-
-      // Go to next if ivttTrB is a bad candidate
-      if(ivttTrB->badCandidate()) break;
-
-    } // ivttTrE
-
-  } // ivttTrB
-
-  // Check what we have left, only in debug mode
-  if(m_debug){
-    int nVeloUTBeforeLocalCleanUp = 0;
-    int nVeloUTAfterLocalCleanUp = 0;
-
-    for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-      nVeloUTBeforeLocalCleanUp++;
-      if(ivttTrB->badCandidate()) continue;
-      nVeloUTAfterLocalCleanUp++;
+  if(chi2Global<m_maxPseudoChi2){
+    if(!m_foundCand){
+      m_bestCand.push_back(vuttr);
+      m_foundCand = true;
     }
-    debug() << "Number of VeloUT candidates before: " << nVeloUTBeforeLocalCleanUp
-            << " and after local clean-up: "<<  nVeloUTAfterLocalCleanUp << endmsg;
-
-    debug() << "Leaving localCleanUp" << endmsg;
-  }
-}
-
-//=========================================================================
-// Remove worse pseudo chi2 vtt candidates
-//=========================================================================
-void PrVeloUTTool::selectBestTracks( std::vector<PrVUTTrack>& vttTracks) {
-
-  // keep only best m_maxSolutionsPerTrack i.e. smallest chi2
-
-  std::vector<PrVUTTrack>::iterator ivttTrB;
-
-  // apply psudoChi2 cut
-
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-    if( ivttTrB->chi2PerDoF() > m_maxPseudoChi2 ) {
-      ivttTrB->setBadCandidate(true);
+    else if(chi2Global < (*m_bestCand.begin()).chi2PerDoF()){
+      m_bestCand.pop_back();
+      m_bestCand.push_back(vuttr);
     }
-
   }
 
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    if(ivttTrB->badCandidate()) continue;
-    if(ivttTrB->unique()) continue; // Ignore if only one candidate for a Velo track
-
-    std::vector<PrVUTTrack*> pvtt;
-    pvtt.push_back(&(*ivttTrB));
-    std::vector<PrVUTTrack>::iterator ivttTrE;
-    for(ivttTrE = ivttTrB+1; ivttTrE != vttTracks.end(); ++ivttTrE){
-
-      if(ivttTrE->badCandidate()) continue;
-      if(ivttTrE->unique()) continue; // Ignore if only one candidate for a Velo track
-
-      if(ivttTrB->track() != ivttTrE->track()) continue;
-      pvtt.push_back( &(*ivttTrE));
-    }
-
-
-    if((int)pvtt.size() > m_maxSolutionsPerTrack) {
-      std::vector<PrVUTTrack*>::iterator iv;
-
-      std::sort(pvtt.begin(),pvtt.end(),compPseudoChi2());
-
-      if(m_debug) {
-        debug() << pvtt.size() << " sorted vtt, chi2 = : ";
-        for (iv=pvtt.begin(); iv != pvtt.end() ; iv++) {
-          debug() << (*iv)->chi2PerDoF() << " " ;
-        }
-        debug() << endmsg;
-      }
-
-      for (iv=pvtt.begin()+m_maxSolutionsPerTrack; iv != pvtt.end() ; iv++) {
-        (*iv)->setBadCandidate(true);
-        if(m_debug) debug() << (*iv)->chi2PerDoF() << " bad chi2" << endmsg;
-      }
-
-
-    }
-
-  }
 }
 
 //=========================================================================
 // Create the Velo-UT tracks
 //=========================================================================
-void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
-                                         std::vector<LHCb::Track*>& outtracks)
-{
+void PrVeloUTTool::prepareOutputTracks(std::vector<LHCb::Track*>& outtracks){
 
-  if(m_debug) debug() << "Entering prepareOutputTracks" << endmsg;
-
-  std::vector<PrVUTTrack>::iterator ivttTrB;
-  for(ivttTrB = vttTracks.begin(); ivttTrB != vttTracks.end(); ++ivttTrB){
-
-    PrVUTTrack cand = *ivttTrB;
-
-    bool ok = cand.badCandidate();
-    if(m_debug) debug() << " good candidate? " << (!ok) << endmsg;
-    if(cand.badCandidate()) continue;
-
-    PrUTHits candClusters = cand.clusters();
-    if(m_debug) debug() << " with n clusters " << candClusters.size() << endmsg;
-    if (candClusters.size() == 0) continue;
-
-    LHCb::Track* veloTr = cand.track();
-    const LHCb::State& state = veloTr->hasStateAt(LHCb::State::LastMeasurement) ?
-      *(veloTr->stateAt(LHCb::State::LastMeasurement)) :
-      (veloTr->closestState(LHCb::State::EndVelo)) ;
-
-    //== Handle states. copy Velo one, add UT.
-
-    double qop = cand.qOverP();
-    if(m_debug) debug() << " output track Q/P = " << qop << " p " << 1/qop << endmsg;
-
-    LHCb::Track* outTr = new LHCb::Track();
-    // reset the track
-    outTr->reset();
-
-    outTr->copy(*veloTr);
-    // set q/p in all of the existing states
-    const std::vector< LHCb::State * > states = outTr->states();
-    std::vector< LHCb::State * >::const_iterator iState;
-    for ( iState = states.begin() ; iState != states.end() ; ++iState ){
-      (*iState)->setQOverP(qop);
-    }
+  PrVUTTrack cand = *m_bestCand.begin();
+  PrUTHits candClusters = cand.clusters();
+  LHCb::Track* veloTr = cand.track();
+  
+  //== Handle states. copy Velo one, add UT.
+  
+  float qop = cand.qOverP();
+  float xUT = cand.xUT();
+  float txUT = cand.xSlopeUT();
     
-    double y_Velo = state.y();
-    double z_Velo = state.z();
-    double ty_Velo = state.ty();
-    
-    double c11,c12,c13,c21,c22,c23;
+  LHCb::Track* outTr = new LHCb::Track();
+  
+  // reset the track
+  outTr->reset();
+  
+  outTr->copy(*veloTr);
+  
+  // set q/p in all of the existing states
+  const std::vector< LHCb::State * > states = outTr->states();
+  std::vector< LHCb::State * >::const_iterator iState;
+  for ( iState = states.begin() ; iState != states.end() ; ++iState ){
+    (*iState)->setQOverP(qop);
+  }
 
-    c11 = 0.;
-    c12 = 0.;
-    c13 = 0.;
-    c21 = 0.;
-    c22 = 0.;
-    c23 = 0.;
+  //Add UT hits to track
+  for( auto hit : candClusters){
+    outTr->addToLhcbIDs( hit->hit()->lhcbID() );
+  }
+  
+  
+  //== Add a new state...
+  LHCb::State temp;
+  temp.setLocation( LHCb::State::AtTT );
+  temp.setState( xUT,
+                 cand.yAtZ( m_zMidUT ),
+                 m_zMidUT,
+                 txUT,
+                 m_tyVelo,
+                 qop );
+  
+  
+  outTr->addToStates( temp );
+  
+  outTr->setType( LHCb::Track::Upstream );
+  outTr->setHistory( LHCb::Track::PrVeloUT );
+  outTr->addToAncestors( veloTr );
+  outTr->setPatRecStatus( LHCb::Track::PatRecIDs );
+  outTr->setChi2PerDoF(cand.chi2PerDoF());
+  
+  outtracks.push_back(outTr);
 
-    // Adding hits and calculating tx
-    for( PrUTHits::const_iterator iClusB = candClusters.begin();
-         iClusB != candClusters.end(); ++iClusB){
-      (*iClusB)->hit()->setUsed( true );
-
-      outTr->addToLhcbIDs( (*iClusB)->hit()->lhcbID() );
-
-      if(m_debug){
-        debug() << " adding LHCb ID " << format( "%8x", (*iClusB)->hit()->lhcbID().lhcbID() ) << endmsg;
-      }
-
-      PrUTHit* pdigi = (*iClusB);
-
-      double y0 = y_Velo -  ty_Velo * z_Velo;
-      updateUTHitForTrack(pdigi, y0, ty_Velo);
-      
-      double ui = pdigi->x();
-      
-      double ci = pdigi->hit()->cosT();
-      double dz = pdigi->z() - m_zMidUT;
-      double wi = pdigi->hit()->weight();
-      
-      c11 += wi * ci;
-      c12 += wi * ci * dz;
-      c13 += wi * ui;
-      c22 += wi * ci * dz * dz;
-      c23 += wi * ui * dz;
-
-
-    } 
-
-    double x_UT = (c13*c22-c23*c12)/(c11*c22-c21*c12);
-    double tx_UT = (c13*c21-c23*c11)/(c12*c21-c22*c11);
-    
-    //== Add a new state...
-    LHCb::State temp;
-    temp.setLocation( LHCb::State::AtTT );
-    temp.setState( x_UT,
-                   cand.yAtZ( m_zMidUT ),
-                   m_zMidUT,
-                   tx_UT,
-                   ty_Velo,
-                   qop );
-
-
-    outTr->addToStates( temp );
-
-    if(m_debug) debug() << " added State " << temp.stateVector()
-                        << " cov \n" << temp.covariance() << endmsg;
-
-    
-
-    outTr->setType( LHCb::Track::Upstream );
-    outTr->setHistory( LHCb::Track::PrVeloUT );
-    outTr->addToAncestors( veloTr );
-    outTr->setPatRecStatus( LHCb::Track::PatRecIDs );
-    outTr->setChi2PerDoF(cand.chi2PerDoF());
-
-    outtracks.push_back(outTr);
-
-  } // for ivttTr
-
-  if(m_debug) debug() << "Leaving prepareOutputTracks" << endmsg;
 }
 
+//=============================================================================
+// -- Check if new event has occurred. If yes, set flag
+// -- Note: The actions of initEvent cannot be executed here,
+// -- as this handle runs before decoding the clusters
+//=============================================================================
+void PrVeloUTTool::handle ( const Incident& incident ) {
 
-
+  if ( IncidentType::BeginEvent == incident.type() ) m_newEvent = true;
+  
+}
 
 //=============================================================================
+// -- Init event: Get the new hits and sort them
+//=============================================================================
+void PrVeloUTTool::initEvent () {
+  
+  for(unsigned int i = 0; i < 8; ++i){
+    m_hitsLayers[i].clear();
+  }
+  
+  Tf::UTStationHitManager<PrUTHit>::HitRange range = m_utHitManager->hits();
+  
+  for(PrUTHit* hit : range){
+        
+    if(hit->hit()->yMax() > 0){
+      m_hitsLayers[hit->planeCode() + 4].push_back( hit );
+    }
+    if(hit->hit()->yMin() < 0){
+      m_hitsLayers[hit->planeCode()].push_back( hit );
+    }
+  }
+  
+  for(unsigned int i = 0; i < 8; ++i){
+    std::sort(m_hitsLayers[i].begin(), m_hitsLayers[i].end(), compX() );
+    m_iterators[i] = m_hitsLayers[i].begin();
+  }
+  
+  m_newEvent = false;
+  
+
+}
+
+//=============================================================================
+bool PrVeloUTTool::acceptTrack(const LHCb::Track& track) 
+{
+  bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
+  ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
+  return ok;
+}

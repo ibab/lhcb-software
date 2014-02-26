@@ -43,51 +43,51 @@ class PrUTMagnetTool : public GaudiTool {
     virtual StatusCode initialize();
 
     /// Actual operator function
-    double bdlIntegral(double ySlopeVelo,double zOrigin,double zVelo);
-    double zBdlMiddle(double ySlopeVelo,double zOrigin,double zVelo);
-    double dist2mom(double ySlope);
-    void dxNormFactorsUT(double ySlope, std::vector<double>& nfact);
+    float bdlIntegral(float ySlopeVelo,float zOrigin,float zVelo);
+    float zBdlMiddle(float ySlopeVelo,float zOrigin,float zVelo);
+    float dist2mom(float ySlope);
+    void dxNormFactorsUT(float ySlope, std::vector<float>& nfact);
 
-    double zMidUT();
-    double zMidField();
-    double averageDist2mom();
+    float zMidUT();
+    float zMidField();
+    float averageDist2mom();
     void prepareBdlTables();
     void prepareDeflectionTables();
     StatusCode updateField() ;
 
   protected:
-    void f_bdl(double slopeY, double zOrigin , double zStart, double zStop);
+    void f_bdl(float slopeY, float zOrigin , float zStart, float zStop);
     
   private:
 
-    double m_BdlTrack;
-    double m_zHalfBdlTrack;
-    std::vector<double> m_zLayers;
+    float m_BdlTrack;
+    float m_zHalfBdlTrack;
+    std::vector<float> m_zLayers;
 
-    std::vector<double> m_bdlTmp, m_zTmp;
+    std::vector<float> m_bdlTmp, m_zTmp;
 
     /// pointer to mag field service
     IMagneticFieldSvc* m_magFieldSvc;
     PrTableForFunction* m_lutBdl;
     PrTableForFunction* m_lutZHalfBdl;
 
-    double m_zCenterUT;
-    double m_zMidField;
+    float m_zCenterUT;
+    float m_zMidField;
 
-    double m_dist2mom;
+    float m_dist2mom;
     PrTableForFunction* m_lutDxLay;
     PrTableForFunction* m_lutDxToMom;
 
-    std::vector<double> m_lutVar; // auxiliary vector used as argument
+    std::vector<float> m_lutVar; // auxiliary vector used as argument
 
     DeSTDetector*       m_STDet;         ///< ST Detector element
     std::string m_detLocation;
 
     bool m_noField;
-    double m_bdlIntegral_NoB;
-    double m_zBdlMiddle_NoB;
-    double m_zMidField_NoB;
-    double m_averageDist2mom_NoB;
+    float m_bdlIntegral_NoB;
+    float m_zBdlMiddle_NoB;
+    float m_zMidField_NoB;
+    float m_averageDist2mom_NoB;
 
   };
 

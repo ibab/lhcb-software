@@ -5,6 +5,10 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiAlg/ISequencerTimerTool.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "Event/Track.h"
 #include "TfKernel/UTStationHitManager.h"
@@ -13,9 +17,9 @@
 #include "PrVUTTrack.h"
 #include "PrUTMagnetTool.h"
 #include "PrKernel/PrUTHit.h"
+#include "IPrVeloUTTool.h"
 
-static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
-
+#include "vdt/sqrt.h"
 
   /** @class PrVeloUTTool PrVeloUTTool.h
    *
@@ -27,62 +31,88 @@ static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
    *
    */
 
-  class PrVeloUTTool : public GaudiTool {
+class PrVeloUTTool :   public IPrVeloUTTool,  public IIncidentListener {
+public:
+  
+  /// Standard constructor
+  PrVeloUTTool( const std::string& type,
+                const std::string& name,
+                const IInterface* parent);
+  
+  virtual ~PrVeloUTTool( ); ///< Destructor
+  
+  StatusCode initialize ( );
+  void recoVeloUT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+  void handle ( const Incident& incident );
+  
+protected:
+  
+  void getCandidates(LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks );
+  bool findHits();
+  void clustering();
+  void formClusters(bool forward);
+  void simpleFit( PrVUTTrack& vtt);
+  void prepareOutputTracks(std::vector<LHCb::Track*>& outtracks);
+  void initEvent();
+  bool acceptTrack(const LHCb::Track& track);
+
+  
+private:
+  class compX  {
   public:
+    bool operator() (PrUTHit* first, PrUTHit* second ) {
+      return first->hit()->xAtYEq0() < second->hit()->xAtYEq0() ;
+    }
+  };
 
-    // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PrVeloUTTool; }
-
-    /// Standard constructor
-    PrVeloUTTool( const std::string& type,
-                   const std::string& name,
-                   const IInterface* parent);
-
-    virtual ~PrVeloUTTool( ); ///< Destructor
-
-    StatusCode initialize ( );
-
-
-    void recoVeloUT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-    void simpleFit( PrVUTTrack& vtt);
-
-  protected:
-
-    void simpleFitTracks( std::vector<PrVUTTrack>&);
-    void selectBestTracks( std::vector<PrVUTTrack>& vttTracks);
-    void prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);
-    void localCleanUp(std::vector<PrVUTTrack>&);
-    void getCandidates(LHCb::Track& veloTrack, std::vector<PrVUTTrack>& vtt);
-    void saveCandidate( PrUTHits& theClusters, PrVUTTrack& candidate);
-
-  private:
-    class compPseudoChi2  {
+  class lowerBoundX  {
     public:
-      bool operator() (PrVUTTrack* first, PrVUTTrack* second ) {
-        return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
+      bool operator() (const PrUTHit* first, const float value ) const {
+        return first->x() < value ;
       }
     };
-    double m_maxXSlope;
-    double m_maxYSlope;
-    double m_centralHoleSize;
-    double m_minMomentum;
-    double m_minPT;
-    double m_maxPseudoChi2;
-    int m_maxSolutionsPerTrack;
-    double m_xTol;
-    double m_xTolSlope;
-    double m_yTol;
-    double m_yTolSlope;
-    double m_hitTol;
-    double m_zMidUT;
-
-    Tf::UTStationHitManager<PrUTHit> *      m_utHitManager;
-
-    PrUTMagnetTool*    m_PrUTMagnetTool;  ///< Multipupose tool for Bdl and deflection
-    bool m_debug;
-    bool m_verbose;
-    bool m_PrintVariables;
-
-  };
+  float m_minMomentum;
+  float m_minPT;
+  float m_maxPseudoChi2;
+  float m_yTol;
+  float m_yTolSlope;
+  float m_hitTol;
+  float m_maxXSlope;
+  float m_maxYSlope;
+  float m_centralHoleSize;
+  float m_zMidUT;
+  float m_intraLayerDist;
+  
+  Tf::UTStationHitManager<PrUTHit> *      m_utHitManager;
+  
+  PrUTMagnetTool*    m_PrUTMagnetTool;  ///< Multipupose tool for Bdl and deflection
+  bool m_PrintVariables;
+  
+  std::vector<PrVUTTrack> m_vuttracks;
+  std::vector<PrUTHits> m_hitsLayers;
+  std::vector<PrUTHits> m_allHits;
+  std::vector<PrUTHits> m_allClusters;
+  PrUTHits m_clusterCandidate;
+  std::array<PrUTHits::iterator,8> m_iterators;
+  std::vector<float> m_normFact;
+  std::vector<float> m_invNormFact;
+  bool m_newEvent;
+  std::vector<PrVUTTrack> m_bestCand;
+  bool m_foundCand;
+  float m_xVelo;
+  float m_yVelo;
+  float m_zVelo;
+  float m_txVelo;
+  float m_tyVelo;
+  float m_zKink;
+  float m_bdl;
+  float m_yAtMidUT;
+  float m_distToMomentum;
+  float m_yAt0;
+  bool m_fourLayerSolution;
+  
+  float m_c11,m_c12,m_c13,m_c21,m_c22,m_c23;
+  
+};
 
 #endif // PRVELOUTTOOL_H

@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2014-02-26 - Espen Eie Bowen
+ - Optimised VeloUT for speed, restructured code layout, added interface
+
 !========================= PrVeloUT v2r0 2014-02-19 =========================
 ! 2014-01-30 - Espen Eie Bowen
  - Fixed small bug in clustering, change state to LastMeasurement

@@ -22,7 +22,7 @@ static const InterfaceID IID_PrTableForFunction ( "PrTableForFunction", 1, 0 );
    * addVariable(20,-50.,50.);
    *
    * resetIndexVector();
-   * std::vector<double> var;
+   * std::vector<float> var;
    * int iover = 0;
    * while(!iover) {
    *  getVariableVector(var);
@@ -58,15 +58,15 @@ static const InterfaceID IID_PrTableForFunction ( "PrTableForFunction", 1, 0 );
 
     virtual ~PrTableForFunction( ); ///< Destructor
 
-    void   addVariable(int nBin, double lowVal, double highVal);
+    void   addVariable(int nBin, float lowVal, float highVal);
     void   prepareTable();
     void   resetIndexVector();
     int    incrementIndexVector();
-    void   fillTable(double lutValue);
-    double getVariable(int ivar);
-    void   getVariableVector(std::vector<double>& var);
-    double getValueFromTable(std::vector<double>& var);
-    double getInterpolatedValueFromTable(std::vector<double>& var);
+    void   fillTable(float lutValue);
+    float getVariable(int ivar);
+    void   getVariableVector(std::vector<float>& var);
+    float getValueFromTable(std::vector<float>& var);
+    float getInterpolatedValueFromTable(std::vector<float>& var);
 
     void clear() ;
   protected:
@@ -78,18 +78,18 @@ static const InterfaceID IID_PrTableForFunction ( "PrTableForFunction", 1, 0 );
     void   resetVariableVector();
     int    tableLocation();
     void   calculateVariableVector();
-    void   calculateIndexVector(std::vector<double>& var);
-    void   calculateClosestIndexVector(std::vector<double>& var);
+    void   calculateIndexVector(std::vector<float>& var);
+    void   calculateClosestIndexVector(std::vector<float>& var);
 
     int     m_nVar;
     std::vector<int>    m_nPointVar;
-    std::vector<double> m_minVar;
-    std::vector<double> m_maxVar;
-    std::vector<double> m_deltaVar;
-    std::vector<double> m_table;
+    std::vector<float> m_minVar;
+    std::vector<float> m_maxVar;
+    std::vector<float> m_deltaVar;
+    std::vector<float> m_table;
 
     std::vector<int>    m_indexVector;
-    std::vector<double> m_variableVector;
+    std::vector<float> m_variableVector;
 
   };
 

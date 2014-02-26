@@ -46,7 +46,7 @@ void PrTableForFunction::clear()
 }
 
 
-void PrTableForFunction::addVariable(int nBin, double lowVal, double highVal) {
+void PrTableForFunction::addVariable(int nBin, float lowVal, float highVal) {
   m_nPointVar.push_back(nBin+1);
   m_minVar.push_back(lowVal);
   m_maxVar.push_back(highVal);
@@ -110,17 +110,17 @@ int PrTableForFunction::incrementIndexVector() {
 }
 
 
-void PrTableForFunction::fillTable(double lutValue) {
+void PrTableForFunction::fillTable(float lutValue) {
   m_table[tableLocation()] = lutValue;
 }
 
-double PrTableForFunction::getVariable(int iv) {
+float PrTableForFunction::getVariable(int iv) {
   calculateVariableVector();
   if(iv<0 || iv> m_nVar-1) return 0.0;
   return m_variableVector[iv];
 }
 
-void PrTableForFunction::getVariableVector(std::vector<double>& var) {
+void PrTableForFunction::getVariableVector(std::vector<float>& var) {
   int i;
   calculateVariableVector();
   for (i=0; i<m_nVar; i++) {
@@ -128,25 +128,25 @@ void PrTableForFunction::getVariableVector(std::vector<double>& var) {
   }
 }
 
-double PrTableForFunction::getValueFromTable(std::vector<double>& var) {
+float PrTableForFunction::getValueFromTable(std::vector<float>& var) {
   calculateClosestIndexVector(var);
-  return (double) m_table[tableLocation()];
+  return (float) m_table[tableLocation()];
 }
 
-double PrTableForFunction::getInterpolatedValueFromTable(std::vector<double>& var) {
+float PrTableForFunction::getInterpolatedValueFromTable(std::vector<float>& var) {
   int i;
   calculateIndexVector(var);
   calculateVariableVector();
-  double tabVal = m_table[tableLocation()];
-  double addTabVal = 0.0;
+  float tabVal = m_table[tableLocation()];
+  float addTabVal = 0.0;
   for(i=0; i<m_nVar; i++) {
     if(var[i]<m_variableVector[i]) continue;
     if(m_indexVector[i] > m_nPointVar[i]-2) continue;
     if(var[i]<m_minVar[i] || var[i]>m_maxVar[i]) continue;
     m_indexVector[i]++;
-    double dTab_dVar =  (m_table[tableLocation()] - tabVal) / m_deltaVar[i];
+    float dTab_dVar =  (m_table[tableLocation()] - tabVal) / m_deltaVar[i];
     m_indexVector[i]--;
-    double dVar = (var[i]-m_variableVector[i]);
+    float dVar = (var[i]-m_variableVector[i]);
     addTabVal += dTab_dVar*dVar;
   }
   tabVal+=addTabVal;
@@ -171,7 +171,7 @@ void PrTableForFunction::calculateVariableVector() {
   }
 }
 
-void PrTableForFunction::calculateIndexVector(std::vector<double>& var) {
+void PrTableForFunction::calculateIndexVector(std::vector<float>& var) {
   int i;
   for (i=0; i<m_nVar; i++) {
     int idx = (int) ((var[i]-m_minVar[i])/m_deltaVar[i] + 0.000000001);
@@ -181,7 +181,7 @@ void PrTableForFunction::calculateIndexVector(std::vector<double>& var) {
   }
 }
 
-void PrTableForFunction::calculateClosestIndexVector(std::vector<double>& var) {
+void PrTableForFunction::calculateClosestIndexVector(std::vector<float>& var) {
   int i;
   for (i=0; i<m_nVar; i++) {
     int idx = (int) ((var[i]-m_minVar[i])/m_deltaVar[i] + 0.5);
