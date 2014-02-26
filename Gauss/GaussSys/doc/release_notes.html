@@ -4,6 +4,41 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r7p1">2014-02-26 - GaussSys v46r7p1</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Patch to include options
+   for ad-hoc settings in generator
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v36r4 (and Gaudi v24r2)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   Geant4 v95r2p6 (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r18,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   EvtGen v13r12, EvtGenExtras v3r10 and Mint v3r0 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v4r0 (private LHCb versions)
+</A></H3>
+
+!========================= Gauss v46r7p1 2014-02-26 ==========================
+! 2014-02-04 - Paul Szczypka
+ - Purged the VL from Configuration.py
+
+
+!=============================================================================
 </PRE><H1><A NAME="v46r7">2014-02-03 - GaussSys v46r7</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. 
     </A></H2>
@@ -19,8 +54,8 @@ Purpose: LHCb Simulation program
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    LHAPDFSets v1r* (private LHCb version)
-   Geant4 v95r2p5g4 (based on geant4.9.5.p02 + patches for LHCb) and 
-   Geant4Files v95r0, 
+   <b>Geant4 v95r2p6 (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0,
    XmlVis v1r18,
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
    alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
@@ -29,7 +64,7 @@ Purpose: LHCb Simulation program
    <b>EvtGen v13r12</b>, EvtGenExtras v3r10 and <b>Mint v3r0</b> 
    (private LHCb version),
    BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
-   <b>HidValley v4r0</b? (private LHCb versions)
+   <b>HidValley v4r0</b> (private LHCb versions)
 </A></H3>
 
 ! 2014-02-03 - Gloria Corti
@@ -6155,6 +6190,13 @@ for LHAPDF data file to deploy on grid, enableing VeloPix and options for Hidden
 ! 2009-10-05 - Gloria CORTI
  - Include latest version of Det/DDDB package (v1r22) for support of 
    simulation for Upgrade
+
+!======================== LbPythia8 v7r7p1 2014-02-26 ========================
+! 2014-02-26 - Gloria Corti
+ - Options for ad-hoc settings for multiplicities by W. Bonivento to check 
+   effect on occupancies
+   . options/Pythia8_Pt0Ref2.6_CT09MCS.py
+   . options/LHCbPt0Ref2.6_CT09MCS.cmd
 
 !========================= Gauss v37r5 2009-10-05 ============================
 ! 2009-10-05 - Gloria CORTI
