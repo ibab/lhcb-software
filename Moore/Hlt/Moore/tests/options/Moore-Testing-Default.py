@@ -1,8 +1,6 @@
 
 from Gaudi.Configuration import *
 from Configurables import Moore
-#from LHCbKernel.Configuration import *
-#from GaudiConf.Configuration import *
 from Configurables import L0Conf, HltConf
 from Gaudi.Configuration import *
 from Configurables import Moore
@@ -19,17 +17,11 @@ Moore().InitialTCK= '0x00790038';
 Moore().CondDBtag= 'cond-20120831'; #from RunDB
 Moore().EnableTimer=True
 
-from Configurables import TimingAuditor, SequencerTimerTool
-TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
-TimingAuditor('TIMER').TIMER.NameSize=150
-
 ########### L0-related things #######################
 
 from Configurables import L0Conf
 L0Conf().EnsureKnownTCK=False
 Moore().ForceSingleL0Configuration=False
-
-#from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
 ############# prepend a "killHltSeq" ############
 
