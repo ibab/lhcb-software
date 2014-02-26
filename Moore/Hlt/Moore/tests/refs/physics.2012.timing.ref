@@ -121,6 +121,7 @@ Hlt1HighPtJetsSinglePVPreScaler: 1200
 Hlt1HighPtJetsSinglePVL0DUFilterSequence: 1200
 Hlt1HighPtJetsSinglePVL0DUFilter: 1200
 Hlt1HighPtJetsSinglePVFilterSequence: 1
+Hlt1HighPtJetsSinglePVDecision: 1
 Hlt1HighPtJetsSinglePVPostScaler: 0
 Hlt1L0Any: 1200
 Hlt1L0AnyPreScaler: 1200

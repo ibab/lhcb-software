@@ -333,7 +333,7 @@ class Moore(LHCbConfigurableUser):
         raise ValueError('Could not deduce MOORE (base)version from %s',fname)
 
     def getConfigAccessSvc(self):
-        method  = self.getProp('TCKpersistency').lower()
+        method  = MooreExpert().getProp('TCKpersistency').lower()
         TCKData = self.getProp('TCKData')
         if method == 'file' :
             from Configurables import ConfigFileAccessSvc
