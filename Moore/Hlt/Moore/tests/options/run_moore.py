@@ -36,18 +36,11 @@ Moore().CondDBtag  = options.CondDBtag
 Moore().ForceSingleL0Configuration=(not options.multil0)
 Moore().EnableTimer=True
 
-#from Configurables import L0MuonAlg
-#L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
-
 #take the test data and automatically set with the PRConfig
 from PRConfig import TestFileDB
 TestFileDB.test_file_db[options.Data].run(withDB=False,configurable=Moore())
 
 EventSelector().PrintFreq = 100
-
-from Configurables import TimingAuditor, SequencerTimerTool
-TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
-TimingAuditor('TIMER').TIMER.NameSize=150
 
 ## GaudiPython
 from GaudiPython.Bindings import AppMgr

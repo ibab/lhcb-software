@@ -15,11 +15,5 @@ from PRConfig.TestFileDB import test_file_db
 input = test_file_db['2012_raw_default']
 input.run(configurable=Moore())
 
-#from Configurables import L0MuonAlg
-#L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 Moore().ForceSingleL0Configuration=False
-
 Moore().EnableTimer=True
-from Configurables import TimingAuditor, SequencerTimerTool
-TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
-TimingAuditor('TIMER').TIMER.NameSize=150

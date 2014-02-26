@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-02-26 - Rob Lambert
+ - Update behaviour of TCK tests to new default printout.
+
 !========================= Moore v22r0 2014-02-25 =========================
 ! 2014-02-25 - Rob Lambert
  - More now prints no errors or warnings during usual running

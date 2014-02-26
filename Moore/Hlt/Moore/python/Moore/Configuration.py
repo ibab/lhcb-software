@@ -83,7 +83,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
-                             #if this is set to INFO no changes to default printout is made
+                             #INFO sets all tools and algs to INFO, since the TCK will have been generated with WARNING
         , 'Split'       : '' # HLT1 or HLT2?
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
@@ -160,7 +160,7 @@ class Moore(LHCbConfigurableUser):
         , "OutputLevel" : """Multi-level option, keeps same logic as standard OutputLevel.
         if this is set to WARNING (or higher) Moore will become almost silent.
         if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
-        if this is set to INFO no changes to default printout is made"""
+        if this is set to INFO info messages are nominally printed"""
         , 'Split'       : 'HLT1 or HLT2?'
         , "EnableAuditor" :    'put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]'
         , 'WriterRequires' : "require certain algs for the end sequence [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2"
@@ -356,19 +356,33 @@ class Moore(LHCbConfigurableUser):
         x.Enable = True
 
     def _outputLevel(self) :
+        """
+        Set the print out of various tools, services, all algorithms, and properties of all things like algorithms
+        Sensitive to the OutputLevel of Moore
+
+        a) configure things independently of level
+        b) configure things depending on level
+           - ThresholdSettings via postConfigActions
+           - TCKs via transforms
+
+        defaults are now WARNING printouts only, so I need to handle the case the user wishes to switch back if a TCK has been generated with a warning
+        
+        """
         #firstly explicitly configure things not seen by TCK
-        from Configurables import Hlt__Service
-        if self.getProp("OutputLevel")>=INFO:
-            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = False
-            #turn off LoKi::Distance print outs, which are very frequent!
-            #todo: put this in a "quiet" option of Moore
-            from Configurables import LoKi__DistanceCalculator
-            LoKi__DistanceCalculator().MaxPrints=0
-        else:
-            if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = True
+        #firstly configure things which are level-independent
+        
+        # Usual output levels for services
+        from Configurables import XmlParserSvc 
+        XmlParserSvc().OutputLevel                = WARNING
+        ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
+        
+        # Print algorithm name with 40 characters
+        MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+        
         #this should be OK to do here...
         from Funcs import _minSetFileTypes
         
+        #postconfig away common warnings
         def suppresswarningifneeded():
             #histogram warning isn't needed if I didn't want histograms
             from Configurables import RootHistCnv__PersSvc
@@ -383,121 +397,154 @@ class Moore(LHCbConfigurableUser):
                 IODataManager().DisablePFNWarning=True
         
         appendPostConfigAction(suppresswarningifneeded)
-        # Usual output levels for services
-        ToolSvc().OutputLevel                     = INFO
-        from Configurables import XmlParserSvc 
-        XmlParserSvc().OutputLevel                = WARNING
-        MessageSvc().OutputLevel                  = INFO
-        ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
-        if self.getProp("OutputLevel")>=INFO: SequencerTimerTool().OutputLevel          = WARNING
-        # Print algorithm name with 40 characters
-        MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+        
+        #then configure things that depend on the level
+        level=self.getProp("OutputLevel")
+        
+        if level>=INFO: SequencerTimerTool().OutputLevel = WARNING
+        
+        if level>DEBUG:
+            from Configurables import LoKi__DistanceCalculator
+            LoKi__DistanceCalculator().MaxPrints=0
+            from Configurables import LoKiSvc
+            LoKiSvc().Welcome = False
+        
+        from Configurables import Hlt__Service
+        if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = (level<INFO)
+        ###############################################################
+        #if level is less than INFO, I don't need to edit anything else
+        #it's up to the users to do that themselves!
+        ###############################################################
+        if level<INFO:
+            return
+        
+        if level>INFO:
+            MessageSvc().OutputLevel = level
+            ToolSvc().OutputLevel = level
+        
+        if level>INFO and self.getProp("EnableTimer"):
+            #in the future handle this by outputting a timing file!
+            print "# WARNING: Timing table is very far from silent, please disable timing if you want to run with lower verbosity"
+            from Configurables import TimingAuditor
+            TimingAuditor('TIMER').OutputLevel=INFO
+            TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
+            TimingAuditor('TIMER').TIMER.OutputLevel=INFO
         
         #################################################
-        # If the OutputLevel is >INFO I need to use
+        # If the OutputLevel is set I need
         # Either a postConfigAction or a transform
         # to suppress the outputs properly
         #################################################
-        if self.getProp("OutputLevel")>INFO:
-            level=self.getProp("OutputLevel")
-            MessageSvc().OutputLevel = level
-            ToolSvc().OutputLevel = level
-            if self.getProp("EnableTimer"):
-                #in the future handle this by outputting a timing file!
-                print "# WARNING: Timing table is very far from silent, please disable timing if you want to run with lower verbosity"
-                from Configurables import TimingAuditor
+        
+        #################################################
+        # Running from thresholds, use post config action
+        #################################################
+        if not self.getProp("UseTCK"):
+            #post config to really reset all the output to null
+            from DAQSys.Decoders import DecoderDB
+            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+            props={}
+            #reset to INFO if asked to, remember, the default is now WARNING!
+            props["OutputLevel"]=level
+            props["StatPrint"]=(level<WARNING)
+            props["ErrorsPrint"]=(level<WARNING)
+            props["PropertiesPrint"]=(level<WARNING)
+            
+            from DAQSys.Decoders import DecoderDB
+            for k,v in DecoderDB.iteritems():
+                for pk,pv in props.iteritems():
+                    v.Properties[pk]=pv
+            
+            #only for GaudiHistoAlgs...
+            props["HistoCountersPrint"]=(level<WARNING)
+            postConfForAll(head=None, prop_value_dict=props,force=True)
+            
+            #now turn off the calo tool finalize printout
+            tools={"CaloECorrection/ECorrection":{"OutputLevel":level},
+                   "CaloSCorrection/SCorrection":{"OutputLevel":level},
+                   "CaloLCorrection/LCorrection":{"OutputLevel":level}
+                   }
+            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #three extras for merged pi0
+            tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":level},
+                   "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":level},
+                   "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":level}
+                   }
+            postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #I still want to print "Application Manager Finalized Successfully"
+            #and "End of event input reached" no matter what
+            
+            def AppMrgOP():
+                if ApplicationMgr().getProp("OutputLevel")>INFO:
+                    ApplicationMgr().OutputLevel=INFO
+                if EventSelector().getProp("OutputLevel")>INFO:
+                    EventSelector().OutputLevel=INFO
+            
+            appendPostConfigAction(AppMrgOP)
+            
+            #in the future handle this by outputting a timing file!
+            def RestoreTimer():
+                from Configurables import TimingAuditor, SequencerTimerTool
                 TimingAuditor('TIMER').OutputLevel=INFO
                 TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
                 TimingAuditor('TIMER').TIMER.OutputLevel=INFO
-                SequencerTimerTool().OutputLevel          = INFO
-            from Configurables import LoKiSvc
-            LoKiSvc().Welcome = False
+                from Configurables import Moore
+                if Moore().getProp("OutputLevel")<INFO:
+                    SequencerTimerTool().OutputLevel          = INFO
+            
+            if self.getProp("EnableTimer"):
+                appendPostConfigAction(RestoreTimer)
+            
+            def RestoreGenConfig():
+                Moore().getConfigAccessSvc().OutputLevel =INFO
+                from Configurables import HltGenConfig
+                HltGenConfig().OutputLevel =INFO
+            
+            if self.getProp("generateConfig"):
+                appendPostConfigAction(RestoreGenConfig)
             
             #################################################
-            # Running from thresholds, use post config action
+            # Running from TCK define a similar transform
             #################################################
-            if not self.getProp("UseTCK"):
-                #post config to really reset all the output to null
-                from DAQSys.Decoders import DecoderDB
-                from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
-                props={"StatPrint":False,
-                       "ErrorsPrint":False,
-                       "PropertiesPrint":False,
-                       "OutputLevel":level
-                       }
-                from DAQSys.Decoders import DecoderDB
-                for k,v in DecoderDB.iteritems():
-                    for pk,pv in props.iteritems():
-                        v.Properties[pk]=pv
-                #only for GaudiHistoAlgs...
-                props["HistoCountersPrint"]=False
-                postConfForAll(head=None, prop_value_dict=props,force=True)
-                #now turn off the calo tool finalize printout
-                tools={"CaloECorrection/ECorrection":{"OutputLevel":level},
-                       "CaloSCorrection/SCorrection":{"OutputLevel":level},
-                       "CaloLCorrection/LCorrection":{"OutputLevel":level}
-                       }
-                postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
-                #three extras for merged pi0
-                tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":level},
-                       "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":level},
-                       "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":level}
-                       }
-                postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
-                #I still want to print "Application Manager Finalized Successfully"
-                #and "End of event input reached"
-                def AppMrgOP():
-                    ApplicationMgr().OutputLevel=INFO
-                    EventSelector().OutputLevel=INFO
-                appendPostConfigAction(AppMrgOP)
-
-                #in the future handle this by outputting a timing file!
-                def RestoreTimer():
-                    from Configurables import TimingAuditor, SequencerTimerTool
-                    TimingAuditor('TIMER').OutputLevel=INFO
-                    TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
-                    TimingAuditor('TIMER').TIMER.OutputLevel=INFO
-                    from Configurables import Moore
-                    if Moore().OutputLevel<INFO:
-                        SequencerTimerTool().OutputLevel          = INFO
-                
-                if self.getProp("EnableTimer"):
-                    appendPostConfigAction(RestoreTimer)
-                #################################################
-                # Running from TCK define a similar transform
-                #################################################
-            else:
-                trans={".*":{"OutputLevel"        : {"^.*$":str(level)}
-                             ,"StatPrint"         : {"^.*$":'False'}
-                             ,"ErrorsPrint"       : {"^.*$":'False'}
-                             ,"PropertiesPrint"   : {"^.*$":'False'}
-                             ,"HistoCountersPrint": {"^.*$":'False'}
-                             }
-                       }
+        else:
+            trans={".*":{"OutputLevel"      : {"^.*$":str(level)}}}
+            #turn certain things back on if INFO is set again...
+            trans[".*"]["StatPrint"]=         {"^.*$":str(level<WARNING)}
+            trans[".*"]["ErrorsPrint"]=       {"^.*$":str(level<WARNING)}
+            trans[".*"]["PropertiesPrint"]=   {"^.*$":str(level<WARNING)}
+            trans[".*"]["HistoCountersPrint"]={"^.*$":str(level<WARNING)}
+            
+            Funcs._mergeTransform(trans)
+            #restore timing if required
+            if self.getProp("EnableTimer"):
+                trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}}}
+                if level<INFO:
+                    trans[".*SequencerTimingTool.*"]={"OutputLevel"        : {"^.*$":str(INFO)}}
                 Funcs._mergeTransform(trans)
-                #restore timing if required
-                if self.getProp("EnableTimer"):
-                    trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}}}
-                    if self.getProp("OutputLevel")<INFO:
-                        trans[".*SequencerTimingTool.*"]={"OutputLevel"        : {"^.*$":str(INFO)}}
-                    Funcs._mergeTransform(trans)
-                #kill LoKi warnings
-                if self.getProp("OutputLevel")>=INFO:
-                    trans={".*DistanceCalculator.*":{"MaxPrints"        : {"^.*$":"0"}}}
-                    Funcs._mergeTransform(trans)
-                
-                from Configurables import HltConfigSvc
-                cfg = HltConfigSvc()
-                #self-defeating warnings!
-                cfg.OutputLevel=ERROR
+            
+            #kill LoKi warnings
+            set=0
+            if level<WARNING:
+                set=3
+            trans={".*DistanceCalculator.*":{"MaxPrints" : {"^.*$":str(set)}}}
+            Funcs._mergeTransform(trans)
+            
+            from Configurables import HltConfigSvc
+            cfg = HltConfigSvc()
+            #self-defeating warnings!
+            cfg.OutputLevel=ERROR
                 
     
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')
         if self.getProp('EnableTimer') : 
-            from Configurables import TimingAuditor
+            from Configurables import TimingAuditor, SequencerTimerTool
+            TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
+            TimingAuditor('TIMER').TIMER.NameSize=150
+            #minimum printing length to catch the long names of algs
             auditors = [ TimingAuditor('TIMER') ] + auditors
+
         for i in auditors : self.addAuditor( i )
 
     def _generateConfig(self) :
@@ -507,8 +554,8 @@ class Moore(LHCbConfigurableUser):
         algs = MooreExpert().getProp("configAlgorithms")
         if MooreExpert().getProp('TCKpersistency').lower() == 'tarfile' :
             self.getConfigAccessSvc().Mode = 'ReadWrite'
-            self.getConfigAccessSvc().OutputLevel = 1
-
+            #self.getConfigAccessSvc().OutputLevel = 1
+        
         from Configurables import HltGenConfig
         print 'requesting following  svcs: %s ' % svcs
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
