@@ -79,7 +79,7 @@ struct ExampleTracks {
     tr->addToLhcbIDs(LHCbID(17));
     m_tracks.add(tr);
     // add a State to this track
-    Gaudi::TrackVector v(1,1,1,1,1);
+    Gaudi::TrackVector v(1,-1,1,-1,1);
     Gaudi::TrackSymMatrix cov;
 
     State newYork(v,cov,200.,State::EndVelo);
@@ -92,8 +92,8 @@ struct ExampleTracks {
     vector<unsigned int> bank = {3,  1,3,5, 0,      
 				 3,  2,4,6, 0,
 				 4,  7,11,13,17, 2,  // 2 states in this track
-				 3 , 1072693248,0 , 1072693248,0 , 1072693248,0 , 1072693248,0 , 1072693248,0 , // state at location 3
-				 1 , 1072693248,0 , 1072693248,0 , 1072693248,0 , 1072693248,0 , 1072693248,0}; // state at location 1
+				 3 , 10000, 4294957296, 100000000, 4194967296, 100, // state at location 3
+				 1 , 10000, 4294957296, 100000000, 4194967296, 100}; // state at location 1
     m_rawbank = bank;
   }
 

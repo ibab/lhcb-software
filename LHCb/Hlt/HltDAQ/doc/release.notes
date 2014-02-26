@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-26 - Sebastian Neubert
+ - Using the StandardPacker functions to pack the strack states 
+ 	 to 32bit per parameter
+
 ! 2014-02-25 - Sebastian Neubert
  - Added persistence of States to TrackReports
    only state location and parameters written atm

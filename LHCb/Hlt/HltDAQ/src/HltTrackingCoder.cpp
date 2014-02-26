@@ -7,6 +7,7 @@
 // local
 #include "HltTrackingCoder.h" 
 #include "Event/State.h"
+#include "Event/StandardPacker.h"
 
 using namespace LHCb;
 
@@ -30,15 +31,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 
-// packing macros to put a double into 2 uints
-// from: http://stackoverflow.com/questions/4306577/how-to-get-the-upper-lower-machine-word-of-a-double-according-to-ieee-754-ansi
-#define REP(x) ((union { double v; uint64_t r; }){ x }).r
-#define HI(x) (uint32_t)(REP(x) >> 32)
-#define LO(x) (uint32_t)(REP(x))
-
-#define HILO(u,l) (((uint64_t)u) << 32)|((uint64_t)l)
-#define PER(u,l) ((union {uint64_t r; double v;}){HILO(u,l)}).v
-
+// It is stupid to have to instantiate this
+StandardPacker pac;
 
 void
 encodeTracks(const LHCb::Tracks* tracks,
@@ -66,10 +60,15 @@ encodeTracks(const LHCb::Tracks* tracks,
 	rawBank.push_back(state->location());
 	// store the parameters
 	Gaudi::TrackVector& par=state->stateVector();
-	for(unsigned int ipar=0;ipar<5;++ipar){
-	  rawBank.push_back(HI(par[ipar]));
-	  rawBank.push_back(LO(par[ipar]));
-	}
+	rawBank.push_back((unsigned int)pac.position(par[0]));
+	rawBank.push_back((unsigned int)pac.position(par[1]));
+	rawBank.push_back((unsigned int)pac.slope(par[2]));
+	rawBank.push_back((unsigned int)pac.slope(par[3]));
+
+	double p=0;
+	if(state->qOverP() !=0 ) p= 1./state->qOverP();
+	rawBank.push_back((unsigned int)pac.energy(p));
+	
       }
       
       //rawBank.push_back(0);
@@ -114,11 +113,12 @@ decodeTracks(unsigned int* rawBankData,
       LHCb::State::Location loc = LHCb::State::Location(rawit[k++]);
       // add parameters
       Gaudi::TrackVector par;
-      for(unsigned int ip=0;ip<5;++ip){
-	unsigned int hi=rawit[k++];
-	unsigned int lo=rawit[k++];
-	par[ip]=PER(hi,lo);
-      }
+      par[0]=pac.position((int)(rawit[k++]));
+      par[1]=pac.position((int)(rawit[k++]));
+      par[2]=pac.slope((int)(rawit[k++]));
+      par[3]=pac.slope((int)(rawit[k++]));
+      int p= (int) rawit[k++];
+      par[4]=( 0 != p ? 1.0/pac.energy(p) : 0.0 );
       Gaudi::TrackSymMatrix cov;
       track->addToStates(LHCb::State(par,cov,200.,loc));
     }
