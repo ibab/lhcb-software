@@ -47,10 +47,7 @@ __date__    = "????-??-??"
 __version__ = "SVN $Revision$ "
 # =============================================================================
 
-import PyCintex
-
-# construct the global namespace 
-_cpp = PyCintex.makeNamespace('')
+from LoKiCore.basic import cpp as _cpp
 
 _Tuple = _cpp.Tuples.Tuple
 _Array = _cpp.LoKi.Dicts.MCTupleArray
