@@ -121,6 +121,7 @@ Hlt1HighPtJetsSinglePVPreScaler: 1200
 Hlt1HighPtJetsSinglePVL0DUFilterSequence: 1200
 Hlt1HighPtJetsSinglePVL0DUFilter: 1200
 Hlt1HighPtJetsSinglePVFilterSequence: 1
+Hlt1HighPtJetsSinglePVDecision: 1
 Hlt1HighPtJetsSinglePVPostScaler: 0
 Hlt1L0Any: 1200
 Hlt1L0AnyPreScaler: 1200
@@ -260,7 +261,7 @@ Hlt1BeamGasCrossingParasiticPostScaler: 0
 Hlt1ErrorEvent: 1200
 Hlt1ErrorEventPreScaler: 1200
 Hlt1ErrorEventHltFilter: 1200
-Hlt1ErrorEventPostScaler: 2
+Hlt1ErrorEventPostScaler: 0
 Hlt1Global: 1200
 Hlt1GlobalPreScaler: 1200
 Hlt1GlobalHltFilter: 1200
