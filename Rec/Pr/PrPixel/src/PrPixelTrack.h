@@ -139,7 +139,6 @@ private:
   void solve();
 };
 
-/// Vector of tracks
-typedef std::vector<PrPixelTrack> PrPixelTracks;
+typedef std::vector<PrPixelTrack> PrPixelTracks; // vector of tracks
 
-#endif
+#endif // PRPIXELTRACK_H

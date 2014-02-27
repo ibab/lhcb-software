@@ -16,29 +16,46 @@ class PrPixelHit {
 public:
   /// Standard constructor
   PrPixelHit() :
-    m_x(0.), m_y(0.), m_z(0.),
+    m_x(0.), m_y(0.), m_z(0.), 
     m_id(0),
     m_wx(0.), m_wy(0.),
     m_module(0),
     m_isUsed(false) {
-
+  
   }
   /// Destructor
   virtual ~PrPixelHit() {}
 
   void setHit(const LHCb::LHCbID id,
               const Gaudi::XYZPoint& point,
-              const double dx,
-              const double dy,
+              const double wx,
+              const double wy,
               const unsigned int module) {
     m_id = id;
     m_x = point.x();
     m_y = point.y();
     m_z = point.z();
-    m_wx = 1. / (dx * dx);
-    m_wy = 1. / (dy * dy);
+    m_wx = wx;
+    m_wy = wy;
     m_module = module;
-    m_isUsed = false;
+    m_isUsed = false; 
+  }
+
+  void setHit(const LHCb::LHCbID id,
+              const double x, 
+              const double y, 
+              const double z, 
+              const double wx,
+              const double wy,
+              const unsigned int module) {
+    m_id = id;
+    m_x = x;
+    m_y = y;
+    m_z = z;
+    m_wx = wx;
+    m_wy = wy;
+    m_module = module;
+    m_isUsed = false; 
   }
 
   LHCb::LHCbID id() const {return m_id;}
@@ -82,13 +99,12 @@ private:
   double m_wx;
   double m_wy;
   // Module number
-  unsigned int m_module;
+  unsigned int m_module;  
   // Already used by (associated to) a track?
   bool m_isUsed;
 
 };
 
-/// Vector of hits
-typedef std::vector<PrPixelHit*> PrPixelHits;
+typedef std::vector<PrPixelHit*> PrPixelHits;  // vector of hits
 
-#endif
+#endif // PRPIXELHIT_H

@@ -46,7 +46,7 @@ private:
   void extendTrack(const PrPixelHit* h1, const PrPixelHit* h2);
   /// Try to add a matching hit on a given module. 
   PrPixelHit* bestHit(PrPixelModule* module, double xTol, double maxScatter,
-                      const PrPixelHit* h1, const PrPixelHit* h2);
+                       const PrPixelHit* h1, const PrPixelHit* h2);
   /// Produce LHCb::Track list understandable to other LHCb applications.
   void makeLHCbTracks();
 
@@ -87,9 +87,9 @@ private:
   bool m_addStateFirstLastMeasurementKalmanFit; 
 
   /// List of tracks found
-  PrPixelTracks m_tracks; 
+  PrPixelTracks m_tracks;                  
   /// Current track being worked with
-  PrPixelTrack m_track; 
+  PrPixelTrack m_track;                   
 
   /// Debug control
   std::string m_debugToolName;
@@ -97,6 +97,12 @@ private:
   IPatDebugTool* m_debugTool;
   bool m_isDebug;
   bool m_debug;
+
+  /// Use lite cluster raw bank or super pixel raw bank.
+  bool m_assumeSuperPixels;
+
+  /// Maximum clusters size (no effect when running on lite cluster banks).
+  unsigned int m_maxClusterSize;
 
   /// Timing measurement control
   bool m_doTiming;
@@ -107,4 +113,4 @@ private:
   int m_timeFinal;
 
 };
-#endif
+#endif // PRPIXELTRACKING_H

@@ -1,0 +1,338 @@
+//-----------------------------------------------------------------------------
+// Core implementation of pixel clustering from raw super pixel bank.
+//
+//
+// This is used by PrPixelHitManager and PrPixelClustering wit minor 
+// differences. Admittedly this is a bit of an ugly CPP hack.
+//
+// However, using runtime branching has a significant impact on the
+// 3D hit building in PrPixelHitManager. So we let the preprocessor
+// do the job and avoid dublicating the entire code this way.
+//
+// 2014-02-26 : Kurt Rinnert
+//-----------------------------------------------------------------------------
+
+#ifdef PRPIXELCLUSTERING_CLIENT 
+  // record all contributing channels.
+  // TODO: make this useful by reviewing the event model
+  std::vector<LHCb::VPChannelID> channelIDs;
+#endif
+
+  // Loop over VP RawBanks  
+  std::vector<LHCb::RawBank*>::const_iterator iterBank = tBanks.begin();
+  for (; iterBank != tBanks.end(); ++iterBank) {
+    
+    const unsigned int sensor = (*iterBank)->sourceID();
+    const unsigned int module_chip_base = (sensor%MODULE_SENSORS)*SENSOR_CHIPS;
+    const unsigned int module = sensor/MODULE_SENSORS;
+#ifndef PRPIXELCLUSTERING_CLIENT 
+    const double *ltg = m_ltg + 16*sensor;
+#endif
+
+    // reset and then fill the super pixel buffer for a sensor
+    //memset(m_sp_buffer,0,256*256*3*sizeof(unsigned char));
+    // the memset is too slow here. the occupancy is so low that
+    // resetting a few elements is *much* faster.
+    const unsigned int nrc = m_pixel_idx.size();
+    for (unsigned int irc=0; irc<nrc; ++irc) {
+      m_buffer[m_pixel_idx[irc]] = 0;
+    } 
+    m_pixel_idx.clear();
+
+    const uint32_t* bank = (*iterBank)->data(); 
+    const uint32_t nsp = *bank++;
+
+    // make sure the all pools have sufficient size
+    // if we target clusters, make sure the space point pool is large enough
+#ifndef PRPIXELCLUSTERING_CLIENT 
+    if (m_pool.size() < m_nHits + nsp*2) { m_pool.resize(m_nHits + nsp*2 + 100); }
+#endif
+
+    for (unsigned int i=0; i<nsp; ++i) {
+      const uint32_t sp_word = *bank++;
+      uint8_t sp = sp_word & 0xFFU;
+
+      if (0 == sp) continue; // protect against zero super pixels.
+
+      const uint32_t sp_addr = (sp_word & 0x007FFF00U) >> 8;
+      const uint32_t sp_row = sp_addr & 0x3FU;
+      const uint32_t sp_col = (sp_addr >> 6);
+#ifndef PRPIXELCLUSTERING_CLIENT 
+      const uint32_t no_sp_neighbours = sp_word & 0x80000000U;
+
+      // if a super pixel is isolated the clustering boils
+      // down to a simple pattern look up.
+      // don't do this if we target clusters after the first trigger decision;
+      // in that scenario a few more us are negligible compared to the complication
+      // of keeping track of all contributing channel IDs.
+      if (no_sp_neighbours) {
+        const int sp_size = m_sp_sizes[sp];
+        const uint32_t idx = m_sp_patterns[sp];
+        const uint32_t module_chip = module_chip_base + sp_col/CHIP_COLUMNS/2;
+
+        if ((sp_size &0x0F) <= m_maxClusterSize) { 
+          // there is always at least one cluster in the super
+          // pixel. look up the pattern and add it.
+          const uint32_t row = idx & 0x03U;
+          const uint32_t col = (idx >> 2) & 1;
+          const uint32_t cx = sp_col*2 + col;
+          const uint32_t cy = sp_row*4 + row;
+
+          LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+
+          const double local_x = m_local_x[cx] + m_sp_fx[sp*2]*m_x_pitch[cx];
+          const double local_y = (cy + 0.5 + m_sp_fy[sp*2]) * m_pixel_size;
+
+          const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+          const double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+          const double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
+
+          m_pool[m_nHits++].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
+        }
+
+        // if there is a second cluster for this pattern
+        // add it as well.
+        if ( (idx & 8) && (((sp_size >> 4) & 0x0F) <= m_maxClusterSize) ) {
+          const uint32_t row = (idx >> 4) & 3;
+          const uint32_t col = (idx >> 6) & 1;
+          const uint32_t cx = sp_col*2 + col;
+          const uint32_t cy = sp_row*4 + row;
+
+          LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+          const double local_x = m_local_x[cx] + m_sp_fx[sp*2 + 1]*m_x_pitch[cx];
+          const double local_y = (cy + 0.5 + m_sp_fy[sp*2 + 1]) * m_pixel_size;
+
+          const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+          const double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+          const double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
+
+          m_pool[m_nHits++].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
+        }
+
+        continue; // move on to next super pixel
+      }
+#endif
+
+      // this one is not isolated or we are targeting clusters; record all pixels.
+      for (uint32_t shift=0; shift<8; ++shift) {
+        const uint8_t pixel = sp & 1;
+        if (pixel) {
+          const uint32_t row = sp_row*4 + shift%4;
+          const uint32_t col = sp_col*2 + shift/4;
+          const uint32_t idx = (col << 8) | row;
+          m_buffer[idx] = pixel; 
+          m_pixel_idx.push_back(idx);
+        }
+        sp = sp >> 1;
+        if (0 == sp) break;
+      }
+
+    }
+
+    // the sensor buffer is filled, perform the clustering on
+    // clusters that span several super pixels.
+    const unsigned int nidx = m_pixel_idx.size();
+    for (unsigned int irc=0; irc<nidx; ++irc) {
+      const uint32_t idx = m_pixel_idx[irc];
+      const uint8_t pixel = m_buffer[idx];
+      if (0 == pixel) continue; // pixel is used in another cluster
+
+#ifdef PRPIXELCLUSTERING_CLIENT 
+      channelIDs.clear();
+      bool hasLong = false;
+#endif
+
+      // 8-way row scan optimized flood fill from here.
+      m_stack.clear();
+
+      // mark seed as used
+      m_buffer[idx] = 0;
+
+      // initialize sums
+      unsigned int x = 0;
+      unsigned int y = 0;
+      unsigned int n = 0;
+
+      // push seed on stack
+      m_stack.push_back(idx);
+
+      // as long as the stack is not exhausted:
+      // - pop the stack and add popped pixel to cluster
+      // - scan the row to left and right, adding set pixels
+      //   to the cluster and push set pixels above and below
+      //   on the stack (and delete both from the pixel buffer).
+      while (!m_stack.empty()) {
+        // pop pixel and add it to cluster
+        const uint32_t idx = m_stack.back();
+        m_stack.pop_back();
+        const uint32_t row = idx & 0xFFU;
+        const uint32_t col = (idx >> 8) & 0x3FFU;
+        x += col;
+        y += row;
+        ++n;
+#ifdef PRPIXELCLUSTERING_CLIENT 
+        const uint32_t module_chip = module_chip_base + col/CHIP_COLUMNS;
+        LHCb::VPChannelID cid(module,module_chip,col%CHIP_COLUMNS,row);
+        channelIDs.push_back(cid);
+        switch (col) {
+          case CHIP_COLUMNS-1:
+          case CHIP_COLUMNS:
+          case 2*CHIP_COLUMNS-1:
+          case 2*CHIP_COLUMNS:
+            hasLong = true;
+        }
+#endif
+
+        // check up and down
+        uint32_t u_idx = idx+1;
+        bool u_stack = true;
+        bool u_seed_stack = false;
+        if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) { 
+          m_buffer[u_idx] = 0;
+          m_stack.push_back(u_idx);
+          u_stack = false;
+          u_seed_stack = true;
+        } 
+        uint32_t d_idx = idx-1;
+        bool d_stack = true;
+        bool d_seed_stack = false;
+        if (row > 0 && m_buffer[d_idx]) {
+          m_buffer[d_idx] = 0;
+          m_stack.push_back(d_idx);
+          d_stack = false;
+          d_seed_stack = true;
+        }
+
+        // scan row to the right
+        for (int c=col+1; c < SENSOR_COLUMNS; ++c) {
+          const uint32_t nidx = (c << 8) | row;
+          // check up and down
+          u_idx = nidx+1;
+          if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) {
+           if (u_stack) { 
+             m_buffer[u_idx] = 0;
+             m_stack.push_back(u_idx);
+             u_stack = false; 
+             u_seed_stack = false;
+           } 
+          } else {
+            u_stack = true;
+          } 
+          d_idx = nidx-1;
+          if (row > 0 && m_buffer[d_idx]) {
+           if (d_stack) { 
+             m_buffer[d_idx] = 0;
+             m_stack.push_back(d_idx);
+             d_stack = false; 
+             d_seed_stack = false;
+           } 
+          } else {
+            d_stack = true;
+          }
+          // add set pixel to cluster or stop scanning
+          if ( m_buffer[nidx] ) {
+            m_buffer[nidx] = 0;
+            x += c;
+            y += row;
+            ++n;
+#ifdef PRPIXELCLUSTERING_CLIENT 
+            const uint32_t module_chip = module_chip_base + c/CHIP_COLUMNS;
+            LHCb::VPChannelID cid(module,module_chip,c%CHIP_COLUMNS,row);
+            channelIDs.push_back(cid);
+            switch (c) {
+              case CHIP_COLUMNS-1:
+              case CHIP_COLUMNS:
+              case 2*CHIP_COLUMNS-1:
+              case 2*CHIP_COLUMNS:
+                hasLong = true;
+            }
+#endif
+          } else {
+            break;
+          }
+        }
+
+        // scan row to the left
+        u_stack = !u_seed_stack;
+        d_stack = !d_seed_stack;
+        for (int c=col-1; c >= 0; --c) {
+          const uint32_t nidx = (c << 8) | row;
+          // check up and down
+          u_idx = nidx+1;
+          if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) {
+           if (u_stack) { 
+             m_buffer[u_idx] = 0;
+             m_stack.push_back(u_idx);
+             u_stack = false; 
+           } 
+          } else {
+            u_stack = true;
+          } 
+          d_idx = nidx-1;
+          if (row > 0 && m_buffer[d_idx]) {
+           if (d_stack) { 
+             m_buffer[d_idx] = 0;
+             m_stack.push_back(d_idx);
+             d_stack = false; 
+           } 
+          } else {
+            d_stack = true;
+          }
+          // add set pixel to cluster or stop scanning
+          if ( m_buffer[nidx] ) {
+            m_buffer[nidx] = 0;
+            x += c;
+            y += row;
+            ++n;
+#ifdef PRPIXELCLUSTERING_CLIENT 
+            const uint32_t module_chip = module_chip_base + c/CHIP_COLUMNS;
+            LHCb::VPChannelID cid(module,module_chip,c%CHIP_COLUMNS,row);
+            channelIDs.push_back(cid);
+            switch (c) {
+              case CHIP_COLUMNS-1:
+              case CHIP_COLUMNS:
+              case 2*CHIP_COLUMNS-1:
+              case 2*CHIP_COLUMNS:
+                hasLong = true;
+            }
+#endif
+          } else {
+            break;
+          }
+        }
+      }
+
+      // we are done with this cluster, calculate
+      // centroid pixel coordinate and fractions.
+      // unless the cluster is too large; bail out
+      // in this case.
+#ifndef PRPIXELCLUSTERING_CLIENT 
+      if (n <= m_maxClusterSize) {
+#endif
+        const unsigned int cx = x/n;
+        const unsigned int cy = y/n;
+        const double fx = x/static_cast<double>(n) - cx;
+        const double fy = y/static_cast<double>(n) - cy;
+
+        // store target (cluster or 3D point)
+        const uint32_t module_chip = module_chip_base + cx/CHIP_COLUMNS;
+        LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+
+#ifdef PRPIXELCLUSTERING_CLIENT
+        // store the cluster
+        // TODO: flooring the ipf is not strictly correct. but the current
+        // event model is for the bin anyway. we'll have proper clusters soon.
+        const unsigned int ifx = static_cast<unsigned int>(fx*8.0) & 7;
+        const unsigned int ify = static_cast<unsigned int>(fy*8.0) & 7;
+        m_clusters->push_back(LHCb::VPLiteCluster(cid,1,std::make_pair(ifx,ify),hasLong));
+#else
+        const double local_x = m_local_x[cx] + fx*m_x_pitch[cx];
+        const double local_y = (cy + 0.5 + fy) * m_pixel_size;
+        const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+        const double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+        const double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
+        m_pool[m_nHits++].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
+      }
+#endif
+    }
+  } 

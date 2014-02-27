@@ -4,6 +4,15 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-27 - Kurt Rinnert
+ - use new features of DeVPSensor to speed up 3D point building.
+ - additional various optimizations (cache global transforms, PrPixelModule 
+   object pool ...).
+ - added possibility to do clustering and 3D hit building directly from
+   super pixel raw banks.
+ - added clustering algorithm creatinf VPLiteClusters from super pixel raw
+   bank.
+
 !========================= PrPixel v1r5 2014-02-19 =========================
 ! 2014-02-13 - Heinrich Schindler
  - Renamed PatPixel* to PrPixel*

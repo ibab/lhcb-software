@@ -18,7 +18,7 @@ class PrPixelModule {
 public:
   /// Constructor
   PrPixelModule(const unsigned int number, const bool right) : 
-    m_lastHitX(-1), m_empty(true), m_number(number), m_isRight(right), m_previous(-1) {
+    m_lastHitX(-1), m_number(number), m_previous(-1), m_empty(true), m_isRight(right) {
     reset();
   }
   /// Destructor
@@ -49,17 +49,17 @@ public:
 
 private:
   float m_lastHitX;
-  bool m_empty;
   /// Module number
   unsigned int m_number;
-  /// Right or left side of VELO
-  bool m_isRight;
   // Number of neighbouring same-side module towards smaller z
   int m_previous;
   /// Z-position
   double m_z;
   /// Vector of pointers to hits
   PrPixelHits m_hits;
+  bool m_empty;
+  /// Right or left side of VELO
+  bool m_isRight;
 
 };
-#endif
+#endif // PRPIXELMODULE_H

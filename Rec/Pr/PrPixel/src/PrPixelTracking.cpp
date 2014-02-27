@@ -14,11 +14,11 @@
 
 DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
 
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-PrPixelTracking::PrPixelTracking(const std::string& name,
-                                 ISvcLocator* pSvcLocator) :
+  //=============================================================================
+  // Standard constructor, initializes variables
+  //=============================================================================
+  PrPixelTracking::PrPixelTracking(const std::string& name,
+      ISvcLocator* pSvcLocator) :
 #ifdef DEBUG_HISTO
     GaudiTupleAlg(name, pSvcLocator),
 #else
@@ -26,39 +26,42 @@ PrPixelTracking::PrPixelTracking(const std::string& name,
 #endif
     m_debugTool(NULL) { 
 
-  declareProperty("OutputTracksName", m_outputLocation = LHCb::TrackLocation::Velo);
-  declareProperty("MaxXSlope", m_maxXSlope = 0.400);
-  declareProperty("MaxYSlope", m_maxYSlope = 0.400);
-  // Tolerance window when adding hits
-  declareProperty("ExtraTol", m_extraTol = 0.6 * Gaudi::Units::mm);
-  // Number of modules without a hit after which to stop extrapolation
-  declareProperty("MaxMissed", m_maxMissed = 3); 
+      declareProperty("OutputTracksName", m_outputLocation = LHCb::TrackLocation::Velo);
+      declareProperty("MaxXSlope", m_maxXSlope = 0.400);
+      declareProperty("MaxYSlope", m_maxYSlope = 0.400);
+      // Tolerance window when adding hits
+      declareProperty("ExtraTol", m_extraTol = 0.6 * Gaudi::Units::mm);
+      // Number of modules without a hit after which to stop extrapolation
+      declareProperty("MaxMissed", m_maxMissed = 3); 
 
-  // Acceptance criteria for adding new hits
-  declareProperty("MaxScatter", m_maxScatter = 0.004);
-  
-  // Acceptance criteria for track candidates
-  // Max. chi2 for 3-hit tracks
-  declareProperty("MaxChi2Short", m_maxChi2Short = 20.0); 
-  // Min. fraction of unused hits
-  declareProperty("FractionUnused", m_fractionUnused = 0.5);
+      // Acceptance criteria for adding new hits
+      declareProperty("MaxScatter", m_maxScatter = 0.004);
 
-  // Flag to clear hits (for rerunning in same event) 
-  declareProperty("ClearHits", m_clearHits = false);  
+      // Acceptance criteria for track candidates
+      // Max. chi2 for 3-hit tracks
+      declareProperty("MaxChi2Short", m_maxChi2Short = 20.0); 
+      // Min. fraction of unused hits
+      declareProperty("FractionUnused", m_fractionUnused = 0.5);
 
-  declareProperty("UseSlopeCorrection", m_useSlopeCorrection = false);
+      // Flag to clear hits (for rerunning in same event) 
+      declareProperty("ClearHits", m_clearHits = false);  
 
-  // Parameters for debugging
-  declareProperty("DebugToolName", m_debugToolName = "");
-  declareProperty("WantedKey", m_wantedKey = -100);
-  declareProperty("TimingMeasurement", m_doTiming = false);
+      declareProperty("UseSlopeCorrection", m_useSlopeCorrection = false);
 
-  // Parameters for Kalman fit
-  declareProperty("ClosestToBeamStateKalmanFit", m_stateClosestToBeamKalmanFit = true);
-  declareProperty("EndVeloStateKalmanFit", m_stateEndVeloKalmanFit = false);
-  declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
+      // Parameters for debugging
+      declareProperty("DebugToolName", m_debugToolName = "");
+      declareProperty("WantedKey", m_wantedKey = -100);
+      declareProperty("TimingMeasurement", m_doTiming = false);
 
-}
+      // Parameters for Kalman fit
+      declareProperty("ClosestToBeamStateKalmanFit", m_stateClosestToBeamKalmanFit = true);
+      declareProperty("EndVeloStateKalmanFit", m_stateEndVeloKalmanFit = false);
+      declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
+
+      // Parameters for 3D hit building
+      declareProperty("AssumeSuperPixels",m_assumeSuperPixels=false);
+      declareProperty("MaxClusterSize",m_maxClusterSize=4);
+    }
 
 //=============================================================================
 // Destructor
@@ -76,6 +79,8 @@ StatusCode PrPixelTracking::initialize() {
   // Setup the hit manager.
   m_hitManager = tool<PrPixelHitManager>("PrPixelHitManager");
   m_hitManager->useSlopeCorrection(m_useSlopeCorrection);
+  m_hitManager->setMaxClusterSize(m_maxClusterSize);
+
   // Setup the debug tool.
   if ("" != m_debugToolName) m_debugTool = tool<IPatDebugTool>(m_debugToolName);
   // Setup the timing measurement.
@@ -105,7 +110,11 @@ StatusCode PrPixelTracking::execute() {
     m_timerTool->start(m_timePrepare);
   }
   if (m_clearHits) m_hitManager->clearHits();
-  m_hitManager->buildHits();
+  if (m_assumeSuperPixels) {
+    m_hitManager->buildHitsFromSPRawBank();
+  } else {
+    m_hitManager->buildHits();
+  }
   m_hitManager->sortByX();
 
   if (m_isDebug) {
@@ -193,7 +202,7 @@ StatusCode PrPixelTracking::execute() {
 // on both sides of the detector as soon as one hit is missed.
 //=============================================================================
 void PrPixelTracking::extendTrack(const PrPixelHit* h1, 
-                                  const PrPixelHit* h2) {
+    const PrPixelHit* h2) {
 
   // Initially scan every second module (stay on the same side).
   int step = 2;
@@ -302,7 +311,7 @@ void PrPixelTracking::searchByPair() {
           if (matchKey(*ith0) && matchKey(*ith1)) m_debug = true;
           if (m_debug) {
             info() << format("s1%3d dxRel %7.3f dyRel %7.3f    ", 
-                             sens1, (x1-xMin)/(xMax-xMin), fabs((*ith1)->y()-y0)/dyMax);
+                sens1, (x1-xMin)/(xMax-xMin), fabs((*ith1)->y()-y0)/dyMax);
             printHit(*ith1);
           }
         }
@@ -327,13 +336,12 @@ void PrPixelTracking::searchByPair() {
               info() << " -- reject, chi2 " << m_track.chi2() << " too high." << endmsg;
               printTrack(m_track);
             }
-            continue;
           }
         } else {
           if (m_track.nbUnused() < m_fractionUnused * m_track.hits().size()) {
             if (m_debug) {
               info() << "  -- reject, only " << m_track.nbUnused() << "/" 
-                     << m_track.hits().size() << " hits are unused." << endmsg;
+                << m_track.hits().size() << " hits are unused." << endmsg;
               printTrack(m_track); 
             }
             continue;
@@ -378,7 +386,7 @@ void PrPixelTracking::makeLHCbTracks() {
     newTrack->setHistory(LHCb::Track::PatFastVelo);
     newTrack->setPatRecStatus(LHCb::Track::PatRecIDs);
     if (m_debug) {
-      info() << "=== Store track Nb " << outputTracks->size() << endmsg;
+      info() << "=== Store track Nb " << outputTracks->size() << "\tnhits " << (*itt).hits().size() << endmsg;
       printTrack(*itt);
     }
 
@@ -414,33 +422,33 @@ void PrPixelTracking::makeLHCbTracks() {
       (*itt).fitKalman(upstreamstate, backward ? 1 : -1 , scat2);
       // Add this state as state at first measurement if requested
       if (m_addStateFirstLastMeasurementKalmanFit) {
-	upstreamstate.setLocation(LHCb::State::FirstMeasurement);
-	newTrack->addToStates(upstreamstate);
+        upstreamstate.setLocation(LHCb::State::FirstMeasurement);
+        newTrack->addToStates(upstreamstate);
       }
       // Transport the state to the closestToBeam position
       if (m_stateClosestToBeamKalmanFit) {
-	upstreamstate.setLocation(LHCb::State::ClosestToBeam);
-	upstreamstate.linearTransportTo(zBeam);
-	newTrack->addToStates(upstreamstate);
+        upstreamstate.setLocation(LHCb::State::ClosestToBeam);
+        upstreamstate.linearTransportTo(zBeam);
+        newTrack->addToStates(upstreamstate);
       }
     }
     if (!m_stateClosestToBeamKalmanFit) {
       newTrack->addToStates(state);
     }
-    
+
     // Set state at last measurement, if requested
     if ((!backward && m_stateEndVeloKalmanFit) || m_addStateFirstLastMeasurementKalmanFit) {
       LHCb::State downstreamstate;
       (*itt).fitKalman(downstreamstate, backward ? -1 : +1 , scat2);
       if(m_addStateFirstLastMeasurementKalmanFit) {
-	downstreamstate.setLocation(LHCb::State::LastMeasurement);
-	newTrack->addToStates(downstreamstate);
+        downstreamstate.setLocation(LHCb::State::LastMeasurement);
+        newTrack->addToStates(downstreamstate);
       }
       if (m_stateEndVeloKalmanFit) {
-	state = downstreamstate;
+        state = downstreamstate;
       }
     } 
-    
+
     // Add state at end of velo
     if (!backward) {
       state.setLocation(LHCb::State::EndVelo) ;
@@ -458,35 +466,35 @@ void PrPixelTracking::makeLHCbTracks() {
     const unsigned int nHitsPerTrack = (*itt).hits().size();
     if (backward) {
       plot(nHitsPerTrack, "Bwd_HitsPerTrack", "Number of hits per backward track",
-           0.5, 40.5, 40);
+          0.5, 40.5, 40);
       plot(newTrack->chi2PerDoF(), "Bwd_Chi2PerTrack", "Chi2/DoF of backward tracks",
-           0.0, 10.0, 50);
+          0.0, 10.0, 50);
       plot(newTrack->pseudoRapidity(), "Bwd_EtaOfTracks", "pseudoRapidity of backward tracks",
-           1.0, 6.0, 50);
+          1.0, 6.0, 50);
       plot(newTrack->phi()*(180.0/M_PI), "Bwd_PhiOfTracks", "Phi-angle of backward tracks",
-           -180.0, 180.0, 60);
+          -180.0, 180.0, 60);
       plot2D(newTrack->pseudoRapidity(), nHitsPerTrack, "Bwd_HitsPerTrackVsEta", "hits/track vs pseudoRapidity of backward tracks",
-             1.0, 6.0, 0.5, 15.5, 50, 15);
+          1.0, 6.0, 0.5, 15.5, 50, 15);
       plot2D(newTrack->pseudoRapidity(), newTrack->chi2PerDoF(), "Bwd_Chi2VsEta", "Chi2/DoF vs pseudoRapidity of backward tracks",
-             1.0, 6.0, 0.0, 10.0, 50, 20);
+          1.0, 6.0, 0.0, 10.0, 50, 20);
       plot2D(nHitsPerTrack, newTrack->chi2PerDoF(), "Bwd_Chi2VsHitsPerTrack", "Chi2/DoF vs hits/backward track",
-             0.5, 15.5, 0.0, 10.0, 15, 20);
+          0.5, 15.5, 0.0, 10.0, 15, 20);
       nBwd++;
     } else {
       plot(nHitsPerTrack, "Fwd_HitsPerTrack", "Number of hits per forward track",
-           0.5, 40.5, 40);
+          0.5, 40.5, 40);
       plot(newTrack->chi2PerDoF(), "Fwd_Chi2PerTrack", "Chi2/DoF of forward tracks",
-           0.0, 10.0, 50);
+          0.0, 10.0, 50);
       plot(newTrack->pseudoRapidity(), "Fwd_EtaOfTracks", "pseudoRapidity of forward tracks",
-           1.0, 6.0, 50);
+          1.0, 6.0, 50);
       plot(newTrack->phi()*(180.0/M_PI), "Fwd_PhiOfTracks", "Phi-angle of forward tracks",
-           -180.0, 180.0, 60);
+          -180.0, 180.0, 60);
       plot2D(newTrack->pseudoRapidity(), nHitsPerTrack, "Fwd_HitsPerTrackVsEta", "hits/track vs pseudoRapidity of forward tracks",
-             1.0, 6.0, 0.5, 15.5, 50, 15);
+          1.0, 6.0, 0.5, 15.5, 50, 15);
       plot2D(newTrack->pseudoRapidity(), newTrack->chi2PerDoF(), "Fwd_Chi2VsEta", "Chi2/DoF vs pseudoRapidity of forward tracks",
-             1.0, 6.0, 0.0, 10.0, 50, 20);
+          1.0, 6.0, 0.0, 10.0, 50, 20);
       plot2D(nHitsPerTrack, newTrack->chi2PerDoF(), "Fwd_Chi2VsHitsPerTrack", "Chi2/DoF vs hits/forward track",
-             0.5, 15.5, 0.0, 10.0, 15, 20);
+          0.5, 15.5, 0.0, 10.0, 15, 20);
       nFwd++;
     }
 #endif
@@ -505,7 +513,7 @@ void PrPixelTracking::makeLHCbTracks() {
 //  Add hits from the specified module to the track
 //=========================================================================
 PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double maxScatter,
-                                     const PrPixelHit* h1, const PrPixelHit* h2) {
+    const PrPixelHit* h1, const PrPixelHit* h2) {
   if (module->empty()) return NULL;
   const double x1 = h1->x();
   const double y1 = h1->y();
@@ -571,7 +579,7 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
   if (bestHit) {
 #ifdef DEBUG_HISTO
     plot(bestScatter, "HitBestScatter", "best hit scatter [rad]",
-         0.0, 0.1, 100);
+        0.0, 0.1, 100);
 #endif
     if (m_debug) printHitOnTrack(bestHit, false);
   }
@@ -585,7 +593,7 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
 void PrPixelTracking::printHit(const PrPixelHit* hit, std::string title) {
   info() << title;
   info() << format(" module%3d x%8.3f y%8.3f z%8.2f used%2d",
-                   hit->module(), hit->x(), hit->y(), hit->z(), hit->isUsed());
+      hit->module(), hit->x(), hit->y(), hit->z(), hit->isUsed());
   if (m_debugTool) {
     LHCb::LHCbID id = hit->id();
     info() << " MC: ";
