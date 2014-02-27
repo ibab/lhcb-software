@@ -52,11 +52,6 @@ public:
                             const bool local,
                             LHCb::VPChannelID& channel,
                             std::pair <double, double>& fraction) const;
-  /// Calculate the position of a given pixel.
-  Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
-                                 const bool local) const;
-  Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel, 
-                                 const std::pair<double, double> fraction) const;
 
   /// Return the pixel size.
   std::pair<double, double> pixelSize(LHCb::VPChannelID channel) const;
@@ -94,16 +89,54 @@ public:
   bool isDownstream() const {return m_isDownstream;}
 
   /// Return sensor thickness in mm.
-  double siliconThickness() const {return m_thickness;}
+  double siliconThickness() const {return DeVPSensor::m_thickness;}
 
   /// Workaround to prevent hidden base class function
   inline const std::type_info& type(const std::string &name) const {
     return ParamValidDataObject::type(name);
   }
 
+  /// Return array of cached local x-coordinates by column
+  inline const double* xLocal(void) const {
+    return DeVPSensor::m_local_x;
+  }
+
+  /// Return array of cachedd x pitches by column
+  inline const double* xPitch(void) const {
+    return DeVPSensor::m_x_pitch;
+  }
+
+  /// Calculate the position of a given pixel.
+  inline Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+      const bool local) const {
+
+    const unsigned int chip = channel.chip() % 3;
+    const unsigned int col = channel.col() + chip*256;
+    const unsigned int row = channel.row();
+    const double x = DeVPSensor::m_local_x[col];
+    const double y = (row + 0.5) * 0.055; 
+    const Gaudi::XYZPoint point(x, y, 0.0);
+    return ( local ? point : localToGlobal(point) );
+  }
+
+  /// Calculate the position of a given pixel and inter pixel fractions.
+  Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+      std::pair<double, double> fraction) const {
+
+    const unsigned int chip = channel.chip() % 3;
+    const unsigned int col = channel.col() + chip*256;
+    const unsigned int row = channel.row();
+    const double pitch = DeVPSensor::m_x_pitch[col];
+    const double x = DeVPSensor::m_local_x[col] + fraction.first * pitch;
+    const double y = (row + 0.5 + fraction.second) * 0.055; 
+    const Gaudi::XYZPoint point(x, y, 0.0);
+    return localToGlobal(point);
+  }
+
   /// Function kept for backwards compatibility with VPDAQ
   virtual StatusCode channelToNeighbours(const LHCb::VPChannelID& seedChannel, 
                                          std::vector <LHCb::VPChannelID>& channels) const;
+
 
 private:
 
@@ -114,27 +147,31 @@ private:
   bool m_isLeft;
   bool m_isDownstream;
 
-  double m_z;
-  double m_thickness;
-
-  /// Dimensions of the sensor active area
-  double m_sizeX;
-  double m_sizeY;
-  /// Number of chips per ladder
-  unsigned int m_nChips;
-  /// Length of chip active area
-  double m_chipSize;
-  /// Distance between two chips
-  double m_interChipDist;
-  /// Number of columns and rows
-  unsigned int m_nCols;
-  unsigned int m_nRows;
-  /// Cell size of pixels
-  double m_pixelSize;
-  /// Cell size in column direction of elongated pixels
-  double m_interChipPixelSize;
   /// Index of the first chip
   unsigned int m_chip;
+
+  /// Global Z position
+  double m_z;
+  
+
+
+  /// Dimensions of the sensor active area
+  static double m_sizeX;
+  static double m_sizeY;
+  static double m_thickness;
+  /// Number of chips per ladder
+  static unsigned int m_nChips;
+  /// Length of chip active area
+  static double m_chipSize;
+  /// Distance between two chips
+  static double m_interChipDist;
+  /// Number of columns and rows
+  static unsigned int m_nCols;
+  static unsigned int m_nRows;
+  /// Cell size of pixels
+  static double m_pixelSize;
+  /// Cell size in column direction of elongated pixels
+  static double m_interChipPixelSize;
 
   /// Output level flag
   bool m_debug;
@@ -145,6 +182,16 @@ private:
     if (!m_msg) m_msg = new MsgStream(msgSvc(), "DeVPSensor");
     return *m_msg;
   }
+
+  /// Cache of local x-cooordinates
+  static double m_local_x[768];
+  /// Cache of x-pitch
+  static double m_x_pitch[768];
+  /// Cache validity, so we create it only once on startup
+  static bool m_common_cache_valid;
+
+  /// Calculate and cache the local x positions an pitches
+  void cacheLocalXAndPitch(void);
   /// Update geometry cache when the alignment changes
   StatusCode updateGeometryCache();
 
