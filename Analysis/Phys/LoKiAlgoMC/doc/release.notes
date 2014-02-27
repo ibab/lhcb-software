@@ -5,6 +5,9 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-27 - Marco Clemencic
+ - Fixed header include guard in LoKiAlgoMCDict.h (causes problems with ROOT 6).
+
 ! 2014-02-26 - Marco Clemencic
  - Removed explicit use of PyCintex (breaks with ROOT 6).
 
