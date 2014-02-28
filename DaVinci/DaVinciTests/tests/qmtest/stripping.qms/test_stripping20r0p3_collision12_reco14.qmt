@@ -15,7 +15,10 @@
 <argument name="reference"><text>../refs/test_stripping20r0p3_collision12_reco14.ref</text></argument>
 <argument name="validator"><text>
 from DaVinciTests.QMTest.DaVinciExclusions import preprocessor
-validateWithReference(preproc = preprocessor)
+# Skip 'requesting factory via old name ....' warnings that are 
+# due to the new plugin manager in Gaudi v25r0 onwards (ROOT6 compatible).
+err = '\n'.join( l for l in stderr.splitlines() if 'requesting factory' not in l )
+validateWithReference( preproc = preprocessor, stderr = err )
 countErrorLines({"FATAL":0})
 </text></argument>
 </extension>
