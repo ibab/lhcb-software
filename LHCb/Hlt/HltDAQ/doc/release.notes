@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-28 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-02-26 - Sebastian Neubert
  - Using the StandardPacker functions to pack the strack states 
  	 to 32bit per parameter
