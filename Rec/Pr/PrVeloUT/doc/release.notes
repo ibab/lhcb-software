@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2014-02-28 - Marco Cattaneo
+ - Fixed CMake configuration.
+
 ! 2014-02-26 - Espen Eie Bowen
  - Optimised VeloUT for speed, restructured code layout, added interface
 

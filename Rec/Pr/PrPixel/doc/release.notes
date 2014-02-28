@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-28 - Marco Cattaneo
+ - Fixed CMake configuration.
+
 ! 2014-02-27 - Kurt Rinnert
  - use new features of DeVPSensor to speed up 3D point building.
  - additional various optimizations (cache global transforms, PrPixelModule 
