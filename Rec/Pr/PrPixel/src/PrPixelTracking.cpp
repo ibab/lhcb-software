@@ -336,6 +336,7 @@ void PrPixelTracking::searchByPair() {
               info() << " -- reject, chi2 " << m_track.chi2() << " too high." << endmsg;
               printTrack(m_track);
             }
+            continue;
           }
         } else {
           if (m_track.nbUnused() < m_fractionUnused * m_track.hits().size()) {

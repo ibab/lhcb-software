@@ -4,6 +4,14 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-02-28 - Kurt Rinnert
+ - fixed bug in PrPixelHitManager::buildHits(): the sensor pixel column was
+   computed wrongly due to writing SENSOR_COLUMNS were it should have been
+   CHIP_COLUMNS. This is what caused the garbage VP tracking results in the
+   last nightly build.
+ - re-instantiated chi^2 rejection fix that was accidentally globbered by the
+   last commit.
+
 ! 2014-02-28 - Marco Cattaneo
  - Fixed CMake configuration.
 

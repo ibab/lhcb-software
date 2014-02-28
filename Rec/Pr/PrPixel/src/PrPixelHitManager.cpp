@@ -382,7 +382,7 @@ void PrPixelHitManager::buildHits() {
     const unsigned int sensor_chip = cid.chip()%SENSOR_CHIPS;
     const unsigned int sensor = cid.module()*MODULE_SENSORS + cid.chip()/SENSOR_CHIPS;
     const unsigned int cy = cid.row();
-    const unsigned int cx = cid.col() + SENSOR_COLUMNS*sensor_chip;
+    const unsigned int cx = cid.col() + CHIP_COLUMNS*sensor_chip;
     const double dx = (*itc).interPixelFractionX()*m_x_pitch[cx];
     const double dy = (*itc).interPixelFractionY()*m_pixel_size;
     double local_x = m_local_x[cx] + dx;
