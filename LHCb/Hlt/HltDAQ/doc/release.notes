@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-02-28 - Sebastian Neubert
+ - full track states including covariances persisted
+
 ! 2014-02-28 - Marco Clemencic
  - Fixed CMake configuration.
 
