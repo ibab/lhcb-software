@@ -8,7 +8,7 @@ branches doc cmt
 
 use  Moore               v22r0      Hlt
 use  IndependenceTests   v1r6       Hlt
-use  HltMonitor          v1r2	    Hlt   # Diego Martinez
+use  HltMonitor          v1r3	    Hlt   # Diego Martinez
 use  Swimming            v3r0p1     Phys  # Nick Torr
 use  L0App               v2r1       L0    # Rob Lambert
 
