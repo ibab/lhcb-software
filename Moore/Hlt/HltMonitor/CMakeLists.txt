@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltMonitor
 ################################################################################
-gaudi_subdir(HltMonitor v1r2p1)
+gaudi_subdir(HltMonitor v1r3)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 
