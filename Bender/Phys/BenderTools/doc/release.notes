@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-01 - Vanya Belyaev
+ - fix CheckTrg 
+
+! 2014-03-01 - Vanya Belyaev
+ - TisTos: update to use spit Hlt1/Hlt2 decisions 
+
 ! 2014-01-30 - Vanya Belyaev
  - CheckTrg: fix bug
    Many thanks to Eduardo! 

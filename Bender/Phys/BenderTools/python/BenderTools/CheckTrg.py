@@ -246,7 +246,9 @@ if '__main__' == __name__ :
         Simulation      = options.Simulation       ,
         EventPreFilters = fltrs.filters('Filters') ,
         InputType       = InputType                ,
-        Lumi            = options.Lumi  
+        Lumi            = options.Lumi             ,
+        #
+        UserAlgorithms  = [ 'CheckTrg' ]
         )
     
     if not options.Simulation : 
@@ -270,15 +272,8 @@ if '__main__' == __name__ :
                             logger.info('Oracle DB will be used')
                             
 
-    if options.RootInTES: 
-        # ------- decoding set-up start ----------
-        #from MicroDSTConf.TriggerConfUtils import configureL0AndHltDecoding
-        #from Bender.uDstTisTos import configureL0AndHltDecoding
-        from BenderTools.MicroDST import uDstConf 
-        uDstConf(options.RootInTES)
-        logger.info('Reconfigure uDST')
-        # ------- decoding set-up end  -----------
-        
+    if options.RootInTES:
+        daVinci.RootInTES = options.RootInTES 
     
     ## get xml-catalogs (if specified) 
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
@@ -291,14 +286,19 @@ if '__main__' == __name__ :
 
     ## instantiate the application manager
     gaudi=appMgr ()
-    
+
     rootInTES = options.RootInTES 
 
     ## Set properties of the TisTosTools
     if rootInTES : 
-        for t in ( gaudi.tool ( 'CheckTrg.L0TriggerTisTos' ) ,
-                   gaudi.tool ( 'CheckTrg.TriggerTisTos'   ) ) : 
-            t . UseParticle2LHCbIDsMap = 2
+        for t in ( gaudi.tool ( 'CheckTrg.L0TriggerTisTos'   ) ,
+                   gaudi.tool ( 'CheckTrg.TriggerTisTos'     ) ,
+                   gaudi.tool ( 'CheckTrg.Hlt1TriggerTisTos' ) , 
+                   gaudi.tool ( 'CheckTrg.Hlt2TriggerTisTos' ) ) :
+            ## 
+            ## commented by VB, March 1, 2014
+            ## t . UseParticle2LHCbIDsMap = 2
+            ##
             t . PropertiesPrint        = False
             t . TriggerInputWarnings   = True
     ##
@@ -320,12 +320,12 @@ if '__main__' == __name__ :
             )
         
     #
-    mainSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence', True )
-    mainSeq.Members += [ alg.name() ]
-        
-    ## initialize and read the first 1000 event
-    gaudi.run( options.Nevents )
 
+    #
+    ## initialize and read the first 1000 event
+    #
+    gaudi.run( options.Nevents )
+    
     
     # dod = gaudi.service('DataOnDemandSvc' )
     # dod.Dump = True

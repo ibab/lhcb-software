@@ -122,7 +122,8 @@ Hlt2_Global    = 'Hlt2Global'
 #         self.decisions ( B                  ,
 #                          self.triggers['B'] ,
 #                          self.l0tistos      ,
-#                          self.tistos        )
+#                          self.l1tistos      ,
+#                          self.l2tistos      )
 #     ...
 #
 #  @endcode 
@@ -131,7 +132,8 @@ Hlt2_Global    = 'Hlt2Global'
 #  @param p        (input)         the particle
 #  @param triggers (update/output) the triggers
 #  @param l0tistos (input)         the tool for L0-tistos 
-#  @param   tistos (input)         the tool for Hlt1/Hlt2-tistos
+#  @param l1tistos (input)         the tool for Hlt1-tistos 
+#  @param l2tistos (input)         the tool for Hlt2-tistos 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-21
@@ -139,7 +141,8 @@ def decisions ( self             ,
                 p                ,
                 triggers         , 
                 l0tistos  = None ,
-                tistos    = None ) : 
+                l1tistos  = None ,
+                l2tistos  = None ) : 
     """
     Collect the important trigger lines
 
@@ -149,7 +152,8 @@ def decisions ( self             ,
         self.decisions ( D               ,
         triggers        ,
         self.l0tistos   ,
-        self.tistos     )
+        self.l1tistos   ,
+        self.l2tistos   )
         
     ``triggers'' here is in/out-argument (dictionary) that accumulates the
     information abot trigger lines ...
@@ -190,12 +194,13 @@ def decisions ( self             ,
 
 
     if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
-    if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
+    if not l1tistos and hasattr ( self , 'l1tistos' ) : l1tistos = self.l1tistos
+    if not l2tistos and hasattr ( self , 'l2tistos' ) : l2tistos = self.l2tistos
     
     if not l0tistos : return self.Error ( 'decisions: Invalid "l0tistos"-argument ')
-    if not   tistos : return self.Error ( 'decisions: Invalid   "tistos"-argument ')
+    if not l1tistos : return self.Error ( 'decisions: Invalid "l1tistos"-argument ')
+    if not l2tistos : return self.Error ( 'decisions: Invalid "l2tistos"-argument ')
     
-            
     if hasattr ( p , 'particle' ) : p = p.particle()
     
     ## TOS 
@@ -240,7 +245,7 @@ def decisions ( self             ,
         else                  : tis[t] += 1 
 
         
-    for i in ( 'Hlt1' , 'Hlt2' ) :
+    for i,tistos in zip ( ( 'Hlt1' , 'Hlt2' ) , ( l1tistos, l2tistos ) ) :
 
         ## TOS 
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
@@ -252,8 +257,8 @@ def decisions ( self             ,
         if not tos.has_key('TOTAL') : tos['TOTAL']  = 1
         else                        : tos['TOTAL'] += 1
         for t in trigs :
-            if not tos.has_key(t) : tos[t]  = 1 
-            else                  : tos[t] += 1 
+            if not tos.has_key(t)   : tos[t]  = 1 
+            else                    : tos[t] += 1 
 
         ## TIS 
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
@@ -265,8 +270,8 @@ def decisions ( self             ,
         if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
         else                        : tis['TOTAL'] += 1
         for t in trigs :
-            if not tis.has_key(t) : tis[t]  = 1 
-            else                  : tis[t] += 1
+            if not tis.has_key(t)   : tis[t]  = 1 
+            else                    : tis[t] += 1
             
         ## TPS 
         trigs = tistos.triggerSelectionNames ( p  , i + '.*Decision'  ,
@@ -278,8 +283,8 @@ def decisions ( self             ,
         if not tis.has_key('TOTAL') : tis['TOTAL']  = 1
         else                        : tis['TOTAL'] += 1
         for t in trigs :
-            if not tis.has_key(t) : tis[t]  = 1 
-            else                  : tis[t] += 1 
+            if not tis.has_key(t)   : tis[t]  = 1 
+            else                    : tis[t] += 1 
             
     return SUCCESS
 
@@ -353,7 +358,8 @@ def trgDecs ( self            ,
 #                      'D0_' ,
 #                      lines             ,
 #                      self.l0tistos     ,
-#                      self.tistos       )
+#                      self.l1tistos     ,
+#                      self.l2tistos     )
 #  @endcode
 # 
 #  "lines" here is a dictionary of lines (or regex-patterns) with
@@ -403,7 +409,8 @@ def trgDecs ( self            ,
 #                      'B0_' ,
 #                      self.lines['B']   ,
 #                      self.l0tistos     ,
-#                      self.tistos       )
+#                      self.l1tistos     ,
+#                      self.l2tistos     )
 #  @endcode
 #
 #
@@ -423,7 +430,8 @@ def tisTos ( self              ,
              label             , 
              lines             , 
              l0tistos  = None  ,
-             tistos    = None  ,
+             l1tistos  = None  ,
+             l2tistos  = None  ,
              verbose   = False ) :
     """
     Fill TisTos information into n-tuple
@@ -434,7 +442,8 @@ def tisTos ( self              ,
                     'd0_' ,
                     self.lines ['D0'] , 
                     self.l0tistos     ,
-                    self.tistos       )
+                    self.l1tistos     ,
+                    self.l2tistos     )
     
 
   
@@ -481,7 +490,8 @@ def tisTos ( self              ,
                           'B0_' ,
                           self.lines['B']   , 
                           self.l0tistos     ,
-                          self.tistos       )
+                          self.l1tistos     ,
+                          self.l2tistos     )
 
         ...
         return SUCCESS
@@ -498,7 +508,8 @@ def tisTos ( self              ,
     if hasattr ( p , 'particle' ) :  p = p.particle()
     
     if not l0tistos and hasattr ( self , 'l0tistos' ) : l0tistos = self.l0tistos
-    if not   tistos and hasattr ( self ,   'tistos' ) :   tistos = self.  tistos
+    if not l1tistos and hasattr ( self , 'l1tistos' ) : l1tistos = self.l1tistos
+    if not l2tistos and hasattr ( self , 'l2tistos' ) : l2tistos = self.l2tistos
     #
 
     #
@@ -518,7 +529,7 @@ def tisTos ( self              ,
     l2_phys = TisTosTob ()  ## physics 
     l2_glob = TisTosTob ()  ## global 
     ## 
-    if p and l0tistos and tistos : 
+    if p and l0tistos and l1tistos and l2tistos : 
 
         #
         ## start actual Tis/Tos/Tob'ing
@@ -537,24 +548,24 @@ def tisTos ( self              ,
         #
         ## L1
         #
-        tistos   . setTriggerInput ( lines [ 'Hlt1TOS'    ]  )
+        l1tistos . setTriggerInput ( lines [ 'Hlt1TOS'    ]  )
         l1_tos   =   tistos.tisTosTobTrigger ()
-        tistos   . setTriggerInput ( lines [ 'Hlt1TIS'    ]  )
+        l1tistos . setTriggerInput ( lines [ 'Hlt1TIS'    ]  )
         l1_tis   =   tistos.tisTosTobTrigger ()
-        tistos   . setTriggerInput ( lines [ 'Hlt1Phys'   ]  )
+        l1tistos . setTriggerInput ( lines [ 'Hlt1Phys'   ]  )
         l1_phys  =   tistos.tisTosTobTrigger () 
-        tistos   . setTriggerInput ( lines [ 'Hlt1Global' ]  )
+        l1tistos . setTriggerInput ( lines [ 'Hlt1Global' ]  )
         l1_glob  =   tistos.tisTosTobTrigger () 
         #
         ## L2
         #
-        tistos   . setTriggerInput ( lines [ 'Hlt2TOS'    ]  )
+        l2tistos . setTriggerInput ( lines [ 'Hlt2TOS'    ]  )
         l2_tos   =   tistos.tisTosTobTrigger ()
-        tistos   . setTriggerInput ( lines [ 'Hlt2TIS'    ]  )
+        l2tistos . setTriggerInput ( lines [ 'Hlt2TIS'    ]  )
         l2_tis   =   tistos.tisTosTobTrigger ()
-        tistos   . setTriggerInput ( lines [ 'Hlt2Phys'   ]  )
+        l2tistos . setTriggerInput ( lines [ 'Hlt2Phys'   ]  )
         l2_phys  =   tistos.tisTosTobTrigger () 
-        tistos   . setTriggerInput ( lines [ 'Hlt2Global' ]  )
+        l2tistos . setTriggerInput ( lines [ 'Hlt2Global' ]  )
         l2_glob  =   tistos.tisTosTobTrigger ()
         
     #
@@ -613,11 +624,15 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
     """
     
     ## locate tools 
-    self.l0tistos  = self.tool ( cpp.ITriggerTisTos , 'L0TriggerTisTos' , parent = self )  
-    self.tistos    = self.tool ( cpp.ITriggerTisTos ,   'TriggerTisTos' , parent = self )
-    
-    self.tistos   . setOfflineInput()
+    self.l0tistos  = self.tool ( cpp.ITriggerTisTos ,   'L0TriggerTisTos' , parent = self )  
+    #self.l1tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt1TriggerTisTos' , parent = self )
+    #self.l2tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt2TriggerTisTos' , parent = self )
+    self.l1tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
+    self.l2tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
+
     self.l0tistos . setOfflineInput()
+    self.l1tistos . setOfflineInput()
+    self.l2tistos . setOfflineInput()
     
     self.triggers = {}
     
@@ -685,7 +700,8 @@ def _tisTosFini ( self , triggers = None ) :
     trgDecs ( self , triggers )
 
     if hasattr ( self , 'l0tistos' ) : self . l0tistos = None
-    if hasattr ( self ,   'tistos' ) : self .   tistos = None
+    if hasattr ( self , 'l1tistos' ) : self . l1tistos = None
+    if hasattr ( self , 'l2tistos' ) : self . l2tistos = None
 
     if not hasattr ( self , 'lines' ) :
         self.Warning ( 'No LINES are defined ' , SUCCESS )
