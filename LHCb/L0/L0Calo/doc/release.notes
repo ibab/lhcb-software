@@ -2,6 +2,8 @@
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
+! 2014-03-01 - Patrick Robbe
+ - Add classes to emulate the LLT Calo, LLTCaloAlg and LLTTriggerCard
 
 !========================= L0Calo v11r12 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
