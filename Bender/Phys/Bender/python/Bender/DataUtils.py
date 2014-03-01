@@ -118,7 +118,10 @@ def inCastor ( fname            ,
 
 
 # =============================================================================
-_eos    = 'root://eoslhcb.cern.ch//eos'
+_eos_   = 'root://eoslhcb.cern.ch//eos'
+_eos_0  = 'root://eoslhcb.cern.ch/'
+_eos_p  = '/eos/lhcb/grid/prod'
+_eos_u  = '/eos/lhcb/grid/user'
 _eosls  = 'eos_ls %s '
 # =============================================================================
 ## check the presence of the file in (CERN) EOS
@@ -143,14 +146,14 @@ _eosls  = 'eos_ls %s '
 #  @param fname   filename
 #  @param prefix  prefix to be used
 #
-def inEOS ( fname             ,
-            prefix = _eos     ,
-            eosls  = _eosls   ) :
+def inEOS ( fname            ,
+            prefix  = _eos_0 ,
+            eosls   = _eosls ) :
     """
     check if the file is accessible from castor:
     
     >>> lfn = '/lhcb/Collisons11/......'
-    >>> ok = inEOS ( lfn ) ## check CERN Grid Castor storage 
+    >>> ok = inEOS ( lfn   ) ## check CERN Grid Castor storage 
     
     >>> fname = '/eos/...'
     >>> ok = inEOS ( fname ) ## check the explicit location
@@ -158,9 +161,16 @@ def inEOS ( fname             ,
     """
     # remove full
     if 0 == fname.find ( prefix ) : fname = fname [ prefix.size() : ]
+    #
     # check short prefix
-    if 0 != fname.find ( '/eos' ) : fname = '/eos' + fname 
-    ##
+    if   0 == fname.find ( '/lhcb/user/' ) :
+        fname = _eos_u + fname
+    elif 0 == fname.find ( '/lhcb/LHCb/' ) or 0 == fname.find ( '/lhcb/MC/' ) or 0 == fname.find ( '/lhcb/validation/' ) :
+        fname = _eos_p + fname
+    elif 0 == fname.find (  'eos' ) : fname = '/'  + fname 
+    elif 0 != fname.find ( '/eos' ) :
+        fname = '/eos' + fname 
+    ##    
     import os 
     from subprocess import Popen, PIPE
     p   = Popen( [ 'eos_ls' , fname ] ,
@@ -171,13 +181,15 @@ def inEOS ( fname             ,
     #
     ## require empty stder
     #
-    for l in stderr : return False   ## RETURN 
+    for l in stderr : return ''   ## RETURN 
     #
     ## Require non-empty std-out:
     #
-    for l in stdout : return True    ##  RETURN 
-    
-    return False 
+    fname = prefix + fname 
+    #
+    for l in stdout : return fname    ##  RETURN 
+    #
+    return ''
 
 # =============================================================================
 ## check the validity of GRID proxy 
@@ -307,17 +319,22 @@ def extendfile1 ( filename , castor = False , grid = None ) :
                 filename = res
                 return filename                         ## RETURN 
 
-        if   castor and inCastor ( filename ) :
+
+        #
+        ## check the file in EOS
+        #
+        eos = inEOS ( filename ) if castor else ''
+
+        if   castor and eos     : filename = 'PFN:' + eos
+        elif castor and inCastor ( filename ) :
             filename = extendfile1 ( '/castor/cern.ch/grid' + filename , castor , grid )
-        elif castor and inEOS    ( filename ) :
-            filename = 'PFN:' + _eos + filename 
         else : 
             filename = 'LFN:' + filename
 
-    elif 0 == filename.find ( 'eos/lhcb/data/'       ) : 
+    else:
         
-        if castor and inEOS  ( filename ) :
-            filename = 'PFN:' + _eos + filename[4: ]  
+        eos = inEOS ( filename )
+        if eos : filename = 'PFN:'+ eos
         
     ##
     return filename

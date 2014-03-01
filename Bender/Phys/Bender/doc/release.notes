@@ -24,6 +24,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-03-01 - Vanya Belyaev
+ - DataUtils:
+   prepare to the new EOS structure of directories 
+
 ! 2014-02-03 - Vanya Belyaev
  - DataUtils:  substitute 'castor:' with 'root:'
 
