@@ -3039,6 +3039,15 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 {
   m_phis.add ( phi1 ) ;
   m_iterator = m_phis.createIterator() ;
+  //
+  const RooRealVar* v = dynamic_cast<RooRealVar*>(&x) ;
+  if ( 0 != v ) 
+  {
+    const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
+    const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
+    m_positive = Gaudi::Math::Positive( 1 , xmin , xmax ) ;
+  }
+  //
 }
 // ============================================================================
 //  PhaseSpace x poly
@@ -3063,6 +3072,15 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
   m_iterator = m_phis.createIterator() ;
+  //
+  const RooRealVar* v = dynamic_cast<RooRealVar*>(&x) ;
+  if ( 0 != v ) 
+  {
+    const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
+    const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
+    m_positive = Gaudi::Math::Positive ( 2 , xmin , xmax ) ;
+  }
+  //
 }
 // ============================================================================
 //  PhaseSpace x poly
@@ -3089,6 +3107,15 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   m_phis.add ( phi2 ) ;
   m_phis.add ( phi3 ) ;
   m_iterator = m_phis.createIterator() ;
+  //
+  const RooRealVar* v = dynamic_cast<RooRealVar*>(&x) ;
+  if ( 0 != v ) 
+  {
+    const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
+    const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
+    m_positive = Gaudi::Math::Positive ( 3 , xmin , xmax ) ;
+  }
+  //
 }
 // ============================================================================
 //  PhaseSpace x poly
@@ -3120,6 +3147,14 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
     m_phis.add ( *coef ) ;
   }
   delete tmp ;
+  //
+  const RooRealVar* v = dynamic_cast<RooRealVar*>(&x) ;
+  if ( 0 != v ) 
+  {
+    const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
+    const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
+    m_positive = Gaudi::Math::Positive ( phis.getSize() , xmin , xmax ) ;
+  }
   //
   m_iterator = m_phis.createIterator() ;
 }
