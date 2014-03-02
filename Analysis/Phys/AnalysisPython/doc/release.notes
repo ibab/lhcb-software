@@ -5,11 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
-! 2014-03-02 - Vanya Belyaev
- - modify a bit parameterizatio of PhaseSpacePol to increase 
-   the effective sensitivity to polinomial coeffcients
+!========================= AnalysisPython v2r26 2014-03-02 =========================
 
-!========================= AnalysisPython v2r26 2014-02-20 =========================
+! 2014-03-02 - Vanya Belyaev
+ - Modify a bit parameterization of PhaseSpacePol to increase 
+   the effective sensitivity to polinomial coefficients.
 
 ! 2014-02-04 - Vanya Belyaev
  - add the accessor functions for leaves and branches 
