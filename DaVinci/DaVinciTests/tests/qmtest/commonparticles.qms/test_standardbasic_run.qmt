@@ -5,7 +5,7 @@
 <argument name="timeout"><integer>6400</integer></argument>
 <argument name="args"><set>
   <text>../options/CommonParticles/DVTestStandardBasic.py</text>
-  <text>../options/dimuon_testfile.py</text>
+  <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision12-4TeV-Reco14-FULLDST.py</text>
 </set></argument>
 <argument name="prerequisites"><set>
   <tuple><text>commonparticles.test_standardbasic_init</text><enumeral>PASS</enumeral></tuple>
@@ -17,7 +17,7 @@ DaVinciInitAlg                                              SUCCESS 500 events p
 findReferenceBlock("""
 StdNoPIDsUpPions                                            SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       500 |        499 |(  99.8000 +- 0.199800 )%|   -------   |   -------   |
+  |*"#accept"                                       |       500 |        492 |(  98.4000 +- 0.561142 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
 </text></argument>

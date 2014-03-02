@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+
+! 2014-03-02 - Stefano Perazzini
+ - Updated qmtests for commonparticles
+
 ! 2014-03-01 - Stefania Vecchi
   updated  tagging.qms/test_tag_mc12.qmt 
 
