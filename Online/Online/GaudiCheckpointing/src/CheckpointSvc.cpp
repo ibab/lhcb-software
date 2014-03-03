@@ -307,7 +307,7 @@ CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   declareProperty("UtgidPattern",           m_utgid         = "%N_%T_%02d");
   declareProperty("ExitAfterCheckpoint",    m_exit          = 1);
   declareProperty("KillChildren",           m_killChildren  = false);
-  declareProperty("FirstChild",             m_firstChild    = 0);
+  declareProperty("FirstChild",             m_firstChild    = 1);
   declareProperty("ChildWait",              m_childWait     = 0);
   declareProperty("ChildSleep",             m_childSleep    = 250);
   declareProperty("ForceUtgid",             m_forceUTGID    = 0);
@@ -566,7 +566,7 @@ int CheckpointSvc::parseRestartOptions()    {
      	sc = setProperties();
 	if ( sc.isSuccess() ) {
 	  RTL::RTL_reset();
-	  string utgid = buildChildUTGID(0);
+	  string utgid = buildChildUTGID(m_firstChild-1);
 	  checkpointing_set_utgid(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
