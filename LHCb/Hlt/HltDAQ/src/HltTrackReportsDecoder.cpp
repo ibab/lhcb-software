@@ -89,16 +89,27 @@ StatusCode HltTrackReportsDecoder::execute() {
     return Error(" No RawEvent found at any location. No HltTracks created.");
   }  
 
+  // check if the container is already present
+  
+ 
   // create output container and put it on TES
-  LHCb::Tracks* outputTracks = new LHCb::Tracks();
+  LHCb::Tracks* outputTracks = NULL;
   try {
-    put( outputTracks, m_outputLocation );
+    outputTracks=getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_outputLocation);
+    //put( outputTracks, m_outputLocation );
   }
   catch(GaudiException ex) {
     warning() << "Failed to create output location " <<  m_outputLocation << endmsg;
     warning() << ex.message() << endmsg;
     return StatusCode::FAILURE;
   }
+
+  if(outputTracks->size()>0) {
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "outputLocation already contains tracks. Skipping decoding." << endmsg;
+    return StatusCode::SUCCESS;
+  } 
+
 
   // ----------------------------------------------------------
   // get the bank from RawEvent
