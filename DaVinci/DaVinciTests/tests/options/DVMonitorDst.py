@@ -12,7 +12,7 @@ from Gaudi.Configuration import *
 #
 # the stuff
 #
-importOptions( "$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py") 
+importOptions("$DAVINCIMONITORSROOT/options/DaVinciMonitoring.py") 
 ##############################################################################
 #
 # Histograms
@@ -23,8 +23,4 @@ DaVinci().HistogramFile = "DVMonitors.root"
 # Most of this will be configured from Dirac
 #
 ##############################################################################
-DaVinci().EvtMax = -1
-
-from PRConfig import TestFileDB
-TestFileDB.test_file_db["brunel-v37r1-sdst"].run(configurable=DaVinci())
-FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']
+DaVinci().EvtMax = 100

@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-03-03 - Chris Jones
+ - Rename io.test_monitor_sdst io.test_monitor_reco14_fulldst and update to 
+   run on a Reco14 FULL.DST.
 
 ! 2014-03-02 - Stefano Perazzini
  - Updated qmtests for commonparticles
