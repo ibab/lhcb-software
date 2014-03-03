@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-03-03 - Marco Clemencic
+ - Changed the namespace used for __Instanitations in the dictionary to avoid
+   clashes in ROOT 6;
+
 !========================= HltBase v14r0 2014-02-20 =========================
 ! 2014-02-18 - Gerhard Raven
  - SelectionContainer0 is now also a specialization of SelectionContainer
