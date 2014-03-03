@@ -5,6 +5,10 @@
 ! Purpose     : LoKi-algorithm related stuff
 ! -----------------------------------------------------------------------------
 
+! 2014-03-03 - Marco Clemencic
+ - Changed the namespace used for __Instanitations in the dictionary to avoid
+   clashes in ROOT 6.
+
 ! 2014-02-25 - Marco Clemencic
  - Fixed wrong guard macro in the dictionary header (required for ROOT 6).
 

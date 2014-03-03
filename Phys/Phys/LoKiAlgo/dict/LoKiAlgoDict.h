@@ -27,7 +27,7 @@
 #pragma warning(disable:191) // type qualifier is meaningless on cast type
 #endif
 // ============================================================================
-namespace
+namespace LoKiAlgoDict
 {
   // ===========================================================================
   struct __Instantiations
