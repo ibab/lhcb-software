@@ -1,5 +1,5 @@
 package DaVinciTests
-version v2r21
+version v2r22
 
 branches doc cmt tests python
 
