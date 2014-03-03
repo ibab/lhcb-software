@@ -4,13 +4,15 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= IncTopoVert v1r3 2014-03-03 =========================
+
 ! 2014-02-20 - Chris Jones
  - Add and FPE Guard for the Minuit call in VertexFunctionToolRootMini.
 
 !========================= IncTopoVert v1r2 2014-01-25 =========================
 
 ! 2014-01-25 - Chris Jones
- - Downgrade warnings when fit fails to 0 instances printed during the 
+ - Downgrade warnings when fit fails to 0 instances printed during the
    event loop (summary at the end) to minimise size of production logs.
  - Protect some more debug messages behind if statements, for CPU eff.
 
@@ -44,7 +46,7 @@
 
 ! 2013-10-17 - Chris Jones
  - Various clean ups ...
-  + Add missing or incorrect calls to bas class initialize() method from 
+  + Add missing or incorrect calls to bas class initialize() method from
     specialized initalize() implementations.
   + fix -pedantic warnings.
 

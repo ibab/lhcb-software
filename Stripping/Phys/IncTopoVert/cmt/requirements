@@ -3,10 +3,10 @@
 # Maintainer : Mathieu Perrin-Terrin
 #============================================================================
 package           IncTopoVert
-version           v1r2
+version           v1r3
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src IncTopoVert
 
@@ -33,7 +33,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library  IncTopoVert    ../src/*.cpp 
+library  IncTopoVert    ../src/*.cpp
 
 #============================================================================
 # define component library link options
