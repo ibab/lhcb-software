@@ -19,7 +19,7 @@ Purpose     : LHCb stripping packages
  - Remove duplicate Hlt2 candidates
 
 * Phys/IncTopoVert
- - Add and FPE Guard for the Minuit call in VertexFunctionToolRootMini
+ - Add an FPE Guard for the Minuit call in VertexFunctionToolRootMini
 
 * Phys/StrippingConf
  - Added ExtraInfoSelections argument to StrippingLine
