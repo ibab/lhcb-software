@@ -3,7 +3,7 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v22r0>2014-02-24 MooreSys v22r0</A></H1><PRE>
+</PRE><H1><A NAME=v22r0>2014-03-03 MooreSys v22r0</A></H1><PRE>
 Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on HLT v22r0, Phys v18r0, Rec v17r0 ... Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
 
 Major Developments:
@@ -29,7 +29,7 @@ Major Developments:
     task #48780
   
   . Moore's options.
-    Moore has lost over half it's options since v14r8, from 52 to 25 different slots.
+    Moore has lost over half it's options since v14r8, from 52 to 24 different slots.
     This campaign makes Moore much simpler to use. Remember:
     - L0App handles L0
     - MooreOnline handles Online configuration
@@ -64,11 +64,13 @@ Added temporary packages:
   . Muon/MuonID suppress warning message during configuration
   . DAQ/DAQSys hande the case where default configurables "Alg/Alg"
     were not recognised as being the same thing as "Alg"
+  . Hlt/HltDAQ to correctly add a track bank to the raw event, and decode it correctly.
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r0
  and
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v22r0
+
 </PRE><H1><A NAME=v21r0>2014-01-10 MooreSys v21r0</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r4 stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2.
 

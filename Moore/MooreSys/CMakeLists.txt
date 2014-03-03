@@ -11,6 +11,7 @@ gaudi_depends_on_subdirs(Hlt/HltMonitor
                          DAQ/DAQSys #TEMPORARY
                          Muon/MuonID #TEMPORARY
                          Det/DDDB #TEMPORARY
+                         Hlt/HltDAQ #TEMPORARY
                          )
 
 
