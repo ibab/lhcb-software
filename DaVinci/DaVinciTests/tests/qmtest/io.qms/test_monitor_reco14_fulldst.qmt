@@ -11,8 +11,8 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-EventLoopMgr         INFO No more events in event selection 
-ApplicationMgr       INFO Application Manager Stopped successfully
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully
 """, stdout, result, causes, signature_offset = 0)
 countErrorLines({"FATAL":0})
 </text></argument>
