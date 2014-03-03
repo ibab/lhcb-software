@@ -36,6 +36,7 @@ equalMeta(Tracks* tracks, Tracks* reftracks){
       LHCb::Track* Tr = (*pItr);
       LHCb::Track* refTr = (*pRefItr);
       result &= ((Tr->type()) == (refTr->type()));
+      result &= ((Tr->flags()) == (refTr->flags()));
       pRefItr++; // don't forget to increment reference iterator 
   }// end loop over tracks
   return result;
@@ -96,6 +97,8 @@ struct ExampleTracks {
     BOOST_TEST_MESSAGE("setup example tracks");
     Track* tr=new Track();
 
+    
+    tr->setFlags(1);
     tr->setType(Track::Velo);
 
     tr->addToLhcbIDs(LHCbID(1));
@@ -104,21 +107,23 @@ struct ExampleTracks {
     m_tracks.add(tr);
 
     tr=new Track();
+    tr->setFlags(1);
     tr->setType(Track::TT);
 
     tr->addToLhcbIDs(LHCbID(2));
     tr->addToLhcbIDs(LHCbID(4));
     tr->addToLhcbIDs(LHCbID(6));
     m_tracks.add(tr);
-    tr=new Track();
 
+    tr=new Track();
+    tr->setFlags(8);
     tr->setType(Track::Long);
      
     tr->addToLhcbIDs(LHCbID(7));
     tr->addToLhcbIDs(LHCbID(11));
     tr->addToLhcbIDs(LHCbID(13));
     tr->addToLhcbIDs(LHCbID(17));
-    m_tracks.add(tr);
+    
     // add a State to this track
     Gaudi::TrackVector v(1,-1,1,-1,1);
 
@@ -145,11 +150,14 @@ struct ExampleTracks {
 
     State Michigan(v,cov,220.,State::ClosestToBeam);
     tr->addToStates(Michigan);
+
+    m_tracks.add(tr);
     
-    // format:                   type nIDs  IDs    nStates States(Loc, z, par)
-    vector<unsigned int> bank = {1,   3,  1,3,5, 0,      
-				 9,   3,  2,4,6, 0,
-				 3   ,4,  7,11,13,17, 2,  // 2 states in this track
+    // format:                   flags nIDs  IDs    nStates States(Loc, z, par)
+    vector<unsigned int> bank = { 1,    3,  1,3,5,    0,      
+			          9,    3,  2,4,6,    0,
+			          3,    4,  7,11,13,17, 
+				                          2,  // 2 states in this track
 				 3 , 2000000, 10000, 4294957296, 100000000, 4194967296, 100, // state at location 3
 				 10488, 10954, 114017543, 118321596, 12247449, 5483, 7777, 5284, // its cov
 				 9912, 7407, 5115, 11911, 9391, 7090, 4968, 
@@ -195,6 +203,7 @@ BOOST_AUTO_TEST_CASE(decode)
   BOOST_CHECK(equalMeta(&tracks,&m_tracks));
 
 }
+
 
 
 BOOST_AUTO_TEST_CASE(en_de_code)

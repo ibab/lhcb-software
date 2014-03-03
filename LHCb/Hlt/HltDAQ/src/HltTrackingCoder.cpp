@@ -43,9 +43,10 @@ encodeTracks(const LHCb::Tracks* tracks,
       LHCb::Track* Tr = (*pItr);
 
       // write meta information
-      // type
-      rawBank.push_back(Tr->type());
+      // flags
+      rawBank.push_back(Tr->flags());
 
+      //
       unsigned int nhits= Tr->nLHCbIDs();
       rawBank.push_back(nhits);
 
@@ -53,8 +54,7 @@ encodeTracks(const LHCb::Tracks* tracks,
       // behold the awesomness of C++11 functional programming
       // here use the C++ "map" functional transform together with a C++ Lambda construct to fill the LHCbIDs into the bank
       transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });
-      
-
+     
       // write states
       // check number of states on track
       const std::vector<LHCb::State*>& states = Tr->states();
@@ -77,9 +77,9 @@ encodeTracks(const LHCb::Tracks* tracks,
 	double p=0;
 	if(state->qOverP() !=0 ) p= 1./state->qOverP();
 	rawBank.push_back((unsigned int)pac.energy(p));
+	//== Get the coded value in case of saturation, to code properly the error later
+	p = pac.energy( (int)rawBank.back() );
 	
-    
-      
       
       // store covariance matrix
       // the method is analogous to the one descibed
@@ -115,10 +115,10 @@ encodeTracks(const LHCb::Tracks* tracks,
        
       } //  end loop over states
 
-
-      //rawBank.push_back(0);
-      //std::copy(rawBank.begin(), rawBank.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
   }
+  //rawBank.push_back(0);
+  //std::copy(rawBank.begin(), rawBank.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
+  
   
   
 }
@@ -136,8 +136,10 @@ decodeTracks(unsigned int* rawBankData,
   //std::cout << "RawBank size = " << nentries << std::endl; 
   unsigned int k=0;
   while(k<nentries){
-    // read type
-    Track::Types type = Track::Types(rawit[k++]);
+   
+    // read flags this also contains the type
+    unsigned int flags = rawit[k++];
+
     // read number of IDs in track
     unsigned int nid= rawit[k++];
     // std::cout << "Nids in track: " <<  nid << std::endl;
@@ -193,10 +195,10 @@ decodeTracks(unsigned int* rawBankData,
       track->addToStates(LHCb::State(par,stateCov,z,loc));
     } // end loop over states
 
-    track->setType(type);
+    track->setFlags(flags);
     tracks->add(track);
     //std::cout << "RawBank entry counter k= " << k << std::endl;
-    // std::cout << "Decoded track: \n" << *track << std::endl;
+    //std::cout << "Decoded track: \n" << *track << std::endl;
   }
 
   return tracks->size();
