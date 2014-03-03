@@ -3,6 +3,27 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v8r0 2014-03-03 =========================
+
+* Version based on new Phys v18r0 and Analysis v12r0
+
+* Phys/StrippingSelections, Phys/StrippingSettings, Phys/StrippingArchive
+  updated to the latest versions used in Stripping20r{0,1}p3
+
+* Phys/CommonParticles
+ - Heavily changed StdLooseDetachedTau list for B->tautau, B->taumu in
+   StdLooseDetachedTau.py
+
+* Phys/DisplVertices
+ - Fix the null pointer daughter particle created by some TCKs
+ - Remove duplicate Hlt2 candidates
+
+* Phys/IncTopoVert
+ - Add and FPE Guard for the Minuit call in VertexFunctionToolRootMini
+
+* Phys/StrippingConf
+ - Added ExtraInfoSelections argument to StrippingLine
+
 !========================= StrippingSys v7r5 2014-02-22 =========================
 
 ! 2014-02-22 - Stefano Perazzini
@@ -23,7 +44,7 @@ Purpose     : LHCb stripping packages
   - Add new files StdJets.py, StandardJets.py, StdParticleFlow.py
 
 * Phys/StrippingSelections
-  - Various small changes, including new hadronic Xi_b lines and modifying some 
+  - Various small changes, including new hadronic Xi_b lines and modifying some
     lines to use N<x>BodyDecays algo.
 
 ! 2013-11-27 - Marco Cattaneo
@@ -52,7 +73,7 @@ Purpose     : LHCb stripping packages
   - Many changes for S20rXp2
   - Downgrade "new configuration" msgs from WARNING to DEBUG
 
-* Phys/StrippingArchive 
+* Phys/StrippingArchive
   - Add archive for S20rXp2
 
 !========================= StrippingSys v7r1 2013-08-02 =========================
@@ -63,7 +84,7 @@ Purpose     : LHCb stripping packages
   - Added "MC12TuneV2" tuning to ANNPID
 
 * Phys/StrippingArchive
-  - Backport fix for inappropriate downstream Muon PID TES locations in 
+  - Backport fix for inappropriate downstream Muon PID TES locations in
     StrippingTrackEffDownMuon.py to the various Stripping20rXpY archives.
 
 * Phys/StrippingConf
@@ -71,11 +92,11 @@ Purpose     : LHCb stripping packages
 
 * Phys/StrippingSelections
   - Same Muon TES fix as in StrippingArchive above
-  - Adding EnableFlavourTagging = True to a few lines 
+  - Adding EnableFlavourTagging = True to a few lines
 
 * Phys/StrippingSettings
   - Some late changes to settings for Stripping20r3
-  - Created scratch LineConfigDictionaries_XXX.py files for the dictionaries 
+  - Created scratch LineConfigDictionaries_XXX.py files for the dictionaries
     of Stripping20r{0,1}p2
 
 !========================= StrippingSys v7r0 2013-06-14 =========================
@@ -88,9 +109,9 @@ Purpose     : LHCb stripping packages
   - Fixed StdV0FromBrunel
 
 * Phys/DisplVertices
-  - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to 
+  - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to
     candidate z, in order to be able to use PVs as candidates.
-  - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' 
+  - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks'
     for displaced vertex candidate
 
 * Phys/MvaPreSelB2DH
@@ -101,18 +122,18 @@ Purpose     : LHCb stripping packages
 
 * Phys/StripArchive
   - Add StrippingArchive entry for S20r2. This was missing from STRIPPING v6r2p6.
-  - No use of Phys/NeuroBayesTools in v6r2p7. 
+  - No use of Phys/NeuroBayesTools in v6r2p7.
 
 !========================= StrippingSys v6r2p6 2013-05-22 =========================
 
 * Phys/StrippingSelections and Phys/StrippingSettings
   - New lines and dictionaries for Stripping20r2, the stripping of 2.76TeV data
- 
+
 !========================= StrippingSys v6r6 2013-05-07 =========================
 
 * Phys/StrippingSelections
   - Includes latest updates
-  - Also picking up bugfixes included in Stripping v6r2p5 
+  - Also picking up bugfixes included in Stripping v6r2p5
 
 !========================= StrippingSys v6r2p5 2013-05-07 =========================
 
@@ -125,29 +146,29 @@ Patch release for Stripping20r0p1 (2012 incremental restripping)
 !========================= StrippingSys v6r2p4 2013-04-22 =========================
 
 * Phys/StrippingSelections
-  - Many changes for Stripping20r0p1 and Stripping20r1p1. Also some lines for the 
-    2.76TeV stripping. 
+  - Many changes for Stripping20r0p1 and Stripping20r1p1. Also some lines for the
+    2.76TeV stripping.
 
 * Phys/StrippingSettings
   - Final settings for Stripping20r0p1 and Stripping20r1p1.
- 
+
 * Phys/StrippingArchive
   - Add Stripping 20r0p1
 
 !========================= StrippingSys v6r5 2013-04-05 =========================
 
-* Phys/CommonParticles: 
+* Phys/CommonParticles:
   - Removed mass cut in StdLooseDetachedDiElectron
   - Added StdLooseDownMuons
-  - fixed StdV0FromBrunel 
+  - fixed StdV0FromBrunel
 
 * Phys/DisplVertices
-  - Fix bugs and extend matter veto. 
+  - Fix bugs and extend matter veto.
 
 * Phys/StrippingSelections
-  Many changes for Stripping20r0p1 and Stripping20r1p1: 
+  Many changes for Stripping20r0p1 and Stripping20r1p1:
 
-* Phys/StrippingSettings 
+* Phys/StrippingSettings
   Preliminary configuration of Stripping20r0p1 and Stripping20r1p1
 
 * Phys/TMVASelections
@@ -183,20 +204,20 @@ Patch release for Stripping20r0p1 (2012 incremental restripping)
 
 !========================= StrippingSys v6r3 2012-11-30 =========================
 
-Development release. 
+Development release.
 
-* Phys/CommonParticles: 
+* Phys/CommonParticles:
   Improve diElectron vertexing for DD configuration (new settings comes with
     updated DiElectronMaker)
 
 * Phys/StrippingAlgs
   Minor cleanup
 
-* Phys/StrippingConf 
+* Phys/StrippingConf
   Change default TES prefix for DecReports fromstream-dependent to 'Strip', typos fixed.
 
-* Phys/StrippingSelections 
-  Many fixed for Stripping20r1 
+* Phys/StrippingSelections
+  Many fixed for Stripping20r1
 
 * Phys/StrippingSettings
   Add preliminary Stripping20r1 dictionary
@@ -210,37 +231,37 @@ Development release.
 
 !========================= StrippingSys v6r2p1 2012-09-14 =========================
 
-! 2012-09-14 - Anton Poluektov 
+! 2012-09-14 - Anton Poluektov
   - Patch release after Stripping20 validation, to be used for production
-  - Two minor updates in StrippingStrangeBaryons and StrippingBd2DstarMuNu 
+  - Two minor updates in StrippingStrangeBaryons and StrippingBd2DstarMuNu
     selections and settings, updated Stripping20 in StrippingArchive
 
 !========================= StrippingSys v6r2 2012-09-08 =========================
 
-! 2012-09-08 - Anton Poluektov 
-  - More updates in StrippingSettings and StrippingSelections to reduce retention and 
+! 2012-09-08 - Anton Poluektov
+  - More updates in StrippingSettings and StrippingSelections to reduce retention and
     timing
   - Fix warning in DisplVertices
   - Stripping20 in StrippingArchive
 
-! 2012-09-01 - Anton Poluektov 
+! 2012-09-01 - Anton Poluektov
   Preliminary release for Stripping20 preparation
-   - StrippingSelections, StrippingSettings - new lines, updates to reduce timing and 
+   - StrippingSelections, StrippingSettings - new lines, updates to reduce timing and
      retention (including usage of ghost probability cut)
    - CommonParticles
       - fix typo in StdVeryLooseAllPhotons name
       - Removed StdVeryLooseKs.py
       - Removed lines related to StdVeryLooseKs from StandardV0.py
-      - Added StandardTau and StandardDipion to StandardIntermediate 
-   - StrippingConf 
-      - Prevent instantiating the lines with zero prescale. 
+      - Added StandardTau and StandardDipion to StandardIntermediate
+   - StrippingConf
+      - Prevent instantiating the lines with zero prescale.
 
 !========================= StrippingSys v6r1 2012-07-27 =========================
 
-! 2012-07-27 - Anton Poluektov 
-  Release for Stripping19c. 
+! 2012-07-27 - Anton Poluektov
+  Release for Stripping19c.
   - StrippingSelections
-     * Fixes for setting VertexFitters property of CombineParticles instead of ParticleCombiners. 
+     * Fixes for setting VertexFitters property of CombineParticles instead of ParticleCombiners.
      * Fix a small configuration issue in StrippingTrackEffDownMuon
   - StrippingConf - Print warning if public tool has non-default configuration
   - StrippingSettings, StrippingArchive for Stripping19c
@@ -257,8 +278,8 @@ Development release.
 
 !======================= StrippingSys v5r0 2012-06-28 =========================
 
-! 2012-06-28 - Anton Poluektov 
-  Release for Stripping19b. 
+! 2012-06-28 - Anton Poluektov
+  Release for Stripping19b.
   - Phys/CommonParticles v8r9
     . Updated StdVeryLooseAllPhotons, StdLooseDiElectron
     . New StdKsFromV0, StdAllLoose(Tight)GammaConversion.py, StdAllTightSymGammaConversion.py
@@ -269,7 +290,7 @@ Development release.
   - Phys/StrippingArchive v1r12
     . Add Stripping19b
   - Phys/StrippingSelections v3r14
-    . New selections: 
+    . New selections:
       * StrippingForTriggerValidation
       * Betac -> phi p
       * StrippingB2XEta, StrippingBu2KSh, StrippingBetac2PhiP
@@ -277,11 +298,11 @@ Development release.
       * StrippingJPsiForSL
       * Bs->KSKS
       * studies of charm + W+ associative production
-    . Many fixes in existing lines. 
-    . Updated test samples. 
+    . Many fixes in existing lines.
+    . Updated test samples.
    - Phys/StrippingSettings v2r14
     . Dictionary for Stripping19b
-   - Phys/TMVASelections v1r2 
+   - Phys/TMVASelections v1r2
     . Use getIDVAlgorithm instead of getDVAlgorithm
 
 !======================= StrippingSys v4r3p1 2012-05-03 =========================
@@ -295,14 +316,14 @@ Development release.
 
 !========================= StrippingSys v4r3 2012-04-27 =========================
 
-! 2012-04-27 - Anton Poluektov 
+! 2012-04-27 - Anton Poluektov
   - Fix test reference. Retag as v4r3
 
   - Release v4r3 for Stripping19
     * CommonParticles v8r8: added StdTightDplus2PPP
     * StrippingConf v4r5: Reduce output from stripping sequencers
-    * StrippingSelections v3r13: 
-     - A lot of modifications to improve the timing in 
+    * StrippingSelections v3r13:
+     - A lot of modifications to improve the timing in
       . StrippingHeavyBaryons
       . StrippingBs2KKhh
       . Radiative lines
@@ -313,53 +334,53 @@ Development release.
       . Beauty2Charm
       . StrippingDisplVertices
       . StrippingCharmFromBSemi.py
-      . StrippingBs2ChicPhi_Chic2KKPiPi, StrippingBs2ChicPhi_Chic2PiPi, 
+      . StrippingBs2ChicPhi_Chic2KKPiPi, StrippingBs2ChicPhi_Chic2PiPi,
         Stripping Bs2EtacPhi, StrippingB2EtacKst, StrippingB2ChicK
       . StrippingBs2KSKS.py
       . StrippingBeauty2XGamma
       . B2XMuMu
       . StrippingD2XMuMuSS.py
       . StrippingBu2K1MuMu.py
-     - New lines: 
+     - New lines:
       . StrippingD2XGamma.py
       . StrippingDstarD2hhpi0.py
-    * StrippingSettings v2r13: 
+    * StrippingSettings v2r13:
      - Added Stripping19 config dictionary with tighter cuts to reduce timing
     * StrippingArchive v1r10
      - Added Stripping19 archive
 
 !========================= StrippingSys v4r2 2012-04-01 =========================
 ! 2012-04-01 - Jibo He
- - v4r2 for Stripping18 
-  . Only StrippingSelections, StrippingSettings and StrippingArchive have been changed 
+ - v4r2 for Stripping18
+  . Only StrippingSelections, StrippingSettings and StrippingArchive have been changed
 
 !========================= StrippingSys v4r1 2012-03-01 =========================
 
-! 2012-03-02 - Anton Poluektov 
+! 2012-03-02 - Anton Poluektov
   - Update test reference
 
-! 2012-03-01 - Anton Poluektov 
-  - Update requirements. 
-  - Version for PreStripping18. 
+! 2012-03-01 - Anton Poluektov
+  - Update requirements.
+  - Version for PreStripping18.
 
 !========================= StrippingSys v4r0 2012-02-10 =========================
 ! 2012-02-13 - Marco Cattaneo
  - Add TMVASelections package
 
 ! 2012-02-11 - Jibo He
- - Updated configurables.ref, this time only with Stripping env. 
+ - Updated configurables.ref, this time only with Stripping env.
 
 ! 2012-02-11 - Jibo He
  - Updated versions of packages
- - Updated configurables.ref 
+ - Updated configurables.ref
 
 </PRE><H1><A NAME=v3r1p2>2011-12-15 StrippingSys v3r1p2</A></H1><PRE>
 Patch release. Identical to v3r1, just built against LHCb v33r2 and Lbcom v11r2.
 
-! 2011-11-29 - Anton Poluektov 
+! 2011-11-29 - Anton Poluektov
   - Fix tests reference, 2nd attempt
 
-! 2011-11-28 - Anton Poluektov 
+! 2011-11-28 - Anton Poluektov
   - Fix tests reference
 
 </PRE><H1><A NAME=v3r1p1>2011-10-01 StrippingSys v3r1p1</A></H1><PRE>
@@ -439,9 +460,9 @@ For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Stripping&version=v2r3p1
 
 </PRE><H1><A NAME=v2r3>2011-04-29 StrippingSys v2r3 </A></H1><PRE>
-! 2011-04-08 - Anton Poluektov 
- - Add Phys/StrippingTCK package: python shell to query stripping configuration. 
- - Some other small changes. 
+! 2011-04-08 - Anton Poluektov
+ - Add Phys/StrippingTCK package: python shell to query stripping configuration.
+ - Some other small changes.
  - Tracking lines still excluded.
 
 

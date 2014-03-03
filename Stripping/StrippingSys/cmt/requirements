@@ -1,40 +1,40 @@
 package  StrippingSys
-version  v7r4
+version  v8r0
 
 branches doc cmt tests
 
 ####################################################################
 # Framework
-use  CommonParticles             v8r17    Phys   # Patrick Koppenburg, WGs
+use  CommonParticles             v8r18    Phys   # Patrick Koppenburg, WGs
 use  StandardParticles           v2r2     Phys   # Juan Palacios
 
 ####################################################################
 # Internal Packages
-use  DisplVertices 		 v7r16	  Phys	 # Neal Gauvin
+use  DisplVertices 		 v7r18	  Phys	 # Neal Gauvin
 use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
-use  IncTopoVert                 v1r2     Phys   # Mathieu Perrin-Terrin
+use  IncTopoVert                 v1r3     Phys   # Mathieu Perrin-Terrin
 
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r12    Phys   # Anton Poluektov
-use  StrippingArchive            v1r21p3  Phys   # Stripping coordinators
-use  StrippingConf               v4r9     Phys   # Anton Poluektov
+use  StrippingArchive            v1r22    Phys   # Stripping coordinators
+use  StrippingConf               v4r10     Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
-use  StrippingSelections         v3r31    Phys   # Stripping coordinators
-use  StrippingSettings           v2r29    Phys   # Stripping coordinators
+use  StrippingSelections         v3r33    Phys   # Stripping coordinators
+use  StrippingSettings           v2r30    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r8     Phys   # Juan Palacios
 
 ####################################################################
 
-use  TMVASelections              v1r6     Phys   # Stripping coordinators 
+use  TMVASelections              v1r7     Phys   # Stripping coordinators
 
 ####################################################################
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 
 # Allow the generation of the SAM QMTest
