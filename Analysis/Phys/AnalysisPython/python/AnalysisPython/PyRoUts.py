@@ -37,6 +37,7 @@ __all__     = (
     'funID'           , ## construct the (global) unique ROOT identifier
     'hID'             , ## construct the (global) unique ROOT identifier
     'histoID'         , ## construct the (global) unique ROOT identifier
+    'dsID'            , ## construct the (global) unique ROOT identifier
     #
     'VE'              , ## Gaudi::Math::ValueWithError
     'ValueWithError'  , ## Gaudi::Math::ValueWithError
@@ -125,6 +126,8 @@ def histoID () : return rootID  ( 'h_' )
 def histID  () : return histoID ( )
 ## global ROOT identified for histogram objects 
 def hID     () : return histoID ( )
+## global ROOT identified for dataset objects 
+def dsID    () : return rootID  ( 'ds_' )
 
 # =============================================================================
 # temporary trick, to be removed 

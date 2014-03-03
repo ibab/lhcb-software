@@ -53,12 +53,17 @@ namespace Analysis
     Analysis::Formula* formula () const { return fMyformula ; }
     /// get the formula
     const std::string& cuts    () const { return fMycuts    ; }
+    /// event counter (useless for PROOF, useful for interactive python) 
+    unsigned long long event   () const { return m_event    ; }
     // ========================================================================
   private:
     // ========================================================================
     /// the selection formula 
     std::string        fMycuts    ; 
     Analysis::Formula* fMyformula ;
+    /// event counter 
+    unsigned long long m_event    ; // event counter: useless for PROOF
+    // ========================================================================    
   };
   // ==========================================================================
 } //                                                  end of namespace Analysis 

@@ -25,8 +25,9 @@ Analysis::SelectorWithCuts::SelectorWithCuts
   TTree*             tree , 
   PyObject*          self ) 
   : Analysis::Selector ( tree , self ) 
-  , fMycuts             ( cuts        ) 
-  , fMyformula          ( 0           ) 
+  , fMycuts            ( cuts        ) 
+  , fMyformula         ( 0           ) 
+  , m_event            ( 0           )            
 {
   if ( 0 != tree ) 
   { fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ; }
@@ -49,6 +50,8 @@ Bool_t Analysis::SelectorWithCuts::Notify()
 // ============================================================================
 void Analysis::SelectorWithCuts::Init ( TTree* tree ) 
 {
+  /// reset the event counter 
+  m_event = 0 ;
   //
   if ( 0 != fMyformula ) { delete fMyformula ; fMyformula = 0 ; }
   fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ;
@@ -78,6 +81,8 @@ void Analysis::SelectorWithCuts::SlaveBegin ( TTree* tree )
 // ============================================================================
 Bool_t Analysis::SelectorWithCuts::Process      ( Long64_t entry ) 
 {
+  /// increment the event counter 
+  ++m_event  ;
   //
   if ( 0 != fMyformula && fMyformula->GetNdim() && !fMyformula ->evaluate() ) 
   { return false ; }

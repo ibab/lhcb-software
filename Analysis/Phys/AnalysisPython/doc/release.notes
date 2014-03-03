@@ -5,6 +5,20 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-03-03 - Vanya Belyaev
+
+ - new PyTMVA module
+   very simple interface to major TMVA classes: 
+    - Trainer (a bit simplified version of the original code by Abert Puig)
+    - Reader  (not efficinent, but generic enough)
+
+ - new SelectorWithVars module 
+   *generic* py-selector to fill RooDataSet from tree/chain 
+   actually it is a bit extended verison of the original code by Alexander Baranov 
+
+ - modified PySelectorWithCuts.cpp
+   add event counter (it makes much better printout of progress-bar) 
+
 !========================= AnalysisPython v2r26 2014-03-02 =========================
 
 ! 2014-03-02 - Vanya Belyaev
