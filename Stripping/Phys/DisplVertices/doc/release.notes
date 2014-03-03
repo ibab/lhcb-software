@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+!========================= DisplVertices v7r18 2014-03-03 =========================
+
 ! 2014-02-14 - Victor Coco
  - Fix the null pointer daughter particle created by some TCKs
 
@@ -62,11 +64,11 @@
  - Remove unused data members (clang warning).
 
 ! 2013-05-28 - Veerle Heijne
- - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to candidate z, 
+ - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to candidate z,
    in order to be able to use PVs as candidates.
 
 ! 2013-05-15 - Veerle Heijne
- - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' for 
+ - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' for
    displaced vertex candidate
 
 !========================= DisplVertices v7r15 2013-04-05 =========================
@@ -105,7 +107,7 @@
 !========================= DisplVertices v7r10 2012-07-27 =========================
 
 ! 2012-08-07 - Maurizio Martinelli
- - modified the UseExtendedMatterVeto flag in MatterVetoTool to be consistent with	
+ - modified the UseExtendedMatterVeto flag in MatterVetoTool to be consistent with
    LHCb standards.
 
 ! 2012-07-26 - Pieter David
@@ -147,10 +149,10 @@
  - Update DisplVertices
 
 ! 2011-04-12 - Neal Gauvin
- - Added new features for SaveTuple. 
+ - Added new features for SaveTuple.
  - Added new cut : BackToBack = dphi to request for at least one pair of
-   candidates that are back to back (azimuthal angle > dphi) with respect to 
-   the upstream PVs. 
+   candidates that are back to back (azimuthal angle > dphi) with respect to
+   the upstream PVs.
 
 !========================== DisplVertices v7r5 2011-03-28 ====================
 
@@ -164,7 +166,7 @@
 - Split CopyDownstreamTracks.cpp to a headrer and a source file
 
 ! 2011-02-24 - Victor Coco
-- Modification of CopyDownstreamTracks to make it a GaudiAlgorithm. Change 
+- Modification of CopyDownstreamTracks to make it a GaudiAlgorithm. Change
   i/o to Inputs Output to mimic DVALgorithm
 
 ! 2011-02-24 - Victor Coco
@@ -177,7 +179,7 @@
 !========================== DisplVertices v7r3 2011-01-21 ====================
 
 ! 2011-01-14 - Victor Coco
--  Modification to the way candidates are saved to the TES 
+-  Modification to the way candidates are saved to the TES
 
 SaveTuple : save the SPD multiplicity applied in the hadron and electron triggers.
 
@@ -213,7 +215,7 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
  - Added FromPreyInfo Rcut method in DisplVertices.cpp (use the info put in the particle in RecVertices2Particles)
 
 ! 2010-10-26 - Neal Gauvin
- - Added the possibility to measure the radial displacement with respect 
+ - Added the possibility to measure the radial displacement with respect
    to the upstream PV when no beam line infos are found.
 
 ! 2010-10-25 - Neal Gauvin
@@ -223,13 +225,13 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
  - Check consistency of newly added features.
 
 ! 2010-10-25 - Victor Coco
- - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on 
+ - Modification of the upstream PV selection (in +/- 400mm), and keep selecting it when cutting on
    beamline distance (avoid DV backward PV)
    New cut on material, moving with the halfbox frame introduced
    R wrt beam line stored in extra info 52 and is in material stored in extra info 51
 
 ! 2010-10-22 - Neal Gauvin
- - RecVertices2Particles : Require non Velo tracks to have Q/P significance 
+ - RecVertices2Particles : Require non Velo tracks to have Q/P significance
    not in [-20, 20] to enter the Particle fit.
 
 ! 2010-10-18 - Neal Gauvin
@@ -247,17 +249,17 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
 
 ! 2010-09-20 - Neal Gauvin
  - The DisplVertices package is being moved from project Analysis to Stripping
-   ( task #17349 ). MC-dependent code has been put in the newly created 
+   ( task #17349 ). MC-dependent code has been put in the newly created
    DisplVerticesMC packages. In more details :
 	 * SaveParticlesFrom : moved to Phys/DisplVerticesMC
-   * DisplVertices : MC-dependent code moved to Phys/DisplVerticesMC under 
+   * DisplVertices : MC-dependent code moved to Phys/DisplVerticesMC under
                      the name MCDisplVertices.
    The physics remains unaffected.
 
 !========================== DisplVertices v6r11 2010-09-06 ===================
 
 ! 2010-08-24 - Neal Gauvin
- - Added SumPt cut in RecVertices2Particles before creating the Particles.  
+ - Added SumPt cut in RecVertices2Particles before creating the Particles.
 
 ! 2010-08-24 - Neal Gauvin
  - Require at least one backward and one forward track in upPV candidate.
@@ -389,10 +391,10 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
 !==================== Phys/DisplVertices v6r0 2010-02-02 =====================
 
 ! 2010-01-28 - Neal Gauvin
- - First official commit of the package. 
- - RecVertices2Particles : 
-     * take input reconstructed vertices and apply basic cuts to remove 
-       the PVs, vertices from interaction with the matter of the detector 
+ - First official commit of the package.
+ - RecVertices2Particles :
+     * take input reconstructed vertices and apply basic cuts to remove
+       the PVs, vertices from interaction with the matter of the detector
        and low mass vertices.
      * Turn candidates into Particles to be saved in TES.
  - DisplVertices essentially loops on the candidates Particle and applies cuts

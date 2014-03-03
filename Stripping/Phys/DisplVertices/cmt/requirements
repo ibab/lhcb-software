@@ -3,10 +3,10 @@
 # Maintainer : Victor Coco
 # ============================================================================
 package           DisplVertices
-version           v7r17
+version           v7r18
 
 # ============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 # ============================================================================
 branches          cmt src doc Kernel
 
