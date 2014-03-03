@@ -8,14 +8,16 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v34r0 2014-03-03 ===========================
+
 ! 2014-02-14 - Rob Lambert
- - Use the decoderDB for overriding the HLTDec/Sel/Track/Vertex reports locations
+ - Use the decoderDB for overriding the HLTDec/Sel/Track/Vertex reports
+   locations.
 
 ! 2014-01-20 - Rob Lambert
  - Remove persistency option from DaVinci
  - remove ETC options form DaVinci
  
-
 !========================= DaVinci v33r9 2013-12-18 ===========================
 
 ! 2013-11-18 - Rob Lambert
