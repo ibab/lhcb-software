@@ -4,10 +4,15 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingArchive v1r22 2014-02-22 =========================
+!========================= StrippingArchive v1r22 2014-03-03 =========================
 
 ! 2014-02-22 - Stefano Perazzini
  - Updated refs/instantiate-all-strip.ref
+
+!========================= StrippingArchive v1r21p5 2014-02-17 =========================
+
+! 2014-02-17 - Stefano Perazzini
+ - Applied fix to StrippingB2DMuNuX.py
 
 !========================= StrippingArchive v1r21p4 2014-02-04 =========================
 
@@ -31,7 +36,7 @@
 !========================= StrippingArchive v1r21p1 2013-06-26 =========================
 
 ! 2013-06-26 - Chris Jones
- - Backport fix for inappropriate downstream Muon PID TES locations in 
+ - Backport fix for inappropriate downstream Muon PID TES locations in
    StrippingTrackEffDownMuon.py to the various Stripping20rXpY archives.
 
 !========================= StrippingArchive v1r21 2013-05-28 =========================
@@ -50,12 +55,12 @@
 
 !========================= StrippingArchive v1r19 2013-04-22 =========================
 
-! 2013-04-19 - Anton Poluektov 
+! 2013-04-19 - Anton Poluektov
  - Added Stripping20r0p1, update __init__.py
 
 !========================= StrippingArchive v1r18 2012-12-20 =========================
 
-! 2012-12-20 - Anton Poluektov 
+! 2012-12-20 - Anton Poluektov
  - Added Stripping20r1, fix test reference
 
 ! 2012-12-20 - Marco Clemencic
@@ -72,29 +77,29 @@
 
 !========================= StrippingArchive v1r16 2012-09-14 =========================
 
-! 2012-09-14 - Anton Poluektov 
+! 2012-09-14 - Anton Poluektov
  - Update Stripping20/StrippingStrangeBaryons and StrippingBd2DstarMuNu
 
 !========================= StrippingArchive v1r15 2012-09-08 =========================
 
-! 2012-09-08 - Anton Poluektov 
- - Add Stripping20 
+! 2012-09-08 - Anton Poluektov
+ - Add Stripping20
  - Update test reference
 
 !========================= StrippingArchive v1r14 2012-09-01 =========================
 
-! 2012-08-30 - Anton Poluektov 
+! 2012-08-30 - Anton Poluektov
  - Fix test reference
 
 !========================= StrippingArchive v1r13 2012-07-27 =========================
 
-! 2012-07-27 - Anton Poluektov 
+! 2012-07-27 - Anton Poluektov
  - Add Stripping19c
  - Fix test reference
 
 !========================= StrippingArchive v1r12 2012-06-28 ========================
 
-! 2012-06-28 - Anton Poluektov 
+! 2012-06-28 - Anton Poluektov
  - Add Stripping19b
  - Remove Stripping19a from the list of known strippings (since it is a copy of Stripping19)
  - Update test reference
@@ -110,35 +115,35 @@
  - updated test ref
 
 !========================= StrippingArchive v1r10 2012-04-27 ========================
-! 2012-04-27 - Anton Poluektov 
+! 2012-04-27 - Anton Poluektov
  - Add Stripping19
  - Update test reference
 
 !========================= StrippingArchive v1r9 2012-04-01 =========================
 ! 2012-04-01 - Jibo He
- - Included Stripping18, Stripping18b 
+ - Included Stripping18, Stripping18b
  - Updated test ref
 
 !========================= StrippingArchive v1r8 2012-03-02 =========================
 
-! 2012-03-02 - Anton Poluektov 
+! 2012-03-02 - Anton Poluektov
   - Update test reference
 
-! 2012-03-01 - Anton Poluektov 
+! 2012-03-01 - Anton Poluektov
   - Create PreStripping18 archive
 
-! 2012-03-01 - Anton Poluektov 
-  - Modify __init__ to survive if it cannot load old stripping 
+! 2012-03-01 - Anton Poluektov
+  - Modify __init__ to survive if it cannot load old stripping
     due to DaVinci incompatibility
   - Allow use of stripping names not starting with "Stripping"
     (like "PreStripping18")
   - Trivial modification to Stripping17 and Stripping17b archives
-    (remove innecessary import) to allow running them with 
+    (remove innecessary import) to allow running them with
     DaVinci above v30r0
 
 !========================= StrippingArchive v1r7 2012-02-28 =========================
 
-! 2012-02-29 - Jibo He, Anton Poluektov 
+! 2012-02-29 - Jibo He, Anton Poluektov
  - Update Stripping17b archive
 
 !========================= StrippingArchive v1r6 2012-02-14 =========================
@@ -149,7 +154,7 @@
  - Recopied Stripping17b
 
 ! 2012-02-10 - Jibo He
- - Updated the tests refs 
+ - Updated the tests refs
 
 ! 2012-02-08 - Chris Jones
  - Remove any imports from GaudiConf
