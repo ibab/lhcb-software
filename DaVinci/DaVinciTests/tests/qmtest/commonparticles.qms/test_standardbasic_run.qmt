@@ -17,7 +17,7 @@ DaVinciInitAlg                                              SUCCESS 500 events p
 findReferenceBlock("""
 StdNoPIDsUpPions                                            SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
-  |*"#accept"                                       |       500 |        492 |(  98.4000 +- 0.561142 )%|   -------   |   -------   |
+ |*"#accept"                                       |       500 |        492 |(  98.4000 +- 0.561142 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id='Particles')
 countErrorLines({"FATAL":0})
 </text></argument>
