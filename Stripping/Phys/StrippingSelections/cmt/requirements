@@ -2,14 +2,14 @@
 # Maintainer : A. Poluektov
 
 package           StrippingSelections
-version           v3r32
+version           v3r33
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc python
 include_path      none
 
-# Used packages. 
+# Used packages.
 #============================================================================
 use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
@@ -21,7 +21,7 @@ use PhysSelPython        v*     PhysSel
 use TisTosTobbing	 v*	Phys
 
 private
-use LHCbAlgs             v*     Kernel  
+use LHCbAlgs             v*     Kernel
 end_private
 
 # Component library building rule
