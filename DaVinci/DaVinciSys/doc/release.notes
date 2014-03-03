@@ -3,6 +3,53 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v34r0>2014-03-03 DaVinci v34r0</A></H1><PRE>
+
+New development release based on the LHCb v37r0 stack.
+First version that can be built and run against ROOT 6.
+Support for SLC5 has been dropped. Only supports SLC6 gcc4.8.
+
+Executive Summary of notable Phys, Analysis and Stripping changes 
+( See project release notes for full details ) :-
+
+Core DaVinci :-
+ . Add a check to DVCommonBase to test for duplication in the Input particle
+   locations. If duplicates are found, a warning is printed and the
+   duplication is removed. 
+
+FlavourTagging :-
+ . Commit a new tagger: SSpion BDT.
+
+TisTosTobbing :-
+ . Update Hlt1TriggerTis, Hlt2TriggerTisTos to work with split Hlt1,
+   Hlt2 reports. Change TisTosParticleTagger to adopt automatically to split
+   or not-split Hlt reports.
+
+VertexFit :-
+ . Protect MomentumCombiner from sqrt(-number) FPE due to negative mass
+   error squares. Fail the fit in MomentumCombiner if MassErr^2<-999
+   (same as for the OfflineVertexFitter).
+
+DaVinciMCTools :-
+ . Change behaviour of BackgroundCategory when searching for the top level 
+   mother in a particle chain. There is now the option (on by default) 
+   'IgnoreQuarks' which causes the Cat to ignore any quarks in the chain 
+   and return the top level fragmentation product instead. If this option 
+   is set to false the user can instead obtain the quark as the top level 
+   parent.
+
+DecayTreeTuple :-
+ . Flavourtagging : Enabled writing of SSpionBDT
+ . Fixed bug in TupleToolTrackKink. An Error message replaced by a Warning
+   ignored not to stop the algorithm. 
+ . TupleToolTrigger,TupleToolTISTOS: Adapt to split Hlt1/Hlt2 reports
+       (still compatible with old Hlt reports) 
+ . TupleToolTISTOS: Add new properties TPS,TUS,TopParticleOnly (default false)
+                    TIS,TOS (default true)
+
+MVADictTools :-
+ . Add support for Matrixnet models.
+
 </PRE><H1><A NAME=v33r9>2013-12-18 DaVinci v33r9</A></H1><PRE>
 
 New development release based on the LHCb v36r4 stack.
