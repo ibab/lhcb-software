@@ -61,6 +61,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Run() { }
       /// MANDATORY: virtual destructor 
       virtual ~Run(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -152,6 +154,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Orbit() { }
       /// MANDATORY: virtual destructor 
       virtual ~Orbit(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -176,6 +180,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      EventType() { }
       /// MANDATORY: virtual destructor 
       virtual ~EventType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -200,6 +206,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      BunchId() { }
       /// MANDATORY: virtual destructor 
       virtual ~BunchId(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -224,6 +232,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ErrorBits() { }
       /// MANDATORY: virtual destructor 
       virtual ~ErrorBits(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -248,6 +258,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      TriggerType() { }
       /// MANDATORY: virtual destructor 
       virtual ~TriggerType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -272,6 +284,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ReadOutType() { }
       /// MANDATORY: virtual destructor 
       virtual ~ReadOutType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -297,6 +311,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      ForceBit() { }
       // MANDATORY:  virtual desctrutor
       virtual ~ForceBit () {} ;
       // MANDATORY: clone method ("virtual constructor") 
@@ -321,6 +337,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      BXType() { }
       /// MANDATORY: virtual destructor 
       virtual ~BXType(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -345,6 +363,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      BunchCurrent() { }
       /// MANDATORY: virtual destructor 
       virtual ~BunchCurrent(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -369,6 +389,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      CalibrationStep() { }
       /// MANDATORY: virtual destructor 
       virtual ~CalibrationStep(){}
       /// MANDATORY: clone method ("virtual constructor")
@@ -393,6 +415,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      TrgConfKey() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrgConfKey(){}
       /// MANDATORY: clone method ("virtual constructor")

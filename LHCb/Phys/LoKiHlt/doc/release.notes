@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-03-04 - Chris Jones
+ - Add some missing default constructors. Fixes clang compilation failures.
+
 ! 2014-02-21 - Marco Clemencic
  - Fixes to header guard macros.
 
