@@ -625,10 +625,10 @@ def _tisTosInit ( self , triggers = {} , lines = {} ) :
     
     ## locate tools 
     self.l0tistos  = self.tool ( cpp.ITriggerTisTos ,   'L0TriggerTisTos' , parent = self )  
-    #self.l1tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt1TriggerTisTos' , parent = self )
-    #self.l2tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt2TriggerTisTos' , parent = self )
-    self.l1tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
-    self.l2tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
+    self.l1tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt1TriggerTisTos' , parent = self )
+    self.l2tistos  = self.tool ( cpp.ITriggerTisTos , 'Hlt2TriggerTisTos' , parent = self )
+    # self.l1tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
+    # self.l2tistos  = self.tool ( cpp.ITriggerTisTos ,     'TriggerTisTos' , parent = self )
 
     self.l0tistos . setOfflineInput()
     self.l1tistos . setOfflineInput()
