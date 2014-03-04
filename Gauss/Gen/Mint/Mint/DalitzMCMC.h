@@ -11,17 +11,23 @@
 
 class DalitzMCMC{ 
  public:
-  DalitzMCMC( const DalitzEventPattern& pat,
-	      const unsigned int& seed=0 );
-
+  DalitzMCMC( const DalitzEventPattern& pat, 
+	      const unsigned int& seed=0 , 
+	      const bool makeCPconj = false);
+  
+  DalitzMCMC(const DalitzEventPattern& pat, 
+	     FitAmpSum& other,
+	     const unsigned int& seed=0 ,
+	     const bool makeCPconj = false);
   /**
      Uses the Metropolis-Hastings algorithm (Markov Chain) to sample
      a Dalitz plot ampitude-squared probability density and fill a
      DalitzEventList.
   */
+  bool initialise(bool makeCPconj);
+  void MakeCPConjugate(); 
   void FillEventList( DalitzEventList& evtList,
-		      const unsigned int& NEvents );
-
+				  const unsigned int& NEvents, double rejectionFactor = 100 );
   /**
      Performs hit-and-miss using TGenPhaseSpace to generate a uniformly
      distributed phase space event.

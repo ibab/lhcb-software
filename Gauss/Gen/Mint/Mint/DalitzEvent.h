@@ -149,6 +149,9 @@ public:
   virtual double getAValue()const{return _aValue;}
 
   virtual const DalitzEventPattern& eventPattern() const{return _pat;}
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  virtual const std::vector<TLorentzVector>& getP() const{return _p;}
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
   virtual const TLorentzVector& p(unsigned int i) const; // 4-vectors
   virtual TLorentzVector& p(unsigned int i); // 4-vectors
   virtual double s(unsigned int i, unsigned int j) const;       // sij
@@ -189,9 +192,9 @@ public:
 				, TRandom* rnd = 0);
 
 
-  std::string makeNtupleVarnames()const;
-  bool fillNtupleVarArray(Double_t* array, unsigned int arraySize) const;
-  unsigned int ntupleVarArraySize() const;
+  std::string makeNtupleVarnames(const bool addSij)const;
+  bool fillNtupleVarArray(Double_t* array, unsigned int arraySize, const bool addSij) const;
+  unsigned int ntupleVarArraySize(const bool addSij) const;
 
   // mainly for debugging and x-check with prev version
   Calculate4BodyProps makeCalculate4BodyProps() const;

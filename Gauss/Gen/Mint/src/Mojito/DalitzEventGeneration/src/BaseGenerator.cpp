@@ -130,6 +130,7 @@ void BaseGenerator::FillEventList(DalitzEventList& evtList, int NEvents){
   }
 }
 
+
 bool BaseGenerator::ensureFreshEvents(){
   if(0 == _rnd) _rnd = gRandom;
   _rnd->SetSeed(time(0)*3);

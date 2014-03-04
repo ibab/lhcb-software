@@ -348,8 +348,8 @@ PlotSet DalitzEventList::makeAllPlots( const std::string& name_prefix
 }
 
 
-TNtupleD* DalitzEventList::makeNtuple()const{
-  return makeNtuple(className());
+TNtupleD* DalitzEventList::makeNtuple(const bool addSij)const{
+  return makeNtuple(className(), addSij);
 }
 
 /* Works under the assumptions that all events in the list
@@ -358,24 +358,24 @@ TNtupleD* DalitzEventList::makeNtuple()const{
    events.
 */
 
-TNtupleD* DalitzEventList::makeNtuple(const std::string& ntpName ) const{
+TNtupleD* DalitzEventList::makeNtuple(const std::string& ntpName, const bool addSij ) const{
   
   if(this->empty()) return (TNtupleD*) 0;
-  std::string varNameString= ((this->begin()))->makeNtupleVarnames();
+  std::string varNameString= ((this->begin()))->makeNtupleVarnames(addSij);
   TNtupleD* ntp = new TNtupleD(className().c_str()
 			       , ntpName.c_str()
 			       , varNameString.c_str());
 
   ntp->SetDirectory(0);
 
-  int arraySize = ((this->begin()))->ntupleVarArraySize();
+  int arraySize = ((this->begin()))->ntupleVarArraySize(addSij);
   Double_t *array = new Double_t[arraySize];
 
 
   for(vector<DalitzEvent>::const_iterator it = this->begin();
       it != this->end(); it++){
 
-    bool success = (it)->fillNtupleVarArray(array, arraySize);
+    bool success = (it)->fillNtupleVarArray(array, arraySize, addSij);
     if(! success){
       cout << "ERROR in DalitzEventList::makeNtuple"
 	   << ", call to DalitzEvent::fillNtupleVarArray"
@@ -389,20 +389,24 @@ TNtupleD* DalitzEventList::makeNtuple(const std::string& ntpName ) const{
   return ntp;
 }
 
-bool DalitzEventList::save(const std::string& fname)const{
-  return saveAsNtuple(fname);
+bool DalitzEventList::save(const std::string& fname
+			   , const bool addSij
+			   )const{
+  return saveAsNtuple(fname, addSij);
 }
 bool DalitzEventList::fromFile(const std::string& fname){
   return fromNtupleFile(fname);
 }
 
 bool DalitzEventList::saveAsNtuple(const std::string& fname
+				   , const bool addSij
 				   ) const{
-  return saveAsNtuple(fname, className());
+  return saveAsNtuple(fname, className(), addSij);
 }
 
 bool DalitzEventList::saveAsNtuple(const std::string& fname
 				   , const std::string& ntpName
+				   , const bool addSij
 				   ) const{
   if(this->empty()){
     cout << "WARNING in DalitzEventList::saveAsNtuple!"
@@ -416,7 +420,7 @@ bool DalitzEventList::saveAsNtuple(const std::string& fname
   }
   TFile f(fname.c_str(), "RECREATE");
   f.cd();
-  TNtupleD* ntp = makeNtuple(ntpName);
+  TNtupleD* ntp = makeNtuple(ntpName, addSij);
   ntp->Write();
   f.Close();
   ntp->Delete("all");

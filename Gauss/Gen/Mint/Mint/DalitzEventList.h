@@ -100,15 +100,16 @@ class DalitzEventList
 			);
   
 
-  bool save(const std::string& fname = "DalitzEvents.root") const;
+  bool save(const std::string& fname = "DalitzEvents.root", const bool addSij = false) const;
   bool fromFile(const std::string& fname = "DalitzEvents.root");
 
-  TNtupleD* makeNtuple() const;
-  TNtupleD* makeNtuple(const std::string& ntpName) const;
+  TNtupleD* makeNtuple(const bool addSij = false) const;
+  TNtupleD* makeNtuple(const std::string& ntpName, const bool addSij = false) const;
 
-  bool saveAsNtuple(const std::string& fname="DalitzEvents.root")const;
+  bool saveAsNtuple(const std::string& fname="DalitzEvents.root", const bool addSij = false)const;
   bool saveAsNtuple(const std::string& fname
 		    , const std::string& ntpName
+		    , const bool addSij = false
 		    ) const;
   bool fromNtuple(TTree* ntp);
   bool fromNtuple(TTree* ntp, double num);

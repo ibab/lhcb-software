@@ -1,4 +1,4 @@
-// author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
+                                                                                                                                                                                                                              // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
 
 #include <cmath>
@@ -8,6 +8,9 @@
 #include "Mint/Utils.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 #include "Mint/CLHEPPhysicalConstants.h"
+#include "Mint/AllPossibleSij.h"
+#include "Mint/counted_ptr.h"
+
 
 #include "TRandom.h"
 #include "TGenPhaseSpace.h"
@@ -20,8 +23,8 @@
 using namespace std;
 using namespace MINT; // for Utils.h
 
-const char DalitzEvent::prtNameChars[] = { '+', '-', '\0' };
-const char DalitzEvent::ntpNameChars[] = { '#', '~', '\0' };
+const char DalitzEvent::prtNameChars[] = { '+', '-','(', ')', '\0' };
+const char DalitzEvent::ntpNameChars[] = { '#', '~', '{', '}', '\0' };
 
 long int DalitzEvent::_eventCounter=0;
 
@@ -821,7 +824,7 @@ std::string DalitzEvent::ntpToPrtName(const std::string& s_in){
   return s;
 }
 
-std::string DalitzEvent::makeNtupleVarnames()const{
+std::string DalitzEvent::makeNtupleVarnames(const bool addSij)const{
   std::string s="";
   if(eventPattern().empty()){
     return s;
@@ -840,6 +843,14 @@ std::string DalitzEvent::makeNtupleVarnames()const{
     //    if(i != _pat.size() -1) s+= ":";
     s+= ":";
   }
+  if(addSij){
+    int nd = _pat.size() - 1;
+    AllPossibleSij sijList(nd);
+    for(namedVMap::const_iterator it = sijList.begin(); it!= sijList.end(); it++){
+      s+="s" + it->first +":";
+    }
+  }
+  
   s += "weight:";
   s += "genPdf";
   return s;
@@ -849,7 +860,8 @@ int DalitzEvent::singleParticleNtpArraySize(){
   return 5;
 }
 bool DalitzEvent::fillNtupleVarArray(Double_t* array
-				     , unsigned int arraySize)const{
+				     , unsigned int arraySize
+				     , const bool addSij)const{
 
   if(eventPattern().empty()){
     return false;
@@ -863,12 +875,27 @@ bool DalitzEvent::fillNtupleVarArray(Double_t* array
     array[counter++] = _p[i].Y();
     array[counter++] = _p[i].Z();
   }
+
+  if(addSij){
+    AllPossibleSij sijList(_pat.size()-1);
+    for(namedVMap::const_iterator it = sijList.begin(); it!= sijList.end(); it++){
+      array[counter++] = sij(it->second);
+    }
+  }
+
   array[counter++] = getWeight();
   array[counter++] = getGeneratorPdfRelativeToPhaseSpace();
   return true;
 }
-unsigned int DalitzEvent::ntupleVarArraySize() const{
-  return _p.size() * singleParticleNtpArraySize() + 2;
+
+
+unsigned int DalitzEvent::ntupleVarArraySize(const bool addSij) const{
+  int num_sij = 0;
+  if(addSij){
+    AllPossibleSij sijList(_pat.size()-1);
+    num_sij = sijList.size();
+  }
+  return _p.size() * singleParticleNtpArraySize() + 2 + num_sij;
 }
 
 /*
