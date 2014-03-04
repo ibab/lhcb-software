@@ -1,6 +1,6 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
 ApplicationMgr.TopAlg                = {"StoreExplorerAlg"};
-ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.EvtMax                = -1;
 ApplicationMgr.HistogramPersistency  = "NONE";
 
 //Unpack.OutputLevel                 = 1;
@@ -24,8 +24,8 @@ StoreExplorerAlg.OutputLevel         = 1;
 
 ApplicationMgr.ExtSvc        += { "LHCb::FilePoller/Poller"};
 ApplicationMgr.ExtSvc        += { "LHCb::TestFilePollerSvc/TestSvc"};
-ApplicationMgr.ExtSvc        += { "LHCb::MDFEvtSelector/EventSelector"};
-ApplicationMgr.SvcOptMapping += { "LHCb::MDFEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc        += { "LHCb::MDFOnlineEvtSelector/EventSelector"};
+ApplicationMgr.SvcOptMapping += { "LHCb::MDFOnlineEvtSelector/EventSelector"};
 
 
 
@@ -34,5 +34,6 @@ Poller.scanDirectory = "/daqarea/lhcb/data/2013/RAW/FULL/LHCb/COLLISION13";
 Poller.alarmTime = 5;
 EventSelector.PrintFreq            = 100;
 EventSelector.IgnoreChecksum= "YES";
-EventSelector.Input = "/daqarea/lhcb/data/2013/RAW/FULL/LHCb/COLLISION13/138502/138502_0000000001.raw";
+EventSelector.MaxNoEvents = 1000;
+//EventSelector.Input = "/daqarea/lhcb/data/2013/RAW/FULL/LHCb/COLLISION13/138502/138502_0000000001.raw";
 MessageSvc.OutputLevel =1;
