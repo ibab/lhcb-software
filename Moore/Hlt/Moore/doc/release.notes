@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-04 - Rob Lambert
+ - New test suite with split running from TCKs, moore.physics.tck.deferral
+ - see bug #103924 and bug #103993
+
 !========================= Moore v22r0 2014-03-04 =========================
 ! 2014-03-04 - Rob Lambert
  - Fix surface problems with Moore's split running

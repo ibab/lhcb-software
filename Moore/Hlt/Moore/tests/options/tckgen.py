@@ -5,6 +5,12 @@
 #existsString="trying to read Aliases/TOPLEVEL/"
 existsString="top id for this config:"
 
+mysplit=''
+try:
+    mysplit=split
+except:
+    pass
+
 label="Test TCK from nightly builds, auto-generated in nightlies based on some physics threshold setting."
 releaseString="----MOORERELEASE----:"
 thresholdString="----MOORETHRESHOLD----:"
@@ -14,7 +20,7 @@ f=open("../options/Moore-LocalTCKData.py")
 configdest=f.read().split("'")[1]
 f.close()
 
-commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False;'"
+commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False; Moore().Split=\""+mysplit+"\";'"
 
 def expp(apath):
     return os.path.abspath(os.path.expandvars(os.path.expanduser(apath)))
