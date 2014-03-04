@@ -5,6 +5,12 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+2014-03-04 - Claire
+ - added method getP() to DalitzEvent which gives back the vector of the four-momenta of all particles in the event
+ - build an automatic rejection factor into DalitzMCMC generation
+ - added different constructors to DalitzMCMC
+ - new class DalitzMCMC_corrPairs that generates correlated events
+ - new class DalitzEventPairList that stores std::pair of events
 
 2014-02-07 - Jeremy
  - Bug fix in Gounaris-Sakurai function
