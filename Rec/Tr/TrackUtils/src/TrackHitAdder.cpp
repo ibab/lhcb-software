@@ -57,6 +57,10 @@ private:
   double m_maxDistTT ;
   double m_maxDistVelo ;
   double m_maxTolY ;
+  bool m_forceOT ;
+  bool m_forceIT ;
+  bool m_forceTT ;
+  bool m_forceVelo ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -76,6 +80,10 @@ TrackHitAdder::TrackHitAdder( const std::string& name,
   declareProperty("MaxDistTT", m_maxDistTT = 0.5 ) ;
   declareProperty("MaxDistVelo", m_maxDistVelo = 0.1 ) ;
   declareProperty("MaxTolY", m_maxTolY = 10.0 ) ; 
+  declareProperty("ForceOT", m_forceOT = false ) ;
+  declareProperty("ForceIT", m_forceIT = false ) ;
+  declareProperty("ForceTT", m_forceTT = false ) ;
+  declareProperty("ForceVelo", m_forceVelo = false ) ;
 }
 
 TrackHitAdder::~TrackHitAdder() {}
@@ -262,7 +270,7 @@ StatusCode TrackHitAdder::execute()
       LHCb::TrackTraj tracktraj( *track ) ;
       LHCb::Track::LHCbIDContainer lhcbidsorig = lhcbids ;
       
-      if( track->hasT() && m_maxDistOT>0) {
+      if( (track->hasT() || m_forceOT) && m_maxDistOT>0) {
 	// add OT hits
 	std::vector<LHCb::LHCbID> otlhcbids ;
 	addHits<OT>( tracktraj, *m_othitcreator, m_maxDistOT, m_maxTolY, otlhcbids) ;
@@ -270,7 +278,7 @@ StatusCode TrackHitAdder::execute()
 	counter("NumOTHitsAdded") += numotadded ;
       }
 
-      if( track->hasT() && m_maxDistIT>0) {
+      if( (track->hasT() || m_forceIT) && m_maxDistIT>0) {
 	// add IT hits
 	std::vector<LHCb::LHCbID> itlhcbids ;
 	addHits<IT>( tracktraj, *m_ithitcreator, m_maxDistIT, m_maxTolY, itlhcbids) ;
@@ -280,13 +288,13 @@ StatusCode TrackHitAdder::execute()
       
       const unsigned int nTTHits = std::count_if(track->lhcbIDs().begin(), track->lhcbIDs().end(),
 						 bind(&LHCb::LHCbID::isTT,_1));
-      if( nTTHits>0 && m_maxDistTT > 0 ) {
+      if( (nTTHits>0 || m_forceTT) && m_maxDistTT > 0 ) {
 	std::vector<LHCb::LHCbID> ttlhcbids ;
 	addHits<TT>( tracktraj, *m_tthitcreator, m_maxDistTT, m_maxTolY, ttlhcbids) ;
 	counter("NumTTHitsAdded") += addLHCbIDs(lhcbids,ttlhcbids) ;
       }
 
-      if( track->hasVelo() && m_maxDistVelo > 0 ) {
+      if( (track->hasVelo() || m_forceVelo) && m_maxDistVelo > 0 ) {
 	// delegate to ITrackHitCollector
 	std::vector<ITrackHitCollector::IDWithResidual> veloidswithresidual ;
 	m_trackhitcollector->execute(*track,veloidswithresidual,true,false,false,false,false) ;

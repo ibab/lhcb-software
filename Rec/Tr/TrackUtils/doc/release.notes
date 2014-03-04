@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-04 - Frederic Dupertuis
+ - Add new properties to allow TrackHitAdder to be used for Y alignment.
+
 !========================= TrackUtils v1r54 2014-01-06 =========================
 ! 2013-12-15 - Wouter Hulsbergen
  - Removed UT from TrackHitAdder since it was apparently never tested
