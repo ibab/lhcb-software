@@ -734,7 +734,7 @@ class Moore(LHCbConfigurableUser):
             #dependent transform, if HLT1 has run before, now add HLT1 decoding, track decoding etc.
             #if not MooreExpert().getProp("Hlt2Independent"):
             #Todo, route out all the errors here, I should have been able to suppress this stuff!
-            
+            trinsertion=""
             transdep={}
             hlt1decoder_name="HltDecReportsDecoder/Hlt1DecReportsDecoder"
             dec=DecoderDB[hlt1decoder_name]
@@ -743,11 +743,14 @@ class Moore(LHCbConfigurableUser):
             dec4=DecoderDB[hlt1seloder_name]
             dec4Alg=dec4.setup()
             hlt1decrep_location = dec.listOutputs()[0]
-            hlt1traoder_name="HltTrackReportsDecoder/Hlt1TrackReportsDecoder"
-            tr=DecoderDB[hlt1traoder_name]
-            tr.active = True
-            trAlg=tr.setup()
-            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+"', '"+hlt1traoder_name+"', 'GaudiSequencer/Hlt2"  } }
+            if not MooreExpert().getProp("Hlt2Independent"):
+                hlt1traoder_name="HltTrackReportsDecoder/Hlt1TrackReportsDecoder"
+                tr=DecoderDB[hlt1traoder_name]
+                tr.active = True
+                trAlg=tr.setup()
+                trinsertion="', '"+hlt1traoder_name
+            
+            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/Hlt2"  } }
             transdep['.*HDRFilter/.*' ]= { 'Location'                   : { '^.*$' : hlt1decrep_location } }
             transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
             transdep['TisTosParticleTagger/.*']={ 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }

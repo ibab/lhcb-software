@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-04 - Rob Lambert
+ - Ensure no warnings from tracking decoder when in Hlt2Independent mode
+ - (i.e. exclude the decoder from independent mode)
+
 !========================= Moore v22r0 2014-03-04 =========================
 ! 2014-03-04 - Rob Lambert
  - New test suite with split running from TCKs, moore.physics.tck.deferral
