@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v23r0     2014-03-04 ==================
+
+! 2014-03-04 - Vanya Belyaev
+ - prepare new release 
+
 ! 2014-03-01 - Vanya Belyaev
  - fix CheckTrg 
 
