@@ -347,7 +347,6 @@ class Boole(LHCbConfigurableUser):
         # Velo digitisation and clustering (also for PuVeto and trigger)            
         if tae == "":
             from Configurables import (VeloSim, PuVetoFillRawBuffer)
-            importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
             toolName = "SiDepositedCharge" # In house Si deposited energy
             if self.getProp("SiG4EnergyDeposit"):
                 # use GEANT energy deposit directly
@@ -356,6 +355,9 @@ class Boole(LHCbConfigurableUser):
             VeloSim('VeloPUSim').DepChargeTool = toolName
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
+            # note VeloSim.py checks the DepChargeTool and corrects the options
+            # call after choosing SiDepositedCharge or SiGeantDepositedCharge
+            importOptions("$VELOSIMULATIONROOT/options/VeloSim.py")
             if True != self.getProp("VeloTell1Processing"):
                 from Configurables import (VeloDataProcessor, VeloClusterMaker,
                                            PrepareVeloRawBuffer )

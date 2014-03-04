@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 - QMTest changes
   . In BooleExclusions.py, remove EventSelector PFN exclusion, now in GaudiConf
+- Changed call to VeloSim.opts to VeloSim.py in Boole configurable
 
 </PRE><H1><A NAME=v27r0>2014-02-20 Boole v27r0</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0
