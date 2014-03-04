@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2014-03-04 - Olivier Deschamps
+ - set noSpdPrs=False as CaloProcessor default when DataType=Upgrade
+
+
 !========================= PhysConf v1r25 2014-02-20 =========================
 
 ! 2014-02-14 - Rob Lambert

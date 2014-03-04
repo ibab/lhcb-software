@@ -76,8 +76,8 @@ class PhysConf(LHCbConfigurableUser) :
         caloProc = CaloProcessor(EnableOnDemand=True)  # enable caloDigits & Clusters onDemand
         caloProc.RecList =  clusters
         # ---
-        #if self.getProp('DataType')=='Upgrade' :
-        #    caloProc.NoSpdPrs=True
+        if self.getProp('DataType')=='Upgrade' :
+            caloProc.NoSpdPrs=True
 
         ## General unpacking
         from Configurables import DstConf
