@@ -79,11 +79,12 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "Cuts"               , m_spacialCuts = tmp );
   declareProperty( "XLayerCut"          , m_xCut = 300. * Gaudi::Units::um );
   declareProperty( "StereoLayerCut"     , m_stereoCut = 300. * Gaudi::Units::um );
-  declareProperty( "MinExpectedSectors" , m_minExpSectors = 10 );
-  declareProperty( "MaxNbResSectors"    , m_maxNbResSectors = 0 );
+  declareProperty( "MinExpectedSectors" , m_minExpSectors = 1 );
+  declareProperty( "MinNbResSectors"    , m_minNbResSectors = -10 );
+  declareProperty( "MaxNbResSectors"    , m_maxNbResSectors = 10 );
   declareProperty( "MinDistToEdgeX"     , m_minDistToEdgeX = -1. );
   declareProperty( "MinDistToEdgeY"     , m_minDistToEdgeY = -1. );
-  declareProperty( "MinStationPassed"   , m_minStationPassed = 3 );
+  declareProperty( "MinStationPassed"   , m_minStationPassed = 1 );
   declareProperty( "MinCharge"          , m_minCharge = 0. );
   declareProperty( "EfficiencyPlot"     , m_effPlot = true );
   declareProperty( "ResidualsPlot"      , m_resPlot = false );
@@ -171,6 +172,7 @@ StatusCode STEfficiency::execute()
   std::vector<unsigned int> expectedSectors;
   std::vector<unsigned int> foundSectors;
   std::vector<unsigned int>::iterator itFoundSectors;
+  ISTClusterCollector::Hits prefoundHits;
   ISTClusterCollector::Hits foundHits;
   StatusCode inSensor;
   bool inActiveSensor;
@@ -187,41 +189,37 @@ StatusCode STEfficiency::execute()
   {
     // Clearing all the std::vectors !
     expectedHits.clear();
+    prefoundHits.clear();
     foundHits.clear();
     expectedSectors.clear();
     foundSectors.clear();
 
-    // ask for tracks crossing enough stations for IT
-    if(m_detType=="IT"){
-      if( ! hasMinStationPassed( (*It) ) )
-        continue;
-    }
+    // ask for tracks crossing enough stations
+    if( ! hasMinStationPassed( (*It) ) )
+      continue;
         
-    // collect the expected hits
+    // collect the list of expected hits
     m_expectedHits -> collect( **It, expectedHits );
 
     nbExpHits = expectedHits.size();
-    
-    if(fullDetail())
-      plot(nbExpHits, "Control/NbExpHits","Number of expected hits",-0.5,24.5,25);
     
     // remove tracks with too few expected hits
     if ( nbExpHits < m_minExpSectors ) 
       continue; 
 
-    // collect the found hits
-    m_clustercollector -> execute( **It, foundHits );
+    // collect the list of found hits
+    m_clustercollector -> execute( **It, prefoundHits );
     
-    nbFoundHits = foundHits.size();
-    
-    if(fullDetail())
-      plot(nbFoundHits, "Control/NbFoundHits","Number of found hits",-0.5,24.5,25);
+    nbFoundHits = prefoundHits.size();
     
     nbResHits = (int)(nbFoundHits) - (int)(nbExpHits);
     
-    if(fullDetail())
+    if(fullDetail()){
+      plot(nbFoundHits, "Control/NbFoundHits","Number of found hits",-0.5,24.5,25);
+      plot(nbExpHits, "Control/NbExpHits","Number of expected hits",-0.5,24.5,25);
       plot(nbResHits, "Control/NbResHits","Number of found - expected hits",-5.5,7.5,13);
-    
+    }
+        
     // convert the expected hits into unique sectors cutting sensor edges
     BOOST_FOREACH(LHCbID id, expectedHits)
     {
@@ -257,36 +255,33 @@ StatusCode STEfficiency::execute()
     if ( nbExpSectors < m_minExpSectors ) 
       continue; 
         
-    BOOST_FOREACH(ISTClusterCollector::Hit hit, foundHits)
+    BOOST_FOREACH(ISTClusterCollector::Hit hit, prefoundHits)
     {
-      foundSectors.push_back(hit.cluster->channelID().uniqueSector());
+      if(find(expectedSectors.begin(), expectedSectors.end(), hit.cluster->channelID().uniqueSector()) != expectedSectors.end()){
+        if(find(foundSectors.begin(), foundSectors.end(), hit.cluster->channelID().uniqueSector()) == foundSectors.end()){
+          foundHits.push_back(hit);
+          foundSectors.push_back(hit.cluster->channelID().uniqueSector());
+        }else if( !m_singlehitpersector )
+          foundHits.push_back(hit);
+        else
+          continue;
+      }
     }
+
+    nbExpHits = nbExpSectors;
+    nbFoundHits = foundHits.size();
+    nbResHits = (int)(nbFoundHits) - (int)(nbExpHits);
     
     nbFoundSectors = foundSectors.size();
     nbResSectors = (int)(nbFoundSectors) - (int)(nbExpSectors);
     
-    if(fullDetail()){
-      plot(nbFoundSectors, "Control/NbFoundSectors","Number of found sectors",-0.5,24.5,25);
-      plot(nbExpSectors, "Control/NbExpSectors","Number of expected sectors",-0.5,24.5,25);
-      plot(nbResSectors, "Control/NbResSectors","Number of found - expected sectors",-5.5,7.5,13);
-    }
-
-    // remove track with too much found - expected sectors
-    if ( nbResSectors > m_maxNbResSectors ) 
+    // remove track with too much found - expected hits
+    if ( nbResHits > m_maxNbResSectors ) 
       continue;
     
-    // ask for a track with no more than a hit per unique sector
-    if( m_singlehitpersector ){
-      nbFoundSectors = foundSectors.size();
-      std::sort( foundSectors.begin(), foundSectors.end() );
-      itFoundSectors = std::unique( foundSectors.begin(), foundSectors.end() );
-      foundSectors.resize( itFoundSectors - foundSectors.begin() );
-      if(nbFoundSectors>foundSectors.size())
-        continue;
-    }
-
-    nbFoundSectors = foundSectors.size();
-    nbResSectors = (int)(nbFoundSectors) - (int)(nbExpSectors);
+    // remove track with too few found - expected sectors
+    if ( nbResSectors < m_minNbResSectors ) 
+      continue;
     
     if(fullDetail()){
       plot(nbFoundHits, "Control/NbFoundHitsFinal","Number of found hits after full selection",-0.5,24.5,25);
@@ -307,7 +302,7 @@ StatusCode STEfficiency::execute()
       
       for (unsigned int i = 0; i < m_NbrOfCuts; ++i)
 	    {
-	      foundHit = foundHitInSector(foundHits, *It, *iterExp, m_spacialCuts[i]);
+	      foundHit = foundHitInSector(foundHits, *It, *iterExp, m_spacialCuts[i], (sector ->isStereo() && i == m_whichCut[1])||(! sector -> isStereo() &&  i == m_whichCut[0]));
         if (foundHit)
         {
           if ( sector ->isStereo() && i == m_whichCut[1] )
@@ -333,21 +328,22 @@ StatusCode STEfficiency::execute()
  * @return \e true if yes.
  */
 bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits,
-                                        Track* const& track,
-                                        const unsigned int testsector,
-                                        const double resCut ) const
+                                     Track* const& track,
+                                     const unsigned int testsector,
+                                     const double resCut,
+                                     const bool toplot ) const
 {
   BOOST_FOREACH(ISTClusterCollector::Hit aHit, hits)
     {
       if ( aHit.cluster->channelID().uniqueSector() == testsector ){
-        if(fullDetail()){
-          plot(aHit.residual, "Control/HitResidual","Hit residual",-1.,1.,200);
+        if(fullDetail()&&toplot){
+          plot(aHit.residual, "Control/HitResidual","Hit residual",-resCut,resCut,static_cast<unsigned int>(resCut*100+0.01)*2);
           plot(aHit.cluster->totalCharge(), "Control/HitCharge","Hit charge",0.,200.,200);
         }
-        if(m_resPlot){
+        if(m_resPlot&&toplot){
           std::string name("perSector/Residuals_");
           name += aHit.cluster->sectorName();
-          plot(aHit.residual, name,"Hit residual",-1.,1.,200);
+          plot(aHit.residual, name,"Hit residual",-resCut,resCut,static_cast<unsigned int>(resCut*100+0.01)*2);
         }
         if( fabs(aHit.residual) < resCut ){
           if ( !( m_everyHit || track -> isOnTrack( LHCbID( aHit.cluster -> channelID() ) ) ) )

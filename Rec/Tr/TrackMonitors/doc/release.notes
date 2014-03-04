@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-04 - Frederic Dupertuis
+ - Some improvements to STEfficiency.
+ - Add STCoordinates, OTCoordinates, STYAlignMagOff, OTYAlignMagOff
+
 !========================= TrackMonitors v2r0 2014-02-19 =======================
 ! 2014-02-19 - Wouter Hulsbergen
  - TrackAlignMonitor and TrackVertexMonitor: removed some checks for divide-by-zero 

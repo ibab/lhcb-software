@@ -38,9 +38,10 @@ protected:
 private:
 
   bool foundHitInSector( const ISTClusterCollector::Hits& hits,
-			 LHCb::Track* const& track,
-			 const unsigned int testsector,
-			 const double resCut  ) const;
+                         LHCb::Track* const& track,
+                         const unsigned int testsector,
+                         const double resCut,
+                         const bool toplot ) const;
 
   std::string formatNumber( const double& nbr, const unsigned int& digits = 2u ) const;
 
@@ -130,6 +131,11 @@ private:
    */
   unsigned int m_minExpSectors;
   
+  /**
+   * 
+   */
+  int m_minNbResSectors;
+
   /**
    * 
    */
