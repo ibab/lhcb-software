@@ -23,9 +23,20 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-! 2014-01-21 - Marco Clemencic
- - Added CMake configuration file.
- - Modified requirements to simplify auto conversion to CMake.
+<A NAME=v23r0> 2014-03-04 Bender v23r0 based on the DaVinci v34r0</A>
+
+<li>Based on the DaVinci v34r0</li>
+<li>A lot of modifications in <code>BenderTools.Fill</code> </li>
+<li>A lot of modifications in <code>BenderTools.TisTos</code>, 
+   including the support for splti Hlt1/Hlt2 reports </li>
+<li> Fixed <code>trg-check</code> functionality (many thanks to Eduardo!)
+
+
+Few changed by Marco Clemencic to provide CMake configuration
+
+<li> Added CMake configuration file </li>
+<li> Modified requirements to simplify auto conversion to CMake </li>
+
 
 <A NAME=v22r11> 2013-12-22 Bender v22r11 based on the DaVinci v33r9</A>
 
