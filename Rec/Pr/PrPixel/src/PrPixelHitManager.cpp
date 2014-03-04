@@ -169,7 +169,7 @@ void PrPixelHitManager::cacheSPPatterns() {
       const double fx = x/static_cast<double>(n) - cx;
       const double fy = y/static_cast<double>(n) - cy;
 
-      m_sp_sizes[sp] |= (n-1) << (4*clu_idx);
+      m_sp_sizes[sp] |= n << (4*clu_idx);
 
       // store the centroid pixel
       m_sp_patterns[sp] |= ((cx << 2) | cy) << 4*clu_idx;

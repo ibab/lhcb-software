@@ -4,6 +4,18 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-03-04 - Kurt Rinnert
+ - bug fix in PrPixelHitManager: the size of of clusters in super pixel
+   patterns was off by one (legacy debugging code).
+ - bug fix in PrPixelClustering: matched super pixel clusters sometimes
+   received the wrong sensor column number (wrong grouping of integer
+   divisions).
+ - simplified generic clustering code in PrPixelClustering: the latest attempt
+   at agressive row scan optimization didn't do any good and obfuscated the
+   code; it has been reverted to a more generic approach.
+ - none of these changes affect code running in the current Brunel branches;
+   they have no effect on the results (until activated).
+
 ! 2014-02-28 - Kurt Rinnert
  - fixed bug in PrPixelHitManager::buildHits(): the sensor pixel column was
    computed wrongly due to writing SENSOR_COLUMNS were it should have been

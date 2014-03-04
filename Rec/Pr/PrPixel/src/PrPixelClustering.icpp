@@ -68,7 +68,7 @@
       if (no_sp_neighbours) {
         const int sp_size = m_sp_sizes[sp];
         const uint32_t idx = m_sp_patterns[sp];
-        const uint32_t module_chip = module_chip_base + sp_col/CHIP_COLUMNS/2;
+        const uint32_t module_chip = module_chip_base + sp_col/(CHIP_COLUMNS/2);
 
         if ((sp_size &0x0F) <= m_maxClusterSize) { 
           // there is always at least one cluster in the super
@@ -185,22 +185,14 @@
 
         // check up and down
         uint32_t u_idx = idx+1;
-        bool u_stack = true;
-        bool u_seed_stack = false;
         if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) { 
           m_buffer[u_idx] = 0;
           m_stack.push_back(u_idx);
-          u_stack = false;
-          u_seed_stack = true;
         } 
         uint32_t d_idx = idx-1;
-        bool d_stack = true;
-        bool d_seed_stack = false;
         if (row > 0 && m_buffer[d_idx]) {
           m_buffer[d_idx] = 0;
           m_stack.push_back(d_idx);
-          d_stack = false;
-          d_seed_stack = true;
         }
 
         // scan row to the right
@@ -209,25 +201,13 @@
           // check up and down
           u_idx = nidx+1;
           if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) {
-           if (u_stack) { 
              m_buffer[u_idx] = 0;
              m_stack.push_back(u_idx);
-             u_stack = false; 
-             u_seed_stack = false;
-           } 
-          } else {
-            u_stack = true;
           } 
           d_idx = nidx-1;
           if (row > 0 && m_buffer[d_idx]) {
-           if (d_stack) { 
              m_buffer[d_idx] = 0;
              m_stack.push_back(d_idx);
-             d_stack = false; 
-             d_seed_stack = false;
-           } 
-          } else {
-            d_stack = true;
           }
           // add set pixel to cluster or stop scanning
           if ( m_buffer[nidx] ) {
@@ -253,30 +233,18 @@
         }
 
         // scan row to the left
-        u_stack = !u_seed_stack;
-        d_stack = !d_seed_stack;
         for (int c=col-1; c >= 0; --c) {
           const uint32_t nidx = (c << 8) | row;
           // check up and down
           u_idx = nidx+1;
           if (row < SENSOR_ROWS-1 && m_buffer[u_idx]) {
-           if (u_stack) { 
              m_buffer[u_idx] = 0;
              m_stack.push_back(u_idx);
-             u_stack = false; 
-           } 
-          } else {
-            u_stack = true;
           } 
           d_idx = nidx-1;
           if (row > 0 && m_buffer[d_idx]) {
-           if (d_stack) { 
              m_buffer[d_idx] = 0;
              m_stack.push_back(d_idx);
-             d_stack = false; 
-           } 
-          } else {
-            d_stack = true;
           }
           // add set pixel to cluster or stop scanning
           if ( m_buffer[nidx] ) {
