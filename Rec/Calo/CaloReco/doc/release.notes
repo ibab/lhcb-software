@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-02-27 - Olivier Deschamps
+ -  CaloMergedPi0Alg : remove default tools property triggering Prs/Spd decoding
+
 !========================= CaloReco v5r18 2013-12-10 =========================
 ! 2013-10-30 - Olivier Deschamps
  -  python/CaloReco/Configuration.py : fix typo in CaloLines method.

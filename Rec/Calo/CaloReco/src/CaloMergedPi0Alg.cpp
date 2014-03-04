@@ -71,10 +71,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
     , m_a                  ( 0.10                          )
     , m_gainErr            ( 0.01                          )
     , m_noiseIn            ( 1.20                          ) 
-    , m_noiseCo            ( 0.30                          )
- {
-  m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
-  m_toolTypeNames.push_back( "CaloExtraDigits/PrsExtraG" ) ;
+    , m_noiseCo            ( 0.30                          ) {
   /// NTuple directory
   declareProperty ( "NTupleDirectory"        , m_ntupleLUN           ) ;
   declareProperty ( "SplitPhotons"           , m_nameOfSplitPhotons  ) ;
