@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2014-03-04 - Olivier Deschamps
+ -  python/CaloDAQ/CaloDigits.py : deactivate Decoder from DecoderDB when not in Detector list
+ - cmt : add DAQSys dependency
+
 !========================= CaloDAQ v4r37 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Suppress silly info printout

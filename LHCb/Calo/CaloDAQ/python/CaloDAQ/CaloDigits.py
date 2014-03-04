@@ -40,8 +40,11 @@ def caloDigits ( context        ,
                                 RawBankReadoutStatusConverter,
                                 GaudiSequencer    ) 
     
-    
-    
+
+    # deactivate Decoders in Decoder DB when needed
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import Decoder
+ 
 
     conflist=[]
     alglist=[]
@@ -55,6 +58,10 @@ def caloDigits ( context        ,
                          enableOnDemand          )
         conflist.append(spd)
         alglist.append(spd)
+    else :
+        Decoder("CaloDigitsFromRaw/SpdFromRaw",active=False,conf=DecoderDB)
+        print " ... SPD decoding has been deactivated from DecoderDB"
+
 
     if 'Prs'  in detectors :
         _log.debug('caloDigits : Prs is added to the detector list')
@@ -73,7 +80,10 @@ def caloDigits ( context        ,
             alglist.append(prsSeq)
         else :
             alglist.append(prs)
-
+    else :
+        Decoder("CaloDigitsFromRaw/PrsFromRaw",active=False,conf=DecoderDB)
+        print " ... PRS decoding has been deactivated from DecoderDB"
+        
     if 'Ecal' in detectors :
         _log.debug('caloDigits : Ecal is added to the detector list')
         ecalSeq = GaudiSequencer ('EcalDigitsSeq',Context = _cntx)
@@ -91,6 +101,10 @@ def caloDigits ( context        ,
             alglist.append(ecalSeq)
         else :
             alglist.append(ecal)
+    else :
+        Decoder("CaloZSupAlg/EcalZSup",active=False,conf=DecoderDB)
+        print " ... Ecal decoding has been deactivated from DecoderDB"
+
 
     if 'Hcal' in detectors :
         _log.debug('caloDigits : Hcal is added to the detector list')
@@ -109,6 +123,9 @@ def caloDigits ( context        ,
             alglist.append(hcalSeq)
         else :
             alglist.append(hcal)
+    else :
+        Decoder("CaloZSupAlg/HcalZSup",active=False,conf=DecoderDB)
+        print " ... Hcal decoding has been deactivated from DecoderDB"
 
 
 
