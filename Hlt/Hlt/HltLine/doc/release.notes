@@ -5,6 +5,17 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-Mar-04 - Patrick Spradlin
+  - Modifications to HltLine/HltLine.py for use of NnBodyDecays
+    . Hlt2Member.__init__: list of recognized configurable class names
+      expanded to include DaVinci__N3BodyDecays, etc.
+    . Hlt2Member.createConfigurable._adapt:  appropriate output locations for
+      DaVinci__N3BodyDecays, etc. encoded.
+    . Hlt2Line.__init__:  DaVinci__N3BodyDecays, etc. added to needsCopy list
+      for terminal member types.
+    . limitCombinatorics:  DaVinci__N3BodyDecays, etc. added to list of types
+      for which upper limits are placed on the number of candidates per event.
+
 ! 2014-02-23 - Sebastian Neubert
  - Add DecodeTRACK to HltDecodeRaw.py
 

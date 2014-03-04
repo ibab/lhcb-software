@@ -1221,10 +1221,14 @@ class Hlt2Member ( object ) :
         >>> m1 = Hlt2Member ( FilterDesktop , 'Filter', Code = '...', Inputs = ... ,
         """
         from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
+        from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
         ## (0) verify input
         # Type must be a (configurable) class name, and only
         # a limited set is allowed (which must be DVAlgorithms...)
-        if Type not in [ FilterDesktop, CombineParticles, TisTosParticleTagger ] :
+        if Type not in [ FilterDesktop, CombineParticles, TisTosParticleTagger
+                         , DaVinci__N3BodyDecays, DaVinci__N4BodyDecays
+                         , DaVinci__N5BodyDecays, DaVinci__N6BodyDecays
+                         , DaVinci__N7BodyDecays ] :
             raise AttributeError, "The type  %s is not known for Hlt2Member"%Type
         for key in Args :
             if  key not in Type.__slots__  :
@@ -1268,11 +1272,12 @@ class Hlt2Member ( object ) :
             inputLocations = args.pop('Inputs')
             def _adapt(i,line) :
                 from Configurables import FilterDesktop, CombineParticles, NoPIDsParticleMaker, CombinedParticleMaker
+                from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
                 if hasattr(i,'Output') : 
                         return i.Output
                 elif type(i) is bindMembers :
                        return  i.outputSelection()
-                elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker ] : 
+                elif type(i) in [ CombineParticles, FilterDesktop, NoPIDsParticleMaker,CombinedParticleMaker, DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays ] : 
                        return 'Hlt2/%s/Particles' % i.getName()
                 elif type(i) is Hlt2Member :
                        return 'Hlt2/Hlt2'+line+i.subname()+'/Particles'
@@ -1467,7 +1472,7 @@ class Hlt2Line(object):
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
-            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger' ]
+            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2SelDV', 'TisTosParticleTagger', 'DaVinci__N3BodyDecays', 'DaVinci__N4BodyDecays', 'DaVinci__N5BodyDecays', 'DaVinci__N6BodyDecays', 'DaVinci__N7BodyDecays' ]
             knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>','HltIncidentGenerator','TF::PatVeloAlignTrackFilter' ]
             if last.getType() not in knownLastMembers :
               log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with unknown type ' + last.getType() + '; as a result, TISTOS may not work for this line'  )
@@ -1645,6 +1650,7 @@ def computeIndices( configurable ) :
 def limitCombinatorics( configurable, maxCandidates, incidentName = 'ExceedsCombinatoricsLimit' ) :
     val = False
     from Configurables import CombineParticles
+    from Configurables import DaVinci__N3BodyDecays, DaVinci__N4BodyDecays, DaVinci__N5BodyDecays, DaVinci__N6BodyDecays, DaVinci__N7BodyDecays
     if hasattr( configurable, 'Members' ) :
         for i in getattr( configurable, 'Members' ) : 
             # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
@@ -1657,7 +1663,9 @@ def limitCombinatorics( configurable, maxCandidates, incidentName = 'ExceedsComb
             val = limitCombinatorics( i, maxCandidates, incidentName ) or val
         if val : configurable.IncidentsToBeFlagged += [ incidentName ]
         return val
-    elif type(configurable) == CombineParticles :
+    elif type(configurable) in [CombineParticles, DaVinci__N3BodyDecays
+                , DaVinci__N4BodyDecays, DaVinci__N5BodyDecays
+                , DaVinci__N6BodyDecays, DaVinci__N7BodyDecays ] :
         configurable.StopAtMaxCandidates = True
         configurable.MaxCandidates       = maxCandidates
         configurable.StopIncidentType    = incidentName
