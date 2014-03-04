@@ -10,4 +10,9 @@ import Gaudi.Configuration
 from Moore.Configuration import Moore
 
 #use new splitting of Hlt2
-Moore().Split='Hlt1Hlt2'
+Moore().Split=''
+
+##only for experts!
+from Configurables import MooreExpert
+#turn of TISTOS, "Gerhard's Sledgehammer"
+MooreExpert().Hlt2Independent=True

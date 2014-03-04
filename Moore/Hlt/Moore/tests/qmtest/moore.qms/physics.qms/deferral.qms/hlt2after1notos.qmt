@@ -9,6 +9,8 @@
     <text>../options/Moore_NoTosDeferral.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
     <text>../options/default-threshold.py</text>
+    <text>--option</text>
+    <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1.raw' ];</text>
   </set></argument>
   <!--<argument name="prerequisites"><set>
     <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
@@ -16,16 +18,16 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 #print "YES"
-#reftable, should not be equal to the standard physics run!
-reftable='../refs/physics.deferral.hlt2only.ref'
-savestdout='hlt2only.stdout'
-myname='moore.physics.deferral.hlt2only'
+#reftable
+reftable='../refs/physics.deferral.timing.notos.ref'
+#savestdout='hlt2after1notos.stdout'
+myname='moore.physics.deferral.hlt2after1notos'
 
-prevstdout=''
+#prevstdout=''
 #save stdout
-f=open(savestdout,'w')
-f.write(stdout)
-f.close()
+#f=open(savestdout,'w')
+#f.write(stdout)
+#f.close()
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents
 

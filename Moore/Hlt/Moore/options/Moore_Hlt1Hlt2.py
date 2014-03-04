@@ -29,4 +29,8 @@ input = test_file_db['2012_raw_default']
 input.run(configurable=Moore()) 
 Moore().inputFiles = input.filenames
 
-Moore().Split = 'Hlt1Hlt2'
+Moore().Split = ''
+##only for experts!
+from Configurables import MooreExpert
+#turn of TISTOS, "Gerhard's Sledgehammer"
+MooreExpert().Hlt2Independent=True

@@ -4,7 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
-!========================= Moore v22r0 2014-02-26 =========================
+!========================= Moore v22r0 2014-03-04 =========================
+! 2014-03-04 - Rob Lambert
+ - Fix surface problems with Moore's split running
+ - Adapt to HltIndependent option of MooreExpert(). 
+ - Edit the tests, I don't want hlt2after1 to be compared to notos any longer
+
 ! 2014-02-26 - Rob Lambert
  - Update behaviour of TCK tests to new default printout.
 

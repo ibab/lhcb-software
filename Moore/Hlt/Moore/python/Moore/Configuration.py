@@ -36,7 +36,8 @@ class MooreExpert(LHCbConfigurableUser):
         , 'WriteFSR'    :  True #copy FSRs as required
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
-        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
+        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite'
+        , "Hlt2Independent" : False #"Gerhard's Sledgehammer", auto pass all TOS links from HLT1->HLT2 when run alone, and also turn off HLT1 track decoding
         }
 
     def __apply_configuration__(self):
@@ -424,7 +425,7 @@ class Moore(LHCbConfigurableUser):
         
         if level>INFO and self.getProp("EnableTimer"):
             #in the future handle this by outputting a timing file!
-            print "# WARNING: Timing table is very far from silent, please disable timing if you want to run with lower verbosity"
+            print "# WARNING: Timing table is very verbose, please disable timing if you want to run with lower verbosity"
             from Configurables import TimingAuditor
             TimingAuditor('TIMER').OutputLevel=INFO
             TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
@@ -648,7 +649,6 @@ class Moore(LHCbConfigurableUser):
             LHCbApp().setProp("Persistency","MDF")
     
     def _split(self, useTCK ): 
-        if not self.getProp('Split') : return
         def hlt1_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
@@ -670,41 +670,43 @@ class Moore(LHCbConfigurableUser):
             seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
             # TODO: shunt lumi nano events...
             # globally prepend Decoders for Hlt1...
-            # TODO: find a better way of doing this... ditto for L0 decoding...
+            # TODO: find a better way of doing this... ditto for L0 decoding...I should have been able to suppress this stuff! 
             from DAQSys.Decoders import DecoderDB
             
             dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decAlg=dec.setup()
             seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
-
-            tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
-            tr.active = True
-            trAlg=tr.setup()
-            #trAlg.OutputLevel = VERBOSE
-            seq.Members.insert( seq.Members.index(gs('Hlt2')), trAlg )
+            
+            if not MooreExpert().getProp("Hlt2Independent"):
+                tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
+                tr.active = True
+                trAlg=tr.setup()
+                seq.Members.insert( seq.Members.index(gs('Hlt2')), trAlg )
             
             sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
             selAlg=sel.setup()
             seq.Members.insert( seq.Members.index(gs('Hlt2')), selAlg )
+                
+            # shunt Hlt1 decreports
+            from Funcs import _updateProperties
+            _updateProperties( gs('Hlt')
+                               , dict( LoKi__HDRFilter      = 'Location'
+                                       , TisTosParticleTagger = 'HltDecReportsInputLocation'
+                                       , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
+                                       )
+                               , dec.listOutputs()[0]
+                               )
+            
+            
             # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
             # remove LumuWriter, LumiStripper
             end = gs('HltEndSequence')
             end.Members = Funcs._remove( ( 'HltL0GlobalMonitor','Hlt1Global','HltLumiWriter','LumiStripper'), end.Members )
-
+            
             ## adapt HltGlobalMonitor for Hlt2 only...
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt1 = {}
-
-            # shunt Hlt1 decreports
-            from Funcs import _updateProperties
-            _updateProperties( gs('Hlt')
-                             , dict( LoKi__HDRFilter      = 'Location'
-                                   , TisTosParticleTagger = 'HltDecReportsInputLocation'
-                                   , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
-                                   )
-                             , dec.listOutputs()[0]
-                             )
-
+            
             # shunt Hlt2 decreports
             dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             from Funcs import _updateProperties
@@ -717,7 +719,7 @@ class Moore(LHCbConfigurableUser):
                                    )
                              , dec2.listOutputs()[0]
                              )
-
+            
             # shunt selreports
             dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
             _updateProperties( gs('Hlt')
@@ -725,83 +727,103 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
                              ,  dec3.listOutputs()[0]
                              )
-           
-            _updateProperties( gs('Hlt')
-                             , dict( TisTosParticleTagger = 'PassOnAll' )
-                             , 'True'
-                             )
-
-
+            
+        
         def hlt2_only_tck() :
             from DAQSys.Decoders import DecoderDB
+            #dependent transform, if HLT1 has run before, now add HLT1 decoding, track decoding etc.
+            #if not MooreExpert().getProp("Hlt2Independent"):
+            #Todo, route out all the errors here, I should have been able to suppress this stuff!
+            
+            transdep={}
             hlt1decoder_name="HltDecReportsDecoder/Hlt1DecReportsDecoder"
             dec=DecoderDB[hlt1decoder_name]
             decAlg=dec.setup()
-            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
             hlt1seloder_name="HltSelReportsDecoder/Hlt1SelReportsDecoder"
             dec4=DecoderDB[hlt1seloder_name]
             dec4Alg=dec4.setup()
             hlt1decrep_location = dec.listOutputs()[0]
-            hlt2decrep_location = dec2.listOutputs()[0]
+            hlt1traoder_name="HltTrackReportsDecoder/Hlt1TrackReportsDecoder"
+            tr=DecoderDB[hlt1traoder_name]
+            tr.active = True
+            trAlg=tr.setup()
+            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+"', '"+hlt1traoder_name+"', 'GaudiSequencer/Hlt2"  } }
+            transdep['.*HDRFilter/.*' ]= { 'Location'                   : { '^.*$' : hlt1decrep_location } }
+            transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
+            transdep['TisTosParticleTagger/.*']={ 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
+            transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
+            Funcs._mergeTransform(transdep)
+            
+            #always transform
+            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
             hlt2selrep_location = dec3.listOutputs()[0]
-            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
-                      , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
-                                                                              , ", '.*/Hlt1Global'"         : ''
-                                                                              , ", '.*/HltLumiWriter'"      : ''
-                                                                              , ", '.*/LumiStripper'"       : '' } }
-                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
-                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
-                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } 
-                                                                , 'PassOnAll'                  : { '^.*$' : 'True'              }
-                                                                # , 'TriggerTisTosName'          : { '^.*$' : foobar              }
-                                                                              }
-                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
-                                                                , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
-                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
-                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
-                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
-                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
-                      }
-            Funcs._mergeTransform(trans)
-
-        def hlt1hlt2() :
+            hlt2decrep_location = dec2.listOutputs()[0]
+            dec3alg=dec3.setup()
+            
+            transall={}
+            transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
+                                                                      , ", '.*/Hlt1Global'"         : ''
+                                                                      , ", '.*/HltLumiWriter'"      : ''
+                                                                      , ", '.*/LumiStripper'"       : '' } }
+            
+            transall['HltGlobalMonitor/HltGlobalMonitor' ]= { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
+            
+            transall['.*/HltRoutingBitsWriter']={ 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
+            
+            transall2={'Hlt::Line/.*'                        : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
+                       , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                       , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                       , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
+                       , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
+                       , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
+                       }
+            
+            Funcs._mergeTransform(transall)
+            Funcs._mergeTransform(transall2)
+                    
+        def gerhardsSledgehammer() :
             from Configurables import GaudiSequencer as gs
             from Funcs import _updateProperties
             _updateProperties( gs('Hlt2') , dict( TisTosParticleTagger = 'PassOnAll' ) , True)
-
-        def hlt1hlt2_tck() : 
+        
+        def gerhardsSledgehammer_tck() : 
             trans = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
             Funcs._mergeTransform(trans)
         
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
-        try : 
-            if useTCK :
-                splitter = { 'Hlt1'     : hlt1_only_tck 
-                           , 'Hlt2'     : hlt2_only_tck
-                           , 'Hlt1Hlt2' : hlt1hlt2_tck }
-                action = splitter[ self.getProp('Split') ]
-                if action : action()
-            else :
-                splitter = { 'Hlt1'     : hlt1_only 
-                           , 'Hlt2'     : hlt2_only
-                           , 'Hlt1Hlt2' : hlt1hlt2 }
-                action = splitter[ self.getProp('Split') ]
-                if action :
-                    from Gaudi.Configuration import appendPostConfigAction
-                    appendPostConfigAction( action )
-        except :
+        split=self.getProp("Split")
+        if split not in ["","Hlt1","Hlt2"]:
             raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
-
-
-
+        if useTCK :
+            splitter = { 'Hlt1'     : hlt1_only_tck 
+                         , 'Hlt2'     : hlt2_only_tck
+                         , ''         : False }
+            action = splitter[ split ]
+            if  MooreExpert().getProp("Hlt2Independent"): gerhardsSledgehammer_tck()
+            if action : action()
+        else :
+            splitter = { 'Hlt1'     : hlt1_only 
+                         , 'Hlt2'     : hlt2_only
+                         , ''         : False }
+            action = splitter[ split ]
+            
+            from Gaudi.Configuration import appendPostConfigAction
+            if action :
+                appendPostConfigAction( action )
+            
+            if  MooreExpert().getProp("Hlt2Independent"):
+                appendPostConfigAction( gerhardsSledgehammer )
+        
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
         return self.getProp(prop) == value
-
+    
+    def _throwIfNotSet(self,conf,prop,set,reason):
+        if not conf.getProp(prop)==set:
+            raise AttributeError("You've set mutually exclusive settings! "+prop+":"+str(conf.getProp(prop))+" should be "+str(set)+" "+reason)
+        
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         # verify mutually exclusive settings:
@@ -824,6 +846,20 @@ class Moore(LHCbConfigurableUser):
                     deprecationwarning=deprecationwarning+"\n"
         if len(deprecationwarning.strip()):
             raise DeprecationWarning(deprecationwarning.strip())
+        
+        #check nothing strange is set for running online
+        if self.getProp("RunOnline"):
+            #things 
+            for prop,set in [("generateConfig",False),("EvtMax",-1)]:
+                self._throwIfNotSet(self,prop,set," because you're running in Online mode!")
+        
+        #check nothing strange is running to generate a TCK
+        if self.getProp("generateConfig"):
+            for prop,set in [("Hlt2Independent",False)]:
+                self._throwIfNotSet(MooreExpert(),prop,set," because you're trying to generate a TCK!")
+            for prop,set in [("OutputLevel",WARNING),("UseTCK",False)]:
+                self._throwIfNotSet(self,prop,set," because you're trying to generate a TCK!")
+        
         
         if not self.getProp("RunOnline") : self._l0()
         
@@ -856,7 +892,6 @@ class Moore(LHCbConfigurableUser):
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
-        self._outputLevel()
         
         #set the decoders to read from the default location
         self._setRawEventLocations()
@@ -878,4 +913,6 @@ class Moore(LHCbConfigurableUser):
             if self.getProp("generateConfig") : self._generateConfig()
             self._configureInput()
             self._configureOutput()
+        #last thing, set output levels
+        self._outputLevel()
     
