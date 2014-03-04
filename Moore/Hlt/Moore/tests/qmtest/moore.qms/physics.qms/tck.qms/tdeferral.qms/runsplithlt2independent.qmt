@@ -18,7 +18,7 @@
 #print "YES"
 #reftable, compare to hlt2only from standard running
 reftable='../refs/physics.deferral.hlt2only.ref'
-myname='moore.physics.tck.deferral.runsplithlt2independent'
+myname='moore.physics.tck.tdeferral.runsplithlt2independent'
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents
 

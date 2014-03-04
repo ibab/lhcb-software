@@ -17,7 +17,7 @@
 #print "YES"
 #reftable
 reftable='../refs/physics.2012.timing.ref'
-myname='moore.physics.tck.deferral.runsplithlt2'
+myname='moore.physics.tck.tdeferral.runsplithlt2'
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents
 
