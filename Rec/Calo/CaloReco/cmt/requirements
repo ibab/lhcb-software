@@ -12,6 +12,7 @@ use Relations       v*     Kernel
 # next needed for build and run time dependencies of configurable
 use CaloPIDs        v*     Calo -no_auto_imports
 use CaloDAQ         v*     Calo -no_auto_imports
+use DAQSys	    v*	   DAQ  -no_auto_imports
 
 # ================ constituents ===============================================
 library            CaloReco    *.cpp

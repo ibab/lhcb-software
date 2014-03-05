@@ -152,6 +152,12 @@ class CaloRecoConf(LHCbConfigurableUser):
         digitConf.Verbose               = self.getProp ('Verbose'           )
         if self.getProp('NoSpdPrs') :
             digitConf.Detectors = ['Ecal','Hcal']            
+            # deactivate Spd/Prs in DecoderDB
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import Decoder
+            Decoder("CaloDigitsFromRaw/SpdFromRaw",active=False,conf=DecoderDB)
+            Decoder("CaloDigitsFromRaw/PrsFromRaw",active=False,conf=DecoderDB)
+
         return digitConf.digits()
     
     ## Configure reconstruction of Ecal Clusters

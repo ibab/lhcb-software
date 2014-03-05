@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-05 - Olivier Deschamps
+ -  python/Configuration.py : dactivate Spd/Prs Decoders in DecoderDB when noSpdPrs=True
+ -  add DAQSys dependency
+
 ! 2014-02-27 - Olivier Deschamps
  -  CaloMergedPi0Alg : remove default tools property triggering Prs/Spd decoding
 
