@@ -280,7 +280,7 @@ HltANNSvc().InfoID = {
     "Velo"                                       : 6298,
     "PatForwardTool/LooseForward"                : 6299,
     "PatForwardTool/TightForward"                : 6300,
-    "PatForwardTool/PestiForward"                : 6302,
+    "PatForwardTool/PestiForward"                : 6311, #was 6302, see bug #103993
     "PatVeloTTTool/pET"                          : 6301,
     "FastTTValidationTool/ValidateWithTT"        : 6350,
     "MatchVeloMuon"                              : 6400,
