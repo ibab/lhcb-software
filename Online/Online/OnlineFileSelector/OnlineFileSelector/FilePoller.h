@@ -5,6 +5,7 @@
 #include "GaudiOnline/OnlineService.h"
 #include "IHandleListenerSvc.h"
 #include "IAlarmHandler.h"
+#include "IOnlineBookkeep.h"
 #include "RTL/rtl.h"
 #include <deque>
 #include "dim.hxx"
@@ -21,7 +22,8 @@ namespace LHCb  {
   class FilePoller :  virtual public DimTimer,
                       public OnlineService,
                       virtual public IHandleListenerSvc,
-                      virtual public IAlarmHandler
+                      virtual public IAlarmHandler,
+                      virtual public IOnlineBookkeep
 
   {
 
@@ -68,27 +70,42 @@ namespace LHCb  {
     virtual const StatusCode showListeners();  
    
     /// IHandlerListenerSvc statusReport.
-    virtual StatusCode statusReport(StatusCode status);
+    virtual StatusCode statusReport(StatusCode status, std::string file);
     
     /// IAlarmHandler error response.
     virtual const StatusCode issueAlarm(const std::string& msg);
   
+    /// IOnlineBookkeep get the run number from file path implementation
+    virtual std::string getRunFileNumber(const std::string file_path);
 
-  private:
+    /// IOnlineBookkeep book-keep a processed file.
+    virtual StatusCode markBookKept(const std::string file);
+
+    /// IOnlineBookkeep check if a file has been processed.
+    virtual StatusCode isBookKept(const std::string file);
+
+    
+    /// Simple bookkeeping with a vector -- temporary.
+    std::vector<std::string> m_ProcessedFiles;
+    
 
 
-    ///The directory to be scanned.
+ private:
+
+
+    /// The directory to be scanned.
     std::string m_scanDirectory;
 
-    ///The period of the scanning process.
+    /// The period of the scanning process.
     int m_alrmTime;
 
-    ///The names of the files found in the scanned directory.
+    /// The names of the files found in the scanned directory.
     std::deque<std::string>  m_fileNames;
 
-    ///The listeners waiting for the files.
+    /// The listeners waiting for the files.
     std::deque<IAlertSvc*> m_fileListeners;
 
+    /// Lock for the listener queue.
     lib_rtl_lock_t m_listenerLock;
 
   };

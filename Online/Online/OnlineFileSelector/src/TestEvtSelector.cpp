@@ -68,6 +68,7 @@ TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
   declareProperty("PrintFreq",   m_printFreq=-1);
   declareProperty("AddSpace",    m_addSpace=1);
   declareProperty("Input",       m_input="");
+  declareProperty("MaxNoEvents", m_maxNoEvt);
 }
 
 // IInterface::queryInterface
@@ -101,6 +102,8 @@ StatusCode TestEvtSelector::initialize()  {
     log << MSG::ERROR << "<TestEvtSelector> Error initializing base class Service!" << endmsg;
     return status;
   }
+
+  
 
    StatusCode sc = Service::service("LHCb::FilePoller/Poller",m_filePoller,true);
    if ( !sc.isSuccess() )  {
@@ -169,7 +172,7 @@ StatusCode TestEvtSelector::finalize()  {
 
   if ( m_filePoller )  { 
     m_filePoller->remListener(this); 
-    //releaseInterface(m_filePoller);    //INCLUDE IT SOMEHOW
+    m_filePoller = 0;
   }
   
   // Release lock to steer suspend/resume operations
@@ -185,13 +188,19 @@ StatusCode TestEvtSelector::finalize()  {
 StatusCode TestEvtSelector::next(Context& ctxt) const  {
   MsgStream log(messageService(), name());
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
+  StatusCode sc = StatusCode::FAILURE;
+  
+  if (m_maxNoEvt == m_evtCount) { 
+		      m_evtCount = 1; ///Read as much as we wanted, read the same number from next file -- first event is immediately read
+	        cout << "Going idle..." << endl;
+          return goIdle();
+  } 
 
   if ( pCtxt != 0 )   {
-    
-           StatusCode sc = pCtxt->receiveData(msgSvc());  ///Does the inverse order matter to program execution???
-           
-           log << MSG::DEBUG << "IN NEXT" << endmsg;
-           
+
+           if  (0 != TestEvtSelector::m_firstConnection) {
+               sc = pCtxt->receiveData(msgSvc());  
+           } 
            
            if (sc.isSuccess())
            {
@@ -203,28 +212,35 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
              }
              return sc;
            }
-           else  ///Warning: for any case of failure we enter the block, not just end of file.Way to enter only for end of file. 
-           {
-              m_isWaiting = true;
-              m_filePoller->addListener((IAlertSvc*)this);//Why have to force the cast???
+           else {
 
-              if (!lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock))){
-                log << MSG::ERROR << "Cannot lock to suspend operations." << endmsg;
-                
-                 if ( m_filePoller )  { 
-                   m_filePoller->remListener((IAlertSvc*)this);
-                 }
-                
-              }
-              m_isWaiting = false;
-              //what happens next??Is next method called, or should I do it explicitly??
-              
+             return goIdle();
+
            }
+           
   }
-  
-  
   return S_ERROR;
 }
+
+
+StatusCode TestEvtSelector::goIdle() const {
+
+  MsgStream log(msgSvc(), name());
+  m_isWaiting = true;
+  m_filePoller->addListener((IAlertSvc*)this); //Why have to force the cast???
+
+  if (!lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock))) {
+    log << MSG::ERROR << "Cannot lock to suspend operations." << endmsg;
+    if ( m_filePoller ) {
+      m_filePoller->remListener((IAlertSvc*)this);
+    }
+  }
+  m_isWaiting = false;
+
+  return StatusCode::SUCCESS;
+
+}
+
 
 
 StatusCode TestEvtSelector::next(Context& ctxt, int jump) const {
@@ -293,7 +309,7 @@ TestEvtSelector::resetCriteria(const std::string& criteria,Context& context) con
   MsgStream log(messageService(), name());
   LoopContext* ctxt = dynamic_cast<LoopContext*>(&context);
   if ( ctxt )  {
-    std::string crit = criteria.substr(5);
+    std::string crit = criteria;//std::string crit = criteria.substr(5);
     ctxt->close();
     StatusCode sc = ctxt->connect(crit);
     if ( !sc.isSuccess() )  {
@@ -339,10 +355,10 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
 {
   
   MsgStream log(messageService(), name());
-  log << MSG::ERROR << "ALERTEARETTETREY"<<endmsg;
-  
+  TestEvtSelector::m_firstConnection = 1;
+
   //Wake listener up,take care of any lock/synchronisation issues.
-   if ( !file_name.empty() )  {
+  if ( !file_name.empty() )  {
         m_input = file_name;
         Context* refpCtxt = getCurContext();
         StatusCode sc = resetCriteria(m_input,*refpCtxt);
@@ -351,16 +367,17 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
           refpCtxt = 0;
           return sc;
         }
-        m_filePoller->statusReport(sc);
+        m_filePoller->statusReport(sc,m_input);
    }
 
   if (!(m_filePoller->remListener((IAlertSvc*)this))) {
-      log << MSG::ERROR << "Cannot unlock to resume operations." << endmsg;
+      log << MSG::ERROR << "Error removing listener from waiting list." << endmsg;
       return StatusCode::FAILURE;
       }
-  TestEvtSelector::resume();
+
+  cout << "EventSelector:Ready to read events from " + file_name << endl;
   
-  cout << "TESTEVTSEL:Ready to read events from " + file_name << endl;
+  TestEvtSelector::resume();
   
   return StatusCode::SUCCESS;
 }
@@ -377,6 +394,5 @@ string  TestEvtSelector::getSvcName()
   return m_listener_name;
   
 }
-
-
+      
 

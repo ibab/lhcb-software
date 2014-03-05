@@ -85,8 +85,10 @@ namespace LHCb  {
       virtual StatusCode connect(const std::string& specs);
       /// close connection
       virtual void close();
+      
     };
-
+    
+    
     mutable IHandleListenerSvc* m_filePoller;
     
 
@@ -118,7 +120,7 @@ namespace LHCb  {
       * 
       * @return StatusCode indicating success or failure
       */
-    virtual StatusCode next(Context& refCtxt) const;
+    virtual StatusCode next(Context& refCtxt) const; 
 
     /** Get next iteration item from the event loop context, but skip jump elements
       * @param[in,out] refCtxt   Reference to the context
@@ -208,7 +210,9 @@ namespace LHCb  {
     virtual void setCurContext(Context*& ctxt) const { m_curContext = ctxt; } 
     virtual Context* getCurContext() { return m_curContext;}
 
-  protected:
+    virtual StatusCode goIdle() const;
+
+protected:
     /// Definition of the masj type
     typedef std::vector<unsigned int> Mask;
 
@@ -241,13 +245,13 @@ namespace LHCb  {
     lib_rtl_event_t                  m_suspendLock;
     /// Pointer to current context.
     mutable Context* m_curContext;
-    
+    /// Flag to indicate there has been a first connection object.
+    mutable int m_firstConnection = 0;    
+    /// Maximum number of events to be read from each file.
+    int m_maxNoEvt;
    
-    
-    
-    
-    
-    
+
+
   };
 }
 #endif  // MDF_TESTEVTSELECTOR_H

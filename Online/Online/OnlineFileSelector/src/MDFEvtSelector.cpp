@@ -50,7 +50,7 @@ namespace LHCb  {
       return MDFDescriptor(m_buff.data(),m_buff.size());
     }
     /// Read raw byte buffer from input stream
-    StatusCode readBuffer(void* const /* ioDesc */, void* const data, size_t len)  {
+    StatusCode readBuffer(void* const /* ioDesc */, void* const data, size_t len)   {
       return m_ioMgr->read(m_connection, data, len);
     }
     /// Receive event and update communication structure
@@ -104,7 +104,7 @@ namespace LHCb  {
 
   /** @class MDFEvtSelector
     */
-  class MDFEvtSelector : public TestEvtSelector
+  class MDFOnlineEvtSelector : public TestEvtSelector
                          
   {
   protected:
@@ -123,29 +123,22 @@ namespace LHCb  {
       refpCtxt = new MDFPollerContext(this,c=='Y'||c=='T'); // YES or TRUE
       setCurContext(refpCtxt);
       
-      /*if ( !m_input.empty() )  { //goes directly to next -> receive data ->no available connection!
-        StatusCode sc = resetCriteria(m_input,*refpCtxt);
-        if ( !sc.isSuccess() ) {
-          delete refpCtxt;
-          refpCtxt = 0;
-        }
-        m_filePoller->statusReport(sc); ///
-        return sc;
-      }
-      */
+      TestEvtSelector::m_firstConnection = 0;
+      
+      
       return StatusCode::SUCCESS;
     }
 
 
     /// Service Constructor
-    MDFEvtSelector( const std::string& nam, ISvcLocator* svcloc )
+    MDFOnlineEvtSelector( const std::string& nam, ISvcLocator* svcloc )
     : TestEvtSelector( nam, svcloc)  {
       declareProperty("IgnoreChecksum",m_ignoreChecksum="NO");
     }
     /// Standard destructor
-    virtual ~MDFEvtSelector()  {}
+    virtual ~MDFOnlineEvtSelector()  {}
   };
  }
 
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MDFEvtSelector)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MDFOnlineEvtSelector)

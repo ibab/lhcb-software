@@ -104,11 +104,11 @@ StatusCode FilePoller::poller(string scan_path)
   path = (char*)calloc(sizeof(char),1024);
   prev_path = (char*)calloc(sizeof(char),1024);
   if ((!path)||(!prev_path)){
-    status = FilePoller::issueAlarm(OnlineService::name() + "calloc memory problem");
+    status = FilePoller::issueAlarm(OnlineService::name() + " calloc memory problem");
     return status; 
   }
 
-  path = strncpy(path,scan_path.c_str(),1023);//size??
+  path = strncpy(path,scan_path.c_str(),1023);
   dir = opendir(path);
   
   if ( 0 == dir )  {
@@ -117,7 +117,7 @@ StatusCode FilePoller::poller(string scan_path)
   
   while ((0==readdir_r(dir,&d_entry,&d_res)) && (NULL!=d_res)) {
     
-    prev_path = strncpy(prev_path,path,256);
+    prev_path = strncpy(prev_path,path,1023);
     if (!prev_path)
         return error("The directory prev_path is not valid!");
     if (!strcmp(d_entry.d_name,".") || !strcmp(d_entry.d_name,".."))
@@ -131,32 +131,32 @@ StatusCode FilePoller::poller(string scan_path)
       //Place path of the file in buffer.
       if (find( m_fileNames.begin(),  m_fileNames.end(),n_path) ==  m_fileNames.end()) 
       {
-        FilePoller::addTofileNames(n_path);
+        FilePoller::addTofileNames(n_path + "/" + dname);
       }
       
     }
-    else /*if (d_entry.d_type == DT_DIR)*/ {
+    else {
 
       n_path = n_path + "/" + dname;
       nested_dir = opendir(n_path.c_str());
       
 		  if (!nested_dir) {
-          status = FilePoller::issueAlarm(OnlineService::name()+"Error opening directory.");
+          status = FilePoller::issueAlarm(OnlineService::name()+": Error opening directory.");
           return status;
       }
       status = FilePoller::poller(n_path);
       if (StatusCode::FAILURE == status) {
-         status = FilePoller::issueAlarm(OnlineService::name()+"The poller encountered an error.");
+         status = FilePoller::issueAlarm(OnlineService::name()+": The poller encountered an error while recursing.");
          return status;
       }
       i = closedir(nested_dir);
       if (-1 == i){
-         status = FilePoller::issueAlarm(OnlineService::name()+"Problem closing directory.");
+         status = FilePoller::issueAlarm(OnlineService::name()+": Problem closing directory.");
         return status;
       }
     }
     
-    path = strncpy(path,prev_path,255);
+    path = strncpy(path,prev_path,1023);
     if (!path)
         return error("The directory path is not valid!");
   }
@@ -183,8 +183,6 @@ StatusCode FilePoller::remListener(IAlertSvc* Listener)
 {
   deque<IAlertSvc*>::iterator iter;
   
-  
-  
   if (lib_rtl_lock(m_listenerLock)) {
       
    if (!m_fileListeners.empty())
@@ -192,11 +190,13 @@ StatusCode FilePoller::remListener(IAlertSvc* Listener)
      iter = find(m_fileListeners.begin(),m_fileListeners.end(),Listener);
      if (*iter == m_fileListeners.front()) 
          m_fileListeners.pop_front();
+     else if (iter == m_fileListeners.end())
+         return FilePoller::issueAlarm("Logic bug: remove non-existent listener");
      else
          m_fileListeners.erase(iter);
    }
    else 
-     FilePoller::issueAlarm(OnlineService::name()+"No listeners available.");
+     info(OnlineService::name()+": No more listeners available.");
    if (!lib_rtl_unlock(m_listenerLock))
        return FilePoller::issueAlarm("Problem releasing the lock.");
    return StatusCode::SUCCESS;
@@ -219,7 +219,7 @@ const StatusCode FilePoller::showListeners()
     {
       Listener = *iter;
       if (!Listener)
-        return FilePoller::issueAlarm(OnlineService::name()+"Error retrieving service");
+        return FilePoller::issueAlarm(OnlineService::name()+": Error retrieving service");
         cout << Listener->getSvcName() << endl;
     }
     
@@ -255,15 +255,17 @@ string FilePoller::remFromfileNames()
 
   
 /// Implementation of IHandleListenerSvc::statusReport.
-StatusCode FilePoller::statusReport(StatusCode status)
+StatusCode FilePoller::statusReport(StatusCode status, string file)
 {
   if (StatusCode::FAILURE == status)
   {
     // no book-keeping
+    info(OnlineService::name()+": The file has already been processed.");
   }
   else if (StatusCode::SUCCESS == status)
   {
     // book-keep the file
+    StatusCode sc = markBookKept(file);
   }
   
   return status;
@@ -286,15 +288,53 @@ void FilePoller::timerHandler()
     
       path_name = remFromfileNames();
       //check if it is book-kept
+      sc = isBookKept(path_name);
       //if not, alertSvc(), if yes, dismiss and pick next file
-      sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
+      if (StatusCode::FAILURE == sc)
+         sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
+      else
+         break; //?? CHECK!!
+      
       sc = remListener(m_fileListeners.front());
+
   }
   
   FilePoller::start();
 
 } 
 
+
+
+/// Implementation of IOnlineBookkeep::getRunFileNumber.
+string FilePoller::getRunFileNumber(const string file_path) {
+
+  return file_path.substr(57); // Is it standard???
+  
+}
+
+/// Implementation of IOnlineBookkeep::markBookKept.
+StatusCode FilePoller::markBookKept(const std::string file) {
+
+  m_ProcessedFiles.push_back(file);
+  
+  return StatusCode::SUCCESS;
+  
+}
+
+/// Implementation of IOnlineBookkeep::isBookKept.  
+StatusCode FilePoller::isBookKept(const std::string file) {
+
+  vector<string>::iterator iter;
+
+  iter = find(m_ProcessedFiles.begin(),m_ProcessedFiles.end(),file);
+  if (iter == m_ProcessedFiles.end())
+     return StatusCode::FAILURE;
+  
+  return StatusCode::SUCCESS;
+  
+}
+
+  
 
 
 

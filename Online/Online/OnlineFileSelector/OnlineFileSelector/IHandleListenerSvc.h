@@ -27,7 +27,7 @@ public:
   virtual StatusCode addListener(IAlertSvc* ) = 0;
   virtual StatusCode remListener(IAlertSvc*) = 0;
   virtual const StatusCode showListeners() = 0;
-  virtual StatusCode statusReport(StatusCode) = 0;
+  virtual StatusCode statusReport(StatusCode , std::string ) = 0;
   
   
   
