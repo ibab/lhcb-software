@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-03-04 - Olivier Deschamps
+ -  remove previous change due to circular dependency with DAQSys
+ -  DecoderDB deactivation moved to CaloReco configurable
+
+! 2014-03-04 - Olivier Deschamps
  -  python/CaloDAQ/CaloDigits.py : deactivate Decoder from DecoderDB when not in Detector list
  - cmt : add DAQSys dependency
 
