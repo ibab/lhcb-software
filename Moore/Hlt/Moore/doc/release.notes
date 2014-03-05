@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-05 - Rob Lambert
+ - Add test for magic number 6302, see bug #103993
+
 !========================= Moore v22r0 2014-03-04 =========================
 ! 2014-03-04 - Rob Lambert
  - Ensure no warnings from tracking decoder when in Hlt2Independent mode
