@@ -35,7 +35,6 @@ protected:
 
 private:
   DeOTDetector* m_tracker;
-  int m_minHits;
   double m_xTol;
   double m_yTol;
   bool m_global;
