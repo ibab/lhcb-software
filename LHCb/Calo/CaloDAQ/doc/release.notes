@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2014-03-06 - Olivier Deschamps
+ -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
+
 ! 2014-03-05 - Olivier Deschamps
  -  remove verbose printout
 

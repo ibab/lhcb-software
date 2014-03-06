@@ -102,8 +102,9 @@ class CaloDigitConf(LHCbConfigurableUser):
 
         cmp = self.digits()    
         setTheProperty ( cmp , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( cmp , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( cmp , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )        
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( cmp , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
 
       
         if self.isPropertySet('Sequence') :
