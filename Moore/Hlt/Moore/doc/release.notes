@@ -4,10 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r0 2014-03-06 =========================
 ! 2014-03-06 - Sebastian Neubert
  - Fixed raw filename for moore.physics.tracking to be unique
 
-!========================= Moore v22r0 2014-03-05 =========================
 ! 2014-03-05 - Rob Lambert
  - Add test for magic number 6302, see bug #103993
 
