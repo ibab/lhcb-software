@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-03-06 - Chris Jones
+ - Clean up Rich::Rec::MC::RecoQC a little using c++11 features.
+
 !========================= RichRecQC v2r64 2014-02-19 =========================
 ! 2014-02-07 - Marco Clemencic
  - Fixed a bug in RichRecQCConf exposed by the fix to Gaudi bug #103803.

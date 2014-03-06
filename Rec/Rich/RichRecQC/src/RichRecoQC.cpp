@@ -46,27 +46,14 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MinBeta", m_minBeta );
   declareProperty( "MaxBeta", m_maxBeta );
 
-  // Ch Theta Rec histogram limits: low, high -> aerogel, Rich1Gas, Rich2Gas
-  {
-    const std::vector<double> tmp = list_of(0.150)(0.030)(0.010);
-    declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = tmp);
-  }
-  {
-    const std::vector<double> tmp = list_of(0.325)(0.065)(0.036);
-    declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = tmp);
-  }
-  {
-    const std::vector<double> tmp = list_of(0.025)(0.005)(0.0025);
-    declareProperty( "CKResHistoRange", m_ckResRange = tmp);
-  }
-
-  {
-    const std::vector<bool> tmp = list_of(true)(true)(true);
-    declareProperty( "Radiators", m_rads = tmp);
-  }
-
-  declareProperty( "MinRadSegs", m_minRadSegs = std::vector<unsigned int>(3,       0) );
-  declareProperty( "MaxRadSegs", m_maxRadSegs = std::vector<unsigned int>(3, 9999999) );
+  // Ch Theta Rec histogram limits: low, high             -> aerogel, Rich1Gas, Rich2Gas
+  declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = { 0.150, 0.030, 0.010 } );
+  declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = { 0.325, 0.065, 0.036 } );
+  declareProperty( "CKResHistoRange", m_ckResRange = { 0.025, 0.005, 0.0025 } );
+  declareProperty( "Radiators", m_rads = { true, true, true } );
+  
+  declareProperty( "MinRadSegs", m_minRadSegs = { 0, 0, 0 } );
+  declareProperty( "MaxRadSegs", m_maxRadSegs = { 9999999,9999999,9999999 } );
 
   declareProperty( "EnableAerogelTilePlots", m_aeroTilePlots = false );
 
@@ -123,68 +110,66 @@ StatusCode RecoQC::prebookHistograms()
 
     // List of active Aerogel tile IDs
     tiles.reserve( aerogel->radiators().size() );
-    for ( DeRichRadiator::Vector::const_iterator dRad = aerogel->radiators().begin();
-          dRad != aerogel->radiators().end(); ++dRad )
+    for ( const auto dRad : aerogel->radiators() )
     {
-      const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(*dRad);
+      const DeRichAerogelRadiator* d = dynamic_cast<const DeRichAerogelRadiator*>(dRad);
       if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
       tiles.push_back( d );
     }
   }
 
   // Loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const auto rad : Rich::radiators() )
   {
-    if ( m_rads[*rad] )
+    if ( m_rads[rad] )
     {
       // Which RICH ?
-      const Rich::DetectorType rich = ( *rad == Rich::Rich2Gas ?
+      const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ?
                                         Rich::Rich2 : Rich::Rich1 );
 
-      richHisto1D( HID("ckResAllStereoRefit",*rad),
+      richHisto1D( HID("ckResAllStereoRefit",rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit",
-                   -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                   -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
-      richHisto1D( HID("ckResAllStereoRefitIsolated",*rad),
+      richHisto1D( HID("ckResAllStereoRefitIsolated",rad),
                    "Rec-Exp Cktheta | All photons | Stereographic Refit | Isolated Tracks",
-                   -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                   -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
-      richHisto1D( HID("thetaRec",*rad), "Reconstructed Ch Theta | All photons",
-                   m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+      richHisto1D( HID("thetaRec",rad), "Reconstructed Ch Theta | All photons",
+                   m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                    "Cherenkov Theta / rad" );
-      richHisto1D( HID("thetaExpect",*rad), "Expected Ch Theta | All Tracks",
-                   m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+      richHisto1D( HID("thetaExpect",rad), "Expected Ch Theta | All Tracks",
+                   m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                    "Cherenkov Theta / rad" );
-      richHisto1D( HID("phiRec",*rad), "Reconstructed Ch Phi | All photons",
+      richHisto1D( HID("phiRec",rad), "Reconstructed Ch Phi | All photons",
                    0.0, 2.0*Gaudi::Units::pi, nBins1D(),
                    "Cherenkov Phi / rad" );
-      richHisto1D( HID("ckResAll",*rad), "Rec-Exp Cktheta | All photons",
-                   -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+      richHisto1D( HID("ckResAll",rad), "Rec-Exp Cktheta | All photons",
+                   -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
-      richHisto1D( HID("thetaRecIsolated",*rad),
+      richHisto1D( HID("thetaRecIsolated",rad),
                    "Reconstructed Ch Theta | All photons | Isolated Tracks",
-                   m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+                   m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                    "Cherenkov Theta / rad" );
-      richHisto1D( HID("ckResAllIsolated",*rad),
+      richHisto1D( HID("ckResAllIsolated",rad),
                    "Rec-Exp Cktheta | All photons | Isolated Tracks",
-                   -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+                   -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                    "delta(Cherenkov theta) / rad" );
-      richHisto1D( HID("totalPhotons",*rad),"Reconstructed Photon Candidates",
+      richHisto1D( HID("totalPhotons",rad),"Reconstructed Photon Candidates",
                    0, 10000, 100, "# Photon Candidates" );
-      richHisto1D( HID("totalSegments",*rad),"Track Radiator Segments",
+      richHisto1D( HID("totalSegments",rad),"Track Radiator Segments",
                    -0.5, 500.5, 501, "# Track Radiator Segments" );
-      richHisto1D( HID("totalPhotonsPerSeg",*rad),"Photons per Segment | All Tracks",
+      richHisto1D( HID("totalPhotonsPerSeg",rad),"Photons per Segment | All Tracks",
                    -0.5, 500.5, 501, "# Photon Candidates / Track Segment" );
-      richHisto1D( HID("totalPhotonsPerSegIso",*rad), "Photon Yield | Isolated Tracks",
+      richHisto1D( HID("totalPhotonsPerSegIso",rad), "Photon Yield | Isolated Tracks",
                    -0.5, 500.5, 501, "# Photon Candidates / Track Segment" );
-      richHisto1D( HID("ckPullIso",*rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
+      richHisto1D( HID("ckPullIso",rad), "(Rec-Exp)/Res CKtheta | Isolated Tracks",
                    -4, 4, nBins1D(), "Cherenkov Theta pull" );
-      richProfile1D( HID("ckPullVthetaIso",*rad),
+      richProfile1D( HID("ckPullVthetaIso",rad),
                      "(Rec-Exp)/Res CKtheta Versus CKtheta | Isolated Tracks",
-                     m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+                     m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                      "Cherenkov Theta / rad", "Cherenkov Theta pull" );
-      if ( m_aeroTilePlots && *rad == Rich::Aerogel )
+      if ( m_aeroTilePlots && rad == Rich::Aerogel )
       {
         // Book a few plots for each aerogel tile
         for ( std::vector<const DeRichAerogelRadiator*>::const_iterator tile = tiles.begin();
@@ -196,16 +181,16 @@ StatusCode RecoQC::prebookHistograms()
           title.str("");
           id << "tiles/ckResAll-Tile" << (*tile)->primaryTileID();
           title << "Rec-Exp Cktheta | All photons | Tile " << (*tile)->primaryTileID();
-          richHisto1D( HID(id.str(),*rad), title.str(),
-                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+          richHisto1D( HID(id.str(),rad), title.str(),
+                       -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                        "delta(Cherenkov theta) / rad" );
 
           id.str("");
           title.str("");
           id << "tiles/thetaRec-Tile" << (*tile)->primaryTileID();
           title << "Reconstructed Ch Theta | All photons | Tile " << (*tile)->primaryTileID();
-          richHisto1D( HID(id.str(),*rad), title.str(),
-                       m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+          richHisto1D( HID(id.str(),rad), title.str(),
+                       m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                        "Cherenkov Theta / rad" );
 
           if ( (*tile)->subTile() )
@@ -214,16 +199,16 @@ StatusCode RecoQC::prebookHistograms()
             title.str("");
             id << "subtiles/ckResAll-SubTile" << (*tile)->tileID();
             title << "Rec-Exp Cktheta | All photons | SubTile " << (*tile)->tileID();
-            richHisto1D( HID(id.str(),*rad), title.str(),
-                         -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+            richHisto1D( HID(id.str(),rad), title.str(),
+                         -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                          "delta(Cherenkov theta) / rad" );
 
             id.str("");
             title.str("");
             id << "subtiles/thetaRec-SubTile" << (*tile)->tileID();
             title << "Reconstructed Ch Theta | All photons | SubTile " << (*tile)->tileID();
-            richHisto1D( HID(id.str(),*rad), title.str(),
-                         m_ckThetaMin[*rad], m_ckThetaMax[*rad], nBins1D(),
+            richHisto1D( HID(id.str(),rad), title.str(),
+                         m_ckThetaMin[rad], m_ckThetaMax[rad], nBins1D(),
                          "Cherenkov Theta / rad" );
           }
 
@@ -231,20 +216,19 @@ StatusCode RecoQC::prebookHistograms()
       }
 
       // Loop over PDs
-      for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
-            iPD != hpds.end(); ++iPD )
+      for ( const auto PD : hpds )
       {
-        if ( (*iPD).rich() != rich ) continue;
+        if ( PD.rich() != rich ) continue;
         std::ostringstream title;
-        title << "Rec-Exp Cktheta | All photons | " << *iPD;
-        const HID hID(pdResPlotID(*iPD),*rad);
-        const PDPlotKey key(*rad,*iPD);
+        title << "Rec-Exp Cktheta | All photons | " << PD;
+        const HID hID(pdResPlotID(PD),rad);
+        const PDPlotKey key(rad,PD);
         if ( m_pdResPlots )
         {
           TH1D * h =
             Gaudi::Utils::Aida2ROOT::aida2root( richHisto1D( hID, title.str(),
-                                                             -m_ckResRange[*rad],
-                                                             m_ckResRange[*rad],
+                                                             -m_ckResRange[rad],
+                                                             m_ckResRange[rad],
                                                              nBins1D(),
                                                              "delta(Cherenkov theta) / rad" ) );
           if ( !h ) { return Error( "Failed to book histogram" ); }
@@ -255,16 +239,16 @@ StatusCode RecoQC::prebookHistograms()
           m_pdPlots[key] = new TH1D( (name()+hID.fullid()).c_str(),
                                      (name()+title.str()).c_str(),
                                      nBins1D(),
-                                     -m_ckResRange[*rad],
-                                     m_ckResRange[*rad] );
+                                     -m_ckResRange[rad],
+                                     m_ckResRange[rad] );
         }
       }
 
       if ( m_fittedPDResPlots )
       {
-        const unsigned int min = ( *rad == Rich::Rich2Gas ? nHPDsR1           : 0         );
-        const unsigned int max = ( *rad == Rich::Rich2Gas ? nHPDsR1+nHPDsR2-1 : nHPDsR1-1 );
-        richProfile1D( HID("ckResVPDCopyNum",*rad),
+        const unsigned int min = ( rad == Rich::Rich2Gas ? nHPDsR1           : 0         );
+        const unsigned int max = ( rad == Rich::Rich2Gas ? nHPDsR1+nHPDsR2-1 : nHPDsR1-1 );
+        richProfile1D( HID("ckResVPDCopyNum",rad),
                        "CKtheta Resolution Versus PD Copy Number",
                        min-0.5, max+0.5, max-min+1,
                        "PD Copy Number", "Cherenkov Theta Resolution / rad" );
@@ -274,17 +258,16 @@ StatusCode RecoQC::prebookHistograms()
       if ( m_pdColResPlots )
       {
         // Loop over PDs
-        for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
-              iPD != hpds.end(); ++iPD )
+        for ( const auto PD : hpds )
         {
-          if ( (*iPD).rich() != rich ) continue;
+          if ( PD.rich() != rich ) continue;
           std::ostringstream id,title,col;
-          col << (*iPD).rich() << "-" << Rich::text((*iPD).rich(),(*iPD).panel())
-              << "-Col" << (*iPD).pdCol();
+          col << PD.rich() << "-" << Rich::text(PD.rich(),PD.panel())
+              << "-Col" << PD.pdCol();
           id << "PDCols/" << col.str();
           title << "Rec-Exp Cktheta | All photons | " << col.str();
-          richHisto1D( HID(id.str(),*rad), title.str(),
-                       -m_ckResRange[*rad], m_ckResRange[*rad], nBins1D(),
+          richHisto1D( HID(id.str(),rad), title.str(),
+                       -m_ckResRange[rad], m_ckResRange[rad], nBins1D(),
                        "delta(Cherenkov theta) / rad" );
         }
       }
@@ -335,11 +318,8 @@ StatusCode RecoQC::execute()
   // Iterate over segments
   if ( msgLevel(MSG::DEBUG) )
   { debug() << "Found " << richSegments()->size() << " segments" << endmsg; }
-  for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg )
+  for ( LHCb::RichRecSegment * segment : *(richSegments()) )
   {
-    LHCb::RichRecSegment * segment = *iSeg;
-
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
     if ( !m_rads[rad] ) continue;
@@ -403,11 +383,8 @@ StatusCode RecoQC::execute()
     double avRecTrueTheta(0);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " -> Found " << segment->richRecPhotons().size() << " photons" << endmsg;
-    for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
-          iPhot != segment->richRecPhotons().end(); ++iPhot )
+    for ( const auto photon : segment->richRecPhotons() )
     {
-      LHCb::RichRecPhoton * photon = *iPhot;
-
       // count photons
       ++photsPerRad[rad];
 
@@ -443,11 +420,10 @@ StatusCode RecoQC::execute()
         // get the list of radiator intersections
         const LHCb::RichTrackSegment & tkSeg = segment->trackSegment();
         const Rich::RadIntersection::Vector & intersects = tkSeg.radIntersections();
-        for ( Rich::RadIntersection::Vector::const_iterator intersect = intersects.begin();
-              intersect != intersects.end(); ++intersect )
+        for ( auto intersect : intersects )
         {
           const DeRichAerogelRadiator * d =
-            dynamic_cast<const DeRichAerogelRadiator*>((*intersect).radiator());
+            dynamic_cast<const DeRichAerogelRadiator*>(intersect.radiator());
           if (!d) return Error( "Failed to cast to DeRichAerogelRadiator" );
           if ( d->subTile() )
           {
@@ -544,13 +520,12 @@ StatusCode RecoQC::execute()
   } // end loop over segments
 
   // fill total number of photons plots
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const Rich::RadiatorType rad : Rich::radiators() )
   {
-    if ( m_rads[*rad] )
+    if ( m_rads[rad] )
     {
-      richHisto1D(HID("totalPhotons", *rad))->fill(photsPerRad[*rad]);
-      richHisto1D(HID("totalSegments",*rad))->fill(segsPerRad[*rad]);
+      richHisto1D(HID("totalPhotons", rad))->fill(photsPerRad[rad]);
+      richHisto1D(HID("totalSegments",rad))->fill(segsPerRad[rad]);
     }
   }
 
@@ -587,17 +562,16 @@ StatusCode RecoQC::finalize()
     info() << "                 : " << m_maxBeta << " > beta > " << m_minBeta << endmsg;
 
     // loop over radiators
-    for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-          rad != Rich::radiators().end(); ++rad )
+    for ( const Rich::RadiatorType rad : Rich::radiators() )
     {
       // rad name
-      std::string radName = Rich::text(*rad);
+      std::string radName = Rich::text(rad);
       radName.resize(15,' ');
       // photon count
-      if ( m_truePhotCount[*rad]>0 )
+      if ( m_truePhotCount[rad]>0 )
       {
         info() << " " << radName << " Av. # CK photons = "
-               << occ(m_truePhotCount[*rad],m_nSegs[*rad]) << " photons/segment" << endmsg;
+               << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endmsg;
       }
     }
 
@@ -627,36 +601,34 @@ void RecoQC::fitResolutionHistos()
   const LHCb::RichSmartID::Vector& hpds = m_RichSys->allPDRichSmartIDs();
 
   // Loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const Rich::RadiatorType rad : Rich::radiators() )
   {
-    if ( !m_rads[*rad] ) continue;
+    if ( !m_rads[rad] ) continue;
 
     // Which RICH ?
-    const Rich::DetectorType rich = ( *rad == Rich::Rich2Gas ?
+    const Rich::DetectorType rich = ( rad == Rich::Rich2Gas ?
                                       Rich::Rich2 : Rich::Rich1 );
 
     // Get the profile and reset to refill
-    TProfile * p = Aida2ROOT::aida2root( richProfile1D(HID("ckResVPDCopyNum",*rad)) );
+    TProfile * p = Aida2ROOT::aida2root( richProfile1D(HID("ckResVPDCopyNum",rad)) );
     if ( p ) p->Reset();
 
     // Loop over PDs
-    for ( LHCb::RichSmartID::Vector::const_iterator iPD = hpds.begin();
-          iPD != hpds.end(); ++iPD )
+    for ( const LHCb::RichSmartID PD : hpds )
     {
-      if ( rich != (*iPD).rich() ) continue;
+      if ( rich != PD.rich() ) continue;
 
       // Get the resolution plot for this HPD
-      TH1D * h = m_pdPlots[PDPlotKey(*rad,*iPD)];
+      TH1D * h = m_pdPlots[PDPlotKey(rad,PD)];
 
       // Fill the profile
       if ( p )
       {
         // PD Copy Number
-        const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( *iPD );
+        const Rich::DAQ::HPDCopyNumber copyN = m_RichSys->copyNumber( PD );
 
         // fit the histogram
-        const FitResult res = fit(h,*rad);
+        const FitResult res = fit(h,rad);
 
         if ( res.OK )
         {
@@ -770,8 +742,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
       }
 
       // Clean up
-      for ( std::vector<TF1*>::iterator iF = trash.begin(); iF != trash.end(); ++iF )
-      { delete *iF; }
+      for ( TF1* h : trash ) { delete h; }
 
     }
 
