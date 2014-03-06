@@ -6,6 +6,9 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-06 - Alexey Novoselov
+v2r0p1 Added dec and opts in /options/ subfolder
+
 !======================== LbOniaPairs v2r0 2014-02-03 =========================
 ! 2013-12-20 - Marco Clemencic
  - Fixed compilation problem with the latest Gaudi.
