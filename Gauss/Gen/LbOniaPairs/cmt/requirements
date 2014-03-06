@@ -3,11 +3,11 @@
 # Created    : 2011-05-30
 # Updated    : 2013-12-19
 # Purpose    : Generator for onia-pairs production 
-# Authon     : Alexey Novoselov Alexey.Novoselov@cern.ch
+# Author     : Alexey Novoselov Alexey.Novoselov@cern.ch
 # Maintainer : Vanya Belyaev    Ivan.Belyaev@cern.ch
 # =============================================================================
 package           LbOniaPairs
-version           v2r0
+version           alexn_20140306
 
 # =============== structure ===================================================
 branches          cmt src LbOniaPairs doc
