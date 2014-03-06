@@ -311,7 +311,7 @@ bool DiskResidentEventList::makeNtp(const DalitzEvent& evt){
   _ntp = (TNtupleD*) _f->FindObject(ntpName().c_str());
   if(0 == _ntp){
     _ntp = new TNtupleD(cName().c_str(), ntpName().c_str()
-			, evt.makeNtupleVarnames().c_str()
+			, evt.makeNtupleVarnames(false).c_str()
 			);
     _ntp->SetDirectory(0);
   }
@@ -325,10 +325,10 @@ bool DiskResidentEventList::Add(const DalitzEvent& evt){
   if(0 == _f) makeNewFile();
   _f->cd();
   if(0 == _ntp) makeNtp(evt);
-  int arraySize = evt.ntupleVarArraySize();
+  int arraySize = evt.ntupleVarArraySize(false);
   Double_t *array = new Double_t[arraySize];
   
-  bool success = evt.fillNtupleVarArray(array, arraySize);
+  bool success = evt.fillNtupleVarArray(array, arraySize, false);
   if(! success){
     cout << "ERROR in DiskResidentEventList::Add(const DalitzEvent& evt)"
 	 << ", call to DalitzEvent::fillNtupleVarArray"
