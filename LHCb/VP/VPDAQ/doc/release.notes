@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-03-06 - Kurt Rinnert
+ - added encoder for Super Pixel raw bank from digits.
+
 !========================= VPDAQ v2r5 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Adapt VP decoder tool to Decoder base classes, task #49078
@@ -74,7 +77,7 @@
 ! 2010-03-01 - Victor Coco
  - Add VeloPixRawBankToPartialCluster to have partial decoding of the
    VeloPixCluster: get central ChannelID + LiteCluster.
-	 Add sorting of the FastClusterContainer in VeloPixRawBankToLiteCluster
+    Add sorting of the FastClusterContainer in VeloPixRawBankToLiteCluster
 
 !=========================  VeloPixDAQ v1r0 2010-01-25 =====================
 ! 2010-01-25 Marcin Kucharczyk
