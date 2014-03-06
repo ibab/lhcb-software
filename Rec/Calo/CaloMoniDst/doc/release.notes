@@ -4,6 +4,10 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-06 - Olivier Deschamps
+ -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
+
+
 !========================= CaloMoniDst v5r15 2013-10-24 =========================
 ! 2013-10-09 - Olivier Deschamps
  -  python/CaloDAQ/Monitors.py & Configuration.py :  possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)

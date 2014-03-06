@@ -188,7 +188,8 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         if 'Protos'     in monList : addAlgs ( seq , self.protos     () )
         if 'PIDs'       in monList : addAlgs ( seq , self.pids       () )        
         setTheProperty ( seq , 'Context'     , self.getProp('Context') )        
-        setTheProperty ( seq , 'OutputLevel' , self.getProp('OutputLevel') )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( seq , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( seq , 'MeasureTime' , self.getProp('MeasureTime') )    
         if self.isPropertySet('MonitorSequence') :
             moniSeq=self.getProp('MonitorSequence')
@@ -204,7 +205,8 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         if 'Reco'     in checkList : addAlgs ( cseq , self.recoChecker     () ) 
         if 'PIDs'     in checkList : addAlgs ( cseq , self.pidChecker      () ) 
         setTheProperty ( cseq , 'Context'     , self.getProp('Context') )        
-        setTheProperty ( cseq , 'OutputLevel' , self.getProp('OutputLevel') )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( cseq , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( cseq , 'MeasureTime' , self.getProp('MeasureTime') )    
 
         if self.isPropertySet('CheckerSequence') :
