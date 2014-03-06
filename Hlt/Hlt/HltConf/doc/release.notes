@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-06 - Sebastian Neubert
+ - Added missing Hlt1TrackAllL0LifetimeUnbiased entries to HltANNsvc
+
 !========================= HltConf v11r0 2014-03-05 =========================
 ! 2014-03-05 - Rob Lambert
  - 6302 is a magic number... change to 6311 see bug #103993
