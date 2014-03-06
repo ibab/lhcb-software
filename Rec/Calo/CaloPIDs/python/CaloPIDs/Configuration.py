@@ -131,8 +131,9 @@ class CaloPIDsConf(LHCbConfigurableUser):
         pids = self.caloPIDs()
         
         setTheProperty ( pids , 'Context'     , self.getProp('Context'    ) )
-        setTheProperty ( pids , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( pids , 'MeasureTime' , self.getProp('MeasureTime') )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( pids , 'OutputLevel' , self.getProp('OutputLevel') )
 
         if self.getProp ( 'Sequence' ) :
             addAlgs  ( self.Sequence , pids ) 
