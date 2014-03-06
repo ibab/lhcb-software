@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+import sys, getopt
+import os, shutil, re, glob
+import GaudiPython
+from Configurables import CondDB, CondDBAccessSvc, DDDBConf
+
+xmlheadstr = '<?xml version="1.0" encoding="ISO-8859-1"?>'
+xmldtb = '<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">'
+baseloc = "Conditions"
+
+# Fetch the content of the condition name in xml format
+def getxmlcontent(condnames):
+    DDDBConf()
+    app = GaudiPython.AppMgr()
+    app.initialize()
+    app.start()
+    xmlstr = ''
+    for condname in condnames:
+        ret = app.detSvc()["/dd/%s" %condname]
+        try:  xmlstr += ret.toXml() + '\n'
+        except AttributeError:
+            print "Condition path %s not valid. Example: Conditions/Alignment/Rich/XYZ" %condname
+    app.exit()
+
+    return xmlstr
+
+def main(argv):
+    # Nuke the path if already exists
+    if (os.path.exists(baseloc)): shutil.rmtree(baseloc)
+    nEvts = 2
+    hlttags = ['v123', 'v456']
+    hlt2conds = [ os.path.join(baseloc, "hlt2/%04d/data.xml" %(i+1)) for i in range(nEvts)]
+    calibdata = [ os.path.join(baseloc, "calib_data/detector/%s/results.xml" %i) for i in hlttags]
+
+    for f in hlt2conds + calibdata:
+        os.makedirs(os.path.dirname(f))
+
+    if (len(argv)<1): 
+        print "Please give at least one argument."
+        sys.exit(1)
+    testconds = argv
+    for testcond in testconds: testcond.lstrip('/') # Remove the leading '/' charater if exists
+
+    # Get the directory of the condition file
+    xmlstr = getxmlcontent(testconds)
+    if (xmlstr == ''):
+        print "Will quit as no valid condition is found."
+        sys.exit(1)
+
+    for i in range(nEvts):
+        with open (hlt2conds[i], 'w') as f:
+            f.write("%s\n%s\n[<!ENTITY results SYSTEM \"../../calib_data/detector/%s/results.xml\">]>\n<DDDB>\n&results;\n</DDDB>\n" %(xmlheadstr, xmldtb.rstrip('>'), hlttags[i]))
+        print "File produced: %s" %hlt2conds[i]
+        with open (calibdata[i], 'w') as f: f.write("%s\n%s" %(xmlheadstr, xmlstr))
+        print "File produced: %s" %calibdata[i]
+
+    optfname = 'rchoption_withhlt2.py'
+    with open (optfname, 'w') as f:
+        f.write('from Gaudi.Configuration import *\nfrom Configurables import RunChangeHandlerSvc\n\n')
+        f.write("baseloc = \"%s\"\n" %baseloc)
+        f.write("calibconds = [ ")
+        f.write(', '.join('"%s"' %c for c in testconds))
+        f.write(" ]\n")
+        f.write('rch = RunChangeHandlerSvc()\n')
+        f.write('templatexml = os.path.join(baseloc, "hlt2/%04d/data.xml")\n')
+        f.write('rch.Conditions.update({c: templatexml for c in calibconds})\n')
+        f.write('ApplicationMgr().ExtSvc.append( rch )\n')
+        print "Option file produced: %s" %optfname
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

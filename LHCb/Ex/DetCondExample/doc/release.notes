@@ -3,6 +3,10 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+! 2014-03-06 - Liang Sun
+ - Add a script to set up test environment for the split HLT scenario
+ - Add an example script for the purpose of demonstration
+
 !========================= DetCondExample v11r13 2013-06-03 =======================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning

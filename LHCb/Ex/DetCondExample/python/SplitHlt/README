@@ -1,0 +1,26 @@
+README File for prepare_split_hlt_env
+
+Synopsis
+========
+prepare_split_hlt_env [COND1] [COND2]...
+
+Description 
+==========
+This script is used to prepare a test bench for detectors to work on the creation of calibration/alignment XML files. An option file named "rchoption_withhlt2.py" and a local directory named "Conditions" will be produced under current directory. This directory has the same kind of layout that will be found at the PIT, with the dedicated directories and template files to override conditions from XML files.
+
+At least one argument indicating the condition name is needed. The condition names take the form of "Conditions/Path/To/Cond", and need to be accessible in the current LHCBCOND.
+
+Usage
+=====
+Image that we need to test one condition "Conditions/Alignment/Rich1/SiSensor0_Align", we can start from an empty directory and prepare a customized environment with the command "SetupProject [ProjectName] --use Tools/CondDBUI", where ProjectName could be Brunel or DaVinci depending on the actual needs. Afterwards, we can execute the following command:
+
+$ prepare_split_hlt_env Conditions/Alignment/Rich1/SiSensor0_Align | tail -n 5
+File produced: Conditions/hlt2/0001/data.xml
+File produced: Conditions/calib_data/detector/v123/results.xml
+File produced: Conditions/hlt2/0002/data.xml
+File produced: Conditions/calib_data/detector/v456/results.xml
+Option file produced: rchoption_withhlt2.py
+
+The last five lines of the standard output indicate the newly created files. For testing over two events with event numbers 0001 and 0002, the two files named "data.xml" respectively contain references to the two calibration/alignment xml files named "results.xml" under different directories. We can change the content of the "results.xml" files for further tests. 
+
+The auto-generated option file "rchoption_withhlt2.py" contains RunChangeHandlerSvc to pick up the condition parameters defined in the calibration/alignment xml files and override those in the default LHCBCOND db file. A demo python script "testsplit.py" under the same directory as the command "prepare_split_hlt_env" can be run together with the option file through the command "gaudirun.py testsplit.py rchoption_withhlt2.py". The parameters in the test condition "Conditions/Alignment/Rich1/SiSensor0_Align" as defined in the "results.xml" files will thus be printed out.
