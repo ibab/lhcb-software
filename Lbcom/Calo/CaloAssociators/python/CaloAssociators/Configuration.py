@@ -73,8 +73,9 @@ class CaloAssociatorsConf(LHCbConfigurableUser):
             self.getProp ( 'EnableMCOnDemand' ) ,
             self.getProp ( 'Digits'           )
             )
-        setTheProperty ( main , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( main , 'MeasureTime' , self.getProp('MeasureTime') )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( main , 'OutputLevel' , self.getProp('OutputLevel') )
         
         if self.isPropertySet ( 'Sequence' ) : 
             CaloDigitsConf (
