@@ -361,8 +361,9 @@ class CaloRecoConf(LHCbConfigurableUser):
             if 'Electrons'  in recList : addAlgs ( seq , self.electrons() )
         
         setTheProperty ( seq , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( seq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( seq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( seq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         
         if self.isPropertySet('Sequence') :
             main = self.getProp('Sequence') 
@@ -481,6 +482,7 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
         pidConf.ExternalClusters=self.getProp('ExternalClusters')
         pidConf.NoSpdPrs=self.getProp('NoSpdPrs')
         pidConf.DataType= self.getProp('DataType')        
+        pidConf.OutputLevel=self.getProp('OutputLevel')
         pidConf.printConf()
         ##
         return pidConf.caloPIDs()
@@ -685,9 +687,9 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
 
         ## propagate the global properties
         setTheProperty ( caloSeq , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( caloSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( caloSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
-
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( caloSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
 
 
         ######## ProtoParticle update ##########
@@ -801,16 +803,19 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
 
         ## propagate the global properties
         setTheProperty ( protoSeq , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( protoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( protoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( protoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
 
         setTheProperty ( nProtoSeq , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( nProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( nProtoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( nProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
 
         setTheProperty ( cProtoSeq , 'Context'     , self.getProp ( 'Context'     ) )
-        setTheProperty ( cProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( cProtoSeq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( cProtoSeq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
 
         # Full sequence
         addAlgs( fullSeq, caloSeq )
@@ -1028,7 +1033,8 @@ class CaloLines(LHCbConfigurableUser):
 
         caloLines.IgnoreFilterPassed = True
         ## propagate the global properties
-        setTheProperty ( caloLines , 'OutputLevel'     , self.getProp ( 'OutputLevel'     ) )
+        if self.isPropertySet("OutputLevel") :
+            setTheProperty ( caloLines , 'OutputLevel'     , self.getProp ( 'OutputLevel'     ) )
 
         ## define the sequencers
         if self.isPropertySet('Sequencer') :

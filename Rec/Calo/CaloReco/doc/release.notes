@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-06 - Olivier Deschamps
+ -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
+
 ! 2014-03-05 - Olivier Deschamps
  -  python/Configuration.py : dactivate Spd/Prs Decoders in DecoderDB when noSpdPrs=True
  -  add DAQSys dependency
