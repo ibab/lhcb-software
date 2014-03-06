@@ -55,8 +55,6 @@ def caloDigits ( context        ,
                          enableOnDemand          )
         conflist.append(spd)
         alglist.append(spd)
-    else :
-        print " ... SPD decoding has been excluded"
 
 
     if 'Prs'  in detectors :
@@ -76,8 +74,6 @@ def caloDigits ( context        ,
             alglist.append(prsSeq)
         else :
             alglist.append(prs)
-    else :
-        print " ... PRS decoding has been excluded"
         
     if 'Ecal' in detectors :
         _log.debug('caloDigits : Ecal is added to the detector list')
@@ -96,8 +92,6 @@ def caloDigits ( context        ,
             alglist.append(ecalSeq)
         else :
             alglist.append(ecal)
-    else :
-        print " ... Ecal decoding has been excluded"
 
 
     if 'Hcal' in detectors :
@@ -117,8 +111,6 @@ def caloDigits ( context        ,
             alglist.append(hcalSeq)
         else :
             alglist.append(hcal)
-    else :
-        print " ... Hcal decoding has been excluded"
 
 
 

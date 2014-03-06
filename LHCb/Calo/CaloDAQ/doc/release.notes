@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2014-03-05 - Olivier Deschamps
+ -  remove verbose printout
+
 ! 2014-03-04 - Olivier Deschamps
  -  remove previous change due to circular dependency with DAQSys
  -  DecoderDB deactivation moved to CaloReco configurable
