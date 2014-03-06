@@ -18,7 +18,8 @@
 #include "Kernel/IParticleDescendants.h"
 //#include "INNetTool.h"
 #include "Kernel/IVertexFit.h"
-#include "TMVAClassification/BDT_SSproton/BDT_SSproton_Reco14.class.C"
+//#include "TMVAClassification/BDT_SSproton/BDT_SSproton_Reco14.class.C"
+#include "ProtonSSWrapper.h"
 
 /** @class TaggerProtonSameTool TaggerProtonSameTool.h
  *
@@ -63,7 +64,7 @@ private:
                                           << " " << cosT << endmsg ;
     return cosT;
   }
-  ReadssProton* myBDT_reader;
+  ProtonSSWrapper* myBDT_reader;
   
 
   //  INNetTool* m_nnet;

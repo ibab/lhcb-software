@@ -2,16 +2,19 @@
 #ifndef USER_TAGGERCHARMTOOL_H
 #define USER_TAGGERCHARMTOOL_H 1
 
+// Include files
+#include <list>
+#include <utility>
+#include <string>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
+
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
-
-//from ROOT
-//#include "TMVA/Reader.h"
 
 // interface
 #include "Kernel/IParticleDescendants.h"
@@ -20,31 +23,10 @@
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IVertexFit.h"
 
-// mva classes
-#include "mva_charmtagger_reco14/train_D0_Kpi_BDT.C"
-#include "mva_charmtagger_reco14/train_D0_Kpipipi_BDT.C"
-//#include "mva_charmtagger_reco14/train_D0_Kspipi_BDT.C"
-#include "mva_charmtagger_reco14/train_D0_Kpipi0_BDT.C"
-#include "mva_charmtagger_reco14/train_Dp_Kpipi_BDT.C"
-#include "mva_charmtagger_reco14/train_Dp_Kspi_BDT.C"
-#include "mva_charmtagger_reco14/train_D0_KpiX_BDT.C"
-#include "mva_charmtagger_reco14/train_D0_KeX_BDT.C"
-#include "mva_charmtagger_reco14/train_D0_KmuX_BDT.C"
-#include "mva_charmtagger_reco14/train_Dstar_D0_Kspipi_BDT.C"
-#include "mva_charmtagger_reco14/train_Dp_KpiX_BDT.C"
-#include "mva_charmtagger_reco14/train_Dp_KeX_BDT.C"
-#include "mva_charmtagger_reco14/train_Dp_KmuX_BDT.C"
-
-
 // from local
-#include <list>
-#include <utility>
-#include <string>
-
-
 #include "FlavourTagging/ITaggingUtils.h"
 #include "INNetTool.h"
-
+#include "TMVAWrapper.h"
 
 // struct
 
@@ -89,20 +71,20 @@ struct CharmParticle
 
 /** @class TaggerCharmTool TaggerCharmTool.h
  *
- *  Tool to tag the B flavour with the new KaonOpposite Tagger
+ *  Tool to tag the B flavour with the new Charm Tagger
  *
- *  @author rcenci
+ *  @author Riccardo Cenci, Jack Wimberley
  *  @date   23/01/2013
  */
 
 class TaggerCharmTool : public GaudiTool,
-                                  virtual public ITagger {
+                        virtual public ITagger {
 
 public:
   /// Standard constructor
   TaggerCharmTool( const std::string& type,
-                             const std::string& name,
-                             const IInterface* parent );
+                   const std::string& name,
+                   const IInterface* parent );
   virtual ~TaggerCharmTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
 
@@ -139,7 +121,7 @@ private:
   //std::string  m_MvaFileDir;
 
   //std::map< std::string,TMVA::Reader* > m_readers;
-  std::map< std::string,IClassifierReader* > m_classifiers;
+  std::map< std::string,TMVAWrapper* > m_classifiers;
 
   ITaggingUtils* m_util;
   ILifetimeFitter*           m_pLifetimeFitter;

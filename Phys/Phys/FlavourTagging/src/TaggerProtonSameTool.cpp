@@ -95,8 +95,8 @@ StatusCode TaggerProtonSameTool::initialize()
   variable_names.push_back("log(lab0_OWNPV_NDOF)");
   variable_names.push_back("log(lab1_IPCHI2_OWNPV)");
 
-  if(m_isMonteCarlo==1) myBDT_reader = new ReadssProton(variable_names);//BDTReaderCompil_MC(variable_names);
-  else                  myBDT_reader = new ReadssProton(variable_names);
+  if(m_isMonteCarlo==1) myBDT_reader = new ProtonSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
+  else                  myBDT_reader = new ProtonSSWrapper(variable_names);
   
   return sc;
 }

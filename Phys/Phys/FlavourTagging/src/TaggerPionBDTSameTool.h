@@ -18,7 +18,7 @@
 #include "Kernel/IParticleDescendants.h"
 //#include "INNetTool.h"
 #include "Kernel/IVertexFit.h"
-#include "TMVAClassification/BDT_SSpion/BDT_SSpion_Reco14.class.C"
+#include "PionSSWrapper.h"
 
 /** @class TaggerPionBDTSameTool TaggerPionBDTSameTool.h
  *
@@ -63,7 +63,7 @@ private:
                                           << " " << cosT << endmsg ;
     return cosT;
   }
-  ReadssPion* myBDT_reader;
+  PionSSWrapper* myBDT_reader;
   
 
   //  INNetTool* m_nnet;

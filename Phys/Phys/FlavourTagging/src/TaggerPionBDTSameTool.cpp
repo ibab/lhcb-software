@@ -97,8 +97,8 @@ StatusCode TaggerPionBDTSameTool::initialize()
   variable_names.push_back("lab1_CosTheta");
   variable_names.push_back("lab1_TRACK_GhostProb");
 
-  if(m_isMonteCarlo==1) myBDT_reader = new ReadssPion(variable_names);//BDTReaderCompil_MC(variable_names);
-  else                  myBDT_reader = new ReadssPion(variable_names);
+  if(m_isMonteCarlo==1) myBDT_reader = new PionSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
+  else                  myBDT_reader = new PionSSWrapper(variable_names);
   
   return sc;
 }

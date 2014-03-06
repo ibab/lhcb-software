@@ -6,6 +6,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-03-05 - Jack Wimberley
+ - Add wrappers around BDT algorithms for OScharm, SSpion, SSproton taggers
+ - These are based on NEWKaon... wrappers
+ - Moved src/mva_charmtagger_reco14 to TMVAClassication/mva_charmtagger_reco14
+
 !========================= FlavourTagging v13r5 2014-02-20 =========================
 
 ! 2014-02-19 - Chris Jones

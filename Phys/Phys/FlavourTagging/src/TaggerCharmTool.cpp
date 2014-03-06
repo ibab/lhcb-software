@@ -1,45 +1,58 @@
 // Include files 
-#include "TaggerCharmTool.h"
-//#include "TaggingHelpers.h"
-
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <utility>
 
+// from ROOT
 #include "TMath.h"
 
-using namespace std;
-
+// from LOKI
 #include "LoKi/LoKi.h" 
 #include "LoKi/ParticleContextCuts.h" 
 
+// from local
+#include "TaggerCharmTool.h"
+#include "CharmD0KpiWrapper.h"
+#include "CharmD0KpipipiWrapper.h"
+//#include "CharmD0KspipiWrapper.h"
+#include "CharmD0Kpipi0Wrapper.h"
+#include "CharmDpKpipiWrapper.h"
+#include "CharmDpKspiWrapper.h"
+#include "CharmD0KpiXWrapper.h"
+#include "CharmD0KeXWrapper.h"
+#include "CharmD0KmuXWrapper.h"
+#include "CharmDstD0KspipiWrapper.h"
+#include "CharmDpKpiXWrapper.h"
+#include "CharmDpKeXWrapper.h"
+#include "CharmDpKmuXWrapper.h"
+
+using namespace std;
 using namespace LoKi::Cuts;
 using namespace LoKi::Types;
 using namespace LoKi::Particles;
+using namespace LHCb ;
+using namespace Gaudi::Units;
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerCharmTool
 //
-// Author: rcenci
+// Author: Riccardo Cenci, Jack Wimberley
 // 2013-01-23
 //--------------------------------------------------------------------
-
-using namespace LHCb ;
-using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( TaggerCharmTool )
 
 //====================================================================
-  TaggerCharmTool::TaggerCharmTool( const std::string& type,
-                                                        const std::string& name,
-                                                        const IInterface* parent ) :
-    GaudiTool ( type, name, parent ),
-    m_util(0),
-    m_pLifetimeFitter(0),
-    m_descend(0),
-    m_nnet(0)
+TaggerCharmTool::TaggerCharmTool( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent ) :
+GaudiTool ( type, name, parent ),
+  m_util(0),
+  m_pLifetimeFitter(0),
+  m_descend(0),
+  m_nnet(0)
 {
   declareInterface<ITagger>(this);
 
@@ -122,8 +135,8 @@ StatusCode TaggerCharmTool::initialize()
 
   m_nnet = tool<INNetTool> ( "NNetTool_MLP", this);
 
-//   //load tmva readers
-//   int nFoundReaders = 0;
+  //   //load tmva readers
+  //   int nFoundReaders = 0;
   
   std::map<std::string, std::vector< std::string> > inputVarMap;
 
@@ -169,23 +182,23 @@ StatusCode TaggerCharmTool::initialize()
   
   }
 
-//   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+  //   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
 
   //initialize classifier map
-  m_classifiers["D0_Kpi"] = new D0_Kpi::ReadBDT(inputVarMap["D0_Kpi"]);
-  m_classifiers["D0_Kpipipi"] = new D0_Kpipipi::ReadBDT(inputVarMap["D0_Kpipipi"]);
-  m_classifiers["D0_Kspipi"] = NULL; //new D0_Kspipi::ReadBDT(inputVarMap["D0_Kspipi"]);
-  m_classifiers["D0_Kpipi0"] = new D0_Kpipi0::ReadBDT(inputVarMap["D0_Kpipi0"]);
-  m_classifiers["Dp_Kpipi"] = new Dp_Kpipi::ReadBDT(inputVarMap["Dp_Kpipi"]);
-  m_classifiers["Dp_Kspi"] = new Dp_Kspi::ReadBDT(inputVarMap["Dp_Kspi"]);
-  m_classifiers["D0_KpiX"] = new D0_KpiX::ReadBDT(inputVarMap["D0_KpiX"]);
-  m_classifiers["D0_KeX"] = new D0_KeX::ReadBDT(inputVarMap["D0_KeX"]);
-  m_classifiers["D0_KmuX"] = new D0_KmuX::ReadBDT(inputVarMap["D0_KmuX"]);
-  m_classifiers["Dstar_D0_Kspipi"] = new Dstar_D0_Kspipi::ReadBDT(inputVarMap["Dstar_D0_Kspipi"]);
-  m_classifiers["Dp_KpiX"] = new Dp_KpiX::ReadBDT(inputVarMap["Dp_KpiX"]);
-  m_classifiers["Dp_KeX"] = new Dp_KeX::ReadBDT(inputVarMap["Dp_KeX"]);
-  m_classifiers["Dp_KmuX"] = new Dp_KmuX::ReadBDT(inputVarMap["Dp_KmuX"]);
-  
+  m_classifiers["D0_Kpi"] = new CharmD0KpiWrapper(inputVarMap["D0_Kpi"]);
+  m_classifiers["D0_Kpipipi"] = new CharmD0KpipipiWrapper(inputVarMap["D0_Kpipipi"]);
+  m_classifiers["D0_Kspipi"] = NULL; //new CharmD0KspipiWrapper(inputVarMap["D0_Kspipi"]);
+  m_classifiers["D0_Kpipi0"] = new CharmD0Kpipi0Wrapper(inputVarMap["D0_Kpipi0"]);
+  m_classifiers["Dp_Kpipi"] = new CharmDpKpipiWrapper(inputVarMap["Dp_Kpipi"]);
+  m_classifiers["Dp_Kspi"] = new CharmDpKspiWrapper(inputVarMap["Dp_Kspi"]);
+  m_classifiers["D0_KpiX"] = new CharmD0KpiXWrapper(inputVarMap["D0_KpiX"]);
+  m_classifiers["D0_KeX"] = new CharmD0KeXWrapper(inputVarMap["D0_KeX"]);
+  m_classifiers["D0_KmuX"] = new CharmD0KmuXWrapper(inputVarMap["D0_KmuX"]);
+  m_classifiers["Dstar_D0_Kspipi"] = new CharmDstD0KspipiWrapper(inputVarMap["Dstar_D0_Kspipi"]);
+  m_classifiers["Dp_KpiX"] = new CharmDpKpiXWrapper(inputVarMap["Dp_KpiX"]);
+  m_classifiers["Dp_KeX"] = new CharmDpKeXWrapper(inputVarMap["Dp_KeX"]);
+  m_classifiers["Dp_KmuX"] = new CharmDpKmuXWrapper(inputVarMap["Dp_KmuX"]);
+
   return sc;
   
 }
