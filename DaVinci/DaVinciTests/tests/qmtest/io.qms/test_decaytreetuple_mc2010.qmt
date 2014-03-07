@@ -5,6 +5,7 @@
 <argument name="args"><set>
   <text>-T</text>
   <text>$DAVINCITESTSROOT/tests/options/DVTestDecayTreeTuple.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/EnableFPEAuditor.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
