@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-03-07 - Chris Jones
+ - Remove unneccessary Stripping appconfig test. Covered by the various
+   explicit Stripping tests.
+
 !========================= DaVinciTests v2r22 2014-03-03 =========================
 
 ! 2014-03-03 - Chris Jones
