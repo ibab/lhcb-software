@@ -1,6 +1,8 @@
-// Include files
-#include <string>
-#include <vector>
+
+// STL
+#include <sstream>
+
+// Boost
 #include "boost/format.hpp"
 
 // from Gaudi
@@ -121,14 +123,14 @@ StatusCode LbAppInit::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode LbAppInit::execute() 
+StatusCode LbAppInit::execute()
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> LbAppInit()::execute" << endmsg;
 
   const unsigned long long nev = eventCounter();
 
-  if ( 0 == m_lastMem )
+  if ( UNLIKELY( 0 == m_lastMem ) )
   {
     m_lastMem = System::virtualMemory();
   }
@@ -143,8 +145,10 @@ StatusCode LbAppInit::execute()
              << " in last " << m_increment << " events" << endmsg ;
       if ( mem > m_memPurgeLimit )
       {
-        info() << "Memory exceeds limit " << m_memPurgeLimit
-               << " KB -> Purging pools" << endmsg;
+        std::ostringstream mess;
+        mess << "Memory exceeds limit of " << m_memPurgeLimit
+             << " KB -> Purging pools";
+        Info( mess.str(), StatusCode::SUCCESS, 1 );
         releaseMemoryPools();
       }
       m_lastMem = mem;
@@ -157,8 +161,8 @@ StatusCode LbAppInit::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode LbAppInit::finalize() {
-
+StatusCode LbAppInit::finalize()
+{
   releaseMemoryPools();
 
   always()
@@ -258,10 +262,10 @@ std::vector<long int> LbAppInit::getSeeds( unsigned int seed1, ulonglong seed2 )
   }
 
   // Get last seed by hashing string containing seed1 and seed2
-
-  std::string s = name() + boost::io::str( boost::format( "_%1%_%2%" )
-                                           % boost::io::group( std::setfill('0'), std::hex, std::setw(8),  seed1 )
-                                           % boost::io::group( std::setfill('0'), std::hex, std::setw(16), seed2 ) );
+  const std::string s = name() +
+    ( boost::io::str( boost::format( "_%1%_%2%" )
+                      % boost::io::group( std::setfill('0'), std::hex, std::setw(8),  seed1 )
+                      % boost::io::group( std::setfill('0'), std::hex, std::setw(16), seed2 ) ) );
 
   //--> Hash32 algorithm from Pere Mato
   int hash = 0;
@@ -313,10 +317,10 @@ void LbAppInit::releaseMemoryPools() const
 
   const unsigned long long vmem_a = System::virtualMemory();
 
-  if ( vmem_b != vmem_a )
+  if ( msgLevel(MSG::DEBUG) && vmem_b != vmem_a )
   {
-    info() << "Memory change after pool release = "
-           << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
+    debug() << "Memory change after pool release = "
+            << (long long)(vmem_a-vmem_b) << " KB" << endmsg;
   }
 
 #endif

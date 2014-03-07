@@ -1,7 +1,7 @@
 #ifndef LBAPPINIT_H
 #define LBAPPINIT_H 1
 
-// Include files
+// STL
 #include <string>
 #include <vector>
 
@@ -25,7 +25,8 @@ class IRndmGenSvc;
  *  @date   2005-12-21
  */
 
-class LbAppInit : public GaudiAlgorithm {
+class LbAppInit : public GaudiAlgorithm 
+{
 
 public:
 
@@ -97,6 +98,7 @@ protected:
   }
 
 private:
+
   void releaseMemoryPools() const; ///< Release memory pools
 
 private:
