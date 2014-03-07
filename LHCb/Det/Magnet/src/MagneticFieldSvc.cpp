@@ -358,7 +358,10 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   mess << "Map scaled by factor "            << m_magFieldGrid.scaleFactor()
        << " with polarity internally used: " << polarity
        << " signed relative current: "       << signedRelativeCurrent();
-  if ( nUpdates[mess.str()]++ < 2 ) { log << MSG::INFO << mess.str() << endmsg; }
+  if      ( nUpdates[mess.str()]++ <  2 ) 
+  { log << MSG::INFO << mess.str() << endmsg; }
+  else if ( nUpdates[mess.str()]   == 2 ) 
+  { log << MSG::INFO << "Message '" << mess.str() << "' is SUPPRESSED" << endmsg;  }
 
   return sc ;
 }
