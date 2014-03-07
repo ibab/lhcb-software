@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-07 - Frederic Dupertuis
+ - Removing some trivial warnings when -pedantic flag is switched on.
+
 ! 2014-03-06 - Frederic Dupertuis
  - Removing some forgotten warnings in STYAlignMagOff, OTYAlignMagOff.
 

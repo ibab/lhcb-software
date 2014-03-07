@@ -31,7 +31,7 @@ using namespace std;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTCoordinates );
+DECLARE_ALGORITHM_FACTORY( OTCoordinates )
 
 
 //=============================================================================

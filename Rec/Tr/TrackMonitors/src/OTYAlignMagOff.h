@@ -10,7 +10,7 @@ class DeOTModule;
 
 namespace LHCb{
   class State;
-};
+}
 
 /** @class OTYAlignMagOff OTYAlignMagOff.h
  *  ...
