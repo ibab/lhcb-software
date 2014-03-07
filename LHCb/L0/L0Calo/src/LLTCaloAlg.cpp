@@ -32,6 +32,8 @@ LLTCaloAlg::LLTCaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   , m_adcsHcal(NULL) {
   declareProperty( "ECALMultiplicityThreshold" , m_ECALThreshold = 2   ) ;
   declareProperty( "HCALMultiplicityThreshold" , m_HCALThreshold = 2   ) ;  
+  declareProperty( "CaloToolName" , m_caloToolName = "CaloTriggerAdcsFromRaw" ) ; 
+  declareProperty( "DoubleScale" , m_doubleScale = false ) ;
 }
 
 //=============================================================================
@@ -74,10 +76,10 @@ StatusCode LLTCaloAlg::initialize() {
 
   // Initialize needed tools
   m_adcsEcal = 
-    tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", 
+    tool<ICaloTriggerAdcsFromRaw>( m_caloToolName , 
                                    "EcalTriggerAdcTool", this );
   m_adcsHcal = 
-    tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", 
+    tool<ICaloTriggerAdcsFromRaw>( m_caloToolName , 
                                    "HcalTriggerAdcTool", this );
 
   // Gain value to convert ADC into energy
@@ -88,6 +90,8 @@ StatusCode LLTCaloAlg::initialize() {
     m_etScale = gain -> paramAsDouble( "L0EtBin" ) ;
   else
     return Error( "Parameter L0EtBin not found in Ecal Gain" ) ;
+
+  if ( m_doubleScale ) m_etScale = 2. * m_etScale ;
 
   return StatusCode::SUCCESS;
 }

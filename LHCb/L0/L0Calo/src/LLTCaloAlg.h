@@ -53,6 +53,10 @@ private:
   std::vector< LLTTriggerCard > m_ecalFe ; ///< Ecal front-end card vector
   std::vector< LLTTriggerCard > m_hcalFe ; ///< Hcal front-end card vector
 
+  // Name of the ADC tool
+  std::string m_caloToolName ;
+
   double m_etScale ;
+  bool   m_doubleScale ;
 };
 #endif //   L0CALO_LLTCALOALG_H

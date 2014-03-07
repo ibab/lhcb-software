@@ -2,6 +2,11 @@
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
+
+! 2014-03-07 - Patrick Robbe
+ - Add tool to compute L0Adc from CaloADC directly instead of decoding
+   them from the RAW bank (useful for LLT emulation)
+
 ! 2014-03-01 - Patrick Robbe
  - Add classes to emulate the LLT Calo, LLTCaloAlg and LLTTriggerCard
 
