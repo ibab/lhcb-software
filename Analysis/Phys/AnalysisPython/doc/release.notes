@@ -6,6 +6,13 @@
 !-----------------------------------------------------------------------------
 
 
+
+!========================= AnalysisPython v2r27 2014-03-07 =========================
+
+! 2014-03-07 - Vanya Belyaev
+
+ - tagged for release with Bender 
+
 ! 2014-03-07 - Vanya Belyaev
  - minor impovement for PhaseSpace modulated by Polinomial function
 
