@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+! 2014-03-07 - Liang Sun
+ - Fix the CondDB path in testsplit.py
+
 ! 2014-03-06 - Liang Sun
  - Add a script to set up test environment for the split HLT scenario
  - Add an example script for the purpose of demonstration

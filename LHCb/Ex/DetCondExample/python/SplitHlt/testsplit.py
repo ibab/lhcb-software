@@ -9,7 +9,7 @@ sys.path.append('.')
 
 from rchoption_withhlt2 import calibconds
 
-DDDBConf(DbRoot = "/scratch/lsun/myDDDB/lhcb.xml") # Configure the detector description
+DDDBConf() # Configure the detector description
 CondDB(IgnoreHeartBeat = True)
 
 EventClockSvc().addTool(TimeDecoder,"EventTimeDecoder")
