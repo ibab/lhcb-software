@@ -7,6 +7,7 @@
 ! 2014-03-07 - Chris Jones
  - Remove unneccessary Stripping appconfig test. Covered by the various
    explicit Stripping tests.
+ - Update S20rXp3 references.
 
 !========================= DaVinciTests v2r22 2014-03-03 =========================
 
