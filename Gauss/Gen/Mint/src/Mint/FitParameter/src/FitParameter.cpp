@@ -2,6 +2,7 @@
 // status:  Mon 9 Feb 2009 19:17:55 GMT
 #include "Mint/FitParameter.h"
 #include "Mint/MinuitParameterSet.h"
+#include "TRandom3.h"
 
 #include <iostream>
 using namespace std;
@@ -20,6 +21,7 @@ FitParameter::FitParameter(const std::string& name
   , NamedParameterBase(name, fname, vb)
   , IMinuitParameter()
   //  , _minPtr(0)
+  , _blinding(0)
   , _pset(0)
   , _psetIndex(-9999)
   //  , _pN(-1)
@@ -29,12 +31,14 @@ FitParameter::FitParameter(const std::string& name
   , _minInit(0)
   , _maxInit(0)
   , _scanParameters(name + "_Scan", fname, NamedParameterBase::QUIET)
+  , _blindingParameters(name + "_Blind", fname, NamedParameterBase::QUIET)
 {
   setFromParsedFile();
   MinuitParameterSet* ps = setPtr;
   if(0 == ps) ps = MinuitParameterSet::getDefaultSet();
   addToParSet(ps);
   initToResult();
+  setupBlinding();
   //  cout << "FitParameter constructed " << this->name() << endl;
 }
 FitParameter::FitParameter(const std::string& name
@@ -59,6 +63,7 @@ FitParameter::FitParameter(const std::string& name
   , _minInit(mi)
   , _maxInit(ma)
   , _scanParameters(name + "_Scan", 0, NamedParameterBase::QUIET)
+  , _blindingParameters(name + "_Blind", 0, NamedParameterBase::QUIET)
 {
   _gotInitialised = true;
   MinuitParameterSet* ps = setPtr;
@@ -67,6 +72,8 @@ FitParameter::FitParameter(const std::string& name
   addToParSet(ps);
 
   initToResult();
+  setupBlinding();
+
   //cout << "FitParameter constructed a " << this->name() << endl;
 }
 
@@ -88,13 +95,38 @@ FitParameter::FitParameter(const std::string& name
   , _minInit(0)
   , _maxInit(0)
   , _scanParameters(name + "_Scan", 0, NamedParameterBase::QUIET)
+  , _blindingParameters(name + "_Blind", 0, NamedParameterBase::QUIET)
 {
   setFromParsedFile();
   MinuitParameterSet* ps = setPtr;
   if(0 == ps) ps = MinuitParameterSet::getDefaultSet();
   addToParSet(ps);
   initToResult();
+  setupBlinding();
   //cout << "FitParameter constructed b " << this->name() << endl;
+}
+
+
+bool FitParameter::setupBlinding(){
+  if(! _blindingParameters.gotInitialised()) return true;
+  int seed = (int) fabs(_blindingParameters.getVal(0));
+  double min=-1, max=1;
+
+  if(_blindingParameters.size() > 1){
+    min = _blindingParameters.getVal(1);
+  }
+  if(_blindingParameters.size() > 2){
+    max = _blindingParameters.getVal(2);
+  }else{
+    max = min + 1;
+  }
+  
+  TRandom3 rnd(seed + 99);
+  _blinding = rnd.Rndm()*(max - min) + min;
+
+  cout << "blinding " << blinding() << endl;
+  return true;
+
 }
 
 // not so clear if I should keep copy constructor...
@@ -103,6 +135,7 @@ FitParameter::FitParameter(const FitParameter& other)
   : INamedParameter()
   , NamedParameterBase(other)
   , IMinuitParameter()
+  , _blinding(other._blinding)
   //  , _minPtr(other._minPtr)
   , _pset(other._pset)
   , _psetIndex(other._psetIndex)
@@ -113,6 +146,7 @@ FitParameter::FitParameter(const FitParameter& other)
   , _minInit(other._minInit)
   , _maxInit(other._maxInit)
   , _scanParameters(other._scanParameters)
+  , _blindingParameters(other._blindingParameters)
   , _meanResult(other._meanResult)
   , _errResult(other._errResult)
   , _errPosResult(other._errPosResult)
@@ -273,6 +307,9 @@ void FitParameter::setResult(double fitMean
 }
 
 double FitParameter::mean() const{
+  return _meanResult;
+}
+double FitParameter::unblindedMean() const{
   return _meanResult;
 }
 double FitParameter::min() const{

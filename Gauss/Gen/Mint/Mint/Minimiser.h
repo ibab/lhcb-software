@@ -14,6 +14,7 @@ class TGraph;
 namespace MINT{
 
 class IMinuitParameter;
+class FitParameter;
 
 class Minimiser : public TMinuit{
   mutable Double_t arglist[10];
@@ -101,6 +102,8 @@ class Minimiser : public TMinuit{
   TMatrixTSym<double> covMatrix();
   TMatrixTSym<double> covMatrixFull();
 
+  //  friend class FitParameter;
+  //  friend class IMinuitParameter;
 };
 }//namespace MINT
 #endif

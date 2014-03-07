@@ -195,6 +195,7 @@ bool Minimiser::setParametersToResult(){
     if(! getParPtr(i)->hidden()){
       this->mnerrs(i, errP, errN, err, gcc);
       this->GetParameter(i, mean, err);
+      mean += this->getParPtr(i)->blinding();
       this->getParPtr(i)->setResult(mean, err, errP, errN);
     }
   }
@@ -207,7 +208,7 @@ bool Minimiser::updateFitParameters(Double_t* par){
 
   for(unsigned int i=0; i < nPars(); i++){
     if(! getParPtr(i)->hidden()){
-      getParPtr(i)->setCurrentFitVal(par[i]);
+      getParPtr(i)->setCurrentFitVal(par[i] + this->getParPtr(i)->blinding());
     }
   }
   theFunction()->parametersChanged();

@@ -16,6 +16,7 @@ class IMinuitParameter{
   IMinuitParameter(){};
   virtual bool setParSet(MinuitParameterSet* ps)=0;
   virtual bool setParSetIndex(int psetIndex)=0;
+  virtual double blinding() const=0;
  public:
   virtual int iFixInit() const=0;
   virtual bool hidden() const=0;
@@ -54,6 +55,7 @@ class IMinuitParameter{
   virtual ~IMinuitParameter(){}
 
   friend class MinuitParameterSet;
+  friend class Minimiser;
 
 };
 }//namespace MINT

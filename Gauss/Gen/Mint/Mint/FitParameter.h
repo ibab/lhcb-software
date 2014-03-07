@@ -5,6 +5,7 @@
 
 //#include "TMinuit.h"
 #include "Mint/IMinuitParameter.h"
+#include "Mint/IReturnReal.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/NamedParameterBase.h"
 #include "Mint/NamedParameter.h"
@@ -38,7 +39,7 @@ following the parameter name!!
 
 namespace MINT{
 
-class FitParameter : public NamedParameterBase, public IMinuitParameter{
+  class FitParameter : public NamedParameterBase, public IMinuitParameter, virtual public IReturnReal{
   // copying dangerous because a pointer is held 
   // in MinuitParameterSet
   // therefore for the time being: private.
@@ -46,8 +47,16 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter{
   // mean?
   FitParameter(const FitParameter& other);
 
-
  protected:
+
+  //////
+
+  double _blinding;
+  bool setupBlinding();
+  virtual double blinding() const{return _blinding;}
+
+  //////
+
   static const char* _initString;
   
   //  TMinuit* _minPtr;
@@ -59,6 +68,7 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter{
   double _meanInit, _stepInit, _minInit, _maxInit;
 
   NamedParameter<double> _scanParameters;
+  NamedParameter<double> _blindingParameters;
 
   double _meanResult, _errResult, _errPosResult, _errNegResult;
   double _currentFitVal;
@@ -139,6 +149,7 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter{
   //  bool MinuitOK() const;
   double valAtLastFCNCall()const;
   double mean()const;
+  double unblindedMean()const;
   double min()const;
   double max()const;
   double errPos(); // not const because mnerrs is non-const
@@ -158,6 +169,9 @@ class FitParameter : public NamedParameterBase, public IMinuitParameter{
   void fixToInitAndHide();
   void unFix();
 
+  double RealVal(){ // promised by IReturnReal
+    return mean();
+  }
   operator double() const{
     return mean();
   }
