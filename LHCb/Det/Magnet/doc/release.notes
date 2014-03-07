@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2014-03-07 - Chris Jones
+ - Suppress the info messages 'Map scaled by factor ...' after 2 instances.
+
 !========================= Magnet v7r6p1 2013-06-03 =========================
 ! 2013-05-07 - Marco Cattaneo
  - Fix clang32 warning

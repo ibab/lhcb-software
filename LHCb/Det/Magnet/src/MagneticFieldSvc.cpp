@@ -14,6 +14,8 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
+#include <map>
 
 /** @file MagneticFieldSvc.cpp
  *  Implementation of MagneticFieldSvc class
@@ -29,21 +31,21 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
-                                      ISvcLocator* svc )
-    : Service( name, svc ),
-      m_forcedToUseDownMap(false),
-      m_forcedToUseUpMap(false),
-      m_forcedScaleFactor (9999),
-      m_mapFromOptions(false),
-      m_mapFilesUpPtr(0),
-      m_mapFilesDownPtr(0),
-      m_scaleUpPtr(0),
-      m_scaleDownPtr(0),
-      m_currentPtr(0),
-      m_updMgrSvc(0),
-      m_magFieldGridReader(*msgSvc()),
-      m_isDown(false)
+MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
+                                    ISvcLocator* svc )
+: Service( name, svc ),
+  m_forcedToUseDownMap(false),
+  m_forcedToUseUpMap(false),
+  m_forcedScaleFactor (9999),
+  m_mapFromOptions(false),
+  m_mapFilesUpPtr(0),
+  m_mapFilesDownPtr(0),
+  m_scaleUpPtr(0),
+  m_scaleDownPtr(0),
+  m_currentPtr(0),
+  m_updMgrSvc(0),
+  m_magFieldGridReader(*msgSvc()),
+  m_isDown(false)
 {
 
   m_constFieldVector.push_back( 0. );
@@ -122,12 +124,12 @@ StatusCode MagneticFieldSvc::initialize()
   else
   {
 
-    if ( m_UseConditions ) 
+    if ( m_UseConditions )
     {
       // Normal case, use conditions database
       status = initializeWithCondDB();
     }
-    else 
+    else
     {
       status = initializeWithoutCondDB();
       // register anyway with UpdateManagerSvc, so clients can register callbacks
@@ -170,7 +172,7 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::Set,
                                     &MagneticFieldSvc::i_updateConditions, m_currentPtr );
   }
-  else 
+  else
   {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
                                     &MagneticFieldSvc::i_updateConditions, m_currentPtr );
@@ -178,14 +180,14 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
 
   // FieldMap file name(s). If not over-ridden by options, get from CondDB
 
-  if ( !m_mapFileNames.empty() ) 
+  if ( !m_mapFileNames.empty() )
   {
     log << MSG::WARNING
         << "Requested condDB but using manually set field map file name(s) = "
         << m_mapFileNames << endmsg;
 
     m_mapFromOptions = true;
-    const StatusCode sc = 
+    const StatusCode sc =
       ( m_mapFileNames.size() == 1 ?
         m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
         m_magFieldGridReader.readFiles   ( m_mapFileNames,         m_magFieldGrid ) ) ;
@@ -201,7 +203,7 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
 
 
   // Scaling factor. If not over-ridden by options, get it from Options
-  if(m_forcedScaleFactor < 9998. ) 
+  if(m_forcedScaleFactor < 9998. )
   {
     log << MSG::WARNING
         << "Requested condDB but using manually set signed scale factor = "
@@ -244,11 +246,11 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
     if( UNLIKELY(log.level() <= MSG::DEBUG) )
       log << MSG::DEBUG << "Scale factor set to default = " << scaleFactor << endmsg;
   }
-  
+
   m_magFieldGrid.setScaleFactor( scaleFactor ) ;
 
   // update the field
-  const StatusCode sc = 
+  const StatusCode sc =
     ( m_mapFileNames.size() == 1 ?
       m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
       m_magFieldGridReader.readFiles   ( m_mapFileNames,         m_magFieldGrid ) );
@@ -267,8 +269,8 @@ StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
     *ppvInterface = (IMagneticFieldSvc*)this;
     addRef();
     return StatusCode::SUCCESS;
-  } 
-  else if ( ILHCbMagnetSvc::interfaceID().versionMatch(riid) ) 
+  }
+  else if ( ILHCbMagnetSvc::interfaceID().versionMatch(riid) )
   {
     *ppvInterface = (ILHCbMagnetSvc*)this;
     addRef();
@@ -302,7 +304,7 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   {
     const double current = m_currentPtr->param<double>("Current");
 
-    const std::vector<double> coeffs = 
+    const std::vector<double> coeffs =
       ( polarity > 0  ?
         m_scaleUpPtr   -> param<std::vector<double> >("Coeffs") :
         m_scaleDownPtr -> param<std::vector<double> >("Coeffs") );
@@ -350,11 +352,13 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   // update the cached field polarity
   cacheFieldPolarity();
 
-  log << MSG::INFO
-      << "Map scaled by factor "            << m_magFieldGrid.scaleFactor()
-      << " with polarity internally used: " << polarity
-      << " signed relative current: "       << signedRelativeCurrent()
-      << endmsg;
+  // Print a message
+  static std::map<std::string,unsigned long long> nUpdates;
+  std::ostringstream mess;
+  mess << "Map scaled by factor "            << m_magFieldGrid.scaleFactor()
+       << " with polarity internally used: " << polarity
+       << " signed relative current: "       << signedRelativeCurrent();
+  if ( nUpdates[mess.str()]++ < 2 ) { log << MSG::INFO << mess.str() << endmsg; }
 
   return sc ;
 }
