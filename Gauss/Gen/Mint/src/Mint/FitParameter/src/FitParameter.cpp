@@ -123,8 +123,6 @@ bool FitParameter::setupBlinding(){
   
   TRandom3 rnd(seed + 99);
   _blinding = rnd.Rndm()*(max - min) + min;
-
-  cout << "blinding " << blinding() << endl;
   return true;
 
 }
@@ -309,8 +307,8 @@ void FitParameter::setResult(double fitMean
 double FitParameter::mean() const{
   return _meanResult;
 }
-double FitParameter::unblindedMean() const{
-  return _meanResult;
+double FitParameter::blindedMean() const{
+  return mean() - blinding() ;
 }
 double FitParameter::min() const{
   return minInit();
@@ -338,7 +336,7 @@ void FitParameter::print(std::ostream& os) const{
   // ... in a format that can be read back in
   os << "\"" <<  name() << "\""
      << "\t" << iFixInit()
-     << "\t" << mean()
+     << "\t" << blindedMean()
      << "\t" << err()
      << "\t" << min()
      << "\t" << max();
@@ -346,7 +344,7 @@ void FitParameter::print(std::ostream& os) const{
 void FitParameter::printVal(std::ostream& os) const{
   // ... in a format that can be read back in, w/o the name
   os << iFixInit()
-     << "\t" << mean()
+     << "\t" << blindedMean()
      << "\t" << err()
      << "\t" << min()
      << "\t" << max();
@@ -354,12 +352,12 @@ void FitParameter::printVal(std::ostream& os) const{
 void FitParameter::printResultVsInput(std::ostream& os) const{
 
   double pull = -9999;
-  if(err() != 0) pull = (mean() - meanInit() )/err();
+  if(err() != 0) pull = (blindedMean() - meanInit() )/err();
 
 
   os << "\"" <<  name() << "\""
      << "\t" << iFixInit()
-     << "\t" << mean() << " - " << meanInit() << " / " << err()
+     << "\t" << blindedMean() << " - " << meanInit() << " / " << err()
      << " = \t" << pull;
 }
 void FitParameter::printFormat(std::ostream& os, int namelength){ // static

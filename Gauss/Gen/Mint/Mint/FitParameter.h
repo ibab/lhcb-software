@@ -149,7 +149,7 @@ namespace MINT{
   //  bool MinuitOK() const;
   double valAtLastFCNCall()const;
   double mean()const;
-  double unblindedMean()const;
+  double blindedMean()const;
   double min()const;
   double max()const;
   double errPos(); // not const because mnerrs is non-const
