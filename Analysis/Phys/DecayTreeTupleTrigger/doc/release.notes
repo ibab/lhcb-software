@@ -4,6 +4,9 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2014-03-07 - Patrick Robbe 
+ - TupleToolL0Calo: add ET of the associated L0Calo clusters to the ntuple
+
 !========================= DecayTreeTupleTrigger v1r2 2014-02-20 =========================
 
 ! 2013-12-01 Tomasz Skwarnicki	

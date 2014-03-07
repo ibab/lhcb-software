@@ -12,8 +12,11 @@
 #include "Kernel/IParticleTupleTool.h"
 #include "Event/Particle.h"
 #include "CaloInterfaces/IPart2Calo.h"
+#include "Event/L0CaloCandidate.h"
+#include "Event/L0DUBase.h"
 
 #include "TMath.h"
+#include "boost/foreach.hpp"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloTupleTool
@@ -56,10 +59,12 @@ DECLARE_TOOL_FACTORY( TupleToolL0Calo )
   TupleToolL0Calo::TupleToolL0Calo( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-    : TupleToolBase ( type, name , parent )
+: TupleToolBase ( type, name , parent ) , m_fillTriggerEt( false ) ,
+  m_caloDe( 0 )
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("WhichCalo", m_calo = "HCAL");
+  declareProperty("TriggerClusterLocation" , m_location = "" ) ;
 }
 
 //=============================================================================
@@ -75,6 +80,14 @@ StatusCode TupleToolL0Calo::initialize( )
     err() << "TupleToolL0Calo -- Invalid calo: " << m_calo << "." << endmsg ;
     return StatusCode::FAILURE;
   }
+
+  if ( m_calo == "HCAL" ) 
+    m_caloDe = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;  
+  else 
+    m_caloDe = getDet< DeCalorimeter >( DeCalorimeterLocation::Ecal ) ;
+
+  // Fill trigger info ? 
+  if ( "" != m_location ) m_fillTriggerEt = true ;
 
   return sc;
 }
@@ -111,20 +124,31 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
   xProjection = m_part2calo->caloState().x();
   yProjection = m_part2calo->caloState().y();
 
+  double triggerET( -1. ) , leadingET( -1. ) ;
+
+  if ( m_fillTriggerEt ) { 
+    triggerET = getAssociatedCluster( ) ;
+    leadingET = getLeadingEt( ) ;
+  }
 
   // Fill the tuple
-
   if (m_calo == "HCAL") {
     test &= tuple->column( prefix+"_L0Calo_HCAL_realET", trackET );
     test &= tuple->column( prefix+"_L0Calo_HCAL_xProjection", xProjection );
     test &= tuple->column( prefix+"_L0Calo_HCAL_yProjection", yProjection );
-    test &= tuple->column( prefix+"_L0Calo_HCAL_region", isinside_HCAL( xProjection , yProjection ) );
+    test &= tuple->column( prefix+"_L0Calo_HCAL_region", 
+                           isinside_HCAL( xProjection , yProjection ) );    
+    test &= tuple->column( prefix+"_L0Calo_HCAL_TriggerET", triggerET ) ;    
+    test &= tuple->column( prefix+"_L0Calo_HCAL_LeadingET", leadingET ) ;    
   }
   else if (m_calo == "ECAL") {
     test &= tuple->column( prefix+"_L0Calo_ECAL_realET", trackET );
     test &= tuple->column( prefix+"_L0Calo_ECAL_xProjection", xProjection );
     test &= tuple->column( prefix+"_L0Calo_ECAL_yProjection", yProjection );
-    test &= tuple->column( prefix+"_L0Calo_ECAL_region", isinside_ECAL( xProjection , yProjection ) );
+    test &= tuple->column( prefix+"_L0Calo_ECAL_region", 
+                           isinside_ECAL( xProjection , yProjection ) );
+    test &= tuple->column( prefix+"_L0Calo_ECAL_TriggerET", triggerET ) ;
+    test &= tuple->column( prefix+"_L0Calo_ECAL_LeadingET", leadingET ) ;
   }
 
 
@@ -142,11 +166,15 @@ int TupleToolL0Calo::isinside_HCAL(double x,
   inner = false;
   outer = false;
 
-  if (TMath::Abs(x) < HCAL_xMax_Outer && TMath::Abs(y) < HCAL_yMax_Outer) { // projection inside calo
-    if (TMath::Abs(x) < HCAL_xMax_Inner && TMath::Abs(y) < HCAL_yMax_Inner) { // projection inside inner calo (else is outer calo)
-      if (TMath::Abs(x) > 2*HCAL_CellSize_Inner) // projections outside the beampipe (in x)
+  // projection inside calo
+  if (TMath::Abs(x) < HCAL_xMax_Outer && TMath::Abs(y) < HCAL_yMax_Outer) { 
+    // projection inside inner calo (else is outer calo)
+    if (TMath::Abs(x) < HCAL_xMax_Inner && TMath::Abs(y) < HCAL_yMax_Inner) { 
+      // projections outside the beampipe (in x)
+      if (TMath::Abs(x) > 2*HCAL_CellSize_Inner) 
         inner = true;
-      else if (TMath::Abs(y) > 2*HCAL_CellSize_Inner) // projections outside the beampipe (not in x, so in y)
+      // projections outside the beampipe (not in x, so in y)
+      else if (TMath::Abs(y) > 2*HCAL_CellSize_Inner)
         inner = true;
       else
         inside = false;
@@ -177,12 +205,17 @@ int TupleToolL0Calo::isinside_ECAL(double x,
   middle = false;
   outer = false;
 
-  if (TMath::Abs(x) < ECAL_xMax_Outer && TMath::Abs(y) < ECAL_yMax_Outer) { // projection inside calo
-    if (TMath::Abs(x) < ECAL_xMax_Middle && TMath::Abs(y) < ECAL_yMax_Middle) { // projection inside middle calo (else is outer calo)
-      if (TMath::Abs(x) < ECAL_xMax_Inner && TMath::Abs(y) < ECAL_yMax_Inner) { // projection inside inner calo
-        if (TMath::Abs(x) > 2*ECAL_CellSize_Inner) // projections outside the beampipe (in x)
+  // projection inside calo
+  if (TMath::Abs(x) < ECAL_xMax_Outer && TMath::Abs(y) < ECAL_yMax_Outer) {
+    // projection inside middle calo (else is outer calo)
+    if (TMath::Abs(x) < ECAL_xMax_Middle && TMath::Abs(y) < ECAL_yMax_Middle) { 
+      // projection inside inner calo
+      if (TMath::Abs(x) < ECAL_xMax_Inner && TMath::Abs(y) < ECAL_yMax_Inner) {
+        // projections outside the beampipe (in x)
+        if (TMath::Abs(x) > 2*ECAL_CellSize_Inner)
           inner = true;
-        else if (TMath::Abs(y) > 2*ECAL_CellSize_Inner) // projections outside the beampipe (not in x, so in y)
+        // projections outside the beampipe (not in x, so in y)
+        else if (TMath::Abs(y) > 2*ECAL_CellSize_Inner) 
           inner = true;
         else
           inside = false;
@@ -206,5 +239,82 @@ int TupleToolL0Calo::isinside_ECAL(double x,
     return 0;
   else
     return -999;
+}
 
+//=============================================================================
+// Get associated L0 or LLT cluster
+//=============================================================================
+double TupleToolL0Calo::getAssociatedCluster( ) {
+  // First get the CALO cells in the 3x3 cluster around the track projection
+  std::vector< LHCb::CaloCellID > cells3x3;
+
+  if( m_part2calo -> isValid() ) { 
+    const LHCb::CaloCellID centerCell = m_part2calo -> caloCellID();
+    cells3x3.push_back( centerCell ) ;
+    BOOST_FOREACH( LHCb::CaloCellID cell, m_caloDe -> neighborCells( centerCell ) )
+    {
+      cells3x3.push_back( cell );
+    } ;
+  }
+  std::sort( cells3x3.begin() , cells3x3.end() );
+  
+  // loop over the L0 candidates
+  LHCb::L0CaloCandidates * candidates = 
+    getIfExists<LHCb::L0CaloCandidates> ( m_location );
+
+  int typeToCheck = L0DUBase::CaloType::Electron ;
+  if ( m_calo == "HCAL" ) typeToCheck = L0DUBase::CaloType::Hadron ;
+
+  LHCb::L0CaloCandidates::iterator cand ;
+  double result = -1. ;
+
+  for ( cand = candidates -> begin() ; candidates -> end() != cand ;
+        ++cand ) {
+    LHCb::L0CaloCandidate * theCand = (*cand) ;    
+    if ( theCand -> type() == typeToCheck ) {
+      LHCb::CaloCellID cell1 , cell2 , cell3 , cell4 ;
+      cell1 = theCand -> id() ;
+      cell2 = LHCb::CaloCellID( cell1.calo() , cell1.area() , 
+                                cell1.row()+1 , cell1.col() ) ;
+      cell3 = LHCb::CaloCellID( cell1.calo() , cell1.area() , 
+                                cell1.row()  , cell1.col()+1 ) ;
+      cell4 = LHCb::CaloCellID( cell1.calo() , cell1.area() , 
+                                cell1.row()+1  , cell1.col()+1 ) ;      
+      if ( std::binary_search( cells3x3.begin() , cells3x3.end() , cell1 ) ||
+           std::binary_search( cells3x3.begin() , cells3x3.end() , cell2 ) ||
+           std::binary_search( cells3x3.begin() , cells3x3.end() , cell3 ) ||
+           std::binary_search( cells3x3.begin() , cells3x3.end() , cell4 ) )
+      { 
+        if ( theCand -> et() > result ) 
+          result = theCand -> et() ;
+      }
+    }
+  }
+  
+  return result ;
+}
+
+
+double TupleToolL0Calo::getLeadingEt( ) {
+  double result = -1. ;
+  
+  // loop over the L0 candidates
+  LHCb::L0CaloCandidates * candidates = 
+    getIfExists<LHCb::L0CaloCandidates> ( m_location );
+
+  int typeToCheck = L0DUBase::CaloType::Electron ;
+  if ( m_calo == "HCAL" ) typeToCheck = L0DUBase::CaloType::Hadron ;
+
+  LHCb::L0CaloCandidates::iterator cand ;
+
+  for ( cand = candidates -> begin() ; candidates -> end() != cand ;
+        ++cand ) {
+    LHCb::L0CaloCandidate * theCand = (*cand) ;    
+    if ( theCand -> type() == typeToCheck ) {
+      if ( theCand -> et() > result ) 
+        result = theCand -> et() ;
+    }
+  }
+  
+  return result ;
 }

@@ -9,6 +9,7 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class IPart2Calo;
+class DeCalorimeter ;
 
 /** @class TupleToolL0Calo TupleToolL0Calo.h
  *
@@ -56,10 +57,17 @@ private :
                     double y);
   int isinside_ECAL(double x,
                     double y);
+  /// Get the associated L0/LLT cluster
+  double getAssociatedCluster( );
+
+  /// Get the energy of the highest cluster
+  double getLeadingEt( ) ;
 
   IPart2Calo* m_part2calo;
   std::string m_calo;
-
+  std::string m_location ;
+  bool        m_fillTriggerEt ;
+  DeCalorimeter * m_caloDe ;
 };
 
 #endif // TUPLETOOLL0CALO_H
