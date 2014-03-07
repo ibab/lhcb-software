@@ -8,6 +8,8 @@
  - Remove unneccessary Stripping appconfig test. Covered by the various
    explicit Stripping tests.
  - Update S20rXp3 references.
+ - Migrate test_decaytreetuple data file to PRConfig and EOSTEST.
+ - Rename test_decaytreetuple as test_decaytreetuple_mc2010.
 
 !========================= DaVinciTests v2r22 2014-03-03 =========================
 
