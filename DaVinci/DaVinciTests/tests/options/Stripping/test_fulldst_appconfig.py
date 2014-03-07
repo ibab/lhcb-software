@@ -95,9 +95,4 @@ DaVinci().appendToMainSequence( [ dstWriter.sequence() ] )
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py")
 
-
-DaVinci().EvtMax=-1
-from PRConfig import TestFileDB
-TestFileDB.test_file_db["brunel-v37r1-sdst"].run(configurable=DaVinci(),withDB=False)
-DaVinci().DataType = "2011" #I hope....
-FileCatalog().Catalogs =['xmlcatalog_file:../options/TestSDSTCatalog.xml']
+DaVinci().EvtMax = 100
