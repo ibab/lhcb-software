@@ -652,6 +652,7 @@ class Moore(LHCbConfigurableUser):
         def hlt1_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
+            #this replaces the HltDecisionSequence with "Hlt1"
             seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
             ## adapt HltGlobalMonitor for Hlt1 only...
             from Configurables import HltGlobalMonitor
@@ -659,14 +660,20 @@ class Moore(LHCbConfigurableUser):
             ##
 
         def hlt1_only_tck() :
+            #this replaces the HltDecisionSequence with "Hlt1"
             trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
                       }
+            #add the tracking encoder
+            from Configurables import HltTrackReportsWriter
+            HltTrackReportsWriter()
+            trans['GaudiSequencer/HltEndSequence']={ 'Members' : { "DecReportsWriter'": "DecReportsWriter', 'HltTrackReportsWriter'" } }
             Funcs._mergeTransform(trans)
 
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
+            #this replaces the HltDecisionSequence with "Hlt2"
             seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
             # TODO: shunt lumi nano events...
             # globally prepend Decoders for Hlt1...
@@ -750,6 +757,7 @@ class Moore(LHCbConfigurableUser):
                 trAlg=tr.setup()
                 trinsertion="', '"+hlt1traoder_name
             
+            #this is replacing the HltDecisionSequence with some other things
             transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/Hlt2"  } }
             transdep['.*HDRFilter/.*' ]= { 'Location'                   : { '^.*$' : hlt1decrep_location } }
             transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
@@ -818,6 +826,17 @@ class Moore(LHCbConfigurableUser):
             
             if  MooreExpert().getProp("Hlt2Independent"):
                 appendPostConfigAction( gerhardsSledgehammer )
+        
+        #check/set WriterRequires!
+        if not self.isPropertySet('WriterRequires'):
+            if len(self.getProp('Split')):
+                self.setProp('WriterRequires',[self.getProp('Split')])
+        else:
+            if len(self.getProp('Split')):
+                if len(self.getProp('WriterRequires')):
+                    #probably you've done something wrong here!
+                    if self.getProp('WriterRequires')!=[self.getProp('Split')]:
+                        raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
         
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
