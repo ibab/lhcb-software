@@ -136,8 +136,8 @@ StatusCode LbAppInit::execute()
   }
   else if ( UNLIKELY( 0 == nev%m_increment && m_increment > 0 ) )
   {
-    const unsigned long long mem     = System::virtualMemory();
-    const          long long memDiff = (long long)(mem-m_lastMem);
+    unsigned long long mem     = System::virtualMemory();
+    const    long long memDiff = (long long)(mem-m_lastMem);
     if ( UNLIKELY( abs(memDiff) >= m_minMemDelta ) )
     {
       info() << "Memory has changed from " << m_lastMem << " to " << mem << " KB"
@@ -150,6 +150,7 @@ StatusCode LbAppInit::execute()
              << " KB -> Purging pools";
         Info( mess.str(), StatusCode::SUCCESS, 1 );
         releaseMemoryPools();
+        mem = System::virtualMemory();
       }
       m_lastMem = mem;
     }
