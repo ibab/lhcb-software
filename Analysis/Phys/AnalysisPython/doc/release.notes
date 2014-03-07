@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+
+! 2014-03-07 - Vanya Belyaev
+ - minor impovement for PhaseSpace modulated by Polinomial function
+
 ! 2014-03-03 - Vanya Belyaev
 
  - new PyTMVA module
