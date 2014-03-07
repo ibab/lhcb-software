@@ -91,18 +91,5 @@ DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().CondDBtag="sim-20100715-vc-md100"
 DaVinci().DDDBtag="head-20100624"
 
-#-- GAUDI jobOptions generated on Mon Jan 17 17:06:59 2011
-#-- Contains event types : 
-#--   11144103 - 1 files - 10000 events - 4.10 GBytes
-# MC 2010 Beam3500GeV-VeloClosed-MagDown-Nu3
-# B0 -> Jpsi, Ks
-
-from Gaudi.Configuration import * 
-
-EventSelector().Input   = [
-"DATAFILE='root://castorlhcb.cern.ch//castor/cern.ch/user/r/rlambert/testfiles/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-#"DATAFILE='PFN:/usera/jonesc/NFS/data/MC/test/MC2010_BdJPsiKs_00008414_00000106_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-]
-#FileCatalog().Catalogs = [ 'xmlcatalog_file:Sim2010_Bd2JpsiKs.xml' ]
-
-
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["MC2010_BdJPsiKs"].run(configurable=DaVinci(),withDB=False)
