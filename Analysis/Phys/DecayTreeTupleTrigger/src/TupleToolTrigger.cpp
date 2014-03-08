@@ -28,11 +28,11 @@ DECLARE_TOOL_FACTORY( TupleToolTrigger )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  TupleToolTrigger::TupleToolTrigger( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
-    : TupleToolTriggerBase ( type, name , parent )
-    , m_routingBits(0)
+TupleToolTrigger::TupleToolTrigger( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+: TupleToolTriggerBase ( type, name , parent )
+  , m_routingBits(0)
 {
   declareInterface<IEventTupleTool>(this);
   //declareProperty( "FillL0", m_fillL0=true, "Fill L0" ); now in the base class
@@ -102,15 +102,15 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
     if ( !decReports1 )
     {
       decReports1 =
-	getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
+        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
       if ( !decReports1 )
       {
-	decReports1 =
-	  getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
+        decReports1 =
+          getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
       }
       if( decReports1 )
       {
-	decReports2 = decReports1;
+        decReports2 = decReports1;
       }
     }
 
@@ -118,23 +118,23 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
     if( !decReports2 )
     {
       decReports2 =
-      getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports");
+        getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports");
       if ( !decReports2 )
       {
-	decReports2 =
-	  getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports",false);
+        decReports2 =
+          getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports",false);
       }
     }
 
 
     //fill the HLT1 global
-    if ( !tuple->column( prefix+"Hlt1Global", 
-                        decReports1 && decReports1->decReport("Hlt1Global") ?
-                        decReports1->decReport("Hlt1Global")->decision() : 0 ) )
+    if ( !tuple->column( prefix+"Hlt1Global",
+                         decReports1 && decReports1->decReport("Hlt1Global") ?
+                         decReports1->decReport("Hlt1Global")->decision() : 0 ) )
       return StatusCode::FAILURE;
 
     //fill the HLT2 global
-    if ( !tuple->column( prefix+"Hlt2Global", 
+    if ( !tuple->column( prefix+"Hlt2Global",
                          decReports2 && decReports2->decReport("Hlt2Global") ?
                          decReports2->decReport("Hlt2Global")->decision() : 0 ) )
       return StatusCode::FAILURE;
@@ -200,7 +200,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
     if ( !decReports )
     {
-	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+      decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
     }
   } else {
     //  look for split reports first
@@ -208,14 +208,14 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
     if ( !decReports )
     {
-	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+      decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
     }
     //  if not found look for old style Hlt report
     loca = LHCb::HltDecReportsLocation::Default;
     decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
     if ( !decReports )
     {
-	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+      decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
     }
   }
 

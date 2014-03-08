@@ -30,19 +30,19 @@ DECLARE_TOOL_FACTORY( TupleToolTISTOS )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-    : TupleToolTriggerBase  ( type, name , parent )
-    , m_TriggerTisTosName   ( "TriggerTisTos"     )
-    , m_Hlt1TriggerTisTosName   ( "Hlt1TriggerTisTos"     )
-    , m_Hlt2TriggerTisTosName   ( "Hlt2TriggerTisTos"     )
-    , m_L0TriggerTisTosName ( "L0TriggerTisTos"   )
-    , m_TriggerTisTosTool   ( NULL                )
-    , m_Hlt1TriggerTisTosTool   ( NULL                )
-    , m_Hlt2TriggerTisTosTool   ( NULL                )
-    , m_L0TriggerTisTosTool ( NULL                )
-    , m_pidList (0)//1, 22)
+TupleToolTISTOS::TupleToolTISTOS( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
+: TupleToolTriggerBase  ( type, name , parent )
+  , m_TriggerTisTosName   ( "TriggerTisTos"     )
+  , m_Hlt1TriggerTisTosName   ( "Hlt1TriggerTisTos"     )
+  , m_Hlt2TriggerTisTosName   ( "Hlt2TriggerTisTos"     )
+  , m_L0TriggerTisTosName ( "L0TriggerTisTos"   )
+  , m_TriggerTisTosTool   ( NULL                )
+  , m_Hlt1TriggerTisTosTool   ( NULL                )
+  , m_Hlt2TriggerTisTosTool   ( NULL                )
+  , m_L0TriggerTisTosTool ( NULL                )
+  , m_pidList (0)//1, 22)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("TriggerTisTosName",m_TriggerTisTosName);
@@ -99,7 +99,7 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
   // check if the particle matched any of the PIDs given in list IF there is a list
   if ( !m_pidList.empty() )
   {
-  
+
     for ( std::vector<int>::const_iterator it = m_pidList.begin(); m_pidList.end()!=it ; ++it )
     {
 
@@ -111,11 +111,11 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
 
   if ( m_pidList.empty() ) { checkPID = true; }
 
-  if ( checkPID ) 
+  if ( checkPID )
   {
 
     if (msgLevel(MSG::VERBOSE))
-      verbose() << "Filling TISTOS information for particle with pid " 
+      verbose() << "Filling TISTOS information for particle with pid "
                 << P->particleID().pid() << endmsg;
 
     const std::string prefix=fullName(head);
@@ -141,9 +141,9 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
       if(m_TPS)tuple->column( prefix+"_L0Global_TPS", classifiedDec.tps());
     }
 
-    // discover if split Hlt1,Hlt2 or old style 
+    // discover if split Hlt1,Hlt2 or old style
     bool split(false);
-    split = exist<LHCb::HltDecReports>("Hlt1/DecReports",false);    
+    split = exist<LHCb::HltDecReports>("Hlt1/DecReports",false);
     if( !split ) split= exist<LHCb::HltDecReports>("Hlt1/DecReports");
 
     if(m_doHlt1)
@@ -151,7 +151,7 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
 
       ITriggerTisTos * triggerTisTosTool = m_TriggerTisTosTool;
       if( split ){
-	triggerTisTosTool = m_Hlt1TriggerTisTosTool;
+        triggerTisTosTool = m_Hlt1TriggerTisTosTool;
         triggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
       }
 
@@ -183,7 +183,7 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
 
       ITriggerTisTos * triggerTisTosTool = m_TriggerTisTosTool;
       if( split ){
-	triggerTisTosTool = m_Hlt2TriggerTisTosTool;
+        triggerTisTosTool = m_Hlt2TriggerTisTosTool;
         triggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
       }
 
@@ -209,8 +209,8 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
       if(m_TPS)tuple->column( prefix+"_Hlt2Global_TPS", classifiedDec.tps());
     }
     /*
-    if(m_doStripping)
-    {
+      if(m_doStripping)
+      {
 
       //Do the Hlt2
       m_TriggerTisTosTool->setTriggerInput("Stripping.*Decision");
@@ -219,7 +219,7 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
       tuple->column( prefix+"_StrippingGlobal_Dec", classifiedDec.decision());
       tuple->column( prefix+"_StrippingGlobal_TIS", classifiedDec.tis());
       tuple->column( prefix+"_StrippingGlobal_TOS", classifiedDec.tos());
-    }
+      }
     */
   }// if the PID is in the given list
 
@@ -271,9 +271,9 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
     }
   }
 
-  // discover if split Hlt1,Hlt2 or old style 
+  // discover if split Hlt1,Hlt2 or old style
   bool split(false);
-  split = exist<LHCb::HltDecReports>("Hlt1/DecReports",false);    
+  split = exist<LHCb::HltDecReports>("Hlt1/DecReports",false);
   if( !split ) split= exist<LHCb::HltDecReports>("Hlt1/DecReports");
 
 
@@ -293,15 +293,15 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
       if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
       if( s->find("Hlt1L0") == 0 ){
         // assume that we want to look at L0 rather than Hlt1L0 decisions
-	//        triggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
-	classifiedDec = triggerTisTosTool->tisTosTobSelection(*s);
+        //        triggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
+        classifiedDec = triggerTisTosTool->tisTosTobSelection(*s);
         bool decision = triggerTisTosTool->hltSelectionObjectSummaries(*s).size()!=0;
-	tuple->column( prefix+"_"+name+"_Dec", decision);
+        tuple->column( prefix+"_"+name+"_Dec", decision);
       } else {
         //triggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
-	triggerTisTosTool->setTriggerInput(*s);
-	classifiedDec = triggerTisTosTool->tisTosTobTrigger();
-	tuple->column( prefix+"_"+name+"_Dec", classifiedDec.decision());
+        triggerTisTosTool->setTriggerInput(*s);
+        classifiedDec = triggerTisTosTool->tisTosTobTrigger();
+        tuple->column( prefix+"_"+name+"_Dec", classifiedDec.decision());
       }
       if(m_TIS)tuple->column( prefix+"_"+name+"_TIS", classifiedDec.tis());
       if(m_TOS)tuple->column( prefix+"_"+name+"_TOS", classifiedDec.tos());
@@ -324,7 +324,7 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
     {
       const std::string name = getName(*s);
       if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
-      //triggerTisTosTool->triggerTisTos(*s,decision,tis,tos); 
+      //triggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       triggerTisTosTool->setTriggerInput(*s);
       classifiedDec = triggerTisTosTool->tisTosTobTrigger();
       tuple->column( prefix+"_"+name+"_Dec", classifiedDec.decision());
@@ -335,19 +335,19 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
     }
   }
   /*
-  if( m_verboseStripping )
-  {
+    if( m_verboseStripping )
+    {
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=m_stripping.begin();s != m_stripping.end();++s)
     {
-      std::string name = getName(*s);
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
-      m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
-      tuple->column( prefix+"_"+name+"_Dec", decision);
-      tuple->column( prefix+"_"+name+"_TIS", tis);
-      tuple->column( prefix+"_"+name+"_TOS", tos);
+    std::string name = getName(*s);
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
+    m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
+    tuple->column( prefix+"_"+name+"_Dec", decision);
+    tuple->column( prefix+"_"+name+"_TIS", tis);
+    tuple->column( prefix+"_"+name+"_TOS", tos);
     }
-  }
+    }
   */
   return StatusCode::SUCCESS;
 }
@@ -357,10 +357,10 @@ std::string TupleToolTISTOS::getName(const std::string& mystr)
 {
   std::string name = mystr;
   const int found = name.find(".*");
-  if ( found >= 0 ) 
+  if ( found >= 0 )
   {
     name.replace( found, 2, "__");
-    if (msgLevel(MSG::VERBOSE)) 
+    if (msgLevel(MSG::VERBOSE))
       verbose() <<"From the function... Replaced   "<<mystr<<"  with  "<<name<<endmsg;
   }
   return name;

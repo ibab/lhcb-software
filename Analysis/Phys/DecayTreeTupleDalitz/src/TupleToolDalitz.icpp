@@ -6,7 +6,7 @@ private:
 //=============================================================================
 /// The templated method that does it all
 template<class TYPE>
-StatusCode fill( const std::vector<const TYPE*>& dauts      /// daughters
+StatusCode fill( const std::vector<const TYPE*>& dauts     /// daughters
                  , const std::string& head                 /// header
                  , Tuples::Tuple& tuple                    /// tuple
                  , bool revert ) /// revert all PID (because mother is antiparticle)
@@ -39,8 +39,8 @@ StatusCode fill( const std::vector<const TYPE*>& dauts      /// daughters
       if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
       if (msgLevel(MSG::VERBOSE))
       {
-        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid() << " "
-                  << name << " " << revert << endmsg ;
+        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid() 
+                  << " " << name << " " << revert << endmsg ;
       }
       test &= tuple->column( name, p .M2() );
     }
@@ -50,7 +50,7 @@ StatusCode fill( const std::vector<const TYPE*>& dauts      /// daughters
 }
 
 /// get name of particle or anti-particle
-std::string particleName(const LHCb::ParticleID& id, bool revert)const
+std::string particleName( const LHCb::ParticleID& id, bool revert ) const
 {
   const LHCb::ParticleProperty* ppp = ppSvc()->find( id );
   if ( !ppp )
