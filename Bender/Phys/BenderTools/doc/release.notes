@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v23r1p1   2014-03-09 ==================
+
+! 2014-03-09 - Vanya Belyaev
+ - TisTos.py
+   fix a bug  (many thanks to Alexander Baranov) 
+
 ! ==================== Phys/BenderTools v23r1     2014-03-07 ==================
 ! ==================== Phys/BenderTools v23r0     2014-03-04 ==================
 

@@ -94,7 +94,8 @@ Hlt2_Global    = 'Hlt2Global'
 #      self.decisions ( D               ,
 #                       triggers        ,
 #                       self.l0tistos   ,
-#                       self.tistos     )
+#                       self.l1tistos   ,
+#                       self.l2tistos   )
 #
 #  @endcode 
 #
@@ -177,7 +178,8 @@ def decisions ( self             ,
             self.decisions ( B                  ,
                              self.triggers['B'] ,
                              self.l0tistos      ,
-                             self.tistos        )
+                             self.l1tistos      ,
+                             self.l2tistos      )
         ...
         return SUCCESS
     """
@@ -535,7 +537,8 @@ def tisTos ( self              ,
         ## start actual Tis/Tos/Tob'ing
         #
         l0tistos . setOfflineInput ( p )
-        tistos   . setOfflineInput ( p )
+        l1tistos . setOfflineInput ( p )
+        l2tistos . setOfflineInput ( p )
         #
         ## L0
         # 
