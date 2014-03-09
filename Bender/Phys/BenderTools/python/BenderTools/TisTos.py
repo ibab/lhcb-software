@@ -551,24 +551,24 @@ def tisTos ( self              ,
         ## L1
         #
         l1tistos . setTriggerInput ( lines [ 'Hlt1TOS'    ]  )
-        l1_tos   =   tistos.tisTosTobTrigger ()
+        l1_tos   = l1tistos.tisTosTobTrigger ()
         l1tistos . setTriggerInput ( lines [ 'Hlt1TIS'    ]  )
-        l1_tis   =   tistos.tisTosTobTrigger ()
+        l1_tis   = l1tistos.tisTosTobTrigger ()
         l1tistos . setTriggerInput ( lines [ 'Hlt1Phys'   ]  )
-        l1_phys  =   tistos.tisTosTobTrigger () 
+        l1_phys  = l1tistos.tisTosTobTrigger () 
         l1tistos . setTriggerInput ( lines [ 'Hlt1Global' ]  )
-        l1_glob  =   tistos.tisTosTobTrigger () 
+        l1_glob  = l1tistos.tisTosTobTrigger () 
         #
         ## L2
         #
         l2tistos . setTriggerInput ( lines [ 'Hlt2TOS'    ]  )
-        l2_tos   =   tistos.tisTosTobTrigger ()
+        l2_tos   = l2tistos.tisTosTobTrigger ()
         l2tistos . setTriggerInput ( lines [ 'Hlt2TIS'    ]  )
-        l2_tis   =   tistos.tisTosTobTrigger ()
+        l2_tis   = l2tistos.tisTosTobTrigger ()
         l2tistos . setTriggerInput ( lines [ 'Hlt2Phys'   ]  )
-        l2_phys  =   tistos.tisTosTobTrigger () 
+        l2_phys  = l2tistos.tisTosTobTrigger () 
         l2tistos . setTriggerInput ( lines [ 'Hlt2Global' ]  )
-        l2_glob  =   tistos.tisTosTobTrigger ()
+        l2_glob  = l2tistos.tisTosTobTrigger ()
         
     #
     ## fill n-tuples
