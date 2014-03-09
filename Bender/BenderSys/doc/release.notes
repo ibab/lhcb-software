@@ -23,6 +23,14 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v23r1p1> 2014-03-09 Bender v23r1p1 based on the DaVinci v34r0</A>
+
+<ul>
+<li>Similar to v23rr</li> 
+<li>Also based on the DaVinci v34r0</li>
+<li>Bug fix in <code>BenderTools.TisTos</code> module</li>
+</ul>
+
 <A NAME=v23r1> 2014-03-07 Bender v23r1 based on the DaVinci v34r0</A>
 
 <li>Identical to v23r0</li> 

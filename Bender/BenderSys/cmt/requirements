@@ -22,17 +22,17 @@
 #
 # =============================================================================
 package       BenderSys
-version       v23r1
+version       v23r1p1
 author        Vanya BELYAEV
 
 # =========== TEMPORARY! ======================================================
-use           AnalysisPython v2r27  Phys
+use           AnalysisPython v2r27   Phys
 
 # =========== Bender Application itself =======================================
-use           Bender         v23r1   Phys 
+use           Bender         v23r1p1 Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v23r1  Phys 
+use           BenderTools    v23r1p1 Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v20r0   Ex
