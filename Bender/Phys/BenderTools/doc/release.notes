@@ -11,6 +11,9 @@
  - TisTos.py
    fix a bug  (many thanks to Alexander Baranov) 
 
+! 2014-03-09 - Alexander Baranov
+ - Fixed utf-8 coding string in all python files
+
 ! ==================== Phys/BenderTools v23r1     2014-03-07 ==================
 ! ==================== Phys/BenderTools v23r0     2014-03-04 ==================
 
