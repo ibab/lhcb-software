@@ -8,8 +8,8 @@
 #include "TMath.h"
 
 // from LOKI
-#include "LoKi/LoKi.h" 
-#include "LoKi/ParticleContextCuts.h" 
+#include "LoKi/LoKi.h"
+#include "LoKi/ParticleContextCuts.h"
 
 // from local
 #include "TaggerCharmTool.h"
@@ -79,8 +79,8 @@ GaudiTool ( type, name, parent ),
   declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations = def_CharmStarTagLocations);
 
 
-  declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371); 
-  declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111); 
+  declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371);
+  declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111);
   declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.3121);
 
   // initialize decay map
@@ -97,15 +97,15 @@ GaudiTool ( type, name, parent ),
   CharmDecayModeMap["Dp_KpiX"]         = CharmDecayMode("Dp_KpiX",10,        1,0,0,0, 0.8,  1.915, -0.115402,  0.10732  );
   CharmDecayModeMap["Dp_KeX"]          = CharmDecayMode("Dp_KeX",11,         1,1,0,0, 0.8,  1.915, -0.0594275, 0.148148 );
   CharmDecayModeMap["Dp_KmuX"]         = CharmDecayMode("Dp_KmuX",12,        1,0,1,0, 0.8,  1.915, -0.054475,  0.189587 );
-  
-  //const double c_optCutVal[nCharmDecayModes] = { -0.0223261, -0.0118087, 6.95325e-310, -0.0199824, 
+
+  //const double c_optCutVal[nCharmDecayModes] = { -0.0223261, -0.0118087, 6.95325e-310, -0.0199824,
   //-0.0120574, 1, -0.0587858, -0.0483723, -0.0207928, -0.358734, -0.115402, -0.0594275, -0.054475};
-  //const double c_PurVal[nCharmDecayModes] = { 0.630175, 0.420859, 2.02369e-320, 0.0592187, 0.525746, 
+  //const double c_PurVal[nCharmDecayModes] = { 0.630175, 0.420859, 2.02369e-320, 0.0592187, 0.525746,
   //0.731183, 0.235058, 0.291827, 0.39514, 0.073132, 0.10732, 0.148148, 0.189587};
   //const int c_nSig[nCharmDecayModes] = { 3711, 1512, 0, 673, 1595, 68, 3834, 310, 457, 23, 6032, 504, 857};
-  //const int c_nBkg[nCharmDecayModes] = { 40442, 192514, 0, 2504383, 81255, 25, 102308, 99943, 102233, 
+  //const int c_nBkg[nCharmDecayModes] = { 40442, 192514, 0, 2504383, 81255, 25, 102308, 99943, 102233,
   //25972, 304834, 294041, 299594};
-  
+
 }
 
 TaggerCharmTool::~TaggerCharmTool() {}
@@ -137,70 +137,19 @@ StatusCode TaggerCharmTool::initialize()
 
   //   //load tmva readers
   //   int nFoundReaders = 0;
-  
-  std::map<std::string, std::vector< std::string> > inputVarMap;
-
-  for( std::map<std::string, CharmDecayMode>::iterator iter = CharmDecayModeMap.begin(); iter !=CharmDecayModeMap.end(); ++iter)
-  {
-
-    CharmDecayMode decay = iter->second;
-
-    std::vector< std::string > inputVars;
-    
-    inputVars.push_back("RecVerts");
-    inputVars.push_back("Ntrks");
-    inputVars.push_back("SigBpt");
-    inputVars.push_back("Mass");
-    inputVars.push_back("P");
-    inputVars.push_back("Pt");
-    inputVars.push_back("DeltaEta");
-
-    inputVars.push_back("log(Probchi2)");
-    inputVars.push_back("log(Tau)");
-    inputVars.push_back("log(FlightDist)");
-    inputVars.push_back("log(FlightDistChi2)");
-    inputVars.push_back("log(1-BpvDira)");
-    inputVars.push_back("log(MaxProbNNGhostDaus)");
-
-    if (decay.hasK) {
-      inputVars.push_back("log(1-KaonProbNNk)");
-      inputVars.push_back("log(KaonIppvChi2)");
-      inputVars.push_back("log(KaonIpMinChi2)");
-    }
- 
-    if (decay.hasE)
-      inputVars.push_back("log(1-ElecProbNNe)");
-
-    if (decay.hasMu)
-      inputVars.push_back("log(1-MuonProbNNmu)");
-
-    if (decay.hasDstar) {
-      inputVars.push_back("DstarDeltaM");
-    }
-  
-    inputVarMap[decay.mode] = inputVars;
-  
-  }
 
   //   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
 
-  //initialize classifier map
-  m_classifiers["D0_Kpi"] = new CharmD0KpiWrapper(inputVarMap["D0_Kpi"]);
-  m_classifiers["D0_Kpipipi"] = new CharmD0KpipipiWrapper(inputVarMap["D0_Kpipipi"]);
-  m_classifiers["D0_Kspipi"] = NULL; //new CharmD0KspipiWrapper(inputVarMap["D0_Kspipi"]);
-  m_classifiers["D0_Kpipi0"] = new CharmD0Kpipi0Wrapper(inputVarMap["D0_Kpipi0"]);
-  m_classifiers["Dp_Kpipi"] = new CharmDpKpipiWrapper(inputVarMap["Dp_Kpipi"]);
-  m_classifiers["Dp_Kspi"] = new CharmDpKspiWrapper(inputVarMap["Dp_Kspi"]);
-  m_classifiers["D0_KpiX"] = new CharmD0KpiXWrapper(inputVarMap["D0_KpiX"]);
-  m_classifiers["D0_KeX"] = new CharmD0KeXWrapper(inputVarMap["D0_KeX"]);
-  m_classifiers["D0_KmuX"] = new CharmD0KmuXWrapper(inputVarMap["D0_KmuX"]);
-  m_classifiers["Dstar_D0_Kspipi"] = new CharmDstD0KspipiWrapper(inputVarMap["Dstar_D0_Kspipi"]);
-  m_classifiers["Dp_KpiX"] = new CharmDpKpiXWrapper(inputVarMap["Dp_KpiX"]);
-  m_classifiers["Dp_KeX"] = new CharmDpKeXWrapper(inputVarMap["Dp_KeX"]);
-  m_classifiers["Dp_KmuX"] = new CharmDpKmuXWrapper(inputVarMap["Dp_KmuX"]);
-
   return sc;
-  
+}
+
+//=====================================================================
+
+StatusCode TaggerCharmTool::finalize()
+{
+  for ( auto i : m_classifiers ) { delete i.second; }
+  m_classifiers.clear();
+  return GaudiTool::finalize();
 }
 
 //=====================================================================
@@ -213,13 +162,13 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   Tagger tcharm;
 
   std::vector< CharmParticle > cands;
-  
+
   addCands(cands, m_CharmTagLocations    , *signalB, RecVert, 0);
   addCands(cands, m_CharmInclTagLocations, *signalB, RecVert, 1);
   addCands(cands, m_CharmStarTagLocations, *signalB, RecVert, 2);
-  
+
   if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<<cands.size()<<endreq;
-    
+
   // selection
   CharmParticle *thecharm = NULL;
   std::vector< CharmParticle >::iterator ipart;
@@ -283,9 +232,9 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
       curr_purity = CharmDecayModeMap[mode].purity;
       ipicked = icand-1;
     }
-      
+
   }
-  
+
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Number of charm cands selected: "<<ncands<<" picked idx "<<ipicked<<" thecharm"<<thecharm<<endreq;
 
@@ -293,32 +242,32 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
 
   //calculate omega
   double omega = getOmega(thecharm, nPV, tagParticles.size(), *signalB);
-  if ( msgLevel(MSG::DEBUG) )    debug()<<"omega "<<omega << endreq; 
+  if ( msgLevel(MSG::DEBUG) )    debug()<<"omega "<<omega << endreq;
   if( omega < 0 ||  omega > 1 )  {
-    if ( msgLevel(MSG::DEBUG) )    debug()<<"Something wrong with Charm Training "<<omega << endreq; 
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"Something wrong with Charm Training "<<omega << endreq;
     return tcharm;
   }
-  
+
   if ( msgLevel(MSG::DEBUG) )  debug()<<"the charm flavour "<<thecharm->flavour<<endreq;
 
   int decision = thecharm->flavour > 0 ? +1: -1; // double flip, one for opposite side, one for D from B
-  
+
   tcharm.setOmega(omega);
   tcharm.setDecision(decision);
-  tcharm.setType( Tagger::OS_Charm ); 
+  tcharm.setType( Tagger::OS_Charm );
 
   // add charm candidate and daughters to tagger particles
   tcharm.addToTaggerParts(thecharm->part);
   const SmartRefVector<Particle>& charmDaus = thecharm->part->daughters();
   for( SmartRefVector<Particle>::const_iterator idau = charmDaus.begin(); idau != charmDaus.end(); ++idau)
     tcharm.addToTaggerParts(*idau);
-  
+
   return tcharm;
-  
+
 }
 
 //=====================================================================
-int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::vector<std::string>& locations, 
+int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::vector<std::string>& locations,
                               const LHCb::Particle& signalB, const RecVertex* RecVert, const int type)
 {
 
@@ -331,8 +280,8 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
 
       // removing candidates with daughters in common with signal B
       LHCb::Particle::ConstVector purgedParts = m_util->purgeCands(partsin, signalB);
-    
-      for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = purgedParts.begin(); 
+
+      for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = purgedParts.begin();
            icand != purgedParts.end(); ++icand) {
 
         const Particle *cand, *dstar_cand, *pisoft_cand;
@@ -341,10 +290,10 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
           cand = (*icand)->daughters().at(0);
           pisoft_cand = (*icand)->daughters().at(1);
         } else {
-          dstar_cand = pisoft_cand = NULL;  
+          dstar_cand = pisoft_cand = NULL;
           cand = (*icand);
         }
-    
+
         // compute vars
         float mass = cand->measuredMass()/GeV;
 
@@ -358,19 +307,19 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         StatusCode sc = m_pLifetimeFitter->fit(*RecVert, *cand, ct, ctErr, ctChi2);
         if(sc) tau = ct/picosecond;
 
-        
+
         double pchi2 = TMath::Prob(cand->endVertex()->chi2(),cand->endVertex()->nDoF());
 
         // construct the functors
         Fun fDIRA = DIRA( RecVert );
         const float bpvdira = fDIRA( cand ) ;
-        
+
         Fun fVD = VD ( RecVert );
         const float fd = fVD( cand ) ;
-        
+
         Fun fVDCHI2 = VDCHI2 ( RecVert );
         const float fdchi2 = fVDCHI2( cand ) ;
-        
+
         LHCb::VertexBase::ConstVector verts; verts.push_back(RecVert);
         Fun ipPvChi2 = MIPCHI2 ( verts , m_util->getDistanceCalculator() ) ;
         const MIPCHI2DV ipChi2Min  = MIPCHI2DV ( "" ) ;
@@ -382,7 +331,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         float maxProbGhostDaus = 0.;
         float kaonId = 0, kaonProbnnk = 1., kaonIppvchi2 = -1, kaonIpMinchi2 = -1;
         float elecProbnne = 1., muonProbnnmu = 1.;
-        
+
         const SmartRefVector<Particle>& daus = cand->daughters();
         if ( msgLevel(MSG::DEBUG) )
           debug() << "Charm cand, dau vector size = " << daus.size() << endreq;
@@ -392,7 +341,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             float pghostnn = daucand->proto()->info(ProtoParticle::ProbNNghost, -1. );
             if(maxProbGhostDaus < pghostnn ) maxProbGhostDaus = pghostnn;
           }
-          if ( daucand->particleID() == LoKi::Particles::_ppFromName("K+")->particleID() || 
+          if ( daucand->particleID() == LoKi::Particles::_ppFromName("K+")->particleID() ||
                daucand->particleID() == LoKi::Particles::_ppFromName("K-")->particleID() ) {
             kaonId = daucand->particleID().pid();
             if (daucand->proto()) {
@@ -400,21 +349,21 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
             }
             kaonIppvchi2 = ipPvChi2(daucand) ;
             kaonIpMinchi2 = ipChi2Min(daucand) ;        // use the functor:
-            
-          }      
-          
-          if ( daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() || 
-               daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID() ) 
-            if (daucand->proto()) 
+
+          }
+
+          if ( daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() ||
+               daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID() )
+            if (daucand->proto())
               elecProbnne = daucand->proto()->info(ProtoParticle::ProbNNe, -1. );
-          
-          if ( daucand->particleID() == LoKi::Particles::_ppFromName("mu+")->particleID() || 
-               daucand->particleID() == LoKi::Particles::_ppFromName("mu-")->particleID() ) 
-            if (daucand->proto()) 
+
+          if ( daucand->particleID() == LoKi::Particles::_ppFromName("mu+")->particleID() ||
+               daucand->particleID() == LoKi::Particles::_ppFromName("mu-")->particleID() )
+            if (daucand->proto())
               muonProbnnmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1. );
-          
+
         }
-        
+
         // compute flavour charge
         int flavour = 0;
         if (mode=="D0_Kpi" || mode=="D0_Kpipipi" || mode=="D0_Kpipi0" || mode=="D0_KpiX" || mode=="D0_KeX" || mode=="D0_KmuX")
@@ -424,36 +373,36 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         else if (mode=="Dstar_D0_Kspipi")
           flavour = int(charmStarId)/abs(int(charmStarId));
 
-        cands.push_back(CharmParticle(mode, cand, mass, flavour, 
+        cands.push_back(CharmParticle(mode, cand, mass, flavour,
                                       pchi2, fd, fdchi2, tau, bpvdira,
-                                      maxProbGhostDaus, 
+                                      maxProbGhostDaus,
                                       kaonId, kaonProbnnk, kaonIppvchi2, kaonIpMinchi2,
                                       elecProbnne, muonProbnnmu,
                                       dstarDm));
       }
-      
+
     } else {
       error() << "Location not found: "<<*ilist<<endreq;
-    }    
-    
+    }
+
   }
-  
+
   return 0;
 
 }
-  
+
 //=====================================================================
-double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, const int multiplicity, 
+double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, const int multiplicity,
                                   const LHCb::Particle& signalB)
 {
 
   const Particle *part = cpart->part;
-  std::string mode = cpart->mode;
+  const std::string mode = cpart->mode;
 
   CharmDecayMode decay = CharmDecayModeMap[mode];
 
   std::vector<double> inputVals;
-  
+
   inputVals.push_back(nPV);
   inputVals.push_back(multiplicity);
 
@@ -464,23 +413,23 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
   inputVals.push_back(part->pt()/GeV);
   inputVals.push_back(part->momentum().Eta() - signalB.momentum().Eta());
 
-  inputVals.push_back(safe_log(cpart->pchi2));      
+  inputVals.push_back(safe_log(cpart->pchi2));
 
-  inputVals.push_back(safe_log(cpart->tau));      
-  inputVals.push_back(safe_log(cpart->fd));      
+  inputVals.push_back(safe_log(cpart->tau));
+  inputVals.push_back(safe_log(cpart->fd));
 
-  inputVals.push_back(safe_log(cpart->fdchi2));      
-  inputVals.push_back(safe_log(1-cpart->bpvdira));      
-  inputVals.push_back(safe_log(cpart->maxProbGhostDaus));      
+  inputVals.push_back(safe_log(cpart->fdchi2));
+  inputVals.push_back(safe_log(1-cpart->bpvdira));
+  inputVals.push_back(safe_log(cpart->maxProbGhostDaus));
 
   if (decay.hasK) {
-    inputVals.push_back(safe_log(1-cpart->kaonProbnnk));      
-    inputVals.push_back(safe_log(cpart->kaonIppvchi2));      
-    inputVals.push_back(safe_log(cpart->kaonIpMinchi2));      
+    inputVals.push_back(safe_log(1-cpart->kaonProbnnk));
+    inputVals.push_back(safe_log(cpart->kaonIppvchi2));
+    inputVals.push_back(safe_log(cpart->kaonIpMinchi2));
   }
- 
+
   if (decay.hasE)
-    inputVals.push_back(safe_log(1-cpart->elecProbnne));      
+    inputVals.push_back(safe_log(1-cpart->elecProbnne));
 
   if (decay.hasMu)
     inputVals.push_back(safe_log(1-cpart->muonProbnnmu));
@@ -500,8 +449,124 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
            <<" dstarm "<<cpart->dstarDm
            <<endreq;
 
-  return m_classifiers[mode] ? m_classifiers[mode]->GetMvaValue(inputVals) : -10.;
-  
+  TMVAWrapper * mva = getMVA(mode);
+  return ( mva ? mva->GetMvaValue(inputVals) : -10.0 );
+
+}
+
+TMVAWrapper * TaggerCharmTool::getMVA( const std::string& mode )
+{
+  Classifiers::const_iterator iC = m_classifiers.find(mode);
+
+  // If found, just return
+  if ( iC != m_classifiers.end() ) { return iC->second; }
+
+  // Else, make the MVA
+
+  // initialize classifier
+  // CRJ : Only create as needed, as oppossed to all all the time, to reduce memory footprint....
+
+  std::map<std::string, std::vector< std::string> > inputVarMap;
+  for( std::map<std::string, CharmDecayMode>::iterator iter = CharmDecayModeMap.begin();
+       iter !=CharmDecayModeMap.end(); ++iter )
+  {
+    CharmDecayMode& decay = iter->second;
+    std::vector< std::string > inputVars;
+
+    inputVars.push_back("RecVerts");
+    inputVars.push_back("Ntrks");
+    inputVars.push_back("SigBpt");
+    inputVars.push_back("Mass");
+    inputVars.push_back("P");
+    inputVars.push_back("Pt");
+    inputVars.push_back("DeltaEta");
+
+    inputVars.push_back("log(Probchi2)");
+    inputVars.push_back("log(Tau)");
+    inputVars.push_back("log(FlightDist)");
+    inputVars.push_back("log(FlightDistChi2)");
+    inputVars.push_back("log(1-BpvDira)");
+    inputVars.push_back("log(MaxProbNNGhostDaus)");
+
+    if (decay.hasK) {
+      inputVars.push_back("log(1-KaonProbNNk)");
+      inputVars.push_back("log(KaonIppvChi2)");
+      inputVars.push_back("log(KaonIpMinChi2)");
+    }
+
+    if (decay.hasE) {
+      inputVars.push_back("log(1-ElecProbNNe)");
+    }
+
+    if (decay.hasMu) {
+      inputVars.push_back("log(1-MuonProbNNmu)");
+    }
+
+    if (decay.hasDstar) {
+      inputVars.push_back("DstarDeltaM");
+    }
+
+    inputVarMap[decay.mode] = inputVars;
+  }
+
+  if      ( mode == "D0_Kpi" )
+  {
+    m_classifiers[mode] = new CharmD0KpiWrapper(inputVarMap["D0_Kpi"]);
+  }
+  else if ( mode == "D0_Kpipipi" )
+  {
+    m_classifiers[mode] = new CharmD0KpipipiWrapper(inputVarMap["D0_Kpipipi"]);
+  }
+  else if ( mode == "D0_Kspipi" )
+  {
+    m_classifiers[mode] = NULL; //new CharmD0KspipiWrapper(inputVarMap["D0_Kspipi"]);
+  }
+  else if ( mode == "D0_Kpipi0" )
+  {
+    m_classifiers[mode] = new CharmD0Kpipi0Wrapper(inputVarMap["D0_Kpipi0"]);
+  }
+  else if ( mode == "Dp_Kpipi" )
+  {
+    m_classifiers[mode] = new CharmDpKpipiWrapper(inputVarMap["Dp_Kpipi"]);
+  }
+  else if ( mode == "Dp_Kspi" )
+  {
+    m_classifiers[mode] = new CharmDpKspiWrapper(inputVarMap["Dp_Kspi"]);
+  }
+  else if ( mode == "D0_KpiX" )
+  {
+    m_classifiers[mode] = new CharmD0KpiXWrapper(inputVarMap["D0_KpiX"]);
+  }
+  else if ( mode == "D0_KeX" )
+  {
+    m_classifiers[mode] = new CharmD0KeXWrapper(inputVarMap["D0_KeX"]);
+  }
+  else if ( mode == "D0_KmuX" )
+  {
+    m_classifiers[mode] = new CharmD0KmuXWrapper(inputVarMap["D0_KmuX"]);
+  }
+  else if ( mode == "Dstar_D0_Kspipi" )
+  {
+    m_classifiers[mode] = new CharmDstD0KspipiWrapper(inputVarMap["Dstar_D0_Kspipi"]);
+  }
+  else if ( mode == "Dp_KpiX" )
+  {
+    m_classifiers[mode] = new CharmDpKpiXWrapper(inputVarMap["Dp_KpiX"]);
+  }
+  else if ( mode == "Dp_KeX" )
+  {
+    m_classifiers[mode] = new CharmDpKeXWrapper(inputVarMap["Dp_KeX"]);
+  }
+  else if ( mode == "Dp_KmuX" )
+  {
+    m_classifiers[mode] = new CharmDpKmuXWrapper(inputVarMap["Dp_KmuX"]);
+  }
+  else
+  {
+    Exception( "Unknown mode '"+mode+"'" );
+  }
+
+  return m_classifiers[mode];
 }
 
 /////////////////////////////////////////////
@@ -515,7 +580,7 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
 
   inputVars.push_back("mult"                    ); inputVals.push_back( (double)multiplicity                        );
   inputVars.push_back("nnkrec"                  ); inputVals.push_back( (double)nPV                                 );
-  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)safe_log(signalB.pt()/GeV)              );
+  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)safe_log(signalB.pt()/GeV)          );
   inputVars.push_back("charm_mass"              ); inputVals.push_back( (double)part->measuredMass()/GeV            );
   inputVars.push_back("charm_mode"              ); inputVals.push_back( (double)CharmDecayModeMap[cpart->mode].index);
   inputVars.push_back("charm_bpvdira"           ); inputVals.push_back( (double)cpart->bpvdira                      );
@@ -530,10 +595,10 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
     debug()<<"Set NNetCharm Omega Var:";
     for (unsigned int ivec = 0; ivec<inputVars.size();ivec++){
       debug()<<" "<<inputVars[ivec]<<" "<<inputVals[ivec];
-    } 
+    }
     debug()<<endreq;
   }
-  
+
   double omega = 1 - m_nnet->MLPcharmTMVA(inputVars,inputVals);
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)

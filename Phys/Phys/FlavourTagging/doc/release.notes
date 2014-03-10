@@ -6,6 +6,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-03-10 - Chris Jones
+ - Fix some memory leaks from the previous commits, due to classifiers being
+   created with new but never deleted.
+ - Also improve the memory footprint of TaggerCharmTool by only creating 
+   instances of MVAs when they are actually required...
+
 ! 2014-03-05 - Jack Wimberley
  - Add wrappers around BDT algorithms for OScharm, SSpion, SSproton taggers
  - These are based on NEWKaon... wrappers

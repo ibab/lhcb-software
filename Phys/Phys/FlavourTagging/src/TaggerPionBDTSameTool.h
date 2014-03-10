@@ -24,33 +24,36 @@
  *
  *  Tool to tag the B flavour with a PionBDTSame Tagger
  *
- *  @author Stefania Vecchi 
+ *  @author Stefania Vecchi
  * (tool developed by Antonio Falabella, Marta Calvi and
  *  Vava Gligorov )
  *  @date   29/11/2013
  */
 
 class TaggerPionBDTSameTool : public GaudiTool,
-                           virtual public ITagger {
+                              virtual public ITagger {
 
 public:
   /// Standard constructor
   TaggerPionBDTSameTool( const std::string& type,
-                      const std::string& name,
-                      const IInterface* parent );
+                         const std::string& name,
+                         const IInterface* parent );
   virtual ~TaggerPionBDTSameTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();      ///<  finalization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, 
+  virtual LHCb::Tagger tag( const LHCb::Particle*,
                             const LHCb::RecVertex*,
                             const int,
                             LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
+
   // from DecayTreeTuple/src/TupleToolAngles.h
-  inline double cosTheta( const Gaudi::LorentzVector& mother,  
+  inline double cosTheta( const Gaudi::LorentzVector& mother,
                           const Gaudi::LorentzVector& mcp )
   {
     ROOT::Math::Boost boost( mother.BoostToCM() );
@@ -63,8 +66,10 @@ private:
                                           << " " << cosT << endmsg ;
     return cosT;
   }
-  PionSSWrapper* myBDT_reader;
-  
+
+private:
+
+  PionSSWrapper* m_myBDT_reader;
 
   //  INNetTool* m_nnet;
   IVertexFit *m_fitter;
@@ -97,7 +102,7 @@ private:
   double m_P4_pol_pionS ;
   double m_P5_pol_pionS ;
   int    m_isMonteCarlo;
-  
+
 };
 //===============================================================//
 #endif // USER_TAGGERPIONBDTSAMETOOL_H

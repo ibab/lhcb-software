@@ -25,33 +25,36 @@
  *
  *  Tool to tag the B flavour with a ProtonSame Tagger
  *
- *  @author Stefania Vecchi 
+ *  @author Stefania Vecchi
  * (tool developed by Antonio Falabella, Marta Calvi and
  *  Vava Gligorov )
  *  @date   29/11/2013
  */
 
 class TaggerProtonSameTool : public GaudiTool,
-                           virtual public ITagger {
+                             virtual public ITagger {
 
 public:
   /// Standard constructor
   TaggerProtonSameTool( const std::string& type,
-                      const std::string& name,
-                      const IInterface* parent );
+                        const std::string& name,
+                        const IInterface* parent );
   virtual ~TaggerProtonSameTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();      ///<  finalization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, 
+  virtual LHCb::Tagger tag( const LHCb::Particle*,
                             const LHCb::RecVertex*,
                             const int,
                             LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
+
   // from DecayTreeTuple/src/TupleToolAngles.h
-  inline double cosTheta( const Gaudi::LorentzVector& mother,  
+  inline double cosTheta( const Gaudi::LorentzVector& mother,
                           const Gaudi::LorentzVector& mcp )
   {
     ROOT::Math::Boost boost( mother.BoostToCM() );
@@ -64,8 +67,10 @@ private:
                                           << " " << cosT << endmsg ;
     return cosT;
   }
-  ProtonSSWrapper* myBDT_reader;
-  
+
+private:
+
+  ProtonSSWrapper* m_myBDT_reader;
 
   //  INNetTool* m_nnet;
   IVertexFit *m_fitter;
@@ -97,7 +102,7 @@ private:
   double m_P4_pol_protonS ;
   double m_P5_pol_protonS ;
   int    m_isMonteCarlo;
-  
+
 };
 //===============================================================//
 #endif // USER_TAGGERPROTONSAMETOOL_H

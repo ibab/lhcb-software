@@ -21,7 +21,7 @@ namespace MyPionSSSpace
 class PionSSWrapper : public TMVAWrapper {
 public: 
   PionSSWrapper(std::vector<std::string> &);
-  ~PionSSWrapper();
+  virtual ~PionSSWrapper();
   double GetMvaValue(std::vector<double> const &);
 
 private:

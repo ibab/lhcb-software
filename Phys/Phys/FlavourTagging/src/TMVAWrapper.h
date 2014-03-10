@@ -18,5 +18,6 @@
 class TMVAWrapper {
 public: 
   virtual double GetMvaValue(std::vector<double> const &) { return 0; };
+  virtual ~TMVAWrapper() { }
 };
 #endif // TMVAWRAPPER_H

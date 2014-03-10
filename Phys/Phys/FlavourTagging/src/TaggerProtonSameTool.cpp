@@ -17,9 +17,12 @@ DECLARE_TOOL_FACTORY( TaggerProtonSameTool )
 
 //====================================================================
 TaggerProtonSameTool::TaggerProtonSameTool( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent ) :
-  GaudiTool ( type, name, parent )
+                                            const std::string& name,
+                                            const IInterface* parent )
+: GaudiTool ( type, name, parent ),
+  m_myBDT_reader ( NULL ),
+  m_fitter       ( NULL ),
+  m_util         ( NULL )
 {
   declareInterface<ITagger>(this);
 
@@ -54,7 +57,7 @@ TaggerProtonSameTool::TaggerProtonSameTool( const std::string& type,
 
   //m_nnet = 0;
   m_util = 0;
-  m_fitter = 0;  
+  m_fitter = 0;
   //m_descend = 0;
 
 }
@@ -72,7 +75,7 @@ StatusCode TaggerProtonSameTool::initialize()
             << ", P1_pol "<<m_P1_pol_protonS<< ", P2_pol "<<m_P2_pol_protonS
             << ", P3_pol "<<m_P3_pol_protonS<< ", P4_pol "<<m_P4_pol_protonS
             << ", P5_pol "<<m_P5_pol_protonS<<endreq;
-  
+
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
@@ -95,16 +98,24 @@ StatusCode TaggerProtonSameTool::initialize()
   variable_names.push_back("log(lab0_OWNPV_NDOF)");
   variable_names.push_back("log(lab1_IPCHI2_OWNPV)");
 
-  if(m_isMonteCarlo==1) myBDT_reader = new ProtonSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
-  else                  myBDT_reader = new ProtonSSWrapper(variable_names);
-  
+  if(m_isMonteCarlo==1) m_myBDT_reader = new ProtonSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
+  else                  m_myBDT_reader = new ProtonSSWrapper(variable_names);
+
   return sc;
 }
 
 //=====================================================================
-Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert, 
-                                const int nPV,
-                                Particle::ConstVector& vtags )
+
+StatusCode TaggerProtonSameTool::finalize()
+{
+  delete m_myBDT_reader; m_myBDT_reader = NULL;
+  return GaudiTool::finalize();
+}
+
+//=====================================================================
+Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
+                                  const int nPV,
+                                  Particle::ConstVector& vtags )
 {
 
   Tagger tprotonS;
@@ -139,12 +150,12 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     //const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
     const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
 
-    if(  PIDp <-999 )  continue;    
+    if(  PIDp <-999 )  continue;
     if( PIDp < m_PIDp_cut_protonS ) continue;
 
     if ( msgLevel(MSG::DEBUG) )
       debug()<<" Proton PIDp="<< PIDp <<"="<<PIDp<<endreq;
-    
+
     const Track* track = proto->track();
     if( track->type() != Track::Long ) continue;
 
@@ -169,7 +180,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_protonS)  continue;
 
-    //if(track->ghostProbability() > m_ghostprob_cut )  continue; 
+    //if(track->ghostProbability() > m_ghostprob_cut )  continue;
 
     //const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     //if(ippu < m_ipPU_cut_pS) continue;
@@ -179,12 +190,12 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     //if( distphi < m_distPhi_cut_pS ) continue;
 
     Gaudi::LorentzVector ptot_pS = (*ipart)->momentum();
-    
+
     const double mp = 938.27;  // from Antonio&Vava
     ptot_pS.SetE(std::sqrt(mp * mp + ptot_pS.P2()));
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Setting PDG proton mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;    
-    
+      debug()<< " Setting PDG proton mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;
+
     const double dQ = (ptot_B+ptot_pS).M() - B0mass;
 
     if ( msgLevel(MSG::DEBUG) )
@@ -192,19 +203,19 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     if(dQ > m_dQcut_protonS ) continue;
 
     const double pT_Bp = (ptot_B+ptot_pS).Pt();
-    if(pT_Bp < m_Bp_Pt_cut_protonS ) continue;  
+    if(pT_Bp < m_Bp_Pt_cut_protonS ) continue;
 
 
     double cosT = cosTheta(ptot_B+ptot_pS, ptot_B);
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " cosTheta(B**,B*)="<<cosT<<" cut is >-0.5 "<<endreq;    
+      debug()<< " cosTheta(B**,B*)="<<cosT<<" cut is >-0.5 "<<endreq;
     if(cosT< m_cosTheta_cut_protonS) continue;
-    
+
     const double deta = std::fabs(log(tan(ptot_B.Theta()/2.)/tan(ptot_pS.Theta()/2.)));
     const double dphi = std::fabs(TaggingHelpers::dphi(ptot_B.Phi(), ptot_pS.Phi()));
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_protonS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_protonS<<")"<< endreq;    
+      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_protonS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_protonS<<")"<< endreq;
 
     //const double dR = std::sqrt(deta*deta+dphi*dphi);
 
@@ -212,12 +223,12 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     if(dphi > m_phi_cut_protonS) continue;
 
 
-    Vertex vtx;    
-    StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);    
+    Vertex vtx;
+    StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);
     if( sc.isFailure() ) continue;
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_protonS <<")"<< endreq;    
- 
+      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_protonS <<")"<< endreq;
+
     if( vtx.chi2() / vtx.nDoF() > m_Bp_vtxChi2_cut_protonS ) continue;
 
 
@@ -227,54 +238,54 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
 
     ++ncand;
     std::vector<double> values;
-    values.push_back(dQ);  
+    values.push_back(dQ);
     values.push_back(log((ptot_B+ptot_pS).Pt()));  // lab0=B**
     values.push_back(log(ptot_pS.Pt())); // lab1=SSp
     values.push_back(log(ptot_B.Pt())); // lab2=B
     values.push_back(log(ptot_pS.P()));
     values.push_back(log(dphi));
     values.push_back(log(deta));
-    values.push_back(log(PIDp));    
+    values.push_back(log(PIDp));
     values.push_back(log(RecVert->nDoF()));
     values.push_back(log(IPsig*IPsig));
-    
-    if ( msgLevel(MSG::DEBUG) ){      
-      debug() << " BDT computation for candidate "<<ncand<<" ";      
-      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
+
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << " BDT computation for candidate "<<ncand<<" ";
+      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";
     }
-    
-    
-    double BDT = myBDT_reader->GetMvaValue(values);
+
+
+    const double BDT = m_myBDT_reader->GetMvaValue(values);
 
     if ( msgLevel(MSG::DEBUG) ) debug() << " BDT="<<  BDT<<endmsg;
-    
-    if( msgLevel(MSG::INFO) ) if (BDT<-1 || BDT > 1) info()<<" WARNING SSproton BDT out of range "<<BDT<<endmsg;    
-    if( BDT < m_BDT_cut_protonS) continue;    
+
+    if( msgLevel(MSG::INFO) ) if (BDT<-1 || BDT > 1) info()<<" WARNING SSproton BDT out of range "<<BDT<<endmsg;
+    if( BDT < m_BDT_cut_protonS) continue;
     if( BDT < bestBDT ) continue;
 
     //accept candidate
     iprotonS = (*ipart);
     bestBDT = BDT;
-    
+
 
   }
   if( !iprotonS ) return tprotonS;
-  
+
   //calculate omega
   double pn = 1-m_AverageOmega;
-  if ( m_CombinationTechnique == "BDT" ) 
+  if ( m_CombinationTechnique == "BDT" )
   {
-    pn = 1. - ( m_P0_pol_protonS + 
-                m_P1_pol_protonS*bestBDT +  
-                m_P2_pol_protonS*bestBDT*bestBDT + 
+    pn = 1. - ( m_P0_pol_protonS +
+                m_P1_pol_protonS*bestBDT +
+                m_P2_pol_protonS*bestBDT*bestBDT +
                 m_P3_pol_protonS*bestBDT*bestBDT*bestBDT+
-                m_P4_pol_protonS*bestBDT*bestBDT*bestBDT*bestBDT + 
+                m_P4_pol_protonS*bestBDT*bestBDT*bestBDT*bestBDT +
                 m_P5_pol_protonS*bestBDT*bestBDT*bestBDT*bestBDT*bestBDT);
-    
-  
+
+
     if ( msgLevel(MSG::DEBUG) )
       debug() << " ProtonS pn="<< pn <<" w="<<1-pn<<endmsg;
-    
+
     if( pn < 0 || pn > 1 ) return tprotonS;
     if( pn < m_ProtonProbMin ) return tprotonS;
   }

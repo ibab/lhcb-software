@@ -17,9 +17,12 @@ DECLARE_TOOL_FACTORY( TaggerPionBDTSameTool )
 
 //====================================================================
 TaggerPionBDTSameTool::TaggerPionBDTSameTool( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent ) :
-  GaudiTool ( type, name, parent )
+                                              const std::string& name,
+                                              const IInterface* parent )
+: GaudiTool ( type, name, parent ),
+  m_myBDT_reader ( NULL ),
+  m_fitter       ( NULL ),
+  m_util         ( NULL )
 {
   declareInterface<ITagger>(this);
 
@@ -53,7 +56,7 @@ TaggerPionBDTSameTool::TaggerPionBDTSameTool( const std::string& type,
 
   //m_nnet = 0;
   m_util = 0;
-  m_fitter = 0;  
+  m_fitter = 0;
   //m_descend = 0;
 
 }
@@ -71,7 +74,7 @@ StatusCode TaggerPionBDTSameTool::initialize()
             << ", P1_pol "<<m_P1_pol_pionS<< ", P2_pol "<<m_P2_pol_pionS
             << ", P3_pol "<<m_P3_pol_pionS<< ", P4_pol "<<m_P4_pol_pionS
             << ", P5_pol "<<m_P5_pol_pionS<<endreq;
-  
+
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
@@ -97,16 +100,24 @@ StatusCode TaggerPionBDTSameTool::initialize()
   variable_names.push_back("lab1_CosTheta");
   variable_names.push_back("lab1_TRACK_GhostProb");
 
-  if(m_isMonteCarlo==1) myBDT_reader = new PionSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
-  else                  myBDT_reader = new PionSSWrapper(variable_names);
-  
+  if(m_isMonteCarlo==1) m_myBDT_reader = new PionSSWrapper(variable_names);//BDTReaderCompil_MC(variable_names);
+  else                  m_myBDT_reader = new PionSSWrapper(variable_names);
+
   return sc;
 }
 
 //=====================================================================
-Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVert, 
-                                const int nPV,
-                                Particle::ConstVector& vtags )
+
+StatusCode TaggerPionBDTSameTool::finalize()
+{
+  delete m_myBDT_reader; m_myBDT_reader = NULL;
+  return GaudiTool::finalize();
+}
+
+//=====================================================================
+Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
+                                   const int nPV,
+                                   Particle::ConstVector& vtags )
 {
 
   Tagger tpionS;
@@ -141,15 +152,15 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
     const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
 
-    if(  PIDp <-999 )  continue;    
+    if(  PIDp <-999 )  continue;
     if( PIDp > m_PIDp_cut_pionS ) continue;
 
-    if(  PIDk <-999 )  continue;    
+    if(  PIDk <-999 )  continue;
     if( PIDk > m_PIDk_cut_pionS ) continue;
 
     if ( msgLevel(MSG::DEBUG) )
       debug()<<" Pion PIDp="<< PIDp <<"="<<PIDp<<endreq;
-    
+
     const Track* track = proto->track();
     if( track->type() != Track::Long ) continue;
 
@@ -166,7 +177,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     if( lcs > m_lcs_cut ) continue;
 
     const double trackGhostProb = track->ghostProbability();
-    
+
     if ( msgLevel(MSG::DEBUG) )
       debug() << " Pion lcs="<< lcs <<" tsa="<<track->likelihood()<<" ghostProb="<<trackGhostProb<<endmsg;
 
@@ -176,7 +187,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-    //if(track->ghostProbability() > m_ghostprob_cut )  continue; 
+    //if(track->ghostProbability() > m_ghostprob_cut )  continue;
 
     //const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     //if(ippu < m_ipPU_cut_pS) continue;
@@ -186,12 +197,12 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     //if( distphi < m_distPhi_cut_pS ) continue;
 
     Gaudi::LorentzVector ptot_pS = (*ipart)->momentum();
-    
+
     const double mp = 139 ;  // from Antonio&Vava
     ptot_pS.SetE(std::sqrt(mp * mp + ptot_pS.P2()));
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;    
-    
+      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;
+
     const double dQ = (ptot_B+ptot_pS).M() - B0mass;
 
     if ( msgLevel(MSG::DEBUG) )
@@ -199,19 +210,19 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     if(dQ > m_dQcut_pionS ) continue;
 
     const double pT_Bp = (ptot_B+ptot_pS).Pt();
-    if(pT_Bp < m_Bp_Pt_cut_pionS ) continue;  
+    if(pT_Bp < m_Bp_Pt_cut_pionS ) continue;
 
 
     double cosT = cosTheta(ptot_B+ptot_pS, ptot_B);
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " cosTheta(B**,B*)="<<cosT<<" cut is >-0.5 "<<endreq;    
+      debug()<< " cosTheta(B**,B*)="<<cosT<<" cut is >-0.5 "<<endreq;
     if(cosT< m_cosTheta_cut_pionS) continue;
-    
+
     const double deta = std::fabs(log(tan(ptot_B.Theta()/2.)/tan(ptot_pS.Theta()/2.)));
     const double dphi = std::fabs(TaggingHelpers::dphi(ptot_B.Phi(), ptot_pS.Phi()));
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endreq;    
+      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endreq;
 
     const double dR = std::sqrt(deta*deta+dphi*dphi);
 
@@ -219,12 +230,12 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     if(dphi > m_phi_cut_pionS) continue;
 
 
-    Vertex vtx;    
-    StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);    
+    Vertex vtx;
+    StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);
     if( sc.isFailure() ) continue;
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endreq;    
- 
+      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endreq;
+
     if( vtx.chi2() / vtx.nDoF() > m_Bp_vtxChi2_cut_pionS ) continue;
 
 
@@ -234,65 +245,64 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
 
     ++ncand;
     std::vector<double> values;
-    values.push_back(dQ);  
+    values.push_back(dQ);
     values.push_back(log((ptot_B+ptot_pS).Pt()));  // lab0=B**
     values.push_back(log(ptot_pS.Pt())); // lab1=SSp
     values.push_back(log(ptot_B.Pt())); // lab2=B
     values.push_back(log(ptot_pS.P()));
     values.push_back(log(dphi));
     values.push_back(log(deta));
-    //    values.push_back(log(PIDp));    
+    //    values.push_back(log(PIDp));
     values.push_back(log(RecVert->nDoF()));
     values.push_back(log(IPsig*IPsig));
     values.push_back(dR);
     values.push_back(cosT);
     values.push_back(trackGhostProb);
-    
-    if ( msgLevel(MSG::DEBUG) ){      
-      debug() << " BDT computation for candidate "<<ncand<<" ";      
-      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
+
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << " BDT computation for candidate "<<ncand<<" ";
+      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";
     }
-    
-    
-    double BDT = myBDT_reader->GetMvaValue(values);
+
+    const double BDT = m_myBDT_reader->GetMvaValue(values);
 
     if ( msgLevel(MSG::DEBUG) ) debug() << " BDT="<<  BDT<<endmsg;
-    
-    if( msgLevel(MSG::INFO) ) if (BDT<-1 || BDT > 1) info()<<" WARNING SSpion BDT out of range "<<BDT<<endmsg;    
-    if( BDT < m_BDT_cut_pionS) continue;    
+
+    if( msgLevel(MSG::INFO) ) if (BDT<-1 || BDT > 1) info()<<" WARNING SSpion BDT out of range "<<BDT<<endmsg;
+    if( BDT < m_BDT_cut_pionS) continue;
     if( BDT < bestBDT ) continue;
 
     //accept candidate
     ipionS = (*ipart);
     bestBDT = BDT;
-    
+
 
   }
   if( !ipionS ) return tpionS;
-  
+
   //calculate omega
   double pn = 1-m_AverageOmega;
-  if ( m_CombinationTechnique == "BDT" ) 
+  if ( m_CombinationTechnique == "BDT" )
   {
-    pn = 1. - ( m_P0_pol_pionS + 
-                m_P1_pol_pionS*bestBDT +  
-                m_P2_pol_pionS*bestBDT*bestBDT + 
+    pn = 1. - ( m_P0_pol_pionS +
+                m_P1_pol_pionS*bestBDT +
+                m_P2_pol_pionS*bestBDT*bestBDT +
                 m_P3_pol_pionS*bestBDT*bestBDT*bestBDT+
-                m_P4_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT + 
+                m_P4_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT +
                 m_P5_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT*bestBDT);
-    
-  
+
+
     if ( msgLevel(MSG::DEBUG) )
       debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
-    
+
     if( pn < 0 || pn > 1 ) return tpionS;
     if( pn < m_PionProbMin ) return tpionS;
   }
 
 
-  int tagdecision = ipionS->charge()>0 ? 1: -1;  
+  int tagdecision = ipionS->charge()>0 ? 1: -1;
   if( AXB0->particleID().hasUp()) tagdecision = - tagdecision;
-  
+
   tpionS.setDecision( tagdecision );
   tpionS.setOmega( 1-pn );
   tpionS.setType( Tagger::SS_PionBDT );

@@ -86,7 +86,9 @@ public:
                    const std::string& name,
                    const IInterface* parent );
   virtual ~TaggerCharmTool( ); ///< Destructor
+
   StatusCode initialize();    ///<  initialization
+  StatusCode finalize();      ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger  tag( const LHCb::Particle* signalB,
@@ -107,6 +109,8 @@ private:
   {
     return ( x>0 ? std::log(x) : -9e30 );
   }
+  
+  TMVAWrapper * getMVA( const std::string& mode );
 
 private:
 
@@ -120,8 +124,8 @@ private:
 
   //std::string  m_MvaFileDir;
 
-  //std::map< std::string,TMVA::Reader* > m_readers;
-  std::map< std::string,TMVAWrapper* > m_classifiers;
+  typedef std::map< std::string, TMVAWrapper* > Classifiers;
+  Classifiers m_classifiers;
 
   ITaggingUtils* m_util;
   ILifetimeFitter*           m_pLifetimeFitter;

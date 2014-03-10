@@ -21,7 +21,7 @@ namespace MyProtonSSSpace
 class ProtonSSWrapper : public TMVAWrapper {
 public: 
   ProtonSSWrapper(std::vector<std::string> &);
-  ~ProtonSSWrapper();
+  virtual ~ProtonSSWrapper();
   double GetMvaValue(std::vector<double> const &);
 
 private:
