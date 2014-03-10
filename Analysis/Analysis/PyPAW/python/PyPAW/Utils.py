@@ -42,20 +42,11 @@ __all__     = (
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
     'rooSilent'      , ## control RooFit verbosity
+    'NoContext'      , ## empty context manager 
     )
 # =============================================================================
-import ROOT, time, os,sys
-#
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-
-## 
+import ROOT, cppyy, time, os,sys ## attention here!!
+# 
 cpp = cppyy.makeNamespace('')
 ## needed ??? 
 if not hasattr ( ROOT , 'ostream' ) : 

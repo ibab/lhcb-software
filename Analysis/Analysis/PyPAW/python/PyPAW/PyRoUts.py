@@ -61,28 +61,11 @@ __all__     = (
     'axis_bins'       , ## convert list of bin edges to axis
     've_adjust'       , ## adjust the efficiency to be in physical range
     #
-    # from Utils
-    'memory'         , 
-    'clocks'         , 
-    'timing'         , 
-    'mute'           , 
-    #
     )
 # =============================================================================
-import ROOT
+import ROOT, cppyy  ## attention here!!
 #
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-
-## 
 cpp = cppyy.makeNamespace('')
-#
 # 
 import LHCbMath.Types
 Gaudi           = cpp.Gaudi

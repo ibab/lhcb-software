@@ -4,17 +4,21 @@
 # $Id: LHCbStyle.py 165594 2013-12-03 13:20:35Z albarano $ 
 # =============================================================================
 # @file
-# LHCb style file fro Root-plots
+# LHCb style file for ROOT-plots
 #
 #                   $Revision: 165594 $
 # Last modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
 #                by $Author: albarano $
 # =============================================================================
+"""
+LHCb Style for ROOT-plots 
+"""
+# =============================================================================
 import ROOT
 __all__ = (
     'lhcbStyle' ,
     'lhcbLabel' ,
-    'LHCbStyle' 
+    'LHCbStyle' ,
     'lhcbLatex' ,
     )
 # =============================================================================

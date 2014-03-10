@@ -57,7 +57,7 @@
 # =============================================================================
 """
 Helper module to fix a problems in communication of
-TTree/TChain::Process< and TPySelector.
+TTree/TChain::Process and TPySelector.
 In PyROOT some of original C++ methods are disable.
 The module provides the 'recovery' for missing methods
 
@@ -107,20 +107,11 @@ __all__ = (
 'SelectorWithVars'       ## Generic slector to fill RooDataSet form TTree/TChain
 )
 # =============================================================================
-import ROOT
-##
-try:
-    import cppyy
-except ImportError:
-    # FIXME: backward compatibility
-    print "# WARNING: using PyCintex as cppyy implementation"
-    import PyCintex as cppyy
-    import sys
-    sys.modules['cppyy'] = cppyy
-    
+import ROOT, cppyy
 # construct the global C++ namespace 
 cpp       = cppyy.makeNamespace('')
 Analysis  = cpp.Analysis
+
 
 ## C++ Selector 
 Selector  = Analysis.Selector

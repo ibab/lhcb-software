@@ -10,6 +10,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-03-10 - Vanya Belyaev
+ - remove duplictaion with AnalysisPython
+ - make use of __init__.py file  
+
+! 2014-03-10 - Vanya Belyaev
  - new package: 
    collect all utilities (e.f. from AnalysisPython) in one place 
 

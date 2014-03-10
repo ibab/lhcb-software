@@ -23,7 +23,8 @@ apply_pattern install_python_modules
 apply_pattern install_scripts
 
 # =========== aliases ========================================================
-alias         pypaw        "pyPAW -i "
+alias         pypaw        "pyPAW"
+alias         pyroot       "pyPAW"
 
 
 # ============================================================================

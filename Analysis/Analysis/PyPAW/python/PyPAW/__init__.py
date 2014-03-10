@@ -47,6 +47,22 @@ with the smear campaign of Dr.O.Callot et al.:
 __author__  = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__    = "2014-03-10"
 __version__ = "$Revision: 167483 $"
+# =============================================================================
+import ROOT
+#
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    print "# PyPAW WARNING: using PyCintex as cppyy implementation"
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
+#
+cpp = cppyy.makeNamespace('')
+if not hasattr ( ROOT    , 'ostream' ) :
+    print "# PyPAW WARNING: force loading of <ostream>"
+    ROOT.gROOT.ProcessLine("#include <ostream>")
 
 # =============================================================================
 if __name__ == '__main__' :
