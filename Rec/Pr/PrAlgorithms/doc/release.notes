@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-10 - Michel De Cian
+ - Changes in PrPlaneCounter which make it faster.
+
 !========================= PrAlgorithms v1r9p1 2014-02-24 ======================
 ! 2014-02-23 - Michel De Cian
  - Fix unstable sorting in PrSeedingXLayers.
