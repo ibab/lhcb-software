@@ -2,6 +2,10 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 2014-03-07 - gdujany
+ - Corrected y-sign for going from local to global frame in CompareModuleXml.py
+ 	 and CombineDetectorXml.py
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 

@@ -224,8 +224,6 @@ for fnamein in listFiles:
                 if (nmod%2==0):
                     #sign correction to be in global frame
                     sign=-1
-                    if (nmod%4==0):
-                        sign=1
                     n=gr1ltx.GetN()
                     gr1ltx.SetPoint(n,vmodz[nmod],transx)
                     n=gr1lty.GetN()
@@ -248,9 +246,7 @@ for fnamein in listFiles:
                     vd1rotyl[nmod] = sign * roty
                     vd1rotzl[nmod] = sign * rotz
                 else:
-                    sign=-1
-                    if ((nmod+1)%4==0):
-                        sign=1
+                    sign=1
                     n=gr1rtx.GetN()
                     gr1rtx.SetPoint(n,vmodz[nmod],-transx)
                     n=gr1rty.GetN()
