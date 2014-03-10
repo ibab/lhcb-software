@@ -26,9 +26,9 @@ public:
                unsigned int pcn, 
                unsigned int errorFlag = 0){
 
-    m_value = (nClusters<<clusterBits) +
-      (pcn <<pcnBits) +
-      (errorFlag << errorBits);
+    m_value = ((nClusters << clusterBits) & clusterMask) |
+      ((pcn << pcnBits) & pcnMask) |
+      ((errorFlag << errorBits) & errorMask);
   }
 
   /** constructer with int 

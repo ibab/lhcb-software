@@ -110,10 +110,10 @@ SiClusterWord<bitPolicy>::SiClusterWord(unsigned int aChan,
   if (clusterSize > 2) sBit = 1;
   unsigned int hThreshold = (unsigned int)(highThreshold);
  
-  m_value  = (position << bitPolicy::positionBits) +
-             (aChan << bitPolicy::channelBits) +
-             (sBit  << bitPolicy::sizeBits) +
-             (hThreshold << bitPolicy::thresBits);
+  m_value  = ((position << bitPolicy::positionBits) & bitPolicy::positionMask) |
+             ((aChan << bitPolicy::channelBits) & bitPolicy::channelMask)|
+             ((sBit  << bitPolicy::sizeBits) & bitPolicy::sizeMask) |
+             ((hThreshold << bitPolicy::thresBits) & bitPolicy::thresMask);
  }
 
 template <class bitPolicy>

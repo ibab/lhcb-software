@@ -2,6 +2,10 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-------------------------------------------------------------------------
 
+! 2014-03-10 - Kurt Rinnert
+ - protected all word constructors from overflows in inputs by proper masking.
+   This fixes a rare (per mille level) off-by-one bug in the VELO digitisation.
+
 !========================= SiDAQ v2r2 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

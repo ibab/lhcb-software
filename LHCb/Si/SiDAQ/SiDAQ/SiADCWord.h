@@ -83,8 +83,8 @@ inline SiADCWord::SiADCWord(double adc, bool endCluster)
   unsigned char tADC;
   adc > ((1<<adcPrecision)-1) ? tADC = (1<<adcPrecision) -1 : tADC = char(adc);
 
-  m_value  = (tADC << SiADCWord::adcBits) +
-             (endC << SiADCWord::endBits);
+  m_value  = ((tADC << SiADCWord::adcBits) & SiADCWord::adcMask) |
+             ((endC << SiADCWord::endBits) & SiADCWord::endMask);
  }
 
 inline  SiADCWord::operator char() const
