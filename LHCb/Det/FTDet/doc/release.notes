@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2014-03-10 - Michel De Cian
+ - Replace linear search for fibreMat with binary search in DeFTDetector
+
 !========================= FTDet v2r4 2013-10-23 =========================
 ! 2013-10-15 - Plamen Hopchev
  - In DeFTTestAlg.cpp remove a line leftover from a previous commit
