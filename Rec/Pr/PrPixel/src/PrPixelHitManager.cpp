@@ -1,11 +1,12 @@
 #include "TMath.h"
-// Gaudi
+
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/RawEvent.h"
 
-// Local
 #include "PrPixelHitManager.h"
+
+using namespace PrPixel;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PrPixelHitManager
@@ -317,36 +318,124 @@ void PrPixelHitManager::clearHits() {
   for (itm = m_module_pool.begin(); m_module_pool.end() != itm; ++itm) {
     (*itm).reset();
   }
+  m_nHits = 0;
   m_eventReady = false;
 }
 
 //=========================================================================
-// Build PrPixelHits from Super Pixel Raw Bank
+// Build PrPixelHits from Super Pixel or Lite Cluster Raw Bank
 //=========================================================================
-void PrPixelHitManager::buildHitsFromSPRawBank() 
+void PrPixelHitManager::buildHitsFromRawBank() 
 {
-
   if (m_eventReady) return;
   m_eventReady = true;
 
   // Retrieve the RawEvent:
   LHCb::RawEvent *rawEvent = GaudiTool::getIfExists<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
   if (NULL == rawEvent) { return; }
- 
+
   const std::vector<LHCb::RawBank*>& tBanks = rawEvent->banks(LHCb::RawBank::VP);
   if(0 == tBanks.size()) { return; }
- 
+
+  const unsigned int bankVersion = (*tBanks.begin())->version();
+  switch (bankVersion) {
+    case 1: 
+      buildHitsFromLCRawBank(tBanks);
+      break;
+    case 2: 
+      buildHitsFromSPRawBank(tBanks);
+      break;
+    default:
+      error() << "Unsupported VP Raw Bank version." << endmsg;
+      break;
+  }
+}
+
+//=========================================================================
+// Build PrPixelHits from Super Pixel Raw Bank
+//=========================================================================
+void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>& tBanks) 
+{
   // Assume binary resolution of hit position. This is the weight.
   const double w = 12.0/(0.055*0.055);
-
-  // clear all cluster storage
-  m_nHits = 0;
 
 #include "PrPixelClustering.icpp"
 
   for (unsigned int i=0; i<m_nHits; ++i) {
     PrPixelHit *hit = &(m_pool[i]);
     m_modules[hit->module()]->addHit(hit);
+  }
+}
+
+//=========================================================================
+//  PrPixelHits from Lite Cluster Raw Bank
+//=========================================================================
+void PrPixelHitManager::buildHitsFromLCRawBank(const std::vector<LHCb::RawBank*>& tBanks) {
+  // Assume binary resolution of hit position. This is the weight.
+  const double w = 12.0/(0.055*0.055);
+  const double fractScale = 1.0/(1 << (YFRACTSHIFT-XFRACTSHIFT));
+
+  // Loop over raw banks.
+  const unsigned int nb = tBanks.size();
+  for (unsigned int ib=0; ib < nb; ++ib) {
+    const LHCb::RawBank& bank = *tBanks[ib];
+    const unsigned int module = bank.sourceID();
+    
+    if (module >= m_modules.size()) break;
+    
+    const unsigned int *bank_data = bank.data();
+    const unsigned int header = bank_data[0];
+    const unsigned int nc = (header & HEADERNCLUMASK) >> HEADERNCLUSHIFT;
+
+    if (m_pool.size() < m_nHits + nc) { m_pool.resize(m_nHits+100); }
+    
+    for (unsigned int ic=0; ic < nc; ++ic) {
+      const unsigned int cw     = bank_data[ic+1];
+      const unsigned int pixel  = (cw & PIXELMASK)    >> PIXELSHIFT;
+      const unsigned int xfract = (cw & XFRACTMASK)   >> XFRACTSHIFT;
+      const unsigned int yfract = (cw & YFRACTMASK)   >> YFRACTSHIFT;
+      LHCb::VPChannelID cid;
+      cid.setModule(module);
+      cid.setPixel(pixel);
+      const unsigned int sensor_chip = cid.chip()%SENSOR_CHIPS;
+      const unsigned int sensor = cid.module()*MODULE_SENSORS + cid.chip()/SENSOR_CHIPS;
+      const unsigned int cy = cid.row();
+      const unsigned int cx = cid.col() + CHIP_COLUMNS*sensor_chip;
+      const double dx = xfract*fractScale*m_x_pitch[cx];
+      const double dy = yfract*fractScale*m_pixel_size;
+      double local_x = m_local_x[cx] + dx;
+      double local_y = (cy + 0.5)*m_pixel_size + dy;
+      const double *ltg = m_ltg + sensor*16;
+      double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+      double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+      double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
+
+      if (m_useSlopeCorrection && (0.5 != dx || 0.5 != dy)) {
+        double dx_prime = dx, dy_prime = dy;
+        double delta_x = fabs(dx - 0.5);
+        double delta_y = fabs(dy - 0.5);
+        if (dx != 0.5) {
+          double slx = fabs(gx / gz);
+          double p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
+          double t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
+          dx_prime = 0.5 + (dx - 0.5) / delta_x * (p_offset + t_factor * delta_x); 
+        }
+        if (dy != 0.5) {
+          double sly = fabs(gx / gz);
+          double p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
+          double t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
+          dy_prime = 0.5 + (dy - 0.5) / delta_y * (p_offset + t_factor * delta_y);
+        }
+        local_x = m_local_x[cx] + dx_prime;
+        local_y = (cy + 0.5)*m_pixel_size + dy_prime;
+        gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+        gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+        gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
+      }
+
+      m_pool[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
+      m_modules[module]->addHit(&(m_pool[m_nHits++]));
+    }
   }
 
 }
@@ -358,8 +447,6 @@ void PrPixelHitManager::buildHits() {
 
   if (m_eventReady) return;
   m_eventReady = true;
-
-  m_nHits = 0;
 
   // Get the clusters.
   LHCb::VPLiteCluster::VPLiteClusters* liteClusters =

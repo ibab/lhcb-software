@@ -13,9 +13,11 @@
 // Local
 #include "PrPixelHit.h"
 #include "PrPixelModule.h"
+#include "PrPixelUtils.h"
 
 namespace LHCb {
   class RawEvent;
+  class RawBank;
 }
 
 static const InterfaceID IID_PrPixelHitManager("PrPixelHitManager", 1, 0);
@@ -31,23 +33,6 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
 
 public: 
 
-  /// Useful constants
-  enum { 
-    MODULE_SENSORS = 4,
-    SENSOR_CHIPS = 3,
-    CHIP_ROWS = 256,
-    CHIP_COLUMNS = 256,
-    CHIP_0_END = 255,
-    CHIP_1_START = 256,
-    CHIP_1_END = 511,
-    CHIP_2_START = 512,
-    SENSOR_ROWS = 256, 
-    SENSOR_COLUMNS = 768, 
-    SENSOR_PIXELS = SENSOR_ROWS*SENSOR_COLUMNS,
-    TOT_MODULES = 52,
-    TOT_SENSORS = TOT_MODULES*MODULE_SENSORS
-  };
-
   // Return the interface ID
   static const InterfaceID& interfaceID() {return IID_PrPixelHitManager;}
 
@@ -61,7 +46,9 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  void buildHitsFromSPRawBank();
+  void buildHitsFromRawBank();
+  void buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>& tBanks);
+  void buildHitsFromLCRawBank(const std::vector<LHCb::RawBank*>& tBanks);
   void buildHits();
   void clearHits();
 
@@ -93,8 +80,6 @@ public:
   /// Set slope correction flag.
   void useSlopeCorrection(const bool flag) {m_useSlopeCorrection = flag;}
   int maxSize() const {return m_maxSize;}
-  /// Calculate X,Y,Z-position for pixel ChannelID with fractional interpolation.
-  //Gaudi::XYZPoint position(LHCb::VPChannelID id, double dx, double dy);
   /// Recompute the geometry in case of change
   StatusCode rebuildGeometry();                                  
   /// Sort hits by X within every module (to speed up the search).
@@ -139,7 +124,7 @@ private:
   double m_sp_fy[512];
 
   // Clustering buffers
-  unsigned char m_buffer[SENSOR_PIXELS];
+  unsigned char m_buffer[PrPixel::SENSOR_PIXELS];
   std::vector<uint32_t> m_pixel_idx;
   std::vector<uint32_t> m_stack;
 
@@ -147,7 +132,7 @@ private:
   unsigned int m_maxClusterSize;
 
   /// Cache of local to global transformations, 16 stride aligned.
-  double m_ltg[16*TOT_SENSORS]; // 16*208 = 16*number of sensors
+  double m_ltg[16*PrPixel::TOT_SENSORS]; // 16*208 = 16*number of sensors
 
   /// pointers to local x coordinates and pitches
   const double *m_local_x;

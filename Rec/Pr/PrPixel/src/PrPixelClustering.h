@@ -3,35 +3,38 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-// from Gaudi
+
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-// Event
+
 #include "Event/VPLiteCluster.h"
 
+#include "PrPixelUtils.h"
+
 // Forward declarations
-class DeVP;
 namespace LHCb {
   class RawEvent ;
 }
 
-/** @class PrPixelClustering.h 
- *  PrPixel/PrPixelClustering.h
+/** @class PrPixelClustering
  *
- *  Create clusters from super pixel raw bank.
+ *  Create clusters from raw bank.
  *
- *  This is meant to run after the pattern recognition when
- *  using the super pixel raw bank.
+ *  This is meant to run after the pattern recognition. It can
+ *  create clusters from lite clusters raw banks (version <2)
+ *  or super pixel raw banks (versions >=2) transparently.
  *
- *  Note that the PrPixelTracking runs directly on the raw super
- *  pixel bank! So do not run this algorithm before the pattern
- *  recognition in the trigger! It's supposed to run after an event
- *  has passed the first trigger stage.
+ *  Note that the PrPixelTracking now runs directly on the raw bank!  So do not
+ *  run this algorithm before the pattern recognition in the trigger! It's
+ *  supposed to run after an event has passed the first trigger stage.
  *
- *  The algorithm utilizes the same core clustering code as the 3D
- *  hit builder in PrPixelHitManager. Differences are minor and are
- *  dealt with in the inc file via the PRPIXELCLUSTERING_CLIENT 
+ *  In case of super pixel raw banks The algorithm utilizes the same core
+ *  clustering code as the 3D hit builder in PrPixelHitManager. Differences are
+ *  minor and are dealt with in the inc file via the PRPIXELCLUSTERING_CLIENT
  *  preprocessor define.
+ *
+ *  In case of lite cluster raw banks the decodding is so trivial that we
+ *  duplicate thecode.
  *
  *  @author Kurt Rinnert
  *  @date   2014-02-26
@@ -39,21 +42,6 @@ namespace LHCb {
 
 class PrPixelClustering : public GaudiAlgorithm {
 public:
-
-  /// Useful constants
-  enum { 
-    MODULE_SENSORS = 4,
-    SENSOR_CHIPS = 3,
-    CHIP_ROWS = 256,
-    CHIP_COLUMNS = 256,
-    CHIP_0_END = 255,
-    CHIP_1_START = 256,
-    CHIP_1_END = 511,
-    CHIP_2_START = 512,
-    SENSOR_ROWS = 256, 
-    SENSOR_COLUMNS = 768, 
-    SENSOR_PIXELS = SENSOR_ROWS*SENSOR_COLUMNS
-  };
 
   /// Comparison functors
   struct LessThanByChannel {
@@ -65,13 +53,18 @@ public:
   /// Standard constructor
   PrPixelClustering(const std::string& name,
                               ISvcLocator* pSvcLocator);
-  virtual ~PrPixelClustering();   ///< Destructor
+  virtual ~PrPixelClustering();    ///< Destructor
   virtual StatusCode initialize(); ///< Algorithm initialization
   virtual StatusCode execute   (); ///< Algorithm execution
 
 private:
 
+/// Wrapper for decoding methods; delegates ddependding on bank version.
 StatusCode decodeRawBanks();
+/// Decode bank versions < 2. 
+StatusCode decodeLCRawBanks(const std::vector<LHCb::RawBank*>& tBanks); 
+/// Decode bank versions >= 2. 
+StatusCode decodeSPRawBanks(const std::vector<LHCb::RawBank*>& tBanks); 
 
 private:
 
@@ -87,7 +80,7 @@ private:
   LHCb::RawEvent *m_rawEvent;
   LHCb::VPLiteCluster::VPLiteClusters *m_clusters;
 
-  unsigned char m_buffer[SENSOR_PIXELS];
+  unsigned char m_buffer[PrPixel::SENSOR_PIXELS];
   std::vector<unsigned int> m_pixel_idx;
   std::vector<unsigned int> m_stack;
 };

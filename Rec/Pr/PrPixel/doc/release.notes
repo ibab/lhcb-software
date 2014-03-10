@@ -4,6 +4,13 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-03-10 - Kurt Rinnert
+ - added code to run the tracking directly from raw banks. This is completely
+   transparent; the bank version determines how the bank is interpreted. This
+   code branch is not active by default yet, so no change in the results for
+   now.
+ - some clean up of recently addded code.
+
 ! 2014-03-04 - Kurt Rinnert
  - bug fix in PrPixelHitManager: the size of of clusters in super pixel
    patterns was off by one (legacy debugging code).

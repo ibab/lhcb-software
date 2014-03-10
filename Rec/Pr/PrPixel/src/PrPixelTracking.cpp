@@ -59,7 +59,7 @@ DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
       declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
 
       // Parameters for 3D hit building
-      declareProperty("AssumeSuperPixels",m_assumeSuperPixels=false);
+      declareProperty("RunOnRawBanks",m_runOnRawBanks=false);
       declareProperty("MaxClusterSize",m_maxClusterSize=4);
     }
 
@@ -110,8 +110,8 @@ StatusCode PrPixelTracking::execute() {
     m_timerTool->start(m_timePrepare);
   }
   if (m_clearHits) m_hitManager->clearHits();
-  if (m_assumeSuperPixels) {
-    m_hitManager->buildHitsFromSPRawBank();
+  if (m_runOnRawBanks) {
+    m_hitManager->buildHitsFromRawBank();
   } else {
     m_hitManager->buildHits();
   }

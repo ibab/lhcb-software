@@ -12,6 +12,7 @@
 #include "PrPixelClustering.h"
 
 using namespace LHCb;
+using namespace PrPixel;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PrPixelClustering
@@ -128,6 +129,52 @@ StatusCode PrPixelClustering::decodeRawBanks()
   if(tBanks.size() == 0) {
     return Warning("No VP RawBanks found", StatusCode::SUCCESS);
   }
+ 
+  const unsigned int bankVersion = (*tBanks.begin())->version();
+  switch (bankVersion) {
+    case 1:
+      return decodeLCRawBanks(tBanks);
+    case 2:
+      return decodeSPRawBanks(tBanks);
+    default:
+      return Error("Unsupported VP RawBank version.", StatusCode::FAILURE);
+  } 
+}
+
+//=============================================================================
+// Decode Lite Cluster RawBanks (bank version <2)
+//=============================================================================
+StatusCode PrPixelClustering::decodeLCRawBanks(const std::vector<RawBank*>& tBanks) 
+{
+  const unsigned int nb = tBanks.size();
+  for (unsigned int ib=0; ib < nb; ++ib) {
+    const RawBank& bank = *tBanks[ib];
+    const unsigned int module = bank.sourceID();
+    const unsigned int *bank_data = bank.data();
+    const unsigned int header = bank_data[0];
+    const unsigned int nc = (header & HEADERNCLUMASK) >> HEADERNCLUSHIFT;
+    for (unsigned int ic=0; ic < nc; ++ic) {
+      const unsigned int cw     = bank_data[ic+1];
+      const unsigned int pixel  = (cw & PIXELMASK)    >> PIXELSHIFT;
+      const unsigned int tot    = (cw & TOTVALUEMASK) >> TOTVALUESHIFT;
+      const unsigned int xfract = (cw & XFRACTMASK)   >> XFRACTSHIFT;
+      const unsigned int yfract = (cw & YFRACTMASK)   >> YFRACTSHIFT;
+      const unsigned int islong = (cw & ISLONGMASK)   >> ISLONGSHIFT;
+      LHCb::VPChannelID channelID;
+      channelID.setModule(module);
+      channelID.setPixel(pixel);
+      m_clusters->push_back(VPLiteCluster(channelID,tot,std::make_pair(xfract,yfract),islong));
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Decode Super Pixel RawBanks (bank version >=2)
+//=============================================================================
+StatusCode PrPixelClustering::decodeSPRawBanks(const std::vector<RawBank*>& tBanks) 
+{
   
 #define PRPIXELCLUSTERING_CLIENT 1
 #include "PrPixelClustering.icpp"

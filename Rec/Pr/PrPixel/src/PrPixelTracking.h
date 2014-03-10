@@ -98,8 +98,8 @@ private:
   bool m_isDebug;
   bool m_debug;
 
-  /// Use lite cluster raw bank or super pixel raw bank.
-  bool m_assumeSuperPixels;
+  /// Use lite clusters or raw banks.
+  bool m_runOnRawBanks;
 
   /// Maximum clusters size (no effect when running on lite cluster banks).
   unsigned int m_maxClusterSize;
