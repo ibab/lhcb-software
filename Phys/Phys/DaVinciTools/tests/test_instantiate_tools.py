@@ -12,10 +12,8 @@ tools = { 'Bd2KstarMuMuAngleCalculator' : 'IP2VVPartAngleCalculator',
           'DecodeSimpleDecayString' : 'IDecodeSimpleDecayString',
           'FindCloneTool' : 'ICheckOverlap',
           'NeutralCCChangePIDTool' : 'IChangePIDTool',
-          'GenericParticle2PVRelator__p2PVWithIPChi2_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
-          'GenericParticle2PVRelator__p2PVWithIP_OnlineDistanceCalculatorName_' : 'IRelatedPVFinder',
-          'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
-          'GenericParticle2PVRelator__p2PVWithIP_OfflineDistanceCalculatorName_' : 'IRelatedPVFinder',
+          'GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>' : 'IRelatedPVFinder',
+          'GenericParticle2PVRelator<_p2PVWithIP, OfflineDistanceCalculatorName>' : 'IRelatedPVFinder',
           'P2VVAngleCalculator' : 'IP2VVAngleCalculator',
           'ParticleDescendants' : 'IParticleDescendants'
                             }

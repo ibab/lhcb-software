@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-03-10 - Chris Jones
+ - Adapt test_instantiate_tools tests for new plugin service.
+   Remove Online tool tests, only test Offline versions.
+
 !========================= DaVinciTools v23r12 2014-02-20 =========================
 
 ! 2014-02-18 - Chris Jones
