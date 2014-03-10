@@ -8,7 +8,7 @@
 #                by $Author:$
 # =============================================================================
 package       PyPAW
-version       v0
+version       v0r0
 
 # =========== structure =======================================================
 branches      cmt doc python scripts 
