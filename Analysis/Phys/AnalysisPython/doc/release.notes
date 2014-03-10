@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 
+! 2014-03-10 - Vanya Belyaev
+ - move the large portion of pure python code to Analysis/PyPAW 
 
 !========================= AnalysisPython v2r27 2014-03-07 =========================
 

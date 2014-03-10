@@ -54,46 +54,19 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
 __version__ = '$Revision$'
 # =============================================================================
-import ROOT, os, sys
+import ROOT
 # =============================================================================
-# local name 
+import warnings
+warnings.warn (
+    """AnalysisPython:
+    Use 'PyPAW.PyPaw' module instead of 'AnalysisPython.PyRoot'""",
+    DeprecationWarning ,
+    stacklevel   = 3
+    )
 # =============================================================================
-_my_name_ = __name__
-if '__main__' == _my_name_ : _my_name_ = 'PyRoot'
-# =============================================================================
-# logging 
-# =============================================================================
-from AnalysisPython.Logger import getLogger 
-logger = getLogger( _my_name_ )
-logger.info ( "Welcome to PyRoot" )
-# =============================================================================
-## 1) load LHCb-style file
-# =============================================================================
-import AnalysisPython.LHCbStyle 
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
-# =============================================================================
-# The Heart 
-# =============================================================================
-logger.info ( "Create the default canvas" )
-canvas  = ROOT.TCanvas ( 'Canvas', _my_name_ , 1000 , 800 )
-## load zillions of decorations for ROOT-objects 
-import AnalysisPython.PyRoUts   as PyRoUts     ## NB: the most important line!
-import AnalysisPython.ZipShelve as ZipShelve 
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
+## the actual import 
+from PyPAW.PyPaw import *
 
-# ============================================================================
-## minor decoration for shelve module 
-from AnalysisPython.shelve_ext import shelve 
-
-# =============================================================================
-cpp = PyRoUts.cpp
-VE  = PyRoUts.VE
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -102,7 +75,6 @@ if '__main__' == __name__ :
     print ' Version : ', __version__ 
     print ' Date    : ', __date__ 
     print 120*'*'
-
 
 # =============================================================================
 # The END 

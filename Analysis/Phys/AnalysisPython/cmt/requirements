@@ -9,7 +9,7 @@ version           v2r27
 # =============================================================================
 # Structure, i.e. directories to process. 
 # =============================================================================
-branches          cmt doc python tests doc src Analysis
+branches          cmt doc python tests src Analysis
 
 # =============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
@@ -52,10 +52,7 @@ apply_pattern      linker_library        library=AnalysisPythonLib
 
 apply_pattern      install_more_includes more=Analysis
 apply_pattern      install_python_modules
-apply_pattern      install_scripts
 
-# ================= aliases ===================================================
-alias pypaw        "pyroot -i "
 
 # ============================================================================
 # The END 
