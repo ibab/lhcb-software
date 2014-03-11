@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-03-11 - Rob Lambert
+ - Made the library order in the re-ordering script even more explicit
+
 ! 2014-02-24 - Rob Lambert
  - Moved a lot of online parameters from Moore to MooreOnline()
  - this needed reflection in the setup scripts.

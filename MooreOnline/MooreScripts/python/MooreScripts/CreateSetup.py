@@ -30,7 +30,7 @@ def ContainsFNmatch(dir,matches) :
         dirs.extend([ f for f in files if islink(f) and isdir(f)])
     return False
 #
-def ReFactorPath(path,order=["MooreOnline_","MOOREONLINE_","Moore_","MOORE_","Online_","ONLINE_"]):
+def ReFactorPath(path,order=["MooreOnline_","MOOREONLINE_","Moore_","MOORE_","Online_","ONLINE_","Hlt_","HLT_","Phys_","PHYS_","Rec_","REC_","Lbcom_","LBCOM_"]):
     "re-order the path into the order specified, if more than one match to the ordering, the original order is preserverd for those matches"
     collected=[]
     #do all in the match statement
@@ -67,7 +67,6 @@ def FixSetupMoore( output ):
                 if m :
                     (name,value) = m.groups()
                     if name == 'LD_LIBRARY_PATH':
-                        # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
                         value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
                         value=ReFactorPath(value)
                     if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
