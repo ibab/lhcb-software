@@ -345,7 +345,7 @@ void LoKi::HltUnit::updateParams ( Property& /* p */ ) // update the factory
     return ;                                                         // RETURN
   }
   //
-  // check if different from "old" 
+  // check if different from "old" value 
   //
   MsgStream& log = warning ();
   if ( m_params_old != m_params && log.isActive () ) 
