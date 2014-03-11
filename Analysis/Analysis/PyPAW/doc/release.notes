@@ -9,6 +9,12 @@
 !                 by $Author:$
 ! -----------------------------------------------------------------------------
 
+!========================= PyPAW v1r0 2014-03-11 ==============================
+
+! 2014-03-11 - Vanya Belyaev
+
+  tagged for release with Bender v23r2 
+
 ! 2014-03-10 - Vanya Belyaev
  - remove duplictaion with AnalysisPython
  - make use of __init__.py file  
