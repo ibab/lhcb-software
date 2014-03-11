@@ -61,7 +61,7 @@ StatusCode TupleToolPid::fill( const Particle*
       test &= tuple->column( prefix+"_PIDp"
                              ,proto->info(LHCb::ProtoParticle::CombDLLp,-1000));
 
-      // The NeuroBays PID probabilities
+      // The MVA probabilities
       // There is one for each hypothesis
       test &= tuple->column( prefix+"_ProbNNe"
                              ,proto->info(LHCb::ProtoParticle::ProbNNe,-1000));
