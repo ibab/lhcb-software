@@ -168,14 +168,21 @@ class HltConf(LHCbConfigurableUser):
         self.defineL0Channels( L0TCK )
         #
         #  main HLT sequencer
-        # 
+        #
+        #sensitive to the split scenario
+        
+        Dec=Sequence('HltDecisionSequence',Members=[])
+        if self.getProp("Split")=="Hlt1" or not len(self.getProp("Split")):
+            Dec.Members.append(Sequence("Hlt1"))
+        
+        if self.getProp("Split")=="Hlt2" or not len(self.getProp("Split")):
+            Dec.Members.append(Sequence("Hlt2"))
+        
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                      , Members = [ Sequence('HltDecisionSequence', Members = [ Sequence('Hlt1') 
-                                                                              , Sequence('Hlt2') 
-                                                                              ] )
-                                  , Sequence('HltEndSequence') 
-                                  ] 
-                      )
+                       , Members = [ Sequence('HltDecisionSequence')
+                                    , Sequence('HltEndSequence') 
+                                    ] 
+                       )
         if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
             from Configurables import HltRoutingBitsFilter
             filter = HltRoutingBitsFilter( "PhysFilter" )
@@ -701,7 +708,8 @@ class HltConf(LHCbConfigurableUser):
         BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
 
         # only switch on TrackReports in a split scenario in Hlt1
-        if(self.getProp("Split") != "Hlt1") : self.setProp("EnableHltTrackReports", False) 
+        if(self.getProp("Split") != "Hlt1") : self.setProp("EnableHltTrackReports", False)
+        
         
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
@@ -710,7 +718,7 @@ class HltConf(LHCbConfigurableUser):
                 , ( "EnableHltGlobalMonitor",   [ HltGlobalMonitor ] )
                 , ( "EnableHltL0GlobalMonitor", [ HltL0GlobalMonitor ] )
                 , ( "EnableBeetleSyncMonitor",  [ lambda : BeetleMonitorAccept ] )
-                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Line('Hlt1Global') ] )
+                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Sequence('HltDecisionSequence') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
                 , ( "EnableHltTrackReports"    , [ HltTrackReportsWriter ] ) # will only be added in split mode see line above!
