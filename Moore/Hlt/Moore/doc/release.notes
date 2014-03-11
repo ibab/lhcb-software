@@ -4,11 +4,11 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r0 2014-03-11 =========================
 ! 2014-03-11 - Rob Lambert
  - Modify split behaviour with respect to writerRequires, simplifying the logic
  - see bug #103924
 
-!========================= Moore v22r0 2014-03-06 =========================
 ! 2014-03-06 - Sebastian Neubert
  - Fixed raw filename for moore.physics.tracking to be unique
 
