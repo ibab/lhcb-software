@@ -301,6 +301,10 @@ class Moore(LHCbConfigurableUser):
                                                        ,writeFSR=False)
             if self.getProp('WriterRequires') :
                 from Configurables import LoKi__VoidFilter as VoidFilter
+                #this next part does not work correctly, and I don't know why
+                #writer = GaudiSequencer( 'WriteSequence'
+                #                         , Members = self.getProp('WriterRequires') + writer
+                #                         )
                 writer = GaudiSequencer( 'WriteSequence'
                                          , Members = [ VoidFilter( "WriterFilter" 
                                                                    , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
@@ -650,18 +654,13 @@ class Moore(LHCbConfigurableUser):
     
     def _split(self, useTCK ): 
         def hlt1_only() :
-            from Configurables import GaudiSequencer as gs
-            seq = gs('Hlt')
-            #this replaces the HltDecisionSequence with "Hlt1"
-            seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
-            ## adapt HltGlobalMonitor for Hlt1 only...
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt2 = {}
             ##
 
         def hlt1_only_tck() :
-            #this replaces the HltDecisionSequence with "Hlt1"
-            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
+            #this fills the HltDecisionSequence with "Hlt1" only
+            trans = { 'GaudiSequencer/HltDecisionSequence' :               { 'Members' : { '^.*$' : "['GaudiSequencer/Hlt1']" } } 
                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
                       }
             #add the tracking encoder
@@ -673,8 +672,6 @@ class Moore(LHCbConfigurableUser):
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
-            #this replaces the HltDecisionSequence with "Hlt2"
-            seq.Members = Funcs._replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
             # TODO: shunt lumi nano events...
             # globally prepend Decoders for Hlt1...
             # TODO: find a better way of doing this... ditto for L0 decoding...I should have been able to suppress this stuff! 
@@ -682,17 +679,17 @@ class Moore(LHCbConfigurableUser):
             
             dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decAlg=dec.setup()
-            seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
+            seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), decAlg )
             
             if not MooreExpert().getProp("Hlt2Independent"):
                 tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
                 tr.active = True
                 trAlg=tr.setup()
-                seq.Members.insert( seq.Members.index(gs('Hlt2')), trAlg )
+                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), trAlg )
             
             sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
             selAlg=sel.setup()
-            seq.Members.insert( seq.Members.index(gs('Hlt2')), selAlg )
+            seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), selAlg )
                 
             # shunt Hlt1 decreports
             from Funcs import _updateProperties
@@ -758,7 +755,8 @@ class Moore(LHCbConfigurableUser):
                 trinsertion="', '"+hlt1traoder_name
             
             #this is replacing the HltDecisionSequence with some other things
-            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/Hlt2"  } }
+            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/HltDecisionSequence"  } }
+            transdep['GaudiSequencer/HltDecisionSequence$']={ 'Members' : { '^.*$' : "['GaudiSequencer/Hlt2']"  } }
             transdep['.*HDRFilter/.*' ]= { 'Location'                   : { '^.*$' : hlt1decrep_location } }
             transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
             transdep['TisTosParticleTagger/.*']={ 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
@@ -827,16 +825,15 @@ class Moore(LHCbConfigurableUser):
             if  MooreExpert().getProp("Hlt2Independent"):
                 appendPostConfigAction( gerhardsSledgehammer )
         
-        #check/set WriterRequires!
-        if not self.isPropertySet('WriterRequires'):
-            if len(self.getProp('Split')):
-                self.setProp('WriterRequires',[self.getProp('Split')])
-        else:
+        #check/set WriterRequires, not really needed since now the content of Hlt1/2 is modified in the HltDecisionSequence
+        if self.isPropertySet('WriterRequires'):
             if len(self.getProp('Split')):
                 if len(self.getProp('WriterRequires')):
-                    #probably you've done something wrong here!
-                    if self.getProp('WriterRequires')!=[self.getProp('Split')]:
-                        raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
+                    for check,fail in [("Hlt1","Hlt2"),("Hlt2","Hlt1")]:
+                        if self.getProp('Split')==check:
+                            if len([w for w in self.getProp("WriterRequires") if fail in w]):
+                                raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
+        
         
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
