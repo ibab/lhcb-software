@@ -23,10 +23,19 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v23r2> 2014-03-11 Bender v23r2 based on the DaVinci v34r0</A>
+
+<ul>
+<li>Almost identical to v23r*</li> 
+<li>Also based on the DaVinci v34r0</li>
+<li>Use own verison <code>Phys/AnalysisPython v2r28</code> </li>
+<li>Use own verison <code>Analysis/PyPAW v1r0</code> </li>
+</ul>
+
 <A NAME=v23r1p1> 2014-03-09 Bender v23r1p1 based on the DaVinci v34r0</A>
 
 <ul>
-<li>Similar to v23rr</li> 
+<li>Similar to v23r1</li> 
 <li>Also based on the DaVinci v34r0</li>
 <li>Bug fix in <code>BenderTools.TisTos</code> module</li>
 </ul>
@@ -35,7 +44,7 @@
 
 <li>Identical to v23r0</li> 
 <li>Also based on the DaVinci v34r0</li>
-<li>Use own verison <code>Phys/AnalysisPython v2r27</code> </li>
+<li>Use own version <code>Phys/AnalysisPython v2r27</code> </li>
 
 
 <A NAME=v23r0> 2014-03-04 Bender v23r0 based on the DaVinci v34r0</A>
