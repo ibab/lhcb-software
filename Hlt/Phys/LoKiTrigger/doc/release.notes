@@ -4,6 +4,28 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-03-11 - Vanya Belyaev
+
+ - HltUnit
+
+   Add new property "Params"
+
+   Params = { 'PtMin' :  1 * GeV } 
+
+   Code = """
+   ...
+   >>  ( TrPT > PARAM ( 'Params[PtMin]/<Unit-name-or-regex-pattern>' ) ) >>
+   ... 
+   
+   """  
+   The format of 'Params[PtMin]/<Unit-name-or-regex-pattern>' 
+   is defined in $LOKICOREROOT/src/Param.cpp
+
+   *If* parameters are redefined *after* initialiaztaion, 
+    and the value is actrually changed 
+    currently the warning is printed   (probably need to be revisited) 
+    but anyhow  only Eric is allowed to redefine "Params"
+
 !========================= LoKiTrigger v15r0 2014-02-20 =========================
 ! 2014-02-01 - Vanya Belyaev
  - add dictionaries for new FuncOps__ 

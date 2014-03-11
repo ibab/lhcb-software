@@ -41,6 +41,10 @@ LoKi::HltUnit::HltUnit
   , m_out     {}
   //
   , m_cut { LoKi::BasicFunctors<void>::BooleanConstant{ false } }
+//
+  ,  m_params     () 
+  ,  m_params_old () 
+  //
 {
   // ==========================================================================
   // declare own property 
@@ -62,6 +66,10 @@ LoKi::HltUnit::HltUnit
                                  , "from LoKiCore.functions     import *" } );
   Assert ( sc.isSuccess () , "Unable (re)set property 'Preambulo'" , sc ) ;
   // ==========================================================================
+  declareProperty( "Params" , 
+                   m_params , 
+                   "Parameters accessingle via PARAM-constructions" ) 
+    -> declareUpdateHandler ( &LoKi::HltUnit::updateParams  , this ) ;                 
 }
 // ============================================================================
 // virtual & protected destructor
@@ -327,7 +335,30 @@ StatusCode LoKi::HltUnit::registerTESInput
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
-
+void LoKi::HltUnit::updateParams ( Property& /* p */ ) // update the factory 
+{
+  // no action if not yet initialized 
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) 
+  {
+    /// silently redefine "old" parameters 
+    m_params_old = m_params ; // silently redefine "old" parameters 
+    return ;                                                         // RETURN
+  }
+  //
+  // check if different from "old" 
+  //
+  MsgStream& log = warning ();
+  if ( m_params_old != m_params && log.isActive () ) 
+  {
+    log << "Parameters are redefined:" ;
+    log << "\n NEW:" ;  Gaudi::Utils::toStream ( m_params     , log.stream() ) ;
+    log << "\n OLD:" ;  Gaudi::Utils::toStream ( m_params_old , log.stream() ) ;
+    log << endmsg ;
+  }
+  //
+  m_params_old = m_params ;
+  //
+}
 // ============================================================================
 // the factory (needed for instantiations):
 // ============================================================================

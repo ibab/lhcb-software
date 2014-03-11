@@ -162,6 +162,11 @@ namespace LoKi
     // ========================================================================
   protected:                                            // allowed constructors  
     // ========================================================================
+    /// update handler for "Params"-property
+    void updateParams ( Property& /* p */ ) ;
+    // ========================================================================
+  protected:                                            // allowed constructors  
+    // ========================================================================
     /** standard constructor 
      *  @param name the algorithm instance name 
      *  @param pSvc pointer to Service Locator 
@@ -242,6 +247,13 @@ namespace LoKi
     mutable LVct      m_tes ;               // keys for all TES input locations 
     /// the functor itself
     LoKi::Types::FCut m_cut ;                             // the functor itself
+    // ======================================================================== 
+  private: // parameters 
+    // ======================================================================== 
+    typedef GaudiUtils::VectorMap<std::string,double>  Params ;
+    // ======================================================================== 
+    Params   m_params     ;
+    Params   m_params_old ;    
     // ======================================================================== 
   } ; // 
   // ==========================================================================
