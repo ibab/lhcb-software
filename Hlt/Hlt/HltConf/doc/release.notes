@@ -4,11 +4,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v11r0 2014-03-11 =========================
 ! 2014-03-11 - Rob Lambert
  - Modify content of HltDecisionSequence based on HltConf.split, first step
    in task #50414
 
-!========================= HltConf v11r0 2014-03-06 =========================
 ! 2014-03-06 - Sebastian Neubert
  - Added missing Hlt1TrackAllL0LifetimeUnbiased entries to HltANNsvc
 
