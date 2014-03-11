@@ -31,5 +31,3 @@ gaudi_add_dictionary(AnalysisPython
                      OPTIONS -U__MINGW32__ --split=classdef)
 
 gaudi_install_python_modules()
-gaudi_install_scripts()
-
