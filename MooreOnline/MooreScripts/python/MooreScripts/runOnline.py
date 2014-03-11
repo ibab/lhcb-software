@@ -17,7 +17,7 @@ InstallRootLoggingHandler(level = logging.CRITICAL)
 
 def start(**kwargs) :
     from Moore.Configuration import Moore, MooreExpert
-    from MooreOnlineConf.COnfiguration import MooreOnline
+    from MooreOnlineConf.Configuration import MooreOnline
     import OnlineEnv 
     
     moore = Moore()
