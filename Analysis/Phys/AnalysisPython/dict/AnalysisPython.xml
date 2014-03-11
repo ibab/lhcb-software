@@ -70,8 +70,6 @@
   <class name = "Gaudi::Utils::Mute"                  />
   <class name = "Gaudi::Utils::Tee"                   />
 
-  <class name = "std::basic_ostream<char>"/>
-
   <exclusion>
     <class name="Gaudi::Utils::Mute">
       <field name="m_output" />
