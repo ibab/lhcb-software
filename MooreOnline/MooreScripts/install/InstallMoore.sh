@@ -432,7 +432,7 @@ fi
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" ]; then
   echo "# INFO: environment file created at: "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
   #example path
-  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; echo "# INFO: LD_LIBRARY_PATH "${LD_LIBRARY_PATH};  echo "# INFO: PYTHONPATH "${PYTHONPATH};)
+  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; python -c "import os; ld=os.environ['LD_LIBRARY_PATH']; ld=[l.replace('/cvmfs/cern.ch/lib/lhcb','/cvmfs...').replace(os.environ['CMTCONFIG'],'...').replace('/afs/cern.ch/lhcb/software/releases','/afs...').replace('/afs/cern.ch/lhcb/software/nightlies','/nightlies...') for l in ld.split(':') if 'InstallArea' in l]; print '# INFO: LD_LIBRARY_PATH','\n# INFO: \t'.join(['']+ld);" ;  python -c "import os; ld=os.environ['PYTHONPATH']; ld=[l.replace('/cvmfs/cern.ch/lib/lhcb','/cvmfs...').replace(os.environ['CMTCONFIG'],'...').replace('/afs/cern.ch/lhcb/software/releases','/afs...').replace('/afs/cern.ch/lhcb/software/nightlies','/nightlies...') for l in ld.split(':') if 'InstallArea' in l]; print '# INFO: PYTHONPATH','\n# INFO: \t'.join(['']+ld);" ; )
 else
   echo "# ERROR: No environment file at "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
 fi

@@ -4,6 +4,9 @@
 ! Purpose     : Installation scripts for Moore
 !-----------------------------------------------------------------------------
 
+! 2014-03-12 - Rob Lambert
+ - Tidyup the display of LD/PythonPath
+
 ! 2014-02-21 - Rob Lambert
  - makeManifest/fixPermissions only needed in the online environment
  - only update manifest if the config.tar has changed, or if the manifest doesn't exist

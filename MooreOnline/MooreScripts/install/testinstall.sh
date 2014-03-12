@@ -4,7 +4,7 @@ echo "TEST SCRIPT: Faking the online deployment structure"
 echo "============================================="
 
 export EXPECTV="HEAD"
-export EXPECTONV="v5r6"
+export EXPECTONV="v5r7"
 #options to use the nightly slots... need two of those options which work together
 export SPopts="--nightly lhcb-trigger-dev"
 export useSPopts=1
@@ -71,4 +71,4 @@ echo "============================================="
 echo "TEST SCRIPT: now trying to run Moore test job"
 echo "============================================="
 cd MOORE
-(source ${TMPDIR}"/MOORE/MooreOnline_"${EXPECTV}"/InstallArea/x86_64-slc6-gcc48-opt/setupMoore.sh"; echo "TCK data at: "${HLTTCKROOT}; gaudirun.py ${MOOREROOT}"/tests/qmtest/moore.qms/physics.qms/2012.qmt" --option="from Configurables import Moore; Moore().EvtMax=1; Moore().OutputLevel=4;";)
+(source ${TMPDIR}"/MOORE/MooreOnline_"${EXPECTV}"/InstallArea/x86_64-slc6-gcc48-opt/setupMoore.sh"; echo "TCK data at: "${HLTTCKROOT}; gaudirun.py ${MOOREROOT}"/tests/qmtest/moore.qms/physics.qms/silent.qmt" --option="from Configurables import Moore; Moore().EvtMax=1;" | grep -v "List of requested";)
