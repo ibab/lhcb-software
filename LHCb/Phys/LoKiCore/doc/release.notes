@@ -13,6 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-03-12 - Chris Jones
+ - Add Algorithm context names to LoKi Reporter messages.
+ - Correspondingly reduce the max Error and Warning instances from 10 to 2,
+   to prevent log files exploding in production.
+
 ! 2014-02-21 - Marco Clemencic
  - Moved (correctly) operators inside namespaces (fixed a problem with ROOT 6).
 

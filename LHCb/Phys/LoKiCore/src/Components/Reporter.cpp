@@ -5,6 +5,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -58,8 +59,8 @@ namespace LoKi
       const StatusCode   st  ,
       const size_t       mx  ) const 
     {
-      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint   () )  ;
-      return GaudiTool::Error   ( msg , st , mx_ ) ; 
+      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxErrorPrint() ) ;
+      return GaudiTool::Error ( m_printMyAlg ? msg+getMyAlg() : msg , st , mx_ ) ; 
     }
     //
     virtual StatusCode Warning   
@@ -67,38 +68,38 @@ namespace LoKi
       const StatusCode   st  ,
       const size_t       mx  ) const 
     { 
-      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () )  ;
-      return GaudiTool::Warning ( msg , st , mx_ ) ; 
+      const std::size_t mx_ = std::min ( mx , LoKi::IReporter::maxWarningPrint () ) ;
+      return GaudiTool::Warning ( m_printMyAlg ? msg+getMyAlg() : msg , st , mx_ ) ; 
     }
     //
     virtual StatusCode Print     
     ( const std::string& msg , 
       const StatusCode   st  ,
       const MSG::Level   lev ) const 
-    { return GaudiTool::Print ( msg , st , lev ) ; }
+    { return GaudiTool::Print ( m_printMyAlg ? msg+getMyAlg() : msg , st , lev ) ; }
     //
     virtual void       Assert 
     ( const bool         ok      , 
       const std::string& message , 
       const StatusCode   sc      ) const 
-    { GaudiTool::Assert ( ok , message , sc ) ; }
+    { GaudiTool::Assert ( ok , m_printMyAlg ? message+getMyAlg() : message , sc ) ; }
     //
     virtual void       Exception 
     ( const std::string    & msg ,  
       const GaudiException & exc , 
       const StatusCode       sc  ) const 
-    { GaudiTool::Exception ( msg , exc , sc ) ; }
+    { GaudiTool::Exception ( m_printMyAlg ? msg+getMyAlg() : msg , exc , sc ) ; }
     //
     virtual void       Exception 
     ( const std::string    & msg ,  
       const std::exception & exc , 
       const StatusCode       sc  ) const 
-    { GaudiTool::Exception ( msg , exc , sc ) ; }
+    { GaudiTool::Exception ( m_printMyAlg ? msg+getMyAlg() : msg , exc , sc ) ; }
     //
     virtual void       Exception 
     ( const std::string& msg     ,  
       const StatusCode   sc      ) const 
-    { GaudiTool::Exception ( msg      , sc ) ; }
+    { GaudiTool::Exception ( m_printMyAlg ? msg+getMyAlg() : msg      , sc ) ; }
     //
     // ========================================================================
   public:
@@ -150,6 +151,8 @@ namespace LoKi
       declareInterface<LoKi::IReporter> ( this ) ;
       declareInterface<IErrorTool>      ( this ) ;
       //
+      declareProperty( "PrintMyAlg", m_printMyAlg = true );
+      //
       StatusCode sc = setProperty ( "TypePrint"          , false ) ;
       Assert ( sc.isSuccess() , 
                "Unable to set Property 'TypePrint'"      , sc    ) ;
@@ -159,7 +162,7 @@ namespace LoKi
       //
     } 
     /// virtual destructor 
-    virtual ~Reporter(){} ;
+    virtual ~Reporter() { } 
     // ========================================================================
   private:
     // ========================================================================
@@ -169,6 +172,30 @@ namespace LoKi
     Reporter ( const Reporter& ) ;             // copy  constructor is disabled 
     /// assignement operator is disabled 
     Reporter& operator= ( const Reporter& ) ;        // no assignement operator
+    // ========================================================================
+  private:
+    // ========================================================================
+    // get the correct algorithm context 
+    // ========================================================================
+    std::string getMyAlg() const 
+    {
+      std::string myAlg = "" ;
+      const IAlgContextSvc* asvc = contextSvc();
+      if ( asvc ) 
+      {
+        const IAlgorithm* current = asvc->currentAlg();
+        if ( current ) 
+        {
+          myAlg = " [" + current->name() + "]"; 
+        }
+      }
+      return myAlg ;
+      // ======================================================================
+    }
+    // ========================================================================
+  private:
+    // ========================================================================
+    bool                m_printMyAlg  ;
     // ========================================================================
   } ;
   // ==========================================================================

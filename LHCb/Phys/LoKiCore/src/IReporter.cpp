@@ -66,9 +66,9 @@ std::size_t LoKi::IReporter::maxWarningPrint ()
 { return s_maxWarningPrint ; }
 // ============================================================================
 /// define maximal number of prints 
-std::size_t LoKi::IReporter::s_maxErrorPrint   = 10 ;
+std::size_t LoKi::IReporter::s_maxErrorPrint   = 2 ;
 /// define maximal number of prints 
-std::size_t LoKi::IReporter::s_maxWarningPrint = 10 ;
+std::size_t LoKi::IReporter::s_maxWarningPrint = 2 ;
 // ============================================================================
 // The END 
 // ============================================================================
