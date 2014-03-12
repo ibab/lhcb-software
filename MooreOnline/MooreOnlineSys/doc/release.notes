@@ -3,15 +3,28 @@ Package     : MooreOnlineSys
 Package Coordinator : R. Lambert
 Purpose     : Running and testing Moore in the online environment
 
-! 2014-01-24 - Marco Clemencic
- - Added CMake configuration file.
+</PRE><H1><A NAME=v22r0>2014-03-12 MooreOnlineSys v22r0</A></H1><PRE>
+First Full release of MooreOnline.
+
+Moore Online depends on Moore v22r0 and Online v5r7.
+
+New Features:
+  - All Moore's online-specific components have been migrated.
+  - A new configurable, MooreOnline() holds online-specific configurations
+  - A new package, MooreOnlineConf holds this configurable.
+  - This configurable is very specific to the online environment, but simple tests
+    are already performed to check it in principle should work...
+  - The installer script, and testing the installer script, has been added to
+    MooreScripts/install/, so it is tracked and versioned through svn
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=MooreOnline&version=v22r0
 
 </PRE><H1><A NAME=v21r0>2014-01-17 MooreOnlineSys v21r0</A></H1><PRE>
 
 Second prototype release of MooreOnline, the online wrapper project for Moore.
 Moore Online depends on Moore v21r0 and Online v5r6.
 
-A new installer has been provided temporarily at ~rlambert/public/forEric/TinstallMoore.sh
+A new installer has been provided temporarily at ~rlambert/public/forEric/InstallMoore.sh
 
 
 </PRE><H1><A NAME=v20r4>2013-10-30 MooreOnlineSys v20r4</A></H1><PRE>
