@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-12 - Michel De Cian
+ - Added doxygen documentation to PrPlaneCounter, changed PrForwardTracking to make it faster and more standardized
+
 ! 2014-03-10 - Michel De Cian
  - Changes in PrPlaneCounter which make it faster.
 

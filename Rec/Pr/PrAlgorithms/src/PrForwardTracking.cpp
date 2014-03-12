@@ -92,7 +92,8 @@ StatusCode PrForwardTracking::execute() {
     
   LHCb::Tracks* result = new LHCb::Tracks();
   put( result, m_outputName );
-
+  
+  // -- Decode the data in the T-stations
   m_hitManager->decodeData();
 
   //== If needed, debug the cluster associated to the requested MC particle.
@@ -114,11 +115,16 @@ StatusCode PrForwardTracking::execute() {
     m_timerTool->start( m_timeExtend );
   }
 
-  LHCb::Tracks* velo = get<LHCb::Tracks>( m_inputName );
-  for ( LHCb::Tracks::iterator itV = velo->begin(); velo->end() != itV; ++itV ) {
-    bool ok = !((*itV)->checkFlag( LHCb::Track::Invalid) );
-    ok = ok && (!((*itV)->checkFlag( LHCb::Track::Backward) ));
-    if (ok) m_forwardTool->extendTrack( *itV, result );
+  LHCb::Tracks* velo = getIfExists<LHCb::Tracks>( m_inputName );
+  if( velo == nullptr){
+    error() << "Could not find Velo tracks at: " << m_inputName << std::endl;
+    return StatusCode::SUCCESS;
+  }
+  
+  // -- Loop over all Velo input tracks and try to find extension in the T-stations
+  // -- This is the main 'work' of the forward tracking.
+  for ( LHCb::Tracks::iterator itV = velo->begin(); itV != velo->end(); ++itV ) {
+    if ( acceptTrack(*itV) ) m_forwardTool->extendTrack( *itV, result );
   }
   
   //============================================================
@@ -129,24 +135,48 @@ StatusCode PrForwardTracking::execute() {
     m_timerTool->start( m_timeFinal );
   }
 
+  // -- Sort the tracks according to their x-position of the state in the T-stations 
+  // -- in order to make the final loop faster.
+  std::sort( result->begin(), result->end(), 
+             [](const LHCb::Track* track1, const LHCb::Track* track2){ 
+               return track1->stateAt( LHCb::State::AtT )->x() <  track2->stateAt( LHCb::State::AtT )->x();
+             });
+  
   for ( LHCb::Tracks::iterator itT1 = result->begin(); result->end() != itT1; ++itT1 ) {
     LHCb::State* state1 = (*itT1)->stateAt( LHCb::State::AtT );
+
     for ( LHCb::Tracks::iterator itT2 = itT1+1; result->end() != itT2; ++itT2 ) {
       LHCb::State* state2 = (*itT2)->stateAt( LHCb::State::AtT );
       double dx = state1->x() - state2->x();
-      if ( fabs(dx) > 50. ) continue;
+      if ( fabs(dx) > 50. ) break; // The distance only gets larger, as the vectors are sorted
       double dy = state1->y() - state2->y();
       if ( fabs(dy) > 100. ) continue;
       
-      std::vector<LHCb::LHCbID>::const_iterator itID1 = (*itT1)->lhcbIDs().begin();
-      std::vector<LHCb::LHCbID>::const_iterator itID2 = (*itT2)->lhcbIDs().begin();
+      // -- Velo track has at least three hits, so advance by three
+      std::vector<LHCb::LHCbID>::const_iterator itID1 = (*itT1)->lhcbIDs().begin()+3;
+      std::vector<LHCb::LHCbID>::const_iterator itID2 = (*itT2)->lhcbIDs().begin()+3;
+      std::vector<LHCb::LHCbID>::const_iterator itIDEnd1 = (*itT1)->lhcbIDs().end();
+      std::vector<LHCb::LHCbID>::const_iterator itIDEnd2 = (*itT2)->lhcbIDs().end();
+
+      // -- Find the beginning of the FT LHCbIDs
       while( !(*itID1).isFT() ) ++itID1;
       while( !(*itID2).isFT() ) ++itID2;
-      int nCommon = 0;
+      
+      // -- This finds the intersections between the two vectors
+      // -- It is equivalent to the commented method below, but easier to understand
+      std::vector<LHCb::LHCbID> common(100);
+      std::vector<LHCb::LHCbID>::iterator itCom = std::set_intersection(itID1, itIDEnd1, itID2, itIDEnd2, common.begin());
+      
+      int nCommon = itCom - common.begin();
+      
       int n1 = (*itT1)->lhcbIDs().end() - itID1;
       int n2 = (*itT2)->lhcbIDs().end() - itID2;
-      while( itID1 != (*itT1)->lhcbIDs().end() &&
-             itID2 != (*itT2)->lhcbIDs().end() ){
+
+      // -- This is the old method, its equivalent to the std::set_intersection above
+      /*
+      int nCommon = 0;
+      while( itID1 != itIDEnd1 &&
+             itID2 != itIDEnd2 ){
         if ( (*itID1) == (*itID2) ) {
           ++nCommon;
           ++itID1;
@@ -157,18 +187,20 @@ StatusCode PrForwardTracking::execute() {
           ++itID2;
         }
       }      
+      */
+      
       if ( nCommon > .4 * (n1 + n2 ) ) {
         float q1 = (*itT1)->info( LHCb::Track::PatQuality, 0. );
         float q2 = (*itT2)->info( LHCb::Track::PatQuality, 0. );
-        debug() << (*itT1)->key() << " (q=" << q1 << ") and " 
+        if ( msgLevel( MSG::DEBUG ) ) debug() << (*itT1)->key() << " (q=" << q1 << ") and " 
                 << (*itT2)->key() << " (q=" << q2 << ") share " 
                 << nCommon << " FT hits" << endmsg;
         if ( q1 + m_deltaQuality < q2 ) {
-          debug() << "Erase " << (*itT2)->key() << endmsg;
+          if ( msgLevel( MSG::DEBUG ) ) debug() << "Erase " << (*itT2)->key() << endmsg;
           result->erase( itT2 );
           itT2 = itT1;
         } else if ( q2 + m_deltaQuality < q1 ) {
-          debug() << "Erase " << (*itT1)->key() << endmsg;
+          if ( msgLevel( MSG::DEBUG ) ) debug() << "Erase " << (*itT1)->key() << endmsg;
           result->erase( itT1 );
           itT1 = result->begin();
           itT2 = itT1;
