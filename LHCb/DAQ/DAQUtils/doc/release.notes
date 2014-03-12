@@ -4,6 +4,9 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+! 2014-03-12 - Rob Lambert
+ - fix hex printing bug #104052
+
 ! 2014-02-24 - Marco Cattaneo
  - Fix requirements to allow standalone running of tests
 

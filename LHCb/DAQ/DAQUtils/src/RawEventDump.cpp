@@ -79,10 +79,10 @@ StatusCode RawEventDump::execute() {
           info() << "[" << int(r->size()) << ", "
                  << int(r->sourceID()) << ", "
                  << int(r->version()) << ", "
-                 << std::hex << r->magic() << "] ";
+                 << std::hex << r->magic() << std::dec << "] ";
           if( m_dump ) 
           {
-            info() << "Data follows...";
+            info() << "Data follows..." << std::hex ;
             int cnt = 0;
             for(const int* p=r->begin<int>(); p != r->end<int>(); ++p)  
             {
