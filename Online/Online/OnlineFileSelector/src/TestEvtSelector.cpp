@@ -367,7 +367,7 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
           refpCtxt = 0;
           return sc;
         }
-        m_filePoller->statusReport(sc,m_input);
+        m_filePoller->statusReport(sc,m_input,m_evtCount);  ///CHECK m_evtCount
    }
 
   if (!(m_filePoller->remListener((IAlertSvc*)this))) {

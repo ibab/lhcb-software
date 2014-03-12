@@ -13,8 +13,6 @@
 #include <dirent.h>
 #include <stdlib.h>
 
-
-
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FilePoller)
 
 using namespace std;
@@ -27,6 +25,7 @@ FilePoller::FilePoller(const string& nam,ISvcLocator* svc)
 {
   declareProperty("scanDirectory",m_scanDirectory);
   declareProperty("alarmTime",m_alrmTime);
+  declareProperty("DbName",m_nameOfDb);
 }
 
 FilePoller::~FilePoller() {}
@@ -38,6 +37,8 @@ StatusCode FilePoller::queryInterface(const InterfaceID& riid, void** ppvIF) {
     *ppvIF = (IHandleListenerSvc*)this;
   else if(IAlarmHandler::interfaceID().versionMatch(riid))
     *ppvIF = (IAlarmHandler*)this;
+  else if(IOnlineBookkeep::interfaceID().versionMatch(riid))
+    *ppvIF = (IOnlineBookkeep*)this;
   else
     return OnlineService::queryInterface(riid, ppvIF);
   addRef();
@@ -255,17 +256,17 @@ string FilePoller::remFromfileNames()
 
   
 /// Implementation of IHandleListenerSvc::statusReport.
-StatusCode FilePoller::statusReport(StatusCode status, string file)
+StatusCode FilePoller::statusReport(StatusCode status, const string file, const int eventCnt)
 {
   if (StatusCode::FAILURE == status)
   {
     // no book-keeping
-    info(OnlineService::name()+": The file has already been processed.");
+    info(OnlineService::name()+": The recipient encountered a problem while reseting the criteria.");
   }
   else if (StatusCode::SUCCESS == status)
   {
     // book-keep the file
-    StatusCode sc = markBookKept(file);
+    StatusCode sc = markBookKept(getRunFileNumber(file), eventCnt);
   }
   
   return status;
@@ -278,7 +279,8 @@ void FilePoller::timerHandler()
 {
   StatusCode sc;
   string path_name;
-  
+  deque<string> empty_buffer; 
+
   DimTimer::stop();
   StatusCode poll_st = FilePoller::poller(FilePoller::m_scanDirectory);
   poll_st = showListeners();
@@ -288,17 +290,17 @@ void FilePoller::timerHandler()
     
       path_name = remFromfileNames();
       //check if it is book-kept
-      sc = isBookKept(path_name);
+      sc = isBookKept(getRunFileNumber(path_name));
       //if not, alertSvc(), if yes, dismiss and pick next file
-      if (StatusCode::FAILURE == sc)
-         sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
-      else
-         break; //?? CHECK!!
-      
-      sc = remListener(m_fileListeners.front());
-
+      if (StatusCode::FAILURE == sc) {
+        sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
+        sc = remListener(m_fileListeners.front());
+      }
   }
   
+  // Empty the buffer containing the scanned file names.
+  m_fileNames.swap(empty_buffer);
+    
   FilePoller::start();
 
 } 
@@ -308,33 +310,140 @@ void FilePoller::timerHandler()
 /// Implementation of IOnlineBookkeep::getRunFileNumber.
 string FilePoller::getRunFileNumber(const string file_path) {
 
-  return file_path.substr(57); // Is it standard???
+  return file_path.substr(57);    /// Is it standard???
   
 }
 
 /// Implementation of IOnlineBookkeep::markBookKept.
-StatusCode FilePoller::markBookKept(const std::string file) {
+StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) {
 
-  m_ProcessedFiles.push_back(file);
+  // m_ProcessedFiles.push_back(file);
+  int status;
+  sqlite3_stmt *pstatement;
+  string query = "INSERT INTO FileDetails (FileName,RunNumber,TotalEvents,StatusFlag) VALUES (?,?,?,?);";
+  const char *c_query = query.c_str();
+  
+  status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0); // -1 or query.length() ???
+  
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+  
+  status = sqlite3_bind_text(pstatement,1,file.c_str(),-1,0); 
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+
+  status = sqlite3_bind_int(pstatement,2,stoi(file.substr(6))); //CHECK stoi
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+
+  status = sqlite3_bind_int(pstatement,3,eventCnt);
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+
+  status = sqlite3_bind_int(pstatement,4,0); //When the file is inserted for the first time status == 0 / "processing"
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+  
+  status = sqlite3_step(pstatement); 
+  if (SQLITE_DONE != status) {
+    string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+    issueAlarm("Error inserting record into book-keeping database: " + msg);
+    return StatusCode::FAILURE;
+  }
+
+  status = sqlite3_finalize(pstatement);
+  if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+  }
   
   return StatusCode::SUCCESS;
   
 }
+
 
 /// Implementation of IOnlineBookkeep::isBookKept.  
 StatusCode FilePoller::isBookKept(const std::string file) {
 
+  /*
   vector<string>::iterator iter;
-
   iter = find(m_ProcessedFiles.begin(),m_ProcessedFiles.end(),file);
   if (iter == m_ProcessedFiles.end())
      return StatusCode::FAILURE;
+  */
+  int status;
+  sqlite3_stmt *pstatement;
+  string query = "SELECT * from FileDetails WHERE FileName = '" +file+"' ";
+  const char *c_query = query.c_str();
   
+  status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0); 
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+  
+  status = sqlite3_step(pstatement); //successful execution
+  if (SQLITE_DONE != status) {
+    string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+    issueAlarm("Error querying book-keeping database: " + msg);
+    return StatusCode::FAILURE;
+  }
+
+  if (SQLITE_ROW != status) {  //result is NULL
+    return StatusCode::FAILURE;
+  }
+
+
   return StatusCode::SUCCESS;
   
 }
 
+
+/// Implementation of IOnlineBookkeep::connectToDb.  
+StatusCode FilePoller::connectToDb() {
+
+  int status;
+  sqlite3_stmt *pstatement;
+  string query = "CREATE TABLE "+FilePoller::m_nameOfDb+".FileDetails ( " + 
+                       "  FileName    TEXT    PRIMARY KEY NOT NULL,"+
+                       "  RunNumber   INTEGER             NOT NULL,"+
+                       "  TotalEvents INTEGER             NOT NULL,"+
+                       "  StatusFlag  INTEGER             NOT NULL);";
   
+
+  const char *c_query = query.c_str();
+  
+
+  status = sqlite3_open(FilePoller::m_nameOfDb.c_str(), &(FilePoller::m_FileInfo));
+  if (!FilePoller::m_FileInfo) {
+    string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+    issueAlarm("Error opening book-keeping database: " + msg);
+    sqlite3_close(FilePoller::m_FileInfo);
+    return StatusCode::FAILURE;
+  }
+  
+  status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0);
+  
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    return StatusCode::FAILURE;
+  }
+
+  
+  return StatusCode::SUCCESS;
+}
+
 
 
 
