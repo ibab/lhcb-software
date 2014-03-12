@@ -3,6 +3,8 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
 
+#include "CaloUtils/CaloMomentum.h"
+
 #include "RecoPhoton.h"
 #include "FitParams.h"
 
@@ -72,9 +74,6 @@ namespace DecayTreeFitter
     const LHCb::CaloHypo* hypo = particle().proto()->calo()[0] ;
     // this works for photons
     const LHCb::CaloPosition* pos = hypo->position() ;
-    // and this seems to work for merged pi0 ...
-    if(!pos && hypo->clusters().size()>0)
-      pos = &(hypo->clusters()[0]->position()) ;
     ErrCode rc ;
     if(pos) {
       m_m = pos->parameters() ;
@@ -84,7 +83,7 @@ namespace DecayTreeFitter
       std::cout << "DecayTreeFitter::RecoPhoton: cannot find position info for cluster" << std::endl ;
       rc = ErrCode::badsetup ;
     }
-    return ErrCode() ;
+    return rc ;
   }
 
   ErrCode

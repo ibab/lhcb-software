@@ -10,6 +10,7 @@
 #include "RecoResonance.h"
 #include "RecoTrack.h"
 #include "RecoPhoton.h"
+#include "RecoMergedPi0.h"
 #include "Resonance.h"
 #include "MissingParticle.h"
 #include "JetMomentum.h"
@@ -138,8 +139,10 @@ namespace DecayTreeFitter
     } else if( !iscomposite ) { // external particles
       if( hastrack )
         rc = new RecoTrack(particle,mother,config) ;  // reconstructed track
+      else if( hascalo && particle.particleID().pid()==111)
+	rc = new RecoMergedPi0(particle,mother) ; // this better be a merged pi0!
       else if( hascalo )
-        rc = new RecoPhoton(particle,mother) ; // reconstructed photon
+        rc = new RecoPhoton(particle,mother) ; // reconstructed photon	
       else if( validfit ) {  // fitted composites w/o daughters?
         if( isresonance )
           rc = new RecoResonance(particle,mother) ;

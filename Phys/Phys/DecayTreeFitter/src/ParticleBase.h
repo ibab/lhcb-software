@@ -27,7 +27,8 @@ namespace DecayTreeFitter
                        kRecoComposite,kRecoResonance,
                        kInternalParticle,kRecoTrack,
                        kResonance,kRecoPhoton,
-                       kMissingParticle,kJetMomentum, kInternalRecoTrack } ;
+                       kMissingParticle,kJetMomentum,
+		       kInternalRecoTrack, kRecoMergedPi0 } ;
     typedef std::vector<ParticleBase*> ParticleContainer ;
 
     // 'default' constructor
