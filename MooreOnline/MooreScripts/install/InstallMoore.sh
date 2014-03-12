@@ -4,7 +4,6 @@
 #   uses SetupProject and getpack to configure and install MooreOnline
 #   --help for usage
 #
-
 #######################################################
 #              STEERING
 #######################################################
@@ -59,8 +58,8 @@ case "$arg" in
 esac
 done
 
-actionlist=""
-skippedlist=""
+export actionlist=""
+export skippedlist=""
 
 #######################################################
 #              Check ARGS
@@ -83,6 +82,11 @@ echo -e $usage
 exit 1
 fi
 
+echo "# INFO: --------------------------------------------"
+echo "# INFO: 1) Welcome to the Moore installer. Preamble."
+echo "# INFO: --------------------------------------------"
+export RUNSCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+echo "# INFO: Installer in: "${RUNSCRIPT_PATH}
 echo "# INFO: installing "${proj}" "${version}" into "${mooreInstall}" with online satellite from "${onlineInstall}" for cmtconfig "${thiscmtconfig}" with extra sp options: "${onlineSPOpts}
 
 #######################################################
@@ -90,8 +94,11 @@ echo "# INFO: installing "${proj}" "${version}" into "${mooreInstall}" with onli
 #######################################################
 
 
+#set user release area
+export User_release_area=$mooreInstall
+
 #setup with cmtconfig
-. LbLogin.sh -c $thiscmtconfig 
+. LbLogin.sh -c $thiscmtconfig 2>&1 | grep -E -i "WARNING|ERROR|"${thiscmtconfig} | grep -v "using environment variable"
 
 #keep paths, don't suppress empty directories
 export LB_NO_STRIP_PATH=1
@@ -111,8 +118,8 @@ if [ -d ${mooreInstall}"/"${proj}"_"${version} ]; then
 fi
 
 #SP
-echo "# INFO: ------------- SetupProject (in this shell) --------------"
-. SetupProject.sh ${proj} ${version} ${onlineSPOpts}  --build-env 
+echo "# INFO: SetupProject (in this shell, create initial directories)"
+. SetupProject.sh -q ${proj} ${version} ${onlineSPOpts}  --build-env 
 rc=$?
 if [  $rc -ne 0  ]; then
     exit $rc
@@ -122,10 +129,10 @@ fi
 #     Find original Moore version
 #######################################################
 
-echo "# INFO: after SP --build-env, now in " `pwd`
+#echo "# INFO: after SP --build-env, now in " `pwd`
 moorever=""
 #SP without build env, run in a subshell, needed only to get project version
-moorever=$(. SetupProject.sh ${proj} ${version} ${onlineSPOpts} > /dev/null ; cmt sh projects | grep -e " MOORE MOORE_" | awk '{ print $2 ; }' | awk -F '_' '{ print $2 ; }' )
+moorever=$(. SetupProject.sh -q ${proj} ${version} ${onlineSPOpts} ; cmt sh projects | grep -e " MOORE MOORE_" | awk '{ print $2 ; }' | awk -F '_' '{ print $2 ; }' )
 rc=$?
 if [  $rc -ne 0  ]; then
     exit $rc
@@ -139,29 +146,32 @@ fi
 #     Find original online version
 #######################################################
 
-echo "# INFO: after SP --build-env, now in " `pwd`
+#echo "# INFO: after SP --build-env, now in " `pwd`
 onver=""
 #SP without build env, run in a subshell, needed only to get project version
-onver=$(. SetupProject.sh ${proj} ${version} ${onlineSPOpts} > /dev/null ; cmt sh projects | grep -e " ONLINE ONLINE_" | awk '{ print $2 ; }' | awk -F '_' '{ print $2 ; }' )
+onver=$(. SetupProject.sh -q ${proj} ${version} ${onlineSPOpts}  ; cmt sh projects | grep -e " ONLINE ONLINE_" | awk '{ print $2 ; }' | awk -F '_' '{ print $2 ; }' )
 rc=$?
 if [  $rc -ne 0  ]; then
     exit $rc
 fi
 if [ -z $onver ]; then
-echo "# ERROR, could not detect online version" >&2 
+echo "# ERROR, (a) could not detect online version" >&2 
 exit 1
 fi
 
 echo "# INFO: detected online version, "$onver
+echo "# INFO: --------------------------------------------"
+echo "# INFO: 2) Installation actions from (a) to (i)."
+echo "# INFO: --------------------------------------------"
 #check that online version exists locally
 if [ -d ${mooreInstall}"/Online_"$onver  ]; then
-    echo "# WARNING: Online version already exists as a full directory, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
-    skippedlist=${skipppedlist}", creating online softlink because it already existed as a directory"
+    echo "# WARNING: (a) Online version already exists as a full directory, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
+    skippedlist=`echo ${skippedlist}"(a) didn't create online softlink because it already existed as a directory"`
 elif [ -L ${mooreInstall}"/Online_"$onver ]; then
-    echo "# WARNING: Online version already exists as a softlink, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
-    skippedlist=${skipppedlist}", creating online softlink because it already existed"
+    echo "# WARNING: (a) Online version already exists as a softlink, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
+    skippedlist=`echo ${skippedlist}"(a) didn't create online softlink because it already existed as a softlink"`
 elif [ ! -d ${onlineInstall}"/Online_"$onver ]; then
-    echo "# ERROR the online version does *not yet* have a local satelite area! " ${onlineInstall}"/Online_"$onver >&2
+    echo "# ERROR (a) the online version does *not yet* have a local satelite area! " ${onlineInstall}"/Online_"$onver >&2
     exit 1
 else
     ln -s ${onlineInstall}"/Online_"$onver  ${mooreInstall}"/Online_"$onver
@@ -169,7 +179,7 @@ else
     if [  $rc -ne 0  ]; then
 	exit $rc
     fi
-    actionlist=${actionlist}", created online softlink"
+    actionlist=`echo ${actionlist}"(a) created online softlink"`
 fi
 
 if [ ${onver} == "HEAD" ]; then
@@ -179,13 +189,12 @@ fi
 #######################################################
 #     Prepare with that online version.
 #######################################################
-echo "# INFO: ------------- SetupProject (in this shell) --------------"
-. SetupProject.sh ${proj} ${version} ${onlineSPOpts} --runtime-project Online $onver --build-env 
+echo "# INFO: SetupProject (in this shell with full online env) "
+. SetupProject.sh -q ${proj} ${version} ${onlineSPOpts} --runtime-project Online $onver --build-env 
 rc=$?
 if [  $rc -ne 0  ]; then
     exit $rc
 fi
-
 
 #######################################################
 #     Getpack
@@ -193,31 +202,31 @@ fi
 
 #Getpack
 if  [ -d ${mooreInstall}"/"${proj}"_"${version}"/MooreScripts" ]; then
-   echo "# WARNING: MooreScripts already exists, not calling getpack. If you need a different version, do it yourself ;)"
-    skippedlist=${skipppedlist}", getpack moore scripts because it already existed"
+   echo "# WARNING: (b) MooreScripts already exists, not calling getpack. If you need a different version, do it yourself ;)"
+    skippedlist=`echo ${skippedlist}" (b) didn't getpack MooreScripts because it already existed"`
 else
    getpack -p anonymous MooreScripts '<default>' | awk '{ print "# INFO: " $0}'
    rc=$?
    if [  $rc -ne 0  ]; then
        exit $rc
    fi
-    actionlist=${actionlist}", getpack of MooreScripts"
+    actionlist=`echo ${actionlist}" (b) did getpack MooreScripts"`
 fi
 
 #######################################################
 #     Sort HLTTCK if required
 #######################################################
-echo "# INFO: Updating HltTCK"
+echo "# INFO: (c) Updating HltTCK"
 whereto=${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest"
 cd ${mooreInstall}"/"${proj}"_"${version}
 if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK" ]; then
    getpack -p anonymous TCK/HltTCK head 
-   actionlist=${actionlist}", getpack of HltTCK"
+   actionlist=`echo ${actionlist}" (c) did getpack HltTCK"`
 else
    svn update TCK/HltTCK 
-   skippedlist=${skipppedlist}", getpack of HltTCK because it already existed"
+   skippedlist=`echo ${skippedlist}" (c) didn't getpack HltTCK because it already existed"`
 
-   actionlist=${actionlist}", updated HltTCK"
+   actionlist=`echo ${actionlist}" (c) updated HltTCK"`
 fi
 
 
@@ -244,31 +253,31 @@ wheretoRun=${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"
 setupmoore=$whereto
 
 if [ -e $whereto ]; then
-   echo "# WARNING environment file already exists! Delete if you want to overwrite! "${whereto}
-   skippedlist=${skipppedlist}", creating env file because it already exists"
+   echo "# WARNING (d) environment file already exists! Delete if you want to overwrite! "${whereto}
+   skippedlist=`echo ${skippedlist}" (d) didn't create env file because it already existed"`
 else
    #use python module directly, same as SetupProject really.
-   echo "# INFO: ------------- Create environment file --------------"
+   echo "# INFO: ------------- (d) Create environment file --------------"
    needtomake=1
    echo "# INFO: python -mLbConfiguration.SetupProject" ${proj} ${version} ${onlineSPOpts}  "--runtime-project Online"  ${onver} "--output="${whereto} "--shell=sh"
    (python -mLbConfiguration.SetupProject ${proj} ${version} ${onlineSPOpts}  --runtime-project Online ${onver} --output=${whereto} --shell=sh | awk '{ print "# INFO: " $0}')
 
 
    if [ ! -e $whereto ]; then
-       echo "# ERROR environment file was not created! "${whereto} >&2
+       echo "# ERROR (d) environment file was not created! "${whereto} >&2
        exit 1
    fi
-   echo "# INFO: Environment file exists as "${whereto}
-   actionlist=${actionlist}", created env file"
+   echo "# INFO: (d) Environment file exists as "${whereto}
+   actionlist=`echo ${actionlist}" (d) created env file"`
    echo "# INFO: ------------- Edit the file I created --------------"
    (python -c "execfile('"${mooreInstall}"/"${proj}"_"${version}"/MooreScripts/python/MooreScripts/CreateSetup.py'); FixSetupMoore('"${whereto}"');";)
    rc=$?
    if [  $rc -ne 0  ]; then
-    echo "# ERROR environment file was not edited, I am deleting it to protect against a broken file! "${whereto} >&2
+    echo "# ERROR (d) environment file was not edited, I am deleting it to protect against a broken file! "${whereto} >&2
     rm ${whereto}
     exit $rc
    fi
-   actionlist=${actionlist}", edited env file"
+   actionlist=`echo ${actionlist}", edited env file"`
 fi
 
 
@@ -283,17 +292,17 @@ if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"
 fi
 
 if  [ $needtomake -ne 1 ]; then
-   echo "# WARNING: InstallArea/cmtconfig already existed, not calling a full make. Do it manually if you want ;)"
-   skippedlist=${skipppedlist}", make because InstallArea/cmtconfig existed"
+   echo "# WARNING: (e) InstallArea/cmtconfig already exists, not calling a full make. Do it manually if you want ;)"
+   skippedlist=`echo ${skippedlist}" (e) didn't make because InstallArea/cmtconfig already existed"`
    #echo "# INFO: --------- MAKE HltTCK ONLY --------"
    #cd TCK/HltTCK/cmt
    #(source ${setupmoore}; cmt make;)
    #cd ../../..
-   #actionlist=${actionlist}", made HltTCK only,"
+   #actionlist=`echo ${actionlist}", made HltTCK only,"`
 else
-   echo "# INFO: --------- MAKE EVERYTHING ---------"
+   echo "# INFO: --------- (e) MAKE EVERYTHING ---------"
    (source ${setupmoore};  make;)
-   actionlist=${actionlist}", make"
+   actionlist=`echo ${actionlist}" (e) make"`
    #rc=$?
    #if [  $rc -ne 0  ]; then
    #    exit $rc
@@ -321,11 +330,11 @@ elif [ -f "InstallArea/lastsawmanifest" ]; then
 fi
 
 if [ ${needtodomanifest} = "False" ]; then
-    echo "# INFO: no need to re-make manifest"
-    skippedlist=${skipppedlist}", no need to remake manifest"
+    echo "# INFO: (f) no need to re-make manifest"
+    skippedlist=`echo ${skippedlist}" (f) no need to remake manifest"`
 else
-    echo "# INFO: make manifest"
-    actionlist=${actionlist}", made manifest"
+    echo "# INFO: (f) make manifest"
+    actionlist=`echo ${actionlist}" (f) made manifest"`
     cd TCK/HltTCK/cmt
     (source ${setupmoore}; cmt createManifest;)
     cd ../../..
@@ -338,16 +347,16 @@ fi
 mooremin=`python -c "print '"${moorever}"'.split('p')[0]"`
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK/manifest/MOORE_"${mooremin} ]; then
    if [ -e ${whereto} ]; then
-     echo "# INFO: manifest already exists, replacing."
+     echo "# INFO: (g) manifest already exists, replacing."
      rm $whereto
    else
-     echo "# INFO: installing manifest"
+     echo "# INFO: (g) installing manifest"
    fi
    cp ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK/manifest/MOORE_"${mooremin} ${whereto}
-   actionlist=${actionlist}", copied manifest"
+   actionlist=`echo ${actionlist}" (g) copied manifest"`
 else
-   echo "# WARNING: could not install manifest, because no TCKs available for "${mooremin}
-   skippedlist=${skipppedlist}", didn't copy manifest because it did not exist for this Moore version"
+   echo "# WARNING: (g) could not install manifest, because no TCKs available for "${mooremin}
+   skippedlist=`echo ${skippedlist}" (g) didn't copy manifest because it did not exist for this Moore version"`
 fi
 cd $mooreInstall
 
@@ -357,28 +366,28 @@ cd $mooreInstall
 
 whereto=$mooreInstall"/"${proj}"_"${version}"/InstallArea/project_versions.txt"
 if [ -e $whereto ]; then
-   echo "# WARNING project_versions.txt linking file already exists! Delete if you want to overwrite"
-    skippedlist=${skipppedlist}", creating project_versions.txt because it already existed"
+   echo "# WARNING (h) project_versions.txt linking file already exists! Delete if you want to overwrite"
+    skippedlist=`echo ${skippedlist}" (h) didn't create project_versions.txt because it already existed"`
 else
-   echo "# INFO: creating project_versions.txt"
+   echo "# INFO: (h) creating project_versions.txt"
    echo -e "Moore "${moorever}"\nOnline "${onver}"\n" > ${whereto}
-   actionlist=${actionlist}", created project_versions.txt"
+   actionlist=`echo ${actionlist}" (h) created project_versions.txt"`
 fi
 if [ ! -e $whereto ]; then
-   echo "# ERROR failed to create project/version file"
+   echo "# ERROR (h) failed to create project/version file"
    exit 1
 fi
 #make sure it is only readable by the user
 chmod 444 $whereto
 
 
-echo "# INFO: ------------- PostInstall --------------"
+echo "# INFO: Final action, (i) PostInstall script"
 cd ${mooreInstall}"/"${proj}"_"${version}
 (source ${setupmoore} ; ./MooreScripts/scripts/PostInstall.py ${wheretoRun})
-actionlist=${actionlist}", ran post install script"
+actionlist=`echo ${actionlist}" (i) ran post install script"`
 
 echo "# INFO: ---------------------------------------------"
-echo "# INFO: ------------- Summary/Checks ----------------"
+echo "# INFO: 3) Summary and Checks"
 echo "# INFO: ---------------------------------------------"
 echo "# INFO: Actions I did: "${actionlist}
 if [ -n "$skippedlist" ] ; then
@@ -400,7 +409,7 @@ fi
 echo "# INFO: detected Online "${onver}" Moore "${moorever}" ("${mooremin}")"
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/project_versions.txt" ]; then
   echo "# INFO:  stored in "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/project_versions.txt, reading"
-  cat ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/project_versions.txt"
+  cat ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/project_versions.txt" | grep -v "^$"
 else
   echo "# ERROR: No project_versions.txt found at "${mooreInstall}"/"${proj}"_"${version}"/InstallArea"
 fi
@@ -422,19 +431,19 @@ if [ -d ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK" ]; then
 else
   echo "# ERROR: No HltTCK found at "${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK"
 fi
+#check environment file
+if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" ]; then
+  echo "# INFO: environment file created at: "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
+  #example path
+  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; python $RUNSCRIPT_PATH/checkPath.py LD_LIBRARY_PATH ;  python $RUNSCRIPT_PATH/checkPath.py PYTHONPATH ; )
+else
+  echo "# ERROR: No environment file at "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
+fi
+echo "# INFO: The following 'online running' files exist:"
+ls ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/run"*
 #check manifest
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest" ]; then
   echo "# INFO:  TCK manifest exists as "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest"
 else
   echo "# ERROR: No TCK manifest created, probably there were no TCKs defined yet for this version, run this script again after TCKs have been defined "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest"
 fi
-#check environment file
-if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" ]; then
-  echo "# INFO: environment file created at: "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
-  #example path
-  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; python -c "import os; ld=os.environ['LD_LIBRARY_PATH']; ld=[l.replace('/cvmfs/cern.ch/lib/lhcb','/cvmfs...').replace(os.environ['CMTCONFIG'],'...').replace('/afs/cern.ch/lhcb/software/releases','/afs...').replace('/afs/cern.ch/lhcb/software/nightlies','/nightlies...') for l in ld.split(':') if 'InstallArea' in l]; print '# INFO: LD_LIBRARY_PATH','\n# INFO: \t'.join(['']+ld);" ;  python -c "import os; ld=os.environ['PYTHONPATH']; ld=[l.replace('/cvmfs/cern.ch/lib/lhcb','/cvmfs...').replace(os.environ['CMTCONFIG'],'...').replace('/afs/cern.ch/lhcb/software/releases','/afs...').replace('/afs/cern.ch/lhcb/software/nightlies','/nightlies...') for l in ld.split(':') if 'InstallArea' in l]; print '# INFO: PYTHONPATH','\n# INFO: \t'.join(['']+ld);" ; )
-else
-  echo "# ERROR: No environment file at "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
-fi
-echo "# INFO: The following 'online running' files exist:"
-ls ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/run"*

@@ -6,7 +6,7 @@ echo "============================================="
 export EXPECTV="HEAD"
 export EXPECTONV="v5r7"
 #options to use the nightly slots... need two of those options which work together
-export SPopts="--nightly lhcb-trigger-dev"
+export SPopts="--nightly lhcb-trigger-dev Tue"
 export useSPopts=1
 echo "testing for MooreOnline "${EXPECTV}" with Online "${EXPECTONV}" and extra options: "${SPopts}
 #whether to delete existing directories or not

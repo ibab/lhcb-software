@@ -6,6 +6,7 @@
 
 ! 2014-03-12 - Rob Lambert
  - Tidyup the display of LD/PythonPath
+ - Add explicit check of LD/PythonPath with new script
 
 ! 2014-02-21 - Rob Lambert
  - makeManifest/fixPermissions only needed in the online environment
