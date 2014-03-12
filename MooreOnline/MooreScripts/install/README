@@ -9,6 +9,7 @@ The only reason this is in svn is so that we can track the changes made to this 
 Contents:
 - InstallMoore.sh
 - test_install.sh
+- checkPath.py
 - README
 - release.notes
 
@@ -25,6 +26,16 @@ testinstall.sh
  - you may need to edit this script for your local use, 
    to select which version of Moore to test, etc.
 
+checkPath.py
+ - used by InstallMoore to check the order of LD_LIBRARY_PATH and PYTHONPATH
+ - must live in same directory as InstallMoore.sh
+
 To update:
-- if you are reading this file, you already know where this directory is kept
+- if you are reading this file, you already know where this directory is
 - cd into the directory and "svn update"
+
+To commit:
+- make your changes
+- ALWAYS edit release.notes
+- If required, change this README
+- ALWAYS use a full commit log message

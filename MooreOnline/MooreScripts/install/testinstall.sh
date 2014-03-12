@@ -39,9 +39,9 @@ fi;
 cd satelite
 
 if [ $useSPopts -ne 0 ]; then
-    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh Online ${EXPECTONV} --build-env ${SPopts};)
+    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh -q Online ${EXPECTONV} --build-env ${SPopts};)
 else
-    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh Online ${EXPECTONV} --build-env;)
+    (export User_release_area=`pwd`; export CMTPATH=${CMTPATH}:`pwd`; . SetupProject.sh -q Online ${EXPECTONV} --build-env;)
 fi
 
 cd ..
