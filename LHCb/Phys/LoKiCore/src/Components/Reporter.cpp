@@ -179,23 +179,14 @@ namespace LoKi
     // ========================================================================
     std::string getMyAlg() const 
     {
-      std::string myAlg = "" ;
       const IAlgContextSvc* asvc = contextSvc();
-      if ( asvc ) 
-      {
-        const IAlgorithm* current = asvc->currentAlg();
-        if ( current ) 
-        {
-          myAlg = " [" + current->name() + "]"; 
-        }
-      }
-      return myAlg ;
-      // ======================================================================
+      const IAlgorithm* current  = ( asvc ? asvc->currentAlg() : NULL );
+      return ( current ? " [" + current->name() + "]" : "" );
     }
     // ========================================================================
   private:
     // ========================================================================
-    bool                m_printMyAlg  ;
+    bool m_printMyAlg ;
     // ========================================================================
   } ;
   // ==========================================================================
