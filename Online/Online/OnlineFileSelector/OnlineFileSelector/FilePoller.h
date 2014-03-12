@@ -10,6 +10,7 @@
 #include <deque>
 #include "dim.hxx"
 
+#include <sqlite3.h>    
 
 namespace LHCb  {
   
@@ -70,7 +71,7 @@ namespace LHCb  {
     virtual const StatusCode showListeners();  
    
     /// IHandlerListenerSvc statusReport.
-    virtual StatusCode statusReport(StatusCode status, std::string file);
+    virtual StatusCode statusReport(StatusCode status,const std::string file, const int eventCnt);
     
     /// IAlarmHandler error response.
     virtual const StatusCode issueAlarm(const std::string& msg);
@@ -79,12 +80,16 @@ namespace LHCb  {
     virtual std::string getRunFileNumber(const std::string file_path);
 
     /// IOnlineBookkeep book-keep a processed file.
-    virtual StatusCode markBookKept(const std::string file);
+    virtual StatusCode markBookKept(const std::string file, const int eventCnt);
 
     /// IOnlineBookkeep check if a file has been processed.
     virtual StatusCode isBookKept(const std::string file);
 
+    /// IOnlineBookkeep connect to the database.
+    virtual StatusCode connectToDb();
     
+    
+
     /// Simple bookkeeping with a vector -- temporary.
     std::vector<std::string> m_ProcessedFiles;
     
@@ -107,6 +112,15 @@ namespace LHCb  {
 
     /// Lock for the listener queue.
     lib_rtl_lock_t m_listenerLock;
+
+
+
+    /// SQLite database handler.
+    sqlite3* m_FileInfo;
+
+    /// Name of the SQLite database.
+    std::string m_nameOfDb;
+    
 
   };
 }
