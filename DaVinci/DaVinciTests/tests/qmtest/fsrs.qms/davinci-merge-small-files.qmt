@@ -86,7 +86,8 @@ if (memory/1024/1024)>1.2:
 ############################################
 import commands
 newresult=commands.getoutput("$APPCONFIGROOT/scripts/CheckFSRs.py merged.dst")
-if "error" in newresult.lower() or "warning" in newresult.lower() or "merged and cleaned up correctly" not in newresult:
+cleanresult='\n'.join([n for n in newresult.split('\n') if "using PyCintex as cppyy" not in n])
+if "error" in cleanresult.lower() or "warning" in cleanresult.lower() or "merged and cleaned up correctly" not in newresult:
   causes.append('CheckFSRs failure on merged file') 
   retstr=retstr+'\n\n'+'CheckFSRs failure on merged file \n'+newresult.replace('\n','\t\n')
 

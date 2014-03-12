@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-03-12 - Rob Lambert
+ - fix small bug in davinci-smallfiles, see bug #104079
+
 ! 2014-03-07 - Chris Jones
  - Remove unneccessary Stripping appconfig test. Covered by the various
    explicit Stripping tests.
