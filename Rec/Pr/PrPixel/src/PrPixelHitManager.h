@@ -8,6 +8,8 @@
 // LHCb
 // Event/DigiEvent
 #include "Event/VPLiteCluster.h"
+#include "Event/VPCluster.h"
+#include "Kernel/VPChannelID.h"
 // Det/VPDet
 #include "VPDet/DeVP.h"
 // Local
@@ -26,6 +28,7 @@ static const InterfaceID IID_PrPixelHitManager("PrPixelHitManager", 1, 0);
  *  Tool to handle the VP geometry and hits
  *
  *  @author Olivier Callot
+ *  @author Kurt Rinnert
  *  @date   2012-01-05
  */
 
@@ -77,6 +80,10 @@ public:
 
   /// Set maximum cluster size.
   void setMaxClusterSize(const unsigned int size) { m_maxClusterSize = size; }
+  /// Set trigger flag
+  void setTrigger(bool triggerFlag) { m_trigger = triggerFlag; }
+  /// Set cluster location
+  void setClusterLocation(const std::string& loc) { m_clusterLocation = loc; }
   /// Set slope correction flag.
   void useSlopeCorrection(const bool flag) {m_useSlopeCorrection = flag;}
   int maxSize() const {return m_maxSize;}
@@ -84,18 +91,28 @@ public:
   StatusCode rebuildGeometry();                                  
   /// Sort hits by X within every module (to speed up the search).
   void sortByX();                                                
+  /// Wrapper for storing clusters on TES (trigger or offline)
+  void storeClusters();
+  /// Store trigger clusters on TES.
+  void storeTriggerClusters();
+  /// Store offline (all) clusters on TES.
+  void storeOfflineClusters();
 
 private:
 
+  /// Cache Super Pixel patterns for isolated Super Pixel clustering.
   void cacheSPPatterns();
 
 private:
+
   /// Detector element
   DeVP* m_vp;
   // List of hits: here are the hits stored
   std::vector<PrPixelHit> m_pool;             
-  /// Number of hits in this event.
+  /// Number of hits handed to the tracking in this event.
   unsigned int m_nHits;
+  /// Number of clusters in this event.
+  unsigned int m_nClusters;
   /// List of pointers to modules (which contain pointers to their hits)
   std::vector<PrPixelModule*> m_modules;          
   std::vector<PrPixelModule> m_module_pool;          
@@ -131,6 +148,12 @@ private:
   /// Maximum allowed cluster size (no effect when running on lite clusters).
   unsigned int m_maxClusterSize;
 
+  /// Are we running in the trigger?
+  bool m_trigger;
+
+  /// Where to store clusters
+  std::string m_clusterLocation;
+
   /// Cache of local to global transformations, 16 stride aligned.
   double m_ltg[16*PrPixel::TOT_SENSORS]; // 16*208 = 16*number of sensors
 
@@ -140,6 +163,16 @@ private:
 
   /// pixel size in y; this is constant for all pixels on a sensor
   double m_pixel_size;
+
+  /// Storage for pixels contributing to clusters. Not used in trigger.
+  std::vector<std::vector<LHCb::VPChannelID> > m_channelIDs;
+  /// Storage for x fractions of all clusters. Not used in trigger.
+  std::vector<double> m_xFractions;
+  /// Storage for y fractions of all clusters. Not used in trigger.
+  std::vector<double> m_yFractions;
+  /// Storage for 3D points of all clusters. Not used in trigger.
+  std::vector<PrPixelHit> m_allHits;             
+
 };
 
 #endif // PRPIXELHITMANAGER_H

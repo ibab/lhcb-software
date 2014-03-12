@@ -103,6 +103,8 @@ private:
 
   /// Maximum clusters size (no effect when running on lite cluster banks).
   unsigned int m_maxClusterSize;
+  /// Are we running in the trigger?
+  bool m_trigger;
 
   /// Timing measurement control
   bool m_doTiming;

@@ -61,6 +61,7 @@ DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
       // Parameters for 3D hit building
       declareProperty("RunOnRawBanks",m_runOnRawBanks=false);
       declareProperty("MaxClusterSize",m_maxClusterSize=4);
+      declareProperty("Trigger",m_trigger=false);
     }
 
 //=============================================================================
@@ -80,6 +81,7 @@ StatusCode PrPixelTracking::initialize() {
   m_hitManager = tool<PrPixelHitManager>("PrPixelHitManager");
   m_hitManager->useSlopeCorrection(m_useSlopeCorrection);
   m_hitManager->setMaxClusterSize(m_maxClusterSize);
+  m_hitManager->setTrigger(m_trigger);
 
   // Setup the debug tool.
   if ("" != m_debugToolName) m_debugTool = tool<IPatDebugTool>(m_debugToolName);

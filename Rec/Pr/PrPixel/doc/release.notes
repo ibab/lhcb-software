@@ -4,6 +4,20 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-03-12 - Kurt Rinnert
+ - improved documentation and clean up of new code.
+ - prepared for upcoming new event model and cluster storage after track
+   finding (clustering without pattern recognition will work transparently for
+   fast monitoring purposes).
+ - introduced runtime switch for trigger or offline configuration. The pattern
+   recognition results are the same in both cases, but the clusters put on
+   the TES will potentially be different, depending on the maximum cluster
+   size passed to the track finding algorithm.
+ - the default code path is still the same old thing based on a lite cluster
+   raw bank, but should become obsolete soon. Even then old MC will still work
+   transparently, including MC matching, although you can't expect bit-perfect
+   results.
+
 ! 2014-03-10 - Kurt Rinnert
  - added code to run the tracking directly from raw banks. This is completely
    transparent; the bank version determines how the bank is interpreted. This
