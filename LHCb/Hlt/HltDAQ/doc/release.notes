@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-03-12 - Rob Lambert
+ - dump, decode, wipe, encode, dump tests.
+ - see task #48809
+
 ! 2014-03-04 - Sebastian Neubert
  - persisting the flags instead of Track::type. Needed for forward tracking.
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="A6CAB038-DAA9-E311-B075-02163E00A73B">
+    <physical>
+      <pfn filetype="MDF" name="file://rewritten.mdf"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

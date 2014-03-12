@@ -88,7 +88,18 @@ macro_append  GSL_linkopts " -Wl,--as-needed " \
 
 end_private
 
+#at least GaudiConf for IOHelper and LHCbApp
 private
-apply_pattern QMTest
+  macro PRConfig_use "" QMTest "PRConfig v* -no_auto_imports"
+  use $(PRConfig_use)
+  macro Utils_use "" QMTest "DAQUtils v* DAQ -no_auto_imports"
+  use $(Utils_use)
+  macro LHCbK_use "" QMTest "LHCbAlgs v* Kernel -no_auto_imports"
+  use $(LHCbK_use)
+  macro GaudiC_use "" QMTest "GaudiConf v* -no_auto_imports"
+  use $(GaudiC_use)
 end_private
+
+
+apply_pattern QMTest
 
