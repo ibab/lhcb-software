@@ -15,14 +15,14 @@
 class PrForwardTrack {
 public: 
   /// Constructor with only a Velo track
-  PrForwardTrack( const LHCb::Track* track, float zRef ) 
+  PrForwardTrack( const LHCb::Track* track, const float zRef ) 
     : m_track( track ), m_zRef( zRef )
   {
     init();
   }; 
 
   /// Constructor with Velo track and list of hits
-  PrForwardTrack( const LHCb::Track* track, float zRef, PrHits& hits )
+  PrForwardTrack( const LHCb::Track* track, const float zRef, PrHits& hits )
     : m_track( track ), m_zRef( zRef ), m_hits( hits ) 
   {
     init();
@@ -31,18 +31,20 @@ public:
 
   virtual ~PrForwardTrack( ) {}; ///< Destructor
 
-  const LHCb::Track* track()  const { return m_track; }
-  float xFromVelo( float z )  const { return m_x0 + (z-m_z0) * m_tx; }
-  float yFromVelo( float z )  const { return m_y0 + (z-m_z0) * m_ty; }
-  float qOverP()              const { return m_qOverP; }
+  const LHCb::Track* track()        const { return m_track; }
+  /// Predicted x position for a given z, using a straight line from Velo information
+  float xFromVelo( const float z )  const { return m_x0 + (z-m_z0) * m_tx; }
+  /// Predicted y position for a given z, using a straight line from Velo information
+  float yFromVelo( const float z )  const { return m_y0 + (z-m_z0) * m_ty; }
+  float qOverP()                    const { return m_qOverP; }
   
-  float slX()                 const { return m_tx;  }
-  float slY()                 const { return m_ty;  }
-  float slX2()                const { return m_tx2; }
-  float slY2()                const { return m_ty2; }
-  float slope2()              const { return m_slope2; }
+  float slX()                       const { return m_tx;  }
+  float slY()                       const { return m_ty;  }
+  float slX2()                      const { return m_tx2; }
+  float slY2()                      const { return m_ty2; }
+  float slope2()                    const { return m_slope2; }
   
-  /// Handling of hits: acceess, insertion
+  /// Handling of hits: access, insertion
   PrHits& hits()                   { return m_hits; }
   const PrHits& hits()       const { return m_hits; }
   void addHit( PrHit* hit )        { m_hits.push_back( hit ); m_zone = m_hits.front()->zone(); }
@@ -53,8 +55,18 @@ public:
   }
   unsigned int zone() const { return m_zone; }
      
-  /// Parameters of the trajectory in the T stations
-  void setParameters( float ax, float bx, float cx, float dx, float ay, float by, float cy ) {
+  /** Set the parameters of the track. Cubic in x, parabolic in y
+   *  @brief  Set the parameters of the track
+   *  @param ax constant coefficient for x parametrisation
+   *  @param bx linear coefficient for x parametrisation
+   *  @param cx quadratic coefficient for x parametrisation
+   *  @param dx cubic coefficient for x parametrisation
+   *  @param ay constant coefficient for y parametrisation
+   *  @param by linear coefficient for y parametrisation
+   *  @param cy quadratic coefficient for y parametrisation
+   */
+  void setParameters( const float ax, const float bx, const float cx, const float dx, 
+                      const float ay, const float by, const float cy ) {
     m_ax = ax;
     m_bx = bx;
     m_cx = cx;
@@ -64,8 +76,18 @@ public:
     m_cy = cy;
   }
   
-  void updateParameters( float dax, float dbx, float dcx,
-                         float ddx=0., float day=0., float dby= 0., float dcy = 0. ) {
+   /** Update the parameters of the track. Cubic in x, parabolic in y
+   *  @brief Update the parameters of the track
+   *  @param ax constant coefficient for x parametrisation
+   *  @param bx linear coefficient for x parametrisation
+   *  @param cx quadratic coefficient for x parametrisation
+   *  @param dx cubic coefficient for x parametrisation
+   *  @param ay constant coefficient for y parametrisation
+   *  @param by linear coefficient for y parametrisation
+   *  @param cy quadratic coefficient for y parametrisation
+   */
+  void updateParameters( const float dax, const float dbx, const float dcx,
+                         const float ddx=0., const float day=0., const float dby= 0., const float dcy = 0. ) {
     m_ax += dax;
     m_bx += dbx;
     m_cx += dcx;
@@ -75,69 +97,80 @@ public:
     m_cy += dcy;
   }
 
-  float x( float z )         const { float dz = z-m_zRef; return m_ax + dz*( m_bx + dz*( m_cx + dz*m_dx ) ); }
-  float xSlope( float z )    const { float dz = z-m_zRef; return m_bx + dz*( 2 * m_cx + 3 * dz * m_dx ); }
-  float y( float z )         const { float dz = z-m_zRef; return m_ay + dz*( m_by + dz * m_cy); } 
-  float ySlope( float z )    const { float dz = z-m_zRef; return m_by + dz* 2. * m_cy; }  
-  float xStraight( float z ) const { return m_ax + (z-m_zRef) * m_bx; }
-  float yStraight( float z ) const { return m_ay + (z-m_zRef) * m_by; }
+  /// Get the x position at a certain z position
+  float x( const float z )         const { float dz = z-m_zRef; return m_ax + dz*( m_bx + dz*( m_cx + dz*m_dx ) ); }
+  /// Get the x slope at a certain z position
+  float xSlope( const float z )    const { float dz = z-m_zRef; return m_bx + dz*( 2 * m_cx + 3 * dz * m_dx ); }
+  /// Get the y position at a certain z position
+  float y( const float z )         const { float dz = z-m_zRef; return m_ay + dz*( m_by + dz * m_cy); } 
+  /// Get the y slope at a certain z position
+  float ySlope( const float z )    const { float dz = z-m_zRef; return m_by + dz* 2. * m_cy; }  
+  /// Get the x position at a certain z position, assuming the track is a straight line
+  float xStraight( const float z ) const { return m_ax + (z-m_zRef) * m_bx; }
+  /// Get the y position at a certain z position, assuming the track is a straight line
+  float yStraight( const float z ) const { return m_ay + (z-m_zRef) * m_by; }
 
-  float yOnTrack( PrHit* hit ) const { float sly =  ySlope( hit->z() ); 
+  /// Calculate the y position of a hit given the parametrised track
+  float yOnTrack( PrHit* hit ) const { const float sly =  ySlope( hit->z() ); 
     return hit->yOnTrack( y(hit->z()) - sly * hit->z(), sly ); }
 
+  /// Calculate the distance between a hit and the parametrised track
   float distance( PrHit* hit ) const { 
     float yTra = yOnTrack( hit );
     return hit->x( yTra ) - x( hit->z(yTra) );
   }
 
-  float chi2( PrHit* hit )     const { float d = distance( hit ); return d * d * hit->w(); }
+  /// Calculate the chi2 contribution of a single hit to the parametrised track
+  float chi2( PrHit* hit )     const { const float d = distance( hit ); return d * d * hit->w(); }
 
+  /// Calculate the y distance between a hit and the parametrised track
   float deltaY( PrHit* hit )   const {
     if ( hit->isX() ) return 0.;
     return distance( hit ) / hit->dxDy();
   }
 
-  bool valid()                  const { return m_valid; }
-  void setValid( bool v )             { m_valid = v; }
+  bool valid()                               const { return m_valid; }
+  void setValid( const bool v )                    { m_valid = v; }
 
-  void setChi2( float chi2, int nDoF ) { m_chi2 = chi2; m_nDoF = nDoF; }
-  float chi2()                  const { return m_chi2; }
-  float chi2PerDoF()            const { return m_chi2 / m_nDoF; }
-  int   nDoF()                  const { return m_nDoF; }
+  void setChi2( const float chi2, const int nDoF ) { m_chi2 = chi2; m_nDoF = nDoF; }
+  float chi2()                               const { return m_chi2; }
+  float chi2PerDoF()                         const { return m_chi2 / m_nDoF; }
+  int   nDoF()                               const { return m_nDoF; }
+  
+  
+  void setDXCoord( const float dxCoord )           { m_dXCoord = dxCoord; }
+  float dXCoord()                            const { return m_dXCoord; }
 
-  void setDXCoord( float dxCoord )    { m_dXCoord = dxCoord; }
-  float dXCoord()               const { return m_dXCoord; }
-
-  void setMeanDy( float meanDy )      { m_meanDy = meanDy; }
-  float meanDy()                const { return m_meanDy; }
+  void setMeanDy( const float meanDy )             { m_meanDy = meanDy; }
+  float meanDy()                             const { return m_meanDy; }
 
   void setHitsUnused() {
-    for ( PrHits::iterator itH = m_hits.begin(); m_hits.end() != itH; ++itH ) {
-      (*itH)->setUsed(false);
-    }
+    for ( PrHit* hit : m_hits ) hit->setUsed(false);
   }
 
+  /// Return number of stereo hits
   int nStereoHits() {
     int n = 0;
-    for ( PrHits::iterator itH = m_hits.begin(); m_hits.end() != itH; ++itH ) {
-      if ( !(*itH)->isX() ) ++n;
+    for ( PrHit* hit : m_hits ){
+      if ( !hit->isX() ) ++n;
     }
     return n;
   }
 
-  void  setQuality( float q )       { m_quality = q; }
-  float quality()             const { return m_quality; }
+  void  setQuality( const float q )               { m_quality = q; }
+  float quality()                           const { return m_quality; }
 
   struct LowerByQuality {
-    bool operator() (const PrForwardTrack lhs, const PrForwardTrack rhs ) const { return lhs.quality() < rhs.quality(); }
+    bool operator() (const PrForwardTrack& lhs, const PrForwardTrack& rhs ) const { return lhs.quality() < rhs.quality(); }
   };
   
-  void  setChi2AtMagnet( float chi2 )       { m_chi2AtMagnet = chi2; }
-  float chi2AtMagnet()                const { return m_chi2AtMagnet; }
+  void  setChi2AtMagnet( const float chi2 )       { m_chi2AtMagnet = chi2; }
+  float chi2AtMagnet()                      const { return m_chi2AtMagnet; }
 
 protected:
 
 private:
+
   void init() {
     m_valid = true;
     m_hits.reserve( 32 );
