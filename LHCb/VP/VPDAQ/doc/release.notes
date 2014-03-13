@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler 
+ - Follow changes in VPCluster format (revision r169999).
+
 ! 2014-03-06 - Kurt Rinnert
  - added encoder for Super Pixel raw bank from digits.
 

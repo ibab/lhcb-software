@@ -39,7 +39,7 @@ VPRawBankToPartialCluster::VPRawBankToPartialCluster(const std::string& name,
   initRawEventSearch();
     
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  LHCb::VPClusterLocation::VPClusterLocation);
+                  LHCb::VPClusterLocation::Default);
 }
 
 //=============================================================================
@@ -163,12 +163,11 @@ void VPRawBankToPartialCluster::createPartialCluster(
   achan_central.setModule(sensor);
   achan_central.setPixel( aPattern.pixel());
 
-  const std::vector< std::pair< LHCb::VPChannelID, int > >  vectorCHID;
+  const std::vector<LHCb::VPChannelID> vectorCHID;
 
   VPCluster* newCluster = new VPCluster(newLiteCluster,vectorCHID);
 
   clusCont->insert(newCluster,achan_central);
   
   if (achan_central.pixel()!=achan.pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;
-  return;
 }

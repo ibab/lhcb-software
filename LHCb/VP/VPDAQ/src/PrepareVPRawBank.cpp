@@ -40,7 +40,7 @@ PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
   , m_vPelDet(NULL)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  LHCb::VPClusterLocation::VPClusterLocation );
+                  LHCb::VPClusterLocation::Default);
   declareProperty("RawEventLocation", m_rawEventLocation =
                   LHCb::RawEventLocation::Default);
 }
@@ -179,15 +179,13 @@ void PrepareVPRawBank::makeBank(
   for(; iC != end; ++iC) {
     const LHCb::VPCluster* cluster = *iC;
     // Get vectors of active channelIDs and Tots
-    std::vector< std::pair<LHCb::VPChannelID,int> > totVec;
-    totVec = cluster->pixelHitVec();
+    std::vector<LHCb::VPChannelID> totVec = cluster->pixels();
     std::vector<LHCb::VPChannelID> activeChIDs; activeChIDs.clear();
     std::vector<int> ToTs; ToTs.clear();
-    for(std::vector< std::pair<LHCb::VPChannelID,int> >::iterator
+    for(std::vector<LHCb::VPChannelID>::iterator
         id = totVec.begin(); id != totVec.end(); id++) {
-      std::pair<LHCb::VPChannelID,int> pair = *id;
-      activeChIDs.push_back(pair.first);
-      ToTs.push_back(pair.second);
+      activeChIDs.push_back(*id);
+      ToTs.push_back(1);
     }
     // Pack LiteCluster
     double maxFract = 7; // 3 bits
