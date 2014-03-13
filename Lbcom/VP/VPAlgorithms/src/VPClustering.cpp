@@ -27,7 +27,7 @@ VPClustering::VPClustering(const std::string& name, ISvcLocator* pSvcLocator) :
 
   declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("LiteClusterContainer", m_liteClusterLocation = LHCb::VPLiteClusterLocation::Default);
-  declareProperty("VPClusterContainer",   m_clusterLocation     = LHCb::VPClusterLocation::VPClusterLocation);
+  declareProperty("VPClusterContainer",   m_clusterLocation     = LHCb::VPClusterLocation::Default);
 
 }
 
@@ -82,8 +82,8 @@ StatusCode VPClustering::execute() {
  
   std::vector<LHCb::VPDigits::const_iterator> cluster;
   cluster.reserve(100);
-  std::vector<std::pair<LHCb::VPChannelID, int> > totVec;
-  totVec.reserve(100);
+  std::vector<LHCb::VPChannelID> pixels;
+  pixels.reserve(100);
   // Keep track of used digits.
   std::vector<bool> isUsed(digits->size(), false);
   // Loop over digits.
@@ -167,11 +167,11 @@ StatusCode VPClustering::execute() {
     const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID());
     int sum = 0;
     const unsigned int nPixels = cluster.size();
-    totVec.resize(nPixels);
+    pixels.resize(nPixels);
     for (unsigned int i = 0; i < nPixels; ++i) {
       LHCb::VPChannelID channel = (*cluster[i])->channelID();
       const int tot = (*cluster[i])->ToTValue();
-      totVec[i] = std::make_pair(channel, tot);
+      pixels[i] = channel;
       sum += tot;
       Gaudi::XYZPoint pixel = vp_sensor->channelToPoint(channel, true);
       x += pixel.x() * tot;
@@ -201,7 +201,7 @@ StatusCode VPClustering::execute() {
     const VPLiteCluster newLiteCluster(id, 1, intFrac, isLong);
     liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
-    LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, totVec);
+    LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, pixels);
     clusters->insert(newCluster, id);
   }
   // Sort the lite clusters.

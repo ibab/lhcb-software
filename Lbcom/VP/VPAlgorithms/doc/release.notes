@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster format (revision r169999).
+
 !========================= VPAlgorithms v4r2p1 2014-02-18 ======================
 ! 2013-12-20 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
