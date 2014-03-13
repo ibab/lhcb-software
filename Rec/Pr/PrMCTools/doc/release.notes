@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster path (revision r169999).
+
 !========================= PrMCTools v2r0 2014-02-19 =========================
 ! 2014-02-14 - Michel De Cian
  - Update PrCounter to avoid FPE.

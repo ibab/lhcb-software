@@ -63,12 +63,9 @@ StatusCode PrCheatedVP::execute() {
   put( vTracks, LHCb::TrackLocation::Velo );
   
   const LHCb::MCParticles* partCont = get<LHCb::MCParticles>(LHCb::MCParticleLocation::Default);
-  LinkedFrom<ContainedObject,LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
-  LinkedTo<LHCb::MCHit, LHCb::VPCluster> links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation + "2MCHits" );
-  LinkedFrom<LHCb::VPCluster, MCParticle> link(evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation);
-//  LHCb::VPClusters* Clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation);
-//  LHCb::VPClusters::iterator iClus;
-  
+  LinkedFrom<ContainedObject,LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
+  LinkedTo<LHCb::MCHit, LHCb::VPCluster> links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default + "2MCHits" );
+  LinkedFrom<LHCb::VPCluster, MCParticle> link(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
 
   MCTrackInfo trackInfo( evtSvc(), msgSvc() );
   LHCb::MCHits* vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );

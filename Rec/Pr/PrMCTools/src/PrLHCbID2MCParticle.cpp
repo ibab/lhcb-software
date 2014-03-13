@@ -102,28 +102,28 @@ StatusCode PrLHCbID2MCParticle::execute() {
     }
   }
 
-  //== Velo Pixel
+  //== VP
 
-  if ( exist<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation ) ) {
-    LinkedTo<LHCb::MCParticle> vPLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
-    m_detectorLink = &vPLink;
-    LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::VPClusterLocation );
+  if (exist<LHCb::VPClusters>(LHCb::VPClusterLocation::Default)) {
+    LinkedTo<LHCb::MCParticle> vpLink(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
+    m_detectorLink = &vpLink;
+    LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
     LHCb::VPClusters::const_iterator iClus;
-    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+    for (iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
       LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
-      int id            = myId.vpID();
-      linkAll( myId, id );
+      int id = myId.vpID();
+      linkAll(myId, id);
     }
-  } else if ( exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default) ) {    
-    LinkedTo<LHCb::MCParticle> veloLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
-    m_detectorLink = &veloLink;
+  } else if (exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default)) {    
+    LinkedTo<LHCb::MCParticle> vpLink(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
+    m_detectorLink = &vpLink;
     LHCb::VPLiteCluster::VPLiteClusters* clusters = 
       get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
     LHCb::VPLiteCluster::VPLiteClusters::const_iterator iClus;
-    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
-      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
-      int id            = myId.vpID();
-      linkAll( myId, id );
+    for (iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
+      LHCb::LHCbID myId = LHCb::LHCbID((*iClus).channelID());
+      int id = myId.vpID();
+      linkAll(myId, id);
     }
   }
 

@@ -7,7 +7,7 @@
 #include "Event/VPCluster.h"
 
 /** @class PrCheatedVP PrCheatedVP.h
- *  Cheated Pattern for the Velo
+ *  Cheated pattern recognition for the upgraded VELO
  *
  *  @author Olivier Callot
  *  @date   2012-07-26
