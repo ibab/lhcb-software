@@ -29,7 +29,7 @@ VPClusterMonitor::VPClusterMonitor(const std::string& name,
     GaudiHistoAlg(name, pSvcLocator),
     m_radDamageTool(NULL), m_vpDet(NULL) {
 
-  declareProperty("ClusterLocation", m_clusterCont = LHCb::VPClusterLocation::VPClusterLocation);
+  declareProperty("ClusterLocation", m_clusterCont = LHCb::VPClusterLocation::Default);
   declareProperty("MCHitLocation", m_hitCont = LHCb::MCHitLocation::VP);
   declareProperty("DataTaken", m_dataTaken = 0.);
   declareProperty("Irradiated", m_irradiated = false);
@@ -83,7 +83,7 @@ void VPClusterMonitor::loopClusters() {
   }
   // Get cluster iterator and link to MC hits
   LHCb::VPClusters::const_iterator itc;
-  LinkedTo<LHCb::MCHit, LHCb::VPCluster> links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation + "2MCHits");
+  LinkedTo<LHCb::MCHit, LHCb::VPCluster> links = LinkedTo<LHCb::MCHit, LHCb::VPCluster>(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default + "2MCHits");
   // Loop over clusters  
   for (itc = m_clusters->begin(); itc != m_clusters->end(); itc++) {
     LHCb::VPCluster* cluster = *itc;
@@ -91,33 +91,31 @@ void VPClusterMonitor::loopClusters() {
     // Get sensor
     const DeVPSensor* sensor = m_vpDet->sensorOfChannel(lCluster.channelID());
     // Set up some objects for later use
-    std::vector<std::pair<LHCb::VPChannelID, int> > totVec = cluster->pixelHitVec();
+    std::vector<LHCb::VPChannelID> pixels = cluster->pixels();
     int clustToT = 0;
     double cluster_x(0), cluster_y(0), cluster_z(0), pix1ToT(0), pix2ToT(0), pixel_x(0); 
     std::vector<double> xvalues;
     // Loop over pixel hits
-    for (unsigned int it = 0; it < totVec.size(); ++it) {
-      clustToT += totVec[it].second;
+    for (unsigned int it = 0; it < pixels.size(); ++it) {
+      clustToT += 1;
       // Enter pixel values for eta distribution plots
-      if (it == 0 && totVec.size() == 2) pix1ToT = totVec[it].second;
-      if (it == 1 && totVec.size() == 2) pix2ToT = totVec[it].second;
+      if (it == 0 && pixels.size() == 2) pix1ToT = 1;
+      if (it == 1 && pixels.size() == 2) pix2ToT = 1;
       // Get XYZ of pixel
-      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[it].first, false);
+      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(pixels[it], false);
       // Get pixel radius
       double radius = pointGlobal.rho();
       // Plot pixel information
       plot(radius, "pixel_radius", 0, 100, 200);
-      plot(totVec[it].second, "single_pixel_tot", 0, 50, 50);
-      plot2D(radius, totVec[it].second, "single_pixel_tot_versus_r", 0, 100, 0, 50, 200, 50);
       plot2D(pointGlobal.x(), pointGlobal.y(), "xy_map_pixels", -100, 100, -100, 100, 400, 400);
       plot2D(pointGlobal.z(), pointGlobal.x(), "xz_map_pixels", -500, 1000, -100, 100, 1000, 400);
       plot2D(pointGlobal.z(), pointGlobal.y(), "yz_map_pixels", -500, 1000, -100, 100, 1000, 400);
       // Get info for eta distribution
       pixel_x = pointGlobal.x();
       // Make cluster information
-      cluster_x += totVec[it].second * pointGlobal.x();
-      cluster_y += totVec[it].second * pointGlobal.y();
-      cluster_z += totVec[it].second * pointGlobal.z();
+      cluster_x += pointGlobal.x();
+      cluster_y += pointGlobal.y();
+      cluster_z += pointGlobal.z();
       // Information about cluster width
       bool newX = true;
       for (unsigned int j = 0; j < xvalues.size(); ++j) {
@@ -133,18 +131,18 @@ void VPClusterMonitor::loopClusters() {
     // Plot where the cluster is
     double cluster_radius = sqrt(cluster_x * cluster_x + cluster_y * cluster_y);
     
-    plot(totVec.size(), "global_cluster_size", 0, 100, 100);
+    plot(pixels.size(), "global_cluster_size", 0, 100, 100);
     plot(cluster_radius, "cluster_radius", 0, 100, 200);
     plot(clustToT, "cluster_tot", 0, 50, 50);
     plot2D(cluster_radius, clustToT, "cluster_tot_versus_r", 0, 100, 0, 50, 200, 50);
-    plot2D(cluster_radius, totVec.size(), "cluster_size_versus_r", 0, 100, 0, 100, 200, 100);
+    plot2D(cluster_radius, pixels.size(), "cluster_size_versus_r", 0, 100, 0, 100, 200, 100);
     plot2D(cluster_x, cluster_y, "xy_map_clusters", -100, 100, -100, 100, 400, 400);
     plot2D(cluster_z, cluster_x, "xz_map_clusters", -500, 1000, -100, 100, 1000, 400);
     plot2D(cluster_z, cluster_y, "yz_map_clusters", -500, 1000, -100, 100, 1000, 400);
     plot(lCluster.interPixelFractionX(), "interpixel_fraction_x",-0.1,1.1,120);
     plot(lCluster.interPixelFractionY(), "interpixel_fraction_y",-0.1,1.1,120);
     // Check if 2 pixels wide in x
-    if (totVec.size() == 2 && cluster_x != pixel_x) {
+    if (pixels.size() == 2 && cluster_x != pixel_x) {
       // Plot eta distributions
       plot(pix1ToT/(pix1ToT+pix2ToT), "eta_distribution_pix1", 0, 1, 100);
       plot(pix2ToT/(pix1ToT+pix2ToT), "eta_distribution_pix2", 0, 1, 100);
@@ -184,22 +182,22 @@ void VPClusterMonitor::loopClusters() {
       // Plot XY residuals
       plot(dx, "x_residuals",-0.2,0.2,4000);
       plot(dy, "y_residuals",-0.2,0.2,4000);
-      if (1 == totVec.size()) {
+      if (1 == pixels.size()) {
         plot(dx, "x_residuals1", -0.2, 0.2, 4000);
         plot(dy, "y_residuals1", -0.2, 0.2, 4000);
-      } else if (2 == totVec.size()) {
+      } else if (2 == pixels.size()) {
         plot(dx, "x_residuals2", -0.2, 0.2, 4000);
         plot(dy, "y_residuals2", -0.2, 0.2, 4000);
       }
       plot2D(xangle, dx, "x_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
       plot2D(xangle, dy, "y_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
-      plot2D(xangle, totVec.size(), "cluster_size_versus_track_angle_x", -30., 30., 0, 20, 120, 20);
+      plot2D(xangle, pixels.size(), "cluster_size_versus_track_angle_x", -30., 30., 0, 20, 120, 20);
       plot2D(xangle, xvalues.size(), "cluster_widthx_versus_track_angle_x", -30., 30., 0, 20, 120, 20);
       // Plot the same for small y angles
       if (yangle < 2 && yangle > -2) {
         plot2D(xangle, dx, "x_residuals_versus_track_angle_x_small_y", -30., 30., -0.2, 0.2, 120, 400);
         plot2D(xangle, dy, "y_residuals_versus_track_angle_x_small_y", -30., 30., -0.2, 0.2, 120, 400);
-        plot2D(xangle, totVec.size(), "cluster_size_versus_track_angle_x_small_y", -30., 30., 0, 20, 120, 20);
+        plot2D(xangle, pixels.size(), "cluster_size_versus_track_angle_x_small_y", -30., 30., 0, 20, 120, 20);
         plot2D(xangle, xvalues.size(), "cluster_widthx_versus_track_angle_x_small_y", -30., 30., 0, 20, 120, 20);
       }      
     } // End of hit information

@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster format and path (revision r169999).
+
 !========================= VPDigitisation v1r2 2013-12-10 =========================
 ! 2013-12-05 - Heinrich Schindler
  - Remove OldVPxxx algorithms
