@@ -19,6 +19,7 @@
 // Kernel
 // ============================================================================
 #include "Kernel/OSiterator.h"
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 // CaloDet
 // ============================================================================
@@ -251,7 +252,7 @@ StatusCode DeCalorimeter::initialize()
       } 
     }
     // Check gain
-    if(nGain > 0)msg << MSG::INFO << "Found " << nGain << " channel(s) with null gain " << endmsg;
+    if(nGain > 0)msg << MSG::DEBUG << "Found " << nGain << " channel(s) with null gain " << endmsg;
     // Verbosity 
     if( UNLIKELY( msg3.level() <= MSG::VERBOSE ) )
       msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
@@ -1272,11 +1273,12 @@ StatusCode DeCalorimeter::getQuality( )  {
       msg << MSG::WARNING << "Trying to add quality on non-valid channel : " << id << endmsg;
     }
   }
-  if( UNLIKELY( msg.level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msg.level() <= MSG::DEBUG ) ){
     msg << MSG::DEBUG << "Quality constant added for " << count << " channel(s) " << endmsg;
-  if(bad>0)msg << MSG::INFO << "Found  " << bad << " problematic readout channel(s)" << endmsg;
-  if(masked>0)msg << MSG::INFO << "Found  " << masked << " channel(s) to be masked offline " << endmsg;
-  if(badLED>0)msg << MSG::INFO << "Found  " << badLED << " channel(s) with 'LED monitoring problem'" << endmsg;
+    if(bad>0   )msg << MSG::DEBUG << "Found  " << bad<< " problematic readout channel(s)"<<endmsg;
+    if(masked>0)msg << MSG::DEBUG << "Found  " << masked << " channel(s) to be masked offline " << endmsg;
+    if(badLED>0)msg << MSG::DEBUG << "Found  " << badLED << " channel(s) with 'LED monitoring problem'" << endmsg;
+  }
   return StatusCode::SUCCESS;  
 }
 
@@ -1551,7 +1553,7 @@ StatusCode DeCalorimeter::updGain(){
     // ** update gain/channel with theoretical value (if needed)
     if (!nominal){    
       if(  m_caloDet == "EcalDet" ||  m_caloDet == "HcalDet" ) 
-        msg << MSG::INFO << "Apply theoretical nominal gain as EtInCenter+sin(Theta)*EtSlope" << endmsg;
+        msg << MSG::DEBUG << "Apply theoretical nominal gain as EtInCenter+sin(Theta)*EtSlope" << endmsg;
       count=0;
       for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;m_cells.end() != pCell ; ++pCell ) {
         LHCb::CaloCellID id       = pCell->cellID();

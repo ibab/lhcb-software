@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+! 2014-03-13 - Olivier Deschamps
+  - DeCalorimeter.cpp : reduce INFO verbosity
+
 !========================= CaloDet v10r18 2014-02-17 =========================
 ! 2014-02-11 - Olivier Deschamps
   - DeCalorimeter.cpp : fix floating point exception in the initialize()
