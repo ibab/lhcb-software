@@ -210,8 +210,7 @@ StatusCode LHCbIDsToMCParticles::linkVP(const LHCbID& lhcbid, LinkMap& output) c
 
   if (!m_configuredVP){
     m_configuredVP = true;
-    m_vpLinks = VPLinks(evtSvc(), msgSvc(),
-                            LHCb::VPClusterLocation::VPClusterLocation);
+    m_vpLinks = VPLinks(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
     if (m_vpLinks.notFound()) {
       return Error("no VPLinker",StatusCode::FAILURE,10);
     }

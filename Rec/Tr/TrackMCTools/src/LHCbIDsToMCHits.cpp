@@ -206,7 +206,7 @@ void LHCbIDsToMCHits::linkVP(const LHCbID& lhcbid, LinkMap& output) const{
 
   if (!m_configuredVP){
     m_configuredVP = true;
-    m_vPLinks = VPLinks( evtSvc(), msgSvc(),LHCb::VPClusterLocation::VPClusterLocation+m_endString);
+    m_vPLinks = VPLinks( evtSvc(), msgSvc(),LHCb::VPClusterLocation::Default+m_endString);
     if (m_vPLinks.notFound()) {
       throw GaudiException("no vPLinker", "LHCbIDsToMCHits" ,
                            StatusCode::FAILURE);

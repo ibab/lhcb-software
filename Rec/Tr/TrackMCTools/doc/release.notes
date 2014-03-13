@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster format and path (revision r169999).
+
 !========================= TrackMCTools v3r7 2014-02-19 =======================
 ! 2014-02-18 Maurizio Martinelli
  - Protected against an FPE exception due to division by zero.

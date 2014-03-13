@@ -146,7 +146,7 @@ StatusCode DebugTrackingLosses::execute() {
   if ( m_ghost ) {
     LinkedTo<LHCb::MCParticle>     vTrLink( evtSvc(), msgSvc(), veloTrack );
     LinkedTo<LHCb::MCParticle>       vLink( evtSvc(), msgSvc(), LHCb::VeloClusterLocation::Default );
-    LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+    LinkedTo<LHCb::MCParticle>      pxLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
     LinkedTo<LHCb::MCParticle>      ttLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::TTClusters);
     LinkedTo<LHCb::MCParticle>      itLink( evtSvc(), msgSvc(), LHCb::STClusterLocation::ITClusters);
     LinkedTo<LHCb::MCParticle>      otLink( evtSvc(), msgSvc(), LHCb::OTTimeLocation::Default);

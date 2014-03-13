@@ -43,7 +43,7 @@ PatPixelDebugTool::~PatPixelDebugTool() {}
 //=========================================================================
 bool PatPixelDebugTool::matchKey( LHCb::LHCbID& id, int key ) {
 
-  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
 
   LHCb::VPChannelID idV = id.vpID();
   
@@ -58,7 +58,7 @@ bool PatPixelDebugTool::matchKey( LHCb::LHCbID& id, int key ) {
 //  Print the list of MCParticle keys associated to the specified LHCbID
 //=========================================================================
 void PatPixelDebugTool::printKey( MsgStream& msg, LHCb::LHCbID& id ) {
-  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::VPClusterLocation );
+  LinkedTo<LHCb::MCParticle> vLink( evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
 
   LHCb::VPChannelID idV = id.vpID();
   LHCb::MCParticle* part = vLink.first( idV );
