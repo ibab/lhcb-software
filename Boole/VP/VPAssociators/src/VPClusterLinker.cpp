@@ -1,13 +1,15 @@
-// from Gaudi
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
-// Linker
+// LHCb
+// Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
 #include "Linker/LinkerTool.h"
-// Event
+// Event/DigiEvent
 #include "Event/VPCluster.h"
 #include "Event/VPLiteCluster.h"
+// Event/MCEvent
 #include "Event/MCTruth.h"
-// LHCbKernel
+// Kernel/LHCbKernel
 #include "Kernel/VPChannelID.h"
 // Local
 #include "VPClusterLinker.h"
@@ -27,15 +29,15 @@ VPClusterLinker::VPClusterLinker(const std::string& name,
 
 
   declareProperty("ClusterLocation", m_clusterLocation = 
-                  LHCb::VPClusterLocation::VPClusterLocation);
+                  LHCb::VPClusterLocation::Default);
   declareProperty("DigitLocation", m_digitLocation =
-                  LHCb::VPDigitLocation::VPDigitLocation );
+                  LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("AsctLocation", m_asctLocation =
                   LHCb::VPDigitLocation::VPDigitLocation + "2MCHits");
   declareProperty("HitLinkLocation", m_hitLinkLocation = 
-                  LHCb::VPClusterLocation::VPClusterLocation + "2MCHits");
+                  LHCb::VPClusterLocation::Default + "2MCHits");
   declareProperty("ParticleLinkLocation", m_particleLinkLocation = 
-                  LHCb::VPClusterLocation::VPClusterLocation);
+                  LHCb::VPClusterLocation::Default);
 
 }
 
@@ -79,12 +81,11 @@ StatusCode VPClusterLinker::execute() {
     std::map<const MCHit*, double> hitMap;
     std::map<const LHCb::MCParticle*, double> particleMap;
     // Get the pixels in the cluster.
-    std::vector<std::pair<VPChannelID, int> > pixels = (*itc)->pixelHitVec();
+    std::vector<VPChannelID> pixels = (*itc)->pixels();
     double sum = 0.;
-    std::vector<std::pair<VPChannelID, int> >::iterator itp;
+    std::vector<VPChannelID>::iterator itp;
     for (itp = pixels.begin(); itp != pixels.end(); ++itp) {
-      VPChannelID channel = (*itp).first;
-      VPDigit* digit = digits->object(channel);
+      VPDigit* digit = digits->object(*itp);
       if (!digit) continue;
       LinkerTool<VPDigit, MCHit>::DirectType::Range hits = table->relations(digit);
       LinkerTool<VPDigit, MCHit>::DirectType::iterator ith;

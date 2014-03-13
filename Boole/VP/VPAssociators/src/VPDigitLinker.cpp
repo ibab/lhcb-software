@@ -31,7 +31,7 @@ VPDigitLinker::VPDigitLinker(const std::string& name,
   declareProperty("HitLinkLocation", m_hitLinkLocation =  
                   VPDigitLocation::VPDigitLocation + "2MCHits");
   declareProperty("ParticleLinkLocation", m_particleLinkLocation = 
-                  VPDigitLocation::VPDigitLocation + "2MCParticles");
+                  VPDigitLocation::VPDigitLocation);
 
 }
 

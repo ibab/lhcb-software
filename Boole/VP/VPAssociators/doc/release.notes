@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster format (revision r169999).
+
 !========================= VPAssociators v2r4 2014-02-19 =======================
 ! 2014-02-09 - Heinrich Schindler
  - Remove old linker algorithms
