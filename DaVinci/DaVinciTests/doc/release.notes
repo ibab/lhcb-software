@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Chris Jones
+ - Update stripping test reference logs to adapt to new LoKiSvc.REPORT
+   messages that now include the algorithm context.
+
 ! 2014-03-12 - Rob Lambert
  - fix small bug in davinci-smallfiles, see bug #104079
 
