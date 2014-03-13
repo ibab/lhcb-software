@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-13 - Chris Jones
+ - Enable PrintMyAlg for FastVertexFitter as well...
+
 !========================= LoKiFitters v4r9 2014-02-23 =========================
 
 ! 2014-02-21 - Chris Jones
