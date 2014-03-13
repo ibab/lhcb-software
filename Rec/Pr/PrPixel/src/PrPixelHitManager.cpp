@@ -27,7 +27,7 @@ PrPixelHitManager::PrPixelHitManager(const std::string& type,
   , m_useSlopeCorrection(false)
   , m_maxClusterSize(4)
   , m_trigger(false)
-  , m_clusterLocation(LHCb::VPClusterLocation::VPClusterLocation)
+  , m_clusterLocation(LHCb::VPClusterLocation::Default)
 {
   declareInterface<PrPixelHitManager>(this);
 }
@@ -816,7 +816,7 @@ void PrPixelHitManager::storeTriggerClusters() {
   // is not possible in trigger configuration.
   // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
   // false and the code still uses the old event model.
-  std::vector< std::pair<LHCb::VPChannelID,int> > pixels(1);
+  std::vector<LHCb::VPChannelID> pixels(1);
   for (unsigned int ih=0; ih < m_nHits; ++ih) {
     const PrPixelHit& hit = m_pool[ih];
     const LHCb::VPChannelID cid = hit.id().vpID();
@@ -834,7 +834,7 @@ void PrPixelHitManager::storeTriggerClusters() {
     const double fx = m_xFractions[ih];
     const double fy = m_yFractions[ih];
     const LHCb::VPLiteCluster lc(cid,1,std::make_pair(fx,fy),false);
-    pixels[0] = std::make_pair(cid,1);
+    pixels[0] = cid;
     clusters->insert(new LHCb::VPCluster(lc,pixels)); 
   }
 
@@ -856,7 +856,7 @@ void PrPixelHitManager::storeOfflineClusters() {
   // However, MC matching will work consistently in both cases.
   // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
   // false and the code still uses the old event model.
-  std::vector< std::pair<LHCb::VPChannelID,int> > pixels;
+  std::vector<LHCb::VPChannelID> pixels;
   for (unsigned int ic=0; ic < m_nClusters; ++ic) {
     const PrPixelHit& hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
@@ -877,7 +877,7 @@ void PrPixelHitManager::storeOfflineClusters() {
     pixels.clear();
     const std::vector<LHCb::VPChannelID>& cids = m_channelIDs[ic];
     for (unsigned int iID=0; iID < cids.size(); ++iID) {
-      pixels.push_back(std::make_pair(cids[iID],1));
+      pixels.push_back(cids[iID]);
     }
     clusters->insert(new LHCb::VPCluster(lc,pixels)); 
   }

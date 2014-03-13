@@ -21,7 +21,7 @@ PrPixelClustering::PrPixelClustering(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator)
   , m_isDebug(false)
 {
-  declareProperty("ClusterLocation", m_clusterLocation = LHCb::VPClusterLocation::VPClusterLocation);
+  declareProperty("ClusterLocation", m_clusterLocation = LHCb::VPClusterLocation::Default);
 }
 
 //=============================================================================
