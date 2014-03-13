@@ -68,10 +68,10 @@ protected:
   
   void computeAcceptance ( std::vector<int>& station ) ;
 
-  ///< method for sorting the VP clusters. Should be in the VPCluster class!
+  ///< method for sorting the VP digits. Should be in the VPDigit class!
   struct increasingModule {
-     bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
-       return clust1->channelID().module() < clust2->channelID().module();
+     bool operator() (LHCb::VPDigit* d1, LHCb::VPDigit* d2 ) const{
+       return d1->channelID().module() < d2->channelID().module();
      }
   };
 

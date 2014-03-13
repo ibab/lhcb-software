@@ -6,7 +6,7 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
-#include "Event/VPCluster.h"
+#include "Event/VPDigit.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h" /// Needed for path of table
 #include "Event/MCOTTime.h"
@@ -175,30 +175,32 @@ StatusCode BuildMCTrackInfo::execute() {
       }
     }
   } else if ( m_withVP ) {
-    LHCb::VPClusters* veloPixClus = get<LHCb::VPClusters>( LHCb::VPClusterLocation::VPClusterLocation);
-    LinkedTo<LHCb::MCParticle, LHCb::VPCluster> veloPixLink( eventSvc(), msgSvc(),
-                                                             LHCb::VPClusterLocation::VPClusterLocation );
-    if( veloPixLink.notFound() ) return StatusCode::FAILURE;
+    LHCb::VPDigits* digits = get<LHCb::VPDigits>(LHCb::VPDigitLocation::VPDigitLocation);
+    LinkedTo<LHCb::MCParticle, LHCb::VPDigit> vpLink(eventSvc(), msgSvc(),
+                                                     LHCb::VPDigitLocation::VPDigitLocation);
+    if (vpLink.notFound()) return StatusCode::FAILURE;
     
-    std::sort( veloPixClus->begin(), veloPixClus->end(), increasingModule() );  //== Sorting not done in decoding!
-    for ( LHCb::VPClusters::const_iterator vIt = veloPixClus->begin() ;
-          veloPixClus->end() != vIt ; vIt++ ) {
+    std::sort(digits->begin(), digits->end(), increasingModule());
+    for (LHCb::VPDigits::const_iterator vIt = digits->begin();
+         digits->end() != vIt; ++vIt) {
       int module = (*vIt)->channelID().module();
-      part = veloPixLink.first( *vIt );
-      while ( NULL != part ) {
-        if ( mcParts == part->parent() ) {
+      part = vpLink.first(*vIt);
+      while (NULL != part) {
+        if (mcParts == part->parent()) {
           MCNum = part->key();
-          // PSZ - clone code from BuildMCTrackWithVPInfo
-          if (veloPix.size() > MCNum ) {
-            if (module != lastVelo[MCNum]) {  // Count only once per module a given MCParticle
+          if (veloPix.size() > MCNum) {
+            if (module != lastVelo[MCNum]) {  
+              // Count only once per module a given MCParticle
               lastVelo[MCNum] = module;
               veloPix[MCNum]++;
-              if(isVerbose)  
-                verbose() << "MC " << MCNum << " VP module " << module << " nbVP " << veloPix[MCNum] << endmsg;
+              if (isVerbose) { 
+                verbose() << "MC " << MCNum << " VP module " << module 
+                          << " nbVP " << veloPix[MCNum] << endmsg;
+              }
             }
           }
         }
-        part = veloPixLink.next() ;
+        part = vpLink.next() ;
       }
     }
   }

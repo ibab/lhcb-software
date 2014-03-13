@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Heinrich Schindler
+ - Follow changes in VPCluster format (revision r169999).
+
 !========================= DigiAlg v5r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL support
