@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-03-13 - Kurt Rinnert
+ - Store 3D point information when creating VPClusters.
+
 ! 2014-03-13 - Heinrich Schindler
  - Follow changes in VPCluster format and path (revision r169999).
 

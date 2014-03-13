@@ -321,13 +321,13 @@ void PrPixelHitManager::clearHits() {
   for (itm = m_module_pool.begin(); m_module_pool.end() != itm; ++itm) {
     (*itm).reset();
   }
-  m_nHits = 0;
   if (!m_trigger) {
-    for (unsigned int i=0; i<m_channelIDs.size(); ++i) {
+    for (unsigned int i=0; i<m_nClusters; ++i) {
       m_channelIDs[i].clear();
     }
     m_nClusters = 0;
   }
+  m_nHits = 0;
   m_eventReady = false;
 }
 
@@ -820,6 +820,9 @@ void PrPixelHitManager::storeTriggerClusters() {
   for (unsigned int ih=0; ih < m_nHits; ++ih) {
     const PrPixelHit& hit = m_pool[ih];
     const LHCb::VPChannelID cid = hit.id().vpID();
+    const double x = hit.x();
+    const double y = hit.y();
+    const double z = hit.z();
 
     // It is possible that two clusters have the same centroid
     // channel ID. This is extremely rare but we have to protect
@@ -835,7 +838,7 @@ void PrPixelHitManager::storeTriggerClusters() {
     const double fy = m_yFractions[ih];
     const LHCb::VPLiteCluster lc(cid,1,std::make_pair(fx,fy),false);
     pixels[0] = cid;
-    clusters->insert(new LHCb::VPCluster(lc,pixels)); 
+    clusters->insert(new LHCb::VPCluster(lc,x,y,z,pixels)); 
   }
 
   return;
@@ -860,6 +863,9 @@ void PrPixelHitManager::storeOfflineClusters() {
   for (unsigned int ic=0; ic < m_nClusters; ++ic) {
     const PrPixelHit& hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
+    const double x = hit.x();
+    const double y = hit.y();
+    const double z = hit.z();
 
     // It is possible that two clusters have the same centroid
     // channel ID. This is extremely rare but we have to protect
@@ -879,7 +885,7 @@ void PrPixelHitManager::storeOfflineClusters() {
     for (unsigned int iID=0; iID < cids.size(); ++iID) {
       pixels.push_back(cids[iID]);
     }
-    clusters->insert(new LHCb::VPCluster(lc,pixels)); 
+    clusters->insert(new LHCb::VPCluster(lc,x,y,z,pixels)); 
   }
 
   return;
