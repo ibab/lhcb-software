@@ -1,5 +1,5 @@
-#ifndef PRPIXELCLUSTERING_H 
-#define PRPIXELCLUSTERING_H 1
+#ifndef PRPIXELSTORECLUSTERS_H 
+#define PRPIXELSTORECLUSTERS_H 1
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -11,9 +11,9 @@
 
 #include "PrPixelHitManager.h"
 
-/** @class PrPixelClustering
+/** @class PrPixelStoreClusters
  *
- *  Create clusters from raw bank.
+ *  Store clusters created in the hit manager on the TES.
  *
  *  This is meant to run after the pattern recognition. It calls
  *  into the PrPixelHitManager to store the clusters. So not much 
@@ -24,14 +24,14 @@
  *  @date   2014-02-26
  */
 
-class PrPixelClustering : public GaudiAlgorithm {
+class PrPixelStoreClusters : public GaudiAlgorithm {
 
 public:
 
   /// Standard constructor
-  PrPixelClustering(const std::string& name,
+  PrPixelStoreClusters(const std::string& name,
                               ISvcLocator* pSvcLocator);
-  virtual ~PrPixelClustering();    ///< Destructor
+  virtual ~PrPixelStoreClusters();    ///< Destructor
   virtual StatusCode initialize(); ///< Algorithm initialization
   virtual StatusCode execute   (); ///< Algorithm execution
 
@@ -47,4 +47,4 @@ private:
   bool m_isDebug; 
 };
 
-#endif // PRPIXELCLUSTERING_H
+#endif // PRPIXELSTORECLUSTERS_H

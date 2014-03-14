@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-03-14 - Kurt Rinnert
+ - named cluster storing algorithm more aptly.
+
 ! 2014-03-13 - Kurt Rinnert
  - Store 3D point information when creating VPClusters.
 

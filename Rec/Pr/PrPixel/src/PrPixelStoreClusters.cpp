@@ -2,21 +2,21 @@
 
 #include "Event/VPCluster.h"
 
-#include "PrPixelClustering.h"
+#include "PrPixelStoreClusters.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PrPixelClustering
+// Implementation file for class : PrPixelStoreClusters
 //
 // 2014-02-26 : Kurt Rinnert
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(PrPixelClustering)
+DECLARE_ALGORITHM_FACTORY(PrPixelStoreClusters)
 
 //=============================================================================
 // Constructor
 //=============================================================================
-PrPixelClustering::PrPixelClustering(const std::string& name,
+PrPixelStoreClusters::PrPixelStoreClusters(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
   , m_isDebug(false)
@@ -27,12 +27,12 @@ PrPixelClustering::PrPixelClustering(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrPixelClustering::~PrPixelClustering(){}
+PrPixelStoreClusters::~PrPixelStoreClusters(){}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode PrPixelClustering::initialize() {
+StatusCode PrPixelStoreClusters::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
@@ -47,7 +47,7 @@ StatusCode PrPixelClustering::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode PrPixelClustering::execute() {
+StatusCode PrPixelStoreClusters::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
 
   m_hitManager->storeClusters();
