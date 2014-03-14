@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
 - Changes to references to follow changes in underlying packages
   . Correct for GEANT/inhouse dedx differences (VeloSimulation)
+  . Reduced verbosity in Calo initialisation (CaloDet)
 
 - Configuration changes
   . Replaced call to VeloSim.opts with VeloSim.py in Boole configurable
