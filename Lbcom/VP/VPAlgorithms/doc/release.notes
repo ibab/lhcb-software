@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2014-03-14 - Hella Snoek
+ - bugfix in clustering routine. changed two break statements to continue
+
 ! 2014-03-13 - Heinrich Schindler
  - Follow changes in VPCluster format (revision r169999).
 

@@ -128,7 +128,7 @@ StatusCode VPClustering::execute() {
             if (chip != (*iCand)->channelID().chip()) break;  // Next hit not on same chip
             // Skip pixels not neighbouring in y.
             if (abs(row - (*iCand)->channelID().row()) > 1) continue;
-            if (abs(col - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
+            if (abs(col - (*iCand)->channelID().col()) > 1) continue; // Too far away to be added
             // Add pixel and tag it as used.
             cluster.push_back(iCand);
             isUsed[iCand - itBegin] = true;
@@ -140,7 +140,7 @@ StatusCode VPClustering::execute() {
               // On the same chip
               // Skip pixels not neighbouring in y.
               if (abs(row - (*iCand)->channelID().row()) > 1) continue;
-              if (abs(col - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
+              if (abs(col - (*iCand)->channelID().col()) > 1) continue; // Too far away to be added
               // Add pixel and tag it as used.
               cluster.push_back(iCand);
               isUsed[iCand - itBegin] = true;
