@@ -99,7 +99,7 @@ float PrGeometryTool::xAtReferencePlane( PrForwardTrack& track, PrHit* hit ) {
 //=========================================================================
 //  Set the parameters of the track, from the (average) x at reference
 //=========================================================================
-void PrGeometryTool::setTrackParameters ( PrForwardTrack& track, float xAtRef ) {
+void PrGeometryTool::setTrackParameters ( PrForwardTrack& track, const float xAtRef ) {
   float dSlope  = ( track.xFromVelo(m_zReference) - xAtRef ) / ( m_zReference - m_zMagnetParams[0]);
   float zMag    = zMagnet( track ) + m_zMagnetParams[1] * dSlope * dSlope;
   float xMag    = track.xFromVelo( zMag );
@@ -122,14 +122,16 @@ void PrGeometryTool::setTrackParameters ( PrForwardTrack& track ) {
   if ( track.hits().size() == 0 ) return;
   
   float xAtRef = 0.;
-  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+  PrHits::const_iterator itEnd = track.hits().end();
+  for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
     xAtRef += xAtReferencePlane( track, *itH );
   }
   xAtRef /= track.hits().size();
   setTrackParameters( track, xAtRef );
   float s0 = 0.;
   float sd = 0.;
-  for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+
+  for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
     if ( fabs( (*itH)->dxDy() ) > 0.001 ) {
       float d = -track.deltaY( *itH ) * m_zReference / (*itH)->z();
       float w = (*itH)->w();
@@ -146,10 +148,9 @@ void PrGeometryTool::setTrackParameters ( PrForwardTrack& track ) {
 //  Returns an approximation of the Z at centre of magnet
 //=========================================================================
 float PrGeometryTool::zMagnet ( const PrForwardTrack& track ) {
-  float zMagnet    = ( m_zMagnetParams[0] +
-                       m_zMagnetParams[2] * track.slX2() +
-                       m_zMagnetParams[3] * track.slY2() );
-  return zMagnet;
+  return ( m_zMagnetParams[0] +
+           m_zMagnetParams[2] * track.slX2() +
+           m_zMagnetParams[3] * track.slY2() );
 }
 
 //=========================================================================
@@ -219,7 +220,7 @@ float PrGeometryTool::qOverP ( const PrSeedTrack& track) {
 //=========================================================================
 //  Default covariance matrix: Large errors as input to Kalman fitter.
 //=========================================================================
-Gaudi::TrackSymMatrix PrGeometryTool::covariance ( float qOverP ) {
+Gaudi::TrackSymMatrix PrGeometryTool::covariance ( const float qOverP ) {
   Gaudi::TrackSymMatrix cov;
   cov(0,0) = m_covarianceValues[0];
   cov(1,1) = m_covarianceValues[1];

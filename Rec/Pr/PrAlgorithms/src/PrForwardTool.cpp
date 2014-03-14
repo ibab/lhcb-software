@@ -100,6 +100,8 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
 
     //== Collect all hits and project them
     collectAllXHits( track, side );
+
+    // -- > Debug --------
     if ( m_debug ) {
       float xWindow = m_maxXWindow + fabs( track.xFromVelo( m_geoTool->zReference() )) * m_maxXWindowSlope;
       info() << "**** Processing Velo track " << velo->key() << " zone " << side
@@ -108,11 +110,13 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
         if ( matchKey( *itH ) ) printHit( *itH, " " );
       }
     }
+    // -- < Debug --------
 
     //== Select groups and make temporary tracks
     selectXCandidates( track );
   }
 
+  // -- > Debug --------
   if ( m_debug ) {
     info() << endmsg
            << "=============== Selected " << m_trackCandidates.size() << " candidates."
@@ -123,6 +127,7 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
       if ( (*itT).valid() ) printTrack( *itT );
     }
   }
+  // -- < Debug --------
 
   int nbOK = 0;
 
@@ -130,18 +135,25 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
         m_trackCandidates.end() != itT; ++itT ) {
     if ( !(*itT).valid() ) continue;
     collectStereoHits( *itT );
+    
+    // -- > Debug --------
     if ( m_debug ) {
       info() << "**** Stereo hits for track " << itT - m_trackCandidates.begin() << " ****" << endmsg;
       for ( PrHits::const_iterator itH = m_stereoHits.begin(); m_stereoHits.end() != itH; ++itH ) {
         printHit( *itH, " " );
       }
     }
+    // -- < Debug --------
+
     (*itT).setValid( false );
     PrPlaneCounter pc;
-    pc.set( m_stereoHits.begin(), m_stereoHits.end() );
+    pc.set( m_stereoHits.begin(), m_stereoHits.end(), false );
     if ( pc.nbDifferent() + (*itT).hits().size()  < m_minTotalHits  || pc.nbDifferent() < 4 ) {
+      
+      // -- > Debug --------
       if ( m_debug ) info() << "Not enough different layers: " << pc.nbDifferent() + (*itT).hits().size()
                             << " for " << m_minTotalHits << endmsg;
+      // -- < Debug --------
       continue;
     }
     m_minStereoHits = m_minTotalHits - (*itT).hits().size();
@@ -154,10 +166,14 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
     fitXProjection ( *itT );  //== Fit both x and stereo
 
     if ( (*itT).hits().size() < m_minTotalHits ) {
+      
+      // -- > Debug --------
       if ( m_debug ) {
         info() <<"*** rejected: no eneough hits in total ***" << endmsg;
         printTrack( *itT );
       }
+      // -- < Debug --------
+
       (*itT).setValid( false );
     } else {
 
@@ -168,16 +184,22 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
       quality /= ( 1. + fabs( track.xFromVelo(m_geoTool->zReference() )-track.x(m_geoTool->zReference() ) ) * 0.001 );
 
       (*itT).setQuality( quality );
+      
+      // -- > Debug --------
       if ( m_debug ) {
         info() << "*** Accepted as track " << nbOK << " ***" << endmsg;
         printTrack( *itT );
       }
-      nbOK++;
+      // -- < Debug --------
+
+      ++nbOK;
     }
   }
 
   if ( 0 < nbOK ) {
     std::sort( m_trackCandidates.begin(), m_trackCandidates.end(), PrForwardTrack::LowerByQuality() );
+    
+    // -- > Debug --------
     if ( m_debug ) {
       info() << "********** list of candidates ********" << endmsg;
       for ( PrForwardTracks::iterator itT = m_trackCandidates.begin();
@@ -185,6 +207,8 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
         if ( (*itT).valid() ) printTrack( *itT );
       }
     }
+    // -- < Debug --------
+
     float minQuality = 1.e9;
     nbOK = 0;
     for ( PrForwardTracks::iterator itT = m_trackCandidates.begin();
@@ -198,6 +222,7 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
     }
   }
 
+  // -- > Debug --------
   if ( m_debug ) {
     info() << "********** final list of candidates, Velo = " << velo->key() << " ********" << endmsg;
     for ( PrForwardTracks::iterator itT = m_trackCandidates.begin();
@@ -205,6 +230,7 @@ void PrForwardTool::extendTrack ( LHCb::Track* velo, LHCb::Tracks* result ) {
       if ( (*itT).valid() ) printTrack( *itT );
     }
   }
+  // -- < Debug --------
 
   //====================================================================
   // Finalisation: Produce LHCb tracks (and add UT hits)
@@ -224,6 +250,12 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
   dxRef *= 1.10; //== 10% tolerance
   float zMag = m_geoTool->zMagnet( track );
   m_nbXPlanes = 0;
+  
+  double q = track.qOverP() > 0 ? 1. : -1.;
+  float pt = track.track()->pt();
+  double magscalefactor = m_geoTool->magscalefactor();
+  float dir = q*magscalefactor*(-1);
+
   for ( unsigned int zoneNumber = side; m_hitManager->nbZones() > zoneNumber; zoneNumber+=2 ) {
     PrHitZone* zone = m_hitManager->zone(zoneNumber);
     if ( !zone->isX() ) continue;  // only X layers
@@ -241,19 +273,15 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
     float xMin  = xInZone - xTol;
     float xMax  = xInZone + xTol;
 
-    //use momentum estimate from VeloUT tracks
+    // -- Use momentum estimate from VeloUT tracks
     if(m_useMomentumEstimate && 0 != track.qOverP() ){
       
-      double q = track.qOverP() > 0 ? 1. : -1.;
-      float pt = track.track()->pt();
-      double magscalefactor = m_geoTool->magscalefactor();
       
-      //Preselect the VeloUT tracks
+      
+      // - Preselect the VeloUT tracks
       if(m_Preselection && pt<m_PreselectionPT) continue;
 
-      float dir = q*magscalefactor*(-1);
-
-      //Extra window to catch wrong sign tracks
+      // -- Extra window to catch wrong sign tracks
       float xTolWS = 0;
       if(m_useWrongSignWindow && pt>m_wrongSignPT){
         float dxRefWS = 
@@ -263,12 +291,11 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
         xTolWS  = dxRefWS * zZone / m_geoTool->zReference();
         if ( zZone > m_geoTool->zReference() ) xTolWS = dxRefWS * (zZone - zMag) / ( m_geoTool->zReference() - zMag );
       }
+      
       if(dir > 0){
         xMin = xInZone - xTolWS;
         xMax = xInZone + xTol;
-      }
-      
-      else{
+      }else{
         xMin = xInZone - xTol;
         xMax = xInZone + xTolWS;
       }
@@ -279,17 +306,28 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
     float zRatio = ( zoneUv->z() - zMag ) / ( zZone - zMag );
     float xCentral = xInZone + yInZone * zoneUv->dxDy();
     float xInUv = track.xFromVelo( zoneUv->z() );
-    for ( PrHits::const_iterator itH = m_hitManager->hits( zoneNumber ).begin();
-          m_hitManager->hits( zoneNumber ).end() != itH; ++itH ) {
-      if ( (*itH)->x() < xMin ) continue;
+    
+    // -- Use a binary search to find the lower bound of the range of x values
+    PrHits::iterator itH = std::lower_bound(  m_hitManager->hits( zoneNumber ).begin(),  
+                                              m_hitManager->hits( zoneNumber ).end(), 
+                                              xMin, 
+                                              lowerBoundX() );
+    
+
+    PrHits::iterator itEnd =  m_hitManager->hits( zoneNumber ).end();
+    for ( ; itEnd != itH; ++itH ) {
       if ( (*itH)->x() > xMax ) break;
       (*itH)->setUsed( false );
+      
       float xPredUv = xInUv + ( (*itH)->x() - xInZone) * zRatio - dx;
       float maxDx   = m_tolY + ( fabs( (*itH)->x() -xCentral ) + fabs( yInZone ) ) * m_tolYSlope;
+      
       while ( (*itUv)->x() < xPredUv - maxDx ) {
         if ( itUv == m_hitManager->hits( uvZoneNumber ).end()-1 ) break;
         ++itUv;
       }
+
+      // -- > Debug --------
       if ( m_debug && matchKey( *itH ) ) {
         info() << format( "UV delta %7.3f / %7.3f ", (*itUv)->x() - xPredUv, maxDx );
         m_geoTool->xAtReferencePlane( track, *itH );
@@ -297,6 +335,8 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
         info() << format( "  y %8.1f  dx %7.2f   ", yInZone, dx );
         printHit( *itUv, " " );
       }
+      // -- < Debug --------
+      
       if ( (*itUv)->x() < xPredUv - maxDx ) continue;
       if ( (*itUv)->x() > xPredUv + maxDx ) continue;
 
@@ -318,6 +358,7 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
   PrHits::iterator it1 = m_allXHits.begin();
   PrHits::iterator it2 = it1 + m_minXSize;
   PrPlaneCounter planeCount;
+  
   while( it2 <= m_allXHits.end() ) {
     float xWindow = m_maxXWindow + ( fabs( (*it1)->coord() ) + fabs( (*it1)->coord() - xStraight ) ) * m_maxXWindowSlope;
     if( (*(it2-1))->coord() - (*it1)->coord() > xWindow ) {  // Too wide range -> increase start
@@ -325,13 +366,16 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
       if ( it2-it1 < m_minXSize) ++it2;
       continue;
     }
+  
     planeCount.set( it1, it2 );
+    
     while( it2 < m_allXHits.end() &&
            planeCount.nbDifferent() < m_minXSize &&
            (*it2)->coord() - (*it1)->coord() < xWindow ) {   // Add hit if not enough different planes and range small enough
       planeCount.addHit( *it2 );
       ++it2;
     }
+    
     if ( planeCount.nbDifferent() >= m_minXSize ) {
       //== Add next hits until a large enough gap or the hit is in a no yet hit plane
       float lastCoord = (*(it2-1))->coord();
@@ -351,32 +395,42 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
       //====================================================================
       PrHits coordToFit;
       float xAtRef = 0.;
-      int nbSingle = 0;
-      for ( unsigned int pl = 0 ; 12 > pl ; ++pl ) {
-        if ( planeCount.nbInPlane( pl ) == 1 ) nbSingle++;
-      }
-      if ( nbSingle > 3 ) {
+      
+      if ( planeCount.nbSingle() > 3 ) {
+        
+        // -- > Debug --------
         if ( m_debug ) {
-          info() << "--- " << nbSingle << " planes with a single hit. Select best chi2 in other planes ---" << endmsg;
+          info() << "--- " <<   planeCount.nbSingle() 
+                 << " planes with a single hit. Select best chi2 in other planes ---" << endmsg;
         }
+        // -- < Debug --------
+        
         PrLineFitter line( m_geoTool->zReference() );
-        std::vector<PrHits> otherHits( 12 );
+        std::array<PrHits,12> otherHits;
         PrHits::iterator itH;
         for ( itH = it1; it2 > itH; ++itH ) {
           if ( (*itH)->isUsed() ) continue;
+          
+          // -- > Debug --------
           if ( m_debug ) printHit( *itH );
+          // -- < Debug --------
+          
           if ( planeCount.nbInPlane( (*itH)->planeCode() ) == 1 ) {
             line.addHit( *itH );
           } else {
             otherHits[ (*itH)->planeCode() ].push_back( *itH );
           }
         }
+        
+        // -- > Debug --------
         if ( m_debug ) {
           info() << "Start from " << line.hits().size() << " and add other." << endmsg;
           for ( itH = line.hits().begin(); line.hits().end() != itH; ++itH ) {
             printHit( *itH );
           }
         }
+        // -- < Debug --------
+        
         for ( int pl = 0 ; 12 > pl ; ++pl ) {
           float bestChi2 = 1.e9;
           PrHit* best = NULL;
@@ -394,32 +448,41 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
             }
           }
         }
+        
         coordToFit = line.hits();
         xAtRef = line.coordAtRef();
       } else {
+        
         //====================================================================
         // Try to find a group of different planes with very small interval
         //====================================================================
         unsigned int itdiff = it2-it1;
+        
         if ( itdiff > m_nbXPlanes && planeCount.nbDifferent() == m_nbXPlanes ) {
           PrPlaneCounter pc;
           PrHits::iterator itStart = it1;
           PrHits::iterator it3 = it1 + m_nbXPlanes;
           PrHits::iterator best = it1;
           float minInterval = 1.e9;
-          pc.set( it1, it3 );
+          pc.set( it1, it3, false );
+        
           while ( it3 != it2+1 ) {
             if ( pc.nbDifferent() == m_nbXPlanes ) {
               float dist = (*(it3-1))->coord() - (*it1)->coord();
               if ( dist < minInterval ) {
+                
+                // -- > Debug --------
                 if ( m_debug ) {
                   info() << format( "dist%7.3f start ", dist );
                   printHit( *it1, " " );
                 }
+                // -- < Debug --------
+                
                 minInterval = dist;
                 best = it1;
               }
             }
+            
             if ( it3 == it2 ) break;
             pc.removeHit( *it1 );
             pc.addHit( *it3 );
@@ -465,18 +528,26 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
         }
         float dXCoord = maxXCoord - minXCoord;
         tmp.setDXCoord( dXCoord );
+
+        // -- > Debug --------
         if ( m_debug ) {
           info() << "=== Storing track candidate " << m_trackCandidates.size() << endmsg;
           printTrack( tmp );
           info() << endmsg;
         }
+        // -- < Debug --------
+
         if ( tmp.hits().size() > m_minXSize+1 ) {
           m_minXSize = tmp.hits().size()-1;
           for ( PrForwardTracks::iterator itT = m_trackCandidates.begin();
                 m_trackCandidates.end() != itT; ++itT ) {
             if ( (*itT).hits().size() < m_minXSize ) {
+              // -- > Debug --------
+              
               if ( m_debug ) info() << "=== Invalidate track " << itT - m_trackCandidates.begin()
                                     << " as the minimum size is now " << m_minXSize << endmsg;
+              // -- < Debug --------
+
               (*itT).setValid( false );
             }
           }
@@ -485,7 +556,7 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
       }
     }
 
-    it1++;
+    ++it1;
     while( it1+1 < m_allXHits.end() && (*it1)->isUsed() ) ++it1;
     it2 = it1 + m_minXSize;
     if ( it2 > m_allXHits.end() ) break;
@@ -495,8 +566,9 @@ void PrForwardTool::selectXCandidates( PrForwardTrack& track ) {
 //  Fit a linear form, remove the external worst as long as chi2 is big...
 //=========================================================================
 void PrForwardTool::fastLinearFit ( PrForwardTrack& track ) {
+  
   PrPlaneCounter pc;
-  pc.set( track.hits().begin(), track.hits().end() );
+  pc.set( track.hits().begin(), track.hits().end(), false );
 
   bool fit = true;
   while ( fit ) {
@@ -506,7 +578,9 @@ void PrForwardTool::fastLinearFit ( PrForwardTrack& track ) {
     float sz2  = 0.;
     float sd   = 0.;
     float sdz  = 0.;
-    for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+    
+    PrHits::const_iterator itEnd = track.hits().end();
+    for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
       float d = track.distance( *itH );
       float w = (*itH)->w();
       float z = (*itH)->z() - m_geoTool->zReference();
@@ -521,16 +595,21 @@ void PrForwardTool::fastLinearFit ( PrForwardTrack& track ) {
     float db  = (sd *  sz - s0 * sdz) / den;
     track.updateParameters( da, db, 0.);
     fit = false;
+  
+    // -- > Debug --------
     if ( m_debug ) {
       info() << "Linear fit, current status : " << endmsg;
       printTrack( track );
     }
+    // -- < Debug --------
+    
     if ( track.hits().size() < m_minXSize ) return;
 
     PrHits::iterator worst = track.hits().end();
     float maxChi2 = 0.;
     bool notMultiple = pc.nbDifferent() == track.hits().size();
-    for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+    
+    for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
       float chi2 = track.chi2( *itH );
       if ( chi2 > maxChi2 && ( notMultiple || pc.nbInPlane( (*itH)->planeCode() ) > 1 ) ) {
         maxChi2 = chi2;
@@ -541,10 +620,14 @@ void PrForwardTool::fastLinearFit ( PrForwardTrack& track ) {
     //== Remove grossly out hit, or worst in multiple layers
 
     if ( maxChi2 > m_maxChi2LinearFit || ( !notMultiple && maxChi2 > 4. ) ) {
+    
+      // -- > Debug --------
       if ( m_debug ) {
         info() << "Remove hit ";
         printHit( *worst );
       }
+      // -- < Debug --------
+      
       pc.removeHit( *worst );
       track.hits().erase( worst );
       fit = true;
@@ -555,16 +638,25 @@ void PrForwardTool::fastLinearFit ( PrForwardTrack& track ) {
 //  Fit the X projection of a track, return OK if fit sucecssfull
 //=========================================================================
 bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
+  
+  // -- > Debug --------
   if ( m_debug ) {
     info() << "  -- Entering fitXProjection with:" << endmsg;
     printTrack( track );
   }
+  // -- < Debug --------
+
   PrPlaneCounter pc;
-  pc.set( track.hits().begin(), track.hits().end() );
+  pc.set( track.hits().begin(), track.hits().end(),false );
   if ( pc.nbDifferent() < m_minXSize ) {
+    
+    // -- > Debug --------
     if ( m_debug ) info() << "  == Not enough layers ( "<< pc.nbDifferent() << " ) with hits" << endmsg;
+    // -- < Debug --------
+
     return false;
   }
+  
   bool doFit = true;
   while ( doFit ) {
     //== Fit a cubic
@@ -576,7 +668,9 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
     float sd   = 0.;
     float sdz  = 0.;
     float sdz2 = 0.;
-    for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+
+    PrHits::const_iterator itEnd = track.hits().end();
+    for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
       float d = track.distance( *itH );
       float w = (*itH)->w();
       float z = .001 * ( (*itH)->z() - m_geoTool->zReference() );
@@ -613,7 +707,8 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
     int   nDoF = -3; // fitted 3 parameters
     bool hasStereo = false;
     bool notMultiple = pc.nbDifferent() == track.hits().size();
-    for ( PrHits::iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
+    
+    for ( PrHits::iterator itH = track.hits().begin(); itEnd != itH; ++itH ) {
       if ( !(*itH)->isX() ) hasStereo = true;
       float chi2 = track.chi2( *itH );
       totChi2 += chi2;
@@ -626,11 +721,15 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
     if ( hasStereo ) nDoF -= 3; // Fitted a parabola...
     if ( nDoF < 1 )return false;
     track.setChi2( totChi2, nDoF );
+  
+    // -- > Debug --------
     if ( m_debug ) {
       info() << "  -- In fitXProjection, maxChi2 = " << maxChi2 << " totCHi2/nDof " << totChi2/nDoF << endmsg;
       printTrack( track );
     }
-    if ( worst == track.hits().end() ) {
+    // -- < Debug --------
+
+    if ( worst == itEnd ) {
       //info() << "No worst hit ! nbDiff = " << pc.nbDifferent() << " nbHits " << track.hits().size() << endmsg;
       //printTrack( track );
       return true;
@@ -641,19 +740,26 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
       pc.removeHit( *worst );
       track.hits().erase( worst );
       if ( pc.nbDifferent() < m_minXSize || (hasStereo && pc.nbDifferent() < 7)  ) {
+        
+        // -- > Debug --------
         if ( m_debug ) {
           info() << "  == Not enough layers with hits" << endmsg;
           printTrack( track );
         }
+        // -- < Debug --------
+
         return false;
       }
       doFit = true;
     }
   }
+
+  // -- > Debug --------
   if ( m_debug ) {
     info() << "  -- End fitXProjection -- " << endmsg;
     printTrack( track );
   }
+  // -- < Debug --------
 
   return true;
 }
@@ -662,8 +768,9 @@ bool PrForwardTool::fitXProjection ( PrForwardTrack& track ) {
 //  Add hits on empty X layers, and refit if something was added
 //=========================================================================
 bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track, bool fullFit  ) {
+  
   PrPlaneCounter planeCount;
-  planeCount.set( track.hits().begin(), track.hits().end() );
+  planeCount.set( track.hits().begin(), track.hits().end(), false );
   bool added = false;
   float x1 = track.hits().front()->coord();
   float xStraight = track.xFromVelo( m_geoTool->zReference() );
@@ -679,8 +786,16 @@ bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track, bool fullFit 
     float bestChi2 = 1.e9;
     float minX = xPred - xWindow;
     float maxX = xPred + xWindow;
-    for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
-      if ( (*itH)->x() < minX ) continue;
+  
+    // -- Use a binary search to find the lower bound of the range of x values
+    PrHits::const_iterator itH = std::lower_bound(  zone->hits().begin(),  
+                                                    zone->hits().end(), 
+                                                    minX, 
+                                                    lowerBoundX() );
+    
+
+    PrHits::const_iterator itEnd = zone->hits().end();
+    for ( ; itEnd != itH; ++itH ) {
       if ( (*itH)->x() > maxX ) break;
       float chi2 = track.chi2( *itH );
       if ( chi2 < bestChi2 ) {
@@ -689,10 +804,14 @@ bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track, bool fullFit 
       }
     }
     if ( NULL != best ) {
+      
+      // -- > Debug --------
       if ( m_debug ) {
         info() << format( "AddHitOnEmptyXLayer:    chi2%8.2f", bestChi2 );
         printHit( best, " ");
       }
+      // -- < Debug --------
+
       m_geoTool->xAtReferencePlane( track, best );
       best->setUsed( false );
       track.addHit( best );
@@ -710,7 +829,11 @@ bool PrForwardTool::addHitsOnEmptyXLayers ( PrForwardTrack& track, bool fullFit 
 //  Collect all hits in the stereo planes compatible with the track
 //=========================================================================
 void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
+  
+  // -- > Debug --------
   if ( m_debug ) info() << "== Collecte stereo hits. wanted ones: " << endmsg;
+  // -- < Debug --------
+
   m_stereoHits.clear();
   for ( unsigned int zoneNumber = track.zone(); m_hitManager->nbZones() > zoneNumber; zoneNumber += 2 ) {
     PrHitZone* zone = m_hitManager->zone(zoneNumber);
@@ -720,6 +843,8 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
     float yZone = track.y( zZone );
     zZone = zone->z( yZone );  // Correct for dzDy
     float xPred  = track.x( zZone );
+    
+    // -- > Debug --------
     if ( m_debug ) {
       for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
         if ( matchKey( *itH ) ) {
@@ -731,12 +856,21 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
         }
       }
     }
+    // -- < Debug --------
 
     float dxTol = m_tolY + m_tolYSlope * ( fabs( xPred - track.xFromVelo( zZone ) ) + fabs( yZone ) );
 
-    for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
+    // -- Use a binary search to find the lower bound of the range of x values
+    // -- This takes the y value into account
+    PrHits::const_iterator itH = std::lower_bound(  zone->hits().begin(),  
+                                                    zone->hits().end(), 
+                                                    -dxTol + xPred, 
+                                                    lowerBoundXYZone(yZone) );
+
+
+    PrHits::const_iterator itEnd = zone->hits().end();
+    for ( ; itEnd != itH; ++itH ) {
       float dx = (*itH)->x( yZone ) - xPred ;
-      if ( dx < - dxTol ) continue;
       if ( dx >   dxTol ) break;
       if ( zone->dxDy() < 0 ) dx = -dx;
       (*itH)->setCoord( dx );
@@ -751,6 +885,7 @@ void PrForwardTool::collectStereoHits ( PrForwardTrack& track ) {
 //  Fit the stereo hits
 //=========================================================================
 bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
+  
   float lastMeanDy = 1.e9;
   PrHits bestStereoHits;
   PrForwardTrack original( track );
@@ -758,15 +893,19 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
 
   PrHits::iterator beginRange = m_stereoHits.begin() - 1;
   while ( beginRange < m_stereoHits.end() - m_minStereoHits ) {
-    beginRange++;
+    ++beginRange;
+  
+    // -- > Debug --------
     if ( m_debug ) {
       info() << " stereo start at ";
       printHit( *beginRange );
     }
+    // -- > Debug --------
 
     PrPlaneCounter pc;
     PrHits::iterator endRange   = beginRange;
     float sumCoord = 0.;
+    
     while( pc.nbDifferent() < m_minStereoHits ||
            (*endRange)->coord() < (*(endRange-1))->coord() + m_minYGap ) {
       pc.addHit( *endRange );
@@ -774,7 +913,9 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
       ++endRange;
       if ( endRange == m_stereoHits.end() ) break;
     }
+    
     bool changed = true;
+    
     while( changed ) {
       float averageCoord = sumCoord / (endRange-beginRange);
       changed = false;
@@ -804,12 +945,15 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
         }
       }
     }
+    
+    // -- > Debug --------
     if ( m_debug ) {
       info() << "Selected stereo range from " << endmsg;
       printHit( *beginRange );
       printHit( *(endRange-1) );
     }
-
+    // -- < Debug --------
+    
     PrHits stereoHits( beginRange, endRange );
     if ( stereoHits.size() < bestStereoHits.size() ) continue;  // fit only if it can be better!
 
@@ -831,12 +975,16 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
       float sz2  = wMag * zMag * zMag;
       float sd   = wMag * dyMag;
       float sdz  = wMag * dyMag * zMag;
+      
+      PrHits::const_iterator itEnd = stereoHits.end();
+
       if ( parabola ) {
         float sz2m = 0.;
         float sz3  = 0.;
         float sz4  = 0.;
         float sdz2 = 0.;
-        for ( PrHits::iterator itH = stereoHits.begin(); stereoHits.end() != itH; ++itH ) {
+        
+        for ( PrHits::iterator itH = stereoHits.begin(); itEnd != itH; ++itH ) {
           float d = -track.deltaY( *itH );
           float w = (*itH)->w();
           float z = (*itH)->z() - m_geoTool->zReference();
@@ -864,10 +1012,15 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
         float da  = ( sd - db * sz - dc * sz2 ) / s0;
 
         track.updateParameters( 0., 0., 0., 0., da, db, dc );
+        
+        // -- > Debug --------
         if ( m_debug ) info() << "Parabola: " << da << " " << db << " " << dc << endmsg;
+        // -- < Debug --------
 
       } else {
-        for ( PrHits::iterator itH = stereoHits.begin(); stereoHits.end() != itH; ++itH ) {
+
+        
+        for ( PrHits::iterator itH = stereoHits.begin(); itEnd != itH; ++itH ) {
           float d = -track.deltaY( *itH );
           float w = (*itH)->w();
           float z = (*itH)->z() - m_geoTool->zReference();
@@ -882,20 +1035,25 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
         float da  = (sd * sz2 - sdz * sz ) / den;
         float db  = (sdz * s0 - sd  * sz ) / den;
         track.updateParameters( 0., 0., 0., 0., da, db);
+
+        // -- > Debug --------
         if ( m_debug ) info() << "Linear: " << da << " " << db  << endmsg;
+        // -- < Debug --------
       }
 
       PrHits::iterator worst = stereoHits.end();
       maxChi2 = 0.;
-      for ( PrHits::iterator itH = stereoHits.begin(); stereoHits.end() != itH; ++itH ) {
+      for ( PrHits::iterator itH = stereoHits.begin(); itEnd != itH; ++itH ) {
         float chi2 = track.chi2( *itH );
         if ( chi2 > maxChi2 ) {
           maxChi2 = chi2;
           worst   = itH;
         }
       }
-
+      
+      // -- > Debug --------
       if ( m_debug ) printHitsForTrack( stereoHits, track );
+      // -- < Debug --------
 
       if ( maxChi2 < m_maxChi2StereoLinear && !parabola ) {
         parabola = true;
@@ -906,8 +1064,12 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
       if ( maxChi2 > m_maxChi2Stereo ) {
         pc.removeHit( *worst );
         if ( pc.nbDifferent() < m_minStereoHits ) {
+          
+          // -- > Debug --------
           if ( m_debug ) info() << "-- not enough different planes after removing worst: " << pc.nbDifferent()
                                 << " for " << m_minStereoHits << " --" << endmsg;
+          // -- < Debug --------
+
           break;
         }
         stereoHits.erase( worst );
@@ -916,7 +1078,8 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
 
       //== Store average dy
       float meanDy = 0.;
-      for ( PrHits::iterator itH = stereoHits.begin(); stereoHits.end() != itH; ++itH ) {
+      itEnd = stereoHits.end();
+      for ( PrHits::iterator itH = stereoHits.begin(); itEnd != itH; ++itH ) {
         meanDy += (*itH)->coord();
       }
       meanDy = fabs( meanDy / stereoHits.size() );
@@ -934,10 +1097,14 @@ bool PrForwardTool::fitStereoHits( PrForwardTrack& track ) {
       if ( meanDy < lastMeanDy &&
            stereoHits.size() >= bestStereoHits.size() &&
            chi2AtMagnet < m_maxYChi2AtMagnet ) {
+        
+        // -- > Debug --------
         if ( m_debug ) {
           info() << "************ Store candidate, nStereo " << stereoHits.size() << " meanDy " << meanDy
                  << " chi2AtMagnet " << chi2AtMagnet << endmsg;
         }
+        // -- < Debug --------
+        
         lastMeanDy = meanDy;
         bestStereoHits = stereoHits;
         bestTrack = track;
@@ -966,8 +1133,9 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     double qOverP  = m_geoTool->qOverP( *itT );
     double errQop2 = 0.1 * 0.1 * qOverP * qOverP;
 
+    std::vector<LHCb::State*>::const_iterator iStateEnd =  tmp->states().end();
     for ( std::vector<LHCb::State*>::const_iterator iState = tmp->states().begin();
-          iState != tmp->states().end() ; ++iState ){
+          iState != iStateEnd ; ++iState ){
       (*iState)->setQOverP( qOverP );
       (*iState)->setErrQOverP2( errQop2 );
     }
@@ -985,7 +1153,9 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     //== LHCb ids.
 
     tmp->setPatRecStatus( LHCb::Track::PatRecIDs );
-    for ( PrHits::iterator itH = (*itT).hits().begin(); (*itT).hits().end() != itH; ++itH ) {
+
+    PrHits::iterator iHitEnd = (*itT).hits().end();
+    for ( PrHits::iterator itH = (*itT).hits().begin(); iHitEnd != itH; ++itH ) {
       tmp->addToLhcbIDs( (*itH)->id() );
     }
     tmp->setChi2PerDoF( (*itT).chi2PerDoF() );
@@ -1002,8 +1172,12 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     }
 
     result->insert( tmp );
+  
+    // -- > Debug --------
     if ( m_debug ) info() << "Store track " << (*(result->end()-1))->key()
                           << " quality " << (*(result->end()-1))->info( LHCb::Track::PatQuality, 0. ) << endmsg;
+    // -- < Debug --------
   }
+  
 }
 //=============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-14 - Michel De Cian
+ - Added binary searches in PrForwardTool and other small changes to use new PrPlaneCounter, simplifications in PrGeometryTool
+
 ! 2014-03-12 - Michel De Cian
  - Added doxygen documentation to PrForwardTrack, replaced call by value by call by reference
 

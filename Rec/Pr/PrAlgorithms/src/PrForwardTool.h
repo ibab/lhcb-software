@@ -52,6 +52,22 @@ public:
 protected:
 
 private:
+
+  /// Class to find lower bound of x of PrHit in an X layer
+  class lowerBoundX {
+  public:
+    bool operator() (const PrHit* lhs, const float testval ) const { return lhs->x() < testval; }
+  };
+  
+  /// Class to find lower bound of x of PrHit if in a uv layer
+  class lowerBoundXYZone {
+  public:
+    lowerBoundXYZone(const float yZone): m_yZone(yZone){};
+    bool operator() (const PrHit* lhs, const float testval ) const { return lhs->x(m_yZone) < testval; }
+  private:
+    float m_yZone;
+  };
+
   std::string     m_hitManagerName;
   std::string     m_addUTHitsToolName;
   float           m_minPt;
