@@ -58,6 +58,8 @@ application  TestHesse     ../tests/TestHesse.cpp
 macro_append TestHesse_dependencies   " LHCbMathLib "
 application  TestChi2Fit   ../tests/TestChi2Fit.cpp 
 macro_append TestChi2Fit_dependencies   " LHCbMathLib "
+application  TestLABug   ../tests/TestLABug.cpp 
+macro_append TestLABug_dependencies   " LHCbMathLib "
         
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
