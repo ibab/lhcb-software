@@ -394,7 +394,7 @@ namespace LoKi
       , m_global_mass      (   ) 
       , m_locals_mass      (   )
     //
-      , m_extrapolatorName ( "TrackStateProvider" )
+      , m_extrapolatorName ( "TrackStateProvider:PUBLIC" )
       , m_constraints      (   ) 
       , m_masses           (   ) 
     {
