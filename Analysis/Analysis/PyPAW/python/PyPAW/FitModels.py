@@ -71,10 +71,10 @@ __all__ = (
     )
 # =============================================================================
 import ROOT, math
-from   AnalysisPython.PyRoUts    import VE, hID, allInts, cpp, rootID
 from   AnalysisPython.Logger     import getLogger
+from   PyPAW.PyRoUts             import VE, hID, allInts, cpp, rootID
+from   PyPAW.Utils               import RooSilent, NoContext 
 from   GaudiKernel.SystemOfUnits import GeV 
-from   AnalysisPython.Utils      import RooSilent, NoContext 
 # =============================================================================
 logger = getLogger ( __name__ ) 
 # =============================================================================
