@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-03-16 - Vanya Belyaev
+
+ - Parser.py
+
+   add new function "theYear" - a bit extended and specialized version of dataType 
+
 ! ==================== Phys/BenderTools v23r2     2014-03-11 ==================
 ! ==================== Phys/BenderTools v23r1p1   2014-03-09 ==================
 

@@ -56,8 +56,10 @@ Last modification $Date$
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
 __date__    = "2010-09-10"
 __version__ = '$Revision$'
-__all__     = ( 'makeParser' ) ## nothing to import 
-# =============================================================================
+__all__     = ( 'makeParser' ,
+                'dataType'   ,
+                'theYear'    )
+ # =============================================================================
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
@@ -184,7 +186,7 @@ def makeParser ( usage = None ,
 #  @code
 #
 #    >>> file_names  = ...
-#    >>> data_type, simulation,ext = daataType ( file_names )
+#    >>> data_type, simulation,ext = dataType ( file_names )
 #
 #  @endcode
 #
@@ -209,20 +211,15 @@ def dataType ( files ) :
         elif 0 <= f.find ( 'Collision10'   ) : dtype = '2010'
         elif 0 <= f.find ( 'Collision11'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Collision12'   ) : dtype = '2012'
-        elif 0 <= f.find ( 'Collision13'   ) : dtype = '2013' ## ATTENTION
+        elif 0 <= f.find ( 'Collision13'   ) : dtype = '2012' ## ATTENTION
         #
         elif 0 <= f.find ( 'Stripping13'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping17'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping15'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping19'   ) : dtype = '2012'
-        elif 0 <= f.find ( 'Stripping20r1' ) : dtype = '2011'
+        #
         elif 0 <= f.find ( 'Stripping20r1' ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping20r0' ) : dtype = '2012'
-        #
-        # elif 0 <= f.find ( '2010'          ) : dtype = '2010'
-        # elif 0 <= f.find ( '2011'          ) : dtype = '2011'
-        # elif 0 <= f.find ( '2012'          ) : dtype = '2012'
-        # elif 0 <= f.find ( '2013'          ) : dtype = '2013'
         #
         elif 0 <= f.find ( '2k+10'         ) : dtype = '2010'
         elif 0 <= f.find ( '2k+11'         ) : dtype = '2011'
@@ -270,6 +267,28 @@ def hasInFile ( files , pattern ) :
         if   0 <= f.find ( pattern ) : return True
     return False
 
+# =============================================================================
+## try to determine the year 
+def theYear ( files , params = {} , the_year = None ) :
+    """
+    Try to determine the year 
+    """
+    for key in ( 'year' , 'Year' , 'YEAR' ) :
+        if params.has_key ( key ) :
+            year = params[key] 
+            logger.info ("The Year %s is set from params['%s']" % ( year , key ) )
+            return year 
+
+    ## try to it get from file-names 
+    year,simu,ext = dataType ( files )
+    if year :
+        logger.info ("The Year %s is set from filenames" % year )
+        return year
+    
+    year = the_year 
+    logger.info ("The Year %s is set from default" % year )
+    return year 
+    
 # =============================================================================
 if __name__ == '__main__' :
     print '*'*120
