@@ -1,9 +1,18 @@
 ! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KalmanFilter
-! Responsible : Vanya Belyaev  Ivan.Belyaev@cern.ch
+! Responsible : Vanya Belyaev  Ivan.Belyaev@itep.ru
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
+
+! 2014-03-16 - Vanya Belyaev
+
+ - VertexFitWithTracks:  
+
+   add the concept of "weight" for Kalman Filter 
+   and few explicit "multi-steps"
+   in paritcular is allows the efficient implementation
+   of the track removal from the fitted vertex
 
 !========================= KalmanFilter v1r6 2014-02-20 =========================
 

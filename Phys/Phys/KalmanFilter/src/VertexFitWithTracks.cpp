@@ -1,23 +1,31 @@
+// $Id$ 
 // ============================================================================
 // Include files 
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-// #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/SystemOfUnits.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
+#include "LHCbMath/LHCbMath.h"
+#include "LHCbMath/Power.h"
 #include "LHCbMath/MatrixUtils.h"
 #include "LHCbMath/MatrixTransforms.h"
 // ============================================================================
 // Event/TrackEvent 
 // ============================================================================
 #include "Event/State.h"
+#include "Event/Track.h"
 // ============================================================================
 // Local
 // ============================================================================
 #include "KalmanFilter/VertexFitWithTracks.h"
 #include "KalmanFilter/ErrorCodes.h"
+// ============================================================================
+// Boost
+// ============================================================================
+#include "boost/array.hpp"
 // ============================================================================
 /** @file 
  *
@@ -35,17 +43,58 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  @author Vanya BELYAEV ibelyaev@cern.ch
+ *  By usage of this code one clearly states the disagreement 
+ *    with the smear campain by Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2010-12-02
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
  */
+// ============================================================================
+namespace // local anonymous namespace to keep local functions 
+{
+  // ==========================================================================
+  /// comparison of double numbers 
+  const LHCb::Math::Equal_To<double>  s_equal ;
+  // ==========================================================================
+  /// inverse "large" error in position: used to avoid singularity
+  const boost::array<double,3> s_ERROR2_i  = { { 
+      1.0 / Gaudi::Math::pow ( 10.0 * Gaudi::Units::cm , 2 ) ,
+      1.0 / Gaudi::Math::pow ( 10.0 * Gaudi::Units::cm , 2 ) ,
+      1.0 / Gaudi::Math::pow ( 90.0 * Gaudi::Units::cm , 2 ) } } ;
+  // 
+  // ==========================================================================
+  /// "smooth" the singular values 
+  template <class T, unsigned int D>
+  inline 
+  void _smooth 
+  ( ROOT::Math::SMatrix<T,D,D,ROOT::Math::MatRepSym<T,D> >& mtrx       , 
+    const double                                            error = -1 ) 
+  {
+    //
+    const double err2 = error * error ;
+    for ( unsigned int i = 0 ; i < D ; ++i ) 
+    { 
+      mtrx(i,i) += 
+        error <= 0.0 ? 
+        s_ERROR2_i [ i ]  :
+        std::min ( 1.0 / err2 , s_ERROR2_i [ i ] ) ;  
+    }
+  }
+  // ==========================================================================
+} //                   end of local anonymous namespace to keep local functions 
 // ============================================================================
 // make one step of Kalman filter 
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrEntry4&     entry , 
-  const Gaudi::XYZPoint&            x     , 
-  const Gaudi::SymMatrix3x3&        ci    , 
-  const double                      chi2  ) 
+( LoKi::KalmanFilter::TrEntry4&     entry  , 
+  const Gaudi::XYZPoint&            x      , 
+  const Gaudi::SymMatrix3x3&        ci     , 
+  const double                      chi2   )
 {
   const Gaudi::Vector3 xx ( x.X () , x.Y() , x.Z() ) ;
   return step ( entry , xx , ci , chi2 ) ;
@@ -54,15 +103,15 @@ StatusCode LoKi::KalmanFilter::step
 // make one step of Kalman filter q
 // ============================================================================
 StatusCode LoKi::KalmanFilter::step 
-( LoKi::KalmanFilter::TrEntry4&     entry , 
-  const Gaudi::Vector3&             x     , 
-  const Gaudi::SymMatrix3x3&        ci    , 
-  const double                      chi2  ) 
+( LoKi::KalmanFilter::TrEntry4&     entry  , 
+  const Gaudi::Vector3&             x      , 
+  const Gaudi::SymMatrix3x3&        ci     , 
+  const double                      chi2   )
 {
   // regular case: 
   // OK !
   /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
-  entry.m_ci = ci + entry.m_vxi  ; 
+  entry.m_ci = ci + entry.m_weight * entry.m_vxi  ; 
   //
   // OK ! 
   int ifail = 0 ;
@@ -72,18 +121,223 @@ StatusCode LoKi::KalmanFilter::step
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   // OK ! 
   /// \f$\vec{x}_k\f$
-  entry.m_x = entry.m_c * ( ci*x + entry.m_vxi * entry.m_parx  ) ; 
+  entry.m_x = entry.m_c * ( ci*x + entry.m_weight * entry.m_vxi * entry.m_parx  ) ; 
   // OK ! 
   const Gaudi::Vector3 dx = entry.m_parx - entry.m_x ;  
   // OK !
-  entry.m_q = entry.m_parq - entry.m_qvsx * entry.m_vxi * dx ; 
+  entry.m_q = entry.m_parq - entry.m_qvsx * entry.m_vxi * dx * entry.m_weight ; 
   // OK ! 
   const double dchi2 = 
-    ROOT::Math::Similarity ( entry.m_vxi  , dx            ) + 
+    ROOT::Math::Similarity ( entry.m_vxi  , dx            ) * entry.m_weight + 
     ROOT::Math::Similarity ( ci           , entry.m_x - x ) ;
   //
   // update chi2 
-  entry.m_chi2 = chi2 + dchi2 ;
+  entry.m_chi2   = chi2 + dchi2  ;    // update chi2
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  construct the seed from the entries 
+ *  @param entries (input)  the list of entries 
+ *  @param x       (output) the position of "seed"
+ *  @param ci      (output) the gain matrix for the seed 
+ *  @param scale   (input)  the scale factor for gain matrix
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2014-03-15
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::seed 
+( LoKi::KalmanFilter::TrEntries4&   entries  , 
+  Gaudi::XYZPoint&                  x        , 
+  Gaudi::SymMatrix3x3&              ci       , 
+  const double                      scale    ) 
+{
+  //
+  Gaudi::Vector3 v ;
+  Gaudi::Math::geo2LA  ( x , v ) ; //  3D-point    -> 3-vector-LA
+  StatusCode sc = seed ( entries , v , ci , scale ) ;
+  Gaudi::Math::la2geo  ( v , x ) ; //  3-vector-LA -> 3D-point
+  //
+  return sc ;
+}
+// ============================================================================
+/*  construct the seed from the entries 
+ *  @param entries (input)  the list of entries 
+ *  @param x       (output) the position of "seed"
+ *  @param ci      (output) the gain matrix for the seed 
+ *  @param scale   (input)  the scale factor for gain matrix
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2014-03-15
+ */
+// ============================================================================
+StatusCode LoKi::KalmanFilter::seed 
+( LoKi::KalmanFilter::TrEntries4&   entries  , 
+  Gaudi::Vector3&                   x        , 
+  Gaudi::SymMatrix3x3&              ci       , 
+  const double                      scale    ) 
+{
+  //
+  if ( entries.empty() ) { return StatusCode::FAILURE ; }
+  //
+  /// construct the seed from the data 
+  Gaudi::Math::setToScalar ( ci , 0.0 ) ;
+  Gaudi::Vector3 seed ;
+  //
+  typedef TrEntries4::iterator      IT ;
+  //
+  for ( IT ientry = entries.begin() ; entries.end() != ientry ; ++ientry ) 
+  { 
+    //
+    if ( s_equal ( ientry->m_weight , 0 ) ) { continue ; }
+    //
+    ci   += ientry -> m_weight * ( ientry->m_vxi                  ) ; 
+    seed += ientry -> m_weight * ( ientry->m_vxi * ientry->m_parx ) ; 
+    //
+  }
+  //
+  int ifail = 0 ;
+  Gaudi::SymMatrix3x3 c = ci.Inverse ( ifail ) ;
+  //
+  if ( 0 != ifail ) 
+  { 
+    // try to recover using "soft" constraints 
+    _smooth ( ci ) ;
+    //
+    ifail =  0  ; 
+    c = ci.Inverse ( ifail ) ;
+    if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+  }
+  //
+  x = c * seed ;
+  //
+  Gaudi::Math::scale ( ci , scale ) ; // scale the gain matrix 
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// make "multi-step" step of Kalman filter 
+// ============================================================================
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::TrEntries4&   entries , 
+  const Gaudi::XYZPoint&            x       , 
+  const Gaudi::SymMatrix3x3&        ci      , 
+  const double                      chi2    )
+{
+  const Gaudi::Vector3 xx ( x.X () , x.Y() , x.Z() ) ;
+  return step ( entries , xx , ci , chi2 ) ;
+}
+// ============================================================================
+// make one step of Kalman filter q
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::TrEntries4&   entries , 
+  const Gaudi::Vector3&             x       , 
+  const Gaudi::SymMatrix3x3&        ci      , 
+  const double                      chi2    )
+{
+  //
+  /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
+  //
+  if ( entries.empty() ){ return StatusCode::SUCCESS ; }
+  //
+  typedef TrEntries4::iterator      IT ;
+  //
+  IT first = entries.begin () ;
+  //
+  //
+  Gaudi::SymMatrix3x3 _ci ( ci      ) ;
+  Gaudi::Vector3      _x  ( ci * x  ) ;
+  //
+  for ( IT ientry = entries.begin() ; entries.end() != ientry ; ++ientry ) 
+  { 
+    //
+    if ( s_equal ( ientry->m_weight , 0 ) ) { continue ; }
+    //
+    _ci += ( ientry->m_vxi                  ) * ientry->m_weight ; 
+    _x  += ( ientry->m_vxi * ientry->m_parx ) * ientry->m_weight ; 
+    //
+  }
+  //
+  int ifail = 0 ;
+  Gaudi::SymMatrix3x3 _c = _ci.Inverse ( ifail ) ;
+  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  //
+  _x  = Gaudi::Vector3 ( _c * _x ) ;
+  //
+  double dchi2 = chi2 + ROOT::Math::Similarity ( ci , _x - x ) ;
+  //
+  for ( IT ientry = entries.begin() ; entries.end() != ientry ; ++ientry ) 
+  {
+    //
+    ientry->m_ci = _ci ;
+    ientry->m_c  = _c  ;
+    ientry->m_x  = _x  ;
+    //
+    const Gaudi::Vector3 dx = ientry->m_parx - ientry->m_x ; 
+    //
+    ientry->m_q = ientry->m_parq  - ientry->m_qvsx * ( ientry->m_vxi * dx ) ;
+    //
+    dchi2      += ientry->m_weight * ROOT::Math::Similarity ( ientry->m_vxi , dx ) ;
+    //
+    ientry->m_chi2  = dchi2 ;
+  }
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// make one step of Kalman filter q
+// ============================================================================
+StatusCode LoKi::KalmanFilter::step 
+( LoKi::KalmanFilter::TrEntries4& entries ) 
+{
+  //
+  /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
+  //
+  if ( entries.empty() ){ return StatusCode::SUCCESS ; }
+  //
+  typedef TrEntries4::iterator      IT ;
+  //
+  IT first = entries.begin () ;
+  //
+  Gaudi::SymMatrix3x3 _ci ; 
+  Gaudi::Vector3      _x  ;
+  //
+  for ( IT ientry = entries.begin() ; entries.end() != ientry ; ++ientry ) 
+  { 
+    //
+    if ( s_equal ( ientry->m_weight , 0 ) ) { continue ; }
+    //
+    _ci += ( ientry->m_vxi                  ) * ientry->m_weight ; 
+    _x  += ( ientry->m_vxi * ientry->m_parx ) * ientry->m_weight ; 
+    //
+  }
+  //
+  int ifail = 0 ;
+  const Gaudi::SymMatrix3x3 _c = _ci.Inverse ( ifail ) ;
+  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  //
+  _x = Gaudi::Vector3 ( _c * _x ) ;
+  //
+  double dchi2 = 0 ;
+  //
+  for ( IT ientry = entries.begin() ; entries.end() != ientry ; ++ientry ) 
+  {
+    //
+    ientry -> m_ci = _ci ;
+    ientry -> m_c  = _c  ;
+    ientry -> m_x  = _x  ;
+    //
+    const Gaudi::Vector3 dx = ientry->m_parx - ientry->m_x ; 
+    //
+    ientry->m_q = ientry->m_parq  - ientry->m_qvsx * ( ientry->m_vxi * dx ) ;
+    //
+    dchi2      += ientry->m_weight * ROOT::Math::Similarity ( ientry->m_vxi , dx ) ;
+    //
+    ientry->m_chi2  = dchi2 ;
+  }
   //
   return StatusCode::SUCCESS ;
 }
@@ -117,20 +371,20 @@ StatusCode LoKi::KalmanFilter::step
                               entry2.m_vxi * entry2.m_parx ) ;
   entry2.m_x = entry1.m_x ;
   // OK ! 
-  const Gaudi::Vector3 dx1 =   entry1.m_parx -   entry1.m_x ;  
-  entry1.m_q = entry1.m_parq - entry1.m_qvsx * ( entry1.m_vxi * dx1 ) ; 
+  const Gaudi::Vector3 dx1 =   entry1.m_parx -    entry1.m_x ;  
+  entry1.m_q = entry1.m_parq - entry1.m_qvsx *  ( entry1.m_vxi * dx1 ) ; 
   // OK !
-  const Gaudi::Vector3 dx2 =   entry2.m_parx -   entry2.m_x ;  
-  entry2.m_q = entry2.m_parq - entry2.m_qvsx * ( entry2.m_vxi * dx2 ) ; 
+  const Gaudi::Vector3 dx2 =   entry2.m_parx -    entry2.m_x ;  
+  entry2.m_q = entry2.m_parq - entry2.m_qvsx *  ( entry2.m_vxi * dx2 ) ; 
   // OK ! 
   const double dchi2_1 = ROOT::Math::Similarity ( entry1.m_vxi , dx1 ) ;
   //
   // update chi2 
-  entry1.m_chi2 = chi2          + dchi2_1 ;
+  entry1.m_chi2  = chi2          + dchi2_1 ;
   //
   const double dchi2_2 = ROOT::Math::Similarity ( entry2.m_vxi , dx2 ) ;
   //
-  entry2.m_chi2 = entry1.m_chi2 + dchi2_2 ;
+  entry2.m_chi2  = entry1.m_chi2 + dchi2_2 ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -298,10 +552,14 @@ StatusCode LoKi::KalmanFilter::smooth
 /// load the data from the state 
 // ============================================================================
 StatusCode LoKi::KalmanFilter::load
-( const LHCb::State* state , LoKi::KalmanFilter::TrEntry4& entry ) 
+( const LHCb::State*            state  , 
+  LoKi::KalmanFilter::TrEntry4& entry  , 
+  const double                  weight ) 
 {
   /// reset the state 
-  entry.m_state = 0 ;                                       // reset the state 
+  entry.m_state  = 0 ;                                       // reset the state 
+  entry.m_weight = 1 ;
+  entry.m_track  = 0 ;
   //
   if ( 0 == state ) { return StatusCode::FAILURE ; }        // RETURN 
   //
@@ -344,18 +602,38 @@ StatusCode LoKi::KalmanFilter::load
   entry.m_vxi ( 1 , 1 ) = cixy ( 1 , 1 ) ;
   //
   const Gaudi::Vector2 slopes ( vct(2) , vct(3) ) ; // slopes!!! 
-  const Gaudi::Vector2 cslope ( cixy * slopes )   ; // reduced slopes!!!
+  const Gaudi::Vector2 cslope ( cixy   * slopes ) ; // reduced slopes!!!
   //
   entry.m_vxi ( 0 , 2 ) = -1 * cslope ( 0 ) ;
   entry.m_vxi ( 1 , 2 ) = -1 * cslope ( 1 ) ;
   entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , cixy ) ;
   //
-  // 
-  entry.m_state = state ;  
+  entry.m_state  = state  ;  
+  entry.m_weight = weight ; 
   //
   return StatusCode::SUCCESS ;
 }
-
+// ============================================================================
+/*  calculate number of active tracks  
+ *  @param entries (input) list of entries 
+ *  @param weight  (input) the minimum weigth to be considered 
+ *  @return number of tarcks 
+ */
+// ============================================================================
+unsigned int 
+LoKi::KalmanFilter::nTracks
+( const LoKi::KalmanFilter::TrEntries4& entries , 
+  const double                          weight  )
+{
+  //
+  unsigned int n = 0 ;
+  for ( TrEntries4::const_iterator ie = entries.begin() ; 
+        entries.end() != ie ; ++ie ) 
+  { if ( weight <= ie->m_weight ) { ++n ; } }
+  //
+  return n ;
+}
+// ========================================================================
 
 // ============================================================================
 // The END 
