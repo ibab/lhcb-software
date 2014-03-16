@@ -1,3 +1,4 @@
+// $Id$ 
 // ============================================================================
 #ifndef TRACKKALMANFILTER_H 
 #define TRACKKALMANFILTER_H 1
@@ -31,8 +32,16 @@ namespace LHCb { class State ; }  // Event/TrackEvent
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *   By usage of this code one clearly states the disagreement 
+ *    with the smear campain by Dr.O.Callot et al.: 
+ *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2010-11-02
+ * 
+ *                    $Revision$
+ *  Last modification $Date$
+ *                 by $Author$ 
  */
 // ============================================================================
 namespace LoKi
@@ -54,6 +63,8 @@ namespace LoKi
       // ======================================================================
       /// the state 
       const LHCb::State* m_state ;                                 // the state 
+      /// the track 
+      const LHCb::Track* m_track ;                                 // the track 
       // ======================================================================
     public:
       // ======================================================================
@@ -68,28 +79,30 @@ namespace LoKi
       //
       /// \f$C_{\vec{x}}^{-1}\f$
       Gaudi::SymMatrix3x3   m_vxi  ;  // C(x,x)^{-1}
-      /// covarinace matrix (q vs x)
+      /// covariance matrix (q vs x)
       Gaudi::Matrix2x3      m_qvsx ;  // to be loaded 
       //
       //      Projectors A & B are trivial and omitted 
       //
       //      Kalman filter values:
       /// \f$\chi^2\f$
-      double                            m_chi2 ; // chi2 of kalman step/fit 
+      double                            m_chi2   ; // chi2 of kalman step/fit (cumulative)
       /// \f$\vec{x}=(x,y,z)\f$ 
-      Gaudi::Vector3                    m_x    ; // vertex position  (x,y,z)
+      Gaudi::Vector3                    m_x      ; // vertex position  (x,y,z)
       /// \f$C_{\vec{x}}=cov(\vec{x})\f$
-      Gaudi::SymMatrix3x3               m_c    ; // position errors  
+      Gaudi::SymMatrix3x3               m_c      ; // position errors  
       /// \f$C_{\vec{x}}^{-1}\f$
-      Gaudi::SymMatrix3x3               m_ci   ; // position errors(inverse), gain matrix 
+      Gaudi::SymMatrix3x3               m_ci     ; // position errors(inverse), gain matrix 
       /// \f$\vec{q}=(t_x,t_y)\f$ 
-      Gaudi::Vector2                    m_q    ; // parameter vector (tx,ty)
+      Gaudi::Vector2                    m_q      ; // parameter vector (tx,ty)
       /// \f$C_q=cov(\vec{q})\f$
-      Gaudi::SymMatrix2x2               m_d    ; // covariance matrix for q-parameters
+      Gaudi::SymMatrix2x2               m_d      ; // covariance matrix for q-parameters
       /// \f$E=cov(\vec{x},vec{q})\f$
-      Gaudi::Matrix2x3                  m_e    ; // covariance matrix for (x,q)
+      Gaudi::Matrix2x3                  m_e      ; // covariance matrix for (x,q)
       /// \f$F=WB^{T}GA\f$
-      Gaudi::Matrix2x3                  m_f    ; // auxillary matrix F 
+      Gaudi::Matrix2x3                  m_f      ; // auxillary matrix F 
+      /// weight 
+      double                            m_weight ; // the track weight 
       // ======================================================================
     } ; //                         end of class LoKi::KalmanFilter::TrEntry4
     // ========================================================================
@@ -97,36 +110,116 @@ namespace LoKi
     typedef std::vector<TrEntry4>                                  TrEntries4 ;
     // ========================================================================
     /** make one step of Kalman filter 
-     *  @param entry (update)       measurement to be updated 
-     *  @param x     (input)        the initial position of the vertex 
-     *  @param ci    (input)        its gain matrix 
-     *  @param chi2  (input)        the initial chi2 
+     *  @param entry  (update)       measurement to be updated 
+     *  @param x      (input)        the initial position of the vertex 
+     *  @param ci     (input)        its gain matrix 
+     *  @param chi2   (input)        the initial chi2 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-02
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrEntry4&     entry , 
-      const Gaudi::XYZPoint&            x     , 
-      const Gaudi::SymMatrix3x3&        ci    , 
-      const double                      chi2  ) ;
+    ( LoKi::KalmanFilter::TrEntry4&     entry      , 
+      const Gaudi::XYZPoint&            x          , 
+      const Gaudi::SymMatrix3x3&        ci         , 
+      const double                      chi2       ) ;
     // ========================================================================    
     /** make one step of Kalman filter 
-     *  @param entry (update)       measurement to be updated 
-     *  @param x     (input)        the initial position of the vertex 
-     *  @param ci    (input)        its gain matrix 
-     *  @param chi2  (input)        the initial chi2 
+     *  @param entry  (update)       measurement to be updated 
+     *  @param x      (input)        the initial position of the vertex 
+     *  @param ci     (input)        its gain matrix 
+     *  @param chi2   (input)        the initial chi2 
      *  @return status code 
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-02
      */
     GAUDI_API
     StatusCode step 
-    ( LoKi::KalmanFilter::TrEntry4&     entry , 
-      const Gaudi::Vector3&             x     , 
-      const Gaudi::SymMatrix3x3&        ci    , 
-      const double                      chi2  ) ;
+    ( LoKi::KalmanFilter::TrEntry4&     entry      , 
+      const Gaudi::Vector3&             x          , 
+      const Gaudi::SymMatrix3x3&        ci         , 
+      const double                      chi2       ) ;
+    // ========================================================================
+    /** make "multi-step"  (note: smoothing embedded) 
+     *  @param entries (update)  the measurements 
+     *  @param x       (input)        the initial position of the vertex 
+     *  @param ci      (input)        its gain matrix 
+     *  @param chi2    (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-03-15
+     */
+    // ========================================================================
+    GAUDI_API 
+    StatusCode step 
+    ( LoKi::KalmanFilter::TrEntries4&   entries , 
+      const Gaudi::XYZPoint&            x          , 
+      const Gaudi::SymMatrix3x3&        ci      , 
+      const double                      chi2    );
+    // ========================================================================
+    /** make "multi-step"  (note: smoothing embedded) 
+     *  @param entries (update)  the measurements 
+     *  @param x       (input)        the initial position of the vertex 
+     *  @param ci      (input)        its gain matrix 
+     *  @param chi2    (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-03-15
+     */
+    // ========================================================================
+    GAUDI_API 
+    StatusCode step 
+    ( LoKi::KalmanFilter::TrEntries4&   entries , 
+      const Gaudi::Vector3&             x       , 
+      const Gaudi::SymMatrix3x3&        ci      , 
+      const double                      chi2    );
+    // ========================================================================
+    /** make "multi-step"  (note: smoothing embedded) 
+     *  @param entries (update)  the measurements 
+     *  @param x       (input)        the initial position of the vertex 
+     *  @param ci      (input)        its gain matrix 
+     *  @param chi2    (input)        the initial chi2 
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-03-15
+     */
+    // ========================================================================
+    GAUDI_API 
+    StatusCode step 
+    ( LoKi::KalmanFilter::TrEntries4&   entries ) ;
+    // =======================================================================
+    /** construct the seed from the entries 
+     *  @param entries (input)  the list of entries 
+     *  @param x       (output) the position of "seed"
+     *  @param ci      (output) the gain matrix for the seed 
+     *  @param scale   (input)  the scale factor for gain matrix
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-03-15
+     */
+    GAUDI_API 
+    StatusCode seed 
+    ( LoKi::KalmanFilter::TrEntries4&   entries      , 
+      Gaudi::Vector3&                   x            , 
+      Gaudi::SymMatrix3x3&              ci           , 
+      const double                      scale = 1.e-4 );
+    // ========================================================================
+    /** construct the seed from the entries 
+     *  @param entries (input)  the list of entries 
+     *  @param x       (output) the position of "seed"
+     *  @param ci      (output) the gain matrix for the seed 
+     *  @param scale   (input)  the scale factor for gain matrix
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-03-15
+     */
+    GAUDI_API 
+    StatusCode seed 
+    ( LoKi::KalmanFilter::TrEntries4&   entries       , 
+      Gaudi::XYZPoint&                  x             , 
+      Gaudi::SymMatrix3x3&              ci            , 
+      const double                      scale = 1.e-4 ) ;
     // ========================================================================
     /** make one step of Kalman filter (similar to seeding)
      *  @param entry1 (update)       measurements to be updated 
@@ -180,9 +273,28 @@ namespace LoKi
     GAUDI_API
     StatusCode smooth  ( LoKi::KalmanFilter::TrEntries4& entries ) ;
     // ========================================================================
-    /// load the data from the state 
+    /** load the data from the state 
+     *  @param state  (input)  the state 
+     *  @param entry  (update) the entry 
+     *  @param weight (input)  the weight 
+     *  @return status code
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2010-11-02
+     */     
     GAUDI_API
-    StatusCode load    ( const LHCb::State* state , TrEntry4& entry ) ;
+    StatusCode load    ( const LHCb::State* state      , 
+                         TrEntry4&          entry      , 
+                         const double       weight = 1 ) ;
+    // ========================================================================
+    /** calculate number of active tracks  
+     *  @param entries (input) list of entries 
+     *  @param weight  (input) the minimum weigth to be considered 
+     *  @return number of tarcks 
+     */
+    GAUDI_API 
+    unsigned int nTracks
+    ( const LoKi::KalmanFilter::TrEntries4& entries        , 
+      const double                          weight = 1.e-6 ) ;  
     // ========================================================================
   } //                                      end of namespace LoKi::KalmanFilter   
   // ==========================================================================
