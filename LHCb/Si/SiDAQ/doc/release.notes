@@ -2,6 +2,7 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-------------------------------------------------------------------------
 
+!========================= SiDAQ v2r3 2014-03-17 =========================
 ! 2014-03-10 - Kurt Rinnert
  - protected all word constructors from overflows in inputs by proper masking.
    This fixes a rare (per mille level) off-by-one bug in the VELO digitisation.
