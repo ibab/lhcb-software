@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r18 2014-03-17 =========================
 ! 2014-03-12 - Chris Jones
  - Add Algorithm context names to LoKi Reporter messages.
  - Correspondingly reduce the max Error and Warning instances from 10 to 2,
