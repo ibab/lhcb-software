@@ -12,6 +12,7 @@
 
 #include <sqlite3.h>    
 
+
 namespace LHCb  {
   
   /** @class FilePoller FilePoller.h ichalkia/FilePoller.h
@@ -85,14 +86,27 @@ namespace LHCb  {
     /// IOnlineBookkeep check if a file has been processed.
     virtual StatusCode isBookKept(const std::string file);
 
+    /// IOnlineBookkeep update the status flag of a file.
+    virtual StatusCode updateStFlag(const std::string );
+
     /// IOnlineBookkeep connect to the database.
     virtual StatusCode connectToDb();
     
-    
+    /// IOnlineBookkeep print the database.
+    virtual StatusCode printDB();
 
+    /// Auxiliary function for printing DB.
+    static int print_aux(void *data, int argc, char **argv, char **ColName);
+
+    /// IOnlineBookkeep check if a file has been processed.
+    virtual StatusCode isProcessed(const std::string );
+
+	
     /// Simple bookkeeping with a vector -- temporary.
-    std::vector<std::string> m_ProcessedFiles;
-    
+    //std::vector<std::string> m_ProcessedFiles;
+
+
+        
 
 
  private:

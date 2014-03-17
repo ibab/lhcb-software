@@ -11,7 +11,7 @@
 #include "GaudiOnline/ISuspendable.h"
 #include "OnlineFileSelector/IHandleListenerSvc.h"
 #include "OnlineFileSelector/IAlertSvc.h"
-
+#include "OnlineFileSelector/IOnlineBookkeep.h"
 
 
 // Forward declarations
@@ -90,6 +90,7 @@ namespace LHCb  {
     
     
     mutable IHandleListenerSvc* m_filePoller;
+    mutable void*    m_OnlineBookkeep;
     
 
     /// IService implementation: initialize the service
@@ -209,8 +210,10 @@ namespace LHCb  {
     
     virtual void setCurContext(Context*& ctxt) const { m_curContext = ctxt; } 
     virtual Context* getCurContext() { return m_curContext;}
-
+    
     virtual StatusCode goIdle() const;
+
+
 
 protected:
     /// Definition of the masj type
@@ -246,11 +249,11 @@ protected:
     /// Pointer to current context.
     mutable Context* m_curContext;
     /// Flag to indicate there has been a first connection object.
-    mutable int m_firstConnection = 0;    
+    mutable int m_firstConnection;    
     /// Maximum number of events to be read from each file.
     int m_maxNoEvt;
-   
-
+    /// Event counter to be stored in DB.
+    mutable int m_evtCntRecord;
 
   };
 }
