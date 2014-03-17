@@ -1,6 +1,6 @@
 # ====================================================================
 package           CaloDet 
-version           v10r18
+version           v10r19
 
 # =============== structure ===============================================
 branches         src cmt doc options CaloDet dict

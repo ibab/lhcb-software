@@ -3,6 +3,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+!========================= CaloDet v10r19 2014-03-17 =========================
 ! 2014-03-13 - Olivier Deschamps
   - DeCalorimeter.cpp : reduce INFO verbosity
 
