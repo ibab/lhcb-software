@@ -4,11 +4,12 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r55 2014-03-17 =========================
 ! 2014-03-06 - Chris Jones
  - Add some #define statements for shortened debug and verbose messaging with
    if ( msgLevel(...) ) protection.
 
-!========================= RichKernel v7r54p1 2013-09-30 =========================
+!========================= RichKernel v7r54p1 2013-09-30 =======================
 ! 2013-07-19 - Marco Clemencic
  - Fixed CMake configuration.
 

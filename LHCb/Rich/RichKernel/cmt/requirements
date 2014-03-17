@@ -1,15 +1,15 @@
-#=========================================================================
+#=====================================================================
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
-#=========================================================================
+#=====================================================================
 
 package           RichKernel
-version           v7r54p1
+version           v7r55
 
-# ================ structure =================================================
+# ================ structure ==============================================
 branches RichKernel cmt dict doc src python
 
-# ================ dependencies ==============================================
+# ================ dependencies ===========================================
 use DAQEvent           v*   Event
 use LHCbKernel         v*   Kernel
 use GaudiAlg           v*
@@ -21,7 +21,7 @@ private
 use GaudiObjDesc       v* -no_auto_imports
 end_private
 
-# ================ environment ===============================================
+# ================ environment ============================================
 apply_pattern install_more_includes more=RichKernel
 
 # ================ linker library ============================================
@@ -32,7 +32,7 @@ apply_pattern linker_library library=RichKernelLib
 library RichKernel ../src/component/*.cpp
 apply_pattern component_library library=RichKernel
 
-# =============== LCG Dictionaries ============================================
+# =============== LCG Dictionaries ==========================================
 apply_pattern reflex_dictionary                                       \
               dictionary=RichKernel                                   \
               headerfiles=$(RICHKERNELROOT)/dict/RichKernelDict.h     \
