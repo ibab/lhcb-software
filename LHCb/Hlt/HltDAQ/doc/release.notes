@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r1 2014-03-17 =========================
 ! 2014-03-12 - Rob Lambert
  - dump, decode, wipe, encode, dump tests.
  - see task #48809

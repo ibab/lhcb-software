@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltDAQ
 ################################################################################
-gaudi_subdir(HltDAQ v4r0)
+gaudi_subdir(HltDAQ v4r1)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Det/DetDesc
