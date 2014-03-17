@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r1 2014-03-17 =========================
 ! 2014-02-20 - Liang Sun
  - Add tests for the split HLT scenario based on runchangehandler.qmt.
 
