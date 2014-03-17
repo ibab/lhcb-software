@@ -40,6 +40,7 @@ ChargedParticlesToTracks::ChargedParticlesToTracks( const std::string& name,
   declareProperty( "TracksOutputLocation"  , 
                    m_trackOutputLocation = "/Event/Rec/Track/MyBest" ) ;
   declareProperty( "MassWindow"            , m_masswindow = -1. );
+  declareProperty( "MassOffset"            , m_massoffset = 0. );
   declareProperty( "RefitTracks"           , m_refit = false );
 }
 //=============================================================================
@@ -85,21 +86,36 @@ StatusCode ChargedParticlesToTracks::execute() {
     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc",true) ;
   
   LHCb::Particle::ConstVector particles;
-  const LHCb::Particle::Container* particlesCont;
+  //const LHCb::Particle::Container* particlesCont;
+  LHCb::Particle::Range particlesRange;
   const LHCb::ParticleProperty* prop;
   
   for( std::vector<std::string>::const_iterator iterC = m_partloc.begin();
        iterC != m_partloc.end(); ++iterC ){
-    if(exist<LHCb::Particle::Container>(*iterC)){
+    /*if(exist<LHCb::Particle::Container>(*iterC)){
       particlesCont = get<LHCb::Particle::Container>(*iterC);
       for( LHCb::Particle::Container::const_iterator iterP = particlesCont->begin();
            iterP != particlesCont->end(); ++iterP ){
         prop = propertysvc->find((*iterP)->particleID());
-        if(m_masswindow<0.||abs((*iterP)->measuredMass()-prop->mass())<m_masswindow){
+        if(m_masswindow<0.||abs((*iterP)->measuredMass()-(prop->mass()-m_massoffset))<m_masswindow){
           particles.push_back(*iterP);
           if(fullDetail()){
-            plot((*iterP)->measuredMass(), m_linesname[*iterC], prop->mass()-1.5*m_masswindow, 
-                 prop->mass()+1.5*m_masswindow, (int)(3*m_masswindow));
+            plot((*iterP)->measuredMass(), m_linesname[*iterC], prop->mass()+m_massoffset-1.5*m_masswindow, 
+                 prop->mass()+m_massoffset+1.5*m_masswindow, (int)(3*m_masswindow));
+          }
+        }
+      }
+      }else */
+    if(exist<LHCb::Particle::Range>(*iterC)){
+      particlesRange = get<LHCb::Particle::Range>(*iterC);
+      for( LHCb::Particle::Range::const_iterator iterP = particlesRange.begin();
+           iterP != particlesRange.end(); ++iterP ){
+        prop = propertysvc->find((*iterP)->particleID());
+        if(m_masswindow<0.||abs((*iterP)->measuredMass()-(prop->mass()+m_massoffset))<m_masswindow){
+          particles.push_back(*iterP);
+          if(fullDetail()){
+            plot((*iterP)->measuredMass(), m_linesname[*iterC], prop->mass()+m_massoffset-1.5*m_masswindow, 
+                 prop->mass()+m_massoffset+1.5*m_masswindow, (int)(3*m_masswindow));
           }
         }
       }

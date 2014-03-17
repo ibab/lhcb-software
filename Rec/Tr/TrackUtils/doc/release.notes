@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-17 - Frederic Dupertuis
+ - Add new property MassOffset to ChargedParticlesToTracks.
+
 ! 2014-03-04 - Frederic Dupertuis
  - Add new properties to allow TrackHitAdder to be used for Y alignment.
 

@@ -39,6 +39,7 @@ private:
   bool m_refit;
 
   float m_masswindow;
+  float m_massoffset;
      
   ITrackFitter* m_trackFit;
   ITrackFitter* m_trackPreFit;
