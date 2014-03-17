@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-17 - Rob Lambert
+ - Enable Timing now uses the LHCbTimingAuditor
+ - First tests in moore updated to this
+ - set Moore.EnableTimer="somestringtiming.csv" or ".dat"
+ - see https://savannah.cern.ch/task/?49844
+
 !========================= Moore v22r0 2014-03-11 =========================
 ! 2014-03-11 - Rob Lambert
  - Modify split behaviour with respect to writerRequires, simplifying the logic

@@ -16,4 +16,10 @@ input = test_file_db['2012_raw_default']
 input.run(configurable=Moore())
 
 Moore().ForceSingleL0Configuration=False
-Moore().EnableTimer=True
+
+from Configuration import LHCbTimingAuditor, LHCbSequencerTimerTool
+
+LHCbTimingAuditor("TIMING").addTool(LHCbSequencerTimerTool,"TIMING")
+
+#normalize the timing table in tests
+LHCbTimingAuditor("TIMING").TIMING.Normalised=True

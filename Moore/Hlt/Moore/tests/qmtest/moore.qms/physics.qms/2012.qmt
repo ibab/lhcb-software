@@ -7,24 +7,26 @@
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/default-threshold.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().EnableTimer='physics.2012.csv';</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 #print "YES"
 #reftable
-reftable='../refs/physics.2012.timing.ref'
+#reftable='../refs/physics.2012.timing.ref'
 myname='moore.physics.2012'
 
 
-from Moore.QMTest.MooreTests import compareTimingTableEvents
+from Moore.QMTest.MooreTests import compareTimingTableEvents, compareTimingTableFiles
 
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt")
+#compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt")
+compareTimingTableFiles(myname,result,causes,"physics.2012.csv","../refs/physics.2012.csv","Hlt")
 
 savestdout='phys2012.stdout'
 #save stdout
-f=open(savestdout,'w')
-f.write(stdout)
-f.close()
+#f=open(savestdout,'w')
+#f.write(stdout)
+#f.close()
 
 #count error lines, shouldn't be any warnings or errors, ideally
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})

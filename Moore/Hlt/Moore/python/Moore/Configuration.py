@@ -80,7 +80,7 @@ class Moore(LHCbConfigurableUser):
         #########################################
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
-        , "EnableTimer" :       False
+        , "EnableTimer" :       None
         , "EnableDataOnDemand": False
         , "OutputLevel" : WARNING #if this is set to WARNING (or higher) Moore will become almost silent.
                              #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
@@ -156,7 +156,7 @@ class Moore(LHCbConfigurableUser):
         #########################################
         , "outputFile" :       'output filename'
         , "inputFiles" :       "input, can be a simple list of files"
-        , "EnableTimer" :      "Turn on the timing table, Warning! it's very very verbose"
+        , "EnableTimer" :      "Turn on the timing table, set this to the name of a file you'd like the timing to write out to. True does not create a file."
         , "EnableDataOnDemand": "Activate the DataOnDemand service, sometimes needed during testing"
         , "OutputLevel" : """Multi-level option, keeps same logic as standard OutputLevel.
         if this is set to WARNING (or higher) Moore will become almost silent.
@@ -405,7 +405,8 @@ class Moore(LHCbConfigurableUser):
         
         #then configure things that depend on the level
         level=self.getProp("OutputLevel")
-        
+        from Configurables import LHCbSequencerTimerTool, SequencerTimerTool
+        if level>=INFO: LHCbSequencerTimerTool().OutputLevel = WARNING
         if level>=INFO: SequencerTimerTool().OutputLevel = WARNING
         
         if level>DEBUG:
@@ -427,14 +428,9 @@ class Moore(LHCbConfigurableUser):
             MessageSvc().OutputLevel = level
             ToolSvc().OutputLevel = level
         
-        if level>INFO and self.getProp("EnableTimer"):
-            #in the future handle this by outputting a timing file!
-            print "# WARNING: Timing table is very verbose, please disable timing if you want to run with lower verbosity"
-            from Configurables import TimingAuditor
-            TimingAuditor('TIMER').OutputLevel=INFO
-            TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
-            TimingAuditor('TIMER').TIMER.OutputLevel=INFO
-        
+        if level>INFO and self.getProp("EnableTimer") and type(self.getProp("EnableTimer")) is not str:
+            print "# WARNING: Timing table is too verbose for printing, consider outputting to a file instead please, Moore().EnableTimer='timing.csv', for example."
+            
         #################################################
         # If the OutputLevel is set I need
         # Either a postConfigAction or a transform
@@ -487,18 +483,6 @@ class Moore(LHCbConfigurableUser):
             
             appendPostConfigAction(AppMrgOP)
             
-            #in the future handle this by outputting a timing file!
-            def RestoreTimer():
-                from Configurables import TimingAuditor, SequencerTimerTool
-                TimingAuditor('TIMER').OutputLevel=INFO
-                TimingAuditor('TIMER').addTool(SequencerTimerTool,"TIMER")
-                TimingAuditor('TIMER').TIMER.OutputLevel=INFO
-                from Configurables import Moore
-                if Moore().getProp("OutputLevel")<INFO:
-                    SequencerTimerTool().OutputLevel          = INFO
-            
-            if self.getProp("EnableTimer"):
-                appendPostConfigAction(RestoreTimer)
             
             def RestoreGenConfig():
                 Moore().getConfigAccessSvc().OutputLevel =INFO
@@ -520,12 +504,6 @@ class Moore(LHCbConfigurableUser):
             trans[".*"]["HistoCountersPrint"]={"^.*$":str(level<WARNING)}
             
             Funcs._mergeTransform(trans)
-            #restore timing if required
-            if self.getProp("EnableTimer"):
-                trans={".*TIMER.*":{"OutputLevel"        : {"^.*$":str(INFO)}}}
-                if level<INFO:
-                    trans[".*SequencerTimingTool.*"]={"OutputLevel"        : {"^.*$":str(INFO)}}
-                Funcs._mergeTransform(trans)
             
             #kill LoKi warnings
             set=0
@@ -543,13 +521,20 @@ class Moore(LHCbConfigurableUser):
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')
-        if self.getProp('EnableTimer') : 
-            from Configurables import TimingAuditor, SequencerTimerTool
-            TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
-            TimingAuditor('TIMER').TIMER.NameSize=150
+        #print "!!!!!!!!!!!!!!!!!!   IN PROFILE"
+        if self.getProp('EnableTimer') is not None: 
+            #print "!!!!!!!!!!!!!!!!!!   IN ENABLE"
+            #print self.getProp('EnableTimer')
+            from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
+            LHCbTimingAuditor('TIMER').addTool(LHCbSequencerTimerTool, name="TIMER")
+            LHCbTimingAuditor('TIMER').TIMER.NameSize=150
             #minimum printing length to catch the long names of algs
-            auditors = [ TimingAuditor('TIMER') ] + auditors
-
+            auditors = [ LHCbTimingAuditor('TIMER') ] + auditors
+            if type(self.getProp('EnableTimer')) is not bool and len(self.getProp('EnableTimer')):
+                LHCbTimingAuditor('TIMER').TIMER.SummaryFile=self.getProp('EnableTimer')
+                #LHCbSequencerTimerTool().SummaryFile=self.getProp('EnableTimer')
+                #print "!!!!!!!!!!!!!!    YEEEEEAAAAH SETTTTTING IIIIIT"
+        
         for i in auditors : self.addAuditor( i )
 
     def _generateConfig(self) :
