@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-03-17 - Diego Milanes
+ - Added expectation FT class
+
 !========================= TrackTools v5r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
