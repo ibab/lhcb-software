@@ -5,6 +5,115 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v37r1>2014-03-18 LHCbSys v37r1</A></H1><PRE>
+This version uses Gaudi v25r0 and LCG_66.
+
+- Packages modified: Calo/CaloDAQ v4r38, DAQ/DAQSys v8r1, Det/CaloDet v10r19,
+    Det/DDDB v1r68, Det/FTDet v2r5, Det/Magnet v7r7, Det/RichDet v16r21,
+    Det/VPDet v3r1, Event/DigiEvent v4r1, Ex/DetCondExample v11r14, 
+    GaudiConf v19r1, Hlt/HltDAQ v4r1, Kernel/LHCbAlgs v3r1, 
+    Kernel/LHCbKernel v15r1, Kernel/LHCbMath v3r46, Kernel/PartProp v1r18,
+    L0/L0Calo v11r13, Phys/LoKiCore v11r18, Phys/LoKiGen v10r15, 
+    Phys/LoKiHlt v3r14, Phys/LoKiMC v10r11, Rich/RichKernel v7r55, Si/SiDAQ v2r3,
+    VP/VPDAQ v2r6
+
+- In Calo/CaloDAQ v4r38
+  . python/configuration.py: Propagate OutputLevel value to Calo sequences only
+    when the property is explicitly set
+  . Remove verbose printout
+
+- In DAQ/DAQSys v8r1, v8r0p1
+  . Renamed HltTrackReportsDecoder output location
+  . Handle the case where default configurables have already been set to the
+    DoD Svc
+
+- In Det/CaloDet v10r19
+  . DeCalorimeter.cpp : reduce INFO verbosity
+
+- In Det/DDDB v1r68
+  . Add one property to DDDB which allows for the Moore use case, that the time
+    must be "now".
+
+- In Det/FTDet v2r5
+  . Replace linear search for fibreMat with binary search in DeFTDetector
+
+- In Det/Magnet v7r7
+  . Suppress the info messages 'Map scaled by factor ...' after 2 instances.
+
+- In Det/RichDet v16r21
+  . Put an FPE::Guard into DeRichGasRadiator::calcSellmeirRefIndex to protect
+    against a very very weird FPE exception when running clang...
+
+- In Det/VPDet v3r1
+  . Store all common sensor properties in static members.
+  . Provide a static cache of x pixel positions and pitches.
+
+- In Event/DigiEvent v4r1
+  . Remove ToT value from and added global x, y, z coordinates to VPCluster
+  . Remove unused constructor from VPCluster
+  . Change VPCluster location from "VPClusterLocation" to "Default" 
+
+- In Ex/DetCondExample v11r14
+  . Add a script to set up test environment for the split HLT scenario
+  . Add an example script for the purpose of demonstration
+
+- In GaudiConf v19r1
+  . LHCbExclusions.py: Added exclusion to protect against changes in PFN
+    connection string of input data
+
+- In Hlt/HltDAQ v4r0,v4r1
+  . Add dump, decode, wipe, encode, dump tests, see task #48809
+  . Persisting the flags instead of Track::type. Needed for forward tracking.
+  . TrackReportsDecoder protected against filling already existing output location
+  . Added persistence of States to TrackReports, using the StandardPacker
+    functions to pack the track states to 32bit per parameter
+  . Renamed TrackReportsDecoder OutputLocation to be findable by bindMember
+  . Added track type = Velo to all tracks (needs reiteration)
+  . HltTrackReportsWriter/Decoder added debug output: dumps tracks in verbose mode
+
+- In Kernel/LHCbAlgs v3r1
+  . Add tests for the split HLT scenario based on runchangehandler.qmt.
+
+- In Kernel/LHCbKernel v15r1
+  . Use Info(...) methods for memory pool release messages in LbAppInit, in
+    order to benefit from the automatic suppression. Suppressed after 1 instance.
+
+- In Kernel/LHCbMath v3r46
+  . Add new test to illustrate #bug 104111
+
+- In L0/L0Calo v11r13
+  . Add tool to compute L0Adc from CaloADC directly instead of decoding
+    them from the RAW bank (useful for LLT emulation)
+  . Add classes to emulate the LLT Calo, LLTCaloAlg and LLTTriggerCard
+
+- In Phys/LoKiCore v11r18
+  . Add Algorithm context names to LoKi Reporter messages.
+  . Correspondingly reduce the max Error and Warning instances from 10 to 2,
+    to prevent log files exploding in production.
+
+- In Phys/LoKiGen v10r15, Phys/LoKiHlt v3r14
+  . Fixes to header guard macros.
+
+- In Phys/LoKiHlt v3r14
+  . Add some missing default constructors. Fixes clang compilation failures.
+
+- In Rich/RichKernel v7r55
+  . Add some #define statements for shortened debug and verbose messaging with
+    if ( msgLevel(...) ) protection.
+
+- In Si/SiDAQ v2r3
+  . Protected all word constructors from overflows in inputs by proper masking.
+    This fixes a rare (per mille level) off-by-one bug in the VELO digitisation.
+
+- In VP/VPDAQ v2r6
+  . Follow changes in VPCluster format
+  . Added encoder for Super Pixel raw bank from digits.
+
+- In Kernel/PartProp v1r18, Phys/LoKiCore v11r18, Phys/LoKiGen v10r15,
+      Phys/LoKiMC v10r11
+  . Moved operators inside namespaces (fixed a problem with ROOT 6).
+    See https://sft.its.cern.ch/jira/browse/ROOT-6044 for details.
+
 </PRE><H1><A NAME=v37r0>2014-02-18 LHCbSys v37r0</A></H1><PRE>
 This version uses Gaudi v25r0 and LCG_66. First version compatible with ROOT6
 
