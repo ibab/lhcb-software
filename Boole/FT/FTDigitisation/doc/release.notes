@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-03-17 - Jacco de Vries
+ - Moved FTNoiseCreator content to MCFTDigitCreator
  - improved functionality of acceptance studies in FTClusterCreator
 
 !========================= FTDigitisation v1r8 2014-02-19 =======================

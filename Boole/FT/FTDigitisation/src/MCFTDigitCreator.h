@@ -30,6 +30,9 @@
 // local
 #include "SiPMResponse.h"
 
+#include <iostream>
+#include <iomanip>
+
 class MCFTDigitCreator : public GaudiHistoAlg {
 public: 
   /// Standard constructor
@@ -59,8 +62,15 @@ private:
   std::vector<double> m_integrationOffset; ///< Vector of the integration offsets for T1,T2,T3
   std::vector<double> m_stationsZ; ///< Vector of the Z position for T1,T2,T3
 
+  // Noise related
+  float  m_pedestal, m_clusterMinCharge;
+  float m_temperature, m_irradiation;
+  float m_thermalNoiseRateBase, m_crossTalkProbability, m_afterpulseProbability, m_nu;
+  bool  m_doNoise;
+
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;
+  Rndm::Numbers m_rndmLandau;
 
   // tools
   SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
