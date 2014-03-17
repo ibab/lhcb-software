@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r1 2014-03-17 ========================
 ! 2014-03-07 - Chris Jones
  - Use Info(...) methods for memory pool release messages in LbAppInit, in
    order to benefit from the automatic suppression. Suppressed after 1 instance.
