@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r1 2014-03-17 =========================
 ! 2014-02-24 - Marco Cattaneo
  - LHCbExclusions.py: Added exclusion to protect against changes in PFN
    connection string of input data
