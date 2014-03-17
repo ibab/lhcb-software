@@ -4,6 +4,7 @@
 ! Purpose     :
 ! -----------------------------------------------------------------------------
 
+!========================= PartProp v1r18 2014-03-17 =========================
 ! 2014-02-24 - Marco Clemencic
  - Moved (correctly) operators inside namespaces (fixed a problem with ROOT 6).
 
