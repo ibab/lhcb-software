@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQUtils
 ################################################################################
-gaudi_subdir(DAQUtils v1r12)
+gaudi_subdir(DAQUtils v1r13)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/RecEvent
