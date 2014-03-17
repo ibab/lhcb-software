@@ -1,0 +1,21 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+        <text>../options/file-timer.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+countErrorLines({"WARNING":0, "ERROR":0, "FATAL":0})
+from LHCbAlgs import TTParser
+comp=TTParser.compare("timing.dat","../refs/refsimpletiming.dat")
+if comp!=([],[],[]):
+  causes.append("Timing tables do not agree, check stdout")
+  if len(comp[0]):
+    result["lhcbalgs.timingtabletofile.missing"]=result.Quote("Missing:\n\t"+"\n\t".join(comp[0]))
+  if len(comp[1]):
+    result["lhcbalgs.timingtabletofile.different"]=result.Quote("Different:\n\t"+"\n\t".join(comp[1]))
+  if len(comp[2]):
+    result["lhcbalgs.timingtabletofile.added"]=result.Quote("Added:\n\t"+"\n\t".join(comp[2]))
+
+</text></argument>
+</extension>
