@@ -379,6 +379,9 @@ StatusCode FTClusterCreator::execute() {
           
           bool acceptCluster = 1;
           if( m_removeITRegion != 0 ) {
+            const MCHit* cHit = largestHit;  
+            float hitX = cHit -> midPoint().x();
+            float hitY = cHit -> midPoint().y();
             // Check if in IT region
             float ITXmin = 99.  , ITYmin = 99. ;
             float ITXcen = 264.5, ITXmax = 621.;
@@ -386,23 +389,22 @@ StatusCode FTClusterCreator::execute() {
             float ITXcenp = ITXcen * sqrt(m_ITScale);
             float ITXmaxp = ITXmin + (ITXmax-ITXmin) * m_ITScale;
             float ITYmaxp = ITYmin + (ITYmax-ITYmin) * sqrt(m_ITScale);
-            float hitX, hitY;
-              const MCHit* cHit = largestHit;  
-                hitX = cHit -> midPoint().x();
-                hitY = cHit -> midPoint().y();
-                  bool hitInIT = ( ( hitX > -ITXmaxp && hitX < -ITXmin  && hitY > -ITYcen  && hitY < ITYcen ) || //L
-                                   ( hitX >  ITXmin  && hitX <  ITXmaxp && hitY > -ITYcen  && hitY < ITYcen ) || //R
-                                   ( hitX > -ITXcenp && hitX <  ITXcenp && hitY >  ITYmin  && hitY < ITYmaxp) || //T
-                                   ( hitX > -ITXcenp && hitX <  ITXcenp && hitY > -ITYmaxp && hitY < -ITYmin) || //B
-                                   ( hitX > -ITXmin  && hitX <  ITXmin  && hitY > -ITYmin  && hitY < ITYmin ) ); //C
-                  if ( ( m_removeITRegion == 1 &&  hitInIT ) ||
-                       ( m_removeITRegion == 2 && !hitInIT ) ) {
-                    // if this hit is (or isn't) in the IT region
-                    acceptCluster = 0;
-                    plot2D( largestHit->midPoint().x(), largestHit->midPoint().y(),
-                        "MCCluster_rejected","Rejected MCClusters; x [mm]; y [mm]",
-                        -3000, 3000, -2500, 2500, 200, 200 );
-                  }
+            bool hitInIT = ( ( hitX > -ITXmaxp && hitX < -ITXmin  && hitY > -ITYcen  && hitY < ITYcen ) || //L
+                             ( hitX >  ITXmin  && hitX <  ITXmaxp && hitY > -ITYcen  && hitY < ITYcen ) || //R
+                             ( hitX > -ITXcenp && hitX <  ITXcenp && hitY >  ITYmin  && hitY < ITYmaxp) || //T
+                             ( hitX > -ITXcenp && hitX <  ITXcenp && hitY > -ITYmaxp && hitY < -ITYmin) || //B
+                             ( hitX > -ITXmin  && hitX <  ITXmin  && hitY > -ITYmin  && hitY < ITYmin ) ); //C
+            float sqX = (536+2*2)/2., sqY = 99. + 50. * m_ITScale ; 
+            bool hitInSq = ( hitX > -sqX && hitX < sqX && hitY > -sqY && hitY < sqY );  
+            if ( ( m_removeITRegion == 1 &&  hitInIT ) ||
+                 ( m_removeITRegion == 2 && !hitInIT ) ||
+                 ( m_removeITRegion == 3 &&  hitInSq ) ) {
+              // if this hit is (or isn't) in the IT region
+              acceptCluster = 0;
+              plot2D( largestHit->midPoint().x(), largestHit->midPoint().y(),
+                  "MCCluster_rejected","Rejected MCClusters; x [mm]; y [mm]",
+                  -3000, 3000, -2500, 2500, 200, 200 );
+            }
           } // end of if removeITRegion
 
           if ( acceptCluster ) {
