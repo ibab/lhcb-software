@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v3r1 2014-03-17 =========================
 ! 2014-02-27 - Kurt Rinnert
  - store all common sensor properties in static members.
  - provide a static cache of x pixel positions and pitches.
