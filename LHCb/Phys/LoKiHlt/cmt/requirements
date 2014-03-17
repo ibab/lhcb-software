@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ====================================================================
 package           LoKiHlt
-version           v3r13
+version           v3r14
         
 # =============== structure ===============================================
 branches          cmt doc src dict python LoKi 
