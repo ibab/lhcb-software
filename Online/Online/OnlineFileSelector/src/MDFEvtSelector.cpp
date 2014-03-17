@@ -119,13 +119,12 @@ namespace LHCb  {
       * @return StatusCode indicating success or failure
       */
     virtual StatusCode createContext(Context*& refpCtxt) const {
+      
       int c = ::toupper(m_ignoreChecksum[0]);
       refpCtxt = new MDFPollerContext(this,c=='Y'||c=='T'); // YES or TRUE
       setCurContext(refpCtxt);
-      
       TestEvtSelector::m_firstConnection = 0;
-      
-      
+           
       return StatusCode::SUCCESS;
     }
 

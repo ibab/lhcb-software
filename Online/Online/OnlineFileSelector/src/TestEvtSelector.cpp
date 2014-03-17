@@ -111,7 +111,9 @@ StatusCode TestEvtSelector::initialize()  {
      return sc;
    }
 
-  // Locks
+   m_filePoller->queryInterface(IID_IOnlineBookkeep,&m_OnlineBookkeep);
+
+  
   // Create lock to steer suspend/resume operations
   if ( !lib_rtl_is_success(lib_rtl_create_event(0,&m_suspendLock)) )  {
     log << MSG::ERROR << "Cannot create lock to suspend operations." << endmsg;
@@ -124,7 +126,7 @@ StatusCode TestEvtSelector::initialize()  {
     
     return StatusCode::FAILURE;
   }
-  
+  //suspend();
   
   // Retrieve conversion service handling event iteration
   status = Service::service(m_ioMgrName, m_ioMgr);
@@ -191,9 +193,11 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
   StatusCode sc = StatusCode::FAILURE;
   
   if (m_maxNoEvt == m_evtCount) { 
-		      m_evtCount = 1; ///Read as much as we wanted, read the same number from next file -- first event is immediately read
+		m_evtCntRecord = m_evtCount;
+		((IOnlineBookkeep*)m_OnlineBookkeep)->updateStFlag(m_input); 
+		m_evtCount = 1;
 	        cout << "Going idle..." << endl;
-          return goIdle();
+                return goIdle();
   } 
 
   if ( pCtxt != 0 )   {
@@ -210,12 +214,12 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
                log << MSG::ALWAYS << "Reading Event record " << (m_evtCount-m_skipEvents)
                   << ". Record number within stream " << m_evtCount << endmsg;
              }
-             return sc;
+	     return sc;
            }
            else {
-
+	     m_evtCntRecord = m_evtCount;
+	     ((IOnlineBookkeep *)m_OnlineBookkeep)->updateStFlag(m_input); 
              return goIdle();
-
            }
            
   }
@@ -367,7 +371,7 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
           refpCtxt = 0;
           return sc;
         }
-        m_filePoller->statusReport(sc,m_input,m_evtCount);  ///CHECK m_evtCount
+        m_filePoller->statusReport(sc,m_input,m_evtCntRecord);
    }
 
   if (!(m_filePoller->remListener((IAlertSvc*)this))) {
