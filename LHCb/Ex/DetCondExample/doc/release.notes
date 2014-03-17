@@ -1,8 +1,9 @@
-! ========================================================================
+! ====================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
-! ========================================================================
+! =====================================================================
 
+!========================= DetCondExample v11r14 2014-03-17 ====================
 ! 2014-03-07 - Liang Sun
  - Fix the CondDB path in testsplit.py
 
@@ -10,7 +11,7 @@
  - Add a script to set up test environment for the split HLT scenario
  - Add an example script for the purpose of demonstration
 
-!========================= DetCondExample v11r13 2013-06-03 =======================
+!========================= DetCondExample v11r13 2013-06-03 ====================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
 
@@ -19,7 +20,7 @@
  - Fix UNINIT_CTOR defects
  - Remove "do nothing" finalize methods
 
-!========================= DetCondExample v11r12 2012-11-26 =========================
+!========================= DetCondExample v11r12 2012-11-26 ====================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
