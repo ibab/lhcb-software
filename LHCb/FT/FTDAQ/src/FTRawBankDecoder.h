@@ -9,7 +9,7 @@
 
 
 /** @class FTRawBankDecoder FTRawBankDecoder.h
- *  Decode the FT raw bank into FTRawClusters
+ *  Decode the FT raw bank into FTLiteClusters
  *
  *  @author Olivier Callot
  *  @date   2012-05-11
