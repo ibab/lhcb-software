@@ -13,7 +13,7 @@
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FTCluster.h"
-#include "Event/FTRawCluster.h"
+#include "Event/FTLiteCluster.h"
 
 // local
 #include "PrLHCbID2MCParticle.h"
@@ -178,13 +178,13 @@ StatusCode PrLHCbID2MCParticle::execute() {
   }
   
   //== FT
-  if ( exist<FastClusterContainer<LHCb::FTRawCluster,int> >(LHCb::FTRawClusterLocation::Default) ) {
+  if ( exist<FastClusterContainer<LHCb::FTLiteCluster,int> >(LHCb::FTLiteClusterLocation::Default) ) {
     LinkedTo<LHCb::MCParticle> ftLink( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default );
     if ( !ftLink.notFound() ) {
       m_detectorLink = &ftLink;
-      typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
-      FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
-      FTRawClusters::const_iterator iClus;
+      typedef FastClusterContainer<LHCb::FTLiteCluster,int> FTLiteClusters;
+      FTLiteClusters* clus = get<FTLiteClusters>( LHCb::FTLiteClusterLocation::Default );
+      FTLiteClusters::const_iterator iClus;
       for(iClus = clus->begin(); iClus != clus->end(); ++iClus) {
         LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
         int id            = myId.ftID();
