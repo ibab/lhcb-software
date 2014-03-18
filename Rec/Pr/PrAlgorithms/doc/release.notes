@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-18 - Michel De Cian
+ - Changed FTRawCluster to FTLiteCluster in PrFTHitManager
+
 ! 2014-03-18 - Francesco Polci 
  - Removed bilayer code from PrFTHitManager.cpp
    Changed NULL to nullptr

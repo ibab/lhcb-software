@@ -2,7 +2,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include "Event/FTRawCluster.h"
+#include "Event/FTLiteCluster.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 // local
 #include "PrFTHitManager.h"
@@ -44,7 +44,8 @@ void PrFTHitManager::buildGeometry ( ) {
   service( "RndmGenSvc", randSvc );
   m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
   m_ftDet = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg;  //version 20 is the detector with monolayer and fibremat structure, including the dead regions
+  //version 20 is the detector with monolayer and fibremat structure, including the dead regions
+  debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg;  
   DetectorSegment seg;
 
   for ( std::vector<DeFTLayer*>::const_iterator itL = m_ftDet->layers().begin();  //loop over layers
@@ -72,8 +73,8 @@ void PrFTHitManager::decodeData ( ) {
   
   debug() << "I AM IN DECODEDATA " << endmsg;
   
-  typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
-  FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
+  typedef FastClusterContainer<LHCb::FTLiteCluster,int> FTLiteClusters;
+  FTLiteClusters* clus = get<FTLiteClusters>( LHCb::FTLiteClusterLocation::Default );
   debug() << "Retrieved " << clus->size() << " clusters" << endmsg;
   const DeFTFibreMat* ftMat = nullptr;
   const DeFTFibreMat* anaFtMat = nullptr;
@@ -83,15 +84,15 @@ void PrFTHitManager::decodeData ( ) {
   
   DetectorSegment seg ; 
   
-  for ( FTRawClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
-    //find fibremat to which the cluster belongs 
+  for ( FTLiteClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
+    /// find fibremat to which the cluster belongs 
     anaFtMat = m_ftDet->findFibreMat( (*itC).channelID() );
     if(anaFtMat->FibreMatID() != oldFibreMatID)  { 
       oldFibreMatID =  anaFtMat->FibreMatID();
       ftMat =  anaFtMat; 
       if ( nullptr == ftMat ) {
-	info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg; 
-	oldFibreMatID = 99999999;   
+        info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg; 
+        oldFibreMatID = 99999999;   
       } 
     }
     
