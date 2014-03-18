@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FastVelo
 ################################################################################
-gaudi_subdir(FastVelo v1r15)
+gaudi_subdir(FastVelo v1r16)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Det/VeloDet
