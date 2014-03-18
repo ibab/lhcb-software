@@ -5,6 +5,93 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v16r1>2014-03-20 RecSys v16r1</A></H1><PRE>
+This version uses Gaudi v25r0, LHCb v37r1 and Lbcom v15r1
+
+- Packages modified: Calo/CaloMoniDst v5r16, Calo/CaloPIDs v5r16,
+    Calo/CaloReco v5r19, Muon/MuonID v9r10, Pr/PrAlgorithms v1r10,
+    Pr/PrMCTools v2r1, Pr/PrPixel v1r6, Pr/PrVeloUT v2r1, Rich/RichRecQC v2r65,
+    Tf/FastVelo v1r16, Tf/PatAlgorithms v4r31, Tr/TrackMCTools v3r8,
+    Tr/TrackMonitors v2r1, Tr/TrackTools v5r1, Tr/TrackUtils v1r55
+
+- In Calo/CaloMoniDst v5r16, Calo/CaloPIDs v5r16, Calo/CaloReco v5r19
+  . python/Configuration.py : propagate OutputLevel value to calo sequences only
+    when the property is explicity set
+
+- In Calo/CaloReco v5r19
+  . python/Configuration.py : deactivate Spd/Prs Decoders in DecoderDB when
+    noSpdPrs=True
+  . add DAQSys dependency
+  . CaloMergedPi0Alg : remove default tools property triggering Prs/Spd decoding
+
+- In Muon/MuonID v9r10
+  . Suppress warnings in the default case. Move the warning to an info message.
+
+- In Pr/PrAlgorithms v1r9p1, v1r10
+  . Added binary searches in PrForwardTool and other small changes to use new
+    PrPlaneCounter, simplifications in PrGeometryTool
+  . Added doxygen documentation to PrForwardTrack, replaced call by value by call
+    by reference
+  . Added doxygen documentation to PrPlaneCounter, changed PrForwardTracking 
+    to make it faster and more standardized
+  . Changes in PrPlaneCounter which make it faster.
+  . Fix unstable sorting in PrSeedingXLayers.
+
+- In Pr/PrMCTools v2r1, Pr/PrPixel v1r6, Tr/TrackMCTools v3r8
+  . Follow changes in VPCluster format and path 
+
+- In Pr/PrPixel v1r6
+  . Store 3D point information when creating VPClusters.
+  . Improved documentation and clean up of new code.
+  . Prepared for upcoming new event model and cluster storage after track finding
+  . Introduced runtime switch for trigger or offline configuration. The pattern
+    recognition results are the same in both cases, but the clusters put on
+    the TES will potentially be different, depending on the maximum cluster
+    size passed to the track finding algorithm.
+  . Added code to run the tracking directly from raw banks. This is completely
+    transparent; the bank version determines how the bank is interpreted.
+  . Bug fix in PrPixelHitManager: the size of of clusters in super pixel
+    patterns was off by one (legacy debugging code).
+  . Bug fix in PrPixelClustering: matched super pixel clusters sometimes
+    received the wrong sensor column number (wrong grouping of integer divisions).
+  . Simplified generic clustering code in PrPixelClustering
+  . Use new features of DeVPSensor to speed up 3D point building.
+  . Additional various optimizations (cache global transforms, PrPixelModule 
+    object pool ...).
+  . Added possibility to do clustering and 3D hit building directly from
+    super pixel raw banks.
+  . Added clustering algorithm creating VPLiteClusters from super pixel raw
+    bank.
+
+- In Pr/PrVeloUT v2r1
+  . Optimised VeloUT for speed, restructured code layout, added interface
+
+- In Rich/RichRecQC v2r65
+  . Clean up Rich::Rec::MC::RecoQC a little using c++11 features.
+
+- In Tf/FastVelo v1r16
+  . Fixed rare FPE in phi cluster weights
+
+- In Tf/PatAlgorithms v4r31
+  . PatForwardTool: factor out common code in buildXCandidatesList
+    and fillStereoList into make_single_region
+  . PatFwdTool: move check on B-field out of loop
+  . various C++11 changes resulting in O(5%) speedup of PatForward in Hlt2.
+  . replace boost::array with C++11 std::array, BOOST_FOREACH with C++11 
+    range-based for, and boost::assign::list_of with C++11 list initializers
+
+- In Tr/TrackMonitors v2r1
+  . Some improvements to STEfficiency.
+  . Add STCoordinates, OTCoordinates, STYAlignMagOff, OTYAlignMagOff.
+
+- In Tr/TrackTools v5r1
+  . Added expectation FT class
+
+- In Tr/TrackUtils v1r55
+  . Add new property MassOffset to ChargedParticlesToTracks.
+  . Add new properties to allow TrackHitAdder to be used for Y alignment.
+
+
 </PRE><H1><A NAME=v16r0>2014-02-20 RecSys v16r0</A></H1><PRE>
 This version uses Gaudi v25r0, LHCb v37r0 and Lbcom v15r0
 Contains all changes that were used for Upgrade Tracking TDR results 
