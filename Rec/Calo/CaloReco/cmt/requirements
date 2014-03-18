@@ -1,11 +1,11 @@
-# ========================================================================
+# ====================================================================
 package            CaloReco
-version           v5r18
+version           v5r19
 
-# ================ structure ==================================================
+# ================ structure ==============================================
 branches           cmt doc src options 
 
-# ================ dependencies ===============================================
+# ================ dependencies ===========================================
 use CaloInterfaces  v*	   Calo 
 use CaloUtils       v*     Calo 
 use Relations       v*     Kernel 
@@ -14,13 +14,13 @@ use CaloPIDs        v*     Calo -no_auto_imports
 use CaloDAQ         v*     Calo -no_auto_imports
 use DAQSys	    v*	   DAQ  -no_auto_imports
 
-# ================ constituents ===============================================
+# ================ constituents ============================================
 library            CaloReco    *.cpp
 
-# ================ standard patterns ==========================================
+# ================ standard patterns =========================================
 apply_pattern      component_library library=CaloReco
 apply_pattern      install_python_modules
-# ========================================================================
+# ====================================================================
 
 # Set the default path for Brunel options.
 set CALORECOOPTS ${CALORECOROOT}/options

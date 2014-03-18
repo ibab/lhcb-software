@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r19 2014-03-18 =========================
 ! 2014-03-06 - Olivier Deschamps
  -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
 
