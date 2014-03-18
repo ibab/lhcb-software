@@ -73,6 +73,7 @@ This version uses Gaudi v25r0 and LCG_66.
 
 - In Kernel/LHCbAlgs v3r1
   . Add tests for the split HLT scenario based on runchangehandler.qmt.
+  . Add new timing auditor which will output itself to a file.
 
 - In Kernel/LHCbKernel v15r1
   . Use Info(...) methods for memory pool release messages in LbAppInit, in
