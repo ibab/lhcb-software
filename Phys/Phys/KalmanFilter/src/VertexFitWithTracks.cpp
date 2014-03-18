@@ -245,9 +245,6 @@ StatusCode LoKi::KalmanFilter::step
   //
   typedef TrEntries4::iterator      IT ;
   //
-  IT first = entries.begin () ;
-  //
-  //
   Gaudi::SymMatrix3x3 _ci ( ci      ) ;
   Gaudi::Vector3      _x  ( ci * x  ) ;
   //
@@ -299,8 +296,6 @@ StatusCode LoKi::KalmanFilter::step
   if ( entries.empty() ){ return StatusCode::SUCCESS ; }
   //
   typedef TrEntries4::iterator      IT ;
-  //
-  IT first = entries.begin () ;
   //
   Gaudi::SymMatrix3x3 _ci ; 
   Gaudi::Vector3      _x  ;
