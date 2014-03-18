@@ -112,7 +112,7 @@ def removeConfigurables(conf_list):
 
 # Copied from HLT Conf, setting given configurables with a dictionary:
 
-def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} ) :
+def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} , recurseToTools=False) :
     """ Find all configurable algorithms and set certain properties
     
     head: can be a sequence or a list, or a configurable to start with.
@@ -161,8 +161,9 @@ def forAllConf( head=None, prop_value_dict={}, types=[], force=False, tool_value
         if len(tool_value_dict):
             for k,v in tool_value_dict.iteritems():
                 tool=addPrivateToolFromString(head,k)
-                forAllConf(tool,prop_value_dict=v,types=[],force=force)
-        
+                forAllConf(tool,prop_value_dict=v,types=[],force=force,recurseToTools=recurseToTools)
+        if recurseToTools:
+            forAllConf(head.getTools(),prop_value_dict,types=[],force=force,recurseToTools=recurseToTools)
         for prop in prop_value_dict:
             if hasattr(head,prop) or (hasattr(head,"properties") and prop in head.properties()) or(hasattr(head,"__slots__") and prop in head.__slots__):
                 if force or (not head.isPropertySet(prop)):
@@ -211,8 +212,8 @@ def postConfigCallable(*args,**kwargs):
         mydummy=dummyPostConf(args[0],args[1:],kwargs)
     appendPostConfigAction(mydummy.method)
 
-def postConfForAll(head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} ) :
+def postConfForAll(head=None, prop_value_dict={}, types=[], force=False, tool_value_dict={} , recurseToTools=False) :
     """postConfigCallable with signature for forAllConf
     Append postConfigAction or forAllConf"""
-    postConfigCallable(forAllConf,head,prop_value_dict, types=types, force=force, tool_value_dict=tool_value_dict)
+    postConfigCallable(forAllConf,head,prop_value_dict, types=types, force=force, tool_value_dict=tool_value_dict, recurseToTools=recurseToTools)
 
