@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r10 2014-03-18 =======================
 ! 2014-03-14 - Michel De Cian
  - Added binary searches in PrForwardTool and other small changes to use new PrPlaneCounter, simplifications in PrGeometryTool
 
