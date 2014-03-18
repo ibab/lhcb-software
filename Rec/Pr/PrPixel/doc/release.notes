@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r6 2014-03-18 =========================
 ! 2014-03-14 - Kurt Rinnert
  - named cluster storing algorithm more aptly.
 
