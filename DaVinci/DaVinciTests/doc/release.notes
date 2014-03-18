@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-03-18 - Christopher Rob Jones
+ - Adapt to small change in TrackStateProvider message.
+
 ! 2014-03-14 - Chris Jones
  - Adapt to removal of various CaloDet INFO messages.
 
