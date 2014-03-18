@@ -1,17 +1,17 @@
-# ========================================================================
+# ====================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
-# =========================================================================
+# =====================================================================
 package           CaloMoniDst
-version           v5r15
+version           v5r16
 
-# =============== structure ==================================================
+# =============== structure ===============================================
 branches          cmt doc src python
 
-# =============== environment ================================================
+# =============== environment =============================================
 set               CALOMONIDSTOPTS $(CALOMONIDSTROOT)/options 
 
-# =============== dependencies ===============================================
+# =============== dependencies ============================================
 use CaloInterfaces  v*    Calo 
 use CaloUtils       v*    Calo 
 use CaloKernel      v*    Calo 
@@ -32,10 +32,10 @@ use AIDA            v*    LCG_Interfaces
 
 
 
-# =============== constituents ===============================================
+# =============== constituents =============================================
 library           CaloMoniDst -import=AIDA  *.cpp
 
-# =============== patterns ===================================================
+# =============== patterns ===============================================
 apply_pattern     install_python_modules
 apply_pattern     component_library library=CaloMoniDst
 macro_append CaloMoniDst_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"

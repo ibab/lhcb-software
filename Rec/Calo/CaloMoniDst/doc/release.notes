@@ -4,22 +4,22 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloMoniDst v5r16 2014-03-18 =======================
 ! 2014-03-06 - Olivier Deschamps
  -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
 
-
-!========================= CaloMoniDst v5r15 2013-10-24 =========================
+!========================= CaloMoniDst v5r15 2013-10-24 =======================
 ! 2013-10-09 - Olivier Deschamps
  -  python/CaloDAQ/Monitors.py & Configuration.py :  possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
  -  src/  :  protect monitoring algorithms against the upgrade configuration with no Spd/Prs
 
-!========================= CaloMoniDst v5r14 2013-07-18 =========================
+!========================= CaloMoniDst v5r14 2013-07-18 =======================
 ! 2013-06-12 - Marco Cattaneo
  - Fix gcc48 warning
  - Change a global variable to local, fixes UNINIT_CTOR warning
  - Remove empty finalize methods
 
-!========================= CaloMoniDst v5r13 2012-11-28 =========================
+!========================= CaloMoniDst v5r13 2012-11-28 =======================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
@@ -33,12 +33,12 @@
 ! 2012-10-08 - Olivier Deschamps
  - Fix coverity problems
 
-!========================= CaloMoniDst v5r12 2012-06-25 =========================
+!========================= CaloMoniDst v5r12 2012-06-25 =======================
 ! 2012-05-13 - Olivier Deschamps
  - fix CaloAlignmentNtp
  - update L0CaloScale
 
-!========================= CaloMoniDst v5r11 2012-05-02 =========================
+!========================= CaloMoniDst v5r11 2012-05-02 =======================
 ! 2012-04-17 - Olivier Deschamps
  - new algorithm : L0CaloScale to compare CaloCluster/CaloHypo/L0Cluster transverse
    energy
@@ -48,27 +48,27 @@
  - Add eta->gg monitoring (re-use resolvedPi0 algorithm)
  - SpdMonitor : set splitArea=true as the default for Calo2Dview histos 
 
-!========================= CaloMoniDst v5r9 2011-09-06 =========================
+!========================= CaloMoniDst v5r9 2011-09-06 ========================
 ! 2011-09-03 - Olivier Deschamps
  - fix CaloAlignment.cpp
 
-!========================= CaloMoniDst v5r8 2011-07-27 =========================
+!========================= CaloMoniDst v5r8 2011-07-27 ========================
 ! 2011-07-22 - Marco Cattaneo
  - Create debug() messages only when output level requires it,
    also using UNLIKELY macro
  - Replace all endreq by endmsg
 
-!========================= CaloMoniDst v5r7 2011-02-25 =========================
+!========================= CaloMoniDst v5r7 2011-02-25 ========================
 ! 2011-02-07 - Olivier Deschamps
  - update tupling algorithms
 
-!========================= CaloMoniDst v5r6 2011-01-17 =========================
+!========================= CaloMoniDst v5r6 2011-01-17 ========================
 ! 2010-10-07 - Olivier Deschamps
  - New base class : CaloNtpBase for tupling algorithms
  - CaloAlignmentNtp now inherits from CaloNtpBase
  @TODO : make other XXNtp algorithm to inherit from the base class
 
-!========================= CaloMoniDst v5r5 2010-10-28 =========================
+!========================= CaloMoniDst v5r5 2010-10-28 ========================
 ! 2010-10-07 - Olivier Deschamps
  - Fix windows warning
 
