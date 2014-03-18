@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-18 - Marco Clemencic
+ - Added missing dependency on Event/FSREvent.
+
 !========================= FSRAlgs v1r5 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - Change the mergesmallfielstest to use PRConfig

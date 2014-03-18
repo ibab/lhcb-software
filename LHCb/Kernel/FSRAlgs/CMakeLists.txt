@@ -6,6 +6,7 @@ gaudi_subdir(FSRAlgs v1r5)
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/DAQEvent
                          Event/EventBase
+                         Event/FSREvent
                          Event/LumiEvent
                          Event/RecEvent
                          GaudiAlg

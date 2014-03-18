@@ -17,6 +17,7 @@ use LumiEvent       v* Event
 use DAQEvent        v* Event
 use EventBase       v* Event
 use RecEvent        v* Event
+use FSREvent        v* Event
 use LHCbKernel      v* Kernel
 use LHCbAlgs        v* Kernel
 use DetDesc         v* Det
