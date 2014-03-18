@@ -125,7 +125,8 @@ namespace LHCb  {
       refpCtxt = new MDFPollerContext(this,c=='Y'||c=='T'); // YES or TRUE
       setCurContext(refpCtxt);
       TestEvtSelector::m_firstConnection = 0;
-           
+      TestEvtSelector::m_evtCntRecord = 0;
+          
       return StatusCode::SUCCESS;
     }
 

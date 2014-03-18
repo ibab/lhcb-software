@@ -354,7 +354,7 @@ StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) 
   }
 
   int i;				////////
-  istringstream(file.substr(1,6)) >> i;
+  istringstream(file.substr(0,6)) >> i;
   
   status = sqlite3_bind_int(pstatement,2,i/*stoi(file.substr(0,6))*/); 
   if (SQLITE_OK != status) {
@@ -525,7 +525,7 @@ int FilePoller::print_aux(void* /*data*/, int columnNum, char **argv, char** /*C
    
    int i;   
    for(i=0; i<columnNum; i++){
-      cout << (argv[i] ? argv[i] : "NULL") << "     ";
+      cout << (argv[i] ? argv[i] : "NULL") << "        ";
       
    }
    cout << endl;
@@ -543,7 +543,7 @@ StatusCode FilePoller::printDB() {
   
   string query = "SELECT * FROM FileRecords;";
   const char* c_query = query.c_str();	  
-  const char* data = "FileName                   Run    EventCnt StatusFlag"; 
+  const char* data = "FileName                     Run      EventCnt  StatusFlag"; 
  
   cout << data << endl; 	
   
