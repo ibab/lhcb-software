@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackMCTools
 ################################################################################
-gaudi_subdir(TrackMCTools v3r7)
+gaudi_subdir(TrackMCTools v3r8)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
