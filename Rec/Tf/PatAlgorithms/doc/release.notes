@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r31 2014-03-18 ======================
 ! 2014-02-25 - Gerhard Raven
  - PatForwardTool: factor out common code in buildXCandidatesList
    and fillStereoList into make_single_region
