@@ -5,11 +5,12 @@
     <text>-n</text>
     <text>1200</text>
     <text>VanDerMeerScan_Jul12</text>
-    <text>--multil0</text>
+    <text>-d</text>
+    <text>2012_raw_L041</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot;
+expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 1: 1101&quot;
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['moore.vdm.expected_string'] = result.Quote(expected_string)
@@ -17,8 +18,8 @@ if stdout.find(expected_string) == -1:
 #ideally no errors, but there is always two when opening every Raw file
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
-from Moore.QMTest.MooreTests import extractEventsFromTiming
-timing,timingdict=extractEventsFromTiming(stdout,'Hlt')
+from LHCbAlgs import TTParser
+timingdict=TTParser.event_av_dict("VanDerMeerScan_Jul12.csv")
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')
@@ -27,9 +28,9 @@ if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
 if 'Hlt1BeamGasBeam1' not in timingdict:
     causes.append('Doesnt contain beamgas lines')
     result['moore.vdm.bg'] = result.Quote('No line called Hlt1BeamGasBeam1 in timing table')
-elif timingdict['Hlt1BeamGasBeam1']!=1200:
+elif timingdict['Hlt1BeamGasBeam1'][0]!=1200:
     causes.append('BeamGas does not see all events')
-    result['moore.vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1']))
+    result['moore.vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1'][0]))
 
 
 </text></argument>

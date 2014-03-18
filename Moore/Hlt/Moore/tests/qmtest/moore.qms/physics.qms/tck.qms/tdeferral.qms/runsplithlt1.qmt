@@ -10,18 +10,14 @@
     <text>../options/Moore-LocalTCKData.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().outputFile = 'hlt1_reqhlt1_tck.raw';</text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().outputFile = 'hlt1_reqhlt1_tck.raw'; Moore().EnableTimer="tck.deferral.hlt1only.csv";</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-#print "YES"
-#reftable
-reftable='../refs/physics.2012.timing.ref'
 myname='moore.physics.tck.tdeferral.runsplithlt1'
 
-from Moore.QMTest.MooreTests import compareTimingTableEvents
+from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt1",extranewref=".tck")
+compareTimingTableEvents(myname,result,causes,"tck.deferral.hlt1only.csv","physics.2012.qmt","Hlt1",extranewref=".tck")
 
 
 #count error lines, shouldn't be any warnings or errors, ideally

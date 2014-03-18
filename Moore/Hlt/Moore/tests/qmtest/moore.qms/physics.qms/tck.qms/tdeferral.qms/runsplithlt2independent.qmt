@@ -11,18 +11,15 @@
     <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; </text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.deferral.hlt2only.csv"; </text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-#print "YES"
-#reftable, compare to hlt2only from standard running
-reftable='../refs/physics.deferral.hlt2only.ref'
 myname='moore.physics.tck.tdeferral.runsplithlt2independent'
 
-from Moore.QMTest.MooreTests import compareTimingTableEvents
+from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt2",extranewref=".tck")
+compareTimingTableFiles(myname,result,causes,"tck.deferral.hlt2only.csv","physics.2012.csv","Hlt2",extranewref=".tck")
 
 
 #count error lines, shouldn't be any warnings or errors, ideally

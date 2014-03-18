@@ -38,6 +38,7 @@ class MooreExpert(LHCbConfigurableUser):
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite'
         , "Hlt2Independent" : False #"Gerhard's Sledgehammer", auto pass all TOS links from HLT1->HLT2 when run alone, and also turn off HLT1 track decoding
+        , "DisableMonitors" : False #Disable HLT monitoring
         }
 
     def __apply_configuration__(self):
@@ -45,6 +46,7 @@ class MooreExpert(LHCbConfigurableUser):
         for prop in self.__slots__:
             if self.isPropertySet(prop) and self.getProp(prop)!=self.getDefaultProperty(prop):
                 log.warning("Hey! You're setting an expert property "+prop+" are you an expert? Let's hope so!")
+        #seriously, this configurable should not hold any logic, it is only used as a singleton options store
         return
 
 
@@ -382,7 +384,8 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
         
         # Print algorithm name with 40 characters
-        MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
+        if not MessageSvc().isPropertySet("Format"):
+            MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         
         #this should be OK to do here...
         from Funcs import _minSetFileTypes
@@ -428,7 +431,7 @@ class Moore(LHCbConfigurableUser):
             MessageSvc().OutputLevel = level
             ToolSvc().OutputLevel = level
         
-        if level>INFO and self.getProp("EnableTimer") and type(self.getProp("EnableTimer")) is not str:
+        if level>INFO and hasattr(self, "EnableTimer") and self.getProp("EnableTimer") and type(self.getProp("EnableTimer")) is not str:
             print "# WARNING: Timing table is too verbose for printing, consider outputting to a file instead please, Moore().EnableTimer='timing.csv', for example."
             
         #################################################
@@ -440,12 +443,11 @@ class Moore(LHCbConfigurableUser):
         #################################################
         # Running from thresholds, use post config action
         #################################################
-        if not self.getProp("UseTCK"):
+        if not self.getProp("UseTCK") and level>INFO:
             #post config to really reset all the output to null
             from DAQSys.Decoders import DecoderDB
             from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
             props={}
-            #reset to INFO if asked to, remember, the default is now WARNING!
             props["OutputLevel"]=level
             props["StatPrint"]=(level<WARNING)
             props["ErrorsPrint"]=(level<WARNING)
@@ -456,22 +458,51 @@ class Moore(LHCbConfigurableUser):
                 for pk,pv in props.iteritems():
                     v.Properties[pk]=pv
             
+            postConfForAll(head=[k for k in DecoderDB], prop_value_dict=props,force=True,recurseToTools=True)
+            
             #only for GaudiHistoAlgs...
             props["HistoCountersPrint"]=(level<WARNING)
-            postConfForAll(head=None, prop_value_dict=props,force=True)
+            postConfForAll(head=None, prop_value_dict=props,force=True,recurseToTools=True)
+            #so, the above works for almost everything, apart from on-demand created tools, of which there are a lot, and these need to be added separately
+            #mostly these tools are in the calo
             
-            #now turn off the calo tool finalize printout
-            tools={"CaloECorrection/ECorrection":{"OutputLevel":level},
-                   "CaloSCorrection/SCorrection":{"OutputLevel":level},
-                   "CaloLCorrection/LCorrection":{"OutputLevel":level}
+            #now turn off the calo tool finalize printout, there are *a lot* of tools here
+            tools={"CaloECorrection/ECorrection":props,
+                   "CaloSCorrection/SCorrection":props,
+                   "CaloLCorrection/LCorrection":props,
+                   "CaloHypoEstimator":props,
+                   "CaloExtraDigits/SpdPrsExtraE":props,
+                   "CaloExtraDigits/SpdPrsExtraG":props,
+                   "CaloExtraDigits/SpdPrsExtraM":props,
+                   "CaloExtraDigits/SpdPrsExtraS":props,
+                   "CaloSelectCluster/PhotonCluster":props,
+                   "CaloSelectCluster/ElectronCluster":props,
+                   "CaloSelectChargedClusterWithSpd/ChargedClusterWithSpd":props,
+                   "CaloSelectClusterWithPrs/ClusterWithPrs":props,
+                   "CaloSelectNeutralClusterWithTracks/NeutralCluster":props,
+                   "CaloSelectNeutralClusterWithTracks/NotNeutralCluster":props,
+                   
+                   "CaloSelectorNOT/ChargedCluster" : props,
+                   "CaloSelectNeutralClusterWithTracks/ChargedCluster.NeutralCluster":props
                    }
-            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #allcalotools=[]
+            
+            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg","NeutralProtoPAlg"],force=True,tool_value_dict=tools)
             #three extras for merged pi0
-            tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":level},
-                   "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":level},
-                   "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":level}
+            tools={"CaloCorrectionBase/ShowerProfile":props,
+                   "CaloCorrectionBase/Pi0SCorrection":props,
+                   "CaloCorrectionBase/Pi0LCorrection":props
                    }
-            postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            postConfForAll(head=None, prop_value_dict=props,types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #same for members of the ToolService
+            from Configurables import LoKi__LifetimeFitter, CaloDigitFilterTool, CaloGetterTool, OTChannelMapTool, CaloClusterizationTool
+            #public tools
+            postConfForAll(head=[LoKi__LifetimeFitter("ToolSvc.lifetime"),CaloDigitFilterTool("ToolSvc.FilterTool"),CaloGetterTool("ToolSvc.CaloGetter"),OTChannelMapTool("ToolSvc.OTChannelMapTool"),CaloClusterizationTool("ToolSvc.CaloClusterizationTool")], prop_value_dict=props,force=True)
+            tools={"CaloClusterizationTool":props}
+            postConfForAll(head=None, types=["CellularAutomatonAlg"],prop_value_dict=props, tool_value_dict=tools, force=True)
+            #more calo rubbish
+            #tools={"PhotonMaker":props}
+            #postConfForAll(head=None, prop_value_dict={},types=["BiKalmanFittedPhotonFromL0Maker"],force=True,tool_value_dict=tools)
             #I still want to print "Application Manager Finalized Successfully"
             #and "End of event input reached" no matter what
             
@@ -495,7 +526,7 @@ class Moore(LHCbConfigurableUser):
             #################################################
             # Running from TCK define a similar transform
             #################################################
-        else:
+        elif self.getProp("UseTCK"):
             trans={".*":{"OutputLevel"      : {"^.*$":str(level)}}}
             #turn certain things back on if INFO is set again...
             trans[".*"]["StatPrint"]=         {"^.*$":str(level<WARNING)}
@@ -522,7 +553,7 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')
         #print "!!!!!!!!!!!!!!!!!!   IN PROFILE"
-        if self.getProp('EnableTimer') is not None: 
+        if hasattr(self, "EnableTimer") and self.getProp('EnableTimer') is not None: 
             #print "!!!!!!!!!!!!!!!!!!   IN ENABLE"
             #print self.getProp('EnableTimer')
             from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
@@ -611,8 +642,16 @@ class Moore(LHCbConfigurableUser):
                           )
         if self.getProp("OutputLevel")<INFO:
             hltConf.setProp("Verbose",True)
-        
-        if self.getProp("Simulation") is True:
+    
+    def _suppressMonitoring(self):
+        if self.getProp("UseTCK"):
+            trans={}
+            trans['.*HltGlobalMonitor']={ 'Enable' : { "^.*$": "False" } }
+            trans['.*BeetleSyncMonitor.*']={ 'Enable' : { "^.*$": "False" } }
+            trans['HltL0GlobalMonitor']={ 'Enable' : { "^.*$": "False" } }
+            Funcs._mergeTransform(trans)
+        else:
+            hltConf = HltConf()
             hltConf.setProp("EnableHltGlobalMonitor",False)
             hltConf.setProp("EnableBeetleSyncMonitor",False)
             hltConf.setProp("EnableHltL0GlobalMonitor",False)                     
@@ -630,7 +669,8 @@ class Moore(LHCbConfigurableUser):
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
-
+        
+    
     def _definePersistency(self):
         
         #online, do the minimum possible, of only setting up MDF
@@ -856,6 +896,8 @@ class Moore(LHCbConfigurableUser):
             #things 
             for prop,set in [("generateConfig",False),("EvtMax",-1)]:
                 self._throwIfNotSet(self,prop,set," because you're running in Online mode!")
+            for prop,set in [("DisableMonitors",False)]:
+                self._throwIfNotSet(MooreExpert(),prop,set," because you're running in Online mode!")
         
         #check nothing strange is running to generate a TCK
         if self.getProp("generateConfig"):
@@ -911,7 +953,10 @@ class Moore(LHCbConfigurableUser):
             
         self._definePersistency()
         self._configureDataOnDemand()
-        
+
+        if self.getProp("Simulation") or MooreExpert().getProp("DisableMonitors"):
+            self._suppressMonitoring()
+            
         if not self.getProp("RunOnline") :
             self._profile()
             if self.getProp("generateConfig") : self._generateConfig()

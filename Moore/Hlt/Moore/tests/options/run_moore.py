@@ -34,7 +34,7 @@ Moore().EvtMax = options.EvtMax
 Moore().DDDBtag    = options.DDDBtag
 Moore().CondDBtag  = options.CondDBtag
 Moore().ForceSingleL0Configuration=(not options.multil0)
-Moore().EnableTimer=True
+Moore().EnableTimer=args[ 0 ]+".csv"
 
 #take the test data and automatically set with the PRConfig
 from PRConfig import TestFileDB

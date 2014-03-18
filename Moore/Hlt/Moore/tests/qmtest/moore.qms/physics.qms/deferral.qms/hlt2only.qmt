@@ -9,27 +9,16 @@
     <text>../options/Moore_NoTosDeferral.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
     <text>../options/default-threshold.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt2only.csv";</text>
   </set></argument>
-  <!--<argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-#print "YES"
-#reftable, should not be equal to the standard physics run!
-reftable='../refs/physics.deferral.hlt2only.ref'
-savestdout='hlt2only.stdout'
 myname='moore.physics.deferral.hlt2only'
 
-prevstdout=''
-#save stdout
-f=open(savestdout,'w')
-f.write(stdout)
-f.close()
+from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-from Moore.QMTest.MooreTests import compareTimingTableEvents
-
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt2")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt2only.csv","physics.2012.csv","Hlt2")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})

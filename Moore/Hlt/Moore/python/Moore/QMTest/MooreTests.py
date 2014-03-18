@@ -149,7 +149,7 @@ def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=No
     listToResult(testname,"g_Rest",rest,refresultdict,timingdict,toomany,result=result)
 
 
-def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=None,max=200,extranewref='',timingthreshold=0.9):
+def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=None,max=200,extranewref='',timingthreshold=10.):
     """
     compare the timing table with a test timing table
     testname: the name of this qmtest
@@ -174,15 +174,6 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
     if len(missing+different+added)==0:
         return
     
-    causes.append('#timing tables disagree')
-    
-    if len(extranewref) and not extranewref.startswith('.'):
-        extranewref='.'+extranewref
-    if beginswith is not None:
-        extranewref=extranewref+'.'+beginswith
-    import os
-    os.system("cp "+myfile+" "+refFile+extranewref+'.new')
-    
     #work out if it was the number of events or the timing that caused this
     refdict=TTParser.event_av_dict(TTref)
     thisdict=TTParser.event_av_dict(TTthis)
@@ -191,8 +182,21 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
     for d in different:
         if refdict[d][0]!=thisdict[d][0]:
             events.append(d)
-        else:
-            timings.append(d)
+        elif refdict[d][1]<thisdict[d][1] and refdict[d][1]>0.0001:
+            #allow faster, but not slower, and ignore <10 events for noise
+            if refdict[d][0]>10:
+                timings.append(d)
+    
+    different=events+timings
+    if len(events):
+        causes.append('#timing tables disagree')
+        
+        if len(extranewref) and not extranewref.startswith('.'):
+            extranewref='.'+extranewref
+        if beginswith is not None:
+            extranewref=extranewref+'.'+beginswith
+        import os
+        os.system("cp "+myfile+" "+refFile+extranewref+'.new')
     
     #categorize the differences
     singleEventDiffs=[r for r in events if abs(refdict[r][0]-thisdict[r][0])<2]

@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-18 - Rob Lambert
+ - Make things even quiter in Moore
+ - Suppress all those extra calo tools.
+ - Switch from using stdout to using timing table in most tests.
+ - fix many of the tests such as the vdm and strip20 test
+
 ! 2014-03-17 - Rob Lambert
  - Enable Timing now uses the LHCbTimingAuditor
  - First tests in moore updated to this

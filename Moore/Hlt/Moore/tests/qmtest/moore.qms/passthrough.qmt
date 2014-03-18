@@ -18,14 +18,14 @@ countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 #check that all events are actually passed through?
 #Parse timing table, and check that there is only one entry for HLT 2 and it sees all events (1200)
 
-from Moore.QMTest.MooreTests import extractEventsFromTiming
-timing,timingdict=extractEventsFromTiming(stdout,'Hlt')
+from LHCbAlgs import TTParser
+timingdict=TTParser.event_av_dict("Commissioning_PassThrough.csv")
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')
     result['moore.passthrough.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
 
-if timingdict['HltEndSequence']!=1200:
+if timingdict['HltEndSequence'][0]!=1200:
     causes.append('Does not pass everything')
     result['moore.passthrough.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['HltEndSequence']))
 

@@ -17,7 +17,7 @@ input.run(configurable=Moore())
 
 Moore().ForceSingleL0Configuration=False
 
-from Configuration import LHCbTimingAuditor, LHCbSequencerTimerTool
+from Configurables import LHCbTimingAuditor, LHCbSequencerTimerTool
 
 LHCbTimingAuditor("TIMING").addTool(LHCbSequencerTimerTool,"TIMING")
 

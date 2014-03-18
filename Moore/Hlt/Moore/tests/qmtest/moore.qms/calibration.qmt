@@ -16,8 +16,8 @@ if stdout.find(expected_string) == -1:
 #Parse timing table, and check that there is only one entry for HLT 2 and it sees all events (1200)
 
 
-from Moore.QMTest.MooreTests import extractEventsFromTiming
-timing,timingdict=extractEventsFromTiming(stdout,'Hlt')
+from LHCbAlgs import TTParser
+timingdict=TTParser.event_av_dict("Calibration_VeloMicroBias.csv")
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')
@@ -25,9 +25,9 @@ if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
 
 if 'Hlt1MBMicroBiasVelo' not in timingdict:
     causes.append('No MB selection seen')
-elif timingdict['Hlt1MBMicroBiasVelo']!=1200:
+elif timingdict['Hlt1MBMicroBiasVelo'][0]!=1200:
     causes.append('MB test does not select everything')
-    result['moore.calibration.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1MBMicroBiasVelo']))
+    result['moore.calibration.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1MBMicroBiasVelo'][0]))
 
 
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})

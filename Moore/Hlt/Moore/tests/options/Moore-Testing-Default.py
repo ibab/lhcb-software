@@ -10,12 +10,11 @@ from Configurables import Moore
 Moore().outputFile= 'Test.dst';
 Moore().DataType= '2012';
 Moore().DDDBtag= 'dddb-20120831'; #from RunDB
-Moore().WriterRequires= [];
 Moore().EnableDataOnDemand= True;
 Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
 Moore().CondDBtag= 'cond-20120831'; #from RunDB
-Moore().EnableTimer=True
+Moore().EnableTimer="timerdefault.csv"
 
 ########### L0-related things #######################
 

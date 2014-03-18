@@ -8,20 +8,19 @@
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>../options/default-threshold.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv";</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <!--<argument name="prerequisites"><set>
     <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple>
   </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="validator"><text>
-#print "YES"
-#reftable
-reftable='../refs/physics.2012.timing.ref'
 myname='moore.physics.deferral.hlt1only'
 
-from Moore.QMTest.MooreTests import compareTimingTableEvents
+from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt1")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt1only.csv"stdout,"physics.2012.csv","Hlt1")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 
