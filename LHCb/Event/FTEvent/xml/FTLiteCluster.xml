@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2012-05-11 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package  name = "FTEvent">
+
+    <class  name        = "FTLiteCluster"
+            author      = "Olivier Callot"
+            desc        = "Lite cluster, all information on 32 bits for fast container"
+            location    = "Raw/FT/LiteClusters"
+            serializers = "FALSE" >
+
+      <import name="Kernel/FastClusterContainer"/>
+      <import name="Kernel/FTChannelID"/>
+      <import name="Kernel/SiDataFunctor"/>
+
+      <typedef desc   = "channelID type"
+               type   = "LHCb::FTChannelID"
+               def    = "chan_type"
+               access = "PUBLIC" />
+
+      <typedef desc   = "finding policy"
+                type   = "SiDataFunctor::CompareByChannel &lt; LHCb::FTLiteCluster &gt;"
+                def    = "findPolicy"
+                access = "PUBLIC " /> 
+
+      <typedef desc   = "fast container of Lite Cluster"
+               type   = "FastClusterContainer&lt;LHCb::FTLiteCluster,int&gt;"
+               def    = "FTLiteClusters"
+               access = "PUBLIC" />
+
+      <attribute type='bitfield' name='liteCluster' desc='Lite Cluster'             setMeth="FALSE" getMeth="FALSE">
+        <bitfield name='channelID' length='20' desc='channelID'                     setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='fraction'  length='2' desc='Interpolation as 1/8th'         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='size'      length='4' desc='number of cells in the cluster' setMeth="FALSE" getMeth="TRUE"/>
+        <bitfield name='charge'    length='6' desc='scaled ADC sum'                 setMeth="FALSE" getMeth="TRUE"/>
+      </attribute>
+
+      <constructor desc    = "Constructor" 
+                   argList = 'LHCb::FTChannelID chan, int fractionInEighth, int size, int charge'>
+        <code>
+          m_liteCluster = (chan &lt;&lt; channelIDBits) +
+          (fractionInEighth &lt;&lt; fractionBits) +
+          (size &lt;&lt; sizeBits)+
+          (charge &lt;&lt; chargeBits);
+        </code>
+      </constructor>
+
+      <destructor  desc="destructor">
+        <code> </code>
+      </destructor>
+      
+      <method name   = "channelID"
+              type   = "LHCb::FTChannelID"
+              access = "PUBLIC"
+              desc   = "Returns the FT channel ID"
+              const  = "TRUE">
+        <code> return LHCb::FTChannelID( ( m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits ); </code>
+      </method>
+
+      <method name   = "fraction"
+              type   = "double"
+              access = "PUBLIC"
+              desc   = "returns the fraction of channel"
+              const  = "TRUE">
+        <code> return 0.25 * ( ( m_liteCluster &amp; fractionMask ) &gt;&gt; fractionBits ); </code>
+      </method>
+
+    </class>
+  </package>
+</gdd>

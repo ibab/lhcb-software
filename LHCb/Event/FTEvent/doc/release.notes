@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-03-18 - Michel De Cian
+ - Introducing FTLiteCluster, a copy of FTRawCluster, to change the naming to something more logical
+
 !========================= FTEvent v1r5 2013-12-09 =========================
 ! 2013-11-28 - Maurizio Martinelli
  - modified FTDeposit structure, from map<MCHit,double energy> to a structure

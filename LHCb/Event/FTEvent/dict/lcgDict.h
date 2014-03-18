@@ -5,7 +5,7 @@
 
 // Include files
 #include "Kernel/FastClusterContainer.h"
-#include "Event/FTRawCluster.h"
+#include "Event/FTLiteCluster.h"
 // end include files
 
 /** @class lcgDict lcgDict.h dict/lcgDict.h
@@ -17,7 +17,9 @@
 namespace {
   struct _Instantiations {
     // begin instantiations
-    FastClusterContainer<LHCb::FTRawCluster, int> _;
+    //FastClusterContainer<LHCb::FTRawCluster, int> _;
+    FastClusterContainer<LHCb::FTLiteCluster, int> _;
+    
     // end instantiations
   };
 }
