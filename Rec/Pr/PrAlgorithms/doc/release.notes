@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Pr/PrAlgorithms
-! Responsible : Yasmin Amhis
+! Responsible : Yasmine Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2014-03-18 - Francesco Polci 
+ - Removed bilayer code from PrFTHitManager.cpp
+   Changed NULL to nullptr
+
 
 !========================= PrAlgorithms v1r10 2014-03-18 =======================
 ! 2014-03-14 - Michel De Cian

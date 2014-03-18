@@ -44,20 +44,17 @@ void PrFTHitManager::buildGeometry ( ) {
   service( "RndmGenSvc", randSvc );
   m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
   m_ftDet = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+  debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg;  //version 20 is the detector with monolayer and fibremat structure, including the dead regions
   DetectorSegment seg;
 
   for ( std::vector<DeFTLayer*>::const_iterator itL = m_ftDet->layers().begin();  //loop over layers
 	m_ftDet->layers().end() != itL; ++itL ) {
     int id = (*itL)->params()->param<int>("layerID");  //ask layerID
     LHCb::FTChannelID tmp( id, 0, 0, 0 ); 
-    debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg; 
-    if(m_ftDet->version() != 20) {
-      seg = (*itL)->createDetSegment( tmp, 0. );   //create detector segment 
-    }else{
-      const DeFTFibreMat* ftMat = m_ftDet->findFibreMat(tmp);
-      seg = ftMat->createDetSegment( tmp, 0. ); 
-      debug() << "ANGOLO " <<  ftMat->angle() << endmsg;
-    }
+    const DeFTFibreMat* ftMat = m_ftDet->findFibreMat(tmp);
+    seg = ftMat->createDetSegment( tmp, 0. ); 
+    debug() << "STEREO ANGLE: " <<  ftMat->angle() << endmsg;
+    
     zone( 2*id   )->setGeometry( seg ); // ex:layers 0  down
     zone( 2*id+1 )->setGeometry( seg ); // ex:layers 0  up 
     zone( 2*id   )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down 
@@ -74,73 +71,35 @@ void PrFTHitManager::buildGeometry ( ) {
 void PrFTHitManager::decodeData ( ) {
   
   debug() << "I AM IN DECODEDATA " << endmsg;
-
+  
   typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
   FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
-  DeFTLayer* myLayer = NULL;
-  const DeFTFibreMat* ftMat = NULL;
-  const DeFTFibreMat* anaFtMat = NULL;
-  unsigned int oldLayerID = 1000;
-  unsigned int oldFibreMatID = 99999999;
-
   debug() << "Retrieved " << clus->size() << " clusters" << endmsg;
-
+  const DeFTFibreMat* ftMat = nullptr;
+  const DeFTFibreMat* anaFtMat = nullptr;
+  unsigned int oldFibreMatID = 99999999;
+    
   float zDisplacement = 0.;
-  unsigned int oldBiLayer = 1000;
-
+  
   DetectorSegment seg ; 
-
-  bool oldDet = false;
-  if(m_ftDet->version() != 20) { //OLD DETECTOR VERSION
-    oldDet=true;
-  }
-
+  
   for ( FTRawClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
-    if(oldDet) {    
-      debug() << "I HAVE THE OLD DETECTOR VERSION" << endmsg;
-      //find layer to which the cluster belongs 
-      if( (*itC).channelID().layer() != oldLayerID ) {  
-	oldLayerID =(*itC).channelID().layer();  
-	myLayer = m_ftDet->layers()[oldLayerID];      
-	if ( NULL == myLayer ) {
-	  info() << "Layer not found for FT channelID " << (*itC).channelID() << endmsg;    
-	  oldLayerID = 1000;
-	}
-	//find bilayer
-	unsigned int biLayer = (*itC).channelID().layer()/2;
-	if ( m_zSmearing > 0. && biLayer != oldBiLayer ) {
-	  oldBiLayer = biLayer;
-	  zDisplacement = m_zSmearing * m_gauss();
-	  if ( msgLevel( MSG::DEBUG ) ) {
-	    debug () << "Bilayer " << biLayer << " z displacement " << zDisplacement << endmsg;
-	  }
-	}
-      }
-      
-      float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
-      LHCb::FTChannelID id = (*itC).channelID();
-      seg = myLayer->createDetSegment( id, fraction );   //create detector segment  
-      
-    } else { //NEW DETECTOR
-      debug() << "I HAVE THE NEW DETECTOR VERSION" << endmsg;
-      //find fibremat to which the cluster belongs 
-      anaFtMat = m_ftDet->findFibreMat( (*itC).channelID() );
-      if(anaFtMat->FibreMatID() != oldFibreMatID)  { 
-	oldFibreMatID =  anaFtMat->FibreMatID();
-	ftMat =  anaFtMat; 
-	if ( NULL == ftMat ) {
-	  info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg; 
-	  oldFibreMatID = 99999999;   
-	} 
-      }
-
-      float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
-      LHCb::FTChannelID id = (*itC).channelID();
-      seg = ftMat->createDetSegment( id, fraction );   //create detector segment  
+    //find fibremat to which the cluster belongs 
+    anaFtMat = m_ftDet->findFibreMat( (*itC).channelID() );
+    if(anaFtMat->FibreMatID() != oldFibreMatID)  { 
+      oldFibreMatID =  anaFtMat->FibreMatID();
+      ftMat =  anaFtMat; 
+      if ( nullptr == ftMat ) {
+	info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg; 
+	oldFibreMatID = 99999999;   
+      } 
+    }
+    
+    float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
+    LHCb::FTChannelID id = (*itC).channelID();
+    seg = ftMat->createDetSegment( id, fraction );   //create detector segment  
 	
-    } //end switch to new det 
-
-
+    
     //== Add some smearing if needed
     if ( m_xSmearing > 0. || m_zSmearing > 0. ) {
       float x0 = seg.x(0.);
@@ -166,13 +125,6 @@ void PrFTHitManager::decodeData ( ) {
     debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
 
-  /*  
-  //== Remove a bilayer.
-  zone(0 ) ->hits().clear();
-  zone(1  )->hits().clear();
-  zone(2  )->hits().clear();
-  zone(3  )->hits().clear();
-  */
 
   for ( unsigned int lay = 0; nbZones() > lay ; ++lay ) {
     std::sort( zone(lay)->hits().begin(), zone(lay)->hits().end(), PrHit::LowerByCoord() );
