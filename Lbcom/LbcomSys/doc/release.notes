@@ -6,6 +6,24 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v15r1>2014-03-20 LbcomSys v15r1</A></H1><PRE>
+This version uses Gaudi v25r0 and LHCb v37r1
+
+- Packages modified: Calo/CaloAssociators v6r14, VP/VPAlgorithms v4r3,
+    Velo/VeloSimulation v3r15
+
+- In Calo/CaloAssociators v6r14
+  . python/Configuration.py : propagate OutputLevel value to calo sequences only
+    when the property is explicitly set
+
+- In VP/VPAlgorithms v4r3
+  . Bug fix in clustering routine. Changed two break statements to continue
+  . Follow changes in VPCluster format (in Event/DigiEvent v4r1)
+
+- In Velo/VeloSimulation v3r15
+  . Added VeloSim.py file (replaces VeloSim.opts) which corrects for in house and 
+    GEANT4 straggling function differences
+
 </PRE><H1><A NAME=v15r0>2014-02-20 LbcomSys v15r0</A></H1><PRE>
 This version uses Gaudi v25r0 and LHCb v37r0
 
