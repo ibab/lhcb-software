@@ -68,7 +68,7 @@ class L0App(LHCbConfigurableUser):
         fname = self.getProp('outputFile')
         if not fname : return
         writer = None
-        
+        from GaudiConf import IOExtension, IOHelper
         iox=IOExtension()
         
         #check the file type and use MDF writer or InputCopyStream

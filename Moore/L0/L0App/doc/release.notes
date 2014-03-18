@@ -4,6 +4,10 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+! 2014-03-18 - Rob Lambert
+ - Strange error in _configureOutput, I'm sure it used to work properly,
+ - anyway, now add correct import statement.
+
 !========================= L0App v2r1 2014-02-24 =========================
 ! 2014-01-17 - Marco Clemencic
  - Added CMake configuration file.
