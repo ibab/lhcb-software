@@ -18,7 +18,7 @@ myname='moore.physics.deferral.hlt2only'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableFiles(myname,result,causes,"deferral.hlt2only.csv","physics.2012.csv","Hlt2")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt2only.csv","../refs/deferral.hlt2only.csv","Hlt2")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})

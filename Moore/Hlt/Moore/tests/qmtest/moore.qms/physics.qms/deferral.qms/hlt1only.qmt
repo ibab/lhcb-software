@@ -11,16 +11,12 @@
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv";</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <!--<argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="validator"><text>
 myname='moore.physics.deferral.hlt1only'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableFiles(myname,result,causes,"deferral.hlt1only.csv"stdout,"physics.2012.csv","Hlt1")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt1only.csv","physics.2012.csv","Hlt1")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 
