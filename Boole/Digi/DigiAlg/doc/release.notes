@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v5r1 2014-03-18 =========================
 ! 2014-03-13 - Heinrich Schindler
  - Use VPDigits instead of VPClusters in BuildMCTrackInfo
 
