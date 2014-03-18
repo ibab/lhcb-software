@@ -165,22 +165,12 @@ double FTMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const {
   double z(0) ;
   LHCb::FTChannelID ftid = id.ftID() ;
 
-  if(m_det->version() != 20) { 
-    const DeFTLayer* layer = m_det->findLayer( ftid ) ;
-    if ( NULL == layer ) {
-      error() << "Cannot find FT layer for ID = " << ftid << endmsg ;
-    } else {
-      z = layer->layerCenterZ();
-    }
+  const DeFTFibreMat* fibreMat = m_det->findFibreMat(ftid);
+  if ( nullptr == fibreMat ) {
+    error() << "Cannot find FT fibreMat for ID = " << ftid << endmsg ;
   } else {
-   const DeFTFibreMat* fibreMat = m_det->findFibreMat(ftid);
-    if ( NULL == fibreMat ) {
-      error() << "Cannot find FT fibreMat for ID = " << ftid << endmsg ;
-    } else {
-      z = fibreMat->layerCenterZ() ;
-    }
+    z = fibreMat->layerCenterZ() ;
   }
-  
   
   return z ;
 }
