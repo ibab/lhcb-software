@@ -1,14 +1,14 @@
 package           VPDigitisation
-version           v1r2
+version           v1r3
 
 # Structure, i.e. directories to process. 
-#=========================================================================
+#=====================================================================
 branches          cmt doc src
 
 include_path none
 
 # Used packages
-#=========================================================================
+#=====================================================================
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
@@ -17,6 +17,6 @@ use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
 
 # Component library building rule
-#=========================================================================
+#=====================================================================
 library          VPDigitisation      ../src/*.cpp -import=AIDA
 apply_pattern component_library library=VPDigitisation
