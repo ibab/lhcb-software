@@ -1,14 +1,14 @@
-# ========================================================================
+# ====================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
-# =========================================================================
+# =====================================================================
 package           CaloPIDs
-version           v5r15
+version           v5r16
 
-# =============== structure ===================================================
+# =============== structure ===============================================
 branches          cmt doc src python
 
-# =============== dependencies ================================================
+# =============== dependencies ============================================
 use               GaudiAlg        v*  
 use               CaloInterfaces  v* Calo
 use               CaloUtils       v* Calo 
@@ -22,10 +22,10 @@ use               Boost           v* LCG_Interfaces -no_auto_imports
 # =============== exported include directories ================================
 include_path      none
 
-# =============== constituents ================================================
+# =============== constituents =============================================
 library           CaloPIDs    ../src/*.cpp 
 
-# =============== patterns/rules ==============================================
+# =============== patterns/rules ============================================
 apply_pattern     install_python_modules
 apply_pattern     component_library library=CaloPIDs
 
