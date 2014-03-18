@@ -8,7 +8,8 @@
 //               to produce a list of event references given 
 //               a set of "selection criteria".
 //
-//  Author     : M.Frank
+//  Authors     : M.Frank
+//  Modified by : I.Chalkiadakis
 //====================================================================
 
 // Include files
@@ -185,7 +186,7 @@ StatusCode TestEvtSelector::finalize()  {
 }
 
 
-/// Added locking mechanism in next method.
+/// Next method with locking mechanism.
 
 StatusCode TestEvtSelector::next(Context& ctxt) const  {
   MsgStream log(messageService(), name());
@@ -231,7 +232,7 @@ StatusCode TestEvtSelector::goIdle() const {
 
   MsgStream log(msgSvc(), name());
   m_isWaiting = true;
-  m_filePoller->addListener((IAlertSvc*)this); //Why have to force the cast???
+  m_filePoller->addListener((IAlertSvc*)this); 
 
   if (!lib_rtl_is_success(lib_rtl_wait_for_event(m_suspendLock))) {
     log << MSG::ERROR << "Cannot lock to suspend operations." << endmsg;

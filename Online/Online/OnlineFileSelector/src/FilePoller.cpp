@@ -104,10 +104,10 @@ const StatusCode FilePoller::issueAlarm(const string& msg)
 StatusCode FilePoller::poller(string scan_path)
 {
   struct dirent d_entry;                  	
-	struct dirent *d_res;
-	int i;	
-	DIR *dir,*nested_dir;
-	char *path,*prev_path;
+  struct dirent *d_res;
+  int i;	
+  DIR *dir,*nested_dir;
+  char *path,*prev_path;
   StatusCode status;
   string n_path,dname;
   
@@ -122,7 +122,7 @@ StatusCode FilePoller::poller(string scan_path)
   dir = opendir(path);
   
   if ( 0 == dir )  {
-    return error("The directory "+scan_path+" is not valid!");
+     return error("The directory "+scan_path+" is not valid!");
   }
   
   while ((0==readdir_r(dir,&d_entry,&d_res)) && (NULL!=d_res)) {
@@ -150,7 +150,7 @@ StatusCode FilePoller::poller(string scan_path)
       n_path = n_path + "/" + dname;
       nested_dir = opendir(n_path.c_str());
       
-		  if (!nested_dir) {
+      if (!nested_dir) {
           status = FilePoller::issueAlarm(OnlineService::name()+": Error opening directory.");
           return status;
       }
@@ -177,7 +177,6 @@ StatusCode FilePoller::poller(string scan_path)
 /// Implementation of IHandleListenerSvc::addListener.
 StatusCode FilePoller::addListener(IAlertSvc* Listener) 
 {
-  
   if (lib_rtl_lock(m_listenerLock)) {
       m_fileListeners.push_back(Listener);
   }
@@ -292,8 +291,8 @@ void FilePoller::timerHandler()
 
   DimTimer::stop();
   StatusCode poll_st = FilePoller::poller(FilePoller::m_scanDirectory);
-  poll_st = showListeners();
 
+  poll_st = showListeners();
   poll_st = printDB();
 
   while (!m_fileListeners.empty() && !m_fileNames.empty()) {
@@ -306,7 +305,7 @@ void FilePoller::timerHandler()
 	 if (StatusCode::SUCCESS == isProcessed(getRunFileNumber(path_name)))
 	     continue;	  
       }
-      else if (StatusCode::FAILURE == sc) {
+      else {
         sc = ((IAlertSvc*)m_fileListeners.front())->alertSvc(path_name);
         sc = remListener(m_fileListeners.front());
       }
@@ -335,13 +334,13 @@ string FilePoller::getRunFileNumber(const string file_path) {
 /// Implementation of IOnlineBookkeep::markBookKept.
 StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) {
 
-  // m_ProcessedFiles.push_back(file);
+  
   int status;
   sqlite3_stmt *pstatement;
   string query = "INSERT INTO FileRecords (FileName,RunNumber,TotalEvents,StatusFlag) VALUES (?,?,?,?);";
   const char *c_query = query.c_str();
   
-  status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0); // -1 or query.length() ???
+  status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0);
   
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
@@ -355,9 +354,9 @@ StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) 
   }
 
   int i;				////////
-  istringstream(file.substr(0,6)) >> i;
+  istringstream(file.substr(1,6)) >> i;
   
-  status = sqlite3_bind_int(pstatement,2,i/*stoi(file.substr(6))*/); //CHECK stoi
+  status = sqlite3_bind_int(pstatement,2,i/*stoi(file.substr(0,6))*/); 
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
     return StatusCode::FAILURE;
@@ -369,7 +368,7 @@ StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) 
     return StatusCode::FAILURE;
   }
 
-  status = sqlite3_bind_int(pstatement,4,0); //When the file is inserted for the first time status == 0 / "processing"
+  status = sqlite3_bind_int(pstatement,4,0);
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
     return StatusCode::FAILURE;
@@ -396,13 +395,7 @@ StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) 
 
 /// Implementation of IOnlineBookkeep::isBookKept.  
 StatusCode FilePoller::isBookKept(const std::string file) {
-
-  /*
-  vector<string>::iterator iter;
-  iter = find(m_ProcessedFiles.begin(),m_ProcessedFiles.end(),file);
-  if (iter == m_ProcessedFiles.end())
-     return StatusCode::FAILURE;
-  */
+  
   int status;
   sqlite3_stmt *pstatement;
   string query = "SELECT * from FileRecords WHERE FileName = '" +file+"' ";
@@ -484,7 +477,7 @@ StatusCode FilePoller::connectToDb() {
 
   int status;
   sqlite3_stmt *pstatement;
-  string query = "CREATE TABLE IF NOT EXISTS FileRecords ( " \ 
+  string query = "CREATE TABLE IF NOT EXISTS FileRecords ( " \
                        "  FileName    TEXT    PRIMARY KEY NOT NULL," \
                        "  RunNumber   INTEGER             NOT NULL," \
                        "  TotalEvents INTEGER             NOT NULL," \
@@ -528,7 +521,7 @@ StatusCode FilePoller::connectToDb() {
 
 
 /// Auxiliary function for printing the contents of the DB.
-int FilePoller::print_aux(void *data, int columnNum, char **argv, char **ColName) {
+int FilePoller::print_aux(void* /*data*/, int columnNum, char **argv, char** /*ColName*/) {
    
    int i;   
    for(i=0; i<columnNum; i++){
@@ -550,7 +543,7 @@ StatusCode FilePoller::printDB() {
   
   string query = "SELECT * FROM FileRecords;";
   const char* c_query = query.c_str();	  
-  const char* data = "FileName                  Run    EventCnt StatusFlag"; 
+  const char* data = "FileName                   Run    EventCnt StatusFlag"; 
  
   cout << data << endl; 	
   
