@@ -494,15 +494,15 @@ class Moore(LHCbConfigurableUser):
                    "CaloCorrectionBase/Pi0LCorrection":props
                    }
             postConfForAll(head=None, prop_value_dict=props,types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #and one calo clustering
+            tools={"CaloClusterizationTool":props}
+            postConfForAll(head=None, types=["CellularAutomatonAlg"],prop_value_dict=props, tool_value_dict=tools, force=True)
             #same for members of the ToolService
             from Configurables import LoKi__LifetimeFitter, CaloDigitFilterTool, CaloGetterTool, OTChannelMapTool, CaloClusterizationTool
             #public tools
             postConfForAll(head=[LoKi__LifetimeFitter("ToolSvc.lifetime"),CaloDigitFilterTool("ToolSvc.FilterTool"),CaloGetterTool("ToolSvc.CaloGetter"),OTChannelMapTool("ToolSvc.OTChannelMapTool"),CaloClusterizationTool("ToolSvc.CaloClusterizationTool")], prop_value_dict=props,force=True)
-            tools={"CaloClusterizationTool":props}
-            postConfForAll(head=None, types=["CellularAutomatonAlg"],prop_value_dict=props, tool_value_dict=tools, force=True)
-            #more calo rubbish
-            #tools={"PhotonMaker":props}
-            #postConfForAll(head=None, prop_value_dict={},types=["BiKalmanFittedPhotonFromL0Maker"],force=True,tool_value_dict=tools)
+            
+            
             #I still want to print "Application Manager Finalized Successfully"
             #and "End of event input reached" no matter what
             
@@ -542,6 +542,14 @@ class Moore(LHCbConfigurableUser):
                 set=3
             trans={".*DistanceCalculator.*":{"MaxPrints" : {"^.*$":str(set)}}}
             Funcs._mergeTransform(trans)
+            #kill one extra loki print in tool service
+            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+            props={}
+            props["OutputLevel"]=level
+            props["StatPrint"]=(level<WARNING)
+            props["ErrorsPrint"]=(level<WARNING)
+            props["PropertiesPrint"]=(level<WARNING)
+            postConfForAll(head=["LoKi::LifetimeFitter/ToolSvc.lifetime"],force=True,prop_value_dict=props)
             
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()

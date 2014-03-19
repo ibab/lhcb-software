@@ -9,12 +9,19 @@
     <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.hlt1and2.csv";</text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.hlt1and2.csv"; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 myname='moore.physics.tck.zfromxtck'
 
+
+if len(stdout.split('\n'))&gt;59:
+    causes.append('stdout is too long, aiming for less than 60 lines')
+    result['moore.physics.tck.zfromxtck.lines']=result.Quote('Expected less than 40 lines, got '+ str(len(stdout.split('\n'))))
+
+if len(stdout)&gt;7000:
+    causes.append('stdout is too long, aiming for less than 7k characters')
+    result['moore.physics.tck.zfromxtck.chars']=result.Quote('Expected less than 16k characters, got '+ str(len(stdout)))
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 

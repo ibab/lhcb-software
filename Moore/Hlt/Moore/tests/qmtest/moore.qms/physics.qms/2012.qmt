@@ -8,10 +8,18 @@
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer='physics.2012.csv';</text>
+    <text>from Configurables import Moore; Moore().EnableTimer='physics.2012.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
   </set></argument>
   <argument name="validator"><text>
 myname='moore.physics.2012'
+
+if len(stdout.split('\n'))&gt;125:
+    causes.append('stdout is too long, aiming for less than 125 lines')
+    result['moore.physics.2012.lines']=result.Quote('Expected less than 235 lines, got '+ str(len(stdout.split('\n'))))
+
+if len(stdout)&gt;23000:
+    causes.append('stdout is too long, aiming for less than 23k characters')
+    result['moore.physics.2012.chars']=result.Quote('Expected less than 15k characters, got '+ str(len(stdout)))
 
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
