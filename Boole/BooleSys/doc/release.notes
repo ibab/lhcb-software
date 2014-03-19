@@ -3,6 +3,46 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+
+</PRE><H1><A NAME=v27r1>2014-03-20 Boole v27r1</A></H1><PRE>
+This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r1, Lbcom v15r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Configuration changes
+   . Moved FTNoiseCreator content to MCFTDigitCreator (FTDigitisation v1r9)
+   . VeloSim.py replaces VeloSim.opts (Boole v27r1, VeloSimulation v3r15)
+   . Propagate OutputLevel value to Calo sequences only when the property is
+     explicitly set (CaloAssociators v6r14, CaloDAQ v4r38)
+
+ - New tuning
+   . Use VPDigits instead of VPClusters in BuildMCTrackInfo (DigiAlg v5r1)
+   . Correct for in house and GEANT4 straggling function differences
+     (VeloSimulation v3r15)
+
+ - New functionality
+   . Improved functionality of acceptance studies in FTClusterCreator
+     (FTDigitisation v1r9)
+   . Added encoder for Super Pixel raw bank from digits (VPDAQ v2r6)
+
+ - Bug fixes
+   . Fix in VP clustering routine. Changed two break statements to continue
+     (VPAlgorithms v4r3)
+   . Protected all word constructors from overflows in inputs by proper masking.
+     Fixes a rare (per mille level) off-by-one bug in the VELO digitisation.
+     (SiDAQ v2r3)
+
+ - Performance improvements
+   . Changes to VPCluster format (DigiEvent v4r1, VPDAQ v2r6, VPAlgorithms v4r3,
+                                  VPDigitisation v1r3, VPAssociators v2r5)
+
+ - Monitoring changes
+   . Reduce Calo verbosity (CaloDAQ v4r38, CaloDet v10r19)
+   . Reduce verbosity of memory pool release messages (LHCbKernel v15r1)
+
+ - Changes to tests
+   . EventSelector PFN exclusion moved from BooleExclusions to LHCbExclusions
+     (Boole v27r1, GaudiConf v19r1)
+
 </PRE><H1><A NAME=v27r0>2014-02-21 Boole v27r0</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
