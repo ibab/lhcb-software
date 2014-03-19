@@ -1,5 +1,5 @@
 package           Boole
-version           v27r0
+version           v27r1
 # Remember to change version also in ../job/valgrind.job, ../job/Boole_Ganga.py
 #                                    ../CMakeLists.txt
 
