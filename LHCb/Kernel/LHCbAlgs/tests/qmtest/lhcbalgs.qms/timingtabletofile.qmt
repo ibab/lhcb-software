@@ -7,15 +7,19 @@
   <argument name="validator"><text>
 countErrorLines({"WARNING":0, "ERROR":0, "FATAL":0})
 from LHCbAlgs import TTParser
-comp=TTParser.compare("timing.dat","../refs/refsimpletiming.dat")
-if comp!=([],[],[]):
+missing,different,added=TTParser.compare("timing.dat","../refs/refsimpletiming.dat",threshold=1000.)
+td=TTParser.event_av_dict("timing.dat")
+rd=TTParser.event_av_dict("../refs/refsimpletiming.dat")
+#ignore different timings in this test!
+different=[d for d in different if td[d][0]!=rd[d][0]]
+if len(missing+different+added):
   causes.append("Timing tables do not agree, check stdout")
-  if len(comp[0]):
-    result["lhcbalgs.timingtabletofile.missing"]=result.Quote("Missing:\n\t"+"\n\t".join(comp[0]))
-  if len(comp[1]):
-    result["lhcbalgs.timingtabletofile.different"]=result.Quote("Different:\n\t"+"\n\t".join(comp[1]))
-  if len(comp[2]):
-    result["lhcbalgs.timingtabletofile.added"]=result.Quote("Added:\n\t"+"\n\t".join(comp[2]))
+  if len(missing):
+    result["lhcbalgs.timingtabletofile.missing"]=result.Quote("Missing:\n\t"+"\n\t".join(missing))
+  if len(different):
+    result["lhcbalgs.timingtabletofile.different"]=result.Quote("Different:\n\t"+"\n\t".join(different))
+  if len(added):
+    result["lhcbalgs.timingtabletofile.added"]=result.Quote("Added:\n\t"+"\n\t".join(added))
 
 </text></argument>
 </extension>
