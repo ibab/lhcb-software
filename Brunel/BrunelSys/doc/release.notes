@@ -3,6 +3,51 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v25r0, LHCb v37r1, Lbcom v15r1,
+ Rec v16r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Configuration changes
+  . Propagate OutputLevel value to Calo sequences only when the property is
+    explicitly set
+    (CaloDAQ v4r38, CaloMonidst v5r16, CaloPIDs v5r16, CaloReco v5r19)
+
+- Bug fixes
+  . Fix in VP clustering routine. Changed two break statements to continue
+    (VPAlgorithms v4r3)
+  . Put an FPE::Guard into DeRichGasRadiator::calcSellmeirRefIndex to protect
+    against a very very weird FPE exception when running clang... (RichDet v16r21)
+  . Fix unstable sorting in PrSeedingXLayers (PrAlgorithms v1r9p1)
+  . Fix in PrPixelHitManager: the size of of clusters in super pixel patterns was
+    off by one (legacy debugging code) (PrPixel v1r6)
+  . Fix in PrPixelClustering: matched super pixel clusters sometimes received the
+    wrong sensor column number (wrong grouping of integer divisions)
+    (PrPixel v1r6)
+  . Fixed rare FPE in phi cluster weights (FastVelo v1r16)
+
+- Performance improvements
+  . Changes to VPCluster format
+    (DigiEvent v4r1, VPDAQ v2r6, PrMCTools v2r1, PrPixel v1r6, TrackMCTools v3r8)
+  . Replace linear search for fibreMat with binary search in DeFTDetector
+    (FTDet v2r5)
+  . Store all common sensor properties in static members (VPDet v3r1)
+  . Provide a static cache of x pixel positions and pitches (VPDet v3r1)
+  . Speed improvements to PrForward through changes tp PrPlaneCounter
+    (PrAlgorithms v1r10)
+  . Many optimisations to PrPixel (PrPixel v1r6)
+  . Optimised VeloUT for speed (PrVeloUT v2r1)
+  . Speed improvements to PatForward (PatAlgorithms v4r31)
+
+- Monitoring changes
+  . Reduce Calo verbosity (CaloDAQ v4r38, CaloDet v10r19)
+  . Reduce verbosity of memory pool release messages (LHCbKernel v15r1)
+  . Suppress warnings in the default case (MuonID v9r10)
+
+- Changes to tests
+  . EventSelector PFN exclusion moved from BrunelExclusions to LHCbExclusions
+    (Brunel v45r1, GaudiConf v19r1)
+
+
 </PRE><H1><A NAME=v45r0>2014-02-25 Brunel v45r0</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0,
  Rec v16r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
