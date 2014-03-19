@@ -18,7 +18,6 @@ namespace {
   struct _Instantiations {
     // begin instantiations
     FastClusterContainer<LHCb::FTLiteCluster, int> _;
-    
     // end instantiations
   };
 }
