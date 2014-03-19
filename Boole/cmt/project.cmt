@@ -1,6 +1,6 @@
 project BOOLE
 
-use LBCOM LBCOM_v15r0
+use LBCOM LBCOM_v15r1
 
 build_strategy with_installarea
 setup_strategy root
