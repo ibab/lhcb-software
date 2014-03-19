@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
+This version uses projects LHCb v37r1, Lbcom v15r1,
+ Rec v16r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to QMTEsts
   . In BrunelExclusions.py, remove EventSelector PFN exclusion, now in GaudiConf
 
