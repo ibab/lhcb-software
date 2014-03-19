@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r9 2014-03-19 =======================
 ! 2014-03-17 - Jacco de Vries
  - Moved FTNoiseCreator content to MCFTDigitCreator
  - improved functionality of acceptance studies in FTClusterCreator
