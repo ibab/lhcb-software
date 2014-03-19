@@ -15,7 +15,7 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 #include "Event/VPCluster.h"
-#include "Event/FTRawCluster.h"
+#include "Event/FTLiteCluster.h"
 #include "Event/CaloDigit.h"
 #include "Event/MuonCoord.h"
 

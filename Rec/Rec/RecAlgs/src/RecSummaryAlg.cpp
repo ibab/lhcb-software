@@ -65,7 +65,7 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
   declareProperty( "UTClustersLocation",
                    m_utLoc      = LHCb::STClusterLocation::UTClusters );
   declareProperty( "FTClustersLocation",
-                   m_ftLoc      = LHCb::FTRawClusterLocation::Default );
+                   m_ftLoc      = LHCb::FTLiteClusterLocation::Default );
 
 }
 
@@ -214,8 +214,8 @@ StatusCode RecSummaryAlg::execute()
     }
     else if ( "FT" == *iDet )
     {
-      typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
-      addSizeSummary<FTRawClusters>( summary, LHCb::RecSummary::nFTClusters, m_ftLoc );
+      typedef FastClusterContainer<LHCb::FTLiteCluster,int> FTLiteClusters;
+      addSizeSummary<FTLiteClusters>( summary, LHCb::RecSummary::nFTClusters, m_ftLoc );
     }
 
     else
