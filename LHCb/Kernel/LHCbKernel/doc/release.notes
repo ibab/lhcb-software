@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-03-19 - Marco Clemencic
+ - Disabled again Boost allocators in debug mode when building with ROOT 6.
+
 !========================= LHCbKernel v15r1 2014-03-17 ========================
 ! 2014-03-07 - Chris Jones
  - Use Info(...) methods for memory pool release messages in LbAppInit, in
