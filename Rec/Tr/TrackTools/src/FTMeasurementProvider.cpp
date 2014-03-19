@@ -20,7 +20,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "Event/TrackParameters.h"
 #include "TrackKernel/TrackTraj.h"
-#include "Event/FTRawCluster.h"
+#include "Event/FTLiteCluster.h"
 
 class FTMeasurementProvider : public GaudiTool, virtual public IMeasurementProvider,
                               virtual public IIncidentListener
@@ -42,7 +42,7 @@ public:
   inline LHCb::FTMeasurement* ftmeasurement( const LHCb::LHCbID& id ) const  ;
 
   void handle ( const Incident& incident );
-  const FastClusterContainer<LHCb::FTRawCluster,int>* clusters() const;
+  const FastClusterContainer<LHCb::FTLiteCluster,int>* clusters() const;
 
   void addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
                           std::vector<LHCb::Measurement*>& measurements,
@@ -55,7 +55,7 @@ public:
 
 private:
   const DeFTDetector* m_det;
-  mutable FastClusterContainer<LHCb::FTRawCluster,int>* m_clusters;
+  mutable FastClusterContainer<LHCb::FTLiteCluster,int>* m_clusters;
 } ;
 
 //=============================================================================
@@ -99,17 +99,28 @@ StatusCode FTMeasurementProvider::initialize() {
 
 void FTMeasurementProvider::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) m_clusters = 0 ;
+  if ( IncidentType::BeginEvent == incident.type() ) m_clusters = nullptr ;
 }
 
 //-----------------------------------------------------------------------------
 /// Load clusters from the TES
 //-----------------------------------------------------------------------------
 
-const FastClusterContainer<LHCb::FTRawCluster,int>* FTMeasurementProvider::clusters() const
+const FastClusterContainer<LHCb::FTLiteCluster,int>* FTMeasurementProvider::clusters() const
 {
-  if( !m_clusters )
-    m_clusters = get<FastClusterContainer<LHCb::FTRawCluster,int> >( LHCb::FTRawClusterLocation::Default );
+  /// If there is a new event, get the clusters and sort them according to their channel ID
+  if( m_clusters == nullptr ){
+    m_clusters = getIfExists<FastClusterContainer<LHCb::FTLiteCluster,int> >( LHCb::FTLiteClusterLocation::Default );
+    if(m_clusters != nullptr){
+      std::sort(m_clusters->begin(), m_clusters->end(), 
+                [](const LHCb::FTLiteCluster& lhs, const LHCb::FTLiteCluster& rhs){ return lhs.channelID() < rhs.channelID(); });
+    }else{
+      error() << "Could not find FTLiteClusters at: " <<  LHCb::FTLiteClusterLocation::Default << endmsg;
+    }
+    
+    
+  }
+  
   return m_clusters ;
 }
 
@@ -124,24 +135,31 @@ StatusCode FTMeasurementProvider::finalize() {
 //-----------------------------------------------------------------------------
 /// Create a measurement
 //-----------------------------------------------------------------------------
-
-inline LHCb::FTMeasurement* FTMeasurementProvider::ftmeasurement( const LHCb::LHCbID& id ) const {
-  LHCb::FTMeasurement* meas(0) ;
+LHCb::FTMeasurement* FTMeasurementProvider::ftmeasurement( const LHCb::LHCbID& id ) const {
+  LHCb::FTMeasurement* meas(nullptr) ;
+  
   if( !id.isFT() ) {
     error() << "Not an FT measurement" << endmsg ;
   } else {
-    LHCb::FTChannelID ftid = id.ftID() ;
-    for ( FastClusterContainer<LHCb::FTRawCluster,int>::const_iterator itH = clusters()->begin();
-          clusters()->end() != itH; ++itH ) {
-      if ( (*itH).channelID() == ftid ) {
-        meas = new LHCb::FTMeasurement( (*itH), *m_det ) ;
-        break;
-      }
-    }
+    
+    LHCb::FTChannelID ftID = id.ftID() ;
+    /// The clusters are sorted, so we can use a binary search (lower bound search) to find the element
+    /// corresponding to the channel ID
+    FastClusterContainer<LHCb::FTLiteCluster,int>::const_iterator itH = 
+      std::lower_bound( clusters()->begin(),  clusters()->end(), ftID, 
+                        [](const LHCb::FTLiteCluster clus, const LHCb::FTChannelID id){  
+                          return clus.channelID() < id;
+                        });
+    
+    if( itH != clusters()->end() ) meas = new LHCb::FTMeasurement( (*itH), *m_det ) ;
   }
   return meas ;
 }
 
+
+//-----------------------------------------------------------------------------
+/// Return the measurement
+//-----------------------------------------------------------------------------
 LHCb::Measurement* FTMeasurementProvider::measurement( const LHCb::LHCbID& id, bool /*localY*/ ) const {
   return ftmeasurement(id) ;
 }
