@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2014-03-19 - Michel De Cian
+ - Adapted FTMeasurement to work with FTLiteClusters
+
 ! 2014-03-18 - Francesco Polci
  - Removed bilayer code from FTMeasurement.cpp
 

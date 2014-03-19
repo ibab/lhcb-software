@@ -14,14 +14,14 @@
 
       <base name='LHCb::Measurement' />
       <import name='Event/Measurement' />
-      <import name='Event/FTRawCluster'  />
+      <import name='Event/FTLiteCluster'  />
       <import name='StateVector' soft = 'FORWARDONLY'/>
       <import name='FTDet/DeFTDetector'  />
 
       <attribute
-        type = 'const LHCb::FTRawCluster'
+        type = 'const LHCb::FTLiteCluster'
         name = 'cluster'
-        desc = 'the FTRawCluster'
+        desc = 'the FTLiteCluster'
         getMeth = 'FALSE'
         setMeth = 'FALSE' />
 
@@ -33,7 +33,7 @@
 
 
       <method
-        type  = 'const LHCb::FTRawCluster'
+        type  = 'const LHCb::FTLiteCluster'
         name  = 'cluster'
         desc  = 'Retrieve the FTCluster'
         const = 'TRUE'>
@@ -55,7 +55,7 @@
 
       <constructor
         desc     = 'Constructor from an FTCluster'
-        argList  = 'LHCb::FTRawCluster ftCluster, DeFTDetector det, LHCb::StateVector /* dum */'
+        argList  = 'LHCb::FTLiteCluster ftCluster, DeFTDetector det, LHCb::StateVector /* dum */'
         initList = 'Measurement( Measurement::FT, LHCbID(ftCluster.channelID()), 0), m_cluster(ftCluster)'>
         <code>
           this->init( det );
@@ -65,7 +65,7 @@
 
       <constructor
         desc     = 'Constructor from an FTCluster'
-        argList  = 'LHCb::FTRawCluster ftCluster, DeFTDetector det '
+        argList  = 'LHCb::FTLiteCluster ftCluster, DeFTDetector det '
         initList = ' Measurement( Measurement::FT, LHCbID(ftCluster.channelID()), 0), m_cluster(ftCluster)'>
         <code>
           this->init( det );
