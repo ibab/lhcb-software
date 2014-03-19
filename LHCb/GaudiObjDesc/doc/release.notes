@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2014-03-19 - Marco Clemencic
+ - Fixed an issue with manually provided instantiations headers that contain
+   comments or empty lines.
+
 !========================= GaudiObjDesc v11r18 2014-02-17 ======================
 ! 2013-11-01 - Marco Clemencic
  - Modified the generated dictionary header so that the dummy class for the

@@ -205,11 +205,14 @@ class genClassDicts:
     def align(self, dictInstances):
         dictInstances2 = []
         maxlen = 0;
-        for inst in dictInstances :
+        for inst in dictInstances:
             thislen = len(' '.join(inst.split()[:-1]))
             if thislen > maxlen : maxlen = thislen
         maxlen += 1
-        for inst in dictInstances :
+        for inst in dictInstances:
+            if not inst.strip():
+                # ensure that only non-empty lines are considered
+                continue
             first = ' '.join(inst.split()[:-1])
             second = inst.split()[-1]
             dictInstances2.append('    '+first.ljust(maxlen)+second)
