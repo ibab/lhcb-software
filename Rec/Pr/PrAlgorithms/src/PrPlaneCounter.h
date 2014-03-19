@@ -18,8 +18,8 @@ public:
 
   /// Standard constructor
   PrPlaneCounter( )
-    : m_nbVals( {0,0} ),
-      m_planeList( {0,0,0,0,0,0,0,0,0,0,0,0 })
+    : m_nbVals( {{0,0}} ),
+      m_planeList( {{0,0,0,0,0,0,0,0,0,0,0,0}} )
       
   {
   }
@@ -35,8 +35,8 @@ public:
   void set( PrHits::const_iterator itBeg, PrHits::const_iterator itEnd, const bool fill = true)  {
 
     if(fill){
-      m_planeList =  {0,0,0,0,0,0,0,0,0,0,0,0 };
-      m_nbVals =  {0,0};
+      m_planeList = {{0,0,0,0,0,0,0,0,0,0,0,0}};
+      m_nbVals    = {{0,0}};
     }
     
     for ( PrHits::const_iterator itH = itBeg; itEnd != itH; ++itH) {

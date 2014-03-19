@@ -4,13 +4,16 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-19 - Marco Cattaneo
+ - Fix clang33 compilation failures in PrPlaneCounter.h, due to 
+   http://stackoverflow.com/questions/16985687/
+
 ! 2014-03-18 - Michel De Cian
  - Changed FTRawCluster to FTLiteCluster in PrFTHitManager
 
 ! 2014-03-18 - Francesco Polci 
  - Removed bilayer code from PrFTHitManager.cpp
    Changed NULL to nullptr
-
 
 !========================= PrAlgorithms v1r10 2014-03-18 =======================
 ! 2014-03-14 - Michel De Cian
