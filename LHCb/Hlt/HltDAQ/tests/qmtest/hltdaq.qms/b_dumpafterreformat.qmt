@@ -36,24 +36,33 @@ prevstdout=[s.strip() for s in f.readlines()]
 f.close()
 
 if prevstdout!=stdout:
+  #exceptions: HltSelReports vary due to non-deterministic re-sorting
+  exceptions=[p for p in stdout if p not in prevstdout and "[10] [1c445] [b] [c] [d] [e] [10]" in p]
+  exceptions=exceptions+[p for p in prevstdout if p not in stdout and "[10] [1c445] [b] [c] [d] [e] [10]" in p]
+  newlines=[p for p in stdout if p not in prevstdout and p not in exceptions]
+  missing=[p for p in prevstdout if p not in stdout and p not in exceptions]
   #copy both as new references
-  import os
-  os.system("cp hltdaq.dump.previous.stdout ../refs/hltdaq.dump.previous.stdout.ref.new")
-  f=open("../refs/hltdaq.dump.new.stdout.ref.new","w")
-  f.write("\n".join(stdout))
-  f.close()
-  newlines=[p for p in stdout if p not in prevstdout]
-  missing=[p for p in prevstdout if p not in stdout]
-  causes.append("difference in data formats")
+  if len(newlines+missing):
+    import os
+    os.system("cp hltdaq.dump.previous.stdout ../refs/hltdaq.dump.previous.stdout.ref.new")
+    f=open("../refs/hltdaq.dump.new.stdout.ref.new","w")
+    f.write("\n".join(stdout))
+    f.close()
+    causes.append("difference in data formats")
   if len(newlines)+len(missing)&gt;20:
     result['hltdaq.dumpafterreformat']=result.Quote("more than 20 differences in data formats, check stdout, and diff refs/hltdaq.dump.previous.stdout.new wrt refs/hltdaq.dump.new.stdout.ref.new ")
-  elif len(newlines)==len(missing):
+  elif len(newlines) and len(newlines)==len(missing):
     printme=["+ "+newlines[i]+"\n- "+missing[i] for i in range(len(newlines))]
     result['hltdaq.dumpafterreformat']=result.Quote("\n".join(printme))
-  else:
+  elif len(newlines):
     printme=["+ "+newlines[i] for i in range(len(newlines))]
     printme=printme+["- "+missing[i] for i in range(len(missing))]
     result['hltdaq.dumpafterreformat']=result.Quote("\n".join(printme))
+  
+  if len(exceptions):
+    printme=["+ "+ex for ex in exceptions if ex in stdout]
+    printme=printme+["- "+ex for ex in exceptions if ex in prevstdout]
+    result['hltdaq.dumpafterreformat.excluded']=result.Quote("\n".join(printme))
 </text></argument>
 </extension>
 

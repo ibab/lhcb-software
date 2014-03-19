@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2014-03-19 - Rob Lambert
+ - Ignore SelReport diffs
+
 !========================= HltDAQ v4r1 2014-03-17 =========================
 ! 2014-03-12 - Rob Lambert
  - dump, decode, wipe, encode, dump tests.
