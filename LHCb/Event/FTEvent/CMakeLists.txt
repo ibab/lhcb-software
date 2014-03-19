@@ -12,6 +12,7 @@ include(GaudiObjDesc)
 god_build_headers(xml/*.xml)
 
 god_build_dictionary(xml/*.xml
+                     EXTEND dict/lcgDict.h xml/lcgdict/lcg_selection.xml
                      INCLUDE_DIRS Event/EventBase
                      LINK_LIBRARIES MCEvent GaudiObjDescLib)
 

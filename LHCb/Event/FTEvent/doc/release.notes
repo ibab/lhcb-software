@@ -4,6 +4,10 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-03-19 - Marco Clemencic
+ - Modified the CMake configuration to uset the provided header and selection
+   in G.O.D. generated dictionary.
+
 ! 2014-03-19 - Michel De Cian
  - Removing a comment in lcgDict and putting in FTLiteCluster in lcg_selection
 
