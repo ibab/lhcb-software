@@ -4,6 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-03-19 - Michel De Cian
+ - Removing a comment in lcgDict and putting in FTLiteCluster in lcg_selection
+
 ! 2014-03-18 - Michel De Cian
  - Introducing FTLiteCluster, a copy of FTRawCluster, to change the naming to something more logical
 
