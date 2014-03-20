@@ -4,6 +4,10 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+! 2014-03-20 - Sajan Easo
+  -The commit on 2014-01-21 seems to have commented out creation of hits.
+   This is now fixed in CkvSensDet.cpp
+
 ! 2014-02-13 - Sajan Easo
 - Added options for using more QE tables
 

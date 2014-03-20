@@ -653,11 +653,11 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
 
 
     newHit -> setCurrentHitAsDuplicate( FlagThisHitAsDuplicate);
-    //int NumHitsInCurHC =0; // Unused variable
+    int NumHitsInCurHC =0; // Unused variable
     
     if(EnableThisHitStore) {
       
-      //NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit ); // Unused variable
+      NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit ); // Unused variable
 
       if(m_RichPmtAviodDuplicateHitsActivate || m_RichPmtFlagDuplicateHitsActivate ) { 
          m_RichPmtAlreadyHit[CurrentPmtNumber]=true;
@@ -666,12 +666,11 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
       
       
     }
-    
      
-    // log << MSG::VERBOSE
-    //   << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
-    //   << CurrentRichCollectionSet << "  " 
-    //   <<NumHitsInCurHC << "   " <<endmsg;
+     log << MSG::VERBOSE
+       << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
+       << CurrentRichCollectionSet << "  " 
+       <<NumHitsInCurHC << "   " <<endmsg;
         
   }
   
