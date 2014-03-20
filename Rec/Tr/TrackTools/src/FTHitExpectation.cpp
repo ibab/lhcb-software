@@ -117,7 +117,7 @@ IHitExpectation::Info FTHitExpectation::expectation(const LHCb::Track& aTrack) c
 	iterL != m_layers.end() ; 
 	++iterL )
     {      
-      LHCb::FTChannelID elemID( (unsigned int)std::distance( m_layers.begin(), iterL ), 0u, 0u, 0u );
+      LHCb::FTChannelID elemID( (unsigned int)std::distance( m_layers.begin(), iterL ), 0u, 0u, 0u, 0u );
       double layerZ = ((*iterL)->geometry()->toGlobal( Gaudi::XYZPoint(0. ,0., 0.) )).z();
 
       Tf::Tsa::Line     line    = yLine    ( aTrack, layerZ );
@@ -216,7 +216,7 @@ void FTHitExpectation::collect(const LHCb::Track& aTrack ,std::vector<LHCb::LHCb
 	iterL != m_layers.end() ; 
 	++iterL )
     {      
-      LHCb::FTChannelID elemID( (unsigned int)std::distance( m_layers.begin(), iterL ), 0u, 0u, 0u );
+      LHCb::FTChannelID elemID( (unsigned int)std::distance( m_layers.begin(), iterL ), 0u, 0u, 0u, 0u );
       double layerZ = ((*iterL)->geometry()->toGlobal( Gaudi::XYZPoint(0. ,0., 0.) )).z();
 
       Tf::Tsa::Line     line    = yLine    ( aTrack, layerZ );
