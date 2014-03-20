@@ -113,7 +113,7 @@ StatusCode PrSeedingAlgorithm::execute() {
             (*itT)->lhcbIDs().end() != itId; ++itId ) {
         if ( (*itId).isFT() ) {
           LHCb::FTChannelID ftId =(*itId).ftID();
-          int zoneNb = 2 * ftId.layer() + ftId.quarter()/2;
+          int zoneNb = 2 * ftId.layer() + ftId.mat();
           PrHitZone* zone = m_hitManager->zone(zoneNb);
           for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
             if ( (*itH)->id() == *itId ) (*itH)->setUsed( true );

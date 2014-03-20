@@ -143,7 +143,7 @@ StatusCode PrSeedingXLayers::execute() {
             (*itT)->lhcbIDs().end() != itId; ++itId ) {
         if ( (*itId).isFT() ) {
           LHCb::FTChannelID ftId =(*itId).ftID();
-          int zoneNb = 2 * ftId.layer() + ftId.quarter()/2;
+          int zoneNb = 2 * ftId.layer() + ftId.mat(); //zones top are even (0, 2, 4, ....,22)  and zones bottom are odd 
           PrHitZone* zone = m_hitManager->zone(zoneNb);
           // -- The hits are sorted according to LHCbID, we can therefore use a lower bound to speed up the search
           PrHits::iterator itH = std::lower_bound(  zone->hits().begin(),  zone->hits().begin(), *itId, lowerBoundLHCbID() );

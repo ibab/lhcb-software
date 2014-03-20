@@ -51,15 +51,23 @@ void PrFTHitManager::buildGeometry ( ) {
   for ( std::vector<DeFTLayer*>::const_iterator itL = m_ftDet->layers().begin();  //loop over layers
 	m_ftDet->layers().end() != itL; ++itL ) {
     int id = (*itL)->params()->param<int>("layerID");  //ask layerID
-    LHCb::FTChannelID tmp( id, 0, 0, 0 ); 
+    LHCb::FTChannelID tmp( id, 0u, 0u, 0u, 0u ); //"0u" means "unsigned 0" 
     const DeFTFibreMat* ftMat = m_ftDet->findFibreMat(tmp);
     seg = ftMat->createDetSegment( tmp, 0. ); 
     debug() << "STEREO ANGLE: " <<  ftMat->angle() << endmsg;
     
-    zone( 2*id   )->setGeometry( seg ); // ex:layers 0  down
-    zone( 2*id+1 )->setGeometry( seg ); // ex:layers 0  up 
-    zone( 2*id   )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down 
-    zone( 2*id+1 )->setBoundaries( -4090., 4090., -50., 3030. ); //check this boudaries values for zone up   
+    //The setGeometry defines the z at y=0, the dxDy and the dzDy, as well as the isX properties of the zone. 
+    //This is important, since these are used in the following. 
+    //They are set once for each zone in this method.
+    zone( 2*id   )->setGeometry( seg ); // ex:layers 0  down (up with new FTChannelID)
+    zone( 2*id+1 )->setGeometry( seg ); // ex:layers 0  up (down with new FTChannelID)
+    //The boundaries are needed in case you will use the m_xMin, m_xMax, m_yMin, m_yMax of the zone, 
+    //or methods that are indirectly using them, like dxOnAFibre() or isInside(x,y) 
+    //(see https://svnweb.cern.ch/trac/lhcb/browser/Rec/trunk/Pr/PrKernel/PrKernel/PrHitZone.h?rev=164716). 
+    //These are currently not used anywhere in the seeding algorithm.
+    //The isInside(x,y) method is used in the forward algorithm. 
+    zone( 2*id+1 )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down (with new FTChannelID)
+    zone( 2*id   )->setBoundaries( -4090., 4090., -50., 3030. ); //check this boudaries values for zone up (with new FTChannelID) 
     debug() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
   }
   debug() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
@@ -118,7 +126,9 @@ void PrFTHitManager::decodeData ( ) {
 
 
     int lay  = (*itC).channelID().layer();  
-    int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0; 
+    //    int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0;  //if yes, it is top (before bottom was 0)
+    int zone = ( (*itC).channelID().mat() > 0 ) ? 1 : 0;  //if yes, it is bottom (now bottom is 1)
+
     int code = 2*lay + zone;
     PrHit* aHit = newHitInZone( code );
     float errX = 0.05 + .03 * (*itC).size();

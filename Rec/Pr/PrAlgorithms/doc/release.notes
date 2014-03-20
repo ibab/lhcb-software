@@ -4,6 +4,12 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-03-20 - Francesco Polci 
+ -Adapted to the new version of FTChannelID having:
+  1) mat() instead of quarter()
+  2) a different constructor with 5 instead of 4 arguments
+  Affected files: PrFTHitManager.cpp, PrSeedingAlgorithm.cpp, PrSeedingXLayers.cpp
+
 ! 2014-03-19 - Marco Cattaneo
  - Fix clang33 compilation failures in PrPlaneCounter.h, due to 
    http://stackoverflow.com/questions/16985687/
