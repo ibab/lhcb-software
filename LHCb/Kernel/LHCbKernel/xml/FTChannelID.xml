@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--- $Id: -->
-<!--- Author  : Olivier Callot -->
-<!--- Created : 2012-02-23 -->
+<!--- Author  : FT Software team -->
+<!--- Created : 2014-03-17 -->
 
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
@@ -9,17 +9,18 @@
 <gdd>
   <package name    = "LHCbKernel">
     <class name    = "FTChannelID"
-	   author  = "Olivier Callot"
-	   desc    = "Channel ID fo rthe Fibre Tracker (LHCb Upgrade)"
+	   author  = "FT software team"
+	   desc    = "Channel ID for the Fibre Tracker (LHCb Upgrade)"
 	   virtual = "FALSE" >
 
 	   &StlVector;
 
-      <constructor argList = "unsigned int layer, unsigned int quarter, unsigned int sipmId, unsigned int sipmCell" 
+      <constructor argList = "unsigned int layer, unsigned int module, unsigned int mat, unsigned int sipmId, unsigned int sipmCell" 
                    desc    = "Explicit constructor from the geometrical location">
         <code>    
           m_channelID = (layer    &lt;&lt; layerBits  ) + 
-                        (quarter  &lt;&lt; quarterBits) + 
+                        (module   &lt;&lt; moduleBits) + 
+                        (mat      &lt;&lt; matBits) + 
                         (sipmId   &lt;&lt; sipmIdBits ) + 
                         (sipmCell &lt;&lt; sipmCellBits  );
         </code>
@@ -48,13 +49,20 @@
                   setMeth = "FALSE"/>
 
         <bitfield name    = "sipmId" 
-                  length  = "7" 
+                  length  = "4" 
                   desc    = "ID of the SiPM in the quarter layer" 
                   setMeth = "FALSE"/>
-        <bitfield name    = "quarter" 
-                  length  = "2" 
-                  desc    = "Quarter id (top = 2-3, bottom = 0-1 in inreasing x)" 
+        
+        <bitfield name    = "mat" 
+                  length  = "1" 
+                  desc    = "Mat id (0 top, 1 bottom)" 
                   setMeth = "FALSE"/>
+        
+        <bitfield name    = "module" 
+                  length  = "4" 
+                  desc    = "Module id (0,1,2,3,4,10,11,5,6,7,8,9) from positive to negative x" 
+                  setMeth = "FALSE"/>
+        
         <bitfield name    = "layer" 
                   length  = "4" 
                   desc    = "Layer id" 
@@ -75,9 +83,30 @@ return s
 &lt;&lt; "{ FTChannelID : "
 &lt;&lt; " sipmCell =" &lt;&lt; sipmCell()
 &lt;&lt; " sipmId ="   &lt;&lt; sipmId()
-&lt;&lt; " quarter="   &lt;&lt; quarter()
+&lt;&lt; " mat="       &lt;&lt; mat()
+&lt;&lt; " module="    &lt;&lt; module()
 &lt;&lt; " layer="     &lt;&lt; layer()
 &lt;&lt; " }";
+        </code>
+      </method>
+
+      <method 
+          name    = "quarter" 
+          desc    = "returns the quarter associated (top = 2-3, bottom = 0-1 in increasing x)"
+          type    = "uint" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+        <code>
+        uint quart = 99;
+        if (mat() == 0){  // top part of the layer
+          if ((module() &lt; 5) || (module() == 10 ) ) quart = 3;
+          else quart = 2;
+        }
+        if(mat() == 1){   // bottom part of the layer
+          if ((module() &lt; 5) || (module() == 10 ) ) quart = 1;
+          else quart = 0;
+        }
+        return quart;
         </code>
       </method>
 
