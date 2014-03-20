@@ -28,8 +28,8 @@ FTRawBankEncoder::FTRawBankEncoder( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   //== These parameters should eventually come from the Detector Element
-  m_nbBanks = 48;
-  m_nbSipmPerTELL40 = 128;
+  m_nbBanks = FTRawBank::NbBanks;
+  m_nbSipmPerTELL40 = FTRawBank::NbSiPMPerTELL40;
 
   declareProperty("OutputLocation", m_outputLocation = LHCb::RawEventLocation::Default, "RawBank output location");  
 
@@ -65,7 +65,7 @@ StatusCode FTRawBankEncoder::execute() {
   LHCb::FTClusters* clusters = get<LHCb::FTClusters>(LHCb::FTClusterLocation::Default );
   LHCb::RawEvent* event = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>( m_outputLocation );
   
-  int codingVersion = 0;
+  int codingVersion = 1;
 
   for ( unsigned int iBank = 0; m_sipmData.size() > iBank; ++iBank ) {
     for ( unsigned int iPm = 0; m_sipmData[iBank].size() > iPm; ++iPm ) {
@@ -81,7 +81,7 @@ StatusCode FTRawBankEncoder::execute() {
       info() << "*** Invalid bank number " << bankNumber << " channelID " << id << endmsg;
       return StatusCode::FAILURE;
     }
-    unsigned int sipmNumber = id.sipmId();
+    unsigned int sipmNumber = id.sipmId() + 16 * QuarterModule(id.module());//== changes to be done here to include module + mat 
     if ( m_sipmData[bankNumber].size() <= sipmNumber ) {
       info() << "Invalid SiPM number " << sipmNumber << " in bank " << bankNumber << " channelID " << id << endmsg;
       return StatusCode::FAILURE;
@@ -93,21 +93,24 @@ StatusCode FTRawBankEncoder::execute() {
       }
       int frac = int( (*itC)->fraction() * (FTRawBank::fractionMaximum+1) );
       int cell = id.sipmCell();
+      int sipmId = 0;
       int cSize = (*itC)->size();
       int charg = (*itC)->charge() / 16; // one MIP should be around 32 (6 bits ADC) -> coded as 2.
-      if ( 0 > frac || FTRawBank::fractionMaximum < frac  ) frac  = FTRawBank::fractionMaximum;
-      if ( 0 > cell || FTRawBank::cellMaximum     < cell  ) cell  = FTRawBank::cellMaximum;
-      if ( 0 > cSize|| FTRawBank::sizeMaximum     < cSize ) cSize = FTRawBank::sizeMaximum;
-      if ( 0 > charg|| FTRawBank::chargeMaximum   < charg ) charg = FTRawBank::chargeMaximum;
+      if ( 0 > frac   || FTRawBank::fractionMaximum < frac  ) frac   = FTRawBank::fractionMaximum;
+      if ( 0 > cell   || FTRawBank::cellMaximum     < cell  ) cell   = FTRawBank::cellMaximum;
+      if ( 0 > sipmId || FTRawBank::sipmIdMaximum   < sipmId) sipmId = FTRawBank::sipmIdMaximum;
+      if ( 0 > cSize  || FTRawBank::sizeMaximum     < cSize ) cSize  = FTRawBank::sizeMaximum;
+      if ( 0 > charg  || FTRawBank::chargeMaximum   < charg ) charg  = FTRawBank::chargeMaximum;
       int coded = 
         (frac  << FTRawBank::fractionShift) + 
         (cell  << FTRawBank::cellShift) + 
+        (sipmId<< FTRawBank::sipmIdShift) + 
         (cSize << FTRawBank::sizeShift) + 
         (charg << FTRawBank::chargeShift);
       if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << format( "Bank%3d sipm%4d cell %4d frac %6.4f charge %5d size %3d code %4.4x",
+        verbose() << format( "Bank%3d sipm%4d cell %4d frac %6.4f sipmId %5d charge %5d size %3d code %4.4x",
                              bankNumber, sipmNumber, id.sipmCell(), (*itC)->fraction(), 
-                             (*itC)->charge(), (*itC)->size(), coded ) << endmsg;
+                             sipmId, (*itC)->charge(), (*itC)->size(), coded ) << endmsg;
       }
       m_sipmData[bankNumber][sipmNumber].push_back( coded );
       m_sipmData[bankNumber][sipmNumber][0] += 1;
@@ -150,7 +153,6 @@ StatusCode FTRawBankEncoder::execute() {
 
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -169,3 +171,15 @@ StatusCode FTRawBankEncoder::finalize() {
 }
 
 //=============================================================================
+unsigned int FTRawBankEncoder::QuarterModule(unsigned int module)
+{
+  unsigned int quarterModuleNber = 9;
+  if(module < 5) quarterModuleNber = module;
+  else 
+  {
+    quarterModuleNber = module - 4;
+    if(module == 10) quarterModuleNber = 5;
+    if(module == 11) quarterModuleNber = 0;
+  }
+  return quarterModuleNber;
+}

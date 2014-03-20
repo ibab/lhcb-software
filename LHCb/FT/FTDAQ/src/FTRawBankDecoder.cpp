@@ -86,13 +86,20 @@ StatusCode FTRawBankDecoder::execute() {
     if ( msgLevel(MSG::DEBUG) ) debug() << "source " << source << " layer "
                                         << layer << " quarter "
                                         << quarter << " size " << size << endmsg;
-    if ( 0 == bank->version()  ) {
+    if ( 1 == bank->version()  ) {
       size /= 2;   // in short int
       while( size > 0 ) {
         int sipmHeader = (*pt++);
         --size;
         if ( 0 == size && 0 == sipmHeader ) continue;  // padding at the end...
-        int mySiPM = sipmHeader >> FTRawBank::sipmShift;
+        int QuarterSiPMNber = sipmHeader >> FTRawBank::sipmShift;
+        int module = 99;
+        int mat = 9;
+
+        StatusCode sc = RetrieveModuleMat(QuarterSiPMNber,quarter,module,mat);
+        if(sc.isFailure()) return sc;
+
+        int mySiPM = QuarterSiPMNber & 15;
         int nClus  = sipmHeader &  FTRawBank::nbClusMaximum;
         if ( 0 < nClus && msgLevel(MSG::DEBUG) )
           debug() << "   SiPM " << mySiPM << " nClus " << nClus
@@ -100,13 +107,15 @@ StatusCode FTRawBankDecoder::execute() {
         while ( nClus > 0 ) {
           int fraction = ( (*pt) >> FTRawBank::fractionShift ) & FTRawBank::fractionMaximum;
           int cell     = ( (*pt) >> FTRawBank::cellShift     ) & FTRawBank::cellMaximum;
+          int sipmId   = ( (*pt) >> FTRawBank::sipmIdShift   ) & FTRawBank::sipmIdMaximum;
           int cSize    = ( (*pt) >> FTRawBank::sizeShift     ) & FTRawBank::sizeMaximum;
           int charge   = ( (*pt) >> FTRawBank::chargeShift   ) & FTRawBank::chargeMaximum;
           if ( msgLevel( MSG::VERBOSE ) ) {
-            verbose() << format(  "  cell %4d frac %3d charge %5d size %3d code %4.4x",
-                                  cell, fraction, charge, cSize, (*pt) ) << endmsg;
+            verbose() << format(  "  cell %4d sipmId %3d frac %3d charge %5d size %3d code %4.4x",
+                                  cell, sipmId,fraction, charge, cSize, (*pt) ) << endmsg;
           }
-          LHCb::FTChannelID id( layer, quarter, mySiPM, cell );
+          //LHCb::FTChannelID id( layer, quarter, mySiPM, cell );
+          LHCb::FTChannelID id( layer, module, mat, mySiPM, cell );
           LHCb::FTLiteCluster tmp( id, fraction, cSize, charge );
           clus->push_back( tmp );
           pt++;
@@ -136,3 +145,23 @@ StatusCode FTRawBankDecoder::finalize() {
 }
 
 //=============================================================================
+StatusCode FTRawBankDecoder::RetrieveModuleMat(const int quartSipmNb, const int quarter , int &locmod, int &locmat)
+{
+  if((quarter == 0)||(quarter == 0) ) locmat = 1;
+  if((quarter == 0)||(quarter == 0) ) locmat = 0;
+  int intermod = quartSipmNb / 16;
+  if((quarter % 2) != 0) // x positive part
+  {
+    if (quartSipmNb < 5) locmod = intermod;
+    else locmod = 10;
+  }
+  else  // x negative part
+  {
+    if (quartSipmNb > 0) locmod = intermod + 4;
+    else locmod = 11;
+  }
+  if(locmat > 1)  return StatusCode::FAILURE;
+  if(locmod > 11) return StatusCode::FAILURE;
+
+  return StatusCode::SUCCESS;
+}

@@ -4,6 +4,10 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+
+! 2014-03-19 - Eric Cogneras
+ - Modification of the bit sharing in 16-bit words according to the TDR electronic design
+
 ! 2014-03-18 - Michel De Cian
  - Changing FTRawCluster to FTLiteCluster in FTRawBankDecoder
 

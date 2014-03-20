@@ -6,17 +6,25 @@ namespace FTRawBank {
     sipmShift     = 4,  // for the header: SiPM Number + number of clusters
     fractionShift = 0,
     cellShift     = 2,
-    sizeShift     = 9,
-    chargeShift   = 12 
+    sipmIdShift   = 9,
+    sizeShift     = 11,
+    chargeShift   = 13
   };
   
   enum maxima {
-    nbClusMaximum   = 15,
-    fractionMaximum = 3,
-    cellMaximum     = 127,
-    sizeMaximum     = 7,
-    chargeMaximum   = 15 
+    nbClusMaximum   = 15,  // 4 bits ??
+    fractionMaximum = 3,   // 2 bits allocted
+    cellMaximum     = 127, // 0 to 127, coded on 7 bits
+    sipmIdMaximum   = 3,   // 2 bits allocated
+    sizeMaximum     = 3,   // 2 bits allocated
+    chargeMaximum   = 7    // 3 bits allocated
   };
+
+  enum BankProperties {
+    NbBanks = 48,
+    NbSiPMPerTELL40 = 128
+  };
+
 }
 
 #endif // FTRAWBANKPARAMS_H

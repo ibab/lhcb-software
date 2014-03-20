@@ -28,6 +28,7 @@ public:
 protected:
 
 private:
+  StatusCode RetrieveModuleMat(const int quartSipmNb, const int quarter , int &locmod, int &locmat);
   
   std::string m_outputClusterLocation;
 };
