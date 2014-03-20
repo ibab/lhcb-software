@@ -138,8 +138,9 @@ public:
                                 double& fibreLenghFrac)const;
 
   //
-  bool isBottom() const { return m_bottom; }
+  bool isBottom() const { return m_mat; }
   int module() const { return m_module; }
+  int quarter() const { return m_quarter; }
   int layer() const { return m_layer; }
   bool isHoley () const { return m_holey; }
 
@@ -236,7 +237,8 @@ private: // private member functions
    *  @return x-position at y=0
    */
   double xAtYEq0(double x0, double y0) const {
-    return x0 - y0*m_tanAngle;
+    //return x0 - y0*m_tanAngle;
+    return x0 + y0*m_tanAngle;    //DBL
   }
 
   /** Get the sipmID, cellID and fractional position of a hit.
@@ -277,7 +279,8 @@ private: // private member functions
    *  @return FTChannelID
    */
   LHCb::FTChannelID createChannel(unsigned int hitLayer,
-                                  int          quarter,
+                                  int          module,
+                                  int          mat,
                                   unsigned int sipmID,
                                   unsigned int grossCellID) const;
 
@@ -349,7 +352,7 @@ private: // private data members
   double m_tanAngle;            ///< tangent of stereo angle
   double m_dzDy;                ///< layer slope in the y-z plane
 
-  bool m_bottom;
+  int m_mat;
   int m_module;
   int m_layer;
   bool m_holey;
@@ -361,7 +364,7 @@ private: // private data members
   double m_layerMinZ, m_layerMaxZ;
   double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
   double m_innerHoleRadius;
-  double m_layerPosZ;           ///< center of the layer in z
+  double m_layerPosZ;           ///< center of the fibremat in z   
  
   double m_fibreMatMinX, m_fibreMatMaxX;
   double m_fibreMatMinY, m_fibreMatMaxY;
@@ -381,15 +384,9 @@ private: // private data members
   double m_sipmPitchX;          /// = m_sipmSizeX + 2*m_gapXsipmEdge
   unsigned int m_nSipmPerQuarter;  /// = int(m_layerHalfSizeX/m_sipmPitchX)
   double m_gapXLayerOuterEdge;  /// = m_layerHalfSizeX - m_nSipmPerQuarter*m_sipmPitchX
-  /// global x@y=0 positions of the SiPM origins in the 4 quarters. Due to the SiPM numbering
-  /// these positions are chosen to signify the right/left SiPM edge for the (x>0)/(x<0) halves.
-  std::vector<double> m_sipmOriginX;
-  /// Distance between two SiPMs in the 4 quarters. Can be positive or negative which reflects
-  /// the direction of increasing the SiPM ID.
-  std::vector<double> m_sipmStepX;
 
   //variables for sipm geometrical distribution at the level of fibremats rather than at the level of layers
-  int m_nSipmPerModule;
+  unsigned int m_nSipmPerModule;
   double m_SipmGapInModule;
 
   /// Use a single MsgStream instance (created in initialize)
@@ -399,7 +396,10 @@ private: // private data members
   MsgStream& info()    const { return *m_msg << MSG::INFO; }
   MsgStream& error()   const { return *m_msg << MSG::ERROR; }
   MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
-
+  
+  int m_quarter;       //DBL
+  int m_relativemodule;
+  double m_fibreMatPosZ;   
 };
 
 // -----------------------------------------------------------------------------

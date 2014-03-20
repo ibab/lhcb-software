@@ -22,13 +22,16 @@ NTupleSvc().Output = ["FILE1 DATAFILE='TestFT.root' TYP='ROOT' OPT='NEW'"]
 #DDDBConf().DbRoot = "/afs/cern.ch/user/p/phopchev/public/FT/DDDBSlice_FT_v3/lhcb.xml"
 #POLCI
 #DDDBConf().DbRoot = "$HOME/panoramix/DDDB/DDDBSlice_FT_v20_test/lhcb.xml"
-DDDBConf().DbRoot = "/afs/cern.ch/user/f/fpolci/cmtuser/Brunel_v44r5/static_DDDB_VP+UT+FT_v20/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/f/fpolci/cmtuser/Brunel_v44r5_BeforeHolidays/static_DDDB_VP+UT+FT_v20/lhcb.xml"
 #EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 #EventSelector().Input = ["DATAFILE='/castor/cern.ch/user/o/ogruenbe/Bs_mumu_v3.sim' TYP='POOL_ROOTTREE'"]
 #POLCI
 #EventSelector().Input = ["DATAFILE='/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/gauss/output/MiniBias_v20_nu25.sim' TYP='POOL_ROOTTREE'"]
 
-EventSelector().Input = ["DATAFILE='/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/gauss/output5/MiniBias_v20_nu76.sim' TYP='POOL_ROOTTREE'"]
+#EventSelector().Input = ["DATAFILE='/afs/cern.ch/work/d/dmilanes/digi/FT_upgrade/gauss/output5/MiniBias_v20_nu76.sim' TYP='POOL_ROOTTREE'"]
+
+datasetName = 'Bs_phiphi_nu38-5degres-24102013'
+EventSelector().Input = ["DATAFILE='/afs/cern.ch/work/d/delbuono/digi/" + datasetName + ".sim'"]
 
 from Configurables import DeFTTestAlg
 

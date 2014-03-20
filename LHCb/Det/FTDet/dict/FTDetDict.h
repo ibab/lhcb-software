@@ -7,5 +7,8 @@
 #include "FTDet/DeFTStation.h"
 #include "FTDet/DeFTBiLayer.h"
 #include "FTDet/DeFTLayer.h"
+#include "FTDet/DeFTModule.h"
+#include "FTDet/DeFTFibreModule.h"
+#include "FTDet/DeFTFibreMat.h"
 
 #endif // DICT_FTDETDICT_H

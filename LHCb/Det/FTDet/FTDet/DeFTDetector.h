@@ -135,7 +135,9 @@ public:
    */
 
   const DeFTFibreMat* findFibreMat( const LHCb::FTChannelID id ) const;
-  const DeFTLayer* findLayer( const LHCb::FTChannelID id ) const;
+  
+  //OBSOLETE
+  //const DeFTLayer* findLayer( const LHCb::FTChannelID id ) const;
 
   /// Make the Test algo a friend so that it can call private methods
   friend class DeFTTestAlg;

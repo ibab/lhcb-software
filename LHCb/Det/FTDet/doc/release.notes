@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2014-03-20 - Luigi Del Buono
+ - Changes for new FTchanID (no more quarter --> module +mat) Fibremat level implemented
+
 !========================= FTDet v2r5 2014-03-17 =========================
 ! 2014-03-10 - Michel De Cian
  - Replace linear search for fibreMat with binary search in DeFTDetector

@@ -167,7 +167,8 @@ StatusCode DeFTTestAlg::execute() {
 	  debug() << "AND THE LAYER IS...... " <<  (itPair->first).layer() << endmsg;
 
 	  tuple->column("layer", (itPair->first).layer());
-	  tuple->column("quarter",(itPair->first).quarter());
+	  tuple->column("mat",(itPair->first).mat());
+	  tuple->column("module",(itPair->first).module());
 	  tuple->column("fibermat_id",pFibreMat->FibreMatID());
 	  tuple->column("fibermat_layer",pFibreMat->layer());
 	  tuple->column("fibermat_angle",pFibreMat->angle());
@@ -175,6 +176,7 @@ StatusCode DeFTTestAlg::execute() {
 	  tuple->column("sipm",(itPair->first).sipmId());
 	  tuple->column("cell",(itPair->first).sipmCell());
 	  tuple->column("channel",(itPair->first).channelID());
+	  tuple->column("energy",itPair->second);
 	  double xChan = -90000000.;
 	  xChan = pFibreMat->cellUCoordinate(itPair->first);
 	  tuple->column("Chan_X", xChan); 
