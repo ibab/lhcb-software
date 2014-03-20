@@ -43,7 +43,9 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   std::vector<double> tmp = boost::assign::list_of(26*Gaudi::Units::ns)
                                                   (28*Gaudi::Units::ns)
-                                                  (30*Gaudi::Units::ns);// tof (21+2+2) + full fiber propagation time (15) - integration rise (15)
+                                                  (30*Gaudi::Units::ns);// tof (21+2+2)
+                                                                        //+ full fiber propagation time (15) 
+                                                                        //- integration rise (15)
 
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
@@ -60,9 +62,11 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("Temperature",      m_temperature      = -30.,  "Sipm temperature (deg.C)    (for noise)");
   declareProperty("Irradiation",      m_irradiation      =  50.,  "Sipm received irradiation (fb-1) (for noise)");
   declareProperty("Nu",               m_nu               =  7.6,  "Nu of collision run. Nafterpulses ~nu (for noise)");
-  declareProperty("ThermalNoiseRateBase",  m_thermalNoiseRateBase =  0.1,  "Sipm channel thermal (dark) noise rate at 20 deg.C, 0fb-1 (MHz)" );
+  declareProperty("ThermalNoiseRateBase",  m_thermalNoiseRateBase =  0.1, 
+                  "Sipm channel thermal (dark) noise rate at 20 deg.C, 0fb-1 (MHz)" );
   declareProperty("CrossTalkProbability",  m_crossTalkProbability =  0.07, "Sipm cross-talk probability per pe");
-  declareProperty("AfterpulseProbability", m_afterpulseProbability = 0.15, "Sipm random afterpulse probability of 1 pe to occur per hit PIXEL");
+  declareProperty("AfterpulseProbability", m_afterpulseProbability = 0.15, 
+                  "Sipm random afterpulse probability of 1 pe to occur per hit PIXEL");
   //declareProperty("ChannelNoiseEnabled",  m_channelNoiseEnabled  = false );
 }
 //=============================================================================
@@ -139,8 +143,6 @@ StatusCode MCFTDigitCreator::execute() {
   //{
   //
   //}
-  
-
   // retrieve FTDeposits
   const MCFTDeposits* mcDepositsCont = get<MCFTDeposits>(m_inputLocation);
   if ( msgLevel( MSG::DEBUG) )
@@ -270,10 +272,13 @@ StatusCode MCFTDigitCreator::execute() {
 
     // Set geometry
     int Nlayers = 4*3;  // layers * stations
-    int Nquarters = 4;
-    int Nsipms = 4*4*6; // sipms * mats * modules
+    //int Nquarters = 4;
+    int NModule = 12;
+    int NMat = 2;
+    //int Nsipms = 4*4*6; // sipms * mats * modules
+    int Nsipms = 16;
     int Nchannels = 128;
-    int Ntotchannels = Nlayers * Nquarters * Nsipms * Nchannels;
+    int Ntotchannels = Nlayers * NModule * NMat * Nsipms * Nchannels;
 
     // create containers for new noise hits
     std::vector<FTChannelID> noiseChannels;
@@ -290,13 +295,15 @@ StatusCode MCFTDigitCreator::execute() {
     float irradCoef = 50.;
     float tempCoef = 10.;
     float roomTemp = 20.; // deg.C
-    int NthermalNoise = Ntotchannels * (m_thermalNoiseRateBase / readoutFreq) * (irradCoef * m_irradiation) * pow(2,(m_temperature-roomTemp)/tempCoef);
+    int NthermalNoise = Ntotchannels * (m_thermalNoiseRateBase / readoutFreq) * 
+      (irradCoef * m_irradiation) * pow(2,(m_temperature-roomTemp)/tempCoef);
 
     // Calculate number of VISIBLE thermal noise hits, due to cross-talk:
     //int minPEforCluster = int( float(m_clusterMinCharge) / m_sipmGain );
     int NvisibleThermalNoise = int( NthermalNoise * pow(m_crossTalkProbability, 0) ); // ct^0 = generate all pulses
     debug() << "[THERMAL] NthermalNoise = " << NvisibleThermalNoise << endmsg;
-    plot(NvisibleThermalNoise, "NvisibleThermalNoiseHits", "NvisibleThermalNoiseHits; NvisibleThermalNoiseHits", 0. , 1000000. ,10000);
+    plot(NvisibleThermalNoise, "NvisibleThermalNoiseHits", "NvisibleThermalNoiseHits; NvisibleThermalNoiseHits", 
+         0. , 1000000. ,10000);
 
     // Loop over all noise hits
     int totalThermalInMCHit  = 0;
@@ -307,13 +314,18 @@ StatusCode MCFTDigitCreator::execute() {
       // Get random channel
       double r = m_flat()*(Nlayers);
       int layer = int(r);
-      r = m_flat()*(Nquarters);
-      int quarter = int(r);
+      //r = m_flat()*(Nquarters);
+      //int quarter = int(r);
+      r = m_flat()*(NModule);
+      int module = int(r);
+      r = m_flat()*(NMat);
+      int mat = int(r);
       r = m_flat()*(Nsipms);
       int sipmID = int(r);
       r = m_flat()*(Nchannels);
       int sipmCell = int(r);
-      FTChannelID noiseChannel(layer, quarter, sipmID, sipmCell);
+      //FTChannelID noiseChannel(layer, quarter, sipmID, sipmCell);
+      FTChannelID noiseChannel(layer, module, mat, sipmID, sipmCell);
 
       // Create random ADC value due to cross-talk
       int Npe = 1; // should be >1 if NvisibleThermalNoise has a ct^(>0);
@@ -326,7 +338,8 @@ StatusCode MCFTDigitCreator::execute() {
       std::vector<FTChannelID>::const_iterator chanIt = std::find(mcHitChannels.begin(), mcHitChannels.end(), noiseChannel);
       if (chanIt != mcHitChannels.end()) {
         // if it IS, add ADC value to existing MCHit channel
-        MCFTDigit* MCHitdigit = mcHitDigits[ std::distance<std::vector<FTChannelID>::const_iterator>(mcHitChannels.begin(),chanIt) ];
+        MCFTDigit* MCHitdigit = 
+          mcHitDigits[ std::distance<std::vector<FTChannelID>::const_iterator>(mcHitChannels.begin(),chanIt) ];
         MCHitdigit -> setAdcCount( (MCHitdigit -> adcCount()) + noiseADCcount );
         totalThermalInMCHit++;
       } else {
@@ -345,7 +358,8 @@ StatusCode MCFTDigitCreator::execute() {
       }
     }
 
-    debug() << "[THERMAL] Created: " << totalThermalCreated << ", Appended: " << totalThermalAppended << ", Added to MCHit: " << totalThermalInMCHit << endmsg;
+    debug() << "[THERMAL] Created: " << totalThermalCreated << ", Appended: " << totalThermalAppended << ", Added to MCHit: " 
+            << totalThermalInMCHit << endmsg;
 
 
     //========================================================================
@@ -369,15 +383,18 @@ StatusCode MCFTDigitCreator::execute() {
     //debug() << "[HIT AFTERPULSING] integralAfterCut = " << integralAfterCut << endmsg;
 
     // Determine number of hit afterpulsing hits expected
-    int NavgClusInEvent = int(396788./100. / 7.6 * m_nu); // Based on 100 events, nu=7.6, Bs2phiphi, pythia8. Assumes Nclusters goes linearly with nu
+    int NavgClusInEvent = int(396788./100. / 7.6 * m_nu); // Based on 100 events, nu=7.6, Bs2phiphi, 
+                                                          //pythia8. Assumes Nclusters goes linearly with nu
     int NhitAfterpulses = NavgClusInEvent;
 
     // Calculate number of additional hit afterpulse hits due to cross-talk
-    float avgNoisePE = 1. + m_crossTalkProbability + pow(m_crossTalkProbability,2) + pow(m_crossTalkProbability,3) + pow(m_crossTalkProbability,4);
+    float avgNoisePE = 1. + m_crossTalkProbability + pow(m_crossTalkProbability,2) + pow(m_crossTalkProbability,3) 
+      + pow(m_crossTalkProbability,4);
     int NhitAfterpulses_AP = 0;
     float APLoop = float(NhitAfterpulses);
     while (APLoop > 1.) {
-      APLoop *= m_afterpulseProbability; // effectively also takes into account afterpulses of cross-talk of (cross-talk of) MCHit afterpulses
+      APLoop *= m_afterpulseProbability; // effectively also takes into account afterpulses of cross-talk of 
+                                         //(cross-talk of) MCHit afterpulses
       NhitAfterpulses_AP += int(APLoop*avgNoisePE+0.5);
     }
 
@@ -385,12 +402,14 @@ StatusCode MCFTDigitCreator::execute() {
     int NvisibleHitAfterpulses = int( (NhitAfterpulses+NhitAfterpulses_AP) * pow(m_crossTalkProbability, 0) ); // ct^0 = do all
     debug() << "[HIT AFTERPULSING] N channel hits for afterpulses = " << NvisibleHitAfterpulses << " (of which "
       << float(NhitAfterpulses_AP) / float(NhitAfterpulses + NhitAfterpulses_AP) * 100. << " % afterpulses)" << endmsg;
-    //plot(NvisibleHitAfterpulses, "NvisibleHitAfterpulses", "NvisibleHitAfterpulses; NvisibleHitAfterpulses", 0. , 1000000. ,10000);
+    //plot(NvisibleHitAfterpulses, "NvisibleHitAfterpulses", "NvisibleHitAfterpulses; NvisibleHitAfterpulses", 
+    //     0. , 1000000. ,10000);
 
     // determine how many hit afterpulses will have a charge of 1 p.e., 2 p.e., etc. (without cross-talk)
     float NsumBinFractions[20] = { 0.204691106081,  0.176326997846,  0.132542585516,  0.0997058439121,  0.0760373252544,
-      0.0585607741894,  0.0453520643227,  0.0352234776303,  0.0273958443495,  0.0213224364803,  0.0166009440283,  0.0129269868938,
-      0.010066868574,  0.00783983501193,  0.00610557755609,  0.00475499468632,  0.0037031811119,  0.00288403576027,  0.00224608761991,  0.001749254176 };
+                                   0.0585607741894,  0.0453520643227,  0.0352234776303,  0.0273958443495,  0.0213224364803,  
+                                   0.0166009440283,  0.0129269868938,0.010066868574,  0.00783983501193,  0.00610557755609,  
+                                   0.00475499468632,  0.0037031811119,  0.00288403576027,  0.00224608761991,  0.001749254176 };
     float NsumBinFracCum[20] = {0};
     for (int j=0; j<20; j++){
       float sum=0;
@@ -472,16 +491,20 @@ StatusCode MCFTDigitCreator::execute() {
         // Now that we have the IDCell (= sipmID and sipmCell), get random quarter and layer:
         double r = m_flat()*(Nlayers);
         int layer = int(r);
-        r = m_flat()*(Nquarters);
-        int quarter = int(r);
-
-        FTChannelID noiseChannel(layer, quarter, sipmID, sipmCell);
-
+        //r = m_flat()*(Nquarters);
+        //int quarter = int(r);
+      r = m_flat()*(NModule);
+      int module = int(r);
+      r = m_flat()*(NMat);
+      int mat = int(r);
+      //FTChannelID noiseChannel(layer, quarter, sipmID, sipmCell);
+      FTChannelID noiseChannel(layer, module, mat, sipmID, sipmCell);
         // Check if not already in MCHit list
         std::vector<FTChannelID>::const_iterator chanIt = std::find(mcHitChannels.begin(), mcHitChannels.end(), noiseChannel);
         if (chanIt != mcHitChannels.end()) {
           // add ADC value to existing MCHit channel
-          MCFTDigit* MCHitdigit = mcHitDigits[ std::distance<std::vector<FTChannelID>::const_iterator>(mcHitChannels.begin(),chanIt) ];
+          MCFTDigit* MCHitdigit = 
+            mcHitDigits[ std::distance<std::vector<FTChannelID>::const_iterator>(mcHitChannels.begin(),chanIt) ];
           MCHitdigit -> setAdcCount( (MCHitdigit -> adcCount()) + noiseADCcount );
           totalAPInMCHit++;
         } else {
@@ -502,7 +525,8 @@ StatusCode MCFTDigitCreator::execute() {
       }
     }
 
-    debug() << "[HIT AFTERPULSING] Created: " << totalAPCreated << ", Appended: " << totalAPAppended << ", Added to MCHit: " << totalAPInMCHit << endmsg;
+    debug() << "[HIT AFTERPULSING] Created: " << totalAPCreated << ", Appended: " << totalAPAppended 
+            << ", Added to MCHit: " << totalAPInMCHit << endmsg;
 
 
     //==========================================================================  
@@ -654,9 +678,9 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
        "ADC counts (reflected);ADC;Number of SiPM channels", 0., 20., 20);
  
   if( msgLevel( MSG::DEBUG) ){
-    debug() <<format("deposit2ADC() : responseDir=%8.3f responseRef=%8.3f Gain=%8.3f noise=%4.2f adcCountDir = %4i adcCountRef = %4i",
-                     response.first, response.second, gain, noise, adcCountDir, adcCountRef)
-            << endmsg;
+    debug()<<format("deposit2ADC() : responsDir=%8.3f responsRef=%8.3f Gain=%8.3f nois=%4.2f adcCountDir = %4i adcCountRef = %4i"
+                    ,response.first, response.second, gain, noise, adcCountDir, adcCountRef)
+           << endmsg;
   }
   return adcCountDir+adcCountRef;
 }

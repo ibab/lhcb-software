@@ -38,8 +38,8 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-  StatusCode HitToChannelConversion_OldGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
-  StatusCode HitToChannelConversion_NewGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
+
+  StatusCode HitToChannelConversion(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
 private:
   // Locations
   std::string m_inputLocation;     ///< FT MCHits Location
