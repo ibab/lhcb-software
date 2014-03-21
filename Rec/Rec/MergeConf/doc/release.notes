@@ -3,3 +3,6 @@
 ! Responsible : Rob Lambert
 ! Purpose     : An LHCb application to merge files
 !-----------------------------------------------------------------------------
+
+! 2014-03-21 - Rob Lambert
+ - Created this package

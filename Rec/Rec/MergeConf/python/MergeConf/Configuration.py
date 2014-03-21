@@ -4,12 +4,13 @@ Simple configurable which merges some files into one
 
 
 from Gaudi.Configuration import *
+from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import LHCbApp, LumiAlgsConf, DecodeRawData
+from Configurables import LHCbApp
 
 class MergeConf(LHCbConfigurableUser):
     ## Possible used Configurables
-    __used_configurables__ = [ LHCbApp, LumiAlgsConf, DecodeRawData]
+    __used_configurables__ = [ LHCbApp ]
 
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
@@ -64,15 +65,14 @@ class MergeConf(LHCbConfigurableUser):
                               )
             IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
         else :
-
+            from Configurables import EventAccounting
+            ApplicationMgr().TopAlg+=[EventAccounting()]
             #propagate to LumiAlgsConf only if DST type, and only if
             if self.getProp("MergeFSR"):
-                      LumiAlgsConf().MergeFSR=True
-                      LumiAlgsConf().Simulation=self.getProp("Simulation")
-                      lseq=GaudiSequencer("MergeFSRSequence")
-                      LumiAlgsConf().LumiSequencer=GaudiSequencer("MergeFSRSequence")
-                      ApplicationMgr().TopAlg+=[GaudiSequencer("MergeFSRSequence")]
-
+                from Configurables import LumiMergeFSR, FSRCleaner
+                ApplicationMgr().TopAlg+=[LumiMergeFSR(),FSRCleaner()]
+                
+            
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer")
             IOHelper().outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
@@ -80,9 +80,10 @@ class MergeConf(LHCbConfigurableUser):
     def __apply_configuration__(self):
         ############## Set other properties ###########
         self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'CondDBtag','DDDBtag'] )
-
-        ApplicationMgr().AppName="MergeConf within some other application "
-
+        from Configurables import LoKiSvc
+        LoKiSvc().Welcome = False
+        ApplicationMgr().AppName="MergeConf within Noether"
+        
         #done, that was quite easy, now for the output files
         self._configureOutput()
 
