@@ -355,6 +355,7 @@ fi
 #######################################################
 #parse minor version with simple bit of python
 mooremin=`python -c "print '"${moorever}"'.split('p')[0]"`
+whereto=${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest"
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK/manifest/MOORE_"${mooremin} ]; then
    if [ -e ${whereto} ]; then
      echo "# INFO: (g) manifest already exists, replacing."

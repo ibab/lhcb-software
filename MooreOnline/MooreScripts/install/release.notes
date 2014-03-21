@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-03-21 - Rob Lambert
+ - There was also an issue with installing the manifest...
+ - It was being copied wrongly and overwriting some crazy other location...
+
+! 2014-03-21 - Rob Lambert
  - use svnProjectPath to determine default getpack for MooreScripts
  - Automatic getpack '<default>' was not working for some reason...
 
