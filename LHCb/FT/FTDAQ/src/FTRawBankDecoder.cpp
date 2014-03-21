@@ -147,8 +147,8 @@ StatusCode FTRawBankDecoder::finalize() {
 //=============================================================================
 StatusCode FTRawBankDecoder::RetrieveModuleMat(const int quartSipmNb, const int quarter , int &locmod, int &locmat)
 {
-  if((quarter == 0)||(quarter == 0) ) locmat = 1;
-  if((quarter == 0)||(quarter == 0) ) locmat = 0;
+  if((quarter == 0)||(quarter == 1) ) locmat = 1;
+  if((quarter == 2)||(quarter == 3) ) locmat = 0;
   int intermod = quartSipmNb / 16;
   if((quarter % 2) != 0) // x positive part
   {

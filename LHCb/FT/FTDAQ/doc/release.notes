@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2014-03-21 - Eric Cogneras
+ - Fixed bug in FTRawBankDecoder RetrieveModuleMat() function
+
 ! 2014-03-19 - Eric Cogneras
  - Modification of the bit sharing in 16-bit words according to the TDR electronic design
 
