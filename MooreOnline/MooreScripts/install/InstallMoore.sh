@@ -445,7 +445,7 @@ fi
 if [ -e ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" ]; then
   echo "# INFO: environment file created at: "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
   #example path
-  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; python $RUNSCRIPT_PATH/checkPath.py LD_LIBRARY_PATH ;  python $RUNSCRIPT_PATH/checkPath.py PYTHONPATH ; )
+  (source ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh" 2>&1 > /dev/null; python $RUNSCRIPT_PATH/checkPath.py LD_LIBRARY_PATH ;  python $RUNSCRIPT_PATH/checkPath.py PYTHONPATH ; echo "# INFO: HLTTCKROOT="$HLTTCKROOT;)
 else
   echo "# ERROR: No environment file at "${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}"/setupMoore.sh"
 fi
