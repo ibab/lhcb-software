@@ -165,15 +165,16 @@ echo "# INFO: 2) Installation actions from (a) to (i)."
 echo "# INFO: --------------------------------------------"
 #check that online version exists locally
 if [ -d ${mooreInstall}"/Online_"$onver  ]; then
-    echo "# WARNING: (a) Online version already exists as a full directory, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
+    echo "# WARNING: (a)(1) Online version already exists as a full directory, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
     skippedlist=`echo ${skippedlist}"(a) didn't create online softlink because it already existed as a directory"`
 elif [ -L ${mooreInstall}"/Online_"$onver ]; then
-    echo "# WARNING: (a) Online version already exists as a softlink, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
+    echo "# WARNING: (a)(1) Online version already exists as a softlink, not doing anything "${mooreInstall}"/Online_"$onver" delete if you wish to recreate it."
     skippedlist=`echo ${skippedlist}"(a) didn't create online softlink because it already existed as a softlink"`
 elif [ ! -d ${onlineInstall}"/Online_"$onver ]; then
     echo "# ERROR (a) the online version does *not yet* have a local satelite area! " ${onlineInstall}"/Online_"$onver >&2
     exit 1
 else
+    echo "# INFO: (a)(1) Creating link to online satelite area"
     ln -s ${onlineInstall}"/Online_"$onver  ${mooreInstall}"/Online_"$onver
     rc=$?
     if [  $rc -ne 0  ]; then
@@ -189,7 +190,7 @@ fi
 #######################################################
 #     Prepare with that online version.
 #######################################################
-echo "# INFO: SetupProject (in this shell with full online env) "
+echo "# INFO: (a)(2) SetupProject (in this shell with full online env) "
 . SetupProject.sh -q ${proj} ${version} ${onlineSPOpts} --runtime-project Online $onver --build-env 
 rc=$?
 if [  $rc -ne 0  ]; then
@@ -199,18 +200,24 @@ fi
 #######################################################
 #     Getpack
 #######################################################
+#detect MooreScripts version.
 
 #Getpack
 if  [ -d ${mooreInstall}"/"${proj}"_"${version}"/MooreScripts" ]; then
    echo "# WARNING: (b) MooreScripts already exists, not calling getpack. If you need a different version, do it yourself ;)"
     skippedlist=`echo ${skippedlist}" (b) didn't getpack MooreScripts because it already existed"`
 else
-   getpack -p anonymous MooreScripts '<default>' | awk '{ print "# INFO: " $0}'
+   MooreScriptsV=`svnProjectDeps -f MooreScripts ${proj} ${version}  | grep MooreOnline | awk '{print $4}'`
+   if [ -z "$MooreScriptsV" ]; then
+      echo "# ERROR: (b) MooreScripts version was not detected properly by svnProjectDeps, so I cannot getpack it, try yourself with svnProjectDeps -f MooreScripts "${proj} ${version}  >&2
+   fi
+   echo "# INFO: (b) getpacking MooreScripts"
+   getpack -p anonymous MooreScripts $MooreScriptsV | awk '{ print "# INFO: " $0}'
    rc=$?
    if [  $rc -ne 0  ]; then
        exit $rc
    fi
-    actionlist=`echo ${actionlist}" (b) did getpack MooreScripts"`
+    actionlist=`echo ${actionlist}" (b) did getpack MooreScripts "${MooreScriptsV}`
 fi
 
 #######################################################
@@ -220,10 +227,10 @@ echo "# INFO: (c) Updating HltTCK"
 whereto=${mooreInstall}"/"${proj}"_"${version}"/InstallArea/manifest"
 cd ${mooreInstall}"/"${proj}"_"${version}
 if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/TCK/HltTCK" ]; then
-   getpack -p anonymous TCK/HltTCK head 
+   getpack -p anonymous TCK/HltTCK head #| awk '{ print "# INFO: " $0}'
    actionlist=`echo ${actionlist}" (c) did getpack HltTCK"`
 else
-   svn update TCK/HltTCK 
+   svn update TCK/HltTCK #| awk '{ print "# INFO: " $0}'
    skippedlist=`echo ${skippedlist}" (c) didn't getpack HltTCK because it already existed"`
 
    actionlist=`echo ${actionlist}" (c) updated HltTCK"`
@@ -233,11 +240,14 @@ fi
 #######################################################
 #     make install directories
 #######################################################
+echo "# INFO: ------------- (d) Environment file --------------"
 if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/InstallArea" ]; then
+  echo "# INFO: (d)(1) Creating InstallArea directory"
   mkdir ${mooreInstall}"/"${proj}"_"${version}"/InstallArea"
   needtomake=1
 fi
 if [ ! -d ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig} ]; then
+  echo "# INFO: (d)(2) Creating cmtconfig directory"
   mkdir ${mooreInstall}"/"${proj}"_"${version}"/InstallArea/"${thiscmtconfig}
   needtomake=1
 fi
@@ -257,7 +267,7 @@ if [ -e $whereto ]; then
    skippedlist=`echo ${skippedlist}" (d) didn't create env file because it already existed"`
 else
    #use python module directly, same as SetupProject really.
-   echo "# INFO: ------------- (d) Create environment file --------------"
+   echo "# INFO: (d)(3) Create environment file "
    needtomake=1
    echo "# INFO: python -mLbConfiguration.SetupProject" ${proj} ${version} ${onlineSPOpts}  "--runtime-project Online"  ${onver} "--output="${whereto} "--shell=sh"
    (python -mLbConfiguration.SetupProject ${proj} ${version} ${onlineSPOpts}  --runtime-project Online ${onver} --output=${whereto} --shell=sh | awk '{ print "# INFO: " $0}')
@@ -269,8 +279,8 @@ else
    fi
    echo "# INFO: (d) Environment file exists as "${whereto}
    actionlist=`echo ${actionlist}" (d) created env file"`
-   echo "# INFO: ------------- Edit the file I created --------------"
-   (python -c "execfile('"${mooreInstall}"/"${proj}"_"${version}"/MooreScripts/python/MooreScripts/CreateSetup.py'); FixSetupMoore('"${whereto}"');";)
+   echo "# INFO: (d)(4) Edit the file I created "
+   (source ${setupmoore} 2>&1 > /dev/null; python -c "execfile('"${mooreInstall}"/"${proj}"_"${version}"/MooreScripts/python/MooreScripts/CreateSetup.py'); FixSetupMoore('"${whereto}"');";)
    rc=$?
    if [  $rc -ne 0  ]; then
     echo "# ERROR (d) environment file was not edited, I am deleting it to protect against a broken file! "${whereto} >&2

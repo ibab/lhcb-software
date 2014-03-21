@@ -4,6 +4,10 @@
 ! Purpose     : Installation scripts for Moore
 !-----------------------------------------------------------------------------
 
+! 2014-03-21 - Rob Lambert
+ - use svnProjectPath to determine default getpack for MooreScripts
+ - Automatic getpack '<default>' was not working for some reason...
+
 ! 2014-03-12 - Rob Lambert
  - Tidyup the display of LD/PythonPath
  - Add explicit check of LD/PythonPath with new script

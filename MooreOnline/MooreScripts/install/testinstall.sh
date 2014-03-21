@@ -3,11 +3,11 @@ echo "============================================="
 echo "TEST SCRIPT: Faking the online deployment structure"
 echo "============================================="
 
-export EXPECTV="HEAD"
+export EXPECTV="v22r0"
 export EXPECTONV="v5r7"
 #options to use the nightly slots... need two of those options which work together
-export SPopts="--nightly lhcb-trigger-dev Tue"
-export useSPopts=1
+export SPopts="" #"--nightly lhcb-trigger-dev Tue"
+export useSPopts=0
 echo "testing for MooreOnline "${EXPECTV}" with Online "${EXPECTONV}" and extra options: "${SPopts}
 #whether to delete existing directories or not
 export fresh=0
@@ -19,11 +19,13 @@ if [ "$TMPDIR" == "" ]; then export TMPDIR="/tmp/"${USER}; fi; if [ ! -d "$TMPDI
 
 if [ ${fresh} -eq 1 ]; then
     if [ -d "satelite" ]; then
+	echo "cleaning satelite"
 	rm -rf satelite
     fi;
 
 
     if [ -d "MOORE" ]; then
+	echo "cleaning MOORE"
 	rm -rf MOORE
     fi;
 fi
