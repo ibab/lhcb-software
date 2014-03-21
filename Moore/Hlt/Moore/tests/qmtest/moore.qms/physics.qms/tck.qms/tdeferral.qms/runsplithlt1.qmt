@@ -17,7 +17,7 @@ myname='moore.physics.tck.tdeferral.runsplithlt1'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableEvents(myname,result,causes,"tck.deferral.hlt1only.csv","physics.2012.qmt","Hlt1",extranewref=".tck")
+compareTimingTableFiles(myname,result,causes,"tck.deferral.hlt1only.csv","physics.2012.qmt","Hlt1",extranewref=".tck")
 
 
 #count error lines, shouldn't be any warnings or errors, ideally

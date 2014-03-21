@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-03-21 - Rob Lambert
+ - Fix typos in a couple of Moore tests
+
 ! 2014-03-18 - Rob Lambert
  - Make things even quiter in Moore
  - Suppress all those extra calo tools.

@@ -12,7 +12,7 @@
     <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1.raw' ]; Moore().EnableTimer="deferral.hlt2after1.csv";</text>
   </set></argument>
   <argument name="validator"><text>
-myname='moore.physics.deferral.hlt2after1
+myname='moore.physics.deferral.hlt2after1'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
