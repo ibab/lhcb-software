@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v27r1>2014-03-20 Boole v27r1</A></H1><PRE>
+</PRE><H1><A NAME=v27r1>2014-03-21 Boole v27r1</A></H1><PRE>
 This version uses projects LHCb v37r1, Lbcom v15r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
@@ -13,9 +13,12 @@ This version uses projects LHCb v37r1, Lbcom v15r1
 
 - Configuration changes
   . Replaced call to VeloSim.opts with VeloSim.py in Boole configurable
+  . Added options/Boole-RunFromXDST.py which mainpulates the TES loading and 
+    node killing to allow Boole to run on XDST files
 
 - QMTest changes
   . In BooleExclusions.py, remove EventSelector PFN exclusion, now in GaudiConf
+  . Added a test for running Boole on SIM08 xdst data (task #13916)
 
 </PRE><H1><A NAME=v27r0>2014-02-20 Boole v27r0</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v25r0, LHCb v37r0, Lbcom v15r0
