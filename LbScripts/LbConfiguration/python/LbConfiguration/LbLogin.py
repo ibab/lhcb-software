@@ -576,8 +576,11 @@ class LbLoginScript(SourceScript):
                 ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "log", "users")
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
-                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "app", "releases"),
+                ev["LCG_release_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "releases"),
                                                        exist_check=True)
+                ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"],
+                                                 multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "app", "releases"),
+                                                       exist_check=True))
                 ev["LCG_release_area"] = pathAdd(ev["LCG_release_area"],
                                                  multiPathJoin(opts.mysiteroot, os.path.join("lcg", "external")))
                 ev["LCG_external_area"] = multiPathJoin(opts.mysiteroot, os.path.join("lcg" , "external"))
@@ -599,7 +602,8 @@ class LbLoginScript(SourceScript):
                 ev["LHCB_USERLOGS"] = os.path.join(ev["LHCBHOME"], "project", "logfiles")
                 ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
                 ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online")
-                ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases")
+                ev["LCG_release_area"] = os.pathsep.join([os.path.join(ev["SITEROOT"], "sw", "lcg", "releases"),
+                                                          os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases")])
                 ev["LCG_external_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "external")
                 ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software")
                 ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
