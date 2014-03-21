@@ -1,4 +1,4 @@
-OnlineEnv.MBM_setup = "-s=100000 -e=1000 -u=40 -b=17 -f -i=Events -c -s=30000 -e=150 -u=36 -f -i=Output -c";
+OnlineEnv.MBM_setup = "-s=100000 -e=1000 -u=80 -b=17 -f -i=Events -c -s=30000 -e=150 -u=80 -f -i=Output -c";
 OnlineEnv.PartitionBuffers = true;
 //
 //

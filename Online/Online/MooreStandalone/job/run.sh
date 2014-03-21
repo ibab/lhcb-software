@@ -19,8 +19,8 @@ else
     export LOGFIFO=/tmp/logSrv.fifo;
     GUI=;
     HLP=;
-    OPTS=../options/MooreTest.opts;
     OPTS=../options/MooreUPI.opts;
+    OPTS=../options/MooreTest.opts;
     for i in $*; 
     do
 	arg=`echo $i | tr a-z 'A-Z'`;
