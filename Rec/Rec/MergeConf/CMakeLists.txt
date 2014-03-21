@@ -1,24 +1,13 @@
 ################################################################################
-# Package: L0App
+# Package: MergeConf
 ################################################################################
 gaudi_subdir(L0App v2r1)
 
-gaudi_depends_on_subdirs(DAQ/DAQSys
-                         Det/CaloDet
-                         Det/DDDB
-                         Det/MuonDet
-                         Event/DAQEvent
-                         Event/L0Event
+gaudi_depends_on_subdirs(Det/DDDB
                          GaudiConf
                          GaudiKernel
                          Kernel/LHCbAlgs
-                         L0/L0Base
-                         L0/L0Calo
-                         L0/L0DU
-                         L0/L0Interfaces
-                         L0/L0Muon
-                         L0/L0MuonKernel
-                         L0/ProcessorKernel)
+                         Rec/LumiAlgs)
 
 gaudi_install_python_modules()
 

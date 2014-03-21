@@ -1,39 +1,5 @@
 !-----------------------------------------------------------------------------
-! Package     : L0/L0App
+! Package     : Rec/MooreConf
 ! Responsible : Rob Lambert
-! Purpose     : An LHCb application to run L0 Emulation
+! Purpose     : An LHCb application to merge files
 !-----------------------------------------------------------------------------
-
-! 2014-03-18 - Rob Lambert
- - Strange error in _configureOutput, I'm sure it used to work properly,
- - anyway, now add correct import statement.
-
-!========================= L0App v2r1 2014-02-24 =========================
-! 2014-01-17 - Marco Clemencic
- - Added CMake configuration file.
-
-!========================= L0App v2r0 2014-01-10 =========================
-! 2014-01-08 - Rob Lambert
- - Fix bug #103574 by explicitly setting the option AppName to ApplicationMgr 
-
-! 2013-12-03 - Rob Lambert
- - Replace setting a decoder property with setting the DecoderDB
- - Add auto-reconfiguration of input locations, default is like DIGI or pit
-
-! 2013-11-18 - Rob Lambert
- - Replace importOptions of DecodeRawEvent with configurable
-
-!========================= L0App v1r0p1 2013-10-09 =========================
-! 2013-09-18 - Rob Lambert
- - Configure the threads in l0app.emulate-all tests
- - 8 threads, or LHCB_NIGHTLY_MAX_THREADS if it is set.
-
-!========================= L0App v1r0 2013-07-03 =========================
-! 2013-06-07 - Rob Lambert
- - Tests added. First working version of this application.
- - Possible problem with processing on the real data, some errors about cabling layouts, need consultation with Julien.
- - see task #42380
-
-! 2013-06-05 - Rob Lambert
- - Create package for the first time
- - Made a L0App configurable, copy of certain parts of Moore and Brunel
