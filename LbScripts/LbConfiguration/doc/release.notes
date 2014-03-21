@@ -1,6 +1,7 @@
 2014-03-21  Ben Couturier <Ben.Couturier@cern.ch>
 
-        * LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-431 add lcg/releases to
+	* cmt/requirements: release of version v7r10p2
+	* LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-431 add lcg/releases to
 	LCG_release_area env variable.
 
 2014-02-24  Ben Couturier <Ben.Couturier@cern.ch>
