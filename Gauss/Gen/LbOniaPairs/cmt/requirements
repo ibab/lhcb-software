@@ -7,7 +7,7 @@
 # Maintainer : Vanya Belyaev    Ivan.Belyaev@cern.ch
 # =============================================================================
 package           LbOniaPairs
-version           alexn_20140306
+version           v2r0p1
 
 # =============== structure ===================================================
 branches          cmt src LbOniaPairs doc
