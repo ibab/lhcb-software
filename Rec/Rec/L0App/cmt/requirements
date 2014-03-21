@@ -1,0 +1,52 @@
+###############################################
+# L0App, An LHCb Application for emulating L0
+###############################################
+
+package L0App
+version           v2r1
+
+branches doc cmt options python tests
+
+use GaudiPolicy v*
+use GaudiKernel v*
+
+
+#########################################
+# explicitly declare all L0 dependencies 
+#########################################
+
+use L0Interfaces v* L0
+use L0Event      v* Event
+use DAQEvent     v* Event
+use L0Base       v* L0
+use L0Muon       v* L0
+use L0MuonKernel v* L0
+use L0Calo       v* L0
+use L0DU         v* L0
+use DAQSys       v* DAQ
+
+use ProcessorKernel v* L0
+
+use CaloDet v* Det
+use MuonDet v* Det
+
+#########################################
+# Configurable (python) dependencies
+#########################################
+
+use LHCbAlgs    v* Kernel
+use GaudiConf   v*
+
+#########################################
+# DBASE
+#########################################
+
+use L0TCK       v* TCK
+use DDDB        v* Det
+use PRConfig    v* 
+use AppConfig   v*
+use RawEventFormat v*
+
+apply_pattern install_python_modules
+apply_pattern QMTest
+#apply_pattern GaudiApp
