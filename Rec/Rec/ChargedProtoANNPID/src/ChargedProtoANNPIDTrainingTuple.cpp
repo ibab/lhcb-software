@@ -59,13 +59,8 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
   LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
   if( !protos ) return Warning("No ProtoParticles at '" + m_protoPath + "'", StatusCode::SUCCESS);
   
-
-  // Loop over all ProtoParticles
-  for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
-        iP != protos->end(); ++iP )
-  {
-    sc = sc && m_tuple->fill( *iP );
-  }
+  // Loop over all ProtoParticles and fill tuple
+  for ( const auto * P : *protos ) { sc = sc && m_tuple->fill(P); }
 
   return sc;
 }
@@ -76,4 +71,3 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
 DECLARE_ALGORITHM_FACTORY( ChargedProtoANNPIDTrainingTuple )
 
 //=============================================================================
-

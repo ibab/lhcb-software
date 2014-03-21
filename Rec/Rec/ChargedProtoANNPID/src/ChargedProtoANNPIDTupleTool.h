@@ -12,9 +12,6 @@
 // Event
 #include "Event/MCParticle.h"
 
-// boost
-#include "boost/assign/list_of.hpp"
-
 namespace ANNGlobalPID
 {
 

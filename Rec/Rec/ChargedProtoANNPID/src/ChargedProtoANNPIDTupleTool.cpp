@@ -22,51 +22,53 @@ DECLARE_TOOL_FACTORY( ChargedProtoANNPIDTupleTool )
 ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
-  : ChargedProtoANNPIDToolBase ( type, name, parent ),
-    m_truth                    ( NULL )
+: ChargedProtoANNPIDToolBase ( type, name, parent ),
+  m_truth                    ( NULL )
 {
 
   // interface
   declareInterface<IChargedProtoANNPIDTupleTool>(this);
 
   // Job options
-  std::vector<std::string> tmp = boost::assign::list_of
-                   // General event variables
-                   ("NumProtoParticles")("NumCaloHypos")
-                   ("NumLongTracks")("NumDownstreamTracks")("NumUpstreamTracks")
-                   ("NumVeloTracks")("NumTTracks")("NumPVs")("NumSPDHits")
-                   ("NumRich1Hits")("NumRich2Hits")("NumMuonTracks")
-                   // Tracking
-                   ("TrackP")("TrackPt")("TrackChi2PerDof")("TrackType")("TrackHistory")
-                   ("TrackNumDof")("TrackLikelihood")("TrackGhostProbability")
-                   ("TrackMatchChi2")("TrackFitMatchChi2")("TrackCloneDist")
-                   ("TrackFitVeloChi2")("TrackFitVeloNDoF")("TrackFitTChi2")("TrackFitTNDoF")
-                   // Combined DLLs
-                   ("CombDLLe")("CombDLLmu")("CombDLLpi")("CombDLLk")("CombDLLp")
-                   // RICH
-                   ("RichUsedAero")("RichUsedR1Gas")("RichUsedR2Gas")
-                   ("RichAboveElThres")("RichAboveMuThres")("RichAbovePiThres")
-                   ("RichAboveKaThres")("RichAbovePrThres")
-                   ("RichDLLe")("RichDLLmu")("RichDLLpi")("RichDLLk")("RichDLLp")("RichDLLbt")
-                   // MUON
-                   ("InAccMuon")
-                   ("MuonMuLL")("MuonBkgLL")("MuonIsMuon")("MuonIsLooseMuon")("MuonNShared")
-                   // ECAL
-                   ("InAccEcal")("CaloChargedSpd")("CaloChargedPrs")("CaloChargedEcal")
-                   ("CaloElectronMatch")("CaloTrMatch")("CaloEcalE")("CaloEcalChi2")
-                   ("CaloClusChi2")("EcalPIDe")("EcalPIDmu")("CaloTrajectoryL")
-                   // HCAL
-                   ("InAccHcal")("CaloHcalE")("HcalPIDe")("HcalPIDmu")
-                   // PRS
-                   ("InAccPrs")("CaloPrsE")("PrsPIDe")
-                   // SPD
-                   ("InAccSpd")("CaloSpdE")
-                   // BREM
-                   ("InAccBrem")("CaloNeutralSpd")("CaloNeutralPrs")("CaloNeutralEcal")
-                   ("CaloBremMatch")("CaloBremChi2")("BremPIDe")
-                   // VELO
-                   ("VeloCharge");
-  declareProperty( "Variables", m_variables = tmp);
+  declareProperty( "Variables", m_variables = 
+      {
+        // General event variables
+        "NumProtoParticles","NumCaloHypos",
+        "NumLongTracks","NumDownstreamTracks","NumUpstreamTracks",
+        "NumVeloTracks","NumTTracks","NumPVs","NumSPDHits",
+        "NumRich1Hits","NumRich2Hits","NumMuonTracks",
+        // Tracking
+        "TrackP","TrackPt","TrackChi2PerDof","TrackType","TrackHistory",
+        "TrackNumDof","TrackLikelihood","TrackGhostProbability",
+        "TrackMatchChi2","TrackFitMatchChi2","TrackCloneDist",
+        "TrackFitVeloChi2","TrackFitVeloNDoF","TrackFitTChi2","TrackFitTNDoF",
+        // Combined DLLs
+        "CombDLLe","CombDLLmu","CombDLLpi","CombDLLk","CombDLLp",
+        // RICH
+        "RichUsedAero","RichUsedR1Gas","RichUsedR2Gas",
+        "RichAboveElThres","RichAboveMuThres","RichAbovePiThres",
+        "RichAboveKaThres","RichAbovePrThres",
+        "RichDLLe","RichDLLmu","RichDLLpi","RichDLLk","RichDLLp","RichDLLbt",
+        // MUON
+        "InAccMuon",
+        "MuonMuLL","MuonBkgLL","MuonIsMuon","MuonIsLooseMuon","MuonNShared",
+        // ECAL
+        "InAccEcal","CaloChargedSpd","CaloChargedPrs","CaloChargedEcal",
+        "CaloElectronMatch","CaloTrMatch","CaloEcalE","CaloEcalChi2",
+        "CaloClusChi2","EcalPIDe","EcalPIDmu","CaloTrajectoryL",
+        // HCAL
+        "InAccHcal","CaloHcalE","HcalPIDe","HcalPIDmu",
+        // PRS
+        "InAccPrs","CaloPrsE","PrsPIDe",
+        // SPD
+        "InAccSpd","CaloSpdE",
+        // BREM
+        "InAccBrem","CaloNeutralSpd","CaloNeutralPrs","CaloNeutralEcal",
+        "CaloBremMatch","CaloBremChi2","BremPIDe",
+        // VELO
+        "VeloCharge" 
+          }
+                   );
 
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );
@@ -92,12 +94,9 @@ StatusCode ChargedProtoANNPIDTupleTool::initialize()
 
 
   // Get a vector of input accessor objects for the configured variables
-  for ( StringInputs::const_iterator i = m_variables.begin(); 
-        i != m_variables.end(); ++i )
-  {
-    m_inputs[*i] = getInput( *i );
-  }
- 
+  for ( const auto& i : m_variables ) { m_inputs[i] = getInput(i); }
+
+  // return
   return sc;
 }
 
@@ -107,9 +106,7 @@ StatusCode ChargedProtoANNPIDTupleTool::initialize()
 StatusCode ChargedProtoANNPIDTupleTool::finalize()
 {
   // Clean Up
-  for ( Inputs::const_iterator iIn = m_inputs.begin();
-        iIn != m_inputs.end(); ++iIn )
-  { delete iIn->second; }
+  for ( const auto & i : m_inputs ) { delete i.second; }
   m_inputs.clear();
   // return
   return ChargedProtoANNPIDToolBase::finalize();
@@ -130,18 +127,20 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
 
   // Loop over reconstruction variables
-  for ( Inputs::const_iterator iIn = m_inputs.begin();
-        iIn != m_inputs.end(); ++iIn )
+  for ( const auto & i : m_inputs ) 
   {
     // get the variable and fill ntuple
-    sc = sc && tuple->column( iIn->first, (float) iIn->second->value(proto) );
+    sc = sc && tuple->column( i.first, (float) i.second->value(proto) );
   }
 
   // PID info
   sc = sc && tuple->column( "RecoPIDcode", pid.pid() );
 
   // MC variables
+
+  // First get the MCParticle, if associated
   const LHCb::MCParticle * mcPart = m_truth->mcParticle(track);
+  sc = sc && tuple->column( "HasMC",          mcPart != NULL );
   sc = sc && tuple->column( "MCParticleType", mcPart ? mcPart->particleID().pid() : 0    );
   sc = sc && tuple->column( "MCParticleP",    mcPart ? mcPart->p()                : -999 );
   sc = sc && tuple->column( "MCParticlePt",   mcPart ? mcPart->pt()               : -999 );
@@ -154,17 +153,25 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   unsigned int iCount(0); // protect against infinite loops
   while ( mcParent && ++iCount < 99999 )
   {
-    if ( mcParent->particleID().hasBottom() && ( mcParent->particleID().isMeson() 
-                                                 ||  mcParent->particleID().isBaryon()   )) { fromB = true; }
-    if ( mcParent->particleID().hasCharm()  && ( mcParent->particleID().isMeson() 
-                                                 ||  mcParent->particleID().isBaryon()   )) { fromD = true; }
+    const LHCb::ParticleID & pid = mcParent->particleID();
+    if ( pid.hasBottom() && mcParent->particleID().isHadron() ) 
+    { fromB = true; }
+    if ( pid.hasCharm()  && mcParent->particleID().isHadron() ) 
+    { fromD = true; }
     mcParent = mcParent->mother();
   }
   // Save MC parent info
   sc = sc && tuple->column( "MCFromB", fromB );
   sc = sc && tuple->column( "MCFromD", fromD );
 
-  // write the tuple for this ProtoParticle
+  // Get info on the MC vertex type
+  const LHCb::MCVertex * mcVert = ( mcPart ? mcPart->originVertex() : NULL );
+  sc = sc && tuple->column( "MCVertexType", mcVert ? (int)mcVert->type() : -999 );
+  sc = sc && tuple->column( "MCVertexX",    mcVert ? mcVert->position().x() : -999.0 );
+  sc = sc && tuple->column( "MCVertexY",    mcVert ? mcVert->position().y() : -999.0 );
+  sc = sc && tuple->column( "MCVertexZ",    mcVert ? mcVert->position().z() : -999.0 );
+
+  // Finally, write the tuple for this ProtoParticle
   sc = sc && tuple->write();
 
   // return

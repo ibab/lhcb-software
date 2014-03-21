@@ -11,7 +11,7 @@ for polarity in ["MagUp","MagDown"]:
     
     if len(datalfns) > 0 :
 
-        j = Job( application = DaVinci( version = 'v33r2' ) )
+        j = Job( application = DaVinci( version = 'v34r0' ) )
         j.name = "2012-ANNPID-"+polarity+"-"+reco+strp
 
         # Main options
