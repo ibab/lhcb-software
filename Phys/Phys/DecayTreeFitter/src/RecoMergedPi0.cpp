@@ -170,7 +170,10 @@ namespace DecayTreeFitter
       p.r(4) = p4.E() - fitparams.par(momindex+4) ;
     
     // derivative to origin. more complicated than I had hoped:-)
-    for( auto calopos: m_calomom->caloPositions() ) {
+    for( LHCb::CaloMomentum::CaloPositions::const_iterator
+	   ipos = m_calomom->caloPositions().begin() ;
+	 ipos != m_calomom->caloPositions().end() ; ++ipos) {
+      const LHCb::CaloPosition& calopos = *ipos ;
       double dx = calopos.x() - motherpos.x() ;
       double dy = calopos.y() - motherpos.y() ;
       double dz = calopos.z() - motherpos.z() ;
