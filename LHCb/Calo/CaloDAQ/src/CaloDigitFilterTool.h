@@ -4,7 +4,6 @@
 // Include files
 // from Gaudi
 class StatusCode;
-#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Kernel/CaloCellID.h"
 #include "CaloUtils/CaloCellIDAsProperty.h"
 #include "GaudiAlg/GaudiTool.h"
