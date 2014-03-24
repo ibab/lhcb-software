@@ -1,11 +1,12 @@
 2014-03-24  Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v7r10p4
 	* LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-438 Force use of 
 	LCGCMT <= 66 for slc5 
 
 2014-03-21  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* cmt/requirements: release of version v7r10p2
+	* cmt/requirements: release of version v7r10p3
 	* LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-431 add lcg/releases to
 	LCG_release_area env variable.
 
