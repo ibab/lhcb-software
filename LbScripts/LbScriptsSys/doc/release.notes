@@ -1,3 +1,17 @@
+2014-03-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r10p4
+
+	LbConfiguration
+	* python/LbConfiguration/LbLogin.py: LBCORE-438 Force use of 
+	LCGCMT <= 66 for slc5 
+
+	LbUtils
+	* cmake: updated CMake support modules
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r10p4
+
 2014-03-21 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r10p3
