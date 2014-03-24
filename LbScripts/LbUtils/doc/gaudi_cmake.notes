@@ -1,3 +1,145 @@
+! 2014-03-20 - Marco Clemencic (1df239b)
+
+ - allow to ignore subdirectories that would be auto detected
+
+   Adding a subdirectory name to the property GAUDI_IGNORE_SUBDIRS of the top
+   level directory, the auto-detection of the subdirectories will ignore it.
+
+
+! 2014-03-20 - Marco Clemencic (d8e81b7)
+
+ - create GenConfUser targets only if genconfuser_cmd is found
+
+   
+
+! 2014-03-20 - Marco Clemencic (5250f90)
+
+ - added option SPLIT_CLASSDEF to reflex_generate_dictionary function
+
+   
+
+! 2014-03-20 - Marco Clemencic (998a46b)
+
+ - removed forgot debug warning message
+
+   
+
+! 2014-03-19 - Marco Clemencic (18ec48b)
+
+ - fixed a typo in some of the heptools files
+
+   
+
+! 2014-03-11 - Marco Clemencic (d84a525)
+
+ - Merge branch 'dev/cmake'
+
+   * dev/cmake:
+    improved "Find" modules for MySQL, Oracle and Frontier
+    modified UseHEPTools according to the new decription format
+    improved FindSQLite.cmake and FindCppUnit.cmake
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7418
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-03-11 - Marco Clemencic (ff28777)
+
+ - Re-enabled change in Boost Spirit version for all the platforms.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7417
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-03-11 - Marco Clemencic (c62d710)
+
+ - improved "Find" modules for MySQL, Oracle and Frontier
+
+   
+
+! 2014-03-01 - Marco Clemencic (98a25d5)
+
+ - modified UseHEPTools according to the new decription format
+
+   
+
+! 2014-02-28 - Marco Clemencic (56faee2)
+
+ - improved FindSQLite.cmake and FindCppUnit.cmake
+
+   
+
+! 2014-02-28 - Marco Clemencic (76a6e98)
+
+ - fixed LBCORE-325: comments not taken into account scanning for deps
+
+   https://its.cern.ch/jira/browse/LBCORE-325
+
+! 2014-02-25 - Marco Clemencic (a51a31e)
+
+ - added support for genconf --user-module option in CMake
+
+   
+
+! 2014-02-15 - Marco Clemencic (8961c15)
+
+ - ignore problemati externals
+
+   
+
+! 2014-02-14 - Marco Clemencic (9caa465)
+
+ - LBCORE-371: Modified UseHEPTools.cmake to use the SPI versions files
+
+   https://its.cern.ch/jira/browse/LBCORE-371
+
+! 2014-02-03 - Marco Clemencic (aad5c4b)
+
+ - fixed handling or required components in FindROOT.cmake
+
+   
+
+! 2014-02-03 - Marco Clemencic (217744f)
+
+ - commented out debug print-out
+
+   
+
+! 2014-02-02 - Marco Clemencic (111d180)
+
+ - fixed warning in the detection of Vera++
+
+   
+
+! 2014-01-31 - Marco Clemencic (fd89288)
+
+ - Added Vera++ support to GaudiProjectConfig.cmake
+
+   If Vera++ (>= 1.2.1) is available, one can use the option 
+   ENABLE_VERA++_CHECKS to run the style checks during the build.
+
+   It is not enabled by default because we need to fine tune the checks it runs
+   (and clean the code).
+
+   https://its.cern.ch/jira/browse/LBCORE-375
+
+
+! 2014-01-29 - Marco Clemencic (94f187f)
+
+ - fixed detection of ccache
+
+   
+
+! 2014-01-28 - Marco Clemencic (532250e)
+
+ - prefer ccache to ccache-swig
+
+   
+
 ! 2014-01-22 - Marco Clemencic (9a18f44)
 
  - fixed issue with the environment XML files

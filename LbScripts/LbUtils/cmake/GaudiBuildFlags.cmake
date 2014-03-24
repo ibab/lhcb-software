@@ -250,7 +250,7 @@ add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
 # FIXME: enforce the use of Boost Phoenix V3 (V2 does not work with recent compilers)
 #        see http://stackoverflow.com/q/20721486
 #        and http://stackoverflow.com/a/20440238/504346
-#add_definitions(-DBOOST_SPIRIT_USE_PHOENIX_V3)
+add_definitions(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 
 if((LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max") OR GAUDI_CPP11)
   set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -D__STRICT_ANSI__")

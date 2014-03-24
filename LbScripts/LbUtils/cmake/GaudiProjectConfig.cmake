@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 9a18f4486e957b2a579f3ef1c551a9b2dde754d3
+# Commit Id: 1df239b496d21282717e9b6a3ff259b21d9e9a85
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -34,7 +34,7 @@ if (GAUDI_BUILD_PREFIX_CMD)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${GAUDI_BUILD_PREFIX_CMD}")
   message(STATUS "Prefix build commands with '${GAUDI_BUILD_PREFIX_CMD}'")
 else()
-  find_program(ccache_cmd ccache-swig ccache)
+  find_program(ccache_cmd NAMES ccache ccache-swig)
   find_program(distcc_cmd distcc)
   mark_as_advanced(ccache_cmd distcc_cmd)
 
@@ -57,6 +57,20 @@ else()
         message(STATUS "Using distcc for building")
       endif()
     endif()
+  endif()
+endif()
+
+# If Vera++ is available and it is requested by the user, check every source
+# file for style problems.
+find_package(vera++ QUIET)
+if(VERA++_USE_FILE)
+  option(ENABLE_VERA++_CHECKS "Use Vera++ to check the C++ code during the build" OFF)
+  if(ENABLE_VERA++_CHECKS)
+    include(${VERA++_USE_FILE})
+    get_filename_component(VERA++_ROOT ${VERA++_USE_FILE} PATH)
+    add_vera_targets(*.h *.hxx *.icpp *.cpp
+                     RECURSE
+                     ROOT ${VERA++_ROOT})
   endif()
 endif()
 
@@ -389,7 +403,7 @@ macro(gaudi_project project version)
         set(include_paths ${include_paths} ${d})
       endif()
     endforeach()
-    message(STATUS "include_paths -> ${include_paths}")
+    #message(STATUS "include_paths -> ${include_paths}")
   endif()
   foreach(_inc_dir ${include_paths})
     set(project_environment ${project_environment}
@@ -968,6 +982,9 @@ macro(gaudi_collect_subdir_deps)
     set(${_p}_DEPENDENCIES)
     # parse the CMakeLists.txt
     file(READ ${CMAKE_SOURCE_DIR}/${_p}/CMakeLists.txt file_contents)
+    # strip comments
+    string(REGEX REPLACE "#[^\n]*\n" "" file_contents "${file_contents}")
+    # look for explicit dependencies
     string(REGEX MATCHALL "gaudi_depends_on_subdirs *\\(([^)]+)\\)" vars "${file_contents}")
     foreach(var ${vars})
       # extract the individual subdir names
@@ -985,7 +1002,7 @@ macro(gaudi_collect_subdir_deps)
       endforeach()
     endforeach()
     # Special dependency required for modules
-    string(REGEX MATCHALL "gaudi_add_module *\\(([^)]+)\\)" vars ${file_contents})
+    string(REGEX MATCHALL "gaudi_add_module *\\(([^)]+)\\)" vars "${file_contents}")
     if(vars AND NOT _p STREQUAL GaudiCoreSvc)
       list(APPEND ${_p}_DEPENDENCIES GaudiCoreSvc)
     endif()
@@ -1047,12 +1064,16 @@ function(gaudi_get_packages var)
   # FIXME: trick to get the relative path to the build directory
   file(GLOB rel_build_dir RELATIVE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
   set(packages)
+  get_directory_property(_ignored_subdirs GAUDI_IGNORE_SUBDIRS)
   file(GLOB_RECURSE cmakelist_files RELATIVE ${CMAKE_SOURCE_DIR} CMakeLists.txt)
   foreach(file ${cmakelist_files})
     # ignore the source directory itself and files in the build directory
     if(NOT file STREQUAL CMakeLists.txt AND NOT file MATCHES "^${rel_build_dir}")
       get_filename_component(package ${file} PATH)
-      list(APPEND packages ${package})
+      list(FIND _ignored_subdirs ${package} _ignored)
+      if(_ignored EQUAL -1) # not ignored
+        list(APPEND packages ${package})
+      endif()
     endif()
   endforeach()
   list(SORT var)
@@ -1290,7 +1311,7 @@ endfunction()
 function(gaudi_generate_configurables library)
   gaudi_get_package_name(package)
 
-  CMAKE_PARSE_ARGUMENTS(ARG "" "PRELOAD" "" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARG "" "PRELOAD;USER_MODULE" "" ${ARGN})
 
   set(conf_depends ${library})
 
@@ -1311,12 +1332,13 @@ function(gaudi_generate_configurables library)
   file(MAKE_DIRECTORY ${outdir})
 
   # Python classes used for the various component types.
-  set(confModuleName GaudiKernel.Proxy)
-  set(confDefaultName Configurable.DefaultName)
-  set(confAlgorithm ConfigurableAlgorithm)
-  set(confAlgTool ConfigurableAlgTool)
-  set(confAuditor ConfigurableAuditor)
-  set(confService ConfigurableService)
+  set(genconf_opts
+      "--configurable-module=GaudiKernel.Proxy"
+      "--configurable-default-name=Configurable.DefaultName"
+      "--configurable-algorithm=ConfigurableAlgorithm"
+      "--configurable-algtool=ConfigurableAlgTool"
+      "--configurable-auditor=ConfigurableAuditor"
+      "--configurable-service=ConfigurableService")
 
   # Note: the dependencies on GaudiSvc and the genconf executable are needed
   #       in case they have to be built in the current project
@@ -1332,16 +1354,15 @@ function(gaudi_generate_configurables library)
     set(deps genconf)
   endif()
 
+  if(ARG_USER_MODULE)
+    set(genconf_opts ${genconf_opts} "--user-module=${ARG_USER_MODULE}")
+  endif()
+
   add_custom_command(
     OUTPUT ${outdir}/${library}_confDb.py ${outdir}/${library}Conf.py ${outdir}/__init__.py
     COMMAND ${env_cmd} --xml ${env_xml}
               ${genconf_cmd} ${library_preload} -o ${outdir} -p ${package}
-                --configurable-module=${confModuleName}
-                --configurable-default-name=${confDefaultName}
-                --configurable-algorithm=${confAlgorithm}
-                --configurable-algtool=${confAlgTool}
-                --configurable-auditor=${confAuditor}
-                --configurable-service=${confService}
+                ${genconf_opts}
                 -i ${library}
     DEPENDS ${library} ${deps})
   add_custom_target(${library}Conf ALL DEPENDS ${outdir}/${library}_confDb.py)
@@ -1391,7 +1412,7 @@ define_property(DIRECTORY
 function(gaudi_generate_confuserdb)
   gaudi_get_package_name(package)
   get_directory_property(modules CONFIGURABLE_USER_MODULES)
-  if( NOT (modules STREQUAL "None") ) # ConfUser enabled
+  if( genconfuser_cmd AND NOT (modules STREQUAL "None") ) # ConfUser enabled
     set(outdir ${CMAKE_CURRENT_BINARY_DIR}/genConf/${package})
 
     # get the optional dependencies from argument and properties
@@ -1725,7 +1746,8 @@ endmacro()
 #---------------------------------------------------------------------------------------------------
 function(gaudi_add_module library)
   # this function uses an extra option: 'GENCONF_PRELOAD'
-  CMAKE_PARSE_ARGUMENTS(ARG "" "GENCONF_PRELOAD" "LIBRARIES;LINK_LIBRARIES;INCLUDE_DIRS" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARG "" "GENCONF_PRELOAD;GENCONF_USER_MODULE"
+                            "LIBRARIES;LINK_LIBRARIES;INCLUDE_DIRS" ${ARGN})
   gaudi_common_add_build(${ARG_UNPARSED_ARGUMENTS} LIBRARIES ${ARG_LIBRARIES}
                          LINK_LIBRARIES ${ARG_LINK_LIBRARIES} INCLUDE_DIRS ${ARG_INCLUDE_DIRS})
 
@@ -1734,10 +1756,13 @@ function(gaudi_add_module library)
   _gaudi_detach_debinfo(${library})
 
   gaudi_generate_componentslist(${library})
-  if(ARG_GENCONF_PRELOAD)
-    set(ARG_GENCONF_PRELOAD PRELOAD ${ARG_GENCONF_PRELOAD})
-  endif()
-  gaudi_generate_configurables(${library} ${ARG_GENCONF_PRELOAD})
+  set(ARG_GENCONF)
+  foreach(genconf_sub_opt PRELOAD USER_MODULE)
+    if(ARG_GENCONF_${genconf_sub_opt})
+      set(ARG_GENCONF ${ARG_GENCONF} ${genconf_sub_opt} ${ARG_GENCONF_${genconf_sub_opt}})
+    endif()
+  endforeach()
+  gaudi_generate_configurables(${library} ${ARG_GENCONF})
 
   set_property(GLOBAL APPEND PROPERTY COMPONENT_LIBRARIES ${library})
 

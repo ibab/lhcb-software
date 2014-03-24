@@ -65,11 +65,15 @@ if(NOT ROOT_FIND_COMPONENTS)
   set(ROOT_FIND_COMPONENTS Core)
 endif()
 
+# list of variable that should be checked
+set(_root_required_vars ROOT_INCLUDE_DIR)
+
 # Locate the libraries (forcing few default ones)
 while(ROOT_FIND_COMPONENTS)
   # pop the first element from the list
   list(GET ROOT_FIND_COMPONENTS 0 component)
   list(REMOVE_AT ROOT_FIND_COMPONENTS 0)
+  list(APPEND _root_required_vars ROOT_${component}_LIBRARY)
   # look for the library if not found yet
   if(NOT ROOT_${component}_LIBRARY)
     find_library(ROOT_${component}_LIBRARY NAMES ${component} lib${component}
@@ -113,7 +117,7 @@ endforeach()
 # handle the QUIETLY and REQUIRED arguments and set ROOT_FOUND to TRUE if
 # all listed variables are TRUE
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(ROOT DEFAULT_MSG ROOT_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ROOT DEFAULT_MSG ${_root_required_vars})
 mark_as_advanced(ROOT_FOUND ROOTSYS ROOT_INCLUDE_DIR)
 
 ######################################################################
@@ -162,7 +166,7 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
     message(FATAL_ERROR "GCCXML not found, cannot generate Reflex dictionaries.")
   endif()
 
-  CMAKE_PARSE_ARGUMENTS(ARG "" "" "OPTIONS" ${ARGN})
+  CMAKE_PARSE_ARGUMENTS(ARG "SPLIT_CLASSDEF" "" "OPTIONS" ${ARGN})
 
   # Ensure that the path to the header and selection files are absolute
   if(IS_ABSOLUTE ${_selectionfile})
@@ -177,6 +181,11 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   endif()
 
   set(gensrcdict ${dictionary}_dict.cpp)
+
+  if(ARG_SPLIT_CLASSDEF)
+    set(ARG_OPTIONS ${ARG_OPTIONS} --split=classdef)
+    set(gensrcclassdef ${dictionary}_dict_classdef.cpp)
+  endif()
 
   if(NOT MSVC)
     set(GCCXML_CXX_COMPILER ${CMAKE_CXX_COMPILER} CACHE STRING "Compiler that GCCXML must use.")
@@ -215,7 +224,7 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
 
   get_filename_component(GCCXML_home ${GCCXML} PATH)
   add_custom_command(
-    OUTPUT ${gensrcdict} ${rootmapname}
+    OUTPUT ${gensrcdict} ${rootmapname} ${gensrcclassdef}
     COMMAND ${ROOT_genreflex_CMD}
          ${headerfiles} -o ${gensrcdict} ${gccxmlopts} ${rootmapopts} --select=${selectionfile}
          --gccxmlpath=${GCCXML_home} ${ARG_OPTIONS} ${include_dirs} ${definitions}
@@ -223,7 +232,7 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
 
   # Creating this target at ALL level enables the possibility to generate dictionaries (genreflex step)
   # well before the dependent libraries of the dictionary are build
-  add_custom_target(${dictionary}Gen ALL DEPENDS ${gensrcdict} ${rootmapname})
+  add_custom_target(${dictionary}Gen ALL DEPENDS ${gensrcdict} ${rootmapname} ${gensrcclassdef})
 
   set_property(TARGET ${dictionary}Gen PROPERTY ROOTMAPFILE ${rootmapname})
 
