@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2014-03-24 - Heinrich Schindler
+ - Follow changes in VPDigit format and location names (revision r170468).
+
 !========================= VPAlgorithms v4r3 2014-03-18 ========================
 ! 2014-03-14 - Hella Snoek
  - bugfix in clustering routine. changed two break statements to continue

@@ -25,7 +25,7 @@ VPClustering::VPClustering(const std::string& name, ISvcLocator* pSvcLocator) :
 , m_debug(false)
 {
 
-  declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::VPDigitLocation);
+  declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::Default);
   declareProperty("LiteClusterContainer", m_liteClusterLocation = LHCb::VPLiteClusterLocation::Default);
   declareProperty("VPClusterContainer",   m_clusterLocation     = LHCb::VPClusterLocation::Default);
 
@@ -165,20 +165,17 @@ StatusCode VPClustering::execute() {
     double x = 0.;
     double y = 0.;
     const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID());
-    int sum = 0;
     const unsigned int nPixels = cluster.size();
     pixels.resize(nPixels);
     for (unsigned int i = 0; i < nPixels; ++i) {
       LHCb::VPChannelID channel = (*cluster[i])->channelID();
-      const int tot = (*cluster[i])->ToTValue();
       pixels[i] = channel;
-      sum += tot;
       Gaudi::XYZPoint pixel = vp_sensor->channelToPoint(channel, true);
-      x += pixel.x() * tot;
-      y += pixel.y() * tot;
+      x += pixel.x();
+      y += pixel.y();
     }
-    x /= sum; 
-    y /= sum;
+    x /= nPixels;
+    y /= nPixels;
     Gaudi::XYZPoint point(x, y, 0.);
     // Get the channel ID and inter-pixel fractions of the barycentre.
     LHCb::VPChannelID id;
