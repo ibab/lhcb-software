@@ -24,14 +24,13 @@ VPDigitLinker::VPDigitLinker(const std::string& name,
                              ISvcLocator* pSvcLocator) :
     GaudiAlgorithm(name, pSvcLocator) {
 
-  declareProperty("DigitLocation", m_digitLocation = 
-                  VPDigitLocation::VPDigitLocation);
+  declareProperty("DigitLocation", m_digitLocation = VPDigitLocation::Default);
   declareProperty("MCDigitLocation", m_mcdigitLocation = 
-                  MCVPDigitLocation::MCVPDigitLocation);
+                  MCVPDigitLocation::Default);
   declareProperty("HitLinkLocation", m_hitLinkLocation =  
-                  VPDigitLocation::VPDigitLocation + "2MCHits");
+                  VPDigitLocation::Default + "2MCHits");
   declareProperty("ParticleLinkLocation", m_particleLinkLocation = 
-                  VPDigitLocation::VPDigitLocation);
+                  VPDigitLocation::Default);
 
 }
 
@@ -103,11 +102,12 @@ bool VPDigitLinker::associateToTruth(const VPDigit* digit,
   }
   // Loop over the deposits and get the hits and their weights.
   std::map<const MCHit*, double> tempMap;
-  SmartRefVector<MCVPDeposit> deposits = mcDigit->mcDeposit();
-  SmartRefVector<MCVPDeposit>::iterator itd;
-  for (itd = deposits.begin(); itd != deposits.end(); ++itd) {
-    const MCHit* hit = (*itd)->mcHit();
-    tempMap[hit] += (*itd)->depositedCharge();
+  SmartRefVector<MCHit> mchits = mcDigit->mcHits();
+  const std::vector<double>& deposits = mcDigit->deposits();
+  const unsigned int nDeposits = deposits.size();
+  for (unsigned int i = 0; i < nDeposits; ++i) {
+    const MCHit* hit = mchits[i];
+    tempMap[hit] += deposits[i];
   }
   // Clean out the delta-rays
   mergeDeltaRays(tempMap, hitMap);

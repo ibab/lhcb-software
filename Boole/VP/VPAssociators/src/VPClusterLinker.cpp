@@ -31,9 +31,9 @@ VPClusterLinker::VPClusterLinker(const std::string& name,
   declareProperty("ClusterLocation", m_clusterLocation = 
                   LHCb::VPClusterLocation::Default);
   declareProperty("DigitLocation", m_digitLocation =
-                  LHCb::VPDigitLocation::VPDigitLocation);
+                  LHCb::VPDigitLocation::Default);
   declareProperty("AsctLocation", m_asctLocation =
-                  LHCb::VPDigitLocation::VPDigitLocation + "2MCHits");
+                  LHCb::VPDigitLocation::Default + "2MCHits");
   declareProperty("HitLinkLocation", m_hitLinkLocation = 
                   LHCb::VPClusterLocation::Default + "2MCHits");
   declareProperty("ParticleLinkLocation", m_particleLinkLocation = 
