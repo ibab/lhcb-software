@@ -26,8 +26,8 @@ DECLARE_ALGORITHM_FACTORY(VPDigitRawBankToVPDigit)
 VPDigitRawBankToVPDigit::VPDigitRawBankToVPDigit(const std::string& name, ISvcLocator* pSvcLocator): 
 	GaudiAlgorithm(name, pSvcLocator), m_isDebug(false)
 {
-  declareProperty( "RawEventLocation", m_rawEventLocation = LHCb::RawEventLocation::Default );
-  declareProperty( "DigitLocation"   , m_digitLocation    = LHCb::VPDigitLocation::VPDigitLocation );
+  declareProperty( "RawEventLocation", m_rawEventLocation = LHCb::RawEventLocation::Default);
+  declareProperty( "DigitLocation"   , m_digitLocation    = LHCb::VPDigitLocation::Default);
 }
 
 VPDigitRawBankToVPDigit::~VPDigitRawBankToVPDigit(){}
@@ -83,7 +83,7 @@ void VPDigitRawBankToVPDigit::createVPDigit( VPDigitWord aWord, VPDigits* digiCo
 {
   LHCb::VPChannelID achan;
   achan.setChannelID(aWord.ChannelID());
-  VPDigit* newDigit = new VPDigit((int)aWord.ToT(),0);
+  VPDigit* newDigit = new VPDigit();
   digiCont->insert(newDigit, achan);
   return;
 }

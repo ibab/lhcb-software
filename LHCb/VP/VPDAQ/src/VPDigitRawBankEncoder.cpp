@@ -31,7 +31,7 @@ VPDigitRawBankEncoder::VPDigitRawBankEncoder(const std::string& name,
   , m_isVerbose(false)
   , m_vPelDet(NULL)
 {
-  declareProperty("DigitLocation", m_digitLocation = LHCb::VPDigitLocation::VPDigitLocation );
+  declareProperty("DigitLocation", m_digitLocation = LHCb::VPDigitLocation::Default);
   declareProperty("RawEventLocation", m_rawEventLocation = LHCb::RawEventLocation::Default);
 }
 
@@ -149,7 +149,7 @@ void VPDigitRawBankEncoder::makeBank(
   m_rawData.push_back(pcnAndNumDigi); // Add header
   std::vector<const LHCb::VPDigit*>::const_iterator iD = begin;
   for(; iD != end; ++iD) {
-		VPDigitWord vphw((*iD)->channelID().channelID(), (*iD)->ToTValue() ); //packs the digit
+		VPDigitWord vphw((*iD)->channelID().channelID(), 1); //packs the digit
 		m_rawData.push_back(static_cast<SiDAQ::buffer_word>(vphw.value())); //pushes back into the RawBank
 	}
 

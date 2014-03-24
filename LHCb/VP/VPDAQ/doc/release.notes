@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-03-24 - Heinrich Schindler 
+ - Follow changes in VPDigit format and location names (revision r170468).
+
 !========================= VPDAQ v2r6 2014-03-17 =========================
 ! 2014-03-13 - Heinrich Schindler 
  - Follow changes in VPCluster format (revision r169999).

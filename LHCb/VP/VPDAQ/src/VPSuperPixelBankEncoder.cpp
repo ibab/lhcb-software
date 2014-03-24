@@ -26,7 +26,7 @@ VPSuperPixelBankEncoder::VPSuperPixelBankEncoder(const std::string& name,
   , m_evt(0)
   , m_spBySensor(208,std::vector<unsigned int>())
 {
-  declareProperty("DigitLocation", m_digitLocation = LHCb::VPDigitLocation::VPDigitLocation);
+  declareProperty("DigitLocation", m_digitLocation = LHCb::VPDigitLocation::Default);
   declareProperty("RawEventLocation", m_rawEventLocation = LHCb::RawEventLocation::Default);
 }
 

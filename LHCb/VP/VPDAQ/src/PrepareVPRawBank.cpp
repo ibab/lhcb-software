@@ -37,7 +37,7 @@ PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
   , m_bankSizeInBytes(0)
   , m_isDebug(false)
   , m_isVerbose(false)
-  , m_vPelDet(NULL)
+  , m_det(NULL)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
                   LHCb::VPClusterLocation::Default);
@@ -60,11 +60,11 @@ StatusCode PrepareVPRawBank::initialize() {
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   // Get a list of sensor numbers to identify empty sensors
-  m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDet<DeVP>(DeVPLocation::Default);
   std::vector<DeVPSensor*>::const_iterator sIter =
-                                 m_vPelDet->sensorsBegin();
+                                 m_det->sensorsBegin();
   std::vector<DeVPSensor*>::const_iterator sEnd =
-                                 m_vPelDet->sensorsEnd();
+                                 m_det->sensorsEnd();
   for(; sIter != sEnd; ++sIter) {
     m_sensorNumbers.push_back((*sIter)->sensorNumber());
   }
@@ -250,7 +250,7 @@ void PrepareVPRawBank::makeBank(
 long PrepareVPRawBank::findPattern(LHCb::VPChannelID centrChanID,
                             std::vector<LHCb::VPChannelID> activeChIDs)
 {
-  const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(centrChanID);    
+  const DeVPSensor* sensor = m_det->sensorOfChannel(centrChanID);    
   std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
   StatusCode channelsValid;
   channelsValid = sensor->channelToNeighbours(centrChanID,neighbsVec);

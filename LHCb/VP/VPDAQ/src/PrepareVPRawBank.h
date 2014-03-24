@@ -67,7 +67,7 @@ private:
   std::vector<unsigned int> m_sensorNumbers;
   bool m_isDebug; 
   bool m_isVerbose;
-  DeVP* m_vPelDet;
+  DeVP* m_det;
 
 };
 #endif // PREPAREVPRAWBANK_H
