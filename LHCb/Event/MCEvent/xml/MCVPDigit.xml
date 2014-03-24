@@ -1,19 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
-  <package name='MCEvent'>
-
-    <class author="Marcin Kucharczyk" desc="Vector of all charge deposits in given pixel" id="4502" name="MCVPDigit">
-      <base name="KeyedObject&lt;LHCb::VPChannelID&gt;"/>
-      <template name="KeyedObjectDict" t1="LHCb::VPChannelID"/>
+  <package name = 'MCEvent'>
+    <class name = "MCVPDigit"
+           id = "4502"
+           author = "Marcin Kucharczyk" 
+           desc = "Charge deposits in a given pixel"> 
+      <base name = "KeyedObject&lt;LHCb::VPChannelID&gt;"/>
+      <template name = "KeyedObjectDict" t1 = "LHCb::VPChannelID"/>
       &KeyedContainer;
-      <location name="MCVPDigitLocation"   place="MC/VP/Digits"   />
-      <import name ="Kernel/VPChannelID"/>
-      <import name="MCVPDeposit" soft="TRUE"/>
-      <relation name="mcDeposit" multiplicity="M" type="LHCb::MCVPDeposit" desc="vector of MCVPDeposits"/>
-      <method type='LHCb::VPChannelID' name='channelID' const='TRUE'  desc='channel = key'>
+      <location name = "Default" place = "MC/VP/Digits"/>
+      <import name = "Kernel/VPChannelID"/>
+      <import name = "Event/MCHit"/>
+
+      <relation name = "mcHits" multiplicity = "M" 
+                type = "LHCb::MCHit" 
+                desc = "references to contributing MCHits"/>
+      <attribute name = "deposits" type = "std::vector&lt;double&gt;"
+                 desc = "charge deposits of contributing MCHits"/>
+
+      <method name = "channelID" type = "LHCb::VPChannelID" const='TRUE' 
+              desc = "Return channel = key">
         <code>return key();</code>
-      </method> 
+      </method>
+      <method name = "addToMcHits" type = "void"
+              argList = "SmartRef&lt;LHCb::MCHit&gt; hit, const double deposit"
+              desc = "Add MCHit and charge deposit">
+        <code>
+          m_mcHits.push_back(hit);
+          m_deposits.push_back(deposit);
+        </code>
+      </method>
   </class>
   
  </package>
