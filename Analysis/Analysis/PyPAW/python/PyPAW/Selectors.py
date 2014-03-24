@@ -270,6 +270,51 @@ _process_. __doc__ += '\n' + Analysis.Process.process.__doc__
 for t in ( ROOT.TTree , ROOT.TChain ) : t.process  = _process_ 
 
 
+# =============================================================================
+## helper class to decode/keep infomration about the variable in 
+class VEntry(object) :
+    """
+    """
+    def __init__ ( self , var , *args ) :
+        """
+        Add declared variable to RooDataSet 
+        """
+        if   isinstance ( var , str ) :      ## just the name of variable   
+            
+            self.vname = var            ## name 
+            self.vdesc = args[0]        ## description 
+            self.vmin  = args[1]        ## min-value 
+            self.vmax  = args[2]        ## max-value 
+            #
+            ## accessor function
+            #
+            if 3 < len ( args ) : self.vfun = args[3]
+            else                : self.vfun = lambda s : getattr( s , self.vname )
+            # 
+            self.var = ROOT.RooRealVar ( self.vname , self.vdesc , self.vmin , self.vmax )
+
+        elif isinstance ( var , ROOT.RooRealVar ) : # variable itself 
+
+            self.vname = var.GetName  () ## name 
+            self.vdesc = var.GetTitle () ## description
+            self.vmin  = var.getMin   () ## min-value 
+            self.vmax  = var.getMax   () ## max-value 
+            #
+            ## accessor function
+            #
+            if 0 < len ( args ) : self.vfun = args[0]
+            else                : self.vfun = lambda s : getattr( s , self.vname )
+
+        else :
+
+            self._logger.error   ( 'Invalid variable description!' )
+            raise AttributeError,  'Invalid variable description!'
+
+        ## finally the entry
+        self.entry = ( self.var , self.vdesc , self.vmin , self.vmax , self.vfun )
+        
+        
+    
 # ==============================================================================
 ## Define generic selector to fill RooDataSet from TChain
 #
@@ -295,8 +340,8 @@ for t in ( ROOT.TTree , ROOT.TChain ) : t.process  = _process_
 #   ( 'my_name3' , 'my_description3' , low       , high      , lambda s : s.var1+s.var2 ) 
 #  ]
 #
-#  ## any function that gets Tchain/Tree and avaluated to double.
-#  #  e.g. it coudl be TMVAReader
+#  ## any function that gets TChain/Tree entry and evaluates to double.
+#  #  e.g. it could be TMVAReader
 #  def myvar ( chain ) : ....
 #  variables += [ 
 #   #  name       descriptor           min-value , max-value , access function   
@@ -304,14 +349,14 @@ for t in ( ROOT.TTree , ROOT.TChain ) : t.process  = _process_
 #  ]
 #
 #
-#  ## add already booked varibales: 
+#  ## add already booked variables: 
 #  v5 = ROOT.RooRealVal( 'my_name5' )
 #  variables += [  ( v5 , lambda s : s.var5 ) ]
 #
 #  
-#  ## add already booked varibales: 
+#  ## add already booked variables: 
 #  v6 = ROOT.RooRealVal( 'my_name6' )
-#  variables += [  ( v6                     ) ] ## get varibale "my_name6"
+#  variables += [  ( v6                     ) ] ## get variable "my_name6"
 #
 #
 #  #
@@ -343,7 +388,8 @@ class SelectorWithVars(SelectorWithCuts) :
     #   ( 'my_name1' , 'my_description1' , low       , high     )
     #   ]
     # 
-    #  ## get a variable 'my_name' from the tree/chain with accessor function, e.g. rescale it on-fligh
+    #  ## get a variable 'my_name' from the tree/chain with accessor function,
+    #  ## e.g. rescale it on-fligh
     #  variables += [ 
     #   #  name       descriptor           min-value , max-value , access function   
     #   ( 'my_name2' , 'my_description2' , low       , high      , lambda s : s.my_name2/1000 )
@@ -364,14 +410,14 @@ class SelectorWithVars(SelectorWithCuts) :
     #  ]
     #
     #
-    #  ## add already booked varibales: 
+    #  ## add already booked variables: 
     #  v5 = ROOT.RooRealVal( 'my_name5' )
     #  variables += [  ( v5 , lambda s : s.var5 ) ]
     #
     #  
-    #  ## add already booked varibales: 
+    #  ## add already booked variables: 
     #  v6 = ROOT.RooRealVal( 'my_name6' )
-    #  variables += [  ( v6                     ) ] ## get varibale "my_name6"
+    #  variables += [  ( v6                     ) ] ## get variable 'my_name6'
     #
     #
     #  #
@@ -536,7 +582,7 @@ class SelectorWithVars(SelectorWithCuts) :
             ## accessor function
             #
             if 3 < len ( args ) : vfun = args[3]
-            else                : vfun = lambda s : getattr( s , vname )
+            else                : vfun = lambda s : getattr( s , self.vname )
             # 
             var = ROOT.RooRealVar ( vname , vdesc , vmin , vmax )
 
@@ -556,8 +602,9 @@ class SelectorWithVars(SelectorWithCuts) :
 
             self._logger.error   ( 'Invalid variable description!' )
             raise AttributeError,  'Invalid variable description!'
-            
-        self.varset.add ( var ) 
+        
+        ## finally the entry
+        self.varset.add      ( var ) 
         self._variables += [ ( var , vdesc , vmin , vmax , vfun ) ] 
 
     #

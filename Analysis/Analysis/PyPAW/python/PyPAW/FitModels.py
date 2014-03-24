@@ -1645,7 +1645,7 @@ class H1D_pdf(H1D_dset) :
                    histo        ,
                    mass  = None ) :
         
-        H1D_dset.__init__ ( name , histo , mass )
+        H1D_dset.__init__ ( self , name , histo , mass )
         
         self.vset  = ROOT.RooArgSet  ( self.mass )
         

@@ -44,6 +44,7 @@ __all__     = (
     'histoGuess'      , ## guess the simple histo parameters
     'useLL'           , ## use LL for histogram fit?
     'allInts'         , ## natural histogram with natural entries?
+    'SE'              , ## StatEntity
     #
     'binomEff'        , ## calculate binomial efficiency
     'binomEff2'       , ## calculate binomial efficiency
@@ -702,6 +703,7 @@ ROOT.TH2D  .  binsy       = lambda s : s.GetNbinsY()
 ROOT.TH2F  .  binsx       = lambda s : s.GetNbinsX()
 ROOT.TH2F  .  binsy       = lambda s : s.GetNbinsY()
 
+
 # =============================================================================
 ## check bin in 2D-histo 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -825,6 +827,32 @@ ROOT.TH2F . findBin  = _h2_find_
 ROOT.TH2D . findBin  = _h2_find_
 ROOT.TH3F . findBin  = _h3_find_
 ROOT.TH3D . findBin  = _h3_find_
+
+
+# =============================================================================
+## get mean for 2D-histogram 
+#  @code 
+#  >>> histo = ...
+#  >>> x,y   = histo.mean ()
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-20
+def _h2_mean_ ( h2 ) :
+    """
+    Get the mean
+
+    >>> histo = ...
+    >>> x,y   = histo.mean () 
+    """
+    x  = h2.GetMean      (1)
+    ex = h2.GetMeanError (1)
+    y  = h2.GetMean      (2)
+    ey = h2.GetMeanError (2)
+    #
+    return VE ( x , ex * ex ), VE ( y , ey * ey ) 
+
+ROOT.TH2F . mean = _h2_mean_
+ROOT.TH2D . mean = _h2_mean_
 
 # ============================================================================
 ## find the first X-value for the certain Y-value 
@@ -3140,12 +3168,11 @@ def _smear_ ( h1 , sigma , addsigmas = 5 ) :
 ROOT.TH1F. smear = _smear_
 ROOT.TH1D. smear = _smear_
 
-
 # =============================================================================
 ## make transformation of histogram content 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2012-10-23  
-def _transform_ ( h1 , func ) :
+def _h1_transform_ ( h1 , func ) :
     """
     
     Make the transformation of the histogram content 
@@ -3166,8 +3193,86 @@ def _transform_ ( h1 , func ) :
         
     return h2 
 
-ROOT.TH1F. transform = _transform_ 
-ROOT.TH1D. transform = _transform_ 
+ROOT.TH1F. transform = _h1_transform_ 
+ROOT.TH1D. transform = _h1_transform_ 
+
+# =============================================================================
+## make transformation of histogram content 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-23  
+def _h2_transform_ ( h2 , func ) :
+    """
+    
+    Make the transformation of the 2D-histogram content 
+    
+    >>> func = lambda x,y,z: z   ## identical transformation/copy
+    >>> h2 = ...
+    >>> h3 = h2.fransform ( func ) 
+    
+    """
+    #
+    if not h2.GetSumw2() : h2.Sumw2()
+    h3 = h2.Clone( hID() )
+    if not h3.GetSumw2() : h3.Sumw2()
+    #
+    for ix,iy,x,y,z in h2.iteritems() :
+        
+        h3 [ ix , iy ] = func ( x, y , z ) 
+        
+    return h3 
+
+ROOT.TH2F. transform = _h2_transform_ 
+ROOT.TH2D. transform = _h2_transform_ 
+
+
+# =============================================================================
+## rescale the historgam for effective uniform bins
+#  new_content = old_content * factor / bin_width
+#  @code
+#  >>> h1 = ...
+#  >>> h2 = h1.rescale_bins ( h1 , 1 )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-19   
+def _h1_rescale_ ( h1 , factor = 1 ) :
+    """
+    Rescale the historgam for effective uniform bins : 
+    
+    new_bin_content = old_bin_content * factor / bin_width
+
+    >>> h1 = ...
+    >>> h2 = h1.rescale_bins ( h1 , 1 )
+    
+    """
+    return _h1_transform_ ( h1  ,  lambda x , y : ( 0.5 * factor / x.error() ) * y )
+
+ROOT.TH1F. rescale_bins = _h1_rescale_ 
+ROOT.TH1D. rescale_bins = _h1_rescale_ 
+
+
+# =============================================================================
+## rescale the historgam for effective uniform bins
+#  new_content = old_content * factor / bin_area
+#  @code
+#  >>> h2 = ...
+#  >>> h3 = h2.rescale_bins ( h2 , 1 )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-19   
+def _h2_rescale_ ( h2 , factor = 1 ) :
+    """
+    Rescale the historgam for effective uniform bins : 
+    
+    new_bin_content = old_bin_content * factor / bin_area
+
+    >>> h1 = ...
+    >>> h2 = h1.rescale_bins ( h1 , 1 )
+    
+    """
+    return _h2_transform_ ( h2  ,  lambda x , y , z : ( 0.25 * factor / x.error() / y.error() ) * z )
+
+ROOT.TH2F. rescale_bins = _h2_rescale_ 
+ROOT.TH2D. rescale_bins = _h2_rescale_ 
 
 # =============================================================================
 ## sample the histogram using gaussian hypothesis
@@ -3227,7 +3332,7 @@ def _fom_2_ ( h1 , increase = True ) :
     #
     h = h1.sumv( increase )
     #
-    return _transform_ ( h , func = lambda x,y : y.precision() ) 
+    return _h1_transform_ ( h , func = lambda x,y : y.precision() ) 
 
 # =============================================================================
 ## Calculate S/sqrt(S+a*B)
