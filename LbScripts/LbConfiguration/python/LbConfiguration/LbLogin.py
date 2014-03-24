@@ -1062,6 +1062,8 @@ class LbLoginScript(SourceScript):
                 setupprojargs.append("LCGCMT")
                 if ev["CMTCONFIG"].startswith("win32_vc71") :
                     setupprojargs.append("5[0-8]*")
+                if "slc5" in ev["CMTCONFIG"]:
+                    setupprojargs.append("6[0-6]*")
                 setupprojargs.append("Python")
                 if opts.pythonvers :
                     setupprojargs.append("-v")
