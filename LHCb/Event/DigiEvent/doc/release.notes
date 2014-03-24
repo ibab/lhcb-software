@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2014-03-24 - Heinrich Schindler 
+ - Remove ToT value and timestamp from VPDigit, change location name
+
 !========================= DigiEvent v4r1 2014-03-17 =========================
 ! 2014-03-13 - Heinrich Schindler 
  - Remove ToT value from and added global x, y, z coordinates to VPCluster

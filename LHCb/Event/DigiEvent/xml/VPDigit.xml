@@ -1,50 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
- <package name="DigiEvent">
-  <class
-   author="Marcin Kucharczyk"
-   desc="This class represents digitized pixel hit in VP"
-   id="4503"
-   name="VPDigit">
-   <location name="VPDigitLocation"   place="Raw/VP/Digits"   />
-   <import name="Kernel/VPChannelID"/>
-   <template name="KeyedObjectDict" t1="LHCb::VPChannelID"/>
-   <base name="KeyedObject&lt;LHCb::VPChannelID&gt;"/>
-   &KeyedContainer;
+  <package name = "DigiEvent">
+    <class name = "VPDigit"
+           id = "4503"
+           author = "Marcin Kucharczyk"
+           desc = "Digitized pixel hit in VP">
+    <location name = "Default" place = "Raw/VP/Digits"/>
+    <import name = "Kernel/VPChannelID"/>
+    <template name = "KeyedObjectDict" t1 = "LHCb::VPChannelID"/>
+    <base name = "KeyedObject&lt;LHCb::VPChannelID&gt;"/>
+    &KeyedContainer;
 
-   <constructor argList="int tot"
-                initList="m_ToTValue(tot),m_timeStamp(0)"
-                desc="constructor from ToT charge only">
-   </constructor>
+    <method type = 'LHCb::VPChannelID' name = 'channelID' const = 'TRUE' 
+            desc = 'Return channel = key'>
+      <code>return key();</code>
+    </method>
 
-   <constructor argList="int tot, int time"
-                initList="m_ToTValue(tot),m_timeStamp(time)"
-                desc="constructor from ToT and time stamp">
-   </constructor>
-
-  <constructor desc = 'copy constructor'
-      initList = "KeyedObject&lt;LHCb::VPChannelID&gt;(),m_ToTValue(digit.m_ToTValue),m_timeStamp(digit.m_timeStamp)" >
-      <arg const = 'TRUE' name = "digit" type = "LHCb::VPDigit" />
-  </constructor>
-
-  <method desc= 'clone method'
-   name = 'clone'
-   const = 'TRUE'
-   type = "LHCb::VPDigit*"
-   access = "PUBLIC">
-   <code>
-     return new LHCb::VPDigit( *this );
-   </code>
-  </method>
-
-  <attribute name="ToTValue" type="int" desc="total digitized charge in a pixel measured as Time-over-Threshold "/>
-  <attribute name="timeStamp" type="int" desc="time stamp related to when the threshold was exceeded"/>
-  <method type='LHCb::VPChannelID' name='channelID' const='TRUE' desc='channel = key'>
-   <code>return key();</code>
-  </method>
-
-  </class>
- </package>
+    </class>
+  </package>
 </gdd>
 
