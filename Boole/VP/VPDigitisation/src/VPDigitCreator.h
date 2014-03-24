@@ -60,11 +60,6 @@ private:
   double m_clockPhase;
   double m_samplePeriod;
 
-   // Number of bits to use for ToT
-  unsigned int m_nBits;
-  // Max ToT value
-  unsigned int m_maxToT;
-
   // Gaussian random number generator for noise
   Rndm::Numbers m_gaussDist;
   // Noise in electrons (0 = don't simulate)
@@ -77,7 +72,12 @@ private:
 
   bool m_debug;
 
-  double timeOverThreshold(double charge);
+  /// Calculate the time (ns) that the pixel stays over threshold, 
+  /// counting from the LHC clock onwards
+  double timeOverThreshold(const double charge) {
+    const double tot = m_clockPhase + (charge - m_threshold) * m_discharge;
+    return tot > 0. ? tot : 0.;
+  }
   
 };
 #endif // VPDIGITCREATOR_H

@@ -3,6 +3,11 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-03-24 - Heinrich Schindler
+ - Follow changes in VPDigit and MCVPDigit format and location names 
+   (revisions r170467, r170468).
+ - Remove support for "old" (pre-TDR) XML.
+
 !========================= VPDigitisation v1r3 2014-03-18 =======================
 ! 2014-03-13 - Heinrich Schindler
  - Follow changes in VPCluster format and path (revision r169999).

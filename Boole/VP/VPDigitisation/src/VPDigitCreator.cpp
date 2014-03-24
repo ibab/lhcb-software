@@ -1,4 +1,4 @@
-//STL
+// STL
 #include <map>
 
 // Gaudi
@@ -35,16 +35,14 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
 #endif
     m_debug(false) {
 
-  declareProperty("InputLocation",  m_inputLocation =  LHCb::MCVPDigitLocation::MCVPDigitLocation);
-  declareProperty("OutputLocation", m_outputLocation = LHCb::VPDigitLocation::VPDigitLocation);
+  declareProperty("InputLocation",  m_inputLocation =  LHCb::MCVPDigitLocation::Default);
+  declareProperty("OutputLocation", m_outputLocation = LHCb::VPDigitLocation::Default);
 
   // Discrimination threshold in electrons
   declareProperty("ChargeThreshold", m_threshold = 1000.0);  
   // Tuning of ToT gain
   declareProperty("TunedCharge", m_chargeTuning = 15000.); 
   declareProperty("TunedTOT", m_totTuning = 10.);
-  // Number of bits for ToT
-  declareProperty("NumberOfBits", m_nBits = 1); 
   // Bunch spacing in ns 
   declareProperty("BunchCrossingSpacing", m_bunchCrossingSpacing = 25.0);
   // Sampling phase in ns w. r. t. LHC clock (tuned to largest timewalk)
@@ -73,12 +71,6 @@ StatusCode VPDigitCreator::initialize() {
   m_debug = msgLevel(MSG::DEBUG);
   if (m_debug) debug() << "==> Initialize" << endmsg;
 
-  // Calculate maximal ToT value (saturation)
-  if (m_nBits > 0) {
-     m_maxToT = (2 << (m_nBits - 1)) - 1;
-  } else {
-     m_maxToT = 1; 
-  }
   // Calculate discharge rate in ns / electron
   m_discharge = (m_totTuning * m_samplePeriod) / (m_chargeTuning - m_threshold); 
   
@@ -125,12 +117,10 @@ StatusCode VPDigitCreator::execute() {
   LHCb::MCVPDigits::const_iterator it;
   for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
     // Sum up the charge from all deposits.
-    SmartRefVector<LHCb::MCVPDeposit> deposits = (*it)->mcDeposit();
     double charge = 0.;
-    SmartRefVector<LHCb::MCVPDeposit>::const_iterator itd;
-    for (itd = deposits.begin(); itd != deposits.end(); ++itd) {
-      charge += (*itd)->depositedCharge(); 
-    }
+    const std::vector<double>& deposits = (*it)->deposits();
+    const unsigned int nDeposits = deposits.size();
+    for (unsigned int i = 0; i < nDeposits; ++i) charge += deposits[i];
     // Add electronics noise.
     if (m_ElectronicNoise > 0.1) {
       charge += m_ElectronicNoise * m_gaussDist();
@@ -150,27 +140,12 @@ StatusCode VPDigitCreator::execute() {
     if (charge < m_threshold) continue;
     // Update dead time for this pixel.
     if (m_deadTime) m_deadPixels[channel] = tot;
-    // Calculate ToT counts.
-    unsigned int adc = ceil((tot - m_clockPhase) / m_samplePeriod);
-    if (adc > m_maxToT) adc = m_maxToT;
     // Create new digit.
-    LHCb::VPDigit* digit = new LHCb::VPDigit(adc); 
+    LHCb::VPDigit* digit = new LHCb::VPDigit(); 
     digits->insert(digit, channel);
   }
   put(digits, m_outputLocation); 
   return StatusCode::SUCCESS;
-
-}
-
-//=============================================================================
-/// Calculate the time (ns) that the pixel stays over threshold, 
-/// counting from the LHC clock onwards
-//=============================================================================
-double VPDigitCreator::timeOverThreshold(const double charge) {
-
-  double timeOverTh = m_clockPhase + (charge - m_threshold) * m_discharge;
-  if (timeOverTh < 0.) timeOverTh = 0.;
-  return timeOverTh;
 
 }
 

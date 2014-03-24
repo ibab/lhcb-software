@@ -14,12 +14,15 @@
 #endif
 #include "GaudiKernel/RndmGenerators.h"
 
+// LHCb
+// Event/MCEvent
+#include "Event/MCVPDigit.h"
+
 // Local
 #include "VPRadiationDamageTool.h"
 
 class DeVP;
 class MCHit;
-class MCVPDeposit;
 class VPChannelID;
 
 /** @class VPDepositCreator.h 
@@ -46,19 +49,19 @@ public:
 
 private:
   // Convert energy deposit to charge deposits on pixels
-  void createDeposits(LHCb::MCHit* hit, LHCb::MCVPDeposits*& deposits);
+  void createDeposits(LHCb::MCHit* hit);
   // Draw random number from 1/q^2 distribution
   double randomTail(const double qmin, const double qmax);
 
   // Input/output containers
   std::string m_hitLocation;
-  std::string m_depositLocation;
   std::string m_digitLocation;
-
-  bool m_oldXml;
 
   DeVP* m_det;
   VPRadiationDamageTool* m_radDamageTool;
+
+  // Vector of MC digits
+  LHCb::MCVPDigits* m_digits;
 
   // Distance between points on hit trajectory
   double m_stepSize;

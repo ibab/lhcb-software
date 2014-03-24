@@ -4,10 +4,7 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
-#include "GaudiKernel/Vector3DTypes.h"
-#include "GaudiKernel/Point3DTypes.h"
 
 // LHCb
 // Kernel/LHCbKernel
@@ -16,8 +13,6 @@
 #include "LHCbMath/LHCbMath.h"
 // Event/MCEvent
 #include "Event/MCHit.h"
-#include "Event/MCVPDeposit.h"
-#include "Event/MCVPDigit.h"
 // Det/VPDet
 #include "VPDet/DeVP.h"
 
@@ -42,11 +37,10 @@ VPDepositCreator::VPDepositCreator(const std::string& name,
 #else
     GaudiAlgorithm(name, pSvcLocator),
 #endif
-    m_oldXml(true), m_det(NULL), m_radDamageTool(NULL) {
+    m_det(NULL), m_radDamageTool(NULL) {
 
-  declareProperty("HitLocation",     m_hitLocation = LHCb::MCHitLocation::VP);
-  declareProperty("DepositLocation", m_depositLocation = LHCb::MCVPDepositLocation::MCVPDepositLocation);
-  declareProperty("DigitLocation",   m_digitLocation = LHCb::MCVPDigitLocation::MCVPDigitLocation);
+  declareProperty("HitLocation",   m_hitLocation = LHCb::MCHitLocation::VP);
+  declareProperty("DigitLocation", m_digitLocation = LHCb::MCVPDigitLocation::Default);
 
   declareProperty("StepSize",    m_stepSize = 5 * Gaudi::Units::micrometer);
   declareProperty("MaxNumSteps", m_nMaxSteps = 150);
@@ -93,8 +87,6 @@ StatusCode VPDepositCreator::initialize() {
     error() << "Cannot initialize uniform random number generator." << endmsg;
     return sc;
   }
-  // Temporary check if we are running with old or new geometry.
-  if (m_det->numberSensors() > 100) m_oldXml = false;
   // Calculate diffusion coefficient.
   const double kt = m_temperature * Gaudi::Units::k_Boltzmann / Gaudi::Units::eV;
   const double thickness = m_det->sensor(0)->siliconThickness();
@@ -118,53 +110,24 @@ StatusCode VPDepositCreator::execute() {
     error() << "No hits in " << m_hitLocation << endmsg;
     return StatusCode::FAILURE;
   }
+  m_digits = new LHCb::MCVPDigits();
   // Loop over the hits and calculate the deposited charge on each pixel.
-  LHCb::MCVPDeposits* deposits = new LHCb::MCVPDeposits();
-  deposits->reserve(5 * hits->size());
   LHCb::MCHits::const_iterator ith;
-  for (ith = hits->begin(); ith != hits->end(); ++ith) {
-    LHCb::MCHit* hit = *ith;
-    createDeposits(hit, deposits);
-  }
-  // Sort the deposits by channel ID.
-  std::stable_sort(deposits->begin(), deposits->end(),
-                   VPDataFunctor::Less_by_Channel<const LHCb::MCVPDeposit*>());
-  // Store the deposits on the transient store.
-  put(deposits, m_depositLocation);
-  // Sum up the deposits on each pixel and create MC digits.
-  LHCb::MCVPDigits* digits = new LHCb::MCVPDigits();
-  LHCb::VPChannelID lastChannel;
-  LHCb::MCVPDigit* digit = NULL;
-  LHCb::MCVPDeposits::const_iterator itd;
-  for (itd = deposits->begin(); itd != deposits->end(); ++itd) {
-    if (!digit) {
-      // Create the first digit.
-      digit = new LHCb::MCVPDigit();
-      lastChannel = (*itd)->channelID();
-    } else {
-      // Check if the deposits belongs to a new channel.
-      if ((*itd)->channelID() != lastChannel) {
-        digits->insert(digit, lastChannel);
-        digit = new LHCb::MCVPDigit();
-        lastChannel = (*itd)->channelID();
-      }
-    } 
-    digit->addToMcDeposit(*itd);
-  }
-  // Add the last digit to the list.
-  if (digit) digits->insert(digit, lastChannel);
+  for (ith = hits->begin(); ith != hits->end(); ++ith) createDeposits(*ith);
+  // Sort the MC digits by channel ID.
+  std::stable_sort(m_digits->begin(), m_digits->end(),
+                   VPDataFunctor::Less_by_Channel<const LHCb::MCVPDigit*>());
   // Store the MC digits on the transient store.
-  put(digits, m_digitLocation);
+  put(m_digits, m_digitLocation);
   return StatusCode::SUCCESS;
 
 }
 
 
 //============================================================================
-/// Create MCVPDeposits
+/// Create deposits
 //============================================================================
-void VPDepositCreator::createDeposits(LHCb::MCHit* hit, 
-                                      LHCb::MCVPDeposits*& deposits) {
+void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
 
   // Calculate total number of electrons based on energy deposit from G4.
   const double charge = (hit->energy() / Gaudi::Units::eV) / m_eVPerElectron;
@@ -218,12 +181,8 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
          "Number of electrons per point", 0., 2000., 100);
 #endif
     double dz = 0.;
-    if (m_oldXml) {
-      dz = fabs(point.z() - hit->entry().z()); 
-    } else {
-      // Pixel side is always at z = -thickness/2 in local coordinates.
-      dz = fabs(localPoint.z() + 0.5 * thickness);
-    }
+    // Pixel side is always at z = -thickness/2 in local coordinates.
+    dz = fabs(localPoint.z() + 0.5 * thickness);
     if (m_irradiated) {
       if (dz > activeDepth){
         point += step;
@@ -260,8 +219,17 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
   }
   std::map<LHCb::VPChannelID, double>::iterator itm;
   for (itm = pixels.begin(); itm != pixels.end(); ++itm) {
-    LHCb::MCVPDeposit* deposit = new LHCb::MCVPDeposit((*itm).second, (*itm).first, hit);
-    deposits->insert(deposit);
+    LHCb::VPChannelID id = (*itm).first;
+    const double charge = (*itm).second; 
+    LHCb::MCVPDigit* digit = m_digits->object(id);
+    if (digit) {
+      // MC digit already exists.
+      digit->addToMcHits(hit, charge);
+    } else {
+      digit = new LHCb::MCVPDigit();
+      digit->addToMcHits(hit, charge);
+      m_digits->insert(digit, id);
+    } 
   }
 
 }

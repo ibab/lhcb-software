@@ -51,7 +51,7 @@ StatusCode VPDepositMonitor::execute() {
 
   LHCb::MCHits* hits = getIfExists<LHCb::MCHits>(LHCb::MCHitLocation::VP);
   if (hits) monitorHits(hits);
-  LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(LHCb::MCVPDigitLocation::MCVPDigitLocation);
+  LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(LHCb::MCVPDigitLocation::Default);
   if (mcdigits) monitorDigits(mcdigits);
   return StatusCode::SUCCESS;
 
@@ -80,15 +80,13 @@ void VPDepositMonitor::monitorDigits(LHCb::MCVPDigits* mcdigits) {
          "Number of digits / module", -0.5, 51.5, 52);
     // Loop over the deposits.
     double charge = 0.;
-    SmartRefVector<LHCb::MCVPDeposit> deposits = (*it)->mcDeposit();
-    SmartRefVector<LHCb::MCVPDeposit>::const_iterator itd;
-    for (itd = deposits.begin(); itd != deposits.end(); ++itd) {
-      plot((*itd)->depositedCharge(), "ChargePerDeposit",
-           "Charge/deposit [e]", 0., 20000., 100);
-      charge += (*itd)->depositedCharge();
+    const std::vector<double>& deposits = (*it)->deposits();
+    const unsigned int nDeposits = deposits.size();
+    for (unsigned int i = 0; i < nDeposits; ++i) {
+      charge += deposits[i];
+      plot(deposits[i], "ChargePerDeposit", "Charge/deposit [e]", 0., 20000., 100);
     }
-    plot(charge, "ChargePerPixel", 
-         "Charge/pixel [e]", 0., 25000.0, 100);
+    plot(charge, "ChargePerPixel", "Charge/pixel [e]", 0., 25000.0, 100);
   }
 
 }
