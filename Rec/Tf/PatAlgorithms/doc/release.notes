@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-03-25 - Manuel Tobias Schiller
+ - Fix fix from Chris Jones introduced in r168699 to work around an FPE in
+   PatSeedingTool (not documented in the release notes); the new version of
+   the code helps to marginally reduce the ghost rate while still avoiding the
+   FPE
+
 !========================= PatAlgorithms v4r31 2014-03-18 ======================
 ! 2014-02-25 - Gerhard Raven
  - PatForwardTool: factor out common code in buildXCandidatesList
@@ -22,12 +28,12 @@
 !========================= PatAlgorithms v4r29 2013-11-20 ======================
 ! 2013-11-15 - Sascha Stahl
  - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where an x layer 
-	 was marked as a stereo layer.
+    was marked as a stereo layer.
 
 !========================= PatAlgorithms v4r28 2013-10-01 ======================
 ! 2013-09-24 - Sascha Stahl
  - Fixed bug in PatSeedingTool which disabled protection against hot events 
-	 in the OT when disabling protection against hot events in IT.
+    in the OT when disabling protection against hot events in IT.
 
 !========================= PatAlgorithms v4r27 2013-07-18 ======================
 ! 2013-06-18 - Marco Cattaneo
