@@ -175,9 +175,9 @@ StatusCode BuildMCTrackInfo::execute() {
       }
     }
   } else if ( m_withVP ) {
-    LHCb::VPDigits* digits = get<LHCb::VPDigits>(LHCb::VPDigitLocation::VPDigitLocation);
+    LHCb::VPDigits* digits = get<LHCb::VPDigits>(LHCb::VPDigitLocation::Default);
     LinkedTo<LHCb::MCParticle, LHCb::VPDigit> vpLink(eventSvc(), msgSvc(),
-                                                     LHCb::VPDigitLocation::VPDigitLocation);
+                                                     LHCb::VPDigitLocation::Default);
     if (vpLink.notFound()) return StatusCode::FAILURE;
     
     std::sort(digits->begin(), digits->end(), increasingModule());
