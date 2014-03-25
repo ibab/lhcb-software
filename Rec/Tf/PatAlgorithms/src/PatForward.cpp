@@ -15,6 +15,34 @@
 //
 // 2005-04-01 : Olivier Callot
 //-----------------------------------------------------------------------------
+std::array<int,5> count(const LHCb::Track& lhs, const LHCb::Track& rhs) {
+  // adapted from Track::nCommonLhcbIDs
+  std::array<int,5> rc{{0,0,0,0,0}}; // nbTT0, nb0, nbTT1, nb1, ncommon
+  auto i1 = std::begin(lhs.lhcbIDs());
+  auto last1  = std::end(lhs.lhcbIDs());
+  auto i2 = std::begin(rhs.lhcbIDs());
+  auto last2  = std::end(rhs.lhcbIDs());
+  auto f1 = [&](const LHCb::LHCbID& id) { if (!id.isVelo()) ++rc[ id.isTT() ? 0 : 1 ]; };
+  auto f2 = [&](const LHCb::LHCbID& id) { if (!id.isVelo()) ++rc[ id.isTT() ? 2 : 3 ]; };
+  while (i1 != last1 && i2 != last2) {
+    if ( *i1 < *i2 ) {
+      f1(*i1); ++i1;
+    } else if ( *i2 < *i1 ) {
+      f2(*i2); ++i2;
+    } else {
+      if (!i1->isVelo()) {
+            if (i1->isTT()) { ++rc[0]; ++rc[2]; 
+            } else { ++rc[1]; ++rc[3]; ++rc[4]; 
+            }
+      }
+      ++i1;
+      ++i2;
+    }
+  }
+  std::for_each(i1,last1,f1);
+  std::for_each(i2,last2,f2);
+  return rc ; // rely on NRVO
+}
 
 
 DECLARE_ALGORITHM_FACTORY( PatForward )
@@ -97,19 +125,14 @@ bool PatForward::acceptTrack(const LHCb::Track& track) {
   bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
   ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
 
-  if (m_trackSelector) ok = ok && (m_trackSelector->accept(track));
+  if (m_trackSelector) ok = ok && m_trackSelector->accept(track);
 
   if (m_unusedVeloSeeds && ok){
-
-    LHCb::Tracks* veloVetoTracks  = get<LHCb::Tracks>( m_veloVetoTracksName);
-     
-    LHCb::Tracks::const_iterator itT =  veloVetoTracks->begin();
-    while ((itT != veloVetoTracks->end()) && (ok == true)){
-
-      for ( const LHCb::Track* testTrack : (*itT)->ancestors() ) {
-	        if ( testTrack == &track) ok = false;
-      }
-      ++itT;
+    for (auto it : *get<LHCb::Tracks>( m_veloVetoTracksName)) { 
+      auto ancestors = it->ancestors();
+      ok = std::none_of( std::begin( ancestors ), std::end( ancestors ), 
+                         [&](const LHCb::Track* t) { return t == &track; } ) ;
+      if (!ok) break;
     } 
   }
   
@@ -172,12 +195,10 @@ StatusCode PatForward::execute() {
   if ( msgLevel( MSG::DEBUG ) || m_doTiming ) m_timerTool->start( m_fwdTime );
 
   int oriSize = outputTracks->size();
-  LHCb::Tracks::iterator itT;
 
-  for ( itT = inputTracks->begin(); inputTracks->end() != itT;  ++itT ) {
-    LHCb::Track* seed = (*itT);
+  for ( LHCb::Track *seed: *inputTracks ) {
     if ( acceptTrack(*seed) ) {
-      int prevSize = outputTracks->size();
+      auto prevSize = outputTracks->size();
       m_forwardTool->forwardTrack(seed, outputTracks );
       if ( msgLevel( MSG::DEBUG )) debug()  << " track " << seed->key()
                                             << " position " << seed->position()
@@ -190,48 +211,18 @@ StatusCode PatForward::execute() {
   }
   // added for NNTools -- check how many tracks have common hits
   if( m_writeNNVariables){
-    LHCb::Tracks::iterator mitT;
-    LHCb::Tracks::iterator mitT1;
     std::vector<LHCb::LHCbID>::const_iterator mitId0, mitId1;
-    for( mitT = outputTracks->begin(); outputTracks->end() != mitT; ++mitT){
-      int count_Tr = 0;
-      const LHCb::State& state0 = *((*mitT)->stateAt( LHCb::State::AtT ));
-      for( mitT1 = outputTracks->begin(); outputTracks->end()!=mitT1; ++mitT1){
-	const LHCb::State& state1 = *((*mitT1)->stateAt( LHCb::State::AtT ));
-	if ( 5. > fabs( state0.x() - state1.x() ) ) {
-	  int nbCommon = 0;
-	  int nb0      = 0;
-	  int nbTT0    = 0;
-	  int nbTT1    = 0;
-	  int nb1      = 0;
-	  for( mitId1=(*mitT1)->lhcbIDs().begin(); 
-	       (*mitT1)->lhcbIDs().end() != mitId1; ++mitId1){
-	    if ( (*mitId1).isVelo() ) continue;
-	    if ( (*mitId1).isTT() ) {
-	      ++nbTT1;
-	    } else {
-	      ++nb1;
-	    }
-	  }
-	  for( mitId0 = (*mitT)->lhcbIDs().begin(); 
-	       (*mitT)->lhcbIDs().end() != mitId0; ++mitId0 ) {
-	    if ( (*mitId0).isVelo() ) continue;
-	    if ( (*mitId0).isTT() ) {
-	      ++nbTT0;
-	      continue;
-	    }
-	    nb0++;
-	    for ( mitId1 = (*mitT1)->lhcbIDs().begin(); 
-		  (*mitT1)->lhcbIDs().end() != mitId1; ++mitId1 ) {
-	      if ( *mitId0 == *mitId1) ++nbCommon;
-	    }
-	  }
-	  if(!( .7 * nb0 > nbCommon || .7 * nb1 > nbCommon)){
-	    ++count_Tr;
-	  }
-	}
-      }
-      (*mitT)->addInfo(LHCb::Track::NCandCommonHits, count_Tr);
+    for( auto mitT = outputTracks->begin(); outputTracks->end() != mitT; ++mitT){
+      auto x0 = (*mitT)->stateAt( LHCb::State::AtT )->x();
+      auto match = [&](const LHCb::Track* t) { 
+            if (  fabs( x0 - t->stateAt( LHCb::State::AtT )->x() ) < 5. ) {
+                std::array<int,5> N = count( **mitT , *t );
+                return  0.7 * std::max(N[1],N[3]) <= N[4] ;
+            }
+            return false;
+      };
+      auto c = std::count_if( std::begin(*outputTracks), std::end(*outputTracks), match );
+      (*mitT)->addInfo(LHCb::Track::NCandCommonHits, c);
     }
   }
   // end of NNTools loop
@@ -249,48 +240,20 @@ StatusCode PatForward::execute() {
 
 
   //== Try to filter from T station part
- 
-  LHCb::Tracks::iterator itT1;
-  std::vector<LHCb::LHCbID>::const_iterator itId0, itId1;
-
-  for ( itT = outputTracks->begin(); outputTracks->end() != itT;  ++itT ) {
-    const LHCb::State& state0 = *((*itT)->stateAt( LHCb::State::AtT ));
-    for ( itT1 = itT+1; outputTracks->end() > itT1;  ++itT1 ) {
+  for ( auto itT = outputTracks->begin(); outputTracks->end() != itT;  ++itT ) {
+    const auto x0 = (*itT)->stateAt( LHCb::State::AtT )->x();
+    for ( auto itT1 = itT+1; outputTracks->end() > itT1;  ++itT1 ) {
       const LHCb::State& state1 = *((*itT1)->stateAt( LHCb::State::AtT ));
-      if ( 5. > fabs( state0.x() - state1.x() ) ) {
-        int nbCommon = 0;
-        int nb0      = 0;
-        int nbTT0    = 0;
-        int nbTT1    = 0;
-        int nb1      = 0;
-        for ( itId1 = (*itT1)->lhcbIDs().begin(); (*itT1)->lhcbIDs().end() != itId1; ++itId1 ) {
-          if ( (*itId1).isVelo() ) continue;
-          if ( (*itId1).isTT() ) {
-            ++nbTT1;
-          } else {
-            ++nb1;
-          }
-        }
-
-        for ( itId0 = (*itT)->lhcbIDs().begin(); (*itT)->lhcbIDs().end() != itId0; ++itId0 ) {
-          if ( (*itId0).isVelo() ) continue;
-          if ( (*itId0).isTT() ) {
-            ++nbTT0;
-            continue;
-          }
-          nb0++;
-          for ( itId1 = (*itT1)->lhcbIDs().begin(); (*itT1)->lhcbIDs().end() != itId1; ++itId1 ) {
-            if ( *itId0 == *itId1 ) ++nbCommon;
-          }
-        }
-        if ( .7 * nb0 > nbCommon || .7 * nb1 > nbCommon ) continue;
+      if ( fabs( x0 - state1.x() ) < 5. ) {
+        std::array<int,5> N = count( **itT , **itT1 );
+        if ( 0.7 * std::max(N[1],N[3]) > N[4] ) continue;
         if ( msgLevel ( MSG::DEBUG ) ) {
           debug() << format( "Track %3d and %3d nT0 %2d nT1 %2d nCommon %2d nbTT : %2d, %2d  chi20 %8.3f 1 %8.3f",
-                             (*itT)->key(), (*itT1)->key(), nb0, nb1, nbCommon, nbTT0, nbTT1,
+                             (*itT)->key(), (*itT1)->key(), N[1], N[3], N[4], N[0], N[2],
                              (*itT)->chi2PerDoF(), (*itT1)->chi2PerDoF() ) << endmsg;
         }
-        if ( nb0   > nb1   + m_deltaNumberInT  ||
-             nbTT0 > nbTT1 + m_deltaNumberInTT   ) {
+        if ( N[1] - N[3] > m_deltaNumberInT  ||
+             N[0] - N[2] > m_deltaNumberInTT   ) {
           if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
             debug() << "    erase " << (*itT1)->key() << " and restart " << endmsg;
           outputTracks->erase( itT1 );
@@ -298,8 +261,8 @@ StatusCode PatForward::execute() {
           itT1 = itT;
           break;
         }
-        if ( nb1   > nb0   + m_deltaNumberInT  ||
-             nbTT1 > nbTT0 + m_deltaNumberInTT    ) {
+        if ( N[3] - N[1] > m_deltaNumberInT  ||
+             N[2] - N[0] > m_deltaNumberInTT    ) {
           if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
             debug() << "    erase " << (*itT)->key() << " and restart " << endmsg;
           outputTracks->erase( itT );
@@ -317,7 +280,6 @@ StatusCode PatForward::execute() {
             << inputTracks->size() << " Velo tracks in " << t << " ms"
             << endmsg;
   }
-
   return StatusCode::SUCCESS;
 }
 
