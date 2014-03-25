@@ -4,6 +4,10 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2014-03-25 - Diego Milanes
+ - Fix bug with with layerCenterZ method
+
+
 ! 2014-03-20 - Luigi Del Buono
  - Changes for new FTchanID (no more quarter --> module +mat) Fibremat level implemented
 

@@ -219,6 +219,9 @@ StatusCode DeFTFibreMat::initialize(){
   m_fibreMatMinZ = fibreMatCenter.z() - m_fibreMatHalfSizeZ; 
   m_fibreMatMaxZ = fibreMatCenter.z() + m_fibreMatHalfSizeZ; 
   m_fibreMatPosZ    = fibreMatCenter.z();
+  //for backcompatibility
+  m_layerPosZ       = m_fibreMatPosZ;
+
 
   double CarHoneyKapWidth = 0.15 + 20. + 0.05;
 
