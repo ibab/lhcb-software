@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2014-03-25 - Gerhard Raven
+ - Avoid that lumi lines fill a seperate timer...
 
 !========================= Hlt1Lines v7r2 2014-02-24 =========================
 ! 2014-02-24 - Pieter David

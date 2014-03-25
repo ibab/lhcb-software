@@ -123,7 +123,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , OutputLevel = debugOPL
                                     , IgnoreFilterPassed = True
                                     , Members = [] # reset so we build the same things several times TODO: move out of loop...
-                                    , MeasureTime = True)
+                                    )
 
         # define empty sequence to collect counters
         seqCountName = 'LumiCount'+postfix
@@ -133,7 +133,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
                                     , IgnoreFilterPassed = True
-                                    , MeasureTime = True)
+                                    )
 
         # LumiLow lines must be flagged - traditional and low are flagged explicitely
         from Configurables import LumiFlagMethod
@@ -185,7 +185,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         lumiVeloReco = self.__lumi_track_and_vertex_seq__()
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
                                                    Members = [ recoScaler ] + lumiVeloReco,
-                                                   MeasureTime = True ) ) 
+                                                   ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
         from Configurables import Hlt__TrackFilter as HltTrackFilter
@@ -200,7 +200,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                                    , OutputSelection     = 'VeloBW'
                                                    , RequirePositiveInputs = False
                                                    ) ]
-                     , MeasureTime = True
                      , ModeOR = True
                      , ShortCircuit = False
                      ) )
@@ -239,7 +238,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         #                                             , OutputLevel = WARNING
         #                                              )
         #                            ]
-        #             , MeasureTime = True
         #             , ModeOR = True
         #             , ShortCircuit = False
         #             ) )
@@ -262,7 +260,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         #                             , Members = HistoMembers
         #                             , ModeOR = True
         #                             , ShortCircuit = False
-        #                             , MeasureTime = True
         #                             , OutputLevel = debugOPL
         #                             )
 
