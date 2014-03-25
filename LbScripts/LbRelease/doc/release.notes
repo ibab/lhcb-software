@@ -1,3 +1,11 @@
+2014-03-25  Ben Couturier <Ben.Couturier@cern.ch>
+
+	New tool to package LCG_68 (provided in RPM as 
+	an install_project tarball).
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGRpmExtractor.py
+	* scripts/buildLCGCMTFromRPM
+
 2014-03-21  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r16p3
