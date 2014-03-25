@@ -718,13 +718,13 @@ void PatSeedingTool::collectPerRegion(
               debugFwdHit( hit, info() );
             }
           }
-          if ( stereo.size() < unsigned(minNbPlanes) )  continue;
+          if ( stereo.size() < unsigned(minNbPlanes) ) continue;
 
           bool ok = (m_cosmics ?
                      findBestRangeCosmics( reg, minNbPlanes, stereo ) :
                      findBestRange( reg, minNbPlanes, stereo ) );
 
-          if ( !ok ) continue;
+	  if ( !ok ) continue;
 	  
           if ( m_printing ) {
             info() << "--- After filtering of stereo hits " << endmsg;
@@ -1283,6 +1283,7 @@ void PatSeedingTool::collectLowQualTracks(
       }
     }
     if (maxUsed < 0) continue;
+    if (track.nPlanes() < unsigned(m_minTotalPlanes)) continue;
     bool isOT = (*track.coordBegin())->hit()->type() == Tf::RegionID::OT;
     m_tolCollect = isOT ? m_tolCollectOT : m_tolCollectIT;
     m_maxChi2Hit = isOT ? m_maxChi2HitOT : m_maxChi2HitIT;
@@ -1305,7 +1306,10 @@ void PatSeedingTool::collectLowQualTracks(
     // refit in yz
     double y0, sl;
     bool ok = fitLineInY( stereo, y0, sl );
-    if (!ok) {continue;}
+    if (!ok) {
+      if ( m_printing ) info() << "  -- fitLineInY failed" << endmsg;
+      continue;
+    }
     track.setYParams(y0, sl);
 
     // check that pointing constraint still holds
@@ -2243,7 +2247,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
   std::array<double, 3> largestDrift = { { 0., 0., 0. } };
   std::array<PatFwdHit*, 3> seeds = { { nullptr, nullptr, nullptr } };;
   double slopeguess = 0.;
-  int npoints = 0;
+  unsigned npoints = 0;
 
   for( PatFwdHit* hit: stereo ) {
     if ( hit->isIgnored() ) continue;
@@ -2262,7 +2266,9 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
       seeds[sta] = hit;
     }
   }
-  if ( npoints>0 ) { slopeguess /= double(npoints); }
+  // be paranoid - callers should make sure this never happens, though...
+  if (!npoints) return false;
+  slopeguess /= double(npoints);
 
   // place hits with largest drift dist. into seeds[0] and seeds[2]
   if ( largestDrift[1] > largestDrift[0] &&
