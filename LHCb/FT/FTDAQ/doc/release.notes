@@ -4,6 +4,8 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2014-03-25 - Eric Cogneras
+ - change of message level for bad bank version
 
 ! 2014-03-21 - Eric Cogneras
  - Fixed bug in FTRawBankDecoder RetrieveModuleMat() function

@@ -124,7 +124,7 @@ StatusCode FTRawBankDecoder::execute() {
         }
       }
     } else {
-      info() << "** Unsupported FT bank version " << bank->version() 
+      error() << "** Unsupported FT bank version " << bank->version() 
              << " for source " << source << " size " << size << " bytes."
              << endmsg;
       return StatusCode::FAILURE;
