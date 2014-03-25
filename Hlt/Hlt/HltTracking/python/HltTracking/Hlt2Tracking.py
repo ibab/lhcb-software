@@ -1016,7 +1016,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # from the name of our configurable and the RichRecoSys...
         richSeqName         = self._instanceName(RichRecSysConf) 
         richSeq             = GaudiSequencer(richSeqName+"Seq")
-        richSeq.MeasureTime = True
+        # richSeq.MeasureTime = True
         # The RICH COnfigurable 
         # note, the context MUST contain the string HLT
         # in whatever case

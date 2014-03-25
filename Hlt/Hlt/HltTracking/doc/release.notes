@@ -3,6 +3,8 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-02-25 - Gerhard Raven
+ - make sure RICH reco doesn't fill its own timer table...
 
 ! 2014-02-24 - Marco Clemencic
  - Removed use of PyCintex from configuration files (should not be needed and
