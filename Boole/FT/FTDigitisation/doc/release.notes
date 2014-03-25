@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-03-25 - Eric Cogneras
+ - Removal of last piece of code referring to old FT geometry without dead areas
+ - Add new control plots
+
 ! 2014-03-20 - Eric Cogneras
  - Removed in MCDepositCreator all what referred to the old geometry without dead regions
  - changed MCDigitCreator (noise creation) according to the new FTChannelID definition

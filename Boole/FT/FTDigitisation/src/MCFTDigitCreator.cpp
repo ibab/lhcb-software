@@ -43,9 +43,9 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 {
   std::vector<double> tmp = boost::assign::list_of(26*Gaudi::Units::ns)
                                                   (28*Gaudi::Units::ns)
-                                                  (30*Gaudi::Units::ns);// tof (21+2+2)
-                                                                        //+ full fiber propagation time (15) 
-                                                                        //- integration rise (15)
+                                                  (30*Gaudi::Units::ns);//  tof (21+2+2)
+                                                                        // + full fiber propagation time (15) 
+                                                                        // - integration rise (15)
 
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
@@ -112,19 +112,16 @@ StatusCode MCFTDigitCreator::initialize() {
     if ( msgLevel( MSG::DEBUG) ) {
       debug() << "[initialize] RUN NEW GEOMETRY" << endmsg;
       debug() << "fibermats: "<< m_deFT->fibremats().size() 
-	      << " fibremats()[0] z=" << m_deFT->fibremats()[0]->layerCenterZ()
-	      << " fibremats()[100] z=" << m_deFT->fibremats()[100]->layerCenterZ()
-	      << " fibremats()[200] z=" << m_deFT->fibremats()[200]->layerCenterZ();
+              << " fibremats()[0] z=" << m_deFT->fibremats()[0]->layerCenterZ()
+              << " fibremats()[100] z=" << m_deFT->fibremats()[100]->layerCenterZ()
+              << " fibremats()[200] z=" << m_deFT->fibremats()[200]->layerCenterZ()
+              << endmsg;
     }
   }
   else{
-    m_stationsZ.push_back(7859.95);
-    m_stationsZ.push_back(8541.95);
-    m_stationsZ.push_back(9226.95);
-    if ( msgLevel( MSG::DEBUG) ) {
-      debug() << "[initialize] RUN OLD GEOMETRY" << endmsg;
-    }
-  }
+    info() << "Unknown FTDet version" << endmsg; 
+    return  StatusCode::FAILURE;
+	}
 
   return StatusCode::SUCCESS;
 }
@@ -165,6 +162,12 @@ StatusCode MCFTDigitCreator::execute() {
       debug() <<"Channel ="<<mcDeposit->channelID()<< " : " << endmsg;
     }
 
+    plot((double)mcDeposit->channelID().sipmCell(), "FiredSiPMCell","Fired SiPM Cell; Fired SiPM Cell" , 0. , 130. , 130);
+    plot((double)mcDeposit->channelID().sipmId(), "FiredSiPMID","Fired SiPM ID; Fired SiPM ID" , 0. , 96. , 96);
+    plot((double)mcDeposit->channelID().mat(), "FiredMat","Fired Mat; Fired Mat" , 0. , 5. , 5);
+    plot((double)mcDeposit->channelID().module(), "FiredModule","Fired Module; Fired Module" , 0. , 20. , 20);
+    plot((double)mcDeposit->channelID().quarter(), "FiredQuarter","Fired Quarter; Fired Quarter" , 0. , 4. , 4);
+    plot((double)mcDeposit->channelID().layer(), "FiredLayer","Fired Layer; Fired Layer" , 0. , 13. , 13);
     plot((double)mcDeposit->channelID(), "FiredChannelID","Fired Channel; ChannelID" , 0. , 589824. , 4608);
     plot((double)mcDeposit->mcHitVec().size(), "HitPerChannel",
          "Number of Hits per Channel;Number of Hits per Channel; Number of channels" , 0. , 10., 10);
@@ -195,15 +198,15 @@ StatusCode MCFTDigitCreator::execute() {
       // plot energy from reflected light
       plot(mcDeposit->energyRefVec()[idx],
            "EnergyRefPerHitPerChannel",
-           "Energy deposited by each Hit in SiPM Channel (direct);Energy [MeV];Number of SiPM channels", 
+           "Energy deposited by each Hit in SiPM Channel (reflected);Energy [MeV];Number of SiPM channels", 
            0, 10);
       plot(mcDeposit->energyRefVec()[idx],
            "EnergyRefPerHitPerChannelZOOM",
-           "Energy deposited by each Hit in SiPM Channel (direct);Energy [MeV];Number of SiPM channels", 
+           "Energy deposited by each Hit in SiPM Channel (reflected);Energy [MeV];Number of SiPM channels", 
            0, 1);
       plot(mcDeposit->energyRefVec()[idx],
            "EnergyRefPerHitPerChannelBIGZOOM",
-           "Energy deposited by each Hit in SiPM Channel (direct);Energy [MeV];Number of SiPM channels", 0, 0.5);
+           "Energy deposited by each Hit in SiPM Channel (reflected);Energy [MeV];Number of SiPM channels", 0, 0.5);
       
       HitEnergySumInChannel +=mcDeposit->energyVec()[idx];
       HitEnergySumInChannel +=mcDeposit->energyRefVec()[idx];
@@ -244,11 +247,12 @@ StatusCode MCFTDigitCreator::execute() {
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0, .6 ,0,100.,100,100);
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGainZOOM","ADC Gain; Energy [MeV]; ADC", 0, .2 ,0,80.,100,100);
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGainBIGZOOM","ADC Gain; Energy [MeV]; ADC", 0, .1 ,0,50.,100,100);
+      plot(adc,"ADCPerChannel",
+           "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
       counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
       MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcDeposit );
       digitCont->insert(mcDigit);
-      plot(adc,"ADCPerChannel",
-           "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
+
     }
   } // loop on mcDeposits
 
@@ -617,7 +621,18 @@ MCFTDigitCreator::integrateResponse(const LHCb::MCFTDeposit* ftdeposit)
   std::pair<double,double> sum= std::make_pair(0.,0.);
   double toff(0.);
   for (unsigned int i = 0; i < m_stationsZ.size(); ++i)
+  {
+    if(msgLevel( MSG::DEBUG))
+    {
+      debug()<<format("[integrateResponse()] : ftdeposit->entry().z()==%8.3f m_stationsZ[i]=%8.2f m_integrationOffset[i]=%8.2f", 
+                      ftdeposit->mcHitVec()[0]->entry().z(), m_stationsZ[i], m_integrationOffset[i])
+             << endmsg;
+    }
+    
     if ( fabs(ftdeposit->mcHitVec()[0]->entry().z() - m_stationsZ[i]) < 200*Gaudi::Units::mm ) toff = m_integrationOffset[i];
+
+  }
+  
 
   // loop on the hits
   int avePE(0);
@@ -673,9 +688,9 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
   plot(adcCountRef, "ADCcountsReflectedZOOM",
        "ADC counts (reflected);ADC;Number of SiPM channels", 0, 20.);
   plot(adcCountDir+adcCountRef, "ADCcounts",
-       "ADC counts (direct);ADC;Number of SiPM channels", 0, 200.);
+       "ADC counts (direct+ reflected);ADC;Number of SiPM channels", 0, 200.);
   plot(adcCountDir+adcCountRef, "ADCcountsZOOM",
-       "ADC counts (reflected);ADC;Number of SiPM channels", 0., 20., 20);
+       "ADC counts (direct + reflected);ADC;Number of SiPM channels", 0., 20., 20);
  
   if( msgLevel( MSG::DEBUG) ){
     debug()<<format("deposit2ADC() : responsDir=%8.3f responsRef=%8.3f Gain=%8.3f nois=%4.2f adcCountDir = %4i adcCountRef = %4i"

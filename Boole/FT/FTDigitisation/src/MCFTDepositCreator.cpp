@@ -308,9 +308,10 @@ StatusCode MCFTDepositCreator::execute() {
           debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
                   << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
                   << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
+                  << "\n...DeltaX="<<std::abs(ftHit->entry().x()-ftHit->exit().x()) 
                   << endmsg;
           if(ftHit->mcParticle()){
-            debug()  << "--- Come from PDGId="<<(ftHit->mcParticle()->particleID())
+            debug()  << "... Come from PDGId="<<(ftHit->mcParticle()->particleID())
                      << "\t p="<<(ftHit->mcParticle()->p())
                      << "\t pt="<<(ftHit->mcParticle()->pt())
                      << "\t midPoint.X="<< floor(fabs(ftHit->midPoint().x())/128.)
@@ -361,7 +362,33 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
       
       plot(channels.size(),"CheckNbChannel", 
            "Number of fired channels per Hit;Number of fired channels;Number of hits", 
-           0 , 50);
+           0. , 50., 50);
+
+      int NbOfFiredFibres = // in mm
+        std::floor(std::abs((ftHit->entry().x()-ftHit->exit().x())*cos(pL->angle()) 
+                            + (ftHit->entry().y()-ftHit->exit().y())*sin(pL->angle()))/.25+1
+                   );
+      
+      plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibres", 
+           "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+             0 , 50, 0, 50, 50, 50);
+
+      plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibresZOOM", 
+           "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+             0 , 10, 0, 10, 10, 10);
+
+     if ( msgLevel( MSG::DEBUG) ) {
+        debug() << "--- Hit index: " << ftHit->index() 
+                << ", size of vector of channels: " << channels.size() << endmsg;
+        debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
+                << "][" << ftHit->exit ()<< "]\tE="<< ftHit->energy()
+                << "\ttime="<< ftHit->time()<< "\tP="<<ftHit->p()
+                << "\n...DeltaX="<<std::abs(ftHit->entry().x()-ftHit->exit().x()) 
+                << " pL->angle()="<<pL->angle() << " DX=" << (ftHit->entry().x()-ftHit->exit().x()) 
+                << " DY=" << (ftHit->entry().y()-ftHit->exit().y())
+                << "==> #Channels="<<NbOfFiredFibres 
+                << "+2 (light sharing) + 1 (positioning)"<< endmsg;
+      }
 
       double fibrelength = 0 ;
       double fibrelengthfraction = 0;
@@ -455,7 +482,7 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
         if( depositCont->object(vecIter->first) != 0 ){
           (depositCont->object(vecIter->first))->addMCHit(ftHit,DirectEnergyInSiPM,ReflectedEnergyInSiPM,
                                                           timeToSiPM,timeRefToSiPM);
-        } else if ( vecIter->first.layer() < 12 ) { // Set to 12 instaed 15 because of a bug in new geometry
+        } else if ( vecIter->first.layer() < 12 ) { // Set to 12 instead 15 because of a bug in new geometry
           // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
           MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,DirectEnergyInSiPM,
                                                        ReflectedEnergyInSiPM,timeToSiPM,timeRefToSiPM);
