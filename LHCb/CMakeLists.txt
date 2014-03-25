@@ -11,7 +11,7 @@ endif()
 
 # Declare project name and version
 gaudi_project(LHCb v37r1
-              USE Gaudi v25r0
+              USE Gaudi v25r1
               DATA Gen/DecFiles
                    Det/SQLDDDB VERSION v7r*
                    FieldMap
