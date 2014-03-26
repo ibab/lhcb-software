@@ -5,8 +5,8 @@
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
     <text>$APPCONFIGOPTS/Boole/DataType-2012.py</text>
     <text>$BOOLEROOT/options/Boole-RunFromXDST.py</text>
+    <text>$BOOLEROOT/tests/options/boole-sim08-xdst.py</text>
     </set></argument>
-  <argument name="options"><text>from Boole.Configuration import *;from PRConfig import TestFileDB;TestFileDB.test_file_db["Brunel-SIM08-MinBias-Beam6500GeV-md100-nu4.8.xdst"].run();Boole().SiG4EnergyDeposit=True</text></argument>
   <argument name="reference"><text>../refs/boole-sim08-xdst.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
