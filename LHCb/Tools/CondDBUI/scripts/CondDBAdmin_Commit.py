@@ -161,7 +161,7 @@ and for a short message for the release notes.""")
     # check arguments
     changes_source, partition, reference_tag, local_tag = args
 
-    partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
+    partitions = ["DDDB", "LHCBCOND", "SIMCOND", "CALIBOFF"]
     if partition not in partitions:
         parser.error("'%s' is not a valid partition name. Allowed: %s" % \
                      (partition, partitions))

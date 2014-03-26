@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2014-03-26 - Liang Sun
+ - Extend the support for tagging a new CondDB partition 'CALIBOFF'
 
 !========================= CondDBUI v3r27 2014-02-17 =========================
 ! 2013-11-06 - Marco Clemencic

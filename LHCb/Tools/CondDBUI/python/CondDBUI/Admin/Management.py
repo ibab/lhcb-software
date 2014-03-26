@@ -142,7 +142,7 @@ def _checkPartitionBoundaries(partition,modifiedNodes,addedNodes):
     """Check if the modified and added files belong to the correct partition.
     Returns the list of partitions in which the files could go."""
     changes = _divideBySubdir(set(modifiedNodes).union(addedNodes))
-    partDirs = { "/Conditions/Online": ["SIMCOND"],
+    partDirs = { "/Conditions/Online": ["SIMCOND", "CALIBOFF"],
                  "/Conditions": ["LHCBCOND", "SIMCOND"],
                  "/": ["DDDB"],
                  }
