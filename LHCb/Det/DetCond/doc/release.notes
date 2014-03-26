@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2014-03-26 - Liang Sun
+ - CondDB preparation for 2015 in Configuration.py: new CondDB partitions 'CALIB' and 'CALIBOFF' as additional layers above 'ONLINE' partition. New options for 'LoadCALIBDB' to enable/disable loading the new layers. The default option is to add the new layers from $SQLITEDBPATH/CALIB-[YEAR].db and $SQLITEDBPATH/CALIBOFF.db files automatically if exist.
 
 !========================= DetCond v12r33 2014-02-17 =========================
 ! 2013-12-05 - Marco Clemencic
