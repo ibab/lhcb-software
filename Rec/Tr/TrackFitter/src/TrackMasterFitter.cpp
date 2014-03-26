@@ -431,6 +431,7 @@ namespace {
     case LHCb::Measurement::FT : rc = T; break;
     case LHCb::Measurement::UT : rc = TT; break;
     case LHCb::Measurement::UTLite : rc = TT; break;
+    case LHCb::Measurement::VP : rc = VeloR; break;
     }
     return rc;
   }
