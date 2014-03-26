@@ -1,4 +1,3 @@
-// $Id: IVPClusterPosition.h,v 1.1 2010-03-17 14:45:12 cocov Exp $
 #ifndef KERNEL_IVPCLUSTERPOSITION_H 
 #define KERNEL_IVPCLUSTERPOSITION_H 1
 
@@ -17,8 +16,8 @@ static const InterfaceID IID_IVPClusterPosition ("IVPClusterPosition", 1, 0);
  *  @date   2010-02-02
  */
 
-namespace LHCb
-{
+namespace LHCb {
+  class VPCluster;
   class VPLiteCluster;
   class VPChannelID;
   class StateVector;
@@ -36,7 +35,7 @@ public:
   static const InterfaceID& interfaceID() {return IID_IVPClusterPosition;}
 
  /** calculate position of the VPLiteCluster
-  * @param aCluster pointer to a VPLiteCLuster cluste
+  * @param aCluster pointer to a VPLiteCLuster
   * @return toolInfo (templated struct) 
   * <br> pixel = channel ID of a nearest pixel
   * <br> fractionalPosition = fractional position in the pixel (better precision)
@@ -45,6 +44,16 @@ public:
   * The returned error estimate depends only on pixel size
   */
   virtual toolInfo position(const LHCb::VPLiteCluster* aCluster) const=0;
+
+ /** Calculate position of a given VPCluster
+  * @param cluster pointer to a VPCluster
+  * @return toolInfo (templated struct) 
+  * <br> pixel = channel ID of the cluster
+  * <br> fractionalPosition = inter-pixel fraction (within range 0-1)
+  * <br> error = estimate of the error (in fraction of pixel pitch)
+  * The returned error estimate depends only on pixel size
+  */
+  virtual toolInfo position(const LHCb::VPCluster* cluster) const = 0;
 
  /** calculate position of the VPLiteCluster
   * @param aCluster pointer to a VPLiteCLuster cluster
@@ -64,6 +73,21 @@ public:
                             const Gaudi::XYZPoint& aPoint,
                             const Direction& aDirection) const=0;
 
+ /** Calculate position of a given VPCluster
+  * @param cluster pointer to a VPCluster
+  * @param point const reference to XYZ coordinates of track intercept 
+  * @param direction const reference to pair of doubles (track xz and yz slope)
+  * @return toolInfo (templated struct) 
+  * <br> pixel = channel ID of the cluster
+  * <br> fractionalPosition = inter-pixel fraction (within range 0-1)
+  * <br> error = estimate of the error (in fraction of pixel pitch)
+  * The returned error estimate depends both on pixel size and 
+  * projected angle of a track
+  */
+  virtual toolInfo position(const LHCb::VPCluster* cluster,
+                            const Gaudi::XYZPoint& point,
+                            const Direction& direction) const = 0;
+
  /** calculate position of the VPLiteCluster
   * @param aCluster pointer to a VPLiteCluster cluster
   * @param aState const reference to VectorState object
@@ -80,4 +104,4 @@ public:
                             const LHCb::StateVector& aState) const=0;
 
 };
-#endif // KERNEL_IVELOCLUSTERPOSITION_H
+#endif // KERNEL_IVPCLUSTERPOSITION_H 
