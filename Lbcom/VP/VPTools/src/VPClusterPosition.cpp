@@ -66,7 +66,7 @@ StatusCode VPClusterPosition::initialize() {
 }
 
 //=========================================================================
-/// Position given cluster only
+/// Position given lite cluster only
 //=========================================================================
 toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster) const {
 
@@ -84,13 +84,43 @@ toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster) const {
 }
 
 //=========================================================================
-/// Position given cluster, point and direction
+/// Position given cluster only
+//=========================================================================
+toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster) const {
+
+  toolInfo info;
+  const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
+  Gaudi::XYZPoint point = sensor->channelToPoint(cluster->channelID(), 
+                                                 cluster->lCluster().interPixelFraction());
+  Direction direction;
+  direction.first = point.x() / point.z();
+  direction.second = point.y() / point.z();
+
+  return position(cluster->channelID(), cluster->lCluster().interPixelFraction(),
+                  point, direction);
+
+}
+
+//=========================================================================
+/// Position given lite cluster, point and direction
 //=========================================================================
 toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
                                      const Gaudi::XYZPoint& point,
                                      const Direction& direction) const {
 
   return position(cluster->channelID(), cluster->interPixelFraction(),
+                  point, direction);
+
+}
+
+//=========================================================================
+/// Position given cluster, point and direction
+//=========================================================================
+toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
+                                     const Gaudi::XYZPoint& point,
+                                     const Direction& direction) const {
+
+  return position(cluster->channelID(), cluster->lCluster().interPixelFraction(),
                   point, direction);
 
 }

@@ -45,6 +45,11 @@ public:
   virtual toolInfo position(const LHCb::VPLiteCluster* cluster,
                             const LHCb::StateVector& state) const;
   
+  virtual toolInfo position(const LHCb::VPCluster* cluster) const;
+  virtual toolInfo position(const LHCb::VPCluster* cluster,
+                            const Gaudi::XYZPoint& point,
+                            const Direction& direction) const;
+
 private:
 
   toolInfo position(const LHCb::VPChannelID& channel, const Pair& frac,

@@ -1,8 +1,11 @@
 !--------------------------------------------------------------------------
 ! Package     : VP/VPTools
 ! Responsible : Victor Coco
-! Purpose     : Ease the computation based on Velo Pixel detector
+! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
+
+! 2014-04-26 - Heinrich Schindler
+ - Implement VPClusterPosition::position functions with VPCluster as argument
 
 !========================= VPTools v2r2 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
