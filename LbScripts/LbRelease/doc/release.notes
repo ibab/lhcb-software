@@ -1,3 +1,10 @@
+2014-03-26  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-447: Add option to limit the externals packaged in LCGCMT tar	
+	* scripts/buildLCGCMTFromRPM: removed
+	* scripts/mkLCGCMTTarFromRPM: Added option to include only 
+	externals explicitely mentioned  
+
 2014-03-25  Ben Couturier <Ben.Couturier@cern.ch>
 
 	New tool to package LCG_68 (provided in RPM as 
