@@ -438,58 +438,32 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     // remove track with sensibly lower number of planes
     int minPlanes = maxPlanes - 1;
-    double bestQuality = 1000.;
-    int maxOT = 0;
-
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "Require enough planes : " << minPlanes << endmsg;
-    std::vector<PatFwdTrackCandidate> tempCandidates;
-    tempCandidates.swap(goodCandidates );
-    unsigned ndebug_count = 0;
-    for ( const auto& iCand : tempCandidates ) {
-      auto nbDiff = nbDifferent(iCand);
-      if ( nbDiff >= minPlanes ) {
-        goodCandidates.push_back( iCand );
-        bestQuality = std::min(bestQuality, iCand.quality() );
-      } else {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "Ignore candidate " << ndebug_count
-                  << " : not enough planes = " << nbDiff << endmsg;
-      }
-      ++ndebug_count;
-    }
-    // remove worst quality -- use std::partition ?  std::erase?
+    auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates), 
+                                [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
+    // remove worst quality  
+    // TODO: could fold this accumulate into the lambda above by capturing bestQuality by reference
+    auto bestQuality = std::accumulate( std::begin(goodCandidates), last,
+                                  1000.,
+                                  [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
     bestQuality += 1.0;
-    tempCandidates.clear();
-    tempCandidates.swap( goodCandidates );
-    ndebug_count = 0;
-    for ( const auto& iCand : tempCandidates ) {
-      if ( iCand.quality() < bestQuality ) {
-        goodCandidates.push_back( iCand );
-        maxOT = std::max(  nbT(iCand) , maxOT );
-      } else {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "Ignore candidate " << ndebug_count
-                  << " : quality too low = " << iCand.quality() << endmsg;
-      }
-      ++ndebug_count;
-    }
-    // remove if sensibly less OT
+    last = std::remove_if( std::begin(goodCandidates), last,
+                           [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
+    // remove if sensibly less OT 
+    // TODO: could fold this accumulate into the lambda above by capturing maxOT by reference
+    auto maxOT = std::accumulate( std::begin(goodCandidates), last,
+                                  0,
+                                  [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
     maxOT = std::min(24,maxOT)-3;
-    tempCandidates.clear();
-    tempCandidates.swap( goodCandidates );
-    ndebug_count = 0;
-    for ( const auto& iCand : tempCandidates ) {
-      if ( nbT( iCand)  > maxOT ) {
-        goodCandidates.push_back( iCand );
-      } else {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "Ignore candidate " << ndebug_count
-                  << " : not enough OT = " << iCand.nbOT() << " mini " << maxOT << endmsg;
-      }
-      ++ndebug_count;
+    last = std::remove_if( std::begin(goodCandidates), last,
+                           [=](const PatFwdTrackCandidate& t) { return nbT(t)  <= maxOT; }  );
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+        debug() << "Ignoring " << std::distance(last,std::end(goodCandidates)) 
+                << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
     }
+
+    goodCandidates.erase(last,std::end(goodCandidates));
   }
+  // TODO/FIXME: do we need to sort the candidates prior to outputting them?
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
@@ -794,11 +768,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 //=========================================================================
 //  Debug one vector of of Hits
 //=========================================================================
-void PatForwardTool::debugFwdHits ( PatFwdTrackCandidate& track ) {
+void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track ) const {
   debugFwdHits( track, debug() );
 }
 
-void PatForwardTool::debugFwdHits ( PatFwdTrackCandidate& track, MsgStream& msg ) {
+void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream& msg ) const {
   for ( const PatFwdHit *hit : track ) {
     msg << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d typ%2d Prev%2d Next%2d Drift %7.3f",
                    hit->z(),

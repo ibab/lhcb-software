@@ -86,9 +86,9 @@ private:
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol );
 
-  void debugFwdHits( PatFwdTrackCandidate& track );
+  void debugFwdHits( const PatFwdTrackCandidate& track ) const;
 
-  void debugFwdHits( PatFwdTrackCandidate& track, MsgStream& msg );
+  void debugFwdHits( const PatFwdTrackCandidate& track, MsgStream& msg ) const;
 
 
   bool driftInRange( const PatFwdHit& hit )  const {  
