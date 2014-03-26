@@ -592,8 +592,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 
   totChi2 /= nDof;
 
-  track.setChi2PerDoF( totChi2 );
-  track.setNDoF( nDof );
+  track.setChi2PerDoF( totChi2 , nDof);
 
   return totChi2;
 }

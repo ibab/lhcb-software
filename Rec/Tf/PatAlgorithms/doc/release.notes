@@ -7,6 +7,7 @@
 
 ! 2014-03-26 - Gerhard Raven
  - PatForward: tweak overlap bookkeeping
+ - PatFwdTrackCandidate: compactify, add noexcept move assignment and copy c'tor
 
 ! 2014-03-26 - Manuel Tobias Schiller
  - PatSeedTool: various little fixes which do not hurt, but improve timing by
