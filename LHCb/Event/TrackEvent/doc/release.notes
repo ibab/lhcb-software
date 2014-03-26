@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2014-04-26 - Heinrich Schindler
+ - Add VP measurement type
+
 !========================= TrackEvent v6r0 2014-02-17 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove VL measurement types
