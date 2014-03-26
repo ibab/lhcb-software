@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-26 - Heinrich Schindler
+ - Add support for VP measurement type
+
 !========================= TrackMonitors v2r1 2014-03-18 =======================
 ! 2014-03-07 - Frederic Dupertuis
  - Removing some trivial warnings when -pedantic flag is switched on.

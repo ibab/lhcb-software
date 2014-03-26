@@ -10,6 +10,7 @@
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VPLiteMeasurement.h"
+#include "Event/VPMeasurement.h"
 #include "Event/KalmanFitResult.h"
 #include "Kernel/HitPattern.h"
 #include "TrackInterfaces/IHitExpectation.h"
@@ -154,6 +155,12 @@ namespace {
       {
 	const LHCb::VPLiteMeasurement* vpmeas = dynamic_cast< const LHCb::VPLiteMeasurement* >(&meas) ;
 	rc = vpmeas && vpmeas->projection()==LHCb::VPLiteMeasurement::X ? VPX : VPY ;
+      }
+      break;
+    case LHCb::Measurement::VP:
+      {
+	const LHCb::VPMeasurement* vpmeas = dynamic_cast<const LHCb::VPMeasurement*>(&meas);
+	rc = vpmeas && vpmeas->projection() == LHCb::VPMeasurement::X ? VPX : VPY;
       }
       break;
     case LHCb::Measurement::VeloLiteR:
