@@ -4,10 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r1 2014-03-26 =========================
+! 2014-03-26 - Marco Cattaneo
+ - Add missing EventPacker dependency
+
 ! 2014-03-19 - Rob Lambert
  - Ignore SelReport diffs
 
-!========================= HltDAQ v4r1 2014-03-17 =========================
 ! 2014-03-12 - Rob Lambert
  - dump, decode, wipe, encode, dump tests.
  - see task #48809

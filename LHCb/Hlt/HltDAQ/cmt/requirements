@@ -25,6 +25,7 @@ use GaudiAlg            v*
 use HltInterfaces       v*    Kernel
 use HltEvent            v*    Event
 use DAQEvent            v*    Event
+use EventPacker         v*    Event
 use DAQKernel           v*    DAQ
 use LoKiHlt             v*    Phys
 use HltServices         v*    Hlt
