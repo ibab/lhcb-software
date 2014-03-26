@@ -66,18 +66,28 @@ class LCGRpmInstaller(object):
         rcode = p.returncode
         return (out, err, rcode )
 
-    def prepareLCGTar(self, targetfile):
+    def prepareLCGTar(self, targetfile, packageList):
         '''
         Create the tar file of the install area
         '''
+        # Checking which files to package
         os.chdir(self._siterootBase)
+        allfiles = os.listdir(RELEASEDIRNAME)
+        packfiles = allfiles
+        if packageList != None:
+            packfiles = []
+            for p in allfiles:
+                if p.startswith("LCG") or p in packageList:
+                    packfiles.append(p)
+                else:
+                    self.log.warning("Excluding from package: %s" % p)
+        
         str = "tar zcf " + targetfile
         str += ' --exclude "*/InstallArea*" '
         str += ' --exclude "*.tar.gz" '
         str += ' --exclude "*.tgz" '
         str += ' --exclude "*.rpm" '
-        allfiles = os.listdir(RELEASEDIRNAME)
-        for f in allfiles:
+        for f in packfiles:
             if f not in PACKAGE_EXCLUSION_LIST:
                 str += ' %s ' % os.path.join(RELEASEDIRNAME, f)
 
