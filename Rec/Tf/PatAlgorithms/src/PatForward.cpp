@@ -15,9 +15,9 @@
 //
 // 2005-04-01 : Olivier Callot
 //-----------------------------------------------------------------------------
-std::array<int,5> count(const LHCb::Track& lhs, const LHCb::Track& rhs) {
+std::array<unsigned short,5> count(const LHCb::Track& lhs, const LHCb::Track& rhs) {
   // adapted from Track::nCommonLhcbIDs
-  std::array<int,5> rc{{0,0,0,0,0}}; // nbTT0, nb0, nbTT1, nb1, ncommon
+  std::array<unsigned short,5> rc{{0,0,0,0,0}}; // nbTT0, nb0, nbTT1, nb1, ncommon
   auto i1 = std::begin(lhs.lhcbIDs());
   auto last1  = std::end(lhs.lhcbIDs());
   auto i2 = std::begin(rhs.lhcbIDs());
@@ -43,7 +43,6 @@ std::array<int,5> count(const LHCb::Track& lhs, const LHCb::Track& rhs) {
   std::for_each(i2,last2,f2);
   return rc ; // rely on NRVO
 }
-
 
 DECLARE_ALGORITHM_FACTORY( PatForward )
 
@@ -140,6 +139,27 @@ bool PatForward::acceptTrack(const LHCb::Track& track) {
   return ok;
 }
 
+
+template <typename T> 
+bool overlaps_( const T& N ) { return  N[4] >=  0.7 * std::max(N[1],N[3])  ; }
+
+int
+PatForward::overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const
+{
+      auto N = count( *lhs , *rhs );
+      if ( !overlaps_(N) ) return 0;;
+      if ( UNLIKELY( msgLevel ( MSG::DEBUG ) ) ) {
+        debug() << format( "Track %3d and %3d nT0 %2d nT1 %2d nCommon %2d nbTT : %2d, %2d  chi20 %8.3f 1 %8.3f",
+                           lhs->key(), rhs->key(), N[1], N[3], N[4], N[0], N[2],
+                           lhs->chi2PerDoF(), rhs->chi2PerDoF() ) << endmsg;
+      }
+      auto dnbTT = N[0] - N[2];
+      auto dnb   = N[1] - N[3];
+      if (  dnb   > m_deltaNumberInT ||  dnbTT > m_deltaNumberInTT ) return +1;
+      if ( -dnb   > m_deltaNumberInT || -dnbTT > m_deltaNumberInTT ) return -1;
+      return 0;
+}
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -190,9 +210,9 @@ StatusCode PatForward::execute() {
     return Warning("Too Many OT hits event rejected", StatusCode::SUCCESS,0); 
   }
 
-  if ( msgLevel( MSG::DEBUG )) debug() << "==> Execute" << endmsg;
-
-  if ( msgLevel( MSG::DEBUG ) || m_doTiming ) m_timerTool->start( m_fwdTime );
+  bool dbg = msgLevel(MSG::DEBUG);
+  if ( dbg ) debug() << "==> Execute" << endmsg;
+  if ( dbg  || m_doTiming ) m_timerTool->start( m_fwdTime );
 
   int oriSize = outputTracks->size();
 
@@ -200,81 +220,53 @@ StatusCode PatForward::execute() {
     if ( acceptTrack(*seed) ) {
       auto prevSize = outputTracks->size();
       m_forwardTool->forwardTrack(seed, outputTracks );
-      if ( msgLevel( MSG::DEBUG )) debug()  << " track " << seed->key()
-                                            << " position " << seed->position()
-                                            << " slopes " << seed->slopes()  
-                                            << " cov \n" << seed->firstState().covariance() << "\n"
-                                            << " produced " << outputTracks->size() - prevSize
-                                            << " tracks " << endmsg;
+      if ( dbg ) debug()  << " track " << seed->key()
+                          << " position " << seed->position()
+                          << " slopes " << seed->slopes()  
+                          << " cov \n" << seed->firstState().covariance() << "\n"
+                          << " produced " << outputTracks->size() - prevSize
+                          << " tracks " << endmsg;
 
     }
   }
   // added for NNTools -- check how many tracks have common hits
   if( m_writeNNVariables){
-    std::vector<LHCb::LHCbID>::const_iterator mitId0, mitId1;
-    for( auto mitT = outputTracks->begin(); outputTracks->end() != mitT; ++mitT){
-      auto x0 = (*mitT)->stateAt( LHCb::State::AtT )->x();
-      auto match = [&](const LHCb::Track* t) { 
-            if (  fabs( x0 - t->stateAt( LHCb::State::AtT )->x() ) < 5. ) {
-                std::array<int,5> N = count( **mitT , *t );
-                return  0.7 * std::max(N[1],N[3]) <= N[4] ;
-            }
-            return false;
+    for( auto tr : *outputTracks ) {
+      auto x0 = tr->stateAt( LHCb::State::AtT )->x();
+      auto match = [=](const LHCb::Track* t) {
+            return fabs( x0 - t->stateAt( LHCb::State::AtT )->x() ) < 5.  && 
+                   overlaps_( count( *tr , *t ) );
       };
-      auto c = std::count_if( std::begin(*outputTracks), std::end(*outputTracks), match );
-      (*mitT)->addInfo(LHCb::Track::NCandCommonHits, c);
+      tr->addInfo(LHCb::Track::NCandCommonHits,
+                  std::count_if( std::begin(*outputTracks), std::end(*outputTracks), match ));
     }
   }
   // end of NNTools loop
 
-  if (!m_doClean) {
-    if ( msgLevel( MSG::DEBUG ) || m_doTiming) {
-      double t = m_timerTool->stop( m_fwdTime );
-      debug() << "=== In total, produced " 
-	      << outputTracks->size() - oriSize  << " tracks from "
-	      << inputTracks->size() << " Velo tracks in " << t << " ms" 
-	      << endmsg;
-    }
-    return StatusCode::SUCCESS;
-  }
+  if (m_doClean) {
+      //== Try to filter from T station part
+      for ( auto itT = std::begin(*outputTracks); itT != std::end(*outputTracks) ;  ++itT ) {
+        auto x0 = (*itT)->stateAt( LHCb::State::AtT )->x();
+        auto overlaps0 = [=]( const LHCb::Track* t) {
+          auto x1  = t->stateAt( LHCb::State::AtT )->x();
+          return  ( fabs( x0 - x1 ) < 5. ) ? this->overlaps( *itT, t ) : 0;
+        };
 
-
-  //== Try to filter from T station part
-  for ( auto itT = outputTracks->begin(); outputTracks->end() != itT;  ++itT ) {
-    const auto x0 = (*itT)->stateAt( LHCb::State::AtT )->x();
-    for ( auto itT1 = itT+1; outputTracks->end() > itT1;  ++itT1 ) {
-      const LHCb::State& state1 = *((*itT1)->stateAt( LHCb::State::AtT ));
-      if ( fabs( x0 - state1.x() ) < 5. ) {
-        std::array<int,5> N = count( **itT , **itT1 );
-        if ( 0.7 * std::max(N[1],N[3]) > N[4] ) continue;
-        if ( msgLevel ( MSG::DEBUG ) ) {
-          debug() << format( "Track %3d and %3d nT0 %2d nT1 %2d nCommon %2d nbTT : %2d, %2d  chi20 %8.3f 1 %8.3f",
-                             (*itT)->key(), (*itT1)->key(), N[1], N[3], N[4], N[0], N[2],
-                             (*itT)->chi2PerDoF(), (*itT1)->chi2PerDoF() ) << endmsg;
-        }
-        if ( N[1] - N[3] > m_deltaNumberInT  ||
-             N[0] - N[2] > m_deltaNumberInTT   ) {
-          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-            debug() << "    erase " << (*itT1)->key() << " and restart " << endmsg;
-          outputTracks->erase( itT1 );
-          itT  = outputTracks->begin();
-          itT1 = itT;
-          break;
-        }
-        if ( N[3] - N[1] > m_deltaNumberInT  ||
-             N[2] - N[0] > m_deltaNumberInTT    ) {
-          if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-            debug() << "    erase " << (*itT)->key() << " and restart " << endmsg;
-          outputTracks->erase( itT );
-          itT  = outputTracks->begin();
-          itT1 = itT;
-          break;
+        for ( auto itT1 = itT+1; itT1 != std::end(*outputTracks) ;  ++itT1 ) {
+          auto overlap = overlaps0( *itT1 );
+          if (overlap) {
+              auto i = ( overlap < 0 ? itT : itT1 );
+              if( UNLIKELY( dbg  ) ) debug() << "    erase " << (*i)->key() << " and restart " << endmsg;
+              //TODO: verify that this is not a memory leak... 
+              outputTracks->erase( i );
+              itT  = outputTracks->begin();
+              break;
+          }
         }
       }
-    }
   }
 
-  if ( msgLevel( MSG::DEBUG ) || m_doTiming ) {
+  if ( dbg  || m_doTiming ) {
     double t = m_timerTool->stop( m_fwdTime );
     debug() << "=== In total, produced " <<  outputTracks->size() - oriSize  << " tracks from "
             << inputTracks->size() << " Velo tracks in " << t << " ms"

@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+
+! 2014-03-26 - Gerhard Raven
+ - PatForward: tweak overlap bookkeeping
+
 ! 2014-03-26 - Manuel Tobias Schiller
  - PatSeedTool: various little fixes which do not hurt, but improve timing by
    12% for PatSeeding and 5% for TrackBestTrackCreator, with marginal

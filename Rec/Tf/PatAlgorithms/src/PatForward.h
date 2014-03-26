@@ -31,11 +31,11 @@ class IOTRawBankDecoder;
     virtual StatusCode initialize();    ///< Algorithm initialization
     virtual StatusCode execute   ();    ///< Algorithm execution
     
-  protected:
+  private:
     
     bool acceptTrack(const LHCb::Track& track);
+    int overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const;
     
-  private:
     int              m_fwdTime;
 
     std::string      m_inputTracksName;
@@ -46,6 +46,7 @@ class IOTRawBankDecoder;
     
     int m_deltaNumberInTT;
     int m_deltaNumberInT;
+
     unsigned int m_maxNVelo;
     bool m_doClean;
     bool m_doTiming;
