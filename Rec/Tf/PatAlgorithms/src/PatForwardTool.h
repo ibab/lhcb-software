@@ -100,6 +100,24 @@ private:
     return (hit.hit()->type() != Tf::RegionID::OT) || driftInRange(hit);
   }
 
+  double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const { 
+    double spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
+    double spread = m_maxSpreadX + fabs( spreadSl );
+    if (hit->hit()->type() == Tf::RegionID::OT)  spread += 1.5;  // OT drift ambiguities...
+    return spread;
+  }
+
+  double allowedStereoSpread(const PatFwdHit *hit) const { 
+    double maxSpread = 3.;
+    // in case of OT, add 1.5 to account for OT drift ambiguities...
+    return  (hit->hit()->type() != Tf::RegionID::OT) ? maxSpread : ( maxSpread +1.5 ) ; 
+  }
+
+  bool inCenter(const PatFwdTrackCandidate& cand) const {
+    return  m_centerOTYSize > fabs( cand.y( 0. ) );
+  }
+
+
   PatFwdTool*                                 m_fwdTool;        ///< Tool to compute extrapolations of tracks
   Tf::TStationHitManager <PatForwardHit> *    m_tHitManager;    ///< Tool to provide hits
   IAddTTClusterTool*                          m_addTTClusterTool;

@@ -261,9 +261,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
            (!m_withoutBField || fabs(temp.slX()-temp.xSlope(0))<0.005)){
         //== Count how many weighted hits
         int nbHit = nT( temp ) ; 
-        bool inCenter = m_centerOTYSize > fabs( temp.y( 0. ) );
 
-        if ( minOTX <= nbHit || inCenter ) {
+        if ( minOTX <= nbHit || inCenter(temp) ) {
           
           const double momentum=1.0/fabs(m_fwdTool->qOverP( temp ));
           const double pt = track.sinTrack()*momentum;
@@ -381,8 +380,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     temp.setNbIT( regions.nbIT() );
     temp.setNbOT( regions.nbOT() );
 
-    bool inCenter = m_centerOTYSize > fabs( temp.y( 0. ) );
-    if ( !inCenter ) {
+    if ( !inCenter(temp) ) {
       if ( m_minHits > nbHit ){
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
           debug() << "  --- Not enough hits : " << nbHit << endmsg;
@@ -665,7 +663,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   std::sort( std::begin(temp), std::end( temp), Tf::increasingByProjection<PatForwardHit>() );
 
   int minYPlanes = 4;
-  double maxSpread = 3.;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "List size = " << temp.size() << endmsg;
@@ -695,8 +692,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   while (  itP + (minYPlanes - 1) <  std::end(temp) ) {
     auto itE = itP + (minYPlanes -1);
 
-    // in case of OT, add 1.5 to account for OT drift ambiguities...
-    MaxSpread predicate{ ((*itP)->hit()->type() != Tf::RegionID::OT) ? maxSpread : ( maxSpread +1.5 ) } ; 
+    MaxSpread predicate{ allowedStereoSpread(*itP) } ; 
+
 
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
@@ -847,10 +844,8 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   while (  itP + minXPlanes < std::end(m_xHitsAtReference)  ) {
     auto itE = itP + minXPlanes -1;
 
-    double spreadSl = ( (*itP)->projection() - xExtrap ) * m_maxSpreadSlopeX;
-    double spread = m_maxSpreadX + fabs( spreadSl );
-    if ((*itP)->hit()->type() == Tf::RegionID::OT)  spread += 1.5;  // OT drift ambiguities...
-    MaxSpread predicate{ spread } ;
+    MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
+
 
     //== If not enough hits in the maximum spread, skip
     if ( !predicate(*itP,*itE)  ) {
@@ -891,7 +886,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     //== Protect against too dirty area.
     if ( itE < itP +  m_maxXCandidateSize ) { 
       //== Try to merge the lists, if the first new point is close to the last one...
-      if ( spread > x1 - lastEnd ) {
+      if ( x1 < lastEnd + predicate.spread ) {
         m_candidates.back().addCoords( itP,itE );
       } else {
         m_candidates.emplace_back( track.track(), itP,itE );
