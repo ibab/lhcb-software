@@ -11,6 +11,7 @@
  - PatForwardTool: 
       o use in-situ remove_if/erase instead of swapping between vectors when removing candidates
       o factor out some simple computations
+      o lift the range finding
 
 ! 2014-03-26 - Manuel Tobias Schiller
  - PatSeedTool: various little fixes which do not hurt, but improve timing by

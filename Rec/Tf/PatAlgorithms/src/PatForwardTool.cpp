@@ -102,6 +102,21 @@ Iterator make_single_zone(Iterator first, Iterator mid, Iterator last,
 }
 
 
+template <typename  Iterator,typename Predicate> 
+std::pair<Iterator,Iterator> find_range(Iterator first, Iterator mid, Iterator last, Predicate predicate) 
+{
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    //== If not enough hits in the maximum spread, skip
+    if ( !predicate(*first,*mid)  ) {
+      // first increment first, as we KNOW the current first fails the predicate..
+      first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
+      return { first, first };
+    }
+    //== Add all hits inside the maximum spread. 
+    return { first, std::find_if( mid, last, [&](reference i) { return !predicate(*first,i); } ) };
+}
+
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -688,29 +703,25 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   int inbDifferent = 0;
   double size = 1000.;
 
-  PatFwdHits::iterator itP = std::begin(temp);
-  while (  itP + (minYPlanes - 1) <  std::end(temp) ) {
-    auto itE = itP + (minYPlanes -1);
+  auto itP = std::begin(temp);
+  const auto last = std::end(temp);
+  while (  itP + (minYPlanes - 1) <  last ) {
 
     MaxSpread predicate{ allowedStereoSpread(*itP) } ; 
 
-
+    auto itE = itP + (minYPlanes -1);
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
                            (*itP)->projection(), (*itE)->projection(),
                            (*itE)->projection() - (*itP)->projection(), predicate.spread );
     }
 
-    //== If not enough hits in the maximum spread, skip
-    if (  !predicate(*itP,*itE) ) { 
-      // first increment itP, as we KNOW the current itP fails the predicate..
-      itP = std::find_if(++itP, itE, [&](const PatFwdHit* hit) { return predicate(hit,*itE);});
-      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
-        verbose() << "   not enough planes in spread" << endmsg;
-      continue;
+    std::tie( itP, itE ) = find_range( itP, itE, last, predicate );
+    if ( itP == itE ) { 
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   not enough planes in spread" << endmsg;
+        continue;
     }
-    //== Add all hits inside the maximum spread. If not enough planes, restart
-    itE = std::find_if( itE, std::end(temp), [&](const PatFwdHit* hit) { return !predicate(*itP,hit); } );
+
 
     PlaneCounter planeCount{ itP, itE, minYPlanes };
     //== Enough different planes
@@ -724,7 +735,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and plane count conditions are met.
-    itE = make_single_zone( itP, itE, std::end(temp), std::move(planeCount) , predicate );
+    itE = make_single_zone( itP, itE, last, std::move(planeCount) , predicate );
 
     double x1 = (*itP)->projection();
     double x2 = (*(itE-1))->projection();
@@ -841,27 +852,15 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   double lastEnd = -1.e10;
 
   auto itP = std::begin(m_xHitsAtReference);
-  while (  itP + minXPlanes < std::end(m_xHitsAtReference)  ) {
-    auto itE = itP + minXPlanes -1;
+  auto last = std::end(m_xHitsAtReference);
+  while (  itP + minXPlanes < last ) {
 
     MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
 
+    auto itE = itP + minXPlanes -1;
+    std::tie(itP, itE) = find_range( itP, itE, last, predicate);
+    if (itP == itE) continue;
 
-    //== If not enough hits in the maximum spread, skip
-    if ( !predicate(*itP,*itE)  ) {
-      // first increment itP, as we KNOW the current itP fails the predicate..
-      itP = std::find_if(++itP, itE, [&](const PatFwdHit* hit) { return predicate(hit,*itE);});
-      continue;
-    }
-
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
-                           (*itP)->projection(), (*itE)->projection(),
-                           (*itE)->projection() - (*itP)->projection(), predicate.spread )<<endmsg;
-    }
-
-    //== Add all hits inside the maximum spread. If not enough planes, restart
-    itE = std::find_if( itE, std::end(m_xHitsAtReference), [&](const PatFwdHit* hit) { return !predicate(*itP,hit); } );
     PlaneCounter planeCount{ itP, itE,  minXPlanes };
     //== Enough different planes
     if ( !planeCount() ) {
@@ -874,7 +873,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and minXPlanes conditions are met.
-    itE = make_single_zone( itP, itE, std::end(m_xHitsAtReference), std::move(planeCount), predicate );
+    itE = make_single_zone( itP, itE, last, std::move(planeCount), predicate );
 
     double x1 = (*itP)->projection();
     double x2 = (*(itE-1))->projection();
