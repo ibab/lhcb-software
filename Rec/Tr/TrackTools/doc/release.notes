@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-03-26 - Heinrich Schindler
+ - Add VPMeasurementProvider
+
 ! 2014-03-20 - Francesco Polci
  - Adapted to the new constructor of FTChannelID having 5 instead of 4 arguments
    Affected file: FTHitExpectation.cpp
