@@ -64,6 +64,11 @@ namespace Hlt
     /// =======================================================================
   protected:
     // ========================================================================
+    /// the default & copy constructor, assignment operator are  disabled 
+    Track2Candidate () = delete ;
+    Track2Candidate ( const Track2Candidate& ) = delete ;
+    Track2Candidate & operator=( const Track2Candidate& ) = delete ;
+    // ========================================================================
     /** standard constructor  
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
@@ -73,15 +78,6 @@ namespace Hlt
       ISvcLocator*       pSvc ) ;                //  pointer to Service Locator 
     /// virtual and protected destructor 
     virtual ~Track2Candidate () ;
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled 
-    Track2Candidate () ;                              // no default constructor
-    /// the copy constructor is disabled 
-    Track2Candidate ( const Track2Candidate& ) ;         // no copy constructor 
-    /// the assignement operator is disabled 
-    Track2Candidate & operator=( const Track2Candidate& ) ;   // no assignement
     // ========================================================================
   protected:
     // ========================================================================

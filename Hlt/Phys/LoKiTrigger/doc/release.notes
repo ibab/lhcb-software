@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-03-26 - Gerhard Raven
+ - trivial C++11 changes
+
 ! 2014-03-11 - Vanya Belyaev
 
  - HltUnit

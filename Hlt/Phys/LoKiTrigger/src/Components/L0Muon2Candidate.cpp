@@ -63,6 +63,12 @@ namespace Hlt
     /// =======================================================================
   protected:
     // ========================================================================
+    /// the default, copy constructor and assignment operator are disabled 
+    L0Muon2Candidate () = delete; 
+    L0Muon2Candidate ( const L0Muon2Candidate& ) = delete ; 
+    L0Muon2Candidate & operator=( const L0Muon2Candidate& ) = delete ;
+    // ========================================================================
+    // ========================================================================
     /** standard constructor  
      *  @param name algorithm instance name 
      *  @param pSvc pointer to Service Locator 
@@ -72,17 +78,6 @@ namespace Hlt
       ISvcLocator*       pSvc ) ;                 //  pointer to Service Locator 
     /// virtual and protected destructor 
     virtual ~L0Muon2Candidate () ;
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled 
-    L0Muon2Candidate () ;                             // no default constructor
-    /// the copy constructor is disabled 
-    L0Muon2Candidate ( const L0Muon2Candidate& ) ;       // no copy constructor 
-    /// the assignement operator is disabled 
-    L0Muon2Candidate & operator=( const L0Muon2Candidate& ) ; // no assignement
-    // ========================================================================
-  private:
     // ========================================================================
   private:
     // ========================================================================

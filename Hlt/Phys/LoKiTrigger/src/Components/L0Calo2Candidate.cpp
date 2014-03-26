@@ -49,6 +49,13 @@ namespace Hlt
     // ========================================================================
   public:
     // ========================================================================
+    /// the default constructor, copy constructor and assignment operator
+    //  are disabled
+    L0Calo2Candidate () = delete ;
+    L0Calo2Candidate ( const L0Calo2Candidate& ) = delete ; 
+    L0Calo2Candidate & operator=( const L0Calo2Candidate& ) = delete ;
+    // ========================================================================
+    // ========================================================================
     /// initialize the algorithm
     virtual StatusCode initialize () ;
     /// execute the algorithm
@@ -69,16 +76,6 @@ namespace Hlt
     virtual ~L0Calo2Candidate () ;
     // ========================================================================
   private:
-    // ========================================================================
-    /// the default constructor is disabled
-    L0Calo2Candidate () ;                             // no default constructor
-    /// the copy constructor is disabled
-    L0Calo2Candidate ( const L0Calo2Candidate& ) ;       // no copy constructor
-    /// the assignement operator is disabled
-    L0Calo2Candidate & operator=( const L0Calo2Candidate& ) ; // no assignement
-    // ========================================================================
-  private:
-    // ========================================================================
   private:
     // ========================================================================
     /// the selection

@@ -265,6 +265,9 @@ struct _IP : public std::unary_function<const LHCb::VertexBase*, double>
 {
   public:
     // ========================================================================
+    /// the default constuctor is disabled
+    _IP() = delete ;
+    // ========================================================================
     _IP( const LHCb::Track* t ) : m_track( t )
     {
     }
@@ -279,11 +282,6 @@ struct _IP : public std::unary_function<const LHCb::VertexBase*, double>
         //
         return m_impact.R();
     }
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constuctor is disabled
-    _IP(); // the default constructor is disabled
     // ========================================================================
   private:
     // ========================================================================
@@ -303,6 +301,9 @@ struct _IPchi2 : public std::unary_function<const LHCb::VertexBase*, double>
 {
   public:
     // ========================================================================
+    /// the default constuctor is disabled
+    _IPchi2() = delete ;
+    // ========================================================================
     _IPchi2( const LHCb::Track* t ) : m_track( t )
     {
     }
@@ -319,11 +320,6 @@ struct _IPchi2 : public std::unary_function<const LHCb::VertexBase*, double>
         //
         return ipchi2;
     }
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constuctor is disabled
-    _IPchi2(); // the default constructor is disabled
     // ========================================================================
   private:
     // ========================================================================

@@ -75,18 +75,24 @@ namespace
 #ifdef __INTEL_COMPILER
 #pragma warning(disable:177) //  function .. was declared but never referenced
 #endif
+#ifdef __clang__ 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored -Wunused-function
+#endif
   // ==========================================================================
   /// move LHCbIDs
   inline void moveIDs ( const LHCb::Track* tr1 , LHCb::Track* tr2 )
   {
     tr2->addSortedToLhcbIDs( tr1->lhcbIDs() );
   }  
+#ifdef __clang__ 
+#pragma clang diagnostic pop
+#endif
   // ==========================================================================
   /// move LHCbIDs
   inline void moveIDs ( const LHCb::Track* tr1 , std::vector<LHCb::Track*>& tracks )
   {
-    for ( auto &track : tracks)
-    { moveIDs ( tr1 , track ) ; }
+    for ( auto &track : tracks) moveIDs ( tr1 , track ) ; 
   } 
   // ==========================================================================
   /** is ancestor  ?
@@ -97,6 +103,9 @@ namespace
   struct IsAncestor : public std::unary_function<const LHCb::Track*,bool>
   {
     // ========================================================================
+    /// the default constructor is disabled 
+    IsAncestor() = delete;
+    // ========================================================================
     /// constructor form the seed 
     IsAncestor ( const LHCb::Track* seed ) : m_seed ( seed ) {}
     // ========================================================================
@@ -104,15 +113,10 @@ namespace
     { 
       if ( !track ) { return false ; }
       auto& ancestors = track->ancestors() ;
-      return std::any_of ( ancestors.begin () , ancestors.end   () 
-                         , [&](const LHCb::Track* ancestor) 
-                           { return ancestor==m_seed; } );
+      return std::any_of ( std::begin(ancestors) , std::end(ancestors) 
+                         , [&](const LHCb::Track* t) 
+                           { return t==m_seed; } );
     }
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled 
-    IsAncestor() ;                       // the defautl constructor is disabled 
     // ========================================================================
   private:
     // ========================================================================
@@ -131,17 +135,13 @@ size_t LoKi::Hlt1::UpgradeTool::find
   LHCb::Track::Container*    otracks ) const 
 {
   //
-  if ( !otracks ) 
-  { 
+  if ( !otracks ) { 
     Error ("find(): LHCb::Track::Container* points to NULL!") ;
     return 0 ;
   }
   const size_t ntracks = tracks.size() ;
-  IsAncestor ancestor( seed );
-  std::copy_if 
-    ( otracks -> begin () , 
-      otracks -> end   () , 
-      std::back_inserter ( tracks ) , ancestor  ) ;
+  std::copy_if( std::begin(*otracks), std::end(*otracks),
+                std::back_inserter( tracks ) , IsAncestor{ seed }   ) ;
   return tracks.size() - ntracks ;
 }
 // ============================================================================
@@ -159,9 +159,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
   if ( sc.isFailure() ) 
   { return Error ( "Error from ITrackFromTrack tool '" + m_upgrade->name()+  "'" , sc, 0 ) ; }
   // post action:
-  for ( OUTPUT::iterator iout = out.begin() ; out.end() != iout ; ++iout ) 
+  for ( LHCb::Track *trk : out )
   {
-    LHCb::Track* trk = *iout ;
     if ( owner    () ) { trk->setType ( m_config.trType () )     ; }
     if ( moveIDs  () ) { ::moveIDs ( seed , trk )                ; }
     if ( moveAncs () ) { trk->addToAncestors ( seed )            ; }
@@ -172,11 +171,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::reco
   const_cast< LHCb::Track* >( seed )->addInfo ( recoID() , out.size() );
   // insert only "good" tracks into the stream 
   //
-  std::copy_if  
-    ( out.begin () , 
-      out.end   () , 
-      std::back_inserter ( tracks ) ,
-      m_config     ) ;
+  std::copy_if( std::begin(out) , std::end(out) , 
+                std::back_inserter ( tracks ) , m_config ) ;
   //
   for ( const auto& track : out )
   { 
@@ -209,11 +205,8 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   // ==========================================================================
   // loop over input tracks, upgrade track-by-track 
   // ==========================================================================
-  typedef LHCb::Track::ConstVector  OUTPUT ;
-  for ( OUTPUT::const_iterator iseed = itracks.begin() ;
-        itracks.end() != iseed ; ++iseed ) 
+  for (const LHCb::Track* seed : itracks ) 
   {
-    const LHCb::Track* seed = *iseed ;
     if ( !seed ) { continue ; }                                  // CONTINUE 
     StatusCode sc = iupgrade ( seed , output , otracks ) ;
     if ( sc.isFailure () ) 
@@ -223,7 +216,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   // ==========================================================================
   // sort tracks ?
   if ( ptOrder() ) 
-  { std::stable_sort ( output.begin () , output.end () , Hlt::SortTrackByPt() ) ; }
+  { std::stable_sort ( std::begin(output) , std::end(output) , Hlt::SortTrackByPt() ) ; }
   //
   return StatusCode::SUCCESS ;                                        // RETURN 
 }
@@ -249,7 +242,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::upgrade
   //
   // sort tracks ? 
   if ( ptOrder() ) 
-  { std::stable_sort ( output.begin () , output.end () , Hlt::SortTrackByPt() ) ; }
+  { std::stable_sort ( std::begin(output) , std::end(output) , Hlt::SortTrackByPt() ) ; }
   //
   return StatusCode::SUCCESS ;
 }
@@ -486,10 +479,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_1track
   { return Error ( "Error from iupgrade, skip track", sc, 0 ) ; }    // RETURN 
   //
   // Process output tracks, create a new candidate for tracks beyond the first
-  for ( LHCb::Track::ConstVector::const_iterator iout = out.begin() ;
-        out.end() != iout ; ++iout ) {
+  for ( LHCb::Track::ConstVector::const_iterator iout = std::begin(out) ;
+        std::end(out) != iout ; ++iout ) {
      const LHCb::Track* track = *iout ;
-     if ( ! track ) continue ;
+     if ( !track ) continue ;
      //
      Hlt::Candidate* _input = 0;
      if ( iout == out.begin() ) {
@@ -554,12 +547,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
   bool split = false ;
   OUTs outs ;
   
-  const Hlt::MultiTrack::Tracks& tracks = multi_track->tracks() ;
-  for ( Hlt::MultiTrack::Tracks::const_iterator itrack = tracks.begin() ; 
-        tracks.end() != itrack ; ++itrack ) 
+  for ( const auto& track : multi_track->tracks() )
   {
     LHCb::Track::ConstVector out ;
-    StatusCode sc = iupgrade ( *itrack , out , otracks ) ;
+    StatusCode sc = iupgrade( track , out , otracks ) ;
     if ( sc.isFailure() ) 
     { Error    ( "Error from iupgrade", sc, 0 ); OK = false; break; } // BREAK
     if ( out.empty()    ) 
@@ -570,7 +561,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     outs.push_back ( out ) ;
   }
   //
-  if ( !OK || tracks.size() != outs.size() ) 
+  if ( !OK || multi_track->tracks().size() != outs.size() ) 
   { return Error ( "Upgrade failure", StatusCode::FAILURE, 0 ) ; }   // RETURN 
   //
   if ( !split ) 
@@ -578,8 +569,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     // new multi-track  
     Hlt::MultiTrack* mtrack = newMultiTrack() ;
     //
-    for ( OUTs::const_iterator iout = outs.begin() ; outs.end() != iout ; ++iout ) 
-    { mtrack->addToTracks( iout->front() ) ; }
+    for ( const auto& out : outs )  mtrack->addToTracks( out.front() ) ; 
     //
     // new stage  
     Hlt::Stage* newstage = newStage() ;
@@ -591,18 +581,14 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
     _input -> addToWorkers ( alg()    ) ;
     _input -> addToStages  ( newstage ) ;
     output.push_back ( input ) ;                               // OUTPUT++ 
-  }
-  else
-  {
+  } else {
     //
     Warning ( "Reconstruction causes split of candidate" ) ;
     //
-    typedef LoKi::Combiner_<LHCb::Track::ConstVector> COMBINER ;
-    COMBINER combiner ;
+    LoKi::Combiner_<LHCb::Track::ConstVector> combiner ;
     //
     // fill combiner with data: 
-    for ( OUTs::const_iterator iout = outs.begin() ; outs.end() != iout ; ++iout ) 
-    { combiner.add ( LHCb::Track::Range ( *iout ) ) ; }
+    for ( const auto& out : outs )  combiner.add( LHCb::Track::Range ( out ) ) ; 
     //
     // start looping over all combinations 
     for ( ; combiner.valid() ; ++combiner ) 
@@ -626,10 +612,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track
       newstage2 -> set<Hlt::MultiTrack> ( newtrack ) ;
       //
       // fill multi-track:
-      const COMBINER::Select& cur = combiner.current() ;
-      for ( COMBINER::Select::const_iterator ia = cur.begin() ; 
-            cur.end() != ia ; ++ia ) 
-      { newtrack->addToTracks ( **ia ) ; }
+      for ( auto ia : combiner.current() )  newtrack->addToTracks ( *ia ) ; 
       //
       newcand -> addToStages ( newstage1 ) ;
       newcand -> addToStages ( newstage2 ) ;
@@ -720,12 +703,10 @@ StatusCode LoKi::Hlt1::UpgradeTool::_i_upgrade_multi_track_j
     newstage -> set<Hlt::MultiTrack>  ( newmtrack ) ;
     //
     // fill multi-track: 
-    LHCb::Track::ConstVector _tracks ( tracks.begin() , tracks.end  () ) ;
+    LHCb::Track::ConstVector _tracks ( std::begin(tracks) , std::end(tracks) ) ;
     _tracks [index] = _track ;
     // 
-    for ( LHCb::Track::ConstVector::const_iterator it = _tracks.begin() ; 
-          _tracks.end() != it ; ++it ) 
-    { newmtrack -> addToTracks ( *it ) ; }
+    for ( const auto& i : _tracks ) newmtrack -> addToTracks ( i ) ; 
     //
     output.push_back ( newcand ) ;
   }

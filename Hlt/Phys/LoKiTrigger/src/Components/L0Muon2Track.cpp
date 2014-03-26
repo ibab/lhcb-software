@@ -80,6 +80,11 @@ namespace Hlt
     /// =======================================================================
   protected:
     // ========================================================================
+    /// the default, copy constructor and assignment operator are disabled
+    L0Muon2Track () = delete ;
+    L0Muon2Track ( const L0Muon2Track& ) = delete ;
+    L0Muon2Track& operator=( const L0Muon2Track& ) = delete ;
+    // ========================================================================
     /** standard constructor
      *  @param name algorithm instance name
      *  @param pSvc pointer to Service Locator
@@ -111,15 +116,6 @@ namespace Hlt
             } );
         return candidate != std::end( *candidates )  ? *candidate : nullptr;
     }
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled
-    L0Muon2Track () ;                    // the default constructor is disabled
-    /// the copy constructor is disabled
-    L0Muon2Track ( const L0Muon2Track& ) ;  // the copy constructor is disabled
-    /// the assignement operator is disabled
-    L0Muon2Track& operator=( const L0Muon2Track& ) ; // assignement is disabled
     // ========================================================================
   protected:
     // ========================================================================

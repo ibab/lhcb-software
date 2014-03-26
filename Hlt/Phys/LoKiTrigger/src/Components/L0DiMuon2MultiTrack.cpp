@@ -69,6 +69,11 @@ namespace Hlt
     /// =======================================================================
   protected:
     // ========================================================================
+    /// the default, copy constructor and assignment operator are disabled
+    L0DiMuon2MultiTrack () = delete ;
+    L0DiMuon2MultiTrack ( const L0DiMuon2MultiTrack& ) = delete ;
+    L0DiMuon2MultiTrack& operator=( const L0DiMuon2MultiTrack& ) = delete ;
+    // ========================================================================
     /** standard constructor
      *  @param name algorithm instance name
      *  @param pSvc pointer to Service Locator
@@ -80,15 +85,6 @@ namespace Hlt
     {}
     /// virtual and protected destructor
     virtual ~L0DiMuon2MultiTrack() {}
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// the default constructor is disabled
-    L0DiMuon2MultiTrack () ;             // the default constructor is disabled
-    /// the copy constructor is disabled
-    L0DiMuon2MultiTrack ( const L0DiMuon2MultiTrack& ) ; // no copy constructor
-    /// the assignement operator is disabled
-    L0DiMuon2MultiTrack& operator=( const L0DiMuon2MultiTrack& ) ;
     // ========================================================================
   } ;
   // ==========================================================================

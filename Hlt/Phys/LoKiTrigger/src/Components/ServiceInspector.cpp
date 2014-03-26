@@ -64,7 +64,7 @@ const IAlgorithm*  Hlt::Service::producer
   if ( !inMap ( key ) )
   {
     if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
-    { Warning ("producer: unknown selection'" + key + "', return NULL") ; }
+    { Warning ("producer: unknown selection '" + key + "', return NULL") ; }
     return nullptr ;
   }
   // ==========================================================================
@@ -76,7 +76,7 @@ const IAlgorithm*  Hlt::Service::producer
   }
   // ==========================================================================
   if ( m_pedantic || m_spy || msgLevel ( MSG::DEBUG ) )
-  { Warning ("producer: no producer for selection'" + key +
+  { Warning ("producer: no producer for selection '" + key +
              "', return NULL") ; }
   return nullptr ;
 }
