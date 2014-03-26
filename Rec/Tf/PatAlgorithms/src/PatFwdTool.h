@@ -143,7 +143,7 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     }
 
 
-    double changeInY(  PatFwdTrackCandidate& track ) const {
+    double changeInY( const  PatFwdTrackCandidate& track ) const {
       double yOriginal = track.yStraight( m_zReference );
       if (!m_withoutBField)
         yOriginal += track.dSlope() * track.dSlope() * track.slY() * m_yParams[0];

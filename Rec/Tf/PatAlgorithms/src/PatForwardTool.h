@@ -117,6 +117,47 @@ private:
     return  m_centerOTYSize > fabs( cand.y( 0. ) );
   }
 
+  double computeQOverP( const PatFwdTrackCandidate& c) const {
+    double qOverP = 1000. * m_fwdTool->qOverP( c );  // in 1/GeV
+    if (m_withoutBField) {
+      if (m_minMomentum !=0)  qOverP = 1/m_minMomentum;
+      else                    qOverP = 1;
+    }
+    return qOverP;
+  }
+
+  double computeQuality(const PatFwdTrackCandidate& c, double qOverP) const {
+    double quality = 0.;
+    quality  = 5. * fabs(  m_fwdTool->changeInY( c ) ) / ( m_maxDeltaY + qOverP * qOverP * m_maxDeltaYSlope );
+    quality += c.chi2PerDoF() / 10.;
+    quality += 10 * fabs(qOverP);  // low momentum are worse
+    return quality;
+  }
+
+  double computeStereoTol( double qOverP) const {
+     return m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
+  }
+
+  bool hasEnoughStereo( const PatFwdTrackCandidate& c) {
+    // Enough stereo planes
+    PatFwdPlaneCounter fullCount( std::begin(c), std::end(c) );
+    int nbY = fullCount.nbStereo();
+    if ( nbY < 4 ) {
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        debug() << "Not enough Y planes : " << nbY << endmsg;
+      return false;
+    }
+    return true;
+  }
+
+  bool passMomentum(const PatFwdTrackCandidate& c, double sinTrack) const {
+          const double momentum=1.0/fabs(m_fwdTool->qOverP( c ));
+          const double pt = sinTrack*momentum;
+          //== reject if below threshold
+          return  m_withoutBField || ( momentum>m_minMomentum && pt>m_minPt) ;
+  }
+
+
 
   PatFwdTool*                                 m_fwdTool;        ///< Tool to compute extrapolations of tracks
   Tf::TStationHitManager <PatForwardHit> *    m_tHitManager;    ///< Tool to provide hits

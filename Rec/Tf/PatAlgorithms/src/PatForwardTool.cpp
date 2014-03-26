@@ -271,7 +271,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       }
 
       //== Check the chi2 with magnet center constraint.
-
       if ( m_maxChi2Track > temp.chi2PerDoF()  &&
            (!m_withoutBField || fabs(temp.slX()-temp.xSlope(0))<0.005)){
         //== Count how many weighted hits
@@ -279,11 +278,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
         if ( minOTX <= nbHit || inCenter(temp) ) {
           
-          const double momentum=1.0/fabs(m_fwdTool->qOverP( temp ));
-          const double pt = track.sinTrack()*momentum;
-
           //== reject if below threshold
-          if (m_withoutBField || (momentum>m_minMomentum && pt>m_minPt) ) xCandidates.push_back( temp );
+          if (passMomentum( temp, track.sinTrack() )) xCandidates.push_back( temp );
+
           if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
             debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
         } else {
@@ -318,33 +315,21 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   unsigned nCand = 0;
   for ( PatFwdTrackCandidate& temp :  xCandidates ) {
-    ++nCand;
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "--- Candidate " << nCand
+      debug() << "--- Candidate " << ++nCand
               << "  X cord size " << temp.coords().size() 
               << endmsg;
 
     for ( PatFwdHit *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
     temp.setSelectedCoords( );
 
-    double qOverP = 1000. * m_fwdTool->qOverP( temp );  // in 1/GeV
-
-    if (m_withoutBField) {
-      if (m_minMomentum !=0)
-        qOverP = 1/m_minMomentum;
-      else
-        qOverP = 1;
-    }
-    
-    double tol = m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
-
-    if ( !fillStereoList( temp, tol ) ) continue; // Get the stereo coordinates
+    double qOverP = computeQOverP(temp);  // in 1/GeV
+    if ( !fillStereoList( temp, computeStereoTol(qOverP) ) ) continue; // Get the stereo coordinates
 
     if ( isDebug )  debugFwdHits( temp );
     temp.setSelectedCoords( );
 
     //== Fit and reject if not good enough
-
     if ( !m_fwdTool->fitStereoCandidate( temp, m_maxChi2, minPlanes ) ) continue;
 
     temp.cleanCoords();
@@ -357,16 +342,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     }
 
     //== Remove stereo coordinates incompatible in Y
-
-    double yTol = m_yCompatibleTolFinal;
-    if ( !m_fwdTool->removeYIncompatible( temp, yTol, minPlanes ) ) continue;
+    if ( !m_fwdTool->removeYIncompatible( temp, m_yCompatibleTolFinal, minPlanes ) ) continue;
     temp.cleanCoords();
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug() << "  ... Y is compatible" << endmsg;
 
-    double quality = 0.;
-
-    // Enough stereo planes
+     // Enough stereo planes
     PatFwdPlaneCounter fullCount( std::begin(temp), std::end(temp) );
     int nbY = fullCount.nbStereo();
     if ( nbY < 4 ) {
@@ -381,24 +362,19 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       continue;
     }
 
-    quality  = 5. * fabs(  m_fwdTool->changeInY( temp ) ) / ( m_maxDeltaY + qOverP * qOverP * m_maxDeltaYSlope );
-    quality += temp.chi2PerDoF() / 10.;
-    quality += 10 * fabs(qOverP);  // low momentum are worse
-
-    temp.setQuality( quality );
+    temp.setQuality( computeQuality(temp, qOverP) );
 
     //== Verify if enough OT measurements, counting IT for 2/plane
     //== Ignore the y central region, OT inefficient there.
 
     PatFwdRegionCounter regions( std::begin(temp), std::end(temp) );
-    int nbHit = regions.nbOT() + 2*regions.nbIT();
     temp.setNbIT( regions.nbIT() );
     temp.setNbOT( regions.nbOT() );
 
     if ( !inCenter(temp) ) {
-      if ( m_minHits > nbHit ){
+      if ( m_minHits > nbT(temp) ){
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "  --- Not enough hits : " << nbHit << endmsg;
+          debug() << "  --- Not enough hits : " << nbT(temp) << endmsg;
         continue;
       }
       if ( temp.nbIT() == 0 && temp.nbOT() < m_minOTHits ) {
@@ -410,14 +386,15 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     maxPlanes = std::max(maxPlanes, fullCount.nbDifferent());
 
     //== reject if below threshold
-    const double momentum=1.0/fabs(m_fwdTool->qOverP( temp ));
-    const double pt = track.sinTrack()*momentum;
-    if ( !m_withoutBField && ((momentum<m_minMomentum) || (pt<m_minPt)) ) continue;
-    goodCandidates.push_back( temp );
+    if (!passMomentum( temp, track.sinTrack())) continue;
 
     //== Update requirement according to already found good solutions...
     minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
+
+    goodCandidates.push_back( std::move(temp) );
   }
+
+
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
     std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality());
@@ -534,7 +511,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     }
     fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
 
-    if ( nullptr != m_addTTClusterTool ) {
+    if ( m_addTTClusterTool ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
       if (sc.isFailure())
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
@@ -757,7 +734,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     itP = itE;
   }
 
-  if ( minYPlanes > (int)std::distance(bestList.first,bestList.second) ) return false;
+  if ( (int)std::distance(bestList.first,bestList.second) < minYPlanes ) return false;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "...Selected " << std::distance(bestList.first,bestList.second) << " hits from "
@@ -811,6 +788,7 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
+  bool isDebug = msgLevel( MSG::DEBUG );
   m_candidates.clear();
   m_xHitsAtReference.clear();
 
@@ -831,7 +809,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     kick *= ( m_fwdTool->zReference() - zMagnet);
     maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
   
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( isDebug ) ) 
       debug() << "   xExtrap = " << xExtrap
               << " q/p " << track.qOverP()
               << " predict " << xExtrap + kick << endmsg;
@@ -839,7 +817,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   }
 
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( isDebug ) ) 
     debug() << "Search X coordinates, xMin " << xExtrap - maxRange
             << " xMax " << xExtrap + maxRange << endmsg;
 

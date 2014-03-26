@@ -248,8 +248,8 @@ StatusCode PatForward::execute() {
       for ( auto itT = std::begin(*outputTracks); itT != std::end(*outputTracks) ;  ++itT ) {
         auto x0 = (*itT)->stateAt( LHCb::State::AtT )->x();
         auto overlaps0 = [=]( const LHCb::Track* t) {
-          auto x1  = t->stateAt( LHCb::State::AtT )->x();
-          return  ( fabs( x0 - x1 ) < 5. ) ? this->overlaps( *itT, t ) : 0;
+          auto x1 = t->stateAt( LHCb::State::AtT )->x();
+          return ( fabs( x0 - x1 ) < 5. ) ? this->overlaps( *itT, t ) : 0;
         };
 
         for ( auto itT1 = itT+1; itT1 != std::end(*outputTracks) ;  ++itT1 ) {
