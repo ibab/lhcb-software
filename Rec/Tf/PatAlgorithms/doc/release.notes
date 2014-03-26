@@ -4,6 +4,19 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-03-26 - Manuel Tobias Schiller
+ - PatSeedTool: various little fixes which do not hurt, but improve timing by
+   12% for PatSeeding and 5% for TrackBestTrackCreator, with marginal
+   improvements to efficiencies and ghost rate of the Seeding
+   - some code refactoring to increase code reuse
+   - have a clear bail-out strategy for fits which do not converge, propagate
+     that error to callers
+   - fit in xz projection now uses cubic term from the start (used to be
+     neglected initially because the full fit in both projections will take it
+     into account later)
+   - adjust both quadratic and cubic terms of underlying track in fit
+     (slightly faster convergence, better tracks)
+
 ! 2014-03-25 - Gerhard Raven
  - PatForward: factor out and optimize overlap count
 

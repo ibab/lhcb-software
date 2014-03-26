@@ -153,39 +153,67 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 //=========================================================================
 //  Parabolic fit to projection.
 //=========================================================================
-bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
+template<bool forceRLAmb, unsigned maxIter>
+bool PatSeedTool::fitXProjection(PatSeedTrack& track, bool forceDebug) const
 {
-  for ( unsigned kk = 10 ; kk-- ; ) {
-    PatFwdFitParabola  parabola;
-    int nHits = 0;
+  const bool debug = msgLevel(MSG::VERBOSE) || forceDebug;
+  // up to 10 iterations of simultaneous fit
+  double mat[9], *rhs = mat + 6, z0;
+  unsigned nHitsX, kk;
+  for ( kk = maxIter ; kk ; --kk ) {
+    nHitsX = 0;
+    track.getParameters(z0, rhs[0], rhs[0], rhs[1], rhs[2], rhs[0], rhs[0]);
+    const double dRatio = (std::abs(rhs[1]) > 1e-42) ? (1e3 * rhs[2] / rhs[1]) : 0.;
+    std::fill(mat, mat + 9, 0.);
     for( const PatFwdHit* hit: track.coords() ) {
       if ( !hit->isSelected() ) continue;
+      ++nHitsX;
       const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
-
-      const double dist = track.distanceForFit( hit );
-      parabola.addPoint( hit->z() - track.z0(),
-			 dist,
-			 hit->hit()->weight() * (isOT ? (track.cosine() * track.cosine()): 1.0) );
-     
-      ++nHits;
+      // prepare auxiliary variables
+      const double dist = forceRLAmb ?
+	track.distanceWithRL( hit ) : track.distanceForFit( hit );
+      double w = hit->hit()->weight();
+      if (isOT) w *= track.cosine() * track.cosine();
+      const double dz = 1e-3 * (hit->z() - z0); // better numerical stability
+      const double wdz = w * dz;
+      const double eta = dz * dz * (1. + dz * dRatio);
+      const double weta = w * eta;
+      // fill matrix
+      mat[0] += w;
+      mat[1] += wdz;
+      mat[2] += wdz * dz;
+      mat[3] += weta;
+      mat[4] += weta * dz;
+      mat[5] += weta * eta;
+      // fill right hand side
+      rhs[0] += w * dist;
+      rhs[1] += wdz * dist;
+      rhs[2] += weta * dist;
     }
-    if (3 > nHits) return false;
-    if (!parabola.solve()) return false;
-    if (std::abs(parabola.ax()) > 1e4 || std::abs(parabola.bx()) > 5. ||
-	std::abs(parabola.cx()) > 1e-3) return false;
-    track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
-
-    if ( msgLevel( MSG::VERBOSE ) || forceDebug  ) {
-      info() << format( " dax %10.4f dbx%10.4f dcx %10.4f ",
-	  parabola.ax(), 1e3 * parabola.bx(), 1e6 * parabola.cx() ) << endmsg;
+    // protect against too few hits for unique solution
+    if (nHitsX < 3) return false;
+    // decompose matrix, protect against numerical trouble
+    ROOT::Math::CholeskyDecomp<double, 3> decomp(mat);
+    if (!decomp) return false;
+    // solve linear system
+    decomp.Solve(rhs);
+    // undo dz scaling
+    rhs[1] *= 1e-3; rhs[2] *= 1e-6; rhs[4] *= 1e-3;
+    if (debug) {
+      info() << format( " dax %10.4f dbx %10.4f dcx %10.4f",
+	  rhs[0], 1e3 * rhs[1], 1e6 * rhs[2] ) << endmsg;
     }
+    // protect against unreasonable track parameter corrections
+    if (std::abs(rhs[0]) > 1e4 || std::abs(rhs[1]) > 5. ||
+	std::abs(rhs[2]) > 1e-3) return false;
+    // update track parameters
+    track.updateParameters(rhs[0], rhs[1], rhs[2], 1e-3 * rhs[2] * dRatio);
 
     // wait until stable, due to OT.
-    if ( std::abs( parabola.ax() ) < 5.e-3 &&
-	std::abs( parabola.bx() ) < 5.e-6 &&
-	std::abs( parabola.cx() ) < 5.e-9    ) break;
+    if (std::abs(rhs[0]) < 5e-3 && std::abs(rhs[1]) < 5e-6 &&
+	std::abs(rhs[2]) < 5e-9) break;
   }
-  return true;
+  return (0 != kk || 1 == maxIter);
 }
 
 //=========================================================================
@@ -249,12 +277,7 @@ bool PatSeedTool::fitInitialXProjection (
 	  if (largestDrift[2] >= 0.1) seeds[2]->setRlAmb( ((mask >> 1) & 2) - 1 );
 
 	  // get track parameters for current combination
-	  PatFwdFitParabola  parabola;
-	  for( const PatFwdHit* hit: seeds )
-	    parabola.addPoint( hit->z() - track.z0(),
-		track.distanceWithRL( hit ), hit->hit()->weight() );
-	  if (!parabola.solve()) return false;
-	  track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
+	  if (!fitXProjection<true, 1>(track, forceDebug)) return false;
 
 	  // determine chi^2 for current combination
 	  double totChi2 = 0.;
@@ -279,18 +302,7 @@ bool PatSeedTool::fitInitialXProjection (
     }
   }
   // work out final track parameters
-  PatFwdFitParabola parabola;
-  for( const PatFwdHit* hit: track.coords() ) {
-    if ( !hit->isSelected() ) continue;
-    if ( !hit->hit()->isX() ) continue;
-    const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
-    parabola.addPoint( hit->z() - track.z0(),
-	track.distanceWithRL( hit ), hit->hit()->weight() *
-	(isOT ? (track.cosine() * track.cosine()) : 1.0) );
-  }
-  if (!parabola.solve()) return false;
-  track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
-  return true;
+  return fitXProjection<true, 1>(track, forceDebug);
 }
 
 //=========================================================================
@@ -413,9 +425,8 @@ bool PatSeedTool::fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const
   const bool debug = msgLevel(MSG::VERBOSE) || forceDebug;
   // up to 10 iterations of simultaneous fit
   double mat[20], *rhs = mat + 15, z0;
-  unsigned nHitsX, nHitsStereo;
-  for ( unsigned kk = 10 ; kk-- ; ) {
-    PatFwdFitParabola  parabola;
+  unsigned nHitsX, nHitsStereo, kk;
+  for ( kk = 10; kk; --kk ) {
     nHitsX = 0, nHitsStereo = 0;
     track.getParameters(z0, rhs[0], rhs[0], rhs[1], rhs[2], rhs[0], rhs[0]);
     const double dRatio = (std::abs(rhs[1]) > 1e-42) ? (1e3 * rhs[2] / rhs[1]) : 0.;
@@ -479,7 +490,7 @@ bool PatSeedTool::fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const
 	std::abs(rhs[2]) > 1e-3 || std::abs(rhs[3]) > 1e4 ||
 	std::abs(rhs[4]) > 1.) return false;
     // update track parameters
-    track.updateParameters(rhs[0], rhs[1], rhs[2]);
+    track.updateParameters(rhs[0], rhs[1], rhs[2], 1e-3 * rhs[2] * dRatio);
     track.updateYParameters(rhs[3], rhs[4]);
 
     // wait until stable, due to OT.
@@ -487,7 +498,7 @@ bool PatSeedTool::fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const
 	std::abs(rhs[2]) < 5e-9 && std::abs(rhs[3]) < 5e-2 &&
 	std::abs(rhs[4]) < 5e-6) break;
   }
-  return true;
+  return 0 != kk;
 }
 
 bool PatSeedTool::refitStub(PatSeedTrack& track, double dRatio, double arrow) const

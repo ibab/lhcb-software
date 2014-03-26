@@ -71,6 +71,7 @@ class PatSeedTool : public GaudiTool {
     bool fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
     /// do a fit in xz projection, return false if fewer than 3 x hits on track
+    template<bool forceRLAmb = false, unsigned maxIter = 10>
     bool fitXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
     /// do a fit in yz projection, return false if fewer than 2 stereo hits on track
