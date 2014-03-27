@@ -1,4 +1,5 @@
 // Include files
+#include <type_traits>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -11,7 +12,6 @@
 
 // local
 #include "PatFwdTool.h"
-#include "PatFwdPlaneCounter.h"
 #include "PatFwdRegionCounter.h"
 #include "PatFwdFitParabola.h"
 #include "PatFwdFitLine.h"
@@ -21,6 +21,81 @@
 // 2005-04-01 : Olivier Callot
 //
 //-----------------------------------------------------------------------------
+
+template < typename  Iterator, typename Predicate > 
+Iterator reverse_find_if(Iterator begin, Iterator end, Predicate&& pred) {
+    return std::find_if( std::reverse_iterator<Iterator>(begin), 
+                         std::reverse_iterator<Iterator>(end), 
+                         std::forward<Predicate>(pred) ).base();
+}
+
+template < typename Iterator, 
+           typename Projection, 
+           typename Predicate, 
+           typename Result = std::pair<typename Iterator::value_type, typename std::result_of<Projection(typename Iterator::value_type)>::type> >
+Result
+max_projected_element( Iterator first, Iterator last, Projection proj, Result init, Predicate pred ) {
+    // TODO: can we write this using std::accumulate???
+    for (; first != last; ++first) {
+        if ( pred(*first) ) {
+            auto x = proj(*first);
+            if ( !( x < init.second ) ) {
+                init.first  = *first;
+                init.second = x;
+            }
+        }
+    }
+    return init;
+}
+
+template <typename Iterator, typename Predicate> 
+bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator last, Predicate pred ) 
+{
+      bool extended = false;
+#if 1
+      // unrolled version...
+      assert( first <= start );
+      assert( start <= stop );
+      assert( stop <= last );
+
+      for (; first!=start;++first) {
+          bool pass { pred(*first) } ;
+          (*first)->setSelected(pass);
+          if ( pass ) {
+              start = first;
+              ++first;
+              extended = true;
+              break;
+          }
+      }
+      for (; first!=stop; ++first ) {
+          bool pass { pred(*first) } ;
+          if ( pass && !(*first)->isSelected() ) extended = true;
+          (*first)->setSelected(pass);
+      }
+      for (;first!=last;++first) {
+          bool pass { pred(*first) };
+          (*first)->setSelected(pass);
+          if ( pass ) {
+              stop = first+1;
+              extended = true;
+          }
+      }
+#else
+      // original version...
+      for (; first!=last; ++first ) { 
+          auto& value = *first;
+          bool pass{  pred(value)  };
+          if ( pass && ( first < start || stop < first+1 || !value->isSelected() ) ) {
+              start = std::min( start, first   );
+              stop  = std::max( stop,  first+1 );
+              extended = true;
+          }
+          value->setSelected( pass );
+      }
+#endif
+      return extended;
+}
 
 
 DECLARE_TOOL_FACTORY( PatFwdTool )
@@ -38,14 +113,14 @@ PatFwdTool::PatFwdTool( const std::string& type,
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT); 
   declareProperty( "ZOutput"          ,m_zOutputs        = {StateParameters::ZBegT,StateParameters::ZMidT,StateParameters::ZEndT});
 
-  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = {0.});
-  declareProperty( "xParams"         , m_xParams         = {0.});
-  declareProperty( "yParams"         , m_yParams         = {0.});
-  declareProperty( "momentumParams"  , m_momentumParams  = {0.});
+  declareProperty( "ZMagnetParams"   , m_zMagnetParams   = {});
+  declareProperty( "xParams"         , m_xParams         = {});
+  declareProperty( "yParams"         , m_yParams         = {});
+  declareProperty( "momentumParams"  , m_momentumParams  = {});
 
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
-  declareProperty( "withoutBField"   , m_withoutBField = false);
+  declareProperty( "withoutBField"   , m_withoutBField   = false);
 }
 //=============================================================================
 // Destructor
@@ -166,94 +241,89 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
 
 bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
                                  double maxChi2, int minPlanes ) {
-  bool isDebug = msgLevel( MSG::DEBUG );
 
-  if ( minPlanes > track.setSelectedCoords() ) return false;
+  if ( track.setSelectedCoords() < minPlanes ) return false;
   PatFwdPlaneCounter maxPlanes( track.coordBegin(), track.coordEnd() );
   int bestPlanes = maxPlanes.nbDifferent();
-  if ( minPlanes > maxPlanes.nbDifferent() ) return false;
+  if ( maxPlanes.nbDifferent() < minPlanes ) return false;
 
   //=== Is there a region with 6 planes ?
 
-  PatFwdHits::iterator itH;
-  {
-    int bestRegion = -1;
-    double spread = 1000.;
+  int bestRegion = -1;
+  double spread = 1000.;
 
-    PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
-    for( unsigned int maxRegion = 0; 6 > maxRegion; ++maxRegion ) {
-      if ( regions.nbInRegion( maxRegion ) >= 6 ) {  // count by plane
-        PatFwdPlaneCounter planes( track.coordBegin(), track.coordBegin() );
-        double first = 1.e7;
-        double last  = first;
-        for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
-          unsigned int region = (*itH)->hit()->region();
-	  if (region != Tf::RegionID::OT)
-	    region+=2;
-	  if ( region == maxRegion ) {
-            if ( first > 1.e6 ) first = (*itH)->projection();
-            last = (*itH)->projection();
-            planes.addHit( *itH );
-          }
-        }
-        if ( planes.nbDifferent() == 6 ) {
-          double mySpread = last-first;
-          if ( mySpread < spread ) {
-            spread = mySpread;
-            bestRegion = maxRegion;
-          }
+  PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
+  for( unsigned int maxRegion = 0; 6 > maxRegion; ++maxRegion ) {
+    if ( regions.nbInRegion( maxRegion ) >= 6 ) {  // count by plane
+      PatFwdPlaneCounter planes{ track.coordBegin(), track.coordBegin() };
+      double first = 1.e7;
+      double last  = first;
+      for (auto  hit :  track.coords() ) {
+        unsigned int region = hit->hit()->region();
+        if ( region != Tf::RegionID::OT) region+=2;
+        if ( region == maxRegion ) {
+          if ( first > 1.e6 ) first = hit->projection();
+          last = hit->projection();
+          planes.addHit( hit );
         }
       }
-    }
-    if ( 0 <= bestRegion ) {
-      // remove other regions !
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "========= Keep only hits of region " << bestRegion << endmsg;
-      for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
-        unsigned int region = (*itH)->hit()->region();
-        if (region != Tf::RegionID::OT)
-          region+=2;
-        if ( region != (unsigned int)(bestRegion) ) {
-          (*itH)->setSelected( false );
+      if ( planes.nbDifferent() == 6 ) {
+        double mySpread = last-first;
+        if ( mySpread < spread ) {
+          spread = mySpread;
+          bestRegion = maxRegion;
         }
       }
     }
   }
+  bool isDebug = msgLevel( MSG::DEBUG );
+  if ( 0 <= bestRegion ) {
+    // remove other regions !
+    if( UNLIKELY( isDebug ) ) 
+      debug() << "========= Keep only hits of region " << bestRegion << endmsg;
+    for ( auto hit : track.coords() ) {
+      unsigned int region = hit->hit()->region();
+      if ( region != Tf::RegionID::OT) region+=2;
+      if ( region != (unsigned int)(bestRegion) ) hit->setSelected( false );
+    }
+  }
 
-  PatFwdHits::iterator itBeg, itEnd;
-  itBeg = track.coordBegin();
-  itEnd = itBeg + bestPlanes;
-
+  auto itBeg = std::begin(track.coords());
+  auto itEnd = itBeg + bestPlanes;
   //== get enough planes fired
   PatFwdPlaneCounter planeCount1( itBeg, itEnd );
   while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
-    PatFwdHit* hit = *itEnd++;
+    PatFwdHit* hit = *itEnd;
     if ( hit->isSelected() ) planeCount1.addHit( hit );
+    ++itEnd;
   }
   if ( bestPlanes > planeCount1.nbDifferent() ) return false;
-  double minDist = (*(itEnd-1))->projection() - (*itBeg)->projection();
 
-  PatFwdHits::iterator itBest = itBeg;
-  PatFwdHits::iterator itLast = itEnd;
-  if ( isDebug ) {
+
+  double minDist = (*(itEnd-1))->projection() - (*itBeg)->projection();
+  if ( UNLIKELY(isDebug) ) {
     debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
                        minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
             << endmsg;
   }
-
   //== Better range ? Remove first, try to complete, measure spread...
+  auto itBest = itBeg;
+  auto itLast = itEnd;
   while ( itEnd != track.coordEnd() &&  bestPlanes <= planeCount1.nbDifferent() ) {
-    planeCount1.removeHit( *itBeg++ );
+    planeCount1.removeHit( *itBeg );
+    ++itBeg;
     while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
-      PatFwdHit* hit = *itEnd++;
+      PatFwdHit* hit = *itEnd;
       if ( hit->isSelected() ) planeCount1.addHit( hit );
+      ++itEnd;
     }
     if ( bestPlanes <= planeCount1.nbDifferent() ) {
-      if ( minDist > (*(itEnd-1))->projection() - (*itBeg)->projection() ) {
-        minDist = (*(itEnd-1))->projection() - (*itBeg)->projection();
+      auto dist = (*(itEnd-1))->projection() - (*itBeg)->projection() ;
+      if ( dist < minDist ) {
+        minDist = dist;
         itBest = itBeg;
         itLast = itEnd;
-        if ( bestPlanes < planeCount1.nbDifferent() )  bestPlanes = planeCount1.nbDifferent();
+        bestPlanes = std::max( bestPlanes, planeCount1.nbDifferent() );
         if ( isDebug ) {
           debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
                              minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
@@ -262,31 +332,20 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       }
     }
   }
-
   //== OK, itBest is the start...
 
   itBeg = itBest;
   itEnd = itLast;
 
   //== Add hits before/after
-  PatFwdRegionCounter regions( itBeg, itEnd );
+  regions = PatFwdRegionCounter{ itBeg, itEnd };
   double tolSide = .2;
-  if ( 2 > regions.maxRegion() ) tolSide = 2.0;
+  if ( regions.maxRegion() < 2 ) tolSide = 2.0;
 
   double minProj = (*itBeg)->projection() - tolSide;
-  while ( itBeg != track.coordBegin() ) {
-    PatFwdHit* hit = *(--itBeg); 
-    if ( minProj > hit->projection() ) {
-      ++itBeg;
-      break;
-    }
-  }
+  itBeg = reverse_find_if( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() < minProj; });
   double maxProj = (*(itEnd-1))->projection() + tolSide;
-  while ( itEnd != track.coordEnd() ) {
-    PatFwdHit* hit = *itEnd;
-    if ( maxProj < hit->projection() )  break;
-    ++itEnd;
-  }
+  itEnd = std::find_if(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() > maxProj; });
 
   PatFwdPlaneCounter planeCount( itBeg, itEnd );
   if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
@@ -307,73 +366,39 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   while ( maxChi2 < highestChi2 && minPlanes <= planeCount.nbDifferent() ) {
 
     if (!fitXProjection( track, itBeg, itEnd, true )) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "Abandon: Matrix not positive definite." << endmsg;
+      if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix not positive definite." << endmsg;
       return false;
     }
 
-    highestChi2 = 0;
-    PatFwdHit* worst = *itBeg;
-
-    for ( itH = itBeg; itEnd != itH ; ++itH ) {
-      PatFwdHit* hit = *itH;
-      if ( !hit->isSelected() ) continue;
-      double chi2 = chi2Hit( track, hit );
-      if ( highestChi2 < chi2 ) {
-        highestChi2 = chi2;
-        worst = hit;
-      }
-    }
-
-    if ( maxChi2 < highestChi2 ) {
+    PatFwdHit* worst = nullptr;
+    std::tie( worst, highestChi2 ) = max_projected_element( itBeg, itEnd
+                                                          , [&](const PatFwdHit* hit) { return chi2Hit(track,hit); }
+                                                          , std::make_pair( worst, 0. )
+                                                          , [] (const PatFwdHit* hit) { return hit->isSelected(); });
+    if ( highestChi2 > maxChi2 && worst ) {
       planeCount.removeHit( worst );
       worst->setSelected( false );
-      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      if( UNLIKELY( isDebug ) ) 
         verbose() << "--- Remove worst and retry, plane count = " << planeCount.nbDifferent() << endmsg;
     }
-
-
-
-    if ( first && highestChi2 <  20 * maxChi2 ) {  // Add possibly removed hits
+    if ( first && highestChi2 <  20 * maxChi2 ) {  // Add possibly removed hits 
       first = false;
-      bool hasNewHits = false;
       double minChi2 = maxChi2;
-      if ( highestChi2 > maxChi2 ) {
-        minChi2 = highestChi2 - 0.0001;  // down't find again the worst...
-      }
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
-      PatFwdHits::iterator oldItBeg = itBeg;
-      for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-        PatFwdHit* hit = *itH;
-        if ( hit->isIgnored() ) {
-          hit->setSelected( false );
-          continue;
-        }
+      if ( highestChi2 > minChi2 ) minChi2 = highestChi2 - 0.0001;  // down't find again the worst...
 
-        bool close = minChi2 > chi2Hit( track, hit );
-        if ( close ) {
-          bool isNew = ( itH < oldItBeg || itH+1 > itEnd || !hit->isSelected() );
-          if ( itH   < itBeg ) itBeg = itH;
-          if ( itH+1 > itEnd ) itEnd = itH+1;
-          if ( isNew ) hasNewHits = true;
-        }
-        hit->setSelected( close );
-      }
+      if( UNLIKELY( isDebug ) ) debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
+      bool hasNewHits = extend_range( itBeg, itEnd, std::begin(track.coords()), std::end(track.coords()), 
+                                    [&](const PatFwdHit* hit) { return !hit->isIgnored() && chi2Hit(track,hit) < minChi2; } );
       if ( hasNewHits ) {
-        PatFwdPlaneCounter temp( itBeg, itEnd );
-        planeCount = temp;  // update counter...
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-          debug() << "   new plane count " << planeCount.nbDifferent() << endmsg;
+        planeCount = PatFwdPlaneCounter{ itBeg, itEnd }; // update counter...
+        if( UNLIKELY( isDebug ) ) debug() << "   new plane count " << planeCount.nbDifferent() << endmsg;
         //setRlDefault( track, itBeg, itEnd );
         highestChi2 = 2*maxChi2; // force an iteration...
-      } else {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      } else if( UNLIKELY( isDebug ) ) {
         debug() << "   no new hit added to the track." << endmsg;
       }
     }
   }
-
   return minPlanes <= planeCount.nbDifferent();
 }
 
@@ -388,7 +413,6 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
                                       double maxChi2, int minPlanes ) const {
 
   bool isDebug = msgLevel( MSG::DEBUG );
-  PatFwdHits::iterator itH;
 
   //== get enough planes fired
   PatFwdPlaneCounter planeCount( track.coordBegin(), track.coordEnd() );
@@ -406,32 +430,27 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation
     if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+      if( UNLIKELY( isDebug ) ) 
         debug() << "Abandon: Matrix not positive definite." << endmsg;
 	    return false;
     }
 
-    for ( unsigned int kk = 0; 10 > kk; ++kk ) {
+    for ( unsigned int kk = 0; kk < 10; ++kk ) {
       PatFwdFitLine line;
-      for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-        PatFwdHit* hit = *itH;
-        if ( !hit->isSelected() ) continue;
-        if ( hit->hit()->layer() == 0 ||
-             hit->hit()->layer() == 3) continue;
-        double dz    = hit->z() - m_zReference;
-
-        double dist  = - distanceForFit( track, hit ) / hit->hit()->dxDy();
-        double w     = hit->hit()->weight();
-        line.addPoint( dz, dist, w );
+      for ( PatFwdHit *hit : track.coords() ) {
+        if ( !hit->isSelected()  || hit->hit()->layer() == 0 || hit->hit()->layer() == 3) continue;
+        line.addPoint( hit->z() - m_zReference
+                     , - distanceForFit( track, hit ) / hit->hit()->dxDy()
+                     , hit->hit()->weight() );
       }
       if (!line.solve()) {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        if( UNLIKELY( isDebug ) ) 
           debug() << "Abandon: Matrix not positive definite." << endmsg;
         return false;
       }
       double day = line.ax();
       double dby = line.bx();
-      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
+      if( UNLIKELY( isDebug ) ) 
         verbose() << "    day " << day << " dby " << dby << endmsg;
 
       track.updateParameters( 0., 0., 0., 0., day, dby );
@@ -442,7 +461,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
     highestChi2 = 0;
     PatFwdHit* worst = *track.coordBegin();
 
-    for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+    for ( auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
       PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       if ( ignoreX &&
@@ -462,7 +481,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
         debug() << " Remove hit and try again " << endmsg;
       //== Remove in one go all hits with bad contribution...
       if ( 1000. < highestChi2 ) {
-        for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+        for ( auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
           PatFwdHit* hit = *itH;
           if ( !hit->isSelected() ) continue;
           if ( ignoreX &&
