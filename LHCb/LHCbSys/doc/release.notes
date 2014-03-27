@@ -5,6 +5,8 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+- Packages removed: Tools/EventIndexer - moved to Noether project
+
 </PRE><H1><A NAME=v37r1>2014-03-26 LHCbSys v37r1</A></H1><PRE>
 This version uses Gaudi v25r1 and LCG_68.
 

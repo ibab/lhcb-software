@@ -136,7 +136,6 @@ use STTELL1Event          v1r12   ST      # Matt Needham
 
 use CondDBEntityResolver  v5r7    Tools   # Marco Clemencic
 use CondDBUI              v3r27   Tools   # Marco Clemencic
-use EventIndexer          v1r3    Tools   # Marco Clemencic
 use FileStager            v1r12   Tools   # Roel Aaij
 use XmlTools              v6r8p1  Tools   # Marco Clemencic
 
