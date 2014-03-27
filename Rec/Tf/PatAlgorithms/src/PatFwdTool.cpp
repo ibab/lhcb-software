@@ -459,36 +459,19 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
     }
 
     highestChi2 = 0;
-    PatFwdHit* worst = *track.coordBegin();
-
-    for ( auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-      PatFwdHit* hit = *itH;
-      if ( !hit->isSelected() ) continue;
-      if ( ignoreX &&
-           (hit->hit()->layer() == 0 ||
-            hit->hit()->layer() == 3 )) continue;
-      double chi2 = chi2Hit( track, hit );
-      if ( highestChi2 < chi2 ) {
-        highestChi2 = chi2;
-        worst = hit;
-      }
-    }
-
-    if ( highestChi2 > maxChi2 ) {
+    PatFwdHit* worst = nullptr;
+    auto predicate = [=](const PatFwdHit* hit) { return hit->isSelected() && ! ( ignoreX && (hit->hit()->layer()==0 || hit->hit()->layer()==3 ) ) ; };
+    auto  chi2hit  = [&](const PatFwdHit* hit) { return chi2Hit(track,hit); };
+    std::tie(worst,highestChi2) = max_projected_element( std::begin(track.coords()), std::end(track.coords()),
+                                                         chi2hit, std::make_pair( worst, 0. ), predicate);
+    if ( highestChi2 > maxChi2 && worst) {
       planeCount.removeHit( worst );
       worst->setSelected( false );
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << " Remove hit and try again " << endmsg;
+      if( UNLIKELY( isDebug ) ) debug() << " Remove hit and try again " << endmsg;
       //== Remove in one go all hits with bad contribution...
       if ( 1000. < highestChi2 ) {
-        for ( auto itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-          PatFwdHit* hit = *itH;
-          if ( !hit->isSelected() ) continue;
-          if ( ignoreX &&
-               (hit->hit()->layer() == 0 ||
-                hit->hit()->layer() == 3)) continue;
-          double chi2 = chi2Hit( track, hit );
-          if ( 1000. < chi2 ) {
+        for ( PatFwdHit *hit : track.coords() ) {
+          if (predicate(hit) &&  1000. < chi2hit( hit ) ) {
             planeCount.removeHit( hit );
             hit->setSelected( false );
           }
@@ -496,22 +479,20 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
       }
 
       if ( minPlanes > planeCount.nbDifferent() ) {
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+        if( UNLIKELY( isDebug ) ) 
           debug() << " Abandon: Only " << planeCount.nbDifferent() << " planes, min " << minPlanes
                   << " highestChi2 " << highestChi2 << endmsg;
         return false;
       }
     }
     //== If almost there, force one iteration with X fitting, at least...
-    if ( highestChi2 < 2 * maxChi2 ) {
-      if ( ignoreX ) {
+    if ( highestChi2 < 2 * maxChi2 && ignoreX ) {
         ignoreX = false;
         highestChi2 = 2.* maxChi2;
-      }
     }
   }
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  if( UNLIKELY( isDebug ) ) 
     debug() << ".. OK with " << planeCount.nbDifferent() << " planes, min " << minPlanes
             << " highestChi2 " << highestChi2 << endmsg;
   if ( minPlanes > planeCount.nbDifferent() ) return false;
@@ -520,16 +501,17 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
 
 //=========================================================================
-//  Parabolic fit to projection.
+//  fit to projection.
 //=========================================================================
 template <typename Curve>
-bool PatFwdTool::fitXProjection_ ( PatFwdTrackCandidate& track,
+bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                   PatFwdHits::iterator itBeg,
                                   PatFwdHits::iterator itEnd,
                                   bool onlyXPlanes  ) const {
 
+  bool isDebug = msgLevel( MSG::DEBUG );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
-  for ( unsigned int kk = 0 ; 10 > kk ; ++kk ) {
+  for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
     //= Fit the straight line, forcing the magnet centre. Use only position and slope.
     double dz   = m_zMagnet - m_zReference;
     double dist = distAtMagnetCenter( track );
@@ -537,7 +519,7 @@ bool PatFwdTool::fitXProjection_ ( PatFwdTrackCandidate& track,
 
     Curve  curve( dz, dist, w);
 
-    for (PatFwdHits::iterator itH = itBeg; itEnd != itH ; ++itH ) {
+    for (auto itH = itBeg; itEnd != itH ; ++itH ) {
       PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       if ( onlyXPlanes && !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) continue;
@@ -547,16 +529,14 @@ bool PatFwdTool::fitXProjection_ ( PatFwdTrackCandidate& track,
       curve.addPoint( dz, dist2, w );
     }
 
-    
     if (!curve.solve()) return false;
     double dax = curve.ax();
     double dbx = curve.bx();
     double dcx = curve.cx();   
-    
 
     track.updateParameters( dax, dbx, dcx );
 
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+    if( UNLIKELY( isDebug ) ) {
       verbose() << format( " dax %10.4f dbx%10.4f dcx %10.4f distCent %10.2f",
                            dax, dbx*1.e3, dcx*1.e6, distAtMagnetCenter( track ) ) << endmsg;
     }
@@ -586,28 +566,21 @@ template bool PatFwdTool::fitXProjection_<PatFwdFitParabola> ( PatFwdTrackCandid
 //=========================================================================
 
 double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
-  double totChi2 = 0.;
-  int nDof = 0;
-  bool hasStereo = false;
 
   //== Error component due to the contraint of the magnet centre
-  double dist      = distAtMagnetCenter( track );
-  double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
-  totChi2 = dist * dist / errCenter;
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "   chi2 magnet center " << totChi2 << " dist " << dist << " err " << errCenter << endmsg;
+  double totChi2 = chi2Magnet( track );
+  if( UNLIKELY( msgLevel( MSG::DEBUG )) ) 
+    debug() << "   chi2 magnet center " << totChi2 << endmsg;
 
-  PatFwdHits::iterator itH;
-  for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-    PatFwdHit* hit = *itH;
+  int nDof = -2; // Fitted parabola in X, constraint to magnet center
+  bool hasStereo = false;
+  for ( PatFwdHit * hit : track.coords() ) {
     if ( !hit->isSelected() ) continue;
-    double chi2 = chi2Hit( track, hit );
-    totChi2 += chi2;
+    totChi2 += chi2Hit( track, hit );
     nDof    += 1;
     if ( !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) hasStereo = true;
   }
-  nDof -= 2;  // Fitted parabola in X, constraint to magnet centre
-  if ( hasStereo ) nDof -= 1;  // Linear fit, magnet centre constraint
+  if ( hasStereo ) nDof -= 1;  // Linear fit, magnet center constraint
 
   totChi2 /= nDof;
 
@@ -625,13 +598,11 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   if( std::abs(magscalefactor) > 1e-6 ) {
     double bx = track.bx();
     double bx2 = bx * bx;
-    double coef = ( m_momentumParams[0] +
-		    m_momentumParams[1] * bx2 +
-		    m_momentumParams[2] * bx2 * bx2 +
-		    m_momentumParams[3] * bx * track.slX() +
-		    m_momentumParams[4] * track.slY2() +
-		    m_momentumParams[5] * track.slY2() * track.slY2() );
-    double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
+    double slY2 = track.slY2();
+    double slX2 = track.slX2();
+    double coef = std::inner_product( std::begin(m_momentumParams), std::end(m_momentumParams),
+                                      std::begin({ 1.0, bx2, bx2*bx2, bx*track.slX(), slY2, slY2*slY2 }), 0. );
+    double proj = sqrt( ( 1. + slX2 + slY2 ) / ( 1. + slX2 ) );
     qop = track.dSlope() / ( coef * Gaudi::Units::GeV * proj * magscalefactor*(-1)) ;
   }
   return qop ;
@@ -643,10 +614,9 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
 double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 {
   //== correction behind magnet neglected
-  const double zMagnet    = ( m_zMagnetParams[0] +
-			  m_zMagnetParams[2] * track.slX2() +
-			  m_zMagnetParams[4] * track.slY2() );
-  return zMagnet;
+  return  ( m_zMagnetParams[0] +
+            m_zMagnetParams[2] * track.slX2() +
+            m_zMagnetParams[4] * track.slY2() );
 }
 
 
@@ -657,11 +627,11 @@ double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::iterator itBeg,
                                PatFwdHits::iterator itEnd  ) const {
-  PatFwdHits::iterator itH;
+  bool isDebug = msgLevel( MSG::DEBUG );
   PatFwdHits temp;
-  for ( int planeCode = 0 ;12 > planeCode  ; ++planeCode ) {
+  for ( int planeCode = 0; planeCode <12 ; ++planeCode ) {
     temp.clear();
-    for ( itH = itBeg; itEnd != itH; ++itH ) {
+    for ( auto itH = itBeg; itH != itEnd; ++itH ) {
       PatFwdHit* hit = (*itH);
       if ( planeCode != hit->planeCode() ) continue;
       hit->setRlAmb( 0 );   // default
@@ -669,19 +639,18 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       if ( hit->hit()->type() != Tf::RegionID::OT ) continue;    // IT ->no ambiguity!
       temp.push_back( hit );
     }
-    if ( 2 > temp.size() ) continue;   // no RL solved if at most one hit
+    if ( temp.size() < 2 ) continue;   // no RL solved if only one hit
 
     std::sort( temp.begin(), temp.end(), Tf::increasingByX<PatForwardHit>() ); 
 
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+    if( UNLIKELY( isDebug ) ) 
       debug() << "-- Hit of plane " << planeCode << endmsg;
 
     double prevDistM = 10.;
     double prevDistP = 10.;
-    PatFwdHit* prevHit = *(temp.begin());
+    PatFwdHit* prevHit = temp.front();
 
-    for ( itH = temp.begin(); temp.end() != itH; ++itH ) {
-      PatFwdHit* hit = (*itH);
+    for ( PatFwdHit *hit : temp ) {
       hit->setRlAmb( -1 );
       double distM = distanceHitToTrack( track, hit );
       hit->setRlAmb( +1 );
@@ -692,10 +661,10 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       int    vP = 0;
       int    vC = 0;
 
-      if ( fabs( distM - prevDistP ) < minDist ) {
+      if (         fabs( distM - prevDistP ) < minDist ) {
         minDist =  fabs( distM - prevDistP );  vP = +1;  vC = -1;
       }
-      if ( fabs( distP - prevDistM ) < minDist ) {
+      if (         fabs( distP - prevDistM ) < minDist ) {
         minDist =  fabs( distP - prevDistM );  vP = -1;  vC = +1;
       }
       prevHit->setRlAmb( vP );
@@ -705,7 +674,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       prevDistP = distP;
       prevDistM = distM;
 
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+      if( UNLIKELY( isDebug ) ) {
         debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
                            hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
@@ -720,9 +689,10 @@ void PatFwdTool::updateHitsForTrack ( const PatFwdTrackCandidate& track,
                                       PatFwdHits::iterator itBeg,
                                       PatFwdHits::iterator itEnd ) const {
   for ( PatFwdHits::iterator it = itBeg; itEnd != it; ++it ) {
-    double sly = track.ySlope( (*it)->z() - m_zReference );
-    double y0  = track.y( (*it)->z() - m_zReference ) - (*it)->z() * sly;
-    updateHitForTrack( (*it), y0, sly);
+    double dz =  (*it)->z() - m_zReference;
+    double sly = track.ySlope( dz );
+    double y0  = track.y( dz ) - (*it)->z() * sly; // m_y[0]+m_zRef*m_y[1]
+    updateHitForTrack( *it, y0, sly);
   }
 }
 

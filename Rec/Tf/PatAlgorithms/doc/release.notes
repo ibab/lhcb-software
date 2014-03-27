@@ -6,7 +6,7 @@
 
 
 ! 2014-03-27 - Gerhard Raven
- - PatForwardTool: factor out and lift max finding, range extension
+ - PatFwdTool: factor out and lift max finding, range extension
 
 ! 2014-03-26 - Gerhard Raven
  - PatForward: tweak overlap bookkeeping
