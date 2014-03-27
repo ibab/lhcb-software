@@ -80,7 +80,7 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_cellSizeX(0.25),
   m_sipmSizeX(32.25),
   // Gaps
-//m_sipmEdgeSizeX(0.25), /// in the sipm layout it is 0.17 (we add a bit)
+  //m_sipmEdgeSizeX(0.25), /// in the sipm layout it is 0.17 (we add a bit)
   m_sipmEdgeSizeX(0.625), /// we add separation between sipm
   m_moduleEdgeSizeX(2.0), ///
   m_moduleGapH(2.0), ///
@@ -88,12 +88,12 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_gapXLayerHalves(0.0),
   // Derived params
   m_sipmPitchX(0.),
-//
+  //
   m_nSipmPerModule(0),
   m_SipmGapInModule(0),
   m_msg(NULL),
   
-//params causing "private part" problem in FTDet
+  //params causing "private part" problem in FTDet
   m_quarter(0),       
   m_relativemodule(0),
   m_fibreMatPosZ(0.)   
@@ -247,16 +247,16 @@ StatusCode DeFTFibreMat::initialize(){
   debug() << "mdzdy = " << m_dzDy << endmsg; 
 
   /*
-  debug() << "Derived parameters:"
-          << "\n\tpitch X: " << m_sipmPitchX
-          << "\n\tN of SiPM per module: " << m_nSipmPerModule
-          << "\n\tLayer min X: " << m_layerMinX
-          << "\n\tLayer max X: " << m_layerMaxX 
-          << "\n\tLayer min Y: " << m_layerMinY
-          << "\n\tLayer max Y: " << m_layerMaxY 
-          << "\n\tLayer min Z: " << m_layerMinZ
-          << "\n\tLayer max Z: " << m_layerMaxZ
-          << endmsg;
+    debug() << "Derived parameters:"
+    << "\n\tpitch X: " << m_sipmPitchX
+    << "\n\tN of SiPM per module: " << m_nSipmPerModule
+    << "\n\tLayer min X: " << m_layerMinX
+    << "\n\tLayer max X: " << m_layerMaxX 
+    << "\n\tLayer min Y: " << m_layerMinY
+    << "\n\tLayer max Y: " << m_layerMaxY 
+    << "\n\tLayer min Z: " << m_layerMinZ
+    << "\n\tLayer max Z: " << m_layerMaxZ
+    << endmsg;
   */
 
   //On getting Sipm connected only to sensitive areas
@@ -285,8 +285,114 @@ StatusCode DeFTFibreMat::finalize(){
 // of the MC particle deposited in the corresponding SiPM cell. A light sharing
 // model is used in the determination of the energyFractions.
 //=============================================================================
+StatusCode DeFTFibreMat::calculateListOfFiredChannels(const LHCb::MCHit*  fthit,
+                                                      VectFTPairs&         vectChanAndEnergy) const
+{
+
+  /// Create a vector of FT pairs which will hold <FTChannel, FractionalPosition>
+  /// This is the 'working' quantity. In the final step of the calculateHits method
+  /// we use it to create the final vectChanAndEnergy
+  VectFTPairs vectChanAndFracPos;
+
+  StatusCode sc = this->calculateHits(fthit, vectChanAndFracPos);
+  if(sc.isFailure()) return StatusCode::FAILURE;
+
+  /// Call the light-sharing method using vectChanAndFracPos,
+  /// create the final vector of pairs <FTChannel, EnergyFractions>
+  vectChanAndEnergy = (this->createLightSharingChannels( vectChanAndFracPos ));
+
+  // Finally, to return the energy deposited in each channel by the hit, each energy fraction
+  // is multiplied by the energy
+  for (VectFTPairs::iterator itPair = vectChanAndEnergy.begin(); itPair != vectChanAndEnergy.end(); ++itPair) {
+    itPair->second *= fthit->energy();
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+//=============================================================================
+// Function to determine the mean SiPM channel (ChannelID + fraction) associated
+// to the track between entry and exit point.
+// @param fthit : hit from Geant4
+// @param ChanAndFrac : std::pair (ChannelID + fraction) associated to the mean channel
+//=============================================================================
+StatusCode DeFTFibreMat::calculateMeanChannel(const LHCb::MCHit*  fthit,
+                                              FTPair&             ChanAndFrac) const
+{
+  /// Create a vector of FT pairs which will hold <FTChannel, FractionalPosition>
+  /// This is the 'working' quantity. In the final step of the calculateHits method
+  /// we use it to create the final vectChanAndEnergy
+  VectFTPairs vectChanAndFracPos;
+
+  
+  StatusCode sc = this->calculateHits(fthit, vectChanAndFracPos);
+  if(sc.isFailure()) return StatusCode::FAILURE;
+
+  //Compute mean channel ID + fractional part associated to the mean fired channel of the hit
+  VectFTPairs::iterator vectChanAndFracPosEdgeStart = vectChanAndFracPos.end();
+  VectFTPairs::iterator vectChanAndFracPosEdgeEnd = vectChanAndFracPos.begin();
+  
+  for (VectFTPairs::iterator itPair = vectChanAndFracPos.begin(); itPair != vectChanAndFracPos.end(); ++itPair) {
+    debug() << "==calculateMeanChannel==  channelID="<<itPair->first <<" + " << itPair->second
+            << "\t diff="<< itPair->first - (vectChanAndFracPos.begin())->first
+            << "\t End-Start="<<vectChanAndFracPosEdgeEnd->first - vectChanAndFracPosEdgeStart->first 
+            << "\t Start-End="<< vectChanAndFracPosEdgeStart->first - vectChanAndFracPosEdgeEnd->first  
+            << "\t size="<< vectChanAndFracPos.size()
+            <<endmsg;  
+    if((itPair->first.layer()<  12) && (vectChanAndFracPosEdgeStart == vectChanAndFracPos.end())) 
+      vectChanAndFracPosEdgeStart = itPair;
+    
+    if(itPair->first.layer() < 12) vectChanAndFracPosEdgeEnd = itPair;
+    
+  }
+
+  // Define the output of the function : list of channels and fractional parts
+  FTChannelID meanChannel = std::min(vectChanAndFracPosEdgeStart->first, vectChanAndFracPosEdgeEnd->first);
+  
+  double fractional = (vectChanAndFracPos.size() + (vectChanAndFracPos.begin())->second
+                       +(vectChanAndFracPos.end()-1)->second - 1)/2;
+  debug() <<"==calculateMeanChannel==  vectChanAndFracPosEdgeStart->first="<<vectChanAndFracPosEdgeStart->first
+          << "\t vectChanAndFracPosEdgeEnd->first=" << vectChanAndFracPosEdgeEnd->first
+          << "\t Min Both diff = " 
+          << std::min(vectChanAndFracPosEdgeStart->first-vectChanAndFracPosEdgeEnd->first,
+                      vectChanAndFracPosEdgeEnd->first-vectChanAndFracPosEdgeStart->first)
+          << std::endl;
+  
+  if((vectChanAndFracPosEdgeStart != vectChanAndFracPos.begin())||(vectChanAndFracPosEdgeEnd !=(vectChanAndFracPos.end()-1)))
+  { 
+    fractional = fractional - vectChanAndFracPos.size() + 1 + 
+      std::min(vectChanAndFracPosEdgeStart->first-vectChanAndFracPosEdgeEnd->first,
+               vectChanAndFracPosEdgeEnd->first-vectChanAndFracPosEdgeStart->first);
+  }
+  
+  
+  debug() << "==calculateMeanChannel==  Starting channelID="<<meanChannel 
+          << "\t fractional=" << fractional
+          <<endmsg;
+  while(fractional > 0.5)
+  {
+    meanChannel = meanChannel+ 1;
+    fractional -=1;
+  }
+  
+  debug() << "==calculateMeanChannel==  Final channelID="<<meanChannel 
+          << "\t fractional=" << fractional
+          <<endmsg;
+    
+  ChanAndFrac = std::make_pair(meanChannel,fractional);
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Function to determine the mean SiPM channel (ChannelID + fraction) associated
+// to the track between entry and exit point.
+// @param fthit : hit from Geant4
+// @param ChanAndFrac : std::pair (ChannelID + fraction) associated to the mean channel
+//=============================================================================
 StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
-                                    VectFTPairs&         vectChanAndEnergy) const
+                                       VectFTPairs&        vectChanAndFracPos) const
 {
   if( m_relativemodule == 99 ){
     debug() << "FibreMat not found" << endmsg;
@@ -323,9 +429,9 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
 
   if( m_holey ){
     if ( ( std::pow( enPGlobal.x(), 2 ) + std::pow( enPGlobal.y(), 2) ) < std::pow( m_innerHoleRadius, 2 ) || 
-	 ( std::pow( exPGlobal.x(), 2 ) + std::pow( exPGlobal.y(), 2) ) < std::pow( m_innerHoleRadius, 2 ) ) {
+         ( std::pow( exPGlobal.x(), 2 ) + std::pow( exPGlobal.y(), 2) ) < std::pow( m_innerHoleRadius, 2 ) ) {
       debug() << "Aborting calculateHits(...) because entry or exit points are inside "
-	      << "the beam pipe hole (circle)" << endmsg;
+              << "the beam pipe hole (circle)" << endmsg;
       return StatusCode::FAILURE;
     }
   }
@@ -342,15 +448,10 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
   ///information of the hit
   unsigned int hitLayer = this->layer();
   debug() << "LayerID = "        << hitLayer
-	  << ", Module = "       << m_module
-	  << ", Isbottom = "     << m_mat
-	  << ", quarter = "      << m_quarter
+          << ", Module = "       << m_module
+          << ", Isbottom = "     << m_mat
+          << ", quarter = "      << m_quarter
           << ", Stereo angle = " << this->angle() << endmsg;
-
-  /// Create a vector of FT pairs which will hold <FTChannel, FractionalPosition>
-  /// This is the 'working' quantity. In the final step of the calculateHits method
-  /// we use it to create the final vectChanAndEnergy
-  VectFTPairs vectChanAndFracPos;
   
   ///////////////////////////////////////////////////////
   /// Get cell coordinates of the entry and exit points
@@ -512,16 +613,6 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
     tmpDetSeg = createDetSegment( itPair->first, itPair->second );
   }
 
-  /// Call the light-sharing method using vectChanAndFracPos,
-  /// create the final vector of pairs <FTChannel, EnergyFractions>
-  vectChanAndEnergy = this->createLightSharingChannels( vectChanAndFracPos );
-
-  // Finally, to return the energy deposited in each channel by the hit, each energy fraction
-  // is multiplied by the energy
-  for (VectFTPairs::iterator itPair = vectChanAndEnergy.begin(); itPair != vectChanAndEnergy.end(); ++itPair) {
-    itPair->second *= fthit->energy();
-  }
-
   return StatusCode::SUCCESS;
 }
 
@@ -534,8 +625,8 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
 // through the fibre.
 //=============================================================================
 StatusCode DeFTFibreMat::hitPositionInFibre(const LHCb::MCHit*  fthit,
-                                         double& meanfibrefullLengh,
-                                         double& fibreLenghFrac) const
+                                            double& meanfibrefullLengh,
+                                            double& fibreLenghFrac) const
 {
   Gaudi::XYZPoint enP = this->geometry()->toLocal( fthit->entry() );
   Gaudi::XYZPoint exP = this->geometry()->toLocal( fthit->exit() );
@@ -658,10 +749,10 @@ void DeFTFibreMat::lightSharing( double position, std::vector<double>& fractions
 // Function encapsulating the creation of FTChannelIDs
 //=============================================================================
 FTChannelID DeFTFibreMat::createChannel(unsigned int hitLayer,
-                                     int          module,
-                                     int          mat,
-                                     unsigned int sipmID,
-                                     unsigned int grossCellID) const
+                                        int          module,
+                                        int          mat,
+                                        unsigned int sipmID,
+                                        unsigned int grossCellID) const
 {
   FTChannelID channel;
   // Convert the grossCellID to netCellID
@@ -742,10 +833,10 @@ double DeFTFibreMat::cellUCoordinate(const FTChannelID& channel) const {
 // the cell u-coordinate and quarterID.
 //=============================================================================
 void DeFTFibreMat::cellIDCoordinates( const double  lCoord,
-				      unsigned int  quarter,
-				      unsigned int& sipmID,
-				      unsigned int& cellID,
-				      double&       fracDistCellCenter ) const
+                                      unsigned int  quarter,
+                                      unsigned int& sipmID,
+                                      unsigned int& cellID,
+                                      double&       fracDistCellCenter ) const
 {
   /// Get sipmID and local position of its right edge
 
@@ -772,7 +863,7 @@ void DeFTFibreMat::cellIDCoordinates( const double  lCoord,
   double sipmREdgeU = originX + (double)(lsipm + !(quarter%2))*stepX;
   
   debug() << "quarter, sipmID, sipmREdgeU = "
-	  << quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
+          << quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
   
   /// Get cellID inside the SiPM
   double distSipmREdge = lCoord - sipmREdgeU;
@@ -823,9 +914,9 @@ void DeFTFibreMat::cellIDCoordinates( const double  lCoord,
 // plane between two cells.
 //=============================================================================
 StatusCode DeFTFibreMat::cellCrossingPoint(const double cellEdgeU,
-                                        const Gaudi::XYZPoint& gpEntry,
-                                        const Gaudi::XYZPoint& gpExit,
-                                        Gaudi::XYZPoint& pIntersect) const
+                                           const Gaudi::XYZPoint& gpEntry,
+                                           const Gaudi::XYZPoint& gpExit,
+                                           Gaudi::XYZPoint& pIntersect) const
 {
   /// Create the plane of the border between two cells
   /// set small, but signed yInit for the calculation of the cell x at the top/bottom of the layer
@@ -864,7 +955,7 @@ StatusCode DeFTFibreMat::cellCrossingPoint(const double cellEdgeU,
 // from a FTChannelID
 //=============================================================================
 DetectorSegment DeFTFibreMat::createDetSegment(const FTChannelID& channel,
-                                            double fracPos) const {
+                                               double fracPos) const {
 
   /// Determine the x coordinate at y=0 of the det. segment
   double cellCenter = cellUCoordinate( channel );
@@ -947,8 +1038,8 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double
 // signifies if there is at least one crossing point.
 //=============================================================================
 StatusCode DeFTFibreMat::beamPipeYCoord(const double xcoord,
-                                     const double ycoord,
-                                     double& yIntersect) const {
+                                        const double ycoord,
+                                        double& yIntersect) const {
   StatusCode sc;
   /// Solve the quadratic equation
   double x0 = xAtYEq0(xcoord, ycoord);
@@ -981,7 +1072,7 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double xcoord,
 // BEWARE : This hole is considered here as being a square.
 //=============================================================================
 double DeFTFibreMat::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
-                             const Gaudi::XYZPoint&  lpExit) const{
+                                const Gaudi::XYZPoint&  lpExit) const{
 
   // define y coordinate of the crossing point between fibre and beam hole
   double YFibreXHole = 0;

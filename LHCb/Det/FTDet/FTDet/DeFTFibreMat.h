@@ -114,16 +114,35 @@ public:
    */
   static const CLID& classID() { return CLID_DeFTFibreMat; }
 
-  /** Get the list of traveresed SiPM channels. The particle trajectory is a
-   *  straight line defined by:
-   *  @param globalPointEntry Global entry point
-   *  @param globalPointExit Global exit point
+  /** Get the list of SiPM channels traversed by the hit, (including the light sharing)
+   *  The particle trajectory is a straight line defined by:
+   *  @param MChit providing globalPointEntry Global entry and exit point
    *  Fills a vector of 'FT pairs' (channel ID and fraction of the energy
    *  deposited in it by the MC particle passed as an argument.
    *  @return Status of the execution
    */
+  StatusCode calculateListOfFiredChannels(const LHCb::MCHit*  fthit,
+                                          VectFTPairs&        vectChanAndFrac) const;
+
+  /** Get the position of the mean SiPM channels plus fractionnal position within the channel
+   *  of the hit.
+   *  The particle trajectory is a straight line defined by:
+   *  @param MChit providing globalPointEntry Global entry and exit point
+   *  Fills a 'FT pairs' (channel ID and fraction of the energy
+   *  deposited in it by the MC particle passed as an argument.
+   *  @return Status of the execution
+   */
+  StatusCode calculateMeanChannel(const LHCb::MCHit*  fthit,
+                                  FTPair&             ChanAndFrac) const;
+
+  /** Get the list of SiPM channels traversed by the hit.
+   *  The particle trajectory is a straight line defined by:
+   *  @param MChit providing globalPointEntry Global entry and exit point
+   *  Fills a vector of 'FT pairs' (channel ID and fraction of the crossed length).
+   *  @return Status of the execution
+   */
   StatusCode calculateHits(const LHCb::MCHit*  fthit,
-                           VectFTPairs&         vectChanAndFrac) const;
+                           VectFTPairs&        vectChanAndFracPos) const;
 
 
   /** This function returns the fibre lengh and relative position of the hit 
@@ -133,9 +152,9 @@ public:
    *  @param fibre lengh for the mean y-value of the hit (from entry to exit point)
    *  @param relative position of the hit in the fibre wrt the SiPm position
    */
-  StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
-                                double& meanfibrefullLengh,
-                                double& fibreLenghFrac)const;
+    StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
+                                  double& meanfibrefullLengh,
+                                  double& fibreLenghFrac)const;
 
   //
   bool isBottom() const { return m_mat; }
@@ -179,7 +198,7 @@ public:
   double layerMaxZ() const { return m_layerMaxZ; }
 
 
- /// Accessor to the minimal x-position of the fibreMat area covered with fibres
+  /// Accessor to the minimal x-position of the fibreMat area covered with fibres
   double fibreMatMinX() const { return m_fibreMatMinX; }
 
   /// Accessor to the maximal x-position of the fibreMat area covered with fibres
@@ -376,7 +395,8 @@ private: // private data members
   double m_cellSizeX;
   double m_sipmSizeX;
   /// Gaps
-  double m_sipmEdgeSizeX, m_moduleEdgeSizeX;       ///< x-gap between the active area and the outer edge of a sipm and same for module
+  double m_sipmEdgeSizeX, m_moduleEdgeSizeX; ///< x-gap between the active area and the outer edge
+                                             ///of a sipm and same for module
   double  m_moduleGapH, m_moduleGapV;
   double m_gapXLayerHalves;     ///< half x-gap between left and right detector halves
 

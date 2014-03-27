@@ -4,9 +4,13 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+
+! 2014-03-27 - Eric Cogneras
+ - Add new method calculateMeanChannel and calculateLitsOfFiredChannels
+ - Factorisation of the code of the new methods with existing calculateHit method
+
 ! 2014-03-25 - Diego Milanes
  - Fix bug with with layerCenterZ method
-
 
 ! 2014-03-20 - Luigi Del Buono
  - Changes for new FTchanID (no more quarter --> module +mat) Fibremat level implemented
