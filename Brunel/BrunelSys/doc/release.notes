@@ -3,9 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
-This version uses projects LCG 66, Gaudi v25r0, LHCb v37r1, Lbcom v15r1,
- Rec v16r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+</PRE><H1><A NAME=v45r1>2014-03-27 Brunel v45r1</A></H1><PRE>
+This version uses projects:
+ LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r1, Lbcom v15r1, Rec v16r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
 - Configuration changes
   . Propagate OutputLevel value to Calo sequences only when the property is
