@@ -322,12 +322,11 @@ StatusCode MCFTDepositCreator::execute() {
 
         // Get the list of fired FTChannel from the (x,y,z) position of the hit, with, 
         // for each FTChannel, the relative distance to the middle of the cell of the barycentre 
-        // of the (entry point, endpoint) system : 
-        // ( call of calculateHits method from DeFTLayer)
+        // of the (entry point, endpoint) system :
         if(m_deFT->version() == 20 ){
           StatusCode sc = HitToChannelConversion(ftHit,depositCont,iSpill);
           if (  sc.isFailure() ){
-            info() << " HitToChannelConversion_NewGeometry() FAILED" << endmsg; 
+            info() << " HitToChannelConversion() FAILED" << endmsg; 
             return sc;
           }
         } 
@@ -350,7 +349,8 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
     debug() << "[HitToChannelConversion] RUN NEW GEOMETRY" << endmsg;
   }
   if ( pL) {
-    if( pL->calculateHits( ftHit, channels)){
+    // ( call of calculateListOfFiredChannels method from DeFTLayer)
+    if( pL->calculateListOfFiredChannels( ftHit, channels)){
       if ( msgLevel( MSG::DEBUG) ) {
         debug() << "--- Hit index: " << ftHit->index() 
                 << ", size of vector of channels: " << channels.size() << endmsg;
@@ -491,9 +491,9 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
       }
     }else{
       if ( msgLevel( MSG::DEBUG) ){
-        debug()  << "Call (if(pL->calculateHit)) returned FALSE" << endmsg;
+        debug()  << "Call (if(pL->calculateListOfFiredChannels)) returned FALSE" << endmsg;
       }
-    }// end if(pL->calculateHit)
+    }// end if(pL->calculateListOfFiredChannels)
       
   }// end if(pL)
 

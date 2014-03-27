@@ -29,7 +29,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  
 
   bool keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
 
@@ -37,6 +36,11 @@ private:
   // Location
   std::string m_inputLocation;       ///< MCFTDigit input Container
   std::string m_outputLocation;      ///< FTCluster output Container
+  std::string m_clusterAlgo;         ///< Clustering algo to be performed (6 or 2 bits) [Temporary] 
+
+  double m_dynamicsLowLimit;         ///< Lower edge of the clustering range
+  double m_dynamicsUpLimit;          ///< Upper edge of the clustering range
+  uint m_dynamicsBitsNber;           ///< Number of bits of the dynamics
 
   int m_adcThreshold;   ///<Minimal ADC value for cluster definition
   unsigned int m_clusterMinWidth;   ///< Minimal Width for clusters
@@ -56,6 +60,8 @@ private:
   int     m_nberOfKeptHitFromMap;
   int     m_evtNbCluster64;
   
+  DeFTDetector* m_deFT; ///< pointer to FT detector description
+
 };
 #endif // FTCLUSTERCREATOR_H
 

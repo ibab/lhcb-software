@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-03-27 - Eric Cogneras
+ - Move clustering algorithm to its 2 bits version
+ - propagation of the change (calculateHits -> calculateListOfFiredChannels) in Det/FTDet
+
 ! 2014-03-25 - Eric Cogneras
  - Removal of last piece of code referring to old FT geometry without dead areas
  - Add new control plots

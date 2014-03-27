@@ -109,7 +109,7 @@ StatusCode MCFTDepositMonitor::execute() {
 
     plot(ftHit->energy(),"CheckEnergyPerHit", "Energy deposited [Hit level]; Energy [MeV];Number of hits" , 0 , 10 );  
 
-    // ( call of calculateHits method) 
+    // ( call of calculateListOfFiredChannels method) 
     const DeFTFibreMat* pL = m_deFT->findFibreMat(ftHit->midPoint());
     FTDoublePairs energyDistribution;
     
@@ -117,7 +117,7 @@ StatusCode MCFTDepositMonitor::execute() {
     double fibrelenghfraction = 0;
 
     if (pL) {
-      if(pL->calculateHits(ftHit, energyDistribution)){
+      if(pL->calculateListOfFiredChannels(ftHit, energyDistribution)){
         
 
         plot(pL->angle()*180/M_PI,"CheckStereoAngle","Stereo Angle; Stereo Angle [#degree];" ,-10 , 10);

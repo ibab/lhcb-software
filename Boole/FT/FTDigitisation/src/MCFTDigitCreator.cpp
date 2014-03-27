@@ -244,9 +244,9 @@ StatusCode MCFTDigitCreator::execute() {
     // The deposited energy to ADC conversion is made by the deposit2ADC method
     int adc = deposit2ADC(mcDeposit);
     if ( 0 < adc ) {
-      plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0, .6 ,0,100.,100,100);
-      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainZOOM","ADC Gain; Energy [MeV]; ADC", 0, .2 ,0,80.,100,100);
-      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainBIGZOOM","ADC Gain; Energy [MeV]; ADC", 0, .1 ,0,50.,100,100);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGain","ADC Gain; Energy [MeV]; ADC", 0., .6 ,0., 100., 100, 100);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainZOOM","ADC Gain; Energy [MeV]; ADC", 0., .2, 0., 80., 100, 80);
+      plot2D(HitEnergySumInChannel,(double)adc,"ADCGainBIGZOOM","ADC Gain; Energy [MeV]; ADC", 0., .1, 0., 50., 100, 50);
       plot(adc,"ADCPerChannel",
            "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
       counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
@@ -682,13 +682,13 @@ int MCFTDigitCreator::deposit2ADC(const LHCb::MCFTDeposit* ftdeposit)
   plot(adcCountDir, "ADCcountsDirect",
        "ADC counts (direct);ADC;Number of SiPM channels", 0, 200.);
   plot(adcCountRef, "ADCcountsReflected",
-       "ADC counts (reflected);ADC;Number of SiPM channels", 0, 200.);
+       "ADC counts (reflected);ADC;Number of SiPM channels", 0., 200.);
   plot(adcCountDir, "ADCcountsDirectZOOM",
-       "ADC counts (direct);ADC;Number of SiPM channels", 0, 20.);
+       "ADC counts (direct);ADC;Number of SiPM channels", 0., 20., 20);
   plot(adcCountRef, "ADCcountsReflectedZOOM",
-       "ADC counts (reflected);ADC;Number of SiPM channels", 0, 20.);
+       "ADC counts (reflected);ADC;Number of SiPM channels", 0., 20., 20);
   plot(adcCountDir+adcCountRef, "ADCcounts",
-       "ADC counts (direct+ reflected);ADC;Number of SiPM channels", 0, 200.);
+       "ADC counts (direct+ reflected);ADC;Number of SiPM channels", 0., 200.);
   plot(adcCountDir+adcCountRef, "ADCcountsZOOM",
        "ADC counts (direct + reflected);ADC;Number of SiPM channels", 0., 20., 20);
  
