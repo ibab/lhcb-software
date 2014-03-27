@@ -131,16 +131,13 @@ PatFwdTool::~PatFwdTool() {}
 //  Initialisation, check parameters
 //=========================================================================
 StatusCode PatFwdTool::initialize ( ) {
-  
-  
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
-  if ( 5 > m_zMagnetParams.size() || 6 > m_momentumParams.size() || 
-       2 > m_xParams.size() || 2 > m_yParams.size()){
-  
+  if ( m_zMagnetParams.empty() && m_momentumParams.empty() &&
+       m_xParams.empty() && m_yParams.empty()){
     if (m_magFieldSvc->useRealMap()){
       m_zMagnetParams   = { 5208.05, 318.502, -1223.87, 9.80117e-06, -304.272},
       m_xParams         = { 17.5815, -5.94803},
@@ -154,6 +151,12 @@ StatusCode PatFwdTool::initialize ( ) {
     }
   }
 
+  if ( 5 != m_zMagnetParams.size() || 6 != m_momentumParams.size() || 
+       2 != m_xParams.size() || 2 != m_yParams.size()){
+      error() << "The properties ZMagnetParams, xParams, yParams and momentumParams must either"
+                 " all be empty, or contain resp. 5, 6, 2 and 2 entries" << endmsg;
+      return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 
