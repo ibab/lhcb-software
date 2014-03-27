@@ -250,7 +250,8 @@ namespace LoKi
     // ======================================================================== 
   private: // parameters 
     // ======================================================================== 
-    typedef GaudiUtils::VectorMap<std::string,double>  Params ;
+    // typedef GaudiUtils::VectorMap<std::string,double>  Params ;
+    typedef std::map<std::string,double>  Params ;
     // ======================================================================== 
     Params   m_params     ;
     Params   m_params_old ;    
