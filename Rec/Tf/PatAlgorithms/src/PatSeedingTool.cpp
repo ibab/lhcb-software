@@ -2212,11 +2212,10 @@ bool PatSeedingTool::findBestRangeCosmics(
       // now, collect hits around predicted position in projection plane
       current.clear();
       current.reserve(stereo.size());
-      for( PatFwdHit* hit: stereo ) {
-        if (fabs(hit->projection() - y0 / hit->z() - ty) > maxRangeSize)
-          continue;
-        current.push_back(hit);
-      }
+      std::copy_if( std::begin(stereo), std::end(stereo), std::back_inserter(current), 
+                    [=](const PatFwdHit* hit) { 
+        return fabs(hit->projection() - y0 / hit->z() - ty) <= maxRangeSize;
+                    });
 
       // count number of hits - more hits win (fast check first)
       if (current.size() < best.size()) continue;
