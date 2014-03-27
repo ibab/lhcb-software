@@ -10,6 +10,7 @@
  - PatFwdTrackCandidate: use default copy ctor, dtor, assignement, move ctor/assignment, 
  - PatSeedingTool: replace loop by std::copy_if
  - PatFwdTool: be more pedantic about some properties
+ - PatForwardTool: trivial optimizations in control flow
 
 ! 2014-03-26 - Gerhard Raven
  - PatForward: tweak overlap bookkeeping

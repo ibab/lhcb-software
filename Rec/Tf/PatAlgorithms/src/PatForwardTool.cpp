@@ -575,11 +575,8 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
           double xRef = m_fwdTool->xAtReferencePlane( track, hit );
           hit->setProjection( xRef );
 
-          if ( xMin > xRef ) continue;
           if ( xMax < xRef ) break;
-
-          m_xHitsAtReference.push_back( hit );
-
+          if ( xMin <= xRef ) m_xHitsAtReference.push_back( hit );
         }
       }
     }
@@ -617,13 +614,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
         //== get position and slope at z=0 from track at zReference (0 for y/ySlope functions)
         double ty = track.ySlope( 0. );
-        double y0 = track.y( 0. )  -  m_fwdTool->zReference()  * ty;  // Extrapolate from back...
+        double y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
 
         //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
         //== displacement also in this projectio.
-
-        double sign = std::copysign( 1., regionB->sinT() );
-
+        bool  flipSign = ( regionB->sinT()  < 0 );
         double minProj = tol;
         if ( region< m_nOTReg ) minProj += 1.5;
 
@@ -638,13 +633,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
               continue;
           }
           hit->setSelected( true );
-          double xRef = ( hit->x() - xPred ) * sign;
-          hit->setProjection( xRef );
+          double xRef = ( hit->x() - xPred ) ;
+          hit->setProjection( flipSign ? -xRef : xRef );
 
-          if ( -minProj > xRef * sign ) continue;
-          if (  minProj < xRef * sign ) break;
-
-          temp.push_back( hit );
+          if (  minProj <  xRef ) break;
+          if ( -minProj <= xRef ) temp.push_back( hit );
         }
       }
     }
@@ -699,7 +692,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
         continue;
     }
 
-
     PlaneCounter planeCount{ itP, itE, minYPlanes };
     //== Enough different planes
     if ( !planeCount() ) {
@@ -712,21 +704,21 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
     //== Try to make a single zone, by removing the first and adding other as
     //   long as the spread and plane count conditions are met.
+    //TODO: move make_single_zone into PlaneCounter...
     itE = make_single_zone( itP, itE, last, std::move(planeCount) , predicate );
 
-    double x1 = (*itP)->projection();
-    double x2 = (*(itE-1))->projection();
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           x1, x2, itE-itP, nbDifferent(itP,itE), predicate.spread)
+                           (*itP)->projection(), (*(itE-1))->projection(), itE-itP, nbDifferent(itP,itE), predicate.spread)
                 << endmsg;
     }
     //== We have the first list. The best one ????
     auto cnt = nbDifferent( itP, itE );
     if ( cnt >= inbDifferent ) {
-      if ( cnt > inbDifferent || x2-x1 < size ) {
+      auto delta = (*(itE-1))->projection() - (*itP)->projection();
+      if ( cnt > inbDifferent || delta < size ) {
         inbDifferent =  cnt;
-        size = x2-x1;
+        size = delta;
         bestList = { itP, itE } ;
         //break; /// Keep first one !
       }
