@@ -30,11 +30,11 @@
 #include "AIDA/IHistogram3D.h"
 #include "boost/lexical_cast.hpp"
 
-#include "TH3D.h"
+#include "TH1D.h"
 #include "TMath.h"
 #include "Math/VectorUtil.h"
 
-class TH3D;
+class TH1D;
 // ============================================================================
 namespace LoKi 
 {
@@ -205,7 +205,9 @@ namespace LoKi
     /// append Jet ID
     bool m_applyJetID              ; // append jet ID info
     /// histograms for JEC
-    std::vector<TH3D*> m_histosJEC ;
+    TH1D* m_histosJEC[3][24][10][2] ;
+
+    //std::vector<TH1D*> m_histosJEC ;
     /// histo path
     std::string m_histo_path ;
     /// input particles to consider
@@ -252,13 +254,20 @@ StatusCode LoKi::PFJetMaker::initialize ()
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
   // Read in the histograms for JEC
   if ( m_applyJEC ){ 
-    for( int i = 1; i < 4; ++i ) {
-      std::string histoname = "JEC_PV"+boost::lexical_cast<std::string>(i);
-      AIDA::IHistogram3D *aida =  get<AIDA::IHistogram3D> (histoSvc(), m_histo_path + histoname);
-      if( 0==aida ) warning()<<"Could not find AIDA::IHistogram3D* "
-                             << m_histo_path + histoname<<"."<<endmsg;
-      m_histosJEC.push_back( Gaudi::Utils::Aida2ROOT::aida2root(aida) );
-    }
+      const int netabins=24, ncpfbins=10, nphibins=2;
+      for(int inpvs=0; inpvs<3; inpvs++) for(int ieta=0; ieta<netabins; ieta++)
+          for(int icpf=0; icpf<ncpfbins; icpf++) for(int iphi=0; iphi<nphibins; iphi++) {
+              std::string histoname = 
+                  "JECSYS_PV"+boost::lexical_cast<std::string>(inpvs+1)+
+                  "_ETA"+boost::lexical_cast<std::string>(ieta+20)+
+                  "_CPF"+boost::lexical_cast<std::string>(icpf+1)+
+                  "_PHI"+boost::lexical_cast<std::string>(iphi);
+              AIDA::IHistogram1D *aida =  get<AIDA::IHistogram1D> (histoSvc(), m_histo_path + histoname);
+              if( 0==aida ) warning()<<"Could not find AIDA::IHistogram1D* "
+                  << m_histo_path + histoname<<"."<<endmsg;
+              m_histosJEC[inpvs][ieta][icpf][iphi] = Gaudi::Utils::Aida2ROOT::aida2root(aida) ;
+              //m_histosJEC.push_back( Gaudi::Utils::Aida2ROOT::aida2root(aida) );
+          }
   }
   // Give some default values to the types if not defined
   if (m_inputTypes.empty()){
@@ -672,18 +681,29 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   int PV = this->primaryVertices().size();
   int usePV = PV;
   if (PV > 3)usePV = 3;
-  TH3D* histo = m_histosJEC[usePV-1];
-  //int xbin = histo->GetXaxis()->FindBin(LoKi::Cuts::PT(jet)/1000.);
-  //int ybin = histo->GetYaxis()->FindBin(LoKi::Cuts::ETA(jet));
-  double jetpt = LoKi::Cuts::PT(jet)/1000.;
-  double jeteta = LoKi::Cuts::ETA(jet);
-  double jetcpf = jet->info(CPF,-1.);
-  if(jetpt>499) jetpt=498;
+
+  float jetpt = LoKi::Cuts::PT(jet)/1000.;
+  float jeteta = LoKi::Cuts::ETA(jet);
+  float jetphi = LoKi::Cuts::PHI(jet);
+  float jetcpf = jet->info(CPF,-1.);
+
+  if(jetpt<5)    jetpt=5;
+  if(jetpt>299)  jetpt=298;
   if(jeteta<2.0) jeteta=2.0;
-  if(jeteta>4.8) jeteta=4.8;
+  if(jeteta>4.4) jeteta=4.5;
+
+  int jec_eta=(int)(jeteta*10-20.5), jec_cpf=(int)(jetcpf*10-0.5);
+  int jec_phi=0; jetphi = TMath::Abs(jetphi);
+  if(jetphi<TMath::Pi()/4.||jetphi>3*TMath::Pi()/4.) jec_phi=0;
+  if(TMath::Abs(jetphi-TMath::Pi()/2.)<TMath::Pi()/4.) jec_phi=1;
+  if(jec_cpf>9) jec_cpf=9;
+  if(jec_eta>23) jec_eta=23;
+
+  TH1D* histo = m_histosJEC[usePV-1][jec_eta][jec_cpf][jec_phi];
+  
   double cor = 1.;
-  if (jetpt>5.) cor = histo->Interpolate(jetpt, jeteta, jetcpf);
-  double corerr = histo->GetBinError(histo->FindBin(jetpt,jeteta,jetcpf));
+  cor = histo->Interpolate(jetpt);
+  double corerr = histo->GetBinError(histo->FindBin(jetpt));
   cor+=m_shiftJEC*corerr;
   // Store the uncorrected kinematics
 
