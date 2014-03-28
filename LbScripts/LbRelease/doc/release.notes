@@ -1,3 +1,10 @@
+2014-03-28  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-449: Fixed to package only relevant links and files. Added protection.
+        * scripts/mkLCGCMTTarFromRPM
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGRpmExtractor.py
+
 2014-03-26  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-447: Add option to limit the externals packaged in LCGCMT tar	

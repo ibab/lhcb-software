@@ -60,6 +60,11 @@ class BuildLCGTarScript(Script):
                           action = "store_true",
                           default = False,
                           help = "For DEV: does packaging, do not redo install")
+        parser.add_option("--force",
+                          dest = "force",
+                          action = "store_true",
+                          default = False,
+                          help = "Ignore installation errors and continue packaging")        
         parser.add_option("--explicit-deps",
                           dest = "explicit_deps",
                           action = "store_true",
@@ -83,7 +88,7 @@ class BuildLCGTarScript(Script):
             self.cmtconfig = args[2]
 
         # preparing the actual RPM install area
-        log.warning("Repackaging LCG %s for CMTCONFIG %s" % (self.version, self.cmtconfig))
+        log.warning("Repackaging %s %s for CMTCONFIG %s" % (self.project, self.version, self.cmtconfig))
         installer = LCGRpmExtractor.LCGRpmInstaller(opts.siteroot)
 
         # performing the installation if requested
@@ -117,11 +122,14 @@ class BuildLCGTarScript(Script):
         packageList = None
         if opts.explicit_deps:
             packageList = externalsDict.keys()
+            # Now adding the files in LCG_XX
+            for k in externalsDict.keys():
+                packageList.append(os.path.join("LCG_" + self.lcgVer,
+                                                k))
         installer.prepareLCGTar(tarFilename, packageList)
         self.createMD5File(tarFilename, "tar.gz")
         self.createHTMLFile(htmlFilename, baseFilename, self.cmtconfig)
         self.createMD5File(htmlFilename, "html")
-
 
     def createMD5File(self, tarfile, origExtension):
         '''
@@ -204,6 +212,10 @@ class BuildLCGTarScript(Script):
             self.log.error("Errors installing the following packages:")
             for p in packageErrors:
                 self.log.error(p)
+            if not self.options.force:
+                self.log.error("Some packages are missing -stopping installation")
+                self.log.error("Use --force option to continue nonetheless")
+                sys.exit(1)
         else:
                 self.log.warning("All packaged installed successfully")
                 

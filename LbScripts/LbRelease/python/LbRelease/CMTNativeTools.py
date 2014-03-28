@@ -67,7 +67,7 @@ def get_macro_value(cmtdir, macro, extratags):
 
 def get_base_project(native_version):
     NAME = native_version.split('_')[0]
-    version = native_version.split('_')[1]
+    version = native_version.split('_',1)[1]
     Name = NAME.lower().capitalize()
     if NAME == "LHCBDIRAC" :
         Name = "LHCbDirac"
@@ -91,18 +91,34 @@ def get_base_project(native_version):
             print 'you should set CMTPROJECTPATH first - STOP '
             sys.exit('No CMTPROJECTPATH')
         print 'CMTPROJECTPATH = ',os.environ['CMTPROJECTPATH']
-        os.chdir(os.path.join(os.environ[release_area],NAME,native_version,'cmt'))
+        #print " * Release area k:", release_area
+        #print " * Release area  :", os.environ[release_area]
+        #print " * Name          :", NAME
+        #print " * Native Version:", native_version
+        relarea = find_project_in_cmtprojectpath(NAME, native_version)
+        #os.chdir(os.path.join(os.environ[release_area],NAME,native_version,'cmt'))
+        os.chdir(os.path.join(relarea,NAME,native_version,'cmt'))
     print "get_base_project %s %s %s %s %s" % (NAME, version, Name, NameSys, release_area)
     return NAME, version, Name, NameSys, release_area
 
-
+def find_project_in_cmtprojectpath(name, version):
+    '''
+    Method to replace the use of os.environ[release_area]
+    It scans the CMTPROJECTPATH to find the right location
+    '''
+    for e in os.environ['CMTPROJECTPATH'].split(":"):
+        epath = os.path.join(e, name, version,'cmt')
+        if os.path.exists(epath):
+            return e
+                          
 def get_project_dir(native_version):
     here = os.getcwd()
     NAME, version, Name, NameSys, release_area = get_base_project(native_version)
-    dir = os.path.join(os.environ[release_area],NAME,native_version)
+    #dir = os.path.join(os.environ[release_area],NAME,native_version)
+    relarea = find_project_in_cmtprojectpath(NAME, native_version)
+    dir = os.path.join(relarea,NAME,native_version)
     os.chdir(here)
     return dir
-
 
 def get_projectcmt_file(native_version):
     dir = get_project_dir(native_version)
@@ -128,7 +144,6 @@ def get_runtime_cmtpath(native_version):
         dir = get_project_dir(deps[d])
         cmtpath.append(dir)
     return ':'.join(cmtpath)
-
 
 def get_cmtpath(native_version):
     os.environ['CMTPATH'] = get_runtime_cmtpath(native_version)
@@ -218,9 +233,10 @@ def get_native_versions(native_version, binary):
     NAME, version, Name, NameSys, release_area = get_base_project(native_version)
     CMTPATH = get_cmtpath(native_version)
     lcgv = get_lcg_version(CMTPATH)
-    native_cmt = os.path.join(os.environ[release_area], NAME, native_version, NameSys, 'cmt')
+    relarea = find_project_in_cmtprojectpath(NAME, native_version)
+    native_cmt = os.path.join(relarea, NAME, native_version, NameSys, 'cmt')
     if not os.path.exists(native_cmt) :
-        native_cmt = os.path.join(os.environ[release_area], NAME, native_version, NameSys, version, 'cmt')
+        native_cmt = os.path.join(relarea, NAME, native_version, NameSys, version, 'cmt')
     os.chdir(native_cmt)
     __log__.debug('get_native_version - %s %s %s %s '%(release_area, native_cmt, os.getenv('CMTPATH'), lcgv))
     if NAME != 'LHCBGRID':
@@ -282,7 +298,7 @@ def get_native_versions(native_version, binary):
         # Compatibility check for OLD packages
         # Force external in this case
         if LCG_external == LCG_releases:
-            print "get_native_version - *** Compatibility mode for OLD packages: setting the type to external ***"
+            #print "get_native_version - *** Compatibility mode for OLD packages: setting the type to external ***"
             pakType = "external"
 
         if pakType is None:
@@ -297,7 +313,7 @@ def get_native_versions(native_version, binary):
             # Adding the pakType to the attribute of the package in the map
             l = packages_versions[pak]
             l.append(pakType)
-            print "get_native_version - Package %s is %s" % (pak, pakType)
+            print "get_native_version - Including %s package %s\t%s" % (pakType, pak, l[0])
 
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :

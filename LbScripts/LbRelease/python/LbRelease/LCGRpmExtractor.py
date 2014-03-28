@@ -66,6 +66,62 @@ class LCGRpmInstaller(object):
         rcode = p.returncode
         return (out, err, rcode )
 
+
+    def checkInstallArea(self, packageList):
+        '''
+        Check which files are packages, which are NOT
+        '''
+        # First we parse the package list to see which top dirs we should go down into!
+        # Only works 1st level is needed!
+        subdirs = {}
+        topdirfilesrequested = set()
+        finallist = []
+        for p in packageList:
+            # First a safety check
+            if p.count(os.sep) > 1:
+                raise Exception("Error: install area check only works for top level directory")
+
+            # Check subdirs
+            if p.count(os.sep) == 1:
+                topdirname = p.split(os.sep)[0]
+                extname = p.split(os.sep)[1]
+                tmplist = subdirs.get(topdirname)
+                if tmplist == None:
+                    tmplist = []
+                tmplist.append(extname)
+                subdirs[topdirname]=tmplist
+            # And topdir
+            else:
+                topdirfilesrequested.add(p)
+                
+        # Now comparing the requested files with the files on disk...
+        # First the topdir....
+        topdirfiles = set(os.listdir(RELEASEDIRNAME)) - set(subdirs.keys())
+        unpackaged = topdirfiles - topdirfilesrequested
+        missing = topdirfilesrequested - topdirfiles
+        if len(unpackaged) > 0:
+            self.log.error("Unpackaged files:" + ",".join(unpackaged))
+        if len(missing) > 0:
+            self.log.error("Missing    files:" + ",".join(missing))
+
+        finallist.extend(topdirfiles - missing)
+            
+        # Now doing the same on subdirs
+        for k, v in subdirs.items():
+            files = set(os.listdir(os.path.join(RELEASEDIRNAME, k)))
+            requested = set(v)
+            unpackaged = files - requested
+            missing = requested - files
+            if len(unpackaged) > 0:
+                self.log.error("Subdir: %s Unpackaged files: %s" % (k, ",".join(unpackaged)))
+            if len(missing) > 0:
+                self.log.error("Subdir: %s Missing    files: %s" % (k,  ",".join(missing)))
+
+            finallist.extend(list(requested - missing))
+
+        # Now returning the actual list of files to package
+        return finallist
+
     def prepareLCGTar(self, targetfile, packageList):
         '''
         Create the tar file of the install area
@@ -75,22 +131,19 @@ class LCGRpmInstaller(object):
         allfiles = os.listdir(RELEASEDIRNAME)
         packfiles = allfiles
         if packageList != None:
-            packfiles = []
-            for p in allfiles:
-                if p.startswith("LCG") or p in packageList:
-                    packfiles.append(p)
-                else:
-                    self.log.warning("Excluding from package: %s" % p)
-        
+            packfiles = packageList
+            actuallist = self.checkInstallArea(packageList)
+            
         str = "tar zcf " + targetfile
         str += ' --exclude "*/InstallArea*" '
         str += ' --exclude "*.tar.gz" '
         str += ' --exclude "*.tgz" '
         str += ' --exclude "*.rpm" '
-        for f in packfiles:
+        for f in actuallist:
             if f not in PACKAGE_EXCLUSION_LIST:
                 str += ' %s ' % os.path.join(RELEASEDIRNAME, f)
 
+        self.log.warning("In directory: %s" % self._siterootBase)
         self.log.warning("Running command: %s" % str)
         rc = os.system(str)
         if rc == 0:
