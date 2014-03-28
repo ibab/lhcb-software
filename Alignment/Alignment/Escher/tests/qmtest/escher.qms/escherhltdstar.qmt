@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# --------------------
+# Author: rlambert
+# Purpose: To check that Escher can aligh with mass-constrained D*
+# Pre-requisites: None
+# Common failure modes, severities and cures: 
+#               - SEVERE: Segfaults or stderr
+#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               - MINOR: Additional WARNING messages, need to be checked and suppressed if they are not actually warning you of anything
+#               - EXPECTED: The stdout can vary due to changes lower down the stack.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudiiter.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>

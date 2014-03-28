@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# --------------------
+# Author: rlambert
+# Purpose: To verify that the default Escher configurable is self-consistent
+# Pre-requisites: 
+# Common failure modes, severities and cures: 
+#               - SEVERE: Failure to instantiate, segfaults or stderr
+#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               - MINOR: INFO message differences
+#               - EXPECTED: small changes in printouts from minor changes lower down the stack
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
