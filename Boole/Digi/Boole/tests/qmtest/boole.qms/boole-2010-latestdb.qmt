@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert/cattanem
+# Purpose: Check the backwards compatibility of the database
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test. This would indicate a major backwards incompatibility in the database.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning. This could indicate a minor backwards incompatibility in the database.
+#               . EXPECTED: There are always small differences in output from one stack to the next, if there are such small differences the reference files need to be updated.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
