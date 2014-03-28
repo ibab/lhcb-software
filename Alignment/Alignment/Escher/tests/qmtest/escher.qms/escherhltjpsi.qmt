@@ -2,15 +2,15 @@
 <!--
 #######################################################
 # SUMMARY OF THIS TEST
-# --------------------
+# ....................
 # Author: rlambert
 # Purpose: Verify that muon-based alignment still works
-# Pre-requisites: 
+# Prerequisites: 
 # Common failure modes, severities and cures: 
-#               - SEVERE: Segfault or raised exception
-#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
-#               - MINOR: additional WARNING messages should be followed up.
-#               - EXPECTED: Minor changes in stdout due to small varioations in the stack below Escher. This is most probably not a problem and the ref files can be updated.
+#               . SEVERE: Segfault or raised exception
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages should be followed up.
+#               . EXPECTED: Minor changes in stdout due to small varioations in the stack below Escher. This is most probably not a problem and the ref files can be updated.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">

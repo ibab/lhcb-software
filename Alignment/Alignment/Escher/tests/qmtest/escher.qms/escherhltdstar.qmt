@@ -2,15 +2,15 @@
 <!--
 #######################################################
 # SUMMARY OF THIS TEST
-# --------------------
+# ....................
 # Author: rlambert
 # Purpose: To check that Escher can aligh with mass-constrained D*
-# Pre-requisites: None
+# Prerequisites: None
 # Common failure modes, severities and cures: 
-#               - SEVERE: Segfaults or stderr
-#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
-#               - MINOR: Additional WARNING messages, need to be checked and suppressed if they are not actually warning you of anything
-#               - EXPECTED: The stdout can vary due to changes lower down the stack.
+#               . SEVERE: Segfaults or stderr
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: Additional WARNING messages, need to be checked and suppressed if they are not actually warning you of anything
+#               . EXPECTED: The stdout can vary due to changes lower down the stack.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">

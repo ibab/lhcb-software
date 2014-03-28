@@ -2,15 +2,15 @@
 <!--
 #######################################################
 # SUMMARY OF THIS TEST
-# --------------------
+# ....................
 # Author: rlambert, wouter
 # Purpose: To validate that Echer can still align iteratively
-# Pre-requisites: None
+# Prerequisites: None
 # Common failure modes, severities and cures: 
-#               - SEVERE: Segementation violations or stderr printout
-#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
-#               - MINOR: Additional INFO messages
-#               - EXPECTED: Small diffs in reference files on each new LHCb stack, resulting from changes lower down the stack.
+#               . SEVERE: Segementation violations or stderr printout
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: Additional INFO messages
+#               . EXPECTED: Small diffs in reference files on each new LHCb stack, resulting from changes lower down the stack.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">

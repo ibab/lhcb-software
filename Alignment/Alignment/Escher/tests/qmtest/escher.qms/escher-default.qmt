@@ -2,15 +2,15 @@
 <!--
 #######################################################
 # SUMMARY OF THIS TEST
-# --------------------
+# ....................
 # Author: rlambert
 # Purpose: To verify that the default Escher configurable is self-consistent
 # Pre-requisites: 
 # Common failure modes, severities and cures: 
-#               - SEVERE: Failure to instantiate, segfaults or stderr
-#               - MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
-#               - MINOR: INFO message differences
-#               - EXPECTED: small changes in printouts from minor changes lower down the stack
+#               . SEVERE: Failure to instantiate, segfaults or stderr
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: INFO message differences
+#               . EXPECTED: small changes in printouts from minor changes lower down the stack
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
