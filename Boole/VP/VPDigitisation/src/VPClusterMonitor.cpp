@@ -87,9 +87,8 @@ void VPClusterMonitor::loopClusters() {
   // Loop over clusters  
   for (itc = m_clusters->begin(); itc != m_clusters->end(); itc++) {
     LHCb::VPCluster* cluster = *itc;
-    LHCb::VPLiteCluster lCluster = cluster->lCluster();
     // Get sensor
-    const DeVPSensor* sensor = m_vpDet->sensorOfChannel(lCluster.channelID());
+    const DeVPSensor* sensor = m_vpDet->sensorOfChannel(cluster->channelID());
     // Set up some objects for later use
     std::vector<LHCb::VPChannelID> pixels = cluster->pixels();
     int clustToT = 0;
@@ -139,8 +138,8 @@ void VPClusterMonitor::loopClusters() {
     plot2D(cluster_x, cluster_y, "xy_map_clusters", -100, 100, -100, 100, 400, 400);
     plot2D(cluster_z, cluster_x, "xz_map_clusters", -500, 1000, -100, 100, 1000, 400);
     plot2D(cluster_z, cluster_y, "yz_map_clusters", -500, 1000, -100, 100, 1000, 400);
-    plot(lCluster.interPixelFractionX(), "interpixel_fraction_x",-0.1,1.1,120);
-    plot(lCluster.interPixelFractionY(), "interpixel_fraction_y",-0.1,1.1,120);
+    plot(cluster->fraction().first, "interpixel_fraction_x",-0.1,1.1,120);
+    plot(cluster->fraction().second, "interpixel_fraction_y",-0.1,1.1,120);
     // Check if 2 pixels wide in x
     if (pixels.size() == 2 && cluster_x != pixel_x) {
       // Plot eta distributions
@@ -173,7 +172,7 @@ void VPClusterMonitor::loopClusters() {
       const double dy = cluster_point.y() - mchitPoint.y();
       const double dz = cluster_point.z() - mchitPoint.z();
       const double resid3d = sqrt(dx * dx + dy * dy + dz * dz);
-      Gaudi::XYZPoint liteClusterPoint = sensor->channelToPoint(lCluster.channelID(), lCluster.interPixelFraction());
+      Gaudi::XYZPoint liteClusterPoint = sensor->channelToPoint(cluster->channelID(), cluster->fraction());
       plot(liteClusterPoint.x() - mchitPoint.x(), "xresLite", -0.2, 0.2, 4000); 
       plot(liteClusterPoint.y() - mchitPoint.y(), "yresLite", -0.2, 0.2, 4000); 
       plot(resid3d, "3d_residuals",-0.2,0.2,4000);
