@@ -8,6 +8,7 @@
 
 #include "VPDet/DeVP.h"
 #include "Event/VPCluster.h"
+#include "Event/VPLiteCluster.h"
 
 #include "VPClusterPosition.h"
 
@@ -91,13 +92,12 @@ toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster) const {
   toolInfo info;
   const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
   Gaudi::XYZPoint point = sensor->channelToPoint(cluster->channelID(), 
-                                                 cluster->lCluster().interPixelFraction());
+                                                 cluster->fraction());
   Direction direction;
   direction.first = point.x() / point.z();
   direction.second = point.y() / point.z();
 
-  return position(cluster->channelID(), cluster->lCluster().interPixelFraction(),
-                  point, direction);
+  return position(cluster->channelID(), cluster->fraction(), point, direction);
 
 }
 
@@ -120,8 +120,7 @@ toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
                                      const Gaudi::XYZPoint& point,
                                      const Direction& direction) const {
 
-  return position(cluster->channelID(), cluster->lCluster().interPixelFraction(),
-                  point, direction);
+  return position(cluster->channelID(), cluster->fraction(), point, direction);
 
 }
 
