@@ -187,6 +187,8 @@ StatusCode VPClustering::execute() {
       warning() << "Duplicated channel ID " << id << endmsg;
       continue; 
     }
+    // Calculate the position in global coordinates.
+    point = vp_sensor->localToGlobal(point);
     // Map the interpixel-fractions to 3-bit integers.
     std::pair<unsigned int,  unsigned int> intFrac;
     intFrac.first = int(ceil(frac.first * 7));
@@ -198,7 +200,7 @@ StatusCode VPClustering::execute() {
     const VPLiteCluster newLiteCluster(id, 1, intFrac, isLong);
     liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
-    LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, pixels);
+    LHCb::VPCluster* newCluster = new LHCb::VPCluster(frac, point.x(), point.y(), point.z(), pixels);
     clusters->insert(newCluster, id);
   }
   // Sort the lite clusters.
