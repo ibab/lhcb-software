@@ -61,7 +61,7 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
                    m_muonTracksLoc = LHCb::TrackLocation::Muon );
   // Upgrade detectors
   declareProperty( "VPClustersLocation",
-                   m_vpLoc    = LHCb::VPLiteClusterLocation::Default );
+                   m_vpLoc    = LHCb::VPClusterLocation::Default );
   declareProperty( "UTClustersLocation",
                    m_utLoc      = LHCb::STClusterLocation::UTClusters );
   declareProperty( "FTClustersLocation",
@@ -206,7 +206,7 @@ StatusCode RecSummaryAlg::execute()
     //Upgrade detectors
     else if ( "VP" == *iDet )
     {
-      addSizeSummary<LHCb::VPLiteCluster::VPLiteClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vpLoc );
+      addSizeSummary<LHCb::VPClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vpLoc );
     }
     else if ( "UT" == *iDet )
     {

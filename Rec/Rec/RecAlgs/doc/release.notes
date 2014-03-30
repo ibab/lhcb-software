@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-03-30 - Heinrich Schindler
+ - Use VPClusters instead of VPLiteClusters.
+
 ! 2014-03-19 - Michel De Cian
  - Change FTRawCluster to FTLiteCluster in RecSummaryAlg.
 
