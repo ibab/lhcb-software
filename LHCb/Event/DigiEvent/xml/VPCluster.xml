@@ -2,30 +2,26 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd" > 
 <gdd>
   <package name = "DigiEvent">
-    <class author = "Marcin Kucharczyk"
-           desc = "This class represents a cluster of pixel hits"
+    <class name = "VPCluster"
            id = "4504"
-           name = "VPCluster">
+           author = "Marcin Kucharczyk"
+           desc = "This class represents a cluster of pixel hits">
     <location name = "Default" place = "Raw/VP/Clusters"/>
     <import name = "vector" std = "TRUE"/>
     <import name = "Kernel/VPChannelID"/>
-    <import name = "Event/VPLiteCluster"/>
     <template name = "KeyedObjectDict" t1 = "LHCb::VPChannelID"/>
     <base name = "KeyedObject&lt;LHCb::VPChannelID&gt;"/>
     &KeyedContainer;
 
-    <constructor desc = "Constructor with lite cluster and global position"
-                 argList = 'VPLiteCluster lc, double x, double y, double z, std::vector&lt;LHCb::VPChannelID&gt; pixels'
-                 initList = 'm_lCluster(lc), m_x(x), m_y(y), m_z(z), m_pixels(pixels)'>
+    <constructor desc = "Constructor"
+                 argList = 'std::pair&lt;double, double&gt; fraction,
+                            const double x, const double y, const double z, 
+                            std::vector&lt;LHCb::VPChannelID&gt; pixels'
+                 initList = 'm_fraction(fraction), m_x(x), m_y(y), m_z(z), m_pixels(pixels)'>
     </constructor>
-    <constructor desc = "Constructor with lite cluster"
-                 argList = 'VPLiteCluster lc, std::vector&lt;LHCb::VPChannelID&gt; pixels'
-                 initList = 'm_lCluster(lc), m_x(0.), m_y(0.), m_z(0.), m_pixels(pixels)'>
-    </constructor>
-
     <constructor desc = "Copy constructor"
-                 initList = "KeyedObject&lt;LHCb::VPChannelID&gt;(), 
-                             m_lCluster(cluster.m_lCluster), 
+                 initList = "KeyedObject&lt;LHCb::VPChannelID&gt;(),
+                             m_fraction(cluster.m_fraction), 
                              m_x(cluster.m_x), m_y(cluster.m_y), m_z(cluster.m_z), 
                              m_pixels(cluster.m_pixels)">
       <arg const = 'TRUE' name = "cluster" type = "LHCb::VPCluster"/>
@@ -38,14 +34,14 @@
       </code>
     </method>
 
-    <attribute name = "lCluster" type = "LHCb::VPLiteCluster" desc = "lite cluster"/>
+    <attribute name = "fraction" type = "std::pair&lt;double, double&gt;" desc = "inter-pixel fraction"/>
     <attribute name = "x" type = "double" desc = "global x coordinate"/>
     <attribute name = "y" type = "double" desc = "global y coordinate"/>
     <attribute name = "z" type = "double" desc = "global z coordinate"/>
     <attribute name = "pixels" type = "std::vector&lt;LHCb::VPChannelID&gt;" desc = "vector of channel IDs"/>
 
     <method type = "LHCb::VPChannelID" name = "channelID" const = 'TRUE' 
-            desc = "Get the cluster channelID = key">
+            desc = "Return the cluster channelID = key">
       <code>return key();</code>
     </method>
 
