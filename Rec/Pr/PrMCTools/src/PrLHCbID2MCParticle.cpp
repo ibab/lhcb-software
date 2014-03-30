@@ -110,7 +110,7 @@ StatusCode PrLHCbID2MCParticle::execute() {
     LHCb::VPClusters* clusters = get<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
     LHCb::VPClusters::const_iterator iClus;
     for (iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
-      LHCb::LHCbID myId = (*iClus)->lCluster().channelID();
+      LHCb::LHCbID myId = (*iClus)->channelID();
       int id = myId.vpID();
       linkAll(myId, id);
     }

@@ -191,7 +191,7 @@ StatusCode PrCheatedVP::execute() {
 Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster) {
   
   const DeVPSensor* vpSensor = m_vp->sensorOfChannel(cluster->channelID());
-  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(), cluster->lCluster().interPixelFraction());
+  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(), cluster->fraction());
   return pointGlobal;
   
 }
