@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
 // Event
-#include "Event/VPLiteCluster.h"
+#include "Event/VPCluster.h"
 // Local
 #include "VPClusterWord.h"
 #include "VPPatternWord.h"
@@ -36,21 +36,18 @@ public:
 
 private:
 
-StatusCode decodeRawBanks(LHCb::RawEvent* rawEvt,
-           LHCb::VPCluster::Container* clusCont) const;
-void createPartialCluster(
-               unsigned int sensor,
-               VPClusterWord aWord,
-               VPPatternWord aPattern,
-               LHCb::VPCluster::Container* clusCont) const;
+StatusCode decodeRawBanks(LHCb::RawEvent* rawEvt, LHCb::VPClusters* clusters) const;
+void createPartialCluster(unsigned int sensor,
+                          VPClusterWord aWord,
+                          LHCb::VPClusters* clusters) const;
 
 private:
 
   std::string m_clusterLocation;
   
   bool m_isDebug; 
-  DeVP* m_vPelDet;
+  DeVP* m_det;
 
 };
 
-#endif // VPRAWBANKTOLITECLUSTER_H
+#endif // VPRAWBANKTOPARTIALCLUSTER_H

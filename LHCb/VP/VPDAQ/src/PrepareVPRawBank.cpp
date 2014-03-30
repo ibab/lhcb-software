@@ -8,7 +8,7 @@
 #include "Event/VPLiteCluster.h"
 #include "Event/RawEvent.h"
 #include "Event/BankWriter.h"
-// VPelDet
+// VPDet
 #include "VPDet/DeVP.h"
 // Local
 #include "VPClusterWord.h"
@@ -61,10 +61,8 @@ StatusCode PrepareVPRawBank::initialize() {
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   // Get a list of sensor numbers to identify empty sensors
   m_det = getDet<DeVP>(DeVPLocation::Default);
-  std::vector<DeVPSensor*>::const_iterator sIter =
-                                 m_det->sensorsBegin();
-  std::vector<DeVPSensor*>::const_iterator sEnd =
-                                 m_det->sensorsEnd();
+  std::vector<DeVPSensor*>::const_iterator sIter = m_det->sensorsBegin();
+  std::vector<DeVPSensor*>::const_iterator sEnd = m_det->sensorsEnd();
   for(; sIter != sEnd; ++sIter) {
     m_sensorNumbers.push_back((*sIter)->sensorNumber());
   }
@@ -84,7 +82,7 @@ StatusCode PrepareVPRawBank::execute() {
     return Error( " ==> There are no VPClusters in TES! " );
   }
 
-  // Check if RawEvent exits
+  // Check if RawEvent exists
   RawEvent* rawEvent = getIfExists<RawEvent>(m_rawEventLocation);
   if( NULL == rawEvent ) {
     // Create RawEvent
@@ -98,8 +96,7 @@ StatusCode PrepareVPRawBank::execute() {
   std::stable_sort(m_sortedClusters.begin(),m_sortedClusters.end(),
                    sortLessBySensor);
   // Loop over all clusters and write one bank per sensor
-  std::vector<const VPCluster*>::const_iterator firstOnSensor,
-                                                     lastOnSensor;
+  std::vector<const VPCluster*>::const_iterator firstOnSensor, lastOnSensor;
   lastOnSensor = firstOnSensor = m_sortedClusters.begin();
   unsigned int currentSensorNumber;
   int sensorIndex = -1;
@@ -189,13 +186,12 @@ void PrepareVPRawBank::makeBank(
     }
     // Pack LiteCluster
     double maxFract = 7; // 3 bits
-    unsigned int xFract =
-             int(ceil(cluster->lCluster().interPixelFractionX() * maxFract));
-    unsigned int yFract =
-             int(ceil(cluster->lCluster().interPixelFractionY() * maxFract));
-    VPClusterWord vplcw(cluster->lCluster().channelID().pixel(),
-                  cluster->lCluster().clustToT(),xFract,yFract,
-                  cluster->lCluster().isLongPixel());
+    std::pair<double, double> xyFract = cluster->fraction();
+    unsigned int xFract = int(ceil(xyFract.first * maxFract));
+    unsigned int yFract = int(ceil(xyFract.second * maxFract));
+    // Force cluster ToT to 1 and isLongPixel to false.
+    VPClusterWord vplcw(cluster->channelID().pixel(), 1,
+                        xFract, yFract, false); 
     SiDAQ::buffer_word packedCluster;
     packedCluster = static_cast<SiDAQ::buffer_word>(vplcw.value());
     m_clusterLiteBuffer.push_back(packedCluster);
