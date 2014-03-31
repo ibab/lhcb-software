@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbPythia8
-! Responsible : Patrick Robbe
+! Responsible : Philip Ilten
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
+
+!======================== LbPythia8 v7r7p2 2014-03-31 ========================
+! 2014-03-31 - Gloria Corti
+ - Fix options to set pt0 to 2.6 for all production mechanisms
+   . options/Pythia8_Pt0Ref2.6_CT09MCS.py
 
 !======================== LbPythia8 v7r7p1 2014-02-26 ========================
 ! 2014-02-26 - Gloria Corti
