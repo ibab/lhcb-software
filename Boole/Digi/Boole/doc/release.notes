@@ -11,6 +11,7 @@ Purpose: LHCb Digitization program
 
 - QMTest changes
   . Added a test for running Boole on SIM08 xdst data (task #13916)
+  . Upgrade tests brought up to date. 20140331
 
 </PRE><H1><A NAME=v27r1>2014-03-20 Boole v27r1</A></H1><PRE>
 This version uses projects LHCb v37r1, Lbcom v15r1
