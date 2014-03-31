@@ -123,8 +123,17 @@ class MooreOnline(LHCbConfigurableUser):
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
             writer.OutputLevel = OnlineEnv.OutputLevel
-            writer.Members = Moore().getProp('WriterRequires') + [ evtMerger ]
-            app.TopAlg.append( writer )
+            #need to leave this to Moore in future!
+            if len(Moore().getProp('WriterRequires')):
+                from Configurables import LoKi__VoidFilter as VoidFilter
+                writer.Members.append( VoidFilter( "WriterFilter" 
+                                                   , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
+                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in Moore().getProp('WriterRequires') ] ) 
+                                                   )
+                                       )
+            writer.Members.append(evtMerger)
+            
+            app.OutStream.append( writer )
         else :
             input = 'Events'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
