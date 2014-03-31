@@ -44,8 +44,8 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
         CloneBTaggingInfo( CloneTaggerParticles = False ),
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
-                          RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ),
-        ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
+                          RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
+        #ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
         ]
     if isMC :
         elements += [ CloneParticleMCInfo(),

@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-03-31 - Chris Jones
+ - Disable the automatic refitting of PVs for uDSTs.
+
 !========================= DSTWriters v4r12 2013-10-29 =========================
 
 ! 2013-10-02 - Anton Poluektov 
