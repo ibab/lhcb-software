@@ -6,6 +6,7 @@
 
 ! 2014-03-31 - Chris Jones
  - Add track DOCA variable.
+ - Add support for multiple cut text files.
 
 ! 2014-03-21 - Chris Jones
  - Add MCVertex information to training tuples.

@@ -84,29 +84,37 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     // Check if this string ends with .txt ?
     if ( cutsFile.find(".txt") != std::string::npos )
     {
+      // New style cuts file(s), so read from file(s)
 
-      // New style cuts file, so read from file
-      cutsFile = paramRoot+cutsFile;
-      std::ifstream cuts(cutsFile.c_str());
-      if ( !cuts.is_open() ) return Error( "Track Selection cuts file '" +
-                                           cutsFile + "' cannot be opened" );
-
-      // Read the cuts and create a cut object for each
-      std::string cut;
-      while ( std::getline(cuts,cut) )
+      // Split up files seperated by comma
+      std::vector<std::string> files;
+      boost::split( files, cutsFile, boost::is_any_of(",") );
+      for ( const auto & file : files )
       {
-        // Skip empty lines or comments
-        if ( !cut.empty() && cut.find("#") == std::string::npos )
-        {
-          // try and make a cut for this string
-          m_cuts.push_back( new Cut(cut,this) );
-          if ( !m_cuts.back()->isOK() )
-          { return Error( "Failed to decode selection cut '" + cut + "'" ); }
-        }
-      }
 
-      // close the file
-      cuts.close();
+        const std::string fullFile = paramRoot + file;
+        std::ifstream cuts(fullFile.c_str());
+        if ( !cuts.is_open() ) return Error( "Track Selection cuts file '" +
+                                             fullFile + "' cannot be opened" );
+
+        // Read the cuts and create a cut object for each
+        std::string cut;
+        while ( std::getline(cuts,cut) )
+        {
+          // Skip empty lines or comments
+          if ( !cut.empty() && cut.find("#") == std::string::npos )
+          {
+            // try and make a cut for this string
+            m_cuts.push_back( new Cut(cut,this) );
+            if ( !m_cuts.back()->isOK() )
+            { return Error( "Failed to decode selection cut '" + cut + "'" ); }
+          }
+        }
+
+        // close the file
+        cuts.close();
+
+      } // loop over cuts file
 
     }
     else
@@ -196,7 +204,8 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
 #ifdef _ENABLE_NEUROBAYES
     else if ( "NeuroBayes" == annType )
     {
-      debug() << "Using NeuroBayes Expert implementation" << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Using NeuroBayes Expert implementation" << endmsg;
       // FPE Guard for NB call
       FPE::Guard guard(true);
       m_netHelper = new NeuroBayesANN( paramFileName, inputs, this,
@@ -212,12 +221,14 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
     info() << boost::format(sF) % m_netVersion % trackType % particleType << endmsg;
     if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << "Network type     = " << annType << endmsg
               << "ConfigFile       = " << configFile << endmsg
               << "ParamFile        = " << paramFileName << endmsg
               << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
               << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
               << endmsg;
+    }
 
   }
   else
@@ -256,10 +267,10 @@ StatusCode ChargedProtoANNPIDAlg::execute()
     // Clear current ANN PID information
     if ( proto->hasInfo(m_protoInfo) )
     {
-//       std::ostringstream mess;
-//       mess << "ProtoParticle already has '" << m_protoInfo
-//            << "' information -> Replacing.";
-//       Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
+      //       std::ostringstream mess;
+      //       mess << "ProtoParticle already has '" << m_protoInfo
+      //            << "' information -> Replacing.";
+      //       Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
       proto->eraseInfo(m_protoInfo);
     }
 

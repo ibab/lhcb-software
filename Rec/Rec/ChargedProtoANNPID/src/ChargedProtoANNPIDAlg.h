@@ -185,7 +185,7 @@ namespace ANNGlobalPID
                                         "!Color:!Silent" : "!Color:Silent" ) ),
           m_inArray ( new float[inputs.size()] )
       {
-        int i = 0;
+        unsigned int i = 0;
         for ( ChargedProtoANNPIDAlgBase::StringInputs::const_iterator iIn = inputs.begin();
               iIn != inputs.end(); ++iIn, ++i )
         {
