@@ -836,9 +836,8 @@ void PrPixelHitManager::storeTriggerClusters() {
 
     const double fx = m_xFractions[ih];
     const double fy = m_yFractions[ih];
-    const LHCb::VPLiteCluster lc(cid,1,std::make_pair(fx,fy),false);
     pixels[0] = cid;
-    clusters->insert(new LHCb::VPCluster(lc,x,y,z,pixels)); 
+    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,pixels)); 
   }
 
   return;
@@ -879,13 +878,12 @@ void PrPixelHitManager::storeOfflineClusters() {
 
     const double fx = m_xFractions[ic];
     const double fy = m_yFractions[ic];
-    const LHCb::VPLiteCluster lc(cid,1,std::make_pair(fx,fy),false);
     pixels.clear();
     const std::vector<LHCb::VPChannelID>& cids = m_channelIDs[ic];
     for (unsigned int iID=0; iID < cids.size(); ++iID) {
       pixels.push_back(cids[iID]);
     }
-    clusters->insert(new LHCb::VPCluster(lc,x,y,z,pixels)); 
+    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,pixels)); 
   }
 
   return;
