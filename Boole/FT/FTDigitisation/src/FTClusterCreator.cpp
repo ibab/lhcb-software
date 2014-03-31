@@ -639,20 +639,20 @@ StatusCode FTClusterCreator::execute(){
           const LHCb::MCHit* largestHit = 0; 
           for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); 
               i != mcHitContributionMap.end(); ++i) {
-            const DeFTFibreMat* pL = m_deFT->findFibreMat((i->first)->midPoint());
-            if ( pL) {
-              std::pair<LHCb::FTChannelID, double> meanCha;
-              std::vector< std::pair<LHCb::FTChannelID, double> > meanChaTest;              
-              if( pL->calculateMeanChannel((i->first), meanCha)){
-                if ( msgLevel(MSG::DEBUG) ){
+
+            if ( msgLevel(MSG::DEBUG) ){
+              const DeFTFibreMat* pL = m_deFT->findFibreMat((i->first)->midPoint());
+              if ( pL) {
+                std::pair<LHCb::FTChannelID, double> meanCha;
+                std::vector< std::pair<LHCb::FTChannelID, double> > meanChaTest;              
+                if( pL->calculateMeanChannel((i->first), meanCha)){
                   debug() << "|calculateMeanChannel| Hit->midPoint.x=" << (i->first)->midPoint().x()
                           << "  converted in channelID="<< meanCha.first << " + " << meanCha.second
                           << "  Deposit=" << (i->second) << endmsg;
-                }    
-              }
+                }
 
-              if( pL->calculateListOfFiredChannels( (i->first), meanChaTest)){
-                if ( msgLevel(MSG::DEBUG) ){
+                if( pL->calculateListOfFiredChannels( (i->first), meanChaTest)){
+                  
                   debug() << "|calculateListOfFiredChannels| Hit->midPoint.x=" << (i->first)->midPoint().x()
                           << "  Deposit=" 
                           << (i->second)<< endmsg;
@@ -661,10 +661,11 @@ StatusCode FTClusterCreator::execute(){
                   { 
                     debug() << "...  converted in channelID="<< testiter->first << " + " << testiter->second
                             << endmsg;
-                  }
+                  } 
                 }
               }
             }
+            
        
             if(largestDeposit < (i->second)) {
               largestDeposit = (i->second);

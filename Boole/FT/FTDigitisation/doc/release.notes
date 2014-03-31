@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-03-31 - Eric Cogneras
+ - add if statement for debugging tests
+
 ! 2014-03-27 - Eric Cogneras
  - Move clustering algorithm to its 2 bits version
  - propagation of the change (calculateHits -> calculateListOfFiredChannels) in Det/FTDet
