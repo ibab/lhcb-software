@@ -2,15 +2,27 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// 
+// Local: 
+// ============================================================================
 #include "Analysis/StatVar.h"
 #include "Analysis/Formula.h"
-
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/MatrixUtils.h"
+// ============================================================================
+// ROOT 
+// ============================================================================
 #include "TTree.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/static_assert.hpp"
+// ============================================================================
 /** @file 
  *  Implementation file for class Analysis::StatVar
  *  @date 2013-10-13 
- *  @author Vanya BELYAEV Ivan.Brlyaev@itep.ru
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  * 
  *                    $Revision:$
  *  Last modification $Date:$
@@ -19,6 +31,8 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
+  BOOST_STATIC_ASSERT(std::numeric_limits<unsigned long>::is_specialized );
   // ==========================================================================
   /** @class Notifier
    *  Local helper class to keep the proper notifications for TTree
@@ -126,7 +140,9 @@ namespace
 StatEntity 
 Analysis::StatVar::statVar 
 ( TTree*             tree       , 
-  const std::string& expression ) 
+  const std::string& expression , 
+  const unsigned long first     ,
+  const unsigned long entries   )
 {
   StatEntity result ;
   if ( 0 == tree          ) { return result ; }  // RETURN 
@@ -136,9 +152,9 @@ Analysis::StatVar::statVar
   Notifier notify ( tree , &formula ) ;
   //
   const unsigned long nEntries = 
-    (unsigned long ) tree->GetEntries() ;
+    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
   //
-  for ( unsigned long entry = 0 ; entry < nEntries ; ++entry )   
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
     //
     long ievent = tree->GetEntryNumber ( entry ) ;
@@ -169,9 +185,11 @@ Analysis::StatVar::statVar
 // ============================================================================
 StatEntity 
 Analysis::StatVar::statVar 
-( TTree*             tree       , 
-  const std::string& expression ,
-  const std::string& cuts       ) 
+( TTree*              tree       , 
+  const std::string&  expression ,
+  const std::string&  cuts       , 
+  const unsigned long first      ,
+  const unsigned long entries    )
 {
   StatEntity result ;
   if ( 0 == tree        ) { return result ; }            // RETURN 
@@ -183,9 +201,9 @@ Analysis::StatVar::statVar
   Notifier notify ( tree , &selection,  &formula ) ;
   //
   const unsigned long nEntries = 
-    (unsigned long ) tree->GetEntries() ;
+    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
   //
-  for ( unsigned long entry = 0 ; entry < nEntries ; ++entry )   
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
   {
     //
     long ievent = tree->GetEntryNumber ( entry ) ;
@@ -199,6 +217,162 @@ Analysis::StatVar::statVar
   }
   //
   return result ;
+}
+// ============================================================================
+/*  calculate the covariance of two expressions 
+ *  @param tree  (INPUT)  the input tree 
+ *  @param exp1  (INPUT)  the first  expresiion
+ *  @param exp2  (INPUT)  the second expresiion
+ *  @param stat1 (UPDATE) the statistic for the first  expression
+ *  @param stat2 (UPDATE) the statistic for the second expression
+ *  @param cov2  (UPDATE) the covariance matrix 
+ *  @return number of processed events 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2014-03-27
+ */
+// ============================================================================
+unsigned long
+Analysis::StatVar::statCov
+( TTree*               tree    , 
+  const std::string&   exp1    , 
+  const std::string&   exp2    , 
+  StatEntity&          stat1   ,  
+  StatEntity&          stat2   ,  
+  Gaudi::SymMatrix2x2& cov2    , 
+  const unsigned long  first   ,
+  const unsigned long  entries )
+{
+  //
+  stat1.reset () ;
+  stat2.reset () ;
+  Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
+  //
+  if ( 0 == tree        ) { return 0 ; } // RETURN 
+  Analysis::Formula formula1 ( "" , exp1 , tree ) ;
+  if ( !formula1 .ok () ) { return 0 ; } // RETURN 
+  Analysis::Formula formula2 ( "" , exp2 , tree ) ;
+  if ( !formula2 .ok () ) { return 0 ; } // RETURN 
+  //
+  Notifier notify ( tree , &formula1 , &formula2 ) ;
+  //
+  const unsigned long nEntries = 
+    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+  //
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
+  {
+    //
+    long ievent = tree->GetEntryNumber ( entry ) ;
+    if ( 0 > ievent ) { return 0 ; } // RETURN
+    //
+    ievent      = tree->LoadTree ( ievent ) ;
+    if ( 0 > ievent ) { return 0 ; } // RETURN 
+    //
+    const double v1 = formula1.evaluate() ;
+    const double v2 = formula2.evaluate() ;
+    //
+    stat1 += v1 ;
+    stat2 += v2 ;
+    //
+    cov2 ( 0 , 0 ) += v1*v1 ;
+    cov2 ( 0 , 1 ) += v1*v2 ;
+    cov2 ( 1 , 1 ) += v2*v2 ;
+    //
+  }
+  //
+  if ( 0 == stat1.nEntries() ) { return 0 ; }
+  //
+  cov2 /= stat1.nEntries () ;
+  //
+  const double v1_mean = stat1.mean() ;
+  const double v2_mean = stat2.mean() ;
+  //
+  cov2 ( 0 , 0 ) -= v1_mean * v1_mean ;
+  cov2 ( 0 , 1 ) -= v1_mean * v2_mean ;
+  cov2 ( 1 , 1 ) -= v2_mean * v2_mean ;  
+  //
+  return stat1.nEntries () ;
+}
+// ============================================================================
+/*  calculate the covariance of two expressions 
+ *  @param tree  (INPUT)  the inpout tree 
+ *  @param exp1  (INPUT)  the first  expresiion
+ *  @param exp2  (INPUT)  the second expresiion
+ *  @param cuts  (INPUT)  the selection criteria 
+ *  @param stat1 (UPDATE) the statistic for the first  expression
+ *  @param stat2 (UPDATE) the statistic for the second expression
+ *  @param cov2  (UPDATE) the covariance matrix 
+ *  @return number of processed events 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2014-03-27
+ */
+// ============================================================================
+unsigned long 
+Analysis::StatVar::statCov
+( TTree*               tree    , 
+  const std::string&   exp1    , 
+  const std::string&   exp2    , 
+  const std::string&   cuts    , 
+  StatEntity&          stat1   ,  
+  StatEntity&          stat2   ,  
+  Gaudi::SymMatrix2x2& cov2    , 
+  const unsigned long  first   ,
+  const unsigned long  entries )
+{
+  //
+  stat1.reset () ;
+  stat2.reset () ;
+  Gaudi::Math::setToScalar ( cov2 , 0.0 ) ;
+  //
+  if ( 0 == tree        ) { return 0 ; } // RETURN 
+  Analysis::Formula formula1 ( "" , exp1 , tree ) ;
+  if ( !formula1 .ok () ) { return 0 ; } // RETURN 
+  Analysis::Formula formula2 ( "" , exp2 , tree ) ;
+  if ( !formula2 .ok () ) { return 0 ; } // RETURN 
+  Analysis::Formula selection ( "" , cuts      , tree ) ;
+  if ( !selection.ok () ) { return 0 ; } // RETURN 
+  //
+  Notifier notify ( tree , &formula1 , &formula2 ) ;
+  //
+  const unsigned long nEntries = 
+    std::min ( entries , (unsigned long) tree->GetEntries() ) ;
+  //
+  for ( unsigned long entry = first ; entry < nEntries ; ++entry )   
+  {
+    //
+    long ievent = tree->GetEntryNumber ( entry ) ;
+    if ( 0 > ievent ) { return 0 ; } // RETURN
+    //
+    ievent      = tree->LoadTree ( ievent ) ;
+    if ( 0 > ievent ) { return 0 ; } // RETURN 
+    //
+    if ( !selection.evaluate() ) { continue ; } // CONTINUE 
+    //
+    const double v1 = formula1.evaluate() ;
+    const double v2 = formula2.evaluate() ;
+    //
+    stat1 += v1 ;
+    stat2 += v2 ;
+    //
+    cov2 ( 0 , 0 ) += v1*v1 ;
+    cov2 ( 0 , 1 ) += v1*v2 ;
+    cov2 ( 1 , 1 ) += v2*v2 ;
+    //
+  }
+  //
+  if ( 0 == stat1.nEntries() ) { return 0 ; }
+  //
+  cov2 /= stat1.nEntries()  ;
+  //
+  const double v1_mean = stat1.mean() ;
+  const double v2_mean = stat2.mean() ;
+  //
+  cov2 ( 0 , 0 ) -= v1_mean * v1_mean ;
+  cov2 ( 0 , 1 ) -= v1_mean * v2_mean ;
+  cov2 ( 1 , 1 ) -= v2_mean * v2_mean ;  
+  //
+  return stat1.nEntries() ;
 }
 // ============================================================================
 // The END 

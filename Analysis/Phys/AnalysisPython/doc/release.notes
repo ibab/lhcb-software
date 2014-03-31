@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-03-31 - Vanya Belyaev
+ - StatVar:  extend to get the correlations for the variables 
+
 !========================= AnalysisPython v2r28 2014-03-11 =========================
 
 ! 2014-03-10 - Vanya Belyaev

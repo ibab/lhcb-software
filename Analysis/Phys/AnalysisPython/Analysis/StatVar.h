@@ -5,8 +5,15 @@
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & STL
+// ============================================================================
+#include <limits>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatEntity.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
 // Forward declarations 
 // =============================================================================
@@ -43,9 +50,11 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static StatEntity 
-    statVar ( TTree*             tree       , 
-              const std::string& expression ) ;
+    static StatEntity
+    statVar ( TTree*              tree                                                   , 
+              const std::string&  expression                                             ,
+              const unsigned long first      = 0                                         ,
+              const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** build statistic for the <code>expression</code>
      *  @param tree       (INPUT) the tree 
@@ -61,9 +70,57 @@ namespace Analysis
      *  @date   2013-10-13
      */
     static StatEntity 
-    statVar ( TTree*             tree       , 
-              const std::string& expression , 
-              const std::string& cuts       ) ;
+    statVar ( TTree*              tree        , 
+              const std::string&  expression  , 
+              const std::string&  cuts        ,
+              const unsigned long first      = 0                                         ,
+              const unsigned long entries    = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+    /** calculate the covariance of two expressions 
+     *  @param tree  (INPUT)  the inpout tree 
+     *  @param exp1  (INPUT)  the first  expresiion
+     *  @param exp2  (INPUT)  the second expresiion
+     *  @param stat1 (UPDATE) the statistic for the first  expression
+     *  @param stat2 (UPDATE) the statistic for the second expression
+     *  @param cov2  (UPDATE) the covariance matrix 
+     *  @return number of processed events 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-03-27
+     */
+    static unsigned long
+    statCov ( TTree*               tree   , 
+              const std::string&   exp1   , 
+              const std::string&   exp2   , 
+              StatEntity&          stat1  ,  
+              StatEntity&          stat2  ,  
+              Gaudi::SymMatrix2x2& cov2   , 
+              const unsigned long first   = 0                                         ,
+              const unsigned long entries = std::numeric_limits<unsigned long>::max() ) ;
+    // ========================================================================
+    /** calculate the covariance of two expressions 
+     *  @param tree  (INPUT)  the inpout tree 
+     *  @param exp1  (INPUT)  the first  expresiion
+     *  @param exp2  (INPUT)  the second expresiion
+     *  @param cuts  (INPUT)  the selection criteria 
+     *  @param stat1 (UPDATE) the statistic for the first  expression
+     *  @param stat2 (UPDATE) the statistic for the second expression
+     *  @param cov2  (UPDATE) the covariance matrix 
+     *  @return number of processed events 
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-03-27
+     */
+    static unsigned long 
+    statCov ( TTree*               tree    ,
+              const std::string&   exp1    , 
+              const std::string&   exp2    , 
+              const std::string&   cuts    ,
+              StatEntity&          stat1   ,  
+              StatEntity&          stat2   ,  
+              Gaudi::SymMatrix2x2& cov2    , 
+              const unsigned long  first   = 0                                         ,
+              const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
   };
   // ==========================================================================
