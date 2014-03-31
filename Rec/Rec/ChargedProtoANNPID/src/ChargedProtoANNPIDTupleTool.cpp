@@ -30,43 +30,44 @@ ChargedProtoANNPIDTupleTool::ChargedProtoANNPIDTupleTool( const std::string& typ
   declareInterface<IChargedProtoANNPIDTupleTool>(this);
 
   // Job options
-  declareProperty( "Variables", m_variables = 
+  declareProperty( "Variables", m_variables =
       {
         // General event variables
         "NumProtoParticles","NumCaloHypos",
-        "NumLongTracks","NumDownstreamTracks","NumUpstreamTracks",
-        "NumVeloTracks","NumTTracks","NumPVs","NumSPDHits",
-        "NumRich1Hits","NumRich2Hits","NumMuonTracks",
-        // Tracking
-        "TrackP","TrackPt","TrackChi2PerDof","TrackType","TrackHistory",
-        "TrackNumDof","TrackLikelihood","TrackGhostProbability",
-        "TrackMatchChi2","TrackFitMatchChi2","TrackCloneDist",
-        "TrackFitVeloChi2","TrackFitVeloNDoF","TrackFitTChi2","TrackFitTNDoF",
-        // Combined DLLs
-        "CombDLLe","CombDLLmu","CombDLLpi","CombDLLk","CombDLLp",
-        // RICH
-        "RichUsedAero","RichUsedR1Gas","RichUsedR2Gas",
-        "RichAboveElThres","RichAboveMuThres","RichAbovePiThres",
-        "RichAboveKaThres","RichAbovePrThres",
-        "RichDLLe","RichDLLmu","RichDLLpi","RichDLLk","RichDLLp","RichDLLbt",
-        // MUON
-        "InAccMuon",
-        "MuonMuLL","MuonBkgLL","MuonIsMuon","MuonIsLooseMuon","MuonNShared",
-        // ECAL
-        "InAccEcal","CaloChargedSpd","CaloChargedPrs","CaloChargedEcal",
-        "CaloElectronMatch","CaloTrMatch","CaloEcalE","CaloEcalChi2",
-        "CaloClusChi2","EcalPIDe","EcalPIDmu","CaloTrajectoryL",
-        // HCAL
-        "InAccHcal","CaloHcalE","HcalPIDe","HcalPIDmu",
-        // PRS
-        "InAccPrs","CaloPrsE","PrsPIDe",
-        // SPD
-        "InAccSpd","CaloSpdE",
-        // BREM
-        "InAccBrem","CaloNeutralSpd","CaloNeutralPrs","CaloNeutralEcal",
-        "CaloBremMatch","CaloBremChi2","BremPIDe",
-        // VELO
-        "VeloCharge" 
+          "NumLongTracks","NumDownstreamTracks","NumUpstreamTracks",
+          "NumVeloTracks","NumTTracks","NumPVs","NumSPDHits",
+          "NumRich1Hits","NumRich2Hits","NumMuonTracks",
+          // Tracking
+          "TrackP","TrackPt","TrackChi2PerDof","TrackType","TrackHistory",
+          "TrackNumDof","TrackLikelihood","TrackGhostProbability",
+          "TrackMatchChi2","TrackFitMatchChi2","TrackCloneDist",
+          "TrackFitVeloChi2","TrackFitVeloNDoF","TrackFitTChi2","TrackFitTNDoF",
+          "TrackDOCA",
+          // Combined DLLs
+          "CombDLLe","CombDLLmu","CombDLLpi","CombDLLk","CombDLLp",
+          // RICH
+          "RichUsedAero","RichUsedR1Gas","RichUsedR2Gas",
+          "RichAboveElThres","RichAboveMuThres","RichAbovePiThres",
+          "RichAboveKaThres","RichAbovePrThres",
+          "RichDLLe","RichDLLmu","RichDLLpi","RichDLLk","RichDLLp","RichDLLbt",
+          // MUON
+          "InAccMuon",
+          "MuonMuLL","MuonBkgLL","MuonIsMuon","MuonIsLooseMuon","MuonNShared",
+          // ECAL
+          "InAccEcal","CaloChargedSpd","CaloChargedPrs","CaloChargedEcal",
+          "CaloElectronMatch","CaloTrMatch","CaloEcalE","CaloEcalChi2",
+          "CaloClusChi2","EcalPIDe","EcalPIDmu","CaloTrajectoryL",
+          // HCAL
+          "InAccHcal","CaloHcalE","HcalPIDe","HcalPIDmu",
+          // PRS
+          "InAccPrs","CaloPrsE","PrsPIDe",
+          // SPD
+          "InAccSpd","CaloSpdE",
+          // BREM
+          "InAccBrem","CaloNeutralSpd","CaloNeutralPrs","CaloNeutralEcal",
+          "CaloBremMatch","CaloBremChi2","BremPIDe",
+          // VELO
+          "VeloCharge"
           }
                    );
 
@@ -127,7 +128,7 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
 
   // Loop over reconstruction variables
-  for ( const auto & i : m_inputs ) 
+  for ( const auto & i : m_inputs )
   {
     // get the variable and fill ntuple
     sc = sc && tuple->column( i.first, (float) i.second->value(proto) );
@@ -154,9 +155,9 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
   while ( mcParent && ++iCount < 99999 )
   {
     const LHCb::ParticleID & pid = mcParent->particleID();
-    if ( pid.hasBottom() && mcParent->particleID().isHadron() ) 
+    if ( pid.hasBottom() && mcParent->particleID().isHadron() )
     { fromB = true; }
-    if ( pid.hasCharm()  && mcParent->particleID().isHadron() ) 
+    if ( pid.hasCharm()  && mcParent->particleID().isHadron() )
     { fromD = true; }
     mcParent = mcParent->mother();
   }

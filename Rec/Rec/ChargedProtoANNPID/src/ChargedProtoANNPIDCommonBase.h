@@ -27,6 +27,10 @@
 #include "Event/ProtoParticle.h"
 #include "Event/RecSummary.h"
 
+// Kernel LHCbMath
+#include "LHCbMath/GeomFun.h"
+#include "LHCbMath/LineTypes.h" 
+
 //-----------------------------------------------------------------------------
 /** @namespace ANNGlobalPID
  *
@@ -200,6 +204,21 @@ namespace ANNGlobalPID
       {
         const double var = proto->track()->info(LHCb::Track::CloneDist,-999);
         return ( var >= 0 ? var : -999 );
+      }
+    };
+
+    /// Track DOCA
+    class InTrackDOCA : public Input
+    {
+    public:
+      virtual double value( const LHCb::ProtoParticle * proto ) const
+      {
+        const LHCb::State & s = proto->track()->firstState() ;
+        const Gaudi::Math::XYZLine z_axis ( Gaudi::XYZPoint() ,
+                                            Gaudi::XYZVector(0,0,1) ) ;
+        const Gaudi::Math::XYZLine track_line ( Gaudi::XYZPoint ( s.x(),  s.y(), s.z() ), 
+                                                Gaudi::XYZVector( s.tx(), s.ty(), 1.0  ) ) ;
+        return Gaudi::Math::distance ( track_line , z_axis );
       }
     };
 

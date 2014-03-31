@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-03-31 - Chris Jones
+ - Add track DOCA variable.
+
 ! 2014-03-21 - Chris Jones
  - Add MCVertex information to training tuples.
 

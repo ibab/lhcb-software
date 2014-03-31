@@ -10,11 +10,9 @@ mkdir -p $ROOTD
 
 export i=0
 for tuple in `find ~/gangadir/workspace/jonesc/LocalXML -name ProtoPIDANN.MC.tuples.root | perl -MList::Util=shuffle -e"print shuffle<>"`; do
- 
  export TARGET=${ROOTD}"/ProtoPIDANN."${i}".root"
- echo mv $tuple $TARGET
+ mv -v $tuple $TARGET
  echo $TARGET >> $FILELIST
-
  i=`expr $i + 1`
 done
 

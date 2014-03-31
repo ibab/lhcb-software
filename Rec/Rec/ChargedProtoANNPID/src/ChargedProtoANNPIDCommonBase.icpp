@@ -138,6 +138,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
   else if ( "TrackFitTChi2"         == name ) { input = new InTrackExInfo(LHCb::Track::FitTChi2); }
   else if ( "TrackFitTNDoF"         == name ) { input = new InTrackExInfo(LHCb::Track::FitTNDoF); }
   else if ( "TrackMatchChi2"        == name ) { input = new InTrackExInfo(LHCb::Track::MatchChi2); }
+  else if ( "TrackDOCA"             == name ) { input = new InTrackDOCA(); }
 
   // Rich Variables
   else if ( "RichUsedAero"     == name ) { input = new InRichUsedAerogel(); }
