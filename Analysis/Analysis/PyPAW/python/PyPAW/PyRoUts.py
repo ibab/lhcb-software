@@ -1801,7 +1801,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
         #
         y2 = h2 ( x1.value() ) 
         #
-        v = VE ( oper ( y1 , y2 ) ) 
+        v  = VE ( oper ( y1 , y2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -3783,8 +3783,8 @@ def _gre_getitem_ ( graph , ipoint )  :
     
     graph.GetPoint ( ipoint , x_ , v_ )
     
-    x = VE ( x_ , graph.GetErrorX ( ipoint ) )
-    v = VE ( v_ , graph.GetErrorY ( ipoint ) )
+    x = VE ( x_ , graph.GetErrorX ( ipoint )**2 )
+    v = VE ( v_ , graph.GetErrorY ( ipoint )**2 )
     
     return x,v
 
@@ -4181,14 +4181,46 @@ class _H1Func(object) :
         self._func  = func
         
     ## evaluate the function 
-    def __call__ ( self , x ) :
+    def __call__ ( self , x , par = [ 1 , 0 , 1 ] ) :
         """
         Evaluate the function 
         """
         #
         x0 = x if isinstance ( x , (int,long,float) ) else x[0]
         #
-        return self._func ( self._histo ( x0 , interpolate = True ) )
+        norm  = par[0]
+        bias  = par[1]
+        scale = par[2]
+        #
+        x0    = ( x0 - bias ) / scale
+        # 
+        return norm * self._func ( self._histo ( x0 , interpolate = True ) )
+
+
+# =============================================================================
+## helper class to wrap 1D-histogram as spline 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-27
+class _H1Spline(object) :
+    """
+    Helper class to Wrap 1D-histogram as function/spline 
+    """
+    def __init__ ( self , histo , func = lambda s : s.value() , *args ) :
+        self._spline = histo.splineErr ( *args )
+        self._histo  = self._spline ## ATTENTION!!! 
+        self._func   = func
+        
+    ## evaluate the function 
+    def __call__ ( self , x , par = [ 1 ] ) :
+        """
+        Evaluate the function 
+        """
+        #
+        x0 = x if isinstance ( x , (int,long,float) ) else x[0]
+        #
+        norm  = par[0]
+        #
+        return norm * self._func ( self._spline ( x0 ) ) 
 
 # ==============================================================================
 ## helper class to wrap 2D-histogram as function 
@@ -4220,6 +4252,17 @@ def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
     construct the function fomr the histogram 
     """
     return _H1Func ( self , func )
+
+# =============================================================================
+## construct helper class 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-27
+def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
+    """
+    construct the function/spline from the histogram 
+    """
+    return _H1Spline ( self , func , *args )
+
 # =============================================================================
 ## construct helper class 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -4233,7 +4276,7 @@ def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
 ## construct function 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
+def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args ) :
     """
     Construct the function from the 1D-histogram
 
@@ -4241,15 +4284,35 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () ) :
     
     """
     ax  = self.GetXaxis()
-    fun = _h1_as_fun_ ( self , func )
     #
-    f1  = ROOT.TF1  ( funID()       ,
-                      fun           ,
-                      ax.GetXmin () ,
-                      ax.GetXmax () )
-    
-    f1.SetNpx  ( 10 * ax.GetNbins() )
+    if spline :
+        fun = _h1_as_spline_ ( self , func , *args )
+        f1  = ROOT.TF1  ( funID()       ,
+                          fun           ,
+                          ax.GetXmin () ,
+                          ax.GetXmax () , 1 )
+        
+        f1.SetParNames ( 'Normalization' )
+        #
+    else      :
+        #
+        fun = _h1_as_fun_    ( self , func )
+        f1  = ROOT.TF1  ( funID()       ,
+                          fun           ,
+                          ax.GetXmin () ,
+                          ax.GetXmax () , 3 )
+        f1.SetParNames (
+            'Normalization' ,
+            'Bias'          ,
+            'Scale' 
+            )
+        #
+        f1.FixParameter(1,0)
+        f1.FixParameter(2,1)
+        #
 
+    f1.FixParameter(0,1) 
+    f1.SetNpx  ( 10 * ax.GetNbins() )
     f1._funobj = fun  
     f1._histo  = fun._histo
     f1._func   = fun._func
@@ -4623,6 +4686,31 @@ for h in ( ROOT.TH1F , ROOT.TH1D ) :
     #
     h.nEff           = h.GetEffectiveEntries 
 
+
+
+# =============================================================================
+## get some statistic infomration on the histogram content
+#  @code 
+#  >>> histo = ... 
+#  >>> stat  = histo.stat()
+#  >>> print stat
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-26
+def _h_stat_ ( h ) :
+    """
+    Get some statistic infomration on the histogram content
+
+    >>> histo = ... 
+    >>> stat  = histo.stat()
+    >>> print stat 
+    """
+    cnt = SE() 
+    for i in h : cnt += h[i].value()  
+    return cnt
+
+ROOT.TH1.stat = _h_stat_
+
 # =============================================================================
 ## adjust the "efficiency"
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -4928,7 +5016,7 @@ def _1d_spline_err_ ( self                                      ,
 _1d_spline_     . __doc__ += '\n' + cpp.Gaudi.Math.Spline       .__init__ .__doc__
 _1d_spline_err_ . __doc__ += '\n' + cpp.Gaudi.Math.SplineErrors .__init__ .__doc__
 
-for t in ( ROOT.TH1D , ROOT.TH1D , ROOT.TGraphErrors ) :
+for t in ( ROOT.TH1D , ROOT.TH1F , ROOT.TGraphErrors ) :
     t.spline    = _1d_spline_
     t.splineErr = _1d_spline_err_
     
@@ -5040,7 +5128,7 @@ def _solve_ ( h1 , value ) :
 #  @endcode
 #  @author Vanya BELYAVE Ivan.Belyaev@itep.ru
 #  @date 2013-05-13
-def _equal_edges_ ( h1 , num  ) :
+def _equal_edges_ ( h1 , num  , wmax = -1 ) :
     """
     Propose the edged for ``equal-bins''
 
@@ -5052,20 +5140,44 @@ def _equal_edges_ ( h1 , num  ) :
         return TypeError, "'num' is not integer!"
     elif 1 >  num :
         return TypeError, "'num' is invalid!"
-    elif 1 == num : return ( h1.xmin() , h1.xmax() ) ## triavial binnig scheme 
+    elif 1 == num :
+        _bins = [ h1.xmin() , h1.xmax() ] ## trivial binnig scheme
+    else :
+        
+        ## integrate it! 
+        _eff = h1.effic()
+        
+        _bins = [ h1.xmin()  ]
+        d     = 1.0 / num
+        
+        from   PyPAW.PyRoUts         import _solve_
 
-    ## integrate it! 
-    _eff = h1.effic()
+        for i in range ( 1 , num ) :
+            vi  = float ( i ) / num
+            eqs = _solve_ ( _eff , vi )
+            if not eqs : continue
+            _bins.append ( eqs[0] )
+            
+        _bins.append ( h1.xmax() )
 
-    _bins = [ h1.xmin()  ]
-    d     = 1.0 / num 
-    for i in range ( 1 , num ) :
-        vi  = float ( i ) / num
-        eqs = _solve_ ( _eff , vi )
-        if not eqs : continue
-        _bins.append( eqs[0] )
-
-    _bins.append ( h1.xmax() )
+    #
+    ## split if needed
+    #
+    if 0 < wmax :
+        _lst  = []
+        _lst.append ( _bins[0] )
+        for i in range ( 1 , len( _bins ) ) :
+            b    = _bins[i]
+            last = _lst[-1] 
+            dist = b - last 
+            if dist > wmax :
+                n   = 1 + int ( dist // wmax ) 
+                dlt = dist / float( n )
+                for j in range(1,n) :
+                    _lst.append ( last + j * dlt )
+            _lst.append ( b )
+            
+        _bins = _lst 
 
     return tuple ( _bins ) 
     
