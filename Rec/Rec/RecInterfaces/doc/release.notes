@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Chris Jones
+ - Rework the tool interface, to allow it to be used by a DecayTreeTuple tool.
+
 !========================= RecInterfaces v1r1 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

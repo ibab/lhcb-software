@@ -12,6 +12,9 @@
 #include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
 
+// Forward decls.
+namespace Tuples { class Tuple; }
+
 static const InterfaceID IID_IChargedProtoANNPIDTupleTool ( "IChargedProtoANNPIDTupleTool", 1, 0 );
 
 namespace ANNGlobalPID
@@ -24,8 +27,7 @@ namespace ANNGlobalPID
    *  @author Chris Jones
    *  @date   2011-02-04
    */
-  class IChargedProtoANNPIDTupleTool :
-    virtual public IAlgTool
+  class IChargedProtoANNPIDTupleTool : virtual public IAlgTool
   {
 
   public:
@@ -40,16 +42,20 @@ namespace ANNGlobalPID
      *  @param pdgCode The PID to assume for this ProtoParticle
      *  @return StatusCode indicating if the ProtoParticle information was successfully filled
      */
-    virtual StatusCode fill( const LHCb::ProtoParticle * proto,
+    virtual StatusCode fill( Tuples::Tuple& tuple,
+                             const LHCb::ProtoParticle * proto,
                              const LHCb::ParticleID pid = LHCb::ParticleID() ) const = 0;
 
     /** Fill the tuple tool with information for the given Particle
      *  @param part Pointer to the Particle to fill into the tuple
      *  @return StatusCode indicating if the Particle information was successfully filled
      */
-    inline StatusCode fill( const LHCb::Particle * part ) const
+    inline StatusCode fill( Tuples::Tuple& tuple, 
+                            const LHCb::Particle * part ) const
     {
-      return ( part ? fill( part->proto(), part->particleID() ) : StatusCode::SUCCESS );
+      return ( part ? fill( tuple, 
+                            part->proto(), 
+                            part->particleID() ) : StatusCode::SUCCESS );
     }
 
   };
