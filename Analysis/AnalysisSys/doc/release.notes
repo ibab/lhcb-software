@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2014-04-01 - Chris Jones
+ - Add new package Phys/DecayTreeTupleANNPID.
+
 </PRE><H1><A NAME=v12r0>2014-02-20 Analysis v12r0</A></H1><PRE>
 New development release, built against Phys v18r0.
 

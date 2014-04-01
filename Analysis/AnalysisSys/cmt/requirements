@@ -38,6 +38,7 @@ use  DecayTreeTupleMC           v1r4     Phys
 use  DecayTreeTupleTrigger      v1r2     Phys
 use  DecayTreeTupleMuonCalib    v1r2p1   Phys
 use  DecayTreeTupleTracking     v1r1     Phys
+use  DecayTreeTupleANNPID       v1r0     Phys
 use  DecayTreeTuple             v4r7     Phys
 
 ####################################################################
