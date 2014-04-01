@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : VP/VPDAQ
 ! Responsible : Marcin Kucharczyk
-! Purpose     : Prepare VeloPix RawBank and decode it
+! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
+
+! 2014-04-01 - Heinrich Schindler
+ - Remove VPLiteCluster include statements from PrepareVPRawBank.
+ - Remove VPRawBankToLiteCluster algorithm.
 
 ! 2014-03-30 - Heinrich Schindler 
  - Follow changes in VPCluster format (revision r170715).

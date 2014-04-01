@@ -5,7 +5,6 @@
 #include "Kernel/VPChannelID.h"
 // Event
 #include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
 #include "Event/RawEvent.h"
 #include "Event/BankWriter.h"
 // VPDet

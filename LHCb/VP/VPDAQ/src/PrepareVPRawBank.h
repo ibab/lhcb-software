@@ -8,7 +8,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
 // Si
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiRawBufferWord.h"
