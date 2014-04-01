@@ -1,4 +1,21 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check that merging many small files does not explode memory or file size. Check that the structure of the FSR store is correct after merging.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code. In this test it si possible segfaults may indicate a massive VMEM usage from merging FSRs.
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: File size explosion, if merging and cleaning of the input file FSRs fails to happen, the file size can explode. This is a major problem.
+#               . MAJOR: Memory usage explosion, if merging and cleaning of the input file FSRs fails to happen, the VMEM can explode in finalize. This is a major problem.
+#               . MAJOR: Incorrect structure of output FSR store. This test uses the CheckFSRs script in APPCONFIG, which verifies that merging and cleaning was done correctly.
+#               . MAJOR: Unable to calculate the Luminosity related to the input file(s), the CheckFSR script verifies that the luminosity can be calculated correctly. If this cannot be done it points to a big problem with the database or the merging of FSRs.
+#               . MINOR: Warnings not related to FSRs might be printed from the CheckFSR script, for example the recent warning about 'cppyy' and these should be added to a list of exceptions below.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../options/davinci-merge-small-files.py</text></set></argument>

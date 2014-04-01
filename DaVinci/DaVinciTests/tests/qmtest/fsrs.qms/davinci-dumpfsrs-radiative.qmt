@@ -1,4 +1,17 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check whether FSRs are consistent before/after merging
+# Prerequisites: This is a full test suite which creates its own input
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: Any difference in the FSRs is a major problem and signifies a major FSR problem to be followed up with Jaap et al.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
