@@ -1,4 +1,19 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check I can run HLT1 split from a TCK
+# Prerequisites: the physics.2012 test needs to have completed first.
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: also compares the result against a timing table of running both Hlt1 and 2, and the results for Hlt1 independent better be identical!
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . TRIVIAL: sometimes the timing table can show a failure due to the odd event which exceeds a timing cutoff in the nightlies running on an overloaded machine.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">

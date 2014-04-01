@@ -196,7 +196,7 @@ class Moore(LHCbConfigurableUser):
         , "DBSnapshotDirectory" : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
         , 'EnableMonitoring' : "None # DEPRECATED.  use HltConf() directly or MooreOnline"
         , 'SkipDisabledL0Channels' : "None # DEPRECATED.  use HltConf() directly"
-        , "prefetchConfigDir" : "None # use MooreExpert"
+        , "prefetchConfigDir" : "None # DEPRECATED. use MooreExpert"
         , "EnableLumiEventWriting"       : "None # DEPRECATED.  use HltConf() directly"
         , 'EnableAcceptIfSlow' : "None # DEPRECATED.  use HltConf directly"
         , 'RequireL0ForEndSequence'     :  "None # DEPRECATED.  use HltConf() directly"

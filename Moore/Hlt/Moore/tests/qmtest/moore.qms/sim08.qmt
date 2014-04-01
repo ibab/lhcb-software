@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Verify that Moroe can be run to emulate the trigger on a simulated file
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . EXPECTED: At the moment this test often dies due to timeouts or odd abort signals thrown in finalize, which is annoying since all the printout seems otherwise fine.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
@@ -6,7 +20,7 @@
     <text>../options/Moore-Testing-Default.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Gaudi.Configuration import *; from Configurables import Moore; Moore().EvtMax=99; from PRConfig import TestFileDB; Moore().CheckOdin = False; Moore().ForceSingleL0Configuration=True; Moore().WriterRequires = [];  TestFileDB.test_file_db["Sim08_2012_L044"].run(configurable=Moore(),withDB=True,clear=True); Moore().Simulation=True;</text>
+    <text>from Gaudi.Configuration import *; from Configurables import Moore; Moore().EvtMax=99; from PRConfig import TestFileDB; Moore().CheckOdin = False; Moore().ForceSingleL0Configuration=True; Moore().WriterRequires = [];  TestFileDB.test_file_db["Sim08_2012_L044"].run(configurable=Moore(),withDB=True,clear=True); Moore().Simulation=True; from Configurables import MooreExpert; MooreExpert().DisableMonitors=True;</text>
   </set></argument>
   <argument name="validator"><text>
 countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})

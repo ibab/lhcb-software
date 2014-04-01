@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Test running HLT2 after 1, but independent of Hlt1, with "gGerhard's sledgehammer"
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . EXPECTED: Tests against a reference file with all teh timings from the last release, just like with the physics.2012 test this can be come outdated quickly, even though very little changes in the stack.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">
@@ -11,9 +25,7 @@
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1and2notos.csv";</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-#print "YES"
 #reftable
 myname='moore.physics.deferral.hlt1and2notos'
 

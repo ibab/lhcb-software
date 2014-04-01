@@ -1,16 +1,26 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Compatibility test, check that Moore can run a 2010 data file with 2010 tags used to produce it originally
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set>
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(configurable=Moore()); Moore().EvtMax=100;</text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(configurable=Moore(), withDB=True); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
-#print stdout
-#from Brunel.QMTest.BrunelExclusions import preprocessor
-#validateWithReference(preproc = preprocessor)
 countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
 </text></argument>
 </extension>

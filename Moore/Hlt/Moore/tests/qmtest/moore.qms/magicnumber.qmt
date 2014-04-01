@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check for the wierdness when we use the number 6302 in HltAnnSvc(), something very weird happens when we do that. This test currently fails until this problem is understood.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . EXPECTED: This test is expected to fail until the underlying problem of this crazy magic number thing is fixed. https://savannah.cern.ch/bugs/?103993#comment18
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">
@@ -11,9 +25,6 @@
     <text>../options/default-threshold.py</text>
     <text>../options/magicnumber.py</text>
   </set></argument>
-  <!--<argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
-  </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 

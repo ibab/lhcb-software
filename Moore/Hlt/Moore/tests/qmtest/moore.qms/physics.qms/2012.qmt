@@ -1,4 +1,19 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check that the behaviour of Moore when processing the same dataset with the same threshold setting remains approximately constant
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . MINOR: This test also currently checks the number of lines of stdout, which are demanded to be less than a given amount. Ideally this nubmer would be very small and not allowed to increase.
+#               . EXPECTED: This test also checks the number of events seen by every algorithm, via the timing table. For some reason this is a very heavily fluctuating quantity, requiring the reference files to be regularly updated.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">
