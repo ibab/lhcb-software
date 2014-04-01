@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DecayTreeTupleANNPID
+! Responsible : Chris Jones
+! Purpose     : ABBPID training tuple tools.
+!-----------------------------------------------------------------------------
+
+! 2014-04-01 - Chris Jones
+ - First version. Provides a tuple tool for the ANNPID training.
