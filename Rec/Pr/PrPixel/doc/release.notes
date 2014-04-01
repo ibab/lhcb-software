@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Pickup VPClusters instead of VPLiteClusters.
+
 ! 2014-03-31 - Heinrich Schindler
  - Follow changes in VPCluster format (revision r170715)
 

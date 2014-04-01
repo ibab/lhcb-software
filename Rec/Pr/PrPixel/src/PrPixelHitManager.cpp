@@ -332,7 +332,7 @@ void PrPixelHitManager::clearHits() {
 }
 
 //=========================================================================
-// Build PrPixelHits from Super Pixel or Lite Cluster Raw Bank
+// Build PrPixelHits from Super Pixel or Cluster Raw Bank
 //=========================================================================
 void PrPixelHitManager::buildHitsFromRawBank() 
 {
@@ -684,7 +684,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
 }
 
 //=========================================================================
-//  PrPixelHits from Lite Cluster Raw Bank
+//  PrPixelHits from Cluster Raw Bank
 //=========================================================================
 void PrPixelHitManager::buildHitsFromLCRawBank(const std::vector<LHCb::RawBank*>& tBanks) {
 
@@ -853,8 +853,8 @@ void PrPixelHitManager::storeOfflineClusters() {
   put(clusters, m_clusterLocation);
 
   // We are in offline configuration. Provided we are not running on old MC
-  // we have the full information about contributing pixels. In case of
-  // old MC we started from VPLiteClusters and don't have this information.
+  // we have the full information about contributing pixels. In case of old MC
+  // this was not encoded in the raw bank, and we don't have this information.
   // However, MC matching will work consistently in both cases.
   // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
   // false and the code still uses the old event model.
@@ -906,7 +906,7 @@ void PrPixelHitManager::sortByX() {
 }
 
 //=========================================================================
-//  Convert the LiteClusters to PrPixelHits
+//  Convert the clusters to PrPixelHits
 //=========================================================================
 void PrPixelHitManager::buildHits() {
 
@@ -914,29 +914,29 @@ void PrPixelHitManager::buildHits() {
   m_eventReady = true;
 
   // Get the clusters.
-  LHCb::VPLiteCluster::VPLiteClusters* liteClusters =
-    GaudiTool::get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
+  LHCb::VPClusters* clusters =
+    GaudiTool::get<LHCb::VPClusters>(LHCb::VPClusterLocation::Default);
   // If necessary adjust the size of the hit pool.
-  if (liteClusters->size() > m_pool.size()) {
-    m_pool.resize(liteClusters->size() + 100);
+  if (clusters->size() > m_pool.size()) {
+    m_pool.resize(clusters->size() + 100);
   }
   // Assume binary resolution of hit position. This is the weight.
   const double w = 12.0/(0.055*0.055);
   // Loop over clusters.
-  LHCb::VPLiteCluster::VPLiteClusters::const_iterator itc; 
-  LHCb::VPLiteCluster::VPLiteClusters::const_iterator itc_end(liteClusters->end());
-  for (itc = liteClusters->begin(); itc_end != itc; ++itc) {
-    const unsigned int module = itc->channelID().module();
+  LHCb::VPClusters::const_iterator itc; 
+  LHCb::VPClusters::const_iterator itc_end(clusters->end());
+  for (itc = clusters->begin(); itc_end != itc; ++itc) {
+    const unsigned int module = (*itc)->channelID().module();
     if (module >= m_modules.size()) break;
 
     // store 3D point
-    LHCb::VPChannelID cid = (*itc).channelID();
+    LHCb::VPChannelID cid = (*itc)->channelID();
     const unsigned int sensor_chip = cid.chip()%SENSOR_CHIPS;
     const unsigned int sensor = cid.module()*MODULE_SENSORS + cid.chip()/SENSOR_CHIPS;
     const unsigned int cy = cid.row();
     const unsigned int cx = cid.col() + CHIP_COLUMNS*sensor_chip;
-    const double dx = (*itc).interPixelFractionX()*m_x_pitch[cx];
-    const double dy = (*itc).interPixelFractionY()*m_pixel_size;
+    const double dx = (*itc)->fraction().first * m_x_pitch[cx];
+    const double dy = (*itc)->fraction().second * m_pixel_size;
     double local_x = m_local_x[cx] + dx;
     double local_y = (cy + 0.5)*m_pixel_size + dy;
     const double *ltg = m_ltg + sensor*16;

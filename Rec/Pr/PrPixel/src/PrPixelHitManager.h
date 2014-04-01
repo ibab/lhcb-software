@@ -7,7 +7,6 @@
 #include "GaudiKernel/IIncidentListener.h"
 // LHCb
 // Event/DigiEvent
-#include "Event/VPLiteCluster.h"
 #include "Event/VPCluster.h"
 #include "Kernel/VPChannelID.h"
 // Det/VPDet
