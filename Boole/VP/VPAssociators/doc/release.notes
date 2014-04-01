@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Remove VPLiteCluster include statement.
+
 ! 2014-03-24 - Heinrich Schindler
  - Follow changes in VPDigit and MCVPDigit format and location names 
    (revisions r170467, r170468).

@@ -6,7 +6,6 @@
 #include "Linker/LinkerTool.h"
 // Event/DigiEvent
 #include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
 // Event/MCEvent
 #include "Event/MCTruth.h"
 // Kernel/LHCbKernel
