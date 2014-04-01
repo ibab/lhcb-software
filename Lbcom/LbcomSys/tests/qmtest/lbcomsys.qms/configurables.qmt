@@ -1,4 +1,20 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Standard test in every project, check against a list of all known configurables, that all configurables are visible and can be instantiated. This test verifies that there is no problem with the python dictionary in the release, and is the minimal possible test of the confDB.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: configurables which cannot be instantiated. Contact the authors responsible for the problem.
+#               . MAJOR: entire missing sets of configurables for packages or projects, problem in the build, consult the package authors or release shifters.
+#               . MINOR: A small number of Extra configurables or renamed configurables or small number of removed configurables. See if they make sence and then update the reference files.
+#               . EXPECTED: There are always additional configurables and a small number of modified configurables in each release, this is not a big deal and you can update the references. Be casreful to check that there were no build failures first, and if in doubt contact the release managers of the projects below you.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>
