@@ -1,5 +1,5 @@
 package GaussSys
-version v46r7p1
+version v46r7p2
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v46r7p1 Sim
+use Gauss               v46r7p2 Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v66r0p1 
@@ -44,7 +44,7 @@ use LbOniaPairs         v2r0    Gen
 use LbPowheg            v1r0p3  Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v7r7p1  Gen
+use LbPythia8           v7r7p2  Gen
 use LbHerwigpp          v3r0    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
