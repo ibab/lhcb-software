@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - James Mccarthy
+ - Added scripts for monitoring timing in subdetectors and processes in Gauss (MonitorTiming.cpp MonitorTiming.h)
+
 !======================= GaussMonitor v8r0 2014-02-02 ========================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
