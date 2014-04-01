@@ -256,10 +256,11 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultPVReFittersNames() const
 {
   static const ToolMap m = boost::assign::map_list_of
-    ( ""           , "AdaptivePVReFitter:PUBLIC" )
-    ( "PVReFitter" , "PVReFitter"         )
+    ( ""           , "LoKi::PVReFitter:PUBLIC"   )
+    ( "LoKi"       , "LoKi::PVReFitter:PUBLIC"   )
+    ( "PVReFitter" , "PVReFitter"                )
     ( "Adaptive"   , "AdaptivePVReFitter:PUBLIC" )
-    ( "Cheated"    , "CheatedPVReFitter"  )
+    ( "Cheated"    , "CheatedPVReFitter"         )
     ;
   return m;
 }
@@ -586,30 +587,29 @@ StatusCode DVCommonBase<PBASE>::loadEventInput()
 template <class PBASE>
 StatusCode DVCommonBase<PBASE>::loadParticle2PVRelations()
 {
-  for( std::vector<std::string>::const_iterator iLoc = m_p2PVInputLocations.begin();
-       iLoc != m_p2PVInputLocations.end(); ++iLoc )
+  for ( auto& loc : m_p2PVInputLocations )
   {
 
     if ( this->msgLevel(MSG::VERBOSE) )
-      this -> verbose() << "Trying to Preload " << *iLoc << endmsg;
+      this -> verbose() << "Trying to Preload " << loc << endmsg;
 
     const Particle2Vertex::Table * table =
-      this -> template getIfExists<Particle2Vertex::Table>(*iLoc);
+      this -> template getIfExists<Particle2Vertex::Table>(loc);
     if ( !table )
     {
-      table = this -> template getIfExists<Particle2Vertex::Table>(*iLoc,false);
+      table = this -> template getIfExists<Particle2Vertex::Table>(loc,false);
     }
     if ( table )
     {
       if ( this->msgLevel(MSG::VERBOSE) )
       {
-        this -> verbose() << "Pre-loaded table from " << (*iLoc) << endmsg ;
+        this -> verbose() << "Pre-loaded table from " << loc << endmsg ;
       }
       loadRelations( table->relations() );
     }
     else
     {
-      this -> Info ( "No P->PV table at " + (*iLoc),
+      this -> Info ( "No P->PV table at " + loc,
                      StatusCode::SUCCESS, 0 ).ignore() ;
     }
   }

@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2014-04-01 - Chris Jones
+ - Make LoKi::PVReFitter the default PV refitting tool.
+
 !========================= DaVinciKernel v11r6 2014-02-20 =========================
 
 ! 2014-02-20 - Chris Jones
