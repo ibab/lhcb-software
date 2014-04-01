@@ -1,4 +1,16 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: To compare the output of the DecodeRawEvent comfigurable with the old DecodeRawEvent.py python file
+# Prerequisites: decoder setup should have passed
+# Common failure modes, severities and cures: 
+#               . SEVERE: segfaults or FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . EXPECTED: On modifications of the decoder db we expect there to be gradually mroe and more differences with the old data-on-demand way of doing things, and so soon this test is expected to be obsolete. For the moment, though, expected differences are stored in compare options with configurable.py and this should be updated with any new changes.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>

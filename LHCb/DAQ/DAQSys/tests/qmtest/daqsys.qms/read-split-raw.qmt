@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Verify that DecodeRawEvent configurable can successfully read data from a wierdly non-trivially split raw event input.
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: required modifications not found, indicates that some change in the input/output raw event locations was not correctly propagated. Perhaps there is a decoder whose input location cannot be set or is overridded incorrectly by other options, or perhaps there is some problem with RawEventFormat ro RawEventCompat.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>

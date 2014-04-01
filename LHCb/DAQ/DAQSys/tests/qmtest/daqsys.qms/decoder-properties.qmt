@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Verify that properties of decoders in the database are correctly propagated
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . MAJOR: Failure of any part of this unit test indicates something major is screwed in teh python for decoders, you will need to check ../options/testproperties.py and ameliorate the code as required.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>

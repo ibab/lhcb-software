@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check that the decoder-db is consistent and correct, uinit test of the decoderDB
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: Failure of any part of this test, you should check the reelevent part of ../options/test decoder db.py and ameliorate as required.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>

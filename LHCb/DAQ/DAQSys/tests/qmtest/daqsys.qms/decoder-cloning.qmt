@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Test that cloning functionality of decoders in the decoder DB is consistent
+# Prerequisites: decoder db test must have passed.
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failure in any part of this test indicates a major problem in consistency of the functionality of cloning items out of the database.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>

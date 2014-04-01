@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: initial unit tests of consistency of the configurables in this package, configring algs/tools from the database
+# Prerequisites: decoder db should have passed.
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failure in any part of this test indicates a major problem with the python code of the decoder db or DecodeRawData which must be addressed
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>
