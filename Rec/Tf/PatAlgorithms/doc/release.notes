@@ -7,6 +7,7 @@
 
 ! 2014-04-01 - Gerhard Raven
  - PatFwdFitLine, PatFwdFitParabola: declare final, remove virtual destructor
+ - PatFwdTrackCandidate: use perfect forwarding in  c'tor
 
 ! 2014-03-27 - Gerhard Raven
  - PatFwdTool: factor out and lift max finding, range extension

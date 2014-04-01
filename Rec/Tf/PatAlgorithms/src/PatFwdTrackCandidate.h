@@ -19,8 +19,9 @@
 
 class PatFwdTrackCandidate final {
 public:
-  PatFwdTrackCandidate(const LHCb::Track *tr, PatFwdHits coords)
-      : m_track{ tr }, m_coords{ std::move(coords) } {
+  template <typename C>
+  PatFwdTrackCandidate(const LHCb::Track *tr, C&& coords)
+      : m_track{ tr }, m_coords{ std::forward<C>(coords) } {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
     m_x0 = state->x();
@@ -38,10 +39,11 @@ public:
   }
 
   template <typename I>
-  PatFwdTrackCandidate(const LHCb::Track *tr, I first, I last)
+  PatFwdTrackCandidate(const LHCb::Track *tr, I&& first, I&& last)
       : PatFwdTrackCandidate(
             tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) }) {}
 
+  PatFwdTrackCandidate() = delete;
   PatFwdTrackCandidate(const PatFwdTrackCandidate &) = default;
   PatFwdTrackCandidate(PatFwdTrackCandidate &&) = default;
 
