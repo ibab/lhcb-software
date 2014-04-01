@@ -12,6 +12,7 @@ gaudi_depends_on_subdirs(Phys/DecayTreeFitter
                          Phys/DecayTreeTupleReco
                          Phys/DecayTreeTupleTrigger
                          Phys/DecayTreeTupleTracking
+                         Phys/DecayTreeTupleANNPID
                          Phys/LoKiPhys)
 
 find_package(HepMC)
