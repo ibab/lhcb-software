@@ -425,13 +425,12 @@ namespace {
     case LHCb::Measurement::Muon: rc = Muon; break;
     case LHCb::Measurement::TTLite: rc = TT; break;  
     case LHCb::Measurement::ITLite: rc = T; break;
-    case LHCb::Measurement::VPLite: rc = VeloR; break;
+    case LHCb::Measurement::VP: rc = VeloR; break;
     case LHCb::Measurement::Calo: rc = Unknown; break;
     case LHCb::Measurement::Origin : rc = Unknown; break;
     case LHCb::Measurement::FT : rc = T; break;
     case LHCb::Measurement::UT : rc = TT; break;
     case LHCb::Measurement::UTLite : rc = TT; break;
-    case LHCb::Measurement::VP : rc = VeloR; break;
     }
     return rc;
   }
