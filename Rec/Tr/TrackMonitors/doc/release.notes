@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Follow removal of VPLite measurement (r170832, r170821).
+
 ! 2014-03-26 - Heinrich Schindler
  - Add support for VP measurement type
 

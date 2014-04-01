@@ -9,7 +9,6 @@
 #include "Event/VeloCluster.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
-#include "Event/VPLiteMeasurement.h"
 #include "Event/VPMeasurement.h"
 #include "Event/KalmanFitResult.h"
 #include "Kernel/HitPattern.h"
@@ -151,12 +150,6 @@ namespace {
     case LHCb::Measurement::Origin :
     case LHCb::Measurement::Unknown: rc = HitTypeUnknown ; break ;
       
-    case LHCb::Measurement::VPLite:
-      {
-	const LHCb::VPLiteMeasurement* vpmeas = dynamic_cast< const LHCb::VPLiteMeasurement* >(&meas) ;
-	rc = vpmeas && vpmeas->projection()==LHCb::VPLiteMeasurement::X ? VPX : VPY ;
-      }
-      break;
     case LHCb::Measurement::VP:
       {
 	const LHCb::VPMeasurement* vpmeas = dynamic_cast<const LHCb::VPMeasurement*>(&meas);
