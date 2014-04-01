@@ -15,7 +15,7 @@ using ROOT::Math::CholeskyDecomp;
    *  @date   2009-11-04 Update to use Cholesky decomposition
    */
 
-  class PatFwdFitParabola {
+  class PatFwdFitParabola final {
   public:
     /// Standard constructor
     PatFwdFitParabola( double z = 0., double x = 0., double w = 0. ) {
@@ -34,8 +34,6 @@ using ROOT::Math::CholeskyDecomp;
       m_sol[1] = 0.;
       m_sol[2] = 0.;
     }
-
-    virtual ~PatFwdFitParabola( ) {}; ///< Destructor
 
     void addPoint( double z, double x, double w ) {
       const double dz = 1.e-3*z;
@@ -66,8 +64,6 @@ using ROOT::Math::CholeskyDecomp;
     double ax() const { return m_sol[0]; }
     double bx() const { return m_sol[1]; }
     double cx() const { return m_sol[2]; }
-
-  protected:
 
   private:
     double m_mat[6]; /// matrix M in Mx = b

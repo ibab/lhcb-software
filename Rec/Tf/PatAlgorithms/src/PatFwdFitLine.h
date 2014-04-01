@@ -15,7 +15,7 @@ using ROOT::Math::CholeskyDecomp;
    *  @date   2009-22-04 Update to use Cholesky decomposition
    */
 
-  class PatFwdFitLine {
+  class PatFwdFitLine final {
   public:
     /// Standard constructor
     PatFwdFitLine( double z = 0., double x = 0., double w = 0. ) {
@@ -29,8 +29,6 @@ using ROOT::Math::CholeskyDecomp;
       m_sol[0] = 0.;
       m_sol[1] = 0.;
     }
-
-    virtual ~PatFwdFitLine( ) {}; ///< Destructor
 
     void addPoint( double z, double x, double w ) {
       const double dz = 1.e-3*z;
