@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v46r7p2 2014-04-01 ==========================
+! 2014-01-04 - Gloria Corti
+ - Technical release for patch in options of Pythia8 for ad-hoc setting
+
 !========================= Gauss v46r7p1 2014-02-26 ==========================
 ! 2014-02-04 - Paul Szczypka
  - Purged the VL from Configuration.py
