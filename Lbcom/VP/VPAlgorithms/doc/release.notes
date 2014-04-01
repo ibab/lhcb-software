@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Do not create lite clusters in VPClustering.
+
 ! 2014-03-30 - Heinrich Schindler
  - Follow changes in VPCluster format (removal of VPLiteCluster, r170715)
 

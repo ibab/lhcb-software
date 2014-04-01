@@ -26,7 +26,6 @@ VPClustering::VPClustering(const std::string& name, ISvcLocator* pSvcLocator) :
 {
 
   declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::Default);
-  declareProperty("LiteClusterContainer", m_liteClusterLocation = LHCb::VPLiteClusterLocation::Default);
   declareProperty("VPClusterContainer",   m_clusterLocation     = LHCb::VPClusterLocation::Default);
 
 }
@@ -55,15 +54,15 @@ StatusCode VPClustering::initialize() {
 //=============================================================================
 StatusCode VPClustering::execute() {
 
-  // Check if LiteClusters already decoded. 
-  if (exist<LHCb::VPLiteCluster::VPLiteClusters>(m_digitLocation)) {
-    // If lite clusters are decoded there is no need to build clusters.
+  // Check if clusters already exist. 
+  if (exist<LHCb::VPClusters>(m_clusterLocation)) {
+    // If clusters are decoded there is no need to build clusters.
     if (m_debug) {
-      debug() << "Lite clusters already exist. No clustering taking place" << endmsg;
+      debug() << "Clusters already exist. No clustering taking place" << endmsg;
     }
     return StatusCode::SUCCESS;
   }  
-  // If no lite clusters, then cluster the digits.
+  // Cluster the digits.
   if (m_debug) debug() << "Clustering digits" << endmsg;
   // Pick up pixel hits (digits) to cluster
   LHCb::VPDigits* digits = getIfExists<LHCb::VPDigits>(m_digitLocation);
@@ -71,8 +70,7 @@ StatusCode VPClustering::execute() {
     error() << "No digits in " << m_digitLocation << endmsg;
     return StatusCode::SUCCESS;
   }
-  // Create containers for clusters and lite clusters.
-  VPLiteCluster::VPLiteClusters* liteClusters = new VPLiteCluster::VPLiteClusters();
+  // Create container.
   VPClusters* clusters = new VPClusters();
 
   // Sort digits by channelID
@@ -189,25 +187,11 @@ StatusCode VPClustering::execute() {
     }
     // Calculate the position in global coordinates.
     point = vp_sensor->localToGlobal(point);
-    // Map the interpixel-fractions to 3-bit integers.
-    std::pair<unsigned int,  unsigned int> intFrac;
-    intFrac.first = int(ceil(frac.first * 7));
-    intFrac.second = int(ceil(frac.second * 7));
-    if (intFrac.first > 7) intFrac.first = 7;
-    if (intFrac.second > 7) intFrac.second = 7; 
-    // Add the lite cluster to the list.
-    bool isLong = false; 
-    const VPLiteCluster newLiteCluster(id, 1, intFrac, isLong);
-    liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
     LHCb::VPCluster* newCluster = new LHCb::VPCluster(frac, point.x(), point.y(), point.z(), pixels);
     clusters->insert(newCluster, id);
   }
-  // Sort the lite clusters.
-  std::sort(liteClusters->begin(), liteClusters->end(), 
-            SiDataFunctor::Less_by_Channel<LHCb::VPLiteCluster>()); 
-  // Store clusters and lite clusters on TES.
-  put(liteClusters, m_liteClusterLocation);
+  // Store the clusters on the TES.
   put(clusters, m_clusterLocation);
   return StatusCode::SUCCESS;
 
