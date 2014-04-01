@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Eric Cogneras
+ - remove unused keepAdding() function 
+
 ! 2014-03-31 - Eric Cogneras
  - add if statement for debugging tests
 

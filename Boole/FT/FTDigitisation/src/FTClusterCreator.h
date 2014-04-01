@@ -30,8 +30,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  bool keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter);///< Check conditions before adding another digit to the cluster
-
 private:
   // Location
   std::string m_inputLocation;       ///< MCFTDigit input Container
@@ -41,6 +39,9 @@ private:
   double m_dynamicsLowLimit;         ///< Lower edge of the clustering range
   double m_dynamicsUpLimit;          ///< Upper edge of the clustering range
   uint m_dynamicsBitsNber;           ///< Number of bits of the dynamics
+
+  std::map<double, double> m_thresholdWeightMap; //< map linking weights to thresholds
+  
 
   int m_adcThreshold;   ///<Minimal ADC value for cluster definition
   unsigned int m_clusterMinWidth;   ///< Minimal Width for clusters

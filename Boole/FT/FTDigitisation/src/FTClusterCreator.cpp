@@ -53,13 +53,15 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 7 , "Maximal allowed width for clusters");
   declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 9 , "Minimal charge to keep cluster ~4 p.e.");
   declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks, ~2.5 pe.");
-  declareProperty("SplitPrevNextMoni" , m_splitPrevNextMoni = 0 ,
+  declareProperty("SplitPrevNextMoni" , m_splitPrevNextMoni = false ,
                   "In case of spillover, make split Prev/Next plots");
   declareProperty("RemoveITRegion"    , m_removeITRegion    = 0 , 
                   "0 = keep all clusters, 1 = remove IT region, 2 = keep only IT region");
   declareProperty("ITScale"           , m_ITScale           = 1 , 
                   "Scale of IT to be removed / kept (only relevant if RemoveITRegion)");
 
+  m_thresholdWeightMap.clear();
+  
 
   m_nberOfLostHitFromMap = 0;
   m_nberOfKeptHitFromMap = 0;
@@ -82,6 +84,18 @@ StatusCode FTClusterCreator::initialize() {
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
     debug() << ":m_adcThreshold is " <<m_adcThreshold << endmsg;
   }
+
+  int StepPE = std::pow(2,m_dynamicsBitsNber); // (6-bit)
+  if(m_dynamicsBitsNber != 2 )
+    for(int i = 0; i<StepPE; ++i) m_thresholdWeightMap[(double)i]=(double)i/2.;
+  else
+  {
+    m_thresholdWeightMap[0]=0;
+    m_thresholdWeightMap[3]=m_adcThreshold;
+    m_thresholdWeightMap[5]=m_clusterMinADCPeak;
+    m_thresholdWeightMap[8]=m_clusterMinCharge;
+  }
+
   m_nCluster = 0;
   m_sumCharge = 0.;
   
@@ -108,33 +122,17 @@ StatusCode FTClusterCreator::execute(){
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "[FTClusterCreator] ==> Execute NEW EVENT" << endmsg;
 
-  int StepPE = std::pow(2,m_dynamicsBitsNber); // (6-bit)
 
-  std::map<double, double> ThresholdWeightMap;  // < weight; threshold>
-  if(m_dynamicsBitsNber != 2 )
-    for(int i = 0; i<StepPE; ++i) ThresholdWeightMap[(double)i]=(double)i/2.;
-  else
-  {
-    ThresholdWeightMap[0]=0;
-    ThresholdWeightMap[3]=m_adcThreshold;
-    ThresholdWeightMap[5]=m_clusterMinADCPeak;
-    ThresholdWeightMap[8]=m_clusterMinCharge;
-  }
   
-  std::map<double, double>::const_iterator thmapittest = ThresholdWeightMap.begin();
-  while((thmapittest !=  ThresholdWeightMap.end()))
-  {
-    if ( msgLevel(MSG::DEBUG) ){
+  if ( msgLevel(MSG::DEBUG) ){
+    std::map<double, double>::const_iterator thmapittest = m_thresholdWeightMap.begin();
+    while((thmapittest !=  m_thresholdWeightMap.end()))
+    {
       debug() << "=== TEST1  thmapittest->first= " << thmapittest->first
               << "  thmapittest->second=" << thmapittest->second 
               << endmsg;
+      ++thmapittest;
     }
-    
-    ++thmapittest;
-  }
-        
-
-  if ( msgLevel(MSG::DEBUG) ) {
     debug() << "[Clustering_Test] ==> Execute NEW EVENT" << endmsg;
   }
   
@@ -198,9 +196,9 @@ StatusCode FTClusterCreator::execute(){
       for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
         hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
       }
-    } else {
-      //debug() << "[hitBoolMap] no mcDeposit for hit found! (noise hit?). No hitmap added." << endmsg;
-    }
+    } /*else {
+      debug() << "[hitBoolMap] no mcDeposit for hit found! (noise hit?). No hitmap added." << endmsg;
+      }*/
   }
 
   // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
@@ -345,7 +343,8 @@ StatusCode FTClusterCreator::execute(){
           }
           MCFTDigit* startDigit = *(startDigitIter-1);
 
-          /// should be in the same SiPM, the channel next door, above adcThreshold and 
+          /// should be in the same SiPM, the channel next door, above adcThreshold
+          /// and after the ending channel of the previous cluster
           if((startDigit->channelID().sipmId() == seedDigit->channelID().sipmId()) 
              &&(startDigit->channelID().sipmCell()==((*startDigitIter)->channelID().sipmCell()-1))
              && (startDigit->adcCount() >=m_adcThreshold)
@@ -412,14 +411,19 @@ StatusCode FTClusterCreator::execute(){
           ++iterDigit)
       {
         MCFTDigit* digit = *iterDigit;
-        int ChannelWeightREF =  std::min(std::floor((digit->adcCount())*(double)StepPE/(m_dynamicsUpLimit-m_dynamicsLowLimit)),
+        int ChannelWeightREF =  std::min(std::floor((digit->adcCount())*std::pow(2,m_dynamicsBitsNber)/
+                                                    (m_dynamicsUpLimit-m_dynamicsLowLimit)),
                                          m_dynamicsUpLimit);
-        std::map<double, double>::const_iterator thmapit = ThresholdWeightMap.begin();
+        std::map<double, double>::const_iterator thmapit = m_thresholdWeightMap.begin();
         double ChannelWeight = thmapit->first;
-        while((thmapit != ThresholdWeightMap.end())&&(digit->adcCount() >= thmapit->second))
+        while((thmapit != m_thresholdWeightMap.end())&&(digit->adcCount() >= thmapit->second))
         {
-          ChannelWeight = (thmapit->first);
-          //ChannelWeight = (thmapit->first)/2;
+         
+          if(m_dynamicsBitsNber == 6 ) // 6 bit old treatment
+            ChannelWeight = (thmapit->first)/2;
+          else
+            ChannelWeight = (thmapit->first);
+
           if ( msgLevel(MSG::DEBUG) ){ 
             debug() << "=... Test   ChannelWeight= " << ChannelWeight << " [ChannelWeightREF= " <<ChannelWeightREF
                     << "] (adc=" <<digit->adcCount() <<" >= " << thmapit->second << " criteria)"
@@ -467,9 +471,8 @@ StatusCode FTClusterCreator::execute(){
       if( 0 < totalCharge) 
         meanPosition =(*startDigitIter)->channelID() + meanPosition/totalCharge;
       if(msgLevel(MSG::DEBUG)){
-        debug() << format("==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f",meanPosition,
-                          std::floor(meanPosition),
-                          ( meanPosition-std::floor(meanPosition)) )
+        debug() << format("==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f",
+                          meanPosition,std::floor(meanPosition),(meanPosition-std::floor(meanPosition)))
                 << endmsg;
       }
 
@@ -477,9 +480,7 @@ StatusCode FTClusterCreator::execute(){
       // Before Cluster record, checks :
       // - total ADC charge of the cluster is over threshold and
       // - A seed has been found and
-      // - number of cells above the minimal allowed value      
-      //if( ( totalCharge >= ThresholdWeightMap[2*m_clusterMinCharge]) &&
-      //    ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) ){
+      // - number of cells above the minimal allowed value
       if( ( totalCharge >= m_clusterMinCharge) &&
           ((stopDigitIter-startDigitIter+1) >= m_clusterMinWidth) ){
 
@@ -546,10 +547,10 @@ StatusCode FTClusterCreator::execute(){
         // draw cluster fractional part
         plot(newCluster->fraction(), "ClusFraction", 
              "Cluster Fraction Part Distribution;Cluster Fractional part; Nber of events" , -.5, .5 , 100);
-        plot(newCluster->fraction()*250, "ClusFractionPosition", 
-             "Cluster Fraction position Distribution;Cluster Fractional position; Nber of events" , -1000,1000,100);
-        plot(newCluster->fraction()*250, "ClusFractionPositionZOOM", 
-             "Cluster Fraction position Distribution;Cluster Fractional position; Nber of events" ,-200,200,400 );
+        plot(newCluster->fraction()*250., "ClusFractionPosition", 
+             "Cluster Fraction position Distribution;Cluster Fractional position; Nber of events" , -1000.,1000.,100);
+        plot(newCluster->fraction()*250., "ClusFractionPositionZOOM", 
+             "Cluster Fraction position Distribution;Cluster Fractional position; Nber of events" ,-150.,150.,300 );
         // draw cluster width
         plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
         plot(newCluster->size(),"ClusSizeZOOM","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
@@ -1029,6 +1030,8 @@ StatusCode FTClusterCreator::execute(){
               -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"KeptHitEnergy", 
            "Energy of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
+      // plot(hitboolMapiter->first->entry().Pt(),"KeptHitPT", 
+      //      "PT of Hits kept by Clusterisation; p_T [MeV];Number of hits" , 0 , 1 );
       plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"KeptHitPDGId", 
            "PDGId of Hits kept by Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100);
     }
@@ -1040,6 +1043,8 @@ StatusCode FTClusterCreator::execute(){
               -500., 500., -500.,500., 100, 100);  
       plot(hitboolMapiter->first->energy(),"LostHitEnergy", 
            "Energy of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0 , 1 );
+      // plot(hitboolMapiter->first->entry().Pt(),"LostHitPT", 
+      //      "Energy of Hits lost in Clusterisation; p_T [MeV];Number of hits" , 0 , 1 );
       plot(hitboolMapiter->first->mcParticle()->particleID().pid(),"LostHitPDGId", 
            "PDGId of Hits lost in Clusterisation; Energy [MeV];Number of hits" , 0. , 100., 100 );
     }
@@ -1064,24 +1069,7 @@ StatusCode FTClusterCreator::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-bool FTClusterCreator::keepAdding(LHCb::MCFTDigits::const_iterator clusCandIter)
-{
-  /** checks that channelID is :
-      - 1. in the same SiPM
-      - 2. follows the previous one
-      - 3. previous channel not 63
-      - 4. previous channel not 127
-      - 5. above threshold
 
-  */
-  return (((*clusCandIter)->channelID().sipmId() == ((*(clusCandIter-1))->channelID().sipmId()))
-          && ((*clusCandIter)->channelID() == ((*(clusCandIter - 1))->channelID() + 1))
-          && ((*(clusCandIter - 1 ))->channelID().sipmCell() != 63 )
-          && ((*(clusCandIter - 1 ))->channelID().sipmCell() != 127 )
-          && ((*clusCandIter)->adcCount() >= m_adcThreshold));
-
-}
 
 
 
