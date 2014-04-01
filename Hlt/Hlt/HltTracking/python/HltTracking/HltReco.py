@@ -153,15 +153,15 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , OutputSelection     = "Velo" )
 
 #### State Initialiser for resurrected tracks
-veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName ))
-veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+#veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName ))
+#veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
 
 
 #############################################################################################
 # Define the reconstruction sequence 
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK
-from Configurables import DecodeVeloRawBuffer
+from Configurables import DecodeVeloRawBuffer, DumpTracks
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
@@ -169,7 +169,12 @@ MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection(
 
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK, veloInitFit ]).setOutputSelection( veloInitFit.TrackLocation )
+
+dumper = DumpTracks('VeloDumper')
+dumper.OutputLevel = VERBOSE
+dumper.TracksLocation = recoVelo.OutputTracksName
+
+RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK, dumper]).setOutputSelection( recoVelo.OutputTracksName )
 
 Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 

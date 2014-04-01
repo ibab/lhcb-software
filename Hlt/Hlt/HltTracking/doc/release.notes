@@ -3,6 +3,11 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2014-04-01 - Sebastian Neubert
+ - added trackingSources to link track locations to TrackReports SourceIDs
+ - removed the VeloInitFit
+
 ! 2014-02-25 - Gerhard Raven
  - make sure RICH reco doesn't fill its own timer table...
 

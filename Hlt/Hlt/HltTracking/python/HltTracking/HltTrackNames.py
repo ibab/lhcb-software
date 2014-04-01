@@ -12,6 +12,22 @@ HltGlobalTrackLocation 			= "Track"
 HltGlobalProtoPLocation			= "ProtoP"
 #
 ########################################################################
+# The rules for generating track and proto particle containers
+# These rules apply to HLT2 TODO: add rule for HLT1 usable from Hlt1Units
+########################################################################
+# For tracks, the format is e.g. Hlt2/Track/Unfitted/Forward 
+#
+# First of all we have the "base" track and protoparticle
+# location; this just defines that tracks and protoparticles go into
+# some_prefix_you_choose/Track/... and some_refix_you_choose/ProtoP/... 
+#
+def _baseTrackLocation(prefix,tracks) :
+    return prefix + "/" + HltGlobalTrackLocation + "/" + tracks 
+#
+def _baseProtoPLocation(prefix,protos) :
+    return prefix + "/" + HltGlobalProtoPLocation + "/" + protos
+
+########################################################################
 # Tracks
 ########################################################################
 # prefixes where to put the tracks (these go into the prefix field of 
@@ -28,6 +44,9 @@ HltSharedRZVeloTracksName               = "RZVelo"
 HltSharedVeloTracksName               = "Velo"
 #
 Hlt1SeedingTracksName                   = "Seeding"
+Hlt1ForwardTracksName                   = "Forward"
+Hlt1ForwardPestimateTracksName                   = "PestiForward"
+
 #
 Hlt2VeloTracksName 			= "Velo"
 Hlt2ForwardTracksName 			= "Forward"
@@ -64,6 +83,16 @@ Hlt2TrackingRecognizedFitTypes		= [	HltUnfittedTracksSuffix,
 Hlt2TrackingRecognizedFitTypesForRichID = [	HltBiDirectionalKalmanFitSuffix
 					  ]	
 #
+
+# List of track types that should be persisted into the TrackReports in HLT1
+# Map TrackLocations to SourceIDs for the TrackReports 
+# link source IDs, WriterName and TES locations:
+trackingSources = [ (1,"VeloWriter",_baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)),
+                    (3,"ForwardWriter",_baseTrackLocation(HltSharedTracksPrefix,Hlt1ForwardPestimateTracksName)), ] 
+                     # this will pickup the forward tracks 
+                     # with VeloTT momentum estimate
+
+
 ########################################################################
 # ProtoParticles
 ########################################################################
@@ -107,21 +136,7 @@ HltDefaultTrackCuts = {"Chi2Cut" : [0.,MaxChi2] }
 HltCaloProtosSuffix			= "WithCaloID"
 HltMuonProtosSuffix			= "WithMuonID"
 HltRichProtosSuffix			= "WithRichID"
-########################################################################
-# The rules for generating track and proto particle containers
-# These rules apply to HLT2 TODO: add rule for HLT1 usable from Hlt1Units
-########################################################################
-# For tracks, the format is e.g. Hlt2/Track/Unfitted/Forward 
-#
-# First of all we have the "base" track and protoparticle
-# location; this just defines that tracks and protoparticles go into
-# some_prefix_you_choose/Track/... and some_refix_you_choose/ProtoP/... 
-#
-def _baseTrackLocation(prefix,tracks) :
-    return prefix + "/" + HltGlobalTrackLocation + "/" + tracks 
-#
-def _baseProtoPLocation(prefix,protos) :
-    return prefix + "/" + HltGlobalProtoPLocation + "/" + protos
+
 #
 __all__ = (	
 		#
