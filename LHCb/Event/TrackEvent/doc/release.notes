@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
-! 2014-04-26 - Heinrich Schindler
+! 2014-04-01 - Heinrich Schindler
+ - Replace VPLite by VP measurement type
+
+! 2014-03-26 - Heinrich Schindler
  - Add VP measurement type
 
 !========================= TrackEvent v6r0 2014-02-17 =========================
