@@ -93,7 +93,6 @@ StatusCode ChargedProtoANNPIDTupleTool::initialize()
   m_truth = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool",
                                                "MCTruth", this );
 
-
   // Get a vector of input accessor objects for the configured variables
   for ( const auto& i : m_variables ) { m_inputs[i] = getInput(i); }
 
@@ -115,17 +114,15 @@ StatusCode ChargedProtoANNPIDTupleTool::finalize()
 
 //=============================================================================
 
-StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
+StatusCode ChargedProtoANNPIDTupleTool::fill( Tuples::Tuple& tuple,
+                                              const LHCb::ProtoParticle * proto,
                                               const LHCb::ParticleID pid ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  // Check this is a charged track ProtoParticle
+  // Get track 
   const LHCb::Track * track = proto->track();
-  if ( !track ) return sc;
-
-  // make a tuple
-  Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
+  if ( !track ) return Error( "ProtoParticle is neutral!" );
 
   // Loop over reconstruction variables
   for ( const auto & i : m_inputs )
@@ -167,13 +164,10 @@ StatusCode ChargedProtoANNPIDTupleTool::fill( const LHCb::ProtoParticle * proto,
 
   // Get info on the MC vertex type
   const LHCb::MCVertex * mcVert = ( mcPart ? mcPart->originVertex() : NULL );
-  sc = sc && tuple->column( "MCVertexType", mcVert ? (int)mcVert->type() : -999 );
+  sc = sc && tuple->column( "MCVertexType", mcVert ? (int)mcVert->type()    : -999   );
   sc = sc && tuple->column( "MCVertexX",    mcVert ? mcVert->position().x() : -999.0 );
   sc = sc && tuple->column( "MCVertexY",    mcVert ? mcVert->position().y() : -999.0 );
   sc = sc && tuple->column( "MCVertexZ",    mcVert ? mcVert->position().z() : -999.0 );
-
-  // Finally, write the tuple for this ProtoParticle
-  sc = sc && tuple->write();
 
   // return
   return sc;

@@ -44,7 +44,8 @@ namespace ANNGlobalPID
   public:
 
     // Fill the tuple tool with information for the given ProtoParticle
-    virtual StatusCode fill( const LHCb::ProtoParticle * proto,
+    virtual StatusCode fill( Tuples::Tuple& tuple,
+                             const LHCb::ProtoParticle * proto,
                              const LHCb::ParticleID pid = LHCb::ParticleID() ) const;
 
   private:

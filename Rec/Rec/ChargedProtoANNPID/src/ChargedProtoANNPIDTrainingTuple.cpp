@@ -26,7 +26,8 @@ ChargedProtoANNPIDTrainingTuple::
 ChargedProtoANNPIDTrainingTuple( const std::string& name,
                                  ISvcLocator* pSvcLocator )
   : ChargedProtoANNPIDAlgBase ( name , pSvcLocator ),
-    m_tuple                   ( NULL ) { }
+    m_tuple                   ( NULL )
+{ }
 
 //=============================================================================
 // Destructor
@@ -58,10 +59,21 @@ StatusCode ChargedProtoANNPIDTrainingTuple::execute()
   // Load the charged ProtoParticles
   LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
   if( !protos ) return Warning("No ProtoParticles at '" + m_protoPath + "'", StatusCode::SUCCESS);
-  
-  // Loop over all ProtoParticles and fill tuple
-  for ( const auto * P : *protos ) { sc = sc && m_tuple->fill(P); }
 
+  // Loop over all ProtoParticles and fill tuple
+  for ( const auto * P : *protos ) 
+  { 
+    // Check proto is charged
+    if ( !P->track() ) continue;
+    // make a tuple
+    Tuple tuple = nTuple( "annInputs", "ProtoParticle PID Information for ANN Training" );
+    // Fill variables
+    sc = sc && m_tuple->fill(tuple,P);
+    // Finally, write the tuple for this ProtoParticle
+    sc = sc && tuple->write();
+  }
+
+  // return
   return sc;
 }
 

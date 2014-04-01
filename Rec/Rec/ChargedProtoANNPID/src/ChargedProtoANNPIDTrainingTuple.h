@@ -17,6 +17,7 @@
 
 // Event Model
 #include "Event/ProtoParticle.h"
+#include "Event/Particle.h"
 
 // Interfaces
 #include "RecInterfaces/IChargedProtoANNPIDTupleTool.h"
@@ -27,7 +28,7 @@ namespace ANNGlobalPID
   //-----------------------------------------------------------------------------
   /** @class ChargedProtoANNPIDTrainingTuple ChargedProtoANNPIDTrainingTuple.h
    *
-   *  Makes an ntuple for PID ANN training
+   *  Makes an ntuple for PID ANN training, starting from ProtoParticles.
    *
    *  @author Chris Jones
    *  @date   2010-03-09

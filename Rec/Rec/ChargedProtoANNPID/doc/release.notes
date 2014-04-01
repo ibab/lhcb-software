@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Chris Jones
+ - Rework a little the tuple tool, to allow it to be used by a DecayTreeTuple
+   tool in DaVinci.
+
 ! 2014-03-31 - Chris Jones
  - Add track DOCA variable.
  - Add support for multiple cut text files.
