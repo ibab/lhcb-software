@@ -29,8 +29,10 @@ public:
 
   enum SourceIDs { kSourceID_Dummy=0,
 		   kSourceID_Hlt=kSourceID_Dummy,
-		   kSourceID_Hlt1=1,
-		   kSourceID_Hlt2=2,
+		   kSourceID_Hlt1_Velo = 1,
+		   kSourceID_Hlt1_VeloTT = 2,
+		   kSourceID_Hlt1_Forward = 3,
+		   kSourceID_Hlt1_ForwardFitted = 4,
 		   kSourceID_Max=7,
 		   kSourceID_BitShift=13,
 		   kSourceID_MinorMask=0x1FFF,

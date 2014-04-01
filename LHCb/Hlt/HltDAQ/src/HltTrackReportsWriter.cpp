@@ -116,7 +116,7 @@ StatusCode HltTrackReportsWriter::execute() {
   encodeTracks(inputTracks,bankBody);
 
   // shift bits in sourceID for the same convention as in HltSelReports
-  rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltTrackReports, kVersionNumber, bankBody );
+  rawEvent->addBank(  int(m_sourceID), RawBank::HltTrackReports, kVersionNumber, bankBody );
   
 
   if ( msgLevel(MSG::VERBOSE) ){

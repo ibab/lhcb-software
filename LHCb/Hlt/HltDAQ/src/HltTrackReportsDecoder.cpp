@@ -68,7 +68,7 @@ StatusCode HltTrackReportsDecoder::initialize() {
 
   if( m_sourceID > HltTrackReportsWriter::kSourceID_Max ){
     m_sourceID = m_sourceID & HltTrackReportsWriter::kSourceID_Max;
-    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+    return Error("Illegal SourceID specified (too large);" , StatusCode::FAILURE, 50 );
   }
 
   return StatusCode::SUCCESS;
@@ -131,7 +131,7 @@ StatusCode HltTrackReportsDecoder::execute() {
    // -------------------------------------------------------
 
    for(RawBank* bank : hltTrackReportsRawBanks){
-     decodeTracks(bank->data(),bank->size()/sizeof(unsigned int),outputTracks);
+     if(bank->sourceID()==m_sourceID)decodeTracks(bank->data(),bank->size()/sizeof(unsigned int),outputTracks);
    }
   
    // for debug purposes print the contents of the outputLocation

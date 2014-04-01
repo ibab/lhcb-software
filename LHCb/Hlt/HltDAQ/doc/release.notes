@@ -1,8 +1,12 @@
-!-------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
 ! Package     : Hlt/HltDAQ
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
-!-------------------------------------------------------------------------------
+!------------------------------------------------------------------------------
+
+! 2014-04-01 - Sebastian Neubert
+ - TrackReportsWriter uses straight SourceID
+ - TrackReportsDecoder only decodes the Bank with the correct SourceID 
 
 !========================= HltDAQ v4r1 2014-03-26 =========================
 ! 2014-03-26 - Marco Cattaneo
