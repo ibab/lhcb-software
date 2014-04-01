@@ -13,8 +13,10 @@ branches          cmt doc src python
 #============================================================================
 # Used packages.
 #============================================================================
+
 use   DecayTreeTupleBase        v*    Phys
 use   DecayTreeFitter           v*    Phys
+
 # Depend on the various component packages, so they get built before the
 # python stuff below.
 use   DecayTreeTupleReco        v*    Phys
@@ -24,21 +26,10 @@ use   DecayTreeTupleMC          v*    Phys
 use   DecayTreeTupleTrigger     v*    Phys
 use   DecayTreeTupleMuonCalib   v*    Phys
 use   DecayTreeTupleTracking    v*    Phys
+use   DecayTreeTupleANNPID      v*    Phys
 
 use   LoKiPhys                  v*    Phys
 use   HepMC                     v*    LCG_Interfaces
-
-# Old dependencies. Kept for a while for reference
-#use   DaVinciAssociators  v*    Phys
-#use   HltInterfaces       v*    Kernel
-#use   DecFiles            v*    Gen     --no_auto_imports
-#use   DAQEvent            v*    Event
-#use   L0Event             v*    Event
-#use   HltEvent            v*    Event
-#use   LoKiArrayFunctors   v*    Phys
-#use   MuonDet             v*    Det
-#use   ROOT                v*    LCG_Interfaces -no_auto_imports
-#use   Python              v*    LCG_Interfaces
 
 #============================================================================
 # Python
@@ -51,11 +42,3 @@ macro_append DecayTreeTupleGenConfUser_dependencies DecayTreeTupleConfDbMerge
 #============================================================================
 library          DecayTreeTuple     ../src/*.cpp 
 apply_pattern    component_library  library=DecayTreeTuple
-
-#============================================================================
-# Private stuff
-#============================================================================
-#private
-# Not sure why this was added. Doesn't seem to be needed ...
-#macro_append ROOT_linkopts " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d "
-#end_private

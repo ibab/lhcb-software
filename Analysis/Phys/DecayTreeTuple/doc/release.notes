@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Chris Jones
+ - Add DecayTreeTupleANNPID to package list.
+
 !========================= DecayTreeTuple v4r7 2014-02-20 =========================
 
 ! 2014-01-31 - Chris Jones
