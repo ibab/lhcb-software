@@ -1,6 +1,6 @@
 // $Id: TupleToolPid.h,v 1.2 2008/11/11 07:47:58 pkoppenb Exp $
-#ifndef APOWELL_TUPLETOOLPID_H
-#define APOWELL_TUPLETOOLPID_H 1
+#ifndef APOWELL_TupleToolRICHPid_H
+#define APOWELL_TupleToolRICHPid_H 1
 
 // Include files
 // from Gaudi
@@ -55,4 +55,4 @@ private:
 
 };
 
-#endif // APOWELL_TUPLETOOLRICHPID_H
+#endif // APOWELL_TupleToolRICHPid_H
