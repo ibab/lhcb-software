@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Keep track fo what XMLSUmmary stores on a write error (trying to write to an unopenable file).
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MINOR: Any changes here indicate a change in how Gaudi handles truing to write unwritable files
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="exit_code"><integer>2</integer></argument>
   <argument name="program"><text>gaudirun.py</text></argument>

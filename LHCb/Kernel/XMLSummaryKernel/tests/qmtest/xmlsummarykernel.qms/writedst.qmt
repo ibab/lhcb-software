@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check what an XMLSummary for a successful written DST looks like
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . MAJOR: any changes in the XML summary indicates a modification in the behaviour of Gaudi which probably has major impact on how XMLSummary needs to be handled
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set><text>../../options/test-XMLSummary.py</text></set></argument>

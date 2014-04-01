@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check what the XMLSummary stores when the program exits with non-zero exit code
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: modified or missing XMLSUmmary indicates that either Gaudi has changed how it handles aborts in the code, or that there is some serious problem with the XMLSummary
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set><text>../../options/runExitTest.py</text></set></argument>

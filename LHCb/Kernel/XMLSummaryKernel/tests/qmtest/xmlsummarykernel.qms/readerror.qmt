@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Test what heppens when you try and read a nonexistent file, verify that the XMLSummary does something sensible in this case.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: changes here indicate either a major problem with the xmlsumamry, or a major change in how Gaudi handles failed-to-open-files which needs to be incoprorated in the XMLSummary.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="exit_code"><integer>2</integer></argument>
   <argument name="program"><text>gaudirun.py</text></argument>
