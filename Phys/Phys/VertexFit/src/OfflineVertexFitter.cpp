@@ -1825,7 +1825,7 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
   {
     // 'Very' negative mass error, so declare fit failed ...
     Warning( "Mass Error Squared < -999 -> Fit aborted" ).ignore();
-    sc = StatusCode::FAILURE;
+    //sc = StatusCode::FAILURE;
   }
   if ( measuredMassErr < 0 )
   {
