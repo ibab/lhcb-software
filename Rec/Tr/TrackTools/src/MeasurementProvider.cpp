@@ -30,7 +30,7 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
-    m_vpProvider(     "VPLiteMeasurementProvider", this ),
+    m_vpProvider(     "VPMeasurementProvider", this ),
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_utProvider(     "MeasurementProviderT<MeasurementProviderTypes::UT>/UTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
@@ -91,7 +91,7 @@ StatusCode MeasurementProvider::initialize()
   if(!m_ignoreVP) {
     sc = m_vpProvider.retrieve() ;
     if (sc.isFailure()) return sc;  
-    m_providermap[LHCb::Measurement::VPLite] = &(*m_vpProvider) ;
+    m_providermap[LHCb::Measurement::VP] = &(*m_vpProvider) ;
   }
 
   if(!m_ignoreTT) {
@@ -240,7 +240,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::Velo: 
     rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
-  case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VPLite  ; break ;
+  case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VP      ; break ;
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
   case LHCb::LHCbID::UT:      rc = LHCb::Measurement::UT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;

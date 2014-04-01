@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Remove VPLiteMeasurementProvider
+
 ! 2014-03-26 - Heinrich Schindler
  - Add VPMeasurementProvider
 
