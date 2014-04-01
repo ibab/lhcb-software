@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Unit test of the methods and functions in RawEventCompat
+# Prerequisites: 
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failure of this test indicates a major problem in the methods or functions of RawEventCompat, check ../options/test methods.py and ameliorate the code in the python methods.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>

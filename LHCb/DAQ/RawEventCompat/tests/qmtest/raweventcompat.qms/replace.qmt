@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Check the automatic replacement of parts of strings of locations in  the TES.
+# Prerequisites: methods must pass first
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failure here indicates a major problem with the methods used to automatically replace strings in the TES locations for raw events stored in RawEventFormat. This should be addressed and fixed.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="prerequisites"><set>

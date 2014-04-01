@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Unit test, Check I can import the DBase package this requires
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: ImportError, and AttributeError are thrown initially if the database cannot be loaded. Then forceLoad() is called. If anything fails it indicates a big problem with the database or with the way DBASE is picked up.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>
