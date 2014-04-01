@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: unit test of IOExtension methods
+# Prerequisites: IOHelper must work...
+# Common failure modes, severities and cures: 
+#               . MAJOR: Any failure is a major problem of IOExtension
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set><text>../test_ioextension.py</text></set></argument>
