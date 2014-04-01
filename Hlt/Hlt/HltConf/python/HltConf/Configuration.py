@@ -707,10 +707,6 @@ class HltConf(LHCbConfigurableUser):
                                  + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
         BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
 
-        # only switch on TrackReports in a split scenario in Hlt1
-        if(self.getProp("Split") != "Hlt1") : self.setProp("EnableHltTrackReports", False)
-        
-        
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
         from Configurables import Hlt__Line as Line
@@ -721,7 +717,6 @@ class HltConf(LHCbConfigurableUser):
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Sequence('HltDecisionSequence') ] )
                 # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
-                , ( "EnableHltTrackReports"    , [ HltTrackReportsWriter ] ) # will only be added in split mode see line above!
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
                 , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )
                 )
@@ -731,6 +726,23 @@ class HltConf(LHCbConfigurableUser):
         # make sure we only instantiate if we actually use it...
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
             EndMembers += [ c() for c in i ]
+
+        # only switch on TrackReports in a split scenario in Hlt1
+        if self.getProp("Split") != "Hlt1" : 
+            self.setProp("EnableHltTrackReports", False)
+            Warning("Disabling HltTrackReports Writers")
+
+            
+        # Add the TrackReports
+        from HltTrackNames import trackingSources 
+        if self.getProp("EnableHltTrackReports") :
+            # We will have one Writer per track stage
+            # add and configure the Writers                                                       
+            EndMembers += [ HltTrackReportsWriter(name, SourceID=sID, InputHltTrackLocation=inLocation) for sID, name, inLocation in trackingSources ]
+            
+        # endif EnableHltTrackReports        
+
+            
         if (self.getProp("EnableLumiEventWriting")) :
             if sets and hasattr(sets, 'NanoBanks') :
                 if not self.isPropertySet('NanoBanks') :
