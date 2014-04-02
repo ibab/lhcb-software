@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-04-02 - Christopher Rob Jones
+ - Update stripping references to adapt to changes due to new PV refitting
+   default tool, and removal of automatic refitting from uDST persistency
+   sequences.
+
 ! 2014-03-18 - Christopher Rob Jones
  - Adapt to small change in TrackStateProvider message.
 
