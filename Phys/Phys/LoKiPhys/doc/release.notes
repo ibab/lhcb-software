@@ -5,6 +5,8 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r17p1 2014-04-02 =========================
+
 ! 2014-02-21 - Marco Clemencic
  - Moved (correctly) operators inside namespaces (fixed a problem with ROOT 6).
 
