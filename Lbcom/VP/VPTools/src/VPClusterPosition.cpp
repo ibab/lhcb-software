@@ -1,19 +1,23 @@
 #include <vector>
 
+// Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Point3DTypes.h"
 
+// LHCb
+// Kernel/LHCbMath
 #include "LHCbMath/LHCbMath.h"
-
+// Det/VPDet
 #include "VPDet/DeVP.h"
+// Event/DigiEvent
 #include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
 
+// Local
 #include "VPClusterPosition.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloClusterPosition
+// Implementation file for class : VPClusterPosition
 //
 // 2010-02-02 : Victor Coco
 // 
@@ -67,24 +71,6 @@ StatusCode VPClusterPosition::initialize() {
 }
 
 //=========================================================================
-/// Position given lite cluster only
-//=========================================================================
-toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster) const {
-
-  toolInfo info;
-  const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
-  Gaudi::XYZPoint point = sensor->channelToPoint(cluster->channelID(), 
-                                                 cluster->interPixelFraction());
-  Direction direction;
-  direction.first = point.x() / point.z();
-  direction.second = point.y() / point.z();
-
-  return position(cluster->channelID(), cluster->interPixelFraction(),
-                  point, direction);
-
-}
-
-//=========================================================================
 /// Position given cluster only
 //=========================================================================
 toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster) const {
@@ -102,18 +88,6 @@ toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster) const {
 }
 
 //=========================================================================
-/// Position given lite cluster, point and direction
-//=========================================================================
-toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
-                                     const Gaudi::XYZPoint& point,
-                                     const Direction& direction) const {
-
-  return position(cluster->channelID(), cluster->interPixelFraction(),
-                  point, direction);
-
-}
-
-//=========================================================================
 /// Position given cluster, point and direction
 //=========================================================================
 toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
@@ -121,25 +95,6 @@ toolInfo VPClusterPosition::position(const LHCb::VPCluster* cluster,
                                      const Direction& direction) const {
 
   return position(cluster->channelID(), cluster->fraction(), point, direction);
-
-}
-
-//=========================================================================
-/// Position given cluster and track state
-//=========================================================================
-toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
-                                     const LHCb::StateVector& state) const {
-  
-  const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
-  // Get space point in global frame
-  Gaudi::XYZPoint point(state.x(), state.y(), sensor->z());
-  // Get direction 
-  Direction direction;
-  direction.first = state.tx();
-  direction.second = state.ty();
-  
-  return position(cluster->channelID(), cluster->interPixelFraction(), 
-                  point, direction);
 
 }
 
