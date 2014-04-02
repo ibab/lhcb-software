@@ -3,6 +3,45 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v18r1>2014-04-02 Phys v18r1</A></H1><PRE>
+Development release, based on Rec v16r1, LHCb v37r1 and Gaudi v25r1.
+
+- Packages Updated :
+   DaVinciKernel, DaVinciTools, DecayTreeFitter, FlavourTagging,
+   JetAccessories, KalmanFilter, LoKiAlgo, LoKiFitters, LoKiPhys,
+   LoKiTracks, PhysConf, VertexFit
+
+In VertexFit :
+ . Temporarily disable the line that fails the fit if MassErr^2<-999 in
+   OfflineVertexFitter.
+
+In PhysConf :
+ . Set noSpdPrs=False as CaloProcessor default when DataType = Upgrade.
+
+In LoKiFitters :
+ . LoKi::PVReFitter : Very efficient implementation of IPVReFitter interface. 
+
+In KalmanFilter :
+ . VertexFitWithTracks: Add the concept of "weight" for Kalman Filter 
+   and few explicit "multi-steps" in paritcular is allows the efficient
+   implementation of the track removal from the fitted vertex.
+
+In JetAccessories :
+ . Remove old and not supported codes: ParticleFlow4Jets, HighPtIsoLeptonAndTagPV
+   and python codes Old*.
+ . Update PFJetMaker for Reco14  new JEC file.
+ . Update python/JetAccessories/JetMaker_Config.py for new JEC file.
+
+In FlavourTagging :
+ . Add wrappers around BDT algorithms for OScharm, SSpion, SSproton taggers.
+   These are based on NEWKaon... wrappers.
+
+In DecayTreeFitter :
+ . New implementation of constraint for merged pi0.
+
+In DaVinciKernel :
+ . Make LoKi::PVReFitter the default PV refitting tool.
+
 </PRE><H1><A NAME=v18r0>2014-02-20 Phys v18r0</A></H1><PRE>
 Development release, based on Rec v16r0, LHCb v37r0 and Gaudi v25r0.
 
