@@ -4,11 +4,13 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r4 2014-04-02 =========================
 
 ! 2014-03-27 - Cédric Potterat
- - remove old and not supported codes: ParticleFlow4Jets, HighPtIsoLeptonAndTagPV and python codes Old*
- - Update PFJetMaker for Reco14  new JEC file
- - Update python/JetAccessories/JetMaker_Config.py for new JEC file
+ - Remove old and not supported codes: ParticleFlow4Jets, HighPtIsoLeptonAndTagPV
+   and python codes Old*.
+ - Update PFJetMaker for Reco14  new JEC file.
+ - Update python/JetAccessories/JetMaker_Config.py for new JEC file.
 
 !========================= JetAccessories v3r3 2014-01-25 =========================
 
