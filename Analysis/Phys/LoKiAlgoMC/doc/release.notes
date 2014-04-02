@@ -5,6 +5,8 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgoMC v9r6 2014-04-02 =========================
+
 ! 2014-02-27 - Marco Clemencic
  - Fixed header include guard in LoKiAlgoMCDict.h (causes problems with ROOT 6).
 
