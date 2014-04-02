@@ -3,6 +3,25 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v12r1>2014-04-02 Analysis v12r1</A></H1><PRE>
+New development release, built against Phys v18r1.
+
+- Packages Updated :-
+   AnalysisPython, DSTWriters, DecayTreeTupleTrigger,
+   KaliCalo, LoKiAlgoMC, PyPAW
+
+- Packages Added :-
+    DecayTreeTupleANNPID
+
+In DSTWriters :
+ . Disable the automatic refitting of PVs for uDSTs.
+
+In DecayTreeTupleANNPID :
+ . First version. Provides a tuple tool for the ANNPID training.
+
+In DecayTreeTupleTrigger :
+ . TupleToolL0Calo : Add ET of the associated L0Calo clusters to the ntuple.
+
 ! 2014-04-01 - Chris Jones
  - Add new package Phys/DecayTreeTupleANNPID.
 
