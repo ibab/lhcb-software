@@ -9,7 +9,6 @@
 #include "Event/VeloCluster.h"
 #include "Event/VeloLiteCluster.h"
 #include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FTCluster.h"
@@ -114,18 +113,7 @@ StatusCode PrLHCbID2MCParticle::execute() {
       int id = myId.vpID();
       linkAll(myId, id);
     }
-  } else if (exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default)) {    
-    LinkedTo<LHCb::MCParticle> vpLink(evtSvc(), msgSvc(), LHCb::VPClusterLocation::Default);
-    m_detectorLink = &vpLink;
-    LHCb::VPLiteCluster::VPLiteClusters* clusters = 
-      get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
-    LHCb::VPLiteCluster::VPLiteClusters::const_iterator iClus;
-    for (iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
-      LHCb::LHCbID myId = LHCb::LHCbID((*iClus).channelID());
-      int id = myId.vpID();
-      linkAll(myId, id);
-    }
-  }
+  } 
 
   //== TT, IT, UT (All ST-like detectors)
 
