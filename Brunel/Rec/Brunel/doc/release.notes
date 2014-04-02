@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes since v45r1
+  . Fix in PatSeedingTool to reduce ghost rate and avoid FPE
+
 </PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
 This version uses projects LHCb v37r1, Lbcom v15r1,
  Rec v16r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
