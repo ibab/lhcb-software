@@ -7,20 +7,11 @@ Purpose     : LHCb analysis packages
 New development release, built against Phys v18r1.
 
 - Packages Updated :-
-   AnalysisPython, DSTWriters, DecayTreeTupleTrigger, DecayTreeTuple,
+   AnalysisPython, DSTWriters, DecayTreeTupleTrigger,
    KaliCalo, LoKiAlgoMC, PyPAW, 
-
-- Packages Added :-
-   DecayTreeTupleANNPID
 
 In DSTWriters :
  . Disable the automatic refitting of PVs for uDSTs.
-
-In DecayTreeTuple :
- . Add DecayTreeTupleANNPID to package list.
-
-In DecayTreeTupleANNPID :
- . First version. Provides a tuple tool for the ANNPID training.
 
 In DecayTreeTupleTrigger :
  . TupleToolL0Calo : Add ET of the associated L0Calo clusters to the ntuple.

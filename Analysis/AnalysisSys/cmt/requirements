@@ -38,8 +38,8 @@ use  DecayTreeTupleMC           v1r4     Phys
 use  DecayTreeTupleTrigger      v1r3     Phys
 use  DecayTreeTupleMuonCalib    v1r2p1   Phys
 use  DecayTreeTupleTracking     v1r1     Phys
-use  DecayTreeTupleANNPID       v1r0     Phys
-use  DecayTreeTuple             v4r8     Phys
+#use  DecayTreeTupleANNPID       v1r0     Phys # Add back in the next release (do not forget cmake)
+use  DecayTreeTuple             v4r7     Phys # update to v4r8 in next release
 
 ####################################################################
 
