@@ -16,9 +16,11 @@ namespace OTDet
     double dptfactor;
     double overtau;
 
-    inline double fastTanh(const double x) const;
+    inline static double vdtTanh(const double x);
+    inline static double fastTanh(const double x);
     //inline int float2int(const double d ) const;
     //inline int floattoint(const double d ) const;
+    inline static double padeTanh(const double x);
 
   public:
     WalkRelation();

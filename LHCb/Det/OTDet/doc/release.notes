@@ -2,6 +2,18 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-04-02 - Manuel Tobias Schiller
+ - Reimplement the tanh approximation in WalkRelation; the new version is both
+   faster and comes within a factor 10 of what is possible in terms of
+   absolute/relative error with double precision. It's also about as fast as
+   you can get with lookup table based implementations, so this is very likely
+   the last such change in a long time. I added my implementation notes in the
+   doc subdirectory for future reference. (It also contains the reasoning why
+   potential floating point overflows/underflows/NaN handling do NOT need
+   special treatment - the routine behaves correctly even without special
+   handling. So please don't change things because it will slow the routine
+   down without a net benefit for the caller.)
+
 !========================= OTDet v8r11 2014-02-17 =========================
 ! 2014-02-15 - Chris Jones
  - Protect WalkRelation::walk against floating point overflows with large

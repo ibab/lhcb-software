@@ -1,0 +1,173 @@
+ Method of approximation:
+--------------------------
+
+The approximation of tanh(x) comes in two parts: A Padé approximant
+which does a good job for small |x| of the form f(x) = x * P(x^2)/Q(x^2)
+where P and Q are polynomials in x^2 of degree D. Second, I use the
+identity tanh(2 * x) = 2 * tanh(x) / (1 + tanh^2(x)) which allows me to
+transport the small error of the Padé approximation for small |x| to
+large |x| as well.
+
+So the strategy is:
+- use a Padé approximant (degree D) on x * 2^-N
+- use N steps of the argument doubling relation to recover tanh(x)
+
+I've decided that the resulting routine should have a relative error
+smaller than 1e-15 over the entire range |x| < 20 (for |x| >= 20,
+tanh(x) is x/|x| to the machine precision anyway). That allows me to
+play with different values of D and the number N of doublings, and
+compare timings (see below for the method used to measure timings; I
+also benchmark the other methods there).
+
+D/N		0/26	1/8	2/5	3/3	4/2	5/2	6/2
+CPU cycles	447.0	72.3	41.8	34.5	34.6	38.0	43.3
+
+D = 3, N = 3 is the optimum (subject to the constraint on the desired
+relative error). This leaves me with a nice little routine (the full
+shebang where you can tune D and N can be found below):
+
+inline double WalkRelation::padeTanh(const double x)
+{
+  typedef double T;
+  // for very large |x| > 20, tanh(x) is x/|x| anyway (at least to double
+  // precision)
+  const T x2 = x * x;
+  if (x2 > T(400)) return (x > T(0)) ? T(1) : T(-1);
+  // strategy for large arguments: tanh(2x) = 2 tanh(x)/(1 + tanh^2(x))
+  // idea is to use this "argument halving" a couple of times, and use a
+  // very short Padé approximation for the rest of the way
+  const unsigned N = 3;
+  const T xx = x / T(1u << N);
+  const T xx2 = xx * xx;
+  const T numer = T(135135) + xx2 * (T(17325) + xx2 * (T( 378) + xx2 * T( 1)));
+  const T denom = T(135135) + xx2 * (T(62370) + xx2 * (T(3150) + xx2 * T(28)));
+
+  T f = xx * numer / denom;
+  for (unsigned i = N; i--; f = T(2) * f / (T(1) + f * f));
+
+  return f;
+}
+
+That's it - one single if statement (if |x| > 20 there's two if
+statements, but no calculations). A plot with the relative error of this
+approximation is attached (for D = 3, with curves for N = 0, 1, 2, 3, 4,
+so you can see how the argument doubling helps/evolves).
+
+Also note what happens with infinities and NaNs:
+
+- (positive or negative) infinity squared is still infinity according to
+  IEEE 754, so this case is caught with the first if statement, and the
+  correct value is returned
+
+- a NaN cannot be compared to finite numbers in IEEE 754, so the if
+  statement will not trigger for a NaN. It will consequently propagate
+  through the routine, so padeTanh(NaN) = NaN
+
+I think this is about all the error handling you can expect from such a
+short routine, and it gets the important corner cases right. Therefore:
+Please do not "fix" overflows, underflows, NaN handling etc - it's
+correct by construction.
+
+
+ Timings and error evaluation:
+-------------------------------
+
+I've tested seven routines:
+
+- std::tanh (reference),
+- lb2_tanh (Christoph's LUT-based implementation with 100 bins between 0
+  and 5, works only for positive arguments),
+- vdt_tanh (based on vdt's implementation of exp),
+- lb_tanh (my own LUT-based approach, 50 bins between 0 and 5),
+- ftbl_tanh (LUT-based just like lb_tanh, but integer only caculations
+  in fixed point arithmetic),
+- pade_tanh (my original suggestion with Padé approximant), and
+- pade2_tanh (the routine I propose for use now).
+
+The performance numbers I give below are from running the routine unter
+test with random arguments (2^20 different values uniformly drawn from
+[-20, +20]); timing is obtained using a truncated mean 64 of RDTSC-timed
+function calls per random number with the slowest 25% of measurements
+discarded (OS preempting the benchmark program etc.). "Idle" and "load"
+in the table below refer to test runs where the machine in question was
+either idle on the three other cores, or fully busy with some kind of
+scientific number crunching (i.e. under load - the situation we
+typically have in the trigger farm or on the grid). As you can see, this
+makes quite a bit of difference, and callgrind/cachegrind cannot catch
+this kind of behaviour.
+
+		cycles (idle)	cycles (load)	rel. err.	abs. err.
+std::tanh	61.9		99.3		2e-16		2e-16
+vdt_tanh	29.0		49.3		3e-11		3e-16
+lb2_tanh	22.4 (23.2 #)	25.1 (28.7 #)	8e-4 #		2e-4 #
+lb_tanh		23.0		28.3		3e-3		1e-3
+ftbl_tanh	22.3		26.7		up to 1.0*	1e-3
+pade_tanh	22.6		25.6		1e-3		1e-3
+pade2_tanh	23.1		33.5		9e-16		4e-16
+
+#) note that lb2_tanh does not work for negative arguments, and this is
+how timing is reported, while the timings in brackets and the rel./abs.
+errors are reported with an if statement at the beginning of the routine
+which handles negative x
+
+*) for very small arguments of tanh, the integer based routine hits the
+granularity of the fixed point representation; the average rel. error is
+much smaller (1e-4), on par with the average rel error of lb_tanh
+
+Typical variations between different function evaluations are on the
+order of 5 CPU cycles RMS or better, or 15 (40) for vdt_tanh
+(std::tanh); the reproducibility of the average number of cycles quoted
+above is typically better than 0.3 CPU cycles.
+
+ Full routine, with tunable D and N:
+-------------------------------------
+
+double pade2_tanh(const double x)
+{
+    typedef double t;
+    // for very large |x| > 20, tanh(x) is x/|x| anyway (at least to double
+    // precision)
+    const T x2 = x * x;
+    if (x2 > T(400)) return (x > T(0)) ? T(1) : T(-1);
+    // strategy for large arguments: tanh(2x) = 2 tanh(x)/(1 + tanh^2(x))
+    // idea is to use this "argument halving" a couple of times, and use a
+    // very short Padé approximation for the rest of the way
+    const unsigned halvings = 3;
+    const T xx = x / T(1u << halvings);
+    const T xx2 = xx * xx;
+#undef PADE2_TANH_DEG
+#define PADE2_TANH_DEG 3 // "degree" of Padé approximation in xx2
+#if 0 == PADE2_TANH_DEG
+    const T numer = T(1);
+    const T denom = T(1);
+#elif 1 == PADE2_TANH_DEG
+    const T numer = T(15) + xx2 * T(1);
+    const T denom = T(15) + xx2 * T(6);
+#elif 2 == PADE2_TANH_DEG
+    const T numer = T(945) + xx2 * (T(105) + xx2 * T( 1));
+    const T denom = T(945) + xx2 * (T(420) + xx2 * T(15));
+#elif 3 == PADE2_TANH_DEG
+    const T numer = T(135135) + xx2 * (T(17325) + xx2 * (T( 378) + xx2 * T( 1)));
+    const T denom = T(135135) + xx2 * (T(62370) + xx2 * (T(3150) + xx2 * T(28)));
+#elif 4 == PADE2_TANH_DEG
+    const T numer = (((T( 1) * xx2 + T(  990)) * xx2 + T(135135)) * xx2 + T( 4729725)) * xx2 + T(34459425);
+    const T denom = (((T(45) * xx2 + T(13860)) * xx2 + T(945945)) * xx2 + T(16216200)) * xx2 + T(34459425);
+#elif 5 == PADE2_TANH_DEG
+    const T numer = ((((T( 1.) * xx2 + T( 2145.)) * xx2 + T( 675675.)) * xx2 + T( 64324260.)) * xx2 + T(1964187225.)) * xx2 + T(13749310575.);
+    const T denom = ((((T(66.) * xx2 + T(45045.)) * xx2 + T(7567560.)) * xx2 + T(413513100.)) * xx2 + T(6547290750.)) * xx2 + T(13749310575.);
+#else
+    const T numer = (((((T( 1.) * xx2 + T(  4095.)) * xx2 + T( 2552550.)) * xx2 + T( 523783260.)) * xx2 + T( 41247931725.)) * xx2 + T(1159525191825.)) * xx2 + T(7905853580625.);
+    const T denom = (((((T(91.) * xx2 + T(120120.)) * xx2 + T(41351310.)) * xx2 + T(5237832600.)) * xx2 + T(252070693875.)) * xx2 + T(3794809718700.)) * xx2 + T(7905853580625.);
+#endif
+#undef PADE2_TANH_DEG
+
+    T f = xx * numer / denom;
+    for (unsigned i = halvings; i--; f = T(2) * f / (T(1) + f * f));
+
+    return f;
+}
+
+
+Manuel Schiller
+
+April 2nd 2014
