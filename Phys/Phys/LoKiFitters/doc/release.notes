@@ -5,9 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiFitters v4r10 2014-04-02 =========================
+
 ! 2014-03-16 - Vanya Belyaev
- - LoKi::PVReFitter
-   very efficinect implementation of IPVReFitter interface 
+ - LoKi::PVReFitter : Very efficient implementation of IPVReFitter interface. 
 
 ! 2014-03-13 - Chris Jones
  - Enable PrintMyAlg for FastVertexFitter as well...
