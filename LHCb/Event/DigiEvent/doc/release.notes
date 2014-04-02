@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler 
+ - Remove VPLiteCluster.
+
 ! 2014-03-30 - Heinrich Schindler 
  - Remove VPLiteCluster from VPCluster, add inter-pixel fraction to VPCluster
 
