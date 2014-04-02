@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ROOTD="/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Sim08a/Digi13/Reco14a/MC/Binc"
+export ROOTD="/r03/lhcb/jonesc/ANNPID/ProtoParticlePIDtuples/Sim08a/Digi13/Reco14a/MC/10000000"
 
 export FILELIST="cambridge-list.txt"
 rm -rf $FILELIST
@@ -11,7 +11,7 @@ mkdir -p $ROOTD
 export i=0
 for tuple in `find ~/gangadir/workspace/jonesc/LocalXML -name ProtoPIDANN.MC.tuples.root | perl -MList::Util=shuffle -e"print shuffle<>"`; do
  export TARGET=${ROOTD}"/ProtoPIDANN."${i}".root"
- mv -v $tuple $TARGET
+ echo mv -v $tuple $TARGET
  echo $TARGET >> $FILELIST
  i=`expr $i + 1`
 done

@@ -1,13 +1,23 @@
 from Gaudi.Configuration import *
 from Configurables import ( DaVinci, GaudiSequencer )
-from Configurables import ( ANNGlobalPID__ChargedProtoANNPIDTrainingTuple,
-                            ANNGlobalPID__ChargedProtoANNPIDTupleTool )
+from DecayTreeTuple.Configuration import *
 
-pidtuple = ANNGlobalPID__ChargedProtoANNPIDTrainingTuple("ANNPID")
-pidtuple.addTool( ANNGlobalPID__ChargedProtoANNPIDTupleTool, name = "Tuple" )
-pidtuple.Tuple.NTupleLUN = "ANNPIDTUPLE"
-   
-DaVinci().UserAlgorithms += [ pidtuple ]
+#from Configurables import ( ANNGlobalPID__ChargedProtoANNPIDTrainingTuple )
+#pidtuple = ANNGlobalPID__ChargedProtoANNPIDTrainingTuple("ANNPID")
+#pidtuple.NTupleLUN = "ANNPIDTUPLE" 
+#DaVinci().UserAlgorithms += [ pidtuple ]
+
+from Configurables import ( DecayTreeTuple, LoKi__Hybrid__TupleTool )
+tuple = DecayTreeTuple("ANNPID")
+tuple.Decay    = "[pi+]cc"
+tuple.NTupleLUN = "ANNPIDTUPLE"
+tuple.Inputs = [ 'Phys/StdAllNoPIDsPions/Particles',
+                 'Phys/StdNoPIDsUpPions/Particles',
+                 'Phys/StdNoPIDsDownPions/Particles' ]
+tuple.ToolList = [ "TupleToolANNPIDTraining", "TupleToolGeometry" ]
+#lokiT = tuple.addTupleTool( LoKi__Hybrid__TupleTool, name = "LokiTool" )
+#lokiT.Variables = { "MIPCHI2_PRIMARY" : "MIPCHI2DV(PRIMARY)" }
+DaVinci().UserAlgorithms += [ tuple ]
 
 DaVinci().EvtMax     = -1
 DaVinci().PrintFreq  = 1000
