@@ -5,14 +5,14 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================= KalmanFilter v1r7 2014-04-02 =========================
+
 ! 2014-03-16 - Vanya Belyaev
-
  - VertexFitWithTracks:  
-
-   add the concept of "weight" for Kalman Filter 
-   and few explicit "multi-steps"
-   in paritcular is allows the efficient implementation
-   of the track removal from the fitted vertex
+    Add the concept of "weight" for Kalman Filter 
+    and few explicit "multi-steps"
+    in paritcular is allows the efficient implementation
+    of the track removal from the fitted vertex.
 
 !========================= KalmanFilter v1r6 2014-02-20 =========================
 
