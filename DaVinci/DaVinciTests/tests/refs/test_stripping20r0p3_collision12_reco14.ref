@@ -1,0 +1,839 @@
+# Restarting with LD_PRELOAD='libtcmalloc.so'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/DaVinci/DV-Stripping20r0p3-Stripping.py'
+Trying to import module StrippingArchive.Stripping13
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping14
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping15
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping16
+  -> Cannot be loaded with this version of DaVinci (cannot import name ConfiguredFastFitter)
+Trying to import module StrippingArchive.Stripping17
+Trying to import module StrippingArchive.Stripping17b
+Trying to import module StrippingArchive.PreStripping18
+Trying to import module StrippingArchive.Stripping18
+Trying to import module StrippingArchive.Stripping19
+Trying to import module StrippingArchive.Stripping19b
+Trying to import module StrippingArchive.Stripping19c
+Trying to import module StrippingArchive.Stripping20
+Trying to import module StrippingArchive.Stripping20r1
+Trying to import module StrippingArchive.Stripping20r0p1
+Trying to import module StrippingArchive.Stripping20r0p2
+Trying to import module StrippingArchive.Stripping20r0p3
+Trying to import module StrippingArchive.Stripping20r2
+Trying to import module StrippingArchive.Stripping20r3
+Creating Bhadron stream with 79 lines
+Creating Semileptonic stream with 7 lines
+Creating BhadronCompleteEvent stream with 27 lines
+Creating Dimuon stream with 42 lines
+Creating DimuonVELORAW stream with 14 lines
+Creating Charm stream with 34 lines
+Creating EW stream with 42 lines
+Creating Leptonic stream with 46 lines
+# Initialising StrippingConf
+# StrippingGlobal appending stream Bhadron
+# StrippingGlobal appending stream Semileptonic
+# StrippingGlobal appending stream BhadronCompleteEvent
+# WARNING: Line StrippingB2XTau_DMu_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTau_DMu_SameSign_Line has zero prescale, skipping
+# StrippingGlobal appending stream Dimuon
+# WARNING: Line StrippingBLVLinesLa2KmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2KmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2DmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2DsmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesB2LcmuLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesLb2LcpiLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesB2DpiLine has zero prescale, skipping
+# WARNING: Line StrippingBLVLinesBs2DspiLine has zero prescale, skipping
+# StrippingGlobal appending stream DimuonVELORAW
+# WARNING: Line StrippingRareStrangeSigmaPMuMuLine has zero prescale, skipping
+# WARNING: Line StrippingRareStrangeSigmaPEELine has zero prescale, skipping
+# WARNING: Line StrippingRareStrangeSigmaPMuMuLFVLine has zero prescale, skipping
+# StrippingGlobal appending stream Charm
+# StrippingGlobal appending stream EW
+# StrippingGlobal appending stream Leptonic
+# WARNING: Line StrippingB2XTauMicro_TauTau_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DD_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DPi_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauTau_SameSign_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DD_SameSign_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_SameSign_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_DPi_SameSign_Line has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauTau_piSS_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingB2XTauMicro_TauMu_piSS_TOSLine has zero prescale, skipping
+# WARNING: Line StrippingLowMultMuonLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultMuonLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPP2PPMuMuLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPP2PPMuMuLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultElectronLineNoFilter is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLinePS is declared but not appended to any stream
+# WARNING: Line StrippingLowMultHadronLineNoFilter is declared but not appended to any stream
+# WARNING: Line StrippingLowMultPhotonLine is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KpPipPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2K3Pi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PP_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPimPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKmPipPim_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKKK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiPiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_D2KmPipPip_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KpPipPim_D2KpPipPim_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KmPipPip_D2KpPipPim_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_KpKm_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_KpKp_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2KPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_LMR2PiPi_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_PHI2KK_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2KPiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_D2K3PiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PPWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPipPipWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKpPipPimWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KpKmPipPipWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2KKKKWS_line is declared but not appended to any stream
+# WARNING: Line StrippingLowMultCEP_ChiC2PiPiPiPiWS_line is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_PhiToKsKsLine is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_JPsiToKKLine is declared but not appended to any stream
+# WARNING: Line StrippingPhiToKSKS_JPsiToKsKsLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiNoIPD2KPIPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarWSD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PPbarD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSDDD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSLLD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KsPiDDD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KsPiLLD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0MergedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiDDWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0MergedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKsPiLLWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPi0ResolvedWSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKKD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DPiPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DHHOSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DRho0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKstar0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DPhiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKSDDD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DKSLLD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DRhoPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKstarPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHLLWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSHHDDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarKDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2HHHHWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSDDD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KSLLD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHWSResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHWSResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2Pi0HHWSMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2Pi0HHWSMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KKD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0PiPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0KPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DHHWSD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKWSD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiWSD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KKPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0KPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiPiPiD2HHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0PiD2HHHHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKKPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKKPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKKPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstPiPiPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKPiPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstKKPiWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DD02K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0FULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0D02K3PiUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DDKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0DKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDstKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstDstKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2Dst2460DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2Dst2460DKWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0st2460D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSWSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DDKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2D0DKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02D0D0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB2DstD0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DstDstKSWSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiNoIPLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiNoIPWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicKXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicKWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2XicPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicDXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicDWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0DXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0DWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicKPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicPiPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicPiPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02XicKPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KPiPiXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0PiPiPiXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0KPiPiWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2Xic0PiPiPiWSXic02PKKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2LcDsKLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2LcDsKWSLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02LcDsKPiLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib02LcDsKPiWSLc2PKPiDs2KKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb2D0PD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb02DPD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingSb02DPWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0PHD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0PHWSD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKKPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarKLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiPiPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcPiPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarKWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcppbarPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcKKPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDWSD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0D02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0PiD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0KD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0PiWSD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcD0KWSD02KPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpPiXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpKXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpPiWSXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX02XiccpKWSXiccp2Xic0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppKXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppPiXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppKWSXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2XiccppPiWSXiccpp2XicPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiKOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiSSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKKOSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiPiPiLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcKPiPiPiWSLc2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicPiPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKPiXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKKXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKKWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicPiPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2XicKPiWSXic2PKPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDstDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2LcDstWSDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcLcBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingX2LcLcWSBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2Lc5PiLc2PKPiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0Lambda0DDD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2D0Lambda0LLD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingLb2DpKKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingXib2D0pPiPiD02HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingB02DKLTUBD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiNoIPD2KPIPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PPbarD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PPbarD2HHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSDDD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSLLD2HHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPi0MergedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KsPiDDD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KsPiLLD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPi0ResolvedD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2PhiMuNuBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2HHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiNoIPD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiNoIPDs2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsKDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsKLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsPiDDD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPi0MergedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPi0ResolvedD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKsPiLLD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKKD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DPiPiD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DHHOSD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DRho0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKstar0D2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DPhiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKSDDD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DKSLLD2HHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DRhoPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKstarPMD2HHHCFPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2KSHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2KSHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarPiDst2D0Pi_D2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarPiDst2D0Pi_D2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsPiDDDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsKDDDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsKLLDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstarKsPiLLDst2D0PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHUPBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2KPiPiPiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSDDD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KSLLD2K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2Pi0HHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2Pi0HHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHLLResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHLLMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHDDResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2KSPi0HHDDMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2Pi0KPiResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KKD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0PiPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0KPiD2Pi0KPiMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2Pi0HHHResolvedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiD2Pi0HHHMergedBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2HHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2KSHHDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KKPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0KPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2KSHHLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiPiPiD2HHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0PiD2HHHHTIGHTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKKPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPiPiD2HHHPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DKPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DPiPiPiD2HHHFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstKKPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstKPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstPiPiPiDstar2D0PiPIDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DD02K3PiBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0FULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0D02K3PiUPFULLDSTBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0Beauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstDKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstDstKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2Dst2460DKBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0st2460D0KBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KstBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstKSDDBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2D0DKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02D0D0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB2DstD0KSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarUPB02DstDstKSLLBeauty2CharmLine is declared but not appended to any stream
+# WARNING: Line StrippingDoubleTopoLine is declared but not appended to any stream
+# WARNING: Line StrippingPseudoDoubleTopoLine is declared but not appended to any stream
+# WARNING: Line StrippingD02HHTopoTOSLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKpiDCSB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXpipiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line StrippingDstarOfb2D0MuXpipiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXKKDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXpipiDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DpMuXB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DMuXKKKB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXK3PiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuXK3PiDstB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuX3KPiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2D0MuX2K2PiB2DMuNuXLine is declared but not appended to any stream
+# WARNING: Line Strippingb2LcMuXB2DMuNuXLine is declared but not appended to any stream
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Append to Main Sequence has been called
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/DaVinci/DV-Stripping20r0p3-Stripping.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/DaVinci/DataType-2012.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/DaVinci/DataType-2012.py'
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision12-4TeV-Reco14-FULLDST.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/PRConfig/options/DaVinci/Stripping/Collision12-4TeV-Reco14-FULLDST.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/Persistency/Compression-ZLIB-1.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/AppConfig/v3r193/options/Persistency/Compression-ZLIB-1.py'
+# --> Including file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
+# <-- End of file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/DaVinci-1000events.py'
+# --> Including file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/EnableFPEAuditor.py'
+# <-- End of file '/afs/cern.ch/user/j/jonrob/cmtuser/DaVinci_HEAD/DaVinciTests/tests/options/EnableFPEAuditor.py'
+# applying configuration of DefaultTrackingCuts
+# /***** User DefaultTrackingCuts/DefaultTrackingCuts ************************************************
+# |-Types = ['Long']  (default: ['Long'])
+# |-Cuts  = {'CloneDistCut': [5000, 9e+99], 'Chi2Cut': [0, 3]}
+# |       (default: {'CloneDistCut': [5000, 9e+99], 'Chi2Cut': [0, 5]})
+# \----- (End of User DefaultTrackingCuts/DefaultTrackingCuts) ---------------------------------------
+# applying configuration of DaVinci
+# DaVinci                   INFO    Applying DaVinci configuration
+# DaVinci                   INFO    /***** User DaVinci/DaVinci ************************************************************************
+|-MainOptions     = ''
+|-TupleFile       = ''
+|-SkipEvents      = 0
+|-Input           = []  (default: [])
+|-DDDBtag         = ''
+|-UserAlgorithms  = []  (default: [])
+|-RootInTES       = ''
+|-DQFLAGStag      = ''
+|-Lumi            = False
+|-MoniSequence    = []  (default: [])
+|-VerboseMessages = False
+|-IgnoreDQFlags   = False
+|-ProductionType  = 'Stripping'  (default: 'None')
+|-PrintFreq       = 10  (default: 1000)
+|-Detectors       = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+|                 (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+|-EvtMax          = 1000  (default: -1)
+|-CondDBtag       = ''
+|-Simulation      = False
+|-DataType        = '2012'  (default: '')
+|-RedoMCLinks     = False
+|-InputType       = 'DST'
+|-HistogramFile   = 'DVHistos.root'  (default: '')
+|-WriteFSR        = True
+|-EnableUnpack    = None
+|-EventPreFilters = []  (default: [])
+\----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/PreloadUnits.opts'
+# Apply CaloProcessor configuration for ['Digits', 'Clusters'] and ['InAcceptance', 'Match', 'Energy', 'Chi2', 'DLL', 'NeutralPID']
+# CaloDigits onDemand for ['Ecal', 'Hcal', 'Prs', 'Spd']
+# ClusterReco onDemand
+# Configured Ecal Clusters Reco : ClusterReco
+# Configured Calo PIDs           : CaloPIDsCaloPIDsForCaloProcessor
+# CaloProcessor onDemand enabled
+# DaVinci                   INFO    Creating Lumi Algorithms
+# DaVinci                   INFO    No MainOptions specified. DaVinci() will import no options file!
+# DaVinci                   INFO    Creating User Algorithms
+# DaVinci                   INFO    Append to Main Sequence has been called
+# DaVinci                   INFO    Creating Moni Algorithms
+# DaVinci                   INFO    Append to Moni Sequence has been called
+# /***** User DaVinci/DaVinci ************************************************************************
+# |-MainOptions     = ''
+# |-TupleFile       = ''
+# |-SkipEvents      = 0
+# |-Input           = []  (default: [])
+# |-DDDBtag         = ''
+# |-UserAlgorithms  = []  (default: [])
+# |-RootInTES       = ''
+# |-DQFLAGStag      = ''
+# |-Lumi            = False
+# |-MoniSequence    = []  (default: [])
+# |-VerboseMessages = False
+# |-IgnoreDQFlags   = True  (default: False)
+# |-ProductionType  = 'Stripping'  (default: 'None')
+# |-PrintFreq       = 10  (default: 1000)
+# |-Detectors       = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+# |                 (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-EvtMax          = 1000  (default: -1)
+# |-CondDBtag       = ''
+# |-Simulation      = False
+# |-DataType        = '2012'  (default: '')
+# |-RedoMCLinks     = False
+# |-InputType       = 'DST'
+# |-HistogramFile   = 'DVHistos.root'  (default: '')
+# |-WriteFSR        = True
+# |-EnableUnpack    = ['Reconstruction']  (default: None)
+# |-EventPreFilters = []  (default: [])
+# \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
+# applying configuration of LumiAlgsConf
+# /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
+# |-UseLumiLow        = False
+# |-ForceFullSequence = False
+# |-InputType         = 'DST'
+# |-DataType          = '2012'  (default: '2012')
+# |-SetFSRStatus      = ''
+# |-OutputLevel       = 3
+# |-MergeFSR          = False
+# |-BXTypes           = ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2']
+# |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
+# |-Simulation        = False
+# |-Context           = 'Offline'
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x10da1a20>  (default: None)
+# |-IgnoreDQFlags     = False
+# \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
+# applying configuration of L0Conf
+# Applying L0Conf
+# L0 on demand activated (rootInTES : )
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts'
+# /***** User L0Conf/L0Conf **************************************************************************
+# |-FullL0MuonDecoding         = True  (default: False)
+# |-verbose                    = False
+# |-LinkSequencer              = None
+# |-DecodeL0                   = False
+# |-ETCSequencer               = None
+# |-L0MuonUseTCKFromData       = None
+# |-RootInTESOnDemand          = ['']  (default: [''])
+# |-ETCOutput                  = 'L0ETC.root'
+# |-EnsureKnownTCK             = True
+# |-EnableL0DecodingOnDemand   = True  (default: False)
+# |-TCK                        = None
+# |-FastL0DUDecoding           = False
+# |-DecodeL0DU                 = False
+# |-ReplayL0DU                 = False
+# |-FilterSequencer            = None
+# |-L0Sequencer                = None
+# |-L0MuonForceLUTVersion      = None
+# |-L0EmulatorContext          = None
+# |-FilterL0                   = False
+# |-RawEventLocations          = []  (default: [])
+# |-EnableTAEOnDemand          = False
+# |-SimulateL0                 = False
+# |-FullPileUpSimulation       = False
+# |-ReplaceL0BanksWithEmulated = False
+# |-ForceSingleL0Configuration = False
+# |-MoniSequencer              = None
+# |-MonitorL0                  = False
+# |-DataType                   = ''
+# |-FilterL0FromRaw            = False
+# |-IgnoreL0MuonCondDB         = None
+# |-L0DecodingContext          = None
+# |-EmulateL0                  = False
+# \----- (End of User L0Conf/L0Conf) -----------------------------------------------------------------
+# applying configuration of PhysConf
+# Applying Phys configuration
+# WARNING: file '/afs/cern.ch/lhcb/software/releases/DBASE/TCK/L0TCK/v4r17/options/L0DUConfig.opts' already included, ignored.
+# PhysConf: Configuring EventClockSvc to use RecHeader
+# /***** User PhysConf/PhysConf **********************************************************************
+# |-CaloReProcessing  = False
+# |-DataType          = '2012'  (default: '')
+# |-AllowPIDRecalib   = True
+# |-Detectors         = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
+# |                   (default: ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr'])
+# |-Simulation        = False
+# |-EnableUnpack      = ['Reconstruction']  (default: None)
+# |-InputType         = 'DST'
+# |-AllowPIDRerunning = True
+# \----- (End of User PhysConf/PhysConf) -------------------------------------------------------------
+# applying configuration of MyDSTWriter
+# Configuring BaseDSTWriter
+# /***** User SelDSTWriter/MyDSTWriter ***************************************************************
+# |-MicroDSTElements   = {'default': [<DSTWriters.microdstelements.FindDuplicates object at 0x105bb390>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x105bb3d0>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x105bb410>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105bb450>, <DSTWriters.microdstelements.PackStrippingReports object at 0x105bb490>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x105bb4d0>, <DSTWriters.microdstelements.PackRecObjects object at 0x105bb510>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x105bb550>], 'PID': [<DSTWriters.microdstelements.ClonePVs object at 0x105bb090>, <DSTWriters.microdstelements.FindDuplicates object at 0x105bb150>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x105bb190>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x105bb1d0>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105bb210>, <DSTWriters.microdstelements.PackStrippingReports object at 0x105bb250>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x105bb290>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x105bb2d0>, <DSTWriters.microdstelements.PackRecObjects object at 0x105bb310>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x105bb350>], 'Leptonic': [<DSTWriters.microdstelements.ClonePVs object at 0x105bb090>, <DSTWriters.microdstelements.FindDuplicates object at 0x105bb150>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x105bb190>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x105bb1d0>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105bb210>, <DSTWriters.microdstelements.PackStrippingReports object at 0x105bb250>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x105bb290>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x105bb2d0>, <DSTWriters.microdstelements.PackRecObjects object at 0x105bb310>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x105bb350>], 'Charm': [<DSTWriters.microdstelements.ClonePVs object at 0x105bb090>, <DSTWriters.microdstelements.FindDuplicates object at 0x105bb150>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x105bb190>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x105bb1d0>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105bb210>, <DSTWriters.microdstelements.PackStrippingReports object at 0x105bb250>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x105bb290>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x105bb2d0>, <DSTWriters.microdstelements.PackRecObjects object at 0x105bb310>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x105bb350>], 'Bhadron': [<DSTWriters.microdstelements.ClonePVs object at 0x105bb090>, <DSTWriters.microdstelements.FindDuplicates object at 0x105bb150>, <DSTWriters.microdstelements.CloneParticleTrees object at 0x105bb190>, <DSTWriters.microdstelements.CloneBTaggingInfo object at 0x105bb1d0>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105bb210>, <DSTWriters.microdstelements.PackStrippingReports object at 0x105bb250>, <DSTWriters.microdstelements.PackTrackingClusters object at 0x105bb290>, <DSTWriters.microdstelements.PackParticlesAndVertices object at 0x105bb2d0>, <DSTWriters.microdstelements.PackRecObjects object at 0x105bb310>, <DSTWriters.microdstelements.CleanEmptyEventNodes object at 0x105bb350>]}
+# |                    (default: {'default': [<DSTWriters.microdstelements.CloneParticleTrees object at 0x105b7850>, <DSTWriters.microdstelements.ClonePVRelations object at 0x105b7890>]})
+# |-RootInTES          = '/Event'
+# |-WriteFSR           = True
+# |-StreamConf         = {'Bhadron': <DSTWriters.streamconf.OutputStreamConf object at 0xccd5210>, 'default': <DSTWriters.streamconf.OutputStreamConf object at 0x105bb590>, 'Dimuon': <DSTWriters.streamconf.OutputStreamConf object at 0x105bb5d0>, 'PID': <DSTWriters.streamconf.OutputStreamConf object at 0x105bb650>, 'DimuonVELORAW': <DSTWriters.streamconf.OutputStreamConf object at 0x105bb610>, 'Charm': <DSTWriters.streamconf.OutputStreamConf object at 0xccd5210>, 'Leptonic': <DSTWriters.streamconf.OutputStreamConf object at 0xccd5210>}
+# |                    (default: {'default': <DSTWriters.streamconf.OutputStreamConf object at 0x105b7810>})
+# |-OutputFileSuffix   = '000000'  (default: 'Sel')
+# |-SelectionSequences = [<StrippingConf.StrippingStream.StrippingStream object at 0x6e82e50>, <StrippingConf.StrippingStream.StrippingStream object at 0xd02d710>, <StrippingConf.StrippingStream.StrippingStream object at 0xce45350>, <StrippingConf.StrippingStream.StrippingStream object at 0xdb7e310>, <StrippingConf.StrippingStream.StrippingStream object at 0xdb7eb50>, <StrippingConf.StrippingStream.StrippingStream object at 0xd634710>, <StrippingConf.StrippingStream.StrippingStream object at 0xd9316d0>, <StrippingConf.StrippingStream.StrippingStream object at 0xd931d50>]
+# |                    (default: [])
+# \----- (End of User SelDSTWriter/MyDSTWriter) ------------------------------------------------------
+# skipping configuration of RawEventFormatConf
+# skipping configuration of LumiIntegratorConf
+# applying configuration of AnalysisConf
+# Applying Analysis configuration
+# /***** User AnalysisConf/AnalysisConf **************************************************************
+# |-DataType    = '2012'  (default: '')
+# |-RedoMCLinks = False  (default: False)
+# |-Simulation  = False
+# \----- (End of User AnalysisConf/AnalysisConf) -----------------------------------------------------
+# WARNING: Using default tag dddb-20130503-1 for partition DDDB
+# WARNING: Using default tag cond-20131128 for partition LHCBCOND
+# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: something else configured a decoder already, Raw/Spd/Digits CaloDigitsFromRaw/SpdFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/Calo L0CaloCandidatesFromRaw/L0CaloFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/FullCalo L0CaloCandidatesFromRaw/L0CaloFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/L0DUReport L0DUFromRawAlg/L0DUFromRaw
+# WARNING: something else configured a decoder already, Raw/Prs/Digits CaloDigitsFromRaw/PrsFromRaw
+# WARNING: something else configured a decoder already, Raw/Ecal/Digits CaloZSupAlg/EcalZSup
+# WARNING: something else configured a decoder already, Raw/Hcal/Digits CaloZSupAlg/HcalZSup
+# WARNING: something else configured a decoder already, Trig/L0/MuonCtrl L0MuonCandidatesFromRaw/L0MuonFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/MuonBCSU L0MuonCandidatesFromRaw/L0MuonFromRaw
+# WARNING: something else configured a decoder already, Trig/L0/MuonData L0MuonCandidatesFromRaw/L0MuonFromRaw
+# No Writer defined for DIGI
+# WARNING: tool ToolSvc.SequencerTimerTool has non-default configuration! Attributes that differ:
+# WARNING:     OutputLevel = 4 (default = 7)
+# WARNING: tool ToolSvc.OTRawBankDecoder has non-default configuration! Attributes that differ:
+# WARNING:     TimeWindow = (-8.0, 56.0) (default = (999.0, -999.0))
+# WARNING: tool ToolSvc.CoreFactory has non-default configuration! Attributes that differ:
+# WARNING:     Modules = ['LoKiNumbers.decorators', 'LoKiTracks.decorators'] (default = ['LoKiNumbers.decorators'])
+# WARNING: tool ToolSvc.DoubleTopoLine_DT has non-default configuration! Attributes that differ:
+# WARNING:     minAngle = 0.0350877192982 (default = 0.0350877)
+# WARNING:     minMass = 19000.0 (default = 20000.0)
+# WARNING: tool ToolSvc.OTHitCreator has non-default configuration! Attributes that differ:
+# WARNING:     RawBankDecoder = OTRawBankDecoder (default = OTRawBankDecoder)
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to DaVinci version v34r0
+                                          running on lxplus0153 on Wed Apr  2 10:50:45 2014
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersistencySvc           INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc               SUCCESS Detector description database: conddb:/lhcb.xml
+RndmGenSvc.Engine                INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine                INFO Current Seed:1234567 Luxury:3
+RndmGenSvc                       INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+TimingAuditor.TIMER              INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
+RootCnvSvc                       INFO Setting global ROOT compression to:ZLIB:1
+DaVinciEventSeq                  INFO Member list: DaVinciInit/DaVinciInitAlg, GaudiSequencer/FilteredEventSeq, GaudiSequencer/LumiSeq
+DaVinciInitAlg                SUCCESS ==================================================================
+DaVinciInitAlg                SUCCESS Requested to process 1000 events
+DaVinciInitAlg                SUCCESS ==================================================================
+RootHistSvc                      INFO Writing ROOT histograms to: DVHistos.root
+HistogramPersistencySvc          INFO Added successfully Conversion service:RootHistSvc
+HistogramDataSvc                 INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r11/data/JetEnergyCorrections_Reco14_v1.root as JEC
+HistogramDataSvc                ERROR Cannot add JEC DATAFILE='/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r11/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT' invalid filename!
+ServiceManager                  ERROR Unable to initialize service "HistogramDataSvc"
+DaVinciInitAlg.DaVinciMemory    FATAL MemoryTool:: Exception throw: svc():: Could not retrieve Svc 'HistogramDataSvc' StatusCode=FAILURE
+DaVinciInitAlg.DaVinciMemor...  FATAL  Exception with tag= is caught
+DaVinciInitAlg.DaVinciMemor...  ERROR 	DaVinciInitAlg.DaVinciMemory:: svc():: Could not retrieve Svc 'HistogramDataSvc'	 StatusCode=FAILURE
+ToolSvc                         ERROR Error initializing tool 'DaVinciInitAlg.DaVinciMemory'
+DaVinciInitAlg                  FATAL DaVinciInit:: Exception throw: tool():: Could not retrieve Tool 'MemoryTool'/'DaVinciMemory' StatusCode=FAILURE
+DaVinciInitAlg                  FATAL  Exception with tag= is caught
+DaVinciInitAlg                  ERROR 	DaVinciInitAlg:: tool():: Could not retrieve Tool 'MemoryTool'/'DaVinciMemory'	 StatusCode=FAILURE
+ChronoStatSvc                    INFO  Number of skipped events for MemStat-1
+DaVinciEventSeq                 ERROR GaudiSequencer:: Can not initialize DaVinciInitAlg StatusCode=FAILURE
+EventLoopMgr                    ERROR Unable to initialize Algorithm: DaVinciEventSeq
+ServiceManager                  ERROR Unable to initialize Service: EventLoopMgr
+ApplicationMgr                   INFO Application Manager Terminated successfully
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'ChargedProtoParticleMapper/ToolSvc.UnpackChargedPPsMapper' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'EvtCounter/ToolSvc.EvtCounter' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'LoKi::Reporter/LoKiSvc.REPORT' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'MemoryTool/DaVinciInitAlg.DaVinciMemory' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Initialize/Finalize (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'ChargedProtoParticleMapper/ToolSvc.UnpackChargedPPsMapper' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'EvtCounter/ToolSvc.EvtCounter' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'LoKi::Reporter/LoKiSvc.REPORT' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/TimingAuditor.TIMER' Counts = 1
+GaudiTool       WARNING   Create/Destroy      (mis)balance 'SequencerTimerTool/ToolSvc.SequencerTimerTool' Counts = 1
