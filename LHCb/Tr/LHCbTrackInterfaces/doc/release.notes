@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces previously in TrackInterfaces but needed in Lbcom
 !-----------------------------------------------------------------------------
 
+! 2014-04-01 - Heinrich Schindler
+ - Remove functions using VPLiteCluster from IVPClusterPosition interface.
+
 ! 2014-03-26 - Heinrich Schindler
  - Add position function using VPCluster to IVPClusterPosition
 
