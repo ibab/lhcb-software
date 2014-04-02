@@ -3,6 +3,33 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v34r1>2014-04-02 DaVinci v34r1</A></H1><PRE>
+
+New development release based on the LHCb v37r1 stack.
+
+Executive Summary of notable Phys, Analysis and Stripping changes 
+( See project release notes for full details ) :-
+
+Core DaVinci :
+ . Make LoKi::PVReFitter the default PV refitting tool.
+ . Set noSpdPrs=False as CaloProcessor default when DataType = Upgrade.
+
+DST Writers :
+ . Disable the automatic refitting of PVs for uDSTs.
+
+Vertex Fitting :
+ . Temporarily disable the line that fails the fit if MassErr^2<-999 in
+   OfflineVertexFitter.
+ . LoKi::PVReFitter : Very efficient implementation of IPVReFitter interface. 
+ . VertexFitWithTracks: Add the concept of "weight" for Kalman Filter.
+
+Jets :
+ . Update PFJetMaker for Reco14  new JEC file.
+ . Remove old unsupported components.
+
+DecayTreeFitter :
+ . New implementation of constraint for merged pi0.
+
 </PRE><H1><A NAME=v34r0>2014-03-03 DaVinci v34r0</A></H1><PRE>
 
 New development release based on the LHCb v37r0 stack.
