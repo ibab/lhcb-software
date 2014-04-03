@@ -86,7 +86,7 @@ StatusCode PatTTMagnetTool::updateField()
   m_noField = false;
   // check whether B=0
   f_bdl(0.,0.,400.*Gaudi::Units::mm, m_zCenterTT);
-  double  tbdl = m_BdlTrack;
+  float  tbdl = m_BdlTrack;
   if(fabs(tbdl)<10e-4) {
     m_noField = true;
   }
@@ -104,14 +104,14 @@ StatusCode PatTTMagnetTool::updateField()
 //=========================================================================
 // z middle of TT
 //=========================================================================
-double PatTTMagnetTool::zMidTT() {
+float PatTTMagnetTool::zMidTT() {
   return m_zCenterTT;
 }
 
 //=========================================================================
 // z middle of B field betweenz=0 and zMidTT
 //=========================================================================
-double PatTTMagnetTool::zMidField() {
+float PatTTMagnetTool::zMidField() {
   if( m_noField ) { 
     return m_zMidField_NoB;
   }
@@ -121,7 +121,7 @@ double PatTTMagnetTool::zMidField() {
 //=========================================================================
 // averageDist2mom
 //=========================================================================
-double PatTTMagnetTool::averageDist2mom() {
+float PatTTMagnetTool::averageDist2mom() {
   if( m_noField ) { 
     return m_averageDist2mom_NoB;
   }
@@ -149,12 +149,12 @@ void PatTTMagnetTool::prepareBdlTables() {
   // No need to update with small TT movement up to +- 5 cm. 
 
   m_zCenterTT = 2484.6;
-  double zCenterTT = 0.;
+  float zCenterTT = 0.;
   
   m_zLayers.clear();
   for ( std::vector<DeSTLayer*>::const_iterator itL = m_STDet->layers().begin();
           m_STDet->layers().end() != itL; ++itL ) {
-     double zlay = (*(*itL)->sectors().begin())->globalCentre().Z(); 
+     float zlay = (*(*itL)->sectors().begin())->globalCentre().Z(); 
      m_zLayers.push_back(zlay); 
      zCenterTT += zlay;
   }   
@@ -193,9 +193,9 @@ void PatTTMagnetTool::prepareBdlTables() {
   int iover = 0;
   while(!iover) {
     m_lutBdl->getVariableVector(m_lutVar);
-    double slopeY   = m_lutVar[0];
-    double zOrigin  = m_lutVar[1];
-    double zEndVelo = m_lutVar[2];
+    float slopeY   = m_lutVar[0];
+    float zOrigin  = m_lutVar[1];
+    float zEndVelo = m_lutVar[2];
     f_bdl(slopeY, zOrigin, zEndVelo, m_zCenterTT);
     m_lutBdl->fillTable(m_BdlTrack);
     m_lutZHalfBdl->fillTable(m_zHalfBdlTrack);
@@ -229,12 +229,12 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 
   // tmp state
   LHCb::State tmpState;
-  double xBeg = 0.;
-  double yBeg = 0.;
-  double zBeg = 0.;
-  double qpBeg = 1./(10.*Gaudi::Units::GeV);
-  double dxdzBeg = 0.0;
-  double dydzBeg = 0.0;
+  float xBeg = 0.;
+  float yBeg = 0.;
+  float zBeg = 0.;
+  float qpBeg = 1./(10.*Gaudi::Units::GeV);
+  float dxdzBeg = 0.0;
+  float dydzBeg = 0.0;
   tmpState.setState(  xBeg,  yBeg, zBeg, dxdzBeg, dydzBeg, qpBeg );
   // set dummy covariance matrix
   Gaudi::TrackSymMatrix cov = Gaudi::TrackSymMatrix();
@@ -262,7 +262,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     int idLay       = int(m_lutVar[0]+0.000001);
     dydzBeg  = m_lutVar[1];
     dxdzBeg  = 0.0;
-    double zLay = m_zLayers[idLay];
+    float zLay = m_zLayers[idLay];
     
     xBeg = 0.;
     yBeg = 0.;
@@ -284,9 +284,9 @@ void PatTTMagnetTool::prepareDeflectionTables() {
       Warning( "Extrapolation failed ", StatusCode::SUCCESS, 0 ).ignore();
     } 
 
-    double dx_mid = 0.;
-    double dx_lay = 0.;
-    double ratio = 0.;
+    float dx_mid = 0.;
+    float dx_lay = 0.;
+    float ratio = 0.;
     LHCb::State stalin_lay = tmpState;
     LHCb::State stapar_lay = tmpState;
 
@@ -327,11 +327,11 @@ void PatTTMagnetTool::prepareDeflectionTables() {
     StatusCode sc1 =    my_linear->propagate( stalin_mid, m_zCenterTT );
     StatusCode sc2 = my_parabolic->propagate( stapar_mid, m_zCenterTT );
 
-    double dx2mom = 0.;
+    float dx2mom = 0.;
     if( sc1.isFailure() || sc2.isFailure() ) {
       Warning( "Extrapolation failed ", StatusCode::SUCCESS, 0 ).ignore();
     } else {
-      double dx = stapar_mid.x()-stalin_mid.x();
+      float dx = stapar_mid.x()-stalin_mid.x();
       if(fabs(dx)>1e-8) dx2mom = qpBeg / dx;    
     }
     m_lutDxToMom->fillTable(dx2mom);
@@ -353,7 +353,7 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 PatTTMagnetTool::~PatTTMagnetTool() {}
 
 //****************************************************************************
-double PatTTMagnetTool::bdlIntegral(double ySlopeVelo, double zOrigin, double zVelo) {
+float PatTTMagnetTool::bdlIntegral(float ySlopeVelo, float zOrigin, float zVelo) {
 
     if( m_noField ) { 
       return m_bdlIntegral_NoB;
@@ -365,7 +365,7 @@ double PatTTMagnetTool::bdlIntegral(double ySlopeVelo, double zOrigin, double zV
     return  m_lutBdl->getInterpolatedValueFromTable(m_lutVar);
 }
 //****************************************************************************
-double PatTTMagnetTool::zBdlMiddle(double ySlopeVelo, double zOrigin, double zVelo) {
+float PatTTMagnetTool::zBdlMiddle(float ySlopeVelo, float zOrigin, float zVelo) {
 
     if( m_noField ) { 
       return m_zBdlMiddle_NoB;
@@ -378,7 +378,7 @@ double PatTTMagnetTool::zBdlMiddle(double ySlopeVelo, double zOrigin, double zVe
 }
 
 //****************************************************************************
-double PatTTMagnetTool::dist2mom(double ySlope) {
+float PatTTMagnetTool::dist2mom(float ySlope) {
 
   if( m_noField ) { 
     return m_averageDist2mom_NoB;
@@ -390,7 +390,7 @@ double PatTTMagnetTool::dist2mom(double ySlope) {
 }
 
 //****************************************************************************
-void PatTTMagnetTool::dxNormFactorsTT(double ySlope, std::vector<double>& nfact) {
+void PatTTMagnetTool::dxNormFactorsTT(float ySlope, std::vector<float>& nfact) {
 
   nfact.clear();
   if( m_noField ) { 
@@ -404,23 +404,23 @@ void PatTTMagnetTool::dxNormFactorsTT(double ySlope, std::vector<double>& nfact)
   m_lutVar.push_back(fabs(ySlope));
   for(int i=0; i<4; i++) {
     m_lutVar[0]=i;
-    double nf = m_lutDxLay->getValueFromTable(m_lutVar);
+    float nf = m_lutDxLay->getValueFromTable(m_lutVar);
     nfact.push_back(nf);
   }
 }
 
 
 //****************************************************************************
-void PatTTMagnetTool::f_bdl( double slopeY, double zOrigin,
-                             double zStart, double zStop){
+void PatTTMagnetTool::f_bdl( float slopeY, float zOrigin,
+                             float zStart, float zStop){
 
     m_BdlTrack=0.0;
     m_zHalfBdlTrack=0.0;
 
     if(zStart>zStop) return;
 
-    double Bdl=0.0;
-    double zHalfBdl=0.0;
+    float Bdl=0.0;
+    float zHalfBdl=0.0;
 
    // vectors to calculate z of half Bdl
     m_bdlTmp.clear();
@@ -431,15 +431,15 @@ void PatTTMagnetTool::f_bdl( double slopeY, double zOrigin,
     Gaudi::XYZVector bField;
 
     int np    = 500;
-    double dz = (zStop - zStart)/np;
-    double dy = dz*slopeY;
+    float dz = (zStop - zStart)/np;
+    float dy = dz*slopeY;
 
     aPoint.SetX( 0.0 );
 
-    double z = zStart+dz/2.;
-    double y = slopeY*(zStart-zOrigin);
+    float z = zStart+dz/2.;
+    float y = slopeY*(zStart-zOrigin);
 
-    double bdl = 0.;
+    float bdl = 0.;
 
     while( z<zStop ) {
       
@@ -457,11 +457,11 @@ void PatTTMagnetTool::f_bdl( double slopeY, double zOrigin,
     }
 
     Bdl=bdl;
-    double bdlhalf = fabs(Bdl)/2.;
+    float bdlhalf = fabs(Bdl)/2.;
 
     for(unsigned int i=5; i<m_bdlTmp.size()-5; i++) {
       if(fabs(m_bdlTmp[i])>bdlhalf) {
-        double zrat = (Bdl/2.-m_bdlTmp[i-1])/(m_bdlTmp[i]-m_bdlTmp[i-1]);
+        float zrat = (Bdl/2.-m_bdlTmp[i-1])/(m_bdlTmp[i]-m_bdlTmp[i-1]);
         zHalfBdl = m_zTmp[i-1]+dz*zrat;
         break;
       }

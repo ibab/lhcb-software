@@ -26,7 +26,7 @@ static const InterfaceID IID_PatTTMagnetTool ( "PatTTMagnetTool", 1, 0 );
    *
    */
 
-  class PatTTMagnetTool : public GaudiTool {
+class PatTTMagnetTool : public GaudiTool {
   public:
 
     // Return the interface ID
@@ -43,50 +43,51 @@ static const InterfaceID IID_PatTTMagnetTool ( "PatTTMagnetTool", 1, 0 );
     virtual StatusCode initialize();
 
     /// Actual operator function
-    double bdlIntegral(double ySlopeVelo,double zOrigin,double zVelo);
-    double zBdlMiddle(double ySlopeVelo,double zOrigin,double zVelo);
-    double dist2mom(double ySlope);
-    void dxNormFactorsTT(double ySlope, std::vector<double>& nfact);
+    float bdlIntegral(float ySlopeVelo,float zOrigin,float zVelo);
+    float zBdlMiddle(float ySlopeVelo,float zOrigin,float zVelo);
+    float dist2mom(float ySlope);
+    void dxNormFactorsTT(float ySlope, std::vector<float>& nfact);
 
-    double zMidTT();
-    double zMidField();
-    double averageDist2mom();
+    float zMidTT();
+    float zMidField();
+    float averageDist2mom();
     void prepareBdlTables();
     void prepareDeflectionTables();
     StatusCode updateField() ;
 
   protected:
-    void f_bdl(double slopeY, double zOrigin , double zStart, double zStop);
+    void f_bdl(float slopeY, float zOrigin , float zStart, float zStop);
     
   private:
 
-    double m_BdlTrack;
-    double m_zHalfBdlTrack;
-    std::vector<double> m_zLayers;
+    float m_BdlTrack;
+    float m_zHalfBdlTrack;
+    std::vector<float> m_zLayers;
 
-    std::vector<double> m_bdlTmp, m_zTmp;
+    std::vector<float> m_bdlTmp, m_zTmp;
 
     /// pointer to mag field service
     IMagneticFieldSvc* m_magFieldSvc;
     PatTableForFunction* m_lutBdl;
     PatTableForFunction* m_lutZHalfBdl;
 
-    double m_zCenterTT;
-    double m_zMidField;
+    float m_zCenterTT;
+    float m_zMidField;
 
-    double m_dist2mom;
+    float m_dist2mom;
     PatTableForFunction* m_lutDxLay;
     PatTableForFunction* m_lutDxToMom;
 
-    std::vector<double> m_lutVar; // auxiliary vector used as argument
+    std::vector<float> m_lutVar; // auxiliary vector used as argument
 
     DeSTDetector*       m_STDet;         ///< ST Detector element
+    std::string m_detLocation;
 
     bool m_noField;
-    double m_bdlIntegral_NoB;
-    double m_zBdlMiddle_NoB;
-    double m_zMidField_NoB;
-    double m_averageDist2mom_NoB;
+    float m_bdlIntegral_NoB;
+    float m_zBdlMiddle_NoB;
+    float m_zMidField_NoB;
+    float m_averageDist2mom_NoB;
 
   };
 

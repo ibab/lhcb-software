@@ -12,8 +12,9 @@
 #include "TfKernel/TTStationHitManager.h"
 
 // local
+#include "PatVeloTTTool.h"
 #include "PatKernel/PatTTHit.h"
-
+#include "PatTTMagnetTool.h"
 
   /** @class PatVeloTT PatVeloTT.h
    *
@@ -37,7 +38,6 @@
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   protected:
-    bool acceptTrack(const LHCb::Track& track);
     void removeUsedTracks( std::vector<LHCb::Track*>& veloTracks);
     bool matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused);
 
@@ -48,26 +48,29 @@
         return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
       }
     };
-
-    ITrackSelector* m_trackSelector; // tool to accept a track
+    class compVeloTx  {
+    public:
+      bool operator() (const LHCb::Track* first, const LHCb::Track* second ) {
+        return first->closestState(LHCb::State::EndVelo).tx() < second->closestState(LHCb::State::EndVelo).tx();
+      }
+    };
 
     Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager;
 
     std::string m_inputTracksName;    ///< input container name
     std::string m_outputTracksName;   ///< output container name
-    std::string m_trackSelectorName; ///< name of the tool to accept a track
     bool m_removeUsedTracks;
     /// The fitter tool
     std::string m_fitterName;
     ITrackFitter* m_tracksFitter;
     ITracksFromTrack* m_veloTTTool;
     std::vector< std::string > m_inputUsedTracksNames;
-    double m_maxChi2;
+    float m_maxChi2;
     bool m_fitTracks; 
     ISequencerTimerTool* m_timerTool;
     int  m_veloTTTime;
     bool m_doTiming;
-    bool m_AddMomentumEstimate;
+    
   };
 
 #endif // PATVELOTT_H
