@@ -1,4 +1,18 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Standard test in many applications, check that the default application does something sensible
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MAJOR: additional WARNING messages, no warnings should be printed when instantiating a default algorithm
+#               . EXPECTED: I do not set up the complete Online environemtn in this test, I just fake the existance of some of the modules and variables so that the configurable can at least be instantiated. That list of things to set up initially may vary in the future as Markus/Eric edit the configuration.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="exit_code"><integer>1</integer></argument>
   <argument name="program"><text>gaudirun.py</text></argument>
