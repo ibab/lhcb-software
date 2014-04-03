@@ -5,7 +5,7 @@ Purpose             : LHCb physics packages
 
 </PRE><H1><A NAME=v18r1p1>2014-04-03 Phys v18r1p1</A></H1><PRE>
 Development release, based on Rec v16r1p1, LHCb v37r1p1 and Gaudi v25r1p1.
-Identical to Phys v18r1 built against the ROOT6 test stack.
+Identical to Phys v18r1, rebuilt against the ROOT6 test stack.
 
 </PRE><H1><A NAME=v18r1>2014-04-02 Phys v18r1</A></H1><PRE>
 Development release, based on Rec v16r1, LHCb v37r1 and Gaudi v25r1.
