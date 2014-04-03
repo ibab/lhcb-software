@@ -1,4 +1,16 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Major test of L0App, to verify that L0App continues to be able to emulate all possible L0TCKs. This test takes a lot of time, and so it is parellalized on the python side to 8 CPUs, but in a way that respects the environment variable LHCB_NIGHTLY_MAX_THREADS.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: Errors or Fatal messages, or complete failure to emulate a given L0TCK represents a very important failure of L0 Emulation, and the L0 team need to know immediately.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="timeout">
