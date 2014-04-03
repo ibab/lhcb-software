@@ -1,0 +1,24 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: To check if the old DecodeRawEvent.py script still works (ish)
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . EXPECTED: On modifications of the decoder db we expect there to be gradually more and more differences with the old data-on-demand way of doing things, and so soon this test is expected to be obsolete. Eventually the old Data-On-Demand way of doing things will be impossible and useless and this test should be removed.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>../options/OldDecodeRawEvent.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+countErrorLines({"FATAL":0, "ERROR": 0, "WARNING": 0})
+
+</text></argument>
+</extension>
+

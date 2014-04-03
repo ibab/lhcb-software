@@ -1,6 +1,14 @@
+"""# INFO: ===================================================================
+# INFO: this is the old DecodeRawEvent.py script, this is completely obsolete
+# INFO: a copy is maintained here for some tests just to check that some of
+# INFO: the configuration is the same from the old->new way of doing stuff
+# INFO: but this will gradually become unmaintainable and useless
+# INFO: ==================================================================="""
 
 # Job options to configure the data on demand service for decoding the RawEvent
 print "# WARNING: You have imported DecodeRawEvent.py, there is now a configurable doing the same job. See savannah task #19106."
+
+print __doc__
 
 from Gaudi.Configuration import *
 from Configurables import ( DataOnDemandSvc,
@@ -9,17 +17,17 @@ from Configurables import ( DataOnDemandSvc,
                             DecodeVeloRawBuffer,
                             RawBankToSTLiteClusterAlg,
                             FTRawBankDecoder,
-                            Rich__DAQ__RawBufferToRichDigitsAlg,VPRawBankToLiteCluster,VPRawBankToPartialCluster )
+                            Rich__DAQ__RawBufferToRichDigitsAlg,VPRawBankToPartialCluster )
 # for the upgrade
-VPLiteClusters = VPRawBankToLiteCluster("createVPLiteClusters")
-VPLiteClusters.ClusterLocation  = "Raw/VP/LiteClusters"
+#VPLiteClusters = VPRawBankToLiteCluster("createVPLiteClusters")
+#VPLiteClusters.ClusterLocation  = "Raw/VP/LiteClusters"
 VPClusters     = VPRawBankToPartialCluster("createVPClusters")
 VPClusters.ClusterLocation = "Raw/VP/Clusters"
 #
 FTClusters =  FTRawBankDecoder("createFTClusters")
 # Set up the algorithms
 DataOnDemandSvc().AlgMap["Raw/VP/Clusters"]       = VPClusters 
-DataOnDemandSvc().AlgMap["Raw/VP/LiteClusters"]   = VPLiteClusters
+#DataOnDemandSvc().AlgMap["Raw/VP/LiteClusters"]   = VPLiteClusters
 DataOnDemandSvc().AlgMap["Raw/Velo/Clusters"]     = "DecodeVeloRawBuffer/createVeloClusters"
 DataOnDemandSvc().AlgMap["Raw/TT/Clusters"]       = "RawBankToSTClusterAlg/createTTClusters"
 DataOnDemandSvc().AlgMap["Raw/IT/Clusters"]       = "RawBankToSTClusterAlg/createITClusters"
@@ -59,3 +67,5 @@ from Configurables import CaloDigitConf
 CaloDigitConf(EnableDigitsOnDemand=True).applyConf()
 
 importOptions( "$L0DUOPTS/L0OnDemand.opts" )
+
+print __doc__

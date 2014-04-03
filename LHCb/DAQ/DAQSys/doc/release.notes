@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-04-03 - Rob Lambert
+ - Adapt test for removal of VPLite clusters
+
 ! 2014-04-01 - Heinrich Schindler
  - Remove decoder for VPLiteClusters
 

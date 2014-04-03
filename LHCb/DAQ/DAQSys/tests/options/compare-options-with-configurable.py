@@ -3,28 +3,20 @@ import commands
 #extra locations known to be added
 known_extras=['Raw/Prs/Adcs', 'Hlt1/DecReports', 'Hlt2/DecReports', 'Hlt/SelReports', 'Raw/Velo/PUClustersNZS', 'Hlt1/VertexReports', 'Raw/Hcal/Adcs', 'Raw/Ecal/Adcs', 'Hlt/VertexReports', 'Raw/Spd/Adcs', 'Hlt2/SelReports', 'Hlt1/Track/Velo', 'Hlt/DecReports', 'Trig/L0/L0DUData', 'Hlt1/SelReports', 'Raw/Velo/PUClusters', 'Hlt2/VertexReports', 'Hlt/LumiSummary']
 
-#known differences
+#known differences, none :)
 known_diffs={}
 
-#options which are known to differ because the defaults are set weirdly in the C++
-default_opts_diffs={'Raw/FT/RawClusters': {'FTRawBankDecoder/createFTClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/TT/Clusters': {'RawBankToSTClusterAlg/createTTClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/VP/LiteClusters': {'VPRawBankToLiteCluster/createVPLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/IT/LiteClusters': {'RawBankToSTLiteClusterAlg/createITLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/UT/LiteClusters': {'RawBankToSTLiteClusterAlg/createUTLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/UT/Clusters': {'RawBankToSTClusterAlg/createUTClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/VP/Clusters': {'VPRawBankToPartialCluster/createVPClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/Velo/LiteClusters': {'DecodeVeloRawBuffer/createVeloLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/IT/Clusters': {'RawBankToSTClusterAlg/createITClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/Velo/Clusters': {'DecodeVeloRawBuffer/createVeloClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/TT/LiteClusters': {'RawBankToSTLiteClusterAlg/createTTLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/Hcal/Digits': {'CaloZSupAlg/HcalZSup' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
-                    'Raw/Ecal/Digits': {'CaloZSupAlg/EcalZSup' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
-                    'Raw/Prs/Digits': {'CaloDigitsFromRaw/PrsFromRaw' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
-                    'Raw/Spd/Digits': {'CaloDigitsFromRaw/SpdFromRaw' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }}
+#options which are known to differ, very very few right now :)
+default_opts_diffs={'Raw/Ecal/Digits' : { 'CaloZSupAlg/EcalZSup': { 'Context': ['Offline', '-->', '']}},
+                    'Raw/Prs/Digits' : { 'CaloDigitsFromRaw/PrsFromRaw': { 'Context': ['Offline', '-->', '']}},
+                    'Raw/Hcal/Digits' : { 'CaloZSupAlg/HcalZSup': { 'Context': ['Offline', '-->', '']}},
+                    'Raw/Spd/Digits' : { 'CaloDigitsFromRaw/SpdFromRaw': { 'Context': ['Offline', '-->', '']}}
                     }
 
+
+
 def parse(stdout):
+    stdout='\n'.join([ s for s in stdout.split('\n') if not s.startswith("# INFO:") and not s.startswith("# WARNING:")])
     blocks=stdout.split("====================\n")
     if len(blocks)<2:
         return None
