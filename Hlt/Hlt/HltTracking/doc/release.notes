@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-04-03 - Sebastian Neubert
+ - added options for new VeloTT version and PatForward that goes with that
+   (using charge and momentum estimate) 
+
 ! 2014-04-01 - Sebastian Neubert
  - added trackingSources to link track locations to TrackReports SourceIDs
  - removed the VeloInitFit
