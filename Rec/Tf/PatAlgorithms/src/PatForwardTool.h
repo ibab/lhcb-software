@@ -80,7 +80,7 @@ private:
   void buildXCandidatesList( PatFwdTrackCandidate& track );
 
   void fillXList ( PatFwdTrackCandidate& track, 
-                   double kick, double maxRangeRef, double zMagnet );
+                   double kick, double maxRangeRef, double zMagnet ,float dir, double pt);
   
 
 
@@ -210,6 +210,11 @@ private:
   std::vector<PatFwdTrackCandidate> m_candidates;
 
   bool   m_withoutBField;
+  
+  bool m_Preselection;
+  float m_PreselectionPT;
+  bool m_UseWrongSignWindow;
+  float m_WrongSignPT;
 
   bool   m_nnSwitch;                   // switch on or off NN var. writing
 };

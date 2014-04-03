@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-04-03 - Sebastian Neubert
+ - PatForwardTool added options for use of charge and momentum estimate from VeloTT
+ - Wrong sign search window
 
 ! 2014-04-01 - Gerhard Raven
  - PatFwdFitLine, PatFwdFitParabola: declare final, remove virtual destructor
