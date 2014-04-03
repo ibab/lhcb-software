@@ -1,15 +1,14 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // LHCb
+// Event/MCEvent
+#include "Event/MCHit.h"
 // Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
-#include "Linker/LinkerTool.h"
+#include "Linker/LinkedTo.h"
 // Event/DigiEvent
 #include "Event/VPCluster.h"
-// Event/MCEvent
-#include "Event/MCTruth.h"
-// Kernel/LHCbKernel
-#include "Kernel/VPChannelID.h"
+#include "Event/VPDigit.h"
 // Local
 #include "VPClusterLinker.h"
 
@@ -29,9 +28,7 @@ VPClusterLinker::VPClusterLinker(const std::string& name,
 
   declareProperty("ClusterLocation", m_clusterLocation = 
                   LHCb::VPClusterLocation::Default);
-  declareProperty("DigitLocation", m_digitLocation =
-                  LHCb::VPDigitLocation::Default);
-  declareProperty("AsctLocation", m_asctLocation =
+  declareProperty("InputLocation", m_inputLocation =
                   LHCb::VPDigitLocation::Default + "2MCHits");
   declareProperty("HitLinkLocation", m_hitLinkLocation = 
                   LHCb::VPClusterLocation::Default + "2MCHits");
@@ -56,17 +53,11 @@ StatusCode VPClusterLinker::execute() {
     error() << "No clusters in " << m_clusterLocation << endmsg;
     return StatusCode::FAILURE;
   }
-  // Get digits.
-  const VPDigits* digits = getIfExists<VPDigits>(m_digitLocation);
-  if (!digits) {
-    error() << "No digits in " << m_digitLocation << endmsg;
-    return StatusCode::FAILURE;
-  }
-  // Get the VPDigit to MCHit association table.
-  LinkerTool<VPDigit, MCHit> associator(evtSvc(), m_asctLocation);
-  const LinkerTool<VPDigit, MCHit>::DirectType* table = associator.direct();
-  if (!table) {
-    error() << "Cannot find association table " << m_asctLocation << endmsg;
+
+  // Get the association table between digits and MCHits.
+  LinkedTo<MCHit> associator(evtSvc(), msgSvc(), m_inputLocation);
+  if (associator.notFound()) {
+    error() << "Cannot find association table " << m_inputLocation << endmsg;
     return StatusCode::FAILURE;
   }
   // Create association tables for clusters. 
@@ -78,25 +69,21 @@ StatusCode VPClusterLinker::execute() {
   VPClusters::const_iterator itc;
   for (itc = clusters->begin(); itc != clusters->end(); ++itc) {
     std::map<const MCHit*, double> hitMap;
-    std::map<const LHCb::MCParticle*, double> particleMap;
+    std::map<const MCParticle*, double> particleMap;
     // Get the pixels in the cluster.
     std::vector<VPChannelID> pixels = (*itc)->pixels();
     double sum = 0.;
     std::vector<VPChannelID>::iterator itp;
     for (itp = pixels.begin(); itp != pixels.end(); ++itp) {
-      VPDigit* digit = digits->object(*itp);
-      if (!digit) continue;
-      LinkerTool<VPDigit, MCHit>::DirectType::Range hits = table->relations(digit);
-      LinkerTool<VPDigit, MCHit>::DirectType::iterator ith;
-      for (ith = hits.begin(); ith != hits.end(); ++ith) {
-        const MCHit* hit = ith->to();
-        if (!hit) continue;
-        const double weight = ith->weight();
+      LHCb::MCHit* hit = associator.first(*itp);
+      while (hit) {
+        const double weight = associator.weight();
         hitMap[hit] += weight;
         sum += weight;
         const MCParticle* particle = hit->mcParticle();
         if (!particle) continue;
         particleMap[particle] += weight;
+        hit = associator.next();
       }
     }
     if (sum < 1.e-2) continue;

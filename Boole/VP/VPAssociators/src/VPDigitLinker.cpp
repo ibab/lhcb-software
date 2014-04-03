@@ -1,13 +1,15 @@
+// STL
+#include <map>
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/SystemOfUnits.h"
 // LHCb
-// Kernel/LHCbMath
-#include "LHCbMath/GeomFun.h"
-#include "LHCbMath/LineTypes.h"
 // Event/LinkerEvent
 #include "Linker/LinkerWithKey.h"
+// Event/MCEvent
+#include "Event/MCHit.h"
+#include "Event/MCVPDigit.h"
+// Event/DigiEvent
+#include "Event/VPDigit.h"
 // Local
 #include "VPDigitLinker.h"
 
@@ -57,18 +59,48 @@ StatusCode VPDigitLinker::execute() {
     return StatusCode::FAILURE;
   }
   // Create association tables. 
-  LinkerWithKey<MCHit, VPDigit> hitLinker(evtSvc(), msgSvc(), 
-                                          m_hitLinkLocation);
-  LinkerWithKey<MCParticle, VPDigit> particleLinker(evtSvc(), msgSvc(), 
-                                                    m_particleLinkLocation);
+  LinkerWithKey<MCHit> hitLinker(evtSvc(), msgSvc(), m_hitLinkLocation);
+  LinkerWithKey<MCParticle> particleLinker(evtSvc(), msgSvc(), m_particleLinkLocation);
+
   // Loop over the digits.
   VPDigits::const_iterator it;
   for (it = digits->begin(); it != digits->end(); ++it) {
-    // Get the associated hits and their weights. 
-    std::map<const LHCb::MCHit*, double> hitMap;
-    if (!associateToTruth(*it, mcdigits, hitMap)) {
-      warning() << "Association failed" << endmsg;
+    // Get the MC digit with the same channel ID.
+    const MCVPDigit* mcDigit = mcdigits->object((*it)->key());
+    if (!mcDigit) {
+      warning() << "No MC digit with channel ID " << (*it)->key() << endmsg;
       continue;
+    }
+    // Get the MC hits associated to the MC digit and their weights.
+    SmartRefVector<MCHit> hits = mcDigit->mcHits();
+    const std::vector<double>& deposits = mcDigit->deposits();
+    const unsigned int nDeposits = deposits.size();
+    // Make a map of the MC hits and weights.
+    std::map<const MCHit*, double> hitMap;
+    for (unsigned int i = 0; i < nDeposits; ++i) {
+      const MCHit* hit = hits[i];
+      const MCParticle* particle = hit->mcParticle();
+      // Check if the hit originates from a delta ray.
+      if (particle && particle->originVertex() &&
+          particle->originVertex()->type() == LHCb::MCVertex::DeltaRay) {
+        // Check if there is another hit from the mother particle of the delta.
+        const MCParticle* mother = particle->mother();
+        SmartRefVector<MCHit>::iterator ith;
+        bool foundMother = false;
+        for (ith = hits.begin(); ith != hits.end(); ++ith) {
+          if ((*ith)->mcParticle() == mother) {
+            // Add the deposit to the hit of the mother particle.
+            hitMap[*ith] += deposits[i];
+            foundMother = true;
+            break;
+          }
+        } 
+        // If no other hit from the mother particle is found,
+        // add the delta ray hit as a separate entry.
+        if (!foundMother) hitMap[hit] += deposits[i];
+      } else {
+        hitMap[hit] += deposits[i];
+      }
     }
     std::map<const LHCb::MCHit*, double>::const_iterator itm;
     for (itm = hitMap.begin(); itm != hitMap.end(); ++itm) {
@@ -76,89 +108,10 @@ StatusCode VPDigitLinker::execute() {
       const double weight = (*itm).second;
       const MCParticle* particle = hit->mcParticle();
       // Do the associations.
-      hitLinker.link(*it, hit, weight);
-      particleLinker.link(*it, particle, weight);
+      hitLinker.link((*it)->key(), hit, weight);
+      particleLinker.link((*it)->key(), particle, weight);
     } 
   }
   return StatusCode::SUCCESS;
 }
 
-bool VPDigitLinker::associateToTruth(const VPDigit* digit,
-                                     const MCVPDigits* mcdigits,
-                                     std::map<const MCHit*, double>& hitMap) {
-
-  // Find the corresponding MC digit.  
-  const MCVPDigit* mcDigit = 0;
-  MCVPDigits::const_iterator it;
-  for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
-    if ((*it)->channelID() == digit->key()) {
-      mcDigit = *it;
-      break;
-    }
-  }
-  if (!mcDigit) {
-    warning() << "No MC digit with channel ID " << digit->key() << endmsg;
-    return false;
-  }
-  // Loop over the deposits and get the hits and their weights.
-  std::map<const MCHit*, double> tempMap;
-  SmartRefVector<MCHit> mchits = mcDigit->mcHits();
-  const std::vector<double>& deposits = mcDigit->deposits();
-  const unsigned int nDeposits = deposits.size();
-  for (unsigned int i = 0; i < nDeposits; ++i) {
-    const MCHit* hit = mchits[i];
-    tempMap[hit] += deposits[i];
-  }
-  // Clean out the delta-rays
-  mergeDeltaRays(tempMap, hitMap);
-  return true;
-
-}
-
-void VPDigitLinker::mergeDeltaRays(const std::map<const MCHit*, double>& inputMap,
-                                   std::map<const MCHit*,double>& hitMap) {
-
-  // Separate into hits from delta rays and normal hits.
-  std::map<const MCHit*, double> deltaRays;
-  std::map<const MCHit*, double>::const_iterator it;
-  for (it = inputMap.begin(); it != inputMap.end(); ++it) {
-    const MCHit* hit = it->first;
-    if (!hit) continue;
-    const MCParticle* particle = hit->mcParticle();
-    if (particle && particle->originVertex() &&
-        particle->originVertex()->type() == LHCb::MCVertex::DeltaRay) {
-      deltaRays.insert(*it);
-    } else {
-      hitMap.insert(*it);
-    }
-  }
-  // Tolerance for merging hits.
-  const double tol = 0.02 * Gaudi::Units::mm;
-  std::map<const MCHit*, double>::const_iterator itd;
-  for (itd = deltaRays.begin(); itd != deltaRays.end(); ++itd) {
-    // Check if a related hit is in the table.
-    const MCHit* hit = 0;
-    for (it = hitMap.begin(); it != hitMap.end() ; ++it) {
-      if (it->first->mcParticle() == itd->first->mcParticle()) {
-        hit = it->first;
-        break;
-      }
-    }
-    if (!hit) {
-      // No existing candidate found.
-      hitMap.insert(*itd);
-    } else {
-      Gaudi::XYZPoint dPoint = itd->first->midPoint();
-      Gaudi::Math::XYZLine hitLine = Gaudi::Math::XYZLine(it->first->entry(), 
-                                                          it->first->exit());
-      const double dist = impactParameter(dPoint, hitLine);
-      if (fabs(dist) < tol) {
-        // Merge with the existing hit.
-        hitMap[it->first] += itd->second;
-      } else {
-        hitMap.insert(*itd);
-      }
-    }
-  }
-
-}

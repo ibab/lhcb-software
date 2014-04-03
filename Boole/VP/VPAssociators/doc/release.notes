@@ -3,6 +3,11 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-04-03 - Heinrich Schindler
+ - Modify digits linker tables to use keys instead of VPDigit objects.
+ - Simplify delta electron treatment in VPDigitLinker.
+ - Remove dependencies on VPDet and GSL.
+
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPLiteCluster include statement.
 
