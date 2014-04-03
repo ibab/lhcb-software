@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2014-04-03 - Chris Jones
+ - Adapt to changes in the ANNPID tuple monitor.
+
 !========================= GlobalReco v6r46 2013-10-24 =========================
 ! 2013-10-09 - Olivier Deschamps
  -  python/GlobalReco/Configuration.py : 

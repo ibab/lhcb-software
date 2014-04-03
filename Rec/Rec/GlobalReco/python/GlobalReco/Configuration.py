@@ -169,11 +169,9 @@ class GlobalRecoChecks(LHCbConfigurableUser):
 
         # ANN training ntuple
         if self.getProp("AddANNPIDInfo") :
-            from Configurables import ( ANNGlobalPID__ChargedProtoANNPIDTrainingTuple,
-                                        ANNGlobalPID__ChargedProtoANNPIDTupleTool )
+            from Configurables import ( ANNGlobalPID__ChargedProtoANNPIDTrainingTuple )
             annTuple = ANNGlobalPID__ChargedProtoANNPIDTrainingTuple("ChargedProtoPIDANNTuple")
-            annTuple.addTool( ANNGlobalPID__ChargedProtoANNPIDTupleTool, name = "Tuple" )
-            annTuple.Tuple.NTupleLUN = "ANNPIDTUPLE"
+            annTuple.NTupleLUN = "ANNPIDTUPLE"
             protoSeq.Members += [annTuple]
             NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='"+self.getProp("ANNTupleName")+"' TYP='ROOT' OPT='NEW'"]
             if self.isPropertySet("OutputLevel"):
