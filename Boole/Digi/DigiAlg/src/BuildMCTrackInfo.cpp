@@ -176,15 +176,15 @@ StatusCode BuildMCTrackInfo::execute() {
     }
   } else if ( m_withVP ) {
     LHCb::VPDigits* digits = get<LHCb::VPDigits>(LHCb::VPDigitLocation::Default);
-    LinkedTo<LHCb::MCParticle, LHCb::VPDigit> vpLink(eventSvc(), msgSvc(),
-                                                     LHCb::VPDigitLocation::Default);
+    LinkedTo<LHCb::MCParticle> vpLink(eventSvc(), msgSvc(),
+                                      LHCb::VPDigitLocation::Default);
     if (vpLink.notFound()) return StatusCode::FAILURE;
     
     std::sort(digits->begin(), digits->end(), increasingModule());
     for (LHCb::VPDigits::const_iterator vIt = digits->begin();
          digits->end() != vIt; ++vIt) {
       int module = (*vIt)->channelID().module();
-      part = vpLink.first(*vIt);
+      part = vpLink.first((*vIt)->key());
       while (NULL != part) {
         if (mcParts == part->parent()) {
           MCNum = part->key();
@@ -200,7 +200,7 @@ StatusCode BuildMCTrackInfo::execute() {
             }
           }
         }
-        part = vpLink.next() ;
+        part = vpLink.next();
       }
     }
   }

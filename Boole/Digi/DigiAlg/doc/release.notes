@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-04-03 - Heinrich Schindler
+ - Follow changes in VPDigit linker table format (r171120) 
+
 ! 2014-03-24 - Heinrich Schindler
  - Follow changes in VPDigit format and location names (r170468) 
 
