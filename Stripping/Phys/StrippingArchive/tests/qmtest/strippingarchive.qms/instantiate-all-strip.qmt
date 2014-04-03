@@ -1,4 +1,15 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Simple unit test, minal unit test of this package, just test that the strippings in the stripping archive can be instantiated, not run, just instantiated
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . MAJOR: All failures of this test are pretty much major, and represent a major problem in an old or new stripping line which will cause headaches for everyone concerned.
+#######################################################
+-->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set><text>../test_all_stripping_instantiation.py</text></set></argument>
