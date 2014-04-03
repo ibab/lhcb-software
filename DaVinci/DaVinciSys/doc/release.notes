@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v34r1p1>2014-04-03 DaVinci v34r1p1</A></H1><PRE>
+
+New test ROOT6 release based on the LHCb v37r1p1 stack.
+Otherwise, identical to DaVinci v34r1.
+
 </PRE><H1><A NAME=v34r1>2014-04-02 DaVinci v34r1</A></H1><PRE>
 
 New development release based on the LHCb v37r1 stack.
