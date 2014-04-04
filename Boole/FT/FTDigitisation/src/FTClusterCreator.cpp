@@ -43,16 +43,15 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
-  declareProperty("ClusterProcess" ,    m_clusterAlgo       = "Init", "Choice of the clustering algorithm (Init/6Bits/2Bits)");
   declareProperty("DynamicsLow" ,       m_dynamicsLowLimit = 0. , "Lower limit of digitisation");
   declareProperty("DynamicsUp" ,        m_dynamicsUpLimit = 32. , "Saturation limit for digitisation");
   declareProperty("DynamicsBits" ,      m_dynamicsBitsNber = 2 , "Number of available bits for digitisation");
 
-  declareProperty("ADCThreshold" ,      m_adcThreshold      = 2 , "Minimal ADC Count to be added in cluster");
+  declareProperty("ADCThreshold" ,      m_adcThreshold      = 3 , "Minimal ADC Count to be added in cluster");
   declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
-  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 7 , "Maximal allowed width for clusters");
-  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 9 , "Minimal charge to keep cluster ~4 p.e.");
-  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks, ~2.5 pe.");
+  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 4 , "Maximal allowed width for clusters");
+  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
   declareProperty("SplitPrevNextMoni" , m_splitPrevNextMoni = false ,
                   "In case of spillover, make split Prev/Next plots");
   declareProperty("RemoveITRegion"    , m_removeITRegion    = 0 , 
@@ -82,7 +81,7 @@ StatusCode FTClusterCreator::initialize() {
     debug() << "==> Initialize" << endmsg;
     debug() << ": InputLocation is " <<m_inputLocation << endmsg;
     debug() << ": OutputLocation is " <<m_outputLocation << endmsg;
-    debug() << ":m_adcThreshold is " <<m_adcThreshold << endmsg;
+    debug() << ": m_adcThreshold is " <<m_adcThreshold << endmsg;
   }
 
   int StepPE = std::pow(2,m_dynamicsBitsNber); // (6-bit)
@@ -147,9 +146,10 @@ StatusCode FTClusterCreator::execute(){
   const MCHits* mcHitsNext = 0;
   const MCHits* mcHitsPrev = 0;
   if( m_splitPrevNextMoni ) {
-    mcHitsNext = getIfExists<MCHits>("/Event/Next/MC/FT/Hits");
-    mcHitsPrev = getIfExists<MCHits>("/Event/Prev/MC/FT/Hits");
+    mcHitsNext = getIfExists<MCHits>("Next/"+LHCb::MCHitLocation::FT); //"/Event/Next/MC/FT/Hits"
+    mcHitsPrev = getIfExists<MCHits>("Prev/"+LHCb::MCHitLocation::FT);  // "/Event/Prev/MC/FT/Hits"
   } 
+
 
   // define clusters container
   FTClusters *clusterCont = new FTClusters();

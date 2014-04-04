@@ -34,7 +34,6 @@ private:
   // Location
   std::string m_inputLocation;       ///< MCFTDigit input Container
   std::string m_outputLocation;      ///< FTCluster output Container
-  std::string m_clusterAlgo;         ///< Clustering algo to be performed (6 or 2 bits) [Temporary] 
 
   double m_dynamicsLowLimit;         ///< Lower edge of the clustering range
   double m_dynamicsUpLimit;          ///< Upper edge of the clustering range

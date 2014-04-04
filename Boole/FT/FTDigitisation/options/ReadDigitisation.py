@@ -1,5 +1,9 @@
 #! /usr/bin/env python
-from ROOT import gROOT, TFile, TCanvas, TH1D,kBlue,kRed,gStyle, TLine, TF1,TLatex
+#python ReadDigitisation.py -i 2BitsADC_Initial-100ev-histos.root
+__author__ = 'Eric Cogneras'
+
+import os,sys,getopt,time
+from ROOT import gROOT, TFile, TCanvas, TH1D,kBlue, kRed, gStyle, TLine, TF1, TLatex
 
 class Read:
     def __init__(self, files= ["MiniBias_v20_nu25_EC-histos.root"], outtype = ".gif"):
@@ -19,366 +23,292 @@ class Read:
         self.lineX.Draw()
         self.lineY.Draw()
         
+    def CreateDir(self,DirChain):
+        Dirnames = DirChain.split('/')
+        Dirname = ""
+        for i in Dirnames:
+            Dirname = os.path.join(Dirname, i)
+            if os.path.exists("./"+Dirname):
+                print "Directory ",Dirname, "  exist : do nothing"
+            else :
+                print "Directory ",Dirname, " do not exist : create it"
+                os.mkdir("./"+Dirname)
+            
+    def Draw1DHisto(self,list,cvs,mantisse):
+        FileMantisse = mantisse.split('/')[0]
+        for i in range(2):
+            if i==1:
+                cvs.SetLogy()
+                ext = "_LOG"+self.OutFileType
+            else:
+                cvs.SetLogy(0)
+                ext = self.OutFileType
+                
+            for h in list :
+                h.SetMarkerStyle(8)
+                h.SetMarkerColor(kBlue)
+                h.Draw("P")
+                cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+ext)
+                
+    def Draw1DHistoBar(self,list,cvs,mantisse):
+        FileMantisse = mantisse.split('/')[0]
+        for i in range(2):
+            if i==1:
+                cvs.SetLogy()
+                ext = "_LOG"+self.OutFileType
+            else:
+                cvs.SetLogy(0)
+                ext = self.OutFileType
+                
+            for h in list :
+                h.SetFillColor(kBlue)
+                h.Draw("bar2")
+                cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+ext)               
+
+    def Draw2DHisto(self,list,cvs,mantisse, opt=""):
+        print "___________ Draw2DHisto"
+        FileMantisse = mantisse.split('/')[0]
+        for h in list :
+            print h
+            #h.SetMarkerStyle(8)
+            #h.SetMarkerColor(kBlue)
+            h.Draw("COLORZ")
+            for Options in  opt.split(" ") :
+                print Options
+                if (Options == "QE") :
+                    self.DrawQuarterEdge()
+            cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+self.OutFileType)
+            
+    def DrawADCGainProfile(self,list,cvs,mantisse, opt=""):
+        FileMantisse = mantisse.split('/')[0]
+        cvs.SetLogy(0)
+        for h in list :
+            hProf = h.ProfileX()
+            h.Draw("colz")
+            hProf.SetLineWidth(5)
+            hProf.SetLineColor(7)
+            hProf.Draw("SAME")
+            linFit = TF1("linFit", "pol1", 0, 0.3)
+            hProf.Fit(linFit,"","SAME", 0, 0.3)
+            comment = TLatex(0.5,.2,"Slope = "+str("%.0f" % linFit.GetParameter(1))+" MeV^{-1}")
+            comment.SetTextColor(kRed)
+            comment.SetNDC(1)
+            comment.Draw()
+            cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+self.OutFileType)
+
+    def DrawResolutionSingleGaussianFit(self,list,cvs,mantisse, opt=""):
+        FileMantisse = mantisse.split('/')[0]
+        for h in list :
+            h.SetFillColor(38)
+            h.SetMarkerStyle(8)
+            sgngaus = TF1("sgngaus", "gaus", h.GetMean()-2*h.GetRMS(),h.GetMean()+2*h.GetRMS())
+            h.Fit(sgngaus,"","", sgngaus.GetXmin(), sgngaus.GetXmax())
+            comment = TLatex(.6,.6,"#sigma = "+str("%.0f" % round(sgngaus.GetParameter(2)))+" #mum")                
+            comment.SetTextColor(kRed)
+            comment.SetNDC(1)
+
+            for i in range(2):
+                if i==1:
+                    cvs.SetLogy()
+                    ext = "_LOG"+self.OutFileType
+                else:
+                    cvs.SetLogy(0)
+                    ext = self.OutFileType
+                h.Draw("bar2")
+                sgngaus.Draw("SAME")
+                comment.Draw()         
+                cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+"SingleGaussFit"+ext)
+
+    def DrawResolutionDoubleGaussianFit(self,list,cvs,mantisse, opt=""):
+        FileMantisse = mantisse.split('/')[0]
+        for h in list :
+            h.SetFillColor(38)
+            #h.Draw("bar2")
+            doublgaus = TF1("doublgaus", "gaus(0)+gaus(3)", h.GetXaxis().GetXmin(), h.GetXaxis().GetXmax() )   
+            sgngaus= TF1("sgngaus", "gaus", doublgaus.GetXmin(), doublgaus.GetXmax() )
+            bckgaus = TF1("bckgaus", "gaus", doublgaus.GetXmin(), doublgaus.GetXmax() )
+            h.Fit(sgngaus,"","", sgngaus.GetXmin(),sgngaus.GetXmax())
+            doublgaus.SetParameters(sgngaus.GetParameter(0),sgngaus.GetParameter(1),sgngaus.GetParameter(2),sgngaus.GetParameter(0)/100.,sgngaus.GetParameter(1),sgngaus.GetParameter(2)*2)
+            doublgaus.SetParLimits(4,(doublgaus.GetXmin()-(doublgaus.GetXmax()-doublgaus.GetXmin())/2),(doublgaus.GetXmin()+(doublgaus.GetXmax()-doublgaus.GetXmin())/2))
+            h.Fit(doublgaus,"","", doublgaus.GetXmin(),doublgaus.GetXmax())
+            sgngaus.SetParameters(doublgaus.GetParameter(0),doublgaus.GetParameter(1),doublgaus.GetParameter(2))
+            bckgaus.SetParameters(doublgaus.GetParameter(3),doublgaus.GetParameter(4),doublgaus.GetParameter(5))
+            bckgaus.SetLineStyle(7)
+            bckgaus.SetLineColor(1)
+ 
+            sgngaus.SetLineStyle(7)
+            sgngaus.SetLineColor(4)
+
+            comment = TLatex(.6,.6,"#sigma = "+str("%.0f" % round(doublgaus.GetParameter(2)))+" #mum")                
+            comment.SetTextColor(kBlue)
+            comment.SetNDC(1)
+
+            for i in range(2):
+                if i==1:
+                    cvs.SetLogy()
+                    ext = "_LOG"+self.OutFileType
+                else:
+                    cvs.SetLogy(0)
+                    ext = self.OutFileType
+                h.Draw("bar2")
+                bckgaus.Draw("SAME")
+                sgngaus.Draw("SAME")
+                comment.Draw()    
+                cvs.SaveAs(mantisse+"/"+FileMantisse+"_"+h.GetName()+"DoubleGaussFit"+ext)
+
+
     def DepositPlots(self):
         #Rstyle = TStyle(ROOT.TStyle)
         gStyle.SetOptStat(0)
         gStyle.SetPalette(1)
+        RootDirectory = 'MCFTDepositCreator'
+        EdgePlotList = ["FibreAttenuationMap", "RadiationAttMap", 
+                        "ReflectionContributionMap", "ReflectionAttenuationMap", 
+                        "FinalAttenuationMap", "FinalReflectedAttenuationMap"]
         #gROOT.SetStyle("Rstyle")
         for files in self.ListOfFiles:
             tfile = TFile.Open(files)
-            OutFileMantisse = files[:files.find('-histos')]
-
-            FibreAttenuationMap = tfile.Get('MCFTDepositCreator/FibreAttenuationMap')
-            RadiationAttMap     = tfile.Get('MCFTDepositCreator/RadiationAttMap')
-            ReflectionContributionMap = tfile.Get('MCFTDepositCreator/ReflectionContributionMap')
-            ReflectionAttenuationMap = tfile.Get('MCFTDepositCreator/ReflectionAttenuationMap')
-            FinalAttenuationMap = tfile.Get('MCFTDepositCreator/FinalAttenuationMap')
-
-            HitEntryPosition      = tfile.Get('MCFTDepositCreator/HitEntryPosition')
-            EnergyOfHit           = tfile.Get('MCFTDepositCreator/EnergyOfHit')
-            EnergyOfHitZOOM       = tfile.Get('MCFTDepositCreator/EnergyOfHitZOOM')
-
-            LayerStereoAngle      = tfile.Get('MCFTDepositCreator/LayerStereoAngle')
-            LayerHoleRadius       = tfile.Get('MCFTDepositCreator/LayerHoleRadius')
-            LayerHalfSizeY        = tfile.Get('MCFTDepositCreator/LayerHalfSizeY')
-            CheckNbChannel        = tfile.Get('MCFTDepositCreator/CheckNbChannel')
-
-            FibreLengh            = tfile.Get('MCFTDepositCreator/FibreLengh')
-            FibreFraction         = tfile.Get('MCFTDepositCreator/FibreFraction')
-            AttenuationFactor     = tfile.Get('MCFTDepositCreator/AttenuationFactor')
-            EnergyDepositedInCell = tfile.Get('MCFTDepositCreator/EnergyDepositedInCell')
-            EnergyRecordedInCell  = tfile.Get('MCFTDepositCreator/EnergyRecordedInCell')
-
-
-            Depositcvs = TCanvas("Depositcvs","Depositcvs")
-            Extension = self.OutFileType
+            OutFileMantisse = files[:files.find('-histos')]+"/"+RootDirectory+"_"+time.strftime('%y-%m-%d_%H-%M',time.localtime())
+            self.CreateDir(OutFileMantisse)
+            tdir = tfile.GetDirectory(RootDirectory)
+            histo1D = []
+            histo2D = []     
+            histo2DQuarterEdge = []
+            DepositCvs= TCanvas("Depositcvs","Depositcvs")
             
-            # 2D plots
-            FibreAttenuationMap.Draw("colz")
-            self.DrawQuarterEdge()
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_FibreAttenuationMap"+Extension)
 
-            RadiationAttMap.Draw("colz")
-            self.DrawQuarterEdge()
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_RadiationAttMap"+Extension)
+            dirlist = tdir.GetListOfKeys()
+            iter = dirlist.MakeIterator()
+            key = iter.Next()
+            td = None
+            while key:
+                if key.GetClassName() == 'TH1D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    #print "found TH1D", objName
+                    histo1D.append(td) 
+                if key.GetClassName() == 'TH2D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    if td.GetName() in EdgePlotList :
+                        histo2DQuarterEdge.append(td)
+                    else :
+                    	histo2D.append(td)
+                key = iter.Next()
 
-            ReflectionContributionMap.Draw("colz")
-            self.DrawQuarterEdge()
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_ReflectionContributionMap"+Extension)
+            self.Draw2DHisto(histo2D,DepositCvs,OutFileMantisse)
 
-            ReflectionAttenuationMap.Draw("colz")
-            self.DrawQuarterEdge()
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"ReflectionAttenuationMap"+Extension)
+            self.Draw2DHisto(histo2DQuarterEdge,DepositCvs,OutFileMantisse,"QE")
+
+            self.Draw1DHistoBar(histo1D,DepositCvs,OutFileMantisse)
+
             
-            FinalAttenuationMap.Draw("colz")
-            self.DrawQuarterEdge()
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_FinalAttenuationMap"+Extension)
-
-            HitEntryPosition.Draw("colz")
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_HitEntryPosition"+Extension)
-
-            # 1D plots linear scale
-           # LayerHalfSizeY.SetMarkerStyle(8)
-           # LayerHalfSizeY.SetMarkerColor(kBlue)
-           # LayerHalfSizeY.Draw("P")
-            #for Extension in self.OutFileType : 
-            Depositcvs.SaveAs(OutFileMantisse+"_LayerHalfSizeY"+Extension)
-
-            if(LayerStereoAngle):
-                LayerStereoAngle.SetMarkerStyle(8)
-                LayerStereoAngle.SetMarkerColor(kBlue)
-                LayerStereoAngle.Draw("P")
-                #for Extension in self.OutFileType : 
-                Depositcvs.SaveAs(OutFileMantisse+"_LayerStereoAngle"+Extension)
-            else:
-                print "!!!!! BEWARE : LayerStereoAngle NOT FOUND"
-
-            if(LayerHoleRadius):
-                LayerHoleRadius.SetMarkerStyle(8)
-                LayerHoleRadius.SetMarkerColor(kBlue)
-                LayerHoleRadius.Draw("P")
-                #for Extension in self.OutFileType : 
-                Depositcvs.SaveAs(OutFileMantisse+"_LayerHoleRadius"+Extension)
-            else:
-                print "!!!!! BEWARE : LayerHoleRadius NOT FOUND"
-            
-            # Empty !!!!
-            if(FibreLengh):
-                FibreLengh.SetMarkerStyle(8)
-                FibreLengh.SetMarkerColor(kBlue)
-                FibreLengh.Draw("P")
-                #for Extension in self.OutFileType : 
-                Depositcvs.SaveAs(OutFileMantisse+"_FibreLengh"+Extension)
-            else:
-                print "!!!!! BEWARE : FibreLengh NOT FOUND"                
-            # Plots in linear and log scales
-            for i in range(2):
-                if i==1:
-                    Depositcvs.SetLogy()
-                    Extension = "_LOG"+self.OutFileType
-                    
-                EnergyOfHit.SetMarkerStyle(8)
-                EnergyOfHit.SetMarkerColor(kBlue)
-                EnergyOfHit.Draw("P")
-                Depositcvs.SaveAs(OutFileMantisse+"_EnergyOfHit"+Extension)
-
-                EnergyOfHitZOOM.SetMarkerStyle(8)
-                EnergyOfHitZOOM.SetMarkerColor(kBlue)
-                EnergyOfHitZOOM.Draw("P")
-                Depositcvs.SaveAs(OutFileMantisse+"_EnergyOfHitZOOM"+Extension)
-
-                if(CheckNbChannel):
-                    CheckNbChannel.SetMarkerStyle(8)
-                    CheckNbChannel.SetMarkerColor(kBlue)
-                    CheckNbChannel.Draw("P")
-                    Depositcvs.SaveAs(OutFileMantisse+"_CheckNbChannel"+Extension)
-                else:
-                    print "!!!!! BEWARE : CheckNbChannel NOT FOUND"       
-
-                FibreFraction.SetMarkerStyle(8)
-                FibreFraction.SetMarkerColor(kBlue)
-                FibreFraction.Draw("P")
-                Depositcvs.SaveAs(OutFileMantisse+"_FibreFraction"+Extension)
-                
-                AttenuationFactor.SetMarkerStyle(8)
-                AttenuationFactor.SetMarkerColor(kBlue)
-                AttenuationFactor.Draw("LP")
-                Depositcvs.SaveAs(OutFileMantisse+"_AttenuationFactor"+Extension)
-                
-                EnergyDepositedInCell.SetMarkerStyle(8)
-                EnergyDepositedInCell.SetMarkerColor(kBlue)
-                EnergyDepositedInCell.Draw("LP")
-                Depositcvs.SaveAs(OutFileMantisse+"_EnergyDepositedInCell"+Extension)
-                
-                EnergyRecordedInCell.SetMarkerStyle(8)
-                EnergyRecordedInCell.SetMarkerColor(kBlue)
-                EnergyRecordedInCell.Draw("LP")
-                Depositcvs.SaveAs(OutFileMantisse+"_EnergyRecordedInCell"+Extension)
-            tfile.Close()
-                 
-
     def DigitPlots(self):
-        gStyle.SetOptStat(0)
-        gStyle.SetPalette(1)
-        gStyle.SetFuncWidth(3)
-        
+        RootDirectory = 'MCFTDigitCreator'
         for files in self.ListOfFiles:
             tfile = TFile.Open(files)
-            OutFileMantisse = files[:files.find('-histos')]
-
+            OutFileMantisse = files[:files.find('-histos')]+"/"+RootDirectory+"_"+time.strftime('%y-%m-%d_%H-%M',time.localtime())
+            self.CreateDir(OutFileMantisse)
+            tdir = tfile.GetDirectory(RootDirectory)
+            histo1D = []
+            histo2D = []     
+            histoADCvsEnergy = []            
+            DigitCvs= TCanvas("Digitcvs","Digitcvs")
             
-#            ChanNoise_nb                  = tfile.Get('MCFTDigitCreator/ChanNoise_nb')
-#            ChanNoise_layer               = tfile.Get('MCFTDigitCreator/ChanNoise_layer')
-#            ChanNoise_module              = tfile.Get('MCFTDigitCreator/ChanNoise_module')
-#            ChanNoise_fibermat            = tfile.Get('MCFTDigitCreator/ChanNoise_fibermat')
-#            ChanNoise_sipm                = tfile.Get('MCFTDigitCreator/ChanNoise_sipm')            
-#            ChanNoise_channel             = tfile.Get('MCFTDigitCreator/ChanNoise_channel')
-            FiredChannelID                = tfile.Get('MCFTDigitCreator/FiredChannelID')
-            HitPerChannel                 = tfile.Get('MCFTDigitCreator/HitPerChannel')
-            EnergyPerHitPerChannel        = tfile.Get('MCFTDigitCreator/EnergyPerHitPerChannel')
-            EnergyPerHitPerChannelZOOM    = tfile.Get('MCFTDigitCreator/EnergyPerHitPerChannelZOOM')
-            EnergyPerHitPerChannelBIGZOOM = tfile.Get('MCFTDigitCreator/EnergyPerHitPerChannelBIGZOOM')
-            EnergyPerChannel              = tfile.Get('MCFTDigitCreator/EnergyPerChannel')
-            EnergyPerChannelZOOM          = tfile.Get('MCFTDigitCreator/EnergyPerChannelZOOM')
-            EnergyPerChannelBIGZOOM       = tfile.Get('MCFTDigitCreator/EnergyPerChannelBIGZOOM')
-            ADCPerChannel                 = tfile.Get('MCFTDigitCreator/ADCPerChannel')
-            ADCGain                       = tfile.Get('MCFTDigitCreator/ADCGain')
-            ADCGainZOOM                   = tfile.Get('MCFTDigitCreator/ADCGainZOOM')           
-            ADCGainBIGZOOM                = tfile.Get('MCFTDigitCreator/ADCGainBIGZOOM')
-            Digitcvs= TCanvas("Digitcvs","Digitcvs")
-            Extension = self.OutFileType
 
-            # 2D plots
-            ADCGain_PRX=ADCGain.ProfileX()
-            ADCGain.Draw("colz")
-            ADCGain_PRX.SetLineWidth(5)
-            ADCGain_PRX.SetLineColor(7)
-            ADCGain_PRX.Draw("SAME")
-            FitFct = TF1("FitFct", "pol1", 0, 0.3)
-            ADCGain_PRX.Fit(FitFct,"","SAME", 0, 0.3)
-            Comment = TLatex(0.3,10,"Slope = "+str(FitFct.GetParameter(1)))
-            Comment.SetTextColor(kRed)
-            Comment.Draw()
-            Digitcvs.SaveAs(OutFileMantisse+"_ADCGain"+Extension)
+            dirlist = tdir.GetListOfKeys()
+            iter = dirlist.MakeIterator()
+            key = iter.Next()
+            td = None
+            while key:
+                if key.GetClassName() == 'TH1D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    #print "found TH1D", objName
+                    histo1D.append(td) 
+                if key.GetClassName() == 'TH2D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    #print "found TH2D", objName
+                    if (td.GetName().find('ADCGain') >= 0):
+                        histoADCvsEnergy.append(td)
+                    else :
+                        histo2D.append(td)
+                key = iter.Next()
 
-            # 1D plots linear scale
-#            ChanNoise_nb.SetMarkerStyle(8)
-#            ChanNoise_nb.SetMarkerColor(kBlue)
-#            ChanNoise_nb.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_nb"+Extension)
+            self.Draw2DHisto(histo2D,DigitCvs,OutFileMantisse)
 
-#            ChanNoise_layer.SetMarkerStyle(8)
-#            ChanNoise_layer.SetMarkerColor(kBlue)
-#            ChanNoise_layer.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_layer"+Extension)
+            self.Draw1DHistoBar(histo1D,DigitCvs,OutFileMantisse)
 
-#            ChanNoise_module.SetMarkerStyle(8)
-#            ChanNoise_module.SetMarkerColor(kBlue)
-#            ChanNoise_module.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_module"+Extension)
-
-#            ChanNoise_fibermat.SetMarkerStyle(8)
-#            ChanNoise_fibermat.SetMarkerColor(kBlue)
-#            ChanNoise_fibermat.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_fibermat"+Extension)
-
-#            ChanNoise_sipm.SetMarkerStyle(8)
-#            ChanNoise_sipm.SetMarkerColor(kBlue)
-#            ChanNoise_sipm.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_sipm"+Extension)
-
-#            ChanNoise_channel.SetMarkerStyle(8)
-#            ChanNoise_channel.SetMarkerColor(kBlue)
-#            ChanNoise_channel.Draw("P")
-#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_channel"+Extension)
+            self.DrawADCGainProfile(histoADCvsEnergy,DigitCvs,OutFileMantisse)
             
-            FiredChannelID.SetMarkerStyle(8)
-            FiredChannelID.SetMarkerColor(kBlue)
-            FiredChannelID.Draw("P")
-            Digitcvs.SaveAs(OutFileMantisse+"_FiredChannelID"+Extension)
-
-            
-            ADCPerChannel.SetMarkerStyle(8)
-            ADCPerChannel.SetMarkerColor(kBlue)
-            ADCPerChannel.Draw("P")
-            Digitcvs.SaveAs(OutFileMantisse+"_ADCPerChannel"+Extension)
-
-            # Plots in linear and log scales
-            for i in range(2):
-                if i==1:
-                    Digitcvs.SetLogy()
-                    Extension = "_LOG"+self.OutFileType
-                    
-                HitPerChannel.SetMarkerStyle(8)
-                HitPerChannel.SetMarkerColor(kBlue)
-                HitPerChannel.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_HitPerChannel"+Extension)
-            
-                EnergyPerHitPerChannel.SetMarkerStyle(8)
-                EnergyPerHitPerChannel.SetMarkerColor(kBlue)
-                EnergyPerHitPerChannel.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerHitPerChannel"+Extension)
-
-                EnergyPerHitPerChannelZOOM.SetMarkerStyle(8)
-                EnergyPerHitPerChannelZOOM.SetMarkerColor(kBlue)
-                EnergyPerHitPerChannelZOOM.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerHitPerChannelZOOM"+Extension)
-
-                EnergyPerHitPerChannelBIGZOOM.SetMarkerStyle(8)
-                EnergyPerHitPerChannelBIGZOOM.SetMarkerColor(kBlue)
-                EnergyPerHitPerChannelBIGZOOM.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerHitPerChannelBIGZOOM"+Extension)
-
-                EnergyPerChannel.SetMarkerStyle(8)
-                EnergyPerChannel.SetMarkerColor(kBlue)
-                EnergyPerChannel.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerChannel"+Extension)
-
-                EnergyPerChannelZOOM.SetMarkerStyle(8)
-                EnergyPerChannelZOOM.SetMarkerColor(kBlue)
-                EnergyPerChannelZOOM.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerChannelZOOM"+Extension)
-                                                                                 
-                EnergyPerChannelBIGZOOM.SetMarkerStyle(8)
-                EnergyPerChannelBIGZOOM.SetMarkerColor(kBlue)
-                EnergyPerChannelBIGZOOM.Draw("P")
-                Digitcvs.SaveAs(OutFileMantisse+"_EnergyPerChannelBIGZOOM"+Extension)
-                #DigADCCount.SetMarkerStyle(8)
-                #DigADCCount.Draw("P")
-                #Digitcvs.SaveAs(OutFileMantisse+"_DigADCCount"+Extension)
-        
-                #DigADCCountvsEnergy.SetMarkerStyle(8)
-                #DigADCCountvsEnergy.Draw("SURF2")
-                #Digitcvs.SaveAs(OutFileMantisse+"_DigADCCountvsEnergy"+Extension)
-
-        
-
     def ClusterPlots(self):
+        RootDirectory = 'FTClusterCreator'
         for files in self.ListOfFiles:
             tfile = TFile.Open(files)
-            OutFileMantisse = files[:files.find('-histos')]
-            
-
-            ClusChannelID         = tfile.Get('FTClusterCreator/ClusChannelID')
-            ClusSiPMID            = tfile.Get('FTClusterCreator/ClusSiPMID')
-            ClusFraction          = tfile.Get('FTClusterCreator/ClusFraction')
-            ClusSize              = tfile.Get('FTClusterCreator/ClusSize')
-            ClusCharge            = tfile.Get('FTClusterCreator/ClusCharge')
-            ClusChargeZoom        = tfile.Get('FTClusterCreator/ClusChargeZOOM')
-            ClusChargeVsSize      = tfile.Get('FTClusterCreator/ClusChargevsSize') #2D
-            ClusterPerSiPM        = tfile.Get('FTClusterCreator/ClusterPerSiPM')
-            KeptHitEntryPosition  = tfile.Get('FTClusterCreator/KeptHitEntryPosition') #2D
-            KeptHitEnergy         = tfile.Get('FTClusterCreator/KeptHitEnergy')
-            KeptHitPDGId          = tfile.Get('FTClusterCreator/KeptHitPDGId')
-            LostHitEntryPosition  = tfile.Get('FTClusterCreator/LostHitEntryPosition') #2D
-            LostHitEnergy         = tfile.Get('FTClusterCreator/LostHitEnergy')
-            LostHitPDGId          = tfile.Get('FTClusterCreator/LostHitPDGId')          
-   
+            OutFileMantisse = files[:files.find('-histos')]+"/"+RootDirectory+"_"+time.strftime('%y-%m-%d_%H-%M',time.localtime())
+            self.CreateDir(OutFileMantisse)
+            tdir = tfile.GetDirectory(RootDirectory)
+            histo1D = []
+            histoResolution = []
+            histo2D = []                
             Clustercvs= TCanvas("Clustercvs","Clustercvs")
-            Extension = self.OutFileType
-
-            ClusChargeVsSize.SetMarkerStyle(8)
-            ClusChargeVsSize.SetMarkerColor(kBlue)
-            ClusChargeVsSize.Draw("COLORZ")
-            Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeVsSize"+Extension)
-
-            ClusterSize64 = files[:files.find('-histos')]
-            for i in range(2):
-                if i==1:
-                    Clustercvs.SetLogy()
-                    Extension = "_LOG"+self.OutFileType
-
-                ClusChannelID.SetMarkerStyle(8)
-                ClusChannelID.SetMarkerColor(kBlue)
-                ClusChannelID.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusChannelID"+Extension)
-
-                ClusSiPMID.SetMarkerStyle(8)
-                ClusSiPMID.SetMarkerColor(kBlue)
-                ClusSiPMID.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusSiPMID"+Extension)
             
-                ClusFraction.SetMarkerStyle(8)
-                ClusFraction.SetMarkerColor(kBlue)
-                ClusFraction.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusFraction"+Extension)
-                
-                ClusSize.SetMarkerStyle(8)
-                ClusSize.SetMarkerColor(kBlue)
-                ClusSize.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusSize"+Extension)
-            
-                ClusCharge.SetMarkerStyle(8)
-                ClusCharge.SetMarkerColor(kBlue)
-                ClusCharge.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusCharge"+Extension)
-                
-                ClusChargeZoom.SetMarkerStyle(8)
-                ClusChargeZoom.SetMarkerColor(kBlue)
-                ClusChargeZoom.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeZoom"+Extension)
 
-                ClusterPerSiPM.SetMarkerStyle(8)
-                ClusterPerSiPM.SetMarkerColor(kBlue)
-                ClusterPerSiPM.Draw("P")
-                Clustercvs.SaveAs(OutFileMantisse+"_ClusterPerSiPM"+Extension)
-        
-def main():
-    #t = Read()
-   # t = Read(["Bs_mumu_v6_nu325_EC-histos.root","Bs_mumu_v6_nu65_EC-histos.root","MiniBias_v6_nu325_EC-histos.root","MiniBias_v6_nu65_EC-histos.root"],".eps")
-    t = Read(["MiniBias_v20_nu25_EC-histos.root"])
-    #t = Read(["Bs_mumu_v6_nu65_EC-histos.root"])
-    #t = Read(["Bs_mumu_v6_nu325_EC-histos.root","Bs_mumu_v6_nu65_EC-histos.root","MiniBias_v6_nu325_EC-histos.root","MiniBias_v6_nu65_EC-histos.root"])
-    #t = Read( ["MiniBias_v6_nu325_EC-histos.root"] )
+            dirlist = tdir.GetListOfKeys()
+            iter = dirlist.MakeIterator()
+            key = iter.Next()
+            td = None
+            while key:
+                if key.GetClassName() == 'TH1D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    #print "found TH1D", objName
+                    if (td.GetName().find('Cluster_x_position_resolution') >= 0 ): 
+                        histoResolution.append(td) 
+                    else : 
+                        histo1D.append(td) 
+                if key.GetClassName() == 'TH2D':
+                    td = key.ReadObj()
+                    #objName = td.GetName()
+                    #print "found TH2D", objName
+                    histo2D.append(td)
+                key = iter.Next()
+
+            self.Draw2DHisto(histo2D,Clustercvs,OutFileMantisse)
+
+            self.Draw1DHistoBar(histo1D,Clustercvs,OutFileMantisse)
+
+            self.DrawResolutionSingleGaussianFit(histoResolution,Clustercvs,OutFileMantisse)
+
+            self.DrawResolutionDoubleGaussianFit(histoResolution,Clustercvs,OutFileMantisse)                      
+
+def main(argv):
+    input = "2BitsADC_2Bits-100ev-histos.root"
+    print "Main"
+    print input
+    
+    try:                                
+        opts, args = getopt.getopt(argv, "hi:", ["help", "input="])
+    except getopt.GetoptError as err:
+        print(err)
+        print "Error"
+        usage()                         
+        sys.exit(2)              
+    for opt, arg in opts:
+        print opt, arg
+        if opt in ("-h", "--help"):      
+            usage()                     
+            sys.exit()                                 
+        elif opt in ("-i", "--input"): 
+            input = arg               
+
+    print input
+    
+    t = Read([ input ])
     t.DepositPlots()
-    t.DigitPlots()
-    t.ClusterPlots()
+    #t.DigitPlots()
+    #t.ClusterPlots()
     
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-04-04 - Eric Cogneras
+ - remove unused parameter
+ - redefinition of default value of parameters
+
 ! 2014-04-01 - Eric Cogneras
  - remove unused keepAdding() function 
 

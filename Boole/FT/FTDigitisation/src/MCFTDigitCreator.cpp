@@ -74,10 +74,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
 //=============================================================================
 MCFTDigitCreator::~MCFTDigitCreator() {}
 
-// factorial function
-int factorial(int n) {
-    return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
-}
+
 //=============================================================================
 // Initialization
 //=============================================================================
