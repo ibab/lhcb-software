@@ -102,12 +102,15 @@ def inCastor ( fname            ,
     
     import os 
     from subprocess import Popen, PIPE
-    p   = Popen( [ 'nsls' , '-l' , fname ] , 
-                 env    = os.environ       , 
-                 stdout = PIPE             ,
-                 stderr = PIPE             )
-    stdout, stderr = p.stdout, p.stderr
-    
+    try:
+        p   = Popen( [ 'nsls' , '-l' , fname ] , 
+                     env    = os.environ       , 
+                     stdout = PIPE             ,
+                     stderr = PIPE             )
+        stdout, stderr = p.stdout, p.stderr
+    except OSError:
+        ## nsls not in the path
+        return False
     ## require empty stder
     for l in stderr : return False   ## RETURN 
     
@@ -160,7 +163,7 @@ def inEOS ( fname            ,
     
     """
     # remove full
-    if 0 == fname.find ( prefix ) : fname = fname [ prefix.size() : ]
+    if 0 == fname.find ( prefix ) : fname = fname [ len(prefix) : ]
     #
     # check short prefix
     if   0 == fname.find ( '/lhcb/user/' ) :
@@ -173,11 +176,15 @@ def inEOS ( fname            ,
     ##    
     import os 
     from subprocess import Popen, PIPE
-    p   = Popen( [ 'eos_ls' , fname ] ,
-                 env    = os.environ  ,
-                 stdout = PIPE        ,
-                 stderr = PIPE        )
-    stdout, stderr = p.stdout, p.stderr
+    try:
+        p   = Popen( [ 'eos_ls' , fname ] ,
+                     env    = os.environ  ,
+                     stdout = PIPE        ,
+                     stderr = PIPE        )
+        stdout, stderr = p.stdout, p.stderr
+    except OSError:
+        # eos_ls not in the path
+        return ''
     #
     ## require empty stder
     #
@@ -230,7 +237,7 @@ def inGrid ( filename , grid ) :
     #
     import os 
     from subprocess import Popen, PIPE
-    p   = Popen ( [ 'get_grid_url', filename , '-g' , grid.upper() ] ,
+    p   = Popen ( [ 'get_grid_url', filename , grid.upper() ] ,
                   env       = os.environ  ,
                   stdout    = PIPE        ,
                   stderr    = None        )

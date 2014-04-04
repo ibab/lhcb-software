@@ -24,6 +24,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-04-04 - Roel Aaij
+ - Add try: except to some subprocess calls in case the command is not in the
+   path, for example at remote sites.
+
 ! ==================== Phys/Bender v23r2   2014-03-11 =========================
 ! ==================== Phys/Bender v23r1p1 2014-03-09 =========================
 ! ==================== Phys/Bender v23r1   2014-03-07 =========================
