@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-04 - Kurt Rinnert
+ - Assign proper keys when inserting clusters in container.
+
 ! 2014-04-01 - Heinrich Schindler
  - Pickup VPClusters instead of VPLiteClusters.
 

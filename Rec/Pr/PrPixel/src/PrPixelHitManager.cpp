@@ -837,7 +837,7 @@ void PrPixelHitManager::storeTriggerClusters() {
     const double fx = m_xFractions[ih];
     const double fy = m_yFractions[ih];
     pixels[0] = cid;
-    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,pixels)); 
+    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,pixels),cid); 
   }
 
   return;
@@ -858,7 +858,6 @@ void PrPixelHitManager::storeOfflineClusters() {
   // However, MC matching will work consistently in both cases.
   // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
   // false and the code still uses the old event model.
-  std::vector<LHCb::VPChannelID> pixels;
   for (unsigned int ic=0; ic < m_nClusters; ++ic) {
     const PrPixelHit& hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
@@ -878,12 +877,7 @@ void PrPixelHitManager::storeOfflineClusters() {
 
     const double fx = m_xFractions[ic];
     const double fy = m_yFractions[ic];
-    pixels.clear();
-    const std::vector<LHCb::VPChannelID>& cids = m_channelIDs[ic];
-    for (unsigned int iID=0; iID < cids.size(); ++iID) {
-      pixels.push_back(cids[iID]);
-    }
-    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,pixels)); 
+    clusters->insert(new LHCb::VPCluster(std::make_pair(fx, fy),x,y,z,m_channelIDs[ic]),cid); 
   }
 
   return;
