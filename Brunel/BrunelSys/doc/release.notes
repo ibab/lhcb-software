@@ -3,6 +3,8 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Modified configurables test to test all configurables, but only fail if there are more than 50 "missing". See task #50698
+
 </PRE><H1><A NAME=v45r1>2014-03-27 Brunel v45r1</A></H1><PRE>
 This version uses projects:
  LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r1, Lbcom v15r1, Rec v16r1
