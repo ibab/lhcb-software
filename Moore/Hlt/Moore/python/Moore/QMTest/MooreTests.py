@@ -165,11 +165,11 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
     #parse the tables
     import os
     if not os.path.exists(myfile):
-        causes("Cannot compare timing, timing table not created "+myfile)
+        causes.append("Cannot compare timing, timing table not created "+myfile)
         return
     
     if not os.path.exists(refFile):
-        causes("Cannot compare timing, reference table does not exit "+reffile)
+        causes.append("Cannot compare timing, reference table does not exit "+reffile)
         return
     
     TTref=TTParser.parse(refFile)
