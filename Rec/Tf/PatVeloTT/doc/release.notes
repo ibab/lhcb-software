@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-04-04 - Sebastian Neubert
+- Added back PatVeloTTFit with updated fitting routine
+
+! 2014-04-03 - Sebastian Neubert
+- Completely rewritten implementation of VeloTT. New track finding. New Regions. New hybrid modes
+
 !========================= PatVeloTT v4r1 2013-07-18 =========================
 ! 2013-06-28 - Espen Eie Bowen
 - Added pT window, optional printout, and set passUnmatched default to false. 

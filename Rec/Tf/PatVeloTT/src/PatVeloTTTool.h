@@ -47,17 +47,17 @@ public:
   virtual ~PatVeloTTTool( ); ///< Destructor
   
   StatusCode initialize ( );
-  //void recoVeloTT(LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
+  
   virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
   void handle ( const Incident& incident );
-  
+  void simpleFit( PatVTTTrack& vtt);
+
 protected:
   
   void getCandidates(const LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks );
   bool findHits();
   void clustering();
   void formClusters(bool forward);
-  void simpleFit( PatVTTTrack& vtt);
   void prepareOutputTracks(std::vector<LHCb::Track*>& outtracks);
   void initEvent();
   bool acceptTrack(const LHCb::Track& track);
