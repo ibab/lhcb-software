@@ -1,6 +1,8 @@
 ###################################################
 # Helper functions, shared code, used in the tests
 ###################################################
+PrintParseLine="#######################  Printing Configurables:"
+
 def generateList(packages=[]):
     """
     Return a dictionary of all configurables, {package: {configurable: True/False/None} }
@@ -34,7 +36,16 @@ def generateList(packages=[]):
     return retdict
 
 def saveTo(ofile,thingy):
-    f=open(ofile,"w")
+    f=None
+    try:
+        import os
+        f=open(os.path.expandvars(ofile),"w")
+    except IOError:
+        pass
+    if not f:
+        import sys
+        print >> sys.stderr, "# Warning, could not save file "+ofile
+        return
     f.write(thingy.__str__())
     f.close()
 
@@ -76,9 +87,9 @@ def dict_from_file(fname):
     read a dictionary from a file into a variable to return
     """
     import os
-    if not os.path.exists(fname):
+    if not os.path.exists(os.path.expandvars(fname)):
         raise IOError(fname + " does not exist, so I cannot read from it")
-    f=open(fname)
+    f=open(os.path.expandvars(fname))
     fr=f.read()
     f.close()
     exec("retdict = "+fr.replace("\n"," "))
@@ -92,7 +103,7 @@ def dict_from_file(fname):
 #########################################
 
 
-def testThisProjectOnly(output,project=None):
+def testThisProjectOnly(output=None,project=None):
     if project is None:
         project,dummy=evalProject()
     if project is None:
@@ -100,17 +111,29 @@ def testThisProjectOnly(output,project=None):
     proj_pack=moduleList()
     findproj=[p for p in proj_pack if p==me or p.lower()==me.lower()][0]
     clist=generateList(proj_pack[findproj])
-    saveTo(output,clist)
+    if output:
+        saveTo(output,clist)
+    else:
+        print PrintParseLine
+        print clist
     return
 
-def testThisPackOnly(output,package):
+def testThisPackOnly(package, output=None):
     clist=generateList([package.split('/')[-1]])
-    saveTo(output,clist)
+    if output:
+        saveTo(output,clist)
+    else:
+        print PrintParseLine
+        print clist
     return
 
-def testAllConfigurables(output):
+def testAllConfigurables(output=None):
     clist=generateList()
-    saveTo(output,clist)
+    if output:
+        saveTo(output,clist)
+    else:
+        print PrintParseLine
+        print clist
     return
 
 
@@ -134,8 +157,15 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
     """
     rfile=reference
     reference=dict_from_file(reference)
-    if type(testoutput) is str:            
-        testoutput=dict_from_file(testoutput)
+    if type(testoutput) is str:
+        import os
+        if os.path.exists(testoutput):
+            testoutput=dict_from_file(testoutput)
+        elif PrintParseLine in testoutput:
+            testoutput=testoutput[testoutput.find(PrintParseLine)+len(PrintParseLine):].strip().replace("\n"," ")
+            exec("testoutput="+testoutput)
+        else:
+            raise ValueError("Failed to interpret testoutput as a file or stdout")
     if type(reference) is not dict:
         raise TypeError("expected reference dictionary, got instead "+str(type(reference)))
     if type(testoutput) is not dict:

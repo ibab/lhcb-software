@@ -14,13 +14,13 @@
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>
       <text>-c</text>
-      <text>from GaudiConf.QMTest.ConfigurablesTest import testThisPackOnly; testThisPackOnly("gaudiconf.conf","GaudiConf");</text>
+      <text>from GaudiConf.QMTest.ConfigurablesTest import testThisPackOnly; testThisPackOnly("GaudiConf");</text>
   </set></argument>
   <argument name="prerequisites"><set>
     <tuple><text>gaudiconf.conftest</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="validator"><text>
 from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables
-compareConfigurables("../refs/configurables.ref","gaudiconf.conf",causes,result,"gaudiconf.configurables",packages=["GaudiConf"],threshold=10000)
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"gaudiconf.configurables",packages=["GaudiConf"],threshold=10000)
 </text></argument>
 </extension>
