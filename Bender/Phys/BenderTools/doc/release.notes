@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-04-04 - Roel Aaij
+ - DstExplorer.py
+ 
+   Change order of imports in DstExplorer to allow proper command line help 
+   message instead of the ROOT one.
+
 ! 2014-03-16 - Vanya Belyaev
 
  - Parser.py

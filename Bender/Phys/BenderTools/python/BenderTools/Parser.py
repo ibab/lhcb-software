@@ -60,11 +60,6 @@ __all__     = ( 'makeParser' ,
                 'dataType'   ,
                 'theYear'    )
  # =============================================================================
-## logging
-# =============================================================================
-from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
-# =============================================================================
 ## create the parser
 def makeParser ( usage = None ,
                  vers  = None ) :

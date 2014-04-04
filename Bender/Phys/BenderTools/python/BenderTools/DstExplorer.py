@@ -120,20 +120,15 @@ __date__    = "2010-09-10"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
-# =============================================================================
-## logging
-# =============================================================================
-from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
-# =============================================================================
-from BenderTools.Seek       import * 
-from BenderTools.GoodEvents import * 
-# =============================================================================
 ## configure the application from parser data  
 def configure ( options , arguments ) :
     """
     Configure the application from parser data 
     """
+    # 
+    ## logging
+    from Bender.Logger import getLogger 
+    logger = getLogger( __name__ )
     #
     ## redefine output level for 'quiet'-mode
     if options.OutputLevel > 5 :
@@ -342,7 +337,7 @@ if '__main__' == __name__ :
     from BenderTools.Parser import makeParser
     parser = makeParser  ( usage = __usage__   ,
                            vers  = __version__ )
-    
+
     parser.add_option (
         '-o'                     ,
         '--output'               ,
@@ -353,7 +348,7 @@ if '__main__' == __name__ :
         )
     ##
     options , arguments = parser.parse_args()
-    
+
     print 120*'*'
     if options.Quiet :
         print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
@@ -368,7 +363,10 @@ if '__main__' == __name__ :
     
     if options.Simulation : from Bender.MainMC   import *
     else                  : from Bender.Main     import *
-    
+
+    from BenderTools.Seek       import * 
+    from BenderTools.GoodEvents import * 
+        
     ## instantiate the application manager 
     gaudi  = appMgr ()
     
