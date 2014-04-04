@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: check the GaudiConf.QMTest.ConfigurablesTest
+# Prerequisites: none
+# Common failure modes, severities and cures: 
+#               . MAJOR: any failure of this test indicates a major problem with the manipulations module
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="args"><set><text>../options/conftest.py</text></set></argument>
+</extension>

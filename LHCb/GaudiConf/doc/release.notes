@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-04-04 - Rob Lambert
+ - Added threshold to the # of missing configurables as requested by Marco, see task #50698
+
 ! 2014-04-03 - Rob Lambert
  - consolodate configurables tests into a single module, task #50698
 

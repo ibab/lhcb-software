@@ -75,6 +75,7 @@ def dict_from_file(fname):
     """
     read a dictionary from a file into a variable to return
     """
+    import os
     if not os.path.exists(fname):
         raise IOError(fname + " does not exist, so I cannot read from it")
     f=open(fname)
@@ -117,12 +118,16 @@ def testAllConfigurables(output):
 # Evaluate the results, comparing a ref file dictionary with a test output
 ##############################################
 
-def compareConfigurables(reference, testoutput, causes, result, testname, packages=[]):
+def compareConfigurables(reference, testoutput, causes, result, testname, packages=[], failIfMissing=[], threshold=50):
     """
     Compare two sets of configurables
     reference: compare against these configurables, a filename
     testoutput: the result of the current list, a dictionary or filename
-    package: a list of packages to check, empty means everything
+    packages: a list of packages to check, empty means everything
+    failIfMissing: a smaller list of packages to trigger a failure if they are missing.
+                   Can be used to check all configurables for consistency but only demand that a certain list must exist.
+                   If empty, is initialized to packages, which if empty is initialized to everything.
+    threshold: how many missing configurables to tolerate before an error?
     causes: the usual QMTest causes
     result: the usual QMTest result
     testname: the usual QMTestname
@@ -137,7 +142,7 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
         raise TypeError("expected testoutput dictionary, got instead "+str(type(testoutput)))
     if reference==testoutput:
         return
-    saveTo(rfile+".new",reference)
+    saveTo(rfile+".new",testoutput)
     missingpackages=[]
     addedpackages=[]
     failedpackages=[]
@@ -149,6 +154,10 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
     brokenconfigurables=[]
     if not len(packages):
         packages=reference.keys()+testoutput.keys()
+    else:
+        packages=[p.split("/")[-1] for p in packages]
+    if not len(failIfMissing):
+        failIfMissing=packages
     if len(packages):
         missingpackages=[m for m in reference if m not in testoutput and m in packages]
         addedpackages=[m for m in testoutput if m not in reference and m in packages]
@@ -168,7 +177,7 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
                             failedconfigurables.append((c,p))
                         elif v is None:
                             brokenconfigurables.append((c,p))
-                        elif c not in reference[p]:
+                        elif p in reference and (c not in reference[p]):
                             extraconfigurables.append((c,p))
                 if p in reference:
                     cs=reference[p]
@@ -186,9 +195,10 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
         movedpackages=[m for m in missingpackages if m not in expected]
         missingpackages=[m for m in missingpackages if m in expected]
     #reasons to fail
-    if len(missingpackages):
+    missingtofail=[m for m in missingpackages if m in failIfMissing]
+    if len(missingtofail):
         causes.append("Entire Package Missing")
-        result[testname+".missingpack"]=result.Quote("Completely cannot see the following packages, even though they were there in svnProjectDeps, indicates some major problem with svnProjectDeps or that the package failed to build: "+missingpackages.__str__())
+        result[testname+".missingpack"]=result.Quote("Completely cannot see the following packages, even though they were there in svnProjectDeps, indicates some major problem with svnProjectDeps or that the package failed to build: "+missingtofail.__str__())
     if len(brokenpackages):
         causes.append("Entire package broken")
         result[testname+".brokenpack"]=result.Quote("Package existed in confDB, but had no entries in Configurables module? Perhaps the python code was broken in this package : "+brokenpackages.__str__())
@@ -202,16 +212,24 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
         causes.append("Configurables failed to instantiate")
         result[testname+".failed"]=result.Quote("Failed to instantiate : "+mixedpackages.__str__())
     if len(brokenconfigurables):
-        causes.append("Configurables which didn't make if to Configurables module")
+        causes.append("Configurables which didn't make it to Configurables module")
         result[testname+".broken"]=result.Quote("Failed to make it to Configurables module : "+mixedpackages.__str__())
     #only fail if there are a lot of modifications
     if len(movedpackages+addedpackages)>20:
         causes.append("More than 20 svn moves have taken place, please update the reference! ")
-    if len(extraconfigurables+missingconfigurables)>50:
-        causes.append("More than 50 extra/lost configurables, this is suspicious!")
+    if len(extraconfigurables)>50:
+        causes.append("More than 50 extra configurables, this is suspicious!")
+    if len(missingconfigurables)>threshold:
+        causes.append("More than "+str(threshold)+" missing configurable(s)")
+    missingtopass=[m for m in missingpackages if m not in failIfMissing]
+    if len(missingtopass)>20:
+        causes.append("More than 20 packages are missing and ignored, check and update the reference! ")
     #not of themselves a problem
     if len(movedpackages):
         result[testname+".movedpack"]=result.Quote("Moved packages in svn : "+movedpackages.__str__())
+    #not of themselves a problem
+    if len(missingtopass):
+        result[testname+".ignoremissingpack"]=result.Quote("Missing packages which were ignored : "+missingtopass.__str__())
     #not of themselves a problem
     if len(addedpackages):
         result[testname+".addedpack"]=result.Quote("Added packages in svn : "+addedpackages.__str__())
@@ -219,5 +237,5 @@ def compareConfigurables(reference, testoutput, causes, result, testname, packag
     if len(missingconfigurables):
         result[testname+".missing"]=result.Quote("Missing configurables : "+missingconfigurables.__str__())
     if len(extraconfigurables):
-        result[testname+".added"]=result.Quote("Added configurables : "+addedconfigurables.__str__())
+        result[testname+".added"]=result.Quote("Added configurables : "+extraconfigurables.__str__())
     
