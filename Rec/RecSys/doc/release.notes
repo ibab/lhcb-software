@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+- Modified configurables test to only check configurables in this project. See task #50698
+
 </PRE><H1><A NAME=v16r1>2014-03-26 RecSys v16r1</A></H1><PRE>
 This version uses Gaudi v25r1, LHCb v37r1 and Lbcom v15r1
 
