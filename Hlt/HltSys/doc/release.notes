@@ -5,6 +5,8 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+- Modified configurables test to only check configurables in this project. See task #50698
+
 </PRE><H1><A NAME=v22r0>2014-02-20 HltSys v22r0</A></H1><PRE>
 Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on Rec v17r0 via Phys v18r0. Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
 
