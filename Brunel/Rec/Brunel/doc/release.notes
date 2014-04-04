@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Fix in PatSeedingTool to reduce ghost rate and avoid FPE (Tf/PatAlgorithms)
   . Change default LHCbCond tag for 2010 to 2014328
     (new Tracking alignment, new OT T0 database) (Det/DDDB)
+  . Reimplement the tanh approximation in WalkRelation (Det/OTDet)
 
 </PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
 This version uses projects LHCb v37r1, Lbcom v15r1,
