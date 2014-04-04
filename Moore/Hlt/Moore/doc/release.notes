@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-04-04 - Rob Lambert
+ - Fail test if timing tables don't exist instead of throwing an exception.
+
 ! 2014-03-21 - Rob Lambert
  - Fix typos in a couple of Moore tests
 

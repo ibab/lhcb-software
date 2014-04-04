@@ -163,6 +163,15 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
     """
     from LHCbAlgs import TTParser
     #parse the tables
+    import os
+    if not os.path.exists(myfile):
+        causes("Cannot compare timing, timing table not created "+myfile)
+        return
+    
+    if not os.path.exists(refFile):
+        causes("Cannot compare timing, reference table does not exit "+reffile)
+        return
+    
     TTref=TTParser.parse(refFile)
     TTthis=TTParser.parse(myfile)
     #
