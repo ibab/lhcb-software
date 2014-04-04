@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-04-03 - Sebastian Neubert
+ - Fixed handling of the kickRange
+
+! 2014-04-03 - Sebastian Neubert
  - PatForwardTool added options for use of charge and momentum estimate from VeloTT
  - Wrong sign search window
 
