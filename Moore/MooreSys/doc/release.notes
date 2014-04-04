@@ -3,6 +3,8 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+- Better configurables test separates and checks all configurables, followed by just configurables in this project. See task #50698
+
 </PRE><H1><A NAME=v22r0>2014-03-03 MooreSys v22r0</A></H1><PRE>
 Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on HLT v22r0, Phys v18r0, Rec v17r0 ... Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
 
