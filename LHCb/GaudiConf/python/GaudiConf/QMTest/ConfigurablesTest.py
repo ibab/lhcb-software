@@ -109,7 +109,7 @@ def testThisProjectOnly(output=None,project=None):
     if project is None:
         raise ValueError("could not determine project automatically, please supply a string")
     proj_pack=moduleList()
-    findproj=[p for p in proj_pack if p==me or p.lower()==me.lower()][0]
+    findproj=[p for p in proj_pack if p==project or p.lower()==project.lower()][0]
     clist=generateList(proj_pack[findproj])
     if output:
         saveTo(output,clist)
