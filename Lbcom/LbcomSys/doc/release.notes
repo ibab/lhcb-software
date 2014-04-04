@@ -6,6 +6,8 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+- Modified configurables test to only check configurables in this project. See task #50698 
+
 </PRE><H1><A NAME=v15r1>2014-03-26 LbcomSys v15r1</A></H1><PRE>
 This version uses Gaudi v25r1 and LHCb v37r1
 
