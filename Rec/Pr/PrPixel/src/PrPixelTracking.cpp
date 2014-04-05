@@ -59,7 +59,7 @@ DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
       declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
 
       // Parameters for 3D hit building
-      declareProperty("RunOnRawBanks",m_runOnRawBanks=false);
+      declareProperty("RunOnRawBanks",m_runOnRawBanks = true);
       declareProperty("MaxClusterSize",m_maxClusterSize=4);
       declareProperty("Trigger",m_trigger=false);
     }

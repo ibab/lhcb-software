@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-05 - Heinrich Schindler
+ - Change default value of RunOnRawBanks to True.
+
 ! 2014-04-04 - Kurt Rinnert
  - Assign proper keys when inserting clusters in container.
 
