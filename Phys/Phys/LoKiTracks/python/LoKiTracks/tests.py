@@ -17,7 +17,7 @@
 #  with the campain of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
-#  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2007-05-29
 # =============================================================================
 """
@@ -37,26 +37,20 @@ with the campain of Dr.O.Callot et al.:
  
 """
 # =============================================================================
-__author__   = "Vanya BELYAEV  Ivan.Belyaev@nikhef.nl"
+__author__   = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__     = "2007-05-29"
-__version__  = "CVS tag $Name: not supported by cvs2svn $, verison $Revision$ "
+__version__  = "$Revision: 12005$"
 # =============================================================================
-
-## needed since there is no autoloading of Tracking dictionaries:
-## import sys,PyCintex
-## if sys.platform == 'win32' : PyCintex.loadDict (    "TrackEventDict" )  
-## else                       : PyCintex.loadDict ( "libTrackEventDict" )  
-## import GaudiPython.Pythonizations
 
 import LoKiNumbers.decorators 
 from   LoKiTracks.decorators  import *
 from   LoKiCore.functions     import *
 from   LoKiCore.math          import *
 
+from   LoKiCore.basic         import LHCb
 if not hasattr ( std , 'stringstream' ) :
     LHCb.Track.__repr__ = lambda s : LoKi.Print.toString ( s ) 
     LHCb.State.__repr__ = lambda s : LoKi.Print.toString ( s ) 
-
         
 # =============================================================================
 ## The most trivial test function
@@ -83,7 +77,7 @@ def test1() :
     print 'track: (TrP,TrPT)=(%s,%s)'%(TrP(t),TrPT(t))
     print 'track: ( t>>TrP , p>>cos(TrPT) )=(%s,%s)'%(t>>TrP,t>>cos(TrPT))
     
-    v = std.vector('LHCb::Track*')()
+    v = LHCb.Track.ConstVector()
     
     v.push_back(t)
     
