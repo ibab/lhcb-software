@@ -49,9 +49,6 @@ __date__    = "2011-10-21"
 __version__ = '$Revision$'
 __all__     = ()
 # =============================================================================
-## some strange lines... Reflex feature ?
-from PyCintex import gbl as cpp 
-# =============================================================================
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
@@ -59,7 +56,8 @@ logger = getLogger( __name__ )
 # =============================================================================
 logger.info ( '*** Fix some Gaudi features' ) 
 # =============================================================================
-
+from LoKiCore.basic import cpp 
+# =============================================================================
 
 import GaudiPython.Bindings
 _EvtSel = GaudiPython.Bindings.iEventSelector

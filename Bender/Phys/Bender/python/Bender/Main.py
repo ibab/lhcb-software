@@ -80,8 +80,7 @@ except:
 
 # =============================================================================
 import ROOT
-import PyCintex 
-cpp = PyCintex.makeNamespace('')
+from LoKiCore.basic import cpp
 if not hasattr ( ROOT , 'ostream' ) :
     logger.info ( 'Fix ostream issue. Needed???')
     ROOT.gROOT.ProcessLine("#include <ostream>")     
