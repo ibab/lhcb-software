@@ -22,12 +22,12 @@
 #
 # =============================================================================
 package       BenderSys
-version       v23r2
+version       v23r3
 author        Vanya BELYAEV
 
 # =========== TEMPORARY! ======================================================
-use           AnalysisPython v2r28   Phys
-use           PyPAW          v1r0    Analysis
+## use           AnalysisPython v2r28   Phys
+## use           PyPAW          v1r0    Analysis
 
 # =========== Bender Application itself =======================================
 use           Bender         v23r2   Phys 

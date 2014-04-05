@@ -23,6 +23,15 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v23r3> 2014-03-11 Bender v23r3 based on the DaVinci v34r1</A>
+
+<ul>
+<li>Almost identical to v23r2</li> 
+<li>Based on the DaVinci v34r1</li>
+<li>Fixes for Bender-based scripts for non-CERN location (thanks to Roel!)</li>
+<li>Fixes for command lne help for Bender-based scripts (thanks to Roel!)</li>
+</ul>
+
 <A NAME=v23r2> 2014-03-11 Bender v23r2 based on the DaVinci v34r0</A>
 
 <ul>
