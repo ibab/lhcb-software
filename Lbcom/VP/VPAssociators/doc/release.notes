@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-04-05 - Heinrich Schindler
+ - VPClusterLinker: add temporary check if table already exists.
+
 ! 2014-04-03 - Heinrich Schindler
  - Modify digits linker tables to use keys instead of VPDigit objects.
  - Simplify delta electron treatment in VPDigitLinker.
