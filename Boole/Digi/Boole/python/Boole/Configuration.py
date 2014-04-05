@@ -390,10 +390,8 @@ class Boole(LHCbConfigurableUser):
         if tae == "":
             from Configurables import VPDepositCreator, VPDigitCreator
             seq.Members += [VPDepositCreator(), VPDigitCreator()]
-            from Configurables import VPClustering
-            seq.Members += [VPClustering()]
-            from Configurables import PrepareVPRawBank
-            seq.Members += [PrepareVPRawBank()]
+            from Configurables import VPSuperPixelBankEncoder
+            seq.Members += [VPSuperPixelBankEncoder()]
         else:
             raise RuntimeError("TAE not implemented for VP")
 
@@ -595,10 +593,9 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
         
         if "VP" in linkDets:
-            from Configurables import VPDigitLinker, VPClusterLinker
+            from Configurables import VPDigitLinker
             seq = GaudiSequencer("LinkVPSeq")
             seq.Members += [VPDigitLinker()]
-            seq.Members += [VPClusterLinker()]
         
         if (det for det in ["TT", "IT", "UT"] if det in linkDets):
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
