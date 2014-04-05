@@ -6,5 +6,5 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Bender v23r3
-              USE DaVinci v34r1)
+gaudi_project(Bender v23r3p1
+              USE DaVinci v34r1p1)
