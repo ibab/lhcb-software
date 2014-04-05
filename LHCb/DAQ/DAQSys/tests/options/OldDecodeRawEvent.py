@@ -17,16 +17,16 @@ from Configurables import ( DataOnDemandSvc,
                             DecodeVeloRawBuffer,
                             RawBankToSTLiteClusterAlg,
                             FTRawBankDecoder,
-                            Rich__DAQ__RawBufferToRichDigitsAlg,VPRawBankToPartialCluster )
+                            Rich__DAQ__RawBufferToRichDigitsAlg )
 # for the upgrade
 #VPLiteClusters = VPRawBankToLiteCluster("createVPLiteClusters")
 #VPLiteClusters.ClusterLocation  = "Raw/VP/LiteClusters"
-VPClusters     = VPRawBankToPartialCluster("createVPClusters")
-VPClusters.ClusterLocation = "Raw/VP/Clusters"
+#VPClusters     = VPRawBankToPartialCluster("createVPClusters")
+#VPClusters.ClusterLocation = "Raw/VP/Clusters"
 #
 FTClusters =  FTRawBankDecoder("createFTClusters")
 # Set up the algorithms
-DataOnDemandSvc().AlgMap["Raw/VP/Clusters"]       = VPClusters 
+#DataOnDemandSvc().AlgMap["Raw/VP/Clusters"]       = VPClusters 
 #DataOnDemandSvc().AlgMap["Raw/VP/LiteClusters"]   = VPLiteClusters
 DataOnDemandSvc().AlgMap["Raw/Velo/Clusters"]     = "DecodeVeloRawBuffer/createVeloClusters"
 DataOnDemandSvc().AlgMap["Raw/TT/Clusters"]       = "RawBankToSTClusterAlg/createTTClusters"

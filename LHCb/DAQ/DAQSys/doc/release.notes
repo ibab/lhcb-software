@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-04-04 - Heinrich Schindler
+ - Remove decoder for VPClusters (decoding now done inside PrPixelHitManager).
+ - Adapt tests/options/OldDecodeRawEvent.py.
+
 ! 2014-04-03 - Rob Lambert
  - Adapt test for removal of VPLite clusters
 
