@@ -81,8 +81,8 @@ def RecoUpgradeTracking(exclude=[]):
         veloSeq = GaudiSequencer("TrVeloSeq")
         GaudiSequencer("RecoTrSeq").Members += [ veloSeq ]
         if "VP" in subDets:
-            from Configurables import PrPixelTracking
-            veloSeq.Members += [ PrPixelTracking() ]
+            from Configurables import PrPixelTracking, PrPixelStoreClusters
+            veloSeq.Members += [ PrPixelTracking(), PrPixelStoreClusters() ]
 
 
     if "Forward" in trackTypes:

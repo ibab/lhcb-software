@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-04-05 - Heinrich Schindler
+ - Add PrPixelStoreClusters to TrVeloSeq
+ - Add VPClusterLinker to MCLinksTrSeq 
+
 !========================= TrackSys v9r0 2014-02-19 =========================
 ! 2014-02-17 - Rob Lambert
  - Add dependency of TrackSys on DecodeRawEvent, task #50179
