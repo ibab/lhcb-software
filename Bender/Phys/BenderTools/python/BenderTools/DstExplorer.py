@@ -347,6 +347,7 @@ if '__main__' == __name__ :
         default = ''            
         )
     ##
+    import sys
     options , arguments = parser.parse_args()
 
     print 120*'*'
