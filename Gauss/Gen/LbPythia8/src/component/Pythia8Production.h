@@ -11,6 +11,9 @@
 // from Pythia8
 #include "Pythia.h"
 
+// LbPythia8.
+#include "LbPythia8/LhcbHooks.h"
+
 // Forward declaration
 class IBeamTool ;
 class GaudiRandomForPythia8 ;
@@ -85,6 +88,7 @@ protected:
 
   // Central engine
   Pythia8::Pythia * m_pythia;   // Pythia8 engine
+  Pythia8::LhcbHooks *m_hooks;  // LHCb user hooks
   Pythia8::Event m_event;       // generated event
 
   // Various input channels
