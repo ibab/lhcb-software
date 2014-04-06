@@ -39,8 +39,7 @@ use RichReadout         v2r16   Rich     # Chris Jones
 # Silicon Tracker
 use STDigiAlgorithms    v2r6    ST       # Jeroen van Tilburg
 
-# VeloPix
-use VPAssociators       v2r5    VP       # Marcin Kucharczyk / Paul Szczypka
+# VP
 use VPDigitisation      v1r3    VP       # Marcin Kucharczyk / Paul Szczypka
 
 # Allow the generation of the SAM QMTest
