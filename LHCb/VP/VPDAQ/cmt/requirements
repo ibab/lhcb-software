@@ -1,6 +1,3 @@
-# Created    : 15/01/10
-# Maintainer : Marcin Kucharczyk
-#
 package           VPDAQ
 version           v2r6
 
@@ -13,18 +10,11 @@ include_path none
 # Used packages
 #=====================================================================
 use  LHCbKernel    v*  Kernel
-use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
-use  VeloEvent     v*  Event
-use  VeloDet       v*  Det
 use  GaudiAlg      v*
-use  LinkerEvent   v*  Event
-use  VPDet         v*  Det
-use  GSL           v*  LCG_Interfaces
 use  DAQEvent      v*  Event
 use  DAQKernel     v*  DAQ
 use  DAQUtils      v*  DAQ
-use  SiDAQ         v*  Si
 use  AIDA          v*  LCG_Interfaces -no_auto_imports
 
 # Component library building rule
