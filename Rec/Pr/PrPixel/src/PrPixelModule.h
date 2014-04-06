@@ -25,8 +25,10 @@ public:
   virtual ~PrPixelModule() {}
 
   bool empty() const {return m_empty;}
-  float lastHitX() const {return m_lastHitX;}
-  void setLastHitX(float x) {m_lastHitX = x;}
+  double lastHitX() const {return m_lastHitX;}
+  void setLastHitX(const double x) {m_lastHitX = x;}
+  double firstHitX() const {return m_firstHitX;}
+  void setFirstHitX(const double x) {m_firstHitX = x;}
   unsigned int number() const {return m_number;}
   int previous() const {return m_previous;}
   bool isRight() const {return m_isRight;}
@@ -48,7 +50,8 @@ public:
   }
 
 private:
-  float m_lastHitX;
+  double m_lastHitX;
+  double m_firstHitX;
   /// Module number
   unsigned int m_number;
   // Number of neighbouring same-side module towards smaller z

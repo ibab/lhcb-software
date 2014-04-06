@@ -4,6 +4,10 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-06 - Kurt Rinnert
+ - avoid mixing double and float (this is very expensive!).
+ - cache global x of first hit on a module.
+
 ! 2014-04-05 - Heinrich Schindler
  - Change default value of RunOnRawBanks to True.
 

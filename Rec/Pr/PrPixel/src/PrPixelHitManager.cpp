@@ -679,7 +679,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
   // here!
   for (unsigned int i=0; i<m_nHits; ++i) {
     PrPixelHit *hit = &(m_pool[i]);
-    m_modules[hit->module()]->addHit(hit);
+    PrPixelModule *module = m_modules[hit->module()];  
+    module->addHit(hit);
   }
 }
 
@@ -893,6 +894,7 @@ void PrPixelHitManager::sortByX() {
       if (!((*itm)->empty())) {
         std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
                   PrPixelHit::LowerByX());
+        (*itm)->setFirstHitX((*itm)->hits().front()->x());
         (*itm)->setLastHitX((*itm)->hits().back()->x());
       }
     }

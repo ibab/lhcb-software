@@ -527,10 +527,12 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
   const double tx = (x2 - x1) / (z2 - z1);
   const double ty = (y2 - y1) / (z2 - z1); 
   // Extrapolate to the z-position of the module
-  const double xGuess = x1 + tx * (module->z() - z1) - xTol;
+  const double xGuess = x1 + tx * (module->z() - z1);
 
   // If the first hit is already below this limit we can stop here.
-  if (module->lastHitX() < xGuess) return NULL;
+  if (module->lastHitX() < xGuess-xTol) return NULL;
+  if (module->firstHitX() > xGuess+xTol) return NULL;
+
   // Do a binary search through the hits.
   unsigned int hit_start(0);
   unsigned int step(module->hits().size());
@@ -538,7 +540,7 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
   const PrPixelHits& module_hits(module->hits());
   while (2 < step) { // quick skip of hits that are above the X-limit
     step /= 2;
-    if ((module_hits[hit_start+step])->x() < xGuess) hit_start += step;
+    if ((module_hits[hit_start+step])->x() < xGuess-xTol) hit_start += step;
   }
 
   // Find the hit that matches best.
