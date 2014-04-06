@@ -5,23 +5,19 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiAlg/ISequencerTimerTool.h"
-#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "Event/Track.h"
 #include "TfKernel/TTStationHitManager.h"
+
+#include "TrackInterfaces/ITracksFromTrack.h"
 
 // local
 #include "PatVTTTrack.h"
 #include "PatTTMagnetTool.h"
 #include "PatKernel/PatTTHit.h"
-#include "TrackInterfaces/ITracksFromTrack.h"
-
-#include "vdt/sqrt.h"
 
 static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
+
 
   /** @class PatVeloTTTool PatVeloTTTool.h
    *
@@ -33,94 +29,70 @@ static const InterfaceID IID_PatVeloTTTool ( "PatVeloTTTool", 1, 0 );
    *
    */
 
-class PatVeloTTTool : public GaudiTool,  virtual public ITracksFromTrack,  public IIncidentListener {
+class PatVeloTTTool : public GaudiTool, virtual public ITracksFromTrack {
 public:
-  
-  // Return the interface ID
+
+    // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_PatVeloTTTool; }
 
-  /// Standard constructor
-  PatVeloTTTool( const std::string& type,
-                const std::string& name,
-                const IInterface* parent);
-  
-  virtual ~PatVeloTTTool( ); ///< Destructor
-  
-  StatusCode initialize ( );
-  
+    /// Standard constructor
+    PatVeloTTTool( const std::string& type,
+                   const std::string& name,
+                   const IInterface* parent);
+
+    virtual ~PatVeloTTTool( ); ///< Destructor
+
+    StatusCode initialize ( );
+
+    
   virtual StatusCode tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::Track*>& outtracks );
-  void handle ( const Incident& incident );
-  void simpleFit( PatVTTTrack& vtt);
+   
+    void simpleFit( PatVTTTrack& vtt);
 
-protected:
-  
-  void getCandidates(const LHCb::Track& veloTrack,std::vector<LHCb::Track*>& outtracks );
-  bool findHits();
-  void clustering();
-  void formClusters(bool forward);
-  void prepareOutputTracks(std::vector<LHCb::Track*>& outtracks);
-  void initEvent();
-  bool acceptTrack(const LHCb::Track& track);
+    /// toggle passing of unmatched velo candidates to output
+    void passUnmatched(bool flag=true){m_passUnmatched=flag;}
 
-  
-private:
-  class compX  {
-  public:
-    bool operator() (PatTTHit* first, PatTTHit* second ) {
-      return first->hit()->xAtYEq0() < second->hit()->xAtYEq0() ;
-    }
-  };
+  protected:
 
-  class lowerBoundX  {
+    void simpleFitTracks( std::vector<PatVTTTrack>&);
+    void selectBestTracks( std::vector<PatVTTTrack>& vttTracks);
+    void prepareOutputTracks( std::vector<PatVTTTrack>& vttTracks, std::vector<LHCb::Track*>& outtracks);
+    void localCleanUp(std::vector<PatVTTTrack>&);
+    void getCandidates(const LHCb::Track& veloTrack, std::vector<PatVTTTrack>& vtt);
+    void saveCandidate( PatTTHits& theClusters, PatVTTTrack& candidate);
+
+  private:
+    class compPseudoChi2  {
     public:
-      bool operator() (const PatTTHit* first, const float value ) const {
-        return first->x() < value ;
+      bool operator() (PatVTTTrack* first, PatVTTTrack* second ) {
+        return fabs(first->chi2PerDoF()) < fabs(second->chi2PerDoF()) ;
       }
     };
-  float m_minMomentum;
-  float m_minPT;
-  float m_maxPseudoChi2;
-  float m_yTol;
-  float m_yTolSlope;
-  float m_hitTol;
-  float m_maxXSlope;
-  float m_maxYSlope;
-  float m_centralHoleSize;
-  float m_zMidTT;
-  float m_intraLayerDist;
-  
-  Tf::TTStationHitManager<PatTTHit> *      m_utHitManager;
-  
-  PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
-  bool m_printVariables;
-  
-  std::vector<PatVTTTrack> m_vuttracks;
-  std::vector<PatTTHits> m_hitsLayers;
-  std::vector<PatTTHits> m_allHits;
-  std::vector<PatTTHits> m_allClusters;
-  PatTTHits m_clusterCandidate;
-  std::array<PatTTHits::iterator,8> m_iterators;
-  std::vector<float> m_normFact;
-  std::vector<float> m_invNormFact;
-  bool m_newEvent;
-  std::vector<PatVTTTrack> m_bestCand;
-  bool m_foundCand;
-  float m_xVelo;
-  float m_yVelo;
-  float m_zVelo;
-  float m_txVelo;
-  float m_tyVelo;
-  float m_zKink;
-  float m_bdl;
-  float m_yAtMidTT;
-  float m_distToMomentum;
-  float m_yAt0;
-  bool m_fourLayerSolution;
-  
-  float m_c11,m_c12,m_c13,m_c21,m_c22,m_c23;
-  bool m_passTracks;
-  float m_passHoleSize;
-  
-};
+    double m_maxXSlope;
+    double m_maxYSlope;
+    double m_centralHoleSize;
+    double m_maxXSize;
+    double m_maxYSize;
+    double m_minMomentum;
+    double m_minPT;
+    double m_maxPseudoChi2;
+    int m_maxSolutionsPerTrack;
+    double m_xTol;
+    double m_xTolSlope;
+    double m_yTol;
+    double m_yTolSlope;
+    double m_dxGroupTol;
+    double m_dxGroupFactor;
+    double m_zMidTT;
+
+    Tf::TTStationHitManager<PatTTHit> *      m_ttHitManager;
+
+    PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
+    bool m_debug;
+    bool m_verbose;
+    bool m_passUnmatched;                   ///< flag to toggle passing unmatched velo candidates to output (default=true) 
+    bool m_PrintVariables;
+
+  };
 
 #endif // PATVELOTTTOOL_H

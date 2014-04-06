@@ -1,31 +1,28 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
-#include "PatVeloTTTool.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // local
-#include "PatVeloTT.h"
+#include "PatVeloTTHybrid.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatVeloTT
+// Implementation file for class : PatVeloTTHybrid
 //
 // 2007-05-08 : Mariusz Witek
 //-----------------------------------------------------------------------------
 
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PatVeloTT )
-  
+DECLARE_ALGORITHM_FACTORY( PatVeloTTHybrid )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PatVeloTT::PatVeloTT( const std::string& name,
+PatVeloTTHybrid::PatVeloTTHybrid( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-  , m_veloTTTime(0)
+: GaudiAlgorithm ( name , pSvcLocator ),
+   m_veloTTTime(0)
 {
   if ( "Hlt" == context() ) {
     m_inputTracksName =  "";
@@ -38,46 +35,39 @@ PatVeloTT::PatVeloTT( const std::string& name,
 
   declareProperty("InputTracksName"    , m_inputTracksName);
   declareProperty("OutputTracksName"   , m_outputTracksName);
-  declareProperty("removeUsedTracks"   , m_removeUsedTracks = true); 
+  declareProperty("removeUsedTracks"   , m_removeUsedTracks = false); 
   declareProperty("InputUsedTracksNames"    , m_inputUsedTracksNames);
-  declareProperty("fitTracks"          , m_fitTracks = true);
+  declareProperty("fitTracks"          , m_fitTracks = false);
   declareProperty("Fitter"             , m_fitterName = "TrackMasterFitter" );
-  declareProperty("maxChi2"            , m_maxChi2          = 5.); 
-  declareProperty("TrackSelectorName"  , m_trackSelectorName = "None");
+  declareProperty("maxChi2"            , m_maxChi2          = 1280.); 
   declareProperty( "TimingMeasurement", m_doTiming = false);
-  declareProperty( "AddMomentumEstimate", m_AddMomentumEstimate = false);
+    
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-PatVeloTT::~PatVeloTT() {} 
+PatVeloTTHybrid::~PatVeloTTHybrid() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PatVeloTT::initialize() {
+StatusCode PatVeloTTHybrid::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
-
-  m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTTool", "PatVeloTTTool");
-  
-  m_trackSelector = NULL;
-  if (m_trackSelectorName != "None")
-    m_trackSelector = tool<ITrackSelector>( m_trackSelectorName, this);
+  m_veloTTTool = tool<ITracksFromTrack>("PatVeloTTHybridTool", "PatVeloTTHybridTool");
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
   m_ttHitManager   = tool<Tf::TTStationHitManager <PatTTHit> >("PatTTStationHitManager");
-  
+
   info() << " InputTracksName    = " << m_inputTracksName            << endmsg;
   info() << " OutputTracksName   = " << m_outputTracksName           << endmsg;
 
   if ( m_doTiming) {
     m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
     m_timerTool->increaseIndent();
-    m_veloTTTime = m_timerTool->addTimer( "Internal VeloTT Tracking" );
+    m_veloTTTime = m_timerTool->addTimer( "Internal VeloTTHybrid Tracking" );
     m_timerTool->decreaseIndent();
   }
 
@@ -88,143 +78,79 @@ StatusCode PatVeloTT::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode PatVeloTT::execute() {
+StatusCode PatVeloTTHybrid::execute() {
 
   if ( m_doTiming ) m_timerTool->start( m_veloTTTime );
   
   m_ttHitManager->prepareHits();
 
-
-
   LHCb::Tracks* outputTracks  = new LHCb::Tracks();
   outputTracks->reserve(200);
   put(outputTracks, m_outputTracksName);
 
-
   LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
-
-
-  std::vector<LHCb::Track*> veloTracks;
-
-  // collect tracks pointers in local vector
-  LHCb::Tracks::const_iterator pItr;
-  for(pItr = inputTracks->begin(); inputTracks->end() != pItr; ++pItr){
-    LHCb::Track* veloTr = (*pItr);
-    if (!acceptTrack(*veloTr)) continue;
-    veloTracks.push_back(veloTr);
-  }
-
-  if ( m_removeUsedTracks ) {
-    removeUsedTracks( veloTracks);
+  if( !inputTracks ){
+    warning() << " Input Tracks container: " <<  m_inputTracksName << " is invalid! Skipping" << endmsg;
+    return StatusCode::SUCCESS;
   }
   
-  // reconstruct tracks in TT
-  std::vector<LHCb::Track*>::iterator itv;  
-  std::vector<LHCb::Track*>::iterator itvtmp;  
-
-  std::vector<LHCb::Track*> tmptracks;
-  std::vector<LHCb::Track*> fittracks;
+  std::vector<LHCb::Track*> tmpTracks;
+  tmpTracks.reserve(5);
   
-  for(itv = veloTracks.begin(); itv != veloTracks.end(); ++itv){
-
-    LHCb::Track* velotr = *itv;
- 
-    m_veloTTTool->tracksFromTrack(*velotr, tmptracks).ignore();
-
-    for (itvtmp = tmptracks.begin(); itvtmp != tmptracks.end(); ++itvtmp ) {
-
-      LHCb::Track* ptr = (*itvtmp);
-      StatusCode sc = StatusCode::SUCCESS;   
-      if (m_fitTracks) {  
-        sc = m_tracksFitter -> fit( *ptr );   
-      }
-      
-      if ( sc == StatusCode::SUCCESS ) {
-        fittracks.push_back(ptr);
-      }
-      else
-	delete ptr;
-
-    }
-
-    // choose best track
-    LHCb::Track* bestTrack = 0;
+  for(const LHCb::Track* veloTr: *inputTracks){
     
-    std::vector<LHCb::Track*>::iterator tracks;
-    if(fittracks.size() > 0) {
-      std::sort(fittracks.begin(),fittracks.end(),compChi2());
-      bestTrack = *(fittracks.begin());
-      tracks = fittracks.begin();
-       
-      if(bestTrack) {
-        if(bestTrack->chi2PerDoF() < m_maxChi2) {
-          
-          if(m_AddMomentumEstimate){
-            //qop estimate
-            //Get qop from VeloTT track
-            const LHCb::State& state_VELOTT = *(bestTrack->stateAt(LHCb::State::EndVelo));
-            double qop = state_VELOTT.qOverP();
-            
-            //Find track state for Velo track - will write out qop to it
-            LHCb::Track* veloTr = new LHCb::Track;
-            SmartRefVector<LHCb::Track>& ancestor = bestTrack->ancestors();
-            
-            for( SmartRefVector<LHCb::Track>::iterator trIt = ancestor.begin();
-                 ancestor.end() != trIt; trIt++) {
-              veloTr = *trIt;
-            }
-            
-            // Add the qop estimate to all Velo track states
-            LHCb::Track::StateContainer::const_iterator istate;
-            for( istate = veloTr->states().begin();istate != veloTr->states().end(); ++istate){
-              (const_cast<LHCb::State*>(*istate))->setQOverP( qop ) ;
-            }
-          }
-          
-          outputTracks->insert(bestTrack);
-          tracks++;
+    m_veloTTTool->tracksFromTrack(*veloTr, tmpTracks).ignore();
+    
+    LHCb::Track* bestTrack = nullptr;
+    
+    float maxChi2 = m_maxChi2;
+
+    for ( LHCb::Track* fitTrack : tmpTracks ) {
+
+      if (m_fitTracks) {  
+        StatusCode sc = m_tracksFitter -> fit( *fitTrack );
+        std::cout << "chi2 after KF " << fitTrack->chi2PerDoF() << std::endl;
+
+        if( !sc ){
+          warning() << "Could not fit track" << endmsg;
+          delete fitTrack;
+          continue;
         }
+        
+      }
+      if( fitTrack->chi2PerDoF() < maxChi2){
+        maxChi2 = fitTrack->chi2PerDoF();
+        bestTrack = fitTrack;
       }
       
-      for (; tracks != fittracks.end(); tracks++){
-        delete (*tracks);
-      }
     }
-    tmptracks.clear();
-    fittracks.clear();
+
+    tmpTracks.clear();
+    
+    if( bestTrack != nullptr){
+      outputTracks->insert(bestTrack);
+    }
   }
-
+  
   if ( m_doTiming ) m_timerTool->stop( m_veloTTTime );
-
+  
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode PatVeloTT::finalize() {
-
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
+StatusCode PatVeloTTHybrid::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-bool PatVeloTT::acceptTrack(const LHCb::Track& track) 
-{
-  bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
-  ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
-  if (m_trackSelector) 
-    ok = ok && (m_trackSelector->accept(track));
-  
-  if(msgLevel(MSG::DEBUG)) debug() << " accept track " << ok << endmsg;
-  return ok;
-}
+
 
 //=========================================================================
 // Remove Velo tracks that has been used by other algorithms
 //=========================================================================
-void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
+void PatVeloTTHybrid::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
 
   // collect tracks from indicated containers
 
@@ -238,7 +164,6 @@ void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
     LHCb::Tracks* stracks = get<LHCb::Tracks>(*itTrName);
     if(!stracks) {
       Warning("Tracks not found at given location: ",StatusCode::SUCCESS).ignore(); 
-      if(msgLevel(MSG::DEBUG)) debug() <<"Tracks not found at location: " << *itTrName << endmsg; 
       continue;
     }
 
@@ -249,8 +174,6 @@ void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
       usedTracks.push_back(str);
     }
   }
-
-  if(msgLevel(MSG::DEBUG)) debug() << " # used tracks to check: " << usedTracks.size() << endmsg;
 
   if( 0 == usedTracks.size() ) return; 
 
@@ -271,7 +194,6 @@ void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
     }
     if(!found)  tmpTracks.push_back(velocand);  
   }
-  if(msgLevel(MSG::DEBUG)) debug() << " # used tracks found: " << veloTracks.size() - tmpTracks.size() << endmsg;
 
   veloTracks = tmpTracks;
 
@@ -281,7 +203,7 @@ void PatVeloTT::removeUsedTracks( std::vector<LHCb::Track*>& veloTracks){
 //=========================================================================
 // Check if two tracks have same VElo hits
 //=========================================================================
-bool PatVeloTT::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused) 
+bool PatVeloTTHybrid::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused) 
 {
   
 
@@ -295,17 +217,21 @@ bool PatVeloTT::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused)
   int nvelo1 = 0;
   int nvelo2 = 0;
   for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) || ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) nvelo1++;
+    if(ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
+       || ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) nvelo1++;
   }
   for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-    if(ids2[i2].checkDetectorType(LHCb::LHCbID::Velo)|| ids2[i2].checkDetectorType(LHCb::LHCbID::VP) ) nvelo2++;
+    if(ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
+       || ids2[i2].checkDetectorType(LHCb::LHCbID::VP) ) nvelo2++;
   }
 
   // Calculate the number of common LHCbIDs
   for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    if(!ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) && !ids1[i1].checkDetectorType(LHCb::LHCbID::VP)) continue;
+    if(!ids1[i1].checkDetectorType(LHCb::LHCbID::Velo) 
+       && !ids1[i1].checkDetectorType(LHCb::LHCbID::VP) ) continue;
     for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-      if(!ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) && !ids2[i2].checkDetectorType(LHCb::LHCbID::VP)) continue;
+      if(!ids2[i2].checkDetectorType(LHCb::LHCbID::Velo) 
+         && !ids2[i2].checkDetectorType(LHCb::LHCbID::VP)) continue;
 
       if ( ids1[i1].channelID() == ids2[i2].channelID()  ) {
         ++nCommon;
@@ -315,8 +241,8 @@ bool PatVeloTT::matchingTracks( LHCb::Track* vttcand, LHCb::Track* trackused)
     }
   }  
 
-  double rat1 = 0.;
-  double rat2 = 0.;
+  float rat1 = 0.;
+  float rat2 = 0.;
   if(nvelo1) rat1 = 1.0*nCommon/nvelo1;
   if(nvelo2) rat2 = 1.0*nCommon/nvelo2;
 

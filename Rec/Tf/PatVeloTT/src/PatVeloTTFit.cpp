@@ -62,12 +62,8 @@ StatusCode PatVeloTTFit::finalize()
 StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
 {
   LHCb::Track* veloTr = &track;
-
-  const LHCb::State& state = veloTr->hasStateAt(LHCb::State::LastMeasurement) ?
-    *(veloTr->stateAt(LHCb::State::LastMeasurement)) :
-    (veloTr->closestState(LHCb::State::EndVelo)) ;
-
-  float slY = state.y();
+  double slY = veloTr->stateAt(LHCb::State::EndVelo)->ty();
+  double slX = veloTr->stateAt(LHCb::State::EndVelo)->tx();
 
   // The candidate based on the Velo track
   PatVTTTrack cand( veloTr );
@@ -94,48 +90,52 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
       if(stSector==0) {
         return Error( "No sector found for TT hit!" );
       }
-      
+
       LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
-        m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
+	m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
 
       if( iclus != m_stLiteContainer->end() ) {
-        Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
-        PatTTHit* pattthit = new PatTTHit( *sthit );
-        sthits.push_back( sthit ) ;
-        hits.push_back( pattthit ) ; 
-        
-        float xOnTrack = cand.xAtZ( pattthit->z() );
-        float yAt0 = cand.yAtZ( 0 );
-        
-        float dyDz = cand.slopeY();
-        
-        updateTTHitForTrack(pattthit,yAt0, dyDz);
-        float dx = pattthit->x() - xOnTrack;
-        
-        // Scale to the reference reg	
-        dx = dx * normFact[pattthit->planeCode()];
-        cand.storeHit( pattthit );
-        
+	Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
+	PatTTHit* pattthit = new PatTTHit( *sthit );
+	sthits.push_back( sthit ) ;
+	hits.push_back( pattthit ) ; 
+	
+	double xOnTrack = cand.xAtZ( pattthit->z() );
+	//double yOnTrack = cand.yAtZ( pattthit->z() );
+	double yAt0 = cand.yAtZ( 0 );
+	
+	double dyDz = cand.slopeY();
+	
+	updateTTHitForTrack(pattthit,yAt0, dyDz);
+	double dx = pattthit->x() - xOnTrack;
+	
+	// Scale to the reference reg	
+	dx = dx * normFact[pattthit->planeCode()];
+	cand.storeHit( dx, pattthit );
+	
       } else {
         return Error( "Cannot find lite cluster!" );
       }
     }
   }
-  
+
+  cand.storeClusters();
+
   m_patVTTTool->simpleFit(cand);
   
-  float qOverP = cand.qOverP();
+  double qOverP = cand.qOverP();
   
-  float zMidTT    = m_PatTTMagnetTool->zMidTT();
- 
+  double zMidTT    = m_PatTTMagnetTool->zMidTT();
+  double zMidField = m_PatTTMagnetTool->zMidField();
+
   LHCb::State temp;
   temp.setLocation( LHCb::State::AtTT );
-  temp.setState( cand.xTT(),
-                 cand.yAtZ( zMidTT ),
-                 zMidTT,
-                 cand.xSlopeTT(),
-                 slY,
-                 qOverP);
+  temp.setState( cand.xAtZ( zMidTT ) + cand.Dx(),
+		 cand.yAtZ( zMidTT ),
+		 zMidTT,
+		 slX + cand.Dx()/(zMidTT - zMidField),
+		 slY,
+		 qOverP);
 
   track.addToStates( temp );
 
