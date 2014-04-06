@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-04-06 - Sebastian Neubert
+ - switched VeloTT to VeloTTHybrid
+
 ! 2014-04-03 - Sebastian Neubert
  - added options for new VeloTT version and PatForward that goes with that
    (using charge and momentum estimate) 

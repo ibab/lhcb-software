@@ -1,7 +1,7 @@
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
                             PatForwardTool,
-                            PatVeloTTTool,
+                            PatVeloTTHybridTool,
                             MatchVeloMuon,
                             HltTrackFit )
                             
@@ -45,9 +45,9 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                      , MinMomentum = minP ).createConfigurable( parent )
 
 def ConfiguredpET(parent, name = None, minP = _minP, minPT = _minPt) :
-    if name == None: name = PatVeloTTTool.__name__
+    if name == None: name = PatVeloTTHybridTool.__name__
     from HltTracking.HltReco import CommonpETOptions 
-    return Hlt1Tool( PatVeloTTTool
+    return Hlt1Tool( PatVeloTTHybridTool
                      , name
                      , minMomentum = minP
                      , minPT = minPT
