@@ -21,6 +21,8 @@ gaudi_depends_on_subdirs(Associators/Associators
                          ST/STMonitors
                          ST/STTools
                          Si/SiTools
+                         VP/VPAlgorithms
+                         VP/VPAssociators
                          VP/VPTools
                          Velo/VeloAlgorithms
                          Velo/VeloAssociators
