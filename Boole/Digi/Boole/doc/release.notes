@@ -3,6 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Configuration changes
+  . Modified VP sequences: remove VPClustering from DigiSeq, replace
+    PrepareVPRawBank by VPSuperPixelBankEncoder, remove VPClusterLinker from
+    LinkSeq
+
+- Changes to references to follow changes in underlying packages
+  . Update default values of FT digitisation parameters
+  . DigiConf.py: replace VPCluster linker tables by VPDigit linker tables
+
 </PRE><H1><A NAME=v27r2>2014-03-21 Boole v27r2</A></H1><PRE>
 
 - Configuration changes
