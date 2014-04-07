@@ -32,21 +32,28 @@ void PrPixelTrack::set(PrPixelHit* h1, PrPixelHit* h2) {
   m_hits.push_back(h1);
 
   const double x = h1->x();
-  const double y = h1->y();
   const double z = h1->z();
-  double w = h1->wx();
-  m_s0  = w;
-  m_sx  = w * x;
-  m_sz  = w * z;
-  m_sxz = w * x * z;
-  m_sz2 = w * z * z;
 
-  w = h1->wy();
-  m_u0  = w;
-  m_uy  = w * y;
-  m_uz  = w * z;
-  m_uyz = w * y * z;
-  m_uz2 = w * z * z;
+  const double wx = h1->wx();
+  const double wx_t_x = wx * x;
+  m_s0  = wx;
+  m_sx  = wx_t_x;
+  const double wx_t_z = wx * z;
+  m_sz  = wx_t_z;
+
+  const double y = h1->y();
+  const double wy = h1->wy();
+  const double wy_t_y = wy * y;
+  m_u0  = wy;
+  m_uy  = wy_t_y;
+  const double wy_t_z = wy * z;
+  m_uz  = wy_t_z;
+
+  m_sxz = wx_t_x * z;
+  m_sz2 = wx_t_z * z;
+
+  m_uyz = wy_t_y * z;
+  m_uz2 = wy_t_z * z;
 
   addHit(h2);
 
@@ -60,21 +67,28 @@ void PrPixelTrack::addHit(PrPixelHit* hit) {
   m_hits.push_back(hit);
 
   const double x = hit->x();
-  const double y = hit->y();
   const double z = hit->z();
-  double w = hit->wx();
-  m_s0  += w;
-  m_sx  += w * x;
-  m_sz  += w * z;
-  m_sxz += w * x * z;
-  m_sz2 += w * z * z;
 
-  w = hit->wy();
-  m_u0  += w;
-  m_uy  += w * y;
-  m_uz  += w * z;
-  m_uyz += w * y * z;
-  m_uz2 += w * z * z;
+  const double wx = hit->wx();
+  const double wx_t_x = wx * x;
+  m_s0  += wx;
+  m_sx  += wx_t_x;
+  const double wx_t_z = wx * z;
+  m_sz  += wx_t_z;
+
+  const double y = hit->y();
+  const double wy = hit->wy();
+  const double wy_t_y = wy * y;
+  m_u0  += wy;
+  m_uy  += wy_t_y;
+  const double wy_t_z = wy * z;
+  m_uz  += wy_t_z;
+
+  m_sxz += wx_t_x * z;
+  m_sz2 += wx_t_z * z;
+
+  m_uyz += wy_t_y * z;
+  m_uz2 += wy_t_z * z;
 
   if (m_hits.size() > 1) solve();
 
@@ -88,22 +102,30 @@ void PrPixelTrack::removeHit(PrPixelHit* hit) {
   PrPixelHits::iterator it = std::find(m_hits.begin(), m_hits.end(), hit);
   if (it == m_hits.end()) return;
   m_hits.erase(it);
-  const double x = hit->x();
-  const double y = hit->y();
-  const double z = hit->z();
-  double w = hit->wx();
-  m_s0  -= w;
-  m_sx  -= w * x;
-  m_sz  -= w * z;
-  m_sxz -= w * x * z;
-  m_sz2 -= w * z * z;
 
-  w = hit->wy();
-  m_u0  -= w;
-  m_uy  -= w * y;
-  m_uz  -= w * z;
-  m_uyz -= w * y * z;
-  m_uz2 -= w * z * z;
+  const double x = hit->x();
+  const double z = hit->z();
+
+  const double wx = hit->wx();
+  const double wx_t_x = wx * x;
+  m_s0  -= wx;
+  m_sx  -= wx_t_x;
+  const double wx_t_z = wx * z;
+  m_sz  -= wx_t_z;
+
+  const double y = hit->y();
+  const double wy = hit->wy();
+  const double wy_t_y = wy * y;
+  m_u0  -= wy;
+  m_uy  -= wy_t_y;
+  const double wy_t_z = wy * z;
+  m_uz  -= wy_t_z;
+
+  m_sxz -= wx_t_x * z;
+  m_sz2 -= wx_t_z * z;
+
+  m_uyz -= wy_t_y * z;
+  m_uz2 -= wy_t_z * z;
 
   if (m_hits.size() > 1) solve();
 
@@ -114,15 +136,15 @@ void PrPixelTrack::removeHit(PrPixelHit* hit) {
 //=========================================================================
 void PrPixelTrack::solve() {
 
-  double den = (m_sz2 * m_s0 - m_sz * m_sz);
-  if (fabs(den) < 10e-10) den = 1.;
-  m_tx = (m_sxz * m_s0  - m_sx  * m_sz) / den;
-  m_x0 = (m_sx  * m_sz2 - m_sxz * m_sz) / den;
+  double dens = 1.0/(m_sz2 * m_s0 - m_sz * m_sz);
+  if (fabs(dens) > 10e+10) dens = 1.0;
+  m_tx = (m_sxz * m_s0  - m_sx  * m_sz) * dens;
+  m_x0 = (m_sx  * m_sz2 - m_sxz * m_sz) * dens;
   
-  den = (m_uz2 * m_u0 - m_uz * m_uz);
-  if (fabs(den) < 10e-10) den = 1.;
-  m_ty = (m_uyz * m_u0  - m_uy  * m_uz) / den;
-  m_y0 = (m_uy  * m_uz2 - m_uyz * m_uz) / den;
+  double denu = 1.0/(m_uz2 * m_u0 - m_uz * m_uz);
+  if (fabs(denu) > 10e+10) denu = 1.0;
+  m_ty = (m_uyz * m_u0  - m_uy  * m_uz) * denu;
+  m_y0 = (m_uy  * m_uz2 - m_uyz * m_uz) * denu;
 
 }
 
@@ -133,22 +155,22 @@ Gaudi::TrackSymMatrix PrPixelTrack::covariance(double z) {
 
   Gaudi::TrackSymMatrix cov;
   //== Ad hoc matrix inversion, as it is almost diagonal!
-  double m00 = m_s0;
-  double m11 = m_u0;
-  double m20 = m_sz - z * m_s0;
-  double m31 = m_uz - z * m_u0;
-  double m22 = m_sz2 - 2 * z * m_sz + z * z * m_s0;
-  double m33 = m_uz2 - 2 * z * m_uz + z * z * m_u0;
-  double den20 = m22 * m00 - m20 * m20;
-  double den31 = m33 * m11 - m31 * m31;
+  const double m00 = m_s0;
+  const double m11 = m_u0;
+  const double m20 = m_sz - z * m_s0;
+  const double m31 = m_uz - z * m_u0;
+  const double m22 = m_sz2 - 2 * z * m_sz + z * z * m_s0;
+  const double m33 = m_uz2 - 2 * z * m_uz + z * z * m_u0;
+  const double den20 = 1.0/(m22 * m00 - m20 * m20);
+  const double den31 = 1.0/(m33 * m11 - m31 * m31);
   
-  cov(0,0) =  m22/den20;
-  cov(2,0) = -m20/den20;
-  cov(2,2) =  m00/den20;
+  cov(0,0) =  m22*den20;
+  cov(2,0) = -m20*den20;
+  cov(2,2) =  m00*den20;
 
-  cov(1,1) =  m33/den31;
-  cov(3,1) = -m31/den31;
-  cov(3,3) =  m11/den31;
+  cov(1,1) =  m33*den31;
+  cov(3,1) = -m31*den31;
+  cov(3,3) =  m11*den31;
 
   cov(4,4) = 1.;
   return cov;
@@ -172,17 +194,21 @@ namespace
 			double zhit, double xhit, double whit )
   {
     // compute the prediction
-    double dz = zhit - z ;
-    double predx = x + dz * tx ;
-    double predcovXX  = covXX + 2* dz * covXTx + dz * dz * covTxTx ;
-    double predcovXTx = covXTx + dz * covTxTx ;
-    double predcovTxTx = covTxTx ;
+    const double dz = zhit - z ;
+    const double predx = x + dz * tx;
+
+    const double dz_t_covTxTx = dz * covTxTx;
+    const double predcovXTx = covXTx + dz_t_covTxTx ;
+    const double dx_t_covXTx = dz * covXTx;
+
+    const double predcovXX  = covXX + 2* dx_t_covXTx + dz * dz_t_covTxTx ;
+    const double predcovTxTx = covTxTx ;
     // compute the gain matrix
-    double R = 1/whit + predcovXX ;
-    double Kx  = predcovXX  / R ;
-    double KTx = predcovXTx / R ;
+    const double R = 1.0/(1.0/whit + predcovXX) ;
+    const double Kx  = predcovXX  * R ;
+    const double KTx = predcovXTx * R ;
     // update the state vector
-    double r = xhit - predx ;
+    const double r = xhit - predx ;
     x  = predx + Kx  * r ;
     tx = tx    + KTx * r ;
     // update the covariance matrix. we can write it in many ways ...
@@ -190,7 +216,7 @@ namespace
     covXTx  /*= predcovXTx - predcovXX * predcovXTx / R */ = (1 - Kx) * predcovXTx ;
     covTxTx = predcovTxTx - KTx * predcovXTx ;
     // return the chi2
-    return r*r/R ;
+    return r*r*R ;
   }
 }
 

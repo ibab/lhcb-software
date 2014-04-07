@@ -4,6 +4,13 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-07 - Kurt Rinnert
+ - change default to unlimited cluster size when running on Super Pixel raw
+   banks. This is to avoid changes in results when we switch over. Cuts will
+   help, but this needs a detailed study before deployment.
+ - help the compiler with out of order execution and constness in various places.
+ - avoid calling into sqrt() in hot PrPixelTracking::bestHit() method. 
+
 ! 2014-04-06 - Kurt Rinnert
  - avoid mixing double and float (this is very expensive!).
  - cache global x of first hit on a module.

@@ -60,7 +60,7 @@ DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
 
       // Parameters for 3D hit building
       declareProperty("RunOnRawBanks",m_runOnRawBanks = true);
-      declareProperty("MaxClusterSize",m_maxClusterSize=4);
+      declareProperty("MaxClusterSize",m_maxClusterSize=PrPixel::SENSOR_PIXELS);
       declareProperty("Trigger",m_trigger=false);
     }
 
@@ -95,6 +95,10 @@ StatusCode PrPixelTracking::initialize() {
     m_timeFinal = m_timerTool->addTimer("Store tracks");
     m_timerTool->decreaseIndent();
   }
+
+  // use the square of the scatter to avoid calls to sqrt()
+  m_maxScatter *= m_maxScatter;
+
 #ifdef DEBUG_HISTO
   setHistoTopDir("VP/");
 #endif
@@ -519,13 +523,16 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
     const PrPixelHit* h1, const PrPixelHit* h2) {
   if (module->empty()) return NULL;
   const double x1 = h1->x();
-  const double y1 = h1->y();
-  const double z1 = h1->z();
   const double x2 = h2->x();
+  const double y1 = h1->y();
   const double y2 = h2->y();
+  const double z1 = h1->z();
   const double z2 = h2->z();
-  const double tx = (x2 - x1) / (z2 - z1);
-  const double ty = (y2 - y1) / (z2 - z1); 
+  const double td = 1.0/(z2 - z1);
+  const double txn = (x2 - x1);
+  const double tx = txn*td;
+  const double tyn = (y2 - y1); 
+  const double ty = tyn*td; 
   // Extrapolate to the z-position of the module
   const double xGuess = x1 + tx * (module->z() - z1);
 
@@ -550,9 +557,9 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
   PrPixelHit* hit(NULL);
   for (unsigned int i=hit_start; i<module_nhits; ++i) {
     hit = module_hits[i];
+    const double hit_z = hit->z();
     const double hit_x = hit->x();
     const double hit_y = hit->y();
-    const double hit_z = hit->z();
     const double dz = hit_z - z1; 
     const double xPred = x1 + tx * dz;
     const double yPred = y1 + ty * dz;
@@ -563,18 +570,20 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
     if (hit_x + xTol < xPred) continue;
     // If x-position is below prediction - tolerance, stop the search.
     if (hit_x - xTol > xPred) break;
-    const double dx = xPred - hit_x;
     const double dy = yPred - hit_y;
     // Skip hits outside the y-position tolerance.
     if (fabs(dy) > xTol) continue;
-    const double scatter = sqrt(dx * dx + dy * dy) / fabs(hit_z - z2);
+    const double scatterDenom = 1.0/(hit_z - z2);
+    const double dx = xPred - hit_x;
+    const double scatterNum = (dx * dx) + (dy * dy);
+    const double scatter = scatterNum*scatterDenom*scatterDenom;
     if (scatter < bestScatter) { 
       bestHit = hit; 
       bestScatter = scatter;
     }
     if (scatter < maxScatter) ++nFound;
 #ifdef DEBUG_HISTO
-    plot(scatter, "HitScatter", "hit scatter [rad]", 0.0, 0.5, 500);
+    plot(sqrt(scatter), "HitScatter", "hit scatter [rad]", 0.0, 0.5, 500);
     plot2D(dx, dy, "Hit_dXdY", "Difference between hit and prediction in x and y [mm]", -1, 1, -1, 1, 500,500);
 #endif
   }
@@ -583,7 +592,7 @@ PrPixelHit* PrPixelTracking::bestHit(PrPixelModule* module, double xTol, double 
 #endif
   if (bestHit) {
 #ifdef DEBUG_HISTO
-    plot(bestScatter, "HitBestScatter", "best hit scatter [rad]",
+    plot(sqrt(bestScatter), "HitBestScatter", "best hit scatter [rad]",
         0.0, 0.1, 100);
 #endif
     if (m_debug) printHitOnTrack(bestHit, false);

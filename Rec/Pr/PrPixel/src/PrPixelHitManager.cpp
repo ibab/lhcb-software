@@ -815,8 +815,6 @@ void PrPixelHitManager::storeTriggerClusters() {
   // entry in the list which is the centroid pixel channel ID. It is possible
   // that this refers to a pixel that has not fired. Hence reliable MC matching
   // is not possible in trigger configuration.
-  // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
-  // false and the code still uses the old event model.
   std::vector<LHCb::VPChannelID> pixels(1);
   for (unsigned int ih=0; ih < m_nHits; ++ih) {
     const PrPixelHit& hit = m_pool[ih];
@@ -857,8 +855,6 @@ void PrPixelHitManager::storeOfflineClusters() {
   // we have the full information about contributing pixels. In case of old MC
   // this was not encoded in the raw bank, and we don't have this information.
   // However, MC matching will work consistently in both cases.
-  // TODO: The ToT is always faked to 1, the (obsolete?) 'isLong' flag is always 
-  // false and the code still uses the old event model.
   for (unsigned int ic=0; ic < m_nClusters; ++ic) {
     const PrPixelHit& hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
