@@ -1,3 +1,9 @@
+2014-04-07  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-426: Added Gaudidiff code from R.Lambert
+ 	* scripts/diff_template.py
+	* scripts/gaudidiff.py
+
 2014-03-28  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-449: Fixed to package only relevant links and files. Added protection.
