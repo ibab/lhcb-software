@@ -732,9 +732,15 @@ class HltConf(LHCbConfigurableUser):
             self.setProp("EnableHltTrackReports", False)
             Warning("Disabling HltTrackReports Writers")
 
+        # List of track types that should be persisted into the TrackReports in HLT1
+        # Map TrackLocations to SourceIDs for the TrackReports 
+        # link source IDs, WriterName and TES locations:
+        trackingSources = [ (1,"VeloWriter","Hlt/Track/Velo"),(3,"ForwardWriter","Hlt1/Track/PestiForward") ] 
+        # this will pickup the forward tracks 
+        # with VeloTT momentum estimate
+            
             
         # Add the TrackReports
-        from HltTrackNames import trackingSources 
         if self.getProp("EnableHltTrackReports") :
             # We will have one Writer per track stage
             # add and configure the Writers                                                       

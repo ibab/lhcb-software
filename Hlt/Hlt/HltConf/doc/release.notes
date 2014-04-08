@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-04-08 - Sebastian Neubert
+ - Moved trackingSource into HltConf
 
 ! 2014-04-01 - Sebastian Neubert
  - Added list of TrackReports writers to write several track locations
