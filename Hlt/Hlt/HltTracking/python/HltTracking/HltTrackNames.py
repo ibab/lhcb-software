@@ -84,13 +84,7 @@ Hlt2TrackingRecognizedFitTypesForRichID = [	HltBiDirectionalKalmanFitSuffix
 					  ]	
 #
 
-# List of track types that should be persisted into the TrackReports in HLT1
-# Map TrackLocations to SourceIDs for the TrackReports 
-# link source IDs, WriterName and TES locations:
-trackingSources = [ (1,"VeloWriter",_baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)),
-                    (3,"ForwardWriter",_baseTrackLocation(HltSharedTracksPrefix,Hlt1ForwardPestimateTracksName)), ] 
-                     # this will pickup the forward tracks 
-                     # with VeloTT momentum estimate
+
 
 
 ########################################################################
@@ -187,4 +181,5 @@ __all__ = (
 		#
 		_baseTrackLocation,
 		_baseProtoPLocation
+
 	  ) 

@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-4-08 - Sebastian Neubert
+ - removed trackingSources
+
 ! 2014-04-06 - Sebastian Neubert
  - switched VeloTT to VeloTTHybrid
 
