@@ -32,7 +32,7 @@ using namespace LHCb;
 //=============================================================================
 HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_callcount(0)
 {
 
   declareProperty("InputHltTrackLocation",
@@ -57,7 +57,7 @@ StatusCode HltTrackReportsWriter::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-
+  // We need space for the bitshift to identify split up banks
   if( m_sourceID > kSourceID_Max ){
     m_sourceID = m_sourceID & kSourceID_Max;
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
@@ -73,6 +73,7 @@ StatusCode HltTrackReportsWriter::initialize() {
 StatusCode HltTrackReportsWriter::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  ++m_callcount;
 
   // get input
   if( !exist<LHCb::Tracks>(m_inputHltTrackLocation) ){    
@@ -85,11 +86,13 @@ StatusCode HltTrackReportsWriter::execute() {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
   }  
   RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
-
+  
+  
 
   if( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "----------------------------------------\n";
+    verbose() << " Written event " << m_callcount << endmsg;
     verbose() << " Input tracks: \n";  
     // collect tracks pointers in local vector
     LHCb::Tracks::const_iterator pItr;
@@ -115,9 +118,33 @@ StatusCode HltTrackReportsWriter::execute() {
   // calling core encoder function see src/core/HltTrackingCoder.cxx
   encodeTracks(inputTracks,bankBody);
 
-  // shift bits in sourceID for the same convention as in HltSelReports
-  rawEvent->addBank(  int(m_sourceID), RawBank::HltTrackReports, kVersionNumber, bankBody );
+  // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.
+  // Save in chunks if exceed this size.
+  int nBank = (bankBody.size()-1)/16300 + 1;
+  if( nBank > kSourceID_MinorMask ){
+    return Error("HltTrackReports too long to save", StatusCode::SUCCESS, 50 );    
+  }
+  for(int iBank=0; iBank < nBank; ++iBank ){
+    int ioff=iBank*16300;
+    int isize=bankBody.size()-ioff;
+    if( isize > 16300 )isize=16300;	
+    std::vector< unsigned int > bankBodyPiece( &(bankBody[ioff]), 
+					       &(bankBody[ioff+isize]) );
+    int sourceID = iBank | ( m_sourceID << kSourceID_BitShift );
+    rawEvent->addBank(  sourceID, RawBank::HltTrackReports, kVersionNumber, bankBodyPiece );
+  }
+  if( nBank>1 ){
+    std::ostringstream mess;
+    mess << "HltTrackReports is huge. Saved in " << nBank << " separate RawBanks ";    
+    Warning( mess.str(), StatusCode::SUCCESS, 10 );
+  }
+ 
   
+ //if(m_callcount==251) {
+ //  std::cout << "RAWBANK:" << std::endl;
+ //  std::copy(bankBody.begin(), bankBody.end(), std::ostream_iterator<unsigned int>(std::cout, "\n"));  
+ //  std::cout.flush();
+ // }
 
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " Output:  ";  

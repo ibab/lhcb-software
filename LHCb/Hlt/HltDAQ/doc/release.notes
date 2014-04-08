@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2014-04-08 - Sebastian Neubert
+ - HltTrackReports updates:
+ - Added check against reading over the end of the bank
+ - Added ability to split big banks into several pieces 
+   using major and minor source IDs
 
 ! 2014-04-02 - Sebastian Neubert
  - Switched SourceID to an int

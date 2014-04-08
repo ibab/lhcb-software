@@ -36,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY( HltTrackReportsDecoder )
 //=============================================================================
 HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-: Decoder::AlgBase ( name , pSvcLocator )
+  : Decoder::AlgBase ( name , pSvcLocator ) , m_trackcount(0),m_callcount(0)
 {
    //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
@@ -78,7 +78,7 @@ StatusCode HltTrackReportsDecoder::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltTrackReportsDecoder::execute() {
-
+  ++m_callcount;
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
 
@@ -120,25 +120,68 @@ StatusCode HltTrackReportsDecoder::execute() {
     return Warning( " No HltTrackReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
   }
 
-  // Check version number to make sure we are on the same page here (this should go to the decoder function?)
-   const RawBank* hltTrackReportsRawBank0 = *(hltTrackReportsRawBanks.begin());
-   if( hltTrackReportsRawBank0->version() > kVersionNumber ){
-     Warning( " HltTrackReportsReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
-   }
+  // collect possibly split up banks
+  unsigned int bankCounterMax = 0;
+  unsigned int bankSize =0; // this will be the total size of the bank
+  // store the pieces of the bank with the correct major sourceID in an ordered list:
+  std::vector<const RawBank*> orderedBanks(hltTrackReportsRawBanks.size(),(const RawBank*)0);
+  for( RawBank* trbank : hltTrackReportsRawBanks ){    
+    RawBank* bank = trbank;
+
+    int sourceID = bank->sourceID() >> HltTrackReportsWriter::kSourceID_BitShift;
+    if( m_sourceID != sourceID )continue; // Not our major SourceID a.k.a different tracks
+
+    if( bank->magic() != RawBank::MagicPattern ){
+      Error(" HltTrackReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+      continue;
+    }
+
+    // which piece of the bank is that?
+    unsigned int bankCounter = bank->sourceID() & HltTrackReportsWriter::kSourceID_MinorMask;
+    if( bankCounter < hltTrackReportsRawBanks.size() ){
+      orderedBanks[bankCounter]= bank;
+      if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
+    } else {
+      Error( " Illegal Source ID HltTrackReports bank skipped ", StatusCode::SUCCESS, 20 );
+    }
+    bankSize += bank->size();
+  }
+  if( !bankSize ){
+    return Warning( " No HltTrackReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  }    
+  bankSize = (bankSize+3)/4; // from bytes to words
+  // need to copy it to local array 
+  unsigned int* pBank = new unsigned int[bankSize];
+  unsigned int* completeBank=pBank;
+  ++bankCounterMax; // increase by one to get entries from max index
+  for( unsigned int iBank=0; iBank<bankCounterMax; ++iBank){
+    const RawBank* bank = orderedBanks[iBank];
+    if( bank == NULL ){
+      delete pBank;
+      return Error("Missing HltTrackReports RawBank part - quiting.", StatusCode::SUCCESS, 100 );
+    }
+    unsigned int bankSize1 =  (bank->size()+3)/4; // from bytes to words
+    for(unsigned int i=0; i!=bankSize1; ++i){
+      (*pBank) = bank->data()[i]; ++pBank;
+    }
+  }
 
    // -------------------------------------------------------
    // do the actual decoding: see HltTrackingCoder.cpp
    // -------------------------------------------------------
 
-   for(RawBank* bank : hltTrackReportsRawBanks){
-     if(bank->sourceID()==m_sourceID)decodeTracks(bank->data(),bank->size()/sizeof(unsigned int),outputTracks);
-   }
+  decodeTracks(completeBank,bankSize,outputTracks);
+  
+  delete completeBank;
+  
   
    // for debug purposes print the contents of the outputLocation
    if( msgLevel(MSG::VERBOSE) )
      {
        verbose() << "----------------------------------------\n";
-       verbose() << " Resurrected tracks: \n"; 
+       verbose() << "Decoded event " << m_callcount << endmsg;
+       verbose() << outputTracks->size() <<" Resurrected tracks: \n"; 
+       m_trackcount += outputTracks->size();
        LHCb::Tracks::const_iterator pItr;
        for(pItr = outputTracks->begin(); outputTracks->end() != pItr; ++pItr){
 	 LHCb::Track* Tr = (*pItr);
@@ -151,6 +194,7 @@ StatusCode HltTrackReportsDecoder::execute() {
 	 }
 	 verbose() << "]" << endmsg;
        }
+       
      }
    
    return StatusCode::SUCCESS;
@@ -161,7 +205,10 @@ StatusCode HltTrackReportsDecoder::execute() {
 //=============================================================================
 StatusCode HltTrackReportsDecoder::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "==> Finalize" << endmsg;
+    verbose() << "Decoded " << m_trackcount << " tracks to " << m_outputLocation << endmsg;
+  }
 
   return Decoder::AlgBase::finalize();  // must be called after all other actions
 }

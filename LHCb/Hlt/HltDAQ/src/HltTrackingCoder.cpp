@@ -53,12 +53,14 @@ encodeTracks(const LHCb::Tracks* tracks,
       // write LHCbIDs
       // behold the awesomness of C++11 functional programming
       // here use the C++ "map" functional transform together with a C++ Lambda construct to fill the LHCbIDs into the bank
+      assert(nhits == Tr->lhcbIDs().size());
       transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });
      
       // write states
       // check number of states on track
       const std::vector<LHCb::State*>& states = Tr->states();
       unsigned int nstates= states.size();
+      assert(nstates<1000);
       rawBank.push_back(nstates);
       // loop over states and encode locations, parameters and covs
       for(unsigned int is=0;is<nstates;++is){
@@ -142,9 +144,11 @@ decodeTracks(unsigned int* rawBankData,
 
     // read number of IDs in track
     unsigned int nid= rawit[k++];
-    // std::cout << "Nids in track: " <<  nid << std::endl;
+    //std::cout << "Nids in track: " <<  nid << std::endl;
     // Start a new track
     Track* track=new Track();
+    track->setFlags(flags);
+
     for(unsigned int i=0;i<nid;i++){
       track->addToLhcbIDs(LHCbID(rawit[k]));
       ++k; //rawit+=sizeof(unsigned int);
@@ -152,6 +156,22 @@ decodeTracks(unsigned int* rawBankData,
 
     // read number of states
     unsigned int nstates = rawit[k];
+    //std::cout << "Nstates in track: " <<  nstates << std::endl;
+    if(k+nstates*22>nentries){
+      std::cout << "TOO MANY STATES IN TRACK. ABORTING DECODING. " << std::endl;
+      std::cout << "This happens at track " << tracks->size() << " in the event" << std::endl;
+      std::cout << "Track so far:\n "<< *track <<std::endl;
+      unsigned int nhits= track->nLHCbIDs();
+      for(unsigned int i=0;i<nhits;++i){
+	std::cout << track->lhcbIDs()[i] << ",\n";
+      }
+      std::cout << "State of the the bank with " <<nentries << " entries" <<std::endl;
+      for(unsigned int i=0; i<60;++i){
+	if(i==30) std::cout << "****" << std::endl;
+	std::cout << rawit[i-30+k] << std::endl;
+      }
+      return tracks->size();
+    }
     ++k;
     for(unsigned int istate=0;istate<nstates;++istate){
       
@@ -195,7 +215,7 @@ decodeTracks(unsigned int* rawBankData,
       track->addToStates(LHCb::State(par,stateCov,z,loc));
     } // end loop over states
 
-    track->setFlags(flags);
+   
     tracks->add(track);
     //std::cout << "RawBank entry counter k= " << k << std::endl;
     //std::cout << "Decoded track: \n" << *track << std::endl;
