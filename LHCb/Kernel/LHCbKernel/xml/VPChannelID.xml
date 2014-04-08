@@ -59,29 +59,6 @@
         </code>
       </method>
        
-      <method type = 'unsigned int' name = 'getColMask' const = 'TRUE' desc = 'Get column mask'>
-        <code>return colMask;</code>
-      </method>
-      <method type = 'unsigned int' name = 'getRowMask' const = 'TRUE' desc = 'Get row mask'>
-        <code>return rowMask;</code>
-      </method>
-      <method type = 'unsigned int' name = 'getPixelMask' const = 'TRUE' desc = 'Get pixel mask'>
-        <code>return (colMask | rowMask);</code>
-      </method>
-      <method type = 'unsigned int' name = 'getChipMask' const = 'TRUE' desc = 'Get chip mask'>
-        <code>return chipMask;</code>
-      </method>
-       
-      <method type = 'unsigned int' name = 'getColBits' const = 'TRUE' desc = 'Get pixel low precision number of bits'>
-        <code>return colBits - rowBits;</code>
-      </method>
-      <method type = 'unsigned int' name = 'getRowBits' const = 'TRUE' desc = 'Get pixel high precision number of bits'>
-        <code>return chipBits - colBits;</code>
-      </method>
-      <method type = 'unsigned int' name = 'getPixelBits' const = 'TRUE' desc = 'Get pixel high precision number of bits'>
-        <code>return chipBits - rowBits;</code>
-      </method>
-
       <method type = "std::ostream&amp;" name = "fillStream" virtual = "FALSE" const = "TRUE"
               desc = "special serializer to ASCII stream" >
         <arg name = "s" type = "std::ostream" inout = "BOTH"/> 

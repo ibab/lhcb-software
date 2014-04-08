@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-04-08 - Heinrich Schindler
+ - Remove unused get*Mask, get*Bits functions from VPChannelID.
+ - Remove unused functors from VPDataFunctor.
+
 ! 2014-03-20 - Francesco Polci
  - Modified FTChannelID.xml to include mat() and module() and redefined quarter() functions to reflect the present FT geometry. 
 
