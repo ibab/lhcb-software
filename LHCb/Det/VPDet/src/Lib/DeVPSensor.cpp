@@ -105,7 +105,7 @@ StatusCode DeVPSensor::initialize() {
     return sc;
   }
   // Get the information we need from the DDDB.
-  // Some of these parameters are commong to all sensors
+  // Some of these parameters are common to all sensors
   // and will be stored in statics.
 
   // sensor specifics
@@ -285,199 +285,6 @@ StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
   return StatusCode::SUCCESS;
 
 }
-//==============================================================================
-/// Calculate the position of a pixel with given channel ID.
-//==============================================================================
-//Gaudi::XYZPoint DeVPSensor::channelToPoint(const LHCb::VPChannelID& channel,
-//                                              const bool local) const {
-//
-//  const unsigned int chip = channel.chip() % DeVPSensor::m_nChips;
-//  const unsigned int col = channel.col() + chip*256;
-//  const unsigned int row = channel.row();
-//  const double x = DeVPSensor::m_local_x[col];
-//  const double y = (row + 0.5) * DeVPSensor::m_pixelSize; 
-//  const Gaudi::XYZPoint point(x, y, 0.0);
-//  return ( local ? point : localToGlobal(point) );
-//
-//  // Calculate the x-coordinate of the pixel centre and the pitch.
-//  //const double x0 = chip * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
-//  //double x = x0 + (col + 0.5) * DeVPSensor::m_pixelSize;
-//  //switch (col + chip*256) {
-//  //  case 256: case 512: // right of chip border
-//  //    x -= 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //    break;
-//  //  case 255: case 511: // left of chip border
-//  //    x += 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //    break;
-//  //}
-//
-//  //const Gaudi::XYZPoint point(x, y, 0.0);
-//  //return ( local ? point : localToGlobal(point) );
-//
-//  //const unsigned int col = channel.col() + (channel.chip() % DeVPSensor::m_nChips)*256;
-//  //const unsigned int row = channel.row();
-//  //const double x = DeVPSensor::m_local_x[col];
-//  //const double y = (row + 0.5) * DeVPSensor::m_pixelSize; 
-//  //const Gaudi::XYZPoint point(x, y, 0.0);
-//
-//  //const unsigned int chip = channel.chip() % DeVPSensor::m_nChips;
-//  //const unsigned int col = channel.col();
-//  //const unsigned int row = channel.row();
-//  //const double x0 = chip * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
-//  //double x = x0 + (col + 0.5) * DeVPSensor::m_pixelSize;
-//  //if (col == 0 && chip > 0) {
-//  //  x -= 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //} else if (col == DeVPSensor::m_nCols - 1 && chip < DeVPSensor::m_nChips - 1) {
-//  //  x += 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //}
-//  //const double y = (row + 0.5) * DeVPSensor::m_pixelSize;
-//  //Gaudi::XYZPoint point(x, y, 0.);
-//  //if (local) return point;
-//  //return localToGlobal(point);
-//
-//}
-
-//==============================================================================
-/// Calculate the position of a pixel with given channel ID and offset. 
-//==============================================================================
-//Gaudi::XYZPoint DeVPSensor::channelToPoint(const LHCb::VPChannelID& channel,
-//                                              std::pair<double, double> fraction) const {
-//
-//  const unsigned int chip = channel.chip() % DeVPSensor::m_nChips;
-//  const unsigned int col = channel.col() + chip*256;
-//  const unsigned int row = channel.row();
-//  const double pitch = DeVPSensor::m_x_pitch[col];
-//  const double x = DeVPSensor::m_local_x[col] + fraction.first * pitch;
-//  const double y = (row + 0.5 + fraction.second) * DeVPSensor::m_pixelSize; 
-//  const Gaudi::XYZPoint point(x, y, 0.0);
-//  return localToGlobal(point);
-//
-//  // Calculate the x-coordinate of the pixel centre and the pitch.
-//  //const double x0 = chip * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
-//  //double x = x0 + (col + 0.5) * DeVPSensor::m_pixelSize;
-//  //double pitch = DeVPSensor::m_pixelSize;
-//  //switch (col + chip*256) {
-//  //  case 256: case 512: // right of chip border
-//  //    x -= 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //    pitch = 0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);
-//  //    break;
-//  //  case 255: case 511: // left of chip border
-//  //    x += 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //    pitch = DeVPSensor::m_interChipPixelSize;
-//  //    break;
-//  //  case 254: case 510: // two left of chip border
-//  //    pitch = 0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);
-//  //    break;
-//  //}
-//  //x += fraction.first * pitch;
-//
-//  //const Gaudi::XYZPoint point(x, y, 0.0);
-//  //return localToGlobal(point);
-//  
-//  //const unsigned int chip = channel.chip() % DeVPSensor::m_nChips;
-//  //const unsigned int col = channel.col();
-//  //const unsigned int row = channel.row();
-//  //const double x0 = chip * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
-//  //// Calculate the x-coordinate of the pixel centre.
-//  //double x = x0 + (col + 0.5) * DeVPSensor::m_pixelSize;
-//  //if (col == 0 && chip > 0) {
-//  //  x -= 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //} else if (col == DeVPSensor::m_nCols - 1 && chip < DeVPSensor::m_nChips - 1) {
-//  //  x += 0.5 * (DeVPSensor::m_interChipPixelSize - DeVPSensor::m_pixelSize);
-//  //}
-//  //// Calculate the pitch in the column direction.
-//  //double pitch = DeVPSensor::m_pixelSize;
-//  //if (chip > 0 && col == 0) {
-//  //  pitch = 0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);
-//  //} else if (chip < DeVPSensor::m_nChips - 1 && col == DeVPSensor::m_nCols - 1) {
-//  //  pitch = DeVPSensor::m_interChipPixelSize;
-//  //} else if (chip < DeVPSensor::m_nChips - 1 && col == DeVPSensor::m_nCols - 2) {
-//  //  pitch = 0.5 * (DeVPSensor::m_interChipPixelSize + DeVPSensor::m_pixelSize);
-//  //}
-//  //// Correct the x-coordinate based on the inter-pixel fraction.
-//  //x += fraction.first * pitch;
-//  //// Calculate the y-coordinate.
-//  //double y = (row + 0.5 + fraction.second) * DeVPSensor::m_pixelSize;
-//  //Gaudi::XYZPoint point(x, y, 0.);
-//  //return localToGlobal(point);
-//
-//}
-
-//==============================================================================
-/// Get the 8 channels (if they exist) arround a given seed channel
-//==============================================================================
-StatusCode DeVPSensor::channelToNeighbours(const LHCb::VPChannelID& channel,
-                                              std::vector <LHCb::VPChannelID>& neighbours) const {
-
-  neighbours.clear();
-  const unsigned int chip = channel.chip();
-  const unsigned int col = channel.col();
-  const unsigned int row = channel.row();
-  if (row > 0) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setRow(row - 1);
-    neighbours.push_back(neighbour);
-  }
-  if (row < DeVPSensor::m_nRows - 1) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setRow(row + 1);
-    neighbours.push_back(neighbour);
-  }
-  if (col > 0) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setCol(col - 1);
-    neighbours.push_back(neighbour);
-    if (row > 0) {
-      neighbour.setRow(row - 1);
-      neighbours.push_back(neighbour);
-    }
-    if (row < DeVPSensor::m_nRows - 1) {
-      neighbour.setRow(row + 1);
-      neighbours.push_back(neighbour);
-    }
-  } else if (chip % DeVPSensor::m_nChips > 0) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setChip(chip - 1);
-    neighbour.setCol(DeVPSensor::m_nCols - 1);
-    neighbours.push_back(neighbour);
-    if (row > 0) {
-      neighbour.setRow(row - 1);
-      neighbours.push_back(neighbour);
-    }
-    if (row < DeVPSensor::m_nRows - 1) {
-      neighbour.setRow(row + 1);
-      neighbours.push_back(neighbour);
-    }
-  }
-  if (col < DeVPSensor::m_nCols - 1) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setCol(col + 1);
-    neighbours.push_back(neighbour);
-    if (row > 0) {
-      neighbour.setRow(row - 1);
-      neighbours.push_back(neighbour);
-    }
-    if (row < DeVPSensor::m_nRows - 1) {
-      neighbour.setRow(row + 1);
-      neighbours.push_back(neighbour);
-    }
-  } else if (chip % DeVPSensor::m_nChips < DeVPSensor::m_nChips - 1) {
-    LHCb::VPChannelID neighbour(channel);
-    neighbour.setChip(chip + 1);
-    neighbour.setCol(0);
-    neighbours.push_back(neighbour);
-    if (row > 0) {
-      neighbour.setRow(row - 1);
-      neighbours.push_back(neighbour);
-    }
-    if (row < DeVPSensor::m_nRows - 1) {
-      neighbour.setRow(row + 1);
-      neighbours.push_back(neighbour);
-    }
-  }
-  return StatusCode::SUCCESS;
-
-}
 
 //==============================================================================
 /// Check if a local point is inside the active area of the sensor. 
@@ -517,7 +324,7 @@ bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
 }
 
 //==============================================================================
-/// Calculate and cache the local x positions an pitches
+/// Calculate and cache the local x positions and pitches
 //==============================================================================
 void DeVPSensor::cacheLocalXAndPitch(void) {
 

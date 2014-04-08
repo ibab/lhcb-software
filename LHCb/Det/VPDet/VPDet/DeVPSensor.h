@@ -15,8 +15,6 @@
 // Unique class identifier
 static const CLID CLID_DeVPSensor = 1008205;
 
-class DeVP;
-
 /** @class DeVPSensor DeVPSensor.h VPDet/DeVPSensor.h
  *
  *  Detector element class for a single VP sensor
@@ -101,7 +99,7 @@ public:
     return DeVPSensor::m_local_x;
   }
 
-  /// Return array of cachedd x pitches by column
+  /// Return array of cached x pitches by column
   inline const double* xPitch(void) const {
     return DeVPSensor::m_x_pitch;
   }
@@ -133,11 +131,6 @@ public:
     return localToGlobal(point);
   }
 
-  /// Function kept for backwards compatibility with VPDAQ
-  virtual StatusCode channelToNeighbours(const LHCb::VPChannelID& seedChannel, 
-                                         std::vector <LHCb::VPChannelID>& channels) const;
-
-
 private:
 
   IGeometryInfo* m_geometry;
@@ -153,8 +146,6 @@ private:
   /// Global Z position
   double m_z;
   
-
-
   /// Dimensions of the sensor active area
   static double m_sizeX;
   static double m_sizeY;

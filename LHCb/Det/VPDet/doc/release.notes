@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2014-04-08 - Heinrich Schindler
+ - Remove obsolete function channelToNeighbours.
+
 !========================= VPDet v3r1 2014-03-17 =========================
 ! 2014-02-27 - Kurt Rinnert
  - store all common sensor properties in static members.

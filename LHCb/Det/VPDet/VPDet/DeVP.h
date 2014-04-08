@@ -1,12 +1,6 @@
 #ifndef VPDET_DEVP_H
 #define VPDET_DEVP_H 1
 
-// Gaudi
-#include "GaudiKernel/MsgStream.h"
-
-// Kernel/LHCbKernel
-#include "Kernel/VPChannelID.h"
-
 // Local
 #include "VPDet/DeVPSensor.h"
 
