@@ -358,15 +358,35 @@ ErrCond Machine::checkSlaves()   {
   if ( tr )  {
     // Here we only enter in the presence of slaves!
     CheckStateSlave check = for_each(sl.begin(),sl.end(),CheckStateSlave(tr));
+    size_t bad = check.fail+check.dead;
+    size_t count = check.count+bad;
     display(DEBUG,c_name(),"Executing %s. Count:%d Fail:%d Dead:%d Size:%d",
 	    tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()));
 
-    if ( tr->killActive() && check.dead < sl.size() )
+    if ( tr->killActive() && check.dead < sl.size() )   {
+      display(DEBUG,c_name(),"WAIT_ACTION %s. Count:%d Fail:%d Dead:%d Size:%d KillActive:%s",
+	      tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
+	      tr->killActive() ? "YES" : "NO");
       return FSM::WAIT_ACTION;
-    else if ( tr->create()     && check.dead > 0    )
+    }
+    else if ( tr->create()     && check.dead > 0    )   {
+      display(DEBUG,c_name(),"WAIT_ACTION %s. Count:%d Fail:%d Dead:%d Size:%d Create:%s",
+	      tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
+	      tr->create() ? "YES" : "NO");
       return FSM::WAIT_ACTION;
-    else if ( tr->checkLimbo() && check.dead > 0    )
+    }
+    else if ( tr->checkLimbo() && !tr->create() && check.dead > 0 && count == sl.size() )   {
+      display(DEBUG,c_name(),"WAIT_FAIL   %s. Count:%d Fail:%d Dead:%d Size:%d CheckLimbo:%s Create:%s",
+	      tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
+	      tr->checkLimbo() ? "YES" : "NO", tr->create() ? "YES" : "NO");
+      return ret_failure(this);
+    }
+    else if ( tr->checkLimbo() && check.dead > 0    )   {
+      display(DEBUG,c_name(),"WAIT_ACTION %s. Count:%d Fail:%d Dead:%d Size:%d CheckLimbo:%s",
+	      tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
+	      tr->checkLimbo() ? "YES" : "NO");
       return FSM::WAIT_ACTION;
+    }
     // Either the transition is finished or all slaves should be dead now....
     if ( check.count == sl.size() )
       return ret_success(this,MACH_EXEC_ACT);
