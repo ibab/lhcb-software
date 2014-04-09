@@ -1,5 +1,5 @@
-#ifndef MPATEL_TUPLETOOLVTXISOLN_H
-#define MPATEL_TUPLETOOLVTXISOLN_H 1
+#ifndef TUPLETOOLVTXISOLN_H
+#define TUPLETOOLVTXISOLN_H 1
 
 // Include files
 // from Gaudi
@@ -18,19 +18,25 @@ namespace LHCb {
 
 /** @class TupleToolVtxIsoln TupleToolVtxIsoln.h
  *
- * \brief Fill isolation information for DecayTreeTuple
+ * \brief Fill vertex isolation information for DecayTreeTuple
+ *    Take vertexed particle and add other tracks of the
+ *    event, one by one, building a new vertex. By default, this tool
+ *    will look for ExtraInfo filled by the VertexIsolation tool. If it
+ *    is not found, the tool is run to fill the ExtraInfo.
  *
- * - head_NOPARTWITHINDCHI2WDW : no. of non-signal particles that when added to vertex give delta chi2 < specified window
- * - head_NOPARTWITHINCHI2WDW : no. of non-signal particles that when added to vertex give chi2 < specified window
- * head_SMALLESTCHI2: chi2 of smallest chi2 combination with any of the input Particles
- * head_SMALLESTDELTACHI2: delta chi2 of smallest delta chi2 combination with any of the input Particles
+ * Leaves filled by the tool:
+ *    - (head)_NumVtxWithinChi2WindowOneTrack: number of particles that generate a vertex within a chi2 window
+ *    - (head)_SmallestDeltaChi2OneTrack: smallest delta chi2 when adding one track
+ *    - (head)_SmallestDeltaChi2MassOneTrack: mass of the candidate with the smallest delta chi2
+ *    - (head)_SmallestDeltaChi2TwoTracks: smallest delta chi2 when adding one track to the
+ *      combination that has the smallest delta chi2 when adding one track
+ *    - (head)_SmallestDeltaChi2MassTwoTracks: mass of the candidate with the smallest delta chi2
+ *      when adding one track to the combination that has the smallest delta chi2 when adding one track
  *
- * \sa DecayTreeTuple
  *
- *  @todo Maybe one should get Tracks instead of Particles?
+ *  @author Albert Puig, based on previous work from Mitesh Patel, Patrick Koppenburg
+ *  @date   2013-08-05
  *
- *  @author Mitesh Patel, Patrick Koppenburg
- *  @date   2008-04-15
  */
 class TupleToolVtxIsoln : public TupleToolBase,
                           virtual public IParticleTupleTool
@@ -54,14 +60,14 @@ public:
 
 private:
 
-  IDVAlgorithm* m_dva;
-  const IDistanceCalculator* m_dist;
-  const IVertexFit* m_pVertexFit;
+  // Isolation tool
   IExtraInfoTool *m_isolationTool ;
-  double m_Chi2;
-  std::string m_typeVertexFit;
-  std::vector<std::string> m_inputParticles;
+  struct IsolationIndices { int first; int last; } ;
+  IsolationIndices m_indices ;
+  // Variable names to store in the tuple
   std::map< int, std::string > m_varNames ;
 };
 
-#endif // MPATEL_TUPLETOOLGEOMETRY_H
+#endif // TUPLETOOLVTXISOLN_H
+
+// EOF

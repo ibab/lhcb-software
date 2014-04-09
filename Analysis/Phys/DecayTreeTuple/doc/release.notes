@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2014-04-09 - Albert Puig
+ - Cleanup of TupleToolVtxIsoln (removed unneeded vars and properties).
+ - Improved documentation in TupleToolVtxIsoln.
+
 !========================= DecayTreeTuple v4r8 2014-04-02 =========================
 
 ! 2014-04-01 - Chris Jones
