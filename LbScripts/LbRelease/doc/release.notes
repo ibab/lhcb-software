@@ -1,10 +1,5 @@
-2014-04-07  Ben Couturier <Ben.Couturier@cern.ch>
-
-	LBCORE-426: Added Gaudidiff and gaudiexcise code from R.Lambert
- 	* scripts/diff_template.py
-	* scripts/gaudidiff.py
-	* scripts/gaudiexcise.py
-	* scripts/excise_template.py
+2014-04-10  Joel Closier <Joel.Closier@cern.ch>
+        * python/LbRelease/add_DN_LFC.py: add a check on lbvobox machines
 
 2014-03-28  Ben Couturier <Ben.Couturier@cern.ch>
 
