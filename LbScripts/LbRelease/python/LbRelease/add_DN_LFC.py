@@ -10,7 +10,7 @@ import sys, socket, os
 import lfc, getopt
 def checkEnv():
     hostname = socket.gethostname()
-    if hostname.find("volhcb") < 0 :
+    if hostname.find( "volhcb" ) or hostname.find( "lbvobox" ) < 0 :
         print "Please log as root on one of the volhcbXX machines at CERN"
         return - 1
     user = os.getuid()
