@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-04-10 - Heinrich Schindler
+ - Run VPClusterLinker only if VP is in the list of subdetectors.
+
 ! 2014-04-05 - Heinrich Schindler
  - Add PrPixelStoreClusters to TrVeloSeq
  - Add VPClusterLinker to MCLinksTrSeq 
