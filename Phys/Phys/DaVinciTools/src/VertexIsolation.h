@@ -39,7 +39,8 @@ namespace LHCb {
  *    - InputParticles: containers for extra particles used for building extra vertices
  *    - MaxChi2: maximum chi2 for counting compatible vertices
  *
- *  Converted from TupleTool by A. Puig 05/08/2013
+ *  @author Albert Puig (albert.puig@cern.ch)
+ *  @date   05/08/2013
  *
  */
 
@@ -103,9 +104,9 @@ public:
   struct IsolationResult
   {
     // Constructor with defaults
-    IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0), 
-                         smallestChi2(-1), smallestDeltaChi2(-1), 
-                         bestParticle(NULL) {} 
+    IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0),
+                         smallestChi2(-1), smallestDeltaChi2(-1),
+                         bestParticle(NULL) {}
     // Members
     int             nCompatibleDeltaChi2, nCompatibleChi2 ;
     double          smallestChi2, smallestDeltaChi2 ;

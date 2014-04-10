@@ -57,6 +57,7 @@ StatusCode VertexIsolation::initialize()
   m_pVertexFit= m_dva->vertexFitter() ;
   if ( !m_pVertexFit ) { return Error("Unable to retrieve the IVertexFit tool"); }
 
+  // If no input particle container is specified, put StdNoPIDsPions by default
   if ( m_inputParticles.empty() )
   {
     m_inputParticles.push_back("/Event/Phys/StdNoPIDsPions") ;
@@ -82,7 +83,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
 
   // Check the vertex of the particle
   const LHCb::Vertex* vtx = top->endVertex() ;
-  if ( !vtx ) 
+  if ( !vtx )
   {
     return Error("Can't retrieve the vertex!") ;
   }
@@ -99,19 +100,19 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
 
   // -- Get vector of particles excluding the signal
   LHCb::Particle::ConstVector partsToCheck ;
-  for ( std::vector<std::string>::iterator iLocation = m_inputParticles.begin();
-        iLocation != m_inputParticles.end();
+  for ( auto iLocation = m_inputParticles.begin(), iLocationEnd = m_inputParticles.end();
+        iLocation != iLocationEnd;
         ++iLocation )
   {
     // Get the particles
     LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(*iLocation+"/Particles") ;
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "Got " << particles.size() << " particles from " << *iLocation << endreq ;
     if ( particles.empty() ) { continue; }
 
     // Loop over the particles and take the ones we can use for vertexing
-    for ( LHCb::Particle::Range::const_iterator iParticle = particles.begin();
-          iParticle != particles.end();
+    for ( auto iParticle = particles.begin(), iParticleEnd = particles.end() ;
+          iParticle != iParticleEnd;
           ++iParticle )
     {
       // Ignore if no proto
@@ -120,17 +121,17 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
       if ( isPureNeutralCalo(*iParticle) ) continue ;
       // Check that the proto of the particle does not match the signal
       bool isSignal = false ;
-      for ( LHCb::Particle::ConstVector::const_iterator iSignal = m_particlesToVertex.begin();
-            iSignal != m_particlesToVertex.end();
-            ++iSignal ) 
+      for ( auto iSignal = m_particlesToVertex.begin(), iSignalEnd = m_particlesToVertex.end();
+            iSignal != iSignalEnd;
+            ++iSignal )
       {
         if ( (*iSignal)->proto() == (*iParticle)->proto() ) { isSignal = true ; break ; }
       }
       if ( isSignal ) continue ;
       // Check for duplicated particles
       bool isAlreadyIn = false ;
-      for ( LHCb::Particle::ConstVector::const_iterator iSavedParticle = partsToCheck.begin();
-            iSavedParticle != partsToCheck.end();
+      for ( auto iSavedParticle = partsToCheck.begin(), iSavedParticleEnd = partsToCheck.end();
+            iSavedParticle != iSavedParticleEnd;
             ++iSavedParticle )
       {
         if ( (*iSavedParticle)->proto() == (*iParticle)->proto() ) { isAlreadyIn = true ; break ; }
@@ -139,8 +140,8 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
       partsToCheck.push_back( *iParticle ) ;
     }
   }
-  if ( msgLevel(MSG::DEBUG) ) 
-    debug() << "Number of particles to check excluding signal, particles with same proto and gammas = " 
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
             << partsToCheck.size() << endreq;
   // Now let's do some vertexing
   if( !part )
@@ -153,7 +154,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   IsolationResult isolationTwoTracks ;
   double smallestMassOneTrack  = 0.0 ;
   double smallestMassTwoTracks = 0.0 ;
-  if ( isolationOneTrack.bestParticle)
+  if ( isolationOneTrack.bestParticle )
   {
     const Gaudi::LorentzVector cand = part->momentum() + isolationOneTrack.bestParticle->momentum();
     smallestMassOneTrack = cand.mass();
@@ -162,11 +163,11 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
     m_particlesToVertex.push_back( isolationOneTrack.bestParticle ) ;
     // Build list with particles to check removing bestParticle
     LHCb::Particle::ConstVector partsToCheckForTwoTracks ;
-    for ( LHCb::Particle::ConstVector::const_iterator iSavedParticle = partsToCheck.begin();
-          iSavedParticle != partsToCheck.end();
+    for ( auto iSavedParticle = partsToCheck.begin(), iSavedParticleEnd = partsToCheck.end();
+          iSavedParticle != iSavedParticleEnd;
           ++iSavedParticle )
     {
-      if ( (*iSavedParticle)->proto() != (isolationOneTrack.bestParticle)->proto() ) 
+      if ( (*iSavedParticle)->proto() != (isolationOneTrack.bestParticle)->proto() )
         partsToCheckForTwoTracks.push_back(*iSavedParticle) ;
     }
     // Compute isolation adding one further track
@@ -175,7 +176,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
     //   m_particlesToVertex.pop_back() ;
     if ( isolationTwoTracks.bestParticle )
     {
-      const Gaudi::LorentzVector cand = ( part->momentum() + isolationOneTrack.bestParticle->momentum() + 
+      const Gaudi::LorentzVector cand = ( part->momentum() + isolationOneTrack.bestParticle->momentum() +
                                           isolationTwoTracks.bestParticle->momentum() );
       smallestMassTwoTracks = cand.mass();
     }
@@ -200,7 +201,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
 //=============================================================================
 //bool  VertexIsolation::getIsolation( const double originalVtxChi2,
 //                                     LHCb::Particle::ConstVector &extraParticles )
-VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double originalVtxChi2, 
+VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double originalVtxChi2,
                                                                 LHCb::Particle::ConstVector &extraParticles )
 {
   int             nCompatibleDeltaChi2 = 0 ;
@@ -209,8 +210,8 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
   double          smallestDeltaChi2    = -1 ;
   LHCb::Particle *bestParticle         = NULL ;
 
-  for ( LHCb::Particle::ConstVector::const_iterator iExtraPart = extraParticles.begin() ;
-        iExtraPart != extraParticles.end() ;
+  for ( auto iExtraPart = extraParticles.begin(), iExtraPartEnd = extraParticles.end() ;
+        iExtraPart != iExtraPartEnd ;
         ++iExtraPart )
   {
     LHCb::Vertex vtxWithExtraTrack ;
@@ -230,8 +231,8 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
       if ( vtxWithExtraTrack.chi2() == 0 ) continue;
 
       const double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
-      if ( msgLevel(MSG::DEBUG) ) 
-        debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2 
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
                 << " chi2 = " << vtxWithExtraTrack.chi2() << endmsg ;
       // Get values
       if ( (m_chi2 > 0.0) && (vtxWithExtraTrack.chi2() < m_chi2) ) nCompatibleChi2++ ;
@@ -260,7 +261,9 @@ void VertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
   // -- Get the daughters of the top particle
   const LHCb::Particle::ConstVector & daughters = top->daughtersVector();
   // -- Fill all the daugthers in m_particlesToVertex
-  for(  LHCb::Particle::ConstVector::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau)
+  for( auto idau = daughters.begin(), idauEnd = daughters.end() ;
+       idau != idauEnd ;
+       ++idau )
   {
     // -- If the particle is stable, save it in the vector, or...
     if( (*idau)->isBasicParticle() )
