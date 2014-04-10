@@ -2,6 +2,7 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/PhysicalConstants.h"
 
 // boost
 #include <boost/assign/std/vector.hpp>
@@ -37,7 +38,7 @@ SiPMResponse::SiPMResponse( const std::string& type,
 {
   declareInterface<SiPMResponse>(this);
   // properties
-  declareProperty("samplingDt",  m_samplingDt, "Sampling time step" );
+  declareProperty("samplingDt",  m_samplingDt = 0.1 * Gaudi::Units::ns, "Sampling time step" );
   declareProperty("times",  m_times, "Times for user-defined function" );
   declareProperty("values", m_values, "Values for user-defined function" );
   declareProperty("splineType", m_splineType = "Cspline", "The spline type" );

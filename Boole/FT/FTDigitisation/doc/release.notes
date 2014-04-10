@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-04-10 - Jacco de Vries
+ - Initialized variable in SiPMResponse
+
 ! 2014-04-04 - Eric Cogneras
  - remove unused parameter
  - redefinition of default value of parameters
