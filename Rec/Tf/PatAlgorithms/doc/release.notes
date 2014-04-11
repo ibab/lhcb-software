@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-04-11 - Espen Eie Bowen
+ - Fixed bug on how preselection on pT is applied.
 
 ! 2014-04-03 - Sebastian Neubert
  - Fixed handling of the kickRange

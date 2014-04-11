@@ -80,9 +80,7 @@ private:
   void buildXCandidatesList( PatFwdTrackCandidate& track );
 
   void fillXList ( PatFwdTrackCandidate& track, 
-                   double kick, double maxRangeRef, double zMagnet ,float dir, double pt);
-  
-
+                   double kick, double maxRangeRef, double zMagnet ,float dir);
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol );
 
