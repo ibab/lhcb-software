@@ -89,12 +89,13 @@ boost::uintmax_t  File::size() const
          m_size = get_size( command.str(), 7, 0 );
       } else if ( args[0] == "xrdcp" ) {
          stringstream command;
-         boost::regex re_xrd( "root://([a-zA-z0-9\\.]+)(?::[0-9]+)?" );
+         boost::regex re_xrd( "root://([a-zA-z0-9\\.-]+)(?::([0-9]+))?" );
          boost::smatch matches;
          boost::match_flag_type flags = boost::match_default;
          boost::regex_search( m_remote.begin(), m_remote.end(), matches, re_xrd, flags );
-         command << "xrd " << matches[1] << " \"stat " << matches.suffix() << "\"";
-         m_size = get_size( command.str(), 0, 1 );
+         command << "xrd -DIport " << matches[2] << " " << matches[1] << " \"stat " 
+                 << matches.suffix() << "\" 2>&1";
+         m_size = get_size( command.str(), 1, 1 );
       } else if ( args[0] == "cp" ) {
          struct stat buf;
          int r = ::stat(m_remote.c_str(), &buf);
@@ -127,7 +128,7 @@ boost::uintmax_t get_size( const string& command, const unsigned int lineno,
       string line;
       while ( in ) {
          getline( in, line );
-         lines.push_back( line );
+         if ( lines.size() < 20 ) lines.push_back( line );
       }
       ret = pclose( pipe );
    }
