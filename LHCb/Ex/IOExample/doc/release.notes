@@ -5,8 +5,9 @@
 !-------------------------------------------------------------------------------
 
 ! 2014-04-11 - Marco Cattaneo
- - Adapt path of EOS test files to change of eos directory structure 
-   (/eos -> /eos/lhcb/grid/prod
+ - Pick up EOS test files from TestFileDB (changed some input files to use ones
+   already in TestFileDB)
+ - Remove obsolete Reco09 tests
 
 !========================= IOExample v4r12 2014-02-17 =========================
 ! 2014-01-21 - Marco Cattaneo

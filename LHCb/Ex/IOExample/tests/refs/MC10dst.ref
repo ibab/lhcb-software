@@ -1,7 +1,26 @@
-# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
-# ROOT output file requested. Forcing reading of POOL input files with RootCnv
-# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/LHCb_HEAD/Ex/IOExample/tests/options/CopyMC10toROOTdst.py'
+# applying configuration of LHCbApp
+# /***** User LHCbApp/LHCbApp ************************************************************************
+# |-Persistency    = None
+# |-DataType       = '2010'  (default: '2012')
+# |-DDDBtag        = 'head-20101206'  (default: '')
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = True  (default: False)
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'sim-20101210-vc-md100'  (default: '')
+# |-Monitors       = []  (default: [])
+# \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
+# skipping configuration of XMLSummary
 # applying configuration of IOTest
+# WARNING: Property 'EvtMax' is set in both 'IOTest' and 'ApplicationMgr', using 'IOTest.EvtMax'
 # /***** User IOTest/IOTest **************************************************************************
 # |-KillDAQ     = False
 # |-DataContent = 'DST'
@@ -10,10 +29,18 @@
 # |-EvtMax      = 5  (default: -1)
 # |-WithMC      = True  (default: False)
 # \----- (End of User IOTest/IOTest) -----------------------------------------------------------------
+# applying configuration of DDDBConf
+# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# /***** User DDDBConf/DDDBConf **********************************************************************
+# |-DataType    = '2010'  (default: '2012')
+# |-DbRoot      = 'conddb:/lhcb.xml'
+# |-InitialTime = 'Safe'
+# |-AutoTags    = False
+# |-Simulation  = True  (default: False)
+# \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of DstConf
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
-# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -22,8 +49,8 @@
 # |-Writer              = 'DstWriter'
 # |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
 # |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
-# |-Persistency         = None
-# |-KeepDAQRawEvent     = False
+# |-WriteFSR            = True
+# |-SplitRawEventOutput = 2.0
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
@@ -32,7 +59,6 @@
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
-# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
@@ -41,23 +67,54 @@
 # |-Writer              = 'DstWriter'
 # |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
 # |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
-# |-Persistency         = None
-# |-KeepDAQRawEvent     = False
+# |-WriteFSR            = True
+# |-SplitRawEventOutput = 2.0
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = ['Reconstruction', 'Stripping']  (default: [])
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
+# applying configuration of CondDB
+# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                   = False
+# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
+# |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
+# |-LogFile                   = ''
+# |-EnableRunChangeHandler    = False
+# |-Tags                      = {}  (default: {})
+# |-LoadCALIBDB               = 'OFFLINE'
+# |-LatestLocalTagsByDataType = []  (default: [])
+# |-AllLocalTagsByDataType    = []  (default: [])
+# |-PartitionName             = 'LHCb'
+# |-PartitionConnectionString = {}  (default: {})
+# |-LocalTags                 = {}  (default: {})
+# |-IgnoreHeartBeat           = False
+# |-Overrides                 = []  (default: [])
+# |-Simulation                = True  (default: False)
+# |-QueryGranularity          = 0
+# |-UseOracle                 = False
+# |-LatestGlobalTagByDataType = ''
+# |-UseDBSnapshot             = False
+# |-DisableLFC                = False
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
+# |-UseLatestTags             = []  (default: [])
+# |-OverwriteSQLiteLocalCopy  = False
+# \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 # applying configuration of DigiConf
 # WARNING: Property 'EnableUnpack' is set in both 'DigiConf' and 'SimConf', using 'DigiConf.EnableUnpack'
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r3)
-                                          running on lxbuild163.cern.ch on Mon May  6 10:21:44 2013
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v3r1)
+                                          running on lxplus0046 on Fri Apr 11 13:49:30 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
+DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 TESFingerPrint    VERBOSE ServiceLocatorHelper::service: found service AlgContextSvc
@@ -143,7 +200,7 @@ EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:ROOT-MC10.dst' SVC='RootCnvSvc' OPT='REC'
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 FSRInputCopyStream   INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:ROOT-MC10.dst' SVC='FileRecordCnvSvc' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod//lhcb/swtest/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -151,7 +208,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x10005b30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x5773410@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -614,10 +671,9 @@ evtTime :	301000000
 DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
 DumpMCEventAlg       INFO There are 3544 Vertices:
 DumpMCEventAlg       INFO There are 3306 Particles:
-IODataManager        INFO Referring to dataset ROOT-MC10.dst by its file ID:DA224705-26B6-E211-B4FE-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1cfee650@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x12085c40@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -1151,7 +1207,7 @@ DumpMCEventAlg       INFO There are 4585 Vertices:
 DumpMCEventAlg       INFO There are 4300 Particles:
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1c579f30@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x137f5a10@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -1683,7 +1739,7 @@ DumpMCEventAlg       INFO There are 3223 Vertices:
 DumpMCEventAlg       INFO There are 2885 Particles:
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x13d89aa0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x13611f10@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -2154,7 +2210,7 @@ DumpMCEventAlg       INFO There are 3426 Vertices:
 DumpMCEventAlg       INFO There are 3250 Particles:
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x1e20bb40@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x1384eb90@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x2]  LHCb::GenHeader
@@ -2649,7 +2705,7 @@ DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
 UnpackTrack       SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# UnpackedTracks"                              |         5 |        824 |     164.80 |     46.258 |      118.00 |      252.00 |
+ | "# Unpacked Tracks"                             |         5 |        824 |     164.80 |     46.258 |      118.00 |      252.00 |
 PrintHeader          INFO Filtered 5 events
 PrintHeader       SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
@@ -2668,7 +2724,7 @@ FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 15/5/61(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:7C3CB66C-021D-E011-B1B8-003048CBA516 [root://eoslhcb.cern.ch//eos/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst]
-RootCnvSvc           INFO Disconnected data IO:DA224705-26B6-E211-B4FE-003048C9CD62 [ROOT-MC10.dst]
+RootCnvSvc           INFO Disconnected data IO:74DA431C-46C1-E311-A2EA-02163E00A743 [ROOT-MC10.dst]
+RootCnvSvc           INFO Disconnected data IO:7C3CB66C-021D-E011-B1B8-003048CBA516 [root://eoslhcb.cern.ch//eos/lhcb/grid/prod//lhcb/swtest/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
