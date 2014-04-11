@@ -6,5 +6,5 @@ IOTest( EvtMax = 5, LoadAll = True, DataContent = 'MDST' )
 
 ioh = IOHelper()
 ioh.setupServices()
-ioh.inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision11/LEPTONIC.MDST/00010195/0000/00010195_00000443_1.leptonic.mdst'])
+ioh.inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision11/LEPTONIC.MDST/00010195/0000/00010195_00000443_1.leptonic.mdst'])
 ioh.outStream('PFN:ROOT-Reco09.mdst',"InputCopyStream")

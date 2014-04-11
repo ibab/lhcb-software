@@ -4,6 +4,10 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2014-04-11 - Marco Cattaneo
+ - Adapt path of EOS test files to change of eos directory structure 
+   (/eos -> /eos/lhcb/grid/prod
+
 !========================= IOExample v4r12 2014-02-17 =========================
 ! 2014-01-21 - Marco Cattaneo
  - Follow removal of POOL services for reading POOL files
