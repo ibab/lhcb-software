@@ -4,15 +4,18 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-04-11 - Cédric Potterat
+ - fix backward compatibility for Strippin line StrippingDisplVertices
+
 ! 2014-04-05 - Cédric Potterat
  - Remove the possible request to the non-deployed JEC file for R=0.7
 
 !========================= JetAccessories v3r4 2014-04-02 =========================
 
 ! 2014-03-27 - Cédric Potterat
- - Remove old and not supported codes: ParticleFlow4Jets, HighPtIsoLeptonAndTagPV
-   and python codes Old*.
- - Update PFJetMaker for Reco14  new JEC file.
+- Remove old and not supported codes: ParticleFlow4Jets, HighPtIsoLeptonAndTagPV
+and python codes Old*.
+- Update PFJetMaker for Reco14  new JEC file.
  - Update python/JetAccessories/JetMaker_Config.py for new JEC file.
 
 !========================= JetAccessories v3r3 2014-01-25 =========================

@@ -1,6 +1,6 @@
 // $Id: LoKiJetMakerAlg.cpp,v 1.6 2010-01-11 08:37:42 cocov Exp $
 // ============================================================================
-// Include files 
+// Include files
 // ============================================================================
 // from Gaudi
 // ============================================================================
@@ -13,14 +13,14 @@
 #include "LoKi/VertexCuts.h"
 #include "LoKi/ParticleContextCuts.h"
 // ============================================================================
-// DaVinci Kernel 
+// DaVinci Kernel
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/Particle2Vertex.h"
 #include "Kernel/PFParticle.h"
 // ============================================================================
-// Event 
+// Event
 // ============================================================================
 #include "Event/Particle.h"
 
@@ -36,39 +36,39 @@
 
 class TH1D;
 // ============================================================================
-namespace LoKi 
+namespace LoKi
 {
   // ==========================================================================
   /** @class PFJetMaker
-   *  
-   *  This file is a part of LoKi project - 
+   *
+   *  This file is a part of LoKi project -
    *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
    *
    *  The package has been designed with the kind help from
-   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+   *  contributions and advices from G.Raven, J.van Tilburg,
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date   2005-03-21
    */
-  class PFJetMaker : public LoKi::Algo  
+  class PFJetMaker : public LoKi::Algo
   {
     // ========================================================================
-    /// the friend factory for instantiation 
+    /// the friend factory for instantiation
     friend class AlgFactory<LoKi::PFJetMaker> ;
     // ========================================================================
-  protected:  
-    // ========================================================================    
+  protected:
+    // ========================================================================
     /** Standard constructor
-     *  @param name instance name 
-     *  @param pSvc pointer to Service Locator 
+     *  @param name instance name
+     *  @param pSvc pointer to Service Locator
      */
     PFJetMaker
     ( const std::string& name ,
-      ISvcLocator*       pSvc ) 
+      ISvcLocator*       pSvc )
       : LoKi::Algo ( name , pSvc )
-      // 
+      //
       , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
@@ -82,60 +82,60 @@ namespace LoKi
       , m_minlogIPChi2toPV_Down(7.5)
       , m_minlogIPChi2toPV_Up(9.5)
       , m_minlogIPChi2toPV_Long(9.5)
-    { 
-      // 
-      declareProperty 
-        ( "JetMaker"  , 
-          m_makerName , 
-          "Type type/name of jet-maker tool (IJetMaker interface)") ;  
-      declareProperty 
-        ( "Associate2Vertex"  , 
-          m_associate2Vertex , 
-          "Jet reconstruction per vertex") ;  
+    {
+      //
+      declareProperty
+        ( "JetMaker"  ,
+          m_makerName ,
+          "Type type/name of jet-maker tool (IJetMaker interface)") ;
+      declareProperty
+        ( "Associate2Vertex"  ,
+          m_associate2Vertex ,
+          "Jet reconstruction per vertex") ;
       declareProperty ( "ApplyJetID"  ,
-			m_applyJetID = false, 
-			"Apply jet ID cuts") ; 
+			m_applyJetID = false,
+			"Apply jet ID cuts") ;
       declareProperty ( "JetIDMinMPT"  ,
-			m_JetID_MPT = 1200, 
-			"jet ID mpt cut") ; 
+			m_JetID_MPT = 1200,
+			"jet ID mpt cut") ;
       declareProperty ( "JetIDMinCPF"  ,
-			m_JetID_CPF = 0.1, 
-			"jet ID cpf cut") ; 
+			m_JetID_CPF = 0.1,
+			"jet ID cpf cut") ;
       declareProperty ( "JetIDMinNTrk"  ,
-			m_JetID_NTRK = 1.5, 
-			"jet ID ntrk cut") ; 
+			m_JetID_NTRK = 1.5,
+			"jet ID ntrk cut") ;
       declareProperty ( "JetIDMaxMPF"  ,
-			m_JetID_MPF = 0.8, 
-			"jet ID MPF cut") ; 
-      declareProperty("ApplyJEC"  , 
+			m_JetID_MPF = 0.8,
+			"jet ID MPF cut") ;
+      declareProperty("ApplyJEC"  ,
 		      m_applyJEC = false ,
 		      "Apply jet energy corrections");
-      declareProperty("ShiftJEC"  , 
+      declareProperty("ShiftJEC"  ,
 		      m_shiftJEC = 0. ,
 		      "Shift jet energy correction by n sigma");
-      declareProperty("PFParticleTypes"  , 
+      declareProperty("PFParticleTypes"  ,
 		      m_inputTypes  ,
 		      "Type of particles to consider");
-      declareProperty("OnlySaveWithB"  , 
+      declareProperty("OnlySaveWithB"  ,
 		      m_onlysavewithB  ,
 		      "Only save jets containing a B meson");
-      declareProperty("PVassociationMinIPChi2"  , 
+      declareProperty("PVassociationMinIPChi2"  ,
 		      m_minIPChi2PVassoc  ,
 		      "True: will use the minIPchi2 to associate particles with pointing info to the PV, False is more refined");
-      
-      declareProperty("HistoPath"  , m_histo_path = "JEC" , "The path of the JEC histograms" );
+
+      declareProperty("HistoPath"  , m_histo_path = "JEC14" , "The path of the JEC histograms" );
       //
     }
     /// destructor
     virtual ~PFJetMaker( ){}
-    // ========================================================================    
+    // ========================================================================
   public:
-    // ========================================================================    
-    /** standard execution of the algorithm 
-     *  @see LoKi::Algo 
-     *  @return status code 
-     */  
-    
+    // ========================================================================
+    /** standard execution of the algorithm
+     *  @see LoKi::Algo
+     *  @return status code
+     */
+
     enum ParticleExtraInfo{ StartJetExtraInfo =9000,
                             Ntracks = 9001 ,
                             N90 = 9002 ,
@@ -169,34 +169,34 @@ namespace LoKi
                             ChargedInfMomentum = 9218 ,
                             BadPhotonMatchingT = 9219 ,
                             BadPhoton = 9220 ,
-                            IsolatedPhoton = 9221 
+                            IsolatedPhoton = 9221
     };
-                         
-			    
+
+
 
     virtual StatusCode initialize   () ;
     virtual StatusCode analyse   () ;
     // Append the Jet ID variables to the jet extra infos
     StatusCode appendJetIDInfo   ( LHCb::Particle * jet ) ;
-    // Apply the Jet energy corrections 
+    // Apply the Jet energy corrections
     StatusCode JEC               ( LHCb::Particle * jet )  ;
 
-    // ========================================================================    
+    // ========================================================================
   private:
-    // ========================================================================    
-    // the default constructor is disabled 
+    // ========================================================================
+    // the default constructor is disabled
     PFJetMaker () ;
-    // the copy constructor is disabled 
+    // the copy constructor is disabled
     PFJetMaker ( const PFJetMaker& )  ;
-    // the assignement operator is disabled 
+    // the assignement operator is disabled
     PFJetMaker& operator=( const  PFJetMaker& )  ;
-    // ========================================================================    
-  private:  
-    // ========================================================================    
+    // ========================================================================
+  private:
+    // ========================================================================
     /// maker name
-    std::string      m_makerName ; // jet maker name  
+    std::string      m_makerName ; // jet maker name
     /// maker
-    const IJetMaker* m_maker     ; // jet maker to be used 
+    const IJetMaker* m_maker     ; // jet maker to be used
     /// associate two vertex?
     bool m_associate2Vertex      ; // make jet per vertex
     /// apply JEC
@@ -228,36 +228,36 @@ namespace LoKi
     double m_JetID_CPF;
     double m_JetID_MPF ;
 
-    
-    // ========================================================================    
+
+    // ========================================================================
   };
   // ==========================================================================
-} // end of namespace LoKi 
+} // end of namespace LoKi
 // ============================================================================
-/** @file 
+/** @file
  *  Implementation file for class  LoKi::PFJetMaker
- *  @date  2005-03-21 
+ *  @date  2005-03-21
  *  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
  */
 // ============================================================================
-/*  standard execution of the algorithm 
- *  @see LoKi::Algo 
- *  @return status code 
+/*  standard execution of the algorithm
+ *  @see LoKi::Algo
+ *  @return status code
  */
 // ===========================================================================
-StatusCode LoKi::PFJetMaker::initialize () 
+StatusCode LoKi::PFJetMaker::initialize ()
 {
-  StatusCode sc = LoKi::Algo::initialize() ; 
+  StatusCode sc = LoKi::Algo::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
 
   // Initialize the tool
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
   // Read in the histograms for JEC
-  if ( m_applyJEC ){ 
+  if ( m_applyJEC ){
       const int netabins=24, ncpfbins=10, nphibins=2;
       for(int inpvs=0; inpvs<3; inpvs++) for(int ieta=0; ieta<netabins; ieta++)
           for(int icpf=0; icpf<ncpfbins; icpf++) for(int iphi=0; iphi<nphibins; iphi++) {
-              std::string histoname = 
+              std::string histoname =
                   "JECSYS_PV"+boost::lexical_cast<std::string>(inpvs+1)+
                   "_ETA"+boost::lexical_cast<std::string>(ieta+20)+
                   "_CPF"+boost::lexical_cast<std::string>(icpf+1)+
@@ -288,7 +288,7 @@ StatusCode LoKi::PFJetMaker::initialize ()
   }
 
   m_dist   = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
-  if ( !m_dist ) {   
+  if ( !m_dist ) {
     fatal() << "Distance Calculator Tool could not be found" << endreq;
     return StatusCode::FAILURE;
   }
@@ -297,14 +297,14 @@ StatusCode LoKi::PFJetMaker::initialize ()
 }
 
 
-StatusCode LoKi::PFJetMaker::analyse   () 
+StatusCode LoKi::PFJetMaker::analyse   ()
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts ;
 
   if ( m_associate2Vertex ){
-    
+
 
     // A cut to check that a jet contains information able to link it to a PV
     LoKi::Types::Cut withPVPointingInfo = NINTREE(( ABSID == 310 || ABSID == 3122 )
@@ -319,7 +319,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     LoKi::Types::Fun mpt = LoKi::Cuts::INFO(9011,-10.);
     LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
-    
+
     // A cut to get the position of the bestPV of input particles (would be better to code a VKEY functor)
     LoKi::Types::Fun bestVertexVX = BPV(VX);
     LoKi::Types::Fun bestVertexVY = BPV(VY);
@@ -331,37 +331,37 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     for ( int i = 1 ; i < (int) m_inputTypes.size() ; i++ ){
       GoodInput = GoodInput || fabs(  PFType - m_inputTypes[i] ) < 1e-6 ;
     }
-    LoKi::Types::Cut PerPVinputs = ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral && LHCb::Track::Downstream != TRTYPE ) 
+    LoKi::Types::Cut PerPVinputs = ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral && LHCb::Track::Downstream != TRTYPE )
       || ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle )
       || ( PFType == LHCb::PFParticle::ChargedInfMomentum && LHCb::Track::Downstream != TRTYPE ) || ( PFType == LHCb::PFParticle::Charged0Momentum && LHCb::Track::Downstream != TRTYPE );
     LoKi::Types::Cut AllPVinputs = ( PFType > LHCb::PFParticle::Neutral && PFType < LHCb::PFParticle::Composite )
-      || ( PFType == LHCb::PFParticle::BadPhotonMatchingT ) || ( PFType == LHCb::PFParticle::BadPhoton )  || ( PFType == LHCb::PFParticle::IsolatedPhoton ) 
+      || ( PFType == LHCb::PFParticle::BadPhotonMatchingT ) || ( PFType == LHCb::PFParticle::BadPhoton )  || ( PFType == LHCb::PFParticle::IsolatedPhoton )
       || ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral &&  LHCb::Track::Downstream == TRTYPE )
       || ( PFType == LHCb::PFParticle::ChargedInfMomentum &&  LHCb::Track::Downstream == TRTYPE )
       || ( PFType == LHCb::PFParticle::Charged0Momentum &&  LHCb::Track::Downstream == TRTYPE );
-    
+
     LoKi::Types::Cut PVPointingInfo = NINTREE( PerPVinputs )>0 ;
-    
+
     // Loop over PV list and make jets out of appropriate inputs related to the PVs
     const LHCb::RecVertex::Range pvs = this->primaryVertices () ;
     for ( LHCb::RecVertex::Range::const_iterator i_pv = pvs.begin() ; pvs.end() != i_pv ; i_pv++ )
     {
       // Cut to get the particles pointing to the PV.
       const LHCb::RecVertex* pv = *i_pv;
-      
+
       // Prepare the inputs
       IJetMaker::Input inputs;
-      for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ 
+      for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
         // General cut, if it is not a good input
        	if (!GoodInput(*i_p))continue;
         // If we decideded to only do the best ipchi2 association and the input is to be associated to a pv but does not point to this pv, discard
-        if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
-                                    || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6 
+        if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6
+                                    || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6
                                     || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
         // Otherwise (if it does point to this pv) take it
         else if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) )	inputs.push_back(*i_p);
         // Then if it is of the type to ba added to all pv, just add it to all pv
-        else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
+        else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) )	inputs.push_back(*i_p);
         else if (!m_minIPChi2PVassoc && PerPVinputs(*i_p) ){
           // First compute the ip and ipchi2 wrt this pv
           double ip(1e8), chi2(1e8);
@@ -383,7 +383,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
             }
             if (useIt) inputs.push_back(*i_p);
           }
-          else if( (*i_p)->proto()!= NULL && ((*i_p)->proto()->track()->type()== LHCb::Track::Upstream || (*i_p)->proto()->track()->type()== LHCb::Track::Velo) && 
+          else if( (*i_p)->proto()!= NULL && ((*i_p)->proto()->track()->type()== LHCb::Track::Upstream || (*i_p)->proto()->track()->type()== LHCb::Track::Velo) &&
                    TMath::Log(ip) < m_minlogIPtoPV_Up &&  TMath::Log(chi2) < m_minlogIPChi2toPV_Up ){
             bool useIt = true;
             for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
@@ -413,14 +413,14 @@ StatusCode LoKi::PFJetMaker::analyse   ()
             if (useIt) inputs.push_back(*i_p);
           }
           // make the ip selection
-        } 
+        }
         else if (!m_minIPChi2PVassoc && AllPVinputs(*i_p)){
           // make the ip selection for downstream
           if (  ( PFType(*i_p) > LHCb::PFParticle::Charged && PFType(*i_p) < LHCb::PFParticle::Neutral )
                 || ( PFType(*i_p) == LHCb::PFParticle::ChargedInfMomentum )
                 || ( PFType(*i_p) == LHCb::PFParticle::Charged0Momentum )){
-            
-            if( (*i_p)->proto()->track()->type()== LHCb::Track::Downstream){ 
+
+            if( (*i_p)->proto()->track()->type()== LHCb::Track::Downstream){
               double ip(1e8), chi2(1e8);
               StatusCode dist = m_dist->distance ( (*i_p), pv , ip, chi2 );
               double thisPVchi2 = chi2;
@@ -454,17 +454,17 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 
       // ouput container
       IJetMaker::Jets jets ;
-      // make the jets 
+      // make the jets
       StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
-      
+
       if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
-      
+
       // save all jets
-      while ( !jets.empty() ) 
+      while ( !jets.empty() )
       {
         LHCb::Particle* jet = jets.back() ;
         this->appendJetIDInfo(jet);
-        if(m_applyJEC) this->JEC(jet);  
+        if(m_applyJEC) this->JEC(jet);
         // If the jet contain info on PV, assign a PV and update the P2PV relation table
         if ( PVPointingInfo(jet) ){
 
@@ -479,12 +479,12 @@ StatusCode LoKi::PFJetMaker::analyse   ()
           this->relate ( jet , *i_pv );
 
         }
-	
+
 	//    if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800 )){
-	
+
         if ( !( m_applyJetID && ( mpt(jet)< m_JetID_MPT  || nPVInfo(jet)<   m_JetID_NTRK ||  cpf(jet) <  m_JetID_CPF || std::max(mtf(jet),mnf(jet))  >  m_JetID_MPF  ) ) )
-	  {  
-	    
+	  {
+
 	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
 	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
 	      sc = save ( "jets" , jet ) ;
@@ -495,7 +495,7 @@ StatusCode LoKi::PFJetMaker::analyse   ()
         unRelatePV(jet);
         delete jet->endVertex();
         delete jet;
-	
+
 
       }
     }
@@ -518,19 +518,19 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ inputs.push_back(*i_p); }
     // ouput container
     IJetMaker::Jets jets ;
-    // make the jets 
+    // make the jets
     StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
     if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
     // save all jets
-    while ( !jets.empty() ) 
+    while ( !jets.empty() )
     {
       LHCb::Particle* jet = jets.back() ;
       this->appendJetIDInfo(jet);
 
 
       if ( !( m_applyJetID && ( mpt(jet)< m_JetID_MPT  || nPVInfo(jet)<   m_JetID_NTRK ||  cpf(jet) <  m_JetID_CPF || std::max(mtf(jet),mnf(jet))  >  m_JetID_MPF  ) ) )
-	  {  
-	    
+	  {
+
 	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
 	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
 	      sc = save ( "jets" , jet ) ;
@@ -539,14 +539,14 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 	  }
         jets.pop_back() ;
         delete jet;
-	
+
 
     }
   }
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) )
   { counter ( "#jets" ) += selected ("jets").size() ; }
   setFilterPassed ( true ) ;
-  
+
   return StatusCode::SUCCESS ;
 }
 
@@ -564,12 +564,12 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   int    n90;    /// Number of items responsible for at least 90% of the jet momentum
   int    ntrk;   /// Number of tracks
 
-  float auxptmax=-1, auxptPmax=-1,sumpt=0; 
+  float auxptmax=-1, auxptPmax=-1,sumpt=0;
   int iitems=0;
   double tpx=0, tpy=0;
   std::vector<float> itemspt;
-  ntrk=n90=width=0; 
-  
+  ntrk=n90=width=0;
+
 
   for (;idaughter != daughtersvector.end() ; ++idaughter){
     const LHCb::Particle * daughter = *idaughter;
@@ -604,9 +604,9 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   LoKi::Types::Fun NsatCells = NECALsatCells + NHCALsatCells ;
   // Function to get the number of particles with PV information
   LoKi::Types::Fun BestPVIPChi2  = LoKi::Cuts::BPVIPCHI2 ("")  ;
-  LoKi::Types::Fun N_HasPVInfo   = LoKi::Cuts::NINTREE( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) || 
+  LoKi::Types::Fun N_HasPVInfo   = LoKi::Cuts::NINTREE( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) ||
 							( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE ) );
-  LoKi::Types::Fun N_HasPVInfoChi24   = LoKi::Cuts::NINTREE(( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) || 
+  LoKi::Types::Fun N_HasPVInfoChi24   = LoKi::Cuts::NINTREE(( ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle ) ||
 							      ( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream != LoKi::Cuts::TRTYPE )) && BestPVIPChi2 < 9 );
 
   jet->addInfo ( Ntracks , ntrk );
@@ -668,7 +668,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   jet->addInfo ( BadPhotonMatchingT  , FractionBadPhotonMatchingT(jet)/LoKi::Cuts::E(jet) );
   LoKi::Types::Fun FractionBadPhoton = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , fabs( PFType -  LHCb::PFParticle::BadPhoton ) < 1e-6 , 0. );
   jet->addInfo (  BadPhoton , FractionBadPhoton(jet)/LoKi::Cuts::E(jet) );
-  
+
   LoKi::Types::Fun FractionBadParticle = FractionCharged0Momentum + FractionChargedInfMomentum + FractionBadPhotonMatchingT + FractionBadPhoton;
   jet->addInfo ( BadParticle  , FractionBadParticle(jet)/LoKi::Cuts::E(jet) );
 
@@ -700,7 +700,7 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   if(jec_eta>23) jec_eta=23;
 
   TH1D* histo = m_histosJEC[usePV-1][jec_eta][jec_cpf][jec_phi];
-  
+
   double cor = 1.;
   cor = histo->Interpolate(jetpt);
   double corerr = histo->GetBinError(histo->FindBin(jetpt));
@@ -713,8 +713,8 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
 
   Gaudi::LorentzVector newMom(cor*LoKi::Cuts::PX(jet),cor*LoKi::Cuts::PY(jet),cor*LoKi::Cuts::PZ(jet),cor*LoKi::Cuts::E(jet));
   jet->setMomentum(newMom);
-  
-  return SUCCESS;  
+
+  return SUCCESS;
 }
 
 
@@ -722,5 +722,5 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
 /// The factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,PFJetMaker)
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
