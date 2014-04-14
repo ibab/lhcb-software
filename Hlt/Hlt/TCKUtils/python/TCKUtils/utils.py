@@ -189,6 +189,8 @@ class Configuration :
         self.info = { 'id' : alias.ref().str() , 'TCK' : [], 'label' : '<NONE>' }
         self.info.update( zip(['release','hlttype'],alias.alias().str().split('/')[1:3]))
         x = svc.resolveConfigTreeNode( alias.ref() )
+        if not x :
+            print 'Configuration: failed to resolve configtreenode %s - %s ' %  ( alias.alias().str(), alias.ref() )
         label =  x.label();
         self.info.update( { 'label' : label } )
     def __getitem__(self,label) : 
@@ -231,6 +233,8 @@ class TreeNode(object) :
             TreeNode._cm = TreeNode._cm+1 
             obj = AccessSvcSingleton().resolveConfigTreeNode(id)
             TreeNode._pool[id] = obj
+        if not obj :
+            print 'failed to resolve ConfigTreeNode %s'%id
         return obj
 
 
@@ -256,6 +260,8 @@ class PropCfg(object) :
         if not obj :
             PropCfg._cm = PropCfg._cm + 1
             x = AccessSvcSingleton().resolvePropertyConfig(id)
+            if not x :
+                print 'failed to resolve PropertyCondif %s'%id
             obj = object.__new__(cls)
             obj.name = x.name()
             obj.type = x.type()
@@ -264,6 +270,8 @@ class PropCfg(object) :
             obj.digest = id
             obj.props  = dict( (i.first,i.second) for i in x.properties() )
             PropCfg._pool[id] = obj
+        if not obj :
+                print 'invalid PropCfg %s'%id
         return obj
     def properties(self) : return self.props
     def fqn(self) : return  self.fullyQualifiedName + ' ('+self.kind+')'
@@ -275,6 +283,7 @@ class Tree(object):
         self.parent = parent
         self.depth = self.parent.depth+1  if self.parent else 0
         node = TreeNode(id)
+        if not node : print 'invalid TreeNode for %s' % id
         self.digest = node.digest().str()
         self.label = node.label()
         leaf =  node.leaf() 
@@ -521,14 +530,17 @@ class RemoteAccess(object) :
         #print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
         svc = RemoteAccess._svc
         info = dict()
+        #print 'reading TOPLEVEL'
         for i in svc.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
             x = Configuration( i,svc )
             info[ i.alias().str() ] = x
+        #print 'reading TCK'
         for i in svc.configTreeNodeAliases( alias( 'TCK/'  ) ) :
             tck =  _tck(i.alias().str().split('/')[-1])
             id  =  i.ref().str()
             for k in info.values() :
                 if k.info['id'] == id : k.info['TCK'].append(tck)
+        #print 'reading TAG'
         for i in svc.configTreeNodeAliases( alias( 'TAG/'  ) ) :
             tag = i.alias().str().split('/')[1:] 
             id  = i.ref().str()
@@ -663,8 +675,9 @@ class RemoteAccess(object) :
         #    The rest: find corresponding TOPLEVEL, add it to the toplevel list, re-create alias afterwards
         other = filter( lambda i : not i.alias().str().startswith('TOPLEVEL/'), aliases )
         assert len(top)+len(other) == len(aliases)
+        toplevelaliases = svc.configTreeNodeAliases( alias('TOPLEVEL/') )
         for i in other :
-            top += [ deepcopy(j) for j in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if j.ref() == i.ref() and j not in top ]
+            top += [ deepcopy(j) for j in toplevelaliases if j.ref() == i.ref() and j not in top ]
         l = len(top)
         print '# of TOPLEVEL items to copy: %s' % l
         for k,i in enumerate( sorted( top, key = lambda x : x.alias().str() ), 1 ):# TODO: sort on the (integer) numbers appearing in the string...

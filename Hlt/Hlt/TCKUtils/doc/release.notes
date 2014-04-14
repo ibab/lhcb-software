@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2014-04-14 - Gerhard Raven
+ - speed up initializion phase of copy
+ - better diagnostic in case of errors
 
 !========================= TCKUtils v1r12p3 2014-02-20 =========================
 ! 2014-01-08 - Marco Clemencic
