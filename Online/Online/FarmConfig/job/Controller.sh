@@ -14,7 +14,7 @@
 #
 #
 export PRINT_LEVEL=4;
-#export PRINT_LEVEL=3;
+#export PRINT_LEVEL=2;
 exec -a ${UTGID} ${CONTROLLERROOT}/${CMTCONFIG}/fsm_ctrl.exe \
     -print=${PRINT_LEVEL} -sleep=0 \
     -partition=${PARTITION_NAME} \
