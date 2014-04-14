@@ -114,11 +114,9 @@ StatusCode DeVPSensor::initialize() {
   m_module = param<int>("Module");
   std::string side = param<std::string>("Side");
   m_isLeft = side.find("Left") == 0;
-  m_isDownstream = 0 != param<int>("Downstream");
 
   // Calculate the index of the first chip (assuming four sensors per module).
   m_chip = (sensorNumber() - module() * 4) * DeVPSensor::m_nChips;
-
 
   // commons
   //

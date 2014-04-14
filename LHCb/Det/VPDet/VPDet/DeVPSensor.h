@@ -83,8 +83,6 @@ public:
   bool isRight() const {return !m_isLeft;}
   /// Return true for x > 0 side of the detector
   bool isLeft() const {return m_isLeft;}
-  /// Return true if sensor is downstream
-  bool isDownstream() const {return m_isDownstream;}
 
   /// Return sensor thickness in mm.
   double siliconThickness() const {return DeVPSensor::m_thickness;}
@@ -138,7 +136,6 @@ private:
   unsigned int m_sensorNumber;
   unsigned int m_module;
   bool m_isLeft;
-  bool m_isDownstream;
 
   /// Index of the first chip
   unsigned int m_chip;

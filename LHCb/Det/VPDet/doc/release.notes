@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2014-04-14 - Heinrich Schindler
+ - Remove unused functions (type, isDownstream) from DeVPSensor.
+
 ! 2014-04-08 - Heinrich Schindler
  - Remove obsolete function channelToNeighbours.
 
