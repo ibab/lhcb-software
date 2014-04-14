@@ -9,7 +9,7 @@
 #include "Event/RawEvent.h"
 #include "Event/VPDigit.h"
 
-/** @class VPSuperPixelBankEncoder VPSuperPixelBankEncoder.h 
+/** @class VPSuperPixelBankEncoder VPSuperPixelBankEncoder.h
  * Algorithm to create Super Pixel Raw Bank from VP digits.
  *
  * There is one raw bank per sensor, that is the sensor number (0-207)
@@ -40,7 +40,7 @@
  *  |  15
  *  |  04
  *  +---> col,x
- *  
+ * 
  * @author Karol Hennessy
  * @author Kurt Rinnert
  * @date   2014-03-06
@@ -48,40 +48,39 @@
 
 class VPSuperPixelBankEncoder : public GaudiAlgorithm {
 
-  public:
+ public:
 
-    /// Standard constructor
-    VPSuperPixelBankEncoder(const std::string& name,ISvcLocator* pSvcLocator);
-    virtual ~VPSuperPixelBankEncoder();   ///< Destructor
-    virtual StatusCode initialize();      ///< Algorithm initialization
-    virtual StatusCode execute   ();      ///< Algorithm execution
-    virtual StatusCode finalize  ();      ///< Algorithm execution
+  /// Standard constructor
+  VPSuperPixelBankEncoder(const std::string& name, ISvcLocator* pSvcLocator);
+  virtual ~VPSuperPixelBankEncoder();  ///< Destructor
+  virtual StatusCode initialize();     ///< Algorithm initialization
+  virtual StatusCode execute();        ///< Algorithm execution
 
-  private:
+ private:
 
-    /// to sort super pixels by column (major) and row (minor)
-    struct SPLowerThan {
-      inline bool operator() (unsigned int lhs, unsigned int rhs) const {
-        return (lhs & 0x7FFF00) < (rhs & 0x7FFF00);
-      }
-    };
+  /// to sort super pixels by column (major) and row (minor)
+  struct SPLowerThan {
+    inline bool operator()(unsigned int lhs, unsigned int rhs) const {
+      return (lhs & 0x7FFF00) < (rhs & 0x7FFF00);
+    }
+  };
 
-    /// where to get the digits from
-    std::string m_digitLocation;
-    /// where to write the clusters to
-    std::string m_rawEventLocation;
-    /// bank version. (change this every time semantics change!)
-    const unsigned int m_bankVersion;
-    /// quick check for debug state
-    bool m_isDebug; 
-    /// quick check for verbose state
-    bool m_isVerbose;
-    /// event counter
-    unsigned int m_evt;
-    /// per sensor buffers of super pixel words
-    std::vector< std::vector<unsigned int> > m_spBySensor;
-    /// buffer for checking super pixel neighbours
-    unsigned char m_buffer[768*256];
-    /// buffer for all non-zero super pixel indices on a sensor
-    std::vector<unsigned int> m_idx;
+  /// where to get the digits from
+  std::string m_digitLocation;
+  /// where to write the clusters to
+  std::string m_rawEventLocation;
+  /// bank version. (change this every time semantics change!)
+  const unsigned int m_bankVersion;
+  /// quick check for debug state
+  bool m_isDebug;
+  /// quick check for verbose state
+  bool m_isVerbose;
+  /// event counter
+  unsigned int m_evt;
+  /// per sensor buffers of super pixel words
+  std::vector<std::vector<unsigned int> > m_spBySensor;
+  /// buffer for checking super pixel neighbours
+  unsigned char m_buffer[768 * 256];
+  /// buffer for all non-zero super pixel indices on a sensor
+  std::vector<unsigned int> m_idx;
 };

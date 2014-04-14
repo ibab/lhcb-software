@@ -4,6 +4,10 @@
 ! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-04-14 - Heinrich Schindler
+ - Remove do-nothing finalize method.
+ - Run clang-format for consistent style.
+
 ! 2014-04-04 - Heinrich Schindler
  - Remove en/decoders for old, cluster-based raw banks.
  - Remove unnecessary dependencies.
