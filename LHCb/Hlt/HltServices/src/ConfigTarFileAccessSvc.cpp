@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <string.h>
+#include <cerrno>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -13,11 +14,11 @@
 
 #ifndef _WIN32
 #include <unistd.h>
-#include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <pwd.h>
 #include <grp.h>
-#include <sys/stat.h>
 #else
 typedef int uid_t;
 typedef int gid_t;
@@ -162,6 +163,7 @@ namespace {
 namespace ConfigTarFileAccessSvc_details {
   class TarFile {
   public:
+    bool writeable() const { return m_lock>=0; }
     TarFile(const std::string& name, ios::openmode mode = ios::in, bool compressOnWrite = false )
       : m_name(name)
       , m_lock(-1)
@@ -171,8 +173,8 @@ namespace ConfigTarFileAccessSvc_details {
       , m_myGid(0)
       , m_compressOnWrite( compressOnWrite )
     {
-#ifndef _WIN32
       if (mode&ios::out) {
+#ifndef _WIN32
             std::string lckname = m_name + ".lock";
             // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
             //
@@ -193,41 +195,38 @@ namespace ConfigTarFileAccessSvc_details {
             CleanupAtExit::instance().add(lckname);
             // TODO: write some text to the lockfile to identify this process: machine name, pid...
             //       which can be used in the above failure case to point out the source of the clash...
-      }
+#else   
+            m_lock = 1;
 #endif
+      }
       m_file.open(m_name.c_str(), mode | ios::in | ios::binary );
     }
-    bool good() const { return m_file.good(); }
-    bool dump(const std::string& name,ostream& os) {
+    bool operator!() const { return !m_file; }
+    template <typename T>
+    bool readObject(T& t, const std::string& name) {
       const map<Gaudi::StringKey,Info>& myIndex = getIndex();
       map<Gaudi::StringKey,Info>::const_iterator i = myIndex.find(name);
-      if (i!=myIndex.end()) {
+      if (i==myIndex.end()) return false;
         // slice works relative to the current file offset, as it works on an istream...
         m_file.seekg(0,std::ios_base::beg);
+        io::filtering_istream s;
         if (i->second.compressed) {
 #ifndef _WIN32
-            io::filtering_istream in;
 #ifdef __INTEL_COMPILER         // Disable ICC warning
   #pragma warning(disable:279)  // gzip.hpp(551) controlling expression constant
   #pragma warning(push)
 #endif
-            in.push(io::gzip_decompressor());
+            s.push(io::gzip_decompressor());
 #ifdef __INTEL_COMPILER         // Re-enable ICC warning 279
   #pragma warning(pop)
 #endif
-            in.push(io::slice(m_file,i->second.offset,i->second.size));
-            // suggest an 8K buffer size as hint -- most config items are smaller than that...
-            io::copy(in, os, 8192);
 #else 
             return false;
 #endif // _WIN32
-        } else {
-            // suggest an 8K buffer size as hint -- most config items are smaller than that...
-            io::copy(io::slice(m_file,i->second.offset,i->second.size), os, 8192);
-        }
+        }  
+        s.push(io::slice(m_file,i->second.offset,i->second.size));
+        s >> t;
         return true;
-      }
-      return false;
     }
 
     bool exists(const std::string& path) {
@@ -356,7 +355,7 @@ namespace ConfigTarFileAccessSvc_details {
   }
 
   bool TarFile::_append(const string& name, std::stringstream& is) {
-    //TODO: check if file is open in read/write mode...
+    if (m_lock<0) return false;
     m_indexUpToDate = false;
     std::string bstring = is.str();
     size_t size = bstring.size();
@@ -516,7 +515,7 @@ namespace ConfigTarFileAccessSvc_details {
                     return false;
                 }
                 if (info.name.empty()) {
-                    std::cerr << " got empty name " << std::endl;
+                    cerr << " got empty name " << endl;
                     break;
                 }
                 if ( (info.type == REGTYPE || info.type == REGTYPE0 ) 
@@ -530,11 +529,11 @@ namespace ConfigTarFileAccessSvc_details {
                 size_t skip = info.size;
                 size_t padding = skip % 512;
                 if (padding!=0 ) skip += 512 - padding;
-                m_file.seekg(skip,std::ios::cur);
+                m_file.seekg(skip,ios::cur);
             }
             m_leof = 0;
             m_file.clear();
-            m_file.seekg(0,std::ios::beg);
+            m_file.seekg(0,ios::beg);
             return true;
     }
 }
@@ -547,11 +546,11 @@ DECLARE_SERVICE_FACTORY(ConfigTarFileAccessSvc)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
+  ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const string& name, ISvcLocator* pSvcLocator)
     : Service ( name , pSvcLocator )
-    , m_tarfile(0)
+    , m_file(0)
 {
-  std::string def( System::getEnv("HLTTCKROOT") );
+  string def( System::getEnv("HLTTCKROOT") );
   if (!def.empty()) def += "/config.tar";
   declareProperty("File", m_name = def);
   declareProperty("Mode", m_mode = "ReadOnly");
@@ -588,80 +587,81 @@ StatusCode ConfigTarFileAccessSvc::initialize() {
 }
 
 ConfigTarFileAccessSvc_details::TarFile* ConfigTarFileAccessSvc::file() const {
-  if (m_tarfile.get()==0) { 
-
+  if (m_file.get()==0) { 
       if (m_mode!="ReadOnly"&&m_mode!="ReadWrite"&&m_mode!="Truncate") {
         error() << "invalid mode: " << m_mode << endmsg;
         return 0;
       }
-
       ios::openmode mode =  (m_mode == "ReadWrite") ? ( ios::in | ios::out | ios::ate   )
         :                   (m_mode == "Truncate" ) ? ( ios::in | ios::out | ios::trunc )
         :                                               ios::in ;
 
       info() << " opening " << m_name << " in mode " << m_mode << endmsg;
-      m_tarfile.reset( new TarFile(m_name,mode,m_compress) );
-      if (!m_tarfile->good()) {
+      m_file.reset( new TarFile(m_name,mode,m_compress) );
+      if (!*m_file) {
         error() << " Failed to open " << m_name << " in mode " << m_mode << endmsg;
+        error() << string(strerror(errno)) << endmsg;
+        m_file.reset(0);
       }
   }
-  return m_tarfile.get();
+  return m_file.get();
 }
 
 //=============================================================================
 // Finalization
 //=============================================================================
 StatusCode ConfigTarFileAccessSvc::finalize() {
-  m_tarfile.reset(0);  // (TarFile*)0); // close file if still open
+  m_file.reset(0);  // close file if still open
   return Service::finalize();
 }
 
-std::string
+string
 ConfigTarFileAccessSvc::propertyConfigPath( const PropertyConfig::digest_type& digest ) const {
-  std::string sref=digest.str();
-  return  ((std::string("PropertyConfigs/")+= sref.substr(0,2))+="/")+= sref;
+  string sref=digest.str();
+  return  ((string("PropertyConfigs/")+= sref.substr(0,2))+="/")+= sref;
 }
 
-std::string
+string
 ConfigTarFileAccessSvc::configTreeNodePath( const ConfigTreeNode::digest_type& digest)  const{
-  std::string sref=digest.str();
-  return  ((std::string("ConfigTreeNodes/")+= sref.substr(0,2) )+="/")+= sref;
+  string sref=digest.str();
+  return  ((string("ConfigTreeNodes/")+= sref.substr(0,2) )+="/")+= sref;
 }
 
-std::string
+string
 ConfigTarFileAccessSvc::configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const {
-  return  std::string("Aliases/") +=  alias.str();
+  return  string("Aliases/") +=  alias.str();
 }
 
 template <typename T>
 boost::optional<T>
-ConfigTarFileAccessSvc::read(const std::string& path) const {
-  stringstream content(stringstream::in | stringstream::out);
+ConfigTarFileAccessSvc::read(const string& path) const {
   if( msgLevel(MSG::DEBUG) ) debug() << "trying to read " << path << endmsg;
-  if (file()==0 || !file()->dump(path,content)) {
-    if( msgLevel(MSG::DEBUG) ) debug() << "file " << path << " not found" << endmsg;
+  if (file()==0) {
+    debug() << "file " << m_name << " not found" << endmsg;
     return boost::optional<T>();
   }
   T c;
-  content >> c;
+  if (!file()->readObject(c,path)) { 
+    if( msgLevel(MSG::DEBUG) ) debug() << "file " << path << " not found in container "<< m_name << endmsg;
+    return boost::optional<T>();
+  }
   return c;
-
 }
 
 template <typename T>
 bool
-ConfigTarFileAccessSvc::write(const std::string& path,const T& object) const {
+ConfigTarFileAccessSvc::write(const string& path,const T& object) const {
   boost::optional<T> current = read<T>(path);
   if (current) {
-    if (object==current) return true;
+    if (object==current.get()) return true;
     error() << " object @ " << path << "  already exists, but contents are different..." << endmsg;
     return false;
   }
-  if (m_mode=="ReadOnly") {
-    error() <<"attempted write, but tarfile has been opened ReadOnly" << endmsg;
+  if (!file()->writeable()) {
+    error() <<"attempted write, but file has been opened ReadOnly" << endmsg;
     return false;
   }
-  std::stringstream s; s << object;
+  stringstream s; s << object;
   return file()!=0 && file()->append( path, s );
 }
 
@@ -677,15 +677,10 @@ ConfigTarFileAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& re
 
 boost::optional<ConfigTreeNode>
 ConfigTarFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
-  stringstream content(stringstream::in | stringstream::out);
-  std::string fnam = configTreeNodeAliasPath(alias);
-  if (file()==0 || !file()->dump(fnam,content)) {
-    if( msgLevel(MSG::DEBUG) ) debug() << "file " << fnam << " does not exist" << endmsg;
-    return boost::optional<ConfigTreeNode>();
-  }
-  std::string sref;
-  content >> sref;
-  ConfigTreeNode::digest_type ref = ConfigTreeNode::digest_type::createFromStringRep(sref);
+  string fnam = configTreeNodeAliasPath(alias);
+  boost::optional<string> sref = this->read<string>( fnam );
+  if (!sref) return boost::optional<ConfigTreeNode>();
+  ConfigTreeNode::digest_type ref = ConfigTreeNode::digest_type::createFromStringRep(*sref);
   if (!ref.valid()) {
     error() << "content of " << fnam << " not a valid ref" << endmsg;
     return boost::optional<ConfigTreeNode>();
@@ -693,25 +688,23 @@ ConfigTarFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias
   return readConfigTreeNode(ref);
 }
 
-std::vector<ConfigTreeNodeAlias>
+vector<ConfigTreeNodeAlias>
 ConfigTarFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias)
 {
-  std::vector<ConfigTreeNodeAlias> x;
+  vector<ConfigTreeNodeAlias> x;
 
-  std::string basename("Aliases");
+  string basename("Aliases");
   if (file()==0) { return x ; }
-  std::vector<std::string> aliases = file()->files( PrefixFilenameSelector(basename+"/"+alias.major()) );
+  vector<string> aliases = file()->files( PrefixFilenameSelector(basename+"/"+alias.major()) );
 
-  for (std::vector<std::string>::const_iterator i  = aliases.begin(); i!=aliases.end(); ++i ) {
+  for (vector<string>::const_iterator i  = aliases.begin(); i!=aliases.end(); ++i ) {
     //TODO: this can be more efficient...
     if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
-    std::string ref;
-    stringstream content(stringstream::in | stringstream::out);
-    file()->dump(*i,content);
-    content >> ref;
-    std::string _alias = i->substr( basename.size()+1 );
-    std::stringstream str;
-    str << "Ref: " << ref << '\n' << "Alias: " << _alias << std::endl;
+    string ref;
+    file()->readObject(ref,*i);
+    string _alias = i->substr( basename.size()+1 );
+    stringstream str;
+    str << "Ref: " << ref << '\n' << "Alias: " << _alias << endl;
     ConfigTreeNodeAlias a;
     str >> a;
     if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: content:" << a << endmsg;
@@ -743,23 +736,20 @@ ConfigTarFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alia
   }
   // now write alias...
   fs::path fnam = configTreeNodeAliasPath(alias.alias());
-  //fs::path fdir = fnam.branch_path();
-  //if (fs::exists(fdir)) {
-  //         if (!isCompatible(alias,fdir) ) {
-  //             error() << " current TOPLEVEL is not compatible with other config in " << fdir.string() << " refusing to write TOPLEVEL alias " << endmsg;
-  //             return ConfigTreeNodeAlias::alias_type();
-  //         }
-  //} else if ( !create_directories(fdir) ) {
-  //         error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
-  //         return ConfigTreeNodeAlias::alias_type();
-  //}
   boost::optional<string> x = read<string>(fnam.string());
   if (!x) {
-    std::stringstream s; s << alias.ref();
-    if (file()==0) return ConfigTreeNodeAlias::alias_type();
-    file()->append(fnam.string(),s);
-    info() << " created " << fnam.string() << endmsg;
-    return alias.alias();
+    stringstream s; s << alias.ref();
+    if (file()==0) { 
+        error() << " container file not found during attempted write of " << fnam.string() << endmsg;
+        return ConfigTreeNodeAlias::alias_type();
+    }
+    if (file()->append(fnam.string(),s)) { 
+        info() << " created " << fnam.string() << endmsg;
+        return alias.alias();
+    } else  {
+        error() << " failed to write " << fnam.string() << endmsg;
+        return ConfigTreeNodeAlias::alias_type();
+    }
   } else {
     //@TODO: decide policy: in which cases do we allow overwrites of existing labels?
     // (eg. TCK aliases: no!, tags: maybe... , toplevel: impossible by construction )
