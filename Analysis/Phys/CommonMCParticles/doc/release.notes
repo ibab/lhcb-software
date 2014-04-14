@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
+!========================= CommonMCParticles v1r1 2014-04-14 =========================
+! 2014-04-14 - Conor Fitzpatrick
+ - Basics used StdNoPIDs instead of StdAllNoPIDs, This is a problem for charm modes. Now fixed. All basics are now StdAllNoPIDs. 
+
+
 !========================= CommonMCParticles v1r0 2013-10-02 =========================
 
 ! 2013-08-14 - Conor Fitzpatrick

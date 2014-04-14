@@ -19,7 +19,7 @@ from CommonParticles.StdNoPIDsMuons    import *
 
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCMuons',
-                           Inputs = ["Phys/StdNoPIDsMuons/Particles"],
+                           Inputs = ["Phys/StdAllNoPIDsMuons/Particles"],
                            Code = "(mcMatch('[mu+]cc'))",
 			   Preambulo = ["from LoKiPhysMC.decorators import *",
 			   "from PartProp.Nodes import CC" ]

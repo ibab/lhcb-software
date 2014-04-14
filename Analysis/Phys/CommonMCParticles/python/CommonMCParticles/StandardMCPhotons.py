@@ -18,7 +18,7 @@ from CommonParticles.Utils import *
 from CommonParticles import StdLoosePhotons
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCPhotons',
-                           Inputs = ["Phys/StdLoosePhotons/Particles"],
+                           Inputs = ["Phys/StdLooseAllPhotons/Particles"],
                            Code = "(mcMatch('gamma'))",
 			   Preambulo = ["from LoKiPhysMC.decorators import *",
 			   "from PartProp.Nodes import CC" ]
