@@ -5,10 +5,8 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
-#include <fstream>
 #include <sstream>
 #include <string>
-#include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/copy.hpp"
 #include "boost/iostreams/filter/zlib.hpp"
 #ifndef _WIN32
@@ -21,8 +19,6 @@
 #include "boost/iostreams/device/back_inserter.hpp"
 #include "boost/iostreams/device/array.hpp"
 #include "boost/iostreams/stream.hpp"
-#include "boost/regex.hpp"
-#include "boost/assign/list_of.hpp"
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem/operations.hpp"
 
@@ -107,7 +103,7 @@ namespace ConfigCDBAccessSvc_details {
            cout << " open( " << m_fname << " ): fd = " << fd << endl;
            // if not exist, forget about copying...
 
-           cdb_init( &m_icdb, fd );
+           if (cdb_init( &m_icdb, fd ) < 0) cdb_fileno(&m_icdb) = -1;
         
            if ( mode & ios::out ) {
                 m_oname = fs::unique_path( m_fname.string() + "-%%%%-%%%%-%%%%-%%%%") ;
@@ -140,7 +136,7 @@ namespace ConfigCDBAccessSvc_details {
 
                   }
                   std::cout << "copied " << nrec << " records " << std::endl;
-               }
+               } 
            }
         }
 
@@ -212,11 +208,14 @@ namespace ConfigCDBAccessSvc_details {
         template <typename SELECTOR> vector<string> files(const SELECTOR& selector) const {
             vector<string> _keys;
             
-            unsigned cpos;
-            cdb_seqinit(&cpos,&m_icdb);
-            while( cdb_seqnext(&cpos,&m_icdb) > 0 ) {
-                string key(static_cast<const char*>(cdb_getkey(&m_icdb)), cdb_keylen(&m_icdb));
-                if ( selector(key) ) _keys.push_back(key);
+            std::cout << "fetching keys; fd = " << cdb_fileno(&m_icdb) << std::endl;
+            if (cdb_fileno(&m_icdb)>=0) {
+                unsigned cpos;
+                cdb_seqinit(&cpos,&m_icdb);
+                while( cdb_seqnext(&cpos,&m_icdb) > 0 ) {
+                    string key(static_cast<const char*>(cdb_getkey(&m_icdb)), cdb_keylen(&m_icdb));
+                    if ( selector(key) ) _keys.push_back(key);
+                }
             }
             if (writing()) { // then also check write cache...
                 for ( auto & i : m_shadow ) {
@@ -297,7 +296,7 @@ namespace ConfigCDBAccessSvc_details {
 
             auto record = make_record(is.str());
             if ( cdb_make_add( &m_ocdb, reinterpret_cast<const unsigned char*>(key.data()), key.size()
-                                          , record.data(), record.size()
+                                      , record.data(), record.size()
                              ) != 0 )  {
                // handle error... 
                cerr << " failure to put key " << key << " : " << errno << " = "  << strerror(errno) << endl;
@@ -474,15 +473,13 @@ ConfigCDBAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type&
   string basename("AL");
   if (file()==0) { return x ; }
   vector<string> aliases = file()->files( PrefixFilenameSelector(basename+"/"+alias.major()) );
-
-  for (vector<string>::const_iterator i  = aliases.begin(); i!=aliases.end(); ++i ) {
+  for (const auto& i : aliases ) {
     //TODO: this can be more efficient...
-    if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
+    if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: adding file " << i << endmsg;
     string ref;
-    file()->readObject(ref,*i);
-    string _alias = i->substr( basename.size()+1 );
+    file()->readObject(ref,i);
     stringstream str;
-    str << "Ref: " << ref << '\n' << "Alias: " << _alias << endl;
+    str << "Ref: " << ref << '\n' << "Alias: " <<  i.substr( basename.size()+1 ) << endl;
     ConfigTreeNodeAlias a;
     str >> a;
     if( msgLevel(MSG::DEBUG) ) debug() << " configTreeNodeAliases: content:" << a << endmsg;
