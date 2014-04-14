@@ -140,13 +140,7 @@ namespace ConfigCDBAccessSvc_details {
 
                   }
                   std::cout << "copied " << nrec << " records " << std::endl;
-                 
-                  // close the original, open the output.
-                  assert ( fd == cdb_fileno(&m_icdb) );
-                  close( fd );
                }
-
-                
            }
         }
 
