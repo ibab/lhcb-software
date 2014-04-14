@@ -27,9 +27,13 @@ def generateList(packages=[]):
         if hasattr(Configurables, name):
             try:
                 aConf=getattr(Configurables,name)
-                aConf()
+                if callable(aConf):
+                    aConf()
+                else:
+                    raise TypeError(name+" is not callable, Configurables."+name+" evaluates as type "+str(type(aConf)))
                 retdict[mypack][name]=True
             except Exception,e:
+                import sys, traceback
                 retdict[mypack][name]=False
                 print >> sys.stderr, 'ERROR, cannot import/instantiate configurable', name, '\n-------\n', e.__class__, '\n-------'
                 traceback.print_exc()

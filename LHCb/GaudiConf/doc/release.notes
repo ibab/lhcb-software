@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-04-14 - Rob Lambert
+ - Fix small bug in ConfigurablesTest when configurables fail, make failure more explicit.
+
 ! 2014-04-05 - Heinrich Schindler
  - DigiConf.py: replace VPCluster linker tables by VPDigit linker tables.
 
