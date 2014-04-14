@@ -8,7 +8,7 @@
 
 <H1><A NAME=v5r5>2014-04-14 OnlineSys v5r8</A></H1>
 <PRE>
-  Use new Gaudi v25r1p1
+  Use new Gaudi v25r1
   This release is compatible with the cmake build
   Updated/new packages:	
      Checkpointing       v0r16    Online
