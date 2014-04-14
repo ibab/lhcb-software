@@ -18,17 +18,69 @@
 // ============================================================================
 #include "CaloTrackTool.h"
 // ============================================================================
-
+#include "DetDesc/Condition.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+// #include "GaudiKernel/Kernel.h"
 // ============================================================================
 /** @class CaloTrackMatch CaloTrackMatch.h
- *  
+ *  Description of the use of the track-cluster matching X-correction
+ *  parameters for electrons and positrons.
  *
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date   2006-05-28
+ *  The X-correction part of the code has been designed with the kind help from
+ *  Vanya BELYAEV and Dmitry GOLUBKOV.
+ *
+ *  Common form of the X-correction between the X-position of the state
+ *  of track and barycentre of the CaloHypo object is:
+ *  dX = a0*p + a1 + a2/p + a3/p^2 + ...
+ *  where p - momentum of the track in GeV/$c$,
+ *  parameter vectors for each zone of the ECAL
+ *  m_alphaN<Area>[3] = {a0, a1, a2, a3, ...}
+ *  for e- MagUp and e+ MagDown: (q*polarity) < 0
+ *  and
+ *  m_alphaP<Area>[3] = {a0, a1, a2, a3, ...}
+ *  for e- MagDown and e+ MagUp: (q*polarity) > 0
+ *  
+ *  By default the X-correction parameters are read from the CondDB
+ *  path '/dd/Conditions/ParticleID/Calo/ElectronXCorrection'. 
+ *  
+ *  In the case when the CondDB is switched off or reading
+ *  of the X-correction parameters from the CondDB is disabled
+ *  the X-correction is not implemented and all X-correction parameters
+ *  are equal to zero.
+ *
+ *  Usage of the X-correction parameters in Bender scripts:
+ *  def configure ( ) :
+ *      """
+ *      Job configuration 
+ *      """
+ *      ...
+ *      from Configurables import CaloElectronMatch
+ *      my_tool = CaloElectronMatch()
+ *      ## disable use of the CondDB to apply correction coefficients
+ *      ## from the Options
+ *      my_tool.ConditionName = ""
+ *      ## Set the X-correction parameters for the Outer zone
+ *      ## of the ECAL in case (q*polarity) < 0
+ *      my_tool.AlphaNOut = [ 0.0, -18.92, 83.46, -292.4 ]
+ *
+ *  For more info see talk by O. Stenyakin
+ *  at 2014/02/20 Moscow student meeting 
+ *  https://indico.cern.ch/event/302695/
+ *  or
+ *  at 2014/01/24 Calo Objects meeting
+ *  https://indico.cern.ch/event/296617/
+ *
+ *  @author Oleg STENYAKIN oleg.stenyakin@cern.ch
+ *  @date   2014-03-03
  */
 // ============================================================================
 class CaloTrackMatch : public Calo::CaloTrackTool 
 {
+public:
+  /// initialization
+  virtual StatusCode initialize() ;
+  StatusCode i_updateAlpha();
+  StatusCode i_updateField(); 
 protected:
   /// Standard constructor
   CaloTrackMatch
@@ -232,10 +284,51 @@ protected:
   ( const LHCb::State& s , Match_<3>& match ) const 
   {
     const Gaudi::TrackVector&    par = s.stateVector() ;
-    match ( 0     ) =                par ( 0 ) ;
+    const double q  = 0 < par(4) ? 1. : -1. ; // charge
+    const double mom = ::fabs( 1.0/par(4)/Gaudi::Units::GeV ); // momentum in GeV
+
+    // find calo area corresponding to the input LHCb::State &s;
+    const CellParam* cell = calo()->Cell_( s.position() ) ; // cell parameters (null if point is outside the Calorimeter)
+    unsigned int area = 4; // initialize with some invalid area number
+    if ( cell ) // protection against tracks pointing outside the Calorimeter
+      area = cell->cellID().area() ; // 0:Outer, 1:Middle, 2:Inner
+    else // roughly assign the area around the beam hole to the Inner, everything outside Calo -- to the Outer
+      area = ( fabs(s.position().x()) < 2.*Gaudi::Units::m && fabs(s.position().y()) < 2.*Gaudi::Units::m ) ? 2 : 0; // |x,y| < > 2m
+
+    float polarity = m_magFieldSvc->isDown() ? -1 : +1 ;
+    bool qpolarity = ( q * polarity > 0 ) ; // true : (q*polarity) > 0, false : (q*polarity) < 0
+
+    const std::vector<double> *alpha = NULL;
+    switch ( area ) // symbolic names only declaread as "the private part" of namespace CaloCellCode in CaloCellCode.cpp
+    {
+    case 0 : // Outer  ECAL
+      alpha = qpolarity ? &m_alphaPOut : &m_alphaNOut;
+      break;
+    case 1 : // Middle ECAL
+      alpha = qpolarity ? &m_alphaPMid : &m_alphaNMid;
+      break;
+    case 2 : // Inner  ECAL
+      alpha = qpolarity ? &m_alphaPInn : &m_alphaNInn;
+      break;
+    }
+    Assert( alpha, "electron track pointing to an impossible Calo area outside 0..2 range");    
+
+    match ( 0 ) = par ( 0 ) ;
+    // now add the correction series dX = a0*p + a1 + a2/p + a3/p^2 + ...
+    if ( !alpha->empty() )
+    {
+      double mmm = mom; // p, 1, 1/p, 1/p^2, ...
+      double inv = fabs( par(4)*Gaudi::Units::GeV ); // abs(1/p) in GeV
+
+      for ( std::vector<double>::const_iterator it = alpha->begin(); it != alpha->end(); ++ it)
+      {
+        match ( 0 ) += (*it) * mmm ;
+        mmm *= inv ; // [1/p]^k, k=-1, 0, ... size(alpha)-2
+      }
+    }
+
     match ( 1     ) =                par ( 1 ) ;
     match ( 2     ) = ::fabs ( 1.0 / par ( 4 ) ) ; /// @todo check it!
-    const double q  = 0 < par(4) ? 1. : -1.    ;        // charge 
     const double f  = -1.0 * q / par ( 4 ) / par( 4 ) ; // d(p)/d(Q/p)
     const Gaudi::TrackSymMatrix& cov = s.covariance () ;
     match ( 0 , 0 ) =     cov ( 0 , 0 )     ; // (x,x) 
@@ -256,13 +349,24 @@ protected:
     return StatusCode::SUCCESS ;
   } ;  
 protected:
-  inline       double        bad   () const { return m_bad   ; }
-  inline       LHCb::State& _state ()       { return m_state ; }
-  inline const LHCb::State& _state () const { return m_state ; }
+  inline       double        bad    () const { return m_bad   ; }
+  inline       LHCb::State& _state  ()       { return m_state ; }
+  inline const LHCb::State& _state  () const { return m_state ; }
+
+  Condition * m_cond;
+  std::string m_conditionName;
+  ILHCbMagnetSvc * m_magFieldSvc;
 private:
   /// bad value for chi2 
-  double      m_bad   ;
-  LHCb::State m_state ;
+  double       m_bad       ;
+  LHCb::State  m_state     ;
+
+  std::vector<double> m_alphaPOut ; // (q*polarity) > 0, Outer  ECAL
+  std::vector<double> m_alphaNOut ; // (q*polarity) < 0, Outer  ECAL
+  std::vector<double> m_alphaPMid ; // (q*polarity) > 0, Middle ECAL
+  std::vector<double> m_alphaNMid ; // (q*polarity) < 0, Middle ECAL
+  std::vector<double> m_alphaPInn ; // (q*polarity) > 0, Inner  ECAL
+  std::vector<double> m_alphaNInn ; // (q*polarity) < 0, Inner  ECAL  
 } ;
 
 // ============================================================================
