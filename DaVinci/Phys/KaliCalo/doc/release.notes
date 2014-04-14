@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2014-04-14 - Rob Lambert
+ - Make DaVinci dependency explicit (moved to DaVinci project) see task #50698
+
 !========================= KaliCalo v4r14p1 2014-04-02 =========================
 
 ! 2014-02-21 - Chris Jones

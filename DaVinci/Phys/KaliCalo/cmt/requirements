@@ -20,6 +20,9 @@ use                pytools     v* LCG_Interfaces
 use                LoKiArrayFunctors v* Phys
 use                AnalysisPython v* Phys
 
+#explicit to resolve build/test order, see task #50698
+use                DaVinci v* Phys
+
 # ================ constituents ==============================================
 library            KaliCalo     ../src/*.cpp 
 

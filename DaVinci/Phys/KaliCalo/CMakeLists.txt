@@ -8,7 +8,8 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
                          Phys/AnalysisPython
                          Phys/LoKiAlgo
                          Phys/LoKiArrayFunctors
-                         Phys/LoKiPhys)
+                         Phys/LoKiPhys
+                         Phys/DaVinci)
 
 find_package(pytools)
 
