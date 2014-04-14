@@ -24,6 +24,7 @@
 #include "boost/regex.hpp"
 #include "boost/assign/list_of.hpp"
 #include "boost/filesystem/path.hpp"
+#include "boost/filesystem/operations.hpp"
 
 #include "boost/integer_traits.hpp"
 using boost::uint8_t;
@@ -92,7 +93,6 @@ namespace ConfigCDBAccessSvc_details {
     public:
         CDB(const std::string& name, ios::openmode mode = ios::in) 
             : m_fname(name)
-            , m_writing( mode&ios::out )
         {
            cdb_make_start(&m_ocdb, -1);
            // if open 'readwrite' we construct a fresh copy of the input 
@@ -108,11 +108,16 @@ namespace ConfigCDBAccessSvc_details {
            // if not exist, forget about copying...
 
            cdb_init( &m_icdb, fd );
+        
+           if ( mode & ios::out ) {
+                m_oname = fs::unique_path( m_fname.string() + "-%%%%-%%%%-%%%%-%%%%") ;
+           }
+
            if ( writing() ) {
 
                 // use mkstemp instead of a single a-priori known name!
-                int ofd = open( (m_fname+".tmp").c_str(),O_RDWR|O_CREAT|O_EXCL,S_IRUSR|S_IWUSR);
-                cout << " opened new database \""<< (m_fname+".tmp") << "\", ofd = " << ofd << endl;
+                int ofd = open( m_oname.c_str(),O_RDWR|O_CREAT|O_EXCL,S_IRUSR|S_IWUSR);
+                cout << " opened new database \""<< m_oname << "\", ofd = " << ofd << endl;
                 cdb_make_start(&m_ocdb, ofd);
 
                if (fd>=0) {
@@ -130,6 +135,7 @@ namespace ConfigCDBAccessSvc_details {
                                        ) != 0 )  {
                            // handle error... 
                            cerr << " failure to put key " << string(static_cast<const char*>(cdb_getkey(&m_icdb)) ,cdb_keylen(&m_icdb))  << " : " << errno << " = "  << strerror(errno) << endl;
+                           m_error = true;
                       }
 
                   }
@@ -147,18 +153,21 @@ namespace ConfigCDBAccessSvc_details {
         ~CDB() { 
             close(cdb_fileno(&m_icdb));
             cdb_free(&m_icdb);
-            if (writing()) { 
+            if (writing()) {
                 auto fd = cdb_fileno(&m_ocdb);
                 cdb_make_finish(&m_ocdb);
                 close(fd);
-                // TODO: first verify there are no errors!!!!
-                rename((m_fname+".tmp").c_str(),m_fname.c_str());
+                if (!m_error) {
+                    cout << "renaming "<< m_oname << ", to " << m_fname << endl;
+                    fs::rename(m_oname, m_fname);
+                } else {
+                    cout << "encountered an error; leaving original " << m_fname  << " untouchted, removing temporary "<< m_oname  << endl;
+                    fs::remove( m_oname );
+                }
             }
         }
         
-        bool writing() const {return m_writing; };
-
-
+        bool writing() const {return !m_oname.empty(); };
 
         template <typename T>
         bool readObject(T& t, const std::string& key) {
@@ -171,7 +180,7 @@ namespace ConfigCDBAccessSvc_details {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
                 { unsigned int version  = read8(value); assert( version == 0); }
-                unsigned int flags      = read8(value); assert( flags >= 0 && flags <=3 );
+                  unsigned int flags    = read8(value); assert(  flags < 4 );
                 { unsigned int reserved = read16(value); assert( reserved== 0);
                   auto         uid      = read_uid(value);
                   auto         tm       = read_time(value); }
@@ -298,6 +307,7 @@ namespace ConfigCDBAccessSvc_details {
                              ) != 0 )  {
                // handle error... 
                cerr << " failure to put key " << key << " : " << errno << " = "  << strerror(errno) << endl;
+               m_error = true;
                return false;
             }
             //cout << " appended key " << key << " onto shadow -- now " << m_shadow.size() << " entries " << endl;
@@ -307,10 +317,11 @@ namespace ConfigCDBAccessSvc_details {
     private:
         mutable struct cdb      m_icdb;
         mutable struct cdb_make m_ocdb;
-        string m_fname;
+        fs::path  m_fname;
+        fs::path  m_oname;
         map<Gaudi::StringKey,string> m_shadow; // write cache..
         mutable uid_t m_myUid = 0;
-        bool m_writing;
+        mutable bool m_error = false;
     };
 
 }
