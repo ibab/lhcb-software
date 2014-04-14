@@ -69,7 +69,7 @@ class JetMakerConf:
         tool.JetID = self.jetidnumber
         if self.JetEnergyCorrection:
             algo.ApplyJEC = True
-            algo.HistoPath = 'JEC/'
+            algo.HistoPath = 'JEC14/'
         if self.JetIDCut :
             algo.ApplyJetID = True
         

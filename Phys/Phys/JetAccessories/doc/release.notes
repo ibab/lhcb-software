@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-04-14 - Cédric Potterat
+ - fix JetMaker_Config, error introduced in the last commit
+
 ! 2014-04-11 - Cédric Potterat
  - fix backward compatibility for Strippin line StrippingDisplVertices
 
