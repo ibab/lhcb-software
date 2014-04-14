@@ -7,6 +7,9 @@ branches doc cmt
 use  DaVinci         v34r1p1    Phys
 use  DaVinciTests    v2r23
 
+#Moved from Analysis, see task #50698
+use  KaliCalo        v4r14p1  Phys   # Vanya Belyaev
+
 # Declare this as a container package
 apply_pattern container_package
 

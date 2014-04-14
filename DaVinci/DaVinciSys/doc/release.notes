@@ -5,6 +5,7 @@ Purpose             : LHCb physics analysis application
 
 ! 2014-04-14 - Rob Lambert
  - Restored/updated configurables test, see task #50698
+ - Moved KaliCalo into DaVinci due to the UsedConfigurables. Can always be moved back later.
 
 </PRE><H1><A NAME=v34r1p1>2014-04-03 DaVinci v34r1p1</A></H1><PRE>
 
