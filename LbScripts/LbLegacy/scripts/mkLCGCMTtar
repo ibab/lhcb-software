@@ -386,7 +386,8 @@ def get_macro_value(cmtdir, macro, extratags):
 def get_tar_name(root, gen, native, bin):
     if debug_flag == 1: print ' get_tar_name for %s %s %s %s '%(root,gen,native,bin)
     lcgbin = '__LCG_'+bin
-    lcg_app_dir = os.getenv('LCG_release_area')
+    # Not needed if I'm not mistaken
+    #lcg_app_dir = os.getenv('LCG_release_area')
     dirlist = []
 
     if native.find(gen) != -1 or gen == 'ROOT':
@@ -413,6 +414,7 @@ def get_tar_name(root, gen, native, bin):
             dirlist.append(bin)
 
     if debug_flag == 1: print 'get_tar_name ',name,dirlist
+    if debug_flag == 1: print 'get_tar_name root dir for tars:', root
 
     if not os.path.exists(os.path.join(root,name)):
         if os.path.exists(os.path.join(root,name.replace(gen,gen.lower()))):
@@ -425,6 +427,7 @@ def get_tar_name(root, gen, native, bin):
                 else:
                     name = None
 
+    if debug_flag == 1: print 'get_tar_name returning: ',name,dirlist
     return name, dirlist
 
 
@@ -787,7 +790,11 @@ if __name__ == "__main__":
     else:
         rmcmd = '/bin/rm -fr '
 
-    lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_release_area'], '..', '..', 'external'))
+    # Since LCG_release_area has been changed, we need to sanitize it to remove the new "releases" dir
+    # Available since LCG 68
+    # BC 2014-04-14
+    #lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_release_area'], '..', '..', 'external'))
+    lcg_ext_dir = os.path.normpath(os.path.join(os.environ['LCG_external_area']))
     lhcbtar  = os.path.join(os.environ['LHCBHOME'], 'distribution', 'source')
     lhcbhtml = os.path.join(os.environ['LHCBHOME'], 'distribution', 'html')
     binary = os.environ['CMTCONFIG']
