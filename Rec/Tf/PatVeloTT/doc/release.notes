@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-04-14 - Marco Cattaneo
+ - Add VDT dependency in CMakeLists.txt
+
 ! 2014-04-06 - Sebastina Neubert
 - Restored old version of VeloTT.
 - Moved new version to separate algorithm VeloTTHybrid

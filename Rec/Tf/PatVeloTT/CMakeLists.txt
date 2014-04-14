@@ -10,10 +10,12 @@ gaudi_depends_on_subdirs(Det/STDet
                          Tf/TfKernel
                          Tr/TrackInterfaces)
 
+find_package(VDT)
+
 gaudi_add_module(PatVeloTT
                  src/*.cpp
-                 INCLUDE_DIRS Event/DigiEvent Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces
-                 LINK_LIBRARIES STDetLib TrackEvent)
+                 INCLUDE_DIRS Event/DigiEvent Tf/PatKernel Tf/TfKernel Tr/TrackInterfaces VDT
+                 LINK_LIBRARIES STDetLib TrackEvent VDT)
 
 gaudi_install_python_modules()
 
