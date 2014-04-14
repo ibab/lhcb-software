@@ -6,6 +6,23 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r5>2014-04-14 OnlineSys v5r8</A></H1>
+<PRE>
+  Use new Gaudi v25r1p1
+  This release is compatible with the cmake build
+  Updated/new packages:	
+     Checkpointing       v0r16    Online
+     Controller          v0r10    Online
+     FarmConfig          v0r5     Online
+     GaudiCheckpointing  v0r15    Online
+     GaudiOnlineTests    v1r3     Online
+     OnlineBase          v1r21    Online
+     OnlineKernel        v2r15    Online
+     UPI                 v1r26    Online
+     UPIR                v1r6     Online
+     XML                 v0r4     Online
+</PRE>
+
 <H1><A NAME=v5r5>2014-02-21 OnlineSys v5r7</A></H1>
 <PRE>
   Use new Gaudi v25r0
