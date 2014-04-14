@@ -1,0 +1,42 @@
+# ============================================================================
+# Created    : 2005-05-31
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+# ============================================================================
+package            KaliCalo
+version            v4r14p1
+
+# ================ stucture ==================================================
+branches           cmt doc src python root 
+
+# ================ exported includes =========================================
+include_path       none
+
+# ================ dependencies ==============================================
+use                CaloUtils   v* Calo 
+use                LoKiPhys    v* Phys 
+use                LoKiAlgo    v* Phys 
+use                GaudiPython v* 
+use                pytools     v* LCG_Interfaces
+use                LoKiArrayFunctors v* Phys
+use                AnalysisPython v* Phys
+
+# ================ constituents ==============================================
+library            KaliCalo     ../src/*.cpp 
+
+# ================ Produce LCG dictionary =====================================
+apply_pattern      reflex_dictionary                                     \
+                   dictionary=KaliCalo                                   \
+                   headerfiles=$(KALICALOROOT)/dict/KaliCaloDict.h       \
+                   selectionfile=$(KALICALOROOT)/dict/KaliCalo.xml       \
+                   options=" -U__MINGW32__ "
+
+macro_append ROOT_linkopts " -lPyROOT" \
+             target-winxp  " libPyROOT.lib " 
+
+# ================ standard pattern ==========================================
+apply_pattern      install_python_modules
+apply_pattern      component_library library=KaliCalo
+
+# ============================================================================
+# The END 
+# ============================================================================
