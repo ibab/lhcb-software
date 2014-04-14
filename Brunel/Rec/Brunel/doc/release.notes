@@ -10,6 +10,9 @@ Purpose: LHCb reconstruction program
   . Reimplement the tanh approximation in WalkRelation (Det/OTDet)
   . Use float instead of double where possible (Tf/PatVeloTT)
 
+- Changes to QMTests
+  . Pick up brunel-mc11a-xdst PFN from TestFileDB
+
 </PRE><H1><A NAME=v45r1>2014-03-20 Brunel v45r1</A></H1><PRE>
 This version uses projects LHCb v37r1, Lbcom v15r1,
  Rec v16r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

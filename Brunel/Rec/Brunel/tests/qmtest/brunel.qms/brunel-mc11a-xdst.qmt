@@ -6,10 +6,8 @@
 from Gaudi.Configuration import *
 
 from Configurables import LHCbApp
-LHCbApp().DDDBtag="head-20110914"
-LHCbApp().CondDBtag="sim-20111020-vc-md100"
-
-EventSelector().Input = ["DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst"]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["mc11a-xdst"].run(configurable=LHCbApp())
 
 from Brunel.Configuration import *
 Brunel().EvtMax   = 10
