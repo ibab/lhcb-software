@@ -4,11 +4,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-04-14 - Gerhard Raven
+ - fix clang diagnostic
+
 ! 2014-03-27 - Vanya Belyaev
 
  - HltUnit: change the type of "Params" to std::map<std::string,double>
    to be reverted so something more reasonable [what?] after update of LoKiCore 
-
 
 ! 2014-03-26 - Gerhard Raven
  - trivial C++11 changes

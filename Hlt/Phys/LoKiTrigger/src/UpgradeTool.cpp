@@ -77,7 +77,7 @@ namespace
 #endif
 #ifdef __clang__ 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored -Wunused-function
+#pragma clang diagnostic ignored "-Wunused-function"
 #endif
   // ==========================================================================
   /// move LHCbIDs
