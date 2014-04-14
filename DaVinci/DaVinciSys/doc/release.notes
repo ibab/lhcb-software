@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+! 2014-04-14 - Rob Lambert
+ - Restored/updated configurables test, see task #50698
+
 </PRE><H1><A NAME=v34r1p1>2014-04-03 DaVinci v34r1p1</A></H1><PRE>
 
 New test ROOT6 release based on the LHCb v37r1p1 stack.
