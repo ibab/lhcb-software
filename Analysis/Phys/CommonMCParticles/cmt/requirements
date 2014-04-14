@@ -3,7 +3,7 @@
 # Maintainer : Conor Fitzpatrick
 #============================================================================
 package           CommonMCParticles
-version           v1r0
+version           v1r1
  
 #============================================================================
 # Structure, i.e. directories to process. 
