@@ -12,6 +12,9 @@ Purpose: LHCb Digitization program
   . Update default values of FT digitisation parameters
   . DigiConf.py: replace VPCluster linker tables by VPDigit linker tables
 
+- QMTest changes
+  . Pick up boole-mc11a-xdst PFN from TestFileDB
+
 </PRE><H1><A NAME=v27r2>2014-03-21 Boole v27r2</A></H1><PRE>
 
 - Configuration changes
