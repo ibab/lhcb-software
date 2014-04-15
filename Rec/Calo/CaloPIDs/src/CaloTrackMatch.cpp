@@ -54,7 +54,7 @@ StatusCode CaloTrackMatch::i_updateAlpha()
 {
   // allow a user to disable the CondDB and reset the x-corrections with setProperty on the fly (if ever needed)
   if ( m_conditionName.empty() ){
-    warning() << "attempt to update X-correction parameters by UpdMgrSvc while CondDB access disabled" << endmsg;
+    info() << "attempt to update X-correction parameters by UpdMgrSvc while CondDB access disabled" << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -91,7 +91,7 @@ StatusCode CaloTrackMatch::initialize()
   if ( sc.isFailure() ) { return sc ; }
 
   if (! existDet<DataObject>(detSvc(), m_conditionName) ){
-    warning() << "Condition '" << m_conditionName << "' not found -- switch off the use of the CondDB for CaloTrackMatch!" << endmsg; 
+    info() << "Condition '" << m_conditionName << "' not found -- switch off the use of the CondDB for CaloTrackMatch!" << endmsg;
     m_conditionName = "";
   }
  
@@ -100,7 +100,7 @@ StatusCode CaloTrackMatch::initialize()
     sc = runUpdate();  // ask UpdateManagerSvc to load the condition w/o waiting for the next BeginEvent incident
   }
   else
-    warning() << "ConditionName empty -- reading of the CaloTrackMatch X-correction parameters from the CondDB has been disabled!" << endmsg;
+    info() << "ConditionName empty -- reading of the CaloTrackMatch X-correction parameters from the CondDB has been disabled!" << endmsg;
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true ) ;
 

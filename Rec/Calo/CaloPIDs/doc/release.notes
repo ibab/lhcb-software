@@ -4,6 +4,9 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2014-04-15 - Oleg Stenyakin
+ - CaloTrackMatch : fix warnings
+
 ! 2014-04-14 - Oleg Stenyakin
  - CaloTrackMatch.{h,cpp} : the X-correction for the e+, e- track-cluster matching for each zone of the ECAL is added. Parameters of the correction are loaded from the CondDB by default, added protection if the Conditions are missing.
 
