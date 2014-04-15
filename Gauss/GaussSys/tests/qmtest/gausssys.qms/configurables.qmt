@@ -1,0 +1,31 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: rlambert
+# Purpose: Standard test in every project, check against a list of known configurables, that configurables are visible and can be instantiated. This test verifies that there is no problem with the python dictionary in the release, and is the minimal possible test of the confDB.
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception
+#               . MAJOR: configurables which cannot be instantiated. Contact the authors responsible for the problem.
+#               . MAJOR: entire missing sets of configurables for packages or projects, problem in the build, consult the package authors or release shifters.
+#               . MINOR: A small number of Extra configurables or renamed configurables or small number of removed configurables. See if they make sence and then update the reference files.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="args"><set>
+    <text>-c</text>
+    <text>from GaudiConf.QMTest.ConfigurablesTest import testAllConfigurables; testAllConfigurables();</text>
+  </set></argument>
+  <argument name="validator"><text>
+from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList,evalProject
+
+#first check there are no failures out of all configurables which exist
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"gausssys.allconfigurables")
+
+#next check that there is not a single missing configurable in *this* project
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"gausssys.gaussconfigurables",packages=moduleList()[evalProject()[0]],threshold=0)
+</text></argument>
+</extension>
