@@ -8,7 +8,6 @@
 // ============================================================================
 // Boost
 // ============================================================================
-#include "boost/foreach.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
 // ============================================================================
@@ -49,10 +48,10 @@ using namespace HistogramUtilities;
 #include "Kernel/SelectionLine.h"
 // ============================================================================
 
-namespace {
+namespace 
+{
   static const double timeHistoLowBound = -3;  
 }
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltLine
@@ -225,7 +224,7 @@ StatusCode Selection::Line::initialize()
 {
   // initialize the base:
   StatusCode status = GaudiHistoAlg::initialize();
-  if ( !status.isSuccess() ) return status;
+  if ( status.isFailure() ) return status;
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
@@ -236,7 +235,7 @@ StatusCode Selection::Line::initialize()
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
-  BOOST_FOREACH( const std::string& s, m_incidents )
+  for(  const std::string& s : m_incidents )
   {
     bool rethrow = false; bool oneShot = false; long priority = 0;
     incidentSvc->addListener(this,s,priority,rethrow,oneShot);
@@ -257,10 +256,11 @@ StatusCode Selection::Line::initialize()
   }
 
   //== Initialize the stages
-  BOOST_FOREACH( Stage* i, m_stages) 
+  for ( Stage* i : m_stages) 
   {
     const StatusCode sc = i->initialize(m_timerTool);
-    if ( !sc.isSuccess() ) Error( "Failed to initialize " + i->name(), sc ).ignore();
+    if ( sc.isFailure() ) 
+    { return Error( "Failed to initialize " + i->name(), sc ); }
   }
 
   //== pick up (recursively!) our sub algorithms and their depth count
@@ -290,13 +290,13 @@ StatusCode Selection::Line::initialize()
     if (j!=std::string::npos) stepname.erase(j,common.size());
     stepLabels.push_back( stepname );
   }
-  if (!setBinLabels( m_stepHisto, stepLabels )) 
+  if ( !setBinLabels( m_stepHisto, stepLabels ) ) 
   {
-    error() << " Could not set bin labels in step histo " << endmsg;
+    error() << "Could not set bin labels in step histo" << endmsg;
   }
-  if (!setBinLabels( m_candHisto, stepLabels ))
+  if ( !setBinLabels( m_candHisto, stepLabels ) )
   {
-    error() << " Could not set bin labels in cand histo " << endmsg;
+    error() << "Could not set bin labels in cand histo" << endmsg;
   }
 
   //== and the counters
@@ -328,7 +328,7 @@ StatusCode Selection::Line::execute()
 
   if ( m_measureTime ) m_timerTool->start( m_timer );
 
-  debug() << "==> Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
   LHCb::HltDecReports* reports = 
     getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
@@ -343,12 +343,13 @@ StatusCode Selection::Line::execute()
   LHCb::HltDecReport report( 0, 0, 0, key.second );
   if ( report.invalidIntDecisionID() ) 
   {
-    warning() << " DecisionName=" << key.first << " has invalid intDecisionID=" << key.second << endmsg;
+    warning() << " DecisionName=" << key.first 
+              << " has invalid intDecisionID=" << key.second << endmsg;
   }
   bool accept = !m_stages.empty(); // make sure an empty line always rejects events...
   m_caughtIncident = false; // only interested in incidents during stages->execute...
 
-  for (unsigned i=0;i<m_stages.size();++i) 
+  for  ( unsigned i = 0; i < m_stages.size(); ++i ) 
   {
     result = m_stages[i]->execute();
     if (m_caughtIncident) 
@@ -444,7 +445,7 @@ void Selection::Line::resetExecuted ( )
 {
   Algorithm::resetExecuted();
   // algorithm doesn't call resetExecuted of subalgos! should it???
-  BOOST_FOREACH( Stage* i, m_stages) i->resetExecuted();
+  for ( Stage* i : m_stages ) { i->resetExecuted(); }
 }
 
 //=========================================================================

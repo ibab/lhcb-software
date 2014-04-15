@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-04-15 - Chris Jones
+ - If a tool fails to initialize in Selection::Line::initialize(), pass this
+   failure back to the application framework.
+
 !========================= SelectionLine v1r0p5 2013-07-08 =========================
 
 ! 2013-07-05 - Sebastian Neubert
