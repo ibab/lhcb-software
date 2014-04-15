@@ -2,140 +2,30 @@
 <!--
 #######################################################
 # SUMMARY OF THIS TEST
-# ....................
+# ...................
 # Author: rlambert
-# Purpose: Standard test in every project, check against a list of all known configurables, that all configurables are visible and can be instantiated. This test verifies that there is no problem with the python dictionary in the release, and is the minimal possible test of the confDB.
+# Purpose: Standard test in every project, check against a list of known configurables, that configurables are visible and can be instantiated. This test verifies that there is no problem with the python dictionary in the release, and is the minimal possible test of the confDB.
 # Prerequisites: None
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception
-#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
 #               . MAJOR: configurables which cannot be instantiated. Contact the authors responsible for the problem.
 #               . MAJOR: entire missing sets of configurables for packages or projects, problem in the build, consult the package authors or release shifters.
 #               . MINOR: A small number of Extra configurables or renamed configurables or small number of removed configurables. See if they make sence and then update the reference files.
-#               . EXPECTED: There are always additional configurables and a small number of modified configurables in each release, this is not a big deal and you can update the references. Be casreful to check that there were no build failures first, and if in doubt contact the release managers of the projects below you.
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>
-    <text>$BOOLESYSROOT/tests/options/configurables.py</text>
+    <text>-c</text>
+    <text>from GaudiConf.QMTest.ConfigurablesTest import testAllConfigurables; testAllConfigurables();</text>
   </set></argument>
-  <argument name="timeout"><integer>3000</integer></argument>
-  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="validator"><text>
-ref="$BOOLESYSROOT/tests/refs/configurables.ref"
-me='boolesys.configurables'
-success_ref=[]
-failed_ref=[]
-success_list=[]
-failed_list=[]
+from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList,evalProject
 
-import os
-#####################################################
-#Open and parse the reference file
-#####################################################
-f=open(os.path.expandvars(ref))
-refs=f.read().split('\n')
-try:
-  i=refs.index('== successful ==')
-  exec("success_ref="+refs[i+2])
-  i=refs.index('== failed ==')
-  exec("failed_ref="+refs[i+2])
-except:
-  pass
+#first check there are no failures out of all configurables which exist
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"boolesys.allconfigurables")
 
-#####################################################
-#parse the stdout
-#####################################################
-theResults=stdout.split('\n')
-i=theResults.index('== successful ==')
-exec("success_list="+theResults[i+2])
-i=theResults.index('== failed ==')
-exec("failed_list="+theResults[i+2])
-
-#####################################################
-#check the stdout against the reference
-#####################################################
-quote=''
-for conf in success_ref:
-  if (conf not in success_list) and (conf not in failed_list): 
-    if len(quote):
-      quote=quote+'\n'
-    quote=quote+'-' + conf
-    causes.append(conf+ ' missing')
-
-if(len(quote)):
-  print quote
-  result[me+'.missing']=result.Quote(quote) 
-
-quote=''
-for conf in success_list:
-  if conf not in success_ref:
-    if len(quote):
-      quote=quote+'\n'
-    quote=quote+'+' + conf
-
-if(len(quote)):
-  print quote
-  result[me+'.added']=result.Quote(quote)
-
-quote=''
-for conf in failed_list:
-  if len(quote):
-    quote=quote+'\n'
-  quote=quote+conf+ ' failure'
-  causes.append(conf+ ' failure')
-
-if(len(quote)):
-  print quote
-  result[me+'.failure']=result.Quote(quote) 
-
-#####################################################
-#check the stdout for random other warnings
-#####################################################
-quote=''
-prev_lines=[]
-random_lines=[]
-last_line=''
-for line in theResults:
-  if "== successful ==" in line:
-    break
-  #all my lines start with a '#' and have the configurable in
-  if   (line.split('#')[-1].strip() in success_list): pass
-  elif (line.split('#')[-1].strip() in failed_list ): pass
-  elif (line.split('#')[-1].strip() in success_ref ): pass
-  elif (line.split('#')[-1].strip() in failed_ref  ): pass
-  else:
-    print line
-    if last_line in prev_lines: pass
-    elif last_line in random_lines: pass
-    else:
-      random_lines.append("...\n &gt;&gt;" + last_line)
-      prev_lines.append(last_line)
-    random_lines.append(line)
-    # only fail if the random line has no '#' at the start
-    if '#'!=line[0] and ('stdout' not in causes): causes.append('stdout')
-  
-  if line not in random_lines:
-    last_line=line
-
-if(len(random_lines)):
-  quote = '\n'.join(random_lines)
-  print quote
-  result[me+'.stdout']=result.Quote(quote) 
-
-#####################################################
-#write a new reference file
-#####################################################
-if theResults!=refs:
-  newref=ref+".new"
-  try:
-    newref=ref+".new"
-    fn=open(os.path.expandvars(newref),'w')
-    fn.write(stdout)
-    fn.close()
-  except:
-    pass
-
+#next check that there is not a single missing configurable in *this* project
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"boolesys.booleconfigurables",packages=moduleList()[evalProject()[0]],threshold=0)
 </text></argument>
 </extension>
