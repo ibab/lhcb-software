@@ -20,7 +20,7 @@
     <text>from GaudiConf.QMTest.ConfigurablesTest import testAllConfigurables; testAllConfigurables();</text>
   </set></argument>
   <argument name="validator"><text>
-from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList
+from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList,evalProject
 
 #first check there are no failures out of all configurables which exist
 compareConfigurables("../refs/configurables.ref",stdout,causes,result,"mooresys.allconfigurables")
