@@ -20,13 +20,13 @@
     <text>from GaudiConf.QMTest.ConfigurablesTest import testAllConfigurables; testAllConfigurables();</text>
   </set></argument>
   <argument name="validator"><text>
-from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList
+from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList,evalProject
 
 #first check there are no failures out of all configurables which exist
 compareConfigurables("../refs/configurables.ref",stdout,causes,result,"davincisys.allconfigurables")
 
 #next check that there is not a single missing configurable in *this* project
-compareConfigurables("../refs/configurables.ref",stdout,causes,result,"davincisys.dvconfigurables",packages=moduleList()["DaVinci"],threshold=0)
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"davincisys.dvconfigurables",packages=moduleList()[evalProject()[0]],threshold=0)
 
 </text></argument>
 </extension>
