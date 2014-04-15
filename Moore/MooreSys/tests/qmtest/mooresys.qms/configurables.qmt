@@ -26,6 +26,6 @@ from GaudiConf.QMTest.ConfigurablesTest import compareConfigurables,moduleList
 compareConfigurables("../refs/configurables.ref",stdout,causes,result,"mooresys.allconfigurables")
 
 #next check that there is not a single missing configurable in *this* project
-compareConfigurables("../refs/configurables.ref",stdout,causes,result,"mooresys.mooreconfigurables",packages=moduleList()["Moore"],threshold=0)
+compareConfigurables("../refs/configurables.ref",stdout,causes,result,"mooresys.mooreconfigurables",packages=moduleList()[[evalProject()[0]],threshold=0)
 </text></argument>
 </extension>
