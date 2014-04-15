@@ -215,7 +215,10 @@ Selection::Line::Line( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Selection::Line::~Line() { }
+Selection::Line::~Line() 
+{
+  for ( unsigned i = 0; i < m_stages.size(); ++i ) { delete m_stages[i]; }
+}
 
 //=============================================================================
 // Initialisation. Check parameters

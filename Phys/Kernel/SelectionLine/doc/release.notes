@@ -8,6 +8,7 @@
 ! 2014-04-15 - Chris Jones
  - If a tool fails to initialize in Selection::Line::initialize(), pass this
    failure back to the application framework.
+ - Delete the Stage objects in Selection::Line::~Line().
 
 !========================= SelectionLine v1r0p5 2013-07-08 =========================
 
