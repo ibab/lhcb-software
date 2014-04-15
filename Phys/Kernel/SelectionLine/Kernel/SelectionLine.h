@@ -7,7 +7,8 @@
 #include "Kernel/IANNSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "boost/array.hpp"
+#include <array>
+#include <memory>
 
 // Forward declarations
 class StatEntity;
@@ -151,7 +152,7 @@ namespace Selection {
       Line& operator=( const Line& a );
       
       
-      boost::array<Stage*,nStages> m_stages; ///< List of algorithms to process.
+      std::array< std::unique_ptr<Stage>,nStages> m_stages; ///< List of algorithms to process.
       SubAlgos          m_subAlgo;        ///< list of subalgorithms and their sub-count
       ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
       IJobOptionsSvc* m_jos;                 ///< Pointer to job options service

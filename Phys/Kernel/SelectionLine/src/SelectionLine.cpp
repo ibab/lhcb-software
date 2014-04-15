@@ -53,6 +53,15 @@ namespace
   static const double timeHistoLowBound = -3;  
 }
 
+//TODO: this  adds C++14 'make_unique'... remove once we move to C++14...
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique( Args&& ...args )
+{
+        return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+}
+
+
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltLine
 //
@@ -192,7 +201,7 @@ Selection::Line::Line( const std::string& name,
 {
   for ( unsigned i = 0; i < m_stages.size(); ++i )
   {
-    m_stages[i] = new Stage(*this, transition(stage(i)));
+    m_stages[i] = make_unique<Stage>(*this, transition(stage(i)));
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "HltDecReportsLocation", 
@@ -217,7 +226,6 @@ Selection::Line::Line( const std::string& name,
 //=============================================================================
 Selection::Line::~Line() 
 {
-  for ( unsigned i = 0; i < m_stages.size(); ++i ) { delete m_stages[i]; }
 }
 
 //=============================================================================
@@ -259,7 +267,7 @@ StatusCode Selection::Line::initialize()
   }
 
   //== Initialize the stages
-  for ( Stage* i : m_stages) 
+  for ( auto& i : m_stages) 
   {
     const StatusCode sc = i->initialize(m_timerTool);
     if ( sc.isFailure() ) 
@@ -448,7 +456,7 @@ void Selection::Line::resetExecuted ( )
 {
   Algorithm::resetExecuted();
   // algorithm doesn't call resetExecuted of subalgos! should it???
-  for ( Stage* i : m_stages ) { i->resetExecuted(); }
+  for ( auto& i : m_stages ) { i->resetExecuted(); }
 }
 
 //=========================================================================
