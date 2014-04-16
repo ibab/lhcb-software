@@ -144,8 +144,13 @@ class Hlt2Conf(LHCbConfigurableUser):
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
                 , "DefaultVoidFilter"          : ''
                 , "Hlt2ForwardMaxVelo"         : 1000
+                , "Hlt1TrackOption" : "Decode" #what to do with tracks from Hlt1?
                 }
-
+    __known_hlt1trackoptions__ = ["Decode","Encode-Decode","Rerun","Copy"]
+    #############################  ^ take from HLT1Track raw banks
+    #############################            ^ Create banks and then decode them
+    ############################# Recreate tracks from scratch ^
+    ############################# Direct Copy from Hlt1 location(s)  ^
 ###################################################################################
 #
 # Threshold settings
@@ -211,6 +216,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         Hlt2 configuration
         """
+        if self.getProp("Hlt1TrackOption") not in self.__known_hlt1trackoptions__:
+            raise ValueError("You must choose a valid Hlt1TrackOption for the input of Hlt2, you chose "+self.getProp("Hlt1TrackOption")+" which is not one of: "+self.__known_hlt1trackoptions__.__str__())
         Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
         # set Hlt2 PID
         self.configureReconstruction()

@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2014-04-16 - Rob Lambert
+ - Add Hlt1TrackOption to Hlt2Conf, see task #50648, propagate to it from HltConf in split scenario (to be removed shortly).
+
 ! 2014-04-08 - Sebastian Neubert
  - Moved trackingSource into HltConf
 

@@ -726,12 +726,22 @@ class HltConf(LHCbConfigurableUser):
         # make sure we only instantiate if we actually use it...
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
             EndMembers += [ c() for c in i ]
-
+        
         # only switch on TrackReports in a split scenario in Hlt1
         if self.getProp("Split") != "Hlt1" : 
             self.setProp("EnableHltTrackReports", False)
-            Warning("Disabling HltTrackReports Writers")
-
+            #don't need to print a warning here.
+            #Warning("Disabling HltTrackReports Writers")
+        
+        #pass split defaults to Hlt2Conf to deal with track reports
+        if not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
+            if self.getProp("Split") == "Hlt1" :
+                pass
+            elif self.getProp("Split") == "Hlt2":
+                Hlt2Conf().setProp("Hlt1TrackOption","Decode")
+            else:
+                Hlt2Conf().setProp("Hlt1TrackOption","Encode-Decode")
+        
         # List of track types that should be persisted into the TrackReports in HLT1
         # Map TrackLocations to SourceIDs for the TrackReports 
         # link source IDs, WriterName and TES locations:
