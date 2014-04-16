@@ -650,6 +650,12 @@ class Moore(LHCbConfigurableUser):
                           )
         if self.getProp("OutputLevel")<INFO:
             hltConf.setProp("Verbose",True)
+        
+        from Configurables import Hlt2Conf
+        #cannot do this for the TCK right now. Ideally I want a transform which doies the same as this.
+        if MooreExpert().getProp("Hlt2Independent") and ("Hlt1TrackOption" in Hlt2Conf().__slots__ or hasattr(Hlt2Conf(),"Hlt1TrackOption")) and not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
+            Hlt2Conf().setProp("Hlt1TrackOption","Rerun")
+        
     
     def _suppressMonitoring(self):
         if self.getProp("UseTCK"):

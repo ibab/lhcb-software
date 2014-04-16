@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-04-16 - Rob Lambert
+ - Configure Hlt2Conf Hlt1TrackOption if it exists for Hlt2Independent
+
 ! 2014-04-04 - Rob Lambert
  - Fail test if timing tables don't exist instead of throwing an exception.
 
