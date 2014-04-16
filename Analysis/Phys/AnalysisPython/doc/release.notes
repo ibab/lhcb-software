@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-04-16 - Vanya Belyaev
+   add qmtest that makes segmentation fault for ROOT6  
+   
 !========================= AnalysisPython v2r29 2014-04-02 =========================
 
 ! 2014-03-31 - Vanya Belyaev
