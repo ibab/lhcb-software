@@ -20,7 +20,14 @@ f=open("../options/Moore-LocalTCKData.py")
 configdest=f.read().split("'")[1]
 f.close()
 
-commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False; Moore().Split=\""+mysplit+"\";'"
+commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False;'"
+
+if mysplit=="Hlt1":
+    commandoptions.replace("import Moore;","import Moore; Moore().ThresholdSettings=\"Hlt1_\"+Moore().ThresholdSettings;")
+
+if mysplit=="Hlt2":
+    commandoptions.replace("import Moore;","import Moore; Moore().ThresholdSettings=\"Hlt2_\"+Moore().ThresholdSettings;")
+
 
 def expp(apath):
     return os.path.abspath(os.path.expandvars(os.path.expanduser(apath)))

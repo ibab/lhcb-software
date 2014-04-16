@@ -6,6 +6,7 @@
 
 ! 2014-04-16 - Rob Lambert
  - Begin retiring split configuration, start by using the new Hlt1/2 thresholds for Physics_2012 in testing. see task #50414.
+ - Next use those new thresholds in TCK generation and in the tck deferral tests
 
 ! 2014-04-16 - Rob Lambert
  - Configure Hlt2Conf Hlt1TrackOption if it exists for Hlt2Independent

@@ -25,7 +25,7 @@
     <text>../options/Moore-LocalTCKData.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().outputFile = 'hlt1_reqhlt1_tck.raw'; Moore().EnableTimer="tck.deferral.hlt1only.csv";</text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00e10046';  Moore().CheckOdin=False; Moore().outputFile = 'hlt1_reqhlt1_tck.raw'; Moore().EnableTimer="tck.deferral.hlt1only.csv";</text>
   </set></argument>
   <argument name="validator"><text>
 myname='moore.physics.tck.tdeferral.runsplithlt1'
