@@ -4,12 +4,13 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Run HLT2 stand alone and independentlyusing Gerhard's sledehammer and compare it to a reference timing table
-# Prerequisites: 
+# Purpose: Test deferral running Hlt2 after Hlt1
+# Prerequisites: at least the physics.2012 and the physics.deferral.hlt1only need to have completed first.
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
 #               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
 #               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . EXPECTED: Unfortunately Hlt2 after 1 does not currently behave the same as Hlt2 along side 1, and this is something to be understood and fixed. https://savannah.cern.ch/task/?49544
 #######################################################
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
@@ -19,19 +20,17 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
-    <text>../options/Moore_NoTosDeferral.py</text>
     <text>../options/default-threshold.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt2only.csv"; Moore().ThresholdSettings="Hlt2_"+Moore().ThresholdSettings;</text>
+    <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1.raw' ]; Moore().EnableTimer="deferral.hlt2after1newthreshold.csv"; Moore().ThresholdSettings="Hlt2_"+Moore().ThresholdSettings;</text>
   </set></argument>
-  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-myname='moore.physics.deferral.hlt2only'
+myname='moore.physics.deferral.hlt2after1'
 
 from Moore.QMTest.MooreTests import compareTimingTableFiles
 
-compareTimingTableFiles(myname,result,causes,"deferral.hlt2only.csv","../refs/deferral.hlt2only.csv","Hlt2")
+compareTimingTableFiles(myname,result,causes,"deferral.hlt2after1newthreshold.csv","physics.2012.csv","Hlt2")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})

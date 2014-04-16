@@ -21,8 +21,8 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
-    <text>../options/Moore_Hlt1Only.py</text>
     <text>../options/default-threshold.py</text>
+    <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv";</text>
   </set></argument>

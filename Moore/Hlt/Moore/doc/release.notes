@@ -5,6 +5,9 @@
 !============================================
 
 ! 2014-04-16 - Rob Lambert
+ - Begin retiring split configuration, start by using the new Hlt1/2 thresholds for Physics_2012 in testing. see task #50414.
+
+! 2014-04-16 - Rob Lambert
  - Configure Hlt2Conf Hlt1TrackOption if it exists for Hlt2Independent
 
 ! 2014-04-04 - Rob Lambert

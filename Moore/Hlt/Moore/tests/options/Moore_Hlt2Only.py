@@ -11,3 +11,4 @@ from Configurables import Moore
 
 #new splitting of Hlt1
 Moore().Split='Hlt2'
+#Moore().ThresholdSettings='Hlt2_'+Moore().ThresholdSettings

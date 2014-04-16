@@ -16,3 +16,4 @@ Moore().outputFile = 'hlt1_reqhlt1.raw'
 
 #use new splitting of Hlt2
 Moore().Split='Hlt1'
+Moore().ThresholdSettings="Hlt1_"+Moore().ThresholdSettings
