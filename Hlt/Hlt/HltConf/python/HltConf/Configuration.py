@@ -171,11 +171,14 @@ class HltConf(LHCbConfigurableUser):
         #
         #sensitive to the split scenario
         
+        # obtain list of lines,
+        activehlt1lines,activehlt2lines=self._runHltLines()
+        
         Dec=Sequence('HltDecisionSequence',Members=[])
-        if self.getProp("Split")=="Hlt1" or not len(self.getProp("Split")):
+        if self.getProp("Split")!="Hlt2" and len(activehlt1lines):
             Dec.Members.append(Sequence("Hlt1"))
         
-        if self.getProp("Split")=="Hlt2" or not len(self.getProp("Split")):
+        if self.getProp("Split")!="Hlt1" and len(activehlt2lines):
             Dec.Members.append(Sequence("Hlt2"))
         
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
@@ -190,19 +193,23 @@ class HltConf(LHCbConfigurableUser):
             if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits') 
             Sequence("HltDecisionSequence").Members.insert(0,filter)
             Sequence("HltEndSequence").Members.insert(0,filter)
+        
         #
-        # dispatch Hlt1 configuration
+        # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
         #
-        Hlt1Conf()
-        Hlt1Conf().ThresholdSettings = ThresholdSettings
+        if activehlt1lines:
+            Hlt1Conf()
+            Hlt1Conf().ThresholdSettings = ThresholdSettings
         #
         # dispatch Hlt2 configuration
         #
-        Hlt2Conf()
-        self.setOtherProps(Hlt2Conf(),[ "DataType" ])
-        Hlt2Conf().ThresholdSettings = ThresholdSettings
-        if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
-            Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
+        # don't do this if there are no HLT2 lines, or if the split is Hlt1
+        if self.getProp("Split")!="Hlt1" and activehlt2lines:
+            Hlt2Conf()
+            self.setOtherProps(Hlt2Conf(),[ "DataType" ])
+            Hlt2Conf().ThresholdSettings = ThresholdSettings
+            if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
+                Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
         #fix input locations, for the moment do with a post-config action,
         #TODO: in the future set in Hlt1 and Hlt2 separately
@@ -367,9 +374,9 @@ class HltConf(LHCbConfigurableUser):
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         # We need to get the "extra" piece of the Muon stubs location compared to the track location
         tracking = 0
-        try :
+        try:
             tracking = Hlt2BiKalmanFittedForwardTracking.hlt2PrepareTracks()
-        except :
+        except:
             # Nobody configured the tracking so no meaningful Hlt2 was run
             # so just pass some default value
             HltSelReportsMaker().MuonIDSuffix = "/PID/MuonSegments"
@@ -551,16 +558,9 @@ class HltConf(LHCbConfigurableUser):
 
 
 ##################################################################################
-    def postConfigAction(self) : 
-        """
-        Add the configured lines into the Hlt1 and Hlt2 sequencers,
-        provided there is no reason not to do so...
-
-        @todo remove this method
-        """
-        from HltLine.HltLine     import hlt1Lines
+    def _runHltLines(self):
         from HltLine.HltLine     import hlt2Lines
-
+        
         activeHlt1Lines = []
         activeHlt2Lines = []
         sets = self.settings()
@@ -570,20 +570,9 @@ class HltConf(LHCbConfigurableUser):
         else :
             activeHlt1Lines = [ i.name() for i in hlt1Lines() ]
             activeHlt2Lines = [ i.name() for i in hlt2Lines() ]
-
-        ###
-        # append additional lines # WARNING do that in DaVinci, not Moore!
-        # @todo : Need to protect against that when making a TCK. Gerhard know how
+        
         activeHlt1Lines.extend( self.getProp('AdditionalHlt1Lines')  )
         activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
-
-        ### @FIXME / @TODO
-        #  brute force addition of Hlt2PileUp -- needs to be done in an elegant fashion...
-        #  problem is that it is the setting which drives this, but Hlt2.py which generates
-        #  the Hlt2Line('PileUp',... ) -- so for now we rely on the fact that we happen
-        #  to know what Hlt2.py does...
-        if activeHlt2Lines and 'Hlt2PileUp' in [ i.name() for i in hlt2Lines() ] and 'Hlt2PileUp' not in activeHlt2Lines :
-                activeHlt2Lines += [ 'Hlt2PileUp' ]
 
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
@@ -602,7 +591,19 @@ class HltConf(LHCbConfigurableUser):
         activeHlt1Lines = unique( activeHlt1Lines )
         activeHlt2Lines = unique( activeHlt2Lines )
 
+        return activeHlt1Lines, activeHlt2Lines
+    
+    def postConfigAction(self) : 
+        """
+        Add the configured lines into the Hlt1 and Hlt2 sequencers,
+        provided there is no reason not to do so...
 
+        @todo remove this method
+        """
+        from HltLine.HltLine     import hlt1Lines
+        from HltLine.HltLine     import hlt2Lines
+        activeHlt1Lines, activeHlt2Lines = self._runHltLines()
+        
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         # print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
         awol1 = set( activeHlt1Lines ) - set( [ i.name() for i in hlt1Lines() ] )
@@ -727,17 +728,20 @@ class HltConf(LHCbConfigurableUser):
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
             EndMembers += [ c() for c in i ]
         
+        #pass split defaults to Hlt2Conf to deal with track reports
+        activehlt1lines,activehlt2lines=self._runHltLines()
+        
         # only switch on TrackReports in a split scenario in Hlt1
-        if self.getProp("Split") != "Hlt1" : 
+        if self.getProp("Split") != "Hlt1" and len(activehlt2lines): 
             self.setProp("EnableHltTrackReports", False)
             #don't need to print a warning here.
             #Warning("Disabling HltTrackReports Writers")
         
-        #pass split defaults to Hlt2Conf to deal with track reports
-        if not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
-            if self.getProp("Split") == "Hlt1" :
-                pass
-            elif self.getProp("Split") == "Hlt2":
+        #only instantiate Hlt2Conf if we need it!
+        if self.getProp("Split") == "Hlt1" or len(activehlt2lines)==0:
+            pass
+        elif not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
+            if self.getProp("Split") == "Hlt2" or len(activehlt1lines)==0:
                 Hlt2Conf().setProp("Hlt1TrackOption","Decode")
             else:
                 Hlt2Conf().setProp("Hlt1TrackOption","Encode-Decode")
