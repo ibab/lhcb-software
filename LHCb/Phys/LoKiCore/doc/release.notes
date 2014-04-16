@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-04-16 - Marco Cattaneo
+ - Remove duplicate dictionaries for IChronoSvc and IStatSvc, already in 
+   GaudiKernelDict
+
 !========================= LoKiCore v11r18 2014-03-17 =========================
 ! 2014-03-12 - Chris Jones
  - Add Algorithm context names to LoKi Reporter messages.
