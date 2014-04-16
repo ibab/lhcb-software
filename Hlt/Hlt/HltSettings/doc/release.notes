@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-04-16 - Rob Lambert
+ - Add Hlt1_ and Hlt2_ versions of Physics_September2012, see task #50414
+
 !========================= HltSettings v6r2 2014-02-20 =========================
 ! 2014-02-19 - Sebastian Neubert
  - Added Hlt1TrackAllL0LifetimeUnbiased prototype line
