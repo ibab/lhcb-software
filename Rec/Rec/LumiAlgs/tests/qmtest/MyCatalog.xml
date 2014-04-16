@@ -7,7 +7,7 @@
 
   <File ID="345b5b36-9890-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000018.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000018.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000018.raw"/>
@@ -16,7 +16,7 @@
 
   <File ID="14dceef0-9890-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw"/>
@@ -25,7 +25,7 @@
 
   <File ID="14de0a1a-9890-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"/>
@@ -34,7 +34,7 @@
 
   <File ID="21ab1526-9890-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000017.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000017.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000017.raw"/>
@@ -44,7 +44,7 @@
 
   <File ID="2d9d961c-9898-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"/>
@@ -54,7 +54,7 @@
 
   <File ID="156d2ae0-e117-11e1-b668-00259011312c">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000008.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000008.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000008.raw"/>
@@ -63,7 +63,7 @@
 
   <File ID="3b3b41fc-e118-11e1-b669-00259011312c">
      <physical>
-       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000112.raw"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000112.raw"/>
      </physical>
      <logical>
        <lfn name="/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000112.raw"/>

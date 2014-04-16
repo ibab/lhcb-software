@@ -63,7 +63,9 @@ private
 # Uses only needed to set up run time environment of tests
   macro DDDB_use "" QMTest "DDDB  v*  Det"
   macro XMLSummaryBase_use "" QMTest "XMLSummaryBase  v* Kernel "
+  macro PRConfig_use "" QMTest "PRConfig  v* "
   use $(DDDB_use)
   use $(XMLSummaryBase_use)
+  use $(PRConfig_use)
   apply_pattern QMTest
 end_private
