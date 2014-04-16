@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-04-16 - Vanya Belyaev
+    add qmtest for JIRA-LBCORE-461
+    it makes seghmentation fault for ROOT6 and runs smoothly for ROOT5 
+
 !========================= LoKiGen v10r15 2014-03-17 =========================
 ! 2014-02-21 - Marco Clemencic
  - Moved the PID operators to the namespace LoKi::GenParticles to fix an issue
