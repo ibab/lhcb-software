@@ -49,8 +49,7 @@ StatusCode PrPixelHitManager::initialize() {
   // Get detector element.
   m_vp = getDet<DeVP>(DeVPLocation::Default);
   // Make sure we are up-to-date on populated VELO stations
-  registerCondition((*(m_vp->leftSensorsBegin()))->geometry(), &PrPixelHitManager::rebuildGeometry);
-  registerCondition((*(m_vp->rightSensorsBegin()))->geometry(), &PrPixelHitManager::rebuildGeometry);
+  registerCondition((*(m_vp->sensorsBegin()))->geometry(), &PrPixelHitManager::rebuildGeometry);
   // First update
   sc = updMgrSvc()->update(this);
   if (!sc.isSuccess()) {

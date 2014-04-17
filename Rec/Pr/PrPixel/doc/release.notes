@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-17 - Heinrich Schindler
+ - Change condition for rebuilding geometry (following r171666).
+
 ! 2014-04-07 - Kurt Rinnert
  - change default to unlimited cluster size when running on Super Pixel raw
    banks. This is to avoid changes in results when we switch over. Cuts will
