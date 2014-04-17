@@ -10,6 +10,7 @@
 // Kernel/LHCbKernel
 #include "Kernel/VPDataFunctor.h"
 #include "Kernel/VPChannelID.h"
+// Kernel/LHCbMath
 #include "LHCbMath/LHCbMath.h"
 // Event/MCEvent
 #include "Event/MCHit.h"
@@ -110,15 +111,18 @@ StatusCode VPDepositCreator::execute() {
     error() << "No hits in " << m_hitLocation << endmsg;
     return StatusCode::FAILURE;
   }
+
+  // Create a container for the MC digits and transfer ownership to the TES. 
   m_digits = new LHCb::MCVPDigits();
+  put(m_digits, m_digitLocation);
+
   // Loop over the hits and calculate the deposited charge on each pixel.
   LHCb::MCHits::const_iterator ith;
   for (ith = hits->begin(); ith != hits->end(); ++ith) createDeposits(*ith);
+
   // Sort the MC digits by channel ID.
   std::stable_sort(m_digits->begin(), m_digits->end(),
                    VPDataFunctor::Less_by_Channel<const LHCb::MCVPDigit*>());
-  // Store the MC digits on the transient store.
-  put(m_digits, m_digitLocation);
   return StatusCode::SUCCESS;
 
 }
@@ -135,7 +139,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
   const double path = hit->pathLength();
   unsigned int nPoints = int(ceil(path / m_stepSize));
   if (nPoints > m_nMaxSteps) nPoints = m_nMaxSteps;
-  // Calculate charge on each point.
+  // Calculate the charge on each point.
   std::vector<double> charges(nPoints);
   double sum = 0.;
   const double mpv = m_chargeUniform * (path / Gaudi::Units::micrometer) / nPoints;
@@ -166,23 +170,24 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
     activeDepth *= m_radDamageTool->chargeCollectionEfficiency(f, m_biasVoltage);
   }
   // Calculate the distance between two points on the trajectory.
-  Gaudi::XYZVector step = hit->displacement() / static_cast<double>(nPoints);
+  Gaudi::XYZPoint entry = sensor->globalToLocal(hit->entry());
+  Gaudi::XYZPoint exit = sensor->globalToLocal(hit->exit());
+  Gaudi::XYZVector step = (exit - entry) / static_cast<double>(nPoints);
   // Coordinates of the first point on the trajectory.
-  Gaudi::XYZPoint point = hit->entry() + 0.5 * step;
+  Gaudi::XYZPoint point = entry + 0.5 * step;
   // Calculate scaling factor to match total deposited charge.
   const double adjust = charge / sum;
   // Accumulate deposits on pixels.
   std::map<LHCb::VPChannelID, double> pixels;
   for (unsigned int i = 0; i < nPoints; ++i) {
-    Gaudi::XYZPoint localPoint = sensor->globalToLocal(point);
     charges[i] *= adjust;
 #ifdef DEBUG_HISTO
     plot(charges[i], "ChargePerPoint",
          "Number of electrons per point", 0., 2000., 100);
 #endif
-    double dz = 0.;
+    // Calculate the distance to the pixel side of the sensor.
     // Pixel side is always at z = -thickness/2 in local coordinates.
-    dz = fabs(localPoint.z() + 0.5 * thickness);
+    const double dz = fabs(point.z() + 0.5 * thickness);
     if (m_irradiated) {
       if (dz > activeDepth){
         point += step;
@@ -195,7 +200,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
     for (unsigned int j = 0; j < nSplit; ++j) {
       const double dx = sigmaD * m_gauss();
       const double dy = sigmaD * m_gauss();
-      Gaudi::XYZPoint endpoint = localPoint + Gaudi::XYZVector(dx, dy, 0.);
+      Gaudi::XYZPoint endpoint = point + Gaudi::XYZVector(dx, dy, 0.);
       LHCb::VPChannelID channel;
       StatusCode valid = sensor->pointToChannel(endpoint, true, channel);
       if (valid) {

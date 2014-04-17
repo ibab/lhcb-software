@@ -9,6 +9,8 @@
 #include "Event/MCVPDigit.h"
 // Event/DigiEvent
 #include "Event/VPDigit.h"
+// Kernel/LHCbKernel
+#include "Kernel/VPDataFunctor.h"
 
 // Local
 #include "VPDigitCreator.h"
@@ -94,7 +96,7 @@ StatusCode VPDigitCreator::initialize() {
 StatusCode VPDigitCreator::execute() {
   
   if (m_deadTime) {
-    // Update the list of currently inactive pixels
+    // Update the list of currently inactive pixels.
     std::map<const VPChannelID, double>::iterator itp;
     for (itp = m_deadPixels.begin(); itp != m_deadPixels.end(); ++itp) {
       m_deadPixels[itp->first] -= m_bunchCrossingSpacing;
@@ -107,20 +109,24 @@ StatusCode VPDigitCreator::execute() {
       }
     }
   }
-  
-  LHCb::VPDigits* digits = new LHCb::VPDigits();
+
+  // Pick up the MC digits.
   const LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(m_inputLocation);
   if (!mcdigits) {
     error() << "No digits in " << m_inputLocation << endmsg;
     return StatusCode::FAILURE;
   }
+
+  // Create a container for the digits and transfer ownership to the TES. 
+  LHCb::VPDigits* digits = new LHCb::VPDigits();
+  put(digits, m_outputLocation); 
+
+  // Loop over the MC digits.
   LHCb::MCVPDigits::const_iterator it;
   for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
     // Sum up the charge from all deposits.
-    double charge = 0.;
     const std::vector<double>& deposits = (*it)->deposits();
-    const unsigned int nDeposits = deposits.size();
-    for (unsigned int i = 0; i < nDeposits; ++i) charge += deposits[i];
+    double charge = std::accumulate(deposits.begin(), deposits.end(), 0.);
     // Add electronics noise.
     if (m_ElectronicNoise > 0.1) {
       charge += m_ElectronicNoise * m_gaussDist();
@@ -128,7 +134,7 @@ StatusCode VPDigitCreator::execute() {
     }
     const LHCb::VPChannelID channel = (*it)->channelID();
     // Calculate time over threshold.
-    double tot = timeOverThreshold(charge);
+    const double tot = timeOverThreshold(charge);
     // Check if pixel is already over threshold.
     if (m_deadTime) {
       if (m_deadPixels.count(channel) == 1) {
@@ -144,7 +150,10 @@ StatusCode VPDigitCreator::execute() {
     LHCb::VPDigit* digit = new LHCb::VPDigit(); 
     digits->insert(digit, channel);
   }
-  put(digits, m_outputLocation); 
+
+  // Sort the digits by channel ID.
+  std::stable_sort(digits->begin(), digits->end(),
+                   VPDataFunctor::Less_by_Channel<const LHCb::VPDigit*>());
   return StatusCode::SUCCESS;
 
 }

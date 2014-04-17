@@ -16,7 +16,7 @@ static const InterfaceID IID_VPRadiationDamageTool ("VPRadiationDamageTool", 1, 
 class VPRadiationDamageTool : public GaudiTool {
 
 public: 
-  // Return the interface ID
+  /// Return the interface ID
   static const InterfaceID& interfaceID() {return IID_VPRadiationDamageTool;}
 
   /// Standard constructor
@@ -27,9 +27,9 @@ public:
 
   virtual StatusCode initialize();
 
-  // Fluence as function of position and integrated luminosity (in fb-1).
+  /// Fluence as function of position and integrated luminosity (in fb-1).
   double fluence(const Gaudi::XYZPoint point, const double lint);
-  // Charge collection efficiency as function of 1 MeV n eq. fluence and bias.
+  /// Charge collection efficiency as function of 1 MeV n eq. fluence and bias.
   double chargeCollectionEfficiency(const double f, const double v);
 
 private:

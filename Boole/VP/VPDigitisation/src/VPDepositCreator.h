@@ -25,8 +25,7 @@ class DeVP;
 class MCHit;
 class VPChannelID;
 
-/** @class VPDepositCreator.h 
- *  VPDigitisation/VPDepositCreator.h
+/** @class VPDepositCreator VPDepositCreator.h VPDigitisation/VPDepositCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
@@ -44,44 +43,48 @@ public:
   /// Destructor
   virtual ~VPDepositCreator();
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute();       ///< Algorithm execution
+  /// Algorithm initialization
+  virtual StatusCode initialize();
+  /// Algorithm execution
+  virtual StatusCode execute();       
 
 private:
-  // Convert energy deposit to charge deposits on pixels
+  /// Convert G4 energy deposit to charge deposits on pixels
   void createDeposits(LHCb::MCHit* hit);
-  // Draw random number from 1/q^2 distribution
+  /// Draw random number from 1/q^2 distribution
   double randomTail(const double qmin, const double qmax);
 
-  // Input/output containers
+  /// Locations of input and output containers
   std::string m_hitLocation;
   std::string m_digitLocation;
 
+  /// Detector element
   DeVP* m_det;
+  /// Radiation damage tool
   VPRadiationDamageTool* m_radDamageTool;
 
-  // Vector of MC digits
+  /// Vector of MC digits
   LHCb::MCVPDigits* m_digits;
 
-  // Distance between points on hit trajectory
+  /// Distance between points on hit trajectory
   double m_stepSize;
-  // Max. number of points on hit trajectory
+  /// Max. number of points on hit trajectory
   unsigned int m_nMaxSteps;
 
-  // Number of electrons per micron (MPV) 
+  /// Number of electrons per micron (MPV) 
   double m_chargeUniform;
-  // Conversion factor between energy loss and number of electrons
+  /// Conversion factor between energy deposit and number of electrons
   double m_eVPerElectron;
-  // Lower limit of 1/q^2 distribution
+  /// Lower limit of 1/q^2 distribution
   double m_minChargeTail;
 
   double m_temperature;
   double m_biasVoltage;
   double m_diffusionCoefficient; 
 
-  // Flag to simulate radiation damage or not
+  /// Flag to simulate radiation damage or not
   bool m_irradiated;
-  // Integrated luminosity in fb-1
+  /// Integrated luminosity in fb-1
   double m_dataTaken;
 
   Rndm::Numbers m_gauss;

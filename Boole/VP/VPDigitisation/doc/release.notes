@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-04-17 - Heinrich Schindler
+ - VPDigitCreator: sort digits by channel ID
+
 ! 2014-03-30 - Heinrich Schindler
  - Follow changes in VPCluster format (removal of VPLiteCluster, r170715)
 
