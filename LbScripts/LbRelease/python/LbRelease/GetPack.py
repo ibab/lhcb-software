@@ -406,6 +406,8 @@ class GetPack(Script):
                                "('#' is interpreted as a comment and empty lines are skipped). "
                                "If the file name is '-' the list is taken from the standard input. "
                                "Note: it implies '--batch' and cannot be used for projects.")
+        self.parser.add_option('--export', action='store_true',
+                               help='use "export" instead of "checkout" to get the packages')
         self.parser.set_defaults(protocol = "default",
                                  switch = False,
                                  version_dirs = False,
@@ -415,6 +417,7 @@ class GetPack(Script):
                                  no_curses = False,
                                  exclude = [],
                                  eclipse_config = True,
+                                 export = False,
                                  )
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
@@ -586,7 +589,10 @@ class GetPack(Script):
             version = version.lower()
         self.log.info("Checking out %s %s (from '%s')" % (package, version, rep.repository))
         try:
-            rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse,ifExistsAction=self._ifExistsAction)
+            rep.checkout(package, version, vers_dir=self.options.version_dirs,
+                         eclipse=self.options.eclipse,
+                         ifExistsAction=self._ifExistsAction,
+                         export=self.options.export)
         except TypeError:
             #need to have this option in case it's a CVS user repository, don't want to break those immediately!
             rep.checkout(package, version, vers_dir = self.options.version_dirs, eclipse = self.options.eclipse)
@@ -644,8 +650,10 @@ class GetPack(Script):
         if version.lower() == "head":
             version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
-        rep.checkout(project, version, vers_dir = True, project = True,
-                     eclipse = self.options.eclipse, global_tag = self.options.global_tag)
+        rep.checkout(project, version, vers_dir=True, project=True,
+                     eclipse= self.options.eclipse,
+                     global_tag=self.options.global_tag,
+                     export=self.options.export)
         project = project.upper()
         pkgdir =  os.path.abspath(os.path.join(project, "%s_%s" % (project, version)))
         #svn switch?

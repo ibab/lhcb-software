@@ -201,7 +201,7 @@ class RevisionControlSystem(object):
             or version in self._retrieveVersions(module, isProject)
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False):
+                 project = False, eclipse = False, export = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -377,7 +377,7 @@ class CVS(RevisionControlSystem):
         return tags
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False):
+                 project = False, eclipse = False, export = False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -941,7 +941,8 @@ class SubversionCmd(RevisionControlSystem):
         return self._computePaths(module, version, isProject, branch=branch)[0]
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False,
-                 project = False, eclipse = False, global_tag = False, ifExistsAction=None):
+                 project = False, eclipse = False, global_tag = False,
+                 ifExistsAction=None, export=False):
         """
         Extract a module in the directory specified with "dest".
         If no destination is specified, the current directory is used.
@@ -957,6 +958,8 @@ class SubversionCmd(RevisionControlSystem):
                            project tag, otherwise only the 'cmt' directory
         @param ifExistsAction: what to do if the directory already exists, usually nothing
                                but maybe try --relocate first if protocols are not equal
+        @param export: if True, use 'svn export' instead of 'svn checkout'
+                       (note: it prevents Eclipse-friendly checkout)
         """
         from os.path import exists, join, dirname, abspath, isdir
         # check for the validity of the version
@@ -979,12 +982,12 @@ class SubversionCmd(RevisionControlSystem):
 
         # Check if we can do an advanced (eclipse-friendly checkout)
         # - first prepare the top level directory if needed
-        if not project and not vers_dir: # we can do it on packages without version
+        if not project and not vers_dir and not export: # we can do it on packages without version
             if eclipse and not exists(join(dest, ".svn")):
                 # there is no svn directory, make a checkout of the project
                 # containing the package
                 psrc, _ = self._computePaths(self.modules[module], "trunk", isProject=True)
-                _svn("co", "-N", psrc, dest, stdout = None, stderr = None)
+                _svn("checkout", "-N", psrc, dest, stdout = None, stderr = None)
                 # top level directory ready
         # - check if we can use the top level directory
         if exists(join(dest, ".svn")):
@@ -1020,7 +1023,10 @@ class SubversionCmd(RevisionControlSystem):
             sub_cmd = "switch"
         else:
             # normal case
-            sub_cmd = "checkout"
+            if export:
+                sub_cmd = 'export'
+            else:
+                sub_cmd = "checkout"
 
         if not project:
             _svn(sub_cmd, src, dst, stdout = None, stderr = None)
@@ -1029,7 +1035,11 @@ class SubversionCmd(RevisionControlSystem):
             # List of subdirectories to check-out too
             for subdir in ['cmt', 'cmake']:
                 if self._exists(src + '/' + subdir):
-                    _svn('up', join(dst, subdir), stdout = None, stderr = None)
+                    if not export:
+                        _svn('up', join(dst, subdir), stdout = None, stderr = None)
+                    else:
+                        _svn('export', join(src, subdir), join(dst, subdir),
+                             stdout = None, stderr = None)
 
         if not vers_dir and not project:
             # create version.cmt file

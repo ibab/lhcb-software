@@ -1,3 +1,8 @@
+2014-04-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: added --export flag (LBCORE-396)
+	* python/LbRelease/rcs.py: allow use of 'svn export' instead of 'svn checkout' (LBCORE-396)
+
 2014-04-10  Joel Closier <Joel.Closier@cern.ch>
         * python/LbRelease/add_DN_LFC.py: add a check on lbvobox machines
 
@@ -10,14 +15,14 @@
 
 2014-03-26  Ben Couturier <Ben.Couturier@cern.ch>
 
-	LBCORE-447: Add option to limit the externals packaged in LCGCMT tar	
+	LBCORE-447: Add option to limit the externals packaged in LCGCMT tar
 	* scripts/buildLCGCMTFromRPM: removed
-	* scripts/mkLCGCMTTarFromRPM: Added option to include only 
-	externals explicitely mentioned  
+	* scripts/mkLCGCMTTarFromRPM: Added option to include only
+	externals explicitely mentioned
 
 2014-03-25  Ben Couturier <Ben.Couturier@cern.ch>
 
-	New tool to package LCG_68 (provided in RPM as 
+	New tool to package LCG_68 (provided in RPM as
 	an install_project tarball).
 	* python/LbRelease/CMTNativeTools.py
 	* python/LbRelease/LCGRpmExtractor.py
@@ -29,7 +34,7 @@
 
 2014-02-07  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* LbRelease/scripts/getNightlyRefs:Added script written by R.Lambert 
+	* LbRelease/scripts/getNightlyRefs:Added script written by R.Lambert
 
 2014-02-04  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -77,7 +82,7 @@
 
 	* scripts/ariadne_add: ignorance of SSL certificate validation is removed.
 	* scripts/ariadne: ignorance of SSL certificate validation is removed.
-	
+
 2013-11-07  Illya Shapoval <Illya.Shapoval@cern.ch>
 
 	* scripts/ariadne_add: new security model is taken on-board
@@ -85,7 +90,7 @@
 
 2013-10-03  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* scripts/lb-project-manage-volume: New script to manage LHCb AFS volumes 
+	* scripts/lb-project-manage-volume: New script to manage LHCb AFS volumes
 
 2013-10-02  Ben Couturier <Ben.Couturier@cern.ch>
 
