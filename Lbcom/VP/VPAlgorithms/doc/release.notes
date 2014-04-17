@@ -3,6 +3,10 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2014-04-17 - Heinrich Schindler
+ - Use sorting function from VPDataFunctor
+ - Run clang-format for consistent style.
+
 ! 2014-04-01 - Heinrich Schindler
  - Do not create lite clusters in VPClustering.
 

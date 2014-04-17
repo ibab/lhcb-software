@@ -1,32 +1,32 @@
-#ifndef VPCLUSTERING_H 
+#ifndef VPCLUSTERING_H
 #define VPCLUSTERING_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+
 // LHCb
 // Event/DigiEvent
 #include "Event/VPDigit.h"
-#include "Event/VPCluster.h"
-// Det/VPDet
-#include "VPDet/DeVP.h"
 
 /** @class VPClustering VPClustering.h
- *  
+ * 
  *  @author Daniel Hynds
  *  @date   2013-08-13
  */
 
+class DeVP;
+
 class VPClustering : public GaudiAlgorithm {
-  public: 
+ public:
   /// Standard constructor
   VPClustering(const std::string& name, ISvcLocator* pSvcLocator);
-  /// Destructor    
+  /// Destructor
   virtual ~VPClustering();
-    
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute();       ///< Algorithm execution
 
-  private:
+  virtual StatusCode initialize();  ///< Algorithm initialization
+  virtual StatusCode execute();     ///< Algorithm execution
+
+ private:
 
   std::string m_digitLocation;
   std::string m_clusterLocation;
@@ -37,13 +37,6 @@ class VPClustering : public GaudiAlgorithm {
 
   bool isEdge(LHCb::VPDigit* digit) const;
 
-  struct less_than_channelID {
-    inline bool operator() (const LHCb::VPDigit* obj1, const LHCb::VPDigit* obj2) {
-      return (obj1->channelID() < obj2->channelID());
-    }
-  };
-
 };
 
-#endif // VPCLUSTERING_H
-
+#endif  // VPCLUSTERING_H
