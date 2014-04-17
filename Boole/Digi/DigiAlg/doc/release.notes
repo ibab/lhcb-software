@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-04-08 - Heinrich Schindler
+ - Remove functor and sorting of VP digits from BuildMCTrackInfo 
+   (digits are already sorted in VPDigitCreator).
+
 ! 2014-04-03 - Heinrich Schindler
  - Follow changes in VPDigit linker table format (r171120) 
 

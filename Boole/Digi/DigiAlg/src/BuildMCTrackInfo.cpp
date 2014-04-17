@@ -180,7 +180,6 @@ StatusCode BuildMCTrackInfo::execute() {
                                       LHCb::VPDigitLocation::Default);
     if (vpLink.notFound()) return StatusCode::FAILURE;
     
-    std::sort(digits->begin(), digits->end(), increasingModule());
     for (LHCb::VPDigits::const_iterator vIt = digits->begin();
          digits->end() != vIt; ++vIt) {
       int module = (*vIt)->channelID().module();

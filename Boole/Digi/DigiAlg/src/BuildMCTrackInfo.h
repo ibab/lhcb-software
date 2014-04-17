@@ -68,13 +68,6 @@ protected:
   
   void computeAcceptance ( std::vector<int>& station ) ;
 
-  ///< method for sorting the VP digits. Should be in the VPDigit class!
-  struct increasingModule {
-     bool operator() (LHCb::VPDigit* d1, LHCb::VPDigit* d2 ) const{
-       return d1->channelID().module() < d2->channelID().module();
-     }
-  };
-
 private:
   bool m_withVelo;
   bool m_withVP;
