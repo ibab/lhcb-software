@@ -86,11 +86,6 @@ class DeVPSensor : public DetectorElement {
   /// Return sensor thickness in mm.
   double siliconThickness() const { return DeVPSensor::m_thickness; }
 
-  /// Workaround to prevent hidden base class function
-  inline const std::type_info& type(const std::string& name) const {
-    return ParamValidDataObject::type(name);
-  }
-
   /// Return array of cached local x-coordinates by column
   inline const double* xLocal(void) const { return DeVPSensor::m_local_x; }
 
@@ -161,6 +156,7 @@ class DeVPSensor : public DetectorElement {
 
   /// Message stream
   mutable MsgStream* m_msg;
+  /// On-demand access to message stream
   MsgStream& msg() const {
     if (!m_msg) m_msg = new MsgStream(msgSvc(), "DeVPSensor");
     return *m_msg;

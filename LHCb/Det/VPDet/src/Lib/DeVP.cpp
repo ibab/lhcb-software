@@ -22,35 +22,35 @@
  *  @author Victor Coco Victor.Coco@cern.ch
  */
 
-// ============================================================================
-/// Constructor
-// ============================================================================
+//============================================================================
+// Constructor
+//============================================================================
 DeVP::DeVP(const std::string& name)
     : DetectorElement(name), m_nSensors(0), m_msg(NULL) {
 
 }
 
-// ============================================================================
-/// Destructor
-// ============================================================================
+//============================================================================
+// Destructor
+//============================================================================
 DeVP::~DeVP() {
 
   if (m_msg) delete m_msg;
 
 }
 
-// ============================================================================
-/// Object identification
-// ============================================================================
+//============================================================================
+// Object identification
+//============================================================================
 const CLID& DeVP::clID() const { 
 
   return DeVP::classID(); 
 
 }
 
-// ============================================================================
-/// Initialisation method
-// ============================================================================
+//============================================================================
+// Initialisation method
+//============================================================================
 StatusCode DeVP::initialize() {
 
   // Set the output level.
@@ -77,7 +77,7 @@ StatusCode DeVP::initialize() {
     return sc;
   }
 
-  // Get all child detector elements
+  // Get all daughter detector elements.
   std::vector<DeVPSensor*> sensors;
   findSensors(this, sensors);
   if (m_debug) {
@@ -85,45 +85,40 @@ StatusCode DeVP::initialize() {
   }
   std::sort(sensors.begin(), sensors.end(), less_Z());
 
-  // Find the highest sensor number.
-  std::vector<DeVPSensor*>::iterator it;
-  unsigned int maxSensorNumber = 0;
-  for (it = sensors.begin(); it != sensors.end(); ++it) {
-    if (maxSensorNumber < (*it)->sensorNumber()) {
-      maxSensorNumber = (*it)->sensorNumber();
-    }
-  }
-  m_sensors.resize(maxSensorNumber + 1, 0);
-
   m_nSensors = 0;
   unsigned int nLeftSensors = 0;
   unsigned int nRightSensors = 0;
+  std::vector<DeVPSensor*>::iterator it;
   for (it = sensors.begin(); it != sensors.end(); ++it) {
-    m_vpSensors.push_back(*it);
+    m_sensors.push_back(*it);
     ++m_nSensors;
     if ((*it)->isLeft()) {
-      m_leftSensors.push_back(*it);
       ++nLeftSensors;
     } else {
-      m_rightSensors.push_back(*it);
       ++nRightSensors;
     }
-    m_sensors[(*it)->sensorNumber()] = *it;
   }
   msg() << MSG::INFO << "There are " << m_nSensors << " sensors "
         << "(left: " << nLeftSensors << ", right: " << nRightSensors << ")"
         << endmsg;
+  msg() << "HALLIHALLO" << endmsg;
   return StatusCode::SUCCESS;
 
 }
 
-// ============================================================================
-/// Get sensitive volume identifier for a given point in the global frame
-// ============================================================================
+//============================================================================
+// Get sensitive volume identifier for a given point in the global frame
+//============================================================================
 int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
+  const double z = point.z();
+  const double tol = 10 * Gaudi::Units::mm; 
+  // Loop over all VP sensors.
   std::vector<DeVPSensor*>::const_iterator it;
-  for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
+  for (it = m_sensors.begin(); it != m_sensors.end(); ++it) {
+    // Skip sensors which are far away in z.
+    if (fabs(z - (*it)->z()) > tol) continue; 
+    // Check if the point is inside this sensor.
     if ((*it)->isInside(point)) return (*it)->sensorNumber();
   }
   msg() << MSG::ERROR << "No sensitive volume at (" << point.x() << ", "
@@ -132,25 +127,13 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 
 }
 
-// ============================================================================
-/// Return pointer to sensor for a given point in the global frame
-// ============================================================================
-const DeVPSensor* DeVP::sensor(const Gaudi::XYZPoint& point) const {
-
-  const int sensorNumber = sensitiveVolumeID(point);
-  if (sensorNumber >= 0) {
-    return m_sensors[sensitiveVolumeID(point)];
-  }
-  return NULL;
-
-}
-
-// ============================================================================
-/// Scan detector element tree for VP sensors
-// ============================================================================
+//============================================================================
+// Scan detector element tree for VP sensors
+//============================================================================
 void DeVP::findSensors(IDetectorElement* det,
                        std::vector<DeVPSensor*>& sensors) {
 
+  // Get the daughter detector elements.
   std::vector<IDetectorElement*> elements = det->childIDetectorElements();
   std::vector<IDetectorElement*>::iterator it;
   for (it = elements.begin(); it != elements.end(); ++it) {
@@ -158,14 +141,18 @@ void DeVP::findSensors(IDetectorElement* det,
       msg() << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
             << (*it)->name() << endmsg;
     }
+    // Check if this is a VP sensor.
     DeVPSensor* p = dynamic_cast<DeVPSensor*>(*it);
     if (p) {
+      // Add the sensor to the list.
       sensors.push_back(p);
       if (m_debug) {
         msg() << MSG::DEBUG << "Storing detector " << (*it)->name() << endmsg;
       }
+    } else {
+      // Recurse.
+      findSensors(*it, sensors);
     }
-    findSensors(*it, sensors);
   }
 
 }

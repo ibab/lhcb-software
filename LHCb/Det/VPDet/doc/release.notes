@@ -4,6 +4,14 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2014-04-18 - Heinrich Schindler
+ - Merge m_sensors and m_vpSensors class members of DeVP.
+ - Add coarse z-cut in DeVP::sensitiveVolumeID. 
+ - Inline DeVP::sensor(const Gaudi::XYZPoint& point).
+ - Remove less_sensor functor.
+ - Remove separate lists of/iterators to left- and right-side sensors.
+ - Add comments.
+
 ! 2014-04-14 - Heinrich Schindler
  - Remove unused functions (type, isDownstream) from DeVPSensor.
  - Run clang-format for consistent style.
