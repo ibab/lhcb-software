@@ -101,7 +101,6 @@ StatusCode DeVP::initialize() {
   msg() << MSG::INFO << "There are " << m_nSensors << " sensors "
         << "(left: " << nLeftSensors << ", right: " << nRightSensors << ")"
         << endmsg;
-  msg() << "HALLIHALLO" << endmsg;
   return StatusCode::SUCCESS;
 
 }
