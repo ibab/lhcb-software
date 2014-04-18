@@ -98,7 +98,7 @@ namespace ConfigCDBAccessSvc_details {
            // Note that while appending, we need to keep a 'shadow' copy to satisfy reads
            // to the newly written items...
             
-           int fd = open( m_fname.c_str(), O_RDONLY) ;
+           int fd = open( m_fname.c_str(), O_RDONLY );
 
            cout << " open( " << m_fname << " ): fd = " << fd << endl;
            // if not exist, forget about copying...
@@ -110,13 +110,20 @@ namespace ConfigCDBAccessSvc_details {
            }
 
            if ( writing() ) {
+               // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
+               //
+               // O_CREAT and O_EXCL are set, open() will fail if the file exists. The check for 
+               // the existence of the file and the creation of the file if it does not exist will 
+               // be atomic with respect to other processes executing open() naming the same 
+               // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT is not set, 
+               // the effect is undefined.
 
-                // use mkstemp instead of a single a-priori known name!
-                int ofd = open( m_oname.c_str(),O_RDWR|O_CREAT|O_EXCL,S_IRUSR|S_IWUSR);
-                cout << " opened new database \""<< m_oname << "\", ofd = " << ofd << endl;
-                cdb_make_start(&m_ocdb, ofd);
+               int ofd = open( m_oname.c_str(),O_RDWR|O_CREAT|O_EXCL,S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+               cout << " opened new database "<< m_oname << ", fd = " << ofd << endl;
+               if (ofd<0) m_error = true; 
+               cdb_make_start(&m_ocdb, ofd);
 
-               if (fd>=0) {
+               if (fd>=0 && ofd>=0) {
                   cout << "copying original database entries" << endl;
                   // copy everything into a 'shadow' database -- basically, a (k,v) vector 
                   // which preserves insertion order, augmented with a map for fast searches 
@@ -136,7 +143,7 @@ namespace ConfigCDBAccessSvc_details {
 
                   }
                   std::cout << "copied " << nrec << " records " << std::endl;
-               } 
+               }
            }
         }
 
@@ -161,10 +168,8 @@ namespace ConfigCDBAccessSvc_details {
 
         template <typename T>
         bool readObject(T& t, const std::string& key) {
-            // cout << " request key = " << key << endl;
             // first check input database...
             if ( cdb_find(&m_icdb, key.c_str(), key.size())>0 ) {
-                // cout << " found in input:  key = " << key << endl;
                 io::stream<io::array_source> value(static_cast<const char*>(cdb_getdata(&m_icdb)),cdb_datalen(&m_icdb));
                 // 12 bytes of header information...
 #pragma GCC diagnostic push
@@ -196,7 +201,6 @@ namespace ConfigCDBAccessSvc_details {
             if ( writing() ) {
                 auto i = m_shadow.find(key);
                 if (i != m_shadow.end()) {
-                    //cout << " found in output:  key = " << key << endl;
                     std::stringstream s( i->second );
                     s >> t;
                     return true;

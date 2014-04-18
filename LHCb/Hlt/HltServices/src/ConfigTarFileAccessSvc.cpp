@@ -255,7 +255,6 @@ namespace ConfigTarFileAccessSvc_details {
             unlink( ( m_name + ".lock").c_str() );
             cerr << "removed lock file " << ( m_name+".lock" )  << endl;
             CleanupAtExit::instance().remove(m_name+".lock");
-
       }
 #endif
     }

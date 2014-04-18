@@ -8,7 +8,7 @@ version           v2r0
 #=========================================================================
 # Structure, i.e. directories to process.
 #=========================================================================
-branches          cmt doc src
+branches          cmt doc src utilities
 #=========================================================================
 # Used packages
 #=========================================================================
@@ -54,3 +54,6 @@ end_private
 #macro_append cppoptimized_s "-g"
 #end_private
 
+
+application  hlttck_cdb_listkeys     ../utilities/main.cpp ../src/cdb.cpp
+# macro_append hlttck_listkeys_dependencies  " HltServicesLib "
