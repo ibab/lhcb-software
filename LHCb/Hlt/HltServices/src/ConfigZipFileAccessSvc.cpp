@@ -1,4 +1,3 @@
-
 #include "ConfigZipFileAccessSvc.h"
 
 #include <iostream>
@@ -17,7 +16,7 @@
 using namespace std;
 namespace fs = boost::filesystem;
 
-using namespace ConfigZipFileAccessSvc_details;
+using ConfigZipFileAccessSvc_details::ZipFile;
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY( ConfigZipFileAccessSvc )

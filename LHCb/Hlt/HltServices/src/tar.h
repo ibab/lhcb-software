@@ -28,9 +28,13 @@ namespace io = boost::iostreams;
 namespace
 {
 
-
-constexpr struct {
-    template <typename T> bool operator()( const T& ) const { return true; }
+constexpr struct
+{
+    template <typename T>
+    bool operator()( const T& ) const
+    {
+        return true;
+    }
 } all;
 
 struct PrefixFilenameSelector
@@ -66,7 +70,6 @@ struct posix_header
     char prefix[155];   /* 345-499 */
     char padding[12];   /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
 };
-
 }
 
 namespace ConfigTarFileAccessSvc_details
@@ -90,10 +93,10 @@ class TarFile
     boost::optional<T> get( const std::string& name )
     {
         io::filtering_istream strm;
-        if (!setupStream( strm, name ) ) return boost::optional<T>();
+        if ( !setupStream( strm, name ) ) return boost::optional<T>();
         T t;
         strm >> t;
-        return !strm.fail() ? t : boost::optional<T>() ;
+        return !strm.fail() ? t : boost::optional<T>();
     }
 
     bool exists( const std::string& path )
@@ -102,7 +105,7 @@ class TarFile
         return myIndex.find( path ) != myIndex.end();
     }
     template <typename SELECTOR>
-    std::vector<std::string> files( const SELECTOR& selector = all) const
+    std::vector<std::string> files( const SELECTOR& selector = all ) const
     {
         std::vector<std::string> f;
         for ( auto& i : getIndex() ) {

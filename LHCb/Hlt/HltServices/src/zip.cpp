@@ -1,4 +1,5 @@
 #include "zip.h"
+using namespace std;
 
 namespace {
 template <typename T>

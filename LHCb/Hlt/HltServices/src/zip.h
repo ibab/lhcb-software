@@ -46,7 +46,6 @@ using boost::uint64_t;
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StringKey.h"
 
-using namespace std;
 namespace io = boost::iostreams;
 namespace fs = boost::filesystem;
 
@@ -78,19 +77,19 @@ namespace ConfigZipFileAccessSvc_details
 class ZipFile : boost::noncopyable
 {
   public:
-    ZipFile( const string& name, ios::openmode mode = ios::in )
+    ZipFile( const std::string& name, std::ios::openmode mode = std::ios::in )
         : m_erec()
         , m_mode( mode )
         , m_modified( false )
     {
-        m_file.open(  name.c_str(), mode | ios::in | ios::binary );
-        if ( !m_file && ( mode & ios::out ) ) { // try to create it
+        m_file.open(  name.c_str(), mode | std::ios::in | std::ios::binary );
+        if ( !m_file && ( mode & std::ios::out ) ) { // try to create it
             m_file.close();
             m_file.clear();
-            m_file.open( name.c_str(), ios::out | ios::binary );
+            m_file.open( name.c_str(), std::ios::out | std::ios::binary );
             m_file.close();
-            m_file.open( name.c_str(), mode | ios::in | ios::binary );
-            if ( !m_file ) cerr << "Can not create the file " << name << endl;
+            m_file.open( name.c_str(), mode | std::ios::in | std::ios::binary );
+            if ( !m_file ) std::cerr << "Can not create the file " << name << std::endl;
         } else
             index();
     }
@@ -105,26 +104,26 @@ class ZipFile : boost::noncopyable
     }
     bool writeable() const
     {
-        return m_mode & ios::out;
+        return m_mode & std::ios::out;
     }
-    vector<string> files() const
+    std::vector<std::string> files() const
     {
         return files( all );
     }
 
-    bool append( const string& name, const stringstream& is );
+    bool append( const std::string& name, const std::stringstream& is );
 
     template <typename SELECTOR>
-    vector<string> files( const SELECTOR& selector ) const
+    std::vector<std::string> files( const SELECTOR& selector ) const
     {
-        vector<string> f;
+        std::vector<std::string> f;
         for ( const auto& i : m_index ) {
             if ( selector( i.first ) ) f.push_back( i.first );
         }
         return f;
     }
 
-    bool setupStream( io::filtering_istream& s, const string& name );
+    bool setupStream( io::filtering_istream& s, const std::string& name );
 
     template <typename T>
     boost::optional<T> get( const std::string& name )
@@ -158,19 +157,19 @@ class ZipFile : boost::noncopyable
         uint32_t eattr;          /* External file attributes (0x81a40000 or 0) */
         uint32_t file_offset;    /* Relative offset of local file header */
 
-        string name;
-        string extra;
-        string comment;
+        std::string name;
+        std::string extra;
+        std::string comment;
 
-        void make_from( const string& a_name, uint32_t a_file_offset,
-                        const string& is );
+        void make_from( const std::string& a_name, uint32_t a_file_offset,
+                        const std::string& is );
 
-        bool read_from( istream& is );
+        bool read_from( std::istream& is );
 
-        bool write_cd( ostream& os ) const;
+        bool write_cd( std::ostream& os ) const;
 
-        bool write_hdr( ostream& os ) const;
-        void print( void ) const;
+        bool write_hdr( std::ostream& os ) const;
+        void print( ) const;
 
     };
 
@@ -192,7 +191,7 @@ class ZipFile : boost::noncopyable
         /* uint32_t size;   lower part from ZIP64 ECD or 0xffffffff */
         /* uint32_t offset; lower part from ZIP64 ECD or 0xffffffff */
         uint16_t comment_length;
-        string comment;
+        std::string comment;
 
         /* Zip64 end of central directory locator */
         /* uint32_t zip64_loc_sig = 0x07064b50 */
@@ -215,8 +214,8 @@ class ZipFile : boost::noncopyable
 
         void print() const
         {
-            cout << dec << entriesThisDisk << ' ' << size << ' ' << offset << ' '
-                 << comment_length << " '" << comment << "' " << endl;
+            std::cout << std::dec << entriesThisDisk << ' ' << size << ' ' << offset << ' '
+                 << comment_length << " '" << comment << "' " << std::endl;
         }
 
         EndRec()
@@ -232,22 +231,22 @@ class ZipFile : boost::noncopyable
         {
         }
 
-        bool write_zip64_ecd( ostream& os );
-        bool write_zip64_cdl( ostream& os );
-        bool write_ecd( ostream& os );
-        bool write_to( ostream& os );
-        bool read_zip64_ecd( istream& is );
-        bool read_zip64_cdl( istream& is, ios::streampos cdl_offset );
-        bool read_from( istream& is );
+        bool write_zip64_ecd( std::ostream& os );
+        bool write_zip64_cdl( std::ostream& os );
+        bool write_ecd( std::ostream& os );
+        bool write_to( std::ostream& os );
+        bool read_zip64_ecd( std::istream& is );
+        bool read_zip64_cdl( std::istream& is, std::ios::streampos cdl_offset );
+        bool read_from( std::istream& is );
     };
 
     void flush()
     {
         if ( !m_modified ) return;
 
-        m_file.seekp( m_erec.offset, ios::beg );
+        m_file.seekp( m_erec.offset, std::ios::beg );
         for ( const auto& i : m_index ) i.second.write_cd( m_file );
-        m_erec.size = m_file.tellp() - streamoff( m_erec.offset );
+        m_erec.size = m_file.tellp() - std::streamoff( m_erec.offset );
         m_erec.write_to( m_file );
         m_modified = false;
     }
@@ -257,7 +256,7 @@ class ZipFile : boost::noncopyable
         if ( !m_erec.read_from( m_file ) ) return;
 
         // m_erec.print();
-        m_file.seekg( m_erec.offset, ios::beg );
+        m_file.seekg( m_erec.offset, std::ios::beg );
 
         for ( ;; ) {
             ZipInfo info;
@@ -266,11 +265,11 @@ class ZipFile : boost::noncopyable
             m_index[info.name] = info;
         }
     }
-    fstream m_file;
-    map<Gaudi::StringKey, ZipInfo> m_index;
+    std::fstream m_file;
+    std::map<Gaudi::StringKey, ZipInfo> m_index;
 
     EndRec m_erec;
-    ios::openmode m_mode;
+    std::ios::openmode m_mode;
     bool m_modified;
 };
 }
