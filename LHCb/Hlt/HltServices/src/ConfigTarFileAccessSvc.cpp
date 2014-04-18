@@ -72,24 +72,20 @@ class CleanupAtExit
     }
     ~CleanupAtExit()
     {
-        for ( std::set<std::string>::const_iterator i = m_files.begin();
-              i != m_files.end(); ++i ) {
-            cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removing " << *i << endl;
-            unlink( i->c_str() );
-            cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removed " << *i << endl;
+        for ( const auto& i : m_files ) {
+            cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removing " << i << endl;
+            unlink( i.c_str() );
+            cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removed " << i << endl;
         }
     }
     std::set<std::string> m_files;
 };
 #endif
 
-struct DefaultFilenameSelector
-{
-    bool operator()( const std::string& /*fname*/ ) const
-    {
-        return true;
-    }
-};
+
+constexpr struct {
+    template <typename T> bool operator()( const T& ) const { return true; }
+} all;
 
 struct PrefixFilenameSelector
 {
@@ -304,12 +300,13 @@ class TarFile
     }
 
     template <typename T>
-    bool readObject( T& t, const std::string& name )
+    boost::optional<T> get( const std::string& name )
     {
         io::filtering_istream strm;
-        if ( !setupStream( strm, name ) ) return false;
+        if (!setupStream( strm, name ) ) return boost::optional<T>();
+        T t;
         strm >> t;
-        return !strm.fail();
+        return !strm.fail() ? t : boost::optional<T>() ;
     }
 
     bool exists( const std::string& path )
@@ -318,19 +315,17 @@ class TarFile
         return myIndex.find( path ) != myIndex.end();
     }
     template <typename SELECTOR>
-    std::vector<std::string> files( const SELECTOR& selector ) const
+    std::vector<std::string> files( const SELECTOR& selector = all) const
     {
         std::vector<std::string> f;
-        const map<Gaudi::StringKey, Info>& myIndex = getIndex();
-        for ( map<Gaudi::StringKey, Info>::const_iterator i = myIndex.begin();
-              i != myIndex.end(); ++i ) {
-            if ( selector( i->first ) ) f.push_back( i->first );
+        for ( auto& i : getIndex() ) {
+            if ( selector( i.first ) ) f.push_back( i.first );
         }
         return f;
     }
     std::vector<std::string> files() const
     {
-        return files( DefaultFilenameSelector() );
+        return files( all );
     }
     bool append( const string& name, std::stringstream& is );
 
@@ -629,7 +624,7 @@ DECLARE_SERVICE_FACTORY( ConfigTarFileAccessSvc )
 //=============================================================================
 ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const string& name,
                                                 ISvcLocator* pSvcLocator )
-    : Service( name, pSvcLocator ), m_file( 0 )
+    : Service( name, pSvcLocator ), m_file{ nullptr }
 {
     string def( System::getEnv( "HLTTCKROOT" ) );
     if ( !def.empty() ) def += "/config.tar";
@@ -732,16 +727,14 @@ template <typename T>
 boost::optional<T> ConfigTarFileAccessSvc::read( const string& path ) const
 {
     if ( msgLevel( MSG::DEBUG ) ) debug() << "trying to read " << path << endmsg;
-    if ( file() == 0 ) {
+    if ( !file() ) {
         debug() << "file " << m_name << " not found" << endmsg;
         return boost::optional<T>();
     }
-    T c;
-    if ( !file()->readObject( c, path ) ) {
-        if ( msgLevel( MSG::DEBUG ) )
+    auto c = file()->get<T>(path);
+    if ( !c &&  msgLevel( MSG::DEBUG ) ) {
             debug() << "file " << path << " not found in container " << m_name
                     << endmsg;
-        return boost::optional<T>();
     }
     return c;
 }
@@ -762,7 +755,7 @@ bool ConfigTarFileAccessSvc::write( const string& path, const T& object ) const
     }
     stringstream s;
     s << object;
-    return file() != 0 && file()->append( path, s );
+    return !file() && file()->append( path, s );
 }
 
 boost::optional<PropertyConfig>
@@ -798,22 +791,16 @@ vector<ConfigTreeNodeAlias> ConfigTarFileAccessSvc::configTreeNodeAliases(
     vector<ConfigTreeNodeAlias> x;
 
     string basename( "Aliases" );
-    if ( file() == 0 ) {
-        return x;
-    }
-    vector<string> aliases =
-        file()->files( PrefixFilenameSelector( basename + "/" + alias.major() ) );
-
-    for ( vector<string>::const_iterator i = aliases.begin(); i != aliases.end();
-          ++i ) {
+    if ( !file() ) return x;
+    PrefixFilenameSelector selector( basename + "/" + alias.major() );
+    for ( const auto& i : file()->files( selector )) {
         // TODO: this can be more efficient...
         if ( msgLevel( MSG::DEBUG ) )
-            debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
-        string ref;
-        file()->readObject( ref, *i );
-        string _alias = i->substr( basename.size() + 1 );
+            debug() << " configTreeNodeAliases: adding file " << i << endmsg;
+        auto ref = file()->get<string>( i );
+        string _alias = i.substr( basename.size() + 1 );
         stringstream str;
-        str << "Ref: " << ref << '\n' << "Alias: " << _alias << endl;
+        str << "Ref: " << *ref << '\n' << "Alias: " << _alias << endl;
         ConfigTreeNodeAlias a;
         str >> a;
         if ( msgLevel( MSG::DEBUG ) )
@@ -856,7 +843,7 @@ ConfigTarFileAccessSvc::writeConfigTreeNodeAlias( const ConfigTreeNodeAlias& ali
     if ( !x ) {
         stringstream s;
         s << alias.ref();
-        if ( file() == 0 ) {
+        if ( !file() ) {
             error() << " container file not found during attempted write of "
                     << fnam.string() << endmsg;
             return ConfigTreeNodeAlias::alias_type();

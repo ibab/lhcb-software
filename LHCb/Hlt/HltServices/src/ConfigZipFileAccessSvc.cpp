@@ -53,24 +53,20 @@ namespace fs = boost::filesystem;
 namespace
 {
 
-struct DefaultFilenameSelector
-{
-    bool operator()( const string& /*fname*/ ) const
-    {
-        return true;
-    }
-};
+constexpr struct {
+    template <typename T> bool operator()( const T& ) const { return true; }
+} all;
 
 struct PrefixFilenameSelector
 {
-    PrefixFilenameSelector( const string& _prefix ) : prefix( _prefix )
+    PrefixFilenameSelector( const std::string& _prefix ) : prefix( _prefix )
     {
     }
-    bool operator()( const string& fname ) const
+    bool operator()( const std::string& fname ) const
     {
         return fname.compare( 0, prefix.size(), prefix ) == 0;
     }
-    string prefix;
+    std::string prefix;
 };
 
 template <typename T>
@@ -182,12 +178,11 @@ void TimeToZip( uint16_t& zip_date, uint16_t& zip_time )
 
 ptime ZipToTime( uint16_t zip_date, uint16_t zip_time )
 {
-    ptime t( date( 1980 + ( ( zip_date >> 9 ) & 0x3f ), ( ( zip_date >> 5 ) & 0xf ),
+    return { date( 1980 + ( ( zip_date >> 9 ) & 0x3f ), ( ( zip_date >> 5 ) & 0xf ),
                    zip_date & 0x1f ),
              hours( ( zip_time >> 11 ) & 0x1f ) +
                  minutes( ( zip_time >> 5 ) & 0x1f ) +
-                 seconds( ( ( zip_time & 0x1f ) << 1 ) ) );
-    return t;
+                 seconds( ( ( zip_time & 0x1f ) << 1 ) ) };
 }
 }
 
@@ -198,18 +193,18 @@ class ZipFile : boost::noncopyable
 {
   public:
     ZipFile( const string& name, ios::openmode mode = ios::in )
-        : m_name( name )
-        , m_file( new fstream( name.c_str(), mode | ios::in | ios::binary ) )
-        , m_erec()
-        , modified( false )
+        : m_erec()
+        , m_mode( mode )
+        , m_modified( false )
     {
-        if ( !*m_file && ( mode & ios::out ) ) { // try to create it
-            m_file->close();
-            m_file->clear();
-            m_file->open( name.c_str(), ios::out | ios::binary );
-            m_file->close();
-            m_file->open( name.c_str(), mode | ios::in | ios::binary );
-            if ( !*m_file ) cerr << "Can not create the file " << name << endl;
+        m_file.open(  name.c_str(), mode | ios::in | ios::binary );
+        if ( !m_file && ( mode & ios::out ) ) { // try to create it
+            m_file.close();
+            m_file.clear();
+            m_file.open( name.c_str(), ios::out | ios::binary );
+            m_file.close();
+            m_file.open( name.c_str(), mode | ios::in | ios::binary );
+            if ( !m_file ) cerr << "Can not create the file " << name << endl;
         } else
             index();
     }
@@ -220,11 +215,15 @@ class ZipFile : boost::noncopyable
 
     bool operator!() const
     {
-        return !*m_file;
+        return !m_file;
+    }
+    bool writeable() const
+    {
+        return m_mode & ios::out;
     }
     vector<string> files() const
     {
-        return files( DefaultFilenameSelector() );
+        return files( all );
     }
 
     bool append( const string& name, const stringstream& is )
@@ -253,13 +252,13 @@ class ZipFile : boost::noncopyable
 
         // info.print();
 
-        m_file->seekp( info.file_offset, ios::beg );
-        info.write_hdr( *m_file );
+        m_file.seekp( info.file_offset, ios::beg );
+        info.write_hdr( m_file );
         if ( uncompressed.size() > compressed.size() )
-            m_file->write( compressed.c_str(), compressed.size() );
+            m_file.write( compressed.c_str(), compressed.size() );
         else
-            m_file->write( uncompressed.c_str(), uncompressed.size() );
-        m_erec.offset = m_file->tellp();
+            m_file.write( uncompressed.c_str(), uncompressed.size() );
+        m_erec.offset = m_file.tellp();
 
         ++m_erec.entriesThisDisk;
 
@@ -269,7 +268,7 @@ class ZipFile : boost::noncopyable
         */
 
         m_index[info.name] = info;
-        modified = true;
+        m_modified = true;
         return true;
     }
 
@@ -277,30 +276,27 @@ class ZipFile : boost::noncopyable
     vector<string> files( const SELECTOR& selector ) const
     {
         vector<string> f;
-        for ( map<Gaudi::StringKey, ZipInfo>::const_iterator i = m_index.begin();
-              i != m_index.end(); ++i ) {
-            if ( selector( i->first ) ) f.push_back( i->first );
+        for ( const auto& i : m_index ) {
+            if ( selector( i.first ) ) f.push_back( i.first );
         }
         return f;
     }
 
-    template <typename T>
-    bool readObject( T& t, const string& path )
+    bool setupStream( io::filtering_istream& s, const string& name )
     {
-        map<Gaudi::StringKey, ZipInfo>::const_iterator i = m_index.find( path );
+        map<Gaudi::StringKey, ZipInfo>::const_iterator i = m_index.find( name );
         if ( i == m_index.end() ) return false;
-        m_file->seekg( i->second.file_offset, ios::beg );
-        if ( get<uint32_t>( *m_file ) != 0x04034B50 ) return false;
+        m_file.seekg( i->second.file_offset, ios::beg );
+        if ( ::get<uint32_t>( m_file ) != 0x04034B50 ) return false;
         // AZ: original code read values from the file header, I think it is not
         // required since should be redundant in consistent file
         // In practice, it is not... at least for extra field.
         // i->second.print();
-        m_file->seekg( i->second.file_offset + 28, ios::beg );
-        uint16_t hdr_extra_length = get<uint16_t>( *m_file );
+        m_file.seekg( i->second.file_offset + 28, ios::beg );
+        uint16_t hdr_extra_length = ::get<uint16_t>( m_file );
         uint32_t offset =
             i->second.file_offset + 30 + i->second.name_length + hdr_extra_length;
-        m_file->seekg( 0, ios::beg );
-        io::filtering_istream s;
+        m_file.seekg( 0, ios::beg );
         switch ( i->second.compress ) {
         case 0:
             break;
@@ -318,9 +314,18 @@ class ZipFile : boost::noncopyable
             cerr << " unknown compression algorithm " << i->second.compress << endl;
             return false;
         }
-        s.push( io::slice( *m_file, offset, i->second.data_size ) );
-        s >> t;
+        s.push( io::slice( m_file, offset, i->second.data_size ) );
         return true;
+    }
+
+    template <typename T>
+    boost::optional<T> get( const std::string& name )
+    {
+        io::filtering_istream strm;
+        if (!setupStream( strm, name ) ) return boost::optional<T>();
+        T t;
+        strm >> t;
+        return !strm.fail() ? t : boost::optional<T>() ;
     }
 
   private:
@@ -374,24 +379,24 @@ class ZipFile : boost::noncopyable
 
         bool read_from( istream& is )
         {/* here 'is' is the ZIP file positioned to the start of the entry */
-            if ( get<uint32_t>( is ) != 0x02014B50 ) return false;
+            if ( ::get<uint32_t>( is ) != 0x02014B50 ) return false;
 
-            vmade = get<uint16_t>( is );
-            vneed = get<uint16_t>( is );
-            flag = get<uint16_t>( is );
-            compress = get<uint16_t>( is );
-            time = get<uint16_t>( is );
-            date = get<uint16_t>( is );
-            crc = get<uint32_t>( is );
-            data_size = get<uint32_t>( is );
-            file_size = get<uint32_t>( is );
-            name_length = get<uint16_t>( is );
-            extra_length = get<uint16_t>( is );
-            comment_length = get<uint16_t>( is );
-            disk = get<uint16_t>( is );
-            iattr = get<uint16_t>( is );
-            eattr = get<uint32_t>( is );
-            file_offset = get<uint32_t>( is );
+            vmade = ::get<uint16_t>( is );
+            vneed = ::get<uint16_t>( is );
+            flag = ::get<uint16_t>( is );
+            compress = ::get<uint16_t>( is );
+            time = ::get<uint16_t>( is );
+            date = ::get<uint16_t>( is );
+            crc = ::get<uint32_t>( is );
+            data_size = ::get<uint32_t>( is );
+            file_size = ::get<uint32_t>( is );
+            name_length = ::get<uint16_t>( is );
+            extra_length = ::get<uint16_t>( is );
+            comment_length = ::get<uint16_t>( is );
+            disk = ::get<uint16_t>( is );
+            iattr = ::get<uint16_t>( is );
+            eattr = ::get<uint32_t>( is );
+            file_offset = ::get<uint32_t>( is );
 
             io::copy( io::slice( is, 0, name_length ), io::back_inserter( name ) );
             io::copy( io::slice( is, 0, extra_length ), io::back_inserter( extra ) );
@@ -573,19 +578,19 @@ class ZipFile : boost::noncopyable
         bool read_zip64_ecd( istream& is )
         {
             is.seekg( zip64_offset, ios::beg );
-            if ( get<uint32_t>( is ) != 0x06064b50 ) {
+            if ( ::get<uint32_t>( is ) != 0x06064b50 ) {
                 cerr << "ZIP: ZIP64 ECD is not found: not a zip file??" << endl;
                 return false;
             }
-            uint64_t ecd_size = get<uint64_t>( is );
-            vmade = get<uint16_t>( is );
-            vneed = get<uint16_t>( is );
-            uint32_t ecdDisk = get<uint32_t>( is );
-            uint32_t cdDisk = get<uint32_t>( is );
-            entriesThisDisk = get<uint64_t>( is );
-            uint64_t entriesTotal = get<uint64_t>( is );
-            size = get<uint64_t>( is );
-            offset = get<uint64_t>( is );
+            uint64_t ecd_size = ::get<uint64_t>( is );
+            vmade = ::get<uint16_t>( is );
+            vneed = ::get<uint16_t>( is );
+            uint32_t ecdDisk = ::get<uint32_t>( is );
+            uint32_t cdDisk = ::get<uint32_t>( is );
+            entriesThisDisk = ::get<uint64_t>( is );
+            uint64_t entriesTotal = ::get<uint64_t>( is );
+            size = ::get<uint64_t>( is );
+            offset = ::get<uint64_t>( is );
 
             if ( ecdDisk != 0 || cdDisk != 0 ) {
                 cerr << "ZIP: multifile archives are not supported" << endl;
@@ -605,13 +610,13 @@ class ZipFile : boost::noncopyable
         bool read_zip64_cdl( istream& is, ios::streampos cdl_offset )
         {
             is.seekg( cdl_offset, ios::beg );
-            if ( get<uint32_t>( is ) != 0x07064b50 ) {
+            if ( ::get<uint32_t>( is ) != 0x07064b50 ) {
                 cerr << "ZIP: ZIP64 CDL is not found: not a zip file??" << endl;
                 return false;
             }
-            uint32_t diskStart = get<uint32_t>( is );
-            zip64_offset = get<uint64_t>( is );
-            uint32_t diskTotal = get<uint32_t>( is );
+            uint32_t diskStart = ::get<uint32_t>( is );
+            zip64_offset = ::get<uint64_t>( is );
+            uint32_t diskTotal = ::get<uint32_t>( is );
 
             if ( diskStart != 0 || diskTotal != 1 ) {
                 cerr << "ZIP: multifile archives are not supported" << endl;
@@ -640,23 +645,23 @@ class ZipFile : boost::noncopyable
                                     ios::streamoff( 0 ) );
                   er_offset -= 1 ) {
                 is.seekg( er_offset, ios::beg );
-                if ( get<uint8_t>( is ) == 0x50 && get<uint8_t>( is ) == 0x4b &&
-                     get<uint8_t>( is ) == 0x05 && get<uint8_t>( is ) == 0x06 ) {
+                if ( ::get<uint8_t>( is ) == 0x50 && ::get<uint8_t>( is ) == 0x4b &&
+                     ::get<uint8_t>( is ) == 0x05 && ::get<uint8_t>( is ) == 0x06 ) {
                     break;
                 }
             }
             is.seekg( er_offset, ios::beg );
-            if ( get<uint32_t>( is ) != 0x06054b50 ) {
+            if ( ::get<uint32_t>( is ) != 0x06054b50 ) {
                 cerr << "ZIP: CDE is not found: not a zip file??" << endl;
                 return false;
             }
-            uint16_t diskNumber = get<uint16_t>( is );
-            uint16_t diskStart = get<uint16_t>( is );
-            entriesThisDisk = get<uint16_t>( is );
-            uint16_t entriesTotal = get<uint16_t>( is );
-            size = get<uint32_t>( is );
-            offset = get<uint32_t>( is );
-            comment_length = get<uint16_t>( is );
+            uint16_t diskNumber = ::get<uint16_t>( is );
+            uint16_t diskStart = ::get<uint16_t>( is );
+            entriesThisDisk = ::get<uint16_t>( is );
+            uint16_t entriesTotal = ::get<uint16_t>( is );
+            size = ::get<uint32_t>( is );
+            offset = ::get<uint32_t>( is );
+            comment_length = ::get<uint16_t>( is );
             io::copy( io::slice( is, 0, comment_length ),
                       io::back_inserter( comment ) );
 
@@ -683,38 +688,35 @@ class ZipFile : boost::noncopyable
 
     void flush()
     {
-        if ( !modified ) return;
+        if ( !m_modified ) return;
 
-        m_file->seekp( m_erec.offset, ios::beg );
-        for ( map<Gaudi::StringKey, ZipInfo>::const_iterator i = m_index.begin();
-              i != m_index.end(); ++i )
-            i->second.write_cd( *m_file );
-
-        m_erec.size = m_file->tellp() - streamoff( m_erec.offset );
-        m_erec.write_to( *m_file );
-        modified = false;
+        m_file.seekp( m_erec.offset, ios::beg );
+        for ( const auto& i : m_index ) i.second.write_cd( m_file );
+        m_erec.size = m_file.tellp() - streamoff( m_erec.offset );
+        m_erec.write_to( m_file );
+        m_modified = false;
     }
 
     void index()
     {
-        if ( !m_erec.read_from( *m_file ) ) return;
+        if ( !m_erec.read_from( m_file ) ) return;
 
         // m_erec.print();
-        m_file->seekg( m_erec.offset, ios::beg );
+        m_file.seekg( m_erec.offset, ios::beg );
 
         for ( ;; ) {
             ZipInfo info;
-            if ( !info.read_from( *m_file ) ) break;
+            if ( !info.read_from( m_file ) ) break;
             // info.print();
             m_index[info.name] = info;
         }
     }
-    string m_name;
-    std::auto_ptr<fstream> m_file;
+    fstream m_file;
     map<Gaudi::StringKey, ZipInfo> m_index;
 
     EndRec m_erec;
-    bool modified;
+    ios::openmode m_mode;
+    bool m_modified;
 };
 }
 
@@ -728,7 +730,7 @@ DECLARE_SERVICE_FACTORY( ConfigZipFileAccessSvc )
 //=============================================================================
 ConfigZipFileAccessSvc::ConfigZipFileAccessSvc( const string& name,
                                                 ISvcLocator* pSvcLocator )
-    : Service( name, pSvcLocator ), m_file( 0 )
+    : Service( name, pSvcLocator ), m_file{ nullptr }
 {
     string def( System::getEnv( "HLTTCKROOT" ) );
     if ( !def.empty() ) def += "/config.zip";
@@ -830,16 +832,14 @@ template <typename T>
 boost::optional<T> ConfigZipFileAccessSvc::read( const string& path ) const
 {
     if ( msgLevel( MSG::DEBUG ) ) debug() << "trying to read " << path << endmsg;
-    if ( file() == 0 ) {
+    if ( !file() ) {
         debug() << "file " << m_name << " not found" << endmsg;
         return boost::optional<T>();
     }
-    T c;
-    if ( !file()->readObject( c, path ) ) {
-        if ( msgLevel( MSG::DEBUG ) )
+    auto c = file()->get<T>(path);
+    if ( !c  &&  msgLevel( MSG::DEBUG ) ) {
             debug() << "file " << path << " not found in container " << m_name
                     << endmsg;
-        return boost::optional<T>();
     }
     return c;
 }
@@ -854,13 +854,13 @@ bool ConfigZipFileAccessSvc::write( const string& path, const T& object ) const
                 << "  already exists, but contents are different..." << endmsg;
         return false;
     }
-    if ( m_mode == "ReadOnly" ) {
+    if ( !file()->writeable() ) {
         error() << "attempted write, but file has been opened ReadOnly" << endmsg;
         return false;
     }
     stringstream s;
     s << object;
-    return file() != 0 && file()->append( path, s );
+    return !file() && file()->append( path, s );
 }
 
 boost::optional<PropertyConfig>
@@ -896,22 +896,16 @@ vector<ConfigTreeNodeAlias> ConfigZipFileAccessSvc::configTreeNodeAliases(
     vector<ConfigTreeNodeAlias> x;
 
     string basename( "Aliases" );
-    if ( file() == 0 ) {
-        return x;
-    }
-    vector<string> aliases =
-        file()->files( PrefixFilenameSelector( basename + "/" + alias.major() ) );
-
-    for ( vector<string>::const_iterator i = aliases.begin(); i != aliases.end();
-          ++i ) {
+    if ( !file() ) return x;
+    PrefixFilenameSelector selector( basename + "/" + alias.major() );
+    for ( const auto& i : file()->files( selector )) {
         // TODO: this can be more efficient...
         if ( msgLevel( MSG::DEBUG ) )
-            debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
-        string ref;
-        file()->readObject( ref, *i );
-        string _alias = i->substr( basename.size() + 1 );
+            debug() << " configTreeNodeAliases: adding file " << i << endmsg;
+        auto ref = file()->get<string>( i );
+        string _alias = i.substr( basename.size() + 1 );
         stringstream str;
-        str << "Ref: " << ref << '\n' << "Alias: " << _alias << endl;
+        str << "Ref: " << *ref << '\n' << "Alias: " << _alias << endl;
         ConfigTreeNodeAlias a;
         str >> a;
         if ( msgLevel( MSG::DEBUG ) )
@@ -954,7 +948,7 @@ ConfigZipFileAccessSvc::writeConfigTreeNodeAlias( const ConfigTreeNodeAlias& ali
     if ( !x ) {
         stringstream s;
         s << alias.ref();
-        if ( file() == 0 ) {
+        if ( !file() ) {
             error() << " container file not found during attempted write of "
                     << fnam.string() << endmsg;
             return ConfigTreeNodeAlias::alias_type();

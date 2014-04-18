@@ -56,10 +56,10 @@ private:
   
   ConfigZipFileAccessSvc_details::ZipFile*  file() const;
 
-  mutable std::auto_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>   m_msg;
   std::string                          m_name;   ///< filename of zip file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the zip file
-  mutable std::auto_ptr<ConfigZipFileAccessSvc_details::ZipFile>               m_file;
+  mutable std::unique_ptr<ConfigZipFileAccessSvc_details::ZipFile>               m_file;
 
   template <typename T> boost::optional<T> read(const std::string& path) const;
   template <typename T> bool write(const std::string& path,const T& object) const;
