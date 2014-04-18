@@ -14,14 +14,15 @@
 #include "boost/iostreams/stream.hpp"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
+#include "boost/program_options.hpp"
 
 #include "../src/cdb.h"
 
 namespace io = boost::iostreams;
 
 struct manifest_entry {
-    template <typename TCKS, typename COMMENT> 
-    manifest_entry( std::string toplevel, const TCKS& tcks, const COMMENT& comments ) 
+    template <typename TCKS > 
+    manifest_entry( std::string toplevel, const TCKS& tcks, std::string com) 
     {
         std::vector<std::string> tokens;
         boost::algorithm::split(tokens,toplevel,boost::algorithm::is_any_of("/"));
@@ -30,9 +31,8 @@ struct manifest_entry {
         type = tokens[1];
         id = tokens[2];
         auto itck = tcks.find(id);
-        if (itck!=std::end(tcks)) tck = itck->second;
-        auto ilab = comments.find(id);
-        if (ilab!=std::end(comments))  comment = ilab->second;
+        tck = (itck!=std::end(tcks)) ? itck->second : "<NONE>" ;
+        comment = com;
     }
     std::string release;
     std::string type;
@@ -41,6 +41,9 @@ struct manifest_entry {
     std::string comment;
 
     bool operator<(const manifest_entry& rhs) const {
+        // can we get MOORE_v9r1 prior to MOORE_v10r1 ???
+        // if the string contains a digit at the point where they are different,
+        // do a numerical <
         return release < rhs.release || 
               ( release == rhs.release && ( type < rhs.type || 
               ( type == rhs.type && ( tck < rhs.tck || 
@@ -55,6 +58,7 @@ std::ostream& operator<<(std::ostream& os, const manifest_entry& e) {
 
 
 std::string format_time(std::time_t t) {
+            // gcc4.8 doesn't have std::put_time???
             static char mbstr[100];
             mbstr[0]=0;
             std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&t));
@@ -127,6 +131,9 @@ public:
             if (m_db) cdb_seqinit(&m_cpos, m_db);
             next();
         }
+        iterator(struct cdb *parent , unsigned cpos ) : m_db(parent), m_cpos(cpos){
+            next();
+        }
         iterator& operator++() { next(); return *this; }
         bool operator==(const iterator& rhs) const {
             return atEnd() ? rhs.atEnd() : m_cpos == rhs.m_cpos;
@@ -143,7 +150,13 @@ public:
     iterator end()   const { return {        }; }
 
     iterator find(const std::string& key) const { 
-        return { cdb_find(&m_db, key.c_str(), key.size())>0 ? &m_db  : nullptr };
+        if ( cdb_find(&m_db, key.c_str(), key.size())>0 ) {
+            // Hrmpf. Use inside knowledge of the layout of the cdb structure... 
+            //        ... so that 'next' will do the right thing...
+            unsigned int offset = std::distance(m_db.cdb_mem,static_cast<const unsigned char*>(cdb_getkey(&m_db)));
+            return { &m_db, offset-8 };
+        }
+        return end();
     }
 
     bool ok() const { return cdb_fileno(&m_db)>=0; }
@@ -155,32 +168,31 @@ private:
 
 void dump_manifest(CDB& db) {
     std::multiset< manifest_entry > manifest;
-    std::map< std::string , std::string > tck;     // id -> TCK
-    std::map< std::string , std::string > comment; // id -> comment
 
-    // first: get TCK & labels
+    // first: get TCK -> id map, and invert.
+    // needed so that we can make immutable manifest_entries later...
+    std::map< std::string , std::string > tck;     // id -> TCK
     for ( auto record : db )  { // TODO: allow loop with predicate on key...
         auto key = record.key() ; 
         if (key.compare(0,6,"AL/TCK")!=0) continue;
-        auto id  = record.value();
-        tck.emplace( id, key.substr(7));
-        key = "TN/";  key+=id;
-        auto i = db.find( key );
+        tck.emplace( record.value() , key.substr(7));
+    }
+    // next: create manifest
+    for ( auto record : db ) { // TODO: allow loop with predicate on key... 
+        auto key = record.key();
+        if (key.compare(0,11,"AL/TOPLEVEL")!=0) continue;
+        // the 'comment' is in the 'label' member of the treenode this alias "points" at
+        std::string comment;
+        auto i = db.find( std::string("TN/")+key.substr(key.rfind("/")+1) );
         if ( i != std::end(db) ) {
             auto value = (*i).value();
             if (value.compare(0,6,"Label:")==0) {
                    auto x = value.find('\n',6);
-                   comment.emplace(id, value.substr(6, x!=std::string::npos ? x-6 : x ));
+                   comment = value.substr(6, x!=std::string::npos ? x-6 : x );
             }
         }
-    }
-    // next: create manifest
-    for ( auto record : db ) { // TODO: allow loop with predicate on key...
-        auto key = record.key();
-        if (key.compare(0,11,"AL/TOPLEVEL")!=0) continue;
         manifest.emplace( key.substr(12), tck, comment );
     }
-
     for (auto& m : manifest ) std::cout << m <<   std::endl;
 }
 
@@ -199,16 +211,29 @@ void dump_records(CDB& db) {
     std::cout << std::flush;
 }
 
+namespace po = boost::program_options;
+
 int main(int argc, char* argv[]) {
     // TODO: add cmdline arguments for database, Moore version...
+    po::options_description desc("Allowed options");
+    desc.add_options() ("list-manifest", "dump manifest ")
+                       ("list-keys", "list keys")
+                       ("list-records", "list keys and records")
+                       ("input-file",  po::value<std::string>()->default_value(std::string("config.cdb")),"input file");
+    po::positional_options_description p;
+    p.add("input-file", -1);
 
-    if (argc<2) return 0;
-    CDB db(argv[1],O_RDONLY );
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
+    po::notify(vm);
+
+    
+    CDB db(vm["input-file"].as<std::string>(),O_RDONLY );
     if (!db.ok()) return 1;
 
-    // dump_manifest(db);
-    // dump_keys(db);
-    dump_records(db);
+    if (vm.count("list-manifest")) dump_manifest(db);
+    if (vm.count("list-keys"))     dump_keys(db);
+    if (vm.count("list-records"))  dump_records(db);
 
     return 0;
 }
