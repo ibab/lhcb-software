@@ -1,6 +1,103 @@
 #include "zip.h"
 
 namespace {
+template <typename T>
+T get( istream& is );
+template <typename T>
+T get( const unsigned char* buf );
+
+template <typename I, typename J>
+I _get2( istream& is )
+{
+    I x( get<J>( is ) );
+    x |= I( get<J>( is ) ) << ( 8 * sizeof( J ) );
+    return x;
+}
+template <typename I, typename J>
+I _get2( const unsigned char* buf )
+{
+    I x( get<J>( buf ) );
+    x |= I( get<J>( buf + sizeof( J ) ) ) << 8 * sizeof( J );
+    return x;
+}
+template <>
+uint8_t get<uint8_t>( istream& is )
+{
+    uint8_t x;
+    is.read( (char*)&x, sizeof( uint8_t ) );
+    // TODO: if not OK, throw exception...
+    return x;
+}
+template <>
+uint8_t get<uint8_t>( const unsigned char* buf )
+{
+    return uint8_t( buf[0] );
+}
+
+template <>
+uint16_t get<uint16_t>( istream& is )
+{
+    return _get2<uint16_t, uint8_t>( is );
+}
+template <>
+uint32_t get<uint32_t>( istream& is )
+{
+    return _get2<uint32_t, uint16_t>( is );
+}
+template <>
+uint64_t get<uint64_t>( istream& is )
+{
+    return _get2<uint64_t, uint32_t>( is );
+}
+
+template <>
+uint16_t get<uint16_t>( const unsigned char* buf )
+{
+    return _get2<uint16_t, uint8_t>( buf );
+}
+template <>
+uint32_t get<uint32_t>( const unsigned char* buf )
+{
+    return _get2<uint32_t, uint16_t>( buf );
+}
+template <typename T>
+void put( ostream& os, T value );
+template <>
+void put<uint8_t>( ostream& os, uint8_t value )
+{
+    os.put( value & 0xff );
+}
+template <>
+void put<uint16_t>( ostream& os, uint16_t value )
+{
+    os.put( value & 0xff );
+    os.put( ( value >> 8 ) & 0xff );
+}
+template <>
+void put<uint32_t>( ostream& os, uint32_t value )
+{
+    os.put( value & 0xff );
+    os.put( ( value >> 8 ) & 0xff );
+    os.put( ( value >> 16 ) & 0xff );
+    os.put( ( value >> 24 ) & 0xff );
+}
+template <>
+void put<uint64_t>( ostream& os, uint64_t value )
+{
+    os.put( value & 0xff );
+    os.put( ( value >> 8 ) & 0xff );
+    os.put( ( value >> 16 ) & 0xff );
+    os.put( ( value >> 24 ) & 0xff );
+    os.put( ( value >> 32 ) & 0xff );
+    os.put( ( value >> 40 ) & 0xff );
+    os.put( ( value >> 48 ) & 0xff );
+    os.put( ( value >> 56 ) & 0xff );
+}
+
+using namespace boost::posix_time;
+using namespace boost::gregorian;
+
+
 ptime ZipToTime( uint16_t zip_date, uint16_t zip_time )
 {
     return { date( 1980 + ( ( zip_date >> 9 ) & 0x3f ), ( ( zip_date >> 5 ) & 0xf ),
@@ -8,6 +105,15 @@ ptime ZipToTime( uint16_t zip_date, uint16_t zip_time )
              hours( ( zip_time >> 11 ) & 0x1f ) +
                  minutes( ( zip_time >> 5 ) & 0x1f ) +
                  seconds( ( ( zip_time & 0x1f ) << 1 ) ) };
+}
+void TimeToZip( uint16_t& zip_date, uint16_t& zip_time )
+{
+    ptime pt = second_clock::local_time();
+    date d = pt.date();
+    time_duration t = pt.time_of_day();
+
+    zip_date = ( ( d.year() - 1980 ) << 9 ) + ( d.month() << 5 ) + d.day();
+    zip_time = ( t.hours() << 11 ) + ( t.minutes() << 5 ) + ( t.seconds() >> 1 );
 }
 }
 
