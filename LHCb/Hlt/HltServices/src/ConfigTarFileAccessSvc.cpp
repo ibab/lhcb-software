@@ -164,10 +164,6 @@ std::string convert( const T& in )
     return ( last == std::string::npos ) ? s : s.substr( 0, last );
 }
 
-// size_t maxValWithDigits(unsigned digits, unsigned bitsPerDigit) {
-//    return (1UL << (digits*bitsPerDigit)) - 1 ;
-//}
-
 template <typename T>
 char* putString( const char* s, T& buffer )
 {
@@ -191,15 +187,7 @@ bool putOctal( T val, char ( &buf )[Size] )
 bool isZero( const struct posix_header& h )
 {
     const char* i = (const char*)( &h );
-    const char* end = i + 512;
-    while ( i < end && *i++ == 0 ) {/* nothing*/
-    }
-    return i == end;
-}
-
-void zero( struct posix_header& h )
-{
-    memset( &h, 0, sizeof( posix_header ) );
+    return std::all_of( i, i+512, [](const char &c) { return c==0; } );
 }
 
 /* A nice enum with all the possible tar file content types */

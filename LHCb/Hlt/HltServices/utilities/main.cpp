@@ -125,21 +125,18 @@ public:
         }
     };
     class iterator {
-        struct cdb* m_db = nullptr;
-        unsigned m_cpos  = 0;
+        struct cdb* m_db;
+        unsigned m_cpos;
         bool atEnd() const { return !m_db; }
-        void next() { 
-            if (m_db && !( cdb_seqnext(&m_cpos, m_db) > 0 ) ) m_db = nullptr ;
-        }
     public:
-        iterator(struct cdb *parent = nullptr) : m_db{parent} {
-            if (m_db) cdb_seqinit(&m_cpos, m_db);
-            next();
+        iterator(struct cdb *parent = nullptr, unsigned cpos = 0) : m_db{parent}, m_cpos(cpos) {
+            if ( m_db && !m_cpos ) cdb_seqinit(&m_cpos, m_db);
+            ++*this;
         }
-        iterator(struct cdb *parent , unsigned cpos ) : m_db(parent), m_cpos(cpos){
-            next();
+        iterator& operator++() { 
+            if (m_db && !( cdb_seqnext(&m_cpos, m_db) > 0 ) ) m_db = nullptr ;
+            return *this; 
         }
-        iterator& operator++() { next(); return *this; }
         bool operator==(const iterator& rhs) const {
             return atEnd() ? rhs.atEnd() : m_cpos == rhs.m_cpos;
         }
