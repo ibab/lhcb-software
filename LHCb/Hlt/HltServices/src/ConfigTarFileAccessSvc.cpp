@@ -80,6 +80,18 @@ namespace {
     std::string prefix;
   };
 
+    bool isOctal(const char& ch) { return ((ch >= '0') && (ch <= '7')); }
+    long getOctal(const char *cp, int size) 
+    {
+      long val = 0;
+      for(;(size > 0) && (*cp == ' '); cp++, size--);
+      if ((size == 0) || !isOctal(*cp)) return -1;
+      for(; (size > 0) && isOctal(*cp); size--) val = (val<<3)  + (*cp++ - '0');
+      for (;(size > 0) && (*cp == ' '); cp++, size--);
+      if ((size > 0) && *cp) return -1;
+      return val;
+    }
+
 
   /* POSIX tar Header Block, from POSIX 1003.1-1990  */
   struct posix_header
@@ -102,6 +114,21 @@ namespace {
     char prefix[155];             /* 345-499 */
     char padding[12];             /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
   };
+
+  long computeChecksum(const posix_header& header)  {
+    /* Check the checksum */
+    long sum=0;
+    unsigned char *s = (unsigned char *)&header;
+    for (int i = sizeof(header); i-- != 0;) sum += *s++;
+    /* Remove the effects of the checksum field (replace
+     * with blanks for the purposes of the checksum) */
+    for (int i = sizeof header.chksum; i-- != 0;) {
+      sum -= (unsigned char) header.chksum[i];
+    }
+    sum += ' ' * sizeof header.chksum;
+    return sum;
+  }
+
 
   template <typename T>
   std::string convert(const T& in) {
@@ -277,22 +304,10 @@ namespace ConfigTarFileAccessSvc_details {
       }
       return m_index;
     }
-    long computeChecksum(const posix_header& header) const;
     bool interpretHeader(posix_header& header, struct Info& info) const;
     // Read an octal value in a field of the specified width, with optional
     // spaces on both sides of the number and with an optional null character
     // at the end.  Returns -1 on an illegal format.
-    bool isOctal(const char& ch) const   { return ((ch >= '0') && (ch <= '7')); }
-    long getOctal(const char *cp, int size) const
-    {
-      long val = 0;
-      for(;(size > 0) && (*cp == ' '); cp++, size--);
-      if ((size == 0) || !isOctal(*cp)) return -1;
-      for(; (size > 0) && isOctal(*cp); size--) val = (val<<3)  + (*cp++ - '0');
-      for (;(size > 0) && (*cp == ' '); cp++, size--);
-      if ((size > 0) && *cp) return -1;
-      return val;
-    }
     uid_t getUid() const {
 #ifndef _WIN32
       if (m_myUid==0) m_myUid = getuid();
@@ -336,6 +351,7 @@ namespace ConfigTarFileAccessSvc_details {
     mutable gid_t m_myGid;
     bool m_compressOnWrite;
   };
+
 
   bool TarFile::append(const string& name, std::stringstream& is) {
 #ifndef _WIN32
@@ -427,20 +443,6 @@ namespace ConfigTarFileAccessSvc_details {
       return false;
     }
     return true;
-  }
-
-  long TarFile::computeChecksum(const posix_header& header)  const {
-    /* Check the checksum */
-    long sum=0;
-    unsigned char *s = (unsigned char *)&header;
-    for (int i = sizeof(header); i-- != 0;) sum += *s++;
-    /* Remove the effects of the checksum field (replace
-     * with blanks for the purposes of the checksum) */
-    for (int i = sizeof header.chksum; i-- != 0;) {
-      sum -= (unsigned char) header.chksum[i];
-    }
-    sum += ' ' * sizeof header.chksum;
-    return sum;
   }
 
     bool TarFile::interpretHeader(posix_header& header, Info& info) const {
