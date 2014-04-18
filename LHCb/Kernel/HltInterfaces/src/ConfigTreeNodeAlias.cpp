@@ -85,7 +85,7 @@ std::istream& ConfigTreeNodeAlias::alias_type::read(std::istream& os) {
 istream& ConfigTreeNodeAlias::read(istream& is) {
     static boost::regex ref("^Ref: ([a-fA-F0-9]{32})$"),
                         alias("^Alias: (.*)$");
-    while (!is.eof()) {
+    while (istream::traits_type::not_eof( is.peek()) ) {
         string s; getline(is,s);
         boost::smatch what;
         if (boost::regex_match(s,what,ref))   m_ref   = digest_type::createFromStringRep(what[1]);

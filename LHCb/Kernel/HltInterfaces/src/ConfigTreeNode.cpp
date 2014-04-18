@@ -37,7 +37,7 @@ void read_custom(istream& is, ptree& top) {
     std::string s;
     boost::smatch what;
     ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree());
-    while (!is.eof()) {
+    while (istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
         if (s.empty()) break;
         if (parsing_nodes)  {

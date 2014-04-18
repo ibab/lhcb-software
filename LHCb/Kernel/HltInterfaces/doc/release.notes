@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2014-04-18 - Gerhard Raven
+ - improve check for 'eof' so that getline will not set the 'fail' bit at eof.
+
 !========================= HltInterfaces v5r0 2013-12-09 =========================
 ! 2013-12-05 - Rob Lambert
  - Changes to comply with new Gaudi::StringKey types in IANSvc and related

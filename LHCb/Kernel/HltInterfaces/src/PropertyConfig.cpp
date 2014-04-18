@@ -86,7 +86,7 @@ void read_custom(istream& is, ptree& top) {
     boost::smatch what;
     string s;
     ptree& props = top.put_child("Properties",ptree());
-    while (!is.eof()) {
+    while (istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
         if (s.empty()) break;
         if (parsing_properties)  {
