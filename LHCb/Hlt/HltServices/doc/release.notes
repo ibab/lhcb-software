@@ -7,7 +7,7 @@
  - add utility to inspect content of .cdb file 
  - add command line options to cdb utility
  - add option to dump content of cdb file to collection of files
- - move tar specific I/O in seperate cpp,h files
+ - move tar and zip specific I/O in seperate cpp,h files
 
 ! 2014-04-14 - Gerhard Raven
  - add new persistence implementation: ConfigCDBAccessSvc, using tinycdb. 
