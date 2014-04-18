@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include "boost/iostreams/filter/zlib.hpp"
@@ -15,10 +16,14 @@
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
 #include "boost/program_options.hpp"
+#include "boost/filesystem.hpp"
+#include "boost/filesystem/fstream.hpp"
 
 #include "../src/cdb.h"
 
 namespace io = boost::iostreams;
+namespace fs = boost::filesystem;
+
 
 struct manifest_entry {
     template <typename TCKS > 
@@ -67,8 +72,8 @@ std::string format_time(std::time_t t) {
 
 class CDB {
 public:
-    CDB( std::string fname, int mode ) {
-        int fd = open( fname.c_str(), mode );
+    CDB( std::string fname ) {
+        int fd = open( fname.c_str(), O_RDONLY );
         if (cdb_init( &m_db, fd ) < 0) cdb_fileno(&m_db)=-1;
     }
     ~CDB() {
@@ -211,14 +216,33 @@ void dump_records(CDB& db) {
     std::cout << std::flush;
 }
 
+void extract_records(CDB& db) {
+    struct timespec t[2]; t[0].tv_nsec = 0; t[1].tv_nsec = 0;
+    for ( auto record : db ) {
+        auto key = record.key();
+        if (key.compare(0,3,"TN/")==0)        key = std::string("ConfigTreeNodes/") + key.substr(3,2) + "/" + key.substr(3);
+        else if (key.compare(0,3,"PC/")==0 )  key = std::string("PropertyConfigs/") + key.substr(3,2) + "/" + key.substr(3);
+        else if (key.compare(0,3,"AL/")==0 )  key = std::string("Aliases/") + key.substr(3);
+        std::cout <<  " extracting    " << record.key() << " -> " << key << std::endl;
+        fs::path fname( key );
+        fs::create_directories( fname.parent_path() );
+        fs::ofstream fn( fname );
+        fn << record.value();
+        fn.close();
+        t[0].tv_sec = record.time();
+        t[1].tv_sec = record.time();
+        utimensat( AT_FDCWD,  fname.c_str(), t, 0 );
+    }
+}
+
 namespace po = boost::program_options;
 
 int main(int argc, char* argv[]) {
-    // TODO: add cmdline arguments for database, Moore version...
     po::options_description desc("Allowed options");
     desc.add_options() ("list-manifest", "dump manifest ")
                        ("list-keys", "list keys")
                        ("list-records", "list keys and records")
+                       ("extract-records", "extract records")
                        ("input-file",  po::value<std::string>()->default_value(std::string("config.cdb")),"input file");
     po::positional_options_description p;
     p.add("input-file", -1);
@@ -228,12 +252,13 @@ int main(int argc, char* argv[]) {
     po::notify(vm);
 
     
-    CDB db(vm["input-file"].as<std::string>(),O_RDONLY );
+    CDB db(vm["input-file"].as<std::string>() );
     if (!db.ok()) return 1;
 
     if (vm.count("list-manifest")) dump_manifest(db);
     if (vm.count("list-keys"))     dump_keys(db);
     if (vm.count("list-records"))  dump_records(db);
+    if (vm.count("extract-records"))  extract_records(db);
 
     return 0;
 }

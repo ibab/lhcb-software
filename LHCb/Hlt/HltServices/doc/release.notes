@@ -6,6 +6,7 @@
 ! 2014-04-18 - Gerhard Raven
  - add utility to inspect content of .cdb file 
  - add command line options to cdb utility
+ - add option to dump content of cdb file to collection of files
 
 ! 2014-04-14 - Gerhard Raven
  - add new persistence implementation: ConfigCDBAccessSvc, using tinycdb. 
