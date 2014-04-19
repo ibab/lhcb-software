@@ -129,7 +129,7 @@ private:
 
   TransformMap                         m_transform;
 
-  mutable std::auto_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>   m_msg;
   std::string                          s_accessSvc;
   IJobOptionsSvc*                      m_joboptionsSvc;
   IToolSvc*                            m_toolSvc;
@@ -146,10 +146,10 @@ private:
   std::vector<std::string>             m_prefetch;    ///< configurations to load at initialization
   std::vector<std::string>             m_skip;        ///< items NOT to configure with this service
   std::string                          m_ofname;
-  std::auto_ptr<std::ostream>          m_os;
+  std::unique_ptr<std::ostream>        m_os;
   bool                                 m_createGraphVizFile;
   bool                                 m_allowFlowChanges;
-  mutable std::auto_ptr<std::vector<std::string> > m_initialTopAlgs;
+  mutable std::unique_ptr<std::vector<std::string> > m_initialTopAlgs;
 
   MsgStream& msg(MSG::Level level) const;
 

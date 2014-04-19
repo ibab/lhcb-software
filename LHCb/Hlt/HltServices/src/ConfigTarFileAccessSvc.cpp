@@ -1,10 +1,7 @@
 #include "ConfigTarFileAccessSvc.h"
 
-#include "boost/filesystem/path.hpp"
-namespace fs = boost::filesystem;
-
-
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/System.h"
 #include "tar.h"
 
 
@@ -24,6 +21,7 @@ ConfigTarFileAccessSvc::ConfigTarFileAccessSvc( const std::string& name,
     if ( !def.empty() ) def += "/config.tar";
     declareProperty( "File", m_name = def );
     declareProperty( "Mode", m_mode = "ReadOnly" );
+    declareProperty("CompressOnWrite", m_compress = true );
 }
 
 //=============================================================================
@@ -34,14 +32,6 @@ StatusCode ConfigTarFileAccessSvc::finalize()
     m_file.reset( nullptr ); // close file if still open
     return ConfigArchiveAccessSvc::finalize();
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigTarFileAccessSvc::~ConfigTarFileAccessSvc()
-{
-}
-
 
 
 IArchive* ConfigTarFileAccessSvc::file() const
@@ -57,9 +47,8 @@ IArchive* ConfigTarFileAccessSvc::file() const
                                  : ( m_mode == "Truncate" )
                                        ? ( std::ios::in | std::ios::out | std::ios::trunc )
                                        : std::ios::in;
-
         info() << " opening " << m_name << " in mode " << m_mode << endmsg;
-        m_file.reset( new TarFile( m_name, mode, true ) );
+        m_file.reset( new TarFile( m_name, mode, m_compress ) );
         if ( !*m_file ) {
             error() << " Failed to open " << m_name << " in mode " << m_mode
                     << endmsg;

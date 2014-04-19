@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
-#include "boost/foreach.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/regex.hpp"
@@ -51,8 +50,8 @@ DECLARE_SERVICE_FACTORY( HltConfigSvc )
 HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   : PropertyConfigSvc( name , pSvcLocator )
   , m_configuredTCK(0)
-  , m_evtSvc(0)
-  , m_incidentSvc(0)
+  , m_evtSvc{nullptr}
+  , m_incidentSvc{nullptr}
   , m_decodeOdin("ODINDecodeTool",this)
   , m_id(~0u)
 {
@@ -69,8 +68,8 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
 void HltConfigSvc::updateMap(Property&) {
   m_tck2config.clear();
   typedef std::pair<std::string,std::string> val_t;
-  BOOST_FOREACH( const val_t& i, m_tck2config_ ) {
-    m_tck2config.insert( make_pair( TCK( i.first ), i.second)  );
+  for( const val_t& i: m_tck2config_ ) {
+    m_tck2config.emplace(  TCK( i.first ), i.second );
   }
 }
 
@@ -78,20 +77,13 @@ void HltConfigSvc::updateInitial(Property&) {
     m_initialTCK = TCK(m_initialTCK_);
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-HltConfigSvc::~HltConfigSvc() {
-   // if not released already by now, then do it now...
-} 
-
 
 //=============================================================================
 // Finalization
 //=============================================================================
 StatusCode HltConfigSvc::finalize() {
-  m_evtSvc->release();      m_evtSvc=0;
-  if (m_incidentSvc!=0) { m_incidentSvc->release(); m_incidentSvc=0; }
+  m_evtSvc->release();      m_evtSvc=nullptr;
+  if (m_incidentSvc) { m_incidentSvc->release(); m_incidentSvc=nullptr; }
   return PropertyConfigSvc::finalize();
 }
 
@@ -140,7 +132,7 @@ StatusCode HltConfigSvc::initialize() {
   
   // load all TCKs... (brute force, but OK for now...)
   std::vector<ConfigTreeNodeAlias> tcks = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TCK/") ));
-  BOOST_FOREACH( const ConfigTreeNodeAlias& tck, tcks ) tck2id( TCK( tck.alias().str().substr(4) ) );
+  for( const ConfigTreeNodeAlias& tck: tcks ) tck2id( TCK( tck.alias().str().substr(4) ) );
 
   // find the ID of the initial TCK
   ConfigTreeNode::digest_type initialID = tck2id( TCK( m_initialTCK ) );
@@ -198,7 +190,7 @@ HltConfigSvc::tck2id(TCK tck) const {
         debug() << " masked L0 part of TCK -- now have " << tck << endmsg;
     }
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
-    TCKMap_t::const_iterator i = m_tck2config.find( tck );
+    auto i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
         id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
         warning() << " TCK " << tck << " mapped (by explicit option) to " << id << endmsg;
@@ -286,7 +278,7 @@ void HltConfigSvc::checkOdin() {
 }
 
 void HltConfigSvc::createHltDecReports() {
-    std::auto_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
+    std::unique_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
     hdr->setConfiguredTCK(m_configuredTCK.uint());
     hdr->setTaskID(m_id);
     m_evtSvc->registerObject(m_outputContainerName,hdr.release());

@@ -31,10 +31,10 @@ public:
 
   HltConfigSvc(const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltConfigSvc( );           ///< Destructor
-  virtual StatusCode initialize();    ///< Service initialization
-  virtual StatusCode finalize();      ///< Service finalization
-  virtual void handle(const Incident&);
+  ~HltConfigSvc( ) override = default; ///< Destructor
+  StatusCode initialize() override;    ///< Service initialization
+  StatusCode finalize() override;      ///< Service finalization
+  void handle(const Incident&) override;
 
 private:
   void dummyCheckOdin();
@@ -44,14 +44,14 @@ private:
    void updateMap(Property&);
    void updateInitial(Property&);
 
-  typedef std::map<TCK,std::string> TCKMap_t;
+   typedef std::map<TCK,std::string> TCKMap_t;
 
   std::string                  m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
   std::string                  m_prefetchDir;     ///< which set of configurations 
                                                   ///< to search for same types as initial TCK
                                                   ///< and to prefetch...
 
-  TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID
+  TCKMap_t                          m_tck2config;      ///< from TCK to configuration ID
   std::map<std::string,std::string> m_tck2config_;      ///< from TCK to configuration ID
 
   TCK                          m_initialTCK;      ///< which TCK to start with...

@@ -5,8 +5,6 @@
 // Include files
 #include <string>
 #include <memory>
-#include "boost/optional.hpp"
-
 #include "ConfigArchiveAccessSvc.h"
 
 /** @class ConfigFileAccessSvc ConfigFileAccessSvc.h
@@ -17,20 +15,19 @@
  *  @author Gerhard Raven
  *  @date   2009-06-04
  */
-
-
 class IArchive;
 
 class ConfigTarFileAccessSvc : public ConfigArchiveAccessSvc {
 public:
   ConfigTarFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigTarFileAccessSvc( );     ///< Destructor
+  ~ConfigTarFileAccessSvc( ) override = default;     ///< Destructor
   StatusCode finalize();      ///< Service initialization
 private:
   IArchive*  file() const override;
+
+  mutable std::unique_ptr<IArchive>    m_file;
   std::string                          m_name;   ///< filename of tar file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the tar file
-  mutable std::unique_ptr<IArchive>    m_file;
-
+  bool                                 m_compress; ///< do we want to transparently compress items on write?
 };
 #endif // CONFIGTARFILEACCESSSVC_H

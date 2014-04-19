@@ -3,7 +3,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <sstream>
 #include <string>
 
 
@@ -13,7 +12,6 @@
 #include "zip.h"
 
 using namespace std;
-namespace fs = boost::filesystem;
 
 using ConfigZipFileAccessSvc_details::ZipFile;
 
@@ -32,14 +30,6 @@ ConfigZipFileAccessSvc::ConfigZipFileAccessSvc( const string& name,
     declareProperty( "File", m_name = def );
     declareProperty( "Mode", m_mode = "ReadOnly" );
 }
-
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigZipFileAccessSvc::~ConfigZipFileAccessSvc()
-{
-}
-
 
 IArchive* ConfigZipFileAccessSvc::file() const
 {

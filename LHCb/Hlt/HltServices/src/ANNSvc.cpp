@@ -136,12 +136,6 @@ ANNSvc::ANNSvc( const string& name, ISvcLocator* pSvcLocator,
                     const_cast<maps_type::mapped_type&>(r.first->second)->property());
   }
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-ANNSvc::~ANNSvc() {
-}
-
 
 //=============================================================================
 // queryInterface

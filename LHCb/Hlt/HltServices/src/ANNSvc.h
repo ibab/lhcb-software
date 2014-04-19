@@ -29,7 +29,7 @@ class ANNSvc : public Service,
 public:
   ANNSvc( const std::string& name, ISvcLocator* pSvcLocator,
           const std::vector<major_key_type>& majors );
-  ~ANNSvc();
+  ~ANNSvc() = default;
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
   StatusCode finalize();

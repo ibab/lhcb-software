@@ -25,7 +25,7 @@ class ANNDispatchSvc : public Service
 
 public:
   ANNDispatchSvc( const std::string& name, ISvcLocator* pSvcLocator);
-  ~ANNDispatchSvc() {}
+  ~ANNDispatchSvc() = default ; 
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
   StatusCode initialize(  );
@@ -79,10 +79,10 @@ DECLARE_SERVICE_FACTORY( ANNDispatchSvc )
 //=============================================================================
 ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
   : Service( name , pSvcLocator )
-  , m_evtSvc(0)
-  , m_child(0)
-  , m_incidentSvc(0)
-  , m_propertyConfigSvc(0)
+  , m_evtSvc{nullptr}
+  , m_child{nullptr}
+  , m_incidentSvc{nullptr}
+  , m_propertyConfigSvc{nullptr}
   , m_uptodate(false)
   , m_inputRawEventLocation("")
   , m_currentTCK(0)
@@ -90,15 +90,12 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("IANNSvcInstance", m_instanceName = "HltANNSvc");
   declareProperty("IPropertyConfigSvcInstance", m_propertyConfigSvcName = "PropertyConfigSvc");
   declareProperty("RawEventLocation", m_inputRawEventLocation); 
-
 }
 
 StatusCode
 ANNDispatchSvc::initialize(  )
 {
-
   StatusCode sc = Service::initialize();
-
   if (sc.isFailure()) {
     fatal() << "Service::initialize() failed!!!"<< endmsg;
     return sc;

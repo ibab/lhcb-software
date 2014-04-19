@@ -4,7 +4,6 @@
 // Include files
 #include <string>
 #include <memory>
-#include "boost/optional.hpp"
 
 #include "ConfigArchiveAccessSvc.h"
 
@@ -22,13 +21,12 @@ class IArchive;
 class ConfigZipFileAccessSvc : public ConfigArchiveAccessSvc {
 public:
   ConfigZipFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigZipFileAccessSvc( );     ///< Destructor
+  ~ConfigZipFileAccessSvc( ) override = default;     ///< Destructor
   StatusCode finalize();      ///< Service initialization
 private:  
   IArchive*  file() const;
+  mutable std::unique_ptr<IArchive>    m_file;
   std::string                          m_name;   ///< filename of zip file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the zip file
-  mutable std::unique_ptr<IArchive>    m_file;
-
 };
 #endif // CONFIGZIPFILEACCESSSVC_H
