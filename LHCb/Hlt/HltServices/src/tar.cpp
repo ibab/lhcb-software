@@ -9,7 +9,8 @@
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
 
-namespace {
+namespace
+{
 #ifndef _WIN32
 class CleanupAtExit
 {
@@ -36,9 +37,11 @@ class CleanupAtExit
     ~CleanupAtExit()
     {
         for ( const auto& i : m_files ) {
-            std::cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removing " << i << std::endl;
+            std::cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removing " << i
+                      << std::endl;
             unlink( i.c_str() );
-            std::cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removed " << i << std::endl;
+            std::cerr << "ConfigTarFileAccessSvc::CleanupAtExit: removed " << i
+                      << std::endl;
         }
     }
     std::set<std::string> m_files;
@@ -111,12 +114,12 @@ bool putOctal( T val, char ( &buf )[Size] )
 bool isZero( const struct posix_header& h )
 {
     const char* i = (const char*)( &h );
-    return std::all_of( i, i+512, [](const char &c) { return c==0; } );
+    return std::all_of( i, i + 512, []( const char& c ) { return c == 0; } );
 }
 }
 
-namespace ConfigTarFileAccessSvc_details {
-
+namespace ConfigTarFileAccessSvc_details
+{
 
 bool TarFile::append( const std::string& name, std::stringstream& is )
 {
@@ -205,8 +208,8 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     m_file.flush();
     m_indexUpToDate = index( m_leof );
     if ( m_leof != leof ) {
-        std::cerr << "oops: read-back eof not what was predicted: " << m_leof << " vs. "
-             << leof << std::endl;
+        std::cerr << "oops: read-back eof not what was predicted: " << m_leof
+                  << " vs. " << leof << std::endl;
         return false;
     }
     return true;
@@ -269,6 +272,11 @@ bool TarFile::index( std::streamoff offset ) const
 {
     posix_header header;
     if ( offset == 0 ) m_index.clear();
+    // check whether file is empty
+    m_file.seekg( offset, std::ios::end );
+    auto pos = m_file.tellg();
+    if ( pos == 0 ) return true;
+    // otherwise, start at the begin...
     m_file.seekg( offset, std::ios::beg );
     while ( m_file.read( (char*)&header, sizeof( header ) ) ) {
         Info info;
@@ -292,12 +300,13 @@ bool TarFile::index( std::streamoff offset ) const
             std::cerr << " got empty name " << std::endl;
             break;
         }
-        if ( ( info.type == Info::TarFileType::REGTYPE || info.type == Info::TarFileType::REGTYPE0 ) &&
+        if ( ( info.type == Info::TarFileType::REGTYPE ||
+               info.type == Info::TarFileType::REGTYPE0 ) &&
              info.name[info.name.size() - 1] != '/' &&
              info.name.find( "/CVS/" ) == std::string::npos &&
              info.name.find( "/.svn/" ) == std::string::npos ) {
             // TODO: check for duplicates!!
-            m_index.emplace(  Gaudi::StringKey( info.name ), info );
+            m_index.emplace( info.name, info );
         }
         // round up size to block size, and skip to next header...
         size_t skip = info.size;
@@ -310,90 +319,91 @@ bool TarFile::index( std::streamoff offset ) const
     m_file.seekg( 0, std::ios::beg );
     return true;
 }
-bool TarFile::setupStream( io::filtering_istream& s, const std::string& name )
-    {
-        const auto& myIndex = getIndex();
-        auto i = myIndex.find( name );
-        if ( i == myIndex.end() ) return false;
-        // slice works relative to the current file offset, as it works on an
-        // istream...
-        m_file.seekg( 0, std::ios_base::beg );
-        if ( i->second.compressed ) {
+bool TarFile::setupStream( io::filtering_istream& s, const std::string& name ) const
+{
+    const auto& myIndex = getIndex();
+    auto i = myIndex.find( name );
+    if ( i == myIndex.end() ) return false;
+    // slice works relative to the current file offset, as it works on an
+    // istream...
+    m_file.seekg( 0, std::ios_base::beg );
+    if ( i->second.compressed ) {
 #ifndef _WIN32
 #ifdef __INTEL_COMPILER          // Disable ICC warning
 #pragma warning( disable : 279 ) // gzip.hpp(551) controlling expression constant
 #pragma warning( push )
 #endif
-            s.push( io::gzip_decompressor() );
+        s.push( io::gzip_decompressor() );
 #ifdef __INTEL_COMPILER // Re-enable ICC warning 279
 #pragma warning( pop )
 #endif
 #else
-            return false;
+        return false;
 #endif // _WIN32
-        }
-        s.push( io::slice( m_file, i->second.offset, i->second.size ) );
-        return true;
     }
+    s.push( io::slice( m_file, i->second.offset, i->second.size ) );
+    return true;
+}
 TarFile::TarFile( const std::string& name, std::ios::openmode mode,
-             bool compressOnWrite  )
-        : m_name( name )
-        , m_lock( -1 )
-        , m_leof( 0 )
-        , m_indexUpToDate( false )
-        , m_myUid( 0 )
-        , m_myGid( 0 )
-        , m_compressOnWrite( compressOnWrite )
-    {
-        if ( mode & std::ios::out ) {
+                  bool compressOnWrite )
+    : m_name( name )
+    , m_lock( -1 )
+    , m_leof( 0 )
+    , m_indexUpToDate( false )
+    , m_myUid( 0 )
+    , m_myGid( 0 )
+    , m_compressOnWrite( compressOnWrite )
+{
+    if ( mode & std::ios::out ) {
 #ifndef _WIN32
-            std::string lckname = m_name + ".lock";
-            // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
-            //
-            // O_CREAT and O_EXCL are set, open() will fail if the file exists. The
-            // check for
-            // the existence of the file and the creation of the file if it does not
-            // exist will
-            // be atomic with respect to other processes executing open() naming the
-            // same
-            // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT
-            // is not set,
-            // the effect is undefined.
-            //
-            m_lock = open( lckname.c_str(), O_RDWR | O_CREAT | O_EXCL,
-                           S_IRUSR | S_IWUSR );
-            if ( m_lock < 0 ) {
-                std::cerr << "trying to open  " << m_name << " for writing, but lockfile "
-                     << lckname << " already exists." << std::endl;
-                std::cerr << "This (most likely) means that some other process intends "
-                        "to write into " << m_name << std::endl;
-                std::cerr << "Refusing to continue to preserve integrity of " << m_name
-                     << "... goodbye" << std::endl;
-                ::abort();
-            }
-            std::cerr << "succesfully created lock file " << lckname << std::endl;
-            CleanupAtExit::instance().add( lckname );
+        std::string lckname = m_name + ".lock";
+        // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
+        //
+        // O_CREAT and O_EXCL are set, open() will fail if the file exists. The
+        // check for
+        // the existence of the file and the creation of the file if it does not
+        // exist will
+        // be atomic with respect to other processes executing open() naming the
+        // same
+        // filename in the same directory with O_EXCL and O_CREAT set. If O_CREAT
+        // is not set,
+        // the effect is undefined.
+        //
+        m_lock =
+            open( lckname.c_str(), O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR );
+        if ( m_lock < 0 ) {
+            std::cerr << "trying to open  " << m_name
+                      << " for writing, but lockfile " << lckname
+                      << " already exists." << std::endl;
+            std::cerr << "This (most likely) means that some other process intends "
+                         "to write into " << m_name << std::endl;
+            std::cerr << "Refusing to continue to preserve integrity of " << m_name
+                      << "... goodbye" << std::endl;
+            ::abort();
+        }
+        std::cerr << "succesfully created lock file " << lckname << std::endl;
+        CleanupAtExit::instance().add( lckname );
 // TODO: write some text to the lockfile to identify this process: machine name,
 // pid...
 //       which can be used in the above failure case to point out the source of the
 // clash...
 #else
-            m_lock = 1;
+        m_lock = 1;
 #endif
-        }
-        m_file.open( m_name.c_str(), mode | std::ios::in | std::ios::binary );
     }
+    m_file.open( m_name.c_str(), mode | std::ios::in | std::ios::binary );
+}
 TarFile::~TarFile()
-    {
-        m_file.close();
+{
+    m_file.close();
 #ifndef _WIN32
-        if ( !( m_lock < 0 ) ) {
-            std::cerr << "releasing lock " << std::endl;
-            close( m_lock );
-            unlink( ( m_name + ".lock" ).c_str() );
-            std::cerr << "removed lock file " << ( m_name + ".lock" ) << std::endl;
-            CleanupAtExit::instance().remove( m_name + ".lock" );
-        }
-#endif
+    if ( !( m_lock < 0 ) ) {
+        std::cerr << "releasing lock " << std::endl;
+        close( m_lock );
+        unlink( ( m_name + ".lock" ).c_str() );
+        std::cerr << "removed lock file " << ( m_name + ".lock" ) << std::endl;
+        CleanupAtExit::instance().remove( m_name + ".lock" );
     }
+#endif
+}
 }

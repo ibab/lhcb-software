@@ -90,6 +90,7 @@ public:
           : m_kpos{kpos}, m_vpos{vpos}, m_klen{klen}, m_vlen{vlen} { 
             assert(vlen>=12);
         }
+        unsigned int valuePersistentSize() const { return m_vlen;}
         std::string key() const {
             return { static_cast<const char*>(m_kpos), m_klen };
         }
@@ -200,14 +201,14 @@ void dump_manifest(CDB& db) {
 
 void dump_keys(CDB& db) {
     for ( auto record : db ) {
-        std::cout << record.uid() << "     " << format_time( record.time() ) << "     "  << record.key() << "\n";
+        std::cout << record.uid() << "     " << record.valuePersistentSize()  << "      " << format_time( record.time() ) << "     "  << record.key() << "\n";
     }
     std::cout << std::flush;
 }
 
 void dump_records(CDB& db) {
     for ( auto record : db ) {
-        std::cout << record.uid() << "     " << format_time( record.time() ) << "     "  << record.key() << "\n";
+        std::cout << record.uid() << "     " << record.valuePersistentSize()  << "      "<< format_time( record.time() ) << "     "  << record.key() << "\n";
         std::cout << record.value() <<"\n";
     }
     std::cout << std::flush;

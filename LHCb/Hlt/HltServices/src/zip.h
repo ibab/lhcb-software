@@ -1,3 +1,5 @@
+#ifndef ZIP_H
+#define ZIP_H
 /*
  * 19xx...2012 - GR: original design and the code
  * 9.2012 - AZ: write access, spec from
@@ -14,23 +16,22 @@
  */
 
 
+#include "IArchive.h"
+
 #include <map>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "boost/optional.hpp"
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/copy.hpp"
 #include "boost/iostreams/filter/zlib.hpp"
 #ifndef _WIN32
 #include "boost/iostreams/filter/bzip2.hpp"
 #endif
-#include "boost/iostreams/filtering_stream.hpp"
 #include "boost/iostreams/device/back_inserter.hpp"
 #include "boost/regex.hpp"
-#include "boost/assign/list_of.hpp"
 #include "boost/filesystem/path.hpp"
 
 #include "boost/integer_traits.hpp"
@@ -49,32 +50,11 @@ using boost::uint64_t;
 namespace io = boost::iostreams;
 namespace fs = boost::filesystem;
 
-namespace
-{
-
-constexpr struct {
-    template <typename T> bool operator()( const T& ) const { return true; }
-} all;
-
-struct PrefixFilenameSelector
-{
-    PrefixFilenameSelector( const std::string& _prefix ) : prefix( _prefix )
-    {
-    }
-    bool operator()( const std::string& fname ) const
-    {
-        return fname.compare( 0, prefix.size(), prefix ) == 0;
-    }
-    std::string prefix;
-};
-
-
-}
 
 namespace ConfigZipFileAccessSvc_details
 {
 
-class ZipFile : boost::noncopyable
+class ZipFile : public IArchive
 {
   public:
     ZipFile( const std::string& name, std::ios::openmode mode = std::ios::in )
@@ -98,37 +78,24 @@ class ZipFile : boost::noncopyable
         flush();
     }
 
-    bool operator!() const
+    bool operator!() const override
     {
         return !m_file;
     }
-    bool writeable() const
+    bool writeable() const override
     {
         return m_mode & std::ios::out;
     }
-    bool append( const std::string& name, const std::stringstream& is );
+    bool append( const std::string& name, std::stringstream& is ) override;
 
-    template <typename SELECTOR>
-    std::vector<std::string> files( const SELECTOR& selector = all ) const
+    std::vector<std::string> contents( ) const override
     {
         std::vector<std::string> f;
-        for ( const auto& i : m_index ) {
-            if ( selector( i.first ) ) f.push_back( i.first );
-        }
+        for ( const auto& i : m_index ) f.push_back( i.first );
         return f;
     }
 
-    bool setupStream( io::filtering_istream& s, const std::string& name );
-
-    template <typename T>
-    boost::optional<T> get( const std::string& name )
-    {
-        io::filtering_istream strm;
-        if (!setupStream( strm, name ) ) return boost::optional<T>();
-        T t;
-        strm >> t;
-        return !strm.fail() ? t : boost::optional<T>() ;
-    }
+    bool setupStream( io::filtering_istream& s, const std::string& name ) const override;
 
   private:
     struct ZipInfo
@@ -260,7 +227,7 @@ class ZipFile : boost::noncopyable
             m_index[info.name] = info;
         }
     }
-    std::fstream m_file;
+    mutable std::fstream m_file;
     std::map<Gaudi::StringKey, ZipInfo> m_index;
 
     EndRec m_erec;
@@ -268,4 +235,4 @@ class ZipFile : boost::noncopyable
     bool m_modified;
 };
 }
-
+#endif

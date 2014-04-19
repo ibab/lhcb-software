@@ -1,5 +1,6 @@
 #ifndef TAR_IMPL_H
 #define TAR_IMPL_H
+#include "IArchive.h"
 #ifndef _WIN32
 #include <unistd.h>
 #include <map>
@@ -28,26 +29,6 @@ namespace io = boost::iostreams;
 namespace
 {
 
-constexpr struct
-{
-    template <typename T>
-    bool operator()( const T& ) const
-    {
-        return true;
-    }
-} all;
-
-struct PrefixFilenameSelector
-{
-    PrefixFilenameSelector( const std::string& _prefix ) : prefix( _prefix )
-    {
-    }
-    bool operator()( const std::string& fname ) const
-    {
-        return fname.compare( 0, prefix.size(), prefix ) == 0;
-    }
-    std::string prefix;
-};
 
 /* POSIX tar Header Block, from POSIX 1003.1-1990  */
 struct posix_header
@@ -74,50 +55,35 @@ struct posix_header
 
 namespace ConfigTarFileAccessSvc_details
 {
-class TarFile
+class TarFile : public IArchive, private boost::noncopyable
 {
   public:
     TarFile( const std::string& name, std::ios::openmode mode = std::ios::in,
              bool compressOnWrite = true );
-    bool operator!() const
+    bool operator!() const override
     {
         return !m_file;
     }
-    bool writeable() const
+    bool writeable() const override
     {
         return m_lock >= 0;
     }
-    bool setupStream( io::filtering_istream& s, const std::string& name );
+    bool setupStream( io::filtering_istream& s, const std::string& name ) const  override;
 
-    template <typename T>
-    boost::optional<T> get( const std::string& name )
-    {
-        io::filtering_istream strm;
-        if ( !setupStream( strm, name ) ) return boost::optional<T>();
-        T t;
-        strm >> t;
-        return !strm.fail() ? t : boost::optional<T>();
-    }
 
     bool exists( const std::string& path )
     {
         const auto& myIndex = getIndex();
         return myIndex.find( path ) != myIndex.end();
     }
-    template <typename SELECTOR>
-    std::vector<std::string> files( const SELECTOR& selector = all ) const
+
+    std::vector<std::string> contents() const override
     {
         std::vector<std::string> f;
-        for ( auto& i : getIndex() ) {
-            if ( selector( i.first ) ) f.push_back( i.first );
-        }
+        for ( auto& i : getIndex() ) f.push_back(i.first) ;
         return f;
     }
-    std::vector<std::string> files() const
-    {
-        return files( all );
-    }
-    bool append( const std::string& name, std::stringstream& is );
+    bool append( const std::string& name, std::stringstream& is ) override;
 
     ~TarFile();
 

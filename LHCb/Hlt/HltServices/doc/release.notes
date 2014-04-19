@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-04-19 - Gerhard Raven
+ - factor common code in Config{Tar,Zip}FileAccessSvc into a new mix-in class,
+   ConfigArchiveAccessSvc from which both now inherit.
+
 ! 2014-04-18 - Gerhard Raven
  - add utility to inspect content of .cdb file 
  - add command line options to cdb utility
