@@ -106,15 +106,10 @@ class ZipFile : boost::noncopyable
     {
         return m_mode & std::ios::out;
     }
-    std::vector<std::string> files() const
-    {
-        return files( all );
-    }
-
     bool append( const std::string& name, const std::stringstream& is );
 
     template <typename SELECTOR>
-    std::vector<std::string> files( const SELECTOR& selector ) const
+    std::vector<std::string> files( const SELECTOR& selector = all ) const
     {
         std::vector<std::string> f;
         for ( const auto& i : m_index ) {

@@ -536,7 +536,7 @@ bool ConfigCDBAccessSvc::write( const string& path, const T& object ) const
     }
     stringstream s;
     s << object;
-    return !file() && file()->append( path, s );
+    return file() && file()->append( path, s );
 }
 
 boost::optional<PropertyConfig>
