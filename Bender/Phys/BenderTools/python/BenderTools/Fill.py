@@ -649,7 +649,7 @@ def fillMasses ( self        ,
                                 
                                 for o in range ( n + 1 , nc + 1 ) :
                                     
-                                    k7 = "m%d%d%d%d%d%d" % ( i , j , k , l , m , n , p )
+                                    k7 = "m%d%d%d%d%d%d" % ( i , j , k , l , m , n , o )
                                 
                                     _ind7 = LoKi.Particles.InvariantMass.Indices ()
                                     
