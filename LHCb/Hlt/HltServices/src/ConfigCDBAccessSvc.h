@@ -57,10 +57,10 @@ private:
   
   ConfigCDBAccessSvc_details::CDB*  file() const;
 
-  mutable std::auto_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>     m_msg;
   std::string                          m_name;   ///< filename of tar file from which to read configurations
   std::string                          m_mode;   ///< which flags to specify when opening the tar file
-  mutable std::auto_ptr<ConfigCDBAccessSvc_details::CDB>               m_file;
+  mutable std::unique_ptr<ConfigCDBAccessSvc_details::CDB>               m_file;
   bool                                 m_compress; ///< do we want to transparently compress items on write?
 
   template <typename T> boost::optional<T> read(const std::string& path) const;

@@ -2,16 +2,11 @@
 #include <sstream>
 #include <string>
 #include "boost/filesystem/path.hpp"
-
-#include "boost/lexical_cast.hpp"
-#include "boost/filesystem/path.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/convenience.hpp"
 namespace fs = boost::filesystem;
 
-//// temporary to support both boost 1.37 (and later) and 1.36 (and earlier)
-#include "boost/version.hpp"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
@@ -245,12 +240,12 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
     fs::path basedir = fs::path(m_dir) / "Aliases" ;
     std::list<fs::path> dirs; dirs.push_back( basedir / alias.major() );
 
-    for (std::list<fs::path>::const_iterator dir  = dirs.begin(); dir!=dirs.end(); ++dir ) {
+    for (const auto&  dir : dirs ) {
 
-        if ( !fs::exists( *dir) ) continue; //@todo: add warning about this...
+        if ( !fs::exists( dir) ) continue; //@todo: add warning about this...
 
         fs::directory_iterator end; // default construction yields past-the-end
-        for ( fs::directory_iterator i( *dir ); i != end; ++i) {
+        for ( fs::directory_iterator i( dir ); i != end; ++i) {
             if ( fs::is_directory(i->status()) ) {
               std::string fn = i->path().filename().string();
               if ( fn  == "CVS" || fn == ".svn" ) continue;

@@ -59,7 +59,7 @@ private:
   
   std::vector<std::string>             s_svcs;
   boost::ptr_vector<IConfigAccessSvc>  m_svcs;
-  mutable std::auto_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>     m_msg;
   MsgStream& msg(MSG::Level level) const;
 };
 #endif // CONFIGFILEACCESSSVC_H

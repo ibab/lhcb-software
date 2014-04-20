@@ -344,14 +344,8 @@ bool ZipFile::EndRec::write_ecd( ostream& os )
         put<uint16_t>( os, uint16_t( entriesThisDisk ) );
         put<uint16_t>( os, uint16_t( entriesThisDisk ) );
     }
-    if ( size > 0xfffffffe && zip64 )
-        put<uint32_t>( os, 0xffffffff );
-    else
-        put<uint32_t>( os, size );
-    if ( offset > 0xfffffffe && zip64 )
-        put<uint32_t>( os, 0xffffffff );
-    else
-        put<uint32_t>( os, offset );
+    put<uint32_t>( os, (   size > 0xfffffffe && zip64 ) ? 0xffffffff :   size );
+    put<uint32_t>( os, ( offset > 0xfffffffe && zip64 ) ? 0xffffffff : offset );
     put<uint16_t>( os, comment_length );
     os.write( comment.c_str(), comment.size() );
     return true;

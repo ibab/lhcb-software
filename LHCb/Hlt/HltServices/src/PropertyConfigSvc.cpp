@@ -16,8 +16,6 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 
 #include "boost/filesystem/fstream.hpp"
 #include "boost/filesystem/convenience.hpp"
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/bind.hpp"
 #include "boost/regex.hpp"
 
 // from Gaudi
@@ -36,7 +34,6 @@ StatusCode parse(std::map<std::string, std::map<std::string,
 
 using namespace std;
 using boost::ptr_vector;
-namespace bl = boost::lambda;
 
 
 
@@ -61,7 +58,7 @@ namespace {
             property2jos(IJobOptionsSvc* jos,const string& name, ostream* os=0) :
                 m_jos(jos),m_name(name),m_properties(jos->getProperties(name)),m_out(os) { assert(m_jos!=0); }
             property2jos& operator=(const PropertyConfig::Prop& prop) {
-                if (m_out!=0) {
+                if (m_out) {
                    *m_out << m_name << '.' <<prop.first<< '=' << prop.second << ";\n";
                 }
                 const Property *p = (m_properties !=0 ? find(prop.first): 0);
@@ -102,11 +99,10 @@ namespace {
             }
          private:
             const Property* find(const string& name) {
-               vector<const Property*>::const_iterator i =
-                  find_if(m_properties->begin(),
-                          m_properties->end(),
-                          bl::bind(&Property::name,bl::_1)==name);
-               return i==m_properties->end() ? 0 : *i;
+               auto i = find_if(std::begin(*m_properties),
+                                std::end(*m_properties),
+                                [&](const Property* p) { return p->name()==name; } );
+               return i!=std::end(*m_properties) ? *i : nullptr;
             }
             IJobOptionsSvc*                m_jos;
             string                         m_name;

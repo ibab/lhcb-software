@@ -90,24 +90,14 @@ class TarFile : public IArchive, private boost::noncopyable
   private:
     struct Info
     {
-        /* A nice enum with all the possible tar file content types */
-        enum TarFileType {
-            REGTYPE = '0',   /* regular file */
-            REGTYPE0 = '\0', /* regular file (ancient bug compat)*/
-            GNUTYPE_LONGLINK = 'K',
-            GNUTYPE_LONGNAME = 'L'
-        };
-        typedef enum TarFileType TarFileType;
-
-        Info()
-            : size( 0 ), type( TarFileType( 0 ) ), offset( 0 ), compressed( false )
-        {
-        }
+        Info() : size( 0 ), offset( 0 ), compressed( false ), mtime(0),uid(0)
+        { }
         std::string name;
         size_t size;
-        TarFileType type;
         size_t offset;
         bool compressed;
+        time_t mtime;
+        uid_t uid;
     };
 
     bool _append( const std::string& name, std::stringstream& is );

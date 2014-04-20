@@ -116,6 +116,15 @@ bool isZero( const struct posix_header& h )
     const char* i = (const char*)( &h );
     return std::all_of( i, i + 512, []( const char& c ) { return c == 0; } );
 }
+
+/* A nice enum with all the possible tar file content types */
+enum TarFileType {
+    REGTYPE = '0',   /* regular file */
+    REGTYPE0 = '\0', /* regular file (ancient bug compat)*/
+    GNUTYPE_LONGLINK = 'K',
+    GNUTYPE_LONGNAME = 'L'
+};
+typedef enum TarFileType TarFileType;
 }
 
 namespace ConfigTarFileAccessSvc_details
@@ -154,7 +163,7 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     if ( name.size() > sizeof( header.name ) ) {
         // generate GNU longlink header...
         putString( "././@LongLink", header.name );
-        header.typeflag = Info::TarFileType::GNUTYPE_LONGNAME;
+        header.typeflag = TarFileType::GNUTYPE_LONGNAME;
         putOctal( name.size(), header.size );
         putString( "ustar ", header.magic );
         putString( "00", header.version );
@@ -182,7 +191,7 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     putOctal( getGid(), header.gid );
     putOctal( size, header.size );
     putOctal( time( 0 ), header.mtime );
-    header.typeflag = Info::TarFileType::REGTYPE;
+    header.typeflag = TarFileType::REGTYPE;
     putString( getUname(), header.uname );
     putString( getGname(), header.gname );
     putOctal( 0, header.devmajor );
@@ -228,7 +237,6 @@ bool TarFile::interpretHeader( posix_header& header, Info& info ) const
         std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
         return false;
     }
-    info.type = Info::TarFileType( header.typeflag );
     long size = getOctal( header.size, sizeof( header.size ) );
     if ( size < 0 ) {
         std::cerr << " got negative file size: " << info.size << std::endl;
@@ -241,7 +249,7 @@ bool TarFile::interpretHeader( posix_header& header, Info& info ) const
         info.name = prefix + "/" + info.name;
     }
 
-    if ( info.type == Info::TarFileType::GNUTYPE_LONGNAME ) {
+    if ( TarFileType( header.typeflag ) == TarFileType::GNUTYPE_LONGNAME ) {
         // current header is a dummy 'flag', followed by data blocks
         // with name as content (length of name is 'size' of data)
         assert( info.name == "././@LongLink" );
@@ -257,6 +265,8 @@ bool TarFile::interpretHeader( posix_header& header, Info& info ) const
         // so we overwrite the truncated one with the long one...
         info.name = fname.str();
     }
+    info.uid    = getOctal( header.uid, sizeof(header.uid) );
+    info.mtime  = getOctal( header.mtime, sizeof(header.mtime) );
     info.offset = m_file.tellg(); // this goes here, as the longlink handling
                                   // reads an extra block...
     // if name ends in .gz, assume it is gzipped.
@@ -274,8 +284,7 @@ bool TarFile::index( std::streamoff offset ) const
     if ( offset == 0 ) m_index.clear();
     // check whether file is empty
     m_file.seekg( offset, std::ios::end );
-    auto pos = m_file.tellg();
-    if ( pos == 0 ) return true;
+    if ( m_file.tellg() == 0 ) return true;
     // otherwise, start at the begin...
     m_file.seekg( offset, std::ios::beg );
     while ( m_file.read( (char*)&header, sizeof( header ) ) ) {
@@ -300,8 +309,8 @@ bool TarFile::index( std::streamoff offset ) const
             std::cerr << " got empty name " << std::endl;
             break;
         }
-        if ( ( info.type == Info::TarFileType::REGTYPE ||
-               info.type == Info::TarFileType::REGTYPE0 ) &&
+        if ( ( TarFileType( header.typeflag ) == TarFileType::REGTYPE ||
+               TarFileType( header.typeflag ) == TarFileType::REGTYPE0 ) &&
              info.name[info.name.size() - 1] != '/' &&
              info.name.find( "/CVS/" ) == std::string::npos &&
              info.name.find( "/.svn/" ) == std::string::npos ) {
@@ -319,6 +328,7 @@ bool TarFile::index( std::streamoff offset ) const
     m_file.seekg( 0, std::ios::beg );
     return true;
 }
+
 bool TarFile::setupStream( io::filtering_istream& s, const std::string& name ) const
 {
     const auto& myIndex = getIndex();

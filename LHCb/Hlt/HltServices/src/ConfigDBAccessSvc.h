@@ -76,7 +76,7 @@ private:
   template <typename iter> void writeCacheEntries( const std::string&, const std::string&, iter, iter);
   void createCacheTables();
 
-  mutable std::auto_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>     m_msg;
   std::string                          m_connection;
   coral::ISessionProxy*                m_session;
   ICOOLConfSvc*                        m_coolConfSvc;
