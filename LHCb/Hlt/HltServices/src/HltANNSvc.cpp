@@ -6,7 +6,7 @@
 class HltANNSvc : public ANNSvc {
 public:
     HltANNSvc( const std::string& name, ISvcLocator *svcLocator )
-    :ANNSvc(name, svcLocator, {  std::string("Hlt1SelectionID") , std::string("Hlt2SelectionID"), std::string("InfoID"), std::string("RoutingBits")  })
+    :ANNSvc(name, svcLocator, {  {"Hlt1SelectionID"} , {"Hlt2SelectionID"}, {"InfoID"}, {"RoutingBits"}  })
     {
         declareProperty("allowUndefined",m_allowUndefined=true,"do we allow undefined, on-demand generated, key/value pairs?");
     }

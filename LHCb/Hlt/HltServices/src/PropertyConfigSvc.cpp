@@ -322,10 +322,10 @@ PropertyConfigSvc::resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) co
     }
     // add it into alias cache
     ConfigTreeNode::digest_type ref = node->digest();
-    m_aliases.insert(make_pair( alias,ref ));
+    m_aliases.emplace( alias,ref );
     // add to ConfigTreeNode cache now that we got it anyway...
     if (m_nodes.find(ref)==m_nodes.end()) {
-        m_nodes.insert( make_pair( ref, *node) );
+        m_nodes.emplace( ref, *node );
     }
     info() << " resolved " << alias << " to " << ref << endmsg;
     return ref;
@@ -384,7 +384,7 @@ PropertyConfigSvc::collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) c
         PropertyConfig::digest_type leafRef = node->leaf();
         if (leafRef.valid()) leafRefs.push_back(leafRef);
      }
-     auto rv = m_leavesInTree.insert( make_pair(nodeRef, leafRefs) );
+     auto rv = m_leavesInTree.emplace( nodeRef, leafRefs );
      return rv.first->second;
 }
 
@@ -700,7 +700,7 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
                 << " points at " << config->digest().str() << endmsg;
         return 0;
    }
-   pair<PropertyConfigMap_t::iterator,bool> rv = m_configs.insert( make_pair( ref, *config) );
+   pair<PropertyConfigMap_t::iterator,bool> rv = m_configs.emplace(  ref, *config);
    return &(rv.first->second);
 }
 
@@ -731,7 +731,7 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref)
                 << " points at " << node->digest().str() << endmsg;
         return 0;
    }
-   pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.insert( make_pair( ref, *node) );
+   pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.emplace( ref, *node );
    return &(rv.first->second);
 }
 

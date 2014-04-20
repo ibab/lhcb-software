@@ -4,10 +4,7 @@
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/bind.hpp"
 #include "boost/regex.hpp"
-namespace bl=boost::lambda;
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
@@ -33,7 +30,6 @@ namespace bl=boost::lambda;
 
 using namespace std;
 using boost::lexical_cast;
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltConfigSvc
@@ -131,27 +127,27 @@ StatusCode HltConfigSvc::initialize() {
 
   
   // load all TCKs... (brute force, but OK for now...)
-  std::vector<ConfigTreeNodeAlias> tcks = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TCK/") ));
-  for( const ConfigTreeNodeAlias& tck: tcks ) tck2id( TCK( tck.alias().str().substr(4) ) );
+  for( const auto& tck: cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TCK/") ) )
+      ) tck2id( TCK( tck.alias().str().substr(4) ) );
 
   // find the ID of the initial TCK
   ConfigTreeNode::digest_type initialID = tck2id( TCK( m_initialTCK ) );
 
-  if (std::count(m_prefetchDir.begin(),m_prefetchDir.end(),'/')!=0) {
+  if (std::count(std::begin(m_prefetchDir),std::end(m_prefetchDir),'/')!=0) {
     error() << " prefetch directory "  << m_prefetchDir << " is too specific" << endmsg;
     return StatusCode::FAILURE;
   }
 
   // load all TOPLEVEL aliases for specified release
   std::vector<ConfigTreeNodeAlias> tops = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( std::string("TOPLEVEL/")+m_prefetchDir+'/' ));
-  std::vector<ConfigTreeNodeAlias>::const_iterator initTop = std::find_if( tops.begin(), tops.end(), bl::bind(&ConfigTreeNodeAlias::ref,bl::_1)==initialID );
-  if (initTop == tops.end() ) {
+  auto initTop = std::find_if( std::begin(tops), std::end(tops), [=](const ConfigTreeNodeAlias& a) {  return a.ref()==initialID; } );
+  if (initTop == std::end(tops) ) {
     error() << " initial TCK ( " << m_initialTCK << " -> " << initialID << " ) not amongst entries in prefetch directory "  << m_prefetchDir << endmsg;
     return StatusCode::FAILURE;
   }
 
   // get pointer into initTop->alias(), to the end of TOPLEVEL/+prefetch, to pick up which type this is...
-  std::string::size_type pos = initTop->alias().str().find('/', std::string("TOPLEVEL/"+m_prefetchDir+'/').size() );
+  auto pos = initTop->alias().str().find('/', std::string("TOPLEVEL/"+m_prefetchDir+'/').size() );
   if (pos == std::string::npos) {
     error() << " could not determine type from " << initTop->alias() << " with prefetchdir = " << m_prefetchDir << endmsg;
     return StatusCode::FAILURE;
@@ -161,12 +157,12 @@ StatusCode HltConfigSvc::initialize() {
   info() << " prefetching  from " << initTop->alias().str().substr(0,pos) << endmsg;
   std::vector<ConfigTreeNodeAlias> sameTypes = cas()->configTreeNodeAliases(ConfigTreeNodeAlias::alias_type( initTop->alias().str().substr(0,pos) ));
 
-  for (std::vector<ConfigTreeNodeAlias>::const_iterator i = sameTypes.begin(); i!=sameTypes.end(); ++i ) {
-     debug() << " considering " << i->alias().str() << endmsg; 
-     if ( i->alias().str().substr(0,pos) != initTop->alias().str().substr(0,pos) ) continue;
-     debug() << " loading config " << i->alias().str() << " -> " << i->ref() << endmsg; 
-     if ( !loadConfig( i->ref() ) ) {
-        error() << " failed to load config " << *i << endmsg; 
+  for (const auto& i : sameTypes ) {
+     debug() << " considering " << i.alias().str() << endmsg; 
+     if ( i.alias().str().substr(0,pos) != initTop->alias().str().substr(0,pos) ) continue;
+     debug() << " loading config " << i.alias().str() << " -> " << i.ref() << endmsg; 
+     if ( !loadConfig( i.ref() ) ) {
+        error() << " failed to load config " << i << endmsg; 
         return StatusCode::FAILURE;
      }
   }
@@ -212,7 +208,7 @@ HltConfigSvc::tck2id(TCK tck) const {
         }
         id = n->digest(); // need a digest, not an object itself...
         // add to cache...
-        m_tck2configCache.insert( make_pair(  tck , id.str() ) );
+        m_tck2configCache.emplace( tck , id.str() );
     }
     debug() << "mapping TCK" <<  tck  << " to configuration ID" << id << endmsg;
     return id;
