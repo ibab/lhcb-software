@@ -9,6 +9,7 @@
  - change Cache interface to use StringKey (see https://savannah.cern.ch/task/?48821)
  - clarify memory ownership in IHltUnit (and its implementations): use 
    std::unique_ptr in interface where relevant
+ - change locker from  SmartIF<INamedInterface> to const INamedInterface*
 
 ! 2014-03-03 - Marco Clemencic
  - Changed the namespace used for __Instanitations in the dictionary to avoid

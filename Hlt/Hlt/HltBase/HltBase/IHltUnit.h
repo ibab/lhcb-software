@@ -19,13 +19,6 @@
 // ============================================================================
 #include "HltBase/HltSelection.h"
 // ============================================================================
-#ifdef __GCCXML__
-// gccxml doesn't know about any C++11 constructions...
-// note: it's explicitly forbidden to fwd declare this in std.. but it is the
-//       only way to use a unique_ptr as argument in a method seen by gccxml
-namespace std { template <typename T> class unique_ptr; }
-#endif
-// ============================================================================
 class DataObject;
 // ============================================================================
 namespace Hlt

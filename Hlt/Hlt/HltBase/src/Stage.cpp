@@ -40,14 +40,13 @@ Hlt::Stage::~Stage()
 }
 // ============================================================================
 Hlt::Stage::Lock::Lock( Stage* stage, const INamedInterface* locker )
+    : m_locker(locker), m_stage(stage)
 {
-    if ( !stage || !locker ) {
+    if ( !m_stage || !m_locker ) {
         throw GaudiException( "Stage or locker is null", "Stage::Lock::Lock",
                               StatusCode::FAILURE );
     }
-    m_stage = stage;
-    m_locker = const_cast<INamedInterface*>( locker );
-    stage->_lock( locker );
+    stage->_lock( m_locker );
 }
 // ============================================================================
 Hlt::Stage::Lock::~Lock()
@@ -86,15 +85,10 @@ void Hlt::Stage::_checkLock() const
     }
 }
 // ============================================================================
-void Hlt::Stage::SetToNull()
-{
-    _checkLock();
-    m_object = boost::blank{};
-}
-// ============================================================================
 struct getContainedObjectPtr_ : boost::static_visitor<const ContainedObject*> {
     result_type operator()(boost::blank) const { return 0; }
-    template <typename T> result_type operator()(const T& operand) const { return operand.target();  }
+    template <typename T> 
+    result_type operator()(const T& operand) const { return operand.target();  }
 };
 
 const ContainedObject* Hlt::Stage::_get() const
@@ -109,7 +103,7 @@ void Hlt::Stage::_lock( const INamedInterface* locker )
                              StatusCode::FAILURE};
     }
     //
-    m_locker = const_cast<INamedInterface*>( locker );
+    m_locker = locker;
     // m_history.push_back (locker->name());
 }
 // ============================================================================
@@ -126,7 +120,7 @@ void Hlt::Stage::_unlock( const INamedInterface* locker )
                               StatusCode::FAILURE );
     }
     //
-    m_history.push_back( locker->name() );
+    m_history.emplace_back( *locker );
     //
     m_locker = nullptr;
 }
@@ -175,11 +169,6 @@ void Hlt::Stage::setOwner( const Hlt::Candidate* c )
     }
     //
     m_owner = c;
-}
-// ============================================================================
-Hlt::Stage::Type Hlt::Stage::stageType() const
-{
-    return Hlt::Stage::Type( m_object.which() );
 }
 // ============================================================================
 // printout

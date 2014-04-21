@@ -55,16 +55,19 @@
 
 namespace Hlt_Stage_details {
 template <typename T> struct is_ : boost::static_visitor<bool> {
-    bool operator()( const SmartRef<T>& ) const  { return true; }
-    template <typename Any> bool operator()( Any& ) const { return false; }
+    bool operator()( const SmartRef<T>& ) const { return true; }
+    template <typename Any> 
+    bool operator()( const Any&         ) const { return false; }
 };
 template <typename T> struct get_ : boost::static_visitor<T*> {
     T* operator()( SmartRef<T>& ref ) const { return ref.target(); }
-    template <typename Any> T* operator()( Any& ) const { return NULL; }
+    template <typename Any> 
+    T* operator()( Any&             ) const { return NULL; }
 };
 template <typename T> struct getc_ : boost::static_visitor<const T*> {
     const T* operator()( const SmartRef<T>& ref ) const { return ref.target(); }
-    template <typename Any> T* operator()( Any& ) const { return NULL; }
+    template <typename Any> 
+    const T* operator()( const Any&             ) const { return NULL; }
 };
 }
 
@@ -101,6 +104,13 @@ class GAUDI_API Stage : public ContainedObject
     friend class Hlt::Candidate;
     // ========================================================================
   public:
+    Stage() 
+#ifdef __GCCXML__ 
+        ;
+#else 
+        : m_locker{nullptr}  {}
+#endif
+
     // ========================================================================
     // Thus MUST match the order of the boost::variant, such that
     // Type( boost::variant::which ) makes sense...
@@ -173,7 +183,7 @@ class GAUDI_API Stage : public ContainedObject
         // ======================================================================
       private:
         // ======================================================================
-        SmartIF<INamedInterface> m_locker;
+        const INamedInterface* m_locker;
         Stage* m_stage;
         // ======================================================================
     };
@@ -185,7 +195,14 @@ class GAUDI_API Stage : public ContainedObject
     // ========================================================================
   public:
     // ========================================================================
-    void SetToNull();
+    void SetToNull()
+#ifdef __GCCXML__
+    ;
+#else
+    {
+        _checkLock(); m_object = boost::blank{};
+    }
+#endif
     // ========================================================================
   public:
     // ========================================================================
@@ -358,7 +375,10 @@ class GAUDI_API Stage : public ContainedObject
     } // history
     // ========================================================================
     /// the actual type of the stage
-    Type stageType() const; // the actual type of the stage
+    Type stageType() const
+    {
+        return Hlt::Stage::Type( m_object.which() );
+    }
     // ========================================================================
   private:
     // ========================================================================
@@ -391,7 +411,7 @@ class GAUDI_API Stage : public ContainedObject
     /// history
     History m_history; // history
     /// locker
-    SmartIF<INamedInterface> m_locker; // locker
+    const INamedInterface* m_locker; // locker
     /// my candidate
     SmartRef<Hlt::Candidate> m_owner; // my candidate
     // ========================================================================
