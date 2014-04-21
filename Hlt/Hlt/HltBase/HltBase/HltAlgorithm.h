@@ -13,7 +13,6 @@
 
 #include "boost/iterator/transform_iterator.hpp"
 #include "boost/mpl/if.hpp"
-#include "boost/lambda/bind.hpp"
 #include "boost/lambda/casts.hpp"
 
 /** @class HltAlgorithm
@@ -41,7 +40,7 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
                   bool requireInputsToBeValid = true );
 
     // Standard destructor
-    virtual ~HltAlgorithm();
+    virtual ~HltAlgorithm() = default;
 
     // driver of the initialize()
     virtual StatusCode sysInitialize();
@@ -84,18 +83,20 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
     // register an output selection of no candidates
     Hlt::Selection& registerSelection( const Gaudi::StringKey& key )
     {
-        Hlt::Selection* tsel = new Hlt::Selection( key );
-        registerOutput( tsel ).ignore();
-        return *tsel;
+        std::unique_ptr<Hlt::Selection> tsel{ new Hlt::Selection( key ) };
+        auto& ret = *tsel;
+        registerOutput( std::move(tsel) ).ignore();
+        return ret;
     }
 
     // register an output selection with candidates of T type (e.g. Track)
     template <typename T>
     Hlt::TSelection<T>& registerTSelection( const Gaudi::StringKey& key )
     {
-        Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>( key );
-        registerOutput( tsel ).ignore();
-        return *tsel;
+        std::unique_ptr<Hlt::TSelection<T>> tsel{ new Hlt::TSelection<T>( key ) };
+        auto& ret = *tsel;
+        registerOutput( std::move(tsel) ).ignore();
+        return ret;
     }
 
   private:
@@ -143,12 +144,12 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
 
     // set this selection as output, to be monitor, and to decide if the
     // event pass
-    StatusCode registerOutput( Hlt::Selection* sel,
-                               const Hlt::IUnit::Client& client ) const;
-    StatusCode registerOutput( Hlt::Selection* sel ) const;
+    StatusCode registerOutput( std::unique_ptr<Hlt::Selection> sel,
+                               const Hlt::IUnit::Client& client ) const override;
+    StatusCode registerOutput( std::unique_ptr<Hlt::Selection> sel ) const;
 
     // (owner!) pointer to the output selection
-    mutable Hlt::Selection* m_outputSelection;
+    mutable std::unique_ptr<Hlt::Selection> m_outputSelection;
 
     /// container of keys
     typedef GaudiUtils::VectorMap<Key, Hlt::Selection*> OMap;

@@ -10,6 +10,8 @@
 #include <vector>
 #include <ostream>
 // =============================================================================
+#include "boost/variant.hpp"
+// =============================================================================
 // GaudiKernel
 // =============================================================================
 #include "GaudiKernel/NamedRange.h"
@@ -50,6 +52,22 @@
 // =============================================================================
 #include "GaudiKernel/boost_allocator.h"
 // =============================================================================
+
+namespace Hlt_Stage_details {
+template <typename T> struct is_ : boost::static_visitor<bool> {
+    bool operator()( const SmartRef<T>& ) const  { return true; }
+    template <typename Any> bool operator()( Any& ) const { return false; }
+};
+template <typename T> struct get_ : boost::static_visitor<T*> {
+    T* operator()( SmartRef<T>& ref ) const { return ref.target(); }
+    template <typename Any> T* operator()( Any& ) const { return NULL; }
+};
+template <typename T> struct getc_ : boost::static_visitor<const T*> {
+    const T* operator()( const SmartRef<T>& ref ) const { return ref.target(); }
+    template <typename Any> T* operator()( Any& ) const { return NULL; }
+};
+}
+
 namespace Hlt
 {
 // ===========================================================================
@@ -84,6 +102,8 @@ class GAUDI_API Stage : public ContainedObject
     // ========================================================================
   public:
     // ========================================================================
+    // Thus MUST match the order of the boost::variant, such that
+    // Type( boost::variant::which ) makes sense...
     enum Type {
         Unknown = 0,
         L0Muon = 1,
@@ -108,6 +128,8 @@ class GAUDI_API Stage : public ContainedObject
     typedef Gaudi::NamedRange_<ConstVector> Range;
     /// the actual type of history
     typedef std::vector<Hlt::NamedEntry> History;
+    /// the actual KeyType for the info cache
+    typedef Cache::KeyType KeyType;
     // ========================================================================
     /** @class Lock Event/HltStage.h
      *  Locker class for stage
@@ -163,7 +185,7 @@ class GAUDI_API Stage : public ContainedObject
     // ========================================================================
   public:
     // ========================================================================
-    void SetAllToNull();
+    void SetToNull();
     // ========================================================================
   public:
     // ========================================================================
@@ -184,37 +206,44 @@ class GAUDI_API Stage : public ContainedObject
      *  const LHCb::Track* track = stage->get<LHCb::Track>();
      *  @endcode
      */
-    template <typename T>
-    const T* get() const;
+    template <typename T> const T* get() const
+    { return boost::apply_visitor( Hlt_Stage_details::getc_<T>(), m_object); } 
+
     /** Get a wrapped object (non-const)
      *  @code
      *  LHCb::Track* track = stage->get<LHCb::Track>();
+     *  if (!track) { 
+     *     ... stage was not a track...
+     *  } else { 
+     *     ... do something with track
+     *  }
      *  @endcode
      */
-    template <typename T>
-    T* get();
+    template <typename T> T* get()
+    { _checkLock(); return boost::apply_visitor( Hlt_Stage_details::get_<T>(), m_object); } 
     /** Set a wrapped object
      *   @code
      *  Hlt::Stage* stage = ...;
      *  LHCb::L0MuonCandidate* l0mc = ...;
      *  ...
-     *  stage->set<LHCb::L0MuonCandidate>(l0mc);
+     *  stage->set(l0mc);
      *  @endcode
      */
     template <typename T>
-    void set( const T* value );
+    void set( const T* value )
+    { m_object = SmartRef<T>(value); }
     /** Check a type of contained object
      *   @code
      *  Hlt::Stage* stage = ...;
      *  ...
-     *  if (stage<LHCb::Track>()) {
+     *  if (stage->is<LHCb::Track>()) {
      *    LHCb::Track* track = stage->get<LHCb::Track>();
      *      ...
      *  }
      *  @endcode
      */
-    template <typename T>
-    bool is() const;
+    template <typename T> bool is() const
+    { return boost::apply_visitor( Hlt_Stage_details::is_<T>(), m_object ); }
     // ========================================================================
   public: // python-friendly access
     // ========================================================================
@@ -264,13 +293,13 @@ class GAUDI_API Stage : public ContainedObject
           /** Check if cache contains value with the specified key
 * @param[in] key
 */
-    bool hasInfo( const std::string& key )
+    bool hasInfo( const KeyType& key )
     {
         return m_cache.has( key );
     }
     /// Check if cache contains value with the specified key and type
     template <typename T>
-    bool hasInfo_( const std::string& key ) const
+    bool hasInfo_( const KeyType& key ) const
     {
         return m_cache.has_<T>( key );
     }
@@ -278,20 +307,20 @@ class GAUDI_API Stage : public ContainedObject
      *  @return true if value was added and false if we try insert an existing key
      */
     template <typename T>
-    bool insertInfo( const std::string& key, const T& value );
+    bool insertInfo( const KeyType& key, const T& value );
     /// Update  value with the specified type and key
     template <typename T>
-    void updateInfo( const std::string& key, const T& value );
+    void updateInfo( const KeyType& key, const T& value );
     /** Get a cached value associated with the specified type and key.
      *  @returns The value associated with the specified type and key. If the such
      *  value does not exists def is returned.
      */
     template <typename T>
-    T info( const std::string& key, const T& default_value ) const;
+    T info( const KeyType& key, const T& default_value ) const;
     /** Erase all cached values with the specified key
      * @param[in] key
      */
-    void eraseInfo( const std::string& key )
+    void eraseInfo( const KeyType& key )
     {
         _checkLock();
         m_cache.erase( key );
@@ -339,23 +368,24 @@ class GAUDI_API Stage : public ContainedObject
     void _checkLock() const;
     //
     template <typename T>
-    bool _insertInfo( const std::string& key, const T& value );
+    bool _insertInfo( const KeyType& key, const T& value );
     //
     template <typename T>
-    void _updateInfo( const std::string& key, const T& value );
+    void _updateInfo( const KeyType& key, const T& value );
     //
     template <typename T>
-    T _info( const std::string& key, const T& default_value ) const;
+    T _info( const KeyType& key, const T& default_value ) const;
     // ========================================================================
   private:
     // ========================================================================
-    SmartRef<LHCb::Track> m_track;
-    SmartRef<LHCb::RecVertex> m_rec_vertex;
-    SmartRef<LHCb::L0CaloCandidate> m_l0_calo_candidate;
-    SmartRef<LHCb::L0MuonCandidate> m_l0_muon_candidate;
-    SmartRef<Hlt::MultiTrack> m_multitrack;
-    SmartRef<Hlt::L0DiMuonCandidate> m_l0_dimuon_candidate;
-    SmartRef<Hlt::Stage> m_stage;
+    boost::variant< boost::blank                      // 0
+                  , SmartRef<LHCb::L0MuonCandidate>   // 1
+                  , SmartRef<LHCb::L0CaloCandidate>   // 2
+                  , SmartRef<Hlt::L0DiMuonCandidate>  // 3
+                  , SmartRef<LHCb::Track>             // 4
+                  , SmartRef<LHCb::RecVertex>         // 5
+                  , SmartRef<Hlt::MultiTrack>         // 6
+                  , SmartRef<Hlt::Stage> >  m_object; // 7
     /// cache
     Cache m_cache; // cache
     /// history
@@ -389,91 +419,7 @@ std::ostream& toStream( const Hlt::Stage* c, std::ostream& s );
 namespace Hlt
 {
 // ==========================================================================
-// Stage
-// ==========================================================================
-template <>
-inline const Hlt::Stage* Hlt::Stage::get<Hlt::Stage>() const
-{
-    return m_stage;
-}
-// ==========================================================================
-template <>
-inline Hlt::Stage* Hlt::Stage::get<Hlt::Stage>()
-{
-    _checkLock();
-    return m_stage;
-}
-// ==========================================================================
-template <>
-inline void Hlt::Stage::set<Hlt::Stage>( const Hlt::Stage* value )
-{
-    SetAllToNull();
-    m_stage = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<Hlt::Stage>() const
-{
-    return m_stage != 0;
-}
-// ==========================================================================
-// Track
-// ==========================================================================
-template <>
-inline const LHCb::Track* Hlt::Stage::get<LHCb::Track>() const
-{
-    return m_track;
-}
-// ============================================================================
-template <>
-inline LHCb::Track* Hlt::Stage::get<LHCb::Track>()
-{
-    _checkLock();
-    return m_track;
-}
-// ============================================================================
-template <>
-inline void Hlt::Stage::set<LHCb::Track>( const LHCb::Track* value )
-{
-    SetAllToNull();
-    m_track = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<LHCb::Track>() const
-{
-    return m_track != 0;
-}
-// ==========================================================================
-// RecVertex
-// ==========================================================================
-template <>
-inline const LHCb::RecVertex* Hlt::Stage::get<LHCb::RecVertex>() const
-{
-    return m_rec_vertex;
-}
-// ==========================================================================
-template <>
-inline LHCb::RecVertex* Hlt::Stage::get<LHCb::RecVertex>()
-{
-    _checkLock();
-    return m_rec_vertex;
-}
-// ==========================================================================
-template <>
-inline void Hlt::Stage::set<LHCb::RecVertex>( const LHCb::RecVertex* value )
-{
-    SetAllToNull();
-    m_rec_vertex = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<LHCb::RecVertex>() const
-{
-    return m_rec_vertex != 0;
-}
-// ==========================================================================
-// Helper trick with VertexBase
+// Helper trick with VertexBase -- forward to RecVertex...
 // ==========================================================================
 template <>
 inline const LHCb::VertexBase* Hlt::Stage::get<LHCb::VertexBase>() const
@@ -493,215 +439,100 @@ inline bool Hlt::Stage::is<LHCb::VertexBase>() const
     return this->is<LHCb::RecVertex>();
 }
 // ==========================================================================
-// L0CaloCandidate
-// ==========================================================================
-template <>
-inline const LHCb::L0CaloCandidate* Hlt::Stage::get<LHCb::L0CaloCandidate>() const
-{
-    return m_l0_calo_candidate;
-}
-// ==========================================================================
-template <>
-inline LHCb::L0CaloCandidate* Hlt::Stage::get<LHCb::L0CaloCandidate>()
-{
-    _checkLock();
-    return m_l0_calo_candidate;
-}
-// ==========================================================================
-template <>
-inline void
-Hlt::Stage::set<LHCb::L0CaloCandidate>( const LHCb::L0CaloCandidate* value )
-{
-    SetAllToNull();
-    m_l0_calo_candidate = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<LHCb::L0CaloCandidate>() const
-{
-    return m_l0_calo_candidate != 0;
-}
-// ==========================================================================
-// L0MuonCandidate
-// ==========================================================================
-template <>
-inline const LHCb::L0MuonCandidate* Hlt::Stage::get<LHCb::L0MuonCandidate>() const
-{
-    return m_l0_muon_candidate;
-}
-// ==========================================================================
-template <>
-inline LHCb::L0MuonCandidate* Hlt::Stage::get<LHCb::L0MuonCandidate>()
-{
-    _checkLock();
-    return m_l0_muon_candidate;
-}
-// ==========================================================================
-template <>
-inline void
-Hlt::Stage::set<LHCb::L0MuonCandidate>( const LHCb::L0MuonCandidate* value )
-{
-    SetAllToNull();
-    m_l0_muon_candidate = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<LHCb::L0MuonCandidate>() const
-{
-    return m_l0_muon_candidate != 0;
-}
-// ==========================================================================
-// MultiTrack
-// ==========================================================================
-template <>
-inline const Hlt::MultiTrack* Hlt::Stage::get<Hlt::MultiTrack>() const
-{
-    return m_multitrack;
-}
-// ==========================================================================
-template <>
-inline Hlt::MultiTrack* Hlt::Stage::get<Hlt::MultiTrack>()
-{
-    _checkLock();
-    return m_multitrack;
-}
-// ==========================================================================
-template <>
-inline void Hlt::Stage::set<Hlt::MultiTrack>( const Hlt::MultiTrack* value )
-{
-    SetAllToNull();
-    m_multitrack = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<Hlt::MultiTrack>() const
-{
-    return m_multitrack != 0;
-}
-// ==========================================================================
-// L0DiMuonCandidate
-// ==========================================================================
-template <>
-inline const Hlt::L0DiMuonCandidate* Hlt::Stage::get<Hlt::L0DiMuonCandidate>() const
-{
-    return m_l0_dimuon_candidate;
-}
-// ==========================================================================
-template <>
-inline Hlt::L0DiMuonCandidate* Hlt::Stage::get<Hlt::L0DiMuonCandidate>()
-{
-    _checkLock();
-    return m_l0_dimuon_candidate;
-}
-// ==========================================================================
-template <>
-inline void
-Hlt::Stage::set<Hlt::L0DiMuonCandidate>( const Hlt::L0DiMuonCandidate* value )
-{
-    SetAllToNull();
-    m_l0_dimuon_candidate = value;
-}
-// ==========================================================================
-template <>
-inline bool Hlt::Stage::is<Hlt::L0DiMuonCandidate>() const
-{
-    return m_l0_dimuon_candidate != 0;
-}
-// ==========================================================================
 // * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO * INFO *
 // ==========================================================================
 template <typename T>
-inline bool Stage::_insertInfo( const std::string& key, const T& value )
+inline bool Stage::_insertInfo( const KeyType& key, const T& value )
 {
     _checkLock();
     return m_cache.insert<T>( key, value );
 }
 // ==========================================================================
 template <>
-inline bool Stage::insertInfo<bool>( const std::string& key, const bool& value )
+inline bool Stage::insertInfo<bool>( const KeyType& key, const bool& value )
 {
     return _insertInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline bool Stage::insertInfo<int>( const std::string& key, const int& value )
+inline bool Stage::insertInfo<int>( const KeyType& key, const int& value )
 {
     return _insertInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline bool Stage::insertInfo<double>( const std::string& key, const double& value )
+inline bool Stage::insertInfo<double>( const KeyType& key, const double& value )
 {
     return _insertInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline bool Stage::insertInfo<std::string>( const std::string& key,
+inline bool Stage::insertInfo<std::string>( const KeyType& key,
                                             const std::string& value )
 {
     return _insertInfo( key, value );
 }
 // ==========================================================================
 template <typename T>
-inline void Stage::_updateInfo( const std::string& key, const T& value )
+inline void Stage::_updateInfo( const KeyType& key, const T& value )
 {
     _checkLock();
     m_cache.update<T>( key, value );
 }
 // ==========================================================================
 template <>
-inline void Stage::updateInfo<bool>( const std::string& key, const bool& value )
+inline void Stage::updateInfo<bool>( const KeyType& key, const bool& value )
 {
     _updateInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline void Stage::updateInfo<int>( const std::string& key, const int& value )
+inline void Stage::updateInfo<int>( const KeyType& key, const int& value )
 {
     _updateInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline void Stage::updateInfo<double>( const std::string& key, const double& value )
+inline void Stage::updateInfo<double>( const KeyType& key, const double& value )
 {
     _updateInfo( key, value );
 }
 // ==========================================================================
 template <>
-inline void Stage::updateInfo<std::string>( const std::string& key,
+inline void Stage::updateInfo<std::string>( const KeyType& key,
                                             const std::string& value )
 {
     _updateInfo( key, value );
 }
 // ==========================================================================
 template <typename T>
-inline T Stage::_info( const std::string& key, const T& default_value ) const
+inline T Stage::_info( const KeyType& key, const T& default_value ) const
 {
     return m_cache.info<T>( key, default_value );
 }
 // ==========================================================================
 template <>
-inline bool Stage::info<bool>( const std::string& key,
+inline bool Stage::info<bool>( const KeyType& key,
                                const bool& default_value ) const
 {
     return _info( key, default_value );
 }
 // ==========================================================================
 template <>
-inline int Stage::info<int>( const std::string& key, const int& default_value ) const
+inline int Stage::info<int>( const KeyType& key, const int& default_value ) const
 {
     return _info( key, default_value );
 }
 // ==========================================================================
 template <>
-inline double Stage::info<double>( const std::string& key,
+inline double Stage::info<double>( const KeyType& key,
                                    const double& default_value ) const
 {
     return _info( key, default_value );
 }
 // ==========================================================================
 template <>
-inline std::string Stage::info<std::string>( const std::string& key,
+inline std::string Stage::info<std::string>( const KeyType& key,
                                              const std::string& default_value ) const
 {
     return _info( key, default_value );
@@ -715,10 +546,7 @@ inline std::ostream& operator<<( std::ostream& str, const Stage& obj )
 /// output operatoor
 inline std::ostream& operator<<( std::ostream& str, const Stage* obj )
 {
-    if ( 0 == obj ) {
-        return str << "<NULL>";
-    }
-    return obj->fillStream( str );
+    return obj ? obj -> fillStream(str) : ( str << "<NULL>" ) ;
 }
 // ==========================================================================
 } //                                                       end of namespace Hlt

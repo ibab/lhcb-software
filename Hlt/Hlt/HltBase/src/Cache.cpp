@@ -9,11 +9,10 @@
 namespace Hlt
 {
 // =============================================================================
-using Gaudi::StringKey;
 // =============================================================================
-const std::vector<const StringKey*> Cache::keys() const
+const std::vector<const Cache::KeyType*> Cache::keys() const
 {
-    std::vector<const StringKey*> result;
+    std::vector<const KeyType*> result;
     for ( auto& value : m_boolean_store ) result.push_back( &value.first );
     for ( auto& value : m_integer_store ) result.push_back( &value.first );
     for ( auto& value : m_double_store ) result.push_back( &value.first );

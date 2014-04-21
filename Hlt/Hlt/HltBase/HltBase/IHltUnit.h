@@ -7,6 +7,8 @@
 // ============================================================================
 // STD & STL
 // ============================================================================
+#include <memory>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
@@ -16,6 +18,13 @@
 // HltBase
 // ============================================================================
 #include "HltBase/HltSelection.h"
+// ============================================================================
+#ifdef __GCCXML__
+// gccxml doesn't know about any C++11 constructions...
+// note: it's explicitly forbidden to fwd declare this in std.. but it is the
+//       only way to use a unique_ptr as argument in a method seen by gccxml
+namespace std { template <typename T> class unique_ptr; }
+#endif
 // ============================================================================
 class DataObject;
 // ============================================================================
@@ -62,10 +71,11 @@ class IUnit : virtual public IInterface
     // ========================================================================
     /** register the selection
      *  @param selection the selection to be registered
-     *  @param client the client
+     *                   NOTE: assumes ownership 
+     *  @param client    the client
      *  @return status code
      */
-    virtual StatusCode registerOutput( Hlt::Selection* selection,
+    virtual StatusCode registerOutput( std::unique_ptr<Hlt::Selection> selection,
                                        const Client& client ) const = 0;
     // ========================================================================
     /** declare the input selection
@@ -153,13 +163,16 @@ template <class T>
 Hlt::TSelection<T>*
 Hlt::IUnit::declareOutput( const Hlt::IUnit::Key& key,
                            const Hlt::IUnit::Client& client ) const
+#ifdef __GCCXML__
+;
+#else
 {
-    Hlt::TSelection<T>* selection = new Hlt::TSelection<T>( key );
-    StatusCode sc = this->registerOutput( selection, client );
-    if ( sc.isSuccess() ) return selection;  // RETURN
-    delete selection;
-    return 0;
+    std::unique_ptr<Hlt::TSelection<T>> selection{ new Hlt::TSelection<T>( key ) };
+    auto ret = selection.get();
+    StatusCode sc = this->registerOutput( std::move(selection), client );
+    return sc.isSuccess() ? ret : nullptr ;   // RETURN
 }
+#endif
 // ============================================================================
 /*  get the data form TES
  *  @param client the client
@@ -172,8 +185,7 @@ const TYPE* Hlt::IUnit::tesData( const Hlt::IUnit::Client& client,
                                  const Hlt::IUnit::Key& location ) const
 {
     const DataObject* obj = this->tes( client, location );
-    if ( ! obj ) return 0;
-    return dynamic_cast<const TYPE*>( obj );
+    return obj ? dynamic_cast<const TYPE*>( obj ) : 0;
 }
 // ============================================================================
 // The END

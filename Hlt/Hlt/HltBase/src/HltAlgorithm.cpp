@@ -31,12 +31,6 @@ HltAlgorithm::HltAlgorithm( std::string name, ISvcLocator* pSvcLocator,
     declareProperty( "MinCandidates", m_minNCandidates = 1 );
 }
 
-HltAlgorithm::~HltAlgorithm()
-{
-    delete m_outputSelection;
-    m_outputSelection = nullptr;
-}
-
 StatusCode HltAlgorithm::queryInterface( const InterfaceID& iid, void** ppvi )
 {
     /// valid placeholder?
@@ -259,35 +253,35 @@ HltAlgorithm::selection( const Gaudi::StringKey& selname ) const
     return sel;
 }
 
-StatusCode HltAlgorithm::registerOutput( Hlt::Selection* sel,
+StatusCode HltAlgorithm::registerOutput( std::unique_ptr<Hlt::Selection> sel,
                                          const Hlt::IUnit::Client& /*client*/ ) const
 {
-    return registerOutput( sel );
+    return registerOutput( std::move(sel) );
 }
 
-StatusCode HltAlgorithm::registerOutput( Hlt::Selection* sel ) const
+StatusCode HltAlgorithm::registerOutput( std::unique_ptr<Hlt::Selection> sel ) const
 {
     if ( m_outputSelection ) {
         error() << "attempt to register a 2nd output selection: " << sel->id()
                 << " already have " << m_outputSelection->id() << endmsg;
         return StatusCode::FAILURE;
     }
-    m_outputSelection = sel;
+    m_outputSelection = std::move(sel); // transfer ownership...
     std::vector<const Hlt::Selection*> sels;
     sels.reserve( m_in.size() );
     for ( const auto& i : m_in ) sels.push_back( i.second );
     sel->addInputSelectionIDs( sels.begin(), sels.end() );
     if ( msgLevel( MSG::DEBUG ) )
-        debug() << " Output selection " << sel->id() << endmsg;
-    if ( regSvc()->registerOutput( sel, this ).isFailure() ) {
-        error() << "Failed to add Selection" << sel->id() << endmsg;
+        debug() << " Output selection " << m_outputSelection->id() << endmsg;
+    if ( regSvc()->registerOutput( m_outputSelection.get(), this ).isFailure() ) {
+        error() << "Failed to add Selection" << m_outputSelection->id() << endmsg;
         return StatusCode::FAILURE;
     }
     m_outputHisto = const_cast<HltAlgorithm*>( this )
                         ->initializeHisto( "Ncandidates", -0.5, 99.5, 100 );
     if ( msgLevel( MSG::DEBUG ) )
-        debug() << " registered selection " << sel->id() << " type "
-                << sel->classID() << endmsg;
+        debug() << " registered selection " << m_outputSelection->id() << " type "
+                << m_outputSelection->classID() << endmsg;
     return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,12 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-04-21 - Gerhard Raven
+ - change HltStage to use a variant (see https://savannah.cern.ch/task/?48822)
+ - change Cache interface to use StringKey (see https://savannah.cern.ch/task/?48821)
+ - clarify memory ownership in IHltUnit (and its implementations): use 
+   std::unique_ptr in interface where relevant
+
 ! 2014-03-03 - Marco Clemencic
  - Changed the namespace used for __Instanitations in the dictionary to avoid
    clashes in ROOT 6;

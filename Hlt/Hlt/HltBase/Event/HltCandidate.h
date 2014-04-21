@@ -9,6 +9,7 @@
 // ============================================================================
 #include <vector>
 #include <ostream>
+// #include <type_traits>
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -186,7 +187,41 @@ class GAUDI_API Candidate : public ContainedObject
     *     - positive value corresponds to step-back in history
     *  @return the obejct
     */
-    template <class TYPE> const TYPE *get( int slot = 0 ) const;
+  private :
+  /** get the stage from the Hlt Candidate -- public version is 'get<Stage>
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the stage 
+   */
+    const Hlt::Stage* stage( int slot ) const {
+        return ( slot == 0 ) ? currentStage()      // current
+             : ( slot <  0 ) ? initiatorStage()    // initiator
+             : ( unsigned(slot) < m_stages.size() ) ? (m_stages.end()-slot-1)->data() // step-back
+             : NULL ; // gccxml doesn't like nullptr..
+    }
+  public:
+  // ===========================================================================
+  /** get the underlying object from the stage.
+   *  any type support by the stage can be 'got'.
+   * 
+   *  @param slot the slot to be used for data extraction 
+   *     - 0 corresponds to the current stage , 
+   *     - negative value corresponds to initiator stage 
+   *     - positive value corresponds to step-back in history
+   *  @return the track
+   */
+      template <typename T> const T* get( int slot = 0 ) const 
+#ifdef __GCCXML__
+          ;
+#else
+      {
+        const Hlt::Stage* _stage = this->stage( slot ) ;
+        return std::is_same<typename std::remove_cv<T>::type,Hlt::Stage>::value ? (const T*)_stage 
+             : ( _stage ? _stage->get<T>() : 0 );                // RETURN 
+      }
+#endif
     // ========================================================================
   public: // python-friendly access
           // ========================================================================
@@ -273,131 +308,6 @@ std::ostream& toStream( const Hlt::Stage* c, std::ostream& s );
 // ============================================================================
 namespace Hlt
 {
-// ============================================================================
-// implementation of various methods for simple access
-// ============================================================================
-/** get the stage from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the stage
- */
-template <>
-inline const Hlt::Stage* Candidate::get<Stage>( int slot ) const
-{
-    if ( 0 == slot ) {
-        return currentStage(); // current
-    } else if ( 0 > slot ) {
-        return initiatorStage(); // initator
-    }
-    //
-    if ( (unsigned)slot >= m_stages.size() ) return 0;
-    //
-    return *( m_stages.end() - slot - 1 ); // step-back
-}
-// ===========================================================================
-/** get the track from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the track
- */
-template <>
-inline const LHCb::Track* Candidate::get<LHCb::Track>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<LHCb::Track>() : 0;
-}
-// ==========================================================================
-/** get the vertex from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the vertex
- */
-template <>
-inline const LHCb::RecVertex* Hlt::Candidate::get<LHCb::RecVertex>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<LHCb::RecVertex>() : 0;
-}
-// ==========================================================================
-/** get the vertex from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the vertex
- */
-template <>
-inline const LHCb::VertexBase*
-Hlt::Candidate::get<LHCb::VertexBase>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<LHCb::VertexBase>() : 0;
-}
-// ==========================================================================
-/** get the L0CaloCandidate from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the L0CaloCandidate
- */
-template <>
-inline const LHCb::L0CaloCandidate*
-Hlt::Candidate::get<LHCb::L0CaloCandidate>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<LHCb::L0CaloCandidate>() : 0;
-}
-// ============================================================================
-/** get the L0MuonCandidate from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the L0MuonCandidate
- */
-template <>
-inline const LHCb::L0MuonCandidate*
-Hlt::Candidate::get<LHCb::L0MuonCandidate>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<LHCb::L0MuonCandidate>() : 0;
-}
-// ============================================================================
-/** get the Multi-track from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the multi-track
- */
-template <>
-inline const Hlt::MultiTrack* Hlt::Candidate::get<Hlt::MultiTrack>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<Hlt::MultiTrack>() : 0;
-}
-// ============================================================================
-/** get the L0DiMuonCandidate from the Hlt Candidate
- *  @param slot the slot to be used for data extraction
- *     - 0 corresponds to the current stage ,
- *     - negative value corresponds to initiator stage
- *     - positive value corresponds to step-back in history
- *  @return the dimuon-candidate
- */
-template <>
-inline const Hlt::L0DiMuonCandidate*
-Hlt::Candidate::get<Hlt::L0DiMuonCandidate>( int slot ) const
-{
-    const Hlt::Stage *_stage = this->get<Stage>( slot );
-    return _stage ? _stage->get<Hlt::L0DiMuonCandidate>() : 0;
-}
 // ============================================================================
 // printout
 inline std::ostream& operator<<( std::ostream& str, const Candidate& obj )

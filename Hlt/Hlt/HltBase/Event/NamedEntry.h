@@ -16,6 +16,7 @@ class NamedEntry
     std::pair<const INamedInterface*, std::string> m_entry;
 
   public:
+    // NamedEntry( const INamedInterface& arg ) : m_entry( &arg, {} ) // wait until gccxml is retired...
     NamedEntry( const INamedInterface& arg ) : m_entry( &arg, std::string() )
     {
     }

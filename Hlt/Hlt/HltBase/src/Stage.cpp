@@ -86,30 +86,20 @@ void Hlt::Stage::_checkLock() const
     }
 }
 // ============================================================================
-void Hlt::Stage::SetAllToNull()
+void Hlt::Stage::SetToNull()
 {
     _checkLock();
-    m_track = nullptr;
-    m_rec_vertex = nullptr;
-    m_l0_calo_candidate = nullptr;
-    m_l0_muon_candidate = nullptr;
-    m_multitrack = nullptr;
-    m_l0_dimuon_candidate = nullptr;
-    m_stage = nullptr;
+    m_object = boost::blank{};
 }
 // ============================================================================
+struct getContainedObjectPtr_ : boost::static_visitor<const ContainedObject*> {
+    result_type operator()(boost::blank) const { return 0; }
+    template <typename T> result_type operator()(const T& operand) const { return operand.target();  }
+};
+
 const ContainedObject* Hlt::Stage::_get() const
 {
-    //
-    if ( is<LHCb::Track>() ) return get<LHCb::Track>();
-    if ( is<LHCb::RecVertex>() ) return get<LHCb::RecVertex>();
-    if ( is<LHCb::L0CaloCandidate>() ) return get<LHCb::L0CaloCandidate>();
-    if ( is<LHCb::L0MuonCandidate>() ) return get<LHCb::L0MuonCandidate>();
-    if ( is<Hlt::MultiTrack>() ) return get<Hlt::MultiTrack>();
-    if ( is<Hlt::L0DiMuonCandidate>() ) return get<Hlt::L0DiMuonCandidate>();
-    if ( is<Hlt::Stage>() ) return get<Hlt::Stage>();
-    //
-    return nullptr;
+    return boost::apply_visitor( getContainedObjectPtr_() , m_object );
 }
 // ============================================================================
 void Hlt::Stage::_lock( const INamedInterface* locker )
@@ -189,15 +179,7 @@ void Hlt::Stage::setOwner( const Hlt::Candidate* c )
 // ============================================================================
 Hlt::Stage::Type Hlt::Stage::stageType() const
 {
-    if ( is<LHCb::L0MuonCandidate>() ) return Hlt::Stage::L0Muon;
-    if ( is<Hlt::L0DiMuonCandidate>() ) return Hlt::Stage::L0DiMuon;
-    if ( is<LHCb::L0CaloCandidate>() ) return Hlt::Stage::L0Calo;
-    if ( is<LHCb::Track>() ) return Hlt::Stage::HltTrack;
-    if ( is<LHCb::RecVertex>() ) return Hlt::Stage::HltVertex;
-    if ( is<Hlt::MultiTrack>() ) return Hlt::Stage::HltMultiTrack;
-    if ( is<Hlt::Stage>() ) return Hlt::Stage::HltStage;
-    //
-    return Hlt::Stage::Unknown;
+    return Hlt::Stage::Type( m_object.which() );
 }
 // ============================================================================
 // printout
