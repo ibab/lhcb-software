@@ -27,6 +27,9 @@ using namespace LHCb;
 
 
 namespace { 
+const Gaudi::StringKey  Hlt1SelectionID{"Hlt1SelectionID"};
+const Gaudi::StringKey  Hlt2SelectionID{"Hlt2SelectionID"};
+
          // version 1 layout:
          // decision:  0x        1                      x
          // error:     0x        e                   xxx0
@@ -227,11 +230,11 @@ int HltDecReportsDecoder::decodeHDR(I i, I end,  HltDecReports& output ) const
 
     int id=dec.intDecisionID();
 
-    boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
+    boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Hlt1SelectionID,id);
     unsigned int hltType(HltDecReportsWriter::kSourceID_Hlt2); 
     if (!selName) 
     {
-      selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
+      selName = m_hltANNSvc->value(Hlt2SelectionID,id);
     } 
     else 
     {

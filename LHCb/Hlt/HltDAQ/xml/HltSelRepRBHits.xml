@@ -24,6 +24,13 @@ Then sequences must be pushed back in the sequencial order.'
      <import name='Kernel/LHCbID' />
      <import name='vector' std='TRUE' />
 
+     <typedef 
+       type = "std::set&lt; unsigned int &gt; "
+       def  = "value_type"
+       desc = "type, without const and reference, used as argument to push_back; needed to make push_back work with std::back_inserter"
+       access = "PUBLIC"
+      />
+
      <attribute 
 	type = 'unsigned int*'
 	name = 'location'
@@ -268,7 +275,7 @@ Then sequences must be pushed back in the sequencial order.'
       <method
         name ='push_back'
         type='void'
-        argList='const std::vector&lt; unsigned int &gt; hitvec'
+        argList='const value_type&amp; hitvec'
         desc='add hit sequence to the bank (must be initialized first)'
         >
         <code>
@@ -293,11 +300,7 @@ Then sequences must be pushed back in the sequencial order.'
                    m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
                  }   
                  // copy hits
-                 unsigned int i=0;
-                 for( std::vector&lt; unsigned int &gt;::const_iterator iHit=hitvec.begin();
-                         iHit!=hitvec.end();++iHit,++i){
-                       m_location[begin+i]=*iHit;
-                 }
+                 std::copy( std::begin(hitvec), std::end(hitvec), m_location+begin );
                  return;
               }
           }

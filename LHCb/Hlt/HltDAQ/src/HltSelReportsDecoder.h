@@ -27,13 +27,11 @@ public:
   /// Standard constructor
   HltSelReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltSelReportsDecoder( ); ///< Destructor
+  ~HltSelReportsDecoder( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  static float floatFromInt(unsigned int i);
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
 

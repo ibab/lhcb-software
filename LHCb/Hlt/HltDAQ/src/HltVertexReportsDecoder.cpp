@@ -12,6 +12,8 @@
 #include "HltVertexReportsWriter.h"
 
 namespace { 
+    const Gaudi::StringKey Hlt1SelectionID {"Hlt1SelectionID"};
+    const Gaudi::StringKey Hlt2SelectionID {"Hlt2SelectionID"};
     double doubleFromInt(unsigned int i) {
             union IntFloat { unsigned int mInt; float mFloat; };
             IntFloat a; a.mInt=i;
@@ -157,9 +159,9 @@ StatusCode HltVertexReportsDecoder::execute() {
     unsigned intSelID = ( *i++ >> 16 );
 
     unsigned int hltType(HltVertexReportsWriter::kSourceID_Hlt2); 
-    boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),intSelID);
+    boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value(Hlt1SelectionID,intSelID);
     if (!value) {
-      value = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),intSelID);
+      value = m_hltANNSvc->value(Hlt2SelectionID,intSelID);
     } else {
       hltType=HltVertexReportsWriter::kSourceID_Hlt1;
     }

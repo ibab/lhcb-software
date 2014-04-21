@@ -4,85 +4,78 @@
 
 #include "../HltTrackingCoder.h"
 #include <vector>
+#include <algorithm>
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Math/SMatrix.h"
 #include <iostream>
-using namespace LHCb; 
-using namespace std;
 
 // Helper function to compare two track containers element wise
+template <typename Container, typename Cmp>
+bool
+equal(const Container& c1, const Container& c2, Cmp cmp) {
+  return  c1.size() == c2.size() &&
+           std::equal( std::begin(c1), std::end(c1),
+                       std::begin(c2),
+                       cmp );
+}
+
+
+
 // Check for equal LHCbIDs
 bool
-equalLHCbIDs(Tracks* tracks, Tracks* reftracks){
-  LHCb::Tracks::const_iterator  pRefItr = reftracks->begin();
-  bool result=true;
-  for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
-      LHCb::Track* Tr = (*pItr);
-      LHCb::Track* refTr = (*pRefItr);
-      result &= ((Tr->lhcbIDs()) == (refTr->lhcbIDs()));
-      pRefItr++; // don't forget to increment reference iterator 
-  }// end loop over tracks
-  return result;
+equalLHCbIDs(const LHCb::Tracks& tracks, const LHCb::Tracks& reftracks){
+  return  equal(tracks, reftracks, [](const LHCb::Track* t1, const LHCb::Track* t2) { 
+                           return t1->lhcbIDs() == t2->lhcbIDs() ; 
+                       } );
 }
  
-// Check for equal LHCbIDs
+// Check for equal types
 bool
-equalMeta(Tracks* tracks, Tracks* reftracks){
-  LHCb::Tracks::const_iterator  pRefItr = reftracks->begin();
-  bool result=true;
-  for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
-      LHCb::Track* Tr = (*pItr);
-      LHCb::Track* refTr = (*pRefItr);
-      result &= ((Tr->type()) == (refTr->type()));
-      result &= ((Tr->flags()) == (refTr->flags()));
-      pRefItr++; // don't forget to increment reference iterator 
-  }// end loop over tracks
-  return result;
+equalMeta(const LHCb::Tracks& tracks, const LHCb::Tracks& reftracks){
+  return  equal(tracks, reftracks, [](const LHCb::Track* t1, const LHCb::Track* t2) { 
+                           return t1->type() == t2->type() &&
+                                  t1->flags() == t2->flags();
+                       } );
 }
 
 
 // Check for equal States
 bool
-equalStates(Tracks* tracks, Tracks* reftracks){
-  LHCb::Tracks::const_iterator  pRefItr = reftracks->begin();
-  bool result=true;
-  for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
-      LHCb::Track* Tr = (*pItr);
-      LHCb::Track* refTr = (*pRefItr);
+equalStates(const LHCb::Tracks& tracks, const LHCb::Tracks& reftracks){
+  return equal( tracks, reftracks, [](const LHCb::Track* Tr, const LHCb::Track* refTr) {
       // check the number of states
       unsigned int nstates=Tr->states().size();
       if (nstates != (refTr->states().size())) return false;
-      const vector<State*>& states = Tr->states();
-      const vector<State*>& refstates = refTr->states();
-      for(unsigned int i=0;i<nstates;++i){
-	result &= (states[i]->location() == refstates[i]->location());
-	if(!result){
-	  std::cout << states[i]->location() << std::endl;
-	  std::cout << refstates[i]->location() << std::endl;
-	}
-	result &= (states[i]->stateVector() == refstates[i]->stateVector());
-	if(!result){
-	  std::cout << states[i]->stateVector() << std::endl;
-	  std::cout << refstates[i]->stateVector() << std::endl;
-	}
-	// check for approximate equivalence of covariance matrix
-	double* cov = states[i]->covariance().Array();
-	double* refcov = refstates[i]->covariance().Array();
-	for(unsigned int ic=0;ic<15;++ic){
-	  result &= (fabs(cov[ic]-refcov[ic])/fabs(refcov[ic]) < 0.001); 
-	}
-	if(!result){
-	  std::cout << states[i]->covariance() << std::endl;
-	  std::cout << refstates[i]->covariance() << std::endl;
-	}
-	if (!result) return result;
+      const std::vector<LHCb::State*>& states = Tr->states();
+      const std::vector<LHCb::State*>& refstates = refTr->states();
+      for(unsigned int i=0;i<nstates;++i) {
+        bool result = (states[i]->location() == refstates[i]->location());
+        if(!result){
+          std::cout << states[i]->location() << std::endl;
+          std::cout << refstates[i]->location() << std::endl;
+        }
+        result &= (states[i]->stateVector() == refstates[i]->stateVector());
+        if(!result){
+          std::cout << states[i]->stateVector() << std::endl;
+          std::cout << refstates[i]->stateVector() << std::endl;
+        }
+        // check for approximate equivalence of covariance matrix
+        double* cov = states[i]->covariance().Array();
+        double* refcov = refstates[i]->covariance().Array();
+        for(unsigned int ic=0;ic<15;++ic){
+          result &= (fabs(cov[ic]-refcov[ic]) < 0.001*fabs(refcov[ic])); 
+        }
+        if(!result){
+          std::cout << states[i]->covariance() << std::endl;
+          std::cout << refstates[i]->covariance() << std::endl;
+        }
+        if (!result) return result;
       } // end loop over states
+      return true;
 
-      pRefItr++; // don't forget to increment reference iterator 
-  }// end loop over tracks
-  return result;
+        } ); 
 }
 
 
@@ -90,39 +83,39 @@ equalStates(Tracks* tracks, Tracks* reftracks){
 // This can be used as a common starting point for all tests
 struct ExampleTracks {
   
-  Tracks m_tracks;                  // collection of tracks
-  vector<unsigned int> m_rawbank;   // corresponding RawBank
+  LHCb::Tracks m_tracks;                  // collection of tracks
+  std::vector<unsigned int> m_rawbank;   // corresponding RawBank
  
   ExampleTracks() {
     BOOST_TEST_MESSAGE("setup example tracks");
-    Track* tr=new Track();
+    auto tr=new LHCb::Track();
 
     
     tr->setFlags(1);
-    tr->setType(Track::Velo);
+    tr->setType(LHCb::Track::Velo);
 
-    tr->addToLhcbIDs(LHCbID(1));
-    tr->addToLhcbIDs(LHCbID(3));
-    tr->addToLhcbIDs(LHCbID(5));
+    tr->addToLhcbIDs(LHCb::LHCbID(1));
+    tr->addToLhcbIDs(LHCb::LHCbID(3));
+    tr->addToLhcbIDs(LHCb::LHCbID(5));
     m_tracks.add(tr);
 
-    tr=new Track();
+    tr=new LHCb::Track();
     tr->setFlags(1);
-    tr->setType(Track::TT);
+    tr->setType(LHCb::Track::TT);
 
-    tr->addToLhcbIDs(LHCbID(2));
-    tr->addToLhcbIDs(LHCbID(4));
-    tr->addToLhcbIDs(LHCbID(6));
+    tr->addToLhcbIDs(LHCb::LHCbID(2));
+    tr->addToLhcbIDs(LHCb::LHCbID(4));
+    tr->addToLhcbIDs(LHCb::LHCbID(6));
     m_tracks.add(tr);
 
-    tr=new Track();
+    tr=new LHCb::Track();
     tr->setFlags(8);
-    tr->setType(Track::Long);
+    tr->setType(LHCb::Track::Long);
      
-    tr->addToLhcbIDs(LHCbID(7));
-    tr->addToLhcbIDs(LHCbID(11));
-    tr->addToLhcbIDs(LHCbID(13));
-    tr->addToLhcbIDs(LHCbID(17));
+    tr->addToLhcbIDs(LHCb::LHCbID(7));
+    tr->addToLhcbIDs(LHCb::LHCbID(11));
+    tr->addToLhcbIDs(LHCb::LHCbID(13));
+    tr->addToLhcbIDs(LHCb::LHCbID(17));
     
     // add a State to this track
     Gaudi::TrackVector v(1,-1,1,-1,1);
@@ -145,16 +138,16 @@ struct ExampleTracks {
     //std::cout << std::endl;
 
 
-    State newYork(v,cov,200.,State::EndVelo);
+    LHCb::State newYork(v,cov,200.,LHCb::State::EndVelo);
     tr->addToStates(newYork);
 
-    State Michigan(v,cov,220.,State::ClosestToBeam);
+    LHCb::State Michigan(v,cov,220.,LHCb::State::ClosestToBeam);
     tr->addToStates(Michigan);
 
     m_tracks.add(tr);
     
     // format:                   flags nIDs  IDs    nStates States(Loc, z, par)
-    vector<unsigned int> bank = { 1,    3,  1,3,5,    0,      
+    std::vector<unsigned int> bank = { 1,    3,  1,3,5,    0,      
 			          9,    3,  2,4,6,    0,
 			          3,    4,  7,11,13,17, 
 				                          2,  // 2 states in this track
@@ -180,14 +173,14 @@ BOOST_FIXTURE_TEST_SUITE(TrackingCoder, ExampleTracks)
  
 BOOST_AUTO_TEST_CASE(comparetracks)
 {
-  BOOST_CHECK(equalLHCbIDs(&m_tracks,&m_tracks));
-  BOOST_CHECK(equalStates(&m_tracks,&m_tracks));
-  BOOST_CHECK(equalMeta(&m_tracks,&m_tracks));
+  BOOST_CHECK(equalLHCbIDs(m_tracks,m_tracks));
+  BOOST_CHECK(equalStates(m_tracks,m_tracks));
+  BOOST_CHECK(equalMeta(m_tracks,m_tracks));
 }
 
 BOOST_AUTO_TEST_CASE(encode)
 {
-  vector<unsigned int> rawBank;
+  std::vector<unsigned int> rawBank;
   encodeTracks(&m_tracks,rawBank);
   BOOST_CHECK(rawBank.size() == m_rawbank.size()  );
   BOOST_CHECK(rawBank == m_rawbank );
@@ -195,12 +188,12 @@ BOOST_AUTO_TEST_CASE(encode)
 
 BOOST_AUTO_TEST_CASE(decode)
 {
-  Tracks tracks;
+  LHCb::Tracks tracks;
   BOOST_CHECK(decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks) == m_tracks.size());
   BOOST_CHECK(tracks.size() == m_tracks.size() );
-  BOOST_CHECK(equalLHCbIDs(&tracks,&m_tracks));
-  BOOST_CHECK(equalStates(&tracks,&m_tracks));
-  BOOST_CHECK(equalMeta(&tracks,&m_tracks));
+  BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
+  BOOST_CHECK(equalStates(tracks,m_tracks));
+  BOOST_CHECK(equalMeta(tracks,m_tracks));
 
 }
 
@@ -208,13 +201,13 @@ BOOST_AUTO_TEST_CASE(decode)
 
 BOOST_AUTO_TEST_CASE(en_de_code)
 {
-  vector<unsigned int> rawBank;
+  std::vector<unsigned int> rawBank;
   encodeTracks(&m_tracks,rawBank);
-  Tracks tracks;
+  LHCb::Tracks tracks;
   decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks);
-  BOOST_CHECK(equalLHCbIDs(&tracks,&m_tracks));
-  BOOST_CHECK(equalStates(&tracks,&m_tracks));
-  BOOST_CHECK(equalMeta(&tracks,&m_tracks));
+  BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
+  BOOST_CHECK(equalStates(tracks,m_tracks));
+  BOOST_CHECK(equalMeta(tracks,m_tracks));
 }
 
 

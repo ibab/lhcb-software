@@ -8,7 +8,7 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "DetDesc/Condition.h"
-#include "boost/array.hpp"
+#include <array>
 
 #include "LoKi/OdinTypes.h"
 #include "LoKi/L0Types.h"
@@ -49,9 +49,9 @@ private:
     AIDA::IHistogram1D* hist;
   } ;
   // 8 ODIN, 24 L0DU, 32 Hlt1, 32 Hlt2
-  boost::array<odin_eval_t,8> m_odin_evaluators;
-  boost::array<l0_eval_t, 24> m_l0_evaluators;
-  boost::array<hlt_eval_t,64> m_hlt_evaluators;
+  std::array<odin_eval_t,8> m_odin_evaluators;
+  std::array<l0_eval_t, 24> m_l0_evaluators;
+  std::array<hlt_eval_t,64> m_hlt_evaluators;
   void zeroEvaluators(bool skipDelete=false);
 
   Condition *m_runpars;
@@ -62,8 +62,7 @@ private:
  
   std::string m_odin_location;
   std::string m_l0_location;
-  std::string m_hlt1_location;
-  std::string m_hlt2_location;
+  std::string m_hlt_location[2];
 
   unsigned long long m_startOfRun;
   double m_binWidth; // in _minutes_!
@@ -79,7 +78,6 @@ private:
   std::string m_preambulo ;                           // the preambulo itself
   bool m_preambulo_updated;
   void updatePreambulo ( Property& );
-
 
   bool m_useCondDB;
 };

@@ -1,6 +1,5 @@
 // Include files 
 // from Boost
-#include "boost/foreach.hpp"
 #include <boost/format.hpp>
 
 // from Gaudi
@@ -79,23 +78,23 @@ StatusCode HltRoutingBitsWriter::decode() {
 
 void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete) 
 { 
-    BOOST_FOREACH( odin_eval_t& eval , m_odin_evaluators ) {
+    for( odin_eval_t& eval : m_odin_evaluators ) {
         if (!skipDelete) { delete eval.predicate; }
-        eval.predicate = 0;
-        eval.counter = 0;
-        eval.hist = 0;
+        eval.predicate = nullptr;
+        eval.counter = nullptr;
+        eval.hist = nullptr;
     }
-    BOOST_FOREACH( l0_eval_t& eval , m_l0_evaluators ) {
+    for( l0_eval_t& eval : m_l0_evaluators ) {
         if (!skipDelete) { delete eval.predicate; }
-        eval.predicate = 0;
-        eval.counter = 0;
-        eval.hist = 0;
+        eval.predicate = nullptr;
+        eval.counter = nullptr;
+        eval.hist = nullptr;
     }
-    BOOST_FOREACH( hlt_eval_t& eval , m_hlt_evaluators ) {
+    for( hlt_eval_t& eval : m_hlt_evaluators ) {
         if (!skipDelete) { delete eval.predicate; }
-        eval.predicate = 0;
-        eval.counter = 0;
-        eval.hist = 0;
+        eval.predicate = nullptr;
+        eval.counter = nullptr;
+        eval.hist = nullptr;
     }
 }
 //=============================================================================
@@ -104,8 +103,8 @@ void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete)
 HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-  , m_runpars(0)
-  , m_updMgrSvc(0)
+  , m_runpars{nullptr}
+  , m_updMgrSvc{nullptr}
   , m_startOfRun(0)
   , m_binWidth(1) // in minutes!!! 
   , m_timeSpan(125) // in minutes!!!
@@ -113,10 +112,10 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   , m_preambulo_updated(false)
 {
   zeroEvaluators(true);
-  declareProperty("Hlt1DecReportsLocation", m_hlt1_location = LHCb::HltDecReportsLocation::Default);
-  declareProperty("Hlt2DecReportsLocation", m_hlt2_location = LHCb::HltDecReportsLocation::Default);
-  declareProperty("L0DUReportLocation", m_l0_location = LHCb::L0DUReportLocation::Default);
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
+  declareProperty("L0DUReportLocation", m_l0_location = LHCb::L0DUReportLocation::Default);
+  declareProperty("Hlt1DecReportsLocation", m_hlt_location[0] = LHCb::HltDecReportsLocation::Default);
+  declareProperty("Hlt2DecReportsLocation", m_hlt_location[1] = LHCb::HltDecReportsLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
   declareProperty("TrendTimeSpan",m_timeSpan = 125 );
@@ -233,13 +232,13 @@ StatusCode HltRoutingBitsWriter::execute() {
   double weight = double(1)/(m_binWidth*60); // m_binWidth is in minutes, need rate in Hz
 
   for (unsigned i=0;i<8;++i) {
-        LoKi::Types::ODIN_Cut* eval = m_odin_evaluators[ i ].predicate;
-        if ( eval == 0 ) continue;
+        auto* eval = m_odin_evaluators[ i ].predicate;
+        if ( !eval ) continue;
         bool result = (*eval)(odin);
         *(m_odin_evaluators[ i ].counter) += result;
         if ( result ) m_odin_evaluators[ i ].hist->fill( t,  weight ); 
         if ( result ) bits[0] |= (0x01UL << i); 
-    }
+  }
 
   // bits 8--32 are for L0DU
   // check if L0DU exists (may not!)
@@ -247,8 +246,8 @@ StatusCode HltRoutingBitsWriter::execute() {
     LHCb::L0DUReport* l0du = get<LHCb::L0DUReport>( m_l0_location );
     if (l0du->valid()) {
         for (unsigned i=8;i<32;++i) {
-              LoKi::Types::L0_Cut* eval = m_l0_evaluators[ i-8 ].predicate;
-              if ( eval == 0 ) continue;
+              auto* eval = m_l0_evaluators[ i-8 ].predicate;
+              if ( !eval ) continue;
               bool result = (*eval)(l0du);
               *(m_l0_evaluators[ i-8 ].counter) += result;
               if ( result ) m_l0_evaluators[ i-8 ].hist->fill( t, weight ); 
@@ -258,14 +257,11 @@ StatusCode HltRoutingBitsWriter::execute() {
   }
 
   // bits 32--95 are for HLT
-  std::string* location[2];
-  location[0] = &m_hlt1_location;
-  location[1] = &m_hlt2_location;
   for (unsigned j=1;j<3;++j) {
-    LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( *location[j-1] );
+    LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( m_hlt_location[j-1] );
     for (unsigned i=0;i<32;++i) {
-        LoKi::Types::HLT_Cut* eval = m_hlt_evaluators[ (j-1)*32+i ].predicate;
-        if ( eval == 0 ) continue;
+        auto* eval = m_hlt_evaluators[ (j-1)*32+i ].predicate;
+        if ( !eval ) continue;
         bool result = (*eval)(hdr);
         *(m_hlt_evaluators[ (j-1)*32+i ].counter) += result;
         if ( result ) m_hlt_evaluators[ (j-1)*32+i ].hist->fill( t, weight ); 

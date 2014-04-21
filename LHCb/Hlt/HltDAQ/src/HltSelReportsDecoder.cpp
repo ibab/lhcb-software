@@ -29,6 +29,18 @@
 
 using namespace LHCb;
 
+namespace {
+float floatFromInt(unsigned int i)
+{
+        union IntFloat { unsigned int mInt; float mFloat; };
+        IntFloat a; a.mInt=i;
+        return a.mFloat;
+}
+
+const Gaudi::StringKey  Hlt1SelectionID{"Hlt1SelectionID"};
+const Gaudi::StringKey  Hlt2SelectionID{"Hlt2SelectionID"};
+const Gaudi::StringKey  InfoID{"InfoID"};
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSelReportsDecoder
@@ -45,26 +57,18 @@ DECLARE_ALGORITHM_FACTORY( HltSelReportsDecoder )
 //=============================================================================
 HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-: Decoder::AlgBase ( name , pSvcLocator ),
-    m_hltANNSvc(0)
+: Decoder::AlgBase ( name , pSvcLocator ), m_hltANNSvc{nullptr}
 {
   //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
   initRawEventSearch();
-  
 
   declareProperty("OutputHltSelReportsLocation",
     m_outputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
 
   declareProperty("SourceID",
 		  m_sourceID= HltSelReportsWriter::kSourceID_Dummy );  
-  
-  
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltSelReportsDecoder::~HltSelReportsDecoder() {} 
 
 //=============================================================================
 // Initialization
@@ -89,15 +93,12 @@ StatusCode HltSelReportsDecoder::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltSelReportsDecoder::execute() {
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
 
   // get inputs
   LHCb::RawEvent* rawEvent = findFirstRawEvent();
   
-  if( ! rawEvent )
-  {
+  if( !rawEvent ) {
     return Error(" No RawEvent found at any location. No HltSelReports created.");
   }  
 
@@ -125,16 +126,14 @@ StatusCode HltSelReportsDecoder::execute() {
 
   unsigned int bankCounterMax = 0;
   unsigned int bankSize =0;
-  std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)0);
-  for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
-	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
-    const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+  std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),nullptr);
+  for( const auto& hltselreportsRawBank : hltselreportsRawBanks ) {
 
-    unsigned int sourceID=HltSelReportsWriter::kSourceID_Hlt;
+    unsigned int sourceID = HltSelReportsWriter::kSourceID_Hlt;
     if( hltselreportsRawBank->version() > 1 ){
       sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
     }
-    if( m_sourceID != sourceID )continue;
+    if( m_sourceID != sourceID ) continue;
 
     if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
       Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
@@ -157,31 +156,28 @@ StatusCode HltSelReportsDecoder::execute() {
     if( ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt1 ) ||
         ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt2 ) ){
 
-      for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
-	   hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
-	const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+      for( const auto& hltselreportsRawBank : hltselreportsRawBanks ) {
+        unsigned int sourceID= HltSelReportsWriter::kSourceID_Hlt;
+        if( hltselreportsRawBank->version() > 1 ){
+          sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
+        }
+        if( HltSelReportsWriter::kSourceID_Hlt != sourceID )continue;
 
-	unsigned int sourceID= HltSelReportsWriter::kSourceID_Hlt;
-	if( hltselreportsRawBank->version() > 1 ){
-	  sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
-	}
-	if( HltSelReportsWriter::kSourceID_Hlt != sourceID )continue;
-
-	if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
-	  Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
-	  continue;
-	}
-	unsigned int bankCounter = hltselreportsRawBank->sourceID();
-	if( hltselreportsRawBank->version() > 1 ){
-	  bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
-	}
-	if( bankCounter < hltselreportsRawBanks.size() ){
-	  orderedBanks[bankCounter]= hltselreportsRawBank;
-	  if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
-	} else {
-	  Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
-	}
-	bankSize += hltselreportsRawBank->size();
+        if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
+          Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+          continue;
+        }
+        unsigned int bankCounter = hltselreportsRawBank->sourceID();
+        if( hltselreportsRawBank->version() > 1 ){
+          bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
+        }
+        if( bankCounter < hltselreportsRawBanks.size() ){
+          orderedBanks[bankCounter]= hltselreportsRawBank;
+          if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
+        } else {
+          Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
+        }
+        bankSize += hltselreportsRawBank->size();
       }
     }
   }
@@ -202,7 +198,8 @@ StatusCode HltSelReportsDecoder::execute() {
     }
     unsigned int bankSize1 =  (hltselreportsRawBank->size()+3)/4; // from bytes to words
     for(unsigned int i=0; i!=bankSize1; ++i){
-      (*pBank) = hltselreportsRawBank->data()[i]; ++pBank;
+      *pBank = hltselreportsRawBank->data()[i]; 
+      ++pBank;
     }
   }
 
@@ -462,8 +459,8 @@ StatusCode HltSelReportsDecoder::execute() {
           infoPersistent.insert( "0#SelectionID", floatFromInt(stdInfo[0]) );
           if( stdInfo.size()>1 ){
             int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
-            boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
-            if (!selName) selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
+            boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Hlt1SelectionID,id);
+            if (!selName) selName = m_hltANNSvc->value(Hlt2SelectionID,id);
             if (selName) {
               infoPersistent.insert( "10#" + std::string(selName->first), floatFromInt(stdInfo[1]) );        
             } else {
@@ -503,7 +500,7 @@ StatusCode HltSelReportsDecoder::execute() {
       for( HltSelRepRBExtraInfo::ExtraInfo::const_iterator i=extraInfo.begin();
            i!=extraInfo.end(); ++i){
         // convert int to string
-        boost::optional<IANNSvc::minor_value_type> infos = m_hltANNSvc->value(Gaudi::StringKey(std::string("InfoID")),i->first); 
+        boost::optional<IANNSvc::minor_value_type> infos = m_hltANNSvc->value(InfoID,i->first); 
         if ( infos ) {
           infoPersistent.insert( infos->first, i->second );
         } else {
@@ -591,9 +588,9 @@ StatusCode HltSelReportsDecoder::execute() {
          i!=hos->numericalInfo().end();++i ){
       if( i->first == "0#SelectionID" ){
         int id = (int)(i->second+0.1);
-        selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
+        selName = m_hltANNSvc->value(Hlt1SelectionID,id);
         if (!selName) {
-          selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
+          selName = m_hltANNSvc->value(Hlt2SelectionID,id);
 	} else {
 	  hltType=HltSelReportsWriter::kSourceID_Hlt1;
 	}
@@ -637,24 +634,19 @@ StatusCode HltSelReportsDecoder::execute() {
     verbose() << *outputSummary << endmsg;
 
     verbose() << " ======= HltObjectSummary container size= " << objectSummaries->size() << endmsg;
-    for( HltObjectSummary::Container::const_iterator ppHos=objectSummaries->begin();
-         ppHos!=objectSummaries->end();++ppHos){
-      const HltObjectSummary* pHos=*ppHos;    
+    for( const auto& pHos : *objectSummaries ) {
       verbose() << " key " << pHos->index();
-      std::vector<std::string> selby = outputSummary->selectedAsCandidateBy(pHos);
-      if( selby.size() ){
+      auto selby = outputSummary->selectedAsCandidateBy(pHos);
+      if( !selby.empty() ){
         verbose() << " selectedAsCandidateBy= ";       
-        for( std::vector<std::string>::const_iterator i=selby.begin();i!=selby.end();++i){
-          verbose() << *i << " ";
-        }
-        std::pair<std::string,int> pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
+        for( const auto&  i : selby ) verbose() << i << " ";
+        auto pvInfo = outputSummary->pvSelectionNameAndKey(pHos);
         if( pvInfo.second > -1 ){
           verbose() << " pvSelectionName= " << pvInfo.first << " pvKey= " << pvInfo.second << " ";
         }
       }     
       verbose() << *pHos << endmsg;    
     }
-    
   }
 
  return StatusCode::SUCCESS;
@@ -673,10 +665,4 @@ StatusCode HltSelReportsDecoder::finalize() {
 //=============================================================================
     
   
-float HltSelReportsDecoder::floatFromInt(unsigned int i)
-{
-        union IntFloat { unsigned int mInt; float mFloat; };
-        IntFloat a; a.mInt=i;
-        return a.mFloat;
-}
 

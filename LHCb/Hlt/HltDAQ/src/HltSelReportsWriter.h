@@ -62,10 +62,10 @@ private:
 
 
   typedef std::set<unsigned int> LhcbidSequence;
-  typedef std::vector< LhcbidSequence* > LhcbidSequences;
+  typedef std::vector< LhcbidSequence > LhcbidSequences;
 
-  void addToLhcbidSequences( LhcbidSequence* set2,
-                             LhcbidSequences & lhcbidSequences ) const;
+  void addToLhcbidSequences( LhcbidSequence&& set2,
+                             LhcbidSequences& lhcbidSequences ) const;
   
   /// for sorting ranked selections
   // static bool sortByCLID( const LHCb::HltObjectSummary*  elem1, const LHCb::HltObjectSummary*  elem2);
@@ -79,7 +79,6 @@ private:
           return  elem1->summarizedObjectCLID() > elem2->summarizedObjectCLID();
         }
    };
-
 
 };
 

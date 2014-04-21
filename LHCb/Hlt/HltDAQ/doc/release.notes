@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2014-04-21 - Gerhard Raven
+ - optimize HltSelReportsWriter, esp. the LHCbID packing, which now  uses move 
+   semantics to avoid explcit heap storage.
+ - various C++11 optimizations
+
 ! 2014-04-08 - Sebastian Neubert
  - HltTrackReports updates:
  - Added check against reading over the end of the bank
