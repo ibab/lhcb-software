@@ -24,6 +24,9 @@
  * @author Pieter David pieter.david@cern.ch
  */
 // ============================================================================
+
+const Gaudi::StringKey s_InfoID{"InfoID"};
+
 LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::Hlt_TrackCutAsRecVertexCut_Any
 ( const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut ,
   bool useExtraInfo                                             )
@@ -46,7 +49,7 @@ void LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::retrieveFailKey()
   // get the InfoID from HltANNSvc
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   const std::string infoIDName { "HltUnit/" + alg->name() };
-  auto _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName );
+  auto _info = ann->value(s_InfoID , infoIDName );
   Assert( _info , " request for unknown Info ID : " + infoIDName );
   m_extraInfoKey = _info->second;
 

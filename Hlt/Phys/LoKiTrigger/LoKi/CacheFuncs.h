@@ -49,7 +49,7 @@ namespace LoKi
       /// constructor from the function and the key 
       Log_ 
       ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    fun      , 
-        const std::string&                                  key      )
+        const Gaudi::StringKey&                                  key      )
         : LoKi::Functor<const Hlt::Candidate*,TYPE>()
         , m_fun  ( fun ) 
         , m_key  ( key ) 
@@ -63,8 +63,8 @@ namespace LoKi
       ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    f     , 
         const bool                                        /* b */ )
         : LoKi::Functor<const Hlt::Candidate*,TYPE>()
-        , m_fun  ( f            ) 
-        , m_key  ( f.printOut() ) 
+        , m_fun  ( f            )
+        , m_key  ( f.printOut() )
         , m_name () 
       {
         m_algorithm = LoKi::AlgUtils::getAlg ( *this , false ) ;
@@ -159,7 +159,7 @@ namespace LoKi
       /// constructor from the function and the fictive argument  
       Cache_ 
       ( const LoKi::Functor<const Hlt::Candidate*,TYPE>&    f      , 
-        const std::string&                                  key    , 
+        const Gaudi::StringKey&                             key    , 
         const bool                                          update )
         : LoKi::Candidates::Log_<TYPE>( f , key ) 
         , m_update ( update ) 
@@ -249,7 +249,7 @@ namespace LoKi
   LoKi::FunctorFromFunctor<const Hlt::Candidate*,TYPE>
   log_  
   ( const LoKi::Functor<const Hlt::Candidate*,TYPE>& fun , 
-    const std::string&                               key )  
+    const Gaudi::StringKey&                          key )  
   {
     return LoKi::Candidates::Log_<TYPE> ( fun , key ) ;
   }
@@ -266,7 +266,7 @@ namespace LoKi
   LoKi::FunctorFromFunctor<const Hlt::Candidate*,TYPE>
   cache_  
   ( const LoKi::Functor<const Hlt::Candidate*,TYPE>& fun    , 
-    const std::string&                               key    , 
+    const Gaudi::StringKey&                          key    , 
     const bool                                       update )
   {
     return LoKi::Candidates::Cache_<TYPE> ( fun , key , update ) ;
@@ -302,7 +302,7 @@ namespace LoKi
       /// constructor from the function and the key 
       Log_ 
       ( const LoKi::Functor<const Hlt::Stage*,TYPE>&    f     , 
-        const std::string&                              key   ) 
+        const Gaudi::StringKey&                              key   ) 
         : LoKi::Functor<const Hlt::Stage*,TYPE>()
         , m_fun     ( f   ) 
         , m_key     ( key ) 
@@ -398,7 +398,7 @@ namespace LoKi
       /// constructor
       Cache_ 
       ( const LoKi::Functor<const Hlt::Stage*,TYPE>&    f      , 
-        const std::string&                              key    , 
+        const Gaudi::StringKey&                         key    , 
         const bool                                      update )
         : LoKi::Stages::Log_<TYPE>  ( f , key ) 
         , m_update ( update ) 
@@ -481,7 +481,7 @@ namespace LoKi
   LoKi::FunctorFromFunctor<const Hlt::Stage*,TYPE>
   log_  
   ( const LoKi::Functor<const Hlt::Stage*,TYPE>& fun , 
-    const std::string&                           key ) 
+    const Gaudi::StringKey&                      key ) 
   {
     return LoKi::Stages::Log_<TYPE> ( fun , key ) ;
   }
@@ -498,7 +498,7 @@ namespace LoKi
   LoKi::FunctorFromFunctor<const Hlt::Stage*,TYPE>
   cache_  
   ( const LoKi::Functor<const Hlt::Stage*,TYPE>& fun    , 
-    const std::string&                           key    , 
+    const Gaudi::StringKey&                      key    , 
     const bool                                   update )
   {
     return LoKi::Stages::Cache_<TYPE> ( fun , key , update ) ;

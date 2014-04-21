@@ -75,10 +75,9 @@ namespace Hlt
      *  @param producer  the algorithm/producer
      *  @return status code 
      */
-    virtual StatusCode        
-    registerOutput 
-    ( Hlt::Selection*         selection ,               // the output selection 
-      const IAlgorithm*       producer  )  ;            //             producer 
+    StatusCode        registerOutput 
+    ( Hlt::Selection* selection ,               // the output selection 
+      const IAlgorithm*       producer  )  override;    //             producer 
     /** register the input selection  dirung the allower transactions for 
      *  locked service 
      *  @see Hlt::IRegister
@@ -86,10 +85,9 @@ namespace Hlt
      *  @param consumer the algorithm/consumer
      *  @return status code 
      */
-    virtual StatusCode           
-    registerInput 
+    StatusCode           registerInput 
     ( const Hlt::IRegister::Key& selection ,             // the input selection 
-      const IAlgorithm*          consumer  ) ;           //            consumer 
+      const IAlgorithm*          consumer  ) override;   //            consumer 
     // ========================================================================
     /** register the requiest to TES-selection 
      *  @attention the service much be locked properly during the transaction!
@@ -97,10 +95,9 @@ namespace Hlt
      *  @param consumer algorithm/consumer 
      *  @return Status Code 
      */
-    virtual StatusCode  
-    registerTESInput
+    StatusCode  registerTESInput
     ( const Key&                 location ,              //        TES location 
-      const IAlgorithm*          consumer ) ;            //            consumer   
+      const IAlgorithm*          consumer ) override ;   //            consumer   
     // ========================================================================
   protected: // Hlt::IRegister (public) 
     // ========================================================================
@@ -111,7 +108,7 @@ namespace Hlt
      *  @param alg the algorithm which starts the transaction
      *  @param status code
      */
-    virtual StatusCode lock   ( const IAlgorithm* alg ) ;
+    StatusCode lock   ( const IAlgorithm* alg ) override;
     /** end the transaction/unlock the registrator 
      *  @see Hlt::IRegister
      *  @see Hlt::IRegister::unlock 
@@ -119,7 +116,7 @@ namespace Hlt
      *  @param alg the algorithm which ends the transaction
      *  @param status code
      */
-    virtual StatusCode unlock ( const IAlgorithm* alg ) ;  
+    StatusCode unlock ( const IAlgorithm* alg ) override;  
     // ========================================================================
   public:  // Hlt::IData
     // ========================================================================
@@ -127,25 +124,25 @@ namespace Hlt
      *  @see Hlt::IData 
      *  @see Hlt::IInspector
      */
-    virtual bool hasSelection ( const Key& key ) const { return inMap ( key ) ; }
+    bool hasSelection ( const Key& key ) const override { return inMap ( key ) ; }
     /*  retrieve the selection by name  (conts-access by consumer)
      *  @see Hlt::IData 
      *  @param key the selection key/name 
      *  @param alg the consumer 
      *  @return pointer to the selection (0 for missing selections)
      */
-    virtual const Hlt::Selection* selection 
+    const Hlt::Selection* selection 
     ( const Hlt::IData::Key&      key          ,          // selection key/name
-      const IAlgorithm*           consumer     ) const ;  //       the consumer
+      const IAlgorithm*           consumer     ) const override;  //       the consumer
     // ========================================================================
     /** retrieve the selection by name  (non-const access, only by producer)
      *  @param alg the producer
      *  @param key the selection key/name 
      *  @return pointer to the selection (0 for missing selections)
      */
-    virtual Hlt::Selection*  retrieve
+    Hlt::Selection*  retrieve
     ( const IAlgorithm*      producer ,                  //        the producer
-      const Hlt::IData::Key& key      ) const ;          //  selection key/name
+      const Hlt::IData::Key& key      ) const override;  //  selection key/name
     // ========================================================================
   public: // TES locations
     // ========================================================================
@@ -154,9 +151,9 @@ namespace Hlt
      *  @param location TES-location 
      *  @return object for TES 
      */
-    virtual const DataObject* tes 
+    const DataObject* tes 
     ( const IAlgorithm* reader   ,                              //       reader 
-      const Key&        location ) const ;                      // TES-location
+      const Key&        location ) const override;              // TES-location
     // ========================================================================
   public:   // Hlt::IInspector 
     // ========================================================================
@@ -164,30 +161,30 @@ namespace Hlt
      *  @param selection the selection 
      *  @return the producer 
      */
-    virtual const IAlgorithm*  producer 
-    ( const Hlt::Selection*    selection ) const ;
+    const IAlgorithm*  producer 
+    ( const Hlt::Selection*    selection ) const override;
     /** get the producer for the given selection 
      *  @param selection the selection 
      *  @return the producer 
      */
-    virtual const IAlgorithm* producer 
-    ( const std::string&      selection ) const ;
+    const IAlgorithm* producer 
+    ( const std::string&      selection ) const override;
     /** get all nominal consumers for the given selection 
      *  @param selection the selection 
      *  @param alglist (OUTPUT) list of consumers 
      *  @param number of nominal consumers 
      */
-    virtual size_t consumers 
+    size_t consumers 
     ( const Hlt::Selection* selection , 
-      AlgList&              alglist   ) const  ;  
+      AlgList&              alglist   ) const  override ;  
     /** get all nominal consumers for the given selection 
      *  @param selection the selection 
      *  @param alglist (OUTPUT) list of consumers 
      *  @param number of nominal consumers 
      */
-    virtual size_t consumers 
+    size_t consumers 
     ( const std::string&    selection , 
-      AlgList&              alglist   ) const ;
+      AlgList&              alglist   ) const override;
     // ========================================================================
   public:   // Hlt::Inspector: ispection by algorithms: inputs/outputs  
     // ========================================================================
@@ -196,84 +193,84 @@ namespace Hlt
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of input selections 
      */
-    virtual size_t inputs 
+    size_t inputs 
     ( const IAlgorithm*  algorithm , 
-      SelList&           selections ) const ;
+      SelList&           selections ) const override;
     /** get the inputs for the given algorithm 
      *  @param algorithm the algorithm (consumer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of input selections 
      */
-    virtual size_t inputs 
+    size_t inputs 
     ( const IAlgorithm*  algorithm , 
-      KeyList&           selections ) const ;
+      KeyList&           selections ) const override;
     /** get the inputs for the given algorithm 
      *  @param algorithm the algorithm (consumer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of input selections 
      */
-    virtual size_t inputs 
+    size_t inputs 
     ( const std::string& algorithm , 
-      SelList&           selections ) const ;
+      SelList&           selections ) const override;
     /** get the inputs for the given algorithm 
      *  @param algorithm the algorithm (consumer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of input selections 
      */
-    virtual size_t inputs 
+    size_t inputs 
     ( const std::string& algorithm , 
-      KeyList&           selections ) const ;
+      KeyList&           selections ) const override;
     // ========================================================================
     /** get the outputs for the given algorithm 
      *  @param algorithm the algorithm (producer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of output selections 
      */
-    virtual size_t outputs 
+    size_t outputs 
     ( const IAlgorithm*  algorithm , 
-      SelList&           selections ) const ;
+      SelList&           selections ) const override;
     /** get the outputs for the given algorithm 
      *  @param algorithm the algorithm (producer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of output selections 
      */
-    virtual size_t outputs 
+    size_t outputs 
     ( const IAlgorithm*  algorithm , 
-      KeyList&           selections ) const ;
+      KeyList&           selections ) const override;
     /** get the outputs for the given algorithm 
      *  @param algorithm the algorithm (producer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of output selections 
      */
-    virtual size_t outputs
+    size_t outputs
     ( const std::string& algorithm , 
-      SelList&           selections ) const ;
+      SelList&           selections ) const override;
     /** get the outputs for the given algorithm 
      *  @param algorithm the algorithm (producer) 
      *  @param selections (OUTPUT) the list of input selections 
      *  @return number of output selections 
      */
-    virtual size_t outputs 
+    size_t outputs 
     ( const std::string& algorithm , 
-      KeyList&           selections ) const ;
+      KeyList&           selections ) const override;
     // ========================================================================
     /// registered algorithm?
-    virtual bool hasAlgorithm ( const IAlgorithm*  alg ) const ;
+    bool hasAlgorithm ( const IAlgorithm*  alg ) const override;
     /// registered algorithm?
-    virtual bool hasAlgorithm ( const std::string& alg ) const ;
+    bool hasAlgorithm ( const std::string& alg ) const override;
     /// registered producer?
-    virtual bool hasProducer  ( const IAlgorithm*  alg ) const ;
+    bool hasProducer  ( const IAlgorithm*  alg ) const override;
     /// registered producer?
-    virtual bool hasProducer  ( const std::string& alg ) const ;
+    bool hasProducer  ( const std::string& alg ) const override;
     /// registered consumer
-    virtual bool hasConsumer  ( const IAlgorithm*  alg ) const ;
+    bool hasConsumer  ( const IAlgorithm*  alg ) const override;
     /// registered producer?
-    virtual bool hasConsumer  ( const std::string& alg ) const ;
+    bool hasConsumer  ( const std::string& alg ) const override;
     /// registered selection ?
-    virtual bool hasSelection ( const Hlt::Selection* selection ) const ;
+    bool hasSelection ( const Hlt::Selection* selection ) const override;
     // ========================================================================
     /// existing selection ? 
-    virtual bool hasSelection ( const std::string& key ) const 
+    bool hasSelection ( const std::string& key ) const override 
     { return inMap ( key ) ; }
     // ========================================================================
   public: // Get All
@@ -282,12 +279,12 @@ namespace Hlt
      *  @param algs (OUTPUT) the list of algorithms 
      *  @return number of algorithms 
      */
-    virtual size_t algorithms ( AlgList& algs ) const ;
+    size_t algorithms ( AlgList& algs ) const override;
     /** get all selections 
      *  @param keys (OUTPUT) the list of selections 
      *  @return number of selections  
      */
-    virtual size_t selections ( KeyList& keys ) const ;
+    size_t selections ( KeyList& keys ) const override;
     // ========================================================================
   public:  // TES selections  
     // ========================================================================
@@ -296,37 +293,37 @@ namespace Hlt
      *  @param alglist (OUTPUT) the list of readers 
      *  @return number of readers 
      */
-    virtual size_t readers 
+    size_t readers 
     ( const std::string&    location  , 
-      AlgList&              alglist   ) const ;
+      AlgList&              alglist   ) const override;
     /** get all readers 
      *  @param alglist (OUTPUT) the list of readers 
      *  @return number of readers 
      */
-    virtual size_t allReaders 
-    ( AlgList&              alglist   ) const ;
+    size_t allReaders 
+    ( AlgList&              alglist   ) const override;
     /** get the input TES locations for the given reader 
      *  @param reader the algorithm
      *  @param locations (OUTPUT) the list of input TES locations 
      *  @return number of locations 
      */
-    virtual size_t readTES 
+    size_t readTES 
     ( const IAlgorithm*     reader    , 
-      KeyList&              locations ) const ;
+      KeyList&              locations ) const override;
     /** get the input TES locations for the given reader 
      *  @param reader the algorithm
      *  @param locations (OUTPUT) the list of input TES locations 
      *  @return numebr of locations 
      */
-    virtual size_t readTES 
+    size_t readTES 
     ( const std::string&    reader    , 
-      KeyList&              locations ) const ;
+      KeyList&              locations ) const override;
     /** get all TES-inptu locations 
      *  @param locations (OUTPUT) the list of input TES locations 
      *  @return number of locations 
      */
-    virtual size_t allTES 
-    ( KeyList&              locations ) const ;
+    size_t allTES 
+    ( KeyList&              locations ) const override;
     // ========================================================================
   public: // IIncidentListener
     // ========================================================================
@@ -334,7 +331,7 @@ namespace Hlt
      *  @see IIncidentListener 
      *  @param inc incident to be handled 
      */
-    virtual void handle ( const Incident& inc ) ;
+    void handle ( const Incident& inc ) override;
     // ========================================================================
   public: // IService/IInterface etc...
     // ========================================================================
@@ -344,19 +341,19 @@ namespace Hlt
      *  @param ppi (OUTPUT) the interface 
      *  @return status code 
      */
-    virtual StatusCode queryInterface
+    StatusCode queryInterface
     (  const InterfaceID& iid ,
-       void**             ppi ) ;
+       void**             ppi ) override;
     /** standard initialization 
      *  @see IService 
      *  @return status code 
      */
-    virtual StatusCode initialize () ;
+    StatusCode initialize () override;
     /** standard finalization
      *  @see IService 
      *  @return status code 
      */
-    virtual StatusCode finalize   () ;
+    StatusCode finalize   () override;
     // ========================================================================
   protected:
     // ========================================================================
@@ -401,7 +398,7 @@ namespace Hlt
     ( const std::string& name ,                        // service instance name 
       ISvcLocator*       pSvc ) ;                      //       Service Locator 
     /// virtual & protected destructor 
-    virtual ~Service() {}                     // virtual & protected destructor
+    ~Service() override = default;             // virtual & protected destructor
     // ========================================================================
   private:
     // ========================================================================
@@ -486,10 +483,8 @@ namespace Hlt
     // check the presence of selection in the map
     bool inMap ( const Hlt::Selection* selection ) const
     { 
-      for ( SelMap::iterator item = m_selections.begin() ;
-            m_selections.end() != item ; ++item) 
-      { if ( item->second == selection ) { return true ; } }
-      return false ;
+      return std::any_of( std::begin(m_selections), std::end(m_selections), 
+                          [&](SelMap::const_reference item ) { return item.second == selection; } );
     }
     // ========================================================================
   private:

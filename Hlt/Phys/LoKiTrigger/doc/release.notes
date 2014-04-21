@@ -4,6 +4,11 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-04-21 - Gerhard Raven
+ - follow changes in Cache interface to use Gaudi::StringKey throughout
+ - follow changes in Hlt::IUnit interface to clarify memory
+   ownership
+
 ! 2014-04-14 - Gerhard Raven
  - fix clang diagnostic
 

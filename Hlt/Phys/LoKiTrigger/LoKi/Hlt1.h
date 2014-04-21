@@ -416,7 +416,7 @@ namespace LoKi
       /// get the unit 
       const Hlt::IUnit*          unit () const { return m_unit ; }  // get unit 
       /// get the key 
-      const std::string&         key  () const { return m_key  ; }  //  get key 
+      const Hlt::IUnit::Key&     key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
       const LoKi::Types::TrCuts& cuts () const { return m_cut  ; }  //  get cut 
       /// get the cuts 
@@ -470,7 +470,7 @@ namespace LoKi
       /// get the unit 
       const Hlt::IUnit*      unit () const { return m_unit ; }  // get unit 
       /// get the key 
-      const std::string&         key  () const { return m_key  ; }  //  get key 
+      const Hlt::IUnit::Key& key  () const { return m_key  ; }  //  get key 
       /// get the cuts 
       const LoKi::Functor<const LHCb::VertexBase*,bool>&  
       cuts () const { return m_cut  ; }  //  get cut 

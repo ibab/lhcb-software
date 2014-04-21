@@ -54,8 +54,8 @@
 namespace 
 {
   // ==========================================================================
-  const Gaudi::StringKey s_CHI2  { std::string{"Chi2"} } ;
-  const Gaudi::StringKey s_DOCA  { std::string{"DOCA"} } ;
+  const Gaudi::StringKey s_CHI2{ std::string{"Chi2"} } ;
+  const Gaudi::StringKey s_DOCA{ std::string{"DOCA"} } ;
   // ==========================================================================
 }
 // ============================================================================

@@ -101,13 +101,13 @@ namespace LoKi
         LoKi::Hlt1::VxCreator ()                ) ;//            vertex creator  
       // ======================================================================
       /// MANDATORY: virtual destructor 
-      virtual ~VxUpgrade() {}
+      ~VxUpgrade() override = default ;
       /// MANDATORY: clone method ("virtual constructor")
-      virtual  VxUpgrade* clone () const { return new VxUpgrade (*this) ; }
+      VxUpgrade* clone () const override { return new VxUpgrade (*this) ; }
       /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
+      result_type operator() ( argument a ) const override;
       /// OPTIONAL: nice printout
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      std::ostream& fillStream ( std::ostream& s ) const override;
       // ======================================================================    
     public:
       // ======================================================================

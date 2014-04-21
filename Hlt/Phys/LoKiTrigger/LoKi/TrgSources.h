@@ -101,7 +101,7 @@ namespace LoKi
       { return m_dataSvc ; }      
     public:
       /// set the  paths
-      void setPaths  ( const std::vector<std::string>& value ) { m_path = value ; }
+      void setPaths  ( std::vector<std::string> value ) { m_path.swap( value ) ; }
       /// set the  paths
       void addToPath ( const std::string& value ) { m_path.push_back( value ) ; }
       /// set the  service 

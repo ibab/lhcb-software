@@ -74,7 +74,9 @@ LoKi::HltUnit::HltUnit
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
-LoKi::HltUnit::~HltUnit(){}                   // virtual & protected destructor
+LoKi::HltUnit::~HltUnit(){       // virtual & protected destructor
+    for ( auto& i : m_out ) delete i.second;
+}            
 // ============================================================================
 /* register the selection
  *  @param selection the selection to be registered
@@ -83,19 +85,22 @@ LoKi::HltUnit::~HltUnit(){}                   // virtual & protected destructor
  */
 // ============================================================================
 StatusCode LoKi::HltUnit::registerOutput
-( Hlt::Selection*    selection  ,
+( std::unique_ptr<Hlt::Selection>    selection  ,
   const Client&   /* client */  ) const
 {
   if ( !selection )
   { return Error ("registerSelection: Hlt::Selection points to NULL") ; }
   //
-  StatusCode sc = regSvc()->registerOutput ( selection , this ) ;
+  StatusCode sc = regSvc()->registerOutput ( selection.get() , this ) ;
   if ( sc.isFailure() )
   { return Error ( "Unable to register OUTPUT selection '" +
                    selection->id().str()+ "'" , sc ) ; }
   //
   // register as "output" selection
-  m_out.insert ( selection->id () , selection ) ;
+  //FIXME:TODO: VectorMap does not support 'move' insertion...
+  // so we cannot have a VectorMap<..., std::unique_ptr<...>> 
+  auto id = selection->id();
+  m_out.insert ( id , selection.release() ) ;
   //
   return StatusCode::SUCCESS ;
 }

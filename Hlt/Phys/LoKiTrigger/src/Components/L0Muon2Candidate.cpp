@@ -82,7 +82,7 @@ namespace Hlt
   private:
     // ========================================================================
     /// the selection 
-    Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
+    std::unique_ptr<Hlt::TSelection<Hlt::Candidate>> m_selection ;// the selection 
     /// the output selection 
     Location m_output ;                                        //    the output
     /// TES Location of L0MuonCandidate 
@@ -101,9 +101,9 @@ Hlt::L0Muon2Candidate::L0Muon2Candidate
 ( std::string        name ,                  //     algorithm instance name 
   ISvcLocator*       pSvc )                  //  pointer to Service Locator 
   : Hlt::Base   ( name , pSvc ) 
-  , m_selection ( nullptr    ) 
-  , m_output    ( std::move(name) ) 
-  , m_input     ( LHCb::L0MuonCandidateLocation ::Default ) 
+  , m_selection { nullptr    } 
+  , m_output    { std::move(name) }
+  , m_input     { LHCb::L0MuonCandidateLocation ::Default }
 //
 {
   declareProperty 
@@ -133,8 +133,8 @@ StatusCode Hlt::L0Muon2Candidate::initialize ()
   sc = lock -> registerTESInput ( m_input     , this ) ;
   Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
   /// register the output selection
-  m_selection = new Hlt::TSelection<Hlt::Candidate>( m_output ) ;
-  sc = lock -> registerOutput   ( m_selection , this ) ;
+  m_selection.reset( new Hlt::TSelection<Hlt::Candidate>( m_output ) ) ;
+  sc = lock -> registerOutput   ( m_selection.get() , this ) ;
   Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc ) ;
   //
   declareInfo ( "#accept" , "" , &counter("#accept") , 
@@ -152,7 +152,7 @@ StatusCode Hlt::L0Muon2Candidate::initialize ()
 StatusCode Hlt::L0Muon2Candidate::execute  () 
 {
   // some sanity checks:
-  Assert ( m_selection , "Invalid Local pointer to selection" ) ;
+  Assert ( !!m_selection , "Invalid Local pointer to selection" ) ;
   if ( !m_selection->empty() ) { Warning("Local selection is not empty!") ; }
   
   // get all L0 Muons from TES  
@@ -206,7 +206,7 @@ StatusCode Hlt::L0Muon2Candidate::execute  ()
 // ============================================================================
 StatusCode Hlt::L0Muon2Candidate::finalize () 
 {
-  m_selection = nullptr ;
+  m_selection.reset();
   return Hlt::Base::finalize () ;
 }
 // ============================================================================

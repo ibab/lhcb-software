@@ -134,7 +134,7 @@ namespace Hlt
     /// the input selection 
     Hlt::IRegister::Key              m_input     ;                 // the input
     /// the selection 
-    Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
+    std::unique_ptr<Hlt::TSelection<Hlt::Candidate>> m_selection ;// the selection 
     // ========================================================================
   private:
     // ========================================================================

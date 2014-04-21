@@ -21,14 +21,14 @@
  */
 // ============================================================================
 
-const struct {
+constexpr struct {
     template <typename I1, typename I2> 
     constexpr const I1& operator()(const std::pair<I1,I2>& p) const { return p.first; }
     template <typename I1, typename I2> 
     constexpr I1&& operator()(const std::pair<I1,I2>&& p) const { return std::forward<I1>(p.first); }
 } select1st {} ;
 
-const struct {
+constexpr struct {
     template <typename I1, typename I2> 
     constexpr const I2& operator()(const std::pair<I1,I2>& p) const { return p.second; }
     template <typename I1, typename I2> 

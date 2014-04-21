@@ -89,7 +89,7 @@ namespace Hlt
   private:
     // ========================================================================
     /// the selection 
-    Hlt::TSelection<Hlt::Candidate>* m_selection ;             // the selection 
+    std::unique_ptr<Hlt::TSelection<Hlt::Candidate>> m_selection ;// the selection 
     /// the output selection 
     Location m_output         ;                                //    the output
     /// the input track location in TES 
@@ -231,8 +231,8 @@ StatusCode Hlt::Track2Candidate::initialize ()
   sc = lock -> registerTESInput ( m_input     , this ) ;
   Assert ( sc.isSuccess () , "Unable to register INPUT  selection" , sc ) ;
   /// register the output selection
-  m_selection = new Hlt::TSelection<Hlt::Candidate>( m_output ) ;
-  sc = lock -> registerOutput ( m_selection , this ) ;
+  m_selection.reset(new Hlt::TSelection<Hlt::Candidate>( m_output )) ;
+  sc = lock -> registerOutput ( m_selection.get() , this ) ;
   Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc );
   //
   declareInfo ( "#accept" , "" , &counter("#accept") , 
@@ -257,7 +257,7 @@ StatusCode Hlt::Track2Candidate::execute  ()
   }
   //
   // some sanity checks:
-  Assert ( m_selection , "Invalid Local pointer to selection" ) ;
+  Assert ( !!m_selection , "Invalid Local pointer to selection" ) ;
   if ( !m_selection->empty() ) { Warning("Local selection is not empty!") ; }
   
   // get all L0 Muons from TES  

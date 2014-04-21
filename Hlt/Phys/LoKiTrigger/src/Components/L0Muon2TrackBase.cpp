@@ -80,8 +80,8 @@ StatusCode Hlt::L0Muon2TrackBase::initialize ()
   sc = lock -> registerInput  ( m_input     , this ) ;
   Assert ( sc.isSuccess () , "Unable to register INPU    selection" , sc ) ;
   /// register the output selection
-  m_selection = new Hlt::TSelection<Hlt::Candidate> ( m_output ) ;
-  sc = lock -> registerOutput ( m_selection , this ) ;
+  m_selection.reset(  new Hlt::TSelection<Hlt::Candidate> ( m_output ) );
+  sc = lock -> registerOutput ( m_selection.get() , this ) ;
   Assert ( sc.isSuccess () , "Unable to register OUTPUT selection"  , sc ) ;
   // get the tool
   Assert ( 0 != maker() , "Unable to get the tool" ) ;
@@ -100,7 +100,7 @@ StatusCode Hlt::L0Muon2TrackBase::initialize ()
 // ============================================================================
 StatusCode Hlt::L0Muon2TrackBase::finalize   ()
 {
-  m_selection = nullptr ;
+  m_selection.reset();
   m_maker     = nullptr ;
   return Hlt::Base::finalize () ;
 }

@@ -48,7 +48,7 @@ namespace LoKi
     // virtual StatusCode initialize () ;
     // ========================================================================
     /// execute the algorithm
-    virtual StatusCode execute    () ;
+    StatusCode execute    () override;
     // ========================================================================
   public:                                                    // LoKi::FilterAlg 
     // ========================================================================
@@ -56,19 +56,19 @@ namespace LoKi
      *  @see LoKi::FilterAlg
      *  @see LoKi::ICoreFactory 
      */
-    virtual StatusCode decode  () ;
+    StatusCode decode  () override;
     // ========================================================================
     /** define the code 
      *  @see LoKi::FilterAlg
      *  @see LoKi::ICoreFactory 
      */
-    virtual StatusCode defineCode () ;
+    StatusCode defineCode () ;
     // ========================================================================
     /** define the stream 
      *  @see LoKi::FilterAlg
      *  @see LoKi::ICoreFactory 
      */
-    virtual StatusCode setCode ( const LoKi::Types::FCuts& cut ) ; // functor
+    StatusCode setCode ( const LoKi::Types::FCuts& cut ) ; // functor
     // ========================================================================
   public:                                                // Hlt::IUnit part 
     // ========================================================================
@@ -78,44 +78,40 @@ namespace LoKi
      *  @param client the client 
      *  @return status code 
      */
-    virtual StatusCode 
-    registerOutput 
-    ( Hlt::Selection* selection , 
-      const Client&   client    ) const ;
+    StatusCode registerOutput 
+    ( std::unique_ptr<Hlt::Selection> selection , 
+      const Client&   client    ) const override;
     // ========================================================================
     /** declare the input selection 
      *  @param key the selection key 
      *  @param client the client 
      */
-    virtual const Hlt::Selection* 
-    declareInput 
+    const Hlt::Selection* declareInput 
     ( const Key&      key       , 
-      const Client&   client    ) const ;
+      const Client&   client    ) const override;
     // ========================================================================
     /** get the (const) selection by key 
      *  @attention only *local input* selections are available 
      *  @param key the key 
      *  @return pointer to the selection 
      */
-    virtual const Hlt::Selection* 
-    selection 
+    const Hlt::Selection* selection 
     ( const Key&    key    , 
-      const Client& client ) const ;
+      const Client& client ) const override;
     // =========================================================================
     /** get the (const) selection by key  (anonymous)  
      *  @param key the key 
      *  @return pointer to the selection 
      */
-    virtual const Hlt::Selection* 
-    selection ( const Key& key ) const ;
+    const Hlt::Selection* 
+    selection ( const Key& key ) const override;
     // =========================================================================
     /** get the object form TES 
      *  @param client the client 
      *  @param location the TES location 
      *  @return the object 
      */
-    const DataObject*
-    tes 
+    const DataObject* tes 
     ( const Client& client   , 
       const Key&    location ) const ;
     // =========================================================================
@@ -124,10 +120,9 @@ namespace LoKi
      *  @param consumer algorithm/consumer 
      *  @return Status Code 
      */
-    virtual StatusCode   
-    registerTESInput
+    StatusCode   registerTESInput
     ( const Key&         location  ,                    //          TES location 
-      const Client&      client    ) const ;            //                client
+      const Client&      client    ) const override;    //                client
     // =========================================================================
  public:
     // =========================================================================
@@ -135,10 +130,9 @@ namespace LoKi
      *  @param key the key 
      *  @return pointer to the selection 
      */
-    virtual Hlt::Selection* 
-    retrieve  
-    ( const Client& /* client */ , 
-      const Key&    /* key    */ ) const 
+    Hlt::Selection* retrieve  
+    ( const Client& /* client */ ,
+      const Key&    /* key    */ ) const override
     {
       Error("retrieve(): not implemented ") ;
       return 0 ;
@@ -152,8 +146,8 @@ namespace LoKi
      *  @param ppvi pointer to the interface 
      *  @return status code 
      */
-    virtual StatusCode queryInterface 
-    (const InterfaceID& iid, void** ppvi ) ;
+    StatusCode queryInterface 
+    (const InterfaceID& iid, void** ppvi ) override;
     // ========================================================================
   protected:
     // ========================================================================
@@ -175,7 +169,7 @@ namespace LoKi
     ( const std::string& name ,                   //    algorithm instance name 
       ISvcLocator*       pSvc ) ;                 // pointer to Service Locator
     /// virtual & protected destructor 
-    virtual ~HltUnit() ;                      // virtual & protected destructor 
+    ~HltUnit() override;                      // virtual & protected destructor 
     // ========================================================================
   private:                                                     // private stuff 
     // ========================================================================
@@ -236,6 +230,8 @@ namespace LoKi
   private:
     // ========================================================================
     /// container of keys 
+    //FIXME:TODO: OMap should have a std::unique_ptr as value, but VectorMap
+    //            does not support 'move' insertion...
     typedef GaudiUtils::VectorMap<Key,      Hlt::Selection*> OMap ;
     typedef GaudiUtils::VectorMap<Key,const Hlt::Selection*> IMap ;
     typedef std::vector<Key>                                 LVct ;

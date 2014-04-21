@@ -174,7 +174,7 @@ StatusCode Hlt::L0Muon2Track::execute  ()
       const LHCb::Track* track = seekMuon ( *l0muon , muons  ) ;
 
       // it is already selected and it is clone ?
-      if      ( track && checkMuon ( track , m_selection ) )
+      if      ( track && checkMuon ( track , m_selection.get() ) )
       {
         if ( msgLevel(MSG::DEBUG) ) debug() << "is clone " << endmsg;
         continue ;

@@ -50,12 +50,12 @@ namespace Hlt
       /// Lock the service to enable the output selection registration
       Hlt::IRegister::Lock lock { regSvc() , this } ;
       /// register the output selection
-      m_selection = new Hlt::TSelection<LHCb::Track>{ m_output } ;
-      sc = lock -> registerOutput ( m_selection , this ) ;
+      m_selection.reset(  new Hlt::TSelection<LHCb::Track>{ m_output } );
+      sc = lock -> registerOutput ( m_selection.get() , this ) ;
       Assert ( sc.isSuccess () , "Unable to register OUTPUT selection" , sc );
       // get the tool
       if ( m_makerName.empty() )
-      { m_maker = 0 ; }
+      { m_maker = nullptr ; }
       else
       { m_maker = tool<ICaloSeedTool>( m_makerName , this ) ;  } // PRIVATE ???
       //
@@ -80,7 +80,7 @@ namespace Hlt
     /// finalize the algorithm
     virtual StatusCode finalize ()
     {
-      m_selection = nullptr ;
+      m_selection.reset();
       m_maker     = nullptr ;
       return Hlt::Base::finalize () ;
     }
@@ -228,7 +228,7 @@ namespace Hlt
   private:
     // ========================================================================
     /// the selection
-    Hlt::TSelection<LHCb::Track>* m_selection ;                // the selection
+    std::unique_ptr<Hlt::TSelection<LHCb::Track>> m_selection ;// the selection
     /// the output selection
     std::string m_output         ;                                // the output
     /// TES Location of L0DUReport

@@ -46,6 +46,9 @@
  *  @author Roel Aaij roel.aaij@cern.ch
  *  @date 2011-04-08
  */
+
+const Gaudi::StringKey s_InfoID{ "InfoID" };
+
 // ============================================================================
 /*  constructor from configuration parameters 
  *  @param output  the output selection name 
@@ -74,7 +77,7 @@ LoKi::Hlt1::FilterTracks::FilterTracks
    /// get the service 
    SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
 
-   auto info = ann->value( Gaudi::StringKey(std::string("InfoID")), tool() );
+   auto info = ann->value( s_InfoID, tool() );
    Assert( info , "request for unknown Info ID :" + tool() );
 
    m_recoID = info->second;
