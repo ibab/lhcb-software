@@ -13,7 +13,7 @@
 // from an older, pre-C++11 version of  <memory>. 
 // note: it's explicitly forbidden to fwd declare this in std.. but it is the 
 //       only way to use a unique_ptr as argument in a method seen by gccxml 
-namespace std { template <typename T> struct unique_ptr<T> ; }
+namespace std { template <typename T> struct unique_ptr ; }
 #endif
 // ============================================================================
 // GaudiKernel
@@ -153,6 +153,7 @@ class IUnit : virtual public IInterface
 };
 // ==========================================================================
 } // end of namespace LoKi
+#ifndef __GCCXML__
   // ============================================================================
   /*  declare (the templated) selection
 *  @param key the key to be used for selection
@@ -163,16 +164,12 @@ template <class T>
 Hlt::TSelection<T>*
 Hlt::IUnit::declareOutput( const Hlt::IUnit::Key& key,
                            const Hlt::IUnit::Client& client ) const
-#ifdef __GCCXML__
-;
-#else
 {
     std::unique_ptr<Hlt::TSelection<T>> selection{ new Hlt::TSelection<T>( key ) };
     auto ret = selection.get();
     StatusCode sc = this->registerOutput( std::move(selection), client );
     return sc.isSuccess() ? ret : nullptr ;   // RETURN
 }
-#endif
 // ============================================================================
 /*  get the data form TES
  *  @param client the client
@@ -187,6 +184,7 @@ const TYPE* Hlt::IUnit::tesData( const Hlt::IUnit::Client& client,
     const DataObject* obj = this->tes( client, location );
     return obj ? dynamic_cast<const TYPE*>( obj ) : 0;
 }
+#endif
 // ============================================================================
 // The END
 // ============================================================================
