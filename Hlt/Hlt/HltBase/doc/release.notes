@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+
 !========================= HltBase v15r0 2014-04-22 =========================
 ! 2014-04-21 - Gerhard Raven
  - change HltStage to use a variant (see https://savannah.cern.ch/task/?48822)
