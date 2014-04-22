@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TCKUtils
 ################################################################################
-gaudi_subdir(TCKUtils v1r12p3)
+gaudi_subdir(TCKUtils v1r12p4)
 
 gaudi_depends_on_subdirs(Hlt/HltCommon)
 
