@@ -582,7 +582,7 @@ class SelectorWithVars(SelectorWithCuts) :
             ## accessor function
             #
             if 3 < len ( args ) : vfun = args[3]
-            else                : vfun = lambda s : getattr( s , self.vname )
+            else                : vfun = lambda s : getattr( s , vname )
             # 
             var = ROOT.RooRealVar ( vname , vdesc , vmin , vmax )
 
