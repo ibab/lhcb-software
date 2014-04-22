@@ -112,6 +112,9 @@ private:
   bool m_fourLayerSolution;
   
   float m_c11,m_c12,m_c13,m_c21,m_c22,m_c23;
+
+  bool m_PassTracks;
+  float m_passHoleSize;
   
 };
 

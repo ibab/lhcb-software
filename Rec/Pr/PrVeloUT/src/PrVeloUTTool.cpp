@@ -35,15 +35,16 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   // Tolerances for extrapolation
   declareProperty("MaxXSlope"          , m_maxXSlope        = 0.350);
   declareProperty("MaxYSlope"          , m_maxYSlope        = 0.300);
-  declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
+  declareProperty("centralHoleSize"    , m_centralHoleSize  = 33. * Gaudi::Units::mm);
   declareProperty("YTolerance"         , m_yTol             = 0.8  * Gaudi::Units::mm);
   declareProperty("YTolSlope"          , m_yTolSlope        = 0.2);
   // Grouping tolerance
   declareProperty("HitTol"             , m_hitTol           = 3.0 * Gaudi::Units::mm);
   declareProperty("IntraLayerDist"     , m_intraLayerDist   = 15.0 * Gaudi::Units::mm);
   declareProperty("PrintVariables"     , m_PrintVariables   = false);
-
-
+  //Passing Velo tracks
+  declareProperty("PassTracks"         , m_PassTracks   = false);
+  declareProperty("passHoleSize"       , m_passHoleSize  = 37. * Gaudi::Units::mm);
 }
 //=============================================================================
 // Destructor
@@ -72,13 +73,18 @@ StatusCode PrVeloUTTool::initialize ( ) {
     info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
     info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
     info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-    info() << " MaxXSlope          = " << m_maxXSlope    << "   "  << endmsg;
-    info() << " MaxYSlope          = " << m_maxYSlope    << "   "  << endmsg;
-    info() << " distToMomentum     = " << m_distToMomentum               << endmsg;
+    info() << " MaxXSlope          = " << m_maxXSlope        << "   "  << endmsg;
+    info() << " MaxYSlope          = " << m_maxYSlope        << "   "  << endmsg;
+    info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
     info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
     info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-    info() << " HitTol             = " << m_hitTol       << " mm " << endmsg;
+    info() << " HitTol             = " << m_hitTol           << " mm " << endmsg;
+    info() << " IntraLayerDist     = " << m_intraLayerDist   << " mm " << endmsg;
+    info() << " PassTracks         = " << m_PassTracks                 << endmsg;
+    info() << " passHoleSize       = " << m_passHoleSize     << " mm " << endmsg;
+    
     info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
+    info() << " distToMomentum     = " << m_distToMomentum             << endmsg;
   }
   
   m_utHitManager   = tool<Tf::UTStationHitManager <PrUTHit> >("PrUTStationHitManager");
@@ -146,6 +152,11 @@ void PrVeloUTTool::recoVeloUT(LHCb::Track & velotrack, std::vector<LHCb::Track*>
   
   // skip tracks pointing into central hole of UT
   if(xAtMidUT*xAtMidUT + m_yAtMidUT*m_yAtMidUT < m_centralHoleSize*m_centralHoleSize) return;
+
+  if(m_PassTracks && xAtMidUT*xAtMidUT + m_yAtMidUT*m_yAtMidUT < m_passHoleSize*m_passHoleSize){
+    outtracks.push_back(new LHCb::Track(velotrack));
+    return;
+  }
   
   //clear vectors
   m_normFact.clear();
