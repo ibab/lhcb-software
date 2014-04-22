@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r1 2014-04-22 =========================
 ! 2014-Mar-04 - Patrick Spradlin
   - Modifications to HltLine/HltLine.py for use of NnBodyDecays
     . Hlt2Member.__init__: list of recognized configurable class names
