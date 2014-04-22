@@ -8,6 +8,13 @@
 // STD & STL
 // ============================================================================
 #include <memory>
+#ifdef __GCCXML__
+// gccxml doesn't know about any C++11 constructions...  presumably it reads
+// from an older, pre-C++11 version of  <memory>. 
+// note: it's explicitly forbidden to fwd declare this in std.. but it is the 
+//       only way to use a unique_ptr as argument in a method seen by gccxml 
+namespace std { template <typename T> struct unique_ptr<T> ; }
+#endif
 // ============================================================================
 // GaudiKernel
 // ============================================================================
