@@ -346,10 +346,11 @@ pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 time_t get_Boot_Time()
 {
-  char line[4096];
+  char line[4*4096];
   string sline;
   sline.erase();
   string filen;
+  filen.erase();
   filen.append( "/proc/stat");
   FILE *f=fopen(filen.c_str(),"r");
   if (f == 0) return 0;
