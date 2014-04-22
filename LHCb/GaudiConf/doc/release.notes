@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r2 2014-04-22 =========================
 ! 2014-04-14 - Rob Lambert
  - Fix small bug in ConfigurablesTest when configurables fail, make failure more explicit.
 
