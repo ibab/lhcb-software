@@ -4,6 +4,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r1 2014-04-22 =========================
 ! 2014-04-21 - Gerhard Raven
  - follow changes in Cache interface to use Gaudi::StringKey throughout
  - follow changes in Hlt::IUnit interface to clarify memory

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiTrigger
 ################################################################################
-gaudi_subdir(LoKiTrigger v15r0)
+gaudi_subdir(LoKiTrigger v15r1)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/L0Event
