@@ -1,14 +1,33 @@
 <PRE>
 Package: HltSys
-Package Coordinator: R. Lambert, Gerhard Raven
+Package Coordinator: R. Lambert, Gerhard Raven, S. Benson
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
-- Modified configurables test to only check configurables in this project. See task #50698
+</PRE><H1><A NAME=v22r1>2014-04-22 HltSys v22r1</A></H1><PRE>
+Moore/HLT LS1 development version, to catch up with LHCb stack v37r1. Depends on Rec v17r1 via Phys v18r1. Based on Gaudi v25r1. 
+
+Mostly picks up a lot of underlying changes in LHCb and Rec, after the recent Velo reconstruction sprint. Very few major changes, and few changes in Hlt altogether. Changes in this project are mostly C++11 migrations, small speed-ups and changes in the tests. Other changes are summarized below.
+
+In HltConf v11r1:
+  . Add Hlt1TrackOption to Hlt2Conf, see task #50648, propagate to it from HltConf in split scenario (split scenario to be removed shortly).
+  . Interpret Hlt1/2 split scenario from the active hlt1/hlt2 lines. There are other ways to do it, of course.
+
+In HltBase v15r0:
+  . change HltStage to use a variant (see task #48822)
+  . change Cache interface to use StringKey (see task #48821)
+  . clarify memory ownership in IHltUnit (and its implementations): use std::unique_ptr in interface where relevant
+
+Added temporarily:
+   . GaudiConf v19r2: Included to pick up new types of tests with timing tables
+   . LHCbAlgs  v3r2 : Included to pick up new types of tests with timing tables
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r1
 
 </PRE><H1><A NAME=v22r0>2014-02-20 HltSys v22r0</A></H1><PRE>
-Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack. Depends on Rec v17r0 via Phys v18r0. Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
+Moore/HLT LS1 development version and Upgrade TDR version, LHCb stack v37r0. Depends on Rec v17r0 via Phys v18r0. Based on Gaudi v25r0. Aimed to fit the needs of the Upgrade TDR.
 
 This is the first Moore release which allows C++11 features. Therefore is only available on slc6-gcc48.
 

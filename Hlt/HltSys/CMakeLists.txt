@@ -3,7 +3,9 @@
 ################################################################################
 gaudi_subdir(HltSys v22r0)
 
-gaudi_depends_on_subdirs(Hlt/Hlt1Lines
+gaudi_depends_on_subdirs(GaudiConf # temporary
+                         Kernel/LHCbAlgs # temporary
+                         Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
                          Hlt/Hlt2Lines
                          Hlt/Hlt2SharedParticles

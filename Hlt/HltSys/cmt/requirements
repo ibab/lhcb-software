@@ -1,31 +1,33 @@
 package HltSys
-version           v22r0
+version           v22r1
 
 branches cmt doc
 
-use Hlt1Lines           v7r2    Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
+use Hlt1Lines           v7r3    Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
 use Hlt1Muons           v1r7    Hlt   # Christoph Langenbruch
 use Hlt2Lines           v9r1p1  Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v7r0p1  Hlt   # Vava Gligorov, Rob Lambert
-use HltBase             v14r0   Hlt   # Gerhard Raven
+use HltBase             v15r0   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r0    Hlt   # Rosen Matev
 use HltCommon           v10r0   Hlt   # Gerhard Raven
-use HltConf             v11r0   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v11r1   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r2    Hlt   # Stephan Nies
 use HltDisplVertices    v4r1    Hlt   # Pieter Norbert Y David, Victor Coco
 use HltGlobalMonitor    v4r2    Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r0    Hlt   # Johannes Albrecht
-use HltLine             v7r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v7r1    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v4r0    Hlt   # Jaap Panman
 use HltRawData          v4r0p1  Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r0    Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r2    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v6r3    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v3r0    Hlt   # Tomasz Skwarnicki
 use HltTracking         v12r0   Hlt   # Johannes Albrecht, Vava Gligorov
-use TCKUtils            v1r12p3 Hlt   # Gerhard Raven
-use LoKiTrigger         v15r0   Phys  # Vanya Belyaev
+use TCKUtils            v1r12p4 Hlt   # Gerhard Raven
+use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
 
 #temporary
+use GaudiConf           v19r2         # Included to pick up new types of tests with timing tables
+use LHCbAlgs            v3r2    Kernel # Included to pick up new types of tests with timing tables
 
 # Declare this as a container package
 apply_pattern container_package
