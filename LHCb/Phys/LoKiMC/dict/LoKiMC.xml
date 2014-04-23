@@ -107,6 +107,7 @@
     <class name = "LoKi::Interface<GaudiAlgorithm>"   /> 
     <class name = "LoKi::Interface<LoKi::ILoKiSvc>"   /> 
     <class name = "LoKi::Interface<IDataProviderSvc>" /> 
+    <class name = "LoKi::Interface<IChronoSvc>"       />
     
     <class name="LoKi::MCFinder">
       <method name="=" />

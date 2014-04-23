@@ -14,6 +14,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-04-23 - Marco Cattaneo
+ - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
+   already defined in LoKiCore
+
 !========================= LoKiMC v10r11 2014-03-17 =========================
 ! 2014-02-20 - Marco Clemencic
  - Moved the PID operators to the namespace LoKi::MCParticles to fix an issue
