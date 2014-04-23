@@ -117,7 +117,7 @@ namespace MINT{
     }
     
     virtual double logPdf(unsigned int evtNumber){
-      bool dbThis = true;
+      bool dbThis=false;
       if(dbThis) {
 	std::cout << "about to call _pdf.getVal() " 
 		  << "for event:\n " << _eventList[evtNumber]
