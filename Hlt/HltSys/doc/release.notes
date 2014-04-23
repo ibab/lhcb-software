@@ -22,6 +22,7 @@ In HltBase v15r0:
 Added temporarily:
    . GaudiConf v19r2: Included to pick up new types of tests with timing tables
    . LHCbAlgs  v3r2 : Included to pick up new types of tests with timing tables
+   . HltDAQ    v4r2 : suppress warnings in HltDAQ and pick up timing improvements from Gerhard
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r1

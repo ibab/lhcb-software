@@ -5,6 +5,7 @@ gaudi_subdir(HltSys v22r0)
 
 gaudi_depends_on_subdirs(GaudiConf # temporary
                          Kernel/LHCbAlgs # temporary
+                         Hlt/HltDAQ   # temporary
                          Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
                          Hlt/Hlt2Lines

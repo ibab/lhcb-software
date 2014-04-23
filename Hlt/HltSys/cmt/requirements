@@ -26,8 +26,13 @@ use TCKUtils            v1r12p4 Hlt   # Gerhard Raven
 use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
 
 #temporary
-use GaudiConf           v19r2         # Included to pick up new types of tests with timing tables
-use LHCbAlgs            v3r2    Kernel # Included to pick up new types of tests with timing tables
+
+#pick up new types of tests with timing tables
+use GaudiConf           v19r2   
+use LHCbAlgs            v3r2    Kernel 
+
+#suppress warnings in HltDAQ and pick up timing improvements from Gerhard
+use HltDAQ              v4r2    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
