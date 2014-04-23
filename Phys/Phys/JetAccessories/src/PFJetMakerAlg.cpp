@@ -169,7 +169,14 @@ namespace LoKi
                             ChargedInfMomentum = 9218 ,
                             BadPhotonMatchingT = 9219 ,
                             BadPhoton = 9220 ,
-                            IsolatedPhoton = 9221
+                            IsolatedPhoton = 9221,
+                            NLongTrk = 9230,
+                            EfLongTrk = 9231,
+                            NDownTrk = 9232,
+                            EfDownTrk = 9233,
+                            NUpTrk   = 9234,
+                            EfUpTrk   = 9235,
+
     };
 
 
@@ -671,6 +678,33 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
 
   LoKi::Types::Fun FractionBadParticle = FractionCharged0Momentum + FractionChargedInfMomentum + FractionBadPhotonMatchingT + FractionBadPhoton;
   jet->addInfo ( BadParticle  , FractionBadParticle(jet)/LoKi::Cuts::E(jet) );
+
+
+
+
+
+
+  LoKi::Types::Cut NoV0s = ((fabs( PFType -  LHCb::PFParticle::ChargedHadron ) < 1e-6 ) || (fabs( PFType -  LHCb::PFParticle::Electron ) < 1e-6 ) || (fabs( PFType -  LHCb::PFParticle::Muon ) < 1e-6 ));
+
+  LoKi::Types::Fun N_LongTrk   = LoKi::Cuts::NINTREE( LoKi::Cuts::HASTRACK && LHCb::Track::Long == LoKi::Cuts::TRTYPE && NoV0s )       ;
+  LoKi::Types::Fun Ef_LongTrk  = LoKi::Cuts::SUMTREE(LoKi::Cuts::E, LoKi::Cuts::HASTRACK && LHCb::Track::Long == LoKi::Cuts::TRTYPE && NoV0s , 0.)       ;
+
+  jet->addInfo ( NLongTrk , N_LongTrk(jet));
+  jet->addInfo ( EfLongTrk , Ef_LongTrk(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun N_DownTrk   = LoKi::Cuts::NINTREE( LoKi::Cuts::HASTRACK && LHCb::Track::Downstream == LoKi::Cuts::TRTYPE && NoV0s)       ;
+  LoKi::Types::Fun Ef_DownTrk  = LoKi::Cuts::SUMTREE(LoKi::Cuts::E, LoKi::Cuts::HASTRACK && LHCb::Track::Downstream == LoKi::Cuts::TRTYPE && NoV0s , 0.)       ;
+
+  jet->addInfo ( NDownTrk , N_DownTrk(jet));
+  jet->addInfo ( EfDownTrk , Ef_DownTrk(jet)/LoKi::Cuts::E(jet) );
+
+  LoKi::Types::Fun N_UpTrk   = LoKi::Cuts::NINTREE( LoKi::Cuts::HASTRACK && LHCb::Track::Upstream == LoKi::Cuts::TRTYPE && NoV0s )       ;
+  LoKi::Types::Fun Ef_UpTrk  = LoKi::Cuts::SUMTREE(LoKi::Cuts::E, LoKi::Cuts::HASTRACK && LHCb::Track::Upstream == LoKi::Cuts::TRTYPE && NoV0s , 0.)       ;
+
+  jet->addInfo ( NUpTrk , N_UpTrk(jet));
+  jet->addInfo ( EfUpTrk , Ef_UpTrk(jet)/LoKi::Cuts::E(jet) );
+
+
 
   return SUCCESS;
 }
