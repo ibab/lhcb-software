@@ -3,6 +3,7 @@
 #include "Mint/DalitzBWBoxSet.h"
 
 #include "Mint/phaseSpaceIntegrals.h"
+#include "Mint/ReturnWeight.h"
 #include "Mint/DiskResidentEventList.h"
 
 #include <ctime>

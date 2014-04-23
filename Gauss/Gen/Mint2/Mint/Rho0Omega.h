@@ -17,13 +17,12 @@ class Rho0Omega : public BW_BW, virtual public ILineshape{
      Default parameters taken from the Crystal Barrel Collaboration
      Phys. Lett. B 411, 354 (1997)
    */
-  Rho0Omega( const AssociatedDecayTree& tree, 
-	     IDalitzEventAccess* events );
+  Rho0Omega( const AssociatedDecayTree& tree);
 
   /**
      Evaluate rho0-omega lineshape from the Crystal Barrel measurement
    */
-  virtual std::complex<double> getVal();
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
 
   /**
      Print decay
@@ -33,7 +32,7 @@ class Rho0Omega : public BW_BW, virtual public ILineshape{
   /**
      Print decay
    */
-  virtual void print( std::ostream& out = std::cout );
+  virtual void print( IDalitzEvent& evt, std::ostream& out = std::cout );
 
   /**
      Decay Name

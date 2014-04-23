@@ -19,5 +19,6 @@ bool EqualEvent(const IDalitzEvent* a, const IDalitzEvent* b){
 
 std::ostream& operator<<(std::ostream& os, const IDalitzEvent& de){
   de.print(os);
+  return os;
 }
 //
