@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-04-23 - Marco Cattaneo
+ - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
+   already defined in LoKiCore
+
 ! 2014-04-16 - Vanya Belyaev
     add qmtest for JIRA-LBCORE-461
     it makes seghmentation fault for ROOT6 and runs smoothly for ROOT5 
@@ -28,7 +32,7 @@
 
 !========================= LoKiGen v10r14 2014-02-17 =========================
 ! 2014-02-01 - Vanya Belyaev
- - add dicitonaris for new FuncOps__
+ - add dictionaries for new FuncOps__
 
 ! 2014-01-06 - Marco Clemencic
  - Replaced import of GaudiPython with import of cppyy (to allow usage of the
