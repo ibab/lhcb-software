@@ -392,23 +392,21 @@ void Monitor::CopyData()
   int j;
   for (int i = 0; i < m_buffers->p_bmax; ++i)
   {
-    if (m_buffers->buffers[i].used == 1)
-    {
+    if ( !m_bms[i].m_buff ) continue;
+    if (m_buffers->buffers[i].used == 1)    {
       it = m_BMMap.find(string(m_buffers->buffers[i].name));
-      if (it == m_BMMap.end())
-      {
+      if (it == m_BMMap.end())     {
         st = new BMSTAT;
         m_BMMap.insert(make_pair(string(m_buffers->buffers[i].name), st));
       }
-      else
-      {
+      else      {
         st = (*it).second;
       }
       st->evactual = m_bms[i].m_mgr.m_bm->ctrl->tot_actual;
       st->evcons = m_bms[i].m_mgr.m_bm->ctrl->tot_seen;
       st->evprod = m_bms[i].m_mgr.m_bm->ctrl->tot_produced;
     }
-    if (m_bms[i].m_buff != 0)
+    if (st != 0 && m_bms[i].m_buff != 0)
     {
       USER *us, *utst = (USER*) ~0x0;
       BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
@@ -437,9 +435,9 @@ void Monitor::CopyData()
         {
           ust->Name = us->name;
         }
-          ust->evprod = us->ev_produced;
-          ust->evseen = us->ev_seen;
-          ust->evfreed = us->ev_freed;
+	ust->evprod = us->ev_produced;
+	ust->evseen = us->ev_seen;
+	ust->evfreed = us->ev_freed;
       }
     }
   }
