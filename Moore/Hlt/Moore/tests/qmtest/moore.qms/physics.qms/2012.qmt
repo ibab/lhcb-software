@@ -28,9 +28,9 @@
   <argument name="validator"><text>
 myname='moore.physics.2012'
 
-if len(stdout.split('\n'))&gt;125:
-    causes.append('stdout is too long, aiming for less than 125 lines')
-    result['moore.physics.2012.lines']=result.Quote('Expected less than 235 lines, got '+ str(len(stdout.split('\n'))))
+if len(stdout.split('\n'))&gt;128:
+    causes.append('stdout is too long, aiming for less than 128 lines')
+    result['moore.physics.2012.lines']=result.Quote('Expected less than 128 lines, got '+ str(len(stdout.split('\n'))))
 
 if len(stdout)&gt;23000:
     causes.append('stdout is too long, aiming for less than 23k characters')
