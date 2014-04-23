@@ -133,10 +133,12 @@ StatusCode HltTrackReportsWriter::execute() {
     int sourceID = iBank | ( m_sourceID << kSourceID_BitShift );
     rawEvent->addBank(  sourceID, RawBank::HltTrackReports, kVersionNumber, bankBodyPiece );
   }
-  if( nBank>1 ){
-    std::ostringstream mess;
-    mess << "HltTrackReports is huge. Saved in " << nBank << " separate RawBanks ";    
-    Warning( mess.str(), StatusCode::SUCCESS, 10 );
+  if( nBank>1 )
+  {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "HltTrackReports is huge. Saved in " << nBank << " separate RawBanks " << endmsg;    
+    //std::ostringstream mess;
+    //mess << "HltTrackReports is huge. Saved in " << nBank << " separate RawBanks ";    
+    //Warning( mess.str(), StatusCode::SUCCESS, 10 );
   }
  
   

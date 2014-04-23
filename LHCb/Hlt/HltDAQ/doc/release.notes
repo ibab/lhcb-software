@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+
+! 2014-04-23 - Rob Lambert
+ - Suppress warnings about splitting big banks into pieces. Make them debug.
+
 ! 2014-04-21 - Gerhard Raven
  - optimize HltSelReportsWriter, esp. the LHCbID packing, which now  uses move 
    semantics to avoid explcit heap storage.
