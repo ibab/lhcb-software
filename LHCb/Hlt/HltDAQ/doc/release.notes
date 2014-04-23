@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r2 2014-04-23 =========================
 ! 2014-04-23 - Rob Lambert
  - Suppress warnings about splitting big banks into pieces. Make them debug.
 
