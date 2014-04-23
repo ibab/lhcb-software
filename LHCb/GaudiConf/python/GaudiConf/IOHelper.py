@@ -1109,7 +1109,7 @@ class IOExtension(object):
             persistency=self.detectFileType(file)
 
             if persistency=="UNKNOWN":
-                raise TypeError, "Type of file "+filename+" could not be determined"+" use IOHelper with specified persistency instead"
+                raise TypeError, "Type of file "+file+" could not be determined"+" use IOHelper with specified persistency instead"
             if persistency is not 'MDF':
                 if persistency!=self._rootTypePersistency:
                     raise TypeError, "You are trying to parse "+persistency+" file types when you told IOExtension to expect "+self._rootTypePersistency
