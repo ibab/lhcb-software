@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-04-24 - Gerhard Raven
+ - insert HltConfigSvc as first in ExtSvc
+ - only insert Hlt sequencer if not there already (as MooreOnline, which
+   runs first, inserts an instance in front of the SendSequence, to make
+   sure that Hlt precedes it.)
+
 ! 2014-04-16 - Rob Lambert
  - Begin retiring split configuration, start by using the new Hlt1/2 thresholds for Physics_2012 in testing. see task #50414.
  - Next use those new thresholds in TCK generation and in the tck deferral tests
