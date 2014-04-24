@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CommonMCParticles
 ################################################################################
-gaudi_subdir(CommonMCParticles v1r0)
+gaudi_subdir(CommonMCParticles v1r1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Tr/TrackTools)
