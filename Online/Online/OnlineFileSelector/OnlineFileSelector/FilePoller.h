@@ -9,7 +9,7 @@
 #include "RTL/rtl.h"
 #include <deque>
 #include "dim.hxx"
-
+#include <regex.h>
 #include <sqlite3.h>    
 
 
@@ -72,13 +72,13 @@ namespace LHCb  {
     virtual const StatusCode showListeners();  
    
     /// IHandlerListenerSvc statusReport.
-    virtual StatusCode statusReport(StatusCode status,const std::string file, const int eventCnt);
+    virtual StatusCode statusReport(StatusCode status,const std::string file);
     
     /// IAlarmHandler error response.
     virtual const StatusCode issueAlarm(const std::string& msg);
   
     /// IOnlineBookkeep get the run number from file path implementation
-    virtual std::string getRunFileNumber(const std::string file_path);
+    virtual std::string getRunFileNumber(const std::string file_path, const char* pattern);
 
     /// IOnlineBookkeep book-keep a processed file.
     virtual StatusCode markBookKept(const std::string file, const int eventCnt);
@@ -87,7 +87,7 @@ namespace LHCb  {
     virtual StatusCode isBookKept(const std::string file);
 
     /// IOnlineBookkeep update the status flag of a file.
-    virtual StatusCode updateStFlag(const std::string );
+    virtual StatusCode updateStatus(const std::string, int );
 
     /// IOnlineBookkeep connect to the database.
     virtual StatusCode connectToDb();
@@ -100,12 +100,6 @@ namespace LHCb  {
 
     /// IOnlineBookkeep check if a file has been processed.
     virtual StatusCode isProcessed(const std::string );
-
-	
-    /// Simple bookkeeping with a vector -- temporary.
-    //std::vector<std::string> m_ProcessedFiles;
-
-
         
 
 

@@ -22,10 +22,10 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IOnlineBookkeep; }
 
-  virtual std::string getRunFileNumber(const std::string /*whole path to file*/ ) = 0;
+  virtual std::string getRunFileNumber(const std::string /*whole path to file*/ , const char* ) = 0;
   virtual StatusCode markBookKept(const std::string,const int ) = 0;
   virtual StatusCode isBookKept(const std::string ) = 0;
-  virtual StatusCode updateStFlag(const std::string ) = 0;	
+  virtual StatusCode updateStatus(const std::string, int ) = 0;	
   virtual StatusCode connectToDb() = 0;
   virtual StatusCode printDB() = 0;
   virtual StatusCode isProcessed(const std::string ) = 0;

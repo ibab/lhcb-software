@@ -12,6 +12,11 @@
 #include "OnlineFileSelector/IHandleListenerSvc.h"
 #include "OnlineFileSelector/IAlertSvc.h"
 #include "OnlineFileSelector/IOnlineBookkeep.h"
+#include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/DataObject.h"
+#include "OnlineFileSelector/HistogramAgent.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IProperty.h"
 
 
 // Forward declarations
@@ -90,8 +95,17 @@ namespace LHCb  {
     
     
     mutable IHandleListenerSvc* m_filePoller;
-    mutable void*    m_OnlineBookkeep;
-    
+    mutable IService* m_EvtLoopMger;
+    mutable IConversionSvc* m_RtHistPersSvc;
+    mutable void* m_RtHistPersSvc2;
+    mutable void*     m_OnlineBookkeep;
+    /// Name of output histogram file.
+    std::string m_HistFileName;
+    /// Minimum number of events required for a histogram.
+    int m_EvtHisto;
+    mutable IDataManagerSvc*  m_histoDataMgrSvc;
+    mutable void* m_HistPersProp;
+    mutable IService* m_RootHistSvc;
 
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
@@ -213,7 +227,7 @@ namespace LHCb  {
     
     virtual StatusCode goIdle() const;
 
-
+    virtual StatusCode saveHistos() const;
 
 protected:
     /// Definition of the masj type
@@ -254,7 +268,9 @@ protected:
     int m_maxNoEvt;
     /// Event counter to be stored in DB.
     mutable int m_evtCntRecord;
-
+    /// Total event counter
+    mutable int m_totalEvt;
+    
   };
 }
 #endif  // MDF_TESTEVTSELECTOR_H
