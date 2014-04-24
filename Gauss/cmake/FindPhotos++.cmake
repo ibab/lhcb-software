@@ -15,7 +15,10 @@ if(NOT PHOTOS++_FIND_COMPONENTS)
 endif()
 
 foreach(component ${PHOTOS++_FIND_COMPONENTS})
-  find_library(PHOTOS++_${component}_LIBRARY NAMES Photos${component})
+  find_library(PHOTOS++_${component}_LIBRARY NAMES Photos${component}
+               HINTS ${PHOTOS++_ROOT_DIR}/lib
+                     $ENV{PHOTOSPP_ROOT_DIR}/lib
+                     ${PHOTOSPP_ROOT_DIR}/lib)
   if (PHOTOS++_${component}_LIBRARY)
     set(PHOTOS++_${component}_FOUND 1)
     list(APPEND PHOTOS++_LIBRARIES ${PHOTOS++_${component}_LIBRARY})
@@ -32,7 +35,10 @@ if(PHOTOS++_LIBRARY_DIRS)
   list(REMOVE_DUPLICATES PHOTOS++_LIBRARY_DIRS)
 endif()
 
-find_path(PHOTOS++_INCLUDE_DIR Photos/Photos.h)
+find_path(PHOTOS++_INCLUDE_DIR Photos/Photos.h
+          HINTS ${PHOTOS++_ROOT_DIR}/include
+                $ENV{PHOTOSPP_ROOT_DIR}/include
+                ${PHOTOSPP_ROOT_DIR}/include)
 set(PHOTOS++_INCLUDE_DIRS ${PHOTOS++_INCLUDE_DIR})
 mark_as_advanced(PHOTOS++_INCLUDE_DIR)
 

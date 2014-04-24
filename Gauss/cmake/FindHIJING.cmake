@@ -15,7 +15,8 @@ if(NOT HIJING_FIND_COMPONENTS)
 endif()
 
 foreach(component ${HIJING_FIND_COMPONENTS})
-  find_library(HIJING_${component}_LIBRARY NAMES ${component})
+  find_library(HIJING_${component}_LIBRARY NAMES ${component}
+               HINTS $ENV{HIJING_ROOT_DIR}/lib ${HIJING_ROOT_DIR}/lib)
   if (HIJING_${component}_LIBRARY)
     set(HIJING_${component}_FOUND 1)
     list(APPEND HIJING_LIBRARIES ${HIJING_${component}_LIBRARY})

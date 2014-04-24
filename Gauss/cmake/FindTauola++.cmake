@@ -10,8 +10,8 @@
 #  TAUOLA++_LIBRARY_DIRS (not cached)
 
 # Enforce a minimal list if none is explicitly requested
-if(NOT TAUOLA++_FIND_COMPONENTS)
-  set(TAUOLA++_FIND_COMPONENTS Fortran CxxInterface)
+if(NOT Tauola++_FIND_COMPONENTS)
+  set(Tauola++_FIND_COMPONENTS Fortran CxxInterface)
 endif()
 
 #message(STATUS "Tauola++ CMAKE_PREFIX_PATH")
@@ -19,8 +19,10 @@ endif()
 #  message(STATUS "Tauola++ -- ${_x}")
 #endforeach()
 
-foreach(component ${TAUOLA++_FIND_COMPONENTS})
-  find_library(TAUOLA++_${component}_LIBRARY NAMES Tauola${component})
+foreach(component ${Tauola++_FIND_COMPONENTS})
+  find_library(TAUOLA++_${component}_LIBRARY NAMES Tauola${component}
+               HINTS ${TAUOLA++_ROOT_DIR}/lib
+                     $ENV{TAUOLAPP_ROOT_DIR}/lib ${TAUOLAPP_ROOT_DIR}/lib)
   if (TAUOLA++_${component}_LIBRARY)
     set(TAUOLA++_${component}_FOUND 1)
     list(APPEND TAUOLA++_LIBRARIES ${TAUOLA++_${component}_LIBRARY})
@@ -37,7 +39,9 @@ if(TAUOLA++_LIBRARY_DIRS)
   list(REMOVE_DUPLICATES TAUOLA++_LIBRARY_DIRS)
 endif()
 
-find_path(TAUOLA++_INCLUDE_DIR Tauola/Tauola.h)
+find_path(TAUOLA++_INCLUDE_DIR Tauola/Tauola.h
+          HINTS ${TAUOLA++_ROOT_DIR}/include
+                $ENV{TAUOLAPP_ROOT_DIR}/include ${TAUOLAPP_ROOT_DIR}/include)
 set(TAUOLA++_INCLUDE_DIRS ${TAUOLA++_INCLUDE_DIR})
 mark_as_advanced(TAUOLA++_INCLUDE_DIR)
 
