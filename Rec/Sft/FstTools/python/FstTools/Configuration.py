@@ -39,6 +39,7 @@ class FstConf(LHCbConfigurableUser):
                                     # estimate is used
         ,"FastDecoding"    : True   # if false uses the old official decoding
         ,"Compare"         : False  # if using the old decoding, can run the new one and compare the containers
+        ,"OutputFile" : ""
         }
 
     def applyConf(self):
@@ -79,17 +80,20 @@ class FstConf(LHCbConfigurableUser):
             FastVeloTracking("FstVeloTracking").HLT1Only = True
             
         elif "VP" == self.getProp("VeloType"):
-            from Configurables import PatPixelTracking, VPRawBankToLiteCluster
+            from Configurables import PrPixelTracking, VPRawBankToLiteCluster
             FstSequencer("RecoFstSeq").Members += ["VPRawBankToLiteCluster/FstVPDecoding",
-                                                   "PatPixelTracking/FstPixel"]
+                                                   "PrPixelTracking/FstPixel",
+                                                   #"PrPixelStoreClusters"
+                                                   ]
             # Centrally produced upgrade samples need this fix
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
-            VPRawBankToLiteCluster("FstVPDecoding").RawEventLocation = "/Event/Other/RawEvent"
-            PatPixelTracking("FstPixel").OutputTracksName = self.getProp("RootInTES") + "Track/Velo"
+            #VPRawBankToLiteCluster("FstVPDecoding").RawEventLocation = "/Event/Other/RawEvent"
+            
+            PrPixelTracking("FstPixel").OutputTracksName = self.getProp("RootInTES") + "Track/Velo"
             # Use Kalman fit to estimate track state at end of the Velo
             # this is the state used by the UT tracking
-            PatPixelTracking("FstPixel").EndVeloStateKalmanFit = True
-            PatPixelTracking("FstPixel").AddFirstLastMeasurementStatesKalmanFit = True
+            PrPixelTracking("FstPixel").EndVeloStateKalmanFit = True
+            PrPixelTracking("FstPixel").AddFirstLastMeasurementStatesKalmanFit = True
             
         elif "VL" == self.getProp("VeloType"):
             from Configurables import PrVLTracking
@@ -213,7 +217,7 @@ class FstConf(LHCbConfigurableUser):
         # Forward tracking using the VeloUT to estimate
         # a tracks momentum
         elif "FT+VeloUT" == self.getProp("TStationType"):
-            from Configurables import PrForwardTracking, PrForwardTool
+            from Configurables import PrForwardTracking, PrForwardTool, PrFTHitManager
             from Configurables import PrVeloUT
             from Configurables import TrackMasterFitter
             from Configurables import RawBankToSTLiteClusterAlg
@@ -222,13 +226,7 @@ class FstConf(LHCbConfigurableUser):
             prVeloUT = PrVeloUT()
             prVeloUT.InputTracksName = self.getProp("RootInTES") + "Track/VeloFst"
             prVeloUT.OutputTracksName = self.getProp("RootInTES") + "Track/VeloUTFst"
-            #prVeloUT.TimingMeasurement = False
-            #prVeloUT.removeUsedTracks = False
-            #prVeloUT.InputUsedTracksNames = []
-            #prVeloUT.fitTracks = False
-            #prVeloUT.maxChi2 = 1280.
-            #prVeloUT.AddMomentumEstimate = True
-
+            
             prVeloUT.addTool(TrackMasterFitter, "Fitter")
             prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
             #prVeloUT.Fitter.MeasProvider.IgnoreVL = True
@@ -244,19 +242,24 @@ class FstConf(LHCbConfigurableUser):
             elif self.getProp("VeloType") == "Velo":
                 prVeloUT.Fitter.MeasProvider.IgnoreVelo = False
 
-            #PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.25
-            #PrVeloUTTool("PrVeloUTTool").maxPseudoChi2 = 1280.
-            PrVeloUTTool("PrVeloUTTool").minMomentum = 2000.
-            PrVeloUTTool("PrVeloUTTool").minPT = 200.
-            PrVeloUTTool("PrVeloUTTool").PrintVariables = True
-            
-            createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
-            createUTLiteClusters.DetType = "UT"
+            PrVeloUTTool("PrVeloUT.PrVeloUTTool").minMomentum = 2000.
+            PrVeloUTTool("PrVeloUT.PrVeloUTTool").minPT = 200.
+            PrVeloUTTool("PrVeloUT.PrVeloUTTool").PrintVariables = True
+
+            #createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
+            #createUTLiteClusters.DetType = "UT"
             #createUTLiteClusters.clusterLocation = "Raw/UT/LiteClusters"
+            # This create Lite clusters as well as the full ones
+            # lite is all that is needed for tracking, but to
+            # evaluate the efficiencies in simulation we also
+            # need the full clusters
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+
+            createUTLiteClusters = decodersForBank(DecoderDB, "UT")
+            FstSequencer("RecoFstSeq").Members += [d.setup() for d in createUTLiteClusters]
             
-            FstSequencer("RecoFstSeq").Members += [#"UnpackMCParticle", "UnpackMCVertex",
-                                                   createUTLiteClusters,
-                                                   PrVeloUT("PrVeloUT"),
+            FstSequencer("RecoFstSeq").Members += [PrVeloUT("PrVeloUT"),
                                                    "FTRawBankDecoder",
                                                    "PrForwardTracking/FstForward"]
             
@@ -277,7 +280,12 @@ class FstConf(LHCbConfigurableUser):
             FstForward.PrForwardTool.PreselectionPT = self.getProp("ForwardMinPt") * 0.8
             FstForward.PrForwardTool.Preselection = True
             FstForward.PrForwardTool.UseWrongSignWindow = True
-            
+
+            #FstForward.PrForwardTool.HitManagerName = "PrFTHitManager/TimsHitManager"
+            #ft_hitmanager = PrFTHitManager("TimsHitManager")
+            #ft_hitmanager.OutputLevel = 1
+            #ft_hitmanager.XSmearing = 0.002#2
+                        
         else:
             log.warning("Unknown TStationType option '%s' !"%self.getProp("TStationType"))
             exit(0)
@@ -344,16 +352,19 @@ class FstConf(LHCbConfigurableUser):
         
             # Create the top level Conf object and set some general options
             richConf = RichRecSysConf(richRecConfName)
+            #richConf.OutputLevel = 1
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = rich_seq
             richConf.Context = "HLT"
+            #richConf.Context = "Offline"
             richConf.Simulation = True
             richConf.DataType = "Upgrade"
             
             richConf.Radiators = ["Rich1Gas", "Rich2Gas"]
             richConf.PidConfig = "FullGlobal"
-            richConf.Particles = ["electron", "muon", "pion",
-                                  "kaon", "proton", "belowThreshold"]
+            #richConf.Particles = ["electron", "muon", "pion",
+            #                      "kaon", "proton", "belowThreshold"]
+            richConf.Particles = ["kaon", "pion"]
             richConf.TracklessRingAlgs = []
             richConf.pixelConfig().FindClusters = False
             richConf.CheckProcStatus = False
@@ -369,7 +380,7 @@ class FstConf(LHCbConfigurableUser):
         
             # Input tracks and RICH output locations
             richConf.trackConfig().InputTracksLocation = self.getProp("RootInTES") + "Track/ForwardFst"
-            richConf.RichPIDLocation = self.getProp("RootInTES") + "/Rich/PIDs"
+            richConf.RichPIDLocation = self.getProp("RootInTES") + "Rich/PIDs"
             
         
         if self.getProp("MuonID"):    
@@ -392,3 +403,13 @@ class FstConf(LHCbConfigurableUser):
                                                    "RawBankReadoutStatusConverter/MuonProcStatus",
                                                    "RawBankReadoutStatusFilter/MuonROFilter",
                                                    MuonIDSeq]
+
+        if self.getProp("OutputFile"):
+            from Configurables import InputCopyStream
+            writer = InputCopyStream('FstDstWriter')
+            writer.ItemList += ["Fst#999",
+                                "Link/Pr#999",
+                                "Link/Fst#999",
+                                ]
+            writer.Output = "DATAFILE='PFN:%s'"%(self.getProp("OutputFile"))
+            

@@ -16,7 +16,7 @@ from Configurables import (
     FstSelectVeloTracks,
     GaudiSequencer,
     InputCopyStream,
-    PatPixelTracking
+    PrPixelTracking
 )
 from FstTools.Configuration import FstConf
 from GaudiConf import IOHelper
@@ -31,30 +31,48 @@ importOptions('$FSTTOOLSROOT/options/Sft.py')
 Brunel().InputType = 'DST'
 
 # MinBias events
-input_path = '/group/online/data_hlt/minbias_25ns_spillover'
+#input_path = '/group/online/data_hlt/minbias_25ns_spillover_nu7.6'
+#input_path = '/group/online/data_hlt/minbias_25ns_spillover_nu11.4'
+#input_path = '/calib/hlt/data_hlt/minbias_25ns_spillover_nu7.6'
+#input_path = "/scratch/thead/hlt/data_hlt/minbias_25ns_spillover_nu7.6"
+input_path = "/scratch/thead/hlt/data_hlt/minbias_25ns_spillover_nu7.6_NoSpillRich/"
 input_files = glob(path.join(input_path, '0*.xdst'))
-Brunel().DatasetName = "minbias"
+Brunel().DatasetName = "minbias-hlt-7.6"
 
 # Bs->phiphi events
-#input_files = ['/group/online/data_hlt/bsphiphi_25ns_spillover/00033064_00000026_1.xdst']
-#Brunel().DatasetName = "bsphiphi"
+#input_path = '/group/online/data_hlt/bsphiphi_25ns_spillover_nu7.6'
+input_path = '/calib/hlt/data_hlt/bsphiphi_25ns_spillover_nu7.6'
+#input_path = '/calib/hlt/data_hlt/bsphiphi_25ns_spillover_nu11.4'
+#input_path = '/scratch/thead/hlt/data_hlt/bsphiphi_25ns_spillover_nu11.4'
+#input_path = "/scratch/thead/hlt/data_hlt/bsphiphi_25ns_spillover_nu3.8"
+#input_files = glob(path.join(input_path, '0*.xdst'))
+#Brunel().DatasetName = "bsphiphi-offline-7.6"
 
 IOHelper().inputFiles(input_files)
 
 # configure trigger emulation
 FstConf().VeloType = 'VP'
 FstConf().TStationType = 'FT+VeloUT'
-#FstConf().TStationType = 'FT'
 FstConf().ForwardMinPt = 500  # MeV, pT cut in FT
-#
-# empty string or None means do not run Rich/Fit
-# fit disabled for the moment by default, if you
-# have the head of Tr/TrackFitter you can enable it
-FstConf().TrackFit = ''#'HltFit'
-# default is no Rich reco, turn on by uncommenting
-#FstConf().RICHType = 'HLT2015'
-FstConf().MuonID = False
+# Offline like configuration
+#FstConf().TStationType = 'FT'
+#FstConf().ForwardMinPt = 50  # MeV, pT cut in FT
 
+#
+# empty string or None means do not run Rich or Fit
+# For the fit to work we need the lite clusters from
+# the Velo. Currently all that is being reworked.
+# So we need to run the cluster decoding by hand
+FstConf().TrackFit = 'HltFit'
+
+# default is no Rich reco, turn on by uncommenting
+FstConf().RICHType = 'HLT2015'
+FstConf().MuonID = False
+#FstConf().OutputFile = "/scratch/thead/Conor.xdst"
+
+# Kurt's improvements
+PrPixelTracking("FstPixel").RunOnRawBanks = True
+PrPixelTracking("FstPixel").Trigger = True
 
 # use the newly introduced DoNothing property to turn off algorithms
 algos = [
@@ -68,7 +86,7 @@ for algo in algos:
 
 # set multiplicity cuts
 FstSelectGEC().MultiplicityCutECAL = 1
-FstSelectGEC().MultiplicityCutHCAL = 999#*10000
+FstSelectGEC().MultiplicityCutHCAL = 1199#*10000
 
 # set the mcut via env var for a study
 from os import getenv
@@ -84,16 +102,6 @@ if mcut:
 #InputCopyStream("DstWriter3").Output = "DATAFILE='PFN:%s'"%(output_fname)
 #InputCopyStream("DstWriter3").OutputLevel = 2
 
-# detailed output for tracking algos
-# if done run over 2 events
-#tr_algos = [
-#    ...('FstPixel'),
-#    ...('PrVeloUT'),
-#    ...('FstForward')
-#]
-#for tr_algo in tr_algos:
-#    tr_algo.OutputLevel = 2
-
 # set up CondDB
 CondDB().Upgrade = True
 CondDB().AllLocalTagsByDataType = [
@@ -104,8 +112,8 @@ CondDB().AllLocalTagsByDataType = [
 ]
 
 # set up Brunel
-Brunel().PrintFreq = 1000
-Brunel().EvtMax = 3000
+Brunel().PrintFreq = 1000/100
+Brunel().EvtMax = 1000 #100#500 #1000*3
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
 Brunel().CondDBtag = 'sim-20130830-vc-md100'
@@ -123,8 +131,13 @@ def setup_truth_matching():
         PrChecker,
         PrTrackAssociator,
         TrackIPResolutionChecker,
-        PatPixelTracking,
+        PrPixelTracking,
+        DumpTracks,
     )
+    from Configurables import Rich__Rec__MC__PIDQC as PIDQC
+    from Configurables import Rich__Rec__MC__RecoQC as RichRecoQC
+    from Configurables import RichTools
+    
     GaudiSequencer('CaloBanksHandler').Members = []
     GaudiSequencer('DecodeTriggerSeq').Members = []
     GaudiSequencer('MCLinksTrSeq').Members = [
@@ -136,7 +149,40 @@ def setup_truth_matching():
     
     GaudiSequencer("CheckPatSeq").Members = ['PrChecker',
                                              TrackIPResolutionChecker(),
+                                             #DumpTracks("DumpFwdTracks"),
                                              ]
+
+    DumpTracks("DumpFwdTracks").TracksLocation = "/Event/Fst/Track/ForwardFst"
+    DumpTracks("DumpFwdTracks").OutputLevel = 1
+
+    if FstConf().getProp("RICHType"):
+        GaudiSequencer("CheckPatSeq").Members += [PIDQC(),
+                                                  RichRecoQC(),
+                                                  ]
+        pidqc = PIDQC()
+        pidqc.addTool(RichTools().trackSelector(nickname="TrackSelector",
+                                                private=True),
+                      name="TrackSelector")
+        pidqc.TrackSelector.TrackAlgs = ["Forward"]
+        pidqc.InputPIDs = "/Event/Fst/Rich/PIDs"
+        pidqc.MCTruth = True
+        pidqc.HistoProduce = True
+        
+        recoqc = RichRecoQC()
+        recoqc.addTool(RichTools().trackSelector(nickname="TrackSelector",
+                                                 private=True),
+                       name="TrackSelector")
+        recoqc.TrackSelector.TrackAlgs = ["Forward"]
+        recoqc.Context = "HLT"
+        recoqc.HistoProduce = True
+    
+    if FstConf().getProp("OutputFile"):
+        # run here so that MC linking info
+        # is ready, configured in the FstSequencer though
+        GaudiSequencer("CheckPatSeq").Members += [
+            InputCopyStream("FstDstWriter"),
+            ]
+        
     PrChecker().VeloTracks = '/Event/Fst/Track/Velo'
     PrChecker().UpTracks = '/Event/Fst/Track/VeloUTFst'
     PrChecker().ForwardTracks = '/Event/Fst/Track/Forward'
@@ -144,6 +190,8 @@ def setup_truth_matching():
     PrChecker().WriteVeloHistos = 2
     PrChecker().WriteForwardHistos = 2
     PrChecker().WriteUpHistos  = 2
+    PrChecker().TriggerNumbers = True
+    PrChecker().UseElectrons = False
 
     # For this you should check out the head of
     # Tr/TrackCheckers
@@ -156,12 +204,18 @@ def setup_truth_matching():
     active14 = "1111111111111111111111111111000000000000000000000000"
     active16 = "1111111111111111111111111111111100000000000000000000"
     other16 =  "0000000000000000000000000000000011111111111111111111"
-    #PatPixelTracking("FstPixel").ActiveModules = other16#active16
+    #PrPixelTracking("FstPixel").ActiveModules = active16
     
     # Uncomment to run over events written out
     # after the GEC cut, for some reason
     # reading in DSTs we wrote out ourselves is broken
     # Use this as well if producing DSTs for Conor
-    #GaudiSequencer("InitReprocSeq").Members = []
+    GaudiSequencer("InitReprocSeq").Members = []
    
 appendPostConfigAction(setup_truth_matching)
+
+
+#if __name__ == "__main__":
+#    import GaudiPython
+#    app_mgr = GaudiPython.AppMgr()
+#    app_mgr.run(1)
