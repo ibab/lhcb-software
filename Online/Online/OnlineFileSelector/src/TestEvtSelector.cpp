@@ -60,7 +60,7 @@ void TestEvtSelector::LoopContext::close()    {
 }
 
 TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0)
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), m_totalEvt(0)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
@@ -70,6 +70,8 @@ TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
   declareProperty("AddSpace",    m_addSpace=1);
   declareProperty("Input",       m_input="");
   declareProperty("MaxNoEvents", m_maxNoEvt);
+  declareProperty("HistogramFile",m_HistFileName);  ///NEDDED ????
+  declareProperty("EvtsForHist",m_EvtHisto);
 }
 
 // IInterface::queryInterface
@@ -104,8 +106,37 @@ StatusCode TestEvtSelector::initialize()  {
     return status;
   }
 
-  
+  StatusCode st = serviceLocator()->service("EventLoopMgr", m_EvtLoopMger);
+  if( !st.isSuccess() ) {
+    log << MSG::ERROR << "Cannot get EventLoopMgr" << endmsg;
+    return st;
+  }
+ 
+  // Setup access to histogramming services
+  st = serviceLocator()->service("HistogramDataSvc", m_histoDataMgrSvc);
+  if( !st.isSuccess() )  {
+    fatal() << "Error retrieving HistogramDataSvc." << endmsg;
+    return st;
+  }
 
+  st = serviceLocator()->service("RootHistSvc", m_RootHistSvc);
+  if( !st.isSuccess() )  {
+    fatal() << "Error retrieving RootHistSvc." << endmsg;
+    return st;
+  }
+
+  st = serviceLocator()->service("HistogramPersistencySvc", m_RtHistPersSvc);
+  if( !st.isSuccess() ) {
+    log << MSG::ERROR << "Cannot get HistogramPersistencySvc" << endmsg;
+    return st;
+  }
+  ///Set property "Output File" ????
+  m_HistPersProp = 0;
+  m_RtHistPersSvc->queryInterface(IProperty::interfaceID(),&m_HistPersProp);
+  
+  m_RtHistPersSvc2 = 0;  ///CHANGE NAME!!!
+  m_RtHistPersSvc->queryInterface(IService::interfaceID(),&m_RtHistPersSvc2);
+ 
    StatusCode sc = Service::service("LHCb::FilePoller/Poller",m_filePoller,true);
    if ( !sc.isSuccess() )  {
      log << MSG::ERROR << "Cannot access poller service." << endmsg;
@@ -161,6 +192,7 @@ StatusCode TestEvtSelector::initialize()  {
     log << endmsg;
   }
   m_evtCount = 0;
+  m_totalEvt = 0;
 
   return status;
 }
@@ -172,6 +204,7 @@ StatusCode TestEvtSelector::finalize()  {
     m_ioMgr = 0;
   }
   m_evtCount = 0;
+  m_totalEvt = 0;
 
   if ( m_filePoller )  { 
     m_filePoller->remListener(this); 
@@ -192,14 +225,34 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
   MsgStream log(messageService(), name());
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   StatusCode sc = StatusCode::FAILURE;
+
   
   if (m_maxNoEvt == m_evtCount) { 
 		m_evtCntRecord = m_evtCount;
-		((IOnlineBookkeep*)m_OnlineBookkeep)->updateStFlag(m_input); 
+		((IOnlineBookkeep*)m_OnlineBookkeep)->updateStatus(m_input,m_evtCntRecord); 
 		m_evtCount = 1;
-	        cout << "Going idle..." << endl;
-                return goIdle();
+		return goIdle();
   } 
+	
+
+  /*if (m_EvtHisto <= m_totalEvt) { 
+        m_totalEvt = 0;
+	m_EvtLoopMger->stop();
+	StatusCode sts = saveHistos();
+	m_RootHistSvc->finalize();	
+	((IService*)m_RtHistPersSvc2)->stop();
+	((IService*)m_RtHistPersSvc2)->finalize();
+	if (0 != m_HistPersProp) {
+		((IProperty*)m_HistPersProp)->setProperty(StringProperty("OutputFile",m_HistFileName));
+		
+ 	}
+	((IService*)m_RtHistPersSvc2)->initialize();
+	m_RootHistSvc->initialize();
+	((IService*)m_RtHistPersSvc2)->start();
+	//((IService*)m_RtHistPersSvc2)->reinitialize();
+	m_EvtLoopMger->start();
+	
+  }*/
 
   if ( pCtxt != 0 )   {
 
@@ -209,18 +262,24 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
            
            if (sc.isSuccess())
            {
+	     ++m_totalEvt;
              ++m_evtCount;
              if ( m_printFreq>0 && (m_evtCount%m_printFreq)==0 ) {
                MsgStream log(messageService(), name());
                log << MSG::ALWAYS << "Reading Event record " << (m_evtCount-m_skipEvents)
                   << ". Record number within stream " << m_evtCount << endmsg;
              }
+	     
 	     return sc;
            }
            else {
-	     m_evtCntRecord = m_evtCount;
-	     ((IOnlineBookkeep *)m_OnlineBookkeep)->updateStFlag(m_input); 
-             return goIdle();
+	     if (0 != TestEvtSelector::m_firstConnection) {
+		m_evtCntRecord = m_evtCount;
+		((IOnlineBookkeep *)m_OnlineBookkeep)->updateStatus(m_input,m_evtCntRecord);              	
+		return goIdle();
+	     }
+	     else
+		return goIdle();
            }
            
   }
@@ -230,7 +289,9 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
 
 StatusCode TestEvtSelector::goIdle() const {
 
+  
   MsgStream log(msgSvc(), name());
+  log << MSG::INFO << "Going idle..." << endmsg; 
   m_isWaiting = true;
   m_filePoller->addListener((IAlertSvc*)this); 
 
@@ -244,6 +305,54 @@ StatusCode TestEvtSelector::goIdle() const {
 
   return StatusCode::SUCCESS;
 
+}
+
+
+StatusCode TestEvtSelector::saveHistos() const {
+
+// Save Histograms Now
+  if ( m_RtHistPersSvc != 0 )    {
+    	HistogramAgent agent;
+    	StatusCode sc = m_histoDataMgrSvc->traverseTree( &agent );
+    	if( sc.isSuccess() )   {
+	      	IDataSelector* objects = agent.selectedObjects();
+	      	// skip /stat entry!
+	      	if ( objects->size() > 0 )    {
+	        	IDataSelector::iterator i;
+	                for ( i = objects->begin(); i != objects->end(); i++ ) {
+	        	  	IOpaqueAddress* pAddr = 0;
+	        	  	StatusCode iret = m_RtHistPersSvc->createRep(*i, pAddr);
+	        	  	if ( iret.isSuccess() )     {
+	        	  	  	(*i)->registry()->setAddress(pAddr);
+	        		}
+	        	  	else  {
+	        	    		sc = iret;
+	        	  	}
+	        	}
+	        	for ( i = objects->begin(); i != objects->end(); i++ )    {
+	        		  IRegistry* reg = (*i)->registry();
+	       			  StatusCode iret = m_RtHistPersSvc->fillRepRefs(reg->address(), *i);
+	        	  	  if ( !iret.isSuccess() )    {
+	        	    		sc = iret;
+	        	  	  }
+	       		}
+		}
+		if ( sc.isSuccess() )    {
+	        	info() << "Histograms converted successfully according to request." << endmsg;
+		}
+		else  {
+	       		error() << "Error while saving Histograms." << endmsg;
+			return StatusCode::FAILURE;
+		}
+      }
+      else {
+	      error() << "Error while traversing Histogram data store" << endmsg;
+	      return StatusCode::FAILURE;
+      }
+ }
+
+ 
+ return StatusCode::SUCCESS;	
 }
 
 
@@ -372,7 +481,8 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
           refpCtxt = 0;
           return sc;
         }
-        m_filePoller->statusReport(sc,m_input,m_evtCntRecord);
+        m_filePoller->statusReport(sc,m_input);
+	
    }
 
   if (!(m_filePoller->remListener((IAlertSvc*)this))) {
@@ -380,7 +490,8 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
       return StatusCode::FAILURE;
       }
 
-  cout << "EventSelector:Ready to read events from " + file_name << endl;
+  log << MSG::INFO << "Ready to read events from " + file_name << endmsg; 
+  //info(Service::name()+"Ready to read events from " + file_name);
   
   TestEvtSelector::resume();
   

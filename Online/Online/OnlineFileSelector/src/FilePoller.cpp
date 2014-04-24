@@ -12,11 +12,13 @@
 #include <string>
 #include <dirent.h>
 #include <stdlib.h>
+#include <errno.h>
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FilePoller)
 
 using namespace std;
 using namespace LHCb;
+using namespace boost;
 
 FilePoller::FilePoller(const string& nam,ISvcLocator* svc)
                            : OnlineService::OnlineService(nam,svc),
@@ -26,6 +28,8 @@ FilePoller::FilePoller(const string& nam,ISvcLocator* svc)
   declareProperty("scanDirectory",m_scanDirectory);
   declareProperty("alarmTime",m_alrmTime);
   declareProperty("DbName",m_nameOfDb);
+
+  
 }
 
 FilePoller::~FilePoller() {}
@@ -55,25 +59,26 @@ StatusCode FilePoller::initialize()  {
     return issueAlarm("Problem creating listener list lock.");
 
   status = FilePoller::connectToDb();
-
+  
   return status;
 }
 
 /// Implementation of IOnlineService::finalize()
 StatusCode FilePoller::finalize()  {
-  StatusCode status = OnlineService::finalize();
-
+  StatusCode statusP = OnlineService::finalize();
+  
   if (!lib_rtl_delete_lock(m_listenerLock))
     return issueAlarm("Problem deleting listener list lock.");
   
-  status = sqlite3_close(FilePoller::m_FileInfo);
+  int status = sqlite3_close(FilePoller::m_FileInfo);
   if (SQLITE_OK != status) {
+      	
       string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
       issueAlarm("Error closing database: " + msg);
       return StatusCode::FAILURE;
   }
 
-  return status;
+  return statusP;
 }
 
 
@@ -103,6 +108,7 @@ const StatusCode FilePoller::issueAlarm(const string& msg)
 /// Implementation of polling method.
 StatusCode FilePoller::poller(string scan_path)
 {
+  
   struct dirent d_entry;                  	
   struct dirent *d_res;
   int i;	
@@ -142,6 +148,7 @@ StatusCode FilePoller::poller(string scan_path)
       if (find( m_fileNames.begin(),  m_fileNames.end(),n_path) ==  m_fileNames.end()) 
       {
         FilePoller::addTofileNames(n_path + "/" + dname);
+	
       }
       
     }
@@ -264,7 +271,7 @@ string FilePoller::remFromfileNames()
 
   
 /// Implementation of IHandleListenerSvc::statusReport.
-StatusCode FilePoller::statusReport(StatusCode status, const string file, const int eventCnt)
+StatusCode FilePoller::statusReport(StatusCode status, const string file)
 {
   if (StatusCode::FAILURE == status)
   {
@@ -274,7 +281,8 @@ StatusCode FilePoller::statusReport(StatusCode status, const string file, const 
   else if (StatusCode::SUCCESS == status)
   {
     // book-keep the file
-    StatusCode sc = markBookKept(getRunFileNumber(file), eventCnt);
+    const char* pattern = "/[0-9]*_[0-9]*.raw";  
+    StatusCode sc = markBookKept(getRunFileNumber(file,pattern),0);
   }
   
   return status;
@@ -288,10 +296,9 @@ void FilePoller::timerHandler()
   StatusCode sc;
   string path_name;
   deque<string> empty_buffer; 
-
+  const char* pattern = "/[0-9]*_[0-9]*.raw"; 
   DimTimer::stop();
   StatusCode poll_st = FilePoller::poller(FilePoller::m_scanDirectory);
-
   poll_st = showListeners();
   poll_st = printDB();
 
@@ -299,10 +306,10 @@ void FilePoller::timerHandler()
     
       path_name = remFromfileNames();
       //check if it is book-kept
-      sc = isBookKept(getRunFileNumber(path_name));
+      sc = isBookKept(getRunFileNumber(path_name,pattern));
       //if not/yes+StFlag==0, alertSvc(), if yes, dismiss and pick next file
       if (StatusCode::SUCCESS == sc) {
-	 if (StatusCode::SUCCESS == isProcessed(getRunFileNumber(path_name)))
+	 if (StatusCode::SUCCESS == isProcessed(getRunFileNumber(path_name,pattern)))
 	     continue;	  
       }
       else {
@@ -321,11 +328,31 @@ void FilePoller::timerHandler()
 
 
 
+
+
+
 /// Implementation of IOnlineBookkeep::getRunFileNumber.
-string FilePoller::getRunFileNumber(const string file_path) {
+string FilePoller::getRunFileNumber(const string file_path, const char* pattern) {
+ 
+  regex_t regex;
+  regmatch_t matchptr;
   
-  if (!file_path.empty())
-  	return file_path.substr(57);    /// Is it standard???
+  if (!file_path.empty()) {
+  	int status = regcomp(&regex, pattern, 0); //check flags
+        if (status) { 
+           issueAlarm("Could not compile regex\n");
+      	   return "failure in regex!";		 
+	}
+	status = regexec(&regex, file_path.c_str(), 1, &matchptr, 0);
+	regfree(&regex);
+	int outOfBounds1 = ( ((matchptr.rm_so)<0)||((matchptr.rm_so)>file_path.length()) );
+	int outOfBounds2 = ( ((matchptr.rm_eo)<0)||((matchptr.rm_eo)>file_path.length()) );
+	if ( outOfBounds1 || outOfBounds2) { 
+           issueAlarm("No match of regexp\n");
+      	   return "failure in regex!";		 
+	}
+	return file_path.substr(matchptr.rm_so+1,matchptr.rm_eo-matchptr.rm_so-1);
+  }
   else
 	return file_path;
   
@@ -334,7 +361,8 @@ string FilePoller::getRunFileNumber(const string file_path) {
 /// Implementation of IOnlineBookkeep::markBookKept.
 StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) {
 
-  
+  const char* patternR = "/[0-9]*_";
+  long run_no = 0;
   int status;
   sqlite3_stmt *pstatement;
   string query = "INSERT INTO FileRecords (FileName,RunNumber,TotalEvents,StatusFlag) VALUES (?,?,?,?);";
@@ -344,33 +372,62 @@ StatusCode FilePoller::markBookKept(const std::string file, const int eventCnt) 
   
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
   
   status = sqlite3_bind_text(pstatement,1,file.c_str(),-1,0); 
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
 
-  int i;				////////
-  istringstream(file.substr(0,6)) >> i;
   
-  status = sqlite3_bind_int(pstatement,2,i/*stoi(file.substr(0,6))*/); 
+  run_no = strtol(getRunFileNumber("/"+file,patternR).c_str(),NULL,10);  // "/" to support the regexp and not cut off the run number
+  if (ERANGE == errno) {
+	issueAlarm("Run number was wrongfully converted.");
+	return StatusCode::FAILURE;
+  }
+  
+  status = sqlite3_bind_int(pstatement,2,run_no); 
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
 
   status = sqlite3_bind_int(pstatement,3,eventCnt);
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
 
   status = sqlite3_bind_int(pstatement,4,0);
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising insert query: " + msg);
+      return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
   
@@ -398,7 +455,7 @@ StatusCode FilePoller::isBookKept(const std::string file) {
   
   int status;
   sqlite3_stmt *pstatement;
-  string query = "SELECT * from FileRecords WHERE FileName = '" +file+"' ";
+  string query = "SELECT * from FileRecords WHERE FileName = '" +file+"'; ";
   const char *c_query = query.c_str();
   
   status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0); 
@@ -423,6 +480,14 @@ StatusCode FilePoller::isBookKept(const std::string file) {
      }
      return StatusCode::FAILURE;
   }
+
+
+  status = sqlite3_finalize(pstatement);
+     if (SQLITE_OK != status) {
+        string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+        issueAlarm("Error finalising isBookKept query: " +  msg);
+        return StatusCode::FAILURE;
+     }
 
 
   return StatusCode::SUCCESS;
@@ -460,6 +525,14 @@ StatusCode FilePoller::isProcessed(const std::string file) {
         return StatusCode::FAILURE;
      }
      return StatusCode::FAILURE;
+  }
+
+
+  status = sqlite3_finalize(pstatement);
+  if (SQLITE_OK != status) {
+       string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+       issueAlarm("Error finalising isBookKept query: " +  msg);
+       return StatusCode::FAILURE;
   }
 
 
@@ -525,7 +598,7 @@ int FilePoller::print_aux(void* /*data*/, int columnNum, char **argv, char** /*C
    
    int i;   
    for(i=0; i<columnNum; i++){
-      cout << (argv[i] ? argv[i] : "NULL") << "        ";
+      cout << (argv[i] ? argv[i] : "NULL") << "  ----  ";
       
    }
    cout << endl;
@@ -543,7 +616,7 @@ StatusCode FilePoller::printDB() {
   
   string query = "SELECT * FROM FileRecords;";
   const char* c_query = query.c_str();	  
-  const char* data = "FileName                     Run      EventCnt  StatusFlag"; 
+  const char* data = "FileName                     Run         EventCnt  StatusFlag"; 
  
   cout << data << endl; 	
   
@@ -557,18 +630,41 @@ StatusCode FilePoller::printDB() {
 }
 
 
-StatusCode FilePoller::updateStFlag(const string file) {
+StatusCode FilePoller::updateStatus(const string file, int eventCnt) {
 
   int status;
+  const char* pattern = "/[0-9]*_[0-9]*.raw";  
   sqlite3_stmt *pstatement;
-  string query = "UPDATE FileRecords SET StatusFlag = 1 WHERE FileName = '" + getRunFileNumber(file) +"' ";
+  string query = "UPDATE FileRecords SET StatusFlag = 1, TotalEvents = ? WHERE FileName = '" + getRunFileNumber(file,pattern) +"';";
   const char *c_query = query.c_str();
   
+  
   status = sqlite3_prepare_v2(FilePoller::m_FileInfo, c_query, -1, &pstatement, 0); 
+  
+  
+  
   if (SQLITE_OK != status) {
     status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+       string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+       issueAlarm("Error finalising update query: " + msg);
+       return StatusCode::FAILURE;
+    }
     return StatusCode::FAILURE;
   }
+  
+
+  status = sqlite3_bind_int(pstatement,1,eventCnt); 
+  if (SQLITE_OK != status) {
+    status = sqlite3_finalize(pstatement);
+    if (SQLITE_OK != status) {
+      string msg = sqlite3_errmsg(FilePoller::m_FileInfo);
+      issueAlarm("Error finalising update query: " + msg);
+      return StatusCode::FAILURE;
+    }
+    return StatusCode::FAILURE;
+  }
+  
   
   status = sqlite3_step(pstatement); 
   if ((SQLITE_DONE != status) && (SQLITE_ROW != status)) {

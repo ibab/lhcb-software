@@ -135,6 +135,7 @@ namespace LHCb  {
     MDFOnlineEvtSelector( const std::string& nam, ISvcLocator* svcloc )
     : TestEvtSelector( nam, svcloc)  {
       declareProperty("IgnoreChecksum",m_ignoreChecksum="NO");
+      
     }
     /// Standard destructor
     virtual ~MDFOnlineEvtSelector()  {}
