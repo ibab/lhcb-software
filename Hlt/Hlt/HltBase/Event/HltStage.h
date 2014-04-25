@@ -558,6 +558,20 @@ inline std::string Stage::info<std::string>( const KeyType& key,
     return _info( key, default_value );
 }
 // ==========================================================================
+//  explicitly instantiate  so that these appear in the python dictionary...
+//  (or should we remove the generic template implementation, and rely on specialization???
+//  ( that way, code that wants a signature that isn't specialized won't link..., which
+//    is good, as I'd rather have a linktime error than a runtime error)
+// ==========================================================================
+template void Hlt::Stage::set(const LHCb::L0MuonCandidate*) ;
+template void Hlt::Stage::set(const LHCb::L0CaloCandidate*) ;
+template void Hlt::Stage::set(const  Hlt::L0DiMuonCandidate*) ;
+template void Hlt::Stage::set(const LHCb::Track*) ;
+template void Hlt::Stage::set(const LHCb::RecVertex*) ;
+template void Hlt::Stage::set(const  Hlt::MultiTrack*) ;
+template void Hlt::Stage::set(const  Hlt::Stage*) ;
+
+// ==========================================================================
 /// output operatoor
 inline std::ostream& operator<<( std::ostream& str, const Stage& obj )
 {

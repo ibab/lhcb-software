@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-04-24 - Gerhard Raven
+ - explicitly instantiate the template member function  HltStage::set for
+   the relevant types so that they explicitly appear in the python dictionary.
 
 !========================= HltBase v15r0 2014-04-22 =========================
 ! 2014-04-21 - Gerhard Raven
