@@ -8,10 +8,6 @@ gaudi_depends_on_subdirs(Hlt/HltMonitor
                          Hlt/Moore
                          L0/L0App
                          Phys/Swimming
-                         DAQ/DAQSys #TEMPORARY
-                         Muon/MuonID #TEMPORARY
-                         Det/DDDB #TEMPORARY
-                         Hlt/HltDAQ #TEMPORARY
                          )
 
 

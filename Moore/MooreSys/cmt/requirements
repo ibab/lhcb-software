@@ -15,10 +15,6 @@ use  L0App               v2r1       L0    # Rob Lambert
 # Bug fixes on top of LHCb v36r4 release stack
 
 #temporary for new features
-use  DAQSys    v8r0p1    DAQ
-use  DDDB      v1r68     Det
-use  MuonID    v9r10     Muon
-use  HltDAQ    v4r0      Hlt
 
 # Declare this as a container package
 apply_pattern container_package
