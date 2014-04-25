@@ -96,7 +96,7 @@ class DeVPSensor : public DetectorElement {
   inline Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
                                         const bool local) const {
 
-    const unsigned int chip = channel.chip() % 3;
+    const unsigned int chip = channel.chip();
     const unsigned int col = channel.col() + chip * 256;
     const unsigned int row = channel.row();
     const double x = DeVPSensor::m_local_x[col];
@@ -109,7 +109,7 @@ class DeVPSensor : public DetectorElement {
   Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
                                  std::pair<double, double> fraction) const {
 
-    const unsigned int chip = channel.chip() % 3;
+    const unsigned int chip = channel.chip();
     const unsigned int col = channel.col() + chip * 256;
     const unsigned int row = channel.row();
     const double pitch = DeVPSensor::m_x_pitch[col];
@@ -126,9 +126,6 @@ class DeVPSensor : public DetectorElement {
   unsigned int m_sensorNumber;
   unsigned int m_module;
   bool m_isLeft;
-
-  /// Index of the first chip
-  unsigned int m_chip;
 
   /// Global Z position
   double m_z;

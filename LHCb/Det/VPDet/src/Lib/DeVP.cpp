@@ -83,7 +83,7 @@ StatusCode DeVP::initialize() {
   if (m_debug) {
     msg() << MSG::DEBUG << "Found " << sensors.size() << " sensors" << endmsg;
   }
-  std::sort(sensors.begin(), sensors.end(), less_Z());
+  std::sort(sensors.begin(), sensors.end(), less_SensorNumber());
 
   m_nSensors = 0;
   unsigned int nLeftSensors = 0;

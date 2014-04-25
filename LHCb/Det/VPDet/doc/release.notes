@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2014-04-25 - Heinrich Schindler
+ - Bugfix from previous commit (need to sort by sensor number not by z!).
+ - Follow change in VPChannelID format (r171869).
+
 ! 2014-04-18 - Heinrich Schindler
  - Merge m_sensors and m_vpSensors class members of DeVP.
  - Add coarse z-cut in DeVP::sensitiveVolumeID. 

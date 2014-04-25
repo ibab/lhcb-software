@@ -59,10 +59,7 @@ class DeVP : public DetectorElement {
   }
   /// Return pointer to sensor for a given channel ID.
   const DeVPSensor* sensorOfChannel(LHCb::VPChannelID channel) const {
-    unsigned int sensorNumber = channel.module();
-    const int ladder = int(channel.chip() / 3);
-    sensorNumber = 4 * sensorNumber + ladder;
-    return sensor(sensorNumber);
+    return sensor(channel.sensor());
   }
   /// Return pointer to sensor for a given sensor number.
   const DeVPSensor* sensor(unsigned int sensorNumber) const {
@@ -84,6 +81,11 @@ class DeVP : public DetectorElement {
   struct less_Z {
     bool operator()(DeVPSensor* const& x, DeVPSensor* const& y) {
       return (x->z() < y->z());
+    }
+  };
+  struct less_SensorNumber {
+    bool operator()(DeVPSensor* const& x, DeVPSensor* const& y) {
+      return (x->sensorNumber() < y->sensorNumber());
     }
   };
 

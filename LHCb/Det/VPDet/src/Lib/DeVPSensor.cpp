@@ -50,7 +50,7 @@ double DeVPSensor::m_x_pitch[768];
 bool DeVPSensor::m_common_cache_valid = false;
 
 //==============================================================================
-/// Standard constructor
+// Standard constructor
 //==============================================================================
 DeVPSensor::DeVPSensor(const std::string& name)
     : DetectorElement(name), m_geometry(NULL), m_msg(NULL) {
@@ -58,7 +58,7 @@ DeVPSensor::DeVPSensor(const std::string& name)
 }
 
 //==============================================================================
-/// Destructor
+// Destructor
 //==============================================================================
 DeVPSensor::~DeVPSensor() {
 
@@ -67,7 +67,7 @@ DeVPSensor::~DeVPSensor() {
 }
 
 //==============================================================================
-/// Object identification
+// Object identification
 //==============================================================================
 const CLID& DeVPSensor::clID() const { 
 
@@ -76,7 +76,7 @@ const CLID& DeVPSensor::clID() const {
 }
 
 //==============================================================================
-/// Initialisation method
+// Initialisation method
 //==============================================================================
 StatusCode DeVPSensor::initialize() {
 
@@ -114,9 +114,6 @@ StatusCode DeVPSensor::initialize() {
   m_module = param<int>("Module");
   std::string side = param<std::string>("Side");
   m_isLeft = side.find("Left") == 0;
-
-  // Calculate the index of the first chip (assuming four sensors per module).
-  m_chip = (sensorNumber() - module() * 4) * DeVPSensor::m_nChips;
 
   // commons
   //
@@ -157,7 +154,7 @@ StatusCode DeVPSensor::initialize() {
 }
 
 //==============================================================================
-/// Return a trajectory (for track fit) from pixel + offset
+// Return a trajectory (for track fit) from pixel + offset
 //==============================================================================
 std::auto_ptr<LHCb::Trajectory> DeVPSensor::trajectory(
     const LHCb::VPChannelID& channel,
@@ -171,7 +168,7 @@ std::auto_ptr<LHCb::Trajectory> DeVPSensor::trajectory(
 }
 
 //==============================================================================
-/// Calculate the nearest pixel to a point in the global frame.
+// Calculate the nearest pixel to a point in the global frame.
 //==============================================================================
 StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
                                       const bool local,
@@ -181,14 +178,14 @@ StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
   // Check if the point is in the active area of the sensor.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
-  // Set the module number.
-  channel.setModule(module());
+  // Set the sensor number.
+  channel.setSensor(m_sensorNumber);
   double x0 = 0.;
   for (unsigned int i = 0; i < DeVPSensor::m_nChips; ++i) {
     const double x = localPoint.x() - x0;
     if (x < DeVPSensor::m_chipSize + 0.5 * DeVPSensor::m_interChipDist) {
       // Set the chip number.
-      channel.setChip(m_chip + i);
+      channel.setChip(i);
       // Set the row and column.
       unsigned int col = 0;
       unsigned int row = 0;
@@ -211,7 +208,7 @@ StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
 }
 
 //==============================================================================
-/// Calculate the pixel and fraction corresponding to a global point.
+// Calculate the pixel and fraction corresponding to a global point.
 //==============================================================================
 StatusCode DeVPSensor::pointToChannel(
     const Gaudi::XYZPoint& point, const bool local, LHCb::VPChannelID& channel,
@@ -223,14 +220,14 @@ StatusCode DeVPSensor::pointToChannel(
   if (!sc.isSuccess()) return sc;
   fraction.first = 0.;
   fraction.second = 0.;
-  // Set the module number.
-  channel.setModule(module());
+  // Set the sensor number.
+  channel.setSensor(m_sensorNumber);
   const double step = DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist;
   double x0 = 0.;
   for (unsigned int i = 0; i < DeVPSensor::m_nChips; ++i) {
     if (localPoint.x() < x0 + step) {
       // Set the chip number.
-      channel.setChip(m_chip + i);
+      channel.setChip(i);
       // Calculate the column number.
       const double x = localPoint.x() - x0;
       const double fcol = x / DeVPSensor::m_pixelSize - 0.5;
@@ -291,7 +288,7 @@ StatusCode DeVPSensor::pointToChannel(
 }
 
 //==============================================================================
-/// Check if a local point is inside the active area of the sensor.
+// Check if a local point is inside the active area of the sensor.
 //==============================================================================
 StatusCode DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 
@@ -304,7 +301,7 @@ StatusCode DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 }
 
 //==============================================================================
-/// Return the size of a pixel with given channel ID.
+// Return the size of a pixel with given channel ID.
 //==============================================================================
 std::pair<double, double> DeVPSensor::pixelSize(
     LHCb::VPChannelID channel) const {
@@ -318,11 +315,11 @@ std::pair<double, double> DeVPSensor::pixelSize(
 }
 
 //==============================================================================
-/// Return true if a pixel with given channel ID is an elongated pixel.
+// Return true if a pixel with given channel ID is an elongated pixel.
 //==============================================================================
 bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
 
-  const unsigned int chip = channel.chip() % DeVPSensor::m_nChips;
+  const unsigned int chip = channel.chip();
   const unsigned int col = channel.col();
   if ((col == 0 && chip > 0) ||
       (col == DeVPSensor::m_nCols - 1 && chip < DeVPSensor::m_nChips - 1)) {
@@ -333,7 +330,7 @@ bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
 }
 
 //==============================================================================
-/// Calculate and cache the local x positions and pitches
+// Calculate and cache the local x positions and pitches
 //==============================================================================
 void DeVPSensor::cacheLocalXAndPitch(void) {
 
@@ -371,7 +368,7 @@ void DeVPSensor::cacheLocalXAndPitch(void) {
 }
 
 //==============================================================================
-/// Cache geometry parameters
+// Cache geometry parameters
 //==============================================================================
 StatusCode DeVPSensor::updateGeometryCache() {
 
