@@ -6,6 +6,7 @@
 
 ! 2014-04-25 - Heinrich Schindler
  - Follow changes in VPChannelID format (r171869).
+ - Use IPrDebugTool instead of IPatDebugTool.
 
 ! 2014-04-17 - Heinrich Schindler
  - Change condition for rebuilding geometry (following r171666).

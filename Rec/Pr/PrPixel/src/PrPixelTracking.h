@@ -11,8 +11,9 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #endif
 
-#include "PatKernel/IPatDebugTool.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
+
+#include "PrKernel/IPrDebugTool.h"
 
 #include "PrPixelHitManager.h"
 #include "PrPixelTrack.h"
@@ -94,7 +95,7 @@ private:
   /// Debug control
   std::string m_debugToolName;
   int m_wantedKey;
-  IPatDebugTool* m_debugTool;
+  IPrDebugTool* m_debugTool;
   bool m_isDebug;
   bool m_debug;
 

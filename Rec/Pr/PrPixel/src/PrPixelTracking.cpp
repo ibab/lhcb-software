@@ -84,7 +84,7 @@ StatusCode PrPixelTracking::initialize() {
   m_hitManager->setTrigger(m_trigger);
 
   // Setup the debug tool.
-  if ("" != m_debugToolName) m_debugTool = tool<IPatDebugTool>(m_debugToolName);
+  if ("" != m_debugToolName) m_debugTool = tool<IPrDebugTool>(m_debugToolName);
   // Setup the timing measurement.
   if (m_doTiming) {
     m_timerTool = tool<ISequencerTimerTool>("SequencerTimerTool/Timer", this);
