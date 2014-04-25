@@ -6,7 +6,9 @@
 
 ! 2014-04-25 - Heinrich Schindler
  - PrDebugTrackingLosses: follow changes in VPChannelID format (r171869).
-
+ - Rename PatPixelDebugTool (moved here from Tr/TrackMCTools) 
+   to PrPixelDebugTool and make it inherit from PrDebugTool.
+ 
 ! 2014-04-01 - Heinrich Schindler
  - Remove linking based on VPLiteClusters from PrLHCbID2MCParticle.
 

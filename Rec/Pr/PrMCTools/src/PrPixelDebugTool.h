@@ -1,39 +1,30 @@
-// $Id: PatPixelDebugTool.h,v 1.3 2008-12-04 09:05:07 cattanem Exp $
-#ifndef PATPIXELDEBUGTOOL_H 
-#define PATPIXELDEBUGTOOL_H 1
+#ifndef PRPIXELDEBUGTOOL_H
+#define PRPIXELDEBUGTOOL_H 1
 
-// Include files
-// from Gaudi
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "PatKernel/IPatDebugTool.h"            // Interface
+// Interface
+#include "PrKernel/IPrDebugTool.h"
 
-
-/** @class PatPixelDebugTool PatPixelDebugTool.h
+/** @class PrPixelDebugTool PrPixelDebugTool.h
  *  Debug Pixel processing using MC truth
  *
  *  @author Olivier Callot
  *  @date   2007-10-25
  */
-class PatPixelDebugTool : public GaudiTool, virtual public IPatDebugTool {
-public: 
+class PrPixelDebugTool : public GaudiTool, virtual public IPrDebugTool {
+ public:
   /// Standard constructor
-  PatPixelDebugTool( const std::string& type, 
-                     const std::string& name,
-                     const IInterface* parent);
+  PrPixelDebugTool(const std::string& type, const std::string& name,
+                   const IInterface* parent);
+  /// Destructor
+  virtual ~PrPixelDebugTool();
 
-  virtual ~PatPixelDebugTool( ); ///< Destructor
+  virtual bool matchKey(LHCb::LHCbID id, int key);
+  virtual void printKey(MsgStream& msg, LHCb::LHCbID id);
 
-  virtual bool matchKey( LHCb::LHCbID& id, int key );
-
-  virtual void printKey( MsgStream& msg, LHCb::LHCbID& id );
-
-  virtual double xTrue( int key, double z );
-
-  virtual double yTrue( int key, double z );
-
-protected:
-
-private:
+  virtual double xTrue(int key, double z);
+  virtual double yTrue(int key, double z);
 
 };
-#endif // PATPIXELDEBUGTOOL_H
+#endif
