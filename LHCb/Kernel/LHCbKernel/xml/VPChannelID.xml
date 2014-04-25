@@ -2,79 +2,55 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 
 <gdd>
-  <package name='LHCbKernel'>
+  <package name = 'LHCbKernel'>
     <class name = 'VPChannelID' 
            author = 'Victor Coco' 
-           desc = 'This class describes a single pixel'
+           desc = 'This class identifies a single pixel in the VP'
            virtual = 'FALSE'>
 
-      <constructor argList = 'unsigned long module, unsigned int chip, unsigned int col, unsigned int row' 
-                   desc = 'Constructor with module, chip, column and row'>
+      <constructor argList = 'unsigned int sensor, unsigned int chip, unsigned int col, unsigned int row' 
+                   desc = 'Constructor with sensor, chip, column and row'>
         <code>
-  m_channelID = (module &lt;&lt; sideposBits) | (chip &lt;&lt; chipBits) | (col &lt;&lt; colBits) | row;
+  m_channelID = (sensor &lt;&lt; sensorBits) | (chip &lt;&lt; chipBits) | (col &lt;&lt; colBits) | row;
         </code>
       </constructor>
 
       <constructor argList = 'int id' initList = 'm_channelID(id)'
-                   desc = 'constructor with channelID'>
+                   desc = 'Constructor with channelID'>
       </constructor>
 
       <copyconstructor/>
 
-      <method type = '' name = 'operator long' const = 'TRUE' desc = 'cast'>
+      <method type = '' name = 'operator unsigned int' const = 'TRUE' 
+              desc = 'Cast'>
         <code>return m_channelID;</code>
       </method> 
 
-      <method type = 'unsigned long' name = 'module' const = 'TRUE' 
+      <method type = 'unsigned int' name = 'module' const = 'TRUE' 
               desc = 'Get module number'>
-        <code>
-  return (m_channelID &amp; (stationMask | sideposMask)) >> sideposBits;
-        </code>
+        <code>return sensor() / 4;</code>
       </method>
 
-      <method name = 'setModule' argList = 'unsigned long module'
-              desc = 'Set module number'>
-        <code>
-  m_channelID &amp;=  ~(stationMask | sideposMask);
-  m_channelID |= ((unsigned long)(module) &lt;&lt; sideposBits) &amp; (stationMask | sideposMask);
-        </code>
+      <method type = 'unsigned int' name = 'station' const = 'TRUE' 
+              desc = 'Get station number'>
+        <code>return module() / 2;</code>
       </method>
 
-      <method type = 'unsigned long' name = 'sidepos' const = 'TRUE' desc = 'Get side (left/right)'>
-        <code>
-  return (m_channelID &amp; sideposMask) >> sideposBits;
-        </code>
+      <method type = 'unsigned int' name = 'sidepos' const = 'TRUE' 
+              desc = 'Get side (left/right)'>
+        <code>return module() % 2;</code>
       </method>
 
-      <method type = 'unsigned long' name = 'pixel' const = 'TRUE' desc = 'Get pixel'>
-        <code>
-  return (m_channelID &amp; (chipMask | colMask | rowMask));
-        </code>
-      </method>
-
-      <method name = 'setPixel' argList = 'unsigned long pixel' desc = 'Set pixel'>
-        <code>
-  m_channelID &amp;= ~(chipMask | colMask | rowMask);
-  m_channelID |= ((unsigned long)(pixel))  &amp; (chipMask | colMask | rowMask);
-        </code>
-      </method>
-       
       <method type = "std::ostream&amp;" name = "fillStream" virtual = "FALSE" const = "TRUE"
-              desc = "special serializer to ASCII stream" >
+              desc = "Special serializer to ASCII stream" >
         <arg name = "s" type = "std::ostream" inout = "BOTH"/> 
       </method> 
 
-      <enum access = 'PUBLIC'
-            desc = 'Enumerates the 2 module sides'
-            name = 'side'
-            value = 'Left = 0, Right = 1'/>
-
       <attribute type = 'bitfield' name = 'channelID' desc = 'VP Channel ID'>
-        <bitfield name = 'row'     length = '8' desc = 'Pixel row'/>
-        <bitfield name = 'col'     length = '8' desc = 'Pixel column'/>
-        <bitfield name = 'chip'    length = '6' desc = 'Chip number'/>
-        <bitfield name = 'sidepos' length = '1' desc = 'Side of the module (left/right)' setMeth = "FALSE" getMeth = "FALSE"/>
-        <bitfield name = 'station' length = '5' desc = 'Station number'/>
+        <bitfield name = 'row'    length =  '8' desc = 'pixel row'/>
+        <bitfield name = 'col'    length =  '8' desc = 'pixel column'/>
+        <bitfield name = 'chip'   length =  '2' desc = 'chip number'/>
+        <bitfield name = 'sensor' length = '10' desc = 'sensor number'/>
       </attribute>
 
     </class>

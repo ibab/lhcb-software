@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-04-25 - Heinrich Schindler
+ - Change VPChannelID bitfield from row/col/chip/module to row/col/chip/sensor.
+
 ! 2014-04-08 - Heinrich Schindler
  - Remove unused get*Mask, get*Bits functions from VPChannelID.
  - Remove unused functors from VPDataFunctor.

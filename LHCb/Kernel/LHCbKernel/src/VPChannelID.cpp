@@ -10,6 +10,6 @@
 std::ostream& LHCb::VPChannelID::fillStream(std::ostream& s) const {
   s << "{ " << " VPChannelID : " << channelID()
     << " : row = " << row() << " col = " << col()
-    << " chip = " << chip() << " module = " << module();
+    << " chip = " << chip() << " sensor = " << sensor();
   return s << " }";
 }
