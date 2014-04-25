@@ -98,9 +98,8 @@ StatusCode VPClustering::execute() {
     // Create a new cluster with this seed.
     cluster.clear();
     cluster.push_back(itSeed);
-    // Store the sensor and module of this cluster.
-    const unsigned int sensorNumber = floor((*itSeed)->channelID().chip() / 3);
-    const unsigned int module = (*itSeed)->channelID().module();
+    // Store the sensor of this cluster.
+    const unsigned int sensorNumber = (*itSeed)->channelID().sensor();
     // Tag the digit as used.
     isUsed[itSeed - itBegin] = true;
     // Look for neighbouring hits until the cluster size stops changing.
@@ -126,10 +125,8 @@ StatusCode VPClustering::execute() {
         LHCb::VPDigits::const_iterator iCand;
         for (iCand = itCandBegin; iCand != digits->end(); ++iCand) {
           if (isUsed[iCand - itBegin]) continue;
-          // Check if the candidate is on the same module.
-          if (module != (*iCand)->channelID().module()) break;
           // Check if the candidate is on the same sensor.
-          if (sensorNumber != (*iCand)->channelID().chip() / 3) break;
+          if (sensorNumber != (*iCand)->channelID().sensor()) break;
           if (!edge) {
             if (chip != (*iCand)->channelID().chip())
               break;  // Next hit not on same chip
@@ -214,9 +211,9 @@ StatusCode VPClustering::execute() {
 bool VPClustering::isEdge(LHCb::VPDigit* digit) const {
 
   if (digit->channelID().col() == 255) {
-    if (digit->channelID().chip() % 3 < 2) return true;
+    if (digit->channelID().chip() < 2) return true;
   } else if (digit->channelID().col() == 0) {
-    if (digit->channelID().chip() % 3 > 0) return true;
+    if (digit->channelID().chip() > 0) return true;
   }
   return false;
 
