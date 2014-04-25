@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-04-25 - Heinrich Schindler
+ - PrDebugTrackingLosses: follow changes in VPChannelID format (r171869).
+
 ! 2014-04-01 - Heinrich Schindler
  - Remove linking based on VPLiteClusters from PrLHCbID2MCParticle.
 
