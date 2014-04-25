@@ -93,19 +93,24 @@ namespace LHCb  {
       
     };
     
-    
+    // Pointer to the IHandleListenerSvc interface of the poller.
     mutable IHandleListenerSvc* m_filePoller;
-    mutable IService* m_EvtLoopMger;
-    mutable IConversionSvc* m_RtHistPersSvc;
-    mutable void* m_RtHistPersSvc2;
-    mutable void*     m_OnlineBookkeep;
+    
+    /// Pointer to the HistogramPersistencySvc.
+    mutable IConversionSvc* m_HistPersSvc;
+    
+    /// Pointer to the Conversion service.
+    mutable IService* m_RootHistSvc;
+    
+    /// Pointer to the HistogramDataSvc.
+    mutable IDataManagerSvc*  m_histoDataMgrSvc;
+
     /// Name of output histogram file.
     std::string m_HistFileName;
     /// Minimum number of events required for a histogram.
     int m_EvtHisto;
-    mutable IDataManagerSvc*  m_histoDataMgrSvc;
-    mutable void* m_HistPersProp;
-    mutable IService* m_RootHistSvc;
+    
+    
 
     /// IService implementation: initialize the service
     virtual StatusCode initialize();
@@ -228,6 +233,8 @@ namespace LHCb  {
     virtual StatusCode goIdle() const;
 
     virtual StatusCode saveHistos() const;
+	
+    virtual std::string genRootName(const std::string& ) const;
 
 protected:
     /// Definition of the masj type
@@ -270,6 +277,12 @@ protected:
     mutable int m_evtCntRecord;
     /// Total event counter
     mutable int m_totalEvt;
+    /// Current run number.
+    mutable std::string m_run;
+    /// Current run number.
+    mutable int m_runNum;
+    /// Last run number.
+    mutable int m_prevRun;
     
   };
 }
