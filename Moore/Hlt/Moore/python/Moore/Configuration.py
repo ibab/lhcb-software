@@ -104,34 +104,34 @@ class Moore(LHCbConfigurableUser):
         #########################################
         # Deprecated former options
         #########################################
-        #, "L0"         :       None # use L0App!
-        #, "ReplaceL0BanksWithEmulated" : None # use L0App
-        #, "RunL0Emulator" : None # use L0App
-        #, "Verbose" :       None # use OutputLevel
-        #, 'REQ1' : None # use MooreOnline!
-        #, "PartitionName" :  None # use MooreOnline!
-        #, "RunMonitoringFarm" :  None # use MooreOnline!
-        #, "NbOfSlaves":         None # use MooreOnline!
-        #, 'IgnoreDBHeartBeat'  :   None # use CondDB directly or MooreOnline!
-        #, "UseDBSnapshot"     : None # use CondDB directly or MooreOnline!
-        #, "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
-        #, 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
-        #, 'SkipDisabledL0Channels' : None # use HltConf directly
-        #, "prefetchConfigDir" : None # use MooreExpert
-        #, "EnableLumiEventWriting"       : None # use HltConf directly
-        #, 'EnableAcceptIfSlow' : None # use HltConf directly
-        #, 'RequireL0ForEndSequence'     :  None # use HltConf directly
-        #, 'SkipHltRawBankOnRejectedEvents' : None # use HltConf directly
-        #, 'HistogrammingLevel' : None # use HltConf directly
-        #, 'TimeOutThreshold'  : 10000  # Not used anywhere??
-        #, 'TimeOutBits'       : 0x200 # Not used anywhere??
-        #, 'RequireRoutingBits' : None # use HltConf
-        #, 'VetoRoutingBits'    : None # use HltConf
-        #, "DQFLAGStag" : None # use MooreExpert
-        #, 'WriteFSR'    :  None # use MooreExpert
-        #, 'EnableRunChangeHandler' : None # use CondDB directly, only needed there!
-        #, "configAlgorithms" : None # use MooreExpert
-        #, "configServices" :  None #use MooreExpert
+        , "L0"         :       None # use L0App!
+        , "ReplaceL0BanksWithEmulated" : None # use L0App
+        , "RunL0Emulator" : None # use L0App
+        , "Verbose" :       None # use OutputLevel
+        , 'REQ1' : None # use MooreOnline!
+        , "PartitionName" :  None # use MooreOnline!
+        , "RunMonitoringFarm" :  None # use MooreOnline!
+        , "NbOfSlaves":         None # use MooreOnline!
+        , 'IgnoreDBHeartBeat'  :   None # use CondDB directly or MooreOnline!
+        , "UseDBSnapshot"     : None # use CondDB directly or MooreOnline!
+        , "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
+        , 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
+        , 'SkipDisabledL0Channels' : None # use HltConf directly
+        , "prefetchConfigDir" : None # use MooreExpert
+        , "EnableLumiEventWriting"       : None # use HltConf directly
+        , 'EnableAcceptIfSlow' : None # use HltConf directly
+        , 'RequireL0ForEndSequence'     :  None # use HltConf directly
+        , 'SkipHltRawBankOnRejectedEvents' : None # use HltConf directly
+        , 'HistogrammingLevel' : None # use HltConf directly
+        , 'TimeOutThreshold'  : 10000  # Not used anywhere??
+        , 'TimeOutBits'       : 0x200 # Not used anywhere??
+        , 'RequireRoutingBits' : None # use HltConf
+        , 'VetoRoutingBits'    : None # use HltConf
+        , "DQFLAGStag" : None # use MooreExpert
+        , 'WriteFSR'    :  None # use MooreExpert
+        , 'EnableRunChangeHandler' : None # use CondDB directly, only needed there!
+        , "configAlgorithms" : None # use MooreExpert
+        , "configServices" :  None #use MooreExpert
         }
     
     _propertyDocDct={
