@@ -380,7 +380,6 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
   for (; iterBank != tBanks.end(); ++iterBank) {
     
     const unsigned int sensor = (*iterBank)->sourceID();
-    const unsigned int module_chip_base = (sensor%MODULE_SENSORS)*SENSOR_CHIPS;
     const unsigned int module = sensor/MODULE_SENSORS;
     const double *ltg = m_ltg + 16*sensor;
 
@@ -435,7 +434,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
       if (m_trigger && no_sp_neighbours) {
         const int sp_size = m_sp_sizes[sp];
         const uint32_t idx = m_sp_patterns[sp];
-        const uint32_t module_chip = module_chip_base + sp_col/(CHIP_COLUMNS/2);
+        const uint32_t chip = sp_col/(CHIP_COLUMNS/2);
 
         if ((sp_size & 0x0F) <= m_maxClusterSize) { 
           // there is always at least one cluster in the super
@@ -445,7 +444,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
           const uint32_t cx = sp_col*2 + col;
           const uint32_t cy = sp_row*4 + row;
 
-          LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+          LHCb::VPChannelID cid(sensor, chip,cx%CHIP_COLUMNS,cy);
 
           const double fx = m_sp_fx[sp*2];
           const double fy = m_sp_fy[sp*2];
@@ -469,7 +468,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
           const uint32_t cx = sp_col*2 + col;
           const uint32_t cy = sp_row*4 + row;
 
-          LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+          LHCb::VPChannelID cid(sensor, chip,cx%CHIP_COLUMNS,cy);
           
           const double fx = m_sp_fx[sp*2 + 1];
           const double fy = m_sp_fy[sp*2 + 1];
@@ -544,8 +543,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
         ++n;
 
         if (!m_trigger) {
-          const uint32_t module_chip = module_chip_base + col/CHIP_COLUMNS;
-          LHCb::VPChannelID cid(module,module_chip,col%CHIP_COLUMNS,row);
+          const uint32_t chip = col/CHIP_COLUMNS;
+          LHCb::VPChannelID cid(sensor, chip,col%CHIP_COLUMNS,row);
           m_channelIDs[m_nClusters].push_back(cid);
         }
 
@@ -582,8 +581,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
             y += row;
             ++n;
             if (!m_trigger) {
-              const uint32_t module_chip = module_chip_base + c/CHIP_COLUMNS;
-              LHCb::VPChannelID cid(module,module_chip,c%CHIP_COLUMNS,row);
+              const uint32_t chip = c/CHIP_COLUMNS;
+              LHCb::VPChannelID cid(sensor, chip,c%CHIP_COLUMNS,row);
               m_channelIDs[m_nClusters].push_back(cid);
             }
           } else {
@@ -612,8 +611,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
             y += row;
             ++n;
             if (!m_trigger) {
-              const uint32_t module_chip = module_chip_base + c/CHIP_COLUMNS;
-              LHCb::VPChannelID cid(module,module_chip,c%CHIP_COLUMNS,row);
+              const uint32_t chip = c/CHIP_COLUMNS;
+              LHCb::VPChannelID cid(sensor, chip,c%CHIP_COLUMNS,row);
               m_channelIDs[m_nClusters].push_back(cid);
             }
           } else {
@@ -637,8 +636,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
           m_yFractions[m_nHits] = fy;
 
           // store target (3D point for tracking)
-          const uint32_t module_chip = module_chip_base + cx/CHIP_COLUMNS;
-          LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+          const uint32_t chip = cx/CHIP_COLUMNS;
+          LHCb::VPChannelID cid(sensor, chip,cx%CHIP_COLUMNS,cy);
 
           const double local_x = m_local_x[cx] + fx*m_x_pitch[cx];
           const double local_y = (cy + 0.5 + fy) * m_pixel_size;
@@ -657,8 +656,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(const std::vector<LHCb::RawBank*>
         m_yFractions[m_nClusters] = fy;
 
         // store target (cluster and 3D point for tracking)
-        const uint32_t module_chip = module_chip_base + cx/CHIP_COLUMNS;
-        LHCb::VPChannelID cid(module,module_chip,cx%CHIP_COLUMNS,cy);
+        const uint32_t chip = cx/CHIP_COLUMNS;
+        LHCb::VPChannelID cid(sensor, chip,cx%CHIP_COLUMNS,cy);
         const double local_x = m_local_x[cx] + fx*m_x_pitch[cx];
         const double local_y = (cy + 0.5 + fy) * m_pixel_size;
         const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
@@ -721,15 +720,16 @@ void PrPixelHitManager::buildHitsFromLCRawBank(const std::vector<LHCb::RawBank*>
     for (unsigned int ic=0; ic < nc; ++ic) {
       const unsigned int cw     = bank_data[ic+1];
       const unsigned int pixel  = (cw & PIXELMASK) >> PIXELSHIFT;
+      const unsigned int module_chip = pixel & 0x3f0000L >> 16;
+      const unsigned int col = pixel & 0xff00L >> 8;
+      const unsigned int row = pixel & 0xffL;
+      const unsigned int sensor = module * MODULE_SENSORS + module_chip / SENSOR_CHIPS; 
+      const unsigned int sensor_chip = module_chip % SENSOR_CHIPS;
       const double xfract = fractScale*((cw & XFRACTMASK) >> XFRACTSHIFT);
       const double yfract = fractScale*((cw & YFRACTMASK) >> YFRACTSHIFT);
 
-      LHCb::VPChannelID cid;
-      cid.setModule(module);
-      cid.setPixel(pixel);
+      LHCb::VPChannelID cid(sensor, sensor_chip, col, row);
 
-      const unsigned int sensor_chip = cid.chip()%SENSOR_CHIPS;
-      const unsigned int sensor = cid.module()*MODULE_SENSORS + cid.chip()/SENSOR_CHIPS;
       const unsigned int cy = cid.row();
       const unsigned int cx = cid.col() + CHIP_COLUMNS*sensor_chip;
       const double dx = xfract*m_x_pitch[cx];
@@ -922,8 +922,8 @@ void PrPixelHitManager::buildHits() {
 
     // store 3D point
     LHCb::VPChannelID cid = (*itc)->channelID();
-    const unsigned int sensor_chip = cid.chip()%SENSOR_CHIPS;
-    const unsigned int sensor = cid.module()*MODULE_SENSORS + cid.chip()/SENSOR_CHIPS;
+    const unsigned int sensor_chip = cid.chip();
+    const unsigned int sensor = cid.sensor();
     const unsigned int cy = cid.row();
     const unsigned int cx = cid.col() + CHIP_COLUMNS*sensor_chip;
     const double dx = (*itc)->fraction().first * m_x_pitch[cx];
