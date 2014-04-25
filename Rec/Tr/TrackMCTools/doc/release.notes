@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-04-25 - Heinrich Schindler
+ - Move PatPixelDebugTool to Pr/PrMCTools.
+
 !========================= TrackMCTools v3r8 2014-03-18 =======================
 ! 2014-03-13 - Heinrich Schindler
  - Follow changes in VPCluster format and path (revision r169999).
