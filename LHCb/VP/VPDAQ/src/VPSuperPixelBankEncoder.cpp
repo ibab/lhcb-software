@@ -60,7 +60,7 @@ StatusCode VPSuperPixelBankEncoder::execute() {
     return Error(" ==> There are no VPDigits in TES! ");
   }
 
-  // Check if RawEvent exits
+  // Check if RawEvent exists
   RawEvent* rawEvent = getIfExists<RawEvent>(m_rawEventLocation);
   if (NULL == rawEvent) {
     // Create RawEvent
@@ -78,13 +78,11 @@ StatusCode VPSuperPixelBankEncoder::execute() {
   // No assumption about the order of digits is made.
   LHCb::VPDigits::const_iterator itSeed;
   for (itSeed = digits->begin(); itSeed != digits->end(); ++itSeed) {
-    const unsigned int chip = (*itSeed)->channelID().chip();   //0-11
-    const unsigned int mod = (*itSeed)->channelID().module();  //0-51
+    const unsigned int chip = (*itSeed)->channelID().chip();
     const unsigned int row = (*itSeed)->channelID().row();
     const unsigned int col = (*itSeed)->channelID().col();
-    const unsigned int globalSensor = mod * 4 + chip / 3;
-    const unsigned int sensorChip = chip % 3;
-    const unsigned int sensorCol = col + 256 * sensorChip;
+    const unsigned int sensor = (*itSeed)->channelID().sensor();
+    const unsigned int sensorCol = col + 256 * chip;
     const unsigned int spCol = sensorCol / 2;
     const unsigned int spRow = row / 4;
     const unsigned int spAddr = ((spCol << 6) | spRow);
@@ -92,16 +90,16 @@ StatusCode VPSuperPixelBankEncoder::execute() {
 
     bool found = false;
 
-    for (unsigned int j = 0; j < m_spBySensor[globalSensor].size(); j++) {
-      if ((m_spBySensor[globalSensor][j] >> 8) == spAddr) {
-        m_spBySensor[globalSensor][j] |= spix;
+    for (unsigned int j = 0; j < m_spBySensor[sensor].size(); j++) {
+      if ((m_spBySensor[sensor][j] >> 8) == spAddr) {
+        m_spBySensor[sensor][j] |= spix;
         found = true;
         break;
       }
     }
 
     if (!found) {
-      m_spBySensor[globalSensor].push_back((spAddr << 8) | spix);
+      m_spBySensor[sensor].push_back((spAddr << 8) | spix);
     }
 
   }

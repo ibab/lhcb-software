@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-04-25 - Heinrich Schindler
+ - Follow changes in VPChannelID format (r171869).
+
 ! 2014-04-14 - Heinrich Schindler
  - Remove do-nothing finalize method.
  - Run clang-format for consistent style.
