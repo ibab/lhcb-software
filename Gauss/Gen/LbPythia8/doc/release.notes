@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-04-35 - Marco Clemencic
+ - Minor improvement to CMake configuration.
+
 !======================== LbPythia8 v7r7p2 2014-03-31 ========================
 ! 2014-03-31 - Gloria Corti
  - Fix options to set pt0 to 2.6 for all production mechanisms
