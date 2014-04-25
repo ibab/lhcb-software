@@ -17,6 +17,21 @@ set(generators_versions
     thepeg      1.8.1
     )
 
+# FIXME: temporary work around, because LCG_68 does not contain the versions we want
+set(generators_versions
+    alpgen      2.1.4
+    herwig++    2.7.0
+    hijing      1.383bs.2
+    lhapdf      5.9.1
+    photos++    3.52
+    powheg-box  r2092
+    pythia6     428.2
+    pythia8     183
+    rivet       1.9.0
+    tauola++    1.1.4
+    thepeg      1.9.0
+    )
+
 # Process the lines of LCG_generators_*.txt file to extract the
 # needed generators (variable generators_versions)
 macro(lcg_set_generator name hash version dir)
