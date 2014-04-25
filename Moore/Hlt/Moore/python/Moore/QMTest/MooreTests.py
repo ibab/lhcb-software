@@ -169,7 +169,7 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
         return
     
     if not os.path.exists(refFile):
-        causes.append("Cannot compare timing, reference table does not exit "+reffile)
+        causes.append("Cannot compare timing, reference table does not exit "+refFile)
         return
     
     TTref=TTParser.parse(refFile)
