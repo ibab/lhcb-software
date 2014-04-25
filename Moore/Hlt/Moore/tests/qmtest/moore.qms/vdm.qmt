@@ -35,9 +35,9 @@ countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 from LHCbAlgs import TTParser
 timingdict=TTParser.event_av_dict("VanDerMeerScan_Jul12.csv")
 
-if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
+if len([t for t in timingdict if t.startswith("Hlt2")])!=0:
     causes.append('Does not look like pass-through')
-    result['moore.vdm.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    result['moore.vdm.passthrough'] = result.Quote('Expected no Hlt2 entries in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
 
 if 'Hlt1BeamGasBeam1' not in timingdict:
     causes.append('Doesnt contain beamgas lines')
