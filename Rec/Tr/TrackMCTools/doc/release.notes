@@ -6,6 +6,7 @@
 
 ! 2014-04-25 - Heinrich Schindler
  - Move PatPixelDebugTool to Pr/PrMCTools.
+ - DebugTrackingLosses: follow changes in VPChannelID format (r171869).
 
 !========================= TrackMCTools v3r8 2014-03-18 =======================
 ! 2014-03-13 - Heinrich Schindler

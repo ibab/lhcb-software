@@ -191,7 +191,8 @@ StatusCode DebugTrackingLosses::execute() {
             info() << endmsg;
           } else if ( (*itId).isVP() ) {
             LHCb::VPChannelID idV = (*itId).vpID();
-            info() << format( "   Velo Module %3d chip%3d pixel %4d ", idV.module(), idV.chip(), idV.pixel() );
+            info() << format( "   Velo Sensor %3d chip %3d col %3d row %3d", 
+                              idV.sensor(), idV.chip(), idV.col(), idV.row() );
             LHCb::MCParticle* part = pxLink.first( idV );
             while ( 0 != part ) {
               info() << " " << part->key();
