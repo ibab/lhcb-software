@@ -1,13 +1,30 @@
-! $Id:$ 
+! $Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Analysis/PyPAW
 ! Responsible : Vanya Belyaev
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
-!                    $Revision:$
-! Last modifitcation $Date:$
-!                 by $Author:$
+!                    $Revision$
+! Last modifitcation $Date$
+!                 by $Author$
 ! -----------------------------------------------------------------------------
+
+! 2014-04-26 - Vanya Belyaev
+
+ - Several changes:
+
+  1) with some totally unclear and mistic actions, 
+     the opening of ROOT TCanvas is reenabled. Actually the temporary 
+     canvas is created and deleted... It is strange, but it helps...
+ 
+  2) now one can specify as arguments the files to be executed, e.g: 
+
+          pypaw  a.py a.py c.py 
+
+     "execfile" is used, therefore all files are executed in local context
+
+  3) trilinear interpolation is added for 3D-histograms 
+
 
 ! 2014-04-23 - Sasha Baranov
  - Fix vname bug in SelectorWithVars
