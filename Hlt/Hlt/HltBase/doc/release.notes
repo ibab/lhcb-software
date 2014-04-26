@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================= HltBase v15r0 2014-04-26 =========================
 ! 2014-04-24 - Gerhard Raven
  - replace some default destructor implementations with '= default'
 
@@ -11,7 +12,6 @@
  - explicitly instantiate the template member function  HltStage::set for
    the relevant types so that they explicitly appear in the python dictionary.
 
-!========================= HltBase v15r0 2014-04-22 =========================
 ! 2014-04-21 - Gerhard Raven
  - change HltStage to use a variant (see https://savannah.cern.ch/task/?48822)
  - change Cache interface to use StringKey (see https://savannah.cern.ch/task/?48821)
