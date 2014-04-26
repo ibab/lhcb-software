@@ -7,14 +7,14 @@ gaudi_depends_on_subdirs(Det/VPDet
                          Event/DAQEvent
                          Event/DigiEvent
                          Event/TrackEvent
-                         Tf/PatKernel
+                         Pr/PrKernel
                          GaudiAlg
                          GaudiKernel)
 
 
 gaudi_add_module(PrPixel
                  src/*.cpp
-                 INCLUDE_DIRS AIDA GSL Tf/PatKernel
+                 INCLUDE_DIRS AIDA GSL Pr/PrKernel
 		 LINK_LIBRARIES VPDetLib DAQEventLib TrackEvent GaudiAlgLib GaudiKernel )
 
 
