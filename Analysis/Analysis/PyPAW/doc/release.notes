@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-04-26 - Vanya Belyaev
+ - add the slices abnd projections for 2D and 3D historgams 
+
 !========================= PyPAW v1r2 2014-04-26 ==============================
 
 ! 2014-04-26 - Vanya Belyaev
@@ -40,7 +43,7 @@
  - minor fix 
 
 ! 2014-03-16 - Vanya Belyaev
- - minor fox of import statement 
+ - minor fix of import statement 
 
 !========================= PyPAW v1r0 2014-03-11 ==============================
 

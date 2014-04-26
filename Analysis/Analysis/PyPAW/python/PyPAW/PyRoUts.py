@@ -297,9 +297,9 @@ def _poisson_ ( s , fluctuate , accept = lambda s : True ) :
     """
     v = s.value() 
     if v <= 0 and not fluctuate :
-        raise TypeErorr, 'Non-positive mean without fluctuations (1)'
+        raise TypeError, 'Non-positive mean without fluctuations (1)'
     if v <= 0 and s.cov2() <=0  :
-        raise TypeErorr, 'Non-positive mean without fluctuations (2)'
+        raise TypeError, 'Non-positive mean without fluctuations (2)'
 
     e = s.error() 
     if abs(v)/e > 3 :
@@ -1240,7 +1240,7 @@ def _a_get_item_ ( axis , i ) :
 ROOT.TAxis.__getitem__  = _a_get_item_
 
 # =============================================================================
-# soem minor decoration for 2D-histos 
+# some minor decoration for 2D-histos 
 # =============================================================================
 
 # =============================================================================
@@ -1481,7 +1481,7 @@ def allInts ( histo         ,
 ROOT.TH1.allInts = allInts
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs
+## calculate the efficiency histogram using the binomial errors
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1491,7 +1491,7 @@ ROOT.TH1.allInts = allInts
 #  @date   2011-06-07
 def binomEff_h1 ( h1 , h2 , func = binomEff ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
     
     >>> accepted   = ...
     >>> total      = ...
@@ -1531,7 +1531,7 @@ ROOT.TH1F.  binomEff    = binomEff_h1
 ROOT.TH1D.  binomEff    = binomEff_h1 
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs 
+## calculate the efficiency histogram using the binomial errors 
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1541,7 +1541,7 @@ ROOT.TH1D.  binomEff    = binomEff_h1
 #  @date   2011-06-07
 def binomEff_h2 ( h1 , h2 , func = binomEff ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
 
     >>> accepted   = ...
     >>> total      = ...
@@ -1580,7 +1580,7 @@ ROOT.TH2F.  binomEff    = binomEff_h2
 ROOT.TH2D.  binomEff    = binomEff_h2 
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs 
+## calculate the efficiency histogram using the binomial errors 
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1590,7 +1590,7 @@ ROOT.TH2D.  binomEff    = binomEff_h2
 #  @date   2011-06-07
 def binomEff_h3 ( h1 , h2 , func = binomEff ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
 
     >>> accepted   = ...
     >>> total      = ...
@@ -1637,7 +1637,7 @@ ROOT.TH3D . __floordiv__  = binomEff_h3
 
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs
+## calculate the efficiency histogram using the binomial errors
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1650,7 +1650,7 @@ ROOT.TH3D . __floordiv__  = binomEff_h3
 #  @date   2011-06-07
 def zechEff_h1 ( h1 , h2 ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
     
     >>> accepted  = ... ##  histogram for accepted sample 
     >>> total     = ... ##  histogram for total    sample 
@@ -1686,7 +1686,7 @@ ROOT.TH1F.  zechEff    = zechEff_h1
 ROOT.TH1D.  zechEff    = zechEff_h1 
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs
+## calculate the efficiency histogram using the binomial errors
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1699,7 +1699,7 @@ ROOT.TH1D.  zechEff    = zechEff_h1
 #  @date   2011-06-07
 def zechEff_h2 ( h1 , h2 ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
     
     >>> accepted  = ... ##  histogram for accepted sample 
     >>> total     = ... ##  histogram for total    sample 
@@ -1735,7 +1735,7 @@ ROOT.TH2F.  zechEff    = zechEff_h2
 ROOT.TH2D.  zechEff    = zechEff_h2 
 
 # =============================================================================
-## calculate the efficiency histogram using the binomial erorrs
+## calculate the efficiency histogram using the binomial errors
 #  @code 
 #  >>> accepted   = ...
 #  >>> total      = ...
@@ -1748,7 +1748,7 @@ ROOT.TH2D.  zechEff    = zechEff_h2
 #  @date   2011-06-07
 def zechEff_h3 ( h1 , h2 ) :
     """
-    Calculate the efficiency histogram using the binomial erorrs
+    Calculate the efficiency histogram using the binomial errors
     
     >>> accepted  = ... ##  histogram for accepted sample 
     >>> total     = ... ##  histogram for total    sample 
@@ -3958,7 +3958,7 @@ ROOT.TGraph  . xminmax = _gr_xminmax_
 #  @date   2011-06-07
 def hToGraph_ ( h1 , funcx , funcy ) :
     """
-    Convert  1D-histogram into TGraphAsymmErorr 
+    Convert  1D-histogram into TGraphAsymmError 
 
     """
     #
@@ -4004,7 +4004,7 @@ def hToGraph2 ( h1 , bias ) :
     
     """
     if abs ( bias ) > 1 :
-        raise ValueErorr, ' Illegal value for "bias" parameter '
+        raise ValueError, ' Illegal value for "bias" parameter '
     
     funcx = lambda x,y : ( x.value() + x.error()*bias , x.error()*(1+bias) , x.error()*(1-bias) ) 
     funcy = lambda x,y : ( y.value()                  , y.error()          , y.error()          ) 
@@ -4028,7 +4028,7 @@ def hToGraph3 ( h1 , bias ) :
     for p in h1.iteritems() :
         x = p[1]
         if x.error() < abs ( bias ) :
-            raise ValueErorr, ' Illegal value for "bias" parameter '
+            raise ValueError, ' Illegal value for "bias" parameter '
         
     funcx = lambda x,y : ( x.value() + bias , x.error()+bias , x.error()-bias )
     funcy = lambda x,y : ( y.value()        , y.error()      , y.error()      ) 
@@ -5244,6 +5244,169 @@ ROOT.TH1F . solve       = _solve_
 ROOT.TH1D . solve       = _solve_                              
 ROOT.TH1F . equal_edges = _equal_edges_                              
 ROOT.TH1D . equal_edges = _equal_edges_                         
+
+# =============================================================================
+# slices
+# =============================================================================
+## define 2D slice for 2D-historgam
+def _h2_get_slice_ ( h2 , axis , ibins ) :
+    """
+    Get 1D-slice for 2D-histogram
+
+    >>> histo2 = ...
+    >>> h1 = histo2.sliceX ( 1        ) ## along 1st X-bin
+    >>> h2 = histo2.sliceY ( [2,4,19] ) ## along 2nd,4th and 19th Y-bins
+    
+    """
+    #
+    if   1 == axis :
+        if isinstance ( ibins , ( int , long ) ) :
+            if not ibin in h2.GetXaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibins
+            ibins = ibins,
+        h_slice = h1_axis ( h2.GetYaxis () ,
+                            title  = h2.GetTitle() + ":X-slice %s" % ibins , 
+                            double = isinstance ( h2 , ROOT.TH2D )         )              
+    elif 2 == axis : 
+        if isinstance ( ibins , ( int , long ) ) :
+            if not ibins in h2.GetYaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibins 
+            ibins = ibins,
+        h_slice = h1_axis ( h2.GetXaxis () ,
+                            title  = h2.GetTitle() + ":Y-slice %s" % ibins , 
+                            double = isinstance ( h2 , ROOT.TH2D )         )  
+            
+    else :
+        raise TypeError, 'Illegal axis index %s' % axis 
+
+    ## fill the slice historgam
+    for i in h2 :
+        
+        ix = i[0]
+        iy = i[1]
+        
+        if   1 == axis and ix in ibins : h_slice [ iy ] += h2 [ i ]
+        elif 2 == axis and iy in ibins : h_slice [ ix ] += h2 [ i ]
+        
+    return h_slice 
+
+ROOT.TH2F . slice  = _h2_get_slice_ 
+ROOT.TH2F . sliceX = lambda s , ibin : _h2_get_slice_ ( s , 1 , ibin ) 
+ROOT.TH2F . sliceY = lambda s , ibin : _h2_get_slice_ ( s , 2 , ibin ) 
+
+ROOT.TH2D . slice  = _h2_get_slice_
+ROOT.TH2D . sliceX = lambda s , ibin : _h2_get_slice_ ( s , 1 , ibin ) 
+ROOT.TH2D . sliceY = lambda s , ibin : _h2_get_slice_ ( s , 2 , ibin ) 
+
+# =============================================================================
+## define 2D slice for 3D-historgam
+def _h3_get_slice_ ( h2 , axis , ibins ) :
+    """
+    Get 2D-slice for 3D-histogram
+    
+    >>> histo3 = ...
+    >>> h1 = histo3.sliceX ( 1          ) ## along 1st X-bin
+    >>> h2 = histo3.sliceY ( [2,4,19]   ) ## along 2nd,4th and 19th Y-bins
+    >>> h3 = histo3.sliceZ ( range(3,8) ) ## along 3-8th Z-bins
+
+    """
+    #
+    if   1 == axis :
+        if isinstance ( ibins , (int,long) ) : 
+            if not ibin in h2.GetXaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibin
+            ibins = ibins ,
+        h_slice = h2_axes ( h2.GetYaxis () ,
+                            h2.GetZaxis () ,
+                            title  = h3.GetTitle()+ ":X-slice %s" % ibins , 
+                            double = isinstance ( h3 , ROOT.TH3D )        )
+        
+    elif 2 == axis : 
+        if isinstance ( ibins , (int,long) ) : 
+            if not ibin in h2.GetYaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibin
+            ibins = ibins ,
+        h_slice = h2_axes ( h2.GetXaxis () ,
+                            h2.GetZaxis () ,
+                            title  = h3.GetTitle()+ ":Y-slice %s" % ibnis , 
+                            double = isinstance ( h3 , ROOT.TH2D )        )             
+    elif 3 == axis : 
+        if isinstance ( ibins , (int,long) ) : 
+            if not ibin in h2.GetZaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibin 
+            ibins = ibins ,
+        h_slice = h2_axes ( h2.GetXaxis () , 
+                            h2.GetYaxis () ,
+                            title  = h3.GetTitle()+ ":Z-slice %s" % ibins , 
+                            double = isinstance ( h3 , ROOT.TH2D ) )     
+    else :
+        raise TypeError, 'Illegal axis index %s' % axis 
+
+    ## fill the slice historgam
+    for i in h3 :
+        
+        ix = i[0]
+        iy = i[1]
+        iz = i[2]
+        
+        if   1 == axis and ix in ibins : h_slice [ iy , iz ] += h3 [ i ]
+        elif 2 == axis and iy in ibins : h_slice [ ix , iz ] += h3 [ i ]
+        elif 3 == axis and iz in ibins : h_slice [ ix , iy ] += h3 [ i ] 
+
+    return h_slice 
+
+ROOT.TH3F . slice  = _h3_get_slice_
+ROOT.TH3F . sliceX = lambda s,ibin : _h3_get_slice_ ( s , 1 , ibin ) 
+ROOT.TH3F . sliceY = lambda s,ibin : _h3_get_slice_ ( s , 2 , ibin ) 
+ROOT.TH3F . sliceZ = lambda s,ibin : _h3_get_slice_ ( s , 3 , ibin ) 
+
+ROOT.TH3D . slice  = _h3_get_slice_ 
+ROOT.TH3D . sliceX = lambda s,ibin : _h3_get_slice_ ( s , 1 , ibin ) 
+ROOT.TH3D . sliceY = lambda s,ibin : _h3_get_slice_ ( s , 2 , ibin ) 
+ROOT.TH3D . sliceZ = lambda s,ibin : _h3_get_slice_ ( s , 3 , ibin ) 
+
+
+# ============================================================================
+## make projections
+#  see ROOT::TH2::ProjectionX
+#  see ROOT::TH2::ProjectionY
+def _h2_proj_ ( h2 , axis , *args ) :
+    """
+    Make histogram projection along the axis
+
+    >>> histo2 = ...
+    >>> hx = histo2.projX ()
+    >>> hy = histo2.projY ()
+    
+    """
+    if   1 == axis : return self.ProjectionX ( hID () , *args ) 
+    elif 1 == axis : return self.ProjectionY ( hID () , *args )
+
+    raise TypeError, 'Illegal axis index %s' % axis 
+
+_h2_proj_ . __doc__ += '\n'
+_h2_proj_ . __doc__ += ROOT.TH2.ProjectionX.__doc__
+_h2_proj_ . __doc__ += ROOT.TH2.ProjectionY.__doc__
+
+
+ROOT.TH2F . proj   = _h2_proj_
+ROOT.TH2F . projX  = lambda s , *args : _h2_proj_ ( s , 1 , *args )
+ROOT.TH2F . projY  = lambda s , *args : _h2_proj_ ( s , 2 , *args )
+
+ROOT.TH2D . proj   = _h2_proj_
+ROOT.TH2D . projX  = lambda s , *args : _h2_proj_ ( s , 1 , *args )
+ROOT.TH2D . projY  = lambda s , *args : _h2_proj_ ( s , 2 , *args )
+
+
+ROOT. TH3 . projX  = lambda s : s.Project ( 'x'  )
+ROOT. TH3 . projY  = lambda s : s.Project ( 'y'  )
+ROOT. TH3 . projZ  = lambda s : s.Project ( 'z'  )
+ROOT. TH3 . projXY = lambda s : s.Project ( 'xy' )
+ROOT. TH3 . projYX = lambda s : s.Project ( 'yx' )
+ROOT. TH3 . projXZ = lambda s : s.Project ( 'xz' )
+ROOT. TH3 . projZX = lambda s : s.Project ( 'zx' )
+ROOT. TH3 . projYZ = lambda s : s.Project ( 'yz' )
+ROOT. TH3 . projZY = lambda s : s.Project ( 'zy' )
 
 
 # =============================================================================
