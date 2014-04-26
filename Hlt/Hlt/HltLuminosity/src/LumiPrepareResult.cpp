@@ -29,12 +29,6 @@ LumiPrepareResult::LumiPrepareResult( const std::string& name,
     declareProperty( "OutputContainer",
                      m_OutputContainerName = LHCb::HltLumiResultLocation::Default );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-LumiPrepareResult::~LumiPrepareResult()
-{
-}
 
 //=============================================================================
 // Initialization

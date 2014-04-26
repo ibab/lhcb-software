@@ -29,10 +29,10 @@ class LumiHistoCollector : public HltBaseAlg
     LumiHistoCollector( const std::string& name, ISvcLocator* pSvcLocator );
 
     // Standard destructor
-    virtual ~LumiHistoCollector();
+    ~LumiHistoCollector() override = default;
 
     // initialize algorithm
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
 
   private:
     // analyse histos
@@ -51,7 +51,7 @@ class LumiHistoCollector : public HltBaseAlg
 
   private:
     // driver of the execute()
-    StatusCode execute();
+    StatusCode execute() override;
 
   private:
     // period to update filling of histogram

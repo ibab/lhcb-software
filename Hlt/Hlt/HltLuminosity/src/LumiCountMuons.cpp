@@ -28,9 +28,6 @@ LumiCountMuons::LumiCountMuons( const std::string& name, ISvcLocator* pSvcLocato
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
     declareProperty( "Threshold", m_Threshold = 2.0 );
 }
-LumiCountMuons::~LumiCountMuons()
-{
-}
 
 StatusCode LumiCountMuons::initialize()
 {
@@ -61,7 +58,7 @@ StatusCode LumiCountMuons::execute()
     LHCb::L0MuonCandidates* cands =
         getIfExists<LHCb::L0MuonCandidates>( m_InputSelectionName );
     // FIXME/TODO: is L0MuonCandidate signed or unsigned????
-    int nCand = cands ? std::count_if( cands->begin(), cands->end(),
+    int nCand = cands ? std::count_if( std::begin(*cands), std::end(*cands),
                                        [&]( const LHCb::L0MuonCandidate* c ) {
                             return c->pt() > m_Threshold;
                         } )

@@ -18,10 +18,10 @@ class LumiFromL0DU : public GaudiAlgorithm
     /// Standard constructor
     LumiFromL0DU( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~LumiFromL0DU(); ///< Destructor
+    ~LumiFromL0DU() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     std::string m_InputSelectionName;

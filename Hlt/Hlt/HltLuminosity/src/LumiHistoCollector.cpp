@@ -55,10 +55,6 @@ LumiHistoCollector::LumiHistoCollector( const std::string& name,
     declareProperty( "PathBase", m_pathBase = "/stat/Histo" );
 }
 
-LumiHistoCollector::~LumiHistoCollector()
-{
-}
-
 StatusCode LumiHistoCollector::initialize()
 {
 

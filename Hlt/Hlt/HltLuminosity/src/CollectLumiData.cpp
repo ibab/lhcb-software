@@ -36,13 +36,6 @@ CollectLumiData::CollectLumiData( std::string name, ISvcLocator* pSvcLocator )
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-CollectLumiData::~CollectLumiData()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode CollectLumiData::initialize()

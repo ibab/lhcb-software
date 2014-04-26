@@ -29,11 +29,6 @@ LumiHistoMaker::LumiHistoMaker( const std::string& name, ISvcLocator* pSvcLocato
     declareProperty( "Threshold", m_Threshold = 5 );
 }
 
-LumiHistoMaker::~LumiHistoMaker()
-{
-    // delete m_outputSelection;
-}
-
 StatusCode LumiHistoMaker::initialize()
 {
 

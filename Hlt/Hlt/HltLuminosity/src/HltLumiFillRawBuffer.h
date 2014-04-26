@@ -20,16 +20,14 @@ class HltLumiFillRawBuffer : public GaudiAlgorithm
     /// Standard constructor
     HltLumiFillRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~HltLumiFillRawBuffer(); ///< Destructor
+    ~HltLumiFillRawBuffer() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
-    virtual StatusCode finalize();   ///< Algorithm finalization
-
-  protected:
-    void fillDataBankShort();
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
+    StatusCode finalize() override;   ///< Algorithm finalization
 
   private:
+    void fillDataBankShort();
     std::string m_inputBank;
 
     int m_LastKey;

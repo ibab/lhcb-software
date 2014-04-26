@@ -36,13 +36,6 @@ LumiCountTracks::LumiCountTracks( const std::string& name, ISvcLocator* pSvcLoca
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-LumiCountTracks::~LumiCountTracks()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode LumiCountTracks::initialize()

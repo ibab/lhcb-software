@@ -31,11 +31,6 @@ HltLumiOdinReader::HltLumiOdinReader( const std::string& name,
     m_selection.declareProperties();
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-HltLumiOdinReader::~HltLumiOdinReader() {}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode HltLumiOdinReader::initialize()

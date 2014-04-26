@@ -18,10 +18,10 @@ class LumiPrepareResult : public GaudiAlgorithm
     /// Standard constructor
     LumiPrepareResult( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~LumiPrepareResult(); ///< Destructor
+    ~LumiPrepareResult() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override ; ///< Algorithm initialization
+    StatusCode execute() override ;    ///< Algorithm execution
 
   private:
     std::string m_OutputContainerName;

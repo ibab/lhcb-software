@@ -39,13 +39,6 @@ LumiCountVertices::LumiCountVertices( const std::string& name,
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-LumiCountVertices::~LumiCountVertices()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode LumiCountVertices::initialize()

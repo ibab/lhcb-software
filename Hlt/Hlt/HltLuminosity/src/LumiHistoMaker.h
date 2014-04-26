@@ -26,13 +26,13 @@ class LumiHistoMaker : public HltBaseAlg
     LumiHistoMaker( const std::string& name, ISvcLocator* pSvcLocator );
 
     // Standard destructor
-    virtual ~LumiHistoMaker();
+    ~LumiHistoMaker() override = default;
 
     // initialize algorithm
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
 
     // driver of the execute()
-    StatusCode execute();
+    StatusCode execute() override;
 
   private:
     // force decision to the value of decision

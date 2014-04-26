@@ -4,12 +4,11 @@
 
 // Include files
 // from Gaudi
-#include <vector>
+#include <string>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
-#include "GaudiAlg/ISequencerTimerTool.h"
-#include "GaudiKernel/StringKey.h"
 #include "HltBase/HltBaseAlg.h"
+#include "HltBase/HltSelection.h"
 
 /** @class LumiCountHltTracks LumiCountHltTracks.h
  *
@@ -25,10 +24,10 @@ class LumiCountHltTracks : public HltBaseAlg
     /// Standard constructor
     LumiCountHltTracks( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~LumiCountHltTracks(); ///< Destructor
+    ~LumiCountHltTracks() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     const Hlt::Selection* m_input;

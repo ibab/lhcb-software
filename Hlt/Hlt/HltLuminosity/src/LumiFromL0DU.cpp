@@ -35,13 +35,6 @@ LumiFromL0DU::LumiFromL0DU( const std::string& name, ISvcLocator* pSvcLocator )
     declareProperty( "CounterMap", m_CounterValueProperty );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-LumiFromL0DU::~LumiFromL0DU()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode LumiFromL0DU::initialize()

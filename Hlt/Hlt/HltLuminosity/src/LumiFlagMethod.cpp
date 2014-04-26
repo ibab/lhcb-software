@@ -38,13 +38,6 @@ LumiFlagMethod::LumiFlagMethod( const std::string& name, ISvcLocator* pSvcLocato
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-LumiFlagMethod::~LumiFlagMethod()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode LumiFlagMethod::initialize()

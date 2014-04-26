@@ -37,29 +37,22 @@ LumiCountHltTracks::LumiCountHltTracks( const std::string& name,
     declareProperty( "OutputContainer",
                      m_OutputContainerName = LHCb::HltLumiSummaryLocation::Default );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-LumiCountHltTracks::~LumiCountHltTracks()
-{
-}
-
 //=============================================================================//
 // Initialization
 //=============================================================================
 StatusCode LumiCountHltTracks::initialize()
 {
-
-    Hlt::IRegister::Lock lock( regSvc(), this );
     StatusCode sc = HltBaseAlg::initialize();
     if ( sc.isFailure() ) return sc;
+
+    Hlt::IRegister::Lock lock( regSvc(), this );
     sc = regSvc()->registerInput( m_InputSelectionName, this );
     if ( sc.isFailure() ) {
         error() << " could not register " << m_InputSelectionName << endmsg;
         return sc;
     }
     m_input = hltSvc()->selection( m_InputSelectionName, this );
-    if ( m_input == 0 ) {
+    if ( !m_input ) {
         error() << " could not obtain " << m_InputSelectionName << endmsg;
         return StatusCode::FAILURE;
     }
@@ -87,7 +80,6 @@ StatusCode LumiCountHltTracks::initialize()
 //=============================================================================
 StatusCode LumiCountHltTracks::execute()
 {
-
     // get container, and add track counter
     LHCb::HltLumiSummary* sum =
         getOrCreate<HltLumiSummary, HltLumiSummary>( m_OutputContainerName );

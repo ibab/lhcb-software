@@ -39,11 +39,11 @@ class LumiHisto2dSPD : public Calo2Dview
     /// Standard constructor
     LumiHisto2dSPD( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~LumiHisto2dSPD(); ///< Destructor
+    ~LumiHisto2dSPD() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
-    virtual StatusCode finalize();   ///< Algorithm finalization
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
+    StatusCode finalize() override;   ///< Algorithm finalization
 
   private:
     // AIDA::IHistogram2D* HistoSPD;

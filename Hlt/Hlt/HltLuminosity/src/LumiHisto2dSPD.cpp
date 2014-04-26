@@ -26,13 +26,6 @@ LumiHisto2dSPD::LumiHisto2dSPD( const std::string& name, ISvcLocator* pSvcLocato
     declareProperty( "HistoTitle", m_htitle = "" );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-LumiHisto2dSPD::~LumiHisto2dSPD()
-{
-}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode LumiHisto2dSPD::initialize()

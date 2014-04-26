@@ -23,10 +23,10 @@ class HltLumiOdinReader : public HltAlgorithm
     /// Standard constructor
     HltLumiOdinReader( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~HltLumiOdinReader(); ///< Destructor
+    ~HltLumiOdinReader() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     Hlt::SelectionContainer<void> m_selection;

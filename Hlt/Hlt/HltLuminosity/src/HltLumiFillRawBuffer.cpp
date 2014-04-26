@@ -35,11 +35,6 @@ HltLumiFillRawBuffer::HltLumiFillRawBuffer( const std::string& name,
                      m_inputBank = LHCb::HltLumiSummaryLocation::Default );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-HltLumiFillRawBuffer::~HltLumiFillRawBuffer() {}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode HltLumiFillRawBuffer::initialize()

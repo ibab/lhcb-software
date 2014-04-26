@@ -2,6 +2,8 @@
 #define LUMICOUNTVELOWITHZRCUTS_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include <cmath>
 
 /** @class LumiCountVeloWithZRCuts LumiCountVeloWithZRCuts.h
  *
@@ -14,16 +16,21 @@ class LumiCountVeloWithZRCuts : public GaudiAlgorithm
 {
   public:
     LumiCountVeloWithZRCuts( std::string name, ISvcLocator* pSvcLocator );
-    virtual ~LumiCountVeloWithZRCuts();
+    ~LumiCountVeloWithZRCuts() override = default;
 
-    virtual StatusCode initialize();
-    virtual StatusCode execute();
+    StatusCode initialize() override;
+    StatusCode execute() override;
 
-  protected:
+  private:
     std::string m_TrackCounterName, m_VertexCounterName;
     std::string m_TrackInputSelectionName, m_VertexInputSelectionName;
     std::string m_OutputContainerName;
     double m_AbsZCut, m_RCut;
     int m_TrackCounter, m_VertexCounter;
+
+    bool fiducial(const Gaudi::XYZPoint&  p) const {
+         return std::fabs( p.z() )   < m_AbsZCut &&
+                           p.Perp2() < m_RCut * m_RCut;
+    }
 };
 #endif

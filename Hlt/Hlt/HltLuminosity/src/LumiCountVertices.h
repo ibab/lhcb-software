@@ -21,10 +21,10 @@ class LumiCountVertices : public GaudiAlgorithm
     /// Standard constructor
     LumiCountVertices( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~LumiCountVertices(); ///< Destructor
+    ~LumiCountVertices() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     std::string m_InputSelectionName;

@@ -14,10 +14,10 @@ class LumiCountMuons : public GaudiAlgorithm
 {
   public:
     LumiCountMuons( const std::string& name, ISvcLocator* pSvcLocator );
-    virtual ~LumiCountMuons();
+    ~LumiCountMuons() override = default;
 
-    virtual StatusCode initialize();
-    virtual StatusCode execute();
+    StatusCode initialize();
+    StatusCode execute();
 
   protected:
     std::string m_CounterName;

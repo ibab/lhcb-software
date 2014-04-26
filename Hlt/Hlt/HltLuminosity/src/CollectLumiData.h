@@ -25,7 +25,7 @@ class CollectLumiData : public GaudiAlgorithm
     /// Standard constructor
     CollectLumiData( std::string name, ISvcLocator* pSvcLocator );
 
-    virtual ~CollectLumiData(); ///< Destructor
+    ~CollectLumiData() override = default; ///< Destructor
 
     virtual StatusCode initialize(); ///< Algorithm initialization
     virtual StatusCode execute();    ///< Algorithm execution
