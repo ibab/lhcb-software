@@ -98,7 +98,11 @@ class GAUDI_API Candidate : public ContainedObject
   public:
     // ========================================================================
     /// Destructor
-    virtual ~Candidate();
+    virtual ~Candidate() 
+#ifndef __GCCXML__
+        = default
+#endif
+        ;
     // ========================================================================
   public:
     // ========================================================================

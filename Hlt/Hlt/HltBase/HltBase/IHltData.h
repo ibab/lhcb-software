@@ -130,7 +130,11 @@ class IData : virtual public IInterface
   protected:
     // ========================================================================
     /// virtual & protected destructor
-    virtual ~IData(); // virtual & protected destructor
+    virtual ~IData() 
+#ifndef __GCCXML__
+        = default
+#endif
+        ;
     // ========================================================================
 };
 // ==========================================================================

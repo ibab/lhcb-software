@@ -200,7 +200,11 @@ class IInspector : virtual public IInterface
   protected:
     // ========================================================================
     /// virtual & protected destructor
-    virtual ~IInspector(); // virtual & protected destructor
+    virtual ~IInspector() 
+#ifndef __GCCXML__
+        = default
+#endif
+        ;
     // ========================================================================
 };
 // ==========================================================================

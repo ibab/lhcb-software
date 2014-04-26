@@ -33,12 +33,6 @@ const CLID& Hlt::Stage::classID()
     return CLID_Stage;
 }
 // ============================================================================
-// Default Destructor
-// ============================================================================
-Hlt::Stage::~Stage()
-{
-}
-// ============================================================================
 Hlt::Stage::Lock::Lock( Stage* stage, const INamedInterface* locker )
     : m_locker(locker), m_stage(stage)
 {

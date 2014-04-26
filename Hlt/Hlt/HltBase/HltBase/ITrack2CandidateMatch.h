@@ -68,7 +68,11 @@ class GAUDI_API ITrack2CandidateMatch : virtual public IAlgTool
   protected:
     // ========================================================================
     /// protected & virtual destructor
-    virtual ~ITrack2CandidateMatch(); // protected & virtual destructior
+    virtual ~ITrack2CandidateMatch() 
+#ifndef __GCCXML__
+        = default
+#endif
+        ;
     // ========================================================================
 };
 // ==========================================================================
