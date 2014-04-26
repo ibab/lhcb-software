@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ==========================================================================================
-# $Id:$
+# $Id$
 # ==========================================================================================
 ## @file  PyTMVA.py
 #
@@ -31,9 +31,9 @@
 #  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
 #  @thanks Albert PUIG
 #
-#                    $Revision:$
-#  Last modification $Date:$
-#                 by $Author:$ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """
 Python interface to two major TMVA classes :
@@ -61,7 +61,7 @@ with the smear campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV  Ivan.Belyaev@itep.ru'
 __date__    = "2013-10-02"
-__version__ = '$Revision:$'
+__version__ = '$Revision$'
 __all__     = ( "Trainer" , "Reader" )
 # =============================================================================
 import ROOT

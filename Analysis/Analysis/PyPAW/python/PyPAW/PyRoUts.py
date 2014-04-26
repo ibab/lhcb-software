@@ -2,18 +2,18 @@
 # =============================================================================
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: PyRoUts.py 169564 2014-03-03 16:02:41Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with decoration of many ROOT objects for efficient use in python
 #
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #
 #  
-#                    $Revision: 169564 $
-#  Last modification $Date: 2014-03-03 17:02:41 +0100 (Mon, 03 Mar 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """
 
@@ -25,8 +25,8 @@ in particular TH1(x) , TH2(x) , TAxis, TGraph(Errors), etc...
 see also GaudiPython.HistoUtils 
 """
 # =============================================================================
-__version__ = "$Revision: 169564 $"
-__author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
+__version__ = "$Revision$"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================
 __all__     = (
@@ -91,7 +91,7 @@ logger = getLogger( __name__ )
 logger.info ( 'Zillions of decorations for ROOT   objects')
 ## ============================================================================
 # global identifier for ROOT objects 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def rootID ( prefix = 'o_') :
     """
@@ -167,7 +167,7 @@ def _int ( ve , precision = 1.e-5 ) :
 # =============================================================================
 ## get the B/S estimate from the formula 
 #  \f$ \sigma  = \fras{1}{S}\sqrt{1+\frac{B}{S}}\f$
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-15
 def _b2s_ ( s )  :
     """
@@ -189,7 +189,7 @@ def _b2s_ ( s )  :
 
 # =============================================================================
 ## get the precision with some  error estimation 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-15
 def _prec2_ ( s )  :
     """
@@ -326,7 +326,7 @@ VE.poisson = _poisson_
 
 # =============================================================================
 ## iterator for histogram  axis 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _axis_iter_1_ ( a ) :
     """
@@ -345,7 +345,7 @@ ROOT.TAxis . __iter__ = _axis_iter_1_
 
 # =============================================================================
 ## get item for the 1-D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_get_item_ ( h1 , ibin ) :
     """
@@ -365,7 +365,7 @@ def _h1_get_item_ ( h1 , ibin ) :
 
 # ==========================================================================
 ## get item for the 2D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_set_item_ ( h1 , ibin , v ) :
     """
@@ -397,7 +397,7 @@ ROOT.TH1D. __setitem__ = _h1_set_item_
 
 # ==========================================================================
 ## get item for the 2D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_set_item_ ( h2 , ibin , v ) :
     """
@@ -430,7 +430,7 @@ ROOT.TH2D. __setitem__ = _h2_set_item_
 
 # ==========================================================================
 ## get item for the 3D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_set_item_ ( h3 , ibin , v ) :
     """
@@ -462,7 +462,7 @@ ROOT.TH3D. __setitem__ = _h3_set_item_
 
 # =============================================================================
 ## get item for the 2D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_get_item_ ( h2 , ibin ) :
     """
@@ -483,7 +483,7 @@ def _h2_get_item_ ( h2 , ibin ) :
 
 # =============================================================================
 ## get item for the 3D histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_get_item_ ( h3 , ibin ) :
     """
@@ -505,7 +505,7 @@ def _h3_get_item_ ( h3 , ibin ) :
 
 # =============================================================================
 ## iterator for 1D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_iter_ ( h1 ) :
     """
@@ -524,7 +524,7 @@ ROOT.TH1D . __iter__ = _h1_iter_
 
 # =============================================================================
 ## iterator for 2D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_iter_ ( h2 ) :
     """
@@ -550,7 +550,7 @@ ROOT.TH2D . __iter__ = _h2_iter_
 
 # =============================================================================
 ## iterator for 3D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_iter_ ( h3 ) :
     """
@@ -581,7 +581,7 @@ ROOT.TH3D . __iter__ = _h3_iter_
 # interpolate 
 # =============================================================================
 ## linear interpolation 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def interpolate_1D ( x       ,
                      x0 , v0 ,
@@ -600,7 +600,7 @@ def interpolate_1D ( x       ,
 
 # ========================================================================
 ## bilinear interpolation 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def interpolate_2D ( x   , y   ,
                      x0  , x1  , 
@@ -630,7 +630,7 @@ def interpolate_2D ( x   , y   ,
 
 # =============================================================================
 ## histogram as function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_call_ ( h1 , x , func = lambda s : s , interpolate = True ) :
     """
@@ -706,7 +706,7 @@ ROOT.TH2F  .  binsy       = lambda s : s.GetNbinsY()
 
 # =============================================================================
 ## check bin in 2D-histo 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_contains_ ( s , ibin ) :
     """
@@ -724,7 +724,7 @@ ROOT.TH2D  . __contains__ = _h2_contains_
 
 # ============================================================================
 ## check bin in 3D-histo 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_contains_ ( s , ibin ) :
     """
@@ -767,7 +767,7 @@ ROOT.TH1 . numEmpty = _num_empty_
 
 # =============================================================================
 ## find bin in 1D-histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_find_ ( h1 , x ) :
     """
@@ -782,7 +782,7 @@ def _h1_find_ ( h1 , x ) :
     return ax.FindBin ( x )
 # =============================================================================
 ## find bin in 2D-histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_find_ ( h2 , x , y ) :
     """
@@ -800,7 +800,7 @@ def _h2_find_ ( h2 , x , y ) :
               ay.FindBin ( y ) )
 # =============================================================================
 ## find bin in 3D-histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_find_ ( h3 , x , y , z ) :
     """
@@ -903,7 +903,7 @@ def _h1_find_X ( self             ,
 
 # =============================================================================
 ## histogram as function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_call_ ( h2 , x , y , func = lambda s : s , interpolate = True ) :
     """
@@ -984,9 +984,9 @@ ROOT.TH2D  . __getitem__  = _h2_get_item_
 
 # =============================================================================
 ## histogram as function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
-def _h3_call_ ( h3 , x , y , z , func = lambda s : s ) :
+def _h3_call_ ( h3 , x , y , z , func = lambda s : s , interpolate = True ) :
     """
     Histogram as function:
     
@@ -998,23 +998,82 @@ def _h3_call_ ( h3 , x , y , z , func = lambda s : s ) :
     if hasattr ( y , 'value' )  : return _h3_call_ ( h3 ,  x         , y.value () , z          )
     if hasattr ( z , 'value' )  : return _h3_call_ ( h3 ,  x         , y          , z.value () )
     #
-    ax = h3.GetXaxis (   )
-    ix = ax.FindBin  ( x )
-    if not  1 <= ix <= ax.GetNbins() : return VE ( 0, 0 )
+    ax  = h3.GetXaxis (   )
+    ix  = ax.FindBin  ( x )
+    nbx = ax.GetNbins (   )  
+    if not  1 <= ix <= nbx : return VE ( 0, 0 )
     #
-    ay = h3.GetYaxis (   )
-    iy = ay.FindBin  ( y )
-    if not  1 <= iy <= ay.GetNbins() : return VE ( 0, 0 )
+    ay  = h3.GetYaxis (   )
+    iy  = ay.FindBin  ( y )
+    nby = ay.GetNbins (   )  
+    if not  1 <= iy <= nby : return VE ( 0, 0 )
     ##
-    az = h3.GetZaxis (   )
-    iz = az.FindBin  ( z )
-    if not  1 <= iz <= az.GetNbins() : return VE ( 0, 0 )
+    az  = h3.GetZaxis (   )
+    iz  = az.FindBin  ( z )
+    nbz = az.GetNbins (   )  
+    if not  1 <= iz <= nbz : return VE ( 0, 0 )
     ##
-    ##
-    val = h3.GetBinContent ( ix , iy , iz ) 
-    err = h3.GetBinError   ( ix , iy , iz )
+    if not interpolate :
+        #
+        val = h3.GetBinContent ( ix , iy , iz ) 
+        err = h3.GetBinError   ( ix , iy , iz )
+        #
+        return func ( VE ( val , err * err ) ) 
+    # 
+    ## make trilinear interpolation:
+    #  http://en.wikipedia.org/wiki/Trilinear_interpolation
     #
-    return func ( VE ( val , err * err ) ) 
+    xc = ax.GetBinCenter ( ix )
+    yc = ay.GetBinCenter ( iy )
+    zc = az.GetBinCenter ( iz )
+    #
+    if   1   == ix and x < xc : pass
+    elif nbx == ix and x > xc : pass
+    #
+    if   1   == iy and y < yc : pass
+    elif nby == iy and y > yc : pass
+    #
+    if   1   == iz and z < zc : pass
+    elif nbz == iz and z > zc : pass
+    #
+    if x <= xc : ix0,ix1 = max ( 1 , ix - 1 ) ,             ix
+    else       : ix0,ix1 =           ix       , min ( nbx , ix + 1 )
+    #
+    if y <= yc : iy0,iy1 = max ( 1 , iy - 1 ) ,             iy
+    else       : iy0,iy1 =           iy       , min ( nby , iy + 1 )
+    #
+    if z <= zc : iz0,iz1 = max ( 1 , iz - 1 ) ,             iz
+    else       : iz0,iz1 =           iz       , min ( nbz , iz + 1 )
+    #
+    x0,x1 = ax.GetBinCenter ( ix0 ) , ax.GetBinCenter ( ix1 )
+    y0,y1 = ay.GetBinCenter ( iy0 ) , ay.GetBinCenter ( iy1 )
+    z0,z1 = az.GetBinCenter ( iz0 ) , az.GetBinCenter ( iz1 )
+    #
+    if ix0 == ix1 : xd =   0 
+    else          : xd = ( x - x0 ) / ( x1 - x0 )
+    if iy0 == iy1 : yd =   0 
+    else          : yd = ( y - y0 ) / ( y1 - y0 )
+    if iz0 == iz1 : zd =   0 
+    else          : zd = ( z - z0 ) / ( z1 - z0 )
+    #
+    v000 = VE ( h3.GetBinContent ( ix0 , iy0 , iz0 ) , h3.GetBinError ( ix0 , iy0 , iz0 ) ** 2 )
+    v100 = VE ( h3.GetBinContent ( ix1 , iy0 , iz0 ) , h3.GetBinError ( ix1 , iy0 , iz0 ) ** 2 )
+    v010 = VE ( h3.GetBinContent ( ix0 , iy1 , iz0 ) , h3.GetBinError ( ix0 , iy1 , iz0 ) ** 2 )
+    v110 = VE ( h3.GetBinContent ( ix1 , iy1 , iz0 ) , h3.GetBinError ( ix1 , iy1 , iz0 ) ** 2 )
+    v001 = VE ( h3.GetBinContent ( ix0 , iy0 , iz1 ) , h3.GetBinError ( ix0 , iy0 , iz1 ) ** 2 )
+    v101 = VE ( h3.GetBinContent ( ix1 , iy0 , iz1 ) , h3.GetBinError ( ix1 , iy0 , iz1 ) ** 2 )
+    v011 = VE ( h3.GetBinContent ( ix0 , iy1 , iz1 ) , h3.GetBinError ( ix0 , iy1 , iz1 ) ** 2 )
+    v111 = VE ( h3.GetBinContent ( ix1 , iy1 , iz1 ) , h3.GetBinError ( ix1 , iy1 , iz1 ) ** 2 )
+    # 
+    c00 = v000 * ( 1 - xd ) + v100 * xd
+    c10 = v010 * ( 1 - xd ) + v110 * xd
+    c01 = v001 * ( 1 - xd ) + v101 * xd
+    c11 = v011 * ( 1 - xd ) + v111 * xd
+    #
+    c0  = c00  * ( 1 - yd ) + c10  * yd
+    c1  = c01  * ( 1 - yd ) + c11  * yd
+    #
+    return c0  * ( 1 - zd ) + c1   * zd 
 
 ROOT.TH3   . __call__     = _h3_call_
 ROOT.TH3F  . __getitem__  = _h3_get_item_
@@ -1024,7 +1083,7 @@ ROOT.TH3D  . __getitem__  = _h3_get_item_
 # iterate over items
 # =============================================================================
 ## iterate over entries in 1D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_iteritems_ ( h1 , low = 1 , high = sys.maxsize ) :
     """
@@ -1055,7 +1114,7 @@ ROOT.TH1D  . iteritems     = _h1_iteritems_
 
 # =============================================================================
 ## iterate over entries in 2D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_iteritems_ ( h2 ) :
     """
@@ -1092,7 +1151,7 @@ ROOT.TH2D  . iteritems     = _h2_iteritems_
 
 # =============================================================================
 ## iterate over entries in 3D-histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_iteritems_ ( h3 ) :
     """
@@ -1140,7 +1199,7 @@ ROOT.TH3D  . iteritems     = _h3_iteritems_
 
 # =============================================================================
 ## iterate over items in TAxis
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _a_iteritems_ ( axis ) :
     """
@@ -1237,7 +1296,7 @@ ROOT.TH2D . Colz = _h2_colz_
 
 # =============================================================================
 ## representation of TFitResult object 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_repr_ ( self ) :
     """
@@ -1257,7 +1316,7 @@ def _fit_repr_ ( self ) :
     return _r
 # =============================================================================
 ## iterator over fit-result object 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_iter_ ( r ) :
     """
@@ -1274,7 +1333,7 @@ def _fit_iter_ ( r ) :
         
 # =============================================================================
 ## getitem for fit-result-object            
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _fit_get_item_ ( self , i ) :
     """
@@ -1299,7 +1358,7 @@ ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() )
 #    - number of signal events
 #    - background level under the signal (per bin)
 #    - background slope
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def histoGuess ( histo , mass , sigma ) :
     """
@@ -1375,7 +1434,7 @@ ROOT.TH1D . histoGuess = histoGuess
 
 # =============================================================================
 ## use likelihood in histogram fit ? 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def useLL ( histo         ,
             minc  = 10    ,
@@ -1400,7 +1459,7 @@ ROOT.TH1.useLL = useLL
 
 # =============================================================================
 ## Natural histogram with all integer entries ?
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def allInts ( histo         ,
               diff  = 1.e-4 ) :
@@ -1428,7 +1487,7 @@ ROOT.TH1.allInts = allInts
 #  >>> total      = ...
 #  >>> efficiency = acepted // total
 #  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def binomEff_h1 ( h1 , h2 , func = binomEff ) :
     """
@@ -1478,7 +1537,7 @@ ROOT.TH1D.  binomEff    = binomEff_h1
 #  >>> total      = ...
 #  >>> efficiency = acepted // total
 #  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def binomEff_h2 ( h1 , h2 , func = binomEff ) :
     """
@@ -1527,7 +1586,7 @@ ROOT.TH2D.  binomEff    = binomEff_h2
 #  >>> total      = ...
 #  >>> efficiency = acepted // total
 #  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def binomEff_h3 ( h1 , h2 , func = binomEff ) :
     """
@@ -1587,7 +1646,7 @@ ROOT.TH3D . __floordiv__  = binomEff_h3
 #  @see Gaudi::Math::zechEff
 #  @param h1 histogram of "accepted" sample
 #  @param h2 histogram of "total"    sample 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def zechEff_h1 ( h1 , h2 ) :
     """
@@ -1636,7 +1695,7 @@ ROOT.TH1D.  zechEff    = zechEff_h1
 #  @see Gaudi::Math::zechEff
 #  @param h1 histogram of "accepted" sample
 #  @param h2 histogram of "total"    sample 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def zechEff_h2 ( h1 , h2 ) :
     """
@@ -1685,7 +1744,7 @@ ROOT.TH2D.  zechEff    = zechEff_h2
 #  @see Gaudi::Math::zechEff
 #  @param h1 histogram of "accepted" sample
 #  @param h2 histogram of "total"    sample 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def zechEff_h3 ( h1 , h2 ) :
     """
@@ -1734,7 +1793,7 @@ ROOT.TH3D . __mod__  = zechEff_h3
 
 # =============================================================================
 ## operation with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_oper_ ( h1 , h2 , oper ) :
     """
@@ -1778,7 +1837,7 @@ def _h1_oper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ## operation with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_ioper_ ( h1 , h2 , oper ) :
     """
@@ -1812,7 +1871,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_div_ ( h1 , h2 ) :
     """
@@ -1825,7 +1884,7 @@ def _h1_div_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_mul_ ( h1 , h2 ) :
     """
@@ -1838,7 +1897,7 @@ def _h1_mul_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_add_ ( h1 , h2 ) :
     """
@@ -1851,7 +1910,7 @@ def _h1_add_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_sub_ ( h1 , h2 ) :
     """
@@ -1864,7 +1923,7 @@ def _h1_sub_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 ##  Fraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_frac_ ( h1 , h2 ) :
     """
@@ -1877,7 +1936,7 @@ def _h1_frac_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ##  ``Asymmetry'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_asym_ ( h1 , h2 ) :
     """
@@ -1891,7 +1950,7 @@ def _h1_asym_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ## ``Difference'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_diff_ ( h1 , h2 ) :
     """
@@ -1905,7 +1964,7 @@ def _h1_diff_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : 2*x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_chi2_ ( h1 , h2 ) :
     """
@@ -1919,7 +1978,7 @@ def _h1_chi2_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_mean_ ( h1 , h2 ) :
     """
@@ -1934,7 +1993,7 @@ def _h1_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_pow_ ( h1 , val ) :
     """
@@ -1991,7 +2050,7 @@ def _h1_abs_ ( h1 , val ) :
 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_idiv_ ( h1 , h2 ) :
     """
@@ -2005,7 +2064,7 @@ def _h1_idiv_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_imul_ ( h1 , h2 ) :
     """
@@ -2019,7 +2078,7 @@ def _h1_imul_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_iadd_ ( h1 , h2 ) :
     """
@@ -2033,7 +2092,7 @@ def _h1_iadd_ ( h1 , h2 ) :
     return _h1_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_isub_ ( h1 , h2 ) :
     """
@@ -2048,7 +2107,7 @@ def _h1_isub_ ( h1 , h2 ) :
 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rdiv_ ( h1 , h2 ) :
     """
@@ -2061,7 +2120,7 @@ def _h1_rdiv_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y/x ) 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rmul_ ( h1 , h2 ) :
     """
@@ -2074,7 +2133,7 @@ def _h1_rmul_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y*x ) 
 # =============================================================================
 ##  Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_radd_ ( h1 , h2 ) :
     """
@@ -2087,7 +2146,7 @@ def _h1_radd_ ( h1 , h2 ) :
     return _h1_oper_ ( h1 , h2 , lambda x,y : y+x ) 
 # =============================================================================
 ##  Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rsub_ ( h1 , h2 ) :
     """
@@ -2370,7 +2429,7 @@ ROOT.TH3 . zminmax = lambda s : ( s.zmin() , s.zmax() )
     
 # =============================================================================
 ## operation with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_oper_ ( h1 , h2 , oper ) :
     """
@@ -2446,7 +2505,7 @@ def _h2_ioper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_div_ ( h1 , h2 ) :
     """
@@ -2460,7 +2519,7 @@ def _h2_div_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_mul_ ( h1 , h2 ) :
     """
@@ -2473,7 +2532,7 @@ def _h2_mul_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ## Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_add_ ( h1 , h2 ) :
     """
@@ -2486,7 +2545,7 @@ def _h2_add_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ## Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_sub_ ( h1 , h2 ) :
     """
@@ -2500,7 +2559,7 @@ def _h2_sub_ ( h1 , h2 ) :
 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_rdiv_ ( h1 , h2 ) :
     """
@@ -2514,7 +2573,7 @@ def _h2_rdiv_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : y/x ) 
 # =============================================================================
 ## Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_rmul_ ( h1 , h2 ) :
     """
@@ -2527,7 +2586,7 @@ def _h2_rmul_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : y*x ) 
 # =============================================================================
 ## Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_radd_ ( h1 , h2 ) :
     """
@@ -2540,7 +2599,7 @@ def _h2_radd_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : y+x ) 
 # =============================================================================
 ## Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_rsub_ ( h1 , h2 ) :
     """
@@ -2554,7 +2613,7 @@ def _h2_rsub_ ( h1 , h2 ) :
 
 # =============================================================================
 ##  ``Fraction'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_frac_ ( h1 , h2 ) :
     """
@@ -2568,7 +2627,7 @@ def _h2_frac_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ## ``Asymmetry'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_asym_ ( h1 , h2 ) :
     """
@@ -2581,7 +2640,7 @@ def _h2_asym_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ## ``Difference'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-06-03
 def _h2_diff_ ( h1 , h2 ) :
     """
@@ -2594,7 +2653,7 @@ def _h2_diff_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : 2*x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_chi2_ ( h1 , h2 ) :
     """
@@ -2607,7 +2666,7 @@ def _h2_chi2_ ( h1 , h2 ) :
     return _h2_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_mean_ ( h1 , h2 ) :
     """
@@ -2621,7 +2680,7 @@ def _h2_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_pow_ ( h1 , val ) :
     """
@@ -2652,7 +2711,7 @@ def _h2_pow_ ( h1 , val ) :
 
 # =============================================================================
 ## 'abs' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_abs_ ( h1 ) :
     """
@@ -2775,7 +2834,7 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
 
 # =============================================================================
 ## operation with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_oper_ ( h1 , h2 , oper ) :
     """
@@ -2811,7 +2870,7 @@ def _h3_oper_ ( h1 , h2 , oper ) :
 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_div_ ( h1 , h2 ) :
     """
@@ -2824,7 +2883,7 @@ def _h3_div_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_mul_ ( h1 , h2 ) :
     """
@@ -2837,7 +2896,7 @@ def _h3_mul_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x*y ) 
 # =============================================================================
 ##  Addition with the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_add_ ( h1 , h2 ) :
     """
@@ -2850,7 +2909,7 @@ def _h3_add_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x+y ) 
 # =============================================================================
 ##  Subtraction of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_sub_ ( h1 , h2 ) :
     """
@@ -2863,7 +2922,7 @@ def _h3_sub_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x-y ) 
 # =============================================================================
 ##  ``Fraction'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_frac_ ( h1 , h2 ) :
     """
@@ -2877,7 +2936,7 @@ def _h3_frac_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.frac(y) ) 
 # =============================================================================
 ##  ``Asymmetry'' of the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_asym_ ( h1 , h2 ) :
     """
@@ -2891,7 +2950,7 @@ def _h3_asym_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : x.asym(y) ) 
 # =============================================================================
 ##  ``Chi2-tension'' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_chi2_ ( h1 , h2 ) :
     """
@@ -2905,7 +2964,7 @@ def _h3_chi2_ ( h1 , h2 ) :
     return _h3_oper_ ( h1 , h2 , lambda x,y : VE ( x.chi2 ( y ) , 0 ) ) 
 # =============================================================================
 ##  ``Average'' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_mean_ ( h1 , h2 ) :
     """
@@ -2919,7 +2978,7 @@ def _h3_mean_ ( h1 , h2 ) :
 
 # =============================================================================
 ## 'pow' the histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h3_pow_ ( h1 , val ) :
     """
@@ -2963,7 +3022,7 @@ ROOT.TH3.  average = _h3_mean_
 
 # =============================================================================
 ## get the runnig sum over the histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_sumv_ ( h , increasing = True ) :
     """
@@ -3002,7 +3061,7 @@ for t in  (ROOT.TH1F , ROOT.TH1D ) :
 
 # =============================================================================
 ## Calculate the "cut-efficiency from the histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_effic_ ( h , increasing = True ) :
     """
@@ -3034,7 +3093,7 @@ def _h1_effic_ ( h , increasing = True ) :
 
 # =============================================================================
 ## Calculate the "cut-efficiency from the histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_effic2_ ( h , value , increasing = True ) :
     """
@@ -3170,7 +3229,7 @@ ROOT.TH1D. smear = _smear_
 
 # =============================================================================
 ## make transformation of histogram content 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23  
 def _h1_transform_ ( h1 , func ) :
     """
@@ -3198,7 +3257,7 @@ ROOT.TH1D. transform = _h1_transform_
 
 # =============================================================================
 ## make transformation of histogram content 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23  
 def _h2_transform_ ( h2 , func ) :
     """
@@ -3320,7 +3379,7 @@ ROOT.TH1 .sample   = _sample_
 ## Get the Figure-of-Merit (FoM) for the pure signal distribution,
 #  e.g. from sPlot)
 #  the FoM is defined from the relative precision of the signal yield
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23  
 def _fom_2_ ( h1 , increase = True ) :
     """
@@ -3336,7 +3395,7 @@ def _fom_2_ ( h1 , increase = True ) :
 
 # =============================================================================
 ## Calculate S/sqrt(S+a*B)
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23   
 def _sb_ ( s , b  , a = 1 ) :
     """
@@ -3361,7 +3420,7 @@ def _sb_ ( s , b  , a = 1 ) :
 # =============================================================================
 ## Get the figure-of-merit (FoM) for the signal and background distributions 
 #  the FoM is defined as S/sqrt(S+alpha*B) 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-23  
 def _fom_1_ ( s , b , alpha = 1 , increase = True ) :
     """
@@ -3406,7 +3465,7 @@ ROOT.TH1F . FoM_2 = _fom_2_
 
 # =============================================================================
 ## make graph from data 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def makeGraph ( x , y = []  , ex = [] , ey = [] ) :
 
@@ -3656,7 +3715,7 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
     t.rebinFunction = _rebin_func_2D_
 
 # =============================================================================
-## Create NULL-line fo rthe histogram and (optionally) draw it
+## Create NULL-line for the histogram and (optionally) draw it
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-11-01
 def _h1_null_ ( h1 , draw = False , style = 1 ) :
@@ -3680,7 +3739,7 @@ ROOT.TH1F.null = _h1_null_
 
 # =============================================================================
 ## convert histogram to graph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph ( h1                   ,
                funcx = lambda s : s ,
@@ -3717,7 +3776,7 @@ def hToGraph ( h1                   ,
 # iterate over graph items
 # =============================================================================
 ## iterate over points in TGraphErrors
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_iter_ ( graph ) :
     """
@@ -3733,7 +3792,7 @@ def _gr_iter_ ( graph ) :
         
 # =============================================================================
 ## iterate over points in TGraph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_iteritems_ ( graph ) :
     """
@@ -3751,7 +3810,7 @@ def _gr_iteritems_ ( graph ) :
         
 # =============================================================================
 ## get the point in TGraph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_getitem_ ( graph , ipoint )  :
     """
@@ -3769,7 +3828,7 @@ def _gr_getitem_ ( graph , ipoint )  :
 
 # =============================================================================
 ## get the point in TGraphErrors
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gre_getitem_ ( graph , ipoint )  :
     """
@@ -3790,7 +3849,7 @@ def _gre_getitem_ ( graph , ipoint )  :
 
 # =============================================================================
 ## set the point in TGraph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gr_setitem_ ( graph , ipoint , point )  :
     """
@@ -3807,7 +3866,7 @@ def _gr_setitem_ ( graph , ipoint , point )  :
 
 # =============================================================================
 ## set the point in TGraphErrors
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _gre_setitem_ ( graph , ipoint , point )  :
     """
@@ -3895,7 +3954,7 @@ ROOT.TGraph  . xminmax = _gr_xminmax_
 
 # =============================================================================
 ## convert histogram to graph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph_ ( h1 , funcx , funcy ) :
     """
@@ -3933,7 +3992,7 @@ def hToGraph_ ( h1 , funcx , funcy ) :
 
 # =============================================================================
 ## convert histogram to graph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph2 ( h1 , bias ) :
     """
@@ -3955,7 +4014,7 @@ def hToGraph2 ( h1 , bias ) :
 
 # =============================================================================
 ## convert histogram to graph
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def hToGraph3 ( h1 , bias ) :
     """
@@ -3991,11 +4050,11 @@ ROOT.TH1D.toGraph3 = hToGraph3
 
 # =============================================================================
 ## get edges from the axis:
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _edges_ ( axis ) :
     """
-    Get list of edges form the TAxis
+    Get list of edges from the TAxis
 
     >>> axis
     >>> edges = axis.edges() 
@@ -4011,7 +4070,7 @@ ROOT.TAxis.edges = _edges_
 
 # =============================================================================
 ## make axis from bin-edges 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def axis_bins ( bins         ) :
     """
@@ -4109,7 +4168,7 @@ ROOT.TH1D  . __getslice__  =   _h1_getslice_
 
 # =============================================================================
 ## make 1D-histogram from axis
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def h1_axis ( axis           ,
               title  = '1D'  , 
@@ -4137,7 +4196,7 @@ def h1_axis ( axis           ,
 
 # =============================================================================
 ## make 2D-histogram from axes
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def h2_axes ( x_axis            ,
               y_axis            ,
@@ -4170,7 +4229,7 @@ def h2_axes ( x_axis            ,
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 class _H1Func(object) :
     """
@@ -4224,7 +4283,7 @@ class _H1Spline(object) :
 
 # ==============================================================================
 ## helper class to wrap 2D-histogram as function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 class _H2Func(object) :
     """
@@ -4245,7 +4304,7 @@ class _H2Func(object) :
 
 # =============================================================================
 ## construct helper class 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_as_fun_ ( self , func = lambda s : s.value () ) :
     """
@@ -4265,7 +4324,7 @@ def _h1_as_spline_ ( self , func = lambda s : s.value () , *args ) :
 
 # =============================================================================
 ## construct helper class 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
     """
@@ -4274,7 +4333,7 @@ def _h2_as_fun_ ( self , func = lambda s : s.value () ) :
     return _H2Func ( self , func )
 # =============================================================================
 ## construct function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args ) :
     """
@@ -4321,7 +4380,7 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
     
 # =============================================================================
 ## construct function 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     """
@@ -4367,7 +4426,7 @@ ROOT.TH2D . asFunc = _h2_as_fun_
 
 # =======================================================================
 ## calculate the ``difference'' between two histograms 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h_diff_ ( h1 , h2 , func = lambda s1,s2 : (s1/s2).value() ) :
     """
@@ -4397,7 +4456,7 @@ ROOT.TH3D.histoDiff = _h_diff_
 
 # =============================================================================
 ## perform some accumulation for the histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_accumulate_ ( h                         ,
                      func = lambda s,v : s + v ,
@@ -4416,7 +4475,7 @@ def _h1_accumulate_ ( h                         ,
 
 # =============================================================================
 ## perform some accumulation for the histogram 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h2_accumulate_ ( h                         ,
                       func = lambda s,v : s + v ,
@@ -4435,7 +4494,7 @@ def _h2_accumulate_ ( h                         ,
 
 # =============================================================================
 ## get the sum of entries 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_sum_ ( h    ,
               low  ,
@@ -4451,7 +4510,7 @@ def _h1_sum_ ( h    ,
 
 # =============================================================================
 ## simple scaling
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h_scale_ ( histo , val = 1.0 ) :
     """
@@ -4485,7 +4544,7 @@ def _h_scale_ ( histo , val = 1.0 ) :
 
 # =============================================================================
 ## simple shift of the histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_shift_ ( h , bias ) :
     """
@@ -4510,7 +4569,7 @@ def _h1_shift_ ( h , bias ) :
 
 # =============================================================================
 ## simple shift of the histogram
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_ishift_ ( h , ibias ) :
     """
@@ -4561,7 +4620,7 @@ HStats   = cpp.Gaudi.Utils.HStats
 
 # =============================================================================
 ## calculate bin-by-bin momenta 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_moment_ ( h1 , order ) :
     """
@@ -4581,7 +4640,7 @@ _h1_moment_ .__doc__ += '\n' + HStats.momentErr .__doc__
 
 # =============================================================================
 ## calculate bin-by-bin central momenta 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_central_moment_ ( h1 , order ) :
     """
@@ -4601,7 +4660,7 @@ _h1_central_moment_ .__doc__ += '\n' + HStats.centralMomentErr .__doc__
 
 # =============================================================================
 ## get skewness
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_skewness_ ( h1 ) :
     """
@@ -4620,7 +4679,7 @@ _h1_skewness_ .__doc__ += '\n' + HStats.skewnessErr .__doc__
 
 # =============================================================================
 ## get kurtosis
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_kurtosis_ ( h1 ) :
     """
@@ -4639,7 +4698,7 @@ _h1_kurtosis_ .__doc__ += '\n' + HStats.kurtosisErr .__doc__
 
 # =============================================================================
 ## get mean
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_mean_ ( h1 ) :
     """
@@ -4658,7 +4717,7 @@ _h1_mean_ .__doc__ += '\n' + HStats.meanErr .__doc__
 
 # =============================================================================
 ## get RMS
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _h1_rms_ ( h1 ) :
     """
@@ -4713,7 +4772,7 @@ ROOT.TH1.stat = _h_stat_
 
 # =============================================================================
 ## adjust the "efficiency"
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def ve_adjust ( ve , mn = 0 , mx = 1.0 ) :
     """
@@ -5186,1619 +5245,15 @@ ROOT.TH1D . solve       = _solve_
 ROOT.TH1F . equal_edges = _equal_edges_                              
 ROOT.TH1D . equal_edges = _equal_edges_                         
 
-_large = 2**63
-# =============================================================================
-## Iterator over ``good events'' in TTree/TChain:
-#  @code 
-#    >>> tree = ... # get the tree
-#    >>> for i in tree.withCuts ( 'pt>5' ) : print i.y
-#  @endcode
-#  @attention: TTree::GetEntry is already invoked for accepted events,
-#              no need in second call
-#  @see Analysis::PyIterator
-#  @see Analysis::Formula
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-05-06
-def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
-    """
-    Iterator over ``good events'' in TTree/TChain:
-    
-    >>> tree = ... # get the tree
-    >>> for i in tree.withCuts ( 'pt>5' ) : print i.y
-    
-    Attention: TTree::GetEntry is already invoked for accepted events,
-               no need in second call 
-    """
-    #
-    _pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
-    if first < last and not _pit.ok() :
-        raise TypeError ( "Invalid Formula: %s" % cuts )
-    #
-    _t = _pit.tree()
-    while _t :
-        yield _t
-        _t = _pit.next()
-    #
-    del _pit
-
-ROOT.TTree .withCuts  = _iter_cuts_ 
-ROOT.TChain.withCuts  = _iter_cuts_ 
-
-ROOT.TTree. __len__   = lambda s : s.GetEntries()
 
 # =============================================================================
-## help project method for ROOT-trees and chains 
-#
-#  @code 
-#    >>> h1   = ROOT.TH1D(... )
-#    >>> tree.Project ( h1.GetName() , 'm', 'chi2<10' ) ## standart ROOT 
-#    
-#    >>> h1   = ROOT.TH1D(... )
-#    >>> tree.project ( h1.GetName() , 'm', 'chi2<10' ) ## ditto 
-#    
-#    >>> h1   = ROOT.TH1D(... )
-#    >>> tree.project ( h1           , 'm', 'chi2<10' ) ## use histo
-#  @endcode
-#
-#  @see TTree::Project
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-06
-def _tt_project_ ( tree , histo , what , *args ) :
-    """
-    Helper project method
-
-    >>> tree = ...
-    
-    >>> h1   = ROOT.TH1D(... )
-    >>> tree.Project ( h1.GetName() , 'm', 'chi2<10' ) ## standart ROOT 
-    
-    >>> h1   = ROOT.TH1D(... )
-    >>> tree.project ( h1.GetName() , 'm', 'chi2<10' ) ## ditto 
-    
-    >>> h1   = ROOT.TH1D(... )
-    >>> tree.project ( h1           , 'm', 'chi2<10' ) ## use histo 
-    
-    """
-    #
-    if hasattr (  histo , 'GetName' ) : histo = histo.GetName()
-    #
-    return tree.Project ( histo , what , *args )
-
-ROOT.TTree.project = _tt_project_
-
+# Other decorations 
 # =============================================================================
-## Helper project method for RooDataSet
-#
-#  @code 
-#    
-#    >>> h1   = ROOT.TH1D(... )
-#    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project variable into histo
-#    
-#    >>> h1   = ROOT.TH1D(... )
-#    >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
-#
-#  @endcode
-#
-#  @see RooDataSet 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-06
-def _ds_project_  ( dataset , histo , what , *args ) :
-    """
-    Helper project method for RooDataSet
-    
-    >>> h1   = ROOT.TH1D(... )
-    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project varibale into histo
-    
-    >>> h1   = ROOT.TH1D(... )
-    >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
-    """
-    store = dataset.store()
-    
-    if store :
-        tree = store.tree()
-        if tree : return tree.project ( histo , what , *args ) 
-        
-    raise AttributeError( "Can't ``project'' data set , probably wrong StorageType" ) 
-
-    
-# =============================================================================
-## Helper draw method for RooDataSet
-#
-#  @code 
-#    
-#    >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
-#
-#  @endcode
-#
-#  @see RooDataSet 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-06
-def _ds_draw_ ( dataset , what , *args ) :
-    """
-    Helper draw method for RooDataSet
-    
-    >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
-    
-    """
-    store = dataset.store()
-    if store :
-        tree = store.tree()
-        if tree : return tree.Draw( what , *args )
-        
-    raise AttributeError( "Can't ``draw'' data set , probably wrong StorageType" )
-
-
-# =============================================================================
-## get the statistic for certain expression in Tree/Dataset
-#  @code
-#  dataset  = ... 
-#  stat1 = dataset.statVar( 'S_sw/effic' )
-#  stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-09-15
-def _ds_stat_var_ ( dataset , what , *cuts ) :
-    """
-    Get the statistic for certain expression in Tree/Dataset
-    
-    >>> dataset  = ... 
-    >>> stat1 = dataset.statVar( 'S_sw/effic' )
-    >>> stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
-    
-    """
-    store = dataset.store()
-    if store :
-        tree = store.tree()
-        if tree : return tree.statVar( what , *cuts )
-        
-    raise AttributeError( "Can't ``statVar'' data set , probably wrong StorageType" )
-
-ROOT.RooDataSet . statVar = _ds_stat_var_
-
-# =============================================================================
-## @var _h_one_
-#  special helper histogram for summation
-_h_one_ = ROOT.TH1D( hID () , '' , 3 , -1 , 2 ) ; _h_one_.Sumw2()
-# =============================================================================
-## make a sum over expression in Tree/Dataset
-#
-#  @code
-#
-#  >>> dataset = ...
-#  ## get corrected number of events 
-#  >>> n_corr  = dataset.sumVar ( "S_sw/effic" )
-#
-#  @endcode
-#
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-09-15
-def _sum_var_ ( tree , expression ) :
-    """
-    Make a sum over expression in Tree/Dataset
-    
-    >>> dataset = ...
-    ## get corrected number of signale events  
-    >>> n_corr  = dataset.sumVar ( 'S_sw/effic' )
-    
-    """
-    _h_one_.Reset() 
-    tree.project ( _h_one_ , '1' , expression )
-    return _h_one_.accumulate()
-
-ROOT.RooDataSet . sumVar = _sum_var_
-ROOT.TTree      . sumVar = _sum_var_
-ROOT.TChain     . sumVar = _sum_var_
-
-# =============================================================================
-## get the statistic for certain expression in Tree/Dataset
-#  @code
-#  tree  = ... 
-#  stat1 = tree.statVar( 'S_sw/effic' )
-#  stat2 = tree.statVar( 'S_sw/effic' ,'pt>1000')
-#  @endcode
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-09-15
-def _stat_var_ ( tree , expression , *cuts ) :
-    """
-    Get a statistic for the  expression in Tree/Dataset
-    
-    >>> tree  = ... 
-    >>> stat1 = tree.statVar ( 'S_sw/effic' )
-    >>> stat2 = tree.statVar ( 'S_sw/effic' ,'pt>1000')
-    
-    """
-    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
-
-ROOT.TTree  . statVar = _stat_var_
-ROOT.TChain . statVar = _stat_var_
-
-# =============================================================================
-## print method for RooDatSet
-#  @code
-#
-#   >>> print dataset
-#
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-06
-def _ds_print_ ( dataset , opts = 'v' ) :
-    """
-    Helper print method:
-    
-    >>> print dataset 
-    """
-    #
-    dataset.Print( opts )
-    #
-    return dataset.GetName() 
-
-ROOT.RooDataSet.draw     = _ds_draw_
-ROOT.RooDataSet.project  = _ds_project_
-ROOT.RooDataSet.__repr__ = _ds_print_
-
-ROOT.RooDataHist.__repr__ = _ds_print_
-ROOT.RooDataHist.__len__  = lambda s : s.numEntries() 
-
-# ==============================================================================
-## print ROOT file (actually a combination of ls&Print)
-#  @code
-#
-#  >>> f = ROOT.TFile(... )
-#  >>> print f
-#
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-06
-def _rf_print_ ( rfile , opts = '') :
-    """
-    Print ROOT file (altually a combination of ls&Print)
-    
-    >>> f = ROOT.TFile(... )
-    >>> print f
-    """
-    #
-    rfile.ls    ( opts  )
-    #
-    rfile.Print ( 'v'   )
-    #
-    return rfile.GetName()
-    
-ROOT.TFile.__repr__    = _rf_print_
-
-ROOT.TFile.name        = ROOT.TFile.GetName
-ROOT.TFile.__getitem__ = ROOT.TFile.Get 
-ROOT.TFile.__getattr__ = ROOT.TFile.Get 
-
-
-# =============================================================================
-## get the leaves for the given tree/chain
-#  @see TTree
-#  @code
-#
-#  >>> tree = ...
-#  >>> lst = tree.leaves()
-#  >>> for l in lst : print l
-#
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2014-02-04
-def _rt_leaves_ ( t ) :
-    """
-    Get the list of leaves names
-    
-    
-    """
-    _lst =  t.GetListOfLeaves()
-    _lst = [ l.GetName() for l in _lst ] 
-    _lst.sort()
-    return tuple( _lst ) 
-
-ROOT.TTree.leaves   = _rt_leaves_
-
-# =============================================================================
-## get the branches for the given tree/chain
-#  @see TTree
-#  @code
-#
-#  >>> tree = ...
-#  >>> lst = tree.branches()
-#  >>> for b in lst : print b
-#
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2014-02-04
-def _rt_branches_ ( t ) :
-    """
-    Get the list of branch names
-    
-    >>> tree = ...
-    >>> lst = tree.branches()
-    >>> for b in lst : print b
-    
-    """
-    _lst =  t.GetListOfBranches()
-    _lst = [ l.GetName() for l in _lst ] 
-    _lst.sort()
-    return tuple( _lst ) 
-
-ROOT.TTree.branches = _rt_branches_
-
-
-# =============================================================================
-## simplified printout for TTree/TChain
-#  @see TTree
-#  @code
-#
-#  >>> tree = ...
-#  >>> print tree
-#
-#  @endcode 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2014-02-04
-def _rt_print_ ( t ) :
-    """
-    Simplified print out for tree/chain
-
-    >>> tree = ...
-    >>> print tree
-    """
-    res = "Name: %s " % t.GetName() 
-    if hasattr ( t , 'GetNtrees' ) :
-        res += " Chain/#%d " % t.GetNtrees()
-    _b          = t.branches()
-    res     += "\nBranches: %s" % list(_b)
-    _l          = t.leaves()
-    if _l != _l : res += "\nLeaves: %s" % list(_s)
-    return res
-
-ROOT.TTree.__repr__ = _rt_print_
-ROOT.TTree.__str__  = _rt_print_
-    
-# =============================================================================
-logger.info ( 'Some useful decorations for TMinuit objects')
-# =============================================================================
-## get the parameter from Minuit 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_par_ ( self , i ) :
-    """
-    Get the parameter from minuit
-
-    >>> mn = ...             # TMinuit object
-    >>> p1 = mn[0]           # get the parameter 
-    >>> p1 = mn.par(0)       # ditto 
-    >>> p1 = mn.parameter(0) # ditto 
-    """
-    if not i in self : raise IndexError
-    #
-    ip  = ROOT.Long   ( i )
-    val = ROOT.Double ( 0 )
-    err = ROOT.Double ( 0 )
-    #
-    res = self.GetParameter ( ip , val , err )
-    #
-    return VE ( val , err*err )
-
-ROOT.TMinuit . __contains__ = lambda s,i : isinstance(i,(int,long,ROOT.Long)) and 0<=i<s.GetNumPars() 
-ROOT.TMinuit . __len__      = lambda s : s.GetNumPars() 
-
-ROOT.TMinuit . par         = _mn_par_
-ROOT.TMinuit . parameter   = _mn_par_
-ROOT.TMinuit . __getitem__ = _mn_par_
-ROOT.TMinuit . __call__    = _mn_par_
-
-# =============================================================================
-## iterator over TMinuit indices 
-def _mn_iter_ ( self ) :
-    """
-    Iterator for TMinuit indices:
-
-    >>> m = ... #TMinuit object
-    >>> for i in m : print m[i]
-    
-    """
-    i = 0
-    while i < len ( self )  :
-        yield i
-        i += 1
-
-ROOT.TMinuit . __iter__ = _mn_iter_
-
-# =============================================================================
-## excute MINUIT command
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-04-01
-def _mn_exec_ ( self , command , *args ) :
-    """
-    Execute MINUIT  command
-    """
-    if not args :
-        args = [0]
-        logger.warning ( 'TMinuit::execute: empty vector replaced with  %s ' % args ) 
-        
-    arglist = array ( 'd' , [ i for i in args ]  )
-    ierr    = ROOT.Long   ( 0 )
-    #        
-    self.mnexcm ( command , arglist , len(arglist) , ierr )
-    #
-    return ierr
-
-_mn_exec_ . __doc__  += '\n' + ROOT.TMinuit.mnexcm . __doc__
-
-ROOT.TMinuit.execute = _mn_exec_
-
-# =============================================================================
-## excute MINUIT "SHOW" command
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-04-01
-def _mn_show_ ( self , what , *args ) :
-    """
-    Execute MINUIT  command
-    """
-    if not args : args = [ 0 ]
-    ##
-    what = what.upper()
-    whar = what.replace ( 'SHOW',' ' )
-    return _mn_exec_ ( self , 'SHOW ' + what , *args )
-
-ROOT.TMinuit.show = _mn_show_
-
-# =============================================================================
-## set the parameter 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_set_par_ ( self , i , val , fix = False ) :
-    """
-    Set MINUIT parameter for some value
-    """
-    if not i in self : raise IndexError
-    #
-    ip = ROOT.Long ( i )
-    if hasattr ( val , 'value' ) : val = val.value()
-    #
-    ierr =  _mn_exec_ ( self , "SET PAR" , i + 1 , val )
-    #
-    if fix : self.FixParameter ( ROOT.Long ( ip ) ) 
-    #
-    return ierr 
-
-ROOT.TMinuit . setPar       = _mn_set_par_
-ROOT.TMinuit . setParameter = _mn_set_par_
-
-ROOT.TMinuit . fixPar       = lambda s,i,v: _mn_set_par_ ( s , i , v , True )
-ROOT.TMinuit . fixParameter = lambda s,i,v: _mn_set_par_ ( s , i , v , True )
-
-
-ROOT.TMinuit . __setitem__ = _mn_set_par_ 
-
-
-# =============================================================================
-## release the parameter 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_rel_par_ ( self , i ) :
-    """
-    Release MINUIT parameter for some value
-
-    >>> mn = ... # TMinuit  obejct
-    >>> mn.release ( 1 ) 
-    """
-    if not i in self : raise IndexError
-    #
-    return _mn_exec_ ( self , "REL" , i + 1 )
-    #
-
-ROOT.TMinuit . release = _mn_rel_par_ 
-
-# ===========================================================
-## set the parameter 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_min_ ( self                  ,
-               maxcalls  = 5000      ,
-               tolerance = 0.1       ,
-               method    = 'MIGRADE' ) :
-    """
-    Perform the actual MINUIT minimization:
-
-    >>> m = ... #
-    >>> m.fit()       ## run migrade! 
-    >>> m.migrade ()  ## ditto
-    >>> m.fit ( method = 'MIN' ) 
-    
-    """
-    #
-    return _mn_exec_ ( self , method , maxcalls , tolerance ) 
-
-ROOT.TMinuit . migrade  = _mn_min_
-ROOT.TMinuit . migrad   = _mn_min_
-ROOT.TMinuit . fit      = _mn_min_
-
-ROOT.TMinuit . hesse    = lambda s : _mn_exec_ ( s , 'HESSE'   , 0 )
-ROOT.TMinuit . minimize = lambda s : _mn_exec_ ( s , 'MIN'     , 0 )
-ROOT.TMinuit . seek     = lambda s : _mn_exec_ ( s , 'SEEK'    , 0 )
-ROOT.TMinuit . simplex  = lambda s : _mn_exec_ ( s , 'SIMPLEX' , 0 )
-
-# =============================================================================
-## set the parameter 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_str_ ( self , l = 3 , v = 0.0 ) :
-    """
-    Print MINUIT information:
-
-    >>> m = ...
-    >>> print m
-    
-    """
-    #
-    self.mnprin ( l , v )
-    return '\n'
-
-ROOT.TMinuit . Print     =  _mn_str_ 
-ROOT.TMinuit . __str__   =  _mn_str_ 
-ROOT.TMinuit . __repr__  =  _mn_str_ 
-
-# =============================================================================
-## define/add parameter to TMinuit 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28
-def _mn_add_par_ ( self    , name      ,
-                   start   , step = -1 ,
-                   low = 0 , high = 0  ) :
-    """
-    Define/add parameter to MUNUIT
-
-    >>> m.addPar ( 'ququ' , 10 , 0.1 )
-    
-    """
-    if hasattr ( start , 'value' ) : start = start . value()
-    if hasattr ( step  , 'value' ) : step  = step  . value()
-    ## 
-    if step < 0 : step = abs ( 0.01 * start ) 
-    ##
-    starts  = array ( 'd' , 1 * [ start ] )
-    steps   = array ( 'd' , 1 * [ step  ] )
-    #
-    ipar    = len ( self ) 
-    ierr    = ROOT.Long   ( 0 )
-    self.mnparm ( ipar , name ,  start , step , low , high , ierr )
-    #
-    return ierr 
-
-ROOT.TMinuit . addpar = _mn_add_par_
-ROOT.TMinuit . addPar = _mn_add_par_
-ROOT.TMinuit . defpar = _mn_add_par_
-ROOT.TMinuit . defPar = _mn_add_par_
-ROOT.TMinuit . newpar = _mn_add_par_
-ROOT.TMinuit . newPar = _mn_add_par_
-
-# =============================================================================
-## get MINOS errors
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28 
-def _mn_minerr_ ( self , i ) :
-    """
-    Get MINOS errors for parameter:
-
-    >>> m = ...       # TMinuit object
-    >>> pos,neg = m.minosErr( 0 )
-    
-    """
-    #
-    if not i in self : raise IndexError
-    #
-    eplus  = ROOT.Double ( 0 ) 
-    eminus = ROOT.Double ( 0 ) 
-    epara  = ROOT.Double ( 0 ) 
-    gcc    = ROOT.Double ( 0 ) 
-    #
-    self.mnerrs ( i , eplus , eminus , epara , gcc )
-    #
-    return eplus,eminus 
-
-ROOT.TMinuit .   minErr  = _mn_minerr_ 
-ROOT.TMinuit . minosErr  = _mn_minerr_ 
-ROOT.TMinuit .   minErrs = _mn_minerr_ 
-ROOT.TMinuit . minosErrs = _mn_minerr_ 
-
-# =============================================================================
-## run MINOS
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-28 
-def _mn_minos_ ( self , *args ) :
-    """
-    Get MINOS errors for parameter:
-    
-    >>> m = ...       # TMinuit object
-    >>> result = m.minos( 1 , 2  )
-    
-    """
-    ipars  = []
-    for i in args :
-        if not i in self : raise IndexError
-        ipars.append ( i )
-
-    return _mn_exec_ ( self , 'MINOS' , 200 , *tuple(ipars) ) 
-
-ROOT.TMinuit . minos = _mn_minos_
-# =============================================================================
-
-# =============================================================================
-## get current Minuit statistics 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2013-04-01
-def _mn_stat_  ( self ) :
-    """
-    Get current Minuit status
-
-    >>> mn   = ... # TMoniut object
-    >>> stat = mn.stat()
-    
-    
-    Returns concerning the current status of the minimization
-    *-*      =========================================================
-    *-*       User-called
-    *-*          Namely, it returns:
-    *-*        FMIN: the best function value found so far
-    *-*        FEDM: the estimated vertical distance remaining to minimum
-    *-*        ERRDEF: the value of UP defining parameter uncertainties
-    *-*        NPARI: the number of currently variable parameters
-    *-*        NPARX: the highest (external) parameter number defined by user
-    *-*        ISTAT: a status integer indicating how good is the covariance
-    *-*           matrix:  0= not calculated at all
-    *-*                    1= approximation only, not accurate
-    *-*                    2= full matrix, but forced positive-definite
-    *-*                    3= full accurate covariance matrix
-    *
-    
-    """
-    fmin    = ROOT.Double ( )
-    fedm    = ROOT.Double ( )
-    errdef  = ROOT.Double ( )
-    npari   = ROOT.Long   (1)
-    nparx   = ROOT.Long   (2)
-    istat   = ROOT.Long   (0)
-    #
-    self . mnstat( fmin, fedm, errdef, npari , nparx , istat )
-    #
-    return { 'FMIN'   : float( fmin   ) ,
-             'FEDM'   : float( fmin   ) ,
-             'ERRDEF' : float( errdef ) ,
-             'NPARI'  : int  ( npari  ) ,
-             'NPARX'  : int  ( nparx  ) ,
-             'ISTAT'  : int  ( nparx  ) } 
-
-_mn_stat_ . __doc__  += '\n' + ROOT.TMinuit.mnstat . __doc__
-
-ROOT.TMinuit.stat    = _mn_stat_ 
-# =============================================================================
-## get UP-parameter for err-def 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2013-04-01
-def _mn_get_errdef_ ( self ) :
-    """
-    Get UP-parameter used to define the uncertainties
-
-    >>> mn = ... # TMoniut object
-    >>> up  = mn.GetErrorDef()
-    
-    """
-    return _mn_stat_ ( self ) ['ERRDEF']
-
-ROOT.TMinuit.errDef      = _mn_get_errdef_ 
-ROOT.TMinuit.GetErrorDef = _mn_get_errdef_ 
-
-# =============================================================================
-## create N-sigma contour 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _mn_contour_ ( self , npoint , par1  , par2 , nsigma = 1 ) :
-    """
-    Create n-sigma contour for par1 vs par2
-
-    >>> mn = ... # TMinuit object
-    >>> graph = mn.contour( 100 , 1 , 2 )
-    
-    """
-    if     npoint < 4   : raise ValueError ( 'contour: npoint (%s) must be >= 4'  % npoint )
-    if not par1 in self : raise ValueError ( 'contour: par1(%s) is not in Minuit' % par1   )
-    if not par2 in self : raise ValueError ( 'contour: par2(%s) is not in Minuit' % par2   )
-    if     par1 == par2 : raise ValueError ( 'contour: par1 == par2(%s) '         % par2   )
-    #
-    ## save old error defintion
-    #
-    old_err_def = self.GetErrorDef()
-    #
-    ## set new error definition
-    #
-    self.SetErrorDef ( nsigma * nsigma )
-    
-    graph  = self.Contour ( npoint , par1 , par2 )
-
-    #
-    ## restore old error defininion
-    #
-    status = self.GetStatus()
-    self.SetErrorDef ( old_err_def ) 
-    #
-    if graph and 0 == status : return graph
-    logger.error ( 'TMinuit::Contour: status %i' % status ) 
-    return graph 
-
-_mn_contour_ . __doc__ += '\n' + ROOT.TMinuit.Contour . __doc__ 
-
-ROOT.TMinuit . contour = _mn_contour_
-
-# =============================================================================
-## get the covariance matrix from TMinuit
-def _mn_cov_ ( self , size = -1 , root = False ) :
-    """
-    Get the covariance matrix from TMinuit
-
-    >>> mn  = ... # TMinuit object
-    >>> cov = mn.cov() 
-    
-    """
-    #
-    if size <= 0 : size = len ( self )
-    size = min ( size , len ( self ) ) 
-    #
-    matrix = array ( 'd' , [ 0 for i in range(0, size * size) ]  )
-    self.mnemat ( matrix , size )
-    #
-    if   1 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix1x1 ()
-    elif 2 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix2x2 ()
-    elif 3 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix3x3 ()
-    elif 4 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix4x4 ()
-    elif 5 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix5x5 ()
-    elif 6 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix6x6 ()
-    elif 7 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix7x7 ()
-    ## no 8x8! 
-    ## elif 9 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix9x9 ()
-    else :
-        ## use ROOT matrices 
-        mtrx = ROOT.TMatrix( size , size )
-        for i in range ( 0 , size ) :
-            for j in range ( 0 , size ) :
-                mtrx [i][j] = matrix [ i * size + j ]
-        return mtrx  ## RETURN 
-        
-    for i in range ( 0 , size ) :
-        for j in range ( i , size ) :
-            mtrx [i,j] = matrix [ i * size + j ]
-            
-    return mtrx
-
-# =============================================================================
-## get the correlation matrix from TMinuit
-def _mn_cor_ ( self , size = -1 , root  = False ) :
-    """
-    Get the correlation matrix from TMinuit
-
-    >>> mn  = ... # TMinuit object
-    >>> cor = mn.cor() 
-        
-    """
-    #
-    cov = self.cov ( size , root )
-    #
-    from math import sqrt
-    #
-    if   isinstance ( cov , ROOT.TMatrix ) :
-
-        size  = cov.GetNrows()
-        root  = True
-        
-    else : size = cov.kRows
-
-    ## use ROOT matrices 
-    if root : cor = ROOT.TMatrix  ( size , size )
-    else    : cor = cov.__class__ () 
-
-    for i in range(0, size ) :
-        
-        d_i = cov ( i , i )
-        cor [ i , i ] = 1 if 0 < d_i else 0
-        
-        for j in range ( i + 1 , size  ) :
-            
-            d_j = cov ( j , j )
-            
-            if 0 != cov ( i , j ) and 0 < d_i and 0 < d_j  :
-                
-                if root  : cor [ i ] [ j ] = cov ( i , j ) / sqrt ( d_i * d_j )
-                else     : cor [ i ,   j ] = cov ( i , j ) / sqrt ( d_i * d_j )
-                
-            else :
-                
-                if _root : cor [ i ] [ j ] = 0 
-                else     : cor [ i ,   j ] = 0
-
-    return cor
-            
-_mn_cor_ . __doc__ += '\n' + ROOT.TMinuit.mnemat . __doc__ 
-
-
-ROOT.TMinuit . cov  = _mn_cov_
-ROOT.TMinuit . cor  = _mn_cor_
-ROOT.TMinuit . corr = _mn_cor_
-
-# =============================================================================
-logger.info ( 'Some useful decorations for RooFit objects')
-# =============================================================================
-## iterator for RooArgList 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _ral_iter_ ( self ) :
-    """
-    Iterator for RooArgList:
-
-    >>> arg_list = ...
-    >>> for p in arg_list : print p
-    
-    """
-    l = len ( self )
-    for i in range ( 0 , l )  : yield self[i]
-
-## some decoration over RooArgList 
-ROOT.RooArgList . __len__       = lambda s   : s.getSize()
-ROOT.RooArgList . __contains__  = lambda s,i :  0<= i < len(s)
-ROOT.RooArgList . __iter__      = _ral_iter_
-ROOT.RooArgList . __nonzero__   = lambda s   : 0 != len ( s ) 
-
-## helper function 
-def _rs_list_ ( self ) :
-    """
-    """
-    _l = []
-    for i in self :
-        
-        if   hasattr  ( i , 'GetName' ) and hasattr ( i , 'getVal' ) :
-            _l.append ( i.GetName() + ":%s" % i.getVal() )
-        elif hasattr  ( i , 'GetName' ) :
-            _l.append ( i.GetName()   )
-        elif hasattr  ( i , 'getVal'  ) :
-            _l.append ( "%s" % i.getVal ()  )
-        else :
-            _l.append (  str ( i )    )
-            
-    return _l ;
-
-ROOT.RooArgList . __str__       = lambda s : str ( _rs_list_ ( s ) )  
-ROOT.RooArgList . __repr__      = lambda s : str ( _rs_list_ ( s ) )  
-
-# =============================================================================
-## iterator for RooArgSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _ras_iter_ ( self ) :
-    """
-    Simple iterator for RootArgSet:
-
-    >>> arg_set = ...
-    >>> for i in arg_set : print i
-    
-    """    
-    it  = self.createIterator()
-    val = it.Next()
-    while val :
-        yield val 
-        val = it.Next()
-        
-    del it
-
-# =============================================================================
-## get the attibute for RooArgtSet 
-def _ras_getattr_ ( self , aname ) :
-    """
-    Get the attibute from RooArgSet
-
-    >>> aset = ...
-    >>> print aset.pt
-    
-    """
-    _v = self.find ( aname )
-    if not _v : raise  AttributeError
-    return _v 
-
-# =============================================================================
-## get the attibute for RooArgtSet 
-def _ras_getitem_ ( self , aname ) :
-    """
-    Get the attibute from RooArgSet
-
-    >>> aset = ...
-    >>> print aset.pt
-    
-    """
-    _v = self.find ( aname )
-    if not _v : raise  IndexError
-    return _v 
-
-# =============================================================================
-## check the presence of variable in set 
-def _ras_contains_ ( self , ename ) :
-    """
-    """
-    _v = self.find ( aname )
-    if not _v : return False 
-    return             True 
-
-## some decoration over RooArgSet 
-ROOT.RooArgSet . __len__       = lambda s   : s.getSize()
-ROOT.RooArgSet . __iter__      = _ras_iter_ 
-ROOT.RooArgSet . __getattr__   = _ras_getattr_ 
-ROOT.RooArgSet . __getitem__   = _ras_getitem_ 
-ROOT.RooArgSet . __contains__  = _ras_contains_ 
-ROOT.RooArgSet . __nonzero__   = lambda s   : 0 != len ( s ) 
-        
-ROOT.RooArgSet . __str__   = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
-ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
-
-# =============================================================================
-## iterator for RooDataSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rds_iter_ ( self ) :
-    """
-    Iterator for RooDataSet 
-    """
-    _l = len ( self )
-    for i in xrange ( 0 , _l ) : yield self.get ( i )
-
-# =============================================================================
-## access to the entries in  RooDataSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2013-03-31
-def _rds_getitem_ ( self , i ) :
-    """
-    Get the entry from RooDataSet 
-    """
-    if 0<= i < len ( self ) :
-        return self.get ( i )
-    raise IndexError 
-
-## some decoration over RooDataSet 
-ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
-ROOT.RooDataSet . __iter__      = _rds_iter_ 
-ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
-ROOT.RooDataSet . __nonzero__   = lambda s   : 0 != len ( s ) 
-        
-# =============================================================================
-## ``easy'' print of RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rfr_print_ ( self , opts = 'v' ) :
-    """
-    Easy print of RooFitResult
-
-    >>> result = ...
-    >>> print result
-    
-    """
-    self.Print( opts )
-    return 'RooFitResult'
-
-# =============================================================================
-## get parameters from RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rfr_params_ ( self , float_only = True ) :
-    """
-    GetParameters from RooFitResult:
-
-    >>> result = ...
-    >>> params = results
-    >>> p0     = params['A'][0]  ## get the value
-    >>> p0s    = params['A'][1]  ## get the parameter itself 
-    
-    """
-    pars  = self.floatParsFinal()
-    pars_ = {}
-    for p in pars :
-        pars_ [ p.GetName() ] = p.as_VE(), p
-
-    ## also fixed parameters? 
-    if not float_only :
-        fixed = self.constPars()
-        for p in fixed :
-            pars_ [ p.GetName() ] = p.as_VE(), p
-            
-    return pars_
-
-# =============================================================================
-## get parameter by name  from RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rfr_param_  ( self , pname , float_only = True ) :
-    """
-    Get Parameter from RooFitResult by name 
-
-    >>> result = ...
-    >>> signal = results.param('Signal')
-    >>> print signal
-    """
-    p = self.parameters ( float_only )[ pname ] 
-    return p 
-
-# =============================================================================
-## get the correlation coefficient
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rfr_corr_  ( self , name1 , name2 ) :
-    """
-    Get correlation coefficient for two parameter 
-
-    >>> result = ...
-    >>> corr = results.corr('Signal', 'Background')
-    >>> print corr
-    """
-    p1 = self.parameters()[ name1 ]
-    p2 = self.parameters()[ name2 ]
-    #
-    return self.correlation ( p1[1] , p2[1] ) 
-
-# =============================================================================
-## get the covariance (sub) matrix 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def _rfr_cov_  ( self , name1 , name2 ) :
-    """
-    Get covariance (sub) matrix 
-
-    >>> result = ...
-    >>> cov = results.cov('Signal', 'Background')
-    >>> print corr
-    """
-    p1 = self.parameters()[ name1 ]
-    p2 = self.parameters()[ name2 ]
-    args = ROOT.RooArgList ( p1[1] , p2[1] ) 
-    return self.reducedCovarianceMatrix (  args ) 
-
-
-# =============================================================================
-
-## some decoration over RooFitResult
-ROOT.RooFitResult . __repr__   = _rfr_print_
-ROOT.RooFitResult . __str__    = _rfr_print_
-ROOT.RooFitResult . __call__   = _rfr_param_
-ROOT.RooFitResult . parameters = _rfr_params_
-ROOT.RooFitResult . params     = _rfr_params_
-ROOT.RooFitResult . param      = _rfr_param_
-ROOT.RooFitResult . parameter  = _rfr_param_
-ROOT.RooFitResult . corr       = _rfr_corr_
-ROOT.RooFitResult . cor        = _rfr_corr_
-ROOT.RooFitResult . cov        = _rfr_cov_
-ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
-
-# =============================================================================
-## fix parameter at some value
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-20
-def _fix_par_ ( var , value ) :
-    """
-    Fix parameter at some value :
-
-    >>> par = ...
-    >>> par.fix ( 10 ) 
-    
-    """
-    #
-    if hasattr ( value , 'value' ) : value = value.value()
-    #
-    var.setVal      ( value )
-    var.setConstant ( True  )
-    #
-    return var.ve() 
-
-# =============================================================================
-## release the parameter
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-09-20
-def _rel_par_ ( var )  :
-    """
-    Release the parameters
-
-    >>> par = ...
-    >>> par.release () 
-    
-    """
-    var.setConstant ( False )
-    #
-    return var.ve()
-
-# =============================================================================
-## decorate RooRealVar:
-ROOT.RooRealVar   . as_VE   = lambda s :  VE( s.getVal () , s.getError()**2 )
-ROOT.RooRealVar   . ve      = lambda s :      s.as_VE  () 
-ROOT.RooRealVar   . fix     = _fix_par_
-ROOT.RooRealVar   . Fix     = _fix_par_
-ROOT.RooRealVar   . release = _rel_par_
-ROOT.RooRealVar   . Release = _rel_par_
-
-# ============================================================================
-## make a histogram for RooRealVar
-#  @see RooRealVar
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-07-14
-def _rrv_as_H1_ ( v , bins = 100 , double = True ) :
-    """
-    Make TH1 histogram from RooRealVar
-
-    >>> variable = ...
-    >>> histo = variable.histo ( 100 )
-    
-    """
-    _hT = ROOT.TH1D if double else ROOT.TH1F 
-    _h  = _hT ( hID() , v.GetTitle() , bins , v.getMin()  , v.getMax() )
-    _h.Sumw2()
-    return _h 
-
-ROOT.RooRealVar   . histo = _rrv_as_H1_
-ROOT.RooRealVar   . asH1  = _rrv_as_H1_
-
-# ============================================================================
-## Addition of RooRealVar and ``number''
-def _rrv_add_ ( s , o ) :
-    """
-    Addition of RooRealVar and ``number''
-
-    >>> var = ...
-    >>> num = ...
-    >>> res = var + num
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() + o
-
-## Subtraction  of RooRealVar and ``number''
-def _rrv_sub_ ( s , o ) :
-    """
-    Subtraction of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = var - num
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() - o
-
-## Multiplication of RooRealVar and ``number''
-def _rrv_mul_ ( s , o ) :
-    """
-    Multiplication  of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = var * num
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() * o
-
-## Division of RooRealVar and ``number''
-def _rrv_div_ ( s , o ) :
-    """
-    Division of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = var / num
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() / o
-
-
-## (right) Addition of RooRealVar and ``number''
-def _rrv_radd_ ( s , o ) :
-    """
-    (Right) Addition of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = num + var 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o + s.getVal()
-
-## (right) subtraction  of RooRealVar and ``number''
-def _rrv_rsub_ ( s , o ) :
-    """
-    (right) subtraction of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = num - var 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o - s.getVal()
-
-## (right) multiplication of RooRealVar and ``number''
-def _rrv_rmul_ ( s , o ) :
-    """
-    (right) Multiplication  of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = num * var 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o * s.getVal()
-
-## (right) Division of RooRealVar and ``number''
-def _rrv_rdiv_ ( s , o ) :
-    """
-    (right) Division of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = num / var 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o / s.getVal() 
-
-## pow of RooRealVar and ``number''
-def _rrv_pow_ ( s , o ) :
-    """
-    pow of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = var ** num 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() ** o  
-
-## (right) pow of RooRealVar and ``number''
-def _rrv_rpow_ ( s , o ) :
-    """
-    pow of RooRealVar and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> res = num ** var 
-    
-    """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o ** s.getVal() 
-
-
-ROOT.RooRealVar . __add__   = _rrv_add_
-ROOT.RooRealVar . __sub__   = _rrv_sub_
-ROOT.RooRealVar . __div__   = _rrv_div_
-ROOT.RooRealVar . __mul__   = _rrv_mul_
-ROOT.RooRealVar . __pow__   = _rrv_pow_
-
-ROOT.RooRealVar . __radd__  = _rrv_radd_
-ROOT.RooRealVar . __rsub__  = _rrv_rsub_
-ROOT.RooRealVar . __rdiv__  = _rrv_rdiv_
-ROOT.RooRealVar . __rmul__  = _rrv_rmul_
-ROOT.RooRealVar . __rpow__  = _rrv_rpow_
-
-# =============================================================================
-## (compare RooRealVar and "number"
-def _rrv_le_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var <= num : print ' ok! '
-    """
-    return o >= s.getVal()
-
-## (compare RooRealVar and "number"
-def _rrv_lt_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var < num : print ' ok! '
-    """
-    return o > s.getVal()
-
-## (compare RooRealVar and "number"
-def _rrv_ge_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var >= num : print ' ok! '
-    """
-    return o <= s.getVal()
-
-## (compare RooRealVar and "number"
-def _rrv_gt_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var > num : print ' ok! '
-    """
-    return o < s.getVal()
-
-## (compare RooRealVar and "number"
-def _rrv_eq_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var == num : print ' ok! '
-    """
-    return o == s.getVal()
-
-## (compare RooRealVar and "number"
-def _rrv_ne_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var != num : print ' ok! '
-    """
-    return o != s.getVal()
-
-ROOT.RooRealVar . __lt__   = _rrv_lt_
-ROOT.RooRealVar . __gt__   = _rrv_gt_
-ROOT.RooRealVar . __le__   = _rrv_le_
-ROOT.RooRealVar . __ge__   = _rrv_ge_
-ROOT.RooRealVar . __eq__   = _rrv_eq_
-ROOT.RooRealVar . __ne__   = _rrv_ne_
-
-## product of two PDFs 
-def _pdf_mul_ ( pdf1 , pdf2 ) :
-    """
-    Easy contruct for the product of two PDFs:
-    
-    >>> pdf1 = ...
-    >>> pdf2 = ...
-    
-    >>> product = pdf1 * pdf2 
-    """
-    return cpp.Analysis.Models.Product ( '%s*%s'             % ( pdf1.GetName  () ,
-                                                                 pdf2.GetName  () ) ,
-                                         'Product: %s & %s ' % ( pdf1.GetTitle () ,
-                                                                 pdf2.GetTitle () ) ,
-                                         pdf1 , pdf2 )
-ROOT.RooAbsPdf . __mul__  = _pdf_mul_ 
-
-# =============================================================================
-## further decoration
-try : 
-    import GaudiPython.HistoUtils
-    logger.info    ( 'Histogram utilities from GaudiPython.HistoUtils' )
-except:
-    logger.warning ( 'Histogram utilities from GaudiPython.HistoUtils are not loaded' )
-    
-# =============================================================================
-_HS = cpp.Gaudi.Utils.Histos.HistoStrings
-# =============================================================================
-## convert histogram to string
-def _h_toString_ ( h , asXml = False  ) :
-    """
-    Convert histogram to string (or XML)
-
-    >>> h = ... # the histo
-    >>> s = h.toString()
-    >>> print s 
-    
-    """
-    return _HS.toString( h , asXml )
-
-_h_toString_ . __doc__  += '\n' + _HS.toString. __doc__
-
-# =============================================================================
-## convert histogram to XML
-def _h_toXml_ ( h ) :
-    """
-    Convert histogram to XML
-
-    >>> h = ... # the histo
-    >>> s = h.toXml()
-    >>> print s 
-    
-    """
-    return _HS.toXml( h )
-
-_h_toXml_ . __doc__  += '\n' + _HS.toXml. __doc__
-
-# =============================================================================
-## convert XML to histogram 
-def _h_fromString_ ( h , input  ) :
-    """
-    Convert string (or XLM) to histogram 
-
-    >>> input  = ... # the string(or XML)
-    >>> histo  = ... # book some the histo
-    >>> status = histo.fromString ( input ) 
-
-    """
-    return _HS.fromString ( h , input )
-
-_h_fromString_ . __doc__  += '\n' + _HS.fromString. __doc__
-
-# =============================================================================
-## convert XML to histogram 
-def _h_fromXml_ ( h , xml ) :
-    """
-    Convert XML to histogram 
-
-    >>> xml   = ... # the XML-string
-    >>> histo = ... # book some the histo
-    >>> status = histo.fromXml ( xml ) 
-
-    """
-    return _HS.fromXml ( h , xml )
-
-_h_fromXml_ . __doc__  += '\n' + _HS.fromXml. __doc__
-
-
-for t in ( ROOT.TH1D       ,
-           ROOT.TH1F       ,
-           ROOT.TH2D       ,
-           ROOT.TH2F       ,     
-           ROOT.TH3D       ,     
-           ROOT.TProfile   ,
-           ROOT.TProfile2D ) : 
-    
-    t.toString   = _h_toString_
-    t.fromString = _h_fromString_
-    t.toXml      = _h_toXml_
-    t.fromXml    = _h_fromXml_
-
-# =============================================================================
-## define simplified print for TCanvas 
-def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'png' , 'eps', 'C' ] ) :
-    """
-    A bit simplified version for TCanvas print
-
-    >>> canvas.print ( 'fig' )    
-    """
-    #
-    p = fname.rfind ('.')
-    #
-    if 0 < p :
-        
-        if p+4 == len ( fname ) or fname[p:] in ( '.C', '.ps', '.jpeg', '.JPEG') :
-            cnv.Print( fname )
-            return cnv 
-
-    for e in exts :
-        cnv.Print ( fname + '.' + e )
-        
-    return cnv 
-
-# =============================================================================
-## define streamer for canvas 
-def _cnv_rshift_ ( cnv , fname ) :
-    """
-    very simple print for canvas:
-    
-    >>> canvas >> 'a'
-    
-    """
-    return _cnv_print_ ( cnv , fname )
-
-ROOT.TCanvas.print_     = _cnv_print_
-ROOT.TCanvas.__rshift__ = _cnv_rshift_
-
-# =============================================================================
-## HEPDATA format
-# 
-# @code 
-# The format we accept data in is very wide and generally we require only
-# a flat file containing the numerical values.
-# Postscript and pdf figures are not suitable.
-# 
-# Ideally the format should be:
-#
-# xlow xhigh y +stat -stat +sys1 -sys1 +sys2 -sys2 ......
-# where:
-#  xlow and xhigh are the xbin edges
-#  y is the measured quantity
-# +stat and -stat are the positive and negative statistical errors (could also be +-stat)
-# +sysn and -sysn are any number of positive and negative systematic errors (again could be +-sysn)
-# @endcode 
-# 
-# =============================================================================
-def _h1_hepdata_ ( h1 , fmt = " %13.6g %-13.6g   %13.6g +-%-12.5g \n" ) :
-    '''
-    Dump 1D-histogram in HepData -compatible format
-    
-    >>> h = ... # the histogram
-    >>> data = h.toHepDATA ()
-    
-    """
-    The format we accept data in is very wide and generally we require only
-    a flat file containing the numerical values.
-    Postscript and pdf figures are not suitable.
-    
-    Ideally the format should be:
-    
-    xlow xhigh y +stat -stat +sys1 -sys1 +sys2 -sys2 ......
-    
-    where:
-    xlow and xhigh are the xbin edges
-    y is the measured quantity
-    +stat and -stat are the positive and negative statistical errors (could also be +-stat)
-    +sysn and -sysn are any number of positive and negative systematic errors (again could be +-sysn)
-    """
-    '''    
-    data = ''
-    for  ibin in h1.iteritems () :
-        
-        x = ibin[1]
-        y = ibin[2]
-        
-        x_low  = x.value() - x.error()
-        x_high = x.value() + x.error()
-        
-        data += fmt  % ( x_low      ,
-                         x_high     ,
-                         y.value () ,
-                         y.error () )
-        
-    return data
-
-# ================================================================================================
-def _h2_hepdata_ ( h2 ,
-                   fmt = " %13.6g %-13.6g  %13.6g %-13.6g  %13.6g +-%-12.5g \n" )  : 
-    """
-    Dump 2D-histogram in HepData -compatible format
-    
-    >>> h = ... # the histogram
-    >>> data = h.toHepDATA ()
-    
-    """
-    data = ''
-    for  ibin in h2.iteritems () :
-
-        x = ibin[2]
-        y = ibin[3]
-        z = ibin[4]
-        
-        x_low  = x.value () - x.error ()
-        x_high = x.value () + x.error ()
-        y_low  = y.value () - y.error ()
-        y_high = y.value () + y.error ()
-        
-        data += fmt  % ( x_low      ,
-                         x_high     ,
-                         y_low      ,
-                         y_high     ,
-                         z.value () ,
-                         z.error () )
-        
-        
-    return data
-    
-    
-for t in ( ROOT.TH1D ,
-           ROOT.TH1F ) :
-    
-    t . toHepDATA = _h1_hepdata_
-    t . toHepData = _h1_hepdata_
-    
-for t in ( ROOT.TH2D ,
-           ROOT.TH2F ) :
-    
-    t . toHepDATA = _h2_hepdata_
-    t . toHepData = _h2_hepdata_
-    
-# =============================================================================
-
+import PyPAW.TreeDeco
+import PyPAW.MinuitDeco
+import PyPAW.RooFitDeco
+import PyPAW.HTextDeco
+import PyPAW.MiscDeco
 
 # =============================================================================
 if '__main__' == __name__ :

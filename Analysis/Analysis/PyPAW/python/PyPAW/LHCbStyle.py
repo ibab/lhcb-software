@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: LHCbStyle.py 165594 2013-12-03 13:20:35Z albarano $ 
+# $Id$ 
 # =============================================================================
 # @file
 # LHCb style file for ROOT-plots
 #
-#                   $Revision: 165594 $
-# Last modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-#                by $Author: albarano $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """
 LHCb Style for ROOT-plots 

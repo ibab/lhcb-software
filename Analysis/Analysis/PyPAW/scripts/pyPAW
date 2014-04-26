@@ -55,8 +55,13 @@ __date__    = "2012-09-10"
 __version__ = '$Revision: 135439 $'
 # =============================================================================
 import ROOT
+#
+print 'WARNING/TEMPORARY solution: create temporary Canvas'
+ctmp = ROOT.TCanvas('cTMP','cTMP',100,100)
 from   PyPAW.PyPaw import * 
-
+print 'WARNING/TEMPORARY solution: delete temporary Canvas'
+del ctmp
+#
 import IPython
 IPython.embed()
 exit() 

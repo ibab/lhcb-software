@@ -1,7 +1,7 @@
 #!/usr/bin/env ipython 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: PyRoot.py 165594 2013-12-03 13:20:35Z albarano $ 
+# $Id$ 
 # =============================================================================
 ## @file PyPaw.py
 #
@@ -25,9 +25,9 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision: 165594 $
-#  Last modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-#                 by $Author: albarano $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 
@@ -52,7 +52,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
-__version__ = '$Revision: 165594 $'
+__version__ = '$Revision$'
 # =============================================================================
 import ROOT, os, sys
 # =============================================================================
@@ -73,26 +73,58 @@ import PyPAW.LHCbStyle
 # =============================================================================
 if ROOT.gROOT.IsBatch() :
     ROOT.gROOT.SetBatch ( False )
-    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
+    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
 # =============================================================================
 # The Heart 
 # =============================================================================
 logger.info ( "Create the default canvas" )
-canvas  = ROOT.TCanvas ( 'Canvas', _my_name_ , 1000 , 800 )
+cWidth  = 1000
+cHeight =  800 
+canvas  = ROOT.TCanvas ( 'glCanvas', _my_name_ , cWidth , cHeight )
+if not ROOT.gROOT.IsBatch() :
+    ## adjust canvas
+    ## @see http://root.cern.ch/root/html/TCanvas.html#TCanvas:TCanvas@4
+    dw = cWidth  - canvas.GetWw()
+    dh = cHeight - canvas.GetWh()
+    canvas.SetWindowSize ( cWidth + dw , cHeight + dh )
+    
 ## load zillions of decorations for ROOT-objects 
 import PyPAW.PyRoUts   as PyRoUts     ## NB: the most important line!
 import PyPAW.ZipShelve as ZipShelve 
 # =============================================================================
 if ROOT.gROOT.IsBatch() :
     ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.SetBatch () )
+    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
 
-# ============================================================================
+# =============================================================================
 ## minor decoration for shelve module 
 from PyPAW.shelve_ext import shelve 
 
+# =============================================================================
 ## import useful context managers
 from PyPAW.Utils import *
+
+# ============================================================================= 
+## prepend the path 
+if '.' not in sys.path :
+    logger.info('Prepend sys.path with $PWD')
+    sys.path = ['.'] + sys.path 
+
+# =============================================================================
+## execute the files, defined as arguments 
+for a in sys.argv[1:] :
+    p     = a.find( '.py' )
+    if p <= 0 : continue 
+    if len(a) == p + 3 :
+        if not os.path.exists ( a ) :
+            logger.warning   ('No file is found  "%s"' % a )
+        else : 
+            try :
+                logger.info  ('Try    to execute "%s"' % a )
+                execfile ( a )
+            except:
+                logger.error ('Unable to execute "%s"' % a )
+
 
 # =============================================================================
 cpp = PyRoUts.cpp

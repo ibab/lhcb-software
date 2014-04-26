@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: ZipShelve.py 165594 2013-12-03 13:20:35Z albarano $
+# $Id$
 # =============================================================================
 # @file ZipShelve.py
 # 
@@ -71,9 +71,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2010-04-30
 # 
-#                    $Revision: 165594 $
-#  Last Modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-#                 by $Author: albarano $
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 
@@ -128,7 +128,7 @@ The module has been developed and used with great success in
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2010-04-30"
-__version__ = "$Revision: 165594 $" 
+__version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
     'ZipShelf' ,   ## The DB-itself

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: PySelector.py 165594 2013-12-03 13:20:35Z albarano $
+# $Id$
 # =============================================================================
 # @file Selectors.py
 # 
@@ -51,9 +51,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2010-04-30
 # 
-#                    $Revision: 165594 $
-#  Last Modification $Date: 2013-12-03 14:20:35 +0100 (Tue, 03 Dec 2013) $
-#                 by $Author: albarano $
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Helper module to fix a problems in communication of
@@ -98,7 +98,7 @@ SelectorWithCuts and SelectorWithVars classes
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2010-04-30"
-__version__ = "$Revision: 165594 $" 
+__version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
 'Selector'         ,     ## The ``fixed'' TPySelector
