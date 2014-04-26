@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-04-26 - Heinrich Schindler
- - Replace Tf/PatKernel by Pr/PrKernel in CMakeLists.txt
+ - Replace Tf/PatKernel by Pr/PrKernel in CMakeLists.txt and cmt/requirements
 
 ! 2014-04-25 - Heinrich Schindler
  - Follow changes in VPChannelID format (r171869).
