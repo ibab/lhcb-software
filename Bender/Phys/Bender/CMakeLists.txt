@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Bender
 ################################################################################
-gaudi_subdir(Bender v23r3p1)
+gaudi_subdir(Bender v23r4)
 
 gaudi_depends_on_subdirs(GaudiPython
                          Phys/AnalysisPython
