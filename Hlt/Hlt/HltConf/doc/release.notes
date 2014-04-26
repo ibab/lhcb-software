@@ -4,6 +4,11 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-04-26 - Gerhard Raven
+ - remove mapping of datatype -> setting (as it was only mapping ancient
+    data types, and mapping them to 'None' which is the default anyway)
+ - add EnableHltTrackReports to the list of StripEndSequence
+
 !========================= HltConf v11r1 2014-04-22 =========================
 ! 2014-04-16 - Rob Lambert
  - Add Hlt1TrackOption to Hlt2Conf, see task #50648, propagate to it from HltConf in split scenario (to be removed shortly).

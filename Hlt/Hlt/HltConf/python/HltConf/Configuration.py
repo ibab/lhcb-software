@@ -127,11 +127,10 @@ class HltConf(LHCbConfigurableUser):
         """
         Get the class that contains the thresholds, etc
         """
-        thresName  = self.getProp('ThresholdSettings')   # the name
-        if not thresName : thresName = self.settingsForDataType( self.getProp('DataType') )
-        if not thresName : return None
+        name  = self.getProp('ThresholdSettings')   # the name
+        if not name : return None
         from HltConf.ThresholdUtils import Name2Threshold
-        return Name2Threshold(thresName)
+        return Name2Threshold(name)
 
 ##################################################################################
     def confType(self) :
@@ -220,16 +219,6 @@ class HltConf(LHCbConfigurableUser):
             __forAll__(hlt, {"InputPrimaryVertices":loc})
         appendPostConfigAction(__setOnlinePV__)
 
-#########################################################################################
-# Utility function for setting thresholds both in Hlt1 and 2
-#
-    def settingsForDataType( self, x ) :
-        """
-        Defaults per datatype
-        """
-        _dataType2Settings = { 'DC06' : None ,  # development is default
-                               'MC09' : None }  # development is default
-        return _dataType2Settings[x] if x in _dataType2Settings else None
     
 ##################################################################################
     def configureRoutingBits(self) :
@@ -247,7 +236,7 @@ class HltConf(LHCbConfigurableUser):
         ###       still properly routed!!! (this goes esp. for [32,36]!!!)
         ### NOTE: current usage:
         ###       bit 46 -> 'physics triggers'
-        ###       bit 37 -> subscrided to be Hlt monitoring
+        ###       bit 37 -> subscribed to be Hlt monitoring
         ###       bit 36 -> express stream
         ###       bit 35 -> subscribed to by Velo closing monitoring
         ###       bit 34 -> count number of 'non-lumi-exlusive events'
@@ -689,7 +678,7 @@ class HltConf(LHCbConfigurableUser):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
             #  TODO: check not explicitly set if so, provide warning....
-            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports','EnableLumiEventWriting']:
+            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrackReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
             #self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
             #self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
