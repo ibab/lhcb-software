@@ -243,11 +243,6 @@ ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvc
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
-ConfigDBAccessSvc::~ConfigDBAccessSvc() {}
-
-//=============================================================================
 // queryInterface
 //=============================================================================
 StatusCode ConfigDBAccessSvc::queryInterface(const InterfaceID& IID,
@@ -499,7 +494,7 @@ void ConfigDBAccessSvc::createCacheTables() {
 }
 
 MsgStream& ConfigDBAccessSvc::msg(MSG::Level level) const {
-     if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
+     if (!m_msg) m_msg.reset( new MsgStream( msgSvc(), name() ));
      return *m_msg << level;
 }
 

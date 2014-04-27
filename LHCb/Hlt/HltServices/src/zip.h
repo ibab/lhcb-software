@@ -15,7 +15,6 @@
  *        Directories should have specific attributes on creation, so not supported.
  */
 
-
 #include "IArchive.h"
 
 #include <map>
@@ -24,15 +23,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "boost/iostreams/slice.hpp"
-#include "boost/iostreams/copy.hpp"
-#include "boost/iostreams/filter/zlib.hpp"
-#ifndef _WIN32
-#include "boost/iostreams/filter/bzip2.hpp"
-#endif
-#include "boost/iostreams/device/back_inserter.hpp"
-#include "boost/regex.hpp"
-#include "boost/filesystem/path.hpp"
 
 #include "boost/integer_traits.hpp"
 using boost::uint8_t;
@@ -40,16 +30,12 @@ using boost::uint16_t;
 using boost::uint32_t;
 using boost::uint64_t;
 
-#include "boost/date_time/posix_time/posix_time.hpp" // ZIP date/time
-#include <boost/crc.hpp>                             // for boost::crc_32_type
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/StringKey.h"
 
 namespace io = boost::iostreams;
-namespace fs = boost::filesystem;
-
 
 namespace ConfigZipFileAccessSvc_details
 {
@@ -58,18 +44,17 @@ class ZipFile : public IArchive
 {
   public:
     ZipFile( const std::string& name, std::ios::openmode mode = std::ios::in )
-        : m_erec()
-        , m_mode( mode )
-        , m_modified( false )
+        : m_erec(), m_mode( mode ), m_modified( false )
     {
-        m_file.open(  name.c_str(), mode | std::ios::in | std::ios::binary );
+        m_file.open( name.c_str(), mode | std::ios::in | std::ios::binary );
         if ( !m_file && ( mode & std::ios::out ) ) { // try to create it
             m_file.close();
             m_file.clear();
             m_file.open( name.c_str(), std::ios::out | std::ios::binary );
             m_file.close();
             m_file.open( name.c_str(), mode | std::ios::in | std::ios::binary );
-            if ( !m_file ) std::cerr << "Can not create the file " << name << std::endl;
+            if ( !m_file )
+                std::cerr << "Can not create the file " << name << std::endl;
         } else
             index();
     }
@@ -88,14 +73,15 @@ class ZipFile : public IArchive
     }
     bool append( const std::string& name, std::stringstream& is ) override;
 
-    std::vector<std::string> contents( ) const override
+    std::vector<std::string> contents() const override
     {
         std::vector<std::string> f;
         for ( const auto& i : m_index ) f.push_back( i.first );
         return f;
     }
 
-    bool setupStream( io::filtering_istream& s, const std::string& name ) const override;
+    bool setupStream( io::filtering_istream& s, const std::string& name ) const
+        override;
 
   private:
     struct ZipInfo
@@ -131,8 +117,7 @@ class ZipFile : public IArchive
         bool write_cd( std::ostream& os ) const;
 
         bool write_hdr( std::ostream& os ) const;
-        void print( ) const;
-
+        void print() const;
     };
 
     struct EndRec
@@ -176,8 +161,9 @@ class ZipFile : public IArchive
 
         void print() const
         {
-            std::cout << std::dec << entriesThisDisk << ' ' << size << ' ' << offset << ' '
-                 << comment_length << " '" << comment << "' " << std::endl;
+            std::cout << std::dec << entriesThisDisk << ' ' << size << ' ' << offset
+                      << ' ' << comment_length << " '" << comment << "' "
+                      << std::endl;
         }
 
         EndRec()

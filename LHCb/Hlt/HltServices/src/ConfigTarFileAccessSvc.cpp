@@ -36,7 +36,7 @@ StatusCode ConfigTarFileAccessSvc::finalize()
 
 IArchive* ConfigTarFileAccessSvc::file() const
 {
-    if ( !m_file.get() ) {
+    if ( !m_file ) {
         if ( m_mode != "ReadOnly" && m_mode != "ReadWrite" &&
              m_mode != "Truncate" ) {
             error() << "invalid mode: " << m_mode << endmsg;

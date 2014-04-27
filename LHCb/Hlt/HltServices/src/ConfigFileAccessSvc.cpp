@@ -27,11 +27,6 @@ ConfigFileAccessSvc::ConfigFileAccessSvc( const std::string& name, ISvcLocator* 
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
-ConfigFileAccessSvc::~ConfigFileAccessSvc() {}
-
-//=============================================================================
 // queryInterface
 //=============================================================================
 StatusCode ConfigFileAccessSvc::queryInterface(const InterfaceID& riid,
@@ -271,6 +266,6 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
 }
 
 MsgStream& ConfigFileAccessSvc::msg(MSG::Level level) const {
-     if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
+     if (!m_msg) m_msg.reset( new MsgStream( msgSvc(), name() ));
      return *m_msg << level;
 }

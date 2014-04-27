@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-04-27 - Gerhard Raven
+ - general cleanup
+
 ! 2014-04-19 - Gerhard Raven
  - factor common code in Config{Tar,Zip}FileAccessSvc into a new mix-in class,
    ConfigArchiveAccessSvc from which both now inherit.

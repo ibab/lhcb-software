@@ -28,7 +28,7 @@ class ConfigArchiveAccessSvc : public Service,
                             virtual public IConfigAccessSvc {
 public:
   ConfigArchiveAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigArchiveAccessSvc( );     ///< Destructor
+  ~ConfigArchiveAccessSvc( ) override = default;     ///< Destructor
 
   StatusCode queryInterface(const InterfaceID& , void** );
 

@@ -29,7 +29,7 @@ class ConfigCDBAccessSvc : public Service,
                             virtual public IConfigAccessSvc {
 public:
   ConfigCDBAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigCDBAccessSvc( );     ///< Destructor
+  ~ConfigCDBAccessSvc( ) override = default;     ///< Destructor
 
   StatusCode queryInterface(const InterfaceID& , void** );
 

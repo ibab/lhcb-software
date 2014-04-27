@@ -416,12 +416,6 @@ ConfigCDBAccessSvc::ConfigCDBAccessSvc( const string& name,
     declareProperty( "Mode", m_mode = "ReadOnly" );
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigCDBAccessSvc::~ConfigCDBAccessSvc()
-{
-}
 
 //=============================================================================
 // queryInterface
@@ -451,7 +445,7 @@ StatusCode ConfigCDBAccessSvc::initialize()
 
 ConfigCDBAccessSvc_details::CDB* ConfigCDBAccessSvc::file() const
 {
-    if ( m_file.get() == 0 ) {
+    if ( !m_file ) {
         if ( m_mode != "ReadOnly" && m_mode != "ReadWrite" &&
              m_mode != "Truncate" ) {
             error() << "invalid mode: " << m_mode << endmsg;
@@ -657,6 +651,6 @@ ConfigCDBAccessSvc::writeConfigTreeNodeAlias( const ConfigTreeNodeAlias& alias )
 
 MsgStream& ConfigCDBAccessSvc::msg( MSG::Level level ) const
 {
-    if ( m_msg.get() == 0 ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
+    if ( !m_msg ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
     return *m_msg << level;
 }

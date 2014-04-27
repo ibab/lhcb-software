@@ -47,10 +47,6 @@ HltGenConfig::HltGenConfig(const string &name, ISvcLocator *pSvcLocator)
   declareProperty("Label", m_label);
   declareProperty("Overrule", m_overrule);
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltGenConfig::~HltGenConfig() {}
 
 //=============================================================================
 // Initialization

@@ -16,14 +16,6 @@ namespace fs = boost::filesystem;
 #include "GaudiKernel/System.h"
 
 
-
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigArchiveAccessSvc::~ConfigArchiveAccessSvc()
-{
-}
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -228,6 +220,6 @@ ConfigArchiveAccessSvc::writeConfigTreeNodeAlias( const ConfigTreeNodeAlias& ali
 
 MsgStream& ConfigArchiveAccessSvc::msg( MSG::Level level ) const
 {
-    if ( m_msg.get() == 0 ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
+    if ( !m_msg ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
     return *m_msg << level;
 }

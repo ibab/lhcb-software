@@ -34,7 +34,7 @@ class ConfigDBAccessSvc : public Service,
                           virtual public IConfigAccessSvc {
 public:
   ConfigDBAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigDBAccessSvc( );     ///< Destructor
+  ~ConfigDBAccessSvc( ) override = default;     ///< Destructor
 
   StatusCode queryInterface(const InterfaceID& , void** );
 
@@ -76,7 +76,7 @@ private:
   template <typename iter> void writeCacheEntries( const std::string&, const std::string&, iter, iter);
   void createCacheTables();
 
-  mutable std::unique_ptr<MsgStream>     m_msg;
+  mutable std::unique_ptr<MsgStream>   m_msg;
   std::string                          m_connection;
   coral::ISessionProxy*                m_session;
   ICOOLConfSvc*                        m_coolConfSvc;

@@ -24,13 +24,13 @@ class HltGenConfig : public GaudiAlgorithm, public IToolSvc::Observer
   public:
     HltGenConfig( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~HltGenConfig(); ///< Destructor
+    ~HltGenConfig() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
-    virtual StatusCode finalize();   ///< Algorithm finalization
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
+    StatusCode finalize() override;   ///< Algorithm finalization
 
-    virtual void onCreate( const IAlgTool* tool );
+    void onCreate( const IAlgTool* tool ) override;
 
   private:
     typedef unsigned int TCK_t;

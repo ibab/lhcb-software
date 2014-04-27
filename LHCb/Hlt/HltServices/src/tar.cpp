@@ -20,10 +20,9 @@ class CleanupAtExit
         static CleanupAtExit theOne;
         return theOne;
     }
-
-    void add( const std::string& name )
+    void add( std::string name )
     {
-        m_files.insert( name );
+        m_files.emplace( std::move(name) );
     }
     void remove( const std::string& name )
     {
@@ -31,9 +30,7 @@ class CleanupAtExit
     }
 
   private:
-    CleanupAtExit()
-    {
-    }
+    CleanupAtExit() = default;
     ~CleanupAtExit()
     {
         for ( const auto& i : m_files ) {

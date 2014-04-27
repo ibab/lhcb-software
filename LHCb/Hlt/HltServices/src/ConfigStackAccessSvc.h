@@ -31,7 +31,7 @@ class ConfigStackAccessSvc : public Service,
                             virtual public IConfigAccessSvc {
 public:
   ConfigStackAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
-  virtual ~ConfigStackAccessSvc( );     ///< Destructor
+  ~ConfigStackAccessSvc( ) override = default;     ///< Destructor
 
   StatusCode queryInterface(const InterfaceID& , void** );
   StatusCode initialize();    ///< Service initialization

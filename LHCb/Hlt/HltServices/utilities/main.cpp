@@ -71,8 +71,9 @@ std::string format_time(std::time_t t) {
 }
 
 class CDB {
+    mutable struct cdb m_db;
 public:
-    CDB( std::string fname ) {
+    CDB( const std::string& fname ) {
         int fd = open( fname.c_str(), O_RDONLY );
         if (cdb_init( &m_db, fd ) < 0) cdb_fileno(&m_db)=-1;
     }
@@ -125,6 +126,7 @@ public:
             return value;
         }
     };
+
     class iterator {
         struct cdb* m_db;
         unsigned m_cpos;
@@ -163,8 +165,6 @@ public:
     }
 
     bool ok() const { return cdb_fileno(&m_db)>=0; }
-private:
-    mutable struct cdb m_db;
 };
 
 

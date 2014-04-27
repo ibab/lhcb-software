@@ -15,12 +15,6 @@ ConfigStackAccessSvc::ConfigStackAccessSvc( const std::string& name,
     declareProperty( "ConfigAccessSvcs", s_svcs = {{"ConfigDBAccessSvc"}} );
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigStackAccessSvc::~ConfigStackAccessSvc()
-{
-}
 
 //=============================================================================
 // queryInterface
@@ -159,6 +153,6 @@ ConfigStackAccessSvc::writeConfigTreeNodeAlias( const ConfigTreeNodeAlias& alias
 
 MsgStream& ConfigStackAccessSvc::msg( MSG::Level level ) const
 {
-    if ( m_msg.get() == 0 ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
+    if ( !m_msg ) m_msg.reset( new MsgStream( msgSvc(), name() ) );
     return *m_msg << level;
 }

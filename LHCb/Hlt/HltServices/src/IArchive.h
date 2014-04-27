@@ -9,9 +9,9 @@
 #include "boost/optional.hpp"
 
 namespace {
-constexpr struct {
+constexpr struct all_ {
   template <typename T> bool operator()(const T &) const { return true; }
-} all;
+} all{};
 
 struct PrefixFilenameSelector {
   PrefixFilenameSelector(const std::string &_prefix) : prefix(_prefix) {}

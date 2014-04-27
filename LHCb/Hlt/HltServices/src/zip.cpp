@@ -1,4 +1,15 @@
 #include "zip.h"
+#include <boost/crc.hpp>                             // for boost::crc_32_type
+#include "boost/regex.hpp"
+#ifndef _WIN32
+#include "boost/iostreams/filter/bzip2.hpp"
+#endif
+#include "boost/iostreams/filter/zlib.hpp"
+#include "boost/iostreams/slice.hpp"
+#include "boost/filesystem/path.hpp"
+#include "boost/iostreams/device/back_inserter.hpp"
+#include "boost/iostreams/copy.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp" // ZIP date/time
 using namespace std;
 
 namespace

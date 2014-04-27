@@ -9,7 +9,6 @@
 #include <memory>
 #include <iterator>
 #include "boost/optional.hpp"
-#include "boost/ptr_container/ptr_vector.hpp"
 
 
 // from Gaudi
@@ -45,27 +44,37 @@
 class PropertyConfigSvc : public Service
                         , public IToolSvc::Observer 
                         , virtual public IPropertyConfigSvc {
+private:
+  typedef std::map<PropertyConfig::digest_type,  PropertyConfig> PropertyConfigMap_t;
+  typedef std::map<ConfigTreeNode::digest_type,  ConfigTreeNode> ConfigTreeNodeMap_t;
+  typedef std::map<ConfigTreeNodeAlias::alias_type,  ConfigTreeNode::digest_type> ConfigTreeNodeAliasMap_t;
+
+  //TODO: use multimap instead???
+  typedef std::map<ConfigTreeNode::digest_type,  std::vector<PropertyConfig::digest_type> > Tree2LeafMap_t;
+  typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t; // replace std::list with std::deque???
+  
+  typedef std::map<std::string, PropertyConfig::digest_type> ConfigPushed_t;
 public:
   PropertyConfigSvc(const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~PropertyConfigSvc( ); ///< Destructor
-  virtual StatusCode initialize();    ///< Service initialization
-  virtual StatusCode finalize();    ///< Service initialization
+  ~PropertyConfigSvc( ) override  = default ; ///< Destructor
+  StatusCode initialize() override;    ///< Service initialization
+  StatusCode finalize() override;    ///< Service initialization
 
-  virtual StatusCode queryInterface(const InterfaceID& riid,
-                                    void** ppvUnknown) ;
+  StatusCode queryInterface(const InterfaceID& riid,
+                            void** ppvUnknown) override;
 
-  virtual PropertyConfig currentConfiguration(const INamedInterface& obj) const;
-  virtual PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const;
+  PropertyConfig currentConfiguration(const INamedInterface& obj) const override;
+  PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const override;
 
-  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const;
-  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const;
-  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const;
-  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const;
+  const Tree2NodeMap_t::mapped_type& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const override;
+  const Tree2NodeMap_t::mapped_type& collectNodeRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const override;
+  const Tree2LeafMap_t::mapped_type& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const override;
+  const Tree2LeafMap_t::mapped_type& collectLeafRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const override;
 
-  virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const;
-  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const;
-  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& ref) const;
+  const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const override;
+  const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const override;
+  const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& ref) const override;
   // helper functions
 
   // preload a configuration
@@ -115,18 +124,9 @@ protected:
   MsgStream& error() const { return msg(MSG::ERROR); }
   MsgStream& fatal() const { return msg(MSG::FATAL); }
   MsgStream& always() const { return msg(MSG::ALWAYS); }
+
+
 private:
-  typedef std::map<PropertyConfig::digest_type,  PropertyConfig> PropertyConfigMap_t;
-  typedef std::map<ConfigTreeNode::digest_type,  ConfigTreeNode> ConfigTreeNodeMap_t;
-  typedef std::map<ConfigTreeNodeAlias::alias_type,  ConfigTreeNode::digest_type> ConfigTreeNodeAliasMap_t;
-
-  //TODO: use multimap instead???
-  typedef std::map<ConfigTreeNode::digest_type,  std::vector<PropertyConfig::digest_type> > Tree2LeafMap_t;
-  typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t;
-  
-  typedef std::map<std::string, PropertyConfig::digest_type> ConfigPushed_t;
-
-
   TransformMap                         m_transform;
 
   mutable std::unique_ptr<MsgStream>   m_msg;
