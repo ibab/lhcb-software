@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-04-27 - Heinrich Schindler
+ - VPChannelID: add decoding to sensor column.
+
 ! 2014-04-25 - Heinrich Schindler
  - Change VPChannelID bitfield from row/col/chip/module to row/col/chip/sensor.
 

@@ -26,6 +26,11 @@
         <code>return m_channelID;</code>
       </method> 
 
+      <method type = 'unsigned int' name = 'scol' const = 'TRUE' 
+              desc = 'Get sensor column number'>
+        <code>return (m_channelID &amp; (chipMask | colMask)) >> colBits;</code>
+      </method>
+
       <method type = 'unsigned int' name = 'module' const = 'TRUE' 
               desc = 'Get module number'>
         <code>return sensor() / 4;</code>
