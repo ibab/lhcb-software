@@ -191,11 +191,7 @@ class GAUDI_API Stage : public ContainedObject
   public:
     // ========================================================================
     /// Default Destructor
-    virtual ~Stage() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~Stage();
     // ========================================================================
   public:
     // ========================================================================

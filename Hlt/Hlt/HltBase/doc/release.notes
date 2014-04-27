@@ -6,9 +6,6 @@
 
 !========================= HltBase v15r0 2014-04-26 =========================
 ! 2014-04-24 - Gerhard Raven
- - replace some default destructor implementations with '= default'
-
-! 2014-04-24 - Gerhard Raven
  - explicitly instantiate the template member function  HltStage::set for
    the relevant types so that they explicitly appear in the python dictionary.
 

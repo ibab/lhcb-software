@@ -17,6 +17,14 @@ const InterfaceID& ITrackBiFunctionTool::interfaceID()
     return s_ITrackBiFunctionTool;
 }
 // ============================================================================
+// virtual and protected destructor
+// ============================================================================
+ITrackBiFunctionTool::~ITrackBiFunctionTool()
+{
+}
+// ============================================================================
+
+// ============================================================================
 // Return the interface ID
 // ============================================================================
 const InterfaceID& ITrackVertexBiFunctionTool::interfaceID()
@@ -26,6 +34,14 @@ const InterfaceID& ITrackVertexBiFunctionTool::interfaceID()
     return s_ITrackVertexBiFunctionTool;
 }
 // ============================================================================
+// virtual and protected destructor
+// ============================================================================
+ITrackVertexBiFunctionTool::~ITrackVertexBiFunctionTool()
+{
+}
+// ============================================================================
+
+// ============================================================================
 // Return the interface ID
 // ============================================================================
 const InterfaceID& IVertexBiFunctionTool::interfaceID()
@@ -33,6 +49,14 @@ const InterfaceID& IVertexBiFunctionTool::interfaceID()
     static const InterfaceID s_IVertexBiFunctionTool{"IVertexBiFunctionTool", 2, 0};
     return s_IVertexBiFunctionTool;
 }
+// ============================================================================
+// virtual and protected destructor
+// ============================================================================
+IVertexBiFunctionTool::~IVertexBiFunctionTool()
+{
+}
+// ============================================================================
+
 // ============================================================================
 // The END
 // ============================================================================

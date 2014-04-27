@@ -44,11 +44,9 @@ class IBiFunctionTool : virtual public IAlgTool
   protected:
     // ==========================================================================
     /// virtual and protected destructor
-    virtual ~IBiFunctionTool() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~IBiFunctionTool()
+    {
+    }
     // ==========================================================================
 };
 // ============================================================================
@@ -62,11 +60,7 @@ class ITrackBiFunctionTool : virtual public IBiFunctionTool<LHCb::Track, LHCb::T
   protected:
     // ==========================================================================
     /// virtual and protected destructor
-    virtual ~ITrackBiFunctionTool() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~ITrackBiFunctionTool();
     // ==========================================================================
 };
 // ============================================================================
@@ -81,11 +75,7 @@ class ITrackVertexBiFunctionTool
   protected:
     // ==========================================================================
     /// virtual and protected destructor
-    virtual ~ITrackVertexBiFunctionTool() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~ITrackVertexBiFunctionTool();
     // ==========================================================================
 };
 // ============================================================================
@@ -100,11 +90,7 @@ class IVertexBiFunctionTool
   protected:
     // ==========================================================================
     /// virtual and protected destructor
-    virtual ~IVertexBiFunctionTool() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~IVertexBiFunctionTool();
     // ==========================================================================
 };
 // ============================================================================

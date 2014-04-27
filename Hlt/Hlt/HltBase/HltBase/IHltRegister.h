@@ -127,23 +127,11 @@ class IRegister : virtual public IInterface
       private:
         // ====================================================================
         /// default constructor is disabled
-        Lock() 
-#ifndef __GCCXML__
-            = delete
-#endif
-            ;
+        Lock(); // default constructor is disabled
         /// copy constructor is disabled
-        Lock( const Lock& )
-#ifndef __GCCXML__
-            = delete
-#endif
-            ;
+        Lock( const Lock& ); // copy constructor is disabled
         /// assignement operator is disabled
-        Lock& operator=( const Lock& ) 
-#ifndef __GCCXML__
-            = delete 
-#endif
-            ;
+        Lock& operator=( const Lock& ); // assignement operator is disabled
         // ====================================================================
       private:
         // ====================================================================
@@ -213,11 +201,7 @@ class IRegister : virtual public IInterface
   protected:
     // ========================================================================
     /// virtual & protected destructor
-    virtual ~IRegister() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ; // virtual & protected destructor
+    virtual ~IRegister(); // virtual & protected destructor
     // ========================================================================
 };
 // ==========================================================================

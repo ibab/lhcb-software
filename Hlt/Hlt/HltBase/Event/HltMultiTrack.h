@@ -65,11 +65,7 @@ class MultiTrack : public ContainedObject
     {
     }
     /// Default Destructor
-    virtual ~MultiTrack() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~MultiTrack();
     // ========================================================================
     // Retrieve pointer to class definition structure
     virtual const CLID& clID() const;

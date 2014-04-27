@@ -148,11 +148,7 @@ class IUnit : virtual public IInterface
   protected:
     // ========================================================================
     /// virtual & protected destructor
-    virtual ~IUnit() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~IUnit(); // virtual & protected destructor
     // ========================================================================
 };
 // ==========================================================================

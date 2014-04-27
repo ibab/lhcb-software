@@ -29,11 +29,7 @@ class IConfigTreeEditor : virtual public INamedInterface
   public:
     /// Return the interface ID
     static const InterfaceID& interfaceID();
-    virtual ~IConfigTreeEditor() 
-#ifndef __GCCXML__
-        = default
-#endif
-        ;
+    virtual ~IConfigTreeEditor();
 
     // given a configuration tree identified by 'in', apply the changes
     // defined by 'updates' (which is a multimap of 'component' -> 'key','value'),
