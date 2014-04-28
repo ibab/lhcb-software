@@ -3,7 +3,7 @@
 # Maintainer : Vladimir Gligorov, Johannes Albrecht
 #============================================================================
 package           HltTracking
-version           v12r0
+version           v12r0p1
 
 # Structure
 #============================================================================
