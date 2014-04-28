@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-04-28 - Sebastian Neubert
+ - Add Hlt1_ and Hlt2_ versions of TrackingOnly settings
+
 !========================= HltSettings v6r3 2014-04-22 =========================
 ! 2014-04-16 - Rob Lambert
  - Add Hlt1_ and Hlt2_ versions of Physics_September2012, see task #50414

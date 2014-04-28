@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class TrackingOnly( object ):
+class Hlt1_TrackingOnly( object ):
     """
     Settings for only running the tracking in the HLT
 
@@ -44,8 +44,8 @@ class TrackingOnly( object ):
         return '0x0044'
 
     def HltType(self) :
-        self.verifyType( TrackingOnly ) 
-        return          'TrackingOnly'
+        self.verifyType( Hlt1_TrackingOnly ) 
+        return          'Hlt1_TrackingOnly'
     
     def Thresholds(self) :
         """
@@ -96,10 +96,10 @@ class TrackingOnly( object ):
                                                ,   'AllL0VeloTT_ValidateTT'  : True
                                                ,   'AllL0VeloTTForw_Velo_NHits' : 9.
                                                ,   'AllL0VeloTTForw_Velo_Qcut'  : 3.
-                                               ,   'AllL0VeloTTForw_IP'         : 0.1
-                                               ,   'AllL0VeloTTForw_PT'          : 800.
+                                               ,   'AllL0VeloTTForw_IP'         : 0.0
+                                               ,   'AllL0VeloTTForw_PT'          : 300.
                                                ,   'AllL0VeloTTForw_P'           : 3000.
-                                               ,   'AllL0VeloTTForw_IPChi2'      : 16.
+                                               ,   'AllL0VeloTTForw_IPChi2'      : 0.
                                                ,   'AllL0VeloTTForw_TrChi2'      : 2.
                                                ,   'AllL0VeloTTForw_TrNTHits'    : 16.
                                                ,   'AllL0VeloTTForw_GEC'         : 'Loose'
@@ -260,18 +260,7 @@ class TrackingOnly( object ):
      
 
         return thresholds
-
-      
- 
                        
-    def ActiveHlt2Lines(self) :
-        """
-        Returns a list of active lines
-        """
-        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent','Hlt2LowMultHadron','Hlt2B2HH']
- 
-        return hlt2
-       
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
@@ -280,3 +269,10 @@ class TrackingOnly( object ):
         #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
        
         return lines 
+
+
+    def ActiveHlt2Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        return []

@@ -18,7 +18,7 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class TrackingOnly( object ):
+class Hlt2_TrackingOnly( object ):
     """
     Settings for only running the tracking in the HLT
 
@@ -44,8 +44,8 @@ class TrackingOnly( object ):
         return '0x0044'
 
     def HltType(self) :
-        self.verifyType( TrackingOnly ) 
-        return          'TrackingOnly'
+        self.verifyType( Hlt2_TrackingOnly ) 
+        return          'Hlt2_TrackingOnly'
     
     def Thresholds(self) :
         """
@@ -276,7 +276,6 @@ class TrackingOnly( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0VeloTTForw', 'Hlt1TrackMuon',  'Hlt1TrackPhoton', ]
-        #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
+        lines =  [ ]
        
         return lines 
