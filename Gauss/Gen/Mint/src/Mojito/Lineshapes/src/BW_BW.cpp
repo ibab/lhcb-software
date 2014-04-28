@@ -437,14 +437,14 @@ TLorentzVector BW_BW::daughterP4(int i) const{
 	 << " You requested the 4-momentum of dgtr number " << i
 	 << ". There are " << _theDecay.nDgtr() 
 	 << " daughters." << endl;
-    return -9999;
+    return TLorentzVector(-9999, 0.0, 0.0, 0.0);
   }
   const_counted_ptr<AssociatedDecayTree> dgtr = _theDecay.getDgtrTreePtr(i);
   std::vector<int> asi = dgtr->getVal().asi();
   if(asi.size() < 2){
     return getEvent()->p(asi[0]);
   }else{
-    return TLorentzVector(0.0);
+    return TLorentzVector();
   }
 }
 double BW_BW::daughterRecoMass2(int i) const{
