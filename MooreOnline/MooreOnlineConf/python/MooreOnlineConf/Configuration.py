@@ -28,6 +28,13 @@ class MooreOnline(LHCbConfigurableUser):
         , 'EnableRunChangeHandler' : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
         , "PartitionName" : "LHCb"
+        , "RunChangeHandlerConditions" : [ "Conditions/Online/LHCb/Magnet/Set"
+                                         , "Conditions/Online/Velo/MotionSystem"        
+                                         , "Conditions/Online/LHCb/Lumi/LumiSettings"   
+                                         , "Conditions/Online/LHCb/LHCFillingScheme"    
+                                         , "Conditions/Online/LHCb/RunParameters"       
+                                         , "Conditions/Online/Rich1/R1HltGasParameters" 
+                                         , "Conditions/Online/Rich2/R2HltGasParameters" ]
         , 'IgnoreDBHeartBeat'  : False
         ################################################################
         # Options to Moore which have a different default in online mode
@@ -49,7 +56,8 @@ class MooreOnline(LHCbConfigurableUser):
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
                                       'DBSnapshotDirectory',
                                       'PartitionName',
-                                      'EnableRunChangeHandler'])
+                                      'EnableRunChangeHandler',
+                                      'RunChangeHandlerConditions' ])
         
         # https://savannah.cern.ch/bugs/?94454#comment12
         from Configurables import MagneticFieldSvc
@@ -123,16 +131,14 @@ class MooreOnline(LHCbConfigurableUser):
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
             writer.OutputLevel = OnlineEnv.OutputLevel
-            #need to leave this to Moore in future!
             if len(Moore().getProp('WriterRequires')):
-                from Configurables import LoKi__VoidFilter as VoidFilter
-                writer.Members.append( VoidFilter( "WriterFilter" 
-                                                   , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
-                                                   , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in Moore().getProp('WriterRequires') ] ) 
-                                                   )
-                                       )
+                from Configurables import LoKi__VoidFilter as Filter
+                writer.Members.append( Filter( "SendSequenceFilter" 
+                                             , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
+                                             , Code = ' & '.join( [ "ALG_EXECUTED('{0}') & ALG_PASSED('{0}')".format(i) for i in Moore().getProp('WriterRequires') ] ) 
+                                             )
+                                     )
             writer.Members.append(evtMerger)
-            
             app.OutStream.append( writer )
         else :
             input = 'Events'
@@ -262,4 +268,3 @@ class MooreOnline(LHCbConfigurableUser):
         if self.getProp("UseDBSnapshot"): self._configureDBSnapshot()
         
         self._configureOnline()
-        

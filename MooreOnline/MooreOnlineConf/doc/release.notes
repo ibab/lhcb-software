@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2014-04-28 - Gerhard Raven
+ - forward RunChangeHandlerConditions 
+
 ! 2014-03-31 - Rob Lambert
  - Fix bug processing in the pit thanks to WriterRequires in MooreOnline
  - see bug #104195
