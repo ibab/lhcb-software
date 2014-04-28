@@ -106,7 +106,8 @@ namespace LHCb  {
     mutable IDataManagerSvc*  m_histoDataMgrSvc;
 
     /// Name of output histogram file.
-    std::string m_HistFileName;
+    mutable std::string m_HistFileName;
+
     /// Minimum number of events required for a histogram.
     int m_EvtHisto;
     
@@ -236,6 +237,10 @@ namespace LHCb  {
 	
     virtual std::string genRootName(const std::string& ) const;
 
+    virtual std::string genRootName_FileId(const std::string& ) const;
+
+    
+
 protected:
     /// Definition of the masj type
     typedef std::vector<unsigned int> Mask;
@@ -283,6 +288,8 @@ protected:
     mutable int m_runNum;
     /// Last run number.
     mutable int m_prevRun;
+    /// Number of .root files belonging to same run. Used for naming the file.
+    mutable int m_fileCnt;
     
   };
 }
