@@ -21,7 +21,7 @@ use HltRawData          v4r0p1  Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r0    Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v6r3    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v3r0    Hlt   # Tomasz Skwarnicki
-use HltTracking         v12r0   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v12r0p1 Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r12p4 Hlt   # Gerhard Raven
 use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
 
@@ -42,3 +42,4 @@ apply_pattern QMTest
 
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
+
