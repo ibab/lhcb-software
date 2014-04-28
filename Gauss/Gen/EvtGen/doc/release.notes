@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-04-28 - Marco Clemencic
+ - Fixes to compile against Pythia8 183 (with CMake).
+
 !========================== EvtGen v13r13 2014-04-18 ==========================
 ! 2014-01-29 - John Back
  - Removed mass assertion on GS shape in EvtDalitzReso to allow it to 

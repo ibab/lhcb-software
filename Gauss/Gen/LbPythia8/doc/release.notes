@@ -4,7 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
-! 2014-04-35 - Marco Clemencic
+! 2014-04-28 - Marco Clemencic
+ - Fixes to compile against Pythia8 183 (with CMake).
+
+! 2014-04-25 - Marco Clemencic
  - Minor improvement to CMake configuration.
 
 !======================== LbPythia8 v7r7p2 2014-03-31 ========================
