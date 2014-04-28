@@ -45,6 +45,12 @@ class CondDB(ConfigurableUser):
                   "DBSnapshotDirectory" : "/group/online/hlt/conditions" ,
                   "PartitionName" : "LHCb" ,
                   'EnableRunChangeHandler' : False,
+                  'RunChangeHandlerConditions' : [ "Conditions/Online/LHCb/Magnet/Set"
+                                                 , "Conditions/Online/Velo/MotionSystem"
+                                                 , "Conditions/Online/LHCb/Lumi/LumiSettings"
+                                                 , "Conditions/Online/LHCb/RunParameters"
+                                                 , "Conditions/Online/Rich1/R1HltGasParameters"
+                                                 , "Conditions/Online/Rich2/R2HltGasParameters" ],
                   'LoadCALIBDB' : "OFFLINE"
                   }
     _propertyDocDct = {
@@ -350,13 +356,7 @@ class CondDB(ConfigurableUser):
             online_xml = '%s/%s/online_%%d.xml' % (baseloc, self.getProp('PartitionName')[0:4] )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
-            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"        : online_xml
-                             , "Conditions/Online/Velo/MotionSystem"      : online_xml
-                             , "Conditions/Online/LHCb/Lumi/LumiSettings" : online_xml
-                             , "Conditions/Online/LHCb/RunParameters"     : online_xml
-                             , "Conditions/Online/Rich1/R1HltGasParameters" : online_xml
-                             , "Conditions/Online/Rich2/R2HltGasParameters" : online_xml
-                             }
+            rch.Condiitions = dict( (cnd, online_xml ) for cnd in self.getProp("RunChangeHandlerConditions") )
             ApplicationMgr().ExtSvc.append(rch)
 
     def __apply_configuration__(self):
