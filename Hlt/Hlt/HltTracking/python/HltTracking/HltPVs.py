@@ -49,7 +49,7 @@ def PV3D():
     from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
     from HltVertexNames import HltSharedVerticesPrefix
     from HltVertexNames import HltGlobalVertexLocation
-    from HltReco import MinimalVelo
+    from HltReco import MinimalVelo, RevivedVelo
 
     from Configurables import PatPV3D
     from Configurables import PVOfflineTool, LSAdaptPV3DFitter
@@ -66,8 +66,17 @@ def PV3D():
     recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.maxIP2PV = 0.3
     #recoPV3D.PVOfflineTool.LSAdaptPV3DFitter.zVtxShift = 0.0
     recoPV3D.OutputVerticesName = proto3DVertices
-    recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
-
+    
+    
+    from Configurables import HltConf
+    reuseTracks = ( HltConf().getProp('Split') == 'Hlt2' )
+    if reuseTracks :
+        pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in RevivedVelo.members() + [ recoPV3D ] ] )
+        recoPV3D.PVOfflineTool.InputTracks = [ RevivedVelo.outputSelection() ]
+    else : 
+        pv3dAlgos =  ','.join( [ "'%s'"%m.getFullName() for m in MinimalVelo.members() + [ recoPV3D ] ] )
+        recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
+        
     from Configurables import LoKi__HltUnit as HltUnit
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
@@ -83,13 +92,14 @@ def PV3D():
         >> RV_SINKTES( '%(tesFinal)s' )
         >> VX_SINK( '%(hltFinal)s' )
         >> ~VEMPTY
-        """ % { 'algo'     : ','.join( [ "'%s'"%m.getFullName() for m in MinimalVelo.members() + [ recoPV3D ] ] ),
+        """ % { 'algo'     : pv3dAlgos,
                 'tesInput' : recoPV3D.OutputVerticesName,
                 'hltProto' : ProtoPV3DSelection,
                 'tesFinal' : output3DVertices,
                 'hltFinal' : PV3DSelection   }
 
         )
+    
     from HltReco import MinimalVelo
     return bindMembers( "HltPVsPV3D", [ filterPV3D ] ).setOutputSelection( PV3DSelection )
 
