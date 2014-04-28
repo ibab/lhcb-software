@@ -107,7 +107,7 @@ PEstiForward = LoKi.Hlt1.UpgradeConf(
     True                         )                 ##              "OrderByPt
 # =============================================================================
 pET = LoKi.Hlt1.UpgradeConf(
-    "PatVeloTTHybridTool/pET",                 ##                   "Tool" 
+    "PatVeloTTTool/pET",                 ##                   "Tool" 
     "Hlt1/Track/VeloTT"    ,                 ##              "TESOutput"
     LHCb.Track.Upstream          ,                 ##              "TrackType"
     True                         ,                 ##                  "Owner"

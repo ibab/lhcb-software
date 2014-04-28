@@ -1,3 +1,8 @@
+import PyCintex
+_global   = PyCintex.makeNamespace('')
+cpp      = _global
+LHCb     = cpp.LHCb
+
 __all__ = ( 'MatchVeloL0Calo' )
 # =============================================================================
 ## Symbols for streamer users

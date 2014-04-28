@@ -32,7 +32,6 @@
 
 __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to get 'MinimalRZVelo' 
           , 'MinimalVelo'
-          , 'RevivedVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
 	  , 'Hlt1Seeding'
           , 'VeloCandidates'
@@ -135,7 +134,6 @@ from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, Hl
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
-from Configurables import TrackStateInitAlg, TrackStateInitTool
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
@@ -152,29 +150,17 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
 
-#### State Initialiser for resurrected tracks
-#veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName ))
-#veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-
-
 #############################################################################################
 # Define the reconstruction sequence 
 #############################################################################################
-from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK
-from Configurables import DecodeVeloRawBuffer, DumpTracks
+from HltLine.HltDecodeRaw import DecodeVELO
+from Configurables import DecodeVeloRawBuffer
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
 MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
 
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
-
-
-dumper = DumpTracks('VeloDumper')
-dumper.OutputLevel = VERBOSE
-dumper.TracksLocation = recoVelo.OutputTracksName
-
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK, dumper]).setOutputSelection( recoVelo.OutputTracksName )
 
 Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 

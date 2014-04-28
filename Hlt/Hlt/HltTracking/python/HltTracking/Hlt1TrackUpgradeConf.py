@@ -1,7 +1,14 @@
+# skip any of the next three lines, and we crash trying to instantiate the AppMgr.... ?!?!!!???
+# probably this is needed before Hlt1StreamerConf is imported...
+import PyCintex
+cpp      = PyCintex.makeNamespace('')
+LHCb     = cpp.LHCb
+__tmp = LHCb.Track.Long
+
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
                             PatForwardTool,
-                            PatVeloTTHybridTool,
+                            PatVeloTTTool,
                             MatchVeloMuon,
                             HltTrackFit )
                             
@@ -34,9 +41,6 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                      , name
                      , SecondLoop = True
                      , UseMomentumEstimate = useMomEst
-                     , UseWrongSignWindow = True
-                     , WrongSignPT = 2000
-                     , Preselection = useMomEst
                      , MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
                      , MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
                      , MinHits = CommonForwardTrackingOptions["MinHits"]
@@ -44,17 +48,17 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                      , MinPt = minPt
                      , MinMomentum = minP ).createConfigurable( parent )
 
-def ConfiguredpET(parent, name = None, minP = _minP, minPT = _minPt) :
-    if name == None: name = PatVeloTTHybridTool.__name__
+def ConfiguredpET(parent, name = None, minP = _minP) :
+    if name == None: name = PatVeloTTTool.__name__
     from HltTracking.HltReco import CommonpETOptions 
-    return Hlt1Tool( PatVeloTTHybridTool
+    return Hlt1Tool( PatVeloTTTool
                      , name
-                     , minMomentum = minP
-                     , minPT = minPT
-                     , PassTracks = True
-                     , centralHoleSize = 33
-                     , PassHoleSize = 45
+                     , minMomentum = minP ## it was 2000.
+                     , DxGroupFactor = CommonpETOptions["DxGroupFactor"]
                      , maxPseudoChi2 = CommonpETOptions["maxPseudoChi2"]
+                     , maxSolutionsPerTrack = CommonpETOptions["maxSolutionsPerTrack"]
+                     #, fitTracks = CommonpETOptions["fitTracks"]
+                     #, maxChi2 = CommonpETOptions["maxChi2"]
                      ).createConfigurable( parent )
 
 def ConfiguredFastKalman( parent = None, name = None ) :
@@ -130,8 +134,8 @@ import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000, 1250 )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000,  500 )
-ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 500 , useMomEst=True)
-ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000, 200 )
+ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 1250 , useMomEst=True)
+ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 800)
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
 LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"

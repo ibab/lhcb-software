@@ -4,36 +4,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2014-4-08 - Sebastian Neubert
- - removed trackingSources
-
-! 2014-04-06 - Sebastian Neubert
- - switched VeloTT to VeloTTHybrid
-
-! 2014-04-03 - Sebastian Neubert
- - added options for new VeloTT version and PatForward that goes with that
-   (using charge and momentum estimate) 
-
-! 2014-04-01 - Sebastian Neubert
- - added trackingSources to link track locations to TrackReports SourceIDs
- - removed the VeloInitFit
-
-! 2014-02-25 - Gerhard Raven
- - make sure RICH reco doesn't fill its own timer table...
-
-! 2014-02-24 - Marco Clemencic
- - Removed use of PyCintex from configuration files (should not be needed and
-   does not fix any bug).
-
-! 2014-02-24 - Sebastian Neubert
- - added correct dependencies for using resurrected tracks in PV3D
-
-! 2014-02-23 - Sebastian Neubert
- - added RevivedVelo which configures sequences for velo track resurrection
-
-! 2014-02-19 - Sebastian Neubert
- - added TrackInitStateAlg for HLT1 tracks resurrected in HLT2
-
+!========================= HltTracking v12r0 2014-02-20 =========================
 ! 2014-02-11 - Gerhard Raven
  - remove unused private fields
 
