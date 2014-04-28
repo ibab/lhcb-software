@@ -147,7 +147,7 @@ def getUserName ( userID ):
             if i.userid == userID:
                 print "userID exists mapped to " + str( i.username )
                 return i.username
-            print "Did not find the corresponding username for " + str( userID )
+        print "Did not find the corresponding username for " + str( userID )
         return "ERROR"
     else :
         err_num = lfc.cvar.serrno #@UndefinedVariable
