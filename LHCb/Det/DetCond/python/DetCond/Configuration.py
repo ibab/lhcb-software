@@ -48,10 +48,11 @@ class CondDB(ConfigurableUser):
                   'RunChangeHandlerConditions' : [ "Conditions/Online/LHCb/Magnet/Set"
                                                  , "Conditions/Online/Velo/MotionSystem"
                                                  , "Conditions/Online/LHCb/Lumi/LumiSettings"
+                                                 , "Conditions/Online/LHCb/LHCFillingScheme"    
                                                  , "Conditions/Online/LHCb/RunParameters"
                                                  , "Conditions/Online/Rich1/R1HltGasParameters"
                                                  , "Conditions/Online/Rich2/R2HltGasParameters" ],
-                  'XMLFilename' : 'online_%%d.xml',
+                  'XMLFilename' : 'online_%d.xml',
                   'LoadCALIBDB' : "OFFLINE"
                   }
     _propertyDocDct = {
@@ -354,7 +355,7 @@ class CondDB(ConfigurableUser):
 
         # Set the location of the Online conditions
         if self.getProp('EnableRunChangeHandler') :
-            online_xml = '%s/%s/%s.xml' % (baseloc, self.getProp('PartitionName')[0:4] , self.getProp('XMLFilename'))
+            online_xml = '%s/%s/%s' % (baseloc, self.getProp('PartitionName')[0:4] , self.getProp('XMLFilename'))
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
             rch.Conditions = dict( (cnd, online_xml ) for cnd in self.getProp("RunChangeHandlerConditions") )
