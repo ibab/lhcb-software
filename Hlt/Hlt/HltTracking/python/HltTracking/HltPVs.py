@@ -74,7 +74,8 @@ def PV3D():
     filterPV3D = HltUnit(
         'HltPV3D',
         Preambulo = [ 'from LoKiPhys.decorators import *',
-                      'from LoKiTrigger.decorators import *' ],
+                      'from LoKiTrigger.decorators import *',
+                      'from LoKiHlt.algorithms import *' ],
         Code = """
         execute( %(algo)s ) * VSOURCE( '%(tesInput)s' )
         >> VX_SINK( '%(hltProto)s' )
