@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2014-04-28 - Gerhard Raven
  - make the conditions which the RunChangeHanderSvc updates a property
+ - make the (last part of the) filename used by the RunChangeHandlerSvc a property
 
 ! 2014-03-26 - Liang Sun
  - CondDB preparation for 2015 in Configuration.py: new CondDB partitions 'CALIB' 
