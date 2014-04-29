@@ -4,6 +4,8 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+!========================= L0App v2r2 2014-04-29 =========================
+
 ! 2014-03-18 - Rob Lambert
  - Strange error in _configureOutput, I'm sure it used to work properly,
  - anyway, now add correct import statement.
