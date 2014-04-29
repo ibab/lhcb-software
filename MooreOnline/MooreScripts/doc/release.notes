@@ -3,6 +3,9 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
+
+!========================= MooreScripts v1r2 2014-04-29 =========================
+
 ! 2014-04-28 - Gerhard Raven
  - never instantiate HltConf online...
  - institutionalize forwarding from OnlineEnv to various other places
