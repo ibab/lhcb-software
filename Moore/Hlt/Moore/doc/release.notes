@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r1 2014-04-29 =========================
+
+
 ! 2014-04-24 - Gerhard Raven
  - insert HltConfigSvc as first in ExtSvc
  - only insert Hlt sequencer if not there already (as MooreOnline, which
