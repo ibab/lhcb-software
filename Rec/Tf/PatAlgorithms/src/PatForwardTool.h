@@ -213,7 +213,7 @@ private:
   float m_PreselectionPT;
   bool m_UseWrongSignWindow;
   float m_WrongSignPT;
-
+  bool m_FlagUsedSeeds;                    // flag velo seeds as used if a track is upgraded
   bool   m_nnSwitch;                   // switch on or off NN var. writing
 };
 

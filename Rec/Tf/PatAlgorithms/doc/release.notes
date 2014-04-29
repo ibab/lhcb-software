@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-04-29 - Sebastian Neubert
+ - Added option to flag track seeds and their ancestors as used
+ - Added counter for number of tracks produced by the forward tracking
+
 ! 2014-04-11 - Espen Eie Bowen
  - Fixed bug on how preselection on pT is applied.
 

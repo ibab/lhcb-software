@@ -286,6 +286,9 @@ StatusCode PatForward::execute() {
             << inputTracks->size() << " Velo tracks in " << t << " ms"
             << endmsg;
   }
+
+  counter("#Tracks") += outputTracks->size() - oriSize;
+
   return StatusCode::SUCCESS;
 }
 

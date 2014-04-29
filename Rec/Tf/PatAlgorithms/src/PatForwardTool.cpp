@@ -173,6 +173,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("PreselectionPT",m_PreselectionPT = 400.*Gaudi::Units::MeV);
   declareProperty("UseWrongSignWindow",m_UseWrongSignWindow = false);
   declareProperty("WrongSignPT",m_WrongSignPT = 2000.*Gaudi::Units::MeV);
+  declareProperty("FlagUsedSeeds",m_FlagUsedSeeds = false);
 
 }
 //=============================================================================
@@ -237,6 +238,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   if ( tr->checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
   if ( tr->checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
+  if ( tr->checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // indicates this has already successfully been upgraded
+
 
   PatFwdTrackCandidate track( tr );
 
@@ -525,6 +528,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
     }
   }
+  // mark the input tracks and all ancestors as used
+  if(m_FlagUsedSeeds && output.size()>0){
+    tr->setFlag(LHCb::Track::Used,true);
+    for (LHCb::Track* anc : tr->ancestors()){
+      anc->setFlag(LHCb::Track::Used,true);
+    }
+  }
+
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
   return StatusCode::SUCCESS;
 }
