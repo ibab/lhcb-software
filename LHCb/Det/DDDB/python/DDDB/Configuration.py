@@ -202,7 +202,7 @@ class DDDBConf(ConfigurableUser):
         # Set the tags
         self.__set_tag__(["DDDB"], "dddb-20130503")
         self.__set_tag__(["LHCBCOND"], "cond-20140425")
-        self.__set_tag__(["DQFLAGS"], "dq-20130806-1")
+        self.__set_tag__(["DQFLAGS"], "dq-20140428")
         if not self.getProp("Simulation"):
             self.__set_init_time__(datetime.utcfromtimestamp(1319991087)) # End of fill 2267
 

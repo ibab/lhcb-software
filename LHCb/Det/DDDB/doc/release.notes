@@ -7,6 +7,7 @@
 ! 2014-04-28 - Marco Cattaneo
  - Update default database tags to the latest ones:
    . LHCBCOND, 2012, 2011 : cond-20140425
+   . DQFLAGS,        2011 : dq-20140428
 
 ! 2014-04-02 - Marco Cattaneo
  - Update default database tags to the latest ones:
