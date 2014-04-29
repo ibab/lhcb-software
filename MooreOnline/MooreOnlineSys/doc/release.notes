@@ -3,6 +3,10 @@ Package     : MooreOnlineSys
 Package Coordinator : R. Lambert
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v22r1>2014-04-29 MooreOnlineSys v22r1</A></H1><PRE>
+
+- Forward RunChangeHandlerConditions
+- Modifications to remove instantiations of HltConf online
 - Better configurables test separates and checks all configurables, followed by just configurables in this project. See task #50698
 
 </PRE><H1><A NAME=v22r0>2014-03-12 MooreOnlineSys v22r0</A></H1><PRE>

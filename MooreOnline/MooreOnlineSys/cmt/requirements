@@ -1,5 +1,5 @@
 package MooreOnlineSys
-version           v22r0
+version           v22r1
 branches doc cmt tests
 
 #=======================================================
@@ -7,7 +7,7 @@ branches doc cmt tests
 #=======================================================
 
 use  MooreScripts  v1r2
-use  MooreOnlineConf  v1r0
+use  MooreOnlineConf  v1r1
 
 # Bug fixes on top of LHCb v36r1 release stack
 
