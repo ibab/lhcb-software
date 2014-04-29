@@ -3,6 +3,8 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v22r1>2014-4-29 MooreSys v22r1</A></H1><PRE>
+
 - Better configurables test separates and checks all configurables, followed by just configurables in this project. See task #50698
 
 - Removed the temporary inclusion of DAQSys, DDDB, MuonID and HltDAQ, because they are included lower down the stack.
