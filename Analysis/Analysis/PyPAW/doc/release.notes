@@ -11,6 +11,9 @@
 
 !========================= PyPAW v1r2 2014-04-26 ==============================
 
+! 2014-04-29 - Sasha Baranov
+ - Proper utf-8 tag in PyPAW scripts
+
 ! 2014-04-26 - Vanya Belyaev
  - add the slices and projections for 2D and 3D historgams 
 
