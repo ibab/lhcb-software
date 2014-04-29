@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r1 2014-04-29 =========================
+
 ! 2014-04-28 - Gerhard Raven
  - forward RunChangeHandlerConditions 
 
