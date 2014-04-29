@@ -3,6 +3,9 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!========================= DetCond v12r34 2014-04-29 =========================
+
 ! 2014-04-28 - Gerhard Raven
  - make the conditions which the RunChangeHanderSvc updates a property
  - make the (last part of the) filename used by the RunChangeHandlerSvc a property

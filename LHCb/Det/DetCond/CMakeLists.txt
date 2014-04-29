@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DetCond
 ################################################################################
-gaudi_subdir(DetCond v12r33)
+gaudi_subdir(DetCond v12r34)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          GaudiAlg
