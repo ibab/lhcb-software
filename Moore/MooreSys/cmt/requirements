@@ -15,8 +15,8 @@ use  L0App               v2r2       L0    # Rob Lambert
 # Bug fixes on top of LHCb v36r4 release stack
 
 #temporary for new features
-use HltServices              v2r1    Hlt
-use Det/DetCond          v12r35    Det
+use HltServices              v2r1      Hlt
+use DetCond                  v12r35    Det
 
 # Declare this as a container package
 apply_pattern container_package
