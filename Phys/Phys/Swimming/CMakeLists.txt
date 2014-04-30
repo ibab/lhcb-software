@@ -1,11 +1,12 @@
 ################################################################################
 # Package: Swimming
 ################################################################################
-gaudi_subdir(Swimming v3r0p1)
+gaudi_subdir(Swimming v3r0p2)
 
 gaudi_depends_on_subdirs(GaudiConf
                          GaudiKernel
                          Kernel/LHCbKernel
+                         Det/DetCond
                          Phys/TisTosTobbing)
 
 gaudi_add_library(Swimming

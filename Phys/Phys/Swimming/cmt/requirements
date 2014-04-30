@@ -3,7 +3,7 @@
 # Maintainer : Vladimir Gligorov
 #============================================================================
 package           Swimming
-version           v3r0p1
+version           v3r0p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,6 +17,7 @@ use     GaudiPolicy     v*
 use     GaudiKernel     v*
 use     GaudiConf       v*
 use     LHCbKernel      v*  Kernel
+use     DetCond         v*  Det
 use     TisTosTobbing   v*  Phys
 
 include_path      none
