@@ -18,6 +18,7 @@ use     GaudiKernel     v*
 use     GaudiConf       v*
 use     LHCbKernel      v*  Kernel
 use     TisTosTobbing   v*  Phys
+use     DetCond         v*  Det
 
 include_path      none
 

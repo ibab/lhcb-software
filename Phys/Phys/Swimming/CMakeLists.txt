@@ -6,6 +6,7 @@ gaudi_subdir(Swimming v3r1)
 gaudi_depends_on_subdirs(GaudiConf
                          GaudiKernel
                          Kernel/LHCbKernel
+                         Det/DetCond
                          Phys/TisTosTobbing)
 
 gaudi_add_library(Swimming

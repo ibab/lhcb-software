@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-04-30 - G. Raven
+ - add explicit dependency on Det/DetCond to make sure that in Moore v22r1
+   Swimming is build _after_ DetCond
+
 !========================= Swimming v3r1p1 2013-12-16 =======================
 ! 2013-12-16 - N. Torr
  - Patch for release with DaVinci v32r2 stack
