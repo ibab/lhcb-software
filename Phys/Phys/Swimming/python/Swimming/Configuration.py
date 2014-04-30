@@ -9,8 +9,6 @@ from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp,
                             DstConf, CaloDstUnPackConf )
 
-from Gaudi.Configuration import * 
-
 import GaudiKernel.ProcessJobOptions
 
 class Swimming(LHCbConfigurableUser) :
@@ -41,8 +39,7 @@ class Swimming(LHCbConfigurableUser) :
         , "TCK"                : ''              # The TCK to swim
         , "StrippingStream"    : ''              # The stripping stream name to swim e.g. 'CharmCompleteEvent'
         , "StrippingVersion"   : ''              # The stripping version, e.g. 'Stripping17'  
-        , "StrippingLineGroup" : ''              # The group of stripping lines to swim
-        , "StrippingLine"      : ''              # The specific single stripping line to swim
+        , "StrippingLine"      : ''              # The stripping line to swim
         , "StrippingFile"      : ''              #
         , "Hlt1Triggers"       : []              # The Hlt1 triggers to swim
         , "Hlt2Triggers"       : []              # The Hlt2 triggers to swim  
@@ -101,8 +98,7 @@ class Swimming(LHCbConfigurableUser) :
         , "TCK"                : """ The TCK to swim"""
         , "StrippingStream"    : """ The stripping stream name to swim e.g. 'CharmCompleteEvent'"""
         , "StrippingVersion"   : """ The stripping version, e.g. 'Stripping17'  """
-        , "StrippingLineGroup" : """ The group of stripping lines to swim"""
-        , "StrippingLine"      : """ The specific single stripping line to swim"""
+        , "StrippingLine"      : """ The stripping line to swim"""
         , "StrippingFile"      : """   """
         , "Hlt1Triggers"       : """ The Hlt1 triggers to swim"""
         , "Hlt2Triggers"       : """ The Hlt2 triggers to swim  """
@@ -171,7 +167,7 @@ class Swimming(LHCbConfigurableUser) :
             log.warning("You have specified a different output file extension " +
                         "than OutputType; this is ignored.")
         
-        from Configurables import DataOnDemandSvc,PhysConf
+        from Configurables import DataOnDemandSvc
 
         app = LHCbApp()
         self.setOtherProps(app, ['EvtMax', 'SkipEvents', 'Simulation', 'DataType',
@@ -182,6 +178,7 @@ class Swimming(LHCbConfigurableUser) :
             from Configurables import XMLSummarySvc
             XMLSummarySvc('CounterSummarySvc').EndEventIncident = 'SwimmingEndEvent'
             
+        CaloDstUnPackConf ( Enable = True )
         DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] ) 
 
         importOptions("$STDOPTS/DecodeRawEvent.py")
@@ -189,10 +186,9 @@ class Swimming(LHCbConfigurableUser) :
         appConf.HistogramPersistency = 'ROOT'
         appConf.ExtSvc += ['DataOnDemandSvc']
         EventSelector().PrintFreq = -1
-        EventSelector().OutputLevel = 6
+        EventSelector().OutputLevel = 6 
         if not (self.getProp('Input') == []) :
-            from GaudiConf import IOHelper
-            IOHelper('ROOT').inputFiles(self.getProp('Input'))
+            EventSelector().Input = self.getProp('Input') 
 
         # FileStager
         if self.getProp('UseFileStager'):
@@ -263,9 +259,6 @@ def ConfigureMoore():
     # Define the TCK transformation
     # 
     HltConfigSvc().ApplyTransformation = thisTransform
-    from Configurables import HltConfigSvc
-    from pprint import pprint
-    pprint( HltConfigSvc().ApplyTransformation )
     #
     # Define the swimming algorithm
     #
@@ -289,11 +282,7 @@ def ConfigureMoore():
 
     d = Deathstar(deathstar)
     appendPostConfigAction(d.insert)
-   
-    # Need to rebuild the raw event which is in pieces on the DST
-    from Configurables import RecombineRawEvent
-    RecombineRawEvent()
- 
+    
 def ConfigureDaVinci():
     config = Swimming()
     from Configurables import DaVinci
@@ -309,12 +298,11 @@ def ConfigureDaVinci():
     if config.getProp('StrippingFile') != 'none':
         strippingFile = config.getProp('StrippingFile')
     else:
-        strippingFile = config.getProp('StrippingLineGroup')
+        strippingFile = config.getProp('StrippingLine')
     myconfig = lineBuilderConfiguration(config.getProp('StrippingVersion'),
-                                        config.getProp('StrippingLineGroup'))
-    
-    import StrippingArchive
-    mylineconf = getattr(__import__('StrippingArchive.'+config.getProp('StrippingVersion')+'.Stripping' + strippingFile,
+                                        config.getProp('StrippingLine'))
+    import StrippingSelections
+    mylineconf = getattr(__import__('StrippingSelections.Stripping' + strippingFile,
                                     globals(),locals(),
                                     [myconfig["BUILDERTYPE"]],-1),myconfig["BUILDERTYPE"])
     mylinedict = myconfig["CONFIG"]
@@ -323,13 +311,12 @@ def ConfigureDaVinci():
 
     from StrippingConf.StrippingStream import StrippingStream
     stream = StrippingStream(config.getProp('StrippingStream') + "Swimming")
-    allLines = mylineconf(config.getProp('StrippingLineGroup'), mylinedict).lines()
+    allLines = mylineconf(config.getProp('StrippingLine'), mylinedict).lines()
     lines = []
     for l in allLines:
         lineName = config.getProp('StrippingLine')
         if l.outputLocation().find(lineName) != -1:
             lines.append(l)
-            print l.outputLocation()
     stream.appendLines(lines)
 
     # Define the stream
@@ -350,7 +337,6 @@ def ConfigureDaVinci():
             # decayVertices, etc...
             o = '/'.join(f.Output.split('/')[:-1])
             outputs.append(o)
-    print "Outputs are",outputs
     mykiller    = EventNodeKiller("killStripping")
     # Some default nodes which we will want to kill in all cases
     nodestokill = outputs + ['Strip', '/Event/Rec/Vertex/Primary']
@@ -388,22 +374,8 @@ def ConfigureDaVinci():
     dstWriter = None
     print config.getProp('OutputType')
     if config.getProp('OutputType') == 'MDST':
-        # Try the dev version, if not...
-        try :
-            from DSTWriters.__dev__.Configuration import MicroDSTWriter, microDSTStreamConf
-            from DSTWriters.__dev__.microdstelements import (CloneRecHeader,
-                                                         CloneODIN,
-                                                         ClonePVs,
-                                                         CloneSwimmingReports,
-                                                         CloneParticleTrees,
-                                                         ClonePVRelations,
-                                                         CloneTPRelations,
-                                                         ReFitAndClonePVs,
-                                                         CloneLHCbIDs,
-                                                         CloneRawBanks)
-        except ImportError :
-            from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
-            from DSTWriters.microdstelements import (CloneRecHeader,
+        from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
+        from DSTWriters.microdstelements import (CloneRecHeader,
                                                          CloneODIN,
                                                          ClonePVs,
                                                          CloneSwimmingReports,
@@ -448,12 +420,9 @@ def ConfigureDaVinci():
                                    OutputFileSuffix   = prefix,
                                    SelectionSequences = [selectionSeq])
     elif config.getProp('OutputType') == 'DST':
-        try :
-            from DSTWriters.__dev__.streamconf import OutputStreamConf
-            from DSTWriters.__dev__.Configuration import SelDSTWriter
-        except ImportError :
-            from DSTWriters.streamconf import OutputStreamConf
-            from DSTWriters.Configuration import SelDSTWriter
+        from DSTWriters.streamconf import OutputStreamConf
+        from DSTWriters.Configuration import SelDSTWriter
+
         # Output
         inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
         selectionSeq = SelectionSequence(seqName, TopSelection = inputData)

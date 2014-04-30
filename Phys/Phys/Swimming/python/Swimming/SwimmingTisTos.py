@@ -1,6 +1,8 @@
 #The TISTOS function of the swimming. For TISTOSing the trigger
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
+from GaudiPython.Bindings import gbl
+hashParticle = gbl.Swimming.hashParticle
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 
@@ -21,12 +23,6 @@ def isTob(myGlobs,trigger) :
     return False 
 
 def evaluateTisTos(myGlobs,mycand,swimPoint):
-    from GaudiPython.Bindings import gbl
-    ## import GaudiPython
-    ## GaudiPython.loaddict('SwimmingEventDict')
-    Swimming = gbl.Swimming
-    hashParticle = Swimming.hashParticle
-
     #Evaluate whether or not you TOS-ed on your triggers
     decisions = {}
     if not myGlobs.swimStripping :
@@ -96,11 +92,8 @@ def evaluateTisTos(myGlobs,mycand,swimPoint):
                     cand = candidates(i)
                     if myGlobs.DEBUGMODE :
                         print "########################"
-                        print "About to match these two candidates"
-                        print "The stripping candidate"
-                        print cand
-                        print "The offline candidate"
-                        print mycand
+                        "About to match these two candidates"
+                        print cand,mycand
                         print "########################"
                     if matchCands(myGlobs,mycand,cand):
                         # If we're not swimming the offline selection, we're done
@@ -142,8 +135,8 @@ def appendToFSP(parent, daughter,finalstateparticles) :
 def matchCands(myGlobs,cand1,cand2) :
     finalstateparticles_cand1 = []
     finalstateparticles_cand2 = []
-    appendToFSP(0,cand1,finalstateparticles_cand1)
-    appendToFSP(0,cand2,finalstateparticles_cand2)
+    appendToFSP(cand1,finalstateparticles_cand1)
+    appendToFSP(cand2,finalstateparticles_cand2)
     num_cand1 = finalstateparticles_cand1.__len__()
     num_cand2 = finalstateparticles_cand2.__len__()
     nummatch = 0
@@ -159,7 +152,7 @@ def matchCands(myGlobs,cand1,cand2) :
         try :
             for kid1 in finalstateparticles_cand1 :
                 for kid2 in finalstateparticles_cand2 :
-                    if matchLists(kid1["child"].proto().track().lhcbIDs(),kid2["child"].proto().track().lhcbIDs()) :
+                    if matchLists(kid1.proto().track().lhcbIDs(),kid2.proto().track().lhcbIDs()) :
                         nummatch += 1
         except :
             return False

@@ -5,52 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v3r0p2 2014-04-30 =========================
 ! 2014-04-30 - G. Raven
- - add explicit dependency on Det/DetCond to make sure that in Moore v22r1
-   Swimming is build _after_ DetCond
+ - add DetCond to requirements file
 
-!========================= Swimming v3r1p1 2013-12-16 =======================
-! 2013-12-16 - N. Torr
- - Patch for release with DaVinci v32r2 stack
-
-!========================= Swimming v3r1 2013-11-11 =========================
-! 2013-10-16 - V. Gligorov
- - Update Hlt transforms to include a transform for swimming the
-   inclusive D* trigger used in 2012 datataking.
- - Update VELO acceptance calculator to ignore non-VELO tracks.
-
-! 2013-10-14 - V. Gligorov
- - Update example scripts for swimming the trigger and stripping,
-   as well as the DecayTreeTupleD2hh.py script, so that we have a 
-   working example for the full analysis chain for testing the
-   2012 charm production. 
-
-! 2013-10-10 - Roel Aaij
-
- - Fix method resolution problems when swimming the stripping. There
-   is a dictionary related problem, which I suspect has to do with a
-   clash between Reflex and CINT dictionaries for std::map
-   classes. This fix I coded up is super hacky and the fact that the
-   solution works depends heavily on the details of when dictionaries
-   are loaded. 
-
-! 2013-09-30 - Roel Aaij
- - Add some documentation explaining the deterministic nature of RandomSelector.
-
-! 2013-09-27 - Roel Aaij
- - Fix swimming the stripping. Apparently something was going wrong with the
-   types setup in Swimming.decorators; it looks like (Py)ROOT sometimes messes
-   with the class table. As a workaround, the definitions have been moved into
-   the eventloop, but are only called once.
- - Explicitely load SwimmingEventDict to get access to Swimming::hashParticle
-
-! 2013-09-26 - V. Gligorov
- - Fix bug in SwimmingTisTos.py introduced by an earlier rollback
- - Make Configuration.py properly use either the __dev__ or normal DSTWriters
-   depending on the avilability of the former
- - Update GeneralSetup to make it clear this is obsolete
- - Update SwimTriggerB2JpsiX.py, SwimStrippingB2JpsiX.py to be relevant 
-   to testing Moore v14rX versions 
 
 !========================= Swimming v3r0p1 2013-06-13 =========================
 
