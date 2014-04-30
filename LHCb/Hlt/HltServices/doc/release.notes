@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2014-04-30 - Rob Lambert / Gerhard Raven
+ - migrate HltGenConfig from HltCommon to here
+
 !========================= HltServices v2r1 2014-04-29 =========================
 
 ! 2014-04-27 - Gerhard Raven
