@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
     (new Tracking alignment, new OT T0 database) (Det/DDDB)
   . Reimplement the tanh approximation in WalkRelation (Det/OTDet)
   . Use float instead of double where possible (Tf/PatVeloTT)
+  . PatForward: added option to flag seeds as used; added counter (PatAlgorithms)
+  . Add X-correction for track-cluster matching (CaloPIDs)
 
 - Changes to QMTests
   . Pick up brunel-mc11a-xdst PFN from TestFileDB
