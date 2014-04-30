@@ -312,7 +312,10 @@ bool TarFile::index( std::streamoff offset ) const
              info.name.find( "/CVS/" ) == std::string::npos &&
              info.name.find( "/.svn/" ) == std::string::npos ) {
             // TODO: check for duplicates!!
-            m_index.emplace( info.name, info );
+            auto r = m_index.emplace( info.name, info );
+            if (!r.second) {
+                 std::cerr << "error inserting " << info.name << " into index!!! " << std::endl;
+            }
         }
         // round up size to block size, and skip to next header...
         size_t skip = info.size;
