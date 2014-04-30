@@ -1,5 +1,3 @@
-#include "TMath.h"
-
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/RawEvent.h"
@@ -24,7 +22,6 @@ PrPixelHitManager::PrPixelHitManager(const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent)
   : GaudiTool(type, name, parent)
-  , m_useSlopeCorrection(false)
   , m_maxClusterSize(4)
   , m_trigger(false)
   , m_clusterLocation(LHCb::VPClusterLocation::Default)
@@ -737,32 +734,9 @@ void PrPixelHitManager::buildHitsFromLCRawBank(const std::vector<LHCb::RawBank*>
       double local_x = m_local_x[cx] + dx;
       double local_y = (cy + 0.5)*m_pixel_size + dy;
       const double *ltg = m_ltg + sensor*16;
-      double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
-      double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
-      double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
-
-      if (m_useSlopeCorrection && (0.5 != dx || 0.5 != dy)) {
-        double dx_prime = dx, dy_prime = dy;
-        double delta_x = fabs(dx - 0.5);
-        double delta_y = fabs(dy - 0.5);
-        if (dx != 0.5) {
-          double slx = fabs(gx / gz);
-          double p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
-          double t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
-          dx_prime = 0.5 + (dx - 0.5) / delta_x * (p_offset + t_factor * delta_x); 
-        }
-        if (dy != 0.5) {
-          double sly = fabs(gx / gz);
-          double p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
-          double t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
-          dy_prime = 0.5 + (dy - 0.5) / delta_y * (p_offset + t_factor * delta_y);
-        }
-        local_x = m_local_x[cx] + dx_prime;
-        local_y = (cy + 0.5)*m_pixel_size + dy_prime;
-        gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
-        gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
-        gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
-      }
+      const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+      const double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+      const double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
 
       if (!m_trigger) {
         m_channelIDs[m_nHits].push_back(cid);
@@ -931,32 +905,9 @@ void PrPixelHitManager::buildHits() {
     double local_x = m_local_x[cx] + dx;
     double local_y = (cy + 0.5)*m_pixel_size + dy;
     const double *ltg = m_ltg + sensor*16;
-    double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
-    double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
-    double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
-
-    if (m_useSlopeCorrection && (0.5 != dx || 0.5 != dy)) {
-      double dx_prime = dx, dy_prime = dy;
-      double delta_x = fabs(dx - 0.5);
-      double delta_y = fabs(dy - 0.5);
-      if (dx != 0.5) {
-        double slx = fabs(gx / gz);
-        double p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
-        double t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
-        dx_prime = 0.5 + (dx - 0.5) / delta_x * (p_offset + t_factor * delta_x); 
-      }
-      if (dy != 0.5) {
-        double sly = fabs(gx / gz);
-        double p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
-        double t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
-        dy_prime = 0.5 + (dy - 0.5) / delta_y * (p_offset + t_factor * delta_y);
-      }
-      local_x = m_local_x[cx] + dx_prime;
-      local_y = (cy + 0.5)*m_pixel_size + dy_prime;
-      gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
-      gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
-      gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
-    }
+    const double gx = ltg[0]*local_x + ltg[1]*local_y + ltg[ 9];
+    const double gy = ltg[3]*local_x + ltg[4]*local_y + ltg[10];
+    const double gz = ltg[6]*local_x + ltg[7]*local_y + ltg[11];
 
     m_pool[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
     m_modules[module]->addHit(&(m_pool[m_nHits++]));

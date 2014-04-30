@@ -83,8 +83,6 @@ public:
   void setTrigger(bool triggerFlag) { m_trigger = triggerFlag; }
   /// Set cluster location
   void setClusterLocation(const std::string& loc) { m_clusterLocation = loc; }
-  /// Set slope correction flag.
-  void useSlopeCorrection(const bool flag) {m_useSlopeCorrection = flag;}
   int maxSize() const {return m_maxSize;}
   /// Recompute the geometry in case of change
   StatusCode rebuildGeometry();                                  

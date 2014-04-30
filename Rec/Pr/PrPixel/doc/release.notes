@@ -4,6 +4,10 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-04-30 - Heinrich Schindler
+ - Remove slope correction option (to be reimplemented in VPDet or cluster 
+   position tool after retuning for binary readout)
+
 ! 2014-04-26 - Heinrich Schindler
  - Replace Tf/PatKernel by Pr/PrKernel in CMakeLists.txt and cmt/requirements
 

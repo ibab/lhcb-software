@@ -81,7 +81,6 @@ private:
   /// Min. fraction of unused hits
   double m_fractionUnused;
 
-  bool m_useSlopeCorrection;
   bool m_clearHits;
   bool m_stateClosestToBeamKalmanFit;
   bool m_stateEndVeloKalmanFit;

@@ -46,8 +46,6 @@ DECLARE_ALGORITHM_FACTORY(PrPixelTracking)
       // Flag to clear hits (for rerunning in same event) 
       declareProperty("ClearHits", m_clearHits = false);  
 
-      declareProperty("UseSlopeCorrection", m_useSlopeCorrection = false);
-
       // Parameters for debugging
       declareProperty("DebugToolName", m_debugToolName = "");
       declareProperty("WantedKey", m_wantedKey = -100);
@@ -79,7 +77,6 @@ StatusCode PrPixelTracking::initialize() {
   m_isDebug = msgLevel(MSG::DEBUG);
   // Setup the hit manager.
   m_hitManager = tool<PrPixelHitManager>("PrPixelHitManager");
-  m_hitManager->useSlopeCorrection(m_useSlopeCorrection);
   m_hitManager->setMaxClusterSize(m_maxClusterSize);
   m_hitManager->setTrigger(m_trigger);
 
