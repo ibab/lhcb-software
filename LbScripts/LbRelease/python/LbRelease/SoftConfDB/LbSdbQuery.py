@@ -23,6 +23,10 @@ class LbSdbQuery(Script):
                           dest = "debug",
                           action = "store_true",
                           help = "Display debug output")
+        parser.add_option("-v",
+                          dest = "verbose",
+                          action = "store_true",
+                          help = "Verbose command output")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -53,7 +57,12 @@ class LbSdbQuery(Script):
         method =  self._findMethod(self, "cmd", command)
 
         # And invoking it...
-        method(args[1:])
+        tmpargs = args[1:]
+        # Setting to verbose mode
+        if command.lower() == 'checkunused' and opts.verbose != None:
+            tmpargs.append(opts.verbose)
+        print "====> ", tmpargs
+        method(tmpargs)
 
     # Know commands forwarded to the DB
     ###########################################################################
@@ -89,7 +98,7 @@ class LbSdbQuery(Script):
 
     def cmdCheckUnused(self, args):
         ''' List used projects '''
-        for p in sorted(self.mConfDB.checkUnused()):
+        for p in sorted(self.mConfDB.checkUnused(args[0])):
             print "%s %s" % p
 
     def cmdlistVersions(self, args):
@@ -113,6 +122,22 @@ class LbSdbQuery(Script):
             for v in vs:
                 print "%s %s" %  (proj, v)
 
+    def cmdShow(self, args):
+        ''' Check the various atributes of a specific node '''
+        if (len(args) < 2):
+            self.log.error("Please specify a project and version")
+            sys.exit(1)
+
+        pname = args[0].upper()
+        pversion =  args[1]
+
+        if not self.cmdProjectExists(args):
+            self.log.error("Could not find %s %s" % (pname, pversion))
+            sys.exit(1)
+
+        self.mConfDB.show(pname, pversion)
+
+        
     def cmdlistStackPlatforms(self, args):
         ''' The project versions available in the stack '''
         if (len(args) < 2):

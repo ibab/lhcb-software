@@ -125,6 +125,36 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
         return pvs
 
+    def show(self, project, version):
+        ''' Show teh various attributes of a project/version '''
+        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
+                                                          "ProjectVersion",
+                                                          project + "_" + version,
+                                                          {"project": project, "version":version})
+        
+        print "Node %s Properties" % node_pv._id
+        print "------------------------------"
+        for (p,v) in node_pv.get_properties().items():
+            print "%-10s: %s" % (p, v)
+
+        print "\nNode %s relationships" % node_pv._id
+        print "------------------------------"
+        outrels = node_pv.get_relationships(neo4j.Direction.OUTGOING)
+        for r in outrels:
+            relprops = r.end_node.get_properties()
+            relprops['ID'] = r.end_node._id
+            props = ", ".join("{}:{}".format(k, v) for k, v in sorted(relprops.items()))
+            tmp = "%s:%-15s -> (%s)" % (r._id, r.type + "(O)", props)
+            print tmp
+
+        inrels = node_pv.get_relationships(neo4j.Direction.INCOMING)
+        for r in inrels:
+            relprops = r.start_node.get_properties()
+            relprops['ID'] = r.start_node._id
+            props = ", ".join("{}:{}".format(k, v) for k, v in sorted(relprops.items()))
+            tmp = "%s:%-15s <- (%s)" % (r._id, r.type + "(I)", props)
+            print tmp
+
     def listActive(self):
         ''' List the active project/versions '''
         query = 'start n=node:Lbadmin(Type="STATUS") match n-[:ACTIVE]->m return distinct m.project, m.version'
@@ -147,7 +177,7 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
         return pvs
 
-    def checkUnused(self):
+    def checkUnused(self, verbose):
         ''' List the used project/versions '''
         queryactive = 'start n=node:Lbadmin(Type="STATUS") match n-[:ACTIVE]->m return distinct m'
         queryappused = '''start n=node:Lbadmin(Type="USED"), q=node:Lbadmin(Type="STATUS")
@@ -169,17 +199,26 @@ class SoftConfDB(object):
         for n in active:
             props = n.get_properties()
             activec.append((props["project"], props["version"]))
+            if verbose:
+                print "Active: %s %s" % (props["project"], props["version"])
 
         usedc = []
         for n in used:
             props = n.get_properties()
             usedc.append((props["project"], props["version"]))
+            if verbose:
+                print "Used: %s %s" % (props["project"], props["version"])
 
         appusedc = []
         for n in appused:
             props = n.get_properties()
             appusedc.append((props["project"], props["version"]))
+            if verbose:
+                print "AppUsed: %s %s" % (props["project"], props["version"])
 
+
+        if verbose:
+            print "Unused = Active - Used - AppUsed"
         return [ n for n in activec if n not in usedc and n not in appusedc ]
 
 

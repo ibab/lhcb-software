@@ -1,3 +1,10 @@
+2014-04-30  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-477: Software Database: Add "verbose" option to checkUnused command of lb-sdb-query 
+	and add "show" command to display relationships and attributes of a node.
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2014-04-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: added --export flag (LBCORE-396)
