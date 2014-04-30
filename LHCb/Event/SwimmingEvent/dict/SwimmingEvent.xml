@@ -89,6 +89,7 @@
 
   <class pattern="std::pair<*,LHCb::*>" />
   <class pattern="std::pair<__gnu_cxx::*" />
+  <class name="std::pair<unsigned long,bool>" />
 
   <class pattern="IRelation*">
     <method name="="/>
