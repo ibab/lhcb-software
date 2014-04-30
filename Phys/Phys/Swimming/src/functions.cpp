@@ -6,6 +6,7 @@
 // from Boost
 #include "boost/integer/integer_mask.hpp"
 #include "boost/integer_traits.hpp"
+
 using boost::uint32_t;
 using boost::uint64_t;
 

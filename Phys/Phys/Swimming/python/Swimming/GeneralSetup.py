@@ -1,5 +1,9 @@
 #some more general options which come before
 #the gaudi.initialize step
+
+# THIS IS OBSOLETE, IT IS ONLY BEING KEPT IN FOR COMPATIBILITY
+# WITH THE PRE-CONFIGURABLE ERA SWIMMING SCRIPT
+
 from LHCbKernel.Configuration import *
 from Configurables import DataOnDemandSvc,CondDB
 from Configurables import DstConf, CaloDstUnPackConf

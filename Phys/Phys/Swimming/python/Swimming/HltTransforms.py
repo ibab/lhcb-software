@@ -41,7 +41,7 @@ def getTransform(name,triggerstorun) :
                                               "'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}},
             '.*HltUnit/.*': {'Preambulo' : {'HltCopySelection<LHCb::RecVertex>/Hlt1PreparePV3D':
                                             'HltMoveVerticesForSwimming/HltMovePVs4Swimming'}}}
-  elif name == "2011_WithBeamSpotFilter" :
+  elif name == "2011_WithBeamSpotFilter" or name == "2012_WithBeamSpotFilter" :
     PrescalerFiddlePrefix = 'DeterministicPrescaler/'
     PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global)(?!Hlt1TrackPhoton).*PreScaler'
     PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
@@ -53,7 +53,7 @@ def getTransform(name,triggerstorun) :
             '.*HltUnit/Hlt1TrackPhotonUnit' : {'Code' : {"Velo.*EMPTY":"VeloCandidates>>LooseForward>>FitTrack>>SINK( 'Hlt1TrackPhotonDecision' )>>~TC_EMPTY"}},
             '.*HltPV3D': {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
             'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}} 
-  elif name == "2011_WithBeamSpotFilter_NoRecoLines" :
+  elif name == "2011_WithBeamSpotFilter_NoRecoLines" or name == "2012_WithBeamSpotFilter_NoRecoLines" :
     PrescalerFiddlePrefix = 'DeterministicPrescaler/'
     PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
     PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
@@ -61,6 +61,17 @@ def getTransform(name,triggerstorun) :
     return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'}},
             'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
             '.*HltPV3D': {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
+            'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}}
+  elif name == "2012_WithBeamSpotFilter_NoRecoLines_ForInclusiveDstar" :
+    PrescalerFiddlePrefix = 'DeterministicPrescaler/'
+    PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
+    PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
+    print PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix
+    return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'}},
+            'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
+            '.*HltPV3D': {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
+            'CombineParticles/.*Combine_Dstar_.*' : { 'DaughtersCuts' : { '^.*$' :\
+            str({ '' : 'ALL' , 'K*(892)0' : "(INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(TRCHI2DOF < 2.25),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(MIPCHI2DV(PRIMARY) > 36.0),1)) & (BPVVDCHI2 > 100.0) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)" , 'K*(892)~0' : "(INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(TRCHI2DOF < 2.25),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(MIPCHI2DV(PRIMARY) > 36.0),1)) & (BPVVDCHI2 > 100.0) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)" , 'pi+' : "ALL" , 'pi-' : "ALL" })}},
             'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}}
   else :
     return {}

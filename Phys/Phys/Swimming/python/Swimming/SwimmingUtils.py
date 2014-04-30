@@ -5,26 +5,40 @@ __all__ = ['getBinfo',
            'createObject',
            'getSelector']
 
-import GaudiPython
-GaudiPython.loaddict( 'SwimmingDict' )
-Random = GaudiPython.Bindings.gbl.Random
-
 def createObject(t, *args):
-    """ Function to create objects which are not owned by python, will not be
-    garbage collected and can therefore be put in the TES. """
+    """
+    Function to create objects which are not owned by python.
+
+    These objects will not be garbage collected and can therefore be put in the
+    TES, which always takes ownership.
+    """
     i = t(*args)
     import ROOT
     ROOT.SetOwnership(i, False)
     return i
 
 class RandomSelector(object):
+    """
+    Selector which deteministically selects a single offline candidate.
+
+    This selector uses the code developed for the HLT's DeterministicPrescaler
+    to randomly select a single offline candidate in the event. It uses as input
+    (same as DeterministicPrescaler):
+    - event GPS time
+    - event run number
+    - event number
+
+    This ensures that in an event any container with size m will always result
+    in a selected candidate with position in the container 0 <= n < m.
+    """
     def __init__(self, globs, extra = 'RandomSelector'):
-        self._extra = extra
-        self._initialRandom = Random.mixString(len(extra), extra)
-        self._TES = globs.TES
+        self.__extra = extra
+        self.__initialRandom = None
+        self.__random = None
+        self.__TES = globs.TES
  
     def __call__(self, candidates):
-        odin = self._TES['DAQ/ODIN']
+        odin = self.__TES['DAQ/ODIN']
         r = self.random(odin)
         n = candidates.size()
         for i in xrange(n):
@@ -32,13 +46,22 @@ class RandomSelector(object):
         return candidates.containedObjects()[i]
 
     def random(self, odin):
-        x = self._initialRandom;
-        x = Random.mix64(x, odin.gpsTime())
-        x = Random.mix32(x, odin.runNumber())
-        x = Random.mix64(x, odin.eventNumber())
+        if self.__random == None:
+            import GaudiPython
+            GaudiPython.loaddict( 'SwimmingDict' )
+            self.__Random = GaudiPython.Bindings.gbl.Random
+        if not self.__initialRandom:
+            self.__initialRandom = self.__Random.mixString(len(self.__extra), self.__extra)
+        x = self.__initialRandom;
+        x = self.__Random.mix64(x, odin.gpsTime())
+        x = self.__Random.mix32(x, odin.runNumber())
+        x = self.__Random.mix64(x, odin.eventNumber())
         return float(x) / float(0xFFFFFFFF)
 
 class FirstSelector(object):
+    """
+    Selector which selects the first candidate in a container.
+    """
     def __init__(self, *args):
         pass
 
