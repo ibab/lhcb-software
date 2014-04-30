@@ -1,0 +1,16 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+//#include "$INFOOPTIONS"
+
+ApplicationMgr.ExtSvc               += { "FileTestSvc"};
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+//Runable.Wait                         = 1;  // 1 of running as daemon (Class0 task)
+
+//MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+
+
+FileTestSvc.FileName         = "/group/online/magnetTest040608.txt"; //Possible values are "node","subfarm" and "top" or "part"
