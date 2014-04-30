@@ -86,12 +86,12 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
   declareProperty( "YStepOfMap"                 , m_yStepOfMap                  = 100. * Gaudi::Units::mm );
 }
 //=============================================================================
-// Destructo
+// Destructor
 //=============================================================================
 MCFTDepositCreator::~MCFTDepositCreator() {}
 
 //=============================================================================
-// Initialization"
+// Initialization
 //=============================================================================
 StatusCode MCFTDepositCreator::initialize() {
 
@@ -233,13 +233,13 @@ StatusCode MCFTDepositCreator::initialize() {
     }
     
     if ( msgLevel( MSG::DEBUG) ) {
-      debug() << format( "x=%7.0f\n", x);
+      debug() << format( "x=%7.0f\n", x)<< endmsg;
     }
         
     for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
       if ( msgLevel( MSG::DEBUG) ) {
-        debug() << format( "y=%7.0f [%6.3f] [%6.3f]", kk * m_yStepOfMap , 
-                           m_transmissionMap[kx*m_nYSteps+kk], m_transmissionRefMap[kx*m_nYSteps+kk]);
+        debug() << format( "y=%7.0f [%6.3f] [%6.3f]\n", kk * m_yStepOfMap , 
+                           m_transmissionMap[kx*m_nYSteps+kk], m_transmissionRefMap[kx*m_nYSteps+kk])<< endmsg;
       }
       // plot attenuation map        
       plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,
@@ -402,10 +402,13 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
         
 
       //== Compute attenuation by interpolation in the table
-      int kx = fabs( ftHit->midPoint().x() ) / m_xStepOfMap;
-      int ky = fabs( ftHit->midPoint().y() ) / m_yStepOfMap;
-      float fracX = fabs( ftHit->midPoint().x() )/m_xStepOfMap - kx;
-      float fracY = fabs( ftHit->midPoint().y() )/m_yStepOfMap - ky;
+      //== No difference made here between x-layers and (u,v)-layers : all layers assumed to be x-layers
+      double hitXPosition = ftHit->midPoint().x();
+      double hitYPosition = ftHit->midPoint().y();
+      int kx = std::min(m_nXSteps - 2,(int)(fabs( hitXPosition ) / m_xStepOfMap));
+      int ky = std::min(m_nYSteps - 2,(int)(fabs( hitYPosition ) / m_yStepOfMap));
+      float fracX = fabs( hitXPosition )/m_xStepOfMap - kx;
+      float fracY = fabs( hitYPosition )/m_yStepOfMap - ky;
       
       // A linear interpolation is assumed
       //
