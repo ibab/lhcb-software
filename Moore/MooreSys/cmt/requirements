@@ -16,6 +16,7 @@ use  L0App               v2r2       L0    # Rob Lambert
 
 #temporary for new features
 use HltServices              v2r1      Hlt
+use HltInterfaces            v5r0p1    Kernel
 use DetCond                  v12r35    Det
 
 # Declare this as a container package
