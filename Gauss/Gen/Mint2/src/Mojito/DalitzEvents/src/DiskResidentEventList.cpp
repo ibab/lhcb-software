@@ -107,7 +107,7 @@ DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent
   Add(otherList);
   init();
 }
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList)
+/*DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList)
   : _fname(generateFname())
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
@@ -119,7 +119,7 @@ DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEven
   openFile();
   Add(otherList);
   init();
-}
+  }*/
 DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
 					     , const std::string& newFname
 					     , const std::string& opt
@@ -140,7 +140,7 @@ DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent
   Add(otherList);
   init();
 }
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
+/*DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
 					     , const std::string& newFname
 					     , const std::string& opt
 					     )
@@ -159,7 +159,7 @@ DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEven
   fromFile();
   Add(otherList);
   init();
-}
+  }*/
 
 /*
 DiskResidentEventList::DiskResidentEventList(TNtupleD* ntp)
@@ -337,13 +337,13 @@ bool DiskResidentEventList::Add(const IMinimalEventList<DalitzEvent>& otherList)
   }
   return true;
 }
-bool DiskResidentEventList::Add(const IMinimalEventList<IDalitzEvent>& otherList){
+/*bool DiskResidentEventList::Add(const IMinimalEventList<IDalitzEvent>& otherList){
   if(0 == otherList.size()) return false;
   for(unsigned int i=0; i < otherList.size(); i++){
     Add(otherList.getEvent(i));
   }
   return true;
-}
+  }*/
 bool DiskResidentEventList::save(){
   if(0 == _ntp) return false;
   if(0 == _f) return false;

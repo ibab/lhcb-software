@@ -29,7 +29,7 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
     MINT::IReturnRealForEvent<IDalitzEvent>* _externalPdf;
   public:
     integrationWeight(MINT::IReturnRealForEvent<IDalitzEvent>* externalPdf);
-    void setWeight(IReturnRealForEvent<IDalitzEvent>* pdf);
+    void setWeight(MINT::IReturnRealForEvent<IDalitzEvent>* pdf);
     double RealVal(IDalitzEvent& evt);
   };
 

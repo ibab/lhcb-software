@@ -64,18 +64,18 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
 			, const std::string& fname
 			, const std::string& opt="RECREATE");
 
-  DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
+  DiskResidentEventList(const MINT::IMinimalEventList<DalitzEvent>& otherList
 			);
-  DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
-			);
-  DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
+  //DiskResidentEventList(const MINT::IMinimalEventList<IDalitzEvent>& otherList
+  //			);
+  DiskResidentEventList(const MINT::IMinimalEventList<DalitzEvent>& otherList
 			, const std::string& newFname
 			, const std::string& opt="RECREATE"
 			);
-  DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
-			, const std::string& newFname
-			, const std::string& opt="RECREATE"
-			);
+  //DiskResidentEventList(const MINT::IMinimalEventList<IDalitzEvent>& otherList
+  //			, const std::string& newFname
+  //			, const std::string& opt="RECREATE"
+  //			);
 
   virtual ~DiskResidentEventList();
 
@@ -92,7 +92,7 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
   bool Add(const IDalitzEvent* evt); // for backward compatibility
   bool Add(const MINT::counted_ptr<IDalitzEvent>& evt);
   bool Add(const MINT::IMinimalEventList<DalitzEvent>& otherList);
-  bool Add(const MINT::IMinimalEventList<IDalitzEvent>& otherList);
+  //bool Add(const MINT::IMinimalEventList<IDalitzEvent>& otherList);
 
   bool save();
   bool Close();

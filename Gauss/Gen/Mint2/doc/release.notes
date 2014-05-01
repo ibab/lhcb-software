@@ -5,6 +5,10 @@
 ! Purpose     : Original author of MINT Dr. Jonas Rademacker.
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
+
+2014-05-01 - Jeremy
+ - Bug fixes to make Mint2 gcc-4.8 and root 5.34 compatible
+
 2014-03-04 - Claire
  - added method getP() to DalitzEvent which gives back the vector of the four-momenta of all particles in the event
  - build an automatic rejection factor into DalitzMCMC generation
