@@ -14,7 +14,7 @@ set(override_subdirs RootCnv)
 # Declare project name and version
 gaudi_project(MooreOnline v22r1
               USE Moore v22r1
-                  Online v5r7
+                  Online v5r8
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
                    PRConfig
