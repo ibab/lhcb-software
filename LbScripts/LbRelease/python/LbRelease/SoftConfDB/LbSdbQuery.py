@@ -61,7 +61,6 @@ class LbSdbQuery(Script):
         # Setting to verbose mode
         if command.lower() == 'checkunused' and opts.verbose != None:
             tmpargs.append(opts.verbose)
-        print "====> ", tmpargs
         method(tmpargs)
 
     # Know commands forwarded to the DB
