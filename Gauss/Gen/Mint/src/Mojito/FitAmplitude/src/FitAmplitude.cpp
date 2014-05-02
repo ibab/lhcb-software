@@ -8,7 +8,6 @@
 #include "Mint/FitAmplitude.h"
 #include "Mint/NamedDecayTreeList.h"
 
-#include "Mint/IDalitzEventAccess.h"
 #include "Mint/DecayTree.h"
 
 using namespace std;
@@ -89,12 +88,11 @@ void FitAmplitude::AutogenerateFitFile(const std::string& fname, const DalitzEve
 
 FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , const AmpInitialiser& treeWithOpts
-			   , IDalitzEventAccess* events
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : FastAmplitude(treeWithOpts, events)
+  : FastAmplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(yourOwnName, fname, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -108,34 +106,13 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
     _name += treeWithOpts.uniqueName();
   }
 }
+
 FitAmplitude::FitAmplitude(const std::string& yourOwnName
 			   , const AmpInitialiser& treeWithOpts
-			   , IDalitzEventList* events
-			   , const char* fname
 			   , MinuitParameterSet* pset
 			   , STRING_USAGE useStringAs
 			   )
-  : FastAmplitude(treeWithOpts, events)
-  , _FitAmpPhase(FitComplexMaker(yourOwnName, fname, pset
-			      , FitParameter::HIDE
-			      , NamedParameterBase::QUIET
-			      ))
-  , _fitFraction(yourOwnName + "_Frac", (double) 0, fname
-		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(yourOwnName)
-{
-  if(useStringAs == FitAmplitude::PREFIX){
-    _name += treeWithOpts.uniqueName();
-  }  
-}
-FitAmplitude::FitAmplitude(const std::string& yourOwnName
-			   , const AmpInitialiser& treeWithOpts
-			   , IDalitzEventAccess* events
-			   , MinuitParameterSet* pset
-			   , STRING_USAGE useStringAs
-			   )
-  : FastAmplitude(treeWithOpts, events)
+  : FastAmplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(yourOwnName, (char*) 0, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -149,35 +126,12 @@ FitAmplitude::FitAmplitude(const std::string& yourOwnName
     _name += treeWithOpts.uniqueName();
   }    
 }
-
-FitAmplitude::FitAmplitude(const std::string& yourOwnName
-			   , const AmpInitialiser& treeWithOpts
-			   , IDalitzEventList* events
-			   , MinuitParameterSet* pset
-			   , STRING_USAGE useStringAs
-			   )
-  : FastAmplitude(treeWithOpts, events)
-  , _FitAmpPhase(FitComplexMaker(yourOwnName, (char*) 0, pset
-			      , FitParameter::HIDE
-			      , NamedParameterBase::QUIET
-			      ))
-  , _fitFraction(yourOwnName + "_Frac", (double) 0, (char*) 0
-		 		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(yourOwnName)
-{
-  if(useStringAs == FitAmplitude::PREFIX){
-    _name += treeWithOpts.uniqueName();
-  }    
-}
-
 
 FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
-			   , IDalitzEventAccess* events
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(treeWithOpts, events)
+  : FastAmplitude(treeWithOpts)
   , _FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), fname, pset
 				 , FitParameter::HIDE
 				 , NamedParameterBase::QUIET
@@ -188,28 +142,11 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
   , _name(treeWithOpts.uniqueName())
 {
 }
-FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
-			   , IDalitzEventList* events
-			   , const char* fname
-			   , MinuitParameterSet* pset
-			   )
-  : FastAmplitude(treeWithOpts, events)
-  ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), fname, pset
-			     , FitParameter::HIDE
-			     , NamedParameterBase::QUIET
-			     ))
-  , _fitFraction(treeWithOpts.uniqueName() + "_Frac", (double) 0, fname
-		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(treeWithOpts.uniqueName())
-{
-}
 
 FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
-			   , IDalitzEventAccess* events
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(treeWithOpts, events)
+  : FastAmplitude(treeWithOpts)
   ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), (char*) 0, pset
 			     , FitParameter::HIDE
 			     , NamedParameterBase::QUIET
@@ -220,47 +157,12 @@ FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
   , _name(treeWithOpts.uniqueName())
 {
 }
-FitAmplitude::FitAmplitude(const AmpInitialiser& treeWithOpts
-			   , IDalitzEventList* events
-			   , MinuitParameterSet* pset
-			   )
-  : FastAmplitude(treeWithOpts, events)
-  ,_FitAmpPhase(FitComplexMaker(treeWithOpts.uniqueName(), (char*) 0, pset
-			     , FitParameter::HIDE
-			     , NamedParameterBase::QUIET
-			     ))
-  , _fitFraction(treeWithOpts.uniqueName() + "_Frac", (double) 0, (char*) 0
-		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(treeWithOpts.uniqueName())
-{
-}
 
 FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
-			   , IDalitzEventAccess* events
 			   , const char* fname
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName)
-	      , events)
-  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, fname, pset
-			      , FitParameter::HIDE
-			      , NamedParameterBase::QUIET
-			      ))
-  , _fitFraction(StandardisedDecayTreeName + "_Frac", (double) 0
-		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(StandardisedDecayTreeName)
-{
-  
-}
-FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
-			   , IDalitzEventList* events
-			   , const char* fname
-			   , MinuitParameterSet* pset
-			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName)
-	      , events)
+  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName))
   , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, fname, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -274,11 +176,9 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 }
 
 FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
-			   , IDalitzEventAccess* events
 			   , MinuitParameterSet* pset
 			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName)
-	      , events)
+  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName))
   , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, (char*) 0, pset
 			      , FitParameter::HIDE
 			      , NamedParameterBase::QUIET
@@ -290,31 +190,9 @@ FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
 {
   
 }
-FitAmplitude::FitAmplitude(const std::string& StandardisedDecayTreeName
-			   , IDalitzEventList* events
-			   , MinuitParameterSet* pset
-			   )
-  : FastAmplitude(AmpInitialiser(StandardisedDecayTreeName)
-	      , events)
-  , _FitAmpPhase(FitComplexMaker(StandardisedDecayTreeName, (char*) 0, pset
-			      , FitParameter::HIDE
-			      , NamedParameterBase::QUIET
-			      ))
-  , _fitFraction(StandardisedDecayTreeName + "_Frac", (double) 0
-		 , NamedParameterBase::QUIET)
-  , _preFactors(1)
-  , _name(StandardisedDecayTreeName)
-{
-  
-}
-
 FitAmplitude::FitAmplitude(const FitAmplitude& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , IReturnReal()
-  , IGetRealEvent<IDalitzEvent>()
-  , IReturnComplex()
+  : IReturnRealForEvent<IDalitzEvent>()
+  , IReturnComplexForEvent<IDalitzEvent>()
   , FastAmplitude(other)
   , _FitAmpPhase(other._FitAmpPhase)
   , _fitFraction(other._fitFraction)
@@ -329,53 +207,6 @@ FitAmplitude::FitAmplitude(const FitAmplitude& other)
      change.
 
      Since all this might not be 100% intuitive, leave it
-     private/protected for now. Use the "Get" methods instead.
-  */
-}
-
-FitAmplitude::FitAmplitude(const FitAmplitude& other
-			   , IDalitzEventAccess* newEvents
-			   )
-  : IEventAccess<IDalitzEvent>()
-  , IReturnReal()
-  , IReturnComplex()
-  , FastAmplitude(other, newEvents)
-  , _FitAmpPhase(other._FitAmpPhase)
-  , _fitFraction(other._fitFraction)
-  , _preFactors(other._preFactors)
-  , _name(other._name)
-{
-  /* this creates a copy of the amplitude, but 
-     it will depend on the SAME fit parameter 
-     (it just copies the (smart) pointer).
-
-     Name will not change since FitParameterName doesn't
-     change.
-
-     Since all this might not be 100% inuitive, leave it
-     private/protected for now. Use the "Get" methods instead.
-  */
-}
-FitAmplitude::FitAmplitude(const FitAmplitude& other
-			   , IDalitzEventList* newEvents
-			   )
-  : IEventAccess<IDalitzEvent>()
-  , IReturnReal()
-  , IReturnComplex()
-  , FastAmplitude(other, newEvents)
-  , _FitAmpPhase(other._FitAmpPhase)
-  , _fitFraction(other._fitFraction)
-  , _preFactors(other._preFactors)
-  , _name(other._name)
-{
-  /* this creates a copy of the amplitude, but 
-     it will depend on the SAME fit parameter 
-     (it just copies the (smart) pointer).
-
-     Name will not change since FitParameterName doesn't
-     change.
-
-     Since all this might not be 100% inuitive, leave it
      private/protected for now. Use the "Get" methods instead.
   */
 }
@@ -408,127 +239,29 @@ FitAmplitude FitAmplitude::GetCPConjugateSameFitParameters() const{
   cp.CPConjugateSameFitParameters();
   return cp;
 }
-/* now inline
-FitComplex& FitAmplitude::FitAmpPhase(){
-  if(0 == _FitAmpPhase){
-    cout << "FATAL ERROR in FitAmplitude::FitAmpPhase()"
-	 << "\n    >  _FitAmpPhase pointer zero"
-	 << endl;
-    throw "should always be set to sth in constructor";
-  }
-  return *_FitAmpPhase;
-}
-
-const FitComplex& FitAmplitude::FitAmpPhase() const{
-  if(0 == _FitAmpPhase){
-    cout << "FATAL ERROR in FitAmplitude::FitAmpPhase()"
-	 << "\n    >  _FitAmpPhase pointer zero"
-	 << endl;
-    throw "should always be set to sth in constructor";
-  }
-  return *_FitAmpPhase;
-}
-*/
-
-/* now inlined:
-std::complex<double> FitAmplitude::preFactors(){
-  return _preFactors.ComplexVal();
-}
-*/
-
-/*
-  Now inlined - does save a lot of time
-  by avoiding the complex constructor
-std::complex<double> FitAmplitude::AmpPhase(){
-  std::complex<double> FAS(FitAmpPhase());
-  if(0.0==FAS) return 0;
-  // this will save time in case preFactors() calls
-  // some lengthy function and FitAmpPhase is zero
-  // anyway.
-  return FAS * preFactors();
-}
-*/
-
 
 std::complex<double> FitAmplitude::getVal(IDalitzEvent* evt){
-  //bool dbThis=false;
-  this->setEvent(evt);
-  std::complex<double> result(this->getVal());
-  this->resetEventRecord();
-  return result;
+  if(0 == evt) return 0;
+  return getVal(*evt);
 }
 
-
-std::complex<double> FitAmplitude::getVal(){
-  //bool dbThis=false;
+std::complex<double> FitAmplitude::getVal(IDalitzEvent& evt){
+  bool dbThis=false;
   if(isZero()) return 0;
   complex<double> ap(AmpPhase());
   if(0.0 == ap) return 0;
-
-
-  /*
   if(dbThis){
-    std::complex<double> valA = getValWithoutFitParameters();
-    if(0 != getEvent()){
-      cout << "event pz " << getEvent()->p(1).Z() << endl;
-    }
-    cout << " FitAmplitude::getVal() for decay " 
-	 << theDecay().oneLiner()
-	 << "  total = " << AmpPhase() * valA
-	 << "\n    >  M()   = " << FitAmpPhase().getVal()
-	 << "\n    >  rB*exp()   = " << preFactors()
-	 << "\n    >  Amp   = " << valA
+    cout << "FitAmplitude::getVal(evt) with name:\n"
+	 << this->name()
+	 << "\n and evt = \n"
+	 << evt
+	 << "\n returning " << ap << " * "
+	 << getValWithoutFitParameters(evt)
+	 << "\n ----------------- "
 	 << endl;
   }
-  */
-  return  ap * getValWithoutFitParameters();
+  return  ap * getValWithoutFitParameters(evt);
 }
-
-
-std::complex<double> FitAmplitude::getSmootherLargerVal(IDalitzEvent* evt){
-  //bool dbThis=false;
-  this->setEvent(evt);
-  std::complex<double> result = this->getSmootherLargerVal();
-  this->resetEventRecord();
-  return result;
-}
-
-std::complex<double> FitAmplitude::getSmootherLargerVal(){
-  //bool dbThis=false;
-
-  //  if(FitAmpPhase().getAmp() == 0.0) return 0;
-  if(AmpPhase() == 0.0) return 0;
-  std::complex<double> valA = getSmootherLargerValWithoutFitParameters();
-
-  /*
-  if(dbThis){
-    cout << " FitAmplitude::getVal() for decay " 
-	 << theDecay().oneLiner()
-	 << "  total = " << AmpPhase() * valA
-	 << "\n    >  M()   = " << FitAmpPhase().getVal()
-	 << "\n    >  rB*exp()   = " << preFactors()
-	 << "\n    >  Amp   = " << valA
-	 << endl;
-  }
-  */
-  return  AmpPhase() * valA;
-}
-std::complex<double> FitAmplitude::getSmootherLargerValWithoutFitParameters(){
-  return FastAmplitude::getSmootherLargerVal();
-}
-
-std::complex<double>  FitAmplitude::getValAtResonance(){
-  //  cout << "using FitAmplitude::getValAtResonance()" << endl;
-  return AmpPhase() * Amplitude::getValAtResonance();
-}
-
-/*
-double FitAmplitude::gaussProb(){
-  double M2 = AmpPhase().getAmp()*AmpPhase().getAmp();
-
-  return M2 * Amplitude::gaussProb();
-}
-*/
 
 void FitAmplitude::multiply(double r){ // by value
   _preFactors.addTerm(r);
@@ -538,6 +271,9 @@ void FitAmplitude::multiply(const std::complex<double>& z){ // by value
 }
 void FitAmplitude::multiply(const counted_ptr<IReturnComplex>& irc){ // by ref
   _preFactors.addTerm(irc);
+}
+void FitAmplitude::multiply(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& irce){ // by ref
+  _evt_dep_preFactors.addTerm(irce);
 }
 
 void FitAmplitude::print(std::ostream& os) const{
@@ -556,6 +292,10 @@ FitAmplitude& FitAmplitude::operator*=(const complex<double>& z){
 }
 FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IReturnComplex>& irc){
   multiply(irc);
+  return *this;
+}
+FitAmplitude& FitAmplitude::operator*=(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& irce){
+  multiply(irce);
   return *this;
 }
 

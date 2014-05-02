@@ -9,8 +9,6 @@
 #include "Mint/ILineshape.h"
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
-#include "Mint/DalitzEventAccess.h"
-#include "Mint/IDalitzEventAccess.h"
 
 #include "Mint/IGenFct.h"
 #include "TRandom.h"
@@ -31,15 +29,14 @@ class CrystalBarrelFOCUS : public BW_BW, virtual public ILineshape{
   std::complex<double> BW (double s, double m_w, double gamma) const;
 
  public:
-  CrystalBarrelFOCUS( const AssociatedDecayTree& decay
-		  , IDalitzEventAccess* events);
+  CrystalBarrelFOCUS( const AssociatedDecayTree& decay);
   CrystalBarrelFOCUS(const CrystalBarrelFOCUS& other);
   virtual ~CrystalBarrelFOCUS();
 
-  virtual std::complex<double> getVal();
-  virtual std::complex<double> getValAtResonance();
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
+
   virtual void print(std::ostream& out = std::cout) const;
-  virtual void print(std::ostream& out = std::cout);
+  virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout);
 
   virtual std::string name() const{
     return "CrystalBarrel_ala_FOCUS("+_theDecay.oneLiner() +")";

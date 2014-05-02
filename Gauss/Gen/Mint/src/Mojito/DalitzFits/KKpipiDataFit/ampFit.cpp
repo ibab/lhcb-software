@@ -56,20 +56,17 @@ protected:
   NamedParameter<std::string> _integratorSource;
   NamedParameter<std::string> _integratorFileName;
 public:
-  double un_normalised_noPs(){
-    if(0 == getEvent()) return 0;
-    double ampSq =  _amps->RealVal();
-    double returnVal =  ampSq;// * getEvent()->phaseSpace();
-    //    cout << "returnVal " << returnVal << endl;
-    return returnVal;
+  double un_normalised_noPs(IDalitzEvent& evt){
+    double ampSq =  _amps->RealVal(evt);
+    return ampSq;
   }
 
-  AmpsPdf(IDalitzEventList* events=0
+  AmpsPdf(const DalitzEventPattern& pat
 	  , double precision=1.e-4
 	  , std::string method="efficient"
 	  , MinuitParameterSet* mps=0
 	  )
-    : DalitzPdfBaseFastInteg(events, 0, mps, precision)
+    : DalitzPdfBaseFastInteg(0, mps, precision)
     , _localRnd(0)
     , _sgGen(0)
     , _fileGen(0)
@@ -85,7 +82,7 @@ public:
     if(nonFlat){
       cout << "AmpsPdf uses nonFlat integration." << endl;
       if(generateNew){
-	_sgGen =  new SignalGenerator(_amps);
+	_sgGen =  new SignalGenerator(pat, _amps);
 	_sgGen->setWeighted();
 	_sgGen->setSaveEvents(_integratorFileName);
 	_chosenGen = _sgGen;
@@ -96,7 +93,7 @@ public:
 	// events in the file were generated, we supply a random
 	// number generator with randomised seed.
 	_localRnd = new TRandom3(time(0));
-	_sgGen =  new SignalGenerator(_amps, _localRnd);
+	_sgGen =  new SignalGenerator(pat, _amps, _localRnd);
 	_sgGen->setWeighted();
 	_sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
 	_fileGen   = new FromFileGenerator(_integratorFileName, _sgGen);
@@ -137,9 +134,9 @@ int ampFit(){
 					  , (std::string)"efficient");
    
   NamedParameter<int> EventPattern("Event Pattern", 421, -321, 211, 211, -211);
-  DalitzEventPattern pdg(EventPattern.getVector());
+  DalitzEventPattern pat(EventPattern.getVector());
   
-  cout << " got event pattern: " << pdg << endl;
+  cout << " got event pattern: " << pat << endl;
   DalitzEventList eventList;
 
   if(! generateNew){
@@ -149,7 +146,7 @@ int ampFit(){
   }
 
   if(generateNew){
-    SignalGenerator sg(pdg);
+    SignalGenerator sg(pat);
     sg.FillEventList(eventList, Nevents);
   }
   
@@ -157,12 +154,12 @@ int ampFit(){
   datH.save("plotsFromEventList.root");
 
   MinuitParameterSet fitMPS;
-  AmpsPdf amps(&eventList, integPrecision, integMethod, &fitMPS);
-  Neg2LL<IDalitzEvent> fcn(&amps, &eventList, &fitMPS);
+  AmpsPdf amps(pat, integPrecision, integMethod, &fitMPS);
+  Neg2LL fcn(amps, eventList, &fitMPS);
   
   NamedParameter<int> checkNorm("CheckNorm", 0);
   if(0 != checkNorm){
-    DalitzPdfNormChecker nc(&amps, pdg);
+    DalitzPdfNormChecker nc(&amps, pat);
     nc.checkNorm();
   }
   Minimiser mini(&fcn);
@@ -202,7 +199,7 @@ int ampFit(){
     fscan.Close();
   }
 
-  AmpRatios rats(pdg);
+  AmpRatios rats(pat);
 
   //  rats.getRatios(amps.getAmpSum());
 

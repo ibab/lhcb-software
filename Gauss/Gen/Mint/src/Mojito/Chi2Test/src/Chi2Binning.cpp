@@ -84,15 +84,13 @@ Chi2Binning::Chi2Binning()
   , _totalMCWeight(0)
 {
 }
-int Chi2Binning::createBinning(IDalitzEventList* events
+int Chi2Binning::createBinning(MINT::IEventList<DalitzEvent>* events
 			       , int minPerBin
 			       , int maxPerBin
 			       ){
 
   if(0 == events) return 0;
   if(0 == events->size()) return 0;
-  const IDalitzEvent* evt0 = events->getREvent(0);
-  if(0 == evt0) return 0;
 
   Chi2BoxSet boxes = splitBoxes(events, maxPerBin);
 
@@ -120,17 +118,29 @@ int Chi2Binning::mergeBoxes(Chi2BoxSet& boxes, int minPerBin){
 }
 
 
-Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
+Chi2BoxSet Chi2Binning::splitBoxes(MINT::IEventList<DalitzEvent>* events
+				   , int maxPerBin
+				   ) const{
+  bool dbThis=false;
+  if(dbThis){
+    cout << "Chi2Binning::splitBoxes(MINT::IEventList<DalitzEvent>* events , int maxPerBin = " 
+	 << maxPerBin << ") called" << endl;
+  }
+
+  Chi2BoxSet dummy;
+  if(0 == events) return dummy;
+  return splitBoxes(*events, maxPerBin);
+}
+
+Chi2BoxSet Chi2Binning::splitBoxes(MINT::IEventList<DalitzEvent>& events
 				   , int maxPerBin
 				   ) const{
   bool dbThis=false;
   Chi2BoxSet dummy;
-  if(0 == events) return dummy;
-  if(0 == events->size()) return dummy;
-  const IDalitzEvent* evt0 = events->getREvent(0);
-  if(0 == evt0) return dummy;
+  if(0 == events.size()) return dummy;
+  const IDalitzEvent& evt0 = events[0];
   
-  Chi2Box box(evt0->eventPattern());
+  Chi2Box box(evt0.eventPattern());
 
   Chi2BoxSet boxes(box.split(0));
   bool needToSplitMore=false;
@@ -139,11 +149,11 @@ Chi2BoxSet Chi2Binning::splitBoxes(IDalitzEventList* events
     counter++;
     boxes.resetEventCounts();
     int failedSet=0, failedBox=0;
-    events->Start();
-    while(events->Next()){
-      bool added = boxes.addData(events->getEvent());
+    
+    for(unsigned int i=0; i < events.size(); i++){
+      bool added = boxes.addData(events[i]);
       if(! added) failedSet++;
-      if(! box.addData(events->getEvent())){
+      if(! box.addData(events[i])){
 	failedBox++;
       }
     }
@@ -178,12 +188,12 @@ void Chi2Binning::resetEventCounts(){
     _boxSets[i].resetEventCounts();
   }
 }
-void Chi2Binning::fillData(IDalitzEventList* data){
-  data->Start();
-  while(data->Next()){
+void Chi2Binning::fillData(IEventList<DalitzEvent>& data){
+  for(unsigned int k=0; k < data.size(); k++){
     bool foundBox=false;
+    DalitzEvent evt(data[k]);
     for(unsigned int i=0; i < _boxSets.size(); i++){
-      if(_boxSets[i].addData(data->getEvent())){
+      if(_boxSets[i].addData(evt)){
 	foundBox=true;
 	_nData++;
 	break;
@@ -193,33 +203,29 @@ void Chi2Binning::fillData(IDalitzEventList* data){
       cout << "WARNING in Chi2Binning::fillData:"
 	   << "\n\t didn't find box for event " 
 	   << endl;
-      data->getEvent()->print();
+      evt.print();
       cout << "compare to first event: " << endl;
-      data->getREvent(0)->print();
-      Chi2Box box(data->getEvent()->eventPattern());
+      data[0].print();
+      Chi2Box box(evt.eventPattern());
       cout << "would have fit into large? "
-	   << box.addData(data->getEvent()) << endl;
+	   << box.addData(evt) << endl;
     }
   }
 }
-void Chi2Binning::fillMC(IDalitzEventList* mc
+void Chi2Binning::fillMC(IEventList<DalitzEvent>& mc
 			 , IDalitzPdf* pdf){
   bool dbThis=false;
   if(dbThis){
     cout << "Chi2Binning::fillMC called with "
-	 << mc << ", " <<  pdf << endl;
+	 << &mc << ", " <<  pdf << endl;
   }
-  mc->Start();
-  pdf->setEventRecord(mc);
-  int counter=0;
   int printevery=10000;
-  while(mc->Next()){
-    counter++;
-    bool printit = (0 == counter%printevery);
-    if(printit) cout << "...fillMC filling event number " << counter;
-    IDalitzEvent* evt = mc->getEvent();
-    double weight = pdf->getVal_noPs() * evt->getWeight() / 
-      evt->getGeneratorPdfRelativeToPhaseSpace();
+  for(unsigned int k=0; k < mc.size(); k++){
+    bool printit = (0 == k%printevery);
+    if(printit) cout << "...fillMC filling event number " << k;
+    DalitzEvent evt(mc[k]);
+    double weight = pdf->getVal_noPs(evt) * evt.getWeight() / 
+      evt.getGeneratorPdfRelativeToPhaseSpace();
     
     if(printit) cout << ", with weight " << weight << endl;
     int n=0;
@@ -232,22 +238,21 @@ void Chi2Binning::fillMC(IDalitzEventList* mc
       }
     }
     if(dbThis){
-      cout << "event " << counter << " in " << n << " out of " << numBins()
+      cout << "event " << k << " in " << n << " out of " << numBins()
 	   << " box sets" << endl;
-      if(0 == n) evt->print();
+      if(0 == n) evt.print();
       cout << "mc weight now: " << _totalMCWeight << endl;
     }
   }
   if(dbThis) cout << "Total MC weight: " << _totalMCWeight << endl;
-  pdf->resetEventRecord();
 }
 
 void Chi2Binning::sortByChi2(){
   lessByChi2BoxSetChi2 sorter;
   stable_sort(_boxSets.rbegin(), _boxSets.rend(), sorter);
 }
-double Chi2Binning::setEventsAndPdf(IDalitzEventList* data
-				    , IDalitzEventList* mc
+double Chi2Binning::setEventsAndPdf(IEventList<DalitzEvent>* data
+				    , IEventList<DalitzEvent>* mc
 				    , IDalitzPdf* pdf
 				    , IFastAmplitudeIntegrable* fas
 				    ){

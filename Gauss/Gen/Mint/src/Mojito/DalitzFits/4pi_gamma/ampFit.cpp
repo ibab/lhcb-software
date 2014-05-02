@@ -108,19 +108,17 @@ protected:
   NamedParameter<std::string> _integratorSource;
   std::string _integratorFileName;
 public:
-  double un_normalised_noPs(){
-    if(0 == getEvent()) return 0;
-    double ampSq =  _amps->RealVal();
-    return ampSq;// * getEvent()->phaseSpace();
+  double un_normalised_noPs(IDalitzEvent& evt){
+    return  _amps->RealVal(evt);
   }
 
-  AmpsPdf( const counted_ptr<FitAmpSum>& amps
-	   , IDalitzEventList* events=0
+  AmpsPdf( DalitzEventPattern& pat
+	   , const counted_ptr<FitAmpSum>& amps
 	   , double precision=1.e-4
 	   , const std::string& method="efficient"
 	   , const std::string& integFileName="IntegFile.root"
 	   )
-    : DalitzPdfBaseFastInteg(events, 0, amps.get(), precision)
+    : DalitzPdfBaseFastInteg(pat, 0, amps.get(), precision)
     , _localRnd(0)
     , _sgGen(0)
     , _fileGen(0)
@@ -134,7 +132,7 @@ public:
     if(nonFlat){
       cout << "AmpsPdf uses nonFlat integration." << endl;
       if(generateNew){
-	_sgGen =  new SignalGenerator(_amps);
+	_sgGen =  new SignalGenerator(pat, _amps);
 	_sgGen->setWeighted();
 	_sgGen->setSaveEvents(_integratorFileName);
 	_chosenGen = _sgGen;
@@ -145,7 +143,7 @@ public:
 	// events in the file were generated, we supply a random
 	// number generator with randomised seed.
 	_localRnd = new TRandom3(time(0));
-	_sgGen =  new SignalGenerator(_amps, _localRnd);
+	_sgGen =  new SignalGenerator(pat, _amps, _localRnd);
 	_sgGen->setWeighted();
 	_sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
 	_fileGen   = new FromFileGenerator(_integratorFileName, _sgGen);
@@ -227,7 +225,7 @@ int ampFit(){
 
     bool doWeightTest= false && (0 == j_ex);
     if(doWeightTest){
-      SignalGenerator sgP_generateWeighted(BpAmps.get());
+      SignalGenerator sgP_generateWeighted(pat, BpAmps.get());
       sgP_generateWeighted.setWeighted();
       DalitzEventList sgPWeighted;
       sgP_generateWeighted.FillEventList(sgPWeighted, WeightTestEvents);
@@ -248,36 +246,56 @@ int ampFit(){
     //SignalGenerator sgP(&justBp);
 
     cout << "ex " << j_ex << ") " << "generating " << (int) Nevents << " B+ events" << endl;
-    SignalGenerator sgP(BpAmps.get());
+    SignalGenerator sgP(pat, BpAmps.get());
     sgP.FillEventList(BpEventList, Nevents);
     cout << "ex " << j_ex << ") " << "done Bp." << endl;
     cout << "ex " << j_ex << ") " << "Now I got " << (int) BpEventList.size() << " B+ events" << endl;
+    if(BpEventList.size() > 0) cout << "ex " << j_ex << ") " << "first B+ event: " << BpEventList[0] << endl;
     BpEventList.save("BplusEvents.root");
 
     cout << "ex " << j_ex << ") " << "generating " << (int) Nevents << " B- events:" << endl;
-    SignalGenerator sgM(BmAmps.get());
+    SignalGenerator sgM(pat, BmAmps.get());
     sgM.FillEventList(BmEventList, Nevents);
     BmEventList.save("BminusEvents.root");
 
     cout << "ex " << j_ex << ") " << "done B-" << endl;
     cout << "ex " << j_ex << ") " << "Now I got " << (int) BmEventList.size() << " B- events" << endl;
+    if(BmEventList.size() > 0) cout << "ex " << j_ex << ") " << "first B- event: " << BmEventList[0] << endl;
 
     DalitzHistoSet datHP = BpEventList.histoSet();
     datHP.save("plotsFromBpEventList.root");
     //DalitzHistoSet datHM = BmEventList.histoSet();
     //datHM.save("plotsFromBmEventList.root");
     
-    AmpsPdf BpPdf(BpAmps, &BpEventList, integPrecision, integMethod
+    AmpsPdf BpPdf(pat, BpAmps, integPrecision, integMethod
 		  , BpIntegFileName);
     BpPdf.setIntegratorFileName("spIntegrator_2");
     
-    Neg2LL<IDalitzEvent> fcnP(&BpPdf, &BpEventList);
+    //Neg2LL<AmpsPdf, DalitzEventList> fcnP(&BpPdf, &BpEventList);
+    cout << "Creating B+ Neg2LL with an eventlist of size " << BpEventList.size() << endl;
+    cout << "with pointer " << &BpEventList << endl;
+    if(BpEventList.size() > 0){
+      cout << "The first event is: " << BpEventList[0] << endl;
+    }
+    Neg2LL fcnP(BpPdf, BpEventList);
+    cout << "Done this. The eventlist size is now " << BpEventList.size() << endl;
+    cout << "with pointer " << &BpEventList << endl;
+    if(BpEventList.size() > 0){
+      cout << "and the first event is, now: " << BpEventList[0] << endl;
+    }
+
     
-    AmpsPdf BmPdf(BmAmps, &BmEventList, integPrecision, integMethod
+    AmpsPdf BmPdf(pat, BmAmps, integPrecision, integMethod
 		  , BmIntegFileName);
     BmPdf.setIntegratorFileName("smIntegrator_2");
     
-    Neg2LL<IDalitzEvent> fcnM(&BmPdf, &BmEventList);
+    //Neg2LL<AmpsPdf, DalitzEventList> fcnM(&BmPdf, &BmEventList);
+
+    cout << "Creating B- Neg2LL with an eventlist of size " << BmEventList.size() << endl;
+    if(BmEventList.size() > 0){
+      cout << "The first event is: " << BmEventList[0] << endl;
+    }
+    Neg2LL fcnM(BmPdf, BmEventList);
     
     Neg2LLSum fcn(&fcnP, &fcnM);
     
@@ -305,7 +323,7 @@ int ampFit(){
     BpPdf.saveIntegrator("spIntegrator_2");
     BmPdf.saveIntegrator("smIntegrator_2");
     
-    bool do2DScan= false; (0 == j_ex);
+    bool do2DScan= false;// (0 == j_ex);
     
     if(do2DScan){
       cout << "ex " << j_ex << ") " << "now doing 2D scan:" << endl;

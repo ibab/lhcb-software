@@ -5,7 +5,6 @@
 #include "Mint/ILineshape.h"
 #include "Mint/Utils.h"
 #include "Mint/AssociatedDecayTree.h"
-#include "Mint/IDalitzEventAccess.h"
 #include "Mint/CLEO2012_BW_BW.h"
 #include "Mint/CLEO2012_GounarisSakurai.h"
 #include "Mint/CLEO2012_Lass.h"
@@ -26,14 +25,13 @@ using namespace MINT;
    GS
 */
 ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
-			   , IDalitzEventAccess* events
-			   , const std::string& lopt
-			   ){
+				    , const std::string& lopt
+				    ){
 
   if(0 == tree) return 0;
 
   if(A_is_in_B("ALWAYS_BW", lopt)){
-    return new CLEO2012_BW_BW(*tree, events);
+    return new CLEO2012_BW_BW(*tree);
   }
 
   if((abs(tree->getVal().pdg())%1000)==113){
@@ -41,54 +39,54 @@ ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
       cout << "CLEO2012_LineshapeMaker returning rho-omega lineshape"
 	   << endl;
       
-      return new CLEO2012_CrystalBarrelFOCUS(*tree, events);
+      return new CLEO2012_CrystalBarrelFOCUS(*tree);
       //return new CLEO2012_BW_BW(*tree, events);
     }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
-      return new CLEO2012_GounarisSakurai(*tree, events);
+      return new CLEO2012_GounarisSakurai(*tree);
     }else{
       cout << "WARNING: CLEO2012_LineshapeMaker:"
 	   << " returning plain Breit-Wigner (CLEO2012_BW_BW) for rho"
 	   << endl;
-      return new CLEO2012_BW_BW(*tree, events);
+      return new CLEO2012_BW_BW(*tree);
     }
   }else if(abs(tree->getVal().pdg()) == 10321 ){ // K0*(1430)
     if(A_is_in_B("CLEO2012_Lass", lopt)){
       cout << "CLEO2012_LineshapeMaker: "
 	   << "\n\t> returning CLEO2012_Lass lineshape"
 	   << endl;
-      return new CLEO2012_Lass(*tree, events);
+      return new CLEO2012_Lass(*tree);
     }else{
       cout << "WARNING: CLEO2012_LineshapeMaker:"
 	   << " returning plain Breit-Wigner (CLEO2012_BW_BW) for K0*(1430)"
 	   << endl;
-      return new CLEO2012_BW_BW(*tree, events);
+      return new CLEO2012_BW_BW(*tree);
     }
   }else if(abs(tree->getVal().pdg()) == 9010221 ){ // f0(980)
     if(A_is_in_B("CLEO2012_FocusFlatte", lopt)){
       cout << "CLEO2012_LineshapeMaker: "
 	   << "\n\t> returning Flatte lineshape"
 	   << endl;
-      return new CLEO2012_FocusFlatte(*tree, events);
+      return new CLEO2012_FocusFlatte(*tree);
     }else if(A_is_in_B("CLEO2012_Flatte", lopt)){
       cout << "CLEO2012_LineshapeMaker: "
 	   << "\n\t> returning CLEO2012_Flatte lineshape"
 	   << endl;
-      return new CLEO2012_Flatte(*tree, events);
+      return new CLEO2012_Flatte(*tree);
     }
     else if(A_is_in_B("CLEO2012_FocusFlatte", lopt)){
     cout << "CLEO2012_LineshapeMaker: "
 	   << "\n\t> returning Focus Flatte lineshape"
 	   << endl;
-	   return new CLEO2012_FocusFlatte(*tree, events); //laurens f0 focusflatte
+	   return new CLEO2012_FocusFlatte(*tree); //laurens f0 focusflatte
     }
     else{
       cout << "WARNING: CLEO2012_LineshapeMaker:"
 	   << " returning plain Breit-Wigner (CLEO2012_BW_BW) for f0(980)"
 	   << endl;
-      return new CLEO2012_BW_BW(*tree, events);
+      return new CLEO2012_BW_BW(*tree);
     }
   }else{
-    return new CLEO2012_BW_BW(*tree, events);
+    return new CLEO2012_BW_BW(*tree);
   }
 
 }

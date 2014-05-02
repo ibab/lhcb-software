@@ -10,10 +10,11 @@ using namespace MINT;
 
 SignalGenerator::SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd)
   : BaseGenerator(rnd)
+  , _pat(pat)
   , _myOwnPSet()
   , _counted_amps(new FitAmpSum(pat, &_myOwnPSet))
   , _amps(_counted_amps.get())
-  , _boxes(_amps->makeEventGenerator())
+  , _boxes(_amps->makeEventGenerator(pat))
 {
   _boxes->setRnd(rnd);
 }
@@ -22,6 +23,7 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
 				 , double phase
 				 , TRandom* rnd)
   : BaseGenerator(rnd)
+  , _pat(pat)
   , _myOwnPSet()
   , _counted_amps(0)
   , _amps(0)
@@ -47,11 +49,14 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
   _boxes->setRnd(_rnd);
   */
 }
-SignalGenerator::SignalGenerator(IFastAmplitudeIntegrable* amps, TRandom* rnd)
+SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
+				 , IFastAmplitudeIntegrable* amps
+				 , TRandom* rnd)
   : BaseGenerator(rnd)
+  , _pat(pat)
   , _myOwnPSet()
   , _amps(amps)
-  , _boxes(_amps->makeEventGenerator())
+  , _boxes(_amps->makeEventGenerator(pat))
 {
   _boxes->setRnd(_rnd);
 }
@@ -59,7 +64,7 @@ SignalGenerator::SignalGenerator(IFastAmplitudeIntegrable* amps, TRandom* rnd)
 bool SignalGenerator::makeBoxes(){
   if(0 == _amps) return 0;
   counted_ptr< IUnweightedEventGenerator<IDalitzEvent> > 
-    bpt(_amps->makeEventGenerator());
+    bpt(_amps->makeEventGenerator(_pat));
   _boxes = bpt;
   if(0 == _boxes) return 0;
   _boxes->setRnd(_rnd);
@@ -89,6 +94,7 @@ counted_ptr<IDalitzEvent> SignalGenerator::tryDalitzEvent(){
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
+  bool dbThis=true;
   counted_ptr<IDalitzEvent> evt(0);
   int counter(0);
   int largeNumber(1000000);
@@ -97,6 +103,10 @@ counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
     evt = tryDalitzEvent();
   }while(0 == evt &&  counter++ < largeNumber);
   if(saveEvents()) _evtList->Add(evt);
+  if(dbThis){
+    cout << "SignalGenerator::newDalitzEvent:"
+	 << " just generated this event:\n" << evt << endl;
+  }
   return evt;
 }
 

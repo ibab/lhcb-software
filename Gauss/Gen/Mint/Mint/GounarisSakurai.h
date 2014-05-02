@@ -5,6 +5,7 @@
 
 #include "Mint/ILineshape.h"
 #include "Mint/BW_BW.h"
+#include "Mint/IDalitzEvent.h"
 
 class GounarisSakurai : public BW_BW, virtual public ILineshape{
  public:
@@ -13,14 +14,13 @@ class GounarisSakurai : public BW_BW, virtual public ILineshape{
      Gounaris-Sakurai lineshape describing the P-wave pipi scattering amplitude
      Phys. Rev. Lett. 21, 244 (1968)
    */ 
-  GounarisSakurai( const AssociatedDecayTree& decay,
-		   IDalitzEventAccess* events )
-    : BW_BW(decay, events){}
+ GounarisSakurai( const AssociatedDecayTree& decay)
+    : BW_BW(decay){}
 
   /**
      Evaluate Gounaris-Sakurai lineshape
    */
-  virtual std::complex<double> getVal();
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
 
   /**
      Decay Name

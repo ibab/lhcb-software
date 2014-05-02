@@ -25,7 +25,7 @@ DalitzBWBox::DalitzBWBox(TRandom* rnd)
 
 
 DalitzBWBox::DalitzBWBox(const DalitzEventPattern& pat
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   : _name("noName")
   , _area(pat, rnd)
@@ -39,7 +39,7 @@ DalitzBWBox::DalitzBWBox(const DalitzEventPattern& pat
 
 DalitzBWBox::DalitzBWBox(const DalitzEventPattern& pat
 		     , const counted_ptr<IGenFct>& pdf
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   : _name("noName")
   , _area(pat, pdf, rnd)
@@ -53,7 +53,7 @@ DalitzBWBox::DalitzBWBox(const DalitzEventPattern& pat
 
 DalitzBWBox::DalitzBWBox(const DalitzEventPattern& pat
 		     , const std::vector<counted_ptr<IGenFct> >& limits
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   : _name("noName")
   , _area(pat, limits, rnd)
@@ -75,7 +75,7 @@ DalitzBWBox::DalitzBWBox(const DalitzBWBox& other)
 {
 }
 
-bool DalitzBWBox::setAmps(IGetRealEvent<IDalitzEvent>* amps){
+bool DalitzBWBox::setAmps(IReturnRealForEvent<IDalitzEvent>* amps){
   _amps = amps;
   if(0 == _amps) return false;
   return true;

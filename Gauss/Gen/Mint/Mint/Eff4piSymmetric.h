@@ -1,12 +1,10 @@
 #ifndef MINT_EFF_FOUR_PI_SYMMETRIC_HH
 #define MINT_EFF_FOUR_PI_SYMMETRIC_HH
 
-#include "Mint/IGetDalitzEvent.h"
-#include "Mint/DalitzEventAccess.h"
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/IDalitzEventList.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/DalitzEventPattern.h"
+
+#include "Mint/IReturnRealForEvent.h"
 
 #include "Mint/FitParameter.h"
 #include "Mint/MinuitParameterSet.h"
@@ -17,8 +15,7 @@
 #include <vector>
 #include <iostream>
 
-class Eff4piSymmetric : virtual public IGetDalitzEvent
-, public DalitzEventAccess
+class Eff4piSymmetric : virtual public MINT::IReturnRealForEvent<IDalitzEvent>
 {
  public:
   class ProdWithFitParameter{
@@ -77,18 +74,17 @@ class Eff4piSymmetric : virtual public IGetDalitzEvent
   
   Eff4piSymmetric(int order
 		  , const DalitzEventPattern& pat
-		  , IDalitzEventAccess* daddyPDF
-		  , MINT::MinuitParameterSet* pset=0);
-  Eff4piSymmetric(int order
-		  , const DalitzEventPattern& pat
-		  , IDalitzEventList* evtList
 		  , MINT::MinuitParameterSet* pset=0);
   virtual double getVal( double t01, double s12, double s23
 			 , double s34, double t40) const;
-  virtual double getVal(const IDalitzEvent* evt) const;
-  virtual double getVal() const;
+  virtual double getVal(const IDalitzEvent& evt) const;
+  virtual double getVal(const IDalitzEvent* evt) const{
+    // for backwards compatibility only, deprecated.
+    if(0 == evt) return 0;
+    return getVal(*evt);
+  }
 
-  virtual double RealVal();
+  virtual double RealVal(IDalitzEvent& evt);
   
   void print(std::ostream& os = std::cout) const;
   void printCentreAndTypicalVal(std::ostream& os = std::cout) const;

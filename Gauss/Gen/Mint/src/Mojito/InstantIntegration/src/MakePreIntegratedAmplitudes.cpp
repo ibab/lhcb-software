@@ -90,7 +90,7 @@ bool MakePreIntegratedAmplitudes::doit(){
 	 << eventsFname()
 	 << " to reach precision " << _prec
 	 << endl;
-    counted_ptr<SignalGenerator> ptr(new SignalGenerator(&fitAmps));
+    counted_ptr<SignalGenerator> ptr(new SignalGenerator(_pat, &fitAmps));
     genSgPtr = ptr;
   }else{
     cout << "MakePreIntegratedAmplitudes::doit()"

@@ -6,7 +6,6 @@
 #include "Mint/ILineshape.h"
 #include "Mint/CLEO2012_BW_BW.h"
 #include "Mint/AssociatedDecayTree.h"
-#include "Mint/IDalitzEventAccess.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 
 // copied from Jim's DcyGSAmplitude.
@@ -32,11 +31,10 @@ class CLEO2012_GounarisSakurai : public CLEO2012_BW_BW, virtual public ILineshap
   
  public:
   
-  CLEO2012_GounarisSakurai( const AssociatedDecayTree& decay
-		   , IDalitzEventAccess* events)
-    : CLEO2012_BW_BW(decay, events){}
+  CLEO2012_GounarisSakurai( const AssociatedDecayTree& decay)
+    : CLEO2012_BW_BW(decay){}
 
-  virtual std::complex<double> getVal();
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
 
   virtual std::string name() const{
     return "CLEO2012_GounarisSakurai("+_theDecay.oneLiner() +")";

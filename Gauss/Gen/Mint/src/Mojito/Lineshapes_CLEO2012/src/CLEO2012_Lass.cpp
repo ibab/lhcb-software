@@ -12,9 +12,8 @@ using namespace MINT;
 // (and of course originally developed by Lass,
 // D. Aston et al. (LASS), Nucl. Phys. B296, 493 (1988).
 
-CLEO2012_Lass::CLEO2012_Lass( const AssociatedDecayTree& decay
-	    , IDalitzEventAccess* events)
-  : CLEO2012_BW_BW(decay, events)
+CLEO2012_Lass::CLEO2012_Lass( const AssociatedDecayTree& decay)
+  : CLEO2012_BW_BW(decay)
   , _a("CLEO2012_Lass::a", 2.07/GeV)
   , _r("CLEO2012_Lass::r", 3.32/GeV) // same as b in Lass paper
   , _phi("CLEO2012_Lass::phi", 0*pi/180.0)
@@ -22,10 +21,7 @@ CLEO2012_Lass::CLEO2012_Lass( const AssociatedDecayTree& decay
 {}
 
 CLEO2012_Lass::CLEO2012_Lass(const CLEO2012_Lass& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
+  : ILineshape()
   , CLEO2012_BW_BW(other)
   , _a(other._a)
   , _r(other._r) // same as b in Lass paper
@@ -104,8 +100,9 @@ double CLEO2012_Lass::deltaBg(){
   return atan2(y, x);
 }
 
-std::complex<double> CLEO2012_Lass::getVal(){
+std::complex<double> CLEO2012_Lass::getVal(IDalitzEvent& evt){
   resetInternals();
+  setEventPtr(evt);
   complex<double> expIPhi(cos(2*deltaBg()), sin(2*deltaBg()));
-  return BG() + CLEO2012_BW_BW::getVal()*expIPhi;
+  return BG() + CLEO2012_BW_BW::getVal(evt)*expIPhi;
 }

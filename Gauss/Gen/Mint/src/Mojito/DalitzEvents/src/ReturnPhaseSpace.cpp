@@ -3,28 +3,6 @@
 #include "Mint/ReturnPhaseSpace.h"
 using namespace MINT;
 
-ReturnPhaseSpace::ReturnPhaseSpace(IDalitzEventAccess* evts)
-  : IDalitzEventAccess()
-  , IReturnReal()
-  , DalitzEventAccess(evts)
-{}
-
-ReturnPhaseSpace::ReturnPhaseSpace(IDalitzEventList* evts)
-  : IDalitzEventAccess()
-  , IReturnReal()
-  , DalitzEventAccess(evts)
-{}
-
-ReturnPhaseSpace::ReturnPhaseSpace(const ReturnPhaseSpace& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , IReturnReal()
-  , IGetRealEvent<IDalitzEvent>()
-  , DalitzEventAccess(other)
-{}
-
-double ReturnPhaseSpace::RealVal(){
-  if(0 == getEvent()) return -9999;
-  return getEvent()->phaseSpace();
+double ReturnPhaseSpace::RealVal(IDalitzEvent& evt){
+  return evt.phaseSpace();
 }

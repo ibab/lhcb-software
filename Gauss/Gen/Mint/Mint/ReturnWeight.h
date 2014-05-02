@@ -3,19 +3,28 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:01 GMT
 
-#include "Mint/DalitzEventAccess.h"
-#include "Mint/IReturnReal.h"
-#include "Mint/IDalitzEventList.h"
+#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IDalitzEvent.h"
+#include "Mint/DalitzEvent.h"
+
+// possible that this is not really
+// needed anymore after moving to
+// vectorised MINT - leave it for now,
+// but likely to disappear in the future.
 
 class ReturnWeight 
-: public DalitzEventAccess
-, virtual public MINT::IGetRealEvent<IDalitzEvent>{
+: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+, virtual public MINT::IReturnRealForEvent<DalitzEvent>{
  public:
-  ReturnWeight(IDalitzEventAccess* evts);
-  ReturnWeight(IDalitzEventList* evts);
-  ReturnWeight(const ReturnWeight& other);
+  ReturnWeight(){}
+  ReturnWeight(const ReturnWeight& ){}
 
-  double RealVal();
+  double RealVal(IDalitzEvent& evt){
+    return evt.getWeight();
+  }
+  double RealVal(DalitzEvent& evt){
+    return evt.getWeight();
+  }
 };
 
 #endif

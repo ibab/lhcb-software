@@ -12,9 +12,8 @@ using namespace MINT;
 // (and of course originally developed by Lass,
 // D. Aston et al. (LASS), Nucl. Phys. B296, 493 (1988).
 
-Lass::Lass( const AssociatedDecayTree& decay
-	    , IDalitzEventAccess* events)
-  : BW_BW(decay, events)
+Lass::Lass( const AssociatedDecayTree& decay)
+  : BW_BW(decay)
   , _a("Lass::a", 2.07/GeV)
   , _r("Lass::r", 3.32/GeV) // same as b in Lass paper
   , _phi("Lass::phi", 0*pi/180.0)
@@ -22,10 +21,7 @@ Lass::Lass( const AssociatedDecayTree& decay
 {}
 
 Lass::Lass(const Lass& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
+  : ILineshape()
   , BW_BW(other)
   , _a(other._a)
   , _r(other._r) // same as b in Lass paper
@@ -106,8 +102,9 @@ double Lass::deltaBg(){
   return atan2(y, x);
 }
 
-std::complex<double> Lass::getVal(){
+std::complex<double> Lass::getVal(IDalitzEvent& evt){
   resetInternals();
+  setEventPtr(evt);
   complex<double> expIPhi(cos(2*deltaBg()), sin(2*deltaBg()));
-  return BG() + BW_BW::getVal()*expIPhi;
+  return BG() + BW_BW::getVal(evt)*expIPhi;
 }

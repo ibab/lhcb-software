@@ -11,182 +11,62 @@
 #include "TRandom.h"
 
 #include "Mint/IEventList.h"
-#include "Mint/IEventAccess.h"
-//#include "Mint/EventAccess.h"
-#include "Mint/IReturnReal.h"
-#include "Mint/IGetRealEvent.h"
-
-#include "Mint/GeneralisedPareto.h"
 
 namespace MINT{
-
-template<typename RETURN_TYPE, typename STORE_TYPE = RETURN_TYPE>
-class EventList 
-//: virtual public IEventAccess<RETURN_TYPE>
-//, public IEventAccess<RETURN_TYPE>
-  : virtual public IEventList<RETURN_TYPE >
-  , public std::vector<STORE_TYPE> 
-    {
   
-  protected:
-  bool _initialised;
-  typename std::vector<STORE_TYPE>::iterator currentPosition;
-  typename std::vector<STORE_TYPE>::iterator nextPosition;
-
-  bool init(){
-    return (_initialised=Start());
-  }
-  public:
-  EventList()
-  {
-    init();
-  }
-
-  EventList(const STORE_TYPE& evt)
-  {
-    init();
-    Add(evt);
-    Start();
-  }
-
-  EventList(const EventList<RETURN_TYPE, STORE_TYPE>& other)
-  : ILoopable()
-  , IBasicEventAccess<RETURN_TYPE>()
-  , IEventList<RETURN_TYPE>()
-  , std::vector<STORE_TYPE>(other)
-  {
-    init();
-  }
-  EventList<RETURN_TYPE, STORE_TYPE>& 
-  operator=(const EventList<RETURN_TYPE, STORE_TYPE>& other){
-    if(this == &other) return *this;
-    this->clear();
-    for(unsigned int i=0; i<other.size(); i++){
-      this->push_back(other[i]);
-    }
-    /*
-    this->_recordCollection = other._recordCollection;
-    this->_recordCollection.pop_front();
-    this->_recordCollection.push_front((IEventList< RETURN_TYPE >*) this);
-    */
-    _initialised=false;
-    this->init();
-    return *this;
-  }
-
-  virtual unsigned int size() const{
-    return std::vector<STORE_TYPE>::size();
-  }
-  virtual bool Start(){
-    if(this->empty()) return false;
-    currentPosition = nextPosition = this->begin();
-    //    if(nextPosition != this->end()) nextPosition++;
-    // this way, (i.e above line commented out)
-    // the 1st call to Next() gives 1st event.
-    //else return false;
-    return true;
-  }
-  virtual bool Next(){ // 1st call to Next gives first event!
-    // a bit complicated, but insures save deleting
-    if(this->empty()) return false;
-    if(! _initialised) init();
-
-    currentPosition = nextPosition;
-    if(currentPosition == this->end()){
-      Start();
-      return false;
-    }
-    nextPosition++;
-    return true;
-  }
-  virtual bool curryCheck(){
-    if(this->empty())return 0;
-    if(! _initialised) init();
-    if(currentPosition == this->end()) Start();
-    if(currentPosition == this->end()) return 0;
-    return true;
-  }
-  virtual RETURN_TYPE* getEvent(){
-    if(! curryCheck()) return 0;
-    return (RETURN_TYPE*) (&(*currentPosition));
-  }
-  virtual const RETURN_TYPE* getEvent() const{
-    if(this->empty())return 0;
-    if(! _initialised) return &(*(this->begin()));
-    if(currentPosition == this->end()) return &(*this->begin());
-    return (const RETURN_TYPE*) (&(*currentPosition));
-  }
-
-  virtual RETURN_TYPE* getREvent(unsigned int i){
-    if(i >= size()) return 0;
-    return &((*this)[i]);
-  }
-  virtual const RETURN_TYPE* getREvent(unsigned int i) const{
-    if(i >= size()) return 0;
-    return &((*this)[i]);
-  }
-
-  virtual RETURN_TYPE* getFirstEvent(){
-    return getREvent(0);
-  }
-  virtual const RETURN_TYPE* getFirstEvent() const{
-    return getREvent(0);
-  }
-  virtual RETURN_TYPE* getLastEvent(){
-    return getREvent(this->size()-1);
-  }
-  virtual const RETURN_TYPE* getLastEvent() const{
-    return getREvent(this->size()-1);
-  }
-  virtual RETURN_TYPE* popLastEvent(){
-    if(this->empty()) return 0;
-    RETURN_TYPE* evt(getREvent(this->size()-1));
-    this->resize(this->size() - 1);
-    return evt;
-  }
-
-  virtual bool Delete(){
-    if(this->empty()) return false;
-    if(currentPosition == this->end()) return false;
-    nextPosition=this->erase(currentPosition);
-    return true;
-  }
-  virtual bool Add(const STORE_TYPE& evt){
-    this->push_back(evt);
-    return true;
-  }
-
-  virtual bool Add(const EventList<RETURN_TYPE, STORE_TYPE>& otherList){
-    if(otherList.empty()) return false;
-    for(unsigned int i=0; i < otherList.size(); i++){
-      Add(otherList[i]);
-    }
-    return true;
-  }
-  class iterator : public std::vector<STORE_TYPE>::iterator{
+  template<typename EVENT_TYPE>
+    class EventList 
+    : virtual public IEventList<EVENT_TYPE >
+    , public std::vector<EVENT_TYPE> 
+    {
     public:
-    iterator() : std::vector<STORE_TYPE>::iterator(){}
-    iterator(const typename std::vector<STORE_TYPE>::iterator& other) 
-    : std::vector<STORE_TYPE>::iterator(other){}
-    iterator(const iterator& other) 
-    : std::vector<STORE_TYPE>::iterator(other){}
- };
-  class const_iterator : public std::vector<STORE_TYPE>::const_iterator{
-    public:
-    const_iterator() : std::vector<STORE_TYPE>::const_iterator(){}
-    const_iterator(const typename std::vector<STORE_TYPE>::iterator& other) 
-      : std::vector<STORE_TYPE>::const_iterator(other){}
-    const_iterator(const const_iterator& other) 
-      : std::vector<STORE_TYPE>::const_iterator(other){}
-  };
+    EventList()
+      : IEventList<EVENT_TYPE>()
+	, std::vector<EVENT_TYPE>()
+	{
+	}
+    EventList(const EventList<EVENT_TYPE>& other)
+      : IEventList<EVENT_TYPE>()
+	, std::vector<EVENT_TYPE>(other)
+	{
+	}
+      EventList<EVENT_TYPE>& 
+	operator=(const EventList<EVENT_TYPE>& other){
+	if(this == &other) return *this;
+	this->clear();
+	for(unsigned int i=0; i<other.size(); i++){
+	  this->push_back(other[i]);
+	}
+	return *this;
+      }
+      
+      virtual const EVENT_TYPE& operator[](unsigned int i) const{
+	return std::vector<EVENT_TYPE>::operator[](i);
+      }
 
+      virtual EVENT_TYPE& operator[](unsigned int i){
+	return std::vector<EVENT_TYPE>::operator[](i);
+      }
+      
+      EVENT_TYPE getEvent(unsigned int i)const{
+	return (*this)[i];
+      }
 
-  double getMax(IReturnReal* amps){
+      virtual unsigned int size() const{
+	return std::vector<EVENT_TYPE>::size();
+      }
+      
+      virtual bool Add(const EVENT_TYPE & evt){
+	this->push_back(evt);
+	return true;
+      }
+
+  /*
+  double getMax(IReturnReal<EVENT_TYPE>* amps){
     double max=-1;
     int counter=0;
-    this->Start();
-    while(this->Next()){// 1st call to next gives 1st event
-      double d=amps->RealVal();
+    for(int i=0; i < this->size(); i++){
+      double d=amps->RealVal((*this)[i]);
       if(d > max || 0 == counter) max=d;
       counter++;
     };
@@ -206,7 +86,7 @@ class EventList
   }
   
   int findMaxAndThrowAwayData(double& maxValue
-			      , IGetRealEvent<RETURN_TYPE>* amps
+			      , IGetRealEvent<EVENT_TYPE>* amps
 			      , int Nevents  = -1
 			      , TRandom* rnd = gRandom)
   {
@@ -264,7 +144,7 @@ class EventList
     std::cout << "Now added " << epsilon * 100 << "% for safety "
               << maxValue << std::endl;
 
-    EventList<RETURN_TYPE, STORE_TYPE> newList;
+    EventList<EVENT_TYPE, EVENT_TYPE> newList;
     
     for(counter=0; counter<this->size(); counter++){
       double d=vals[counter]; 
@@ -306,7 +186,7 @@ class EventList
     return this->size();
   }
   int justThrowAwayData(double maxValue
-			      , IGetRealEvent<RETURN_TYPE>* amps
+			      , IGetRealEvent<EVENT_TYPE>* amps
 			      , TRandom* rnd = gRandom)
   {
     //    bool dbThis=true;
@@ -319,7 +199,7 @@ class EventList
     int rememberSize = this->size();
     unsigned int counter=0;
 
-    EventList<RETURN_TYPE, STORE_TYPE> newList;
+    EventList<EVENT_TYPE, EVENT_TYPE> newList;
 
     this->Start();
     amps->setEventRecord(this);
@@ -371,7 +251,7 @@ class EventList
     return this->size();
   }
   double findMax(double& maxInThisSample
-		 , IGetRealEvent<RETURN_TYPE>* amps
+		 , IGetRealEvent<EVENT_TYPE>* amps
 		 )
   {
     //    bool dbThis=true;
@@ -439,20 +319,21 @@ class EventList
     return estimatedMaxOfParentSample;
   }
 
-  double findMax(IGetRealEvent<RETURN_TYPE>* amps
+  double findMax(IGetRealEvent<EVENT_TYPE>* amps
 		 ){
     double maxInThisSample;
     return findMax(maxInThisSample, amps);
   }
 
   // for bw compatibility
-  int throwAwayData(IGetRealEvent<RETURN_TYPE>* amps
+  int throwAwayData(IGetRealEvent<EVENT_TYPE>* amps
 		    , int Nevents=-1, TRandom* rnd=gRandom)
   {
     double maxValue = -9999;
     return findMaxAndThrowAwayData(maxValue, amps, Nevents, rnd);
   }
 
+  */
 };
 
 }//namespace MINT

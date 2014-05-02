@@ -30,10 +30,9 @@ const ParticleProperties* CLEO2012_BW_BW_DifferentMother::mumsProperties() const
 }
 
 CLEO2012_BW_BW_DifferentMother::CLEO2012_BW_BW_DifferentMother(const AssociatedDecayTree& decay
-					     , IDalitzEventAccess* events
 					     , int newMumID
 					     )
-  : CLEO2012_BW_BW(decay, events)
+  : CLEO2012_BW_BW(decay)
   , _alternativeMumPDG(newMumID)
 {}
 

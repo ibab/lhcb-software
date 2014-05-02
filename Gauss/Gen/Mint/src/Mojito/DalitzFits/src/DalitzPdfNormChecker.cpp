@@ -191,14 +191,12 @@ double DalitzPdfNormChecker::checkNorm(){
     _Nevents++;
     if(0 == evtPtr) continue;
     if(evtPtr->phaseSpace() <= 0) continue;
-    _pdf->setEvent(evtPtr.get());
-    double val = _pdf->getVal_withPs();
+    double val = _pdf->getVal_withPs(*evtPtr);
     if(_Nevents < 20 || 0 == i%printEvery){
       cout << " for _Nevents = " << _Nevents << ", current val = " << val << endl;
       cout << "event: " << *evtPtr << endl;
       cout << " ------------------ " << endl;
     }
-    _pdf->resetEventRecord();
     
     _sum   += val;
     _sumsq += val*val;

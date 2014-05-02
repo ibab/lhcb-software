@@ -8,8 +8,8 @@
 #include "Mint/CoherenceFactorStoreAndEvaluate.h"
 #include "Mint/CoherenceFactorCalculator.h"
 #include "Mint/FitAmpSum.h"
-#include "Mint/IGetRealEvent.h"
-#include "Mint/IGetComplexEvent.h"
+#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IReturnComplexForEvent.h"
 #include "Mint/CLHEPPhysicalConstants.h"
 
 #include <cstdio>
@@ -21,7 +21,7 @@ CoherenceFactorCalculator::
 CoherenceFactorCalculator( FitAmpSum& A, FitAmpSum& Abar
 			   , double CSAbs
 			   , double CSPhase
-			   , IGetRealEvent<IDalitzEvent>* eff
+			   , IReturnRealForEvent<IDalitzEvent>* eff
 			   , double prec
 			   , const std::string& name
 			  )
@@ -50,8 +50,10 @@ CoherenceFactorCalculator::getGenerator(){
   if(0 == _myOwnGenAplusAbar){
     if(dbThis) cout << "CoherenceFactorCalculator::getGenerator():  "
 		    << "making generator" << endl;
+    if(_A_plus_Abar.size() <= 0) return 0;
+    DalitzEventPattern pat = _A_plus_Abar.getAmpPtr(0)->getTreePattern();
     counted_ptr< IEventGenerator<IDalitzEvent> > 
-      ptr( new DalitzBWBoxSet(_A_plus_Abar.makeBWBoxes()));
+      ptr( new DalitzBWBoxSet(_A_plus_Abar.makeBWBoxes(pat)));
     if(dbThis) cout << "made generator." << endl;
     _myOwnGenAplusAbar = ptr;
   }

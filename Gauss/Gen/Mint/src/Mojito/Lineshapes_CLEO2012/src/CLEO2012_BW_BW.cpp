@@ -2,6 +2,7 @@
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 #include <cmath>
 
+#include "Mint/Utils.h"
 #include "Mint/CLEO2012_BW_BW.h"
 #include "Mint/ParticleProperties.h"
 //#include "fitSetup.h"
@@ -19,10 +20,8 @@ bool CL_PDGWithReco=false;
 
 bool CL_compareToOldRooFit=false;
 
-CLEO2012_BW_BW::CLEO2012_BW_BW( const AssociatedDecayTree& decay
-	      , IDalitzEventAccess* events)
-  : DalitzEventAccess(events)
-  , _prSq(-9999.0)
+CLEO2012_BW_BW::CLEO2012_BW_BW( const AssociatedDecayTree& decay)
+  : _prSq(-9999.0)
   , _pABSq(-9999.0)
   , _mumsPDGMass(-9999.0)
   , _mumsWidth(-9999.0) 
@@ -62,11 +61,7 @@ CLEO2012_BW_BW::CLEO2012_BW_BW( const AssociatedDecayTree& decay
   }
 }
 CLEO2012_BW_BW::CLEO2012_BW_BW(const CLEO2012_BW_BW& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
-  , DalitzEventAccess(other)
+  : ILineshape()
   , _prSq(other._prSq)
   , _pABSq(other._pABSq)
   , _mumsPDGMass(other._mumsPDGMass)
@@ -94,6 +89,15 @@ CLEO2012_BW_BW::CLEO2012_BW_BW(const CLEO2012_BW_BW& other)
 }
 
 CLEO2012_BW_BW::~CLEO2012_BW_BW(){
+}
+
+bool CLEO2012_BW_BW::setEventPtr(IDalitzEvent& evt) const{
+  _eventPtr = &(evt);
+  return true;
+}
+
+IDalitzEvent* CLEO2012_BW_BW::getEvent() const{
+  return _eventPtr;
 }
 
 int CLEO2012_BW_BW::twoLPlusOne() const{
@@ -945,12 +949,14 @@ void CLEO2012_BW_BW::resetPDG(){
   }
 }
 
+/*
 std::complex<double> CLEO2012_BW_BW::getValAtResonance(){
   _substitutePDGForReco=true;
   std::complex<double> returnVal = getVal();
   _substitutePDGForReco = false;
   return returnVal;
 }
+*/
 
 /*
 const GaussFct& CLEO2012_BW_BW::gaussianApprox(){
@@ -970,8 +976,9 @@ const GaussFct& CLEO2012_BW_BW::gaussianApprox(){
 */
 
 
-std::complex<double> CLEO2012_BW_BW::getVal(){
+std::complex<double> CLEO2012_BW_BW::getVal(IDalitzEvent& evt){
   bool dbThis=false;
+  setEventPtr(evt);
   resetInternals();
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
@@ -980,7 +987,9 @@ std::complex<double> CLEO2012_BW_BW::getVal(){
     // the D is zero, as usual). However, 
     // this is to comply with the usual convention: Only the
     // form factor, not the BW-propagator.
-    if (CL_compareToOldRooFit) return 1;
+    if (CL_compareToOldRooFit) {
+      return 1;
+    }
     if(_theDecay.nDgtr() > 2){
       // all calculations of Fr etc are meaningless in this case
       // assume Fr=1;
@@ -991,7 +1000,6 @@ std::complex<double> CLEO2012_BW_BW::getVal(){
       }
       return 1;
     }
-
     return 1;
 
   }
@@ -1012,10 +1020,11 @@ std::complex<double> CLEO2012_BW_BW::getVal(){
        << "|A|^2 | " << returnVal.real()*returnVal.real() 
 	       + returnVal.imag()*returnVal.imag()
        << endl; //dbg
-  
+
   return returnVal;
 }
 
+/*
 std::complex<double> CLEO2012_BW_BW::getSmootherLargerVal(){
   // this is not the maximum that CLEO2012_BW_BW could ever have but a value
   // that is certainly larger than the true value for this event. This
@@ -1060,7 +1069,6 @@ std::complex<double> CLEO2012_BW_BW::getSmootherLargerVal(){
     return getVal();
   }
 
-  /*
   if(dbThis) cout << " CLEO2012_BW_BW for " 
 		  << _theDecay.oneLiner() << endl; // dbg
   if(dbThis) cout << "\n    >  nominalMass " << mumsPDGMass()
@@ -1079,13 +1087,8 @@ std::complex<double> CLEO2012_BW_BW::getSmootherLargerVal(){
        << endl; //dbg
   
   return returnVal;
-  */
 }
-
-void CLEO2012_BW_BW::print(std::ostream& out) const{
-  CLEO2012_BW_BW copyOfMe(*this);
-  copyOfMe.print(out);
-}
+*/
 
 void CLEO2012_BW_BW::makeGeneratingFunction() const{
   if(! _genFct){
@@ -1103,7 +1106,13 @@ counted_ptr<IGenFct> CLEO2012_BW_BW::generatingFunction() const{
   return _genFct;
 }
 
-void CLEO2012_BW_BW::print(std::ostream& out) {
+void CLEO2012_BW_BW::print(std::ostream& out) const{
+  out << name();
+}
+void CLEO2012_BW_BW::print(IDalitzEvent& evt, std::ostream& out) {
+  setEventPtr(evt);
+  resetInternals();
+  
   out << name()
       << "\n\t> co-ordinate: " << getDalitzCoordinate()
       << "\n\t> This is the decay I'm looking at:"
@@ -1115,7 +1124,8 @@ void CLEO2012_BW_BW::print(std::ostream& out) {
       << ", Blatt-Weisskopf penetration factor: "
       << Fr()
       << ", total CLEO2012_BW_BW: " 
-      << getVal();
+      << getVal(evt) << endl;
+
 }
 
 std::ostream& operator<<(std::ostream& out, const CLEO2012_BW_BW& amp){

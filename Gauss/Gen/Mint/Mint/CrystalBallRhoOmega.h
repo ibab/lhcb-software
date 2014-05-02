@@ -1,16 +1,17 @@
-#ifndef CLEO2012_CRYSTALBALLRHOOMEGA_LINESHAPE_HH
-#define CLEO2012_CRYSTALBALLRHOOMEGA_LINESHAPE_HH
+#ifndef CRYSTALBALLRHOOMEGA_LINESHAPE_HH
+#define CRYSTALBALLRHOOMEGA_LINESHAPE_HH
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 
+#include "Mint/IDalitzEvent.h"
 #include "Mint/ILineshape.h"
-#include "Mint/CLEO2012_BW_BW.h"
-#include "Mint/CLEO2012_BW_BW_DifferentMother.h"
+#include "Mint/BW_BW.h"
+#include "Mint/BW_BW_DifferentMother.h"
 #include "Mint/NamedParameter.h"
 
 #include <complex>
 
-class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILineshape{
+class CrystalBallRhoOmega : public BW_BW, virtual public ILineshape{
   // Implemented as a normal Breit Wigner K*(1430)->K+ pi-
   // with an extra bit of "Background", parameterised
   // as in the Lass paper.
@@ -18,7 +19,7 @@ class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILine
   // (wonder whether that's correct)?
  protected:
 
-  CLEO2012_BW_BW_DifferentMother _omegaBW;
+  BW_BW_DifferentMother _omegaBW;
 
   MINT::NamedParameter<double> _eps, _beta, _phi, _delta, _aRatioSq;
   std::complex<double> rhoBWVal(IDalitzEvent& evt);
@@ -42,7 +43,7 @@ class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILine
   double omegaToRhoAmpRatio() const;
  public:
   
-  CLEO2012_CrystalBallRhoOmega( const AssociatedDecayTree& tree);
+  CrystalBallRhoOmega( const AssociatedDecayTree& tree);
 
   virtual std::complex<double> getVal(IDalitzEvent& evt);
   virtual DalitzCoordinate getDalitzCoordinate(double nSigma=3)const;
@@ -52,9 +53,9 @@ class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILine
   virtual MINT::counted_ptr<IGenFct> generatingFunction() const;
 
   virtual std::string name() const{
-    return "CLEO2012_CrystallBarrel("+_theDecay.oneLiner() +")";
+    return "CrystallBarrel("+_theDecay.oneLiner() +")";
   }
-  virtual ~CLEO2012_CrystalBallRhoOmega(){}
+  virtual ~CrystalBallRhoOmega(){}
 };
 
 #endif

@@ -10,11 +10,12 @@
 #include "Mint/counted_ptr.h"
 
 namespace MINT{
-  class ComplexProduct{
+  class ComplexProduct : public IReturnComplex{
+  protected:
     std::vector< counted_ptr<IReturnComplex> > _facVec; 
     std::vector< double > _fixedDoubleVec; 
     std::vector< std::complex<double> > _fixedComplexVec; 
-
+    
     inline double fixedRealProduct(){
       double prod(1); 
       for(unsigned i = 0; i < _fixedDoubleVec.size(); i++){
@@ -44,6 +45,8 @@ namespace MINT{
     ComplexProduct(const std::complex<double>& z);
     ComplexProduct(const ComplexProduct& other);
 
+    void multiply(const ComplexProduct& other);
+
     void addTerm(double val); // by value
     void addTerm(const std::complex<double>& z); // by value
     void addTerm(const counted_ptr<IReturnComplex>& irc); // by reference
@@ -51,6 +54,7 @@ namespace MINT{
     ComplexProduct& operator*=(double val);
     ComplexProduct& operator*=(const std::complex<double>& z);
     ComplexProduct& operator*=(const counted_ptr<IReturnComplex>& irc);
+    ComplexProduct& operator*=(const ComplexProduct& cp);
 
    inline std::complex<double> ComplexVal(){
      return  complexProduct() *  fixedComplexProduct() * fixedRealProduct();

@@ -1,9 +1,12 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:13 GMT
+
 #include "Mint/SpinFactors.h"
+
 #include "Mint/DecayTree.h"
 #include "Mint/SpinSumV.h"
 #include "Mint/SpinSumT.h"
+#include "Mint/Utils.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 
 #include "Mint/ZTspin1.h"
@@ -45,23 +48,23 @@ bool SpinFactor3::setSpin(){
   }else{    
     cout << "SpinFactor3::setSpin() Don't know how to"
 	 << " handle resonance with spin = " << R->getVal().J()
-	 << "\n    > looking at decay\n" << theDecay()
+	 << "\n    > looking at decay\n" << theBareDecay()
 	 << "\n    > Sorry, will crash now!" << endl;
     throw "sorry";
   }
   return true;
 }
 
-bool SpinFactor3::parseTree(){
+bool SpinFactor3::parseTree(const DalitzEventPattern& pat){
   if(fsPS.size() < 3) fsPS.reserve(3);
 
-  if(theDecay().nDgtr() == (int)theDecay().finalState().size()){
+  if(theDecay(pat).nDgtr() == (int)(theDecay(pat).finalState().size())){
     _nonResonant = true;
     return true;
   }
 
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if   (! dgtr->isFinalState())      R = dgtr;
     else                         fsPS[0] = dgtr;
   }
@@ -80,7 +83,7 @@ bool SpinFactor3::parseTree(){
   fsPS[1] = R->getDgtrTreePtr(0);
   fsPS[2] = R->getDgtrTreePtr(1);
 
-  normalOrder(fsPS[1], fsPS[2]);
+  //normalOrder(fsPS[1], fsPS[2]);
 
 //  printYourself();
 
@@ -90,9 +93,9 @@ bool SpinFactor3::parseTree(){
 }
 
 void SpinFactor3::printYourself(std::ostream& os)const{
-  os << "INFO in SpinFactor3::parseTree():\n"
+  os << "INFO from SpinFactor3::printYourself():\n"
      << "    > parsed the following tree "
-     << theDecay().oneLiner() << " like this:\n"
+     << theBareDecay().oneLiner() << " like this:\n"
      << "    > R =  " << R->getVal().name()
      << ", fsPS[0]=C= " << fsPS[0]->getVal().name()
      << ", fsPS[1]=A= " << fsPS[1]->getVal().name()
@@ -100,12 +103,12 @@ void SpinFactor3::printYourself(std::ostream& os)const{
      << endl;
 }
 
-double SpinFactor3::getVal(){
+double SpinFactor3::getVal(IDalitzEvent& evt){
   if(_nonResonant){
     return nonResVal();
   }
   
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2])) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2])) parseTree(evt.eventPattern());
   
   if(0 == R){
     cout << "ERROR in SpinFactor3::getVal(): 0 == R"
@@ -116,46 +119,56 @@ double SpinFactor3::getVal(){
   if(_spin == 0){
     return spinZeroVal();
   }else if(_spin == 1){
-    return spinOneVal();
+    return spinOneVal(evt);
   }else if(_spin == 2){
-    return spinTwoVal();
+    return spinTwoVal(evt);
   }else{    
     cout << "SpinFactor3::getVal() Don't know how to"
 	 << " handle resonance with spin = " << R->getVal().J()
-	 << "\n    > looking at decay\n" << theDecay()
+	 << "\n    > looking at decay\n" << theBareDecay()
 	 << "\n    > Sorry, will crash now!" << endl;
     throw "sorry";
   }
   return -9999;
   
 }
+/*
+double SpinFactor3::GSSpinFactor(IDalitzEvent& evt){
 
-double SpinFactor3::spinOneVal(){
+  double m2AC = (p(0, evt) + p(1, evt)).M2();
+  double m2BC = (p(0, evt) + p(2, evt)).M2();
+
+  //     cout << "GS spin factor " << m2AC - m2BC << endl;
+  return (m2AC - m2BC)/(GeV*GeV);
+}
+*/
+
+double SpinFactor3::spinOneVal(IDalitzEvent& evt){
   // parsed as:
   // D -> V P0; V->P1, P2;
   // fsPS[0] && fsPS[1] && fsPS[2]
 
   bool dbThis=false;
 
-  TLorentzVector pV = p(1) + p(2);
-  TLorentzVector pD = pV + p(0);
-  double mr = mRes(R);
+  TLorentzVector pV = p(1, evt) + p(2, evt);
+  TLorentzVector pD = pV + p(0, evt);
+  double mr = mRes(R, evt);
   SpinSumV spin_sum(pV, mr);
 
-  TLorentzVector lhs = pD + p(0);
-  TLorentzVector rhs = p(1) - p(2);
+  TLorentzVector lhs = pD + p(0, evt);
+  TLorentzVector rhs = p(1, evt) - p(2, evt);
 
   if(dbThis){
-    cout << " spinOneVal for " << theDecay().oneLiner()
+    cout << " spinOneVal for " << theBareDecay().oneLiner()
 	 << "\n   > compare: Sandwich: "  
 	 << -spin_sum.Sandwich(lhs, rhs)
 	 << "\n   > from masses             "  
-	 << spinOneFromMasses() 
+	 << spinOneFromMasses(evt) 
 	 << "\n   > ratio sw/m         "  
-	 << -spin_sum.Sandwich(lhs, rhs)/spinOneFromMasses() 
-	 << "\n   > from Zemach " << spinOneFromZemach()
+	 << -spin_sum.Sandwich(lhs, rhs)/spinOneFromMasses(evt) 
+	 << "\n   > from Zemach " << spinOneFromZemach(evt)
 	 << "\n   > ratios sw/Zemach "
-	 << spin_sum.Sandwich(lhs, rhs)/spinOneFromZemach()
+	 << spin_sum.Sandwich(lhs, rhs)/spinOneFromZemach(evt)
 	 << endl;
   }
 
@@ -166,22 +179,22 @@ double SpinFactor3::spinOneVal(){
   return -spin_sum.Sandwich(lhs, rhs)/(GeV*GeV);
 }
 
-double SpinFactor3::spinOneFromZemach(){
+double SpinFactor3::spinOneFromZemach(IDalitzEvent& evt){
   // all wrong - just experimenting - don't use!!
 
-  TLorentzVector pV = p(1) + p(2);
-  TLorentzVector qV = p(1) - p(2);
-  TLorentzVector pD = pV + p(0);
-  TLorentzVector qD = pV - p(0);
+  TLorentzVector pV = p(1, evt) + p(2, evt);
+  TLorentzVector qV = p(1, evt) - p(2, evt);
+  TLorentzVector pD = pV + p(0, evt);
+  TLorentzVector qD = pV - p(0, evt);
   //TLorentzVector qD = pD + p(0);
 
-  double mr = mRes(R);
+  double mr = mRes(R, evt);
   double mD = pD.M();
 
   ZTspin1 tV(qV, pV, mr);
   ZTspin1 tD(qD, pD, mD);
   //  ZTspin1 tP(pD + p(0), pD-p(0), mD);
-  ZTspin1 tP(p(0), pD, mD);
+  ZTspin1 tP(p(0, evt), pD, mD);
   //double norm = 1.;//tV.M() * tD.M();
   //return tV.Contract(pD + p(0)); << this works
   return tV.Contract(tP );
@@ -194,42 +207,42 @@ double SpinFactor3::spinOneFromZemach(){
 
 }
 
-double SpinFactor3::spinOneFromMasses(){
+double SpinFactor3::spinOneFromMasses(IDalitzEvent& evt){
   // parsed as:
   // D -> V P0; V->P1, P2;
   // fsPS[0] && fsPS[1] && fsPS[2]
   
-  double MV = mRes(R);
+  double MV = mRes(R, evt);
   double mA = fsPS[1]->getVal().mass();
   double mB = fsPS[2]->getVal().mass();
 
   double mC = fsPS[0]->getVal().mass();
 
-  double mD = (p(0)+p(1)+p(2)).M();
+  double mD = (p(0, evt)+p(1, evt)+p(2, evt)).M();
 
-  double m2AC = (p(0) + p(1)).M2();
-  double m2BC = (p(0) + p(2)).M2();
+  double m2AC = (p(0, evt) + p(1, evt)).M2();
+  double m2BC = (p(0, evt) + p(2, evt)).M2();
 
   return (m2AC - m2BC + (mD*mD - mC*mC)*(mB*mB-mA*mA)/(MV*MV))/(GeV*GeV);
 
 }
 
-double SpinFactor3::spinTwoFromMasses(){
+double SpinFactor3::spinTwoFromMasses(IDalitzEvent& evt){
   // parsed as:
   // D -> V P0; V->P1, P2;
   // fsPS[0] && fsPS[1] && fsPS[2]
   
-  double MV = mRes(R);
+  double MV = mRes(R, evt);
   double mA = fsPS[1]->getVal().mass();
   double mB = fsPS[2]->getVal().mass();
 
   double mC = fsPS[0]->getVal().mass();
 
-  double mD = (p(0)+p(1)+p(2)).M();
+  double mD = (p(0, evt)+p(1, evt)+p(2, evt)).M();
 
-  double m2AB = (p(1) + p(2)).M2();
-  double m2AC = (p(0) + p(1)).M2();
-  double m2BC = (p(0) + p(2)).M2();
+  double m2AB = (p(1, evt) + p(2, evt)).M2();
+  double m2AC = (p(0, evt) + p(1, evt)).M2();
+  double m2BC = (p(0, evt) + p(2, evt)).M2();
   
   Double_t term1 = m2BC-m2AC+(mD*mD-mC*mC)*(mA*mA-mB*mB)/(MV*MV);
   Double_t term2 = m2AB-2.0*mD*mD-2.0*mC*mC+pow(mD*mD-mC*mC,2)/(MV*MV);
@@ -238,26 +251,26 @@ double SpinFactor3::spinTwoFromMasses(){
   return (pow(term1,2)-(1.0/3.0)*term2*term3)/(GeV*GeV*GeV*GeV);
 }
 //
-double SpinFactor3::spinTwoVal(){
+double SpinFactor3::spinTwoVal(IDalitzEvent& evt){
   // parsed as:
   // D -> T P0; T->P1, P2;
   bool dbThis=false;
 
-  TLorentzVector pT = p(1) + p(2);
-  TLorentzVector pD = pT + p(0);
-  double mr = mRes(R);
+  TLorentzVector pT = p(1, evt) + p(2, evt);
+  TLorentzVector pD = pT + p(0, evt);
+  double mr = mRes(R, evt);
   SpinSumT spin_sum(pT, mr);
 
-  TLorentzVector lhs = pD + p(0);
-  TLorentzVector rhs = p(1) - p(2);
+  TLorentzVector lhs = pD + p(0, evt);
+  TLorentzVector rhs = p(1, evt) - p(2, evt);
 
   double returnVal = spin_sum.Sandwich(lhs, lhs, rhs, rhs)/(GeV*GeV*GeV*GeV);
   if(dbThis){
     cout << "spin-2 spin factor got called for "
-	 << theDecay().oneLiner()
+	 << theBareDecay().oneLiner()
 	 << "\n   >  returning " << returnVal
-	 << "\n   >  compare " << spinTwoFromMasses()
-	 << "\n   >  ratio " << returnVal/spinTwoFromMasses()
+	 << "\n   >  compare " << spinTwoFromMasses(evt)
+	 << "\n   >  ratio " << returnVal/spinTwoFromMasses(evt)
 	 << endl;
   }
 

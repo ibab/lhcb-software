@@ -2,6 +2,7 @@
 // status:  Mon 9 Feb 2009 19:18:04 GMT
 #include <cmath>
 
+#include "Mint/Utils.h"
 #include "Mint/BW_BW.h"
 #include "Mint/ParticleProperties.h"
 //#include "fitSetup.h"
@@ -21,9 +22,8 @@ bool PDGWithReco=false;
 bool DoAsLaurenDid = false;
 bool compareToOldRooFit = DoAsLaurenDid;
 
-BW_BW::BW_BW( const AssociatedDecayTree& decay
-	      , IDalitzEventAccess* events)
-  : DalitzEventAccess(events)
+BW_BW::BW_BW( const AssociatedDecayTree& decay)
+  : _eventPtr(0)
   , _prSq(-9999.0)
   , _prSqForGofM(-9999.0)
   , _pABSq(-9999.0)
@@ -65,11 +65,7 @@ BW_BW::BW_BW( const AssociatedDecayTree& decay
   }
 }
 BW_BW::BW_BW(const BW_BW& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
-  , DalitzEventAccess(other)
+  : ILineshape()
   , _prSq(other._prSq)
   , _prSqForGofM(other._prSqForGofM)
   , _pABSq(other._pABSq)
@@ -98,6 +94,16 @@ BW_BW::BW_BW(const BW_BW& other)
 }
 
 BW_BW::~BW_BW(){
+}
+
+bool BW_BW::setEventPtr(IDalitzEvent& evt) const{
+  //_oldPointers.push(getEvent());
+  _eventPtr = &(evt);
+  return true;
+}
+
+IDalitzEvent* BW_BW::getEvent() const{
+  return _eventPtr;
 }
 
 int BW_BW::twoLPlusOne() const{
@@ -991,38 +997,15 @@ void BW_BW::resetPDG(){
   }
 }
 
-std::complex<double> BW_BW::getValAtResonance(){
-  _substitutePDGForReco=true;
-  std::complex<double> returnVal = getVal();
-  _substitutePDGForReco = false;
-  return returnVal;
-}
+std::complex<double> BW_BW::getVal(IDalitzEvent& evt){
+  bool dbThis=false;
 
-/*
-const GaussFct& BW_BW::gaussianApprox(){
-  
-  std::complex<double> v = getValAtResonance();
-  double h = v.real()*v.real() + v.imag()*v.imag();
-
-  double sigma = 0.5*mumsWidth()/sqrt(2.0*log(2.0));
-
-  _gaussianApprox.set_x(mumsRecoMass());
-  _gaussianApprox.set_height(h);
-  _gaussianApprox.set_mean(mumsPDGMass());
-  _gaussianApprox.set_sigma(sigma);
-
-  return _gaussianApprox;
-}
-*/
-
-std::complex<double> BW_BW::getVal(){
-  const bool dbThis = false;
-
+  setEventPtr(evt);
   resetInternals();
 
-  if( nonResonant() )
-    return Fr_PDG_BL();
-
+  if(nonResonant()){
+    return 1;
+  }
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
     // of the decay chain from the rest - it could just get
@@ -1030,7 +1013,9 @@ std::complex<double> BW_BW::getVal(){
     // the D is zero, as usual). However, 
     // this is to comply with the usual convention: Only the
     // form factor, not the BW-propagator.
-    if (compareToOldRooFit) return 1;
+    if (compareToOldRooFit){
+      return 1;
+    }
     if(_theDecay.nDgtr() > 2){
       // all calculations of Fr etc are meaningless in this case
       // assume Fr=1;
@@ -1065,7 +1050,7 @@ std::complex<double> BW_BW::getVal(){
 	 << "\n    > BW   " << BreitWigner()
 	 << "\n    > FR*BW = " << Fr() * BreitWigner()
 	 << "\n    > recoMass " << mumsRecoMass()
-	 << "\n    > EvtGenValue " << EvtGenValue()
+	 << "\n    > EvtGenValue " << EvtGenValue(*(getEvent()))
 	 << endl;
   }
   //std::complex<double> returnVal = Fr()*BreitWigner(); //Unnormalised BFs
@@ -1074,88 +1059,9 @@ std::complex<double> BW_BW::getVal(){
        << "|A|^2 | " << returnVal.real()*returnVal.real() 
 	       + returnVal.imag()*returnVal.imag()
        << endl; //dbg
-  
+
   return returnVal;
 }
-
-std::complex<double> BW_BW::getSmootherLargerVal(){
-  // this is an experiment gone wrong - or at least useless. Don't use, I'll delete this, soon.
-  
-  // this is not the maximum that BW_BW could ever have but a value
-  // that is certainly larger than the true value for this event. This
-  // is used to estimate the true maximum of full PDF / BW, using the
-  // pareto trick.  It works by reducing the rms of the distribution
-  // of values of true pdf / simple Breit Wigner PDF
-  // Only thing that's guaranteed: value is >= true value.
-  // Not guaranteed, but hoped: rms is smaller, get a better estimate of true max.
-
-  bool dbThis=false;
-  if(nonResonant()) return 1;
-
-  resetInternals();
-  if(startOfDecayChain()){
-    // this is the only difference to the right now to the normal getVal
-    // ... smoothes the distribution, leads to better estimate of maximum.
-
-
-    // in principle there is no need to distinguish the start
-    // of the decay chain from the rest - it could just get
-    // a Breit Wigner (with a constant value of the width of 
-    // the D is zero, as usual). However, 
-    // this is to comply with the usual convention: Only the
-    // form factor, not the BW-propagator.
-    if (compareToOldRooFit) return 1;
-    if(_theDecay.nDgtr() > 2){
-      // all calculations of Fr etc are meaningless in this case
-      // assume Fr=1;
-      if(dbThis){
-	cout << "BW_BW::getVal() for " << name() << endl;
-	cout << "instead of Fr() for 2l+1 = " << twoLPlusOne() << endl;
-	cout << " I'll return 1 " << endl;
-      }
-      return 1;
-    }
-
-    if(nonResonant()) return 1;
-    
-    double returnVal = FrMax(); 
-    if(dbThis && (returnVal > 2 || returnVal < 0.5)){
-      cout << " BW_BW for " 
-	   << _theDecay.oneLiner() << endl; // dbg
-      cout << "FrMax() " << returnVal << endl;
-    }
-    return returnVal;
-  }else{
-    return getVal();
-  }
-
-  /*
-  if(dbThis) cout << " BW_BW for " 
-		  << _theDecay.oneLiner() << endl; // dbg
-  if(dbThis) cout << "\n    >  nominalMass " << mumsPDGMass()
-		  << "\n    > nominalWidth " << mumsWidth()
-		  << "\n    > GoM() " << GofM()
-		  << "\n    > FrMax() " << Fr()
-		  << "\n    > BW   " << BreitWigner()
-		  << "\n    > FrMax*BW = " << FrMax() * BreitWigner()
-		  << "\n    > recoMass " << mumsRecoMass()
-		  << "\n    > EvtGenValue " << EvtGenValue()
-		  << endl;
-  std::complex<double> returnVal = FrMax()*BreitWigner();
-  if(dbThis) cout << " value = " << returnVal 
-       << "|A|^2 | " << returnVal.real()*returnVal.real() 
-	       + returnVal.imag()*returnVal.imag()
-       << endl; //dbg
-  
-  return returnVal;
-  */
-}
-
-void BW_BW::print(std::ostream& out) const{
-  BW_BW copyOfMe(*this);
-  copyOfMe.print(out);
-}
-
 
 double BW_BW::peakShift() const{
   // from: J.D. Jackson, Il Nuovo Cimento, Siere X, Vol 34, pag 1644-1666
@@ -1216,7 +1122,12 @@ counted_ptr<IGenFct> BW_BW::generatingFunction() const{
   return _genFct;
 }
 
-void BW_BW::print(std::ostream& out) {
+void BW_BW::print(std::ostream& out)const {
+  out << name();
+}
+void BW_BW::print(IDalitzEvent& evt, std::ostream& out) {
+  setEventPtr(evt);
+  resetInternals();
   out << name()
       << "\n\t> co-ordinate: " << getDalitzCoordinate()
       << "\n\t> This is the decay I'm looking at:"
@@ -1228,10 +1139,10 @@ void BW_BW::print(std::ostream& out) {
       << ", Blatt-Weisskopf penetration factor: "
       << Fr()
       << ", total BW_BW: " 
-      << getVal();
+      << getVal(evt);
 }
 
-std::complex<double> BW_BW::EvtGenValue(){
+std::complex<double> BW_BW::EvtGenValue(IDalitzEvent& evt){
   // For debugging only.  
   // This is the EvtGen version of the full 3-body amplitude
   // (cut'n'paste with minimal changes).  
@@ -1240,6 +1151,7 @@ std::complex<double> BW_BW::EvtGenValue(){
   // function is part of BW_BW for convencience, BW_BW provides all
   // the "services" needed to compute this.
 
+  setEventPtr(evt);
   double pi180inv = pi/108.0;//1.0/EvtConst::radToDegrees;
 
   complex<double> ampl(0,0);
@@ -1249,8 +1161,9 @@ std::complex<double> BW_BW::EvtGenValue(){
   int spin = (twoLPlusOne() -1)/2;
 
   // get parent
-  if(0 == _theDecay.hasParent()) return -9999;
-  
+  if(0 == _theDecay.hasParent()) {
+    return -9999;
+  }  
   TLorentzVector p4_p = getEvent()->p(0)  * (1./GeV);
   TLorentzVector p4_d1 = getEvent()->p(_theDecay.getDgtrTreePtr(0)->getVal().asi()[0])   * (1./GeV);
   TLorentzVector p4_d2 = getEvent()->p(_theDecay.getDgtrTreePtr(1)->getVal().asi()[0])   * (1./GeV);

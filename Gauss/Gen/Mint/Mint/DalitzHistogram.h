@@ -81,7 +81,7 @@ class DalitzHistogram{
 
   void setNormFactor(double f=1){_h->SetNormFactor(f);}
 
-  void addEvent(const IDalitzEvent* evtPtr, double weight=1);
+  void addEvent(const IDalitzEvent& evt, double weight=1);
 
   MINT::const_counted_ptr<TH1> histo() const{return _h;}
   MINT::counted_ptr<TH1> histo() {return _h;}

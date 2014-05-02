@@ -7,21 +7,8 @@ using namespace MINT;
 
 Eff4piSymmetric::Eff4piSymmetric(int order
 				 , const DalitzEventPattern& pat
-				 , IDalitzEventAccess* daddyPDF
 				 , MINT::MinuitParameterSet* pset)
-  : DalitzEventAccess(daddyPDF)
-  , _order(order)
-  , _pat(pat)
-  , _pset(pset)
-{
-  init();
-}
-Eff4piSymmetric::Eff4piSymmetric(int order
-				 , const DalitzEventPattern& pat
-				 , IDalitzEventList* evtList
-				 , MINT::MinuitParameterSet* pset)
-  : DalitzEventAccess(evtList)
-  , _order(order)
+  : _order(order)
   , _pat(pat)
   , _pset(pset)
 {
@@ -130,22 +117,18 @@ double Eff4piSymmetric::getVal( double t01, double s12, double s23
 
   return getValFromSavedCoordinates();
 }
-double Eff4piSymmetric::getVal(const IDalitzEvent* evt) const{
+double Eff4piSymmetric::getVal(const IDalitzEvent& evt) const{
 
-  if(0 == evt) return 0;
-
-  _t01 = (evt->t(0,1) - _t01_ctr)/_t01_del;
-  _s12 = (evt->s(1,2) - _s12_ctr)/_s12_del;
-  _s23 = (evt->s(2,3) - _s23_ctr)/_s23_del;
-  _s34 = (evt->s(3,4) - _s34_ctr)/_s34_del;
-  _t40 = (evt->t(4,0) - _t40_ctr)/_t40_del;
+  _t01 = (evt.t(0,1) - _t01_ctr)/_t01_del;
+  _s12 = (evt.s(1,2) - _s12_ctr)/_s12_del;
+  _s23 = (evt.s(2,3) - _s23_ctr)/_s23_del;
+  _s34 = (evt.s(3,4) - _s34_ctr)/_s34_del;
+  _t40 = (evt.t(4,0) - _t40_ctr)/_t40_del;
 
   //  cout << "extracted sij" << endl;
   return getValFromSavedCoordinates();
 }
-double Eff4piSymmetric::getVal()const{
-  return getVal(getEvent());
-}
+
 double Eff4piSymmetric::getValFromSavedCoordinates() const{
   double sum=0;
   for(unsigned int i=0; i < _allTerms.size(); i++){
@@ -154,9 +137,9 @@ double Eff4piSymmetric::getValFromSavedCoordinates() const{
   return sum;
 }
 
-double Eff4piSymmetric::RealVal(){
+double Eff4piSymmetric::RealVal(IDalitzEvent& evt){
   //  cout << "Hello from  Eff4piSymmetric::RealVal()" << endl;
-  return this->getVal();
+  return this->getVal(evt);
 }
 
 void Eff4piSymmetric::fixZerothTherm(){

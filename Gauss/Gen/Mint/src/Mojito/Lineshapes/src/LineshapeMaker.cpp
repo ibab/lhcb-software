@@ -6,7 +6,7 @@
 #include "Mint/ILineshape.h"
 #include "Mint/Utils.h"
 #include "Mint/AssociatedDecayTree.h"
-#include "Mint/IDalitzEventAccess.h"
+//#include "Mint/IDalitzEventAccess.h"
 #include "Mint/BW_BW.h"
 #include "Mint/GounarisSakurai.h"
 #include "Mint/Lass.h"
@@ -29,13 +29,12 @@ using namespace MINT;
 */
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
-			   , IDalitzEventAccess* events
 			   , const std::string& lopt
 			   ){
   bool dbThis=false;
 
   if(A_is_in_B("CLEO2012", lopt)){
-    return CLEO2012_LineshapeMaker(tree, events, lopt);
+    return CLEO2012_LineshapeMaker(tree, lopt);
   }
 
   if(0 == tree) return 0;
@@ -53,7 +52,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
 
   if(A_is_in_B("ALWAYS_BW", lopt)){
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;
-    return new BW_BW(*tree, events);
+    return new BW_BW(*tree);
   }
 
   if((abs(tree->getVal().pdg())%1000)==113){
@@ -61,7 +60,7 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
       if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"
 		     << endl;
 
-      return new Rho0Omega(*tree, events);
+      return new Rho0Omega(*tree);
     }else if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("WRONG_RHOOMEGA", lopt)){
       if(dbThis)cout << "LineshapeMaker returning rho-omega lineshape"
 		     << endl;
@@ -70,43 +69,44 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
       std::cout << "CrystalBarrelFOCUS has many known issues" << std::endl;
       std::cout << "Use at your own risk" << std::endl << std::endl;
 
-      return new CrystalBarrelFOCUS(*tree, events);
-    }else if(abs(tree->getVal().pdg()) == 113 && A_is_in_B("GS", lopt)){
+      return new CrystalBarrelFOCUS(*tree);
+      //return new BW_BW(*tree);
+    }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
       if(dbThis) cout << "LineshapeMaker: return GS lineshape" << endl;
-      return new GounarisSakurai(*tree, events);
+      return new GounarisSakurai(*tree);
     }else{
       if(dbThis)cout << "WARNING: LineshapeMaker:"
 		     << " returning plain Breit-Wigner (BW_BW) for rho"
 		     << endl;
-      return new BW_BW(*tree, events);
+      return new BW_BW(*tree);
     }
   }else if(abs(tree->getVal().pdg()) == 10321 || abs(tree->getVal().pdg()) == 10311 ){ // K0*(1430), charged or neutral
     if(A_is_in_B("Lass", lopt)){
       cout << "LineshapeMaker: "
 	   << "\n\t> returning Lass lineshape"
 	   << endl;
-      return new Lass(*tree, events);
+      return new Lass(*tree);
     }else{
       cout << "WARNING: LineshapeMaker:"
 	   << " returning plain Breit-Wigner (BW_BW) for K0*(1430)"
 	   << endl;
-      return new BW_BW(*tree, events);
+      return new BW_BW(*tree);
     }
   }else if(abs(tree->getVal().pdg()) == 9010221 ){ // f0(980)
     if(A_is_in_B("Flatte", lopt)){
       cout << "LineshapeMaker: "
 	   << "\n\t> returning Flatte lineshape"
 	   << endl;
-      return new Flatte(*tree, events);
+      return new Flatte(*tree);
     }else{
       cout << "WARNING: LineshapeMaker:"
 	   << " returning plain Breit-Wigner (BW_BW) for f0(980)"
 	   << endl;
-      return new BW_BW(*tree, events);
+      return new BW_BW(*tree);
     }
   }else{
     if(dbThis) cout << "LineshapeMaker returns BW_BW" << endl;
-    return new BW_BW(*tree, events);
+    return new BW_BW(*tree);
   }
 
 }

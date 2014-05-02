@@ -7,23 +7,17 @@
 using namespace std;
 using namespace MINT;
 
-bool DalitzPdfBase::getNorm(){
+bool DalitzPdfBase::getNorm(){  
+  if(_pat.size() <= 0) return false;
+
   _integrating = true;
-  if( ! _mcint.initialised()){
-    IDalitzEvent* evtPtr = getEvent();
-    if(0==evtPtr){
-      cout << "gammaPdf::getNorm: can't get event!"
-	   << endl;
-      _integrating = false;
-      return false;
-    }
-    _mcint.initialise(evtPtr->eventPattern()
-		      , this
-		      , _generator
-		      , gRandom
-		      , _precision
-		      );
-  }
+
+  _mcint.initialise(_pat
+		    , this
+		    , _generator
+		    , gRandom
+		    , _precision
+		    );
   _norm = _mcint.getVal();
   _integrating = false;
   return _norm > 0;
@@ -37,23 +31,11 @@ void DalitzPdfBase::setIntegrationPrecision(double prec){
 void DalitzPdfBase::parametersChanged(){
   getNorm();
 }
-DalitzPdfBase::DalitzPdfBase(IDalitzEventAccess* events
-			     , IEventGenerator<IDalitzEvent>* generator
+DalitzPdfBase::DalitzPdfBase( IEventGenerator<IDalitzEvent>* generator
 			     , double prec
 			     ) 
-  : PdfBase<IDalitzEvent>(events)
-    , _norm(-1)
-    , _precision(prec)
-    , _generator(generator)
-    , _integrating(0)
-{
-  
-}
-DalitzPdfBase::DalitzPdfBase(IDalitzEventList* events
-			     , IEventGenerator<IDalitzEvent>* generator
-			     , double prec
-			     ) 
-  : PdfBase<IDalitzEvent>(events)
+  : PdfBase<IDalitzEvent>()
+  , _pat()
   , _norm(-1)
   , _precision(prec)
   , _generator(generator)
@@ -65,31 +47,26 @@ DalitzPdfBase::DalitzPdfBase(IDalitzEventList* events
 bool DalitzPdfBase::integrating(){
   return _integrating;
 }
-double DalitzPdfBase::phaseSpace(){
-  IDalitzEvent* evt = getEvent();
-  if(0 == evt) return 0;
-  return evt->phaseSpace();
+double DalitzPdfBase::phaseSpace(IDalitzEvent& evt){
+  return evt.phaseSpace();
 }
-double DalitzPdfBase::getVal(){
-  if(_integrating) return getVal_withPs();
-  else return getVal_noPs();
-}
-double DalitzPdfBase::getVal(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal();
-  this->resetEventRecord();
-  return result;
+double DalitzPdfBase::getVal(IDalitzEvent& evt){
+  if(_pat.empty()) _pat = evt.eventPattern();
+  if(_integrating) return getVal_withPs(evt);
+  else return getVal_noPs(evt);
 }
 
-double DalitzPdfBase::getVal_noPs(){
+double DalitzPdfBase::getVal_noPs(IDalitzEvent& evt){
   bool dbthis = false;
+  if(_pat.empty()) _pat = evt.eventPattern();
+
   if(_integrating){
     // shouldn't really do that - use getVal or getVal_withPs
     // when you integrate (automatically done in getVal()):
-    return un_normalised_noPs();
+    return un_normalised_noPs(evt);
   }else{
     if(_norm == -1) getNorm();
-    double num = un_normalised_noPs();
+    double num = un_normalised_noPs(evt);
     if(dbthis)cout  << "un_normalised / norm: " 
 		    << num << " / " <<_norm 
 		    << " = " << num/_norm
@@ -97,20 +74,15 @@ double DalitzPdfBase::getVal_noPs(){
     return num/_norm;
   }
 }
-double DalitzPdfBase::getVal_noPs(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal_noPs();
-  this->resetEventRecord();
-  return result;
-}
 
-double DalitzPdfBase::getVal_withPs(){
+double DalitzPdfBase::getVal_withPs(IDalitzEvent& evt){
   bool dbthis = false;
+  if(_pat.empty()) _pat = evt.eventPattern();
   if(_integrating){
-    return un_normalised_noPs()*phaseSpace();
+    return un_normalised_noPs(evt)*phaseSpace(evt);
   }else{
     if(_norm == -1) getNorm();
-    double num = un_normalised_noPs()*phaseSpace();
+    double num = un_normalised_noPs(evt)*phaseSpace(evt);
     if(dbthis)cout  << "un_normalised / norm: " 
 		    << num << " / " <<_norm 
 		    << " = " << num/_norm
@@ -119,11 +91,5 @@ double DalitzPdfBase::getVal_withPs(){
   }
 }
 
-double DalitzPdfBase::getVal_withPs(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal_withPs();
-  this->resetEventRecord();
-  return result;
-}
-
+//
 //

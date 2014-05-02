@@ -6,7 +6,7 @@
 #include "Mint/ILineshape.h"
 #include "Mint/BW_BW.h"
 #include "Mint/AssociatedDecayTree.h"
-#include "Mint/IDalitzEventAccess.h"
+#include "Mint/IDalitzEvent.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 #include "Mint/CLHEPPhysicalConstants.h"
 #include "Mint/NamedParameter.h"
@@ -40,11 +40,10 @@ class Lass : public BW_BW, virtual public ILineshape{
 
  public:
   
-  Lass( const AssociatedDecayTree& decay
-	, IDalitzEventAccess* events);
+  Lass( const AssociatedDecayTree& decay);
   Lass(const Lass& other);
 
-  virtual std::complex<double> getVal();
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
 
   virtual std::string name() const{
     return "LASS("+_theDecay.oneLiner() +")";

@@ -81,7 +81,7 @@ void BaseGenerator::dontSaveEvents(){
 }
 
 void BaseGenerator::FillEventList(DiskResidentEventList& evtList, int NEvents){
-  bool dbThis=false;
+  bool dbThis=true;
   if(dbThis) cout << "BaseGenerator::FillEventList (dr) called" << endl;
   time_t t0 = time(0);
   for(int i=0; i < NEvents; i++){
@@ -100,6 +100,13 @@ void BaseGenerator::FillEventList(DiskResidentEventList& evtList, int NEvents){
     counted_ptr<IDalitzEvent> evtPtr(newEvent());
     DalitzEvent evt(evtPtr.get());
     evtList.Add(evt);
+    if(dbThis){
+      cout << "BaseGenerator::FillEventList (disk resident)" <<endl;
+      cout << "After adding this event to the event list:\n " << evt << endl;
+      cout << ".... the last event in the list is:\n " 
+	   << evtList.getEvent(evtList.size()-1) << endl;
+      cout << "are they the same?" << endl;
+    }
   }
 }
 
@@ -127,6 +134,14 @@ void BaseGenerator::FillEventList(DalitzEventList& evtList, int NEvents){
     counted_ptr<IDalitzEvent> evtPtr(newEvent());
     DalitzEvent evt(evtPtr.get());
     evtList.Add(evt);
+    if(dbThis){
+      cout << "BaseGenerator::FillEventList (memory resident)" <<endl;
+      cout << "After adding this event to the event list:\n " << evt << endl;
+      cout << ".... the last event in the list is:\n " 
+	   << evtList[evtList.size()-1] << endl;
+      cout << "are they the same?" << endl;
+    }
+
   }
 }
 

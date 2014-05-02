@@ -6,52 +6,36 @@
 #include <map>
 #include <complex>
 
-#include "Mint/IGetRealEvent.h"
-#include "Mint/IReturnComplex.h"
+#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IReturnComplexForEvent.h"
 
 #include "Mint/IDalitzEvent.h"
 #include "Mint/Amplitude.h"
 
 class FastAmplitude : public Amplitude
-, virtual public MINT::IGetRealEvent<IDalitzEvent>
-  , virtual public MINT::IReturnComplex
+, virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+  , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
  protected:
   std::map<IDalitzEvent*, std::complex<double> > _resultMap;
 
-  bool knownEvent(std::complex<double>& value);
+  bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);
 
  public:
   FastAmplitude( const DecayTree& decay
-		 , IDalitzEventAccess* events
-		 , char SPD_Wave='?'
-		 , const std::string& opt=""
-		 );
-  
-  FastAmplitude( const DecayTree& decay
-		 , IDalitzEventList* events
 		 , char SPD_Wave='?'
 		 , const std::string& opt=""
 		 );
   
   FastAmplitude( const AmpInitialiser& ampInit
-		 , IDalitzEventAccess* events
-		 );
-  FastAmplitude( const AmpInitialiser& ampInit
-		 , IDalitzEventList* events
 		 );
   
   FastAmplitude( const FastAmplitude& other);
-  FastAmplitude( const FastAmplitude& other, IDalitzEventAccess* newEvents);
-  FastAmplitude( const FastAmplitude& other, IDalitzEventList* newEvents);
 
   FastAmplitude( const Amplitude& other);
-  FastAmplitude( const Amplitude& other, IDalitzEventAccess* newEvents);
-  FastAmplitude( const Amplitude& other, IDalitzEventList* newEvents);
 
-
-  virtual std::complex<double> getVal();
-  virtual std::complex<double> getVal(IDalitzEvent* evt);
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal(IDalitzEvent* evt); // for backwards compatibilitiy
 
 };
 

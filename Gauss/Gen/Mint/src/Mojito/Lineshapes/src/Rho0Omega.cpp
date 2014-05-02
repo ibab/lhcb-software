@@ -11,9 +11,8 @@
 using namespace std;
 using namespace MINT;
 
-Rho0Omega::Rho0Omega( const AssociatedDecayTree& tree,
-		      IDalitzEventAccess* events )
-  : BW_BW(tree, events)
+Rho0Omega::Rho0Omega( const AssociatedDecayTree& tree)
+  : BW_BW(tree)
   , _pr("Rho0Omega::pr", 0.1973)
   , _aRatioSq("Rho0Omega::aRatioSq", 3.9)
   , _eps_coh("Rho0Omega::eps_coh", 1.14)
@@ -24,7 +23,8 @@ Rho0Omega::Rho0Omega( const AssociatedDecayTree& tree,
 {
 }
 
-std::complex<double> Rho0Omega::getVal() {
+std::complex<double> Rho0Omega::getVal(IDalitzEvent& evt) {
+  setEventPtr(evt);
   resetInternals();
 
   const double mpipi = (BW_BW::daughterP4(0)+BW_BW::daughterP4(1)).M()/GeV;
@@ -74,8 +74,9 @@ void Rho0Omega::print( std::ostream& out ) const {
   out << name();
 }
 
-void Rho0Omega::print( std::ostream& out ) {
-  out << name();
+void Rho0Omega::print( IDalitzEvent& evt, std::ostream& out ) {
+  out << name() << endl;
+  BW_BW::print(evt, out);
 }
     
 double Rho0Omega::GetAOmegatoRho0() const {

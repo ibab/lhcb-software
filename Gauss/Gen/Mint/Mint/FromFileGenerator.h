@@ -22,6 +22,7 @@ class FromFileGenerator
   std::string _opt;
   DiskResidentEventList _dL;
   bool _listExhausted;
+  unsigned int _listIndex;
   MINT::IEventGenerator<IDalitzEvent>* _gen;
 
   virtual MINT::counted_ptr<IDalitzEvent> newEventFromGenerator();
@@ -30,11 +31,12 @@ class FromFileGenerator
 
   FromFileGenerator(const std::string& fname
 		    , MINT::IEventGenerator<IDalitzEvent>* addThisWhenFileEmpty
-		    , const std::string& opt="UPDATE"
+		    , const std::string& opt=""
 		    );
-  // alternative option: "READ", which makes sure it only takes
-  // events from the file, and does not generate new ones
-  // when it runs out.
+  // option "" defaults to "UPDATE" if addThisWhenFileEmpty != 0 and
+  // "READ" otherwise (this sets the option with which the root file
+  // containing the events is opened). If you want to override this behaviour
+  // set the option explicitly.
 
   virtual MINT::counted_ptr<IDalitzEvent> newDalitzEvent();
 

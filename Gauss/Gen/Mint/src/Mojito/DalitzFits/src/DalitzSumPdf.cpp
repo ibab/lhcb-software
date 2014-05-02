@@ -9,8 +9,6 @@
 #include "Mint/IEventList.h"
 
 #include "Mint/IDalitzEvent.h"
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/IGetRealEvent.h"
 
 #include "Mint/DalitzSumPdf.h"
 
@@ -20,10 +18,7 @@ using namespace std;
 using namespace MINT;
 
 DalitzSumPdf::DalitzSumPdf(const DalitzSumPdf& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IReturnReal()
-  , IGetRealEvent<IDalitzEvent>()
+  : IReturnRealForEvent<IDalitzEvent>()
   , IPdf<IDalitzEvent>()
   , IDalitzPdf()
   , SumPdf<IDalitzEvent>(other)
@@ -32,77 +27,37 @@ DalitzSumPdf::DalitzSumPdf(const DalitzSumPdf& other)
   cout << "DON'T USE copy-constructor WITH DalitzSumPdf!!" << endl;
 }
 
-DalitzSumPdf::DalitzSumPdf(MINT::IEventList<IDalitzEvent>* events
-			   , MINT::FitParameter& f1
+DalitzSumPdf::DalitzSumPdf(MINT::FitParameter& f1
 			   , IDalitzPdf& pdf_1
 			   , IDalitzPdf& pdf_2)
-  : SumPdf<IDalitzEvent>(events
-			 , f1
+  : SumPdf<IDalitzEvent>( f1
 			 , pdf_1
 			 , pdf_2)
   , _dalitz_pdf_1(pdf_1)
   , _dalitz_pdf_2(pdf_2)
 {
 }
-DalitzSumPdf::DalitzSumPdf(MINT::IEventAccess<IDalitzEvent>* events
-			   , MINT::FitParameter& f1
-			   , IDalitzPdf& pdf_1
-			   , IDalitzPdf& pdf_2)
-  : SumPdf<IDalitzEvent>(events
-			 , f1
-			 , pdf_1
-			 , pdf_2
-			 )
-  , _dalitz_pdf_1(pdf_1)
-  , _dalitz_pdf_2(pdf_2)
-{
-}
 
-double DalitzSumPdf::phaseSpace(){
-  IDalitzEvent* evt = getEvent();
-  if(0 == evt) return 0;
-  return evt->phaseSpace();
+double DalitzSumPdf::phaseSpace(IDalitzEvent& evt){
+  return evt.phaseSpace();
 }
-double DalitzSumPdf::getVal(){
+double DalitzSumPdf::getVal(IDalitzEvent& evt){
   bool dbThis=false;
   if(dbThis) cout << "DalitzSumPdf::getVal(): you called? " << endl;
-  return getVal_noPs();
+  return getVal_noPs(evt);
 }
-double DalitzSumPdf::getVal_noPs(){
+double DalitzSumPdf::getVal_noPs(IDalitzEvent& evt){
   bool dbThis=false;
   if(dbThis) cout << "DalitzSumPdf::getVal_noPs(): you called? " << endl;
-  setPdfsEventRecords();
   double returnVal = 
-    _f1         * _dalitz_pdf_1.getVal_noPs() +
-    (1.0 - _f1) * _dalitz_pdf_2.getVal_noPs();
-  resetPdfsEventRecords();
+    _f1         * _dalitz_pdf_1.getVal_noPs(evt) +
+    (1.0 - _f1) * _dalitz_pdf_2.getVal_noPs(evt);
   if(dbThis) cout << "DalitzSumPdf::getVal_noPs(): returning "
 		  << returnVal << endl;
   return returnVal;
 }
-double DalitzSumPdf::getVal_withPs(){
-  return getVal_noPs()*phaseSpace();
-}
-
-double DalitzSumPdf::getVal(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal();
-  this->resetEventRecord();
-  return result;
-}
-
-double DalitzSumPdf::getVal_noPs(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal_noPs();
-  this->resetEventRecord();
-  return result;
-}
-
-double DalitzSumPdf::getVal_withPs(IDalitzEvent* evt){
-  this->setEvent(evt);
-  double result = this->getVal_withPs();
-  this->resetEventRecord();
-  return result;
+double DalitzSumPdf::getVal_withPs(IDalitzEvent& evt){
+  return getVal_noPs(evt)*phaseSpace(evt);
 }
 
 //

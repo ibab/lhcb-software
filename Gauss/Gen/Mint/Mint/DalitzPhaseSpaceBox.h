@@ -4,7 +4,6 @@
 // status:  Mon 9 Feb 2009 19:17:58 GMT
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzCoordinate.h"
-#include "Mint/IGetRealEvent.h"
 #include "Mint/DalitzEventList.h"
 
 #include "Mint/IGenFct.h"

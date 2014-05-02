@@ -2,7 +2,6 @@
 // status:  Mon 9 Feb 2009 19:18:03 GMT
 #include "Mint/FitAmpList.h"
 
-#include "Mint/IDalitzEventAccess.h"
 #include "Mint/FitAmplitude.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/NamedDecayTreeList.h"
@@ -20,8 +19,7 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		     )
-  : DalitzEventAccess(pat)
-  , _minuitParaSet(pset)
+  : _minuitParaSet(pset)
   , _efficiency(0)
   , _opt(opt)
 {
@@ -31,7 +29,7 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
     _paraFName.clear();
   }
   
-  createAllAmps(prefix);
+  createAllAmps(pat, prefix);
 }
 
 FitAmpList::FitAmpList(const DalitzEventPattern& pat
@@ -39,135 +37,30 @@ FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		     )
-  : DalitzEventAccess(pat)
-  , _minuitParaSet(pset)
+  : _minuitParaSet(pset)
   , _opt(opt)
 {
   
   _paraFName.clear();
   
-  createAllAmps(prefix);
+  createAllAmps(pat, prefix);
 }
 FitAmpList::FitAmpList(const DalitzEventPattern& pat
 		       , const std::string& prefix
 		       , const std::string& opt
 		       )
-  : DalitzEventAccess(pat)
-  , _minuitParaSet(0)
+  : _minuitParaSet(0)
   , _efficiency(0)
   , _opt(opt)
 {
   
   _paraFName.clear();
   
-  createAllAmps(prefix);
-}
-
-FitAmpList::FitAmpList(IDalitzEventAccess* events
-		       , const char* fname
-		       , MinuitParameterSet* pset
-		       , const std::string& prefix
-		       , const std::string& opt
-		     )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(pset)
-  , _efficiency(0)
-  , _opt(opt)
-{
-  if(0 != fname){
-    _paraFName = fname;
-  }else{
-    _paraFName.clear();
-  }
-  
-  createAllAmps(prefix);
-}
-
-FitAmpList::FitAmpList(IDalitzEventAccess* events
-		       , MinuitParameterSet* pset
-		       , const std::string& prefix
-		       , const std::string& opt
-		     )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(pset)
-  , _efficiency(0)
-  , _opt(opt)
-{
-
-  _paraFName.clear();
-  
-  createAllAmps(prefix);
-}
-FitAmpList::FitAmpList(IDalitzEventAccess* events
-		       , const std::string& prefix
-		       , const std::string& opt
-		       )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(0)
-  , _efficiency(0)
-  , _opt(opt)
-{
-
-  _paraFName.clear();
-  
-  createAllAmps(prefix);
-}
-
-FitAmpList::FitAmpList(IDalitzEventList* events
-		       , const char* fname
-		       , MinuitParameterSet* pset
-		       , const std::string& prefix
-		       , const std::string& opt
-		       )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(pset)
-  , _opt(opt)
-{
-  if(0 != fname){
-    _paraFName = fname;
-  }else{
-    _paraFName.clear();
-  }
-  
-  createAllAmps(prefix);
-}
-
-FitAmpList::FitAmpList(IDalitzEventList* events
-		       , MinuitParameterSet* pset
-		       , const std::string& prefix
-		       , const std::string& opt
-		     )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(pset)
-  , _efficiency(0)
-  , _opt(opt)
-{
-
-  _paraFName.clear();
-  
-  createAllAmps(prefix);
-}
-FitAmpList::FitAmpList(IDalitzEventList* events
-		       , const std::string& prefix
-		       , const std::string& opt
-		     )
-  : DalitzEventAccess(events)
-  , _minuitParaSet(0)
-  , _efficiency(0)
-  , _opt(opt)
-{
-
-  _paraFName.clear();
-  
-  createAllAmps(prefix);
+  createAllAmps(pat, prefix);
 }
 
 FitAmpList::FitAmpList(const FitAmpList& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , DalitzEventAccess(other)
-  , _paraFName(other._paraFName)
+  : _paraFName(other._paraFName)
   , _minuitParaSet(other._minuitParaSet)
   , _efficiency(other._efficiency)
   , _opt(other._opt)
@@ -189,7 +82,6 @@ FitAmpList::FitAmpList(const FitAmpList& other)
 
 FitAmpList& FitAmpList::operator=(const FitAmpList& other){
   if(&other == this) return *this;
-  (DalitzEventAccess)(*this) = (DalitzEventAccess) (other);
 
   _paraFName     = other._paraFName;
   _minuitParaSet = other._minuitParaSet;
@@ -207,7 +99,7 @@ int FitAmpList::addCopyWithSameFitParameters(const FitAmpList& other
 					     , double factor){
   for(unsigned int i=0; i < other._fitAmps.size(); i++){
     FitAmplitude* fa = other._fitAmps[i];
-    FitAmplitude* newFa = new FitAmplitude(*fa, (IDalitzEventAccess*) this);
+    FitAmplitude* newFa = new FitAmplitude(*fa);
     if(1.0 != factor) newFa->multiply(factor);
     _fitAmps.push_back(newFa);
   }
@@ -272,24 +164,6 @@ counted_ptr<FitAmpList> FitAmpList::GetCPConjugateSameFitParameters() const{
   return newList;
 }
 
-bool FitAmpList::createAllAmps(const std::string& prefix){
-  if(0 == getEvent()){
-    cout << "NOTE in FitAmpList::createAllAmps()"
-	 << " I got called, but there is no event."
-	 << "\n\t> Need at least one event to determine final state."
-	 << "\n\t> Alternatively call "
-	 << " createAllAmps(const DalitzEventPattern& thePattern)"
-	 << endl;
-    return false;
-  }
-
-  DalitzEventPattern thePattern = getEvent()->eventPattern();
-  // this assumes that the final state is the same
-  // for all events in list. No point, really, in
-  // adding amplitudes for different final states.
-
-  return createAllAmps(thePattern, prefix);
-}
 bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
 			      , const std::string& prefix){
   bool dbThis=false;
@@ -325,7 +199,6 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
     FitAmplitude* fa = 
       new FitAmplitude(prefix + it->first
 		       , it->second
-		       , this
 		       , fnamePtr
 		       , _minuitParaSet
 		      );
@@ -346,55 +219,79 @@ bool FitAmpList::createAllAmps(const DalitzEventPattern& thePattern
   return success;
 }
 
-void FitAmpList::printLargestAmp(std::ostream& os){
+void FitAmpList::printLargestAmp(IDalitzEvent& evt, std::ostream& os){
   bool dbthis=false;
-  if(_fitAmps.empty()) createAllAmps();
+  if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
+
   double largestValue = -9999;
   std::string largestName = "none";
-
-  if(0 == getEvent()){
-    os << "FitAmpList::printLargestAmp(): no Event, no Amp"
-       << endl;
-    return;
-  }
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
     if(dbthis){
       cout << "FitAmpList::printLargestAmp()"
-	   << "\n     > for " << (_fitAmps[i])->theDecay().oneLiner()
-	   << "\n     > I get " << (_fitAmps[i])->getVal()
+	   << "\n     > for " << (_fitAmps[i])->theBareDecay().oneLiner()
+	   << "\n     > I get " << (_fitAmps[i])->getVal(evt)
 	   << endl;
     }
-    double val = norm((_fitAmps[i])->getVal());
+    double val = norm((_fitAmps[i])->getVal(evt));
     if(val > largestValue){
       largestValue = val;
       largestName = (_fitAmps[i])->name();
     }
   }
-  os << "largest amp is " << largestName 
+  os << "largest amp for event " << evt
+     << "\n is " << largestName 
      << " with value " << largestValue 
      << endl;
 }
 
 
-void FitAmpList::printAllAmps(std::ostream& os){
+void FitAmpList::printAllAmps(IDalitzEvent& evt, std::ostream& os){
   bool dbThis=false;
-  if(_fitAmps.empty()) createAllAmps();
+  if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
 
   std::string largestName = "none";
   if(dbThis) cout << "Debug mode for  FitAmpList::printAllAmps" << endl;
 
-  if(0 == getEvent()){
-    os << "FitAmpList::printAllAmps(): no Event, no Amp"
-       << endl;
-    return;
-  }
-  
   os << "FitAmpList::printAllAmps()\n====================";
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
-       << " \t" << (_fitAmps[i])->getVal()
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+       << " \t" << (_fitAmps[i])->getVal(evt)
+       << endl;
+  }
+}
+void FitAmpList::printAllAmps(std::ostream& os)const{
+  bool dbThis=false;
+  if(_fitAmps.empty()){
+    os << "FitAmpList::printAllAmps: list is empty" << endl;
+
+  }
+
+  std::string largestName = "none";
+  if(dbThis) cout << "Debug mode for  FitAmpList::printAllAmps" << endl;
+
+  os << "FitAmpList::printAllAmps()\n====================";
+
+  for(unsigned int i=0; i<_fitAmps.size(); i++){
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+       << endl;
+  }
+}
+
+void FitAmpList::printNonZeroWithValue(IDalitzEvent& evt, std::ostream& os){
+  bool dbThis=false;
+  if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
+
+  std::string largestName = "none";
+  if(dbThis) cout << "Debug mode for  FitAmpList::printAllAmps" << endl;
+  
+  os << "FitAmpList::printNonZeroWithValue\n====================\n";
+
+  for(unsigned int i=0; i<_fitAmps.size(); i++){
+    if((_fitAmps[i])->isZero()) continue;
+    os << "\t" << (_fitAmps[i])->theBareDecay().oneLiner()
+       << " \t" << (_fitAmps[i])->getVal(evt)
        << endl;
   }
 }
@@ -402,7 +299,7 @@ void FitAmpList::print(std::ostream& os) const{
    os << "FitAmpList::print\n====================";
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
        << endl;
   }
 }
@@ -411,7 +308,7 @@ void FitAmpList::printNonZero(std::ostream& os) const{
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
     if((_fitAmps[i])->isZero()) continue;
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
        << endl;
   }
 }
@@ -422,30 +319,8 @@ void FitAmpList::setAllAmpsTo(std::complex<double> z){
   }
 }
 
-DalitzBoxSet FitAmpList::makeBoxes(IGetRealEvent<IDalitzEvent>* pdf
-                                   , double nSigma
-                                   ){
-  if(0 == getEvent()){
-    cout << "NOTE in FitAmpList::makeBoxes()"
-         << " I got called, but there is no event."
-         << " Need at least one event to determine final state."
-         << " Alternatively pass me the pattern as an argument:"
-         << " makeBoxes(pattern);"
-         << endl;
-    cout << " event record: " << getEventRecord()->size() << endl;
-    return DalitzBoxSet( 0 ) ;
-  }
-  
-  DalitzEventPattern thePattern = getEvent()->eventPattern();
-  // this assumes that the final state is the same
-  // for all events in list. No point, really, in
-  // adding amplitudes for different final states.
-  
-  return makeBoxes(thePattern, pdf, nSigma);
-}
-
 DalitzBoxSet FitAmpList::makeBoxes(const DalitzEventPattern& pat
-				   , IGetRealEvent<IDalitzEvent>* pdf
+				   , IReturnRealForEvent<IDalitzEvent>* pdf
 				   , double nSigma){
   DalitzBoxSet boxes;
   DalitzBox phaseSpaceBox(pat);
@@ -458,31 +333,8 @@ DalitzBoxSet FitAmpList::makeBoxes(const DalitzEventPattern& pat
   return boxes;
 }
 
-
-DalitzBWBoxSet FitAmpList::makeBWBoxes(IGetRealEvent<IDalitzEvent>* pdf
-				       , TRandom* rnd){
-  if(0 == getEvent()){
-    cout << "NOTE in FitAmpList::makeBWBoxes()"
-	 << " I got called, but there is no event."
-	 << " Need at least one event to determine final state."
-	 << " Alternatively pass me the pattern as an argument:"
-	 << " makeBoxes(pattern);"
-	 << endl;
-    cout << " event record: " << getEventRecord()->size() << endl;
-    DalitzBWBoxSet dummyBox(pdf, rnd);
-    return dummyBox;
-  }
-
-  DalitzEventPattern thePattern = getEvent()->eventPattern();
-  // this assumes that the final state is the same
-  // for all events in list. No point, really, in
-  // adding amplitudes for different final states.
-
-  return makeBWBoxes(thePattern, pdf, rnd);
-}
-
 DalitzBWBoxSet FitAmpList::makeBWBoxes(const DalitzEventPattern& pat
-				       , IGetRealEvent<IDalitzEvent>* pdf
+				       , IReturnRealForEvent<IDalitzEvent>* pdf
 				       , TRandom* rnd
 				      ){
   DalitzBWBoxSet boxes(pdf, rnd);
@@ -518,6 +370,13 @@ void FitAmpList::multiply(const MINT::counted_ptr<MINT::IReturnComplex> irc){
     }
   }
 }
+void FitAmpList::multiply(MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> > irc){
+  for(unsigned int i=0; i<_fitAmps.size(); i++){
+    if(0 != (_fitAmps[i])){
+      (_fitAmps[i])->multiply(irc);
+    }
+  }
+}
 
 void FitAmpList::deleteAll(){
   for(unsigned int i=0; i<_fitAmps.size(); i++){
@@ -528,13 +387,12 @@ void FitAmpList::deleteAll(){
   _fitAmps.clear();
 }
 
-void FitAmpList::setEfficiency(counted_ptr<IGetDalitzEvent> eff){
+void FitAmpList::setEfficiency(const counted_ptr<IReturnRealForEvent<IDalitzEvent> >& eff){
   _efficiency=eff;
-  _efficiency->setDaddy(this);
 }
-double FitAmpList::efficiency(){
+double FitAmpList::efficiency(IDalitzEvent& evt){
   if(0 == _efficiency) return 1.0;
-  double eff = _efficiency->RealVal();
+  double eff = _efficiency->RealVal(evt);
   if(eff < 0) return 0;
   return eff;
 }
@@ -601,6 +459,9 @@ FitAmpList operator*(const counted_ptr<IReturnComplex>& irc
   return fas;
 }
 
-
+std::ostream& operator<<(std::ostream& os, const FitAmpList& fal){
+  fal.print(os);
+  return os;
+}
 
 //

@@ -14,7 +14,6 @@ class CLEO2012_BW_BW_DifferentMother : public CLEO2012_BW_BW, virtual public ILi
   virtual const ParticleProperties* mumsProperties() const;
  public:
   CLEO2012_BW_BW_DifferentMother(const AssociatedDecayTree& decay
-				 , IDalitzEventAccess* events
 				 , int newMumID
 				 );
 };

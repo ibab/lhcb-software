@@ -7,8 +7,8 @@
 //
 #include "Mint/CoherenceFactor.h"
 #include "Mint/FitAmpSum.h"
-#include "Mint/IGetRealEvent.h"
-#include "Mint/IGetComplexEvent.h"
+#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IReturnComplexForEvent.h"
 #include "Mint/CLHEPPhysicalConstants.h"
 
 using namespace std;
@@ -17,7 +17,7 @@ using namespace MINT;
 CoherenceFactor::CoherenceFactor(FitAmpSum& A, FitAmpSum& Abar
 				 , double CSAbs
 				 , double CSPhase
-				 , IGetRealEvent<IDalitzEvent>* eff
+				 , IReturnRealForEvent<IDalitzEvent>* eff
 				 , double prec
 				 )
   : _A(&A)
@@ -35,13 +35,16 @@ CoherenceFactor::CoherenceFactor(FitAmpSum& A, FitAmpSum& Abar
 {
 }
 
-counted_ptr< IEventGenerator<IDalitzEvent> > CoherenceFactor::getGenerator(){
+counted_ptr< IEventGenerator<IDalitzEvent> > 
+CoherenceFactor::getGenerator(){
   bool dbThis=false;
   if(0 == _myOwnGenAplusAbar){
     if(dbThis) cout << "CoherenceFactor::getGenerator():  "
 		    << "making generator" << endl;
+    if(_A_plus_Abar.size() <= 0) return 0;
+    DalitzEventPattern pat = _A_plus_Abar.getAmpPtr(0)->getTreePattern();
     counted_ptr< IEventGenerator<IDalitzEvent> > 
-      ptr( new DalitzBWBoxSet(_A_plus_Abar.makeBWBoxes()));
+      ptr( new DalitzBWBoxSet(_A_plus_Abar.makeBWBoxes(pat)));
     if(dbThis) cout << "made generator." << endl;
     _myOwnGenAplusAbar = ptr;
   }
@@ -51,12 +54,9 @@ counted_ptr<IDalitzEvent> CoherenceFactor::newEvent(){
   return getGenerator()->newEvent();
 }
 
-double CoherenceFactor::getEff(counted_ptr<IDalitzEvent> evt){
+double CoherenceFactor::getEff(IDalitzEvent& evt){
   if(0 == _eff) return 1.0;
-  _eff->setEvent(evt.get());
-  double val = _eff->RealVal();
-  _eff->resetEventRecord();
-  return val;
+  return _eff->RealVal(evt);
 }
 double CoherenceFactor::estimatedPrecision() const{
   if(_Nevents <= 0) return 9999;
@@ -202,22 +202,15 @@ void CoherenceFactor::printResult(std::ostream& os) const{
   }
   cout << endl;
 }
-complex<double> CoherenceFactor::A_Value(IDalitzEvent* evtPtr){
+complex<double> CoherenceFactor::A_Value(IDalitzEvent& evt){
   //  bool dbThis=false;
-  A()->setEvent(evtPtr);
-  complex<double> val = A()->ComplexVal();
-  A()->resetEventRecord();
-  return val;
+  return A()->ComplexVal(evt);
 }
-complex<double> CoherenceFactor::Abar_Value(IDalitzEvent* evtPtr){
+complex<double> CoherenceFactor::Abar_Value(IDalitzEvent& evt){
   bool dbThis=false;
   if(dbThis) cout << "CoherenceFactor::Abar_Value" << endl;
-  Abar()->setEvent(evtPtr);
-  if(dbThis) cout << "set event pointer" << endl;
-  complex<double> val = Abar()->ComplexVal();
-  if(dbThis) cout << "got value" << endl;
-  Abar()->resetEventRecord();
-  if(dbThis) cout << "reset it" << endl;
+  complex<double> val = Abar()->ComplexVal(evt);
+  if(dbThis) cout << "got value: " << val << endl;
   return val;
 }
 
@@ -235,6 +228,7 @@ complex<double> CoherenceFactor::getCVal(){
       bool printout = tries < 10 || (0 == tries%printEvery);
       
       counted_ptr<IDalitzEvent> evtPtr(newEvent());
+      
       if(0 == evtPtr){
 	if(dbThis) cout << "WARNING in CoherenceFactor::getR()"
 			<< " got evtPtr = " << evtPtr << endl;
@@ -245,19 +239,19 @@ complex<double> CoherenceFactor::getCVal(){
       double w = evtPtr->getWeight()
 	/evtPtr->getGeneratorPdfRelativeToPhaseSpace();
       
-      w*= getEff(evtPtr);
-
+      w*= getEff(*evtPtr);
+      
       w = sqrt(w); // since we apply the weight to the amplitudes, 
       //              while the integrals (as one might expect) all 
       //              contain terms |A|^2, |Abar|^2, or |A*Abar|.
 
       complex<double> c_a=
-	A_Value(evtPtr.get()) * w;
+	A_Value(*evtPtr) * w;
 
       complex<double> c_abar=
-	Abar_Value(evtPtr.get()) *w*polar(_CSAbs, _CSPhase);
+	Abar_Value(*evtPtr) *w*polar(_CSAbs, _CSPhase);
       
-      double d_a = norm(c_a);
+      double d_a    = norm(c_a);
       double d_abar = norm(c_abar);
 
       _sumASq += d_a;

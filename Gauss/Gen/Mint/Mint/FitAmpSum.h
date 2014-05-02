@@ -6,14 +6,12 @@
 #include <complex>
 #include <iostream>
 
-#include "Mint/IDalitzEventAccess.h"
-#include "Mint/DalitzEventAccess.h"
 #include "Mint/DalitzBoxSet.h"
 #include "Mint/DalitzBWBoxSet.h"
 #include "Mint/IntegCalculator.h"
 
-#include "Mint/IGetRealEvent.h"
-#include "Mint/IGetComplexEvent.h"
+#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IReturnComplexForEvent.h"
 #include "Mint/IFastAmplitudeIntegrable.h"
 #include "Mint/IUnweightedEventGenerator.h"
 #include "Mint/IIntegrationCalculator.h"
@@ -26,8 +24,8 @@
 // methods formerly defined here are now defined there.
 
 class FitAmpSum 
-: virtual public MINT::IGetRealEvent<IDalitzEvent>
-, virtual public MINT::IGetComplexEvent<IDalitzEvent>
+: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+, virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 , virtual public IFastAmplitudeIntegrable
 , virtual public ILookLikeFitAmpSum
 , public FitAmpList
@@ -46,41 +44,8 @@ class FitAmpSum
 	    , const std::string& prefix=""
 	     , const std::string& opt=""
 	    );
-  FitAmpSum(const DalitzEventPattern& pat
-	    , const std::string& prefix
-	     , const std::string& opt=""
-	    );
 
-  FitAmpSum(IDalitzEventAccess* events
-	    , const char* fname=0
-	    , MINT::MinuitParameterSet* pset=0
-	    , const std::string& prefix=""
-	     , const std::string& opt=""
-	    );
-  
-  FitAmpSum(IDalitzEventAccess* events
-	    , MINT::MinuitParameterSet* pset
-	    , const std::string& prefix=""
-	     , const std::string& opt=""
-	    );
-  FitAmpSum(IDalitzEventAccess* events
-	    , const std::string& prefix
-	     , const std::string& opt=""
-	    );
-  
-  FitAmpSum(IDalitzEventList* events
-	    , const char* fname=0
-	    , MINT::MinuitParameterSet* pset=0
-	    , const std::string& prefix=""
-	     , const std::string& opt=""
-	    );
-  
-  FitAmpSum(IDalitzEventList* events
-	    , MINT::MinuitParameterSet* pset
-	    , const std::string& prefix=""
-	     , const std::string& opt=""
-	    );
-  FitAmpSum(IDalitzEventList* events
+  FitAmpSum(const DalitzEventPattern& pat
 	    , const std::string& prefix
 	     , const std::string& opt=""
 	    );
@@ -99,21 +64,22 @@ class FitAmpSum
   virtual MINT::counted_ptr<FitAmpList> GetCloneSameFitParameters() const;
   // same behaviour for FitParameters as for copy constructor.
 
-  virtual DalitzBoxSet makeBoxes(double nSigma = 2){
-    return FitAmpList::makeBoxes(this, nSigma);}
+
+  // if "virtual" works as I think it should
+  // the below is not necessary - leave it in
+  // for now, maybe I had a reason. But might
+  // in future just use FitAmpList's routines.
   virtual DalitzBoxSet makeBoxes(const DalitzEventPattern& pat
-				 , double nSigma=2){
+                                 , double nSigma=2){
     return FitAmpList::makeBoxes(pat, this, nSigma);}
 
-  virtual DalitzBWBoxSet makeBWBoxes(TRandom* rnd=gRandom){
-    return FitAmpList::makeBWBoxes(this, rnd);}
   virtual DalitzBWBoxSet makeBWBoxes(const DalitzEventPattern& pat
-				     , TRandom* rnd=gRandom){
+                                     , TRandom* rnd=gRandom){
     return FitAmpList::makeBWBoxes(pat, this, rnd);}
 
 
-  virtual std::complex<double> getVal();
-  virtual std::complex<double> getVal(IDalitzEvent* evt);
+  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal(IDalitzEvent* evt);// for backward compatibility
 
   /*
   virtual std::complex<double> getSmootherLargerVal();
@@ -123,8 +89,8 @@ class FitAmpSum
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
 
-  virtual double Prob(){
-    std::complex<double> res = getVal();
+  virtual double Prob(IDalitzEvent& evt){
+    std::complex<double> res = getVal(evt);
     return res.real()*res.real() + res.imag()*res.imag();
   }
 
@@ -135,8 +101,8 @@ class FitAmpSum
   }
   */
 
-  virtual double RealVal(){
-    return Prob();
+  virtual double RealVal(IDalitzEvent& evt){
+    return Prob(evt);
   }
 
   /*
@@ -145,18 +111,18 @@ class FitAmpSum
   }
   */
 
-  virtual std::complex<double> ComplexVal(){return getVal();}
+  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){return getVal(evt);}
 
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-    makeEventGenerator(TRandom* rnd=gRandom){
+    makeEventGenerator(const DalitzEventPattern& pat, TRandom* rnd=gRandom){
     MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-      ptr(new DalitzBWBoxSet(makeBWBoxes(rnd)));
+      ptr(new DalitzBWBoxSet(makeBWBoxes(pat, rnd)));
     return ptr;
   }
 
   virtual void print(std::ostream& os=std::cout) const;
   virtual void printNonZero(std::ostream& os=std::cout) const;
-  virtual void printValues(std::ostream& os=std::cout) ;
+  virtual void printValues(IDalitzEvent& evt, std::ostream& os=std::cout) ;
 
   virtual ~FitAmpSum();
 
@@ -165,10 +131,12 @@ class FitAmpSum
   FitAmpSum& operator*=(double r);
   FitAmpSum& operator*=(const std::complex<double>& z);
   FitAmpSum& operator*=(const MINT::counted_ptr<MINT::IReturnComplex>& irc);
+  FitAmpSum& operator*=(const MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> >& ircfe);
 
   FitAmpSum operator*(double r) const;
   FitAmpSum operator*(const std::complex<double>& z) const;
   FitAmpSum operator*(const MINT::counted_ptr<MINT::IReturnComplex>& irc) const;
+  FitAmpSum operator*(const MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> >& ircfe) const;
 
 
   FitAmpSum& operator=(const FitAmpSum& other);
@@ -181,6 +149,8 @@ class FitAmpSum
 FitAmpSum operator*(double r, const FitAmpSum& rhs);
 FitAmpSum operator*(const std::complex<double>& z, const FitAmpSum& rhs);
 FitAmpSum operator*(const MINT::counted_ptr<MINT::IReturnComplex>& irc
+		     , const FitAmpSum& rhs);
+FitAmpSum operator*(const MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> >& ircfe
 		     , const FitAmpSum& rhs);
 
 

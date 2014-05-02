@@ -39,9 +39,8 @@ class CLEO2012_FocusFlatte : public CLEO2012_BW_BW, virtual public ILineshape{
   static double pdgMass(int PDG_ID);
  public:
   
-  CLEO2012_FocusFlatte( const AssociatedDecayTree& decay
-		   , IDalitzEventAccess* events)
-    : CLEO2012_BW_BW(decay, events)
+  CLEO2012_FocusFlatte( const AssociatedDecayTree& decay)
+    : CLEO2012_BW_BW(decay)
     , _gPi("Flatte::gPi", 0.20*GeV)
     , _gK_by_gPi("Flatte::gK_by_gPi", 2.50) // same as b in Flatte paper
     , _pi0Mass(-9999.0)

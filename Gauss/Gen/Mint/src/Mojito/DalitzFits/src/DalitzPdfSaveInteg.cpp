@@ -12,7 +12,7 @@
 using namespace std;
 using namespace MINT;
 
-DalitzPdfSaveInteg::DalitzPdfSaveInteg(IDalitzEventList* events
+DalitzPdfSaveInteg::DalitzPdfSaveInteg(const DalitzEventPattern& pat
 				       , double precision
 				       , const std::string& integInputFiles
 				       , const std::string& integEvtFile
@@ -20,13 +20,14 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg(IDalitzEventList* events
 				       , MinuitParameterSet* mps
 				       , const std::string& integOutputFile
 				       )
-    : DalitzPdfBaseFastInteg(events, 0, mps, precision)
+  : DalitzPdfBaseFastInteg(pat, 0, mps, precision)
     , _localRnd(0)
     , _sgGen(0)
     , _fileGen(0)
     , _integratorEventFile(integEvtFile)
     , _integratorOutputFile(integOutputFile)
  {
+   //   _pat = pat;
    setIntegratorFileName(integInputFiles);
    
    if("" == integOutputFile) _integratorOutputFile=integInputFiles;
@@ -37,32 +38,43 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg(IDalitzEventList* events
    // events in the file were generated, we supply a random
    // number generator with randomised seed.
    _localRnd = new TRandom3(time(0));
-   if("topUp" == topUpIntegOption){
-     _sgGen =  new SignalGenerator(_amps, _localRnd);
+    if("topUp" == topUpIntegOption){
+     if(0 == _amps){
+       cout << "cannot make SignalGenerator, _amps are empty" << endl;
+       cout << "bailing out" << endl;
+       throw "no amps, no signal generator";
+     }
+     if(_pat.empty()){
+       cout << "cannot make SignalGenerator, pattern is empty" << endl;
+       cout << "bailing out" << endl;
+       throw "no pattern, no signal generator";
+     }
+     _sgGen =  new SignalGenerator(_pat, _localRnd);
      _sgGen->setWeighted();
      _sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
-   }else{
-     _sgGen = 0;
-   }
-   _fileGen   = new FromFileGenerator(_integratorEventFile, _sgGen);
+    }else{
+      _sgGen = 0;
+    }
+    _fileGen   = new FromFileGenerator(_integratorEventFile, _sgGen);
     this->setEventGenerator(_fileGen);
-  }
+ }
 
-DalitzPdfSaveInteg::DalitzPdfSaveInteg( IFastAmplitudeIntegrable* amps
-				       , IDalitzEventList* events
+DalitzPdfSaveInteg::DalitzPdfSaveInteg( const DalitzEventPattern& pat
+				       , IFastAmplitudeIntegrable* amps
 				       , double precision
 				       , const std::string& integInputFiles
 				       , const std::string& integEvtFile
 				       , const std::string& topUpIntegOption
 				       , const std::string& integOutputFile
 				       )
-  : DalitzPdfBaseFastInteg(events, 0, amps, precision)
-    , _localRnd(0)
-    , _sgGen(0)
-    , _fileGen(0)
-    , _integratorEventFile(integEvtFile)
-    , _integratorOutputFile(integOutputFile)
+  : DalitzPdfBaseFastInteg(pat, 0, amps, precision)
+  , _localRnd(0)
+  , _sgGen(0)
+  , _fileGen(0)
+  , _integratorEventFile(integEvtFile)
+  , _integratorOutputFile(integOutputFile)
  {
+   //_pat = pat;
    setIntegratorFileName(integInputFiles);
    
    if("" == integOutputFile) _integratorOutputFile=integInputFiles;
@@ -74,7 +86,17 @@ DalitzPdfSaveInteg::DalitzPdfSaveInteg( IFastAmplitudeIntegrable* amps
    // number generator with randomised seed.
    _localRnd = new TRandom3(time(0));
    if("topUp" == topUpIntegOption){
-     _sgGen =  new SignalGenerator(_amps, _localRnd);
+     if(0 == _amps){
+       cout << "cannot make SignalGenerator, _amps are empty" << endl;
+       cout << "bailing out" << endl;
+       throw "no amps, no signal generator";
+     }
+     if(_pat.empty()){
+       cout << "cannot make SignalGenerator, pattern is empty" << endl;
+       cout << "bailing out" << endl;
+       throw "no pattern, no signal generator";
+     }
+     _sgGen =  new SignalGenerator(_pat, _localRnd);
      _sgGen->setWeighted();
      _sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
    }else{

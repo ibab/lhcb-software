@@ -16,15 +16,16 @@
 #include "Mint/AmpInitialiser.h"
 #include "Mint/FastAmplitude.h"
 
-#include "Mint/IBasicEventAccess.h"
-#include "Mint/IDalitzEventAccess.h"
+#include "Mint/IDalitzEvent.h"
 
 #include "Mint/ComplexProduct.h"
+#include "Mint/ComplexProductForEvent.h"
+
 #include <complex>
 
 class FitAmplitude : public FastAmplitude
-, virtual public MINT::IGetRealEvent<IDalitzEvent>
-  , virtual public MINT::IReturnComplex
+, virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+  , virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 {
  public:
   enum STRING_USAGE{FULL_NAME, PREFIX, DEFAULT};
@@ -33,18 +34,14 @@ class FitAmplitude : public FastAmplitude
   MINT::counted_ptr<MINT::FitComplex> _FitAmpPhase; // what we want to fit.
   MINT::NamedParameter<double> _fitFraction; // not in fit; input or result.
   MINT::ComplexProduct _preFactors;
+  MINT::ComplexProductForEvent<IDalitzEvent> _evt_dep_preFactors;
 
   std::string _name;
   static std::string longestNameInList();
 
   // methods
   FitAmplitude(const FitAmplitude& other);
-  FitAmplitude(const FitAmplitude& other
-	       , IDalitzEventAccess* newEvents
-	       );
-  FitAmplitude(const FitAmplitude& other
-	       , IDalitzEventList* newEvents
-	       );
+
  public:
   static void AutogenerateFitFile(const std::string& fname =
 				  "protoFitAmplitudeFile.txt"
@@ -55,68 +52,33 @@ class FitAmplitude : public FastAmplitude
 
   FitAmplitude(const std::string& yourOwnName
 	       , const AmpInitialiser& treeWithOpts
-	       , IDalitzEventAccess* events
 	       , const char* fname=0
 	       , MINT::MinuitParameterSet* pset=0
 	       , STRING_USAGE useStringAs = FULL_NAME
 	       );
+
   FitAmplitude(const std::string& yourOwnName
 	       , const AmpInitialiser& treeWithOpts
-	       , IDalitzEventList* events
-	       , const char* fname=0
-	       , MINT::MinuitParameterSet* pset=0
-	       , STRING_USAGE useStringAs = FULL_NAME
-	       );
-  FitAmplitude(const std::string& yourOwnName
-	       , const AmpInitialiser& treeWithOpts
-	       , IDalitzEventAccess* events
-	       , MINT::MinuitParameterSet* pset
-	       , STRING_USAGE useStringAs = FULL_NAME
-	       );
-  FitAmplitude(const std::string& yourOwnName
-	       , const AmpInitialiser& treeWithOpts
-	       , IDalitzEventList* events
 	       , MINT::MinuitParameterSet* pset
 	       , STRING_USAGE useStringAs = FULL_NAME
 	       );
   // you decide name and pass decay as DecayTree
 
   FitAmplitude(const AmpInitialiser& treeWithOpts
-	       , IDalitzEventAccess* events
 	       , const char* fname=0
 	       , MINT::MinuitParameterSet* pset=0
 	       );
-  FitAmplitude(const AmpInitialiser& treeWithOpts
-	       , IDalitzEventList* events
-	       , const char* fname=0
-	       , MINT::MinuitParameterSet* pset=0
-	       );
-  FitAmplitude(const AmpInitialiser& treeWithOpts
-	       , IDalitzEventAccess* events
-	       , MINT::MinuitParameterSet* pset
-	       );
-  FitAmplitude(const AmpInitialiser& treeWithOpts
-	       , IDalitzEventList* events
-	       , MINT::MinuitParameterSet* pset
-	       );
-  // derives name from tree
 
-  FitAmplitude(const std::string& StandardisedDecayTreeName
-	       , IDalitzEventAccess* events
-	       , const char* fname=0
-	       , MINT::MinuitParameterSet* pset=0
-	       );
-  FitAmplitude(const std::string& StandardisedDecayTreeName
-	       , IDalitzEventList* events
-	       , const char* fname=0
-	       , MINT::MinuitParameterSet* pset=0
-	       );
-  FitAmplitude(const std::string& StandardisedDecayTreeName
-	       , IDalitzEventAccess* events
+  FitAmplitude(const AmpInitialiser& treeWithOpts
 	       , MINT::MinuitParameterSet* pset
 	       );
+
+  // derives name from tree
   FitAmplitude(const std::string& StandardisedDecayTreeName
-	       , IDalitzEventList* events
+	       , const char* fname=0
+	       , MINT::MinuitParameterSet* pset=0
+	       );
+  FitAmplitude(const std::string& StandardisedDecayTreeName
 	       , MINT::MinuitParameterSet* pset
 	       );
   // derives tree from name (if known by NamedDecayTreeList
@@ -165,32 +127,16 @@ class FitAmplitude : public FastAmplitude
     return norm(AmpPhase()) * Amplitude::boxFactor();
   }
 
-  std::complex<double> getVal();
-  /*
-  inline std::complex<double> getVal(){
-    std::complex<double> ap(AmpPhase());
-    if(0.0 == ap) return 0;
-    return  ap * getValWithoutFitParameters();
-  }
-  */
+  std::complex<double> getVal(IDalitzEvent& evt);
 
-  std::complex<double> getVal(IDalitzEvent* evt);
+  std::complex<double> getVal(IDalitzEvent* evt); //for backwards compatibility
 
-  //std::complex<double> getValWithoutFitParameters();
-  std::complex<double> getValWithoutFitParameters(){
-    return FastAmplitude::getVal();
+  std::complex<double> getValWithoutFitParameters(IDalitzEvent& evt){
+    return FastAmplitude::getVal(evt);
   }
 
-  virtual std::complex<double> getSmootherLargerVal();
-  virtual std::complex<double> getSmootherLargerVal(IDalitzEvent* evt);
-
-  virtual std::complex<double> getSmootherLargerValWithoutFitParameters();
-
-  virtual std::complex<double> getValAtResonance();
-  //  double gaussProb();
-
-  double Prob(){
-    std::complex<double> z = getVal();
+  double Prob(IDalitzEvent& evt){
+    std::complex<double> z = getVal(evt);
     return z.real()*z.real() + z.imag()*z.imag();
   }
   std::string name() const{
@@ -201,46 +147,15 @@ class FitAmplitude : public FastAmplitude
   void multiply(double r); // by value
   void multiply(const std::complex<double>& z); // by value
   void multiply(const MINT::counted_ptr<MINT::IReturnComplex>& irc); // by ref
-  
+  void multiply(const MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> >& irce); // by ref
+
   FitAmplitude& operator*=(double r);
   FitAmplitude& operator*=(const std::complex<double>& z);
   FitAmplitude& operator*=(const MINT::counted_ptr<MINT::IReturnComplex>& irc);
+  FitAmplitude& operator*=(const MINT::counted_ptr<MINT::IReturnComplexForEvent<IDalitzEvent> >& irce);
 
   void print(std::ostream& os = std::cout) const;
 
-
-
-  /*
-  std::complex<double> getValWithoutFitParameters(){
-    return FastAmplitude::getVal();
-  }
-  
-  std::complex<double> getVal(IDalitzEvent* evt){
-    //bool dbThis=false;
-    this->setEvent(evt);
-    std::complex<double> result = this->getVal();
-    this->resetEventRecord();
-    return result;
-  }
-  
-  std::complex<double> getVal(){
-    bool dbThis=false;    
-    //  if(FitAmpPhase().getAmp() == 0.0) return 0;
-    if(AmpPhase() == 0.0) return 0;
-    std::complex<double> valA = getValWithoutFitParameters();
-    
-    if(dbThis){
-      cout << " FitAmplitude::getVal() for decay " 
-	   << theDecay().oneLiner()
-	   << "  total = " << AmpPhase() * valA
-	   << "\n    >  M()   = " << FitAmpPhase().getVal()
-	   << "\n    >  rB*exp()   = " << preFactors()
-	   << "\n    >  Amp   = " << valA
-	   << endl;
-    }
-  return  AmpPhase() * valA;
-  }
-  */
 
   ~FitAmplitude();
 

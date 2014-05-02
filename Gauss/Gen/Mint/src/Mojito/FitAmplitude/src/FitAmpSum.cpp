@@ -2,7 +2,6 @@
 // status:  Mon 9 Feb 2009 19:18:03 GMT
 #include "Mint/FitAmpSum.h"
 
-#include "Mint/IDalitzEventAccess.h"
 #include "Mint/FitAmplitude.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/NamedDecayTreeList.h"
@@ -41,78 +40,19 @@ FitAmpSum::FitAmpSum(const DalitzEventPattern& pat
   : FitAmpList(pat, prefix, opt)
 {}
 
-FitAmpSum::FitAmpSum(IDalitzEventAccess* events
-		     , const char* fname
-		     , MinuitParameterSet* pset
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, fname, pset, prefix, opt)
-{}
-
-FitAmpSum::FitAmpSum(IDalitzEventAccess* events
-		     , MinuitParameterSet* pset
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, pset, prefix, opt)
-{}
-
-FitAmpSum::FitAmpSum(IDalitzEventAccess* events
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, prefix, opt)
-{}
-
-FitAmpSum::FitAmpSum(IDalitzEventList* events
-		     , const char* fname
-		     , MinuitParameterSet* pset
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, fname, pset, prefix, opt)
-{}
-
-FitAmpSum::FitAmpSum(IDalitzEventList* events
-		     , MinuitParameterSet* pset
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, pset, prefix, opt)
-{}
-FitAmpSum::FitAmpSum(IDalitzEventList* events
-		     , const std::string& prefix
-		     , const std::string& opt
-		     )
-  : FitAmpList(events, prefix, opt)
-{}
-
 FitAmpSum::FitAmpSum(const FitAmpSum& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IReturnReal()
-  , IGetRealEvent<IDalitzEvent>()
-  , IReturnComplex()
-  , IGetComplexEvent<IDalitzEvent>()
+  : IReturnRealForEvent<IDalitzEvent>()
+  , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , IDalitzEventAccess()
-    //  , DalitzEventAccess()
   , FitAmpList(other)
 {}
 
 FitAmpSum::FitAmpSum(const FitAmpList& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IReturnReal()
-  , IGetRealEvent<IDalitzEvent>()
-  , IReturnComplex()
-  , IGetComplexEvent<IDalitzEvent>()
+  : IReturnRealForEvent<IDalitzEvent>()
+  , IReturnComplexForEvent<IDalitzEvent>()
   , IFastAmplitudeIntegrable()
   , ILookLikeFitAmpSum()
-  , IDalitzEventAccess()
-    //  , DalitzEventAccess()
   , FitAmpList(other)
 {}
 
@@ -159,89 +99,39 @@ counted_ptr<FitAmpList> FitAmpSum::GetCloneSameFitParameters() const{
 }
 
 std::complex<double> FitAmpSum::getVal(IDalitzEvent* evt){
-  //  bool dbthis=false;
-  this->setEvent(evt);
-  std::complex<double> result = this->getVal();
-  this->resetEventRecord();
-  return result;
+  return getVal(*evt);
 }
 
-std::complex<double> FitAmpSum::getVal(){
+std::complex<double> FitAmpSum::getVal(IDalitzEvent& evt){
   double dbThis=false;
 
   std::complex<double> sum(0);
-  if(0 == getEvent()) return sum;
-  if(_fitAmps.empty()) createAllAmps();
+  if(_fitAmps.empty()) createAllAmps(evt.eventPattern());
   for(unsigned int i=0; i<_fitAmps.size(); i++){
     if(! _fitAmps[i]->isZero()){
-      sum += (_fitAmps[i])->getVal();
+      sum += (_fitAmps[i])->getVal(evt);
     }
   }
   
-  std::complex<double> result(sqrt(fabs(efficiency()))*sum);
+  std::complex<double> result(sqrt(fabs(efficiency(evt)))*sum);
   double resultSq = norm(result);
   bool invalid = (! isfinite(resultSq)) || std::isnan(resultSq);
   if(dbThis || invalid){
     cout << "\n---------------------------" << endl;
     cout << "sqrt(efficiency())*sum = "
-	 << "sqrt(" << efficiency() << ")*" << sum
+	 << "sqrt(" << efficiency(evt) << ")*" << sum
 	 << endl;
-    printValues();
+    printValues(evt);
     cout << "\n---------------------------" << endl;
   }
   return result;
 }
 
-/*
-
-std::complex<double> FitAmpSum::getSmootherLargerVal(IDalitzEvent* evt){
-  //  bool dbthis=false;
-  this->setEvent(evt);
-  std::complex<double> result = this->getSmootherLargerVal();
-  this->resetEventRecord();
-  return result;
-}
-
-std::complex<double> FitAmpSum::getSmootherLargerVal(){
-  bool dbthis=false;
-
-  std::complex<double> sum=0;
-
-  std::complex<double> normalVal = this->getVal();
-
-  if(0 == getEvent()) return sum;
-
-  if(_fitAmps.empty()) createAllAmps();
-
-  for(unsigned int i=0; i<_fitAmps.size(); i++){
-    if(dbthis){
-      cout << "FitAmpSum::getSmootherLargerVal()"
-	   << "\n     > for " << (_fitAmps[i])->theDecay().oneLiner()
-	   << "\n     > I get " << (_fitAmps[i])->getSmootherLargerVal()
-	   << endl;
-    }
-    sum += (_fitAmps[i])->getSmootherLargerVal();
-  }
-  if(dbthis) cout << "FitAmpSum::getSmootherLargerVal():"
-		  << " returning this: " << sum 
-		  << endl;
-
-  if( abs(sum) < abs(normalVal) ){
-    cout << "WARNING in FitAmpSum::getSmootherLargerVal() "
-	 << " \"larger\" val = " << sum << " < " << normalVal << " = normalVal"
-	 << " will return normalVal " << endl;
-    sum = normalVal;
-  }
-
-  return sqrt(efficiency())*sum;
-}
-*/
-
 void FitAmpSum::print(std::ostream& os) const{
    os << "FitAmpSum::print\n====================";
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
        << endl;
   }
 }
@@ -250,16 +140,16 @@ void FitAmpSum::printNonZero(std::ostream& os) const{
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
     if(_fitAmps[i]->isZero()) continue;
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
        << endl;
   }
 }
-void FitAmpSum::printValues(std::ostream& os){
+void FitAmpSum::printValues(IDalitzEvent& evt, std::ostream& os){
    os << "FitAmpSum::print\n====================";
 
   for(unsigned int i=0; i<_fitAmps.size(); i++){
-    complex<double> val = _fitAmps[i]->getVal();
-    os << "\n\t" << (_fitAmps[i])->theDecay().oneLiner()
+    complex<double> val = _fitAmps[i]->getVal(evt);
+    os << "\n\t" << (_fitAmps[i])->theBareDecay().oneLiner()
        << val;
     if(norm(val) > 1.e10) os << "  HUGE!!!"  << endl;
     os << endl;
@@ -318,6 +208,10 @@ FitAmpSum& FitAmpSum::operator*=(const counted_ptr<IReturnComplex>& irc){
   multiply(irc);
   return *this;
 }
+FitAmpSum& FitAmpSum::operator*=(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& ircfe){
+  multiply(ircfe);
+  return *this;
+}
 
 FitAmpSum FitAmpSum::operator*(double r) const{
   FitAmpSum fas(*this);
@@ -334,7 +228,11 @@ FitAmpSum FitAmpSum::operator*(const counted_ptr<IReturnComplex>& irc) const{
   fas.multiply(irc);
   return fas;
 }
-
+FitAmpSum FitAmpSum::operator*(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& ircfe) const{
+  FitAmpSum fas(*this);
+  fas.multiply(ircfe);
+  return fas;
+}
 
 FitAmpSum operator*(double r, const FitAmpSum& rhs){
   FitAmpSum fas(rhs);
@@ -350,6 +248,12 @@ FitAmpSum operator*(const counted_ptr<IReturnComplex>& irc
 		     , const FitAmpSum& rhs){
   FitAmpSum fas(rhs);
   fas.multiply(irc);
+  return fas;
+}
+FitAmpSum operator*(const counted_ptr<IReturnComplexForEvent<IDalitzEvent> >& ircfe
+		     , const FitAmpSum& rhs){
+  FitAmpSum fas(rhs);
+  fas.multiply(ircfe);
   return fas;
 }
 

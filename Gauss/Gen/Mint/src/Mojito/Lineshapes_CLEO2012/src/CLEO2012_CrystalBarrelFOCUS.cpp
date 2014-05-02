@@ -8,9 +8,8 @@
 using namespace std;
 using namespace MINT;
 
-CLEO2012_CrystalBarrelFOCUS::CLEO2012_CrystalBarrelFOCUS( const AssociatedDecayTree& decay
-					, IDalitzEventAccess* events)
-  : CLEO2012_BW_BW(decay, events)
+CLEO2012_CrystalBarrelFOCUS::CLEO2012_CrystalBarrelFOCUS( const AssociatedDecayTree& decay)
+  : CLEO2012_BW_BW(decay)
   , _mRho(-9999.0)
   , _GRho(-9999.0)
   , _mOmega(-9999.0)
@@ -18,10 +17,7 @@ CLEO2012_CrystalBarrelFOCUS::CLEO2012_CrystalBarrelFOCUS( const AssociatedDecayT
 {
 }
 CLEO2012_CrystalBarrelFOCUS::CLEO2012_CrystalBarrelFOCUS( const CLEO2012_CrystalBarrelFOCUS& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
+  : ILineshape()
   , CLEO2012_BW_BW(other)
   , _mRho(other._mRho)
   , _GRho(other._GRho)
@@ -127,20 +123,20 @@ std::complex<double> CLEO2012_CrystalBarrelFOCUS::AlbertosFunction(double spipi_
 
 }
 
-std::complex<double> CLEO2012_CrystalBarrelFOCUS::getVal(){
+std::complex<double> CLEO2012_CrystalBarrelFOCUS::getVal(IDalitzEvent& evt){
   resetInternals();
-  return AlbertosFunction(mumsRecoMass2());
-}
-std::complex<double> CLEO2012_CrystalBarrelFOCUS::getValAtResonance(){
-  return AlbertosFunction(pow(mumsPDGMass(),2));
+  setEventPtr(evt);
+  complex<double> returnVal(AlbertosFunction(mumsRecoMass2()));
+  return returnVal;
 }
 
 void CLEO2012_CrystalBarrelFOCUS::print(std::ostream& out) const{
   out << name();
 }
 
-void CLEO2012_CrystalBarrelFOCUS::print(std::ostream& out){
+void CLEO2012_CrystalBarrelFOCUS::print(IDalitzEvent& evt, std::ostream& out){
   out << name();
+  CLEO2012_BW_BW::print(evt, out);
 }
 
 std::ostream& operator<<(std::ostream& out, const CLEO2012_CrystalBarrelFOCUS& amp){

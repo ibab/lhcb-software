@@ -6,7 +6,8 @@
 
 using namespace std;
 
-std::complex<double> GounarisSakurai::getVal() {
+std::complex<double> GounarisSakurai::getVal(IDalitzEvent& evt) {
+  setEventPtr(evt);
   resetInternals();
 
   const std::complex<double> returnVal = Fr_PDG_BL()*sJ()*InvGSDen();

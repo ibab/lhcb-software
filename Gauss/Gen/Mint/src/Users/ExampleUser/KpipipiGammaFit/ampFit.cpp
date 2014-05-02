@@ -77,7 +77,7 @@ public:
 
 
 
-counted_ptr<FitAmpSum> makeGammaFitAmpSum(DalitzEventPattern pat
+counted_ptr<FitAmpSum> makeGammaFitAmpSum(const DalitzEventPattern& pat
 					  , const counted_ptr<AmpRatioB>& ar){
   counted_ptr<FitAmpSum> DSum( new FitAmpSum(pat) );
   //return DSum;
@@ -108,19 +108,18 @@ protected:
   NamedParameter<std::string> _integratorSource;
   std::string _integratorFileName;
 public:
-  double un_normalised_noPs(){
-    if(0 == getEvent()) return 0;
-    double ampSq =  _amps->RealVal();
+  double un_normalised_noPs(IDalitzEvent& evt){
+    double ampSq =  _amps->RealVal(evt);
     return ampSq;// * getEvent()->phaseSpace();
   }
 
-  AmpsPdf( const counted_ptr<FitAmpSum>& amps
-	   , IDalitzEventList* events=0
-	   , double precision=1.e-4
-	   , const std::string& method="efficient"
-	   , const std::string& integFileName="IntegFile.root"
-	   )
-    : DalitzPdfBaseFastInteg(events, 0, amps.get(), precision)
+  AmpsPdf(const DalitzEventPattern& pat
+	  , const counted_ptr<FitAmpSum>& amps
+	  , double precision=1.e-4
+	  , const std::string& method="efficient"
+	  , const std::string& integFileName="IntegFile.root"
+	  )
+    : DalitzPdfBaseFastInteg(pat, 0, amps.get(), precision)
     , _localRnd(0)
     , _sgGen(0)
     , _fileGen(0)
@@ -134,7 +133,7 @@ public:
     if(nonFlat){
       cout << "AmpsPdf uses nonFlat integration." << endl;
       if(generateNew){
-	_sgGen =  new SignalGenerator(_amps);
+	_sgGen =  new SignalGenerator(pat, _amps);
 	_sgGen->setWeighted();
 	_sgGen->setSaveEvents(_integratorFileName);
 	_chosenGen = _sgGen;
@@ -145,7 +144,7 @@ public:
 	// events in the file were generated, we supply a random
 	// number generator with randomised seed.
 	_localRnd = new TRandom3(time(0));
-	_sgGen =  new SignalGenerator(_amps, _localRnd);
+	_sgGen =  new SignalGenerator(pat, _amps, _localRnd);
 	_sgGen->setWeighted();
 	_sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
 	_fileGen   = new FromFileGenerator(_integratorFileName, _sgGen);
@@ -227,7 +226,7 @@ int ampFit(){
 
     bool doWeightTest= false && (0 == j_ex);
     if(doWeightTest){
-      SignalGenerator sgP_generateWeighted(BpAmps.get());
+      SignalGenerator sgP_generateWeighted(pat, BpAmps.get());
       sgP_generateWeighted.setWeighted();
       DalitzEventList sgPWeighted;
       sgP_generateWeighted.FillEventList(sgPWeighted, WeightTestEvents);
@@ -248,14 +247,14 @@ int ampFit(){
     //SignalGenerator sgP(&justBp);
 
     cout << "ex " << j_ex << ") " << "generating " << (int) Nevents << " B+ events" << endl;
-    SignalGenerator sgP(BpAmps.get());
+    SignalGenerator sgP(pat, BpAmps.get());
     sgP.FillEventList(BpEventList, Nevents);
     cout << "ex " << j_ex << ") " << "done Bp." << endl;
     cout << "ex " << j_ex << ") " << "Now I got " << (int) BpEventList.size() << " B+ events" << endl;
     BpEventList.save("BplusEvents.root");
 
     cout << "ex " << j_ex << ") " << "generating " << (int) Nevents << " B- events:" << endl;
-    SignalGenerator sgM(BmAmps.get());
+    SignalGenerator sgM(pat, BmAmps.get());
     sgM.FillEventList(BmEventList, Nevents);
     BmEventList.save("BminusEvents.root");
 
@@ -267,17 +266,17 @@ int ampFit(){
     //DalitzHistoSet datHM = BmEventList.histoSet();
     //datHM.save("plotsFromBmEventList.root");
     
-    AmpsPdf BpPdf(BpAmps, &BpEventList, integPrecision, integMethod
+    AmpsPdf BpPdf(pat, BpAmps, integPrecision, integMethod
 		  , BpIntegFileName);
     BpPdf.setIntegratorFileName("spIntegrator_2");
     
-    Neg2LL<IDalitzEvent> fcnP(&BpPdf, &BpEventList);
+    Neg2LL fcnP(BpPdf, BpEventList);
     
-    AmpsPdf BmPdf(BmAmps, &BmEventList, integPrecision, integMethod
+    AmpsPdf BmPdf(pat, BmAmps, integPrecision, integMethod
 		  , BmIntegFileName);
     BmPdf.setIntegratorFileName("smIntegrator_2");
     
-    Neg2LL<IDalitzEvent> fcnM(&BmPdf, &BmEventList);
+    Neg2LL fcnM(BmPdf, BmEventList);
     
     Neg2LLSum fcn(&fcnP, &fcnM);
     
@@ -301,7 +300,7 @@ int ampFit(){
     BpPdf.saveIntegrator("spIntegrator_2");
     BmPdf.saveIntegrator("smIntegrator_2");
     
-    bool do2DScan= false; (0 == j_ex);
+    bool do2DScan= false;// (0 == j_ex);
     
     if(do2DScan){
       cout << "ex " << j_ex << ") " << "now doing 2D scan:" << endl;

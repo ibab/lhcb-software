@@ -6,9 +6,10 @@
 #include "Mint/MappedDalitzArea.h"
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzCoordinate.h"
-#include "Mint/IGetRealEvent.h"
 #include "Mint/DalitzEventList.h"
 
+#include "Mint/IDalitzEvent.h"
+#include "Mint/IReturnRealForEvent.h"
 
 #include "Mint/counted_ptr.h"
 
@@ -30,7 +31,7 @@ class DalitzBox{
   MappedDalitzArea _area;
 
   DalitzEventPattern _pat;
-  MINT::IGetRealEvent<IDalitzEvent>* _amps;
+  MINT::IReturnRealForEvent<IDalitzEvent>* _amps;
 
   TRandom* _rnd;
   double _height;
@@ -47,8 +48,6 @@ class DalitzBox{
 
   int makeFlatEventsKeepAll(int N);
 
-  bool linkAmpsToEvents();
-  bool unLinkAmps();
   bool estimateHeight(std::vector<double>& vals);
   bool estimateHeight_old(std::vector<double>& vals);
   bool estimateHeightMinuit();
@@ -69,24 +68,24 @@ class DalitzBox{
   void setFlatPhaseSpace(bool flat=true){
     _flatPhaseSpace = flat;
   }
-  double amps(IDalitzEvent* ep=0);
-  double phaseSpace(IDalitzEvent* ep=0);
-  double ampsWithPhaseSpace(IDalitzEvent* ep=0);
+  double amps(IDalitzEvent& ep);
+  double phaseSpace(IDalitzEvent& ep);
+  double ampsWithPhaseSpace(IDalitzEvent& ep);
 
   DalitzBox();
   DalitzBox(const DalitzEventPattern& pat
-	    , MINT::IGetRealEvent<IDalitzEvent>* amps = 0
+	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps = 0
 	    , TRandom* rnd = gRandom
 	    );
   
   DalitzBox(const DalitzEventPattern& pat
 	    , const DalitzCoordinate& limit
-	    , MINT::IGetRealEvent<IDalitzEvent>* amps =0
+	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps =0
 	    , TRandom* rnd = gRandom);
 
   DalitzBox(const DalitzEventPattern& pat
 	    , const std::vector<DalitzCoordinate>& limits
-	    , MINT::IGetRealEvent<IDalitzEvent>* amps =0
+	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps =0
 	    , TRandom* rnd = gRandom);
 
   DalitzBox(const DalitzBox& other);
@@ -116,7 +115,7 @@ class DalitzBox{
   double volume() const;
 
   void setDaddy(const DalitzBox* daddy);
-  bool setAmps(MINT::IGetRealEvent<IDalitzEvent>* amps);
+  bool setAmps(MINT::IReturnRealForEvent<IDalitzEvent>* amps);
 
   bool insideArea(const DalitzEvent& evt) const;
   bool insideDaddysArea(const DalitzEvent& evt) const;

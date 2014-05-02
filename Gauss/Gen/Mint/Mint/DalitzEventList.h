@@ -8,7 +8,7 @@
 #include "Mint/EventList.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/IDalitzEventList.h"
-#include "Mint/IGetDalitzEvent.h"
+#include "Mint/IReturnRealForEvent.h"
 #include "Mint/DalitzEvent.h"
 #include "Mint/DalitzEventPattern.h"
 //#include "Mint/IDalitzEventAccess.h"
@@ -30,7 +30,7 @@ namespace MINT{
 }
 
 class DalitzEventList 
-: public MINT::EventList<IDalitzEvent, DalitzEvent >
+: public MINT::EventList<DalitzEvent>
 {
   static const std::string _className;
  protected:
@@ -51,13 +51,13 @@ class DalitzEventList
 			       );
   int generateEvents(unsigned int NumEvents
 		     , const DalitzEventPattern& pat
-		     , MINT::IGetRealEvent<IDalitzEvent>* amps
+		     , MINT::IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd
 		     );
 
   TH1D* makePlot(const std::vector<int> sij
 		 , const std::string& name
-		 , MINT::IReturnReal* weightFunction=0
+		 , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
 		 , int nbins = 100
 		 , double units = GeV*GeV
 		 , char opt = 's'
@@ -66,21 +66,21 @@ class DalitzEventList
   TH2D* makePlot2D(const std::vector<int> sijIndicesX
 		   ,const std::vector<int> sijIndicesY
 		   , const std::string& name
-		   , MINT::IReturnReal* weightFunction =0
+		   , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction =0
 		   , int nbins =10
 		   , double units = GeV*GeV
 		   , char opt ='s'// = s, m
 		   );
 
   TNtupleD* makePlotNtp(  const std::string& name_prefix="DalitzPlotNtp"
-			  , MINT::IReturnReal* weightFunction =0
+			  , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction =0
 			  , double units = GeV*GeV
 			  );
 
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet() const;
-  DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) ;
-  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) ;
+  DalitzHistoSet reWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w) ;
+  DalitzHistoSet weighedReWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w) ;
 
   bool makePlots(const std::string& filename) const;
 
@@ -93,7 +93,7 @@ class DalitzEventList
 
 
   PlotSet makeAllPlots( const std::string& name_prefix
-			, MINT::IReturnReal* weightFunction=0
+			, MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
 			, int nbins1D = 100
 			, int nbins2D = 10
 			, double units = GeV*GeV

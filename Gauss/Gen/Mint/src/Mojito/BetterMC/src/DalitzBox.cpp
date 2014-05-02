@@ -7,6 +7,7 @@
 #include "Mint/Minimisable.h"
 #include "Mint/MinuitParameterSet.h"
 #include "Mint/FitParameter.h"
+#include "Mint/GeneralisedPareto.h"
 
 #include <iostream>
 #include <ctime>
@@ -46,7 +47,7 @@ public:
     if(db) cout << " evtPtr->print() ";
     if(db)evtPtr->print();
     if(db) cout << " that worked " << endl;
-    double val = _box->ampsWithPhaseSpace(&(*evtPtr));
+    double val = _box->ampsWithPhaseSpace((*evtPtr));
     if(db) cout << " got val " << val << endl;
     if(db) cout << " returning " << -val << endl;
     return -val;
@@ -94,7 +95,7 @@ DalitzBox::DalitzBox()
 
 
 DalitzBox::DalitzBox(const DalitzEventPattern& pat
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   :  _max_s0(-1), _max_s1(-1), _max_s2(-1), _max_s3(-1), _max_s4(-1)
   , _maxPhaseSpace(-9999)
@@ -119,7 +120,7 @@ DalitzBox::DalitzBox(const DalitzEventPattern& pat
 
 DalitzBox::DalitzBox(const DalitzEventPattern& pat
 		     , const DalitzCoordinate& limit
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   :  _max_s0(-1), _max_s1(-1), _max_s2(-1), _max_s3(-1), _max_s4(-1)
   , _maxPhaseSpace(-9999)
@@ -144,7 +145,7 @@ DalitzBox::DalitzBox(const DalitzEventPattern& pat
 
 DalitzBox::DalitzBox(const DalitzEventPattern& pat
 		     , const std::vector<DalitzCoordinate>& limits
-		     , IGetRealEvent<IDalitzEvent>* amps
+		     , IReturnRealForEvent<IDalitzEvent>* amps
 		     , TRandom* rnd)
   :  _max_s0(-1), _max_s1(-1), _max_s2(-1), _max_s3(-1), _max_s4(-1)
   , _maxPhaseSpace(-9999)
@@ -194,7 +195,7 @@ DalitzBox::DalitzBox(const DalitzBox& other)
   //  cout << "copying box" << endl;
 }
 
-bool DalitzBox::setAmps(IGetRealEvent<IDalitzEvent>* amps){
+bool DalitzBox::setAmps(IReturnRealForEvent<IDalitzEvent>* amps){
   _ready = false;
   _amps = amps;
   _eventList.clear();
@@ -264,63 +265,32 @@ int DalitzBox::makeFlatEventsKeepAll(int N){
   return _nTries;
 }
 
-double DalitzBox::amps(IDalitzEvent* evt){
+double DalitzBox::amps(IDalitzEvent& evt){
   bool dbThis=false;
 
-  if(bigDebug) return 1;
   if(0 == _amps) return 1;
-  if(0 == evt){
-    return _amps->RealVal(); // value from event list
-  }
-  if(dbThis) cout << "Got event ptr " << evt << endl;
-  if(dbThis) cout << " the event " << endl;
-  if(dbThis) evt->print();
-
-  if(dbThis) cout << "DalitzBox::amps setting event " << evt << endl;
-  _amps->setEvent(evt);
-  if(dbThis) cout << " ..did that, now getting RealVal() " << endl;
-  double val = _amps->RealVal();
-  if(dbThis) cout << ", done that " << val 
-		  << ". Finally resetting evt rec." << endl;
-  _amps->resetEventRecord();
+  if(dbThis) cout << " the event: " << endl;
+  if(dbThis) evt.print();
+  if(dbThis) cout << " ... now getting RealVal() " << endl;
+  double val = _amps->RealVal(evt);
   if(dbThis) cout << "  all done, returning " << val << endl;
   return val;
 }
 
-double DalitzBox::phaseSpace(IDalitzEvent* evt_in){
+double DalitzBox::phaseSpace(IDalitzEvent& evt_in){
   if(_flatPhaseSpace) return 1;
-  if(0 != evt_in) return evt_in->phaseSpace();
-		    
-  if(_eventList.empty()) return 0;
-  IDalitzEvent* evt(_eventList.currentEvent());
-  if(0==evt) return 0;
-  //  cout << " calcualting phase space " << endl;
-  double ph = evt->phaseSpace();
-  //cout << " returning " << ph << endl;
-  return ph;
+  return evt_in.phaseSpace();
 }
 
-double DalitzBox::ampsWithPhaseSpace(IDalitzEvent* evt_in){
+double DalitzBox::ampsWithPhaseSpace(IDalitzEvent& evt_in){
   bool dbThis=false;
-  if(0 == evt_in) return 0;
 
-  if(dbThis)cout << "DalitzBox::ampsWithPhaseSpace called" << endl;
   double a = amps(evt_in);
   if(dbThis) cout << "amps " << a << endl;
   double ps = phaseSpace(evt_in);
   if(dbThis) cout << "ps " << ps << endl;
 
   return a*ps;
-}
-bool DalitzBox::linkAmpsToEvents(){
-  if(0 == _amps) return false;
-  _amps->setEventRecord(&_eventList);
-  return true;
-}
-bool DalitzBox::unLinkAmps(){
-  if(0 == _amps) return false;
-  _amps->resetEventRecord();
-  return true;
 }
 
 bool DalitzBox::estimateHeightMinuit(){
@@ -481,7 +451,7 @@ bool DalitzBox::estimateHeight(std::vector<double>& vals
 
 
     DalitzEvent tmpEvt(*tmpEvtPtr);
-    double val = ampsWithPhaseSpace(&tmpEvt);
+    double val = ampsWithPhaseSpace(tmpEvt);
     vals.push_back(val);
     if(val > max){
       max=val;
@@ -491,7 +461,7 @@ bool DalitzBox::estimateHeight(std::vector<double>& vals
       _max_s3 = tmp_s3;
       _max_s4 = tmp_s4;
     }
-    double p =  phaseSpace(&(tmpEvt));
+    double p =  phaseSpace(tmpEvt);
 
     meanPhaseSpaceSum += p;
     if(p > _maxPhaseSpace){
@@ -570,45 +540,39 @@ bool DalitzBox::estimateHeight_old(std::vector<double>& vals
   vals.clear();
 
   vals.resize(_eventList.size());
-  _eventList.Start();
-
-  linkAmpsToEvents();
 
   double max = -9999;
 
   double maxPhaseSpace = -9999;
 
-  while(_eventList.Next()){// 1st call to next gives 1st event
-     double p = phaseSpace();
+  for(unsigned int i=0; i < _eventList.size(); i++){
+    IDalitzEvent& evt = _eventList[i];
+     double p = evt.phaseSpace();
     if(p > maxPhaseSpace || 0 == counter){
       maxPhaseSpace = p;
     }
-    double d=ampsWithPhaseSpace();
+    double d=ampsWithPhaseSpace(evt);
 
     if(d > max || 0 == counter){
       max=d;
       //      _maxEvent = *(_eventList.getEvent());
     }
-    vals[counter] = d;
-    if(counter < 5 || 0 == counter%(_eventList.size()/20 + 1)){
+    vals[i] = d;
+    if(i < 5 || 0 == i%(_eventList.size()/20 + 1)){
       std::cout << " calculated amps for event " 
-		<< counter 
+		<< i 
 		<< ", its value is " << d
 		<< std::endl;
       double deltaT = difftime(time(0), startTime);
       std::cout << " this took " << deltaT << " s";
       if(deltaT > 0.5){
 	std::cout << "; rate (before throwing away) = " 
-		  << counter/deltaT
+		  << i/deltaT
 		  << " evts/s";
       }
       std::cout << std::endl;
     }
-    counter++;
   };
-
-  cout << " done generating. Unlinking amplitudes." << endl;
-  unLinkAmps();
 
   cout << " max phase space: " << maxPhaseSpace << endl;
 
@@ -775,20 +739,18 @@ int DalitzBox::throwAwayData(const std::vector<double>& vals){
   
   DalitzEventList newList;
 
-  _eventList.Start();
   int rememberSize = _eventList.size();
 
   unsigned int counter=0;
-  _eventList.Start();
 
-  linkAmpsToEvents();
-  while(_eventList.Next()){// 1st call to next gives 1st event
+  for(unsigned int i=0; i < _eventList.size(); i++){
+    IDalitzEvent& evt(_eventList[i]);
 
-    double d=ampsWithPhaseSpace();
+    double d=ampsWithPhaseSpace(evt);
     //    double d = vals[counter]; 
 
     if(_rnd->Rndm()*_height < d){
-      newList.Add( _eventList[counter] );
+      newList.Add( _eventList[i] );
     }
     if(counter < 10 || 0 == counter%(_eventList.size()/20 + 1)){
       std::cout << " remembering amps for event " 
@@ -798,7 +760,6 @@ int DalitzBox::throwAwayData(const std::vector<double>& vals){
     }
     counter++;
   }
-  unLinkAmps();
 
   _eventList = newList;
   std::cout << "now my size has changed to " << _eventList.size()
@@ -820,7 +781,7 @@ int DalitzBox::throwAwayData(const std::vector<double>& vals){
   std::cout << std::endl;
   
   std::cout << " ---------------\n " << std::endl;
-  _eventList.Start();
+
   return _eventList.size();
 }
 
@@ -869,12 +830,8 @@ counted_ptr<DalitzEvent> DalitzBox::tryEventForOwner(){
 double DalitzBox::getEventsPdf(DalitzEvent& evt){
 
   if(0 == _amps || bigDebug) return evt.phaseSpace();
-  
-  _amps->setEvent(&evt);
-  double val = _amps->RealVal() * evt.phaseSpace();
-  _amps->resetEventRecord();
 
-
+  double val = _amps->RealVal(evt) * evt.phaseSpace();
 
   return val;
 }
@@ -925,11 +882,11 @@ counted_ptr<DalitzEvent> DalitzBox::tryWeightedEventForOwner(){
   if(dbThis)cout << " now printing event: "
 		 << *evt
 		 << endl;
-  double val = ampsWithPhaseSpace(&(*evt));
+  double val = ampsWithPhaseSpace(*evt);
   if(dbThis)cout << " val = " << val << ", now setting weight " << endl;
   evt->setWeight(val/_height);
   if(dbThis)cout << " done weight, now generator..." << endl;
-  evt->setGeneratorPdfRelativeToPhaseSpace(amps(&(*evt)));
+  evt->setGeneratorPdfRelativeToPhaseSpace(amps(*evt));
   if(dbThis)cout << " all OK, returning " << evt << endl;
   return evt;
 }

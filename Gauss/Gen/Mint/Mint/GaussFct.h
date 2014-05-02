@@ -3,10 +3,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
 
-#include "Mint/IReturnReal.h"
 
 namespace MINT{
-class GaussFct : virtual public IReturnReal{
+class GaussFct{
  protected:
   double _x;
   double _height;
@@ -26,7 +25,7 @@ class GaussFct : virtual public IReturnReal{
   
   double getVal() const;
   double getIntegral() const;
-  double RealVal(){ return getVal(); }
+  //  double RealVal(){ return getVal(); }
 
   GaussFct(double x_in, double h, double m, double s);
 

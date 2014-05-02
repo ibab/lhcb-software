@@ -20,7 +20,7 @@ double DalitzBWBoxSet::__phaseSpaceFracDefaultValue=0.25;
 // miss out any part of phase space where the (approximate) amplitude
 // model might have some artificial "holes" etc.
 
-DalitzBWBoxSet::DalitzBWBoxSet(IGetRealEvent<IDalitzEvent>* amps, TRandom* r)
+DalitzBWBoxSet::DalitzBWBoxSet(IReturnRealForEvent<IDalitzEvent>* amps, TRandom* r)
   : std::vector<DalitzBWBox>()
   , _maxWeightEstimate(-9999.0)
   , _maxWeightInSample(-9999.0)
@@ -68,9 +68,7 @@ double DalitzBWBoxSet::fullPdf(DalitzEvent& evt){ // (but w/o phase space factor
   bool dbThis=false;
   if(dbThis) cout << "DalitzBWBoxSet::fullPdf called" << endl;
   if(0 == _ampSum) return 0;
-  _ampSum->setEvent(&evt);
-  double returnVal = _ampSum->RealVal();
-  _ampSum->resetEventRecord();
+  double returnVal = _ampSum->RealVal(evt);
   if(dbThis) cout << "DalitzBWBoxSet::fullPdf result: " 
 		  << returnVal << endl;
   return returnVal;
@@ -288,7 +286,7 @@ void DalitzBWBoxSet::findMax(){
     maxEvents=30000;
     maxTries = 2;
   }
-  bool instant=false;
+  bool instant=false; // set true for very fast & very dirty testing jobs etc;
   if(instant){
     maxEvents=5000;
     maxTries = 1;
@@ -349,18 +347,38 @@ void DalitzBWBoxSet::findMax(){
   }
   //  _maxWeightEstimate = 60; // debug only june 2011
 
+  if(dbThis){
+    cout << "DalitzBWBoxSet::findMax(): I have now "
+	 << _eventPtrList.size()
+	 << " events in the eventPtrList." << endl;
+    if( _eventPtrList.size() > 0){
+      cout << "The first one is: " << _eventPtrList[0] << endl;
+    }
+  }
 
-  if(dbThis)_eventPtrList.save("eventListBeforeUnweighting.root");
+  //if(dbThis)_eventPtrList.save("eventListBeforeUnweighting.root");
 
-  ReturnWeight w(&_eventPtrList);
-  _eventPtrList.justThrowAwayData(_maxWeightEstimate, &w);
+  ReturnWeight w;
+  justThrowAwayData(_maxWeightEstimate, &w);
+
+  if(dbThis){
+    cout << "DalitzBWBoxSet::findMax(): AFTER unweighting I have "
+	 << _eventPtrList.size()
+	 << " events in the eventPtrList." << endl;
+    if( _eventPtrList.size() > 0){
+      cout << "The first unweighted event is: " << _eventPtrList[0] << endl;
+    }
+  }
+
+
+
   /*
   _eventPtrList.findMaxAndThrowAwayData(_maxWeightEstimate, &w);
   */
 
   // we've un-weighted them, need to set weight correctly...
   for(unsigned int i=0; i < _eventPtrList.size(); i++){
-    _eventPtrList[i]->setWeight(1);
+    (_eventPtrList[i]).setWeight(1);
   }
 
   cout << "DalitzBWBoxSet::findMax() after throw away I have "
@@ -379,33 +397,30 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
   time_t startTime = time(0);
   if(0 == _eventPtrList.size()) return -9999;
 
-  int counter=0;
   std::vector<double> vals;
   vals.resize(_eventPtrList.size());
   sampleMax=-9999;
-  _eventPtrList.Start();
-  _ampSum->setEventRecord(&_eventPtrList);
+  for(unsigned int i=0; i < _eventPtrList.size(); i++){
+    DalitzEvent& evt(_eventPtrList[i]);
 
-  while(_eventPtrList.Next()){// 1st call to next gives 1st event
-    double w = _eventPtrList.getEvent()->getWeight();
-
+    double w = evt.getWeight();
     double d=w;
 
     if(dbThis) cout << "w = " << w << endl;
 
-    if(d > sampleMax || 0 == counter) sampleMax=d;
-    vals[counter] = d;
+    if(d > sampleMax || 0 == i) sampleMax=d;
+    vals[i] = d;
 
     
     unsigned int printEvery = _eventPtrList.size()/10;
     if(printEvery <=0) printEvery = 5;
-    if(counter <= 2) printEvery=1;
-    else if(counter <= 200) printEvery=100;
+    if(i <= 2) printEvery=1;
+    else if(i <= 200) printEvery=100;
     
-    if(counter < 5 || 0 == counter%(printEvery)){
+    if(i < 5 || 0 == i%(printEvery)){
       std::cout << "DalitzBWBoxSet::findMaxInList() calculated "
 		<< "_ampSum for event " 
-		<< counter 
+		<< i 
 		<< ", its value is " << d
 		<< std::endl;
       double deltaT = difftime(time(0), startTime);
@@ -413,14 +428,12 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
 		<< deltaT << " s";
       if(deltaT > 0){
 	std::cout << "; rate (before throwing away) = " 
-		  << counter/deltaT
+		  << i/deltaT
 		  << " evts/s";
       }
       std::cout << std::endl;
     }
-    counter++;
   };
-  _ampSum->resetEventRecord();
   
   
   double epsilon = 0.2;
@@ -438,6 +451,69 @@ double DalitzBWBoxSet::findMaxInList(double& sampleMax){
  
   return maxValue;
 }
+
+int DalitzBWBoxSet::justThrowAwayData(double maxValue
+				      , IReturnRealForEvent<IDalitzEvent>* amps
+				      ){
+  //  bool dbThis=true;
+  std::cout << "EventPtrList::justThrowAwayData:"
+	    << " before throwing away data, my size is " 
+	    << _eventPtrList.size() << std::endl;
+  
+  time_t startTime = time(0);
+  
+  int rememberSize = _eventPtrList.size();
+  unsigned int counter=0;
+  
+  DalitzEventPtrList newList;
+  
+  for(unsigned int i=0; i < _eventPtrList.size(); i++){
+    double d=amps->RealVal(_eventPtrList[i]);
+    if(_rnd->Rndm()*maxValue < d){
+      newList.Add( _eventPtrList[counter] );
+    }
+    
+    unsigned int printEvery = size()/10;
+    if(printEvery <=0) printEvery = 5;
+    if(counter <= 2) printEvery=1;
+    else if(counter <= 200) printEvery=100;
+    
+    if(counter < 5 || 0 == counter%(printEvery)){
+      std::cout << " amps for event " 
+		<< counter 
+		<< ": " << d
+		<< ".  "  << newList.size() 
+		<< " events passed ";
+      double deltaT = difftime(time(0), startTime);
+      std::cout << ". Took " << deltaT << " s";
+      
+      if(deltaT > 0){
+	std::cout << "; rate (before/after throwing away) = " 
+		  << counter/deltaT
+		  << " / " << newList.size()/deltaT
+		  << " evts/s";	  
+      }
+      std::cout << std::endl;
+    }
+    counter++;
+  };
+  
+  _eventPtrList = newList;
+  std::cout << "now my size has changed to " << _eventPtrList.size()
+	    << std::endl;
+  std::cout << " So the waste factor is ";
+  if(size() > 0) std::cout << rememberSize/_eventPtrList.size();
+  else std::cout << " infinity! - that's big!";
+  std::cout << std::endl;
+  
+  
+  double deltaTFinal = difftime(time(0), startTime);
+  std::cout << " this took " << deltaTFinal/60.0 << " min" << std::endl;
+  
+  return _eventPtrList.size();
+}
+
+
 
 double DalitzBWBoxSet::heightSum() const{
   bool dbThis=false;
@@ -587,8 +663,11 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::makeEventForOwner(int& NTries){
   if(! _ready) getReady();
   if(_maxWeightEstimate < 0) findMax();
   if(dbThis) cout << "makeEventForOwner found max" << endl;
-  if(_eventPtrList.size() > 0) return popEventFromList();
-
+  if(_eventPtrList.size() > 0){
+    if(dbThis) cout << "popping Event" << endl;
+    return popEventFromList();
+  }
+  if(dbThis) cout << "making new event" << endl;
   counted_ptr<DalitzEvent> evtPtr(0);
   
   int counter=0;
@@ -655,7 +734,7 @@ counted_ptr<DalitzEvent> DalitzBWBoxSet::popEventFromList(){
   }
   //  counted_ptr<DalitzEvent> evt(new DalitzEvent(_eventPtrList[_eventPtrList.size()-1]));
   //_eventPtrList.resize(_eventPtrList.size()-1);
-  return _eventPtrList.popLastEvent();
+  return _eventPtrList.popLastEventPtr();
 }
 
 counted_ptr<DalitzEvent> DalitzBWBoxSet::makeWeightedEventForOwner(){

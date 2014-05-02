@@ -1,24 +1,32 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 #include "Mint/AssociatingDecayTree.h"
+#include "Mint/IDalitzEvent.h"
+
 #include <algorithm>
 
 using namespace std;
 using namespace MINT;
 
-bool AssociatingDecayTree::associate() const{
+bool AssociatingDecayTree::associate(const IDalitzEvent& evt) const{
+  return associate(evt.eventPattern());
+}
+bool AssociatingDecayTree::associate(const DalitzEventPattern& pat) const{
   bool success=true;
-  success &= associateFinalStates();
+  success &= associateFinalStates(pat);
   if(! success) return false;
   success &= associateResonances();
-  _prevPattern=getPattern();
+  _prevPattern=pat;
   return success;
 }
 
-bool AssociatingDecayTree::associateFinalStates() const{
+bool AssociatingDecayTree::associateFinalStates(const IDalitzEvent& evt) const{
+  return associateFinalStates(evt.eventPattern());
+}
+bool AssociatingDecayTree::associateFinalStates(const DalitzEventPattern& pat) const{
   //  cout << "associateFinalStates was called " << endl;
-  if(getPattern().empty())return false;
-  vector<int> fs_pat= getPattern().finalStates();
+  if(pat.empty())return false;
+  vector<int> fs_pat= pat.finalStates();
 
   //cout << "got pattern of size " << pat.size() << endl;
   if(fs_pat.empty()) return false;
@@ -77,17 +85,13 @@ std::vector<int> AssociatingDecayTree::addAssociations(AssociatedDecayTree* tree
 }
 
 
-const DalitzEventPattern& AssociatingDecayTree::getPattern() const{
-  if(0 == getEvent()){
-    return DalitzEventPattern::NoPattern;
-  }
-  return getEvent()->eventPattern();
+
+bool AssociatingDecayTree::patternHasChanged(const IDalitzEvent& evt) const{
+  return patternHasChanged(evt.eventPattern());
 }
-
-
-bool AssociatingDecayTree::patternHasChanged() const{
-  if(getPattern().empty()) return false;
-  if(_prevPattern.size() != getPattern().size()){
+bool AssociatingDecayTree::patternHasChanged(const DalitzEventPattern& pat) const{
+  if(pat.empty()) return false;
+  if(_prevPattern.size() != pat.size()){
     std::cout << " returning pattern has changed = true " << std::endl;
     return true;
   }
@@ -95,7 +99,7 @@ bool AssociatingDecayTree::patternHasChanged() const{
   // (this means for D or Dbar to same final state will be treated
   //  as having the same pattern).
   for(unsigned int i=1; i< _prevPattern.size(); i++){
-    if (_prevPattern[i] != getPattern()[i]){
+    if (_prevPattern[i] != pat[i]){
       std::cout << " returning pattern has changed = true " << std::endl;
       return true;
     }
@@ -103,13 +107,19 @@ bool AssociatingDecayTree::patternHasChanged() const{
   return false;
 }
 
-const AssociatedDecayTree* AssociatingDecayTree::getTreePtr() const{
-  if(patternHasChanged()) associate();
+const AssociatedDecayTree* AssociatingDecayTree::getTreePtr(const IDalitzEvent& evt) const{
+  return getTreePtr(evt.eventPattern());
+}
+const AssociatedDecayTree* AssociatingDecayTree::getTreePtr(const DalitzEventPattern& pat) const{
+  if(patternHasChanged(pat)) associate(pat);
   return & _theDecay;
 }
 
-const AssociatedDecayTree& AssociatingDecayTree::getTree() const{
-  if(patternHasChanged()) associate();
+const AssociatedDecayTree& AssociatingDecayTree::getTree(const IDalitzEvent& evt) const{
+  return getTree(evt.eventPattern());
+}
+const AssociatedDecayTree& AssociatingDecayTree::getTree(const DalitzEventPattern& pat) const{
+  if(patternHasChanged(pat)) associate(pat);
   return _theDecay;
 }
 

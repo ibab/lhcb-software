@@ -16,7 +16,7 @@ using namespace MINT;
   Still, the code here is good for x-checks.
  */
 DalitzMCIntegrator::DalitzMCIntegrator( const DalitzEventPattern& pattern
-					, IGetRealEvent<IDalitzEvent>* weightFunction
+					, IReturnRealForEvent<IDalitzEvent>* weightFunction
 					, IEventGenerator<IDalitzEvent> * generator
 					, TRandom* rnd
 					, double precision
@@ -26,7 +26,7 @@ DalitzMCIntegrator::DalitzMCIntegrator( const DalitzEventPattern& pattern
   , _numEvents(0)
   , _weightSum(0)
   , _initialised(0)
-  , _iw(&_events, weightFunction)
+  , _iw(weightFunction)
 {
   initialise(pattern, weightFunction, generator, rnd, precision);
 }
@@ -36,12 +36,12 @@ DalitzMCIntegrator::DalitzMCIntegrator()
   , _numEvents(0)
   , _weightSum(0)
   , _initialised(0)
-  , _iw(&_events, 0)
+  , _iw(0)
 {
 }
 
 bool DalitzMCIntegrator::initialise(const DalitzEventPattern& pattern
-				    , IGetRealEvent<IDalitzEvent>* weightFunction
+				    , IReturnRealForEvent<IDalitzEvent>* weightFunction
 				    , IEventGenerator<IDalitzEvent> * generator
 				    , TRandom* rnd
 				    , double precision
@@ -53,8 +53,6 @@ bool DalitzMCIntegrator::initialise(const DalitzEventPattern& pattern
   
   _generator = generator;
 
-
-  _iw.setEventRecord(&_events);
   _iw.setWeight(weightFunction);
 
   _initialised = true;
@@ -64,7 +62,7 @@ bool DalitzMCIntegrator::initialise(const DalitzEventPattern& pattern
 
   return _initialised;
 }
-bool DalitzMCIntegrator::resetIntegrand(IGetRealEvent<IDalitzEvent>* 
+bool DalitzMCIntegrator::resetIntegrand(IReturnRealForEvent<IDalitzEvent>* 
 					weightFunction
 					){
   _w   = weightFunction;
@@ -138,30 +136,22 @@ double DalitzMCIntegrator::evaluateSum(){
   double sum   = 0;
   double sumsq = 0;
   _weightSum = 0;
-  int N = 0;
+  unsigned int N = 0;
   int printEveryNEvents = (_events.size()/4);
   if(printEveryNEvents < 1) printEveryNEvents = 1;
 
   time_t tstart = time(0);
 
-  cout << " event record before set: "
-       << _w->getEventRecord() << endl;
-
-  _w->setEventRecord(&_events); // << this must be followed ...
-  _iw.setEventRecord(&_events); // << this must be followed ...
-
-  _events.Start();
-  while(_events.Next()){
-    N++;
-    IDalitzEvent* thisEvt =  _events.getEvent();
-    double ps = thisEvt->phaseSpace();
+  for(N=0; N < _events.size(); N++){
+    DalitzEvent thisEvt(_events[N]);
+    double ps = thisEvt.phaseSpace();
     if(ps <= 0.0){
       cout << "WARNING in DalitzMCIntegrator::evaluateSum()"
 	   << " event with phase space = " << ps << endl;
       continue; // should not happen.
     }
-    double weight =  thisEvt->getWeight() / thisEvt->getGeneratorPdfRelativeToPhaseSpace();
-    double val = _iw.RealVal(); // _w->RealVal() * weight;
+    double weight =  thisEvt.getWeight() / thisEvt.getGeneratorPdfRelativeToPhaseSpace();
+    double val = _iw.RealVal(thisEvt); // _w->RealVal() * weight;
 
     sum   += val;
     sumsq += val*val;
@@ -170,14 +160,13 @@ double DalitzMCIntegrator::evaluateSum(){
 
     if(N%printEveryNEvents == 0){
       cout << "DalitzMCIntegrator::evaluateSum() N = " << N 
-	   << " val = " << val << " _w->RealVal()*weight " << _w->RealVal()*weight << endl;
-      cout << "event pointer = " << _w->getEvent() << endl;
+	   << " val = " << val 
+	   << " _w->RealVal(thisEvt)*weight " << _w->RealVal(thisEvt)*weight 
+	   << endl;
     }
   }
-  _iw.resetEventRecord();      // << ... by this.
-  _w->resetEventRecord();      // << ... by this.
 
-  if(N <= 0) return 0;
+  if(0 == N) return 0;
 
   double fN       = (double) N;
   _mean           = sum   / fN;
@@ -238,28 +227,24 @@ double DalitzMCIntegrator::getVal(){
 void DalitzMCIntegrator::doFinalStats(MINT::Minimiser*){};
 
 DalitzMCIntegrator::
-integrationWeight::integrationWeight(IDalitzEventList* list
-				     , IGetDalitzEvent* externalPdf) 
-  : DalitzEventAccess(list)
-  , _externalPdf(externalPdf)
+integrationWeight::integrationWeight(IReturnRealForEvent<IDalitzEvent>* externalPdf) 
+  : _externalPdf(externalPdf)
 {
   cout << "after construction, externalPdf = " << _externalPdf << endl;
 }
 
 double DalitzMCIntegrator::
-integrationWeight::RealVal(){
-  _externalPdf->setEvent(getEvent());
-  double den    = getEvent()->getGeneratorPdfRelativeToPhaseSpace();
-  double weight = getEvent()->getWeight();
+integrationWeight::RealVal(IDalitzEvent& evt){
+  double den    = evt.getGeneratorPdfRelativeToPhaseSpace();
+  double weight = evt.getWeight();
   if(0 != den) weight /= den;
-  double val = _externalPdf->RealVal() * weight;
-  _externalPdf->resetEventRecord();
+  double val = _externalPdf->RealVal(evt) * weight;
 
   return val;
 }
 
 void  DalitzMCIntegrator::
-integrationWeight::setWeight(IGetDalitzEvent* pdf){
+integrationWeight::setWeight(IReturnRealForEvent<IDalitzEvent>* pdf){
   _externalPdf = pdf;
 }
 

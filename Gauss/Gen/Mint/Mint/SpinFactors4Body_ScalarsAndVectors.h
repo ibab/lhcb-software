@@ -8,6 +8,9 @@
 // Physical Review D, Vol 45, Number 7, page 2196
 // The spin factors are in Table II, page 2201.
 
+#include "Mint/DalitzEventPattern.h"
+#include "Mint/IDalitzEvent.h"
+
 #include "Mint/DecayTree.h"
 #include "Mint/SpinFactor.h"
 #include "Mint/counted_ptr.h"
@@ -19,7 +22,7 @@
 class SF_DtoPP0_PtoSP1_StoP3P4 : public SpinFactorTrivial{ 
   static DecayTree* _exampleDecay;
  public:
-  SF_DtoPP0_PtoSP1_StoP3P4(IDalitzEventAccess* , const DecayTree& )
+  SF_DtoPP0_PtoSP1_StoP3P4(const DecayTree& )
     : SpinFactorTrivial(){}
 
   virtual ~SF_DtoPP0_PtoSP1_StoP3P4(){}
@@ -34,7 +37,7 @@ class SF_DtoPP0_PtoSP1_StoP3P4 : public SpinFactorTrivial{
 class SF_DtoS1S2_S1toP1P2_S2toP3P4 : public SpinFactorTrivial{ 
   static DecayTree* _exampleDecay;
  public:
-  SF_DtoS1S2_S1toP1P2_S2toP3P4(IDalitzEventAccess* , const DecayTree& )
+  SF_DtoS1S2_S1toP1P2_S2toP3P4(const DecayTree& )
     : SpinFactorTrivial(){}
 
   virtual ~SF_DtoS1S2_S1toP1P2_S2toP3P4(){}
@@ -50,7 +53,7 @@ class SF_DtoS1S2_S1toP1P2_S2toP3P4 : public SpinFactorTrivial{
 class SF_DtoPP1P2_PtoP3P4 : public SpinFactorTrivial{ //Laurens wide Ks Spin
   static DecayTree* _exampleDecay;
  public:
-  SF_DtoPP1P2_PtoP3P4(IDalitzEventAccess* , const DecayTree& )
+  SF_DtoPP1P2_PtoP3P4(const DecayTree& )
     : SpinFactorTrivial(){}
 
   virtual ~SF_DtoPP1P2_PtoP3P4(){}
@@ -68,27 +71,22 @@ class SF_DtoPP0_PtoVP1_VtoP2P3 : public SpinFactor{
   static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> P, V;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
   
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoPP0_PtoVP1_VtoP2P3(IDalitzEventAccess* events
-			   , const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoPP0_PtoVP1_VtoP2P3(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , P(0), V(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoPP0_PtoVP1_VtoP2P3";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoPP0_PtoVP1_VtoP2P3(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoPP0_PtoVP1_VtoP2P3(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
   static const DecayTree& getExampleDecay();
@@ -103,27 +101,23 @@ class SF_DtoAP0_AtoVP1_VtoP2P3_BASE : public SpinFactor{
   // static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> A, V;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const=0;
-  SF_DtoAP0_AtoVP1_VtoP2P3_BASE(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoAP0_AtoVP1_VtoP2P3_BASE(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , A(0), V(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoAP0_AtoVP1_VtoP2P3_BASE";
-      }
-      //printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoVP1_VtoP2P3_BASE(){}
-  virtual double getVal()=0;
+  virtual double getVal(IDalitzEvent& evt)=0;
 
   virtual const DecayTree& exampleDecay()=0;
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoAP0_AtoVP1_VtoP2P3_BASE(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
 };
@@ -134,23 +128,19 @@ class SF_DtoAP0_AtoVP1_VtoP2P3 : public SF_DtoAP0_AtoVP1_VtoP2P3_BASE{
   static DecayTree* _exampleDecay;
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoAP0_AtoVP1_VtoP2P3(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SF_DtoAP0_AtoVP1_VtoP2P3_BASE(events, theDecay)
+  SF_DtoAP0_AtoVP1_VtoP2P3(const DecayTree& theDecay) 
+    : SF_DtoAP0_AtoVP1_VtoP2P3_BASE(theDecay)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoAP0_AtoVP1Dwave_VtoP2P3";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoVP1_VtoP2P3(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoAP0_AtoVP1D_VtoP2P3(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
 };
@@ -161,23 +151,19 @@ class SF_DtoAP0_AtoVP1Dwave_VtoP2P3 : public SF_DtoAP0_AtoVP1_VtoP2P3_BASE{
   static DecayTree* _exampleDecayD;
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoAP0_AtoVP1Dwave_VtoP2P3(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SF_DtoAP0_AtoVP1_VtoP2P3_BASE(events, theDecay)
+  SF_DtoAP0_AtoVP1Dwave_VtoP2P3(const DecayTree& theDecay) 
+    : SF_DtoAP0_AtoVP1_VtoP2P3_BASE(theDecay)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoAP0_AtoVP1Dwave_VtoP2P3";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoVP1Dwave_VtoP2P3(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoAP0_AtoVP1Dwave_VtoP2P3(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
 };
@@ -190,28 +176,24 @@ class SF_DtoAP0_AtoSP1_StoP2P3 : public SpinFactor{
   static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> A, S;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoAP0_AtoSP1_StoP2P3(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoAP0_AtoSP1_StoP2P3(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , A(0), S(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoAP0_AtoSP1_StoP2P3";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoAP0_AtoSP1_StoP2P3(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoAP0_AtoSP1_StoP2P3(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
 };
@@ -223,28 +205,23 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE : public SpinFactor{
   //  static DecayTree* _exampleDecayS;
   MINT::const_counted_ptr<AssociatedDecayTree> V1, V2;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const=0;
- SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(IDalitzEventAccess* events
-				   , const DecayTree& theDecay) 
-   : SpinFactor(events, theDecay, 4)
+ SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(const DecayTree& theDecay) 
+   : SpinFactor(theDecay, 4)
     , V1(0), V2(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoV1V2_V1toP0P1_V1toP2P3_S";
-      }
-      //printYourself();
     }
   
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(){}
-  virtual double getVal()=0;
+  virtual double getVal(IDalitzEvent& evt)=0;
 
   virtual const DecayTree& exampleDecay()=0;
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 
 };
@@ -256,21 +233,20 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_S : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
- SF_DtoV1V2_V1toP0P1_V1toP2P3_S(IDalitzEventAccess* events
-				, const DecayTree& theDecay)
-   : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
+ SF_DtoV1V2_V1toP0P1_V1toP2P3_S(const DecayTree& theDecay)
+   : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(theDecay)
     {
 //      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_S(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoV1V2_V1toP0P1_V1toP2P3_S(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 // -----------------------------------------------
@@ -280,21 +256,20 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_P : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoV1V2_V1toP0P1_V1toP2P3_P(IDalitzEventAccess* events
-				 , const DecayTree& theDecay)
-    : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
+  SF_DtoV1V2_V1toP0P1_V1toP2P3_P(const DecayTree& theDecay)
+    : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(theDecay)
     {
 //      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_P(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoV1V2_V1toP0P1_V1toP2P3_P(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 // -----------------------------------------------
@@ -303,21 +278,20 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_D : public SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE{
   static DecayTree* _exampleDecayD;
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoV1V2_V1toP0P1_V1toP2P3_D(IDalitzEventAccess* events
-				 , const DecayTree& theDecay)
-    : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(events, theDecay)
+  SF_DtoV1V2_V1toP0P1_V1toP2P3_D(const DecayTree& theDecay)
+    : SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE(theDecay)
     {
 //      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_D(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoV1V2_V1toP0P1_V1toP2P3_D(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 
@@ -328,29 +302,24 @@ class SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1 : public SpinFactor{
   static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> V2;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(IDalitzEventAccess* events
-					  , const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , V2(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 
@@ -361,28 +330,24 @@ class SF_DtoVS_VtoP0P1_StoP2P3 : public SpinFactor{
   static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> V, S;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoVS_VtoP0P1_StoP2P3(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoVS_VtoP0P1_StoP2P3(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , V(0), S(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoVS_VtoP0P1_StoP2P3";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoVS_VtoP0P1_StoP2P3(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoVS_VtoP0P1_StoP2P3(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 
@@ -393,28 +358,24 @@ class SF_DtoVS_VtoP0P1_StoP2P3_nonResV : public SpinFactor{
   static DecayTree* _exampleDecay;
   MINT::const_counted_ptr<AssociatedDecayTree> S;// *P1, *P2, *P3, *P4;
 
-  virtual bool parseTree();
+  virtual bool parseTree(const DalitzEventPattern& pat);
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
-  SF_DtoVS_VtoP0P1_StoP2P3_nonResV(IDalitzEventAccess* events, const DecayTree& theDecay) 
-    : SpinFactor(events, theDecay, 4)
+  SF_DtoVS_VtoP0P1_StoP2P3_nonResV(const DecayTree& theDecay) 
+    : SpinFactor(theDecay, 4)
     , S(0)
     {
-      if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoVS_VtoP0P1_StoP2P3_nonResV";
-      }
-//      printYourself();
     }
 
   virtual ~SF_DtoVS_VtoP0P1_StoP2P3_nonResV(){}
-  virtual double getVal();
+  virtual double getVal(IDalitzEvent& evt);
 
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
     return "SpinFactor4:SF_DtoVS_VtoP0P1_StoP2P3_nonResV(" 
-      + theDecay().oneLiner() + ")";
+      + theBareDecay().oneLiner() + ")";
   }
 };
 
@@ -426,29 +387,24 @@ protected:
  static DecayTree* _exampleDecay;
  MINT::const_counted_ptr<AssociatedDecayTree> V1, V2;// *P1, *P2, *P3, *P4;
 
- virtual bool parseTree();
+ virtual bool parseTree(const DalitzEventPattern& pat);
 
 public:
  virtual void printYourself(std::ostream& os=std::cout) const;
- SF_DtoV1P0_V1toV2P1_V2toP2P3(IDalitzEventAccess* events
-				 , const DecayTree& theDecay) 
-   : SpinFactor(events, theDecay, 4)
+ SF_DtoV1P0_V1toV2P1_V2toP2P3(const DecayTree& theDecay) 
+   : SpinFactor(theDecay, 4)
    , V1(0), V2(0)
    {
-     if( ! parseTree()){
-	throw "error in parseTree in constructor of SF_DtoV1P0_V1toV2P1_V2toP2P3";
-     }
-//     printYourself();
    }
 
  virtual ~SF_DtoV1P0_V1toV2P1_V2toP2P3(){}
- virtual double getVal();
+ virtual double getVal(IDalitzEvent& evt);
 
  static const DecayTree& getExampleDecay();
  virtual const DecayTree& exampleDecay();
  virtual std::string name() const{
    return "SpinFactor4:SF_DtoV1P0_V1toV2P1_V2toP2P3(" 
-     + theDecay().oneLiner() + ")";
+     + theBareDecay().oneLiner() + ")";
  }
 
 };

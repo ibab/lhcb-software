@@ -19,14 +19,12 @@ using namespace std;
 using namespace MINT;
 
 DalitzHistoSet::DalitzHistoSet() 
-  : _tree(0) 
 {
   makeName();
 }
 
 DalitzHistoSet::DalitzHistoSet(const DalitzHistoSet& other)
   :  std::map< DalitzCoordSet, DalitzHistogram>( other)
-  , _tree(0)
 {
   makeName();
 }
@@ -82,16 +80,15 @@ void DalitzHistoSet::divide(const DalitzHistoSet& hL){
   return;
 }
 
-void DalitzHistoSet::addEvent(const IDalitzEvent* evtPtr, double weight){
-  if(0 == evtPtr) return;
-  int ndgtr(evtPtr->eventPattern().numDaughters());
-  if(this->empty() && ndgtr > 2) makeHistograms(evtPtr->eventPattern());
+void DalitzHistoSet::addEvent(const IDalitzEvent& evt, double weight){
+  int ndgtr(evt.eventPattern().numDaughters());
+  if(this->empty() && ndgtr > 2) makeHistograms(evt.eventPattern());
 
   for(map< DalitzCoordSet, DalitzHistogram>::iterator 
 	it = this->begin();
       it != this->end();
       it++){
-    it->second.addEvent(evtPtr, weight);
+    it->second.addEvent(evt, weight);
   }
   return;
 }

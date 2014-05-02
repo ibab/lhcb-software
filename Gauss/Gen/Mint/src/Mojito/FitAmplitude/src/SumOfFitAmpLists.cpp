@@ -3,31 +3,18 @@
 using namespace std;
 using namespace MINT;
 
-SumOfFitAmpLists::SumOfFitAmpLists(const DalitzEventPattern& pat)
-  : DalitzEventAccess(pat)
-{
-}
-SumOfFitAmpLists::SumOfFitAmpLists(IDalitzEventAccess* eventAccess)
-  : DalitzEventAccess(eventAccess)
-{
-}
-SumOfFitAmpLists::SumOfFitAmpLists(IDalitzEventList* events)
-  : DalitzEventAccess(events)
+SumOfFitAmpLists::SumOfFitAmpLists()
 {
 }
 
 SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>& 
-				   list)
-  : DalitzEventAccess(list->getEventRecord())
-{
+				   list){
   addList(list);
 }
 SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>& 
 				   list_1
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
-				   list_2)
-  : DalitzEventAccess(list_1->getEventRecord())
-{
+				   list_2){
   addList(list_1);
   addList(list_2);
 }
@@ -36,9 +23,7 @@ SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>&
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
 				   list_2
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
-				   list_3)
-  : DalitzEventAccess(list_1->getEventRecord())
-{
+				   list_3){
   addList(list_1);
   addList(list_2);
   addList(list_3);
@@ -50,9 +35,7 @@ SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>&
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
 				   list_3
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
-				   list_4)
-  : DalitzEventAccess(list_1->getEventRecord())
-{
+				   list_4){
   addList(list_1);
   addList(list_2);
   addList(list_3);
@@ -67,9 +50,7 @@ SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>&
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
 				   list_4
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
-				   list_5)
-  : DalitzEventAccess(list_1->getEventRecord())
-{
+				   list_5){
   addList(list_1);
   addList(list_2);
   addList(list_3);
@@ -87,9 +68,7 @@ SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>&
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
 				   list_5
 				   ,const counted_ptr<ILookLikeFitAmpSum>&
-				   list_6)
-  : DalitzEventAccess(list_1->getEventRecord())
-{
+				   list_6){
   addList(list_1);
   addList(list_2);
   addList(list_3);
@@ -100,7 +79,6 @@ SumOfFitAmpLists::SumOfFitAmpLists(const counted_ptr<ILookLikeFitAmpSum>&
 
 void SumOfFitAmpLists::addList(const counted_ptr<ILookLikeFitAmpSum>& 
 			       list){
-  list->setDaddy(this);
   _listOfLists.push_back(list);
 }
 
@@ -123,35 +101,35 @@ SumOfFitAmpLists::makeIntegCalculator(){
   return ptr;
 }
 
-double SumOfFitAmpLists::RealVal(){
+double SumOfFitAmpLists::RealVal(IDalitzEvent& evt){
   double sum=0;
   if(_listOfLists.empty()) return 0;
 
   for(unsigned int i=0; i < _listOfLists.size(); i++){
-    sum += _listOfLists[i]->RealVal();
+    sum += _listOfLists[i]->RealVal(evt);
   }
   return sum;
 }
 
-DalitzBWBoxSet SumOfFitAmpLists::makeBWBoxes(TRandom* rnd){
+DalitzBWBoxSet SumOfFitAmpLists::makeBWBoxes(const DalitzEventPattern& pat, TRandom* rnd){
   if(_listOfLists.empty()){
     DalitzBWBoxSet emptyBoxes;
     return emptyBoxes;
   }
-  DalitzBWBoxSet boxset(_listOfLists[0]->makeBWBoxes(rnd));
+  DalitzBWBoxSet boxset(_listOfLists[0]->makeBWBoxes(pat, rnd));
   if(_listOfLists.size() == 1) return boxset;
 
   for(unsigned int i=1; i < _listOfLists.size(); i++){
-    DalitzBWBoxSet boxes(_listOfLists[i]->makeBWBoxes(rnd));
+    DalitzBWBoxSet boxes(_listOfLists[i]->makeBWBoxes(pat, rnd));
     boxset.add(boxes);
   }
   return boxset;
 }
 
 MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-SumOfFitAmpLists::makeEventGenerator(TRandom* rnd){
+SumOfFitAmpLists::makeEventGenerator(const DalitzEventPattern& pat, TRandom* rnd){
   MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-    ptr(new DalitzBWBoxSet(makeBWBoxes(rnd)));
+    ptr(new DalitzBWBoxSet(makeBWBoxes(pat, rnd)));
   return ptr;
 }
 

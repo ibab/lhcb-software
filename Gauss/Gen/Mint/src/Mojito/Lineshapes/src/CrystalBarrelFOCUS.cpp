@@ -8,9 +8,8 @@
 using namespace std;
 using namespace MINT;
 
-CrystalBarrelFOCUS::CrystalBarrelFOCUS( const AssociatedDecayTree& decay
-					, IDalitzEventAccess* events)
-  : BW_BW(decay, events)
+CrystalBarrelFOCUS::CrystalBarrelFOCUS( const AssociatedDecayTree& decay)
+  : BW_BW(decay)
   , _mRho(-9999.0)
   , _GRho(-9999.0)
   , _mOmega(-9999.0)
@@ -18,10 +17,7 @@ CrystalBarrelFOCUS::CrystalBarrelFOCUS( const AssociatedDecayTree& decay
 {
 }
 CrystalBarrelFOCUS::CrystalBarrelFOCUS( const CrystalBarrelFOCUS& other)
-  : IBasicEventAccess<IDalitzEvent>()
-  , IEventAccess<IDalitzEvent>()
-  , IDalitzEventAccess()
-  , ILineshape()
+  : ILineshape()
   , BW_BW(other)
   , _mRho(other._mRho)
   , _GRho(other._GRho)
@@ -127,20 +123,20 @@ std::complex<double> CrystalBarrelFOCUS::AlbertosFunction(double spipi_in){
 
 }
 
-std::complex<double> CrystalBarrelFOCUS::getVal(){
+std::complex<double> CrystalBarrelFOCUS::getVal(IDalitzEvent& evt){
   resetInternals();
-  return AlbertosFunction(mumsRecoMass2());
-}
-std::complex<double> CrystalBarrelFOCUS::getValAtResonance(){
-  return AlbertosFunction(pow(mumsPDGMass(),2));
+  setEventPtr(evt);
+  std::complex<double> returnVal = AlbertosFunction(mumsRecoMass2());
+  return returnVal;
 }
 
 void CrystalBarrelFOCUS::print(std::ostream& out) const{
   out << name();
 }
 
-void CrystalBarrelFOCUS::print(std::ostream& out){
+void CrystalBarrelFOCUS::print(IDalitzEvent& evt, std::ostream& out){
   out << name();
+  BW_BW::print(evt, out);
 }
 
 std::ostream& operator<<(std::ostream& out, const CrystalBarrelFOCUS& amp){

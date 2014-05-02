@@ -47,7 +47,7 @@ IntegCalculator::clone_IIntegrationCalculator() const{
 
 
 // the rest
-void IntegCalculator::setEfficiency(MINT::counted_ptr<IGetDalitzEvent> eff){
+void IntegCalculator::setEfficiency(MINT::counted_ptr<IReturnRealForEvent<IDalitzEvent> > eff){
   withEff().setEfficiency(eff);
 }
 void IntegCalculator::unsetEfficiency(){

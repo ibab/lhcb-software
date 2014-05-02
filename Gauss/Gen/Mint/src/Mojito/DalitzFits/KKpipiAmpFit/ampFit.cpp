@@ -154,7 +154,7 @@ int ampFit(){
   if(doIntegTest){
     int Ncheck=1000000;
     FitAmpSum fas(pdg);
-    DalitzBWBoxSet boxes(fas.makeBWBoxes());
+    DalitzBWBoxSet boxes(fas.makeBWBoxes(pdg));
     boxes.am_I_generating_what_I_think_I_am_generating(Ncheck);
     boxes.compareGenerationMethodsForFullPDF(Ncheck);
   }
@@ -177,7 +177,7 @@ int ampFit(){
   datH.draw("dataPlots_");
 
   MinuitParameterSet fitMPS;
-  DalitzPdfSaveInteg amps(&eventList, integPrecision
+  DalitzPdfSaveInteg amps(pdg, integPrecision
                           , (std::string) IntegratorInputFile
                           , (std::string) IntegratorEventFile
                           , "topUp"
@@ -186,7 +186,7 @@ int ampFit(){
 
 
 
-  Neg2LL<IDalitzEvent> fcn(&amps, &eventList, &fitMPS);
+  Neg2LL fcn(amps, eventList, &fitMPS);
 
   /*
   DalitzPdfNormChecker nc(&amps, pdg);

@@ -30,10 +30,9 @@ const ParticleProperties* BW_BW_DifferentMother::mumsProperties() const{
 }
 
 BW_BW_DifferentMother::BW_BW_DifferentMother(const AssociatedDecayTree& decay
-					     , IDalitzEventAccess* events
 					     , int newMumID
 					     )
-  : BW_BW(decay, events)
+  : BW_BW(decay)
   , _alternativeMumPDG(newMumID)
 {}
 

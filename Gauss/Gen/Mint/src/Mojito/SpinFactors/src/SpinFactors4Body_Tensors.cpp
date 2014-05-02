@@ -182,18 +182,18 @@ const DecayTree& SF_DtoAP0_AtoTP1_TtoP2P3::exampleDecay(){
 
 //=============================================================
 
-bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(){
+bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_S::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
 
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if(dgtr->getVal().SVPAT() == "V" && ! dgtr->isFinalState()) V = dgtr;
     else if(dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T = dgtr;
   }
@@ -212,7 +212,7 @@ bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(){
   }
   fsPS[0] = V->getDgtrTreePtr(0);
   fsPS[1] = V->getDgtrTreePtr(1);
-  normalOrder(fsPS[0], fsPS[1]);
+  //normalOrder(fsPS[0], fsPS[1]);
 
   if(T->nDgtr() != 2){
     cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree"
@@ -223,23 +223,23 @@ bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(){
   }
   fsPS[2] = T->getDgtrTreePtr(0);
   fsPS[3] = T->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  //normalOrder(fsPS[2], fsPS[3]);
 
   // this->printYourself();
   return true;
 }
 
-double SF_DtoVT_VtoP0P1_TtoP2P3_P::getVal(){
+double SF_DtoVT_VtoP0P1_TtoP2P3_P::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pV = p(0) + p(1);
-  TLorentzVector qV = p(0) - p(1);
-  TLorentzVector pT = p(2) + p(3);
-  TLorentzVector qT = p(2) - p(3);
+  TLorentzVector pV = p(0, evt) + p(1, evt);
+  TLorentzVector qV = p(0, evt) - p(1, evt);
+  TLorentzVector pT = p(2, evt) + p(3, evt);
+  TLorentzVector qT = p(2, evt) - p(3, evt);
   
-  double MV = mRes(V);
-  double MT = mRes(T);
+  double MV = mRes(V, evt);
+  double MT = mRes(T, evt);
   
   ZTspin1 tV(qV, pV, MV);
   ZTspin2 tT(qT, pT, MT);
@@ -264,26 +264,26 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_P::printYourself(ostream& os) const{
      << "\n\t implemented as: (tT.Contract(tV)).Dot(pV) / GeV^4"
      << "\n\t with T1(V) = ZTspin1 tV(qV, pV, MV), T2(T)= ZTspin2 tT(qT, pT, MT);"
      << "\n\t and pV = p(0) + p(1), qV = p(0) - p(1), pT = p(2) + p(3), qT = p(2) - p(3)"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 // -------------------------------------
 
-double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
+double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pV = p(0) + p(1);
-  TLorentzVector qV = p(0) - p(1);
-  TLorentzVector pT = p(2) + p(3);
-  TLorentzVector qT = p(2) - p(3);
+  TLorentzVector pV = p(0, evt) + p(1, evt);
+  TLorentzVector qV = p(0, evt) - p(1, evt);
+  TLorentzVector pT = p(2, evt) + p(3, evt);
+  TLorentzVector qT = p(2, evt) - p(3, evt);
 
   TLorentzVector pD = pT + pV;
   TLorentzVector qD = pT - qV;
   
-  double MV = mRes(V);
-  double MT = mRes(T);
+  double MV = mRes(V, evt);
+  double MT = mRes(T, evt);
   
   ZTspin1 tV(qV, pV, MV);
   ZTspin2 tT(qT, pT, MT);
@@ -298,7 +298,7 @@ double SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal(){
     cout << " SF_DtoVT_VtoP0P1_TtoP2P3_D::getVal "
 	 << " returning " << returnVal
 	 << endl;
-    double checkVal = LeviCivita(p(0), p(1), p(2), p(3))*MV*MT/units;
+    double checkVal = LeviCivita(p(0, evt), p(1, evt), p(2, evt), p(3, evt))*MV*MT/units;
     cout << "cross check: " << checkVal
 	 << " ratio " << checkVal/returnVal << endl;
   }
@@ -316,7 +316,7 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_D::printYourself(ostream& os) const{
      << "\n\t  double returnVal = LeviCivita(tV, vecT, qD, pD) /units;"
      << "\n\t with pV = p(0) + p(1), qV = p(0) - p(1), pT = p(2) + p(3), qT = p(2) - p(3)"
      << "\n\t and  pD = pT + pV, qD = pT - qV;"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
@@ -325,23 +325,23 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_D::printYourself(ostream& os) const{
 // D->TT, various L states
 //-------------------------------------------
 // -----------------------------------------------
-bool SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree(){
+bool SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
 
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if(dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T[i] = dgtr;
     else{
       cout << "ERROR in SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree"
 	   << " expected exactly 2 Tensors, have "
-	   << theDecay().nDgtr();
+	   << theDecay(pat).nDgtr();
       cout << "\n so daughter " << i << " is not a tensor." << endl;
       return false;
     }
@@ -361,7 +361,7 @@ bool SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree(){
   }
   fsPS[0] = T[0]->getDgtrTreePtr(0);
   fsPS[1] = T[0]->getDgtrTreePtr(1);
-  normalOrder(fsPS[0], fsPS[1]);
+  // normalOrder(fsPS[0], fsPS[1]);
 
   if(T[1]->nDgtr() != 2){
     cout << "ERROR in SF_DtoT1T2_T1toP0P1_T2toP2P3_S::parseTree"
@@ -372,23 +372,23 @@ bool SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree(){
   }
   fsPS[2] = T[1]->getDgtrTreePtr(0);
   fsPS[3] = T[1]->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
 
   // this->printYourself();
   return true;
 }
 // ------- same decay, s-wave -----
-double SF_DtoT1T2_T1toP0P1_T2toP2P3_S::getVal(){
+double SF_DtoT1T2_T1toP0P1_T2toP2P3_S::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pT1 = p(0) + p(1);
-  TLorentzVector qT1 = p(0) - p(1);
-  TLorentzVector pT2 = p(2) + p(3);
-  TLorentzVector qT2 = p(2) - p(3);
+  TLorentzVector pT1 = p(0, evt) + p(1, evt);
+  TLorentzVector qT1 = p(0, evt) - p(1, evt);
+  TLorentzVector pT2 = p(2, evt) + p(3, evt);
+  TLorentzVector qT2 = p(2, evt) - p(3, evt);
   
-  double MT1 = mRes(T[0]);
-  double MT2 = mRes(T[1]);
+  double MT1 = mRes(T[0], evt);
+  double MT2 = mRes(T[1], evt);
   
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
@@ -416,25 +416,25 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_S::printYourself(ostream& os) const{
      << "\n\t  ZTspin2 tT2(qT2, pT2, MT2);"
      << "\n\t  return: tT1.Contract_2(tT2) / GeV^8"
      << "\n\t with pT1 = p(0) + p(1), qT = p(0) - p(1), pT2 = p(2) + p(3), qT2 = p(2)-p(3)"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 // ------- same decay, P-wave -----
-double SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getVal(){
+double SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pT1 = p(0) + p(1);
-  TLorentzVector qT1 = p(0) - p(1);
-  TLorentzVector pT2 = p(2) + p(3);
-  TLorentzVector qT2 = p(2) - p(3);
+  TLorentzVector pT1 = p(0, evt) + p(1, evt);
+  TLorentzVector qT1 = p(0, evt) - p(1, evt);
+  TLorentzVector pT2 = p(2, evt) + p(3, evt);
+  TLorentzVector qT2 = p(2, evt) - p(3, evt);
   TLorentzVector pD  = pT1 + pT2;
   TLorentzVector qD  = pT1 + pT2;
   
 
-  double MT1 = mRes(T[0]);
-  double MT2 = mRes(T[1]);
+  double MT1 = mRes(T[0], evt);
+  double MT2 = mRes(T[1], evt);
   
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
@@ -462,23 +462,23 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_P::printYourself(ostream& os) const{
      << "\n\t  qD = pT1 - pT2 "
      << "\n\t  return:  LeviCivita(pD, qD, tT1.Contract_1(tT2))/ GeV^4"
      << "\n\t  with pT1 = p(0) + p(1), qT = p(0) - p(1), pT2 = p(2) + p(3), qT2 = p(2)-p(3)"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 // ------- same decay, D-wave -----
-double SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getVal(){
+double SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pT1 = p(0) + p(1);
-  TLorentzVector qT1 = p(0) - p(1);
-  TLorentzVector pT2 = p(2) + p(3);
-  TLorentzVector qT2 = p(2) - p(3);
+  TLorentzVector pT1 = p(0, evt) + p(1, evt);
+  TLorentzVector qT1 = p(0, evt) - p(1, evt);
+  TLorentzVector pT2 = p(2, evt) + p(3, evt);
+  TLorentzVector qT2 = p(2, evt) - p(3, evt);
   TLorentzVector qD  = pT1 - pT2;
 
-  double MT1 = mRes(T[0]);
-  double MT2 = mRes(T[1]);
+  double MT1 = mRes(T[0], evt);
+  double MT2 = mRes(T[1], evt);
   
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
@@ -508,7 +508,7 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_D::printYourself(ostream& os) const{
      << "\n\t  qD = pT1 - pT2"
      << "\n\t  return: (tT1.Contract(qD))* (tT2.Contract(qD))/ GeV^4"
      << "\n\t  with pT1 = p(0) + p(1), qT = p(0) - p(1), pT2 = p(2) + p(3), qT2 = p(2)-p(3)"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
@@ -516,17 +516,17 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_D::printYourself(ostream& os) const{
 // ------------------------------------------
 // D->TP0, various subesquent decays of the T
 //------------------------------------------------
-bool SF_DtoTP0_TtoVP1_VtoP2P3::parseTree(){
+bool SF_DtoTP0_TtoVP1_VtoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoTP0_TtoVP1_VtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T = dgtr;
   }
@@ -563,25 +563,25 @@ bool SF_DtoTP0_TtoVP1_VtoP2P3::parseTree(){
   }
   fsPS[2] = V->getDgtrTreePtr(0);
   fsPS[3] = V->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ------- note that T->VP1 has to be in D-wave for parity and ang mom ----
-double SF_DtoTP0_TtoVP1_VtoP2P3::getVal(){
+double SF_DtoTP0_TtoVP1_VtoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pV = p(2) + p(3);
-  TLorentzVector qV = p(2) - p(3);
-  TLorentzVector pT = pV + p(1);
-  TLorentzVector qT = pV - p(1);
-  TLorentzVector pD = pT + p(0);
-  TLorentzVector qD = pT - p(0);
+  TLorentzVector pV = p(2, evt) + p(3, evt);
+  TLorentzVector qV = p(2, evt) - p(3, evt);
+  TLorentzVector pT = pV + p(1, evt);
+  TLorentzVector qT = pV - p(1, evt);
+  TLorentzVector pD = pT + p(0, evt);
+  TLorentzVector qD = pT - p(0, evt);
 
-  double MT = mRes(T);
-  double MV = mRes(V);
+  double MT = mRes(T, evt);
+  double MV = mRes(V, evt);
   
   ZTspin2 tT(qT, pT, MT);
   ZTspin1 tV(qV, pV, MV);
@@ -610,22 +610,22 @@ void SF_DtoTP0_TtoVP1_VtoP2P3::printYourself(ostream& os) const{
      << "\n\t  pT = pV + p(1); qT = pV - p(1);"
      << "\n\t  pD = pT + p(0); qD = pT - p(0);"
      << "\n\t  return: DT(tT.Contract(qD))/GeV^6"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 // -----------------------------------------------
-bool SF_DtoT1P0_T1toT2P1_T2toP2P3::parseTree(){
+bool SF_DtoT1P0_T1toT2P1_T2toP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoT1P0_T1toT2P1_T2toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T1 = dgtr;
   }
@@ -662,25 +662,25 @@ bool SF_DtoT1P0_T1toT2P1_T2toP2P3::parseTree(){
   }
   fsPS[2] = T2->getDgtrTreePtr(0);
   fsPS[3] = T2->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ------- note that T->TP1 has to be in P-wave (or F, etc) for parity and ang mom ----
-double SF_DtoT1P0_T1toT2P1_T2toP2P3::getVal(){
+double SF_DtoT1P0_T1toT2P1_T2toP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pT2 = p(2) + p(3);
-  TLorentzVector qT2 = p(2) - p(3);
-  TLorentzVector pT1 = pT2 + p(1);
-  TLorentzVector qT1 = pT2 - p(1);
-  TLorentzVector pD = pT1 + p(0);
-  TLorentzVector qD = pT1 - p(0);
+  TLorentzVector pT2 = p(2, evt) + p(3, evt);
+  TLorentzVector qT2 = p(2, evt) - p(3, evt);
+  TLorentzVector pT1 = pT2 + p(1, evt);
+  TLorentzVector qT1 = pT2 - p(1, evt);
+  TLorentzVector pD = pT1 + p(0, evt);
+  TLorentzVector qD = pT1 - p(0, evt);
 
-  double MT1 = mRes(T1);
-  double MT2 = mRes(T2);
+  double MT1 = mRes(T1 ,evt);
+  double MT2 = mRes(T2, evt);
   
   ZTspin2 tT1(qD, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
@@ -706,11 +706,11 @@ void SF_DtoT1P0_T1toT2P1_T2toP2P3::printYourself(ostream& os) const{
      << "\n\t  ZTspin2 tT1(qT, pT, MT);"
      << "\n\t  ZTspin1 tT2(qV, pV, MV);"
      << "\n\t    TLorentzVector DT(tT1.Contract(qT1));"
-     << "\n\t  pV = p(2) + p(3); qV = p(2) - p(3);"
+     << "\n\t  pV = p(2, evt) + p(3); qV = p(2) - p(3);"
      << "\n\t  pT = pV + p(1); qT = pV - p(1);"
      << "\n\t  pD = pT + p(0); qD = pT - p(0);"
      << "\n\t  return: LeviCivita(pD, DT, tT2)/GeV^6"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
@@ -718,18 +718,18 @@ void SF_DtoT1P0_T1toT2P1_T2toP2P3::printYourself(ostream& os) const{
 // -------------------
 //     D->TS
 // ------------------
-bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
+bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoTS_TtoP0P1_StoP2P3::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
 
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if(dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T = dgtr;
     else if(dgtr->getVal().SVPAT() == "S" && ! dgtr->isFinalState()) S = dgtr;
   }
@@ -748,7 +748,7 @@ bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
   }
   fsPS[0] = T->getDgtrTreePtr(0);
   fsPS[1] = T->getDgtrTreePtr(1);
-  normalOrder(fsPS[0], fsPS[1]);
+  // normalOrder(fsPS[0], fsPS[1]);
 
   if(S->nDgtr() != 2){
     cout << "ERROR in SF_DtoTS_TtoP0P1_StoP2P3::parseTree"
@@ -759,7 +759,7 @@ bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
   }
   fsPS[2] = S->getDgtrTreePtr(0);
   fsPS[3] = S->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
 
   // this->printYourself();
   return true;
@@ -768,16 +768,16 @@ bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
 
 // -----------------------------------------------
 
-double SF_DtoTS_TtoP0P1_StoP2P3::getVal(){
+double SF_DtoTS_TtoP0P1_StoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pT = p(0) + p(1);
-  TLorentzVector qT = p(0) - p(1);
-  TLorentzVector pS = p(2) + p(3);
+  TLorentzVector pT = p(0, evt) + p(1, evt);
+  TLorentzVector qT = p(0, evt) - p(1, evt);
+  TLorentzVector pS = p(2, evt) + p(3, evt);
   TLorentzVector qD = pT - pS;
   
-  double MT = mRes(T);
+  double MT = mRes(T, evt);
   
   ZTspin2 tT(qT, pT, MT);
   
@@ -801,7 +801,7 @@ void SF_DtoTS_TtoP0P1_StoP2P3::printYourself(ostream& os) const{
      << "\n\t  ZTspin2 tT(qT, pT, MT);"
      << "\n\t  return: (tT.Contract(qD)).Dot(qD) / GeV^4"
      << "\n\t with pT = p(0) + p(1), qT = p(0) - p(1), pS = p(2) + p(3), qD = pT - qV;"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
@@ -811,17 +811,17 @@ void SF_DtoTS_TtoP0P1_StoP2P3::printYourself(ostream& os) const{
 // --------------
 
 // -----------------------------------------------
-bool SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::parseTree(){
+bool SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "PT" && ! dgtr->isFinalState()) PT = dgtr;
   }
@@ -858,25 +858,25 @@ bool SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::parseTree(){
   }
   fsPS[2] = V->getDgtrTreePtr(0);
   fsPS[3] = V->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ------- note that pseudoT->VP1 has to be in P-wave for parity and ang mom ----
-double SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getVal(){
+double SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pV = p(2) + p(3);
-  TLorentzVector qV = p(2) - p(3);
-  TLorentzVector pT = pV + p(1);
-  TLorentzVector qT = pV - p(1);
-  TLorentzVector pD = pT + p(0);
-  TLorentzVector qD = pT - p(0);
+  TLorentzVector pV = p(2, evt) + p(3, evt);
+  TLorentzVector qV = p(2, evt) - p(3, evt);
+  TLorentzVector pT = pV + p(1, evt);
+  TLorentzVector qT = pV - p(1, evt);
+  TLorentzVector pD = pT + p(0, evt);
+  TLorentzVector qD = pT - p(0, evt);
 
-  double MT = mRes(PT);
-  double MV = mRes(V);
+  double MT = mRes(PT, evt);
+  double MV = mRes(V, evt);
   
   ZTspin1 tV(qV, pV, MV);
   ZTspin2 tT(qD, pT, MT);
@@ -908,22 +908,22 @@ void SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::printYourself(ostream& os) const{
      << "\n\t  pT = pV + p(1); qT = pV - p(1);"
      << "\n\t  pD = pT + p(0); qD = pT - p(0);"
      << "\n\t  return: ProT.Sandwich(qD, qD, qT, tV) / GeV^4"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 // -----------------------------------------------
-bool SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::parseTree(){
+bool SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "PT" && ! dgtr->isFinalState()) PT = dgtr;
   }
@@ -960,24 +960,24 @@ bool SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::parseTree(){
   }
   fsPS[2] = S->getDgtrTreePtr(0);
   fsPS[3] = S->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ------- note that pseudoT->SP1 has to be in D-wave for parity and ang mom ----
-double SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::getVal(){
+double SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
   
-  TLorentzVector pS = p(2) + p(3);
-  TLorentzVector qS = p(2) - p(3);
-  TLorentzVector pT = pS + p(1);
-  TLorentzVector qT = pS - p(1);
-  TLorentzVector pD = pT + p(0);
-  TLorentzVector qD = pT - p(0);
+  TLorentzVector pS = p(2, evt) + p(3, evt);
+  TLorentzVector qS = p(2, evt) - p(3, evt);
+  TLorentzVector pT = pS + p(1, evt);
+  TLorentzVector qT = pS - p(1, evt);
+  TLorentzVector pD = pT + p(0, evt);
+  TLorentzVector qD = pT - p(0, evt);
 
-  double MT = mRes(PT);
+  double MT = mRes(PT, evt);
   //double MV = mRes(S);
   
   ZTspin2 tT(qT, pT, MT);
@@ -1004,23 +1004,23 @@ void SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::printYourself(ostream& os) const{
      << "\n\t  pT = pV + p(1); qT = pV - p(1);"
      << "\n\t  pD = pT + p(0); qD = pT - p(0);"
      << "\n\t  (tT.Contract(qD)).Dot(qD) / GeV^4"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
 
 // -------------------------------------------
-bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(){
+bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "PT" && ! dgtr->isFinalState()) PT = dgtr;
   }
@@ -1057,27 +1057,27 @@ bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(){
   }
   fsPS[2] = T->getDgtrTreePtr(0);
   fsPS[3] = T->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ------- note that pseudoT->SP1 has to be in D-wave for parity and ang mom ----
-double SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getVal(){
+double SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
 
   double invGeV = 1;// 1.0/GeV;
   
-  TLorentzVector pT = p(2) + p(3);
-  TLorentzVector qT = p(2) - p(3);
-  TLorentzVector pPT = pT + p(1);
-  TLorentzVector qPT = pT - p(1);
-  TLorentzVector pD = pPT + p(0);
-  TLorentzVector qD = pPT - p(0);
+  TLorentzVector pT = p(2, evt) + p(3, evt);
+  TLorentzVector qT = p(2, evt) - p(3, evt);
+  TLorentzVector pPT = pT + p(1, evt);
+  TLorentzVector qPT = pT - p(1, evt);
+  TLorentzVector pD = pPT + p(0, evt);
+  TLorentzVector qD = pPT - p(0, evt);
 
-  double MPT = mRes(PT);
-  double MT = mRes(T);
+  double MPT = mRes(PT, evt);
+  double MT  = mRes(T , evt);
   //double MV = mRes(S);
   
   ZTspin2 tPT(qD*invGeV, pPT*invGeV, MPT*invGeV);
@@ -1109,7 +1109,7 @@ void SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::printYourself(ostream& os) const{
      << "\n\t  pPT = pT + p(1); qPT = pT - p(1);"
      << "\n\t  pD = pPT + p(0); qD = pPT - p(0);"
      << "\n\t  tPT.Contract_2(tT)/ GeV^8"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
@@ -1119,17 +1119,17 @@ void SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::printYourself(ostream& os) const{
 // D->PA, A->TP (ang mom L=1 at each vtx)
 // -----------------------------------------------
 
-bool SF_DtoAP0_AtoTP1_TtoP2P3::parseTree(){
+bool SF_DtoAP0_AtoTP1_TtoP2P3::parseTree(const DalitzEventPattern& pat){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(theDecay().nDgtr() != 2){
+  if(theDecay(pat).nDgtr() != 2){
     cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
-	 << theDecay().nDgtr();
+	 << theDecay(pat).nDgtr();
     return false;
   }
-  for(int i=0; i< theDecay().nDgtr(); i++){
-    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+  for(int i=0; i< theDecay(pat).nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay(pat).getDgtrTreePtr(i);
     if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
     else if(dgtr->getVal().SVPAT() == "A" && ! dgtr->isFinalState()) A = dgtr;
   }
@@ -1166,25 +1166,25 @@ bool SF_DtoAP0_AtoTP1_TtoP2P3::parseTree(){
   }
   fsPS[2] = T->getDgtrTreePtr(0);
   fsPS[3] = T->getDgtrTreePtr(1);
-  normalOrder(fsPS[2], fsPS[3]);
+  // normalOrder(fsPS[2], fsPS[3]);
   
   // this->printYourself();
   return true;
 }
 // ---
-double SF_DtoAP0_AtoTP1_TtoP2P3::getVal(){
+double SF_DtoAP0_AtoTP1_TtoP2P3::getVal(IDalitzEvent& evt){
   bool dbThis=false;
-  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
 
-  TLorentzVector pT = p(2) + p(3);
-  TLorentzVector qT = p(2) - p(3);
-  TLorentzVector pA = pT + p(1);
-  TLorentzVector qA = pT - p(1);
-  //TLorentzVector pD = pPT + p(0);
-  TLorentzVector qD = pA - p(0);
+  TLorentzVector pT = p(2, evt) + p(3, evt);
+  TLorentzVector qT = p(2, evt) - p(3, evt);
+  TLorentzVector pA = pT + p(1, evt);
+  TLorentzVector qA = pT - p(1, evt);
+  //TLorentzVector pD = pPT + p(0, evt);
+  TLorentzVector qD = pA - p(0, evt);
 
-  double MA = mRes(A);
-  double MT = mRes(T);
+  double MA = mRes(A, evt);
+  double MT = mRes(T, evt);
   //double MV = mRes(S);
   
   ZTspin1 tA(qA, pA, MA);
@@ -1212,7 +1212,7 @@ void SF_DtoAP0_AtoTP1_TtoP2P3::printYourself(ostream& os) const{
      << "\n\t  pA = pT + p(1); qA = pT - p(1);"
      << "\n\t  pD = pA + p(0); qD = pA - p(0);"
      << "\n\t  (tT.Contract(tA)).Dot(qD) / GeV^4"
-     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n\t    parsed tree " << theBareDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
