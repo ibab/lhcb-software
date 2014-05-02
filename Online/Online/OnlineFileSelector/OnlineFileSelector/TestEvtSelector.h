@@ -237,7 +237,7 @@ namespace LHCb  {
 	
     virtual std::string genRootName(const std::string& ) const;
 
-    virtual std::string genRootName_FileId(const std::string& ) const;
+    //virtual std::string genRootName_FileId(const std::string& ) const;
 
     
 
@@ -289,7 +289,7 @@ protected:
     /// Last run number.
     mutable int m_prevRun;
     /// Number of .root files belonging to same run. Used for naming the file.
-    mutable int m_fileCnt;
+    //mutable int m_fileCnt;
     
   };
 }
