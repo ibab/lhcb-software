@@ -152,12 +152,12 @@ StatusCode FTRawBankDecoder::RetrieveModuleMat(const int quartSipmNb, const int 
   int intermod = quartSipmNb / 16;
   if((quarter % 2) != 0) // x positive part
   {
-    if (quartSipmNb < 5) locmod = intermod;
+    if (intermod < 5) locmod = intermod;
     else locmod = 10;
   }
   else  // x negative part
   {
-    if (quartSipmNb > 0) locmod = intermod + 4;
+    if (intermod > 0) locmod = intermod + 4;
     else locmod = 11;
   }
   if(locmat > 1)  return StatusCode::FAILURE;
