@@ -63,7 +63,7 @@ void TestEvtSelector::LoopContext::close()    {
 }
 
 TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), m_totalEvt(0), m_runNum(0), m_prevRun(0) , m_fileCnt(1)
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), m_totalEvt(0), m_runNum(0), m_prevRun(0) //, m_fileCnt(1)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
@@ -222,13 +222,13 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
 
   
   if (m_maxNoEvt == m_evtCount) { 
-    m_evtCntRecord = m_evtCount;
+    m_evtCntRecord = m_evtCount; ///why not only m_evtCntRecord??
     bkkeep->updateStatus(m_input,m_evtCntRecord); 
     m_evtCount = 1;
     return goIdle();
   } 
 	
-
+  //2 if : evtHisto<total -> save and go idle --- 2: run1 != run2 : save
   if ((m_EvtHisto <= m_totalEvt) || (m_runNum!=m_prevRun)) { 
         
     m_totalEvt = 0;
@@ -291,12 +291,30 @@ StatusCode TestEvtSelector::goIdle() const {
 
 string TestEvtSelector::genRootName(const string& m_run) const{
 
-	string new_name = "run_"+m_run+".root";
+
+        time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[200];
+	int st = 0;
+	MsgStream log(msgSvc(), name());
+        string new_name;
+
+	time (&rawtime);
+	timeinfo = localtime(&rawtime);
+	st = strftime(buffer,200,"%Y%m%d%H%M%S",timeinfo);
+	if (0 != st) {
+	    string str(buffer);  
+	    new_name = "HltOperPoller-"+m_run+"-"+str + ".root";
+	}
+	else {
+	    log << MSG::INFO << "Something went wrong during naming the histogram...just name it with the run number." << endmsg; 
+	    new_name = "run_"+m_run+".root";
+	}
 	return new_name;
 
 } 
 
-string TestEvtSelector::genRootName_FileId(const string& m_run) const{
+/*string TestEvtSelector::genRootName_FileId(const string& m_run) const{
 
 	
 	stringstream ss;
@@ -307,7 +325,7 @@ string TestEvtSelector::genRootName_FileId(const string& m_run) const{
 
 	return new_name;
 } 
-
+*/
 
 StatusCode TestEvtSelector::saveHistos() const {
 
@@ -352,10 +370,8 @@ StatusCode TestEvtSelector::saveHistos() const {
 		m_RootHistSvc->sysFinalize();
 
 		SmartIF<IProperty> prop(m_RootHistSvc);
-		//GENERATE THE NEW ROOTFILE NAME, initially from run number. 
-    		//If name="...sth..." stop, and save the last root file.Needed?or change according to run num and the last one will close after finalising everything??
-		
-    		if (m_runNum != m_prevRun) { //INCLUDE finalise/initialise+reset() sections????? Check what happens with last .root file
+				
+    		if (m_runNum != m_prevRun) { //Check what happens with last .root file
 			m_prevRun = m_runNum;
 			info () << "Setting new histogram file because of run change:" << m_HistFileName << endmsg;
 			SmartIF<IJobOptionsSvc> joptsvc(serviceLocator()->service("JobOptionsSvc"));
@@ -364,9 +380,9 @@ StatusCode TestEvtSelector::saveHistos() const {
 			StringProperty p2("OutputFile", m_HistFileName);
 		        joptsvc->addPropertyToCatalogue("RootHistSvc", p2).ignore();
 			//initialize .root file counter for the new run
-			m_fileCnt = 1; 
+			//m_fileCnt = 1; 
 		}
-		else { 
+		/*else { 
 			m_HistFileName = genRootName_FileId(m_run);			
 			info () << "Setting new histogram file - no run change:" << m_HistFileName << endmsg;
 			SmartIF<IJobOptionsSvc> joptsvc(serviceLocator()->service("JobOptionsSvc"));
@@ -375,7 +391,7 @@ StatusCode TestEvtSelector::saveHistos() const {
 			StringProperty p2("OutputFile", m_HistFileName);
 		        joptsvc->addPropertyToCatalogue("RootHistSvc", p2).ignore();
 		}
-
+		*/
 
 
 		SmartIF<IService> hist_pers(m_HistPersSvc);
@@ -544,7 +560,7 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
   m_prevRun = m_runNum;
   m_run = bkkeep->getRunFileNumber("/"+m_input,patternR);
   m_runNum = strtol(m_run.c_str(),NULL,10);
-  m_HistFileName = genRootName(m_run);
+  m_HistFileName = genRootName(m_run.erase(m_run.length()-1));
     
   TestEvtSelector::resume();
   
