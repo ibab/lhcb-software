@@ -94,7 +94,7 @@ counted_ptr<IDalitzEvent> SignalGenerator::tryDalitzEvent(){
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
-  bool dbThis=true;
+  bool dbThis=false;
   counted_ptr<IDalitzEvent> evt(0);
   int counter(0);
   int largeNumber(1000000);
