@@ -24,32 +24,33 @@ DECLARE_ALGORITHM_FACTORY( PrSeedingXLayers )
 PrSeedingXLayers::PrSeedingXLayers( const std::string& name,
                                         ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator ),
-  m_hitManager(NULL),
-  m_geoTool(NULL),
-  m_debugTool(NULL),
-  m_timerTool(NULL)
+  m_hitManager(nullptr),
+  m_geoTool(nullptr),
+  m_debugTool(nullptr),
+  m_timerTool(nullptr)
 {
   declareProperty( "InputName",           m_inputName            = LHCb::TrackLocation::Forward );
   declareProperty( "OutputName",          m_outputName           = LHCb::TrackLocation::Seed    );
-  declareProperty( "HitManagerName",      m_hitManagerName       = "PrFTHitManager"  );
-  declareProperty( "MaxChi2InTrack",      m_maxChi2InTrack       = 5.                );
-  declareProperty( "TolXInf",             m_tolXInf              = 0.5 * Gaudi::Units::mm );
-  declareProperty( "TolXSup",             m_tolXSup              = 3.0 * Gaudi::Units::mm );
-  declareProperty( "MinXPlanes",          m_minXPlanes           = 5                      );
-  declareProperty( "MaxChi2PerDoF",       m_maxChi2PerDoF        = 3.0                    );
-  declareProperty( "XOnly",               m_xOnly                = false                  );
-  declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 4                      );
+  declareProperty( "HitManagerName",      m_hitManagerName       = "PrFTHitManager"             );
+  declareProperty( "DecodeData",          m_decodeData           = false                        );
+  declareProperty( "XOnly",               m_xOnly                = false                        );
   
-  declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002           );
-  declareProperty( "TolTySlope",          m_tolTySlope           = 0.02           );
-  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 2500.           );
-  //declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 1000.           );
+  declareProperty( "MaxChi2InTrack",      m_maxChi2InTrack       = 5.5                          );
+  declareProperty( "TolXInf",             m_tolXInf              = 0.5 * Gaudi::Units::mm       );
+  declareProperty( "TolXSup",             m_tolXSup              = 8.0 * Gaudi::Units::mm       );
+  declareProperty( "MinXPlanes",          m_minXPlanes           = 5                            );
+  declareProperty( "MaxChi2PerDoF",       m_maxChi2PerDoF        = 4.0                          );
+  declareProperty( "MaxParabolaSeedHits", m_maxParabolaSeedHits  = 4                            );
+  declareProperty( "TolTyOffset",         m_tolTyOffset          = 0.002                        );
+  declareProperty( "TolTySlope",          m_tolTySlope           = 0.015                        );
+  declareProperty( "MaxIpAtZero",         m_maxIpAtZero          = 5000.                        );
   
-
   // Parameters for debugging
-  declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
-  declareProperty( "WantedKey"         , m_wantedKey      = -100      );
-  declareProperty( "TimingMeasurement" , m_doTiming       = false     );
+  declareProperty( "DebugToolName",       m_debugToolName         = ""                          );
+  declareProperty( "WantedKey",           m_wantedKey             = -100                        );
+  declareProperty( "TimingMeasurement",   m_doTiming              = false                       );
+  declareProperty( "PrintSettings",       m_printSettings         = false                       );
+  
 }
 //=============================================================================
 // Destructor
@@ -87,6 +88,35 @@ StatusCode PrSeedingXLayers::initialize() {
     m_timerTool->decreaseIndent();
   }
 
+  if( m_decodeData ) info() << "Will decode the FT clusters!" << endmsg;
+
+  // -- Print the settings of this algorithm in a readable way
+  if( m_printSettings){
+    
+    info() << "========================================"             << endmsg
+           << " InputName            = " <<  m_inputName             << endmsg
+           << " OutputName           = " <<  m_outputName            << endmsg
+           << " HitManagerName       = " <<  m_hitManagerName        << endmsg
+           << " DecodeData           = " <<  m_decodeData            << endmsg
+           << " XOnly                = " <<  m_xOnly                 << endmsg
+           << " MaxChi2InTrack       = " <<  m_maxChi2InTrack        << endmsg
+           << " TolXInf              = " <<  m_tolXInf               << endmsg
+           << " TolXSup              = " <<  m_tolXSup               << endmsg
+           << " MinXPlanes           = " <<  m_minXPlanes            << endmsg
+           << " MaxChi2PerDoF        = " <<  m_maxChi2PerDoF         << endmsg
+           << " MaxParabolaSeedHits  = " <<  m_maxParabolaSeedHits   << endmsg
+           << " TolTyOffset          = " <<  m_tolTyOffset           << endmsg
+           << " TolTySlope           = " <<  m_tolTySlope            << endmsg
+           << " MaxIpAtZero          = " <<  m_maxIpAtZero           << endmsg
+           << " DebugToolName        = " <<  m_debugToolName         << endmsg
+           << " WantedKey            = " <<  m_wantedKey             << endmsg
+           << " TimingMeasurement    = " <<  m_doTiming              << endmsg
+           << "========================================"             << endmsg;
+  }
+  
+
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -104,7 +134,9 @@ StatusCode PrSeedingXLayers::execute() {
   LHCb::Tracks* result = new LHCb::Tracks();
   put( result, m_outputName );
 
-  // m_hitManager->decodeData();   //=== Should be done only if needed !!!
+  // -- This is only needed if the seeding is the first algorithm using the FT
+  // -- As the Forward normally runs first, it's off per default
+  if( m_decodeData ) m_hitManager->decodeData();   
 
   for ( unsigned int zone = 0; m_hitManager->nbZones() > zone; ++zone ) {
     for ( PrHits::const_iterator itH = m_hitManager->hits( zone ).begin();
@@ -321,7 +353,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
           PrHits::iterator itH = iterators.at( counter );
           
           float xMinStrict = xP - m_tolXSup;
-          PrHit* best = NULL;
+          PrHit* best = nullptr;
 
           for ( ; (*itZ)->hits().end() != itH; ++itH ) {
             
@@ -338,7 +370,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
             best = *itH;
             xCandidate.push_back( best );
           }
-          if ( NULL == best ) {
+          if ( nullptr == best ) {
             nMiss++;
             if ( 1 < nMiss ) break;
           }
@@ -439,7 +471,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
 }
 
 //=========================================================================
-//  
+// Add Stereo hits
 //=========================================================================
 void PrSeedingXLayers::addStereo( unsigned int part ) {
   PrSeedTracks xProjections;
@@ -807,7 +839,7 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         parabolaSeedHits.clear();
         parabolaSeedHits.reserve(5);
         
-        //loop over first two x zones
+        // -- loop over first two x zones
         // --------------------------------------------------------------------------------
         unsigned int counter = 0; 
 
@@ -1095,8 +1127,8 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
       
         (*itH)->setCoord( ((*itH)->x() - xPred) / dxDy  / zPlane );
         
-        if ( 0 == part && (*itH)->coord() < -0.005 ) continue;
-        if ( 1 == part && (*itH)->coord() >  0.005 ) continue;
+        if ( 1 == part && (*itH)->coord() < -0.005 ) continue;
+        if ( 0 == part && (*itH)->coord() >  0.005 ) continue;
 
         myStereo.push_back( *itH );
       }
@@ -1176,7 +1208,7 @@ void PrSeedingXLayers::addStereo2( unsigned int part ) {
 
 
 //=========================================================================
-// Solve parabola
+// Solve parabola using Cramer's rule 
 //========================================================================
 void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c){
   

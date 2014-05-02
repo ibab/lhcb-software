@@ -17,6 +17,25 @@
  *  This code is a hack which represents the code used for the upgrade tracker TDR
  *  It needs to be superseded by a proper implementation!
  *
+ * - InputName: Name of the input container for the forward tracks. Set to '""' to not reuse the FT part of the forward tracks.
+ * - OutputName: Name of the output container
+ * - HitManagerName: Name of the hit manager
+ * - DecodeData: Decode the data (default: false, as normally done in the Forward Tracking)
+ * - XOnly: Only reconstruct tracks with the x-layers?
+ * - MaxChi2InTrack: Max Chi2 value in internal track fit.
+ * - TolXInf: Lower bound for search "road"
+ * - TolXSup: Upper bound for search "road"
+ * - MinXPlanes: Minimum number of x-planes a track needs to have
+ * - MaxChi2PerDoF: Maximum Chi2/nDoF a track can have.
+ * - MaxParabolaSeedHits: Maximum number of hits which are use to construct a parabolic search window.
+ * - TolTyOffset: Tolerance for the offset in y for adding stereo hits.
+ * - TolTySlope: Tolerance for the slope in y for adding stereo hits.
+ * - MaxIpAtZero: Maximum impact parameter of the track when doing a straight extrapolation to zero. Acts as a momentum cut.
+ * - DebugToolName: Name of the debug tool
+ * - WantedKey: Key of the particle which should be studied (for debugging).
+ * - TimingMeasurement: Do timing measurement and print table at the end (?).
+ * - PrintSettings: Print all values of the properties at the beginning?
+ *
  *  @author Olivier Callot
  *  @date   2013-02-14
  *  2013-03-21 : Yasmine Amhis Modification
@@ -37,22 +56,51 @@ public:
  
 
 protected:
+
+  /** @brief Collect hits in the x-layers. Obsolete, just kept for documentation
+   *  @param part lower (1) or upper (0) half
+   */
   void findXProjections( unsigned int part );
 
+  /** @brief Collect hits in the stereo-layers. Obsolete, just kept for documentation
+   *  @param part lower (1) or upper (0) half
+   */
   void addStereo( unsigned int part );
-
+  
+  /** @brief Fit the track with a parabola
+   *  @param track The track to fit
+   *  @return bool Success of the fit
+   */
   bool fitTrack( PrSeedTrack& track );
 
+  /** @brief Remove the hit which gives the largest contribution to the chi2 and refit
+   *  @param track The track to fit
+   *  @return bool Success of the fit
+   */
   bool removeWorstAndRefit( PrSeedTrack& track );
-
+  
+  /** @brief Set the chi2 of the track
+   *  @param track The track to set the chi2 of 
+   */
   void setChi2( PrSeedTrack& track );
 
+  /** @brief Transform the tracks from the internal representation into LHCb::Tracks
+   *  @param tracks The tracks to transform
+   */
   void makeLHCbTracks( LHCb::Tracks* result );
 
+  /** @brief Print some information of the hit in question
+   *  @param hit The hit whose information should be printed
+   *  @param title Some additional information to be printed
+   */
   void printHit( const PrHit* hit, std::string title="" );
 
+  /** @brief Print some information of the track in question
+   *  @param hit The track whose information should be printed
+   */
   void printTrack( PrSeedTrack& track );
 
+  
   bool matchKey( const PrHit* hit ) {
     if ( m_debugTool ) return m_debugTool->matchKey( hit->id(), m_wantedKey );
     return false;
@@ -66,19 +114,28 @@ protected:
     return false;
   };
 
+
+  /** @brief Collect hits in the x-layers using a parabolic search window.
+   *  @param part lower (1) or upper (0) half
+   */
   void findXProjections2( unsigned int part );
   
+  /** @brief Collect hits in the stereo-layers.
+   *  @param part lower (1) or upper (0) half
+   */
   void addStereo2( unsigned int part );
 
+  /** @brief Internal method to construct parabolic parametrisation out of three hits, using Cramer's rule.
+   *  @param hit1 First hit
+   *  @param hit2 Second hit
+   *  @param hit3 Third hit
+   *  @param a quadratic coefficient
+   *  @param b linear coefficient
+   *  @param c offset
+   */
   void solveParabola(const PrHit* hit1, const PrHit* hit2, const PrHit* hit3, float& a, float& b, float& c);
   
-  bool confirmStereo( PrSeedTrack& xTrack, const unsigned int part);
   
-
-
-
-
-
   /// Class to find lower bound of x of PrHit
   class lowerBoundX {
   public:
@@ -121,7 +178,10 @@ private:
   float           m_tolTyOffset;
   float           m_tolTySlope;
   
+  bool            m_decodeData;
+  bool            m_printSettings;
   
+
   PrHitManager*   m_hitManager;
   PrGeometryTool* m_geoTool;
 
