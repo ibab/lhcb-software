@@ -34,7 +34,11 @@ HackRunNrAndGPSSvc::HackRunNrAndGPSSvc( const std::string& name, ISvcLocator* pS
     , m_odinTool{ "ODINDecodeTool", this }
     , m_evtSvc{ nullptr }
     , m_run{ nullptr }
+    , m_dim{ "RunInfo/LHCb1/RunNumber" }
+    , m_runnr{ -1 }
 {
+    declareProperty("RunNumberDimService" , m_dim );
+    declareProperty("FixedRunNumber" , m_runnr );
 }
 
 //=============================================================================
@@ -42,6 +46,7 @@ HackRunNrAndGPSSvc::HackRunNrAndGPSSvc( const std::string& name, ISvcLocator* pS
 //=============================================================================
 StatusCode HackRunNrAndGPSSvc::initialize()
 {
+    always() << "HackRunNrAndGPSSvc::initialize; " << m_dim << " " << m_runnr << endmsg;
     if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
 
     // Tool to decode ODIN object from RawEvent
@@ -86,7 +91,11 @@ StatusCode HackRunNrAndGPSSvc::finalize()
 //=============================================================================
 StatusCode HackRunNrAndGPSSvc::start()
 {
-        // m_run.reset( new RunNumber() );
+        always() << "HackRunNrAndGPSSvc::start; " << m_dim << " " << m_runnr << endmsg;
+        if (!m_dim.empty() && m_runnr <= 0 ) {
+            always() << "Requesting run number from DIM service " << m_dim << endmsg;
+            m_run.reset( new RunNumber(m_dim.c_str()) );
+        }
         return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -148,16 +157,12 @@ void HackRunNrAndGPSSvc::handle( const Incident& /*incident*/ )
         error() << "Too late:  ODIN already decoded into TES..." << endmsg;
     }
     SmartDataPtr<LHCb::RawEvent> event( m_evtSvc, LHCb::RawEventLocation::Default );
-    // DataObject* pDO = nullptr;
-    //  StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
-    //  if ( sc.isSuccess() ) RawEvent *event = (RawEvent*)pDO;
     if ( !event) {
         error() << "No raw event at " <<  LHCb::RawEventLocation::Default  << endmsg;
     } else {
-        unsigned runnr = m_run ? (*m_run)() : 123456789u ;
+        unsigned runnr = m_run ? (*m_run)() : m_runnr ;
         poke( event, runnr );
     }
-
 
     if ( !odin ) { 
         always() << "requesting decode of ODIN raw bank..." << endmsg;
@@ -167,7 +172,6 @@ void HackRunNrAndGPSSvc::handle( const Incident& /*incident*/ )
         error() << " Could not obtain ODIN...  " << endmsg;
     } else {
         always() << " decoded ODIN gives: " <<  odin->runNumber() << " " << odin->eventNumber() << " " << odin->eventTime() << endmsg;
-        always() << (*odin) << endmsg;
     }
 }
 

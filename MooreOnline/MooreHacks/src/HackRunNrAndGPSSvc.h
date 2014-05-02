@@ -37,13 +37,13 @@ class HackRunNrAndGPSSvc : public virtual extends1<Service, IIncidentListener>
     class RunNumber: public DimInfo {
         public:
             // Subscribe to the relevant DIM service
-            RunNumber() : DimInfo("RunInfo/LHCb1/RunNumber", -1) {}
+            RunNumber(const char *d = "RunInfo/LHCb1/RunNumber" ) : DimInfo(d, -1) {}
             int operator()() const { return m_runnr; }
         private:
             int m_runnr = -1;
             void infoHandler() override {
                 m_runnr = getInt();
-                std::cerr << "got new runnr! " << m_runnr << std::endl; 
+                std::cerr << "RunNumbe DimInfo: got new runnr! " << m_runnr << std::endl; 
             }
      };
 
@@ -53,8 +53,10 @@ class HackRunNrAndGPSSvc : public virtual extends1<Service, IIncidentListener>
     void poke( LHCb::RawEvent *event, unsigned runnr ) ;
     void pokeODINRawBank( LHCb::RawBank *bank, unsigned runnr, Gaudi::Time time );
 
-    ToolHandle<IGenericTool> m_odinTool; ///< Pointer to odin encoding tool
-    IDataProviderSvc* m_evtSvc; ///< get Evt Svc to get ODIN (which contains TCK)
+    std::string                m_dim;
+    int                        m_runnr;
+    ToolHandle<IGenericTool>   m_odinTool; ///< Pointer to odin encoding tool
+    IDataProviderSvc*          m_evtSvc; ///< get Evt Svc to get ODIN (which contains TCK)
     std::unique_ptr<RunNumber> m_run;
 };
 #endif
