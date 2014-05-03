@@ -4,6 +4,12 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+! 2014-05-03 - Heinrich Schindler
+ - Replace hardcoded numbers by constants.
+ - Remove unused function trajectory from DeVPSensor.
+ - Change return type of isInActiveArea and pointToChannel 
+   functions from StatusCode to bool  
+
 ! 2014-04-25 - Heinrich Schindler
  - Bugfix from previous commit (need to sort by sensor number not by z!).
  - Follow change in VPChannelID format (r171869).

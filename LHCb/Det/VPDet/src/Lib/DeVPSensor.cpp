@@ -43,9 +43,9 @@ double DeVPSensor::m_pixelSize;
 double DeVPSensor::m_interChipPixelSize;
 
 // local coordinate cache, once for all sensors
-double DeVPSensor::m_local_x[768];
+double DeVPSensor::m_local_x[VP::NSensorColumns];
 // pitch cache, once for all sensors
-double DeVPSensor::m_x_pitch[768];
+double DeVPSensor::m_x_pitch[VP::NSensorColumns];
 // common configuration validity
 bool DeVPSensor::m_common_cache_valid = false;
 
@@ -154,30 +154,15 @@ StatusCode DeVPSensor::initialize() {
 }
 
 //==============================================================================
-// Return a trajectory (for track fit) from pixel + offset
-//==============================================================================
-std::auto_ptr<LHCb::Trajectory> DeVPSensor::trajectory(
-    const LHCb::VPChannelID& channel,
-    const std::pair<double, double> offset) const {
-
-  Gaudi::XYZPoint point = channelToPoint(channel, offset);
-  LHCb::Trajectory* traj = new LHCb::LineTraj(point, point);
-  std::auto_ptr<LHCb::Trajectory> autoTraj(traj);
-  return autoTraj;
-
-}
-
-//==============================================================================
 // Calculate the nearest pixel to a point in the global frame.
 //==============================================================================
-StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
-                                      const bool local,
-                                      LHCb::VPChannelID& channel) const {
+bool DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                const bool local,
+                                LHCb::VPChannelID& channel) const {
 
   Gaudi::XYZPoint localPoint = local ? point : globalToLocal(point);
   // Check if the point is in the active area of the sensor.
-  StatusCode sc = isInActiveArea(localPoint);
-  if (!sc.isSuccess()) return sc;
+  if (!isInActiveArea(localPoint)) return false;
   // Set the sensor number.
   channel.setSensor(m_sensorNumber);
   double x0 = 0.;
@@ -203,21 +188,20 @@ StatusCode DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point,
     }
     x0 += DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist;
   }
-  return StatusCode::SUCCESS;
+  return true;
 
 }
 
 //==============================================================================
 // Calculate the pixel and fraction corresponding to a global point.
 //==============================================================================
-StatusCode DeVPSensor::pointToChannel(
-    const Gaudi::XYZPoint& point, const bool local, LHCb::VPChannelID& channel,
-    std::pair<double, double>& fraction) const {
+bool DeVPSensor::pointToChannel(const Gaudi::XYZPoint& point, 
+                                const bool local, LHCb::VPChannelID& channel,
+                                std::pair<double, double>& fraction) const {
 
   Gaudi::XYZPoint localPoint = local ? point : globalToLocal(point);
   // Check if the point is in the active area of the sensor.
-  StatusCode sc = isInActiveArea(localPoint);
-  if (!sc.isSuccess()) return sc;
+  if (!isInActiveArea(localPoint)) return false;
   fraction.first = 0.;
   fraction.second = 0.;
   // Set the sensor number.
@@ -283,20 +267,18 @@ StatusCode DeVPSensor::pointToChannel(
     }
     x0 += step;
   }
-  return StatusCode::SUCCESS;
+  return true;
 
 }
 
 //==============================================================================
 // Check if a local point is inside the active area of the sensor.
 //==============================================================================
-StatusCode DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
+bool DeVPSensor::isInActiveArea(const Gaudi::XYZPoint& point) const {
 
-  if (point.x() < 0. || point.x() > DeVPSensor::m_sizeX)
-    return StatusCode::FAILURE;
-  if (point.y() < 0. || point.y() > DeVPSensor::m_sizeY)
-    return StatusCode::FAILURE;
-  return StatusCode::SUCCESS;
+  if (point.x() < 0. || point.x() > DeVPSensor::m_sizeX) return false;
+  if (point.y() < 0. || point.y() > DeVPSensor::m_sizeY) return false;
+  return true;
 
 }
 
@@ -334,11 +316,11 @@ bool DeVPSensor::isLong(LHCb::VPChannelID channel) const {
 //==============================================================================
 void DeVPSensor::cacheLocalXAndPitch(void) {
 
-  for (int col = 0; col < 768; ++col) {
+  for (unsigned int col = 0; col < VP::NSensorColumns; ++col) {
     // Calculate the x-coordinate of the pixel centre and the pitch.
     const double x0 =
-        (col / 256) * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
-    double x = x0 + (col % 256 + 0.5) * DeVPSensor::m_pixelSize;
+        (col / VP::NColumns) * (DeVPSensor::m_chipSize + DeVPSensor::m_interChipDist);
+    double x = x0 + (col % VP::NColumns + 0.5) * DeVPSensor::m_pixelSize;
     double pitch = DeVPSensor::m_pixelSize;
     switch (col) {
       case 256:
