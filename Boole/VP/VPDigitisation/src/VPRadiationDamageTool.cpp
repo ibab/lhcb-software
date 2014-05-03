@@ -12,7 +12,7 @@
 DECLARE_TOOL_FACTORY(VPRadiationDamageTool)
 
 //=============================================================================
-/// Standard constructor
+// Standard constructor
 //=============================================================================
 VPRadiationDamageTool::VPRadiationDamageTool(const std::string& type,
                                              const std::string& name,
@@ -25,12 +25,12 @@ VPRadiationDamageTool::VPRadiationDamageTool(const std::string& type,
 }
 
 //=============================================================================
-/// Destructor
+// Destructor
 //=============================================================================
 VPRadiationDamageTool::~VPRadiationDamageTool() {}
 
 //=============================================================================
-/// Initialization
+// Initialization
 //=============================================================================
 StatusCode VPRadiationDamageTool::initialize() {
 
@@ -60,7 +60,7 @@ StatusCode VPRadiationDamageTool::initialize() {
 }
 
 //=========================================================================
-/// Calculate the fluence at a given position in the global frame.
+// Calculate the fluence at a given position in the global frame.
 //=========================================================================
 double VPRadiationDamageTool::fluence(const Gaudi::XYZPoint point, 
                                       const double lint) {
@@ -86,12 +86,12 @@ double VPRadiationDamageTool::fluence(const Gaudi::XYZPoint point,
 }
 
 //=========================================================================
-/// Calculate the CCE for a given fluence and bias.
+// Calculate the CCE for a given fluence and bias.
 //=========================================================================
 double VPRadiationDamageTool::chargeCollectionEfficiency(const double f, 
                                                          const double v) {
 
-  // Collected charge before irradiation (assuming 200 um thickness).
+  // Collected charge in ke- before irradiation (assuming 200 um thickness).
   const double mpvNonIrradiated = 15.;
   const double a = 2.2e4 * pow(f, -0.306);
   const double b = -0.1363 * pow(f, 0.2276) + 191.6;

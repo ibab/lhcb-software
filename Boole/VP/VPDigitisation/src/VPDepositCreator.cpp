@@ -29,15 +29,11 @@
 DECLARE_ALGORITHM_FACTORY(VPDepositCreator)
 
 //=============================================================================
-/// Constructor
+// Constructor
 //=============================================================================
 VPDepositCreator::VPDepositCreator(const std::string& name, 
                                    ISvcLocator* pSvcLocator) : 
-#ifdef DEBUG_HISTO
     GaudiTupleAlg(name, pSvcLocator),
-#else
-    GaudiAlgorithm(name, pSvcLocator),
-#endif
     m_det(NULL), m_radDamageTool(NULL) {
 
   declareProperty("HitLocation",   m_hitLocation = LHCb::MCHitLocation::VP);
@@ -56,28 +52,32 @@ VPDepositCreator::VPDepositCreator(const std::string& name,
   declareProperty("Irradiated", m_irradiated = false);
   declareProperty("DataTaken", m_dataTaken = 0.);
 
+  declareProperty("Monitoring", m_monitoring = false);
+
 }
 
 //=============================================================================
-/// Destructor
+// Destructor
 //=============================================================================
 VPDepositCreator::~VPDepositCreator() {}
 
 //=============================================================================
-/// Initialisation
+// Initialisation
 //=============================================================================
 StatusCode VPDepositCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
-  m_debug = msgLevel(MSG::DEBUG);
-  // Get detector element.
+
+  // Get the detector element.
   m_det = getDet<DeVP>(DeVPLocation::Default);
-  // Get radiation damage tool.
+
+  // Get the radiation damage tool.
   if (m_irradiated) {
     m_radDamageTool = tool<VPRadiationDamageTool>("VPRadiationDamageTool");
   }
-  // Initialize random number generators.
+
+  // Initialize the random number generators.
   sc = m_gauss.initialize(randSvc(), Rndm::Gauss(0.0, 1.0));
   if (!sc) {
     error() << "Cannot initialize Gaussian random number generator." << endmsg;
@@ -88,20 +88,22 @@ StatusCode VPDepositCreator::initialize() {
     error() << "Cannot initialize uniform random number generator." << endmsg;
     return sc;
   }
-  // Calculate diffusion coefficient.
+
+  // Calculate the diffusion coefficient.
   const double kt = m_temperature * Gaudi::Units::k_Boltzmann / Gaudi::Units::eV;
   const double thickness = m_det->sensor(0)->siliconThickness();
-  if (m_irradiated) m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
-  else m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
-#ifdef DEBUG_HISTO
+  if (m_irradiated) {
+    m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
+  } else {
+    m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
+  }
   setHistoTopDir("VP/");
-#endif
   return StatusCode::SUCCESS;
 
 }
 
 //=========================================================================
-///  Main execution
+//  Main execution
 //=========================================================================
 StatusCode VPDepositCreator::execute() {
 
@@ -129,12 +131,14 @@ StatusCode VPDepositCreator::execute() {
 
 
 //============================================================================
-/// Create deposits
+// Create deposits
 //============================================================================
 void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
 
-  // Calculate total number of electrons based on energy deposit from G4.
+  // Calculate the total number of electrons based on the G4 energy deposit.
   const double charge = (hit->energy() / Gaudi::Units::eV) / m_eVPerElectron;
+  // Skip very small deposits.
+  if (charge < 100.) return;
   // Calculate the number of points to distribute the deposited charge on.
   const double path = hit->pathLength();
   unsigned int nPoints = int(ceil(path / m_stepSize));
@@ -151,10 +155,8 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
       sum += q;
     }
   }
-  // Skip very small deposits.
-  if (sum < 1.) return;
   while (charge > sum + m_minChargeTail) {
-    // Add additional charge sampled from 1 / n^2 distribution.
+    // Add additional charge sampled from an 1 / n^2 distribution.
     const double q = randomTail(m_minChargeTail, charge - sum);
     const unsigned int i = int(LHCb::Math::round(m_uniform() * (nPoints - 1)));
     charges[i] += q;
@@ -181,14 +183,15 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
   std::map<LHCb::VPChannelID, double> pixels;
   for (unsigned int i = 0; i < nPoints; ++i) {
     charges[i] *= adjust;
-#ifdef DEBUG_HISTO
-    plot(charges[i], "ChargePerPoint",
-         "Number of electrons per point", 0., 2000., 100);
-#endif
+    if (m_monitoring) {
+      plot(charges[i], "ChargePerPoint",
+           "Number of electrons per point", 0., 2000., 100);
+    }
     // Calculate the distance to the pixel side of the sensor.
-    // Pixel side is always at z = -thickness/2 in local coordinates.
+    // In local coordinates, the pixel side is at z = -thickness/2.
     const double dz = fabs(point.z() + 0.5 * thickness);
     if (m_irradiated) {
+      // Skip points outside the active depth.
       if (dz > activeDepth){
         point += step;
         continue;
@@ -202,7 +205,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
       const double dy = sigmaD * m_gauss();
       Gaudi::XYZPoint endpoint = point + Gaudi::XYZVector(dx, dy, 0.);
       LHCb::VPChannelID channel;
-      StatusCode valid = sensor->pointToChannel(endpoint, true, channel);
+      const bool valid = sensor->pointToChannel(endpoint, true, channel);
       if (valid) {
         if (pixels.find(channel) == pixels.end()) {
           pixels[channel] = q;
@@ -210,15 +213,15 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
           pixels[channel] += q;
         }
       }
-#ifdef DEBUG_HISTO
-      if (valid) {
-        plot2D(endpoint.x(), endpoint.y(), "ActiveSensorArea", 
-               "Active sensor area [mm]", -40.0, 40.0, -40.0, 40.0, 160, 160);
-      } else {
-        plot2D(endpoint.x(), endpoint.y(), "DeadSensorArea", 
-               "Dead sensor area [mm]", -40.0, 40.0, -40.0, 40.0, 160, 160);
+      if (m_monitoring) {
+        if (valid) {
+          plot2D(endpoint.x(), endpoint.y(), "ActiveSensorArea", 
+                 "Active sensor area [mm]", -40.0, 40.0, -40.0, 40.0, 160, 160);
+        } else {
+          plot2D(endpoint.x(), endpoint.y(), "DeadSensorArea", 
+                 "Dead sensor area [mm]", -40.0, 40.0, -40.0, 40.0, 160, 160);
+        }
       }
-#endif
     }
     point += step;
   }
@@ -240,7 +243,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit) {
 }
 
 //=============================================================================
-/// Sample charge from 1 / n^2 distribution.
+// Sample charge from 1 / n^2 distribution.
 //=============================================================================
 double VPDepositCreator::randomTail(const double qmin, const double qmax) {
 

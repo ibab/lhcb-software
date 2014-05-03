@@ -1,6 +1,3 @@
-// STL
-#include <map>
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -10,6 +7,7 @@
 // Event/DigiEvent
 #include "Event/VPDigit.h"
 // Kernel/LHCbKernel
+#include "Kernel/VPConstants.h"
 #include "Kernel/VPDataFunctor.h"
 
 // Local
@@ -26,40 +24,43 @@ using namespace LHCb;
 DECLARE_ALGORITHM_FACTORY(VPDigitCreator)
 
 //=============================================================================
-/// Standard constructor
+// Standard constructor
 //=============================================================================
 VPDigitCreator::VPDigitCreator(const std::string& name, 
                                ISvcLocator* pSvcLocator) :
-#ifdef DEBUG_HISTO
     GaudiTupleAlg(name, pSvcLocator),
-#else
-    GaudiAlgorithm(name, pSvcLocator),
-#endif
-    m_debug(false) {
+    m_nNoisy(0) {
 
+  // Where to pick up the MCVPDigits
   declareProperty("InputLocation",  m_inputLocation =  LHCb::MCVPDigitLocation::Default);
+  // Where to put the VPDigits
   declareProperty("OutputLocation", m_outputLocation = LHCb::VPDigitLocation::Default);
 
   // Discrimination threshold in electrons
   declareProperty("ChargeThreshold", m_threshold = 1000.0);  
-  // Tuning of ToT gain
-  declareProperty("TunedCharge", m_chargeTuning = 15000.); 
-  declareProperty("TunedTOT", m_totTuning = 10.);
+  // Threshold dispersion in electrons
+  declareProperty("ElectronicNoise", m_electronicNoise = 130.0); 
+
+  // Simulate pixel dead time or not
+  declareProperty("DeadTime", m_deadTime = false);  
   // Bunch spacing in ns 
   declareProperty("BunchCrossingSpacing", m_bunchCrossingSpacing = 25.0);
-  // Sampling phase in ns w. r. t. LHC clock (tuned to largest timewalk)
-  declareProperty("ClockPhase", m_clockPhase = 12.0); 
-  // Sampling period of the ToT counter in ns
-  declareProperty("SamplingPeriod", m_samplePeriod = 25.0);
-  // Electronic noise in electrons
-  declareProperty("ElectronicNoise", m_ElectronicNoise = 100.0);  
-  // Include pixel dead time in the simulation or not
-  declareProperty("DeadTime", m_deadTime = false);  
+  // Discharge rate in electrons per ns (used in dead time simulation)
+  declareProperty("DischargeRate", m_dischargeRate = 200.0); 
+
+  // Simulate masked pixels or not
+  declareProperty("MaskedPixels", m_maskedPixels = false);
+  // Simulate noisy pixels or not
+  declareProperty("NoisyPixels", m_noisyPixels = false);
+  // Fraction of masked pixels
+  declareProperty("FractionMasked", m_fractionMasked = 0.0);
+  // Fraction of noisy pixels
+  declareProperty("FractionNoisy", m_fractionNoisy = 0.0);
 
 }
 
 //=============================================================================
-/// Destructor
+// Destructor
 //=============================================================================
 VPDigitCreator::~VPDigitCreator() {}
 
@@ -70,22 +71,27 @@ StatusCode VPDigitCreator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;  
-  m_debug = msgLevel(MSG::DEBUG);
-  if (m_debug) debug() << "==> Initialize" << endmsg;
 
-  // Calculate discharge rate in ns / electron
-  m_discharge = (m_totTuning * m_samplePeriod) / (m_chargeTuning - m_threshold); 
-  
-  if (m_ElectronicNoise > 0.1) {    
-    sc = m_gaussDist.initialize(randSvc(), Rndm::Gauss(0.0, 1.0));
-    if (!sc) {
-      error() << "Random number initialisation failure" << endmsg;
-      return sc;
-    }
+  // Calculate discharge per bunch-crossing.
+  m_dischargeRate *= m_bunchCrossingSpacing;
+
+  // Initialize the random number generators.
+  sc = m_gauss.initialize(randSvc(), Rndm::Gauss(0., 1.));
+  if (!sc) {
+    error() << "Cannot initialize Gaussian random number generator." << endmsg;
+    return sc;
   }
-#ifdef DEBUG_HISTO
+  sc = m_uniform.initialize(randSvc(), Rndm::Flat(0., 1.));
+  if (!sc) {
+    error() << "Cannot initialize uniform random number generator." << endmsg;
+    return sc;
+  }
+  if (m_noisyPixels) {
+    // Calculate the total number of noisy pixels. 
+    m_nNoisy = int(m_fractionNoisy * VP::NSensors * VP::NPixelsPerSensor);
+    if (m_nNoisy < 1) m_noisyPixels = false;
+  }
   setHistoTopDir("VP/");
-#endif
   return StatusCode::SUCCESS;
 
 }
@@ -99,11 +105,11 @@ StatusCode VPDigitCreator::execute() {
     // Update the list of currently inactive pixels.
     std::map<const VPChannelID, double>::iterator itp;
     for (itp = m_deadPixels.begin(); itp != m_deadPixels.end(); ++itp) {
-      m_deadPixels[itp->first] -= m_bunchCrossingSpacing;
-      if (m_debug) {
+      m_deadPixels[itp->first] -= m_dischargeRate;
+      if (msgLevel(MSG::DEBUG)) {
         debug() << (itp->first).channelID() << " " << itp->second << endmsg;
       }
-      if (m_deadPixels[itp->first] <= 0) {
+      if (m_deadPixels[itp->first] < m_threshold) {
         std::map<const VPChannelID, double>::iterator here = itp++;
         m_deadPixels.erase(here);
       }
@@ -124,31 +130,43 @@ StatusCode VPDigitCreator::execute() {
   // Loop over the MC digits.
   LHCb::MCVPDigits::const_iterator it;
   for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
-    // Sum up the charge from all deposits.
+    // Sum up the collected charge from all deposits.
     const std::vector<double>& deposits = (*it)->deposits();
-    double charge = std::accumulate(deposits.begin(), deposits.end(), 0.);
-    // Add electronics noise.
-    if (m_ElectronicNoise > 0.1) {
-      charge += m_ElectronicNoise * m_gaussDist();
-      if (charge < 1.) charge = 1.;
-    }
+    const double charge = std::accumulate(deposits.begin(), deposits.end(), 0.);
+    // Check if the collected charge exceeds the threshold.
+    if (charge < m_threshold + m_electronicNoise * m_gauss()) continue;
     const LHCb::VPChannelID channel = (*it)->channelID();
-    // Calculate time over threshold.
-    const double tot = timeOverThreshold(charge);
-    // Check if pixel is already over threshold.
     if (m_deadTime) {
+      // Check if the pixel is already over threshold.
       if (m_deadPixels.count(channel) == 1) {
-        m_deadPixels[channel] += tot;
+        m_deadPixels[channel] += charge;
         continue;
+      } else {
+        // Add the pixel to the list of dead pixels.
+        m_deadPixels[channel] = charge;
       } 
     }
-    // Skip hits below threshold.
-    if (charge < m_threshold) continue;
-    // Update dead time for this pixel.
-    if (m_deadTime) m_deadPixels[channel] = tot;
-    // Create new digit.
-    LHCb::VPDigit* digit = new LHCb::VPDigit(); 
-    digits->insert(digit, channel);
+    if (m_maskedPixels) {
+      // Draw a random number to choose if this pixel is masked.
+      if (m_uniform() < m_fractionMasked) continue;
+    }
+    // Create a new digit.
+    digits->insert(new LHCb::VPDigit(), channel);
+  }
+
+  if (m_noisyPixels) {
+    // Add additional digits without a corresponding MC digit.
+    for (unsigned int i = 0; i < m_nNoisy; ++i) {
+      // Sample the sensor, chip, column and row of the noise pixel.
+      const int sensor = int(floor(m_uniform() * VP::NSensors));
+      const int chip = int(floor(m_uniform() * VP::NChipsPerSensor));
+      const int col = int(floor(m_uniform() * VP::NColumns));
+      const int row = int(floor(m_uniform() * VP::NRows));
+      LHCb::VPChannelID channel(sensor, chip, col, row);
+      // Make sure the channel has not yet been added to the container.
+      if (digits->object(channel)) continue;
+      digits->insert(new LHCb::VPDigit(), channel);
+    }
   }
 
   // Sort the digits by channel ID.

@@ -1,19 +1,11 @@
 #ifndef VPDIGITCREATOR_H 
 #define VPDIGITCREATOR_H 1
 
-// Activate filling of debugging histograms while the algorithm	runs
-// #define DEBUG_HISTO 
-
 // STL 
-#include <string>
 #include <map>
 
 // Gaudi
-#ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
-#else
-#include "GaudiAlg/GaudiAlgorithm.h"
-#endif
 #include "GaudiKernel/RndmGenerators.h"
 
 // LHCb
@@ -21,17 +13,14 @@
 #include "Event/VPDigit.h"
 
 /** @class VPDigitCreator VPDigitCreator.h
- *  
+ *  Using MCVPDigits as input, this algorithm simulates the response of the 
+ *  VeloPix ASIC and produces a VPDigit for each MCVPDigit above threshold. 
  *
  *  @author Thomas Britton
  *  @date   2010-07-07
  */
 
-#ifdef DEBUG_HISTO
 class VPDigitCreator : public GaudiTupleAlg {
-#else
-class VPDigitCreator : public GaudiAlgorithm {
-#endif
 
 public: 
   /// Standard constructor
@@ -44,40 +33,39 @@ public:
 
 private:
 
+  /// Location of input container (MCVPDigits)
   std::string m_inputLocation;
+  /// Location of output container (VPDigits)
   std::string m_outputLocation;
 
-  // Bunch crossing spacing in ns
-  double m_bunchCrossingSpacing;  
-  // Discrimination threshold in number of electrons
+  /// Discrimination threshold in number of electrons
   double m_threshold;
-    
-  // Calibration constants used during tuning of the front end. X-threshold) electrons = Y ToT
-  double m_chargeTuning;
-  double m_totTuning;
-  double m_discharge;
-  
-  double m_clockPhase;
-  double m_samplePeriod;
+  /// Noise in number of electrons
+  double m_electronicNoise;
 
-  // Gaussian random number generator for noise
-  Rndm::Numbers m_gaussDist;
-  // Noise in electrons (0 = don't simulate)
-  double m_ElectronicNoise;
-
-  // Option to use pixel dead time
+  /// Option to simulate pixel dead time
   bool m_deadTime;
-  // List of dead pixels and time until recovery
+  /// Discharge rate in electrons per ns 
+  double m_dischargeRate;
+  /// Bunch crossing spacing in ns
+  double m_bunchCrossingSpacing;  
+  /// List of dead pixels and remaining charge
   std::map<const LHCb::VPChannelID, double> m_deadPixels; 
 
-  bool m_debug;
+  /// Option to simulate masked pixels
+  bool m_maskedPixels;
+  /// Option to simulate noisy pixels
+  bool m_noisyPixels;
+  /// Fraction of masked pixels
+  double m_fractionMasked;
+  /// Fraction of noisy pixels
+  double m_fractionNoisy;
+  /// Average number of noisy pixels
+  unsigned int m_nNoisy;
 
-  /// Calculate the time (ns) that the pixel stays over threshold, 
-  /// counting from the LHC clock onwards
-  double timeOverThreshold(const double charge) {
-    const double tot = m_clockPhase + (charge - m_threshold) * m_discharge;
-    return tot > 0. ? tot : 0.;
-  }
-  
+  /// Random number generators
+  Rndm::Numbers m_gauss;
+  Rndm::Numbers m_uniform;
+
 };
 #endif // VPDIGITCREATOR_H

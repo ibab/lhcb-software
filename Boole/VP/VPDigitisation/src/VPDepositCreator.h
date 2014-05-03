@@ -1,17 +1,8 @@
 #ifndef VPDEPOSITCREATOR_H
 #define VPDEPOSITCREATOR_H 1
 
-// Activate filling of debugging histograms while the algorithm runs
-// #define DEBUG_HISTO 
-
-// STL
-#include <string>
 // Gaudi
-#ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
-#else
-#include "GaudiAlg/GaudiAlgorithm.h"
-#endif
 #include "GaudiKernel/RndmGenerators.h"
 
 // LHCb
@@ -23,19 +14,17 @@
 
 class DeVP;
 class MCHit;
-class VPChannelID;
 
 /** @class VPDepositCreator VPDepositCreator.h VPDigitisation/VPDepositCreator.h
+ *  Using MCHits as input, this algorithm simulates the spatial ionisation 
+ *  pattern as well as the drift and diffusion of charge carriers in the sensor
+ *  and produces an MCVPDigit for each pixel with a charge deposit.
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
  */
 
-#ifdef DEBUG_HISTO
 class VPDepositCreator : public GaudiTupleAlg {
-#else
-class VPDepositCreator : public GaudiAlgorithm {
-#endif
 
 public:
   /// Standard constructor
@@ -43,10 +32,8 @@ public:
   /// Destructor
   virtual ~VPDepositCreator();
 
-  /// Algorithm initialization
-  virtual StatusCode initialize();
-  /// Algorithm execution
-  virtual StatusCode execute();       
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute();       ///< Algorithm execution
 
 private:
   /// Convert G4 energy deposit to charge deposits on pixels
@@ -54,8 +41,9 @@ private:
   /// Draw random number from 1/q^2 distribution
   double randomTail(const double qmin, const double qmax);
 
-  /// Locations of input and output containers
+  /// Location of input container (MCHits)
   std::string m_hitLocation;
+  /// Location of output container (MCVPDigits)
   std::string m_digitLocation;
 
   /// Detector element
@@ -63,7 +51,7 @@ private:
   /// Radiation damage tool
   VPRadiationDamageTool* m_radDamageTool;
 
-  /// Vector of MC digits
+  /// Container for MCVPDigits
   LHCb::MCVPDigits* m_digits;
 
   /// Distance between points on hit trajectory
@@ -78,8 +66,11 @@ private:
   /// Lower limit of 1/q^2 distribution
   double m_minChargeTail;
 
+  /// Temperature of the sensor [K]
   double m_temperature;
+  /// Applied reverse bias voltage [V] 
   double m_biasVoltage;
+  /// Diffusion coefficient
   double m_diffusionCoefficient; 
 
   /// Flag to simulate radiation damage or not
@@ -90,7 +81,8 @@ private:
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_uniform;
 
-  bool m_debug; 
+  /// Flag to activate monitoring histograms or not
+  bool m_monitoring;
   
 };
 #endif

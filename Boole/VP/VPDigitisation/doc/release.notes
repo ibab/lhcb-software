@@ -3,6 +3,14 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-05-03 - Heinrich Schindler
+ - Improve doxygen documentation and comments
+ - Replace #ifdef DEBUG_HISTOS by configurable option "Monitoring"
+ - Change default value of electronic noise to 130.
+ - Add options to simulate noisy and masked pixels.
+ - CMakeLists.txt: remove dependency on DAQEvent
+ - Follow change in return type of pointToChannel function (r172319).
+
 ! 2014-04-17 - Heinrich Schindler
  - VPDigitCreator: sort digits by channel ID
 
