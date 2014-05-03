@@ -67,10 +67,7 @@ StatusCode VPDigitLinker::execute() {
   for (it = digits->begin(); it != digits->end(); ++it) {
     // Get the MC digit with the same channel ID.
     const MCVPDigit* mcDigit = mcdigits->object((*it)->key());
-    if (!mcDigit) {
-      warning() << "No MC digit with channel ID " << (*it)->key() << endmsg;
-      continue;
-    }
+    if (!mcDigit) continue;
     // Get the MC hits associated to the MC digit and their weights.
     SmartRefVector<MCHit> hits = mcDigit->mcHits();
     const std::vector<double>& deposits = mcDigit->deposits();
