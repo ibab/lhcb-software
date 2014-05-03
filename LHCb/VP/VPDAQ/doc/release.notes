@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2014-05-04 - Heinrich Schindler
+ - Replace hard-coded array size by constants.
+
 ! 2014-04-25 - Heinrich Schindler
  - Follow changes in VPChannelID format (r171869).
 

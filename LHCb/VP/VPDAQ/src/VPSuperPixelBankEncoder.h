@@ -8,6 +8,7 @@
 
 #include "Event/RawEvent.h"
 #include "Event/VPDigit.h"
+#include "Kernel/VPConstants.h"
 
 /** @class VPSuperPixelBankEncoder VPSuperPixelBankEncoder.h
  * Algorithm to create Super Pixel Raw Bank from VP digits.
@@ -80,7 +81,7 @@ class VPSuperPixelBankEncoder : public GaudiAlgorithm {
   /// per sensor buffers of super pixel words
   std::vector<std::vector<unsigned int> > m_spBySensor;
   /// buffer for checking super pixel neighbours
-  unsigned char m_buffer[768 * 256];
+  unsigned char m_buffer[VP::NPixelsPerSensor];
   /// buffer for all non-zero super pixel indices on a sensor
   std::vector<unsigned int> m_idx;
 };
