@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-05-03 - Heinrich Schindler
+ - Add file VPConstants.h.
+
 ! 2014-04-27 - Heinrich Schindler
  - VPChannelID: add decoding to sensor column.
 
