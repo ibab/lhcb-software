@@ -28,9 +28,12 @@ class VPClustering : public GaudiAlgorithm {
 
  private:
 
+  /// Location of input container (VPDigits) 
   std::string m_digitLocation;
+  /// Location of output container (VPClusters)
   std::string m_clusterLocation;
 
+  /// Detector element
   DeVP* m_vpDet;
 
   bool m_debug;

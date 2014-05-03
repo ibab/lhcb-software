@@ -73,7 +73,7 @@ StatusCode VPClustering::execute() {
   LHCb::VPDigits* digits = getIfExists<LHCb::VPDigits>(m_digitLocation);
   if (!digits) {
     error() << "No digits in " << m_digitLocation << endmsg;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   // Create container and transfer ownership to the TES.
   VPClusters* clusters = new VPClusters();
@@ -187,8 +187,7 @@ StatusCode VPClustering::execute() {
     // Get the channel ID and inter-pixel fractions of the barycentre.
     LHCb::VPChannelID id;
     std::pair<double, double> frac;
-    StatusCode sc = vp_sensor->pointToChannel(point, true, id, frac);
-    if (sc == StatusCode::FAILURE) continue;
+    if (!vp_sensor->pointToChannel(point, true, id, frac)) continue;
     // Make sure there isn't already a cluster with the same channel ID.
     if (clusters->object(id)) {
       warning() << "Duplicated channel ID " << id << endmsg;
