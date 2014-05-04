@@ -2,8 +2,7 @@
 #ifndef HLT1MUONHITMANAGER_H
 #define HLT1MUONHITMANAGER_H 1
 
-// boost
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -41,23 +40,23 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
     Hlt1MuonHitManager( const std::string& type, const std::string& name,
                         const IInterface* parent );
 
-    virtual ~Hlt1MuonHitManager();
+    ~Hlt1MuonHitManager() override = default;
 
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
 
-    virtual StatusCode finalize();
+    StatusCode finalize() override;
 
-    virtual void handle( const Incident& incident );
+    void handle( const Incident& incident ) override;
 
-    virtual Hlt1MuonHitRange hits( const double xmin, const unsigned int station,
-                                   const unsigned int region );
+    virtual Hlt1MuonHitRange hits( double xmin, unsigned int station,
+                                   unsigned int region );
 
-    virtual unsigned int nRegions( const unsigned int station ) const;
+    virtual unsigned int nRegions( unsigned int station ) const;
 
-    virtual const Hlt1MuonStation& station( const unsigned int id ) const;
+    virtual const Hlt1MuonStation& station( unsigned int id ) const;
 
-    virtual const Hlt1MuonRegion& region( const unsigned int station,
-                                          const unsigned int region ) const;
+    virtual Hlt1MuonRegion region( unsigned int station,
+                                   unsigned int region ) const;
 
   private:
     // Properties
@@ -66,16 +65,15 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
     // Data members
     DeMuonDetector* m_muonDet;
 
-
     std::vector<Hlt1MuonStation> m_stations;
     std::bitset<5> m_prepared;
 
-    boost::unordered_multimap<unsigned int, const LHCb::MuonCoord*> m_coords;
+    std::unordered_multimap<unsigned int, const LHCb::MuonCoord*> m_coords;
     std::array<unsigned int,5> m_nHits;
     bool m_loaded;
 
     // Functions
-    void prepareHits( const unsigned int station );
+    void prepareHits( unsigned int station );
 
     void loadCoords();
 };

@@ -27,88 +27,85 @@
 using Gaudi::Range_;
 using Gaudi::range;
 using std::vector;
-using std::exception;
 
 //=============================================================================
 Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
-                                  const vector<double>& regions )
-    : m_muonDet{det}
-    , m_z{det->getStationZ( station )}
+                                  vector<double> regions )
+    : m_xboundaries{ std::move(regions) }
+    , m_hits{}
+    , m_index{ nRegionsY * ( m_xboundaries.size()-1) + 1 }
+    , m_z{     det->getStationZ( station )}
+    , m_ymax{  det->getOuterY( station ) }
     , m_station{station}
-    , m_nRegionsX( regions.size() - 1 ) // narrowing : ul -> u 
+
 {
-    m_hits.resize( nRegions() );
-    m_regions.reserve( nRegions() );
-
-    m_ymax = det->getOuterY( station );
-    m_ymin = -m_ymax;
-    m_dy = 2 * m_ymax / nRegionsY;
-
-    for ( unsigned int i = 1; i < regions.size(); ++i ) {
-        for ( unsigned int j = 0; j < nRegionsY; ++j ) {
-            const unsigned int id = ( i - 1 ) * nRegionsY + j;
-            double ymin = m_ymin + j * m_dy;
-            m_regions.emplace_back( id, regions[i - 1], regions[i]
-                                  , ymin, ymin + m_dy );
-        }
-    }
 }
 
 //=============================================================================
 Hlt1MuonStation::~Hlt1MuonStation()
 {
     clearHits();
-    m_hits.clear();
 }
 
 //=============================================================================
 Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 {
-    return {std::find_if( std::begin( m_hits[region] ), std::end( m_hits[region] ),
+    return {std::find_if( m_index[region], m_index[region+1],
                           [=]( const Hlt1MuonHit* hit ) {
                             return ( hit->x() + hit->dx() / 2. ) > xmin;
-            } ),
-            std::end( m_hits[region] )};
+            } ), m_index[region+1] } ;
 }
 
 //=============================================================================
 Hlt1MuonHitRange Hlt1MuonStation::hits( unsigned int region ) const
 {
-    return range( m_hits[region] );
+    return { m_index[region], m_index[region+1] };
 }
 
 //=============================================================================
 void Hlt1MuonStation::clearHits()
 {
-    for ( Hlt1MuonHits& hits : m_hits ) {
-        for ( Hlt1MuonHit* hit : hits ) delete hit;
-        hits.clear();
-    }
+    for ( Hlt1MuonHit* hit : m_hits ) delete hit;
+    m_hits.clear();
 }
 
 //=============================================================================
-void Hlt1MuonStation::addHit( Hlt1MuonHit* hit )
+void Hlt1MuonStation::setHits( Hlt1MuonHits hts )
 {
-    int index = int( ( hit->y() - m_ymin ) / m_dy );
-    try
-    {
-        index += nRegionsY * xRegion( hit->x() );
+    m_hits = std::move(hts);
+
+    //TODO: first get rid of invalid hits ( x < xlow, y<ymin, y>ymax )
+    // m_hits.erase( std::remove_if( std::begin(m_hits), std::end(m_hits), ... ) );
+    auto by_x = [](const Hlt1MuonHit* lhs, const Hlt1MuonHit* rhs) { return lhs->x() < rhs->x(); };
+    auto y_lt_ = [](double ymax) { return [=]( const Hlt1MuonHit *h ) { return h->y() < ymax; }; };
+    auto x_lt_ = [](double xmax) { return [=]( const Hlt1MuonHit *h ) { return h->x() < xmax; }; };
+
+    auto id = std::begin(m_index);
+    *id = std::begin(m_hits);
+    // partition in x
+    for ( auto x = std::begin(m_xboundaries)+1 ; x!=std::end(m_xboundaries); ++x ) { 
+        auto imax = std::partition( *id, std::end(m_hits), x_lt_( *x ) ); 
+        // within each x partition, partition in y
+        for(unsigned j=0;j<nRegionsY;++j ) {
+            *(id+1) = std::partition( *id, imax, y_lt_( ymin()+(j+1)*dy() ) );
+            // within each region, sort by x 
+            std::sort( *id, *(id+1), by_x );
+            ++id; // next region...
+        }
+        assert( *id == imax ); // no invalid hits in y...
     }
-    catch ( const exception& )
-    {
-        return;
+    assert( *id == std::end(m_hits) );
+    assert( std::distance( std::begin(m_index), id ) == m_index.size() );
+
+#if 0
+    for( unsigned i = 0; i< nRegions() ; ++i ) {
+        Hlt1MuonRegion r = region(i);
+        std::cout << "region " << r.id() << " x:[" << r.xmin() << ","<<r.xmax() << " y:["<< r.ymin() <<"," << r.ymax() <<"]\n";
+        for ( const auto& h : hits(i) ) {
+            std::cout << "  ( " << h->x() << ", " << h->y() << " )" ;
+        }
+        std::cout << std::endl;
     }
-    m_hits[index].push_back( hit );
+#endif
 }
 
-//=============================================================================
-inline unsigned int Hlt1MuonStation::xRegion( const double x )
-{
-    // Use the first x region in the regions to test which one we need.
-    unsigned int i = 0;
-    for ( ; i < m_nRegionsX; ++i ) {
-        if ( x < m_regions[nRegionsY * i].xmax() ) return i;
-    }
-    throw std::exception{};
-    return i;
-}

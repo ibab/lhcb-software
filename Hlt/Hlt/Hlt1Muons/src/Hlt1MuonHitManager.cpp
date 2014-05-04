@@ -80,10 +80,6 @@ Hlt1MuonHitManager::Hlt1MuonHitManager( const std::string& type,
     m_prepared.reset();
 }
 
-//=============================================================================
-Hlt1MuonHitManager::~Hlt1MuonHitManager()
-{
-}
 
 //=============================================================================
 StatusCode Hlt1MuonHitManager::initialize()
@@ -136,35 +132,35 @@ void Hlt1MuonHitManager::handle( const Incident& incident )
 }
 
 //=============================================================================
-Hlt1MuonHitRange Hlt1MuonHitManager::hits( const double xmin,
-                                           const unsigned int station,
-                                           const unsigned int region )
+Hlt1MuonHitRange Hlt1MuonHitManager::hits( double xmin,
+                                           unsigned int station,
+                                           unsigned int region )
 {
     if ( !m_prepared[station] ) prepareHits( station );
     return m_stations[station].hits( xmin, region );
 }
 
 //=============================================================================
-unsigned int Hlt1MuonHitManager::nRegions( const unsigned int station ) const
+unsigned int Hlt1MuonHitManager::nRegions( unsigned int station ) const
 {
     return m_stations[station].nRegions();
 }
 
 //=============================================================================
-const Hlt1MuonStation& Hlt1MuonHitManager::station( const unsigned int id ) const
+const Hlt1MuonStation& Hlt1MuonHitManager::station( unsigned int id ) const
 {
     return m_stations[id];
 }
 
 //=============================================================================
-const Hlt1MuonRegion& Hlt1MuonHitManager::region( const unsigned int station,
-                                                  const unsigned int region ) const
+Hlt1MuonRegion Hlt1MuonHitManager::region( unsigned int station,
+                                           unsigned int region ) const
 {
     return m_stations[station].region( region );
 }
 
 //=============================================================================
-void Hlt1MuonHitManager::prepareHits( const unsigned int station )
+void Hlt1MuonHitManager::prepareHits( unsigned int station )
 {
     if ( !m_loaded ) loadCoords();
 
@@ -177,16 +173,10 @@ void Hlt1MuonHitManager::prepareHits( const unsigned int station )
             Warning( "Impossible MuonTileID" );
             continue;
         }
-        hits.push_back( new Hlt1MuonHit{coord->key(), x, dx, y, dy, z, dz} );
+        hits.emplace_back( new Hlt1MuonHit{coord->key(), x, dx, y, dy, z, dz} );
     }
-
-    // Sort the hits
-    std::sort( std::begin( hits ), std::end( hits ),
-               []( const Hlt1MuonHit* lhs,
-                   const Hlt1MuonHit* rhs ) { return lhs->x() < rhs->x(); } );
-
     // Put the hits in the station
-    m_stations[station].setHits( hits ); // transfer ownership
+    m_stations[station].setHits( std::move(hits) ); // transfer ownership
     m_prepared.set(station,true);
 }
 
@@ -198,6 +188,7 @@ void Hlt1MuonHitManager::loadCoords()
         Exception( "Cannot retrieve MuonCoords ", StatusCode::FAILURE );
     }
 
+    // TODO: replace m_coords with a partitioned vector?
     for ( auto coord : *coords ) {
         auto station = coord->key().station();
         m_coords.insert( {station, coord} );

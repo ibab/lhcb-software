@@ -22,31 +22,14 @@
  *  @author Roel Aaij
  *  @date   2010-12-02
  */
-class Candidate
+class Candidate final
 {
   public:
     /// Standard constructor
-    Candidate( const LHCb::Track* track, const Hlt1MuonHits& hits )
-        : m_hits( hits.begin(), hits.end() )
+    Candidate( const LHCb::Track* track, Hlt1ConstMuonHits hits )
+        : m_track(track)
+        , m_hits( std::move(hits) )
     {
-        init( track );
-    }
-
-    Candidate( const LHCb::Track* track, const Hlt1ConstMuonHits& hits )
-        : m_hits( hits )
-    {
-        init( track );
-    }
-
-    Candidate( const LHCb::Track* track )
-    {
-        m_hits.reserve( 5 );
-        init( track );
-    }
-
-    void init( const LHCb::Track* track )
-    {
-        m_track = track;
         const LHCb::State* state = track->stateAt( LHCb::State::EndVelo );
         if ( !state ) state = &( track->closestState( 5000 ) );
         m_x = state->x();
@@ -57,19 +40,18 @@ class Candidate
 
         m_errTx2 = state->errTx2();
         m_errTy2 = state->errTy2();
-
-        m_tx2 = m_tx * m_tx;
-        m_ty2 = m_ty * m_ty;
-
-        m_slope = 0.;
-        m_p = 0.;
-
-        m_fitted = false;
-        m_chi2 = 0.;
-        m_nDoF = 0;
     }
 
-    virtual ~Candidate() {}; ///< Destructor
+    Candidate( const LHCb::Track* track, const Hlt1MuonHits& hits )
+        : Candidate(track, Hlt1ConstMuonHits( std::begin(hits), std::end(hits) ) ) 
+    {
+    }
+
+    Candidate( const LHCb::Track* track )
+        : Candidate( track, Hlt1ConstMuonHits() )
+    {
+        m_hits.reserve( 5 );
+    }
 
     const LHCb::Track* track() const
     {
@@ -108,21 +90,21 @@ class Candidate
     }
     double tx2() const
     {
-        return m_tx2;
+        return m_tx * m_tx;
     }
     double ty2() const
     {
-        return m_ty2;
+        return m_ty * m_ty;
     }
 
     double sinTrack() const
     {
-        return sqrt( 1. - 1. / ( 1. + m_tx2 + m_ty2 ) );
+        return sqrt( 1. - 1. / ( 1. + tx2() + ty2() ) );
     }
 
     double cosTy() const
     {
-        return 1. / sqrt( 1 + m_ty2 );
+        return 1. / sqrt( 1 + ty2() );
     }
 
     Hlt1ConstMuonHits::iterator hitsBegin()
@@ -149,7 +131,7 @@ class Candidate
 
     double sin() const
     {
-        return sqrt( 1 - 1 / ( 1 + m_tx2 + m_ty2 ) );
+        return sqrt( 1 - 1 / ( 1 + tx2() + ty2() ) );
     }
 
     double& slope()
@@ -221,20 +203,18 @@ class Candidate
     double m_z;
     double m_tx;
     double m_ty;
-    double m_tx2;
-    double m_ty2;
 
     double m_errTx2;
     double m_errTy2;
 
-    double m_slope;
-    double m_p;
+    double m_slope = 0;
+    double m_p = 0;
 
     Hlt1ConstMuonHits m_hits;
 
-    bool m_fitted;
-    double m_chi2;
-    unsigned int m_nDoF;
+    double m_chi2 = 0;
+    unsigned int m_nDoF = 0;
+    bool m_fitted = false;
 };
 
 typedef std::vector<Candidate*> Candidates;

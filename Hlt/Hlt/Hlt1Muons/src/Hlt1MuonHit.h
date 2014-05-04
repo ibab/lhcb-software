@@ -17,13 +17,12 @@
  */
 class Hlt1MuonHit final // please do not inherit from this class...
 {
-
   public:
     Hlt1MuonHit() = delete;
 
     Hlt1MuonHit( const LHCb::MuonTileID& tile, double x, double dx, double y,
                  double dy, double z, double dz )
-        : m_tile{tile}, m_x{x}, m_dx{dx}, m_y{y}, m_dy{dy}, m_z{z}, m_dz{dz}
+        : m_x{x}, m_y{y}, m_dx{dx}, m_z{z}, m_dy{dy}, m_dz{dz}, m_tile{tile}
     {
     }
 
@@ -78,14 +77,14 @@ class Hlt1MuonHit final // please do not inherit from this class...
     }
 
   private:
-    LHCb::MuonTileID m_tile;
-
     double m_x;
-    double m_dx;
     double m_y;
-    double m_dy;
+    double m_dx;
+
     double m_z;
+    double m_dy;
     double m_dz;
+    LHCb::MuonTileID m_tile;
 };
 
 typedef std::vector<Hlt1MuonHit*> Hlt1MuonHits;

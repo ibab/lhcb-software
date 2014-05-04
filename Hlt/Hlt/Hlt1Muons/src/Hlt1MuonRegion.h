@@ -10,7 +10,7 @@
  *  @author Roel Aaij
  *  @date   2010-12-07
  */
-class Hlt1MuonRegion
+class Hlt1MuonRegion final
 {
   public:
     /// Standard constructor
@@ -19,8 +19,6 @@ class Hlt1MuonRegion
         : m_xmin{xmin}, m_xmax{xmax}, m_ymin{ymin}, m_ymax{ymax}, m_id{id}
     {
     }
-
-    virtual ~Hlt1MuonRegion() {}; ///< Destructor
 
     unsigned int id() const
     {
@@ -45,9 +43,15 @@ class Hlt1MuonRegion
         return m_ymax;
     }
 
+
     bool overlap( double xmin, double xmax, double ymin, double ymax ) const
     {
         return !( xmax < m_xmin || xmin > m_xmax || ymin > m_ymax || ymax < m_ymin );
+    }
+
+    bool overlap( const Hlt1MuonRegion& rhs ) const 
+    {
+        return overlap( rhs.xmin(), rhs.xmax(), rhs.ymin(), rhs.ymax());
     }
 
   private:

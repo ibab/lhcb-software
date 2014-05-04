@@ -3,6 +3,8 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-05-04 - Gerhard Raven
+ - speed up hit partitioning and sorting in Hlt1MuonStation
 
 !========================= Hlt1Muons v1r7 2014-02-20 =========================
 ! 2014-01-28 - Gerhard Raven

@@ -21,14 +21,14 @@ class DeMuonDetector;
  *  @author Roel Aaij
  *  @date   2010-12-07
  */
-class Hlt1MuonStation
+class Hlt1MuonStation final
 {
   public:
     /// Standard constructor
     Hlt1MuonStation( DeMuonDetector* det, int station,
-                     const std::vector<double>& regions );
+                     std::vector<double> regions );
 
-    virtual ~Hlt1MuonStation(); ///< Destructor
+    ~Hlt1MuonStation(); ///< Destructor
 
     enum { nRegionsY = 7u };
 
@@ -48,40 +48,37 @@ class Hlt1MuonStation
 
     unsigned int nRegions() const
     {
-        return m_nRegionsX * nRegionsY;
+        return (m_xboundaries.size()-1) * nRegionsY;
     }
 
-    const Hlt1MuonRegion& region( unsigned int id ) const
+    Hlt1MuonRegion region( unsigned int id ) const
     {
-        return m_regions[id];
+        auto j = id % nRegionsY ;
+        auto i = 1 + id/nRegionsY;
+        auto y = ymin() + j * dy();
+        return { id, m_xboundaries[ i-1], m_xboundaries[i],  y, y+dy() };
     }
 
   private:
     friend class Hlt1MuonHitManager;
 
-    void setHits( const Hlt1MuonHits& hits )
-    {
-        for ( Hlt1MuonHit* hit : hits ) addHit( hit );
-    }
+    void setHits( Hlt1MuonHits hts ); // assumes ownership of pointers in vector
 
-    void addHit( Hlt1MuonHit* hit ); // grabs ownership
 
-    inline unsigned int xRegion( const double x );
+    inline double dy() const { return 2 * m_ymax / nRegionsY; }
+    inline double ymin() const { return -m_ymax; }
 
     void clearHits();
 
-    DeMuonDetector* m_muonDet;
 
-    std::vector<Hlt1MuonHits> m_hits;
-    std::vector<Hlt1MuonRegion> m_regions;
+    const std::vector<double>  m_xboundaries;
+    Hlt1MuonHits  m_hits; 
+    std::vector<Hlt1MuonHits::iterator> m_index; // indices into m_hits
 
     double m_z;
-    double m_ymin;
     double m_ymax;
-    double m_dy;
 
     const int m_station;
-    unsigned int m_nRegionsX;
 
 };
 #endif // HLT1MUONSTATION_H
