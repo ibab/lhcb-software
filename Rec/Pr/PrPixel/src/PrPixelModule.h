@@ -15,28 +15,32 @@
  */
 class PrPixelModule {
 
-public:
+ public:
   /// Constructor
-  PrPixelModule(const unsigned int number, const bool right) : 
-    m_lastHitX(-1), m_number(number), m_previous(-1), m_empty(true), m_isRight(right) {
+  PrPixelModule(const unsigned int number, const bool right)
+      : m_lastHitX(-1),
+        m_number(number),
+        m_previous(-1),
+        m_empty(true),
+        m_isRight(right) {
     reset();
   }
   /// Destructor
   virtual ~PrPixelModule() {}
 
-  bool empty() const {return m_empty;}
-  double lastHitX() const {return m_lastHitX;}
-  void setLastHitX(const double x) {m_lastHitX = x;}
-  double firstHitX() const {return m_firstHitX;}
-  void setFirstHitX(const double x) {m_firstHitX = x;}
-  unsigned int number() const {return m_number;}
-  int previous() const {return m_previous;}
-  bool isRight() const {return m_isRight;}
-  double z() const {return m_z;}
-  PrPixelHits& hits() {return m_hits;}
+  bool empty() const { return m_empty; }
+  double lastHitX() const { return m_lastHitX; }
+  void setLastHitX(const double x) { m_lastHitX = x; }
+  double firstHitX() const { return m_firstHitX; }
+  void setFirstHitX(const double x) { m_firstHitX = x; }
+  unsigned int number() const { return m_number; }
+  int previous() const { return m_previous; }
+  bool isRight() const { return m_isRight; }
+  double z() const { return m_z; }
+  PrPixelHits &hits() { return m_hits; }
 
-  void setPrevious(const int prev) {m_previous = prev;}
-  void setZ(const double z) {m_z = z;}
+  void setPrevious(const int prev) { m_previous = prev; }
+  void setZ(const double z) { m_z = z; }
 
   /// Remove all stored hits.
   void reset() {
@@ -44,12 +48,12 @@ public:
     m_empty = true;
   }
   /// Add a new (pointer to) hit.
-  void addHit(PrPixelHit* hit) {
+  void addHit(PrPixelHit *hit) {
     m_hits.push_back(hit);
     m_empty = false;
   }
 
-private:
+ private:
   double m_lastHitX;
   double m_firstHitX;
   /// Module number
@@ -63,6 +67,5 @@ private:
   bool m_empty;
   /// Right or left side of VELO
   bool m_isRight;
-
 };
-#endif // PRPIXELMODULE_H
+#endif  // PRPIXELMODULE_H

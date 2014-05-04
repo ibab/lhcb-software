@@ -1,4 +1,4 @@
-#ifndef PRPIXELTRACKING_H 
+#ifndef PRPIXELTRACKING_H
 #define PRPIXELTRACKING_H 1
 
 // #define DEBUG_HISTO // fill some histograms while the algorithm runs.
@@ -30,43 +30,42 @@ class PrPixelTracking : public GaudiTupleAlg {
 class PrPixelTracking : public GaudiAlgorithm {
 #endif
 
-public: 
+ public:
   /// Standard constructor
-  PrPixelTracking(const std::string& name, ISvcLocator* pSvcLocator);
+  PrPixelTracking(const std::string &name, ISvcLocator *pSvcLocator);
   /// Destructor
   virtual ~PrPixelTracking();
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode initialize();  ///< Algorithm initialization
+  virtual StatusCode execute();     ///< Algorithm execution
 
-private:
-
+ private:
   /// Search for tracks starting from pair of hits on adjacent sensors
-  void searchByPair();                            
+  void searchByPair();
   /// Extrapolate a seed track and try to add further hits.
-  void extendTrack(const PrPixelHit* h1, const PrPixelHit* h2);
-  /// Try to add a matching hit on a given module. 
-  PrPixelHit* bestHit(PrPixelModule* module, double xTol, double maxScatter,
-                       const PrPixelHit* h1, const PrPixelHit* h2);
+  void extendTrack(const PrPixelHit *h1, const PrPixelHit *h2);
+  /// Try to add a matching hit on a given module.
+  PrPixelHit *bestHit(PrPixelModule *module, double xTol, double maxScatter,
+                      const PrPixelHit *h1, const PrPixelHit *h2);
   /// Produce LHCb::Track list understandable to other LHCb applications.
   void makeLHCbTracks();
 
   /// Debugging methods
-  bool matchKey(const PrPixelHit* hit) {
+  bool matchKey(const PrPixelHit *hit) {
     if (m_debugTool) {
       LHCb::LHCbID id = hit->id();
       return m_debugTool->matchKey(id, m_wantedKey);
     }
     return false;
   }
-  void printHit(const PrPixelHit* hit, std::string title = "");
-  void printTrack(PrPixelTrack& track);
-  void printHitOnTrack(PrPixelHit* hit, bool ifMatch = true);
+  void printHit(const PrPixelHit *hit, std::string title = "");
+  void printTrack(PrPixelTrack &track);
+  void printHitOnTrack(PrPixelHit *hit, bool ifMatch = true);
 
   /// Location of output container
   std::string m_outputLocation;
   /// Hit manager tool
-  PrPixelHitManager* m_hitManager;
+  PrPixelHitManager *m_hitManager;
 
   /// Slope limits for seed pairs
   double m_maxXSlope;
@@ -84,17 +83,17 @@ private:
   bool m_clearHits;
   bool m_stateClosestToBeamKalmanFit;
   bool m_stateEndVeloKalmanFit;
-  bool m_addStateFirstLastMeasurementKalmanFit; 
+  bool m_addStateFirstLastMeasurementKalmanFit;
 
   /// List of tracks found
-  PrPixelTracks m_tracks;                  
+  PrPixelTracks m_tracks;
   /// Current track being worked with
-  PrPixelTrack m_track;                   
+  PrPixelTrack m_track;
 
   /// Debug control
   std::string m_debugToolName;
   int m_wantedKey;
-  IPrDebugTool* m_debugTool;
+  IPrDebugTool *m_debugTool;
   bool m_isDebug;
   bool m_debug;
 
@@ -108,11 +107,10 @@ private:
 
   /// Timing measurement control
   bool m_doTiming;
-  ISequencerTimerTool* m_timerTool;
+  ISequencerTimerTool *m_timerTool;
   int m_timeTotal;
   int m_timePrepare;
   int m_timePairs;
   int m_timeFinal;
-
 };
-#endif // PRPIXELTRACKING_H
+#endif  // PRPIXELTRACKING_H

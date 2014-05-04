@@ -1,9 +1,10 @@
 #ifndef PRPIXELHIT_H
 #define PRPIXELHIT_H 1
 
-// Include files
-#include "Kernel/LHCbID.h"
 #include "GaudiKernel/Point3DTypes.h"
+
+#include "Kernel/LHCbID.h"
+
 
 /** @class PrPixelHit PrPixelHit.h
  *  This defines the VP hits to be used in the pattern recognition.
@@ -13,24 +14,22 @@
  */
 
 class PrPixelHit {
-public:
+ public:
   /// Standard constructor
-  PrPixelHit() :
-    m_x(0.), m_y(0.), m_z(0.), 
-    m_id(0),
-    m_wx(0.), m_wy(0.),
-    m_module(0),
-    m_isUsed(false) {
-  
-  }
+  PrPixelHit()
+      : m_x(0.),
+        m_y(0.),
+        m_z(0.),
+        m_id(0),
+        m_wx(0.),
+        m_wy(0.),
+        m_module(0),
+        m_isUsed(false) {}
   /// Destructor
   virtual ~PrPixelHit() {}
 
-  void setHit(const LHCb::LHCbID id,
-              const Gaudi::XYZPoint& point,
-              const double wx,
-              const double wy,
-              const unsigned int module) {
+  void setHit(const LHCb::LHCbID id, const Gaudi::XYZPoint &point,
+              const double wx, const double wy, const unsigned int module) {
     m_id = id;
     m_x = point.x();
     m_y = point.y();
@@ -38,15 +37,11 @@ public:
     m_wx = wx;
     m_wy = wy;
     m_module = module;
-    m_isUsed = false; 
+    m_isUsed = false;
   }
 
-  void setHit(const LHCb::LHCbID id,
-              const double x, 
-              const double y, 
-              const double z, 
-              const double wx,
-              const double wy,
+  void setHit(const LHCb::LHCbID id, const double x, const double y,
+              const double z, const double wx, const double wy,
               const unsigned int module) {
     m_id = id;
     m_x = x;
@@ -55,18 +50,18 @@ public:
     m_wx = wx;
     m_wy = wy;
     m_module = module;
-    m_isUsed = false; 
+    m_isUsed = false;
   }
 
-  LHCb::LHCbID id() const {return m_id;}
-  double x() const {return m_x;}
-  double y() const {return m_y;}
-  double z() const {return m_z;}
-  double wx() const {return m_wx;}
-  double wy() const {return m_wy;}
-  int module() const {return m_module;}
-  bool isUsed() const {return m_isUsed;}
-  void setUsed(const bool flag) {m_isUsed = flag;}
+  LHCb::LHCbID id() const { return m_id; }
+  double x() const { return m_x; }
+  double y() const { return m_y; }
+  double z() const { return m_z; }
+  double wx() const { return m_wx; }
+  double wy() const { return m_wy; }
+  int module() const { return m_module; }
+  bool isUsed() const { return m_isUsed; }
+  void setUsed(const bool flag) { m_isUsed = flag; }
 
   /// Calculate distance in X-Y to given X-Y point
   double distance(const double x, const double y) const {
@@ -83,28 +78,44 @@ public:
   }
 
   // Operators for sorting the vectors of pointers to hits
-  struct DecreasingByZ { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->z() > rhs->z(); } };
-  struct IncreasingByZ { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->z() < rhs->z(); } };
-  struct LowerByX      { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->x() < rhs->x(); } };
-  struct LowerByY      { bool operator() (const PrPixelHit* lhs, const PrPixelHit* rhs) const { return lhs->y() < rhs->y(); } };
+  struct DecreasingByZ {
+    bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
+      return lhs->z() > rhs->z();
+    }
+  };
+  struct IncreasingByZ {
+    bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
+      return lhs->z() < rhs->z();
+    }
+  };
+  struct LowerByX {
+    bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
+      return lhs->x() < rhs->x();
+    }
+  };
+  struct LowerByY {
+    bool operator()(const PrPixelHit *lhs, const PrPixelHit *rhs) const {
+      return lhs->y() < rhs->y();
+    }
+  };
 
-private:
+ private:
   /// Global position
   double m_x;
   double m_y;
   double m_z;
   /// Channel ID
   LHCb::LHCbID m_id;
-  /// Weights (1 / squared error) in X and Y
+  /// Weight (1 / squared error) in X
   double m_wx;
+  /// Weight (1 / squared error) in Y 
   double m_wy;
-  // Module number
-  unsigned int m_module;  
-  // Already used by (associated to) a track?
+  /// Module number
+  unsigned int m_module;
+  /// Already used by (associated to) a track?
   bool m_isUsed;
-
 };
 
-typedef std::vector<PrPixelHit*> PrPixelHits;  // vector of hits
+typedef std::vector<PrPixelHit *> PrPixelHits;
 
-#endif // PRPIXELHIT_H
+#endif  // PRPIXELHIT_H
