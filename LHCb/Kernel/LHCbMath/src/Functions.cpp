@@ -552,7 +552,7 @@ namespace
     //
     if ( ierror )
     {
-      if ( ierror == GSL_EDOM     ||    /* input domain error, e.g sqrt(-1)    */
+      if ( ierror == GSL_EDOM     ||    /* input domain error, e.g  sqrt(-1)   */
            ierror == GSL_ERANGE   ||    /* output range error, e.g. exp(1e100) */
            ierror == GSL_EINVAL   ||    /* invalid argument supplied by user   */
            ierror == GSL_EUNDRFLW ||    /* underflow                           */
@@ -1041,6 +1041,21 @@ namespace
     const Gaudi::Math::Apolonios* f = (Gaudi::Math::Apolonios*) params ;
     //
     return (*f)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for itegration of binomial differential 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2014-05-04
+   */
+  double binom_int_GSL ( double x , void* params ) 
+  {
+    //
+    const std::pair<unsigned short,unsigned short>* p = 
+      (std::pair<unsigned short,unsigned short>*) params ;
+    //
+    return 
+      Gaudi::Math::pow (     x , p->first  ) * 
+      Gaudi::Math::pow ( 1 - x , p->second ) ;
   }
   // ==========================================================================
 } //                                                 end of anonymous namespace
@@ -5852,13 +5867,117 @@ double Gaudi::Math::Bernstein::integral () const
     std::accumulate ( m_pars.begin() , m_pars.end() , 0.0 ) / npars() ;
 }
 // ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::indefinite_integral () const 
+{
+  std::vector<double> ck ; ck.reserve ( npars() + 1 ) ;
+  //
+  for  ( unsigned short k = 0 ; k <= npars() ; ++k ) 
+  {
+    double c = 0 ;
+    for ( unsigned short j = 0 ; j < k  ; ++j ) { c += m_pars[j] ; }
+    //
+    c /= npars() ;
+    c *= ( m_xmax - m_xmin ) ;
+    ck.push_back  ( c ) ;
+  }
+  //
+  return Gaudi::Math::Bernstein ( ck ,  m_xmin  , m_xmax ) ;
+  //
+}
+// ============================================================================
+double Gaudi::Math::Bernstein::integral ( const double low  ,
+                                          const double high ) const 
+{
+  //
+  if      ( s_equal ( low , high )           ) { return 0 ; }
+  else if ( low  >  high                     ) { return -1*integral ( high   , low    ) ; }
+  else if ( high <= xmin () || low >= xmax() ) { return  0 ; }
+  //
+  const double xlow  = std::max ( low  , m_xmin ) ;
+  const double xhigh = std::min ( high , m_xmax ) ;
+  //
+  if ( s_equal ( xlow , m_xmin ) && s_equal ( xhigh , m_xmax ) ) { return integral () ; }
+  //  
+  const Gaudi::Math::Bernstein b_int ( indefinite_integral () ) ;
+  //
+  return b_int ( xhigh ) - b_int ( xlow ) ;
+}
+// ============================================================================
+Gaudi::Math::Bernstein
+Gaudi::Math::Bernstein::derivative () const 
+{
+  //
+  std::vector<double> ck ; ck.reserve ( npars() + 1 ) ;
+  //
+  for  ( unsigned short k = 0 ; (unsigned int) ( k + 1 ) < npars()  ; ++k ) 
+  {
+    double c = m_pars[k+1] - m_pars[k] ;
+    c /= ( m_xmax - m_xmin ) ;
+    c *= ( npars() - 1 ) ;
+    ck.push_back  ( c ) ;
+  }
+  //
+  return Gaudi::Math::Bernstein ( ck ,  m_xmin  , m_xmax ) ;
+  //  
+}
+// ============================================================================
+double Gaudi::Math::Bernstein::derivative ( const double x   ) const 
+{
+  if ( m_pars.size() <= 1       ) { return 0 ; }
+  if ( x < m_xmin || x > m_xmax ) { return 0 ; }
+  //
+  const Gaudi::Math::Bernstein b_prime ( derivative () ) ;
+  //  
+  return b_prime ( x )  ;
+}
+// ============================================================================
+/* get the integral between low and high for a product of Bernstein function
+ * and the exponential function with exponent tau
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein::integral_exp   
+( const double low  , 
+  const double high , 
+  const double tau  ) const 
+{
+  //
+  if      ( s_equal ( tau , 0    )           ) { return      integral     ( low  , high      ) ; } 
+  else if ( s_equal ( low , high )           ) { return  0 ; }
+  else if ( low  >  high                     ) { return -1 * integral_exp ( high , low , tau ) ; }
+  else if ( high <= xmin () || low >= xmax() ) { return  0 ; }
+  //
+  const double xlow  = std::max ( low  , m_xmin ) ;
+  const double xhigh = std::min ( high , m_xmax ) ;
+  //
+  const double p1 = ( (*this)( xhigh ) * my_exp ( tau * xhigh ) - 
+                      (*this)( xlow  ) * my_exp ( tau * xlow  ) ) / tau ;
+  //
+  if ( npars ()  <= 1   ) { return p1 ; } // RETURN 
+  //
+  const Gaudi::Math::Bernstein b_prime ( derivative() ) ;
+  if ( b_prime.zero() ) { return p1 ; } // RETURN
+  //
+  return p1 - b_prime.integral_exp ( xlow , xhigh , tau ) / tau ;
+}
+// ============================================================================
+// are all parameters zero?
+// ============================================================================
+bool Gaudi::Math::Bernstein::zero () const 
+{
+  for ( std::vector<double>::const_iterator i = m_pars.begin() ; 
+        m_pars.end() != i ; ++i ) 
+  { if ( !s_equal ( *i , 0 ) ) { return false ; } }
+  return true ;
+} 
+// ============================================================================
 // set k-parameter
 // ============================================================================
 bool Gaudi::Math::Bernstein::setPar
 ( const unsigned short k , const double value )
 {
   //
-  if ( k >= npars() ){ return false ; }
+  if ( k >= npars() )                  { return false ; }
   //
   if ( s_equal ( par ( k ) , value ) ) { return false ; }
   //
@@ -5963,8 +6082,100 @@ namespace
       n * binomial ( n - 1 , k - 1 ) / k  ;
   }
   // ==========================================================================
+  /// get simplified binomial integral   (x**n)*(1-x)**m   
+  inline long double _binom_int_ 
+  ( const unsigned short n    ,
+    const unsigned short m    , 
+    const long double    xmin , 
+    const long double    xmax )
+  {
+    //
+    if      ( 0 == n && 0 == m ) { return xmax - xmin ; }
+    else if ( 0 == m ) 
+    {
+      return ( Gaudi::Math::pow (     xmax , n + 1 ) - 
+               Gaudi::Math::pow (     xmin , n + 1 ) ) / ( n + 1 ) ;
+    }
+    else if ( 0 == n ) 
+    {
+      return ( Gaudi::Math::pow ( 1 - xmin , m + 1 ) - 
+               Gaudi::Math::pow ( 1 - xmax , m + 1 ) ) / ( m + 1 ) ;
+    }
+    //
+    // recursive cases 
+    //
+    if ( n <= m ) 
+    {
+      const int f1 = -1 * ( n + m + 1 ) ;
+      return ( Gaudi::Math::pow (     xmax , n     ) * 
+               Gaudi::Math::pow ( 1 - xmax , m + 1 ) - 
+               Gaudi::Math::pow (     xmin , n     ) * 
+               Gaudi::Math::pow ( 1 - xmin , m + 1 ) - 
+               n * _binom_int_  ( n - 1    , m , xmin , xmax ) ) / f1 ;
+    }
+    //
+    const int f2 = n + 1 + 1 ;
+    return   ( Gaudi::Math::pow (     xmax , n + 1 ) * 
+               Gaudi::Math::pow ( 1 - xmax , m     ) - 
+               Gaudi::Math::pow (     xmin , n + 1 ) * 
+               Gaudi::Math::pow ( 1 - xmin , m     ) - 
+               m * _binom_int_  ( n        , m - 1 , xmin , xmax ) ) / f2 ;
+    //
+  }
+  // ==========================================================================
+} //                                          end of local anopnymos namesapace  
+// ============================================================================
+/*  get the integral from the simplified binomial differential 
+ *  \f$ \int_{xmin}^{xmax} x^{n}(1-x)^{m}dx \f$
+ */
+// ============================================================================
+double Gaudi::Math::Bernstein::binomial_integral 
+( const unsigned short n    , 
+  const unsigned short m    , 
+  const double         xmin , 
+  const double         xmax ) 
+{
+  if      ( s_equal ( xmin , xmax ) ) { return 0 ; }
+  //
+  if ( std::min ( n , m ) < 10 ) 
+  { return _binom_int_ ( n , m , xmin , xmax ) ; }
+  //
+  std::pair<unsigned short,unsigned short> params = std::make_pair ( n , m ) ;
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F              ;
+  F.function = &binom_int_GSL ;
+  F.params   = &params        ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  Gaudi::Math::WorkSpace ws ;
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      xmin   , xmax     ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( ws )  ,            // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  {
+    //
+    gsl_error ( "Gaudi::Math::Bernstein::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
 }
 // ============================================================================
+
 
 // ============================================================================
 // constructor from the order
@@ -6030,6 +6241,47 @@ double Gaudi::Math::Bernstein2D::operator () ( const double x ,
       m_cx[ix] * 
       Gaudi::Math::pow (     _tx ,        ix ) * 
       Gaudi::Math::pow ( 1 - _tx , m_nx - ix ) ;
+    //
+    for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+    {
+      //
+      result += par ( ix , iy ) * fx * fy[iy] ;
+    }
+  }
+  //
+  return result ;
+}
+// ============================================================================
+double Gaudi::Math::Bernstein2D::integral 
+( const double xlow , const double xhigh , 
+  const double ylow , const double yhigh ) const 
+{
+  if      ( s_equal ( xlow , xhigh ) || s_equal ( ylow  , yhigh ) ) { return 0 ; }
+  //
+  else if ( xlow  > xhigh ) { return -1*integral ( xhigh , xlow  , ylow  , yhigh ) ; }
+  else if ( ylow  > yhigh ) { return -1*integral ( xlow  , xhigh , yhigh , ylow  ) ; }
+  //
+  else if ( xhigh <= xmin () || xlow >= xmax() ) { return 0 ; }
+  else if ( yhigh <= ymin () || ylow >= ymax() ) { return 0 ; }
+  //
+  const double txl = tx ( xlow  ) ;
+  const double txh = tx ( xhigh ) ;
+  const double tyl = ty ( ylow  ) ;
+  const double tyh = ty ( yhigh ) ;
+  //
+  double result = 0 ;
+  //
+  std::vector<double> fy ( m_ny + 1 , 0 ) ;
+  for ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+  {
+    fy[iy] = m_cy[iy] * 
+      Gaudi::Math::Bernstein::binomial_integral ( iy , m_ny - iy , tyl ,tyh ) ;
+  }
+  //
+  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
+  {
+    const double fx = m_cx[ix] * 
+      Gaudi::Math::Bernstein::binomial_integral ( ix , m_nx - ix , txl ,txh ) ;
     //
     for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
     {
@@ -6151,6 +6403,51 @@ double Gaudi::Math::Bernstein2DSym::operator ()
   return result ;
 }
 // ============================================================================
+// get the value
+// ============================================================================
+double Gaudi::Math::Bernstein2DSym::integral 
+( const double xlow , const double xhigh , 
+  const double ylow , const double yhigh ) const 
+{
+  if      ( s_equal ( xlow , xhigh ) || s_equal ( ylow  , yhigh ) ) { return 0 ; }
+  //
+  else if ( xlow  > xhigh ) { return -1*integral ( xhigh , xlow  , ylow  , yhigh ) ; }
+  else if ( ylow  > yhigh ) { return -1*integral ( xlow  , xhigh , yhigh , ylow  ) ; }
+  //
+  else if ( xhigh <= xmin () || xlow >= xmax() ) { return 0 ; }
+  else if ( yhigh <= ymin () || ylow >= ymax() ) { return 0 ; }
+  //
+  const double txl = tx ( xlow  ) ;
+  const double txh = tx ( xhigh ) ;
+  const double tyl = ty ( ylow  ) ;
+  const double tyh = ty ( yhigh ) ;
+  //
+  double       result = 0 ;
+  //
+  std::vector<double> fy ( m_n + 1 , 0 ) ;
+  for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
+  {
+    fy[i] = m_c[i] * 
+      Gaudi::Math::Bernstein::binomial_integral ( i , m_n - i , tyl ,tyh ) ;
+  }
+  //
+  for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
+  {
+    const double fx = m_c[ix] * 
+      Gaudi::Math::Bernstein::binomial_integral ( ix , m_n - ix , txl ,txh ) ;
+    //
+    for  ( unsigned short iy = ix ; iy <= m_n ; ++iy ) 
+    {
+      //
+      const double dr = par ( ix , iy ) * fx * fy[iy] ;  
+      //
+      result += ( ix == iy ) ? dr : 2*dr ; 
+    }
+  }
+  //
+  return result ;
+}
+// ============================================================================
 // set (k)-parameter
 // ============================================================================
 bool Gaudi::Math::Bernstein2DSym::setPar
@@ -6197,6 +6494,8 @@ double Gaudi::Math::Bernstein2DSym::par
   //
   return par ( k ) ;
 }
+
+
 
 // ============================================================================
 // constructor from the order
@@ -6257,6 +6556,60 @@ bool Gaudi::Math::Positive::updateBernstein ()
   return update ;
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::ExpoPositive::ExpoPositive
+( const unsigned short      N    ,
+  const double              tau  ,   
+  const double              xmin ,
+  const double              xmax )
+  : std::unary_function<double,double> ()
+  , m_positive  ( N , xmin , xmax )
+  , m_tau       ( tau ) 
+{}
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::ExpoPositive::ExpoPositive
+( const std::vector<double>& pars ,
+  const double               tau  ,
+  const double               xmin ,
+  const double               xmax )
+  : std::unary_function<double,double> ()
+  , m_positive  ( pars , xmin , xmax )
+  , m_tau       ( tau ) 
+{}
+// ============================================================================
+// set tau-parameter
+// ============================================================================
+bool Gaudi::Math::ExpoPositive::setTau ( const double value )
+{
+  if ( s_equal ( value , m_tau ) ) { return false ; }
+  m_tau = value ;
+  return true ;
+}
+// ============================================================================
+// get the value
+// ============================================================================
+double Gaudi::Math::ExpoPositive::operator () ( const double x ) const 
+{
+  //
+  if ( x < xmin() || x > xmax() ) { return 0 ; }
+  //
+  return my_exp ( m_tau * x ) * m_positive ( x ) ;
+}
+// ============================================================================
+double Gaudi::Math::ExpoPositive::integral ( const double low  , 
+                                             const double high ) const 
+{
+  return m_positive.bernstein().integral_exp ( low ,high , m_tau ) ;
+}
+// ============================================================================
+
+
 
 // ============================================================================
 // constructor from the order

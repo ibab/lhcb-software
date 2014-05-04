@@ -81,6 +81,7 @@
   <class name    = "Gaudi::Math::Amoroso"         />
   <class name    = "Gaudi::Math::LogGamma"        />
   <class name    = "Gaudi::Math::BetaPrime"       />
+  <class name    = "Gaudi::Math::ExpoPositive"    />
   
   <class name    = "Gaudi::Math::GenGaussV1"      />
   <class name    = "Gaudi::Math::GenGaussV2"      />

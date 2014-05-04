@@ -313,7 +313,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get number of parameters
-      std::size_t npars () const { return m_pars.size() ; }
+      std::size_t npars  () const { return m_pars.size() ; }
+      /// are all parameters zero?
+      bool        zero   () const ;
       /// set k-parameter
       bool setPar       ( const unsigned short k , const double value ) ;
       /// set k-parameter
@@ -328,6 +330,8 @@ namespace Gaudi
       double xmin () const { return m_xmin ; }
       /// get upper edge
       double xmax () const { return m_xmax ; }
+      /// get all parameters:
+      const std::vector<double>& pars() const { return m_pars ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -339,7 +343,33 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get the integral between xmin and xmax
-      double integral () const ;
+      double integral   () const ;
+      /// get the integral between low and high 
+      double integral   ( const double low , const double high ) const ;
+      /// get the derivative at point "x" 
+      double derivative ( const double x   ) const ;
+      /// get integral   as function object 
+      Bernstein indefinite_integral () const ;
+      /// get derivative as function object 
+      Bernstein derivative  () const ;
+      // ======================================================================
+      /** get the intergal between low and high for a product of Bernstein function
+       *  and exponential function with exponent tau
+       */
+      double integral_exp   ( const double low  , 
+                              const double high , 
+                              const double tau  ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** get the integral from the simplified binomial differential 
+       *  \f$ \int_{xmin}^{xmax} x^{n}(1-x)^{m}dx \f$
+       */
+      static double binomial_integral 
+        ( const unsigned short n    , 
+          const unsigned short m    , 
+          const double         xmin , 
+          const double         xmax ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -405,11 +435,26 @@ namespace Gaudi
     public:
       // ======================================================================
       /// get the integral between xmin and xmax
-      double integral () const { return m_bernstein.integral() ; }
+      double integral   () const { return m_bernstein.integral() ; }
+      /// get the integral between low and high 
+      double integral   ( const double low , const double high ) const 
+      { return m_bernstein.integral ( low , high )  ; }
+      /// get the derivative 
+      double derivative ( const double x ) const 
+      { return m_bernstein.derivative ( x ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       /// get the underlying Bernstein polynomial
       const Gaudi::Math::Bernstein& bernstein () const { return m_bernstein ; }
       /// get the parameter sphere 
       const Gaudi::Math::NSphere&   sphere    () const { return m_sphere    ; }
+      /// get the indefinite integral 
+      Bernstein indefinite_intergal () const 
+      { return m_bernstein.indefinite_integral () ; }
+      /// get the derivative 
+      Bernstein derivative          () const 
+      { return m_bernstein.derivative          () ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -482,7 +527,7 @@ namespace Gaudi
     private: // parameters
       // ======================================================================
       /// the peak position
-      double m_peak    ;      //                              the peak position
+      double m_peak   ;       //                              the peak position
       /// sigma left
       double m_sigmaL ;       // sigma-left
       /// sigma right
@@ -3834,6 +3879,80 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class ExpoPositive
+     *  useful function for parameterizing smooth background:
+     *  product of the exponential and positive polinonmial 
+     *  @see Gaudi::Math::Positive 
+     */
+    class GAUDI_API ExpoPositive :  public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /// constructor from the order
+      ExpoPositive ( const unsigned short       N     =  0 ,
+                     const double               tau   =  0 , // exponent  
+                     const double               xmin  =  0 ,
+                     const double               xmax  =  1 ) ;
+      // ======================================================================
+      /// constructor from N phases
+      ExpoPositive ( const std::vector<double>& pars       ,
+                     const double               tau   =  0 , // exponent 
+                     const double               xmin  =  0 ,
+                     const double               xmax  =  1 ) ;
+      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get exponential 
+      double tau    () const { return m_tau ;}
+      /// get bnew valeu for the exponent  
+      bool   setTau ( const  double value ) ;
+      /// get number of polinomial parameters
+      std::size_t npars () const { return m_positive.npars() ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned short k , const double value ) 
+      { return m_positive.setPar ( k , value ) ; }
+      /// set k-parameter
+      bool setParameter ( const unsigned short k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value 
+      double  par       ( const unsigned short k ) const 
+      { return m_positive.par ( k ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the parameter value
+      double  parameter ( const unsigned short k ) const { return par ( k ) ; }
+      /// get lower edge
+      double xmin () const { return m_positive.xmin () ; }
+      /// get upper edge
+      double xmax () const { return m_positive.xmax () ; }
+      /// transform variables 
+      double x ( const double t ) const { return m_positive. x ( t )  ; }
+      double t ( const double x ) const { return m_positive. t ( x )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the underlying positive function 
+      const Gaudi::Math::Positive&  positive  () const { return m_positive  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double integral ( const double low , const double high ) const ;
+      double integral () const { return integral ( xmin() , xmax() ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      Gaudi::Math::Positive m_positive  ;
+      double                m_tau       ;
+      // ======================================================================
+    };
+    // ========================================================================
     // 2D-models 
     // ========================================================================
     /** @class Bernstein2D
@@ -3920,6 +4039,12 @@ namespace Gaudi
       double ty ( const double y ) const
       { return  ( y - ymin () ) / ( ymax () - ymin () )      ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       // polynom order in x-dimension 
@@ -4001,6 +4126,13 @@ namespace Gaudi
       double ty ( const double  y ) const { return m_bernstein.ty (  y ) ; }      
       double  x ( const double tx ) const { return m_bernstein. x ( tx ) ; }
       double  y ( const double ty ) const { return m_bernstein. y ( ty ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const 
+      { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -4091,6 +4223,12 @@ namespace Gaudi
       double ty ( const double y ) const
       { return  ( y - ymin () ) / ( ymax () - ymin () ) ; }
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
     private:
       // ======================================================================
       // polynom order
@@ -4159,6 +4297,13 @@ namespace Gaudi
       double ty ( const double  y ) const { return m_bernstein.ty (  y ) ; }      
       double  x ( const double tx ) const { return m_bernstein. x ( tx ) ; }
       double  y ( const double ty ) const { return m_bernstein. y ( ty ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const 
+      { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
       // ======================================================================
     private:
       // ======================================================================

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-05-04 - Vanya Belyaev
+ - analytial integration of bvernsteins polynomials 
+
 !========================= LHCbMath v3r46 2014-03-17 =========================
 ! 2014-03-16 - Vanya Belyaev
  - add new test to illustrate #bug 104111
