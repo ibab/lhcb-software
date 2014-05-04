@@ -1748,9 +1748,9 @@ Analysis::Models::ExpoPositive::ExpoPositive
   , m_tau      ( "tau"     , "Exponential"  , this , tau )
   , m_phis     ( "phi"     , "Coefficients" , this )
 //
-  , m_iterator ( 0 ) 
+  , m_iterator ( 0 )
 //
-  , m_positive ( 1 , xmin , xmax ) 
+  , m_positive ( 1 , 0 , xmin , xmax ) 
 {
   m_phis.add ( phi1 ) ;
   m_iterator = m_phis.createIterator() ;
@@ -1775,7 +1775,7 @@ Analysis::Models::ExpoPositive::ExpoPositive
 //
   , m_iterator ( 0 ) 
 //
-  , m_positive ( 2 , xmin , xmax ) 
+  , m_positive ( 2 , 0 , xmin , xmax ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -1802,7 +1802,7 @@ Analysis::Models::ExpoPositive::ExpoPositive
 //
   , m_iterator ( 0 ) 
 //
-  , m_positive ( 3 , xmin , xmax ) 
+  , m_positive ( 3 , 0 , xmin , xmax ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -1831,7 +1831,7 @@ Analysis::Models::ExpoPositive::ExpoPositive
 //
   , m_iterator ( 0 ) 
 //
-  , m_positive ( 4 , xmin , xmax ) 
+  , m_positive ( 4 , 0 , xmin , xmax ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -1862,7 +1862,7 @@ Analysis::Models::ExpoPositive::ExpoPositive
 //
   , m_iterator ( 0 ) 
 //
-  , m_positive ( 5 , xmin , xmax ) 
+  , m_positive ( 5 , 0 , xmin , xmax ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -1889,7 +1889,7 @@ Analysis::Models::ExpoPositive::ExpoPositive
 //
   , m_iterator ( 0 ) 
 //
-  , m_positive ( phis.getSize() , xmin , xmax ) 
+  , m_positive ( phis.getSize() , 0 , xmin , xmax ) 
 {
   //
   TIterator* tmp  = phis.createIterator() ;
@@ -1958,23 +1958,49 @@ Double_t Analysis::Models::ExpoPositive::evaluate() const
     ++k ;
   }
   //
-  const double x = m_x  ;
-  const double t = m_tau ;
+  m_positive.setTau ( m_tau ) ;
   //
-  const double e = std::exp ( t * x ) ;
-  //
-  const double xmin = m_positive.xmin () ;
-  const double xmax = m_positive.xmax () ;
-  //
-  const double norm = 
-    ( 0 == t ) ? 
-    std::abs (              xmax       -             xmin             ) :
-    std::abs ( ( std::exp ( xmax * t ) - std::exp  ( xmin * t ) ) / t ) ;
-  //
-  return m_positive ( m_x ) * e / norm ; 
+  return m_positive ( m_x   ) ;
 }
 // ============================================================================
-
+Int_t Analysis::Models::ExpoPositive::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+//_____________________________________________________________________________
+Double_t Analysis::Models::ExpoPositive::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_positive.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+  //
+  m_positive.setTau ( m_tau ) ;
+  //
+  return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
 // ============================================================================
 //         Gram-Charlier type A 
 // ============================================================================
@@ -3348,9 +3374,44 @@ Double_t Analysis::Models::Poly2DPositive::evaluate() const
   return m_positive ( m_x , m_y ) ; 
 }
 // ============================================================================
-
-
-
+Int_t Analysis::Models::Poly2DPositive::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+//_____________________________________________________________________________
+Double_t Analysis::Models::Poly2DPositive::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_positive.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  
+}
 
 // ============================================================================
 // generic polinomial
@@ -3436,8 +3497,6 @@ Double_t Analysis::Models::Poly2DSymPositive::evaluate() const
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
-  std::vector<double> sin2phi ;
-  //
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
@@ -3454,6 +3513,43 @@ Double_t Analysis::Models::Poly2DSymPositive::evaluate() const
   return m_positive ( m_x , m_y ) ; 
 }
 // ============================================================================
+Int_t Analysis::Models::Poly2DSymPositive::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+//_____________________________________________________________________________
+Double_t Analysis::Models::Poly2DSymPositive::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_positive.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+}
 
 
 

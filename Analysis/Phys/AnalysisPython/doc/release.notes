@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-05-04 - Vanya Belyaev
+ - make use of analysical integrals 
+
 ! 2014-04-16 - Vanya Belyaev
    add qmtest that makes segmentation fault for ROOT6  
    

@@ -1930,6 +1930,16 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
     protected :
       // ======================================================================
       RooRealProxy m_x    ;
@@ -1941,7 +1951,7 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual function 
-      mutable Gaudi::Math::Positive m_positive ;               // the function 
+      mutable Gaudi::Math::ExpoPositive m_positive ;           // the function 
       // ======================================================================
     } ;
     // ========================================================================
@@ -2443,6 +2453,16 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -2499,6 +2519,16 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
       // ======================================================================
     public:
       // ======================================================================
