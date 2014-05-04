@@ -33,7 +33,7 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
                                   vector<double> regions )
     : m_xboundaries{ std::move(regions) }
     , m_hits{}
-    , m_index{ nRegionsY * ( m_xboundaries.size()-1) + 1 }
+    , m_index{ nRegionsY * ( m_xboundaries.size()-1 ) + 1 }
     , m_z{     det->getStationZ( station )}
     , m_ymax{  det->getOuterY( station ) }
     , m_station{station}
@@ -100,7 +100,7 @@ void Hlt1MuonStation::setHits( Hlt1MuonHits hts )
 #if 0
     for( unsigned i = 0; i< nRegions() ; ++i ) {
         Hlt1MuonRegion r = region(i);
-        std::cout << "region " << r.id() << " x:[" << r.xmin() << ","<<r.xmax() << " y:["<< r.ymin() <<"," << r.ymax() <<"]\n";
+        std::cout << "region " << r.id() << " x:[" << r.xmin() << ","<<r.xmax() << "] y:["<< r.ymin() <<"," << r.ymax() <<"]\n";
         for ( const auto& h : hits(i) ) {
             std::cout << "  ( " << h->x() << ", " << h->y() << " )" ;
         }

@@ -46,7 +46,6 @@ struct iter_pair_range : pair<iterator_, iterator_>
     {
         return this->second;
     }
-
 };
 
 template <typename Iter, typename I2> // I2 must be convertable to Iter
@@ -75,8 +74,6 @@ Hlt1MuonHitManager::Hlt1MuonHitManager( const std::string& type,
     // declare properties
     declareProperty( "MuonCoordLocation",
                      m_coordLocation = LHCb::MuonCoordLocation::MuonCoords );
-
-    m_nHits.fill(0);
     m_prepared.reset();
 }
 
@@ -111,13 +108,6 @@ StatusCode Hlt1MuonHitManager::initialize()
 }
 
 //=============================================================================
-StatusCode Hlt1MuonHitManager::finalize()
-{
-    // boost::singleton_pool<Hlt1MuonHit, sizeof(Hlt1MuonHit)>::release_memory();
-    return GaudiTool::finalize();
-}
-
-//=============================================================================
 void Hlt1MuonHitManager::handle( const Incident& incident )
 {
     if ( IncidentType::BeginEvent != incident.type() ) return;
@@ -126,9 +116,9 @@ void Hlt1MuonHitManager::handle( const Incident& incident )
         if ( m_prepared[station] ) m_stations[station].clearHits();
     }
     m_prepared.reset();
-    m_nHits.fill( 0 );
     m_loaded = false;
-    m_coords.clear();
+    std::for_each( std::begin(m_coords), std::end(m_coords), 
+                   [](std::vector<const LHCb::MuonCoord*>& v){ v.clear(); } );
 }
 
 //=============================================================================
@@ -164,9 +154,8 @@ void Hlt1MuonHitManager::prepareHits( unsigned int station )
 {
     if ( !m_loaded ) loadCoords();
 
-    std::vector<Hlt1MuonHit*> hits; hits.reserve( m_nHits[station] );
-    for ( const auto& entry : make_range( m_coords.equal_range( station ) ) ) {
-        const LHCb::MuonCoord* coord = entry.second;
+    std::vector<Hlt1MuonHit*> hits; hits.reserve( m_coords[station].size() );
+    for ( const auto& coord : m_coords[station] ) {
         double x = 0., dx = 0., y = 0., dy = 0., z = 0., dz = 0.;
         StatusCode sc = m_muonDet->Tile2XYZ( coord->key(), x, dx, y, dy, z, dz );
         if ( sc.isFailure() ) {
@@ -188,12 +177,10 @@ void Hlt1MuonHitManager::loadCoords()
         Exception( "Cannot retrieve MuonCoords ", StatusCode::FAILURE );
     }
 
-    // TODO: replace m_coords with a partitioned vector?
+    //assert(m_coords[station].empty());
+    //m_coords[station].reserve( coords->size() );
     for ( auto coord : *coords ) {
-        auto station = coord->key().station();
-        m_coords.insert( {station, coord} );
-        ++m_nHits[station];
+        m_coords[coord->key().station()].emplace_back( coord ) ;
     }
-
     m_loaded = true;
 }

@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2014-05-04 - Gerhard Raven
  - speed up hit partitioning and sorting in Hlt1MuonStation
+ - replace unordered_multimap with array<std::vector ,5> in Hlt1MuonHitManager
 
 !========================= Hlt1Muons v1r7 2014-02-20 =========================
 ! 2014-01-28 - Gerhard Raven

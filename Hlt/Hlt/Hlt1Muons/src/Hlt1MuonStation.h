@@ -64,12 +64,10 @@ class Hlt1MuonStation final
 
     void setHits( Hlt1MuonHits hts ); // assumes ownership of pointers in vector
 
-
     inline double dy() const { return 2 * m_ymax / nRegionsY; }
     inline double ymin() const { return -m_ymax; }
 
     void clearHits();
-
 
     const std::vector<double>  m_xboundaries;
     Hlt1MuonHits  m_hits; 
@@ -79,6 +77,5 @@ class Hlt1MuonStation final
     double m_ymax;
 
     const int m_station;
-
 };
 #endif // HLT1MUONSTATION_H

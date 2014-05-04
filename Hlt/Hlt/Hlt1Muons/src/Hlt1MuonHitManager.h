@@ -2,11 +2,10 @@
 #ifndef HLT1MUONHITMANAGER_H
 #define HLT1MUONHITMANAGER_H 1
 
-#include <unordered_map>
-
+#include <array>
+#include <vector>
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 
 // Muon detector
@@ -44,8 +43,6 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
 
     StatusCode initialize() override;
 
-    StatusCode finalize() override;
-
     void handle( const Incident& incident ) override;
 
     virtual Hlt1MuonHitRange hits( double xmin, unsigned int station,
@@ -68,8 +65,7 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
     std::vector<Hlt1MuonStation> m_stations;
     std::bitset<5> m_prepared;
 
-    std::unordered_multimap<unsigned int, const LHCb::MuonCoord*> m_coords;
-    std::array<unsigned int,5> m_nHits;
+    std::array<std::vector<const LHCb::MuonCoord*>,5>  m_coords;
     bool m_loaded;
 
     // Functions
