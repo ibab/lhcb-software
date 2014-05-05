@@ -41,8 +41,7 @@ IsMuonTool::IsMuonTool( const string& type, const string& name,
                         const IInterface* parent )
     : GaudiTool( type, name, parent )
     , m_foiFactor( 1. )
-    , m_occupancy( 5, 0 )
-    , m_regionHits( 4 )
+    , m_occupancy( nStations, 0 )
 {
     declareInterface<ITracksFromTrack>( this );
 }
@@ -59,16 +58,13 @@ StatusCode IsMuonTool::initialize()
     m_det = getDet<DeMuonDetector>( "/dd/Structure/LHCb/DownstreamRegion/Muon" );
 
     for ( unsigned int s = 0; s < nStations; ++s ) {
-        m_regionInnerX[s] = m_det->getInnerX( s );
-        m_regionOuterX[s] = m_det->getOuterX( s );
-        m_regionInnerY[s] = m_det->getInnerY( s );
-        m_regionOuterY[s] = m_det->getOuterY( s );
+        m_regionInner[s] = std::make_pair( m_det->getInnerX( s ), m_det->getInnerY( s ) );
+        m_regionOuter[s] = std::make_pair( m_det->getOuterX( s ), m_det->getOuterY( s ) );
 
         m_stationZ[s] = m_det->getStationZ( s );
 
         for ( unsigned int r = 0; r < nRegions; ++r ) {
-            m_padSizeX[s * nRegions + r] = m_det->getPadSizeX( s, r );
-            m_padSizeY[s * nRegions + r] = m_det->getPadSizeY( s, r );
+            m_padSize[s * nRegions + r] = std::make_pair( m_det->getPadSizeX( s, r ), m_det->getPadSizeY( s, r ) );
         }
     }
 
@@ -116,18 +112,11 @@ StatusCode IsMuonTool::initialize()
 }
 
 //=============================================================================
-IsMuonTool::~IsMuonTool()
-{
-}
-
-//=============================================================================
 StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track& track,
                                         std::vector<LHCb::Track*>& tracks )
 {
     // Clear temporary storage
-    m_occupancy.assign( 5, 0 );
-    m_trackX.clear();
-    m_trackY.clear();
+    m_track.clear();
 
     // do the track extrapolations
     extrapolateTrack( track );
@@ -135,14 +124,15 @@ StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track& track,
     // track is in acceptance? Track has minimum momentum?
     if ( !preSelection( track ) ) return StatusCode::SUCCESS;
 
+    m_occupancy.assign( nStations, 0 );
     // find the coordinates in the fields of interest
-    findHits( track );
+    auto hits = findHits( track );
 
     if ( isMuon( track.p() ) ) {
         // Add found hits to track
         LHCb::Track* output = track.clone();
         tracks.push_back( output );
-        for ( const Hlt1MuonHit* hit : m_hits ) {
+        for ( const Hlt1MuonHit* hit : hits ) {
             output->addToLhcbIDs( LHCb::LHCbID{hit->tile()} );
         }
     }
@@ -159,10 +149,8 @@ void IsMuonTool::extrapolateTrack( const LHCb::Track& track )
     // Project the state into the muon stations
     for ( unsigned int station = 0; station < nStations; ++station ) {
         // x(z') = x(z) + (dx/dz * (z' - z))
-        m_trackX.push_back( state.x() +
-                            state.tx() * ( m_stationZ[station] - state.z() ) );
-        m_trackY.push_back( state.y() +
-                            state.ty() * ( m_stationZ[station] - state.z() ) );
+        m_track.emplace_back( state.x() + state.tx() * ( m_stationZ[station] - state.z() ) ,
+                              state.y() + state.ty() * ( m_stationZ[station] - state.z() ) );
     }
 }
 
@@ -172,20 +160,21 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
     // compare momentum and position to acceptance
     if ( track.p() < m_preSelMomentum ) return false;
 
+    using xy_t = std::pair<double,double>;
+    auto abs_lt = [](const xy_t& p1, const xy_t& p2) { 
+        return fabs( p1.first ) < p2.first && fabs( p1.second) < p2.second; 
+    } ;
+
     // Outer acceptance
-    if ( !( fabs( m_trackX[0] ) < m_regionOuterX[0] &&
-            fabs( m_trackY[0] ) < m_regionOuterY[0] ) ||
-         !( fabs( m_trackX[nStations - 1] ) < m_regionOuterX[nStations - 1] &&
-            fabs( m_trackY[nStations - 1] ) < m_regionOuterY[nStations - 1] ) ) {
+    if ( ! abs_lt( m_track[0], m_regionOuter[0] ) ||
+         ! abs_lt( m_track[nStations - 1],  m_regionOuter[nStations - 1] ) )  {
         // outside M1 - M5 region
         return false;
     }
 
     // Inner acceptance
-    if ( ( fabs( m_trackX[0] ) < m_regionInnerX[0] &&
-           fabs( m_trackY[0] ) < m_regionInnerY[0] ) ||
-         ( fabs( m_trackX[nStations - 1] ) < m_regionInnerX[nStations - 1] &&
-           fabs( m_trackY[nStations - 1] ) < m_regionInnerY[nStations - 1] ) ) {
+    if ( abs_lt(  m_track[0], m_regionInner[0]  ) ||
+         abs_lt(  m_track[nStations - 1],  m_regionInner[nStations - 1] ) ) {
         // inside M1 - M5 chamber hole
         return false;
     }
@@ -194,70 +183,87 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
 }
 
 //=============================================================================
-void IsMuonTool::findHits( const LHCb::Track& track )
+Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
 {
-    // clear previously stored hits
-    m_hits.clear();
+    class is_in_window {
+        std::pair<double,double> m_center;
+        std::array<std::pair<double,double>,4> m_foi;
+    public:
+        is_in_window( std::pair<double, double> center
+                    , std::pair<double, double> foi0 
+                    , std::pair<double, double> foi1 
+                    , std::pair<double, double> foi2 
+                    , std::pair<double, double> foi3 
+                    , double sf
+                    ) 
+            : m_center{std::move(center)}, 
+              m_foi{ std::move(foi0), std::move(foi1), std::move(foi2), std::move(foi3) }
+            {   
+                std::for_each( std::begin( m_foi ), std::end(m_foi),
+                               [=](std::pair<double,double>& p) { 
+                                   p.first *= sf ; p.second *= sf; 
+                } );
+            }
 
+        bool operator()(const Hlt1MuonHit* hit) const {
+                auto region = hit->tile().region();
+                assert(region<4);
+                return ( fabs( hit->x() - m_center.first  ) < m_foi[region].first ) &&
+                       ( fabs( hit->y() - m_center.second ) < m_foi[region].second )  ; 
+
+        }
+    };
+
+    auto is_in_window_ = [&](unsigned s) { 
+        auto p = track.p();
+        return is_in_window{ m_track[s], foi(s,0,p), foi(s,1,p), 
+                                         foi(s,2,p), foi(s,3,p), 
+                                         m_foiFactor } ;
+    };
+
+    Hlt1ConstMuonHits hits;
     // Start from 1 because M1 does not matter for IsMuon
     for ( unsigned int s = 1; s < nStations; ++s ) {
-        const auto& station = m_hitManager->station( s );
-
-        // TODO/FIXME:  why is m_regionHits not a local variable??
-        for ( auto& hits : m_regionHits ) hits.clear();
-
+        // prepare the predicates for this station (and current track)
+        auto predicate =  is_in_window_(s) ;
         // Convert Hlt1 regions to standard muon station regions
+        const auto& station = m_hitManager->station( s );
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            // Get hits
-            for ( auto* hit : m_hitManager->hits( -m_regionOuterX[s], s, r ) ) {
-                m_regionHits[hit->tile().region()].push_back( hit );
-            }
-        }
-
-        for ( unsigned int region = 0; region < nRegions; ++region ) {
-            const double foiXDim = m_foiFactor * foiX( s, region, track.p() );
-            const double foiYDim = m_foiFactor * foiY( s, region, track.p() );
-
-            for ( auto hit : m_regionHits[region] ) {
-                double x = hit->x();
-                double y = hit->y();
-
-                // check if the hit is in the window
-                if ( ( fabs( x - m_trackX[s] ) < foiXDim ) &&
-                     ( fabs( y - m_trackY[s] ) < foiYDim ) ) {
-                    m_hits.push_back( hit );
-                    m_occupancy[s] += 1;
-                }
-            } // hits
-        }     // region
-    }         // station
+            auto hr =  m_hitManager->hits( -m_regionOuter[s].first, s, r );
+            std::copy_if( std::begin(hr), std::end(hr), 
+                          std::back_inserter(hits), 
+                          predicate );
+        }  // region
+        m_occupancy[s] = hits.size(); // at this point: cumulative over stations upto s
+    } // station
+    // turn into cumulative occupancy into occupancy  per station
+    std::adjacent_difference( std::begin(m_occupancy), std::end(m_occupancy), 
+                              std::begin(m_occupancy) );
+    return hits;
 }
 
 //=============================================================================
-bool IsMuonTool::isMuon( const double p ) const
+bool IsMuonTool::isMuon( double p ) const
 {
     const double pr1 = m_preSelMomentum;
     const double pr2 = m_momentumCuts[0];
     const double pr3 = m_momentumCuts[1];
 
-    set<unsigned int> stations;
-    for ( unsigned int i = 1; i < m_occupancy.size(); ++i ) {
-        if ( m_occupancy[i] != 0 ) stations.insert( i );
-    }
+    auto has = [&]( unsigned i ) { return m_occupancy[i]!=0; };
+
+    bool _12 = has( 1 ) && has( 2 )  ;
 
     bool id = false;
 
-    if ( p > pr1 && p < pr2 ) {
-        if ( stations.count( 1 ) && stations.count( 2 ) ) id = true;
-    } else if ( p > pr2 && p < pr3 ) {
-        if ( stations.count( 1 ) && stations.count( 2 ) &&
-             ( stations.count( 3 ) || stations.count( 4 ) ) )
-            id = true;
-    } else if ( p > pr3 ) {
-        if ( stations.count( 1 ) && stations.count( 2 ) && stations.count( 3 ) &&
-             stations.count( 4 ) )
-            id = true;
-    }
+    if ( p < pr1 ) {
+        id = false;
+    } else if ( p < pr2 ) {
+        id =  _12  ;
+    } else if ( p < pr3 ) {
+        id =  _12 && ( has( 3 ) || has( 4 ) ) ;
+    } else {
+        id =  _12 && has( 3 ) && has( 4 );
+    } 
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "IsMuon = " << id << endmsg;
@@ -266,38 +272,24 @@ bool IsMuonTool::isMuon( const double p ) const
         debug() << "pr3=" << pr3 << endmsg;
         debug() << "IsMuon p=" << p << endmsg;
     }
-
     return id;
 }
 
 //=============================================================================
-double IsMuonTool::foiX( const int station, const int region, const double p ) const
+std::pair<double,double> IsMuonTool::foi( int station, int region, double p ) const
 {
-    double dx = m_padSizeX[station * nRegions + region] / 2.;
+    auto i = station * nRegions + region;
+    double dx = 0.5 * m_padSize[i].first;
+    double dy = 0.5 * m_padSize[i].second;
 
     if ( p < 1000000. ) {
-        return ( m_xfoiParam1[station * nRegions + region] +
-                 m_xfoiParam2[station * nRegions + region] *
-                     exp( -m_xfoiParam3[station * nRegions + region] * p /
-                          Gaudi::Units::GeV ) ) *
-               dx;
+        auto p_GeV = p / Gaudi::Units::GeV;
+        return{ ( m_xfoiParam1[i] +
+                  m_xfoiParam2[i] * exp( -m_xfoiParam3[i] * p_GeV ) ) * dx,
+                ( m_yfoiParam1[i] + 
+                  m_yfoiParam2[i] * exp( -m_yfoiParam3[i] * p_GeV ) ) * dy };
     } else {
-        return m_xfoiParam1[station * nRegions + region] * dx;
-    }
-}
-
-//=============================================================================
-double IsMuonTool::foiY( const int station, const int region, const double p ) const
-{
-    double dy = m_padSizeY[station * nRegions + region] / 2.;
-
-    if ( p < 1000000. ) {
-        return ( m_yfoiParam1[station * nRegions + region] +
-                 m_yfoiParam2[station * nRegions + region] *
-                     exp( -m_yfoiParam3[station * nRegions + region] * p /
-                          Gaudi::Units::GeV ) ) *
-               dy;
-    } else {
-        return m_yfoiParam1[station * nRegions + region] * dy;
+        return { m_xfoiParam1[i] * dx,
+                 m_yfoiParam1[i] * dy };
     }
 }

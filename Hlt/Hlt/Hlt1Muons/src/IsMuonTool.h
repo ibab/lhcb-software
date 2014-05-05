@@ -34,12 +34,12 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     IsMuonTool( const std::string& type, const std::string& name,
                 const IInterface* parent );
 
-    virtual ~IsMuonTool(); ///< Destructor
+    ~IsMuonTool() override = default; ///< Destructor
 
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
 
-    virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                        std::vector<LHCb::Track*>& tracks );
+    StatusCode tracksFromTrack( const LHCb::Track& seed,
+                                std::vector<LHCb::Track*>& tracks ) override;
 
   private:
     enum { nStations = 5u, nRegions = 4u };
@@ -53,21 +53,15 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     // Tools
     Hlt1MuonHitManager* m_hitManager;
 
-    mutable std::vector<double> m_trackX; // position of track in x(mm) in each
-                                          // station
-    mutable std::vector<double> m_trackY; // position of track in y(mm) in each
-                                          // station
+    mutable std::vector<std::pair<double,double>> m_track; // position of track in x(mm),y(mm) in each station
 
     std::array<double,nStations> m_stationZ;
 
-    std::array<double,nStations*nRegions> m_padSizeX;
-    std::array<double,nStations*nRegions> m_padSizeY;
+    std::array<std::pair<double,double>,nStations*nRegions> m_padSize;
 
     // local array of region sizes
-    std::array<double,nStations> m_regionInnerX; // inner edge in abs(x)
-    std::array<double,nStations> m_regionOuterX; // outer edge in abs(x)
-    std::array<double,nStations> m_regionInnerY; // inner edge in abs(y)
-    std::array<double,nStations> m_regionOuterY; // outer edge in abs(y)
+    std::array<std::pair<double,double>,nStations> m_regionInner; // inner edge in abs(x), abs(y)
+    std::array<std::pair<double,double>,nStations> m_regionOuter; // outer edge in abs(x), abs(y)
 
     // function that defines the field of interest size
     // formula is p(1) + p(2)*exp(-p(3)*momentum)
@@ -85,22 +79,16 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     // number of hits in the FOI found in the muon stations
     std::vector<unsigned int> m_occupancy;
 
-    Hlt1ConstMuonHits m_hits;
-    // FIXME:TODO -- can this be a local variable in findHits???
-    // FIXME:TODO -- replace by std::array<Hlt1ConstMuonHits,4> m_regionHits;
-    std::vector<Hlt1ConstMuonHits> m_regionHits;
-
     // Helper methods
     void extrapolateTrack( const LHCb::Track& track );
 
     bool preSelection( const LHCb::Track& track ) const;
 
-    void findHits( const LHCb::Track& track );
+    Hlt1ConstMuonHits findHits( const LHCb::Track& track );
 
     bool isMuon( const double p ) const;
 
-    double foiX( const int station, const int region, const double p ) const;
+    std::pair<double,double> foi( const int station, const int region, const double p ) const;
 
-    double foiY( const int station, const int region, const double p ) const;
 };
 #endif // ISMUONTOOL_H
