@@ -355,7 +355,7 @@ class CondDB(ConfigurableUser):
 
         # Set the location of the Online conditions
         if self.getProp('EnableRunChangeHandler') :
-            online_xml = '%s/%s/%s' % (baseloc, self.getProp('PartitionName')[0:4] , self.getProp('XMLFilename'))
+            online_xml = '%s/%s/%s' % (baseloc, self.getProp('PartitionName') , self.getProp('XMLFilename'))
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
             rch.Conditions = dict( (cnd, online_xml ) for cnd in self.getProp("RunChangeHandlerConditions") )
