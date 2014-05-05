@@ -16,6 +16,8 @@ Purpose: LHCb Digitization program
 
 - QMTest changes
   . Pick up boole-mc11a-xdst PFN from TestFileDB
+  . Add FPE and SC monitoring to some upgrade tests
+    (not in all yet, pending fixes in found problems)
 
 </PRE><H1><A NAME=v27r2>2014-03-21 Boole v27r2</A></H1><PRE>
 
