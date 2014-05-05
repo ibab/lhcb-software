@@ -4,6 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-05-05 - Gerhard Raven
+ - HltSelReportsWriter: further optimize LHCbID overlap search.
+   Note: the order of the LHCbID sequences in the raw bank has changed, any 
+         overlap now occurs 'prior' to the non-overlap. The corresponding
+         references to these sequences take this into account. So although the
+         bank content is not identical, it is still correct.
+
 !========================= HltDAQ v4r2 2014-04-23 =========================
 ! 2014-04-23 - Rob Lambert
  - Suppress warnings about splitting big banks into pieces. Make them debug.

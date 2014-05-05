@@ -25,6 +25,48 @@ using namespace LHCb;
 
 namespace {
   const Gaudi::StringKey InfoID{"InfoID"};
+
+
+template <typename Input1,  typename Input2,
+          typename Output1, typename Output2, typename Output3>
+void sets_decompose(Input1 first1, Input1 last1,
+                           Input2 first2, Input2 last2,
+                           Output1 result1, Output2 result2, Output3 result3)
+{
+    while (first1 != last1 && first2 != last2) {
+        if (*first1 < *first2) {
+            *result1++ = *first1++;
+        } else if (*first2 < *first1) {
+            *result2++ = *first2++;
+        } else {
+            *result3++ = *first1++;
+            ++first2; // skip common value in set2
+        }
+    }
+    std::copy(first1, last1, result1);
+    std::copy(first2, last2, result2);
+}
+
+template <typename S> class intersects {
+        const S& m_s;
+    public:
+        intersects(const S& s) : m_s(s) {};
+
+        bool operator()(const S& s) const {
+            auto first1 = std::begin(m_s);
+            auto last1  = std::end(m_s);
+            auto first2 = std::begin(s);
+            auto last2  = std::end(s);
+            while( first1!=last1 && first2!=last2) {
+                if      (*first1<*first2)  ++first1; 
+                else if (*first2<*first1)  ++first2; 
+                else return true;
+            }
+            return false;
+        }
+};
+template <typename S> intersects<S> intersects_( const S& s ) { return {s}; }
+
 }
 
 //-----------------------------------------------------------------------------
@@ -262,7 +304,6 @@ StatusCode HltSelReportsWriter::execute() {
     }
     stdInfoSubBank.push_back( stdInfo );
     extraInfoSubBank.push_back( extraInfo );
-    
 
     // substructure or hit sequence link vector
     HltSelRepRBSubstr::Substrv svect;
@@ -404,43 +445,24 @@ StatusCode HltSelReportsWriter::execute() {
 void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence&& set2,
                                                  LhcbidSequences& lhcbidSequences ) const
 {
-  if ( set2.empty() ) return;
-  for(auto  iSet1  = std::begin(lhcbidSequences); iSet1!=std::end(lhcbidSequences); ++iSet1) {
-    // first check full overlap -- no need to store, just skip
-    // is this needed as a special case? Is always checking == faster then set_intersection??
-    if( *iSet1 == set2 ){
-      set2.clear();
-      break;
-    }
-    // check  for overlap
-    LhcbidSequence setint;
-    set_intersection( std::begin(*iSet1),std::end(*iSet1),
-                      std::begin(set2),std::end(set2),
-                      std::inserter(setint,std::begin(setint)) );
-    if( setint.empty() ) continue;
-
-    // if any overlap, we replace the original with its subset not in the input
-    LhcbidSequence set1p;
-    set_difference(  std::begin(*iSet1),std::end(*iSet1),
-                     std::begin(setint),std::end(setint),
-                     std::inserter(set1p,std::begin(set1p)) );
-    lhcbidSequences.erase( iSet1 ); // this invalidates the loop iterators, but we break anyway
-    if( !set1p.empty() ) lhcbidSequences.emplace_back( std::move(set1p) );
-
-    // and then we split the input into the overlap and unique parts 
-    LhcbidSequence set2p;
-    set_difference(  std::begin(set2),std::end(set2),
-                     std::begin(setint),std::end(setint),
-                     std::inserter(set2p,std::begin(set2p)) );
-    // add the overlap
-    lhcbidSequences.emplace_back( std::move(setint) );
-    // don't need the original input anymore
-    set2.clear();
-    // and add the unique part of the input, if any
-    if(!set2p.empty() ) addToLhcbidSequences( std::move(set2p), lhcbidSequences );
-    // Done!
-    break;
+  LhcbidSequences::difference_type offset{ 0 };
+  while ( !set2.empty() ) {
+     auto iSet1 = std::find_if(std::begin(lhcbidSequences)+offset,std::end(lhcbidSequences), intersects_( set2 ));
+     if (iSet1==std::end(lhcbidSequences)) {
+        // no overlap, add everything in one shot...
+       lhcbidSequences.emplace_back( std::move(set2) );
+       assert(set2.empty());
+       break;
+     }
+     offset = std::distance( std::begin(lhcbidSequences), iSet1 );  // start of the next iteration
+     LhcbidSequence set1p,set2p,setin;
+     sets_decompose( std::begin(*iSet1), std::end(*iSet1),
+                     std::begin(set2),   std::end(set2),
+                     std::inserter( set1p, std::end(set1p) ),  // subset of set1, not in set2
+                     std::inserter( set2p, std::end(set2p) ),  // subset of set2, not in set1 
+                     std::inserter( setin, std::end(setin) ) ) ; // intersection of set1 and set2
+     if (iSet1->size()!=setin.size()) iSet1->swap(setin); // shrink set1 to its intersection with set2 
+     if (!set1p.empty()) lhcbidSequences.emplace_back( std::move(set1p) ); // add the non-overlapping part of set1
+     set2.swap(set2p);   // shrink set2 to its non-overlapping part
   }
-  // and if no overlap, we just add everything in one shot...
-  if( !set2.empty()) lhcbidSequences.emplace_back( std::move(set2) );
 }
