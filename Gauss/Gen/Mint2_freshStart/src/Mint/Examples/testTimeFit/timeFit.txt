@@ -1,0 +1,5 @@
+N		100
+generatedTime 	1.5
+
+* name  fix?    start   step    (min)   (max) 
+  tau   0       1       0.1
