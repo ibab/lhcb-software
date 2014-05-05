@@ -1,4 +1,0 @@
-
-"string from file" "By default, NamedParameters are initialised from stdin. This one got initialised from a file (OtherParameterFile.txt)"
-
-*

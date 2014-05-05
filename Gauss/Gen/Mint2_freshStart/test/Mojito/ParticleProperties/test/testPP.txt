@@ -1,6 +1,0 @@
-
-*doesn't really need any input, but wants a file anyhow, otherwise it will stall excecution until you press Ctr-D
-
-**"ParticlePropertiesList::ParticlePropertiesDir" another_mass_widh_with_strangeNumbers
-
-
