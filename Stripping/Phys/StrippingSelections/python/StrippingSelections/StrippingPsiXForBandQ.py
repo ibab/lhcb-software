@@ -828,7 +828,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             #
             ## algorithm configuration
             #
-            DecayDescriptor = "[B+ -> J/psi(1S) pi+ ]cc" ,
+            DecayDescriptor = "[B+ -> J/psi(1S) K+ ]cc" ,
             ##
             CombinationCut  = " mbu_acut | mbc_acut "    ,
             ## 

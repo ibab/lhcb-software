@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-05-05 - Vanya Belyaev
+ - StrippingPsiXForBandQ.py
+    psi_K: fix a sad stupid typo. 
+    Many thanks to Ekaterina Govorkova for pointing tot he problem
+
 !========================= StrippingSelections v3r33 2014-02-22 =========================
 
 ! 2014-02-22 - Stefano Perazzini
