@@ -322,7 +322,7 @@ private: // private member functions
    *  @param yIntersect y-coordinate of the crossing point (set by the function)
    *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
    */
-  StatusCode beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
+  void beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const;
 
   /** Function to determine the y coordinate of the crossing point between
    *  the beam-pipe hole (circle) and the fibres. Purely geometrical function.
@@ -331,9 +331,9 @@ private: // private member functions
    *  @param yIntersect y-coordinate of the crossing point (set by the function)
    *  @return StatusCode: does the fibre trajectory cross the beam-pipe circle
    */
-  StatusCode beamPipeYCoord(const double xcoord,
-                            const double ycoord,
-                            double& yIntersect) const;
+  void beamPipeYCoord(const double xcoord,
+		      const double ycoord,
+		      double& yIntersect) const;
 
   /** Function for light sharing between neighbouring SiPM cells.
    *  This model uses straight lines for describing the fibre fractions

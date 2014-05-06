@@ -1006,8 +1006,8 @@ double DeFTFibreMat::xAtVerticalBorder(double x0, double y0) const {
 // x0 is the x-coord@y=0 (i.e. the u-coordinate). The returned status code
 // signifies if there is at least one crossing point.
 //=============================================================================
-StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const {
-  StatusCode sc;
+void DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const {
+
   /// Solve the quadratic equation
   double a = 1 + m_tanAngle*m_tanAngle;
   double b = 2 * x0 * m_tanAngle;
@@ -1015,17 +1015,16 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double
   double D  = b*b - 4*a*c;
   if ( D < 0 ) {
     /// No real solutions ==> no crossing points
-    debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
-    sc = StatusCode::FAILURE;
+    // a dummy value to initialize the variable
+    yIntersect = 0.;
   }
   else {
     /// We have 2 solutions (can be degenerate)
     /// For ySign=1 (ySign=-1) will return the positive (negative) solution
     yIntersect = (-b + ySign*sqrt(D)) / (2*a);
-    sc = StatusCode::SUCCESS;
     // debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
   }
-  return sc;
+
 }
 
 //=============================================================================
@@ -1037,35 +1036,30 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double
 // x0 is the x-coord@y=0 (i.e. the u-coordinate). The returned status code
 // signifies if there is at least one crossing point.
 //=============================================================================
-StatusCode DeFTFibreMat::beamPipeYCoord(const double xcoord,
+void DeFTFibreMat::beamPipeYCoord(const double xcoord,
                                         const double ycoord,
                                         double& yIntersect) const {
-  StatusCode sc;
   /// Solve the quadratic equation
   double x0 = xAtYEq0(xcoord, ycoord);
   int ySign = 0;
   if(ycoord > 0) ySign = 1;
   if(ycoord < 0) ySign = -1;
 
-  double a = 1 + pow(m_tanAngle,2);
+  double a = 1 + m_tanAngle*m_tanAngle;
   double b = 2 * x0 * m_tanAngle;
-  double c = pow(x0,2) - pow(m_innerHoleRadius,2);
-  double D  = pow(b,2) - 4*a*c;
+  double c = x0*x0 - m_innerHoleRadius*m_innerHoleRadius;
+  double D  = b*b - 4*a*c;
   if ( D < 0 ) {
     /// No real solutions ==> no crossing points
-    debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
     // a dummy value to initialize the variable
-    yIntersec = 0.;
-    sc = StatusCode::FAILURE;
+    yIntersect = 0.;
   }
   else {
     /// We have 2 solutions (can be degenerate)
     /// For ySign=1 (ySign=-1) will return the positive (negative) solution
     yIntersect = ( -b + ySign*sqrt(D) ) / (2*a);
-    sc = StatusCode::SUCCESS;
-    debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
+    //debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
   }
-  return sc;
 }
 
 //=============================================================================
@@ -1084,7 +1078,8 @@ double DeFTFibreMat::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
   double MeanPointY = (lpExit.y() + lpEntry.y())/2.;
   // checks if entry point of hit is on a fibre shorten by beam hole
   beamPipeYCoord(MeanPointX,MeanPointY, YFibreXHole);
-  
+  if( YFibreXHole == 0. && m_msg->level() <= MSG::DEBUG ) debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
+
   
   // return the lengh of the fibre taking into account the stereo angle
   return (2.*m_fibreMatHalfSizeY - std::abs(YFibreXHole))/cos(m_angle);
