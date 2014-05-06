@@ -30,11 +30,6 @@ class DecayTreeItem{
     // parityFactor just returns the defaultParityFactor,
     // which is 1 for particles, -1 for antiparticles
     // and 1 for particles that are their own antiparticles.
-    // It is the latter case where one might at some point
-    // like to be able to change the behaviour, i.e.
-    // when CP-conjugating a decay of a C eigenstate (but not
-    // needed for a CP eigenstate, I'd think).
-    //
     return (_pdg_id < 0 ? -1 : +1);
   }
  public: 

@@ -8,16 +8,17 @@
 // http://prola.aps.org/abstract/PRD/v68/i3/e033003
 //
 
+#include "Mint/IGetComplexEvent.h"
 #include "Mint/IDalitzEvent.h"
 
 #include "Mint/IEventGenerator.h"
 
-#include "Mint/IReturnComplexForEvent.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetComplexEvent.h"
 
 #include "Mint/FitAmpSum.h"
 
 #include "Mint/counted_ptr.h"
+#include "Mint/IGetRealEvent.h"
 
 #include <complex>
 #include <iostream>
@@ -32,7 +33,7 @@ class CoherenceFactor{
 
   FitAmpSum _A_plus_Abar;
   MINT::counted_ptr< MINT::IEventGenerator<IDalitzEvent> > _myOwnGenAplusAbar;
-  MINT::IReturnRealForEvent<IDalitzEvent>* _eff;
+  MINT::IGetRealEvent<IDalitzEvent>* _eff;
   double _precision;
 
   double _sumASq,    _sumASqSquared;
@@ -42,12 +43,12 @@ class CoherenceFactor{
   long int _Nevents;
 
 
-  MINT::IReturnComplexForEvent<IDalitzEvent>* A(){
-    return (MINT::IReturnComplexForEvent<IDalitzEvent>*)_A;}
-  MINT::IReturnComplexForEvent<IDalitzEvent>* Abar(){
-    return (MINT::IReturnComplexForEvent<IDalitzEvent>*) _Abar;}
-  std::complex<double> A_Value(IDalitzEvent& evt);
-  std::complex<double> Abar_Value(IDalitzEvent& evt);
+  MINT::IGetComplexEvent<IDalitzEvent>* A(){
+    return (MINT::IGetComplexEvent<IDalitzEvent>*)_A;}
+  MINT::IGetComplexEvent<IDalitzEvent>* Abar(){
+    return (MINT::IGetComplexEvent<IDalitzEvent>*) _Abar;}
+  std::complex<double> A_Value(IDalitzEvent* evtPtr);
+  std::complex<double> Abar_Value(IDalitzEvent* evtPtr);
 
   MINT::counted_ptr< MINT::IEventGenerator<IDalitzEvent> > getGenerator();
 
@@ -71,17 +72,13 @@ class CoherenceFactor{
 
   std::complex<double> Rval() const;
 
-  double getEff(IDalitzEvent& evt);
-  double getEff(MINT::counted_ptr<IDalitzEvent> evtPtr){
-    if(0 == evtPtr) return 0;
-    return getEff(*evtPtr);// just for backward compatibility.
-  }
+  double getEff(MINT::counted_ptr<IDalitzEvent> evt);
 
  public:
   CoherenceFactor(FitAmpSum& A, FitAmpSum& Abar
 		  , double CSAbs = 1
 		  , double CSPhase = 0.0
-		  , MINT::IReturnRealForEvent<IDalitzEvent>* eff=0
+		  , MINT::IGetRealEvent<IDalitzEvent>* eff=0
 		  , double prec=1.e-3);
 
   std::complex<double> var()const;

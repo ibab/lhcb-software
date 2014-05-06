@@ -121,7 +121,7 @@ double BWFct::generatingPDFValue(double sij) const{
 	 << " = " << fct/nr
 	 << endl;
   }
-  return fct/nr;
+  return fct;
 }
 double BWFct::generatingFctValue(double sij) const{
   //  bool dbThis = false;

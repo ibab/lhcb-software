@@ -26,7 +26,6 @@ class SignalGenerator
 : public BaseGenerator
 , virtual public MINT::IEventGenerator<IDalitzEvent>{
  protected:
-  DalitzEventPattern _pat;
   MINT::MinuitParameterSet _myOwnPSet;
   MINT::counted_ptr<IFastAmplitudeIntegrable> _counted_amps;
   IFastAmplitudeIntegrable* _amps;
@@ -35,8 +34,7 @@ class SignalGenerator
   bool makeBoxes();
  public:
   SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd=gRandom);
-  SignalGenerator(const DalitzEventPattern& pat
-		  , IFastAmplitudeIntegrable* amps, TRandom* rnd=gRandom);
+  SignalGenerator(IFastAmplitudeIntegrable* amps, TRandom* rnd=gRandom);
   SignalGenerator(const DalitzEventPattern& pat
 		  , double rB
 		  , double phase

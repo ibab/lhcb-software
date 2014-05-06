@@ -74,7 +74,11 @@ void DalitzBoxSet_Method2::getReady(){
 double DalitzBoxSet_Method2::eventsPDF(DalitzEvent& evt){
 
   if(0 == _amps ) return 0;
-  double val = _amps->RealVal(evt);
+  
+  _amps->setEvent(&evt);
+  double val = _amps->RealVal();
+  _amps->resetEventRecord();
+
   return val;
 }
 

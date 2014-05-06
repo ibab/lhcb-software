@@ -101,8 +101,8 @@ bool FitAmpPair::add(const FitAmpPair& other){
 }
 void FitAmpPair::addToHistograms(IDalitzEvent* evtPtr
 				 , const std::complex<double>& c){
-  _hsRe.addEvent(*evtPtr, c.real());
-  _hsIm.addEvent(*evtPtr, c.imag());
+  _hsRe.addEvent(evtPtr, c.real());
+  _hsIm.addEvent(evtPtr, c.imag());
 }
 
 const std::string& FitAmpPair::makeName(){
@@ -370,12 +370,17 @@ complex<double> FitAmpPair::lastEntry() const{
 complex<double> FitAmpPair::ampValue(IDalitzEvent* evtPtr){
   if(0 == _a1 || 0 == _a2 || 0 == evtPtr) return 0;
 
+  _a1->setEvent(evtPtr);
+  _a2->setEvent(evtPtr);
 
-  complex<double> c1 = _a1->getValWithoutFitParameters(*evtPtr);
-  complex<double> c2 = _a2->getValWithoutFitParameters(*evtPtr);
+  complex<double> c1 = _a1->getValWithoutFitParameters();
+  complex<double> c2 = _a2->getValWithoutFitParameters();
   complex<double> c2star = conj(c2);
   
   complex<double> val = (c1 * c2star);
+
+  _a1->resetEventRecord();
+  _a2->resetEventRecord();
 
   return val;
 }

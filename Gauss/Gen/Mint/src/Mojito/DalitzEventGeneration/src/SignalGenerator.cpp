@@ -10,11 +10,10 @@ using namespace MINT;
 
 SignalGenerator::SignalGenerator(const DalitzEventPattern& pat, TRandom* rnd)
   : BaseGenerator(rnd)
-  , _pat(pat)
   , _myOwnPSet()
   , _counted_amps(new FitAmpSum(pat, &_myOwnPSet))
   , _amps(_counted_amps.get())
-  , _boxes(_amps->makeEventGenerator(pat))
+  , _boxes(_amps->makeEventGenerator())
 {
   _boxes->setRnd(rnd);
 }
@@ -23,7 +22,6 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
 				 , double phase
 				 , TRandom* rnd)
   : BaseGenerator(rnd)
-  , _pat(pat)
   , _myOwnPSet()
   , _counted_amps(0)
   , _amps(0)
@@ -49,14 +47,11 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
   _boxes->setRnd(_rnd);
   */
 }
-SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
-				 , IFastAmplitudeIntegrable* amps
-				 , TRandom* rnd)
+SignalGenerator::SignalGenerator(IFastAmplitudeIntegrable* amps, TRandom* rnd)
   : BaseGenerator(rnd)
-  , _pat(pat)
   , _myOwnPSet()
   , _amps(amps)
-  , _boxes(_amps->makeEventGenerator(pat))
+  , _boxes(_amps->makeEventGenerator())
 {
   _boxes->setRnd(_rnd);
 }
@@ -64,7 +59,7 @@ SignalGenerator::SignalGenerator(const DalitzEventPattern& pat
 bool SignalGenerator::makeBoxes(){
   if(0 == _amps) return 0;
   counted_ptr< IUnweightedEventGenerator<IDalitzEvent> > 
-    bpt(_amps->makeEventGenerator(_pat));
+    bpt(_amps->makeEventGenerator());
   _boxes = bpt;
   if(0 == _boxes) return 0;
   _boxes->setRnd(_rnd);
@@ -94,20 +89,15 @@ counted_ptr<IDalitzEvent> SignalGenerator::tryDalitzEvent(){
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
-  bool dbThis=false;
-  counted_ptr<IDalitzEvent> evtPtr(0);
+  counted_ptr<IDalitzEvent> evt(0);
   int counter(0);
   int largeNumber(1000000);
 
   do{
-    evtPtr = tryDalitzEvent();
-  }while(0 == evtPtr &&  counter++ < largeNumber);
-  if(saveEvents()) _evtList->Add(evtPtr);
-  if(dbThis){
-    cout << "SignalGenerator::newDalitzEvent:"
-	 << " just generated this event:\n" << *evtPtr << endl;
-  }
-  return evtPtr;
+    evt = tryDalitzEvent();
+  }while(0 == evt &&  counter++ < largeNumber);
+  if(saveEvents()) _evtList->Add(evt);
+  return evt;
 }
 
 bool SignalGenerator::ensureFreshEvents(){

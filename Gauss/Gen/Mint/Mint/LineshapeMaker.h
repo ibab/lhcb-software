@@ -5,10 +5,12 @@
 
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
+#include "Mint/IDalitzEventAccess.h"
 
 #include <string>
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
+			   , IDalitzEventAccess* events
 			   , const std::string& lopt
 			   );
 

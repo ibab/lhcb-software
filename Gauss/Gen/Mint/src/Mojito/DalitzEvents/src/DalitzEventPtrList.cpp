@@ -20,16 +20,86 @@ using namespace MINT;
 const std::string DalitzEventPtrList::_className("DalitzEventPtrList");
 
 DalitzEventPtrList::DalitzEventPtrList() 
-  : EventPtrList<DalitzEvent>() 
+  : EventPtrList<IDalitzEvent, DalitzEvent>() 
 {
 }
 
 DalitzEventPtrList::DalitzEventPtrList( const DalitzEventPtrList& other ) 
-  : IEventList<DalitzEvent>()
-  , EventPtrList<DalitzEvent>(other) 
+  : ILoopable()
+  , IBasicEventAccess<IDalitzEvent>()
+  , IEventList<IDalitzEvent>()
+  , EventPtrList<IDalitzEvent, DalitzEvent>(other) 
 {
 }
 
+int DalitzEventPtrList::generateEvents(unsigned int NumEvents
+				    , const DalitzEventPattern& pat
+				    , IGetRealEvent<IDalitzEvent>* amps
+				    , TRandom* rnd
+				    ){
+  time_t startTime = time(0);
+  int startSize = this->size();
+  int N_toStartWith = 50000;
+  if(pat.size() >= 5){
+    N_toStartWith *= 10;
+  }
+  DalitzEventPtrList newList;
+  newList.generatePhaseSpaceEvents(N_toStartWith, pat, rnd);
+
+  double max = -9999;
+  newList.findMaxAndThrowAwayData(max, amps, NumEvents, rnd); 
+  // throws away data & tells us estimated absolute max
+  this->Add(newList);
+
+  amps->setEventRecord(&newList);
+  int counter = 0;
+  while(this->size()-startSize < NumEvents){
+    counter++;
+    bool printit = ! (counter%50000);
+    counted_ptr<DalitzEvent> evt(new DalitzEvent(pat, rnd));
+
+    newList.clear();
+    newList.Add(evt);
+    newList.Start();
+    newList.Next();
+    double d=amps->RealVal();
+    
+    if(d > max){
+      cout << "DalitzEventPtrList::generateEvents: ERROR: We're in some trouble: amps value = " << d
+	   << "\n is larger than the estimated maximum of " << max
+	   << "\n This could mean the data are worthless."
+	   << " I'll continue generating anyway, but"
+	   << "\n I'll re-set max to this maximum + 10% safety margin";
+      max = d*1.1;
+      cout << " = " << max << endl;
+    }
+
+    if(printit){
+      cout << " DalitzEventPtrList::generateEvents INFO: current size " 
+	   << this->size()
+	   << " target: " << NumEvents
+	   << "\n this took " << difftime(time(0), startTime)/60 
+	   << " minutes"
+	   << endl;
+      cout << " current event gives amps = " << d
+	   << " for max = " << max
+	   << " ... accepted? ";
+    }
+    if(rnd->Rndm()*max < d){
+      if(printit) cout << " yes";
+      this->Add(evt);
+    }else{
+      if(printit) cout << "no";
+    }
+    if(printit) cout << endl;
+  }
+  amps->resetEventRecord();
+
+  cout << "DalitzEventPtrList::generateEvents: generating " << this->size() 
+       << " Events took: " <<  difftime(time(0), startTime)/60 << " minutes"
+       << endl;
+  return this->size();
+}
 int DalitzEventPtrList::generatePhaseSpaceEvents(int NumEvents
 					      , const DalitzEventPattern& pat
 					      , TRandom* rnd
@@ -106,8 +176,7 @@ TNtupleD* DalitzEventPtrList::makeNtuple(const std::string& ntpName, const bool 
 DalitzHistoSet DalitzEventPtrList::histoSet() const{
   DalitzHistoSet hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt((*this)[i]);
-    hs.addEvent(evt);
+    hs.addEvent(&(*(*this)[i]));
   }
   return hs;
 }
@@ -115,29 +184,30 @@ DalitzHistoSet DalitzEventPtrList::weightedHistoSet() const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt((*this)[i]);
-    hs.addEvent(evt, evt.getWeight());
+    hs.addEvent(&(*(*this)[i]), (*(*this)[i]).getWeight());
   }
   return hs;
 }
-DalitzHistoSet DalitzEventPtrList::reWeightedHistoSet(IReturnRealForEvent<IDalitzEvent>* w){
+DalitzHistoSet DalitzEventPtrList::reWeightedHistoSet(IGetDalitzEvent* w) const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   if(0 == w) return hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt((*this)[i]);
-    hs.addEvent(evt, w->RealVal(evt) );
+    w->setEvent( &(*(*this)[i]));
+    hs.addEvent(&(*(*this)[i]), w->RealVal());
+    w->resetEventRecord();
   }
   return hs;
 }
 
-DalitzHistoSet DalitzEventPtrList::weighedReWeightedHistoSet(IReturnRealForEvent<IDalitzEvent>* w){
+DalitzHistoSet DalitzEventPtrList::weighedReWeightedHistoSet(IGetDalitzEvent* w) const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   if(0 == w) return hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt((*this)[i]);
-    hs.addEvent(evt, w->RealVal(evt) * evt.getWeight());
+    w->setEvent( &(*(*this)[i]));
+    hs.addEvent(&(*(*this)[i]), w->RealVal() * (*(*this)[i]).getWeight());
+    w->resetEventRecord();
   }
   return hs;
 }

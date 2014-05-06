@@ -6,6 +6,7 @@
 #include "ILineshape.h"
 #include "CLEO2012_BW_BW.h"
 #include "AssociatedDecayTree.h"
+#include "IDalitzEventAccess.h"
 #include "CLHEPSystemOfUnits.h"
 #include "CLHEPPhysicalConstants.h"
 #include "NamedParameter.h"
@@ -39,10 +40,11 @@ class CLEO2012_Lass : public CLEO2012_BW_BW, virtual public ILineshape{
 
  public:
   
-  CLEO2012_Lass( const AssociatedDecayTree& decay);
+  CLEO2012_Lass( const AssociatedDecayTree& decay
+	, IDalitzEventAccess* events);
   CLEO2012_Lass(const CLEO2012_Lass& other);
 
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal();
 
   virtual std::string name() const{
     return "LASS("+_theDecay.oneLiner() +")";

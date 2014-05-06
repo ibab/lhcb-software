@@ -7,10 +7,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <stack>
 
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/IDalitzEventAccess.h"
+//#include "fitSetup.h"
 
 #include "Mint/DalitzCoordinate.h"
 
@@ -26,10 +28,8 @@ class ParticleProperties;
 
 // Breit-Wigner with Blatt-Weisskopf penetration factors.
 // Can only do 2 body decays for now... (it's the BW penetration factors)
-class CLEO2012_BW_BW : virtual public ILineshape{
+class CLEO2012_BW_BW : public DalitzEventAccess, virtual public ILineshape{
  private:
-  mutable IDalitzEvent* _eventPtr;
-
   mutable double _prSq, _pABSq, _mumsPDGMass, _mumsWidth, 
     _mumsRecoMass2, _mumsRecoMass, _Fr_BELLE, _Fr_PDG_BL, _GofM;
   mutable int _mumsPID;
@@ -65,9 +65,6 @@ class CLEO2012_BW_BW : virtual public ILineshape{
   virtual double twoBody_dgtPsq_in_MumsPDGFrame() const;
   virtual double twoBody_dgtPsq_in_MumsRecoFrame();
   
-  bool setEventPtr(IDalitzEvent& evt) const;
-  IDalitzEvent* getEvent() const;
-
  public:
   virtual double prSq() const;
   virtual double pABSq();
@@ -139,16 +136,16 @@ class CLEO2012_BW_BW : virtual public ILineshape{
 
   virtual void resetPDG();
  public:
-  CLEO2012_BW_BW( const AssociatedDecayTree& decay);
-
+  CLEO2012_BW_BW( const AssociatedDecayTree& decay
+	 , IDalitzEventAccess* events);
   CLEO2012_BW_BW(const CLEO2012_BW_BW& other);
   virtual ~CLEO2012_BW_BW();
 
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
-  //  virtual std::complex<double> getValAtResonance();
-  //virtual std::complex<double> getSmootherLargerVal();
+  virtual std::complex<double> getVal();
+  virtual std::complex<double> getValAtResonance();
+  virtual std::complex<double> getSmootherLargerVal();
+  virtual void print(std::ostream& out = std::cout);
   virtual void print(std::ostream& out = std::cout) const;
-  virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout);
 
   virtual DalitzCoordinate getDalitzCoordinate(double nSigma=3) const;
   virtual MINT::counted_ptr<IGenFct> generatingFunction() const;

@@ -24,11 +24,6 @@ ComplexProduct::ComplexProduct(const std::complex<double>& z)
 ComplexProduct::ComplexProduct(const ComplexProduct& other)
   : _facVec(), _fixedDoubleVec(), _fixedComplexVec()
 {
-  multiply(other);
-}
-
-void ComplexProduct::multiply(const ComplexProduct& other)
-{
   for(unsigned int i=0; i< other._facVec.size(); i++){
     addTerm(other._facVec[i]);
   }
@@ -39,7 +34,6 @@ void ComplexProduct::multiply(const ComplexProduct& other)
     addTerm(other._fixedComplexVec[i]);
   }
 }
-
 
 void ComplexProduct::addTerm(double val){
   _fixedDoubleVec.push_back(val);
@@ -73,11 +67,6 @@ ComplexProduct& ComplexProduct::operator*=(const std::complex<double>& z){
 ComplexProduct& ComplexProduct::operator*=(const counted_ptr<IReturnComplex>& 
 					   irc){
   addTerm(irc);
-  return *this;
-}
-
-ComplexProduct& ComplexProduct::operator*=(const ComplexProduct& cp){
-  multiply(cp);
   return *this;
 }
 

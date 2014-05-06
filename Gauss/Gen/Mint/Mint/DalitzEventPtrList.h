@@ -7,6 +7,7 @@
 
 #include "Mint/EventPtrList.h"
 #include "Mint/IDalitzEvent.h"
+#include "Mint/IDalitzEventList.h"
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzHistoSet.h"
 //#include "Mint/IDalitzEventAccess.h"
@@ -22,7 +23,7 @@
 #include "Mint/PlotSet.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetDalitzEvent.h"
 
 class TRandom;
 class TH1D;
@@ -32,7 +33,8 @@ class TNtupleD;
 class FitAmpSum;
 
 class DalitzEventPtrList : 
-public MINT::EventPtrList<DalitzEvent>
+public MINT::EventPtrList<IDalitzEvent, DalitzEvent>
+  , public virtual IDalitzEventList
 {
   static const std::string _className;
  protected:
@@ -49,14 +51,14 @@ public MINT::EventPtrList<DalitzEvent>
 			       );
   int generateEvents(unsigned int NumEvents
 		     , const DalitzEventPattern& pat
-		     , MINT::IReturnRealForEvent<IDalitzEvent>* amps
+		     , MINT::IGetRealEvent<IDalitzEvent>* amps
 		     , TRandom* rnd
 		     );
 
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet() const;
-  DalitzHistoSet reWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w) ;
-  DalitzHistoSet weighedReWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w);
+  DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) const;
+  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) const;
 
   bool save(const std::string& fname = "DalitzEvents.root", const bool addSij = false) const;
   bool fromFile(const std::string& fname = "DalitzEvents.root");

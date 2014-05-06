@@ -16,7 +16,7 @@ class TTree;
 class IDalitzEvent;
 
 class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
-  //mutable TTree* _tree;
+  mutable TTree* _tree;
   std::string _name;
   void makeHistograms(const DalitzEventPattern& pat);
   bool makeDirectory(const std::string& asSubdirOf)const;
@@ -32,7 +32,7 @@ class DalitzHistoSet : public std::map< DalitzCoordSet, DalitzHistogram>{
   void divide(const DalitzHistogram& hL);
   void divide(const DalitzHistoSet& hL);
 
-  void addEvent(const IDalitzEvent& evt, double weight=1);
+  void addEvent(const IDalitzEvent* evtPtr, double weight=1);
   void scale(double sf);
   void setNormFactor(double sf=1);
   void clearAllHistos();

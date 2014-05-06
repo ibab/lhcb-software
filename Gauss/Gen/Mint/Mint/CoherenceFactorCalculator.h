@@ -8,16 +8,17 @@
 // http://prola.aps.org/abstract/PRD/v68/i3/e033003
 //
 
-#include "Mint/IReturnComplexForEvent.h"
-#include "Mint/IReturnRealForEvent.h"
-
+#include "Mint/IGetComplexEvent.h"
 #include "Mint/IDalitzEvent.h"
 
 #include "Mint/IEventGenerator.h"
 
+#include "Mint/IGetComplexEvent.h"
+
 #include "Mint/FitAmpSum.h"
 
 #include "Mint/counted_ptr.h"
+#include "Mint/IGetRealEvent.h"
 
 #include "Mint/CoherenceFactorStoreAndEvaluate.h"
 
@@ -43,7 +44,7 @@ class CoherenceFactorCalculator{
   CoherenceFactorCalculator(FitAmpSum& A, FitAmpSum& Abar
 			    , double CSAbs = 1
 			    , double CSPhase = 0.0
-			    , MINT::IReturnRealForEvent<IDalitzEvent>* eff=0
+			    , MINT::IGetRealEvent<IDalitzEvent>* eff=0
 			    , double prec=1.e-3
 			    , const std::string& name = "coherenceFactorC"
 			    );

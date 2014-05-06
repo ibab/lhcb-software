@@ -10,23 +10,24 @@ FromFileGenerator::FromFileGenerator(const std::string& fname)
   , _opt("READ")
   , _dL(fname,1,"DalitzEventList")
   , _listExhausted(false)
-  , _listIndex(0)
   , _gen(0)
 {
 	  std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+
+  _dL.Start();
 }
 FromFileGenerator::FromFileGenerator(const std::string& fname
 				     , IEventGenerator<IDalitzEvent>* 
 				                    addThisWhenFileEmpty
 				     , const std::string& opt)
   : BaseGenerator()
-  , _opt(  ("" != opt ? opt : ( 0 == addThisWhenFileEmpty ? "READ" : "UPDATE") ) ) 
+  , _opt(opt)
   , _dL(fname, 1, "DalitzEventList", _opt)
   , _listExhausted(false)
-  , _listIndex(0)
   , _gen(addThisWhenFileEmpty)
 {
   std::cout << "Got Intergrator events " << _dL.size() << std::endl;
+  _dL.Start();
 }
 
 counted_ptr<IDalitzEvent> FromFileGenerator::newEventFromGenerator(){
@@ -46,23 +47,19 @@ counted_ptr<IDalitzEvent> FromFileGenerator::newEventFromGenerator(){
 	   << " opt = " << _opt << endl;
     }
     _dL.Add(evtPtr.get());
-    _listIndex++;
   }
   return evtPtr;
 }
 counted_ptr<IDalitzEvent> FromFileGenerator::newDalitzEvent(){
   if(_listExhausted) return newEventFromGenerator();
-  if(_listIndex < _dL.size()){
-    
-    counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(_dL.getEvent(_listIndex)));
+  if(_dL.Next()){
+    counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(_dL.getEvent()));
     if(mothers3MomentumIsSet() && 0 != evtPtr){
       evtPtr->setMothers3Momentum(mothers3Momentum());
     }
-    _listIndex++;
     return evtPtr;
-  }else{
-    _listExhausted=true;
   }
+  else _listExhausted=true;
   return newEventFromGenerator();
 }
 

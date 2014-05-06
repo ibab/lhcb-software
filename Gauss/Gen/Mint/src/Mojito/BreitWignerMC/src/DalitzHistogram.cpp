@@ -320,8 +320,10 @@ void DalitzHistogram::divide(const DalitzHistogram& divideBy){
   _h->Divide((divideBy.histo().get()));
   return;
 }
-void DalitzHistogram::addEvent(const IDalitzEvent& evt, double weight){
-  _h->Fill(evt.sij(_c.begin()->second)/_units, weight);
+void DalitzHistogram::addEvent(const IDalitzEvent* evtPtr, double weight){
+  if(0 == evtPtr) return;
+  // needs to change!!
+  _h->Fill(evtPtr->sij(_c.begin()->second)/_units, weight);
 }
 
 void DalitzHistogram::scale(double sf){

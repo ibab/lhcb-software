@@ -7,8 +7,8 @@
 //
 #include "Mint/CoherenceFactorStoreAndEvaluate.h"
 #include "Mint/FitAmpSum.h"
-#include "Mint/IReturnRealForEvent.h"
-#include "Mint/IReturnComplexForEvent.h"
+#include "Mint/IGetRealEvent.h"
+#include "Mint/IGetComplexEvent.h"
 #include "Mint/CLHEPPhysicalConstants.h"
 
 using namespace std;
@@ -19,7 +19,7 @@ CoherenceFactorStoreAndEvaluate(FitAmpSum& A
 				, FitAmpSum& Abar
 				, double CSAbs
 				, double CSPhase
-				, IReturnRealForEvent<IDalitzEvent>* eff
+				, IGetRealEvent<IDalitzEvent>* eff
 				, double prec
 				)
   : _A(&A)
@@ -38,14 +38,17 @@ CoherenceFactorStoreAndEvaluate(FitAmpSum& A
 {
 }
 
-double CoherenceFactorStoreAndEvaluate::getEff(IDalitzEvent& evt){
+double CoherenceFactorStoreAndEvaluate::getEff(counted_ptr<IDalitzEvent> evt){
   if(0 == _eff) return 1.0;
-  return _eff->RealVal(evt);
+  _eff->setEvent(evt.get());
+  double val = _eff->RealVal();
+  _eff->resetEventRecord();
+  return val;
 }
 double CoherenceFactorStoreAndEvaluate::estimatedPrecision() const{
   if(_Nevents <= 0) return 9999;
   double s = sigmaAbs();
-  if(s < 0) s *= -1;
+  if(s < 0) s *=-1;
   return s;
 }
 
@@ -228,15 +231,23 @@ double CoherenceFactorStoreAndEvaluate::phaseR() const{
 double CoherenceFactorStoreAndEvaluate::phaseRdeg() const{
   return arg(Rval())*180.0/pi;
 }
-complex<double> CoherenceFactorStoreAndEvaluate::A_Value(IDalitzEvent& evt){
-  return A()->ComplexVal(evt);
+complex<double> CoherenceFactorStoreAndEvaluate::A_Value(IDalitzEvent* evtPtr){
+  //  bool dbThis=false;
+  A()->setEvent(evtPtr);
+  complex<double> val = A()->ComplexVal();
+  A()->resetEventRecord();
+  return val;
 }
-complex<double> CoherenceFactorStoreAndEvaluate::Abar_Value(IDalitzEvent&
-							    evt){
+complex<double> CoherenceFactorStoreAndEvaluate::Abar_Value(IDalitzEvent* 
+							    evtPtr){
   bool dbThis=false;
   if(dbThis) cout << "CoherenceFactorStoreAndEvaluate::Abar_Value" << endl;
-  complex<double> val = Abar()->ComplexVal(evt);
-  if(dbThis) cout << "got value: " << val << endl;
+  Abar()->setEvent(evtPtr);
+  if(dbThis) cout << "set event pointer" << endl;
+  complex<double> val = Abar()->ComplexVal();
+  if(dbThis) cout << "got value" << endl;
+  Abar()->resetEventRecord();
+  if(dbThis) cout << "reset it" << endl;
   return val;
 }
 
@@ -260,9 +271,13 @@ bool CoherenceFactorStoreAndEvaluate::addEvent(counted_ptr<IDalitzEvent>&
   if(10 == _tries){
     cout << "=======================\n";
     cout << "all A amplitudes\n";
+    _A->setEvent(evtPtr.get());
     _A->printAllAmps();
+    _A->resetEventRecord();
     cout << "all Abar ampltiudes\n";
+    _Abar->setEvent(evtPtr.get());
     _Abar->printAllAmps();
+    _Abar->resetEventRecord();
     cout <<endl;
   }
   double w = evtPtr->getWeight()
@@ -283,9 +298,9 @@ bool CoherenceFactorStoreAndEvaluate::addEvent(counted_ptr<IDalitzEvent>&
   double d_a = norm(c_a);
   double d_abar = norm(c_abar);
 
-  _histoA.addEvent(*evtPtr, d_a);
-  _histoAbar.addEvent(*evtPtr, d_abar);
-  _histoBoth.addEvent(*evtPtr, norm(c_a + c_abar));
+  _histoA.addEvent(evtPtr.get(), d_a);
+  _histoAbar.addEvent(evtPtr.get(), d_abar);
+  _histoBoth.addEvent(evtPtr.get(), norm(c_a + c_abar));
   
   _sumASq += d_a;
   _sumASqSquared += d_a*d_a;

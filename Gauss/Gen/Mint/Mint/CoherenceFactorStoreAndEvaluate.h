@@ -8,11 +8,13 @@
 // http://prola.aps.org/abstract/PRD/v68/i3/e033003
 //
 
-#include "Mint/IReturnComplexForEvent.h"
-#include "Mint/IReturnRealForEvent.h"
-
+#include "Mint/IGetComplexEvent.h"
 #include "Mint/IDalitzEvent.h"
+
 #include "Mint/IEventGenerator.h"
+
+#include "Mint/IGetComplexEvent.h"
+#include "Mint/IGetRealEvent.h"
 
 #include "Mint/FitAmpSum.h"
 #include "Mint/DalitzHistoSet.h"
@@ -33,7 +35,7 @@ class CoherenceFactorStoreAndEvaluate{
   double _CSPhase;
 
   FitAmpSum _A_plus_Abar;
-  MINT::IReturnRealForEvent<IDalitzEvent>* _eff;
+  MINT::IGetRealEvent<IDalitzEvent>* _eff;
   double _precision;
 
   double _sumASq,    _sumASqSquared;
@@ -44,21 +46,13 @@ class CoherenceFactorStoreAndEvaluate{
   long int _tries;
   long int _Nevents;
 
-  MINT::IReturnComplexForEvent<IDalitzEvent>* A(){
-    return (MINT::IReturnComplexForEvent<IDalitzEvent>*)_A;}
-  MINT::IReturnComplexForEvent<IDalitzEvent>* Abar(){
-    return (MINT::IReturnComplexForEvent<IDalitzEvent>*) _Abar;}
+  MINT::IGetComplexEvent<IDalitzEvent>* A(){
+    return (MINT::IGetComplexEvent<IDalitzEvent>*)_A;}
+  MINT::IGetComplexEvent<IDalitzEvent>* Abar(){
+    return (MINT::IGetComplexEvent<IDalitzEvent>*) _Abar;}
 
-  std::complex<double> A_Value(IDalitzEvent& evt);
-  std::complex<double> A_Value(IDalitzEvent* evtPtr){
-    if(0 == evtPtr) return 0;
-    return A_Value(*evtPtr);
-  }
-  std::complex<double> Abar_Value(IDalitzEvent& evt);
-  std::complex<double> Abar_Value(IDalitzEvent* evtPtr){
-    if(0 == evtPtr) return 0;
-    return Abar_Value(*evtPtr);
-  }
+  std::complex<double> A_Value(IDalitzEvent* evtPtr);
+  std::complex<double> Abar_Value(IDalitzEvent* evtPtr);
 
   std::complex<double> integAxAbarStar()const;
   double integA()const;
@@ -81,18 +75,13 @@ class CoherenceFactorStoreAndEvaluate{
 
   std::complex<double> Rval() const;
 
-  double getEff(IDalitzEvent& evt);
-  double getEff(MINT::counted_ptr<IDalitzEvent> evtPtr){
-    if(0 == evtPtr) return 0;
-    return getEff(*evtPtr);
-  }
-
+  double getEff(MINT::counted_ptr<IDalitzEvent> evt);
 
  public:
   CoherenceFactorStoreAndEvaluate(FitAmpSum& A, FitAmpSum& Abar
 				  , double CSAbs = 1
 				  , double CSPhase = 0.0
-				  , MINT::IReturnRealForEvent<IDalitzEvent>* eff=0
+				  , MINT::IGetRealEvent<IDalitzEvent>* eff=0
 				  , double prec=1.e-3);
   std::complex<double> var()const;
   std::complex<double> sigma()const;

@@ -3,11 +3,9 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
 
-#include "Mint/IMinimalEventList.h"
-#include "Mint/IReturnRealForEvent.h"
-#include "Mint/IReturnComplexForEvent.h"
-
 #include "Mint/IDalitzEvent.h"
+#include "Mint/IDalitzEventList.h"
+#include "Mint/IGetDalitzEvent.h"
 #include "Mint/DalitzEvent.h"
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzHistoSet.h"
@@ -23,8 +21,10 @@ class TFile;
    valid until the next operation on the list is carried out,
    so if you want to use the event longer, use getEventCopy.
  */
-class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent>{
+class DiskResidentEventList : virtual public IDalitzEventList{
  protected:
+  MINT::counted_ptr<DalitzEvent> _currentEvent;
+  mutable MINT::counted_ptr<DalitzEvent> _rEvent;
   std::string _fname;
   std::string _opt;
 
@@ -34,6 +34,7 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
 
 
   bool _initialised;
+  unsigned int currentPosition, nextPosition;
 
   static int __maxBytes;
   std::string cName();
@@ -45,9 +46,13 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
   bool fromFile();
 
   bool init();
+  bool Start_noInit();
  public:
 
   DiskResidentEventList();
+//  DiskResidentEventList(const std::string& fname
+//		  	, const std::string& treeName = "DalitzEventList"
+//			, const std::string& opt="UPDATE");
 
   DiskResidentEventList(const std::string& fname
 			, const std::string& opt="UPDATE"
@@ -64,15 +69,9 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
 			, const std::string& fname
 			, const std::string& opt="RECREATE");
 
-  DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
+  DiskResidentEventList(const IDalitzEventList& otherList
 			);
-  DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
-			);
-  DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
-			, const std::string& newFname
-			, const std::string& opt="RECREATE"
-			);
-  DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
+  DiskResidentEventList(const IDalitzEventList& otherList
 			, const std::string& newFname
 			, const std::string& opt="RECREATE"
 			);
@@ -83,16 +82,19 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
  
   virtual unsigned int size() const;
   virtual bool empty() const;
+  virtual bool Start();
+  virtual bool Next();
+  bool curryCheck();
+  virtual const IDalitzEvent* getEvent() const;
+  virtual IDalitzEvent* getEvent();
 
-  //  DalitzEvent operator[](unsigned int i) const;
-  DalitzEvent getEvent(unsigned int i) const;
+  const IDalitzEvent* getREvent(unsigned int i) const;
+  MINT::counted_ptr<IDalitzEvent> getEventCopy(unsigned int i) const;
 
   virtual bool Add(const DalitzEvent& evt);
-  bool Add(const IDalitzEvent& evt);
-  bool Add(const IDalitzEvent* evt); // for backward compatibility
+  bool Add(const IDalitzEvent* evt);
   bool Add(const MINT::counted_ptr<IDalitzEvent>& evt);
-  bool Add(const MINT::IMinimalEventList<DalitzEvent>& otherList);
-  bool Add(const MINT::IMinimalEventList<IDalitzEvent>& otherList);
+  bool Add(const IDalitzEventList& otherList);
 
   bool save();
   bool Close();
@@ -100,8 +102,8 @@ class DiskResidentEventList : virtual public MINT::IMinimalEventList<DalitzEvent
 
   DalitzHistoSet histoSet() const;
   DalitzHistoSet weightedHistoSet()const;
-  DalitzHistoSet reWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w) const;
-  DalitzHistoSet weighedReWeightedHistoSet(MINT::IReturnRealForEvent<IDalitzEvent>* w) const;
+  DalitzHistoSet reWeightedHistoSet(IGetDalitzEvent* w) const;
+  DalitzHistoSet weighedReWeightedHistoSet(IGetDalitzEvent* w) const;
 
   bool makePlots(const std::string& filename);
 

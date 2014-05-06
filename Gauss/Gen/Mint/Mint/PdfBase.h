@@ -4,36 +4,46 @@
 // status:  Mon 9 Feb 2009 19:17:56 GMT
 
 #include "Mint/IPdf.h"
+#include "Mint/EventAccess.h"
 #include "Mint/IEventList.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IReturnReal.h"
 
 namespace MINT{
 
-  template<typename EVENT_TYPE>
-    class PdfBase : virtual public IPdf<EVENT_TYPE>, virtual public IReturnRealForEvent<EVENT_TYPE>{
+  template<typename EVENTS>
+    class PdfBase : virtual public IPdf<EVENTS>, public EventAccess<EVENTS>{
   public:
-    PdfBase(){};
-    PdfBase(const PdfBase<EVENT_TYPE>& )
-      : IReturnRealForEvent<EVENT_TYPE>()
-      , IPdf<EVENT_TYPE>()
-      {};
+  PdfBase(IEventList<EVENTS>* erptr = 0)
+    : EventAccess<EVENTS>(erptr)
+      {}
+  PdfBase(IEventAccess<EVENTS>* erptr)
+    : EventAccess<EVENTS>(erptr)
+      {}
+  PdfBase(const PdfBase& other)
+    :  IBasicEventAccess<EVENTS>()
+      , IEventAccess<EVENTS>()
+      , IReturnReal()
+      , IGetRealEvent<EVENTS>()
+      , IPdf<EVENTS>()
+      , EventAccess<EVENTS>(other)
+      {}
  
-   IPdf<EVENT_TYPE>* Clone() const{
+   IPdf<EVENTS>* Clone() const{
      return new PdfBase(*this);     
    } 
     
-    virtual double getVal(EVENT_TYPE & evt)=0;
-    virtual double RealVal(EVENT_TYPE & evt){
-      return getVal(evt);
+    virtual double getVal()=0;
+    virtual double RealVal(){
+      return getVal();
     }
     
     virtual void beginFit(){};
     virtual void parametersChanged(){};
     virtual void endFit(){};
 
-    virtual double getNewVal(EVENT_TYPE & evt){
+    virtual double getNewVal(){
       parametersChanged();
-      return getVal(evt);
+      return getVal();
     }
     
     virtual ~PdfBase(){};

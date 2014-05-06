@@ -8,7 +8,7 @@
 #include "Mint/IDalitzEvent.h"
 #include "Mint/IUnweightedEventGenerator.h"
 
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/DalitzEventPtrList.h"
 
 #include "Mint/counted_ptr.h"
@@ -29,7 +29,7 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   double _maxWeightEstimate;
   double _maxWeightInSample;
 
-  MINT::IReturnRealForEvent<IDalitzEvent>* _ampSum;
+  MINT::IGetRealEvent<IDalitzEvent>* _ampSum;
 
   bool _ready;
   std::vector<double> _volumeProbs;
@@ -43,9 +43,6 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   
   void getReady();
   void findMax();
-  int justThrowAwayData(double maxValue
-			   , MINT::IReturnRealForEvent<IDalitzEvent>* amps
-			   );
 
   MINT::counted_ptr<DalitzEvent> popEventFromList();
 
@@ -70,7 +67,7 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   virtual MINT::counted_ptr<DalitzEvent> makeWeightedApproxEventForOwner(int& nTries);
 
  public:
-  DalitzBWBoxSet(MINT::IReturnRealForEvent<IDalitzEvent>* amps=0
+  DalitzBWBoxSet(MINT::IGetRealEvent<IDalitzEvent>* amps=0
 		 , TRandom* r=gRandom);
   DalitzBWBoxSet(TRandom* r);
   DalitzBWBoxSet(const DalitzBWBoxSet& other);
@@ -115,6 +112,6 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   bool compareGenerationMethodsForFullPDF(int Nevents=1000000);
 };
 
-std::ostream& operator<<(std::ostream& os, const DalitzBWBoxSet& box);
+ostream& operator<<(std::ostream& os, const DalitzBWBoxSet& box);
 #endif
 //

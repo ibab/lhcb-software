@@ -4,30 +4,49 @@
 // status:  Mon 9 Feb 2009 19:17:54 GMT
 
 #include "Mint/Utils.h"
-#include "Mint/IMinimalEventList.h"
+#include "Mint/ILoopable.h"
+#include "Mint/IBasicEventAccess.h"
 
 /*
-   looks like array
+  loop like this:
+
+  list.Start();
+  while(list.Next()){
+    do somthing;
+  }
+
+  i.e. 1st call to Next
+  after Start gives first event.
 */
 
 namespace MINT{
 
-template<typename EVENT_TYPE>
-  class IEventList : virtual public IMinimalEventList<EVENT_TYPE>
-  // returns reference (for memory-resident lists)
+template<typename RETURN_TYPE>
+class IEventList : virtual public ILoopable
+, virtual public IBasicEventAccess<RETURN_TYPE>
 {
  protected:
   IEventList(){}
  public:
 
-  virtual const EVENT_TYPE& operator[](unsigned int i) const=0;
-  virtual EVENT_TYPE& operator[](unsigned int i)=0;
+  virtual unsigned int size() const=0;
+  virtual RETURN_TYPE * getEvent()=0;
+  virtual const RETURN_TYPE * getEvent() const=0;
+  /* these are declared in ILoopable */
+  virtual bool Next()   =0;
+  virtual bool Start()  =0;
+  //  virtual bool Delete()  =0;
 
-  // included through IMinimalEventList:
-  // virtual unsigned int size() const=0;
-  // virtual EVENT_TYPE getEvent(unsigned int i) const=0;
-  // virtual bool Add(const EVENT_TYPE & evt)=0;
+  virtual const RETURN_TYPE * getREvent(unsigned int i) const=0;
 
+  virtual ~IEventList(){}
+
+  // in future I'll delete the next two, keep for now, for backw. compat:
+  virtual RETURN_TYPE * currentEvent(){return getEvent();}
+  virtual const RETURN_TYPE * currentEvent() const{return getEvent();}
+
+  virtual const IEventList<RETURN_TYPE> * getEventRecord() const{return this;}
+  virtual IEventList<RETURN_TYPE> * getEventRecord(){return this;}
 };
 }//namespace MINT
 #endif

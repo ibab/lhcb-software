@@ -10,13 +10,6 @@
 using namespace std;
 using namespace MINT;
 
-MinuitParameterSet* DalitzPdfBaseFastInteg::getMPS(){
-  return (0 == _mps ? MinuitParameterSet::getDefaultSet() : _mps);
-}
-const MinuitParameterSet* DalitzPdfBaseFastInteg::getMPS() const{
-  return (0 == _mps ? MinuitParameterSet::getDefaultSet() : _mps);
-}
-
 bool DalitzPdfBaseFastInteg::saveIntegrator(const std::string& fname) const{
   return _faint.save(fname);
 }
@@ -24,14 +17,9 @@ bool DalitzPdfBaseFastInteg::saveIntegrator(const std::string& fname) const{
 bool DalitzPdfBaseFastInteg::getNorm(){
   _integrating = true;
   if( ! _faint.initialised()){
-    if(_pat.empty()){
-      cout << "DalitzPdfBaseFastInteg::getNorm: don't know event pattern!"
-	   << endl;
-      _integrating = false;
-      return false;
-    }
-    if(0 == getAmps()){
-      cout << "DalitzPdfBaseFastInteg::getNorm: don't have amps!"
+    IDalitzEvent* evtPtr = getEvent();
+    if(0==evtPtr){
+      cout << "DalitzPdfBaseFastInteg::getNorm: can't get event!"
 	   << endl;
       _integrating = false;
       return false;
@@ -45,8 +33,8 @@ bool DalitzPdfBaseFastInteg::getNorm(){
     }else{
     */
     _faint.initialise(_commaSepList_of_SavedIntegrators
-		      , _pat
-		      , getAmps()
+		      , evtPtr->eventPattern()
+		      , _amps
 		      //, _efficiency
 		      , getEventGenerator()
 		      , gRandom
@@ -60,7 +48,7 @@ bool DalitzPdfBaseFastInteg::getNorm(){
 	 << " Won't work for efficiencies!!"
 	 << endl;
     _mcint.initialise(evtPtr->eventPattern()
-		      , getAmps()//this
+		      , _amps//this
 		      , getEventGenerator()
 		      , gRandom
 		      , _precision
@@ -87,10 +75,9 @@ bool DalitzPdfBaseFastInteg::getNorm(){
   return _norm > 0;
 }
 IEventGenerator<IDalitzEvent>* DalitzPdfBaseFastInteg::makeDefaultGenerator(){
-  if(_pat.empty()) return 0;
-  if(0 == getAmps()) return 0;
+  if(0 == _amps) return 0;
   counted_ptr<IEventGenerator<IDalitzEvent> > 
-    ptr(getAmps()->makeEventGenerator(_pat));
+    ptr(_amps->makeEventGenerator());
   _defaultGenerator = ptr;
   return _defaultGenerator.get();
 }
@@ -118,15 +105,13 @@ void DalitzPdfBaseFastInteg::setIntegrationPrecision(double prec){
 void DalitzPdfBaseFastInteg::parametersChanged(){
   getNorm();
 }
-DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
-					       , IEventGenerator<IDalitzEvent>*
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg( IDalitzEventAccess* events
+						, IEventGenerator<IDalitzEvent>*
 						   generator
 					        , IFastAmplitudeIntegrable* amps
 						, double prec
 						)
-  : PdfBase<IDalitzEvent>()
-  , _mps(0)
-  , _pat(pat)
+  : PdfBase<IDalitzEvent>(events)
   , _norm(-1)
   , _precision(prec)
   , _amps(amps)
@@ -137,18 +122,110 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
   , _defaultGenerator(0)
   , _commaSepList_of_SavedIntegrators("")
 {
+   if(0 == _amps){
+     _amps = new FitAmpSum(this);
+     counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+     _countedAmps = cp;
+   }
+   else{
+     _amps->setDaddy(this);
+   }
+   if(0 == _generator) makeDefaultGenerator();
 }
 
-DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(IDalitzEventList* events
 					       , IEventGenerator<IDalitzEvent>*
+					         generator
+					       , IFastAmplitudeIntegrable* amps
+					       , double prec
+					       ) 
+  : PdfBase<IDalitzEvent>(events)
+  , _norm(-1)
+  , _precision(prec)
+  , _amps(amps)
+  , _countedAmps(0)
+    //, _efficiency(0)
+  , _generator(generator)
+  , _integrating(0)
+  , _defaultGenerator(0)
+  , _commaSepList_of_SavedIntegrators("")
+{
+   if(0 == _amps){
+     _amps = new FitAmpSum(this);
+     counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+     _countedAmps = cp;
+   }
+   else{
+     _amps->setDaddy(this);
+   }
+   if(0 == _generator) makeDefaultGenerator();
+}
+
+/*
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg( IDalitzEventAccess* events
+						, IEventGenerator<IDalitzEvent>*
+						   generator
+					        , IFastAmplitudeIntegrable* amps
+						, counted_ptr<IGetDalitzEvent> eff
+						, double prec
+						)
+  : PdfBase<IDalitzEvent>(events)
+  , _norm(-1)
+  , _precision(prec)
+  , _amps(amps)
+  , _countedAmps(0)
+  , _efficiency(eff)
+  , _generator(generator)
+  , _integrating(0)
+  , _defaultGenerator(0)
+{
+   if(0 == _amps){
+     _amps = new FitAmpSum(this);
+     counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+     _countedAmps = cp;
+   }
+   else{
+     _amps->setDaddy(this);
+   }
+   if(0 == _generator) makeDefaultGenerator();
+}
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(IDalitzEventList* events
+					       , IEventGenerator<IDalitzEvent>*
+					           generator
+					        , IFastAmplitudeIntegrable* amps
+						, counted_ptr<IGetDalitzEvent> eff
+					       , double prec
+					       ) 
+  : PdfBase<IDalitzEvent>(events)
+  , _norm(-1)
+  , _precision(prec)
+  , _amps(amps)
+  , _countedAmps(0)
+  , _efficiency(eff)
+  , _generator(generator)
+  , _integrating(0)
+  , _defaultGenerator(0)
+{
+   if(0 == _amps){
+     _amps = new FitAmpSum(this);
+     counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+     _countedAmps = cp;
+   }
+   else{
+     _amps->setDaddy(this);
+   }
+   if(0 == _generator) makeDefaultGenerator();
+}
+*/
+
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg( IDalitzEventAccess* events
+						, IEventGenerator<IDalitzEvent>*
 						   generator
 						//, counted_ptr<IGetDalitzEvent> eff
 						, MinuitParameterSet* mps
 						, double prec
 					       ) 
-  : PdfBase<IDalitzEvent>()
-  , _mps(mps)
-  , _pat(pat)
+  : PdfBase<IDalitzEvent>(events)
   , _norm(-1)
   , _precision(prec)
   , _amps(0)
@@ -159,15 +236,48 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzEventPattern& pat
   , _defaultGenerator(0)
   , _commaSepList_of_SavedIntegrators("")
 {
+  MinuitParameterSet *thisMps = (0 == mps ? MinuitParameterSet::getDefaultSet() : mps);
+  _amps = new FitAmpSum(this, thisMps);
+
+  counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+  _countedAmps = cp;
+  if(0 == _generator) makeDefaultGenerator();
+}
+
+DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(IDalitzEventList* events
+					       , IEventGenerator<IDalitzEvent>*
+					          generator
+					       //, counted_ptr<IGetDalitzEvent> eff
+					       , MinuitParameterSet* mps
+					       , double prec
+					       ) 
+  : PdfBase<IDalitzEvent>(events)
+  , _norm(-1)
+  , _precision(prec)
+  , _amps(0)
+  , _countedAmps(0)
+    //, _efficiency(eff)
+  , _generator(generator)
+  , _integrating(0)
+  , _defaultGenerator(0)
+  , _commaSepList_of_SavedIntegrators("")
+{
+  MinuitParameterSet *thisMps = (0 == mps ? MinuitParameterSet::getDefaultSet() : mps);
+  _amps = new FitAmpSum(this, thisMps);
+  counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
+  _countedAmps = cp;
+  if(0 == _generator) makeDefaultGenerator();
 }
 
 DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzPdfBaseFastInteg& other)
-  : IReturnRealForEvent<IDalitzEvent>()
+  : IBasicEventAccess<IDalitzEvent>()
+  , IEventAccess<IDalitzEvent>()
+  , IReturnReal()
+  , IGetRealEvent<IDalitzEvent>()
   , IPdf<IDalitzEvent>()
+  , IDalitzEventAccess()
   , IDalitzPdf()
   , PdfBase<IDalitzEvent>(other)
-  , _mps(other._mps)
-  , _pat(other._pat)
   , _norm(other._norm)
   , _precision(other._precision)
   , _amps(other._amps)
@@ -183,12 +293,10 @@ DalitzPdfBaseFastInteg::DalitzPdfBaseFastInteg(const DalitzPdfBaseFastInteg& oth
 DalitzPdfBaseFastInteg::~DalitzPdfBaseFastInteg(){
 }
 
+const IFastAmplitudeIntegrable* DalitzPdfBaseFastInteg::getAmps() const{
+  return _amps;
+}
 IFastAmplitudeIntegrable* DalitzPdfBaseFastInteg::getAmps(){
-  if(0 == _amps && (! _pat.empty())){
-    _amps = new FitAmpSum(_pat, getMPS());
-    counted_ptr<IFastAmplitudeIntegrable> cp(_amps);
-    _countedAmps = cp;
-  }
   return _amps;
 }
 
@@ -196,26 +304,26 @@ bool DalitzPdfBaseFastInteg::integrating(){
   return _integrating;
 }
 
-double DalitzPdfBaseFastInteg::phaseSpace(IDalitzEvent& evt){
-  return evt.phaseSpace();
+double DalitzPdfBaseFastInteg::phaseSpace(){
+  IDalitzEvent* evt = getEvent();
+  if(0 == evt) return 0;
+  return evt->phaseSpace();
 }
-double DalitzPdfBaseFastInteg::getVal(IDalitzEvent& evt){
-  if(_pat.empty()) _pat = evt.eventPattern();
-  if(_integrating) return getVal_withPs(evt);
-  else return getVal_noPs(evt);
+double DalitzPdfBaseFastInteg::getVal(){
+  if(_integrating) return getVal_withPs();
+  else return getVal_noPs();
 }
-double DalitzPdfBaseFastInteg::getVal_noPs(IDalitzEvent& evt){
+double DalitzPdfBaseFastInteg::getVal_noPs(){
   bool dbThis = false;
   static double maxVal=0;
-  if(_pat.empty()) _pat = evt.eventPattern();
 
   if(_integrating){
     // shouldn't really do that - use getVal or getVal_withPs
     // when you integrate (automatically done in getVal()):
-    return un_normalised_noPs(evt);
+    return un_normalised_noPs();
   }else{
     if(_norm == -1) getNorm();
-    double num = un_normalised_noPs(evt);
+    double num = un_normalised_noPs();
     if(dbThis){
       double val=num/_norm;
       if(fabs(val) > maxVal){
@@ -224,9 +332,9 @@ double DalitzPdfBaseFastInteg::getVal_noPs(IDalitzEvent& evt){
 	  cout  << "biggest un_normalised / norm, yet: " 
 		<< num << " / " <<_norm 
 		<< " = " << num/_norm
-		<< ". ps = " << phaseSpace(evt)
+		<< ". ps = " << phaseSpace()
 		<< endl;
-	  cout << "for event: "; evt.print(); cout << endl;
+	  cout << "for event: "; getEvent()->print(); cout << endl;
 	}
       }
     }
@@ -240,14 +348,13 @@ double DalitzPdfBaseFastInteg::getVal_noPs(IDalitzEvent& evt){
     return num/_norm;
   }
 }
-double DalitzPdfBaseFastInteg::getVal_withPs(IDalitzEvent& evt){
-  if(_pat.empty()) _pat = evt.eventPattern();
+double DalitzPdfBaseFastInteg::getVal_withPs(){
 
   if(_integrating){
-    return un_normalised_noPs(evt)*phaseSpace(evt);
+    return un_normalised_noPs()*phaseSpace();
   }else{
     if(_norm == -1) getNorm();
-    double num = un_normalised_noPs(evt)*phaseSpace(evt);
+    double num = un_normalised_noPs()*phaseSpace();
     return num/_norm;
   }
 }
@@ -256,11 +363,17 @@ bool DalitzPdfBaseFastInteg::makePlots(const std::string& filename) const{
   return histoSet().save(filename);
 }
 DalitzHistoSet DalitzPdfBaseFastInteg::histoSet() const{
-  return (_faint.histoSet());
+  double dN = numEvents();
+  if(0 == dN) dN=1;
+  cout << " dN = " << dN << endl;
+  return (_faint.histoSet() * dN);
 }
 DalitzHistoSet DalitzPdfBaseFastInteg::histoSet(){
     // non-const version to satisfy IDalitzPdf
-  return (_faint.histoSet());
+    double dN = numEvents();
+    if(0 == dN) dN=1;
+    cout << " dN = " << dN << endl;
+    return (_faint.histoSet() * dN);
 }
 
 void DalitzPdfBaseFastInteg::saveEachAmpsHistograms(const std::string& prefix) const{
@@ -282,6 +395,28 @@ void DalitzPdfBaseFastInteg::doFinalStats(Minimiser* mini){
 
 void DalitzPdfBaseFastInteg::setIntegratorFileName(const std::string& commaSeparatedList){
   _commaSepList_of_SavedIntegrators=commaSeparatedList;
+}
+
+
+double DalitzPdfBaseFastInteg::getVal(IDalitzEvent* evt){
+  this->setEvent(evt);
+  double result = this->getVal();
+  this->resetEventRecord();
+  return result;
+}
+
+double DalitzPdfBaseFastInteg::getVal_noPs(IDalitzEvent* evt){
+  this->setEvent(evt);
+  double result = this->getVal_noPs();
+  this->resetEventRecord();
+  return result;
+}
+
+double DalitzPdfBaseFastInteg::getVal_withPs(IDalitzEvent* evt){
+  this->setEvent(evt);
+  double result = this->getVal_withPs();
+  this->resetEventRecord();
+  return result;
 }
 
 

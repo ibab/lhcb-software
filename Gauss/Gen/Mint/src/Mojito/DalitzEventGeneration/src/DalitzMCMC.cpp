@@ -74,9 +74,11 @@ void DalitzMCMC::FillEventList( DalitzEventList& evtList, const unsigned int& NE
 
     sortvar = sort->Uniform(rejectionFactor);
     candEvent_next = GetFlatEvent();
-    const double pdf_start = _pdf.Prob(candEvent_start);
+    _pdf.setEvent(&candEvent_start);
+    const double pdf_start = _pdf.Prob();
 
-    const double pdf_next = _pdf.Prob(candEvent_next);
+    _pdf.setEvent(&candEvent_next);
+    const double pdf_next = _pdf.Prob();
     ratio = pdf_next/pdf_start;
 
     if(ratio != ratio){

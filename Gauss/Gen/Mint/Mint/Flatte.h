@@ -39,8 +39,9 @@ class Flatte : public BW_BW, virtual public ILineshape{
   static double pdgMass(int PDG_ID);
  public:
   
-  Flatte( const AssociatedDecayTree& decay)
-    : BW_BW(decay)
+  Flatte( const AssociatedDecayTree& decay
+		   , IDalitzEventAccess* events)
+    : BW_BW(decay, events)
     , _gPi("Flatte::gPi", 0.165*GeV)
     , _gK_by_gPi("Flatte::gK_by_gPi", 4.21) // same as b in Flatte paper
     , _pi0Mass(-9999.0)

@@ -29,13 +29,14 @@ protected:
   std::string _integratorEventFile;
   std::string _integratorOutputFile; // be default same as input
 public:
-  double un_normalised_noPs(IDalitzEvent& evt){
-    double ampSq =  _amps->RealVal(evt);
+  double un_normalised_noPs(){
+    if(0 == getEvent()) return 0;
+    double ampSq =  _amps->RealVal();
     return ampSq;
   }
 
-  DalitzPdfSaveInteg( const DalitzEventPattern& pat
-		      ,   double precision=1.e-4
+  DalitzPdfSaveInteg(IDalitzEventList* events=0
+		     , double precision=1.e-4
 		     , const std::string& integInputFiles="Integrator"//could be "intg1,intg2,intg2"
 		     , const std::string& integEvtFile="integEvtFile.root"
 		     , const std::string& topUpIntegOption="topUp"
@@ -44,8 +45,8 @@ public:
 		     // default: integratorOutputFile = integratorInputFile
 		     // (set in constructor)
 		     );
-  DalitzPdfSaveInteg(const DalitzEventPattern& pat
-		     , IFastAmplitudeIntegrable* amps
+  DalitzPdfSaveInteg(IFastAmplitudeIntegrable* amps
+		     , IDalitzEventList* events=0
 		     , double precision=1.e-4
 		     , const std::string& integInputFiles="Integrator"//could be "intg1,intg2,intg2"
 		     , const std::string& integEvtFile="integEvtFile.root"

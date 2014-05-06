@@ -41,7 +41,9 @@ std::string DiskResidentEventList::generateFname(){
 }
 
 DiskResidentEventList::DiskResidentEventList()
-  : _fname(generateFname())
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(generateFname())
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
   , _ntp(0)
@@ -57,7 +59,9 @@ DiskResidentEventList::DiskResidentEventList(const std::string& fname
 											, int scale
 		    								, const std::string& treeName
 		    								, const std::string& opt)
-  : _fname(fname)
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(fname)
   , _opt(opt)
   , _f(0)//new TFile(fname.c_str(), opt.c_str()))
   , _ntp(0)
@@ -76,7 +80,9 @@ DiskResidentEventList::DiskResidentEventList(const std::string& fname
 
 DiskResidentEventList::DiskResidentEventList(const std::string& fname
 		    								, const std::string& opt)
-  : _fname(fname)
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(fname)
   , _opt(opt)
   , _f(0)//new TFile(fname.c_str(), opt.c_str()))
   , _ntp(0)
@@ -94,8 +100,10 @@ DiskResidentEventList::DiskResidentEventList(const std::string& fname
 }
 
 
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList)
-  : _fname(generateFname())
+DiskResidentEventList::DiskResidentEventList(const IDalitzEventList& otherList)
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(generateFname())
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
   , _ntp(0)
@@ -107,44 +115,13 @@ DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent
   Add(otherList);
   init();
 }
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList)
-  : _fname(generateFname())
-  , _opt("UPDATE")
-  , _f(0)//new TFile(generateFname().c_str(), "UPDATE"))
-  , _ntp(0)
-  , _scaleData(1)
-  , _cName("DalitzEventList")
-  , _ntpName("DalitzEventList")
-{
-  openFile();
-  Add(otherList);
-  init();
-}
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<DalitzEvent>& otherList
+DiskResidentEventList::DiskResidentEventList(const IDalitzEventList& otherList
 					     , const std::string& newFname
 					     , const std::string& opt
 					     )
-  : _fname(newFname)
-  , _opt(opt)
-  , _f(0)//new TFile(newFname.c_str(), opt.c_str()))
-    //  , _counted_ntp(0)
-  , _ntp(0)
-  , _scaleData(1)
-  , _cName("DalitzEventList")
-  , _ntpName("DalitzEventList")
-{
-  openFile();
-  cout << " copy with new filename : " << newFname << endl;
-  cout << " file pointer: " << _f << endl;
-  fromFile();
-  Add(otherList);
-  init();
-}
-DiskResidentEventList::DiskResidentEventList(const IMinimalEventList<IDalitzEvent>& otherList
-					     , const std::string& newFname
-					     , const std::string& opt
-					     )
-  : _fname(newFname)
+  : _currentEvent(0)
+  , _rEvent(0)
+  , _fname(newFname)
   , _opt(opt)
   , _f(0)//new TFile(newFname.c_str(), opt.c_str()))
     //  , _counted_ntp(0)
@@ -173,7 +150,9 @@ DiskResidentEventList::DiskResidentEventList(TNtupleD* ntp)
 */
 
 DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat)
-  : _fname(generateFname())
+  : _currentEvent(new DalitzEvent(pat))
+  , _rEvent(0)
+  , _fname(generateFname())
   , _opt("UPDATE")
   , _f(0)//new TFile(generateFname().c_str(), "RECREATE"))
   , _ntp(0)
@@ -182,8 +161,7 @@ DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat)
   , _ntpName("DalitzEventList")
 {
   openFile();
-  DalitzEvent evt(pat);
-  makeNtp(evt); // evt won't be saved, just to use "makeNtupleVarname" (clumsy)
+  makeNtp(*_currentEvent);
   init();
 }
 
@@ -191,7 +169,9 @@ DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat
 					     , const std::string& fname
 					     , const std::string& opt
 					     )
-  : _fname(fname)
+  : _currentEvent(new DalitzEvent(pat))
+  , _rEvent(0)
+  , _fname(fname)
   , _opt(opt)
   , _f(0)//new TFile(fname.c_str(), opt.c_str()))
   , _ntp(0)
@@ -201,8 +181,7 @@ DiskResidentEventList::DiskResidentEventList(const DalitzEventPattern& pat
 {
   openFile();
   fromFile();
-  DalitzEvent evt(pat);
-  if(0 == _ntp) makeNtp(evt);
+  if(0 == _ntp) makeNtp(*_currentEvent);
   init();
 }
 
@@ -253,7 +232,7 @@ bool DiskResidentEventList::fromFile(){
 
 bool DiskResidentEventList::init(){
   if(0 != _ntp) _ntp->SetAutoSave(__maxBytes);
-  return (0 != _ntp);
+  return (_initialised = Start_noInit() && 0 != _ntp);
 }
 
 unsigned int DiskResidentEventList::size() const{
@@ -262,6 +241,58 @@ unsigned int DiskResidentEventList::size() const{
 }
 bool DiskResidentEventList::empty() const{
   return (0 == this->size());
+}
+
+bool DiskResidentEventList::Start(){
+  if(! _initialised) init();
+  return Start_noInit();
+}
+
+bool DiskResidentEventList::Start_noInit(){
+  if(this->empty()) return false;
+  currentPosition = nextPosition = 0;
+  if(0 != _ntp){
+    _ntp->GetEvent(currentPosition);
+    _currentEvent = counted_ptr<DalitzEvent>(new DalitzEvent(_ntp));
+  }else{
+    return false;
+  }
+  // the 1st call to Next() gives 1st event.
+  //else return false;
+  return true;
+}
+
+bool DiskResidentEventList::Next(){ // 1st call to Next gives first event!
+  // a bit complicated, but insures save deleting
+  if(this->empty()) return false;
+  if(! _initialised) init();
+  
+  currentPosition = nextPosition;
+  if(currentPosition == size()){
+    Start();
+    return false;
+  }
+  _ntp->GetEvent(currentPosition);
+  _currentEvent = counted_ptr<DalitzEvent>(new DalitzEvent(_ntp));
+  nextPosition++;
+  return true;
+}
+
+bool DiskResidentEventList::curryCheck(){
+  if(this->empty())return false;
+  if(! _initialised) init();
+  if(currentPosition >= size()) Start();
+  if(currentPosition >= size()) return false;
+  return true;
+}
+
+const IDalitzEvent* DiskResidentEventList::getEvent() const{
+  if(this->empty()) return 0;
+  return (IDalitzEvent*) _currentEvent.get();
+}
+IDalitzEvent* DiskResidentEventList::getEvent(){
+  if(! curryCheck()) return 0;
+  return (IDalitzEvent*)  _currentEvent.get();
 }
 
 bool DiskResidentEventList::makeNewFile(){
@@ -318,10 +349,6 @@ bool DiskResidentEventList::Add(const DalitzEvent& evt){
   return true;
 }
 
-bool DiskResidentEventList::Add(const IDalitzEvent& evt){
-  DalitzEvent nevt(&evt);
-  return Add(nevt);
-}
 bool DiskResidentEventList::Add(const IDalitzEvent* evt){
   DalitzEvent nevt(evt);
   return Add(nevt);
@@ -330,17 +357,10 @@ bool DiskResidentEventList::Add(const counted_ptr<IDalitzEvent>& evt){
   DalitzEvent nevt(evt.get());
   return Add(nevt);
 }
-bool DiskResidentEventList::Add(const IMinimalEventList<DalitzEvent>& otherList){
+bool DiskResidentEventList::Add(const IDalitzEventList& otherList){
   if(0 == otherList.size()) return false;
   for(unsigned int i=0; i < otherList.size(); i++){
-    Add(otherList.getEvent(i));
-  }
-  return true;
-}
-bool DiskResidentEventList::Add(const IMinimalEventList<IDalitzEvent>& otherList){
-  if(0 == otherList.size()) return false;
-  for(unsigned int i=0; i < otherList.size(); i++){
-    Add(otherList.getEvent(i));
+    Add(otherList.getREvent(i));
   }
   return true;
 }
@@ -374,8 +394,28 @@ bool DiskResidentEventList::Close(){
   return success;
 }
 
-//DalitzEvent DiskResidentEventList::operator[](unsigned int i) const{
-DalitzEvent DiskResidentEventList::getEvent(unsigned int i) const{
+counted_ptr<IDalitzEvent> DiskResidentEventList::getEventCopy(unsigned int i) const{
+  if(i > size()){
+    cout << "FATAL ERROR in DiskResidentEventList::getEventCopy(unsigned int i)"
+	 << " index i=" << i << " out of range " << size()
+	 << endl;
+    throw "index out of range";
+  }
+  _ntp->GetEvent(i);
+  return counted_ptr<IDalitzEvent>(new DalitzEvent(_ntp));
+}
+const IDalitzEvent* DiskResidentEventList::getREvent(unsigned int i) const{
+  if(i > size()){
+    cout << "FATAL ERROR in DiskResidentEventList::getREvent(unsigned int i)"
+	 << " index i=" << i << " out of range " << size()
+	 << endl;
+    throw "index out of range";
+  }
+  _ntp->GetEvent(i);
+  _rEvent = counted_ptr<DalitzEvent>(new DalitzEvent(_ntp));
+  return _rEvent.get();
+}
+DalitzEvent DiskResidentEventList::operator()(unsigned int i){
   if(i > size()){
     cout << "FATAL ERROR in DiskResidentEventList::operator()"
 	 << " index i=" << i << " out of range " << size()
@@ -389,7 +429,7 @@ DalitzEvent DiskResidentEventList::getEvent(unsigned int i) const{
 DalitzHistoSet DiskResidentEventList::histoSet() const{
   DalitzHistoSet hs;
   for(unsigned int i=0; i< this->size(); i++){
-    hs.addEvent(this->getEvent(i));
+    hs.addEvent(this->getREvent(i));
   }
   return hs;
 }
@@ -398,29 +438,30 @@ DalitzHistoSet DiskResidentEventList::weightedHistoSet() const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt(this->getEvent(i));
-    hs.addEvent(evt, evt.getWeight());
+    hs.addEvent(this->getREvent(i), this->getREvent(i)->getWeight());
   }
   return hs;
 }
-DalitzHistoSet DiskResidentEventList::reWeightedHistoSet(IReturnRealForEvent<IDalitzEvent>* w) const{
+DalitzHistoSet DiskResidentEventList::reWeightedHistoSet(IGetDalitzEvent* w) const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   if(0 == w) return hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt( this->getEvent(i));
-    hs.addEvent(evt, w->RealVal(evt));
+    w->setEvent(this->getEventCopy(i).get());
+    hs.addEvent(this->getREvent(i), w->RealVal());
+    w->resetEventRecord();
   }
   return hs;
 }
 
-DalitzHistoSet DiskResidentEventList::weighedReWeightedHistoSet(IReturnRealForEvent<IDalitzEvent>* w) const{
+DalitzHistoSet DiskResidentEventList::weighedReWeightedHistoSet(IGetDalitzEvent* w) const{
   // mainly for diagnostics
   DalitzHistoSet hs;
   if(0 == w) return hs;
   for(unsigned int i=0; i< this->size(); i++){
-    DalitzEvent evt(this->getEvent(i));
-    hs.addEvent(evt, w->RealVal(evt) * (evt.getWeight()));
+    w->setEvent(this->getEventCopy(i).get());
+    hs.addEvent(this->getREvent(i), w->RealVal() * (this->getREvent(i)->getWeight()));
+    w->resetEventRecord();
   }
   return hs;
 }

@@ -152,10 +152,9 @@ double CLEO2012_GounarisSakurai::sJ(){
   return (1.0+d()*G/m);// the 2nd factor is calc. in SpinFactor3: *(mAC-mBC);
 }
 
-std::complex<double> CLEO2012_GounarisSakurai::getVal(IDalitzEvent& evt){
+std::complex<double> CLEO2012_GounarisSakurai::getVal(){
   bool dbThis=false;
   resetInternals();
-  setEventPtr(evt);
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
     // of the decay chain from the rest - it could just get
@@ -163,9 +162,9 @@ std::complex<double> CLEO2012_GounarisSakurai::getVal(IDalitzEvent& evt){
     // the D is zero, as usual). However, 
     // this is to comply with the usual convention: Only the
     // form factor, not the BW-propagator.
-    std::complex<double> returnVal(Fr());
-    return returnVal;
+    return Fr();
   }
+
 
 
   std::complex<double> returnVal = Fr()*sJ()*BreitWigner();
@@ -182,7 +181,7 @@ std::complex<double> CLEO2012_GounarisSakurai::getVal(IDalitzEvent& evt){
 		  << "\n    > FR*BW = " << Fr() * BreitWigner()
 		  << "\n    > recoMass " << mumsRecoMass()
 		  << endl;
-
+  
   return returnVal;
 }
 

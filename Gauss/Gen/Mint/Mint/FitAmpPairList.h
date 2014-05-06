@@ -8,10 +8,8 @@
 #include "Mint/FitAmpPairCovariance.h"
 #include "Mint/FitFractionList.h"
 
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetDalitzEvent.h"
 #include "Mint/IIntegrationCalculator.h"
-
-#include "Mint/IDalitzEvent.h"
 
 #include "Mint/counted_ptr.h"
 #include <vector>
@@ -36,7 +34,7 @@ class FitAmpPairList
 
   mutable FitAmpPairCovariance _cov;
 
-  MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > _efficiency;
+  MINT::counted_ptr<IGetDalitzEvent> _efficiency;
 
   FitFractionList _singleAmpFractions, _interferenceFractions;
 
@@ -75,7 +73,7 @@ class FitAmpPairList
   FitFractionList getFractions() const{return _singleAmpFractions;}
   FitFractionList getInterferenceTerms() const{return _interferenceFractions;}
 
-  void setEfficiency(MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > eff);
+  void setEfficiency(MINT::counted_ptr<IGetDalitzEvent> eff);
   void unsetEfficiency();
   double efficiency(IDalitzEvent* evtPtr);
 

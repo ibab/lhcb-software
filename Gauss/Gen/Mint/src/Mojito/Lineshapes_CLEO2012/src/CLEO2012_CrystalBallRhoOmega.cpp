@@ -8,9 +8,10 @@
 
 using namespace std;
 
-CLEO2012_CrystalBallRhoOmega::CLEO2012_CrystalBallRhoOmega( const AssociatedDecayTree& tree)
-  : CLEO2012_BW_BW(tree)
-  , _omegaBW(tree, 223)
+CLEO2012_CrystalBallRhoOmega::CLEO2012_CrystalBallRhoOmega( const AssociatedDecayTree& tree
+					  , IDalitzEventAccess* events)
+  : CLEO2012_BW_BW(tree, events)
+  , _omegaBW(tree, events, 223)
   , _eps("CLEO2012_CrystalBallRhoOmega::eps", 1.14)
   , _beta("ChristalBallRhoOmega::beta", 5.16 *pi/180) //-4.3*pi/180.0)
   , _phi("ChristalBallRhoOmega::phi", 100*pi/180) //107*pi/180.0)
@@ -20,12 +21,20 @@ CLEO2012_CrystalBallRhoOmega::CLEO2012_CrystalBallRhoOmega( const AssociatedDeca
 {
 }
 
-std::complex<double> CLEO2012_CrystalBallRhoOmega::rhoBWVal(IDalitzEvent& evt){
-  return CLEO2012_BW_BW::getVal(evt);
+std::complex<double> CLEO2012_CrystalBallRhoOmega::rhoBWVal(){
+  return CLEO2012_BW_BW::getVal();
 }
 
-std::complex<double> CLEO2012_CrystalBallRhoOmega::omegaBWVal(IDalitzEvent& evt){
-  return _omegaBW.getVal(evt);
+std::complex<double> CLEO2012_CrystalBallRhoOmega::omegaBWVal(){
+  return _omegaBW.getVal();
+}
+
+std::complex<double> CLEO2012_CrystalBallRhoOmega::rhoBWValAtResonance(){
+  return CLEO2012_BW_BW::getValAtResonance();
+}
+
+std::complex<double> CLEO2012_CrystalBallRhoOmega::omegaBWValAtResonance(){
+  return _omegaBW.getValAtResonance();
 }
 
 double CLEO2012_CrystalBallRhoOmega::p() const{
@@ -100,19 +109,24 @@ std::complex<double> CLEO2012_CrystalBallRhoOmega::offDiagonalTerm(){
   return num/den;
 }
 
-std::complex<double> CLEO2012_CrystalBallRhoOmega::getVal(IDalitzEvent& evt){
+std::complex<double> CLEO2012_CrystalBallRhoOmega::getVal(){
   resetInternals();
-  setEventPtr(evt);
   //  cout << "CLEO2012_CrystalBallRhoOmega called " << endl;
-  std::complex<double> rho = rhoBWVal(evt) * normRho();
-  std::complex<double> om  = omegaBWVal(evt)
+  std::complex<double> rho = rhoBWVal() * normRho();
+  std::complex<double> om  = omegaBWVal()
     * eps() * expIBeta()* normOmega();
     cout << "\n \n first term = " << abs(rho) << " second term = " << abs(omegaToRhoAmpRatio() * om * offDiagonalTerm())<< endl;
-    std::cout << " Om value = " << abs(omegaBWVal(evt)* normOmega()*omegaToRhoAmpRatio() ) << " offdiaganol term = " << abs(offDiagonalTerm())<<  endl;
+    std::cout << " Om value = " << abs(omegaBWVal()* normOmega()*omegaToRhoAmpRatio() ) << " offdiaganol term = " << abs(offDiagonalTerm())<<  endl;
    
-    return p()*q()*(rho + omegaToRhoAmpRatio() * 
-		    om * offDiagonalTerm());
+  return p()*q()*(rho + omegaToRhoAmpRatio() * om * offDiagonalTerm());
+}
 
+std::complex<double> CLEO2012_CrystalBallRhoOmega::getValAtResonance(){
+  std::complex<double> rho = rhoBWValAtResonance() * normRho();
+  std::complex<double> om  = omegaBWValAtResonance()
+    * eps() * expIBeta()* normOmega();
+
+  return p()*q()*(rho + omegaToRhoAmpRatio()* om * offDiagonalTerm());
 }
 
 DalitzCoordinate CLEO2012_CrystalBallRhoOmega::getDalitzCoordinate(double nSigma)const{
@@ -126,11 +140,11 @@ void CLEO2012_CrystalBallRhoOmega::print(std::ostream& out) const{
   _omegaBW.print(out);
 }
 
-void CLEO2012_CrystalBallRhoOmega::print(IDalitzEvent& evt, std::ostream& out){
+void CLEO2012_CrystalBallRhoOmega::print(std::ostream& out){
   out << "CLEO2012_CrystalBallRhoOmega\n\t with rho:\n";
-  CLEO2012_BW_BW::print(evt, out);
+  CLEO2012_BW_BW::print(out);
   out << "\n\t and with omega:\n";
-  _omegaBW.print(evt, out);
+  _omegaBW.print(out);
 }
     
 MINT::counted_ptr<IGenFct> CLEO2012_CrystalBallRhoOmega::generatingFunction() const{

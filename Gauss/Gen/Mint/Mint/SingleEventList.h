@@ -6,8 +6,6 @@
 // a simple wrapper, useful mainly in IEventAccess, to treat
 // events like eventlists...
 
-// THIS CLASS SHOULD BE REMOVED after reform of event access is complete.
-
 #include "Mint/IEventList.h"
 
 namespace MINT{
@@ -47,13 +45,6 @@ class SingleEventList : virtual public IEventList<RETURN_TYPE>{
 
   virtual const IEventList<RETURN_TYPE> * getEventRecord() const{return this;}
   virtual IEventList<RETURN_TYPE> * getEventRecord(){return this;}
-
-
-  RETURN_TYPE& operator[](unsigned int ){return *_eventPtr;}
-  const RETURN_TYPE& operator[](unsigned int )const {return *_eventPtr;}
-
-  bool Add(const RETURN_TYPE& ){return true;}// dummy - remove class
-
 };
 
 }//namespace MINT

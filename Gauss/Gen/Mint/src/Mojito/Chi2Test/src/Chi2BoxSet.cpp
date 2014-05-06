@@ -68,7 +68,7 @@ void Chi2BoxSet::resetEventCounts(){
 bool Chi2BoxSet::addData(const IDalitzEvent& evt){
   for(unsigned int i=0; i < this->size(); i++){
     if ((*this)[i].addData(evt)){
-      _histoData.addEvent(evt);
+      _histoData.addEvent(&evt);
       return true;
     }
   }
@@ -77,7 +77,7 @@ bool Chi2BoxSet::addData(const IDalitzEvent& evt){
 bool Chi2BoxSet::addData(const IDalitzEvent* evt){
   for(unsigned int i=0; i < this->size(); i++){
     if ((*this)[i].addData(evt)){
-      _histoData.addEvent(*evt);
+      _histoData.addEvent(evt);
       return true;
     }
   }
@@ -86,7 +86,7 @@ bool Chi2BoxSet::addData(const IDalitzEvent* evt){
 bool Chi2BoxSet::addMC(IDalitzEvent& evt, double weight){
   for(unsigned int i=0; i < this->size(); i++){
     if((*this)[i].addMC(evt, weight)){
-      _histoMC.addEvent(evt, weight);
+      _histoMC.addEvent(&evt, weight);
       if(0 != _integCalc)_integCalc->addEvent(&evt);
       return true;
     }
@@ -101,7 +101,7 @@ bool Chi2BoxSet::addMC(IDalitzEvent* evt, double weight){
   }
   for(unsigned int i=0; i < this->size(); i++){
     if((*this)[i].addMC(evt, weight)){
-      _histoMC.addEvent(*evt, weight);
+      _histoMC.addEvent(evt, weight);
       if(0 != _integCalc)_integCalc->addEvent(evt);
       return true;
     }

@@ -3,12 +3,18 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:00 GMT
 
-#include "Mint/IReturnRealForEvent.h"
-#include "Mint/IDalitzEvent.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/IReturnReal.h"
+#include "Mint/IDalitzEventList.h"
 
-class ReturnPhaseSpace : virtual public MINT::IReturnRealForEvent<IDalitzEvent>{
+class ReturnPhaseSpace : public DalitzEventAccess
+, virtual public MINT::IGetRealEvent<IDalitzEvent>{
  public:
-  double RealVal(IDalitzEvent& evt);
+  ReturnPhaseSpace(IDalitzEventAccess* evts);
+  ReturnPhaseSpace(IDalitzEventList* evts);
+  ReturnPhaseSpace(const ReturnPhaseSpace& other);
+
+  double RealVal();
 };
 
 #endif

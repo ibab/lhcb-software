@@ -3,6 +3,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:18:02 GMT
 
+#include "Mint/IGetDalitzEvent.h"
 #include "Mint/IDalitzIntegrator.h"
 
 #include "Mint/DalitzEventPattern.h"
@@ -15,7 +16,8 @@
 #include "Mint/IEventGenerator.h"
 
 #include "Mint/DalitzHistoSet.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetDalitzEvent.h"
+#include "Mint/DalitzEventAccess.h"
 
 /*
   WARNING: This piece of code is much slower and less accurate than
@@ -25,12 +27,13 @@
 
 class DalitzMCIntegrator : virtual public IDalitzIntegrator{
 
-  class integrationWeight : public MINT::IReturnRealForEvent<IDalitzEvent>{
-    MINT::IReturnRealForEvent<IDalitzEvent>* _externalPdf;
+  class integrationWeight : virtual public IGetDalitzEvent, public DalitzEventAccess{
+    IGetDalitzEvent* _externalPdf;
   public:
-    integrationWeight(MINT::IReturnRealForEvent<IDalitzEvent>* externalPdf);
-    void setWeight(IReturnRealForEvent<IDalitzEvent>* pdf);
-    double RealVal(IDalitzEvent& evt);
+    integrationWeight(IDalitzEventList* list
+		      , IGetDalitzEvent* externalPdf);
+    void setWeight(IGetDalitzEvent* pdf);
+    double RealVal();
   };
 
   mutable double _mean, _variance;
@@ -42,7 +45,7 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
  protected:
 
   DalitzEventPattern _pat;
-  MINT::IReturnRealForEvent<IDalitzEvent>* _w;
+  IGetDalitzEvent* _w;
   integrationWeight _iw;
   DalitzEventPtrList _events;
   TRandom* _rnd;
@@ -57,7 +60,7 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
   MINT::IEventGenerator<IDalitzEvent>* _generator;
  public:
   DalitzMCIntegrator(const DalitzEventPattern& pattern
-		     , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
+		     , MINT::IGetRealEvent<IDalitzEvent>* weightFunction=0
 		     , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
 		     , TRandom* rnd = gRandom
 		     , double precision = 1.e-2
@@ -65,13 +68,13 @@ class DalitzMCIntegrator : virtual public IDalitzIntegrator{
   DalitzMCIntegrator();
   
   bool initialise(const DalitzEventPattern& pattern
-		     , MINT::IReturnRealForEvent<IDalitzEvent>* weightFunction=0
+		     , MINT::IGetRealEvent<IDalitzEvent>* weightFunction=0
 		     , MINT::IEventGenerator<IDalitzEvent>* eventGenerator=0
 		     , TRandom* rnd = gRandom
 		     , double precision = 1.e-2
 		  );
 
-  bool resetIntegrand(MINT::IReturnRealForEvent<IDalitzEvent>* 
+  bool resetIntegrand(MINT::IGetRealEvent<IDalitzEvent>* 
 		      weightFunction = 0
 		      );
 

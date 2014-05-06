@@ -74,6 +74,7 @@ void PrintAllSpinFactors(std::ostream& out){
 
 
 ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
+			     , IDalitzEventAccess* events
 			     , char SPD_Wave
 			     , const std::string& lopt
 			     ){
@@ -93,9 +94,9 @@ ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
     // either 2 or less bodies, or non-resonant.
     sf = new SpinFactorTrivial;
   }else if( 3 == nFinalStates){
-    sf = new SpinFactor3(thisDcy);
+    sf = new SpinFactor3(events, thisDcy);
   }else if( 4 == nFinalStates){
-    sf = SpinFactorMaker4Body(thisDcy, SPD_Wave);
+    sf = SpinFactorMaker4Body(thisDcy, events, SPD_Wave);
   }else{
     cout << " SpinFactorMaker: Don't know any spin"
 	 << " factors for a final state with "
@@ -112,6 +113,7 @@ ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
 }
 
 ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
+				  , IDalitzEventAccess* events
 				  , char SPD_Wave
 				  //  , const std::string&
 				  ){
@@ -128,7 +130,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoPP0_PtoVP1_VtoP2P3(thisDcy);
+    return new SF_DtoPP0_PtoVP1_VtoP2P3(events, thisDcy);
 
   }else if( equalBySVPAT_L(SF_DtoAP0_AtoVP1_VtoP2P3::getExampleDecay()
 			   , thisDcy) ){
@@ -136,21 +138,21 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoAP0_AtoVP1_VtoP2P3(thisDcy);
+    return new SF_DtoAP0_AtoVP1_VtoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getExampleDecay()
 			   , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoAP0_AtoVP1Dwave_VtoP2P3(thisDcy);
+    return new SF_DtoAP0_AtoVP1Dwave_VtoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoAP0_AtoSP1_StoP2P3::getExampleDecay()
 			   , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoAP0_AtoSP1_StoP2P3(thisDcy);
+    return new SF_DtoAP0_AtoSP1_StoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoV1V2_V1toP0P1_V1toP2P3_S::getExampleDecay()
 			   , thisDcy) 
 	    ){//&& (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -159,7 +161,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< "S-wave\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_S(thisDcy);
+    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_S(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoV1V2_V1toP0P1_V1toP2P3_P::getExampleDecay()
 			   , thisDcy) 
 	    ){//  && (SPD_Wave == 'P')){
@@ -168,7 +170,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< "P-wave\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_P(thisDcy);
+    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_P(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoV1V2_V1toP0P1_V1toP2P3_D::getExampleDecay()
 			   , thisDcy) 
 	    ){// && (SPD_Wave == 'D')){
@@ -177,7 +179,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< "D-wave\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_D(thisDcy);
+    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_D(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoVT_VtoP0P1_TtoP2P3_P::getExampleDecay()
 			   , thisDcy) 
 	    ){//&& (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -186,7 +188,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< "P-wave\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoVT_VtoP0P1_TtoP2P3_P(thisDcy);
+    return new SF_DtoVT_VtoP0P1_TtoP2P3_P(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoVT_VtoP0P1_TtoP2P3_D::getExampleDecay()
 			   , thisDcy) 
 	    ){//&& (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -195,7 +197,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< "D-wave\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoVT_VtoP0P1_TtoP2P3_D(thisDcy);
+    return new SF_DtoVT_VtoP0P1_TtoP2P3_D(events, thisDcy);
  }else if( equalBySVPAT_L(SF_DtoTS_TtoP0P1_StoP2P3::getExampleDecay()
 			   , thisDcy) 
 	    ){//&& (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -203,7 +205,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "found a spin factor for this decay." 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoTS_TtoP0P1_StoP2P3(thisDcy);
+    return new SF_DtoTS_TtoP0P1_StoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1::getExampleDecay()
 			   , thisDcy) 
 	    ){// && (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -214,7 +216,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "WARNING!! You didn't specify that this is supposed to be"
 		<< " treated as S-Wave!!\n I just assume it is." << std::endl;
     }
-    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(thisDcy);
+    return new SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoVS_VtoP0P1_StoP2P3::getExampleDecay()
 			   , thisDcy) 
 	    ){// && (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -222,7 +224,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoVS_VtoP0P1_StoP2P3(thisDcy);
+    return new SF_DtoVS_VtoP0P1_StoP2P3(events, thisDcy);
   }else if( equalBySVPAT_L(SF_DtoVS_VtoP0P1_StoP2P3_nonResV::getExampleDecay()
 			   , thisDcy) 
 	    ){//&& (SPD_Wave == 'S' || SPD_Wave == '?')){
@@ -230,94 +232,94 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
       std::cout << "found a spin factor for this decay:\n"
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoVS_VtoP0P1_StoP2P3_nonResV(thisDcy);
+    return new SF_DtoVS_VtoP0P1_StoP2P3_nonResV(events, thisDcy);
   }else if(equalBySVPAT_L(SF_DtoPP1P2_PtoP3P4::getExampleDecay() 
 			  //Lauren's wide Ks Spin
 			  , thisDcy)
 	   ){
-    return new SF_DtoPP1P2_PtoP3P4(thisDcy);
+    return new SF_DtoPP1P2_PtoP3P4(events, thisDcy);
   }else if(equalBySVPAT_L(SF_DtoS1S2_S1toP1P2_S2toP3P4::getExampleDecay() 
 			  //Lauren's wide Ks Spin
 			  , thisDcy)
 	   ){
-    return new SF_DtoS1S2_S1toP1P2_S2toP3P4(thisDcy);
+    return new SF_DtoS1S2_S1toP1P2_S2toP3P4(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoV1P0_V1toV2P1_V2toP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoV1P0_V1toV2P1_V2toP2P3(thisDcy);
+    return new SF_DtoV1P0_V1toV2P1_V2toP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_S::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_S(thisDcy);
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_S(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_P(thisDcy);
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_P(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_D(thisDcy);
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_D(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoTP0_TtoVP1_VtoP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoTP0_TtoVP1_VtoP2P3(thisDcy);
+    return new SF_DtoTP0_TtoVP1_VtoP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoT1P0_T1toT2P1_T2toP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoT1P0_T1toT2P1_T2toP2P3(thisDcy);
+    return new SF_DtoT1P0_T1toT2P1_T2toP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3(thisDcy);
+    return new SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3(thisDcy);
+    return new SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3(thisDcy);
+    return new SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoPP0_PtoSP1_StoP3P4::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoPP0_PtoSP1_StoP3P4(thisDcy);
+    return new SF_DtoPP0_PtoSP1_StoP3P4(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoAP0_AtoTP1_TtoP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
       std::cout << "found a spin factor for this decay:\n" 
 		<< thisDcy << std::endl;
     }
-    return new SF_DtoAP0_AtoTP1_TtoP2P3(thisDcy);
+    return new SF_DtoAP0_AtoTP1_TtoP2P3(events, thisDcy);
   }else{
     std::cout << "SpinFactorMaker WARNING!!"
 	      << " don't know spin factor of this decay:\n" 

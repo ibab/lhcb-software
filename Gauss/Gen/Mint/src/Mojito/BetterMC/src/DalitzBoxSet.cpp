@@ -239,7 +239,7 @@ void DalitzBoxSet::add(const DalitzBoxSet& boxes){
   }
 }
 
-void DalitzBoxSet::setPDF(IReturnRealForEvent<IDalitzEvent>* amps){
+void DalitzBoxSet::setPDF(IGetRealEvent<IDalitzEvent>* amps){
   _ready = false;
   _amps = amps;
 }

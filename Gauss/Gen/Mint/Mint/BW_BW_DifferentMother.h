@@ -14,6 +14,7 @@ class BW_BW_DifferentMother : public BW_BW, virtual public ILineshape{
   virtual const ParticleProperties* mumsProperties() const;
  public:
   BW_BW_DifferentMother(const AssociatedDecayTree& decay
+			, IDalitzEventAccess* events
 			, int newMumID
 			);
 };

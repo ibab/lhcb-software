@@ -7,10 +7,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <stack>
 
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/IDalitzEventAccess.h"
+//#include "fitSetup.h"
 
 #include "Mint/DalitzCoordinate.h"
 
@@ -26,11 +28,8 @@ class ParticleProperties;
 
 // Breit-Wigner with Blatt-Weisskopf penetration factors.
 // Can only do 2 body decays for now... (it's the BW penetration factors)
-class BW_BW : virtual public ILineshape{
+class BW_BW : public DalitzEventAccess, virtual public ILineshape{
  private:
-  mutable IDalitzEvent* _eventPtr;
-  //  mutable std::stack<IDalitzEvent*> _oldPointers;
-
   mutable double _prSq, _prSqForGofM, _pABSq, _mumsPDGMass, _mumsWidth, 
     _mumsRecoMass2, _mumsRecoMass, _Fr_BELLE, _Fr_PDG_BL, _GofM;
   mutable int _mumsPID;
@@ -70,9 +69,6 @@ class BW_BW : virtual public ILineshape{
   virtual double twoBody_recodgtPsq_in_MumsPDGFrame() const;
   virtual double twoBody_dgtPsq_in_MumsRecoFrame();
   
-  bool setEventPtr(IDalitzEvent& evt) const;
-  IDalitzEvent* getEvent() const;
-
  public:
   virtual double prSq() const;
   virtual double prSqForGofM() const;
@@ -131,7 +127,7 @@ class BW_BW : virtual public ILineshape{
 
   virtual bool isWeakDecay() const;
 
-  /*
+  /**
      Unnormalised Blatt-Weisskopf Barrier Factors
   */
   virtual double Fr_PDG_BL();
@@ -151,14 +147,16 @@ class BW_BW : virtual public ILineshape{
   virtual void resetInternals();
 
   virtual void resetPDG();
-
  public:
-  BW_BW( const AssociatedDecayTree& decay);
+  BW_BW( const AssociatedDecayTree& decay
+	 , IDalitzEventAccess* events);
   BW_BW(const BW_BW& other);
   virtual ~BW_BW();
 
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
-  virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout);
+  virtual std::complex<double> getVal();
+  virtual std::complex<double> getValAtResonance();
+  virtual std::complex<double> getSmootherLargerVal();
+  virtual void print(std::ostream& out = std::cout);
   virtual void print(std::ostream& out = std::cout) const;
 
   virtual DalitzCoordinate getDalitzCoordinate(double nSigma=3) const;
@@ -171,7 +169,7 @@ class BW_BW : virtual public ILineshape{
   }
 
 
-  virtual std::complex<double> EvtGenValue(IDalitzEvent& evt);
+  virtual std::complex<double> EvtGenValue();
 };
 
 std::ostream& operator<<(std::ostream& out, const BW_BW& amp);

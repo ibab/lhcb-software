@@ -8,6 +8,7 @@
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzEvent.h"
 #include "Mint/IDalitzEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/IDalitzPdf.h"
 
 #include "Mint/counted_ptr.h"

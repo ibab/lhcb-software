@@ -1,6 +1,7 @@
 // author: Jonas Rademacker (Jonas.Rademacker@bristol.ac.uk)
 // status:  Mon 9 Feb 2009 19:17:57 GMT
 #include "Mint/Amplitude.h"
+#include "Mint/IDalitzEventAccess.h"
 #include "Mint/SpinFactorMaker.h"
 #include "Mint/LineshapeMaker.h"
 #include "Mint/Utils.h"
@@ -13,43 +14,99 @@ using namespace std;
 using namespace MINT;
 
 Amplitude::Amplitude( const DecayTree& decay
+		      , IDalitzEventAccess* events
 		      , char SPD_Wave
 		      , const std::string& lopt
 		      ) 
-  : _associatingDecayTree(decay)
+  : IDalitzEventAccess()
+  , DalitzEventAccess(events)
+  , _associatingDecayTree(decay, (IDalitzEventAccess*) this)
   , _spinFactor(0)
   , _spd(SPD_Wave)
   , _lopt(lopt)
-  , _pat()
-  , _init(false)
 {
-  //createDependants();
+  createDependants();
+}
+Amplitude::Amplitude( const DecayTree& decay
+		      , IDalitzEventList* events
+		      , char SPD_Wave
+		      , const std::string& lopt
+		      ) 
+  : IDalitzEventAccess()
+  , DalitzEventAccess(events)
+  , _associatingDecayTree(decay, (IDalitzEventAccess*) this)
+  , _spinFactor(0)
+  , _spd(SPD_Wave)
+  , _lopt(lopt)
+{
+  createDependants();
 }
 
 Amplitude::Amplitude( const AmpInitialiser& ampInit
+		      , IDalitzEventAccess* events
 		      )
-  : _associatingDecayTree(ampInit.tree())
+  : IDalitzEventAccess()
+  , DalitzEventAccess(events)
+  , _associatingDecayTree(ampInit.tree(),(IDalitzEventAccess*)this)
   , _spinFactor(0)
   , _spd(ampInit.SPD())
   , _lopt(ampInit.lopt())
-  , _pat()
-  , _init(false)
 {
-  //createDependants();
+  createDependants();
 }
-
+Amplitude::Amplitude( const AmpInitialiser& ampInit
+		      , IDalitzEventList* events
+		      )
+  : IDalitzEventAccess()
+  , DalitzEventAccess(events)
+  , _associatingDecayTree(ampInit.tree(),(IDalitzEventAccess*)this)
+  , _spinFactor(0)
+  , _spd(ampInit.SPD())
+  , _lopt(ampInit.lopt())
+{
+  createDependants();
+}
 Amplitude::Amplitude( const Amplitude& other)
-  : IReturnRealForEvent<IDalitzEvent>()
-  , IReturnComplexForEvent<IDalitzEvent>()
-  , _associatingDecayTree(other._associatingDecayTree)
+  : IBasicEventAccess<IDalitzEvent>()
+  , IEventAccess<IDalitzEvent>()
+  , IDalitzEventAccess()
+  , IReturnReal()
+  , IGetRealEvent<IDalitzEvent>()
+  , IReturnComplex()
+  , DalitzEventAccess(other)
+  , _associatingDecayTree(other._associatingDecayTree, this)
   , _spinFactor(0)
   , _spd(other._spd)
   , _lopt(other._lopt)
-  , _pat(other._pat)
-  , _init(false)
 {
   // association is done, rest needs to be re-done.
-  deleteDependants();
+  renew();
+}
+Amplitude::Amplitude( const Amplitude& other, IDalitzEventAccess* newEvents)
+  : IDalitzEventAccess()
+  , IReturnReal()
+  , IReturnComplex()
+  , DalitzEventAccess(newEvents)
+  , _associatingDecayTree(other._associatingDecayTree, this)
+  , _spinFactor(0)
+  , _spd(other._spd)
+  , _lopt(other._lopt)
+{
+  // association is done, rest needs to be re-done.
+  renew();
+}
+Amplitude::Amplitude( const Amplitude& other, IDalitzEventList* newEvents)
+  : IDalitzEventAccess()
+  , IReturnReal()
+  , IReturnComplex()
+  , DalitzEventAccess(newEvents)
+  , _associatingDecayTree(other._associatingDecayTree, this)
+  , _spinFactor(0)
+  , _spd(other._spd)
+  , _lopt(other._lopt)
+{
+  // association is done, rest needs to be re-done.
+  renew();
 }
 
 Amplitude::~Amplitude(){
@@ -57,7 +114,6 @@ Amplitude::~Amplitude(){
 }
 
 bool Amplitude::deleteDependants(){
-  _init=false;
   deleteLineshapes();
   if(0 != _spinFactor) delete _spinFactor;
   _spinFactor=0;
@@ -70,7 +126,7 @@ bool Amplitude::createDependants(){
 	 << ". Calling SpinFactorMake with _spd = " << _spd
 	 << " and _lopt = " << _lopt << endl;
       }
-  _spinFactor = SpinFactorMaker(theBareDecay(), _spd, _lopt);
+  _spinFactor = SpinFactorMaker(theDecay(), this, _spd, _lopt);
   if(dbThis) cout << "got this spin factor: " << _spinFactor->name() << endl;
   if(0 == _spinFactor) return false;
   bool cl = createLineshapes();
@@ -79,19 +135,15 @@ bool Amplitude::createDependants(){
 }
 bool Amplitude::renew(){
   deleteDependants();
-  _init = createDependants();
-  if(! _init){
-    cout << "ERROR: Amplitude::renew() failed" << endl;
-  }
-  return _init;
+  return createDependants();
 }
 bool Amplitude::resetTree(const DecayTree& dt){
-  AssociatingDecayTree newTree(dt);
+  AssociatingDecayTree newTree(dt, this);
   _associatingDecayTree = newTree;
-  return deleteDependants();
+  return renew();
 }
 bool Amplitude::CPConjugate(){
-  DecayTree dt = theBareDecay();
+  DecayTree dt = theDecay();
   anti(dt);
   return resetTree(dt);
 }
@@ -108,19 +160,13 @@ bool Amplitude::createLineshapes(const AssociatedDecayTree* treePtr){
 	 << theDecay()
 	 << "\n first call in recursive operation" << endl;
     */
-    if(_pat.empty()){
-      cout << "Amplitude::createLineshapes: cannot create line-shapes"
-	   << " unless _pat is set. Bailing out." 
-	   << endl;
-      throw "no lineshapes without pattern";
-    }
-    return createLineshapes(& theDecay(_pat));
+    return createLineshapes(& theDecay());
   }
   //  cout << "         >> " << treePtr->oneLiner() << endl;
 
   bool success=true;
   if(treePtr->nDgtr() >= 2){
-    LineshapeList.push_back(LineshapeMaker(treePtr, _lopt));
+    LineshapeList.push_back(LineshapeMaker(treePtr, this, _lopt));
     if(dbThis){
       cout << "Amplitude::createLineshapes: just added lineshape: ";
       LineshapeList.back()->print(cout);
@@ -141,22 +187,17 @@ bool Amplitude::deleteLineshapes(){
   return true;
 }
 
-double Amplitude::SpinFactorValue(IDalitzEvent& evt){
+double Amplitude::SpinFactorValue(){
   bool dbThis=false;
   if(dbThis) {
     cout << "amplitude " << name()
 	 << " calling spin factor: "
 	 << spinFactor()->name() << endl;
   }
-  if(0 == spinFactor()) initialise(evt.eventPattern());
-  if(dbThis){
-    cout << " spin factor value is: "
-	 << spinFactor()->getVal(evt) << endl;
-  }
-  return spinFactor()->getVal(evt);
+  return spinFactor()->getVal();
 }
 
-std::complex<double> Amplitude::LineshapeProduct(IDalitzEvent& evt){
+std::complex<double> Amplitude::LineshapeProduct(){
   bool dbThis=false;
   std::complex<double> prod=1;
   if(dbThis){
@@ -165,12 +206,34 @@ std::complex<double> Amplitude::LineshapeProduct(IDalitzEvent& evt){
   }
   for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
       it != LineshapeList.end(); it++){
-    if(dbThis && 0 != *it) cout << (*it)->name() << ", " << (*it)->getVal(evt);
-    if(0 != *it) prod *= (*it)->getVal(evt);
+    if(dbThis && 0 != *it) cout << (*it)->name() << ", " << (*it)->getVal();
+    if(0 != *it) prod *= (*it)->getVal();
   }
-  if(dbThis) cout << " done. Returning " << prod << endl;
+  if(dbThis) cout << " done." << endl;
   return prod;
 }
+std::complex<double> Amplitude::LineshapeProductAtResonance(){
+  //  return 1;//
+  std::complex<double> prod=1;
+
+  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
+      it != LineshapeList.end(); it++){
+    if(0 != *it) prod *= (*it)->getValAtResonance();
+  }
+  return prod;
+}
+
+std::complex<double> Amplitude::LineshapeProductSmootherLarger(){
+  //  return 1;//
+  std::complex<double> prod=1;
+
+  for(std::vector<ILineshape*>::iterator it = LineshapeList.begin();
+      it != LineshapeList.end(); it++){
+    if(0 != *it) prod *= (*it)->getSmootherLargerVal();
+  }
+  return prod;
+}
+
 
 DalitzBoxSet Amplitude::MakeBoxes(const DalitzEventPattern& pat
 				  , double nSigma){
@@ -191,7 +254,7 @@ DalitzBoxSet Amplitude::MakeBox(const DalitzEventPattern& pat
 				){
   cout << "making box for " << (*this) << endl;
   DalitzBoxSet v;
-  double maxHeight = 1;// norm(this->getValAtResonance());
+  double maxHeight = norm(this->getValAtResonance());
   double maxHeight_2 = maxHeight;
   if(LineshapeList.size() >= 2){
     maxHeight_2 *=  exp(-0.5*(nSigma*nSigma*0.75));
@@ -202,7 +265,7 @@ DalitzBoxSet Amplitude::MakeBox(const DalitzEventPattern& pat
     DalitzCoordinate coord ((*it)->getDalitzCoordinate(nSigma).mapMe(perm) );
     if(coord.size() <= 3){ // otherwise it's the D itself
       DalitzBox box(pat, coord);
-      box.setName(this->theBareDecay().oneLiner() 
+      box.setName(this->theDecay().oneLiner() 
 		  + " limit: " + coord.name()
 		  + " " + anythingToString((int)nSigma) + " sigma");
       box.encloseInPhaseSpaceArea();
@@ -213,15 +276,15 @@ DalitzBoxSet Amplitude::MakeBox(const DalitzEventPattern& pat
     }
   }
   DalitzBox lastBox(pat, limits);
-  lastBox.setGuessedHeight(1);//norm(this->getValAtResonance()));
+  lastBox.setGuessedHeight(norm(this->getValAtResonance()));
   cout << " just set box height, it's " << lastBox.guessedHeight() << endl;
-  lastBox.setName(this->theBareDecay().oneLiner() 
+  lastBox.setName(this->theDecay().oneLiner() 
 	      + " all limits"
 	      + " " + anythingToString((int)nSigma) + " sigma");
   cout << " .. now it is " << lastBox.guessedHeight() << endl;
   lastBox.encloseInPhaseSpaceArea();
   cout << "Amp " << name() << " made box with guessed height " 
-       << norm(1)//this->getValAtResonance())
+       << norm(this->getValAtResonance())
        << " = " << lastBox.guessedHeight()
        << "\n   that's the one" << lastBox
        << endl;
@@ -277,7 +340,7 @@ DalitzBWBox Amplitude::MakeBWBox(const DalitzEventPattern& pat
     }
   }
   DalitzBWBox box(pat, limits, 0, rnd);
-  box.setName(this->theBareDecay().oneLiner() 
+  box.setName(this->theDecay().oneLiner() 
 	      + " BW");
   return box;
 }
@@ -296,11 +359,11 @@ double Amplitude::LineshapeGaussProduct(){
 }
 */
 
-std::complex<double> Amplitude::getOnePermutationsVal(IDalitzEvent& evt){
+std::complex<double> Amplitude::getOnePermutationsVal(){
   bool dbThis=false;
 
-  double          sf = SpinFactorValue(evt);
-  complex<double> ls = LineshapeProduct(evt);
+  double          sf = SpinFactorValue();
+  complex<double> ls = LineshapeProduct();
   complex<double> returnVal =  sf*ls;
 
   if(dbThis){
@@ -313,7 +376,34 @@ std::complex<double> Amplitude::getOnePermutationsVal(IDalitzEvent& evt){
     //  }
     // }
 
-    cout << theBareDecay().oneLiner() << ":"
+    cout << theDecay().oneLiner() << ":"
+	 << "\n   >  spinFactor       " << sf
+	 << "\n   >  LineshapeProduct " << ls
+	 << "\n   >  Returning:       " << returnVal
+	 << endl;
+    cout << "-----------------------------------------" << endl;
+  }
+  return returnVal;
+}
+std::complex<double> Amplitude::getOnePermutationsSmootherLargerVal(){
+  bool dbThis=false;
+
+  double          sf = SpinFactorValue();
+  complex<double> ls = LineshapeProductSmootherLarger();
+  complex<double> returnVal =  sf*ls;
+
+  if(dbThis){
+    /*
+    if(LineshapeList.size() >=2){
+      complex<double> evtGen = LineshapeList[1]->EvtGenValue();
+      complex<double> diff = returnVal - evtGen;
+      if(abs(diff) > 1.e-10){
+	cout << " EvtGenCheck: " << returnVal << " - " << evtGen
+	     << " = " << diff << endl;
+      }
+    }
+    */
+    cout << theDecay().oneLiner() << " smoother/larger:"
 	 << "\n   >  spinFactor       " << sf
 	 << "\n   >  LineshapeProduct " << ls
 	 << "\n   >  Returning:       " << returnVal
@@ -324,22 +414,28 @@ std::complex<double> Amplitude::getOnePermutationsVal(IDalitzEvent& evt){
 }
 
 std::complex<double> Amplitude::getVal(IDalitzEvent* evt){
-  if(0 == evt) return 0;
-  return this->getVal(*evt);
+  //  bool dbthis=false;
+  this->setEvent(evt);
+  std::complex<double> result = this->getVal();
+  this->resetEventRecord();
+  return result;
 }
 
-std::complex<double> Amplitude::getVal(IDalitzEvent& evt){
+std::complex<double> Amplitude::getVal(){
   //bool dbThis=false;
 
-  initialiseIfNeeded(evt.eventPattern());
-
+  /*
+  if(dbThis) cout << "Amplitude::getVal() starting amp " 
+		  << name() << endl;
+  */
   complex<double> sum=0;
+  if(0 == getEvent()) return 0;
 
-  if(! evt.eventPattern().compatibleWithFinalState(getTreePattern())) return 0;
+  if(! getEvent()->eventPattern().compatibleWithFinalState(getTreePattern())) return 0;
 
-  for(int i=0; i < evt.numPermutations(); i++){
-    evt.setPermutationIndex(i);
-    complex<double> thisVal= getOnePermutationsVal(evt);
+  for(int i=0; i < getEvent()->numPermutations(); i++){
+    getEvent()->setPermutationIndex(i);
+    complex<double> thisVal= getOnePermutationsVal();
     /*
     if(dbThis){
       cout << " permutation " << i
@@ -350,8 +446,8 @@ std::complex<double> Amplitude::getVal(IDalitzEvent& evt){
     */
     sum += thisVal;
   }
-  evt.setPermutationIndex(0);
-  sum /= sqrt((double) evt.numPermutations());
+  getEvent()->setPermutationIndex(0);
+  sum /= sqrt((double) getEvent()->numPermutations());
 
   /*
   if(dbThis && abs(sum) > sqrt((double) 1000)){
@@ -370,16 +466,82 @@ std::complex<double> Amplitude::getVal(IDalitzEvent& evt){
   return sum;
 }
 
+std::complex<double> Amplitude::getSmootherLargerVal(IDalitzEvent* evt){
+  //  bool dbthis=false;
+  this->setEvent(evt);
+  std::complex<double> result = this->getSmootherLargerVal();
+  this->resetEventRecord();
+  return result;
+}
+
+std::complex<double> Amplitude::getSmootherLargerVal(){
+  bool dbThis=false;
+
+  if(dbThis) cout << "Amplitude::getSmootherLargerVal() starting amp " 
+		  << name() << endl;
+
+  complex<double> sum=0;
+  if(0 == getEvent()) return 0;
+  if(! getEvent()->eventPattern().compatibleWithFinalState(theDecay())) return 0;
+
+  for(int i=0; i < getEvent()->numPermutations(); i++){
+    getEvent()->setPermutationIndex(i);
+    complex<double> thisVal= getOnePermutationsSmootherLargerVal();
+    if(dbThis){
+      cout << " permutation " << i
+	   << " makes event look like this: ";
+      getEvent()->print();
+      cout << "\n gets thisVal " << thisVal << endl;
+    }
+    sum += thisVal;
+  }
+  getEvent()->setPermutationIndex(0);
+  sum /= sqrt((double) getEvent()->numPermutations());
+  if(dbThis && abs(sum) > sqrt((double) 1000)){
+    cout << " Amplitude : " << (*this)
+	 << " returning a large value: " << sum
+	 << endl;
+  }
+  
+  if(dbThis){
+    cout << "Amplitude::getSmootherLargerVal() for " 
+	 << name() << endl;
+    cout << " returning " << sum << endl;
+    cout << "==========================================" << endl;
+  }
+  return sum;
+}
+
+std::complex<double> Amplitude::getValAtResonance(){
+  std::complex<double> ls = LineshapeProductAtResonance();
+  //  cout << "using Amplitude::getValAtResonance()" << endl;
+  return ls;
+}
+
+/*
+double Amplitude::gaussProb(){
+  bool dbthis=false;
+
+  double ls = LineshapeGaussProduct();
+  if(dbthis){
+    cout << theDecay().oneLiner() << ":"
+	 << "\n   >  LineshapeGaussProduct " << ls
+	 << "\n   >  Returning:       " << ls
+	 << endl;
+  }
+  return ls;
+}
+*/
 
 std::string Amplitude::name() const{
   return (std::string) "(" 
     + _spd 
     + " wave) with opt " + _lopt + "; "
-    + theBareDecay().oneLiner();
+    + theDecay().oneLiner();
 }
 
 void Amplitude::print(std::ostream& out) const{
-  out << "(" << _spd << " wave)\n" << theBareDecay();
+  out << "(" << _spd << " wave)\n" << theDecay();
 }
 
 std::ostream& operator<<(std::ostream& out, const Amplitude& amp){

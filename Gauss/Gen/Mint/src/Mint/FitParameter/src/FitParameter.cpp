@@ -33,7 +33,6 @@ FitParameter::FitParameter(const std::string& name
   , _scanParameters(name + "_Scan", fname, NamedParameterBase::QUIET)
   , _blindingParameters(name + "_Blind", fname, NamedParameterBase::QUIET)
 {
-  defaultInit();
   setFromParsedFile();
   MinuitParameterSet* ps = setPtr;
   if(0 == ps) ps = MinuitParameterSet::getDefaultSet();
@@ -100,7 +99,6 @@ FitParameter::FitParameter(const std::string& name
   , _scanParameters(name + "_Scan", 0, NamedParameterBase::QUIET)
   , _blindingParameters(name + "_Blind", 0, NamedParameterBase::QUIET)
 {
-  defaultInit();
   setFromParsedFile();
   MinuitParameterSet* ps = setPtr;
   if(0 == ps) ps = MinuitParameterSet::getDefaultSet();

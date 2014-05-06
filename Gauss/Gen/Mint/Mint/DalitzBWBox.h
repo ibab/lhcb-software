@@ -6,7 +6,7 @@
 #include "Mint/MappedDalitzBWArea.h"
 #include "Mint/DalitzEventPattern.h"
 #include "Mint/DalitzCoordinate.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/DalitzEventList.h"
 
 #include "Mint/IGenFct.h"
@@ -25,7 +25,7 @@ class DalitzBWBox{
   MappedDalitzBWArea _area;
 
   DalitzEventPattern _pat;
-  MINT::IReturnRealForEvent<IDalitzEvent>* _amps;
+  MINT::IGetRealEvent<IDalitzEvent>* _amps;
 
   TRandom* _rnd;
   double _height;
@@ -39,18 +39,18 @@ class DalitzBWBox{
 
   DalitzBWBox(TRandom* rnd = gRandom);
   DalitzBWBox(const DalitzEventPattern& pat
-	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps = 0
+	    , MINT::IGetRealEvent<IDalitzEvent>* amps = 0
 	    , TRandom* rnd = gRandom
 	    );
 
   DalitzBWBox(const DalitzEventPattern& pat
 	    , const MINT::counted_ptr<IGenFct>& fct
-	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps =0
+	    , MINT::IGetRealEvent<IDalitzEvent>* amps =0
 	    , TRandom* rnd = gRandom);
 
   DalitzBWBox(const DalitzEventPattern& pat
 	    , const std::vector<MINT::counted_ptr<IGenFct> >& limits
-	    , MINT::IReturnRealForEvent<IDalitzEvent>* amps =0
+	    , MINT::IGetRealEvent<IDalitzEvent>* amps =0
 	    , TRandom* rnd = gRandom);
 
   DalitzBWBox(const DalitzBWBox& other);
@@ -76,7 +76,7 @@ class DalitzBWBox{
   bool unWeightPs(){return _area.unWeightPs();}
 
 
-  bool setAmps(MINT::IReturnRealForEvent<IDalitzEvent>* amps);
+  bool setAmps(MINT::IGetRealEvent<IDalitzEvent>* amps);
 
   bool insideArea(const DalitzEvent& evt) const;
 
@@ -90,7 +90,7 @@ class DalitzBWBox{
 
 };
 
-std::ostream& operator<<(ostream& os, const DalitzBWBox& box);
+ostream& operator<<(ostream& os, const DalitzBWBox& box);
 
 
 #endif

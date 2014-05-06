@@ -21,8 +21,10 @@ class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILine
   CLEO2012_BW_BW_DifferentMother _omegaBW;
 
   MINT::NamedParameter<double> _eps, _beta, _phi, _delta, _aRatioSq;
-  std::complex<double> rhoBWVal(IDalitzEvent& evt);
-  std::complex<double> omegaBWVal(IDalitzEvent& evt);
+  std::complex<double> rhoBWVal();
+  std::complex<double> omegaBWVal();
+  std::complex<double> rhoBWValAtResonance();
+  std::complex<double> omegaBWValAtResonance();
 
   mutable double _mRho, _mOmega, _GRho, _GOmega;
   
@@ -42,12 +44,14 @@ class CLEO2012_CrystalBallRhoOmega : public CLEO2012_BW_BW, virtual public ILine
   double omegaToRhoAmpRatio() const;
  public:
   
-  CLEO2012_CrystalBallRhoOmega( const AssociatedDecayTree& tree);
+  CLEO2012_CrystalBallRhoOmega( const AssociatedDecayTree& tree
+		       , IDalitzEventAccess* events);
 
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal();
+  virtual std::complex<double> getValAtResonance();
   virtual DalitzCoordinate getDalitzCoordinate(double nSigma=3)const;
   virtual void print(std::ostream& out = std::cout) const;
-  virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout) ;
+  virtual void print(std::ostream& out = std::cout) ;
 
   virtual MINT::counted_ptr<IGenFct> generatingFunction() const;
 

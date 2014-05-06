@@ -17,57 +17,79 @@
 
 #include "Mint/DecayTree.h"
 #include "Mint/DalitzEventPattern.h"
+#include "Mint/IDalitzEventAccess.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/IDalitzEventList.h"
 
 #include "Mint/DalitzEventPattern.h"
 
 #include "Mint/AssociatedDecayTree.h"
 #include "Mint/counted_ptr.h"
 
-class AssociatingDecayTree{
+class AssociatingDecayTree : public DalitzEventAccess{
  protected:
   mutable AssociatedDecayTree _theDecay; // 'mutable' probably not so nice
   mutable DalitzEventPattern _prevPattern;     // ditto
-  //  mutable IDalitzEvent* _evtPtr;
-
+  
   DalitzEventPattern _theTreesPattern;
 
-  bool associate(const DalitzEventPattern& pat) const;
-  bool associate(const IDalitzEvent& evt) const;
+  bool associate() const;
 
-  bool associateFinalStates(const DalitzEventPattern& pat) const;
-  bool associateFinalStates(const IDalitzEvent& evt) const;
+  bool associateFinalStates() const;
   bool associateResonances() const;
   std::vector<int>  addAssociations(MINT::counted_ptr<AssociatedDecayTree> ctree) const;
   std::vector<int> addAssociations(AssociatedDecayTree* tree) const;
 
-  bool patternHasChanged(const DalitzEventPattern& pat) const;
-  bool patternHasChanged(const IDalitzEvent& evt) const;
+  const DalitzEventPattern& getPattern() const;
 
+  bool patternHasChanged() const;
  public:
-  AssociatingDecayTree(const DecayTree& tree)
-    : _theDecay(tree)
+  AssociatingDecayTree(const DecayTree& tree, IDalitzEventAccess* dad)
+    : IDalitzEventAccess()
+    , DalitzEventAccess(dad)
+    , _theDecay(tree)
     , _prevPattern()
     , _theTreesPattern(tree)
     {
-      //associate();
+      associate();
+      //      std::cout << "associated the decay tree\n" << *this << std::endl;
+    }
+  
+  AssociatingDecayTree(const DecayTree& tree, IDalitzEventList* dad)
+    : IDalitzEventAccess()
+    , DalitzEventAccess(dad)
+    , _theDecay(tree)
+    , _prevPattern()
+    , _theTreesPattern(tree)
+    {
+      associate();
       //      std::cout << "associated the decay tree\n" << *this << std::endl;
     }
   
   AssociatingDecayTree(const AssociatingDecayTree& other)
-    : _theDecay(other._theDecay)
+    : MINT::IBasicEventAccess<IDalitzEvent>()
+    , MINT::IEventAccess<IDalitzEvent>()
+    , IDalitzEventAccess()
+    , DalitzEventAccess(other)
+    , _theDecay(other._theDecay)
     , _prevPattern(other._prevPattern)
     , _theTreesPattern(other._theTreesPattern)
     {}
+  AssociatingDecayTree(const AssociatingDecayTree& other
+		       , IDalitzEventAccess* newEvents)
+    : IDalitzEventAccess()
+    , DalitzEventAccess(newEvents)
+    , _theDecay(other._theDecay)
+    , _prevPattern(other._prevPattern)
+    , _theTreesPattern(other._theTreesPattern)
+    {
+      associate();// not really needed, but safer.
+    }
 
-  const AssociatedDecayTree* getTreePtr(const DalitzEventPattern& pat) const;
-  const AssociatedDecayTree* getTreePtr(const IDalitzEvent& evt) const;
 
-  const AssociatedDecayTree& getTree(const DalitzEventPattern& pat) const;
-  const AssociatedDecayTree& getTree(const IDalitzEvent& evt) const;
+  const AssociatedDecayTree* getTreePtr() const;
 
-  DecayTree getBareTree() const{
-    return _theDecay;
-  }
+  const AssociatedDecayTree& getTree() const;
 
   const DalitzEventPattern& getTreePattern() const;
 

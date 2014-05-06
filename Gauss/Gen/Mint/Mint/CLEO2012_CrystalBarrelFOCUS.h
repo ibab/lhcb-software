@@ -8,6 +8,8 @@
 
 #include "Mint/ILineshape.h"
 #include "Mint/AssociatedDecayTree.h"
+#include "Mint/DalitzEventAccess.h"
+#include "Mint/IDalitzEventAccess.h"
 
 #include "Mint/IGenFct.h"
 #include "TRandom.h"
@@ -28,15 +30,15 @@ class CLEO2012_CrystalBarrelFOCUS : public CLEO2012_BW_BW, virtual public ILines
   std::complex<double> BW (double s, double m_w, double gamma) const;
 
  public:
-  CLEO2012_CrystalBarrelFOCUS( const AssociatedDecayTree& decay);
-
+  CLEO2012_CrystalBarrelFOCUS( const AssociatedDecayTree& decay
+		  , IDalitzEventAccess* events);
   CLEO2012_CrystalBarrelFOCUS(const CLEO2012_CrystalBarrelFOCUS& other);
   virtual ~CLEO2012_CrystalBarrelFOCUS();
 
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
-
+  virtual std::complex<double> getVal();
+  virtual std::complex<double> getValAtResonance();
   virtual void print(std::ostream& out = std::cout) const;
-  virtual void print(IDalitzEvent& evt, std::ostream& out = std::cout);
+  virtual void print(std::ostream& out = std::cout);
 
   virtual std::string name() const{
     return "CLEO2012_CrystalBarrel_ala_FOCUS("+_theDecay.oneLiner() +")";

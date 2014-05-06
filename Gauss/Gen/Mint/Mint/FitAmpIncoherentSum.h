@@ -7,12 +7,14 @@
 
 #include "Mint/counted_ptr.h"
 
+#include "Mint/IDalitzEventAccess.h"
+#include "Mint/DalitzEventAccess.h"
 #include "Mint/DalitzBoxSet.h"
 #include "Mint/DalitzBWBoxSet.h"
 #include "Mint/IntegCalculator.h"
 
-#include "Mint/IReturnRealForEvent.h"
-#include "Mint/IReturnComplexForEvent.h"
+#include "Mint/IGetRealEvent.h"
+#include "Mint/IGetComplexEvent.h"
 #include "Mint/IFastAmplitudeIntegrable.h"
 #include "Mint/IIntegrationCalculator.h"
 
@@ -21,7 +23,7 @@
 #include "Mint/FitAmpList.h"
 
 class FitAmpIncoherentSum 
-: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+: virtual public MINT::IGetRealEvent<IDalitzEvent>
 , virtual public IFastAmplitudeIntegrable
 , virtual public ILookLikeFitAmpSum
 , public FitAmpList
@@ -46,6 +48,40 @@ class FitAmpIncoherentSum
 	    , const std::string& opt=""
 	    );
 
+  FitAmpIncoherentSum(IDalitzEventAccess* events
+	    , const char* fname=0
+	    , MINT::MinuitParameterSet* pset=0
+	    , const std::string& prefix=""
+	    , const std::string& opt=""
+	    );
+  
+  FitAmpIncoherentSum(IDalitzEventAccess* events
+	    , MINT::MinuitParameterSet* pset
+	    , const std::string& prefix=""
+	    , const std::string& opt=""
+	    );
+  FitAmpIncoherentSum(IDalitzEventAccess* events
+	    , const std::string& prefix
+	    , const std::string& opt=""
+	    );
+  
+  FitAmpIncoherentSum(IDalitzEventList* events
+	    , const char* fname=0
+	    , MINT::MinuitParameterSet* pset=0
+	    , const std::string& prefix=""
+	    , const std::string& opt=""
+	    );
+  
+  FitAmpIncoherentSum(IDalitzEventList* events
+	    , MINT::MinuitParameterSet* pset
+	    , const std::string& prefix=""
+	    , const std::string& opt=""
+	    );
+  FitAmpIncoherentSum(IDalitzEventList* events
+	    , const std::string& prefix
+	    , const std::string& opt=""
+	    );
+  
   FitAmpIncoherentSum(const FitAmpIncoherentSum& other);
   FitAmpIncoherentSum(const FitAmpList& other);
   /* 
@@ -60,20 +96,21 @@ class FitAmpIncoherentSum
   virtual MINT::counted_ptr<FitAmpList> GetCloneSameFitParameters() const;
 
 
+  virtual DalitzBoxSet makeBoxes(double nSigma = 2){
+    return FitAmpList::makeBoxes(this, nSigma);}
   virtual DalitzBoxSet makeBoxes(const DalitzEventPattern& pat
 				 , double nSigma=2){
     return FitAmpList::makeBoxes(pat, this, nSigma);}
 
+  virtual DalitzBWBoxSet makeBWBoxes(TRandom* rnd=gRandom){
+    return FitAmpList::makeBWBoxes(this, rnd);}
   virtual DalitzBWBoxSet makeBWBoxes(const DalitzEventPattern& pat
 				     , TRandom* rnd=gRandom){
     return FitAmpList::makeBWBoxes(pat, this, rnd);}
 
 
-  double getVal(IDalitzEvent& evt);
-  double getVal(IDalitzEvent* evtPtr){
-    if(0 == evtPtr) return 0;
-    return getVal(*evtPtr);
-  }
+  double getVal();
+  double getVal(IDalitzEvent* evt);
 
   /*
   double getSmootherLargerVal();
@@ -83,8 +120,8 @@ class FitAmpIncoherentSum
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
 
-  virtual double Prob(IDalitzEvent& evt){
-    return getVal(evt);
+  virtual double Prob(){
+    return getVal();
   }
 
   /*
@@ -93,8 +130,8 @@ class FitAmpIncoherentSum
   }
   */
 
-  virtual double RealVal(IDalitzEvent& evt){
-    return Prob(evt);
+  virtual double RealVal(){
+    return Prob();
   }
 
   /*
@@ -104,9 +141,9 @@ class FitAmpIncoherentSum
   */
 
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-    makeEventGenerator(const DalitzEventPattern& pat, TRandom* rnd=gRandom){
+    makeEventGenerator(TRandom* rnd=gRandom){
     MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-      ptr(new DalitzBWBoxSet(makeBWBoxes(pat, rnd)));
+      ptr(new DalitzBWBoxSet(makeBWBoxes(rnd)));
     return ptr;
   }
 

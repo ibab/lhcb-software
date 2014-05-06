@@ -259,14 +259,17 @@ double FitAmpPairList::oldVariance() const{
 }
 double FitAmpPairList::efficiency(IDalitzEvent* evtPtr){
   if(0 == _efficiency) return 1;
-  if(0 == evtPtr) return 0;
-  return _efficiency->RealVal(*evtPtr);
+  _efficiency->setEvent(evtPtr);
+  double ef = _efficiency->RealVal();
+  _efficiency->resetEventRecord();
+  if(ef < 0) return 0;
+  return ef;
 }
-void FitAmpPairList::setEfficiency(counted_ptr<IReturnRealForEvent<IDalitzEvent> > eff){
+void FitAmpPairList::setEfficiency(counted_ptr<IGetDalitzEvent> eff){
   _efficiency=eff;
 }
 void FitAmpPairList::unsetEfficiency(){
-  _efficiency=counted_ptr<IReturnRealForEvent<IDalitzEvent> >(0);
+  _efficiency=counted_ptr<IGetDalitzEvent>(0);
 }
 DalitzHistoSet FitAmpPairList::histoSet() const{
   DalitzHistoSet sum;

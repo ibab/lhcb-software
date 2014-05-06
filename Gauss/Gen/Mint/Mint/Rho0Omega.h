@@ -8,7 +8,6 @@
 #include "Mint/ILineshape.h"
 #include "Mint/BW_BW.h"
 #include "Mint/NamedParameter.h"
-#include "Mint/IDalitzEvent.h"
 
 class Rho0Omega : public BW_BW, virtual public ILineshape{
  public:
@@ -18,12 +17,13 @@ class Rho0Omega : public BW_BW, virtual public ILineshape{
      Default parameters taken from the Crystal Barrel Collaboration
      Phys. Lett. B 411, 354 (1997)
    */
-  Rho0Omega( const AssociatedDecayTree& tree);
+  Rho0Omega( const AssociatedDecayTree& tree, 
+	     IDalitzEventAccess* events );
 
   /**
      Evaluate rho0-omega lineshape from the Crystal Barrel measurement
    */
-  virtual std::complex<double> getVal(IDalitzEvent& evt);
+  virtual std::complex<double> getVal();
 
   /**
      Print decay
@@ -33,7 +33,7 @@ class Rho0Omega : public BW_BW, virtual public ILineshape{
   /**
      Print decay
    */
-  virtual void print( IDalitzEvent& evt, std::ostream& out = std::cout );
+  virtual void print( std::ostream& out = std::cout );
 
   /**
      Decay Name

@@ -5,8 +5,10 @@
 #include "Mint/FlatFct.h"
 
 singleTopHatShape::singleTopHatShape( const AssociatedDecayTree& decay
+				      , IDalitzEventAccess* events
 				      , double mini, double maxi)
-  : _genFct(0)
+  : DalitzEventAccess(events)
+  , _genFct(0)
   , _theDecay(decay)
   , _min_sij(mini)
   , _max_sij(maxi)
@@ -23,7 +25,11 @@ singleTopHatShape::singleTopHatShape( const AssociatedDecayTree& decay
   }
 }
 singleTopHatShape::singleTopHatShape(const singleTopHatShape& other)
-  : ILineshape()
+  : IBasicEventAccess<IDalitzEvent>()
+  , IEventAccess<IDalitzEvent>()
+  , IDalitzEventAccess()
+  , ILineshape()
+  , DalitzEventAccess(other)
   , _genFct(other._genFct)
   , _theDecay(other._theDecay)
   , _min_sij(other._min_sij)
@@ -37,7 +43,7 @@ DalitzCoordinate singleTopHatShape::getDalitzCoordinate(double ) const{
   return coord;
 }
 
-double singleTopHatShape::mumsRecoMass2(IDalitzEvent& evt) const{
+double singleTopHatShape::mumsRecoMass2() const{
   std::vector<int> asi = _theDecay.getVal().asi();
   if(asi.size() < 2){
     cout << "ERROR in singleTopHatShape::mumsRecoMass2() "
@@ -47,16 +53,16 @@ double singleTopHatShape::mumsRecoMass2(IDalitzEvent& evt) const{
 	 << _theDecay
 	 << endl;
   }
-  double mumsRM = evt.sij(asi);
+  double mumsRM = getEvent()->sij(asi);
   return mumsRM;
 }
-std::complex<double> singleTopHatShape::getValue(IDalitzEvent& evt) const{
-  double m = mumsRecoMass2(evt);
+std::complex<double> singleTopHatShape::getValue() const{
+  double m = mumsRecoMass2();
   if(m >= min() && m < max()) return 1;
   else return 0;
 }
-std::complex<double> singleTopHatShape::getVal(IDalitzEvent& evt){
-  return getValue(evt);
+std::complex<double> singleTopHatShape::getVal(){
+  return getValue();
 }
 
 
@@ -86,23 +92,15 @@ std::string singleTopHatShape::name() const{
   return ing;
 }
 
-void singleTopHatShape::print(IDalitzEvent& evt, std::ostream& out) const{
-  out << name()
-      << "\n\t> co-ordinate: " << getDalitzCoordinate()
-      << "\n\t> min, max sij: " << min() << ", " << max()
-      << "\n\t> sij: " << mumsRecoMass2(evt)
-      << "\n\t> This is the decay I'm looking at:"
-      << "\n" << _theDecay
-      << " startOfDecayChain? " << startOfDecayChain()
-      << ", getValue " << getValue(evt);
-}
 void singleTopHatShape::print(std::ostream& out) const{
   out << name()
       << "\n\t> co-ordinate: " << getDalitzCoordinate()
       << "\n\t> min, max sij: " << min() << ", " << max()
+      << "\n\t> sij: " << mumsRecoMass2()
       << "\n\t> This is the decay I'm looking at:"
       << "\n" << _theDecay
-      << " startOfDecayChain? " << startOfDecayChain();
+      << " startOfDecayChain? " << startOfDecayChain()
+      << ", getValue " << getValue();
 }
 
 

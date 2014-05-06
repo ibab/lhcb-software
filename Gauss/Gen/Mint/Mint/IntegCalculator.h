@@ -6,7 +6,6 @@
 #include "Mint/counted_ptr.h"
 #include "Mint/DalitzHistoSet.h"
 #include "Mint/IDalitzEvent.h"
-#include "Mint/IReturnRealForEvent.h"
 #include "Mint/FitFractionList.h"
 #include <iostream>
 
@@ -34,7 +33,7 @@ class IntegCalculator : public virtual IIntegrationCalculator{
   const FitAmpPairList& withEff()const {return _withEff;}
   const FitAmpPairList& noEff()const {return _noEff;}
 
-  void setEfficiency(MINT::counted_ptr<MINT::IReturnRealForEvent<IDalitzEvent> > eff);
+  void setEfficiency(MINT::counted_ptr<IGetDalitzEvent> eff);
   void unsetEfficiency();
   double efficiency(IDalitzEvent* evtPtr);
   

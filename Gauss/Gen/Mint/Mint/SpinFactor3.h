@@ -13,39 +13,38 @@ class SpinFactor3 : public SpinFactor{
   MINT::const_counted_ptr<AssociatedDecayTree> R; // resonance.
   int _spin;
   bool _nonResonant;
-  bool parseTree(const DalitzEventPattern& pat);
+  bool parseTree();
 
   double nonResVal() const{return 1;}
   double spinZeroVal() const{ return 1;}
-  // double GSSpinFactor(IDalitzEvent& evt);
-  double spinOneVal(IDalitzEvent& evt);
-  double spinTwoVal(IDalitzEvent& evt);
+  double spinOneVal();
+  double spinTwoVal();
 
-  double spinOneFromMasses(IDalitzEvent& evt); //db
-  double spinTwoFromMasses(IDalitzEvent& evt); //db
+  double spinOneFromMasses(); //db
+  double spinTwoFromMasses(); //db
 
-  double spinOneFromZemach(IDalitzEvent& evt); //experimental
+  double spinOneFromZemach(); //experimental
 
   bool setSpin();
 
  public:
-  SpinFactor3(const DecayTree& theDecay)
-    : SpinFactor(theDecay, 3)
+  SpinFactor3(IDalitzEventAccess* events
+	      , const DecayTree& theDecay)
+    : SpinFactor(events, theDecay, 3)
     , R(0)
     , _spin(-1)
     , _nonResonant(false)
     {
-      // we'll do the parsing now when we see the 1st event.
-      //if( ! parseTree()){
-      //throw "error in parseTree in constructor of SpinFactor3";
-      //}
+      if( ! parseTree()){
+	throw "error in parseTree in constructor of SpinFactor3";
+      }
     }
 
-  virtual double getVal(IDalitzEvent& evt);
+  virtual double getVal();
   static const DecayTree& getExampleDecay();
   virtual const DecayTree& exampleDecay();
   virtual std::string name() const{
-    return "SpinFactor3(" + theBareDecay().oneLiner() + ")";
+    return "SpinFactor3(" + theDecay().oneLiner() + ")";
   }
   virtual void printYourself(std::ostream& os = std::cout)const;
   virtual ~SpinFactor3(){}

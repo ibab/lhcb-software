@@ -108,16 +108,19 @@ protected:
   NamedParameter<std::string> _integratorSource;
   std::string _integratorFileName;
 public:
-  double un_normalised_noPs(IDalitzEvent& evt){
-    return _amps->RealVal(evt);
+  double un_normalised_noPs(){
+    if(0 == getEvent()) return 0;
+    double ampSq =  _amps->RealVal();
+    return ampSq;// * getEvent()->phaseSpace();
   }
 
-  AmpsPdf( const DalitzEventPattern& pat, const counted_ptr<FitAmpSum>& amps
+  AmpsPdf( const counted_ptr<FitAmpSum>& amps
+	   , IDalitzEventList* events=0
 	   , double precision=1.e-4
 	   , const std::string& method="efficient"
 	   , const std::string& integFileName="IntegFile.root"
 	   )
-    : DalitzPdfBaseFastInteg(0, amps.get(), precision)
+    : DalitzPdfBaseFastInteg(events, 0, amps.get(), precision)
     , _localRnd(0)
     , _sgGen(0)
     , _fileGen(0)
@@ -131,7 +134,7 @@ public:
     if(nonFlat){
       cout << "AmpsPdf uses nonFlat integration." << endl;
       if(generateNew){
-	_sgGen =  new SignalGenerator(pat, _amps);
+	_sgGen =  new SignalGenerator(_amps);
 	_sgGen->setWeighted();
 	_sgGen->setSaveEvents(_integratorFileName);
 	_chosenGen = _sgGen;
@@ -142,7 +145,7 @@ public:
 	// events in the file were generated, we supply a random
 	// number generator with randomised seed.
 	_localRnd = new TRandom3(time(0));
-	_sgGen =  new SignalGenerator(pat, _amps, _localRnd);
+	_sgGen =  new SignalGenerator(_amps, _localRnd);
 	_sgGen->setWeighted();
 	_sgGen->dontSaveEvents();// saving events is done by FromFileGenerator
 	_fileGen   = new FromFileGenerator(_integratorFileName, _sgGen);
@@ -216,8 +219,8 @@ int ampFit(){
   cout << "done Bp." << endl;
   */
 
-  SignalGenerator sgM(pat, BmAmps.get());
-  sgM.FillEventList(BmEventList, Nevents);
+ SignalGenerator sgM(BmAmps.get());
+ sgM.FillEventList(BmEventList, Nevents);
 
 //    BpEventList.fromFile("BpSg.root");
 
@@ -230,7 +233,7 @@ int ampFit(){
   ffgM.FillEventList(BmEventList, Nevents);
   cout << "done B-" << endl;
   */
-  SignalGenerator sgP(pat, BpAmps.get());
+  SignalGenerator sgP(BpAmps.get());
   sgP.FillEventList(BpEventList, Nevents);
 
   DalitzHistoSet datHP = BpEventList.histoSet();
@@ -238,19 +241,19 @@ int ampFit(){
   DalitzHistoSet datHM = BmEventList.histoSet();
   datHM.save("plotsFromBmEventList.root");
 
-  AmpsPdf BpPdf(pat, BpAmps, integPrecision, integMethod
+  AmpsPdf BpPdf(BpAmps, &BpEventList, integPrecision, integMethod
       		, BpIntegFileName);
   
   BpPdf.setIntegratorFileName("spIntegrator_test");
 
-  Neg2LL fcnP(BpPdf, BpEventList);
+  Neg2LL<IDalitzEvent> fcnP(&BpPdf, &BpEventList);
   
-  AmpsPdf BmPdf(pat, BmAmps, integPrecision, integMethod
+  AmpsPdf BmPdf(BmAmps, &BmEventList, integPrecision, integMethod
   		, BmIntegFileName);
   
   BmPdf.setIntegratorFileName("smIntegrator_test");
   
-  Neg2LL fcnM(BmPdf, BmEventList);
+  Neg2LL<IDalitzEvent> fcnM(&BmPdf, &BmEventList);
 
   Neg2LLSum fcn(&fcnP, &fcnM);
 

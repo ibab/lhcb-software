@@ -4,7 +4,7 @@
 #define DALITZ_BOX_SET
 
 #include "Mint/DalitzBox.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/IEventGenerator.h"
 
 #include "Mint/counted_ptr.h"
@@ -22,7 +22,7 @@ class DalitzBoxSet
  protected:
   bool _ready;
   std::vector<double> _volumeProbs;
-  MINT::IReturnRealForEvent<IDalitzEvent>* _amps;
+  MINT::IGetRealEvent<IDalitzEvent>* _amps;
 
   TRandom* _rnd;
 
@@ -52,7 +52,7 @@ class DalitzBoxSet
   void add(const DalitzBox& box);
   void add(const std::vector<DalitzBox>& boxes);
   void add(const DalitzBoxSet& boxes);
-  void setPDF(MINT::IReturnRealForEvent<IDalitzEvent>* amps);
+  void setPDF(MINT::IGetRealEvent<IDalitzEvent>* amps);
 
   DalitzBoxSet split(unsigned int nWays)const;
   DalitzBoxSet splitIfWiderThan(double maxWidth)const;

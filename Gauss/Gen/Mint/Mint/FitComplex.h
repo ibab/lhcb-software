@@ -44,22 +44,14 @@ namespace MINT{
 
     virtual std::complex<double> getVal() const=0;
     virtual std::complex<double> getValInit() const=0;
-    inline bool gotInitialised()const{
-      return p1().gotInitialised() && p2().gotInitialised();
-    }
+    virtual bool gotInitialised()const=0;
     virtual void print(std::ostream& os = std::cout) const;
     
     inline double getReal() const{return getVal().real();}
     inline double getImag() const{return getVal().imag();}
     
-    inline double getAmp() const{
-      if(! gotInitialised()) return 0;
-      return std::abs(getVal());
-    }
-    inline double getPhase() const {
-      if(! gotInitialised()) return 0;
-      return std::arg(getVal());
-    }
+    inline double getAmp() const{return std::abs(getVal());}
+    inline double getPhase() const {return std::arg(getVal());}
     
     bool isConstant() const;
     virtual bool isZero() const;

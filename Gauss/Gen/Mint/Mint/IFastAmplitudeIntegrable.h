@@ -5,7 +5,7 @@
 
 #include "Mint/counted_ptr.h"
 #include "Mint/IIntegrationCalculator.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/IUnweightedEventGenerator.h"
 #include "TRandom.h"
@@ -13,19 +13,16 @@
 
 #include "Mint/IntegCalculator.h"
 
-#include "Mint/DalitzEventPattern.h"
-
 #include <iostream>
 
 class IFastAmplitudeIntegrable 
-: virtual public MINT::IReturnRealForEvent<IDalitzEvent>{
+: virtual public MINT::IGetRealEvent<IDalitzEvent>{
  public:
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator()=0;
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator()=0;
 
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-    makeEventGenerator(const DalitzEventPattern& pat
-		       , TRandom* rnd=gRandom)=0;
+    makeEventGenerator(TRandom* rnd=gRandom)=0;
 
   virtual void print(std::ostream& os=std::cout) const=0;
 

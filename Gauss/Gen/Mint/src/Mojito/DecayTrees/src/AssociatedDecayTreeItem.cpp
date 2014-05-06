@@ -46,7 +46,7 @@ void AssociatedDecayTreeItem::print(std::ostream& out) const{
 
 
 TLorentzVector AssociatedDecayTreeItem::p(const IDalitzEvent* evt) const{
-  TLorentzVector pV;
+  TLorentzVector pV(0.0);
   if(0 == evt) return pV;
   for(unsigned int i=0; i < asi().size(); i++){
     pV += evt->p(this->asi(i));

@@ -19,7 +19,14 @@ class TimePdf : public PdfBase<double>{
   FitParameter& _tau;
 public:
   TimePdf(FitParameter& tau) : _tau(tau){}
-  double getVal(double& t){
+  double getVal(){
+    double* evtPtr = getEvent();
+    if(! evtPtr){
+      cout << "timePdf: Can't get event!!"
+	   << endl;
+      return -9999;
+    }
+    double t = *(evtPtr);
     return exp(-t/_tau)/_tau;
   }
 };

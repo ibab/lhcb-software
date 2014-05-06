@@ -6,63 +6,117 @@ using namespace std;
 using namespace MINT;
 
 FastAmplitude::FastAmplitude( const DecayTree& decay
+			      , IDalitzEventAccess* events
 			      , char SPD_Wave
 			      , const std::string& opt
 			      )
-  : Amplitude(decay, SPD_Wave, opt)
+  : Amplitude(decay, events, SPD_Wave, opt)
+{}
+
+FastAmplitude::FastAmplitude( const DecayTree& decay
+			      , IDalitzEventList* events
+			      , char SPD_Wave
+			      , const std::string& opt
+			      )
+  : Amplitude(decay, events, SPD_Wave, opt)
 {}
 
 FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit
+			      , IDalitzEventAccess* events
 			      )
-  : Amplitude(ampInit)
+  : Amplitude(ampInit, events)
+{}
+FastAmplitude::FastAmplitude( const AmpInitialiser& ampInit
+			      , IDalitzEventList* events
+			      )
+  : Amplitude(ampInit, events)
 {}
 
 FastAmplitude::FastAmplitude( const FastAmplitude& other)
-  : IReturnRealForEvent<IDalitzEvent>()
-  , IReturnComplexForEvent<IDalitzEvent>()
+  : IBasicEventAccess<IDalitzEvent>()
+  , IEventAccess<IDalitzEvent>()
+  , IDalitzEventAccess()
+  , IReturnReal()
+  , IGetRealEvent<IDalitzEvent>()
+  , IReturnComplex()
   , Amplitude(other)
   , _resultMap(other._resultMap)
 {}
+
+FastAmplitude::FastAmplitude( const FastAmplitude& other
+			      , IDalitzEventAccess* newEvents)
+  : Amplitude(other, newEvents)
+{
+  _resultMap.clear();
+}
+
+FastAmplitude::FastAmplitude( const FastAmplitude& other
+			      , IDalitzEventList* newEvents)
+  : Amplitude(other, newEvents)
+{
+  _resultMap.clear();
+}
 
 FastAmplitude::FastAmplitude( const Amplitude& other)
   : Amplitude(other)
 {
   _resultMap.clear();
 }
+FastAmplitude::FastAmplitude( const Amplitude& other
+			      , IDalitzEventAccess* newEvents)
+  : Amplitude(other, newEvents)
+{
+  _resultMap.clear();
+}
+FastAmplitude::FastAmplitude( const Amplitude& other
+			      , IDalitzEventList* newEvents)
+  : Amplitude(other, newEvents)
+{
+  _resultMap.clear();
+}
 
-bool FastAmplitude::knownEvent(IDalitzEvent& evt, complex<double>& value){
-  return evt.retrieveComplex(this, value);
+bool FastAmplitude::knownEvent(complex<double>& value){
+  return getEvent()->retrieveComplex(this, value);
 }
 
 std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
-  return getVal(*evt);
+  //  bool dbthis=false;
+  this->setEvent(evt);
+  std::complex<double> result = this->getVal();
+  this->resetEventRecord();
+  return result;
 }
 
-complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
-  bool dbThis=false;
+complex<double> FastAmplitude::getVal(){
+  /* debug
+  //  cout << "returning Amplitude for " << theDecay().oneLiner() << endl;
+  complex<double> returnVal =  Amplitude::getVal(); // dbg
+  //cout << " ... with value " << returnVal << endl;
+  return returnVal;
+  */
+  bool dbthis = false;
   complex<double> result(-9999.0, 0);
 
-  if(dbThis){
-    cout << "FastAmplitude getting value:" << endl;
-    cout << " eventPtr = " << &evt << endl;
-    cout << " event = " << evt.p(1).E() << endl;
+  if(0 == getEvent()){
+    if(dbthis) cout << " No event in FastAmplitude::getVal()!!!" << endl;
+    return 0;
   }
-  if(knownEvent(evt, result)){
-    if(dbThis){
-      cout << " this " << this  
-	   << " remembering result: " << result 
-	   << endl;
-      complex<double> newResult = Amplitude::getVal(evt);
-      cout << " compare to newly calculated: "
-	   << newResult << endl;
-      if(result != newResult) cout << " aaaaaaaaaaaaaaaaaa" << endl;
-    }
+
+  if(dbthis){
+    cout << "FastAmplitude getting value:" << endl;
+    cout << " eventPtr = " << getEvent() << endl;
+    cout << " event = " << getEvent()->p(1).E() << endl;
+  }
+  if(knownEvent(result)){
+    if(dbthis)cout << " this " << this  
+		   << " remembering result: " << result 
+		   << endl;
     return result;
   }
-  if(dbThis) cout << " result is not known - getting Amplitude " << endl;
-  result = Amplitude::getVal(evt);
-  evt.setComplex(this,result);
-  if(dbThis)cout << "FastAmplitude returning " << result << endl;
+  if(dbthis) cout << " result is not known - getting Amplitude " << endl;
+  result = Amplitude::getVal();
+  getEvent()->setComplex(this,result);
+  if(dbthis)cout << "FastAmplitude returning " << result << endl;
   return result;
 }
 

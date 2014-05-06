@@ -4,7 +4,7 @@
 #include "Mint/ILookLikeFitAmpSum.h"
 #include "Mint/IIntegrationCalculator.h"
 #include "Mint/IFastAmplitudeIntegrable.h"
-#include "Mint/IReturnRealForEvent.h"
+#include "Mint/IGetRealEvent.h"
 #include "Mint/IDalitzEvent.h"
 
 #include "Mint/counted_ptr.h"
@@ -14,14 +14,17 @@
 
 
 class SumOfFitAmpLists 
-: virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+: virtual public MINT::IGetRealEvent<IDalitzEvent>
   , virtual public IFastAmplitudeIntegrable
   , virtual public ILookLikeFitAmpSum
+  , DalitzEventAccess
 {
   std::vector<MINT::counted_ptr<ILookLikeFitAmpSum> > _listOfLists;
 
  public:
-  SumOfFitAmpLists();
+  SumOfFitAmpLists(const DalitzEventPattern& pat);
+  SumOfFitAmpLists(IDalitzEventAccess* eventAccess);
+  SumOfFitAmpLists(IDalitzEventList* events);
 
   SumOfFitAmpLists(const MINT::counted_ptr<ILookLikeFitAmpSum>& list);
   SumOfFitAmpLists(const MINT::counted_ptr<ILookLikeFitAmpSum>& list_1
@@ -51,12 +54,12 @@ class SumOfFitAmpLists
   virtual MINT::counted_ptr<IIntegrationCalculator> makeIntegrationCalculator();
   virtual MINT::counted_ptr<IntegCalculator> makeIntegCalculator();
 
-  virtual double RealVal(IDalitzEvent& evt); // | sum A |^2
+  virtual double RealVal(); // | sum A |^2
 
-  virtual DalitzBWBoxSet makeBWBoxes(const DalitzEventPattern& pat, TRandom* rnd=gRandom);
+  virtual DalitzBWBoxSet makeBWBoxes(TRandom* rnd=gRandom);
    
   virtual MINT::counted_ptr<MINT::IUnweightedEventGenerator<IDalitzEvent> > 
-    makeEventGenerator(const DalitzEventPattern& pat, TRandom* rnd=gRandom);
+    makeEventGenerator(TRandom* rnd=gRandom);
 
   virtual void print(std::ostream& os=std::cout) const;
   virtual void printNonZero(std::ostream& os=std::cout) const;
