@@ -58,7 +58,7 @@ StatusCode CaloTrackAlg::initialize()
 void CaloTrackAlg::_setProperty(const std::string& p ,const std::string& v){
   StatusCode sc = setProperty(p,v);
   if(sc.isSuccess()){
-    if( msgLevel(MSG::DEBUG) ) debug() << " setting Property "<<p<< " to " << v <<endmsg ;
+    //    if( msgLevel(MSG::DEBUG) ) debug() << " setting Property "<<p<< " to " << v <<endmsg ;
   }
   else{
     warning() << " setting Property "<<p<< " to " << v << " FAILED" <<endmsg ;
