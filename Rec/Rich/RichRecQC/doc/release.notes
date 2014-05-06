@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-05-06 - Marco Cattaneo
+ - Fix unprotected debug in RichTracklessRingMoni::initialise()
+
 !========================= RichRecQC v2r65 2014-03-18 =========================
 ! 2014-03-06 - Chris Jones
  - Clean up Rich::Rec::MC::RecoQC a little using c++11 features.

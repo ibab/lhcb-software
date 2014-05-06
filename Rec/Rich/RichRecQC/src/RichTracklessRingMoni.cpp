@@ -69,7 +69,8 @@ StatusCode TracklessRingMoni::initialize()
   // tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Monitoring Trackless rings at '" << m_ringLoc << "'" << endmsg;
 
   return sc;
 }
