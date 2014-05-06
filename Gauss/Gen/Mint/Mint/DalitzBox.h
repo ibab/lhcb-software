@@ -137,7 +137,7 @@ class DalitzBox{
   void print(std::ostream& os = std::cout) const;
 };
 
-ostream& operator<<(ostream& os, const DalitzBox& box);
+std::ostream& operator<<(ostream& os, const DalitzBox& box);
 
 
 #endif
