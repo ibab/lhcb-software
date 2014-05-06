@@ -5,6 +5,9 @@
 !--------------------------------------------------------------------------
 
 
+! 2014-05-06 - Diego Milanes
+- Optimiztion in beamPipeYCoord method. Added initialization of yIntersect in the case that it does not find intersection point between the fibre and the beam pipe hole.
+
 ! 2014-03-27 - Eric Cogneras
  - Add new method calculateMeanChannel and calculateLitsOfFiredChannels
  - Factorisation of the code of the new methods with existing calculateHit method

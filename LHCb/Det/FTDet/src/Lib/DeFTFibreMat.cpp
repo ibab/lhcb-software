@@ -1009,10 +1009,10 @@ double DeFTFibreMat::xAtVerticalBorder(double x0, double y0) const {
 StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double& yIntersect) const {
   StatusCode sc;
   /// Solve the quadratic equation
-  double a = 1 + pow(m_tanAngle,2);
+  double a = 1 + m_tanAngle*m_tanAngle;
   double b = 2 * x0 * m_tanAngle;
-  double c = pow(x0,2) - pow(m_innerHoleRadius,2);
-  double D  = pow(b,2) - 4*a*c;
+  double c = x0*x0 - m_innerHoleRadius*m_innerHoleRadius;
+  double D  = b*b - 4*a*c;
   if ( D < 0 ) {
     /// No real solutions ==> no crossing points
     debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
@@ -1023,7 +1023,7 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double x0, const int ySign, double
     /// For ySign=1 (ySign=-1) will return the positive (negative) solution
     yIntersect = (-b + ySign*sqrt(D)) / (2*a);
     sc = StatusCode::SUCCESS;
-    debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
+    // debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
   }
   return sc;
 }
@@ -1054,12 +1054,14 @@ StatusCode DeFTFibreMat::beamPipeYCoord(const double xcoord,
   if ( D < 0 ) {
     /// No real solutions ==> no crossing points
     debug() << "In function beamPipeYCoord: no crossing points found" << endmsg;
+    // a dummy value to initialize the variable
+    yIntersec = 0.;
     sc = StatusCode::FAILURE;
   }
   else {
     /// We have 2 solutions (can be degenerate)
     /// For ySign=1 (ySign=-1) will return the positive (negative) solution
-    yIntersect = (-b + ySign*sqrt(D)) / (2*a);
+    yIntersect = ( -b + ySign*sqrt(D) ) / (2*a);
     sc = StatusCode::SUCCESS;
     debug() << "y-coordinate of beam-pipe crossing point: " << yIntersect << endmsg;
   }
@@ -1076,7 +1078,7 @@ double DeFTFibreMat::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
 
   // define y coordinate of the crossing point between fibre and beam hole
   double YFibreXHole = 0;
-
+  
   //To check whether the hit fires fibres shorten by beam hole, the mean position of the hit is taken
   double MeanPointX = (lpExit.x() + lpEntry.x())/2.;
   double MeanPointY = (lpExit.y() + lpEntry.y())/2.;
