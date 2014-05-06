@@ -94,20 +94,20 @@ counted_ptr<IDalitzEvent> SignalGenerator::tryDalitzEvent(){
 }
 
 counted_ptr<IDalitzEvent> SignalGenerator::newDalitzEvent(){
-  bool dbThis=true;
-  counted_ptr<IDalitzEvent> evt(0);
+  bool dbThis=false;
+  counted_ptr<IDalitzEvent> evtPtr(0);
   int counter(0);
   int largeNumber(1000000);
 
   do{
-    evt = tryDalitzEvent();
-  }while(0 == evt &&  counter++ < largeNumber);
-  if(saveEvents()) _evtList->Add(evt);
+    evtPtr = tryDalitzEvent();
+  }while(0 == evtPtr &&  counter++ < largeNumber);
+  if(saveEvents()) _evtList->Add(evtPtr);
   if(dbThis){
     cout << "SignalGenerator::newDalitzEvent:"
-	 << " just generated this event:\n" << evt << endl;
+	 << " just generated this event:\n" << *evtPtr << endl;
   }
-  return evt;
+  return evtPtr;
 }
 
 bool SignalGenerator::ensureFreshEvents(){
