@@ -252,7 +252,8 @@ StatusCode DeCalorimeter::initialize()
       } 
     }
     // Check gain
-    if(nGain > 0)msg << MSG::DEBUG << "Found " << nGain << " channel(s) with null gain " << endmsg;
+    if(nGain > 0 && msg.level() <= MSG::DEBUG)
+      msg << MSG::DEBUG << "Found " << nGain << " channel(s) with null gain " << endmsg;
     // Verbosity 
     if( UNLIKELY( msg3.level() <= MSG::VERBOSE ) )
       msg3 << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
@@ -1102,8 +1103,10 @@ StatusCode DeCalorimeter::getPileUpOffset( )  {
     } 
   }
   if( UNLIKELY( msg.level() <= MSG::DEBUG ) ) 
+  {
     msg << MSG::DEBUG << "Pileup offset added for " << count << " channel(s) " << endmsg;
     msg << MSG::DEBUG << "Alternative Pileup offset added for " << ccount << " channel(s) " << endmsg;
+  }  
   return StatusCode::SUCCESS;
 }  
 
