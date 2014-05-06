@@ -49,8 +49,6 @@ CaloEFlowAlg::CaloEFlowAlg( const std::string& name,
   else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
   else if(detData()== "Spd"  ){setInputData( LHCb::CaloDigitLocation::Spd  );}
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << " setting default detector name " << endmsg;
   int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
   m_detectorName = name.substr( index, 4 ); 
   if ( name.substr(index,3) == "Prs" ) m_detectorName = "Prs";

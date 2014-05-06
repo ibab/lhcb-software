@@ -4,6 +4,13 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-06 - Marco Cattaneo
+ - CaloMoniAlg.cpp: use setHistoTopDir in initialize() instead of
+   setProperty("HistoTopDir") in constructor. Removes need for debug() in 
+   constructor
+ - CaloEFlowAlg.cpp: remove unnecessary debug() in constructor
+ - Above two changes fix unprotected debug() warnings
+
 !========================= CaloMoniDst v5r16 2014-03-18 =======================
 ! 2014-03-06 - Olivier Deschamps
  -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set

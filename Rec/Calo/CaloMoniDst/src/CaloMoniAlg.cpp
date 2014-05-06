@@ -76,13 +76,6 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   m_histoList.clear();
 
   m_histoList.push_back( "All" );
-  StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
-  if( sc.isSuccess() ) {
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug() << "HistoTopDir set to 'CaloMoniDst/' " << endmsg;
-  } else {
-    warning() << "HistoTopDir setProperty failed " << endmsg ;
-  }
 
   // Areas
   m_nAreas = 1 << (CaloCellCode::BitsArea +1);
@@ -115,6 +108,7 @@ StatusCode CaloMoniAlg::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
+  if("" == histoTopDir()) setHistoTopDir("CaloMoniDst/");
 
   if( m_split && m_splitSides ){
     warning() << "Cannot split simultaneously the calo sides and areas, so far - Area splitting wins" << endmsg;
