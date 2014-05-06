@@ -89,9 +89,12 @@ StatusCode MCFTDigitCreator::initialize() {
   if ( m_doNoise == 1 ) {
     info() << "Will simulate noise: T=" << m_temperature << ", irr=" << m_irradiation << ", nu=" << m_nu << endmsg; 
   }
-  m_gauss.initialize( randSvc(), Rndm::Gauss( 0., 1. ) );
-  m_flat.initialize( randSvc(), Rndm::Flat( 0., 1. ) );
-  m_rndmLandau.initialize( randSvc(), Rndm::Landau(39.0, 7.8) ); // for noise, from a fit to the MCHit cluster charge (6bit ADC)
+  sc = m_gauss.initialize( randSvc(), Rndm::Gauss( 0., 1. ) );
+  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Gauss generator", sc );
+  sc = m_flat.initialize( randSvc(), Rndm::Flat( 0., 1. ) );
+  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Flat generator", sc );
+  sc = m_rndmLandau.initialize( randSvc(), Rndm::Landau(39.0, 7.8) ); // for noise, from a fit to the MCHit cluster charge (6bit ADC)
+  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Landau generator", sc );
 
   // tools
   if ( msgLevel( MSG::DEBUG) ) debug() << ": initializing SiPMResponse" << endmsg;

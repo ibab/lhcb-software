@@ -115,7 +115,9 @@ StatusCode MCFTDepositCreator::initialize() {
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
 
   // Initialize random generator
-  m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0) );
+
+  sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0) );
+  if ( sc.isFailure() ) return Error( "Failed to get Rndm::Flat generator", sc );
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();

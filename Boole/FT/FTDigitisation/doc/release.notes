@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-05-06 - Michel De Cian
+ - Fix unchecked StatusCode in MCFTDepositCreator and MCFTDigitCreator
+
 ! 2014-04-30 - Eric Cogneras
  - Bug fix : protection against reading transmission map out of the box
 
