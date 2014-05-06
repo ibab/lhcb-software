@@ -1,0 +1,18 @@
+package GaussUMC
+version v2r1
+
+branches cmt src doc options python
+
+use  MCEvent        v*       Event
+use  VPDet          v*       Det
+use  GaudiAlg       v*
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          GaussUMC    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=GaussUMC
