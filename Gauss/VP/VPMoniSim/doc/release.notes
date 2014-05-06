@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! Package     : Sim/GaussUMC
+! Package     : VP/VPMoniSim
 ! Responsible : Victor Coco
-! Purpose     : Evry algorithm only needed for upgrade simulation in Gauss
-!               might take place in this package in order not to interact with 
-!               present detector simulation
+! Purpose     : Monitoring of VP hits in Gauss
 !-----------------------------------------------------------------------------
+
+! 2014-05-06 - Heinrich Schindler
+ - Rename package from Sim/GaussUMC to VP/VPMoniSim
 
 !========================= GaussUMC v2r1 2013-10-10 ==========================
 ! 2013-09-26 - Heinrich Schindler

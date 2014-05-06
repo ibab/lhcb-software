@@ -1,4 +1,4 @@
-package GaussUMC
+package VPMoniSim
 version v2r1
 
 branches cmt src doc options python
@@ -10,9 +10,9 @@ use  GaudiAlg       v*
 #============================================================================
 # Component library building rule
 #============================================================================
-library          GaussUMC    ../src/*.cpp 
+library          VPMoniSim    ../src/*.cpp 
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=GaussUMC
+apply_pattern    component_library library=VPMoniSim

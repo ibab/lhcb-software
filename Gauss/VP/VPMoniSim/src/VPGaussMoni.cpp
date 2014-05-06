@@ -92,6 +92,9 @@ StatusCode VPGaussMoni::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+//=============================================================================
+// Create monitoring plots
+//=============================================================================
 void VPGaussMoni::monitor() {
 
   const double size = m_hits->size();
