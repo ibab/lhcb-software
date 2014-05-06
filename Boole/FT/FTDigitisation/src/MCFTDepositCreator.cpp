@@ -165,8 +165,9 @@ StatusCode MCFTDepositCreator::initialize() {
   m_nYSteps = yMax / m_yStepOfMap + 2;   // same for y
   xMax = (m_nXSteps - 1) * m_xStepOfMap;
   yMax = (m_nYSteps - 1) * m_yStepOfMap;
-  m_transmissionMap.resize( m_nXSteps * m_nYSteps, 0. );
-  m_transmissionRefMap.resize( m_nXSteps * m_nYSteps, 0. );
+  // m_transmissionMap set at 1E-10 initialisatino value to avoid 'division by zero' bug
+  m_transmissionMap.resize( m_nXSteps * m_nYSteps, 1E-10 );
+  m_transmissionRefMap.resize( m_nXSteps * m_nYSteps, 1E-10);
 
   info() << format( "m_xStepOfMap=%7.0f m_yStepOfMap=%7.0f m_nXSteps=%7.0i m_nYSteps=%7.0i xMax=%7.0f yMax=%7.0f \n",
                     m_xStepOfMap,m_yStepOfMap,m_nXSteps, m_nYSteps, xMax, yMax);
