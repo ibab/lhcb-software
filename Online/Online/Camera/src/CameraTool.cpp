@@ -775,8 +775,6 @@ int CameraTool::Append( TH2D * H, const char * opts )
 
     data[0]=2.0f;
     data[1]=float(nXBins);
-    //data[2]=float(H->GetXaxis()->GetBinLowEdge(1));
-    //data[3]=float(H->GetXaxis()->GetBinLowEdge(nXBins+1));
     data[2]=float(H->GetXaxis()->GetXmin());
     data[3]=float(H->GetXaxis()->GetXmax());
     data[4]=float(nYBins);
