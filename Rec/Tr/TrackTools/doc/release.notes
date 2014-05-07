@@ -6,7 +6,7 @@
 
 ! 2014-05-07 - Heinrich Schindler
  - VPExpectation: follow change in DeVPSensor::isInActiveArea return type 
-   (r172319), remove support for obsolete geometry.
+   (r172319), remove support for obsolete geometry, clang-format
 
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPLiteMeasurementProvider
