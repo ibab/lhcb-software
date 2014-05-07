@@ -1088,7 +1088,17 @@ std::string MessagePresenter::_getCacheFilename(const std::string & _cache_name_
   }
   else
   {
-    to = "./" + _cache_name_;
+    // default to user home area
+    const char * uhome = getenv("HOME");
+    if ( uhome )
+    {
+      to = (std::string)uhome + "/" + _cache_name_;
+    }
+    else
+    {
+      // just use current dir
+      to = "./" + _cache_name_;
+    }
   }
   if ( !hostS.empty() ) to = to + "." + hostS;
   const char * user = getenv("USER"); 
