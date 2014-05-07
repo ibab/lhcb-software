@@ -716,25 +716,32 @@ int CameraTool::Append(TH1D * H, const char * opts)
 {
   if (m_dosend) 
   {
-    if ( !H ) { Warning("Null TH1D pointer"); return 0; }
+    if ( !H )             { Warning("Null TH1D pointer");  return 0; }
+    if ( !H->GetXaxis() ) { Warning("TH1D has no X axis"); return 0; }
+
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     int nXBins = H->GetNbinsX();
     int size = (5+2*(nXBins+2));
     float * data = new float[size];
+
     data[0] = 1.f;
     data[1]=float(nXBins);
-    data[2]=float(H->GetBinLowEdge(1));
-    data[3]=float(H->GetBinLowEdge(nXBins+1));
+    data[2]=float(H->GetXaxis()->GetBinLowEdge(1));
+    data[3]=float(H->GetXaxis()->GetBinLowEdge(nXBins+1));
     data[4]=float(H->GetEntries());
     for (int i=5; i<2*(nXBins+2); i++) data[i]=0.0f;
-    int  iData = 5;
+    int iData = 5;
     data[iData++]= float(H->GetBinContent(0));
-    for (int ixBin=1; ixBin<=nXBins; ixBin++)
+    for (int ixBin=1; ixBin<=nXBins; ++ixBin)
+    {
       data[iData++]=  float(H->GetBinContent(ixBin));
+    }
     data[iData++]= float(H->GetBinContent(nXBins+1));
 
-    for (int ixBin=0; ixBin<=nXBins+1; ixBin++)
+    for (int ixBin=0; ixBin<=nXBins+1; ++ixBin)
+    {
       data[iData++]= float(H->GetBinError(ixBin));
+    }
 
     m_out.add("DIM1D"+s,data,size*sizeof(float));
 
@@ -756,18 +763,22 @@ int CameraTool::Append( TH2D * H, const char * opts )
 {
   if (m_dosend)
   {
-    if ( !H ) { Warning("Null TH2D pointer"); return 0; }
+    if ( !H )             { Warning("Null TH2D pointer");  return 0; }
+    if ( !H->GetXaxis() ) { Warning("TH2D has no X axis"); return 0; }
+    if ( !H->GetYaxis() ) { Warning("TH2D has no Y axis"); return 0; }
+
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
     const int nXBins = H->GetNbinsX();
     const int nYBins = H->GetNbinsY();
-    info() << "Sending 2D histogram " << nXBins << " " << nYBins << endmsg;
     const int size = ( 8 + 2*(nXBins+2)*(nYBins+2) );
     float * data = new float[size];
 
     data[0]=2.0f;
     data[1]=float(nXBins);
-    data[2]=float(H->GetBinLowEdge(1));
-    data[3]=float(H->GetBinLowEdge(nXBins+1));
+    //data[2]=float(H->GetXaxis()->GetBinLowEdge(1));
+    //data[3]=float(H->GetXaxis()->GetBinLowEdge(nXBins+1));
+    data[2]=float(H->GetXaxis()->GetXmin());
+    data[3]=float(H->GetXaxis()->GetXmax());
     data[4]=float(nYBins);
     data[5]=float(H->GetYaxis()->GetXmin());
     data[6]=float(H->GetYaxis()->GetXmax());
@@ -778,7 +789,7 @@ int CameraTool::Append( TH2D * H, const char * opts )
 
     data[iData++] = float(H->GetBinContent(0,0));
 
-    for (int iyBin=1; iyBin<=nYBins; ++iyBin )
+    for ( int iyBin=1; iyBin<=nYBins; ++iyBin )
     {
       data[iData++] = float(H->GetBinContent(0,iyBin));
     }
@@ -787,7 +798,8 @@ int CameraTool::Append( TH2D * H, const char * opts )
     for ( int ixBin=1; ixBin<=nXBins; ++ixBin )
     {
       data[iData++] = float(H->GetBinContent(ixBin,0));
-      for (int iyBin=1; iyBin<=nYBins; iyBin++){
+      for ( int iyBin=1; iyBin<=nYBins; ++iyBin )
+      {
         data[iData++] = float(H->GetBinContent(ixBin,iyBin));
       }
       data[iData++] = float(H->GetBinContent(ixBin,nYBins+1));
@@ -806,16 +818,16 @@ int CameraTool::Append( TH2D * H, const char * opts )
 
     data[iData++]= (float)H->GetBinError(0,0);
 
-    for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+    for ( int iyBin=1; iyBin<=nYBins; ++iyBin )
     {
       data[iData++] = (float)H->GetBinError(0,iyBin);
     }
     data[iData++] = (float)H->GetBinError(0, nYBins+1);
 
-    for (int ixBin=1; ixBin<=nXBins; ++ixBin)
+    for ( int ixBin=1; ixBin<=nXBins; ++ixBin )
     {
       data[iData++]= (float)H->GetBinError(ixBin,0);
-      for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+      for ( int iyBin=1; iyBin<=nYBins; ++iyBin )
       {
         data[iData++] = (float)H->GetBinError(ixBin,iyBin);
       }
@@ -823,7 +835,7 @@ int CameraTool::Append( TH2D * H, const char * opts )
     }
 
     data[iData++]= (float)H->GetBinError(nXBins+1,0);
-    for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+    for ( int iyBin=1; iyBin<=nYBins; ++iyBin )
     {
       data[iData++] = (float)H->GetBinError(nXBins+1,iyBin);
     }

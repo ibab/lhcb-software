@@ -1,8 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/Camera
-! Responsible : Nicola Mangiafave
+! Responsible : Unfortunately by default now Chris Jones ...
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
+
+! 2014-05-07 - Chris Jones
+ - Fix sending of 2D histograms, which broke when ROOT decided it was a good 
+   idea to break a previously working method with
+  Error in <TH2D::GetBinLowEdge>: Invalid method for a 2-d histogram - return a NaN
+   nice...
 
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
