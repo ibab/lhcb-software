@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
   . Use float instead of double where possible (Tf/PatVeloTT)
   . PatForward: added option to flag seeds as used; added counter (PatAlgorithms)
   . Add X-correction for track-cluster matching (CaloPIDs)
+  . Fix unprotected debug() (CaloPIDs, CaloDet, CaloMoniDst, RichRecQC)
 
 - Changes to QMTests
   . Pick up brunel-mc11a-xdst PFN from TestFileDB
