@@ -23,21 +23,21 @@ InfoWindow::InfoWindow(int * inalive):TGMainFrame()
 
 InfoWindow::~InfoWindow()
 {
-  *alive =0;
+  *alive = 0;
   cont.reset();
   //  std::cerr << "I am no more" << std::endl;
 }
 
 void InfoWindow::ShowCont(const std::string& ins)
 {
-  //std::cout << "in ShowCont"<<std::endl;
+  //std::cout << "in ShowCont " << ins << std::endl;
+
   SetBit(kDontCallClose);
   const std::string& cfile = ins;
 
   this->textclear();
-  this ->canvas()->Clear();
-  this ->canvas()->Update();
-
+  this->canvas()->Clear();
+  this->canvas()->Update();
 
   //  container_ROOT cont;
 
@@ -48,13 +48,13 @@ void InfoWindow::ShowCont(const std::string& ins)
     cont.convert();
     int nrHistos=0;
 
-    for (int i=0;i<cont.entries();++i)
+    for ( int i=0; i < cont.entries(); ++i )
     {
 
-      std::size_t pos = cont.name(i).find('.');
-      std::string cn, cna;
-      cn = cont.name(i);
-      cna = "";
+      const std::size_t pos = cont.name(i).find('.');
+
+      std::string cn = cont.name(i);
+      std::string cna = "";
 
       if (pos!=std::string::npos) cn = cont.name(i).substr(0,pos);
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
@@ -74,7 +74,9 @@ void InfoWindow::ShowCont(const std::string& ins)
 
     int HistoCnt = 1;
 
-    if (nrHistos>1){
+    if (nrHistos>1)
+    {
+    
       int divx=0;
       int divy=0;
 
@@ -85,24 +87,23 @@ void InfoWindow::ShowCont(const std::string& ins)
 
       }
 
-      //      cout << "dividing in "<<divx <<", "<<divy<<" Pads" <<endl;
+      //cout << "dividing in "<<divx <<", "<<divy<<" Pads" <<endl;
       //cout << nrHistos<<" "<<endl;
       this ->canvas()->Divide(divx,divy);
     }
 
-
     numGraphs = 0;
     numTexts = 0;
 
-
-    for (int i=0;i<cont.entries();++i){
+    for ( int i = 0; i <cont.entries(); ++i ) 
+    {
+    
       if (cont.object(i) == NULL) continue;
 
+      const std::size_t pos = cont.name(i).find('.');
 
-      std::size_t pos = cont.name(i).find('.');
-      std::string cn, cna;
-      cn = cont.name(i);
-      cna = "";
+      std::string cn = cont.name(i);
+      std::string cna = "";
 
       if (pos!=std::string::npos) cn = cont.name(i).substr(0,pos);
       if (pos!=std::string::npos) cna = cont.name(i).substr(pos+1);
@@ -145,7 +146,8 @@ void InfoWindow::ShowCont(const std::string& ins)
         numGraphs++;
         // this->appendline("1D Histo ");
 
-        if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
+        if ( ( cna.find("SAME") == std::string::npos ) && 
+             ( cna.find("same") == std::string::npos ) ) { this->canvas()->cd(HistoCnt++); }
         TF1 * v = (TF1 *)cont.object(i);
         //cout << cna<<endl;
         if (cna == "")
@@ -159,7 +161,8 @@ void InfoWindow::ShowCont(const std::string& ins)
         numGraphs++;
         // this->appendline("1D Histo ");
 
-        if ((cna.find("SAME") ==std::string::npos)&& (cna.find("same") ==std::string::npos) ) this->canvas()->cd(HistoCnt++);
+        if ( ( cna.find("SAME") == std::string::npos ) && 
+             ( cna.find("same") == std::string::npos ) ) { this->canvas()->cd(HistoCnt++); }
         TF2 * v = (TF2 *)cont.object(i);
         if (cna == "")
           v->Draw();
@@ -172,12 +175,11 @@ void InfoWindow::ShowCont(const std::string& ins)
       if (cont.name(i)=="TEXT"){
         // this->appendline("Text: ");
         this->appendline((char*)cont.object(i));
-        numTexts++;
-
+        ++numTexts;
       }
       if (cont.name(i)=="CTIME"){
         // this->appendline("Date/Time: ");
-        numTexts++;
+        ++numTexts;
 
         this->appendline((char *)cont.object(i));
       }
@@ -306,8 +308,8 @@ void InfoWindow::Layout(){
   int fWidth,fHeight;
 
   if (fMainFrame892){
-    fWidth =  fMainFrame892->GetWidth();
-    fHeight =  fMainFrame892->GetHeight();
+    fWidth  = fMainFrame892->GetWidth();
+    fHeight = fMainFrame892->GetHeight();
 
     if (3*textsize>=fMainFrame892->GetHeight())
       textsize=fMainFrame892->GetHeight()/3;
@@ -328,9 +330,12 @@ void InfoWindow::Layout(){
 
 
 
-    if (*alive>1)  fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
-    if (*alive>1) fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
-    if (*alive>1)  fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+    if ( *alive > 1 ) 
+    {
+      fRootEmbeddedCanvas514->MoveResize(0,0,fWidth,fHeight-textsize-24);
+      fTextEdit532->MoveResize(0,fHeight-textsize-24,fWidth,textsize);
+      fStatusBar528->MoveResize(0,fHeight-24,fWidth,24);
+    }
     fTextEdit532->Update();
     fTextEdit532->Layout();
 
@@ -366,7 +371,8 @@ void InfoWindow::display(int x,int y)
   c123 = new TCanvas("C0", 10, 10, wfRootEmbeddedCanvas514);
   fRootEmbeddedCanvas514->AdoptCanvas(c123);
 
-  fMainFrame892->AddFrame(fRootEmbeddedCanvas514, new TGLayoutHints(kLHintsLeft | kLHintsTop| kLHintsExpandX,2,2,2,2));
+  fMainFrame892->AddFrame(fRootEmbeddedCanvas514, 
+                          new TGLayoutHints(kLHintsLeft | kLHintsTop| kLHintsExpandX,2,2,2,2));
   //  fRootEmbeddedCanvas514->MoveResize(0,0,x,y-textsize-24);
 
   // status bar

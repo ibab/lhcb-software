@@ -752,18 +752,19 @@ int CameraTool::Append(TH1D * H, const char * opts)
 
 #include <iostream>
 using namespace std;
-int CameraTool::Append(TH2D * H, const char * opts)
+int CameraTool::Append( TH2D * H, const char * opts )
 {
   if (m_dosend)
   {
     if ( !H ) { Warning("Null TH2D pointer"); return 0; }
     const std::string s = ( opts != NULL ? (std::string)"."+opts : "" );
-    int nXBins = H->GetNbinsX();
-    int nYBins = H->GetNbinsY();
-    int size = (8+2*(nXBins+2)*(nYBins+2));
+    const int nXBins = H->GetNbinsX();
+    const int nYBins = H->GetNbinsY();
+    info() << "Sending 2D histogram " << nXBins << " " << nYBins << endmsg;
+    const int size = ( 8 + 2*(nXBins+2)*(nYBins+2) );
     float * data = new float[size];
 
-    data[0]=2.f;
+    data[0]=2.0f;
     data[1]=float(nXBins);
     data[2]=float(H->GetBinLowEdge(1));
     data[3]=float(H->GetBinLowEdge(nXBins+1));
@@ -771,31 +772,33 @@ int CameraTool::Append(TH2D * H, const char * opts)
     data[5]=float(H->GetYaxis()->GetXmin());
     data[6]=float(H->GetYaxis()->GetXmax());
     data[7]=float(H->GetEntries());
-    for (int i=8; i<2*(nXBins+2)*(nYBins+2); i++) data[i]=0.0f;
+    for ( int i=8; i<2*(nXBins+2)*(nYBins+2); ++i ) { data[i] = 0.0f; }
 
     int iData = 8;
 
+    data[iData++] = float(H->GetBinContent(0,0));
 
-    data[iData++]= float(H->GetBinContent(0,0));
-
-    for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= float(H->GetBinContent(0,iyBin));
+    for (int iyBin=1; iyBin<=nYBins; ++iyBin )
+    {
+      data[iData++] = float(H->GetBinContent(0,iyBin));
     }
-    data[iData++]= float(H->GetBinContent(0, nYBins+1));
+    data[iData++] = float( H->GetBinContent(0,nYBins+1) );
 
-    for (int ixBin=1; ixBin<=nXBins; ixBin++){
-      data[iData++]= float(H->GetBinContent(ixBin,0));
+    for ( int ixBin=1; ixBin<=nXBins; ++ixBin )
+    {
+      data[iData++] = float(H->GetBinContent(ixBin,0));
       for (int iyBin=1; iyBin<=nYBins; iyBin++){
-        data[iData++]= float(H->GetBinContent(ixBin,iyBin));
+        data[iData++] = float(H->GetBinContent(ixBin,iyBin));
       }
-      data[iData++]= float(H->GetBinContent(ixBin,nYBins+1));
+      data[iData++] = float(H->GetBinContent(ixBin,nYBins+1));
     }
 
-    data[iData++]= (float)H->GetBinContent(nXBins+1,0);
-    for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= (float)H->GetBinContent(nXBins+1,iyBin);
+    data[iData++] = (float)H->GetBinContent(nXBins+1,0);
+    for ( int iyBin=1; iyBin<=nYBins; ++iyBin ) 
+    {
+      data[iData++] = (float)H->GetBinContent(nXBins+1,iyBin);
     }
-    data[iData++]= (float)H->GetBinContent(nXBins+1,nYBins+1);
+    data[iData++] = (float)H->GetBinContent(nXBins+1,nYBins+1);
 
 
     //===== ERRORS======
@@ -803,26 +806,30 @@ int CameraTool::Append(TH2D * H, const char * opts)
 
     data[iData++]= (float)H->GetBinError(0,0);
 
-    for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= (float)H->GetBinError(0,iyBin);
+    for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+    {
+      data[iData++] = (float)H->GetBinError(0,iyBin);
     }
-    data[iData++]= (float)H->GetBinError(0, nYBins+1);
+    data[iData++] = (float)H->GetBinError(0, nYBins+1);
 
-    for (int ixBin=1; ixBin<=nXBins; ixBin++){
+    for (int ixBin=1; ixBin<=nXBins; ++ixBin)
+    {
       data[iData++]= (float)H->GetBinError(ixBin,0);
-      for (int iyBin=1; iyBin<=nYBins; iyBin++){
-        data[iData++]= (float)H->GetBinError(ixBin,iyBin);
+      for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+      {
+        data[iData++] = (float)H->GetBinError(ixBin,iyBin);
       }
-      data[iData++]= (float)H->GetBinError(ixBin,nYBins+1);
+      data[iData++] = (float)H->GetBinError(ixBin,nYBins+1);
     }
 
     data[iData++]= (float)H->GetBinError(nXBins+1,0);
-    for (int iyBin=1; iyBin<=nYBins; iyBin++){
-      data[iData++]= (float)H->GetBinError(nXBins+1,iyBin);
+    for (int iyBin=1; iyBin<=nYBins; ++iyBin)
+    {
+      data[iData++] = (float)H->GetBinError(nXBins+1,iyBin);
     }
-    data[iData++]= (float)H->GetBinError(nXBins+1,nYBins+1);
+    data[iData++] = (float)H->GetBinError(nXBins+1,nYBins+1);
 
-    m_out.add("DIM2D"+s,(void *)data,size*sizeof(float));
+    m_out.add( "DIM2D"+s, (void *)data, size*sizeof(float) );
 
     delete data;
 
@@ -831,6 +838,7 @@ int CameraTool::Append(TH2D * H, const char * opts)
     const std::string& rootH = "H" + boost::lexical_cast<std::string>(m_lastHistoNum++);
     const std::string& title = rootH+"->SetTitle(\"" + std::string(H->GetTitle()) + "\");";
     this->Append( "EVAL", title.c_str() );
+
   }// if(m_dosend)
   return 1;
 }
