@@ -11,29 +11,39 @@ namespace Pythia8 {
   double LhcbHooks::multiplySigmaBy(const SigmaProcess* sigmaProcessPtr,
 				    const PhaseSpace* phaseSpacePtr, bool) {
     
-    // Initialize
+    // Initialize.
     if (!isInit) {
-      pT20 = pow2(2.85);
-      double alphaSvalue = settingsPtr->parm("SigmaProcess:alphaSvalue");
-      int    alphaSorder = settingsPtr->mode("SigmaProcess:alphaSorder");
-      alphaS.init(alphaSvalue, alphaSorder);
+
+      // Determine the damping factor.
+      double eCM    = phaseSpacePtr->ecm();
+      double pT0Ref = settingsPtr->parm("MultipartonInteractions:pT0Ref");
+      double ecmRef = settingsPtr->parm("MultipartonInteractions:ecmRef");
+      double ecmPow = settingsPtr->parm("MultipartonInteractions:ecmPow");
+      double pT0    = pT0Ref * pow(eCM / ecmRef, ecmPow);
+      pT20          = pT0 * pT0;
+
+      // Determine alpha strong.
+      double aSvalue = settingsPtr->parm("MultipartonInteractions:alphaSvalue");
+      double aSorder = settingsPtr->mode("MultipartonInteractions:alphaSorder");
+      alphaS.init(aSvalue, aSorder);
       // Use these lines for Pythia 8.185.
-      //int    alphaSnfmax = settingsPtr->mode("StandardModel:alphaSnfmax");
-      //alphaS.init(alphaSvalue, alphaSorder, alphaSnfmax, false);
+      //int    aSnfmax = settingsPtr->mode("StandardModel:alphaSnfmax");
+      //alphaS.init(aSvalue, aSorder, aSnfmax, false);
       isInit = true;
     }
-    
+
     // Calculate the weight.
     double wt = 1;
     
-    // Charmonium and bottomonium weight.
-    if (sigmaProcessPtr->code() > 400 && sigmaProcessPtr->code() < 600 &&
-	sigmaProcessPtr->nFinal() == 2) {
+    // All 2 -> 2 hard QCD processes.
+    int code = sigmaProcessPtr->code();
+    if (sigmaProcessPtr->nFinal() == 2 &&
+	((code >= 400 && code <= 600) || (code >= 111 && code <= 124))) {
       
       // pT scale of process. Weight pT^4 / (pT^2 + pT0^2)^2
       double pTHat     = phaseSpacePtr->pTHat();
       double pT2       = pTHat * pTHat;
-      wt               = pow2( pT2 / (pT20 + pT2) );
+      wt               = pow2(pT2 / (pT20 + pT2));
       
       // Renormalization scale and assumed alpha_strong.
       double Q2RenOld  = sigmaProcessPtr->Q2Ren();

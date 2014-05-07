@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-05-07 - Philip Ilten
+ - Added pT damping for all hard QCD and Onia production. This damping is
+   the same that is applied for all MPI. Additional future cross-section
+   weighting can now be added through the LhcbHooks class.
+
 ! 2014-04-28 - Marco Clemencic
  - Fixes to compile against Pythia8 183 (with CMake).
 
