@@ -795,7 +795,7 @@ void MessagePresenter::display()
 
   fMainFrame1933 = this;
   fMainFrame1933->SetLayoutBroken(kTRUE);
-  fMainFrame1933->SetWindowName("CAMERA");
+  fMainFrame1933->SetWindowName("Camera");
 
   //=====================================
 
