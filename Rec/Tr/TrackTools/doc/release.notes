@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-05-07 - Heinrich Schindler
+ - VPExpectation: follow change in DeVPSensor::isInActiveArea return type 
+   (r172319), remove support for obsolete geometry.
+
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPLiteMeasurementProvider
 
