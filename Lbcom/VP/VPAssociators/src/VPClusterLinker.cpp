@@ -21,6 +21,9 @@ using namespace LHCb;
 
 DECLARE_ALGORITHM_FACTORY(VPClusterLinker)
 
+//=============================================================================
+// Constructor
+//=============================================================================
 VPClusterLinker::VPClusterLinker(const std::string& name,
                                  ISvcLocator* pSvcLocator) : 
     GaudiAlgorithm(name, pSvcLocator) {
@@ -46,17 +49,6 @@ VPClusterLinker::~VPClusterLinker() {}
 // Execution
 //=============================================================================
 StatusCode VPClusterLinker::execute() {
-
-  // Check if there is already an existing linker table.
-  // TODO: to be removed once support for old-style raw banks is dropped.
-  SmartDataPtr<LHCb::LinksByKey> links(evtSvc(), "Link/" + m_clusterLocation);
-  if (links) {
-    // Table exists. Nothing to do.
-    if (msgLevel(MSG::DEBUG)) {
-      debug() << "Found association table." << endmsg;
-    } 
-    return StatusCode::SUCCESS;
-  }
 
   // Get clusters.
   const VPClusters* clusters = getIfExists<VPClusters>(m_clusterLocation);

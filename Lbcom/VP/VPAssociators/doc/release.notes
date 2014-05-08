@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2014-05-08 - Heinrich Schindler
+ - VPClusterLinker: remove check if table already exists (results in an error)
+
 ! 2014-05-03 - Heinrich Schindler
  - Remove warning message in VPDigitLinker if no MCVPDigit found.
 
