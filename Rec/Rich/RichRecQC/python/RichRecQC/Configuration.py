@@ -67,6 +67,7 @@ class RichRecQCConf(RichConfigurableUser):
     __slots__ = {
         "Context"  : "Offline"  # The context within which to run
        ,"DataType" : "2012"     # Data type, can be ['2008',2009','2010','2011','2012','Upgrade']
+       ,"OnlineMode"   : False  # Online mode
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",
@@ -97,10 +98,10 @@ class RichRecQCConf(RichConfigurableUser):
                                             "PhotonMonitoring", "TracklessRingAngles",
                                             "DataDecodingErrors",
                                             "AlignmentMonitoring", "HPDIFBMonitoring" ],
-                       "Online"         : [ "L1SizeMonitoring",
+                       "Online"         : [ "L1SizeMonitoring","HPDHitPlots",
                                             "DataDecodingErrors", "TrackMonitoring",
                                             "PhotonMonitoring", "TracklessRingAngles",
-                                            "AlignmentMonitoring" ],
+                                            "AlignmentMonitoring", "HPDImageShifts" ],
                        "None"           : [ ]
                        }
        ,"PidMomentumRanges": { "Expert"         : [ [2,100], [2,10], [10,70], [70,100] ],
@@ -314,11 +315,26 @@ class RichRecQCConf(RichConfigurableUser):
             if not self.isPropertySet("Radiators") :
                 self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
 
+    ## @brief Online mode 
+    def setupOnlineMode(self) :
+
+        # Open up the CK res plot range, for the Wide photon selection
+        self.setProp("CKThetaResRange", [ 0.05, 0.008, 0.004 ] )
+
+        # Save all histograms from image analysis
+        from Configurables import Rich__HPDImage__Summary
+        imageSummary = Rich__HPDImage__Summary("RichHPDImageSummary")
+        imageSummary.Keep2DHistograms = True
+        imageSummary.FinalHPDFit = False
+
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
         # DataType specific tweaks
         self.dataTypeTweaks()
+
+        # Online mode ?
+        if self.getProp("OnlineMode") : self.setupOnlineMode()
 
         ## Sanity checks
         self.sanityChecks()
