@@ -13,7 +13,7 @@ _txt_version_style = r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?(?:g([0-9]+))?'
 version_style = re.compile(_txt_version_style)
 
 # This is the version style for the LCGCMT releases: 56[a]
-_txt_lcg_version_style = r'([0-9]+)([a-z]?)'
+_txt_lcg_version_style = r'([0-9]+)([a-zA-Z_0-9]*)'
 lcg_version_style  = re.compile(_txt_lcg_version_style)
 
 # user version style : hmd_091008

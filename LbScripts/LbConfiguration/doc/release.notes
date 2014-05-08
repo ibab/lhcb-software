@@ -1,3 +1,8 @@
+2014-05-08  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Version.py: Change version regexp for LCGCMT to handle
+	version 68_root6  (LBCORE-490)
+
 2014-03-31  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Added project Kepler (LBCORE-451)
