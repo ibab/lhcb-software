@@ -52,9 +52,6 @@ namespace Rich
       // Initialization of the tool after creation
       virtual StatusCode initialize();
 
-      // Finalisation of the tool
-      virtual StatusCode finalize();
-
     public: // methods (and doxygen comments) inherited from interface
 
       // Reconstructs the geometrical photon candidate for a given RichTrackSegment
@@ -70,7 +67,15 @@ namespace Rich
                             const Gaudi::XYZPoint & a,
                             const Gaudi::XYZPoint & b ) const
       {
-        return ( Rich::Rich2Gas == rad ? a.x() * b.x() > 0 : a.y() * b.y() > 0 );
+        return ( Rich::Rich2Gas == rad ? 
+                 a.x() * b.x() > 0 : 
+                 a.y() * b.y() > 0 );
+      }
+
+      /// Correction for CK theta
+      inline double ckThetaCorrection( const Rich::RadiatorType rad ) const
+      {
+        return m_ckJOCorrs[rad] + m_ckBiasCorrs[rad];
       }
 
     protected: // data
@@ -78,8 +83,13 @@ namespace Rich
       /// Check for photons that cross between the different RICH 'sides'
       std::vector<bool> m_checkPhotCrossSides;
 
-      /// Fudge factors to correct small bias in CK theta values
-      std::vector<double> m_ckFudge;
+      /** Job-Option Corrections applied to the reconstructed theta vales.
+       *  By default 0. */
+      std::vector<double> m_ckJOCorrs;
+
+      /** Cherenkov theta bias corrections, specific for each photon
+       *  reconstruction method. */
+      std::vector<double> m_ckBiasCorrs;
 
     };
 

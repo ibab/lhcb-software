@@ -4,6 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-05-08 - Chris Jones
+ - Seperate out the corrections for intrinsic biases in the various photon
+   reconstruction tools from the job option that allows an artificial shift to
+   be applied. Allows the various different methods to all use the same data
+   n-1 scale factors (computed for the default Offline Quartic tool).
+
 !========================= RichRecPhotonTools v1r13 2014-02-19 ===================
 ! 2014-02-08 - Chris Jones
  - Add support for Upgrade geometries to RichCKthetaBandsPhotonPredictor.

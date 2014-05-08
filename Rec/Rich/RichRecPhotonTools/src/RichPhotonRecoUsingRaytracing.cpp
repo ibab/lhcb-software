@@ -34,11 +34,12 @@ PhotonRecoUsingRaytracing( const std::string& type,
     m_maxiter       (Rich::NRadiatorTypes)
 {
 
-  // Update default CK theta correction values
-  m_ckFudge[Rich::Aerogel]  = -7e-5;
-  m_ckFudge[Rich::Rich1Gas] = 1.66e-4;
-  m_ckFudge[Rich::Rich2Gas] = -1.0524e-5;
-  //for  (int i=0;i<20;++i) m_itersA[i] = m_iters1[i] = m_iters2[i] =0;
+  // Intrinsic biases for this method.
+  // These corrections are designed to correct the results from this
+  // implementation to match those from PhotonRecoUsingQuarticSoln
+  // This is needed so that the data n-1 scale factor corrections
+  // produced from one method are valid for both.
+  m_ckBiasCorrs = { -7e-5, 1.66e-4,  -1.0524e-5 };
 
   declareProperty( "DampingFactor", m_damping = 1. );
   declareProperty( "ERL",           m_ERL = 1. );
@@ -323,7 +324,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     //debug()<<"===================================="<<endmsg;
     ttheta = (ttheta+tthetal+tthetal2+tthetal3+tthetal4+tthetal5)/6.;
   }
-  const double besttheta = ttheta-m_ckFudge[radiator];
+  const double besttheta = ttheta - ckThetaCorrection(radiator);
   double bestphi = tphi;
 
   // is phi out of 0 -> 2PI range ?

@@ -18,23 +18,19 @@ using namespace Rich::Rec;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PhotonRecoBase::
-PhotonRecoBase( const std::string& type,
-                const std::string& name,
-                const IInterface* parent )
-  : Rich::Rec::ToolBase   ( type, name, parent ),
-    m_checkPhotCrossSides ( Rich::NRadiatorTypes, false ),
-    m_ckFudge             ( Rich::NRadiatorTypes, 0     )
+PhotonRecoBase::PhotonRecoBase( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
+  : Rich::Rec::ToolBase ( type, name, parent ),
+    m_ckBiasCorrs( Rich::NRadiatorTypes, 0.0 )
 {
   // declare interface
   declareInterface<IPhotonReconstruction>(this);
-
-  // JOs
-  m_checkPhotCrossSides[Rich::Aerogel]  = false;
-  m_checkPhotCrossSides[Rich::Rich1Gas] = true;
-  m_checkPhotCrossSides[Rich::Rich2Gas] = true;
-  declareProperty( "CheckSideCrossing", m_checkPhotCrossSides );
-  declareProperty( "CKThetaQuartzRefractCorrections", m_ckFudge );
+  // JOs                                     Aero   R1Gas R2Gas
+  declareProperty( "CheckSideCrossing", 
+                   m_checkPhotCrossSides = { false, true, true } );
+  declareProperty( "CKThetaQuartzRefractCorrections", 
+                   m_ckJOCorrs           = { 0.0,   0.0,  0.0  } );
 }
 
 //=============================================================================
@@ -52,27 +48,18 @@ StatusCode PhotonRecoBase::initialize()
   if ( sc.isFailure() ) return sc;
 
   // loop over radiators
-  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
-        rad != Rich::radiators().end(); ++rad )
+  for ( const auto rad : Rich::radiators() )
   {
-    if ( m_checkPhotCrossSides[*rad] )
-    {      info() << "Will reject photons that cross sides in " << *rad << endmsg; }
+    if ( m_checkPhotCrossSides[rad] )
+    { info() << "Will reject photons that cross sides in " << rad << endmsg; }
 
     // fudge factor warning
-    if ( std::fabs(m_ckFudge[*rad]) > 1e-7 )
+    if ( std::fabs(m_ckJOCorrs[rad]) > 1e-7 )
     {
-      info() << "Applying " << Rich::text(*rad) 
-             << " CK theta correction factor : " << m_ckFudge[*rad] << endmsg;
+      info() << "Applying " << Rich::text(rad) 
+             << " CK theta correction factor : " << m_ckJOCorrs[rad] << endmsg;
     }
   }
 
   return sc;
-}
-
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode PhotonRecoBase::finalize()
-{
-  return Rich::Rec::ToolBase::finalize();
 }

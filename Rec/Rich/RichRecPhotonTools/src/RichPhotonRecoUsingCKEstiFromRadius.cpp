@@ -31,7 +31,14 @@ PhotonRecoUsingCKEstiFromRadius( const std::string& type,
     m_massHypoRings ( NULL ),
     m_ckAngle       ( NULL ),
     m_richPartProp  ( NULL )
-{ }
+{ 
+  // Intrinsic biases for this method.
+  // These corrections are designed to correct the results from this
+  // implementation to match those from PhotonRecoUsingQuarticSoln
+  // This is needed so that the data n-1 scale factor corrections
+  // produced from one method are valid for both.
+  m_ckBiasCorrs = { 0.0, -0.0002298, 4.06e-5 };
+}
 
 //=============================================================================
 // Destructor
@@ -120,7 +127,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
     {
 
       // Start with CK fudge factor
-      float thetaCerenkov( (float)(m_ckFudge[radiator]) );
+      float thetaCerenkov( (float) ckThetaCorrection(radiator) );
 
       // estimate CK theta from reference point
       const double sep2_tmp = ( gsl_pow_2(segPSide.x()-point->localPosition().x()) +
@@ -144,10 +151,17 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
       // photon reco worked !
       sc = StatusCode::SUCCESS;
 
+      // Print the photon
+      _ri_verbo << "Created photon " << gPhoton << endmsg;
+
     }
 
   } // reference point located OK
+  else if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "No closest point found !" << endmsg;
+  }
 
-  // if we get here photon reco failed
+  // Return final status
   return sc;
 }
