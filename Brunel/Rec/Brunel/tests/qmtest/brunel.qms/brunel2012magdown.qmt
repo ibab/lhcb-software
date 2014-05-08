@@ -6,7 +6,7 @@
     <text>$PRCONFIGOPTS/Brunel/PR-COLLISION12-Beam4000GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="brunel2012magdown"</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="brunel2012magdown"; Brunel().OnlineMode=True</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
   <argument name="validator"><text>

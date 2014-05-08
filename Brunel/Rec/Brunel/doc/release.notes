@@ -3,6 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Update the QM test brunel2012magdown to test the option Brunel().OnlineMode=True
+
 - Add new boolean "OnlineMode" property to the Brunel configuable. Default is False.
   Option is propagated to the underlying configurables, to allow them to as needed
   tweak the Brunel configuration as required Online (For instance, for the RICH it
