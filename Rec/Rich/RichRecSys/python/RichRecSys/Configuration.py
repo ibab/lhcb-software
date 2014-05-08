@@ -56,6 +56,7 @@ class RichRecSysConf(RichConfigurableUser):
        ,"RecoSequencer" : None    # The sequencer to add the RICH reconstruction algorithms to
        ,"Simulation"    : False   # Simulated data
        ,"DataType"      : ""      # Type of data, propagated from application
+       ,"OnlineMode"    : False   # Online mode
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
        ,"RichPIDLocation" : ""    # Output RichPID Location
        ,"PIDVersion"      : 1     # Default PID version
@@ -129,11 +130,27 @@ class RichRecSysConf(RichConfigurableUser):
             # Longer term, the tools needs a proper retuning for the upgrade
             self.richTools().ckResolution().ScaleFactor = [ 0.57, 0.57, 0.7 ]
 
+    ## @brief Online mode 
+    def setupOnlineMode(self) :
+
+        # Use wide photon selection mode for larger side-bands
+        self.photonConfig().SelectionMode = "Wide"
+
+        # Set scale factors to 1 for n-1 corrections
+        from Configurables import UpdateManagerSvc
+        UpdateManagerSvc().ConditionsOverride += [
+            "Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;",
+            "Conditions/Environment/Rich2/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;"
+            ]
+
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
 
         # DataType specific tweaks
         self.dataTypeTweaks()
+
+        # Online mode ?
+        if self.getProp("OnlineMode") : self.setupOnlineMode()
 
         # Check the sequencer is set
         if not self.isPropertySet("RecoSequencer") :

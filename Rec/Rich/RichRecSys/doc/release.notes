@@ -4,6 +4,14 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2014-05-08 - Chris Jones
+ - Add new OnlineMode property. Tunes the reconstruction as appropriate for
+   Online Brunel, so it can be used for the Online HPD and refractive index
+   run by run calibrations.
+ - Explicitly set the CKThetaQuartzRefractCorrections to 0,0,0 for real data.
+   Systematic differences between different photon reconstruction methods now
+   handled seperately.
+
 !========================= RichRecSys v5r1 2014-02-19 =========================
 ! 2014-02-08 - Chris Jones
  - Add an explicit tuning of the photon reconstruction for the Upgrade.

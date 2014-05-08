@@ -41,6 +41,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     def dataTypeTweaks(self):
 
         if not self.getProp("Simulation") :
+            # Refractive index scale factor is calibrated from data in real data.
+            # So no scale factors should be applied.
             self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,0,0 ]
 
         # Get the DataType
