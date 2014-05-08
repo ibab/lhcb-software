@@ -8,10 +8,10 @@ import sys
 
 from LbUtils.Script import Script
 from LbRelease.SoftConfDB.SoftConfDB import SoftConfDB
+from LbRelease.SoftConfDB.AppImporter import getProjectLastRev
 
-
-class LbSdbDeleteVersion(Script):
-    """ Delete information about a project / version """
+class LbSdbCheckRevision(Script):
+    """ Update information about a project / version """
 
     def defineOpts(self):
         """ Script specific options """
@@ -40,12 +40,21 @@ class LbSdbDeleteVersion(Script):
 
             # Connect to the ConfDB to update the platform
             self.mConfDB = SoftConfDB()
-            self.mConfDB.deletePV(project, version)
+            n = self.mConfDB.mNeoDB.get_indexed_node("ProjectVersion",
+                                                 "ProjectVersion",
+                                                 project + "_" + version)
+            dbRev = n['Rev']
+            svnRev = getProjectLastRev(project, version)
 
-
+            status = "ERROR"
+            if dbRev == svnRev:
+                status = "OK"
+            print "%5s %s %s" % (status, dbRev, svnRev)
+            sys.exit(dbRev != svnRev)
+            
 if __name__=='__main__':
     sUsage = """%prog project version  """
-    s = LbSdbDeleteVersion(usage=sUsage)
+    s = LbSdbCheckRevision(usage=sUsage)
     sys.exit(s.run())
 
 

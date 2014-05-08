@@ -1,7 +1,14 @@
 2014-05-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-491: Software Database: Added tool to remove a project/version node
-	from the database (and allow re-indexing). 
+	from the database (and allow re-indexing). Also added tool to check the revision
+	in the DB vs the revision in SVN. 
+	* python/LbRelease/SoftConfDB/LbSdbDeleteVersion.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbCheckRevision.py
+	* scripts/lb-sdb-checkrevision
+	* scripts/lb-sdb-deletepv
+
 
 
 2014-04-30  Ben Couturier <Ben.Couturier@cern.ch>

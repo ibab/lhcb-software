@@ -128,7 +128,28 @@ class AppImporter:
         f.close()
         return txt
 
+
+def getProjectLastRev(project, version):
+    ''' Get the latest revision of a project in SVN
+    Allows to check for retagging '''
+    (proj,ver)=importerTranslateProject(project, version)
+    tagpath = ""
+
+    # Getting the project.cmt file with dependencies
+    if proj.upper() == "GANGA":
+        projcmt = self.getGangaProjectCMT(ver)
+    else:
+        if proj.upper() == "GAUDI":
+            tagpath = gaudisvn.url(proj,ver, isProject=True)
+        elif proj.upper() == "LHCBDIRAC" or proj.upper() == "DIRAC":
+            tagpath = diracsvn.url(proj,ver, isProject=True)
+        else:
+            tagpath=lbsvn.url(proj,ver, isProject=True)
+    return getPathLastRev(tagpath)
+    
+
 def getPathLastRev(path):
+    ''' Check the SVN revision of the given SVN path '''
     rev = None
     infostr = callCommand('svn','info',path)[0]
     for l in infostr.splitlines():
