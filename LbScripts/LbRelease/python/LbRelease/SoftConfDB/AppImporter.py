@@ -24,7 +24,13 @@ gaudisvn = rcs.connect(gaudiurl)
 diracurl = str(getRepositories(protocol='anonymous')["dirac"])
 diracsvn = rcs.connect(diracurl)
 
-
+def importerTranslateProject(p, v):
+    ''' Function needed to prevent LCGCMT to be passed to translateProject
+    as that does not work '''
+    if p.lower() == "lcgcmt":
+        return (p.upper(), v)
+    else:
+        return translateProject(p, v)
 
 class AppImporter:
     """ Main scripts class for looking up dependencies.
@@ -58,8 +64,8 @@ class AppImporter:
     def processDependencies(self, p, v):
         """ Get the dependencies for a single project """
         # Cleanup the project name and version and get the SVN URL
-        self.log.debug("getDeps %s %s" % (p, v))
-        (proj,ver)=translateProject(p,v)
+        self.log.warning("getDeps %s %s" % (p, v))
+        (proj,ver)=importerTranslateProject(p,v)
         tagpath = ""
 
         # Getting the project.cmt file with dependencies
@@ -86,12 +92,15 @@ class AppImporter:
                 dv = m.group(2)
                 deps.append((dp, dv))
 
+        if len(deps) == 0:
+            return deps
+
         # Creating the parent project in the DB
         corver = ver
         if proj in ver:
             corver = ver.replace(proj + "_", "")
         proj = proj.upper()
-
+        
         self.log.warning("Creating project %s %s" % (proj, ver))
         node_parent = self.mConfDB.getOrCreatePV(proj, corver)
         rev = getPathLastRev(tagpath)

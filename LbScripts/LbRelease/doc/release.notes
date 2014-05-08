@@ -1,3 +1,9 @@
+2014-05-30  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-491: Software Database: Added tool to remove a project/version node
+	from the database (and allow re-indexing). 
+
+
 2014-04-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-477: Software Database: Add "verbose" option to checkUnused command of lb-sdb-query 

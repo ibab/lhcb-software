@@ -92,10 +92,10 @@ class LbSdbImportFIA(Script):
             if opts.blank:
                 self.log.warning("Would add %s %s" % (p,v))
             else:
-                self.log.warning("Adding %s %s" % (p,v))
-                # Actually import the data into the DB
-                self.mAppImporter.recurseDependencies(p, v)
                 try:
+                    self.log.warning("Adding %s %s" % (p,v))
+                    # Actually import the data into the DB
+                    self.mAppImporter.recurseDependencies(p, v)
                     iaproj = self.loadProject(p, v)
                     # Setting the project as active...
                     self.mAppImporter.mConfDB.setPVActive(p, v)

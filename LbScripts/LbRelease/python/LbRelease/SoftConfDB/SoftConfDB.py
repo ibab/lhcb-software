@@ -12,7 +12,6 @@ import logging
 from py2neo import neo4j, cypher
 from LbConfiguration.Version import sortVersions, LCGVersion
 
-
 class SoftConfDB(object):
     '''
     Main class interfacing to the LHCb Configuration Database
@@ -306,6 +305,24 @@ class SoftConfDB(object):
         self._updateVersionPatternLinks(node_project)
 
         return node_pv
+    
+    def deletePV(self, project, version):
+        ''' Create a project version node, with appropriate links '''
+
+        self.log.warning("Deleting: %s %s" % (project, version))
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
+        if node_pv is None:
+            self.log.warning("Node not found, exiting")
+            return
+
+        rels = node_pv.get_relationships()
+        for r in rels:
+            self.log.warning("Deleting rel: " + str(r))
+            r.delete()
+        self.log.warning("Deleting node: " + str(node_pv))
+        node_pv.delete()
 
     def getOrCreateVersionPattern(self, project, version):
         ''' Create a project version pattern, with appropriate links '''
