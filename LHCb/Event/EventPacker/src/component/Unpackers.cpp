@@ -118,3 +118,7 @@ DECLARE_ALGORITHM_FACTORY( T )
 template class DataPacking::Unpack<LHCb::FlavourTagPacker>;
 typedef DataPacking::Unpack<LHCb::FlavourTagPacker> U;
 DECLARE_ALGORITHM_FACTORY( U )
+
+template class DataPacking::Unpack<LHCb::MCHCHitPacker>;
+typedef DataPacking::Unpack<LHCb::MCHCHitPacker> V;
+DECLARE_ALGORITHM_FACTORY( V )

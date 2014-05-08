@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-05-08 - Heinrich Schindler
+ - Add support for HC hits ("Herschel").
+
 !========================= EventPacker v4r0 2014-02-18 =========================
 ! 2014-02-18 - Maurizio Martinelli
  - I had made an error in the previous commit. Now solved.
