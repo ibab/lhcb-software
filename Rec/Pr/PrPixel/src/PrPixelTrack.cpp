@@ -102,42 +102,6 @@ void PrPixelTrack::addHit(PrPixelHit *hit) {
 }
 
 //=========================================================================
-// Remove a hit from the track. Update fit parameters.
-//=========================================================================
-void PrPixelTrack::removeHit(PrPixelHit *hit) {
-
-  PrPixelHits::iterator it = std::find(m_hits.begin(), m_hits.end(), hit);
-  if (it == m_hits.end()) return;
-  m_hits.erase(it);
-
-  const double x = hit->x();
-  const double z = hit->z();
-
-  const double wx = hit->wx();
-  const double wx_t_x = wx * x;
-  m_s0 -= wx;
-  m_sx -= wx_t_x;
-  const double wx_t_z = wx * z;
-  m_sz -= wx_t_z;
-
-  const double y = hit->y();
-  const double wy = hit->wy();
-  const double wy_t_y = wy * y;
-  m_u0 -= wy;
-  m_uy -= wy_t_y;
-  const double wy_t_z = wy * z;
-  m_uz -= wy_t_z;
-
-  m_sxz -= wx_t_x * z;
-  m_sz2 -= wx_t_z * z;
-
-  m_uyz -= wy_t_y * z;
-  m_uz2 -= wy_t_z * z;
-
-  if (m_hits.size() > 1) solve();
-}
-
-//=========================================================================
 // Recompute the track parameters
 //=========================================================================
 void PrPixelTrack::solve() {

@@ -34,8 +34,6 @@ class PrPixelTrack {
   PrPixelHits &hits() { return m_hits; }
   // Add a given hit to this track
   void addHit(PrPixelHit *hit);
-  // Remove a given hit from this track
-  void removeHit(PrPixelHit *hit);
   // Mark the hits of this track as being associated
   void tagUsedHits() {
     PrPixelHits::iterator ith;
@@ -44,28 +42,20 @@ class PrPixelTrack {
     }
   }
   // Count unassociated hits for this track
-  int nbUnused() {
+  unsigned int nbUnused() const {
     unsigned int nn = 0;
-    PrPixelHits::iterator ith;
+    PrPixelHits::const_iterator ith;
     for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
       if (!(*ith)->isUsed()) ++nn;
     }
     return nn;
   }
 
-  // Check that for a 3-hit track, there are actually 3 different sensors used.
-  bool all3SensorsAreDifferent() const {
-    if (m_hits[0]->module() == m_hits[1]->module()) return false;
-    if (m_hits[0]->module() == m_hits[2]->module()) return false;
-    if (m_hits[1]->module() == m_hits[2]->module()) return false;
-    return true;
-  }
-
   int firstModule() const { return m_hits.front()->module(); }
   int lastModule() const { return m_hits.back()->module(); }
 
   /// Chi2 / degrees-of-freedom of straight-line fit
-  double chi2() {
+  double chi2() const {
     double ch = 0.;
     int nDoF = -4;
     PrPixelHits::const_iterator ith;
@@ -76,7 +66,7 @@ class PrPixelTrack {
     return ch / nDoF;
   }
   /// Chi2 constribution from a given hit
-  double chi2(PrPixelHit *hit) {
+  double chi2(PrPixelHit *hit) const {
     return hit->chi2(m_x0 + m_tx * hit->z(), m_y0 + m_ty * hit->z());
   }
   /// Position at given z from straight-line fit
@@ -84,7 +74,7 @@ class PrPixelTrack {
   double yAtZ(const double z) const { return m_y0 + m_ty * z; }
 
   /// Create a track state vector: position and the slopes: dx/dz and dy/dz
-  LHCb::StateVector state(double z) {
+  LHCb::StateVector state(const double z) const {
     LHCb::StateVector temp;
     temp.setX(m_x0 + z * m_tx);
     temp.setY(m_y0 + z * m_ty);
