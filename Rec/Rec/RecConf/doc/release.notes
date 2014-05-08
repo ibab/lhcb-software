@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2014-05-08 - Chris Jones
+ - Add new OnlineMode property to RecSysConf and RecMoniConf Configurables.
+
 !========================= RecConf v2r16 2014-02-19 =========================
 ! 2013-12-18 - Marco Cattaneo
  - Add 'pA' to KnownSpecialData 

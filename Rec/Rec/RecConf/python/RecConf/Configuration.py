@@ -53,6 +53,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"DataType"     : ""            # Type of data, propagated from application
        ,"OutputLevel"  : INFO          # The printout level to use
        ,"Simulation"   : False         # Simulated data
+       ,"OnlineMode"   : False         # Online mode
         }
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -123,7 +124,8 @@ class RecSysConf(LHCbConfigurableUser):
             seq = GaudiSequencer("RecoRICHSeq")
             # Create the top level Conf object and set some general options
             richConf = RichRecSysConf(self.richRecConfName)
-            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel","Simulation","DataType"])
+            self.setOtherProps(richConf,["SpecialData","Context","OutputLevel",
+                                         "Simulation","DataType","OnlineMode"])
             # Set the sequencer the RICH reco algs should be added to
             richConf.RecoSequencer = seq
             # Input Tracks (would be better to not hard code this. Get from TrackSys() or DstConf())
@@ -216,6 +218,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,"DataType"     : ""
        ,"Simulation"   : False         # Simulated data
        ,"Detectors"    : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
+       ,"OnlineMode"   : False         # Online mode
         }
 
     _propertyDocDct = { 
@@ -226,6 +229,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'DataType'     : """ Data type, propagated from the application """
        ,'Simulation'   : """ Is it simulated data? """
+       ,'OnlineMode'   : """ Online Brunel mode """
        }
 
     ## Known monitoring sequences, all run by default
@@ -404,7 +408,8 @@ class RecMoniConf(LHCbConfigurableUser):
         if "RICH" in moniSeq and not self.getProp("CheckEnabled"):
             from Configurables import GaudiSequencer
             conf = RichRecQCConf(self.richMoniConfName)
-            self.setOtherProps(conf,["Histograms","Context","OutputLevel","DataType","Simulation"])
+            self.setOtherProps(conf,["Histograms","Context","OutputLevel",
+                                     "DataType","Simulation","OnlineMode"])
             conf.setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
             conf.setProp("WithMC", False)
             conf.RichPIDLocation = "Rec/Rich/PIDs"
