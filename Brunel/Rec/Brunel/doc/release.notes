@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Add new boolean "OnlineMode" property to the Brunel configuable. Default is False.
+  Option is propagated to the underlying configurables, to allow them to as needed
+  tweak the Brunel configuration as required Online (For instance, for the RICH it
+  makes some changes needed for the online run by run calibrations). 
+
 - Changes to references to reflect changes since v45r1
   . Fix in PatSeedingTool to reduce ghost rate and avoid FPE (Tf/PatAlgorithms)
   . Change default LHCbCond tag for 2010 to 2014328

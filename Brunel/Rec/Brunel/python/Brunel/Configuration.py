@@ -65,6 +65,7 @@ class Brunel(LHCbConfigurableUser):
        ,"OutputLevel"     : INFO
        ,"NoWarnings"      : False
        ,"ProductionMode"  : False
+       ,"OnlineMode"      : False
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
@@ -106,6 +107,7 @@ class Brunel(LHCbConfigurableUser):
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
        ,'ProductionMode'  : """ Enables special settings for running in production """
+       ,"OnlineMode"      : """ Enables special settings for running online """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
@@ -166,7 +168,6 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import SimConf
         SimConf().setProp("Detectors", simConfDetList)
 
-
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
@@ -186,6 +187,11 @@ class Brunel(LHCbConfigurableUser):
                 LHCbApp().setProp( "TimeStamp", True )
             if not self.isPropertySet( "PrintFreq" ) :
                 self.setProp("PrintFreq", 1000)
+
+        # Online mode
+        if self.getProp( "OnlineMode" ) :
+            if not self.isPropertySet("Histograms") :
+                self.setProp("Histograms","Online")
 
         inputType = self.getProp( "InputType" ).upper()
         if inputType not in self.KnownInputTypes:
@@ -242,7 +248,6 @@ class Brunel(LHCbConfigurableUser):
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
             GaudiSequencer("MCLinksCaloSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth", "CaloHypoMCTruth" ]
 
-
             # activate all configured checking (uses MC truth)
             self.configureCheck( histOpt == "Expert" )
 
@@ -286,6 +291,7 @@ class Brunel(LHCbConfigurableUser):
             DecodeRawEvent().setProp("OverrideInputs","Moore")
         #remember that the default is a long list of locations,
         #starting with places which only exist _after_ brunel has run!
+
     
     def defineMonitors(self):
 
@@ -485,8 +491,9 @@ class Brunel(LHCbConfigurableUser):
                 # Load linkers, to kill them (avoid appending to them later)
                 InitReprocSeq.Members.append( "TESCheck" )
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
-            InitReprocSeq.Members.append( "EventNodeKiller" )
-            EventNodeKiller().Nodes += [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            killer = EventNodeKiller()
+            killer.Nodes += [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            InitReprocSeq.Members.append( killer )
             ### see configureOutput to see how the remainder of the juggler
             ### is configured
             
@@ -707,7 +714,7 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import GaudiSequencer
             GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
             richMoniConf = RichRecQCConf(self.richMoniConfName)
-            self.setOtherProps(richMoniConf, ["Histograms","Context","OutputLevel",
+            self.setOtherProps(richMoniConf, ["Histograms","Context","OutputLevel","OnlineMode",
                                               "DataType","WithMC","Simulation"] )
             richMoniConf.setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
@@ -834,8 +841,8 @@ class Brunel(LHCbConfigurableUser):
         self.defineOptions()
         self.defineMonitors()
         self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
-                                         "OutputType","DataType","Simulation"])
-        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation"])
+                                         "OutputType","DataType","Simulation","OnlineMode"])
+        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation","OnlineMode"])
         self.setOtherProps(TrackSys(),["DataType","Simulation"])
 
         if self.isPropertySet("RecoSequence") :
