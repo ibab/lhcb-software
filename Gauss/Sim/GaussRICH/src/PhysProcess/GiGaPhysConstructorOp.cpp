@@ -276,10 +276,12 @@ void GiGaPhysConstructorOp::ConstructOp() {
   RichG4Scintillation* theRichScintillationProcess= 0;
   
   if( m_activateRICHCF4Scintillation ) {
-    
+      
     theRichScintillationProcess = new RichG4Scintillation("RichG4Scintillation",fOptical);
     theRichScintillationProcess->SetVerboseLevel(0);
     if(m_RichApplyScintillationYieldScaleFactor) {
+      G4cout<<" Rich2 scintillation yield scale factor "<<  
+              m_RichScintillationYieldScaleFactor <<G4endl;
       
       theRichScintillationProcess-> 
         SetScintillationYieldFactor(m_RichScintillationYieldScaleFactor);

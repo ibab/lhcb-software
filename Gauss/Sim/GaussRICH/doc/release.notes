@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!2014-05-08 - Sajan Easo 
+- Increased the fraction of scintillation hits in RICH2 in Rich.opts.
+- A printout of the fraction set for scintillation yield is added 
 !2014-02-19 -Sajan Easo
  -Added options to remove or Aerogel.
 !========================= GaussRICH v14r1 2014-02-02 ========================

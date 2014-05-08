@@ -76,7 +76,8 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyScintillationYieldScaleFactor=true
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=2.0;
 // reduced scintillation for 2011 data. So the scale factor is set to small value 
 // corresponding to about 1/10 of the normal scintillation.
-GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
+//GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.1; 
+GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.6; 
 
 // To set the Readout efficiency which empirically seems to depend on Radiator Type, from real data.
 // The default in the C++ is 1.0 which sets 100% readout efficiency for each radiator. 
