@@ -85,6 +85,8 @@ const CLID& DeRichPMTPanel::classID()
 //=========================================================================
 StatusCode DeRichPMTPanel::initialize()
 {
+  StatusCode sc =  StatusCode::SUCCESS;
+
   // store the name of the panel, without the /dd/Structure part
   const std::string::size_type pos = name().find("Rich");
   setMyName( std::string::npos != pos ? name().substr(pos) : "DeRichPMTPanel_NO_NAME" );
@@ -116,8 +118,9 @@ StatusCode DeRichPMTPanel::initialize()
   m_DePMTs.reserve(numCurModules);
   m_DePMTAnodes.reserve(numCurModules);
 
-  getPanelGeometryInfo();
-
+  sc = sc && getPanelGeometryInfo();
+  if(sc == StatusCode::FAILURE ) return sc;
+  
   const IDetectorElement::IDEContainer & detelems = childIDetectorElements();
 
   for ( IDetectorElement::IDEContainer::const_iterator det_it = detelems.begin();
@@ -237,7 +240,7 @@ StatusCode DeRichPMTPanel::initialize()
   // trigger first UMS update
   const StatusCode update = updMgrSvc()->update(this);
 
-  msg << MSG::DEBUG << "Panel Initialised" << endmsg;
+  //msg << MSG::DEBUG << "Panel Initialised" << endmsg;
 
   return update;
 }
@@ -471,6 +474,9 @@ StatusCode DeRichPMTPanel::setRichPmtSmartID(const std::vector<int>& aPmtHitChan
 
 StatusCode DeRichPMTPanel::getPanelGeometryInfo()
 {
+  StatusCode sc =  StatusCode::SUCCESS;
+
+
   if(  ( m_PmtModulePlaneHalfSizeR1.empty() ) ||
        ( m_PmtModulePlaneHalfSizeR2.empty() )  )
   {
@@ -686,7 +692,7 @@ StatusCode DeRichPMTPanel::getPanelGeometryInfo()
   
   
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 void DeRichPMTPanel::Rich1SetupPMTModulesWithLens()
