@@ -702,11 +702,17 @@ class Moore(LHCbConfigurableUser):
             trans = { 'GaudiSequencer/HltDecisionSequence' :               { 'Members' : { '^.*$' : "['GaudiSequencer/Hlt1']" } } 
                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
                       }
-            #add the tracking encoder
+            #configure and add the tracking encoder
             from Configurables import HltTrackReportsWriter
             HltTrackReportsWriter()
             trans['GaudiSequencer/HltEndSequence']={ 'Members' : { "DecReportsWriter'": "DecReportsWriter', 'HltTrackReportsWriter'" } }
+
+            #  make sure SourceID is properly set
+            trans['Hlt(Sel|Dec)ReportsWriter/.*']={ 'SourceID' : { '^.*$' : '1' } }
             Funcs._mergeTransform(trans)
+
+            # remove lumi stripper...
+            trans['GaudiSequencer/HltEndSequence']={ 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
 
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
@@ -770,6 +776,14 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
                              ,  dec3.listOutputs()[0]
                              )
+
+            #  make sure SourceID is properly set
+            _updateProperties( gs('Hlt')
+                             , dict( HltDecReportsWriter  = 'SourceID'
+                                   , HltSelReportsWriter  = 'SourceID' 
+                                   , HltVertexReportsWriter  = 'SourceID' ) 
+                             , 2
+                             )
             
         
         def hlt2_only_tck() :
@@ -810,10 +824,9 @@ class Moore(LHCbConfigurableUser):
             dec3alg=dec3.setup()
             
             transall={}
-            transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
-                                                                      , ", '.*/Hlt1Global'"         : ''
-                                                                      , ", '.*/HltLumiWriter'"      : ''
-                                                                      , ", '.*/LumiStripper'"       : '' } }
+            transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '[^/]*/HltL0GlobalMonitor'" : '' 
+                                                                    , ", '[^/]*/Hlt1Global'"         : ''
+                                                                    , ", '[^/]*/HltLumiWriter'"      : '' } }
             
             transall['HltGlobalMonitor/HltGlobalMonitor' ]= { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
             
@@ -829,6 +842,10 @@ class Moore(LHCbConfigurableUser):
             
             Funcs._mergeTransform(transall)
             Funcs._mergeTransform(transall2)
+
+            #  make sure SourceID is properly set
+            transSID = { 'Hlt(Dec|Sel)ReportsWriter/.*' : { 'SourceID' : { '^.*$' : '2' } } }
+            Funcs._mergeTransform(transSID)
                     
         def gerhardsSledgehammer() :
             from Configurables import GaudiSequencer as gs
@@ -873,6 +890,16 @@ class Moore(LHCbConfigurableUser):
                             if len([w for w in self.getProp("WriterRequires") if fail in w]):
                                 raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
         
+        if split is 'Hlt2' and False:
+            # TODO/FIXME: do not hardwire these here...
+            # TODO/FIXME: pick up the right online_....xml file
+            from Configurables import CondDB
+            CondDB().RunChangeHandlerConditions +=  [ "Conditions/Rich1/Environment"
+                                                    , "Conditions/Rich1/Alignment"
+                                                    , "Conditions/Rich2/Alignment"
+                                                    , "Conditions/Rich2/Environment" ]
+            print "Hlt2 -- using following RunChangeHandlerConditions: " , CondDB().RunChangeHandlerConditions
+            
         
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
