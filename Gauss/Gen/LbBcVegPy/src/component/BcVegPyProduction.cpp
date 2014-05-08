@@ -1,45 +1,52 @@
-// $Id: BcVegPyProduction.cpp,v 1.5 2009-09-28 19:40:14 jhe Exp $
-// Include files 
-
-// local
-#include "BcVegPyProduction.h"
-#include "LbBcVegPy/BcVegPy.h"
-
-// from Gaudi
+// Gaudi.
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-// from Event
+// Event.
 #include "Event/GenCollision.h"
 
-// local
+// Generators.
 #include "Generators/StringParse.h"
 #include "Generators/IBeamTool.h"
 #include "LbPythia/Pythia.h"
+#include "LbBcVegPy/BcVegPy.h"
+
+// HepMC.
+#include "HepMC/GenEvent.h"
+#include "HepMC/IO_GenEvent.h"
+
+// Local.
+#include "BcVegPyProduction.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BcVegPyProduction
 //
-// 
+// 2014-05-08 : Philip Ilten
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-
-DECLARE_TOOL_FACTORY( BcVegPyProduction );
-
+// Declaration of the tool factory.
+DECLARE_TOOL_FACTORY(BcVegPyProduction);
 
 //=============================================================================
-// Standard constructor, initializes variables
+// Default constructor.
 //=============================================================================
-BcVegPyProduction::BcVegPyProduction( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
-   : PythiaProduction ( type, name , parent ) {
+BcVegPyProduction::BcVegPyProduction(const std::string &type,
+				     const std::string &name,
+				     const IInterface *parent)
+  : PythiaProduction(type, name, parent) {
 
   declareInterface< IProductionTool >( this ) ;
+  declareProperty("BcVegPyCommands", m_commandBcVegPyVector);
+  declareProperty("PrintEvent", m_printEvent = false);
+  declareProperty("WriteEvent", m_writeEventOutput = "");
+  declareProperty("ReadEvent", m_readEventInput = "");
+  
+  always() << "============================================================="
+           << endmsg;
+  always() << "Using as production engine " << this->type() << endmsg;
+  always() << "============================================================="
+           << endmsg;
 
-  declareProperty( "BcVegPyCommands", m_commandBcVegPyVector) ;
-  //set the default setting of BcVegPy here
-  m_defaultBcVegPySettings.clear();
+  // Create default BcVegPy settings.
   m_defaultBcVegPySettings.push_back( "mixevnt imix 0");
   m_defaultBcVegPySettings.push_back( "mixevnt imixtype 1");
   m_defaultBcVegPySettings.push_back( "counter ibcstate 1");  //Bc state
@@ -86,6 +93,12 @@ BcVegPyProduction::~BcVegPyProduction( ) { ; }
 StatusCode BcVegPyProduction::initialize( ) {
  //Change the parameter to 2, for BcVegPy,....
 
+  // Set the HepMC output file if requested.
+  if (m_writeEventOutput != "")
+    m_hepmcOut = new HepMC::IO_GenEvent(m_writeEventOutput.c_str(),
+					std::ios::out);
+  else m_hepmcOut = 0;
+
   m_userProcess = 2 ;
 
   // User process
@@ -114,17 +127,23 @@ StatusCode BcVegPyProduction::initialize( ) {
 //=============================================================================
 //   Function called to generate one event with Pythia --> BcVegPy
 //=============================================================================
-StatusCode BcVegPyProduction::generateEvent( HepMC::GenEvent * theEvent , 
-                                            LHCb::GenCollision * theCollision )
+StatusCode BcVegPyProduction::generateEvent(HepMC::GenEvent *theEvent, 
+                                            LHCb::GenCollision *theCollision)
 {
   StatusCode sc = PythiaProduction::generateEvent(theEvent, theCollision) ;
   if ( sc.isFailure() ) return sc ;
 
-  //Pythia::PyList(2);
+  // Read the event if requested.
+  if (m_readEventInput != "") readEvent(theEvent);
+  
+  // Write the event if requested.
+  if (m_writeEventOutput != "") writeEvent(theEvent);
+
+  // Print the event if requested.
+  if (m_printEvent) printEvent(theEvent);
 
   return StatusCode::SUCCESS ;
 }
-
 
 //=============================================================================
 // Parse BcVegPy commands stored in a vector
@@ -225,4 +244,40 @@ StatusCode BcVegPyProduction::parseBcVegPyCommands( const CommandVector &
   }
   
   return StatusCode::SUCCESS ;
+}
+
+//=============================================================================
+// Write the HEPMC container (for debugging purposes).
+//=============================================================================
+StatusCode BcVegPyProduction::writeEvent(HepMC::GenEvent* theEvent) {
+  m_hepmcOut->write_event(theEvent);
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Print the HEPMC container (for debugging purposes).
+//=============================================================================
+StatusCode BcVegPyProduction::printEvent(HepMC::GenEvent* theEvent) {
+  // Loop over the particles.
+  for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
+       p != theEvent->particles_end(); p++)
+    (*p)->print();
+  
+  // Loop over the vertices.
+  for (HepMC::GenEvent::vertex_iterator v = theEvent->vertices_begin();
+       v != theEvent->vertices_end(); v++)
+    (*v)->print();
+
+  return StatusCode::SUCCESS;
+}
+
+
+//=============================================================================
+// Fill the HEPMC container from a file (for debugging purposes).
+//=============================================================================
+StatusCode BcVegPyProduction::readEvent(HepMC::GenEvent* theEvent) {
+  std::ifstream file(m_readEventInput.c_str());
+  HepMC::IO_GenEvent hepmcio(file);
+  hepmcio.fill_next_event(theEvent);
+  return StatusCode::SUCCESS;
 }
