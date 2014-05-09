@@ -4,6 +4,9 @@
 ! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
 
+! 2014-05-09 - Murilo Rangel
+ - Added jet energy correction file for Reco14 cone size 0.7
+
 !======================= ParamFiles v8r11 2014-03-25 =========================
 ! 2014-03-24 - Murilo Rangel
  - Added jet energy correction file for Reco14
