@@ -182,7 +182,7 @@ class MooreOnline(LHCbConfigurableUser):
         forker.UtgidPattern        = "%P_%NN_%T_%02d";
         forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
         forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
-        ApplicationMgr().ExtSvc.append(forker)
+        ApplicationMgr().ExtSvc.insert(0,forker)
     
     def _configureOnlineCheckpointing(self):
         pass

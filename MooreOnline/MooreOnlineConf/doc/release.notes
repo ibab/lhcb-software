@@ -4,6 +4,12 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+
+! 2014-05-09 - Eric van Herwijnen
+ - insert the forker at the beginning rather than the end of ApplicationMgr().ExtSvc
+   since the forker removes all dim services (and then doesn't work with runnr hack)
+
+
 !========================= MooreOnlineConf v1r1 2014-04-29 =========================
 
 ! 2014-04-28 - Gerhard Raven
