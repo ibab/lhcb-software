@@ -15,8 +15,9 @@
  * @author Philip Ilten (original tool by Jibo He and Zhenwei Yang)
  * @date   2014-05-08
  */
-class BcVegPyProduction : public PythiaProduction {
+class BcVegPyProduction : public GaudiTool, virtual public IProductionTool {
  public:
+  typedef std::vector<std::string> CommandVector;
 
   /// Default constructor.
   BcVegPyProduction(const std::string &type, const std::string &name,
@@ -31,6 +32,22 @@ class BcVegPyProduction : public PythiaProduction {
   /// Generate an event.
   virtual StatusCode generateEvent(HepMC::GenEvent *theEvent, 
 				   LHCb::GenCollision *theCollision);
+
+  /// Initialize the generator.
+  virtual StatusCode initializeGenerator() {return StatusCode::SUCCESS;}
+
+  // TODO: migrate relevant methods to IHardProcessProduction.
+  virtual void setStable(const LHCb::ParticleProperty *thePP);
+  virtual void updateParticleProperties(const LHCb::ParticleProperty *thePP);
+  virtual void turnOnFragmentation();
+  virtual void turnOffFragmentation();
+  virtual StatusCode hadronize(HepMC::GenEvent *theEvent, 
+			       LHCb::GenCollision *theCollision); 
+  virtual void savePartonEvent(HepMC::GenEvent *theEvent);
+  virtual void retrievePartonEvent(HepMC::GenEvent *theEvent);
+  virtual void printRunningConditions();
+  virtual bool isSpecialParticle(const LHCb::ParticleProperty *thePP) const; 
+  virtual StatusCode setupForcedFragmentation(const int thePdgId); 
 
   /**
    * Writes event to file.
@@ -54,19 +71,37 @@ class BcVegPyProduction : public PythiaProduction {
   StatusCode readEvent(HepMC::GenEvent *theEvent);
 
 protected:
-
+  
   /// Parse BcVegPy commands from a string vector.
   StatusCode parseBcVegPyCommands(const CommandVector &theVector);
+  
+private:
 
- private:
+  // The showering tools.
+  PythiaProduction m_pythia;      ///< Pythia 6 showering tool.
 
-  CommandVector m_defaultBcVegPySettings;
-  CommandVector m_commandBcVegPyVector;
+  // Additional members.
+  CommandVector m_showerSettings;  ///< Shower command vector.
+  CommandVector m_defaultSettings; ///< Default command vector.
+  CommandVector m_commandSettings; ///< User command vector.
 
   bool m_printEvent;               ///< Flag to print the event to screen.
   std::string m_writeEventOutput;  ///< File name to write output.
   HepMC::IO_GenEvent *m_hepmcOut;  ///< HepMC output object.
   std::string m_readEventInput;    ///< File name of HepMC event to read.
+
+  // Settings that are needed for Pythia.
+  CommandVector m_pygive;     ///< Commands in "Pygive" format.
+  std::vector<int> m_pdtlist; ///< List of particles to be printed.
+  std::string m_beamToolName; ///< Name of the beam tool to use.
+  double m_widthLimit;        ///< Limit to consider a zero lifetime particle.
+  std::string m_slhaDecayFile; 
+  std::vector<int> m_pdecaylist;
+  std::string m_slhaSpectrumFile;
+  bool m_validate_HEPEVT;
+  std::string m_inconsistencies;
+  std::vector<int> m_updatedParticles;
+  std::vector<int> m_particlesToAdd;
 };
 
 #endif // LBBCVEGPY_BCVEGPYPRODUCTION_H

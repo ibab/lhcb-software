@@ -1,5 +1,6 @@
 // Gaudi.
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // Event.
 #include "Event/GenCollision.h"
@@ -32,14 +33,33 @@ DECLARE_TOOL_FACTORY(BcVegPyProduction);
 BcVegPyProduction::BcVegPyProduction(const std::string &type,
 				     const std::string &name,
 				     const IInterface *parent)
-  : PythiaProduction(type, name, parent) {
+  : GaudiTool(type, name, parent), 
+    m_pythia("PythiaProduction", "PythiaProduction", parent) {
 
-  declareInterface< IProductionTool >( this ) ;
-  declareProperty("BcVegPyCommands", m_commandBcVegPyVector);
+  // Interfaces for BcVegPy.
+  declareInterface<IProductionTool>(this) ;
+  declareProperty("BcVegPyCommands", m_commandSettings);
   declareProperty("PrintEvent", m_printEvent = false);
   declareProperty("WriteEvent", m_writeEventOutput = "");
   declareProperty("ReadEvent", m_readEventInput = "");
   
+  // Interfaces for Pythia.
+  declareProperty("Commands", m_showerSettings);
+  declareProperty("PygiveCommands", m_pygive);
+  declareProperty("PDTList", m_pdtlist);
+  declareProperty("BeamToolName", m_beamToolName = "CollidingBeams");
+  declareProperty("WidthLimit", m_widthLimit = 1.5e-6 * Gaudi::Units::GeV);
+  declareProperty("SLHADecayFile", m_slhaDecayFile = "empty");
+  declareProperty("PDecayList", m_pdecaylist) ;
+  declareProperty("SLHASpectrumFile", m_slhaSpectrumFile = "empty") ;
+  declareProperty("ValidateHEPEVT", m_validate_HEPEVT ,
+		  "The flag to force the validation of HEPEVT.");
+  declareProperty("Inconsistencies", m_inconsistencies , 
+		  "The file to dump HEPEVT inconsinstencies.");
+  declareProperty("UpdatedParticles", m_updatedParticles);
+  declareProperty("ParticlesToAdd", m_particlesToAdd);
+
+  // Print the production engine.
   always() << "============================================================="
            << endmsg;
   always() << "Using as production engine " << this->type() << endmsg;
@@ -47,51 +67,76 @@ BcVegPyProduction::BcVegPyProduction(const std::string &type,
            << endmsg;
 
   // Create default BcVegPy settings.
-  m_defaultBcVegPySettings.push_back( "mixevnt imix 0");
-  m_defaultBcVegPySettings.push_back( "mixevnt imixtype 1");
-  m_defaultBcVegPySettings.push_back( "counter ibcstate 1");  //Bc state
-  m_defaultBcVegPySettings.push_back( "upcom pmb 4.95");       //mass of b quark
-  m_defaultBcVegPySettings.push_back( "upcom pmc 1.326");   //mass of c quark 
-  m_defaultBcVegPySettings.push_back( "upcom pmbc 6.276");  
-  //mass of B_c, note that pmBc=pmB+pmC
-  m_defaultBcVegPySettings.push_back( "upcom ecm 14000.0");   //E.C.M. of LHC
-  m_defaultBcVegPySettings.push_back( "confine ptcut 0.0");
-  m_defaultBcVegPySettings.push_back( "confine etacut 1000000000.0");
-  m_defaultBcVegPySettings.push_back( "funtrans nq2 3"); 
-  m_defaultBcVegPySettings.push_back( "funtrans npdfu 2");
-  m_defaultBcVegPySettings.push_back( "loggrade ievntdis 0");
-  m_defaultBcVegPySettings.push_back( "loggrade igenerate 0");
-  m_defaultBcVegPySettings.push_back( "loggrade ivegasopen 0");
-  m_defaultBcVegPySettings.push_back( "loggrade igrade 1");
-  m_defaultBcVegPySettings.push_back( "loggrade iusecurdir 0");
-  //
-  m_defaultBcVegPySettings.push_back( "subopen subenergy 100.0");
-  m_defaultBcVegPySettings.push_back( "subopen isubonly 0");
-  m_defaultBcVegPySettings.push_back( "usertran ishower 1");
-  m_defaultBcVegPySettings.push_back( "usertran idpp 3");
-  m_defaultBcVegPySettings.push_back( "vegasinf number 1000000");
-  m_defaultBcVegPySettings.push_back( "vegasinf nitmx 20");
-  m_defaultBcVegPySettings.push_back( "vegcross iveggrade 0"); 
-  //should be fixed to 0
-  m_defaultBcVegPySettings.push_back( "qqbar iqqbar 0");
-  m_defaultBcVegPySettings.push_back( "qqbar iqcode 2");
-  m_defaultBcVegPySettings.push_back( "outpdf ioutpdf 0");     
-  m_defaultBcVegPySettings.push_back( "outpdf ipdfnum 300");   
-  //should be fixed to 300 for this version
-  m_defaultBcVegPySettings.push_back( "coloct ioctet 0");
-  m_defaultBcVegPySettings.push_back( "octmatrix coeoct 0.1");
+  m_defaultSettings.push_back("mixevnt imix 0");
+  m_defaultSettings.push_back("mixevnt imixtype 1");
+  m_defaultSettings.push_back("counter ibcstate 1"); // B_c state.
+  m_defaultSettings.push_back("upcom pmb 4.95");     // Mass of b-quark.
+  m_defaultSettings.push_back("upcom pmc 1.326");    // Mass of c-quark.
+  m_defaultSettings.push_back("upcom pmbc 6.276");   // Mass of B_c = pmB + pmC.
+  m_defaultSettings.push_back("upcom ecm 14000.0");  // E.C.M. of LHC.
+  m_defaultSettings.push_back("confine ptcut 0.0");
+  m_defaultSettings.push_back("confine etacut 1000000000.0");
+  m_defaultSettings.push_back("funtrans nq2 3"); 
+  m_defaultSettings.push_back("funtrans npdfu 2");
+  m_defaultSettings.push_back("loggrade ievntdis 0");
+  m_defaultSettings.push_back("loggrade igenerate 0");
+  m_defaultSettings.push_back("loggrade ivegasopen 0");
+  m_defaultSettings.push_back("loggrade igrade 1");
+  m_defaultSettings.push_back("loggrade iusecurdir 0");
+  m_defaultSettings.push_back("subopen subenergy 100.0");
+  m_defaultSettings.push_back("subopen isubonly 0");
+  m_defaultSettings.push_back("usertran ishower 1");
+  m_defaultSettings.push_back("usertran idpp 3");
+  m_defaultSettings.push_back("vegasinf number 1000000");
+  m_defaultSettings.push_back("vegasinf nitmx 20");
+  m_defaultSettings.push_back("vegcross iveggrade 0"); 
+  m_defaultSettings.push_back("qqbar iqqbar 0");
+  m_defaultSettings.push_back("qqbar iqcode 2");
+  m_defaultSettings.push_back("outpdf ioutpdf 0");     
+  m_defaultSettings.push_back("outpdf ipdfnum 300");   
+  m_defaultSettings.push_back("coloct ioctet 0");
+  m_defaultSettings.push_back("octmatrix coeoct 0.1");
 }
 
 //=============================================================================
-// Destructor 
+// Default destructor. 
 //=============================================================================
-BcVegPyProduction::~BcVegPyProduction( ) { ; }
+BcVegPyProduction::~BcVegPyProduction( ) { }
 
 //=============================================================================
-// Initialize method
+// Initialize the class.
 //=============================================================================
 StatusCode BcVegPyProduction::initialize( ) {
- //Change the parameter to 2, for BcVegPy,....
+
+  // Set Pythia variables.
+  m_pythia.m_commandVector    = m_showerSettings;
+  m_pythia.m_pygive           = m_pygive;	       
+  m_pythia.m_pdtlist	      = m_pdtlist;	       
+  m_pythia.m_beamToolName     = m_beamToolName;    
+  m_pythia.m_widthLimit       = m_widthLimit;      
+  m_pythia.m_slhaDecayFile    = m_slhaDecayFile;   
+  m_pythia.m_pdecaylist       = m_pdecaylist;      
+  m_pythia.m_slhaSpectrumFile = m_slhaSpectrumFile;
+  m_pythia.m_validate_HEPEVT  = m_validate_HEPEVT; 
+  m_pythia.m_inconsistencies  = m_inconsistencies; 
+  m_pythia.m_updatedParticles = m_updatedParticles;
+  m_pythia.m_particlesToAdd   = m_particlesToAdd;   
+  m_pythia.m_userProcess = 2;
+  m_pythia.m_frame       = "USER";
+  m_pythia.m_beam        = "p+";
+  m_pythia.m_target      = "p+";
+
+  // Read the default and user settings.
+  StatusCode sc;
+  sc = parseBcVegPyCommands(m_defaultSettings);
+  if (sc.isFailure()) return Error("Unable to read default commands.", sc);
+  sc = parseBcVegPyCommands(m_commandSettings);
+  if (sc.isFailure()) return Error("Unable to read user commands.", sc);
+  BcVegPy::SetParameter();
+
+  // Initialize the showering generators.
+  sc = m_pythia.initialize();
+  if (sc.isFailure()) return sc;
 
   // Set the HepMC output file if requested.
   if (m_writeEventOutput != "")
@@ -99,39 +144,17 @@ StatusCode BcVegPyProduction::initialize( ) {
 					std::ios::out);
   else m_hepmcOut = 0;
 
-  m_userProcess = 2 ;
-
-  // User process
-  m_frame = "USER" ;
-  m_beam = "p+";
-  m_target = "p+" ;
-
-  // Set default BcVegPy settings
-  StatusCode  sc = parseBcVegPyCommands( m_defaultBcVegPySettings ) ;
-
-  // read BcVegPy command vector from job options
-  sc = parseBcVegPyCommands( m_commandBcVegPyVector ) ;
-
-  if ( ! sc.isSuccess( ) ) 
-  return Error( "Unable to read BcVegPy commands" , sc ) ;
-
-  BcVegPy::SetParameter( );
-
-  //Initialize of Pythia done here
-  sc = PythiaProduction::initialize( ) ;
-  if ( sc.isFailure() ) return sc ;
-
   return sc ;
 }
 
 //=============================================================================
-//   Function called to generate one event with Pythia --> BcVegPy
+// Generate an event.
 //=============================================================================
 StatusCode BcVegPyProduction::generateEvent(HepMC::GenEvent *theEvent, 
-                                            LHCb::GenCollision *theCollision)
-{
-  StatusCode sc = PythiaProduction::generateEvent(theEvent, theCollision) ;
-  if ( sc.isFailure() ) return sc ;
+                                            LHCb::GenCollision *theCollision) {
+
+  StatusCode sc = m_pythia.generateEvent(theEvent, theCollision);
+  if (sc.isFailure()) return sc;
 
   // Read the event if requested.
   if (m_readEventInput != "") readEvent(theEvent);
@@ -144,6 +167,33 @@ StatusCode BcVegPyProduction::generateEvent(HepMC::GenEvent *theEvent,
 
   return StatusCode::SUCCESS ;
 }
+
+//=============================================================================
+// All these methods just call Pythia.
+//=============================================================================
+void BcVegPyProduction::setStable(const LHCb::ParticleProperty *thePP)
+{m_pythia.setStable(thePP);}
+void BcVegPyProduction::updateParticleProperties(const LHCb::ParticleProperty 
+						 *thePP) 
+{m_pythia.updateParticleProperties(thePP);}
+void BcVegPyProduction::turnOnFragmentation()
+{m_pythia.turnOnFragmentation();}
+void BcVegPyProduction::turnOffFragmentation()
+{m_pythia.turnOffFragmentation();}
+StatusCode BcVegPyProduction::hadronize(HepMC::GenEvent *theEvent, 
+					LHCb::GenCollision *theCollision)
+{return m_pythia.hadronize(theEvent, theCollision);}
+void BcVegPyProduction::savePartonEvent(HepMC::GenEvent *theEvent)
+{m_pythia.savePartonEvent(theEvent);}
+void BcVegPyProduction::retrievePartonEvent(HepMC::GenEvent *theEvent)
+{m_pythia.retrievePartonEvent(theEvent);}
+void BcVegPyProduction::printRunningConditions()
+{m_pythia.printRunningConditions();}
+bool BcVegPyProduction::isSpecialParticle(const LHCb::ParticleProperty *thePP)
+  const {return m_pythia.isSpecialParticle(thePP);}
+StatusCode BcVegPyProduction::setupForcedFragmentation(const int thePdgId)
+{return m_pythia.setupForcedFragmentation(thePdgId);}
+
 
 //=============================================================================
 // Parse BcVegPy commands stored in a vector
