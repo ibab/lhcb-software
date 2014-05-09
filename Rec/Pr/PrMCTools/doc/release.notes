@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-05-09 - Michel De Cian
+ - First commit of PrPlotFTHits, an algorithm that makes various plots for hit-related quantities in the FT.
+
 ! 2014-04-25 - Heinrich Schindler
  - PrDebugTrackingLosses: follow changes in VPChannelID format (r171869).
  - Rename PatPixelDebugTool (moved here from Tr/TrackMCTools) 
