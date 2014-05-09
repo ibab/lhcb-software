@@ -48,12 +48,15 @@
   <class name = "Analysis::Models::BW23L"             />
   <class name = "Analysis::Models::PolyPositive"      />
   <class name = "Analysis::Models::ExpoPositive"      />
+
   <class name = "Analysis::Models::Poly2DPositive"    />
   <class name = "Analysis::Models::Poly2DSymPositive" />
-  <class name = "Analysis::Models::PS22DPol"          />
-  <class name = "Analysis::Models::PSnl2DPol"         />
-  <class name = "Analysis::Models::PS2s2DPol"         />
-  <class name = "Analysis::Models::PSnls2DPol"        />
+  <class name = "Analysis::Models::PS2DPol"           />
+  <class name = "Analysis::Models::PS2DPolSym"        />
+  <class name = "Analysis::Models::ExpoPS2DPol"       />
+  <class name = "Analysis::Models::Expo2DPol"         />
+  <class name = "Analysis::Models::Expo2DPolSym"      />
+
   <class name = "Analysis::Models::StudentT"          />
   <class name = "Analysis::Models::GammaDist"         />
   <class name = "Analysis::Models::GenGammaDist"      />

@@ -687,7 +687,21 @@ namespace Analysis
       // ======================================================================
       virtual Double_t evaluate () const ;
       // ======================================================================
-    private:
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PhaseSpacePol& function() const { return m_ps ; }
+      // ====================================================================== 
+   private:
       // ======================================================================
       RooRealProxy m_x    ;
       RooListProxy m_phis ;
@@ -697,9 +711,7 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual phase space function 
-      Gaudi::Math::PhaseSpaceNL     m_ps       ;  // the actual function 
-      /// the positive polinomial 
-      mutable Gaudi::Math::Positive m_positive ;  // the positive polynomial
+      mutable Gaudi::Math::PhaseSpacePol m_ps ;  // the actual function
       // ======================================================================      
     } ;
     // ========================================================================
@@ -2413,7 +2425,7 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
-    // 2D-models 
+    // 2D non-factorizable models  
     // ========================================================================
     /** @class Poly2DPositive
      *  Poly2DPositive polynomial
@@ -2550,53 +2562,76 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PS22DPol
+    /** @class PS2DPol
      * 
-     *  F(x,y) = PS2(x)*PS2(y)*PPOL(x,y)
+     *  F(x,y) = PS(x)*PS(y)*PPOL(x,y)
      *
+     *  @see Gaudi::Math::PS2DPol 
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date 2011-05-25
      */
-    class GAUDI_API PS22DPol: public RooAbsPdf 
+    class GAUDI_API PS2DPol: public RooAbsPdf 
     {
       // ======================================================================
     public :
       // ======================================================================
-      ClassDef(Analysis::Models::PS22DPol, 1) ;
+      ClassDef(Analysis::Models::PS2DPol, 2) ;
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      PS22DPol
-      ( const char*                     name      , 
-        const char*                     title     ,
-        RooRealVar&                     x         ,
-        RooRealVar&                     y         ,
-        const Gaudi::Math::PhaseSpace2& ps1       , 
-        const Gaudi::Math::PhaseSpace2& ps2       ,
-        const unsigned short nX                   , 
-        const unsigned short nY                   , 
-        RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// constructor  
+      PS2DPol
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          const Gaudi::Math::PhaseSpaceNL& psx       , 
+          const Gaudi::Math::PhaseSpaceNL& psy       ,
+          const unsigned short nX                    , 
+          const unsigned short nY                    , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// constructor  
+      PS2DPol
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          const Gaudi::Math::PS2DPol&      ps        , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
       /// copy
-      PS22DPol
-      ( const PS22DPol&       right     , 
-        const char*          name = 0  ) ;
+      PS2DPol
+        ( const PS2DPol&       right     , 
+          const char*          name = 0  ) ;
       /// destructor 
-      virtual ~PS22DPol() ;
+      virtual ~PS2DPol() ;
       /// clone 
-      virtual  PS22DPol* clone ( const char* name ) const ; 
+      virtual  PS2DPol* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function(s) 
-      const Gaudi::Math::Positive2D&   function() const { return m_positive ; }
-      const Gaudi::Math::PhaseSpace2&  ps1     () const { return m_ps1      ; }
-      const Gaudi::Math::PhaseSpace2&  ps2     () const { return m_ps2      ; }      
+      const Gaudi::Math::PS2DPol&      function    () const { return m_function ; }
+      const Gaudi::Math::Positive2D&   positive    () const { return m_function.positive   () ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_function.positive   () ; }
+      const Gaudi::Math::PhaseSpaceNL& psX         () const { return m_function.phasespaceX() ; }
+      const Gaudi::Math::PhaseSpaceNL& psY         () const { return m_function.phasespaceY() ; }
+      const Gaudi::Math::PhaseSpaceNL& phasespaceX () const { return psX () ; }
+      const Gaudi::Math::PhaseSpaceNL& phasespaceY () const { return psY () ; }
       // ======================================================================
     protected :
       // ======================================================================
@@ -2609,59 +2644,78 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual functions()
-      mutable Gaudi::Math::Positive2D m_positive ;              // the function 
-      Gaudi::Math::PhaseSpace2  m_ps1  ;
-      Gaudi::Math::PhaseSpace2  m_ps2  ;
+      mutable Gaudi::Math::PS2DPol m_function ;              // the function 
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PSnl2DPol
+    /** @class PS2DPolSym
      * 
-     *  F(x,y) = PSnl(x)*PSnl(y)*PPOL(x,y)
+     *  F(x,y) = PS(x)*PS(y)*PPOL(x,y)
      *
+     *  @see Gaudi::Math::PS2DPolSym 
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date 2011-05-25
      */
-    class GAUDI_API PSnl2DPol: public RooAbsPdf 
+    class GAUDI_API PS2DPolSym: public RooAbsPdf 
     {
       // ======================================================================
     public :
       // ======================================================================
-      ClassDef(Analysis::Models::PSnl2DPol, 1) ;
+      ClassDef(Analysis::Models::PS2DPolSym, 1) ;
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      PSnl2DPol
-      ( const char*                      name      , 
-        const char*                      title     ,
-        RooRealVar&                      x         ,
-        RooRealVar&                      y         ,
-        const Gaudi::Math::PhaseSpaceNL& ps1       , 
-        const Gaudi::Math::PhaseSpaceNL& ps2       ,
-        const unsigned short nX                    , 
-        const unsigned short nY                    , 
-        RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// constructor  
+      PS2DPolSym
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          const Gaudi::Math::PhaseSpaceNL& ps        , 
+          const unsigned short N                    , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// constructor  
+      PS2DPolSym
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          const Gaudi::Math::PS2DPolSym&   ps        , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
       /// copy
-      PSnl2DPol
-      ( const PSnl2DPol&       right     , 
-        const char*            name = 0  ) ;
+      PS2DPolSym
+        ( const PS2DPolSym&    right     , 
+          const char*          name = 0  ) ;
       /// destructor 
-      virtual ~PSnl2DPol() ;
+      virtual ~PS2DPolSym() ;
       /// clone 
-      virtual  PSnl2DPol* clone ( const char* name ) const ; 
+      virtual  PS2DPolSym* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function(s) 
-      const Gaudi::Math::Positive2D&   function() const { return m_positive ; }
-      const Gaudi::Math::PhaseSpaceNL& ps1     () const { return m_ps1      ; }
-      const Gaudi::Math::PhaseSpaceNL& ps2     () const { return m_ps2      ; }      
+      const Gaudi::Math::PS2DPolSym&    function    () const { return m_function ; }
+      const Gaudi::Math::Positive2DSym& positive    () const { return m_function.positive   () ; }
+      const Gaudi::Math::Positive2DSym& polynom     () const { return m_function.positive   () ; }
+      const Gaudi::Math::PhaseSpaceNL&  psX         () const { return m_function.phasespaceX() ; }
+      const Gaudi::Math::PhaseSpaceNL&  psY         () const { return m_function.phasespaceY() ; }
+      const Gaudi::Math::PhaseSpaceNL&  phasespaceX () const { return psX () ; }
+      const Gaudi::Math::PhaseSpaceNL&  phasespaceY () const { return psY () ; }
       // ======================================================================
     protected :
       // ======================================================================
@@ -2674,61 +2728,85 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual functions()
-      mutable Gaudi::Math::Positive2D m_positive ;              // the function 
-      Gaudi::Math::PhaseSpaceNL       m_ps1  ;
-      Gaudi::Math::PhaseSpaceNL       m_ps2  ;
+      mutable Gaudi::Math::PS2DPolSym m_function ;              // the function 
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PS2s2DPol
+    /** @class ExpoPS2DPol
      * 
-     *  F(x,y) = PS2(x)*PS2(y)*PPOL(x,y)
+     *  F(x,y) = exp(x)*PS(y)*PPOL(x,y)
      *
+     *  @see Gaudi::Math::ExpoPS2DPol 
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date 2011-05-25
      */
-    class GAUDI_API PS2s2DPol: public RooAbsPdf 
+    class GAUDI_API ExpoPS2DPol: public RooAbsPdf 
     {
       // ======================================================================
     public :
       // ======================================================================
-      ClassDef(Analysis::Models::PS2s2DPol, 1) ;
+      ClassDef(Analysis::Models::ExpoPS2DPol, 2) ;
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      PS2s2DPol
-      ( const char*                     name      , 
-        const char*                     title     ,
-        RooRealVar&                     x         ,
-        RooRealVar&                     y         ,
-        const Gaudi::Math::PhaseSpace2& ps        , 
-        const unsigned short            n                   , 
-        RooArgList&                     phis      ) ; // at least (n+1)*(n+2)-1 elements 
+      /// constructor  
+      ExpoPS2DPol
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          RooAbsReal&                      tau       ,
+          const Gaudi::Math::PhaseSpaceNL& psy       ,
+          const unsigned short nX                    , 
+          const unsigned short nY                    , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// constructor  
+      ExpoPS2DPol
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          RooAbsReal&                      tau       ,
+          const Gaudi::Math::ExpoPS2DPol&  ps        , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
       /// copy
-      PS2s2DPol
-      ( const PS2s2DPol&     right     , 
-        const char*          name = 0  ) ;
+      ExpoPS2DPol
+        ( const ExpoPS2DPol&   right     , 
+          const char*          name = 0  ) ;
       /// destructor 
-      virtual ~PS2s2DPol() ;
+      virtual ~ExpoPS2DPol() ;
       /// clone 
-      virtual  PS2s2DPol* clone ( const char* name ) const ; 
+      virtual  ExpoPS2DPol* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function(s) 
-      const Gaudi::Math::Positive2DSym&function() const { return m_positive ; }
-      const Gaudi::Math::PhaseSpace2&  ps      () const { return m_ps       ; }
+      const Gaudi::Math::ExpoPS2DPol&  function    () const { return m_function ; }
+      const Gaudi::Math::Positive2D&   positive    () const { return m_function.positive   () ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_function.positive   () ; }
+      const Gaudi::Math::PhaseSpaceNL& psY         () const { return m_function.phasespaceY() ; }
+      const Gaudi::Math::PhaseSpaceNL& phasespaceY () const { return psY () ; }
       // ======================================================================
     protected :
       // ======================================================================
       RooRealProxy m_x    ;
       RooRealProxy m_y    ;
+      RooRealProxy m_tau  ;
       RooListProxy m_phis ;
       // ======================================================================
       TIterator* m_iterator;  //! do not persist
@@ -2736,60 +2814,75 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual functions()
-      mutable Gaudi::Math::Positive2DSym m_positive ;          // the function 
-      Gaudi::Math::PhaseSpace2           m_ps  ;
+      mutable Gaudi::Math::ExpoPS2DPol m_function ;             // the function 
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class PSnls2DPol
+    /** @class Expo2DPol
      * 
-     *  F(x,y) = PS2(x)*PS2(y)*PPOL(x,y)
+     *  F(x,y) = exp(x)*exp(y)*PPOL(x,y)
      *
+     *  @see Gaudi::Math::ExpoPS2DPol 
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date 2011-05-25
      */
-    class GAUDI_API PSnls2DPol: public RooAbsPdf 
+    class GAUDI_API Expo2DPol: public RooAbsPdf 
     {
       // ======================================================================
     public :
       // ======================================================================
-      ClassDef(Analysis::Models::PSnls2DPol, 1) ;
+      ClassDef(Analysis::Models::Expo2DPol, 2) ;
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      PSnls2DPol
-      ( const char*                      name      , 
-        const char*                      title     ,
-        RooRealVar&                      x         ,
-        RooRealVar&                      y         ,
-        const Gaudi::Math::PhaseSpaceNL& ps        , 
-        const unsigned short             n                   , 
-        RooArgList&                      phis      ) ; // at least (n+1)*(n+2)-1 elements 
+      /// constructor  
+      Expo2DPol
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          RooAbsReal&                      taux      ,
+          RooAbsReal&                      tauy      ,
+          const unsigned short nX                    , 
+          const unsigned short nY                    , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
       /// copy
-      PSnls2DPol
-      ( const PSnls2DPol&     right     , 
-        const char*          name = 0  ) ;
+      Expo2DPol
+        ( const Expo2DPol&     right     , 
+          const char*          name = 0  ) ;
       /// destructor 
-      virtual ~PSnls2DPol() ;
+      virtual ~Expo2DPol() ;
       /// clone 
-      virtual  PSnls2DPol* clone ( const char* name ) const ; 
+      virtual  Expo2DPol* clone ( const char* name ) const ; 
       // ======================================================================
     public:
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function(s) 
-      const Gaudi::Math::Positive2DSym&function() const { return m_positive ; }
-      const Gaudi::Math::PhaseSpaceNL& ps      () const { return m_ps       ; }
+      const Gaudi::Math::Expo2DPol&    function    () const { return m_function ; }
+      const Gaudi::Math::Positive2D&   positive    () const { return m_function.positive   () ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_function.positive   () ; }
       // ======================================================================
     protected :
       // ======================================================================
       RooRealProxy m_x    ;
       RooRealProxy m_y    ;
+      RooRealProxy m_taux ;
+      RooRealProxy m_tauy ;
       RooListProxy m_phis ;
       // ======================================================================
       TIterator* m_iterator;  //! do not persist
@@ -2797,10 +2890,83 @@ namespace Analysis
     private:
       // ======================================================================
       /// the actual functions()
-      mutable Gaudi::Math::Positive2DSym m_positive ;          // the function 
-      Gaudi::Math::PhaseSpaceNL          m_ps  ;
+      mutable Gaudi::Math::Expo2DPol m_function ;               // the function 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Expo2DPol
+     * 
+     *  F(x,y) = exp(x)*exp(y)*SPOL(x,y)
+     *
+     *  @see Gaudi::Math::Expo2DPolSym 
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API Expo2DPolSym: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Expo2DPolSym, 2) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor  
+      Expo2DPolSym
+        ( const char*                      name      , 
+          const char*                      title     ,
+          RooRealVar&                      x         ,
+          RooRealVar&                      y         ,
+          RooAbsReal&                      tau       ,
+          const unsigned short n                     , 
+          RooArgList&          phis      ) ; // at least (nX+1)*(nY+1)-1 elements 
+      /// copy
+      Expo2DPolSym
+        ( const Expo2DPolSym&  right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~Expo2DPolSym() ;
+      /// clone 
+      virtual  Expo2DPolSym* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function(s) 
+      const Gaudi::Math::Expo2DPolSym&  function    () const { return m_function ; }
+      const Gaudi::Math::Positive2DSym& positive    () const { return m_function.positive   () ; }
+      const Gaudi::Math::Positive2DSym& polynom     () const { return m_function.positive   () ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooRealProxy m_y    ;
+      RooRealProxy m_tau  ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual functions()
+      mutable Gaudi::Math::Expo2DPolSym m_function ;           // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================
 } //                                                  end of namespace Analysis 

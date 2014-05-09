@@ -1971,7 +1971,7 @@ Int_t Analysis::Models::ExpoPositive::getAnalyticalIntegral
   if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
   return 0 ;
 }
-//_____________________________________________________________________________
+// ============================================================================
 Double_t Analysis::Models::ExpoPositive::analyticalIntegral 
 ( Int_t       code      , 
   const char* rangeName ) const 
@@ -2945,9 +2945,8 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   , m_phis     ( "phi"     , "Coefficients" , this )
 //
   , m_iterator ( 0 ) 
-//
-  , m_ps       (     low , high , L , N ) 
-  , m_positive ( 1 , low , high ) 
+    //
+  , m_ps       ( low , high , L , N , 1 ) 
 {
   m_phis.add ( phi1 ) ;
   m_iterator = m_phis.createIterator() ;
@@ -2957,7 +2956,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( std::min ( low , high ) , v -> getMin () ) ;
     const double xmax = std::min ( std::max ( low , high ) , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( 1 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 1 , xmin , xmax ) ;  
   }
   //
 }
@@ -2981,8 +2980,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       (     low , high , L , N ) 
-  , m_positive ( 2 , low , high ) 
+  , m_ps       (     low , high , L , N , 2 ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -2993,7 +2991,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( std::min ( low , high ) , v -> getMin () ) ;
     const double xmax = std::min ( std::max ( low , high ) , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( 2 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 2 , xmin , xmax ) ;  
   }
   //
 }
@@ -3018,8 +3016,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       (     low , high , L , N ) 
-  , m_positive ( 3 , low , high ) 
+  , m_ps       (     low , high , L , N , 3 ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -3031,7 +3028,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( std::min ( low , high ) , v -> getMin () ) ;
     const double xmax = std::min ( std::max ( low , high ) , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( 3 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 3 , xmin , xmax ) ;  
   }
   //
 }
@@ -3054,14 +3051,13 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       (                  low , high , L , N ) 
-  , m_positive ( phis.getSize() , low , high ) 
+  , m_ps       (                  low , high , L , N , phis.getSize() ) 
 {
   //
   TIterator*   tmp  = phis.createIterator() ;
   RooAbsArg*   coef = 0 ;
   unsigned     num  = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_ps.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3074,7 +3070,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( std::min ( low , high ) , v -> getMin () ) ;
     const double xmax = std::min ( std::max ( low , high ) , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( phis.getSize() , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , phis.getSize() , xmin , xmax ) ;  
   }
   //
   m_iterator = m_phis.createIterator() ;
@@ -3093,10 +3089,9 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   , m_x        ( "x"       , "Observable"   , this , x   ) 
   , m_phis     ( "phi"     , "Coefficients" , this )
 //
-  , m_iterator ( 0 ) 
-//
-  , m_ps       ( ps ) 
-  , m_positive ( 1 , ps.lowEdge() , ps.highEdge() ) 
+  , m_iterator ( 0 )
+ //
+  , m_ps       ( ps , 1 ) 
 {
   m_phis.add ( phi1 ) ;
   m_iterator = m_phis.createIterator() ;
@@ -3106,7 +3101,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
     const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive( 1 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 1 , xmin , xmax ) ;  
   }
   //
 }
@@ -3127,8 +3122,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       ( ps ) 
-  , m_positive ( 2 , ps.lowEdge() , ps.highEdge() ) 
+  , m_ps       ( ps , 2 ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -3139,7 +3133,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
     const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( 2 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 2 , xmin , xmax ) ;  
   }
   //
 }
@@ -3161,8 +3155,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       ( ps ) 
-  , m_positive ( 3 , ps.lowEdge() , ps.highEdge() ) 
+  , m_ps       ( ps , 3 ) 
 {
   m_phis.add ( phi1 ) ;
   m_phis.add ( phi2 ) ;
@@ -3174,7 +3167,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
     const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( 3 , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , 3 , xmin , xmax ) ;  
   }
   //
 }
@@ -3194,14 +3187,13 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
 //
   , m_iterator ( 0 ) 
 //
-  , m_ps       ( ps ) 
-  , m_positive ( phis.getSize() , ps.lowEdge() , ps.highEdge() ) 
+  , m_ps       ( ps , phis.getSize() ) 
 {
   //
   TIterator*   tmp  = phis.createIterator() ;
   RooAbsArg*   coef = 0 ;
   unsigned     num  = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_ps.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3214,7 +3206,7 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   {
     const double xmin = std::max ( ps .  lowEdge () , v -> getMin () ) ;
     const double xmax = std::min ( ps . highEdge () , v -> getMax () ) ;
-    m_positive = Gaudi::Math::Positive ( phis.getSize() , xmin , xmax ) ;
+    m_ps = Gaudi::Math::PhaseSpacePol ( m_ps.phasespace() , phis.getSize()  , xmin , xmax ) ;  
   }
   //
   m_iterator = m_phis.createIterator() ;
@@ -3237,7 +3229,6 @@ Analysis::Models::PhaseSpacePol::PhaseSpacePol
   , m_iterator ( 0 ) 
 //
   , m_ps       ( right.m_ps       ) 
-  , m_positive ( right.m_positive ) 
 {
   m_iterator = m_phis.createIterator () ;
 }
@@ -3266,17 +3257,50 @@ Double_t Analysis::Models::PhaseSpacePol::evaluate () const
     //
     const double phi   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_ps.setPar ( k  , phi ) ;
     //
     ++k ;
   }
   //
-  return m_ps ( m_x ) * m_positive ( m_x ) ;
+  return m_ps ( m_x ) ;
 }
 // ============================================================================
-
-
-
+Int_t Analysis::Models::PhaseSpacePol::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::PhaseSpacePol::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_ps.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+  //
+  return m_ps.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
 // ============================================================================
 // generic polinomial
 // ============================================================================
@@ -3521,7 +3545,7 @@ Int_t Analysis::Models::Poly2DSymPositive::getAnalyticalIntegral
   if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
   return 0 ;
 }
-//_____________________________________________________________________________
+// ============================================================================
 Double_t Analysis::Models::Poly2DSymPositive::analyticalIntegral 
 ( Int_t       code      , 
   const char* rangeName ) const 
@@ -3551,20 +3575,16 @@ Double_t Analysis::Models::Poly2DSymPositive::analyticalIntegral
                                m_y.min(rangeName) , m_y.max(rangeName) ) ;
 }
 
-
-
-
-
 // ============================================================================
-// generic polinomial
+//  PS(x)*PS(y)*Polynom 
 // ============================================================================
-Analysis::Models::PS22DPol::PS22DPol
+Analysis::Models::PS2DPol::PS2DPol
 ( const char*          name      , 
   const char*          title     ,
   RooRealVar&          x         ,
   RooRealVar&          y         ,
-  const Gaudi::Math::PhaseSpace2& ps1       , 
-  const Gaudi::Math::PhaseSpace2& ps2       ,
+  const Gaudi::Math::PhaseSpaceNL& psx , 
+  const Gaudi::Math::PhaseSpaceNL& psy ,
   const unsigned short nX        ,
   const unsigned short nY        ,
   RooArgList&          phis      ) 
@@ -3574,17 +3594,17 @@ Analysis::Models::PS22DPol::PS22DPol
   , m_phis     ( "phis"    , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
-//
-  , m_positive ( nX , nY , x.getMin() , x.getMax() , y.getMin() , y.getMax() )
-  , m_ps1      ( ps1 ) 
-  , m_ps2      ( ps2 )
+    //
+  , m_function ( psx, psy , nX , nY , 
+                 x.getMin() , x.getMax() ,
+                 y.getMin() , y.getMax() )
 {
   //
   
   TIterator* tmp  = phis.createIterator() ;
   RooAbsArg* coef = 0 ;
   unsigned num = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3593,7 +3613,48 @@ Analysis::Models::PS22DPol::PS22DPol
   }
   delete tmp ;
   //
-  if ( num != m_positive.npars() ) 
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::PS22DPol"               , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// generic polinomial
+// ============================================================================
+Analysis::Models::PS2DPol::PS2DPol
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  const Gaudi::Math::PS2DPol& ps , 
+  RooArgList&          phis      ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( ps ) 
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
   { throw GaudiException ( "Invalid size of parameters vector", 
                            "Analysis::PS22DPol"               , 
                            StatusCode::FAILURE                ) ; }
@@ -3604,37 +3665,35 @@ Analysis::Models::PS22DPol::PS22DPol
 // ============================================================================
 // copy constructor
 // ============================================================================
-Analysis::Models::PS22DPol::PS22DPol
-( const Analysis::Models::PS22DPol&  right ,      
-  const char*                        name  ) 
-  : RooAbsPdf ( right , name ) 
-//
+Analysis::Models::PS2DPol::PS2DPol
+( const Analysis::Models::PS2DPol&  right ,      
+  const char*                       name  ) 
+  : RooAbsPdf  ( right , name ) 
+    //
   , m_x        ( "x"      , this , right.m_x     ) 
   , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
-//
+    //
   , m_iterator ( 0 ) 
-//
-  , m_positive ( right.m_positive ) 
-  , m_ps1      ( right.m_ps1      ) 
-  , m_ps2      ( right.m_ps2      ) 
+    //
+  , m_function ( right.m_function )
 {
   m_iterator = m_phis.createIterator () ;
 }
 // ============================================================================
 // destructor 
 // ============================================================================
-Analysis::Models::PS22DPol::~PS22DPol() { delete m_iterator ; }
+Analysis::Models::PS2DPol::~PS2DPol() { delete m_iterator ; }
 // ============================================================================
 // clone 
 // ============================================================================
-Analysis::Models::PS22DPol*
-Analysis::Models::PS22DPol::clone( const char* name ) const 
-{ return new Analysis::Models::PS22DPol ( *this , name ) ; }
+Analysis::Models::PS2DPol*
+Analysis::Models::PS2DPol::clone( const char* name ) const 
+{ return new Analysis::Models::PS2DPol ( *this , name ) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
-Double_t Analysis::Models::PS22DPol::evaluate() const 
+Double_t Analysis::Models::PS2DPol::evaluate() const 
 {
   //
   m_iterator->Reset () ;
@@ -3642,8 +3701,6 @@ Double_t Analysis::Models::PS22DPol::evaluate() const
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
-  std::vector<double> sin2phi ;
-  // 
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
@@ -3652,107 +3709,35 @@ Double_t Analysis::Models::PS22DPol::evaluate() const
     //
     const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phiv ) ;
+    m_function.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
   //
-  return m_positive ( m_x , m_y ) * m_ps1 ( m_x ) * m_ps2 ( m_y ) ;
+  return m_function ( m_x , m_y ) ;
 }
 // ============================================================================
-
-
-
-
-// ============================================================================
-// generic polinomial
-// ============================================================================
-Analysis::Models::PSnl2DPol::PSnl2DPol
-( const char*          name      , 
-  const char*          title     ,
-  RooRealVar&          x         ,
-  RooRealVar&          y         ,
-  const Gaudi::Math::PhaseSpaceNL& ps1 , 
-  const Gaudi::Math::PhaseSpaceNL& ps2 ,
-  const unsigned short nX        ,
-  const unsigned short nY        ,
-  RooArgList&          phis      ) 
-  : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable-X" , this , x ) 
-  , m_y        ( "y"       , "Observable-Y" , this , y ) 
-  , m_phis     ( "phis"    , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( nX , nY , x.getMin() , x.getMax() , y.getMin() , y.getMax() )
-  , m_ps1      ( ps1 ) 
-  , m_ps2      ( ps2 )
+Int_t Analysis::Models::PS2DPol::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
 {
-  //
-  
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  unsigned   num  = 0 ;
-  while ( ( coef  = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
-  {
-    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
-    if ( 0 == r ) { continue ; }
-    m_phis.add ( *coef ) ;
-    ++num ;  
-  }
-  delete tmp ;
-  //
-  if ( num != m_positive.npars() ) 
-  { throw GaudiException ( "Invalid size of parameters vector", 
-                           "Analysis::PSnl2DPol"              , 
-                           StatusCode::FAILURE                ) ; }
-  
-  //
-  m_iterator = m_phis.createIterator() ;
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
 }
 // ============================================================================
-// copy constructor
-// ============================================================================
-Analysis::Models::PSnl2DPol::PSnl2DPol
-( const Analysis::Models::PSnl2DPol&  right ,      
-  const char*                         name  ) 
-  : RooAbsPdf ( right , name ) 
-//
-  , m_x        ( "x"      , this , right.m_x     ) 
-  , m_y        ( "y"      , this , right.m_y     ) 
-  , m_phis     ( "phis"   , this , right.m_phis  ) 
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( right.m_positive ) 
-  , m_ps1      ( right.m_ps1      ) 
-  , m_ps2      ( right.m_ps2      ) 
+Double_t Analysis::Models::PS2DPol::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
 {
-  m_iterator = m_phis.createIterator () ;
-}
-// ============================================================================
-// destructor 
-// ============================================================================
-Analysis::Models::PSnl2DPol::~PSnl2DPol() { delete m_iterator ; }
-// ============================================================================
-// clone 
-// ============================================================================
-Analysis::Models::PSnl2DPol*
-Analysis::Models::PSnl2DPol::clone( const char* name ) const 
-{ return new Analysis::Models::PSnl2DPol ( *this , name ) ; }
-// ============================================================================
-// the actual evaluation of function 
-// ============================================================================
-Double_t Analysis::Models::PSnl2DPol::evaluate() const 
-{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
   //
   m_iterator->Reset () ;
   //
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
-  std::vector<double> sin2phi ;
-  // 
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
   {
@@ -3761,132 +3746,18 @@ Double_t Analysis::Models::PSnl2DPol::evaluate() const
     //
     const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phiv ) ;
+    m_function.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
   //
-  return m_positive ( m_x , m_y ) * m_ps1 ( m_x ) * m_ps2 ( m_y ) ;
+  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
 }
 // ============================================================================
-
-
-
-
-
-
+//  PS(x)*PS(y)*SymPolynom 
 // ============================================================================
-// generic polinomial
-// ============================================================================
-Analysis::Models::PS2s2DPol::PS2s2DPol
-( const char*          name      , 
-  const char*          title     ,
-  RooRealVar&          x         ,
-  RooRealVar&          y         ,
-  const Gaudi::Math::PhaseSpace2& ps        ,
-  const unsigned short n         ,
-  RooArgList&          phis      ) 
-  : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable-X" , this , x ) 
-  , m_y        ( "y"       , "Observable-Y" , this , y ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( n , x.getMin() , x.getMax() ) 
-  , m_ps       ( ps ) 
-{
-  //
-  if (  x.getMin() != y.getMin() || x.getMax() != y.getMax() )
-  { throw GaudiException ( "Non-equal x/y-edges "             , 
-                           "Analysis::PS2s2DPol"              , 
-                           StatusCode::FAILURE                ) ; }
-  
-  TIterator* tmp  = phis.createIterator() ;
-  RooAbsArg* coef = 0 ;
-  unsigned num = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
-  {
-    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
-    if ( 0 == r ) { continue ; }
-    m_phis.add ( *coef ) ;
-    ++num ;  
-  }
-  delete tmp ;
-  //
-  if ( num != m_positive.npars() ) 
-  { throw GaudiException ( "Invalid size of parameters vector", 
-                           "Analysis::PS2s2DPol"              , 
-                           StatusCode::FAILURE                ) ; }
-  
-  //
-  m_iterator = m_phis.createIterator() ;
-}
-// ============================================================================
-// copy constructor
-// ============================================================================
-Analysis::Models::PS2s2DPol::PS2s2DPol
-( const Analysis::Models::PS2s2DPol& right ,      
-  const char*                                 name  ) 
-  : RooAbsPdf ( right , name ) 
-//
-  , m_x        ( "x"      , this , right.m_x     ) 
-  , m_y        ( "y"      , this , right.m_y     ) 
-  , m_phis     ( "phis"   , this , right.m_phis  ) 
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( right.m_positive ) 
-  , m_ps       ( right.m_ps       ) 
-{
-  m_iterator = m_phis.createIterator () ;
-}
-// ============================================================================
-// destructor 
-// ============================================================================
-Analysis::Models::PS2s2DPol::~PS2s2DPol() { delete m_iterator ; }
-// ============================================================================
-// clone 
-// ============================================================================
-Analysis::Models::PS2s2DPol*
-Analysis::Models::PS2s2DPol::clone( const char* name ) const 
-{ return new Analysis::Models::PS2s2DPol ( *this , name ) ; }
-// ============================================================================
-// the actual evaluation of function 
-// ============================================================================
-Double_t Analysis::Models::PS2s2DPol::evaluate() const 
-{
-  //
-  m_iterator->Reset () ;
-  //
-  RooAbsArg*       phi   = 0 ;
-  const RooArgSet* nset  = m_phis.nset() ;
-  //
-  std::vector<double> sin2phi ;
-  //
-  unsigned short k = 0 ;
-  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
-  {
-    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
-    if ( 0 == r ) { continue ; }
-    //
-    const double phi   = r->getVal ( nset ) ;
-    //
-    m_positive.setPar ( k  , phi ) ;
-    //
-    ++k ;
-  }
-  //
-  return m_positive ( m_x , m_y ) * m_ps ( m_x ) * m_ps ( m_y ) ;
-}
-// ============================================================================
-
-
-
-// ============================================================================
-// generic polinomial
-// ============================================================================
-Analysis::Models::PSnls2DPol::PSnls2DPol
+Analysis::Models::PS2DPolSym::PS2DPolSym
 ( const char*          name      , 
   const char*          title     ,
   RooRealVar&          x         ,
@@ -3897,23 +3768,18 @@ Analysis::Models::PSnls2DPol::PSnls2DPol
   : RooAbsPdf ( name , title ) 
   , m_x        ( "x"       , "Observable-X" , this , x ) 
   , m_y        ( "y"       , "Observable-Y" , this , y ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
+  , m_phis     ( "phis"    , "Coefficients" , this     )
+    //
   , m_iterator ( 0 ) 
-//
-  , m_positive ( n , x.getMin() , x.getMax() ) 
-  , m_ps       ( ps ) 
+    //
+  , m_function ( ps , n , x.getMin() , x.getMax() ) 
 {
   //
-  if (  x.getMin() != y.getMin() || x.getMax() != y.getMax() )
-  { throw GaudiException ( "Non-equal x/y-edges "             , 
-                           "Analysis::PSnls2DPol"             , 
-                           StatusCode::FAILURE                ) ; }
   
   TIterator* tmp  = phis.createIterator() ;
   RooAbsArg* coef = 0 ;
   unsigned num = 0 ;
-  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
     if ( 0 == r ) { continue ; }
@@ -3922,9 +3788,50 @@ Analysis::Models::PSnls2DPol::PSnls2DPol
   }
   delete tmp ;
   //
-  if ( num != m_positive.npars() ) 
+  if ( num != m_function.npars() ) 
   { throw GaudiException ( "Invalid size of parameters vector", 
-                           "Analysis::PSnls2DPol"             , 
+                           "Analysis::PS22DPol"               , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// generic polinomial
+// ============================================================================
+Analysis::Models::PS2DPolSym::PS2DPolSym
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  const Gaudi::Math::PS2DPolSym& ps , 
+  RooArgList&          phis      ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
+    //
+  , m_iterator ( 0  ) 
+    //
+  , m_function ( ps ) 
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::PS22DPol"               , 
                            StatusCode::FAILURE                ) ; }
   
   //
@@ -3933,36 +3840,35 @@ Analysis::Models::PSnls2DPol::PSnls2DPol
 // ============================================================================
 // copy constructor
 // ============================================================================
-Analysis::Models::PSnls2DPol::PSnls2DPol
-( const Analysis::Models::PSnls2DPol& right ,      
-  const char*                                 name  ) 
-  : RooAbsPdf ( right , name ) 
-//
+Analysis::Models::PS2DPolSym::PS2DPolSym
+( const Analysis::Models::PS2DPolSym& right ,      
+  const char*                         name  ) 
+  : RooAbsPdf  ( right , name ) 
+    //
   , m_x        ( "x"      , this , right.m_x     ) 
   , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
-//
+    //
   , m_iterator ( 0 ) 
-//
-  , m_positive ( right.m_positive ) 
-  , m_ps       ( right.m_ps       ) 
+    //
+  , m_function ( right.m_function )
 {
   m_iterator = m_phis.createIterator () ;
 }
 // ============================================================================
 // destructor 
 // ============================================================================
-Analysis::Models::PSnls2DPol::~PSnls2DPol() { delete m_iterator ; }
+Analysis::Models::PS2DPolSym::~PS2DPolSym() { delete m_iterator ; }
 // ============================================================================
 // clone 
 // ============================================================================
-Analysis::Models::PSnls2DPol*
-Analysis::Models::PSnls2DPol::clone( const char* name ) const 
-{ return new Analysis::Models::PSnls2DPol ( *this , name ) ; }
+Analysis::Models::PS2DPolSym*
+Analysis::Models::PS2DPolSym::clone( const char* name ) const 
+{ return new Analysis::Models::PS2DPolSym ( *this , name ) ; }
 // ============================================================================
 // the actual evaluation of function 
 // ============================================================================
-Double_t Analysis::Models::PSnls2DPol::evaluate() const 
+Double_t Analysis::Models::PS2DPolSym::evaluate() const 
 {
   //
   m_iterator->Reset () ;
@@ -3970,7 +3876,42 @@ Double_t Analysis::Models::PSnls2DPol::evaluate() const
   RooAbsArg*       phi   = 0 ;
   const RooArgSet* nset  = m_phis.nset() ;
   //
-  std::vector<double> sin2phi ;
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  return m_function ( m_x , m_y ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::PS2DPolSym::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::PS2DPolSym::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
   //
   unsigned short k = 0 ;
   while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
@@ -3978,16 +3919,508 @@ Double_t Analysis::Models::PSnls2DPol::evaluate() const
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi   = r->getVal ( nset ) ;
+    const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_function.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
   //
-  return m_positive ( m_x , m_y ) * m_ps ( m_x ) * m_ps ( m_y ) ;
+  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+}
+
+
+// ============================================================================
+//  exp(x)*PS(y)*Polynom 
+// ============================================================================
+Analysis::Models::ExpoPS2DPol::ExpoPS2DPol
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  RooAbsReal&          tau       ,
+  const Gaudi::Math::PhaseSpaceNL& psy ,
+  const unsigned short nX        ,
+  const unsigned short nY        ,
+  RooArgList&          phis      ) 
+  : RooAbsPdf  ( name , title ) 
+  , m_x        ( "x"       , "Observable-X"      , this , x   ) 
+  , m_y        ( "y"       , "Observable-Y"      , this , y   ) 
+  , m_tau      ( "tau"     , "Exponential slope" , this , tau ) 
+  , m_phis     ( "phis"    , "Coefficients"      , this       )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( psy        ,
+                 x.getMin() , x.getMax() ,
+                 nX         , nY         , 
+                 y.getMin() , y.getMax() )
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::ExpoPS22DPol"           , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
 }
 // ============================================================================
+// generic polinomial
+// ============================================================================
+Analysis::Models::ExpoPS2DPol::ExpoPS2DPol
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  RooAbsReal&          tau       ,
+  const Gaudi::Math::ExpoPS2DPol& ps , 
+  RooArgList&          phis      ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable-X"      , this , x   ) 
+  , m_y        ( "y"       , "Observable-Y"      , this , y   ) 
+  , m_tau      ( "tau"     , "Exponential slope" , this , tau ) 
+  , m_phis     ( "phis"    , "Coefficients"      , this       )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( ps ) 
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::ExpoPS22DPol"           , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::ExpoPS2DPol::ExpoPS2DPol
+( const Analysis::Models::ExpoPS2DPol&  right ,      
+  const char*                       name  ) 
+  : RooAbsPdf  ( right , name ) 
+    //
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
+  , m_tau      ( "tau"    , this , right.m_tau   ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( right.m_function )
+{
+  m_iterator = m_phis.createIterator () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::ExpoPS2DPol::~ExpoPS2DPol() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::ExpoPS2DPol*
+Analysis::Models::ExpoPS2DPol::clone( const char* name ) const 
+{ return new Analysis::Models::ExpoPS2DPol ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::ExpoPS2DPol::evaluate() const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTau ( m_tau ) ;
+  //
+  return m_function ( m_x , m_y ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::ExpoPS2DPol::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::ExpoPS2DPol::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTau ( m_tau ) ;
+  //
+  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+}
+
+
+
+// ============================================================================
+//  exp(x)*exp(y)*Polynom 
+// ============================================================================
+Analysis::Models::Expo2DPol::Expo2DPol
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  RooAbsReal&          taux      ,
+  RooAbsReal&          tauy      ,
+  const unsigned short nX        ,
+  const unsigned short nY        ,
+  RooArgList&          phis      ) 
+  : RooAbsPdf  ( name , title ) 
+  , m_x        ( "x"       , "Observable-X"      , this , x    ) 
+  , m_y        ( "y"       , "Observable-Y"      , this , y    ) 
+  , m_taux     ( "taux"    , "Exponential slope" , this , taux ) 
+  , m_tauy     ( "tauy"    , "Exponential slope" , this , tauy ) 
+  , m_phis     ( "phis"    , "Coefficients"      , this        )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( x.getMin() , x.getMax() ,
+                 y.getMin() , y.getMax() ,
+                 nX         , nY         )
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::ExpoPS22DPol"           , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_function.setTauX ( m_taux ) ;
+  m_function.setTauY ( m_tauy ) ;
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::Expo2DPol::Expo2DPol
+( const Analysis::Models::Expo2DPol&  right ,      
+  const char*                       name  ) 
+  : RooAbsPdf  ( right , name ) 
+    //
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
+  , m_taux     ( "taux"   , this , right.m_taux  ) 
+  , m_tauy     ( "tauy"   , this , right.m_tauy  ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( right.m_function )
+{
+  m_iterator = m_phis.createIterator () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Expo2DPol::~Expo2DPol() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Expo2DPol*
+Analysis::Models::Expo2DPol::clone( const char* name ) const 
+{ return new Analysis::Models::Expo2DPol ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Expo2DPol::evaluate() const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTauX ( m_taux ) ;
+  m_function.setTauY ( m_tauy ) ;
+  //
+  return m_function ( m_x , m_y ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::Expo2DPol::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::Expo2DPol::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTauX ( m_taux ) ;
+  m_function.setTauY ( m_tauy ) ;
+  //
+  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+}
+
+
+
+
+
+
+// ============================================================================
+//  exp(x)*exp(y)*SymPolynom 
+// ============================================================================
+Analysis::Models::Expo2DPolSym::Expo2DPolSym
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  RooAbsReal&          tau       ,
+  const unsigned short n         ,
+  RooArgList&          phis      ) 
+  : RooAbsPdf  ( name , title ) 
+  , m_x        ( "x"       , "Observable-X"      , this , x    ) 
+  , m_y        ( "y"       , "Observable-Y"      , this , y    ) 
+  , m_tau      ( "tau"     , "Exponential slope" , this , tau  ) 
+  , m_phis     ( "phis"    , "Coefficients"      , this        )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( x.getMin() , x.getMax() , n )
+{
+  //
+  
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  unsigned num = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_function.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_function.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::ExpoPS22DPol"           , 
+                           StatusCode::FAILURE                ) ; }
+  
+  //
+  m_function.setTau ( m_tau ) ;
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::Expo2DPolSym::Expo2DPolSym
+( const Analysis::Models::Expo2DPolSym& right ,      
+  const char*                           name  ) 
+  : RooAbsPdf  ( right , name ) 
+    //
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
+  , m_tau      ( "tau"    , this , right.m_tau   ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_function ( right.m_function )
+{
+  m_iterator = m_phis.createIterator () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Expo2DPolSym::~Expo2DPolSym() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Expo2DPolSym*
+Analysis::Models::Expo2DPolSym::clone( const char* name ) const 
+{ return new Analysis::Models::Expo2DPolSym ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Expo2DPolSym::evaluate() const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTau ( m_tau ) ;
+  //
+  return m_function ( m_x , m_y ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::Expo2DPolSym::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::Expo2DPolSym::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_function.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+  m_function.setTau ( m_tau ) ;
+  //
+  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
+                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+}
 
 
 // ============================================================================
