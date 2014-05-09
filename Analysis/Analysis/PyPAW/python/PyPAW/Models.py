@@ -36,7 +36,7 @@ class _WO_ (object)  :
 ## convert the model into TF1
 def _tf1_ ( self , *args ) :
     """
-    Convert the model to TF1
+    Convert the function to TF1
     
     >>> obj = ...
     
@@ -47,9 +47,13 @@ def _tf1_ ( self , *args ) :
     key = funID ()
     #
     wo  = _WO_ ( self )
-    _wrappers_ [ key ] = wo
+    # 
+    fun = ROOT.TF1 ( funID() , wo , *args )
+    fun.SetNpx ( 500  ) 
     #
-    return  ROOT.TF1 ( funID() , wo , *args )
+    _wrappers_ [ key ] = wo,fun 
+    #
+    return fun 
 
 # =============================================================================
 ## get the regular complex value for amplitude 

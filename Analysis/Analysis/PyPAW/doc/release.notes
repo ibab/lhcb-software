@@ -9,6 +9,11 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-05-09 - Vanya Belyaev
+
+ - minor reshuffling of code 
+   fix "bernstain" and "positive" parameterisation of histograms 
+
 !========================= PyPAW v1r2 2014-04-26 ==============================
 
 ! 2014-04-29 - Sasha Baranov
