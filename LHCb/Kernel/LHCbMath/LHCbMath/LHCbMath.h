@@ -42,6 +42,7 @@ namespace LHCb
    */
   namespace Math 
   {
+    // ========================================================================
     /// Parameters for numerical calculations (M.Needham)
     static const double hiTolerance    = 1e-40;
     static const double lowTolerance   = 1e-20;
@@ -182,13 +183,61 @@ namespace LHCb
       }
     } ;
     // ========================================================================
+    /** @struct Zero
+     *  helper structure for comparison of floating values
+     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
+     *  @date 2007-11-27
+     */
+    template <class TYPE>
+    struct Zero : public std::unary_function<TYPE,bool>
+    {
+      typedef typename boost::call_traits<const TYPE>::param_type T ;
+      /// comparison
+      inline bool operator() ( T v ) const { return m_cmp ( v , 0 ) ; }
+    private:
+      // the comparizon criteria 
+      Equal_To<TYPE> m_cmp ;
+    } ;
+    // ========================================================================
+    /** @struct NotZero
+     *  helper structure for comparison of floating values
+     *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
+     *  @date 2007-11-27
+     */
+    template <class TYPE>
+    struct NotZero : public std::unary_function<TYPE,bool>
+    {
+      typedef typename boost::call_traits<const TYPE>::param_type T ;
+      /// comparison
+      inline bool operator() ( T v ) const { return !m_zero ( v ) ; }
+    private:
+      // the comparison criteria 
+      Zero<TYPE> m_zero ;
+    } ;
+    // ========================================================================
     /// partial specialization for const-types
     template <class TYPE>
-    struct Equal_To<const TYPE>: public Equal_To<TYPE>{} ;
+    struct Equal_To<const TYPE>: public Equal_To<TYPE> {} ;
     // ========================================================================
     /// partial specialization for references
     template <class TYPE>
-    struct Equal_To<TYPE&>: public Equal_To<TYPE>{} ;
+    struct Equal_To<TYPE&>     : public Equal_To<TYPE> {} ;
+    // ========================================================================
+    /// partial specialization for const-types
+    template <class TYPE>
+    struct Zero<const TYPE>    : public Zero<TYPE>     {} ;
+    // ========================================================================
+    /// partial specialization for references
+    template <class TYPE>
+    struct Zero<TYPE&>         : public Zero<TYPE>     {} ;
+    // ========================================================================
+    /// partial specialization for const-types
+    template <class TYPE>
+    struct NotZero<const TYPE> : public NotZero<TYPE>  {} ;
+    // ========================================================================
+    /// partial specialization for references
+    template <class TYPE>
+    struct NotZero<TYPE&>      : public NotZero<TYPE>  {} ;
     // ========================================================================
     /** explicit specialization for doubles
      *  @see LHCb::Math::mULPS_double 
@@ -285,34 +334,6 @@ using namespace std;
     } ;
     // ========================================================================
     /** specialisation for vectors 
-     *  @see LHCb::Math::mULPS_float
-     *  @see Gaudi::Math::Lomont
-     *  @see Gaudi::Math::Lomont<float>
-     */
-    template <>
-    struct Equal_To<std::vector<float> > 
-    {
-    public:
-      // ======================================================================
-      /** constructor
-       *  @see LHCb::Math::mULPS_float
-       */
-      Equal_To ( const unsigned short eps  = mULPS_float ) : m_cmp ( eps ) {}
-      /// comparison:
-      inline bool operator() ( const std::vector<float>& v1 , 
-                               const std::vector<float>& v2 ) const
-      {
-        return v1.size() == v2.size() && 
-          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
-      }      
-      // ======================================================================
-    private:
-      // ======================================================================
-      Equal_To<float> m_cmp ;
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** specialisation for vectors 
      *  @see LHCb::Math::mULPS_double
      *  @see Gaudi::Math::Lomont
      *  @see Gaudi::Math::Lomont<double>
@@ -382,7 +403,30 @@ using namespace std;
       /// the evaluator 
       Equal_To<double> m_cmp ;                                 // the evaluator 
       // ======================================================================
-    } ;  
+    } ;
+    // ========================================================================
+    /** specialisation for vectors 
+     *  @see Gaudi::Math::Zero
+     *  @see Gaudi::Math::EqualTo
+     *  @see Gaudi::Math::Lomont<float>
+     */
+    template < class TYPE>
+    struct Zero< std::vector<TYPE> > 
+    {
+    public:
+      // ======================================================================
+      inline bool operator () ( const std::vector<TYPE>& v ) const
+      {
+        /// empty vector or all elements are zeros 
+        return v.empty() || ( v.end() == std::find_if ( v.begin() , v.end  () , m_nz ) ) ;
+      }
+      // ======================================================================
+    private :
+      // ======================================================================
+      // comparison criteria for elements 
+      NotZero<TYPE> m_nz ;
+      // ======================================================================
+    } ;
     // ========================================================================
     /** round to nearest integer, rounds half integers to nearest even integer 
      *  It is just a simple wrapper around boost::numeric::converter 
@@ -497,9 +541,34 @@ using namespace std;
       return equal_to_uint ( val , ref , mULPS ) ; 
     }
     // ========================================================================
+    /** simple scaling of elements of non-constant sequence        
+     */
+    template <class ITERATOR, typename SCALAR>
+    void scale ( ITERATOR first  ,
+                 ITERATOR last   , 
+                 SCALAR   factor )
+    { for ( ; first != last ; ++first ) { (*first) *= factor ; } }
+    // ========================================================================
+    /// cale all elements of vector 
+    template <class TYPE , typename SCALAR>
+    void scale ( std::vector<TYPE>& vct , SCALAR factor ) 
+    { scale    ( vct.begin() , vct.end () , factor ) ; }
+    // ========================================================================
   } //                                              end of namespace LHCb::Math 
   // ==========================================================================
 } //                                                      end of namespace LHCb 
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Math
+  {
+    // ========================================================================
+    using LHCb::Math::scale ;
+    // ========================================================================
+  } //                                             end of namespace Gaudi::Math
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-05-09 - Vanya Belyaev
+
+ - Functions.h:
+     1) add integration for 2D non-factorizable models
+     2) fix a stupid bug in nSphere 
+   LHCbMath.h:
+     1) add Zero, NonZero and scale functions  
+
+
 ! 2014-05-04 - Vanya Belyaev
  - analytial integration of bvernsteins polynomials 
 

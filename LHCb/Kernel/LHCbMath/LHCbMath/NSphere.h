@@ -69,6 +69,14 @@ namespace Gaudi
       // ======================================================================
       double par       ( const unsigned short index ) const 
       { return phase ( index ) ; }
+      /// get all phases 
+      const std::vector<double>& phases  () const { return m_phases  ; }
+      /// get all phases 
+      const std::vector<double>& pars    () const { return phases()  ; }
+      // get all   sines 
+      const std::vector<double>& sines   () const { return m_sin_phi ; }
+      // get all cosines 
+      const std::vector<double>& cosines () const { return m_cos_phi ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -114,10 +122,12 @@ inline double Gaudi::Math::NSphere::x
   else if ( nX () == 1     ) { return 1                ; } // trivial 
   else if ( 0     == index ) { return m_cos_phi[index] ; } // x_0 
   //
-  /// get index as phi 
-  const unsigned short phi_i = index - 1 ;
-  double xi =  ( nPhi () == phi_i ) ? 1.0 : m_cos_phi[phi_i] ;
-  for  ( unsigned short j = 0 ; j < phi_i ; ++j ) { xi *= m_sin_phi[j] ; }
+  // get index as phi 
+  //
+  double xi = 1.0 ;
+  for  ( unsigned short j = 0 ; j < index ; ++j ) { xi *= m_sin_phi[j] ; }
+  //
+  if   ( index != nPhi ()  ) { xi *= m_cos_phi[index] ; }
   //
   return xi ;  
 }

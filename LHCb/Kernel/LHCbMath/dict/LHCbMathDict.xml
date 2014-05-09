@@ -46,6 +46,7 @@
   <class name    = "Gaudi::Math::PhaseSpaceLeft"          />
   <class name    = "Gaudi::Math::PhaseSpaceRight"         />
   <class name    = "Gaudi::Math::PhaseSpaceNL"            />
+  <class name    = "Gaudi::Math::PhaseSpacePol"           />
   <class name    = "Gaudi::Math::PhaseSpace23L"           />
   <class name    = "Gaudi::Math::BreitWigner">
     <field name = "m_rho_fun" transient = "true"/>      
@@ -68,24 +69,29 @@
   <class name    = "Gaudi::Math::WorkSpace"        >
     <field name  = "m_workspace" transient = "true"/>      
   </class>
-  <class name    = "Gaudi::Math::Positive"        />
-  <class name    = "Gaudi::Math::Bernstein"       />
-  <class name    = "Gaudi::Math::Positive2D"      />
-  <class name    = "Gaudi::Math::Bernstein2D"     />
-  <class name    = "Gaudi::Math::Positive2DSym"   />
-  <class name    = "Gaudi::Math::Bernstein2DSym"  />
-  <class name    = "Gaudi::Math::GammaDist"       />
-  <class name    = "Gaudi::Math::LogGammaDist"    />
-  <class name    = "Gaudi::Math::Log10GammaDist"  />
-  <class name    = "Gaudi::Math::GenGammaDist"    />
-  <class name    = "Gaudi::Math::Amoroso"         />
-  <class name    = "Gaudi::Math::LogGamma"        />
-  <class name    = "Gaudi::Math::BetaPrime"       />
-  <class name    = "Gaudi::Math::ExpoPositive"    />
+  <class name    = "Gaudi::Math::Positive"         />
+  <class name    = "Gaudi::Math::Bernstein"        />
+  <class name    = "Gaudi::Math::Bernstein::Basic" />
+  <class name    = "Gaudi::Math::Positive2D"       />
+  <class name    = "Gaudi::Math::Bernstein2D"      />
+  <class name    = "Gaudi::Math::Positive2DSym"    />
+  <class name    = "Gaudi::Math::Bernstein2DSym"   />
+  <class name    = "Gaudi::Math::PS2DPol"          />
+  <class name    = "Gaudi::Math::PS2DPolSym"       />
+  <class name    = "Gaudi::Math::ExpoPS2DPol"      />
+  <class name    = "Gaudi::Math::Expo2DPol"        />
+  <class name    = "Gaudi::Math::GammaDist"        />
+  <class name    = "Gaudi::Math::LogGammaDist"     />
+  <class name    = "Gaudi::Math::Log10GammaDist"   />
+  <class name    = "Gaudi::Math::GenGammaDist"     />
+  <class name    = "Gaudi::Math::Amoroso"          />
+  <class name    = "Gaudi::Math::LogGamma"         />
+  <class name    = "Gaudi::Math::BetaPrime"        />
+  <class name    = "Gaudi::Math::ExpoPositive"     />
   
-  <class name    = "Gaudi::Math::GenGaussV1"      />
-  <class name    = "Gaudi::Math::GenGaussV2"      />
-  <class name    = "Gaudi::Math::SkewGauss"       />
+  <class name    = "Gaudi::Math::GenGaussV1"       />
+  <class name    = "Gaudi::Math::GenGaussV2"       />
+  <class name    = "Gaudi::Math::SkewGauss"        />
 
   <class name    = "Gaudi::Math::Spline"           >
     <field name  = "m_spline" transient = "true"/>      
@@ -193,6 +199,15 @@
     </class>
     <class name    = "Gaudi::Math::Interp2D">
       <field name = "m_histo"/>      
+    </class>
+    
+    <class name    = "Gaudi::Math::Bernstein2D">
+      <field name = "m_bx"/>      
+      <field name = "m_by"/>      
+    </class>
+    
+    <class name    = "Gaudi::Math::Bernstein2DSym">
+      <field name = "m_b"/>      
     </class>
     
     <class name = "Gaudi::Math::BreitWigner::rho_fun"/>  

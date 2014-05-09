@@ -51,11 +51,11 @@ Gaudi::Math::NSphere::NSphere
   {
     for ( unsigned short  i = 0 ; i < N ; ++i )
     {
-      const double ni = N - i ;
-      m_delta   [i] = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;      
+      const double ni    = N - i ;
+      m_delta   [i]      = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;      
       const double phase = m_phases [i] + m_delta[i] ;
-      m_sin_phi [i] = std::sin   ( phase ) ;
-      m_cos_phi [i] = std::cos   ( phase ) ;      
+      m_sin_phi [i]      = std::sin   ( phase ) ;
+      m_cos_phi [i]      = std::cos   ( phase ) ;      
     }
   }
   //

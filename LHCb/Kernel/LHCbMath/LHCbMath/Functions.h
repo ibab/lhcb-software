@@ -295,6 +295,29 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// helper structure to denote the basic Bernstein polynomials B(k,N)
+      class GAUDI_API Basic 
+      {
+      public:
+        // ====================================================================
+        explicit  Basic ( const unsigned short k = 0 , 
+                          const unsigned short N = 0 ) 
+          : m_k ( k ) 
+          , m_N ( N ) 
+        {}
+        // ====================================================================
+        unsigned short k () const { return m_k ; }
+        unsigned short N () const { return m_N ; }
+        // ====================================================================
+      private: 
+        // ====================================================================
+        unsigned short m_k ;
+        unsigned short m_N ;
+        // ====================================================================
+      } ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// constructor from the order
       Bernstein ( const unsigned short       N          ,
                   const double               xmin  =  0 ,
@@ -304,6 +327,21 @@ namespace Gaudi
       Bernstein ( const std::vector<double>& pars       ,
                   const double               xmin  =  0 ,
                   const double               xmax  =  1 ) ;
+      /// templated constructor from the sequence of coefficients 
+      template <class ITERATOR>
+      Bernstein ( ITERATOR     first    , 
+                  ITERATOR     last     , 
+                  const double xmin = 0 , 
+                  const double xmax = 0 ) 
+        : std::unary_function<double,double>()
+        , m_pars ( first , last ) 
+        , m_xmin ( std::min ( xmin, xmax ) )
+        , m_xmax ( std::max ( xmin, xmax ) )
+      { if ( m_pars.empty() ) { m_pars.push_back ( 0 ) ; } }
+      /// construct the basic bernstein polinomial  B(k,N)
+      Bernstein  ( const Basic&         basic    ,
+                   const double         xmin = 0 , 
+                   const double         xmax = 0 ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -317,12 +355,12 @@ namespace Gaudi
       /// are all parameters zero?
       bool        zero   () const ;
       /// set k-parameter
-      bool setPar       ( const unsigned short k , const double value ) ;
+      bool setPar        ( const unsigned short k , const double value ) ;
       /// set k-parameter
-      bool setParameter ( const unsigned short k , const double value )
-      { return setPar   ( k , value ) ; }
+      bool setParameter  ( const unsigned short k , const double value )
+      { return setPar    ( k , value ) ; }
       /// get the parameter value
-      double  par       ( const unsigned short k ) const
+      double  par        ( const unsigned short k ) const
       { return ( k < m_pars.size() ) ? m_pars[k] : 0.0 ; }
       /// get the parameter value
       double  parameter ( const unsigned short k ) const { return par ( k ) ; }
@@ -351,25 +389,16 @@ namespace Gaudi
       /// get integral   as function object 
       Bernstein indefinite_integral () const ;
       /// get derivative as function object 
-      Bernstein derivative  () const ;
+      Bernstein derivative          () const ;
       // ======================================================================
-      /** get the intergal between low and high for a product of Bernstein function
-       *  and exponential function with exponent tau
+    public:
+      // ======================================================================
+      /** get the intergal between low and high for a product of Bernstein
+       *  polynom and the exponential function with the exponent tau
        */
       double integral_exp   ( const double low  , 
                               const double high , 
                               const double tau  ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /** get the integral from the simplified binomial differential 
-       *  \f$ \int_{xmin}^{xmax} x^{n}(1-x)^{m}dx \f$
-       */
-      static double binomial_integral 
-        ( const unsigned short n    , 
-          const unsigned short m    , 
-          const double         xmin , 
-          const double         xmax ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -776,7 +805,7 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class WorkSpace
-     *  helper utility to keep the integration workspace
+     *  helper utility to keep the integration workspace fro GSL integration
      *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
      *  @date 2011-12-03
      */
@@ -1833,6 +1862,99 @@ namespace Gaudi
       // ======================================================================
       /// integration workspace
       Gaudi::Math::WorkSpace m_workspace ;    // integration workspace
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class PhaseSpacePol
+     *  simple function to represent the product of N-body phase space 
+     *  and positive polynomial 
+     *  @see Gaudi::Math::PhaseSpaceNL
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API PhaseSpacePol
+      : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from thresholds and number of particles
+       *  @param threshold_L the low-mass  threshold
+       *  @param threshold_H the high-mass threshold
+       *  @param l           how many particles we consider
+       *  @param n           total number of particles ( n>l!)
+       *  @param N           degree of polynomial 
+       */
+      PhaseSpacePol ( const double         threshold_L =  0 ,
+                      const double         threshold_H = 10 ,
+                      const unsigned short l           =  2 ,
+                      const unsigned short n           =  3 , 
+                      const unsigned short N           =  1 ) ; // degree of polynomial
+      // =====================================================================
+      /** constructor from phase space and polynomial degree 
+       *  @param ps          phase space factor 
+       *  @param N           degree of polynomial 
+       */
+      PhaseSpacePol ( const PhaseSpaceNL&  ps      ,
+                      const unsigned short N  =  1 ) ; // degree of polynomial
+      // ======================================================================
+      /** constructor from phase space and polynomial degree 
+       *  @param ps          phase space factor 
+       *  @param N           degree of polynomial 
+       */
+      PhaseSpacePol ( const PhaseSpaceNL&  ps      ,
+                      const unsigned short N       , 
+                      const double         xlow    , 
+                      const double         xhigh   ) ;
+      /// destructor
+      ~PhaseSpacePol () ;                                     // deststructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate N/L-body modulated phase space
+      double operator () ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PhaseSpaceNL& phasespace () const { return m_phasespace ; }
+      const Gaudi::Math::Positive&     polynom    () const { return m_positive   ; }      
+      const Gaudi::Math::Positive&     positive   () const { return m_positive   ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned short k , const double value ) 
+      { return m_positive.setPar ( k , value ) ; }
+      /// set k-parameter
+      bool setParameter ( const unsigned short k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value 
+      double  par       ( const unsigned short k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value 
+      double  parameter ( const unsigned short k ) const 
+      { return m_positive.par ( k ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the phase space 
+      Gaudi::Math::PhaseSpaceNL   m_phasespace ; // the phase space 
+      Gaudi::Math::Positive       m_positive   ; // the positive polynom 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace
+      Gaudi::Math::WorkSpace      m_workspace  ;    // integration workspace
       // ======================================================================
     } ;
     // ========================================================================
@@ -4045,6 +4167,19 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
       // ======================================================================
+    public: // few helper functions to expose internals 
+      // ======================================================================
+      /// evaluate the basic polynomials 
+      double basicX ( const unsigned short i , const double         x ) const 
+      { return ( i > m_nx || x < m_xmin || x < m_xmax ) ? 0.0 : m_bx[i](x) ; }
+      /// evaluate the basic polynomials 
+      double basicY ( const unsigned short i , const double         y ) const
+      { return ( i > m_ny || y < m_ymin || y < m_ymax ) ? 0.0 : m_by[i](y) ; }
+      /// expose some internals 
+      const Bernstein& basicX ( const unsigned short i ) const { return m_bx[i] ; }
+      /// expose some internals 
+      const Bernstein& basicY ( const unsigned short i ) const { return m_by[i] ; }
+      // ======================================================================
     private:
       // ======================================================================
       // polynom order in x-dimension 
@@ -4064,8 +4199,12 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      std::vector<long double> m_cx ; // binomial coefficients 
-      std::vector<long double> m_cy ; // binimial coefficients 
+      ///  vectors of basic  Bernstein polynomials 
+      typedef std::vector<Bernstein>  VB ;
+      ///  vector  of basic  Bernstein polynomials 
+      VB m_bx ; //  vector  of basic  Bernetin polynomials 
+      ///  vector  of basic  Bernstein polynomials 
+      VB m_by ; //  vector  of basic  Bernetin polynomials 
       // ======================================================================
     } ;
     // ========================================================================
@@ -4133,6 +4272,9 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+      // get the bernstein polinomial in 2D 
+      const  Gaudi::Math::Bernstein2D& bernstein() const 
+      { return m_bernstein ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -4229,6 +4371,14 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
       // ======================================================================
+    public: // few helper functions to expose internals 
+      // ======================================================================
+      /// evaluate the basic polynomials 
+      double basic  ( const unsigned short i , const double         x ) const 
+      { return ( i > m_n || x < m_xmin || x < m_xmax ) ? 0.0 : m_b[i](x) ; }
+      /// expose some internals 
+      const Bernstein& basic ( const unsigned short i ) const { return m_b[i] ; }
+      // ======================================================================
     private:
       // ======================================================================
       // polynom order
@@ -4242,7 +4392,10 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      std::vector<long double> m_c ; // precomputed binomial coefficients 
+      ///  vectors of basic  Bernetin polynomials 
+      typedef std::vector<Bernstein>  VB ;
+      ///  vector  of basic  Bernetin polynomials 
+      VB m_b  ; //  vector  of basic  Bernetin polynomials 
       // ======================================================================
     } ;
     // ========================================================================
@@ -4304,6 +4457,9 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+      // get the bernstein 2D polynom
+      const Gaudi::Math::Bernstein2DSym& bernstein() const 
+      { return m_bernstein ; }
       // ======================================================================
     private:
       // ======================================================================
@@ -4318,6 +4474,386 @@ namespace Gaudi
       Gaudi::Math::NSphere        m_sphere ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class PS2DPol 
+     *  The 2D-function: 
+     *  \f$ f(x,y) = Ps(x)*Ps(y)*P_{pos}(x,y) \f$, where
+     *  \f$Ps\f$ denotes phase-space function and 
+     * \f$P_{pos}\f$ denotes the positive polynomial
+     */
+    class GAUDI_API PS2DPol
+      : public std::binary_function<double,double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      PS2DPol ( const PhaseSpaceNL&   psx     , 
+                const PhaseSpaceNL&   psy     , 
+                const unsigned short  Nx =  1 ,
+                const unsigned short  Ny =  1 ) ;
+      /// constructor from the order
+      PS2DPol ( const PhaseSpaceNL&   psx     , 
+                const PhaseSpaceNL&   psy     , 
+                const unsigned short  Nx      ,
+                const unsigned short  Ny      , 
+                const double          xmin    , 
+                const double          xmax    , 
+                const double          ymin    , 
+                const double          ymax    ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x , const double y ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned int k , const double value ) 
+      { return m_positive.setPar ( k , value ) ;}
+      /// set k-parameter
+      bool setParameter ( const unsigned int k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value
+      double  par       ( const unsigned int k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      /// get nX & nY 
+      unsigned short nX () const { return m_positive.nX () ; }
+      unsigned short nY () const { return m_positive.nY () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PhaseSpaceNL& psX         () const { return m_psx      ; }
+      const Gaudi::Math::PhaseSpaceNL& psY         () const { return m_psy      ; }      
+      const Gaudi::Math::PhaseSpaceNL& phasespaceX () const { return psX ()     ; }
+      const Gaudi::Math::PhaseSpaceNL& phasespaceY () const { return psY ()     ; }      
+      const Gaudi::Math::Positive2D&   positive    () const { return m_positive ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_positive ; }      
+      // ====================================== ===============================
+    private:
+      // ======================================================================
+      /// the actual (positive) bernstein polynomial in 2D 
+      Gaudi::Math::Positive2D   m_positive ; // the actual bernstein polynomial
+      /// Phase space 
+      Gaudi::Math::PhaseSpaceNL m_psx      ;
+      Gaudi::Math::PhaseSpaceNL m_psy      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// workspace
+      Gaudi::Math::WorkSpace m_workspace   ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class PS2DPolSym 
+     *  The symmetric 2D-function: 
+     *  \f$ f(x,y) = Ps(x)*Ps(y)*P_{sym}(x,y) \f$, where
+     *  \f$Ps\f$ denotes phase-space function and 
+     * \f$P_{sym}\f$ denotes the symmetric positive polynomial
+     */
+    class GAUDI_API PS2DPolSym
+      : public std::binary_function<double,double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      PS2DPolSym ( const PhaseSpaceNL&   ps      , 
+                   const unsigned short  N  =  1 ) ;
+      /// constructor from the order
+      PS2DPolSym ( const PhaseSpaceNL&   ps      , 
+                   const unsigned short  N       ,
+                   const double          xmin    , 
+                   const double          xmax    ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x , const double y ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned int k , const double value ) 
+      { return m_positive.setPar ( k , value ) ;}
+      /// set k-parameter
+      bool setParameter ( const unsigned int k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value
+      double  par       ( const unsigned int k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PhaseSpaceNL&  psX         () const { return m_ps       ; }
+      const Gaudi::Math::PhaseSpaceNL&  psY         () const { return m_ps       ; }      
+      const Gaudi::Math::PhaseSpaceNL&  phasespaceX () const { return psX()      ; }
+      const Gaudi::Math::PhaseSpaceNL&  phasespaceY () const { return psY()      ; }      
+      const Gaudi::Math::Positive2DSym& positive    () const { return m_positive ; }
+      const Gaudi::Math::Positive2DSym& polynom     () const { return m_positive ; }      
+      // ====================================== ===============================
+    private:
+      // ======================================================================
+      /// the actual (positive) bernstein polynomial in 2D 
+      Gaudi::Math::Positive2DSym m_positive ; // the actual bernstein polynomial
+      /// Phase space 
+      Gaudi::Math::PhaseSpaceNL m_ps        ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// workspace for numerical integration 
+      Gaudi::Math::WorkSpace m_workspace    ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class ExpoPS2DPol 
+     *  The 2D-function: 
+     *  \f$ f(x,y) = exp(tau*x)*Ps(y)*P_{pos}(x,y) \f$, where
+     *  \f$Ps\f$ denotes phase-space function and 
+     * \f$P_{pos}\f$ denotes the positive polynomial
+     */
+    class GAUDI_API ExpoPS2DPol
+      : public std::binary_function<double,double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      ExpoPS2DPol ( const PhaseSpaceNL&   psy     , 
+                    const double          xmin    , 
+                    const double          xmax    ,
+                    const unsigned short  Nx =  1 ,
+                    const unsigned short  Ny =  1 ) ;
+      /// constructor from the order
+      ExpoPS2DPol ( const PhaseSpaceNL&   psy     , 
+                    const double          xmin    , 
+                    const double          xmax    ,
+                    const unsigned short  Nx      ,
+                    const unsigned short  Ny      , 
+                    const double          ymin    , 
+                    const double          ymax    ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x , const double y ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned int k , const double value ) 
+      { return m_positive.setPar ( k , value ) ;}
+      /// set k-parameter
+      bool setParameter ( const unsigned int k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value
+      double  par       ( const unsigned int k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      /// get nX & nY 
+      unsigned short nX () const { return m_positive.nX () ; }
+      unsigned short nY () const { return m_positive.nY () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get tau
+      double         tau () const { return m_tau ;}
+      /// set tau 
+      bool           setTau ( const double val ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::PhaseSpaceNL& psY         () const { return m_psy      ; }      
+      const Gaudi::Math::PhaseSpaceNL& phasespaceY () const { return psY ()     ; }
+      const Gaudi::Math::Positive2D&   positive    () const { return m_positive ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_positive ; }      
+      // ====================================== ===============================
+    private:
+      // ======================================================================
+      /// the actual (positive) bernstein polynomial in 2D 
+      Gaudi::Math::Positive2D   m_positive ; // the actual bernstein polynomial
+      /// Phase space 
+      Gaudi::Math::PhaseSpaceNL m_psy      ;
+      /// exponential 
+      double                    m_tau      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// workspace
+      Gaudi::Math::WorkSpace m_workspace   ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Expo2DPol 
+     *  The 2D-function: 
+     *  \f$ f(x,y) = exp(x)*expo(y)*P_{pos}(x,y) \f$, where
+     * \f$P_{pos}\f$ denotes the positive polynomial
+     */
+    class GAUDI_API Expo2DPol
+      : public std::binary_function<double,double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      Expo2DPol ( const double          xmin    , 
+                  const double          xmax    ,
+                  const double          ymin    , 
+                  const double          ymax    ,
+                  const unsigned short  Nx =  1 ,
+                  const unsigned short  Ny =  1 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x , const double y ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned int k , const double value ) 
+      { return m_positive.setPar ( k , value ) ;}
+      /// set k-parameter
+      bool setParameter ( const unsigned int k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value
+      double  par       ( const unsigned int k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      /// get nX & nY 
+      unsigned short nX () const { return m_positive.nX () ; }
+      unsigned short nY () const { return m_positive.nY () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get tau
+      double         tauX    () const { return m_tauX ;}
+      double         tauY    () const { return m_tauY ;}
+      /// set tau 
+      bool           setTauX ( const double val ) ;
+      bool           setTauY ( const double val ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::Positive2D&   positive    () const { return m_positive ; }
+      const Gaudi::Math::Positive2D&   polynom     () const { return m_positive ; }      
+      // ====================================== ===============================
+    private:
+      // ======================================================================
+      /// the actual (positive) bernstein polynomial in 2D 
+      Gaudi::Math::Positive2D   m_positive ; // the actual bernstein polynomial
+      /// exponential 
+      double                    m_tauX     ;
+      double                    m_tauY     ;
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Expo2DPolSym 
+     *  The 2D-function: 
+     *  \f$ f(x,y) = exp(x)*expo(y)*P_{sym}(x,y) \f$, where
+     * \f$P_{pos}\f$ denotes the symmetric positive polynomial
+     */
+    class GAUDI_API Expo2DPolSym
+      : public std::binary_function<double,double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from the order
+      Expo2DPolSym ( const double          xmin    , 
+                     const double          xmax    ,
+                     const unsigned short  N  =  1 ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the value
+      double operator () ( const double x , const double y ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get number of parameters
+      std::size_t npars () const { return m_positive.npars () ; }
+      /// set k-parameter
+      bool setPar       ( const unsigned int k , const double value ) 
+      { return m_positive.setPar ( k , value ) ;}
+      /// set k-parameter
+      bool setParameter ( const unsigned int k , const double value )
+      { return setPar   ( k , value ) ; }
+      /// get the parameter value
+      double  par       ( const unsigned int k ) const 
+      { return m_positive.par ( k ) ; }
+      /// get the parameter value
+      double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      /// get nX & nY 
+      unsigned short n  () const { return m_positive.nX () ; }
+      unsigned short nX () const { return m_positive.nX () ; }
+      unsigned short nY () const { return m_positive.nY () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get tau
+      double         tau     () const { return m_tau  ;}
+      /// set tau 
+      bool           setTau  ( const double val ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral over 2D-region 
+      double integral ( const double xlow , const double xhigh , 
+                        const double ylow , const double yhigh ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      const Gaudi::Math::Positive2DSym& positive () const { return m_positive ; }
+      const Gaudi::Math::Positive2DSym& polynom  () const { return m_positive ; }      
+      // ====================================== ===============================
+    private:
+      // ======================================================================
+      /// the actual (positive) bernstein polynomial in 2D 
+      Gaudi::Math::Positive2DSym m_positive ; // the actual bernstein polynomial
+      /// exponential 
+      double                     m_tau      ;
+      // ======================================================================
+    };
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
