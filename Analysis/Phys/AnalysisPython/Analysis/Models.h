@@ -25,12 +25,72 @@ namespace Analysis
   // ==========================================================================
   /** @namespace  Models Models.h Analysis/Models.h
    *  
+   *  Naturally "wide" models:
+   *
+   *  - BreitWigner, Rho0, Kstar, Phi, ...
+   *  - BreitWigner from 3-body decay of mother particle: BW23L 
+   *  - LASS (kappa pole) 
+   *  - LASS from 3-body decay of mother particle: LASS23L 
+   *  - Bugg (sigma pole) 
+   *  - Bugg from 3-body decay of mother particle: Bugg23L 
+   *  - Voigt 
+   * 
+   *  Empirical resolution models:
+   *
+   *  - Crystal Ball
+   *  - right side Crystal Ball
+   *  - double-sided Crystal Ball 
+   *  - Needham: Crystal Ball with \f$\alpha(\sigma)\f$
+   *  - Apolonios 
+   *  - Bifurcated Gauissian 
+   *  - Generalized Gaussian v1 
+   *  - Generalized Gaussian v2 
+   *  - Skew Gaussian
+   *  - Bukin 
+   *  - Student-T 
+   *  - Gram-Charlier-A 
+   *
+   *  Smooth phase-space induced models for background 
+   *
+   *  - 2-body phase space
+   *  - L-body phase space at low-edge 
+   *  - L-body phase space in N-body decays at high-edge 
+   *  - L-body phase space from N-body decay 
+   *  - L-body phase space from N-body decay times the positive polynomial
+   *  - 2-body phase space from 3-body decays taking into accout orbital momenta 
+   *
+   *  Various smooth empirical models for background
+   *
+   *  - positive polynomial 
+   *  - exponential times positive polynomial 
+   *  - gamma distribution
+   *  - generalized gamma distribution
+   *  - Amoroso function
+   *  - log  (Gamma-distribution)
+   *  - log10(Gamma-distribution)
+   *  - Log-Gamma distribution 
+   *  - Beta-prime distribution
+   * 
+   *  Non-factorazeable smooth 2D-models 
+   *
+   *  - generic   positive non-factorizable polynomial in 2D    
+   *   \f$ P^+(x,y) = \sum_i \sum_j \alpha^2_{i,j} B^n_i(x) B^k_j(y) \f$ 
+   *  - symmetric positive non-factorizable polynomial in 2D \f$ P^+_{sym}(x,y) \f$ 
+   *  - \f$ f(x,y)       = \Phi_1(x)\times\Phi_2(y)\timesP^+(x,y)       \f$
+   *  - \f$ f_{sym}(x,y) = \Phi  (x)\times\Phi  (y)\timesP^+_{sym}(x,y) \f$
+   *  - \f$ f(x,y)       = exp   (x)\times\Phi  (y)\timesP^+(x,y)       \f$
+   *  - \f$ f(x,y)       = exp   (x)\times exp  (y)\timesP^+(x,y)       \f$
+   *  - \f$ f_{sym}(x,y) = exp   (x)\times exp  (y)\timesP^+_{sym}(x,y) \f$
    *
    *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
    *  @date   2011-11-30
    */
   namespace Models 
   {
+    // ========================================================================
+    // Naturally "wide" models 
+    // ========================================================================
+
     // ========================================================================
     /** @class BreitWigner 
      *
@@ -89,6 +149,21 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -187,6 +262,44 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Phi
+     *
+     *  J.D.Jackson, 
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  @see Analysis::Models::BreitWigner
+     *  @see Gaudi::Math::BreitWigner
+     *  @see Gaudi::Math::Rho0
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Phi : public Analysis::Models::BreitWigner
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Phi, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Phi  ( const char*          name      , 
+             const char*          title     ,
+             RooAbsReal&          x         ,
+             RooAbsReal&          mass      ,
+             RooAbsReal&          width     ,
+             const double         k_mass    ) ;
+      /// "copy" constructor 
+      Phi ( const Phi& , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Phi () ;
+      /// clone 
+      virtual  Phi* clone ( const char* name ) const ; 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class BW23L
      *
      *  J.D.Jackson, 
@@ -253,12 +366,27 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t     evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// get the amplitude 
       std::complex<double>      amplitude () const  ;
       /// access to underlying function 
       const Gaudi::Math::BW23L& function  () const { return m_bw ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     protected:
       // ======================================================================
@@ -315,12 +443,27 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// get the amplitude 
       virtual std::complex<double> amplitude () const  ;
       /// access to underlying function 
       const Gaudi::Math::Flatte&   function  () const { return m_flatte ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     protected:
       // ======================================================================
@@ -384,8 +527,1302 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================      
+    public: // NO ANALYTICAL INTEGRAL !!!
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&  /* allVars   */   , 
+          RooArgSet&  /* analVars  */  ,
+          const char* /* rangename */ ) const ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class LASS
+     *  S-wave Kpi amplitude for S-wave Kpi distribtion
+     *  @see Gaudi::Math::LASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-10-05
+     */
+    class GAUDI_API LASS : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::LASS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      LASS  ( const char*          name          , 
+              const char*          title         ,
+              RooAbsReal&          x             ,
+              RooAbsReal&          m1430         , // mass  of K*(1430) 
+              RooAbsReal&          g1430         , // width of K*(1430) 
+              RooAbsReal&          a             , 
+              RooAbsReal&          r             , 
+              RooAbsReal&          e             ,                
+              const double         m1    = 493.7 ,   // mass of K 
+              const double         m2    = 139.6 ) ; // mass of pi 
+      /// "copy constructor"
+      LASS  ( const LASS& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~LASS () ;
+      /// clone 
+      virtual  LASS * clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>     amplitude () const ;
+      /// access to underlying function 
+      const Gaudi::Math::LASS& function  () const { return m_lass ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// K*(1430) parameters
+      RooRealProxy m_m0    ;
+      RooRealProxy m_g0    ;
+      /// LASS parameters 
+      RooRealProxy m_a     ;
+      RooRealProxy m_r     ;
+      RooRealProxy m_e     ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::LASS m_lass ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class LASS23L
+     *  S-wave Kpi amplitude for Kpi from B-> Kpi X decays
+     *  @see Gaudi::Math::LASS23L
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-02
+     */
+    class GAUDI_API LASS23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::LASS23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      LASS23L ( const char*          name          , 
+                const char*          title         ,
+                RooAbsReal&          x             ,
+                RooAbsReal&          m1430         ,
+                RooAbsReal&          g1430         ,
+                RooAbsReal&          a             , 
+                RooAbsReal&          r             , 
+                RooAbsReal&          e             ,                
+                const double         m1    = 493.7 , 
+                const double         m2    = 139.6 ,
+                const double         m3    = 3097  , 
+                const double         m     = 5278  ,
+                const unsigned short L     = 1     ) ;
+      /// "copy constructor"
+      LASS23L ( const LASS23L& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~LASS23L() ;
+      /// clone 
+      virtual  LASS23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the complex amplitude 
+      std::complex<double>        amplitude () const ; // get the complex amplitude 
+      /// access to underlying function 
+      const Gaudi::Math::LASS23L& function  () const { return m_lass ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// K*(1430) parameters:
+      RooRealProxy m_m0    ;
+      RooRealProxy m_g0    ;
+      /// LASS parameters 
+      RooRealProxy m_a     ;
+      RooRealProxy m_r     ;
+      RooRealProxy m_e     ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::LASS23L m_lass ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Bugg
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution
+     *
+     *  The parameterization of sigma pole by
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     *  @see Gaudi::Math::Bugg
+     */
+    class GAUDI_API Bugg : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Bugg, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bugg  ( const char*          name               , 
+              const char*          title              ,
+              RooAbsReal&          x                  ,
+              RooAbsReal&          M                  ,   // sigma M 
+              RooAbsReal&          g2                 ,   // sigma G2 
+              RooAbsReal&          b1                 ,   // sigma B1 
+              RooAbsReal&          b2                 ,   // sigma B2
+              RooAbsReal&          a                  ,   // sigma a 
+              RooAbsReal&          s1                 ,   // sigma s1 
+              RooAbsReal&          s2                 ,   // sigma s2 
+              const double         m1    = 139.6/1000 ) ; // mass of pi GeV 
+      /// "copy constructor"
+      Bugg  ( const Bugg& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~Bugg () ;
+      /// clone 
+      virtual  Bugg* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>     amplitude () const ;
+      /// access to underlying function 
+      const Gaudi::Math::Bugg& function  () const { return m_bugg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// sigma/bugg parameters 
+      RooRealProxy m_M     ;
+      RooRealProxy m_g2    ;
+      RooRealProxy m_b1    ;
+      RooRealProxy m_b2    ;
+      RooRealProxy m_a     ;
+      RooRealProxy m_s1    ;
+      RooRealProxy m_s2    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bugg m_bugg ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Bugg23L
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution form three body decays 
+     *
+     *  The parameterization of sigma pole by
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     *  @see Gaudi::Math::Bugg23L
+     */
+    class GAUDI_API Bugg23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Bugg23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bugg23L ( const char*          name               , 
+                const char*          title              ,
+                RooAbsReal&          x                  ,
+                RooAbsReal&          M                  ,   // sigma M 
+                RooAbsReal&          g2                 ,   // sigma G2 
+                RooAbsReal&          b1                 ,   // sigma B1 
+                RooAbsReal&          b2                 ,   // sigma B2
+                RooAbsReal&          a                  ,   // sigma a 
+                RooAbsReal&          s1                 ,   // sigma s1 
+                RooAbsReal&          s2                 ,   // sigma s2 
+                const double         m1    = 139.6/1000 ,   // mass of pi GeV 
+                const double         m3 = 3097.0 / 1000 ,   //  GeV
+                const double         m  = 5278.0 / 1000 ,   // GeV
+                const unsigned short L  =    1          ) ;
+      /// "copy constructor"
+      Bugg23L ( const Bugg23L& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~Bugg23L () ;
+      /// clone 
+      virtual  Bugg23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>        amplitude () const ;
+      /// access to underlying function 
+      const Gaudi::Math::Bugg23L& function  () const { return m_bugg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// sigma/bugg parameters 
+      RooRealProxy m_M     ;
+      RooRealProxy m_g2    ;
+      RooRealProxy m_b1    ;
+      RooRealProxy m_b2    ;
+      RooRealProxy m_a     ;
+      RooRealProxy m_s1    ;
+      RooRealProxy m_s2    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bugg23L m_bugg ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Voigt
+     *  "Voigt"-function
+     *  @see Gaudi::Math::Voigt
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API Voigt : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Voigt, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Voigt
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          m0        , 
+        RooAbsReal&          gamma     , 
+        RooAbsReal&          sigma     ) ;
+      /// "copy" constructor 
+      Voigt ( const Voigt& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Voigt () ;
+      /// clone 
+      virtual  Voigt* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Voigt& function() const { return m_voigt ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_gamma  ;
+      RooRealProxy m_sigma  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Voigt m_voigt ;                      // the function 
+      // ======================================================================      
+    };
+    // ========================================================================
+
+    // ========================================================================
+    // Resolution models 
+    // ========================================================================
+
+    // ========================================================================
+    /** @class CrystalBall
+     *  The special parametrization of ``Crystal Ball-function''
+     *  @see Gaudi::Math::CrystalBall
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-05-13
+     */
+    class GAUDI_API CrystalBall : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBall, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBall
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          alpha     ,  
+        RooAbsReal&          n         ) ;  // n-1
+      /// "copy" constructor 
+      CrystalBall ( const CrystalBall& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBall () ;
+      /// clone 
+      virtual  CrystalBall* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBall& function() const { return m_cb ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBall m_cb ;                  // the function 
+      // ======================================================================
+    } ;    
+    // ========================================================================
+    /** @class CrystalBallRS
+     *  The special parametrization of ``Crystal Ball-function''
+     * rigth-side crystal ball 
+     *  @see Gaudi::Math::CrystalBallRightSide 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-05-13
+     */
+    class GAUDI_API CrystalBallRS : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBallRS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBallRS
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          alpha     ,  
+        RooAbsReal&          n         ) ;  // n-1
+      /// "copy" constructor 
+      CrystalBallRS ( const CrystalBallRS& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBallRS () ;
+      /// clone 
+      virtual  CrystalBallRS* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBallRightSide& function() const { return m_cb ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBallRightSide m_cb ;  // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CrystalBallDS 
+     *  double-sided ``Crystal Ball-function'' 
+     *  for description of gaussian with the tail
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @see Gaudi::Math::CrystalBallDoubleSided
+     *  @date 2011-05-25
+     */
+    class GAUDI_API CrystalBallDS : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBallDS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBallDS
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  //    
+        RooAbsReal&          alphaL    ,  // alpha_L 
+        RooAbsReal&          nL        ,  //     n_L - 1   
+        RooAbsReal&          alphaR    ,  // alpha_R - 1   
+        RooAbsReal&          nR        ); //     n_R 
+      /// "copy" constructor 
+      CrystalBallDS ( const CrystalBallDS& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBallDS() ;
+      /// clone 
+      virtual  CrystalBallDS* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBallDoubleSided& function() const 
+      { return m_cb2 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alphaL ;
+      RooRealProxy m_nL     ;
+      RooRealProxy m_alphaR ;
+      RooRealProxy m_nR     ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBallDoubleSided m_cb2 ;       // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Needham
+     *  The special parametrization by Matthew NEEDHAM of 
+     *  ``Crystal Ball-function'' nicely suitable for \f$J/\psi\f$-peak
+     *  @thank Matthew Needham 
+     *  @see Gaudi::Math::Needham
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2012-05-13
+     */
+    class GAUDI_API Needham : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::Needham, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Needham
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          a0        ,  
+        RooAbsReal&          a1        ,  
+        RooAbsReal&          a2        ) ;
+      /// "copy" constructor 
+      Needham ( const Needham& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Needham () ;
+      /// clone 
+      virtual  Needham* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Needham& function() const { return m_needham ; }
+      /// get current alpha 
+      double                      alpha   () const ;
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_a0     ;
+      RooRealProxy m_a1     ;
+      RooRealProxy m_a2     ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Needham m_needham ;                  // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Apolonios
+     *  A modified gaussian with power-law tail on rigth ride and exponential
+     *  tail on low-side 
+     *  The function is proposed by Diego Martinez Santos 
+     *  https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+     *  Here a bit modified version is used with redefined parameter <code>n</code>
+     *  to be coherent with local definitions of Crystal Ball
+     *  
+     *  @see Gaudi::Math::Apolonios
+     *  @author Vanya BELYAEV Ivane.BElyaev@itep.ru
+     *  @date 2013-12-01
+     */
+    // ========================================================================
+    class GAUDI_API Apolonios : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Apolonios, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Apolonios
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mean      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          alpha     ,
+        RooAbsReal&          n         , 
+        RooAbsReal&          b         ) ;
+      /// "copy" constructor 
+      Apolonios  ( const Apolonios& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Apolonios () ;
+      /// clone 
+      virtual  Apolonios* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Apolonios& function() const { return m_apo ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      RooRealProxy m_b      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Apolonios m_apo ;                // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BifurcatedGauss 
+     *  @see Gaudi::Math::BifurkatedGauss 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API BifurcatedGauss : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::BifurcatedGauss, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      BifurcatedGauss 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          peak      , 
+        RooAbsReal&          sigmaL    , 
+        RooAbsReal&          sigmaR    ) ;
+      /// "copy" constructor 
+      BifurcatedGauss ( const BifurcatedGauss& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~BifurcatedGauss () ;
+      /// clone 
+      virtual  BifurcatedGauss* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::BifurcatedGauss& function() const { return m_bg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_peak   ;
+      RooRealProxy m_sigmaL ;
+      RooRealProxy m_sigmaR ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::BifurcatedGauss m_bg ;               // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class GenGaussV1
+     *  Simple class that implements the generalized normal distribution v1
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+     *  @see Gaudi::Math::GenGaussV1 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API GenGaussV1 : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GenGaussV1, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GenGaussV1
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mu        , 
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          beta      ) ;
+      /// "copy" constructor 
+      GenGaussV1 ( const GenGaussV1& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GenGaussV1 () ;
+      /// clone 
+      virtual  GenGaussV1* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GenGaussV1& function() const { return m_ggv1 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_mu     ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_beta   ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GenGaussV1 m_ggv1 ;                 // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class GenGaussV2
+     *  Simple class that implements the generalized normal distribution v2
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
+     *  @see Gaudi::Math::GenGaussV2 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API GenGaussV2 : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GenGaussV2, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GenGaussV2
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          xi        , 
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          kappa     ) ;
+      /// "copy" constructor 
+      GenGaussV2 ( const GenGaussV2& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GenGaussV2 () ;
+      /// clone 
+      virtual  GenGaussV2* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GenGaussV2& function() const { return m_ggv2 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_kappa  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GenGaussV2 m_ggv2 ;                 // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class SkewGauss
+     *  Simple class that implements the skew normal distribution
+     *  @see http://en.wikipedia.org/wiki/Skew_normal_distribution
+     *  @see Gaudi::Math::SkewGauss 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API SkewGauss : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::SkewGauss, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      SkewGauss
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          xi        , 
+        RooAbsReal&          omega     , 
+        RooAbsReal&          alpha     ) ;
+      /// "copy" constructor 
+      SkewGauss ( const SkewGauss& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~SkewGauss () ;
+      /// clone 
+      virtual  SkewGauss* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::SkewGauss& function() const { return m_sg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_omega  ;
+      RooRealProxy m_alpha  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::SkewGauss m_sg ;                     // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class Bukin
+     *  "Bukin"-function
+     *  @see Gaudi::Math::Bukin
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API Bukin : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Bukin, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bukin
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          peak      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          xi        ,
+        RooAbsReal&          rhoL      ,
+        RooAbsReal&          rhoR      ) ;
+      /// "copy" constructor 
+      Bukin ( const Bukin& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Bukin () ;
+      /// clone 
+      virtual  Bukin* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Bukin& function() const { return m_bukin ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_peak   ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_rhoL   ;
+      RooRealProxy m_rhoR   ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bukin m_bukin ;                      // the function 
+      // ======================================================================      
+    } ;  
+    // ========================================================================
+    /** @class StudentT 
+     *  Student-T distribution
+     *
+     *  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
+     *  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
+     *  where \f$ y = \frac{x - \mu}{\sigma} \f$  
+     * 
+     *  @see Gaudi::Math::StudentT
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2013-01-05
+     */
+    class GAUDI_API StudentT: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::StudentT, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      StudentT ( const char*          name      , 
+                 const char*          title     ,
+                 RooAbsReal&          x         ,
+                 RooAbsReal&          mu        ,
+                 RooAbsReal&          sigma     ,
+                 RooAbsReal&          n         ) ;
+      /// "copy constructor"
+      StudentT ( const StudentT&      right     , 
+                 const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~StudentT() ;
+      /// clone 
+      virtual  StudentT* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::StudentT& function() const { return m_stt ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_mu       ;
+      RooRealProxy m_sigma    ;
+      RooRealProxy m_n        ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::StudentT m_stt ;           // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class GramCharlierA
+     *  The peak with Gram-Charlier type A parameterization
+     *  @see Gaudi::Math::GramCharlierA 
+     *  http://en.wikipedia.org/wiki/Edgeworth_series
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API GramCharlierA : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GramCharlierA, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GramCharlierA 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mean      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          kappa3    ,
+        RooAbsReal&          kappa4    );
+      /// "copy" constructor 
+      GramCharlierA ( const GramCharlierA& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GramCharlierA () ;
+      /// clone 
+      virtual  GramCharlierA* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GramCharlierA& function() const { return m_gca ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_kappa3 ;
+      RooRealProxy m_kappa4 ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GramCharlierA m_gca ;                // the function 
+      // ======================================================================
+    } ;  
+    // ========================================================================
+
+    // ========================================================================
+    // Smooth functions for background 
+    // ========================================================================
+    
     // ========================================================================
     /** @class PhaseSpace2
      *  simple model for 2-body phase space 
@@ -418,6 +1855,16 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -464,8 +1911,23 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -517,6 +1979,21 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -536,6 +2013,8 @@ namespace Analysis
     // ========================================================================
     /** @class PhaseSpaceNL
      *  
+     *  The phase space function for L-body systema from N-body decay
+     *
      *  @see Gaudi::Math::PhaseSpaceNL
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
@@ -567,6 +2046,21 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -699,6 +2193,11 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
       const Gaudi::Math::PhaseSpacePol& function() const { return m_ps ; }
       // ====================================================================== 
    private:
@@ -767,6 +2266,16 @@ namespace Analysis
       // the actual evaluation of function 
       Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -783,965 +2292,11 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
-    /** @class LASS
-     *  S-wave Kpi amplitude for S-wave Kpi distribtion
-     *  @see Gaudi::Math::LASS
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2013-10-05
-     */
-    class GAUDI_API LASS : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::LASS, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      LASS  ( const char*          name          , 
-              const char*          title         ,
-              RooAbsReal&          x             ,
-              RooAbsReal&          m1430         , // mass  of K*(1430) 
-              RooAbsReal&          g1430         , // width of K*(1430) 
-              RooAbsReal&          a             , 
-              RooAbsReal&          r             , 
-              RooAbsReal&          e             ,                
-              const double         m1    = 493.7 ,   // mass of K 
-              const double         m2    = 139.6 ) ; // mass of pi 
-      /// "copy constructor"
-      LASS  ( const LASS& right , const char* name = 0 )  ;
-      /// destructor 
-      virtual ~LASS () ;
-      /// clone 
-      virtual  LASS * clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the amplitude 
-      std::complex<double>     amplitude () const ;
-      /// access to underlying function 
-      const Gaudi::Math::LASS& function  () const { return m_lass ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the mass 
-      RooRealProxy m_x     ;
-      /// K*(1430) parameters
-      RooRealProxy m_m0    ;
-      RooRealProxy m_g0    ;
-      /// LASS parameters 
-      RooRealProxy m_a     ;
-      RooRealProxy m_r     ;
-      RooRealProxy m_e     ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::LASS m_lass ;              // the actual function 
-      // ======================================================================
-    } ;
+
     // ========================================================================
-    /** @class LASS23L
-     *  S-wave Kpi amplitude for Kpi from B-> Kpi X decays
-     *  @see Gaudi::Math::LASS23L
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2012-04-02
-     */
-    class GAUDI_API LASS23L : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::LASS23L, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      LASS23L ( const char*          name          , 
-                const char*          title         ,
-                RooAbsReal&          x             ,
-                RooAbsReal&          m1430         ,
-                RooAbsReal&          g1430         ,
-                RooAbsReal&          a             , 
-                RooAbsReal&          r             , 
-                RooAbsReal&          e             ,                
-                const double         m1    = 493.7 , 
-                const double         m2    = 139.6 ,
-                const double         m3    = 3097  , 
-                const double         m     = 5278  ,
-                const unsigned short L     = 1     ) ;
-      /// "copy constructor"
-      LASS23L ( const LASS23L& right , const char* name = 0 )  ;
-      /// destructor 
-      virtual ~LASS23L() ;
-      /// clone 
-      virtual  LASS23L* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the complex amplitude 
-      std::complex<double>        amplitude () const ; // get the complex amplitude 
-      /// access to underlying function 
-      const Gaudi::Math::LASS23L& function  () const { return m_lass ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the mass 
-      RooRealProxy m_x     ;
-      /// K*(1430) parameters:
-      RooRealProxy m_m0    ;
-      RooRealProxy m_g0    ;
-      /// LASS parameters 
-      RooRealProxy m_a     ;
-      RooRealProxy m_r     ;
-      RooRealProxy m_e     ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::LASS23L m_lass ;              // the actual function 
-      // ======================================================================
-    } ;    
+    // Smmoth empirical models fro background  
     // ========================================================================
-    /** @class Bugg
-     *  parametrisation of sigma-pole for
-     *  two pion mass distribution
-     *
-     *  The parameterization of sigma pole by
-     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2012-04-01
-     *  @see Gaudi::Math::Bugg
-     */
-    class GAUDI_API Bugg : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::Bugg, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Bugg  ( const char*          name               , 
-              const char*          title              ,
-              RooAbsReal&          x                  ,
-              RooAbsReal&          M                  ,   // sigma M 
-              RooAbsReal&          g2                 ,   // sigma G2 
-              RooAbsReal&          b1                 ,   // sigma B1 
-              RooAbsReal&          b2                 ,   // sigma B2
-              RooAbsReal&          a                  ,   // sigma a 
-              RooAbsReal&          s1                 ,   // sigma s1 
-              RooAbsReal&          s2                 ,   // sigma s2 
-              const double         m1    = 139.6/1000 ) ; // mass of pi GeV 
-      /// "copy constructor"
-      Bugg  ( const Bugg& right , const char* name = 0 )  ;
-      /// destructor 
-      virtual ~Bugg () ;
-      /// clone 
-      virtual  Bugg* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the amplitude 
-      std::complex<double>     amplitude () const ;
-      /// access to underlying function 
-      const Gaudi::Math::Bugg& function  () const { return m_bugg ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the mass 
-      RooRealProxy m_x     ;
-      /// sigma/bugg parameters 
-      RooRealProxy m_M     ;
-      RooRealProxy m_g2    ;
-      RooRealProxy m_b1    ;
-      RooRealProxy m_b2    ;
-      RooRealProxy m_a     ;
-      RooRealProxy m_s1    ;
-      RooRealProxy m_s2    ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Bugg m_bugg ;              // the actual function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class Bugg23L
-     *  parametrisation of sigma-pole for
-     *  two pion mass distribution form three body decays 
-     *
-     *  The parameterization of sigma pole by
-     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2012-04-01
-     *  @see Gaudi::Math::Bugg23L
-     */
-    class GAUDI_API Bugg23L : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::Bugg23L, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Bugg23L ( const char*          name               , 
-                const char*          title              ,
-                RooAbsReal&          x                  ,
-                RooAbsReal&          M                  ,   // sigma M 
-                RooAbsReal&          g2                 ,   // sigma G2 
-                RooAbsReal&          b1                 ,   // sigma B1 
-                RooAbsReal&          b2                 ,   // sigma B2
-                RooAbsReal&          a                  ,   // sigma a 
-                RooAbsReal&          s1                 ,   // sigma s1 
-                RooAbsReal&          s2                 ,   // sigma s2 
-                const double         m1    = 139.6/1000 ,   // mass of pi GeV 
-                const double         m3 = 3097.0 / 1000 ,   //  GeV
-                const double         m  = 5278.0 / 1000 ,   // GeV
-                const unsigned short L  =    1          ) ;
-      /// "copy constructor"
-      Bugg23L ( const Bugg23L& right , const char* name = 0 )  ;
-      /// destructor 
-      virtual ~Bugg23L () ;
-      /// clone 
-      virtual  Bugg23L* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the amplitude 
-      std::complex<double>        amplitude () const ;
-      /// access to underlying function 
-      const Gaudi::Math::Bugg23L& function  () const { return m_bugg ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      /// the mass 
-      RooRealProxy m_x     ;
-      /// sigma/bugg parameters 
-      RooRealProxy m_M     ;
-      RooRealProxy m_g2    ;
-      RooRealProxy m_b1    ;
-      RooRealProxy m_b2    ;
-      RooRealProxy m_a     ;
-      RooRealProxy m_s1    ;
-      RooRealProxy m_s2    ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Bugg23L m_bugg ;              // the actual function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class CrystalBall
-     *  The special parametrization of ``Crystal Ball-function''
-     *  @see Gaudi::Math::CrystalBall
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2012-05-13
-     */
-    class GAUDI_API CrystalBall : public RooAbsPdf 
-    { 
-    public:
-      // ====================================================================== 
-      ClassDef(Analysis::Models::CrystalBall, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      CrystalBall
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          m0        ,
-        RooAbsReal&          sigma     ,  
-        RooAbsReal&          alpha     ,  
-        RooAbsReal&          n         ) ;  // n-1
-      /// "copy" constructor 
-      CrystalBall ( const CrystalBall& right , const char* name = 0 ) ;
-      /// virtual destructor 
-      virtual ~CrystalBall () ;
-      /// clone 
-      virtual  CrystalBall* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::CrystalBall& function() const { return m_cb ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_alpha  ;
-      RooRealProxy m_n      ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::CrystalBall m_cb ;                  // the function 
-      // ======================================================================
-    } ;    
-    // ========================================================================
-    /** @class CrystalBallRS
-     *  The special parametrization of ``Crystal Ball-function''
-     * rigth-side crystal ball 
-     *  @see Gaudi::Math::CrystalBallRightSide 
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date 2012-05-13
-     */
-    class GAUDI_API CrystalBallRS : public RooAbsPdf 
-    { 
-    public:
-      // ====================================================================== 
-      ClassDef(Analysis::Models::CrystalBallRS, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      CrystalBallRS
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          m0        ,
-        RooAbsReal&          sigma     ,  
-        RooAbsReal&          alpha     ,  
-        RooAbsReal&          n         ) ;  // n-1
-      /// "copy" constructor 
-      CrystalBallRS ( const CrystalBallRS& right , const char* name = 0 ) ;
-      /// virtual destructor 
-      virtual ~CrystalBallRS () ;
-      /// clone 
-      virtual  CrystalBallRS* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::CrystalBallRightSide& function() const { return m_cb ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_alpha  ;
-      RooRealProxy m_n      ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::CrystalBallRightSide m_cb ;  // the function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class Needham
-     *  The special parametrization by Matthew NEEDHAM of 
-     *  ``Crystal Ball-function'' nicely suitable for \f$J/\psi\f$-peak
-     *  @thank Matthew Needham 
-     *  @see Gaudi::Math::Needham
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2012-05-13
-     */
-    class GAUDI_API Needham : public RooAbsPdf 
-    { 
-    public:
-      // ====================================================================== 
-      ClassDef(Analysis::Models::Needham, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Needham
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          m0        ,
-        RooAbsReal&          sigma     ,  
-        RooAbsReal&          a0        ,  
-        RooAbsReal&          a1        ,  
-        RooAbsReal&          a2        ) ;
-      /// "copy" constructor 
-      Needham ( const Needham& right , const char* name = 0 ) ;
-      /// virtual destructor 
-      virtual ~Needham () ;
-      /// clone 
-      virtual  Needham* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::Needham& function() const { return m_needham ; }
-      /// get current alpha 
-      double                      alpha   () const ;
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_a0     ;
-      RooRealProxy m_a1     ;
-      RooRealProxy m_a2     ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Needham m_needham ;                  // the function 
-      // ======================================================================
-    } ;    
-    // ========================================================================
-    /** @class CrystalBallDS 
-     *  double-sided ``Crystal Ball-function'' 
-     *  for description of gaussian with the tail
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @see Gaudi::Math::CrystalBallDoubleSided
-     *  @date 2011-05-25
-     */
-    class GAUDI_API CrystalBallDS : public RooAbsPdf 
-    { 
-    public:
-      // ====================================================================== 
-      ClassDef(Analysis::Models::CrystalBallDS, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      CrystalBallDS
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          m0        ,
-        RooAbsReal&          sigma     ,  //    
-        RooAbsReal&          alphaL    ,  // alpha_L 
-        RooAbsReal&          nL        ,  //     n_L - 1   
-        RooAbsReal&          alphaR    ,  // alpha_R - 1   
-        RooAbsReal&          nR        ); //     n_R 
-      /// "copy" constructor 
-      CrystalBallDS ( const CrystalBallDS& right , const char* name = 0 ) ;
-      /// virtual destructor 
-      virtual ~CrystalBallDS() ;
-      /// clone 
-      virtual  CrystalBallDS* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::CrystalBallDoubleSided& function() const 
-      { return m_cb2 ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_alphaL ;
-      RooRealProxy m_nL     ;
-      RooRealProxy m_alphaR ;
-      RooRealProxy m_nR     ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::CrystalBallDoubleSided m_cb2 ;       // the function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class Apolonios
-     *  A modified gaussian with power-law tail on rigth ride and exponential
-     *  tail on low-side 
-     *  The function is proposed by Diego Martinez Santos 
-     *  https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
-     *  Here a bit modified version is used with redefined parameter <code>n</code>
-     *  to be coherent with local definitions of Crystal Ball
-     *  
-     *  @see Gaudi::Math::Apolonios
-     *  @author Vanya BELYAEV Ivane.BElyaev@itep.ru
-     *  @date 2013-12-01
-     */
-    // ========================================================================
-    class GAUDI_API Apolonios : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::Apolonios, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Apolonios
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          mean      , 
-        RooAbsReal&          sigma     , 
-        RooAbsReal&          alpha     ,
-        RooAbsReal&          n         , 
-        RooAbsReal&          b         ) ;
-      /// "copy" constructor 
-      Apolonios  ( const Apolonios& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~Apolonios () ;
-      /// clone 
-      virtual  Apolonios* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::Apolonios& function() const { return m_apo ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_alpha  ;
-      RooRealProxy m_n      ;
-      RooRealProxy m_b      ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Apolonios m_apo ;                // the function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class GramCharlierA
-     *  The peak with Gram-Charlier type A parameterization
-     *  @see Gaudi::Math::GramCharlierA 
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-     *  @date 2011-12-05
-     */
-    class GAUDI_API GramCharlierA : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::GramCharlierA, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      GramCharlierA 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          mean      , 
-        RooAbsReal&          sigma     , 
-        RooAbsReal&          kappa3    ,
-        RooAbsReal&          kappa4    );
-      /// "copy" constructor 
-      GramCharlierA ( const GramCharlierA& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~GramCharlierA () ;
-      /// clone 
-      virtual  GramCharlierA* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::GramCharlierA& function() const { return m_gca ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_kappa3 ;
-      RooRealProxy m_kappa4 ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::GramCharlierA m_gca ;                // the function 
-      // ======================================================================
-    } ;  
-    // ========================================================================
-    /** @class BifurcatedGauss 
-     *  @see Gaudi::Math::BifurkatedGauss 
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
-     *  @date 2013-08-27
-     */
-    // ========================================================================
-    class GAUDI_API BifurcatedGauss : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::BifurcatedGauss, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      BifurcatedGauss 
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          peak      , 
-        RooAbsReal&          sigmaL    , 
-        RooAbsReal&          sigmaR    ) ;
-      /// "copy" constructor 
-      BifurcatedGauss ( const BifurcatedGauss& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~BifurcatedGauss () ;
-      /// clone 
-      virtual  BifurcatedGauss* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::BifurcatedGauss& function() const { return m_bg ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_peak   ;
-      RooRealProxy m_sigmaL ;
-      RooRealProxy m_sigmaR ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::BifurcatedGauss m_bg ;               // the function 
-      // ======================================================================      
-    } ;
-    // ========================================================================
-    /** @class GenGaussV1
-     *  Simple class that implements the generalized normal distribution v1
-     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
-     *  @see Gaudi::Math::GenGaussV1 
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
-     *  @date 2013-08-27
-     */
-    // ========================================================================
-    class GAUDI_API GenGaussV1 : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::GenGaussV1, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      GenGaussV1
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          mu        , 
-        RooAbsReal&          alpha     , 
-        RooAbsReal&          beta      ) ;
-      /// "copy" constructor 
-      GenGaussV1 ( const GenGaussV1& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~GenGaussV1 () ;
-      /// clone 
-      virtual  GenGaussV1* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::GenGaussV1& function() const { return m_ggv1 ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_mu     ;
-      RooRealProxy m_alpha  ;
-      RooRealProxy m_beta   ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::GenGaussV1 m_ggv1 ;                 // the function 
-      // ======================================================================      
-    } ;
-    // ========================================================================
-    /** @class GenGaussV2
-     *  Simple class that implements the generalized normal distribution v2
-     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
-     *  @see Gaudi::Math::GenGaussV2 
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
-     *  @date 2013-08-27
-     */
-    // ========================================================================
-    class GAUDI_API GenGaussV2 : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::GenGaussV2, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      GenGaussV2
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          xi        , 
-        RooAbsReal&          alpha     , 
-        RooAbsReal&          kappa     ) ;
-      /// "copy" constructor 
-      GenGaussV2 ( const GenGaussV2& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~GenGaussV2 () ;
-      /// clone 
-      virtual  GenGaussV2* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::GenGaussV2& function() const { return m_ggv2 ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_xi     ;
-      RooRealProxy m_alpha  ;
-      RooRealProxy m_kappa  ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::GenGaussV2 m_ggv2 ;                 // the function 
-      // ======================================================================      
-    } ;
-    // ========================================================================
-    /** @class SkewGauss
-     *  Simple class that implements the skew normal distribution
-     *  @see http://en.wikipedia.org/wiki/Skew_normal_distribution
-     *  @see Gaudi::Math::SkewGauss 
-     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
-     *  @date 2013-08-27
-     */
-    // ========================================================================
-    class GAUDI_API SkewGauss : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::SkewGauss, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      SkewGauss
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          xi        , 
-        RooAbsReal&          omega     , 
-        RooAbsReal&          alpha     ) ;
-      /// "copy" constructor 
-      SkewGauss ( const SkewGauss& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~SkewGauss () ;
-      /// clone 
-      virtual  SkewGauss* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::SkewGauss& function() const { return m_sg ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_xi     ;
-      RooRealProxy m_omega  ;
-      RooRealProxy m_alpha  ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::SkewGauss m_sg ;                     // the function 
-      // ======================================================================      
-    } ;
-    // ========================================================================
-    /** @class Bukin
-     *  "Bukin"-function
-     *  @see Gaudi::Math::Bukin
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
-     *  @date 2011-12-05
-     */
-    class GAUDI_API Bukin : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::Bukin, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Bukin
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          peak      , 
-        RooAbsReal&          sigma     , 
-        RooAbsReal&          xi        ,
-        RooAbsReal&          rhoL      ,
-        RooAbsReal&          rhoR      ) ;
-      /// "copy" constructor 
-      Bukin ( const Bukin& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~Bukin () ;
-      /// clone 
-      virtual  Bukin* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::Bukin& function() const { return m_bukin ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_peak   ;
-      RooRealProxy m_sigma  ;
-      RooRealProxy m_xi     ;
-      RooRealProxy m_rhoL   ;
-      RooRealProxy m_rhoR   ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Bukin m_bukin ;                      // the function 
-      // ======================================================================      
-    } ;  
-    // ========================================================================
-    /** @class Voigt
-     *  "Voigt"-function
-     *  @see Gaudi::Math::Voigt
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
-     *  @date 2011-12-05
-     */
-    class GAUDI_API Voigt : public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::Voigt, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      Voigt
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         , 
-        RooAbsReal&          m0        , 
-        RooAbsReal&          gamma     , 
-        RooAbsReal&          sigma     ) ;
-      /// "copy" constructor 
-      Voigt ( const Voigt& right , const char* name = 0  ) ;
-      /// virtual destructor  
-      virtual ~Voigt () ;
-      /// clone 
-      virtual  Voigt* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::Voigt& function() const { return m_voigt ; }
-      // ======================================================================
-    protected:
-      // ======================================================================
-      RooRealProxy m_x      ;
-      RooRealProxy m_m0     ;
-      RooRealProxy m_gamma  ;
-      RooRealProxy m_sigma  ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::Voigt m_voigt ;                      // the function 
-      // ======================================================================      
-    };
+    
     // ========================================================================
     /** @class PolyPositive
      *  PolyPositive polynomial
@@ -1829,6 +2384,21 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+      ( RooArgSet&     allVars      , 
+        RooArgSet&     analVars     ,
+        const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -1952,6 +2522,11 @@ namespace Analysis
         ( Int_t          code         ,  
           const char*    rangeName    ) const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     protected :
       // ======================================================================
       RooRealProxy m_x    ;
@@ -1964,65 +2539,6 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::ExpoPositive m_positive ;           // the function 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class StudentT 
-     *  Student-T distribution
-     *
-     *  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
-     *  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
-     *  where \f$ y = \frac{x - \mu}{\sigma} \f$  
-     * 
-     *  @see Gaudi::Math::StudentT
-     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
-     *  @date 2013-01-05
-     */
-    class GAUDI_API StudentT: public RooAbsPdf 
-    {
-      // ======================================================================
-    public :
-      // ======================================================================
-      ClassDef(Analysis::Models::StudentT, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters 
-      StudentT ( const char*          name      , 
-                 const char*          title     ,
-                 RooAbsReal&          x         ,
-                 RooAbsReal&          mu        ,
-                 RooAbsReal&          sigma     ,
-                 RooAbsReal&          n         ) ;
-      /// "copy constructor"
-      StudentT ( const StudentT&      right     , 
-                 const char*          name  = 0 )  ;
-      /// destructor 
-      virtual ~StudentT() ;
-      /// clone 
-      virtual  StudentT* clone ( const char* name ) const ; 
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// access to underlying function 
-      const Gaudi::Math::StudentT& function() const { return m_stt ; }
-      // ======================================================================
-    protected: 
-      // ======================================================================
-      RooRealProxy m_x        ;
-      RooRealProxy m_mu       ;
-      RooRealProxy m_sigma    ;
-      RooRealProxy m_n        ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the actual function 
-      mutable Gaudi::Math::StudentT m_stt ;           // the actual function 
       // ======================================================================
     } ;
     // ========================================================================
@@ -2060,6 +2576,21 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2123,6 +2654,21 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -2182,6 +2728,21 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// access to underlying function 
       const Gaudi::Math::Amoroso& function() const { return m_amoroso ; }
       // ======================================================================
@@ -2236,6 +2797,21 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -2289,6 +2865,21 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2352,6 +2943,21 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
@@ -2407,25 +3013,44 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
     public:
       // ======================================================================
       /// access to underlying function 
-      const Gaudi::Math::Log10GammaDist& function() const { return m_gamma ; }
+      const Gaudi::Math::BetaPrime& function() const { return m_betap ; }
       // ======================================================================
     protected: 
       // ======================================================================
       RooRealProxy m_x        ;
-      RooRealProxy m_k        ;
-      RooRealProxy m_theta    ;
+      RooRealProxy m_alpha    ;
+      RooRealProxy m_beta     ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual function
-      mutable Gaudi::Math::Log10GammaDist m_gamma ; // the actual function
+      mutable Gaudi::Math::BetaPrime m_betap ; // the actual function
       // ======================================================================
     } ;
     // ========================================================================
+
+    // ========================================================================
     // 2D non-factorizable models  
+    // ========================================================================
+
     // ========================================================================
     /** @class Poly2DPositive
      *  Poly2DPositive polynomial
@@ -2474,6 +3099,11 @@ namespace Analysis
       virtual Double_t analyticalIntegral 
         ( Int_t          code         , 
           const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2541,6 +3171,11 @@ namespace Analysis
       virtual Double_t analyticalIntegral 
         ( Int_t          code         , 
           const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2621,6 +3256,11 @@ namespace Analysis
       virtual Double_t analyticalIntegral 
         ( Int_t          code         , 
           const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2705,6 +3345,11 @@ namespace Analysis
       virtual Double_t analyticalIntegral 
         ( Int_t          code         , 
           const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================
@@ -2795,6 +3440,11 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
       /// access to underlying function(s) 
       const Gaudi::Math::ExpoPS2DPol&  function    () const { return m_function ; }
       const Gaudi::Math::Positive2D&   positive    () const { return m_function.positive   () ; }
@@ -2872,6 +3522,11 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
       /// access to underlying function(s) 
       const Gaudi::Math::Expo2DPol&    function    () const { return m_function ; }
       const Gaudi::Math::Positive2D&   positive    () const { return m_function.positive   () ; }
@@ -2943,6 +3598,11 @@ namespace Analysis
       virtual Double_t analyticalIntegral 
         ( Int_t          code         , 
           const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
       // ======================================================================
     public:
       // ======================================================================

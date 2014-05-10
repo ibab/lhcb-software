@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-05-10 - Vanya Belyaev
+ - improve integration 
+
+! 2014-05-09 - Vanya Belyaev
+ - make use of analytical integrals for 2D non-factorazable models 
+
 ! 2014-05-04 - Vanya Belyaev
  - make use of analysical integrals 
 
