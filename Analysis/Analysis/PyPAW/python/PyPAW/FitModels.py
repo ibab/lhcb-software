@@ -3,7 +3,13 @@
 # =============================================================================
 ## @file FitModels.py
 #
-#  Set of PDFs for 2xCharm fits
+#  Set of useful PDFs for varous 1D and 2D fits
+#  It includes
+#  - soem empricial PDFs to describe narrow peaks: Gauss, CrystalBall, ....
+#  - some PDF to describe "wide" peaks: BreitWigner,LASS, Bugg, Flatter, ...
+#  - some useful PDFs to describe smooth background: phase space ;
+#    expo times polynomial; phase space times polynomial, ...
+#  - set of smooth non-facrorizeable model for 2D fits 
 #
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
@@ -13,7 +19,39 @@
 #                 by $Author$
 # =============================================================================
 """
-Set of useful PDFs 
+Set of useful PDFs for varous 1D and 2D fits
+
+It includes
+
+Empricial PDFs to describe narrow peaks
+
+  - Gauss 
+  - Crystal Ball
+  - right-side Crystal Ball
+  - double-side Crystal Ball
+  - Needham function for J/psi, psi' and Y peaks
+  - Apolonios
+  - bifurcated Gauissian
+  - generalized normal v1 
+  - generalized normal v2
+  - skew Gaussian
+  - Bukin,
+  - Student-T
+
+PDF to describe ``wide'' peaks
+
+ - BreitWigner
+ - LASS
+ - Bugg
+ - Flatter
+ - ...
+- some useful PDFs to describe smooth background in 1D
+ - phase space 
+ - expo times polynomial
+ - phase space times polynomial
+ - ... 
+- set of smooth non-facrorizeable model for 2D fits 
+- ...  
 """
 # =============================================================================
 __version__ = "$Revision:"
@@ -22,38 +60,22 @@ __date__    = "2011-07-25"
 # =============================================================================
 __all__ = (
     #
+    ## empirical 1D signal models
+    # 
     'Gauss_pdf'            , ## simple     Gauss
+    'CrystalBall_pdf'      , ## Crystal-ball function
+    'CrystalBallRS_pdf'    , ## right-side Crystal-ball function
+    'CB2_pdf'              , ## double-sided Crystal Ball function    
+    'Needham_pdf'          , ## Needham function for J/psi or Y (CB function with alpha=alpha(sigma))
+    'Apolonios_pdf'        , ## Apolonios function         
     'BifurcatedGauss_pdf'  , ## bifurcated Gauss
     'GenGaussV1_pdf'       , ## generalized normal v1  
     'GenGaussV2_pdf'       , ## generalized normal v2 
-    'SkewGauss_pdf'        , ## skewed gaussian 
+    'SkewGauss_pdf'        , ## skewed gaussian
+    'Bukin_pdf'            , ## generic Bukin PDF: skewed gaussian with exponential tails     
     'StudentT_pdf'         , ## Student-T function 
-    'Apolonios_pdf'        , ## Apolonios function      
-    'Bukin_pdf'            , ## generic Bukin PDF: skewed gaussian with exponential tails 
-    'CB2_pdf'              , ## double-sided Crystal Ball function    
-    'CrystalBall_pdf'      , ## Crystal-ball function
-    'CrystalBallRS_pdf'    , ## right-side Crystal-ball function
-    'PSPol_pdf'            , ## phase space modulated by polynomial 
-    'Needham_pdf'          , ## Needham function for J/psy or Y (CB function with alpha=alpha(sigma) )
-    'Manca_pdf'            , ## Manca pdf to fit Y->mu mu spectrum
     #
-    ## pdfs for - to be used with care - phase space corrections are large!
-    'BreitWigner_pdf'      , ## (relativistic) 2-body Breit-Wigner
-    'LASS_pdf'             , ## kappa-pole
-    'Flatte_pdf'           , ## Flatte-function  (pipi)
-    'Flatte2_pdf'          , ## Flatte-function  (KK) 
-    'Bugg_pdf'             , ## sigma-pole
-    #
-    'Bkg_pdf'              , ## Background: exponential modified by positive polynom
-    #
-    ## helpers
-    #
-    'H1D_dset'             , ## convertor of 1D-histogram to dataset 
-    'H1D_pdf'              , ## convertor of 1D-histogram to PDF 
-    'H2D_dset'             , ## convertor of 2D-histogram to dataset 
-    'H2D_pdf'              , ## convertor of 2D-histogram to PDF 
-    #
-    # specializations:
+    ## specializations:
     # 
     'D0_pdf'  , ## PDF for D0        : Bukin 
     'Dp_pdf'  , ## PDF for D+        : Bukin
@@ -64,6 +86,34 @@ __all__ = (
     'Bu_pdf'  , ## pdf for B+        : double-sided Crystal Ball 
     'Bs_pdf'  , ## pdf for Bs        : double-sided Crystal Ball 
     'Bc_pdf'  , ## pdf for Bc+       : double-sided Crystal Ball 
+    #
+    'Manca_pdf'            , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    #
+    ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
+    # 
+    'BreitWigner_pdf'      , ## (relativistic) 2-body Breit-Wigner
+    'Flatte_pdf'           , ## Flatte-function  (pipi)
+    'Flatte2_pdf'          , ## Flatte-function  (KK) 
+    'LASS_pdf'             , ## kappa-pole
+    'Bugg_pdf'             , ## sigma-pole
+    #
+    ## 1D-background models
+    # 
+    'Bkg_pdf'              , ## Background: exponential modified by positive polynom
+    'PSPol_pdf'            , ## phase space modulated by positive polynomial
+    #
+    ## 2D non-factorazeable models
+    #
+    #
+    ## 2D non-factorazeable symmetric models
+    #
+    #
+    ## helpers
+    #
+    'H1D_dset'             , ## convertor of 1D-histogram to dataset 
+    'H1D_pdf'              , ## convertor of 1D-histogram to PDF 
+    'H2D_dset'             , ## convertor of 2D-histogram to dataset 
+    'H2D_pdf'              , ## convertor of 2D-histogram to PDF 
     #
     'Fit1D'   , ## generic model for 1D-fit
     'Fit2D'   , ## generic model for 2D-fit
@@ -296,6 +346,291 @@ class Gauss_pdf(Mass_pdf) :
                                       self.sigma )
 
 # =============================================================================
+## @class CrystalBall_pdf
+#  @see Analysis::Models::CrystalBall
+#  @see Gaudi::Math::CrystalBall
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class CrystalBall_pdf(Mass_pdf) :
+    """
+    Simple Crystal Ball
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               , 
+                   fixMass  = None  ,
+                   fixSigma = None  ,
+                   fixAlpha = None  ,
+                   fixN     = None  ,
+                   mass     = None  ,
+                   mean     = None  , 
+                   sigma    = None  ,
+                   alpha    = None  ,
+                   n        = None  ) : 
+                   
+        
+        Mass_pdf.__init__ ( self    , name     ,
+                            mn      , mx       ,
+                            mass    , mean     , sigma ,
+                            fixMass , fixSigma ) 
+        
+        self.alpha = makeVar ( alpha ,
+                               'alphaCB_%s'      % name ,
+                               '#alpha_{CB}(%s)' % name ,
+                               fixAlpha   , 0 , 10      )
+        self.n     = makeVar ( alpha ,
+                               'nCB_%s'      % name ,
+                               'n_{CB}(%s)'  % name ,
+                               fixN       , 0 , 20      )
+
+        #
+        ## finally build PDF 
+        #
+        self.pdf = cpp.Analysis.Models.CrystalBall (
+            'cb_%s'           % name ,
+            'CrystalBall(%s)' % name ,
+            self.mass  ,
+            self.mean  ,
+            self.sigma ,
+            self.alpha ,
+            self.n     )
+
+# =============================================================================
+## @class CrystalBallRS_pdf
+#  @see Analysis::Models::CrystalBallRS
+#  @see Gaudi::Math::CrystalBallRS
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class CrystalBallRS_pdf(Mass_pdf) :
+    """
+    Simple right-side CrystalBall
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               , 
+                   fixMass  = None  ,
+                   fixSigma = None  ,
+                   fixAlpha = None  ,
+                   fixN     = None  ,
+                   mass     = None  ,
+                   mean     = None  , 
+                   sigma    = None  ,
+                   alpha    = None  ,
+                   n        = None  ) : 
+                   
+        
+        Mass_pdf.__init__ ( self    , name     ,
+                            mn      , mx       ,
+                            mass    , mean     , sigma ,
+                            fixMass , fixSigma ) 
+        
+        self.alpha = makeVar ( alpha ,
+                               'alphaCBRS_%s'      % name ,
+                               '#alpha_{CBRS}(%s)' % name ,
+                               fixAlpha   , 0 , 10      )
+        self.n     = makeVar ( alpha ,
+                               'nCBRS_%s'      % name ,
+                               'n_{CBRS}(%s)'  % name ,
+                               fixN       , 0 , 20      )
+
+        #
+        ## finally build PDF 
+        #
+        self.pdf = cpp.Analysis.Models.CrystalBallRS (
+            'cbrs_%s'           % name ,
+            'CrystalBallRS(%s)' % name ,
+            self.mass  ,
+            self.mean  ,
+            self.sigma ,
+            self.alpha ,
+            self.n     )
+        
+
+# =============================================================================
+## @class CB2_pdf
+#  simple wrapper over double-sided Cristal Ball function
+#  @see Analysis::Models::CrystalBallDS
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class CB2_pdf(Mass_pdf) :
+    """
+    Define double sided Crystal Ball
+    """
+    def __init__ ( self            ,
+                   name            ,
+                   mn              ,
+                   mx              ,
+                   fixMass   = None ,
+                   fixSigma  = None ,
+                   fixAlphaL = None ,
+                   fixAlphaR = None ,
+                   fixNL     = None ,
+                   fixNR     = None ,
+                   mass      = None , 
+                   mean      = None ,
+                   sigma     = None ,
+                   alphaL    = None ,
+                   alphaR    = None ,
+                   nL        = None ,
+                   nR        = None ) : 
+        
+        #
+        ## initialize the base
+        # 
+        Mass_pdf.__init__  ( self    , name     ,
+                             mn      , mx       ,
+                             mass    , mean     , sigma   ,
+                             fixMass , fixSigma )
+        #
+        ## treat the specific parameters
+        #
+        self.aL    = makeVar ( alphaL ,  "aL_%s"   % name , "#alpha_{L}(%s)" % name , fixAlphaL , 1.5 , 0 , 10 )
+        self.nL    = makeVar (     nL ,  "nL_%s"   % name ,      "n_{L}(%s)" % name , fixNL     , 1   , 0 , 10 )
+        self.aR    = makeVar ( alphaR ,  "aR_%s"   % name , "#alpha_{R}(%s)" % name , fixAlphaR , 1.5 , 0 , 10 )
+        self.nR    = makeVar (     nR ,  "nR_%s"   % name ,      "n_{R}(%s)" % name , fixNR     , 2   , 0 , 10 )
+        
+        self.pdf = cpp.Analysis.Models.CrystalBallDS(
+            "cb2_"       + name ,
+            "CB_{2}(%s)" % name ,
+            self.mass    ,
+            self.mean    ,
+            self.sigma   ,
+            self.aL      ,
+            self.nL      ,
+            self.aR      ,
+            self.nR      )
+        
+
+# =============================================================================
+## @class Needham_pdf
+#  Wrapper over CrystalBall function, using
+#  alpha/sigma parameterization by Matt Needham
+#  @thank Matthew Needham
+#  @see Gaudi::Math::Needham 
+#  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
+#  @date 2011-07-25
+class Needham_pdf(Mass_pdf) :
+    """
+    Define PDF for J/psi, psi' or Y-signals 
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn       = 3.0   ,
+                   mx       = 3.2   , 
+                   fixMass  = 3.096 ,
+                   fixSigma = 0.013 ,
+                   mass     = None  ,
+                   mean     = None  , 
+                   sigma    = None  ,
+                   a0       = None  ,
+                   a1       = None  ,
+                   a2       = None  ) : 
+        
+        Mass_pdf.__init__ ( self    ,
+                            name    ,
+                            mn      , mx       ,
+                            mass    , mean     , sigma ,
+                            fixMass , fixSigma ) 
+        
+        #
+        unit = 1000
+        #
+        if   self.mass.getMin() <= 3.096 <= self.mass.getMax() : unit = 1000 
+        elif self.mass.getMin() <=  3096 <= self.mass.getMax() : unit = 1
+        elif self.mass.getMin() <= 9.460 <= self.mass.getMax() : unit = 1000 
+        elif self.mass.getMin() <=  9460 <= self.mass.getMax() : unit = 1
+        #
+        self.a0 = makeVar ( a0   , "a0n_%s" % name , "a_{0}(%s)" % name ,  1.975              ,   0           , 10           )
+        self.a1 = makeVar ( a1   , "a1n_%s" % name , "a_{1}(%s)" % name , -0.0011   * unit    , -10 * unit    , 10 * unit    )
+        self.a2 = makeVar ( a2   , "a2n_%s" % name , "a_{2}(%s)" % name , -0.00018  * unit**2 , -10 * unit**2 , 10 * unit**2 )
+        #
+        self.pdf = cpp.Analysis.Models.Needham (
+            'needham_%s'  % name ,
+            'needham(%s)' % name ,
+            self.mass  ,
+            self.mean  ,
+            self.sigma ,
+            self.a0    ,
+            self.a1    ,
+            self.a2
+            )
+# =============================================================================
+## @class Apolonios_pdf
+#  simple wrapper over Apolonios PDF 
+#  @see Analysis::Models::Apolonios 
+#  The function is proposed by Diego Martinez Santos 
+#  https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+#  Here a bit modified version is used with redefined parameter <code>n</code>
+#  to be coherent with local definitions of Crystal Ball
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class Apolonios_pdf(Mass_pdf) :
+    """
+    Simple wrapper over Apolonios PDF 
+    The function is proposed by Diego Martinez Santos 
+    https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+    Here a bit modified version is used with redefined parameter <code>n</code>
+    to be coherent with local definitions of Crystal Ball
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               ,
+                   fixMass   = None ,
+                   fixSigma  = None ,
+                   fixAlpha  = None ,
+                   fixN      = None ,
+                   fixB      = None ,
+                   mass      = None ,
+                   mean      = None ,
+                   sigma     = None ,
+                   alpha     = None ,
+                   n         = None ,
+                   b         = None ) : 
+                   
+        
+        #
+        ## initialize the base
+        # 
+        Mass_pdf.__init__  ( self    , name , mn , mx ,
+                             mass    ,
+                             mean    ,
+                             sigma   ,
+                             fixMass , fixSigma ) 
+        
+        self.alpha = makeVar ( alpha                    ,
+                               'alphaAp_%s'      % name ,
+                               '#alpha_{Ap}(%s)' % name ,
+                               fixAlpha , 0 , 10 )
+        
+        self.n     = makeVar ( n                   ,
+                               'nAp_%s'     % name ,
+                               'n_{Ap}(%s)' % name ,
+                               fixN     , 0 , 20 )
+        
+        self.b     = makeVar ( b                     ,
+                               'bAp_%s'     % name   ,
+                               'b_{Ap}(%s)' % name   ,
+                               fixB     , 0.01 , 100 ) 
+        
+        
+        #
+        ## finally build PDF
+        #
+        self.pdf  = cpp.Analysis.Models.Apolonios (
+            "apolo_"        + name ,
+            "Apolonios(%s)" % name ,
+            self.mass   ,
+            self.mean   ,
+            self.sigma  ,
+            self.alpha  ,
+            self.n      ,
+            self.b      ) 
+
+
+# =============================================================================
 ## @class BifurcatedGauss_pdf
 #  simple wrapper over bifurcated-gaussian
 #  @see RooGaussian
@@ -523,132 +858,6 @@ class SkewGauss_pdf(Mass_pdf) :
             self.alpha  )
 
 # =============================================================================
-## @class StudentT_pdf
-#  Student-T distribution
-#
-#  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
-#  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
-#  where \f$ y = \frac{x - \mu}{\sigma} \f$  
-# 
-#  @see Analysis::Models::StudentT
-#  @see Gaudi::Math::StudentT
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-07-25
-class StudentT_pdf(Mass_pdf) :
-    """
-    Student-T distribution
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixN      = None , 
-                   mass      = None ,
-                   mean      = None ,
-                   sigma     = None ,
-                   n         = None ) :
-        #
-        ## initialize the base
-        # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
-        
-        # 
-        self.n  = makeVar ( n                    ,
-                            'nST_%s'      % name ,
-                            '#n_{ST}(%s)' % name ,
-                            fixN , 0 , 50  ) 
-        #
-        ## finally build pdf
-        # 
-        self.pdf = cpp.Analysis.Models.StudentT (
-            "stT_"         + name ,
-            "StudentT(%s)" % name ,
-            self.mass   ,
-            self.mean   ,
-            self.sigma  ,
-            self.n      )
-
-        
-# =============================================================================
-## @class Apolonios_pdf
-#  simple wrapper over Apolonios PDF 
-#  @see Analysis::Models::Apolonios 
-#  The function is proposed by Diego Martinez Santos 
-#  https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
-#  Here a bit modified version is used with redefined parameter <code>n</code>
-#  to be coherent with local definitions of Crystal Ball
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-07-25
-class Apolonios_pdf(Mass_pdf) :
-    """
-    Simple wrapper over Apolonios PDF 
-    The function is proposed by Diego Martinez Santos 
-    https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
-    Here a bit modified version is used with redefined parameter <code>n</code>
-    to be coherent with local definitions of Crystal Ball
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixAlpha  = None ,
-                   fixN      = None ,
-                   fixB      = None ,
-                   mass      = None ,
-                   mean      = None ,
-                   sigma     = None ,
-                   alpha     = None ,
-                   n         = None ,
-                   b         = None ) : 
-                   
-        
-        #
-        ## initialize the base
-        # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
-        
-        self.alpha = makeVar ( alpha                    ,
-                               'alphaAp_%s'      % name ,
-                               '#alpha_{Ap}(%s)' % name ,
-                               fixAlpha , 0 , 10 )
-        
-        self.n     = makeVar ( n                   ,
-                               'nAp_%s'     % name ,
-                               'n_{Ap}(%s)' % name ,
-                               fixN     , 0 , 20 )
-        
-        self.b     = makeVar ( b                     ,
-                               'bAp_%s'     % name   ,
-                               'b_{Ap}(%s)' % name   ,
-                               fixB     , 0.01 , 100 ) 
-        
-        
-        #
-        ## finally build PDF
-        #
-        self.pdf  = cpp.Analysis.Models.Apolonios (
-            "apolo_"        + name ,
-            "Apolonios(%s)" % name ,
-            self.mass   ,
-            self.mean   ,
-            self.sigma  ,
-            self.alpha  ,
-            self.n      ,
-            self.b      ) 
-
-# =============================================================================
 ## @class Bukin_pdf
 #  simple wrapper over Bukin-pdf
 #  @see RooBukinPdf
@@ -704,60 +913,110 @@ class Bukin_pdf(Mass_pdf) :
             self.rhor  )
 
 # =============================================================================
-## @class CB2_pdf
-#  simple wrapper over double-sided Cristal Ball function
-#  @see Analysis::Models::CrystalBallDS
+## @class StudentT_pdf
+#  Student-T distribution
+#
+#  \f[  f(y) = \frac{1}{\sqrt{\pi n}} \frac { \Gamma( \frac{n+1}{2}) } { \Gamma( \frac{n}{2}  ) }
+#  \left( 1 + \frac{y^2}{n} \right)^{ -\frac{n+1}{2}} \f], 
+#  where \f$ y = \frac{x - \mu}{\sigma} \f$  
+# 
+#  @see Analysis::Models::StudentT
+#  @see Gaudi::Math::StudentT
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class CB2_pdf(Mass_pdf) :
+class StudentT_pdf(Mass_pdf) :
     """
-    Define double sided Crystal Ball
+    Student-T distribution
     """
-    def __init__ ( self            ,
-                   name            ,
-                   mn              ,
-                   mx              ,
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               ,
                    fixMass   = None ,
                    fixSigma  = None ,
-                   fixAlphaL = None ,
-                   fixAlphaR = None ,
-                   fixNL     = None ,
-                   fixNR     = None ,
-                   mass      = None , 
+                   fixN      = None , 
+                   mass      = None ,
                    mean      = None ,
                    sigma     = None ,
-                   alphaL    = None ,
-                   alphaR    = None ,
-                   nL        = None ,
-                   nR        = None ) : 
-        
+                   n         = None ) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , mean     , sigma   ,
-                             fixMass , fixSigma )
+        Mass_pdf.__init__  ( self    , name , mn , mx ,
+                             mass    ,
+                             mean    ,
+                             sigma   ,
+                             fixMass , fixSigma ) 
+        
+        # 
+        self.n  = makeVar ( n                    ,
+                            'nST_%s'      % name ,
+                            '#n_{ST}(%s)' % name ,
+                            fixN , 0 , 50  ) 
         #
-        ## treat the specific parameters
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.StudentT (
+            "stT_"         + name ,
+            "StudentT(%s)" % name ,
+            self.mass   ,
+            self.mean   ,
+            self.sigma  ,
+            self.n      )
+
+
+# =============================================================================
+## @class Voigt_pdf
+#  Voigt-pdf distribution
+#  @see Analysis::Models::Voigt
+#  @see Gaudi::Math::Voigt
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class Voigt_pdf(Mass_pdf) :
+    """
+    Voigt function
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               ,
+                   fixMass   = None ,
+                   fixSigma  = None ,
+                   fixGamma  = None , 
+                   mass      = None ,
+                   mean      = None ,
+                   sigma     = None ,
+                   gamma     = None ) :
         #
-        self.aL    = makeVar ( alphaL ,  "aL_%s"   % name , "#alpha_{L}(%s)" % name , fixAlphaL , 1.5 , 0 , 10 )
-        self.nL    = makeVar (     nL ,  "nL_%s"   % name ,      "n_{L}(%s)" % name , fixNL     , 1   , 0 , 10 )
-        self.aR    = makeVar ( alphaR ,  "aR_%s"   % name , "#alpha_{R}(%s)" % name , fixAlphaR , 1.5 , 0 , 10 )
-        self.nR    = makeVar (     nR ,  "nR_%s"   % name ,      "n_{R}(%s)" % name , fixNR     , 2   , 0 , 10 )
+        ## initialize the base
+        # 
+        Mass_pdf.__init__  ( self    , name , mn , mx ,
+                             mass    ,
+                             mean    ,
+                             sigma   ,
+                             fixMass , fixSigma ) 
         
-        self.pdf = cpp.Analysis.Models.CrystalBallDS(
-            "cb2_"       + name ,
-            "CB_{2}(%s)" % name ,
-            self.mass    ,
-            self.mean    ,
-            self.sigma   ,
-            self.aL      ,
-            self.nL      ,
-            self.aR      ,
-            self.nR      )
+        # 
+        self.gamma  = makeVar ( gamma                    ,
+                                'gamma_%s'   % name ,
+                                '#gamma(%s)' % name ,
+                                fixGamma , 0 , 0.2 * ( mass.getMax()  - mass.getMin() ) ) 
+        #
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.Voigt (
+            "vgt_"       + name ,
+            "Voigt(%s)" % name ,
+            self.mass   ,
+            self.mean   ,
+            self.sigma  ,
+            self.gamma  )
+
         
-        
+# =============================================================================
+# Specializations 
+# =============================================================================
+
 # =============================================================================
 ## @class B0_pdf
 #  simple wrapper over CB2-pdf
@@ -1241,7 +1500,6 @@ class LASS_pdf(Mass_pdf) :
             self.mKaon   ,
             self.mPion   ) 
         
-
         
 # =============================================================================
 ## @class Bugg_pdf
@@ -1551,7 +1809,7 @@ class PSPol_pdf(Mass_pdf) :
             self.ps              ,  ## Gaudi::Math::PhaseSpaceNL 
             self.phi_list        )
 
-
+# =============================================================================
 ## simple class to adjust certaint PDF to avoid zeroes 
 class Adjust1D(object) :
     """
@@ -1875,207 +2133,6 @@ class Lc_pdf(Bukin_pdf) :
                              rhol     ,
                              rhor     ) 
         
-# =============================================================================
-## @class Needham_pdf
-#  Wrapper over CrystalBall function, using
-#  alpha/sigma parameterization by Matt Needham
-#  @thank Matthew Needham
-#  @see Gaudi::Math::Needham 
-#  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
-#  @date 2011-07-25
-class Needham_pdf(Mass_pdf) :
-    """
-    Define PDF for J/psi, psi' or Y-signals 
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   mn       = 3.0   ,
-                   mx       = 3.2   , 
-                   fixMass  = 3.096 ,
-                   fixSigma = 0.013 ,
-                   mass     = None  ,
-                   mean     = None  , 
-                   sigma    = None  ,
-                   a0       = None  ,
-                   a1       = None  ,
-                   a2       = None  ) : 
-        
-        Mass_pdf.__init__ ( self    ,
-                            name    ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
-        
-        #
-        unit = 1000
-        #
-        if   self.mass.getMin() <= 3.096 <= self.mass.getMax() : unit = 1000 
-        elif self.mass.getMin() <=  3096 <= self.mass.getMax() : unit = 1
-        elif self.mass.getMin() <= 9.460 <= self.mass.getMax() : unit = 1000 
-        elif self.mass.getMin() <=  9460 <= self.mass.getMax() : unit = 1
-        #
-        self.a0 = makeVar ( a0   , "a0n_%s" % name , "a_{0}(%s)" % name ,  1.975              ,   0           , 10           )
-        self.a1 = makeVar ( a1   , "a1n_%s" % name , "a_{1}(%s)" % name , -0.0011   * unit    , -10 * unit    , 10 * unit    )
-        self.a2 = makeVar ( a2   , "a2n_%s" % name , "a_{2}(%s)" % name , -0.00018  * unit**2 , -10 * unit**2 , 10 * unit**2 )
-        #
-        self.pdf = cpp.Analysis.Models.Needham (
-            'needham_%s'  % name ,
-            'needham(%s)' % name ,
-            self.mass  ,
-            self.mean  ,
-            self.sigma ,
-            self.a0    ,
-            self.a1    ,
-            self.a2
-            )
-        
-# =============================================================================
-## @class CrystalBall_pdf
-#  @see Analysis::Models::CrystalBall
-#  @see Gaudi::Math::CrystalBall
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-07-25
-class CrystalBall_pdf(Mass_pdf) :
-    """
-    Simple Crystal Ball
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               , 
-                   fixMass  = None  ,
-                   fixSigma = None  ,
-                   fixAlpha = None  ,
-                   fixN     = None  ,
-                   mass     = None  ,
-                   mean     = None  , 
-                   sigma    = None  ,
-                   alpha    = None  ,
-                   n        = None  ) : 
-                   
-        
-        Mass_pdf.__init__ ( self    , name     ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
-        
-        self.alpha = makeVar ( alpha ,
-                               'alphaCB_%s'      % name ,
-                               '#alpha_{CB}(%s)' % name ,
-                               fixAlpha   , 0 , 10      )
-        self.n     = makeVar ( alpha ,
-                               'nCB_%s'      % name ,
-                               'n_{CB}(%s)'  % name ,
-                               fixN       , 0 , 20      )
-
-        #
-        ## finally build PDF 
-        #
-        self.pdf = cpp.Analysis.Models.CrystalBall (
-            'cb_%s'           % name ,
-            'CrystalBall(%s)' % name ,
-            self.mass  ,
-            self.mean  ,
-            self.sigma ,
-            self.alpha ,
-            self.n     )
-
-# =============================================================================
-## @class CrystalBallRS_pdf
-#  @see Analysis::Models::CrystalBallRS
-#  @see Gaudi::Math::CrystalBallRS
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-07-25
-class CrystalBallRS_pdf(Mass_pdf) :
-    """
-    Simple right-side CrystalBall
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               , 
-                   fixMass  = None  ,
-                   fixSigma = None  ,
-                   fixAlpha = None  ,
-                   fixN     = None  ,
-                   mass     = None  ,
-                   mean     = None  , 
-                   sigma    = None  ,
-                   alpha    = None  ,
-                   n        = None  ) : 
-                   
-        
-        Mass_pdf.__init__ ( self    , name     ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
-        
-        self.alpha = makeVar ( alpha ,
-                               'alphaCBRS_%s'      % name ,
-                               '#alpha_{CBRS}(%s)' % name ,
-                               fixAlpha   , 0 , 10      )
-        self.n     = makeVar ( alpha ,
-                               'nCBRS_%s'      % name ,
-                               'n_{CBRS}(%s)'  % name ,
-                               fixN       , 0 , 20      )
-
-        #
-        ## finally build PDF 
-        #
-        self.pdf = cpp.Analysis.Models.CrystalBallRS (
-            'cbrs_%s'           % name ,
-            'CrystalBallRS(%s)' % name ,
-            self.mass  ,
-            self.mean  ,
-            self.sigma ,
-            self.alpha ,
-            self.n     )
-        
-# =============================================================================
-## @class Poly2DPositive_pdf
-#  positive polynomial in 2D 
-#  @see Analysis::Models::Poly2DPositive
-#  @see Gaudi::Math::Poly2DPositive
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2013-01-10
-class Poly2DPositive_pdf(Mass_pdf) :
-    """
-    Positive polynomial in 2D 
-    """
-    def __init__ ( self             ,
-                   name             ,
-                   x                ,   ##  the first  dimension  
-                   y                ,   ##  the second dimension
-                   nx = 2           ,   ##  polynomial degree in X 
-                   ny = 2           ) : ##  polynomial degree in Y 
-        
-        self.x  = x
-        self.y  = y
-        
-        self.m1 = x ## ditto 
-        self.m2 = y ## ditto 
-        
-        self.phis     = []
-        self.phi_list = ROOT.RooArgList() 
-        
-        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
-            
-            phi_i = makeVar   ( None , 'phi_2d_%d_%s' %  ( i , name ) , '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
-            self.phis.append  ( phi_i )
-            self.phi_list.add ( phi_i )
-            
-        #
-        ## finally build PDF 
-        #
-        self.pdf = cpp.Analysis.Models.Poly2DPositive (
-            'p2Dp_%s'            % name ,
-            'Poly2DPositive(%s)' % name ,
-            self.x        ,
-            self.y        ,
-            nx            ,
-            ny            , 
-            self.phi_list )
-
         
 # =============================================================================
 ## @class Fit1DBase
@@ -2766,6 +2823,62 @@ class Manca_pdf (Fit1DBase) :
     def alpha_1S ( self ) : return self.Y1S.pdf.alpha ()
     def alpha_2S ( self ) : return self.Y2S.pdf.alpha ()
     def alpha_3S ( self ) : return self.Y3S.pdf.alpha ()
+
+
+# =============================================================================
+## 2D-non-factorizable models 
+# =============================================================================
+
+# =============================================================================
+## @class Poly2DPositive_pdf
+#  positive polynomial in 2D:
+#  \f$  f(x,y) = \sum^{i=n}_{i=0}\sum{j=k}_{j=0} a^2_{\ij} B^n_i(x) B^k_j(y) \f$,
+#  where \f$ B^n_i(x)\f$ denotes the basic bersntein polynomial 
+#  @see Analysis::Models::Poly2DPositive
+#  @see Gaudi::Math::Poly2DPositive
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2013-01-10
+class Poly2DPositive_pdf(object) :
+    """
+    Positive polynomial in 2D 
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   x                ,   ##  the first  dimension  
+                   y                ,   ##  the second dimension
+                   nx = 2           ,   ##  polynomial degree in X 
+                   ny = 2           ) : ##  polynomial degree in Y 
+        
+        self.x  = x
+        self.y  = y
+        
+        self.m1 = x ## ditto 
+        self.m2 = y ## ditto 
+        
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList() 
+        
+        for i in range ( 1 ,  ( nx + 1 ) * ( ny + 1 ) ) :
+            
+            phi_i = makeVar   ( None ,
+                                'phi_2d_%d_%s'    % ( i , name ) ,
+                                '#phi(2D)_%d(%s)' % ( i , name ) ,  None , 0 , -3.5 , 3.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            
+        #
+        ## finally build PDF 
+        #
+        self.pdf = cpp.Analysis.Models.Poly2DPositive (
+            'p2Dp_%s'            % name ,
+            'Poly2DPositive(%s)' % name ,
+            self.x        ,
+            self.y        ,
+            nx            ,
+            ny            , 
+            self.phi_list )
+
+
 
 
 # =============================================================================

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# $Id$
 # =============================================================================
 # A Python Library to create a Progress Bar.
 # Copyright (C) 2008  BJ Dierkes <wdierkes@5dollarwhitebox.org>
@@ -17,11 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+# =============================================================================
 #
 # This class is an improvement from the original found at:
 #
 #   http://code.activestate.com/recipes/168639/
 #
+# =============================================================================
+#                   $Revision$
+# Last modification $Date$
 # =============================================================================
 """
 
