@@ -4,6 +4,15 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-10 - Gerhard Raven
+ - PatFwdTool: 
+     o consolidate find_single_zone 
+     o replace some loops by std::for_each
+     o make sortQuality a constexpr literal
+     o use override
+     o use Gaudi::extends2
+ 
+
 ! 2014-04-29 - Sebastian Neubert
  - Added option to flag track seeds and their ancestors as used
  - Added counter for number of tracks produced by the forward tracking

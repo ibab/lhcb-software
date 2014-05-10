@@ -5,6 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/extends.h"
 
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "Event/STCluster.h"
@@ -34,8 +35,7 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-class PatForwardTool : public GaudiTool, virtual public IPatForwardTool,
-                       virtual public ITracksFromTrack{
+class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack> {
 public:
 
   // Return the interface ID
@@ -46,34 +46,18 @@ public:
                   const std::string& name,
                   const IInterface* parent);
 
-  virtual ~PatForwardTool( ); ///< Destructor
+  ~PatForwardTool( ) override = default; ///< Destructor
 
-  virtual void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output );
+  void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) override;
 
-  virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                      std::vector<LHCb::Track*>& tracks );
+  StatusCode tracksFromTrack( const LHCb::Track& seed,
+                              std::vector<LHCb::Track*>& tracks ) override;
 
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
 
   // added for NNTools
   void setNNSwitch( bool nnSwitch)  { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
-
-  struct sortQuality{
-    bool operator()( const PatFwdTrackCandidate& first, 
-                     const PatFwdTrackCandidate& second )
-    {
-      bool sortDecision = ( first.quality() < second.quality());
-      if(first.quality() == second.quality()){
-        sortDecision = ( first.chi2PerDoF() < second.chi2PerDoF());
-        if(first.chi2PerDoF() == second.chi2PerDoF()){
-          sortDecision = ( first.qOverP() < second.qOverP());
-        }
-      }
-      return sortDecision;
-    }
-  };
-
 
 private:
 
@@ -163,7 +147,6 @@ private:
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
 
-
   //== Parameters of the algorithm
   bool   m_secondLoop;
   bool   m_useMomentumEstimate;
@@ -190,11 +173,8 @@ private:
   double m_maxDeltaYSlope;
   int    m_maxXCandidateSize;
 
-
   std::vector<double>  m_magnetKickParams ;
   double m_minRange;
-
-
 
   // setting the cov matrix of the state
   double m_stateErrorX2;
@@ -204,17 +184,15 @@ private:
   double m_stateErrorP;
 
   PatFwdHits  m_xHitsAtReference;
-
   std::vector<PatFwdTrackCandidate> m_candidates;
 
-  bool   m_withoutBField;
-  
-  bool m_Preselection;
+  bool  m_withoutBField;
+  bool  m_Preselection;
   float m_PreselectionPT;
-  bool m_UseWrongSignWindow;
+  bool  m_UseWrongSignWindow;
   float m_WrongSignPT;
-  bool m_FlagUsedSeeds;                    // flag velo seeds as used if a track is upgraded
-  bool   m_nnSwitch;                   // switch on or off NN var. writing
+  bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
+  bool  m_nnSwitch;                   // switch on or off NN var. writing
 };
 
 #endif // PATFORWARDTOOL_H

@@ -24,14 +24,29 @@
 // 2005-10-04 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
-static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
-static const unsigned int m_nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions;
-static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
-static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
+static const unsigned int nSta = Tf::RegionID::OTIndex::kNStations;
+static const unsigned int nLay = Tf::RegionID::OTIndex::kNLayers;
+static const unsigned int nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions;
+static const unsigned int nOTReg = Tf::RegionID::OTIndex::kNRegions;
+static const unsigned int nITReg = Tf::RegionID::ITIndex::kNRegions;
 
 
 DECLARE_TOOL_FACTORY( PatForwardTool )
+
+constexpr struct sortQuality {
+  bool operator()( const PatFwdTrackCandidate& first, 
+                   const PatFwdTrackCandidate& second )
+  {
+    bool sortDecision = ( first.quality() < second.quality());
+    if(first.quality() == second.quality()){
+      sortDecision = ( first.chi2PerDoF() < second.chi2PerDoF());
+      if(first.chi2PerDoF() == second.chi2PerDoF()){
+        sortDecision = ( first.qOverP() < second.qOverP());
+      }
+    }
+    return sortDecision;
+  }
+} sortQuality_{};
 
 struct MaxSpread {
     double spread;
@@ -62,45 +77,44 @@ int nbDifferent( const PatFwdTrackCandidate &c) {
 
 
 class PlaneCounter {
-    PatFwdPlaneCounter counter_;
-    int minPlanes_;
+    PatFwdPlaneCounter m_counter;
+    int m_minPlanes;
 public:
-    PlaneCounter( PatFwdPlaneCounter counter, int minPlane ) : counter_{ counter }, minPlanes_(minPlane) { }
+    PlaneCounter( PatFwdPlaneCounter counter, int minPlane ) : m_counter{ counter }, m_minPlanes(minPlane) { }
     template <typename Iterator>
     PlaneCounter( Iterator&& first, Iterator&& last, int minPlane ) 
-         : counter_{ std::forward<Iterator>(first) , std::forward<Iterator>(last) }
-         , minPlanes_(minPlane) { }
+         : m_counter{ std::forward<Iterator>(first) , std::forward<Iterator>(last) }
+         , m_minPlanes{minPlane} { }
 
-    PlaneCounter& operator +=( const PatFwdHit* hit ) { counter_.addHit(hit); return *this;}
-    PlaneCounter& operator -=( const PatFwdHit* hit ) { counter_.removeHit(hit);return *this; }
-    bool operator()() const { return  counter_.nbDifferent() >= minPlanes_; }
-    template <typename Iterator>
-    bool isPossible(const Iterator& first, const Iterator& last) const { 
-        return first+ (minPlanes_-1) != last;
+    bool operator()() const { return m_counter.nbDifferent() >= m_minPlanes; }
+
+    //== Try to make a single zone, by removing the first and adding other as
+    //   long as the spread and minPlanes conditions are met.
+    template <typename Iterator, typename Predicate>
+    Iterator make_single_zone(Iterator first, Iterator mid, Iterator last,
+                              Predicate predicate) 
+    {
+        auto i = mid;
+        while ( first + (m_minPlanes-1) != mid  && i != last ) {
+          m_counter.removeHit(*first);
+          ++first;
+          for (; i!=last && predicate(*first,*i) ; ++i ) m_counter.addHit(*i);
+          if ( (*this)() ) mid = i;
+        }
+        return mid;
     }
-    int count() const { return counter_.nbDifferent(); }
 };
 
-//== Try to make a single zone, by removing the first and adding other as
-//   long as the spread and minPlanes conditions are met.
-template <typename Iterator, typename Predicate>
-Iterator make_single_zone(Iterator first, Iterator mid, Iterator last,
-                          PlaneCounter counter,
-                          Predicate predicate) 
+template <typename  Iterator,typename Predicate> 
+std::pair<Iterator,Iterator> make_single_zone(Iterator first, Iterator mid, Iterator last, int minPlanes, Predicate predicate) 
 {
-    auto i = mid;
-    while ( counter.isPossible( first, mid ) && i != last ) {
-      counter -= *first;
+    PlaneCounter planeCount{ first, mid,  minPlanes };
+    if ( !planeCount() ) { //== Enough different planes?
       ++first;
-      // if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
-      //   verbose() << " try to extend from itP : " << (*first)->projection()
-      //             << " itF " << (*i)->projection() << endmsg;
-      for (; i!=last && predicate(*first,*i) ; ++i ) counter += *i;
-      if ( counter() ) mid = i;
+      return { first, first };
     }
-    return mid;
+    return { first, planeCount.make_single_zone( first, mid, last, predicate ) };
 }
-
 
 template <typename  Iterator,typename Predicate> 
 std::pair<Iterator,Iterator> find_range(Iterator first, Iterator mid, Iterator last, Predicate predicate) 
@@ -108,12 +122,13 @@ std::pair<Iterator,Iterator> find_range(Iterator first, Iterator mid, Iterator l
     using reference = typename std::iterator_traits<Iterator>::reference;
     //== If not enough hits in the maximum spread, skip
     if ( !predicate(*first,*mid)  ) {
-      // first increment first, as we KNOW the current first fails the predicate..
+      // first increment first, as we KNOW the current first fails predicate..
       first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
       return { first, first };
     }
     //== Add all hits inside the maximum spread. 
-    return { first, std::find_if( mid, last, [&](reference i) { return !predicate(*first,i); } ) };
+    // first increment mid, as we KNOW the current mid passes predicate..
+    return { first, std::find_if( ++mid, last, [&](reference i) { return !predicate(*first,i); } ) };
 }
 
 
@@ -124,7 +139,7 @@ std::pair<Iterator,Iterator> find_range(Iterator first, Iterator mid, Iterator l
 PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : GaudiTool ( type, name , parent ),
+    : base_class( type, name , parent ),
       m_nnSwitch(false)
 {
   declareInterface<IPatForwardTool>(this);
@@ -176,10 +191,6 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("FlagUsedSeeds",m_FlagUsedSeeds = false);
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-PatForwardTool::~PatForwardTool() {}
 
 //=========================================================================
 //  Initialization, get the tools
@@ -189,7 +200,6 @@ StatusCode PatForwardTool::initialize ( ) {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
-
 
   m_tHitManager  = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
   m_fwdTool      = tool<PatFwdTool>( "PatFwdTool", this);
@@ -231,28 +241,22 @@ void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output )
 
 StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                                             std::vector<LHCb::Track*>& output ){
-
-  LHCb::Track* tr = (LHCb::Track*) &seed;
-
   bool isDebug = msgLevel( MSG::DEBUG );
 
-  if ( tr->checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
-  if ( tr->checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
-  if ( tr->checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // indicates this has already successfully been upgraded
+  if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
+  if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
+  if ( seed.checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // indicates this has already successfully been upgraded
 
+  PatFwdTrackCandidate track( &seed );
 
-  PatFwdTrackCandidate track( tr );
-
-  if(m_Preselection && tr->pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
+  if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
 
   if ( isDebug ) {
     debug() << format( "**** Velo track %3d  x%8.2f  y%8.2f  tx%9.5f  ty%9.5f q/p = %8.6f",
-                       tr->key(), track.xStraight( m_zAfterVelo ),
+                       seed.key(), track.xStraight( m_zAfterVelo ),
                        track.yStraight( m_zAfterVelo ),
                        track.slX(), track.slY(), 1000. * track.qOverP() ) << endmsg;
   }
-
-
 
   //== Build the initial list of X candidates
   buildXCandidatesList( track );
@@ -266,7 +270,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   for( auto& icand : m_candidates ) {
 
     //== Fit the candidate, and store them
-
     while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
 
       // Copy the whole stuff, keep only used ones and store it.
@@ -300,7 +303,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       }
 
       //== tag these coordinates in the original, so that we don't find the same track again
-      for ( PatFwdHit* hit :  icand ) {
+      for ( auto* hit :  icand ) {
         if ( hit->isSelected() ) hit->setIgnored( true );
       }
     }
@@ -308,29 +311,27 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   if ( isDebug ) {
     debug() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
-    for ( auto itL = xCandidates.begin(); xCandidates.end() != itL; ++itL ) {
-      debug() << "Candidate " << itL - xCandidates.begin()
-              << " Chi2/nDof = " << (*itL).chi2PerDoF() << endmsg;
-      debugFwdHits( *itL );
+    unsigned nCand=0;
+    for ( const auto& itL : xCandidates ) {
+      debug() << "Candidate " << nCand++
+              << " Chi2/nDof = " << itL.chi2PerDoF() << endmsg;
+      debugFwdHits( itL );
     }
     if ( !xCandidates.empty() ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
   }
 
   //== Now try to get space track from these X track.
-
-
   std::vector<PatFwdTrackCandidate> goodCandidates;
   int maxPlanes = 0;
 
-
   unsigned nCand = 0;
-  for ( PatFwdTrackCandidate& temp :  xCandidates ) {
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
+  for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "--- Candidate " << ++nCand
               << "  X cord size " << temp.coords().size() 
               << endmsg;
 
-    for ( PatFwdHit *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
+    for ( auto *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
     temp.setSelectedCoords( );
 
     double qOverP = computeQOverP(temp);  // in 1/GeV
@@ -400,32 +401,22 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     //== Update requirement according to already found good solutions...
     minPlanes = std::max( minPlanes,   nbDifferent(temp)-1 );
-
     goodCandidates.push_back( std::move(temp) );
   }
 
 
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
-    std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality());
+    std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality_);
     // loop over all candidates
-    int cand_count = 0;
     for( auto& all : goodCandidates ) {
-      if(goodCandidates.size() == 1){
-	    all.setCand1stQuality(all.quality());
+	  all.setCand1stQuality(all.quality());
+      if(goodCandidates.size() == 1) {
 	    all.setCand2ndQuality(0.);
-      }
-      ++cand_count;
-      if(goodCandidates.size() > 1){
-	    all.setCand1stQuality(all.quality());
-	    bool cand2nd = false;
-	    for( const auto& allb : goodCandidates ) {
-	        if( all.quality() == allb.quality()) continue;
-	        if( !cand2nd){
-	            all.setCand2ndQuality(allb.quality());
-	            cand2nd = true;
-	        }
-	    }
+      } else {
+        auto i2 = std::find_if( std::begin(goodCandidates), std::end(goodCandidates),
+                                [&](const PatFwdTrackCandidate& c) { return c.quality() != all.quality(); } );
+        if (i2!=std::end(goodCandidates)) { all.setCand2ndQuality( i2->quality() ); }
       }
     }
   }
@@ -442,16 +433,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                                 [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
     // remove worst quality  
     // TODO: could fold this accumulate into the lambda above by capturing bestQuality by reference
-    auto bestQuality = std::accumulate( std::begin(goodCandidates), last,
-                                  1000.,
+    auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
                                   [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
     bestQuality += 1.0;
     last = std::remove_if( std::begin(goodCandidates), last,
                            [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
     // remove if sensibly less OT 
     // TODO: could fold this accumulate into the lambda above by capturing maxOT by reference
-    auto maxOT = std::accumulate( std::begin(goodCandidates), last,
-                                  0,
+    auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
                                   [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
     maxOT = std::min(24,maxOT)-3;
     last = std::remove_if( std::begin(goodCandidates), last,
@@ -460,19 +449,17 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
         debug() << "Ignoring " << std::distance(last,std::end(goodCandidates)) 
                 << " candidates -- either not enough planes, or bad quality, or not enough OT" << endmsg;
     }
-
     goodCandidates.erase(last,std::end(goodCandidates));
   }
-  // TODO/FIXME: do we need to sort the candidates prior to outputting them?
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
   //=== Store tracks...
   for (const auto&  cand : goodCandidates ) {
-    output.push_back( tr->clone() );
+    output.push_back( seed.clone() );
     LHCb::Track* fwTra = output.back();
     //fwTra->clearAncestors();
-    fwTra->addToAncestors( tr );  // Set the Velo track as only ancestor of the Forward track
+    fwTra->addToAncestors( seed );  // Set the Velo track as only ancestor of the Forward track
     fwTra->setType( LHCb::Track::Long );
     fwTra->setHistory( LHCb::Track::PatForward );
 
@@ -480,10 +467,11 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     
     double qOverP = m_fwdTool->qOverP( cand );
     // set q/p in all of the existing states
-    for ( auto& state : fwTra->states()) {
+    std::for_each( std::begin( fwTra->states() ), std::end( fwTra->states() ),
+                   [qOverP]( LHCb::State* state ) {
       state->setQOverP(qOverP);
       state->setErrQOverP2(qOverP*qOverP*0.012*0.012);
-    }
+    } );
     
     Gaudi::TrackSymMatrix cov;
     cov(0,0) = m_stateErrorX2;
@@ -494,13 +482,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     cov(4,4) = errQOverP * errQOverP;
 
 
-    for (unsigned int i=0; i<m_fwdTool->zOutputs().size(); i++) {
+    for ( const auto& z : m_fwdTool->zOutputs() ) {
+      double dz = z - m_fwdTool->zReference();
       LHCb::State temp;
-      double dz = m_fwdTool->zOutputs()[i] - m_fwdTool->zReference();
       temp.setLocation( LHCb::State::AtT );
-      temp.setState( cand.x( dz ), cand.y( dz ), m_fwdTool->zOutputs()[i],
-		     cand.xSlope( dz ), cand.ySlope( dz ), qOverP );
-      
+      temp.setState( cand.x( dz ), cand.y( dz ), z,
+		             cand.xSlope( dz ), cand.ySlope( dz ), qOverP );
       //== overestimated covariance matrix, as input to the Kalman fit
       temp.setCovariance( cov );
       fwTra->addToStates( std::move(temp) );
@@ -514,11 +501,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra->addInfo(LHCb::Track::Cand2ndQPat, cand.cand2ndquality());
 
     //== Add reference to the used clusters/, T stations
-    for ( PatFwdHit *myHit : cand ) { 
-      fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
-      myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
-      myHit->setIsUsed(true);
-    }
+    std::for_each( std::begin(cand), std::end(cand), 
+                   [&fwTra](PatForwardHit *myHit) {
+           fwTra->addToLhcbIDs( myHit->hit()->lhcbID() );
+           myHit->hit()->setStatus(Tf::HitBase::UsedByPatForward);
+           myHit->setIsUsed(true);
+    } );
     fwTra -> setPatRecStatus( LHCb::Track::PatRecIDs );
 
     if ( m_addTTClusterTool ) {
@@ -530,10 +518,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   }
   // mark the input tracks and all ancestors as used
   if(m_FlagUsedSeeds && output.size()>0){
-    tr->setFlag(LHCb::Track::Used,true);
-    for (LHCb::Track* anc : tr->ancestors()){
-      anc->setFlag(LHCb::Track::Used,true);
-    }
+    const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
+    std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
+                   [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
   }
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
@@ -554,13 +541,11 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
     if(dir > 0){
       xMin = xExtrapRef - kickRange;
       xMax = xExtrapRef + maxRangeRef;
-    }
-    else{
+    } else{
       xMin = xExtrapRef - maxRangeRef;
       xMax = xExtrapRef + kickRange;
     }
-  }
-  else{
+  } else{
     xMin = xExtrapRef - maxRangeRef;
     xMax = xExtrapRef + maxRangeRef;
   }
@@ -570,12 +555,10 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
     debug()<< "xMin: " << xMin <<endmsg;
   }
   
-  PatFwdHits::const_iterator itFwdH;
-
-  for (unsigned int sta = 0; sta < m_nSta; sta ++){
-    for (unsigned int lay = 0; lay< m_nLay; lay++){
+  for (unsigned int sta = 0; sta < nSta; sta ++){
+    for (unsigned int lay = 0; lay< nLay; lay++){
       if (lay == 1 || lay == 2) continue;  // X layers
-      for (unsigned int region = 0; region <m_nReg; region ++){
+      for (unsigned int region = 0; region <nReg; region ++){
         const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
 
         double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
@@ -630,11 +613,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
 
-  PatFwdHits temp;
+  PatFwdHits temp; // no need actually for PatFwdHits -- a container with objects which have 'projection', 'planeCode','selected' (and pointer to hit) suffices
 
-  for (unsigned int sta=0; sta<m_nSta; sta++) {
-    for (unsigned int lay=1; lay<m_nLay-1; lay++) {
-      for (unsigned int region=0; region<m_nReg; region++) {
+  for (unsigned int sta=0; sta<nSta; sta++) {
+    for (unsigned int lay=1; lay<nLay-1; lay++) {
+      for (unsigned int region=0; region<nReg; region++) {
 
         const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
         double dz = regionB->z() - m_fwdTool->zReference();
@@ -657,19 +640,17 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
         //== displacement also in this projectio.
         bool  flipSign = ( regionB->sinT()  < 0 );
         double minProj = tol;
-        if ( region< m_nOTReg ) minProj += 1.5;
+        if ( region< nOTReg ) minProj += 1.5;
 
-        for ( PatFwdHit* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
+        for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
     	  if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, tolY ) ) continue;
 
           updateHitForTrack( hit, y0, ty );
 
           hit->setIgnored( false );
-          if (!driftOK( *hit )) {
-              hit->setSelected( false );
-              continue;
-          }
-          hit->setSelected( true );
+          hit->setSelected( driftOK(*hit) );
+          if (!hit->isSelected()) continue;
+
           double xRef = ( hit->x() - xPred ) ;
           hit->setProjection( flipSign ? -xRef : xRef );
 
@@ -681,7 +662,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Sort by projection
-
   std::sort( std::begin(temp), std::end( temp), Tf::increasingByProjection<PatForwardHit>() );
 
   int minYPlanes = 4;
@@ -716,33 +696,19 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
     MaxSpread predicate{ allowedStereoSpread(*itP) } ; 
 
+    /// collapse these two calls into one...
     auto itE = itP + (minYPlanes -1);
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      verbose() << format( "  first %8.2f +minXPlanes -> %8.2f (diff: %8.2f) Spread %6.2f ",
-                           (*itP)->projection(), (*itE)->projection(),
-                           (*itE)->projection() - (*itP)->projection(), predicate.spread );
-    }
-
     std::tie( itP, itE ) = find_range( itP, itE, last, predicate );
-    if ( itP == itE ) { 
+    if ( itP == itE ) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   not enough planes in spread" << endmsg;
         continue;
     }
-
-    PlaneCounter planeCount{ itP, itE, minYPlanes };
-    //== Enough different planes
-    if ( !planeCount() ) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "   Not enough y planes : " << planeCount.count() << endmsg;
-      ++itP;
-      continue; 
+    std::tie( itP, itE) = make_single_zone( itP, itE, last, minYPlanes, predicate);
+    if ( itP == itE ) {
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   Not enough x planes : " << endmsg;
+        continue;
     }
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << endmsg;
-
-    //== Try to make a single zone, by removing the first and adding other as
-    //   long as the spread and plane count conditions are met.
-    //TODO: move make_single_zone into PlaneCounter...
-    itE = make_single_zone( itP, itE, last, std::move(planeCount) , predicate );
+    ///
 
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
@@ -750,9 +716,9 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
                 << endmsg;
     }
     //== We have the first list. The best one ????
-    auto cnt = nbDifferent( itP, itE );
+    auto cnt = nbDifferent( itP, itE ); // can we re-use the result computed in make_single_zone???
     if ( cnt >= inbDifferent ) {
-      auto delta = (*(itE-1))->projection() - (*itP)->projection();
+      auto delta = (*std::prev(itE))->projection() - (*itP)->projection();
       if ( cnt > inbDifferent || delta < size ) {
         inbDifferent =  cnt;
         size = delta;
@@ -772,10 +738,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   track.addCoords( bestList.first, bestList.second );
 
-
   //== Sort by Z
   std::sort( std::begin(track), std::end(track), Tf::increasingByZ<PatForwardHit>() );
-
   return true;
 }
 
@@ -787,7 +751,7 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track ) const {
 }
 
 void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream& msg ) const {
-  for ( const PatFwdHit *hit : track ) {
+  for ( const auto *hit : track ) {
     msg << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d typ%2d Prev%2d Next%2d Drift %7.3f",
                    hit->z(),
                    hit->projection(),
@@ -808,9 +772,6 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
     msg << endmsg;
   }
 }
-
-
-
 
 //=========================================================================
 //  Build the list of vector of X hit candidates.
@@ -835,10 +796,10 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   double dSlope_kick = 0;
   //== based on momentum a wrong-charge sign window size is defined
   if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
-    const double q = track.qOverP() > 0 ? 1. : -1.;
+    double q = track.qOverP() > 0 ? 1. : -1.;
 
-    const double magscalefactor = m_fwdTool->magscalefactor() ;
-    dir = q*magscalefactor*(-1);
+    double magscalefactor = m_fwdTool->magscalefactor() ;
+    dir = -q*magscalefactor;
     if(m_UseWrongSignWindow && pt>m_WrongSignPT){
       double minWrongSignedMom = m_WrongSignPT / track.sinTrack();
       dSlope_kick =m_magnetKickParams[0] / (minWrongSignedMom - m_magnetKickParams[1] ) ;
@@ -848,9 +809,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       debug() << "   xExtrap = " << xExtrap
               << " q/p " << track.qOverP()
               << " predict " << xExtrap + kick << endmsg;
-
   }
-
 
   if( UNLIKELY( isDebug ) ) 
     debug() << "Search X coordinates, xMin " << xExtrap - maxRange
@@ -867,26 +826,17 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   auto itP = std::begin(m_xHitsAtReference);
   auto last = std::end(m_xHitsAtReference);
   while (  itP + minXPlanes < last ) {
-
     MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
 
     auto itE = itP + minXPlanes -1;
     std::tie(itP, itE) = find_range( itP, itE, last, predicate);
     if (itP == itE) continue;
 
-    PlaneCounter planeCount{ itP, itE,  minXPlanes };
-    //== Enough different planes
-    if ( !planeCount() ) {
-      if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) 
-        verbose() << "   Not enough x planes : " << planeCount.count() << endmsg;
-      ++itP;
-      continue;
+    std::tie(itP, itE) = make_single_zone( itP, itE, last, minXPlanes, predicate);
+    if (itP == itE) {
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   Not enough x planes : " << endmsg;
+        continue;
     }
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << endmsg;
-
-    //== Try to make a single zone, by removing the first and adding other as
-    //   long as the spread and minXPlanes conditions are met.
-    itE = make_single_zone( itP, itE, last, std::move(planeCount), predicate );
 
     double x1 = (*itP)->projection();
     double x2 = (*(itE-1))->projection();

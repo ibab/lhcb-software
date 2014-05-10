@@ -28,7 +28,7 @@
     /// Standard constructor
     template < class Iterator >
     PatFwdPlaneCounter( Iterator first, Iterator last )
-      : m_nbDifferent(0)
+      : m_nbDifferent{0}
     {
       m_planeList.fill(0);
       while (first!=last) {
