@@ -95,7 +95,7 @@ namespace Gaudi
     public :
       // ======================================================================
       /// constructor
-      Chebyshev ( const unsigned int N ) : m_N ( N ) {}
+      Chebyshev ( const unsigned int N = 0 ) : m_N ( N ) {}
       // ======================================================================
     public:
       // ======================================================================
@@ -105,11 +105,6 @@ namespace Gaudi
     public:
       // ======================================================================
       unsigned int order() const { return m_N ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      Chebyshev () ;                     // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -184,7 +179,7 @@ namespace Gaudi
     public :
       // ======================================================================
       /// constructor
-      Legendre ( const unsigned int N ) : m_N ( N ) {}
+      Legendre ( const unsigned int N = 0  ) : m_N ( N ) {}
       // ======================================================================
     public:
       // ======================================================================
@@ -194,11 +189,6 @@ namespace Gaudi
     public:
       // ======================================================================
       unsigned int order() const { return m_N ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      Legendre () ;                      // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -264,7 +254,7 @@ namespace Gaudi
     public :
       // ======================================================================
       /// constructor
-      Hermite ( const unsigned int N ) : m_N ( N ) {}
+      Hermite ( const unsigned int N = 0 ) : m_N ( N ) {}
       // ======================================================================
     public:
       // ======================================================================
@@ -274,11 +264,6 @@ namespace Gaudi
     public:
       // ======================================================================
       unsigned int order() const { return m_N ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      Hermite () ;                      // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -1457,6 +1442,7 @@ namespace Gaudi
     // ========================================================================
     /** @class GramCharlierA4
      *  Gram-Charlier type A approximation
+     *  http://en.wikipedia.org/wiki/Edgeworth_series
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-06-13
      */
@@ -1543,8 +1529,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from two masses
-      PhaseSpace2 ( const double m1 ,
-                    const double m2 ) ;
+      PhaseSpace2 ( const double m1 = 0 ,
+                    const double m2 = 1 ) ;
       /// deststructor
       ~PhaseSpace2 () ;                                         // deststructor
       // ======================================================================
@@ -1552,11 +1538,8 @@ namespace Gaudi
       // ======================================================================
       /// evaluate 2-body phase space
       double operator () ( const double x ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpace2 () ;                   // the default constructor is disabled
+      /// integral 
+      double integral    ( const double xmin , const double xmax ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -1631,6 +1614,11 @@ namespace Gaudi
         const double         m2     ,
         const unsigned short L  = 0 ) ;
       // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class PhaseSpace3
@@ -1651,9 +1639,9 @@ namespace Gaudi
        *  @param l1 the angular momentum between 1st and 2nd particle
        *  @param l2 the angular momentum between the pair and 3rd particle
        */
-      PhaseSpace3 ( const double         m1     ,
-                    const double         m2     ,
-                    const double         m3     ,
+      PhaseSpace3 ( const double         m1 = 0 ,
+                    const double         m2 = 1 ,
+                    const double         m3 = 2 ,
                     const unsigned short l1 = 0 ,
                     const unsigned short l2 = 0 ) ;
       /// deststructor
@@ -1663,11 +1651,6 @@ namespace Gaudi
       // ======================================================================
       /// evaluate 3-body phase space
       double operator () ( const double x ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpace3 () ;                   // the default constructor is disabled
       // ======================================================================
     public:
       // ======================================================================
@@ -1720,8 +1703,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from threshold and number of particles
-      PhaseSpaceLeft ( const double         threshold ,
-                       const unsigned short num       ) ;
+      PhaseSpaceLeft ( const double         threshold = 0 ,
+                       const unsigned short num       = 2 ) ;
       /// constructor from list of masses
       PhaseSpaceLeft ( const std::vector<double>& masses ) ;
       /// deststructor
@@ -1732,14 +1715,13 @@ namespace Gaudi
       /// evaluate N-body phase space near left threhsold
       double operator () ( const double x    ) const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================
+      double integral ( const double xmin , const double xmax ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       bool setThreshold ( const double x ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpaceLeft () ;               // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -1762,9 +1744,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// constructor from threshold and number of particles
-      PhaseSpaceRight ( const double         threshold ,
-                        const unsigned short l         ,
-                        const unsigned short n         ) ;
+      PhaseSpaceRight ( const double         threshold = 10 ,
+                        const unsigned short l         = 2  ,
+                        const unsigned short n         = 3  ) ;
       /// deststructor
       ~PhaseSpaceRight () ;                                     // deststructor
       // ======================================================================
@@ -1773,14 +1755,13 @@ namespace Gaudi
       /// evaluate N/L-body phase space near right  threhsold
       double operator () ( const double x ) const ;
       // ======================================================================
+    public: // integrals  
+      // ======================================================================
+      double integral ( const double xmin , const double xmax ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       bool setThreshold ( const double x ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpaceRight () ;               // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -1985,12 +1966,12 @@ namespace Gaudi
        *  the third particle
        *  @param l  the angular momentum between the first and the second particle
        */
-      PhaseSpace23L ( const double         m1     ,
-                      const double         m2     ,
-                      const double         m3     ,
-                      const double         m      ,
-                      const unsigned short L      ,
-                      const unsigned short l  = 0 ) ;
+      PhaseSpace23L ( const double         m1 = 0.5 ,
+                      const double         m2 = 0.5 ,
+                      const double         m3 = 3   ,
+                      const double         m  = 5   ,
+                      const unsigned short L  = 1   ,
+                      const unsigned short l  = 0   ) ;
       /// deststructor
       ~PhaseSpace23L () ;                                     // deststructor
       // ======================================================================
@@ -2027,11 +2008,6 @@ namespace Gaudi
       /// get the integral between low and high limits
       double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpace23L () ;               // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -2304,7 +2280,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Flatte
      *
-     *  S.M. Flatt�
+     *  S.M. Flatte
      *  "Coupled-channel analysis of the \f$\pi\eta\f$ and \f$K\bar{K}\f$
      *  systems near \f$K\bar{K}\f$threshold"
      *  Physics Letters B, Volume 63, Issue 2, 19 July 1976, Pages 224-227
@@ -2379,8 +2355,12 @@ namespace Gaudi
       /// get the integral
       virtual double integral () const ;
       /// get the integral between low and high limits
-      virtual double integral ( const double low  ,
-                                const double high ) const ;
+      virtual double integral  ( const double low  ,
+                                 const double high ) const 
+      { return integral1 ( low ,high ) ; }
+      /// get the integral between low and high limits
+      double         integral1 ( const double low  ,
+                                 const double high ) const ;
       // ======================================================================
     private:
       // ======================================================================
@@ -2399,7 +2379,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Flatte2
      *
-     *  S.M. Flatt�
+     *  S.M. Flatte
      *  "Coupled-channel analysis of the \f$\pi\eta\f$ and \f$K\bar{K}\f$
      *  systems near \f$K\bar{K}\f$threshold"
      *  Physics Letters B, Volume 63, Issue 2, 19 July 1976, Pages 224-227
@@ -3982,7 +3962,7 @@ namespace Gaudi
       bool   setAlpha ( const double value ) ;
       bool   setBeta  ( const double value ) ;
       // ======================================================================
-    private: // integrals
+    public: // integrals
       // ======================================================================
       double integral ()                    const ;
       double cdf      ( const double x    ) const ;

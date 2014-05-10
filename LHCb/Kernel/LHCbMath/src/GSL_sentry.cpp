@@ -55,8 +55,8 @@ namespace
 Gaudi::Math::GSL::GSL_Error_Handler::GSL_Error_Handler () 
   : m_old ( 0 ) 
 { 
-  // m_old = gsl_set_error_handler ( &GSL_local_error ) ; 
-  m_old = gsl_set_error_handler_off () ; 
+  m_old = gsl_set_error_handler ( &GSL_local_error ) ; 
+  // m_old = gsl_set_error_handler_off () ; 
 }
 // ============================================================================
 // destructor/ unlock 

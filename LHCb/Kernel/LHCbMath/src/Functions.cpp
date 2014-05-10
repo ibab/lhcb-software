@@ -187,7 +187,14 @@ namespace
   /** @var s_INFINITY
    *  representation of positive INFINITY
    */
-  const double s_INFINITY      = 0.8 * std::numeric_limits<double>::max()  ;
+  const double s_INFINITY      = 0.8 * std::numeric_limits<double>::max ()  ;
+  // ==========================================================================
+  /** @var s_SMALL
+   *  representation of positive "small"
+   */
+  const double s_SMALL         = 2.0 * std::numeric_limits<double>::min ()  ;
+  // ==========================================================================  
+  BOOST_STATIC_ASSERT ( 0 < s_SMALL ) ;
   // ==========================================================================
   /** @var s_INFINITY_LOG
    *  representation of positive INFINITY_LOG 
@@ -550,7 +557,11 @@ namespace
   double my_exp ( const double arg )
   {
     //
+    if      ( GSL_LOG_DBL_MAX < arg ) { return s_INFINITY ; }
+    else if ( GSL_LOG_DBL_MIN > arg ) { return s_SMALL    ; }
+    //
     Sentry sentry ;
+    //
     gsl_sf_result      result ;
     const int          ierror = gsl_sf_exp_e ( arg , &result ) ;
     //
@@ -569,7 +580,7 @@ namespace
                     __FILE__ , __LINE__ , ierror ) ;
       }
       //
-      if      ( -100 > arg ) { return          0 ; }
+      if      ( -100 > arg ) { return s_SMALL    ; }
       else if (  100 < arg ) { return s_INFINITY ; }
     }
     //
@@ -837,7 +848,7 @@ namespace
    */
   const double s_sqrt2_i = 1 / s_sqrt2 ;
   // ==========================================================================
-  /** helper function for itegration of Gram-Charlier A function
+  /** helper function for integration of Gram-Charlier A function
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -850,7 +861,7 @@ namespace
     return (*gca)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Breit-Wigner shape
+  /** helper function for integration of Breit-Wigner shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -863,7 +874,7 @@ namespace
     return (*bw)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Flatte shape
+  /** helper function for integration of Flatte shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -875,7 +886,20 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of PhaseSpace shape
+  /** helper function for integration of PhaseSpace2 shape
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double phase_space_2_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::PhaseSpace2* ps =
+      (Gaudi::Math::PhaseSpace2*) params ;
+    //
+    return (*ps)(x) ;
+  }
+  // ==========================================================================
+  /** helper function for integration of PhaseSpace shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -901,7 +925,7 @@ namespace
     return (*ps)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of PhaseSpace shape
+  /** helper function for integration of PhaseSpaceNL shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -927,7 +951,7 @@ namespace
     return (*ps)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of PhaseSpace23L shape
+  /** helper function for integration of PhaseSpace23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -940,7 +964,7 @@ namespace
     return (*ps23L)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of LASS shape
+  /** helper function for integration of LASS shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2013-10--5
    */
@@ -952,7 +976,7 @@ namespace
     return (*lass)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of LASS23L shape
+  /** helper function for integration of LASS23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -964,7 +988,7 @@ namespace
     return (*lass)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Bugg23L shape
+  /** helper function for integration of Bugg23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-23
    */
@@ -976,7 +1000,7 @@ namespace
     return (*bugg)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Bugg shape
+  /** helper function for integration of Bugg shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-23
    */
@@ -988,7 +1012,7 @@ namespace
     return (*bugg)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of BW23L shape
+  /** helper function for integration of BW23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-23
    */
@@ -1000,7 +1024,7 @@ namespace
     return (*bw)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Flatte23L shape
+  /** helper function for integration of Flatte23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-24
    */
@@ -1012,7 +1036,7 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Gounaris23L shape
+  /** helper function for integration of Gounaris23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-24
    */
@@ -1024,7 +1048,7 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of StudentT-shape
+  /** helper function for integration of StudentT-shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2013-01-05
    */
@@ -1036,7 +1060,7 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Voigt shape
+  /** helper function for integration of Voigt shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
@@ -1048,7 +1072,7 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for itegration of Apolonios shape 
+  /** helper function for integration of Apolonios shape 
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2013-12-1
    */
@@ -1295,7 +1319,8 @@ bool Gaudi::Math::GenGaussV1::setBeta     ( const double value )
     m_gbeta1  = 0 ;
     m_gbeta2  = gsl_sf_lngamma ( 3 / beta() ) ;    
     m_gbeta2 -= gsl_sf_lngamma ( 1 / beta() ) ;
-    m_gbeta2  = gsl_sf_exp     ( m_gbeta2   ) ;
+    // m_gbeta2  = gsl_sf_exp     ( m_gbeta2   ) ;
+    m_gbeta2  = my_exp     ( m_gbeta2   ) ;
   }
   else 
   { 
@@ -1318,11 +1343,12 @@ double Gaudi::Math::GenGaussV1::pdf ( const double x ) const
     double result  = gsl_sf_log ( 0.5 * beta() / alpha() ) ;
     result        -= delta2 ;
     result        -= gsl_sf_lngamma ( 1 / beta() ) ;
-    return gsl_sf_exp ( result ) ;
+    return my_exp ( result ) ;
   }
   //
   double result   = 0.5 * beta() / alpha() ;
-  result         *= gsl_sf_exp   ( -delta2 ) ;
+  result         *= my_exp   ( -delta2 ) ;
+  // result         *= gsl_sf_exp   ( -delta2 ) ;
   result         *= m_gbeta1  ;
   //
   return result ;
@@ -1335,7 +1361,7 @@ double Gaudi::Math::GenGaussV1::cdf ( const double x ) const
   const double delta1 =            delta  / m_alpha   ;
   const double delta2 = std::pow ( delta1 , m_beta  ) ;
   //
-  const double c = gsl_sf_gamma_inc_P ( 1/beta() , -delta2 ) ;
+  const double c = gsl_sf_gamma_inc_P ( 1/beta() , delta2 ) ;
   //
   return x < m_mu ?  0.5 - c : 0.5 + c ;
 }
@@ -3115,7 +3141,7 @@ bool Gaudi::Math::GramCharlierA::setKappa3 ( const double value )
 {
   if ( s_equal ( m_kappa3 , value )  ) { return false ; }
   //
-  m_kappa4  = value ;
+  m_kappa3  = value ;
   //
   return false ;
 }
@@ -3150,10 +3176,71 @@ Gaudi::Math::PhaseSpace2::~PhaseSpace2(){}
 // ============================================================================
 double Gaudi::Math::PhaseSpace2::operator () ( const double x ) const
 { return phasespace ( x , m_m1 , m_m2 ) ; }
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double  Gaudi::Math::PhaseSpace2::integral
+( const double low  ,
+  const double high ) const
+{
+  if      ( s_equal ( low , high ) ) { return  0 ; }                          // RETURN
+  else if (           low > high   ) { return -1*integral ( high , low  ) ; } // RETURN
+  //
+  if ( lowEdge() >= high  ) { return 0 ; }
+  //
+  const double xlow  = std::max ( lowEdge() , low  ) ;
+  const double xhigh = std::max ( lowEdge() , high ) ;
+  //
+  if ( xlow >= xhigh ) { return 0.0 ; }
+  //
+  if ( 0 < lowEdge()
+       && !s_equal ( std::min ( m_m1 , m_m2 ) , 0 )
+       && ( xhigh - xlow ) > 20 * lowEdge() ) 
+  {
+    return 
+      integral ( xlow , 0.5 * ( xhigh + xlow )         ) + 
+      integral (        0.5 * ( xhigh + xlow ) , xhigh ) ;
+  }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                  ;
+  F.function = &phase_space_2_GSL ;
+  const PhaseSpace2* _ps = this  ;
+  F.params   = const_cast<PhaseSpace2*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,             // the function
+      xlow   , xhigh    ,             // low & high edges
+      s_PRECISION       ,             // absolute precision
+      s_PRECISION       ,             // relative precision
+      s_SIZE            ,             // size of workspace
+      GSL_INTEG_GAUSS31 ,             // integration rule
+      workspace ( m_workspace ) ,     // workspace
+      &result           ,             // the result
+      &error            ) ;           // the error in result
+  //
+  if ( ierror )
+  {
+    gsl_error ( "Gaudi::Math::PhaseSpace2::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+// ============================================================================a
 // get the momentum at center of mass 
+// ============================================================================a
 double Gaudi::Math::PhaseSpace2::q_  ( const double x ) const 
 { return q ( x , m1() , m2() ) ; }
+// ============================================================================a
 // get the momentum at center of mass 
+// ============================================================================a
 std::complex<double>
 Gaudi::Math::PhaseSpace2::q1_ ( const double x ) const 
 { return q1 ( x , m1() , m2() ) ; }
@@ -3408,9 +3495,7 @@ Gaudi::Math::PhaseSpaceLeft::PhaseSpaceLeft
   //
   for ( std::vector<double>::const_iterator im = masses.begin() ;
         masses.end() != im ; ++im )
-  {
-    m_threshold += std::abs ( *im ) ;
-  }
+  { m_threshold += std::abs ( *im ) ; }
   //
 }
 // ============================================================================
@@ -3426,6 +3511,26 @@ double Gaudi::Math::PhaseSpaceLeft::operator () ( const double x ) const
   if ( m_threshold >= x ) { return 0 ; }
   //
   return std::pow ( x - m_threshold , 3 * 0.5 * m_num - 5 * 0.5  ) ;
+}
+// ============================================================================
+double Gaudi::Math::PhaseSpaceLeft::integral 
+( const double xmin , const double xmax ) const 
+{
+  //
+  if      ( s_equal ( xmin , xmax ) ) { return  0 ; }
+  else if (           xmin > xmax   ) { return -1 * integral ( xmax , xmin ) ; }
+  else if ( xmax <= m_threshold     ) { return  0 ; }
+  //
+  const double xlow   = std::max ( xmin , m_threshold ) ;
+  const double xhigh  = std::max ( xmax , m_threshold ) ;
+  //
+  const double n      =  ( 3 * m_num - 5 ) * 0.5 ;
+  //
+  const double tlow   = xlow  - m_threshold ;
+  const double thigh  = xhigh - m_threshold ;
+  //
+  return ( std::pow ( thigh , n + 1 ) - 
+           std::pow ( tlow  , n + 1 ) ) / ( n + 1 ) ;
 }
 // ============================================================================
 // set the new value for threshold
@@ -3465,6 +3570,27 @@ double Gaudi::Math::PhaseSpaceRight::operator () ( const double x ) const
   if ( m_threshold <= x ) { return 0 ; }
   //
   return std::pow ( m_threshold - x , 1.5 * ( m_N - m_L ) - 1  ) ;
+}
+// ============================================================================
+double Gaudi::Math::PhaseSpaceRight::integral 
+( const double xmin , const double xmax ) const 
+{
+  //
+  if      ( s_equal ( xmin , xmax ) ) { return  0 ; }
+  else if (           xmin > xmax   ) { return -1 * integral ( xmax , xmin ) ; }
+  else if ( xmin >= m_threshold     ) { return  0 ; }
+  //
+  const double xlow   = std::min ( xmin , m_threshold ) ;
+  const double xhigh  = std::min ( xmax , m_threshold ) ;
+  //
+  const double n      = 1.5 * ( m_N - m_L ) - 1 ;
+  //
+  const double thigh  = m_threshold - xlow ;
+  //
+  const double tlow   = m_threshold - xhigh ;
+  //
+  return ( std::pow ( thigh , n + 1 ) - 
+           std::pow ( tlow  , n + 1 ) ) / ( n + 1 ) ;
 }
 // ============================================================================
 // set the new value for threshold
@@ -4237,7 +4363,7 @@ double Gaudi::Math::Flatte::flatte2 ( const double x ) const
 // ============================================================================
 // get the integral between low and high limits
 // ============================================================================
-double  Gaudi::Math::Flatte::integral
+double  Gaudi::Math::Flatte::integral1
 ( const double low  ,
   const double high ) const
 {
@@ -4528,8 +4654,8 @@ double  Gaudi::Math::Voigt::integral
     ( &F                ,            // the function
       low   , high      ,            // low & high edges
       s_PRECISION       ,            // absolute precision
-      ( high   <= x_low  ) ? s_PRECISION_TAIL :
-      ( x_high <=   low  ) ? s_PRECISION_TAIL :
+      // ( high   <= x_low  ) ? s_PRECISION_TAIL :
+      // ( x_high <=   low  ) ? s_PRECISION_TAIL :
       s_PRECISION       ,            // relative precision
       s_SIZE            ,            // size of workspace
       GSL_INTEG_GAUSS31 ,            // integration rule
