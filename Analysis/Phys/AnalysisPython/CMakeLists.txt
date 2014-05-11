@@ -18,7 +18,7 @@ add_custom_command(OUTPUT AnalysisPython_dict_classdef.cpp
 
 gaudi_add_library(AnalysisPythonLib
                   src/*.cpp
-                  ${CMAKE_CURRENT_BINARY_DIR}/AnalysisPython_dict_classdef.cpp
+                  ${CMAKE_CURRENT_BINARY_DIR}/AnalysisPython*_classdef.cpp
                   PUBLIC_HEADERS Analysis
                   INCLUDE_DIRS ROOT
                   LINK_LIBRARIES ROOT GaudiPythonLib LHCbMathLib)
