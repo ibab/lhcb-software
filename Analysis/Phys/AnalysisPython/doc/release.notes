@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-05-11 - Vanya Belyaev
+ - improve positive polynomials 
+
 ! 2014-05-11 - Marco Clemencic
  - Minor change to work with the latest changes in the reflex dictionary pattern,
    needed for ROOT 6's PCMs.
