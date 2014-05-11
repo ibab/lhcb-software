@@ -221,7 +221,7 @@ def _rfr_params_ ( self , float_only = True ) :
 ## get parameter by name  from RooFitResult
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _rfr_param_  ( self , pname , float_only = True ) :
+def _rfr_param_  ( self , pname , float_only = False ) :
     """
     Get Parameter from RooFitResult by name 
 

@@ -8,14 +8,14 @@
 #  tests for various signal models 
 #
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
-#  @date 2011-07-25
+#  @date 2014-05-11
 # 
 #                    $Revision: 172094 $
 #  Last modification $Date: 2014-04-29 16:02:06 +0200 (Tue, 29 Apr 2014) $
 #                 by $Author: albarano $
 # =============================================================================
 """
-Tests for various fit models  
+Tests for various background fit models  
 """
 # =============================================================================
 __version__ = "$Revision:"
@@ -31,12 +31,12 @@ from   PyPAW.Utils   import rooSilent
 # =============================================================================
 from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : 
-    logger = getLogger( 'PyPAW.TestModels' )
+    logger = getLogger ( 'PyPAW.TestModels' )
 else : 
-    logger = getLogger( __name__ )
+    logger = getLogger ( __name__ )
 # =============================================================================
-logger.info ( 'Test for Fit models from Analysis/PyPAW')
-## ============================================================================
+logger.info ( 'Test for signal it models from Analysis/PyPAW')
+# =============================================================================
 ## make simple test mass 
 mass     = ROOT.RooRealVar ( 'test_mass' , 'Some test mass' , 3.0 , 3.2 )
 
@@ -52,8 +52,7 @@ for i in xrange(0,5000) :
 
 print dataset0
 
-import PyPAW.FitModels as Models 
-
+import PyPAW.FitModels as     Models 
 
 # =============================================================================
 ## gauss PDF
@@ -440,30 +439,32 @@ else :
     print 'Mean   & Gamma      are: ', result ( 'mean_Gauss')[0] , result( 'gamma_BW' )[0]
 
 
-# =============================================================================
-## Voigt
-# =============================================================================
-logger.info ('Test Voigt_pdf' )
-model_vgt = Models.Fit1D (
-    signal = Models.Voigt_pdf ( 'V' , mass.getMin() , mass.getMax()  ,
-                                mass  = mass                ,
-                                mean  = signal_gauss.mean   , 
-                                sigma = signal_gauss.sigma  ) , 
-    background = model_gauss.background  )
+## # =============================================================================
+## ## Voigt
+## # =============================================================================
+## logger.info ('Test Voigt_pdf' )
+## model_vgt = Models.Fit1D (
+##     signal = Models.Voigt_pdf ( 'V' , mass.getMin() , mass.getMax()  ,
+##                                 mass  = mass                ,
+##                                 mean  = signal_gauss.mean   , 
+##                                 sigma = signal_gauss.sigma  ) , 
+##     background = model_gauss.background  )
 
-model_vgt.signal.mean .fix ( m.value() )
-model_vgt.signal.sigma.fix ( m.error() )
-with rooSilent() : 
-    result, frame = model_vgt. fitTo ( dataset0 )
-    model_vgt.signal.mean.release()
-    result, frame = model_vgt. fitTo ( dataset0 )
-    result, frame = model_vgt. fitTo ( dataset0 )
+## model_vgt.signal.sigma.fix ( m.error() )
+## model_vgt.signal.gamma.fix ( 0.010     )
+## with rooSilent() : 
+##     result, frame = model_vgt. fitTo ( dataset0 )
+##     result, frame = model_vgt. fitTo ( dataset0 )
+##     result, frame = model_vgt. fitTo ( dataset0 )
     
-if 0 != result.status() or 3 != result.covQual() :
-    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
-    print result 
-else :
-    print 'Signal & Background are: ', result ( 'S'         )[0] , result ( 'B'       )[0]
-    print 'Mean   & Gamma      are: ', result ( 'mean_Gauss')[0] , result ( 'gamma_V' )[0]
+## if 0 != result.status() or 3 != result.covQual() :
+##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
+##     print result 
+## else :
+##     print 'Signal & Background are: ', result ( 'S'         )[0] , result ( 'B'               )[0]
+##     print 'Mean   & Gamma      are: ', result ( 'mean_Gauss' , False )[0] , result ( 'gamma_V' , False )[0]
     
 
+# =============================================================================
+# The END 
+# =============================================================================
