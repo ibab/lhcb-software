@@ -583,10 +583,28 @@ Double_t Analysis::Models::Flatte2::evaluate() const
   return m_flatte.flatte2 ( m_x ) ;
 }
 // ============================================================================
+/// @attention integrtaion is disabled 
 Int_t Analysis::Models::Flatte2::getAnalyticalIntegral
 ( RooArgSet&  /* allVars   */ , 
   RooArgSet&  /* analVars  */ ,
   const char* /* rangename */ ) const { return 0 ; }
+// =============================================================================
+Double_t Analysis::Models::Flatte2::analyticalIntegral 
+( Int_t          code         , 
+  const char* /* rangeName */ ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  /// @warning integration is disabled 
+  //
+  return 1 ;
+  // setPars () ;
+  // return m_flatte.integral1 ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ===========================================================================
+
+
 // ============================================================================
 std::complex<double> Analysis::Models::Flatte2::amplitude () const  
 {
@@ -1134,11 +1152,14 @@ Double_t Analysis::Models::Voigt::evaluate() const
 }
 // ============================================================================
 Int_t Analysis::Models::Voigt::getAnalyticalIntegral
-( RooArgSet&     allVars      , 
-  RooArgSet&     analVars     ,
+( RooArgSet&  /* allVars   */ , 
+  RooArgSet&  /* analVars  */ ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  //
+  // DISABLE INTEGRATION// to be fixed later 
+  // if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  // 
   return 0 ;
 }
 // ============================================================================
@@ -3117,141 +3138,6 @@ Double_t Analysis::Models::PhaseSpacePol::analyticalIntegral
 
 
 // ============================================================================
-//  positive polinomial
-// ============================================================================
-Analysis::Models::PolyPositive::PolyPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          phi1      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 1 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
-//  quadric polinomial
-// ============================================================================
-Analysis::Models::PolyPositive::PolyPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 2 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
-//  cubic polinomial
-// ============================================================================
-Analysis::Models::PolyPositive::PolyPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 3 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
-//  quartic polinomial
-// ============================================================================
-Analysis::Models::PolyPositive::PolyPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  RooAbsReal&          phi4      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 4 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_phis.add ( phi4 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
-//  quintic polinomial
-// ============================================================================
-Analysis::Models::PolyPositive::PolyPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  RooAbsReal&          phi4      , 
-  RooAbsReal&          phi5      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 5 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_phis.add ( phi4 ) ;
-  m_phis.add ( phi5 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-}
-// ============================================================================
 // generic polinomial
 // ============================================================================
 Analysis::Models::PolyPositive::PolyPositive 
@@ -3369,159 +3255,6 @@ Double_t Analysis::Models::PolyPositive::analyticalIntegral
 // ============================================================================
 
 
-
-
-
-// ============================================================================
-//  linear polinomial
-// ============================================================================
-Analysis::Models::ExpoPositive::ExpoPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          tau       , 
-  RooAbsReal&          phi1      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x   ) 
-  , m_tau      ( "tau"     , "Exponential"  , this , tau )
-  , m_phis     ( "phi"     , "Coefficients" , this )
-//
-  , m_iterator ( 0 )
-//
-  , m_positive ( 1 , 0 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-  //
-}
-// ============================================================================
-//  quadric polinomial
-// ============================================================================
-Analysis::Models::ExpoPositive::ExpoPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          tau       , 
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x   ) 
-  , m_tau      ( "tau"     , "Exponential"  , this , tau )
-  , m_phis     ( "phi"     , "Coefficients" , this )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 2 , 0 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-  //
-}
-// ============================================================================
-//  cubic polinomial
-// ============================================================================
-Analysis::Models::ExpoPositive::ExpoPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          tau       , 
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x   ) 
-  , m_tau      ( "tau"     , "Exponential"  , this , tau )
-  , m_phis     ( "phi"     , "Coefficients" , this )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 3 , 0 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-  //
-}
-// ============================================================================
-//  quartic polinomial
-// ============================================================================
-Analysis::Models::ExpoPositive::ExpoPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          tau       , 
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  RooAbsReal&          phi4      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x   ) 
-  , m_tau      ( "tau"     , "Exponential"  , this , tau )
-  , m_phis     ( "phi"     , "Coefficients" , this )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 4 , 0 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_phis.add ( phi4 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-  //
-}
-// ============================================================================
-//  quintic polinomial
-// ============================================================================
-Analysis::Models::ExpoPositive::ExpoPositive
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          tau       , 
-  RooAbsReal&          phi1      , 
-  RooAbsReal&          phi2      , 
-  RooAbsReal&          phi3      , 
-  RooAbsReal&          phi4      , 
-  RooAbsReal&          phi5      , 
-  const double         xmin      , 
-  const double         xmax      ) 
-  : RooAbsPdf ( name , title ) 
-//
-  , m_x        ( "x"       , "Observable"   , this , x   ) 
-  , m_tau      ( "tau"     , "Exponential"  , this , tau )
-  , m_phis     ( "phi"     , "Coefficients" , this )
-//
-  , m_iterator ( 0 ) 
-//
-  , m_positive ( 5 , 0 , xmin , xmax ) 
-{
-  m_phis.add ( phi1 ) ;
-  m_phis.add ( phi2 ) ;
-  m_phis.add ( phi3 ) ;
-  m_phis.add ( phi4 ) ;
-  m_phis.add ( phi5 ) ;
-  m_iterator = m_phis.createIterator() ;
-  setPars () ;
-  //
-}
 // ============================================================================
 // generic polinomial
 // ============================================================================
@@ -4412,9 +4145,7 @@ Double_t Analysis::Models::Poly2DPositive::analyticalIntegral
   //
   return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
                                m_y.min(rangeName) , m_y.max(rangeName) ) ;
-  
 }
-
 // ============================================================================
 // generic polinomial
 // ============================================================================

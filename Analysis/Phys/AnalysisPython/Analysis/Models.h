@@ -490,8 +490,11 @@ namespace Analysis
      *
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
+     *  @warning something wrong here...
+     *  @todo    checks needed 
+     *
      *  KK-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte2 : public Analysis::Models::Flatte
@@ -528,12 +531,15 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================      
-    public: // NO ANALYTICAL INTEGRAL !!!
+    public:
       // ======================================================================
       virtual Int_t    getAnalyticalIntegral
-        ( RooArgSet&  /* allVars   */   , 
-          RooArgSet&  /* analVars  */  ,
-          const char* /* rangename */ ) const ;
+        ( RooArgSet&   allVars   , 
+          RooArgSet&   analVars  ,
+          const char*  rangename ) const ;
+      virtual Double_t analyticalIntegral 
+      ( Int_t          code         ,  
+        const char*    rangeName    ) const ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -2294,7 +2300,7 @@ namespace Analysis
     // ========================================================================
 
     // ========================================================================
-    // Smmoth empirical models fro background  
+    // Smooth empirical models for background  
     // ========================================================================
     
     // ========================================================================
@@ -2313,56 +2319,6 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      PolyPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          phi1      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quadric
-      PolyPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// cubic 
-      PolyPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quartic
-      PolyPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        RooAbsReal&          phi4      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quintic 
-      PolyPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        RooAbsReal&          phi4      , 
-        RooAbsReal&          phi5      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
       /// general 
       PolyPositive
       ( const char*          name      , 
@@ -2434,61 +2390,6 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
-      /// linear 
-      ExpoPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          tau       , 
-        RooAbsReal&          phi1      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quadric
-      ExpoPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          tau       , 
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// cubic 
-      ExpoPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          tau       , 
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quartic
-      ExpoPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          tau       , 
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        RooAbsReal&          phi4      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
-      /// quintic 
-      ExpoPositive
-      ( const char*          name      , 
-        const char*          title     ,
-        RooAbsReal&          x         ,
-        RooAbsReal&          tau       , 
-        RooAbsReal&          phi1      , 
-        RooAbsReal&          phi2      , 
-        RooAbsReal&          phi3      , 
-        RooAbsReal&          phi4      , 
-        RooAbsReal&          phi5      , 
-        const double         xmin      , 
-        const double         xmax      ) ;
       /// general 
       ExpoPositive
       ( const char*          name      , 
@@ -2621,7 +2522,7 @@ namespace Analysis
      *  @see Gaudi::Math::GenGammaDist
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-05-11
-     *  @see Gaudi::Math::GammaDist 
+     *  @see Gaudi::Math::GenGammaDist 
      */
     class GAUDI_API GenGammaDist : public RooAbsPdf 
     {
