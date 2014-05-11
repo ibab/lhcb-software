@@ -1178,6 +1178,27 @@ if not hasattr ( Gaudi.Math.Spline       , 'DATAERR' ) :
 if not hasattr ( Gaudi.Math.SplineErrors , 'DATAERR' ) :
     Gaudi.Math.SplineErrors.DATAERR = Gaudi.Math.Splines.DATAERR
 
+
+## self-printout of TMaxtrix 
+def _tmg_str_ ( self , fmt = ' %+11.4g') :
+    """
+    Self-printout of TMatrix
+    """
+    _rows = self.GetNrows()
+    _cols = self.GetNcols()
+    _line = ''
+    for _irow in range ( 0 , _rows ) :
+        _line += ' |'
+        for _icol in range ( 0 , _cols ) :
+            _line += fmt % self( _irow , _icol )
+        _line += ' |'
+        if ( _rows - 1 )  != _irow : _line += '\n'
+    return _line
+
+
+ROOT.TMatrix.__repr__  = _tmg_str_
+ROOT.TMatrix.__str__   = _tmg_str_
+
 # =============================================================================
 if '__main__' == __name__ :
 

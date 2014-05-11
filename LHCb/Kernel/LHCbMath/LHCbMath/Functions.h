@@ -3489,7 +3489,7 @@ namespace Gaudi
       GammaDist ( const double k     = 2 ,   // shape parameter
                   const double theta = 1 ) ; // scale parameter
       /// desctructor
-      ~GammaDist() ;  // desctructor
+      ~GammaDist() ;  // destructor
       // ======================================================================
     public:
       // ======================================================================
@@ -4112,6 +4112,8 @@ namespace Gaudi
       { return k < m_pars.size() ? m_pars[k] : 0.0 ; }
       /// get k-parameter
       double  parameter ( const unsigned int k ) const { return par ( k ) ; }
+      /// get all parameters at once 
+      const std::vector<double>& pars() const { return m_pars ; }
       // ======================================================================      
     public:
       // ======================================================================
@@ -4252,9 +4254,15 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+      // =====================================================================
+    public: // ingeredients 
+      // =====================================================================
       // get the bernstein polinomial in 2D 
-      const  Gaudi::Math::Bernstein2D& bernstein() const 
+      const  Gaudi::Math::Bernstein2D& bernstein () const 
       { return m_bernstein ; }
+      /// get the parameter sphere  
+      const  Gaudi::Math::NSphere&     sphere    () const 
+      { return m_sphere ; }  
       // ======================================================================
     private:
       // ======================================================================
@@ -4321,6 +4329,11 @@ namespace Gaudi
       { return k < m_pars.size() ? m_pars [k] : 0.0 ; }
       /// get k-parameter
       double  parameter ( const unsigned int   k ) const { return par ( k ) ; }
+      /// get all parameters at once 
+      const std::vector<double>& pars() const { return m_pars ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       /// get lower edge
       double xmin () const { return m_xmin    ; }
       /// get upper edge
@@ -4440,6 +4453,9 @@ namespace Gaudi
       // get the bernstein 2D polynom
       const Gaudi::Math::Bernstein2DSym& bernstein() const 
       { return m_bernstein ; }
+      /// get the parameter sphere  
+      const  Gaudi::Math::NSphere&       sphere   () const 
+      { return m_sphere ; }  
       // ======================================================================
     private:
       // ======================================================================
@@ -4821,7 +4837,7 @@ namespace Gaudi
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
       // ======================================================================
-    public:
+    public:  // expose some internmals 
       // ======================================================================
       const Gaudi::Math::Positive2DSym& positive () const { return m_positive ; }
       const Gaudi::Math::Positive2DSym& polynom  () const { return m_positive ; }      

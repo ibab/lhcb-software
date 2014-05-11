@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-05-11 - Vanya Belyaev
+ - improve positive polynomials 
+
 ! 2014-05-10 - Vanya Belyaev
  - impove integration and fix few bugs 
 

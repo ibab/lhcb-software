@@ -5,6 +5,7 @@
 // STD & STL
 // ============================================================================
 #include <cmath>
+#include <map>
 #include <climits>
 #include <iostream>
 #include <complex>
@@ -6325,9 +6326,13 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   //
   // treat the trivial cases
   //
-  if      ( x < m_xmin || x > m_xmax || m_pars.empty() ) { return 0 ; }
-  else if ( 1 == npars ()                              ) { return m_pars [0] ; }
-  // else if ( s_vzero ( m_pars )                         ) { return 0 ; }
+  if      ( m_pars.empty()                             ) { return 0 ; }
+  //  neeed for the proper interegration with an exponential 
+  else if ( s_equal ( x , m_xmin )                     ) { return m_pars [0]    ; }
+  else if ( s_equal ( x , m_xmax )                     ) { return m_pars.back() ; }
+  else if ( x < m_xmin || x > m_xmax                   ) { return 0 ; }
+  else if ( 1 == npars ()                              ) { return m_pars [0]    ; }
+  else if ( s_vzero ( m_pars )                         ) { return 0 ; }
   //
   // get the t-values
   //
@@ -6434,17 +6439,19 @@ double Gaudi::Math::Bernstein2D::operator () ( const double x ,
   if      ( 0 == npars ()       ) { return 0.0        ; }
   else if ( 1 == npars ()       ) { return m_pars [0] ; }
   ///
-  double       result = 0 ;
-  // 
   std::vector<double> fy ( m_ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= m_ny ; ++iy )
-  { fy[iy] = m_by[iy] ( y )  ; }
+  for ( unsigned short i = 0 ; i <= m_ny ; ++i )
+  { fy[i] = m_by[i] ( y )  ; }
   //
-  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
-  {    
-    const double fx = m_bx[ix] ( x ) ;
+  std::vector<double> fx ( m_nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_nx ; ++i ) 
+  { fx[i] = m_bx[i] ( x )  ; }
+  //
+  double       result = 0 ;
+  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix )
+  { 
     for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
-    { result += par ( ix , iy ) * fx * fy[iy] ; }
+    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;
@@ -6470,17 +6477,19 @@ double Gaudi::Math::Bernstein2D::integral
   const double  y_high = std::min ( ymax() , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   std::vector<double> fy ( m_ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
-  { fy[iy] = m_by[iy].integral ( y_low , y_high ) ; }
+  for ( unsigned short i = 0 ; i <= m_ny ; ++i ) 
+  { fy[i] = m_by[i].integral ( y_low , y_high ) ; }
   //
+  std::vector<double> fx ( m_nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_nx ; ++i ) 
+  { fx[i] = m_bx[i].integral ( x_low , x_high ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
   {
-    const double fx = m_bx[ix].integral ( x_low , x_high ) ;
     for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
-    { result += par ( ix , iy ) * fx * fy[iy] ; }
+    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
     //
   }
   //
@@ -6566,20 +6575,19 @@ double Gaudi::Math::Bernstein2DSym::operator ()
   if      ( 0 == npars ()       ) { return 0.0        ; }
   else if ( 1 == npars ()       ) { return m_pars [0] ; }
   ///
-  double       result = 0 ;
-  //
   std::vector<double> fy ( m_n + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
   { fy[i] = m_b[i] ( y ) ; }
   //
+  std::vector<double> fx ( m_n + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_n ; ++i ) 
+  { fx[i] = m_b[i] ( x ) ; }
+  //
+  double       result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
   {
-    const double fx = m_b[ix] ( x ) ;
-    for  ( unsigned short iy = ix ; iy <= m_n ; ++iy ) 
-    {
-      const double dr = par ( ix , iy ) * fx * fy[iy] ;  
-      result += ( ix == iy ) ? dr : 2*dr ; 
-    }
+    for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
+    { result += par ( ix , iy ) * fx[ix]  * fy[iy] ; }
   }
   //
   return result ;
@@ -6607,20 +6615,19 @@ double Gaudi::Math::Bernstein2DSym::integral
   const double  y_high = std::min ( ymax() , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double       result = 0 ;
-  //
   std::vector<double> fy ( m_n + 1 , 0 ) ;
   for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
   { fy[i] = m_b[i].integral ( y_low , y_high ) ; }
   //
+  std::vector<double> fx ( m_n + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= m_n ; ++i ) 
+  { fx[i] = m_b[i].integral ( x_low , x_high ) ; }
+  //
+  double       result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
   {
-    const double fx = m_b[ix].integral ( x_low , x_high ) ;
-    for  ( unsigned short iy = ix ; iy <= m_n ; ++iy ) 
-    {
-      const double dr = par ( ix , iy ) * fx * fy[iy] ;  
-      result += ( ix == iy ) ? dr : 2*dr ; 
-    }
+    for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
+    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;
@@ -6727,7 +6734,6 @@ bool Gaudi::Math::Positive::updateBernstein ()
     update = updated || update ;
   }
   //
-  //
   return update ;
 }
 // ============================================================================
@@ -6827,7 +6833,10 @@ bool Gaudi::Math::Positive2D::updateBernstein ()
   //
   bool update = false ;
   for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
-  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
+  { 
+    const bool updated = m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ;
+    update = updated || update ;  
+  }
   //
   return update ;
 }
@@ -6835,14 +6844,7 @@ bool Gaudi::Math::Positive2D::updateBernstein ()
 // get the parameter value
 // ============================================================================
 double Gaudi::Math::Positive2D::par ( const unsigned int k ) const 
-{
-  //
-  const double sk = m_sphere.sin_phi ( k ) ;
-  const double ck = m_sphere.cos_phi ( k ) ;
-  const double dk = m_sphere.delta   ( k ) ;
-  //
-  return std::atan2 ( sk , ck ) - dk ;
-}
+{ return m_sphere.phase ( k ) ; }
 
 // ============================================================================
 // constructor from the order
@@ -6880,7 +6882,10 @@ bool Gaudi::Math::Positive2DSym::updateBernstein ()
   //
   bool update = false ;
   for ( unsigned int ix = 0 ; ix < m_sphere.nX() ; ++ix ) 
-  { update = update || m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; }
+  { 
+    const bool updated = m_bernstein.setPar ( ix , m_sphere.x2 ( ix ) ) ; 
+    update = updated || update ; 
+  }
   //
   return update ;
 }
@@ -6888,14 +6893,7 @@ bool Gaudi::Math::Positive2DSym::updateBernstein ()
 // get the parameter value
 // ============================================================================
 double Gaudi::Math::Positive2DSym::par ( const unsigned int  k ) const 
-{
-  //
-  const double sk = m_sphere.sin_phi ( k ) ;
-  const double ck = m_sphere.cos_phi ( k ) ;
-  const double dk = m_sphere.delta   ( k ) ;
-  //
-  return std::atan2 ( sk , ck ) - dk ;
-}
+{ return m_sphere.phase ( k ) ; }
 
 // ============================================================================
 // Student-T 
@@ -7869,9 +7867,9 @@ double Gaudi::Math::PS2DPol::operator ()
 {
   //
   if      ( x < m_psx. lowEdge() || x < m_positive.xmin () ) { return 0 ; }
-  else if ( x < m_psx.highEdge() || x > m_positive.xmax () ) { return 0 ; }
+  else if ( x > m_psx.highEdge() || x > m_positive.xmax () ) { return 0 ; }
   else if ( y < m_psy. lowEdge() || y < m_positive.ymin () ) { return 0 ; }
-  else if ( y < m_psy.highEdge() || y > m_positive.ymax () ) { return 0 ; }
+  else if ( y > m_psy.highEdge() || y > m_positive.ymax () ) { return 0 ; }
   //
   return m_positive ( x , y ) * m_psx ( x ) * m_psy ( y ) ;
 }
@@ -7898,6 +7896,14 @@ namespace
     return (*ps_bern)( x ) ;
   }
   // ==========================================================================
+  typedef std::pair<const Gaudi::Math::PhaseSpaceNL*,
+                    const Gaudi::Math::Bernstein*>     _KEY1 ;
+  typedef std::pair<double,double>                     _KEY2 ;
+  typedef std::pair<_KEY1,_KEY2>                       _KEY  ;
+  typedef std::map<_KEY,double>                        _MAP  ;
+  typedef _MAP::const_iterator                         _CIT  ;
+  _MAP _s_map_ ;
+  // ==========================================================================
   double _integral_
   ( const Gaudi::Math::PhaseSpaceNL&    ps   , 
     const Gaudi::Math::Bernstein&       bp   ,
@@ -7905,6 +7911,7 @@ namespace
     const double                        high ,
     const Gaudi::Math::WorkSpace&       work ) 
   {
+    //
     if      ( ps.highEdge() <= bp.xmin() || ps. lowEdge() >= bp.xmax() ) { return 0 ; }
     //
     if      ( s_equal ( low , high ) ) { return 0 ; }
@@ -7912,7 +7919,7 @@ namespace
     else if ( low > high  ) { return _integral_ ( ps , bp , high , low , work ) ; }
     //
     if      ( high <= ps.lowEdge () || high <= bp.xmin () ) { return 0 ; }
-    else if ( low  <= ps.highEdge() || low  >= bp.xmax () ) { return 0 ; }
+    else if ( low  >= ps.highEdge() || low  >= bp.xmax () ) { return 0 ; }
     //
     const double xlow  = std::max ( std::max ( ps. lowEdge() , bp.xmin() ) , low  ) ;
     const double xhigh = std::min ( std::min ( ps.highEdge() , bp.xmax() ) , high ) ;
@@ -7920,6 +7927,13 @@ namespace
     if ( xlow >= xhigh   ) { return 0 ; }
     //
     if ( 1 == bp.npars() ) { return bp.par(0) * ps.integral ( xlow , xhigh ) ; }
+    //
+    // check the cache
+    const _KEY1 k1  = std::make_pair( &ps , &bp  ) ;
+    const _KEY2 k2  = std::make_pair( low , high ) ;
+    const _KEY  key = std::make_pair( k1  , k2   ) ;
+    _CIT  it = _s_map_.find  ( key ) ;
+    if ( _s_map_.end() != it ) {  return it->second ; }  // AVOID calculation 
     //
     // use GSL to evaluate the integral 
     //
@@ -7954,6 +7968,11 @@ namespace
                   __FILE__ , __LINE__ , ierror ) ;
     }
     //
+    // clear the cache if too large
+    if ( 500 < _s_map_.size() ) { _s_map_.clear() ; }
+    // update the cache
+    _s_map_[key ] = result ;  
+    //
     return result ;
   }
   // ==========================================================================
@@ -7982,22 +8001,24 @@ double Gaudi::Math::PS2DPol::integral
   const double  y_high = std::min ( std::min ( m_psy.highEdge() , m_positive.ymax() ) , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   const unsigned short nx  = m_positive.nX() ;
   const unsigned short ny  = m_positive.nY() ;
   //
   const Bernstein2D&   b2d = m_positive.bernstein() ;
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-  { fy[iy] = _integral_ ( m_psy , b2d.basicY ( iy ) , y_low , y_high , m_workspace ) ; }
+  for ( unsigned short i = 0 ; i <= ny ; ++i ) 
+  { fy[i] = _integral_ ( m_psy , b2d.basicY ( i ) , y_low , y_high , m_workspace ) ; }
   //
+  std::vector<double> fx ( nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= nx ; ++i ) 
+  { fx[i] = _integral_ ( m_psx , b2d.basicX ( i ) , x_low , x_high , m_workspace ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
   {
-    const double fx = _integral_ ( m_psx , b2d.basicX ( ix ) , x_low , x_high , m_workspace ) ; 
     for  ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-    { result += b2d.par ( ix , iy ) * fx * fy[iy] ; }
+    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;
@@ -8038,9 +8059,9 @@ double Gaudi::Math::PS2DPolSym::operator ()
 {
   //
   if      ( x < m_ps. lowEdge() || x < m_positive.xmin () ) { return 0 ; }
-  else if ( x < m_ps.highEdge() || x > m_positive.xmax () ) { return 0 ; }
+  else if ( x > m_ps.highEdge() || x > m_positive.xmax () ) { return 0 ; }
   else if ( y < m_ps. lowEdge() || y < m_positive.ymin () ) { return 0 ; }
-  else if ( y < m_ps.highEdge() || y > m_positive.ymax () ) { return 0 ; }
+  else if ( y > m_ps.highEdge() || y > m_positive.ymax () ) { return 0 ; }
   //
   return m_positive ( x , y ) * m_ps ( x ) * m_ps ( y ) ;
 }
@@ -8068,24 +8089,23 @@ double Gaudi::Math::PS2DPolSym::integral
   const double  y_high = std::min ( std::min ( m_ps.highEdge() , m_positive.ymax() ) , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   const unsigned short n = m_positive.n () ;
   //
   const Gaudi::Math::Bernstein2DSym& b2d = m_positive.bernstein() ;
   //
   std::vector<double> fy ( n + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= n ; ++iy ) 
-  { fy[iy] = _integral_ ( m_ps , b2d.basic( iy )  , y_low , y_high , m_workspace ) ; }
+  for ( unsigned short i = 0 ; i <= n ; ++i ) 
+  { fy[i] = _integral_ ( m_ps , b2d.basic( i )  , y_low , y_high , m_workspace ) ; }
   //
+  std::vector<double> fx ( n + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= n ; ++i ) 
+  { fx[i] = _integral_ ( m_ps , b2d.basic( i )  , x_low , x_high , m_workspace ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= n ; ++ix ) 
   {
-    const double fx = _integral_ ( m_ps , b2d.basic( ix )  , x_low , x_high , m_workspace ) ; 
-    for  ( unsigned short iy = ix ; iy <= n ; ++iy ) 
-    { 
-      const double dr = b2d.par ( ix , iy ) * fx * fy[iy] ;  
-      result += ( ix == iy ) ? dr : 2*dr ; 
-    }
+    for  ( unsigned short iy = 0 ; iy <= n ; ++iy ) 
+    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }  
   //
   return result ;
@@ -8155,7 +8175,7 @@ double Gaudi::Math::ExpoPS2DPol::operator ()
   //
   if      ( x < m_positive.xmin () || x > m_positive.xmax () ) { return 0 ; }
   else if ( y < m_psy. lowEdge  () || y < m_positive.ymin () ) { return 0 ; }
-  else if ( y < m_psy.highEdge  () || y > m_positive.ymax () ) { return 0 ; }
+  else if ( y > m_psy.highEdge  () || y > m_positive.ymax () ) { return 0 ; }
   //
   return m_positive ( x , y ) * my_exp ( m_tau * x ) * m_psy ( y ) ;
 }
@@ -8183,22 +8203,24 @@ double Gaudi::Math::ExpoPS2DPol::integral
   const double  y_high = std::min ( std::min ( m_psy.highEdge() , m_positive.ymax() ) , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   const unsigned short nx  = m_positive.nX() ;
   const unsigned short ny  = m_positive.nY() ;
   //
   const Bernstein2D&   b2d = m_positive.bernstein() ;
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-  { fy[iy] = _integral_ ( m_psy , b2d.basicY ( iy ) , y_low , y_high , m_workspace ) ; }
+  for ( unsigned short i = 0 ; i <= ny ; ++i ) 
+  { fy[i] = _integral_ ( m_psy , b2d.basicY ( i ) , y_low , y_high , m_workspace ) ; }
   //
+  std::vector<double> fx ( nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= nx ; ++i )
+  { fx[i] = b2d.basicX ( i ).integral_exp ( x_low , x_high , m_tau ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
   {
-    const double fx = b2d.basicX ( ix ).integral_exp ( x_low , x_high , m_tau ) ;
     for  ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-    { result += b2d.par ( ix , iy ) * fx * fy[iy] ; }
+    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;
@@ -8282,22 +8304,24 @@ double Gaudi::Math::Expo2DPol::integral
   const double  y_high = std::min ( m_positive.ymax() , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   const unsigned short nx  = m_positive.nX() ;
   const unsigned short ny  = m_positive.nY() ;
   //
   const Bernstein2D&   b2d = m_positive.bernstein() ;
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-  { fy[iy] =  b2d.basicY ( iy ).integral_exp ( y_low , y_high , m_tauY ) ; }
+  for ( unsigned short i = 0 ; i <= ny ; ++i ) 
+  { fy[i] =  b2d.basicY ( i ).integral_exp ( y_low , y_high , m_tauY ) ; }
   //
+  std::vector<double> fx ( nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= nx ; ++i ) 
+  { fx[i] =  b2d.basicX ( i ).integral_exp ( x_low , x_high , m_tauX ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
   {
-    const double fx = b2d.basicX ( ix ).integral_exp ( x_low , x_high , m_tauX ) ;
     for  ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-    { result += b2d.par ( ix , iy ) * fx * fy[iy] ; }
+    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;
@@ -8364,25 +8388,24 @@ double Gaudi::Math::Expo2DPolSym::integral
   const double  y_high = std::min ( m_positive.ymax() , yhigh ) ;
   if ( y_low >= y_high ) { return 0 ; }
   //
-  double result = 0 ;
-  //
   const unsigned short nx  = m_positive.nX() ;
   const unsigned short ny  = m_positive.nY() ;
   //
   const Bernstein2DSym&   b2d = m_positive.bernstein() ;
   //
   std::vector<double> fy ( ny + 1 , 0 ) ;
-  for ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-  { fy[iy] =  b2d.basic ( iy ).integral_exp ( y_low , y_high , m_tau ) ; }
+  for ( unsigned short i = 0 ; i <= ny ; ++i ) 
+  { fy[i] = b2d.basic ( i ).integral_exp ( y_low , y_high , m_tau ) ; }
   //
+  std::vector<double> fx ( nx + 1 , 0 ) ;
+  for  ( unsigned short i = 0 ; i <= nx ; ++i )
+  { fx[i] = b2d.basic ( i ).integral_exp ( x_low , x_high , m_tau ) ; }
+  //
+  double result = 0 ;
   for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
   {
-    const double fx = b2d.basic ( ix ).integral_exp ( x_low , x_high , m_tau ) ;
     for  ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-    { 
-      const double dr = b2d.par ( ix , iy ) * fx * fy[iy] ;  
-      result += ( ix == iy ) ? dr : 2*dr ; 
-    }
+    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
   return result ;

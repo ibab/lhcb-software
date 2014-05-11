@@ -76,13 +76,12 @@ bool Gaudi::Math::NSphere::setPhase
   //
   if ( s_equal ( m_phases[index] , value ) ) { return false ; }
   //
-  //
   const double di     = m_rotated ? m_delta [ index ] : 0.0 ;
   const double phase  = value + di ;
-  const double sinv   = std::sin ( phase ) ;
-  const double cosv   = std::cos ( phase ) ;
+  const double sinv   = std::sin ( phase ) ; // attention +delta!
+  const double cosv   = std::cos ( phase ) ; // attention +delta!
   //
-  m_phases  [ index ] = value ;
+  m_phases  [ index ] = value ;  // attention!! original values!! 
   m_sin_phi [ index ] = sinv  ;
   m_cos_phi [ index ] = cosv  ;
   //

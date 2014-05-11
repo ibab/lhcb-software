@@ -80,6 +80,7 @@
   <class name    = "Gaudi::Math::PS2DPolSym"       />
   <class name    = "Gaudi::Math::ExpoPS2DPol"      />
   <class name    = "Gaudi::Math::Expo2DPol"        />
+  <class name    = "Gaudi::Math::Expo2DPolSym"     />
   <class name    = "Gaudi::Math::GammaDist"        />
   <class name    = "Gaudi::Math::LogGammaDist"     />
   <class name    = "Gaudi::Math::Log10GammaDist"   />
