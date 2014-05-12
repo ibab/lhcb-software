@@ -3,6 +3,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r11 2014-05-12 =========================
 ! 2014-04-24 - Marco Cattaneo
  - Remove duplicate dictionary HepMC::GenVertex::particles_in_const_iterator,
    in HepMCRflx since LCG_56
