@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r3 2014-05-12 =========================
 ! 2014-05-05 - Gerhard Raven
  - HltSelReportsWriter: further optimize LHCbID overlap search.
    Note: the order of the LHCbID sequences in the raw bank has changed, any 
