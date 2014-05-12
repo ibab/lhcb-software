@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiGen v10r16 2014-05-12 =========================
 ! 2014-04-23 - Marco Cattaneo
  - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
    already defined in LoKiCore
