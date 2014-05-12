@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MCEvent
 ################################################################################
-gaudi_subdir(MCEvent v3r0)
+gaudi_subdir(MCEvent v3r1)
 
 gaudi_depends_on_subdirs(Event/EventBase
                          GaudiObjDesc

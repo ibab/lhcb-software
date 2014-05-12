@@ -3,6 +3,7 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v3r1 2014-05-12 =========================
 ! 2014-05-08 - Heinrich Schindler
  - Add HC ("Herschel Counters") hit location.
 
