@@ -5,6 +5,7 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+!========================= GaudiObjDesc v11r19 2014-05-12 ======================
 ! 2014-03-19 - Marco Clemencic
  - Fixed an issue with manually provided instantiations headers that contain
    comments or empty lines.
