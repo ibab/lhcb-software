@@ -4,6 +4,7 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+!========================= SwimmingEvent v1r5 2014-05-12 ======================
 ! 2014-04-30 - Marco Cattaneo
  - Removed duplicate dictionary for std::pair<unsigned long,bool>, already in 
    libSTLRflx.so
