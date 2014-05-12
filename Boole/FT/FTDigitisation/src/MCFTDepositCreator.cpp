@@ -222,7 +222,8 @@ StatusCode MCFTDepositCreator::initialize() {
 
         // Evaluate the attenuation factor. 
         // Rather than calculating it use information from the transmission map in the same point
-        float att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
+        float att = 0;
+        if (m_nYSteps > (kk + 1)) att = m_transmissionMap[ m_nYSteps*kx + kk] / m_transmissionMap[ m_nYSteps*kx + kk + 1];
 
         // Fill the map
         m_transmissionRefMap[ m_nYSteps*kx + kk] = reflected;
@@ -279,7 +280,7 @@ StatusCode MCFTDepositCreator::execute() {
   // define deposits container
   MCFTDeposits *depositCont = new MCFTDeposits();
 
-  // register MCSTDeposits in the transient data store
+  // register MCFTDeposits in the transient data store
   put(depositCont, m_outputLocation );
 
   // Loop over the spills
@@ -329,12 +330,12 @@ StatusCode MCFTDepositCreator::execute() {
         if(m_deFT->version() == 20 ){
           StatusCode sc = HitToChannelConversion(ftHit,depositCont,iSpill);
           if (  sc.isFailure() ){
-            info() << " HitToChannelConversion() FAILED" << endmsg; 
+            error() << " HitToChannelConversion() FAILED" << endmsg; 
             return sc;
           }
         } 
         else{
-          info() << "Unknown FTDet version" << endmsg; 
+          error() << "Unknown FTDet version" << endmsg; 
           return  StatusCode::FAILURE;
         }
       } // loop on hits
@@ -422,6 +423,11 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
       //   A-|---B
       //     fx            Att = fx X2 + (1-fx) X1
       //
+      if ( msgLevel( MSG::DEBUG ) ) {
+        debug() << format( "[ATTENUATION]  kx %3d ky %3d fracx %8.3f fracY %8.3f ",
+                           kx, ky, fracX, fracY ) << endmsg;
+      }
+
       float att = ( fracX     * ( fracY     * m_transmissionMap[m_nYSteps*(kx+1)+ky+1] + 
                                   (1-fracY) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
                     (1-fracX) * ( fracY     * m_transmissionMap[m_nYSteps*kx+ky+1] + 

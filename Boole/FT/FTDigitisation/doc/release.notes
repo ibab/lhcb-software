@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-05-12 - Eric Cogneras
+ - Bug fix : out of the map reading
+
 ! 2014-05-07 - Eric Cogneras
  - Fix the 'division by zero' bug
 
