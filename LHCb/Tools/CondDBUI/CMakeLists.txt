@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CondDBUI
 ################################################################################
-gaudi_subdir(CondDBUI v3r27)
+gaudi_subdir(CondDBUI v3r28)
 
 gaudi_depends_on_subdirs(Det/DDDB)
 
