@@ -4,8 +4,9 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= FTEvent v1r6 2014-05-12 =========================
 ! 2014-03-19 - Marco Clemencic
- - Modified the CMake configuration to uset the provided header and selection
+ - Modified the CMake configuration to use the provided header and selection
    in G.O.D. generated dictionary.
 
 ! 2014-03-19 - Michel De Cian

@@ -1,21 +1,21 @@
-#========================================================================
+#=====================================================================
 # Created    : 2012-05-11
 # Maintainer : Eric Cogneras
-#========================================================================
+#=====================================================================
 package           FT/FTEvent
-version           v1r5
+version           v1r6
 
 # Structure, i.e. directories to process.
-#========================================================================
+#=====================================================================
 branches          cmt doc dict Event xml
 
 # Used packages.
-#========================================================================
+#=====================================================================
 use LHCbKernel   v* Kernel
 use EventBase    v*      Event
 use MCEvent      v*      Event
 
-#========================================================================
+#=====================================================================
 #---- Produce Header-Files from XML description
 private
 use GaudiObjDesc v* -no_auto_imports
@@ -26,7 +26,7 @@ apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
 # Make custom dictionary. Must be before GOD generation
-#========================================================================
+#=====================================================================
 document customdict FTEventCustomDict ../dict/lcgDict.h
 macro_append FTEventObj2Dict_dependencies FTEventCustomDict
 
