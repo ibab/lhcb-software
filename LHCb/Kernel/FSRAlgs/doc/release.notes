@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r6 2014-05-12 =========================
 ! 2014-03-18 - Marco Clemencic
  - Added missing dependency on Event/FSREvent.
 
