@@ -1,7 +1,7 @@
 ################################################################################
 # Package: IOExample
 ################################################################################
-gaudi_subdir(IOExample v4r12)
+gaudi_subdir(IOExample v4r13)
 
 gaudi_depends_on_subdirs(Event/EventPacker
                          GaudiConf
