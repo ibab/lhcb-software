@@ -4,9 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
-
+!========================= FTDet v2r6 2014-05-12 =========================
 ! 2014-05-06 - Diego Milanes
-- Optimiztion in beamPipeYCoord method. Fixed typo. 
+- Optimization in beamPipeYCoord method. Fixed typo. 
 
 ! 2014-05-06 - Diego Milanes
 - Optimiztion in beamPipeYCoord method. Added initialization of yIntersect in the case that it does not find intersection point between the fibre and the beam pipe hole.
