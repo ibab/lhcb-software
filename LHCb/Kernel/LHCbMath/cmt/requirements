@@ -3,7 +3,7 @@
 # Maintainer : Vanya Belyaev
 #=====================================================================
 package           LHCbMath
-version           v3r46
+version           v3r47
 
 #=====================================================================
 # Structure, i.e. directories to process. 
