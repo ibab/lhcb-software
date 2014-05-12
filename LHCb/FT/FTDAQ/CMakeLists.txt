@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FTDAQ
 ################################################################################
-gaudi_subdir(FTDAQ v1r5)
+gaudi_subdir(FTDAQ v1r6)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/FTEvent
