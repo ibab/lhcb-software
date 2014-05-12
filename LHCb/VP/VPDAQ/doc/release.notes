@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VP RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!========================= VPDAQ v2r7 2014-05-12 =========================
 ! 2014-05-04 - Heinrich Schindler
  - Replace hard-coded array size by constants.
 
