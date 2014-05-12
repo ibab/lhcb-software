@@ -14,6 +14,7 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiMC v10r12 2014-05-12 =========================
 ! 2014-04-23 - Marco Cattaneo
  - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
    already defined in LoKiCore
