@@ -1,7 +1,7 @@
 ################################################################################
 # Package: EventPacker
 ################################################################################
-gaudi_subdir(EventPacker v4r0)
+gaudi_subdir(EventPacker v4r1)
 
 gaudi_depends_on_subdirs(DAQ/MDF
                          Event/DAQEvent

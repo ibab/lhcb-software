@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r1 2014-05-12 =========================
 ! 2014-05-08 - Heinrich Schindler
  - Add support for HC hits ("Herschel").
 
