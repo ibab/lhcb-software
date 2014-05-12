@@ -25,40 +25,208 @@ This version uses Gaudi v25r1 and LCG_68.
     Phys/LoKiMC v10r12, Tools/CondDBUI v3r28, Tools/FileStager v1r13,
     Tr/LHCbTrackInterfaces v2r1, VP/VPDAQ v2r7
 
-DAQ/DAQSys v8r2
-Det/CaloDet v10r19p1
-Det/DDDB v1r69
-Det/DetCond v12r35, v12r36
-Det/FTDet v2r6
-Det/OTDet v8r12
-Det/RichDet v16r22
-Det/VPDet v3r2
-Event/DigiEvent v4r2
-Event/EventPacker v4r1
-Event/FTEvent v1r6
-Event/GenEvent v6r11
-Event/MCEvent v3r1 
-Event/RecEvent v2r50
-Event/SwimmingEvent v1r5
-Event/TrackEvent v6r1
-Ex/IOExample v4r13
-FT/FTDAQ v1r6
-GaudiConf v19r2, v19r2p1
-GaudiObjDesc v11r19
-Hlt/HltDAQ v4r2, v4r3
-Hlt/HltServices v2r1, v2r2
-Kernel/FSRAlgs v1r6
-Kernel/HltInterfaces v5r0p1
-Kernel/LHCbAlgs v3r2
-Kernel/LHCbKernel v15r2
-Kernel/LHCbMath v3r7
-Phys/LoKiCore v11r19
-Phys/LoKiGen v10r16
-Phys/LoKiMC v10r12
-Tools/CondDBUI v3r28
-Tools/FileStager v1r13
-Tr/LHCbTrackInterfaces v2r1
-VP/VPDAQ v2r7
+- In DAQ/DAQSys v8r2
+  . Remove decoders for VPClusters and VPLiteClusters and adapt tests accordingly
+
+- In Det/CaloDet v10r19p1
+  . Fix unprotected debug
+
+- Det/DDDB v1r69
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2012, 2011 : cond-20140425
+    o LHCBCOND, 2010       : cond-20140328
+    o DQFLAGS,        2011 : dq-20140428
+
+- In Det/DetCond v12r35, v12r36
+  . Do not truncate RunChangeHandlerSvc partitionname
+  . Make the conditions which the RunChangeHandlerSvc updates a property
+  . Make the (last part of the) filename used by RunChangeHandlerSvc a property
+  . CondDB preparation for 2015 in Configuration.py: 
+    o new CondDB partitions 'CALIB' and 'CALIBOFF' as additional layers above
+      'ONLINE' partition.
+    o New options for 'LoadCALIBDB' to enable/disable loading the new layers.
+    The default option is to add the new layers from $SQLITEDBPATH/CALIB-[YEAR].db
+    and $SQLITEDBPATH/CALIBOFF.db files automatically if exist.
+
+- In Det/FTDet v2r6
+  . Optimization in beamPipeYCoord method.
+  . Add new method calculateMeanChannel and calculateLitsOfFiredChannels
+  . Factorisation of the code of the new methods with existing calculateHit method
+  . Fix bug with with layerCenterZ method
+  . Changes for new FTchanID (no more quarter --> module +mat) Fibremat level
+    implemented
+
+- In Det/OTDet v8r12
+  . Reimplement the tanh approximation in WalkRelation; the new version is both
+    faster and comes within a factor 10 of what is possible in terms of
+    absolute/relative error with double precision
+
+- In Det/RichDet v16r22
+  . Added a test on StatusCode::FAILURE and removed a print statement
+
+- In Det/VPDet v3r2
+  . Replace hardcoded numbers by constants.
+  . Remove unused functions (type, isDownstream, trajectory) from DeVPSensor.
+  . Change return type of isInActiveArea and pointToChannel functions from
+    StatusCode to bool  
+  . Follow change in VPChannelID format
+  . Merge m_sensors and m_vpSensors class members of DeVP.
+  . Add coarse z-cut in DeVP::sensitiveVolumeID. 
+  . Inline DeVP::sensor(const Gaudi::XYZPoint& point).
+  . Remove less_sensor functor.
+  . Remove separate lists of/iterators to left- and right-side sensors.
+  . Add comments.
+  . Run clang-format for consistent style.
+  . Remove obsolete function channelToNeighbours.
+
+- In Event/DigiEvent v4r2
+  . Remove VPLiteCluster.
+  . Remove VPLiteCluster from VPCluster, add inter-pixel fraction to VPCluster
+  . Remove ToT value and timestamp from VPDigit, change location name
+
+- In Event/EventPacker v4r1
+  . Add support for HC hits ("Herschel").
+
+- In Event/FTEvent v1r6
+  . Introduced FTLiteCluster, a copy of FTRawCluster, to change the naming to
+    something more logical
+  . Removed a comment in lcgDict and put FTLiteCluster in lcg_selection
+  . Modified the CMake configuration to use the provided header and selection
+    in G.O.D. generated dictionary.
+
+- In Event/GenEvent v6r11,  Event/RecEvent v2r50, Event/SwimmingEvent v1r5,
+     Phys/LoKiCore v11r19, Phys/LoKiGen v10r16, Phys/LoKiMC v10r12
+  . Removed duplicate dictionaries
+
+- In Event/MCEvent v3r1 
+  . Add HC ("Herschel Counters") hit location.
+  . Remove MCVPDeposit and modify MCVPDigit accordingly
+
+- In Event/TrackEvent v6r1
+  . Add VP measurement type
+  . Replace VPLite by VP measurement type
+
+- In Ex/IOExample v4r13
+  . Pick up EOS test files from TestFileDB (changed some input files to use ones
+    already in TestFileDB)
+  . Remove obsolete Reco09 tests
+
+- In FT/FTDAQ v1r6
+  . Fix bug in RawBankDecoder, in method 'RetrieveModuleMat', which was giving
+    wrong numbers for the modules.
+  . Change of message level for bad bank version
+  . Modification of the bit sharing in 16-bit words according to the TDR
+    electronic design
+  . Changed FTRawCluster to FTLiteCluster in FTRawBankDecoder
+
+- In GaudiConf v19r2, v19r2p1
+  . Fix trivial bug in error message when file type which is unknown is specified
+  . DigiConf.py: replace VPCluster linker tables by VPDigit linker tables.
+  . Recurse to tools in Manipulators, works to recurse to already-added tools
+  . Changes to Configurables tests:
+    o Consolidate into a single module, task #50698
+    o Added threshold to the # of missing configurables, see task #50698
+    o Allow for running in a temporary area, or at least without creating local 
+      files, so this test can be run on a read-only file system.
+    o Fix small bug when configurables fail, make failure more explicit.
+
+- In GaudiObjDesc v11r19
+  . Fixed an issue with manually provided instantiations headers that contain
+    comments or empty lines.
+
+- In Hlt/HltDAQ v4r2, v4r3
+  . Suppress warnings about splitting big banks into pieces. Make them debug.
+  . HltSelReportsWriter: 
+    o Optimize the LHCbID packing, which now  uses move semantics to avoid
+      explicit heap storage
+    o Further optimize LHCbID overlap search.
+    Note: the order of the LHCbID sequences in the raw bank has changed, any 
+          overlap now occurs 'prior' to the non-overlap. The corresponding
+          references to these sequences take this into account. So although the
+          bank content is not identical, it is still correct.
+  . Various C++11 optimizations
+  . HltTrackReports updates:
+    o Added check against reading over the end of the bank
+    o Added ability to split big banks into several pieces 
+      using major and minor source IDs
+  . Switched SourceID to an int
+  . TrackReportsWriter uses straight SourceID
+  . TrackReportsDecoder only decodes the Bank with the correct SourceID 
+
+- In Hlt/HltServices v2r1, v2r2
+  . Migrate HltGenConfig from HltCommon to here
+  . Factor common code in Config{Tar,Zip}FileAccessSvc into a new mix-in class,
+    ConfigArchiveAccessSvc from which both now inherit.
+  . C++11 changes
+  . Add utility to inspect content of .cdb file 
+  . Add command line options to cdb utility
+  . Add option to dump content of cdb file to collection of files
+  . Move tar and zip specific I/O in seperate cpp,h files
+  . Add new persistence implementation: ConfigCDBAccessSvc, using tinycdb. 
+    Filesize is less than 1/3 of the default config.tar format, and 20% smaller 
+    than config.zip. 
+  . Unify ConfigTarFileAccessSvc and ConfigZipFileAccessSvc
+  . Improve file & error handling in ConfigCDBAccessSvc
+  . Fix initial creation of .cdb file
+  . General cleanup
+
+- In Kernel/FSRAlgs v1r6
+  . Added missing dependency on Event/FSREvent.
+
+- In Kernel/HltInterfaces v5r0p1
+  . Improve check for 'eof' so that getline will not set the 'fail' bit at eof.
+
+- In Kernel/LHCbAlgs v3r2
+  . Ignore test results which differ in the timing.
+
+- In Kernel/LHCbKernel v15r2
+  . Add file VPConstants.h.
+  . VPChannelID
+    o Add decoding to sensor column.
+    o Change bitfield from row/col/chip/module to row/col/chip/sensor.
+    o Remove unused get*Mask, get*Bits functions
+  . Remove unused functors from VPDataFunctor.
+  . Modified FTChannelID.xml to include mat() and module() and redefined
+    quarter() functions to reflect the present FT geometry. 
+  . Disabled again Boost allocators in debug mode when building with ROOT 6.
+
+- In Kernel/LHCbMath v3r7
+  . Improve positive polynomials 
+  . Improve integration and fix few bugs 
+  . Functions.h:
+     1) add integration for 2D non-factorizable models
+     2) fix a stupid bug in nSphere 
+  . LHCbMath.h:
+     1) add Zero, NonZero and scale functions  
+  . Analytial integration of bvernsteins polynomials 
+
+- In Phys/LoKiGen v10r16
+  . Add qmtest for JIRA-LBCORE-461. It makes segmentation fault for ROOT6 and
+    runs smoothly for ROOT5 
+
+- In Tools/CondDBUI v3r28
+  . Extend the support for tagging a new CondDB partition 'CALIBOFF'
+
+- In Tools/FileStager v1r13
+  . Add support for dashes in the xrootd server hostname and for custom ports
+    when calling stat.
+
+- In Tr/LHCbTrackInterfaces v2r1
+  . IVPClusterPosition:
+    o Remove functions using VPLiteCluster
+    o Add position function using VPCluster
+
+- In VP/VPDAQ v2r7
+  . Replace hard-coded array size by constants.
+  . Follow changes in VPChannelID format
+  . Remove do-nothing finalize method.
+  . Run clang-format for consistent style.
+  . Remove en/decoders for old, cluster-based raw banks.
+  . Remove unnecessary dependencies.
+  . Remove VPLiteCluster include statements from PrepareVPRawBank.
+  . Remove VPRawBankToLiteCluster algorithm.
+  . Follow changes in VPCluster format
+  . Follow changes in VPDigit format and location names
 
 </PRE><H1><A NAME=v37r1>2014-03-26 LHCbSys v37r1</A></H1><PRE>
 This version uses Gaudi v25r1 and LCG_68.
