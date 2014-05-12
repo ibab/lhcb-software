@@ -1,5 +1,5 @@
 package           DigiEvent
-version           v4r1
+version           v4r2
 
 branches Event xml cmt doc
 
