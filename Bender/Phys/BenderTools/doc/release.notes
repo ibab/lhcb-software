@@ -5,6 +5,24 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-12 - Vanya Belyaev
+ - new moduel FakeH.py with useful utility for substitution of pids 
+   is uses context manager concept, therefore the correct pid is propertly 
+	 restored after:
+	 
+#  mass = DTF_FUN ( M , True , 'J/psi(1S)') ## calculate the mass with constrains
+#  for B in container :
+#	 
+#
+#      mass_B  = mass ( B )  ## calcualte the mass with all constraints
+#      
+#      pion = B(1)  ## get the first daughter
+#      with FakeKaon ( pion ) :
+#         mass_fake = mass ( B ) ## calculate the mass after pion -> kaon change
+#  
+
+  Many thanks to Alexander Baranov and Wouter Hulsbergen 
+
 ! ==================== Phys/BenderTools v23r4     2014-04-26 ==================
 
 ! 2014-04-20 - Vanya Belyaev
