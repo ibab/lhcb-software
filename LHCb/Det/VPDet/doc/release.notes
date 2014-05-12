@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for upgraded VELO
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v3r2 2014-05-12 =========================
 ! 2014-05-03 - Heinrich Schindler
  - Replace hardcoded numbers by constants.
  - Remove unused function trajectory from DeVPSensor.
