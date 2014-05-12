@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r50 2014-05-12 =========================
 ! 2014-04-16 - Marco Cattaneo
  - Remove dictionary for LHCb::RecVertex::TrackWithWeight, already existing as
    std::pair<const LHCb::Track*,float> in TrackEventDict
