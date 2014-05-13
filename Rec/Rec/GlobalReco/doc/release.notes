@@ -4,25 +4,26 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r47 2014-05-13 ========================
 ! 2014-04-03 - Chris Jones
  - Adapt to changes in the ANNPID tuple monitor.
 
-!========================= GlobalReco v6r46 2013-10-24 =========================
+!========================= GlobalReco v6r46 2013-10-24 ========================
 ! 2013-10-09 - Olivier Deschamps
  -  python/GlobalReco/Configuration.py : 
         - possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
 
-!========================= GlobalReco v6r45 2013-10-01 =========================
+!========================= GlobalReco v6r45 2013-10-01 ========================
 ! 2013-08-12 - Chris Jones
  - Update ChargedProtoParticleMoni and ChargedProtoParticleTupleAlg to not 
    terminate the processing if the input Tracks or ProtoParticles are missing. 
    Instead just print a warning.
 
-!========================= GlobalReco v6r44p1 2013-04-30 =========================
+!========================= GlobalReco v6r44p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= GlobalReco v6r44 2012-11-28 =========================
+!========================= GlobalReco v6r44 2012-11-28 ========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -30,26 +31,26 @@
  - Fix unprotected debug()'s
  - Use getIfExists where appropriate
 
-!========================= GlobalReco v6r43 2012-10-02 =========================
+!========================= GlobalReco v6r43 2012-10-02 ========================
 ! 2012-08-15 - Chris Jones
  - Update ROOT scripts
  - Add an option to the GlobalRecoChecks Configurable to control the output
    ROOT tuple file locations.
  - Add some additional tracking variables to ChargedProtoParticleTupleAlg
 
-!========================= GlobalReco v6r42 2012-05-02 =========================
+!========================= GlobalReco v6r42 2012-05-02 ========================
 ! 2012-04-30 - Chris Jones
  - Change default track chi^2 cut from 0->10 to 0->5, to reflect tracking 
    changes. Note that by default in the tracking clone killing a cut of 0->3 is
    now applied, so this cut does nothing. Retain though as a sanity check.
  - Remove context() specific default job options from ChargedProtoParticleMoni
 
-!========================= GlobalReco v6r41 2012-03-27 =========================
+!========================= GlobalReco v6r41 2012-03-27 ========================
 ! 2011-03-16 - Olivier Deschamps
  - ChargedProtoParticleAdd[CALO]Info.cpp : reduce verbosity when input container
    is missing
 
-!========================= GlobalReco v6r40 2012-01-31 =========================
+!========================= GlobalReco v6r40 2012-01-31 ========================
 ! 2011-12-27 - Chris Jones
  - Try and fix the qmtests
 
@@ -59,7 +60,7 @@
  - Remove obsolete properties for inputs and outputs from 
    ChargedProtoParticleMaker
 
-!========================= GlobalReco v6r39 2011-11-08 =========================
+!========================= GlobalReco v6r39 2011-11-08 ========================
 ! 2011-10-19 - Marco Cattaneo
  - Fix coverity defects 23869, 23870, 23871 (UNINIT_CTOR)
  - Remove some unnecessary includes
