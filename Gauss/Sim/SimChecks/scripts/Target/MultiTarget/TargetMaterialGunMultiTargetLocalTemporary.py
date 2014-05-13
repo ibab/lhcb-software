@@ -44,7 +44,7 @@ ParticleGun.addTool(FlatNParticles, name="FlatNParticles")
 ParticleGun.NumberOfParticlesTool = "FlatNParticles"
 ParticleGun.FlatNParticles.MinNParticles = 100
 ParticleGun.FlatNParticles.MaxNParticles = 100
-ParticleGun.MaterialEval.PdgCode = -2212
+ParticleGun.MaterialEval.PdgCode = 321
 
 # The vertex of each particle gun is produced in a single point of given
 # coordinates. Default is 0.0*mm for all. 
@@ -55,7 +55,7 @@ ParticleGun.MaterialEval.PdgCode = -2212
 ParticleGun.MaterialEval.Zorig = 100*mm
 
 # The abs(P) of the particle if fixed at the given value (default = 500 GeV)
-ParticleGun.MaterialEval.ModP = 3 * GeV
+ParticleGun.MaterialEval.ModP = 100 * GeV
 
 # The particle can be generated uniformly (randomly or in a grid) in eta-phi
 # rather than x-y (default is false, i.e. x-y)

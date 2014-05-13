@@ -89,7 +89,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts=10
+nEvts = 1000
 LHCbApp().EvtMax = nEvts
 Gauss().Production='PGUN'
 
@@ -99,13 +99,13 @@ Gauss().OutputType = 'NONE'
 #  Note that if you do not set it Gauss will make a name based on event type,
 #  number of events and the date
 #idFile = 'Test43r3'
-histoFile = 'Multi_pbar_inAl'
+histoFile = 'Multi_Kplus_inAl'
 HistogramPersistencySvc().OutputFile = histoFile + '-histos.root'
 
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_pbar_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inAl.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
 
