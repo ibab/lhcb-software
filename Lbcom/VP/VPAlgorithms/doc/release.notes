@@ -3,6 +3,7 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+!========================= VPAlgorithms v4r4 2014-05-13 ========================
 ! 2014-05-03 - Heinrich Schindler
  - Follow change in return type of pointToChannel function (r172319).
 
