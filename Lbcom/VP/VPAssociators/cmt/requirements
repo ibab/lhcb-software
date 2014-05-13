@@ -1,8 +1,8 @@
 # Created    : 20/09/09
-# Maintainer : Marcin Kucharczyk
+# Maintainer : Heinrich Schindler
 #
 package           VPAssociators
-version           v2r5
+version           v2r6
 
 # Structure, i.e. directories to process. 
 #=====================================================================

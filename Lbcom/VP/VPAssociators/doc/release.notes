@@ -1,8 +1,9 @@
 !--------------------------------------------------------------------------
 ! Package     : VP/VPAssociators
-! Responsible : Pawel Jalocha
+! Responsible : Heinrich Schindler
 !--------------------------------------------------------------------------
 
+!========================= VPAssociators v2r6 2014-05-13 =======================
 ! 2014-05-08 - Heinrich Schindler
  - VPClusterLinker: remove check if table already exists (results in an error)
 
