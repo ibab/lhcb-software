@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r2 2014-05-13 =========================
 ! 2014-05-13 - Marco Clemencic
  - Fixed CMake configuration.
 
