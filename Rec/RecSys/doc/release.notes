@@ -5,7 +5,203 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-- Modified configurables test to only check configurables in this project. See task #50698
+</PRE><H1><A NAME=v16r2>2014-05-13 RecSys v16r2</A></H1><PRE>
+This version uses Gaudi v25r1, LHCb v37r2 and Lbcom v15r2
+
+- Packages modified: Calo/CaloMoniDst v5r17, Calo/CaloPIDs v5r17, 
+    Pr/PrAlgorithms v1r11, Pr/PrMCTools v2r2, Pr/PrPixel v1r7, Pr/PrVeloUT v2r2,
+    Rec/ChargedProtoANNPID v2r6, Rec/GlobalReco v6r47, Rec/LumiAlgs v9r2,
+    Rec/RecAlgs v3r1, Rec/RecConf v2r17, Rec/RecInterfaces v1r2,
+    Rich/RichRecPhotonTools v1r14, Rich/RichRecQC v2r66, Rich/RichRecSys v5r2,
+    Tf/PatAlgorithms v4r32, Tf/PatVeloTT v4r2, Tf/TrackSys v9r1,
+    Tr/TrackFitEvent v6r1, Tr/TrackFitter v5r1, Tr/TrackMCTools v3r9,
+    Tr/TrackMonitors v2r2, Tr/TrackProjectors v3r1, Tr/TrackTools v5r2
+
+- Modified configurables test to only check configurables in this project.
+  See task #50698
+
+- In Calo/CaloMoniDst v5r17
+  . Fix unprotected debug() warnings:
+    o In CaloMoniAlg.cpp: use setHistoTopDir in initialize() instead of
+      setProperty("HistoTopDir") in constructor. Removes need for debug() in 
+      constructor
+    o CaloEFlowAlg.cpp: remove unnecessary debug() in constructor
+
+- In Calo/CaloPIDs v5r17
+  . Remove debug() from CaloTrackAlg::_setProperty and CaloTrackTool::_setProperty
+    This function is called in the constructor, when the OutputLevel is not
+    initialised
+  . CaloTrackMatch.{h,cpp} : the X-correction for the e+, e- track-cluster
+    matching for each zone of the ECAL is added. Parameters of the correction are
+    loaded from the CondDB by default, added protection if the Conditions are
+    missing.
+
+- In Pr/PrAlgorithms v1r11
+  . Adapted to the new version of FTChannelID having:
+    1) mat() instead of quarter()
+    2) a different constructor with 5 instead of 4 arguments
+  . Fix clang33 compilation failures in PrPlaneCounter.h, due to 
+    http://stackoverflow.com/questions/16985687/
+  . Changed FTRawCluster to FTLiteCluster in PrFTHitManager
+  . Removed bilayer code from PrFTHitManager.cpp
+  . Changed NULL to nullptr
+
+- In Pr/PrMCTools v2r2
+  . Fixed CMake configuration.
+  . First commit of PrPlotFTHits, an algorithm that makes various plots for
+    hit-related quantities in the FT.
+  . Rename PatPixelDebugTool (moved here from Tr/TrackMCTools)
+    to PrPixelDebugTool and make it inherit from PrDebugTool.
+  . Remove linking based on VPLiteClusters from PrLHCbID2MCParticle.
+  . Rename FTRawCluster to FTLiteCluster in PrLHCbID2MCParticle
+
+- In Pr/PrMCTools v2r2, Pr/PrPixel v1r7 
+  . Follow changes in VPChannelID format (r171869).
+  . Follow changes in VPCluster format (removal of VPLiteCluster, r170715)
+
+- In Pr/PrPixel v1r7
+  . Remove unused functions removeHit, all3SensorsAreDifferent from PrPixelTrack
+  . clang-format
+  . Remove slope correction option
+  . Replace Tf/PatKernel by Pr/PrKernel in CMakeLists.txt and cmt/requirements
+  . Use IPrDebugTool instead of IPatDebugTool.
+  . Change condition for rebuilding geometry (following r171666).
+  . Change default to unlimited cluster size when running on Super Pixel raw
+    banks.
+  . Help the compiler with out of order execution and constness in various places.
+  . Avoid calling into sqrt() in hot PrPixelTracking::bestHit() method. 
+  . Avoid mixing double and float (this is very expensive!).
+  . Cache global x of first hit on a module.
+  . Change default value of RunOnRawBanks to True.
+  . Assign proper keys when inserting clusters in container.
+
+- In Pr/PrPixel v1r7, Rec/RecAlgs v3r1
+  . Use VPClusters instead of VPLiteClusters.
+
+- In Pr/PrVeloUT v2r2
+  . Added method to pass VELO tracks to VeloUT container
+
+- In Rec/ChargedProtoANNPID v2r6
+  . Rework a little the tuple tool, to allow it to be used by a DecayTreeTuple
+    tool in DaVinci.
+  . Add track DOCA variable.
+  . Add support for multiple cut text files.
+  . Add MCVertex information to training tuples.
+
+- In Rec/GlobalReco v6r47
+  . Adapt to changes in the ANNPID tuple monitor.
+
+- In Rec/LumiAlgs v9r2
+  . Update eos paths and add PRConfig to requirements
+
+- In Rec/RecAlgs v3r1
+  . Change FTRawCluster to FTLiteCluster in RecSummaryAlg.
+
+- In Rec/RecConf v2r17
+  . Add new OnlineMode property to RecSysConf and RecMoniConf Configurables.
+    Propagated to Rich configurables to tune the reconstruction and monitoring
+    as appropriate for Online Brunel 
+
+- In Rec/RecInterfaces v1r2
+  . Rework the tool interface, to allow it to be used by a DecayTreeTuple tool.
+
+- In Rich/RichRecPhotonTools v1r14
+  . Separate out the corrections for intrinsic biases in the various photon
+    reconstruction tools from the job option that allows an artificial shift to
+    be applied. Allows the various different methods to all use the same data
+    n-1 scale factors (computed for the default Offline Quartic tool).
+
+- In Rich/RichRecQC v2r66
+  . Add new OnlineMode property. Tunes the monitoring so it can be used for the
+    Online HPD and refractive index run by run calibrations.
+  . Fix unprotected debug in RichTracklessRingMoni::initialize()
+
+- In Rich/RichRecSys v5r2
+  . Add new OnlineMode property. Tunes the reconstruction so it can be used for
+    the Online HPD and refractive index run by run calibrations.
+  . Explicitly set the CKThetaQuartzRefractCorrections to 0,0,0 for real data.
+    Systematic differences between different photon reconstruction methods now
+    handled seperately.
+
+- In Tf/PatAlgorithms v4r32
+  . PatFwdTool: 
+     o consolidate find_single_zone 
+     o replace some loops by std::for_each
+     o make sortQuality a constexpr literal
+     o use override
+     o use Gaudi::extends2
+     o Factor out and lift max finding, range extension
+     o Be more pedantic about some properties
+  . Added option to flag track seeds and their ancestors as used
+  . Added counter for number of tracks produced by the forward tracking
+  . Fixed bug on how preselection on pT is applied.
+  . Fixed handling of the kickRange
+  . PatForwardTool: 
+    o Added options for use of charge and momentum estimate from VeloTT
+    o Trivial optimizations in control flow
+    o use in-situ remove_if/erase instead of swapping between vectors when
+      removing candidates
+    o factor out some simple computations
+    o lift the range finding
+  . Wrong sign search window
+  . PatFwdFitLine, PatFwdFitParabola: declare final, remove virtual destructor
+  . PatFwdTrackCandidate:
+    o use perfect forwarding in  c'tor
+    o use default copy ctor, dtor, assignement, move ctor/assignment 
+    o Compactify, add noexcept move assignment and copy c'tor
+  . PatForward : factor out and optimize overlap count, clarify overlap logic
+  . PatSeedingTool: replace loop by std::copy_if
+  . PatSeedTool: various little fixes which do not hurt, but improve timing by
+    12% for PatSeeding and 5% for TrackBestTrackCreator, with marginal 
+    improvements to efficiencies and ghost rate of the Seeding
+    o some code refactoring to increase code reuse
+    o have a clear bail-out strategy for fits which do not converge, propagate
+      that error to callers
+    o fit in xz projection now uses cubic term from the start (used to be
+      neglected initially because the full fit in both projections will take it
+      into account later)
+    o adjust both quadratic and cubic terms of underlying track in fit
+      (slightly faster convergence, better tracks)
+    o Fix fix introduced in r168699 to work around an FPE. This new version of
+      the code helps to marginally reduce the ghost rate while still avoiding the
+      FPE
+
+- In Tf/PatVeloTT v4r2
+  . Add VDT dependency in CMakeLists.txt
+  . VeloTTHybrid: Completely rewritten implementation of VeloTT. New track 
+    finding. New Regions. New hybrid modes.
+
+- In Tf/TrackSys v9r1,
+  . Add PrPixelStoreClusters to TrVeloSeq
+  . Add VPClusterLinker to MCLinksTrSeq 
+
+- In Tr/TrackFitEvent v6r1
+  . Adapted FTMeasurement to work with FTLiteClusters
+  . Removed bilayer code from FTMeasurement.cpp
+
+- In Tr/TrackFitEvent v6r1, Tr/TrackFitter v5r1
+  . Replace VPLite measurement type by VP measurement type
+
+- In Tr/TrackFitter v5r1, Tr/TrackMonitors v2r2, Tr/TrackProjectors v3r1
+  . Add support for VP measurement type
+
+- In Tr/TrackMCTools v3r9
+  . Move PatPixelDebugTool to Pr/PrMCTools.
+  . DebugTrackingLosses: follow changes in VPChannelID format (r171869).
+
+- In Tr/TrackMonitors v2r2, Tr/TrackProjectors v3r1
+  . Follow removal of VPLite measurement (r170832, r170821).
+
+- In Tr/TrackTools v5r2
+  . VPExpectation: follow change in DeVPSensor::isInActiveArea return type 
+    (r172319), remove support for obsolete geometry, clang-format
+  . Remove VPLiteMeasurementProvider
+  . Add VPMeasurementProvider
+  . Adapted to the new constructor of FTChannelID having 5 instead of 4 arguments
+    Affected file: FTHitExpectation.cpp
+  . Adapted FTMeasurementProvider to work with FTLiteClusters, added binary
+    search to find LiteCluster corresponding to channelID
+  . Removed bilayer code from FTMeasurementProvider.cpp
 
 </PRE><H1><A NAME=v16r1>2014-03-26 RecSys v16r1</A></H1><PRE>
 This version uses Gaudi v25r1, LHCb v37r1 and Lbcom v15r1
