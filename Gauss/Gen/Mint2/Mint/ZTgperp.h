@@ -16,7 +16,7 @@ class ZTgperp : public SymmLorentzMatrix{
     // the (off-shell) mass of the resonance.
     // m_R < 0 uses sqrt(p^2), otherwise it's m_R
 
-    double mR2 = (mR_in < 0 ? p.M2(), mR_in*mR_in);
+    double mR2 = (mR_in < 0 ? p.M2() : mR_in*mR_in);
     SymmLorentzMatrix uu(p);
     uu /= mR2;
 

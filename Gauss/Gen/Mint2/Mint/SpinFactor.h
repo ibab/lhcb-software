@@ -11,6 +11,7 @@
 
 class SpinFactor 
 : virtual public MINT::IReturnRealForEvent<IDalitzEvent>
+, virtual public MINT::IReturnComplexForEvent<IDalitzEvent>
 , virtual public ISpinFactor{
  protected:
   AssociatingDecayTree _associatingDecayTree;
@@ -21,7 +22,9 @@ class SpinFactor
  public:
   virtual double getVal(IDalitzEvent& evt)=0;
   virtual double RealVal(IDalitzEvent& evt){return getVal(evt);}// some dublication here...
+  virtual std::complex<double> ComplexVal(IDalitzEvent& evt){return std::complex<double>(getVal(evt),0);}
 
+    
   double mRes(const AssociatedDecayTreeItem& adt, IDalitzEvent& evt);
   double mRes(const MINT::const_counted_ptr<AssociatedDecayTree>& adt
 	      , IDalitzEvent& evt);
@@ -40,6 +43,7 @@ class SpinFactor
 
   SpinFactor(const DecayTree& decay, int nFinal=3) 
     : MINT::IReturnRealForEvent<IDalitzEvent>()
+    , MINT::IReturnComplexForEvent<IDalitzEvent>()
     , ISpinFactor()
     , _associatingDecayTree(decay)
     , _nFinal(nFinal)
@@ -48,6 +52,7 @@ class SpinFactor
   
   SpinFactor(const SpinFactor& other) // just create a new one
     : MINT::IReturnRealForEvent<IDalitzEvent>()
+    , MINT::IReturnComplexForEvent<IDalitzEvent>()    
     , ISpinFactor()
     , _associatingDecayTree(other._associatingDecayTree)
     , _nFinal(other._nFinal)

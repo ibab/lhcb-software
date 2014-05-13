@@ -17,6 +17,9 @@ class SpinFactorTrivial : virtual public ISpinFactor{
   virtual double RealVal(){return getVal();}
   virtual double RealVal(IDalitzEvent& ){return RealVal();}
   
+  virtual std::complex<double> ComplexVal(){return std::complex<double>(getVal(),0);}
+  virtual std::complex<double> ComplexVal(IDalitzEvent& ){return ComplexVal();}
+
   virtual std::string name() const{
     return "TrivialSpinFactor=1";
   }

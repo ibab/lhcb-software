@@ -141,7 +141,7 @@ bool Amplitude::deleteLineshapes(){
   return true;
 }
 
-double Amplitude::SpinFactorValue(IDalitzEvent& evt){
+std::complex<double> Amplitude::SpinFactorValue(IDalitzEvent& evt){
   bool dbThis=false;
   if(dbThis) {
     cout << "amplitude " << name()
@@ -153,7 +153,7 @@ double Amplitude::SpinFactorValue(IDalitzEvent& evt){
     cout << " spin factor value is: "
 	 << spinFactor()->getVal(evt) << endl;
   }
-  return spinFactor()->getVal(evt);
+  return spinFactor()->ComplexVal(evt);
 }
 
 std::complex<double> Amplitude::LineshapeProduct(IDalitzEvent& evt){
@@ -221,7 +221,7 @@ DalitzBoxSet Amplitude::MakeBox(const DalitzEventPattern& pat
   cout << " .. now it is " << lastBox.guessedHeight() << endl;
   lastBox.encloseInPhaseSpaceArea();
   cout << "Amp " << name() << " made box with guessed height " 
-       << norm(1)//this->getValAtResonance())
+       << 1//norm(1)//this->getValAtResonance())
        << " = " << lastBox.guessedHeight()
        << "\n   that's the one" << lastBox
        << endl;
@@ -299,7 +299,7 @@ double Amplitude::LineshapeGaussProduct(){
 std::complex<double> Amplitude::getOnePermutationsVal(IDalitzEvent& evt){
   bool dbThis=false;
 
-  double          sf = SpinFactorValue(evt);
+  std::complex<double> sf = SpinFactorValue(evt);
   complex<double> ls = LineshapeProduct(evt);
   complex<double> returnVal =  sf*ls;
 

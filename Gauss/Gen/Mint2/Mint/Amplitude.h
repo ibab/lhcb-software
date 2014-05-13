@@ -74,7 +74,7 @@ class Amplitude
 
   std::complex<double> LineshapeProduct(IDalitzEvent& evt);
   //  double LineshapeGaussProduct();
-  double SpinFactorValue(IDalitzEvent& evt);
+  std::complex<double> SpinFactorValue(IDalitzEvent& evt);
   std::complex<double> getOnePermutationsVal(IDalitzEvent& evt);
  public:
   Amplitude( const DecayTree& decay
