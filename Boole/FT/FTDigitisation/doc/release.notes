@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-05-13 - Eric Cogneras
+ - Floating point exception correction in MCFTDigitCreator
+
 ! 2014-05-12 - Eric Cogneras
  - Bug fix : out of the map reading
 

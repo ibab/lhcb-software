@@ -249,7 +249,8 @@ StatusCode MCFTDigitCreator::execute() {
       plot2D(HitEnergySumInChannel,(double)adc,"ADCGainBIGZOOM","ADC Gain; Energy [MeV]; ADC", 0., .1, 0., 50., 100, 50);
       plot(adc,"ADCPerChannel",
            "ADC in SiPM Channel;ADC;Number of SiPM channels", 0, 20);
-      counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
+      if (HitEnergySumInChannel > 0) 
+        counter("ADCPerMeV") += (double)adc/HitEnergySumInChannel ;
       MCFTDigit *mcDigit = new MCFTDigit(mcDeposit->channelID(), adc, mcDeposit );
       digitCont->insert(mcDigit);
 
@@ -596,13 +597,13 @@ MCFTDigitCreator::averagePhotoElectrons(double energy)
   if ( averagePhotoElectrons > 50. ) {
     photoElectrons = averagePhotoElectrons + sqrt( averagePhotoElectrons ) * m_gauss();
   } else {
-    double expL = exp( -averagePhotoElectrons );
+    double expL = 1/exp( averagePhotoElectrons );
     double cumul = expL;
     double last  = expL;
     double value = m_flat();
     while ( value > cumul ) {
       photoElectrons++;
-      last = last * averagePhotoElectrons / photoElectrons;
+      if (photoElectrons > 0) last = last * averagePhotoElectrons / photoElectrons;
       cumul += last;
     }
   }
