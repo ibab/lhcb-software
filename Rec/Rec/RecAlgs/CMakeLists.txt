@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecAlgs
 ################################################################################
-gaudi_subdir(RecAlgs v3r0)
+gaudi_subdir(RecAlgs v3r1)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/EventBase
