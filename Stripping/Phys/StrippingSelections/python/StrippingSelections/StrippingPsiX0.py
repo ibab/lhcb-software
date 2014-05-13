@@ -1074,7 +1074,7 @@ class PsiX0Conf(LineBuilder) :
             DecayDescriptor = " chi_c1(1P) -> J/psi(1S) gamma " ,
             ##
             DaughtersCuts   = {
-            'J/psi(1S)'   :  " M  < ( 3.100 + 0.120 ) * MeV " ,
+            'J/psi(1S)'   :  " M  < ( 3.100 + 0.120 ) * GeV " ,
             'gamma'       :  " PT > 400 * MeV "
             } ,
             ## 
