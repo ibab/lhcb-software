@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r2 2014-05-13 =========================
 ! 2014-05-08 - Chris Jones
  - Add new OnlineMode property. Tunes the reconstruction as appropriate for
    Online Brunel, so it can be used for the Online HPD and refractive index
