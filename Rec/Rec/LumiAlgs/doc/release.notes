@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r2 2014-05-13 =========================
 ! 2014-04-16 - Rob Lambert
  - Update eos paths and add PRConfig to requirements
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LumiAlgs
 ################################################################################
-gaudi_subdir(LumiAlgs v9r1)
+gaudi_subdir(LumiAlgs v9r2)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/DAQEvent
