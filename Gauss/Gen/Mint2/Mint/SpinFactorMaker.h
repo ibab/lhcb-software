@@ -15,7 +15,7 @@ ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
 			    );
 ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 				  , char SPD_Wave='?'
-				  //, const std::string& lopt=""
+				  , const std::string& lopt=""
 				  );
 #endif
 //

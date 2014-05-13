@@ -18,6 +18,51 @@ void PrintAllSpinFactors(std::ostream& out){
   out << " All known 4-body spin factors with example decays:\n"
       << " (Not all examples are necessarily physical)\n"
       << " -------------------- " << std::endl;
+    
+    out << " SF_BtoAV0_AtoVP1_VtoP2P3:\n" 
+    << SF_BtoAV0_AtoVP1_VtoP2P3::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoAV0_AtoVP1Dwave_VtoP2P3:\n" 
+    << SF_BtoAV0_AtoVP1Dwave_VtoP2P3::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoAV0_AtoVP1_VtoP2P3_P:\n" 
+    << SF_BtoAV0_AtoVP1_VtoP2P3_P::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoAV0_AtoVP1_VtoP2P3_D:\n" 
+    << SF_BtoAV0_AtoVP1_VtoP2P3_D::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P:\n" 
+    << SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D:\n" 
+    << SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
+    out << " SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P:\n" 
+    << SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::getExampleDecay()
+    << " -------------------- " << std::endl; 
+    
+    out << " SF_BtoTV0_TtoVP1_VtoP2P3_P:\n" 
+    << SF_BtoTV0_TtoVP1_VtoP2P3_P::getExampleDecay()
+    << " -------------------- " << std::endl;
+    
+    out << " SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P:\n" 
+    << SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::getExampleDecay()
+    << " -------------------- " << std::endl;
+    
+    out << " SF_BtoVP1_VtoV0S_StoP2P3:\n" 
+    << SF_BtoVP1_VtoV0S_StoP2P3::getExampleDecay()
+    << " -------------------- " << std::endl;
+    
+    out << " SF_BtoV1V0_V1toV2P1_V2toP2P3:\n" 
+    << SF_BtoV1V0_V1toV2P1_V2toP2P3::getExampleDecay()
+    << " -------------------- " << std::endl;  
+    
   out << " SF_DtoPP0_PtoVP1_VtoP2P3:\n" 
       << SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay()
       << " -------------------- " << std::endl;
@@ -101,7 +146,7 @@ ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
       sf = new SpinFactor3(thisDcy);
     }
   }else if( 4 == nFinalStates){
-    sf = SpinFactorMaker4Body(thisDcy, SPD_Wave);
+    sf = SpinFactorMaker4Body(thisDcy, SPD_Wave,lopt);
   }else{
     cout << " SpinFactorMaker: Don't know any spin"
 	 << " factors for a final state with "
@@ -117,17 +162,151 @@ ISpinFactor* SpinFactorMaker(const DecayTree& thisDcy
   return sf;
 }
 
-ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
-				  , char SPD_Wave
-				  //  , const std::string&
-				  ){
-  bool dbThis=false;
+ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy, char SPD_Wave, const std::string& lopt){
+    bool dbThis=false;
 
-  if(dbThis){
-    std::cout << "SpinFactorMaker4Body called for"
+    if(dbThis){
+        std::cout << "SpinFactorMaker4Body called for"
 	      << thisDcy
 	      << std::endl;
-  }
+    }
+   
+    // final state vector
+    if( equalBySVPAT(SF_BtoAV0_AtoVP1_VtoP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3(thisDcy,-1);  
+        else return new SF_BtoAV0_AtoVP1_VtoP2P3(thisDcy,-999);  
+    }
+  
+    if( equalBySVPAT_L(SF_BtoAV0_AtoVP1Dwave_VtoP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoAV0_AtoVP1Dwave_VtoP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoAV0_AtoVP1Dwave_VtoP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoAV0_AtoVP1Dwave_VtoP2P3(thisDcy,-1);  
+        else return new SF_BtoAV0_AtoVP1Dwave_VtoP2P3(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoAV0_AtoVP1_VtoP2P3_P::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_P(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_P(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_P(thisDcy,-1);  
+        else return new SF_BtoAV0_AtoVP1_VtoP2P3_P(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoAV0_AtoVP1_VtoP2P3_D::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_D(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_D(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoAV0_AtoVP1_VtoP2P3_D(thisDcy,-1);  
+        else return new SF_BtoAV0_AtoVP1_VtoP2P3_D(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P(thisDcy,-1);  
+        else return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D(thisDcy,-1);  
+        else return new SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P(thisDcy,-1);  
+        else return new SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoAV0_AtoSP1_StoP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoAV0_AtoSP1_StoP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoAV0_AtoSP1_StoP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoAV0_AtoSP1_StoP2P3(thisDcy,-1);  
+        else return new SF_BtoAV0_AtoSP1_StoP2P3(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoTV0_TtoVP1_VtoP2P3_P::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoTV0_TtoVP1_VtoP2P3_P(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoTV0_TtoVP1_VtoP2P3_P(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoTV0_TtoVP1_VtoP2P3_P(thisDcy,-1);  
+        else return new SF_BtoTV0_TtoVP1_VtoP2P3_P(thisDcy,-999);
+    }
+    
+    
+    if( equalBySVPAT_L(SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P(thisDcy,-1);  
+        else return new SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoVP1_VtoV0S_StoP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoVP1_VtoV0S_StoP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoVP1_VtoV0S_StoP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoVP1_VtoV0S_StoP2P3(thisDcy,-1);  
+        else return new SF_BtoVP1_VtoV0S_StoP2P3(thisDcy,-999);
+    }
+    
+    if( equalBySVPAT_L(SF_BtoV1V0_V1toV2P1_V2toP2P3::getExampleDecay(), thisDcy) ){
+        if(dbThis){
+            std::cout << "found a spin factor for this decay:\n" 
+            << thisDcy << std::endl;
+        }
+        if(A_is_in_B("PLUS", lopt))return new SF_BtoV1V0_V1toV2P1_V2toP2P3(thisDcy,1);  
+        else if(A_is_in_B("ZERO", lopt))return new SF_BtoV1V0_V1toV2P1_V2toP2P3(thisDcy,0);  
+        else if(A_is_in_B("MINUS", lopt))return new SF_BtoV1V0_V1toV2P1_V2toP2P3(thisDcy,-1);  
+        else return new SF_BtoV1V0_V1toV2P1_V2toP2P3(thisDcy,-999);
+    }
+    
+    
+  // final state pseudo scalars  
   if( equalBySVPAT(SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay()
 		   , thisDcy) ){
     if(dbThis){

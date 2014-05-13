@@ -297,6 +297,7 @@ int NamedDecayTreeList::make3BodyList(){
 }
 
 int NamedDecayTreeList::make4BodyList(){
+  makeJpsiKpipiList();
   makeKKpipiList();
   makeK3piList();
   makeKsPiPiPizeroList();
@@ -613,11 +614,371 @@ int NamedDecayTreeList::makeDplusToKKPiList() {
 }
 
 //======================== 4 body decays ========================
+int NamedDecayTreeList::makeJpsiKpipiList(){
+    bool dbThis=false;
+    
+    DecayTree* dk=0;
+    
+    // B->J/psi K1(1270); K1->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 313)->addDgtr(321,-211); 
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K rho
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 9983)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    
+    // B->J/psi K1(1270); K1->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    dk = new DecayTree(521);
+    DecayTree k1(10323);
+    k1.getVal().setL(2);
+    k1.addDgtr(211, 313)->addDgtr(321,-211);
+    dk->addDgtr(443);
+    dk->addDgtr(&k1);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 313)->addDgtr(321,-211);
+    dk->getVal().setL(1);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 313)->addDgtr(321,-211);
+    dk->getVal().setL(2);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K1(1270); K1->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    dk->getVal().setL(1);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));  
+    dk->getVal().setL(2);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    dk = new DecayTree(521);
+    DecayTree K1(10323);
+    K1.getVal().setL(2);
+    K1.addDgtr(321, 113)->addDgtr(211,-211);
+    dk->addDgtr(443);
+    dk->addDgtr(&K1);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K1(1270); K1->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/Psi K1(1270); K1-> K0^*(1430) pi; K0^*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 10311)->addDgtr(321,-211);
+    this->add(AmpInitialiser(*dk, "Lass"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K1(1400); K1->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 20323)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS")); 
+    delete dk;
+    
+    // B->J/psi K1(1400); K1->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 20323)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K1(1400); K1->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 20323)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K*(1410); K*(1410)->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 100323)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi K2(1580); K2->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 9000325)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    dk->getVal().setL(2);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi  K2(1580); K2->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 9000325)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    dk->getVal().setL(2);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2(1580); K2->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 9000325)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2(1770); K2->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    dk->getVal().setL(2);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi  K2(1770); K2->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    dk->getVal().setL(2);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2(1770); K2->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi K2*(1430); K2->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 325)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi  K2*(1430); K2->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 325)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2*(1430); K2->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 325)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2*(1980); K2->K*(892) pi; K*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 100325)->addDgtr(211, 313)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi  K2*(1980); K2->K rho(770); rho->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 100325)->addDgtr(321, 113)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "RHO_OMEGA"));
+    this->add(AmpInitialiser(*dk, "GS"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));  
+    delete dk;
+    
+    // B->J/psi K2*(1980); K2->K omega; omega->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 100325)->addDgtr(321, 223)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));  
+    delete dk;
+    
+    // B->J/psi K2(1770); K2->K f0(980); f2->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(321, 9010221)->addDgtr(211,-211);
+    this->add(AmpInitialiser(*dk, "FocusFlatte"));
+    this->add(AmpInitialiser(*dk, "Flatte"));
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2(1770); K2->K f2(1270); f2->pi pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(321, 225)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->J/psi K2(1770); K2->K2*(1430) pi; K2*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10325)->addDgtr(211, 315)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
+    // B->psi(2S) K; psi(2S)-> J/psi pi pi (non resonant)  
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 100443)->addDgtr(443, 9981)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    //B->J/psi K pi pi (non resonant)
+    dk = new DecayTree(521);
+    dk->addDgtr(321, 9993)->addDgtr(443, 9981)->addDgtr(211,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi K1(1270); K1->K pi pi (non resonant) 
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 9993)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));   
+    delete dk;
+    
+    // B->J/psi K1(1270); K1->K pi pi (non resonant)
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211,  9981)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+
+    // Done
+    return _trees.size();
+}
+
 int NamedDecayTreeList::makeKKpipiList(){
   bool dbThis=false;
 
   DecayTree* dk=0;
-
+ 
   // D->KK pipi
 
   // D->K1(1270)K-, K1(1270)->rho(770)K+

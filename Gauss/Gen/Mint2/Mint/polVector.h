@@ -41,7 +41,7 @@ class polVector : public TLorentzVectorC{
       }
         
       else {
-          std::cout << "I can't handle spin > 1 particles. I'll set everything to 0. " std::endl;
+          std::cout << "I can't handle spin > 1 particles. I'll set everything to 0. "  << std::endl;
           _v[0].SetXYZT(0,0,0,0);
           _v[1].SetXYZT(0,0,0,0);
       }
