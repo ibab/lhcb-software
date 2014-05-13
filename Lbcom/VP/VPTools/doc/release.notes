@@ -1,9 +1,10 @@
 !--------------------------------------------------------------------------
 ! Package     : VP/VPTools
-! Responsible : Victor Coco
+! Responsible : Heinrich Schindler
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+!========================= VPTools v2r3 2014-05-13 =========================
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPClusterPosition::position functions with VPLiteCluster as argument
 

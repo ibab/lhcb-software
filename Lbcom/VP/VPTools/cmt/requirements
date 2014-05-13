@@ -1,8 +1,8 @@
 # Created    : 02/02/10
-# Maintainer : Victor Coco
+# Maintainer : Heinrich Schindler
 #
 package           VPTools
-version           v2r2
+version           v2r3
 
 # Structure, i.e. directories to process. 
 #=========================================================================
