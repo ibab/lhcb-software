@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r66 2014-05-13 =========================
 ! 2014-05-08 - Chris Jones
  - Add new OnlineMode property. Tunes the monitoring as appropriate for
    Online Brunel, so it can be used for the Online HPD and refractive index
