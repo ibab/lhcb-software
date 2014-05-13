@@ -4,8 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r11 2014-05-13 =======================
 ! 2014-05-02 - Michel De Cian
- - Fixed bug in PrSeedingXLayers to take inverted top/bottom for new FT into account. Added new properties and documentation.
+ - Fixed bug in PrSeedingXLayers to take inverted top/bottom for new FT into account. 
+   Added new properties and documentation.
 
 ! 2014-03-20 - Francesco Polci 
  -Adapted to the new version of FTChannelID having:
