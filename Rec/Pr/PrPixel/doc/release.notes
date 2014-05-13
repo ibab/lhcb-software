@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r7 2014-05-13 =========================
 ! 2014-05-08 - Heinrich Schindler
  - Remove unused functions removeHit, all3SensorsAreDifferent from PrPixelTrack
 
