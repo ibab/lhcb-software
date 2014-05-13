@@ -4,6 +4,16 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-05-13 - Vanya Belyaev
+
+ - microdst.py
+
+      add switch to enable the automatic refitting of PVs for uDST 
+      (useful for WG-productions)
+
+      Default is "no refit"
+
+
 !========================= DSTWriters v4r13 2014-04-02 =========================
 
 ! 2014-03-31 - Chris Jones

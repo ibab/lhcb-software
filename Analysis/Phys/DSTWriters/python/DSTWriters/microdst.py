@@ -31,7 +31,7 @@ from microdstelements import ( CloneRecHeader,
                                PrintTESContents,
                                FindDuplicates )
 
-def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
+def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit = False) :
     '''
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
@@ -45,8 +45,11 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
                           RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
-        #ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
         ]
+
+    if refit : 
+        elements += [ ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ) ] 
+
     if isMC :
         elements += [ CloneParticleMCInfo(),
                       CloneBackCat()
@@ -85,8 +88,8 @@ def stripCalibMicroDSTStreamConf( pack=True, isMC=False ) :
     conf.extraItems += [ '/Event/Muon/RawEvent#1' ]
     return conf
 
-def microDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
-    return stripMicroDSTElements(pack,saveTrackClusters,isMC)
+def microDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit = False ) :
+    return stripMicroDSTElements(pack,saveTrackClusters,isMC,refit)
 
 def microDSTStreamConf( pack=True, isMC=False ) :
     return stripMicroDSTStreamConf(pack,isMC)
