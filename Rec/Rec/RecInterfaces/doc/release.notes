@@ -4,14 +4,15 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+!========================= RecInterfaces v1r2 2014-05-13 ========================
 ! 2014-04-01 - Chris Jones
  - Rework the tool interface, to allow it to be used by a DecayTreeTuple tool.
 
-!========================= RecInterfaces v1r1 2012-11-28 =========================
+!========================= RecInterfaces v1r1 2012-11-28 ========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= RecInterfaces v1r0 2011-02-28 =========================
+!========================= RecInterfaces v1r0 2011-02-28 ========================
 ! 2011-02-13 - Chris Jones
  - New package for sub-det non-specific reconstruction interfaces.
  - Add interface IChargedProtoANNPIDTupleTool
