@@ -6,6 +6,12 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-05-13 - Philippe d'Argent
+ - SpinFactor class returns complex instead of double
+ - new class polVector that implements polarization vector of a massive spin 1 particle
+ - added P-> P P P V spin factors
+ - added B-> K pi pi J/psi decay trees
+
 2014-05-01 - Jeremy
  - Bug fixes to make Mint2 gcc-4.8 and root 5.34 compatible
 
