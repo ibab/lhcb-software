@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r17 2014-05-13 =========================
 ! 2014-05-08 - Chris Jones
  - Add new OnlineMode property to RecSysConf and RecMoniConf Configurables.
 
