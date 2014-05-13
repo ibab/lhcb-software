@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v6r1 2014-05-13 ========================
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPLiteMeasurement
 
