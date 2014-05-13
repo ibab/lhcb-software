@@ -6,7 +6,36 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-- Modified configurables test to only check configurables in this project. See task #50698 
+</PRE><H1><A NAME=v15r2>2014-05-13 LbcomSys v15r2</A></H1><PRE>
+This version uses Gaudi v25r1 and LHCb v37r2
+
+- Packages modified: VP/VPAlgorithms v4r4, VP/VPAssociators v2r6, VP/VPTools v2r3
+
+- Modified configurables test to only check configurables in this project.
+  See task #50698 
+
+- In VP/VPAlgorithms v4r4
+  . Follow change in return type of pointToChannel function (r172319).
+  . Follow changes in VPChannelID format (r171869).
+  . Use sorting function from VPDataFunctor
+  . Run clang-format for consistent style.
+  . Do not create lite clusters in VPClustering.
+  . Follow changes in VPCluster format (removal of VPLiteCluster, r170715)
+  . Follow changes in VPDigit format and location names (revision r170468).
+
+- In VP/VPAssociators v2r6
+  . Remove warning message in VPDigitLinker if no MCVPDigit found.
+  . Modify digits linker tables to use keys instead of VPDigit objects.
+  . Simplify delta electron treatment in VPDigitLinker.
+  . Remove dependencies on VPDet and GSL.
+  . Remove VPLiteCluster include statement.
+  . Follow changes in VPDigit and MCVPDigit format and location names 
+    (revisions r170467, r170468).
+
+- In VP/VPTools v2r3
+  . Follow changes in VPCluster format (removal of VPLiteCluster, r170715)
+  . Re-implement VPClusterPosition::position functions with VPCluster instead of
+    VPLiteCluster as argument
 
 </PRE><H1><A NAME=v15r1>2014-03-26 LbcomSys v15r1</A></H1><PRE>
 This version uses Gaudi v25r1 and LHCb v37r1
