@@ -4,6 +4,7 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloMoniDst v5r17 2014-05-13 =======================
 ! 2014-05-06 - Marco Cattaneo
  - CaloMoniAlg.cpp: use setHistoTopDir in initialize() instead of
    setProperty("HistoTopDir") in constructor. Removes need for debug() in 
