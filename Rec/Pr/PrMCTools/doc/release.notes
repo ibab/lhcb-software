@@ -4,14 +4,17 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-05-13 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-05-09 - Michel De Cian
  - First commit of PrPlotFTHits, an algorithm that makes various plots for hit-related quantities in the FT.
 
 ! 2014-04-25 - Heinrich Schindler
  - PrDebugTrackingLosses: follow changes in VPChannelID format (r171869).
- - Rename PatPixelDebugTool (moved here from Tr/TrackMCTools) 
+ - Rename PatPixelDebugTool (moved here from Tr/TrackMCTools)
    to PrPixelDebugTool and make it inherit from PrDebugTool.
- 
+
 ! 2014-04-01 - Heinrich Schindler
  - Remove linking based on VPLiteClusters from PrLHCbID2MCParticle.
 
@@ -55,9 +58,9 @@
 
 !========================= PrMCTools v1r8 2013-12-10 =========================
 ! 2013-11-18 - Heinrich Schindler
- - PrCheatedVP: Follow change in channelToPoint syntax in DeVPSensor, 
+ - PrCheatedVP: Follow change in channelToPoint syntax in DeVPSensor,
    remove unused includes
- 
+
 !========================= PrMCTools v1r7 2013-10-24 =========================
 ! 2013-10-16 - Wouter Hulsbergen
  - Make sure PrTrackAssociator clears a linker table before filling it
@@ -105,7 +108,7 @@
  - Added UT to PrTrackAssociator.
 
 ! 2013-02-27 - Sascha Stahl
- - Implemented basic efficiency checking for Matching, 
+ - Implemented basic efficiency checking for Matching,
 	 Downstream and Upstream tracking.
 
 ! 2013-02-20 - Olivier Callot
@@ -143,7 +146,7 @@
 
 ! 2012-08-06 - Olivier Callot
  - In PrTrackAssociator, revisit the mother-daughter association: The decay can be
-   inside the Velo or inside the T stations. The requirement is direct daughter, 
+   inside the Velo or inside the T stations. The requirement is direct daughter,
    and mother has some Velo hits, daughter some T hits.
    The ghost rate is then reduced by ~0.5%...
 

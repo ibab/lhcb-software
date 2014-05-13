@@ -8,7 +8,8 @@ gaudi_depends_on_subdirs(Det/VPDet
                          Event/LinkerEvent
                          Event/MCEvent
                          GaudiAlg
-                         Pr/PrKernel)
+                         Pr/PrKernel
+                         Tr/TrackInterfaces)
 
 gaudi_add_module(PrMCTools
                  src/*.cpp
