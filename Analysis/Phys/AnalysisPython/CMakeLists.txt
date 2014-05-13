@@ -25,4 +25,8 @@ gaudi_add_dictionary(AnalysisPython
                      SPLIT_CLASSDEF
                      OPTIONS -U__MINGW32__)
 
+# Ensure that the library and the dictionary are built in the right order and
+# not multiple times.
+add_dependencies(AnalysisPythonLib AnalysisPythonGen)
+
 gaudi_install_python_modules()

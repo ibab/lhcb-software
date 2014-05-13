@@ -1,47 +1,50 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisPython
 ! Responsible : Juan PALACIOS
-! Purpose     : Collection of useful python modules for LHCb-specific 
+! Purpose     : Collection of useful python modules for LHCb-specific
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
+
+! 2014-05-13 - Marco Clemencic
+ - Fixed CMake configuration.
 
 ! 2014-05-12 - Marco Clemencic
  - Fixed CMake configuration (requires Gaudi > v25r1, only for CMake build).
 
 ! 2014-05-11 - Vanya Belyaev
- - improve positive polynomials 
+ - improve positive polynomials
 
 ! 2014-05-11 - Marco Clemencic
  - Minor change to work with the latest changes in the reflex dictionary pattern,
    needed for ROOT 6's PCMs.
 
 ! 2014-05-10 - Vanya Belyaev
- - improve integration 
+ - improve integration
 
 ! 2014-05-09 - Vanya Belyaev
- - make use of analytical integrals for 2D non-factorazable models 
+ - make use of analytical integrals for 2D non-factorazable models
 
 ! 2014-05-04 - Vanya Belyaev
- - make use of analysical integrals 
+ - make use of analysical integrals
 
 ! 2014-04-16 - Vanya Belyaev
-   add qmtest that makes segmentation fault for ROOT6  
-   
+   add qmtest that makes segmentation fault for ROOT6
+
 !========================= AnalysisPython v2r29 2014-04-02 =========================
 
 ! 2014-03-31 - Vanya Belyaev
- - StatVar:  extend to get the correlations for the variables 
+ - StatVar:  extend to get the correlations for the variables
 
 !========================= AnalysisPython v2r28 2014-03-11 =========================
 
 ! 2014-03-10 - Vanya Belyaev
- - move the large portion of pure python code to Analysis/PyPAW 
+ - move the large portion of pure python code to Analysis/PyPAW
 
 !========================= AnalysisPython v2r27 2014-03-07 =========================
 
 ! 2014-03-07 - Vanya Belyaev
 
- - tagged for release with Bender 
+ - tagged for release with Bender
 
 ! 2014-03-07 - Vanya Belyaev
  - minor impovement for PhaseSpace modulated by Polinomial function
@@ -49,37 +52,37 @@
 ! 2014-03-03 - Vanya Belyaev
 
  - new PyTMVA module
-   very simple interface to major TMVA classes: 
+   very simple interface to major TMVA classes:
     - Trainer (a bit simplified version of the original code by Abert Puig)
     - Reader  (not efficinent, but generic enough)
 
- - new SelectorWithVars module 
-   *generic* py-selector to fill RooDataSet from tree/chain 
-   actually it is a bit extended verison of the original code by Alexander Baranov 
+ - new SelectorWithVars module
+   *generic* py-selector to fill RooDataSet from tree/chain
+   actually it is a bit extended verison of the original code by Alexander Baranov
 
  - modified PySelectorWithCuts.cpp
-   add event counter (it makes much better printout of progress-bar) 
+   add event counter (it makes much better printout of progress-bar)
 
 !========================= AnalysisPython v2r26 2014-03-02 =========================
 
 ! 2014-03-02 - Vanya Belyaev
- - Modify a bit parameterization of PhaseSpacePol to increase 
+ - Modify a bit parameterization of PhaseSpacePol to increase
    the effective sensitivity to polinomial coefficients.
 
 ! 2014-02-04 - Vanya Belyaev
- - add the accessor functions for leaves and branches 
+ - add the accessor functions for leaves and branches
 
 ! 2014-01-30 - Vanya Belyaev
- - add missing descriptors 
+ - add missing descriptors
 
 ! 2014-01-26 - Vanya Belyaev
- - add Zech-prescriptition for efficiency determination 
+ - add Zech-prescriptition for efficiency determination
 
 ! 2014-01-20 - Vanya Belyaev
- - substitute numpy.array with array.array 
+ - substitute numpy.array with array.array
 
 ! 2014-01-12 - Vanya Belyaev
- - many minor fixes 
+ - many minor fixes
 
 !========================= AnalysisPython v2r25 2013-12-18 =========================
 
@@ -87,39 +90,39 @@
  - Add utf-8 coding string(PEP 0263) to python files
 
 ! 2013-11-23 - Vanya Belyaev
- - Adjust a bit Bugg&Co family of functions 
+ - Adjust a bit Bugg&Co family of functions
 
 ! 2013-10-27 - Vanya Belyaev
- - Add GetNdata for the Analysis::Formula 
+ - Add GetNdata for the Analysis::Formula
 
 ! 2013-10-27 - Vanya Belyaev
  - Add a few functions for phase space modulated by polynomial
 
 ! 2013-10-14 - Vanya Belyaev
- - Tiny fix in comments 
+ - Tiny fix in comments
 
 ! 2013-10-13 - Vanya Belyaev
- - Add StatVar : useful utility to get the statistics for 
-   certain variables in TTree/Dataset 
- - Few minor decorators for StatEntity 
- 
+ - Add StatVar : useful utility to get the statistics for
+   certain variables in TTree/Dataset
+ - Few minor decorators for StatEntity
+
 !========================= AnalysisPython v2r24 2013-10-02 =========================
 
 ! 2013-09-26 - Vanya Belyaev
- - Add getitem ffor the axes 
+ - Add getitem ffor the axes
 
 ! 2013-09-24 - Vanya Belyaev
  - ZipShelve: Add more functionality to ls-method :
      List the avilable keys (patterns included).
      Pattern matching is performed accoriding to
-     fnmatch/glob/shell rules [it is not regex!] 
+     fnmatch/glob/shell rules [it is not regex!]
      >>> db = ...
-     >>> db.ls () ## all keys in DB 
+     >>> db.ls () ## all keys in DB
      >>> db.ls ('*MC*')
-        
+
 ! 2013-09-15 - Vanya Belyaev
  - PyRoUts: few new decorators (e.g. sumVar)
-   GetLumi: make use of sumVar 
+   GetLumi: make use of sumVar
 
 ! 2013-08-28 - Vanya Belyaev
  - use new functions from Kernel/LHCbMath
@@ -128,7 +131,7 @@
 
 ! 2013-08-10 - Vanya Belyaev
  - PyRoUts: minor improvements in VE.b2s, VE.prec
-    easier sampling from VE and histograms 
+    easier sampling from VE and histograms
 
 !========================= AnalysisPython v2r22p1 2013-08-01 =========================
 
@@ -138,22 +141,22 @@
 !========================= AnalysisPython v2r22 2013-07-12 =========================
 
 ! 2013-07-12 - Vanya Belyaev
- - Minor improvement in Utils.py 
+ - Minor improvement in Utils.py
 
 ! 2013-07-11 - Vanya Belyaev
- - PyRoUts.py & Utils.py : Eliminate unnesessary imports from GaudiPython 
+ - PyRoUts.py & Utils.py : Eliminate unnesessary imports from GaudiPython
 
 ! 2013-07-09 - Vanya Belyaev
- - Add context manager for suppression of RooFit prints 
+ - Add context manager for suppression of RooFit prints
 
 ! 2013-07-08 - Vanya Belyaev
- - Minor improvements in functions 
+ - Minor improvements in functions
 
 ! 2013-07-06 - Vanya Belyaev
- - Add output & tee context managers  
+ - Add output & tee context managers
 
 ! 2013-07-06 - Vanya Belyaev
- - Fix file descriptor leak in MuteC-utilitities 
+ - Fix file descriptor leak in MuteC-utilitities
 
 !========================= AnalysisPython v2r21 2013-06-13 =========================
 
@@ -161,26 +164,26 @@
  - Fixed compilation with CMake.
 
 ! 2013-05-26 - Vanya Belyaev
- - Add the slicing for axes and histos 
+ - Add the slicing for axes and histos
 
 ! 2013-05-17 - Chris Jones
  - Remove unused methods from HStats.cpp to fix clang 3.2 warning
 
 ! 2013-05-14 - Vanya Belyaev
- - Add (log&log10)gamma distribution models 
+ - Add (log&log10)gamma distribution models
 
 ! 2013-05-13 - Vanya Belyaev
- - Add the function for bining according to the density 
+ - Add the function for bining according to the density
 
 ! 2013-05-11 - Vanya Belyaev
  - Add (python) comparison operators for RooRealVar
 
 ! 2013-05-11 - Vanya Belyaev
- - (py)minuit: improments in cor&cov methods 
+ - (py)minuit: improments in cor&cov methods
 
 ! 2013-05-09 - Vanya Belyaev
- - Many small improvements for python selectors, 
-   especially selectors with embedded cuts 
+ - Many small improvements for python selectors,
+   especially selectors with embedded cuts
 
 !========================= AnalysisPython v2r20 2013-05-07 =========================
 
@@ -188,24 +191,24 @@
  - PyRoUts.py: add "withCuts" iterator for TTree/TChain
 
 ! 2013-05-06 - Vanya Belyaev
- - Add few utilities for much faster processing of trees in python 
+ - Add few utilities for much faster processing of trees in python
 
 ! 2013-04-27 - Vanya Belyaev
  - Add helper function sFactor
 
 ! 2013-04-26 - Vanya Belyaev
- - PyRoUts: minor fix for histo -> graph transformation methods  
+ - PyRoUts: minor fix for histo -> graph transformation methods
 
 !========================= AnalysisPython v2r19 2013-04-05 =========================
 
 ! 2013-03-31 - Vanya Belyaev
- - More decorators for RooFit objects 
+ - More decorators for RooFit objects
 
 ! 2013-03-24 - Vanya Belyaev
  - Drastic speedup for rebin-methods
 
 ! 2013-03-17 - Vanya Belyaev
- - Add some decorations for splines and interpolation 
+ - Add some decorations for splines and interpolation
 
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
@@ -213,22 +216,22 @@
 !========================= AnalysisPython v2r18 2013-02-20 =========================
 
 ! 2013-02-19 - Vanya Belyaev
- - more silence 
+ - more silence
 
 ! 2013-02-19 - Vanya Belyaev
- - add utilities to suppress stdout/stderr printout  
+ - add utilities to suppress stdout/stderr printout
 
 ! 2013-02-10 - Vanya Belyaev
- - Utils.py simple module  with very simple context managers 
+ - Utils.py simple module  with very simple context managers
 
 !  2013-02-10 - Vanya Belyaev
- - PySelector - allow to control number of processed events 
+ - PySelector - allow to control number of processed events
 
 ! 2013-01-27 - Vanya Belyaev
- - few minor fixes in PyRoUts 
+ - few minor fixes in PyRoUts
 
 ! 2013-01-05 - Vanya Belyaev
- - add StudentT pdf by Matt Needham 
+ - add StudentT pdf by Matt Needham
 
 !========================= AnalysisPython v2r17 2012-11-30 =========================
 
@@ -237,34 +240,34 @@
  - Modified requirements to simplify auto conversion to CMake.
 
 ! 2012-11-24 - Vanya Belyaev
- - suppress warnings from "smear"-method 
+ - suppress warnings from "smear"-method
 
-! 2012-11-18 - Vanya Belyaev 
- - fix "transform"-method 
+! 2012-11-18 - Vanya Belyaev
+ - fix "transform"-method
 
-! 2012-11-16 - 
- - fix typo in rebin method 
+! 2012-11-16 -
+ - fix typo in rebin method
 
 ! 2012-11-10 - Vanya Belyaev
- - add corr&cov methods 
+ - add corr&cov methods
 
 ! 2012-10-26 - Vanya Belyaev
- - PyRoUts.py: minor decoration  
+ - PyRoUts.py: minor decoration
 
 ! 2012-10-23 - Vanya Belyaev
- - PyRoUts.py: 
-    - add histogram content fransformation and two FoMs: 
+ - PyRoUts.py:
+    - add histogram content fransformation and two FoMs:
          - S/sqrt(S+alpha*B)
-         - sigma(S)/S 
+         - sigma(S)/S
 
 ! 2012-10-16 - Vanya Belyaev
- - tiny addition to VE 
+ - tiny addition to VE
 
 ! 2012-10-16 - Vanya Belyaev
- - more conversions to tgraph 
+ - more conversions to tgraph
 
 ! 2012-10-16 - Vanya Belyaev
- - add getLumi function 
+ - add getLumi function
 
 !========================= AnalysisPython v2r16 2012-10-04 =========================
 
@@ -275,48 +278,48 @@
  - Add a few decorators for TMinuit&Co
 
 ! 2012-09-23 - Vanya Belyaev
- - Few minor fixes in PyRoUts 
+ - Few minor fixes in PyRoUts
  - Add smearing of the histograms according to the Gaussian resolutions
 
 !========================= AnalysisPython v2r15 2012-07-26 =========================
 
 ! 2012-07-21 - Vanya Belyaev
- - rewrite PolyPositive  
+ - rewrite PolyPositive
 
 ! 2012-07-18 - Vanya Belyaev
- - rewrite PolyPositive 
+ - rewrite PolyPositive
 
 ! 2012-07-17 - Vanya Belyaev
- - toHepDATA 
+ - toHepDATA
 
 ! 2012-07-12 - Vanya Belyaev
- - add transpose operation for 2D-histos 
+ - add transpose operation for 2D-histos
 
 !========================= AnalysisPython v2r14 2012-06-28 =========================
 
 ! 2012-06-24 - Vanya Belyaev
- - fix "diff"-function 
+ - fix "diff"-function
 
 ! 2012-06-09 - Vanya Belyaev
- - add rebin-functions 
+ - add rebin-functions
 
 ! 2012-06-03 - Vanya Belyaev
- - fiw minor fixes & improvements 
+ - fiw minor fixes & improvements
 
 ! 2012-05-28 - Vanya Belyaev
- - add hfits 
+ - add hfits
 
 !========================= AnalysisPython v2r13p1 2012-05-24 =========================
 
 !========================= AnalysisPython v2r13 2012-05-24 =========================
 
 ! 2012-05-24 - Vanya Belyaev
- - Add Flatte's function, corrected for proper phase space factors 
+ - Add Flatte's function, corrected for proper phase space factors
 
 ! 2012-05-23 - Vanya Belyaev
  - add Bugg' function for low mass S-wave dipion system ("sigma")
      *
-     *  The parameterization of sigma pole by 
+     *  The parameterization of sigma pole by
      *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
      *
      *
@@ -324,43 +327,43 @@
 !========================= AnalysisPython v2r12 2012-05-21 =========================
 
 ! 2012-05-21 - Vanya Belyaev
- - minor fixes in logger 
+ - minor fixes in logger
 
 ! 2012-05-13 - Vanya Belyaev
- - add Needham function 
+ - add Needham function
 
 ! 2012-05-13 - Vanya Belyaev
 
- - add shelve_ext module 
- - simplify a bit pyroot 
+ - add shelve_ext module
+ - simplify a bit pyroot
 
 !========================= AnalysisPython v2r10 2012-05-03 =========================
 
 ! 2012-04-29 - Vanya Belyaev
  - PyRoUts:
   . Add intervals
-  . Add  (x,y,z,v)min/max-functions, 
+  . Add  (x,y,z,v)min/max-functions,
   . Improve documentation
 
 ! 2012-04-02 - Vanya Belyaev
- - Add LASS model for Kpi S-wave scattering 
+ - Add LASS model for Kpi S-wave scattering
 
 ! 2012-04-01 - Vanya Belyaev
- - Add phase space functor for 2-from-3 body decyas with orbital momentum 
+ - Add phase space functor for 2-from-3 body decyas with orbital momentum
 
 !========================= AnalysisPython v2r9 2012-02-18 =========================
 
 ! 2012-02-18 - Vanya Belyaev
 
- - minor extension/fix for h1_aixs and axis_bins method 
+ - minor extension/fix for h1_aixs and axis_bins method
 
 ! 2012-02-16 - Vanya Belyaev
- - improve logging, pyroot 
+ - improve logging, pyroot
 
 !========================= AnalysisPython v2r8 2012-02-09 =========================
 
 ! 2012-01-15 - Vanya Belyaev
- - add cloners 
+ - add cloners
 
 ! 2011-12-17 - Vanya Belyaev
  - fix for gcc46 compiler.
@@ -371,29 +374,29 @@
  - add functions for efficieny calculations
 
 ! 2011-12-01 - Vanya Belyaev
- - new functions 
+ - new functions
 
 !========================= AnalysisPython v2r6 2011-11-01 =========================
 
 ! 2011-11-01 - Vanya Belyaev
- - tagged as v2r6 to be released witgh Bender v18r2 
+ - tagged as v2r6 to be released witgh Bender v18r2
 
 
 ! 2011-10-28 - Vanya Belyaev
 
- - add few more decorations into PyRoUts 
+ - add few more decorations into PyRoUts
 
 
 ! 2011-10-28 - Vanya Belyaev
- - more fixes in PyRoUts 
+ - more fixes in PyRoUts
 
 ! 2011-10-22 - Vanya Belyaev
 
- - some fixes in the histogram operations 
+ - some fixes in the histogram operations
 
 ! 2011-10-20 - Vanya Belyaev
 
- - small change in PyRoUts 
+ - small change in PyRoUts
 
 ! 2011-10-10 - Vanya Belyaev
  - UStat: extend for tests of any dimensions ...
@@ -406,42 +409,42 @@
  - speed-up U-stat
 
 ! 2011-09-23 - Vanya Belyaev
- - add uStat.py modele: code for calcualtiuong U-statistics 
-   It is just python  reimplementation of original C++ lines 
-   written by Greig Cowan 
+ - add uStat.py modele: code for calcualtiuong U-statistics
+   It is just python  reimplementation of original C++ lines
+   written by Greig Cowan
 
 ! 2011-09-15 - Vanya Belyaev
- - few minor fixes 
+ - few minor fixes
 
 !========================= AnalysisPython v2r5 2011-09-07 =========================
 ! 2011-08-01 - Vanya Belyaev
 
- - PyRoUts.py: few minor fixes 
+ - PyRoUts.py: few minor fixes
 
 !========================= AnalysisPython v2r4 2011-07-28 =========================
 ! 2011-07-25 - Vanya Belyaev
 
- - PyRoUts: a bit more decorators 
+ - PyRoUts: a bit more decorators
 
 ! 2011-07-24 - Vanya Belyaev
- - minor fix 
+ - minor fix
 
 ! 2011-07-19 - Vanya Belyaev
 
- - decorate findBin functions 
+ - decorate findBin functions
 
 
 ! 2011-07-17 - Vanya Belyaev
- - more polishing of decorators, 
-   fix the problem with ``hidden'' createHistogram method 
+ - more polishing of decorators,
+   fix the problem with ``hidden'' createHistogram method
 
 ! 2011-07-16 - Vanya Belyaev
 
- - more polishing of decorators 
+ - more polishing of decorators
 
 ! 2011-07-13 - Vanya Belyaev
 
- - small polishing of decorators 
+ - small polishing of decorators
 
 ! 2011-07-05 - Vanya Belyaev
  - fix in py-selector
@@ -449,34 +452,34 @@
 ! 2011-06-26 - Vanya Belyaev
 
  - ZipShelve:
-     print SORTED list of keys 
+     print SORTED list of keys
 
 ! 2011-06-22 - Vanya Belyaev
 
- - PyRoUts.py : more decorators 
+ - PyRoUts.py : more decorators
 
 ! 2011-06-19 - Vanya Belyaev
 
- - PyRoUts.py : more improvements for root-decorators 
+ - PyRoUts.py : more improvements for root-decorators
 
- - cmt/requirements 
-    version increment to v2r3 
+ - cmt/requirements
+    version increment to v2r3
 
 !========================= AnalysisPython v2r2 2011-06-17 =========================
 
 ! 2011-06-16 - Vanya Belyaev
- - add python module for python selector 
- - add few useful decorators for plain ROOT classes 
+ - add python module for python selector
+ - add few useful decorators for plain ROOT classes
 
 ! 2011-06-07 - Vanya Belyaev
 
- - add simple module with decorations form some ROOT classes 
- - cmt/requirements 
-    version increment to v2r1 
+ - add simple module with decorations form some ROOT classes
+ - cmt/requirements
+    version increment to v2r1
 
 ! 2011-04-30 - Vanya Belyaev
 
- - add python module for python selector 
+ - add python module for python selector
 
 !======================= Phys/AnalysisPython v2r0 2011-04-29 =================
 ! 2011-04-02 - Vanya Belyaev
@@ -487,16 +490,16 @@
 ! 2011-03-31 - Vanya Belyaev
  - AnalsysisPython/Dir.py
 
-    add "on-demand" option to add also 
+    add "on-demand" option to add also
     the locations "known" to DataOnDeman service :
 
    >>> ls('/Event/Rec', ondemand = False , level = 1 )
-     /Event/Rec                                                             DataObject 
+     /Event/Rec                                                             DataObject
 
-   compare with: 
+   compare with:
 
    >>> ls('/Event/Rec', ondemand = True , level = 1 )
-     /Event/Rec                                                             DataObject 
+     /Event/Rec                                                             DataObject
     */Event/Rec/Rich                                                        Directory
     */Event/Rec/Muon                                                        Directory
     */Event/Rec/Calo                                                        InPrsAcceptanceAlg/InPRS
@@ -508,9 +511,9 @@
 
 ! 2011-01-23 - Vanya Belyaev
 
- - AnalysiPython/ZipShelvel.py 
-      "zipped"-version of shelve DB 
- - AnalysisPython/TPySelectorFix.py, 
+ - AnalysiPython/ZipShelvel.py
+      "zipped"-version of shelve DB
+ - AnalysisPython/TPySelectorFix.py,
    Analysis/TPySelector.h,
    src/TPySelector.cpp
 
@@ -519,7 +522,7 @@
 
  - cmt/requitements
    version incremen to Incre
- 
+
 
 !======================= Phys/AnalysisPython v1r6 2010-04-08 =================
 
@@ -533,7 +536,7 @@
 
 ! 2009-11-12 - Juan Palacios
  - python/AnalysisPython/Helpers.py
-  . Add printProperties, function to print the non-zero properties of a 
+  . Add printProperties, function to print the non-zero properties of a
     configurable.
  - cmt/requirements
   . Increase version to v1r5
