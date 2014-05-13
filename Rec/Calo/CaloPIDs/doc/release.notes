@@ -4,6 +4,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r17 2014-05-13 =========================
 ! 2014-05-06 - Marco Cattaneo
  - Remove debug() from CaloTrackAlg::_setProperty and CaloTrackTool::_setProperty
    This function is called in the constructor, when the OutputLevel is not initialised
