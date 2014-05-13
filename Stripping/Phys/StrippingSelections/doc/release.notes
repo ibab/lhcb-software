@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2014-05-13 - Vanya Belyaev
+ - add missing line 
+
+! 2014-05-13 - Vanya Belyaev
  - StrippingPsiX0.py 
    add few modes with chi_c (to be used for B&Q WG-production #8)
 

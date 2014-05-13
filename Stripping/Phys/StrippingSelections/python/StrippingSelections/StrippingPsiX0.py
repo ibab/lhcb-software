@@ -197,6 +197,7 @@ _default_configuration_ = {
     'B2ChicKPrescale'           : 1.0 ,
     'B2ChicKKPrescale'          : 1.0 ,
     'B2ChicKPiPrescale'         : 1.0 ,
+    'B2ChicKPiPiPrescale'       : 1.0 ,
     'B2ChicPiPiPrescale'        : 1.0 ,
     ## Bc * Lb  
     'Bc2ChicPiPrescale'         : 1.0 ,
@@ -405,6 +406,7 @@ class PsiX0Conf(LineBuilder) :
             self.b2chicK          () ,
             self.b2chicKK         () ,
             self.b2chicKpi        () ,
+            self.b2chicKpipi      () ,
             self.b2chicpipi       () ,
             # 
             self.bc2chicpi        () ,
@@ -641,6 +643,13 @@ class PsiX0Conf(LineBuilder) :
             prescale = self['B2ChicKPiPrescale'    ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'              ] ,
             algos    = [ self.b2chicKpi ()         ]
+            ) ,
+            ##
+            StrippingLine (
+            "B2ChicKPiPiFor" + self.name()           ,
+            prescale = self['B2ChicKPiPiPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.b2chicKpipi ()       ]
             ) ,
             ##
             StrippingLine (
@@ -1289,6 +1298,49 @@ class PsiX0Conf(LineBuilder) :
             """ % self['CTAU'],
             )
 
+
+    # ============================================================================
+    # B- -> chi_c K+ pi+ pi-  
+    # ============================================================================
+    def b2chicKpipi ( self ) :
+        """
+        B -> chic K+ pi+ pi-
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'B2ChicKPiPi'                   ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.chi_c () , self.kaons() , self.pions ()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> chi_c1(1P) K+ pi+ pi-]cc" ,
+            ##
+            Combination12Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,2) < 20 ) 
+            """  ,
+            ## 
+            Combination123Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,3) < 20 ) & 
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """  ,
+            ## 
+            CombinationCut   = """ mb0_acut &
+            ( ACHI2DOCA(1,4) < 20 ) & 
+            ( ACHI2DOCA(2,4) < 20 ) &
+            ( ACHI2DOCA(3,4) < 20 ) 
+            """ , 
+            ## 
+            MotherCut        = """
+            mbu_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
 
 
     # ============================================================================
