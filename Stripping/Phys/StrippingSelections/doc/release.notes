@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-05-13 - Vanya Belyaev
+ - StrippingPsiX0.py 
+   add few modes with chi_c (to be used for B&Q WG-production #8)
+
 ! 2014-05-05 - Vanya Belyaev
  - StrippingPsiXForBandQ.py
     psi_K: fix a sad stupid typo. 

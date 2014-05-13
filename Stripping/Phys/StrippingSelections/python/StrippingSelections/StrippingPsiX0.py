@@ -126,6 +126,18 @@ _default_configuration_ = {
     ( MIPCHI2DV()  > 4        )
     """ ,
     #
+    'ProtonCut'   : """
+    ( PT           > 200 * MeV ) & 
+    ( CLONEDIST    > 5000      ) & 
+    ( TRCHI2DOF    < 4         ) & 
+    ( TRGHOSTPROB  < 0.5       ) & 
+    in_range ( 2         , ETA , 5         ) &
+    in_range ( 10 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNp      > 0.1      ) &
+    ( MIPCHI2DV()  > 4        ) 
+    """ ,
+    #
     ## useful shortcuts:
     #
     'Preambulo' : [
@@ -143,10 +155,12 @@ _default_configuration_ = {
     ## Combination mass-cut for beauty particles 
     "mb0_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
     "mbu_acut   = in_range ( 4.50 * GeV , AM , 6.00 * GeV ) "  ,
+    "mbl_acut   = in_range ( 5.00 * GeV , AM , 6.50 * GeV ) "  ,
     "mbc_acut   = in_range ( 4.50 * GeV , AM , 6.75 * GeV ) "  ,
     ## mass-cut for beauty particles 
     "mb0_cut    = in_range ( 4.55 * GeV ,  M , 5.95 * GeV ) "  ,
     "mbu_cut    = in_range ( 4.55 * GeV ,  M , 5.95 * GeV ) "  ,
+    "mbl_cut    = in_range ( 5.05 * GeV ,  M , 6.45 * GeV ) "  ,
     "mbc_cut    = in_range ( 4.55 * GeV ,  M , 6.70 * GeV ) "  ,
     ] ,
     # =========================================================================
@@ -179,6 +193,14 @@ _default_configuration_ = {
     'Bu2PsiKstarPrescale'       : 1.0 ,
     'Bu2PsiKstarMPrescale'      : 1.0 ,
     'Bc2PsiRhoPrescale'         : 1.0 ,
+    #
+    'B2ChicKPrescale'           : 1.0 ,
+    'B2ChicKKPrescale'          : 1.0 ,
+    'B2ChicKPiPrescale'         : 1.0 ,
+    'B2ChicPiPiPrescale'        : 1.0 ,
+    ## Bc * Lb  
+    'Bc2ChicPiPrescale'         : 1.0 ,
+    'Lb2ChicPKPrescale'         : 1.0 ,
     # =========================================================================
     }
 ## ============================================================================
@@ -335,6 +357,7 @@ class PsiX0Conf(LineBuilder) :
             self.muons            () ,
             self.pions            () ,
             self.kaons            () ,
+            self.protons          () ,
             ##
             self.eta0             () ,
             self.eta_prime        () ,
@@ -346,6 +369,7 @@ class PsiX0Conf(LineBuilder) :
             self.etap2rhog        () ,
             self.etap2pipieta     () ,
             self.omega            () ,
+            self.chi_c            () , 
             #
             ## beauty
             #
@@ -375,7 +399,15 @@ class PsiX0Conf(LineBuilder) :
             ## 
             self.bc2rho           () ,
             self.bu2Kstar         () , ## for extraction of photon efficiency
-            self.bu2KstarM        ()   ## for merged pi0s 
+            self.bu2KstarM        () ,  ## for merged pi0s
+            #
+            ## b -> chi_c
+            self.b2chicK          () ,
+            self.b2chicKK         () ,
+            self.b2chicKpi        () ,
+            self.b2chicpipi       () ,
+            # 
+            self.bc2chicpi        () ,
             ]
         
         return self._add_selection ( 'Selections' , sel )
@@ -587,7 +619,51 @@ class PsiX0Conf(LineBuilder) :
             checkPV  = self['CheckPV'              ] ,
             algos    = [ self.bc2rho ()            ]
             ) ,
-            ##            
+            ##
+            ## b -> chi_c
+            ##
+            StrippingLine (
+            "B2ChicKFor" + self.name()               ,
+            prescale = self['B2ChicKPrescale'      ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.b2chicK ()           ]
+            ) ,
+            ##
+            StrippingLine (
+            "B2ChicKKFor" + self.name()              ,
+            prescale = self['B2ChicKKPrescale'     ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.b2chicKK ()          ]
+            ) ,
+            ##
+            StrippingLine (
+            "B2ChicKPiFor" + self.name()             ,
+            prescale = self['B2ChicKPiPrescale'    ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.b2chicKpi ()         ]
+            ) ,
+            ##
+            StrippingLine (
+            "B2ChicPiPiFor" + self.name()            ,
+            prescale = self['B2ChicPiPiPrescale'   ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.b2chicpipi ()        ]
+            ) ,
+            ##
+            StrippingLine (
+            "Bc2ChicPiFor" + self.name()             ,
+            prescale = self['Bc2ChicPiPrescale'    ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.bc2chicpi ()         ]
+            ) ,
+            ##
+            StrippingLine (
+            "Lb2ChicPKFor" + self.name()             ,
+            prescale = self['Lb2ChicPKPrescale'    ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'              ] ,
+            algos    = [ self.lb2chicpK ()         ]
+            ) ,
+            #
             ]
         #
         return self._add_selection ( 'PsiX0Lines' , sel ) 
@@ -610,7 +686,7 @@ class PsiX0Conf(LineBuilder) :
             )
     
     # ========================================================================
-    ## pions :
+    ## kaons :
     # ========================================================================
     def kaons     ( self ) :
         """
@@ -624,6 +700,23 @@ class PsiX0Conf(LineBuilder) :
             FilterDesktop          ,
             [ inpts ]              ,
             Code = self['KaonCut'] ,
+            )
+
+    # ========================================================================
+    ## protons
+    # ========================================================================
+    def protons    ( self ) :
+        """
+        protons for   B -> psi X lines 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdAllLooseProtons as inpts 
+        ##
+        return self.make_selection (
+            'Proton'                 ,
+            FilterDesktop            ,
+            [ inpts ]                ,
+            Code = self['ProtonCut'] ,
             )
 
     # =========================================================================
@@ -955,6 +1048,46 @@ class PsiX0Conf(LineBuilder) :
             """ 
             )
     
+    # =========================================================================
+    ## chi_c -> J/psi gamma 
+    # =========================================================================
+    def chi_c ( self ) :
+        """
+        chi_c -> J/psi gamma 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ##
+        pre_chic = self.make_selection (
+            'PreChic' ,
+            CombineParticles ,
+            [ self.psi() , self.gamma()  ] ,
+            ## 
+            DecayDescriptor = " chi_c1(1P) -> J/psi(1S) gamma " ,
+            ##
+            DaughtersCuts   = {
+            'J/psi(1S)'   :  " M  < ( 3.100 + 0.120 ) * MeV " ,
+            'gamma'       :  " PT > 400 * MeV "
+            } ,
+            ## 
+            CombinationCut  = """
+            ( AM - AM1 ) < 650 * GeV
+            """ ,
+            ##
+            MotherCut       = " PALL "
+            )
+        
+        ##         
+        from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger
+        ## 
+        return self.make_selection (
+            'Chic'                        ,
+            Pi0Veto__Tagger               ,
+            [ pre_chic ]                  ,
+            MassWindow     = 25 * MeV     ,
+            MassChi2       = -1           ,
+            ExtraInfoIndex = 25030     ## unique ! 
+            )
+    
     # ============================================================================
     ## Beauty -> psi(') X0
     # ============================================================================
@@ -964,7 +1097,7 @@ class PsiX0Conf(LineBuilder) :
     # ============================================================================
     def b2eta ( self ) :
         """
-        B -> psi(') eta -> gamma gamma 
+        B -> psi(') eta
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         ##
@@ -1046,8 +1179,223 @@ class PsiX0Conf(LineBuilder) :
 
 
     # ============================================================================
-    ## Beauty -> psi(') [ K,pi,KK,pipi,Kpi] X0 
+    ## Beauty -> chi_c  X 
     # ============================================================================
+
+    # ============================================================================
+    # B -> chi_c K 
+    # ============================================================================
+    def b2chicK ( self ) :
+        """
+        B -> chic K 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'B2ChicK'                   ,
+            ## algorithm type to be used
+            CombineParticles            ,
+            ## input selections 
+            [ self.chi_c () , self.kaons()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> chi_c1(1P) K+ ]cc" ,
+            ##
+            CombinationCut = """ mbu_acut &
+            ( ACHI2DOCA(1,2) < 20 )
+            """ , 
+            ## 
+            MotherCut        = """
+            mbu_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
+
+
+    # ============================================================================
+    # Bs -> chi_c K K 
+    # ============================================================================
+    def b2chicKK ( self ) :
+        """
+        B -> chic K K
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'B2ChicKK'                    ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.chi_c () , self.kaons()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "B_s0 -> chi_c1(1P) K- K+" ,
+            ##
+            Combination12Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,2) < 20 ) 
+            """  ,
+            ## 
+            CombinationCut   = """ mb0_acut &
+            ( ACHI2DOCA(1,3) < 20 ) & 
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            ## 
+            MotherCut        = """
+            mbu_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
+    
+    # ============================================================================
+    # B0 -> chi_c K- pi+ 
+    # ============================================================================
+    def b2chicKpi ( self ) :
+        """
+        B -> chic K- pi+
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'B2ChicKPi'                   ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.chi_c () , self.kaons() , self.pions ()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B0 -> chi_c1(1P) K- pi+]cc" ,
+            ##
+            Combination12Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,2) < 20 ) 
+            """  ,
+            ## 
+            CombinationCut   = """ mb0_acut &
+            ( ACHI2DOCA(1,3) < 20 ) & 
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            ## 
+            MotherCut        = """
+            mbu_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
+
+
+
+    # ============================================================================
+    # Bs -> chi_c pi pi 
+    # ============================================================================
+    def b2chicpipi ( self ) :
+        """
+        B -> chic pi pi 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'B2ChicPiPi'                  ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.chi_c () , self.pions()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "B_s0 -> chi_c1(1P) pi- pi+" ,
+            ##
+            Combination12Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,2) < 20 ) 
+            """  ,
+            ## 
+            CombinationCut   = """ mb0_acut &
+            ( ACHI2DOCA(1,3) < 20 ) & 
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            ## 
+            MotherCut        = """
+            mbu_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
+    
+    # ============================================================================
+    # Bc -> chi_c pi
+    # ============================================================================
+    def bc2chicpi ( self ) :
+        """
+        Bc -> chic pi+ 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Bc2ChicPi'                 ,
+            ## algorithm type to be used
+            CombineParticles            ,
+            ## input selections 
+            [ self.chi_c () , self.pions()  ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B_c+ -> chi_c1(1P) pi+ ]cc" ,
+            ##
+            CombinationCut = """ mbc_acut &
+            ( ACHI2DOCA(1,2) < 20 )
+            """ , 
+            ## 
+            MotherCut        = """
+            mbc_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            in_range ( 75   * um  , ctau ,  5 * mm     )
+            """
+            )
+
+    # ============================================================================
+    # Lb -> chi_c p K 
+    # ============================================================================
+    def lb2chicpK ( self ) :
+        """
+        Lambda_b -> chic p K 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Lb2ChicPK'                   ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.chi_c () , self.protons() , self.kaons () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[Lambda_b0 -> chi_c1(1P) p+ K-]cc" ,
+            ##
+            Combination12Cut = """ ( AM < 6 * GeV  ) &
+            ( ACHI2DOCA(1,2) < 20 )
+            """  ,
+            ## 
+            CombinationCut   = """ mbl_acut &
+            ( ACHI2DOCA(1,3) < 20 ) & 
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            ## 
+            MotherCut        = """
+            mbl_cut                 &
+            ( chi2vxNDF < 10      ) &  
+            ( ctau      > %s      ) 
+            """ % self['CTAU'],
+            )
     
     # ============================================================================
     # B -> psi(') K eta
