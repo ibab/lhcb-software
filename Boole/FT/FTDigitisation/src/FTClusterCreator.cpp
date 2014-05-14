@@ -1060,8 +1060,7 @@ StatusCode FTClusterCreator::execute(){
 StatusCode FTClusterCreator::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  info() << "*** Average cluster charge = " << m_sumCharge / m_nCluster << endmsg;
+  if (m_nCluster > 0) info() << "*** Average cluster charge = " << m_sumCharge / m_nCluster << endmsg;
 
   info() << "*** Lost Hits = " <<m_nberOfLostHitFromMap << "\t Kept Hits = "<< m_nberOfKeptHitFromMap
          <<"\t Sum="<< (m_nberOfKeptHitFromMap + m_nberOfLostHitFromMap)

@@ -93,7 +93,8 @@ StatusCode MCFTDigitCreator::initialize() {
   if ( sc.isFailure() ) return Error( "Failed to get Rndm::Gauss generator", sc );
   sc = m_flat.initialize( randSvc(), Rndm::Flat( 0., 1. ) );
   if ( sc.isFailure() ) return Error( "Failed to get Rndm::Flat generator", sc );
-  sc = m_rndmLandau.initialize( randSvc(), Rndm::Landau(39.0, 7.8) ); // for noise, from a fit to the MCHit cluster charge (6bit ADC)
+  sc = m_rndmLandau.initialize( randSvc(), Rndm::Landau(39.0, 7.8) ); // for noise, from a fit to the
+                                                                      // MCHit cluster charge (6bit ADC)
   if ( sc.isFailure() ) return Error( "Failed to get Rndm::Landau generator", sc );
 
   // tools
@@ -586,9 +587,14 @@ StatusCode MCFTDigitCreator::execute() {
   return StatusCode::SUCCESS;
 }
 
-int
-MCFTDigitCreator::averagePhotoElectrons(double energy)
+
+//=============================================================================
+// function averagePhotoElectrons(double energy)
+//=============================================================================
+int MCFTDigitCreator::averagePhotoElectrons(double energy)
 {
+  if ( msgLevel( MSG::DEBUG) )
+    debug() <<format("averagePhotoElectrons() : energy=%8.3f ",energy) << endmsg;
   // Compute the expected number of photoelectron, draw a poisson with that mean, and convert to ADC counts
   //== For large number of photo-electrons, take a gaussian.
   //== Else compute manually the value, by computing when the sum of terms if greater than a flat random.
@@ -609,13 +615,16 @@ MCFTDigitCreator::averagePhotoElectrons(double energy)
   }
 
   if ( msgLevel( MSG::DEBUG) )
-    debug() <<format("averagePhotoElectrons() : energy=%8.3f averagePE=%8.2f realPE %4i", 
-		     energy, averagePhotoElectrons, photoElectrons)
-	    << endmsg;
+    debug() <<format("averagePhotoElectrons() : averagePE=%8.2f realPE %4i",
+                     averagePhotoElectrons, photoElectrons)
+            << endmsg;
 
   return photoElectrons;
 }
 
+//=============================================================================
+// function integrateResponse(const LHCb::MCFTDeposit* ftdeposit)
+//=============================================================================
 std::pair<double,double>
 MCFTDigitCreator::integrateResponse(const LHCb::MCFTDeposit* ftdeposit)
 {
@@ -641,13 +650,25 @@ MCFTDigitCreator::integrateResponse(const LHCb::MCFTDeposit* ftdeposit)
   for (unsigned int idx = 0; idx < ftdeposit->mcHitVec().size(); idx++) {
     // direct pulse
     double t= ftdeposit->timeVec()[idx]-toff;
-    avePE = averagePhotoElectrons(ftdeposit->energyVec()[idx]);
+
     SiPMresponse = m_SiPMResponse->response(t);
+    if(msgLevel( MSG::DEBUG))
+    {
+      debug()<<format("[integrateResponse()] : idx==%4i t==%8.3f  SiPMresponse== %8.3f ftdeposit->energyVec()[idx]==%8.3f" ,
+                      idx, t, SiPMresponse,ftdeposit->energyVec()[idx])<< endmsg;
+    }
+    avePE = averagePhotoElectrons(ftdeposit->energyVec()[idx]);
+
     sum.first += avePE * SiPMresponse;
     // reflected pulse
     t= ftdeposit->timeRefVec()[idx]-toff;
-    avePE = averagePhotoElectrons(ftdeposit->energyRefVec()[idx]);
     SiPMresponse = m_SiPMResponse->response(t);
+    if(msgLevel( MSG::DEBUG))
+    {
+      debug()<<format("[integrateResponse()] : t==%8.3f SiPMresponse== %8.3f ftdeposit->energyRefVec()[idx]==%8.3f" ,
+                      t, SiPMresponse,ftdeposit->energyRefVec()[idx])<< endmsg;
+    }
+    avePE = averagePhotoElectrons(ftdeposit->energyRefVec()[idx]);
     sum.second += avePE * SiPMresponse;
   }
 

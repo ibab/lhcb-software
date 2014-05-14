@@ -374,14 +374,14 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
                    );
       
       plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibres", 
-           "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+             "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
              0 , 50, 0, 50, 50, 50);
 
       plot2D(channels.size(),NbOfFiredFibres,"NbChannelvsNbFiredFibresZOOM", 
-           "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
+             "Number of fired channels per Hit vs deposit length; Number of fired channels;Deposit Length (in channel units)", 
              0 , 10, 0, 10, 10, 10);
 
-     if ( msgLevel( MSG::DEBUG) ) {
+      if ( msgLevel( MSG::DEBUG) ) {
         debug() << "--- Hit index: " << ftHit->index() 
                 << ", size of vector of channels: " << channels.size() << endmsg;
         debug() << "[ HIT ] XYZ=[" << ftHit->entry() << "][" << ftHit->midPoint()
@@ -461,8 +461,17 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
                  << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
       }
 
-      // Fill MCFTDeposit
+      // Fill MCFTDeposit 
       FTDoublePairs::const_iterator vecIter;
+      // Temporary Patch [Eric 14/05/2014 : remove hits whose fired channels have negative energy!!]
+      bool PositiveEnergy = true;
+      for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter)
+      {
+        if (vecIter->second < 0 ) PositiveEnergy = false;
+      }
+      //End Temporary Patch
+      if(PositiveEnergy){
+        
       for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter){
         double DirectEnergyInSiPM = vecIter->second * att;
         double ReflectedEnergyInSiPM = vecIter->second * attRef;
@@ -501,6 +510,8 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
           depositCont->insert(energyDeposit,vecIter->first);
         }
       }
+      }
+    
     }else{
       if ( msgLevel( MSG::DEBUG) ){
         debug()  << "Call (if(pL->calculateListOfFiredChannels)) returned FALSE" << endmsg;
