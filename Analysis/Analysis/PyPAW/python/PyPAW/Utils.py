@@ -98,6 +98,7 @@ class Memory(object):
         self.name   = name
     def __enter__ ( self ) :
         self.memory = cpp.System.virtualMemory()
+        return self 
     def __exit__  ( self, *_ ) :
         self.delta = cpp.System.virtualMemory() - self.memory
         print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
@@ -166,7 +167,8 @@ class Clock(object):
     def __init__  ( self , name = '' ) :
         self.name   = name
     def __enter__ ( self ) :
-        self.clock = time.clock() 
+        self.clock = time.clock()
+        return self 
     def __exit__  ( self, *_ ) :
         self.delta = time.clock() - self.clock
         print  '%s Clocks %s ' % ( self.name , self.delta ) 
@@ -215,7 +217,8 @@ class Timer(object):
     def __init__  ( self , name = '' ) :
         self.name   = name
     def __enter__ ( self ) :
-        self.time = time.time() 
+        self.time = time.time()
+        return self 
     def __exit__  ( self, *_ ) :
         self.delta = time.time() - self.time
         print  '%s Time   %s ' % ( self.name , self.delta ) 
@@ -337,6 +340,8 @@ class MutePy(object):
         if self._out : sys.stdout = Silent() 
         if self._err : sys.stderr = Silent() 
 
+        return self
+    
     def __exit__(self, *_):
         
         sys.stdout = self.stdout
@@ -404,6 +409,8 @@ class MuteC(object):
         if self._out : os.dup2 ( self.__class__._devnull , 1 )  ## C/C++
         if self._err : os.dup2 ( self.__class__._devnull , 2 )  ## C/C++
 
+        return self
+    
     ## context-manager 
     def __exit__(self, *_):
         
@@ -461,7 +468,9 @@ class OutputC(object) :
         #
         if self._out : os.dup2 ( self._file.fileno() , 1 )  ## C/C++
         if self._err : os.dup2 ( self._file.fileno() , 2 )  ## C/C++
-        
+
+        return self
+    
     ## context-manager 
     def __exit__(self, *_):
             
@@ -525,7 +534,9 @@ class TeePy(object) :
                 
         self.stdout =  sys.stdout        
         sys.stdout  = _Tee ( self._file , self.stdout ) 
-                
+
+        return self
+    
     ## context manager 
     def __exit__(self, *_):
 
@@ -560,7 +571,9 @@ class TeeCpp(cpp.Gaudi.Utils.Tee) :
         cpp.Gaudi.Utils.Tee.__init__ ( self , fname )
 
     ## context manager
-    def __enter__ ( self      ) : self.enter ()
+    def __enter__ ( self      ) :
+        self.enter ()
+        return self 
     ## context manager
     def __exit__  ( self , *_ ) : self.exit  ()
 
@@ -623,7 +636,8 @@ class RooSilent(object) :
         self._svc.setGlobalKillBelow  ( self._level      )
         self._svc.setSilentMode       ( self._silent     )
         
-        
+        return self
+    
     ## context manager 
     def __exit__ ( self , *_ ) : 
             
@@ -642,7 +656,7 @@ class NoContext(object) :
     """
     def __init__  ( self , *args , **kwargs ) : pass
     ## context manager
-    def __enter__ ( self         ) : pass
+    def __enter__ ( self         ) : return self 
     ## context manager 
     def __exit__  ( self , *args ) : pass  
         

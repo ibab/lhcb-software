@@ -143,7 +143,6 @@ __all__ = (
 from AnalysisPython.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
-
 try:
     from cPickle import Pickler, Unpickler, HIGHEST_PROTOCOL
 except ImportError:
@@ -237,7 +236,7 @@ class ZipShelf(shelve.Shelf):
             writeback                              )
         
         self.compresslevel = compress
-        self.__opened      = True 
+        self.__opened      = True
         
     ## destructor 
     def __del__ ( self ) :
@@ -292,7 +291,8 @@ class ZipShelf(shelve.Shelf):
         self.__opened = False  
         ##
         if self.__remove and os.path.exists ( self.__filename ) :
-            if not self.__silent : print 'REMOVE: ', self.__filename
+            if not self.__silent :
+                logger.info( 'REMOVE: ', self.__filename )
             os.remove ( self.__filename )
         ##
         if self.__gzip and os.path.exists ( self.__filename ) :
@@ -405,7 +405,13 @@ class ZipShelf(shelve.Shelf):
             import time
             time.sleep( 3 ) 
         return fileout
-    
+
+    #
+    ## some context manager functionality
+    # 
+    def __enter__ ( self      ) : return self 
+    def __exit__  ( self , *_ ) : self.close ()
+        
 # =============================================================================
 ## ``get-and-uncompress-item'' from dbase 
 def _zip_getitem (self, key):

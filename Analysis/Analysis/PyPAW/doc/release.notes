@@ -10,6 +10,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-05-14 - Vanya Belyaev
+ - add few utilities for semi-automatic reweighting
+
+! 2014-05-14 - Vanya Belyaev
  - few fixes in 2D-fit models.
    add qmtest 
 

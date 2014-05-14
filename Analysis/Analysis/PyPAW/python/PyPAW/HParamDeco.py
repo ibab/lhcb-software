@@ -559,6 +559,69 @@ def _f_fit_ ( func , histo , *args ) :
 ROOT.TF1 . Fit      = _f_fit_ 
 ROOT.TF1 . fitHisto = _f_fit_ 
 
+# =============================================================================
+# Decorate fit results 
+# =============================================================================
+
+# =============================================================================
+## representation of TFitResult object 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _fit_repr_ ( self ) :
+    """
+    Representaion of TFitResult object
+    """
+    _r  = ''
+    _r += "\n Status      = %s "    %   self.Status ()
+    _r += "\n Chi2/nDoF   = %s/%s " % ( self.Chi2   () , self.Ndf() ) 
+    _r += "\n Probability = %s "    %   self.Prob   () 
+    _p = self.Parameters ()
+    _e = self.Errors     ()
+    for i in range( 0 , len(_p) ) :
+        v = _p[i]
+        e = _e[i]
+        a = VE ( v ,e*e )
+        _r  += " \n %s " % a 
+    return _r
+# =============================================================================
+## iterator over fit-result object 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _fit_iter_ ( r ) :
+    """
+    Iterator over fit-result object 
+    """
+    _i = 0
+    _p = r.Parameters ()
+    _e = r.Errors     ()
+    _l = len(_p)
+    while _i < _l :
+        a = VE ( _p[_i] , _e[_i]**2 )
+        yield a
+        _i += 1
+        
+# =============================================================================
+## getitem for fit-result-object            
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _fit_get_item_ ( self , i ) :
+    """
+    Getitem for fit-result-object            
+    """
+    _p = self.Parameters ()
+    _e = self.Errors     ()
+    _l = len(_p)
+    if 0<= i < _l :
+        return VE ( _p[i]  , _e[i]**2 )
+    raise IndexError 
+
+ROOT.TFitResultPtr.__repr__     = _fit_repr_ 
+ROOT.TFitResultPtr.__str__      = _fit_repr_ 
+ROOT.TFitResultPtr.__iter__     = _fit_iter_ 
+ROOT.TFitResultPtr.__getitem__  = _fit_get_item_ 
+ROOT.TFitResultPtr.__call__     = _fit_get_item_ 
+ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() ) 
+
 
 # =============================================================================
 if '__main__' == __name__ :
