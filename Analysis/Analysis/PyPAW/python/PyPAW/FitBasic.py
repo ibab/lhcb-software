@@ -130,6 +130,7 @@ class Mass_pdf(object) :
         #
         ## adjust the mass and edges, create if needed
         #
+        self.name = name 
         self.mass = makeVar ( mass              ,
                               "m_%s"     % name ,
                               "mass(%s)" % name , None ,  min ( mn , mx ) , max( mn , mx ) )
@@ -192,6 +193,11 @@ class Mass_pdf(object) :
         with context :
             
             result = self.pdf.fitTo ( dataset , ROOT.RooFit.Save() , *args, **kwargs )
+
+            st   = result.status () 
+            if 0 != st   : logger.warning('Model(%s).fitTo: fit status %s' % ( self.name , st   ) )
+            qual = result.covQual()
+            if 3 != qual : logger.warning('Model(%s).fitTo: covQual    %s' % ( self.name , qual ) )
             
             if not draw :
                 return result, None
@@ -756,6 +762,11 @@ class Fit2D (object) :
                                   ncpu ( len ( dataset ) ) ,
                                   *args                    )
 
+        st   = result.status()
+        if 0 != st   : logger.warning('Fit2D.fitTo: fit status is %s' % st   )
+        qual = result.covQual()
+        if 3 != qual : logger.warning('Fit2D.fitTo: covQual    is %s' % qual )
+        
         #
         ## keep dataset (for drawing)
         #
