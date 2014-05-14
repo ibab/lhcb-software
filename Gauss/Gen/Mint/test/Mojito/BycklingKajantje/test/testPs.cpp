@@ -21,6 +21,7 @@ int main(){
        << psi3.getVal(pdg3)
        << endl;
   
+  return 0;
 
   cout << " getting 4-body phase space "
        << psi4.getVal(pdg4)
