@@ -4,6 +4,9 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+! 2014-05-14 - Marco Cattaneo
+ - Remove unnecessary include "Event/VeloLiteCluster.h"
+
 !========================= FTDAQ v1r6 2014-05-12 =========================
 ! 2014-05-02- Michel De Cian
  - Fix bug in RawBankDecoder, in method 'RetrieveModuleMat', which was giving wrong numbers for the modules.

@@ -2,7 +2,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "Event/VeloLiteCluster.h"
 #include "Event/FTLiteCluster.h"
 #include "Event/FTCluster.h"
 
