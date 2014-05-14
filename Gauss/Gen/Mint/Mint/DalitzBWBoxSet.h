@@ -112,6 +112,6 @@ class DalitzBWBoxSet : public std::vector<DalitzBWBox>
   bool compareGenerationMethodsForFullPDF(int Nevents=1000000);
 };
 
-ostream& operator<<(std::ostream& os, const DalitzBWBoxSet& box);
+std::ostream& operator<<(std::ostream& os, const DalitzBWBoxSet& box);
 #endif
 //

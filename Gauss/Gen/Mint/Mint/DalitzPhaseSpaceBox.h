@@ -69,7 +69,7 @@ class DalitzPhaseSpaceBox{
 
 };
 
-std::ostream& operator<<(ostream& os, const DalitzPhaseSpaceBox& box);
+std::ostream& operator<<(std::ostream& os, const DalitzPhaseSpaceBox& box);
 
 
 #endif
