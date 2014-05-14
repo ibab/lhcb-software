@@ -235,7 +235,7 @@ double PhaseSpaceIntegral3body::getVal(double mum, double d1
   double returnVal = _f->IntegralFast(np,x,w, min_s12, max_s12, para);
   */
 
-  double returnVal =  _f->Integral(min_s12, max_s12, para);
+  double returnVal =  _f->Integral(min_s12, max_s12);//, para);
   if(dbThis) cout << "PhaseSpaceIntegral3body::getVal() returning " 
 		  << returnVal << endl;
   return returnVal;
