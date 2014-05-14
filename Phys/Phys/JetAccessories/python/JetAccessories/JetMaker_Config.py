@@ -50,6 +50,13 @@ class JetMakerConf:
             for file in hsvc.Input:
                 if file == "JEC14 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_v1.root' TYP='ROOT'": alreadySet = True
             if not alreadySet: hsvc.Input += [ "JEC14 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_v1.root' TYP='ROOT'" ]
+        elif self.R == 0.7:
+            for file in hsvc.Input:
+                if file == "JEC14 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT'": alreadySet = True
+            if not alreadySet: hsvc.Input += [ "JEC14 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT'" ]
+        else:
+            print "WARNING R parameter is not supported by any official JEC. Make sure you manually set your correct JEC file"
+            
         
     def setupJetMaker(self):
         jetMakerName = self.name
