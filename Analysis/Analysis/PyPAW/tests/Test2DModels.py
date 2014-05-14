@@ -50,7 +50,7 @@ m = VE(3.100,0.015**2)
 for i in xrange(0,5000) :
 
     m_x.setVal ( random.uniform ( m_x.getMin() , m_x.getMax() ) ) 
-    m_y.setVal ( random.uniform ( m_x.getMin() , m_x.getMax() ) ) 
+    m_y.setVal ( random.uniform ( m_y.getMin() , m_y.getMax() ) ) 
     dataset.add ( varset  )
 
 print dataset

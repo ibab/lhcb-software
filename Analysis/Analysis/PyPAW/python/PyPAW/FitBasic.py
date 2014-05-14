@@ -503,8 +503,11 @@ class Fit1D (Fit1DBase) :
                    suffix     = ''   ,
                    bpower     = 0    ) :  
         
+        self.suffix     = suffix 
         self.signal     =      signal 
         self.mass       = self.signal.mass
+        #
+        from PyPAW.FitBkgModels import Bkg_pdf 
         #
         if background : self.background = background 
         else          : self.background = Bkg_pdf  ( 'Background' + suffix ,
@@ -517,6 +520,9 @@ class Fit1D (Fit1DBase) :
         self.S = self.s
         self.B = self.b
         
+        self.S_name = self.s.GetName()
+        self.B_name = self.b.GetName()
+
         #
         self.alist1 = ROOT.RooArgList (
             self.signal     .pdf ,
@@ -593,15 +599,26 @@ class Fit2D (object) :
                    power2     = 0    ,
                    powerA     = 0    ,
                    powerB     = 0    ,
+                   #
+                   ## main components:
+                   ss         = None , ## signal    (1) * signal     (2)
+                   sb         = None , ## signal    (1) * bakcground (2) 
+                   bs         = None , ## background(1) * signal     (2)
+                   bb         = None , ## background-2D 
                    ## additional components 
                    components = []   ) :
-        
+
+        self.suffix    = suffix 
         self.signal1   = signal_1
         self.signal2   = signal_2
         
         self.m1        = signal_1.mass
         self.m2        = signal_2.mass
 
+        #
+        from PyPAW.FitBkgModels import Bkg_pdf 
+        #
+        
         #
         ## First component: Signal(1) and Signal(2)
         # 
@@ -634,6 +651,8 @@ class Fit2D (object) :
         self._bkgs = ( bkg1 , bkg2 , bkgA , bkgB ) 
         #
         ## fourth component: Background(1) and Background(2) 
+        #
+        if bkg2D : self._bb2D  = bkg2D
         # 
         if   bkg2D and isinstance ( bkg2D , ROOT.RooAbsPdf ) : self.bb_pdf = bkg2D 
         elif bkg2D and hasattr    ( bkg2D , 'pdf'          ) : self.bb_pdf = bkg2D.pdf
@@ -652,19 +671,24 @@ class Fit2D (object) :
         #
         ## coefficients
         #
-        self.ss = makeVar ( None ,
+        self.ss = makeVar ( ss   ,
                             "S1S2"          + suffix ,
                             "Sig(1)&Sig(2)" + suffix , None , 1000  , 0 ,  1.e+6 )
-        self.sb = makeVar ( None ,
+        self.sb = makeVar ( sb   ,
                             "S1B2"          + suffix ,
                             "Sig(1)&Bkg(2)" + suffix , None ,  100  , 0 ,  1.e+6 )
-        self.bs = makeVar ( None ,
+        self.bs = makeVar ( bs   ,
                             "B1S2"          + suffix ,
                             "Bkg(1)&Sig(2)" + suffix , None ,  100  , 0 ,  1.e+6 )
-        self.bb = makeVar ( None ,
+        self.bb = makeVar ( bb   ,
                             "B1B2"          + suffix ,
                             "Bkg(1)&Bkg(2)" + suffix , None ,   10  , 0 ,  1.e+6 )
 
+        self.SS_name = self.ss.GetName()
+        self.SB_name = self.sb.GetName()
+        self.BS_name = self.bs.GetName()
+        self.BB_name = self.bb.GetName()
+        
         self.alist1 = ROOT.RooArgList ( self.ss_pdf , self.sb_pdf ,
             self.bs_pdf ,
             self.bb_pdf )

@@ -9,6 +9,10 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-05-14 - Vanya Belyaev
+ - few fixes in 2D-fit models.
+   add qmtest 
+
 ! 2014-05-11 - Vanya Belyaev
  - improve models, add qmtest
 
