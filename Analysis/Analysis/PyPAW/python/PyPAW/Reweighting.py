@@ -217,7 +217,7 @@ def makeWeights  ( dataset                 ,
                 db[address] = db.get( address , [] ) + [ w ]
 
         
-        return (hdata0,hmc0),(hdata,hmc) 
+        ## return (hdata0,hmc0),(hdata,hmc) 
 
 
 
