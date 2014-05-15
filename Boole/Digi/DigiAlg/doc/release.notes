@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================= DigiAlg v5r2 2014-05-15 =========================
 ! 2014-04-08 - Heinrich Schindler
  - Remove functor and sorting of VP digits from BuildMCTrackInfo 
    (digits are already sorted in VPDigitCreator).
