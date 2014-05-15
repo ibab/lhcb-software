@@ -3,7 +3,79 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-- Modified configurables test to test all configurables, but only fail if there are more than 50 "missing". See task #50698
+</PRE><H1><A NAME=v46r0>2014-05-16 Brunel v46r0</A></H1><PRE>
+This version uses projects:
+ LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r2, Lbcom v15r2, Rec v16r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to Configuration.py
+  . Add new boolean Brunel().OnlineMode property. Default is False. Option is
+    propagated to the underlying configurables, to allow them to as needed tweak
+    the Brunel configuration as required Online
+
+- Backward incompatible persistency changes
+  (require input from Boole v28r0 or greater)
+  . Changes to FTChannelID: no more quarter --> module + mat
+    (LHCbKernel v15r2, FTDet v2r6, PrAlgorithms v1r11, TrackTools v5r2)
+  . Modification of the bit sharing in 16-bit words according to the FT TDR
+    electronic design (FTDAQ v1r6)
+  . Changes to VPChannelID (LHCbKernel v15r2, VPDet v3r2, VPDAQ v2r7,
+                            VPAlgorithms v4r4, PrMCTools v2r2, PrPixel v1r7)
+  . Digits linker tables use keys instead of VPDigit objects (PrMCTools v2r2)
+  . DigiConf.py: replace VPCluster by VPDigit linker tables (GaudiConf v19r2)
+
+- New functionality
+  . Add support for new CondDB partitions 'CALIB' and 'CALIBOFF' as additional
+    layers above 'ONLINE' partition, for 2015 workflows (DetCond v12r36)
+  . Add new OnlineMode property (RecConf v2r17, RichRecSys v5r2, RichRecQC v2r66)
+  . Additional functionality in ANNPID tuple
+    (ChargedProtoANNPID v2r6, GlobalReco v6r47, RecInterfaces v1r2) 
+
+- Functionality removed
+  . Removed FT bilayer code
+    (PrAlgorithms v1r11, TrackFitEvent v6r1, TrackTools v5r2)
+  . Remove support for obsolete (pre-TDR) VP geometry (TrackTools v5r2)
+
+- New physics tuning
+  . Change default LHCbCond tag for 2010 to 2014328
+    (new Tracking alignment, new OT T0 database) (DDDB v1r69)
+  . PatForward: added option to flag seeds as used (PatAlgorithms v4r32)
+  . Add X-correction for track-cluster matching (CaloPIDs v5r17)
+  . Use same data n-1 scale factors in all photon reconstruction tools, to 
+    synchronise offline and HLT tunings (RichRecPhotonTools v1r14)
+  . When OnlineMode=True, tune the reconstruction so it can be used for
+    the Online HPD and refractive index run by run calibrations (RichRecSys v5r2)
+
+- Performance improvements
+  . Performance optimisations of DeVP (VPDet v3r2)
+  . Performance optimisations of FT geometry (FTDet v2r6)
+  . Reimplement the tanh approximation in WalkRelation (OTDet v8r12)
+  . Use float instead of double where possible (Tf/PatVeloTT)
+  . Various improvements to PrPixel (PrPixel v1r7)
+  . Many perfomance improvements in PatForward and PatSeeding
+    (PatAlgorithms v4r32)
+  . Renamed FTRawCluster to FTLiteCluster
+    (FTEvent v1r6, FTDAQ v1r6, PrMCTools v2r2, RecAlgs v3r1, TrackTools v5r2)
+  . Replace VPLite measurement type by VP measurement type (TrackFitEvent v6r1,
+    TrackFitter v5r1, TrackFitter v5r1, TrackMonitors v2r2, TrackProjectors v3r1)
+  . Remove VPLiteCluster from VPCluster, add inter-pixel fraction to VPCluster
+    (DigiEvent v4r2, VPDAQ v2r7, VPAlgorithms v4r4, VPTools v2r3, PrMCTools v2r2,
+     PrPixel v1r7)
+
+- Bug fixes
+  . Fix in PatSeedingTool to reduce ghost rate and avoid FPE (Tf/PatAlgorithms)
+  . Fix unprotected debug()
+    (CaloPIDs v5r17, CaloDet v10r19p1, CaloMoniDst v5r17, RichRecQC v2r66)
+
+- Monitoring changes
+  . When OnlineMode=True, tune monitoring so it can be used for the Online HPD
+    and refractive index run by run calibrations (RichRecQC v2r66)
+
+- QMTest changes
+  . Modified configurables test to test all configurables, but only fail if there
+    are more than 50 "missing". See task #50698
+  . Pick up brunel-mc11a-xdst PFN from TestFileDB
+  . Update brunel2011magdown to test the option Brunel().OnlineMode=True
 
 </PRE><H1><A NAME=v45r1>2014-03-27 Brunel v45r1</A></H1><PRE>
 This version uses projects:
