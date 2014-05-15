@@ -1,7 +1,6 @@
 // $Id: $
 // ============================================================================
 // local LbOniaPairs
-#include "LbOniaPairs/OniaPairsProduction.h"
 #include "LbOniaPairs/OniaPairs.h"
 
 // from GaudiKernel
@@ -15,6 +14,10 @@
 
 // LbPythia 
 #include "LbPythia/Pythia.h"
+
+
+// local 
+#include "OniaPairsProduction.h"
 
 // ============================================================================
 // Standard constructor, initializes variables

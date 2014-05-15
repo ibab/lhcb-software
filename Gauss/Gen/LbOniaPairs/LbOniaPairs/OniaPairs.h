@@ -16,16 +16,18 @@
  *
  *  @author Alexey NOVOSELOV Alexey.Novoselov@cern.ch
  *
- *                    $Revision$
- *  Last modification mid/10/2013
- *                 by alexn
+ *                    $Revision:$
+ *  Last modification $Date:$
+ *                 by $Author:$
  */
 namespace OniaPairs 
 {
   // ==========================================================================
   GAUDI_API 
-  bool   SetPar ( std::string n , double value );
-  double GetPar ( std::string n );
+  bool   SetPar       ( std::string n , double value );
+  GAUDI_API 
+  double GetPar       ( std::string n );
+  GAUDI_API 
   void   PrintCSTable ( ) ;
   // ==========================================================================
 } //                                                 end of namespace OniaPairs 

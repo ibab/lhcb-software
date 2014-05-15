@@ -6,6 +6,11 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-15 - Vanya Belyaev
+ - minor reshulffling of files
+   move the header fikle for production tool form 
+   "public" area to internal area 
+
 ! 2014-03-20 
 Added Psi1S1S.py opts file in /options/ subfolder
 
