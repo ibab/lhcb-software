@@ -690,33 +690,31 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   auto sentinel = make_RangeFinder(minYPlanes, std::end(temp));
   while ( sentinel( itP ) ) {
 
-    MaxSpread predicate{ allowedStereoSpread(*itP) } ; 
+    auto range = sentinel.next_range( itP, MaxSpread{ allowedStereoSpread(*itP) } );
+    if ( range.first != range.second ) {
 
-    auto itE = itP; // only to get the type right...
-    std::tie( itP, itE ) = sentinel.next_range( itP, predicate );
-    if ( itP == itE ) {
-        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   not enough planes in spread" << endmsg;
-        continue;
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+          verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
+                               (*range.first)->projection(), (*std::prev(range.second))->projection(), 
+                               std::distance(range.first,range.second), nbDifferent(range.first,range.second), 
+                               allowedStereoSpread(*itP) )
+                    << endmsg;
+        }
+        //== We have the first list. The best one ????
+        auto cnt = nbDifferent( range.first, range.second );
+        if ( cnt >= inbDifferent ) {
+          auto delta = (*std::prev(range.second))->projection() - (*range.first)->projection();
+          if ( cnt > inbDifferent || delta < size ) {
+            inbDifferent =  cnt;
+            size = delta;
+            bestList = range;
+            //break; /// Keep first one !
+          }
+        }
+    } else if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+        verbose() << "   not enough planes in spread" << endmsg;
     }
-    ///
-
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           (*itP)->projection(), (*(itE-1))->projection(), itE-itP, nbDifferent(itP,itE), predicate.spread)
-                << endmsg;
-    }
-    //== We have the first list. The best one ????
-    auto cnt = nbDifferent( itP, itE ); // can we re-use the result computed in make_single_zone???
-    if ( cnt >= inbDifferent ) {
-      auto delta = (*std::prev(itE))->projection() - (*itP)->projection();
-      if ( cnt > inbDifferent || delta < size ) {
-        inbDifferent =  cnt;
-        size = delta;
-        bestList = { itP, itE } ;
-        //break; /// Keep first one !
-      }
-    }
-    itP = itE;
+    itP = range.second;
   }
 
   if ( (int)std::distance(bestList.first,bestList.second) < minYPlanes ) return false;
@@ -813,29 +811,29 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
     MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
 
-    auto itE = itP ; // only to get the type right...
-    std::tie(itP, itE) = sentinel.next_range( itP, predicate);
-    if (itP == itE) {
-        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   Not enough x planes : " << endmsg;
-        continue;
+    auto range = sentinel.next_range( itP, predicate);
+    if (range.first != range.second) {
+        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+          verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
+                               (*range.first)->projection(),(*std::prev(range.second))->projection(),
+                               std::distance(range.second,range.first), nbDifferent(range.first,range.second),
+                               predicate.spread)
+                    << endmsg;
+        }
+        //== Protect against too dirty area.
+        if ( std::distance(range.first,range.second ) <  m_maxXCandidateSize ) { 
+          //== Try to merge the lists, if the first new point is close to the last one...
+          if (lastEnd && predicate(lastEnd, *range.first) ) {
+            m_candidates.back().addCoords( range.first,range.second );
+          } else {
+            m_candidates.emplace_back( track.track(), range.first,range.second );
+          }
+          lastEnd = *std::prev(range.second);
+        }
+    } else if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+        verbose() << "   Not enough x planes : " << endmsg;
     }
-
-    if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-      verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           (*itP)->projection(),(*std::prev(itE))->projection(), itE-itP, nbDifferent(itP,itE), predicate.spread)
-                << endmsg;
-    }
-    //== Protect against too dirty area.
-    if ( std::distance(itP,itE ) <  m_maxXCandidateSize ) { 
-      //== Try to merge the lists, if the first new point is close to the last one...
-      if (lastEnd && predicate(lastEnd, *itP) ) {
-        m_candidates.back().addCoords( itP,itE );
-      } else {
-        m_candidates.emplace_back( track.track(), itP,itE );
-      }
-      lastEnd = *std::prev(itE);
-    }
-    itP = itE;
+    itP = range.second;
   }
 }
 

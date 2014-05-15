@@ -5,9 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-05-15 - Gerhard Raven
- - PatForwardTool: combine find_range and make_single_zone into a single call
-     to a member function of a 'sentinel' object which controls the peak finding
-     loop.
+ - PatForwardTool: 
+    o combine find_range and make_single_zone into a single call to a mem_fn 
+      of a 'sentinel' object which controls the peak finding loop.
+    o better utilization of above 'sentinel' in loop control
+
 
 !========================= PatAlgorithms v4r32 2014-05-13 ======================
 ! 2014-05-10 - Gerhard Raven
