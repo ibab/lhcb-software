@@ -76,60 +76,60 @@ int nbDifferent( const PatFwdTrackCandidate &c) {
 }
 
 
-class PlaneCounter {
-    PatFwdPlaneCounter m_counter;
+template <typename Iter>
+class RangeFinder {
+    Iter m_last;
     int m_minPlanes;
 public:
-    PlaneCounter( PatFwdPlaneCounter counter, int minPlane ) : m_counter{ counter }, m_minPlanes(minPlane) { }
-    template <typename Iterator>
-    PlaneCounter( Iterator&& first, Iterator&& last, int minPlane ) 
-         : m_counter{ std::forward<Iterator>(first) , std::forward<Iterator>(last) }
-         , m_minPlanes{minPlane} { }
+    RangeFinder( int minPlane, Iter last ) :  m_last{last}, m_minPlanes(minPlane) { }
+    template <typename Iterator> Iterator next(Iterator current) const { return std::next( current, m_minPlanes-1 ); }
+    template <typename Iterator> bool operator()(Iterator first, Iterator last) const { return std::distance(first,last) > m_minPlanes-1; }
+    template <typename Iterator> bool operator()(Iterator first ) const { return std::distance(first,m_last) > m_minPlanes-1; }
 
-    bool operator()() const { return m_counter.nbDifferent() >= m_minPlanes; }
-
-    //== Try to make a single zone, by removing the first and adding other as
-    //   long as the spread and minPlanes conditions are met.
-    template <typename Iterator, typename Predicate>
-    Iterator make_single_zone(Iterator first, Iterator mid, Iterator last,
-                              Predicate predicate) 
+    template <typename  Iterator,typename Predicate> 
+    std::pair<Iterator,Iterator> next_range(Iterator first, Predicate predicate) 
     {
-        auto i = mid;
-        while ( first + (m_minPlanes-1) != mid  && i != last ) {
-          m_counter.removeHit(*first);
-          ++first;
-          for (; i!=last && predicate(*first,*i) ; ++i ) m_counter.addHit(*i);
-          if ( (*this)() ) mid = i;
+        auto mid = next(first);
+        using reference = typename std::iterator_traits<Iterator>::reference;
+        //== If not enough hits in the maximum spread, skip
+        if ( !predicate(*first,*mid)  ) {
+          // first increment first, as we KNOW the current first fails predicate..
+          first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
+          return { first, first };
         }
-        return mid;
+        //== Add all hits inside the maximum spread. 
+        // first increment mid, as we KNOW the current mid passes predicate..
+        mid = std::find_if( ++mid, m_last, [&](reference i) { return !predicate(*first,i); } );
+    
+        //== Enough different planes?
+        PatFwdPlaneCounter counter{ first, mid  };
+        auto enough_planes = [&]() { return counter.nbDifferent() >= m_minPlanes; } ;
+        if ( !enough_planes() ) {
+          ++first;
+          return { first, first };
+        }
+        //== Try to make a single zone, by removing the first and adding other as
+        //   long as the spread and minPlanes conditions are met.
+        auto j = mid;
+        auto i = first;
+        while ( std::distance(i,mid) != (m_minPlanes-1)  && j != m_last ) {
+          counter.removeHit(*i);
+          ++i;
+          for (; j!=m_last && predicate(*i,*j) ; ++j ) counter.addHit(*j);
+          if ( enough_planes() ) mid = j;
+        }
+        return { first, mid };
     }
 };
 
-template <typename  Iterator,typename Predicate> 
-std::pair<Iterator,Iterator> make_single_zone(Iterator first, Iterator mid, Iterator last, int minPlanes, Predicate predicate) 
+template <typename Iterator> RangeFinder<Iterator> 
+make_RangeFinder( int nPlanes, Iterator&& last) 
 {
-    PlaneCounter planeCount{ first, mid,  minPlanes };
-    if ( !planeCount() ) { //== Enough different planes?
-      ++first;
-      return { first, first };
-    }
-    return { first, planeCount.make_single_zone( first, mid, last, predicate ) };
-}
+    return { nPlanes, std::forward<Iterator>(last) };
+};
 
-template <typename  Iterator,typename Predicate> 
-std::pair<Iterator,Iterator> find_range(Iterator first, Iterator mid, Iterator last, Predicate predicate) 
-{
-    using reference = typename std::iterator_traits<Iterator>::reference;
-    //== If not enough hits in the maximum spread, skip
-    if ( !predicate(*first,*mid)  ) {
-      // first increment first, as we KNOW the current first fails predicate..
-      first = std::find_if(++first, mid, [&](reference i) { return predicate(i,*mid);});
-      return { first, first };
-    }
-    //== Add all hits inside the maximum spread. 
-    // first increment mid, as we KNOW the current mid passes predicate..
-    return { first, std::find_if( ++mid, last, [&](reference i) { return !predicate(*first,i); } ) };
-}
+
+
 
 
 
@@ -666,12 +666,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   int minYPlanes = 4;
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "List size = " << temp.size() << endmsg;
-  if ( minYPlanes > (int)temp.size() ) return false;
-
-
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
+    debug() << "List size = " << temp.size() << endmsg;
     for ( const PatFwdHit *hit : temp ) {
       debug() << format( " Selected:  Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d typ%2d Prev%2d Next%2d",
                          hit->z(),
@@ -691,21 +687,15 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   double size = 1000.;
 
   auto itP = std::begin(temp);
-  const auto last = std::end(temp);
-  while (  itP + (minYPlanes - 1) <  last ) {
+  auto sentinel = make_RangeFinder(minYPlanes, std::end(temp));
+  while ( sentinel( itP ) ) {
 
     MaxSpread predicate{ allowedStereoSpread(*itP) } ; 
 
-    /// collapse these two calls into one...
-    auto itE = itP + (minYPlanes -1);
-    std::tie( itP, itE ) = find_range( itP, itE, last, predicate );
+    auto itE = itP; // only to get the type right...
+    std::tie( itP, itE ) = sentinel.next_range( itP, predicate );
     if ( itP == itE ) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   not enough planes in spread" << endmsg;
-        continue;
-    }
-    std::tie( itP, itE) = make_single_zone( itP, itE, last, minYPlanes, predicate);
-    if ( itP == itE ) {
-        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   Not enough x planes : " << endmsg;
         continue;
     }
     ///
@@ -817,43 +807,33 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   
   fillXList( track, kick, maxRange, zMagnet ,dir);
   
-  if ( m_minXPlanes > (int)m_xHitsAtReference.size() ) return;
-
-  int minXPlanes = m_minXPlanes;
-
-  double lastEnd = -1.e10;
-
+  PatForwardHit *lastEnd = nullptr;
   auto itP = std::begin(m_xHitsAtReference);
-  auto last = std::end(m_xHitsAtReference);
-  while (  itP + minXPlanes < last ) {
+  auto  sentinel = make_RangeFinder( m_minXPlanes, std::end(m_xHitsAtReference) );
+  while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
     MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
 
-    auto itE = itP + minXPlanes -1;
-    std::tie(itP, itE) = find_range( itP, itE, last, predicate);
-    if (itP == itE) continue;
-
-    std::tie(itP, itE) = make_single_zone( itP, itE, last, minXPlanes, predicate);
+    auto itE = itP ; // only to get the type right...
+    std::tie(itP, itE) = sentinel.next_range( itP, predicate);
     if (itP == itE) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) verbose() << "   Not enough x planes : " << endmsg;
         continue;
     }
 
-    double x1 = (*itP)->projection();
-    double x2 = (*(itE-1))->projection();
     if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
       verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                           x1, x2, itE-itP, nbDifferent(itP,itE), predicate.spread)
+                           (*itP)->projection(),(*std::prev(itE))->projection(), itE-itP, nbDifferent(itP,itE), predicate.spread)
                 << endmsg;
     }
     //== Protect against too dirty area.
-    if ( itE < itP +  m_maxXCandidateSize ) { 
+    if ( std::distance(itP,itE ) <  m_maxXCandidateSize ) { 
       //== Try to merge the lists, if the first new point is close to the last one...
-      if ( x1 < lastEnd + predicate.spread ) {
+      if (lastEnd && predicate(lastEnd, *itP) ) {
         m_candidates.back().addCoords( itP,itE );
       } else {
         m_candidates.emplace_back( track.track(), itP,itE );
       }
-      lastEnd = x2;
+      lastEnd = *std::prev(itE);
     }
     itP = itE;
   }

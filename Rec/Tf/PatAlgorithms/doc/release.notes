@@ -4,10 +4,15 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-15 - Gerhard Raven
+ - PatForwardTool: combine find_range and make_single_zone into a single call
+     to a member function of a 'sentinel' object which controls the peak finding
+     loop.
+
 !========================= PatAlgorithms v4r32 2014-05-13 ======================
 ! 2014-05-10 - Gerhard Raven
- - PatFwdTool: 
-     o consolidate find_single_zone 
+ - PatForwardTool: 
+     o consolidate make_single_zone 
      o replace some loops by std::for_each
      o make sortQuality a constexpr literal
      o use override

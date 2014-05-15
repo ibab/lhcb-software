@@ -48,6 +48,7 @@
     {
       if ( !hit->isSelected() ) return m_nbDifferent;
       const int plane = hit->planeCode();
+      assert( m_planeList[plane]!=-1); // this would cause an overflow...
       if ( 0 == m_planeList[plane]++ ) ++m_nbDifferent;
       return m_nbDifferent;
     }

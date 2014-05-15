@@ -17,14 +17,11 @@
 #include "Event/Track.h"
 
 #include "PatFwdTool.h"
+#include "PatRange.h"
 #include "PatFwdTrackCandidate.h"
 
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
-
-
-
-static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
 
 
 /** @class PatForwardTool PatForwardTool.h
@@ -38,8 +35,6 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
 class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack> {
 public:
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_PatForwardTool; }
 
   /// Standard constructor
   PatForwardTool( const std::string& type,
