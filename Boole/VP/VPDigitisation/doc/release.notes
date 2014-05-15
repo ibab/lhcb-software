@@ -3,6 +3,7 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+!========================= VPDigitisation v1r4 2014-05-15 =======================
 ! 2014-05-03 - Heinrich Schindler
  - Improve doxygen documentation and comments
  - Replace #ifdef DEBUG_HISTOS by configurable option "Monitoring"
