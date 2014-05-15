@@ -287,6 +287,8 @@ def _h1_as_tf1_ ( self , func = lambda s : s.value () , spline = False , *args )
     """
     ax  = self.GetXaxis()
     #
+    from PyPAW.PyRoUts import funID
+    #
     if spline :
         fun = _h1_as_spline_ ( self , func , *args )
         f1  = ROOT.TF1  ( funID()       ,
@@ -337,6 +339,8 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     #
     fun = _h2_as_fun_ ( self , func )
     #
+    from PyPAW.PyRoUts import funID
+    #
     f2  = ROOT.TF2  ( funID()       ,
                       fun           ,
                       ax.GetXmin () ,
@@ -354,18 +358,20 @@ def _h2_as_tf2_ ( self , func = lambda s : s.value () ) :
     return f2
 
     
-ROOT.TH1F . asTF   = _h1_as_tf1_ 
-ROOT.TH1D . asTF   = _h1_as_tf1_ 
-ROOT.TH2F . asTF   = _h2_as_tf2_ 
-ROOT.TH2D . asTF   = _h2_as_tf2_ 
-ROOT.TH1F . asTF1  = _h1_as_tf1_ 
-ROOT.TH1D . asTF1  = _h1_as_tf1_ 
-ROOT.TH2F . asTF2  = _h2_as_tf2_ 
-ROOT.TH2D . asTF2  = _h2_as_tf2_ 
-ROOT.TH1F . asFunc = _h1_as_fun_ 
-ROOT.TH1D . asFunc = _h1_as_fun_ 
-ROOT.TH2F . asFunc = _h2_as_fun_ 
-ROOT.TH2D . asFunc = _h2_as_fun_ 
+ROOT.TH1F . asTF     = _h1_as_tf1_ 
+ROOT.TH1D . asTF     = _h1_as_tf1_ 
+ROOT.TH2F . asTF     = _h2_as_tf2_ 
+ROOT.TH2D . asTF     = _h2_as_tf2_ 
+ROOT.TH1F . asTF1    = _h1_as_tf1_ 
+ROOT.TH1D . asTF1    = _h1_as_tf1_ 
+ROOT.TH2F . asTF2    = _h2_as_tf2_ 
+ROOT.TH2D . asTF2    = _h2_as_tf2_ 
+ROOT.TH1F . asFunc   = _h1_as_fun_ 
+ROOT.TH1D . asFunc   = _h1_as_fun_ 
+ROOT.TH2F . asFunc   = _h2_as_fun_ 
+ROOT.TH2D . asFunc   = _h2_as_fun_ 
+ROOT.TH1F . asSpline = _h1_as_spline_ 
+ROOT.TH1D . asSpline = _h1_as_spline_ 
 
 
 

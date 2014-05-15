@@ -146,7 +146,7 @@ def makeWeights  ( dataset                 ,
     ## loop over plots 
     for r in plots  :
 
-        what    = r [0]         ## variable/funcion to plot/compare 
+        what    = r [0]         ## variable/function to plot/compare 
         how     = r [1]         ## weight or additional cuts 
         address = r [2]         ## address in database 
         hdata0  = r [3]                          .Clone ( hID () ) ## original "DATA" histogram
@@ -156,8 +156,7 @@ def makeWeights  ( dataset                 ,
         ## black magic to take into account the difference in bins and normalizations
         # 
         hdata = hdata0.rescale_bins ( 1.0   )
-        # 
-        hdata . scale        ( 1.0   )
+        ## hdata . scale               ( 1.0   )
         
         hmean  = hdata.mean()             ## normalization point
         #
@@ -173,14 +172,20 @@ def makeWeights  ( dataset                 ,
         ## black magic to take into account the difference in bins and normalizations
         # 
         hmc = hmc0.rescale_bins ( 1.0 )
-        hmc.scale        ( 1.0 )
+        ## hmc.scale               ( 1.0 )
+        
         #
         if isinstance ( hmc , ROOT.TH2 ) : hmc /= hmc ( *hmean )
         else                             : hmc /= hmc (  hmean )
-        
+
+        #
         ## calculate  the reweigting factor : a bit conservative
+        #  this is the only important line 
         w = ( ( 1/hmc ) * hdata ) ** ( 1.0 / ( len ( plots ) ) )  
-        
+
+        #
+        ## 
+        # 
         save = True
         rcnt = w.is_constant ( 0.001 , 1000 , 0.95 , delta = 0.001  )
         if rcnt : save = False
@@ -192,12 +197,16 @@ def makeWeights  ( dataset                 ,
         mnmx = cnt.minmax()
         if not mnmx [0] <= 1 <= mnmx[1] : w /= cnt.mean().value()
         cnt  = w.stat()
-        # 
-        print address, cnt.mean() , cnt.rms(), cnt.minmax() , cnt.rms()/cnt.mean()*100 
+        #
+        wvar = cnt.rms()/cnt.mean()
+        logger.info ( '* %-15s Mean/rms/minmax:%s/%s/(%s,%s) Vars:%s[%%]' %
+                      ( address    ,
+                        cnt.mean() , cnt.rms(),
+                        cnt.minmax()[0] ,
+                        cnt.minmax()[1] , wvar * 100 ) ) 
         #
         ## make decision based on variance of weights 
         # 
-        wvar = cnt.rms()/cnt.mean()
         if wvar.value() <= delta :
             save = False
             logger.warning("No more reweighting for %s [%.3f%%]" %  ( address , wvar * 100 ) ) 
@@ -207,10 +216,10 @@ def makeWeights  ( dataset                 ,
         #
         ## make a comparison (if needed)
         # 
-        if compare : compare ( hdata0 , hmc0 , address )
-            
-        r = compare ( hdata0 , hmc0 , address ) 
-
+        if compare :
+            compare ( hdata0 , hmc0 , address )
+        
+        
         ## update dat abase 
         if save and database and address :
             with ZipShelve.open ( database ) as db :

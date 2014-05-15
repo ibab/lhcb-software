@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-05-15 - Vanya Belyaev
+ - update cmoparison utilities, add qmtest  
+
 ! 2014-05-14 - Vanya Belyaev
  - add few utilities for semi-automatic reweighting
 
