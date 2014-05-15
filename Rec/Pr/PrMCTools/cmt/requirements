@@ -18,6 +18,7 @@ use   FTEvent           v*   Event
 use   LinkerEvent       v*   Event
 use   PrKernel          v*   Pr
 use   VPDet             v*   Det
+use   TrackInterfaces   v*   Tr
 
 include_path      none
 #=====================================================================
