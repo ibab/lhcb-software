@@ -353,12 +353,20 @@ bool _mbmsrv_evt_held(EVENT* e) {
       held += e->one_mask[j].bits()[i];
     }
   }
-#if 0
-  bool held = e->umask0.mask_or(e->umask1,e->held_mask) != 0;
-  for(size_t i=0; !held && i<BM_MAX_REQONE;i+=4) {
-    held |= (0 != e->one_mask[i].mask_or(e->one_mask[i+1],e->one_mask[i+2],e->one_mask[i+3]));
+  return held != 0;
+}
+
+/// Check if a given event is held by a user or must be processed by a user. 
+/// Returns true if at least one consumer needs to see this event.
+bool _mbmsrv_evt_held_vip(EVENT* e) {
+  unsigned int held  = 0;
+  for(int i=0, words=e->umask0.words(); 0==held && i<words; ++i) {
+    held += e->umask0.bits()[i];
+    held += e->held_mask.bits()[i];
+    for(int j=0; 0==held && j<BM_MAX_REQONE;++j) {
+      held += e->one_mask[j].bits()[i];
+    }
   }
-#endif
   return held != 0;
 }
 
@@ -744,6 +752,10 @@ int _mbmsrv_check_freqmode (ServerBMID bm, USER* u)  {
   MBMScanner<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* e=que.get(); e; e = que.get() )  {
     if ( !_mbmsrv_evt_held(e) ) {
+      _mbmsrv_del_event(bm,u,e);   // de-allocate event slot/space
+      ++ret;
+    }
+    else if ( !_mbmsrv_evt_held_vip(e) ) {
       _mbmsrv_del_event(bm,u,e);   // de-allocate event slot/space
       ++ret;
     }
