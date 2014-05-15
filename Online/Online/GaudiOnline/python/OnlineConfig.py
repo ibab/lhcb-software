@@ -46,7 +46,8 @@ def patchExitHandler():
   import atexit
   handlers = []
   for i in atexit._exithandlers:
-    if str(i[0]).find('function _atexit_ at ') == -1:
+    ##print '[ERROR] Exit:',str(i[0])
+    if str(i[0]).find(' AppMgr.exit ') == -1:
       handlers.append(i)
   atexit._exithandlers = handlers
   #print atexit._exithandlers
@@ -248,10 +249,19 @@ def netSelector(input=None,type=None,event_type=2):
 
 #------------------------------------------------------------------------------------------------
 def end_config_normal(print_config=True):
+  import traceback
   import GaudiPython
-  gaudi = GaudiPython.AppMgr()
-  patchExitHandler()
-  if print_config: printConfiguration()
+  try:
+    gaudi = GaudiPython.AppMgr()
+    patchExitHandler()
+    if print_config: printConfiguration()
+  except Exception,X:
+    print '[ERROR] Exception:',str(X)
+    info = sys.exc_info()
+    if info is not None and info[0] is not None:
+      lns=traceback.format_exception(info[0],info[1],info[2])
+      for line in lns:
+        print '[ERROR] Exception:',str(line)
   return gaudi
 
 #------------------------------------------------------------------------------------------------

@@ -627,10 +627,13 @@ StatusCode GaudiTask::configPythonSubManager() {
       ip->setProperty(StringProperty("AppName",""));
       ip->setProperty(StringProperty("MessageSvcType", m_msgsvcType));
     }
+    ::PyErr_Clear();
     ::PyRun_SimpleString((char*)cmd.c_str());
     if ( ::PyErr_Occurred() )   {
       ::PyErr_Print(); 
       ::PyErr_Clear();
+      ::fflush(stdout);
+      ::fflush(stderr);
       log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
       m_python = auto_ptr<PythonInterpreter>(0);
       if ( m_subMgr ) {

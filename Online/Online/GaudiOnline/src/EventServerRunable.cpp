@@ -164,7 +164,10 @@ void EventServerRunable::handle(const Incident& inc)    {
         m_mepMgr->cancel();
       }
     }
+    // First clear pending event flags, then set the event,
+    // so that we exit the in ::run
     ::lib_rtl_clear_event(m_suspend);
+    ::lib_rtl_set_event(m_suspend);
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_consState = m_recipients.empty() ? WAIT_REQ : WAIT_EVT;
