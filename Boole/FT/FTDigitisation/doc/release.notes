@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v2r0 2014-05-15 =======================
 ! 2014-05-13 - Eric Cogneras
  - Floating point exception correction in MCFTDigitCreator
 
