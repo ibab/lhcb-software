@@ -7,3 +7,5 @@ use Gaucho             v* Online
 use GaudiOnline        v* Online
 use Controller         v* Online
 use GaudiCheckpointing v* Online
+
+set FARMCONFIG_OPTIONS "${FARMCONFIGROOT}/options"
