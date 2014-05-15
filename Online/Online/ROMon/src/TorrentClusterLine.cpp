@@ -80,6 +80,8 @@ typedef vector<string>               StringV;
 #define CLUSTERLINE_START      2
 #define COL_WARNING         (RED|BOLD)
 #define COL_ALARM           (RED|BOLD|INVERSE)
+#define COL_ACTING	    (FG_YELLOW|BOLD|BG_BLACK)
+
 #define INT_max  numeric_limits<int>::max()
 #define FLT_max  numeric_limits<float>::max()
 namespace ROMon {
@@ -182,7 +184,7 @@ void TorrentClusterLine::display() {
   Display*     dis = m_parent->display();
   const SubfarmTorrentStatus* sf = data<SubfarmTorrentStatus>();
   TorrentStatus sum;
-
+  int num_torrent = 0;
   size_t num_session = sf->sessions.size();
   time_t now = ::time(0), t1 = num_session == 0 ? now : sf->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
@@ -195,19 +197,11 @@ void TorrentClusterLine::display() {
   ::scrc_put_chars(dis," ",INVERSE|BOLD|MAGENTA,line,pos,1);
   last_pos = pos;
   for(Sessions::const_iterator i=sf->sessions.begin(); i!=sf->sessions.end(); i=sf->sessions.next(i)) {
-    int col = COL_ALARM;
+    int col = GREEN|INVERSE;
     const SessionStatus& s = *i;
-    Torrents::const_iterator ti = s.torrents.end();
+
     for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
       const TorrentStatus& t = *j;
-      if ( t.name == torrent ) {
-	ti = j;
-	break;
-      }
-    }
-    for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
-      const TorrentStatus& t = *j;
-      if ( ti != s.torrents.end() && j != ti ) continue;
       switch(t.state) {
       case TorrentStatus::queued_for_checking:
 	col = COL_WARNING;
@@ -217,17 +211,20 @@ void TorrentClusterLine::display() {
       case TorrentStatus::checking_files:
       case TorrentStatus::downloading_metadata:
       case TorrentStatus::downloading:
-	col = FG_YELLOW|BOLD|BG_BLACK;
+	if ( col != COL_WARNING ) col = COL_ACTING;
 	break;
       case TorrentStatus::finished:
       case TorrentStatus::seeding:
-	col = GREEN|INVERSE;
+	if ( col != COL_WARNING && col != COL_ACTING ) col = GREEN|INVERSE;
 	break;
       default:
 	col = COL_ALARM;
-	break;
+	goto Sum_up;
       }
-      if ( t.name != torrent ) col = COL_ALARM;
+    }
+  Sum_up:
+    for(Torrents::const_iterator j=s.torrents.begin(); j!=s.torrents.end();j=s.torrents.next(j))   {
+      const TorrentStatus& t = *j;
       sum.state            += 1;
       sum.num_peers        += t.num_peers;
       sum.num_uploads      += t.num_uploads;
@@ -238,7 +235,7 @@ void TorrentClusterLine::display() {
       sum.total_upload     += t.total_upload;
       sum.total_download   += t.total_download;
       sum.progress         += t.progress;
-      break;
+      ++num_torrent;
     }
     bool excl = m_excluded.find(s.name) != m_excluded.end();
     if ( excl ) col = INVERSE|BLUE;
@@ -248,16 +245,16 @@ void TorrentClusterLine::display() {
     ::scrc_put_chars(dis,val.c_str(),col,line,pos + 3*n_pos,0);
     if ( last_pos < pos+(1+n_pos)*3 ) last_pos = pos+(1+n_pos)*3;
   }
+  sum.progress /= num_torrent;
   ::scrc_put_chars(dis," ",GREEN|INVERSE,line,last_pos,1);
 
   ::sprintf(txt,"%6d",int(num_session));
   ::scrc_put_chars(dis,txt,NORMAL,line,33,0);
 
-  sum.progress /= float(num_session);
   ::sprintf(txt,"%5.1f",sum.progress*100.);
   ::scrc_put_chars(dis,txt,sum.progress>0.99999 ? GREEN|INVERSE : RED,line,31,0);
 
-  ::sprintf(txt,"%6d",sum.num_uploads);
+  ::sprintf(txt,"%6d",num_torrent);
   ::scrc_put_chars(dis,txt,NORMAL,line,37,0);
 
   ::sprintf(txt,"%4d",sum.num_peers);

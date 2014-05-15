@@ -122,8 +122,8 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
   const char* fmt = " %-12s%5d %s";
   char buff_text[256], text1[256], text2[256];
-  map<string,Info> totals;
-  vector<string>   buffers;
+  map<string,Info>   totals;
+  map<size_t,string> buffers;
   long ntsk_tot = 0;
   bool partitioned=m_partition.empty();
 
@@ -180,7 +180,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
 	  (*ibuf).second.second = min_task <= (*ibuf).second.first ? 1 : 0;
 	  (*ibuf).second.first  = min_task;
 	}
-	if ( 0 == len ) buffers.push_back((*ib).name);
+	buffers[totals.size()] = (*ib).name;
 	for(size_t k=0; k<5; ++k) totals[(*ib).name].data[k] += info.data[k];
 	::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld%s",
 		   info.data[4],info.data[4],info.data[1],info.data[2],(*ibuf).second.second ? "/S" : "  ");

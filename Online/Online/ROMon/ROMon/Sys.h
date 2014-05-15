@@ -73,6 +73,7 @@ namespace ROMon {
     int    ppid;
     int    uid;
     int    gid;
+    int    utrace;
     int    fdSize;
     int    vmPeak;
     int    vmSize;
@@ -84,6 +85,7 @@ namespace ROMon {
     int    vmExe;
     int    vmLib;
     int    vmPTE;
+    int    vmSwap;
     long unsigned staBrk;
     long unsigned brk;
     long unsigned staStk;

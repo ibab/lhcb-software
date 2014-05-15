@@ -16,6 +16,7 @@
 // Framework include files
 #include "ROMon/ClusterDisplay.h"
 #include "ROMon/FarmDisplayBase.h"
+#include "ROMon/TorrentNodeDisplay.h"
 #include "ROMon/CPUMon.h"
 #include "SCR/MouseSensor.h"
 #include "CPP/TimeSensor.h"
@@ -164,19 +165,20 @@ int FarmDisplayBase::showSubfarm()    {
     m_nodeSelector = swapMouseSelector(this,m_roDisplay.get(),0);
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
-    m_subfarmDisplay = 0;
-    m_torrentDisplay = auto_ptr<ClusterDisplay>(0);
-    m_roDisplay      = auto_ptr<ClusterDisplay>(0);
-    m_sysDisplay     = auto_ptr<ClusterDisplay>(0);
-    m_deferHltDisplay= auto_ptr<ClusterDisplay>(0);
-    m_cpuDisplay     = auto_ptr<CPUDisplay>(0);
-    m_mbmDisplay     = auto_ptr<BufferDisplay>(0);
-    m_procDisplay    = auto_ptr<ProcessDisplay>(0);
-    m_bootDisplay    = auto_ptr<InternalDisplay>(0);
-    m_statsDisplay   = auto_ptr<InternalDisplay>(0);
-    m_ctrlDisplay    = auto_ptr<CtrlNodeDisplay>(0);
-    m_benchDisplay   = auto_ptr<InternalDisplay>(0);
-    m_subPosCursor   = 0;
+    m_subfarmDisplay     = 0;
+    m_torrentDisplay     = auto_ptr<ClusterDisplay>(0);
+    m_roDisplay          = auto_ptr<ClusterDisplay>(0);
+    m_sysDisplay         = auto_ptr<ClusterDisplay>(0);
+    m_deferHltDisplay    = auto_ptr<ClusterDisplay>(0);
+    m_cpuDisplay         = auto_ptr<CPUDisplay>(0);
+    m_mbmDisplay         = auto_ptr<BufferDisplay>(0);
+    m_procDisplay        = auto_ptr<ProcessDisplay>(0);
+    m_bootDisplay        = auto_ptr<InternalDisplay>(0);
+    m_statsDisplay       = auto_ptr<InternalDisplay>(0);
+    m_ctrlDisplay        = auto_ptr<CtrlNodeDisplay>(0);
+    m_benchDisplay       = auto_ptr<InternalDisplay>(0);
+    m_torrentNodeDisplay = auto_ptr<InternalDisplay>(0);
+    m_subPosCursor       = 0;
   }
   else if ( !dnam.empty() ) {
     string svc = "-servicename="+svcPrefix()+dnam+"/ROpublish";
@@ -298,6 +300,24 @@ int FarmDisplayBase::showMbmWindow() {
     m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
     m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
     MouseSensor::instance().add(this,m_mbmDisplay->display());
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with torrent information of a given node
+int FarmDisplayBase::showTorrentNodeWindow()   {
+  DisplayUpdate update(this,true);
+  if ( m_torrentNodeDisplay.get() ) {
+    if ( m_helpDisplay.get() ) showHelpWindow();
+    MouseSensor::instance().remove(this,m_torrentNodeDisplay->display());
+    m_torrentNodeDisplay = auto_ptr<InternalDisplay>(0);
+    return WT_SUCCESS;
+  }
+  pair<string,string> node = selectedNode();
+  if ( !node.second.empty() ) {
+    m_torrentNodeDisplay = auto_ptr<InternalDisplay>(new TorrentNodeDisplay(this,node.first,node.second));
+    m_torrentNodeDisplay->show(m_anchorY+5,m_anchorX+12);
+    MouseSensor::instance().add(this,m_torrentNodeDisplay->display());
   }
   return WT_SUCCESS;
 }
@@ -495,6 +515,8 @@ bool FarmDisplayBase::handleMouseEvent(const MouseEvent* m) {
       IocSensor::instance().send(this,CMD_SHOWHELP,this);
     else if ( m_ctrlDisplay.get() )
       IocSensor::instance().send(this,CMD_SHOWCTRL,this);
+    else if ( m_torrentNodeDisplay.get() )
+      IocSensor::instance().send(this,CMD_SHOWTORRENTNODE,this);
     else if ( m_torrentDisplay.get() )
       IocSensor::instance().send(this,CMD_SHOWTORRENT,this);
     else if ( m_mbmDisplay.get() )
@@ -530,6 +552,9 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
   case CMD_SHOWTORRENT:
     showTorrentWindow();
     return true;
+  case CMD_SHOWTORRENTNODE:
+    showTorrentNodeWindow();
+    return true;
   case CMD_SHOWSYS:
     showSysWindow();
     return true;
@@ -553,6 +578,7 @@ bool FarmDisplayBase::handleIocEvent(const Event& ev) {
     return true;
   case CMD_SHOWMBM:
     if (m_mode == CTRL_MODE) showCtrlWindow();
+    else if ( m_mode == TORRENT_MODE ) showTorrentNodeWindow();
     else if ( m_mode != HLTDEFER_MODE ) showMbmWindow();
     return true;
   case CMD_SHOWPROCS:
@@ -650,6 +676,10 @@ int FarmDisplayBase::handleKeyboard(int key)    {
     case 'S':
       return showStatsWindow();
     case 't':
+      if ( m_torrentDisplay.get() || m_mode == TORRENT_MODE )  {
+	IocSensor::instance().send(this,CMD_SHOWTORRENTNODE,this);
+	break;
+      }
     case 'T':
       IocSensor::instance().send(this,CMD_SHOWTORRENT,this);
       break;

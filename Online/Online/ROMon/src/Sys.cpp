@@ -193,36 +193,38 @@ int StatusProcess::read(int proc_id) {
       switch(++nitem) {
       case 1:   ::sscanf(p,"%s",comm);          break;
       case 2:   ::sscanf(p,"%c",&state);        break;
-      case 3:   ::sscanf(p,"%d%%",&sleepAvg);   break;
-      case 4:   ::sscanf(p,"%d",&tgid);         break;
-      case 5:   ::sscanf(p,"%d",&pid);          break;
-      case 6:   ::sscanf(p,"%d",&ppid);         break;
-      case 8:   ::sscanf(p,"%d",&uid);          break;
-      case 9:   ::sscanf(p,"%d",&gid);          break;
+	//case 3:   ::sscanf(p,"%d%%",&sleepAvg);   break;
+      case 3:   ::sscanf(p,"%d",&tgid);         break;
+      case 4:   ::sscanf(p,"%d",&pid);          break;
+      case 5:   ::sscanf(p,"%d",&ppid);         break;
+      case 7:   ::sscanf(p,"%d",&uid);          break;
+      case 8:   ::sscanf(p,"%d",&gid);          break;
+      case 9:   ::sscanf(p,"%d",&utrace);       break;
       case 10:  ::sscanf(p,"%d",&fdSize);       break;
       case 12:  ::sscanf(p,"%d",&vmPeak);       break;
       case 13:  ::sscanf(p,"%d",&vmSize);       break;
       case 14:  ::sscanf(p,"%d",&vmLock);       break;
-      case 15:  ::sscanf(p,"%d",&vmRSS);        break;
-      case 16:  ::sscanf(p,"%d",&vmHWM);        break;
+      case 15:  ::sscanf(p,"%d",&vmHWM);        break;
+      case 16:  ::sscanf(p,"%d",&vmRSS);        break;
       case 17:  ::sscanf(p,"%d",&vmData);       break;
       case 18:  ::sscanf(p,"%d",&vmStack);      break;
       case 19:  ::sscanf(p,"%d",&vmExe);        break;
       case 20:  ::sscanf(p,"%d",&vmLib);        break;
       case 21:  ::sscanf(p,"%d",&vmPTE);        break;
-      case 22:  ::sscanf(p,"%08lx",&staBrk);    break;
-      case 23:  ::sscanf(p,"%08lx",&brk);       break;
-      case 24:  ::sscanf(p,"%08lx",&staStk);    break;
-      case 25:  ::sscanf(p,"%d",&nThreads);     break;
-      case 26:  break; // SigQ
-      case 27:  ::sscanf(p,"%016lx",&sigPend);  break;  // Fmt: SigCgt: 00000001808044e9
-      case 28:  ::sscanf(p,"%016lx",&shdPend);  break;
-      case 29:  ::sscanf(p,"%016lx",&sigBlk);   break;
-      case 30:  ::sscanf(p,"%016lx",&sigIgn);   break;
-      case 31:  ::sscanf(p,"%016lx",&sigCgt);   break;
-      case 32:  ::sscanf(p,"%016lx",&capInh);   break;
-      case 33:  ::sscanf(p,"%016lx",&capPrm);   break;
-      case 34:  ::sscanf(p,"%016lx",&capEff);   break;
+      case 22:  ::sscanf(p,"%d",&vmSwap);       break;
+	//case 22:  ::sscanf(p,"%08lx",&staBrk);    break;
+	//case 23:  ::sscanf(p,"%08lx",&brk);       break;
+	//case 24:  ::sscanf(p,"%08lx",&staStk);    break;
+      case 23:  ::sscanf(p,"%d",&nThreads);     break;
+      case 24:  break; // SigQ
+      case 25:  ::sscanf(p,"%016lx",&sigPend);  break;  // Fmt: SigCgt: 00000001808044e9
+      case 26:  ::sscanf(p,"%016lx",&shdPend);  break;
+      case 27:  ::sscanf(p,"%016lx",&sigBlk);   break;
+      case 28:  ::sscanf(p,"%016lx",&sigIgn);   break;
+      case 29:  ::sscanf(p,"%016lx",&sigCgt);   break;
+      case 30:  ::sscanf(p,"%016lx",&capInh);   break;
+      case 31:  ::sscanf(p,"%016lx",&capPrm);   break;
+      case 32:  ::sscanf(p,"%016lx",&capEff);   break;
       default:                                  break;
       }
     }
@@ -512,7 +514,7 @@ int ROMon::read(CPUset& data, size_t max_len) {
 }
 
 int ROMon::read(Procset& procset, size_t max_len) {
-  //static int pgSize = sysconf(_SC_PAGESIZE);
+  static int pgSize = sysconf(_SC_PAGESIZE);
   int jiffy2second = sysconf(_SC_CLK_TCK);
   int pid, retry = 5, cnt;
   char buff[2048], pwdbuff[1024], *ptr;
@@ -562,7 +564,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
               else {
                 uname = (*iu).second;
               }
-              if ( 0 == ret && proc.read(pid) && status.read(pid) ) {
+              if ( 0 == ret && proc.read(pid) ) {
                 Process& p = (*pr);
                 utgid.utgid = "";
                 try {
@@ -590,15 +592,15 @@ int ROMon::read(Procset& procset, size_t max_len) {
 
                 // Note: seconds!!!
                 p.cpu     = float(proc.stime+proc.utime)/float(jiffy2second);
-                p.start   = int(now) - int(sys.uptime) + (proc.starttime/jiffy2second);
+                p.start   = int(float(now) - sys.uptime + float(proc.starttime)/jiffy2second);
                 p.mem     = 0.0;
-                p.stack   = (float)status.vmStack;
-                p.vsize   = (float)status.vmSize;
-                p.rss     = (float)status.vmRSS;
-                p.state   = status.state;
-                p.pid     = (unsigned short)status.pid;
-                p.ppid    = (unsigned short)status.ppid;
-                p.threads = (unsigned short)status.nThreads;
+                p.stack   = (float)(proc.startstack-proc.kstkesp)/1024e0;
+                p.vsize   = (float)proc.vsize/1024e0;
+                p.rss     = proc.rss*pgSize/1024e0;
+                p.state   = proc.state;
+                p.pid     = pid;
+                p.ppid    = (unsigned short)proc.ppid;
+                p.threads = (unsigned short)proc.num_threads;
 #if 0
                 log() << "ReadProc:" << (void*)pr << " PID:" << p.pid 
                       << " PPID:" << p.ppid 

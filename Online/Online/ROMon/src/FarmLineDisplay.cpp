@@ -211,7 +211,7 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
 	      "< -------- Subfarm Information ------- >");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
     ::sprintf(txt," %-10s %8s %6s %6s %6s %5s %6s/%-6s %8s %8s      %s",
-	      "","Update","Session","gress","Upload","Peers","Done","Total","[MB]  ","[MB]  ",
+	      "","Update","Session","gress","Torr.","Peers","Done","Total","[MB]  ","[MB]  ",
 	      "Controls PC and worker torrent status summary");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
@@ -297,12 +297,14 @@ string FarmLineDisplay::selectedCluster() const {
 pair<string,string> FarmLineDisplay::selectedNode() const {
   string node_name, cl = selectedCluster();
   if ( !cl.empty() ) {
-    if ( m_sysDisplay.get() )
+    if ( m_sysDisplay.get() && m_sysDisplay.get() == m_nodeSelector )
       node_name = m_sysDisplay->nodeName(m_subPosCursor);
-    else if ( m_torrentDisplay.get() )
-      node_name = m_roDisplay->nodeName(m_subPosCursor);
-    else if ( m_roDisplay.get() )
+    else if ( m_torrentDisplay.get() && m_torrentDisplay.get() == m_nodeSelector )
       node_name = m_torrentDisplay->nodeName(m_subPosCursor);
+    else if ( m_roDisplay.get() && m_roDisplay.get() == m_nodeSelector )
+      node_name = m_roDisplay->nodeName(m_subPosCursor);
+    else if ( m_deferHltDisplay.get() && m_deferHltDisplay.get() == m_nodeSelector )
+      node_name = m_deferHltDisplay->nodeName(m_subPosCursor);
     else if ( m_subfarmDisplay )
       node_name = m_subfarmDisplay->nodeName(m_subPosCursor);
   }
@@ -311,12 +313,14 @@ pair<string,string> FarmLineDisplay::selectedNode() const {
 
 /// Number of sub-nodes in a cluster
 size_t FarmLineDisplay::selectedClusterSize() const {
-  if ( m_sysDisplay.get() )
+  if ( m_sysDisplay.get() && m_sysDisplay.get() == m_nodeSelector )
     return m_sysDisplay->numNodes();
-  else if ( m_roDisplay.get() )
-    return m_roDisplay->numNodes();
-  else if ( m_torrentDisplay.get() )
+  else if ( m_torrentDisplay.get() && m_torrentDisplay.get() == m_nodeSelector )
     return m_torrentDisplay->numNodes();
+  else if ( m_roDisplay.get() && m_roDisplay.get() == m_nodeSelector )
+    return m_roDisplay->numNodes();
+  else if ( m_deferHltDisplay.get() && m_deferHltDisplay.get() == m_nodeSelector )
+    return m_deferHltDisplay->numNodes();
   else if ( m_subfarmDisplay )
     return m_subfarmDisplay->numNodes();
   return 0;
@@ -339,20 +343,27 @@ int FarmLineDisplay::key_action(unsigned int /* fac */, void* /* param */)  {
 /// Set cursor to position
 void FarmLineDisplay::set_cursor() {
   if ( 0 != m_sysDisplay.get() ) {
-    Display* d1 = m_sysDisplay->display();
-    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
+    Display* disp = m_sysDisplay->display();
+    if ( disp ) ::scrc_set_cursor(disp, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
   }
   else if ( 0 != m_roDisplay.get() ) {
-    Display* d1 = m_roDisplay->display();
-    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
+    Display* disp = m_roDisplay->display();
+    if ( disp ) ::scrc_set_cursor(disp, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
   }
   else if ( 0 != m_torrentDisplay.get() ) {
-    Display* d1 = m_torrentDisplay->display();
-    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+10, 2); // 8 is offset in child window to select nodes
+    Display* disp = m_torrentDisplay->display();
+    if ( disp ) ::scrc_set_cursor(disp, m_subPosCursor+10, 2); // 8 is offset in child window to select nodes
   }
   else if ( 0 != m_subfarmDisplay ) {
-    Display* d1 = m_subfarmDisplay->display();
-    if ( d1 ) ::scrc_set_cursor(d1, m_subPosCursor+8, 2); // 8 is offset in child window to select nodes
+    Display* disp = m_subfarmDisplay->display();
+    if ( disp ) {
+      int pos = m_subPosCursor+8; // 8 is offset in child window to select nodes
+      if ( m_nodeSelector )  {
+	disp = m_nodeSelector->display();
+	pos = m_subPosCursor + 2 + 1;  // Border + offset
+      }
+      ::scrc_set_cursor(disp, pos, 2);
+    }
   }
   else {
     m_currentLine = 0;
@@ -417,7 +428,7 @@ int FarmLineDisplay::handleKeyboard(int key)    {
         m_subPosCursor = 0;
       if( 0 == m_nodeSelector && m_posCursor > 0 )
         --m_posCursor;
-      else if( m_nodeSelector && int(m_subPosCursor) >= 0 )
+      else if( m_nodeSelector && int(m_subPosCursor) > 0 )
         --m_subPosCursor;
       break;
     case MOVE_DOWN:
@@ -427,7 +438,7 @@ int FarmLineDisplay::handleKeyboard(int key)    {
         m_subPosCursor = 0;
       if( 0 == m_nodeSelector && m_posCursor < m_lines.size()-1 )
         ++m_posCursor;
-      else if( m_nodeSelector && selectedClusterSize() > m_subPosCursor )
+      else if( m_nodeSelector && selectedClusterSize()-1 > m_subPosCursor )
         ++m_subPosCursor;
       break;
     case MOVE_LEFT:
@@ -467,7 +478,7 @@ void FarmLineDisplay::handle(const Event& ev) {
     else if ( m_nodeSelector && m->msec == (unsigned int)-1 ) {
       Display* disp = m_nodeSelector->display();
       if ( m->display == disp )    {
-        size_t pos = m->y - disp->row - 2;
+        size_t pos = m->y - 2 - disp->row;
         if ( selectedClusterSize()>pos ) {
           int cmd = m->button==0 ? m_sysDisplay.get() ? CMD_SHOWCTRL : CMD_SHOWMBM : CMD_SHOWPROCS;
           m_subPosCursor = pos;

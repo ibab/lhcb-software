@@ -433,16 +433,18 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
 void StorageDisplay::showSelector(const Nodeset& /* ns */)   {
   if ( m_select )    {
     size_t i, hdr_height = m_select->height()-1-2-2;
-    for(i=1; i<hdr_height/2; ++i)
-      m_select->draw_line_normal("");
-    m_select->draw_line_normal("Move curser, then command");
-    m_select->draw_line_normal("CTRL-H for help");
-    for(; i<hdr_height; ++i)
-      m_select->draw_line_normal("");
+    m_select->draw_line_normal("");
+    m_select->draw_line_bold  ("             ");
     m_select->draw_line_bold  ("  storerecv01");
     m_select->draw_line_bold  ("  storerecv02");    
     m_select->draw_line_bold  ("  storestrm01");
     m_select->draw_line_bold  ("  storestrm02");
+    m_select->draw_line_normal("");
+    m_select->draw_line_normal("");
+    m_select->draw_line_bold  ("  Click node to show MBM");
+    m_select->draw_line_normal("  CTRL-H for help");
+    for(i=1; i<hdr_height-3; ++i)
+      m_select->draw_line_normal("");
   }
 }
 

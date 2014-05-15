@@ -181,6 +181,7 @@ namespace ROMon {
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
+    std::auto_ptr<InternalDisplay>   m_torrentNodeDisplay;
     std::auto_ptr<InternalDisplay>   m_bootDisplay;
     std::auto_ptr<InternalDisplay>   m_statsDisplay;
     std::auto_ptr<InternalDisplay>   m_benchDisplay;
@@ -228,6 +229,8 @@ namespace ROMon {
     int showCpuWindow();
     /// Show window with buffer information of a given node
     int showMbmWindow();
+    /// Show window with torrent information of a given node
+    int showTorrentNodeWindow();
     /// Show window with SYSTEM information of a given subfarm
     int showSysWindow();
     /// Show window with boot information of the subfarm

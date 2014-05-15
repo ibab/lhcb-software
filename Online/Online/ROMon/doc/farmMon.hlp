@@ -7,6 +7,7 @@ You receive different help content depending on the current window:
 -- Help on MBM buffer monitor of a single node.          -- Help on DAQ processes executing on a given node
 -- Help on the CPU content of a given subfarm.           -- Help on the task control status of a given subfarm 
 -- Help on BOOT information of a subfarm                    (-taskmon option only)
+
 </common>
 
 <farm>
@@ -56,6 +57,8 @@ CTRL-V displays all system tasks.                        Once invoked, type H fo
 CTRL-B displays all non-system tasks              s or S displays the statistics summary of a given subfarm (CPU+MBM).
 CTRL-N displays all driver tasks.                        Once invoked, type H for further help.
 T or t shows the torrent download information.    L or l shows the system information
+c or C displays the CPU summary of a given node. 
+       For space reasons not all nodes are expanded.
 
 Invokation of the same command again closes the window.
 </subfarm>
@@ -128,6 +131,17 @@ On a single node all processes and their event consumoption from the buffer mana
 This menu can only be invoked from the extended subfarm display;
 Nothing more to say. If you don't understand this display you are hopeless anyway. 
 
++++ Show process displays (a la top):
+p or P displays all processes, which have the UTGID environment set. 
+       These are typically processes used by the LHCb data aquisition.
+CTRL-P shows all PVSS processes.                  c or C displays the CPU summary of a given node. 
+CTRL-V displays all system tasks.                        For space reasons not all nodes are expanded.
+CTRL-B displays all non-system tasks              b or B displays the BOOT summary of a given subfarm. 
+CTRL-N displays all driver tasks.                 s or S displays the statistics summary of a given subfarm (CPU+MBM). 
+T or t shows the torrent download information.    L or l shows the system information
+
+Invokation of the same command again closes the window.
+
 </mbm>
 
 <procs>
@@ -161,11 +175,9 @@ Common keyboard commands:
 -- To exit the application         type CTRL-E or E            -- To show the subfarm menu        type ENTER or KPD-ENTER
 
 To be invoked from the extended subfarm display:
--- To show the MBM monitor         type KPD-PERIOD or .        -- To show the CPU monitor     type c or C
--- To show the process monitor     type CTRL-P or p or P       -- To show BOOT display        type b or B
--- To show the farm statistics     type s or S                 -- Event processing statistics type CTRL-L
--- To show the torrent information type t or T.                -- Top show the system info    type l or L
-
+-- To show the MBM monitor         type KPD-PERIOD or .        -- To show the CPU monitor         type c or C
+-- To show BOOT display            type b or B                 -- To show the farm statistics     type s or S
+-- Top show the system info        type l or L                 -- To show the torrent information type t or T
 </common>
 
 <common>

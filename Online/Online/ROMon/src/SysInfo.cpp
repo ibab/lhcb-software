@@ -128,13 +128,14 @@ int SysInfo::combineProcessInfo() {
   for(i=now.begin(), j=last.begin(); i != now.end(); i=now.next(i) ) {
     const Process& q = *i;
     int pid = q.pid;
+    int found = 0;
     for(k=j; j != last.end(); j=last.next(j) )
-      if ( (*j).pid == pid ) break;
-    if ( j == last.end() ) {
+      if ( (*j).pid == pid ) {found=1; break;}
+    if ( 0==found ) {
       for(j=last.begin(); j != k; j=last.next(j))
-        if ( (*j).pid == pid ) break;
+        if ( (*j).pid == pid ) {found=1; break;}
     }
-    if ( j != last.end() && (*j).pid == pid ) {
+    if ( found==1 && (*j).pid == pid ) {
       Process& p = *m;
       ::strncpy(p.utgid,q.utgid,sizeof(p.utgid));
       p.utgid[sizeof(p.utgid)-1] = 0;

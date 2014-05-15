@@ -58,29 +58,23 @@ static inline bool __procmatch(const char* nam, const char* pattern) {
 }
 static bool is_driver(const char* cmd) {
   return
+    __procmatch(cmd,"md/") ||
+    __procmatch(cmd,"md_misc/") ||
     __procmatch(cmd,"aio/") ||
     __procmatch(cmd,"ata/") ||
+    __procmatch(cmd,"crypto/") ||
+    __procmatch(cmd,"rpciod/") ||
     __procmatch(cmd,"events/") ||
-    __procmatch(cmd,"lockd") ||
-    __procmatch(cmd,"khubd") ||
-    __procmatch(cmd,"kacpid") ||
-    __procmatch(cmd,"kjournald") ||
-    __procmatch(cmd,"kauditd") ||
-    __procmatch(cmd,"kblockd/") ||
-    __procmatch(cmd,"khelper") ||
-    __procmatch(cmd,"kswapd") ||
-    __procmatch(cmd,"kseriod") ||
-    __procmatch(cmd,"krfcommd") ||
     __procmatch(cmd,"migration/") ||
-    __procmatch(cmd,"ata_aux") ||
-    __procmatch(cmd,"scsi_eh_") ||
-    __procmatch(cmd,"md0_raid") ||
-    __procmatch(cmd,"md1_raid") ||
-    __procmatch(cmd,"md2_raid") ||
-    __procmatch(cmd,"pdflush") ||
-    __procmatch(cmd,"rpciod") ||
-    __procmatch(cmd,"ksoftirqd/");
+    __procmatch(cmd,"ksoftirqd/") ||
+    __procmatch(cmd,"kintegrityd/") ||
+    __procmatch(cmd,"kblockd/") ||
+    __procmatch(cmd,"kondemand/") ||
+    __procmatch(cmd,"kthrotld/") ||
+    __procmatch(cmd,"bnx2i_thread/") ||
+    __procmatch(cmd,"watchdog/");
 }
+
 static inline bool is_sys_task(const char* cmd) { 
   return
     __procmatch(cmd,"init") ||
@@ -105,7 +99,22 @@ static inline bool is_sys_task(const char* cmd) {
     __procmatch(cmd,"clientmqueue") ||
     __procmatch(cmd,"mingetty") ||
     __procmatch(cmd,"smartd") ||
-    __procmatch(cmd,"dhclient");
+    __procmatch(cmd,"dhclient") ||
+    __procmatch(cmd,"lockd") ||
+    __procmatch(cmd,"khubd") ||
+    __procmatch(cmd,"kacpid") ||
+    __procmatch(cmd,"kjournald") ||
+    __procmatch(cmd,"kauditd") ||
+    __procmatch(cmd,"khelper") ||
+    __procmatch(cmd,"kswapd") ||
+    __procmatch(cmd,"kseriod") ||
+    __procmatch(cmd,"krfcommd") ||
+    __procmatch(cmd,"ata_aux") ||
+    __procmatch(cmd,"scsi_eh_") ||
+    __procmatch(cmd,"md0_raid") ||
+    __procmatch(cmd,"md1_raid") ||
+    __procmatch(cmd,"md2_raid") ||
+    __procmatch(cmd,"pdflush");
 }
 static inline bool is_pvss_task(const char* cmd) { 
   return __procmatch(cmd,"PVSS00") || __procmatch(cmd,"smiSM ") || __procmatch(cmd,"WCC") ;
@@ -151,6 +160,7 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
           if ( ::strncmp(p.utgid,"N/A",3)==0 ) continue;
           break;
         case 1:  // Fall-through option if nothing else catches....
+          //if ( ::strncmp(p.owner,"root",4)==0 ) continue;
           if ( ::strncmp(p.utgid,"N/A",3)!=0 ) continue;
           if ( is_pvss_task(p.cmd) ) continue;
           if ( is_sys_task(p.cmd) ) continue;
