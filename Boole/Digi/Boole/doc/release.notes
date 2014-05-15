@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v28r0>2014-05-15 Boole v28r0</A></H1><PRE>
+
 - Configuration changes
   . Modified VP sequences: remove VPClustering from DigiSeq, replace
     PrepareVPRawBank by VPSuperPixelBankEncoder, remove VPClusterLinker from
@@ -16,9 +18,7 @@ Purpose: LHCb Digitization program
 
 - QMTest changes
   . Pick up boole-mc11a-xdst PFN from TestFileDB
-  . Add SC monitoring to all upgrade tests
-  . Add FPE monitoring to some upgrade tests
-    (not in all yet, pending fixes in found problems)
+  . Add SC and FPE monitoring to all upgrade tests
 
 </PRE><H1><A NAME=v27r2>2014-03-21 Boole v27r2</A></H1><PRE>
 
