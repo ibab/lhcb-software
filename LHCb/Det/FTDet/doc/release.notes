@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+ 
+! 2014-05-15 - Luigi Del Buono
+ - Fix inaccuracy in fractional position computation for cellID 0 and 130 in CellIDCoordinates()
 
 !========================= FTDet v2r6 2014-05-12 =========================
 ! 2014-05-06 - Diego Milanes

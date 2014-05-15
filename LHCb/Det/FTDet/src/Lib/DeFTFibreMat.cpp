@@ -879,12 +879,15 @@ void DeFTFibreMat::cellIDCoordinates( const double  lCoord,
   if ( distSipmREdge < m_sipmEdgeSizeX ) {
     cellID = 0;
     cellREdgeU = sipmREdgeU;
+    fracDistCellCenter = -0.5;
   }
   else if ( distSipmREdge > m_sipmEdgeSizeX + m_sipmSizeX ) {
     cellID = 130;
     cellREdgeU = sipmREdgeU + m_sipmEdgeSizeX + m_sipmSizeX;
+    fracDistCellCenter = 0.5;
   }
   else {
+    /// Determine fractional distance between lCoord and cell center
     //sensitive cells have ids: 1-64, 66-129 incl.
     //cellID 65 is the inner SiPM hole!
     double distActiveArea = lCoord - (sipmREdgeU + m_sipmEdgeSizeX);
@@ -895,11 +898,9 @@ void DeFTFibreMat::cellIDCoordinates( const double  lCoord,
     cellID = (unsigned int) (1 + distActiveArea/m_cellSizeX); // >= 1 by construction
     cellREdgeU = (sipmREdgeU + m_sipmEdgeSizeX) + (cellID-1)*m_cellSizeX;
     //use "(cellID-1)" as we added 1 in the preceeding line
+    fracDistCellCenter = (lCoord - (cellREdgeU + m_cellSizeX/2)) / m_cellSizeX;
   }
   
-  /// Determine fractional distance between lCoord and cell center
-  fracDistCellCenter = (lCoord - (cellREdgeU + m_cellSizeX/2)) / m_cellSizeX;
-
   debug() << "\n\tdistSipmREdge: " << distSipmREdge 
           << "\n\tGross cellID: " << cellID
           << "\n\tcellREdgeU: " << cellREdgeU
