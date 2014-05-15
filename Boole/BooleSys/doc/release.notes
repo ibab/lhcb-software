@@ -3,8 +3,55 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2014-04-15 - Rob Lambert
- - Update/restore new configurables test, see task #50698
+</PRE><H1><A NAME=v28r0>2014-05-15 Boole v28r0</A></H1><PRE>
+This version uses projects:
+ LCGCMT 68 (Root 5.34.18), Gaudi v25r1, LHCb v37r2, Lbcom v15r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- Configuration changes
+  . Modified VP sequences: remove VPClustering from DigiSeq, replace
+    PrepareVPRawBank by VPSuperPixelBankEncoder, remove VPClusterLinker from
+    LinkSeq
+
+- Backward incompatible persistency changes (require Brunel 46r0 or greater)
+  . Changes to FTChannelID: no more quarter --> module + mat
+    (LHCbKernel v15r2, FTDet v2r6, FTDigitisation v2r0)
+  . Renamed FTRawCluster to FTLiteCluster (FTEvent v1r6, FTDAQ v1r6)
+  . Modification of the bit sharing in 16-bit words according to the FT TDR
+    electronic design (FTDAQ v1r6)
+  . Changes to VPChannelID
+    (LHCbKernel v15r2, VPDet v3r2, VPDAQ v2r7, VPAlgorithms v4r4)
+  . Remove VPLiteCluster from VPCluster, add inter-pixel fraction to VPCluster
+    (DigiEvent v4r2,VPDAQ v2r7,VPAlgorithms v4r4,VPTools v2r3,VPDigitization v1r4)
+  . Remove ToT value and timestamp from VPDigit
+    (DigiEvent v4r2, VPDAQ v2r7, VPAlgorithms v4r4, DigiAlg v5r2)
+  . Modify digits linker tables to use keys instead of VPDigit objects
+    (VPAssociators v2r6, DigiAlg v5r2)
+  . DigiConf.py: replace VPCluster by VPDigit linker tables (GaudiConf v19r2)
+
+- New optimisations
+  . Performance optimisations of DeVP (VPDet v3r2)
+  . Remove MCVPDeposit and modify MCVPDigit accordingly
+    (MCEvent v3r1, VPAssociators v2r6, VPDigitisation v1r4)
+  . Simplify delta electron treatment in VPDigitLinker (VPAssociators v2r6)
+  . VPDigitCreator: sort digits by channel ID (VPDigitisation v1r4)
+
+- New functionality
+  . Implementation of 2 bit clustering (FTDigitization v2r0)
+  . Add options to simulate noisy and masked pixels (VPDigitisation v1r4)
+
+- New tuning
+  . Update default values of FT digitisation parameters (FTDigitization v2r0)
+  . Change default value of VP electronic noise to 130 (VPDigitisation v1r4)
+
+- Obsolete functionality removed
+  . Remove support for "old" (pre-TDR) VP geometry (VPDigitisation v1r4)
+
+- QMTest changes
+  . Update/restore new configurables test, see task #50698
+  . Pick up boole-mc11a-xdst PFN from TestFileDB
+  . Add SC and FPE monitoring to all upgrade tests
+
 
 </PRE><H1><A NAME=v27r1>2014-03-27 Boole v27r1</A></H1><PRE>
 This version uses projects:
