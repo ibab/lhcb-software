@@ -5,9 +5,11 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r1 2014-05-16 =========================
+
 ! 2014-04-15 - Gerhard Raven
- - replace  boost::array with std::array
- - put Stages in a std::unique_ptr instead of managing them explicitly
+ - Replace boost::array with std::array.
+ - Put Stages in a std::unique_ptr instead of managing them explicitly.
 
 ! 2014-04-15 - Chris Jones
  - If a tool fails to initialize in Selection::Line::initialize(), pass this
