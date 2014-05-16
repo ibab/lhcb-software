@@ -44,7 +44,7 @@ StatusCode DeFTLayer::initialize(){
   if ( sc.isFailure() ) return sc;
 
   MsgStream msg( msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialize DeFTLayer" << endmsg;
+  if(msg.level() <= MSG::DEBUG) msg << MSG::DEBUG << "==> Initialize DeFTLayer" << endmsg;
   
   return StatusCode::SUCCESS;
 }

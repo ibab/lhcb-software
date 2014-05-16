@@ -369,6 +369,7 @@ private: // private data members
   unsigned int m_layerID;
   double m_angle;               ///< stereo angle of the layer
   double m_tanAngle;            ///< tangent of stereo angle
+  double m_cosAngle;            ///< cos of stereo angle
   double m_dzDy;                ///< layer slope in the y-z plane
 
   int m_mat;

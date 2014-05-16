@@ -41,7 +41,7 @@ StatusCode DeFTFibreModule::initialize(){
   if ( sc.isFailure() ) return sc;
   
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Initialize DeFTFibreModule" << endmsg;
+  if(msg.level() <= MSG::DEBUG) msg << MSG::DEBUG << "==> Initialize DeFTFibreModule" << endmsg;
 
   return StatusCode::SUCCESS;
 }

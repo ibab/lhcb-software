@@ -75,91 +75,91 @@ StatusCode DeFTDetector::initialize(){
     for (iS = this->childBegin(); iS != this->childEnd(); ++iS) {
       DeFTStation* station = dynamic_cast<DeFTStation*>(*iS);
       if ( station != 0 ) {
-	/// fill the vector of stations
-	m_stations.push_back(station);
-	///loop over layers and fill the vector of layers
-	for (iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
-	  DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
-	  if ( layer != 0 ) {
-	    m_layers.push_back(layer);
-	    ///loop over modules and fill the vector of modules
-	    for (iM = (*iL)->childBegin(); iM!= (*iL)->childEnd(); ++iM) {
-	      DeFTModule* module = dynamic_cast<DeFTModule*>(*iM);
-	      if ( module != 0 ) {
-		m_modules.push_back(module);
-		///loop over fibremodules and fill the vector of fibremodules
-		for (iFM = (*iM)->childBegin(); iFM!= (*iM)->childEnd(); ++iFM) {
-		  DeFTFibreModule* fibremodule = dynamic_cast<DeFTFibreModule*>(*iFM);
-		  if ( fibremodule != 0 ) {
-		    m_fibremodules.push_back(fibremodule);
-		    ///loop over fibremats and fill the vector of fibremats
-		    for (iFMat = (*iFM)->childBegin(); iFMat!= (*iFM)->childEnd(); ++iFMat) {
-		      DeFTFibreMat* fibremat = dynamic_cast<DeFTFibreMat*>(*iFMat);
-		      if ( fibremat != 0 ) m_fibremats.push_back(fibremat);
-		    } // loop fibremat
-		  }
-		}// loop fibremodules
-	      }
-	    } //loop modules
-	  }
-	} // loop layers
+        /// fill the vector of stations
+        m_stations.push_back(station);
+        ///loop over layers and fill the vector of layers
+        for (iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
+          DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
+          if ( layer != 0 ) {
+            m_layers.push_back(layer);
+            ///loop over modules and fill the vector of modules
+            for (iM = (*iL)->childBegin(); iM!= (*iL)->childEnd(); ++iM) {
+              DeFTModule* module = dynamic_cast<DeFTModule*>(*iM);
+              if ( module != 0 ) {
+                m_modules.push_back(module);
+                ///loop over fibremodules and fill the vector of fibremodules
+                for (iFM = (*iM)->childBegin(); iFM!= (*iM)->childEnd(); ++iFM) {
+                  DeFTFibreModule* fibremodule = dynamic_cast<DeFTFibreModule*>(*iFM);
+                  if ( fibremodule != 0 ) {
+                    m_fibremodules.push_back(fibremodule);
+                    ///loop over fibremats and fill the vector of fibremats
+                    for (iFMat = (*iFM)->childBegin(); iFMat!= (*iFM)->childEnd(); ++iFMat) {
+                      DeFTFibreMat* fibremat = dynamic_cast<DeFTFibreMat*>(*iFMat);
+                      if ( fibremat != 0 ) m_fibremats.push_back(fibremat);
+                    } // loop fibremat
+                  }
+                }// loop fibremodules
+              }
+            } //loop modules
+          }
+        } // loop layers
       }
     } // loop stations
   }else{
     for (iS = this->childBegin(); iS != this->childEnd(); ++iS) {
       DeFTStation* station = dynamic_cast<DeFTStation*>(*iS);
       if ( station != 0 ) {
-	/// fill the vector of stations
-	m_stations.push_back(station);
-	///loop over layers and fill the vector of bilayers
-	for (iBL = (*iS)->childBegin(); iBL!= (*iS)->childEnd(); ++iBL) {
-	  DeFTBiLayer* bilayer = dynamic_cast<DeFTBiLayer*>(*iBL);
-	  if ( bilayer != 0 ) {
-	    m_bilayers.push_back(bilayer);
-	    ///loop over modules and fill the vector of modules
-	    for (iL = (*iBL)->childBegin(); iL!= (*iBL)->childEnd(); ++iL) {
-	      DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
-	      if ( layer != 0 ) {
-		m_layers.push_back(layer);
-	      }
-	    } // loop layers
-	  }
-	}//loop bilayers
+        /// fill the vector of stations
+        m_stations.push_back(station);
+        ///loop over layers and fill the vector of bilayers
+        for (iBL = (*iS)->childBegin(); iBL!= (*iS)->childEnd(); ++iBL) {
+          DeFTBiLayer* bilayer = dynamic_cast<DeFTBiLayer*>(*iBL);
+          if ( bilayer != 0 ) {
+            m_bilayers.push_back(bilayer);
+            ///loop over modules and fill the vector of modules
+            for (iL = (*iBL)->childBegin(); iL!= (*iBL)->childEnd(); ++iL) {
+              DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
+              if ( layer != 0 ) {
+                m_layers.push_back(layer);
+              }
+            } // loop layers
+          }
+        }//loop bilayers
       }
     } // loop stations 
   }
   
   ///>>> print the layer properties <<<///
   if ( m_msg->level() <= MSG::DEBUG ) {
-
+    
     if( m_FTversion == 20 ){
-
+      
       ///loop over fibremats
       FibreMats::const_iterator iFMat;
       for ( iFMat = fibremats().begin(); iFMat != fibremats().end(); ++iFMat) {
-	DeFTFibreMat* fibremat = dynamic_cast<DeFTFibreMat*>(*iFMat);
-	if ( fibremat != 0 ) {
-	  
-	  *m_msg << MSG::DEBUG << "Properties of FT fibreMat with ID " << fibremat->FibreMatID() << ":" << endmsg;
-	  *m_msg << MSG::DEBUG << "\tIn layer  " << fibremat->layer()  <<  endmsg;
-	  *m_msg << MSG::DEBUG << "\tIn module " << fibremat->module() <<  endmsg;
-	  *m_msg << MSG::DEBUG << "\tIs bottom " << fibremat->isBottom() <<  endmsg;
-	  *m_msg << MSG::DEBUG<< "\tGeometrical borders of fibremat: " << endmsg;
-	  *m_msg << MSG::DEBUG<< format("\txMin/xMax = %.1f / %.1f      yMin/yMax = %.1f / %.1f      zMin/zMax = %.1f / %.1f mm",
-					fibremat->fibreMatMinX(), fibremat->fibreMatMaxX(),
-					fibremat->fibreMatMinY(), fibremat->fibreMatMaxY(),
-					fibremat->fibreMatMinZ(), fibremat->fibreMatMaxZ())<< endmsg;
-	  *m_msg << MSG::DEBUG<< "\tGeometrical borders of corresponding layer: " << endmsg;
-	  *m_msg << MSG::DEBUG<< format("\txMin/xMax = %.1f / %.1f      yMin/yMax = %.1f / %.1f      zMin/zMax = %.1f / %.1f mm",
-					fibremat->layerMinX(), fibremat->layerMaxX(),
-					fibremat->layerMinY(), fibremat->layerMaxY(),
-					fibremat->layerMinZ(), fibremat->layerMaxZ())<< endmsg;
-	  *m_msg << MSG::DEBUG<< "\tBeam pipe radius: " << format("%7.1f mm", fibremat->layerInnerHoleRadius())<< endmsg;
-	  *m_msg << MSG::DEBUG<< "\tStereo angle: " << format("%.1f degrees", fibremat->angle()/Gaudi::Units::degree)<< endmsg;
-	  *m_msg << MSG::DEBUG<< "\tSlope dzDy: " << format("%.5f rad", fibremat->slopeDzDy())<< endmsg;
-	  *m_msg << MSG::DEBUG<< endmsg;
-	  
-	}
+        DeFTFibreMat* fibremat = dynamic_cast<DeFTFibreMat*>(*iFMat);
+        if ( fibremat != 0 ) {
+          
+          *m_msg << MSG::DEBUG << "Properties of FT fibreMat with ID " << fibremat->FibreMatID() << ":" << endmsg;
+          *m_msg << MSG::DEBUG << "\tIn layer  " << fibremat->layer()  <<  endmsg;
+          *m_msg << MSG::DEBUG << "\tIn module " << fibremat->module() <<  endmsg;
+          *m_msg << MSG::DEBUG << "\tIs bottom " << fibremat->isBottom() <<  endmsg;
+          *m_msg << MSG::DEBUG<< "\tGeometrical borders of fibremat: " << endmsg;
+          *m_msg << MSG::DEBUG<< format("\txMin/xMax = %.1f / %.1f      yMin/yMax = %.1f / %.1f      zMin/zMax = %.1f / %.1f mm",
+                                        fibremat->fibreMatMinX(), fibremat->fibreMatMaxX(),
+                                        fibremat->fibreMatMinY(), fibremat->fibreMatMaxY(),
+                                        fibremat->fibreMatMinZ(), fibremat->fibreMatMaxZ())<< endmsg;
+          *m_msg << MSG::DEBUG<< "\tGeometrical borders of corresponding layer: " << endmsg;
+          *m_msg << MSG::DEBUG<< format("\txMin/xMax = %.1f / %.1f      yMin/yMax = %.1f / %.1f      zMin/zMax = %.1f / %.1f mm",
+                                        fibremat->layerMinX(), fibremat->layerMaxX(),
+                                        fibremat->layerMinY(), fibremat->layerMaxY(),
+                                        fibremat->layerMinZ(), fibremat->layerMaxZ())<< endmsg;
+          *m_msg << MSG::DEBUG<< "\tBeam pipe radius: " << format("%7.1f mm", fibremat->layerInnerHoleRadius())<< endmsg;
+          *m_msg << MSG::DEBUG<< "\tStereo angle: " << format("%.1f degrees", fibremat->angle()/Gaudi::Units::degree)<< endmsg;
+          *m_msg << MSG::DEBUG<< "\tSlope dzDy: " << format("%.5f rad", fibremat->slopeDzDy())<< endmsg;
+          *m_msg << MSG::DEBUG<< endmsg;
+          
+        }
       } 
     } 
   }
@@ -272,7 +272,7 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
   unsigned int layer    = id.layer();
   unsigned int module = id.module();
   unsigned int mat = id.mat();
-
+  
   unsigned int fibreMatID = mat+100*module+10000*layer;
   for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
     if ( fibreMatID == (*iL)->FibreMatID() ) return *iL;

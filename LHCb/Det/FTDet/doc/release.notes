@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
  
+! 2014-05-16 - Michel De Cian
+ - Fix unprotected 'debug()' in all DeFT* Classes, precompute cosine of angle in DeFTFibreMat
+
 ! 2014-05-16 - Luigi Del Buono
  - correct an unprotected zero division in createLightSharingChannels()
 

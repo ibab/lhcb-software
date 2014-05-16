@@ -41,7 +41,7 @@ StatusCode DeFTStation::initialize(){
   if ( sc.isFailure() ) return sc;
   
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Initialize DeFTStation" << endmsg;
+  if(msg.level() <= MSG::DEBUG) msg << MSG::DEBUG << "==> Initialize DeFTStation" << endmsg;
 
   return StatusCode::SUCCESS;
 }
