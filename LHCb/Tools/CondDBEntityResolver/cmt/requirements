@@ -29,7 +29,7 @@ apply_pattern    component_library library=CondDBEntityResolver
 # Python binary module to acces the compression-decompression functions
 # -----------------------------------------------------------------------------
 use Python * LCG_Interfaces -no_auto_imports
-apply_pattern pyd_boost_module module=CondDBCompression files="component/CondDBCompression.cpp python/module.cpp"
+apply_pattern pyd_boost_module module=CondDBCompression files="python/CondDBCompression_pymod.cpp python/module.cpp"
 #------------------------------------------------------------------------------
 
 apply_pattern QMTest

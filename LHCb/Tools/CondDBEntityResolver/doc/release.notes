@@ -5,6 +5,10 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+! 2014-05-16 - Marco Clemencic
+ - Fixed a concurrency issue in the build (CMT cannot compile the same source
+   twice for different targets/libraries).
+
 !========================= CondDBEntityResolver v5r7 2014-02-17 ==================
 ! 2014-01-20 - Marco Clemencic
  - Fixed compilation warning.
