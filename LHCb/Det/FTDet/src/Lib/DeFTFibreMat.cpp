@@ -655,11 +655,20 @@ VectFTPairs DeFTFibreMat::createLightSharingChannels(VectFTPairs& inputVectPairs
   for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
     sumPathWeights += (1 - 2.*std::abs(itPair->second));
   }
+  
   std::vector<double> vectPathWeights;
-  for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
-    vectPathWeights.push_back( (1 - 2.*std::abs(itPair->second)) / sumPathWeights );
+  if(std::abs(sumPathWeights)>1.e-6) {
+    for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
+      vectPathWeights.push_back( (1 - 2.*std::abs(itPair->second)) / sumPathWeights );
+    }
+  }
+  else {
+    for (itPair = inputVectPairs.begin(); itPair != inputVectPairs.end(); ++itPair) {
+      vectPathWeights.push_back( 0.);
+    }
   }
   debug() << "Path weights: " << vectPathWeights << endmsg;
+
 
   std::vector<LHCb::FTChannelID> vectChannels;
   // append the channel before the first one with a direct deposit from the MC particle

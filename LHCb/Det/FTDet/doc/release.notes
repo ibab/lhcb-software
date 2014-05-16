@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
  
+! 2014-05-16 - Luigi Del Buono
+ - correct an unprotected zero division in createLightSharingChannels()
+
 ! 2014-05-15 - Luigi Del Buono
  - Fix inaccuracy in fractional position computation for cellID 0 and 130 in CellIDCoordinates()
 
