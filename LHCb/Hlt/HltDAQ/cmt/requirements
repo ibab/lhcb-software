@@ -62,7 +62,7 @@ apply_pattern    component_library library=HltDAQ
 #=====================================================================
 # unit test application building rule
 #=====================================================================
-application      utestTrackingCoder -import=Boost   ../src/utest/utestTrackingCoder.cpp ../src/HltTrackingCoder.cpp
+application      utestTrackingCoder -import=Boost   utest/utestTrackingCoder.cpp utest/HltTrackingCoder_utest.cpp
 macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem) -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"
 
 private

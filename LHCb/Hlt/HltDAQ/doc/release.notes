@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-05-16 - Marco Clemencic
+ - Fixed a concurrency issue in the build (CMT cannot compile the same source
+   twice for different targets/libraries).
+
 !========================= HltDAQ v4r3 2014-05-12 =========================
 ! 2014-05-05 - Gerhard Raven
  - HltSelReportsWriter: further optimize LHCbID overlap search.
