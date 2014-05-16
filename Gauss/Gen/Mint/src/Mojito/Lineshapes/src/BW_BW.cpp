@@ -24,6 +24,7 @@ bool compareToOldRooFit = DoAsLaurenDid;
 BW_BW::BW_BW( const AssociatedDecayTree& decay
 	      , IDalitzEventAccess* events)
   : DalitzEventAccess(events)
+  , _normBF("NormBF", 0)
   , _prSq(-9999.0)
   , _prSqForGofM(-9999.0)
   , _pABSq(-9999.0)
@@ -70,6 +71,7 @@ BW_BW::BW_BW(const BW_BW& other)
   , IDalitzEventAccess()
   , ILineshape()
   , DalitzEventAccess(other)
+  , _normBF(other._normBF)
   , _prSq(other._prSq)
   , _prSqForGofM(other._prSqForGofM)
   , _pABSq(other._pABSq)
@@ -1020,8 +1022,13 @@ std::complex<double> BW_BW::getVal(){
 
   resetInternals();
 
-  if( nonResonant() )
-    return Fr_PDG_BL();
+  if( nonResonant() ){
+    if( _normBF != 0 )
+      //Normalised barrier factors do not conserve total angular mopmentum x-(
+      return Fr();
+    else
+      return Fr_PDG_BL();
+  }
 
   if(startOfDecayChain()){
     // in principle there is no need to distinguish the start
@@ -1041,8 +1048,13 @@ std::complex<double> BW_BW::getVal(){
       }
       return 1;
     }
-    //double returnVal = Fr(); //Old version uses unnormalised Barrier Factors
-    const double returnVal = Fr_PDG_BL();
+    double returnVal;
+    if( _normBF != 0 )
+      //Normalised barrier factors do not conserve total angular mopmentum x-(
+      returnVal = Fr();
+    else
+      returnVal = Fr_PDG_BL();
+
     if(dbThis && (returnVal > 2 || returnVal < 0.5)){
       cout << " BW_BW for " 
 	   << _theDecay.oneLiner() << endl; // dbg

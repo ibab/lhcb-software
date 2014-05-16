@@ -7,6 +7,12 @@
 !-----------------------------------------------------------------------------
 
 2014-05-16 - Jeremy
+ - restore ability to use normalised barrier factors in amplitudes
+  . Control in steering file by setting "NormBF" to 1
+  . Default behaviour is to use unnormalised barrier factors
+  . Note that normalised barrier factors violate conservation of total angular momentum x-(
+
+2014-05-16 - Jeremy
  - root 5.34.18 compatibility updates
 
 2014-03-04 - Claire

@@ -12,6 +12,8 @@
 #include "Mint/AssociatedDecayTree.h"
 #include "Mint/DalitzEventAccess.h"
 #include "Mint/IDalitzEventAccess.h"
+#include "Mint/NamedParameter.h"
+
 //#include "fitSetup.h"
 
 #include "Mint/DalitzCoordinate.h"
@@ -30,6 +32,8 @@ class ParticleProperties;
 // Can only do 2 body decays for now... (it's the BW penetration factors)
 class BW_BW : public DalitzEventAccess, virtual public ILineshape{
  private:
+  MINT::NamedParameter<int> _normBF;
+
   mutable double _prSq, _prSqForGofM, _pABSq, _mumsPDGMass, _mumsWidth, 
     _mumsRecoMass2, _mumsRecoMass, _Fr_BELLE, _Fr_PDG_BL, _GofM;
   mutable int _mumsPID;
@@ -131,6 +135,7 @@ class BW_BW : public DalitzEventAccess, virtual public ILineshape{
      Unnormalised Blatt-Weisskopf Barrier Factors
   */
   virtual double Fr_PDG_BL();
+
   virtual double Fr_BELLE(double prSquared);
   virtual double Fr_BELLE_Max();
 
