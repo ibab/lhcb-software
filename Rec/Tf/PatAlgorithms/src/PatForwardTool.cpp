@@ -123,7 +123,7 @@ template <typename Iterator> RangeFinder<Iterator>
 make_RangeFinder( int nPlanes, Iterator&& last) 
 {
     return { nPlanes, std::forward<Iterator>(last) };
-};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
