@@ -512,26 +512,28 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                   PatFwdHits::iterator itEnd,
                                   bool onlyXPlanes  ) const {
 
+  //= Fit the straight line, forcing the magnet centre. Use only position and slope.
+
   bool isDebug = msgLevel( MSG::DEBUG );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
+  auto dz = m_zMagnet - m_zReference;
+  auto make_curve = [=](const PatFwdTrackCandidate& trk) -> Curve { 
+      return { dz, distAtMagnetCenter( trk ), 1./errCenter }; 
+  };
+  auto accept = [=](const PatFwdHit* hit) {
+      if ( !hit->isSelected() ) return false;
+      if ( onlyXPlanes && !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) return false;
+      return true;
+  };
+
   for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
-    //= Fit the straight line, forcing the magnet centre. Use only position and slope.
-    double dz   = m_zMagnet - m_zReference;
-    double dist = distAtMagnetCenter( track );
-    double w    = 1./errCenter;
+    auto curve = make_curve(track);
+    std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
+      if (accept(hit)) curve.addPoint( hit->z() - m_zReference, 
+                                       distanceForFit( track, hit ),
+                                       hit->hit()->weight() );
 
-    Curve  curve( dz, dist, w);
-
-    for (auto itH = itBeg; itEnd != itH ; ++itH ) {
-      PatFwdHit* hit = *itH;
-      if ( !hit->isSelected() ) continue;
-      if ( onlyXPlanes && !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) continue;
-      double dist2 = distanceForFit( track, hit );
-      dz    = hit->z() - m_zReference ;
-      w     = hit->hit()->weight();
-      curve.addPoint( dz, dist2, w );
-    }
-
+    } );
     if (!curve.solve()) return false;
     double dax = curve.ax();
     double dbx = curve.bx();
@@ -654,10 +656,8 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
     PatFwdHit* prevHit = temp.front();
 
     for ( PatFwdHit *hit : temp ) {
-      hit->setRlAmb( -1 );
-      double distM = distanceHitToTrack( track, hit );
-      hit->setRlAmb( +1 );
-      double distP = distanceHitToTrack( track, hit );
+      hit->setRlAmb( -1 ); double distM = distanceHitToTrack( track, hit );
+      hit->setRlAmb( +1 ); double distP = distanceHitToTrack( track, hit );
       hit->setRlAmb( 0 );
 
       double minDist = 0.3;
@@ -691,11 +691,9 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 void PatFwdTool::updateHitsForTrack ( const PatFwdTrackCandidate& track,
                                       PatFwdHits::iterator itBeg,
                                       PatFwdHits::iterator itEnd ) const {
-  for ( PatFwdHits::iterator it = itBeg; itEnd != it; ++it ) {
-    double dz =  (*it)->z() - m_zReference;
-    double sly = track.ySlope( dz );
-    double y0  = track.y( dz ) - (*it)->z() * sly; // m_y[0]+m_zRef*m_y[1]
-    updateHitForTrack( *it, y0, sly);
-  }
+  auto z0=m_zReference; 
+  auto y0=track.y(-z0);
+  std::for_each( itBeg, itEnd , [y0,z0,&track](PatForwardHit *hit) {
+    updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
+  } );
 }
-

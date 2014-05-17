@@ -233,16 +233,16 @@ void PatForwardTool::forwardTrack( const LHCb::Track* tr, LHCb::Tracks* output )
 
 StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                                             std::vector<LHCb::Track*>& output ){
-  bool isDebug = msgLevel( MSG::DEBUG );
 
   if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
   if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
   if ( seed.checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // indicates this has already successfully been upgraded
 
-  PatFwdTrackCandidate track( &seed );
 
+  PatFwdTrackCandidate track( &seed );
   if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
 
+  bool isDebug = msgLevel( MSG::DEBUG );
   if ( isDebug ) {
     debug() << format( "**** Velo track %3d  x%8.2f  y%8.2f  tx%9.5f  ty%9.5f q/p = %8.6f",
                        seed.key(), track.xStraight( m_zAfterVelo ),
@@ -258,6 +258,15 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   std::vector<PatFwdTrackCandidate> xCandidates;
 
   int minOTX = int( 1.5 * m_minXPlanes );
+  auto accept = [=](const PatFwdTrackCandidate& temp) {
+      //== Check the chi2 with magnet center constraint.
+      //== Count how many weighted hits
+      //== reject if below threshold
+      return temp.chi2PerDoF() < m_maxChi2Track &&
+             ( !m_withoutBField || fabs(temp.slX()-temp.xSlope(0))<0.005) &&
+             ( nT(temp) >= minOTX || inCenter(temp) ) && 
+             passMomentum( temp, track.sinTrack() );
+  };
 
   for( auto& icand : m_candidates ) {
 
@@ -274,25 +283,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                 << endmsg;
         debugFwdHits( temp );
       }
-
-      //== Check the chi2 with magnet center constraint.
-      if ( m_maxChi2Track > temp.chi2PerDoF()  &&
-           (!m_withoutBField || fabs(temp.slX()-temp.xSlope(0))<0.005)){
-        //== Count how many weighted hits
-        int nbHit = nT( temp ) ; 
-
-        if ( minOTX <= nbHit || inCenter(temp) ) {
-          
-          //== reject if below threshold
-          if (passMomentum( temp, track.sinTrack() )) xCandidates.push_back( temp );
-
-          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-            debug() << "+++ Store candidate " << xCandidates.size()-1 << endmsg;
-        } else {
-          if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-            debug() << " --- not enough hits " << nbHit << endmsg;
-        }
-      }
+      if ( accept(temp) ) xCandidates.push_back( std::move(temp) );
 
       //== tag these coordinates in the original, so that we don't find the same track again
       for ( auto* hit :  icand ) {
