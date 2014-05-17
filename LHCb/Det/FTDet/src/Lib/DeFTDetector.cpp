@@ -274,8 +274,24 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
   unsigned int mat = id.mat();
   
   unsigned int fibreMatID = mat+100*module+10000*layer;
-  for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
-    if ( fibreMatID == (*iL)->FibreMatID() ) return *iL;
+
+  /// Find the fibreMat using a binary search
+  FibreMats::const_iterator itL = std::lower_bound(m_fibremats.begin(),
+                                                   m_fibremats.end(), fibreMatID,
+                                                   [](const DeFTFibreMat* mat, const unsigned int val){
+                                                     return mat->FibreMatID() < val ;
+                                                   });
+  
+  /// If the fibreMat was found,return the pointer to it, otherwise return a NULLptr
+  if (itL != m_fibremats.end() && (fibreMatID == (*itL)->FibreMatID() )){
+    return *itL;
+  }else{
+    return nullptr;
   }
-  return NULL;
+  
+  //for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
+  //  if ( fibreMatID == (*iL)->FibreMatID() ) return *iL;
+  //}
+  //return NULL;
+
 }
