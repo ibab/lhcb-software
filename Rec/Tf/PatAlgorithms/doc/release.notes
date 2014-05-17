@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-17 - Gerhard Raven
+ - PatForwardTool: 
+    o use lambdas to hoist invariants out of loops
+
 ! 2014-05-15 - Gerhard Raven
  - PatForwardTool: 
     o combine find_range and make_single_zone into a single call to a mem_fn 

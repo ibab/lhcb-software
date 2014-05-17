@@ -55,8 +55,6 @@ struct MaxSpread {
             return last->projection() < first->projection() + spread;
     }
 };
-
-
  
 //== Count how many weighted hits
 
@@ -75,21 +73,20 @@ int nbDifferent( const PatFwdTrackCandidate &c) {
     return nbDifferent( std::begin(c), std::end(c) );
 }
 
-
 template <typename Iter>
 class RangeFinder {
     Iter m_last;
     int m_minPlanes;
+    Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
 public:
-    RangeFinder( int minPlane, Iter last ) :  m_last{last}, m_minPlanes(minPlane) { }
-    template <typename Iterator> Iterator next(Iterator current) const { return std::next( current, m_minPlanes-1 ); }
-    template <typename Iterator> bool operator()(Iterator first, Iterator last) const { return std::distance(first,last) > m_minPlanes-1; }
-    template <typename Iterator> bool operator()(Iterator first ) const { return std::distance(first,m_last) > m_minPlanes-1; }
+    RangeFinder( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
+    template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
+    template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
     template <typename  Iterator,typename Predicate> 
     std::pair<Iterator,Iterator> next_range(Iterator first, Predicate predicate) 
     {
-        auto mid = next(first);
+        auto mid = this->next(first);
         using reference = typename std::iterator_traits<Iterator>::reference;
         //== If not enough hits in the maximum spread, skip
         if ( !predicate(*first,*mid)  ) {
@@ -127,11 +124,6 @@ make_RangeFinder( int nPlanes, Iterator&& last)
 {
     return { nPlanes, std::forward<Iterator>(last) };
 };
-
-
-
-
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -531,7 +523,8 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //=========================================================================
 
 void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, 
-                                 double kickRange, double maxRangeRef, double zMagnet ,float dir) {
+                                 double kickRange, double maxRange, double zMagnet ,float dir) {
+
   double xExtrapRef = track.xStraight( m_fwdTool->zReference() );
   
   double xMin = 0;
@@ -540,14 +533,14 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
   if(m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField){
     if(dir > 0){
       xMin = xExtrapRef - kickRange;
-      xMax = xExtrapRef + maxRangeRef;
+      xMax = xExtrapRef + maxRange;
     } else{
-      xMin = xExtrapRef - maxRangeRef;
+      xMin = xExtrapRef - maxRange;
       xMax = xExtrapRef + kickRange;
     }
   } else{
-    xMin = xExtrapRef - maxRangeRef;
-    xMax = xExtrapRef + maxRangeRef;
+    xMin = xExtrapRef - maxRange;
+    xMax = xExtrapRef + maxRange;
   }
   
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ){ 
@@ -555,48 +548,48 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
     debug()<< "xMin: " << xMin <<endmsg;
   }
   
+
+
+  //TODO: use C++14 generalized capture...
+  double deltaXScale  = maxRange  / ( m_fwdTool->zReference() - zMagnet );
+  double deltaXOffset = deltaXScale*zMagnet;
+  auto deltaX = [=] (double z) { return deltaXScale*z-deltaXOffset; };
+
+  double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
+  double ty = track.slY();
+  double y0 = track.yStraight( 0. );
+
+  auto update = [=](PatForwardHit* hit, double yRegion) { 
+    if (hit->hit()->ignore()) return false;;
+    updateHitForTrack( hit, y0, ty);
+    if ( !hit->hit()->isYCompatible( yRegion, yCompat ) ) return false;
+    hit->setIgnored( false );
+    hit->setRlAmb( 0 );
+    auto ok = this->driftOK(*hit);
+    hit->setSelected(ok);
+    return ok;
+  };
+
   for (unsigned int sta = 0; sta < nSta; sta ++){
     for (unsigned int lay = 0; lay< nLay; lay++){
       if (lay == 1 || lay == 2) continue;  // X layers
       for (unsigned int region = 0; region <nReg; region ++){
         const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
+        auto z = regionB->z();
+        double yRegion = track.yStraight( z );
+        if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
-        double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
-        double yRegion = track.yStraight( regionB->z() );
-        
-        double xExtrapStation  = track.xStraight( regionB->z() );
-        const double deltaX = maxRangeRef * ( regionB->z() - zMagnet ) / ( m_fwdTool->zReference() - zMagnet );
-        double xHitMin = xExtrapStation - deltaX;
-        xHitMin        = xHitMin - fabs( yRegion * regionB->sinT() ) - 20.;
-        double ty = track.slY();
-        double y0 = track.yStraight( 0. );
-
-        if ( yRegion+yCompat < regionB->ymin() ||
-             yRegion-yCompat > regionB->ymax() ) {
-          continue;
-        }
+        double xHitMin = track.xStraight( z ) - deltaX( z );
+        xHitMin       -= fabs( yRegion * regionB->sinT() ) + 20.;
 
         for ( PatFwdHit *hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region)) {
-          if (hit->hit()->ignore()) continue;
-
-          updateHitForTrack( hit, y0, ty);
-
-          if ( !hit->hit()->isYCompatible( yRegion, yCompat ) ) continue;
-
-          hit->setIgnored( false );
-          hit->setRlAmb( 0 );
-          
-          if (!driftOK( *hit ) ) {
-              hit->setSelected( false );
-              continue;
-          }
-          hit->setSelected( true );
+          if (!update(hit,yRegion)) continue;
 
           double xRef = m_fwdTool->xAtReferencePlane( track, hit );
           hit->setProjection( xRef );
 
-          if ( xMax < xRef ) break;
-          if ( xMin <= xRef ) m_xHitsAtReference.push_back( hit );
+          if ( xRef > xMax ) break;
+          if ( xRef >= xMin ) m_xHitsAtReference.push_back( hit );
         }
       }
     }
@@ -615,47 +608,46 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   PatFwdHits temp; // no need actually for PatFwdHits -- a container with objects which have 'projection', 'planeCode','selected' (and pointer to hit) suffices
 
-  for (unsigned int sta=0; sta<nSta; sta++) {
-    for (unsigned int lay=1; lay<nLay-1; lay++) {
-      for (unsigned int region=0; region<nReg; region++) {
+  //== get position and slope at z=0 from track at zReference (0 for y/ySlope functions)
+  double ty = track.ySlope( 0. );
+  double y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
+
+  auto update = [=](PatFwdHit* hit, double yRegion) {
+    if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) return false;;
+    updateHitForTrack( hit, y0, ty );
+    hit->setIgnored( false );
+    auto ok = this->driftOK(*hit);
+    hit->setSelected( ok );
+    return ok;
+  };
+
+  for (unsigned int sta=0; sta<nSta; ++sta) {
+    for (unsigned int lay=1; lay<nLay-1; ++lay) {
+      for (unsigned int region=0; region<nReg; ++region) {
 
         const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
         double dz = regionB->z() - m_fwdTool->zReference();
         double yRegion = track.y( dz );
-
-        double tolY = m_yCompatibleTol;
-        if (yRegion+tolY < regionB->ymin() ||
-            yRegion-tolY > regionB->ymax() ) continue;
+        if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
 
         double xPred   = track.x( dz );
-
         //== Correct for stereo
         double xHitMin = xPred - fabs( yRegion * regionB->sinT() ) - 40. - tol;
 
-        //== get position and slope at z=0 from track at zReference (0 for y/ySlope functions)
-        double ty = track.ySlope( 0. );
-        double y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
-
         //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
         //== displacement also in this projectio.
-        bool  flipSign = ( regionB->sinT()  < 0 );
+        bool  flipSign = std::signbit( regionB->sinT() );
         double minProj = tol;
         if ( region< nOTReg ) minProj += 1.5;
 
         for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
-    	  if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, tolY ) ) continue;
+          if (!update(hit,yRegion)) continue;
 
-          updateHitForTrack( hit, y0, ty );
-
-          hit->setIgnored( false );
-          hit->setSelected( driftOK(*hit) );
-          if (!hit->isSelected()) continue;
-
-          double xRef = ( hit->x() - xPred ) ;
+          double xRef = ( hit->x() - xPred );
           hit->setProjection( flipSign ? -xRef : xRef );
 
-          if (  minProj <  xRef ) break;
-          if ( -minProj <= xRef ) temp.push_back( hit );
+          if (  xRef > minProj ) break;
+          if (  xRef >= -minProj ) temp.push_back( hit );
         }
       }
     }
@@ -664,7 +656,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   //== Sort by projection
   std::sort( std::begin(temp), std::end( temp), Tf::increasingByProjection<PatForwardHit>() );
 
-  int minYPlanes = 4;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << "List size = " << temp.size() << endmsg;
@@ -685,12 +676,14 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   auto bestList = std::make_pair(temp.end(),temp.end());;
   int inbDifferent = 0;
   double size = 1000.;
+  int minYPlanes = 4;
 
   auto itP = std::begin(temp);
   auto sentinel = make_RangeFinder(minYPlanes, std::end(temp));
-  while ( sentinel( itP ) ) {
+  auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { this->allowedStereoSpread(hit) }; };
 
-    auto range = sentinel.next_range( itP, MaxSpread{ allowedStereoSpread(*itP) } );
+  while ( sentinel( itP ) ) {
+    auto range = sentinel.next_range( itP, make_predicate(*itP) ); 
     if ( range.first != range.second ) {
 
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
@@ -777,11 +770,11 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
   const double zMagnet =  m_fwdTool->zMagnet( track );
   const double dSlope =  m_magnetKickParams[0] / ( minMom - m_magnetKickParams[1] ) ;
   double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
-
   double kick = 0.0;
   float dir =  1.0;
   double pt = track.track()->pt();
   double dSlope_kick = 0;
+
   //== based on momentum a wrong-charge sign window size is defined
   if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
     double q = track.qOverP() > 0 ? 1. : -1.;
@@ -793,24 +786,23 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
       dSlope_kick =m_magnetKickParams[0] / (minWrongSignedMom - m_magnetKickParams[1] ) ;
       kick = dSlope_kick*( m_fwdTool->zReference() - zMagnet);
     }
-    if( UNLIKELY( isDebug ) ) 
+    if ( UNLIKELY( isDebug ) ) {
       debug() << "   xExtrap = " << xExtrap
               << " q/p " << track.qOverP()
               << " predict " << xExtrap + kick << endmsg;
+    }
   }
-
   if( UNLIKELY( isDebug ) ) 
     debug() << "Search X coordinates, xMin " << xExtrap - maxRange
             << " xMax " << xExtrap + maxRange << endmsg;
   
   fillXList( track, kick, maxRange, zMagnet ,dir);
   
-  PatForwardHit *lastEnd = nullptr;
   auto itP = std::begin(m_xHitsAtReference);
-  auto  sentinel = make_RangeFinder( m_minXPlanes, std::end(m_xHitsAtReference) );
+  auto sentinel = make_RangeFinder( m_minXPlanes, std::end(m_xHitsAtReference) );
+  auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
   while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
-    MaxSpread predicate{ allowedXSpread(*itP,xExtrap) } ;
-
+    auto  predicate = make_predicate(*itP) ;
     auto range = sentinel.next_range( itP, predicate);
     if (range.first != range.second) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
@@ -822,13 +814,12 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
         }
         //== Protect against too dirty area.
         if ( std::distance(range.first,range.second ) <  m_maxXCandidateSize ) { 
-          //== Try to merge the lists, if the first new point is close to the last one...
-          if (lastEnd && predicate(lastEnd, *range.first) ) {
-            m_candidates.back().addCoords( range.first,range.second );
+          //== Merge the lists, if the first new point is close to the last one...
+          if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), *range.first) ) {
+            m_candidates.back().addCoords( range.first, range.second );
           } else {
-            m_candidates.emplace_back( track.track(), range.first,range.second );
+            m_candidates.emplace_back( track.track(), range.first, range.second );
           }
-          lastEnd = *std::prev(range.second);
         }
     } else if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
         verbose() << "   Not enough x planes : " << endmsg;
