@@ -55,11 +55,60 @@ public:
   bool nnSwitch()       const       { return m_nnSwitch;}
 
 private:
-
   void buildXCandidatesList( PatFwdTrackCandidate& track );
 
-  void fillXList ( PatFwdTrackCandidate& track, 
-                   double kick, double maxRangeRef, double zMagnet ,float dir);
+  class XInterval {
+      double m_xscale,m_offset,m_xmin,m_xmax;
+  public:
+      XInterval(double xScale, double xOffset, double xMin, double xMax) 
+          : m_xscale{xScale}, m_offset{xOffset}, m_xmin{xMin}, m_xmax{xMax} {}
+      double xKick(double z) const { return m_xscale*z-m_offset; }
+      double xMin() const { return m_xmin; }
+      double xMax() const { return m_xmax; }
+  };
+
+  XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
+      double xExtrap = track.xStraight( m_fwdTool->zReference() );
+      //== calculate if minPt or minMomentum sets the window size
+      double minMom = m_minPt / track.sinTrack();
+      //== calculate center of magnet from Velo track
+      const double zMagnet =  m_fwdTool->zMagnet( track );
+      const double dSlope =  m_magnetKickParams[0] / ( minMom - m_magnetKickParams[1] ) ;
+      double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
+      double xMin = xExtrap - maxRange;
+      double xMax = xExtrap + maxRange;
+      
+      //== based on momentum a wrong-charge sign window size is defined
+      if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
+        double kickRange = 0.0;
+
+        if(m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT){
+          double minWrongSignedMom = m_WrongSignPT / track.sinTrack();
+          double dSlope_kick = m_magnetKickParams[0] / (minWrongSignedMom - m_magnetKickParams[1] ) ;
+          kickRange = dSlope_kick*( m_fwdTool->zReference() - zMagnet);
+        }
+        if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
+          debug() << "   xExtrap = " << xExtrap
+                  << " q/p " << track.qOverP()
+                  << " predict " << xExtrap + kickRange << endmsg;
+        }
+        bool dir = std::signbit( m_fwdTool->magscalefactor() );
+        if ( std::signbit( track.qOverP() ) )  dir = !dir;
+        if (dir) { // TODO: replace by check for (in)equality between the signbits
+          xMin = xExtrap - kickRange;
+        } else{
+          xMax = xExtrap + kickRange;
+        }
+      }
+      
+      // compute parameters of deltaX as a function of z
+      double deltaXScale  = maxRange  / ( m_fwdTool->zReference() - zMagnet );
+      double deltaXOffset = deltaXScale*zMagnet;
+      return { deltaXScale, deltaXOffset, xMin, xMax };
+  };
+
+
+  void fillXList( PatFwdTrackCandidate& track );
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol );
 

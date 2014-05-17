@@ -513,39 +513,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
 
-void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, 
-                                 double kickRange, double maxRange, double zMagnet ,float dir) {
-
-  double xExtrapRef = track.xStraight( m_fwdTool->zReference() );
-  
-  double xMin = 0;
-  double xMax = 0;
-  
-  if(m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField){
-    if(dir > 0){
-      xMin = xExtrapRef - kickRange;
-      xMax = xExtrapRef + maxRange;
-    } else{
-      xMin = xExtrapRef - maxRange;
-      xMax = xExtrapRef + kickRange;
-    }
-  } else{
-    xMin = xExtrapRef - maxRange;
-    xMax = xExtrapRef + maxRange;
+void PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
+{
+  auto interval = make_XInterval(track);
+  if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
+    debug() << "Search X coordinates, xMin " << interval.xMin()
+            << " xMax " << interval.xMax() << endmsg;
   }
-  
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ){ 
-    debug()<< "xMax: " << xMax <<endmsg;
-    debug()<< "xMin: " << xMin <<endmsg;
-  }
-  
-
-
   //TODO: use C++14 generalized capture...
-  double deltaXScale  = maxRange  / ( m_fwdTool->zReference() - zMagnet );
-  double deltaXOffset = deltaXScale*zMagnet;
-  auto deltaX = [=] (double z) { return deltaXScale*z-deltaXOffset; };
-
   double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
   double ty = track.slY();
   double y0 = track.yStraight( 0. );
@@ -570,7 +545,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
         double yRegion = track.yStraight( z );
         if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
-        double xHitMin = track.xStraight( z ) - deltaX( z );
+        double xHitMin = track.xStraight( z ) - interval.xKick( z );
         xHitMin       -= fabs( yRegion * regionB->sinT() ) + 20.;
 
         for ( PatFwdHit *hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region)) {
@@ -579,8 +554,8 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track,
           double xRef = m_fwdTool->xAtReferencePlane( track, hit );
           hit->setProjection( xRef );
 
-          if ( xRef > xMax ) break;
-          if ( xRef >= xMin ) m_xHitsAtReference.push_back( hit );
+          if ( xRef >  interval.xMax() ) break;
+          if ( xRef >= interval.xMin() ) m_xHitsAtReference.push_back( hit );
         }
       }
     }
@@ -695,9 +670,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
             //break; /// Keep first one !
           }
         }
-    } else if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-        verbose() << "   not enough planes in spread" << endmsg;
-    }
+    } 
     itP = range.second;
   }
 
@@ -735,10 +708,9 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
                    hit->hasNext(),
                    hit->driftDistance() );
     if ( track.fitted() ) msg << format( " chi2%7.2f", m_fwdTool->chi2Hit( track, hit) );
-    /* for ( std::vector<int>::const_iterator itM = hit->MCKeys().begin();
-       hit->MCKeys().end() != itM; ++itM ) {
-       msg << " " << *itM;
-       if ( (*itM) == m_MCKey ) msg << " <=*** ";
+    /* for ( const auto& tM : hit->MCKeys() ) {
+       msg << " " << tM;
+       if ( tM == m_MCKey ) msg << " <=*** ";
        }
     */
     msg << endmsg;
@@ -750,44 +722,12 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
-  bool isDebug = msgLevel( MSG::DEBUG );
   m_candidates.clear();
+
   m_xHitsAtReference.clear();
+  fillXList( track ) ;
 
-  double xExtrap  = track.xStraight( m_fwdTool->zReference() );
-  //== calculate if minPt or minMomentum sets the window size
-  double minMom = m_minPt / track.sinTrack();
-  //== calculate center of magnet from Velo track
-  const double zMagnet =  m_fwdTool->zMagnet( track );
-  const double dSlope =  m_magnetKickParams[0] / ( minMom - m_magnetKickParams[1] ) ;
-  double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
-  double kick = 0.0;
-  float dir =  1.0;
-  double pt = track.track()->pt();
-  double dSlope_kick = 0;
-
-  //== based on momentum a wrong-charge sign window size is defined
-  if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
-    double q = track.qOverP() > 0 ? 1. : -1.;
-
-    double magscalefactor = m_fwdTool->magscalefactor() ;
-    dir = -q*magscalefactor;
-    if(m_UseWrongSignWindow && pt>m_WrongSignPT){
-      double minWrongSignedMom = m_WrongSignPT / track.sinTrack();
-      dSlope_kick =m_magnetKickParams[0] / (minWrongSignedMom - m_magnetKickParams[1] ) ;
-      kick = dSlope_kick*( m_fwdTool->zReference() - zMagnet);
-    }
-    if ( UNLIKELY( isDebug ) ) {
-      debug() << "   xExtrap = " << xExtrap
-              << " q/p " << track.qOverP()
-              << " predict " << xExtrap + kick << endmsg;
-    }
-  }
-  if( UNLIKELY( isDebug ) ) 
-    debug() << "Search X coordinates, xMin " << xExtrap - maxRange
-            << " xMax " << xExtrap + maxRange << endmsg;
-  
-  fillXList( track, kick, maxRange, zMagnet ,dir);
+  double xExtrap = track.xStraight( m_fwdTool->zReference() );
   
   auto itP = std::begin(m_xHitsAtReference);
   auto sentinel = make_RangeFinder( m_minXPlanes, std::end(m_xHitsAtReference) );
@@ -812,9 +752,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
             m_candidates.emplace_back( track.track(), range.first, range.second );
           }
         }
-    } else if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
-        verbose() << "   Not enough x planes : " << endmsg;
-    }
+    } 
     itP = range.second;
   }
 }

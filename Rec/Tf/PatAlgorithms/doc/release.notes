@@ -7,6 +7,7 @@
 ! 2014-05-17 - Gerhard Raven
  - PatForwardTool: 
     o use lambdas to hoist invariants out of loops
+    o consolidate x searchwindow determination in single function
 
 ! 2014-05-15 - Gerhard Raven
  - PatForwardTool: 
