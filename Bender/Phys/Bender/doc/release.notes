@@ -24,6 +24,15 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-05-18 - Vanya Belyaev
+ - rename BENDERDATAPREFIX to BENDERDATAPATH 
+
+
+! 2014-05-17 - Vanya Belyaev
+ - DataUtils.py
+   add possibility to prepend the file names 
+   with the content of BENDERDATAPREFIX environment variable  
+
 ! ==================== Phys/Bender v23r4   2014-04-26 =========================
 
 

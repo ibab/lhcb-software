@@ -258,6 +258,34 @@ def inGrid ( filename , grid ) :
     return urls [ 0 ] 
 
 # =============================================================================
+##  check the existence of the file with given name
+#   optionally check the prefixes 
+def fileExists ( filename ) :
+    """
+    Check the existence of the file with given name
+    optionally check the prefixes using BENDERDATAPATH
+    environment variable 
+    """
+    import os
+    if os.path.exists ( filename ) and os.path.isfile ( filename ) :
+        return filename
+    ## 
+    prfx = os.getenv('BENDERDATAPATH')
+    if not prfx : return None 
+    #
+    prfx = prfx.split( os.pathsep )
+    for p in prfx :
+        #
+        if not p or not filename : continue
+        elif '/' == p[-1] and '/' == filename[0] : name = p[0:-1] + filename
+        elif '/' != p[-1] and '/' != filename[0] : name = p + '/' + filename
+        else                                     : name = p       + filename
+        #
+        if os.path.exists ( name ) and os.path.isfile ( name ) : return name
+
+    return None
+    
+# =============================================================================
 ## Helper function to 'extend' the short file name
 #
 #  @thanks Philippe Charpentier for extremly clear explanation of
@@ -309,7 +337,8 @@ def extendfile1 ( filename , castor = False , grid = None ) :
     elif 0 == filename.find ( '//castor'    ) :
         return extendfile1 ( filename[1:] , castor ) ## RECURSION!
 
-    elif os.path.exists ( filename )          : filename = 'PFN:' + filename
+    ## check existence of the file 
+    elif fileExists ( filename   ) : filename = 'PFN:' + fileExists ( filename )
     
     elif 0 == filename.find ( '/lhcb/data/'       ) or \
          0 == filename.find ( '/lhcb/LHCb/'       ) or \
@@ -324,9 +353,8 @@ def extendfile1 ( filename , castor = False , grid = None ) :
             res = inGrid ( filename , grid )
             if res :
                 filename = res
-                return filename                         ## RETURN 
-
-
+                return filename                         ## RETURN
+            
         #
         ## check the file in EOS
         #
