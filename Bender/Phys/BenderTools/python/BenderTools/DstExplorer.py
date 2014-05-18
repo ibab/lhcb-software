@@ -120,16 +120,18 @@ __date__    = "2010-09-10"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
+# =============================================================================
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+logger = getLogger( __name__ )
+# =============================================================================
 ## configure the application from parser data  
 def configure ( options , arguments ) :
     """
     Configure the application from parser data 
     """
     # 
-    ## logging
-    from Bender.Logger import getLogger 
-    logger = getLogger( __name__ )
-    #
     ## redefine output level for 'quiet'-mode
     if options.OutputLevel > 5 :
         options.OutputLevel = 5
@@ -152,7 +154,11 @@ def configure ( options , arguments ) :
     ## get the file type for the file extension
     #
     from BenderTools.Parser import dataType
-    files = arguments 
+    pyfiles = [ i for i in arguments if  len(i) == 3 + i.find('.py') ]
+    files   = [ i for i in arguments if  i not in pyfiles ]
+    if not files :
+        raise AttribiteError('No data files are specified!')
+    
     dtype, simu, ext = dataType ( files ) 
 
     if '2013' == dtype :
@@ -325,6 +331,8 @@ def configure ( options , arguments ) :
 
     if not options.Quiet : print daVinci
 
+    return pyfiles
+
 # =============================================================================
 if '__main__' == __name__ :
     
@@ -356,11 +364,10 @@ if '__main__' == __name__ :
     else :
         print __doc__
 
-    
     ## Files must be specfied are mandatory!
     if not arguments : parser.error ( 'No input files are specified' ) 
     
-    configure ( options , arguments ) 
+    pyfiles = configure ( options , arguments ) 
     
     if options.Simulation : from Bender.MainMC   import *
     else                  : from Bender.Main     import *
@@ -382,6 +389,17 @@ if '__main__' == __name__ :
     ## initialize and read the first event
     run ( 1 )
     
+    ## execute the py-files, defined as arguments
+    for a in pyfiles :
+        if not os.path.exists ( a ) :
+            logger.warning   ('No py-file is found "%s"' % a )
+        else : 
+            try :
+                logger.info  ('Try to execute      "%s"' % a )
+                execfile ( a )
+            except:
+                logger.error ('Unable to execute   "%s"' % a )
+
 # =============================================================================
 # The END 
 # =============================================================================

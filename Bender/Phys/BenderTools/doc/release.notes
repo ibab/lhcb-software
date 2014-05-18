@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-18 - Vanya Belyaev
+ - dst-explorer 
+   add possibility to execute some files
+   dst-epxlorer   a.py  b.py c.py 
+ 
 ! 2014-05-12 - Vanya Belyaev
  - new moduel FakeH.py with useful utility for substitution of pids 
    is uses context manager concept, therefore the correct pid is propertly 
