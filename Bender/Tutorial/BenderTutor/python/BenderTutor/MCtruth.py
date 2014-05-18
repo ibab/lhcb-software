@@ -65,7 +65,7 @@ from   Bender.MainMC import *
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 class MCtruth(AlgoMC):                        ## <--- Note the base class here
     """
-    Make combinatorics and composed particle creation in Bender 
+    Very simple manipulations with MC-truth events 
     """
     ## the main 'analysis' method 
     def analyse( self ) :   ## IMPORTANT! 
