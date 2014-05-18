@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id$ 
+# $Id:$ 
 # =============================================================================
-## @file MCtruth.py 
+## @file MCmatch.py 
 #
-#  Very simple manipulations with MC-truth events 
+#  Very simple manipulations with MC-truth matched events 
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -25,13 +25,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2006-10-12
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision:$
+#  Last modification $Date: 2010-09-13 13:24:04 $
+#                 by $Author: ibelyaev $
 # =============================================================================
 """
 
-Very simple manipulations with MC-truth events 
+Very simple manipulations with MC-truth matched events 
 
 This file is a part of BENDER project:
    ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -46,24 +46,24 @@ By usage of this code one clearly states the disagreement
 with the smear campaign of Dr.O.Callot et al.: 
     ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 
-                  $Revision$
-Last modification $Date$
-               by $Author$
+                  $Revision:$
+Last modification $Date: 2010-09-13 13:24:04 $
+               by $Author: ibelyaev $
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2006-10-12 " 
-__version__ = " Version $Revision$ "
+__version__ = " Version $Revision: 1.15 $ "
 # =============================================================================
 import ROOT 
 from   GaudiKernel.SystemOfUnits import GeV 
 ## import everything from bender 
 from   Bender.MainMC import * 
 # =============================================================================
-## @class MCtruth 
-#  Very simple manipulations with MC-truth events 
+## @class MCmatch 
+#  Very simple manipulations with MC-truth matched events 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-class MCtruth(AlgoMC):                        ## <--- Note the base class here
+class MCmatch(AlgoMC):                        ## <--- Note the base class here
     """
     Make combinatorics and composed particle creation in Bender 
     """
@@ -74,7 +74,7 @@ class MCtruth(AlgoMC):                        ## <--- Note the base class here
         """
 
         ## get "all" decays 
-        mybs = self.mcselect ( 'mybs' , '[ B_s0 ==> J/psi(1S) K+ K- pi+ pi-]CC' )
+        mybs = self.mcselect ( 'mybs' , '[ B_s0 ==> (J/psi(1S)=> mu+ mu-) K+ K- pi+ pi-]CC' )
 
         if mybs.empty() :
             self.Warning('No true Bs-decays are found!')
@@ -82,75 +82,75 @@ class MCtruth(AlgoMC):                        ## <--- Note the base class here
             print allb
             return SUCCESS
 
+        ## get psis from MC-decays 
+        mypsi = self.mcselect ( 'mypsi' , '[ B_s0 ==> ^(J/psi(1S)=>mu+ mu-)  K+ K- pi+ pi-]CC' )
+        ## get pions from MC-decays : note carets 
+        mypi  = self.mcselect ( 'mypi' , '[ B_s0 ==> (J/psi(1S)=>mu+ mu-)  K+ K- ^pi+ ^pi-]CC' )
+        ## get psis from MC-decays  : note carets 
+        myk   = self.mcselect ( 'myk'  , '[ B_s0 ==> (J/psi(1S)=>mu+ mu-) ^K+ ^K- pi+ pi-]CC' )
         
-        ## 1) get decays to K*K* 
-        mybs1 = self.mcselect ( 'mybs1' , '[B_s0       => J/psi(1S) K*(892)0 K*(892)~0 ]CC' )  
+        ## create mc-truth functors 
+        trueB   = MCTRUTH ( mybs  , self.mcTruth () ) ## IMPORTANT 
+        truePsi = MCTRUTH ( mypsi , self.mcTruth () ) ## IMPORTANT 
+        trueK   = MCTRUTH ( myk   , self.mcTruth () ) ## IMPORTANT 
+        truePi  = MCTRUTH ( mypi  , self.mcTruth () ) ## IMPORTANT 
 
-        ## 2) get decays to K* K pi
-        mybs2 = self.mcselect ( 'mybs2' , '[ [B_s0]cc  => J/psi(1S) K*(892)0 K- pi+    ]CC' )     
-
-        ## 3) get decays to J/psi phi rho 
-        mybs3 = self.mcselect ( 'mybs3' , '[B_s0  =>  J/psi(1S) ( phi(1020) => K+ K- ) rho(770)0 ]CC' )
+        ## jump to reco-world
+        reco_psi  = self.select( 'psi', 'J/psi(1S)' ==    ID )
+        if reco_psi.empty() : return SUCCESS
+        ## selct only MC-truth matched pions:
+        reco_pi   = self.select( 'pi' , ( 'pi+'     == ABSID ) & truePi ) ## NB!
+        if reco_pi .empty() : return SUCCESS
+        reco_k    = self.select( 'k'  ,   'K+'      == ABSID            ) 
+        if reco_pi .empty() : return SUCCESS
         
-        ## 4) get decays to J/psi phi pi pi 
-        mybs4 = self.mcselect ( 'mybs4' , '[B_s0  =>  J/psi(1S) ( phi(1020) => K+ K- ) pi+ pi-   ]CC' )
+        ## prepare useful functors:
+        mfit  = DTF_FUN  ( M , True , strings('J/psi(1S)') ) ## use PV and J/psi-mass constraint
+        c2dtf = DTF_CHI2NDOF ( True , strings('J/psi(1S)') ) ## ditto
+        ctau  = DTF_CTAU ( 0 , True , strings('J/psi(1S)') ) ## ditto 
+      
+        tup = self.nTuple('MyTuple')
+        ##                 1  2 3 4  5 
+        Bs = self.loop ( 'psi k k pi pi ' , 'B_s0' )
+        for b in Bs :
 
-        ## 5) get decays to J/psi K K pi pi 
-        mybs5 = self.mcselect ( 'mybs5' , '[B_s0  =>  J/psi(1S) K+ K- pi+ pi-   ]CC' )
+            jpsi = b(1)
+            k1   = b(2)
+            k2   = b(3)
+            pi1  = b(4)
+            pi2  = b(5)
 
-        ## 6)  get decays to psi2S phi  
-        mybs6 = self.mcselect ( 'mybs6' , '[B_s0  => ( psi(2S) ==> J/psi(1S) pi+ pi- ) ( phi(1020) =>  K+ K- ) ]CC' )
+            if 0 < Q( k1)*Q( k2) : continue ## skip wrong charge combinations 
+            if 0 < Q(pi1)*Q(pi2) : continue ## skip wrong charge combinations  
 
-        ## 7) get decays to psi2S K K  
-        mybs7 = self.mcselect ( 'mybs7' , '[B_s0  => ( psi(2S) ==> J/psi(1S) pi+ pi- ) K+ K- ]CC' )
+            m = b.mass() / GeV 
+            if not  4.9 <= m     <= 5.6 : continue
+            
+            vchi2 = VCHI2 ( b )
+            if not -1.0 <= vchi2 <= 100 : continue
 
-        ## 8) get decays to X(3872) phi  
-        mybs8 = self.mcselect ( 'mybs8' , '[B_s0  => ( X_1(3872) ==> J/psi(1S) pi+ pi- ) ( phi(1020) => K+ K- ) ]CC' )
-
-        ## 9) get decays to X(3872) K K
-        mybs9 = self.mcselect ( 'mybs9' , '[B_s0  => ( X_1(3872) ==> J/psi(1S) pi+ pi- ) K+ K- ]CC' )
-
-
-        tup1 = self.nTuple ( 'MyTuple' )
-        
-        tup1.column_int ( 'nBs'  , len ( mybs  ) ) 
-        tup1.column_int ( 'nBs1' , len ( mybs1 ) ) 
-        tup1.column_int ( 'nBs2' , len ( mybs2 ) ) 
-        tup1.column_int ( 'nBs3' , len ( mybs3 ) ) 
-        tup1.column_int ( 'nBs4' , len ( mybs4 ) ) 
-        tup1.column_int ( 'nBs5' , len ( mybs5 ) ) 
-        tup1.column_int ( 'nBs6' , len ( mybs6 ) ) 
-        tup1.column_int ( 'nBs7' , len ( mybs7 ) ) 
-        tup1.column_int ( 'nBs8' , len ( mybs8 ) ) 
-        tup1.column_int ( 'nBs9' , len ( mybs9 ) )
-        
-        tup1.write()
-        
-        if len(mybs) != len(mybs1)+len(mybs2)+len(mybs3)+len(mybs4)+len(mybs5)+len(mybs6)+len(mybs7)+len(mybs8)+len(mybs9) :
-            self.Warning('Something wrong happens with decay descriptors!')
-            print len(mybs), len(mybs1), len(mybs2), len(mybs3) , len(mybs4), len(mybs5) , len(mybs6) , len(mybs7), len(mybs8),len(mybs9) 
-            print mybs
-
-
-        tup = self.nTuple ( 'MyTuple2' )
-        psi_selector = LoKi.MCChild.Selector( 'J/psi(1S)' == MCID )
-        km_selector  = LoKi.MCChild.Selector( 'K-'        == MCID )
-        kp_selector  = LoKi.MCChild.Selector( 'K+'        == MCID )
-        
-        for b in mybs :
-
-            psi = b.child ( psi_selector )
-            if not psi : continue
-
-            km  = b.child ( km_selector )
-            if not km : continue
-
-            kp  = b.child ( kp_selector )
-            if not kp : continue
-
-            tup.column ( 'psi' , psi.momentum() / GeV )
-            tup.column ( 'kp'  , kp .momentum() / GeV )
-            tup.column ( 'km'  , km .momentum() / GeV )
+            m_fit  = mfit  ( b ) / GeV
+            if not  5.0 <= m_fit  <= 5.5 : continue 
+            c_tau  = ctau  ( b )
+            if not -1.0 <= c_tau  <= 100 : continue
+            c2_dtf = c2dtf ( b )  
+            if not -1.0 <= c2_dtf <=  10 : continue
+            
+            tup.column  (  'mBdtf' , m_fit  )
+            tup.column  (  'c2dtf' , c2_dtf )
+            tup.column  (  'ctau'  , c_tau  )
+ 
+            tup.column_float ( 'm'       , M ( b ) / GeV )
+            tup.column_float ( 'mpsi'    , M(jpsi) / GeV )
+            
+            tup.column       ( 'psi'     , jpsi.momentum() / GeV )
+            
+            tup.column_bool  ( 'trueB'   , trueB   ( b    )   )
+            tup.column_bool  ( 'truePsi' , truePsi ( jpsi )   )
+            tup.column_bool  ( 'trueK1'  , trueK   (  k1  )   )
+            tup.column_bool  ( 'trueK2'  , trueK   (  k2  )   )
+            tup.column_bool  ( 'truePi1' , truePi  ( pi1  )   )
+            tup.column_bool  ( 'truePi2' , truePi  ( pi2  )   )
 
             tup.write ()
 
@@ -165,19 +165,31 @@ def configure ( inputdata        ,    ## the list of input files
                 castor   = False ,    ## use the direct access to castor/EOS ? 
                 params   = {}    ) :
     
+    ## read only events with Detached J/psi line fired
+    Jpsi_location  = '/Event/AllStreams/Phys/FullDSTDiMuonJpsi2MuMuDetachedLine/Particles'
+    from PhysConf.Filters import LoKi_Filters
+    fltrs = LoKi_Filters ( STRIP_Code = "HLT_PASS_RE('Stripping.*DiMuonJpsi2MuMuDeta.*')"  )
+    
     ## import DaVinci    
     from Configurables import DaVinci
     ## delegate the actual configuration to DaVinci
-    dv = DaVinci ( Simulation      = True                      , ## IMPORTANT 
-                   DDDBtag         = 'dddb-20130929-1'         , ## IMPORTANT 
-                   CondDBtag       = 'sim-20130522-1-vc-mu100' , ## IMPORTANT 
-                   DataType        = '2012'         ,
-                   InputType       = 'DST'          ,
-                   TupleFile       = 'MCtruth.root' )
+    dv = DaVinci ( EventPreFilters =  fltrs.filters ('Filters') , ## IMPORTANT
+                   Simulation      = True                       , ## IMPORTANT  
+                   DDDBtag         = 'dddb-20130929-1'          , ## IMPORTANT 
+                   CondDBtag       = 'sim-20130522-1-vc-mu100'  , ## IMPORTANT 
+                   DataType        = '2012'       ,
+                   InputType       = 'DST'        ,
+                   PrintFreq       =  10          , 
+                   TupleFile       = 'MCmatch.root' )
     
     ## add the name of Bender algorithm into User sequence sequence 
-    alg_name = 'MCtruth'
+    alg_name = 'MCmatch'
     dv.UserAlgorithms += [ alg_name ]
+    
+    from StandardParticles import StdLooseKaons 
+    kaons = StdLooseKaons.outputLocation()
+    from StandardParticles import StdLoosePions 
+    pions = StdLoosePions.outputLocation()
     
     ## define the input data
     setData  ( inputdata , catalogs , castor )
@@ -186,8 +198,13 @@ def configure ( inputdata        ,    ## the list of input files
     gaudi = appMgr() 
     
     ## (1) create the algorithm with given name 
-    alg   = MCtruth( alg_name  , PPMCs =  [] )
-    
+    alg   = MCmatch (
+        alg_name  ,
+        Inputs            = [ Jpsi_location , kaons , pions ] , 
+        ParticleCombiners = { '' : 'LoKi::VertexFitter' } , 
+        PPMCs             = [ "Relations/Rec/ProtoP/Charged"] ## to speedup a bit 
+        )
+             
     return SUCCESS 
 # =============================================================================
 
@@ -220,7 +237,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## event loop 
-    run(1000 )
+    run(5000)
     
 # =============================================================================
 # The END
