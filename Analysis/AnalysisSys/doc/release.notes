@@ -3,6 +3,59 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v12r2>2014-05-19 Analysis v12r2</A></H1><PRE>
+New development release, built against Phys v18r2.
+
+- Packages Updated :-
+   PyPAW, AnalysisPython, CommonMCParticles, DSTWriters, DecayTreeTuple
+
+- Packages Added :-
+   DecayTreeTupleANNPID
+
+In PyPAW :
+ . Update cmoparison utilities, add qmtest  
+ . Add few utilities for semi-automatic reweighting
+ . A few fixes in 2D-fit models. Add qmtest.
+ . Improve models, add qmtest.
+ . Improve models, add qmtest.
+ . Minor reshuffling of code.
+ . Fix "bernstain" and "positive" parameterisation of histograms.
+
+In AnalysisPython :
+ . Fixed CMake configuration (requires Gaudi > v25r1, only for CMake build).
+ . Improve positive polynomials.
+ . Minor change to work with the latest changes in the reflex dictionary 
+   pattern, needed for ROOT 6's PCMs.
+ . Improve integration.
+ . Make use of analytical integrals for 2D non-factorazable models.
+ . Make use of analysical integrals.
+ . Add qmtest that makes segmentation fault for ROOT6.
+
+In CommonMCParticles :
+ . Basics used StdNoPIDs instead of StdAllNoPIDs, This was a problem for charm
+   modes. Now fixed. All basics are now StdAllNoPIDs. 
+
+In DSTWriters :
+ . microdst.py : Add switch to enable the automatic refitting of PVs for uDST 
+                 (useful for WG-productions). Default is "no refit".
+
+In DecayTreeTuple :
+ . Overhaul TupleToolSwimmingInfo:
+  - Fill 0 TPs for events which were not swum, rather than returning an error code.
+  - Tweak logic for dealing with multiple candidates in ExtraLocation.
+  - Match composite particles to their TPs by comparing their daughters, rather than
+    comparing them directly. Copes better when the same candidate is tagged as both
+    flavours.
+  - Only write per-(trigger|stripping)-line TP decision branches if there are more
+    than one of them (i.e. don't duplicate ..._DEC to ..._DEC_linename if there's
+    only one line, as there typically is for the Stripping)
+  - Fix typo (?) where one of .._Stripping_nTP and .._Trigger_nTP got duplicated as 
+    .._nTP
+  - Increase maximum number of turning points from 100 to 1000 (some KSHH candidates
+    get >100)
+ . Cleanup of TupleToolVtxIsoln (removed unneeded vars and properties).
+ . Improved documentation in TupleToolVtxIsoln.
+
 ! 2014-04-14 - Rob Lambert
  - Restored/updated configurables test, see task #50698
  - Moved KaliCalo into DaVinci due to the UsedConfigurables. Can always be moved back later.

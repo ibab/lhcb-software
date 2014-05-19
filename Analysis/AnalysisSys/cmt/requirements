@@ -6,7 +6,7 @@ branches doc cmt
 ####################################################################
 
 use  AnalysisConf               v2r3     Phys   # Patrick Koppenburg
-use  DSTWriters                 v4r13    Phys   # Chris Jones
+use  DSTWriters                 v4r14    Phys   # Chris Jones
 use  DSTWriterTests             v2r4p2   Phys   # Chris Jones
 use  DaVinciMonitors            v1r19p5  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7p1   Rich   # Chris Jones
@@ -28,7 +28,7 @@ use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
 use  JetTagging                 v1r3     Phys   # Cedric Potterat
 use  JetAccessoriesMC		v2r5     Phys   # Victor Coco, Cedric Potterat
-use  CommonMCParticles          v1r0     Phys   # Conor Fitzpatrick
+use  CommonMCParticles          v1r1     Phys   # Conor Fitzpatrick
 
 ####################################################################
 
@@ -41,7 +41,7 @@ use  DecayTreeTupleTrigger      v1r3     Phys
 use  DecayTreeTupleMuonCalib    v1r2p1   Phys
 use  DecayTreeTupleTracking     v1r1     Phys
 use  DecayTreeTupleANNPID       v1r0     Phys 
-use  DecayTreeTuple             v4r8     Phys 
+use  DecayTreeTuple             v4r9     Phys 
 
 ####################################################################
 
@@ -49,9 +49,9 @@ use  HltSelChecker              v12r2    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r29    Phys
+use  AnalysisPython             v2r30    Phys
 use  PyAna                      v1r3p1   Analysis
-use  PyPAW                      v1r1     Analysis
+use  PyPAW                      v1r3     Analysis
 
 ####################################################################
 
