@@ -4,23 +4,25 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r5 2014-05-19 =========================
+
 ! 2014-05-16 - Victor Coco
- - Fix the naming of the files for JEC histos
+ - Fix the naming of the files for JEC histos.
 
 ! 2014-05-14 - Cedric Potterat
- - add again the JEC file R=0.7 in the config, since root file deplayed now
+ - Add again the JEC file R=0.7 in the config, since root file deployed now.
 
 ! 2014-04-23 - Cedric Potterat
- - add the trk type fraction (numbers and energies)
+ - Add the track type fraction (numbers and energies).
 
 ! 2014-04-14 - Cédric Potterat
- - fix JetMaker_Config, error introduced in the last commit
+ - Fix JetMaker_Config, error introduced in the last commit.
 
 ! 2014-04-11 - Cédric Potterat
- - fix backward compatibility for Strippin line StrippingDisplVertices
+ - Fix backward compatibility for Stripping line StrippingDisplVertices.
 
 ! 2014-04-05 - Cédric Potterat
- - Remove the possible request to the non-deployed JEC file for R=0.7
+ - Remove the possible request to the non-deployed JEC file for R=0.7.
 
 !========================= JetAccessories v3r4 2014-04-02 =========================
 
