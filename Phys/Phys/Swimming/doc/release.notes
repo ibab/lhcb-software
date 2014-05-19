@@ -5,10 +5,14 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
-!========================= Swimming v3r0p2 2014-04-30 =========================
+!========================= Swimming v3r2 2014-05-19 =========================
+
+! No commit release notes ;(
+
+!========================= Swimming v3r1p2 2014-04-30 =========================
+
 ! 2014-04-30 - G. Raven
  - add DetCond to requirements file
-
 
 ! 2014-04-30 - G. Raven
  - add explicit dependency on Det/DetCond to make sure that in Moore v22r1
