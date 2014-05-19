@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references to follow changes in underlying packages
+  . Fix inaccuracy in fractional position computation for cellID 0 and 130 in
+    CellIDCoordinates() and correct an unprotected zero division in
+    createLightSharingChannels() (FTDet)
+
 </PRE><H1><A NAME=v28r0>2014-05-15 Boole v28r0</A></H1><PRE>
 
 - Configuration changes
