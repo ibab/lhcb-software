@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to QMTests
+   . Updated Upgrade references for FT changes.
+
 </PRE><H1><A NAME=v46r0>2014-05-15 Brunel v46r0</A></H1><PRE>
 This version uses projects LHCb v37r2, Lbcom v15r2,
  Rec v16r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
