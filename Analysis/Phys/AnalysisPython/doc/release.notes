@@ -5,6 +5,8 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r30 2014-05-19 =========================
+
 ! 2014-05-13 - Marco Clemencic
  - Fixed CMake configuration.
 
@@ -12,23 +14,23 @@
  - Fixed CMake configuration (requires Gaudi > v25r1, only for CMake build).
 
 ! 2014-05-11 - Vanya Belyaev
- - improve positive polynomials
+ - Improve positive polynomials
 
 ! 2014-05-11 - Marco Clemencic
  - Minor change to work with the latest changes in the reflex dictionary pattern,
    needed for ROOT 6's PCMs.
 
 ! 2014-05-10 - Vanya Belyaev
- - improve integration
+ - Improve integration
 
 ! 2014-05-09 - Vanya Belyaev
- - make use of analytical integrals for 2D non-factorazable models
+ - Make use of analytical integrals for 2D non-factorazable models
 
 ! 2014-05-04 - Vanya Belyaev
- - make use of analysical integrals
+ - Make use of analysical integrals
 
 ! 2014-04-16 - Vanya Belyaev
-   add qmtest that makes segmentation fault for ROOT6
+ - Add qmtest that makes segmentation fault for ROOT6
 
 !========================= AnalysisPython v2r29 2014-04-02 =========================
 
