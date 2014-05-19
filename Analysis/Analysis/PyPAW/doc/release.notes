@@ -9,26 +9,26 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+!========================= PyPAW v1r3 2014-05-19 =========================
+
 ! 2014-05-15 - Vanya Belyaev
- - update cmoparison utilities, add qmtest  
+ - Update cmoparison utilities, add qmtest  
 
 ! 2014-05-14 - Vanya Belyaev
- - add few utilities for semi-automatic reweighting
+ - Add few utilities for semi-automatic reweighting
 
 ! 2014-05-14 - Vanya Belyaev
- - few fixes in 2D-fit models.
-   add qmtest 
+ - A few fixes in 2D-fit models. Add qmtest.
 
 ! 2014-05-11 - Vanya Belyaev
- - improve models, add qmtest
+ - Improve models, add qmtest.
 
 ! 2014-05-10 - Vanya Belyaev
- - improve models, add qmtest 
+ - Improve models, add qmtest.
 
 ! 2014-05-09 - Vanya Belyaev
-
- - minor reshuffling of code 
-   fix "bernstain" and "positive" parameterisation of histograms 
+ - Minor reshuffling of code.
+ - Fix "bernstain" and "positive" parameterisation of histograms.
 
 !========================= PyPAW v1r2 2014-04-26 ==============================
 
