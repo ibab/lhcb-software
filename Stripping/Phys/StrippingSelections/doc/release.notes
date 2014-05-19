@@ -2,21 +2,23 @@
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
-! ----------------------------------------------------------------------------- 
+! -----------------------------------------------------------------------------
+
+!========================= StrippingSelections v3r34 2014-05-19 =========================
 
 ! 2014-05-13 - Vanya Belyaev
- - fix units 
+ - fix units
 
 ! 2014-05-13 - Vanya Belyaev
- - add missing line 
+ - add missing line
 
 ! 2014-05-13 - Vanya Belyaev
- - StrippingPsiX0.py 
+ - StrippingPsiX0.py
    add few modes with chi_c (to be used for B&Q WG-production #8)
 
 ! 2014-05-05 - Vanya Belyaev
  - StrippingPsiXForBandQ.py
-    psi_K: fix a sad stupid typo. 
+    psi_K: fix a sad stupid typo.
     Many thanks to Ekaterina Govorkova for pointing tot he problem
 
 !========================= StrippingSelections v3r33 2014-02-22 =========================
@@ -32,15 +34,15 @@
  - Bug fix to K*K line in B2DMuNuX module
 
 ! 2014-02-12 - Vanya Belyaev
- - PsiX0,PSiX,Promptcharm: make use of "SimpleSelection" wrapper 
+ - PsiX0,PSiX,Promptcharm: make use of "SimpleSelection" wrapper
 
 
 ! 2014-02-10 - Vanya Belyaev
- - PsiX0: 
+ - PsiX0:
    add pi0-merged for Fatima
-   PsiX : 
-   add N=8-body decays 
- 
+   PsiX :
+   add N=8-body decays
+
 !========================= StrippingSelections v3r32 2014-02-04 =========================
 
 ! 2014-02-04 - Flavio Archilli
@@ -69,12 +71,12 @@
 
 
 ! 2014-01-26 - Vanya Belyaev
- - add StrippingPromptCharm: add pKK final state 
+ - add StrippingPromptCharm: add pKK final state
 
 ! 2013-01-23 - Stefano Perazzini
  - Added StrippingBc2XK in __init__.py
  - Added StrippingB2DHForTauMu in __init__.py
- 
+
 ! 2014-01-23 - Pablo Ruiz Valls
  - Tightened pi0 cuts in StrippingBeauty2XGamma
  - Renamed Converted photon lines for consistency
@@ -87,9 +89,9 @@
  - Kspi0mumu: tighten the cuts a bit to reduce the rate
 
 ! 2014-01-21 - Marc Olivier Bettler
- - in StrippingK0S24X.py: 
+ - in StrippingK0S24X.py:
    * removing the redondant StrippingK0S24XPiPiMuMuLine lines.
-   * tighten the cuts on the StrippingK0S24XMuMuMuMuD and StrippingK0S24XMuMuMuMuL lines: the rate is now negligible. 
+   * tighten the cuts on the StrippingK0S24XMuMuMuMuD and StrippingK0S24XMuMuMuMuL lines: the rate is now negligible.
 
 ! 2014-01-21 - Ricardo Vazquez Gomez
  - Tight the IP chi2 cuts for the Kpipi line in the StrippingDarkBoson.py module to reduce the rate.
@@ -111,8 +113,8 @@
 
 ! 2014-01-19 - Ricardo Vazquez Gomez, Mike Williams
  - Modifications to the Inflaton lines added.
- * The module has been rewriten and it's called now StrippingDarkBoson.py 
- * More modular and easier to introduce changes and mantain  
+ * The module has been rewriten and it's called now StrippingDarkBoson.py
+ * More modular and easier to introduce changes and mantain
  * Lines added to look for a detached pipi or KK couple in the channel B+ -> K+ U(pipi,KK), where U is the dark boson
  * Lines added for a complete Kpi or KK invariant mass spectra in the decays Bd -> Kpi U(mumu), Bs -> KK U(mumu)
  * Added control channels B+ -> JpsiK+ and Bd -> JpsiK*
@@ -121,8 +123,8 @@
 
 ! 2014-01-19 - Thomas Blake
  - Several changes for rare decay lines
- * Added import of Kshort2MuMuMuMu, Kshort2PiPiMuMu, Kshort2eePiPi to __init__ 
- * Fixed bugs in Bu2LLK and B2XMuMu 
+ * Added import of Kshort2MuMuMuMu, Kshort2PiPiMuMu, Kshort2eePiPi to __init__
+ * Fixed bugs in Bu2LLK and B2XMuMu
  * Added StrippingKshort2PiPiMuMu.py
 
 ! 2014-01-19 - Carla Marin Benito
@@ -133,7 +135,7 @@
 - Heavily changed B->tautau, B->taumu, and control samples lines in StrippingB2XTau.py
 
 ! 2014-01-18 - John Beddow
- - Update of StrippingB2TwoBaryons.py: added ExtraInfoTools to lines 
+ - Update of StrippingB2TwoBaryons.py: added ExtraInfoTools to lines
 
 ! 2014-01-18 - Ronan Wallace
  - Added lines dependent on particle flow algorithm.
@@ -141,8 +143,8 @@
    >> Update StrippingDisplVertices.py
    >> Add StrippingWeAKTJets.py
    >> Add StrippingWmuAKTJets.py
-   
-   
+
+
 ! 2014-01-18 - Ronan Wallace
  - Update of StrippingStrangeBaryons.py returning to pp prescales.
  - Update of StrippingLowMult.py increasing scope of CEP lines.
@@ -152,7 +154,7 @@
  - Added relevant import statements to __init__.py for new lines.
 
 ! 2014-01-18 - Lucio Anderlini (for Andrea Bizzeti)
- - Updated StrippingCC2DD.py. 
+ - Updated StrippingCC2DD.py.
 
 ! 2013-01-18 - Mika Vesterinen and Marian Stahl
  - Update StrippingB2DMuNuX.py with improvements to asls lines
@@ -161,7 +163,7 @@
  - Updated StrippingBu2rho0rhoPlus.py: added ExtraInfoTools to lines
 
 ! 2014-01-17 - Lucio Anderlini (for Andrea Bizzeti)
- - Updated StrippingCC2DD.py. 
+ - Updated StrippingCC2DD.py.
 
 ! 2014-01-17 - Albert Puig
  - Added the new inclusive radiative Stripping from Pablo.
@@ -172,7 +174,7 @@
 ! 2014-01-17 - Roberta Cardinale
 	- Added StrippingB2pphh.py with B2ppKK, B2pppipi, B2ppKpi lines
 
-! 2014-01-17 - Anton Poluektov 
+! 2014-01-17 - Anton Poluektov
  - Added B0->D(*) Ks h lines to Beauty2Charm
 
 ! 2014-01-17 - Lucio Anderlini (for Yury Shcheglov)
@@ -183,14 +185,14 @@
 
 ! 2014-01-16 - Vanya Belyaev
 
-  - PromptCharm: restore removed by mistake 2xdimuon line 
+  - PromptCharm: restore removed by mistake 2xdimuon line
 
 ! 2014-01-16 - Vanya Belyaev
 
  - PromptCharm:
 
  	   remove all garbage Xicc, Ds+J/psi, Ds+Lc,...
-     release pt-cut 
+     release pt-cut
 
 ! 2014-01-16 - Konstantinos A. Petridis
  - Tidying up dictionary of B2XMuMu relating to inclusive Xmumu lines
@@ -228,9 +230,9 @@
     constructed from Downstream tracks, albeit with lower efficiency.
  - Added StrippingKshort2MuMuMuMu.py
 
-! 2014-01-12 - Anton Poluektov 
+! 2014-01-12 - Anton Poluektov
  - Added Lb->Dphh and Xib->D0phh lines to Beauty2Charm module
- - Added the new cone variables configuration to Beauty2Charm 
+ - Added the new cone variables configuration to Beauty2Charm
    (needs the latest Phys/StrippingConf package)
 
 ! 2014-01-12 - Liang Zhong
@@ -243,15 +245,15 @@
 ! 2014-01-10 - Edmund Smith
  - Added lines for WS candidates for B0 -> D0(KsHH) HH decays.
 		LL Kshorts:
-  	 * StrippingB02D0KPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi- 
-     * StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K- 
-     * StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi- 
+  	 * StrippingB02D0KPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi-
+     * StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K-
+     * StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi-
      * StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)H+H+
 		DD Kshorts:
-	   * StrippingB02D0KPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi- 
-  	 * StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K- 
-     * StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi- 
-     * StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)H+H+ 
+	   * StrippingB02D0KPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi-
+  	 * StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K-
+     * StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi-
+     * StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)H+H+
 
 ! 2014-01-08 - S. Blusk
  - Change prescale for WS line StrippingX2LcKPiPiPiWSLc2PKPiBeauty2CharmLine from 1.0 to 0.1
@@ -263,7 +265,7 @@
  - Added a draft for StrippingCC2DD.py. It includes the low momentum comb.:
   . D0D0bar
   . D0D0  &cc
-  . D+D-  
+  . D+D-
   . D+D+  &cc
   . D+D0  &cc
   . D-D0  &cc
@@ -349,20 +351,20 @@
 
 ! 2013-09-01 - Vanya Belyaev
 
- - minor update of StirppingPsiX0 and Stripping PsiXforBandQ - 
+ - minor update of StirppingPsiX0 and Stripping PsiXforBandQ -
    these files anyhow are not used in stripping
 
 ! 2013-08-30 - Mika Vesterinen
- - Add option to make TOS requirements in StrippingD2KS0H_conf.py 
+ - Add option to make TOS requirements in StrippingD2KS0H_conf.py
 
 ! 2013-08-29 - Vanya Belyaev
- - StrippingBc3h: minor (~5%) CPU improvement with the usage 
-   of LoKi::VertexFitter as particle combiner 
+ - StrippingBc3h: minor (~5%) CPU improvement with the usage
+   of LoKi::VertexFitter as particle combiner
 
 ! 2013-08-29 - Edmund Smith
  - Bug in Beauty2Charm_DBuilder.py: having a default argument to a function led to
    duplicate input locations for lines that specified a non-default value for this
-   argument. Since the value of the default argument is bound at the function 
+   argument. Since the value of the default argument is bound at the function
    definition not execution.
 
 ! 2013-08-29 - Vanya Belyaev
@@ -389,7 +391,7 @@
 ! 2013-08-26 - Lucio Anderlini
  - Fix to Xibc line: fixing double candidates problem
 
-! 2013-08-26 - Mika Vesterinen 
+! 2013-08-26 - Mika Vesterinen
  - Update to TestSemileptonicsFromSettings.py
 
 ! 2013-08-26 - Stefano Perazzini
@@ -406,8 +408,8 @@
    which contains calibration lines for proton detection asymmetry measurements
 
 ! 2013-08-24 -Alessandra Borgia
- - StrippingB2XuMuNu: Removed prescale and E_nu cut from K line. 
-   Added a new neutrino reconstruction cut to this line as well as tightening up some cuts. 
+ - StrippingB2XuMuNu: Removed prescale and E_nu cut from K line.
+   Added a new neutrino reconstruction cut to this line as well as tightening up some cuts.
    Amended the name of the Majorana lines to remove ambiguity.
  - StrippingB2DMuNuX: Removed the prescale from the fake line (Bs2DsHX) for asl_s,
    and tightened up cuts on the hadron faking as a muon.
@@ -419,8 +421,8 @@
  - Extra lines now in StrippingD2PiPi0.py for K, eta and eta-prime combinations.
 
 ! 2013-08-24 - Lucio Anderlini
- - StrippingXibc.py 
-   . Added Xibc lines (fix "GoodPoint" inclusive line + JpsiKp new line) 
+ - StrippingXibc.py
+   . Added Xibc lines (fix "GoodPoint" inclusive line + JpsiKp new line)
  - StrippingXic2HHH.py, and StrippingBetac2PhiP.py
    . New version by Yury Shcheglov
 
@@ -434,7 +436,7 @@
    all other lines identical to the previous round.
 
 ! 2013-08-23 - Florin MACIUC
-  - Added (K+ K-), (Lambda0 K+), (Lambda~0 K-), (Lambda0 Lambda~0) production stripping lines in StrippingSbarSCorrelations.py 
+  - Added (K+ K-), (Lambda0 K+), (Lambda~0 K-), (Lambda0 Lambda~0) production stripping lines in StrippingSbarSCorrelations.py
 
 ! 2013-08-23 - Andrea Contu
   - BugFix to StrippingB2ppipiSigmacmm_Lcpi lines
@@ -445,9 +447,9 @@
 ! 2013-08-22 - Francesca Dordei
   - Added a micro dst line for JpsiPhi and persistent tagging inso in StrippingB2JpsiXforBeta_s.py
 
-! 2013-08-22 - Francesco Dettori 
- - Adding StrippingRareStrange.py to StrippingSelections 
-   for the selection of Sigma-> p mu mu 
+! 2013-08-22 - Francesco Dettori
+ - Adding StrippingRareStrange.py to StrippingSelections
+   for the selection of Sigma-> p mu mu
    See VRD Meeting 2013-08-21
 
 ! 2013-08-22 - Haofei Luo
@@ -457,7 +459,7 @@
  - Bug fix to StrippingLowMult.py. Generic 'HH' lines broken into specific hadron decays.
  - Introduced variable LowMultZeroPrescale to zero lines not to be run in restrippings.
 
-! 2013-08-21 - Anton Poluektov 
+! 2013-08-21 - Anton Poluektov
  - Add Lb->D0Lambda0 mode to Beauty2Charm module
 
 ! 2013-08-21 - Cedric Potterat
@@ -468,7 +470,7 @@
  - also tests/TestDstarD0ToHHPi0.py
 
 ! 2013-08-20 - Edmund Smith
- - Added B --> D0(k3pi)pi and B --> D0(kpi)3pi lines with tight selections for 
+ - Added B --> D0(k3pi)pi and B --> D0(kpi)3pi lines with tight selections for
    full dst (tagging and spectroscopy studies).
  - New selections in DBuilder, B2DXBuiler, enabled Flavour Tagging for
    these lines, new set of PID cuts in config dictionary.
@@ -493,7 +495,7 @@
  - Added cut in the HH angle for Beauty2XGamma Stripping
 
 ! 2013-08-14 - Sascha Stahl
- - Added new lines in StrippingB2DMuNuX to write out D* -> D0 pi combinations 
+ - Added new lines in StrippingB2DMuNuX to write out D* -> D0 pi combinations
 	 when a B -> D0 mu was found.
 
 ! 2012-08-13 - Murilo Rangel
@@ -532,7 +534,7 @@
 
 ! 2013-07-30 - Mika Vesterinen
  - Switched on the flavour tagging for certain lines for the SL WG.
-   All lines in StrippingB0q2DplusMuX.py StrippingBd2DstarMuNu.py, 
+   All lines in StrippingB0q2DplusMuX.py StrippingBd2DstarMuNu.py,
    and 3 lines (D->Kpipi, and double tagged D0->K3pi and D0->Kpi) in StrippingB2DMuNuX.py
 
 ! 2013-07-29
@@ -548,10 +550,10 @@
 
 ! 2013-07-01 - Stefano Perazzini
  - Updated tests/test_allstreams_instantiation.py and tests/test_stream_output_locations.py
- 
+
 ! 2013-06-27 - Ronan Wallace
  - 4 lines now in StrippingProtonIonMinBias.py for pA,Ap,MU,MD configurations. Prescales according to run number.
- - Prescales in *ForXSec.py lines. 
+ - Prescales in *ForXSec.py lines.
  - HltFilter set to 'Hlt1MB.*' in *ForXSec.py lines.
 
 ! 2013-06-26 - Chris Jones
@@ -573,11 +575,11 @@
 ! 2013-05-13 - Lucio Anderlini (for BandQ)
  - DiMuon dictionaries reverted to Stripping20r1
  - DiMuonLowPT removed (data already available in DiMuonInc)
- - DiMuonMinusDetached removed and merged to DiMuonDetached 
+ - DiMuonMinusDetached removed and merged to DiMuonDetached
  M       python/StrippingSelections/StrippingDiMuonNew.py
 
-! 2013-05-16 - Anton Poluektov 
- - Fix output locations test. 
+! 2013-05-16 - Anton Poluektov
+ - Fix output locations test.
 
 ! 2013-May-15 - Patrick Spradlin
  - Updated default configuration dicionaries in open charm cross-section lines
@@ -622,8 +624,8 @@
 ! 2013-04-19 - Frederic Dupertuis
  - Last change to B2CC Jpsi2MuMuDetached line for Stripping20r{0,1}p1 in agreement with stripping coordinators.
 
-! 2013-04-18 - Anton Poluektov 
- Small fixes in 
+! 2013-04-18 - Anton Poluektov
+ Small fixes in
   - StrippingB2DHHHForBXX.py      (NoRegex = True removed)
   - StrippingChiCJPsiGammaConv.py (missing "&" added)
 
@@ -648,7 +650,7 @@
 ! 2013-04-15 - Donal Hill
  - Added Hlt1TrackAllL0Decision_TOS to all lines in StrippingB2XTauNu.py
 
-! 2013-04-12 - Anton Poluektov 
+! 2013-04-12 - Anton Poluektov
  - Tighter proton PID for D0PPbarFULLDST line in Beauty2Charm
 
 ! 2013-04-11 - Donal Hill
@@ -666,7 +668,7 @@
 ! 2013-04-09 - Cedric Potterat for Raditaive
  - Remove Error in the Bd2eeKstBDT lines
 
-! 2013-04-09 - William Sutcliffe 
+! 2013-04-09 - William Sutcliffe
  - Updated StrippingLb2pMuNu.py in order to reduce retention rates
  - Added in tos selections. Updated dictionary.
 
@@ -687,12 +689,12 @@
 ! 2013-04-05 - Thomas Blake
  - Updated B2XMuMu to add disabling of decay modes
 
-! 2013-04-04 - Lucio Anderlini 
+! 2013-04-04 - Lucio Anderlini
  - Modified TRGHP cut to Xic2HHH lines (for Yury Shcheglov)
  - Modified line DiMuonIncLowPT to DiMuonNew.py for pT(J/psi)<2 GeV M.Adinolfi
  - Added test/DV-Stripping20r0p1-Stripping.py by Anton (useful for BW tests)
 
-! 2013-04-01 - Anton Poluektov 
+! 2013-04-01 - Anton Poluektov
  - Add Lb2pMuNu to __init__.py
 
 ! 2013-03-31 - Mika Vesterinen
@@ -707,15 +709,15 @@
  - Added StrippingB23MuLines
 
 ! 30-03-2013
-- Added StrippingD2PiPi0 module to __init__.py 
+- Added StrippingD2PiPi0 module to __init__.py
 
 ! 2013-03-29 - Jibo He
  - Removed ee lower mass cuts in Bd->eeKstar (and BDT) lines
 
-! 2013-03-29 - Anton Poluektov 
+! 2013-03-29 - Anton Poluektov
  - Remove characters above 0x7F from some comments
 
-! 2013-03-29 - Anton Poluektov 
+! 2013-03-29 - Anton Poluektov
  - Add StrippingB2KSKpi to __init__.py
 
 ! 2013-03-29 - Paolo Gandini
@@ -731,7 +733,7 @@
 ! 2013-03-29 - Stefano Perazzini
  - Added StrippingB2KSKpi.py for new BDT based stripping line
 
-! 2013-03-29 - Anton Poluektov 
+! 2013-03-29 - Anton Poluektov
  - More verbose error messages in Utils.py
 
 ! 2013-03-28 - Frederic Dupertuis
@@ -746,7 +748,7 @@
 ! 2013-03-28 - Andrea Contu
  - StrippingB2ppipiSigmacmm_Lcpi added for Lc absolute BF measurement
 
-! 2013-03-28 - Edmund Smith (LHCb 2010) 
+! 2013-03-28 - Edmund Smith (LHCb 2010)
  - Added B02D0PPbarD2HHFULLDST RS and WS lines in Beauty2Charm module.
 
 ! 2013-03-28 - Cedric Potterat
@@ -764,7 +766,7 @@
 ! 2013-03-27 - Ronan Wallace
  - Addition to StrippingLowMult.py to search for Phi->KK
 
-! 2013-03-27 - Ronan Wallace 
+! 2013-03-27 - Ronan Wallace
  - Add new lines in StrippingHighPtGamma.py (change to __init__.py also)
 
 ! 2013-03-27 - Mika Vesterinen
@@ -779,17 +781,17 @@
  - Update to StrippingB2JPsiXforBeta_s.py line (11 new lines and loose vtx chi2 for Jpsi Phi and Jpsi K*)
 
 ! 2013-03-26 - Mika Vesterinen
- - New module StrippingCharmFromBSemiForHadronAsy.py 
+ - New module StrippingCharmFromBSemiForHadronAsy.py
    - Kaon, pion and proton asymmetries with "double tagged" charm.
  - Bug fix to StrippingCharmFromBSemi.py
    - Fix duplication of D0->KKpi0 and D0->pipipi0 candidates
  - Updates to TestCharmFromBSemi.py
 
-! 2013-03-26 - Anton Poluektov 
+! 2013-03-26 - Anton Poluektov
  - Fix typo in __init__.py, update tests
 
 ! 2013-03-25 - Vanya Belyaev
- - minor update for psi-X 
+ - minor update for psi-X
 
 ! 2013-03-25 - Eduardo Rodrigues
  - Mass range of B -> ppbar stripping line extended to have a proper sideband
@@ -803,16 +805,16 @@
 
 ! 2013-03-24 - Lucio Anderlini (for Yury Shcheglov)
  - Added StrippingXic2HHH.py for measurement  Br(Xic->p +\phi)/Br(Xic->p Kpi)
- - Modified StrippingBetac2PhiP.py 
+ - Modified StrippingBetac2PhiP.py
 
 ! 2013-03-24 - Pieter David
  - added StrippingLLP2MuX with HighPTHighIPMuonLine for exotics
 
-! 2013-03-21 - Anton Poluektov 
+! 2013-03-21 - Anton Poluektov
  - Fixed typo in __init__.py
 
 ! 2013-03-20 - Oliver Gruenberg
- - Added StrippingLc23MuLines 
+ - Added StrippingLc23MuLines
 
 ! 2013-03-20 - Mika Vesterinen
  - Minor changes to CharmFromBSemiForProtonPID,
@@ -826,13 +828,13 @@
  - update default StrippingBu2KSh to include Bc
 
 ! 2013-03-18 - Oliver Gruenberg
- - Added StrippingBLVLines 
+ - Added StrippingBLVLines
 
 ! 2013-03-17 - Vanya Belyaev
- -  update StrippingPsiX0 
+ -  update StrippingPsiX0
 
 ! 2013-03-17 - Vanya Belyaev
- -  update StrippingPromptCharm 
+ -  update StrippingPromptCharm
 
 ! 2013-03-06 - Laurence Carson
  - Update 2011 Reco 14 data samples in tests/data, edit TestMyStrippingLineOn2011Data_Reco14.py
@@ -841,10 +843,10 @@
 !========================= StrippingSelections v3r21 2013-02-21 =========================
 
 ! 2013-02-07 - Vanya Belyaev
- - update StrippingPsiX0  StrippingPsiXForBandQ 
+ - update StrippingPsiX0  StrippingPsiXForBandQ
 
 ! 2013-02-02 - Ricardo Vazquez Gomez
- - Rename from config to default_config all the appearances in the StrippingBeauty2XGamma. Loosen the pi0 cuts, keeping rate under control. 
+ - Rename from config to default_config all the appearances in the StrippingBeauty2XGamma. Loosen the pi0 cuts, keeping rate under control.
 
 !========================= StrippingSelections v3r20 2012-12-20 =========================
 
@@ -852,21 +854,21 @@
  - Fix bug https://savannah.cern.ch/bugs/index.php?94262 in MB stripping
 
 ! 2012-12-18 - Thomas Blake
- - Updated StrippingBeauty2XGamma to rename default config dictionary. 
+ - Updated StrippingBeauty2XGamma to rename default config dictionary.
 
 ! 2012-12-17 - Alex Grecu for Florin Maciuc
  - Minor changes to StrippingStrangeBaryons.py, mass cuts on Lambda modified
 
-! 2012-12-16 - Anton Poluektov 
+! 2012-12-16 - Anton Poluektov
  - Add 3 new lines to __init__.py
 
-! 2012-12-15 - Anton Poluektov 
+! 2012-12-15 - Anton Poluektov
  - Update Beauty2Charm, add B02D0PPbar lines (RS and WS)
 
 ! 2012-12-14 - Mike Williams
  - Added 2 new lines to Beauty2Charm
 
-! 2012-12-14 - Anton Poluektov 
+! 2012-12-14 - Anton Poluektov
  - Add new builders to __init__.py
 
 ! 2012-12-14 - Jibo He for Yury Shcheglov
@@ -909,12 +911,12 @@
 
 ! 2012-12-05 - Jibo He for Yury Shcheglov
  - StrippingBetac2PhiP.py
-   . Updated for Stripping v20r1 
+   . Updated for Stripping v20r1
 
 !========================= StrippingSelections v3r19 2012-11-30 =========================
 
-! 2012-11-30 - Zhou Xing	
- - Creation of StrippingB2DHHHForBXX.py for Kaon and Proton detection efficiency studies	
+! 2012-11-30 - Zhou Xing
+ - Creation of StrippingB2DHHHForBXX.py for Kaon and Proton detection efficiency studies
 
 ! 2012-11-29 - Edmund Smith
  - Added many different lines to Beauty2Charm Stripping to test tighter
@@ -922,7 +924,7 @@
     * python/StrippingSelections/Beauty2Charm_DBuilder.py
 			- added different charge combinations of D2hhh
 			- different pid filterings
-    * python/StrippingSelections/Beauty2Charm_Utils.py 
+    * python/StrippingSelections/Beauty2Charm_Utils.py
 			- modified filterSelection method to take a Preambulo
     * python/StrippingSelections/Beauty2Charm_HHBuilder.py
 			- different pid filterings of hh.
@@ -941,12 +943,12 @@
 
 ! 2012-11-23 - Vanya Belyaev
 
- - update B2PsiX for B&Q 
+ - update B2PsiX for B&Q
 
-! 2012-11-14 - Anton Poluektov 
+! 2012-11-14 - Anton Poluektov
  - Update test_stream_output_locations to use Stripping20r1
 
-! 2012-11-09 - Anton Poluektov 
+! 2012-11-09 - Anton Poluektov
  - Update test_allstreams_instantiation to use Stripping20r1 dictionary
 
 ! 2012-11-09 - Ricardo Vazquez Gomez
@@ -956,8 +958,8 @@
    * tight PID cuts on the lambda lines to reduce rate after bug fix
    * Global GhostProb cut reduced to 0.4
 
-! 2012-11-06 - Anton Poluektov 
- - Add 2011 test sample with Reco14: 
+! 2012-11-06 - Anton Poluektov
+ - Add 2011 test sample with Reco14:
    * tests/TestMyStrippingLineOn2011Data_Reco14.py - Test script
    * tests/data/Reco14_2011Data_MagDn.py - Test sample (MagDown)
    * tests/data/Reco14_2011Data_MagUp.py - Test sample (MagUp)
@@ -968,8 +970,8 @@
 ! 2012-10-30 - Ricardo Vazquez Gomez
  - Bug fix on the lambda(pK) lines in Radiative stream
 
-! 2012-10-19 - Anton Poluektov 
- - Add Reco14 test sample: 
+! 2012-10-19 - Anton Poluektov
+ - Add Reco14 test sample:
    * tests/TestMyStrippingLineOn2012Data_Reco14.py    - example job
    * tests/data/Reco14_Run125113.py                   - job options
    * tests/data/pool_xml_catalog_Reco14_Run125113.xml - XML catalog
@@ -980,8 +982,8 @@
 
 ! 2012-10-07 - Vanya Belyaev
 
- - minor fix in PsiXForBandQ 
- 
+ - minor fix in PsiXForBandQ
+
 
 !========================= StrippingSelections v3r18 2012-09-14 =========================
 
@@ -989,12 +991,12 @@
  - update default config of StrippingBd2DstarMuNu.py (tighten cuts)
 
 ! 2012-09-10 - Alex Grecu
- - patch StrippingStrangeBaryons.py to eliminate implicit low pT cuts and add names of 
+ - patch StrippingStrangeBaryons.py to eliminate implicit low pT cuts and add names of
    stripping line authors and contributors.
 
 !========================= StrippingSelections v3r17 2012-09-08 =========================
 
-! 2012-09-08 - Anton Poluektov 
+! 2012-09-08 - Anton Poluektov
  - Add ghost prob cut to B2nbody.py
 
 ! 2012-09-07 - Stefano Perazzini
@@ -1017,11 +1019,11 @@
  - update StrippingD02KPiPi0 & StrippingB2HHPi0 (adding GP)
 
 ! 2012-09-06 - Marianna Fontana
- - Updated StrippingBs2KSKS.py and StrippingD02KSKS.py in order to have 
+ - Updated StrippingBs2KSKS.py and StrippingD02KSKS.py in order to have
    also the GhostProb cut in the dictionary
 
 ! 2012-09-06 - Aurelien Martens
- - update KsH GhostProb cut value on the KSLL daughters, according to 
+ - update KsH GhostProb cut value on the KSLL daughters, according to
    Tom Latham's studies
 
 ! 2012-09-06 - Fred Blanc
@@ -1038,32 +1040,32 @@
  - Added GhostProb to B2XMuMu
 
 ! 2012-09-04 - Stefano Perazzini
- - Updated StrippingHb2Charged2Body.py in order to have also the GhostProb 
+ - Updated StrippingHb2Charged2Body.py in order to have also the GhostProb
    cut in the dictionary
 
 ! 2012-09-04 - Sean Benson
- - Tuning of StrippingBs2PhiPhi.py and StrippingBs2Q2B.py to reduce retention 
+ - Tuning of StrippingBs2PhiPhi.py and StrippingBs2Q2B.py to reduce retention
    including GhostProb cuts
 
 ! 2012-09-04 - Aurelien Martens
- - add GhostProb cut in Bu2KSH lines, different values for LL KS daughters 
+ - add GhostProb cut in Bu2KSH lines, different values for LL KS daughters
    and bachelor track
 
 ! 2012-09-04 - Vanya Belyaev
  - StrippingPsiXForBandQ.py & StrippingPsiX0.py
-   add GhostProb cut for pions and kaons to reduce the rate 
+   add GhostProb cut for pions and kaons to reduce the rate
 
 ! 2012-09-03 - Johannes Albrecht
- - Bs2MuMuLines: add ghost prob cut to NoMuId and Kst line 
+ - Bs2MuMuLines: add ghost prob cut to NoMuId and Kst line
 
 ! 2012-09-03 - Paul Seyfert
- - add cut on GhostProbability to all non-electrons in all Tau23MuLines 
+ - add cut on GhostProbability to all non-electrons in all Tau23MuLines
    and LFVLines
 
 ! 2012-09-01 - Vanya Belyaev
  - add GhostProbability<0.5 cut for "PromptCharm" set of lines
-   the cut is applied for all hadrons, 
-   except for the slow bachelor pion form D*+, 
+   the cut is applied for all hadrons,
+   except for the slow bachelor pion form D*+,
    Sigma_c and Lambda_c* decays
 
 !========================= StrippingSelections v3r16 2012-09-01 =========================
@@ -1079,7 +1081,7 @@
 
 ! 2012-08-31 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
-   . Updated InclbJets and HighPtTopo to increase prescales. 
+   . Updated InclbJets and HighPtTopo to increase prescales.
 
 ! 2012-08-31 - Jibo He
  - Added Reco13e test sample (with new GhostProb tunning), Reco13e_Run120535.py
@@ -1089,19 +1091,19 @@
  - StrippingSelections/StrippingBc2JpsiMuXNew.py
    . Added GhostProb cut
  - StrippingSelections/StrippingBd2eeKstar(BDT).py
-   . Added GhostProb cut also on electron  
+   . Added GhostProb cut also on electron
 
 ! 2012-Aug-30 - Paula Alvarez
- - Added BPVDIRA cut to StrippingBs2PhiKst0 
+ - Added BPVDIRA cut to StrippingBs2PhiKst0
  - Added BPVDIRA and TRGHOSTPROB cuts to StrippingBs2Kst0Kst0 and StrippingBs2Kst_0Kst_0
 
 ! 2012-Aug-30 - Sean Benson
- - Added BPVDIRA cut to StrippingBs2PhiPhi, StrippingBs2Q2Body4pi 
+ - Added BPVDIRA cut to StrippingBs2PhiPhi, StrippingBs2Q2Body4pi
 
-! 2012-08-30 - Anton Poluektov 
+! 2012-08-30 - Anton Poluektov
  - Fix tests
 
-! 2012-08-29 - Anton Poluektov 
+! 2012-08-29 - Anton Poluektov
  - Replace VertexFitters with ParticleCombiners in Beauty2Charm_Utils
 
 ! 2012-08-29 - Jibo He
@@ -1129,20 +1131,20 @@
    . StrippingXicc.py
    . StrippingD02HHForXSec.py
 
-! 2012-08-25 - Anton Poluektov 
+! 2012-08-25 - Anton Poluektov
   - Add StrippingDstarD02KShhForTrackingEff to __init__.py
 
-! 2012-08-24 - Anton Poluektov 
+! 2012-08-24 - Anton Poluektov
   - Add missing StrippingB2HHBkg to __init__.py
 
-! 2012-08-24 - Sam Hall 
+! 2012-08-24 - Sam Hall
  - Updated Ds2PhiMuNu for Beauty2Charm lines
 
 ! 2012-08-24 - Stefano Perazzini
  - Updated Phys/StrippingSelections/tests/TestCharmlessLines.py
 
 ! 2012-08-24 Francesca Dordei
-  - Changed pt and DVchi2 cut for phi and K* in lines:  
+  - Changed pt and DVchi2 cut for phi and K* in lines:
 		StrippingBetaSBs2JpsiPhiPrescaledLine
                 StrippingBetaSBs2JpsiPhiDetachedLine
                 StrippingBetaSBd2JpsiKstarPrescaledLine
@@ -1158,26 +1160,26 @@
   - added the two new D*taunu modules in __init__.py
 
 ! 2012-08-24 - Rafael Coutinho
- - Update on the StrippingLb2V0hh by increasing the lower 
-   limit on the invariant mass and tighter cuts 
+ - Update on the StrippingLb2V0hh by increasing the lower
+   limit on the invariant mass and tighter cuts
 
 ! 2012-08-24 - Mike Williams (Beauty2Charm updates)
  - Added all D->X decays that do not involve a pi0 or KS allowing one UP track in the D.
  - Added all non-WS B->DX lines + UP pion where the UP pion+D make a D*.
  - Added several other lines for various channels.
 
-! 2012-08-24 - 
- - Add QEE lines to __init__.py and add new StrippingStrangeBaryons 
+! 2012-08-24 -
+ - Add QEE lines to __init__.py and add new StrippingStrangeBaryons
    (on behalf of Florin Maciuc, Raluca Muresan, Mihai Straticiuc
 
 ! 2012-08-24 - Remove Susan's Bu2D0h lines from __init__.py
 
 ! 2012-08-24 - Mika Vesterinen
  - minor updates to tests/TestSemileptonicsOnRealData.py
- - StrippingB2DMuNuX.py: switch back on DCS Kpi in B. 
+ - StrippingB2DMuNuX.py: switch back on DCS Kpi in B.
    Use muonhighPT for the phipi. Add Loose Ghost prob cuts
  - StrippingB2XuMuNu.py: Add loose ghost prob cuts.
-	
+
 ! 2012-08-24 - Katarzyna Senderowska
  - changes in __init__py : StrippingB2Charmonium_6X line added and
    StrippingB*2*Chic*/StrippingB*2*Etac* lines removed
@@ -1186,11 +1188,11 @@
  - Line for Bd,s -> p pbar in StrippingB2TwoBaryons.py further tightened
 
 ! 2012-08-24 - Katarzyna Senderowska
- - files removed: StrippingBs2ChicPhi_Chic2PiPiPiPi.py, StrippingBs2ChicPhi_Chic2KKPiPi.py, 
+ - files removed: StrippingBs2ChicPhi_Chic2PiPiPiPi.py, StrippingBs2ChicPhi_Chic2KKPiPi.py,
    StrippingBs2EtacPhi.py, StrippingB2EtacKst.py and StrippingB2ChicK.py
  - instead, StrippingB2CharmoniumX_6H.py file added
- - it contains 5 stripping lines wih 6 hadrons in the final state, 
-   where B/Bs decay to chi_c0 X or eta_c X: 
+ - it contains 5 stripping lines wih 6 hadrons in the final state,
+   where B/Bs decay to chi_c0 X or eta_c X:
      StrippingBs2ChicPhi_Chic2PiPiPiPi,
      StrippingBs2ChicPhi_Chic2KKPiPi,
      StrippingBs2EtacPhi_Etac2KKPiPi,
@@ -1214,9 +1216,9 @@
 
 ! 2012-08-23 - Jibo He
  - StrippingDiMuonNew
-   Unregister obsolete lines 
- - StrippingBd2ee(MuMu)KstarBDT 
-   Added cuts on Ghost Prob of hadrons 
+   Unregister obsolete lines
+ - StrippingBd2ee(MuMu)KstarBDT
+   Added cuts on Ghost Prob of hadrons
 
 ! 2012-08-23 - Andrea Contu
    - tweaked PT cut in StrippingXicc.py (1.0 -> 2.0 GeV)
@@ -1253,7 +1255,7 @@
  - StrippingBeauty2XGamma.py
    - Removed the Bd->Omega(hh)Gamma line as it is included in the Bd -> rho gamma line
    - Merge the lines with LL and DD Kshorts into a single line
-   - Add 2 lines with converted photons using the new DiElectronMaker. Bd->K*Gamma, Bs->PhiGamma  
+   - Add 2 lines with converted photons using the new DiElectronMaker. Bd->K*Gamma, Bs->PhiGamma
 
 ! 2012-08-23 - Mika Vesterinen
  - StrippingJPsiForSL.py
@@ -1279,19 +1281,19 @@
    - StrippingV0ForPID.py
 
 ! 2012-08-23 - Thomas Blake
- - Removed the ~ISMUON cut from the K/pi/p in B2XMuMu 
+ - Removed the ~ISMUON cut from the K/pi/p in B2XMuMu
 
 ! 2012-08-23 - Johannes Albrecht
  - retuning of VRD lines, replace tight trChi2 (<2) by ghostProb
  - first running version of B2htaumu
  - retuning of tau2phimu
- 
+
 ! 2012-08-23 - Hamish Gordon
  - Added new stripping lines for D+(s)->Kshhh, in new configurable StrippingD2KS0HHH_conf.py
 
 ! 2012-08-23 - Stefano Perazzini
  - Update configuration dictionary for StrippingHb2Charged2Body.py
- - Created new lines in StrippingB2HHBkg.py, going to Bhadron stream 
+ - Created new lines in StrippingB2HHBkg.py, going to Bhadron stream
 
 ! 2012-08-22 - Aurelien Martens
  - Update StrippingBu2KSh.py (to not explicitely build KSK anymore, pions are now NoPID pions)
@@ -1299,7 +1301,7 @@
 ! 2012-08-22 - Neus Lopez March
  - Update StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py to satisfy requirements.
 
-! 2012-08-22 - Anton Poluektov 
+! 2012-08-22 - Anton Poluektov
  - Add track ghost probability cut to Beauty2Charm selections, once again (svn conflict?)
 
 ! 2012-08-22  - Konstantinos A. Petridis
@@ -1308,7 +1310,7 @@
  - Modified StrippingB2MuMuX.py: Commented out all lines! Thus currently obsolete
 
 ! 2012-08-22 - Sam Hall
- - Update of Beauty2Charm Line DBuilder. 
+ - Update of Beauty2Charm Line DBuilder.
 
 ! 2012-08-22 - Sean Benson
  - Updates to StrippingBs2PhiPhi, StrippingBs2Q2B, StrippingB2FourKHigh & StrippingBs2KKhh to reduce retention
@@ -1316,19 +1318,19 @@
 ! 2012-08-22 - Mika Vesterinen
  - Add tests/TestCharmFromBSemi.py
  - Minor updates to tests/TestSemileptonicsOnRealData.py
- - Updates to CharmFromBSemi.py: 
-   - Remove 2K2Pi and 3KPi lines (now in full DST for mass measurement). 
+ - Updates to CharmFromBSemi.py:
+   - Remove 2K2Pi and 3KPi lines (now in full DST for mass measurement).
    - Add slot in confdict for B mass cut. Loose and tight versions.
-   - Add DZ cut between Ks and D in KsHH. 
-   - looser Ks pT and mass cuts. 
-   - Different pT cuts for pi0 in single and double tagged hhpi0. 
+   - Add DZ cut between Ks and D in KsHH.
+   - looser Ks pT and mass cuts.
+   - Different pT cuts for pi0 in single and double tagged hhpi0.
    - Add PTSUM slots in confdict.
    - D->KsKKPi line for mass measurement.
  - Updates to B2DMuNuX.py
     - use muonhighPT consistently in D0->hh (single and double tags)
     - use the looser muon again for phipi.
     - add D->KKK line for mass measurement.
- 
+
 
 ! 2012-08-22 - Pieter David
  - Re-commit final tuning of displaced vertex lines
@@ -1346,8 +1348,8 @@
 ! 2012-08-22 - Patrick Koppenburg
  - Bu2LLK: Do B->eeK* and B->emK(*) ae well as B->eeK. Changed cuts slightly.
 
-! 2012-08-22 - Anton Poluektov 
- - Add thack ghost probability cut to Beauty2Charm selections. 
+! 2012-08-22 - Anton Poluektov
+ - Add thack ghost probability cut to Beauty2Charm selections.
 
 ! 2012-08-20 - Michel De Cian
  - Added a B->RhoInflaton line to "StrippingInflaton2MuMuLine.py"
@@ -1358,7 +1360,7 @@
 ! 2012-08-17 - Johannes Albrecht
  - tuning rate of VRD lines down, touched Tau23mMuLines, VeryDetachedJPsi, LFVLines, Bs2mumuLines
 
-! 2012-08-16 - C??dric Potterat	
+! 2012-08-16 - C??dric Potterat
  - moved the HighPtTopo lines from StrippingBeauty2Charm to StrippingHighPtTopo.
 
 ! 2012-08-16 - Albert Puig
@@ -1367,7 +1369,7 @@
  - New default cuts for B -> K1 gamma.
 
 ! 2012-08-15 - Mika Vesterinen
- - Changes to B2DMuNuX module: 
+ - Changes to B2DMuNuX module:
  - D0->K3Pi: tighter mass window, dropped Hlt2 muon TOS requirement, tighter kaon PID, tighter pT sum cut
  - D0->KPi: remove prescale and include DCS. Remove dedicated DCS line
  - Add D* versions of D0->Kpi,KK,pipi and K3pi
@@ -1378,7 +1380,7 @@
 
 ! 2012-08-14 - Mika Vesterinen
  - Added loose global event cut to all lines in the B2XuMuNu (V_ub) module.
- - Minor updates tests/TestSemileptonicsOnRealData.py	
+ - Minor updates tests/TestSemileptonicsOnRealData.py
 
 ! 2012-08-08 - Markward Britsch
  - added D0->KSKS stripping line, including different track types and taged D0
@@ -1390,7 +1392,7 @@
  - python/StrippingSelections/StrippingMiniBias.py : Fix bug
 	 https://savannah.cern.ch/bugs/index.php?96584 (L0Any rate)
 
-! 2012-08-07 - Anton Poluektov 
+! 2012-08-07 - Anton Poluektov
  - Add new test sample, tests/data/Reco13c_Run124134.py
    and the corresponding sample test script, tests/TestMyStrippingLineOn2012Data_Reco13c.py
 
@@ -1403,34 +1405,34 @@
 
 !========================= StrippingSelections v3r15 2012-07-27 =========================
 
-! 2012-07-27 - Anton Poluektov 
- - Fix remaining entries of VertexFitters property of CombineParticles. 
+! 2012-07-27 - Anton Poluektov
+ - Fix remaining entries of VertexFitters property of CombineParticles.
 
 ! 2012-07-19 - Chris Jones
  - Fix a small configuration issue in StrippingTrackEffDownMuon
 
 ! 2012-07-13 - Michel De Cian
- - Replaced "VertexFitters.update( { "" : "OfflineVertexFitter"} )" with 
-            "ParticleCombiners.update( { "" : "OfflineVertexFitter"} )" 
+ - Replaced "VertexFitters.update( { "" : "OfflineVertexFitter"} )" with
+            "ParticleCombiners.update( { "" : "OfflineVertexFitter"} )"
    in InflatonStripping2MuMu
 
 !========================= StrippingSelections v3r14 2012-06-27 =========================
 
 ! 2012-07-12 - Mika Vesterinen
- - StrippingCharmFromBSemi.py - Added possibility for pi0 mass constraint. 
+ - StrippingCharmFromBSemi.py - Added possibility for pi0 mass constraint.
    Added names to all of the algorithms/configurables.
 
 ! 2012-07-11 - Lucio Anderlini
  - StrippingXibc.py
-   _globalEventCuts changed to include the required filter Preambulo, 
+   _globalEventCuts changed to include the required filter Preambulo,
    preventing DaVinci crash with python error "name 'LHCb' is not defined".
 
 ! 2012-07-11 - Ricardo Vazquez Gomez
- - change VertexFitter to ParticleCombiners in the Beauty2XGamma Stripping 
+ - change VertexFitter to ParticleCombiners in the Beauty2XGamma Stripping
    following savanah bug 31438
 
 ! 2012-07-10 - Mika Vesterinen
- - fix duplication of some D0 lines in StrippingCharmFromBSemi. 
+ - fix duplication of some D0 lines in StrippingCharmFromBSemi.
    Merge many D filters into single functions.
 
 ! 2012-06-27 - Chris Jones
@@ -1450,19 +1452,19 @@
 
 ! 2012-06-25 - Jibo He
  - StrippingBd2eeKstarBDT
-   . Merged Bd->Jpsi(ee)Kstar to one line 
+   . Merged Bd->Jpsi(ee)Kstar to one line
    . Added a new line using the DiElectronMaker, just for this round.
  - StrippingBc2JpsiHNew
    . Removed the PT cut on Bc
  - StrippingCcbar2PhiPhi
-   . Removed Hlt2TIS req. and tightened cuts of unbiased line 
+   . Removed Hlt2TIS req. and tightened cuts of unbiased line
    . Tightend cuts of Detached DiPhi line
    . Added detached PhiKK(pipi) and Bs->3Phi lines
    . Removed PT cuts on Phi
 
 ! 2012-06-25 - Edwige Tournefier
- - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with 
-   converted photons based on the new BremAdder and DiElectronMaker. 
+ - StrippingChiCJPsiGammaConv.py: created stripping for chi_c and chi_b with
+   converted photons based on the new BremAdder and DiElectronMaker.
    Plus 2 stripping lines for chi_c and chi_b background studies
 
 ! 2012-06-25 - Johannes Albrecht
@@ -1471,7 +1473,7 @@
  - StrippingTau2PMuMu.py: syncronize line with tau23mu
 
 ! 2012-06-25 - Francesca Dordei
- - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine, 
+ - StrippingB2JpsiXForBeta_s.py: removed Bs2JpsiEtaPrescaledLine,
    Bs2JpsiEtaDetachedLine
 
 ! 2012-06-25 - Konstantinos A. Petridis
@@ -1482,7 +1484,7 @@
    StrippingB2MuMuGamma_ssLine
 
 ! 2012-06-25 - Mika Vesterinen
- - StrippingJPsiForSL.py: new stripping line for semi-inclusive psi->mumu 
+ - StrippingJPsiForSL.py: new stripping line for semi-inclusive psi->mumu
    for measuring detection asymmetries.
 
 ! 2012-06-25 - Chris Jones
@@ -1496,16 +1498,16 @@
  - StrippingWMu.py: Update to include single muon control lines (prescaled to ensure low rate).
 
 ! 2012-06-25 -- Ricardo Vazquez Gomez
-  - StrippingBeauty2XGamma.py :  Modify the HHHBuilder to include the creation of the K1 
+  - StrippingBeauty2XGamma.py :  Modify the HHHBuilder to include the creation of the K1
 
 ! 2012-06-25 -- Ricardo Vazquez Gomez
   - StrippingBeauty2XGamma.py :  Added the Bs->phiGamma(ee) with converted photons
 
 ! 2012-06-25 -- Ricardo Vazquez Gomez
-  - StrippingBeauty2XGamma.py :  Added B+->K1+gamma line and Bd->K*gamma with 
+  - StrippingBeauty2XGamma.py :  Added B+->K1+gamma line and Bd->K*gamma with
     converted photons.
-    Tighten the PID cut for pions to reduce the retention and increase the pT 
-    cut of pi0. Retention reduced by ~40%.  
+    Tighten the PID cut for pions to reduce the retention and increase the pT
+    cut of pi0. Retention reduced by ~40%.
 
 ! 2012-06-24 -- Patrick Spradlin
   - StrippingXicc.py :  Added lines to select charge-violating combinations
@@ -1513,14 +1515,14 @@
 
 ! 2012-06-24 Chris Thomas
   - StrippingLowMult.py : added lines to select CEP events.
-    Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various 
+    Selects D decays to HH, 3H and 4H; charmonium decays to HH and 4H; various
     prescaled same-sign lines.
-    Requires a hadronic LowMult decision to have been made at HLT2 
+    Requires a hadronic LowMult decision to have been made at HLT2
     (anticipating new HLT2 CEP lines).
 
 ! 2012-06-24 Mika Vesterinen
-  - StrippingCharmFromBSemi.py: Fix to D0->KsKs lines (DD+DD and DD+LL were 
-    the same as LL+LL). Also added same sign hadron versions of the D0->KKpi0 
+  - StrippingCharmFromBSemi.py: Fix to D0->KsKs lines (DD+DD and DD+LL were
+    the same as LL+LL). Also added same sign hadron versions of the D0->KKpi0
     and D0->pipipi0. Only for the resolved pi0 versions for now.
 
 ! 2012-06-24 Benoit Viaud
@@ -1530,8 +1532,8 @@
   - StrippingBs2PhiPhi.py: Moved configuration parameters to the top of the file
 
 ! 2012-06-23 Flavio Archilli
-  - StrippingLFVLines.py: updated the B2eMu and B2ee lines, corrected a typo in 
-    B2pMu line, added new line Bu2KJPsiee for the Bs->ee and Bs->emu analyses.  
+  - StrippingLFVLines.py: updated the B2eMu and B2ee lines, corrected a typo in
+    B2pMu line, added new line Bu2KJPsiee for the Bs->ee and Bs->emu analyses.
 
 ! 2012-06-22 Olivier Deschamps for R??gis Lef??vre
 	- update B2HHPi0.py & D02KPiPi0.py
@@ -1547,7 +1549,7 @@
 
 
 ! 2012-06-19 - Patrick Koppenburg
- - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel: 
+ - StrippingB2JpsiXforBeta_s: new line to use V0 from Brunel:
    Comment it out for the time being.
 
 ! 2012-06-19 - Patrick Koppenburg
@@ -1556,9 +1558,9 @@
    will be used.
 
 ! 2012-06-19 - Patrick Koppenburg
- - StrippingB2JpsiXforBeta_s: allow to pass ReFitPvs explicitly to 
-   createCombinationSel and createCombinationsSel (note the spelling difference). 
-   Until now the default was different for the 2 methods. That's a purely 
+ - StrippingB2JpsiXforBeta_s: allow to pass ReFitPvs explicitly to
+   createCombinationSel and createCombinationsSel (note the spelling difference).
+   Until now the default was different for the 2 methods. That's a purely
    estaetic change, there's no change in behaviour.
 
 ! 2012-06-18 - Markward Britsch
@@ -1571,30 +1573,30 @@
  - Change particle container in StrippingInclbJets.py
 
 ! 2012-05-15 - Ricardo Vazquez Gomez
- - Remove the CaloClusterization on the StrippingB2XGamma.py as it kills 
+ - Remove the CaloClusterization on the StrippingB2XGamma.py as it kills
    the smartRef when cloning the CaloHypo already stored on DST
 
 ! 2012-05-11 - Jibo He
- - Added Reco13a test sample 
- - Updated tests/TestMyStrippingLineOn2012Data.py to use Reco13a 
- - Added tests/TestMyStrippingLineOn2012Data_Timing.py for timing 
+ - Added Reco13a test sample
+ - Updated tests/TestMyStrippingLineOn2012Data.py to use Reco13a
+ - Added tests/TestMyStrippingLineOn2012Data_Timing.py for timing
 
 ! 2012-05-09 - Patrick Koppenburg
  e Use Rate limiter from cond DB in No Bias line https://savannah.cern.ch/bugs/?94262
 
 ! 2012-05-02 - Stefania Vecchi
- - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to 
+ - removed ReFitPV=true in python/StrippingSelections/StrippingBd2DstarMuNu.py to
    match the time requirements
 
 !========================= StrippingSelections v3r13 2012-04-27 =========================
-! 2012-04-26 - Anton Poluektov 
+! 2012-04-26 - Anton Poluektov
  - Fix typos in python/StrippingSelections/StrippingB2Kphiphi.py
  - Add new builders to __init__.py
 
 ! 2012-04-26 - Evelina Gersabeck
  - StrippingBu2K1MuMu.py
    - A few minor modifications to improve the timing.
-     PT cut for the hadrons (>500MeV), track chi2 < 2.5, IPCHI > 16 
+     PT cut for the hadrons (>500MeV), track chi2 < 2.5, IPCHI > 16
 
 ! 2012-04-26 - Benoit Viaud
  - StrippingD2XMuMuSS.py
@@ -1608,9 +1610,9 @@
 
 
 ! 2012-04-26 - Thomas Blake
- - Removed same sign combiantions and upadted combinatorics to re-use rho 
-	 for K* and Lambda* for B2XMuMu stripping line. 
- - Bug fix for Bs2KSKS. 
+ - Removed same sign combiantions and upadted combinatorics to re-use rho
+	 for K* and Lambda* for B2XMuMu stripping line.
+ - Bug fix for Bs2KSKS.
 
 
 ! 2012-04-26 - Ricardo Vazquez Gomez
@@ -1632,9 +1634,9 @@
 ! 2012-04-25 - Victor Coco
  - tighten cuts in StrippingDisplVertices to match the retention requirements
 
-! 2012-04-25 - Anton Poluektov 
- - Changes in Beauty2Charm: 
-   * Remove IPchi2 cut for bachelor in Beauty2Charm LT-unbiased B->DK selection. 
+! 2012-04-25 - Anton Poluektov
+ - Changes in Beauty2Charm:
+   * Remove IPchi2 cut for bachelor in Beauty2Charm LT-unbiased B->DK selection.
    * Tighten track chi2 to 2.5 in topoInputs
 
 ! 2012-04-25 - Marco Gersabeck
@@ -1648,10 +1650,10 @@
 ! 2012-04-24 - Vanya Belyaev
 
  - StrippingPsiXforBandQ.py
-  
-     - tighten the default selection of pions and kaons 
+
+     - tighten the default selection of pions and kaons
      - allow   pion and kaon selection to be redefiend from configuration
-     - allow FILTER, ODIN, L0DU and HLT filters... 
+     - allow FILTER, ODIN, L0DU and HLT filters...
 
 
 ! 2012-04-24 Mika Vesterinen
@@ -1672,7 +1674,7 @@
  - Change Radiative stream with photons
  - Use same B pT sum cut than trigger. Reduces rate by 25%
  - Bug fixes in few lines.
- - Adjust mass windows for omega and all hh particles  
+ - Adjust mass windows for omega and all hh particles
 
 ! 2012-04-23 Sean Benson
  - Change StrippingBs2KKhh to use StdTightPhi
@@ -1681,10 +1683,10 @@
 ! 2012-04-19 Johannes Albrecht
  - adapt LFV lines to select B2pmu
 
-! 2012-04-18 Yasmine Amhis 
+! 2012-04-18 Yasmine Amhis
   - Changes made to StrippingHeavyBaryons
-     . Adjust mass windows cuts for Xi and Omega 
-    Put back Alltracks for the bachlors. 
+     . Adjust mass windows cuts for Xi and Omega
+    Put back Alltracks for the bachlors.
 
 ! 2012-04-17 - Paul Seyfert
  - Adjust new(=2012) track chi2 behaviour (VeloMuon tracks differently affected than longtracks)
@@ -1695,7 +1697,7 @@
  - Retune StrippingHighPtJets and StrippingInclbJets wrt new dedicated trigger rates
 
 ! 2012-04-01 - Jibo He
- - __init__.py 
+ - __init__.py
   . Added StrippingCrossSectionB2DMuNuX
 
 ! 2012-03-30 - Alessandra Borgia
@@ -1704,9 +1706,9 @@
 
 ! 2012-03-30 - Jibo He
  - StrippingDiMuonForXsection.py
-   . New line for 8 TeV cross section measurements 
- - __init__.py 
-   . Added StrippingB2TwoBaryons, which replaces StrippingB2PPbar 
+   . New line for 8 TeV cross section measurements
+ - __init__.py
+   . Added StrippingB2TwoBaryons, which replaces StrippingB2PPbar
 
 ! 2012-03-29 - Ricardo Vazquez Gomez
  - StrippingBeauty2XGamma.py
@@ -1724,12 +1726,12 @@
    Changed Bs mass window from 50 to 150
 
 ! 2012-03-25 - Jibo He
- - __init__.py 
+ - __init__.py
   . Added StrippingLb2V0hh, StrippingB2PPbar, StrippingB2FourKHigh, StrippingBs2KKhh
     StrippingBs2KSKS
 
 ! 2012-03-23 - Stefano Perazzini
- - Change of StrippingHb2Charged2Body.py (lines to BhadronCompleteEvent stream) 
+ - Change of StrippingHb2Charged2Body.py (lines to BhadronCompleteEvent stream)
    and creation of the new StrippingB2PPbar.py (line to Bhadron stream)
 
 ! 2012-03-23 - Mika Vesterinen
@@ -1749,7 +1751,7 @@
 
 ! 2012-03-17 - S. Gregson
 - Re-optimised cuts in D(s)->KS0H lines for 2012 running
- 
+
 ! 2012-03-16 - F. Archilli
 - StrippingBs2MuMuLines.py:
 	Modified selection in Bs2MuMuLinesNoMuIDLine in
@@ -1763,7 +1765,7 @@
 - Xibc -> J/psi X lines added
   . inclusive line for Xibc -> J/psi Lc
   . inclusive line for Xibc -> J/psi Xic
-  . exclusive line for Xibc -> J/psi p ... 
+  . exclusive line for Xibc -> J/psi p ...
 
 ! 2012-03-16 - S. Blusk
 - Update to Beauty2Charm
@@ -1793,7 +1795,7 @@
    StrippingDiPhotonDiMuon.py
 
 	 to reduce rate and remove unused lines. (Updates from Simone Bifani included.)
-	
+
 
 
 ! 2012-03-15 - Rafael Coutinho
@@ -1814,13 +1816,13 @@
  - StrippingBs2KSKS.py
    Added this line, selects Bs->KsKs in LLLL track combinations
 
-! 2012-03-14 - Jibo He for Indrek 
+! 2012-03-14 - Jibo He for Indrek
  - StrippingB2MuMuMuMuLines.py
-   Added D->4mu line  
+   Added D->4mu line
 
 ! 2012-03-14 Ricardo Vazquez Gomez
  - Align the StrippingBeauty2XGamma.py with the offline selection to get 1/6 of retention.
- - Added B2OmegaGamma lines, with Omega->HH and Omega->HHH 
+ - Added B2OmegaGamma lines, with Omega->HH and Omega->HHH
 
 ! 2012-03-14 Mika Vesterinen
  - Changes to StrippingB2DMuNuX.py:
@@ -1834,7 +1836,7 @@
  - StrippingB2DMuNuX (SL stream) but are now moving to charm micro DST.
 
 ! 2012-03-08 - Will Barter
- - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry. 
+ - include updates to StrippingZ02TauTau.py to reduce rate. (Updates from S. Farry.
  - update and comment out two lines in StrippingDY2ee.py as these lines are not to be run in 2012.
  - update StrippingZ02ee.py
  - include updates from S.Bifani to StrippingSingleTrackTIS.py and StrippingWMu.py t reduce rate.
@@ -1849,10 +1851,10 @@
 !========================= StrippingSelections v3r11 2012-03-01 =========================
 ! 2012-03-01 - Jibo He
  - StrippingDiMuonNew
-   . Require lifetime unbiased (Di-)Muon TOS for prompt J/psi, psi(2S) lines 
-   . Introduced IPS(mu)>2 for detached J/psi, psi(2S) lines 
+   . Require lifetime unbiased (Di-)Muon TOS for prompt J/psi, psi(2S) lines
+   . Introduced IPS(mu)>2 for detached J/psi, psi(2S) lines
 
-! 2012-02-29 - Anton Poluektov 
+! 2012-02-29 - Anton Poluektov
   * Remove unnecessary import of ConfiguredFastFitter from StrippingTrackEffVeloMuon.py
 
 ! 2012-02-29  -Wenbin Qian
@@ -1863,13 +1865,13 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
  - PromptCharm:
 
-    default cut for D0,D+,Ds,Lc:   pT(C)  > 3 * GeV 
-    for D*+:                       pT(D0) > 2 * GeV 
+    default cut for D0,D+,Ds,Lc:   pT(C)  > 3 * GeV
+    for D*+:                       pT(D0) > 2 * GeV
 
 
 ! 2012-02-27 - Jibo He
  - python/StrippingSelections/StrippingX2psiPiPi.py
-   Fixed the bug of using StdNoPIDsPions, swtiched to StdAllNoPIDsPions; added KK modes. 
+   Fixed the bug of using StdNoPIDsPions, swtiched to StdAllNoPIDsPions; added KK modes.
  - python/StrippingSelections/StrippingBeauty2XGamma.py
    Included Psi(2S) as well, enlarged mass window to include more modes.
 
@@ -1878,14 +1880,14 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
 ! 2012-02-24 - Jibo He
  - Added Prefix "Stripping" for PsiX0.py and PsiXforBandQ.py
- - Added X2psiPiPi, X2psiGamma lines for Prompt Charmonium, X. 
+ - Added X2psiPiPi, X2psiGamma lines for Prompt Charmonium, X.
  - Added the above lines to __init__.py
 
 ! 2012-02-23 - Vanya Belyaev
 
  - PsiXforBandQ.py
    	add the stppingline for B-> J/psi K*+ -> ( K- pi0 ) for gamma/pi0
-   efficiency studies, see LHCb_INT-2012-001   
+   efficiency studies, see LHCb_INT-2012-001
 
 
 ! 2012-02-23 - Stefano Perazzini
@@ -1896,16 +1898,16 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 ! 2012-02-21 - Vanya Belyaev
  - PsiXforBandQ.py
 
-   The coherent stripping for B -> psi(') + n(K,pi) for B&Q 
+   The coherent stripping for B -> psi(') + n(K,pi) for B&Q
 
 ! 2012-02-21 - Vanya Belyaev
 
- - PsiX0.py    
- 
+ - PsiX0.py
+
    #  The attempt for coherent stripping for B -> psi(') X0 modes,
    #  where  X0 :  eta   -> gamma gamma ,
    #               eta   -> pi+ pi- pi0 ,
-   #               eta'  -> rho0 gamma 
+   #               eta'  -> rho0 gamma
    #               eta'  -> pi+ pi- ( eta -> gamma gamma )
    #               omega -> pi+ pi- pi0
    #
@@ -1918,30 +1920,30 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
     add few "parasitic" lines
 
-	  These lines do *NOT* increase the rate, 
-    they just keep the candidates, allowing the studies to 
+	  These lines do *NOT* increase the rate,
+    they just keep the candidates, allowing the studies to
     be performed on microDST.
 
    ## Parasitic:
-   #    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(c,b) + dimuon  ] 
-   #    -       2x ( dimuon + gamma ) [ mimic 2xChi_(c,b)           ] 
+   #    - dimuon + ( dimuon + gamma ) [ mimic   Chi_(c,b) + dimuon  ]
+   #    -       2x ( dimuon + gamma ) [ mimic 2xChi_(c,b)           ]
    #
 
 ! 2012-02-19 - Vanya Belyaev
 
  - StrippingPromptCharm:
 
-    add few "parasitic" lines  
+    add few "parasitic" lines
 
-    These lines do *NOT* increase the rate, 
-    they just keep the candidates, allowing the studies to 
+    These lines do *NOT* increase the rate,
+    they just keep the candidates, allowing the studies to
     be performed on microDST.
 
-    ## excited charm baryons for Biagio Saitta: 
+    ## excited charm baryons for Biagio Saitta:
     #
     #    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
     #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
-    
+
     ## pickup also Chi_(c,b):
     #    - Charm + ( Dimuon + gamma ) ( get for free chi_(c,b) )
 
@@ -1959,7 +1961,7 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
  - StrippingB2JpsiKShh.py
   . Filter Jpsi firstly to save CPU time
   . Switched to MergedSelection for hadrons
- - StrippingB2KShh.py 
+ - StrippingB2KShh.py
   . Fixed the same bug
 
 ! 2012-02-09 - Matthew M Reid
@@ -1972,22 +1974,22 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
  - Remove GaudiConf import from StrippingTrackEffDownMuon.py
 
 ! 2012-02-07 - Jibo He
- - Added to __init__.py 
-   . StrippingB2JpsiKShh 
+ - Added to __init__.py
+   . StrippingB2JpsiKShh
    . StrippingBeauty2XGamma
 
 ! 2012-02-04 - Jibo He
- - Added to __init__.py 
+ - Added to __init__.py
    . StrippingB2ChicK
    . StrippingB2EtacKst
    . StrippingB2MuMuX
    . StrippingB2Kphiphi
- - StrippingHb2Charged2Body.py 
-   Commented out two duplicated blocks. 
+ - StrippingHb2Charged2Body.py
+   Commented out two duplicated blocks.
 
 ! 2012-02-03 - Jibo He
  - StrippingCcbar2PhiPhi.py
-   New Stripping lines for charmonium -> phi phi, both prompt or detached. 
+   New Stripping lines for charmonium -> phi phi, both prompt or detached.
 
 ! 2012-02-03 - Jibo He
  - StrippingBd2mumuKstarBDT.py
@@ -2017,8 +2019,8 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 ! 2012-01-27 - Alessandra Borgia
  - in the file StrippingB2XuMuNu.py: removed Bd->PiMu line. Updated and fixed all cuts for Bs->KMuNu and Bs->KMuNu SS lines and have prescales of 0.5 and 0.25 respectively. Updated and fixed the Bs->KstarMuNu and Bs->KstarMuNu SS lines; Removed the Kstar->KS0 pi requirement and have the Bs->Ks0PiMu. Also added 2 new lines Bd->KS0MuNu, KS0->MuPi; one line for SS muon and one line for OS neutrino.
 
-! 2012-01-27 Yasmine Amhis 
-  - Added Bd2JpsiKsLD in StrippingB2JpsiXforbeta_s 
+! 2012-01-27 Yasmine Amhis
+  - Added Bd2JpsiKsLD in StrippingB2JpsiXforbeta_s
 ! 2012-01-26 Mika Vesterinen
  - Added D0->3KPi, D0->2K2Pi, D0->4Pi to StrippingB2DMuNuX
 
@@ -2039,27 +2041,27 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
    o Lambda_b0 -> p~ K+
 
 ! 2010-01-25 - V. Gligorov
- - Add a line without IP cuts on the B to StrippingHb2Charged2Body.py  
+ - Add a line without IP cuts on the B to StrippingHb2Charged2Body.py
 
 ! 2012-Jan-21 - Patrick Spradlin
- - Updated StrippingLambdac2PKPiForXSec.py 
+ - Updated StrippingLambdac2PKPiForXSec.py
    . Add additional decay modes: Lambda_c+ -> p K K, p pi pi, p K+ pi-.
    . Added optional TisTosTagger to lines.
 
 ! 2012-01-20 - Patrick Koppenburg
  - Widen mass windows of B->J/psiKs and J/psiPhi to catch Cabibbo-suppressed decays.
 
-! 2012-Jan-20 - Ricardo Vazquez 
+! 2012-Jan-20 - Ricardo Vazquez
  - New stripping for radiative decays
    . This new Radiative stripping is based on the Beauty2Charm stripping. It shares the Beauty2Charm_LokiUtils module
-   . Added new lines of Bd,Bs,Bu and Lambda_b. Now there are ~20 lines 
-     
+   . Added new lines of Bd,Bs,Bu and Lambda_b. Now there are ~20 lines
 
-! 2012-Jan-20 - Patrick Owen 
+
+! 2012-Jan-20 - Patrick Owen
  - Added StrippingCharmForVub.py
    . Added new line for determination of Vub
-   
-   
+
+
 ! 2012-01-20 - Marcin Chrzaszcz and Katarzyna Senderowska
 - New stripping lines for B2EtacKst and B2ChicK added
 
@@ -2071,7 +2073,7 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
 ! 2012-01-20 - Thomas Blake
  - Added StrippingBu2K1MuMu to __init__.py
- - Change to B2XMuMu cut dictionary  
+ - Change to B2XMuMu cut dictionary
 
 ! 2012-01-20 - Christian Elsasser
 - Changed cuts and bug fix for Z->tau+ tau- prong lines
@@ -2092,14 +2094,14 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
  - add tau25mu in Tau23MuLines
  - add new file: StrippingLFVLines, contains:
   * Tau2PhiMu
-  * Tau2eMuMu 
-  * B2eMu 
-  * B2ee 
+  * Tau2eMuMu
+  * B2eMu
+  * B2ee
   * B2heMu
 
 ! 2012-01-19 W Bonivento
 
-- remove some mistake in input particles (not done by me) to TwoBody_prompt  
+- remove some mistake in input particles (not done by me) to TwoBody_prompt
 
 ! 2012-01-19 - Michel De Cian
  - Added  new lines for (light) inflaton stripping in StrippingInflaton2MuMuLine
@@ -2115,7 +2117,7 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
 ! 2012-01-12 - Evelina Gersabeck
  - Add separate stripping line builder python/StrippingSelections/StrippingBu2K1MuMu for Bu-> K1 mu mu events;
- - Modify the stripping line python/StrippingSelections/StrippingB2XMuMu by incliding a line for Bu-> K1 mu mu events 
+ - Modify the stripping line python/StrippingSelections/StrippingB2XMuMu by incliding a line for Bu-> K1 mu mu events
 
 ! 2012-01-10 - Patrick Koppenburg
  - Widen mass window for B->J/psiPi0
@@ -2156,14 +2158,14 @@ Change pionsel, muonsel sequence into muonsel, pionsel in B2XMuMuSS lines
 
 ! 2011-10-11 - Jibo He
  - tests/TestMyStrippingLineOn2011Data.py
-  . Updated to use Root format test files, and new database tags. 
+  . Updated to use Root format test files, and new database tags.
 
 !========================= StrippingSelections v3r9 2011-09-30 =========================
 ! 2011-09-30 - Cibran Santamarina
- - StrippingBs2PhiKst0.py: Fixing an bug in the IP cut of the phi daughters. 
+ - StrippingBs2PhiKst0.py: Fixing an bug in the IP cut of the phi daughters.
 
 ! 2011-09-30 - Alessandra Borgia
- - StrippingB2DMuNuX.py.: added a new line, B->D0MuNu, D0->PiPi for SL Acp measurement. Also, removed an unnecessary cut in all the lines (DsIP). 
+ - StrippingB2DMuNuX.py.: added a new line, B->D0MuNu, D0->PiPi for SL Acp measurement. Also, removed an unnecessary cut in all the lines (DsIP).
 
 ! 2011-09-29 - Michel De Cian
  - Changed DecayDescriptor in StrippingInflaton2MuMu

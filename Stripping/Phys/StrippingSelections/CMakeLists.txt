@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingSelections
 ################################################################################
-gaudi_subdir(StrippingSelections v3r33)
+gaudi_subdir(StrippingSelections v3r34)
 
 gaudi_depends_on_subdirs(GaudiConfUtils
                          Kernel/LHCbAlgs
