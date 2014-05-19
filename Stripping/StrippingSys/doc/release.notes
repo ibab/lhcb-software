@@ -3,8 +3,14 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
-! 2014-04-14 - Rob Lambert
- - Restored/updated configurables test, see task #50698
+!========================= StrippingSys v8r2 2014-05-19 =========================
+
+* Phys/StrippingSelections
+ - added StrippingPsiX0.py for few modes with chi_c
+   (to be used for B&Q WG-production #8)
+ - Fixed a typo in StrippingPsiXForBandQ.py for psi_K
+
+* Restored/updated configurables test, see task #50698 (thanks to Rob Lambert)
 
 !========================= StrippingSys v8r1p1 2014-04-03 =========================
 
