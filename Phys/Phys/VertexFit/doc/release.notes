@@ -4,11 +4,12 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
-! 2014-05-13 - Vanya Belyaev
+!========================= VertexFit v6r19 2014-05-19 =========================
 
- - PVReFitterAlg.cpp
-   chaneg the default refitting tool from 
-   AdaptivePVReFitter to LoKi::PVReFitter 
+! 2014-05-13 - Vanya Belyaev
+ - PVReFitterAlg.cpp : Change the default refitting tool from 
+                       AdaptivePVReFitter to LoKi::PVReFitter, match change
+                       in core DaVinci base classes.
 
 !========================= VertexFit v6r18 2014-04-02 =========================
 
