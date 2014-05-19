@@ -1,13 +1,13 @@
 package DaVinciSys
-version v34r1p1
+version v35r0
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v34r1p1    Phys
-use  DaVinciTests    v2r23
+use  DaVinci         v35r0    Phys
+use  DaVinciTests    v2r24
 
-#Moved from Analysis, see task #50698
+# Moved from Analysis, see task #50698
 use  KaliCalo        v4r14p1  Phys   # Vanya Belyaev
 
 # Declare this as a container package

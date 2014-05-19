@@ -3,9 +3,45 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v35r0>2014-05-19 DaVinci v35r0</A></H1><PRE>
+
+New development release based on the LHCb v37r2 stack.
+New major release version, due to backwards incompatible changes to FT support.
+
+New Package : KaliCalo
+
+Executive Summary of notable Phys, Analysis and Stripping changes 
+
+Vertex Fitting :
+ . PVReFitterAlg : Change the default refitting tool from 
+                   AdaptivePVReFitter to LoKi::PVReFitter, match change
+                   in core DaVinci base classes.
+Jets :
+ . Add the JEC file R=0.7 in the possible configs.
+ . Add the track type fraction (numbers and energies).
+
+Selections :
+ . If a tool fails to initialize in Selection::Line::initialize(), pass this
+   failure back to the application framework.
+
+Python :
+ . Fix "bernstain" and "positive" parameterisation of histograms.
+ . Improve positive polynomials.
+ . Make use of analytical integrals.
+
+Common Particles :
+ . Basics used StdNoPIDs instead of StdAllNoPIDs.
+
+Persistency :
+ . microdst.py : Add switch to enable the automatic refitting of PVs for uDST 
+                 (useful for WG-productions). Default is "no refit".
+
+DecayTreeTuple :
+ . Overhaul TupleToolSwimmingInfo : See Analysis release notes for details.
+
 ! 2014-04-14 - Rob Lambert
  - Restored/updated configurables test, see task #50698
- - Moved KaliCalo into DaVinci due to the UsedConfigurables. Can always be moved back later.
+ - Moved KaliCalo into DaVinci due to the UsedConfigurables.
 
 </PRE><H1><A NAME=v34r1p1>2014-04-03 DaVinci v34r1p1</A></H1><PRE>
 
