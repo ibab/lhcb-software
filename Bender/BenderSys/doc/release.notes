@@ -23,6 +23,19 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v24r0>   2014-05-20 Bender v24r0 based on the DaVinci v35r0</A>
+<ul>
+<li>Similar to v23r*
+<li>Based on the DaVinci v35r0</li>
+<li>Fixes for bender-based scripts</li>
+<li>(optional) use environment variable BENDERDATAPATH 
+    to look for input data</li>
+<li>Add possibility to pre-execute python scripts 
+    in <code>dst-explorer</code></li
+<li>Updated tutorial!</li>
+</ul>
+
+
 <A NAME=v23r4>   2014-03-26 Bender v23r4 based on the DaVinci v34r1</A>
 <ul>
 <li>Almost identical to v23r3</li> 
