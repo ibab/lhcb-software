@@ -5,6 +5,8 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v24r0     2014-05-20 ==================
+
 ! 2014-05-18 - Vanya Belyaev
  - dst-explorer 
    add possibility to execute some files
