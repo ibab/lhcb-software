@@ -7,6 +7,11 @@
 ! Purpose     : Start-Up tutorial for Bender 
 ! -----------------------------------------------------------------------------
 
+! ======================== BenderTutor v24r0 2014-05-20 =======================
+
+! 2014-05-20 - Vanya Belyaev
+ - new tutorial: https://twiki.cern.ch/twiki/bin/view/LHCb/BenderTutorialV23
+
 ! 2014-01-21 - Marco Clemencic
  - Added CMake configuration file.
 
