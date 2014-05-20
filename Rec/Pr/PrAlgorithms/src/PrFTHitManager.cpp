@@ -42,10 +42,16 @@ PrFTHitManager::~PrFTHitManager() {}
 void PrFTHitManager::buildGeometry ( ) {  
   IRndmGenSvc* randSvc;
   service( "RndmGenSvc", randSvc );
-  m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
+  StatusCode sc = m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
+  if ( sc.isFailure() ){
+    error() << "Could not initialize Rndm::Gauss generator" << endmsg;
+    return;
+  }
+  
+    
   m_ftDet = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
   //version 20 is the detector with monolayer and fibremat structure, including the dead regions
-  debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg;  
+  if ( msgLevel( MSG::DEBUG) )  debug() << "DETECTOR VERSION: " << m_ftDet->version() << endmsg;  
   DetectorSegment seg;
 
   for ( std::vector<DeFTLayer*>::const_iterator itL = m_ftDet->layers().begin();  //loop over layers
@@ -54,7 +60,7 @@ void PrFTHitManager::buildGeometry ( ) {
     LHCb::FTChannelID tmp( id, 0u, 0u, 0u, 0u ); //"0u" means "unsigned 0" 
     const DeFTFibreMat* ftMat = m_ftDet->findFibreMat(tmp);
     seg = ftMat->createDetSegment( tmp, 0. ); 
-    debug() << "STEREO ANGLE: " <<  ftMat->angle() << endmsg;
+    if ( msgLevel( MSG::DEBUG) ) debug() << "STEREO ANGLE: " <<  ftMat->angle() << endmsg;
     
     //The setGeometry defines the z at y=0, the dxDy and the dzDy, as well as the isX properties of the zone. 
     //This is important, since these are used in the following. 
@@ -68,9 +74,9 @@ void PrFTHitManager::buildGeometry ( ) {
     //The isInside(x,y) method is used in the forward algorithm. 
     zone( 2*id+1 )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down (with new FTChannelID)
     zone( 2*id   )->setBoundaries( -4090., 4090., -50., 3030. ); //check this boudaries values for zone up (with new FTChannelID) 
-    debug() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
+    if ( msgLevel( MSG::DEBUG) ) debug() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
   }
-  debug() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
+  if ( msgLevel( MSG::DEBUG) ) debug() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
 }
 
 
@@ -79,11 +85,11 @@ void PrFTHitManager::buildGeometry ( ) {
 //=========================================================================
 void PrFTHitManager::decodeData ( ) {
   
-  debug() << "I AM IN DECODEDATA " << endmsg;
+  if ( msgLevel( MSG::DEBUG) ) debug() << "I AM IN DECODEDATA " << endmsg;
   
   typedef FastClusterContainer<LHCb::FTLiteCluster,int> FTLiteClusters;
   FTLiteClusters* clus = get<FTLiteClusters>( LHCb::FTLiteClusterLocation::Default );
-  debug() << "Retrieved " << clus->size() << " clusters" << endmsg;
+  if ( msgLevel( MSG::DEBUG) ) debug() << "Retrieved " << clus->size() << " clusters" << endmsg;
   const DeFTFibreMat* ftMat = nullptr;
   const DeFTFibreMat* anaFtMat = nullptr;
   unsigned int oldFibreMatID = 99999999;
@@ -133,7 +139,7 @@ void PrFTHitManager::decodeData ( ) {
     PrHit* aHit = newHitInZone( code );
     float errX = 0.05 + .03 * (*itC).size();
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
-    debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
+    if ( msgLevel( MSG::DEBUG) ) debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
 
 
