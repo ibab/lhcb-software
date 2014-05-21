@@ -6,12 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-05-21 - Marco Cattaneo
+ - Use constexpr in Functions.cpp, to fix compilation problem with clang
+
 !========================= LHCbMath v3r47 2014-05-12 =========================
 ! 2014-05-11 - Vanya Belyaev
  - improve positive polynomials 
 
 ! 2014-05-10 - Vanya Belyaev
- - impove integration and fix few bugs 
+ - improve integration and fix few bugs 
 
 ! 2014-05-09 - Vanya Belyaev
 
@@ -23,7 +26,7 @@
 
 
 ! 2014-05-04 - Vanya Belyaev
- - analytial integration of bvernsteins polynomials 
+ - analytical integration of bvernsteins polynomials 
 
 !========================= LHCbMath v3r46 2014-03-17 =========================
 ! 2014-03-16 - Vanya Belyaev

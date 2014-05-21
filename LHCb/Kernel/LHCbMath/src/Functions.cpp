@@ -6,7 +6,7 @@
 // ============================================================================
 #include <cmath>
 #include <map>
-#include <climits>
+#include <limits>
 #include <iostream>
 #include <complex>
 #include <algorithm>
@@ -188,12 +188,12 @@ namespace
   /** @var s_INFINITY
    *  representation of positive INFINITY
    */
-  const double s_INFINITY      = 0.8 * std::numeric_limits<double>::max ()  ;
+  constexpr double s_INFINITY  = 0.8 * std::numeric_limits<double>::max ()  ;
   // ==========================================================================
   /** @var s_SMALL
    *  representation of positive "small"
    */
-  const double s_SMALL         = 2.0 * std::numeric_limits<double>::min ()  ;
+  constexpr double s_SMALL     = 2.0 * std::numeric_limits<double>::min ()  ;
   // ==========================================================================  
   BOOST_STATIC_ASSERT ( 0 < s_SMALL ) ;
   // ==========================================================================
