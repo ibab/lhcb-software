@@ -3,11 +3,15 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+
+
+! 2014-05-21 - Sebastian Neubert
+ - updated tracking tests for new split configuration
+
 ! 2014-05-08 - Gerhard Raven
  - tweak 'split' configuration: set sourceID, remove lumi stripper in Hlt1, ...
 
 !========================= Moore v22r1 2014-04-29 =========================
-
 
 ! 2014-04-24 - Gerhard Raven
  - insert HltConfigSvc as first in ExtSvc

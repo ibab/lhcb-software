@@ -7,7 +7,7 @@
 #   ../options/Moore.py
 #
 import Gaudi.Configuration
-from Moore.Configuration import Moore
+from Moore.Configuration import Moore 
 
 
 Moore().WriterRequires = [ 'Hlt1' ]
@@ -16,4 +16,3 @@ Moore().outputFile = 'hlt1_reqhlt1.raw'
 
 #use new splitting of Hlt2
 Moore().Split='Hlt1'
-Moore().ThresholdSettings="Hlt1_"+Moore().ThresholdSettings
