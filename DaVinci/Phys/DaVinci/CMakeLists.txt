@@ -15,9 +15,7 @@ gaudi_depends_on_subdirs(AnalysisSys
                          PhysSys
                          RecSys
                          Sim/SimComponents
-                         StrippingSys
-                         PRConfig
-                         QMTestFiles)
+                         StrippingSys)
 
 find_package(HepMC)
 

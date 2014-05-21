@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-05-21 - Ben Couturier
+ - Fixed CMake configuration file to remove data packages specified as 
+   sub-dirs.
+
 !========================= DaVinci v35r0 2014-05-19 ===========================
 
 ! 2014-05-19 - Chris Jones
