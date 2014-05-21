@@ -13,4 +13,6 @@ gaudi_project(DaVinci v35r0
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
                    ParamFiles VERSION v8r*
+                   QMTestFiles VERSION v1r*
+                   PRConfig VERSION v1r* 
                    TCK/HltTCK)
