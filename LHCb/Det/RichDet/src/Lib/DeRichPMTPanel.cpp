@@ -1304,6 +1304,11 @@ DeRichPMTPanel::detPlanePoint( const Gaudi::XYZPoint& pGlobal,
 
   std::vector<int> aC = findPMTArraySetup( hitPosition );
   sc = sc && setRichPmtSmartID(aC,smartID );
+  if ( sc == StatusCode::FAILURE) 
+  {
+    return  LHCb::RichTraceMode::RayTraceFailed;
+  }
+  
 
   bool isInPanelAcc = isInPmtPanel( panelIntersection  ) ;
   // the following line to be modifed after getting the new values for
@@ -1330,6 +1335,10 @@ DeRichPMTPanel::PDWindowPoint( const Gaudi::XYZVector& vGlobal,
 
   std::vector<int> aC = findPMTArraySetup(windowPointGlobal  );
   sc = sc && setRichPmtSmartID(aC,smartID );
+  if(sc == StatusCode::FAILURE) {
+    return  LHCb::RichTraceMode::RayTraceFailed;
+  }
+
 
   bool isInPanelAcc = isInPmtPanel( panelIntersection  ) ;
   bool isInPmtAcc=false;

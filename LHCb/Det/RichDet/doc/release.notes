@@ -3,7 +3,8 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
-
+!2014-05-21 - Sajan Easo
+- Added couple of tests of Status code
 !========================= RichDet v16r22 2014-05-12 =========================
 !2014-05-08 - Sajan Easo
 - Added a test on StatusCode::FAILURE and removed a print statement in DeRichPMTPanel.cpp  
