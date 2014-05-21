@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-05-21 - Jaap Panman
+ - More sanity checks in LumiIntegrateFSR to handle empty timeSpanFSRs 
+   (possible problem with legacy reco versions after merging)
+
 !========================= LumiAlgs v9r2 2014-05-13 =========================
 ! 2014-04-16 - Rob Lambert
  - Update eos paths and add PRConfig to requirements

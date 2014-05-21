@@ -270,17 +270,38 @@ StatusCode LumiIntegrateFSR::add_file() {
         if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << " found" << endmsg ;
         long fkey_ts = 0;
         LHCb::LumiFSRs::iterator checkfsr = lumiFSRs->begin();
-        for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
+	// length of container to check against the other FSRs
+	unsigned long fsr_len = lumiFSRs->size();
+  	// search for the TimeSpanFSR 
+  	std::string timeSpanRecordAddress(primaryFileRecordAddress);
+  	timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
+  	timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_FSRName), m_FSRName.size(), m_TimeSpanFSRName );
+  	// read TimeSpanFSR to check length of container
+	unsigned long tsfsr_len = 0;
+  	if ( exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
+  	  if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+  	  LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
+  	  LHCb::TimeSpanFSRs::iterator tsfsr = timeSpanFSRs->begin();
+  	  // check index bounds
+  	  tsfsr_len = timeSpanFSRs->size();
+	  if ( msgLevel(MSG::DEBUG) ) debug() << "number of timeSpanFSRs: " << tsfsr_len << " number of FSRs " << fsr_len << endmsg;
+	  if ( tsfsr_len < fsr_len ) {
+	    warning() << "number of timeSpanFSRs: " << tsfsr_len << " smaller than number of FSRs " << fsr_len << endmsg;
+	  }
+	}
 
+	// run over the FSRs in this container and sum
+        for ( unsigned int fkey = 0; fkey != lumiFSRs->size(); fkey++ ) {
           // trigger database update using the timeSpan FSR
           // if no run number defined, there is no timespan FSR, so skip it
           LHCb::TimeSpanFSR* timeSpanFSR = NULL;
           if ( checkfsr[fkey]->runNumbers().size() ) {
             timeSpanFSR = trigger_event(primaryFileRecordAddress, fkey_ts);
-            fkey_ts++;
+	    fkey_ts++;
           } else {
-            warning() << "missing run number at keycount: " << fkey << " " << fkey_ts 
+            warning() << "missing run number at keycount: " << fkey << " / " << fkey_ts 
                       << " skip db update for this FSR (" << primaryFileRecordAddress << ")" << endmsg;
+	    if ( tsfsr_len >= fsr_len ) fkey_ts++;
           }
 
           // integrate only if DQ-accepted - flag is updated in trigger_event 
@@ -381,6 +402,18 @@ StatusCode LumiIntegrateFSR::add_file() {
 LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecordAddress, unsigned int fkey ) {
   StatusCode sc = StatusCode::SUCCESS;
 
+  // get run number
+  LHCb::LumiFSRs* lumiFSRs = get<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress);
+  LHCb::LumiFSRs::iterator fsr = lumiFSRs->begin();
+  LHCb::LumiFSR* lumiFSR = fsr[fkey];
+  unsigned long run = 0;
+  if ( lumiFSR->runNumbers().size() ) {
+    run = lumiFSR->runNumbers()[0];
+  } else {
+    warning() << "missing run number at keycount: " << fkey << endmsg;
+  }
+  if ( msgLevel(MSG::DEBUG) ) debug() << " run number " << run << endmsg;
+
   // return object
   LHCb::TimeSpanFSR* timeSpanFSR = NULL;
   // search for the TimeSpanFSR 
@@ -391,8 +424,7 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
 
   // read TimeSpanFSR to prepare DB access 
   if ( !exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
-    if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " not found" << endmsg ;
-    // return StatusCode::FAILURE;
+    if ( msgLevel(MSG::ERROR) ) error() << timeSpanRecordAddress << " timeSpanFSR not found - use previous DB conditions" << endmsg ;
     return timeSpanFSR;
   } else {
     if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
@@ -405,20 +437,34 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
     if ( (unsigned long)fkey > tsfsr_len-1 ) { 
       warning() << "missing timeSpanFSR - use previous DB conditions" << endmsg;
       return timeSpanFSR;
-      // return StatusCode::SUCCESS;
     } 
+    // define the time interval
     timeSpanFSR = tsfsr[fkey];
     ulonglong t0 = timeSpanFSR->earliest();
     ulonglong t1 = timeSpanFSR->latest();
-    if ( msgLevel(MSG::DEBUG) ) {
-      debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *timeSpanFSR << endmsg;
-      debug() << timeSpanRecordAddress << " interval: " << t0 << "-" << t1 << endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *timeSpanFSR << " interval: " << t0 << "-" << t1 << endmsg;
+    // no time found - try first to repair
+    if ( t0 == 0 || t1 == 0 ) {
+      debug() << "no time span defined - try harder by using a nearby interval" << endmsg;
+      for ( unsigned long new_fkey = 0; new_fkey < tsfsr_len; ++new_fkey ) {
+	timeSpanFSR = tsfsr[new_fkey];
+	t0 = timeSpanFSR->earliest();
+	t1 = timeSpanFSR->latest();
+	if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *timeSpanFSR << " interval: " << t0 << "-" << t1 << endmsg;
+	if ( t0 != 0 && t1 != 0 ) {
+	  LHCb::LumiFSR* new_lumiFSR = fsr[new_fkey];
+	  unsigned long new_run = 0;
+	  if ( new_lumiFSR->runNumbers().size() ) new_run = new_lumiFSR->runNumbers()[0];
+	  warning() << timeSpanRecordAddress << " replacement interval: " << t0 << "-" << t1 << " run number: " << new_run << endmsg;
+	  break;
+	}
+      }
     }
-    if ( t0 == 0 && t1 == 0 ) {
+    // check if OK now
+    if ( t0 == 0 || t1 == 0 ) {
       m_statusScale = 0;        // invalid luminosity: no time span
-      error() << "ERROR: no time span defined " << endmsg;
+      error() << "ERROR: no time span defined at all (usually due to empty input file) - this invalidates the luminosity calculation!" << endmsg;
       return timeSpanFSR;
-      // return StatusCode::FAILURE;
     }
     // the TimeSpanFSRs have now been read -  fake event loop to get update of calibration constants
     m_dds->setEventTime(Gaudi::Time( (t1/2+t0/2)*1000 ));
@@ -470,7 +516,6 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
   m_statusScale *= m_databaseTool->StatusScale();
 
   return timeSpanFSR;
-  // return StatusCode::SUCCESS;
 }
 
 //=========================================================================
