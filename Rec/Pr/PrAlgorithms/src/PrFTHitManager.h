@@ -10,7 +10,12 @@
 static const InterfaceID IID_PrFTHitManager ( "PrFTHitManager", 1, 0 );
 
 /** @class PrFTHitManager PrFTHitManager.h
+ *  Tool that transforms clusters into 'hits' (spatial positions) which are then used by the pattern
+ *  recognition algorithms involving the FT.
  *  
+ *  Parameters:
+ *  - XSmearing: Amount of gaussian smearing in x
+ *  - ZSmearing: Switch on displacement in z (not used at the moment)
  *
  *  @author Olivier Callot
  *  @date   2012-03-13
@@ -28,16 +33,23 @@ public:
 
   virtual ~PrFTHitManager( ); ///< Destructor
 
+  /** @brief Setup geometry of FT with hit zones for top / bottom / x-u-v-x layers
+   */
   void buildGeometry();
   
+  /** @brief Construct the hits and apply smearing to hit position (if enabled)
+   */
   void decodeData();
+
+  bool m_geometryBuilt; ///< Flag to check if geometry was already built
+  
 
 protected:
 
 private:
   DeFTDetector* m_ftDet;
-  Rndm::Numbers m_gauss;
-  float m_xSmearing;
-  float m_zSmearing;
+  Rndm::Numbers m_gauss; ///< Random number generator for gaussian smearing
+  float m_xSmearing;  ///< Amount of smearing in x
+  float m_zSmearing; 
 };
 #endif // PRFTHITMANAGER_H

@@ -25,7 +25,8 @@ DECLARE_TOOL_FACTORY( PrFTHitManager )
 PrFTHitManager::PrFTHitManager( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : PrHitManager ( type, name , parent )
+: PrHitManager ( type, name , parent ),
+  m_geometryBuilt(false)
 {
   declareInterface<PrFTHitManager>(this);
   declareProperty( "XSmearing",   m_xSmearing = -1. );
@@ -40,8 +41,12 @@ PrFTHitManager::~PrFTHitManager() {}
 //  Create the zones in the hit manager, 'zone' is a method of the base class
 //=========================================================================
 void PrFTHitManager::buildGeometry ( ) {  
-  IRndmGenSvc* randSvc;
-  service( "RndmGenSvc", randSvc );
+  
+  // -- only build geometry once.
+  if(m_geometryBuilt) return;
+  
+
+  IRndmGenSvc* randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
   StatusCode sc = m_gauss.initialize( randSvc, Rndm::Gauss( 0., 1. ) );
   if ( sc.isFailure() ){
     error() << "Could not initialize Rndm::Gauss generator" << endmsg;
@@ -72,11 +77,16 @@ void PrFTHitManager::buildGeometry ( ) {
     //(see https://svnweb.cern.ch/trac/lhcb/browser/Rec/trunk/Pr/PrKernel/PrKernel/PrHitZone.h?rev=164716). 
     //These are currently not used anywhere in the seeding algorithm.
     //The isInside(x,y) method is used in the forward algorithm. 
-    zone( 2*id+1 )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down (with new FTChannelID)
-    zone( 2*id   )->setBoundaries( -4090., 4090., -50., 3030. ); //check this boudaries values for zone up (with new FTChannelID) 
-    if ( msgLevel( MSG::DEBUG) ) debug() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
+    zone( 2*id+1 )->setBoundaries( -4090., 4090., -3030., 50. ); //check these boudaries for zone down (with new FTChannelID)
+    zone( 2*id   )->setBoundaries( -4090., 4090., -50., 3030. ); //check these boudaries for zone up (with new FTChannelID) 
+    if ( msgLevel( MSG::DEBUG) ) debug() << "Layer " << id << " z " << zone(2*id)->z() 
+                                         << " angle " << zone(2*id)->dxDy() << endmsg;
   }
   if ( msgLevel( MSG::DEBUG) ) debug() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
+  
+  m_geometryBuilt = true;
+  
+
 }
 
 
@@ -139,7 +149,8 @@ void PrFTHitManager::decodeData ( ) {
     PrHit* aHit = newHitInZone( code );
     float errX = 0.05 + .03 * (*itC).size();
     aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
-    if ( msgLevel( MSG::DEBUG) ) debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
+    if ( msgLevel( MSG::DEBUG) ) debug() << " .. hit " << (*itC).channelID() 
+                                         << " zone " << zone << " x " << seg.x(0.) << endmsg;
   }
 
 

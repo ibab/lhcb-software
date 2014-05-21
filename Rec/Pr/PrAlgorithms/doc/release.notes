@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-05-21 - Michel De Cian
+ - Introduce flag in 'buildGeometry' of PrFTHitManager that ensures that the geometry is only built once. Add doxygen comments.
+
 ! 2014-05-20 - Michel De Cian
  - Fix unchecked StatusCode and unprotected debug()s in PrFTHitManager.
 
