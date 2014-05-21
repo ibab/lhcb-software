@@ -14,7 +14,6 @@
 
 // local
 #include "HackRunNrAndGPSSvc.h"
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : 
 //
@@ -31,14 +30,16 @@ DECLARE_SERVICE_FACTORY( HackRunNrAndGPSSvc )
 //=============================================================================
 HackRunNrAndGPSSvc::HackRunNrAndGPSSvc( const std::string& name, ISvcLocator* pSvcLocator )
     : extends1<Service, IIncidentListener>( name, pSvcLocator )
+    , m_dim{ "RunInfo/LHCb1/RunNumber" }
+    , m_incident{ "APP_RUNNING" }
+    , m_runnr{ -1 }
     , m_odinTool{ "ODINDecodeTool", this }
     , m_evtSvc{ nullptr }
     , m_run{ nullptr }
-    , m_dim{ "RunInfo/LHCb1/RunNumber" }
-    , m_runnr{ -1 }
 {
     declareProperty("RunNumberDimService" , m_dim );
     declareProperty("FixedRunNumber" , m_runnr );
+    declareProperty("Incident" , m_incident );
 }
 
 //=============================================================================
@@ -62,6 +63,7 @@ StatusCode HackRunNrAndGPSSvc::initialize()
     svc->addListener(this,IncidentType::BeginEvent,
                           std::numeric_limits<long>::max(),rethrow,oneShot);
 
+    svc->addListener(this,m_incident, 0,rethrow,oneShot);
   
 
     return StatusCode::SUCCESS;
@@ -91,12 +93,16 @@ StatusCode HackRunNrAndGPSSvc::finalize()
 //=============================================================================
 StatusCode HackRunNrAndGPSSvc::start()
 {
-        always() << "HackRunNrAndGPSSvc::start; " << m_dim << " " << m_runnr << endmsg;
+        return StatusCode::SUCCESS;
+}
+
+void HackRunNrAndGPSSvc::getDim()
+{
+        always() << "HackRunNrAndGPSSvc::getDim; " << m_dim << " " << m_runnr << endmsg;
         if (!m_dim.empty() && m_runnr <= 0 ) {
             always() << "Requesting run number from DIM service " << m_dim << endmsg;
             m_run.reset( new RunNumber(m_dim.c_str()) );
         }
-        return StatusCode::SUCCESS;
 }
 //=============================================================================
 // stop
@@ -107,8 +113,9 @@ StatusCode HackRunNrAndGPSSvc::stop()
         return StatusCode::SUCCESS;
 }
 
-void HackRunNrAndGPSSvc::pokeODINRawBank( LHCb::RawBank *bank, unsigned runnr, Gaudi::Time time ) {
-
+void 
+HackRunNrAndGPSSvc::pokeODINRawBank( LHCb::RawBank *bank, unsigned runnr, Gaudi::Time time ) 
+{
   Assert(bank->type() == LHCb::RawBank::ODIN, "Wrong ODIN raw bank type",name(),StatusCode::FAILURE);
   Assert(bank->magic() == LHCb::RawBank::MagicPattern, "Magic pattern mismatch in ODIN raw bank",name(),StatusCode::FAILURE);
   Assert(bank->version() == 6, "Can only handle ODIN version 6" ,name(),StatusCode::FAILURE);
@@ -123,8 +130,6 @@ void HackRunNrAndGPSSvc::pokeODINRawBank( LHCb::RawBank *bank, unsigned runnr, G
 
   data[LHCb::ODIN::GPSTimeHi]   =   ( t >> 32) & 0xFFFFFFFFul ;
   data[LHCb::ODIN::GPSTimeLo]   =   t  & 0xFFFFFFFFul ;
-
-  
 }
 
 void HackRunNrAndGPSSvc::poke( LHCb::RawEvent *event, unsigned runnr ) {
@@ -149,7 +154,13 @@ void HackRunNrAndGPSSvc::poke( LHCb::RawEvent *event, unsigned runnr ) {
         }
 }
 
-void HackRunNrAndGPSSvc::handle( const Incident& /*incident*/ )
+void HackRunNrAndGPSSvc::handle( const Incident& incident )
+{
+    if ( incident.type() == m_incident ) getDim();
+    if ( incident.type() == IncidentType::BeginEvent ) update();
+}
+
+void HackRunNrAndGPSSvc::update()
 {
     // check that  ODIN is not yet present in the TES!!!! We need to get it first!!!
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc, LHCb::ODINLocation::Default );
@@ -174,5 +185,3 @@ void HackRunNrAndGPSSvc::handle( const Incident& /*incident*/ )
         always() << " decoded ODIN gives: " <<  odin->runNumber() << " " << odin->eventNumber() << " " << odin->eventTime() << endmsg;
     }
 }
-
-
