@@ -67,6 +67,12 @@ LoKi::Particles::ClosestApproach::distance_
   const LHCb::Particle* p2 ) const 
 {
   //
+  if ( 0 != p1 && p1 == p2 ) 
+  {
+    Warning("doca: the same particle, return 0");
+    return 0 ;
+  }
+  //
   if ( 0 == tool     ()   ) 
   { 
     Error ( " Tool      is invalid, return 'InvalidDistance' " ) ;
@@ -96,6 +102,12 @@ LoKi::Particles::ClosestApproach::chi2_
 ( const LHCb::Particle* p1 , 
   const LHCb::Particle* p2 ) const 
 {
+  //
+  if ( 0 != p1 && p1 == p2 ) 
+  {
+    Warning("chi2: the same particle, return 0");
+    return 0 ;
+  }
   //
   if ( 0 == tool     ()   ) 
   { 

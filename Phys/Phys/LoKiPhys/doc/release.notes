@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-05-22 - Vanya Belyaev
+ - *DOCA* - add an explici ttretamtn of "the same" particles 
+
+
+! 2014-05-22 - Vanya Belyaev
  - Phys.py 
    minor fix: 
 	 save/backup "old/C++" definition of LHCb::Particle::daughters 
