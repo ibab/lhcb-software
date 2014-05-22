@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-22 - Vanya Belyaev
+ - RemoveDaughter
+   simple context manager to "drop" daughter particle fomr the decay tree
+ 
 ! ==================== Phys/BenderTools v24r0     2014-05-20 ==================
 
 ! 2014-05-18 - Vanya Belyaev

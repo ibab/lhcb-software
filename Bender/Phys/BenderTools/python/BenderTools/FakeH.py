@@ -161,11 +161,16 @@ class FakeH ( object ) :
             self._oldpid   = LHC.Particle ( _pid ) 
             self._particle.setParticleID ( self._newpid )
             
+        return self
+        
     def __exit__  ( self, *_ ) :
 
         if self._particle and self._oldpid :
             self._particle.setParticleID ( self._oldpid )
-
+            
+        self._particle = None
+        self._oldpid   = None 
+        self._newpid   = None 
 
 # ===============================================================================
 # | pi-               |         -211 |  -1  |   139.6 MeV | 
