@@ -860,15 +860,15 @@ class StrippingPromptCharmConf(LineBuilder) :
             | ( ADAMASS ( 'Xi_c+'     ) < 65 * MeV ) ) &
             ( APT            > %s ) & 
             ( ACHI2DOCA(1,3) < 16 ) &
-            ( ACHI2DOCA(2,2) < 16 ) 
+            ( ACHI2DOCA(2,3) < 16 ) 
             """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
             ##
             MotherCut      = """
-            ( chi2vx  < 25 )                       &
-            ( PT      > %s                       ) &
+            ( chi2vx  < 25 )                          &
+            ( PT      > %s                          ) &
             ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
             | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
-            ( ctau  > 100 * micrometer           )  
+            ( ctau  > 100 * micrometer              )  
             """ % self [ 'pT(Lc+)']
             )
     
@@ -899,7 +899,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             | ( ADAMASS ( 'Xi_c+'     ) < 65 * MeV ) ) &
             ( APT            > %s ) & 
             ( ACHI2DOCA(1,3) < 16 ) &
-            ( ACHI2DOCA(2,2) < 16 ) 
+            ( ACHI2DOCA(2,3) < 16 ) 
             """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
             ##
             MotherCut      = """
@@ -907,7 +907,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ( PT      > %s                          ) &
             ( ( ADMASS ( 'Lambda_c+' ) < 55 * MeV ) 
             | ( ADMASS ( 'Xi_c+'     ) < 55 * MeV ) ) &
-            ( ctau  > 100 * micrometer       )  
+            ( ctau  > 100 * micrometer              )  
             """ % self [ 'pT(Lc+)']
             )
 

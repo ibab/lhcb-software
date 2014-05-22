@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-05-22 - Vanya Belyaev
+
+ - PromptCharm
+   fix stypud typo in Lambda_c selection.
+   Unfortunately it means that Lambda_c  and 
+   related selection (Sigma_c, Xi_c, lambda_c**, ...)  
+   from this module from the incremental stripping v20r*p3 
+   are wrong and can't be used.. :-( 
+
 !========================= StrippingSelections v3r34 2014-05-19 =========================
 
 ! 2014-05-13 - Vanya Belyaev
