@@ -266,6 +266,12 @@ namespace LoKi
     {
       StatusCode sc = check ( v1 , v2 ) ;
       if ( sc.isFailure() ) { return sc ; }               // RETURN 
+      //
+      if ( v1 == v2 ) 
+      {
+        dist = 0 ;
+        return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS ) ; 
+      }
       // make the real calculations 
       return i_distance ( *v1 , *v2 , dist ) ;
     }
@@ -285,6 +291,13 @@ namespace LoKi
     {  
       StatusCode sc = check ( v1 , v2 ) ;
       if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      //
+      if ( v1 == v2 ) 
+      {
+        dist = 0 ;
+        chi2 = 0 ;
+        return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS ) ; 
+      }
       // make the real calculations 
       return i_distance ( *v1 , *v2 , dist , &chi2 ) ;               // RETURN 
     }
@@ -363,6 +376,12 @@ namespace LoKi
     {
       StatusCode sc = check ( p1 , p2 ) ;
       if ( sc.isFailure() ) { return sc ; }                    // RETURN 
+      //
+      if ( p1 == p2 ) 
+      {
+        dist = 0 ;
+        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ; 
+      }
       // make the real calculations 
       return _distance ( *p1 , *p2 , dist , allow ) ;         // RETURN  
     }
@@ -385,6 +404,13 @@ namespace LoKi
     { 
       StatusCode sc = check ( p1 , p2 ) ;
       if ( sc.isFailure() ) { return sc ; }                      // RETURN 
+      //
+      if ( p1 == p2 ) 
+      {
+        dist = 0 ;
+        chi2 = 0 ;
+        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ; 
+      }
       // make the real calculations 
       return _distance ( *p1 , *p2 , dist , allow , &chi2 ) ;    // RETURN 
     }
@@ -578,6 +604,13 @@ namespace LoKi
     {
       StatusCode sc = check ( track1 , track2 ) ;
       if ( sc.isFailure() ) { return sc ; }
+      //
+      if ( track1 == track2 ) 
+      {
+        doca = 0 ;
+        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ; 
+      }
+      //
       return _distance ( *track1 , *track2 , doca ) ;
     }
     // ========================================================================    
@@ -595,6 +628,14 @@ namespace LoKi
     {
       StatusCode sc = check ( track1 , track2 ) ;
       if ( sc.isFailure() ) { return sc ; }
+      //
+      if ( track1 == track2 ) 
+      {
+        doca = 0 ;
+        chi2 = 0 ;
+        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ; 
+      }
+      //
       return _distance ( *track1 , *track2 , doca , &chi2 ) ;
     }
     // ========================================================================    
@@ -901,8 +942,6 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
     }    
   }
   //
-  //
-  //
   using namespace Gaudi::Math::Operators ;
   
   // make the fast evaluation:
@@ -937,6 +976,13 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   const bool            allow , 
   double*               chi2  ) const 
 {
+  //
+  if ( &p1 == &p2 ) 
+  {
+    dist = 0 ;
+    if ( 0 != chi2 ) { *chi2 = 0 ; }
+    return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ;  
+  }
   //
   if ( allow )
   {
@@ -1221,6 +1267,13 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   double&                 doca   ,
   double*                 chi2   ) const 
 {
+  //
+  if ( &track1 == &track2 ) 
+  {
+    doca = 0 ;
+    if ( 0 != chi2 ) { *chi2 = 0 ; }
+    return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ;  
+  }
   //
   Gaudi::XYZPoint point1 ;
   Gaudi::XYZPoint point2 ;

@@ -5,6 +5,13 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-22 - Vanya Belyaev
+ - distance calculators 
+   add the explicit treatment of 
+   distances between the same particles, 
+   same vertcies and the same tracks..
+
+
 !========================= LoKiFitters v4r10 2014-04-02 =========================
 
 ! 2014-03-16 - Vanya Belyaev

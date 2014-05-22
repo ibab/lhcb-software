@@ -599,6 +599,14 @@ LoKi::DistanceCalculatorBase::i_distance
   double&                 dist , 
   double*                 chi2 ) const 
 {
+  //
+  if ( &vx1 == &vx2 ) 
+  {
+    dist = 0 ;
+    if ( 0 != chi2 ) { *chi2 = 0 ; }
+    return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS ) ;  
+    
+  }
   // calculate the distance 
   const Gaudi::XYZVector delta ( vx1.position() - vx2.position() ) ;
   dist = delta.R() ;
