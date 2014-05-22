@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$BRUNELOPTS/COLLISION11_25.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2011-25ns.ref</text></argument>
   <argument name="validator"><text>

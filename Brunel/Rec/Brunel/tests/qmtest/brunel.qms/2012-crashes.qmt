@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/2012-crashes.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False</text>
+    <text>from Brunel.Configuration import *; Brunel().ProductionMode=True; LHCbApp().TimeStamp=False; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="reference"><text>../refs/2012-crashes.ref</text></argument>
   <argument name="validator"><text>

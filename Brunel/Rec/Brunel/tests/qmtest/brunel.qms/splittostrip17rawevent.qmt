@@ -16,7 +16,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>--option</text>
-    <text>from Configurables import Brunel; from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run(configurable=Brunel()); Brunel().EvtMax=10; Brunel().DatasetName="crazysplit"; Brunel().SplitRawEventOutput=1.0;</text>
+    <text>from Configurables import Brunel; from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run(configurable=Brunel()); Brunel().EvtMax=10; Brunel().DatasetName="crazysplit"; Brunel().SplitRawEventOutput=1.0; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it

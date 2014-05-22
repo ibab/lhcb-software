@@ -19,7 +19,7 @@
   </set></argument>
   <argument name="args"><set>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="brunel2012recombine"; Brunel().SplitRawEventOutput=0.0; Brunel().EvtMax=10;</text>
+    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="brunel2012recombine"; Brunel().SplitRawEventOutput=0.0; Brunel().EvtMax=10; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it

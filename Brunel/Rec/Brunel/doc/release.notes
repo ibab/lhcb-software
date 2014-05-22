@@ -3,10 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-- Changes to QMTests
+- Changes to references to reflect changes since v46r0
    . Updated Upgrade references for FT changes.
-   . Added SC and FPE monitors to upgrade tests.
-   . Leaving SC and FPE tests in baseline upgrade test only.
+
+- Changes to QMTests
+   . Added SC and FPE monitors to all tests that did not have them.
 
 </PRE><H1><A NAME=v46r0>2014-05-15 Brunel v46r0</A></H1><PRE>
 This version uses projects LHCb v37r2, Lbcom v15r2,
