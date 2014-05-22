@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-05-22 - Vanya Belyaev
+ - Phys.py 
+   minor fix: 
+	 save/backup "old/C++" definition of LHCb::Particle::daughters 
+	 add __nonzero__ operator for some smart references 
+
 !========================= LoKiPhys v10r17p1 2014-04-02 =========================
 
 ! 2014-02-21 - Marco Clemencic

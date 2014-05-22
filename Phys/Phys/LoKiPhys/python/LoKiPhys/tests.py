@@ -70,6 +70,33 @@ def test1() :
     print ' in_list ( ID    , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f1 , f1(p1) ) 
     print ' in_list ( ABSID , [ "e+" , "e-" , "mu+" , "mu-"] ) : %s %s ' % ( f2 , f2(p1) ) 
 
+## tets smart references
+def test2() :
+    
+    ##
+    ## simple check
+    ##
+    _SR = cpp.SmartRef( LHCb.Particle )
+    
+    p   = LHCb.Particle()
+    pr1 = _SR( p )
+    pr2 = _SR(   )
+    
+    assert     pr1, 'Invalid smart reference (1) ! ' 
+    assert not pr2, 'Invalid smart reference (2) ! ' 
+
+    try    :
+        assert not pr1, 'Assertion(1) ok!'
+    except AssertionError as e :
+        print e
+        
+    try    :
+        assert     pr2, 'Assertion(2) ok!'
+    except AssertionError  as e :
+        print e
+
+    print 80*'*'
+  
 # =============================================================================
 ## Perform all known tests
 def testAll() :
@@ -78,6 +105,7 @@ def testAll() :
     """
     test0()
     test1()
+    test2() ## smart referemnces 
 
 
 # =============================================================================

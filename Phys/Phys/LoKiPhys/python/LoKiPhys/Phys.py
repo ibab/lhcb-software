@@ -75,6 +75,11 @@ children . __doc__ += '\n' + LoKi.Child.children . __doc__
 
 LHCb.Particle .   children    =  children
 LHCb.Particle . __children__  =  children
+
+## save/backup the original C++ method 
+if not hasattr ( LHCb.Particle , 'orig_daughters' ) :
+    LHCb.Particle.orig_daughters = LHCb.Particle.daughters
+    
 LHCb.Particle .   daughters   =  children
 LHCb.Particle . __daughters__ =  children
 
@@ -287,6 +292,18 @@ LHCb.Particle. __printDecay__ =   printDecay
 LHCb.Particle.      __decay__ =   printDecay
 
 
+## non-zero test for smart reference 
+for t in ( LHCb.Particle    ,
+           LHCb.Vertex      ,
+           LHCb.VertexBase  ,
+           LHCb.Track       ,
+           LHCb.CaloDigit   ,
+           LHCb.CaloCluster , 
+           LHCb.CaloHypo    ) :
+    
+    _SR = cpp.SmartRef ( t )
+    _SR .__nonzero__ = lambda s : bool ( s.target() )
+
 import LoKiCore.functions  as _LCF 
 LHCb.Particle.__pname__ =  _LCF.__pname__
 LHCb.Particle.  pname   =  _LCF.__pname__
@@ -325,11 +342,11 @@ for _t in ( LHCb.Particle    ,
     _tt.__iter__ = _LCF._iter_SRV_
 
     
-LHCb.Particle.ConstVector = cpp.std.vector ('const LHCb::Particle*')
-LHCb.Particle.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
+LHCb.Particle.ConstVector   = cpp.std.vector ('const LHCb::Particle*')
+LHCb.Particle.Range         = cpp.Gaudi.NamedRange_ ( LHCb.Particle.ConstVector )
 
-LHCb.Vertex.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
-LHCb.Vertex.Range       = cpp.Gaudi.NamedRange_ ( LHCb.Vertex.ConstVector )
+LHCb.Vertex.ConstVector     = cpp.std.vector ('const LHCb::VertexBase*')
+LHCb.Vertex.Range           = cpp.Gaudi.NamedRange_ ( LHCb.Vertex.ConstVector )
 
 LHCb.VertexBase.ConstVector = cpp.std.vector ('const LHCb::VertexBase*')
 LHCb.VertexBase.Range       = cpp.Gaudi.NamedRange_ ( LHCb.VertexBase.ConstVector )
