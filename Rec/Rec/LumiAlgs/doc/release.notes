@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-05-23 - Jaap Panman
+ - remove compilation warning
+
 ! 2014-05-21 - Jaap Panman
  - More sanity checks in LumiIntegrateFSR to handle empty timeSpanFSRs 
    (possible problem with legacy reco versions after merging)

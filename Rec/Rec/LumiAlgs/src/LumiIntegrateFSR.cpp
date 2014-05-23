@@ -281,7 +281,6 @@ StatusCode LumiIntegrateFSR::add_file() {
   	if ( exist<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress) ) {
   	  if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
   	  LHCb::TimeSpanFSRs* timeSpanFSRs = get<LHCb::TimeSpanFSRs>(m_fileRecordSvc, timeSpanRecordAddress);
-  	  LHCb::TimeSpanFSRs::iterator tsfsr = timeSpanFSRs->begin();
   	  // check index bounds
   	  tsfsr_len = timeSpanFSRs->size();
 	  if ( msgLevel(MSG::DEBUG) ) debug() << "number of timeSpanFSRs: " << tsfsr_len << " number of FSRs " << fsr_len << endmsg;
@@ -445,7 +444,7 @@ LHCb::TimeSpanFSR* LumiIntegrateFSR::trigger_event( std::string primaryFileRecor
     if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << " READ TimeSpanFSR: " << *timeSpanFSR << " interval: " << t0 << "-" << t1 << endmsg;
     // no time found - try first to repair
     if ( t0 == 0 || t1 == 0 ) {
-      debug() << "no time span defined - try harder by using a nearby interval" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "no time span defined - try harder by using a nearby interval" << endmsg;
       for ( unsigned long new_fkey = 0; new_fkey < tsfsr_len; ++new_fkey ) {
 	timeSpanFSR = tsfsr[new_fkey];
 	t0 = timeSpanFSR->earliest();
