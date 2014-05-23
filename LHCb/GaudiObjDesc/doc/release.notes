@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2014-05-23 - Marco Clemencic
+ - Avoid that the KeyedObject<T> base class of GOD generated classes appears in
+   the rootmap (required for ROOT 6).
+
 !========================= GaudiObjDesc v11r19 2014-05-12 ======================
 ! 2014-03-19 - Marco Clemencic
  - Fixed an issue with manually provided instantiations headers that contain
