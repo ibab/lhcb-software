@@ -19,9 +19,8 @@ classes += [ Rels.Rel1D ( 'LHCb::Track'                               , 'float' 
 classes += [ Rels.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double' ) ]
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'LHCb::VertexBase'             ) ]
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'int'             ) ]
-classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'double'             ) ]
-
-    
+classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'double'          ) ]
+classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'RelatedInfoMap'  ) ]
 classes += [ Rels.RelW1D( 'LHCb::Particle' , 'LHCb::Particle'  , 'double' ) ]
 
 includes += ['Event/Particle.h'      ]
@@ -29,6 +28,7 @@ includes += ['Event/Track.h'         ]
 includes += ['Event/CaloCluster.h'   ]
 includes += ['Event/CaloHypo.h'      ]
 includes += ['Event/VertexBase.h'    ]
+includes += ['Event/RelatedInfoMap.h']
 
 __all__ = ( classes, includes )
 

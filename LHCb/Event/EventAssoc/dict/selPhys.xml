@@ -7,8 +7,8 @@
 <!-- * @file
      *
      * The basic selection file to build the Reflex dictionaries
-     * @author ibelyaev 
-     * @date  2012-11-22 20:29:42.355039 
+     * @author poluekt 
+     * @date  2014-04-10 10:29:15.084708 
      * ========================================================================
 --> 
 
@@ -18,6 +18,9 @@
 
     <class name="LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase>" 
            id="EA9168DC-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::Relation1D<LHCb::Particle,RelatedInfoMap>" 
+           id="44B91074-0000-0000-0000-000000000000" />
 
     <class name="LHCb::Relation1D<LHCb::Particle,double>" 
            id="2FF8FECF-0000-0000-0000-000000000000" />
@@ -47,6 +50,7 @@
            id="0D105CB0-0000-0000-0000-000000000000" />
 
  <class name="IRelation<LHCb::Particle,LHCb::VertexBase>" /> 
+ <class name="IRelation<LHCb::Particle,RelatedInfoMap>" /> 
  <class name="IRelation<LHCb::Particle,double>" /> 
  <class name="IRelation<LHCb::Particle,int>" /> 
  <class name="IRelation<LHCb::Track,float>" /> 
@@ -61,10 +65,15 @@
  <class name="IRelationWeighted<LHCb::Track,LHCb::CaloCluster,float>" /> 
  <class name="IRelationWeighted<LHCb::Track,LHCb::CaloHypo,float>" /> 
  <class name="Relations::Entry_<LHCb::Particle,LHCb::VertexBase>" /> 
+ <class name="Relations::Entry_<LHCb::Particle,RelatedInfoMap>" /> 
  <class name="Relations::Entry_<LHCb::Particle,double>" /> 
  <class name="Relations::Entry_<LHCb::Particle,int>" /> 
  <class name="Relations::Entry_<LHCb::Track,float>" /> 
  <class name="Relations::Range_<std::vector<Relations::Entry_<LHCb::Particle,LHCb::VertexBase> > >" >
+    <field name="m_begin" transient="true" />
+    <field name="m_end"   transient="true" />
+ </class> 
+ <class name="Relations::Range_<std::vector<Relations::Entry_<LHCb::Particle,RelatedInfoMap> > >" >
     <field name="m_begin" transient="true" />
     <field name="m_end"   transient="true" />
  </class> 
@@ -119,6 +128,9 @@
  <class name="Relations::Relation<LHCb::Particle,LHCb::VertexBase>" >
     <field name="m_inverse_aux" transient="true" />
  </class> 
+ <class name="Relations::Relation<LHCb::Particle,RelatedInfoMap>" >
+    <field name="m_inverse_aux" transient="true" />
+ </class> 
  <class name="Relations::Relation<LHCb::Particle,double>" >
     <field name="m_inverse_aux" transient="true" />
  </class> 
@@ -129,6 +141,7 @@
     <field name="m_inverse_aux" transient="true" />
  </class> 
  <class name="Relations::RelationBase<LHCb::Particle,LHCb::VertexBase>" /> 
+ <class name="Relations::RelationBase<LHCb::Particle,RelatedInfoMap>" /> 
  <class name="Relations::RelationBase<LHCb::Particle,double>" /> 
  <class name="Relations::RelationBase<LHCb::Particle,int>" /> 
  <class name="Relations::RelationBase<LHCb::Track,float>" /> 
@@ -163,6 +176,7 @@
  <class name="Relations::WEntry_<LHCb::Track,LHCb::CaloCluster,float>" /> 
  <class name="Relations::WEntry_<LHCb::Track,LHCb::CaloHypo,float>" /> 
  <class name="std::vector<Relations::Entry_<LHCb::Particle,LHCb::VertexBase> >" /> 
+ <class name="std::vector<Relations::Entry_<LHCb::Particle,RelatedInfoMap> >" /> 
  <class name="std::vector<Relations::Entry_<LHCb::Particle,double> >" /> 
  <class name="std::vector<Relations::Entry_<LHCb::Particle,int> >" /> 
  <class name="std::vector<Relations::Entry_<LHCb::Track,float> >" /> 

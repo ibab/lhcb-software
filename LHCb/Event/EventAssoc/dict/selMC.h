@@ -1,6 +1,6 @@
 // $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $
 // ====================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ====================================================================
 // Incldue files
 // ====================================================================
@@ -13,7 +13,7 @@
 // ====================================================================
 #include "Relations/RelationsDict.h"
 // ====================================================================
-// Provided include files:
+// Provided include files: 
 // ====================================================================
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
@@ -35,17 +35,17 @@
 //#include ...
 // ====================================================================
 
-/** @file
-  *
-  * Helper file for building Reflex dictionaries for Relations
-   * @author ibelyaev
-  * @date  2012-11-22 20:29:42.409387
-  *
-  */
+/** @file 
+  *       
+  * Helper file for building Reflex dictionaries for Relations 
+   * @author poluekt 
+  * @date  2014-04-10 10:29:15.158461 
+  *       
+  */      
 
-namespace EventAssocDictMC
+namespace Dict
 {
-  struct __Instantiations
+  struct __Instantiations 
   {
         GaudiDict::Relation1DDict<LHCb::MCVertex,LHCb::GenCollision>	_1 ;
         GaudiDict::Relation1DDict<LHCb::Particle,LHCb::MCParticle>	_2 ;
@@ -72,7 +72,7 @@ namespace EventAssocDictMC
         GaudiDict::RelationWeighted2DDict<LHCb::RecVertex,LHCb::MCVertex,std::pair<unsigned int,float> >	_23 ;
         GaudiDict::RelationWeighted2DDict<LHCb::Track,LHCb::MCParticle,double>	_24 ;
   };
-} // end of namespace Dict
+} // end of namespace Dict 
 
 // ====================================================================
 // The END ============================================================

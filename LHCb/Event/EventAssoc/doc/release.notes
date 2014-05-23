@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2014-05-23 - Anton Poluektov 
+ - Add dictionaries for Particle->RelatedInfo relations
+   (new persistency for cone variables etc.)
+
 !========================= EventAssoc v5r3 2014-02-17 =========================
 ! 2013-11-07 - Marco Clemencic
  - Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
