@@ -230,7 +230,7 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   
   
   r4 /= etot;
-  fr2r4 = (r4 - fr2*fr2)/r4;
+  fr2r4 = (r4 !=0) ? (r4 - fr2*fr2)/r4 : 0.;
   
   E2 = (secondE+Eseed)/etot;
   Eseed = Eseed/etot;
