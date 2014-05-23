@@ -20,20 +20,20 @@ DECLARE_ALGORITHM_FACTORY( AlignmentMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  AlignmentMonitor::AlignmentMonitor( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-    : TupleAlgBase        ( name , pSvcLocator ),
-      m_radiator          ( Rich::InvalidRadiator ),
-      m_deltaThetaHistoRange ( 0 ),
-      m_pType             ( Rich::Unknown ),
-      m_pTypes            ( 7, 0 ),
-      m_trSelector        ( NULL ),
-      m_richRecMCTruth    ( NULL ),
-      m_richPartProp      ( NULL ),
-      m_ckAngle           ( NULL ),
-      m_isoTrack          ( NULL ),
-      m_plotAllHPDs       ( false     ),
-      m_photonsInHPD      ( 220000, 0 )
+AlignmentMonitor::AlignmentMonitor( const std::string& name,
+                                    ISvcLocator* pSvcLocator)
+: TupleAlgBase        ( name , pSvcLocator ),
+  m_radiator          ( Rich::InvalidRadiator ),
+  m_deltaThetaHistoRange ( 0 ),
+  m_pType             ( Rich::Unknown ),
+  m_pTypes            ( 7, 0 ),
+  m_trSelector        ( NULL ),
+  m_richRecMCTruth    ( NULL ),
+  m_richPartProp      ( NULL ),
+  m_ckAngle           ( NULL ),
+  m_isoTrack          ( NULL ),
+  m_plotAllHPDs       ( false     ),
+  m_photonsInHPD      ( 220000, 0 )
 {
   // Maximum number of tracks
   declareProperty( "MaxRichRecTracks",     m_maxUsedTracks = 200 );
@@ -76,9 +76,9 @@ StatusCode AlignmentMonitor::initialize()
   }
 
   m_pType = static_cast<Rich::ParticleIDType>(m_particleType);
-  debug() << "Fixed particle type:" << m_pType << endmsg;
+  _ri_debug << "Fixed particle type:" << m_pType << endmsg;
   m_radiator = static_cast<Rich::RadiatorType>(m_radTemp);
-  debug() << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
+  _ri_debug << "Radiator:" << m_radiator << " " << m_radTemp << endmsg;
 
   Rich::DetectorType rich;
   if ( m_radiator == Rich::Rich1Gas || m_radiator  == Rich::Aerogel )
@@ -175,7 +175,7 @@ StatusCode AlignmentMonitor::initialize()
     if (m_HPDList[0] == 0 )
       m_plotAllHPDs = true;
 
-  debug() << "Finished Initialization" << endmsg;
+  _ri_debug << "Finished Initialization" << endmsg;
   return sc;
 }
 
@@ -194,18 +194,15 @@ StatusCode AlignmentMonitor::execute()
     {
       return Error( "Problem Making Tracks" );
     }
-    debug() << "No tracks found : Created " << richTracks()->size()
-            << " RichRecTracks " << richSegments()->size()
-            << " RichRecSegments" << endmsg;
+    _ri_debug << "No tracks found : Created " << richTracks()->size()
+              << " RichRecTracks " << richSegments()->size()
+              << " RichRecSegments" << endmsg;
   }
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << " Found " << richTracks()->size() << " tracks" << endmsg;
-  }
+  _ri_debug << " Found " << richTracks()->size() << " tracks" << endmsg;
   if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
-    debug() << "Found " << richTracks()->size() << ">"
-            << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
+    _ri_debug << "Found " << richTracks()->size() << ">"
+              << m_maxUsedTracks << " max usable tracks, stopping." << endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -214,14 +211,14 @@ StatusCode AlignmentMonitor::execute()
     {
       return Error( "Problem Making Pixels" );
     }
-    debug() << "No Pixels found : Created "
-            << richPixels()->size() << " RichRecPixels" << endmsg;
+    _ri_debug << "No Pixels found : Created "
+              << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons().ignore();
-    debug() << "No photons found : Created "
-            << richPhotons()->size() << " RichRecPhotons" << endmsg;
+    _ri_debug << "No photons found : Created "
+              << richPhotons()->size() << " RichRecPhotons" << endmsg;
   }
 
   // Iterate over segments
@@ -251,7 +248,7 @@ StatusCode AlignmentMonitor::execute()
     {
       // Get true beta from true particle type
       const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
-      debug() << "mcType:" << mcType << endmsg;
+      _ri_debug << "mcType:" << mcType << endmsg;
       if ( Rich::Unknown == mcType ) continue;
       plot( mcType, "mcType", "MC Particle type", -1.5, 5.5, 7 );
       ++m_pTypes[mcType];
@@ -266,8 +263,7 @@ StatusCode AlignmentMonitor::execute()
 
     thetaExpected =  m_ckAngle->avgCherenkovTheta( segment, m_pType);
 
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " Found " << segment->richRecPhotons().size() << " in this segment" << endmsg;
+    _ri_debug << " Found " << segment->richRecPhotons().size() << " in this segment" << endmsg;
 
     for ( LHCb::RichRecSegment::Photons::const_iterator iPhot = segment->richRecPhotons().begin();
           iPhot != segment->richRecPhotons().end(); ++iPhot )
