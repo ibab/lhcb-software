@@ -66,11 +66,11 @@ inline double solve_quartic_RICH ( const double a,
   const double R2 = R * R;
 
   const double sgnR = ( R >= 0 ? 1 : -1 );
-  const double A = -sgnR * cbrt( fabs(R) + sqrt(R2 - Q3) );
+  const double A = -sgnR * cbrt( fabs(R) + sqrt( fabs(R2-Q3) ) );
   const double B = Q / A;
 
   const double u1 = -0.5 * (A + B) - rc / 3;
-  const double u2 = -( sqrt(3.0) / 2.0) * fabs(A - B);
+  const double u2 = -( sqrt(3.0) / 2.0) * fabs(A-B);
 
   gsl_complex w1, w2, w3;
   GSL_SET_COMPLEX(&w1, u1, u2);

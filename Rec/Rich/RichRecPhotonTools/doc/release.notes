@@ -4,6 +4,9 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-05-23 - Chris Jones
+ - Fix a FPE in zsolve_quartic_RICH.h due to sqrt(-number).
+
 !========================= RichRecPhotonTools v1r14 2014-05-13 ===================
 ! 2014-05-08 - Chris Jones
  - Separate out the corrections for intrinsic biases in the various photon
