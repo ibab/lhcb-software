@@ -194,10 +194,14 @@ class Mass_pdf(object) :
             
             result = self.pdf.fitTo ( dataset , ROOT.RooFit.Save() , *args, **kwargs )
 
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
+
             st   = result.status () 
             if 0 != st   : logger.warning('Model(%s).fitTo: fit status %s' % ( self.name , st   ) )
             qual = result.covQual()
             if 3 != qual : logger.warning('Model(%s).fitTo: covQual    %s' % ( self.name , qual ) )
+            
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
             
             if not draw :
                 return result, None
@@ -421,6 +425,12 @@ class Fit1DBase (object) :
                     logger.error ( 'Fit is problematic:  sum %s != %s '
                                    % ( nsum , len( dataset ) ) )  
                     
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
+            for s in self._signal_set      :
+                if hasattr ( s , 'setPars' ) : s.setPars() 
+            for s in self._background_set :
+                if hasattr ( s , 'setPars' ) : s.setPars() 
+
         if not draw :
             return result, None 
         
