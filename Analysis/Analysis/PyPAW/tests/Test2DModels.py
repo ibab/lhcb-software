@@ -30,7 +30,7 @@ from   PyPAW.Utils   import rooSilent
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-if '__main__' == __name__ : 
+if '__main__' == __name__  or '__builtin__'  == __name__ :  
     logger = getLogger( 'PyPAW.Test2DModels' )
 else : 
     logger = getLogger( __name__ )

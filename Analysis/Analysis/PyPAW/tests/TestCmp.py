@@ -29,7 +29,7 @@ from   PyPAW.PyRoUts import *
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-if '__main__' == __name__ : 
+if '__main__' == __name__  or '__builtin__'  == __name__ : 
     logger = getLogger ( 'PyPAW.TestCmp' )
 else : 
     logger = getLogger ( __name__ )

@@ -55,13 +55,68 @@ __date__    = "2012-09-10"
 __version__ = '$Revision: 135439 $'
 # =============================================================================
 import ROOT
-#
 print 'WARNING/TEMPORARY solution: create temporary Canvas'
 ctmp = ROOT.TCanvas('cTMP','cTMP',100,100)
+# =============================================================================
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+_my_name_ = __name__
+if '__main__' == _my_name_ : _my_name_ = 'pypaw'
+# =============================================================================
+logger = getLogger( _my_name_ )
+# =============================================================================
+# import everythinng from PyPaW  
 from   PyPAW.PyPaw import * 
-print 'WARNING/TEMPORARY solution: delete temporary Canvas'
+#  and delete the temporary canvas 
+logger.warning ( 'TEMPORARY solution: delete temporary Canvas')
 del ctmp
-#
+# =============================================================================
+## execute the files, defined as arguments
+import sys,os
+if sys.argv[1:] : 
+    from   copy import deepcopy
+    _myself = sys.modules[ __name__ ] 
+    _mykeys = deepcopy ( dir(_myself)  ) 
+    ##_mykeys = deepcopy ( globals().keys() ) 
+    _copied = set() 
+    _skept  = set() 
+    
+    for a in sys.argv[1:] :
+
+        p     = a.find( '.py' )
+        if p <= 0          : continue 
+        if len(a) != p + 3 : continue  
+        if not os.path.exists ( a ) :
+            logger.warning   ('No file is found  "%s"' % a )
+            continue 
+        logger.info  ('Try    to execute "%s"' % a )
+        try :
+            myvars =  {} 
+            execfile ( a , myvars )
+            for k,val in myvars.iteritems() : 
+                ## do not redefine already defined symbols!  
+                if k in _mykeys : 
+                    _skept.add ( k ) 
+                    continue
+                    ## copy symbol into local namesapce  
+                setattr ( _myself , k , val ) 
+                _copied.add ( k ) 
+        except Exception as e :
+            print e 
+            logger.error ('Unable to execute "%s"' % a )
+            
+
+    if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
+    if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  
+
+    ## do not polllute namespace 
+    del _copied
+    del _skept
+    del _mykeys 
+    del _myself 
+    
+
 import IPython
 IPython.embed()
 exit() 

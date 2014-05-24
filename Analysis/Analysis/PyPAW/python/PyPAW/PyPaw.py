@@ -111,22 +111,6 @@ if '.' not in sys.path :
     sys.path = ['.'] + sys.path 
 
 # =============================================================================
-## execute the files, defined as arguments 
-for a in sys.argv[1:] :
-    p     = a.find( '.py' )
-    if p <= 0 : continue 
-    if len(a) == p + 3 :
-        if not os.path.exists ( a ) :
-            logger.warning   ('No file is found  "%s"' % a )
-        else : 
-            try :
-                logger.info  ('Try    to execute "%s"' % a )
-                execfile ( a )
-            except:
-                logger.error ('Unable to execute "%s"' % a )
-
-
-# =============================================================================
 cpp = PyRoUts.cpp
 VE  = PyRoUts.VE
 # =============================================================================
