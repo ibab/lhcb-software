@@ -4,6 +4,11 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-05-24 - Chris Jones
+ - PhotonRecoUsingQuarticSoln :
+  . Protect against an FPE due to asin(out of range number).
+  . Use fast VDT asin and acos.
+
 ! 2014-05-23 - Chris Jones
  - Fix a FPE in zsolve_quartic_RICH.h due to sqrt(-number).
 

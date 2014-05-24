@@ -704,7 +704,7 @@ correctAeroRefraction( const LHCb::RichTrackSegment& trSeg,
   snellsLaw()->gasToAerogel( photonDirection, trSeg );
   // update CK theta
   const double ctc = photonDirection.Dot( trSeg.bestMomentum().Unit() );
-  thetaCerenkov = ( ctc>1 ? 0 : std::acos(ctc) );
+  thetaCerenkov = ( ctc>1 ? 0 : vdt::fast_acos(ctc) );
 }
 
 //=========================================================================
@@ -741,7 +741,7 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   const double r2       = radius * radius;
 
   // Fill array for quartic equation
-  const double a0 =   4 * e2 * d2;
+  const double a0 =     4 * e2 * d2;
   const double a1 = - ( 4 * e2 * dy * radius ) / a0;
   const double a2 =   ( (dy * dy * r2) + ((e+dx) * (e+dx) * r2) - a0 ) / a0;
   const double a3 =   ( 2 * e * dy * (e-dx) * radius ) / a0;
@@ -763,7 +763,7 @@ solveQuarticEq ( const Gaudi::XYZPoint& emissionPoint,
   evec *= radius/e;
 
   // create rotation
-  const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,asin(sinbeta)) );
+  const Gaudi::Rotation3D rotn( Gaudi::AxisAngle(nvec2,vdt::fast_asin(sinbeta)) );
 
   // rotate vector and update reflection point
   sphReflPoint = CoC + rotn*evec;

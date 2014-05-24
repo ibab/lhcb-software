@@ -39,6 +39,8 @@
 // Math Definitions
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+// VDT
+#include "vdt/asin.h"
 
 // RichDet
 #include "RichDet/DeRichSphMirror.h"

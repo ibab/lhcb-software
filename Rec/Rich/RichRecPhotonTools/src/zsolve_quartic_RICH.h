@@ -84,7 +84,10 @@ inline double solve_quartic_RICH ( const double a,
     w3 = gsl_complex_mul_real(gsl_complex_inverse(gsl_complex_mul(w1, w2)), -qq / 8.0);
   }
 
-  return GSL_REAL(w1) + GSL_REAL(w2) + GSL_REAL(w3) - (r4*a);
+  const double res = GSL_REAL(w1) + GSL_REAL(w2) + GSL_REAL(w3) - (r4*a);
+  return ( res >  1.0 ?  1.0 :
+           res < -1.0 ? -1.0 :
+           res );
 }
 
 #endif // RICHTOOLS_ZSOLVE_QUARTIC_RICH_H
