@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+! 2013-05-24 - Anton Poluektov 
+ - Add CopyParticle2RelatedInfo
+
 !========================= MicroDSTAlgorithm v5r8 2013-06-13 =========================
 
 ! 2013-05-05 - Chris Jones
