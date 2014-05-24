@@ -516,7 +516,7 @@ class GenGaussV1_pdf(Mass_pdf) :
                    mx               ,
                    fixMass   = None ,
                    fixAlpha  = None ,
-                   fixBeta   = None , ## beta=2 is gaussian distribution 
+                   fixBeta   = 2    , ## beta=2 is gaussian distribution 
                    mass      = None ,
                    mean      = None ,
                    alpha     = None ,
@@ -572,18 +572,17 @@ class GenGaussV2_pdf(Mass_pdf) :
     Simple class that implements the generalized normal distribution v1
     see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
+    def __init__ ( self               ,
+                   name               ,
+                   mn                 ,
+                   mx                 ,
                    fixLocation = None ,
                    fixScale    = None ,
-                   fixShape    = None , ## 0 corresponds to gaussian distribution 
+                   fixShape    = 0    , ## 0 corresponds to gaussian distribution 
                    mass        = None ,
                    mean        = None ,
                    alpha       = None ,
                    kappa       = None ) : 
-        
         
         #
         ## initialize the base
@@ -593,14 +592,30 @@ class GenGaussV2_pdf(Mass_pdf) :
                              mean    ,
                              alpha   ,
                              fixLocation , fixScale ) 
-
-        self.alpha = self.sigma
+        
+        #
+        ## rename it!
+        #
+        self.alpha = self.sigma        
+        sname  = self.alpha.GetName  ()
+        stitle = self.alpha.GetTitle ()
+        gname  = sname .replace ( 'sigma' , 'alpha' )
+        gtitle = stitle.replace ( 'sigma' , 'alpha' )
+        self.alpha.SetName  ( gname  ) 
+        self.alpha.SetTitle ( gtitle )
+        
         self.xi    = self.mean 
+        # sname  = self.xi.GetName  ()
+        # stitle = self.xi.GetTitle ()
+        # gname  = sname .replace ( 'mean' , 'xi' )
+        # gtitle = stitle.replace ( 'mean' , 'xi' )
+        # self.xi.SetName     ( gname  ) 
+        # self.xi.SetTitle    ( gtitle )
         
         self.kappa = makeVar ( kappa ,
                                'kappaV2_%s'      % name  ,
                                '#kappa_{v2}(%s)' % name  ,
-                               fixShape , -10  , 10 ) 
+                               fixShape , -4  , 4 ) 
         
         #
         ## finally build PDF

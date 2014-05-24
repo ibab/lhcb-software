@@ -102,9 +102,9 @@ if sys.argv[1:] :
                     ## copy symbol into local namesapce  
                 setattr ( _myself , k , val ) 
                 _copied.add ( k ) 
-        except Exception as e :
-            print e 
-            logger.error ('Unable to execute "%s"' % a )
+        except :
+            logger.error ('Unable to execute "%s"' % a        )
+            logger.error ('Exception: %s' % sys.exc_info()[0] ) 
             
 
     if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
