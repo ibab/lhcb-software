@@ -11,6 +11,7 @@ from Configurables import InputCopyStream
 from streamconf import OutputStreamConf
 from microdstelements import ( CloneParticleTrees,
                                CloneBTaggingInfo,
+                               CloneRelatedInfo,
                                ClonePVRelations,
                                PackStrippingReports,
                                PackParticlesAndVertices,
@@ -32,6 +33,7 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
                                                     "/Event/Rec/Calo/MergedPi0s",
                                                     "/Event/Rec/Calo/SplitPhotons"] ),
                  CloneBTaggingInfo( CloneTaggerParticles = True ),
+                 CloneRelatedInfo( ), 
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )

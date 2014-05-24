@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-05-24 - Anton Poluektov 
+ - Add RelatedInfo structures
+
 !========================= DSTWriters v4r14 2014-05-19 =========================
 
 ! 2014-05-13 - Vanya Belyaev
