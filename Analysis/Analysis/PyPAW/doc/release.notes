@@ -10,6 +10,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-05-24 - Vanya Belyaev
+ - add one more qmtest 
+
+! 2014-05-24 - Vanya Belyaev
  - improve pre-execution machinnery 
    now all symbols are copied into global namespace...
    well, it is  not ideal, but anyhow much 
