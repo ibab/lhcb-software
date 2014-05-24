@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-05-24 - Vanya Belyaev
+ - Functions.cpp minor fix
+
 ! 2014-05-21 - Marco Cattaneo
  - Use constexpr in Functions.cpp, to fix compilation problem with clang
 

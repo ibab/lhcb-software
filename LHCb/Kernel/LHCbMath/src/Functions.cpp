@@ -1362,7 +1362,7 @@ double Gaudi::Math::GenGaussV1::cdf ( const double x ) const
   const double delta1 =            delta  / m_alpha   ;
   const double delta2 = std::pow ( delta1 , m_beta  ) ;
   //
-  const double c = gsl_sf_gamma_inc_P ( 1/beta() , delta2 ) ;
+  const double c = 0.5 * gsl_sf_gamma_inc_P ( 1/beta() , delta2 ) ;
   //
   return x < m_mu ?  0.5 - c : 0.5 + c ;
 }
@@ -1460,25 +1460,22 @@ double  Gaudi::Math::GenGaussV2::y ( const double x ) const
 double Gaudi::Math::GenGaussV2::pdf ( const double x ) const 
 {
   //
-  const double z = xi() + alpha() / kappa() ;
-  //
-  if      ( kappa () > 0 && ( x > z || s_equal ( x , z ) ) ) { return 0 ; }
-  else if ( kappa () < 0 && ( x < z || s_equal ( x , z ) ) ) { return 0 ; }
+  if      ( s_equal ( m_kappa , 0  ) ) {}
+  else if ( m_kappa * x >= m_kappa * m_xi + m_alpha ) { return 0 ; } // cover both cases(?)
   //
   const double y_   = y ( x ) ;
   //
   const double gau  = my_exp ( -0.5 * y_ * y_ ) / s_SQRT2PI ;
   //
-  return gau / ( 1 - kappa() * ( x - xi () ) ) ;
+  return gau / ( alpha() - kappa() * ( x - xi () ) ) ;
 }
 // ============================================================================
 double Gaudi::Math::GenGaussV2::cdf ( const double x ) const 
 {
   //
-  const double z = xi() + alpha() / kappa() ;
-  //
-  if      ( kappa () > 0 && ( x > z || s_equal ( x , z ) ) ) { return 1 ; }
-  else if ( kappa () < 0 && ( x < z || s_equal ( x , z ) ) ) { return 0 ; }
+  if      ( s_equal ( m_kappa , 0 ) ) {}
+  else if ( kappa () > 0 && ( m_kappa * x >= m_kappa * m_xi + m_alpha ) ) { return 1 ; }
+  else if ( kappa () < 0 && ( m_kappa * x >= m_kappa * m_xi + m_alpha ) ) { return 0 ; }
   //
   const double y_   = y ( x ) ;
   //
