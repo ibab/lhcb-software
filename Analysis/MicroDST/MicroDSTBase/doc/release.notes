@@ -6,6 +6,9 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2013-05-24 - Anton Poluektov 
+ - Add RelatedInfoMap for the list of valud structures
+
 !========================= MicroDSTBase v3r3p1 2013-05-07 =========================
 
 ! 2013-03-27 - Chris Jones

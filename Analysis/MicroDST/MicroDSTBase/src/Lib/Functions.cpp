@@ -64,5 +64,10 @@ namespace MicroDST
   {
     return true;
   }
+
+  template <>
+  bool isValid( RelatedInfoMap ) {
+    return true; 
+  }
   //==========================================================================================
 }

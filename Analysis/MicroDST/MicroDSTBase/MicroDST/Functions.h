@@ -8,6 +8,7 @@
 #include <map>
 #include <GaudiKernel/StatusCode.h>
 #include <GaudiKernel/SmartRef.h>
+#include <Event/RelatedInfoMap.h>
 class IInterface;
 class DataObject;
 
@@ -78,5 +79,7 @@ namespace MicroDST
   template <>
   bool isValid(float);
 
+  template <>
+  bool isValid( RelatedInfoMap );
 }
 #endif // MICRODST_FUNCTIONS_H
