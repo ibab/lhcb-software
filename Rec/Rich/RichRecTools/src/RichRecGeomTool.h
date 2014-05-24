@@ -30,6 +30,9 @@
 // GSL
 #include "gsl/gsl_math.h"
 
+// VDT
+#include "vdt/asin.h"
+
 namespace Rich
 {
   namespace Rec

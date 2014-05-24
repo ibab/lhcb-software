@@ -136,48 +136,48 @@ double GeomTool::hpdPanelAcceptance( LHCb::RichRecSegment * segment,
       // Near max X positive
       if ( fabs(tkPoint.x()-lims.maxX()) < ckRadius )
       {
-        acc *= acos( (tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
+        acc *= vdt::fast_acos( (tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
       }
       // Near max X negative
       else if ( fabs(tkPoint.x()+lims.maxX()) < ckRadius )
       {
-        acc *= acos( (-tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
+        acc *= vdt::fast_acos( (-tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
       }
       if ( lims.minX() > 0 )
       {
         // Near min X positive
         if ( fabs(tkPoint.x()-lims.minX()) < ckRadius )
         {
-          acc *= acos( (-tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
+          acc *= vdt::fast_acos( (-tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
         }
         // Near min X negative
         else if ( fabs(tkPoint.x()+lims.minX()) < ckRadius )
         {
-          acc *= acos( (tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
+          acc *= vdt::fast_acos( (tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
         }
       }
 
       // Near max Y positive
       if ( fabs(tkPoint.y()-lims.maxY()) < ckRadius )
       {
-        acc *= acos( (tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
+        acc *= vdt::fast_acos( (tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
       }
       // Near max Y negative
       else if ( fabs(tkPoint.y()+lims.maxY()) < ckRadius )
       {
-        acc *= acos( (-tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
+        acc *= vdt::fast_acos( (-tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
       }
       if ( lims.minY() > 0 )
       {
         // Near min Y positive
         if ( fabs(tkPoint.y()-lims.minY()) < ckRadius )
         {
-          acc *= acos( (-tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
+          acc *= vdt::fast_acos( (-tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
         }
         // Near min Y negative
         else if ( fabs(tkPoint.y()+lims.minY()) < ckRadius )
         {
-          acc *= acos( (tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
+          acc *= vdt::fast_acos( (tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
         }
       }
 

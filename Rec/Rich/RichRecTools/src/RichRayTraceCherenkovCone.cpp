@@ -40,16 +40,12 @@ RayTraceCherenkovCone::RayTraceCherenkovCone( const std::string& type,
   if ( contextContains("HLT") )
   {
     //               Aero   R1Gas  R2Gas
-    std::vector<unsigned int>
-      tmp = list_of  (10)   (15)   (20);
-    m_nBailout = tmp;
+    m_nBailout = {   10,    15,    20    };
   }
   else
   {
     //               Aero   R1Gas  R2Gas
-    std::vector<unsigned int>
-      tmp = list_of  (50)   (50)   (50);
-    m_nBailout = tmp;
+    m_nBailout = {   50,    50,    50    };
   }
   declareProperty( "BailoutTries", m_nBailout );
 }
@@ -177,8 +173,10 @@ RayTraceCherenkovCone::rayTrace ( LHCb::RichRecRing * ring,
 
     // loop around the ring
     unsigned int nOK(0), nPhot(0);
-    const double cosTheta(std::cos(ring->radius()));
-    const double sinTheta(std::sin(ring->radius()));
+    //const double cosTheta = std::cos(ring->radius());
+    //const double sinTheta = std::sin(ring->radius());
+    double cosTheta(0), sinTheta(0);
+    vdt::fast_sincos(ring->radius(),sinTheta,cosTheta);
     for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
           iP != cosSinPhi.end(); ++iP, ++nPhot )
     {
@@ -255,8 +253,10 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     ring->setNTotalPointSamples(nPoints);
 
     // loop around the ring
-    const double sinCkTheta = std::sin(ckTheta);
-    const double cosCkTheta = std::cos(ckTheta);
+    //const double sinCkTheta = std::sin(ckTheta);
+    //const double cosCkTheta = std::cos(ckTheta);
+    double sinCkTheta(0), cosCkTheta(0);
+    vdt::fast_sincos( ckTheta, sinCkTheta, cosCkTheta );
     unsigned int nOK(0), nPhot(0);
     for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
           iP != cosSinPhi.end(); ++iP, ++nPhot )
@@ -321,17 +321,17 @@ RayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
     const CosSinPhi::Vector & cosSinPhi = cosSinValues(nPoints);
 
     // loop around the ring
-    const double sinCkTheta = std::sin(ckTheta);
-    const double cosCkTheta = std::cos(ckTheta);
- 
-    for ( CosSinPhi::Vector::const_iterator iP = cosSinPhi.begin();
-          iP != cosSinPhi.end(); ++iP )
+    //const double sinCkTheta = std::sin(ckTheta);
+    //const double cosCkTheta = std::cos(ckTheta);
+    double sinCkTheta(0), cosCkTheta(0);
+    vdt::fast_sincos( ckTheta, sinCkTheta, cosCkTheta );
+    for ( const auto& csPhi : cosSinPhi )
     {
 
       // Photon direction around loop
       const Gaudi::XYZVector photDir =
-        rotation * Gaudi::XYZVector( sinCkTheta * (*iP).cosPhi,
-                                     sinCkTheta * (*iP).sinPhi,
+        rotation * Gaudi::XYZVector( sinCkTheta * csPhi.cosPhi,
+                                     sinCkTheta * csPhi.sinPhi,
                                      cosCkTheta );
 
       // Ray trace to detector plane
@@ -369,6 +369,8 @@ void RayTraceCherenkovCone::fillCosSinValues( CosSinPhi::Vector & vect,
   double ckPhi = 0.0;
   for ( unsigned int iPhot = 0; iPhot < nPoints; ++iPhot, ckPhi+=incPhi )
   {
-    vect.push_back( CosSinPhi( std::cos(ckPhi), std::sin(ckPhi) ) );
+    double sinCKPhi(0), cosCKPhi(0);
+    vdt::fast_sincos( ckPhi, sinCKPhi, cosCKPhi );
+    vect.push_back( CosSinPhi( cosCKPhi, sinCKPhi ) );
   }
 }

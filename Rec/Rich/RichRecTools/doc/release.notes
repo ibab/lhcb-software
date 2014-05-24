@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2014-05-24 - Chris Jones
+ - Use VDT for various math functions.
+
 !========================= RichRecTools v4r24 2013-10-01 =========================
 ! 2013-08-14 - Chris Jones
  - Clean up the previous commits.

@@ -32,6 +32,9 @@
 // boost
 #include "boost/assign/list_of.hpp"
 
+// VDT
+#include "vdt/sincos.h"
+
 namespace Rich
 {
   namespace Rec
