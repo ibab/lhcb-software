@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-05-24 - Anton Poluektov 
+ - Add IRelatedInfoTool - interface for tools calculating RelatedInfo
+
 !========================= DaVinciInterfaces v2r21 2014-02-20 =========================
 
 ! 2014-01-17 - Vanya Belyaev
