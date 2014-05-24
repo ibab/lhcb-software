@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-05-24 - Anton Poluektov 
+ - Add tools to store RelatedInfo (new persistency for cone variables etc.)
+   * AddRelatedInfo - algorithm to store RelatedInfo
+   * RelInfoConeVariables - tool to calculate cone variables as RelatedInfo
+
 !========================= DaVinciTools v23r13 2014-05-19 =========================
 
 ! 2014-04-10 - Albert Puig
