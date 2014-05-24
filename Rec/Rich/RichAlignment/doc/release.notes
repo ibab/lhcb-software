@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+! 2014-05-24 - Chris Jones
+ - Update various alignment scripts and data files.
+
 ! 2014-05-23 - Chris Jones
  - Protect some debug printout behind if statements.
 

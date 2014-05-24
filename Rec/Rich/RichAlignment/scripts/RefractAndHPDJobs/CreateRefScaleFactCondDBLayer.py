@@ -46,17 +46,17 @@ def initialise():
   #LHCbApp().DDDBtag   = "head-20110303"
   #LHCbApp().CondDBtag = "head-20110524"
   
-  #DDDBConf(DataType = "2010")
-  #LHCbApp().DDDBtag   = "head-20110303"
-  #LHCbApp().CondDBtag = "head-20110524"
-  
+  DDDBConf(DataType = "2010")
+  LHCbApp().DDDBtag   = "head-20110721"
+  LHCbApp().CondDBtag = "cond-20140328"
+
   #DDDBConf(DataType = "2011")
   #LHCbApp().DDDBtag   = "head-20110722" 
   #LHCbApp().CondDBtag = "head-20110722"
 
-  DDDBConf(DataType = "2012")
-  LHCbApp().DDDBtag   = "dddb-20120831"
-  LHCbApp().CondDBtag = "cond-20121025"
+  #DDDBConf(DataType = "2012")
+  #LHCbApp().DDDBtag   = "dddb-20120831"
+  #LHCbApp().CondDBtag = "cond-20121025"
 
   # Set message level to info and above only
   msgSvc().setOutputLevel(3)
@@ -159,14 +159,14 @@ def fillDB(calibration,db,runsTimes,rad):
     # IOV for conditions
     dStartTime = runsTimes["RunTimes"][run]["Start"]
     #dStopTime  = runsTimes["RunTimes"][run]["Stop"]
-    dStopTime  = runsTimes["GlobalStopTime"]
-    #dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
+    #dStopTime  = runsTimes["GlobalStopTime"]
+    dStopTime  = datetime.datetime(  2010,  12,   31,   23,   59,  59  )
     #dStopTime  = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
     #dStopTime  = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
 
     startTime = correctStartTime( run, getUNIXTime(dStartTime) )
-    #stopTime  = getUNIXTime( dStopTime  )
-    stopTime  = 9223372036854775807 # cool.ValidityKeyMax
+    stopTime  = getUNIXTime( dStopTime  )
+    #stopTime  = 9223372036854775807 # cool.ValidityKeyMax
 
     # Scale factor
     scale = '%g' % scaleF[0]

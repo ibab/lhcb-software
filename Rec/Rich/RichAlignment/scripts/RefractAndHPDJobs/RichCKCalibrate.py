@@ -17,7 +17,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
     
     import os
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File, SplitByFiles, 
-                            SmartMerger, Dirac )
+                            RootMerger, Dirac )
     
     # Number of target events to process
     nEventsTotal    = 250000
@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v43r2p2' ) )
+                j = Job( application = Brunel( version = 'v45r1' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -84,9 +84,17 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 # Split job into 1 file per subjob
                 j.splitter = SplitByFiles ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
 
+                # ROOT file output
+                rootfiles = [j.name+".root"]
+
+                # Output files
+                j.outputfiles = rootfiles
+
                 # Merge the output
-                j.merger = SmartMerger( files = [j.name+".root"],
-                                        ignorefailed = True, overwrite = True )
+                merger = RootMerger( files        = rootfiles,
+                                     ignorefailed = True,
+                                     overwrite    = True )
+                j.postprocessors = [ merger ]
 
                 # Optional input files
                 j.inputsandbox = []
@@ -104,18 +112,19 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v43r2p2",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v45r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v43r2p2",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v45r1",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
 def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     from Ganga.GPI import ( Job, LHCbDataset, Brunel, File,
-                            SplitByFiles, SmartMerger, Dirac )
+                            SplitByFiles, RootMerger, Dirac )
+    import time
 
     # If pickled run data list is empty, create full list
     if len(pickledRunsList) == 0 : pickledRunsList = getPickledRunList()
@@ -177,7 +186,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #dbFiles += ["MDCS-RICH1-26092012"]
 
     # Mirror alignment
-    dbFiles += ["2013MirrorAlign-06022013"]
+    #dbFiles += ["2013MirrorAlign-06022013"]
 
     # HPD image calibration
     #dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-02102012"]
@@ -191,6 +200,16 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #dbFiles += ["2011-RootFiles-V1-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-12122012"]
     #dbFiles += ["2011_MirrAlign-20122012"]
 
+    # 2010 Tracking
+    #dbFiles += ["v6.2series.2010"]
+    #dbFiles += ["v6.2series.2010.TT.temperature"]
+    #dbFiles += ["OT_t0s_2010"]
+
+    # New 2010 MDCS
+    #dbFiles += ["MDCS-RICH1-FINAL-08052014"]
+    # New 2012 MDCS
+    #dbFiles += ["MDCS-RICH1-R_MDMS-23052014"]
+
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
         dbopts += ["UpdateManagerSvc().ConditionsOverride += [\"Conditions/Environment/Rich1/RefractivityScaleFactor := double CurrentScaleFactor = 1.0;\"]\n"]
@@ -198,8 +217,10 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        #pass
-        dbFiles += ["RefInCalib-2011-Repro-V1_BR-v43r1p1-12122012"]
+        pass
+        #dbFiles += ["RefInCalib-2010RePro-V1_BR-v45r1-15052014"]
+        #dbFiles += ["2010RePro-RootFiles-V1-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-15052014"]
+        #dbFiles += ["2010RePro-RootFiles-V1-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-16052014"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -282,9 +303,17 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     # Split job into 1 file per subjob
                     j.splitter = SplitByFiles ( filesPerJob = nFilesPerJob, maxFiles = nFiles )
 
+                    # ROOT file output
+                    rootfiles = [j.name+".root"]
+                    
+                    # Output files
+                    j.outputfiles = rootfiles
+
                     # Merge the output
-                    j.merger = SmartMerger( files = [j.name+".root"],
-                                            ignorefailed = True, overwrite = True )
+                    merger = RootMerger( files        = rootfiles,
+                                         ignorefailed = True,
+                                         overwrite    = True )
+                    j.postprocessors = [ merger ]
 
                     # Dirac backend
                     j.backend = Dirac()
@@ -309,7 +338,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     addToJobTree(j,basejobname)
 
                     # Submit !!
-                    print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")"
+                    print "Submitting Job", j.name, "( #", nJob, "of", len(sortedRuns), ")", time.strftime("%c")
                     print " -> Using", nFiles, "data file(s), max", nFilesPerJob, \
                           "file(s) per subjob,", nEventsPerJob, "events per job"
 
@@ -379,8 +408,8 @@ def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='')
             resPlot = 'PDCols/'+pdCol
 
         # Max/min run range
-        #minMaxRun = [ 0, 99999999 ]
-        minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
+        minMaxRun = [ 0, 99999999 ]
+        #minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
         #minMaxRun = [ 101372, 99999999 ] # Second phase of 2011 RePro
         #minMaxRun = [ 103936, 99999999 ] # Third phase of 2011 RePro
 
@@ -868,20 +897,21 @@ def queryBKDB(run):
     
     from Ganga.GPI import diracAPI
     import time
-    
+
+    # "from DIRAC.Core.Base import Script; Script.parseCommandLine();" +
     cmd = ( "from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient;" +
-            "result = BookkeepingClient().getRunInformations("+str(run)+")" )
+            "output( BookkeepingClient().getRunInformations("+str(run)+") )" )
 
     res = { 'OK' : False }
     nTries = 0
-    while not res['OK'] and nTries < 10:
+    while ( not res.has_key('OK') or not res['OK'] ) and nTries < 10:
         nTries = nTries + 1
         
         # Get information from Dirac
         res = diracAPI(cmd)
         print res
 
-        if not res['OK'] :
+        if not res.has_key('OK') or not res['OK'] :
             print " -> Problem querying DB - Will try again after 5 secs ..."
             time.sleep(5)
 
@@ -954,15 +984,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v45r1",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v45r1",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v45r1",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -988,9 +1018,9 @@ def nScaleFromShift(shift,rad='Rich1Gas'):
     return [result,error]
 
 def getRootFilePath(j):
-    listofMerged = [ j.outputdir+f for f in j.merger.files ]
+    outfiles = [ j.outputdir + f.namePattern for f in j.outputfiles ]
     filename = ""
-    if len(listofMerged) > 0 : filename = listofMerged[0]
+    if len(outfiles) > 0 : filename = outfiles[0]
     return filename
 
 def getListOfRootFiles(cjobs):
@@ -1460,7 +1490,7 @@ def filesPerJob(nFiles):
     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v43r2p2"):
+def removeCalibrationDataSet(name,BrunelVer="v45r1"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])
@@ -1469,7 +1499,7 @@ def removeCalibrationDataSet(name,BrunelVer="v43r2p2"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v43r2p2"):
+def removeVerificationDataSet(name,BrunelVer="v45r1"):
     from Ganga.GPI import jobtree
     js = getVerificationJobList(name,BrunelVer,
                                 statuscodes=['completed','running','submitted','failed'])

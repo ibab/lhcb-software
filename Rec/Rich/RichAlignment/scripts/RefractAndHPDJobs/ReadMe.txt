@@ -39,7 +39,7 @@ This is a python module for use with ganga. So start ganga (clean terminal) in
 the same dir as this file and import it
 
  > SetupProject Ganga
- > lhcb-proxy-init -g lhcb_calibration
+ > lhcb-proxy-init -g lhcb_calibration -v 120:00
  > ganga
  ...
  > import RichCKCalibrate
@@ -52,14 +52,14 @@ proxy location to your normal work, to isolate it. You can do this with
    You must run 'SetupProject Ganga' after this, to pick up the new setting
 
  - Start ganga using something like
-    > ganga -o[Configuration]gangadir=/r02/lhcb/jonesc/gangadir-calibration
+    > ganga -o[Configuration]gangadir=/r03/lhcb/jonesc/gangadir-calibration
 
 The file has a series of methods to submit the calibration jobs, and analyse the
 results. For submission just run at the ganga prompt 
 
  > RichCKCalibrate.submitCalibrationJobs(name="MyName",pickledRunsList=['XYZ.pck.bz2'])
 
-where 'name; is just a name you can give the set of jobs, and pickledRunsList is
+where 'name' is just a name you can give the set of jobs, and pickledRunsList is
 a list of pickled python files, containing the run data, produced in step 1.
 
 If you don't give the pickledRunsList argument, the method will just use all

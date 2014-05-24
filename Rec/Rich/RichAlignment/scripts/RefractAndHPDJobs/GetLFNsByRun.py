@@ -86,7 +86,9 @@ else:
 
         type = 91000000 # EXPRESS Stream
         if year == 2009 : type = 90000000 # Use full stream for 2009
-        if run > 77595  and run < 77624  : # Express disappeared for unknown reasons
+        if run > 71473  and run < 72332 : # Use FULL for first 14nb-1 in 2010
+          type = 90000000 # FULL Stream
+        if run > 77595  and run < 77624 : # Express disappeared for unknown reasons
           type = 90000000 # FULL Stream
         if run > 100256 and run < 102177 : # Express turned off by accident after 09/2011 TS
           type = 90000000 # FULL Stream
