@@ -31,35 +31,37 @@
       : m_nbDifferent{0}
     {
       m_planeList.fill(0);
-      while (first!=last) {
-        if ( (*first)->isSelected() ) {
-            auto plane = (*first)->planeCode();
-            if ( 0 == m_planeList[plane]++ ) ++m_nbDifferent;
-        }
-        ++first;
-      }
+      for (;first!=last;++first) addHit(*first);
     }
 
     explicit PatFwdPlaneCounter( const PatFwdTrackCandidate& cand) : PatFwdPlaneCounter( std::begin(cand), std::end(cand) ) {}
 
     /// add a hit to be counted
-    template < class Hit >
+    template < typename  Hit >
     int addHit( const Hit* hit )
     {
-      if ( !hit->isSelected() ) return m_nbDifferent;
-      const int plane = hit->planeCode();
-      assert( m_planeList[plane]!=-1); // this would cause an overflow...
-      if ( 0 == m_planeList[plane]++ ) ++m_nbDifferent;
+      if ( hit->isSelected() ) {
+          const int plane = hit->planeCode();
+          assert( m_planeList[plane]!=-1); // this would cause an overflow...
+          if ( 0 == m_planeList[plane]++ ) ++m_nbDifferent;
+      }
       return m_nbDifferent;
+    }
+
+    template <typename Iterator>
+    Iterator addHitsUntilEnough( Iterator current, Iterator end, int nPlanes) {
+        for ( ;current != end  && m_nbDifferent < nPlanes; ++current)  addHit(*current);
+        return current;
     }
 
     /// remove a hit
     template < class Hit >
     int removeHit( const Hit* hit )
     {
-      if ( !hit->isSelected() ) return m_nbDifferent;
-      auto plane = hit->planeCode();
-      if ( 0 == --m_planeList[plane] ) --m_nbDifferent;
+      if ( hit->isSelected() ) {
+          auto plane = hit->planeCode();
+          if ( 0 == --m_planeList[plane] ) --m_nbDifferent;
+      }
       return m_nbDifferent;
     }
 
@@ -88,9 +90,9 @@
     int maxPlane () const
     {
       auto max = std::max_element(std::begin(m_planeList),std::end(m_planeList));
-      if (0 == *max) return -1;
-      return std::distance( std::begin(m_planeList), max);
+      return *max!=0 ? std::distance( std::begin(m_planeList), max ) : -1 ;
     }
+
 
   private:
     // make sure things break at compile time if we ever

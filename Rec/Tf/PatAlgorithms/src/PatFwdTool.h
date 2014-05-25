@@ -56,25 +56,25 @@ public:
 private:
   template <typename Curve>
   bool fitXProjection_ ( PatFwdTrackCandidate& track,
-                        PatFwdHits::iterator itBeg,
-                        PatFwdHits::iterator itEnd,
+                        PatFwdHits::const_iterator itBeg,
+                        PatFwdHits::const_iterator itEnd,
                         bool onlyXPlanes  ) const;
 public:
   bool fitXProjection ( PatFwdTrackCandidate& track,
-                        PatFwdHits::iterator itBeg,
-                        PatFwdHits::iterator itEnd,
+                        PatFwdHits::const_iterator itBeg,
+                        PatFwdHits::const_iterator itEnd,
                         bool onlyXPlanes  ) const {
   return m_withoutBField ? fitXProjection_<PatFwdFitLine>( track, itBeg, itEnd, onlyXPlanes )
                          : fitXProjection_<PatFwdFitParabola>( track, itBeg, itEnd, onlyXPlanes );
   }
 
   void setRlDefault ( PatFwdTrackCandidate& track,
-                      PatFwdHits::iterator itBeg,
-                      PatFwdHits::iterator itEnd ) const;
+                      PatFwdHits::const_iterator itBeg,
+                      PatFwdHits::const_iterator itEnd ) const;
 
   void updateHitsForTrack ( const PatFwdTrackCandidate& track,
-                            PatFwdHits::iterator itBeg,
-                            PatFwdHits::iterator itEnd ) const;
+                            PatFwdHits::const_iterator itBeg,
+                            PatFwdHits::const_iterator itEnd ) const;
 
   double distanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
     double dist =  distanceHitToTrack( track, hit );

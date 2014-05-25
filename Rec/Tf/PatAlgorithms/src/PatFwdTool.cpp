@@ -292,7 +292,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   }
 
   auto itBeg = std::begin(track.coords());
-  auto itEnd = itBeg + bestPlanes;
+  auto itEnd = std::next(itBeg, bestPlanes);
   //== get enough planes fired
   PatFwdPlaneCounter planeCount1( itBeg, itEnd );
   while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
@@ -508,8 +508,8 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 template <typename Curve>
 bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
-                                  PatFwdHits::iterator itBeg,
-                                  PatFwdHits::iterator itEnd,
+                                  PatFwdHits::const_iterator itBeg,
+                                  PatFwdHits::const_iterator itEnd,
                                   bool onlyXPlanes  ) const {
 
   //= Fit the straight line, forcing the magnet centre. Use only position and slope.
@@ -555,13 +555,13 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
 
 // explicitly instantiate the two valid versions...
 template bool PatFwdTool::fitXProjection_<PatFwdFitLine> ( PatFwdTrackCandidate& track,
-                          PatFwdHits::iterator itBeg,
-                          PatFwdHits::iterator itEnd,
+                          PatFwdHits::const_iterator itBeg,
+                          PatFwdHits::const_iterator itEnd,
                           bool onlyXPlanes  ) const;
 
 template bool PatFwdTool::fitXProjection_<PatFwdFitParabola> ( PatFwdTrackCandidate& track,
-                          PatFwdHits::iterator itBeg,
-                          PatFwdHits::iterator itEnd,
+                          PatFwdHits::const_iterator itBeg,
+                          PatFwdHits::const_iterator itEnd,
                           bool onlyXPlanes  ) const;
 
 
@@ -630,8 +630,8 @@ double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 //=========================================================================
 
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
-                               PatFwdHits::iterator itBeg,
-                               PatFwdHits::iterator itEnd  ) const {
+                               PatFwdHits::const_iterator itBeg,
+                               PatFwdHits::const_iterator itEnd  ) const {
   bool isDebug = msgLevel( MSG::DEBUG );
   PatFwdHits temp;
   for ( int planeCode = 0; planeCode <12 ; ++planeCode ) {
@@ -689,8 +689,8 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 
 
 void PatFwdTool::updateHitsForTrack ( const PatFwdTrackCandidate& track,
-                                      PatFwdHits::iterator itBeg,
-                                      PatFwdHits::iterator itEnd ) const {
+                                      PatFwdHits::const_iterator itBeg,
+                                      PatFwdHits::const_iterator itEnd ) const {
   auto z0=m_zReference; 
   auto y0=track.y(-z0);
   std::for_each( itBeg, itEnd , [y0,z0,&track](PatForwardHit *hit) {

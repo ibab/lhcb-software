@@ -21,54 +21,45 @@ using ROOT::Math::CholeskyDecomp;
     PatFwdFitParabola( double z = 0., double x = 0., double w = 0. ) {
       //== First point, used to constraint the tangent at z=0 to go to this point.
       const double dz = 1.e-3 * z;  // use small numbers
-      m_mat[0] = w;
-      m_mat[1] = w * dz;
-      m_mat[2] = w * dz * dz;
-      m_mat[3] = 0.;
-      m_mat[4] = 0.;
-      m_mat[5] = 0.;
-      m_rhs[0] = w * x;
-      m_rhs[1] = w * x * dz;
-      m_rhs[2] = 0.;
-      m_sol[0] = 0.;
-      m_sol[1] = 0.;
-      m_sol[2] = 0.;
+      m_data = { w , w*dz, w*dz*dz, 0., 0., 0., w*x, w*x*dz, 0., 0. , 0. , 0. };
     }
 
     void addPoint( double z, double x, double w ) {
       const double dz = 1.e-3*z;
-      m_mat[0] += w;
-      m_mat[1] += w * dz;
-      m_mat[2] += w * dz * dz;
-      m_mat[3] += w * dz * dz;
-      m_mat[4] += w * dz * dz * dz;
-      m_mat[5] += w * dz * dz * dz * dz;
-      m_rhs[0] += w * x;
-      m_rhs[1] += w * x * dz;
-      m_rhs[2] += w * x * dz * dz;
+      m_data[0] += w;
+      m_data[1] += w * dz;
+      m_data[2] += w * dz * dz;
+      m_data[3] += w * dz * dz;
+      m_data[4] += w * dz * dz * dz;
+      m_data[5] += w * dz * dz * dz * dz;
+      m_data[6] += w * x;
+      m_data[7] += w * x * dz;
+      m_data[8] += w * x * dz * dz;
     }
 
     /// return false if matrix is singular
     bool solve() {
-      CholeskyDecomp<double, 3> decomp(m_mat);
+      CholeskyDecomp<double, 3> decomp(m_data.data());
       if (!decomp) return false;
-      m_sol[0] = m_rhs[0];
-      m_sol[1] = m_rhs[1];
-      m_sol[2] = m_rhs[2];
-      decomp.Solve(m_sol);
-      m_sol[1] *= 1.e-3;
-      m_sol[2] *= 1.e-6;
+      m_data[ 9] = m_data[6];
+      m_data[10] = m_data[7];
+      m_data[11] = m_data[8];
+      auto badInterfaceWorkaround = m_data.data()+9;
+      decomp.Solve(badInterfaceWorkaround);
+      m_data[10] *= 1.e-3;
+      m_data[11] *= 1.e-6;
       return true;
     }
 
-    double ax() const { return m_sol[0]; }
-    double bx() const { return m_sol[1]; }
-    double cx() const { return m_sol[2]; }
+    double ax() const { return m_data[9]; }
+    double bx() const { return m_data[10]; }
+    double cx() const { return m_data[11]; }
 
   private:
-    double m_mat[6]; /// matrix M in Mx = b
-    double m_rhs[3]; /// (right hand side) vector b in Mx = b
-    double m_sol[3]; /// (solution) vector x in Mx = b
+    /// [0:5] : packed symetrix 3x3 matrix M in Mx = b 
+    /// [6,7,8] : 3-vector b in Mx = b; 
+    /// [9,10,11] solution x in Mx = b
+    /* alignas(16) */ std::array<double,12> m_data; 
   };
 
 #endif // PATFWDFITPARABOLA_H

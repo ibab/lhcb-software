@@ -24,13 +24,9 @@ public:
       : m_track{ tr }, m_coords{ std::forward<C>(coords) } {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
-    m_x0 = state->x();
-    m_y0 = state->y();
-    m_z0 = state->z();
-    m_tx = state->tx();
-    m_ty = state->ty();
-
-    m_qOverP = state->qOverP();
+    m_state = { state->x(),  state->y(), state->z(), 
+                state->tx(), state->ty(), 
+                state->qOverP() };
   }
 
   PatFwdTrackCandidate(const LHCb::Track *tr)
@@ -41,7 +37,9 @@ public:
   template <typename I>
   PatFwdTrackCandidate(const LHCb::Track *tr, I&& first, I&& last)
       : PatFwdTrackCandidate(
-            tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) }) {}
+            tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) }) 
+  { //TODO: partition m_coords by 'selected' 'not selected' 'ignored'
+  }
 
   PatFwdTrackCandidate() = delete;
   PatFwdTrackCandidate(const PatFwdTrackCandidate &) = default;
@@ -60,14 +58,14 @@ public:
   }
 
   const LHCb::Track *track() const { return m_track; }
-  double xStraight(double z) const { return m_x0 + m_tx * (z - m_z0); }
-  double yStraight(double z) const { return m_y0 + m_ty * (z - m_z0); }
-  double qOverP() const { return m_qOverP; }
+  double xStraight(double z) const { return m_state[0] + m_state[3] * (z - m_state[2]); }
+  double yStraight(double z) const { return m_state[1] + m_state[4] * (z - m_state[2]); }
+  double qOverP() const { return m_state[5]; }
 
-  double slX() const { return m_tx; }
-  double slY() const { return m_ty; }
-  double slX2() const { return m_tx * m_tx; }
-  double slY2() const { return m_ty * m_ty; }
+  double slX() const { return m_state[3]; }
+  double slY() const { return m_state[4]; }
+  double slX2() const { return m_state[3] * m_state[3]; }
+  double slY2() const { return m_state[4] * m_state[4]; }
 
   double sinTrack() const { return sqrt(1. - 1. / (1. + slX2() + slY2())); }
 
@@ -97,50 +95,43 @@ public:
     m_coords.insert(m_coords.end(), first, last);
   }
   const PatFwdHits &coords() const { return m_coords; }
-  PatFwdHits &coords() { return m_coords; }
+  // PatFwdHits &coords() { return m_coords; }
 
-  void setParameters(double ax, double bx, double cx, double dx, double ay,
-                     double by) {
-    m_x[0] = ax;
-    m_x[1] = bx;
-    m_x[2] = cx;
-    m_x[3] = dx;
-
-    m_y[0] = ay;
-    m_y[1] = by;
-
+  PatFwdTrackCandidate& setParameters(double ax, double bx, double cx, double dx, 
+                                      double ay, double by) {
+    m_params = { ax, bx, cx, dx, ay, by };
     m_fitted = true;
+    return *this;
   }
 
   bool fitted() const { return m_fitted; }
 
   void updateParameters(double dax, double dbx, double dcx, double ddx = 0.,
                         double day = 0., double dby = 0.) {
-    m_x[0] += dax;
-    m_x[1] += dbx;
-    m_x[2] += dcx;
-    m_x[3] += ddx;
-
-    m_y[0] += day;
-    m_y[1] += dby;
+    m_params[0] += dax;
+    m_params[1] += dbx;
+    m_params[2] += dcx;
+    m_params[3] += ddx;
+    m_params[4] += day;
+    m_params[5] += dby;
   }
 
   double x(double dz) const {
-    return m_x[0] + dz * (m_x[1] + dz * (m_x[2] + dz * m_x[3]));
+    return m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3]));
   }
-  double y(double dz) const { return m_y[0] + dz * m_y[1]; }
+  double y(double dz) const { return m_params[4] + dz * m_params[5]; }
 
   double xSlope(double dz) const {
-    return m_x[1] + dz * (2 * m_x[2] + 3 * dz * m_x[3]);
+    return m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]);
   }
 
-  double ySlope(double) const { return m_y[1]; }
+  double ySlope(double) const { return m_params[5]; }
 
-  double xMagnet(double dz) const { return m_x[0] + dz * m_x[1]; }
+  double xMagnet(double dz) const { return m_params[0] + dz * m_params[1]; }
 
-  double cosAfter() const { return 1. / sqrt(1. + m_x[1] * m_x[1]); }
+  double cosAfter() const { return 1. / sqrt(1. + m_params[1] * m_params[1]); }
 
-  double dSlope() const { return m_x[1] - m_tx; }
+  double dSlope() const { return m_params[1] - m_state[3]; }
 
   int setSelectedCoords() {
     int nbSelected = 0;
@@ -152,29 +143,32 @@ public:
     return nbSelected;
   }
 
-  void setQuality(double quality) { m_quality = quality; }
+  PatFwdTrackCandidate setQuality(double quality) { m_quality = quality; return *this; }
   double quality() const { return m_quality; }
 
-  void setChi2PerDoF(double chi2, int nDof) {
+  PatFwdTrackCandidate& setChi2PerDoF(double chi2, int nDof) {
     m_chi2PerDof.first = chi2;
     m_chi2PerDof.second = nDof;
+    return *this;
   }
   double chi2PerDoF() const { return m_chi2PerDof.first; }
   int nDoF() const { return m_chi2PerDof.second; }
 
-  double bx() const { return m_x[1]; }
+  double bx() const { return m_params[1]; }
 
-  void setNbIT(int nb) { m_nb[0] = nb; }
-  void setNbOT(int nb) { m_nb[1] = nb; }
+  PatFwdTrackCandidate& setNbIT(int nb) { m_nb[0] = nb; return *this;}
+  PatFwdTrackCandidate& setNbOT(int nb) { m_nb[1] = nb; return *this;}
 
   int nbIT() const { return m_nb[0]; }
   int nbOT() const { return m_nb[1]; }
 
-  void setCand1stQuality(double cand1stquality) {
+  PatFwdTrackCandidate& setCand1stQuality(double cand1stquality) {
     m_candquality[0] = cand1stquality;
+    return *this;
   }
-  void setCand2ndQuality(double cand2ndquality) {
+  PatFwdTrackCandidate& setCand2ndQuality(double cand2ndquality) {
     m_candquality[1] = cand2ndquality;
+    return *this;
   }
 
   double cand1stquality() const { return m_candquality[0]; }
@@ -182,18 +176,11 @@ public:
 
 private:
   const LHCb::Track *m_track;
-  double m_x0;
-  double m_y0;
-  double m_z0;
-
-  double m_tx;
-  double m_ty;
-  double m_qOverP;
+  std::array<double,6> m_state; // x0,y0,z0, tx,ty, Q/P
 
   PatFwdHits m_coords;
 
-  std::array<double, 4> m_x{ { 0., 0., 0., 0. } };
-  std::array<double, 2> m_y{ { 0., 0. } };
+  std::array<double, 6> m_params{ { 0., 0., 0., 0., 0., 0. } };
 
   double m_quality{ 0. };
   std::array<double, 2> m_candquality{ { 0., 0. } };

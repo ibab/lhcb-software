@@ -21,44 +21,40 @@ using ROOT::Math::CholeskyDecomp;
     PatFwdFitLine( double z = 0., double x = 0., double w = 0. ) {
       //== First point
       const double dz = 1.e-3*z;
-      m_mat[0] = w;
-      m_mat[1] = w * dz;
-      m_mat[2] = w * dz * dz;
-      m_rhs[0] = w * x;
-      m_rhs[1] = w * x * dz;
-      m_sol[0] = 0.;
-      m_sol[1] = 0.;
+      m_data = { w, w*dz, w*dz*dz, w*x, w*x*dz, 0. , 0. };
     }
 
     void addPoint( double z, double x, double w ) {
       const double dz = 1.e-3*z;
-      m_mat[0] += w;
-      m_mat[1] += w * dz;
-      m_mat[2] += w * dz * dz;
-      m_rhs[0] += w * x;
-      m_rhs[1] += w * x * dz;
+      m_data[0] += w;
+      m_data[1] += w * dz;
+      m_data[2] += w * dz * dz;
+      m_data[3] += w * x;
+      m_data[4] += w * x * dz;
     }
 
     /// return false if matrix is singular
     bool solve() {
-      CholeskyDecomp<double, 2> decomp(m_mat);
+      CholeskyDecomp<double, 2> decomp(m_data.data());
       if (!decomp) return false;
-      m_sol[0] = m_rhs[0];
-      m_sol[1] = m_rhs[1];
-      decomp.Solve(m_sol);
-      m_sol[1] *= 1.e-3;
+      m_data[5] = m_data[3];
+      m_data[6] = m_data[4];
+      auto badInterfaceWorkaround = m_data.data()+5;
+      decomp.Solve(badInterfaceWorkaround);
+      m_data[6] *= 1.e-3;
       return true;
     }
 
-    double ax() const { return m_sol[0]; }
-    double bx() const { return m_sol[1]; }
+    double ax() const { return m_data[5]; }
+    double bx() const { return m_data[6]; }
     double cx() const { return 0.; }
-    double z0() const { return 1.e3 * m_mat[1] / m_mat[0]; }
+    double z0() const { return 1.e3 * m_data[1] / m_data[0]; }
 
   private:
-    double m_mat[3]; /// matrix M in Mx = b
-    double m_rhs[2]; /// vector b in Mx = b
-    double m_sol[2]; /// (solution) vector x in Mx = b
+    // [0,1,2] = packed 2x2 symmetric matrix M in Mx = b
+    // [3,4]   = vector b  in Mx = b
+    // [5,6]   = solution x in Mx = b
+    /*alignas(16)*/ std::array<double,7> m_data; 
   };
 
 #endif // PATFWDFITLINE_H
