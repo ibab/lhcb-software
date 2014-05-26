@@ -32,11 +32,11 @@ CombineTaggersNN::~CombineTaggersNN(){}
 
 //=============================================================================
 int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
-                                     std::vector<Tagger*>& vtg , int signalType,  bool m_nnetTaggers){
+                                     std::vector<Tagger*>& vtg , int signalType,  bool flag_nnetTaggers, bool flag_CharmTagger){
   if( vtg.empty() ) return 0;
 
   fatal() << "WARNING: update the code according to the new variable signalType !!!!!! "
-          <<signalType<<" and m_nnetTaggers"<<m_nnetTaggers<< endmsg;
+          <<signalType<<" and flag_nnetTaggers"<<flag_nnetTaggers<< " and flag_CharmTagger "<<flag_CharmTagger<< endmsg;
   ///////////////////////////////////////////////////////////////////////////
   // WARNING: update the code according to the new variable signalType !!!!!!
   ///////////////////////////////////////////////////////////////////////////

@@ -53,7 +53,7 @@ StatusCode CombineTaggersProbability::initialize()
 //=============================================================================
 int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
                                               std::vector<Tagger*>& vtg ,
-                                              int signalType, bool m_nnetTaggers)
+                                              int signalType, bool flag_nnetTaggers, bool flag_CharmTagger)
 {
   if( vtg.empty() ) return 0;
 
@@ -65,14 +65,16 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   for( int i = 0; i != vtgsize; ++i ) 
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
-    if( vtg.at(i)->type() == (Tagger::SS_Pion) || vtg.at(i)->type() == (Tagger::SS_PionBDT) ||
+    if( vtg.at(i)->type() == (Tagger::SS_Pion)   || 
+        vtg.at(i)->type() == (Tagger::SS_PionBDT)||
         vtg.at(i)->type() == (Tagger::SS_Proton) || 
-        vtg.at(i)->type() == (Tagger::SS_Kaon) || 
+        vtg.at(i)->type() == (Tagger::SS_Kaon)   || 
         vtg.at(i)->type() == (Tagger::SS_nnetKaon) 
-        ) continue; // Just combine the prob of OS
+        ) continue; // Just combine the prob of OS taggers
     
-    if(!m_nnetTaggers &&  vtg.at(i)->type() == (Tagger::OS_nnetKaon) ) continue;
-    if(m_nnetTaggers &&  vtg.at(i)->type() == (Tagger::OS_Kaon) ) continue;
+    if(!flag_nnetTaggers &&  vtg.at(i)->type() == (Tagger::OS_nnetKaon) ) continue;
+    if(flag_nnetTaggers  &&  vtg.at(i)->type() == (Tagger::OS_Kaon)     ) continue;
+    if(!flag_CharmTagger &&  vtg.at(i)->type() == (Tagger::OS_Charm)    ) continue;
     
     const double mtag = vtg.at(i)->decision();
     if(!mtag) continue;
@@ -119,8 +121,8 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     if(! vtg.at(i)) continue;
     if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) ||
         (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Proton)) ||
-        (signalType == 2 && !m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_Kaon)) ||
-        (signalType == 2 && m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_nnetKaon))
+        (signalType == 2 && !flag_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_Kaon)) ||
+        (signalType == 2 && flag_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_nnetKaon))
         )
     {
       const double mtagss = vtg.at(i)->decision();

@@ -38,6 +38,7 @@ GaudiTool ( type, name, parent )
   declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
   declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = false );
+  declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = false );
 
   //choose active taggers
   declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
@@ -266,7 +267,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(isBu || isBd ) signalType=1;
   else if(isBs) signalType=2;
 
-  m_combine -> combineTaggers( theTag, taggers , signalType,  m_CombineWithNNetTagger);
+  m_combine -> combineTaggers( theTag, taggers , signalType,  m_CombineWithNNetTagger, m_CombineWithCharmTagger);
   if (msgLevel(MSG::DEBUG))
   {
     debug() << "combine taggers "<< taggers.size()

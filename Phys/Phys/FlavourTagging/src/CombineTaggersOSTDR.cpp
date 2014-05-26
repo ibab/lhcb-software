@@ -26,12 +26,13 @@ CombineTaggersOSTDR::~CombineTaggersOSTDR(){}
 //=============================================================================
 int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, 
                                         std::vector<Tagger*>& vtg, 
-                                        int signalType, bool m_nnetTaggers)
+                                        int signalType, bool flag_nnetTaggers, bool flag_CharmTagger)
 {
 
   if ( msgLevel(MSG::DEBUG) ) {    
     debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<<endreq;
-    debug()<<"NB: m_nnetTaggers="<<m_nnetTaggers<<" has no influence here"<<endreq;
+    debug()<<"NB: flag_nnetTaggers="<<flag_nnetTaggers<<" and flag_CharmTagger="<<flag_CharmTagger<<
+      " have no influence here"<<endreq;
   }
   //Want to combine opposite side muon, electron, kaon, vertex
   int catt=0;

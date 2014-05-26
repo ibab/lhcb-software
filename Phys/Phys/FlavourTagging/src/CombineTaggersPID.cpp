@@ -132,11 +132,12 @@ StatusCode CombineTaggersPID::initialize()
 //=============================================================================
 int CombineTaggersPID::combineTaggers(FlavourTag& theTag,
                                       std::vector<Tagger*>& vtg, 
-                                      int signalType, bool m_nnetTaggers)
+                                      int signalType, bool flag_nnetTaggers, bool flag_CharmTagger)
 {
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
-    debug()<<"NB: m_nnetTaggers="<<m_nnetTaggers<<" has no influence here"<<endreq;
+    debug()<<"NB: flag_nnetTaggers="<<flag_nnetTaggers<<" and flag_CharmTagger="<<flag_CharmTagger<<
+      " have no influence here"<<endreq;
   }
   fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "
          <<signalType<<endmsg;

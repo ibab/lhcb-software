@@ -32,7 +32,7 @@ TaggerPionBDTSameTool::TaggerPionBDTSameTool( const std::string& type,
   declareProperty( "PionBDTSame_PIDp_cut",   m_PIDp_cut_pionS = 5.0);
   declareProperty( "PionBDTSame_PIDk_cut",   m_PIDk_cut_pionS = 5.0);
   declareProperty( "PionBDTSame_Pt_cut",     m_Pt_cut_pionS  = 0.4 *GeV );
-  declareProperty( "PionBDTSame_IPs_cut",    m_IPs_cut_pionS = 3. ); // corresponding to IPChi2<16
+  declareProperty( "PionBDTSame_IPs_cut",    m_IPs_cut_pionS = 4. ); // corresponding to IPChi2<16
   declareProperty( "PionBDTSame_lcs_cut",    m_lcs_cut         = 5.0 );
 
   declareProperty( "PionBDTSame_dQ_cut",     m_dQcut_pionS     = 0.9 *GeV);
@@ -152,26 +152,27 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
     const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
 
-    if(  PIDp <-999 )  continue;
-    if( PIDp > m_PIDp_cut_pionS ) continue;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<" Pion PIDp="<< PIDp <<"cut is <"<<m_PIDp_cut_pionS<<" Pion PIDk="<< PIDk <<"cut is <"<<m_PIDk_cut_pionS<<endreq;
 
-    if(  PIDk <-999 )  continue;
+    if( PIDp <-999 )  continue;    
+    if( PIDp > m_PIDp_cut_pionS ) continue;
+    
+    if(  PIDk <-999 )  continue;    
     if( PIDk > m_PIDk_cut_pionS ) continue;
 
-    if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Pion PIDp="<< PIDp <<"="<<PIDp<<endreq;
-
+    
     const Track* track = proto->track();
     if( track->type() != Track::Long ) continue;
 
     const double Pt = (*ipart)->pt();
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<" Pion P="<< (*ipart)->p() <<" Pt="<< Pt <<" cut is >"<<m_Pt_cut_pionS<<endreq;
     if( Pt < m_Pt_cut_pionS )  continue;
 
     //const double P  = (*ipart)->p();
     //if( P  < m_P_cut_pionS )  continue;
 
-    if ( msgLevel(MSG::DEBUG) )
-      debug()<<" Pion P="<< (*ipart)->p() <<" Pt="<< Pt <<endreq;
 
     const double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
@@ -201,28 +202,30 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     const double mp = 139 ;  // from Antonio&Vava
     ptot_pS.SetE(std::sqrt(mp * mp + ptot_pS.P2()));
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;
-
-    const double dQ = (ptot_B+ptot_pS).M() - B0mass;
+      debug()<< " Setting PDG pion mass "<<mp<<" instead of "<< ptot_pS.M() <<" to match the BDT computation "<<endreq;    
+    
+    const double dQ = (ptot_B+ptot_pS).M() - B0mass - mp ;
 
     if ( msgLevel(MSG::DEBUG) )
-      debug() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
+      debug() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<" cut is <"<<m_dQcut_pionS<<endmsg;
     if(dQ > m_dQcut_pionS ) continue;
 
     const double pT_Bp = (ptot_B+ptot_pS).Pt();
     if(pT_Bp < m_Bp_Pt_cut_pionS ) continue;
 
+    //double cosT = cosTheta(ptot_B+ptot_pS, ptot_pS);
+    //double cosT = cosTheta(AXB0->momentum()+(*ipart)->momentum(), (*ipart)->momentum());
+    double cosT = cosTheta(AXB0->momentum()+ptot_pS, ptot_pS);
 
-    double cosT = cosTheta(ptot_B+ptot_pS, ptot_B);
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " cosTheta(B**,B*)="<<cosT<<" cut is >-0.5 "<<endreq;
+      debug()<< " cosTheta(B**,pion)="<<cosT<<" cut is >-0.5 "<<endreq;    
     if(cosT< m_cosTheta_cut_pionS) continue;
 
     const double deta = std::fabs(log(tan(ptot_B.Theta()/2.)/tan(ptot_pS.Theta()/2.)));
     const double dphi = std::fabs(TaggingHelpers::dphi(ptot_B.Phi(), ptot_pS.Phi()));
 
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endreq;
+      debug()<< " deta="<<deta <<" (cut is <"<< m_eta_cut_pionS<<") dphi="<<dphi<<" (cut is <"<< m_phi_cut_pionS<<")"<< endreq;    
 
     const double dR = std::sqrt(deta*deta+dphi*dphi);
 
@@ -234,8 +237,8 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
     StatusCode sc = m_fitter->fit(vtx,*AXB0,**ipart);
     if( sc.isFailure() ) continue;
     if ( msgLevel(MSG::DEBUG) )
-      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endreq;
-
+      debug()<< " Vertex Fit Chi2="<<vtx.chi2() <<"/"<<vtx.nDoF()<<" (cut is <"<< m_Bp_vtxChi2_cut_pionS <<")"<< endreq;    
+ 
     if( vtx.chi2() / vtx.nDoF() > m_Bp_vtxChi2_cut_pionS ) continue;
 
 
@@ -245,7 +248,7 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
 
     ++ncand;
     std::vector<double> values;
-    values.push_back(dQ);
+    values.push_back(dQ);  
     values.push_back(log((ptot_B+ptot_pS).Pt()));  // lab0=B**
     values.push_back(log(ptot_pS.Pt())); // lab1=SSp
     values.push_back(log(ptot_B.Pt())); // lab2=B
@@ -284,14 +287,14 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
   double pn = 1-m_AverageOmega;
   if ( m_CombinationTechnique == "BDT" )
   {
-    pn = 1. - ( m_P0_pol_pionS +
-                m_P1_pol_pionS*bestBDT +
-                m_P2_pol_pionS*bestBDT*bestBDT +
+    pn = 1. - ( m_P0_pol_pionS + 
+                m_P1_pol_pionS*bestBDT +  
+                m_P2_pol_pionS*bestBDT*bestBDT + 
                 m_P3_pol_pionS*bestBDT*bestBDT*bestBDT+
-                m_P4_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT +
+                m_P4_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT + 
                 m_P5_pol_pionS*bestBDT*bestBDT*bestBDT*bestBDT*bestBDT);
-
-
+    
+  
     if ( msgLevel(MSG::DEBUG) )
       debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
 
@@ -308,6 +311,8 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
   tpionS.setType( Tagger::SS_PionBDT );
   tpionS.addToTaggerParts(ipionS);
 
+  if ( msgLevel(MSG::INFO) )
+    info() << " Found a SSpionBDT tagging candidate decision="<< tagdecision <<" w="<<1-pn<<endmsg;
   return tpionS;
 }
 //==========================================================================

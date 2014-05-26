@@ -29,7 +29,7 @@ public:
 
   virtual ~CombineTaggersNN( ); ///< Destructor
 
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int,  bool  );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int,  bool , bool );
 
 private:
 

@@ -27,7 +27,7 @@ public:
   /// Initialize
   StatusCode initialize();
 
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int, bool );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int, bool, bool );
 
 private:
 

@@ -165,8 +165,12 @@ StatusCode DoubleTagging::execute()
                   << signalType<<endmsg;
         warning() << " WARNING: make combination assuming nnetTagger or cut-based tagger fix it!!!"
                   << m_CombineWithNNetTagger <<endmsg;
+        bool m_CombineWithCharmTagger = false;        
+        warning() << " WARNING: make combination without CharmTagger fix it!!!"
+                  << m_CombineWithNNetTagger <<endmsg;
 
-        const unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType,m_CombineWithNNetTagger);
+        const unsigned int category = 
+          m_oscombine->combineTaggers(*OSTag,ptaggers,signalType,m_CombineWithNNetTagger,m_CombineWithCharmTagger);
         const std::vector<Tagger> OStaggers = OSTag->taggers();
 
         if( sskaondec == 0 || category == 0 ) continue;

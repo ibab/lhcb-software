@@ -6,6 +6,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-05-26 - Stefania Vecchi
+ - Add a flag to enable the CharmTagger in the OS combination (default=disabled)
+ - Fix BDT taggers: dQ and CosTheta calculation
+ - SSProtonBDT: removed preselection cut in CosTheta 
+    --> see presentations at FT meeting 8 and 15/05/2014 
 !========================= FlavourTagging v13r6 2014-04-02 =========================
 
 ! 2014-03-10 - Chris Jones
