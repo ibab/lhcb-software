@@ -67,36 +67,35 @@ private:
       double xMax() const { return m_xmax; }
   };
 
+  double dSlope_kick( double sinTrack ) const {
+      return sinTrack * m_magnetKickParams.first / 
+           ( m_WrongSignPT - sinTrack*m_magnetKickParams.second );
+  }
+
   XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
       double xExtrap = track.xStraight( m_fwdTool->zReference() );
       //== calculate if minPt or minMomentum sets the window size
       double minMom = m_minPt / track.sinTrack();
       //== calculate center of magnet from Velo track
       const double zMagnet =  m_fwdTool->zMagnet( track );
-      const double dSlope =  m_magnetKickParams[0] / ( minMom - m_magnetKickParams[1] ) ;
+      const double dSlope =  m_magnetKickParams.first / ( minMom - m_magnetKickParams.second ) ;
       double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
       double xMin = xExtrap - maxRange;
       double xMax = xExtrap + maxRange;
       
       //== based on momentum a wrong-charge sign window size is defined
-      if (m_useMomentumEstimate && 0 != track.qOverP() && !m_withoutBField) {
-        double kickRange = 0.0;
-
-        if(m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT){
-          double minWrongSignedMom = m_WrongSignPT / track.sinTrack();
-          double dSlope_kick = m_magnetKickParams[0] / (minWrongSignedMom - m_magnetKickParams[1] ) ;
-          kickRange = dSlope_kick*( m_fwdTool->zReference() - zMagnet);
-        }
+      if (m_useMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
+        bool useKick { m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT };
+        double kickRange = useKick ? dSlope_kick(track.sinTrack())*( m_fwdTool->zReference() - zMagnet)
+                         : 0;
         if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
           debug() << "   xExtrap = " << xExtrap
                   << " q/p " << track.qOverP()
                   << " predict " << xExtrap + kickRange << endmsg;
         }
-        bool dir = std::signbit( m_fwdTool->magscalefactor() );
-        if ( std::signbit( track.qOverP() ) )  dir = !dir;
-        if (dir) { // TODO: replace by check for (in)equality between the signbits
+        if ( std::signbit( track.qOverP() ) != std::signbit( m_fwdTool->magscalefactor() ) ) {
           xMin = xExtrap - kickRange;
-        } else{
+        } else {
           xMax = xExtrap + kickRange;
         }
       }
@@ -217,7 +216,7 @@ private:
   double m_maxDeltaYSlope;
   int    m_maxXCandidateSize;
 
-  std::vector<double>  m_magnetKickParams ;
+  std::pair<double,double>  m_magnetKickParams ;
   double m_minRange;
 
   // setting the cov matrix of the state

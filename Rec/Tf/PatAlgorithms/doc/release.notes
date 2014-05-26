@@ -6,6 +6,7 @@
 
 ! 2014-05-26 - Gerhard Raven
  - PatFwdTool: optimize rl-ambiguity resolution
+ - PatForwardTool: improve x search window computation
 
 ! 2014-05-25 - Gerhard Raven
  - PatFwdTrackCandidate,PatFwdTool : improve const-correctness 
