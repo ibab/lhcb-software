@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-26 - Gerhard Raven
+ - PatFwdTool: optimize rl-ambiguity resolution
+
 ! 2014-05-25 - Gerhard Raven
  - PatFwdTrackCandidate,PatFwdTool : improve const-correctness 
  - PatFwdTrackCandidate,PatFwdFit{Line,Parabola} : consolidate data members in std::array

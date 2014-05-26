@@ -21,6 +21,18 @@
 // 2005-04-01 : Olivier Callot
 //
 //-----------------------------------------------------------------------------
+template < typename  Iterator, typename BinaryFunction > 
+BinaryFunction for_each_adjacent_pair(Iterator first, Iterator last, BinaryFunction fun) {
+    if ( first==last ) return fun;
+    auto prev = first;
+    while ( ++first != last ) { 
+        fun(*prev,*first);
+        prev = first; 
+    } 
+    return fun;
+}
+      
+
 
 template < typename  Iterator, typename Predicate > 
 Iterator reverse_find_if(Iterator begin, Iterator end, Predicate&& pred) {
@@ -96,6 +108,53 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
 #endif
       return extended;
 }
+
+
+class RLAmbiguityResolver {
+    const PatFwdTool* const m_parent;
+    const PatFwdTrackCandidate* const m_track;
+    double m_distM = 10.;
+    double m_distP = 10.;
+    bool m_isDebug;
+public:
+    RLAmbiguityResolver( const PatFwdTrackCandidate& track, const PatFwdTool& parent ) : 
+        m_parent{ &parent}, 
+        m_track{ &track } ,
+        m_isDebug{ parent.msgLevel( MSG::DEBUG ) }
+    {
+    }
+
+    void operator()(PatFwdHit *prev, PatFwdHit *hit) {
+      double dz   = hit->z() - m_parent->zReference();
+      //OT : distance to a circle, drift time
+      double dist = (hit->x() - m_track->x( dz ))*m_track->cosAfter();
+      double dx = hit->driftDistance();
+      double distM = dist-dx;
+      double distP = dist+dx;
+
+      double minDist = 0.3;
+      int    vP = 0;
+      int    vC = 0;
+
+      if (         fabs( distM - m_distP ) < minDist ) {
+        minDist =  fabs( distM - m_distP );  vP = +1;  vC = -1;
+      }
+      if (         fabs( distP - m_distM ) < minDist ) {
+        minDist =  fabs( distP - m_distM );  vP = -1;  vC = +1;
+      }
+      prev->setRlAmb( vP );
+      hit->setRlAmb( vC );
+
+      m_distP = distP;
+      m_distM = distM;
+
+      if( UNLIKELY( m_isDebug ) ) {
+        m_parent->debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
+                           hit->z(), hit->x(), hit->hit()->region(),
+                           hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
+      }
+    }
+};
 
 
 DECLARE_TOOL_FACTORY( PatFwdTool )
@@ -630,70 +689,40 @@ double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 //=========================================================================
 
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
-                               PatFwdHits::const_iterator itBeg,
-                               PatFwdHits::const_iterator itEnd  ) const {
+                               PatFwdHits::const_iterator ibegin,
+                               PatFwdHits::const_iterator iend  ) const {
   bool isDebug = msgLevel( MSG::DEBUG );
-  PatFwdHits temp;
-  for ( int planeCode = 0; planeCode <12 ; ++planeCode ) {
-    temp.clear();
-    for ( auto itH = itBeg; itH != itEnd; ++itH ) {
-      PatFwdHit* hit = (*itH);
-      if ( planeCode != hit->planeCode() ) continue;
-      hit->setRlAmb( 0 );   // default
-      //if ( !hit->isSelected() ) continue;
-      if ( hit->hit()->type() != Tf::RegionID::OT ) continue;    // IT ->no ambiguity!
-      temp.push_back( hit );
-    }
-    if ( temp.size() < 2 ) continue;   // no RL solved if only one hit
+  PatFwdHits temp; temp.reserve( std::distance(ibegin,iend) );
+  // only OT has ambiguity
+  std::copy_if( ibegin, iend, std::back_inserter(temp), [](const PatFwdHit *hit) { 
+      return /* hit->isSelected() && */ hit->hit()->type() == Tf::RegionID::OT ;
+  } );
 
-    std::sort( temp.begin(), temp.end(), Tf::increasingByX<PatForwardHit>() ); 
+  auto first = std::begin(temp);
+  auto end   = std::end(temp);
+  // why is the following loop actually needed? the 'sort' goes by wire x, and the resolver
+  //  is blind to the a-priori RlAmb, and _always_ sets it.
+  //  but skipping this loop still changes the results....
+  std::for_each( first, end, [](PatForwardHit *hit) {
+      hit->setRlAmb(0) ;  // default 
+  } );
 
-    if( UNLIKELY( isDebug ) ) 
+  for ( int planeCode = 0; planeCode < 12 ; ++planeCode ) {
+    auto part = std::partition( first, end, [planeCode](const PatFwdHit *hit) { 
+        return hit->planeCode() == planeCode ; 
+    } );
+    std::sort( first, part, Tf::increasingByX<PatForwardHit>() ); 
+
+    if ( UNLIKELY( isDebug ) ) 
       debug() << "-- Hit of plane " << planeCode << endmsg;
 
-    double prevDistM = 10.;
-    double prevDistP = 10.;
-    PatFwdHit* prevHit = temp.front();
-
-    for ( PatFwdHit *hit : temp ) {
-      hit->setRlAmb( -1 ); double distM = distanceHitToTrack( track, hit );
-      hit->setRlAmb( +1 ); double distP = distanceHitToTrack( track, hit );
-      hit->setRlAmb( 0 );
-
-      double minDist = 0.3;
-      int    vP = 0;
-      int    vC = 0;
-
-      if (         fabs( distM - prevDistP ) < minDist ) {
-        minDist =  fabs( distM - prevDistP );  vP = +1;  vC = -1;
-      }
-      if (         fabs( distP - prevDistM ) < minDist ) {
-        minDist =  fabs( distP - prevDistM );  vP = -1;  vC = +1;
-      }
-      prevHit->setRlAmb( vP );
-      hit->setRlAmb( vC );
-
-      prevHit   = hit;
-      prevDistP = distP;
-      prevDistM = distM;
-
-      if( UNLIKELY( isDebug ) ) {
-        debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
-                           hit->z(), hit->x(), hit->hit()->region(),
-                           hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
-      }
+    if ( std::distance(first,part) > 1 ) {   // no RL solved if only one hit
+      RLAmbiguityResolver  resolve{track, *this};
+      resolve( *first, *first ); //FIXME: required to retain identical results...
+      for_each_adjacent_pair( first,part, std::move(resolve) );
     }
+    first = part;
   }
+  assert(first==end);
 }
 //=============================================================================
-
-
-void PatFwdTool::updateHitsForTrack ( const PatFwdTrackCandidate& track,
-                                      PatFwdHits::const_iterator itBeg,
-                                      PatFwdHits::const_iterator itEnd ) const {
-  auto z0=m_zReference; 
-  auto y0=track.y(-z0);
-  std::for_each( itBeg, itEnd , [y0,z0,&track](PatForwardHit *hit) {
-    updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
-  } );
-}

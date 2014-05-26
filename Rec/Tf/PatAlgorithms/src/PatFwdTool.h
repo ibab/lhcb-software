@@ -72,9 +72,14 @@ public:
                       PatFwdHits::const_iterator itBeg,
                       PatFwdHits::const_iterator itEnd ) const;
 
-  void updateHitsForTrack ( const PatFwdTrackCandidate& track,
-                            PatFwdHits::const_iterator itBeg,
-                            PatFwdHits::const_iterator itEnd ) const;
+  template <typename Iter>
+  void updateHitsForTrack ( const PatFwdTrackCandidate& track, Iter&& begin, Iter&& end ) const {
+      auto z0=m_zReference; 
+      auto y0=track.y(-z0);
+      std::for_each( std::forward<Iter>(begin), std::forward<Iter>(end) , [y0,z0,&track](PatForwardHit *hit) {
+        updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
+      } );
+  }
 
   double distanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
     double dist =  distanceHitToTrack( track, hit );
@@ -82,8 +87,7 @@ public:
     return dist / track.cosAfter();
   }
 
-  double distanceHitToTrack( const PatFwdTrackCandidate& track,
-  const PatFwdHit* hit) const {
+  double distanceHitToTrack( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
     double dz   = hit->z() - m_zReference;
     double dist = hit->x() - track.x( dz );
     if ( hit->hit()->region() > 1 ) return dist;
