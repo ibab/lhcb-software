@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-05-26 - Chris Jones
+ - Set the compression level for ROOT ntuples. Default is LZMA:6.
+
 ! 2014-05-21 - Ben Couturier
  - Fixed CMake configuration file to remove data packages specified as 
    sub-dirs.

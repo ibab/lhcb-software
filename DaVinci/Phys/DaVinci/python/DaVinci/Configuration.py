@@ -38,6 +38,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
         , "TupleFile"          : ""              # Name of output Tuple file
         , "WriteFSR"           : True            # Flags whether to write out an FSR
+        , "RootCompressionLevel" : "LZMA:6"        # ROOT compression level for ntuple files
         # DQ
         , "IgnoreDQFlags"      : False           # If False (default), process only events with good DQ. 
         #, "IgnoredDQFlags"     : []              # List of particular DQ flags to ignore.
@@ -70,6 +71,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
+        , "RootCompressionLevel" : """ ROOT Compression level for ntuples """
         , 'IgnoreDQFlags'      : """ If False, process only events with good DQ. Default is False """
         #, "IgnoredDQFlags"     : """ List of DQ flags to ignore. Default is empty, so events flagged bad for any reason are rejected (Unless IgnoreDQFlags=True) """
         , "MainOptions"        : """ Main option file to execute """
@@ -372,6 +374,10 @@ class DaVinci(LHCbConfigurableUser) :
             tupleStr = "FILE1 DATAFILE='%s' TYP='ROOT' OPT='NEW'" % tupleFile
             NTupleSvc().Output      += [ tupleStr ]
             # NTupleSvc().OutputLevel  = 1
+
+        # Set the compression level for the ROOT tuple file
+        from GaudiKernel.Configurable import ConfigurableGeneric as RFileCnv
+        RFileCnv('RFileCnv').GlobalCompression = self.getProp("RootCompressionLevel")
             
 ################################################################################
 ################################################################################
