@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2014-05-26 - Stefania Vecchi
+ - updated reference for test_tag_mc12.qmt 
 
 !========================= DaVinciTests v2r24 2014-05-19 =========================
 
