@@ -4,6 +4,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2014-05-26 - Stefania
+ - stored one additional variable in BTA tuple for SS-BDT taggers
+ - updated SignleCandidate.tar with latest cuts in D*munu selectio
 
 !========================= FlavourTaggingChecker v7r3 2014-02-20 =========================
 

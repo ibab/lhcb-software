@@ -285,6 +285,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("Bip", ipPVBS);
   tuple -> column ("Biperr", iperrPVBS);
   tuple -> column ("krec", verts.size() );
+  tuple -> column ("PVndof", RecVert->nDoF());
   tuple -> column ("RVx",  RecVert->position().x()/mm);
   tuple -> column ("RVy",  RecVert->position().y()/mm);
   tuple -> column ("RVz",  RecVert->position().z()/mm);
@@ -444,9 +445,9 @@ StatusCode BTaggingAnalysis::execute() {
     double P   = axp->p()/GeV;
     double Pt  = axp->pt()/GeV;
     double Pl  = axp->momentum().Dot(AXBS->momentum())/GeV;
-    double delta_eta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
-    double delta_phi= fabs(dphi(axp->momentum().phi() , AXBS->momentum().phi())); 
-    double delta_Q  = ((AXBS->momentum() + axp->momentum()).M() - AXBS->momentum().M()) /GeV;
+    double delta_eta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.))); // to drop --> can be recomputed
+    double delta_phi= fabs(dphi(axp->momentum().phi() , AXBS->momentum().phi()));  // to drop --> can be recomputed
+    double delta_Q  = ((AXBS->momentum() + axp->momentum()).M() - AXBS->momentum().M()) /GeV; // to drop --> can be recomputed
     double lcs = track->chi2PerDoF();
     double cloneDist = track->info(LHCb::Track::CloneDist, -1.) ;
     double trackxfirst = track->position().x();
@@ -481,8 +482,6 @@ StatusCode BTaggingAnalysis::execute() {
     Vertex vtx;
     StatusCode sc = m_fitter->fit(vtx,*AXBS,*axp);    
     if(!sc.isFailure() ) chi2ndof_pBs = vtx.chi2()/vtx.nDoF();
-
-    
 
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
@@ -567,10 +566,10 @@ StatusCode BTaggingAnalysis::execute() {
     pIPSVerr    .push_back(iperrSV);
     pDOCA       .push_back(docaSV);
     pDOCAerr    .push_back(docaErrSV);
-    pdeta       .push_back(delta_eta);
-    pdphi       .push_back(delta_phi);
-    pdQ         .push_back(delta_Q);
-    ppionCombinedMass.push_back(pionCombinedMass);
+    pdeta       .push_back(delta_eta); //drop
+    pdphi       .push_back(delta_phi); //drop
+    pdQ         .push_back(delta_Q); //drop
+    ppionCombinedMass.push_back(pionCombinedMass); //drop
     //different PU studies
     pipmean     .push_back(ipmean);
     pnippu      .push_back(nippu);
