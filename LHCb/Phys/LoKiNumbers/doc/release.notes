@@ -13,9 +13,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-05-26 - Marco Clemencic
+ - Moved dictionaries for LoKi::TES classes from LoKiNumbers to LoKiCore
+   (required for ROOT 6).
+
 !========================= LoKiNumbers v10r5 2014-02-17 =======================
 ! 2014-02-02 - Vanya Belyaev
- - add defintion of PARAM helper object 
+ - add defintion of PARAM helper object
 
 ! 2014-02-01 - Vanya Belyaev
  - build dictionaries for FuncOps__

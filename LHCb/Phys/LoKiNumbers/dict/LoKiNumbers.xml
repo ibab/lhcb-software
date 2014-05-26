@@ -1,8 +1,8 @@
-<!-- 
-     * $Id$ 
+<!--
+     * $Id$
      * ========================================================================
      * @file
-     * The XML seleciton file to build Reflex 
+     * The XML seleciton file to build Reflex
      * dictionaries for Phys/LoKiNumbers package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2007-12-01
@@ -10,7 +10,7 @@
 -->
 
 <lcgdict>
-  
+
 
   <class name = "LoKi::Functor<double,double>"            />
   <class name = "LoKi::Functor<double,bool>"            />
@@ -24,7 +24,7 @@
   <class name = "LoKi::FunctorFromFunctor<std::vector<double>,bool>"            />
   <class name = "LoKi::FunctorFromFunctor<std::vector<double>,std::vector<double> >"       />
 
-  
+
   <class name = "LoKi::Functor<void,double>"  />
   <class name = "LoKi::Functor<void,bool>"    />
   <class name = "LoKi::FunctorFromFunctor<void,double>" />
@@ -39,15 +39,15 @@
 
   <class pattern   = "LoKi::Constant<*>"           />
   <class pattern   = "LoKi::Identity<*>"           />
-  
+
   <class pattern   = "LoKi::Dicts::*Ops<*>"        />
   <class pattern   = "LoKi::Dicts::*Ops_<*>"       />
   <class pattern   = "LoKi::Dicts::*Ops__<*>"      />
   <class pattern   = "LoKi::Dicts::*Calls*>"       />
-  
+
   <class pattern   = "LoKi::Random::*"       />
   <class pattern   = "LoKi::Algorithms::*"   />
-  
+
   <class name = "LoKi::Scalers::RateLimitV" >
     <field name = "m_rateSvc" transient = "true"/>
     <field name = "m_uniform" transient = "true"/>
@@ -62,14 +62,6 @@
   <class name = "LoKi::Scalers::SkipperV"     />
   <class name = "LoKi::Scalers::Skipper"      />
 
-  <class name = "LoKi::TES::Exists"        />
-  <class name = "LoKi::TES::Contains"      />
-
-  <class name = "LoKi::TES::Counter"       />
-  <class name = "LoKi::TES::Stat"          />
-  <class name = "LoKi::TES::HasRecSummary" />
-  <class name = "LoKi::TES::RecSummary"    />
-  
   <class name = "LoKi::Status::Check"  >
     <field name = "m_tool" transient = "true"/>
   </class>
@@ -78,13 +70,13 @@
   </class>
 
   <enum name = "LoKi::Scalers::RateLimitType"  />
-  
+
   <exclusion>
-    
+
     <class pattern="LoKi::Random::*">
       <method name="=" />
     </class>
-    
+
     <class pattern="LoKi::Dicts::*">
       <method name="=" />
     </class>
@@ -97,7 +89,7 @@
     <class pattern="LoKi::Hybrid::*">
       <method name="=" />
     </class>
-    
+
     <class pattern="LoKi::Functor&lt;*&gt;">
       <method name="=" />
     </class>
@@ -113,7 +105,7 @@
     <class pattern="LoKi::Identity&lt;*&gt;">
       <method name="=" />
     </class>
-    
+
     <class pattern="Gaudi::Range_&lt;*&gt;">
       <method name="=" />
     </class>
@@ -129,7 +121,7 @@
     <class pattern="LoKi::UniqueKeeper&lt;*&gt;">
       <method name="=" />
     </class>
-    
+
     <class pattern="LoKi::Functors::*">
       <method name="=" />
     </class>
@@ -138,10 +130,6 @@
       <method name="=" />
     </class>
 
-    <class pattern="LoKi::TES::*">
-      <method name="=" />
-    </class>
-    
   </exclusion>
 
 

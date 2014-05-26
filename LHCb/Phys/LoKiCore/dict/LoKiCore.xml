@@ -1,5 +1,5 @@
-<!-- 
-     * ======================================================================== 
+<!--
+     * ========================================================================
      * @file
      * The selection file to build Reflex dictionaries for Phys/LoKiCore package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -8,7 +8,7 @@
 -->
 
 <lcgdict>
-  
+
   <!--
       <class name      = "Gaudi::RangeBase_"     />
   -->
@@ -24,13 +24,13 @@
   <class name      = "LoKi::KeeperBase"      />
 
   <class name      = "LoKi::Services"        />
-  
+
   <class pattern   = "LoKi::Interface<*>"    />
-  
+
   <function pattern = "LoKi::Geometry::*"      />
   <function pattern = "LoKi::Kinematics::*"    />
   <function pattern = "LoKi::Particles::*"     />
-  
+
   <variable pattern = "LoKi::Constants::*"     />
 
   <function name = "LoKi::throwException"  />
@@ -42,16 +42,16 @@
   <class name    = "LoKi::Reverse"         />
   <class name    = "LoKi::Sort"            />
   <class name    = "LoKi::Timer"           />
-  <class name    = "LoKi::DecayChainBase"  />  
+  <class name    = "LoKi::DecayChainBase"  />
   <class name    = "LoKi::Param"           />
-  
+
   <class name    = "Bender::Welcome"       />
-  
+
   <class name = "LoKi::Hybrid::ICoreFactory"               />
   <class name = "LoKi::Hybrid::ICoreAntiFactory"           />
   <class name = "LoKi::Hybrid::CoreEngine"                 />
 
-  
+
   <class    name = "Gaudi::Histo1DDef"                 />
   <function name = "Gaudi::Histos::book"               />
   <function name = "LoKi::HistoBook::book"             />
@@ -72,24 +72,33 @@
   <class    name = "Decays::IDecayNode" />
 
   <class name    = "LoKi::Parameters::ParamBase"  />
-  
+
   <enum name = "LoKi::Monitoring::Flag"  />
- 
+
   <class name    = "LoKi::Listener">
     <field name = "m_incSvc" transient = "true"/>
   </class>
-  
+
   <class    name = "LoKi::TES::Get" >
     <field name = "m_algorithm" transient = "true"/>
     <field name = "m_datasvc"   transient = "true"/>
   </class>
-  
+
+  <class name = "LoKi::TES::Exists"        />
+  <class name = "LoKi::TES::Contains"      />
+
+  <class name = "LoKi::TES::Counter"       />
+  <class name = "LoKi::TES::Stat"          />
+  <class name = "LoKi::TES::HasRecSummary" />
+  <class name = "LoKi::TES::RecSummary"    />
+
+
   <class name =        "implements1<IIncidentListener>" />
   <class name = "extend_interfaces1<IIncidentListener>" />
-  
+
   <exclusion>
-    <function name    = "LoKi::tokenize" /> 
-    
+    <function name    = "LoKi::tokenize" />
+
     <class pattern="LoKi::Interface&lt;*&gt;">
       <method name="=" />
     </class>
@@ -105,18 +114,22 @@
     <class pattern="std::binary_function&lt;*&gt;">
       <method name="=" />
     </class>
-    
+
     <class    name = "LoKi::TES::Get" >
       <field name = "m_algorithm" />
       <field name = "m_datasvc"   />
     </class>
-    
+
+    <class pattern="LoKi::TES::*">
+      <method name="=" />
+    </class>
+
     <class pattern="LoKi::Listener">
       <method name="release"  />
       <method name="addRef"   />
       <method name="refCount" />
     </class>
-    
+
   </exclusion>
-  
+
 </lcgdict>
