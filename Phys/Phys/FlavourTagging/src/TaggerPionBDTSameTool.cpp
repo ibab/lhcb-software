@@ -311,8 +311,8 @@ Tagger TaggerPionBDTSameTool::tag( const Particle* AXB0, const RecVertex* RecVer
   tpionS.setType( Tagger::SS_PionBDT );
   tpionS.addToTaggerParts(ipionS);
 
-  if ( msgLevel(MSG::INFO) )
-    info() << " Found a SSpionBDT tagging candidate decision="<< tagdecision <<" w="<<1-pn<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " Found a SSpionBDT tagging candidate decision="<< tagdecision <<" w="<<1-pn<<endmsg;
   return tpionS;
 }
 //==========================================================================

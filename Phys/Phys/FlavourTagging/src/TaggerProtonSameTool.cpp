@@ -305,8 +305,8 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
   tprotonS.setType( Tagger::SS_Proton );
   tprotonS.addToTaggerParts(iprotonS);
 
-  if ( msgLevel(MSG::INFO) )
-    info() << " Found a SSproton tagging candidate decision="<< tagdecision <<" w="<<1-pn<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " Found a SSproton tagging candidate decision="<< tagdecision <<" w="<<1-pn<<endmsg;
   return tprotonS;
 }
 //==========================================================================

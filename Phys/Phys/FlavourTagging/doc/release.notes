@@ -7,6 +7,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-05-26 - Stefania Vecchi
+ - changed to DEBUG level some useful printouts in BDT Taggers
  - Add a flag to enable the CharmTagger in the OS combination (default=disabled)
  - Fix BDT taggers: dQ and CosTheta calculation
  - SSProtonBDT: removed preselection cut in CosTheta 
