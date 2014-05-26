@@ -225,32 +225,34 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
 
   double x;
 
+  double zHit       = hit->z();
+  double xHit       = hit->x();
+   
+  const Tf::OTHit* othit = hit->hit()->othit();
+  
+  if ( othit ) {
+    if ( hit->hasNext()     ) xHit += hit->driftDistance();
+    if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
+  }
+
   if (!m_withoutBField){
+
     double zMagnet    = ( m_zMagnetParams[0] +
 			  m_zMagnetParams[2] * track.slX2() +
 			  m_zMagnetParams[3] * hit->x() * hit->x() +
 			  m_zMagnetParams[4] * track.slY2() );
     
     double xMagnet    = track.xStraight( zMagnet);
-    double zHit       = hit->z();
-    double xHit       = hit->x();
-    
-    const Tf::OTHit* othit = hit->hit()->othit();
-    
-    if ( othit ) {
-      if ( hit->hasNext()     ) xHit += hit->driftDistance();
-      if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
-    }
     
     double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
     double dSlope     = slopeAfter - track.slX();
     double dSl2       = dSlope * dSlope;
-    zMagnet           = zMagnet + m_zMagnetParams[1] * dSl2;
+    zMagnet          += m_zMagnetParams[1] * dSl2;
     double dz         = 1.e-3 * ( zHit - m_zReference );
     double dyCoef     = dSl2 * track.slY();
     double dy         = dyCoef * ( m_yParams[0] + dz * m_yParams[1] );
     double dxCoef     = dz * dz * ( m_xParams[0] + m_xParams[1] * dz );
-    xHit              = xHit + dy * hit->hit()->dxDy() - dxCoef * dSlope ;
+    xHit             += dy * hit->hit()->dxDy() - dxCoef * dSlope ;
     xMagnet           = track.xStraight( zMagnet );
     slopeAfter        = ( xHit - xMagnet ) / ( zHit - zMagnet );
     x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
@@ -264,21 +266,10 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
 			   track.slY() + dyCoef * m_yParams[1] );
       m_zMagnet = zMagnet;
     }
-  }
-  else {
-     
+  } else {
+    
     double zMagnet    = 0.0;
     double xMagnet    = track.xStraight( zMagnet);
-    double zHit       = hit->z();
-    double xHit       = hit->x();
-     
-    const Tf::OTHit* othit = hit->hit()->othit();
-    
-    if ( othit ) {
-      if ( hit->hasNext()     ) xHit += hit->driftDistance();
-      if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
-    }
-    
     double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
     
     x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;

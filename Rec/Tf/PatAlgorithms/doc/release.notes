@@ -5,8 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-05-26 - Gerhard Raven
- - PatFwdTool: optimize rl-ambiguity resolution
+ - PatFwdTool: 
+      o optimize rl-ambiguity resolution, 
+      o unify with{,out} B-field computation of X @ reference plane
  - PatForwardTool: improve x search window computation
+
 
 ! 2014-05-25 - Gerhard Raven
  - PatFwdTrackCandidate,PatFwdTool : improve const-correctness 
