@@ -1,5 +1,5 @@
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 //
 #include "GaudiOnline/AMSService.h"
@@ -58,3 +58,5 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PanoramixSim)
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiDeamon)
 #include "GaudiOnline/MEPErrorAdder.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPErrorAdder)
+#include "GaudiOnline/PublishSvc.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PublishSvc)
