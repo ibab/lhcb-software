@@ -8,6 +8,7 @@
  - PatFwdTool: 
       o optimize rl-ambiguity resolution, 
       o unify with{,out} B-field computation of X @ reference plane
+      o use PatFwdPlaneCounter::addUntilEnough 
  - PatForwardTool: improve x search window computation
 
 

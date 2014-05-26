@@ -271,15 +271,17 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
     double zMagnet    = 0.0;
     double xMagnet    = track.xStraight( zMagnet);
     double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
+    double dSlope     = 0.0;
+    double dyCoef     = 0.0;
     
     x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     if ( store ) {
       track.setParameters( x, 
 			   ( x - xMagnet ) / ( m_zReference - zMagnet ),
-			   0, 
-			   0, 
-			   track.yStraight( m_zReference ),
-			   track.slY());
+			   1.e-6 * m_xParams[0] * dSlope,
+			   1.e-9 * m_xParams[1] * dSlope,
+			   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
+			   track.slY() + dyCoef * m_yParams[1] );
       m_zMagnet = zMagnet;
     }
   }
@@ -305,27 +307,35 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   int bestRegion = -1;
   double spread = 1000.;
 
+  auto make_matchRegion = [](unsigned int maxRegion) {
+    return [maxRegion](const PatForwardHit& hit) {
+      unsigned int region = hit.hit()->region();
+      if ( region != Tf::RegionID::OT) region+=2;
+      return region == maxRegion ;
+    };
+  };
+
   PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
-  for( unsigned int maxRegion = 0; 6 > maxRegion; ++maxRegion ) {
-    if ( regions.nbInRegion( maxRegion ) >= 6 ) {  // count by plane
-      PatFwdPlaneCounter planes{ track.coordBegin(), track.coordBegin() };
-      double first = 1.e7;
-      double last  = first;
-      for (auto  hit :  track.coords() ) {
-        unsigned int region = hit->hit()->region();
-        if ( region != Tf::RegionID::OT) region+=2;
-        if ( region == maxRegion ) {
-          if ( first > 1.e6 ) first = hit->projection();
-          last = hit->projection();
-          planes.addHit( hit );
-        }
-      }
-      if ( planes.nbDifferent() == 6 ) {
-        double mySpread = last-first;
-        if ( mySpread < spread ) {
-          spread = mySpread;
-          bestRegion = maxRegion;
-        }
+  for( unsigned int maxRegion = 0; maxRegion < 6 ; ++maxRegion ) {
+    if ( regions.nbInRegion( maxRegion ) < 6 ) continue;  // count by plane
+    PatFwdPlaneCounter planes{ track.coordBegin(), track.coordBegin() };
+    double first = 1.e7;
+    double last  = first;
+   
+    auto inRegion = make_matchRegion(maxRegion);
+
+    for (auto  hit :  track.coords() ) {
+      if (!inRegion(*hit)) continue;
+      if ( first > 1.e6 ) first = hit->projection();
+      last = hit->projection();
+      planes.addHit( hit );
+    }
+
+    if ( planes.nbDifferent() == 6 ) {
+      double mySpread = last-first;
+      if ( mySpread < spread ) {
+        spread = mySpread;
+        bestRegion = maxRegion;
       }
     }
   }
@@ -334,44 +344,37 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     // remove other regions !
     if( UNLIKELY( isDebug ) ) 
       debug() << "========= Keep only hits of region " << bestRegion << endmsg;
-    for ( auto hit : track.coords() ) {
-      unsigned int region = hit->hit()->region();
+    std::for_each( std::begin(track.coords()), std::end(track.coords()), [=](PatForwardHit *hit) {
+      int region = hit->hit()->region();
       if ( region != Tf::RegionID::OT) region+=2;
-      if ( region != (unsigned int)(bestRegion) ) hit->setSelected( false );
-    }
+      if ( region != bestRegion ) hit->setSelected( false );
+    } );
   }
 
   auto itBeg = std::begin(track.coords());
   auto itEnd = std::next(itBeg, bestPlanes);
   //== get enough planes fired
   PatFwdPlaneCounter planeCount1( itBeg, itEnd );
-  while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
-    PatFwdHit* hit = *itEnd;
-    if ( hit->isSelected() ) planeCount1.addHit( hit );
-    ++itEnd;
-  }
-  if ( bestPlanes > planeCount1.nbDifferent() ) return false;
+  itEnd = planeCount1.addHitsUntilEnough( itEnd, std::end(track.coords()), bestPlanes );
+  if ( planeCount1.nbDifferent() < bestPlanes ) return false;
 
 
-  double minDist = (*(itEnd-1))->projection() - (*itBeg)->projection();
+  double minDist = (*std::prev(itEnd))->projection() - (*itBeg)->projection();
   if ( UNLIKELY(isDebug) ) {
     debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                       minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
+                       minDist, (*itBeg)->projection(), (*std::prev(itEnd))->projection(), bestPlanes )
             << endmsg;
   }
   //== Better range ? Remove first, try to complete, measure spread...
   auto itBest = itBeg;
   auto itLast = itEnd;
-  while ( itEnd != track.coordEnd() &&  bestPlanes <= planeCount1.nbDifferent() ) {
+  auto last = std::end(track.coords());
+  while ( itEnd != last &&  planeCount1.nbDifferent() >= bestPlanes ) {
     planeCount1.removeHit( *itBeg );
     ++itBeg;
-    while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
-      PatFwdHit* hit = *itEnd;
-      if ( hit->isSelected() ) planeCount1.addHit( hit );
-      ++itEnd;
-    }
-    if ( bestPlanes <= planeCount1.nbDifferent() ) {
-      auto dist = (*(itEnd-1))->projection() - (*itBeg)->projection() ;
+    itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
+    if ( planeCount1.nbDifferent() >= bestPlanes ) {
+      auto dist = (*std::prev(itEnd))->projection() - (*itBeg)->projection() ;
       if ( dist < minDist ) {
         minDist = dist;
         itBest = itBeg;
@@ -397,7 +400,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   double minProj = (*itBeg)->projection() - tolSide;
   itBeg = reverse_find_if( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() < minProj; });
-  double maxProj = (*(itEnd-1))->projection() + tolSide;
+  double maxProj = (*std::prev(itEnd))->projection() + tolSide;
   itEnd = std::find_if(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() > maxProj; });
 
   PatFwdPlaneCounter planeCount( itBeg, itEnd );
@@ -406,11 +409,10 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
 
   // initial value;
-  int minHit = (itEnd - itBeg) / 2;
+  int minHit = std::distance(itBeg,itEnd) / 2;
   xAtReferencePlane( track, track.coords()[minHit], true );
 
   updateHitsForTrack( track, itBeg, itEnd );
-
   setRlDefault( track, itBeg, itEnd );
 
   bool first = true;
@@ -456,12 +458,9 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 }
 
 
-
-
 //=========================================================================
 //  Fit only Y with the stereo hits.
 //=========================================================================
-
 bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
                                       double maxChi2, int minPlanes ) const {
 
@@ -469,7 +468,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
   //== get enough planes fired
   PatFwdPlaneCounter planeCount( track.coordBegin(), track.coordEnd() );
-  if ( minPlanes > planeCount.nbDifferent() ) return false;
+  if ( planeCount.nbDifferent() < minPlanes ) return false;
 
   if ( isDebug ) debug() << "+++ Stereo fit, planeCount " << planeCount.nbDifferent()
                          << " size " << track.coordEnd() - track.coordBegin() << endmsg;
@@ -483,9 +482,8 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation
     if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) {
-      if( UNLIKELY( isDebug ) ) 
-        debug() << "Abandon: Matrix not positive definite." << endmsg;
-	    return false;
+      if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix not positive definite." << endmsg;
+	  return false;
     }
 
     for ( unsigned int kk = 0; kk < 10; ++kk ) {
@@ -522,16 +520,16 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
       worst->setSelected( false );
       if( UNLIKELY( isDebug ) ) debug() << " Remove hit and try again " << endmsg;
       //== Remove in one go all hits with bad contribution...
-      if ( 1000. < highestChi2 ) {
+      if ( highestChi2 > 1000. ) {
         for ( PatFwdHit *hit : track.coords() ) {
-          if (predicate(hit) &&  1000. < chi2hit( hit ) ) {
+          if (predicate(hit) &&  chi2hit( hit ) > 1000. ) {
             planeCount.removeHit( hit );
             hit->setSelected( false );
           }
         }
       }
 
-      if ( minPlanes > planeCount.nbDifferent() ) {
+      if ( planeCount.nbDifferent() < minPlanes ) {
         if( UNLIKELY( isDebug ) ) 
           debug() << " Abandon: Only " << planeCount.nbDifferent() << " planes, min " << minPlanes
                   << " highestChi2 " << highestChi2 << endmsg;
@@ -548,8 +546,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   if( UNLIKELY( isDebug ) ) 
     debug() << ".. OK with " << planeCount.nbDifferent() << " planes, min " << minPlanes
             << " highestChi2 " << highestChi2 << endmsg;
-  if ( minPlanes > planeCount.nbDifferent() ) return false;
-  return true;
+  return planeCount.nbDifferent() >= minPlanes ;
 }
 
 
@@ -566,9 +563,10 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
 
   bool isDebug = msgLevel( MSG::DEBUG );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
+  double weightCenter = 1./errCenter;
   auto dz = m_zMagnet - m_zReference;
   auto make_curve = [=](const PatFwdTrackCandidate& trk) -> Curve { 
-      return { dz, distAtMagnetCenter( trk ), 1./errCenter }; 
+      return { dz, distAtMagnetCenter( trk ), weightCenter }; 
   };
   auto accept = [=](const PatFwdHit* hit) {
       if ( !hit->isSelected() ) return false;
@@ -681,7 +679,8 @@ double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::const_iterator ibegin,
-                               PatFwdHits::const_iterator iend  ) const {
+                               PatFwdHits::const_iterator iend  ) const 
+{
   bool isDebug = msgLevel( MSG::DEBUG );
   PatFwdHits temp; temp.reserve( std::distance(ibegin,iend) );
   // only OT has ambiguity
@@ -701,12 +700,12 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
     if ( UNLIKELY( isDebug ) ) 
       debug() << "-- Hit of plane " << planeCode << endmsg;
 
-    if ( std::distance(first,part) > 1 ) {   // no RL solved if only one hit
+    if ( std::distance(first,part) > 1 ) {
       RLAmbiguityResolver  resolve{track, *this};
       resolve( *first, *first ); //FIXME: required to retain identical results...
-      for_each_adjacent_pair( first,part, std::move(resolve) );
-    } else if ( first!=part ) {
-      (*first)->setRlAmb(0) ; 
+      for_each_adjacent_pair( first, part, std::move(resolve) );
+    } else if ( first!=part ) {   // no RL solved if only one hit
+      (*first)->setRlAmb(0); 
     }
     first = part;
   }
