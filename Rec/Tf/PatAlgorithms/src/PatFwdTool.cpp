@@ -700,12 +700,6 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 
   auto first = std::begin(temp);
   auto end   = std::end(temp);
-  // why is the following loop actually needed? the 'sort' goes by wire x, and the resolver
-  //  is blind to the a-priori RlAmb, and _always_ sets it.
-  //  but skipping this loop still changes the results....
-  std::for_each( first, end, [](PatForwardHit *hit) {
-      hit->setRlAmb(0) ;  // default 
-  } );
 
   for ( int planeCode = 0; planeCode < 12 ; ++planeCode ) {
     auto part = std::partition( first, end, [planeCode](const PatFwdHit *hit) { 
@@ -720,6 +714,8 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       RLAmbiguityResolver  resolve{track, *this};
       resolve( *first, *first ); //FIXME: required to retain identical results...
       for_each_adjacent_pair( first,part, std::move(resolve) );
+    } else if ( first!=part ) {
+      (*first)->setRlAmb(0) ; 
     }
     first = part;
   }
