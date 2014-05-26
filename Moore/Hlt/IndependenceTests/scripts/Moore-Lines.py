@@ -69,7 +69,10 @@ def main():
     #Moore().OutputLevel="VERBOSE" 
     Moore().EvtMax = options.EvtMax
 
-    Moore().UseDBSnapshot = options.UseDBSnapshot
+    #Moore().UseDBSnapshot = options.UseDBSnapshot # DEPRECATED
+    from Configurables import CondDB
+    CondDB().UseDBSnapshot = options.UseDBSnapshot
+    #
     Moore().DDDBtag   = options.DDDBtag
     Moore().CondDBtag = options.CondDBtag
     Moore().Simulation = options.Simulation
