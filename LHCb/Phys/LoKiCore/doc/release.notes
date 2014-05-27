@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-05-27 - Marco Clemencic
+ - Fixed dictionary generation after the move.
+
 ! 2014-05-26 - Marco Clemencic
  - Moved dictionaries for LoKi::TES classes from LoKiNumbers to LoKiCore
    (required for ROOT 6).

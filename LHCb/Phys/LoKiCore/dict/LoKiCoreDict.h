@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-#ifndef LOKI_LOKICOREDICT_H 
+#ifndef LOKI_LOKICOREDICT_H
 #define LOKI_LOKICOREDICT_H 1
 // ============================================================================
 // Include files
@@ -31,6 +31,7 @@
 #include "LoKi/Dump.h"
 #include "LoKi/DecayChainBase.h"
 #include "LoKi/TES.h"
+#include "LoKi/RecStat.h"
 #include "LoKi/Tensors.h"
 #include "LoKi/Param.h"
 // ============================================================================
@@ -39,28 +40,28 @@
 #ifdef WIN32
 #ifdef CONST
 #undef CONST
-#endif 
+#endif
 #endif
 // ============================================================================
-namespace 
+namespace
 {
   // ==========================================================================
-  struct _Interfaces 
-  { 
+  struct _Interfaces
+  {
     // ========================================================================
     LoKi::Interface<LoKi::ILoKiSvc>   m_1 ;
     LoKi::Interface<LoKi::IReporter>  m_2 ;
     LoKi::Interface<GaudiTool>        m_3 ;
     LoKi::Interface<GaudiAlgorithm>   m_4 ;
     LoKi::Interface<IDataProviderSvc> m_5 ;
-    // fictive constructor 
+    // fictive constructor
     _Interfaces() ;
     // ========================================================================
-  } ;  
+  } ;
   // ==========================================================================
 }
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // LOKI_LOKICOREDICT_H
 // ============================================================================
