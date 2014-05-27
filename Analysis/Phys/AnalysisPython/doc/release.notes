@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-05-27 - Marco Clemencic
+ - Work-around for issue ROOT-6233.
+   https://sft.its.cern.ch/jira/browse/ROOT-6233
+
 !========================= AnalysisPython v2r30 2014-05-19 =========================
 
 ! 2014-05-13 - Marco Clemencic

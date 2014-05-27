@@ -7,7 +7,7 @@ package           AnalysisPython
 version           v2r30
 
 # =============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 # =============================================================================
 branches          cmt doc python tests src Analysis
 
@@ -15,11 +15,11 @@ branches          cmt doc python tests src Analysis
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 # =============================================================================
-use   GaudiPython  v*  
+use   GaudiPython  v*
 use   LHCbMath     v*  Kernel
 use   pytools      v*  LCG_Interfaces -no_auto_imports
 use   pyanalysis   v*  LCG_Interfaces -no_auto_imports
-use   ROOT         v*  LCG_Interfaces 
+use   ROOT         v*  LCG_Interfaces
 
 # ================ Produce LCG dictionary =====================================
 apply_pattern      reflex_dictionary                                           \
@@ -27,22 +27,22 @@ apply_pattern      reflex_dictionary                                           \
                    headerfiles=$(ANALYSISPYTHONROOT)/dict/AnalysisPythonDict.h \
                    selectionfile=$(ANALYSISPYTHONROOT)/dict/AnalysisPython.xml \
                    options=" -U__MINGW32__ --split=classdef "
-                   
+
 # ================ constituents ===============================================
 library            AnalysisPythonLib  ../src/*.cpp  \
                    ../$(tag)/dict/AnalysisPython/AnalysisPython*_classdef.cpp
 
 macro_append       ROOT_linkopts " -lPyROOT " \
-                   target-winxp  " libPyROOT.lib " 
+                   target-winxp  " libPyROOT.lib "
 
 macro_append       ROOT_linkopts " -lRooFitCore " \
-                   target-winxp  " libRooFitCore.lib " 
+                   target-winxp  " libRooFitCore.lib "
 
 macro_append       ROOT_linkopts " -lHist " \
-                   target-winxp  " libHist.lib " 
+                   target-winxp  " libHist.lib "
 
 macro_append       ROOT_linkopts " -lTreePlayer " \
-                   target-winxp  " libTreePlayer.lib " 
+                   target-winxp  " libTreePlayer.lib "
 
 macro_append       AnalysisPythonLib_dependencies     " AnalysisPythonGen "
 macro_append       AnalysisPythonDict_dependencies    " AnalysisPythonLib "
@@ -54,7 +54,13 @@ apply_pattern      install_more_includes more=Analysis
 apply_pattern      install_python_modules
 apply_pattern      QMTest
 
+private
+# Required to work with ROOT 6
+# (see https://sft.its.cern.ch/jira/browse/ROOT-6233)
+macro_prepend AnalysisPython_linkopts " -Wl,--no-as-needed "
+macro_append AnalysisPython_linkopts " -Wl,--as-needed "
+end_private
 # ============================================================================
-# The END 
+# The END
 # ============================================================================
 

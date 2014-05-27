@@ -29,4 +29,8 @@ gaudi_add_dictionary(AnalysisPython
 # not multiple times.
 add_dependencies(AnalysisPythonLib AnalysisPythonGen)
 
+# Required to work with ROOT 6
+# (see https://sft.its.cern.ch/jira/browse/ROOT-6233)
+target_link_libraries(AnalysisPythonDict -Wl,--no-as-needed AnalysisPythonLib -Wl,--as-needed)
+
 gaudi_install_python_modules()
