@@ -15,9 +15,8 @@
    *  @date   2005-07-07 Initial version
    *          2007-08-20 Update for A-Team framework  SHM
    */
-  class PatFwdRegionCounter {
+  class PatFwdRegionCounter final {
   public:
-    virtual ~PatFwdRegionCounter( ) {} ///< Destructor
 
     /// Standard constructor
     PatFwdRegionCounter( PatFwdHits::const_iterator first, PatFwdHits::const_iterator last )
