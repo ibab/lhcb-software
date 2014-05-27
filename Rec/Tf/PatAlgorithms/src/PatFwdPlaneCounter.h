@@ -21,27 +21,42 @@
    *  @date   2007-08-20 Update for A-Team framework
    */
 
-  class PatFwdPlaneCounter final {
+
+  namespace PatFwdPlaneCounter_Policy {
+
+  struct RequireSelected {
+      template <typename Hit>
+      static bool check(const Hit * hit ) { return hit->isSelected(); } 
+  };
+  struct OmitSelectedCheck {
+      template <typename Hit>
+      static bool check(const Hit * hit ) { return true; }
+  };
+
+  }
+
+  template <typename CheckPolicy = PatFwdPlaneCounter_Policy::RequireSelected>
+  class PatFwdPlaneCounter_ final {
   public:
 
-    PatFwdPlaneCounter() = delete;
+    PatFwdPlaneCounter_() = delete;
     /// Standard constructor
     template < class Iterator >
-    PatFwdPlaneCounter( Iterator first, Iterator last )
+    PatFwdPlaneCounter_( Iterator first, Iterator last )
       : m_nbDifferent{0}
     {
       m_planeList.fill(0);
       for (;first!=last;++first) addHit(*first);
     }
 
-    explicit PatFwdPlaneCounter( const PatFwdTrackCandidate& cand) : PatFwdPlaneCounter( std::begin(cand), std::end(cand) ) {}
+    explicit PatFwdPlaneCounter_( const PatFwdTrackCandidate& cand) : PatFwdPlaneCounter_( std::begin(cand), std::end(cand) ) {}
 
     /// add a hit to be counted
     template < typename  Hit >
     int addHit( const Hit* hit )
     {
-      if ( hit->isSelected() ) {
-          const int plane = hit->planeCode();
+      if ( CheckPolicy::check( hit ) ) {
+          auto plane = hit->planeCode();
           assert( m_planeList[plane]!=-1); // this would cause an overflow...
           if ( 0 == m_planeList[plane]++ ) ++m_nbDifferent;
       }
@@ -58,7 +73,7 @@
     template < class Hit >
     int removeHit( const Hit* hit )
     {
-      if ( hit->isSelected() ) {
+      if ( CheckPolicy::check( hit ) ) {
           auto plane = hit->planeCode();
           if ( 0 == --m_planeList[plane] ) --m_nbDifferent;
       }
@@ -106,4 +121,5 @@
 
   };
 
+  using PatFwdPlaneCounter = PatFwdPlaneCounter_<>;
 #endif // PATFWDPLANECOUNTER_H

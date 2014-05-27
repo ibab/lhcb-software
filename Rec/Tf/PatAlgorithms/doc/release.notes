@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-27 - Gerhard Raven
+ - PatFwdPlaneCounter: add 'checkingPolicy' so that, if wanted,  the 'isSelected' check 
+   can be disabled (at compile time) in case it is a-priori known to always return
+   true. Default policy (for backwards compatibility) is to perform the check for isSelected.
+ 
 ! 2014-05-26 - Gerhard Raven
  - PatFwdTool: 
       o optimize rl-ambiguity resolution, 
