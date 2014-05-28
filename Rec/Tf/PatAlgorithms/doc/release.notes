@@ -9,7 +9,7 @@
                        employ 'empty base class' optimization to insure that object size 
                        is unaffected when a stateless predicate is provided.
  - PatFwdTool: use a predicated PatFwdPlaneCounter to count planes for selected hits in 
-               specified region
+               specified region; reduce code duplication
  
 ! 2014-05-27 - Gerhard Raven
  - PatFwdPlaneCounter: add 'checkingPolicy' so that, if wanted,  the 'isSelected' check 

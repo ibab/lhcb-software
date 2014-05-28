@@ -17,8 +17,6 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
-
-
 namespace PatFwdPlaneCounter_Policy
 {
 
@@ -50,6 +48,7 @@ struct OmitSelectedCheck
         return true;
     }
 };
+
 }
 
 // Use 'empty base class' optimziation to avoid increasing the size
@@ -148,7 +147,6 @@ class PatFwdPlaneCounter_ final : private Predicate
     static_assert( kNPlanes == Tf::RegionID::ITIndex::kNStations *
                                    Tf::RegionID::ITIndex::kNLayers,
                    "Number of IT planes and OT planes is not the same?????" );
-    // Predicate m_pred;
     std::array<unsigned char, kNPlanes> m_planeList;
     int m_nbDifferent;
 };

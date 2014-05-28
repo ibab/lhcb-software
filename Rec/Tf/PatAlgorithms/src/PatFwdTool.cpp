@@ -352,14 +352,12 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     }
   }
   bool isDebug = msgLevel( MSG::DEBUG );
-  if ( 0 <= bestRegion ) {
+  if ( bestRegion != -1 ) {
     // remove other regions !
-    if( UNLIKELY( isDebug ) ) 
-      debug() << "========= Keep only hits of region " << bestRegion << endmsg;
+    if( UNLIKELY( isDebug ) ) debug() << "========= Keep only hits of region " << bestRegion << endmsg;
+    auto predicate = in_region(bestRegion);
     std::for_each( std::begin(track.coords()), std::end(track.coords()), [=](PatForwardHit *hit) {
-      int region = hit->hit()->region();
-      if ( region != Tf::RegionID::OT) region+=2;
-      if ( region != bestRegion ) hit->setSelected( false );
+      if (!predicate(hit)) hit->setSelected( false );
     } );
   }
 
