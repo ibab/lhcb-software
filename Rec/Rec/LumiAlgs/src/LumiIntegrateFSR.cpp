@@ -38,6 +38,7 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_fileRecordSvc(0),
     m_integratorTool(0),
+    m_rawIntegratorTool(0),
     m_databaseTool(0),
     m_acceptTool(0)
 {
@@ -54,6 +55,7 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   declareProperty( "IgnoreDQFlags"      , m_ignoreDQFlags     = false);
   declareProperty( "AccumulateMu"       , m_accumulateMu      = false);
   declareProperty( "MuKeyName"          , m_muKeyName         = "PoissonRZVelo" );
+  declareProperty( "RawIntegratorToolName" , m_RawToolName    = "RawLumiIntegrator" );
   
 }
 //=============================================================================
@@ -96,6 +98,8 @@ StatusCode LumiIntegrateFSR::initialize() {
   
   // prepare integrator tool
   m_integratorTool = tool<ILumiIntegrator>( "LumiIntegrator" , m_ToolName );
+  // prepare raw integrator tool
+  m_rawIntegratorTool = tool<ILumiIntegrator>( "LumiIntegrator" , m_RawToolName );
 
   // Instantiate the public data quality tool
   m_acceptTool = tool<IAccept>(m_acceptToolName);
@@ -151,9 +155,8 @@ StatusCode LumiIntegrateFSR::execute() {
   // if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   // use tool to count events for this file
   m_integratorTool->countEvents( );
-
-  // use tool to count events for this file
-  m_integratorTool->events( );
+  // use raw tool to count events for this file
+  m_rawIntegratorTool->countEvents( );
 
   return StatusCode::SUCCESS;
 }
@@ -305,33 +308,35 @@ StatusCode LumiIntegrateFSR::add_file() {
 
           // integrate only if DQ-accepted - flag is updated in trigger_event 
           if ( m_DQaccepted || m_ignoreDQFlags ) {
-        	  // initialize integral with the primary BX
-        	  LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
-        	  add_fsr(result, primaryFileRecordAddress, 0, fkey);
-        	  // get the background to be subtracted/added
-        	  std::string fileRecordAddress("undefined");
-        	  for ( std::vector< std::string >::iterator bx = m_BXTypes.begin() ; bx!= m_BXTypes.end() ; ++bx ){  
-        	    // construct the right name of the containers
-              std::string fileRecordAddress(primaryFileRecordAddress);
-              fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
-              if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
-        	    float factor = 0;     // indicates the primary BX - already used
-        	    if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
-        	      factor = 1.;
-                if ( m_calibCoefficients[LHCb::LumiMethods::CorrectionFlag] != 0) {
-                  factor = 0;      // no subtraction of EE
-        	    if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) {
-        	      factor = -1.;
-                }
-              }
-        	    if ( factor != 0) {
+	    // initialize integral with the primary BX
+	    LHCb::LumiIntegral* result = new LHCb::LumiIntegral();
+	    add_fsr(result, primaryFileRecordAddress, 0, fkey);
+	    // initialize non-background subtracted integral with the primary BX
+	    LHCb::LumiIntegral* raw_result = new LHCb::LumiIntegral();
+	    add_fsr(raw_result, primaryFileRecordAddress, 0, fkey);
+	    // get the background to be subtracted/added
+	    std::string fileRecordAddress("undefined");
+	    for ( std::vector< std::string >::iterator bx = m_BXTypes.begin() ; bx!= m_BXTypes.end() ; ++bx ){  
+	      // construct the right name of the containers
+	      std::string fileRecordAddress(primaryFileRecordAddress);
+	      fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), (*bx) );
+	      if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address" << fileRecordAddress << endmsg; 
+	      float factor = 0;     // indicates the primary BX - already used
+	      if ( m_addBXTypes.end() != find( m_addBXTypes.begin(), m_addBXTypes.end(), (*bx) ) ) 
+		factor = 1.;
+	      if ( m_calibCoefficients[LHCb::LumiMethods::CorrectionFlag] != 0) 
+		factor = 0;      // no subtraction of EE
+	      if ( m_subtractBXTypes.end() != find( m_subtractBXTypes.begin(), m_subtractBXTypes.end(), (*bx) ) ) {
+		factor = -1.;
+	      }
+	      if ( factor != 0) {
                 StatusCode sc =  add_fsr(result, fileRecordAddress, factor, fkey);
                 if (sc.isFailure()) {
                   m_statusScale = 0;    // invalid luminosity
                   error() << "ERROR summing bunch crossing types for luminosity " << endmsg;
                 }
-              }
-            }
+	      }
+	    }
 
             // apply calibration
             if (msgLevel(MSG::DEBUG)) debug() << "Result for this file (before calibration): " << *result << endmsg;
@@ -342,6 +347,9 @@ StatusCode LumiIntegrateFSR::add_file() {
               m_statusScale = 0;        // invalid luminosity
               error() << "ERROR summing result using tool " << endmsg;
             }
+            // raw counter sums
+            m_rawIntegratorTool->integrate( *raw_result );
+	    
             // summing of integral
             long old_n_runs = n_runs;
             if ( result->runNumbers().size() ) n_runs = result->runNumbers()[0];
@@ -363,10 +371,13 @@ StatusCode LumiIntegrateFSR::add_file() {
             if ( m_accumulateMu ) {
               m_integratorTool->accumulate_mu( *result, timeSpanFSR, m_MuKey, 
                                                one_vector(m_calibCoefficients, m_calibCoefficientsLog, 
-                                                          LHCb::LumiMethods::PoissonOffset), 
-                                               rel_scale );
+                                                          LHCb::LumiMethods::PoissonOffset), rel_scale );
+              m_rawIntegratorTool->accumulate_mu( *raw_result, timeSpanFSR, m_MuKey, 
+						  one_vector(m_calibCoefficients, m_calibCoefficientsLog, 
+							     LHCb::LumiMethods::PoissonOffset), rel_scale );
             }
             delete result;
+            delete raw_result;
           }
         }
       }

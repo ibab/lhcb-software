@@ -85,6 +85,8 @@ public:
     double deltaLumi;
     double norm;
     double mu;
+    std::vector<LHCb::LumiIntegral::ValuePair> valuePairs;
+    std::vector<int> keys;
   };
   // Get mu results
   virtual std::vector<muTuple> muValues( ) = 0;

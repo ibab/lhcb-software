@@ -56,10 +56,12 @@ protected:
   
   
   std::string m_ToolName;                       // name of tool for normalization
+  std::string m_RawToolName;                    // name of tool for raw mu
   std::string m_EventCountFSRName;              // specific tag of event summary data in FSR
   
 private:
   ILumiIntegrator *m_integratorTool;            // tool to integrate luminosity
+  ILumiIntegrator *m_rawIntegratorTool;         // tool to integrate raw mu
 
 };
 #endif 

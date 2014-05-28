@@ -37,7 +37,7 @@ LumiIntegrator::LumiIntegrator( const std::string& type,
     m_LumiSum()
 {
   declareInterface<ILumiIntegrator>(this);
-  
+  m_ToolName = name;
 }
 //=============================================================================
 // Destructor
@@ -128,10 +128,14 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
   //  int thisCoef(0);
   LHCb::LumiIntegral::ValuePair defValue ( -1, 0. );
   for ( int key = 0; key < int(coeff.size()) && key < LHCb::LumiCounters::LastGlobal; key++ ) {
-    if ( coeff[key] != 0 || mukey == key) {
-      if ( fsr->hasInfo(key) ) {
-        LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
-        std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+    if ( fsr->hasInfo(key) ) {
+      LHCb::LumiIntegral::ValuePair value = fsr->info( key, defValue );
+      std::string counterName = LHCb::LumiCounters::counterKeyToString( key );
+      // collect all mu's
+      mT.valuePairs.push_back(value);
+      mT.keys.push_back(key);
+      // collect chosen mu
+      if ( coeff[key] != 0 || mukey == key) {
         if ( value.first != -1 ) {
           mT.deltaLumi += value.second * coeff[key] * f;
           if ( mukey == key ) {
@@ -157,7 +161,9 @@ StatusCode LumiIntegrator::accumulate_mu( LHCb::LumiIntegral* fsr, LHCb::TimeSpa
   // accumulate
   m_muTuple.push_back(mT);
   // printout
-  info() << "MU: RUN " << mT.run  << " GUID " << mT.guid << " " 
+  if ( m_ToolName.find("RawLumiIntegrator") == std::string::npos ) info() << "MU";
+  else info() << "RAW";
+  info() << ": RUN " << mT.run  << " GUID " << mT.guid << " " 
          << "T " << mT.time0 << "-" << mT.time1 << " "
          << "dL " << mT.deltaLumi << " N " << mT.norm << " MU " << mT.mu << " " 
          << endmsg;

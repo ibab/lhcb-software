@@ -58,6 +58,7 @@ protected:
   IDataProviderSvc* m_fileRecordSvc;            ///< file record service
   SmartIF<IDetDataSvc> m_dds;                   ///< DetectorDataSvc
   ILumiIntegrator *m_integratorTool;            ///< tool to integrate luminosity
+  ILumiIntegrator *m_rawIntegratorTool;         ///< tool to integrate luminosity
   IGetLumiParameters *m_databaseTool;           ///< tool to query luminosity database
   IAccept *m_acceptTool;                        ///< Pointer to the IAccept tool
 
@@ -66,6 +67,7 @@ protected:
   std::string m_EventCountFSRName;              ///< specific tag of event summary data in FSR
   std::string m_TimeSpanFSRName;                ///< specific tag of event summary data in FSR
   std::string m_ToolName;                       ///< name of tool for normalization
+  std::string m_RawToolName;                    ///< name of tool for raw numbers
   std::string m_acceptToolName;                 ///< Name of the (public) IAccept data quality tool
   std::string m_PrimaryBXType;                  ///< BXType to normalize
   std::vector<std::string> m_BXTypes;           ///< list of bunch crossing types

@@ -4,6 +4,12 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-05-28 - Jaap Panman
+ - (GetIntegratedLuminosity) add mu per raw file from the FSRs as a root ntuple
+   activated by LumiIntegrateFSR('IntegrateBeamCrossing').AccumulateMu = True
+   one ntuple for corrected values and one for raw values
+   corrsponding mods to LumiIntegrateFSR and LumiIntegrator 
+
 ! 2014-05-23 - Jaap Panman
  - remove compilation warning
 

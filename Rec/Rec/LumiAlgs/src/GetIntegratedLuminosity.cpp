@@ -12,6 +12,7 @@
 #include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 #include "Event/LumiCounters.h"
+#include "Event/LumiMethods.h"
 #include "FSRAlgs/IFSRNavigator.h"
 // local
 #include "GetIntegratedLuminosity.h"
@@ -41,13 +42,15 @@ GetIntegratedLuminosity::GetIntegratedLuminosity( const std::string& name,
     m_events_in_file(0),
     m_count_input(0),
     m_count_output(0),
-    m_integratorTool(NULL)
+    m_integratorTool(NULL),
+    m_rawIntegratorTool(NULL)
 {
-  declareProperty( "FSRName"            , m_FSRName           = "/LumiFSR"     );
-  declareProperty( "FileRecordLocation" , m_FileRecordName    = "/FileRecords"  );
-  declareProperty( "WriteCountersDetails", m_countersDetails = false );
-  declareProperty( "IntegratorToolName" , m_ToolName          = "LumiIntegrator" );  
-  declareProperty( "EventCountFSRName"  , m_EventCountFSRName = "/EventCountFSR");
+  declareProperty( "FSRName"               , m_FSRName           = "/LumiFSR"     );
+  declareProperty( "FileRecordLocation"    , m_FileRecordName    = "/FileRecords"  );
+  declareProperty( "WriteCountersDetails"  , m_countersDetails   = false );
+  declareProperty( "IntegratorToolName"    , m_ToolName          = "LumiIntegrator" );  
+  declareProperty( "RawIntegratorToolName" , m_RawToolName       = "RawLumiIntegrator" );  
+  declareProperty( "EventCountFSRName"     , m_EventCountFSRName = "/EventCountFSR");
 }
 //=============================================================================
 // Destructor
@@ -61,8 +64,9 @@ StatusCode GetIntegratedLuminosity::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleAlg
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  // prepare tool
+  // prepare tools
   m_integratorTool = tool<ILumiIntegrator>( "LumiIntegrator", m_ToolName );
+  m_rawIntegratorTool = tool<ILumiIntegrator>( "LumiIntegrator", m_RawToolName );
   // get the File Records service
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
   
@@ -74,7 +78,7 @@ StatusCode GetIntegratedLuminosity::initialize() {
 // Main execution
 //=============================================================================
 StatusCode GetIntegratedLuminosity::execute() {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  // if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -124,9 +128,87 @@ StatusCode GetIntegratedLuminosity::finalize() {
         }//check the first value
       }//take the key
       else {
-        if (msgLevel(MSG::DEBUG)) debug() << "No counters availables" <<  endmsg; 
+        if (msgLevel(MSG::DEBUG)) debug() << "No counters available" <<  endmsg; 
       }
     }//loop over the keys
+
+    // mu per raw file
+    std::string frommu = "FromMu_";
+    std::vector<ILumiIntegrator::muTuple> mTuple = m_integratorTool->muValues( );
+    if ( mTuple.size() ) {
+      Tuple tuple_mu = nTuple("CorrectedMuTuple");
+      if (msgLevel(MSG::DEBUG)) debug() << "mu: n_files " << mTuple.size() <<  endmsg; 
+      for ( std::vector<ILumiIntegrator::muTuple>::iterator iT = mTuple.begin(); iT < mTuple.end(); iT++ ) { 
+	tuple_mu->column(frommu+"run", (unsigned long long)iT->run);
+	tuple_mu->column(frommu+"time0", iT->time0);
+	tuple_mu->column(frommu+"time1", iT->time1);
+	tuple_mu->column(frommu+"dL", iT->deltaLumi);
+	tuple_mu->column(frommu+"norm", iT->norm);
+	tuple_mu->column(frommu+"mu", iT->mu);
+	if (msgLevel(MSG::DEBUG)) debug() << "mu: per file " << iT->run << " " << iT->time0 << " " << iT->time1 << " " 
+					<< iT->deltaLumi << " " << iT->norm << " " << iT->mu << " " << iT->keys.size() <<  endmsg; 
+	// per raw file a set of vectors
+	std::vector<int> keys(0);
+	std::vector<double> vnorm(0);
+	std::vector<double> value(0);
+	// iterate over keys and create vectors
+	std::vector<LHCb::LumiIntegral::ValuePair>::iterator iVal;
+	std::vector<int>::iterator ikey;
+	for ( ikey = iT->keys.begin(), iVal = iT->valuePairs.begin(); ikey < iT->keys.end(); ikey++, iVal++ ) {
+	  if ( *ikey >= LHCb::LumiMethods::PoissonOffset ) {
+	    keys.push_back(*ikey);
+	    vnorm.push_back(iVal->first);
+	    value.push_back(iVal->first ? iVal->second/iVal->first : 0);
+	    if (msgLevel(MSG::DEBUG)) debug() << "mu: per file per counter " << *ikey << " " << iVal->first << " " 
+					    << (iVal->first ? iVal->second/iVal->first : 0) <<  endmsg; 
+	  }
+	} 
+	tuple_mu->farray( frommu+"counterkey", keys, frommu+"counterkey_len", keys.size() );
+	tuple_mu->farray( frommu+"counternorm", vnorm, frommu+"counternorm_len", vnorm.size() );
+	tuple_mu->farray( frommu+"countervalue", value, frommu+"countervalue_len", value.size() );
+	// one "event" per raw file
+	tuple_mu->write();
+      } // loop over mu per raw files 
+    }
+
+    // raw mu per raw file
+    std::string fromrawmu = "FromRawMu_";
+    std::vector<ILumiIntegrator::muTuple> mRawTuple = m_rawIntegratorTool->muValues( );
+    if ( mRawTuple.size() ) {
+      Tuple tuple_rawmu = nTuple("RawMuTuple");
+      if (msgLevel(MSG::DEBUG)) debug() << "rawmu: n_files " << mRawTuple.size() <<  endmsg; 
+      for ( std::vector<ILumiIntegrator::muTuple>::iterator iT = mRawTuple.begin(); iT < mRawTuple.end(); iT++ ) { 
+	tuple_rawmu->column(fromrawmu+"run", (unsigned long long)iT->run);
+	tuple_rawmu->column(fromrawmu+"time0", iT->time0);
+	tuple_rawmu->column(fromrawmu+"time1", iT->time1);
+	if (msgLevel(MSG::DEBUG)) debug() << "rawmu: per file " << iT->run << " " << iT->time0 << " " << iT->time1 << " " << iT->keys.size() <<  endmsg; 
+	// per raw file a set of vectors
+	std::vector<int> keys(0);
+	std::vector<double> vnorm(0);
+	std::vector<double> value(0);
+	// iterate over keys and create vectors
+	std::vector<LHCb::LumiIntegral::ValuePair>::iterator iVal;
+	std::vector<int>::iterator ikey;
+	for ( ikey = iT->keys.begin(), iVal = iT->valuePairs.begin(); ikey < iT->keys.end(); ikey++, iVal++ ) {
+	  if ( *ikey >= LHCb::LumiMethods::PoissonOffset ) {
+	    keys.push_back(*ikey);
+	    vnorm.push_back(iVal->first);
+	    value.push_back(iVal->first ? iVal->second/iVal->first : 0);
+	    if (msgLevel(MSG::DEBUG)) debug() << "rawmu: per file per counter " << *ikey << " " << iVal->first << " " 
+					    << (iVal->first ? iVal->second/iVal->first : 0) <<  endmsg; 
+	  }
+	} 
+	tuple_rawmu->farray( fromrawmu+"counterkey", keys, fromrawmu+"counterkey_len", keys.size() );
+	tuple_rawmu->farray( fromrawmu+"counternorm", vnorm, fromrawmu+"counternorm_len", vnorm.size() );
+	tuple_rawmu->farray( fromrawmu+"countervalue", value, fromrawmu+"countervalue_len", value.size() );
+	// one "event" per raw file
+	tuple_rawmu->write();
+      } // loop over raw mu per raw files 
+      
+    }
+
+
+
   }//check that all the events were processed
   else {
     warning() << "The FSR were not  verified : " << check()<< endmsg;
