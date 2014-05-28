@@ -815,7 +815,7 @@ def FixProjectCase(project):
 ########################################################################
 class SetupProjectError(RuntimeError):
     pass
-class SetupProject:
+class SetupProject(object):
     def __init__(self):
         self._logger = logging.getLogger("SetupProject")
 

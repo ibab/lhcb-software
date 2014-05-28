@@ -39,10 +39,13 @@ git clone --mirror $git_url gaudi_tmp
     git archive ${remote_id} cmake | \
         tar -x -v -C $rootdir -f -
 
+    git archive ${remote_id} Makefile-cmake.mk | \
+        tar -x -v -C $rootdir/data -f -
+
     echo "Creating dummy __init__.py"
     touch $rootdir/cmake/cmt2cmake/__init__.py
 
     # create release notes
-    git log --date=short --pretty=format:'! %ad - %an (%h)%n%n - %s%n%n%w(80,3,3)%b%n' ${remote_id} -- cmake > $notes_file
+    git log --date=short --pretty=format:'! %ad - %an (%h)%n%n - %s%n%n%w(80,3,3)%b%n' ${remote_id} -- cmake Makefile-cmake.mk > $notes_file
 )
 rm -rf gaudi_tmp

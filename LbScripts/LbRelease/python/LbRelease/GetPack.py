@@ -366,7 +366,11 @@ class GetPack(Script):
                                help = "create a project top level directory")
         self.parser.add_option("-b", "--batch", action = "store_true",
                                help = "never ask the user if in doubt, but skip the package")
-        self.parser.add_option("--no-config", action = "store_true",
+        self.parser.add_option("--config", action = "store_true",
+                               dest="config",
+                               help = "prevents executing cmt config for each package")
+        self.parser.add_option("--no-config", action = "store_false",
+                               dest="config",
                                help = "prevents executing cmt config for each package")
         self.parser.add_option("-x", "--exclude", action = "append",
                                metavar = "REPOSITORY",
@@ -384,6 +388,9 @@ class GetPack(Script):
                                       "instead of the curses version")
         self.parser.add_option("--eclipse", action = "store_true",
                                help = "enable eclipse-friendly check-out and configuration")
+        self.parser.add_option("--no-eclipse", action = "store_false",
+                               dest = "eclipse",
+                               help = "prevent eclipse-friendly check-out and configuration")
         self.parser.add_option("--no-eclipse-config", action = "store_false",
                                dest = "eclipse_config",
                                help = "skip the modification of eclipse configurations")
@@ -416,6 +423,7 @@ class GetPack(Script):
                                  no_pre = False,
                                  no_curses = False,
                                  exclude = [],
+                                 eclipse = None,
                                  eclipse_config = True,
                                  export = False,
                                  )
@@ -610,7 +618,7 @@ class GetPack(Script):
         if self.options.eclipse and self.options.eclipse_config:
             # add package-specific configuration
             eclipseConfigurationAddPackage(os.getcwd(), package)
-        if not self.options.no_config:
+        if self.options.config:
             self._doCMTConfig(cwd = pkgdir)
         # return the path to the cmt directory of the package to be able to call
         # a "cmt show uses" and get the packages needed with the recursion
@@ -939,6 +947,12 @@ class GetPack(Script):
                 self.retval = 1
                 return
 
+        if self.options.eclipse is None:
+            # no user opinion about the checkout/configuration policy, try to guess:
+            # if we are in an Eclipse workspace (i.e. exists(<dest>/../.metadata)
+            # we enable it
+            self.options.eclipse = os.path.exists(os.path.join(os.path.dirname(os.path.abspath('.')), ".metadata"))
+        self.log.debug("Eclipse checkout %s", "enabled" if self.options.eclipse else "disabled")
         self.log.debug("Starting processing loop")
         current_count = 0
         # process the list of pending packages

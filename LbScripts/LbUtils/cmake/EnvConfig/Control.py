@@ -104,9 +104,15 @@ class Environment(object):
     def vars(self, strings=True):
         '''returns dictionary of all variables optionally converted to string'''
         if strings:
-            return dict([(n, v.value(True)) for n, v in self.variables.items()])
+            return dict([(n, v.value(True))
+                         for n, v in self.variables.items()
+                         if n != '.'])
         else:
-            return self.variables
+            # clone the dictionary to remove the internal special var '.'
+            vars_ = dict(self.variables)
+            if '.' in vars_:
+                del vars_['.']
+            return vars_
 
     def var(self, name):
         '''Gets a single variable. If not available then tries to load from system.'''

@@ -138,6 +138,8 @@ if(NOT GAUDI_FLAGS_SET)
     # The others are already marked as 'advanced' by CMake, these are custom.
     mark_as_advanced(CMAKE_C_FLAGS_COVERAGE CMAKE_CXX_FLAGS_COVERAGE CMAKE_Fortran_FLAGS_COVERAGE
                      CMAKE_C_FLAGS_PROFILE CMAKE_CXX_FLAGS_PROFILE CMAKE_Fortran_FLAGS_PROFILE)
+    mark_as_advanced(CMAKE_Fortran_COMPILER CMAKE_Fortran_FLAGS
+                     CMAKE_Fortran_FLAGS_RELEASE CMAKE_Fortran_FLAGS_RELWITHDEBINFO)
 
   endif()
 
@@ -223,13 +225,16 @@ if(NOT GAUDI_V21)
   endforeach()
 endif()
 
-if (LCG_HOST_ARCH STREQUAL x86_64 AND LCG_ARCH STREQUAL i686)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
-  set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32")
-  set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -m32")
-elseif(NOT LCG_HOST_ARCH STREQUAL LCG_ARCH)
-  message(FATAL_ERROR "Cannot build for ${LCG_ARCH} on ${LCG_HOST_ARCH}.")
+if (LCG_HOST_ARCH AND LCG_ARCH)
+  # this is valid only in the LCG toolchain context
+  if (LCG_HOST_ARCH STREQUAL x86_64 AND LCG_ARCH STREQUAL i686)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32")
+    set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -m32")
+  elseif(NOT LCG_HOST_ARCH STREQUAL LCG_ARCH)
+    message(FATAL_ERROR "Cannot build for ${LCG_ARCH} on ${LCG_HOST_ARCH}.")
+  endif()
 endif()
 
 #--- Tuning of warnings --------------------------------------------------------
@@ -252,6 +257,13 @@ add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
 #        and http://stackoverflow.com/a/20440238/504346
 add_definitions(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 
+# FIXME: this macro is used in ATLAS to simplify the migration to Gaudi v25,
+#        unfortunately it's not possible to detect the version of Gaudi at this point
+#        so we assume that any CMake-based build in ATLAS uses Gaudi >= v25
+if(GAUDI_ATLAS)
+  add_definitions(-DHAVE_GAUDI_PLUGINSVC)
+endif()
+
 if((LCG_COMP STREQUAL gcc AND LCG_COMPVERS MATCHES "47|max") OR GAUDI_CPP11)
   set(GCCXML_CXX_FLAGS "${GCCXML_CXX_FLAGS} -D__STRICT_ANSI__")
 endif()
@@ -260,4 +272,8 @@ if(LCG_COMP STREQUAL gcc AND LCG_COMPVERS STREQUAL 43)
   # The -pedantic flag gives problems on GCC 4.3.
   string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   string(REPLACE "-pedantic" "" CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}")
+endif()
+
+if(GAUDI_ATLAS)
+  include(AthenaBuildFlags)
 endif()

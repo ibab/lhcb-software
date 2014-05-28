@@ -1,3 +1,263 @@
+! 2014-05-27 - Marco Clemencic (db08d5c)
+
+ - Merge branch 'dev/no_reflex' (and 'dev/cmake')
+
+   * dev/no_reflex: (29 commits)
+    minor change in the configure-time messages
+    Removed duplicated dictionary entries (already in RELAX).
+    address the problem described in ROOT-6315
+    LBCORE-498: allow use of Python subpackages from local builds
+    fixed handling of genconf generated __init__.py
+    fixed minor typo in genconf.cpp
+    modified GaudiProjectConfig.cmake to check if genconf supports --no-init
+    fixed delegation exclusion of makefiles
+    modified the Makefile to disable ninja if the project cannot use it
+    Fixed LBCORE-373: warning about multiple rules for __init__.py
+    minor fix in the detection of ninja
+    modified CMake wrapper makefile to use ninja if available
+    Moved dictionary for InterfaceID from GaudiPython to GaudiKernel.
+    moved dictionaries for GaudiHandle*Prop from Python to Kernel
+    Revert fixes to reflex_dictionary fragments.
+    changes to use the CMake configuration in ATLAS
+    Fixed CMake modules to add missing entries in PATH.
+    minor fixes to EnvConfig
+    Fixed listcomponents command lines tests (CMake only).
+    fixed propagation of SPLIT_CLASSDEF
+    ...
+
+   Conflicts:
+   GaudiKernel/doc/release.notes
+   GaudiPluginService/doc/release.notes
+   GaudiPolicy/doc/release.notes
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7465
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-05-27 - Marco Clemencic (467b4cd)
+
+ - minor change in the configure-time messages
+
+   
+
+! 2014-05-22 - Marco Clemencic (2e374b7)
+
+ - LBCORE-498: allow use of Python subpackages from local builds
+
+   The __init__.py files of the Python subpackages where not correctly patched
+   for the special PYTHONPATH used in local builds.
+
+   https://its.cern.ch/jira/browse/LBCORE-498
+
+
+! 2014-05-22 - Marco Clemencic (8b183e9)
+
+ - fixed handling of genconf generated __init__.py
+
+   
+
+! 2014-05-21 - Marco Clemencic (33da37c)
+
+ - modified GaudiProjectConfig.cmake to check if genconf supports --no-init
+
+   
+
+! 2014-05-21 - Marco Clemencic (f287113)
+
+ - fixed delegation exclusion of makefiles
+
+   
+
+! 2014-05-16 - Marco Clemencic (a56f09c)
+
+ - modified the Makefile to disable ninja if the project cannot use it
+
+   Since ninja does not support FORTRAN and some projects like Geant4 have 
+   problems with it, if the CMakeLists.txt contains the string FORTRAN or 
+   NO_NINJA, ninja is not enabled automatically.
+
+
+! 2014-04-30 - Marco Clemencic (eed0df3)
+
+ - Fixed LBCORE-373: warning about multiple rules for __init__.py
+
+   added option --no-init to genconf and fixed Ninja warnings
+
+   https://its.cern.ch/jira/browse/LBCORE-373
+
+
+! 2014-01-28 - Marco Clemencic (83d9514)
+
+ - minor fix in the detection of ninja
+
+   
+
+! 2014-01-28 - Marco Clemencic (a51b2a7)
+
+ - modified CMake wrapper makefile to use ninja if available
+
+   By default, if available Ninja build is used instead of GNU Make for the 
+   actual build. Custom arguments to Ninja can be passed using the variable
+   NINJAFLAGS
+   (e.g. -j or -k).
+
+   The use of GNU Make can be forced by setting the variable USE_MAKE to 
+   non-empty.
+
+
+! 2014-05-21 - Marco Clemencic (94b7475)
+
+ - added HAVE_GAUDI_PLUGINSVC macro to CMake configuration
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7455
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-05-15 - David Quarrie (40cddb7)
+
+ - changes to use the CMake configuration in ATLAS
+
+   - handling of ATLAS version numbers scheme
+   - allow overriding build flags with ATLAS ones
+   - support for ATLAS headers extensions
+   - define some ATLAS-specific environment variables
+
+
+! 2014-05-13 - Marco Clemencic (c04a3d0)
+
+ - Fixed CMake modules to add missing entries in PATH.
+
+   
+
+! 2014-05-13 - Marco Clemencic (91454e6)
+
+ - minor fixes to EnvConfig
+
+   - newline at end of file
+   - do not convert empty variables values to '.'
+
+
+! 2014-05-12 - Marco Clemencic (cd641b6)
+
+ - fixed propagation of SPLIT_CLASSDEF
+
+   
+
+! 2014-05-12 - Marco Clemencic (219d107)
+
+ - Merge branch 'dev/no_reflex' into dev/cmake
+
+   * dev/no_reflex:
+    use the same reflex dictionary gen. source names in ROOT 5 and ROOT 6
+    added option SPLIT_CLASSDEF to gaudi_add_dictionary
+    install PCMs in CMake (if generated) as it is done with CMT
+    modified reflex_dictionary fragments to install the generated PCMs
+    changed the name of the .cpp produced by genreflex (for PCMs)
+    fix bug #104455: extended listcomponents to accept --output
+
+
+! 2014-05-12 - Marco Clemencic (cc753c9)
+
+ - use the same reflex dictionary gen. source names in ROOT 5 and ROOT 6
+
+   
+
+! 2014-05-12 - Marco Clemencic (d96ec86)
+
+ - added option SPLIT_CLASSDEF to gaudi_add_dictionary
+
+   It's needed to forward it to reflex_dictionary in FindROOT.cmake.
+
+! 2014-05-09 - Marco Clemencic (c8642e5)
+
+ - install PCMs in CMake (if generated) as it is done with CMT
+
+   
+
+! 2014-05-09 - Marco Clemencic (bc6cb82)
+
+ - fix bug #104455: extended listcomponents to accept --output
+
+   ... and use the --output option instead of stdout redirection during the 
+   build.
+
+   https://savannah.cern.ch/bugs/?104455
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7440
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-04-30 - Marco Clemencic (e2d0ed8)
+
+ - fixes to work without heptools toolchains
+
+   
+
+! 2014-04-30 - Marco Clemencic (6fd9fe8)
+
+ - LBCORE-264: Make the <package>Exports.cmake files relocatable
+
+   https://its.cern.ch/jira/browse/LBCORE-264
+
+
+! 2014-04-30 - Marco Clemencic (4b77cdb)
+
+ - minor fix in CMake main module
+
+   
+
+! 2014-04-24 - Marco Clemencic (d97ba74)
+
+ - backported improvements to find modules from cmaketools
+
+   
+
+! 2014-04-17 - Marco Clemencic (c122e02)
+
+ - remove genmap variable in ROOT 6 (not supported)
+
+   
+
+! 2014-04-17 - Marco Clemencic (69d4e14)
+
+ - marked as advanced some cache variable (Fortran support)
+
+   
+
+! 2014-04-17 - Marco Clemencic (db98a73)
+
+ - Added support for ROOT 6 in CMake configuration (LBCORE-342).
+
+   Delegated the version-specific code to different CMake modules (one for ROOT
+   5 and one for ROOT 6) to be able to freely update the new one.
+
+   For ROOT 6:
+      - removed dependency on Reflex library
+      - added a function to generate dictionaries with rootcling
+      - removed the (broken) rootcint support
+
+   For ROOT 5:
+      - few improvements
+
+   For Gaudi:
+      - removed explicit references to Reflex
+
+   https://its.cern.ch/jira/browse/LBCORE-342
+
+
+! 2014-04-16 - Marco Clemencic (c742732)
+
+ - Fixed bug CFHEP-170
+
+   https://sft.its.cern.ch/jira/browse/CFHEP-170
+
+
 ! 2014-03-20 - Marco Clemencic (1df239b)
 
  - allow to ignore subdirectories that would be auto detected
@@ -192,6 +452,14 @@
  - allow ccache-swig as ccache command
 
    ccache-swign is found on lxplus instead of the vanilla ccache
+
+
+! 2014-01-10 - Marco Clemencic (a28d3bc)
+
+ - CMake target 'test' depends on the configuration
+
+   Ensure that (when using CMake) the configuration is run before running the
+   tests.
 
 
 ! 2013-12-31 - Marco Clemencic (619d0cf)
@@ -1225,6 +1493,12 @@
 
    
 
+! 2012-11-17 - Marco Clemencic (547a12e)
+
+ - improvement to the generic CMake Makefile
+
+   
+
 ! 2012-11-15 - Marco Clemencic (c8e26aa)
 
  - updated CMake README
@@ -1244,6 +1518,12 @@
     git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7079
    53ecefc3-a64d-0410-9bdf-b8581fa3287e
 
+
+! 2012-11-13 - Marco Clemencic (89f50cb)
+
+ - added generic Makefile to use CMake in the 'standard' way
+
+   
 
 ! 2012-11-13 - Marco Clemencic (385dbdd)
 

@@ -1,8 +1,24 @@
+2014-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: do not call "cmt config" by default
+
+2014-05-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: improved/fixed handling of --(no-)eclipse option
+
+2014-05-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease/scripts/excise_template.py: fixed permissions
+
+2013-05-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py: replaced svn option -N with the correct --depth version
+
 2014-05-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-491: Software Database: Added tool to remove a project/version node
 	from the database (and allow re-indexing). Also added tool to check the revision
-	in the DB vs the revision in SVN. 
+	in the DB vs the revision in SVN.
 	* python/LbRelease/SoftConfDB/LbSdbDeleteVersion.py
 	* python/LbRelease/SoftConfDB/AppImporter.py
 	* python/LbRelease/SoftConfDB/LbSdbCheckRevision.py
@@ -13,7 +29,7 @@
 
 2014-04-30  Ben Couturier <Ben.Couturier@cern.ch>
 
-	LBCORE-477: Software Database: Add "verbose" option to checkUnused command of lb-sdb-query 
+	LBCORE-477: Software Database: Add "verbose" option to checkUnused command of lb-sdb-query
 	and add "show" command to display relationships and attributes of a node.
 	* python/LbRelease/SoftConfDB/LbSdbQuery.py
 	* python/LbRelease/SoftConfDB/SoftConfDB.py

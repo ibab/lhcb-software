@@ -961,7 +961,7 @@ class SubversionCmd(RevisionControlSystem):
         @param export: if True, use 'svn export' instead of 'svn checkout'
                        (note: it prevents Eclipse-friendly checkout)
         """
-        from os.path import exists, join, dirname, abspath, isdir
+        from os.path import exists, join, isdir
         # check for the validity of the version
         # (this implies a check on the existence of the module)
         if not self.hasVersion(module, version, project):
@@ -974,9 +974,6 @@ class SubversionCmd(RevisionControlSystem):
             os.chdir(dest)
         else:
             dest = "." # If not specified, use local directory
-        # we should create Eclipse-friendly configuration if we are in an Eclipse
-        # workspace (i.e. exists(<dest>/../.metadata) or if we are asked explicitly
-        eclipse = eclipse or exists(join(dirname(abspath(dest)), ".metadata"))
 
         src, dst = self._computePaths(module, version, project, vers_dir, global_tag, branch=branch)
 
@@ -987,7 +984,7 @@ class SubversionCmd(RevisionControlSystem):
                 # there is no svn directory, make a checkout of the project
                 # containing the package
                 psrc, _ = self._computePaths(self.modules[module], "trunk", isProject=True)
-                _svn("checkout", "-N", psrc, dest, stdout = None, stderr = None)
+                _svn("checkout", "--depth=empty", psrc, dest, stdout = None, stderr = None)
                 # top level directory ready
         # - check if we can use the top level directory
         if exists(join(dest, ".svn")):
@@ -1004,7 +1001,7 @@ class SubversionCmd(RevisionControlSystem):
                         if ldst or project:
                             # non-recursive checkout for the intermediate levels
                             # (for projects we need to get to the last element)
-                            if _svn("up", "-N", step)[2]:
+                            if _svn("up", "--depth=empty", step)[2]:
                                 break
                         else:
                             # full check-out for the final one
@@ -1031,7 +1028,7 @@ class SubversionCmd(RevisionControlSystem):
         if not project:
             _svn(sub_cmd, src, dst, stdout = None, stderr = None)
         else: # Projects can come with CMake configuration files
-            _svn(sub_cmd, '-N', src, dst, stdout = None, stderr = None)
+            _svn(sub_cmd, '--depth=files', src, dst, stdout = None, stderr = None)
             # List of subdirectories to check-out too
             for subdir in ['cmt', 'cmake']:
                 if self._exists(src + '/' + subdir):
@@ -1120,7 +1117,7 @@ class SubversionCmd(RevisionControlSystem):
         pthlist = []
         for p in pth.split("/") :
             pthlist.append(p)
-            _svn("update", "-N", os.sep.join(pthlist), cwd=root_dir)
+            _svn("update", "--depth=empty", os.sep.join(pthlist), cwd=root_dir)
 
     def _createPath(self, pth, root_dir):
         pthlist = []
@@ -1129,7 +1126,7 @@ class SubversionCmd(RevisionControlSystem):
             if not self._exists("/".join(pthlist)) :
                 _svn("mkdir", os.sep.join(pthlist), cwd=root_dir)
             else :
-                _svn("update", "-N", os.sep.join(pthlist), cwd=root_dir)
+                _svn("update", "--depth=empty", os.sep.join(pthlist), cwd=root_dir)
 
     def _getPackageProperty(self):
         packprop = "### Package Project\n"
@@ -1158,7 +1155,7 @@ class SubversionCmd(RevisionControlSystem):
             tmpdir = TempDir(suffix="tempdir", prefix="movepak_%s_%s" % (package.replace("/", "_"), project))
             tmpdir_name = tmpdir.getName()
             log.debug("The temporary directory used is %s" % tmpdir_name)
-            _, _, _ = _svn("checkout", "-N", self.repository, cwd=tmpdir_name, report_failure=True)
+            _, _, _ = _svn("checkout", "--depth=empty", self.repository, cwd=tmpdir_name, report_failure=True)
             root_dir  = os.path.join(tmpdir_name, self.repository.split("/")[-1])
 
             # package full checkout

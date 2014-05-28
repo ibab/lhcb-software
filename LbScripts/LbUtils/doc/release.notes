@@ -1,3 +1,15 @@
+2014-05-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
+2014-05-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
+2014-05-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2014-03-24  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: Release of v3r16p1
@@ -86,6 +98,11 @@
 2013-05-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules
+
+2013-04-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: local modification of EnvConfig and env.py to be usable by
+	LbConfiguration.SP2
 
 2013-04-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

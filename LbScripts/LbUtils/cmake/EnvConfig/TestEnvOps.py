@@ -103,6 +103,20 @@ class Test(unittest.TestCase):
         self.assertTrue('MY_PATH' not in control)
 
 
+    def testHidingDotVar(self):
+        control = Control.Environment()
+        control.variables['.'].set('some/dir')
+
+        self.assertTrue('.' in control.variables)
+        self.assertTrue('.' not in control.vars())
+        self.assertTrue('.' not in control.vars(strings=False))
+        
+        control.set('MY_DIR', '${.}')
+        self.assertEqual(control.var('MY_DIR').value(True), 'some/dir')
+        self.assertEqual(control.vars()['MY_DIR'], 'some/dir')
+        
+
+
     def testWrite(self):
         """XML file write and load test"""
         control = Control.Environment(useAsWriter = True)

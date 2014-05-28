@@ -1,3 +1,19 @@
+2014-05-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: added support to --{py,sh,csh} when falling back on SetupProject
+
+2014-05-23  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: fixed a case for fallback on SetupProject
+
+2014-05-22  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: added a 'run' wrapper to satellite projects
+
+2013-05-28  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SP2.py: prototype of a new SetupProject for CMake projects
+
 2014-05-08  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Version.py: Change version regexp for LCGCMT to handle
@@ -10,8 +26,8 @@
 2014-03-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r10p4
-	* LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-438 Force use of 
-	LCGCMT <= 66 for slc5 
+	* LbConfiguration/python/LbConfiguration/LbLogin.py: LBCORE-438 Force use of
+	LCGCMT <= 66 for slc5
 
 2014-03-21  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -88,12 +104,12 @@
 
 2013-08-06 Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Package.py: Added package LHAPDFSets 
+	* python/LbConfiguration/Package.py: Added package LHAPDFSets
 
 2013-07-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r8p2
-	* python/LbConfiguration/Platform.py: Added new compilers and platforms 
+	* python/LbConfiguration/Platform.py: Added new compilers and platforms
 
 2013-06-28 Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -102,7 +118,7 @@
 2013-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r8
-	* python/LbConfiguration/Project.py: Added projects Noether and Tesla 
+	* python/LbConfiguration/Project.py: Added projects Noether and Tesla
 	* python/LbConfiguration/Package.py: Added package  RawEventFormat
 
 2013-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>

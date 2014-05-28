@@ -1,0 +1,12 @@
+package ${local_project}Sys
+version ${local_version}
+
+use ${project}Sys *
+
+private
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary
+apply_pattern QMTestSummarize
+end_private

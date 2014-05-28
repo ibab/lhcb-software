@@ -1,0 +1,24 @@
+#!/usr/bin/env python2.6
+###############################################################################
+# (c) Copyright 2013 CERN                                                     #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
+'''
+Script to run a command in an environment modified for an LHCb application.
+'''
+__author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
+
+import sys
+from LbConfiguration.SP2.script import SP2
+# special handling of the option --profile
+if '--profile' in sys.argv:
+    from LbConfiguration.SP2.profiling import run
+    run('SP2().main()')
+else:
+    SP2().main()
