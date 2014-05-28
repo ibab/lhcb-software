@@ -88,10 +88,11 @@ def find_lines( options, args ):
     return remove( hlt1Lines ), remove( hlt2Lines )
 
 def run( options, args ):
+    print 'Starting run method'
 
     evtMax = options.EvtMax
     
-    EventSelector().Input = ["DATA='castor:/castor/cern.ch/user/e/evh/131883/131883_0x0046_NB_L0Phys_00.raw' SVC='LHCb::MDFSelector'"]
+    EventSelector().Input = ["DATA='PFN:mdf:root://castorlhcb.cern.ch//castor/cern.ch/user/e/evh/131883/131883_0x0046_NB_L0Phys_00.raw' SVC='LHCb::MDFSelector'"]
     
     # Put the options into a dictionary
     reporterConfig = dict()
@@ -112,11 +113,11 @@ def run( options, args ):
     reporterConfig[ 'Wait' ] = False     ## Don't wait after each event
     
     reporterConfig[ 'Input' ]  = EventSelector().Input
-    reporterConfig[ 'UseDBSnapshot']= False;
+    #reporterConfig[ 'UseDBSnapshot']= False;
     reporterConfig[ 'Persistency']= 'ROOT';
-    reporterConfig[ 'EnableRunChangeHandler']= False;
+    #reporterConfig[ 'EnableRunChangeHandler']= False;
     reporterConfig[ 'WriterRequires']= [];
-    reporterConfig[ 'WriteFSR']= True;
+    #reporterConfig[ 'WriteFSR']= True;
     reporterConfig[ 'EnableDataOnDemand']= True;
     reporterConfig[ 'CheckOdin']= False;
     reporterConfig[ 'InitialTCK']= '0x00790038';
