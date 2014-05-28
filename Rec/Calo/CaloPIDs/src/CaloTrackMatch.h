@@ -80,7 +80,6 @@ public:
   /// initialization
   virtual StatusCode initialize() ;
   StatusCode i_updateAlpha();
-  StatusCode i_updateField(); 
 protected:
   /// Standard constructor
   CaloTrackMatch
