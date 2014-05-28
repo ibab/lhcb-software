@@ -132,7 +132,6 @@ StatusCode CaloBremMatch::match
   const LHCb::Track*          trObj   ,
   double&                     chi2    ) 
 {
-  using namespace LHCb ;
   chi2 = bad() ;                                                // reset chi2 
   
   // check the stored values!

@@ -165,7 +165,7 @@ protected:
     //         "chi2(): invalid data are detected " ) ;
 
     if (  !m1.inverted() || !m1.ok() || !m2.inverted() || !m2.ok() ){ 
-      Warning(  "chi2(): invalid data are detected - return bad chi2" );
+      Warning(  "chi2(): invalid data are detected - return bad chi2" ).ignore();
       return 99999999. ; 
     }
 
@@ -175,7 +175,7 @@ protected:
     // evaluate the overall covariance matrix 
     s_cov = m1.matrix() +  m2.matrix() ;
     if ( !s_cov.Invert() ){ 
-      Warning(  "chi2(): can not invert the matrix - return bad chi2" ) ; 
+      Warning(  "chi2(): can not invert the matrix - return bad chi2" ).ignore() ; 
       return 99999999. ; 
     }
 
@@ -224,10 +224,9 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "State:" << s << endmsg ; }
-      return StatusCode::FAILURE ; 
+      return Warning ( "match(): Could not invert 'track' matrix", StatusCode::FAILURE ) ; 
     }
     return StatusCode::SUCCESS ;
   } ;
@@ -250,10 +249,9 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Warning ( "match(): Could not invert '3D-calo' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endmsg ; }
-      return StatusCode::FAILURE ; 
+      return Warning ( "match(): Could not invert '3D-calo' matrix", StatusCode::FAILURE ) ; 
     }
     return StatusCode::SUCCESS ;
   } ;
@@ -272,10 +270,9 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     { 
-      Warning ( "match(): Could not invert '2D-calobrem' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "CaloPosition:" << c << endmsg ; }
-      return StatusCode::FAILURE ; 
+      return Warning ( "match(): Could not invert '2D-calobrem' matrix", StatusCode::FAILURE ) ; 
     }
     return StatusCode::SUCCESS ;
   } ;
@@ -341,10 +338,9 @@ protected:
     match.setOK       ( true  ) ;    
     if ( !match.invert() ) 
     {
-      Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
       { debug() << "State:" << s << endmsg ; }
-      return StatusCode::FAILURE ; 
+      return Warning ( "match(): Could not invert 'track' matrix", StatusCode::FAILURE ) ; 
     }
     return StatusCode::SUCCESS ;
   } ;  
