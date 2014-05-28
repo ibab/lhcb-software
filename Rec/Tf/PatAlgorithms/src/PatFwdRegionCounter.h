@@ -27,7 +27,7 @@
       }
     }
 
-    /// add a hit to be counted
+    /// add a hit to be counted //TODO: inconsistent with constructor!!!
     void addHit( const PatFwdHit* hit )
     { ++m_regionList[region(hit)]; }
 
@@ -38,15 +38,15 @@
     /// return number of hits counted in IT
     int nbIT() const
     {
-      return std::accumulate(m_regionList.begin() +
-	  Tf::RegionID::OTIndex::kNRegions, m_regionList.end(), 0);
+      return std::accumulate(m_regionList.begin() + Tf::RegionID::OTIndex::kNRegions, 
+                             m_regionList.end(), 0);
     }
 
     /// return number of hits counted in OT
     int nbOT() const
     {
-      return std::accumulate(m_regionList.begin(),
-	  m_regionList.begin() + Tf::RegionID::OTIndex::kNRegions, 0);
+      auto first = m_regionList.begin();
+      return std::accumulate( first, first + Tf::RegionID::OTIndex::kNRegions, 0);
     }
 
     /// return the region with most hits
@@ -65,9 +65,9 @@
     int region(const PatFwdHit* hit) const
     {
       int region = hit->hit()->region();
-      if (hit->hit()->type() != Tf::RegionID::OT)
-	region += Tf::RegionID::OTIndex::kNRegions;
-      return region;
+      return (hit->hit()->type() == Tf::RegionID::OT) ? 
+                    region : 
+                    region + Tf::RegionID::OTIndex::kNRegions;
     }
 
   };

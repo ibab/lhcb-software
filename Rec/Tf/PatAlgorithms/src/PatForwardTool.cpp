@@ -96,10 +96,16 @@ public:
         }
         //== Add all hits inside the maximum spread. 
         // first increment mid, as we KNOW the current mid passes predicate..
+        // typically, we find something after 2 steps -- which is smaller than the 2log(size_of_range)
+        //  hence, the linear std::find_if is expected to outperform logarithmic  std::partition_point...
+        // (typically in 5% of the cases, 2^distance_to_first_match will be larger than range_size)
         mid = std::find_if( ++mid, m_last, [&](reference i) { return !predicate(*first,i); } );
+        // mid = std::partition_point( ++mid, m_last, [&](reference i) { return predicate(*first,i); } );
     
         //== Enough different planes?
-        PatFwdPlaneCounter counter{ first, mid  };
+        // Note: at this point, only 'selected' hits are used, so we can omit
+        //       the check inside the plane counter....
+        PatFwdPlaneCounter_<PatFwdPlaneCounter_Policy::OmitSelectedCheck> counter{ first, mid };
         auto enough_planes = [&]() { return counter.nbDifferent() >= m_minPlanes; } ;
         if ( !enough_planes() ) {
           ++first;
@@ -309,7 +315,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   unsigned nCand = 0;
   for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+    if( UNLIKELY( isDebug ) )
       debug() << "--- Candidate " << ++nCand
               << "  X cord size " << temp.coords().size() 
               << endmsg;
@@ -622,7 +628,6 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   //== Sort by projection
   std::sort( std::begin(temp), std::end( temp), Tf::increasingByProjection<PatForwardHit>() );
 
-
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << "List size = " << temp.size() << endmsg;
     for ( const PatFwdHit *hit : temp ) {
@@ -670,11 +675,11 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
             //break; /// Keep first one !
           }
         }
-    } 
+    }
     itP = range.second;
   }
 
-  if ( (int)std::distance(bestList.first,bestList.second) < minYPlanes ) return false;
+  if ( std::distance(bestList.first,bestList.second) < minYPlanes ) return false;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "...Selected " << std::distance(bestList.first,bestList.second) << " hits from "

@@ -33,12 +33,28 @@ BinaryFunction for_each_adjacent_pair(Iterator first, Iterator last, BinaryFunct
 }
       
 
+template < typename  Iterator, typename Predicate > 
+Iterator reverse_partition_point(Iterator begin, Iterator end, Predicate&& pred) {
+    return std::partition_point( std::reverse_iterator<Iterator>(begin), 
+                                 std::reverse_iterator<Iterator>(end), 
+                                 std::forward<Predicate>(pred) ).base();
+}
 
 template < typename  Iterator, typename Predicate > 
 Iterator reverse_find_if(Iterator begin, Iterator end, Predicate&& pred) {
     return std::find_if( std::reverse_iterator<Iterator>(begin), 
                          std::reverse_iterator<Iterator>(end), 
                          std::forward<Predicate>(pred) ).base();
+}
+
+
+template < typename  Iterator, typename Predicate >
+std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, Predicate&& pred) {
+    Iterator first = std::find_if( begin, end, pred );
+    if ( first == end ) return { first, end };
+    auto rbegin = std::reverse_iterator<Iterator>(std::next(first));
+    auto second = std::find_if( std::reverse_iterator<Iterator>(end), rbegin, pred );
+    return { first, second == rbegin ? end : std::prev(second.base()) };
 }
 
 template < typename Iterator, 
@@ -111,21 +127,21 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
 
 
 class RLAmbiguityResolver {
-    const PatFwdTool* const m_parent;
+    MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
+    double m_zRef;
     double m_distM = 10.;
     double m_distP = 10.;
-    bool m_isDebug;
 public:
-    RLAmbiguityResolver( const PatFwdTrackCandidate& track, const PatFwdTool& parent ) : 
-        m_parent{ &parent}, 
+    RLAmbiguityResolver( const PatFwdTrackCandidate& track, double zRef,  MsgStream* msg = nullptr ) : 
+        m_msg{ msg }, 
         m_track{ &track } ,
-        m_isDebug{ parent.msgLevel( MSG::DEBUG ) }
+        m_zRef(zRef)
     {
     }
 
     void operator()(PatFwdHit *prev, PatFwdHit *hit) {
-      double dz   = hit->z() - m_parent->zReference();
+      double dz   = hit->z() - m_zRef;
       //OT : distance to a circle, drift time
       double dist = (hit->x() - m_track->x( dz ))*m_track->cosAfter();
       double dx = hit->driftDistance();
@@ -148,8 +164,8 @@ public:
       m_distP = distP;
       m_distM = distM;
 
-      if( UNLIKELY( m_isDebug ) ) {
-        m_parent->debug() << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
+      if( UNLIKELY( m_msg!=nullptr ) ) {
+        (*m_msg) << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
                            hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
       }
@@ -307,36 +323,32 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   int bestRegion = -1;
   double spread = 1000.;
 
-  auto make_matchRegion = [](unsigned int maxRegion) {
-    return [maxRegion](const PatForwardHit& hit) {
-      unsigned int region = hit.hit()->region();
+  auto in_region = [](unsigned int r) {
+    return [r](const PatForwardHit* hit) {
+      unsigned int region = hit->hit()->region();
       if ( region != Tf::RegionID::OT) region+=2;
-      return region == maxRegion ;
+      return region == r ;
     };
   };
 
   PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
   for( unsigned int maxRegion = 0; maxRegion < 6 ; ++maxRegion ) {
     if ( regions.nbInRegion( maxRegion ) < 6 ) continue;  // count by plane
-    PatFwdPlaneCounter planes{ track.coordBegin(), track.coordBegin() };
-    double first = 1.e7;
-    double last  = first;
    
-    auto inRegion = make_matchRegion(maxRegion);
+    auto predicate = in_region(maxRegion);
+    auto hits = find_first_and_last( std::begin(track.coords()), std::end(track.coords()), predicate );
+    if ( hits.second == std::end(track.coords()) ) continue;
 
-    for (auto  hit :  track.coords() ) {
-      if (!inRegion(*hit)) continue;
-      if ( first > 1.e6 ) first = hit->projection();
-      last = hit->projection();
-      planes.addHit( hit );
-    }
+    double mySpread = (*hits.second)->projection() - (*hits.first)->projection();
 
-    if ( planes.nbDifferent() == 6 ) {
-      double mySpread = last-first;
-      if ( mySpread < spread ) {
-        spread = mySpread;
-        bestRegion = maxRegion;
-      }
+    if ( mySpread < spread ) {
+        auto planes = make_predicated_planecounter( hits.first, std::next(hits.second), [&](const PatFwdHit* hit) { 
+            return hit->isSelected() && predicate(hit); 
+        } );
+        if ( planes.nbDifferent() == 6 ) {
+            spread = mySpread;
+            bestRegion = maxRegion;
+        }
     }
   }
   bool isDebug = msgLevel( MSG::DEBUG );
@@ -395,13 +407,20 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   //== Add hits before/after
   regions = PatFwdRegionCounter{ itBeg, itEnd };
-  double tolSide = .2;
-  if ( regions.maxRegion() < 2 ) tolSide = 2.0;
+  double tolSide = ( regions.maxRegion() < 2 ) ? 2.0 : 0.2 ;
+
+  // note that PatForwardTool::buildXCandidatesList has sorted the hits by projection
+  // so we can use this ordering here if advantageous... (depends on how far we typically
+  // traverse before finding our target
 
   double minProj = (*itBeg)->projection() - tolSide;
+  // choice between std::partition_point and std::find_if depends on the 2log(size_of_range) vs distance
+  // from the start to the target...
   itBeg = reverse_find_if( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() < minProj; });
+  // itBeg = reverse_partition_point( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() >= minProj; });
   double maxProj = (*std::prev(itEnd))->projection() + tolSide;
   itEnd = std::find_if(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() > maxProj; });
+  // itEnd = std::partition_point(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() <= maxProj; });
 
   PatFwdPlaneCounter planeCount( itBeg, itEnd );
   if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
@@ -701,7 +720,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
       debug() << "-- Hit of plane " << planeCode << endmsg;
 
     if ( std::distance(first,part) > 1 ) {
-      RLAmbiguityResolver  resolve{track, *this};
+      RLAmbiguityResolver  resolve{track, zReference(),  UNLIKELY( isDebug ) ? &debug() : nullptr };
       resolve( *first, *first ); //FIXME: required to retain identical results...
       for_each_adjacent_pair( first, part, std::move(resolve) );
     } else if ( first!=part ) {   // no RL solved if only one hit

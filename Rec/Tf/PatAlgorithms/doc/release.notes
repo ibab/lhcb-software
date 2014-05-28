@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-05-28 - Gerhard Raven
+ - PatFwdPlaneCounter: generalize checkingPolicy to allow generic, statefull predicates;
+                       employ 'empty base class' optimization to insure that object size 
+                       is unaffected when a stateless predicate is provided.
+ - PatFwdTool: use a predicated PatFwdPlaneCounter to count planes for selected hits in 
+               specified region
+ 
 ! 2014-05-27 - Gerhard Raven
  - PatFwdPlaneCounter: add 'checkingPolicy' so that, if wanted,  the 'isSelected' check 
    can be disabled (at compile time) in case it is a-priori known to always return
