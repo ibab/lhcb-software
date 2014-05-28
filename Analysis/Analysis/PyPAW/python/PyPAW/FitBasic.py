@@ -402,6 +402,8 @@ class Fit1DBase (object) :
                                        ROOT.RooFit.Save (   ) ,
                                        ncpu ( len ( dataset ) ) ,
                                        *args     )
+            
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
 
         if 0 != result.status() and silent :
             logger.warning ( 'Fit status is %s. Refit in non-silent regime '

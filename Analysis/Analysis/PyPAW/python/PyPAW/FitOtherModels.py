@@ -41,6 +41,7 @@ logger = getLogger ( __name__ )
 # Specializations of double-sided Crystal Ball function 
 # =============================================================================
 from   PyPAW.FitBasic             import makeVar
+from   PyPAW.FitBasic             import Fit1DBase
 # =============================================================================
 ## @class GammaDist_pdf
 #  Gamma-distribution with shape/scale parameters
@@ -50,7 +51,7 @@ from   PyPAW.FitBasic             import makeVar
 #  @date   2013-05-11
 #  @see AnalysisModels::GammaDist 
 #  @see Gaudi::Math::GammaDist 
-class GammaDist_pdf(object) :
+class GammaDist_pdf(Fit1DBase) :
     """
     Gamma-distribution with shape/scale parameters
     http://en.wikipedia.org/wiki/Gamma_distribution
@@ -88,6 +89,8 @@ class GammaDist_pdf(object) :
             self.k                 ,
             self.theta             )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class GenGammaDist_pdf 
 #  Generalized Gamma-distribution with additional shift parameter 
@@ -102,7 +105,7 @@ class GammaDist_pdf(object) :
 #  @date   2013-05-11
 #  @see Gaudi::Math::GenGammaDist 
 #  @see Analysis::Models::GenGammaDist 
-class GenGammaDist_pdf(object) :
+class GenGammaDist_pdf(Fit1DBase) :
     """
     Generalized Gamma-distribution with additional shift parameter 
     http://en.wikipedia.org/wiki/Generalized_gamma_distribution
@@ -133,7 +136,7 @@ class GenGammaDist_pdf(object) :
                                '#theta_{#Gamma}(%s)' % name , None , 1 , 1.e-3 , 100 )
         self.p     = makeVar ( p       ,
                                'pGamma_%s'           % name ,
-                               'p_{#Gamma}(%s)'      % name , None , 1 , 1.e-3 ,  20 )
+                               'p_{#Gamma}(%s)'      % name , None , 1 , 1.e-3 ,   6 )
         
         self.low   = makeVar ( low      ,
                                'lGamma_%s'           % name ,
@@ -161,6 +164,7 @@ class GenGammaDist_pdf(object) :
             self.p         , 
             self.low       )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class Amoroso_pdf
@@ -170,7 +174,7 @@ class GenGammaDist_pdf(object) :
 #  @date   2013-05-11
 #  @see Gaudi::Math::Amoroso
 #  @see Analysis::Models::Amoroso
-class Amoroso_pdf(object) :
+class Amoroso_pdf(Fit1DBase) :
     """
     Another view on generalized gamma distribution
     http://arxiv.org/pdf/1005.3274
@@ -210,6 +214,8 @@ class Amoroso_pdf(object) :
             self.beta      ,
             self.a         )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class LogGammaDist_pdf
 #  Distribution for log(x), where x follows Gamma distribution
@@ -220,7 +226,7 @@ class Amoroso_pdf(object) :
 #  @see Gaudi::Math::LogGammaDist 
 #  @see AnalysisModels::GammaDist 
 #  @see Gaudi::Math::GammaDist 
-class LogGammaDist_pdf(object) :
+class LogGammaDist_pdf(Fit1DBase) :
     """
     Gamma-distribution for log(x), where x follows Gamma distribution
     It suits nicely for fits of log(multilicity) and/or log(chi2) distributions
@@ -237,10 +243,10 @@ class LogGammaDist_pdf(object) :
         #
         self.k     = makeVar ( k       ,
                                'kGamma_%s'           % name ,
-                               'k_{#Gamma}(%s)'      % name , None , 1 , 1.e-3 , 100 )
+                               'k_{#Gamma}(%s)'      % name , None , 1 , 1.e-5 , 1000 )
         self.theta = makeVar ( theta   ,
                                'tGamma_%s'           % name ,
-                               '#theta_{#Gamma}(%s)' % name , None , 1 , 1.e-3 , 100 )
+                               '#theta_{#Gamma}(%s)' % name , None , 1 , 1.e-5 , 1000 )
         
         if self.k.getMin() <= 0 :
             self.k.setMin ( 1.e-3 ) 
@@ -257,6 +263,7 @@ class LogGammaDist_pdf(object) :
             self.k                 ,
             self.theta             )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class Log10GammaDist_pdf
@@ -270,7 +277,7 @@ class LogGammaDist_pdf(object) :
 #  @see Gaudi::Math::LogGammaDist 
 #  @see AnalysisModels::GammaDist 
 #  @see Gaudi::Math::GammaDist 
-class Log10GammaDist_pdf(object) :
+class Log10GammaDist_pdf(Fit1DBase) :
     """
     Gamma-distribution for log10(x), where x follows Gamma distribution
     It suits nicely for fits of log10(multilicity) and/or log10(chi2) distributions
@@ -287,10 +294,10 @@ class Log10GammaDist_pdf(object) :
         #
         self.k     = makeVar ( k       ,
                                'kGamma_%s'           % name ,
-                               'k_{#Gamma}(%s)'      % name , None , 1 , 1.e-3 , 100 )
+                               'k_{#Gamma}(%s)'      % name , None , 1 , 1.e-5 , 1000 )
         self.theta = makeVar ( theta   ,
                                'tGamma_%s'           % name ,
-                               '#theta_{#Gamma}(%s)' % name , None , 1 , 1.e-3 , 100 )
+                               '#theta_{#Gamma}(%s)' % name , None , 1 , 1.e-5 , 1000 )
         
         if self.k.getMin() <= 0 :
             self.k.setMin ( 1.e-3 ) 
@@ -307,6 +314,8 @@ class Log10GammaDist_pdf(object) :
             self.k                 ,
             self.theta             )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class LogGamma_pdf
 #  - http://arxiv.org/pdf/1005.3274
@@ -321,7 +330,7 @@ class Log10GammaDist_pdf(object) :
 #  @date   2013-05-11
 #  @see AnalysisModels::LogGamma
 #  @see Gaudi::Math::LogGamma
-class LogGamma_pdf(object) :
+class LogGamma_pdf(Fit1DBase) :
     """
     - http://arxiv.org/pdf/1005.3274
     """
@@ -359,6 +368,7 @@ class LogGamma_pdf(object) :
             self.lam   ,
             self.alpha )
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class BetaPrime_pdf
@@ -367,7 +377,7 @@ class LogGamma_pdf(object) :
 #  @date   2013-05-11
 #  @see Analysis::Models::BetaPrime
 #  @see Gaudi::Math::BetaPrime
-class BetaPrime_pdf(object) :
+class BetaPrime_pdf(Fit1DBase) :
     """
     - http://en.wikipedia.org/wiki/Beta_prime_distribution
     """
@@ -403,6 +413,8 @@ class BetaPrime_pdf(object) :
             self.x     ,
             self.alpha ,
             self.beta  )
+        
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -35,7 +35,7 @@ __all__     = (
 # =============================================================================
 import ROOT, math
 from   PyPAW.PyRoUts             import cpp 
-from   PyPAW.FitBasic            import makeVar
+from   PyPAW.FitBasic            import makeVar, Fit1DBase 
 # =============================================================================
 from   AnalysisPython.Logger     import getLogger
 logger = getLogger ( __name__ ) 
@@ -45,7 +45,7 @@ logger = getLogger ( __name__ )
 #  @see Analysis::Models::ExpoPositive
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class Bkg_pdf(object) :
+class Bkg_pdf(Fit1DBase) :
     """
     Exponential function, modulated by the positive polynomial
     """
@@ -97,6 +97,7 @@ class Bkg_pdf(object) :
             mass.getMin()        ,
             mass.getMax()        )
         
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class  PSPol_pdf
@@ -106,7 +107,7 @@ class Bkg_pdf(object) :
 #  @see Gaudi::Math::PhaseSpaceNL 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PSPol_pdf(object) :
+class PSPol_pdf(Fit1DBase) :
     """
     The phase space function modified with positive polynomial 
     """
@@ -140,6 +141,8 @@ class PSPol_pdf(object) :
             self.mass            ,
             self.ps              ,  ## Gaudi::Math::PhaseSpaceNL 
             self.phi_list        )
+        
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class  PolyPos_pdf
@@ -148,7 +151,7 @@ class PSPol_pdf(object) :
 #  @see Gaudi::Math::Positive
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PolyPos_pdf(object) :
+class PolyPos_pdf(Fit1DBase) :
     """
     A positive polynomial 
     """
@@ -156,19 +159,11 @@ class PolyPos_pdf(object) :
     def __init__ ( self             ,
                    name             ,   ## the name 
                    mass             ,   ## the varibale 
-                   phasespace       ,   ## Gaudi::Math::PhaseSapceNL 
                    power = 1        ) : ## degree of the polynomial
         
-        #
-        ## initialize the base
-        # 
-        Mass_pdf.__init__  ( self    , name , mass.getMin() , mass.getMax() , 
-                             mass    ,
-                             None    ,
-                             None    ,
-                             None    , None ) 
  
         self.power = power
+        self.mass  = mass 
         
         # 
         self.phis     = []
@@ -190,6 +185,7 @@ class PolyPos_pdf(object) :
             self.mass.getMin()   ,
             self.mass.getMax()   ) 
         
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
         
 # =============================================================================
 ## @class  PS2_pdf
@@ -198,7 +194,7 @@ class PolyPos_pdf(object) :
 #  @see Gaudi::Math::PhaseSpace2
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PS2_pdf(object) :
+class PS2_pdf(Fit1DBase) :
     """
     Primitive 2-body phase space function 
     """
@@ -220,6 +216,7 @@ class PS2_pdf(object) :
             self.mass            ,
             m1  , m2 )
         
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
 # =============================================================================
 ## @class  PSLeft_pdf
@@ -228,7 +225,7 @@ class PS2_pdf(object) :
 #  @see Gaudi::Math::PhaseSpaceLeft
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PSLeft_pdf(object) :
+class PSLeft_pdf(Fit1DBase) :
     """
     Left edge of B-body phase space function 
     """
@@ -256,6 +253,8 @@ class PSLeft_pdf(object) :
             self.left ,
             N         ) 
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class  PSRight_pdf
 #  Right edge of L-body phase space fro N-body decay 
@@ -263,7 +262,7 @@ class PSLeft_pdf(object) :
 #  @see Gaudi::Math::PhaseSpaceRight
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PSRight_pdf(object) :
+class PSRight_pdf(Fit1DBase) :
     """
     Right edge of L-body phase space for N-body decay 
     """
@@ -293,6 +292,8 @@ class PSRight_pdf(object) :
             L          , 
             N          ) 
     
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class  PSNL_pdf
 #  L-body phase space from N-body decay 
@@ -300,7 +301,7 @@ class PSRight_pdf(object) :
 #  @see Gaudi::Math::PhaseSpaceNL
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PSNL_pdf(object) :
+class PSNL_pdf(Fit1DBase) :
     """
     L-body phase space from N-body decay 
     """
@@ -339,6 +340,8 @@ class PSNL_pdf(object) :
             L          , 
             N          ) 
 
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
 # =============================================================================
 ## @class  PS23L_pdf
 #  2-body phase space from 3-body decay with orbital momenta 
@@ -346,7 +349,7 @@ class PSNL_pdf(object) :
 #  @see Gaudi::Math::PhaseSpace23L
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class PS23L_pdf(object) :
+class PS23L_pdf(Fit1DBase) :
     """
     2-body phase space from 3-body decay with orbital momenta 
     """
@@ -368,6 +371,8 @@ class PS23L_pdf(object) :
             'PhaseSpace23L(%s)' % name ,
             self.mass  ,
             m1 , m2 , m3 , m , L , l )
+
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
         
 # =============================================================================
 if '__main__' == __name__ :

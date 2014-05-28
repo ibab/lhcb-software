@@ -105,7 +105,8 @@ if sys.argv[1:] :
         except :
             logger.error ('Unable to execute "%s"' % a        )
             logger.error ('Exception: %s' % sys.exc_info()[0] ) 
-            
+            import traceback 
+            print traceback.format_exc() 
 
     if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
     if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  

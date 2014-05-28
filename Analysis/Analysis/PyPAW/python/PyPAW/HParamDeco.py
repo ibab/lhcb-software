@@ -45,20 +45,20 @@ class BernsteinFIT(object) :
     Simple function to fit/represent the histogram with sum of bernstein polynominals
     """
     def __init__ ( self , bp ) :
-        self._bp = bp
+        self.bernstein = bp
 
-    def npars    ( self ) : return self._bp.npars () 
-    def pars     ( self ) : return self._bp.pars  ()
+    def npars    ( self ) : return self.bernstein.npars () 
+    def pars     ( self ) : return self.bernstein.pars  ()
 
     ## the major method 
     def __call__ ( self , x , pars = [] ) :
         
         if pars :
-            np = self._bp.npars() 
+            np = self.bernstein.npars() 
             for i in range ( 0 , np ) :    
-                self._bp.setPar ( i , pars[i] )
+                self.bernstein.setPar ( i , pars[i] )
                 
-        return self._bp( x[0] )
+        return self.bernstein( x[0] )
 
 # =============================================================================
 ## @class PositiveFIT
@@ -68,13 +68,13 @@ class BernsteinFIT(object) :
 #  @date 2014-05-09
 class PositiveFIT(object) :
     """
-    Simple function to fit/represent the histogram with sum of bernstein polynominals
+    Simple function to fit/represent the histogram with sum of bernstein positive polynominals
     """
     def __init__ ( self , bp ) :
-        self._bp = bp
+        self.positive = bp
 
-    def npars    ( self ) : return self._bp.npars () + 1  ## NB: normalization!  
-    def pars     ( self ) : return self._bp.pars  ()
+    def npars    ( self ) : return self.positive.npars () + 1  ## NB: normalization!  
+    def pars     ( self ) : return self.positive.pars  ()
 
     ## the major method 
     def __call__ ( self , x , pars = [] ) :
@@ -84,9 +84,9 @@ class PositiveFIT(object) :
 
             norm = pars[0]
             
-            np   = self._bp.npars() 
+            np   = self.positive.npars() 
             for i in range ( 0 , np ) :    
-                self._bp.setPar ( i , pars[i+1] )
+                self.positive.setPar ( i , pars[i+1] )
                 
         return norm * self._bp( x[0] )
         
@@ -133,7 +133,7 @@ def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
     from PyPAW.PyRoUts import funID
     
     fun   = ROOT.TF1 ( funID() , bfit , mn , mx , bfit.npars() )
-    fun.SetNpx( max ( 100 , 3 * h1.bins) )  
+    fun.SetNpx( max ( 100 , 3 * h1.bins() ) )  
     
     return fun,bfit,fun.Fit(h1,opts)
 
@@ -158,7 +158,7 @@ def _h1_positive_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
     fun   = ROOT.TF1 ( funID() , bfit , mn , mx , bfit.npars() )
 
     fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
-    fun.SetNpx( max ( 100 , 3 * h1.bins ) )  
+    fun.SetNpx( max ( 100 , 3 * h1.bins() ) )  
     
     return fun,bfit,fun.Fit(h1,opts)
 
