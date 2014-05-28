@@ -3793,7 +3793,7 @@ Gaudi::Math::PhaseSpacePol::PhaseSpacePol
   , m_phasespace ( ps ) 
   , m_positive   ( N  , 
                    std::max ( ps. lowEdge() , std::min ( xlow , xhigh ) ) ,
-                   std::min ( ps.highEdge() , std::min ( xlow , xhigh ) ) )
+                   std::min ( ps.highEdge() , std::max ( xlow , xhigh ) ) )
   , m_workspace  ()
 {}
 // =====================================================================
@@ -7139,27 +7139,6 @@ double Gaudi::Math::GammaDist::integral ( const double low  ,
 // ============================================================================
 // Generalaize Gamma distribtions 
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  double _calc_aux_ ( const double k     , 
-                      const double theta , 
-                      const double p     )
-  {
-    if ( k > 0.2 * GSL_SF_GAMMA_XMAX * p 
-         || theta < 1.e-6 
-         || p     > 1.e+6 ) 
-    {
-      double aux  = gsl_sf_log     ( p     ) ;
-      aux        -= gsl_sf_log     ( theta ) ;
-      aux        -= gsl_sf_lngamma ( k / p ) ;
-      return        gsl_sf_exp     ( aux   ) ;
-    }
-    return p / theta / gsl_sf_gamma ( k / p ) ;
-  }
-  // ==========================================================================
-}
-// ============================================================================
 /*  constructor
  *  param k     \f$k\f$ parameter      (shape)
  *  param theta \f$\theta\f$ parameter (scale)
@@ -7178,9 +7157,7 @@ Gaudi::Math::GenGammaDist::GenGammaDist
   , m_p     ( std::abs ( p     ) ) 
   , m_low   ( low ) 
   , m_aux   ( 0   ) 
-{
-  m_aux = _calc_aux_ ( m_k  , m_theta , m_p ) ;
-}
+{}
 // ============================================================================
 // destructor 
 // ============================================================================
@@ -7191,7 +7168,6 @@ bool Gaudi::Math::GenGammaDist::setK     ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_k ) ) { return false ; }
   m_k   = value_ ;
-  m_aux = _calc_aux_ ( k () , theta() , p() ) ;
   return true ;
 }
 // ============================================================================
@@ -7200,7 +7176,6 @@ bool Gaudi::Math::GenGammaDist::setTheta ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_theta ) ) { return false ; }
   m_theta = value_ ;
-  m_aux   = _calc_aux_ ( k () , theta() , p() ) ;
   return true ;
 }
 // ============================================================================
@@ -7209,7 +7184,6 @@ bool Gaudi::Math::GenGammaDist::setP    ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_p ) ) { return false ; }
   m_p     = value_ ;
-  m_aux   = _calc_aux_ ( k () , theta() , p () ) ;
   return true ;
 }
 // ============================================================================
@@ -7226,26 +7200,13 @@ double Gaudi::Math::GenGammaDist::pdf ( const double x ) const
   if ( x <= m_low || s_equal ( x , m_low ) ) { return 0 ; }
   //
   const double xc = ( x - m_low ) / theta() ;  
-  const double xt = std::pow ( xc , p() ) ;
+  const double xt = std::pow ( xc , p () ) ;  
   //
-  if ( xt > 50 
-       || k     () > 0.2 * GSL_SF_GAMMA_XMAX * p() 
-       || theta () < 1.e-6 
-       || p     () > 1.e+6 ) 
-  {
-    double result   = ( k () - 1 ) * gsl_sf_log ( xc ) ;
-    result         -= xt  ;
-    result         += gsl_sf_log     ( p     ()    ) ;
-    result         -= gsl_sf_log     ( theta ()    ) ;
-    result         -= gsl_sf_lngamma ( k () / p () ) ;
-    return gsl_sf_exp ( result ) ;
-  }
-  //
-  double result  = m_aux ;
-  result        *= std::pow ( xc , k() - 1 ) ;
-  result        *= gsl_sf_exp ( -xt  ) ;
-  //
-  return result ;
+  double result   = ( k () - 1 ) * gsl_sf_log ( xc ) - xt ;
+  result         +=  gsl_sf_log     ( p ()  / theta  () ) ;
+  result         -=  gsl_sf_lngamma ( k ()  / p      () ) ;
+  //return gsl_sf_exp ( result ) ;
+  return my_exp ( result ) ;
 }
 // ============================================================================
 double Gaudi::Math::GenGammaDist::cdf ( const double x ) const 
@@ -7273,26 +7234,6 @@ double Gaudi::Math::GenGammaDist::integral ( const double low  ,
 // ============================================================================
 // Amoroso 
 // ============================================================================
-namespace 
-{
-  double _calc_aux_2_ ( const double theta ,
-                        const double alpha , 
-                        const double beta  )
-  {
-    if ( alpha >= 0.2 * GSL_SF_GAMMA_XMAX 
-         || std::abs ( theta ) < 1.e-6 
-         || std::abs ( beta  ) > 1.e+6 ) 
-    { 
-      double aux  = gsl_sf_log     ( std::abs ( beta  ) ) ;
-      aux        -= gsl_sf_log     ( std::abs ( theta ) ) ;
-      aux        -= gsl_sf_lngamma ( alpha ) ;
-      return        gsl_sf_exp     ( aux   ) ;
-    }
-    return std::abs ( beta / theta ) / gsl_sf_gamma ( alpha ) ;
-  }  
-}
-
-// ==========================================================================
 /*  constructor
  *  param a     a-parameter 
  *  param theta \f$\theta\f$-parameter  
@@ -7313,7 +7254,6 @@ Gaudi::Math::Amoroso::Amoroso
   , m_beta  (            beta    ) 
   , m_aux   ( 0 ) 
 {
-  m_aux = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
 }
 // ============================================================================
 // destructor 
@@ -7331,7 +7271,6 @@ bool Gaudi::Math::Amoroso::setTheta ( const double value )
 {
   if ( s_equal ( value , m_theta ) ) { return false ; }
   m_theta = value ;
-  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
   return true ;
 }
 // ============================================================================
@@ -7340,7 +7279,6 @@ bool Gaudi::Math::Amoroso::setAlpha ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_alpha ) ) { return false ; }
   m_alpha = value_ ;
-  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
   return true ;
 }
 // ============================================================================
@@ -7348,7 +7286,6 @@ bool Gaudi::Math::Amoroso::setBeta ( const double value )
 {
   if ( s_equal ( value , m_beta ) ) { return false ; }
   m_beta  = value ;
-  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
   return true ;
 }
 // ============================================================================
@@ -7363,25 +7300,11 @@ double Gaudi::Math::Amoroso::pdf ( const double x ) const
   const double xc = ( x - m_a ) / theta ()    ;
   const double xt = std::pow ( xc , beta() ) ;
   //
-  if ( xt > 50 
-       || alpha () >= 0.2 * GSL_SF_GAMMA_XMAX 
-       || std::abs ( theta () ) < 1.e-6 
-       || std::abs ( beta  () ) > 1.e+6 ) 
-  {
-    //
-    double result   = ( alpha() * beta() - 1 ) * xc ;
-    result += gsl_sf_log     ( std::abs ( beta  () ) ) ;
-    result -= gsl_sf_log     ( std::abs ( theta () ) ) ;
-    result -= gsl_sf_lngamma (            alpha ()   ) ;
-    //
-    return gsl_sf_exp ( result ) ;
-  }
+  double result   = ( alpha() * beta() - 1 ) * gsl_sf_log ( xc )  - xt ; 
+  result += gsl_sf_log     ( std::abs ( beta  () / theta() ) ) ;
+  result -= gsl_sf_lngamma (            alpha ()   ) ;
   //
-  double result  = m_aux ;
-  result        *= std::pow   ( xc , alpha() * beta() - 1 ) ;
-  result        *= gsl_sf_exp ( -xt  ) ;
-  //
-  return result ;
+  return my_exp ( result ) ;
 }
 // ============================================================================
 double Gaudi::Math::Amoroso::cdf ( const double x ) const 
@@ -7557,25 +7480,6 @@ double Gaudi::Math::Log10GammaDist::integral ( const double low  ,
 // ============================================================================
 // Log-Gamma
 // ============================================================================
-namespace 
-{
-  // ==========================================================================
-  double _calc_aux_3_ ( const double alpha  , 
-                        const double lambda )
-  {
-    if ( alpha >= 0.2 * GSL_SF_GAMMA_XMAX 
-         || std::abs ( lambda ) < 1.e-6  )
-    { 
-      double aux  = 0 ;
-      aux        -= gsl_sf_log     ( std::abs ( lambda ) ) ;
-      aux        -= gsl_sf_lngamma ( alpha ) ;
-      return        gsl_sf_exp     ( aux   ) ;
-    }
-    return 1 / ( gsl_sf_gamma ( alpha ) * std::abs ( lambda ) ) ;
-  }  
-  // ==========================================================================
-}
-// ============================================================================
 /*  constructor from scale & shape parameters
  *  param nu      \f$\nu\f$ parameter      (location)
  *  param lambda  \f$\lambda\f$ parameter  
@@ -7592,7 +7496,6 @@ Gaudi::Math::LogGamma::LogGamma
   , m_alpha  ( std::abs ( alpha ) ) 
   , m_aux    ( 0 ) 
 {
-  m_aux = _calc_aux_3_ ( m_alpha , m_lambda ) ;
 }
 // ============================================================================
 // destructor 
@@ -7610,7 +7513,6 @@ bool Gaudi::Math::LogGamma::setLambda ( const double value )
 {
   if ( s_equal ( value , m_lambda ) ) { return false ; }
   m_lambda = value ;
-  m_aux    = _calc_aux_3_ ( m_alpha , m_lambda ) ;
   return true ;
 }
 // ============================================================================
@@ -7619,7 +7521,6 @@ bool Gaudi::Math::LogGamma::setAlpha ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_alpha ) ) { return false ; }
   m_alpha = value_ ;
-  m_aux   = _calc_aux_3_ ( m_alpha , m_lambda ) ;
   return true ;
 }
 // ============================================================================
@@ -7631,21 +7532,13 @@ double Gaudi::Math::LogGamma::pdf ( const double x ) const
   const double xc  = x  -  nu    () ;
   const double xt  = xc / lambda () ;
   //
-  const double arg = alpha() * xt - gsl_sf_exp ( xt ) ;
+  const double arg = alpha() * xt - my_exp ( xt ) ;
   //
-  if ( std::abs ( arg ) > 50 
-       || alpha() > 0.2 * GSL_SF_GAMMA_XMAX 
-       || std::abs ( lambda() ) < 1.e+6      ) 
-  {
-    //
-    double result  = arg ;
-    result        -= gsl_sf_log      ( std::abs ( lambda () ) ) ;
-    result        -= gsl_sf_lngamma  (            alpha  ()   ) ;
-    //
-    return gsl_sf_exp ( result ) ;
-  }
+  double result  = arg ;
+  result        -= gsl_sf_log      ( std::abs ( lambda () ) ) ;
+  result        -= gsl_sf_lngamma  (            alpha  ()   ) ;
   //
-  return m_aux * gsl_sf_exp ( arg ) ;
+  return my_exp ( result ) ;
 }
 // ============================================================================
 double Gaudi::Math::LogGamma::cdf ( const double x ) const 
@@ -7718,7 +7611,7 @@ Gaudi::Math::BetaPrime::BetaPrime
   , m_beta  ( std::abs ( beta  ) )
   , m_aux () 
 {
-  m_aux = gsl_sf_beta ( m_alpha , m_beta ) ;
+  m_aux = 1/gsl_sf_beta ( m_alpha , m_beta ) ;
 }
 // ============================================================================
 // destructor 
@@ -7730,7 +7623,7 @@ bool Gaudi::Math::BetaPrime::setAlpha ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_alpha ) ) { return false ; }
   m_alpha = value_ ;
-  m_aux   = gsl_sf_beta ( m_alpha , m_beta ) ;
+  m_aux   = 1/gsl_sf_beta ( m_alpha , m_beta ) ;
   return true ;
 }
 // ============================================================================
@@ -7739,7 +7632,7 @@ bool Gaudi::Math::BetaPrime::setBeta  ( const double value )
   const double value_ = std::abs ( value ) ;
   if ( s_equal ( value_ , m_beta  ) ) { return false ; }
   m_beta  = value_ ;
-  m_aux   = gsl_sf_beta ( m_alpha , m_beta ) ;
+  m_aux   = 1/gsl_sf_beta ( m_alpha , m_beta ) ;
   return true ;
 }
 // ============================================================================
