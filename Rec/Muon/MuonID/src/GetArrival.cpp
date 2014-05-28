@@ -32,44 +32,32 @@ GetArrival::GetArrival( const std::string& type,
 {
   declareInterface<IGetArrival>(this);
 
-  //remove smallest amongst all probabilities for 4 stations
-  declareProperty("removeSmallest", m_removeSmallest=false);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "removeSmallest="<<m_removeSmallest<<endmsg;
+  declareProperty("removeSmallest", m_removeSmallest=false,
+                  "remove smallest amongst all probabilities for 4 stations");
 
-  declareProperty("useFunct", m_useFunct=false);
-  //use fitted functions instead of histograms
-  if (msgLevel(MSG::DEBUG) ) debug()<< "useFunct="<<m_useFunct<<endmsg;
+  declareProperty("useFunct", m_useFunct=false,
+                  "use fitted functions instead of histograms");
 
   std::vector<double> tmp = boost::assign::list_of(-1.);
-  //moms for all 4 stations
-  declareProperty("moms", m_moms = tmp);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "moms="<<m_moms<<endmsg;
+  declareProperty("moms", m_moms = tmp, "moms for all 4 stations");
 
-  //probs corresponding to those moms in each station
-  declareProperty("probs", m_probs);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "probs="<<m_probs<<endmsg;
+  declareProperty("probs", m_probs,
+                  "probs corresponding to moms in each station");
   
-  //parameter alpha in fitted curves
-  declareProperty("alpha", m_alpha = tmp);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "alpha="<<m_alpha<<endmsg;
+  declareProperty("alpha", m_alpha = tmp, "parameter alpha in fitted curves");
   
-  ////parameter beta in fitted curves
-  declareProperty("beta", m_beta = tmp);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "beta="<<m_beta<<endmsg;
+  declareProperty("beta", m_beta = tmp, "parameter beta in fitted curves");
 
-  ////eff of muon chambers
-  declareProperty("eff", m_eff=.99);
-  if (msgLevel(MSG::DEBUG) ) debug()<< "eff="<<m_eff<<endmsg;
+  declareProperty("eff", m_eff=.99, "eff of muon chambers");
 
-  ////number of min hits for cls arr
-  declareProperty("MinHits",m_minhits=2);
-  if (msgLevel(MSG::DEBUG) ) debug()<<"MinHits="<<m_minhits;
+  declareProperty("MinHits",m_minhits=2,"number of min hits for cls arr");
 
 }
 
 // from m_probs and m_moms fill the m_vprobs
 StatusCode GetArrival::initialize() {
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_init = StatusCode::SUCCESS;
 

@@ -3,9 +3,17 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2014-05-28 - Marco Cattaneo
+ - GetArrival.cpp:
+   . Remove redundant printout of properties from constructor, fixes unprotected
+     debug warnings
+   . Document properties using third argument of setProperty instead of comments
+  - Call the base class initialize and finalize in various tools
+
 !========================= MuonID v9r10 2014-02-24 =========================
 ! 2014-02-21 - Rob Lambert
- - Suppress warnings in the default case. Move the warning to an info message. Default is default and is OK by default.
+ - Suppress warnings in the default case. Move the warning to an info message.
+   Default is default and is OK by default.
 
 !========================= MuonID v9r9 2014-02-19 =========================
 ! 2014-02-04 - Christoph Langenbruch

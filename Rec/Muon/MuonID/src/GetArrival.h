@@ -49,7 +49,7 @@ public:
 
   StatusCode clArrival(const double p,const std::vector<int>& type_st, double& clarr);
 
-  StatusCode finalize() {m_init.ignore(); return StatusCode::SUCCESS;} //tool finalization
+  StatusCode finalize() {m_init.ignore(); return GaudiTool::finalize(); } //tool finalization
 
 protected:
 

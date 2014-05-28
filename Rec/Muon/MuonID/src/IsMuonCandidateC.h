@@ -34,8 +34,6 @@ public:
   bool IsMuon(const std::vector<int>& stations,const double& p);
   bool IsMuonLoose(const std::vector<int>& stations,const double& p);
 
-  virtual StatusCode finalize() {return StatusCode::SUCCESS;} //tool finalization
-
 protected:
 
   std::vector<double> m_MomRangeIsMuon;

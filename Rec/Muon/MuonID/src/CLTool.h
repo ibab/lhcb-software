@@ -38,7 +38,7 @@ public:
   
   double valFromUnif(double value, double mom, int p_r, std::string sig_bkg);
 
-  StatusCode finalize() {m_init.ignore(); return StatusCode::SUCCESS;} //tool finalization
+  StatusCode finalize() {m_init.ignore(); return GaudiTool::finalize();} //tool finalization
 
 protected:
 

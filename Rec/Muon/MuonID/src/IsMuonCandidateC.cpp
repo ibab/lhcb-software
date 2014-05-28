@@ -49,6 +49,9 @@ IsMuonCandidateC::IsMuonCandidateC( const std::string& type,
 }
 
 StatusCode IsMuonCandidateC::initialize() {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
   if (msgLevel(MSG::DEBUG) ) debug()<<"MomRangeIsMuon="<<m_MomRangeIsMuon<<endmsg;
   return StatusCode::SUCCESS;
 }

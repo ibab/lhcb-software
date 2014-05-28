@@ -66,7 +66,8 @@ Chi2MuIDTool::Chi2MuIDTool( const std::string& type,
 
 
 StatusCode Chi2MuIDTool::initialize() {
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   m_fitter = tool<ITrackFitter>("TrackMasterFitter","fitter",this); 
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","extrapol",this);
@@ -683,16 +684,4 @@ StatusCode Chi2MuIDTool::findTrackRegions(const LHCb::Track& muTrack,  std::vect
 Chi2MuIDTool::~Chi2MuIDTool() {} 
 
 //============================================================================
-
-StatusCode Chi2MuIDTool::finalize() {
-
-  StatusCode sc = m_CLQuality->finalize();
-  if (sc.isFailure()) return sc;
-
-  sc = m_GetArrival->finalize();
-  if (sc.isFailure()) return sc;
-
-  return StatusCode::SUCCESS;
-  
-}
 

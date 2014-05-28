@@ -74,7 +74,6 @@ public:
 
   StatusCode findTrackRegions(const LHCb::Track& muTrack,  std::vector<int>& trackRegion);
 
-  StatusCode finalize();
 
   
 protected:

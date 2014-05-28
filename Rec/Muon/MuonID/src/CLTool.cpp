@@ -76,8 +76,9 @@ CLTool::CLTool( const std::string& type,
 }
 
 StatusCode CLTool::initialize() {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  StatusCode sc = StatusCode::SUCCESS;
   m_init = StatusCode::SUCCESS;
   //check if tool has to be initialized
   for (std::vector<double>::const_iterator it=m_rangeNmuons.begin();
