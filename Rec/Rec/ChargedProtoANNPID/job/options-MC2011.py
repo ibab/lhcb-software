@@ -33,6 +33,10 @@ NTupleSvc().Output += ["ANNPIDTUPLE DATAFILE='ProtoPIDANN.MC.tuples.root' TYP='R
 from Configurables import LHCbApp
 LHCbApp().TimeStamp = True
 
+# Set the compression level for the ROOT tuple file
+from GaudiKernel.Configurable import ConfigurableGeneric as RFileCnv
+RFileCnv('RFileCnv').GlobalCompression = "LZMA:6"
+
 # Mag Down
 #DaVinci().DDDBtag   = "head-20120413"
 #DaVinci().CondDBtag = "sim-20120727-vc-md100"
