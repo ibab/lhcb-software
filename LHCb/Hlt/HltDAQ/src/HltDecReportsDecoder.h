@@ -8,6 +8,7 @@
 #include "Event/HltDecReport.h"
 
 #include "Kernel/IANNSvc.h"
+#include "Kernel/IIndexedANNSvc.h"
 
 
 /** @class HltDecReportsDecoder HltDecReportsDecoder.h
@@ -24,16 +25,16 @@ public:
   /// Standard constructor
   HltDecReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltDecReportsDecoder( ); ///< Destructor
+  ~HltDecReportsDecoder( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
   enum HeaderIDs { kVersionNumber=2 };
 
-  template <typename HDRConverter,typename I > 
-  int decodeHDR(I i, I end,  LHCb::HltDecReports& output) const ;
+  template <typename HDRConverter,typename I, typename Table > 
+  int decodeHDR(I i, I end,  LHCb::HltDecReports& output, const Table& table) const ;
 
   /// location of output
   StringProperty m_outputHltDecReportsLocation;
@@ -41,6 +42,9 @@ private:
   
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
+  IIndexedANNSvc* m_TCKANNSvc;
+
+  std::map<unsigned int, GaudiUtils::VectorMap<unsigned int, Gaudi::StringKey>> m_translationtables;
   
   /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
   UnsignedIntegerProperty m_sourceID;
