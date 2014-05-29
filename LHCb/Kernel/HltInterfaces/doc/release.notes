@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2014-05-28 - Gerhard Raven
+ - add IIndexedANNSvc interface
+
 !========================= HltInterfaces v5r0p1 2014-04-30 =========================
 ! 2014-04-18 - Gerhard Raven
  - improve check for 'eof' so that getline will not set the 'fail' bit at eof.

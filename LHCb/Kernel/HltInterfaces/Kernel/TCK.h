@@ -3,7 +3,6 @@
 #include "boost/operators.hpp"
 #include "boost/format.hpp"
 
-   //TODO: move in dedicated class in HltBase...
 class TCK : public boost::equality_comparable<TCK> {
     public:
       TCK() : m_unsigned(0) {}
