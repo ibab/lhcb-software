@@ -31,18 +31,18 @@ public:
           const std::vector<major_key_type>& majors );
   ~ANNSvc() = default;
   
-  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
-  StatusCode finalize();
+  StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown) override;
+  StatusCode finalize() override;
 
-  boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const;
-  boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const;
+  boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const override;
+  boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const override;
 
-  bool                           hasMajor(const major_key_type& major) const;
+  bool                           hasMajor(const major_key_type& major) const override;
 
-  std::vector<minor_key_type>    keys(const major_key_type& major) const;
-  std::vector<minor_value_type>  items(const major_key_type& major) const;
-  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const;
-  std::vector<major_key_type>    majors() const;
+  std::vector<minor_key_type>    keys(const major_key_type& major) const override;
+  std::vector<minor_value_type>  items(const major_key_type& major) const override;
+  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const override;
+  std::vector<major_key_type>    majors() const override;
 
 protected:
   // Call handleUndefined if an unknown key/value is requested...

@@ -3,6 +3,8 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-05-29 - Gerhard Raven
+ - add TCKANNSvc, an implementation of IIndexedANNSvc
 
 !========================= HltServices v2r2 2014-05-12 =========================
 ! 2014-04-30 - Rob Lambert / Gerhard Raven
