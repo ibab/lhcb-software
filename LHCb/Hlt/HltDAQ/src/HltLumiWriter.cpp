@@ -34,11 +34,6 @@ DECLARE_ALGORITHM_FACTORY( HltLumiWriter )
 }
 
 //=============================================================================
-// Destructor
-//=============================================================================
-HltLumiWriter::~HltLumiWriter() {}
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode HltLumiWriter::initialize() {
@@ -62,14 +57,6 @@ StatusCode HltLumiWriter::initialize() {
 }
 
 //=============================================================================
-// Restart
-//=============================================================================
-StatusCode HltLumiWriter::restart() {
-  debug() << "==> Restart" << endmsg;
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HltLumiWriter::execute() {
@@ -84,8 +71,8 @@ StatusCode HltLumiWriter::execute() {
   int totDataSize = 0;
 
   LHCb::RawEvent* rawEvent = 0;
-  std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+  auto iLoc = m_rawEventLocations.begin();
+  for ( ; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
     //    try RootInTES independent path first
     if (exist<LHCb::RawEvent>(*iLoc, false)) {
       rawEvent = get<LHCb::RawEvent>(*iLoc, false);
@@ -118,9 +105,8 @@ StatusCode HltLumiWriter::execute() {
   if ( MSG::VERBOSE >= msgLevel() ) {
     verbose() << "DATA bank : " << endreq;
     int kl = 0;
-    std::vector<unsigned int>::const_iterator itW;
 
-    for ( itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
+    for (auto  itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
       verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
       kl++;
       if ( 0 == kl%4 ) verbose() << endreq;
@@ -157,20 +143,14 @@ void HltLumiWriter::fillDataBankShort ( ) {
   LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
   debug() << m_inputBank << " found" << endmsg ;
 
-  LHCb::HltLumiSummary::ExtraInfo::iterator summaryIter;
-  LHCb::HltLumiSummary::ExtraInfo  summaryInfo = HltLumiSummary->extraInfo();
-  for (summaryIter = summaryInfo.begin(); summaryIter != summaryInfo.end(); summaryIter++) {
-    // get the key and value of the input info
-    int key = summaryIter->first;
-    int s_value = summaryIter->second;
-    // handle overflow
-    int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;
-    unsigned int word = ( key << 16 ) | ( i_value & 0xFFFF );
-    m_bank.push_back( word );
+  // handle overflow
+  auto i_value = [](int s) { return (s < 0xFFFF) ? (int) s : (int)0xFFFF; };
+  for (const auto& summaryIter : HltLumiSummary->extraInfo()) {
+    m_bank.push_back( ( summaryIter.first << 16 ) | ( i_value(summaryIter.second) & 0xFFFF ) );
     if ( MSG::VERBOSE >= msgLevel() ) {
-      verbose() << format ( " %8x %11d %11d %11d ", word, word, key, i_value ) << endreq;
+      auto word = m_bank.back();
+      verbose() << format ( " %8x %11d %11d %11d ", word, word, word>>16, word&0xFFFF ) << endreq;
     }
   }
-
 }
 //=============================================================================

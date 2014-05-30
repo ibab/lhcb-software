@@ -8,6 +8,7 @@
  - Factor out code in common between the various raw bank decoders into
    HltRawBankDecoderBase. 
  - HltSelReportsWriter: more optimizations + C++11 changes..
+ - HltLumiWriter: C++11 changes
  
 
 ! 2014-05-29 - Gerhard Raven
