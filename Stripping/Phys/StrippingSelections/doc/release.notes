@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-05-30 - Alex Pearce
+
+ - CharmFromBSemiForHadronAsy
+   Bug fix: Add charge conjugate decays to LbToLcStarMuLcToKpi{RS,WS} lines.
+   Without this patch, the stripping lines only capture Lambda_c- candidates.
+
 ! 2014-05-22 - Vanya Belyaev
 
  - PromptCharm

@@ -282,9 +282,9 @@ class CharmFromBSemiForHadronAsyAllLinesConf(LineBuilder) :
         self.PiPi_RS = PiPiMaker("PiPiRSFor"+_name,config,[self.Slowpions],['rho(770)0 -> pi+ pi-'])
         self.PiPi_WS = PiPiMaker("PiPiWSFor"+_name,config,[self.Slowpions],['rho(770)0 -> pi+ pi-','rho(770)0 -> pi+ pi+','rho(770)0 -> pi- pi-'])
 
-        self.MuPiPi_RS = MuPiPiMaker("MuPiPiRSFor"+_name,config,[self.Muons,self.PiPi_RS],['K*(892)+ -> mu+ rho(770)0'])
-        self.MuPiPi_WS = MuPiPiMaker("MuPiPiWSFor"+_name,config,[self.Muons,self.PiPi_WS],['K*(892)+ -> mu+ rho(770)0',
-                                                                                           'K*(892)+ -> mu- rho(770)0'])
+        self.MuPiPi_RS = MuPiPiMaker("MuPiPiRSFor"+_name,config,[self.Muons,self.PiPi_RS],['[K*(892)+ -> mu+ rho(770)0]cc'])
+        self.MuPiPi_WS = MuPiPiMaker("MuPiPiWSFor"+_name,config,[self.Muons,self.PiPi_WS],['[K*(892)+ -> mu+ rho(770)0]cc',
+                                                                                           '[K*(892)+ -> mu- rho(770)0]cc'])
 
         self.Lb_RS = LbMaker("LbRSFor"+_name,config,[self.MuPiPi_RS,self.LcToKpi_RS],['[Lambda_b0 -> Lambda_c+ K*(892)-]cc'])
         self.Lb_WS = LbMaker("LbWSFor"+_name,config,[self.MuPiPi_WS,self.LcToKpi_WS],['[Lambda_b0 -> Lambda_c+ K*(892)-]cc'])
