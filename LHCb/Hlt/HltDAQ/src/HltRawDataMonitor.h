@@ -47,8 +47,6 @@ protected:
   /// <0 never 0=at finalize >0 event frequency
   IntegerProperty                                                 m_diagnosticsFrequency;
 
-  IANNSvc*                                                        m_hltANNSvc;
-
 private:
 
   typedef std::pair<std::pair<std::string, AIDA::IHistogram1D*>, double>      HltSortedSelName;

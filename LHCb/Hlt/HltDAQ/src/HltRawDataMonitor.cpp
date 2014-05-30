@@ -53,7 +53,6 @@ HltRawDataMonitor::HltRawDataMonitor( const std::string& name,
   // <0 never 0=at finalize >0 event frequency
   declareProperty("DiagnosticsFrequency",  m_diagnosticsFrequency = 0);
 
-  m_hltANNSvc       =     0;
   m_bankSize        =     0;
   m_hitSize         =     0;
   m_objtypSize      =     0;
@@ -87,7 +86,6 @@ StatusCode HltRawDataMonitor::initialize() {
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
-  m_hltANNSvc                = svc<IANNSvc>("ANNDispatchSvc");
 
   m_bankSize                 = book(100, "Size of HltSelReports Raw Bank (kB)", 0., 5., 500); 
   m_hitSize                  = book(200, "Size of hits sub-bank in HltSelReports (kB)", 0., 5., 500);
