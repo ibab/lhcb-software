@@ -366,7 +366,7 @@ def generateLoginCache(mysiteroot, shell="csh", version="", targetlocation=None,
     # SetupProject. This caused errors when calling mkproject on LbScripts...  
     os.environ["CMTEXTRATAGS"] = "NO_PYTHON_LIBPATH"
 
-    os.environ["CMTCONFIG"] = "x86_64-slc5-gcc43-opt"
+    os.environ["CMTCONFIG"] = "x86_64-slc6-gcc48-opt"
     llsargs = []
     llsargs.append("--silent")
     llsargs.append("--shell=%s" % shell)
