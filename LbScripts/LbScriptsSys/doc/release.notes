@@ -1,3 +1,63 @@
+2014-05-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r0
+
+	LbConfiguration
+	* lb-run: added support to --{py,sh,csh} when falling back on SetupProject
+	* lb-run: fixed a case for fallback on SetupProject
+	* lb-dev: added a 'run' wrapper to satellite projects
+	* python/LbConfiguration/SP2.py: prototype of a new SetupProject for CMake projects
+	* python/LbConfiguration/Version.py: Change version regexp for LCGCMT to handle
+	version 68_root6  (LBCORE-490)
+	* python/LbConfiguration/Project.py: Added project Kepler (LBCORE-451)
+
+	LbUtils
+	* cmake: updated CMake support modules
+
+	LbRelease	
+	* getpack: do not call "cmt config" by default
+	* getpack: improved/fixed handling of --(no-)eclipse option
+	* LbRelease/scripts/excise_template.py: fixed permissions
+	* python/LbRelease/rcs.py: replaced svn option -N with the correct --depth version
+	* python/LbRelease/GetPack.py: added --export flag (LBCORE-396)
+	* python/LbRelease/rcs.py: allow use of 'svn export' instead of 'svn checkout' (LBCORE-396)
+	* python/LbRelease/add_DN_LFC.py: add a check on lbvobox machines
+
+	LBCORE-491: Software Database: Added tool to remove a project/version node
+	from the database (and allow re-indexing). Also added tool to check the revision
+	in the DB vs the revision in SVN.
+	* python/LbRelease/SoftConfDB/LbSdbDeleteVersion.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbCheckRevision.py
+	* scripts/lb-sdb-checkrevision
+	* scripts/lb-sdb-deletepv
+
+	LBCORE-477: Software Database: Add "verbose" option to checkUnused command of lb-sdb-query
+	and add "show" command to display relationships and attributes of a node.
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
+	LBCORE-449: Fixed to package only relevant links and files. Added protection.
+	* scripts/mkLCGCMTTarFromRPM
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGRpmExtractor.py
+
+	LBCORE-447: Add option to limit the externals packaged in LCGCMT tar
+	* scripts/buildLCGCMTFromRPM: removed
+	* scripts/mkLCGCMTTarFromRPM: Added option to include only
+	externals explicitely mentioned
+
+	New tool to package LCG_68 (provided in RPM as
+	an install_project tarball).
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGRpmExtractor.py
+	* scripts/buildLCGCMTFromRPM
+
+	LbLegacy
+  * python/LbLegacy/install_project.py:  release of LbScripts version v8r0
+	* scripts/mkLCGCMTtar: Fix to avoid using LCG_release_area
+	which now contains two directories separeted by a colon.
+
 2014-03-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r10p4
