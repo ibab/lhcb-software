@@ -37,14 +37,13 @@ public:
 		   kSourceID_MajorMask=0xE000
   };
 
-
   /// Standard constructor
   HltSelReportsWriter( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltSelReportsWriter( ); ///< Destructor
+  ~HltSelReportsWriter() override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
 
@@ -59,26 +58,6 @@ private:
   
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
-
-
-  typedef std::set<unsigned int> LhcbidSequence;
-  typedef std::vector< LhcbidSequence > LhcbidSequences;
-
-  void addToLhcbidSequences( LhcbidSequence&& set2,
-                             LhcbidSequences& lhcbidSequences ) const;
-  
-  /// for sorting ranked selections
-  // static bool sortByCLID( const LHCb::HltObjectSummary*  elem1, const LHCb::HltObjectSummary*  elem2);
-
-  class sortByCLID {
-   public:
-     bool operator() (const LHCb::HltObjectSummary*  elem1,
-                      const LHCb::HltObjectSummary*  elem2 ) const
-        {
-          if( (elem1==0) || (elem2==0) || elem1==elem2) return false;
-          return  elem1->summarizedObjectCLID() > elem2->summarizedObjectCLID();
-        }
-   };
 
 };
 

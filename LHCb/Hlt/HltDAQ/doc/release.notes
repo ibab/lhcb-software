@@ -7,6 +7,8 @@
 ! 2014-05-30 - Gerhard Raven
  - Factor out code in common between the various raw bank decoders into
    HltRawBankDecoderBase. 
+ - HltSelReportsWriter: more optimizations + C++11 changes..
+ 
 
 ! 2014-05-29 - Gerhard Raven
  - HltDecReportsDecoder now uses (if a TCK is present in the decreport rawbank)

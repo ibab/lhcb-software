@@ -24,14 +24,15 @@
 using namespace LHCb;
 
 namespace {
-  const Gaudi::StringKey InfoID{"InfoID"};
+
+const Gaudi::StringKey InfoID{"InfoID"};
 
 
 template <typename Input1,  typename Input2,
           typename Output1, typename Output2, typename Output3>
-void sets_decompose(Input1 first1, Input1 last1,
-                           Input2 first2, Input2 last2,
-                           Output1 result1, Output2 result2, Output3 result3)
+void decompose(Input1 first1, Input1 last1,
+               Input2 first2, Input2 last2,
+               Output1 result1, Output2 result2, Output3 result3)
 {
     while (first1 != last1 && first2 != last2) {
         if (*first1 < *first2) {
@@ -48,25 +49,66 @@ void sets_decompose(Input1 first1, Input1 last1,
 }
 
 template <typename S> class intersects {
-        const S& m_s;
-    public:
-        intersects(const S& s) : m_s(s) {};
+    const S& m_s;
+public:
+    intersects(const S& s) : m_s(s) {};
 
-        bool operator()(const S& s) const {
-            auto first1 = std::begin(m_s);
-            auto last1  = std::end(m_s);
-            auto first2 = std::begin(s);
-            auto last2  = std::end(s);
-            while( first1!=last1 && first2!=last2) {
-                if      (*first1<*first2)  ++first1; 
-                else if (*first2<*first1)  ++first2; 
-                else return true;
-            }
-            return false;
+    bool operator()(const S& s) const {
+        auto first1 = std::begin(m_s);
+        auto last1  = std::end(m_s);
+        auto first2 = std::begin(s);
+        auto last2  = std::end(s);
+        while( first1!=last1 && first2!=last2) {
+            if      (*first1<*first2)  ++first1; 
+            else if (*first2<*first1)  ++first2; 
+            else return true;
         }
+        return false;
+    }
 };
 template <typename S> intersects<S> intersects_( const S& s ) { return {s}; }
 
+//=============================================================================
+// this function moves (the relevant parts of) set2 into sequences
+template <typename T>
+void addToSequences( typename T::value_type&& set2, T& sequences )
+{
+  typename T::difference_type offset{ 0 };
+  while ( !set2.empty() ) {
+     auto iSet1 = std::find_if(std::next(std::begin(sequences), offset),
+                               std::end(sequences), intersects_(set2));
+     if (iSet1==std::end(sequences)) {
+        // no overlap, add everything in one shot...
+         sequences.emplace_back( std::move(set2) ); assert(set2.empty());
+     } else {
+         offset = std::distance( std::begin(sequences), iSet1 );  // start of the next iteration
+         typename T::value_type set1p,set2p,setin;
+         decompose( std::begin(*iSet1), std::end(*iSet1),
+                    std::begin(set2),   std::end(set2),
+                    std::inserter( set1p, std::end(set1p) ),  // subset of set1, not in set2
+                    std::inserter( set2p, std::end(set2p) ),  // subset of set2, not in set1 
+                    std::inserter( setin, std::end(setin) ) ) ; // intersection of set1 and set2
+         if (iSet1->size()!=setin.size()) iSet1->swap(setin); // shrink set1 to its intersection with set2 
+         if (!set1p.empty()) sequences.emplace_back( std::move(set1p) ); // add the non-overlapping part of set1
+         set2.swap(set2p);   // shrink set2 to its non-overlapping part
+     }
+  }
+}
+
+
+/// for sorting ranked selections
+// static bool sortByCLID( const LHCb::HltObjectSummary*  elem1, const LHCb::HltObjectSummary*  elem2);
+class sortByCLID {
+ public:
+   bool operator() (const LHCb::HltObjectSummary*  elem1,
+                    const LHCb::HltObjectSummary*  elem2 ) const
+      {
+        if( (elem1==0) || (elem2==0) || elem1==elem2) return false;
+        return  elem1->summarizedObjectCLID() > elem2->summarizedObjectCLID();
+      }
+};
+
+constexpr sortByCLID sortByCLID_{};
 }
 
 //-----------------------------------------------------------------------------
@@ -94,10 +136,6 @@ HltSelReportsWriter::HltSelReportsWriter( const std::string& name,
   declareProperty("SourceID",
     m_sourceID= kSourceID_Dummy );  
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltSelReportsWriter::~HltSelReportsWriter() {} 
 
 //=============================================================================
 // Initialization
@@ -114,8 +152,6 @@ StatusCode HltSelReportsWriter::initialize() {
     m_sourceID = m_sourceID & kSourceID_Max;
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
   }
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -163,17 +199,22 @@ StatusCode HltSelReportsWriter::execute() {
   // --------------------------------------------------------------------------------------
 
   // lhcbid sequences - recognize common hit sequences
+  using LhcbidSequences = std::vector<std::vector<unsigned int>>;
   LhcbidSequences lhcbidSequences;
   for( const auto&  hos : *objectSummaries ) {
-    if( hos->lhcbIDs().empty() ) continue;
-    LhcbidSequence thisIDset; // in C++14 set will have  a constructor from a range...
-    for( const auto&  hit : hos->lhcbIDs() ) thisIDset.emplace( hit.lhcbID() );
-    addToLhcbidSequences( std::move(thisIDset), lhcbidSequences );
+    const auto&  ids = hos->lhcbIDs();
+    if ( ids.empty() ) continue;
+    LhcbidSequences::value_type thisIDset;
+    thisIDset.reserve( ids.size() );
+    std::transform( std::begin(ids), std::end(ids),
+                    std::inserter(thisIDset, std::end(thisIDset)),
+                    std::mem_fn(&LHCbID::lhcbID));
+    addToSequences( std::move(thisIDset), lhcbidSequences );
   }
 
   auto nHits = std::accumulate(
       std::begin(lhcbidSequences), std::end(lhcbidSequences), 0u,
-      [](unsigned int n, const LhcbidSequence &s) { return n += s.size(); });
+      [](unsigned int n, LhcbidSequences::const_reference s) { return n += s.size(); });
 
   if( lhcbidSequences.size()/2 + 1 + nHits >  0xFFFFL  ){
     std::ostringstream mess;
@@ -192,11 +233,11 @@ StatusCode HltSelReportsWriter::execute() {
   // -------------------------------- sort them -------------------------------------------
 
   std::vector<const HltObjectSummary*> sortedHosPtrs( objectSummaries->begin(),objectSummaries->end() );
-  std::sort( std::begin(sortedHosPtrs), std::end(sortedHosPtrs), sortByCLID() );
+  std::sort( std::begin(sortedHosPtrs), std::end(sortedHosPtrs), sortByCLID_ );
   // inverse mapping
   std::vector< unsigned int > fromIndexToNewIndex(sortedHosPtrs.size());
   for( auto ppHos= std::begin(sortedHosPtrs); ppHos != std::end(sortedHosPtrs); ++ppHos ){
-    fromIndexToNewIndex[ (*ppHos)->index() ] = int(ppHos - std::begin(sortedHosPtrs));
+    fromIndexToNewIndex[ (*ppHos)->index() ] = ppHos - std::begin(sortedHosPtrs);
   }
 
   // --------------------------------------------------------------------------------------
@@ -244,20 +285,20 @@ StatusCode HltSelReportsWriter::execute() {
              << " nInfo=" << nStdInfo << " No Std Info will be saved!";        
         Error( mess.str(), StatusCode::SUCCESS, 50 );
         // save only selection IDs
-        nStdInfo=0;  
-        for( auto  iObj= sortedHosPtrs.begin(); iObj != sortedHosPtrs.end(); ++iObj ){
-          const HltObjectSummary & hos = **iObj;
-          if( hos.summarizedObjectCLID() == 1 ){
-            for( const auto&  i : hos.numericalInfo() ) {
-              if( i.first.find("#")!=std::string::npos ){
-                ++nStdInfo;        
-              }
+        nStdInfo = std::accumulate( std::begin(sortedHosPtrs), std::end(sortedHosPtrs), 
+                                    0 , [](int n, const HltObjectSummary* hos) {
+            if( hos->summarizedObjectCLID() == 1 ) {
+                const auto&  ni = hos->numericalInfo();
+                n+=std::count_if( std::begin(ni), std::end(ni),
+                               [](HltObjectSummary::Info::const_reference i) { 
+                    return i.first.find("#")!=std::string::npos ; 
+                } );
             }
-          }
-        }  
+            return n;
+        } );
         if( !stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo ) ){
           Error( "Cannot save even selectionIDs - expect a fatal error", StatusCode::SUCCESS, 50 );
-        }        
+        }
   }
 
   // associate objects with hit sequences, or do simple substructure
@@ -309,29 +350,23 @@ StatusCode HltSelReportsWriter::execute() {
     HltSelRepRBSubstr::Substrv svect;
     unsigned int sHitType=0;    
 
-    if( hos->substructure().size() ){
-      // substructure 
-      for( auto iS=hos->substructure().begin(); iS!=hos->substructure().end(); ++iS ){
-        svect.push_back( fromIndexToNewIndex[ (*iS)->index() ] );
-      }
+    const auto& subs = hos->substructure();
+    if( !subs.empty() ){
+      std::transform( std::begin(subs), std::end(subs), 
+                      std::back_inserter(svect),
+                      [&](const SmartRef<LHCb::HltObjectSummary>& i) { return fromIndexToNewIndex[ i->index() ] ; } );
     } else if( !hos->lhcbIDs().empty() ) {
       // hits
       sHitType=1;
-      
-      LhcbidSequence thisIDset;
-      for( const auto&  hit : hos->lhcbIDs() ) thisIDset.insert( hit.lhcbID() );
-    
-      unsigned int iSeqID(0);  
+      unsigned int iSeqID(0);
       for( const auto&  hitset :  lhcbidSequences) {
-        if( thisIDset.find( *hitset.begin() ) != std::end(thisIDset) ){
-          svect.push_back( iSeqID );          
-        }
+        if ( std::binary_search( std::begin(hos->lhcbIDs()), std::end(hos->lhcbIDs()),  LHCbID{hitset.front()} )) svect.push_back( iSeqID );
         ++iSeqID;
       }
     }
 
-    HltSelRepRBSubstr::Substr aS( sHitType, svect );
-    if( !substrSubBank.push_back( aS ) ){
+    
+    if( !substrSubBank.push_back( { sHitType, std::move(svect) } ) ) {
       hitsSubBank.deleteBank();    
       objTypSubBank.deleteBank();
       substrSubBank.deleteBank();
@@ -339,8 +374,7 @@ StatusCode HltSelReportsWriter::execute() {
       extraInfoSubBank.deleteBank();
       return Error("Exceeded maximal size of substructure-subbank. HltSelReports RawBank cannot be created"
                    , StatusCode::SUCCESS, 50 );
-    } 
-      
+    }
   }
 
   // ----------- create HltSelReports bank body and insert subbanks to it
@@ -374,40 +408,32 @@ StatusCode HltSelReportsWriter::execute() {
   // insert the bank into the RawEvent
   hltSelReportsBank.saveSize();
 
-
   // delete any previously inserted sel reports with the same major sourceID
-  const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
-  for( std::vector<RawBank*>::const_iterator b=hltselreportsRawBanks.begin();
-       b!=hltselreportsRawBanks.end(); ++b){
-    unsigned int sourceID=kSourceID_Hlt;
-    if( (*b)->version() > 1 ){
-      sourceID = (*b)->sourceID() >> kSourceID_BitShift;
+  const auto& hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
+  for( const auto&  b : hltselreportsRawBanks ) {
+    unsigned int sourceID = kSourceID_Hlt;
+    if( b->version() > 1 ) {
+      sourceID = b->sourceID() >> kSourceID_BitShift;
     }
     if( m_sourceID != sourceID )continue;
 
-    rawEvent->removeBank(*b);
-    if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
-
-    }    
+    rawEvent->removeBank(b);
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
   }
 
-  //    std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[0]), 
-  //                                        &(hltSelReportsBank.location()[hltSelReportsBank.size()]) );
-  //  rawEvent->addBank(  0, RawBank::HltSelReports, kVersionNumber, bankBody );
-  //
   // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.
   // Save in chunks if exceed this size.
   int nBank = (hltSelReportsBank.size()-1)/16300 + 1;
   if( nBank > kSourceID_MinorMask ){
     // delete the main bank
     hltSelReportsBank.deleteBank();
-    // 
     return Error("HltSelReports too long to save", StatusCode::SUCCESS, 50 );    
   }
   for(int iBank=0; iBank < nBank; ++iBank ){
     int ioff=iBank*16300;
     int isize=hltSelReportsBank.size()-ioff;
     if( isize > 16300 )isize=16300;	
+    //TODO: can we avoid making a copy into bankBody??? ( call adoptBank( createBank( ... ) ) ? )
     std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[ioff]), 
                                           &(hltSelReportsBank.location()[ioff+isize]) );
     int sourceID = iBank | ( m_sourceID << kSourceID_BitShift );
@@ -420,49 +446,16 @@ StatusCode HltSelReportsWriter::execute() {
   }
     
   if ( msgLevel(MSG::VERBOSE) ){
-
     // print created bank and subbanks inside
     verbose() << hltSelReportsBank << endmsg;
-    
     verbose() << HltSelRepRBHits( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kHitsID ) ) << endmsg;
     verbose() << HltSelRepRBObjTyp( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kObjTypID ) ) << endmsg;
     verbose() << HltSelRepRBSubstr( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kSubstrID ) ) << endmsg;
     verbose() << HltSelRepRBStdInfo( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kStdInfoID ) ) << endmsg;
     verbose() << HltSelRepRBExtraInfo( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kExtraInfoID ) ) << endmsg;
-
   } 
   
-    
   // delete the main bank
   hltSelReportsBank.deleteBank();
-
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// this function moves (the relevant parts of) set2 into lhcbidSequences
-
-void  HltSelReportsWriter::addToLhcbidSequences( LhcbidSequence&& set2,
-                                                 LhcbidSequences& lhcbidSequences ) const
-{
-  LhcbidSequences::difference_type offset{ 0 };
-  while ( !set2.empty() ) {
-     auto iSet1 = std::find_if(std::begin(lhcbidSequences)+offset,std::end(lhcbidSequences), intersects_( set2 ));
-     if (iSet1==std::end(lhcbidSequences)) {
-        // no overlap, add everything in one shot...
-       lhcbidSequences.emplace_back( std::move(set2) );
-       assert(set2.empty());
-       break;
-     }
-     offset = std::distance( std::begin(lhcbidSequences), iSet1 );  // start of the next iteration
-     LhcbidSequence set1p,set2p,setin;
-     sets_decompose( std::begin(*iSet1), std::end(*iSet1),
-                     std::begin(set2),   std::end(set2),
-                     std::inserter( set1p, std::end(set1p) ),  // subset of set1, not in set2
-                     std::inserter( set2p, std::end(set2p) ),  // subset of set2, not in set1 
-                     std::inserter( setin, std::end(setin) ) ) ; // intersection of set1 and set2
-     if (iSet1->size()!=setin.size()) iSet1->swap(setin); // shrink set1 to its intersection with set2 
-     if (!set1p.empty()) lhcbidSequences.emplace_back( std::move(set1p) ); // add the non-overlapping part of set1
-     set2.swap(set2p);   // shrink set2 to its non-overlapping part
-  }
 }
