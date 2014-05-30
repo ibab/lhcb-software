@@ -1,5 +1,5 @@
 package LbRelease
-version v4r16p3
+version v5r0
 
 use LbUtils v*
 use LbConfiguration v*

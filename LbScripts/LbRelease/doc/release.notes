@@ -1,3 +1,7 @@
+2014-05-30  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r0
+
 2014-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: do not call "cmt config" by default
@@ -24,8 +28,6 @@
 	* python/LbRelease/SoftConfDB/LbSdbCheckRevision.py
 	* scripts/lb-sdb-checkrevision
 	* scripts/lb-sdb-deletepv
-
-
 
 2014-04-30  Ben Couturier <Ben.Couturier@cern.ch>
 
