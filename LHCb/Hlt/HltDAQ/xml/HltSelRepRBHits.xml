@@ -25,7 +25,7 @@ Then sequences must be pushed back in the sequencial order.'
      <import name='vector' std='TRUE' />
 
      <typedef 
-       type = "std::set&lt; unsigned int &gt; "
+       type = "std::vector&lt; unsigned int &gt; "
        def  = "value_type"
        desc = "type, without const and reference, used as argument to push_back; needed to make push_back work with std::back_inserter"
        access = "PUBLIC"
@@ -206,9 +206,9 @@ Then sequences must be pushed back in the sequencial order.'
           //doesn't work on WIN32  return (std::vector&lt; LHCbID &gt;(sequenceBegin(iSeq),sequenceEnd(iSeq)));
 	  std::vector&lt; LHCbID &gt; hitseq;
 	  unsigned int* iend=sequenceEnd(iSeq);
-	  for(unsigned int* i=sequenceBegin(iSeq);i!=iend;++i){
-	        hitseq.push_back( LHCbID( *i ) );
-	  }
+	  unsigned int* i=sequenceBegin(iSeq);
+      hitseq.reserve(  iend - i );
+	  for(;i!=iend;++i) hitseq.emplace_back( *i );
 	  return hitseq;
         </code>
       </method>
