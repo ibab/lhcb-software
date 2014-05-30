@@ -32,15 +32,14 @@ using namespace LHCb;
 
 
 // It is stupid to have to instantiate this
-StandardPacker pac;
+const StandardPacker pac;
 
 void
 encodeTracks(const LHCb::Tracks* tracks,
 	     std::vector<unsigned int>& rawBank){
 
   //std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
-  for(LHCb::Tracks::const_iterator  pItr = tracks->begin(); tracks->end() != pItr; ++pItr){
-      LHCb::Track* Tr = (*pItr);
+  for(const LHCb::Track *Tr : *tracks ) {
 
       // write meta information
       // flags
@@ -52,9 +51,11 @@ encodeTracks(const LHCb::Tracks* tracks,
 
       // write LHCbIDs
       // behold the awesomness of C++11 functional programming
-      // here use the C++ "map" functional transform together with a C++ Lambda construct to fill the LHCbIDs into the bank
+      // here use the C++ "map" functional transform to fill the LHCbIDs into the bank
       assert(nhits == Tr->lhcbIDs().size());
-      transform(Tr->lhcbIDs().begin(),Tr->lhcbIDs().end(),std::back_inserter(rawBank),[](const LHCb::LHCbID& id){ return id.lhcbID(); });
+      std::transform( std::begin(Tr->lhcbIDs()),std::end(Tr->lhcbIDs()),
+                      std::back_inserter(rawBank),
+                      std::mem_fn( &LHCb::LHCbID::lhcbID ) );
      
       // write states
       // check number of states on track
@@ -91,12 +92,11 @@ encodeTracks(const LHCb::Tracks* tracks,
 
 
       // get errors for scaling
-       std::vector<double> err;
-       err.push_back( std::sqrt( state->errX2() ) );
-       err.push_back( std::sqrt( state->errY2() ) );
-       err.push_back( std::sqrt( state->errTx2() ) );
-       err.push_back( std::sqrt( state->errTy2() ) );
-       err.push_back( std::sqrt( state->errQOverP2() ) );
+       std::array<double,5> err = { std::sqrt( state->errX2() ) ,
+                                    std::sqrt( state->errY2() ),
+                                    std::sqrt( state->errTx2() ),
+                                    std::sqrt( state->errTy2() ),
+                                    std::sqrt( state->errQOverP2() ) };
        // first store the diagonal then row wise the rest
        
        unsigned int cov_00 = pac.position( err[0] );rawBank.push_back(cov_00);
@@ -104,33 +104,24 @@ encodeTracks(const LHCb::Tracks* tracks,
        unsigned int cov_22 = pac.slope   ( err[2] );rawBank.push_back(cov_22);
        unsigned int cov_33 = pac.slope   ( err[3] );rawBank.push_back(cov_33);
        unsigned int cov_44 = pac.energy  ( 1.e5 * fabs(p) * err[4] ); rawBank.push_back(cov_44); //== 1.e5 * dp/p (*1.e2)
-       unsigned int cov_10 = pac.fraction( state->covariance()(1,0)/err[1]/err[0] ); rawBank.push_back(cov_10);
-       unsigned int cov_20 = pac.fraction( state->covariance()(2,0)/err[2]/err[0] ); rawBank.push_back(cov_20);
-       unsigned int cov_21 = pac.fraction( state->covariance()(2,1)/err[2]/err[1] ); rawBank.push_back(cov_21);
-       unsigned int cov_30 = pac.fraction( state->covariance()(3,0)/err[3]/err[0] ); rawBank.push_back(cov_30);
-       unsigned int cov_31 = pac.fraction( state->covariance()(3,1)/err[3]/err[1] ); rawBank.push_back(cov_31);
-       unsigned int cov_32 = pac.fraction( state->covariance()(3,2)/err[3]/err[2] ); rawBank.push_back(cov_32);
-       unsigned int cov_40 = pac.fraction( state->covariance()(4,0)/err[4]/err[0] ); rawBank.push_back(cov_40);
-       unsigned int cov_41 = pac.fraction( state->covariance()(4,1)/err[4]/err[1] ); rawBank.push_back(cov_41);
-       unsigned int cov_42 = pac.fraction( state->covariance()(4,2)/err[4]/err[2] ); rawBank.push_back(cov_42);
-       unsigned int cov_43 = pac.fraction( state->covariance()(4,3)/err[4]/err[3] ); rawBank.push_back(cov_43);
-       
+       for (unsigned i=1;i<5;++i) for (unsigned j=0;j<i;++j) {
+           rawBank.push_back( pac.fraction( state->covariance()(i,j)/err[i]/err[j] ) );
       } //  end loop over states
 
   }
   //rawBank.push_back(0);
   //std::copy(rawBank.begin(), rawBank.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
   
-  
+    }  
   
 }
 
 
-unsigned int
 // returns number of decoded tracks
+unsigned int
 decodeTracks(unsigned int* rawBankData,
 	     unsigned int nentries,
-	     LHCb::Tracks* tracks){
+	     LHCb::Tracks* tracks) {
   // due to the way the RawBank presents ist data we have 
   // to loop over the data in the old fashioned way
   // so we use a pointer"iterator"
@@ -150,8 +141,8 @@ decodeTracks(unsigned int* rawBankData,
     track->setFlags(flags);
 
     for(unsigned int i=0;i<nid;i++){
-      track->addToLhcbIDs(LHCbID(rawit[k]));
-      ++k; //rawit+=sizeof(unsigned int);
+      track->addToLhcbIDs(LHCbID(rawit[k++]));
+       //rawit+=sizeof(unsigned int);
     }
 
     // read number of states
@@ -190,31 +181,19 @@ decodeTracks(unsigned int* rawBankData,
       Gaudi::TrackSymMatrix stateCov;
 
       //== Fill covariance matrix
-      const double err0 = pac.position( (int) rawit[k++] );
-      const double err1 = pac.position( (int) rawit[k++] );
-      const double err2 = pac.slope   ( (int) rawit[k++] );
-      const double err3 = pac.slope   ( (int) rawit[k++] );
-      const double err4 = pac.energy  ( (int) rawit[k++] ) * fabs(par[4]) * 1.e-5; // par[4]=1/p
-      
-      stateCov(0,0) = err0 * err0;
-      stateCov(1,1) = err1 * err1;
-      stateCov(2,2) = err2 * err2;
-      stateCov(3,3) = err3 * err3;
-      stateCov(4,4) = err4 * err4;
-      stateCov(1,0) = err1 * err0 * pac.fraction( (short int) rawit[k++] );
-      stateCov(2,0) = err2 * err0 * pac.fraction( (short int) rawit[k++] );
-      stateCov(2,1) = err2 * err1 * pac.fraction( (short int) rawit[k++] );
-      stateCov(3,0) = err3 * err0 * pac.fraction( (short int) rawit[k++] );
-      stateCov(3,1) = err3 * err1 * pac.fraction( (short int) rawit[k++] );
-      stateCov(3,2) = err3 * err2 * pac.fraction( (short int) rawit[k++] );
-      stateCov(4,0) = err4 * err0 * pac.fraction( (short int) rawit[k++] );
-      stateCov(4,1) = err4 * err1 * pac.fraction( (short int) rawit[k++] );
-      stateCov(4,2) = err4 * err2 * pac.fraction( (short int) rawit[k++] );
-      stateCov(4,3) = err4 * err3 * pac.fraction( (short int) rawit[k++] );
+      std::array<double,5> err = { pac.position( (int) rawit[k++] ),
+                                   pac.position( (int) rawit[k++] ),
+                                   pac.slope   ( (int) rawit[k++] ),
+                                   pac.slope   ( (int) rawit[k++] ),
+                                   pac.energy  ( (int) rawit[k++] ) * fabs(par[4]) * 1.e-5  // par[4]=1/p
+                                 } ; 
+                         
+      for (unsigned i=0;i<5;++i) stateCov(i,i) = err[i]*err[i];
+      for (unsigned i=1;i<5;++i) for (unsigned j=0;j<i;++j) 
+                                 stateCov(i,j) = err[i]*err[j]*pac.fraction( (short int) rawit[k++] );
       
       track->addToStates(LHCb::State(par,stateCov,z,loc));
     } // end loop over states
-
    
     tracks->add(track);
     //std::cout << "RawBank entry counter k= " << k << std::endl;
@@ -223,5 +202,3 @@ decodeTracks(unsigned int* rawBankData,
 
   return tracks->size();
 }
-
-

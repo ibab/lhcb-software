@@ -63,8 +63,6 @@ StatusCode HltTrackReportsDecoder::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  
-  //m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
 
   if( m_sourceID > HltTrackReportsWriter::kSourceID_Max ){
     m_sourceID = m_sourceID & HltTrackReportsWriter::kSourceID_Max;
