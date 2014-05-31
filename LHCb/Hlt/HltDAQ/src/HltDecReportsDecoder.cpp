@@ -85,7 +85,7 @@ StatusCode HltDecReportsDecoder::execute() {
   
   std::vector<const RawBank*> hltdecreportsRawBanks = selectRawBanks( RawBank::HltDecReports );
   if ( hltdecreportsRawBanks.empty() ) {
-    return Error(" Could not find HltDecReports raw bank. Returning empty HltDeccReports .",StatusCode::FAILURE );
+    return Error(" Could not find HltDecReports raw bank. Returning empty HltDeccReports.");
   }
   if( hltdecreportsRawBanks.size() != 1 ){
     Warning(" More then one HltDecReports RawBanks for requested SourceID in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );

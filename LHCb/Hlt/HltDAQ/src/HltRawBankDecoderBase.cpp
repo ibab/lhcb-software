@@ -29,7 +29,7 @@ StatusCode HltRawBankDecoderBase::initialize()
     StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
     m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
     m_TCKANNSvc = svc<IIndexedANNSvc>("TCKANNSvc");
-    if( m_sourceID > HltRawBankDecoderBase::kSourceID_Max ){
+    if ( m_sourceID > HltRawBankDecoderBase::kSourceID_Max ){
         return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
     }
     return sc;
