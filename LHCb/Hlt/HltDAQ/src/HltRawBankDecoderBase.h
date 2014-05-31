@@ -20,7 +20,19 @@ public:
 
     std::vector<const LHCb::RawBank*> selectRawBanks( LHCb::RawBank::BankType ) const;
 
-    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& id2string(unsigned int tck) const {
+    class element_t {
+        Gaudi::StringKey m_key;
+        bool             m_decode;
+    public:
+        element_t( Gaudi::StringKey key, bool decode ) 
+            : m_key{ std::move(key) }, m_decode{ decode } 
+        {}
+        operator const Gaudi::StringKey& () const { return m_key; }
+        operator const std::string&() const { return m_key.str(); }
+        bool operator!() const { return !m_decode; }
+    };
+
+    const GaudiUtils::VectorMap<int,element_t>& id2string(unsigned int tck) const {
         auto itbl =  m_idTable.find(tck) ;
         if ( itbl  == std::end(m_idTable) ) itbl = fetch_id2string(tck);
         return itbl->second;
@@ -36,9 +48,12 @@ private:
     IANNSvc* m_hltANNSvc;
     IIndexedANNSvc* m_TCKANNSvc;
 
+
+
+    using IdTable_t =  GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, element_t>>;
     using Table_t =  GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, Gaudi::StringKey>>;
-    mutable Table_t m_idTable;
-    Table_t::const_iterator fetch_id2string(unsigned int tck) const;
+    mutable IdTable_t m_idTable;
+    IdTable_t::const_iterator fetch_id2string(unsigned int tck) const;
     mutable Table_t m_infoTable;
     Table_t::const_iterator fetch_info2string(unsigned int tck) const;
     

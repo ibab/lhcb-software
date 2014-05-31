@@ -149,13 +149,13 @@ int HltDecReportsDecoder::decodeHDR(I i, I end,  HltDecReports& output, const Ta
       mess << " No string key found for trigger decision in storage id = " << id;
       Error(mess.str(), StatusCode::FAILURE, 50 ).ignore();
       ++ret;
-    } else if (!isel->second.empty() ){  // has a non-zero string -- insert!!
+    } else if (!!isel->second){  // has a non-zero string -- insert!!
         // debug() << " adding " << id << " as " << isel->second << endmsg;
         if( !output.insert( isel->second, dec ).isSuccess() ) {
           Error(" Duplicate decision report in storage "+std::string(isel->second), StatusCode::FAILURE, 20 ).ignore();
           ++ret;
         }
-    }  // otherwise, present, but empty string -- do nothing, and skip!!
+    }  // otherwise, present, but should be skipped
    }
    return ret;
 }

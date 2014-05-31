@@ -4,11 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
-#include "DAQKernel/DecoderAlgBase.h"
-
-#include "Kernel/IANNSvc.h"
-
+#include "HltRawBankDecoderBase.h"
 
 /** @class HltSelReportsDecoder HltSelReportsDecoder.h
  *  
@@ -19,19 +15,17 @@
  *  Algorithm to read HltSelReports from Raw Data and create containers on TES
  *
  */
-class HltSelReportsDecoder : public Decoder::AlgBase {
+
+class HltSelReportsDecoder : public HltRawBankDecoderBase {
 public: 
 
   enum HeaderIDs { kVersionNumber=2 };
 
   /// Standard constructor
   HltSelReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
-
   ~HltSelReportsDecoder( ) override = default; ///< Destructor
 
-  StatusCode initialize() override;    ///< Algorithm initialization
   StatusCode execute   () override;    ///< Algorithm execution
-  StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
 
@@ -44,8 +38,6 @@ private:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
 
-  /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
-  UnsignedIntegerProperty m_sourceID;
 
 };
 

@@ -87,21 +87,19 @@ HltRawBankDecoderBase::tck() const {
 }
 
 
-HltRawBankDecoderBase::Table_t::const_iterator
+HltRawBankDecoderBase::IdTable_t::const_iterator
 HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
 {
-        Table_t::mapped_type tbl;
+        IdTable_t::mapped_type tbl;
 
-        // TODO: replace empty string with a dedicate 'do not decode' bool field, and always return a non-empty string!
-        //       i..e make a tuple of 'int','string','bool'... -- or a dedicated struct (even better)
-        auto append0 =  [&]( const Gaudi::StringKey& id, bool fill ) { 
+        auto append0 =  [&]( const Gaudi::StringKey& id, bool decode ) { 
                for ( const auto& item : m_hltANNSvc->item_map( id ) ) {
-                   tbl.insert( { item.second, fill ? item.first : Gaudi::StringKey{}  } );
+                   tbl.insert( { item.second, { item.first , decode }  } );
                }
         };
-        auto append1 =  [&]( const Gaudi::StringKey& id, bool fill ) { 
+        auto append1 =  [&]( const Gaudi::StringKey& id, bool decode ) { 
                for ( const auto& item : m_TCKANNSvc->i2s( tck,  id ) ) {
-                   tbl.insert( { item.first, fill ? item.second : Gaudi::StringKey{} } ); // TODO: check for clashes...
+                   tbl.insert( { item.first, { item.second , decode  } } ); // TODO: check for clashes...
                }
         };
 

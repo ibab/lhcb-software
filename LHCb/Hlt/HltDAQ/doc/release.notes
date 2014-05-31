@@ -11,6 +11,7 @@
  - HltDecReportsDecoder: for backwards compatibility, if we cannot find a RawEvent,
                          or RawEvent does not contain a HltDecReportsRawbank, put
                          an empty HltDecReports onto the TES, print error, and return
+ - update HltSelReportsDecoder to use HltRawBankdDecoderBase
  
 ! 2014-05-30 - Gerhard Raven
  - Factor out code in common between the various raw bank decoders into

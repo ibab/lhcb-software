@@ -101,10 +101,10 @@ StatusCode HltVertexReportsDecoder::execute() {
       continue;
     }
     // skip reports if of wrong type
-    if( value->second.empty() ) {
+    if( !value->second ) {
 	    i += nVert * ( bankVersionNumber == 0 ? 5 : 11 ); // would have been nice to have a size / vtx in the bank...
 	    continue;
-    } 
+    }
 
     // create output container for vertices and put it on TES
     VertexBase::Container* verticesOutput = new VertexBase::Container();
