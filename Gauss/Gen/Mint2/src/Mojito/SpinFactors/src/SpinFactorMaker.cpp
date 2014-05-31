@@ -172,7 +172,7 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy, char SPD_Wave, const
     }
    
     // final state vector
-    if( equalBySVPAT(SF_BtoAV0_AtoVP1_VtoP2P3::getExampleDecay(), thisDcy) ){
+    if( equalBySVPAT_L(SF_BtoAV0_AtoVP1_VtoP2P3::getExampleDecay(), thisDcy) ){
         if(dbThis){
             std::cout << "found a spin factor for this decay:\n" 
             << thisDcy << std::endl;

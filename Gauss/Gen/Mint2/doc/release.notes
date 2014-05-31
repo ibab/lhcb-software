@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-05-31 - Philippe d'Argent
+- Fits with weighted events implemented
+- Added new decay tree 
+
 2014-05-13 - Philippe d'Argent
  - SpinFactor class returns complex instead of double
  - new class polVector that implements polarization vector of a massive spin 1 particle

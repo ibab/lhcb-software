@@ -727,6 +727,15 @@ int NamedDecayTreeList::makeJpsiKpipiList(){
     this->add(AmpInitialiser(*dk, "MINUS"));    
     delete dk;
     
+    // B->J/Psi K1(1270); K1-> kappa(800) pi; K0^*->K pi  
+    dk = new DecayTree(521);
+    dk->addDgtr(443, 10323)->addDgtr(211, 900311)->addDgtr(321,-211);
+    this->add(*dk);
+    this->add(AmpInitialiser(*dk, "PLUS"));
+    this->add(AmpInitialiser(*dk, "ZERO"));
+    this->add(AmpInitialiser(*dk, "MINUS"));    
+    delete dk;
+    
     // B->J/psi K1(1400); K1->K*(892) pi; K*->K pi  
     dk = new DecayTree(521);
     dk->addDgtr(443, 20323)->addDgtr(211, 313)->addDgtr(321,-211);

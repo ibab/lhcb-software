@@ -156,19 +156,26 @@ namespace MINT{
 		  << std::endl;
       }
       unsigned int counter=0;
+      double sumweights=0.0;
+      double sumsquareweights=0.0;
+      
       for(counter=0; counter < _eventList.size(); ++counter){
-	//EVENT_TYPE & evt( (*_eventList)[counter] );
-	// sum += logPdf((*_eventList)[counter]);
-	sum += logPdf(counter);
+          //EVENT_TYPE & evt( (*_eventList)[counter] );
+          // sum += logPdf((*_eventList)[counter]);
+          double weight = _eventList[counter].getWeight();
+          sum += weight*logPdf(counter);
+          sumweights+=weight;
+          sumsquareweights+=weight*weight;
       }
       
       if(printout){
-	std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
-		  << "for " << counter
+          std::cout << "Neg2LLClass::getVal after " << _NCalls << " calls."
+          << "for " << counter
 		  << " events, I'm about to return " 
-		  << -2.0*sum << std::endl;
+		  << -2.0*sum*fabs(sumweights/sumsquareweights) << std::endl;
+          std::cout   << "Sum of weights = " << sumweights << std::endl;
       }
-      return -2.* sum;
+      return -2.* sum*fabs(sumweights/sumsquareweights);
     }
     
     virtual double getNewVal(){
