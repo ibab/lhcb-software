@@ -86,12 +86,11 @@ HltRawBankDecoderBase::tck() const {
     return 0;
 }
 
-const GaudiUtils::VectorMap<int,Gaudi::StringKey>&
-HltRawBankDecoderBase::id2string(unsigned int tck) const
+
+HltRawBankDecoderBase::Table_t::const_iterator
+HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
 {
-    auto itbl =  m_idTable.find(tck) ;
-    if ( itbl  == std::end(m_idTable) ) {
-        typename decltype(m_idTable)::mapped_type tbl;;
+        Table_t::mapped_type tbl;
 
         // TODO: replace empty string with a dedicate 'do not decode' bool field, and always return a non-empty string!
         //       i..e make a tuple of 'int','string','bool'... -- or a dedicated struct (even better)
@@ -118,17 +117,13 @@ HltRawBankDecoderBase::id2string(unsigned int tck) const
         } 
         auto res = m_idTable.insert( tck, tbl );
         assert(res.second);
-        itbl = res.first;
-    }
-    return itbl->second;
+        return res.first;
 }
 
-const GaudiUtils::VectorMap<int,Gaudi::StringKey>&
-HltRawBankDecoderBase::info2string(unsigned int tck) const
+HltRawBankDecoderBase::Table_t::const_iterator
+HltRawBankDecoderBase::fetch_info2string(unsigned int tck) const
 {
-    auto itbl =  m_infoTable.find(tck) ;
-    if ( itbl  == std::end(m_infoTable) ) {
-        typename decltype(m_infoTable)::mapped_type tbl;;
+        Table_t::mapped_type tbl;
 
         auto append0 =  [&]( const Gaudi::StringKey& id ) { 
                for ( const auto& item : m_hltANNSvc->item_map( id ) ) {
@@ -149,7 +144,5 @@ HltRawBankDecoderBase::info2string(unsigned int tck) const
         } 
         auto res = m_infoTable.insert( tck, tbl );
         assert(res.second);
-        itbl = res.first;
-    }
-    return itbl->second;
+        return  res.first;
 }

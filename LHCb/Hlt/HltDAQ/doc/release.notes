@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-05-31 - Gerhard Raven
+ - update HltVertexReportsDecoder to use HltRawBankDecoderBase
+ - tiny optimization of HltRawBankDecoderBase
+ 
 ! 2014-05-30 - Gerhard Raven
  - Factor out code in common between the various raw bank decoders into
    HltRawBankDecoderBase. 

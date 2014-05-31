@@ -17,17 +17,30 @@ public:
     HltRawBankDecoderBase( const std::string& name, ISvcLocator* pSvcLocator);
     ~HltRawBankDecoderBase() override;
     StatusCode initialize() override;
+
     std::vector<const LHCb::RawBank*> selectRawBanks( LHCb::RawBank::BankType ) const;
-    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& id2string(unsigned int tck) const;
-    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& info2string(unsigned int tck) const;
+
+    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& id2string(unsigned int tck) const {
+        auto itbl =  m_idTable.find(tck) ;
+        if ( itbl  == std::end(m_idTable) ) itbl = fetch_id2string(tck);
+        return itbl->second;
+    };
+    const GaudiUtils::VectorMap<int,Gaudi::StringKey>& info2string(unsigned int tck) const {
+        auto itbl =  m_infoTable.find(tck) ;
+        if ( itbl  == std::end(m_infoTable) ) itbl = fetch_info2string(tck);
+        return itbl->second;
+    }
     unsigned int tck() const;
 
 private:
     IANNSvc* m_hltANNSvc;
     IIndexedANNSvc* m_TCKANNSvc;
 
-    mutable GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, Gaudi::StringKey>> m_idTable;
-    mutable GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, Gaudi::StringKey>> m_infoTable;
+    using Table_t =  GaudiUtils::VectorMap<unsigned int, GaudiUtils::VectorMap<int, Gaudi::StringKey>>;
+    mutable Table_t m_idTable;
+    Table_t::const_iterator fetch_id2string(unsigned int tck) const;
+    mutable Table_t m_infoTable;
+    Table_t::const_iterator fetch_info2string(unsigned int tck) const;
     
     /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
     UnsignedIntegerProperty m_sourceID;
