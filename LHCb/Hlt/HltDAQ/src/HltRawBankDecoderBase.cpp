@@ -71,7 +71,7 @@ HltRawBankDecoderBase::selectRawBanks( LHCb::RawBank::BankType reqType ) const
       } );
   }
     return mybanks;
-};
+}
 
 unsigned int 
 HltRawBankDecoderBase::tck() const {
