@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-01 - Gerhard Raven
+ - print out only one line if the relevant rawbank / rawevent cannot be found
+
 ! 2014-05-31 - Gerhard Raven
  - update HltVertexReportsDecoder to use HltRawBankDecoderBase
  - tiny optimization of HltRawBankDecoderBase

@@ -39,15 +39,10 @@ std::vector<const LHCb::RawBank*>
 HltRawBankDecoderBase::selectRawBanks( LHCb::RawBank::BankType reqType ) const 
 {
   LHCb::RawEvent* rawEvent = findFirstRawEvent();
-  if ( !rawEvent) {
-    Error(" No RawEvent found at any location. ").ignore();
-    return {};
-  }
+  if ( !rawEvent) return {};
+
   const std::vector<LHCb::RawBank*> rawbanks = rawEvent->banks( reqType );
-  if( rawbanks.empty() ) { 
-     Warning( " Cannot locate requested RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 ).ignore();
-     return {};
-  }
+  if( rawbanks.empty() ) return {};
 
   // TODO: do we need a reqType dependent version check ???
   std::vector<const LHCb::RawBank*> mybanks;
