@@ -1,98 +1,73 @@
-# $Id: $
-# Test your line(s) of the stripping
-
 from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
 from StrippingConf.Configuration import StrippingConf
-
-# Tighten Trk Chi2 to <3
-from CommonParticles.Utils import DefaultTrackingCuts
-DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
-                                "CloneDistCut" : [5000, 9e+99 ] }
-# Now build the stream
 from StrippingConf.StrippingStream import StrippingStream
+
 SL_stream = StrippingStream("_SL_DST")
 Dimuon_stream = StrippingStream("_Dimuon_DST")
-BHad_stream = StrippingStream("_BHad_DST")
-#PID_stream = StrippingStream("_PID_MDST")
-Charm_stream = StrippingStream("_Charm_DST")
+BHadronCompleteEvent_stream = StrippingStream("_BHad_DST")
+CharmCompleteEvent_stream = StrippingStream("_Charm_DST")
+Calib_stream = StrippingStream("_Calib_muDST")
+OBSOLETE_stream = StrippingStream("_OBSOLETE")
+
+######## obsolete lines 
+
+from StrippingSelections import StrippingB0q2DplusMuX # Responsible: Rob Lambert (probably obsolete, was SL stream)
+OBSOLETE_stream.appendLines(StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf("B0q2DplusMuX",StrippingB0q2DplusMuX.confdict).lines())
+
+from StrippingSelections import StrippingDForBSemi # resonsible: Syracuse? 
+OBSOLETE_stream.appendLines( StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict).lines() )
+
+from StrippingSelections import StrippingBd2DstarTauNu # resonsible: Anne Keune? probably obsolete
+OBSOLETE_stream.appendLines( StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict).lines() )
 
 ######## Semileptonic full DST #########
 
+from StrippingSelections import StrippingBd2DstarMuNu # Resonsible: Stefania Vechi
+SL_stream.appendLines(StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu", StrippingBd2DstarMuNu.confdict).lines())
 
-### flavour tagging calibration
-from StrippingSelections import StrippingBd2DstarMuNu
-confBd2DstarMuNu = StrippingBd2DstarMuNu.Bd2DstarMuNuAllLinesConf("Bd2DstarMuNu", StrippingBd2DstarMuNu.confdict)
-#SL_stream.appendLines( confBd2DstarMuNu.lines() )
+from StrippingSelections import StrippingB2DMuNuX # Resonsible: Mika
+SL_stream.appendLines( StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict).lines() )
 
-### delta a_fs
-from StrippingSelections import StrippingB0q2DplusMuX 
-confStrippingB0q2DplusMuX  = StrippingB0q2DplusMuX.B0q2DplusMuXAllLinesConf("B0q2DplusMuX",StrippingB0q2DplusMuX.confdict)
-#SL_stream.appendLines( confStrippingB0q2DplusMuX.lines() )
+from StrippingSelections import StrippingB2XuMuNu # Resonsible: Alessandra (Need someone new!)
+SL_stream.appendLines(StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.confdict).lines() )
 
-### V_ub
-from StrippingSelections import StrippingB2XuMuNu
-confB2XuMuNu = StrippingB2XuMuNu.B2XuMuNuBuilder("B2XuMuNu", StrippingB2XuMuNu.confdict)
-#SL_stream.appendLines( confB2XuMuNu.lines() )
+from StrippingSelections import StrippingB2DMuForTauMu # Resonsible: Greg
+SL_stream.appendLines( StrippingB2DMuForTauMu.B2DMuForTauMuconf("B2DMuForTauMu",StrippingB2DMuForTauMu.confdict).lines())
 
-### Delta_ACP, a_sl, B-fractions etc...
-from StrippingSelections import StrippingB2DMuNuX
-confB2DMuNuX = StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict)
-SL_stream.appendLines( confB2DMuNuX.lines() )
+from StrippingSelections import StrippingCharmFromBSemiForHadronAsy # Resonsible: Mika
+SL_stream.appendLines(StrippingCharmFromBSemiForHadronAsy.CharmFromBSemiForHadronAsyAllLinesConf("CharmFromBSemiForHadronAsy",StrippingCharmFromBSemiForHadronAsy.confdict).lines())
 
-### B->D tau(->mu) nu 
-from StrippingSelections import StrippingB2DMuForTauMu
-confB2DMuForTauMu = StrippingB2DMuForTauMu.B2DMuForTauMuconf("B2DMuForTauMu",StrippingB2DMuForTauMu.confdict)
-#SL_stream.appendLines( confB2DMuForTauMu.lines())
+####### CALIB STREAM #################
 
-##### CHARM MICRO DST STREAM #########
+from StrippingSelections import StrippingPhiToKSKS # resonsible: Mika
+Calib_stream.appendLines( StrippingPhiToKSKS.PhiToKSKSAllLinesConf("PhiToKSKS", StrippingPhiToKSKS.confdict).lines())
 
-from StrippingSelections import StrippingDForBSemi
-confDForBSemi = StrippingDForBSemi.DforBSemiLinesConf("DForBSemi", StrippingDForBSemi.confdict)
-#Charm_stream.appendLines( confDForBSemi.lines() )
+##### CHARM FULL DST STREAM #########
 
-from StrippingSelections import StrippingD0ForBXX
-confD0ForBXX = StrippingD0ForBXX.D0forBXXLinesConf("D0ForBXX", StrippingD0ForBXX.confdict)
-#Charm_stream.appendLines( confD0ForBXX.lines() )
+from StrippingSelections import StrippingD0ForBXX # resonsible: Zhou Xing (comment: should add the kaon line)
+CharmCompleteEvent_stream.appendLines(StrippingD0ForBXX.D0forBXXLinesConf("D0ForBXX", StrippingD0ForBXX.confdict).lines() )
 
 ##### DIMUON STREAM FULL DST ###########
 
-## semi-incl J/psi from B
-from StrippingSelections import StrippingJPsiForSL
-confJPsiForSL = StrippingJPsiForSL.JPsiForSLAllLinesConf("JPsiForSL", StrippingJPsiForSL.confdict)
-#Dimuon_stream.appendLines( confJPsiForSL.lines() )
+from StrippingSelections import StrippingJPsiForSL # resonsible: Mika Vesterinen ## should add this one to my tests
+Dimuon_stream.appendLines( StrippingJPsiForSL.JPsiForSLAllLinesConf("JPsiForSL", StrippingJPsiForSL.confdict).lines())
 
 ##### BHADRON FULL DST ##################
 
-# B->D* TAU NU
-from StrippingSelections import StrippingBd2DstarTauNu
-confBd2DstarTauNu = StrippingBd2DstarTauNu.Bd2DstarTauNuAllLinesConf("Bd2DstarTauNu", StrippingBd2DstarTauNu.confdict)
-#BHad_stream.appendLines( confBd2DstarTauNu.lines() )
+from StrippingSelections import StrippingB2XTauNu # resonsible: Conor/Donal
+BHadronCompleteEvent_stream.appendLines( StrippingB2XTauNu.B2XTauNuAllLinesConf("B2XTauNu",StrippingB2XTauNu.confdict).lines() )
 
-from StrippingSelections import StrippingB2XTauNu
-confB2XTauNu = StrippingB2XTauNu.B2XTauNuAllLinesConf("B2XTauNu",StrippingB2XTauNu.confdict)
-#BHad_stream.appendLines( confB2XTauNu.lines() )
+from StrippingSelections import StrippingB2DHHHForBXX # resonsible: Paolo Gandini
+BHadronCompleteEvent_stream.appendLines(StrippingB2DHHHForBXX.B2DHHHForBXXLinesConf("B2DHHHForBXX",StrippingB2DHHHForBXX.confdict).lines() )
 
-from StrippingSelections import StrippingB2DHHHForBXX
-confB2DHHHForBXX =  StrippingB2DHHHForBXX.B2DHHHForBXXLinesConf("B2DHHHForBXX",StrippingB2DHHHForBXX.confdict)
-BHad_stream.appendLines( confB2DHHHForBXX.lines() )
-
-#### PID MICRO DST STREAM ###############
-
-## MUID calibration
-#from StrippingSelections import StrippingMuIDCalib
-#confMuIDCalib = StrippingMuIDCalib.MuIDCalibConf("MuIDCalib",StrippingMuIDCalib.config_params)
-#PID_stream.appendLines([confMuIDCalib.line_DetachedNoMIP])
-
+##### CONFIGURE THE STRIPPING
 from Configurables import  ProcStatusCheck
-filterBadEvents =  ProcStatusCheck()
-
-# Configure the stripping using the same options as in Reco06-Stripping10
-ActiveStreams = [SL_stream]
+ActiveStreams = [SL_stream,BHadronCompleteEvent_stream,Dimuon_stream,CharmCompleteEvent_stream,Calib_stream]
 sc = StrippingConf( Streams = ActiveStreams,
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
-                    BadEventSelection = filterBadEvents )
+                    BadEventSelection = ProcStatusCheck() )
 
 from Configurables import CondDB
 CondDB().IgnoreHeartBeat = True
@@ -120,8 +95,31 @@ CondDB().IgnoreHeartBeat = True
 
 from Configurables import FilterDesktop
 
+StdParticles = []
+StdParticles.append("Phys/StdNoPIDsProtons")
+StdParticles.append("Phys/StdNoPIDsPions")
+StdParticles.append("Phys/StdNoPIDsKaons")
+StdParticles.append("Phys/StdNoPIDsMuons")
+StdParticles.append("Phys/StdAllLoosePions")
+StdParticles.append("Phys/StdLoosePions")
+StdParticles.append("Phys/StdLooseKaons")
+StdParticles.append("Phys/StdLooseProtons")
+StdParticles.append("Phys/StdLooseKsLL")
+StdParticles.append("Phys/StdLooseKsDD")
+StdParticles.append("Phys/StdLooseLambdaLL")
+StdParticles.append("Phys/StdLooseLambdaDD")
+StdParticles.append("Phys/StdLooseResolvedPi0")
+StdParticles.append("Phys/StdLooseMergedPi0")
+StdParticles.append("Phys/StdLooseDstarWithD02KPi")
+StdParticles.append("Phys/StdLooseDplus2KPiPi")
+StdParticles.append("Phys/StdLooseD02KPi")
+StdParticles.append("Phys/StdLooseDsplus2KKPi")
+StdParticles.append('Phys/StdLooseJpsi2MuMu')
+StdParticles.append('Phys/StdLooseDetachedTau')
+StdParticles.append('Phys/StdLooseDetachedTau3pi')
+StdParticles.append('Phys/StdLooseDetachedTau3piNonPhys')
 MakePionsEtc = FilterDesktop('MakePionsEtc')
-MakePionsEtc.Inputs=["Phys/StdNoPIDsKaons","Phys/StdNoPIDsMuons","Phys/StdLooseKaons","Phys/StdLoosePions","Phys/StdLooseMuons","Phys/StdLooseDstarWithD02KPi"]
+MakePionsEtc.Inputs=StdParticles
 MakePionsEtc.Code="ALL"
 
 DaVinci().PrintFreq = 10000
@@ -134,13 +132,7 @@ DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ ac ] )
 DaVinci().DataType = "2012"
 DaVinci().InputType = 'SDST'
-#DaVinci().DDDBtag  = "head-20120413"
-#DaVinci().CondDBtag = "head-20120420"
 DaVinci().DDDBtag  = "dddb-20120831"
 DaVinci().CondDBtag = "cond-20121008"
-
-
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py")
 importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/Reco13e.py")
+

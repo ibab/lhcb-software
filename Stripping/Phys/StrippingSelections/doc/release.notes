@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-02 - Mika Vesterinen
+ - Updates to tests/TestSemileptonicsOnRealData.py for Stripping21rX
+
 ! 2014-05-30 - Alex Pearce
 
  - CharmFromBSemiForHadronAsy
