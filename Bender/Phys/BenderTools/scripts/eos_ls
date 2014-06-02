@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env sh
 # =============================================================================
 # $Id:$ 
 # =============================================================================
@@ -28,9 +28,13 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-. /afs/cern.ch/project/eos/installation/client/etc/setup.sh
-
-eos ls -la $*
+if [ -f  /afs/cern.ch/project/eos/installation/client/etc/setup.sh ]
+then
+  source /afs/cern.ch/project/eos/installation/client/etc/setup.sh
+  eos ls -la $*
+else 
+  echo 'No eos afs setup available!' > /dev/stderr 
+fi
 
 # =============================================================================
 # The END 

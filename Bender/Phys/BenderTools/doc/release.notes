@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! 2014-05-22 - Vanya Belyaev
+  eos_ls
+  make a protection againns  invalid EOS setup 
+
 ! 2014-05-22 - Vanya Belyaev
  - RemoveDaughter
    simple context manager to "drop" daughter particle fomr the decay tree
