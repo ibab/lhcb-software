@@ -122,11 +122,24 @@
   <class name    = "std::vector<ROOT::Math::SVector<double,4> >" />
   <class name    = "std::vector<ROOT::Math::SVector<double,6> >" />
   
+  <class pattern = "LHCb::Math::Equal_To<*>"  />
+  <class pattern = "LHCb::Math::Zero<*>"      />
+  <class pattern = "LHCb::Math::NotZero<*>"   />
+  
   <function name = "Gaudi::Math::blind"           />
   <function name = "Gaudi::Math::pow"             />
   <function name = "Gaudi::Math::exp"             />
   <function name = "Gaudi::Math::log"             />
   <function name = "Gaudi::Math::log10"           />
+  <function name = "Gaudi::Math::sqrt"            />
+  <function name = "Gaudi::Math::cbrt"            />
+  <function name = "Gaudi::Math::cbrt"            />
+  <function name = "Gaudi::Math::sin"             />
+  <function name = "Gaudi::Math::cos"             />
+  <function name = "Gaudi::Math::tan"             />
+  <function name = "Gaudi::Math::sinh"            />
+  <function name = "Gaudi::Math::cosh"            />
+  <function name = "Gaudi::Math::tanh"            />
   <function name = "Gaudi::Math::chi2"            />
   <function name = "Gaudi::Math::mean"            />
   <function name = "Gaudi::Math::asym"            />
@@ -154,6 +167,7 @@
   <function name    = "LHCb::Math::islong"                 />
   <function name    = "LHCb::Math::equal_to_int"           />
   <function name    = "LHCb::Math::equal_to_uint"          />
+  <function name    = "LHCb::Math::equal_to_double"        />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
   <function name    = "Gaudi::Math::interpolate_1D"        />

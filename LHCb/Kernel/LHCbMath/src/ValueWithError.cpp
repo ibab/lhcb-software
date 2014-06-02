@@ -16,6 +16,7 @@
 #include "GaudiKernel/Lomont.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/ToStream.h"
+#include "GaudiKernel/cbrt.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -505,7 +506,7 @@ bool Gaudi::Math::ValueWithError::isnormal () const
 {
   return
     boost::math::isnormal ( m_value ) &&
-    boost::math::isnormal ( m_cov2  )  ;
+    boost::math::isfinite ( m_cov2  )  ;
 }
 // =============================================================================
 // check for finiteness
@@ -669,6 +670,46 @@ Gaudi::Math::ValueWithError::__log__   () const { return log   ( *this ) ; }
 // ============================================================================
 Gaudi::Math::ValueWithError
 Gaudi::Math::ValueWithError::__log10__ () const { return log10 ( *this ) ; }
+// ============================================================================
+// sqrt(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__sqrt__  () const { return sqrt ( *this ) ; }
+// ============================================================================
+// cbrt(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__cbrt__  () const { return cbrt ( *this ) ; }
+// ============================================================================
+// sin(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__sin__   () const { return sin  ( *this ) ; }
+// ============================================================================
+// cos(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__cos__   () const { return cos  ( *this ) ; }
+// ============================================================================
+// tan(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__tan__   () const { return tan  ( *this ) ; }
+// ============================================================================
+// sinh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__sinh__  () const { return sinh ( *this ) ; }
+// ============================================================================
+// cosh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__cosh__  () const { return cosh ( *this ) ; }
+// ============================================================================
+// tanh(me)
+// ============================================================================
+Gaudi::Math::ValueWithError
+Gaudi::Math::ValueWithError::__tanh__  () const { return tanh ( *this ) ; }
 // ============================================================================
 
 
@@ -1229,7 +1270,7 @@ Gaudi::Math::ValueWithError Gaudi::Math::divide
                           2 * v * r * std::sqrt ( ac2_n * bc2_n ) ) ;
 }
 // ============================================================================
-/*  evaluate log(b)
+/*  evaluate log10(b)
  *  @param b (INPUT) the parameter
  *  @return logarithm
  *  @warning invalid and small covariances are ignored
@@ -1248,6 +1289,156 @@ Gaudi::Math::ValueWithError Gaudi::Math::log10
   const double e1 = a / b.value() ;
   //
   return Gaudi::Math::ValueWithError ( v , e1 * e1 * b.cov2 () ) ;
+}
+// ============================================================================
+/*  evaluate sqrt(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::sqrt
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::sqrt ( b.value() ) ; }
+  //
+  const double v  = std::sqrt ( b.value() ) ;
+  ///
+  const double e2 = 0.25 * b.cov2() / b.value() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate cbrt(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::cbrt
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return ::cbrt ( b.value() ) ; }
+  //
+  const double v  = ::cbrt ( b.value() ) ;
+  //
+  const double e2 = b.cov2() / ( v * b.value() ) ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 / 9.0 ) ;
+}
+// ============================================================================
+/*  evaluate sin(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::sin
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::sin ( b.value() ) ; }
+  //
+  const double v  = std::sin ( b.value() ) ;
+  const double d2 = std::max ( 1 - v*v , 0.0 ) ;
+  //
+  const double e2 = std::min ( d2 * b.cov2() , 1.0 ) ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate cos(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::cos
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::cos ( b.value() ) ; }
+  //
+  const double v  = std::cos ( b.value() ) ;
+  const double d2 = std::max ( 1 - v*v , 0.0 ) ;
+  //
+  const double e2 = std::min ( d2 * b.cov2() , 1.0 ) ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate tan (b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::tan
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::tan ( b.value() ) ; }
+  //
+  const double v  = std::tan ( b.value() ) ;
+  const double d  = 1 + v * v ;
+  //
+  const double e2 = d * d  * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate sinh(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::sinh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::sinh ( b.value() ) ; }
+  //
+  const double v  = std::sinh ( b.value() ) ;
+  const double d2 =  1 + v * v ;
+  //
+  const double e2 = d2 * b.cov2() ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate cosh(b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::cosh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::cosh ( b.value() ) ; }
+  //
+  const double v  = std::cosh ( b.value() ) ;
+  const double d2 = v * v - 1 ;
+  //
+  const double e2 = std::max ( d2 * b.cov2() , 0.0 ) ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
+}
+// ============================================================================
+/*  evaluate tanh (b)
+ *  @param b (INPUT) the parameter
+ *  @warning invalid and small covariances are ignored
+ */
+// ============================================================================
+Gaudi::Math::ValueWithError Gaudi::Math::tanh
+( const Gaudi::Math::ValueWithError& b )
+{
+  if ( 0 >= b.cov2 () || _zero ( b.cov2() ) )
+  { return std::tanh ( b.value() ) ; }
+  //
+  const double v  = std::tanh ( b.value() ) ;
+  const double d  = 1 - v * v ;
+  //
+  const double e2 = std::min ( d * d  * b.cov2() , 1.0 ) ;
+  //
+  return Gaudi::Math::ValueWithError ( v , e2 ) ;
 }
 // ============================================================================
 /*  simple linear interpolation 

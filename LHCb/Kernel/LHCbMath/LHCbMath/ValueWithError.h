@@ -241,6 +241,22 @@ namespace Gaudi
       ValueWithError __log__   () const ;
       /// log10(me) 
       ValueWithError __log10__ () const ;
+      /// sqrt(me) 
+      ValueWithError __sqrt__  () const ;
+      /// sqrt(me) 
+      ValueWithError __cbrt__  () const ;
+      /// sin(me) 
+      ValueWithError __sin__   () const ;
+      /// cos(me) 
+      ValueWithError __cos__   () const ;
+      /// tan(me) 
+      ValueWithError __tan__   () const ;
+      /// sinh(me) 
+      ValueWithError __sinh__  () const ;
+      /// cosh(me) 
+      ValueWithError __cosh__  () const ;
+      /// tanh(me) 
+      ValueWithError __tanh__  () const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -544,6 +560,78 @@ namespace Gaudi
      */
     GAUDI_API
     ValueWithError log10
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate sqrt(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  sqrt(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError sqrt
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate cbrt(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  cbrt(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError cbrt
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate sin(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  sin(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError sin 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate cos(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  cos(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError cos 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate tan(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  tan(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError tan 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate sinh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  sinh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError sinh 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate cosh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  cosh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError cosh 
+    ( const ValueWithError& b ) ;
+    // ========================================================================    
+    /** evaluate tanh(b)
+     *  @param b (INPUT) the parameter 
+     *  @return  tanh(b)
+     *  @warning invalid and small covariances are ignored 
+     */
+    GAUDI_API
+    ValueWithError tanh 
     ( const ValueWithError& b ) ;
     // ========================================================================    
     /// check for NaN
