@@ -1079,7 +1079,7 @@ class PsiX0Conf(LineBuilder) :
             } ,
             ## 
             CombinationCut  = """
-            ( AM - AM1 ) < 650 * GeV
+            ( AM - AM1 ) < 650 * MeV
             """ ,
             ##
             MotherCut       = " PALL "

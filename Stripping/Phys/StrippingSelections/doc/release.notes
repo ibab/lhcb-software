@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-02 - Vanya Belyaev
+ - PsiX0: fix a stupid bug with units 
+
 ! 2014-06-02 - Mika Vesterinen
  - Updates to tests/TestSemileptonicsOnRealData.py for Stripping21rX
 
