@@ -89,6 +89,7 @@ from Bender.Logger import getLogger
 logger = getLogger( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp,LHCb
+import LoKiPhys.Phys 
 ## smart reference class
 _SR  = cpp.SmartRef       ( LHCb.Particle )
 _SRV = cpp.SmartRefVector ( LHCb.Particle )
@@ -161,8 +162,8 @@ class RemoveDaughter ( object ) :
         if self._vertex   and self._daughter :                
             self._outgoing = _SRV( self._vertex   .outgoingParticles() )
             self._vertex.removeFromOutgoingParticles ( self._daughter  )
-            if len ( self._outgoing ) != len ( self._vertex.outgoingParticles() ) + 1 : 
-                logger.warning ( 'Incorrect size of outgoingParticles' )
+            #if len ( self._outgoing ) != len ( self._vertex.outgoingParticles() ) + 1 : 
+            #    logger.warning ( 'Incorrect size of outgoingParticles' )
                         
         return self
         
@@ -195,6 +196,7 @@ if '__main__' == __name__ :
     print ' Symbols : ' , __all__    
     print 80*'*'
 
+    
     ##
     ## simple check
     ## 
