@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-06-02 - Marco Cattaneo
+ - Remove definition of (obsolete) VPDigit RawBank
+
 !========================= DAQEvent v9r14 2014-02-17 =========================
 ! 2014-01-27 - Sebastian Neubert
  - Renamed HltTrackingReports --> HltTrackReports
