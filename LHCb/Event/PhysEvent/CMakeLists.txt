@@ -15,7 +15,7 @@ god_build_headers(xml/*.xml)
 
 gaudi_add_library(PhysEvent
                   src/*.cpp
-                  NO_PUBLIC_HEADERS
+                  PUBLIC_HEADERS Event
                   LINK_LIBRARIES RecEvent GaudiKernel LHCbKernel LHCbMathLib)
 
 god_build_dictionary(xml/*.xml

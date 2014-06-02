@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-06-02 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-05-23 - Anton Poluektov 
  - Add VectorMap<short,float> typedefs for RelatedInfo structure 
    (new persistency for cone variables etc.)
