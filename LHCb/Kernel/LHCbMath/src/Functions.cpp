@@ -7547,12 +7547,11 @@ double Gaudi::Math::LogGamma::cdf ( const double x ) const
   const double xc  = x  -  nu    () ;
   const double xt  = xc / lambda () ;
   //
-  const double ext = gsl_sf_exp ( xt ) ;
+  const double ext = my_exp ( xt ) ;
   //
   return 
     lambda () > 0 ? 
-    1 - gsl_sf_gamma_inc_Q ( alpha() , ext ) : 
-    gsl_sf_gamma_inc_Q ( alpha() , ext ) ;
+    1 - gsl_sf_gamma_inc_Q ( alpha() , ext ) : gsl_sf_gamma_inc_Q ( alpha() , ext ) ;
 }
 // ============================================================================
 double Gaudi::Math::LogGamma::integral ( const double low  , 

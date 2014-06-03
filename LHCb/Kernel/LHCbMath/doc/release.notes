@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-06-03 - Vanya Belyaev
+ - minr fix 
+
 ! 2014-06-02 - Vanya Belyaev
  - add few helper math-functions 
 
