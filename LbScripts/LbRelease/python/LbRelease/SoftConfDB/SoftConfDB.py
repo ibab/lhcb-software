@@ -58,6 +58,14 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append(x[0]))
         return projects
 
+    def listReleaseReqs(self):
+        ''' List the applications known by the SoftConfDB '''
+
+        query = 'start n=node:Lbadmin(Type="RELEASE") match n-[:RELEASEREQ]-m  return distinct m.project, m.version'
+        projects = []
+        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        return projects
+
     def listVersions(self, project):
         ''' List the number of versions known for a given project '''
 

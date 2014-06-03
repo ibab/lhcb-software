@@ -80,6 +80,11 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listApplications()):
             print p
 
+    def cmdlistReleases(self, args):
+        ''' List the projects known by the SoftConfDB '''
+        for p in sorted(self.mConfDB.listReleaseReqs()):
+            print "%s\t%s" % p
+
     def cmdlistActive(self, args):
         ''' List active projects '''
         for p in sorted(self.mConfDB.listActive()):
