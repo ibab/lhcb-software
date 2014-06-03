@@ -77,7 +77,7 @@ import sys,os
 if sys.argv[1:] : 
     from   copy import deepcopy
     _myself = sys.modules[ __name__ ] 
-    _mykeys = deepcopy ( dir(_myself)  ) 
+    _mykeys = deepcopy ( dir( _myself ) ) 
     ##_mykeys = deepcopy ( globals().keys() ) 
     _copied = set() 
     _skept  = set() 
@@ -97,16 +97,17 @@ if sys.argv[1:] :
             for k,val in myvars.iteritems() : 
                 ## do not redefine already defined symbols!  
                 if k in _mykeys : 
-                    _skept.add ( k ) 
+                    # do not redefine local symbols [ needed? ] 
+                    _skept.add ( k )
                     continue
-                    ## copy symbol into local namesapce  
+                    ## copy symbol into the local namespace  
                 setattr ( _myself , k , val ) 
                 _copied.add ( k ) 
         except :
-            logger.error ('Unable to execute "%s"' % a        )
+            logger.error ('Unable to execute "%s"'     % a    )
             logger.error ('Exception: %s' % sys.exc_info()[0] ) 
             import traceback 
-            print traceback.format_exc() 
+            print  traceback.format_exc() 
 
     if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
     if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  
