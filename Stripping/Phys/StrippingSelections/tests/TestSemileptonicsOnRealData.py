@@ -38,6 +38,9 @@ SL_stream.appendLines( StrippingB2DMuForTauMu.B2DMuForTauMuconf("B2DMuForTauMu",
 from StrippingSelections import StrippingCharmFromBSemiForHadronAsy # Resonsible: Mika
 SL_stream.appendLines(StrippingCharmFromBSemiForHadronAsy.CharmFromBSemiForHadronAsyAllLinesConf("CharmFromBSemiForHadronAsy",StrippingCharmFromBSemiForHadronAsy.confdict).lines())
 
+from StrippingSelections import StrippingLb2pMuNuVub # Resonsible: William
+SL_stream.appendLines(StrippingLb2pMuNuVub.Lb2pMuNuVubBuilder("Lb2pMuNuVub",StrippingLb2pMuNuVub.confdict).lines())
+
 ####### CALIB STREAM #################
 
 from StrippingSelections import StrippingPhiToKSKS # resonsible: Mika

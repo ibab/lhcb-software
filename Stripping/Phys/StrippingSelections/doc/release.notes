@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-03 - Mika Vesterinen
+ - Updates to semileptonic tests. Add tests/TestB2DMuNu.py
+
 ! 2014-06-02 - Vanya Belyaev
  - PsiX0: fix a stupid bug with units 
 
