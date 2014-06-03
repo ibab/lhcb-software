@@ -85,10 +85,10 @@ StatusCode HltDecReportsDecoder::execute() {
   
   std::vector<const RawBank*> hltdecreportsRawBanks = selectRawBanks( RawBank::HltDecReports );
   if ( hltdecreportsRawBanks.empty() ) {
-    return Warning(" Could not find HltDecReports raw bank. Returning empty HltDeccReports.", StatusCode::SUCCESS,20);
+    return Warning(" Could not find HltDecReports raw bank. Returning empty HltDecReports.", StatusCode::SUCCESS,20);
   }
   if( hltdecreportsRawBanks.size() != 1 ){
-    Warning(" More then one HltDecReports RawBanks for requested SourceID in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
+    Warning(" More then one HltDecReports RawBanks for requested SourceID in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 ).ignore();
   }
   const RawBank *hltdecreportsRawBank = hltdecreportsRawBanks.front();
   if( hltdecreportsRawBank->magic() != RawBank::MagicPattern ){
@@ -122,7 +122,7 @@ StatusCode HltDecReportsDecoder::execute() {
                                      *outputSummary, tbl );
         break;
     default : Error(
-" HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE );
+" HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE ).ignore();
     err+=1;
  }
 

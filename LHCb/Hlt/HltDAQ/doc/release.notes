@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-02 - Gerhard Raven
+ - spelling, add .ignore to ignored StatusCodes
+
 ! 2014-06-01 - Gerhard Raven
  - print out only one line if the relevant rawbank / rawevent cannot be found
 
