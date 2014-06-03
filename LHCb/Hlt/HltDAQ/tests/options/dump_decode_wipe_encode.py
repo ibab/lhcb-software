@@ -27,6 +27,12 @@ for atype in ["Dec","Sel","Vertex"]: #can't do track just yet, can be added easi
     killer.BankTypes.append(bank)
     encoders.Members.append(bank+"Writer")
 
+from Configurables import HltANNSvc
+HltANNSvc().Hlt1SelectionID = {
+    'PV3D'                                  :10103,
+    'ProtoPV3D'                             :10117
+}
+
 killer2.BankTypes=killer.BankTypes+["ODIN"]
 killer2.DefaultIsKill=True
 

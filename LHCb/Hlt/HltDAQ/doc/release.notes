@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-03 - Gerhard Raven
+ - fix decode/encode qmtest configuration
+
 ! 2014-06-02 - Gerhard Raven
  - spelling, add .ignore to ignored StatusCodes
 
