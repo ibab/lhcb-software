@@ -251,6 +251,11 @@ class SoftConfDB(object):
                                                                "APPLICATION",
                                                                {"type": "APPLICATION"})
 
+            self.node_release =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                                        "Type",
+                                                                        "RELEASE",
+                                                                        {"type": "RELEASE"})
+
             self.setupDone = True
 
 
@@ -449,6 +454,34 @@ class SoftConfDB(object):
                 if r.is_type("APPLICATION"):
                     r.delete()
 
+    def setReleaseFlag(self, project, version):
+        ''' Set the link to indicate that a release was requested '''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
+                                                           "ProjectVersion",
+                                                           project + "_" + version,
+                                                           {"project": project, "version": version})
+
+        if not self.node_release.has_relationship_with(node_pv):
+            rels = self.mNeoDB.get_or_create_relationships((self.node_release, "RELEASEREQ", node_pv))
+            for r in rels:
+                props = r.get_properties()
+                import datetime
+                props["REQDATE"] = str(datetime.datetime.now())
+                r.set_properties(props)
+                
+    def unsetReleaseFlag(self, project, version):
+        ''' unset the link indicated that a release was requested '''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
+                                                           "ProjectVersion",
+                                                           project + "_" + version,
+                                                           {"project": project, "version": version})
+
+        if self.node_release.has_relationship_with(node_pv):
+            for r in node_pv.get_relationships():
+                if r.is_type("RELEASEREQ"):
+                    r.delete()
 
     def setPVActive(self, project, version, batch=None):
         ''' Set the used link for a project version '''

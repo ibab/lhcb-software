@@ -250,6 +250,7 @@ if __name__=='__main__':
   %prog listReferences[r] <project> <version>
   %prog listActiveReferences[s] <project> <version>
   %prog checkUnused <project> <version>
+  %prog show <project> <version>
 
       """
     s = LbSdbQuery(usage=sUsage)
