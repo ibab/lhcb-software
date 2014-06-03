@@ -76,7 +76,7 @@ StatusCode PrPlotFTHits::initialize()
     return StatusCode::FAILURE;
   }
   
-  m_ftHitManager = tool<PrHitManager>("PrFTHitManager", this);
+  m_ftHitManager = tool<PrHitManager>("PrFTHitManager");
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
   m_idealStateCreator = tool<IIdealStateCreator>("IdealStateCreator", "IdealStateCreator", this);
   
