@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-06-04 - Carlos Vazquez Sierra
+ - Added a modification of an existing line (Bs2JpsiKstarWideLine) for analysis purposes, StrippingBs2JpsiKstNoPID (Bs2JpsiKstarWideLineNoPID).
 
 ! 2014-06-04 - Mika Vesterinen
  - Major re-write of StrippingB2DMuNuX.py, ready for optimisation for Stripping21X
