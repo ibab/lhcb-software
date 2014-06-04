@@ -204,7 +204,7 @@ namespace {
         }
       }
       if ( nsock > 0 )  {
-        timeval tv = { 0, 100 };
+        timeval tv = { 0, 5000 };
         int res = 0;
         res = select(mxsock+1, &read_fds, 0, &exc_fds, &tv);
         if ( res == 0 )  {
