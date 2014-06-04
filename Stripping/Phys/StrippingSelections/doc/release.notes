@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-04 - Mika Vesterinen
+ - Major re-write of StrippingB2DMuNuX.py, ready for optimisation for Stripping21X
+
 ! 2014-06-03 - Mika Vesterinen
  - Updates to semileptonic tests. Add tests/TestB2DMuNu.py
 
