@@ -143,7 +143,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                                                   "& (PIDp> %(ProtonPIDp)s) & (PIDp-PIDK>1.0e-10)" % config),
                                     RequiredSelections = [StdLooseProtons])
         
-        self.selPion_fakes = Selection( "Pion_fakes_for" + name,
+        self.selPionFakes = Selection( "Pion_fakes_for" + name,
                                         Algorithm = FilterDesktop(Code = "(P>%(FakeMuonP)s*GeV) & (PT > %(FakeMuonPT)s*MeV)"\
                                                                       "& (TRCHI2DOF < %(TRCHI2)s)"\
                                                                       "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
@@ -335,7 +335,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         
         D2HHH_CONFIG_PhiPiFakes = D2HHH_CONFIG_PhiPi.copy()
         self.b2DsPhiPiMuXFakesLine = makeb2DMuXNEW(name,
-                                                   'b2DsPi_PhiPi_fakes'
+                                                   'b2DsPi_PhiPi_fakes',
                                                    [ '[B0 -> D- pi+]cc', '[B0 -> D- pi-]cc' ],
                                                    [ '[D+ -> K+ K- pi+]cc' ],
                                                    D2HHH_CONFIG_PhiPiFakes,
