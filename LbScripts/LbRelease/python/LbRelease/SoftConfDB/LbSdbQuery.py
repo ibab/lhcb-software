@@ -85,6 +85,14 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listReleaseReqs()):
             print "%s\t%s" % p
 
+    def cmdlistReleaseStacks(self, args):
+        ''' List the projects known by the SoftConfDB '''
+        stacks = self.mConfDB.listReleaseStacks()
+        for (i, stack) in enumerate(stacks):
+            print ">>>>>>>>> Stack %d" % i
+            for (p, v) in stack:
+                print "%d\t%s\t%s" % (i, p, v)
+
     def cmdlistActive(self, args):
         ''' List active projects '''
         for p in sorted(self.mConfDB.listActive()):

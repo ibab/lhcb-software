@@ -59,12 +59,60 @@ class SoftConfDB(object):
         return projects
 
     def listReleaseReqs(self):
-        ''' List the applications known by the SoftConfDB '''
+        ''' List the applications to be released '''
 
         query = 'start n=node:Lbadmin(Type="RELEASE") match n-[:RELEASEREQ]-m  return distinct m.project, m.version'
         projects = []
         self.runCypher(query, lambda x: projects.append((x[0], x[1])))
         return projects
+
+
+    def listReleaseStackFromPV(self, project, version):
+        query = 'start n=node:Lbadmin(Type="RELEASE"), m=node:ProjectVersion(ProjectVersion="%s_%s")  '  % (project, version)
+        query += ' match p = n-[:RELEASEREQ]->m-[:REQUIRES*]->o<-[:RELEASEREQ]-n return distinct p'
+        paths = []
+        self.runCypher(query, lambda x: paths.append(x))
+
+        stack = set()
+
+        # If no deps are found the stack consists of the project only
+        if len(paths) == 0:
+            stack.add((project, version))
+            return stack
+
+        # Now iterate through all paths returned and add the nodes to the set
+        # (the set takes care of deduplicating)
+        rpaths = []
+        for p in paths:
+            for pp in p:
+                for n in pp.nodes:
+                    if n["type"] != "RELEASE":
+                        stack.add((n["project"], n["version"] ))
+
+        return stack
+                        
+    def listReleaseStackTops(self):
+        ''' List the applications to be released '''
+        query = 'start n=node:Lbadmin(Type="RELEASE") match p = n-[:RELEASEREQ]->m-[r?:REQUIRES*]->o<-[:RELEASEREQ]->n '
+        query += ' where not n-[:RELEASEREQ]->()-[:REQUIRES]->m '
+        query += ' return distinct m.project, m.version'
+
+        projects = []
+        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        return projects
+
+    def listReleaseStacks(self):
+        ''' List the applications to be released '''
+
+        # First, find the top of the various stacks
+        stackTops = self.listReleaseStackTops()
+        stacks = []
+
+        for (stp, stv) in stackTops:
+            stack = self.listReleaseStackFromPV(stp, stv)
+            stacks.append(stack)
+
+        return stacks
 
     def listVersions(self, project):
         ''' List the number of versions known for a given project '''
