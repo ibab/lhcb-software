@@ -98,17 +98,17 @@ void OvrPub::analyze(void *, int ,MonMap* mmap)
   m_MEPRate = RMeps;
   if (m_NoBytesSvc == 0)
   {
-    m_NoBytesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoBytes").c_str(),m_NoBytes);
+    m_NoBytesSvc = new DimService(m_adder->m_ServiceDns,(char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoBytes").c_str(),m_NoBytes);
   }
   m_NoBytesSvc->updateService(m_NoBytes);
   if (m_NoFilesSvc == 0)
   {
-    m_NoFilesSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoFiles").c_str(),m_NoFiles);
+    m_NoFilesSvc = new DimService(m_adder->m_ServiceDns,(char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoFiles").c_str(),m_NoFiles);
   }
   m_NoFilesSvc->updateService(m_NoFiles);
   if (m_NoMEPsSvc == 0)
   {
-    m_NoMEPsSvc = new DimService((char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoMEPs").c_str(),m_NoMEPs);
+    m_NoMEPsSvc = new DimService(m_adder->m_ServiceDns,(char*)(std::string("Stat/")+m_PartitionName+"_X_Overflow/NoMEPs").c_str(),m_NoMEPs);
   }
   m_NoMEPsSvc->updateService(m_NoMEPs);
 

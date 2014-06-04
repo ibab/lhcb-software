@@ -241,7 +241,7 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
       m_DataRate = (float)jj->second;
       if (m_LHCbDataRate == 0)
       {
-        m_LHCbDataRate = new DimService((char*)(m_PartitionName+"_DataRate").c_str(),m_DataRate);
+        m_LHCbDataRate = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"_DataRate").c_str(),m_DataRate);
       }
       m_LHCbDataRate->updateService(m_DataRate);
 //      printf("%s Total Data Rate %f\n",m_PartitionName.c_str(),m_DataRate);
@@ -275,12 +275,12 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
   m_MEPDeferred = Mepsovr;
   if (m_MEPTotRateSvc == 0)
   {
-    m_MEPTotRateSvc = new DimService((char*)(m_PartitionName+"_InputMEPRate").c_str(),m_MEPRate);
+    m_MEPTotRateSvc = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"_InputMEPRate").c_str(),m_MEPRate);
   }
   m_MEPTotRateSvc->updateService(m_MEPRate);
   if (m_MEPDefRateSvc == 0)
   {
-    m_MEPDefRateSvc = new DimService((char*)(m_PartitionName+"_DeferMEPRate").c_str(),m_MEPDeferred);
+    m_MEPDefRateSvc = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"_DeferMEPRate").c_str(),m_MEPDeferred);
   }
   m_MEPDefRateSvc->updateService(m_MEPDeferred);
 }

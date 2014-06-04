@@ -93,7 +93,7 @@ void BusyPub::analyze(void *, int ,MonMap* mmap)
 //  printf("Farm Load: %f\n",m_fLoad);
   if (m_FarmLoad == 0)
   {
-    m_FarmLoad = new DimService((char*)(m_PartitionName+"/FarmCPULoad").c_str(),m_fLoad);
+    m_FarmLoad = new DimService(m_adder->m_ServiceDns,(char*)(m_PartitionName+"/FarmCPULoad").c_str(),m_fLoad);
   }
   m_FarmLoad->updateService(m_fLoad);
   if (m_enableTrending)
