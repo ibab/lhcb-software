@@ -34,7 +34,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
-       ,"DataType"      : "2012"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011', '2012']
+       ,"DataType"      : "2012"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011', ... , '2015']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"MergeFSR"      : False      # merge FSRs into one container (incompatible with Integrate)
@@ -49,7 +49,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
-       ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009','2010']"
+        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009','2010', ..., '2015']"
        ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
        ,"MergeFSR"      : "False, merge the FSRs into one container"
@@ -121,7 +121,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                             )
                         seqMembers.append( fillingfilter )
                     
-                    elif self.getProp("DataType") == "2012":
+                    elif self.getProp("DataType") == "2012" or self.getProp("DataType") == "2013":     # 2013 is not a separate type
                         fillingfilter = FilterFillingScheme('Filling'+i, 
                                                             Beam = OppositeBeam,                       # check the opposite beam
                                                             MagnetState = 'ALL',                       # all magnet states
@@ -130,6 +130,12 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                                             )
                         seqMembers.append( fillingfilter )
                                                     
+                    elif self.getProp("DataType") == "2015":                                           # for 25 ns no filter possible
+                        pass
+
+                    elif self.getProp("DataType") == "2016":
+                        pass
+
                     else:
                         assert False , "*** The luminosity logic is not yet set up for this datatype ***"
                 

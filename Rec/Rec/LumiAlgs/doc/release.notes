@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-06-04 - Jaap Panman
+ - Configuration for Brunel: prepare for 25 ns filling schemes in 2015 and beyond
+   (filterFillingScheme)
+ - Add access functions to IntegratorTool datastructure for mu calculation
+
 ! 2014-05-28 - Jaap Panman
  - (GetIntegratedLuminosity) add mu per raw file from the FSRs as a root ntuple
    activated by LumiIntegrateFSR('IntegrateBeamCrossing').AccumulateMu = True

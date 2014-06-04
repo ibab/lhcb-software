@@ -58,6 +58,7 @@ apply_pattern    component_library library=LumiAlgs
 macro_append LumiAlgsGenConfUser_dependencies LumiAlgsConfDbMerge
 apply_pattern install_python_modules
 
+
 #QM tests
 private
 # Uses only needed to set up run time environment of tests

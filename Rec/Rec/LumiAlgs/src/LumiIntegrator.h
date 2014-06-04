@@ -56,11 +56,29 @@ public:
   // Set absolute scale
   StatusCode setAbsolute(double scale, double relerror);
 
+  // Get absolute scale
+  double absolute();
+
   // Get final result
   double lumiValue();
 
   // Get error on result
   double lumiError();
+
+  // Get mu calculation items
+  ulonglong muFiles();
+  ulonglong muKeys(unsigned long index);
+  ulonglong muRun(unsigned long index);
+  std::string muGuid(unsigned long index);
+  ulonglong muTime0(unsigned long index);
+  ulonglong muTime1(unsigned long index);
+  double muDeltaLumi(unsigned long index);
+  double muNorm(unsigned long index);
+  double muMu(unsigned long index);
+  int muCounter(unsigned long index, unsigned long key);
+  std::string muCounterName(unsigned long index, unsigned long key);
+  double muCounterNorm(unsigned long index, unsigned long key);
+  double muCounterValue(unsigned long index, unsigned long key);
 
   // Retrieve the integrated Lumi FSR data
   const LHCb::LumiIntegral& integral( ) const;

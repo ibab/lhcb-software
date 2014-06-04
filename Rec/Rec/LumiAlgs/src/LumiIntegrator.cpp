@@ -176,12 +176,15 @@ std::vector<ILumiIntegrator::muTuple> LumiIntegrator::muValues( ) {
 }
 
 //=============================================================================
-// Set absolute scale
+// Set/get absolute scale
 //=============================================================================
 StatusCode LumiIntegrator::setAbsolute(double scale, double relerror) {
   m_lumi_scale = scale;
   m_lumi_rel_error = relerror;
   return StatusCode::SUCCESS;
+}
+double  LumiIntegrator::absolute() {
+  return m_lumi_scale;
 }
 
 //=============================================================================
@@ -196,6 +199,29 @@ double LumiIntegrator::lumiValue() {
 //=============================================================================
 double LumiIntegrator::lumiError() {
   return m_integral * m_lumi_scale * m_lumi_rel_error;
+}
+
+//=============================================================================
+// Get values from mu calculation
+//=============================================================================
+ulonglong LumiIntegrator::muFiles() { return m_muTuple.size(); }
+ulonglong LumiIntegrator::muKeys(unsigned long index) { return m_muTuple[index].keys.size(); }
+ulonglong LumiIntegrator::muRun(unsigned long index) { return (ulonglong)m_muTuple[index].run; }
+std::string LumiIntegrator::muGuid(unsigned long index) { return m_muTuple[index].guid; }
+ulonglong LumiIntegrator::muTime0(unsigned long index) { return m_muTuple[index].time0; }
+ulonglong LumiIntegrator::muTime1(unsigned long index) { return m_muTuple[index].time1; }
+double LumiIntegrator::muDeltaLumi(unsigned long index) { return m_muTuple[index].deltaLumi; }
+double LumiIntegrator::muNorm(unsigned long index) { return m_muTuple[index].norm; }
+double LumiIntegrator::muMu(unsigned long index) { return m_muTuple[index].mu; }
+int LumiIntegrator::muCounter(unsigned long index, unsigned long key) { return m_muTuple[index].keys[key]; }
+std::string LumiIntegrator::muCounterName(unsigned long index, unsigned long key) { 
+  return LHCb::LumiCounters::counterKeyToString( m_muTuple[index].keys[key] ); 
+}
+double LumiIntegrator::muCounterNorm(unsigned long index, unsigned long key) { 
+  return m_muTuple[index].valuePairs[key].first; 
+}
+double LumiIntegrator::muCounterValue(unsigned long index, unsigned long key) { 
+  return m_muTuple[index].valuePairs[key].second; 
 }
 
 //=============================================================================
