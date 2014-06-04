@@ -160,8 +160,8 @@ StatusCode FTClusterCreator::execute(){
   put(clusterCont, m_outputLocation);
 
 
-  // Create a link between the FTCluster and the MCParticle which leave a track
-  LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> mcToClusterLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
+  // Create a link between the FTCluster and the MCHit which leave a track
+  LinkerWithKey<LHCb::MCHit,LHCb::FTCluster> hitToClusterLink( evtSvc(), msgSvc(), (LHCb::FTClusterLocation::Default));
 
 
   // DEBUG : print Digit content : should be sorted
@@ -233,7 +233,7 @@ StatusCode FTClusterCreator::execute(){
       double totalEnergyFromMC = 0;
 
       // map of contributing MCParticles with their relative energy deposit
-      std::map< const LHCb::MCParticle*, double> mcContributionMap;
+      //std::map< const LHCb::MCParticle*, double> mcContributionMap;
       std::map< const LHCb::MCHit*, double> mcHitContributionMap;
 
       // test neighbours to define starting and ending channels of Cluster
@@ -448,9 +448,9 @@ StatusCode FTClusterCreator::execute(){
         //clusterADCDistribution.push_back(digit->adcCount());
         if( mcDeposit != 0 ) { 
           for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
-            totalEnergyFromMC += mcDeposit->energyVec()[idx]; // only direct pulse energy is stored!!! TO BE UPDATED
-            mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] 
-              += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
+            totalEnergyFromMC += mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]; 
+            //mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] 
+            //  += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
             mcHitContributionMap[mcDeposit->mcHitVec()[idx]] += (mcDeposit->energyVec()[idx] + mcDeposit->energyRefVec()[idx]); 
             clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
           }
@@ -988,16 +988,12 @@ StatusCode FTClusterCreator::execute(){
         }
 
 
-       //clusterCont->insert(newCluster);
-
-
-        // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
+        // DEAL WITH  hitToClusterLink
         if ( msgLevel(MSG::DEBUG) ){
-          debug() << "===   DEAL WITH  mcToClusterLink" << endmsg;
+          debug() << "===   DEAL WITH  hitToClusterLink" << endmsg;
         }
-        
-        for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
-          mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
+        for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i){
+          hitToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
           //           if ( msgLevel( MSG::DEBUG) ) {
           //             debug() << "Linked ClusterChannel=" << newCluster->channelID()
           //                     << " to MCIndex="<<i->first->index()

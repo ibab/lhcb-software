@@ -463,11 +463,16 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
 
       // Fill MCFTDeposit 
       FTDoublePairs::const_iterator vecIter;
+      FTDoublePairs::const_iterator EnergyNegativeEnergyIter;
       // Temporary Patch [Eric 14/05/2014 : remove hits whose fired channels have negative energy!!]
       bool PositiveEnergy = true;
       for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter)
       {
-        if (vecIter->second < 0 ) PositiveEnergy = false;
+        if (vecIter->second < 0 ) {
+          PositiveEnergy = false;
+          EnergyNegativeEnergyIter = vecIter;
+        }
+        
       }
       //End Temporary Patch
       if(PositiveEnergy){
@@ -510,7 +515,13 @@ StatusCode MCFTDepositCreator::HitToChannelConversion(LHCb::MCHit* ftHit,LHCb::M
           depositCont->insert(energyDeposit,vecIter->first);
         }
       }
-      }
+      }else
+       {
+         plot(EnergyNegativeEnergyIter->first.layer(),"CheckNegativeEnergyLayer",
+                     "CheckNegativeEnergyLayer; Layer of negative energy hit; Nber of Channels" ,0.,20.,20); 
+
+       }
+      
     
     }else{
       if ( msgLevel( MSG::DEBUG) ){

@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-06-04 - Eric Cogneras
+ - Change (MCParticle,Cluster) linker into a (Hit,Cluster) linker
+
 !========================= FTDigitisation v2r0 2014-05-15 =======================
 ! 2014-05-13 - Eric Cogneras
  - Floating point exception correction in MCFTDigitCreator
