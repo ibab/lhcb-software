@@ -216,6 +216,8 @@ StatusCode PubSvc::start()
   m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
+  m_adder->m_ServiceDns->autoStartOn();
+  DimServer::start(m_adder->m_ServiceDns);
   m_started = true;
   return StatusCode::SUCCESS;
 }
