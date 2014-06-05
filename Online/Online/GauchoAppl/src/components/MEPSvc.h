@@ -24,8 +24,10 @@ public:
     m_buffer = 0;
     m_service = 0;
     m_TBuffer.clear();
+    dns = 0;
   }
   int bsiz();
+  DimServerDns *dns;
   std::string m_servicename;
   DimService *m_service;
   std::vector<T> m_TBuffer;
@@ -35,6 +37,10 @@ public:
   void FillDim(void *buff,int &siz);
   DimService* makeService(std::string nam);
   static const char* format();
+  void setDNS(DimServerDns *d)
+  {
+    dns = d;
+  }
 //  DetData_T<double> operator=(DetData_T<long long >&a);
   void Zero()
   {
@@ -92,15 +98,31 @@ template <> void DetData_T<double>::FillDim(void *buff, int &siz)
 
 template <> DimService* DetData_T<long long>::makeService(std::string nam)
 {
+  std::string snam = nam;
+  if (dns == 0)
+  {
     DimServer::autoStartOn();
-    std::string snam = nam;
     return new DimService((char*)snam.c_str(),"I",0,0);
+  }
+  else
+  {
+    dns->autoStartOn();
+    return new DimService(dns,(char*)snam.c_str(),"I",0,0);
+  }
 }
 template <> DimService* DetData_T<double>::makeService(std::string nam)
 {
+  std::string snam = nam;
+  if (dns == 0)
+  {
     DimServer::autoStartOn();
-    std::string snam = nam;
     return new DimService((char*)snam.c_str(),"F",0,0);
+  }
+  else
+  {
+    dns->autoStartOn();
+    return new DimService(dns,(char*)snam.c_str(),"F",0,0);
+  }
 }
 
 template <> void DetData_T<long long>::Update()
@@ -169,12 +191,15 @@ public:
   {
     m_buffer = 0;
     m_service = 0;
+    dns = 0;
+    m_bsiz = 0;
   }
   std::map<std::string,DimService*> m_svcmap;
   std::string m_servicename;
   DimService *m_service;
   char *m_buffer;
   int m_bsiz;
+  DimServerDns *dns;
   void divide(DetMap_T<double> &b, long long l); // b=this/l
   void setServiceName(std::string n)
   {
@@ -184,6 +209,10 @@ public:
     {
       i->second.m_servicename = n;
     }
+  }
+  void setDNS(DimServerDns *d)
+  {
+    dns = d;
   }
   void Update();
 //  {
@@ -291,13 +320,22 @@ template <typename T> void DetMap_T<T>::Update()
   }
   if(m_service == 0)
   {
-    DimServer::autoStartOn();
-    m_service = new DimService((char*)(m_servicename+"/Detector").c_str(),"C",m_buffer,m_bsiz);
+    if (dns == 0)
+    {
+      DimServer::autoStartOn();
+      m_service = new DimService((char*)(m_servicename+"/Detector").c_str(),"C",m_buffer,m_bsiz);
+    }
+    else
+    {
+      dns->autoStartOn();
+      m_service = new DimService(dns,(char*)(m_servicename+"/Detector").c_str(),"C",m_buffer,m_bsiz);
+    }
     i = this->begin();
     typename DetData_T<T>::iterator k;
     for (k=i->second.begin();k!=i->second.end();k++)
     {
 //      printf("%s\n",k->first.c_str());
+      i->second.setDNS(dns);
       m_svcmap[k->first] = i->second.makeService(m_servicename+"/"+k->first);
   //    i->second.makeService(k->first);
     }

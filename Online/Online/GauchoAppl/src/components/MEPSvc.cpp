@@ -228,9 +228,11 @@ void MEPSvc::analyze(void *, int ,MonMap* mmap)
     fillrate(std::string("R_Runable/"),s_counterTypes[i],mmap);
   }
   this->fillsums();
+  m_DetMap.setDNS(m_adder->m_ServiceDns);
   m_DetMap.Update();
 //  m_DetMap.dump();
 //  m_DetMap_rate.dump();
+  m_DetMap_rate.setDNS(m_adder->m_ServiceDns);
   m_DetMap_rate.Update();
   DetMap_T<double>::iterator ii = m_DetMap_rate.find(m_PartitionName/*"LHCb"*/);
   if (ii!=m_DetMap_rate.end())
