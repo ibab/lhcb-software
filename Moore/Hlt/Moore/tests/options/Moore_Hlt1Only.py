@@ -16,3 +16,11 @@ Moore().outputFile = 'hlt1_reqhlt1.raw'
 
 #use new splitting of Hlt2
 Moore().Split='Hlt1'
+
+# kill input DecReports
+from Configurables import ApplicationMgr, GaudiSequencer, DecodeRawEvent, RawEventFormatConf, RawEventJuggler, RecombineRawEvent
+ApplicationMgr().TopAlg+= [GaudiSequencer("JuggleSeq")]
+RawEventJuggler().Input="Pit"
+RawEventJuggler().Output="Moore"
+RawEventJuggler().Sequencer = GaudiSequencer("JuggleSeq")
+RawEventJuggler().KillInputBanksBefore = ('HltDecReports')

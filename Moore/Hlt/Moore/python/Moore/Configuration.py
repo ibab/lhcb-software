@@ -578,7 +578,7 @@ class Moore(LHCbConfigurableUser):
 
     def _generateConfig(self) :
         from HltConf.ThresholdUtils import Name2Threshold
-        settings = Name2Threshold(self.getProp('ThresholdSettings'))
+        settings = Name2Threshold(HltConf().getProp('ThresholdSettings'))
         svcs = MooreExpert().getProp("configServices")
         algs = MooreExpert().getProp("configAlgorithms")
         if MooreExpert().getProp('TCKpersistency').lower() == 'tarfile' :
@@ -727,10 +727,14 @@ class Moore(LHCbConfigurableUser):
             seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), decAlg )
             
             if not MooreExpert().getProp("Hlt2Independent"):
-                tr=DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"]
+                tr=DecoderDB["HltTrackReportsDecoder/VeloDecoder"]
                 tr.active = True
                 trAlg=tr.setup()
                 seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), trAlg )
+                forwardDec=DecoderDB["HltTrackReportsDecoder/ForwardDecoder"]
+                forwardDec.active = True
+                forwardDecAlg=tr.setup()
+                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), forwardDecAlg )
             
             sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
             selAlg=sel.setup()
