@@ -4,7 +4,13 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2014-4-08 - Sebastian Neubert
+! 2014-06-05 - Sebastian Neubert
+ - HLT1 upgrade conf: using forward tracking options for momentum estimate 
+ - defined revived forward track sequence
+ - added revived forward sequence to HLT2
+ - added DumpTracks for advanced debugging     
+ 
+! 2014-04-08 - Sebastian Neubert
  - removed trackingSources
 
 ! 2014-04-06 - Sebastian Neubert

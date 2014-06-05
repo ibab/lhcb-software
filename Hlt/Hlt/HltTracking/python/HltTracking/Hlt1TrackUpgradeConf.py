@@ -24,7 +24,8 @@ def ConfiguredPatSeeding( minPSeed = 3000):
     # for the tracking to consider
     # Only relevant for the forward upgrade
     return Hlt1Tool( PatSeedingTool, MinMomentum = minPSeed )
-        
+
+# NOTE THAT THESE DEFAULTS MIGHT BE OVERWRITTEN BELOW
 _minPt =  800  #### MOVE TO 800 (used to be 500 )
 _minP  = 8000 #### MOVE TO 8000 (used to be 5000 )
 def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMomEst = False ) :
@@ -37,6 +38,7 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                      , UseWrongSignWindow = True
                      , WrongSignPT = 2000
                      , Preselection = useMomEst
+                     , FlagUsedSeeds = True
                      , MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
                      , MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
                      , MinHits = CommonForwardTrackingOptions["MinHits"]
@@ -92,6 +94,7 @@ def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     from TrackFitter.ConfiguredFitters import ConfiguredForwardStraightLineFitter
     fitter = ConfiguredForwardStraightLineFitter( getattr(parent, "VeloOnlyFitter") )
     parent.FitterName = fitter.getFullName()
+    #fitter.OutputLevel = 1
     fitter.AddDefaultReferenceNodes = True
 
 # =============================================================================
@@ -130,7 +133,7 @@ import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000, 1250 )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000,  500 )
-ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 500 , useMomEst=True)
+ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 300 , useMomEst=True)
 ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000, 200 )
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"

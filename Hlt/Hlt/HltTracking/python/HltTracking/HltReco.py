@@ -34,7 +34,8 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'MinimalVelo'
           , 'RevivedVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
-	  , 'Hlt1Seeding'
+          , 'RevivedForward'
+          , 'Hlt1Seeding'
           , 'VeloCandidates'
           , 'MaxOTHits'
           )
@@ -158,9 +159,9 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
 
 
 #############################################################################################
-# Define the reconstruction sequence 
+# Define modules for the reconstruction sequence 
 #############################################################################################
-from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK
+from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeFORWARDTRACK, DecodeTT, DecodeIT
 from Configurables import DecodeVeloRawBuffer, DumpTracks
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
@@ -171,13 +172,18 @@ MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( r
 
 
 dumper = DumpTracks('VeloDumper')
-dumper.OutputLevel = VERBOSE
+#dumper.OutputLevel = VERBOSE
 dumper.TracksLocation = recoVelo.OutputTracksName
 
 RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK, dumper]).setOutputSelection( recoVelo.OutputTracksName )
 
 Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 
+
+
+
+
+RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeFORWARDTRACK ])
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias
