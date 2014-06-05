@@ -1,3 +1,22 @@
+2014-06-05  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-446: Integrated Software Configuration DB with Ariadne DB.
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* scripts/lb-sdb-clear
+	* scripts/lb-sdb-addplatform
+	* scripts/lb-sdb-clearenv.sh
+	* scripts/lb-sdb-update
+	* scripts/lb-sdb-importallsvn
+	* scripts/lb-sdb-checkrevision
+	* scripts/lb-sdb-query
+	* scripts/lb-sdb-importinstallarea
+	* scripts/lb-sdb-env.sh
+	* scripts/lb-sdb-importsvn
+	* scripts/lb-sdb-deletepv
+	* scripts/lb-sdb-release
+	* scripts/lb-sdb-setallappsused
+	* scripts/lb-sdb-setapp
+
 2014-05-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r0

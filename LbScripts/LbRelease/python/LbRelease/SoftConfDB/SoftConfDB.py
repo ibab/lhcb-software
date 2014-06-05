@@ -9,20 +9,34 @@ Created on May 2, 2013
 '''
 
 import logging
-from py2neo import neo4j, cypher
+from ariadne.py2neo import neo4j, cypher
 from LbConfiguration.Version import sortVersions, LCGVersion
 
 class SoftConfDB(object):
     '''
     Main class interfacing to the LHCb Configuration Database
+    Test DB: http://lxbuild159:8080/db/data/
+    Prod DB: https://ariadne-lhcb.cern.ch/
     '''
-    def __init__(self, dbConnectStr="http://lxbuild159:8080/db/data/"):
+    def __init__(self, dbConnectStr="https://ariadne-lhcb.cern.ch/db/data"):
         '''
         Initialize the class, setting the address of the Database
         '''
         self.log = logging.getLogger()
 
+        # Choosing the db string
+        import os
+        envdburl = os.environ.get('SDBURL')
+        if envdburl != None:
+            if envdburl == "DEV":
+                dbConnectStr = "http://lxbuild159:8080/db/data/"
+                self.log.info("SDBURL set to DEV: Using DB URL %s" % dbConnectStr)
+            else:
+                dbConnectStr = envdburl
+                self.log.info("SDBURL set to %s" % dbConnectStr)
+
         # Initialize with the server address
+        self.log.debug("Connecting to Neo4j DB: %s" % dbConnectStr)
         self.mDBURL = dbConnectStr
 
         # Initializing the DB itself

@@ -1,7 +1,5 @@
 #!/bin/sh
 
-if [ `echo $PYTHONPATH | grep -c pytools` = "0" ]; then
-	. SetupProject.sh -q LCGCMT pytools
-fi
-
+. lb-sdb-env.sh
 python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbSetAllAppsUsed.py $@
+lb-sdb-clearenv.sh
