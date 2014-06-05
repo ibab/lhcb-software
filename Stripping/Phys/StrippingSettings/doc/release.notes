@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-05 - Lucio Anderlini (BandQ)
+ - Created folder Stripping21 for preliminary compilation and test
+ - Updated B&Q dictionaries
+ - dbase/stripping21 created
+
 !========================= StrippingSettings v2r30 2014-02-04 =========================
 
 ! 2014-30-01 - Stefano Perazzini
