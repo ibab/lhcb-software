@@ -323,11 +323,19 @@ for report in ["Dec","Sel","Vertex"]:
             )
 
 #Also TrackingDecoder, but don't make it active, it's only used during HLT2 stand-alone!
-Decoder("HltTrackReportsDecoder/Hlt1TrackReportsDecoder",
+Decoder("HltTrackReportsDecoder/VeloDecoder",
         active=False, banks=["HltTrackReports"],
         inputs = {"RawEventLocations":None},
         outputs={"OutputLocation" : "Hlt/Track/Velo"},
         properties={"SourceID" : 1}, #None=default(0)
+        conf=DecoderDB
+        )
+
+Decoder("HltTrackReportsDecoder/ForwardDecoder",
+        active=False, banks=["HltTrackReports"],
+        inputs = {"RawEventLocations":None},
+        outputs={"OutputLocation" : "Hlt2/Track/Forward"},
+        properties={"SourceID" : 3}, #None=default(0)
         conf=DecoderDB
         )
 
