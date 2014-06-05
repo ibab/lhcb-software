@@ -675,7 +675,7 @@ StatusCode L0CaloAlg::execute() {
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + 
       m_rawOutput[1].size();
     LHCb::RawEvent* raw = 
-      get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+      getOrCreate<LHCb::RawEvent,LHCb::RawEvent>( LHCb::RawEventLocation::Default );
     raw->addBank( 0, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[0] );
     raw->addBank( 1, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[1] );
   }

@@ -3,6 +3,10 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2014-06-05 - Patrick Robbe
+ - L0CaloAlg: create banks if they don't exist
+ - LLTCaloAlg.cpp: add computation of LLT GEC (HCAL + ECAL mult)
+
 !========================= L0Calo v11r13 2014-03-17 =========================
 ! 2014-03-07 - Patrick Robbe
  - Add tool to compute L0Adc from CaloADC directly instead of decoding

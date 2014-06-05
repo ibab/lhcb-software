@@ -144,23 +144,14 @@ StatusCode LLTCaloAlg::execute() {
     out -> add( cand ) ;
   }
 
-  cand = new LHCb::L0CaloCandidate( L0DUBase::CaloType::Photon , 
+  cand = new LHCb::L0CaloCandidate( L0DUBase::CaloType::SpdMult , 
                                     LHCb::CaloCellID() , 
-                                    ecalMult , 
+                                    ( ecalMult + hcalMult ) , 
                                     0. , 
                                     dummy , 
                                     0. ) ;
   
   out -> add( cand ) ;
-
-  cand = new LHCb::L0CaloCandidate( L0DUBase::CaloType::Pi0Local , 
-                                    LHCb::CaloCellID() , 
-                                    hcalMult , 
-                                    0. , 
-                                    dummy , 
-                                    0. ) ;
-  
-  out -> add( cand ) ;  
 
   return StatusCode::SUCCESS;
 }
