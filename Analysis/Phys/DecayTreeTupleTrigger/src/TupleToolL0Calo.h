@@ -10,6 +10,7 @@
 
 class IPart2Calo;
 class DeCalorimeter ;
+class ICaloTriggerAdcsFromRaw ;
 
 /** @class TupleToolL0Calo TupleToolL0Calo.h
  *
@@ -58,16 +59,16 @@ private :
   int isinside_ECAL(double x,
                     double y);
   /// Get the associated L0/LLT cluster
-  double getAssociatedCluster( );
-
-  /// Get the energy of the highest cluster
-  double getLeadingEt( ) ;
+  double getAssociatedCluster( double & hcal_energy , double & xTrigger , 
+                               double & yTrigger );
 
   IPart2Calo* m_part2calo;
   std::string m_calo;
   std::string m_location ;
   bool        m_fillTriggerEt ;
   DeCalorimeter * m_caloDe ;
+  ICaloTriggerAdcsFromRaw * m_adcsHcal ; ///< Tool to decode trigger adcs.
+
 };
 
 #endif // TUPLETOOLL0CALO_H

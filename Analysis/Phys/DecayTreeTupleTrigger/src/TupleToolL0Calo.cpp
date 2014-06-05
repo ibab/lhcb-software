@@ -14,6 +14,8 @@
 #include "CaloInterfaces/IPart2Calo.h"
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0DUBase.h"
+#include "Event/L0CaloAdc.h"
+#include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"
 
 #include "TMath.h"
 #include "boost/foreach.hpp"
@@ -60,7 +62,8 @@ DECLARE_TOOL_FACTORY( TupleToolL0Calo )
                                     const std::string& name,
                                     const IInterface* parent )
 : TupleToolBase ( type, name , parent ) , m_fillTriggerEt( false ) ,
-  m_caloDe( 0 )
+  m_caloDe( 0 ) , m_adcsHcal(NULL)
+
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("WhichCalo", m_calo = "HCAL");
@@ -81,9 +84,11 @@ StatusCode TupleToolL0Calo::initialize( )
     return StatusCode::FAILURE;
   }
 
-  if ( m_calo == "HCAL" ) 
-    m_caloDe = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;  
-  else 
+  if ( m_calo == "HCAL" ) {
+    m_caloDe = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;
+    m_adcsHcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw", 
+                                                "HcalTriggerAdcTool" );
+  } else 
     m_caloDe = getDet< DeCalorimeter >( DeCalorimeterLocation::Ecal ) ;
 
   // Fill trigger info ? 
@@ -124,11 +129,10 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
   xProjection = m_part2calo->caloState().x();
   yProjection = m_part2calo->caloState().y();
 
-  double triggerET( -1. ) , leadingET( -1. ) ;
+  double triggerET( -1. ) , triggerHCALET( -1. ) , xtrigger( 0. ) , ytrigger( 0. ) ;
 
   if ( m_fillTriggerEt ) { 
-    triggerET = getAssociatedCluster( ) ;
-    leadingET = getLeadingEt( ) ;
+    triggerET = getAssociatedCluster( triggerHCALET , xtrigger , ytrigger ) ;
   }
 
   // Fill the tuple
@@ -139,7 +143,9 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
     test &= tuple->column( prefix+"_L0Calo_HCAL_region", 
                            isinside_HCAL( xProjection , yProjection ) );    
     test &= tuple->column( prefix+"_L0Calo_HCAL_TriggerET", triggerET ) ;    
-    test &= tuple->column( prefix+"_L0Calo_HCAL_LeadingET", leadingET ) ;    
+    test &= tuple->column( prefix+"_L0Calo_HCAL_TriggerHCALET", triggerHCALET ) ;
+    test &= tuple->column( prefix+"_L0Calo_HCAL_xTrigger", xtrigger ) ;
+    test &= tuple->column( prefix+"_L0Calo_HCAL_yTrigger", ytrigger ) ;
   }
   else if (m_calo == "ECAL") {
     test &= tuple->column( prefix+"_L0Calo_ECAL_realET", trackET );
@@ -148,7 +154,8 @@ StatusCode TupleToolL0Calo::fill( const LHCb::Particle* /* mother */,
     test &= tuple->column( prefix+"_L0Calo_ECAL_region", 
                            isinside_ECAL( xProjection , yProjection ) );
     test &= tuple->column( prefix+"_L0Calo_ECAL_TriggerET", triggerET ) ;
-    test &= tuple->column( prefix+"_L0Calo_ECAL_LeadingET", leadingET ) ;
+    test &= tuple->column( prefix+"_L0Calo_ECAL_xTrigger", xtrigger ) ;
+    test &= tuple->column( prefix+"_L0Calo_ECAL_yTrigger", ytrigger ) ;
   }
 
 
@@ -244,7 +251,8 @@ int TupleToolL0Calo::isinside_ECAL(double x,
 //=============================================================================
 // Get associated L0 or LLT cluster
 //=============================================================================
-double TupleToolL0Calo::getAssociatedCluster( ) {
+double TupleToolL0Calo::getAssociatedCluster( double & hcal_energy , double & xTrigger , 
+                                              double & yTrigger ) {
   // First get the CALO cells in the 3x3 cluster around the track projection
   std::vector< LHCb::CaloCellID > cells3x3;
 
@@ -285,34 +293,26 @@ double TupleToolL0Calo::getAssociatedCluster( ) {
            std::binary_search( cells3x3.begin() , cells3x3.end() , cell3 ) ||
            std::binary_search( cells3x3.begin() , cells3x3.end() , cell4 ) )
       { 
-        if ( theCand -> et() > result ) 
+        if ( theCand -> et() > result ) {
+          xTrigger = m_caloDe -> cellX( cell1 ) ;
+          yTrigger = m_caloDe -> cellY( cell1 ) ;
           result = theCand -> et() ;
+          // Compute the HCAL energy of this cluster
+          if ( m_calo == "HCAL" ) {
+            hcal_energy = 0. ;
+            const std::vector< LHCb::L0CaloAdc >& adcs = m_adcsHcal -> adcs() ;
+            for ( std::vector< LHCb::L0CaloAdc >::const_iterator itAdc = adcs.begin() ;
+                  adcs.end() != itAdc ; ++itAdc ) 
+            {
+              LHCb::CaloCellID id = (*itAdc).cellID() ;
+              if ( ( id == cell1 ) || (id == cell2 ) || ( id == cell3 ) || ( id == cell4 ) )
+                hcal_energy += (*itAdc).adc() ; 
+            }
+            if ( hcal_energy > 255 ) hcal_energy = 255 ;
+            hcal_energy = hcal_energy * ( m_caloDe -> L0EtGain() ) ;
+          }
+        } 
       }
-    }
-  }
-  
-  return result ;
-}
-
-
-double TupleToolL0Calo::getLeadingEt( ) {
-  double result = -1. ;
-  
-  // loop over the L0 candidates
-  LHCb::L0CaloCandidates * candidates = 
-    getIfExists<LHCb::L0CaloCandidates> ( m_location );
-
-  int typeToCheck = L0DUBase::CaloType::Electron ;
-  if ( m_calo == "HCAL" ) typeToCheck = L0DUBase::CaloType::Hadron ;
-
-  LHCb::L0CaloCandidates::iterator cand ;
-
-  for ( cand = candidates -> begin() ; candidates -> end() != cand ;
-        ++cand ) {
-    LHCb::L0CaloCandidate * theCand = (*cand) ;    
-    if ( theCand -> type() == typeToCheck ) {
-      if ( theCand -> et() > result ) 
-        result = theCand -> et() ;
     }
   }
   

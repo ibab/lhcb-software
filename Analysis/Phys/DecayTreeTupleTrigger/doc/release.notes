@@ -4,6 +4,9 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2014-06-05 - Patrick Robbe
+ - TupleToolL0Calo: improve ntuple
+
 !========================= DecayTreeTupleTrigger v1r3 2014-04-02 =========================
 
 ! 2014-03-07 - Patrick Robbe 
