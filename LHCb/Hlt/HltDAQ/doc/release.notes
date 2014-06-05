@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-05 - Sebastian Neubert
+ - using a proper counter to keep track of number of decoded tracks
+   in TrackReportsDecoder
+
 ! 2014-06-03 - Gerhard Raven
  - fix decode/encode qmtest configuration
 

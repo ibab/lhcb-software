@@ -36,7 +36,7 @@ DECLARE_ALGORITHM_FACTORY( HltTrackReportsDecoder )
 //=============================================================================
 HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : Decoder::AlgBase ( name , pSvcLocator ) , m_trackcount(0),m_callcount(0)
+  : Decoder::AlgBase ( name , pSvcLocator ) ,m_callcount(0)
 {
    //new for decoders, initialize search path, and then call the base method
   m_rawEventLocations = {LHCb::RawEventLocation::Trigger, LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default};
@@ -102,11 +102,11 @@ StatusCode HltTrackReportsDecoder::execute() {
     return StatusCode::FAILURE;
   }
 
-  if(outputTracks->size()>0) {
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "outputLocation already contains tracks. Skipping decoding." << endmsg;
-    return StatusCode::SUCCESS;
-  } 
+  //if(outputTracks->size()>0) {
+  // if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+  //    debug() << "outputLocation already contains tracks. Skipping decoding." << endmsg;
+  //  return StatusCode::SUCCESS;
+  //} 
 
 
   // ----------------------------------------------------------
@@ -179,7 +179,7 @@ StatusCode HltTrackReportsDecoder::execute() {
        verbose() << "----------------------------------------\n";
        verbose() << "Decoded event " << m_callcount << endmsg;
        verbose() << outputTracks->size() <<" Resurrected tracks: \n"; 
-       m_trackcount += outputTracks->size();
+       counter("#Tracks") += outputTracks->size();
        LHCb::Tracks::const_iterator pItr;
        for(pItr = outputTracks->begin(); outputTracks->end() != pItr; ++pItr){
 	 LHCb::Track* Tr = (*pItr);
@@ -205,7 +205,6 @@ StatusCode HltTrackReportsDecoder::finalize() {
 
   if ( msgLevel(MSG::VERBOSE) ) {
     verbose() << "==> Finalize" << endmsg;
-    verbose() << "Decoded " << m_trackcount << " tracks to " << m_outputLocation << endmsg;
   }
 
   return Decoder::AlgBase::finalize();  // must be called after all other actions

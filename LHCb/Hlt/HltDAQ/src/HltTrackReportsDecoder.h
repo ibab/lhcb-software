@@ -50,7 +50,6 @@ private:
   /// SourceID to decode. source ids are linked to track stages in TrackNames.trackingSources 
   IntegerProperty m_sourceID;
 
-  unsigned int m_trackcount;
   unsigned int m_callcount;
 
 };
