@@ -27,6 +27,11 @@ class LbSdbQuery(Script):
                           dest = "verbose",
                           action = "store_true",
                           help = "Verbose command output")
+        parser.add_option("--json",
+                          dest = "json",
+                          default = False,
+                          action = "store_true",
+                          help = "JSON output format")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -88,10 +93,15 @@ class LbSdbQuery(Script):
     def cmdlistReleaseStacks(self, args):
         ''' List the projects known by the SoftConfDB '''
         stacks = self.mConfDB.listReleaseStacks()
-        for (i, stack) in enumerate(stacks):
-            print ">>>>>>>>> Stack %d" % i
-            for (p, v) in stack:
-                print "%d\t%s\t%s" % (i, p, v)
+        if self.options.json:
+            import json
+            tmp = [list(s) for s in stacks]
+            print json.dumps(tmp, indent=2)
+        else:
+            for (i, stack) in enumerate(stacks):
+                print ">>>>>>>>> Stack %d" % i
+                for (p, v) in stack:
+                    print "%d\t%s\t%s" % (i, p, v)
 
     def cmdlistActive(self, args):
         ''' List active projects '''
@@ -264,6 +274,8 @@ if __name__=='__main__':
   %prog listActiveReferences[s] <project> <version>
   %prog checkUnused <project> <version>
   %prog show <project> <version>
+  %prog listReleases
+  %prog listReleaseStacks
 
       """
     s = LbSdbQuery(usage=sUsage)

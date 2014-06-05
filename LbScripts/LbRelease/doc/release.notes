@@ -1,4 +1,6 @@
 2014-06-05  Ben Couturier <Ben.Couturier@cern.ch>
+	LBCORE-511: Add JSON output to lb-sdb-query for the list of staks to release
+	* * python/LbRelease/SoftConfDB/LbSdbQuery.py
 
 	LBCORE-446: Integrated Software Configuration DB with Ariadne DB.
 	* python/LbRelease/SoftConfDB/SoftConfDB.py
