@@ -674,7 +674,11 @@ Xibc = {
 			, 'GlobalGhostProb_Max'               : 0.4
       , 'LongTrackGEC'                      : 150 
     },
-    'STREAMS' : [ 'Dimuon' ],
+    'STREAMS' : { 'Dimuon' : [
+                                 'StrippingXibcXibc2LcJpsi'
+                               , 'StrippingXibcX2JpsiProton'
+                             ]
+                },
     'WGs'    : ['BandQ']
     }
 
@@ -786,6 +790,111 @@ Bc2JpsiHDetached = {
     'STREAMS'   : [ 'Dimuon' ],
     'WGs'    : [ 'BandQ' ]
 }
+
+#########################################################
+### StrippingBc3pppiForBc3h
+### StrippingBc3ppkForBc3h
+### StrippingBc3piForBc3h
+### StrippingBc3kForBc3h
+### StrippingBc3kpiForBc3h
+### -----------------------------------------------------
+### Defined in:                 StrippingBc3h.py
+### Proponent:                  Ivan.Belyaev@cern.ch
+### Motivation:                 Bc -> J/psi 3h
+### Documentation:              n/a              
+#########################################################
+Bc3h = {
+    'BUILDERTYPE' : 'Bc3hConf',
+    'CONFIG'      : {
+                  #
+                  ## PV-requiremens
+                  #
+                  'CheckPV'   : True ,
+                  #
+                  ## Global filter
+                  # 
+                  'FILTER'    : None ,   ## VOID filter 
+                  'ODIN'      : None ,   ## ODIN filter 
+                  'L0DU'      : None ,   ## L0   filter 
+                  'HLT'       : None ,   ## HLT  filter
+                  #
+                  ## c*tau cut for B-hadrons 
+                  #
+                  'CTAU'      : 140 * micrometer , 
+                  'CTAU_BC'   :  80 * micrometer , 
+                  #
+                  ## pions and kaons
+                  # 
+                  'PionCut'   : """
+                  ( CLONEDIST   > 5000   ) & 
+                  ( TRCHI2DOF   < 4      ) &
+                  ( TRGHOSTPROB < 0.4    ) &
+                  ( PT          > 750 * MeV               ) & 
+                  in_range ( 2          , ETA , 4.9       ) &
+                  in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+                  HASRICH                  &
+                  ( PROBNNpi     > 0.15  ) &
+                  ( MIPCHI2DV()  > 9.    )
+                  """ ,
+                  #
+                  'KaonCut'   : """
+                  ( CLONEDIST   > 5000   ) & 
+                  ( TRCHI2DOF   < 4      ) & 
+                  ( TRGHOSTPROB < 0.4    ) & 
+                  ( PT          > 750 * MeV               ) & 
+                  in_range ( 2          , ETA , 4.9       ) &
+                  in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+                  HASRICH                  &
+                  ( PROBNNk      > 0.20  ) &
+                  ( MIPCHI2DV()  > 9.    ) 
+                  """ ,
+                  #
+                  'ProtonCut'   : """
+                  ( CLONEDIST   > 5000    ) & 
+                  ( TRCHI2DOF   < 4       ) & 
+                  ( TRGHOSTPROB < 0.4     ) & 
+                  ( PT          > 500 * MeV              ) & 
+                  in_range (  2        , ETA , 4.9       ) &
+                  in_range ( 10 * GeV  , P   , 150 * GeV ) &
+                  HASRICH                   &
+                  ( PROBNNp      > 0.15   ) &
+                  ( MIPCHI2DV()  > 4.     ) 
+                  """ ,
+                  #
+                  ## useful shortcuts:
+                  #
+                  'Preambulo' : [
+                  ## shortcut for chi2 of vertex fit 
+                  'chi2vx = VFASPF(VCHI2)   '                                , 
+                  ## shortcut for the c*tau
+                  "from GaudiKernel.PhysicalConstants import c_light"        , 
+                  ## use the embedded cut for chi2(LifetimeFit)<25
+                  "ctau      = BPVLTIME ( 25 ) * c_light "                   ,
+                  "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
+                  "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
+                  ## Combination mass-cut for beauty particles 
+                  "mbp_acut  = in_range ( 5.050 * GeV , AM , 5.550 * GeV ) " ,
+                  "mbc_acut  = in_range ( 6.000 * GeV , AM , 6.600 * GeV ) " ,
+                  ## mass-cut for beauty particles 
+                  "mbp_cut   = in_range ( 5.100 * GeV ,  M , 5.500 * GeV ) " ,
+                  "mbc_cut   = in_range ( 6.050 * GeV ,  M , 6.550 * GeV ) " ,
+                  ] ,
+                  # =========================================================================
+                  ## Prescales 
+                  # =========================================================================
+                  'Bc3piPrescale'    : 1.0 ,
+                  'Bc3kPrescale'     : 1.0 ,
+                  'Bc3kpiPrescale'   : 1.0 ,
+                  'Bc3kpiPrescale'   : 1.0 ,
+                  'Bc3pppiPrescale'  : 1.0 ,
+                  'Bc3ppkPrescale'   : 1.0 ,
+                  # =========================================================================
+                 },
+    'WGs' : [ 'BandQ' ],
+    'STREAMS' : [ 'Bhadron' ] 
+}
+
+
 
 
 #########################################################
@@ -1029,7 +1138,9 @@ BuToKX3872 = {
 
 
 ####################################################
-### StrippingXic2HHH
+### StrippingXicHHHXic2PKPiLine
+### StrippingXicHHHXic2PKKLine
+### StrippingXicHHHTheta2PKS0Line
 ###-------------------------------------------------
 ### Defined in: StrippingXic2HHH.py
 ### Proponent:  Yury.Shcheglov@cern.ch
@@ -1077,7 +1188,7 @@ BuToKX3872 = {
 ##################################################
 
 
-Xic2HHH = {
+XicHHH = {
     'WGs'           : ['BandQ'],
     'BUILDERTYPE'   : 'StrippingXic2HHHConf',
     'CONFIG'        : {  'Daug_All_PT_MIN'          : 300.0 * MeV

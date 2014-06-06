@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-06-06 - Lucio Anderlini (BandQ)
+ - Removed lines Xibc2XicJpsi, Xibc2JpsiKp, XibcLb2JpsiKp
+ - Added Bc3h module 
+ - Fixed typo in XicHHH line modifying the name of the Stripping lines
+
 ! 2014-06-05 - Lucio Anderlini (BandQ)
  - Created folder Stripping21 for preliminary compilation and test
  - Updated B&Q dictionaries
