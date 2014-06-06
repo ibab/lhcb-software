@@ -15,7 +15,6 @@
 
 // local
 #include "Hlt1MuonStation.h"
-#include "Hlt1MuonRegion.h"
 #include "Hlt1MuonHit.h"
 
 //-----------------------------------------------------------------------------
@@ -24,7 +23,6 @@
 // 2010-12-07 : Roel Aaij
 //-----------------------------------------------------------------------------
 
-using Gaudi::Range_;
 using Gaudi::range;
 using std::vector;
 
@@ -50,12 +48,27 @@ Hlt1MuonStation::~Hlt1MuonStation()
 //=============================================================================
 Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 {
-    return {std::find_if( m_index[region], m_index[region+1],
+    auto first = std::find_if( m_index[region], m_index[region+1],
                           [=]( const Hlt1MuonHit* hit ) {
                             return ( hit->x() + hit->dx() / 2. ) > xmin;
-            } ), m_index[region+1] } ;
+    } );
+    return { first, m_index[region+1] } ;
 }
 
+//=============================================================================
+Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, double xmax, unsigned int region ) const
+{
+    auto first = std::find_if( m_index[region], m_index[region+1],
+                          [=]( const Hlt1MuonHit* hit ) {
+                            return ( hit->x() + hit->dx() / 2. ) > xmin;
+    } );
+    auto last = std::find_if( first, m_index[region+1], [=]( const Hlt1MuonHit* hit) {
+                            //TODO: this weird asymmetry between first, last is for historical reasons...
+                            return hit->x() > xmax;
+                            // return ( hit->x() - hit->dx() / 2.) > xmax;
+    } );
+    return { first, last };
+}
 //=============================================================================
 Hlt1MuonHitRange Hlt1MuonStation::hits( unsigned int region ) const
 {

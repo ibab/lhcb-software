@@ -45,8 +45,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
     , m_magnetHit{nullptr}
     , m_seeds{0}
 {
-    declareInterface<ITracksFromTrack>( this );
-
     declareProperty( "SeedWindowX", m_xWindow = 200 );
     declareProperty( "SeedWindowY", m_yWindow = 200 );
     declareProperty( "FoITolerance", m_FoITolerance = 1.05 );
@@ -250,7 +248,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
                 << yMax << ")" << endmsg;
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
+            Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
             for ( Hlt1MuonHit* hit : hits ) {
                 debug() << hit->x() << " " << hit->y() << endmsg;
             }
@@ -258,11 +256,10 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
     }
 
     for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-        const Hlt1MuonRegion& region = station.region( r );
-        if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
+        if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue;
 
         // Get hits
-        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
+        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
         if ( msgLevel( MSG::DEBUG ) ) {
             debug() << "Hits in seed region " << r << ":" << endmsg;
             for ( Hlt1MuonHit* hit : hits ) {
@@ -274,7 +271,6 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
 
         // add seed hits to container
         for ( Hlt1MuonHit* hit : hits ) {
-            if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
 
             Candidate* seed = new Candidate{*veloSeed};
@@ -305,17 +301,15 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         double zStation = station.z();
 
         // Clear and cache region FoIs
-        // m_regionFoIX.clear(); //FIXME/TODO is this a bug? Clear removes all elements!!!!
-        // m_regionFoIY.clear();
         double maxFoIX = 0;
         double maxFoIY = 0;
         // Find the maximum FoI to use as a search window.
         for ( unsigned int region = 0; region < nRegions; ++region ) {
-            const double foiX = m_FoIFactor * FoIX( s, region, seed->p() );
-            const double foiY = m_FoIFactor * FoIY( s, region, seed->p() );
+            auto foiX = m_FoIFactor * FoIX( s, region, seed->p() );
+            auto foiY = m_FoIFactor * FoIY( s, region, seed->p() );
             if ( foiX > maxFoIX ) maxFoIX = foiX;
             if ( foiY > maxFoIY ) maxFoIY = foiY;
-            m_regionFoIX[region] = foiX; //FIXME/TODO so this assign beyond the 'end'!!!!
+            m_regionFoIX[region] = foiX;
             m_regionFoIY[region] = foiY;
         }
 
@@ -333,12 +327,8 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         const Hlt1MuonHit* closest = nullptr;
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            const Hlt1MuonRegion& region = station.region( r );
-            if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
-            Hlt1MuonHitRange hits = m_hitManager->hits( xMin, s, r );
-            for ( Hlt1MuonHit* hit : hits ) {
-                if ( hit->x() > xMax ) break;
-
+            if ( !station.overlaps( r,  xMin, xMax, yMin, yMax ) ) continue; // TODO: move into loop control...
+            for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, s, r ) ) {
                 // Take the actual FoI into account
                 unsigned int r = hit->tile().region();
                 auto dx = hit->x()-xMuon;
@@ -346,7 +336,7 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
                 if ( dx > + m_regionFoIX[r] || dx < -m_regionFoIX[r] ||
                      dy > + m_regionFoIY[r] || dy < -m_regionFoIY[r]  )
                     continue;
-                auto dist2 =  dx*dx + dy*dy  ; 
+                auto dist2 = dx*dx + dy*dy  ; 
                 if ( !closest || dist2 < minDist2 ) {
                     closest = hit;
                     minDist2 = dist2;
@@ -370,10 +360,10 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
 {
     const Hlt1ConstMuonHits& hits = candidate->hits();
 
-    double sumWeights = 0., sumZ = 0., sumX = 0., sumTmp2 = 0.;
+    double sumWeights = 0., sumZ = 0., sumX = 0.;
 
     for ( const Hlt1MuonHit* hit : hits ) {
-        double err = hit->dx() / 2.;
+        double err = 0.5 * hit->dx();
         double weight = 1.0 / ( err * err );
         sumWeights += weight;
         sumZ += hit->z() * weight;
@@ -381,7 +371,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
     }
     double ZOverWeights = sumZ / sumWeights;
 
-    double b = 0;
+    double b = 0, sumTmp2 = 0;
     for ( const Hlt1MuonHit* hit : hits ) {
         double err = hit->dx() / 2.;
         double tmp = ( hit->z() - ZOverWeights ) / err;
@@ -395,12 +385,12 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
     // sumWeights );
     // double errB = sqrt( 1. / sumTmp2 );
 
-    double chi2 = 0.;
-    for ( const Hlt1MuonHit* hit : hits ) {
-        double err = hit->dx() / 2.;
-        double tmp = ( hit->x() - a - b * hit->z() ) / err;
-        chi2 += tmp * tmp;
-    }
+    double chi2 = std::accumulate( std::begin(hits), std::end(hits), 0.0, 
+                                   [=](double chi2, const Hlt1MuonHit* hit)  {
+                                        double err = hit->dx() / 2.;
+                                        double tmp = ( hit->x() - a - b * hit->z() ) / err;
+                                        return chi2 += tmp * tmp;
+    });
 
     candidate->fitted() = true;
     candidate->nDoF() = hits.size() - 2;
@@ -413,9 +403,7 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
 void Hlt::HltVeloIsMuon::clean()
 {
     // delete leftover seeds
-    for ( Candidate* candidate : m_seeds ) {
-        delete candidate;
-    }
+    for ( Candidate* candidate : m_seeds ) delete candidate;
     m_seeds.clear();
     delete m_magnetHit;
     m_magnetHit = nullptr;

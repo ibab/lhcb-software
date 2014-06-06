@@ -128,6 +128,14 @@ Hlt1MuonHitRange Hlt1MuonHitManager::hits( double xmin,
     if ( !m_prepared[station] ) prepareHits( station );
     return m_stations[station].hits( xmin, region );
 }
+//=============================================================================
+Hlt1MuonHitRange Hlt1MuonHitManager::hits( double xmin, double xmax,
+                                           unsigned int station,
+                                           unsigned int region )
+{
+    if ( !m_prepared[station] ) prepareHits( station );
+    return m_stations[station].hits( xmin, xmax, region );
+}
 
 //=============================================================================
 unsigned int Hlt1MuonHitManager::nRegions( unsigned int station ) const
@@ -139,13 +147,6 @@ unsigned int Hlt1MuonHitManager::nRegions( unsigned int station ) const
 const Hlt1MuonStation& Hlt1MuonHitManager::station( unsigned int id ) const
 {
     return m_stations[id];
-}
-
-//=============================================================================
-Hlt1MuonRegion Hlt1MuonHitManager::region( unsigned int station,
-                                           unsigned int region ) const
-{
-    return m_stations[station].region( region );
 }
 
 //=============================================================================

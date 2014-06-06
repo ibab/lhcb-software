@@ -15,7 +15,6 @@
 #include "Hlt1MuonHit.h"
 #include "Hlt1MuonStation.h"
 
-class Hlt1MuonRegion;
 class DeMuonDetector;
 
 static const InterfaceID IID_Hlt1MuonHitManager( "Hlt1MuonHitManager", 1, 0 );
@@ -47,13 +46,12 @@ class Hlt1MuonHitManager : public GaudiTool, public IIncidentListener
 
     virtual Hlt1MuonHitRange hits( double xmin, unsigned int station,
                                    unsigned int region );
+    virtual Hlt1MuonHitRange hits( double xmin, double xmax, unsigned int station,
+                                   unsigned int region );
 
     virtual unsigned int nRegions( unsigned int station ) const;
 
     virtual const Hlt1MuonStation& station( unsigned int id ) const;
-
-    virtual Hlt1MuonRegion region( unsigned int station,
-                                   unsigned int region ) const;
 
   private:
     // Properties

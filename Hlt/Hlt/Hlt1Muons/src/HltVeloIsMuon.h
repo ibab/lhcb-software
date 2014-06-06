@@ -33,7 +33,7 @@ namespace Hlt
  *  @date   2010-12-02
  */
 
-class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
+class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
 {
   public:
     enum { nStations = 5u, nRegions = 4u };
@@ -41,14 +41,12 @@ class HltVeloIsMuon : virtual public extends1<GaudiHistoTool, ITracksFromTrack>
     HltVeloIsMuon( const std::string& type, const std::string& name,
                    const IInterface* parent );
 
-    virtual ~HltVeloIsMuon(); ///< Destructor
+    ~HltVeloIsMuon() override; ///< Destructor
 
-    virtual StatusCode initialize();
-
-    virtual StatusCode finalize();
-
-    virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                        std::vector<LHCb::Track*>& tracks );
+    StatusCode initialize() override;
+    StatusCode finalize() override;
+    StatusCode tracksFromTrack( const LHCb::Track& seed,
+                                std::vector<LHCb::Track*>& tracks ) override;
 
   private:
     friend class ToolFactory<HltVeloIsMuon>;

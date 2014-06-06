@@ -185,36 +185,32 @@ bool IsMuonTool::preSelection( const LHCb::Track& track ) const
 //=============================================================================
 Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
 {
+    using xy_t = std::pair<double,double>;
+
     class is_in_window {
-        std::pair<double,double> m_center;
-        std::array<std::pair<double,double>,4> m_foi;
+        xy_t m_center;
+        std::array<xy_t,4> m_foi;
     public:
-        is_in_window( std::pair<double, double> center
-                    , std::pair<double, double> foi0 
-                    , std::pair<double, double> foi1 
-                    , std::pair<double, double> foi2 
-                    , std::pair<double, double> foi3 
-                    , double sf
-                    ) 
+        is_in_window( xy_t center
+                    , xy_t foi0 , xy_t foi1 , xy_t foi2 , xy_t foi3 
+                    , double sf ) 
             : m_center{std::move(center)}, 
-              m_foi{ std::move(foi0), std::move(foi1), std::move(foi2), std::move(foi3) }
-            {   
+              m_foi{{ std::move(foi0), std::move(foi1), std::move(foi2), std::move(foi3) }}
+            {
                 std::for_each( std::begin( m_foi ), std::end(m_foi),
-                               [=](std::pair<double,double>& p) { 
+                               [=](xy_t& p) { 
                                    p.first *= sf ; p.second *= sf; 
                 } );
             }
-
         bool operator()(const Hlt1MuonHit* hit) const {
                 auto region = hit->tile().region();
                 assert(region<4);
                 return ( fabs( hit->x() - m_center.first  ) < m_foi[region].first ) &&
-                       ( fabs( hit->y() - m_center.second ) < m_foi[region].second )  ; 
-
+                       ( fabs( hit->y() - m_center.second ) < m_foi[region].second ) ;
         }
     };
 
-    auto is_in_window_ = [&](unsigned s) { 
+    auto is_in_window_ = [&](unsigned s) {
         auto p = track.p();
         return is_in_window{ m_track[s], foi(s,0,p), foi(s,1,p), 
                                          foi(s,2,p), foi(s,3,p), 
@@ -229,9 +225,9 @@ Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
         // Convert Hlt1 regions to standard muon station regions
         const auto& station = m_hitManager->station( s );
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            auto hr =  m_hitManager->hits( -m_regionOuter[s].first, s, r );
-            std::copy_if( std::begin(hr), std::end(hr), 
-                          std::back_inserter(hits), 
+            auto hr =  m_hitManager->hits( -m_regionOuter[s].first, s, r ); // TODO: no xMax?? +m_regionOuter[s].first ?? Maybe drop xMin???
+            std::copy_if( std::begin(hr), std::end(hr),
+                          std::back_inserter(hits),
                           predicate );
         }  // region
         m_occupancy[s] = hits.size(); // at this point: cumulative over stations upto s

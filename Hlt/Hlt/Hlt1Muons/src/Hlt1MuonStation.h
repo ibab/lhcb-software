@@ -10,7 +10,6 @@
 
 // Include files
 #include "Hlt1MuonHit.h"
-#include "Hlt1MuonRegion.h"
 
 class DeMuonDetector;
 
@@ -43,6 +42,7 @@ class Hlt1MuonStation final
     }
 
     Hlt1MuonHitRange hits( double xmin, unsigned int region ) const;
+    Hlt1MuonHitRange hits( double xmin, double xmax, unsigned int region ) const;
 
     Hlt1MuonHitRange hits( unsigned int region ) const;
 
@@ -51,12 +51,12 @@ class Hlt1MuonStation final
         return (m_xboundaries.size()-1) * nRegionsY;
     }
 
-    Hlt1MuonRegion region( unsigned int id ) const
-    {
+    //TODO: generate range of id which overlap (xMin,xMax,yMin,yMax)...
+    bool overlaps( unsigned id, double xmin, double xmax, double ymin_, double ymax ) const {
         auto j = id % nRegionsY ;
-        auto i = 1 + id/nRegionsY;
+        auto i = id/nRegionsY;
         auto y = ymin() + j * dy();
-        return { id, m_xboundaries[ i-1], m_xboundaries[i],  y, y+dy() };
+        return !( xmax < m_xboundaries[i] || xmin > m_xboundaries[ i+1 ] || ymin_ > y+dy() || ymax < y );
     }
 
   private:

@@ -3,6 +3,10 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-06-06 - Gerhard Raven
+ - optimize away Hlt1MuonRegion
+ - add interface for left-right symmetric search windows
+
 ! 2014-05-04 - Gerhard Raven
  - speed up hit partitioning and sorting in Hlt1MuonStation
  - replace unordered_multimap with array<std::vector ,5> in Hlt1MuonHitManager

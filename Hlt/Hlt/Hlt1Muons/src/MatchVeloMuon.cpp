@@ -139,10 +139,9 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
             out->addToAncestors( seed );
             const Candidate* c = *best;
             out->addInfo( 35, c->slope() - c->tx() );
-            LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
             double down = m_fieldSvc->isDown() ? -1 : 1;
-            double q =
-                down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
+            double q = down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
+            LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
             state->setQOverP( q / c->p() );
             tracks.push_back( out.release() );
         }
@@ -191,18 +190,17 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
                 << yMax << ")" << endmsg;
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, seedStation, r ) ) {
+            for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
                 debug() << hit->x() << " " << hit->y() << endmsg;
             }
         }
     }
 
     for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-        const Hlt1MuonRegion& region = station.region( r );
-        if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
+        if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue; //TODO: push into loop control -- request from station to a range of regions to loop over...
 
         // Get hits
-        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, seedStation, r );
+        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
 
         if ( msgLevel( MSG::DEBUG ) ) {
             debug() << "Hits in seed region " << r << ":" << endmsg;
@@ -215,7 +213,6 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
 
         // add seed hits to container
         for ( Hlt1MuonHit* hit : hits ) {
-            if ( hit->x() > xMax ) break;
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
             Candidate* seed = new Candidate{veloSeed};
             seed->addHit( m_magnetHit );
@@ -263,11 +260,9 @@ void MatchVeloMuon::addHits( Candidate& seed )
         const Hlt1MuonHit* closest = nullptr;
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            const Hlt1MuonRegion& region = station.region( r );
-            if ( !region.overlap( xMin, xMax, yMin, yMax ) ) continue;
+            if ( !station.overlaps(r, xMin, xMax, yMin, yMax ) ) continue;
 
-            for ( const Hlt1MuonHit* hit : m_hitManager->hits( xMin, s, r ) ) {
-                if ( hit->x() > xMax ) break;
+            for ( const Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax,  s, r ) ) {
                 if ( hit->y() > yMax || hit->y() < yMin ) continue;
 
                 double dist2 = ( xMuon - hit->x() ) * ( xMuon - hit->x() ) +
