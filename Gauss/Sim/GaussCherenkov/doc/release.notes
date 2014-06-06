@@ -4,6 +4,14 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+
+! 2014-06-06 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties 
+   . Added options to scale QE for Rich1 and Rich2 separately
+ - CherenkovG4HistoFillSet5
+   . Added Hists to store true reflection points on Rich2 Mirrors
+
+
 ! 2014-03-20 - Sajan Easo
   -The commit on 2014-01-21 seems to have commented out creation of hits.
    This is now fixed in CkvSensDet.cpp

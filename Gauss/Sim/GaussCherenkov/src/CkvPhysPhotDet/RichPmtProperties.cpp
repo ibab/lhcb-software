@@ -39,7 +39,8 @@ RichPmtProperties::RichPmtProperties( )
     m_PmtDBOverRideMaxQEValue(0.60),
     m_CurQEMatPathname(RichPmtQeffMatTabPropPath ),
     m_CurQETableSourceOption(0),
-    m_PmtQEScaleFactor( 1.0 ),
+    m_R1PmtQEScaleFactor( 1.0 ),
+    m_R2PmtQEScaleFactor( 1.0 ),
     m_ActivatePmtModuleSuppressSet3(false),
     m_ActivatePmtModuleSuppressSet4(false),
     m_ActivatePmtModuleSuppressSet5(false),
@@ -149,12 +150,12 @@ void RichPmtProperties::InitializePmtProperties( ) {
         m_numPmtTotUsedRich[1]= m_numPmtTotRich[1];
       } 
       
-      //      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
-      //           << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
+      // RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+      //            << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
       
       // RichPmtlog << MSG::INFO
-      //           << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
-      //           << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
+      //            << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
+      //            << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
       
     } // end test R_DE[1]
      
@@ -273,13 +274,12 @@ void RichPmtProperties::InitializePmtProperties( ) {
    //   << "Filled the PMT QE, PSF and Demag tables for  RICH  "<<endreq;
 
 
-      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts Used   MaxNumPmt  = "
-                 << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
-      
-      RichPmtlog << MSG::INFO
-                 << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
-                 << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
-
+   RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+              << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
+   
+   RichPmtlog << MSG::INFO
+              << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
+              << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
 
 
   //Now get the PMT High Voltage
@@ -359,10 +359,12 @@ RichPmtProperties::~RichPmtProperties() { ; }
 
 //////////////////////////////////////////////////////////////////////////
 void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc, 
-						IMessageSvc* msgSvc  ) {
+                                                IMessageSvc* msgSvc  ) {
 
   MsgStream RichPmtPropLogQE( msgSvc, "RichPmtProperties" );
-  std::vector<double> QeSingle;
+
+  std::vector<double> R1QeSingle;
+  std::vector<double> R2QeSingle;
   std::vector<double> EphotSingle;
   std::vector<double> QeZero;
 
@@ -433,9 +435,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }else if (m_CurQETableSourceOption == 9)  {m_CurQEMatPathname=RichPmtInflatedNominalQeffMatTabPropPath;
       }else if (m_CurQETableSourceOption == 10)  {m_CurQEMatPathname=RichPmtQESBAUVGlass2013SpecPropPath;
       }else if (m_CurQETableSourceOption == 11)  {m_CurQEMatPathname=RichPmtQESBABSGlass2013SpecPropPath;
-
-      }
-      
+      }      
     }
 
      SmartDataPtr<TabulatedProperty> tabQE(detSvc, m_CurQEMatPathname );
@@ -444,25 +444,28 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     //  SmartDataPtr<TabulatedProperty> tabQE(detSvc, RichPmtBorosilicateQeffMatTabPropPath);
     // RichPmtPropLogQE<<MSG::INFO<<" Now getting QE from "<<RichPmtBorosilicateQeffMatTabPropPath<<endreq;    
 
-      if(!tabQE) { 
-         RichPmtPropLogQE << MSG::ERROR
-				  <<"RichPmtPropertiesQE: Can't retrieve "
-      				  << m_CurQEMatPathname << endreq;
-      //				  <<RichPmtBorosilicateQeffMatTabPropPath  << endreq;
+     if(!tabQE) { 
+       RichPmtPropLogQE << MSG::ERROR
+                        <<"RichPmtPropertiesQE: Can't retrieve "
+                        << m_CurQEMatPathname << endreq;
+       //				  <<RichPmtBorosilicateQeffMatTabPropPath  << endreq;
      } else {
-        table = tabQE->table();
-      }
-      
-      // } else {
-      //    table = iDePmt->pmtQuantumEff()->tabProperty()->table();
-      // }
-    
-    
+       table = tabQE->table();
+     }
+     
+     // } else {
+     //    table = iDePmt->pmtQuantumEff()->tabProperty()->table();
+     // }
+     
+     
+     // Only one table now
+     
     TabulatedProperty::Table::const_iterator it;
     for (it = table.begin(); it != table.end(); it++) {
       double aPhotonEnergy= (it->first);
       double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob 
-      double aQeCorrected = aQeOrig * m_PmtQEScaleFactor;
+      double aR1QeCorrected = aQeOrig * m_R1PmtQEScaleFactor;
+      double aR2QeCorrected = aQeOrig * m_R2PmtQEScaleFactor;
 
       // if( (aPhotonEnergy >= (double) m_MinPhotonEnergyInRICH) && 
           //	  (aPhotonEnergy <= (double) m_MaxPhotonEnergyInRICH ) ) {
@@ -471,36 +474,32 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 
       double aPhotonEnergyIneV = aPhotonEnergy*1000000.0; // mult to get from MeV to eV
       EphotSingle.push_back(aPhotonEnergyIneV);
-      QeSingle.push_back(aQeCorrected );
+      R1QeSingle.push_back( aR1QeCorrected );
+      R2QeSingle.push_back( aR2QeCorrected );
       QeZero.push_back(0.000000001);
     }
-    
-    
 
-    int numQEbin = (int) QeSingle.size();
-
+    int numQEbin = (int) R1QeSingle.size();    
 
     int aNumPmtInModule=16;
     
     std::vector<bool> PmtSupFlag(aTotNumPmtRICH,false);
     G4cout<<" Pmt module supress Flags set3 set4 set5 set6 "<< m_ActivatePmtModuleSuppressSet3<<"   "
           <<m_ActivatePmtModuleSuppressSet4<<"  "<< m_ActivatePmtModuleSuppressSet5
-         <<"   "<< m_ActivatePmtModuleSuppressSet6<< G4endl;
+          <<"   "<< m_ActivatePmtModuleSuppressSet6<< G4endl;
     
     G4cout<<" Pmt supress Flags set0 set1 set2: " 
           << m_ActivatePmtSuppressSet0 <<"   "
           << m_ActivatePmtSuppressSet1 <<"   "
           << m_ActivatePmtSuppressSet2 << G4endl;    
-
-
-     int aNumSupPmt3=0;
-   
+    
+    int aNumSupPmt3 = 0 ;
+    
     if(m_ActivatePmtModuleSuppressSet3) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet3Table( detSvc,RichPmtModuleSuppressSet3Path  );
       if( PmtModuleSupressSet3Table ){
         tableSupSet3= PmtModuleSupressSet3Table->table();
         aNumSupPmt3 = ((int) tableSupSet3.size())*aNumPmtInModule;
-        
         
         TabulatedProperty::Table::const_iterator ita;
 
@@ -515,14 +514,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
       
     }
-
+ 
      int aNumSupPmt4=0;
     if ( m_ActivatePmtModuleSuppressSet4) {
       // for this set only one of row pmts kept. The other three rows are annuled. 6-3-2013
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet4Table( detSvc,RichPmtModuleSuppressSet4Path  );
       if( PmtModuleSupressSet4Table ){
         tableSupSet4= PmtModuleSupressSet4Table->table();
-
         
         TabulatedProperty::Table::const_iterator itb;
         for(itb=tableSupSet4.begin(); itb != tableSupSet4.end(); itb++) {
@@ -539,7 +537,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
           
           
           for (int iPb=aPmtSupStartSet4; iPb<aPmtSupEndSet4 ; iPb++) {
-            PmtSupFlag[iPb]=true; 
+            PmtSupFlag[iPb]=true;
             aNumSupPmt4++;
           }
           
@@ -548,14 +546,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
         
       }
     }
-  
-     int aNumSupPmt5=0;  
+    
+     int aNumSupPmt5=0; 
     if ( m_ActivatePmtModuleSuppressSet5) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet5Table( detSvc,RichPmtModuleSuppressSet5Path  );
       if( PmtModuleSupressSet5Table ){
         tableSupSet5= PmtModuleSupressSet5Table->table();
         aNumSupPmt5 = ((int) tableSupSet5.size())*aNumPmtInModule;
-          
         TabulatedProperty::Table::const_iterator itb;
         for(itb=tableSupSet5.begin(); itb != tableSupSet5.end(); itb++) {
           int aSupModuleC = (int) (itb->second);
@@ -592,7 +589,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     
       
       // Now suppress PMT according to their copy numbers 
-      // PMT Set0 
+      // PMT Set0
       int aNumSupPmt0=0;
       if ( m_ActivatePmtSuppressSet0 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet0Table( detSvc, RichPmtSuppressSet0Path  );
@@ -611,7 +608,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
 
       
-      // PMT Set1 
+      // PMT Set1
       int aNumSupPmt1=0;
       if ( m_ActivatePmtSuppressSet1 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet1Table( detSvc, RichPmtSuppressSet1Path  );
@@ -628,14 +625,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
       
       
-      // PMT Set2 
+      // PMT Set2
       int aNumSupPmt2=0;
       if ( m_ActivatePmtSuppressSet2 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet2Table( detSvc, RichPmtSuppressSet2Path  );
         
         if( PmtSupressSet2Table ){
           tableSupPmtSet2 = PmtSupressSet2Table->table();
-          aNumSupPmt2=(int) tableSupPmtSet2.size();
           
           for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet2.begin(); 
               itPmt != tableSupPmtSet2.end(); itPmt++ ) {
@@ -643,9 +639,11 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
           }    
         }
       }
-      
+
       m_numPmtTotUsedRich[0] -= (aNumSupPmt3+ aNumSupPmt4+ aNumSupPmt5+ aNumSupPmt0    );
-      m_numPmtTotUsedRich[1] -= (aNumSupPmt6 + aNumSupPmt1 + aNumSupPmt2 );
+      m_numPmtTotUsedRich[1] -= (aNumSupPmt6 + aNumSupPmt1 + aNumSupPmt2 );  
+     
+       
       
       //Check
       //for( int i=0; i<(aTotNumPmtRICH) ; ++i ) {
@@ -654,38 +652,38 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       
    
 
-   for(int i=0; i<(aTotNumPmtRICH) ; ++i ) {
-      int ih= i;
-      int irichdet=0;
-      if(i >= nPmtInRich1) {
-         ih=i-nPmtInRich1;
-         irichdet=1;
-      }
-      if(m_SuperRichFlag) irichdet=2;
+      for(int i=0; i<(aTotNumPmtRICH) ; ++i ) {
+        int ih= i;
+        int irichdet=0;
+        if(i >= nPmtInRich1) {
+          ih=i-nPmtInRich1;
+          irichdet=1;
+        }
+        if(m_SuperRichFlag) irichdet=2;
       
-    m_RichPmtQEList[irichdet][ih] = new RichPmtQE(ih,irichdet);
-    if(numQEbin > 0 ){
-
-      if( !( PmtSupFlag[i]) ) {
-
-          m_RichPmtQEList[irichdet][ih]->setAnPmtQEen( numQEbin, QeSingle, EphotSingle);
-      }else {
-        // G4cout<<" Supressing QE of pmt module "<< i <<"  "<<(i/16) <<G4endl;
+        m_RichPmtQEList[irichdet][ih] = new RichPmtQE(ih,irichdet);
         
-         m_RichPmtQEList[irichdet][ih]->setAnPmtQEen( numQEbin, QeZero, EphotSingle);
-      }
+        if( numQEbin > 0 ){
+          if( !( PmtSupFlag[i]) ) {
+            
+            if( irichdet==0 || irichdet==2) m_RichPmtQEList[irichdet][ih]->setAnPmtQEen( numQEbin, R1QeSingle, EphotSingle);
+            else if( irichdet==1 ) m_RichPmtQEList[irichdet][ih]->setAnPmtQEen( numQEbin, R2QeSingle, EphotSingle);
 
-    } else {
-      // the following to be modified for non-existent pmts SE 26-10-2006.
-      RichPmtPropLogQE << MSG::WARNING
-		       <<" RichPmtProperties: Zero number of bins for pmt QE .Check db for "
-		       << "Current richdet pmtInRichDet "<< irichdet<<"  "<<ih
-                       <<endreq;
-    }
-    
-
-    
-   }// end loop over pmts
+          }else {
+            // G4cout<<" Supressing QE of pmt module "<< i <<"  "<<(i/16) <<G4endl;
+            
+            m_RichPmtQEList[irichdet][ih]->setAnPmtQEen( numQEbin, QeZero, EphotSingle);
+          }
+          
+        } else {
+          // the following to be modified for non-existent pmts SE 26-10-2006.
+          RichPmtPropLogQE << MSG::WARNING
+                           <<" RichPmtProperties: Zero number of bins for pmt QE .Check db for "
+                           << "Current richdet pmtInRichDet "<< irichdet<<"  "<<ih
+                           <<endreq;
+        }
+        
+      }// end loop over pmts
     
    
 }

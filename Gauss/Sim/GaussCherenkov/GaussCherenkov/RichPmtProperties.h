@@ -159,10 +159,17 @@ public:
     m_CurQETableSourceOption=aOpt;
     
   }
-  void SetPmtQEOverallScaling( double scaleFactor )
+
+  void SetR1PmtQEOverallScaling( double scaleFactor )
   {
-    m_PmtQEScaleFactor = scaleFactor ;
+    m_R1PmtQEScaleFactor = scaleFactor ;
   }
+
+  void SetR2PmtQEOverallScaling( double scaleFactor )
+  {
+    m_R2PmtQEScaleFactor = scaleFactor ;
+  }
+ 
 
   void setPmtPropertiesVerboseLevel(int aLevel );
 
@@ -264,7 +271,8 @@ private:
   int m_CurQETableSourceOption; // 0 default means Borosilicate
                                 // 1 means the UV glass
                                 // 2 means nominal HPD like
-  double m_PmtQEScaleFactor;
+  double m_R1PmtQEScaleFactor;
+  double m_R2PmtQEScaleFactor;
 
   //  bool m_UsePmtMagDistortions;
   bool m_ActivatePmtModuleSuppressSet3;

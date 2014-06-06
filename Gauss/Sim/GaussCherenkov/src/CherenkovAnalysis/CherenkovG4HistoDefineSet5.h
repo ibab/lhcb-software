@@ -63,9 +63,10 @@ private:
   IHistogram1D*      m_hPmtOccpPmtQWRich1;
   IHistogram1D*      m_hPmtOccpGasQWRich2;
   IHistogram1D*      m_hPmtOccpPmtQWRich2;
+ 
+  IHistogram2D*     m_XYHitLocationRich2GasMirror1 ;
+  IHistogram2D*     m_XYHitLocationRich2GasMirror2 ;
   
-
-
   std::string m_RichG4HistoPathSet5; ///< Histo path
   //  ISvcLocator* m_svcLocSet5;
 

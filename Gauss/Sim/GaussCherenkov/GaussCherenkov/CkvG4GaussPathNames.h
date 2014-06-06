@@ -21,6 +21,8 @@ static const G4String RichPmtUBAUVGlassQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/NominalUBAUVGlassPmtQuantumEff";
 static const G4String RichPmtSBAUVGlassQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBAUVGlassPmtQuantumEff";
+static const G4String RichPmtSBAUVGlassQE2013MatTabPropPath=
+                          "/dd/Materials/RichMaterialTabProperties/SBAUVGlassPmtQE2013";
 static const G4String RichPmtSBABorosilicateQeffMatTabPropPath=
                           "/dd/Materials/RichMaterialTabProperties/SBABorosilicatePmtQuantumEff";
 static const G4String RichPmtDeflatedNominalQeffMatTabPropPath=
