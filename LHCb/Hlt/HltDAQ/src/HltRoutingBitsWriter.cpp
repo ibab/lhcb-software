@@ -268,6 +268,8 @@ StatusCode HltRoutingBitsWriter::execute() {
         if ( result ) bits[j] |= (0x01UL << i); 
     }
   }
+  //TODO: if we're Hlt2, we should _update_ the pre-existing routing bits bank
+  //      and check that we're a pure superset of the existing bits...
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
   rawEvent->addBank(0,LHCb::RawBank::HltRoutingBits,0,bits);
 

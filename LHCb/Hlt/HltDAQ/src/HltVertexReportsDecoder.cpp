@@ -21,7 +21,6 @@ namespace {
 
 using namespace LHCb;
 
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVertexReportsDecoder
 //

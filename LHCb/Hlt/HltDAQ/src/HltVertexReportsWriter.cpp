@@ -104,57 +104,40 @@ StatusCode HltVertexReportsWriter::execute() {
   RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
 
   // get string-to-int selection ID map
-  std::vector<IANNSvc::minor_value_type> selectionNameToIntMap;  
-  //    std::vector<IANNSvc::minor_value_type> hlt = m_hltANNSvc->items("SelectionID"); // old style
-  //    selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt.begin(),hlt.end() );
-  auto hlt1 = m_hltANNSvc->items(Hlt1SelectionID); // new style
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt1.begin(),hlt1.end() );
-  auto hlt2 = m_hltANNSvc->items(Hlt2SelectionID);
-  selectionNameToIntMap.insert( selectionNameToIntMap.end(),hlt2.begin(),hlt2.end() );
+  auto selectionNameToIntMap = m_hltANNSvc->item_map(Hlt1SelectionID); // new style
+  selectionNameToIntMap.merge( m_hltANNSvc->item_map(Hlt2SelectionID) );
 
   std::vector< unsigned int > hltVertexReportsRawBank;
   // first word will count number of vertex selections saved
   hltVertexReportsRawBank.push_back(0);
   
   // loop over vertex selections given in the input list
-  for( HltVertexReports::Container::const_iterator is=inputSummary->begin();
-       is!=inputSummary->end();++is){
-     const std::string selName(is->first);     
+  for( const auto& s : *inputSummary) { 
 
      // save selection ---------------------------
-
-     // int selection id
-     int intSelID(0);   
-     for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
-          si!=selectionNameToIntMap.end();++si){
-       if( si->first == selName ){
-         intSelID=si->second;
-         break;
-       }
-     }
-     if( !intSelID ){
-       Error(" selectionName=" +selName+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 ); 
+     // find int selection id
+     auto si = selectionNameToIntMap.find( s.first );
+     if( si==std::end(selectionNameToIntMap) ) {
+       Error(" selectionName=" +s.first+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 ); 
        continue;
      }
+     int intSelID = si->second;
 
-     hltVertexReportsRawBank[0] = hltVertexReportsRawBank[0] + 1;
+     ++hltVertexReportsRawBank[0];
 
-     unsigned int size = is->second.size();
-     size = (size<65535)?size:65535;
+     unsigned int size = s.second.size();
+     size = std::min( size, 65535u );
      // first word for each selection contains number of vertices (low short) and selection ID (high short)
      hltVertexReportsRawBank.push_back(  (unsigned int)( size | (intSelID << 16) ) );
      
-    
-     for(unsigned int ivtx=0;ivtx!=size;++ivtx){
-       const VertexBase & vtx = *(is->second[ivtx]);
+     for(const auto& vtx : s.second ) { 
        // now push vertex info
-       
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx.position().x() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx.position().y() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx.position().z() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx.chi2() ) );
-       hltVertexReportsRawBank.push_back( (unsigned int)(  (vtx.nDoF()>0)?vtx.nDoF():0 ) );       
-       const Gaudi::SymMatrix3x3 & cov = vtx.covMatrix();
+       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().x() ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().y() ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().z() ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( vtx->chi2() ) );
+       hltVertexReportsRawBank.push_back( std::max( vtx->nDoF(), 0 ) ); 
+       const Gaudi::SymMatrix3x3 & cov = vtx->covMatrix();
        hltVertexReportsRawBank.push_back( doubleToInt( cov[0][0] ) );
        hltVertexReportsRawBank.push_back( doubleToInt( cov[1][1] ) );
        hltVertexReportsRawBank.push_back( doubleToInt( cov[2][2] ) );
@@ -167,17 +150,14 @@ StatusCode HltVertexReportsWriter::execute() {
 
   // delete any previously inserted vtx reports
   const std::vector<RawBank*> hltvtxreportsRawBanks = rawEvent->banks( RawBank::HltVertexReports );
-  for( std::vector<RawBank*>::const_iterator b=hltvtxreportsRawBanks.begin();
-       b!=hltvtxreportsRawBanks.end(); ++b){
+  for( const auto&  b : hltvtxreportsRawBanks ) {
     unsigned int sourceID=kSourceID_Hlt;
-    if( (*b)->version() > 1 ){
-      sourceID = (*b)->sourceID() >> kSourceID_BitShift;
-    }
-    if( m_sourceID != sourceID )continue;
+    if( b->version() > 1 ) sourceID = b->sourceID() >> kSourceID_BitShift;
+    if( m_sourceID != sourceID ) continue;
 
-    rawEvent->removeBank(*b);
+    rawEvent->removeBank(b);
     if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltVertexReports bank " << endmsg;
-    }    
+    }
   }
 
   // shift bits in sourceID for the same convention as in HltSelReports
@@ -216,9 +196,7 @@ StatusCode HltVertexReportsWriter::execute() {
   
       }
     }
-
   }
-
   return StatusCode::SUCCESS;
 }
 

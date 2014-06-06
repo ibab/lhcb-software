@@ -162,22 +162,12 @@ StatusCode HltSelReportsWriter::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-
   // get inputs
-
-  // ------ actually  don't really need this container since its content is duplicated in object store 
-  //if( !exist<HltSelReports>(m_inputHltSelReportsLocation) ){    
-  //  warning() << " No HltSelReports at " << m_inputHltSelReportsLocation << endmsg;
-  //  return StatusCode::SUCCESS;  
-  //}  
-  //const HltSelReports* inputSummary = get<HltSelReports>(m_inputHltSelReportsLocation);
-
   const std::string objectsLocation = m_inputHltSelReportsLocation.value() + "/Candidates" ;  
-  if( !exist<HltObjectSummary::Container>( objectsLocation ) )
-  {
+  const HltObjectSummary::Container* objectSummaries = getIfExists<HltObjectSummary::Container>( objectsLocation );
+  if ( !objectSummaries ) {
     return Warning( " No HltSelReports objects at " + objectsLocation, StatusCode::SUCCESS, 20 );
   }
-  const HltObjectSummary::Container* objectSummaries = get<HltObjectSummary::Container>( objectsLocation );
 
   // protection against too many objectSummaries to store
   if( objectSummaries->size() > 0xFFFFL ){
@@ -188,11 +178,10 @@ StatusCode HltSelReportsWriter::execute() {
   }
 
   // get output
-  if( !exist<RawEvent>(m_outputRawEventLocation) ){    
+  RawEvent* rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
+  if( !rawEvent ) {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
-
 
   // --------------------------------------------------------------------------------------
   // ------------ create hit sequence bank -------------------------------------------------
@@ -203,7 +192,6 @@ StatusCode HltSelReportsWriter::execute() {
   LhcbidSequences lhcbidSequences;
   for( const auto&  hos : *objectSummaries ) {
     const auto&  ids = hos->lhcbIDs();
-    if ( ids.empty() ) continue;
     LhcbidSequences::value_type thisIDset;
     thisIDset.reserve( ids.size() );
     std::transform( std::begin(ids), std::end(ids),
@@ -236,8 +224,8 @@ StatusCode HltSelReportsWriter::execute() {
   std::sort( std::begin(sortedHosPtrs), std::end(sortedHosPtrs), sortByCLID_ );
   // inverse mapping
   std::vector< unsigned int > fromIndexToNewIndex(sortedHosPtrs.size());
-  for( auto ppHos= std::begin(sortedHosPtrs); ppHos != std::end(sortedHosPtrs); ++ppHos ){
-    fromIndexToNewIndex[ (*ppHos)->index() ] = ppHos - std::begin(sortedHosPtrs);
+  for (size_t i = 0 ; i!=sortedHosPtrs.size(); ++i ) {
+    fromIndexToNewIndex[ sortedHosPtrs[i]->index() ] = i;
   }
 
   // --------------------------------------------------------------------------------------
@@ -252,7 +240,6 @@ StatusCode HltSelReportsWriter::execute() {
   HltSelRepRBExtraInfo extraInfoSubBank;
   HltSelRepRBStdInfo stdInfoSubBank;
 
-  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items(InfoID); 
 
   objTypSubBank.initialize();
   substrSubBank.initialize();  
@@ -310,33 +297,26 @@ StatusCode HltSelReportsWriter::execute() {
     HltSelRepRBExtraInfo::ExtraInfo extraInfo;
     HltSelRepRBStdInfo::StdInfo stdInfo;
 
-    for(const auto&  i : hos->numericalInfo() ){
+    for( const auto&  i : hos->numericalInfo() ){
 
       if( i.first.find("#")!=std::string::npos ){
 
         if( saveStdInfo || ( hos->summarizedObjectCLID() == 1 ) ){
-          
           // push floats as ints (allows for possible compression in future versions)
           union IntFloat { unsigned int mInt; float mFloat; };
           IntFloat a; a.mFloat = i.second;
           unsigned int intFloat = a.mInt;
           stdInfo.push_back( intFloat );
-          
         }
 
       } else if(saveExtraInfo) {
 
-        bool found=false;        
         // convert string-id to a short
-        for( const auto&  j : hltinfos) {
-          if( j.first == i.first  ){
-            extraInfo.emplace_back(  j.second, i.second );
-            found=true;
-            break;
-          }
-        }
-        // this is very unexpected but shouldn't be fatal
-        if( !found ) {
+        auto j = m_hltANNSvc->value(InfoID, i.first ) ; 
+        if ( j ) {
+          extraInfo.emplace_back(  j->second, i.second );
+        } else {
+          // this is very unexpected but shouldn't be fatal
           std::ostringstream mess;
           mess << "Int key for string info key=" << i.first << " not found ";
           Error( mess.str(), StatusCode::SUCCESS, 50 );
@@ -364,7 +344,6 @@ StatusCode HltSelReportsWriter::execute() {
         ++iSeqID;
       }
     }
-
     
     if( !substrSubBank.push_back( { sHitType, std::move(svect) } ) ) {
       hitsSubBank.deleteBank();    
@@ -412,10 +391,8 @@ StatusCode HltSelReportsWriter::execute() {
   const auto& hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
   for( const auto&  b : hltselreportsRawBanks ) {
     unsigned int sourceID = kSourceID_Hlt;
-    if( b->version() > 1 ) {
-      sourceID = b->sourceID() >> kSourceID_BitShift;
-    }
-    if( m_sourceID != sourceID )continue;
+    if( b->version() > 1 ) sourceID = b->sourceID() >> kSourceID_BitShift;
+    if( m_sourceID != sourceID ) continue;
 
     rawEvent->removeBank(b);
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
