@@ -8,6 +8,7 @@
 #include <vector>
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
+#include "Event/RelatedInfoMap.h"
 
 // end include files
 
@@ -21,7 +22,10 @@ namespace {
     LHCb::Particle::Selection                       _i4 ;
     Gaudi::NamedRange_<LHCb::Particle::ConstVector> _i5 ;
     Gaudi::Range_<LHCb::Particle::ConstVector>      _i6 ;    
-     // end instantiations
+
+    RelatedInfoMap _i7 ;
+    
+    // end instantiations
   };
 }
 
