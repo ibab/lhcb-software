@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+ ! 2014-06-06 - Sebastian Neubert
+ - Fixed decoderdb test
+
  ! 2014-06-05 - Sebastian Neubert
  - Renamed HltTrackReportsDecoder to VeloDecoder
  - Added ForwardDecoder
