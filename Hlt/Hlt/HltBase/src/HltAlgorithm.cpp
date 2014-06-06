@@ -6,6 +6,12 @@
 #include "Event/RecVertex.h"
 #include "HltBase/HltAlgorithm.h"
 
+constexpr struct select2nd_t {
+    template <typename T, typename U> 
+    const U& operator()(const std::pair<T,U>& p) const 
+    { return p.second; }
+} select2nd {};
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAlgorithm
 //
@@ -269,8 +275,8 @@ StatusCode HltAlgorithm::registerOutput( std::unique_ptr<Hlt::Selection> sel ) c
     m_outputSelection = std::move(sel); // transfer ownership...
     std::vector<const Hlt::Selection*> sels;
     sels.reserve( m_in.size() );
-    for ( const auto& i : m_in ) sels.push_back( i.second );
-    sel->addInputSelectionIDs( sels.begin(), sels.end() );
+    std::transform( std::begin(m_in), std::end(m_in), std::back_inserter(sels), select2nd );
+    m_outputSelection->addInputSelectionIDs( std::begin(sels), std::end(sels) );
     if ( msgLevel( MSG::DEBUG ) )
         debug() << " Output selection " << m_outputSelection->id() << endmsg;
     if ( regSvc()->registerOutput( m_outputSelection.get(), this ).isFailure() ) {

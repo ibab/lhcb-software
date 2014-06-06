@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-06-06 - Gerhard Raven
+ - HltAlgorithm: fix use after move 
+
 !========================= HltBase v15r0 2014-04-26 =========================
 ! 2014-04-24 - Gerhard Raven
  - explicitly instantiate the template member function  HltStage::set for
