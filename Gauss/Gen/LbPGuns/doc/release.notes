@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2014-06-06 - Victor Coco
+ - Modified MomentumSpectrum so that GetRandom from the TH2D and TH3D gets a 
+   seed from the event number and run number (same seed in each jobs otherwise)
+
 ! 2014-01-03 - Dan Johnson
  - Modified MomentumSpectrum class to accept a pre-defined momentum spectrum
    in terms of pt-pz (TH2D), as well as the original px-py-pz (TH3D).

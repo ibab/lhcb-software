@@ -11,7 +11,9 @@
 #include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
-
+#include "TMath.h"
+#include "TRandom3.h"
+#include "Event/GenHeader.h"
 
 
 //===========================================================================
@@ -41,7 +43,6 @@ MomentumSpectrum::MomentumSpectrum( const std::string & type ,
 // Destructor
 //===========================================================================
 MomentumSpectrum::~MomentumSpectrum() { }
-
 //===========================================================================
 // Initialize Particle Gun parameters
 //===========================================================================
@@ -87,6 +88,7 @@ StatusCode MomentumSpectrum::initialize() {
   // -- Get the histogram template file for the particle momentum spectrum
   m_hist = (TH1*)file->Get( m_histoPath.c_str() );
   
+  
   if( !m_hist ){
     error() << "Could not find spectrum histogram!" << endmsg;
     return StatusCode::FAILURE;
@@ -126,6 +128,8 @@ void MomentumSpectrum::generateParticle( Gaudi::LorentzVector & momentum ,
 		m_hist3d = (TH3D*) m_hist;
 		// -- Sample components of momentum according to template in histogram
 		double px(0), py(0), pz(0);
+    LHCb::GenHeader* evt =  get<LHCb::GenHeader>(  LHCb::GenHeaderLocation::Default );
+    gRandom->SetSeed(evt->runNumber() * evt->evtNumber());
 		m_hist3d->GetRandom3(px, py, pz);
 		momentum.SetPx( px ) ; momentum.SetPy( py ) ; momentum.SetPz( pz ) ;
 		momentum.SetE( std::sqrt( m_masses[currentType] * m_masses[currentType] +
@@ -136,16 +140,20 @@ void MomentumSpectrum::generateParticle( Gaudi::LorentzVector & momentum ,
 		m_hist3d = 0;
 		// -- Sample components of momentum according to template in histogram
 		double pt(0), pz(0);
-		m_hist2d->GetRandom2(pt,pz);
-		// pick random azimuthal angle
+
+    LHCb::GenHeader* evt =  get<LHCb::GenHeader>(  LHCb::GenHeaderLocation::Default );
+    gRandom->SetSeed(evt->runNumber() * evt->evtNumber());
+		m_hist2d->GetRandom2(pt , pz);
+
 		double phi = (-1.*Gaudi::Units::pi + m_flatGenerator() * Gaudi::Units::twopi) * Gaudi::Units::rad;
 		momentum.SetPx( pt*cos(phi) );
 		momentum.SetPy( pt*sin(phi) );
 		momentum.SetPz( pz );
 		momentum.SetE( std::sqrt( m_masses[currentType] * m_masses[currentType] +
 					momentum.P2() ) ) ;
+    
 	}
-
+  
                         
   pdgId = m_pdgCodes[ currentType ] ;                      
     
@@ -153,3 +161,10 @@ void MomentumSpectrum::generateParticle( Gaudi::LorentzVector & momentum ,
           << "   P   = " << momentum << endmsg ;
 }
 
+
+
+// return 2 random numbers along axis x and y distributed according
+   // the cellcontents of a 2-dim histogram
+   // return a NaN if the histogram has a bin with negative content
+
+  
