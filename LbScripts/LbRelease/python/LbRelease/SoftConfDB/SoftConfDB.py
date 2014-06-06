@@ -155,6 +155,41 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: plist.append((x[0], x[1], x[2])))
         return plist
 
+    def listStackPlatformsToRelease(self, project, version):
+        # Onlist list the subset that should be released
+        query = 'start n=node:ProjectVersion(ProjectVersion="%s_%s") match p=n-[:REQUIRES*]->m-[:PLATFORM]->q  return distinct q.platform, m.project, m.version, length(p)'  \
+        % (project, version)
+        plist = []
+        self.runCypher(query, lambda x: plist.append((x[0], x[1], x[2], x[3])))
+
+        # Now find the shortest path
+        # First check we have SOME info
+        if len(plist) == 0:
+            raise Exception("Cannot find platform information! Cannot list platforms to release")
+        minpathlength = min([x[3] for x in plist])
+
+        # Now grouping the platforms by project/version
+        platinfo = {}
+        for (plat, p, v, l) in plist:
+            idx = "%s_%s" % (p, v)
+            curplat = platinfo.get(idx)
+            if curplat == None:
+                curplat = set()
+            curplat.add(plat)
+            platinfo[idx] = curplat
+
+        # Now taking the intersection
+        curplat = None
+        for plats in platinfo.values():
+            if curplat == None:
+                curplat = plats
+            else:
+                curplat = curplat & plats
+
+        # And return the result
+        return curplat
+
+
     def listPlatforms(self, project, version):
         ''' List the Platforms released for a Couple project version '''
 

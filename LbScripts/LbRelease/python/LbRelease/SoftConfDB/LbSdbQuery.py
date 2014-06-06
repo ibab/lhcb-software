@@ -61,6 +61,9 @@ class LbSdbQuery(Script):
             command = cmdShort[command]
         method =  self._findMethod(self, "cmd", command)
 
+        if method == None:
+            raise Exception("Could not find command '%s'. See --help for a list of commands" % command)
+
         # And invoking it...
         tmpargs = args[1:]
         # Setting to verbose mode
@@ -93,14 +96,23 @@ class LbSdbQuery(Script):
     def cmdlistReleaseStacks(self, args):
         ''' List the projects known by the SoftConfDB '''
         stacks = self.mConfDB.listReleaseStacks()
+        stackdicts = []
+        for s in stacks:
+            # We take the first one, it doesn't matter as this is a stack...
+            (p, v) = next(iter(s))
+            platforms = self.mConfDB.listStackPlatformsToRelease(p, v)
+            stackdict = {}
+            stackdict["projects"] = list(s)
+            stackdict["platforms"] = list(platforms)
+            stackdicts.append(stackdict)
+                
         if self.options.json:
             import json
-            tmp = [list(s) for s in stacks]
-            print json.dumps(tmp, indent=2)
+            print json.dumps(stackdicts, indent=2)
         else:
-            for (i, stack) in enumerate(stacks):
-                print ">>>>>>>>> Stack %d" % i
-                for (p, v) in stack:
+            for (i, sd) in enumerate(stackdicts):
+                print ">>>>>>>>> Stack %d Platforms: %s" % (i, ",".join(sd["platforms"]))
+                for (p, v) in sd["projects"]:
                     print "%d\t%s\t%s" % (i, p, v)
 
     def cmdlistActive(self, args):
@@ -195,6 +207,21 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listPlatforms(pname, pversion)):
             print p
 
+    def cmdlistPlatformsToRelease(self, args):
+        ''' List the Platforms released for a Couple project version '''
+        if (len(args) < 2):
+            self.log.error("Please specify a project and version")
+            sys.exit(1)
+
+        pname = args[0].upper()
+        pversion =  args[1]
+        if not self.cmdProjectExists(args):
+            self.log.error("Could not find %s %s" % (pname, pversion))
+            sys.exit(1)
+
+        for p in sorted(self.mConfDB.listStackPlatformsToRelease(pname, pversion)):
+            print p
+
 
     def cmdlistDependencies(self, args):
         ''' List the project/versions the specified project depends on '''
@@ -262,20 +289,21 @@ if __name__=='__main__':
     sUsage = \
     """%prog Command to query the Software Configuration database, which can be invoked in the following way:
 
-  %prog listProjects[l]
-  %prog listActive[a]
-  %prog listApplications[a]
-  %prog listUsed[u]
-  %prog listVersions[v] <project>
-  %prog listStackPlatforms[sp] <project> <version>
-  %prog listPlatforms[p] <project> <version>
-  %prog listDependencies[d] <project> <version>
-  %prog listReferences[r] <project> <version>
-  %prog listActiveReferences[s] <project> <version>
-  %prog checkUnused <project> <version>
-  %prog show <project> <version>
-  %prog listReleases
-  %prog listReleaseStacks
+  %prog listProjects[l]                                    : List known projects
+  %prog listActive[a]                                      : List active projects (i.e. installed on disk in AFS
+  %prog listApplications[a]                                : List projects considered as applications
+  %prog listUsed[u]                                        : List projects used by another project
+  %prog listVersions[v] <project>                          : List known version of a given project
+  %prog listStackPlatforms[sp] <project> <version>         : Show all projects the project depends on and teh known platforms
+  %prog listPlatformsToRelease <project> <version>         : List the platforms this project should be released for
+  %prog listPlatforms[p] <project> <version>               : List the platforms this project id known to be released for
+  %prog listDependencies[d] <project> <version>            : List dependencies of a project/version
+  %prog listReferences[r] <project> <version>              : List project/versions using this one
+  %prog listActiveReferences[s] <project> <version>        : Like above only considering the ones that are active (on disk)
+  %prog checkUnused <project> <version>                    : Check for unused projects/version
+  %prog show <project> <version>                           : Show all properties and relationships of a project/version node
+  %prog listReleases                                       : List projects flagged to be RELEASEd
+  %prog listReleaseStacks                                  : List projects flagged to be RELEASEd grouping by stack with platforms
 
       """
     s = LbSdbQuery(usage=sUsage)
