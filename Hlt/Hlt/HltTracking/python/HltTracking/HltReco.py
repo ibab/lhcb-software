@@ -132,16 +132,23 @@ OTRawBankDecoder().TimeWindow = ( -8.0, 56.0 ) # add units: ns!!
 
 #This is the one unavoidable piece of hardcoding since this is the piece
 #shared between Hlt1 and Hlt2
-from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, HltSharedTracksPrefix 
+#from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, HltSharedTracksPrefix 
+
+from HltTrackNames import HltSharedVeloLocation
+
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 from Configurables import TrackStateInitAlg, TrackStateInitTool
 
 #### Velo Tracking
-patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
-recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)) 
-# Run the full fast velo 
+
+# deprecated algorithm
+# patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
+#
+
+# the full Velo reconstruction
+recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = HltSharedVeloLocation) 
 recoVelo.HLT1Only = False 
 recoVelo.HLT2Complement = False 
 
@@ -153,35 +160,20 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
 
-#### State Initialiser for resurrected tracks
-#veloInitFit = TrackStateInitAlg("VeloInitFit",TrackLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName ))
-#veloInitFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
-
 
 #############################################################################################
 # Define modules for the reconstruction sequence 
 #############################################################################################
 from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeFORWARDTRACK, DecodeTT, DecodeIT
-from Configurables import DecodeVeloRawBuffer, DumpTracks
+from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
+#MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
 
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
-
-
-dumper = DumpTracks('VeloDumper')
-#dumper.OutputLevel = VERBOSE
-dumper.TracksLocation = recoVelo.OutputTracksName
-
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK, dumper]).setOutputSelection( recoVelo.OutputTracksName )
-
-Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
-
-
-
-
+RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( recoVelo.OutputTracksName )
+#Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 
 RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeFORWARDTRACK ])
 

@@ -1185,45 +1185,21 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Velo track reconstruction for Hlt2
         """
-        from Configurables      import Tf__PatVeloGeneralTracking
-        from Configurables      import Tf__PatVeloSpaceTool, FastVeloTracking
-        #From HltReco we just get the shared stuff between Hlt1 and Hlt2
-        from HltReco        import MinimalVelo, RevivedVelo
+        #HltReco decides which Velo sequence is used 
+        from HltReco        import RevivedVelo, MinimalVelo
+        from Configurables  import Hlt2Conf
         from HltLine.HltLine    import bindMembers 
         
-        # make these real option!!?
-        FastVelo = False
-        UseHlt1Tracks = True
-        
-        
         veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
-    
-        if self.getProp("EarlyDataTracking") :
-            # Do something special in case of early data
-            # For the moment just a dummy setting
-            dummy = 0
+
+        # select which Velo sequence we want, depending on configuration
+        veloOptions = { 'Decode' : RevivedVelo, 'Encode-Decode' : RevivedVelo, 'Rerun' : MinimalVelo, 'Copy' : MinimalVelo} 
+        
+        Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        if FastVelo:
-            # historically we would do the HLT2Complement tracking here on top of the minimal Velo
-            # for 2015 minimalVelo is already the full FastVelo algorithm.
-            
-            #recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation )
-            
-            #recoVeloExtra.HLT2Complement = True
-            bm_members      = MinimalVelo.members() #+ [recoVeloExtra]
-        elif UseHlt1Tracks:
-            bm_members =  RevivedVelo.members() 
-            veloTracksOutputLocation = RevivedVelo.outputSelection()
-        else:
-            recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
-                                                                  , OutputTracksLocation = veloTracksOutputLocation )
-            
-            bm_members      = MinimalVelo.members() + [recoVeloGeneral]
-
-            
-            
+        bm_members      = Velo.members()
         bm_output       = veloTracksOutputLocation
     
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)

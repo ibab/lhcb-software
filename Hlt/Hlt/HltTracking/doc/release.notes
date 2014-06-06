@@ -4,6 +4,14 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-06-06 - Sebastian Neubert
+ - Intelligent configuration of Velo tracks reuse. First iteration implemented
+   Hlt1 and Hlt2 still use the shared location for this.
+   Switching between redo fastVelo and revive hlt1 velo 
+   done through Hlt2Conf option Hlt1TrackOption
+   Copy does the same as Redo
+   Encode-Decode only decodes atm   
+
 ! 2014-06-05 - Sebastian Neubert
  - HLT1 upgrade conf: using forward tracking options for momentum estimate 
  - defined revived forward track sequence

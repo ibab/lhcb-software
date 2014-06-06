@@ -43,6 +43,8 @@ Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 HltSharedRZVeloTracksName               = "RZVelo"
 HltSharedVeloTracksName               = "Velo"
 #
+HltSharedVeloLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
+#
 Hlt1SeedingTracksName                   = "Seeding"
 Hlt1ForwardTracksName                   = "Forward"
 Hlt1ForwardPestimateTracksName                   = "PestiForward"
@@ -142,6 +144,7 @@ __all__ = (
 		HltSharedTracksPrefix, 
            	Hlt1TracksPrefix, 
            	Hlt2TracksPrefix, 
+        HltSharedVeloLocation,
 		#
 		HltSharedRZVeloTracksName,
 		Hlt2ForwardTracksName, 
