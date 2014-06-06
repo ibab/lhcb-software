@@ -170,6 +170,8 @@
   <function name    = "LHCb::Math::equal_to_double"        />
   <function name    = "LHCb::Math::knuth_equal_to_double"  />
   <function name    = "Gaudi::Math::lomont_compare_double" />
+  <function name    = "Gaudi::Math::next_double"           />
+  <function name    = "Gaudi::Math::next_float"            />
   <function name    = "Gaudi::Math::interpolate_1D"        />
   <function name    = "Gaudi::Math::interpolate_2D"        />
   <function pattern = "Gaudi::Math::Jackson::jackson*"     />
