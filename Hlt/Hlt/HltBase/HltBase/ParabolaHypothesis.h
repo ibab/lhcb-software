@@ -31,17 +31,16 @@ class ParabolaHypothesis : virtual public Tf::IStationSelector
     {
     }
 
-    Tf::XYSearchWindow searchWindow( double zz ) const
+    Tf::XYSearchWindow searchWindow( double z ) const
+#ifdef __GCCXML__
+        ;
+#else
     {
-        double z = zz;
         double y = m_y * z + m_cy;
         double x = ( m_ax * z + m_bx ) * z + m_cx;
-#ifdef __GCCXML__
-        return Tf::XYSearchWindow( x - m_dx, x + m_dx, y - m_dy, y + m_dy );
-#else
         return {x - m_dx, x + m_dx, y - m_dy, y + m_dy};
-#endif
     }
+#endif
 
     void getValidity( double& zmin, double& zmax ) const
     {

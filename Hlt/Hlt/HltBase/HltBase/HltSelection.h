@@ -3,6 +3,10 @@
 #define HLTBASE_HLTSELECTION_H 1
 
 #include <vector>
+#ifndef __GCCXML__
+#include <type_traits>
+#endif
+#include <functional>
 #include <boost/utility.hpp>
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
@@ -41,10 +45,15 @@ class Selection : private boost::noncopyable
 
     template <typename I> // I is assumed to be iterator over a range of Selection*
     void addInputSelectionIDs( I i, I end )
+#ifdef __GCCXML__
+    ;
+#else
     {
-        while ( i != end ) m_inputSelectionsIDs.push_back( ( *i++ )->id() );
+        m_inputSelectionsIDs.reserve( m_inputSelectionsIDs.size() + std::distance(i,end) );
+        using value_type = typename std::remove_pointer<typename I::value_type>::type;
+        std::transform(i,end,std::back_inserter(m_inputSelectionsIDs),std::mem_fn( &value_type::id ) );
     }
-
+#endif
     void setDecision( bool value )
     {
         m_decision = value;
@@ -206,13 +215,25 @@ typedef TSelection<LHCb::Particle> ParticleSelection;
 typedef TSelection<Hlt::Candidate> CandidateSelection;
 
 template <typename R, typename T>
-void operator>>( const R &range, TSelection<T> &sel ) {
-    sel.insert( sel.end(), range.begin(), range.end() );
+TSelection<T>&  operator>>( const R &range, TSelection<T> &sel ) 
+#ifdef __GCCXML__
+    ;
+#else
+{
+    sel.insert( std::end(sel), std::begin(range), std::end(range) );
+    return sel;
 }
+#endif
 
 template <typename T>
-void operator>>( typename TSelection<T>::candidate_type *c, TSelection<T> &sel ) {
+TSelection<T>&  operator>>( typename TSelection<T>::candidate_type *c, TSelection<T> &sel ) 
+#ifdef __GCCXML__
+    ;
+#else
+{
     sel.push_back( c );
+    return sel;
 }
+#endif
 }
 #endif

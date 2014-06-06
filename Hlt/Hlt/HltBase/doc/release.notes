@@ -6,6 +6,7 @@
 
 ! 2014-06-06 - Gerhard Raven
  - HltAlgorithm: fix use after move 
+ - C++11 updates..
 
 !========================= HltBase v15r0 2014-04-26 =========================
 ! 2014-04-24 - Gerhard Raven
