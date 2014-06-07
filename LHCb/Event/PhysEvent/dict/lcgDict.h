@@ -23,7 +23,7 @@ namespace {
     Gaudi::NamedRange_<LHCb::Particle::ConstVector> _i5 ;
     Gaudi::Range_<LHCb::Particle::ConstVector>      _i6 ;    
 
-    RelatedInfoMap _i7 ;
+    LHCb::RelatedInfoMap _i7 ;
     
     // end instantiations
   };

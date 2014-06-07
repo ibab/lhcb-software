@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-06-07 - Anton Poluektov 
+ - Fix dictionaries broken due to RelatedInfoMap moved to LHCb namespace. 
+
 ! 2014-06-06 - Anton Poluektov 
  - Fix of RelatedInfoMap (add dictionaries for Bender, move it to LHCb namespace)
 
