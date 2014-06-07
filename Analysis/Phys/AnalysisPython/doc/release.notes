@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-06-07 - Vanya Belyaev
+ - few minor fixes 
+
 ! 2014-05-27 - Marco Clemencic
  - Work-around for issue ROOT-6233.
    https://sft.its.cern.ch/jira/browse/ROOT-6233

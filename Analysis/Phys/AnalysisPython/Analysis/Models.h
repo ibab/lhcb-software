@@ -2899,7 +2899,9 @@ namespace Analysis
         const char*           title     ,
         RooAbsReal&           x         , 
         RooAbsReal&           alpha     ,
-        RooAbsReal&           beta      ) ;
+        RooAbsReal&           beta      ,
+        RooAbsReal&           scale     ,
+        RooAbsReal&           shift     ) ;
       /// "copy constructor"
       BetaPrime 
       ( const BetaPrime&      right     , 
@@ -2939,11 +2941,153 @@ namespace Analysis
       RooRealProxy m_x        ;
       RooRealProxy m_alpha    ;
       RooRealProxy m_beta     ;
+      RooRealProxy m_scale    ;
+      RooRealProxy m_shift    ;
       // ======================================================================
     private:
       // ======================================================================
       /// the actual function
       mutable Gaudi::Math::BetaPrime m_betap ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Landau
+     *  http://en.wikipedia.org/wiki/Landau_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-06-07
+     *  @see Gaudi::Math::Landau
+     */
+    class GAUDI_API Landau : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Landau, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Landau
+      ( const char*           name      , 
+        const char*           title     ,
+        RooAbsReal&           x         , 
+        RooAbsReal&           scale     ,
+        RooAbsReal&           shift     ) ;
+      /// "copy constructor"
+      Landau
+      ( const Landau&         right     , 
+        const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~Landau  () ;
+      /// clone 
+      virtual  Landau* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Landau& function() const { return m_landau ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_scale    ;
+      RooRealProxy m_shift    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::Landau m_landau ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Argus
+     *  http://en.wikipedia.org/wiki/ARGUS_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-06-07
+     *  @see Gaudi::Math::Landau
+     */
+    class GAUDI_API Argus : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Argus, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Argus
+      ( const char*           name      , 
+        const char*           title     ,
+        RooAbsReal&           x         , 
+        RooAbsReal&           shape     ,
+        RooAbsReal&           high      ,
+        RooAbsReal&           low       ) ;
+      /// "copy constructor"
+      Argus
+      ( const Argus&          right     , 
+        const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~Argus  () ;
+      /// clone 
+      virtual  Argus* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Argus& function() const { return m_argus ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_shape    ;
+      RooRealProxy m_high     ;
+      RooRealProxy m_low      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::Argus m_argus ; // the actual function
       // ======================================================================
     } ;
     // ========================================================================
