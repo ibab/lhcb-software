@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-06-07 - Anton Poluektov 
+ - Update IRelatedInfoTool with RelatedInfoMap in LHCb namespace
+
 ! 2014-05-24 - Anton Poluektov 
  - Add IRelatedInfoTool - interface for tools calculating RelatedInfo
 

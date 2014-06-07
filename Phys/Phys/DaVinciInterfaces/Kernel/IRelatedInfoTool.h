@@ -29,7 +29,7 @@ public:
                                           const LHCb::Particle* part) = 0;
 
   /// Get the value of calculated parameters
-  virtual RelatedInfoMap* getInfo(void) = 0;
+  virtual LHCb::RelatedInfoMap* getInfo(void) = 0;
   
   virtual std::string infoPath(void) = 0; 
 
