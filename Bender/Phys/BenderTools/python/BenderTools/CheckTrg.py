@@ -26,7 +26,6 @@
 # @code
 #
 #    CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
-#
 # 
 #  @endcode 
 #
@@ -61,10 +60,10 @@ Usage:
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2010-09-10"
 __version__ = '$Revision$'
-__all__     = ()  ## nothing to import 
+__all__     = ( 'runChkTrg' , )  ## only one symbol 
 __usage__   = 'CheckTrg [options] line file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 import ROOT 
@@ -75,12 +74,11 @@ from Bender.Logger import getLogger
 logger = getLogger( __name__ )
 # =============================================================================
 ## postpone the massive import from Bender 
-def chkTrg  ( ) :
-    
+def chkTrg  ( ) :    
     """
-    create the algorithnm for trigger checks 
+    Create the algorithnm for trigger checks 
     """
-    from   Bender.Main          import Algo, SUCCESS 
+    from   Bender.Main          import Algo, SUCCESS, PALL  
     import BenderTools.TisTos   ## add methods for TisTos 
     # =============================================================================
     ## @class CheckTrg
@@ -134,10 +132,18 @@ def chkTrg  ( ) :
 
     return CheckTrg
 
+
 # =============================================================================
-if '__main__' == __name__ :
-
-
+## run the actual machinery machinery
+def runChkTrg ( args = None ) :
+    """
+    Run the actual machinery 
+    """
+    
+    if not args :
+        import sys 
+        args = sys.argv[1:]
+        
     from BenderTools.Parser import makeParser
     
     parser = makeParser ( usage = __usage__                ,
@@ -153,11 +159,11 @@ if '__main__' == __name__ :
         default = '1000'                  
         )
     ##
-    (options,arguments) = parser.parse_args() 
-
+    options , arguments = parser.parse_args( args ) 
+    
     print 120*'*'
     if options.Quiet :
-        print ' Trivial Bender-based script to ceck the triggers '
+        print ' Trivial Bender-based script to check the triggers '
     else :
         print __doc__
 
@@ -193,6 +199,28 @@ if '__main__' == __name__ :
         options.DataType = 'MC09'
         logger.info ( 'set DataType to be MC09' )
 
+    from BenderTools.Parser import hasInFile
+    if   hasInFile ( Files , 'CHARM.MDST'    ) and not options.RootInTES :
+        options.RootInTES = '/Event/Charm'
+        logger.info ('RootInTES is set according to CHARM.MDST'    )
+    elif hasInFile ( Files , 'LEPTONIC.MDST' ) and not options.RootInTES :
+        options.RootInTES = '/Event/Leptonic'
+        logger.info ('RootInTES is set according to LEPTONIC.MDST' )
+    elif hasInFile ( Files , 'BHADRON.MDST'  ) and not options.RootInTES :
+        options.RootInTES = '/Event/Bhadron'
+        logger.info ('RootInTES is set according to BHADRON.MDST'  )
+    elif hasInFile ( Files , 'PID.MDST'      ) and not options.RootInTES :
+        options.RootInTES = '/Event/PID'
+        logger.info ('RootInTES is set according to PID.MDST'      )
+    elif hasInFile ( Files , 'PSIX.MDST'     ) and not options.RootInTES :
+        options.RootInTES = '/Event/PSIX'
+        logger.info ('RootInTES is set according to PSIX.MDST'     )
+    elif hasInFile ( Files , 'PSIX0.MDST'    ) and not options.RootInTES :
+        options.RootInTES = '/Event/PSIX0'
+        logger.info ('RootInTES is set according to PSIX0.MDST'    )
+    elif hasInFile ( Files , 'BOTTOM.MDST'   ) and not options.RootInTES :
+        options.RootInTES = '/Event/BOTTOM'
+        logger.info ('RootInTES is set according to BOTTOM.MDST'   )
 
     if options.RootInTES and '/' == options.RootInTES[-1] :
         options.RootInTES = options.RootInTES[:-1]
@@ -200,19 +228,27 @@ if '__main__' == __name__ :
         options.RootInTES = '/Event/' + options.RootInTES 
 
     if options.RootInTES :
-        if   0  < Line.find ( 'Phys' ) :
-            Line = Line [ Line.find('Phys'): ]
-            Line = options.RootInTES + '/' + Line
-        elif 0 == Line.find ( 'Phys' ) :
-            Line = options.RootInTES + '/'      + Line
-        else :
-            Line = options.RootInTES + '/Phys/' + Line
+        if   0 == Line.find ( options.RootInTES + '/') :
+            Line = Line.replace( options.RootInTES + '/' , '' )
+            logger.info('Line name is adjusted to be %s' % Line )
+        elif 0 != Line.find ( '/Event/' ) :
+            tmpl = '/Event/' + Line 
+            if   0 == tmpl.find ( options.RootInTES ) :
+                Line = tmpl.replace( options.RootInTES , '' )
+                logger.info('Line name is adjusted to be %s' % Line )
+                
+    if 0 == Line.find('/Event/') :
+        Line = Line.replace( '/Event/' , '' )
+        logger.info('Line name is adjusted to be %s' % Line )
 
-    if     0 != Line.find ('/Event/') :
-        parser.error ( 'Invalid line name %s' % Line  ) 
+    if       options.Simulation and 0 != Line.find ( 'AllStreams/Phys/' ) :
+        logger.warning('Suspicious line name %s' % Line )
+    elif not options.Simulation and 0 != Line.find ( 'Phys/' ) :
+        logger.warning('Suspicious line name %s' % Line )
         
     if not 0 < Line.rfind ('/Particles') :
         Line = Line + '/Particles'
+        logger.info('Line name is adjusted to be %s' % Line )
         
     if 0 >= options.Nevents and -1 != options.Nevents : options.Nevents = 1000
     #
@@ -221,19 +257,20 @@ if '__main__' == __name__ :
     ## start the actual action:
     #
     
-    if options.Simulation : 
-        from Bender.MainMC   import *
-    else                  : 
-        from Bender.Main     import *
-    
-    from Gaudi.Configuration import * 
+    if options.Simulation : from Bender.MainMC import run,setData
+    else                  : from Bender.Main   import run,setData
+
+    ##
     from Configurables       import DaVinci
 
     #
     ## add filters:
     #
     from PhysConf.Filters import LoKi_Filters
-    fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s') " % Line )
+    if options.RootInTES : location = options.RootInTES + '/' + Line 
+    else                 : location = '/Event/'               + Line 
+    logger.info("Use filter for non-empty location:'%s'"          % location )
+    fltrs = LoKi_Filters ( VOID_Code  = " 0.5 < CONTAINS ('%s') " % location )
     
     InputType = 'DST'
     if options.MicroDST or 'MDST' == ext : 
@@ -278,14 +315,18 @@ if '__main__' == __name__ :
     catalogs = [ options.XmlCatalogue ] if options.XmlCatalogue else []
 
     ## import all:
-    from Bender.Main import *
+    from Bender.Main import setData, appMgr  
     
     ## set input data
     setData ( Files , catalogs , options.Castor  )
 
+    from BenderTools.Utils import silence
+    silence() 
+    
     ## instantiate the application manager
-    gaudi=appMgr ()
+    gaudi = appMgr ()
 
+    
     rootInTES = options.RootInTES 
 
     ## Set properties of the TisTosTools
@@ -303,8 +344,8 @@ if '__main__' == __name__ :
     ##
     inputLine =  Line
     Alg = chkTrg()
+    
     if rootInTES :
-        inputLine =  inputLine[ len(rootInTES) + 1 : ] 
         alg = Alg (
             'CheckTrg'                       ,
             Inputs           = [ inputLine ] ,
@@ -319,11 +360,9 @@ if '__main__' == __name__ :
             )
         
     #
-
-    #
     ## initialize and read the first 1000 event
     #
-    gaudi.run( options.Nevents )
+    gaudi.run ( options.Nevents )
     
     
     # dod = gaudi.service('DataOnDemandSvc' )
@@ -335,6 +374,12 @@ if '__main__' == __name__ :
     print 90*'*'
     
     alg.trgDecs()
+
+    
+# =============================================================================
+if '__main__' == __name__ :
+
+    runChkTrg() 
 
 # =============================================================================
 # The END 

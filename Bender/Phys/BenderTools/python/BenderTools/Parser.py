@@ -258,8 +258,10 @@ def hasInFile ( files , pattern ) :
     #
     if isinstance ( files  , str ) : files = [ files ]
     #
+    ptnu = pattern.upper() 
     for f in files  :
-        if   0 <= f.find ( pattern ) : return True
+        fu = f.upper() 
+        if   0 <= fu.find ( ptnu ) : return True
     return False
 
 # =============================================================================

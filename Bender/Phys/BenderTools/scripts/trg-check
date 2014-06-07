@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/usr/bin/env python 
 # =============================================================================
 # $Id: trg-check 129602 2011-09-29 17:04:25Z ibelyaev $ 
 # =============================================================================
@@ -29,7 +29,11 @@
 #                 by $Author: ibelyaev $
 # =============================================================================
 
-python $BENDERTOOLSROOT/python/BenderTools/CheckTrg.py $* 
+from BenderTools.CheckTrg import runChkTrg 
+import sys 
+args = sys.argv[1:]
+print 'MY ARGS! #%s#' % args  
+runChkTrg() 
 
 # =============================================================================
 # The END 

@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-07 - Vanya Belyaev
+ - chk-trg - some minor improvements 
+
 
 ! 2014-05-22 - Vanya Belyaev
   eos_ls
