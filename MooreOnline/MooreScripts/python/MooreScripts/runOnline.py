@@ -6,7 +6,7 @@ from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
 import logging
 PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
-#import sys
+import sys
 # never search for anything from current directory...
 #if sys.path[0]=='' : sys.path.pop(0)
 from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
@@ -49,6 +49,7 @@ def start(**kwargs) :
     ### TODO: pick up which calibrations to 'register' for the run change handler
 
     if OnlineEnv.PartitionName == 'TEST' : mooreOnline.CheckOdin = False
+    if OnlineEnv.PartitionName == 'LHCb1' : mooreOnline.CheckOdin = False # TODO: push into Hack, but that doesn't seem to pick up its properties???
 
     #not needed any longer? MooreOnline already does this...
     moore.InitialTCK = OnlineEnv.InitialTCK
@@ -72,5 +73,14 @@ def start(**kwargs) :
     c = ConfigurableGeneric("OnlineEnv")
     #[ setattr(c,k,v) for (k,v) in OnlineEnv.__dict__.items() if k not in OnlineConfig.__dict__ ]
     c.AcceptRate = OnlineEnv.AcceptRate
+
+    if OnlineEnv.PartitionName == 'LHCb1' :
+        if kwargs.get('Split','')  == 'Hlt1' :
+            print '#WARNING: Enabling run nr & GPS time hack'
+            from Configurables import  HackRunNrAndGPSSvc, ApplicationMgr
+            ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
+        mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+
+
 
     OnlineEnv.end_config(False)

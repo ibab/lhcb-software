@@ -4,6 +4,11 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-06-07 - Eric van Herwijnen
+ - CreateRunEFF.py for checkpointing
+ - runOnline.py Hlt1 reads MEPS, Hlt2 MDF files
+ 
+
 !========================= MooreScripts v1r2 2014-04-29 =========================
 
 ! 2014-04-28 - Gerhard Raven
