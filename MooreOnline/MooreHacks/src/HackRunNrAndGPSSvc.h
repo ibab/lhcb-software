@@ -40,13 +40,15 @@ class HackRunNrAndGPSSvc : public virtual extends1<Service, IIncidentListener>
         // Subscribe to the relevant DIM service
       RunNumber(const char *d = "RunInfo/LHCb1/RunNumber" ) : DimInfo(d, -1) {}
         int operator()() const { 
+	  RunNumber* info = const_cast<RunNumber*>(this);
           int count = 100000;
           while ( --count > 0 && m_runnr == -1 )   {
-        fprintf(stderr,"[DEBUG] waiting for the runnumber service....\n");
+	    fprintf(stderr,"[DEBUG] waiting for the runnumber service '%s'....\n",
+		    info->getName());
         fflush(stderr);
         dtq_sleep(1);
           }
-          fprintf(stderr,"[DEBUG]  runnumber service.... current runno:%d\n",m_runnr);
+          fprintf(stderr,"[DEBUG]  runnumber service '%s'.... current runno:%d\n",info->getName(), m_runnr);
           fflush(stderr);
           return m_runnr;
         }
