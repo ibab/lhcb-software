@@ -27,6 +27,8 @@
 #include "gsl/gsl_sf_gamma.h"
 #include "gsl/gsl_sf_psi.h"
 #include "gsl/gsl_integration.h"
+#include "gsl/gsl_randist.h"
+#include "gsl/gsl_cdf.h"
 // ============================================================================
 // ROOT
 // ============================================================================
@@ -7604,10 +7606,14 @@ double Gaudi::Math::LogGamma::kurtosis () const
 // ============================================================================
 Gaudi::Math::BetaPrime::BetaPrime 
 ( const double alpha , 
-  const double beta  )
+  const double beta  , 
+  const double scale , 
+  const double shift )
   : std::unary_function<double,double> () 
   , m_alpha ( std::abs ( alpha ) )
   , m_beta  ( std::abs ( beta  ) )
+  , m_scale ( scale )
+  , m_shift ( shift )
   , m_aux () 
 {
   m_aux = 1/gsl_sf_beta ( m_alpha , m_beta ) ;
@@ -7635,26 +7641,51 @@ bool Gaudi::Math::BetaPrime::setBeta  ( const double value )
   return true ;
 }
 // ============================================================================
+bool Gaudi::Math::BetaPrime::setScale ( const double value ) 
+{
+  if ( s_equal ( value , m_scale  ) ) { return false ; }
+  m_scale  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::BetaPrime::setShift ( const double value ) 
+{
+  if ( s_equal ( value , m_shift  ) ) { return false ; }
+  m_shift  = value ;
+  return true ;
+}
+// ============================================================================
 // evaluate beta'-distributions 
 // ============================================================================
 double Gaudi::Math::BetaPrime::pdf ( const double x ) const 
 {
   //
-  if ( x <= 0 || s_equal ( x , 0 ) ) { return 0 ; }
+  if      ( m_scale >= 0 && x <= m_shift ) { return 0 ; }
+  else if ( m_scale <= 0 && x >= m_shift ) { return 0 ; }
+  else if ( s_equal ( x , m_shift )      ) { return 0 ; }
   //
-  return m_aux 
-    * std::pow (     x ,   alpha () - 1       ) 
-    * std::pow ( 1 + x , - alpha () - beta () ) ;  
+  const double y = ( x - m_shift ) / m_scale ;
+  //
+  return m_aux / std::abs ( m_scale  ) 
+    * std::pow (     y ,   alpha () - 1       ) 
+    * std::pow ( 1 + y , - alpha () - beta () ) ;  
 }
 // ============================================================================
 double Gaudi::Math::BetaPrime::cdf ( const double x ) const 
 {
   //
-  if ( x <= 0 || s_equal ( x , 0 ) ) { return 0 ; }
+  const double z = ( x - m_shift ) / m_scale ;
   //
-  const double y = x / ( 1 + x ) ;
+  if ( z <= 0 || s_equal ( z , 0 ) ) { return 0 ; }
   //
-  return gsl_sf_beta_inc (  alpha() , beta() , y ) ;
+  const double y = z / ( 1 + z ) ;
+  //
+  Sentry sentry ;
+  //
+  return
+    0 < m_scale ? 
+    gsl_sf_beta_inc (  alpha() , beta() , y ) :
+    1 - gsl_sf_beta_inc (  alpha() , beta() , y ) ; 
 }
 // ============================================================================
 double Gaudi::Math::BetaPrime::integral ( const double low  , 
@@ -7672,13 +7703,13 @@ double Gaudi::Math::BetaPrime::mean () const
 {
   if ( beta() <= 1 || s_equal ( beta() , 1 ) ) { return -1.e+9 ; }  
   //
-  return alpha() / ( beta() - 1 ) ;
+  return m_shift + m_scale * alpha() / ( beta() - 1 ) ;
 }
 // ============================================================================
 double Gaudi::Math::BetaPrime::mode () const 
 {
   if ( alpha() < 1 ) { return 0 ; }
-  return ( alpha() - 1 ) / ( beta() + 1 ) ;
+  return m_shift + m_scale * ( alpha() - 1 ) / ( beta() + 1 ) ;
 }
 // ============================================================================
 double Gaudi::Math::BetaPrime::variance () const 
@@ -7688,7 +7719,7 @@ double Gaudi::Math::BetaPrime::variance () const
   const double a = alpha () ;
   const double b = beta  () ;
   //
-  return a *  ( a + b + 1 ) / ( b - 2 ) / Gaudi::Math::pow ( b - 1 , 2 ) ;
+  return m_scale * m_scale * a *  ( a + b + 1 ) / ( b - 2 ) / Gaudi::Math::pow ( b - 1 , 2 ) ;
 }
 // ===========================================================================
 double Gaudi::Math::BetaPrime::sigma () const 
@@ -7707,6 +7738,327 @@ double Gaudi::Math::BetaPrime::skewness  () const
   return 2 * ( 2 * a + b - 1 ) / ( b - 3 ) * std::sqrt( ( b - 2 ) / a / ( a + b - 1 ) ) ;
 }
 // ===========================================================================
+
+
+// ============================================================================
+// Landau
+// ============================================================================
+/*  constructor with all parameters 
+ */
+// ============================================================================
+Gaudi::Math::Landau::Landau
+( const double scale , 
+  const double shift )
+  : std::unary_function<double,double> () 
+  , m_scale ( scale )
+  , m_shift ( shift )
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Landau::~Landau (){}
+// ============================================================================
+bool Gaudi::Math::Landau::setScale ( const double value ) 
+{
+  if ( s_equal ( value , m_scale  ) ) { return false ; }
+  m_scale  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Landau::setShift ( const double value ) 
+{
+  if ( s_equal ( value , m_shift  ) ) { return false ; }
+  m_shift  = value ;
+  return true ;
+}
+// ============================================================================
+// evaluate Landau-distributions 
+// ============================================================================
+double Gaudi::Math::Landau::pdf ( const double x ) const 
+{
+  //
+  const double y = ( x - m_shift ) / m_scale ;
+  //  
+  return gsl_ran_landau_pdf ( y ) / m_scale ;
+}
+// ============================================================================
+namespace 
+{
+/* Not needed yet */
+/* This function is a translation from the original Fortran of the
+ * CERN library routine DISLAN, the integral from -inf to x of the
+ * Landau p.d.f.
+ */
+//static
+//double
+//gsl_ran_landau_dislan(const double x)
+double _dislan(const double x)
+  {
+  static double P1[5] =
+    {
+      0.2514091491E0, -0.6250580444E-1,
+      0.1458381230E-1, -0.2108817737E-2,
+      0.7411247290E-3
+    };
+
+  static double P2[4] =
+    {
+      0.2868328584E0, 0.3564363231E0,
+      0.1523518695E0, 0.2251304883E-1
+    };
+
+  static double P3[4] =
+    {
+      0.2868329066E0, 0.3003828436E0,
+      0.9950951941E-1, 0.8733827185E-2
+    };
+
+  static double P4[4] =
+    {
+      0.1000351630E1, 0.4503592498E1,
+      0.1085883880E2, 0.7536052269E1
+    };
+
+  static double P5[4] =
+    {
+      0.1000006517E1, 0.4909414111E2,
+      0.8505544753E2, 0.1532153455E3
+    };
+
+  static double P6[4] =
+    {
+      0.1000000983E1, 0.1329868456E3,
+      0.9162149244E3, -0.9605054274E3
+    };
+
+  static double Q1[5] =
+    {
+      1.0, -0.5571175625E-2,
+      0.6225310236E-1, -0.3137378427E-2,
+      0.1931496439E-2
+    };
+
+  static double Q2[4] =
+    {
+      1.0, 0.6191136137E0,
+      0.1720721448E0, 0.2278594771E-1
+    };
+
+  static double Q3[4] =
+    {
+      1.0, 0.4237190502E0,
+      0.1095631512E0, 0.8693851567E-2
+    };
+
+  static double Q4[4] =
+    {
+      1.0, 0.5539969678E1,
+      0.1933581111E2, 0.2721321508E2
+    };
+
+  static double Q5[4] =
+    {
+      1.0, 0.5009928881E2,
+      0.1399819104E3, 0.4200002909E3
+    };
+
+  static double Q6[4] =
+    {
+      1.0, 0.1339887843E3,
+      0.1055990413E4, 0.5532224619E3
+    };
+
+  static double A1[3] =
+    {
+      -0.4583333333E0, 0.6675347222E0, -0.1641741416E1
+    };
+
+  static double A2[3] =
+    {
+      1.0, -0.4227843351E0, -0.2043403138E1
+    };
+
+  double U, V, DISLAN;
+
+  V = x;
+  if (V < -5.5)
+    {
+      U = exp(V + 1);
+      DISLAN = 0.3989422803 * exp( -1 / U) * sqrt(U) *
+               (1 + (A1[0] + (A1[1] + A1[2] * U) * U) * U);
+    }
+  else if (V < -1)
+    {
+      U = exp( -V - 1);
+      DISLAN = (exp( -U) / sqrt(U)) *
+               (P1[0] + (P1[1] + (P1[2] + (P1[3] + P1[4] * V) * V) * V) * V) /
+               (Q1[0] + (Q1[1] + (Q1[2] + (Q1[3] + Q1[4] * V) * V) * V) * V);
+    }
+  else if (V < 1)
+    {
+      DISLAN = (P2[0] + (P2[1] + (P2[2] + P2[3] * V) * V) * V) /
+               (Q2[0] + (Q2[1] + (Q2[2] + Q2[3] * V) * V) * V);
+    }
+  else if (V < 4)
+    {
+      DISLAN = (P3[0] + (P3[1] + (P3[2] + P3[3] * V) * V) * V) /
+               (Q3[0] + (Q3[1] + (Q3[2] + Q3[3] * V) * V) * V);
+    }
+  else if (V < 12)
+    {
+      U = 1 / V;
+      DISLAN = (P4[0] + (P4[1] + (P4[2] + P4[3] * U) * U) * U) /
+               (Q4[0] + (Q4[1] + (Q4[2] + Q4[3] * U) * U) * U);
+    }
+  else if (V < 50)
+    {
+      U = 1 / V;
+      DISLAN = (P5[0] + (P5[1] + (P5[2] + P5[3] * U) * U) * U) /
+               (Q5[0] + (Q5[1] + (Q5[2] + Q5[3] * U) * U) * U);
+    }
+  else if (V < 300)
+    {
+      U = 1 / V;
+      DISLAN = (P6[0] + (P6[1] + (P6[2] + P6[3] * U) * U) * U) /
+               (Q6[0] + (Q6[1] + (Q6[2] + Q6[3] * U) * U) * U);
+    }
+  else
+    {
+      U = 1 / (V - V * log(V) / (V + 1));
+      DISLAN = 1 - (A2[0] + (A2[1] + A2[2] * U) * U) * U;
+    }
+
+  return DISLAN;
+  }
+}
+// ============================================================================
+// evaluate Landau-CDF 
+// ============================================================================
+double Gaudi::Math::Landau::cdf ( const double x ) const 
+{
+  //
+  const double y = ( x - m_shift ) / m_scale ;
+  //
+  return _dislan ( y ) ;
+}
+// ============================================================================
+double Gaudi::Math::Landau::integral ( const double low  , 
+                                       const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+
+
+
+
+// ============================================================================
+// Argus
+// ============================================================================
+/*  constructor with all parameters 
+ */
+// ============================================================================
+Gaudi::Math::Argus::Argus
+( const double shape , 
+  const double high  ,
+  const double low   )
+  : std::unary_function<double,double> () 
+  , m_shape ( std::abs ( shape ) ) 
+  , m_high  ( std::abs ( high  ) ) 
+  , m_low   ( std::abs ( low   ) ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Argus::~Argus (){}
+// ============================================================================
+bool Gaudi::Math::Argus::setShape ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_shape  ) ) { return false ; }
+  m_shape  = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Argus::setLow ( const double value ) 
+{
+  if ( s_equal ( value , m_low  ) ) { return false ; }
+  m_low  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Argus::setHigh ( const double value ) 
+{
+  if ( s_equal ( value , m_high  ) ) { return false ; }
+  m_high  = value ;
+  return true ;
+}
+// ============================================================================
+// evaluate Argus-distributions 
+// ============================================================================
+namespace 
+{
+  //
+  inline double phi_ ( const double x ) 
+  { return gsl_ran_gaussian_pdf  ( x , 1 ) ; }
+  inline double Phi_ ( const double x ) 
+  { return gsl_cdf_ugaussian_P   ( x     ) ; }
+  inline double Psi_ ( const double x ) 
+  { return Phi_ ( x ) - x * phi_ ( x ) - 0.5 ; } 
+  //
+}
+// ============================================================================
+double Gaudi::Math::Argus::pdf ( const double x ) const 
+{
+  //
+  if      ( x >= std::max ( m_high , m_low ) ) { return 0 ; }
+  else if ( x <= std::min ( m_high , m_low ) ) { return 0 ; }
+  //
+  const double y = y_ ( x ) ;
+  if ( y <= 0 || y >= 1 ) { return 0 ; }
+  //
+  double res   = s_SQRT2PIi ;
+  res         *= Gaudi::Math::pow ( m_shape , 3 ) ;
+  res         /= Psi_   ( m_shape ) ;
+  res         *= y ;
+  //
+  const double y2 = 1 - y * y  ;
+  res         *= std::sqrt ( y2 ) ;
+  res         *= my_exp ( -0.5 * m_shape * m_shape * y2 ) ;
+  //
+  return     res / std::abs ( m_high - m_low ) ;
+}
+// ============================================================================
+// evaluate Argus-CDF 
+// ============================================================================
+double Gaudi::Math::Argus::cdf ( const double x ) const 
+{
+  //
+  if      ( x > std::max ( m_high , m_low ) ) { return 1 ; }
+  else if ( x < std::min ( m_high , m_low ) ) { return 0 ; }
+  //
+  const double y  = y_ ( x )  ;
+  //
+  const double y2 = 1 - y * y ;
+  //
+  const double res =  Psi_ ( m_shape * y2 ) / Psi_( m_shape ) ;
+  return m_high > m_low ?  ( 1 - res ) : res ;
+}
+// ============================================================================
+double Gaudi::Math::Argus::integral ( const double low  , 
+                                      const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+
+
 
 
 

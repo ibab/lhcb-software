@@ -3859,7 +3859,7 @@ namespace Gaudi
        *  param alpha   \f$\alpha\f$ parameter    (>0)
        */
       LogGamma ( const double nu     = 0 ,   // shape parameter
-                 const double lambda = 1 , // scale parameter
+                 const double lambda = 1 ,   // scale parameter
                  const double alpha  = 1 ) ; // scale parameter
       /// destructor
       ~LogGamma () ;  // desctructor
@@ -3929,9 +3929,13 @@ namespace Gaudi
       /** constructor with all parameters
        *  @param alpha \f$\alpha\f$-parameter
        *  @param beta  \f$\beta\f$-parameter
+       *  @param scale scale-parameter
+       *  @param low   shift-parameter 
        */
       BetaPrime ( const double alpha = 3 ,
-                  const double beta  = 3 ) ;
+                  const double beta  = 3 , 
+                  const double scale = 1 , 
+                  const double shift = 0 ) ;
       /// destructor
       ~BetaPrime () ;
       // ======================================================================
@@ -3946,6 +3950,8 @@ namespace Gaudi
       // ======================================================================
       double alpha () const { return m_alpha ; }
       double beta  () const { return m_beta  ; }
+      double scale () const { return m_scale ; }
+      double shift () const { return m_shift ; }
       // ======================================================================
     public: // general properties
       // ======================================================================
@@ -3961,6 +3967,8 @@ namespace Gaudi
       // ======================================================================
       bool   setAlpha ( const double value ) ;
       bool   setBeta  ( const double value ) ;
+      bool   setScale ( const double value ) ;
+      bool   setShift ( const double value ) ;
       // ======================================================================
     public: // integrals
       // ======================================================================
@@ -3973,11 +3981,124 @@ namespace Gaudi
       // ======================================================================
       double m_alpha ;
       double m_beta  ;
+      double m_scale ;
+      double m_shift ;
       // ======================================================================
     private:
       // ======================================================================
       /// auxillary intermediate parameter
       double m_aux ; // auxillary intermediate parameter
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Landau 
+     *  http://en.wikipedia.org/wiki/Landau_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API Landau 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor with all parameters
+       *  @param alpha \f$\alpha\f$-parameter
+       *  @param beta  \f$\beta\f$-parameter
+       *  @param scale scale-parameter
+       *  @param low   shift-parameter 
+       */
+      Landau ( const double scale = 1 , 
+               const double shift = 0 ) ;
+      /// destructor
+      ~Landau () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate beta'-distributions
+      double pdf        ( const double x ) const ;
+      /// evaluate beta'-distributions
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getters
+      // ======================================================================
+      double scale () const { return m_scale ; }
+      double shift () const { return m_shift ; }
+      // ======================================================================
+    public: // direct setters
+      // ======================================================================
+      bool   setScale ( const double value ) ;
+      bool   setShift ( const double value ) ;
+      // ======================================================================
+    public: // integrals
+      // ======================================================================
+      double cdf      ( const double x    ) const ;
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_scale ;
+      double m_shift ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Argus 
+     *  http://en.wikipedia.org/wiki/ARGUS_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API Argus 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor with all parameters
+       *  @param alpha \f$\alpha\f$-parameter
+       *  @param beta  \f$\beta\f$-parameter
+       *  @param scale scale-parameter
+       *  @param low   shift-parameter 
+       */
+      Argus  ( const double shape  = 1   ,
+               const double high   = 1   , 
+               const double low    = 0   ) ;
+      /// destructor
+      ~Argus () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate beta'-distributions
+      double pdf        ( const double x ) const ;
+      /// evaluate beta'-distributions
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getters
+      // ======================================================================
+      double shape  () const { return m_shape  ; }
+      double low    () const { return m_low    ; }
+      double high   () const { return m_high   ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      double  y_ ( const double x ) const 
+      { return ( x - m_low  ) / ( m_high - m_low ) ; }
+      // ======================================================================
+    public: // direct setters
+      // ======================================================================
+      bool   setHigh  ( const double value ) ;
+      bool   setLow   ( const double value ) ;
+      bool   setShape ( const double value ) ;
+      // ======================================================================
+    public: // integrals
+      // ======================================================================
+      double cdf      ( const double x    ) const ;
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_shape ;
+      double m_high  ;
+      double m_low   ;
       // ======================================================================
     } ;
     // ========================================================================
