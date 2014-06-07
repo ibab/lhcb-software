@@ -121,8 +121,12 @@ class MooreOnline(LHCbConfigurableUser):
             app.ExtSvc.append(mepMgr)
             evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
             evtMerger.DataType = OnlineEnv.MDF_BANKS
+	    HLT2 = 0
+	    if 'HLT2' in OnlineEnv.HltArchitecture :
+	       HLT2 = 1
             if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-            else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
+	    elif HLT2 : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
+            else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=True)  
             app.ExtSvc.append(eventSelector)
 
             OnlineEnv.evtDataSvc()

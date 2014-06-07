@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2014-06-07 - Eric van Herwijnen
+ - decode MEPS for Hlt1, not for Hlt2. Depends on Hlt2 appearing in the
+ HltArchitecture name.
 
 ! 2014-05-09 - Eric van Herwijnen
  - insert the forker at the beginning rather than the end of ApplicationMgr().ExtSvc
