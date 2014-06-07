@@ -384,7 +384,44 @@ class Fit1DBase (object) :
 
     def signal_set     ( self ) : return self._signal_set
     def background_set ( self ) : return self._background_set
-    
+
+    ## adjust PDF with some small positive portion to avoid bad regions...
+    def adjust         ( self , value = 1.e-5 ) :
+        """
+        Adjust PDF with some small positive portion to avodi bad regions
+        """
+        if not hasattr ( self , 'orig_pdf' ) :
+
+            self.orig_pdf        = self.pdf
+            self.p0_pdf   = ROOT.RooPolynomial ( 'p0' , 'poly0' , self.mass            )
+
+
+            ## add as component: 
+            if hasattr ( self , 'alist1' ) and hasattr ( self , 'alist2' ) :
+                
+                self.orig_pdf        = self.pdf
+                self.adj_alist1 = ROOT.RooArgList () 
+                self.adj_alist2 = ROOT.RooArgList ()
+                for i in self.alist1 : self.adj_alist1.add  ( i )
+                for i in self.alist2 : self.adj_alist2.add  ( i )
+                
+                self.p0_value = makeVar ( None , 'p0val', 'p0value' , value , 0 , 0 , 1000 )
+            
+                self.adj_alist1.add ( self.p0_pdf   )
+                self.adj_alist2.add ( self.p0_value )
+                
+            else :
+
+                self.adj_alist1 = ROOT.RooArgList ( self.p0_pdf , self.orig_pdf ) 
+                self.p0_value = makeVar ( None , 'p0_value', 'value(p0)' , value , 0 , 0 , 1 )
+                self.adj_alist2 = ROOT.RooArgList ( self.p0_value )
+                
+            self.pdf       = ROOT.RooAddPdf  ( "adjust_"    + self.orig_pdf.GetName () ,  
+                                               "Adjust(%s)" % self.orig_pdf.GetName () ,
+                                               self.adj_alist1 ,
+                                               self.adj_alist2 )
+            
+                
     ## make the actual fit (and optionally draw it!)
     def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args ) :
         """
@@ -937,7 +974,8 @@ class Adjust1D(object) :
                    name          ,
                    mass          ,
                    pdf           ,
-                   value = 1.e-2 ) :
+                   value = 1.e-3 ,
+                   frac  = True  ) :
         
         self.mass    = mass
         self.old_pdf = pdf
@@ -945,14 +983,15 @@ class Adjust1D(object) :
         self.p0_pdf  = ROOT.RooPolynomial( 'p0_%s'     % name ,
                                            'poly0(%s)' % name , self.mass ) 
         
-        self.num_s   = makeVar ( None , 'valueT_%s'    % name ,
+        self.num_f   = makeVar ( None , 'valueT_%s'    % name ,
                                  'value/true(%s)'      % name ,
                                  None ,
-                                 0    , 1.e+6 )
-        self.num_v   = makeVar ( None , 'valF_%s'       % name ,
-                                 'value/fixtive(%s)'    % name ,
-                                 value ,
-                                 value , 0 , 10 )  
+                                 0    , 1 )
+        
+        #self.num_v   = makeVar ( None , 'valF_%s'       % name ,
+        #                         'value/fixtive(%s)'    % name ,
+        #                         value ,
+        #                         value , 0 , 10 )  
         
         #
         self.alist1 = ROOT.RooArgList (
@@ -961,10 +1000,11 @@ class Adjust1D(object) :
             )
         
         self.alist2 = ROOT.RooArgList (
-            self.num_s  ,
-            self.num_v
+            self.num_f    ,
+            # self.num_v
+            # self.num_s  ,
+            # self.num_v
             )
-        
         #
         ## final PDF
         # 

@@ -113,7 +113,8 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.LogGammaDist           ,
                Gaudi.Math.Log10GammaDist         ,
                Gaudi.Math.LogGamma               ,
-               Gaudi.Math.BetaPrime              
+               Gaudi.Math.BetaPrime              ,
+               Gaudi.Math.Landau 
                ) :
     model . tf1 = _tf1_ 
 

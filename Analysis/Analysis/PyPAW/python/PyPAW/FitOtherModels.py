@@ -29,6 +29,8 @@ __all__     = (
     'Log10GammaDist_pdf' , ## Gamma-distributuon in shape/scale parameterization
     'LogGamma_pdf'       , ## 
     'BetaPrime_pdf'      , ## Beta-prime distribution 
+    'Landau_pdf'         , ## Landau distribution 
+    'Argus_pdf'          , ## Landau distribution 
     )
 # =============================================================================
 import ROOT, math
@@ -386,7 +388,9 @@ class BetaPrime_pdf(Fit1DBase) :
                    name             ,   ## the name 
                    x                ,   ## the variable
                    alpha = None     ,   ## alpha-parameter
-                   beta  = None     ) : ## beta-parameter
+                   beta  = None     ,   ## beta-parameter
+                   scale = 1        ,   ## scale-parameter 
+                   shift = 0        ) : ## shift-parameter 
         #
         self.x     = x
         self.mass  = x  ## ditto
@@ -405,14 +409,122 @@ class BetaPrime_pdf(Fit1DBase) :
         if self.beta .getMin() <= 0 :
             self.beta.setMin ( 1.e-3 ) 
             logger.warning( 'BetaPrime_pdf: min(beta) is set %s ' % self.beta.getMin  () ) 
+    
+        self.scale  = makeVar ( scale     ,
+                                'scale_betaprime_%s'       % name ,
+                                '#theta_{#beta#prime}(%s)' % name , scale , 1 ,
+                                -1000 , 1000 )
 
-            
+        _dm = self.x.getMax()  - self.x.getMin() 
+        self.shift  = makeVar ( shift     ,
+                                'shift_betaprime_%s'       % name ,
+                                '#delta_{#beta#prime}(%s)' % name , shift , 0 ,
+                                self.x.getMin() - 10 * _dm ,
+                                self.x.getMax() + 10 * _dm ) 
+                                
         self.pdf  = cpp.Analysis.Models.BetaPrime (
             'bp_%s'         % name ,
             'BetaPrime(%s)' % name ,
             self.x     ,
             self.alpha ,
-            self.beta  )
+            self.beta  ,
+            self.scale ,
+            self.shift )
+        
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
+# =============================================================================
+## @class Landau_pdf
+#  http://en.wikipedia.org/wiki/Landau_distribution
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-11
+#  @see Analysis::Models::Landau
+#  @see Gaudi::Math::Landau
+class Landau_pdf(Fit1DBase) :
+    """
+    - http://en.wikipedia.org/wiki/Landau_distribution
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   x                ,   ## the variable
+                   scale = 1        ,   ## scale-parameter 
+                   shift = 0        ) : ## shift-parameter 
+        #
+        self.x     = x
+        self.mass  = x  ## ditto
+        #
+        self.scale  = makeVar ( scale     ,
+                                'scale_landau_%s'     % name ,
+                                '#theta_{Landau}(%s)' % name , scale , 1 ,
+                                -1000 , 1000 )
+
+        _dm = self.x.getMax()  - self.x.getMin() 
+        self.shift  = makeVar ( shift     ,
+                                'shift_landau_%s'     % name ,
+                                '#delta_{Landau}(%s)' % name , shift , 0 ,
+                                self.x.getMin() - 10 * _dm ,
+                                self.x.getMax() + 10 * _dm ) 
+                                
+        self.pdf  = cpp.Analysis.Models.Landau (
+            'land_%s'    % name ,
+            'Landau(%s)' % name ,
+            self.x     ,
+            self.scale ,
+            self.shift )
+        
+        Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
+
+
+# =============================================================================
+## @class Argus_pdf
+#  http://en.wikipedia.org/wiki/ARGUS_distribution
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-11
+#  @see Analysis::Models::Argus
+#  @see Gaudi::Math::Argus
+class Argus_pdf(Fit1DBase) :
+    """
+    - http://en.wikipedia.org/wiki/ARGUS_distribution
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   x                ,   ## the variable
+                   shape = None     ,   ## shape-parameter 
+                   high  = None     ,   ## high-parameter 
+                   low   = 0        ) : ## low-parameter 
+        #
+        self.x     = x
+        self.mass  = x  ## ditto
+        #
+        self.shape  = makeVar ( shape     ,
+                                'shape_argus_%s'   % name ,
+                                '#chi_{Argus}(%s)' % name , shape , 1 ,
+                                1.e-4 , 20 )
+        
+        self.high  = makeVar ( high      ,
+                               'high_argus_%s'    % name ,
+                               'high_{Argus}(%s)' % name , high ,
+                               self.x.getMin () ,
+                               self.x.getMax () )
+        
+        _dm  = self.x.getMax()  - self.x.getMin()
+        lmin = min ( 0 , self.x.getMin() - 10 * _dm )
+        lmax =           self.x.getMax() + 10 * _dm 
+        self.low   = makeVar ( low      ,
+                               'low_argus_%s'    % name ,
+                               'low_{Argus}(%s)' % name , low ,
+                               lmin , lmax ) 
+        ##lmin , lmax ) 
+                               
+        self.pdf  = cpp.Analysis.Models.Argus (
+            'arg_%s'    % name ,
+            'Argus(%s)' % name ,
+            self.x     ,
+            self.shape ,
+            self.high  ,
+            self.low   )
         
         Fit1DBase.__init__ ( self, ROOT.RooArgSet ( self.pdf ) , ROOT.RooArgSet() ) 
 
