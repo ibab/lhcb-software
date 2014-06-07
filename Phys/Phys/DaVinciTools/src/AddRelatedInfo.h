@@ -15,7 +15,7 @@
  *  @date   15/01/2014
  */
 
-typedef LHCb::Relation1D<LHCb::Particle, RelatedInfoMap> ParticleInfoRelation; 
+typedef LHCb::Relation1D<LHCb::Particle, LHCb::RelatedInfoMap> ParticleInfoRelation; 
 
 class AddRelatedInfo : public DaVinciAlgorithm
 {

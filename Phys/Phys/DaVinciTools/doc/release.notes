@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-06-07 - Anton Poluektov 
+ - Update AddRelatedInfo and RelInfoConeVariables to use RelatedInfoMap in 
+   LHCb namespace. 
+
 ! 2014-05-24 - Anton Poluektov 
  - Add tools to store RelatedInfo (new persistency for cone variables etc.)
    * AddRelatedInfo - algorithm to store RelatedInfo

@@ -59,7 +59,7 @@ public:
   virtual StatusCode calculateRelatedInfo( const LHCb::Particle*
                                          , const LHCb::Particle*);
 
-  virtual RelatedInfoMap* getInfo(void);
+  virtual LHCb::RelatedInfoMap* getInfo(void);
   
   virtual std::string infoPath(void);
 
@@ -100,7 +100,7 @@ private:
   /// Check if your track belongs to your decay or not
   bool isTrackInDecay(const LHCb::Track* track);
   
-  RelatedInfoMap m_map;
+  LHCb::RelatedInfoMap m_map;
 };
 
 #endif // CONEVARIABLES_H

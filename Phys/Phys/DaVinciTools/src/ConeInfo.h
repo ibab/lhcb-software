@@ -2,8 +2,9 @@
 #define CONE_INFO_H 1
 
 #include "Kernel/IRelatedInfoTool.h"
+#include "Event/RelatedInfoMap.h"
 
-class ConeInfo : public RelatedInfoMap {
+class ConeInfo : public LHCb::RelatedInfoMap {
 
   public: 
 
