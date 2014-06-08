@@ -137,14 +137,14 @@ namespace
  *  @date   2013-10-13
  */
 // ============================================================================
-StatEntity 
+Analysis::StatVar::Statistic
 Analysis::StatVar::statVar 
 ( TTree*             tree       , 
   const std::string& expression , 
   const unsigned long first     ,
   const unsigned long entries   )
 {
-  StatEntity result ;
+  Statistic result ;
   if ( 0 == tree          ) { return result ; }  // RETURN 
   Analysis::Formula formula ( "" , expression , tree ) ;
   if ( !formula.GetNdim() ) { return result ; }  // RETURN 
@@ -183,7 +183,7 @@ Analysis::StatVar::statVar
  *  @date   2013-10-13
  */
 // ============================================================================
-StatEntity 
+Analysis::StatVar::Statistic
 Analysis::StatVar::statVar 
 ( TTree*              tree       , 
   const std::string&  expression ,
@@ -191,7 +191,8 @@ Analysis::StatVar::statVar
   const unsigned long first      ,
   const unsigned long entries    )
 {
-  StatEntity result ;
+  //
+  Gaudi::Math::WStatEntity result ;
   if ( 0 == tree        ) { return result ; }            // RETURN 
   Analysis::Formula selection ( "" , cuts      , tree ) ;
   if ( !selection.ok () ) { return result ; }            // RETURN 
@@ -212,7 +213,10 @@ Analysis::StatVar::statVar
     ievent      = tree->LoadTree ( ievent ) ;
     if ( 0 > ievent ) { return result ; }                // RETURN 
     //
-    if ( selection.evaluate() ) { result += formula.evaluate() ; }
+    const double w = selection.evaluate() ;
+    const double v = !w ? 0.0 : formula.evaluate() ;
+    //
+    result.add ( v , w ) ;
     //
   }
   //
@@ -237,8 +241,8 @@ Analysis::StatVar::statCov
 ( TTree*               tree    , 
   const std::string&   exp1    , 
   const std::string&   exp2    , 
-  StatEntity&          stat1   ,  
-  StatEntity&          stat2   ,  
+  Analysis::StatVar::Statistic& stat1 ,  
+  Analysis::StatVar::Statistic& stat2 ,  
   Gaudi::SymMatrix2x2& cov2    , 
   const unsigned long  first   ,
   const unsigned long  entries )
@@ -314,8 +318,8 @@ Analysis::StatVar::statCov
   const std::string&   exp1    , 
   const std::string&   exp2    , 
   const std::string&   cuts    , 
-  StatEntity&          stat1   ,  
-  StatEntity&          stat2   ,  
+  Analysis::StatVar::Statistic& stat1 ,  
+  Analysis::StatVar::Statistic& stat2 ,  
   Gaudi::SymMatrix2x2& cov2    , 
   const unsigned long  first   ,
   const unsigned long  entries )
@@ -347,23 +351,23 @@ Analysis::StatVar::statCov
     ievent      = tree->LoadTree ( ievent ) ;
     if ( 0 > ievent ) { return 0 ; } // RETURN 
     //
-    if ( !selection.evaluate() ) { continue ; } // CONTINUE 
+    const double w = selection.evaluate() ;
     //
-    const double v1 = formula1.evaluate() ;
-    const double v2 = formula2.evaluate() ;
+    const double v1 = !w ? 0.0 : formula1.evaluate() ;
+    const double v2 = !w ? 0.0 : formula2.evaluate() ;
     //
-    stat1 += v1 ;
-    stat2 += v2 ;
+    stat1.add ( v1 , w ) ;
+    stat2.add ( v2 , w ) ;
     //
-    cov2 ( 0 , 0 ) += v1*v1 ;
-    cov2 ( 0 , 1 ) += v1*v2 ;
-    cov2 ( 1 , 1 ) += v2*v2 ;
+    cov2 ( 0 , 0 ) += w*v1*v1 ;
+    cov2 ( 0 , 1 ) += w*v1*v2 ;
+    cov2 ( 1 , 1 ) += w*v2*v2 ;
     //
   }
   //
-  if ( 0 == stat1.nEntries() ) { return 0 ; }
+  if ( 0 == stat1.nEntries() || 0 == stat1.nEff () ) { return 0 ; }
   //
-  cov2 /= stat1.nEntries()  ;
+  cov2 /= stat1.weights().sum()  ;
   //
   const double v1_mean = stat1.mean() ;
   const double v2_mean = stat2.mean() ;

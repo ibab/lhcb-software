@@ -15,6 +15,10 @@
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 // ============================================================================
+// LHcbMath 
+// ============================================================================
+#include "LHCbMath/WStatEntity.h"
+// ============================================================================
 // Forward declarations 
 // =============================================================================
 class TTree  ;     // ROOT 
@@ -36,6 +40,11 @@ namespace Analysis
    */
   class GAUDI_API StatVar 
   {
+  public:
+    // ========================================================================
+    /// the actual type for styatistic 
+    typedef Gaudi::Math::WStatEntity  Statistic ;
+    // ========================================================================
   public: 
     // ========================================================================
     /** build statistic for the <code>expression</code>
@@ -50,7 +59,7 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static StatEntity
+    static Statistic 
     statVar ( TTree*              tree                                                   , 
               const std::string&  expression                                             ,
               const unsigned long first      = 0                                         ,
@@ -69,7 +78,7 @@ namespace Analysis
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date   2013-10-13
      */
-    static StatEntity 
+    static Statistic
     statVar ( TTree*              tree        , 
               const std::string&  expression  , 
               const std::string&  cuts        ,
@@ -92,10 +101,10 @@ namespace Analysis
     statCov ( TTree*               tree   , 
               const std::string&   exp1   , 
               const std::string&   exp2   , 
-              StatEntity&          stat1  ,  
-              StatEntity&          stat2  ,  
+              Statistic&           stat1  ,  
+              Statistic&           stat2  ,  
               Gaudi::SymMatrix2x2& cov2   , 
-              const unsigned long first   = 0                                         ,
+              const unsigned long  first   = 0 ,
               const unsigned long entries = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
     /** calculate the covariance of two expressions 
@@ -112,13 +121,13 @@ namespace Analysis
      *  @date   2014-03-27
      */
     static unsigned long 
-    statCov ( TTree*               tree    ,
-              const std::string&   exp1    , 
-              const std::string&   exp2    , 
-              const std::string&   cuts    ,
-              StatEntity&          stat1   ,  
-              StatEntity&          stat2   ,  
-              Gaudi::SymMatrix2x2& cov2    , 
+    statCov ( TTree*               tree   ,
+              const std::string&   exp1   , 
+              const std::string&   exp2   , 
+              const std::string&   cuts   ,
+              Statistic&           stat1  ,  
+              Statistic&           stat2  ,  
+              Gaudi::SymMatrix2x2& cov2   , 
               const unsigned long  first   = 0                                         ,
               const unsigned long  entries = std::numeric_limits<unsigned long>::max() ) ;
     // ========================================================================
