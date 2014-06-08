@@ -30,6 +30,7 @@
 #include "LHCbMath/Chi2Fit.h"
 #include "LHCbMath/Spline.h"
 #include "LHCbMath/NSphere.h"
+#include "LHCbMath/WStatEntity.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *
