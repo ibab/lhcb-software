@@ -44,6 +44,7 @@ __all__     = (
     'useLL'           , ## use LL for histogram fit?
     'allInts'         , ## natural histogram with natural entries?
     'SE'              , ## StatEntity
+    'WSE'             , ## StatEntity with weights 
     #
     'binomEff'        , ## calculate binomial efficiency
     'binomEff2'       , ## calculate binomial efficiency
@@ -71,6 +72,7 @@ import LHCbMath.Types
 Gaudi           = cpp.Gaudi
 VE              = Gaudi.Math.ValueWithError
 SE              = cpp.StatEntity 
+WSE             = Gaudi.Math.WStatEntity 
 ValueWithError  = Gaudi.Math.ValueWithError
 #
 binomEff        = Gaudi.Math.binomEff
@@ -123,28 +125,6 @@ def hID     () : return histoID ( )
 def dsID    () : return rootID  ( 'ds_' )
 
 # =============================================================================
-# temporary trick, to be removed 
-# =============================================================================
-
-SE.__repr__ = lambda s : 'Stat: '+ s.toString()
-SE.__str__  = lambda s : 'Stat: '+ s.toString()
-
-# =============================================================================
-# minor decoration for StatEntity 
-# ============================================================================= 
-if not hasattr ( SE , '_orig_sum'  ) : 
-    _orig_sum    = SE.sum
-    SE._orig_sum = _orig_sum
-    
-if not hasattr ( SE , '_orig_mean' ) : 
-    _orig_mean    = SE.mean
-    SE._orig_mean = _orig_mean
-    
-SE. sum     = lambda s : VE ( s._orig_sum  () , s.sum2()       )
-SE. minmax  = lambda s :    ( s.flagMin()     , s.flagMax()    ) 
-SE. mean    = lambda s : VE ( s._orig_mean () , s.meanErr()**2 )
-
-# =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
     if isinstance  ( ve , ( int , long ) ) : return True
@@ -162,56 +142,6 @@ def _int ( ve , precision = 1.e-5 ) :
     if abs ( ve.value () -        ve.cov2  ()   ) > diff : return False
     #
     return True 
-
-# =============================================================================
-## get the B/S estimate from the formula 
-#  \f$ \sigma  = \fras{1}{S}\sqrt{1+\frac{B}{S}}\f$
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-10-15
-def _b2s_ ( s )  :
-    """
-    Get B/S estimate from the equation:
-    
-       error(S) = 1/sqrt(S) * sqrt ( 1 + B/S)
-
-    >>> v = ...
-    >>> b2s = v.b2s() ## get B/S estimate
-    
-    """
-    #
-    c2 = s.cov2  ()
-    #
-    if s.value() <= 0  or c2 <= 0 : return VE(-1,0) 
-    #
-    return c2/s - 1 
-
-
-# =============================================================================
-## get the precision with some  error estimation 
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2012-10-15
-def _prec2_ ( s )  :
-    """
-    Get precision with ``some'' error estimate 
-
-    >>> v = ...
-    >>> p = v.prec () 
-    
-    """
-    if not hasattr ( s , 'value' ) :
-        return _prec_ ( VE ( s , 0 ) )
-    #
-    c =       s.error ()
-    #
-    if     c <  0 or s.value() == 0  : return VE(-1,0)
-    elif   c == 0                    : return VE( 0,0)
-    #
-    return c/abs(s) 
-
-
-VE . b2s        = _b2s_
-VE . prec       = _prec2_
-VE . precision  = _prec2_
 
 
 # =============================================================================

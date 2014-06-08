@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-06-08 - Vanya Belyaev
+ - add the simplest linear 2D-decorrelator 
+
 ! 2014-06-07 - Vanya Belyaev
  - few minor fixes 
 
