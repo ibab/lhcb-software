@@ -42,7 +42,7 @@ namespace Dict
   struct __Instantiations 
   {
         GaudiDict::Relation1DDict<LHCb::Particle,LHCb::VertexBase>	_1 ;
-        GaudiDict::Relation1DDict<LHCb::Particle,RelatedInfoMap>	_2 ;
+        GaudiDict::Relation1DDict<LHCb::Particle,LHCb::RelatedInfoMap>	_2 ;
         GaudiDict::Relation1DDict<LHCb::Particle,double>	_3 ;
         GaudiDict::Relation1DDict<LHCb::Particle,int>	_4 ;
         GaudiDict::Relation1DDict<LHCb::Track,float>	_5 ;

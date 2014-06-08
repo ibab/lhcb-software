@@ -4,6 +4,9 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2014-06-08 - Anton Poluektov
+ - Move RelatedInfoMap to LHCb namespace
+
 ! 2014-05-23 - Anton Poluektov 
  - Add dictionaries for Particle->RelatedInfo relations
    (new persistency for cone variables etc.)

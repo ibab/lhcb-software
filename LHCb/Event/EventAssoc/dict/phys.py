@@ -20,7 +20,7 @@ classes += [ Rels.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double'
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'LHCb::VertexBase'             ) ]
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'int'             ) ]
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'double'          ) ]
-classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'RelatedInfoMap'  ) ]
+classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'LHCb::RelatedInfoMap'  ) ]
 classes += [ Rels.RelW1D( 'LHCb::Particle' , 'LHCb::Particle'  , 'double' ) ]
 
 includes += ['Event/Particle.h'      ]
