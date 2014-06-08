@@ -45,7 +45,7 @@
 //=============================================================================
 namespace Particle2RelatedInfo
 {  
-  typedef LHCb::Relation1D<LHCb::Particle, RelatedInfoMap > Table;
+  typedef LHCb::Relation1D<LHCb::Particle, LHCb::RelatedInfoMap > Table;
 }
 //=============================================================================
 template<> struct Defaults<Particle2RelatedInfo::Table>
