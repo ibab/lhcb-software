@@ -80,6 +80,6 @@ namespace MicroDST
   bool isValid(float);
 
   template <>
-  bool isValid( RelatedInfoMap );
+  bool isValid( LHCb::RelatedInfoMap );
 }
 #endif // MICRODST_FUNCTIONS_H

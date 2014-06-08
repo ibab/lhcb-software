@@ -66,7 +66,7 @@ namespace MicroDST
   }
 
   template <>
-  bool isValid( RelatedInfoMap ) {
+  bool isValid( LHCb::RelatedInfoMap ) {
     return true; 
   }
   //==========================================================================================
