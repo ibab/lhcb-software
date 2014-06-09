@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file TestReweigt.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-11
 # 
-#                    $Revision: 172094 $
-#  Last modification $Date: 2014-04-29 16:02:06 +0200 (Tue, 29 Apr 2014) $
-#                 by $Author: albarano $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Test for reweighting machinery
@@ -106,6 +106,8 @@ else :
 # 
 from PyPAW.Reweighting import Weight, makeWeights 
 from PyPAW.Selectors   import SelectorWithVars 
+
+## start iterations:
 for iter in range ( 0 , maxIter ) :
 
     weighting = [
