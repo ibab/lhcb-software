@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-06-09 - Vanya Belyaev
+ - add the test for reweighting procedure 
+
 ! 2014-06-08 - Vanya Belyaev
  - add the simplest linear 2D-decorrelator 
 

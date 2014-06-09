@@ -26,7 +26,7 @@ __all__     = (
     ) 
 # =============================================================================
 import ROOT
-from   PyPAW.PyRoUts   import cpp
+from   PyPAW.PyRoUts   import cpp, VE,SE,iszero,hID   
 import PyPAW.ZipShelve as     ZipShelve  ## needed to store the weights&histos 
 # =============================================================================
 # logging 
@@ -34,7 +34,7 @@ import PyPAW.ZipShelve as     ZipShelve  ## needed to store the weights&histos
 from AnalysisPython.Logger import getLogger 
 logger = getLogger( __name__ )
 # =============================================================================
-logger.info ( 'Some utitilities for re-weigting')
+logger.info ( 'Set of utitilities for re-weigthing')
 # =============================================================================
 ## @class Weight
 #  helper class for semiautomatic reweighting of data 
@@ -51,7 +51,7 @@ class Weight(object) :
         #
         ## make some statistic
         #
-        self._counter = cpp.StatEntity ()
+        self._counter = SE ()
         self._nzeroes = 0 
 
         self.vars = [] 
@@ -60,11 +60,11 @@ class Weight(object) :
         ## open database 
         with ZipShelve.open ( dbase , 'r' ) as db : ## READONLY
             
-            db.ls ()
+            ## db.ls ()
             for k in db :
-                print k, len( db[k] )
-
-            ## loop over the weighting factors and build the funiction
+                logger.info( 'DBASE "%.15s" key "%.15s" #%d' % ( dbase ,  k, len( db[k] ) ) ) 
+                
+            ## loop over the weighting factors and build the function
             for f in factors :
 
                 funval  = f[0]  ## accessor to the variable 
@@ -90,7 +90,7 @@ class Weight(object) :
                 self.vars += [ ( funname , funval , functions ) ]  
 
 
-    ## get the statistic of weighte 
+    ## get the statistic of weights 
     def stat    ( self ) :
         "Get the statistic of used weights"
         return self._counter
@@ -108,7 +108,7 @@ class Weight(object) :
         """
 
         ## initialize the weight 
-        weight  = 1.0 
+        weight  = VE(1,0) 
 
         ## lop over functions 
         for i in self.vars :
@@ -121,16 +121,18 @@ class Weight(object) :
             
             for f in functions :
 
-                if isinstance ( v , tuple ) : w = f ( *v ).value()  
-                else                        : w = f (  v ).value()
+                if isinstance ( v , tuple ) : w = f ( *v )
+                else                        : w = f (  v )
 
                 weight *= w # update the weigth factor 
-                
-        self._counter += weight
 
-        if 0 == weight : self._nzeroes += 1
+                
+        vw = weight.value()
+        
+        self._counter += vw 
+        if iszero ( vw ) : self._nzeroes += 1
             
-        return weight
+        return vw 
 
 # =============================================================================
 ## make one re-weighting iteration 
@@ -142,7 +144,8 @@ def makeWeights  ( dataset                 ,
                    database = "weights.db" ,
                    compare  = None         ,
                    delta    = 0.001        ) : ## delta for weigth variance 
-    
+
+    more = False 
     ## loop over plots 
     for r in plots  :
 
@@ -181,14 +184,14 @@ def makeWeights  ( dataset                 ,
         #
         ## calculate  the reweigting factor : a bit conservative
         #  this is the only important line 
-        w = ( ( 1/hmc ) * hdata ) ** ( 1.0 / ( len ( plots ) ) )  
+        w = ( ( 1.0 / hmc ) * hdata ) ** ( 1.0 / ( len ( plots ) ) )  
 
         #
         ## 
         # 
         save = True
-        rcnt = w.is_constant ( 0.001 , 1000 , 0.95 , delta = 0.001  )
-        if rcnt : save = False
+        # rcnt = w.is_constant ( 0.001 , 1000 , 0.95 , delta = 0.001  )
+        # if rcnt : save = False
         
         #
         ## get the statistics of weights 
@@ -199,7 +202,7 @@ def makeWeights  ( dataset                 ,
         cnt  = w.stat()
         #
         wvar = cnt.rms()/cnt.mean()
-        logger.info ( '* %-15s Mean/rms/minmax:%s/%s/(%s,%s) Vars:%s[%%]' %
+        logger.info ( 'Reweighting "%-.15s: Mean/rms/minmax:%s/%.4f/(%.4f,%.4f) Vars:%s[%%]' %
                       ( address    ,
                         cnt.mean() , cnt.rms(),
                         cnt.minmax()[0] ,
@@ -209,7 +212,7 @@ def makeWeights  ( dataset                 ,
         # 
         if wvar.value() <= delta :
             save = False
-            logger.warning("No more reweighting for %s [%.3f%%]" %  ( address , wvar * 100 ) ) 
+            logger.info("No more reweighting for %s [%.3f%%]" %  ( address , wvar * 100 ) ) 
         else            :
             save = True 
 
@@ -225,11 +228,28 @@ def makeWeights  ( dataset                 ,
             with ZipShelve.open ( database ) as db :
                 db[address] = db.get( address , [] ) + [ w ]
 
+        ## 
+        more = more or save
+
+        del hdata0, hmc0, hdata, hmc, w  
         
-        ## return (hdata0,hmc0),(hdata,hmc) 
+    return more
 
+## return (hdata0,hmc0),(hdata,hmc) 
 
+## some simple comparsion 
+def hCompare ( data , mc , title = '' , spline = True ) :
 
+    
+    if not isinstance ( data , ( ROOT.TH1D , ROOT.TH1F ) ) : return
+    if not isinstance ( mc   , ( ROOT.TH1D , ROOT.TH1F ) ) : return
+
+    data.cmp_prnt( mc )
+
+    hd  = data.rescale_bins ( 1 ) 
+    hm  = mc  .rescale_bins ( 1 ) 
+
+        
 # =============================================================================
 if '__main__' == __name__ :
     

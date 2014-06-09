@@ -55,151 +55,151 @@ m_gamma0.theta.setVal( 1 )
 dataset2 = m_gamma0.pdf.generate ( varset2 , 20000 ) 
  
 
-## # =============================================================================
-## logger.info('Test  Gamma-Distribution')
-## # =============================================================================
-## m_gamma = Models.GammaDist_pdf('GD0'  , x )
+# =============================================================================
+logger.info('Test  Gamma-Distribution')
+# =============================================================================
+m_gamma = Models.GammaDist_pdf('GD0'  , x )
 
-## with rooSilent() : 
-##     result,f  = m_gamma.fitTo ( dataset2 )  
-##     result,f  = m_gamma.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_gamma.fitTo ( dataset2 )  
+    result,f  = m_gamma.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tGamma:       k    = %s " % result( m_gamma.k.GetName()     )[0]
-##     print  "\tGamma:       theta= %s " % result( m_gamma.theta.GetName() )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tGamma:       k    = %s " % result( m_gamma.k.GetName()     )[0]
+    print  "\tGamma:       theta= %s " % result( m_gamma.theta.GetName() )[0]   
 
 
-## # =============================================================================
-## logger.info('Test  GenGamma-Distribution')
-## # =============================================================================
-## m_gengamma = Models.GenGammaDist_pdf('GD0'  , x )
-## m_gengamma.p    .fix(1) 
-## m_gengamma.low  .fix(0) 
-## m_gengamma.theta.fix(1) 
-## m_gengamma.k    .fix(2) 
+# =============================================================================
+logger.info('Test  GenGamma-Distribution')
+# =============================================================================
+m_gengamma = Models.GenGammaDist_pdf('GD0'  , x )
+m_gengamma.p    .fix(1) 
+m_gengamma.low  .fix(0) 
+m_gengamma.theta.fix(1) 
+m_gengamma.k    .fix(2) 
 
-## with rooSilent() : 
-##     result,f  = m_gengamma.fitTo ( dataset2 )  
-##     m_gengamma.p    .release()  
-##     m_gengamma.theta.release()  
-##     m_gengamma.k    .release()  
-##     result,f  = m_gengamma.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_gengamma.fitTo ( dataset2 )  
+    m_gengamma.p    .release()  
+    m_gengamma.theta.release()  
+    m_gengamma.k    .release()  
+    result,f  = m_gengamma.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tGenGamma:    k    = %s " % result( m_gengamma.k.GetName()     )[0]
-##     print  "\tGenGamma:    theta= %s " % result( m_gengamma.theta.GetName() )[0]   
-##     print  "\tGenGamma:    p    = %s " % result( m_gengamma.p.GetName()     )[0]
-##     print  "\tGenGamma:    low  = %s " % result( m_gengamma.low.GetName()   )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tGenGamma:    k    = %s " % result( m_gengamma.k.GetName()     )[0]
+    print  "\tGenGamma:    theta= %s " % result( m_gengamma.theta.GetName() )[0]   
+    print  "\tGenGamma:    p    = %s " % result( m_gengamma.p.GetName()     )[0]
+    print  "\tGenGamma:    low  = %s " % result( m_gengamma.low.GetName()   )[0]   
 
-## # =============================================================================
-## logger.info('Test  Amoroso-Distribution')
-## # =============================================================================
-## m_amoroso = Models.Amoroso_pdf('Am'  , x )
-## m_amoroso.a.fix(0)
-## m_amoroso.theta.setVal(1)
-## m_amoroso.alpha.setVal (2)
-## m_amoroso.beta .setVal (1)
+# =============================================================================
+logger.info('Test  Amoroso-Distribution')
+# =============================================================================
+m_amoroso = Models.Amoroso_pdf('Am'  , x )
+m_amoroso.a.fix(0)
+m_amoroso.theta.setVal(1)
+m_amoroso.alpha.setVal (2)
+m_amoroso.beta .setVal (1)
 
 
-## with rooSilent() : 
-##     result,f  = m_amoroso.fitTo ( dataset2 )  
-##     result,f  = m_amoroso.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_amoroso.fitTo ( dataset2 )  
+    result,f  = m_amoroso.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tAmoroso:     theta= %s " % result( m_amoroso.theta.GetName()  )[0]   
-##     print  "\tAmoroso:     alpha= %s " % result( m_amoroso.alpha.GetName()  )[0]   
-##     print  "\tAmoroso:     beta = %s " % result( m_amoroso.beta .GetName()  )[0]   
-##     print  "\tAmoroso:     a    = %s " % result( m_amoroso.a    .GetName()  )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tAmoroso:     theta= %s " % result( m_amoroso.theta.GetName()  )[0]   
+    print  "\tAmoroso:     alpha= %s " % result( m_amoroso.alpha.GetName()  )[0]   
+    print  "\tAmoroso:     beta = %s " % result( m_amoroso.beta .GetName()  )[0]   
+    print  "\tAmoroso:     a    = %s " % result( m_amoroso.a    .GetName()  )[0]   
 
 
-## # =============================================================================
-## logger.info('Test  LogGamma-Distribution')
-## # =============================================================================
-## m_loggamma = Models.LogGamma_pdf('LogG'  , x )
+# =============================================================================
+logger.info('Test  LogGamma-Distribution')
+# =============================================================================
+m_loggamma = Models.LogGamma_pdf('LogG'  , x )
 
-## with rooSilent() : 
-##     result,f  = m_loggamma.fitTo ( dataset2 )  
-##     result,f  = m_loggamma.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_loggamma.fitTo ( dataset2 )  
+    result,f  = m_loggamma.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tLogGamma:    nu=    %s " % result( m_loggamma. nu     .GetName()  )[0]   
-##     print  "\tLogGamma:    lam=   %s " % result( m_loggamma. lam    .GetName()  )[0]   
-##     print  "\tLogGamma:    alpha= %s " % result( m_loggamma. alpha  .GetName()  )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tLogGamma:    nu=    %s " % result( m_loggamma. nu     .GetName()  )[0]   
+    print  "\tLogGamma:    lam=   %s " % result( m_loggamma. lam    .GetName()  )[0]   
+    print  "\tLogGamma:    alpha= %s " % result( m_loggamma. alpha  .GetName()  )[0]   
 
 
-## # =============================================================================
-## logger.info('Test  log(Gamma)-Distribution')
-## # =============================================================================
-## m_lngamma = Models.LogGammaDist_pdf('LnG'  , x )
+# =============================================================================
+logger.info('Test  log(Gamma)-Distribution')
+# =============================================================================
+m_lngamma = Models.LogGammaDist_pdf('LnG'  , x )
 
-## with rooSilent() : 
-##     result,f  = m_lngamma.fitTo ( dataset2 )  
-##     result,f  = m_lngamma.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_lngamma.fitTo ( dataset2 )  
+    result,f  = m_lngamma.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tLn(Gamma):   k=     %s " % result( m_lngamma. k     .GetName()  )[0]   
-##     print  "\tLn(Gamma):   theta= %s " % result( m_lngamma. theta .GetName()  )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tLn(Gamma):   k=     %s " % result( m_lngamma. k     .GetName()  )[0]   
+    print  "\tLn(Gamma):   theta= %s " % result( m_lngamma. theta .GetName()  )[0]   
 
-## # =============================================================================
-## logger.info('Test  log10(Gamma)-Distribution')
-## # =============================================================================
-## m_log10gamma = Models.Log10GammaDist_pdf('L10G'  , x )
+# =============================================================================
+logger.info('Test  log10(Gamma)-Distribution')
+# =============================================================================
+m_log10gamma = Models.Log10GammaDist_pdf('L10G'  , x )
 
-## with rooSilent() : 
-##     result,f  = m_log10gamma.fitTo ( dataset2 )  
-##     result,f  = m_log10gamma.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_log10gamma.fitTo ( dataset2 )  
+    result,f  = m_log10gamma.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tLog10(Gamma):k=     %s " % result( m_log10gamma. k     .GetName()  )[0]   
-##     print  "\tLog10(Gamma):theta= %s " % result( m_log10gamma. theta .GetName()  )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tLog10(Gamma):k=     %s " % result( m_log10gamma. k     .GetName()  )[0]   
+    print  "\tLog10(Gamma):theta= %s " % result( m_log10gamma. theta .GetName()  )[0]   
 
 
-## # =============================================================================
-## logger.info("Test  Beta'-Distribution")
-## # =============================================================================
-## m_betaprime = Models.BetaPrime_pdf('BP'  , x )
+# =============================================================================
+logger.info("Test  Beta'-Distribution")
+# =============================================================================
+m_betaprime = Models.BetaPrime_pdf('BP'  , x )
 
-## with rooSilent() : 
-##     result,f  = m_betaprime.fitTo ( dataset2 )  
-##     result,f  = m_betaprime.fitTo ( dataset2 )  
-##     m_betaprime.scale.release()
-##     m_betaprime.shift.release()
-##     result,f  = m_betaprime.fitTo ( dataset2 )  
-##     result,f  = m_betaprime.fitTo ( dataset2 )  
+with rooSilent() : 
+    result,f  = m_betaprime.fitTo ( dataset2 )  
+    result,f  = m_betaprime.fitTo ( dataset2 )  
+    m_betaprime.scale.release()
+    m_betaprime.shift.release()
+    result,f  = m_betaprime.fitTo ( dataset2 )  
+    result,f  = m_betaprime.fitTo ( dataset2 )  
     
 
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
-##     print result
-## else :
-##     print  "\tBeta':       alpha= %s " % result( m_betaprime. alpha     .GetName()  )[0]   
-##     print  "\tBeta':       beta=  %s " % result( m_betaprime. beta      .GetName()  )[0]   
-##     print  "\tBeta':       scale= %s " % result( m_betaprime. scale     .GetName()  )[0]   
-##     print  "\tBeta':       shift= %s " % result( m_betaprime. shift     .GetName()  )[0]   
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tBeta':       alpha= %s " % result( m_betaprime. alpha     .GetName()  )[0]   
+    print  "\tBeta':       beta=  %s " % result( m_betaprime. beta      .GetName()  )[0]   
+    print  "\tBeta':       scale= %s " % result( m_betaprime. scale     .GetName()  )[0]   
+    print  "\tBeta':       shift= %s " % result( m_betaprime. shift     .GetName()  )[0]   
 
 
 # =============================================================================

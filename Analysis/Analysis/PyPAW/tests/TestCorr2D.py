@@ -47,7 +47,7 @@ m2      = VE ( 0 , 5 )
 
 RAD = ROOT.RooAbsData
 if RAD.Tree != RAD.getDefaultStorageType() :
-    print 'DEFINE default storage type to be TTree! '
+    logger.info ('DEFINE default storage type to be TTree! ')
     RAD.setDefaultStorageType ( RAD.Tree )
 
 ## book very simple data set

@@ -80,6 +80,7 @@ binomEff2       = Gaudi.Math.binomEff2
 zechEff         = Gaudi.Math.zechEff
 wilsonEff       = Gaudi.Math.wilsonEff
 agrestiCoullEff = Gaudi.Math.agrestiCoullEff
+iszero          = cpp.LHCb.Math.Zero('double')() 
 #
 import math, sys
 from array import array
