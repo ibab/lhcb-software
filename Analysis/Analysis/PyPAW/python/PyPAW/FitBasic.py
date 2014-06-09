@@ -8,9 +8,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 # 
-#                    $Revision: 172520 $
-#  Last modification $Date: 2014-05-10 20:27:44 +0200 (Sat, 10 May 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 Set of useful basic utilities to build various fit models 
