@@ -39,6 +39,7 @@ Empricial PDFs to describe narrow peaks
   - skew Gaussian
   - Bukin,
   - Student-T
+  - bifurcated Student-T
 
 PDF to describe ``wide'' peaks
 
@@ -64,18 +65,19 @@ __all__ = (
     #
     ## empirical 1D signal models
     # 
-    'Gauss_pdf'            , ## simple     Gauss
-    'CrystalBall_pdf'      , ## Crystal-ball function
-    'CrystalBallRS_pdf'    , ## right-side Crystal-ball function
-    'CB2_pdf'              , ## double-sided Crystal Ball function    
-    'Needham_pdf'          , ## Needham function for J/psi or Y (CB function with alpha=alpha(sigma))
-    'Apolonios_pdf'        , ## Apolonios function         
-    'BifurcatedGauss_pdf'  , ## bifurcated Gauss
-    'GenGaussV1_pdf'       , ## generalized normal v1  
-    'GenGaussV2_pdf'       , ## generalized normal v2 
-    'SkewGauss_pdf'        , ## skewed gaussian
-    'Bukin_pdf'            , ## generic Bukin PDF: skewed gaussian with exponential tails     
-    'StudentT_pdf'         , ## Student-T function 
+    'Gauss_pdf'              , ## simple     Gauss
+    'CrystalBall_pdf'        , ## Crystal-ball function
+    'CrystalBallRS_pdf'      , ## right-side Crystal-ball function
+    'CB2_pdf'                , ## double-sided Crystal Ball function    
+    'Needham_pdf'            , ## Needham function for J/psi or Y (CB function with alpha=alpha(sigma))
+    'Apolonios_pdf'          , ## Apolonios function         
+    'BifurcatedGauss_pdf'    , ## bifurcated Gauss
+    'GenGaussV1_pdf'         , ## generalized normal v1  
+    'GenGaussV2_pdf'         , ## generalized normal v2 
+    'SkewGauss_pdf'          , ## skewed gaussian
+    'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails     
+    'StudentT_pdf'           , ## Student-T function 
+    'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
     #
     ## specializations:
     # 

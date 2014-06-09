@@ -408,7 +408,34 @@ else :
     print 'Mean                is: ' , result ( 'mean_Gauss')[0] 
 
 
+# =============================================================================
+## Bifurcated StudentT
+# =============================================================================
+logger.info ('Test bifurcated StudentT_pdf' ) 
+model_bstudent = Models.Fit1D (
+    signal = Models.BifurcatedStudentT_pdf ( 'ST' , mass.getMin() , mass.getMax()  ,
+                                             mass = mass ,
+                                             mean = signal_gauss.mean ) ,
+    background = model_gauss.background  )
 
+model_bstudent.signal.nL.fix(5)
+model_bstudent.signal.nR.fix(5)
+with rooSilent() : 
+    result, frame = model_bstudent. fitTo ( dataset0 )
+    result, frame = model_bstudent. fitTo ( dataset0 )
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
+    print result 
+else : 
+    print 'Signal & Background are: ', result ( 'S' )[0] , result( 'B' )[0]
+    print 'Mean                is: ' , result ( model_bstudent.signal.mean  .GetName() )[0] 
+    print 'Sigma(L)            is: ' , result ( model_bstudent.signal.sigmaL.GetName() )[0] 
+    print 'Sigma(R)            is: ' , result ( model_bstudent.signal.sigmaR.GetName() )[0] 
+    print 'n(L)                is: ' , result ( model_bstudent.signal.nL    .GetName() )[0] 
+    print 'n(R)                is: ' , result ( model_bstudent.signal.nR    .GetName() )[0] 
+    
+    
 # =============================================================================
 ## Breit-Wigner
 # =============================================================================

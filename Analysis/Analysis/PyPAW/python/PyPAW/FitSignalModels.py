@@ -39,6 +39,7 @@ Empricial PDFs to describe narrow peaks
   - skew Gaussian
   - Bukin,
   - Student-T
+  - bifurcated Student-T
 
 PDF to describe ``wide'' peaks
 
@@ -64,18 +65,19 @@ __all__ = (
     #
     ## empirical 1D signal models
     # 
-    'Gauss_pdf'            , ## simple     Gauss
-    'CrystalBall_pdf'      , ## Crystal-ball function
-    'CrystalBallRS_pdf'    , ## right-side Crystal-ball function
-    'CB2_pdf'              , ## double-sided Crystal Ball function    
-    'Needham_pdf'          , ## Needham function for J/psi or Y fits 
-    'Apolonios_pdf'        , ## Apolonios function         
-    'BifurcatedGauss_pdf'  , ## bifurcated Gauss
-    'GenGaussV1_pdf'       , ## generalized normal v1  
-    'GenGaussV2_pdf'       , ## generalized normal v2 
-    'SkewGauss_pdf'        , ## skewed gaussian
-    'Bukin_pdf'            , ## generic Bukin PDF: skewed gaussian with exponential tails     
-    'StudentT_pdf'         , ## Student-T function 
+    'Gauss_pdf'              , ## simple     Gauss
+    'CrystalBall_pdf'        , ## Crystal-ball function
+    'CrystalBallRS_pdf'      , ## right-side Crystal-ball function
+    'CB2_pdf'                , ## double-sided Crystal Ball function    
+    'Needham_pdf'            , ## Needham function for J/psi or Y fits 
+    'Apolonios_pdf'          , ## Apolonios function         
+    'BifurcatedGauss_pdf'    , ## bifurcated Gauss
+    'GenGaussV1_pdf'         , ## generalized normal v1  
+    'GenGaussV2_pdf'         , ## generalized normal v2 
+    'SkewGauss_pdf'          , ## skewed gaussian
+    'Bukin_pdf'              , ## generic Bukin PDF: skewed gaussian with exponential tails     
+    'StudentT_pdf'           , ## Student-T function 
+    'BifurcatedStudentT_pdf' , ## bifurcated Student-T function 
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 
@@ -793,6 +795,74 @@ class StudentT_pdf(Mass_pdf) :
             self.n      )
 
 
+# =============================================================================
+## @class BifurcatedStudentT_pdf
+#  bifurcated Student-T distribution
+# 
+#  @see Analysis::Models::BifurcatedStudentT
+#  @see Gaudi::Math::BifurcatedStudentT
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class BifurcatedStudentT_pdf(Mass_pdf) :
+    """
+    Bifurcated Student-T distribution
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   mn               ,
+                   mx               ,
+                   fixMass   = None ,
+                   fixSigmaL = None ,
+                   fixSigmaR = None ,
+                   fixNL     = None , 
+                   fixNR     = None , 
+                   mass      = None ,
+                   mean      = None ,
+                   sigmaL    = None ,
+                   sigmaR    = None ,
+                   nL        = None , 
+                   nR        = None ) :
+        #
+        ## initialize the base
+        # 
+        Mass_pdf.__init__  ( self    , name , mn , mx ,
+                             mass    ,
+                             mean    ,
+                             sigmaL  ,
+                             fixMass , fixSigmaL )
+        
+        self.sigmaL = self.sigma
+        if hasattr ( self , 'sigma' ) : delattr ( self , 'sigma' )
+        self.sigmaR = makeVar ( sigmaR    ,
+                                'sigmaR_BST_%s'      % name ,
+                                '#sigma_{R,BST}(%s)' % name ,
+                                fixSigmaR ,
+                                self.sigmaL.getVal () ,
+                                self.sigmaL.getMin () ,
+                                self.sigmaL.getMax () ) 
+        
+        # 
+        self.nL =  makeVar ( nL                    ,
+                             'nLBST_%s'      % name ,
+                             '#nL_{BST}(%s)' % name ,
+                             fixNL , 0 , 50  ) 
+        self.nR =  makeVar ( nR                    ,
+                             'nRBST_%s'      % name ,
+                             '#nR_{BST}(%s)' % name ,
+                             fixNR , 0 , 50  ) 
+        #
+        ## finally build pdf
+        # 
+        self.pdf = cpp.Analysis.Models.BifurcatedStudentT (
+            "bstT_"         + name ,
+            "BStudentT(%s)" % name ,
+            self.mass   ,
+            self.mean   ,
+            self.sigmaL ,
+            self.sigmaR ,
+            self.nL     ,
+            self.nR     ) 
+        
 # =============================================================================
 ## @class Voigt_pdf
 #  Voigt-pdf distribution
