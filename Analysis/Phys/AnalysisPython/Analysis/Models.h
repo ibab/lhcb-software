@@ -48,6 +48,7 @@ namespace Analysis
    *  - Skew Gaussian
    *  - Bukin 
    *  - Student-T 
+   *  - bifurcated Student-T 
    *  - Gram-Charlier-A 
    *
    *  Smooth phase-space induced models for background 
@@ -1749,6 +1750,78 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::StudentT m_stt ;           // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BifurcatedStudentT 
+     *  @see Gaudi::Math::BifurcatedStudentT
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2013-01-05
+     */
+    class GAUDI_API BifurcatedStudentT: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::BifurcatedStudentT, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      BifurcatedStudentT ( const char*          name      , 
+                           const char*          title     ,
+                           RooAbsReal&          x         ,
+                           RooAbsReal&          mu        ,
+                           RooAbsReal&          sigmaL    ,
+                           RooAbsReal&          sigmaR    ,
+                           RooAbsReal&          nL        , 
+                           RooAbsReal&          nR        ) ;
+      /// "copy constructor"
+      BifurcatedStudentT ( const BifurcatedStudentT& right     , 
+                           const char*               name  = 0 )  ;
+      /// destructor 
+      virtual ~BifurcatedStudentT() ;
+      /// clone 
+      virtual  BifurcatedStudentT* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::BifurcatedStudentT& function() const { return m_stt ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_mu       ;
+      RooRealProxy m_sigmaL   ;
+      RooRealProxy m_sigmaR   ;
+      RooRealProxy m_nL       ;
+      RooRealProxy m_nR       ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::BifurcatedStudentT m_stt ; // the actual function 
       // ======================================================================
     } ;
     // ========================================================================

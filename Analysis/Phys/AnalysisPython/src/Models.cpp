@@ -2270,6 +2270,105 @@ Double_t Analysis::Models::StudentT::analyticalIntegral
 // ============================================================================
 
 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::BifurcatedStudentT::BifurcatedStudentT 
+( const char*          name   , 
+  const char*          title  ,
+  RooAbsReal&          x      ,
+  RooAbsReal&          mu     ,
+  RooAbsReal&          sigmaL ,
+  RooAbsReal&          sigmaR ,
+  RooAbsReal&          nL     ,
+  RooAbsReal&          nR     )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x      ( "x"     , "Observable" , this , x      ) 
+  , m_mu     ( "mu"    , "Peak"       , this , mu     ) 
+  , m_sigmaL ( "sigmaL" , "Width(L)"  , this , sigmaL )
+  , m_sigmaR ( "sigmaR" , "Width(R)"  , this , sigmaR )
+  , m_nL     ( "nL"     , "N(L)"      , this , nL     )
+  , m_nR     ( "nR"     , "N(R)"      , this , nR     )
+//
+  , m_stt   ( 0 , 1 , 1 , 2 , 2 ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::BifurcatedStudentT::BifurcatedStudentT 
+( const Analysis::Models::BifurcatedStudentT& right , 
+  const char*                       name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_mu     ( "mu"     , this , right.m_mu     ) 
+  , m_sigmaL ( "sigmaL" , this , right.m_sigmaL )
+  , m_sigmaR ( "sigmaR" , this , right.m_sigmaR )
+  , m_nL     ( "nL"     , this , right.m_nL     )
+  , m_nR     ( "nR"     , this , right.m_nR     )
+    //
+  , m_stt   (               right.m_stt    ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::BifurcatedStudentT::~BifurcatedStudentT (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::BifurcatedStudentT*
+Analysis::Models::BifurcatedStudentT::clone( const char* name ) const 
+{ return new Analysis::Models::BifurcatedStudentT(*this,name) ; }
+// ============================================================================
+void Analysis::Models::BifurcatedStudentT::setPars () const 
+{
+  //
+  m_stt.setM      ( m_mu     ) ;
+  m_stt.setSigmaL ( m_sigmaL ) ;
+  m_stt.setSigmaR ( m_sigmaR ) ;
+  m_stt.setNL     ( m_nL     ) ;
+  m_stt.setNR     ( m_nR     ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::BifurcatedStudentT::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_stt   ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::BifurcatedStudentT::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::BifurcatedStudentT::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_stt.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
 
 // ============================================================================
 //         Gram-Charlier type A 
