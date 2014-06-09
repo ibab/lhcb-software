@@ -3413,7 +3413,7 @@ namespace Gaudi
     public:
       // ======================================================================
       /// calculate StudentT's shape
-      double operator() ( const double x ) const ;
+      double operator() ( const double x ) const{ return pdf ( x )  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -3429,6 +3429,7 @@ namespace Gaudi
       double gamma  () const  { return sigma () ; }
       double width  () const  { return sigma () ; }
       // ======================================================================
+      double nu     () const  { return m_n      ; }
       double n      () const  { return m_n      ; }
       // ======================================================================
       bool setM     ( const double value  ) ;
@@ -3442,6 +3443,11 @@ namespace Gaudi
       bool setWidth ( const double value  ) { return setSigma ( value ) ; }
       // ======================================================================
       bool setN     ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double pdf    ( const double x ) const ;
+      double cdf    ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -3464,10 +3470,110 @@ namespace Gaudi
       // ======================================================================
       double m_norm  ;
       // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BifurcatedStudentT
+     *  simple function to parameterize the asymmetric peak using
+     *  Student's ditribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-01-05
+     */
+    class GAUDI_API BifurcatedStudentT
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from mass, resolution and "n"-parameter
+       *  @param M     mass
+       *  @param sigma width parameter
+       *  @param N     n-parameter  ( actually  n=1+|N| )
+       */
+      BifurcatedStudentT ( const double mass   = 0 ,
+                           const double sigmaL = 1 ,
+                           const double sigmaR = 1 ,
+                           const double nL     = 2 ,
+                           const double nR     = 2 ) ;
+      /// destructor
+      ~BifurcatedStudentT() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate bifurcated StudentT's shape
+      double operator() ( const double x ) const{ return pdf ( x )  ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // variables
+      // ======================================================================
+      double M       () const  { return m_M      ; }
+      double m0      () const  { return   M   () ; }
+      double mass    () const  { return   M   () ; }
+      double peak    () const  { return   M   () ; }
+      // ======================================================================
+      double sigmaL  () const  { return m_sL      ; }
+      double sL      () const  { return sigmaL () ; }
+      double gammaL  () const  { return sigmaL () ; }
+      double widthL  () const  { return sigmaL () ; }
+      // ======================================================================
+      double sigmaR  () const  { return m_sR      ; }
+      double sR      () const  { return sigmaR () ; }
+      double gammaR  () const  { return sigmaR () ; }
+      double widthR  () const  { return sigmaR () ; }
+      // ======================================================================
+      double nuL     () const  { return m_nL      ; }
+      double nL      () const  { return m_nL      ; }
+      // =========== ===========================================================
+      double nuR     () const  { return m_nR      ; }
+      double nR      () const  { return m_nR      ; }
+      // ======================================================================
+      bool setM      ( const double value  ) ;
+      bool setM0     ( const double value  ) { return setM  ( value ) ; }
+      bool setMass   ( const double value  ) { return setM  ( value ) ; }
+      bool setPeak   ( const double value  ) { return setM  ( value ) ; }
+      // ======================================================================
+      bool setSigmaL ( const double value  ) ;
+      bool setSL     ( const double value  ) { return setSigmaL ( value ) ; }
+      bool setGammaL ( const double value  ) { return setSigmaL ( value ) ; }
+      bool setWidthL ( const double value  ) { return setSigmaL ( value ) ; }
+      // ======================================================================
+      bool setSigmaR ( const double value  ) ;
+      bool setSR     ( const double value  ) { return setSigmaR ( value ) ; }
+      bool setGammaR ( const double value  ) { return setSigmaR ( value ) ; }
+      bool setWidthR ( const double value  ) { return setSigmaR ( value ) ; }
+      // ======================================================================
+      bool setNL     ( const double value  ) ;
+      bool setNR     ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double pdf    ( const double x ) const ;
+      double cdf    ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
     private:
       // ======================================================================
-      /// integration workspace
-      Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace
+      /// mass
+      double m_M  ; //
+      /// width parameter
+      double m_sL ; // width parameter
+      /// width parameter
+      double m_sR ; // width parameter
+      /// nL-parameter
+      double m_nL ; // n-parameter
+      /// nR-parameter
+      double m_nR ; // n-parameter
+      // ======================================================================
+    private: // normalization
+      // ======================================================================
+      double m_normL  ;
+      double m_normR  ;
       // ======================================================================
     } ;
     // ========================================================================

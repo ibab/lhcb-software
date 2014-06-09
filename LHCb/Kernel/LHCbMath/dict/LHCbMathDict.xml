@@ -62,6 +62,7 @@
   <class name    = "Gaudi::Math::Gounaris23L"             />
   <class name    = "Gaudi::Math::Voigt"                   />
   <class name    = "Gaudi::Math::StudentT"                />
+  <class name    = "Gaudi::Math::BifurcatedStudentT"      />
   <class name    = "Gaudi::Math::Rho0"             />
   <class name    = "Gaudi::Math::Kstar0"           />
   <class name    = "Gaudi::Math::Phi0"             />

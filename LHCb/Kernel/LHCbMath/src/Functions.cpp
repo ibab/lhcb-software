@@ -1051,18 +1051,6 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
-  /** helper function for integration of StudentT-shape
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date 2013-01-05
-   */
-  double studentT_GSL ( double x , void* params )
-  {
-    //
-    const Gaudi::Math::StudentT* f = (Gaudi::Math::StudentT*) params ;
-    //
-    return (*f)(x) ;
-  }
-  // ==========================================================================
   /** helper function for integration of Voigt shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
@@ -6970,14 +6958,33 @@ bool Gaudi::Math::StudentT::setN ( const double x )
   return true ;
 }
 // ==========================================================================
-double Gaudi::Math::StudentT::operator () ( const double x ) const
+double Gaudi::Math::StudentT::pdf ( const double x ) const
 {
   //
-  const double y = ( x - M () ) / sigma() ;
+  const double y = ( x - M () ) / sigma () ;
   //
-  const double f = std::pow (  1 + y * y / n() ,  -0.5 * ( n() + 1 ) ) ;
+  const double f = std::pow (  1 + y * y / nu () ,  -0.5 * ( nu () + 1 ) ) ;
   //
   return m_norm * f / sigma () ; // sigma comes from dx = dy * sigma 
+}
+// ============================================================================
+namespace 
+{
+  //
+  inline double student_cdf (  const double t , const double nu ) 
+  {
+    const double xt    = nu / ( t * t + nu ) ;
+    const double value = 0.5 * gsl_sf_beta_inc ( 0.5 * nu , 0.5 , xt ) ;
+    return t >= 0 ? 1 - value : value ;
+  }
+  //
+}
+// ============================================================================
+double Gaudi::Math::StudentT::cdf ( const double y ) const
+{
+  //
+  const double  t    = ( y - M () ) / sigma () ;
+  return student_cdf ( t , nu() ) ;
 }
 // ============================================================================
 // get the integral 
@@ -6992,51 +6999,180 @@ double Gaudi::Math::StudentT::integral
 {
   //
   if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
-  if (           low > high   ) { return - integral ( high ,
-                                                      low  ) ; } // RETURN
   //
-  // split large pieces 
-  if ( high - low > 8 * sigma() ) 
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+// Student-T 
+// ============================================================================
+/*  constructor from mass, resolution and "n"-parameter 
+ *  @param M     mass 
+ *  @param sigma width parameter
+ *  @param N     n-parameter  ( actually  n=1+|N| ) 
+ */
+// ============================================================================
+Gaudi::Math::BifurcatedStudentT::BifurcatedStudentT 
+( const double mass   , 
+  const double sigmaL ,
+  const double sigmaR ,
+  const double nL     , 
+  const double nR     ) 
+  : std::unary_function<double,double>  ()
+//
+  , m_M     (      std::abs ( mass   ) )
+  , m_sL    (      std::abs ( sigmaL ) )
+  , m_sR    (      std::abs ( sigmaR ) )
+  , m_nL    ( -1 )
+  , m_nR    ( -1 )
+  , m_normL ( -1 ) 
+  , m_normR ( -1 ) 
+{
+  setNL ( nL ) ;  
+  setNR ( nR ) ;  
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::BifurcatedStudentT::~BifurcatedStudentT (){}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::BifurcatedStudentT::setM ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_M ) ) { return false ; }
+  //
+  m_M = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::BifurcatedStudentT::setSigmaL ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_sL ) ) { return false ; }
+  //
+  m_sL = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::BifurcatedStudentT::setSigmaR ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_sR ) ) { return false ; }
+  //
+  m_sR = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::BifurcatedStudentT::setNL ( const double x )
+{
+  //
+  const double v = 1 + std::abs ( x ) ;
+  //
+  if ( m_normL < 0 ) 
   {
-    const double split = 0.5 * ( low + high ) ;
-    return integral ( low , split ) + integral ( split , high ) ;  // RETURN
+    m_normL = gsl_sf_gamma  ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+    m_normL /= std::sqrt    ( M_PI * v ) ;
   }
   //
-  // use GSL to evaluate the integral
+  if ( s_equal ( v , m_nL ) ) { return false ; }
   //
-  Sentry sentry ;
+  m_nL =  v ;
   //
-  gsl_function F                   ;
-  F.function             = &studentT_GSL ;
-  const StudentT* _ps    = this  ;
-  F.params               = const_cast<StudentT*> ( _ps ) ;
+  m_normL = gsl_sf_gamma  ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+  m_normL /= std::sqrt    ( M_PI * v ) ;
   //
-  double result   = 1.0 ;
-  double error    = 1.0 ;
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::BifurcatedStudentT::setNR ( const double x )
+{
   //
-  const int ierror = gsl_integration_qag
-    ( &F                ,            // the function
-      low   , high      ,            // low & high edges
-      s_PRECISION       ,            // absolute precision
-      s_PRECISION       ,            // relative precision
-      s_SIZE            ,            // size of workspace
-      GSL_INTEG_GAUSS31 ,            // integration rule
-      workspace ( m_workspace ) ,    // workspace
-      &result           ,            // the result
-      &error            ) ;          // the error in result
+  const double v = 1 + std::abs ( x ) ;
   //
-  if ( ierror )
+  if ( m_normR < 0 ) 
   {
-    gsl_error ( "Gaudi::Math::StudentT::QAG" ,
-                __FILE__ , __LINE__ , ierror ) ;
+    m_normR  = gsl_sf_gamma ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+    m_normR /= std::sqrt    ( M_PI * v ) ;
   }
   //
-  return result ;
+  if ( s_equal ( v , m_nR ) ) { return false ; }
+  //
+  m_nR = v ;
+  //
+  m_normR  = gsl_sf_gamma ( 0.5 * ( v + 1 ) ) / gsl_sf_gamma ( 0.5 * v ) ;  
+  m_normR /= std::sqrt    ( M_PI * v ) ;
+  //
+  return true ;
+}
+// ==========================================================================
+double Gaudi::Math::BifurcatedStudentT::pdf ( const double x ) const
+{
+  //
+  const double y = ( x <= M() ) ? 
+    ( x - M () ) / sigmaL () : ( x - M () ) / sigmaR () ;
+  //
+  const double f = ( x <= M() ) ? 
+    std::pow (  1 + y * y / nuL () ,  -0.5 * ( nuL () + 1 ) ) :
+    std::pow (  1 + y * y / nuR () ,  -0.5 * ( nuR () + 1 ) ) ;
+  //
+  const double n_1 = m_normL       / sigmaL () ;
+  const double n_2 = m_normR       / sigmaR () ;
+  const double n_t = 2 * n_1 * n_2 / ( n_1 + n_2 ) ;
+  //
+  return n_t * f ; 
+}
+// ============================================================================
+double Gaudi::Math::BifurcatedStudentT::cdf ( const double y ) const
+{
+  //
+  const double n_1 = m_normL / sigmaL () ;
+  const double n_2 = m_normR / sigmaR () ;
+  const double n_t = 2 * n_1 * n_2 / ( n_1 + n_2 ) ;
+  //
+  if ( y <= M() ) 
+  {
+    const double  t    = ( y - M () ) / sigmaL () ;
+    return     2 * n_2 / ( n_1 + n_2 ) * student_cdf (  t , nuL () ) ;  
+  }
+  //
+  const   double  t    = ( y - M () ) / sigmaR () ;
+  return   1 - 2 * n_1 / ( n_1 + n_2 ) * student_cdf ( -t , nuR () ) ;  
+}
+// ============================================================================
+// get the integral 
+// ============================================================================
+double Gaudi::Math::BifurcatedStudentT::integral() const { return 1 ; }
+// ============================================================================
+// get the integral 
+// ============================================================================
+double Gaudi::Math::BifurcatedStudentT::integral
+( const double low  , 
+  const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return 0.0 ; } // RETURN
+  //
+  return cdf ( high ) - cdf ( low ) ;
 }
 // ============================================================================
 
 
-// ============================================================================
+
 /* constructor form scale & shape parameters
  *  param k      \f$k\f$ parameter (shape)
  *  param theta  \f$\theta\f$ parameter (scale)
