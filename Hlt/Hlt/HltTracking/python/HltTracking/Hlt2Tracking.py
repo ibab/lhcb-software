@@ -1211,7 +1211,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Forward track reconstruction for Hlt2
         """
-        from Configurables    import PatForward
+        from Configurables    import PatForward, Hlt2Conf
         from Configurables      import PatForwardTool , DumpTracks
         from HltLine.HltLine    import bindMembers
         from HltTracking.HltReco import MaxOTHits, RevivedForward
@@ -1260,11 +1260,18 @@ class Hlt2Tracking(LHCbConfigurableUser):
             recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
             recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
 
-        forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
-            
+
+        # Add dumper for debugging if needed    
+        #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
+
+        # Build the sequences according to whether or not we reuse tracks from HLT1
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
-        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members() + RevivedForward.members() + [recoForward, forwardDumper]
+        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members() 
+        Hlt1TrackOption = Hlt2Conf().getProp("Hlt1TrackOption")
+        if Hlt1TrackOption in ['Decode','Encode-Decode'] :
+            bm_members += RevivedForward.members() 
+        bm_members += [recoForward]
         bm_output       = forwardTrackOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)

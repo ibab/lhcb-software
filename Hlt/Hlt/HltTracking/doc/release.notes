@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-06-09 - Sebastian Neubert
+ - Intelligent configuration extended to Forward tracks 
+
 ! 2014-06-06 - Sebastian Neubert
  - Intelligent configuration of Velo tracks reuse. First iteration implemented
    Hlt1 and Hlt2 still use the shared location for this.
