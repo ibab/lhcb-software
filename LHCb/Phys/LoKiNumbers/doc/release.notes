@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiNumbers v10r6 2014-06-10 =======================
 ! 2014-05-26 - Marco Clemencic
  - Moved dictionaries for LoKi::TES classes from LoKiNumbers to LoKiCore
    (required for ROOT 6).
