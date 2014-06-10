@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r15 2014-06-10 ===================
 ! 2014-05-24 - Chris Jones
  - PhotonRecoUsingQuarticSoln :
   . Protect against an FPE due to asin(out of range number).
