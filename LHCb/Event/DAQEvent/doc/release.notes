@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r15 2014-06-10 =========================
 ! 2014-06-02 - Marco Cattaneo
  - Remove definition of (obsolete) VPDigit RawBank
 
