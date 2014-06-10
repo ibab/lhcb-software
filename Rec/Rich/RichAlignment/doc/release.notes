@@ -4,17 +4,18 @@
 ! Purpose     : Algorithms and scripts related to RICH alignment
 !-----------------------------------------------------------------------------
 
+!========================= RichAlignment v1r9 2014-06-10 =======================
 ! 2014-05-24 - Chris Jones
  - Update various alignment scripts and data files.
 
 ! 2014-05-23 - Chris Jones
  - Protect some debug printout behind if statements.
 
-!========================= RichAlignment v1r8p1 2013-04-30 =========================
+!========================= RichAlignment v1r8p1 2013-04-30 =====================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= RichAlignment v1r8 2012-11-28 =========================
+!========================= RichAlignment v1r8 2012-11-28 =======================
 ! 2012-11-26 - Chris Jones
  - Update calibration scripts.
 
@@ -24,7 +25,7 @@
 ! 2012-10-31 - Matt Coombes
  - Updated line 143 in RichAlignmentEventSelection.cpp as suggested by coverity.
  
-!========================= RichAlignment v1r7 2012-07-24 =========================
+!========================= RichAlignment v1r7 2012-07-24 =======================
 ! 2012-07-13 - Antonis Papanestis
  - Limit the number of photons per HPD when producing NTuples. 
    Number of photons is a property set by default to 10,000
@@ -32,24 +33,24 @@
 ! 2012-07-13 - Chris Jones
  - Add a HPD veto list to AlignmentMonitor
 
-!========================= RichAlignment v1r6 2011-12-15 =========================
+!========================= RichAlignment v1r6 2011-12-15 =======================
 ! 2011-12-02 - Chris Jones
  - Use long long instead of long
 
-!========================= RichAlignment v1r5 2011-08-31 =========================
+!========================= RichAlignment v1r5 2011-08-31 =======================
 ! 2011-07-24 - Chris Jones
  - Various improvements to the alignment scripts.
 
-!========================= RichAlignment v1r4 2011-07-27 =========================
+!========================= RichAlignment v1r4 2011-07-27 =======================
 ! 2011-07-22 - Chris Jones
  - various script improvements 
 
-!========================= RichAlignment v1r3p1 2011-04-27 =========================
+!========================= RichAlignment v1r3p1 2011-04-27 =====================
 ! 2011-06-07 - Matt Coombes
  - Changed default Rich1 Histogram ranges from 10mrads to 5mrads
  - Increased Bins in dThetavphiRec plots to help alignment
 
-!========================= RichAlignment v1r3 2011-04-27 =========================
+!========================= RichAlignment v1r3 2011-04-27 =======================
 ! 2011-04-12 - Chris Jones
  - Fix some bugs in the order of arguments passed to richHisto2D
 
@@ -61,7 +62,7 @@
  - Some improvements to the alignment monitor algorithm, to use the RICH 
    methods to book and fill histograms.
 
-!========================= RichAlignment v1r2 2011-04-05 =========================
+!========================= RichAlignment v1r2 2011-04-05 =======================
 
 ! 2011-03-10 - Chris Jones
  - Various improvements to the alignment python scripts.
