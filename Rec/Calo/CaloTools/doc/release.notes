@@ -3,10 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+!========================= CaloTools v6r8 2014-06-10 =========================
 ! 2014-05-23 - Olivier Deschamps
  - GammaPi0SeparationTool.cpp : fix FPE
-
-
 
 !========================= CaloTools v6r7 2013-10-24 =========================
 ! 2013-10-09 - Olivier Deschamps
