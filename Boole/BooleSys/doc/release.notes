@@ -3,6 +3,22 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v28r1>2014-06-10 Boole v28r1</A></H1><PRE>
+This version uses projects:
+ LCGCMT 68 (Root 5.34.18), Gaudi v25r2, LHCb v37r3, Lbcom v15r2p1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- Performance improvements
+  . Fix unprotected debugs (FTDet v2r7)
+  . Reintroduce binary search in DeFTDetector (FTDet v2r7)
+  . Precompute cosine of angle in DeFTFibreMat (FTDet v2r7)
+ 
+- Bug fixes
+  . Fix inaccuracy in fractional position computation for cellID 0 and 130 in
+    CellIDCoordinates() and correct an unprotected zero division in
+    createLightSharingChannels() (FTDet v2r7)
+  . Fix untested StatusCodes (RichDet v16r23)
+
 </PRE><H1><A NAME=v28r0>2014-05-15 Boole v28r0</A></H1><PRE>
 This version uses projects:
  LCGCMT 68 (Root 5.34.18), Gaudi v25r1, LHCb v37r2, Lbcom v15r2
