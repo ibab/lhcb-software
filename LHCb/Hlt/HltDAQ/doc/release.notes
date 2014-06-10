@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r4 2014-06-10 =========================
 ! 2014-06-06 - Gerhard Raven
  - better use of IANNSvc interface
 
