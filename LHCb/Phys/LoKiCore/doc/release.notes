@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r20 2014-06-10 =========================
 ! 2014-05-27 - Marco Clemencic
  - Fixed dictionary generation after the move.
 
