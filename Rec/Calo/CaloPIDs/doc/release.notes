@@ -4,6 +4,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r18 2014-06-10 =========================
 ! 2014-05-28 - Dmitry Golubkov
  - CaloTrackMatch.h : remove unused i_updateField() declaration
 
