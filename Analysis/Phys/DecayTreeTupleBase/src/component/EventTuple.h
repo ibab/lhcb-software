@@ -8,23 +8,6 @@
  *
  *  \brief Fill event-related variables only
  *
- * \verbatim
- statseq = GaudiSequencer("StatisticsSeq")
- tuple = EventTuple("TriggerTuple")
- statseq.Members += [tuple ]
- tuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo", "TupleToolGeneration" ]\endverbatim
- *
- * You can also write an event tag collection
- *
- * \verbatim
- tag = EventTuple("TagCreator")
- tag.EvtColsProduce = True
- tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats"  ]
- DaVinci().ETCFile = "DVPresel_ETC2.root"
- \endverbatim
- *
- *
- *
  *  \sa DecayTreeTuple
  *
  *  @author Patrick Koppenburg
