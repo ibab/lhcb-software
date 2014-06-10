@@ -3,7 +3,7 @@
 # Maintainer : 
 #=====================================================================
 package           FTDAQ
-version           v1r6
+version           v1r6p1
 
 #=====================================================================
 # Structure, i.e. directories to process. 

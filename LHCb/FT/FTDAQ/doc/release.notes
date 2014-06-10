@@ -4,6 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r6p1 2014-06-10 =========================
 ! 2014-05-14 - Marco Cattaneo
  - Remove unnecessary include "Event/VeloLiteCluster.h"
 
