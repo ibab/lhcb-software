@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # ====================================================================
 package           EventAssoc
-version           v5r3
+version           v5r4
 
 # =============== structure ===============================================
 branches          cmt doc dict 
