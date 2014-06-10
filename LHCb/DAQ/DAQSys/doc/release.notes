@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v8r3 2014-06-10 =========================
  ! 2014-06-06 - Sebastian Neubert
  - Fixed decoderdb test
 
