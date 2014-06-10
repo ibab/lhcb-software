@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r48 2014-06-10 =========================
 ! 2014-06-10 - Vanya Belyaev
  - fix compilation warning
 
