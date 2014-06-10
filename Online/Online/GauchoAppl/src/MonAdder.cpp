@@ -103,7 +103,6 @@ void MonAdder::Configure()
 //  }
   m_ServiceDns->autoStartOn();
   DimServer::start(m_ServiceDns,(char*)(("MON_"+RTL::processName()).c_str()));
-  m_Dimcmd = new TimeoutCmd(m_ServiceDns,(char*)m_cmdname.c_str(),this);
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
@@ -115,15 +114,15 @@ void MonAdder::Configure()
     std::string nam;
     if ( m_type == ADD_HISTO )
     {
-      nam = m_name + "/Histos/HistCommand";
+      m_RPCName = m_name + "/Histos/HistCommand";
     }
     else if ( m_type == ADD_COUNTER )
     {
-      nam = m_name+"/Counter/HistCommand";
+      m_RPCName = m_name+"/Counter/HistCommand";
     }
-    m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
-    m_maplock.m_name = nam;
-    m_rpc = new ObjRPC(m_ServiceDns,m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
+//    m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
+//    m_maplock.m_name = m_RPCName;
+//    m_rpc = new ObjRPC(m_ServiceDns,m_RPCser,(char*)m_RPCName.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
   }
 }
 
@@ -323,6 +322,19 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
       {
         m_outservice = new ObjService(m_ServiceDns,m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
       }
+    }
+    if (0 == m_rpc)
+    {
+      if (!this->m_noRPC)
+      {
+        m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
+        m_maplock.m_name = m_RPCName;
+        m_rpc = new ObjRPC(m_ServiceDns,m_RPCser,(char*)m_RPCName.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
+      }
+    }
+    if (0==m_Dimcmd)
+    {
+      m_Dimcmd = new TimeoutCmd(m_ServiceDns,(char*)m_cmdname.c_str(),this);
     }
     DimServer::start(m_ServiceDns);
   }

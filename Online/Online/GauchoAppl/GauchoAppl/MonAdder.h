@@ -165,6 +165,7 @@ public:
   std::string m_outsvcname;
   INServiceMap m_inputServicemap;
   std::string m_MyServiceName;
+  std::string m_RPCName;
 //  OUTServiceMap m_outputServicemap;
   TaskServiceMap m_TaskServiceMap;
   void TaskName(std::string &server, std::string &tname, std::string &tgen);
