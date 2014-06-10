@@ -6,6 +6,11 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v15r2p1>2014-06-10 LbcomSys v15r2p1</A></H1><PRE>
+This version uses Gaudi v25r2 and LHCb v37r3
+
+Only the LHCb+Gaudi dependency is changed, no change to the package content.
+
 </PRE><H1><A NAME=v15r2>2014-05-13 LbcomSys v15r2</A></H1><PRE>
 This version uses Gaudi v25r1 and LHCb v37r2
 
