@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FileStager
 ################################################################################
-gaudi_subdir(FileStager v1r13)
+gaudi_subdir(FileStager v1r14)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 

@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r14 2014-06-10 =========================
 ! 2014-05-19 - Roel Aaij
  - Fix bug in xrd stat command when port is absent.
 
