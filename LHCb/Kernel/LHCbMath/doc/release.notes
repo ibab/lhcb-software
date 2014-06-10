@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-06-10 - Vanya Belyaev
+ - fix compilation warning
+
 ! 2014-06-09 - Vanya Belyaev
  - add more functions 
 

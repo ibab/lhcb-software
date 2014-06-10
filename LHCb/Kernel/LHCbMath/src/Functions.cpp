@@ -7142,7 +7142,6 @@ double Gaudi::Math::BifurcatedStudentT::cdf ( const double y ) const
   //
   const double n_1 = m_normL / sigmaL () ;
   const double n_2 = m_normR / sigmaR () ;
-  const double n_t = 2 * n_1 * n_2 / ( n_1 + n_2 ) ;
   //
   if ( y <= M() ) 
   {
