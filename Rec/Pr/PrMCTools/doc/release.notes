@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r3 2014-06-10 =========================
 ! 2014-06-03 - Michel De Cian
  - Fix small bug in PrPlotFTHits.cpp with PrFTHitManager
 
