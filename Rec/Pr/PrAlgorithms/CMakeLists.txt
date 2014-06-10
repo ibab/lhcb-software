@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PrAlgorithms
 ################################################################################
-gaudi_subdir(PrAlgorithms v1r11)
+gaudi_subdir(PrAlgorithms v1r12)
 
 gaudi_depends_on_subdirs(Det/FTDet
                          Event/DAQEvent
