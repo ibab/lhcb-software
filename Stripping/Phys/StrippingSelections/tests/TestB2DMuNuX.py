@@ -6,6 +6,7 @@ from StrippingConf.StrippingStream import StrippingStream
 SL_stream = StrippingStream("_SL_DST")
 
 from StrippingSelections import StrippingB2DMuNuX # Resonsible: Mika
+SL_stream.appendLines( [StrippingB2DMuNuX.B2DMuNuXAllLinesConf("UNPACK", StrippingB2DMuNuX.confdict).b2D0MuXLine] )
 SL_stream.appendLines( StrippingB2DMuNuX.B2DMuNuXAllLinesConf("B2DMuNuX", StrippingB2DMuNuX.confdict).lines() )
 
 ##### CONFIGURE THE STRIPPING
