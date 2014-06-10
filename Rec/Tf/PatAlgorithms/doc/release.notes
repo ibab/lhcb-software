@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r33 2014-06-10 ======================
 ! 2014-05-28 - Gerhard Raven
  - PatFwdPlaneCounter: generalize checkingPolicy to allow generic, statefull predicates;
                        employ 'empty base class' optimization to insure that object size 
@@ -40,7 +41,6 @@
     o combine find_range and make_single_zone into a single call to a mem_fn 
       of a 'sentinel' object which controls the peak finding loop.
     o better utilization of above 'sentinel' in loop control
-
 
 !========================= PatAlgorithms v4r32 2014-05-13 ======================
 ! 2014-05-10 - Gerhard Raven
