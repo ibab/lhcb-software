@@ -4,10 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v2r1 2014-06-10 =======================
 ! 2014-06-06 - Eric Cogneras
  - Undo last changes (keep (MCParticle,Cluster) linker)
  - Create new linker associating Hit to Clusters
-
 
 ! 2014-06-04 - Eric Cogneras
  - Change (MCParticle,Cluster) linker into a (Hit,Cluster) linker
