@@ -5,6 +5,90 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v16r3>2014-06-10 RecSys v16r3</A></H1><PRE>
+This version uses Gaudi v25r2, LHCb v37r3 and Lbcom v15r2p1
+
+- Packages modified: Calo/CaloPIDs v5r18, Calo/CaloTools v6r8, Muon/MuonID v9r11,
+    Pr/PrAlgorithms v1r12, Pr/PrMCTools v2r3, Rec/LumiAlgs v9r3
+    Rich/RichAlignment v1r9, Rich/RichRecPhotonTools v1r15, 
+    Rich/RichRecTools v4r25, Tf/PatAlgorithms v4r33
+
+- In Calo/CaloPIDs v5r18
+  . CaloTrackMatch.h : 
+    o Remove unused i_updateField() declaration
+    o Fix some unprotected StatusCodes
+
+- In Calo/CaloTools v6r8
+  . GammaPi0SeparationTool.cpp : fix FPE
+
+- In Muon/MuonID v9r11
+  . GetArrival.cpp:
+    o Remove redundant printout of properties from constructor, fixes unprotected
+      debug warnings
+    o Document properties using third argument of setProperty instead of comments
+  . Call the base class initialize and finalize in various tools
+
+- In Pr/PrAlgorithms v1r12
+  . Introduce flag in 'buildGeometry' of PrFTHitManager that ensures that the 
+    geometry is only built once. 
+  . Add doxygen comments.
+  . Fix unchecked StatusCode and unprotected debug()s in PrFTHitManager.
+
+- In Pr/PrMCTools v2r3
+  . Fix small bug in PrPlotFTHits.cpp with PrFTHitManager
+
+- In Rec/LumiAlgs v9r3
+  . Configuration for Brunel: prepare for 25 ns filling schemes in 2015 and beyond
+    (filterFillingScheme)
+  . Add access functions to IntegratorTool datastructure for mu calculation
+  . (GetIntegratedLuminosity) add mu per raw file from the FSRs as a root ntuple
+    activated by LumiIntegrateFSR('IntegrateBeamCrossing').AccumulateMu = True
+    one ntuple for corrected values and one for raw values
+    corrsponding mods to LumiIntegrateFSR and LumiIntegrator 
+  . More sanity checks in LumiIntegrateFSR to handle empty timeSpanFSRs 
+    (possible problem with legacy reco versions after merging)
+
+- In Rich/RichAlignment v1r9
+  . Update various alignment scripts and data files.
+  . Protect some debug printout behind if statements.
+
+- In Rich/RichRecPhotonTools v1r15
+  . PhotonRecoUsingQuarticSoln :
+    o Protect against an FPE due to asin(out of range number).
+    o Use fast VDT asin and acos.
+  . Fix a FPE in zsolve_quartic_RICH.h due to sqrt(-number).
+
+- In Rich/RichRecTools v4r25
+  . Use VDT for various math functions.
+
+- In Tf/PatAlgorithms v4r33
+  . PatFwdPlaneCounter: 
+    o Add 'checkingPolicy' so that, if wanted,  the 'isSelected' check can be
+      disabled (at compile time) in case it is a-priori known to always return
+      true. Default policy (for backwards compatibility) is to perform the check
+      for isSelected.
+    o Generalize checkingPolicy to allow generic, stateful predicates;
+    o Employ 'empty base class' optimization to ensure that object size 
+      is unaffected when a stateless predicate is provided.
+  . PatFwdTool:
+    o Optimize rl-ambiguity resolution, 
+    o Unify with{,out} B-field computation of X @ reference plane
+    o Use PatFwdPlaneCounter::addUntilEnough 
+    o Use a predicated PatFwdPlaneCounter to count planes for selected hits in 
+      specified region; reduce code duplication
+  . PatForwardTool:
+    o combine find_range and make_single_zone into a single call to a mem_fn 
+      of a 'sentinel' object which controls the peak finding loop.
+    o better utilization of above 'sentinel' in loop control
+    o Use lambdas to hoist invariants out of loops
+    o Consolidate x searchwindow determination in single function
+    o Improve x search window computation
+  . PatFwdRegionCounter: remove virtual destructor, add 'final' qualification.
+  . PatFwdTrackCandidate,PatFwdTool : improve const-correctness 
+  . PatFwdTrackCandidate,PatFwdFit{Line,Parabola} : consolidate data members in
+    std::array
+  . PatFwdPlaneCounter: add addHitsUntilEnough, always invoke addHits internally
+
 </PRE><H1><A NAME=v16r2>2014-05-13 RecSys v16r2</A></H1><PRE>
 This version uses Gaudi v25r1, LHCb v37r2 and Lbcom v15r2
 
