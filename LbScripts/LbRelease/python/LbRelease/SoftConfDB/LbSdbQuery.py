@@ -93,6 +93,18 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listReleaseReqs()):
             print "%s\t%s" % p
 
+    def _sanitizeProjectName(sel, pname):
+        ''' Puts back the correct case in display '''
+        ret = pname
+        try:
+            from LbConfiguration.Project import getProject
+            p = getProject(pname)
+            ret = p.Name()
+        except:
+            # Ignore errors and return initial name
+            pass
+        return ret
+
     def cmdlistReleaseStacks(self, args):
         ''' List the projects known by the SoftConfDB '''
         stacks = self.mConfDB.listReleaseStacks()
@@ -102,7 +114,7 @@ class LbSdbQuery(Script):
             (p, v) = next(iter(s))
             platforms = self.mConfDB.listStackPlatformsToRelease(p, v)
             stackdict = {}
-            stackdict["projects"] = list(s)
+            stackdict["projects"] = [ (self._sanitizeProjectName(p2), v2) for (p2, v2) in s ]
             stackdict["platforms"] = list(platforms)
             stackdicts.append(stackdict)
                 
