@@ -10,8 +10,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/Online/RootCnv)
 endif()
 
 # Declare project name and version
-gaudi_project(LHCb v37r2
-              USE Gaudi v25r1
+gaudi_project(LHCb v37r3
+              USE Gaudi v25r2
               DATA Gen/DecFiles
                    Det/SQLDDDB VERSION v7r*
                    FieldMap
