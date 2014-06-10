@@ -5,6 +5,100 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v37r3>2014-06-10 LHCbSys v37r3</A></H1><PRE>
+This version uses Gaudi v25r2 and LCG_68.
+
+- Packages modified: DAQ/DAQSys v8r3, Det/FTDet v2r7, Det/RichDet v16r23,
+    Event/DAQEvent v9r15, Event/EventAssoc v5r4, Event/PhysEvent v11r25,
+    Event/SwimmingEvent v1r5p1, FT/FTDAQ v1r6p1, GaudiObjDesc v11r20,
+    Hlt/HltDAQ v4r4, Hlt/HltServices v2r3, Kernel/HltInterfaces v5r1,
+    Kernel/LHCbMath v3r48, L0/L0Calo v11r14, Phys/LoKiCore v11r20,
+    Phys/LoKiNumbers v10r6, Tools/CondDBEntityResolver v5r8, 
+    Tools/FileStager v1r14
+
+- In DAQ/DAQSys v8r3
+  . Renamed HltTrackReportsDecoder to VeloDecoder
+  . Added ForwardDecoder
+  . Updated decoderdb test for above changes
+
+- In Det/FTDet v2r7
+  . Reintroduce binary search in DeFTDetector.
+  . Fix unprotected 'debug()' in all DeFT* Classes
+  . Precompute cosine of angle in DeFTFibreMat
+  . Correct an unprotected zero division in createLightSharingChannels()
+  . Fix inaccuracy in fractional position computation for cellID 0 and 130 in 
+    CellIDCoordinates()
+
+- In Det/RichDet v16r23
+  . Fix a couple of untested StatusCodes
+
+- In Event/DAQEvent v9r15
+  . Remove definition of (obsolete) VPDigit RawBank
+
+- In Event/EventAssoc v5r4
+  . Add dictionaries for Particle->RelatedInfo relations
+    (new persistency for cone variables etc.)
+
+- In Event/PhysEvent v11r25
+  . Add VectorMap<short,float> typedefs for LHCb::RelatedInfo structure 
+    (new persistency for cone variables etc.)
+  . Fix the CMake configuration.
+
+- In Event/SwimmingEvent v1r5p1
+  . Minor fix to the CMake configuration.
+
+- In FT/FTDAQ v1r6p1
+  . Remove unnecessary include "Event/VeloLiteCluster.h"
+
+- In GaudiObjDesc v11r20
+  . Avoid that the KeyedObject<T> base class of GOD generated classes appears in
+    the rootmap (required for ROOT 6).
+
+- In Hlt/HltDAQ v4r4
+  . Better use of IANNSvc interface
+  . Use a proper counter to keep track of number of decoded tracks in
+    TrackReportsDecoder
+  . Print out only one line if the relevant RawBank / RawEvent cannot be found
+  . HltDecReportsDecoder: for backwards compatibility, if we cannot find a
+    RawEvent, or RawEvent does not contain a HltDecReportsRawbank, put an empty
+    HltDecReports onto the TES, print error, and return
+  . Factor out code in common between the various RawBank decoders into
+    HltRawBankDecoderBase. 
+  . HltSelReportsWriter: more optimizations + C++11 changes..
+  . HltLumiWriter: C++11 changes
+  . HltDecReportsDecoder now uses (if a TCK is present in the DecReport RawBank)
+    TCKANNSvc instead of ANNDispatchSvc to find the uint16_t -> string mapping
+    required for decoding...
+
+- In Hlt/HltServices v2r3
+  . Add TCKANNSvc, an implementation of IIndexedANNSvc
+
+- In Kernel/HltInterfaces v5r1
+  . Add IIndexedANNSvc interface
+
+- In Kernel/LHCbMath v3r48
+  . Funtions.cpp:
+    o Add more functions
+    o Few fixes
+    o Use constexpr, to fix compilation problem with clang
+  . Add weighted statistics 
+  . Add few helper math-functions 
+
+- In L0/L0Calo v11r14
+  . L0CaloAlg: create banks if they don't exist
+  . LLTCaloAlg.cpp: add computation of LLT GEC (HCAL + ECAL mult)
+
+- In Phys/LoKiCore v11r20, Phys/LoKiNumbers v10r6
+  . Moved dictionaries for LoKi::TES classes from LoKiNumbers to LoKiCore
+    (required for ROOT 6).
+
+- In Tools/CondDBEntityResolver v5r8, Hlt/HltDAQ v4r4
+  . Fixed a concurrency issue in the build (CMT cannot compile the same source
+    twice for different targets/libraries).
+
+- In Tools/FileStager v1r14
+  . Fix bug in xrd stat command when port is absent.
+
 </PRE><H1><A NAME=v37r2>2014-05-12 LHCbSys v37r2</A></H1><PRE>
 This version uses Gaudi v25r1 and LCG_68.
 
