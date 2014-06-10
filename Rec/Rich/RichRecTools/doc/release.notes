@@ -4,10 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r25 2014-06-10 =======================
 ! 2014-05-24 - Chris Jones
  - Use VDT for various math functions.
 
-!========================= RichRecTools v4r24 2013-10-01 =========================
+!========================= RichRecTools v4r24 2013-10-01 =======================
 ! 2013-08-14 - Chris Jones
  - Clean up the previous commits.
 
@@ -27,15 +28,15 @@
    reconstruction with pmts. Switches are set up that it can run with
    hpd configuration and pmt configuration.
 
-!========================= RichRecTools v4r23 2013-07-18 =========================
+!========================= RichRecTools v4r23 2013-07-18 =======================
 ! 2013-07-16 - Chris Jones
  - Remove unused RichKernel/FastMaths.h include (to be deprecated).
 
-!========================= RichRecTools v4r22 2013-06-03 =========================
+!========================= RichRecTools v4r22 2013-06-03 =======================
 ! 2013-05-13 - Chris Jones
  - Remove unused class data member in Rich::Rec::PIDPlots
 
-!========================= RichRecTools v4r21 2012-11-28 =========================
+!========================= RichRecTools v4r21 2012-11-28 =======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
