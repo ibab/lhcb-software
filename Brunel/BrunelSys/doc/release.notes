@@ -3,6 +3,36 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v46r1>2014-06-10 Brunel v46r1</A></H1><PRE>
+This version uses projects:
+ LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r3, Lbcom v15r2p1, Rec v16r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Prepare Brunel configuration for 25 ns filling schemes in 2015 and beyond
+    (filterFillingScheme) (LumiAlgs v9r3)
+  . Improve handling of missing RawEvent in HltDecReportsDecoder (HltDAQ v4r4)
+
+- Performance improvements
+  . Fix unprotected debugs (MuonID v9r11, RichAlignment v1r9, FTDet v2r7)
+  . Introduce flag in 'buildGeometry' of PrFTHitManager that ensures that the 
+    geometry is only built once (PrAlgorithms v1r12)
+  . Use fast VDT asin and acos (RichRecPhotonTools v1r5)
+  . Use VDT for various math functions (RichRecTools v4r25)
+  . Various optimisations and consolidation of ParForward (PatAlgorithms v4r33)
+  . Reintroduce binary search in DeFTDetector (FTDet v2r7)
+  . Precompute cosine of angle in DeFTFibreMat (FTDet v2r7)
+
+- Bug fixes
+  . Fix untested StatusCodes (CaloPIDs v5r18, PrAlgorithms v1r12, RichDet v16r23)
+  . Fix FPEs (CaloTools v6r8, RichRecPhotonTools v1r5, FTDet v2r7)
+  . Call the base class initialize and finalize in various tools (MuonID v9r11)
+  . Fix inaccuracy in fractional position computation for cellID 0 and 130 in 
+    CellIDCoordinates() (FTDet v2r7)
+
+- Changes to QMTests
+  . Added SC and FPE monitors to all tests that did not have them.
+
 </PRE><H1><A NAME=v46r0>2014-05-16 Brunel v46r0</A></H1><PRE>
 This version uses projects:
  LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r2, Lbcom v15r2, Rec v16r2
