@@ -566,7 +566,7 @@ int CheckpointSvc::parseRestartOptions()    {
      	sc = setProperties();
 	if ( sc.isSuccess() ) {
 	  RTL::RTL_reset();
-	  string utgid = buildChildUTGID(m_firstChild-1);
+	  string utgid = buildChildUTGID(m_firstChild);
 	  checkpointing_set_utgid(utgid.c_str());
 	  const char* dns = ::getenv("DIM_DNS_NODE");
 	  MsgStream log(msgSvc(),name());
@@ -685,6 +685,7 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   if ( dns && m_connectDIM ) {
     log << "DIM_DNS_NODE:" << dns << " ";
     ::dis_set_dns_node(dns);
+    ::dic_set_dns_node(dns);
   }
   log << endmsg;
   //
@@ -777,6 +778,7 @@ int CheckpointSvc::execChild() {
   if ( m_connectDIM ) {
     if ( dns ) {
       ::dis_set_dns_node(dns);
+      ::dic_set_dns_node(dns);
     }
     m_fsm->connectDIM(0);
   }
