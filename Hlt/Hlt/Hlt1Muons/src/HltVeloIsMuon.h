@@ -97,17 +97,17 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
 
     // Temporary storage
     Hlt1MuonHit* m_magnetHit;
-    Candidates m_seeds;
+    std::vector<Candidate>  m_seeds;
 
     std::array<double,nRegions> m_regionFoIX;
     std::array<double,nRegions> m_regionFoIY;
 
     // Helper methods
-    void findSeeds( const Candidate* seed, const unsigned int seedStation );
+    void findSeeds( const Candidate& seed, const unsigned int seedStation );
 
-    void addHits( Candidate* seed );
+    void addHits( Candidate& seed );
 
-    void fitCandidate( Candidate* seed ) const;
+    void fitCandidate( Candidate& seed ) const;
 
     void clean();
 

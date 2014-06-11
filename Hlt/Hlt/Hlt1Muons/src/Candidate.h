@@ -173,23 +173,6 @@ class Candidate final
         return m_nDoF;
     }
 
-    /// operator new
-    static void* operator new( size_t size )
-    {
-        return (
-            sizeof( Candidate ) == size
-                ? boost::singleton_pool<Candidate, sizeof( Candidate )>::malloc()
-                : ::operator new( size ) );
-    }
-
-    /// operator delete
-    static void operator delete( void* p )
-    {
-        boost::singleton_pool<Candidate, sizeof( Candidate )>::is_from( p )
-            ? boost::singleton_pool<Candidate, sizeof( Candidate )>::free( p )
-            : ::operator delete( p );
-    }
-
   private:
     const LHCb::Track* m_track;
     std::array<double,7> m_params;
@@ -204,7 +187,5 @@ class Candidate final
     bool m_fitted = false;
 };
 
-typedef std::vector<Candidate*> Candidates;
-typedef std::vector<const Candidate*> ConstCandidates;
 
 #endif // CANDIDATE_H

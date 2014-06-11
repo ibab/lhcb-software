@@ -39,7 +39,6 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
     : GaudiHistoTool( type, name, parent )
     , m_fieldSvc{nullptr}
     , m_magnetHit{nullptr}
-    , m_seeds{0}
 {
     declareInterface<ITracksFromTrack>( this );
 
@@ -105,26 +104,26 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     unsigned int seedStation = order[0] - 1;
     findSeeds( veloSeed, seedStation );
 
-    for ( Candidate* c : m_seeds ) addHits( *c );
+    for ( Candidate& c : m_seeds ) addHits( c );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
-        for ( Candidate* c : m_seeds ) {
-            debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
+        for ( const Candidate& c : m_seeds ) {
+            debug() << "Found candidate with chi2/DoF " << c.chi2DoF() << endmsg;
         }
     }
 
     if ( produceHistos() ) {
         plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
-        for ( Candidate* c : m_seeds ) {
-            plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+        for ( const Candidate& c : m_seeds ) {
+            plot( c.chi2DoF(), "Chi2DoFX", 0, 100, 100 );
         }
     }
 
     if ( !m_setQOverP ) {
         // in this case, we only care whether a good seed exists for the specified track...
-        if ( std::any_of( std::begin(m_seeds), std::end(m_seeds), [=](const Candidate* c) {
-            return c->chi2DoF() < m_maxChi2DoFX ;
+        if ( std::any_of( std::begin(m_seeds), std::end(m_seeds), [=](const Candidate& c) {
+            return c.chi2DoF() < m_maxChi2DoFX ;
         }) ) {
             // There is a good enough candidate, put the seed into the output
             // unmodified.
@@ -133,18 +132,17 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     } else {
         auto best =
             std::min_element( std::begin(m_seeds), std::end(m_seeds),
-                              []( const Candidate* lhs, const Candidate* rhs ) {
-                return lhs->chi2DoF() < rhs->chi2DoF();
+                              []( const Candidate& lhs, const Candidate& rhs ) {
+                return lhs.chi2DoF() < rhs.chi2DoF();
             } );
-        if ( best != std::end(m_seeds) && (*best)->chi2DoF() < m_maxChi2DoFX ) {
+        if ( best != std::end(m_seeds) && best->chi2DoF() < m_maxChi2DoFX ) {
             std::unique_ptr<LHCb::Track> out{seed.clone()};
             out->addToAncestors( seed );
-            const Candidate* c = *best;
-            out->addInfo( 35, c->slope() - c->tx() );
+            out->addInfo( 35, best->slope() - best->tx() );
             double down = m_fieldSvc->isDown() ? -1 : 1;
-            double q = down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
+            double q = down * ( ( best->slope() < best->tx() ) - ( best->slope() > best->tx() ) );
             LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
-            state->setQOverP( q / c->p() );
+            state->setQOverP( q / best->p() );
             tracks.push_back( out.release() );
         }
     }
@@ -204,14 +202,14 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
         // get hits, and add seed hits to container
         for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
-            Candidate* seed = new Candidate{veloSeed};
-            seed->addHit( m_magnetHit );
-            seed->addHit( hit );
+            m_seeds.emplace_back ( veloSeed );
+            Candidate& seed = m_seeds.back();
+            seed.addHit( m_magnetHit );
+            seed.addHit( hit );
 
-            seed->slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
-            seed->p() = momentum( seed->slope() - seed->tx() );
+            seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
+            seed.p() = momentum( seed.slope() - seed.tx() );
 
-            m_seeds.push_back( seed );
         }
     }
 }
@@ -323,10 +321,7 @@ void MatchVeloMuon::fitCandidate( Candidate& candidate ) const
 void MatchVeloMuon::clean()
 {
     // delete leftover seeds
-    for ( Candidate* candidate : m_seeds ) {
-        delete candidate;
-    }
-    m_seeds.clear();
+    m_seeds.clear(); // leaves capacity invariant, hence we latch onto the max size
     delete m_magnetHit;
     m_magnetHit = nullptr;
 }

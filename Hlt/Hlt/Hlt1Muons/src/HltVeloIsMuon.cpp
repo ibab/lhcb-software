@@ -43,7 +43,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
     , m_hitManager{nullptr}
     , m_fieldSvc{nullptr}
     , m_magnetHit{nullptr}
-    , m_seeds{0}
 {
     declareProperty( "SeedWindowX", m_xWindow = 200 );
     declareProperty( "SeedWindowY", m_yWindow = 200 );
@@ -63,9 +62,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
     setProduceHistos( false ); // yes, this indeed changes the default ;-)
 
     declareProperty( "SetQOverP", m_setQOverP = false );
-
-    //m_regionFoIX.reserve( nRegions );
-    //m_regionFoIY.reserve( nRegions );
 }
 
 //=============================================================================
@@ -158,50 +154,51 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track& seed,
     clean();
 
     // Make a Candidate from the track
-    std::unique_ptr<Candidate> veloSeed( new Candidate( &seed ) );
+    Candidate veloSeed{ &seed };
 
     unsigned int seedStation = order[0] - 1;
-    findSeeds( veloSeed.get(), seedStation );
+    findSeeds( veloSeed, seedStation );
     if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
+
+    for ( Candidate& c : m_seeds ) addHits( c );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
+        for ( const Candidate& c : m_seeds ) {
+            debug() << "Found candidate with chi2/DoF " << c.chi2DoF() << endmsg;
+        }
     }
 
-    ConstCandidates goodCandidates;
+    m_seeds.erase( std::remove_if( std::begin(m_seeds), std::end(m_seeds), [](const Candidate& c) { return !c.fitted(); } ),
+                   std::end(m_seeds) );
 
-    for ( Candidate* c : m_seeds ) {
-        addHits( c );
-        if ( msgLevel( MSG::DEBUG ) ) {
-            debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
-        }
-        if ( !c->fitted() ) continue;
-        if ( produceHistos() ) plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-        if ( !m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
+    if ( produceHistos() ) {
+        for ( const Candidate& c : m_seeds ) plot( c.chi2DoF(), "Chi2DoFX", 0, 100, 100 );
+    }
+
+    if (!m_setQOverP) {
+        if (std::any_of( std::begin(m_seeds), std::end(m_seeds), [=](const Candidate& c) {
+              return  c.chi2DoF() < m_maxChi2DoFX ;
+        } ) ) {
             // There is a good enough candidate, put the seed into the output
             // unmodified.
             tracks.push_back( const_cast<LHCb::Track*>( &seed ) );
-            break;
-        } else if ( m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
-            goodCandidates.push_back( c );
         }
-    }
-
-    if ( m_setQOverP ) {
+    } else {
+        // TODO: should we use all candidates below m_maxChi2DoFX instead??
         auto best =
-            std::min_element( goodCandidates.begin(), goodCandidates.end(),
-                              []( const Candidate* lhs, const Candidate* rhs ) {
-                return lhs->chi2DoF() < rhs->chi2DoF();
+            std::min_element( std::begin(m_seeds), std::end(m_seeds),
+                              []( const Candidate& lhs, const Candidate& rhs ) {
+                return lhs.chi2DoF() < rhs.chi2DoF();
             } );
-        if ( best != goodCandidates.end() ) {
+        if ( best != std::end(m_seeds) && best->chi2DoF() < m_maxChi2DoFX ) {
             auto out = std::unique_ptr<LHCb::Track>{seed.clone()};
-            const Candidate* c = *best;
 
             LHCb::State* state = out->stateAt( LHCb::State::EndVelo );
             double down = m_fieldSvc->isDown() ? -1 : 1;
             double q =
-                down * ( ( c->slope() < c->tx() ) - ( c->slope() > c->tx() ) );
-            state->setQOverP( q / c->p() );
+                down * ( ( best->slope() < best->tx() ) - ( best->slope() > best->tx() ) );
+            state->setQOverP( q / best->p() );
             tracks.push_back( out.release() );
         }
     }
@@ -209,15 +206,15 @@ StatusCode Hlt::HltVeloIsMuon::tracksFromTrack( const LHCb::Track& seed,
 }
 
 //=============================================================================
-void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
+void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
                                     const unsigned int seedStation )
 {
     // forward extrapolation, make seed point
-    double zMagnet = m_zb + m_za * veloSeed->tx2();
+    double zMagnet = m_zb + m_za * veloSeed.tx2();
     double xMagnet = 0., errXMagnet = 0.;
-    veloSeed->xStraight( zMagnet, xMagnet, errXMagnet );
+    veloSeed.xStraight( zMagnet, xMagnet, errXMagnet );
     double yMagnet = 0., errYMagnet = 0.;
-    veloSeed->yStraight( zMagnet, yMagnet, errYMagnet );
+    veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
     m_magnetHit = new Hlt1MuonHit{LHCb::MuonTileID{}, xMagnet, errXMagnet, yMagnet,
                                   errYMagnet,         zMagnet, 0.};
@@ -228,16 +225,16 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
     // calculate window in x
-    double dz = ( zStation - zMagnet ) / veloSeed->cosTy();
-    // double sign = ( veloSeed->tx() > 0) - ( veloSeed->tx() < 0 );
-    double tanMin = ( veloSeed->tx() - dSlope ) / ( 1 + veloSeed->tx() * dSlope );
+    double dz = ( zStation - zMagnet ) / veloSeed.cosTy();
+    // double sign = ( veloSeed.tx() > 0) - ( veloSeed.tx() < 0 );
+    double tanMin = ( veloSeed.tx() - dSlope ) / ( 1 + veloSeed.tx() * dSlope );
     double xMin = xMagnet + dz * tanMin - m_xWindow;
-    double tanMax = ( veloSeed->tx() + dSlope ) / ( 1 - veloSeed->tx() * dSlope );
+    double tanMax = ( veloSeed.tx() + dSlope ) / ( 1 - veloSeed.tx() * dSlope );
     double xMax = xMagnet + dz * tanMax + m_xWindow;
 
     // Calculate window in y
     double yMuon = 0., yRange = 0;
-    veloSeed->yStraight( zStation, yMuon, yRange );
+    veloSeed.yStraight( zStation, yMuon, yRange );
     yRange += m_yWindow;
 
     double yMin = yMuon - yRange;
@@ -273,19 +270,19 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate* veloSeed,
         for ( Hlt1MuonHit* hit : hits ) {
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
 
-            Candidate* seed = new Candidate{*veloSeed};
-            seed->addHit( m_magnetHit );
-            seed->addHit( hit );
-            seed->slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
-            seed->p() = momentum( seed->slope() - seed->tx() );
+            m_seeds.emplace_back(  veloSeed );
+            Candidate& seed = m_seeds.back();
+            seed.addHit( m_magnetHit );
+            seed.addHit( hit );
+            seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
+            seed.p() = momentum( seed.slope() - seed.tx() );
 
-            m_seeds.push_back( seed );
         }
     }
 }
 
 //=============================================================================
-void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
+void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
 {
     // First hit is in magnet
     double zMagnet = m_magnetHit->z();
@@ -305,8 +302,8 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
         double maxFoIY = 0;
         // Find the maximum FoI to use as a search window.
         for ( unsigned int region = 0; region < nRegions; ++region ) {
-            auto foiX = m_FoIFactor * FoIX( s, region, seed->p() );
-            auto foiY = m_FoIFactor * FoIY( s, region, seed->p() );
+            auto foiX = m_FoIFactor * FoIX( s, region, seed.p() );
+            auto foiY = m_FoIFactor * FoIY( s, region, seed.p() );
             if ( foiX > maxFoIX ) maxFoIX = foiX;
             if ( foiY > maxFoIY ) maxFoIY = foiY;
             m_regionFoIX[region] = foiX;
@@ -315,11 +312,11 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
 
         // Calculate window in x and y for this station
         double yMuon = 0., yRange = 0;
-        seed->yStraight( zStation, yMuon, yRange );
+        seed.yStraight( zStation, yMuon, yRange );
         const double yMin = yMuon - maxFoIY;
         const double yMax = yMuon + maxFoIY;
 
-        const double xMuon = ( zStation - zMagnet ) * seed->slope() + xMagnet;
+        const double xMuon = ( zStation - zMagnet ) * seed.slope() + xMagnet;
         const double xMin = xMuon - maxFoIX;
         const double xMax = xMuon + maxFoIX;
 
@@ -333,10 +330,9 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
                 unsigned int r = hit->tile().region();
                 auto dx = hit->x()-xMuon;
                 auto dy = hit->y()-yMuon;
-                if ( dx > + m_regionFoIX[r] || dx < -m_regionFoIX[r] ||
-                     dy > + m_regionFoIY[r] || dy < -m_regionFoIY[r]  )
-                    continue;
-                auto dist2 = dx*dx + dy*dy  ; 
+                if ( fabs(dx) > m_regionFoIX[r] ||
+                     fabs(dy) > m_regionFoIY[r]  ) continue;
+                auto dist2 = dx*dx + dy*dy ; 
                 if ( !closest || dist2 < minDist2 ) {
                     closest = hit;
                     minDist2 = dist2;
@@ -344,8 +340,8 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
             }
         }
 
-        if ( closest != 0 ) {
-            seed->addHit( closest );
+        if ( closest ) {
+            seed.addHit( closest );
         } else {
             ++nMissed;
         }
@@ -356,9 +352,9 @@ void Hlt::HltVeloIsMuon::addHits( Candidate* seed )
 }
 
 //=============================================================================
-void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
+void Hlt::HltVeloIsMuon::fitCandidate( Candidate& candidate ) const
 {
-    const Hlt1ConstMuonHits& hits = candidate->hits();
+    const Hlt1ConstMuonHits& hits = candidate.hits();
 
     double sumWeights = 0., sumZ = 0., sumX = 0.;
 
@@ -392,18 +388,17 @@ void Hlt::HltVeloIsMuon::fitCandidate( Candidate* candidate ) const
                                         return chi2 += tmp * tmp;
     });
 
-    candidate->fitted() = true;
-    candidate->nDoF() = hits.size() - 2;
-    candidate->chi2() = chi2;
-    candidate->slope() = b;
-    candidate->p() = momentum( b - candidate->tx() );
+    candidate.fitted() = true;
+    candidate.nDoF() = hits.size() - 2;
+    candidate.chi2() = chi2;
+    candidate.slope() = b;
+    candidate.p() = momentum( b - candidate.tx() );
 }
 
 //=============================================================================
 void Hlt::HltVeloIsMuon::clean()
 {
     // delete leftover seeds
-    for ( Candidate* candidate : m_seeds ) delete candidate;
     m_seeds.clear();
     delete m_magnetHit;
     m_magnetHit = nullptr;
