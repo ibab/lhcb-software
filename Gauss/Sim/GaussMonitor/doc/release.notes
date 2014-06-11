@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-06-11 - James Mccarthy
+ - Added options file to run timing monitor code in options/MonitorTiming.py
+
 ! 2014-04-01 - James Mccarthy
  - Added scripts for monitoring timing in subdetectors and processes in Gauss (MonitorTiming.cpp MonitorTiming.h)
 
