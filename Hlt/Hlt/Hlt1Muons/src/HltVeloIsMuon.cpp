@@ -216,8 +216,8 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
     double yMagnet = 0., errYMagnet = 0.;
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
-    m_magnetHit = new Hlt1MuonHit{LHCb::MuonTileID{}, xMagnet, errXMagnet, yMagnet,
-                                  errYMagnet,         zMagnet, 0.};
+    m_magnetHit.reset(new Hlt1MuonHit{LHCb::MuonTileID{}, xMagnet, errXMagnet, yMagnet,
+                                  errYMagnet,         zMagnet, 0.});
 
     double dSlope = dtx( m_minMomentum );
     const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -272,7 +272,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
 
             m_seeds.emplace_back(  veloSeed );
             Candidate& seed = m_seeds.back();
-            seed.addHit( m_magnetHit );
+            seed.addHit( m_magnetHit.get() );
             seed.addHit( hit );
             seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
             seed.p() = momentum( seed.slope() - seed.tx() );
@@ -400,8 +400,7 @@ void Hlt::HltVeloIsMuon::clean()
 {
     // delete leftover seeds
     m_seeds.clear();
-    delete m_magnetHit;
-    m_magnetHit = nullptr;
+    m_magnetHit.reset();
 }
 
 //=============================================================================

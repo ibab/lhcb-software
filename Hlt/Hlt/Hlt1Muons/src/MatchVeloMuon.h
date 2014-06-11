@@ -68,7 +68,7 @@ class MatchVeloMuon : public GaudiHistoTool, virtual public ITracksFromTrack
     ILHCbMagnetSvc* m_fieldSvc;
 
     // Temporary storage
-    Hlt1MuonHit* m_magnetHit;
+    std::unique_ptr<Hlt1MuonHit> m_magnetHit;
     std::vector<Candidate> m_seeds;
 
     // Helper methods

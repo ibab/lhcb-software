@@ -161,8 +161,7 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
     LHCb::MuonTileID id;
-    m_magnetHit =
-        new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. );
+    m_magnetHit.reset(  new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. ) );
 
     double dSlope = dtx( m_minMomentum );
     const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -204,7 +203,7 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
             m_seeds.emplace_back ( veloSeed );
             Candidate& seed = m_seeds.back();
-            seed.addHit( m_magnetHit );
+            seed.addHit( m_magnetHit.get() );
             seed.addHit( hit );
 
             seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
@@ -322,6 +321,5 @@ void MatchVeloMuon::clean()
 {
     // delete leftover seeds
     m_seeds.clear(); // leaves capacity invariant, hence we latch onto the max size
-    delete m_magnetHit;
-    m_magnetHit = nullptr;
+    m_magnetHit.reset();
 }

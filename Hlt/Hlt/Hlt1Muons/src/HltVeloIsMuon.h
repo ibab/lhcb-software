@@ -96,7 +96,7 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
 
 
     // Temporary storage
-    Hlt1MuonHit* m_magnetHit;
+    std::unique_ptr<Hlt1MuonHit> m_magnetHit;
     std::vector<Candidate>  m_seeds;
 
     std::array<double,nRegions> m_regionFoIX;

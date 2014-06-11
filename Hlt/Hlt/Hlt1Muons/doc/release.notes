@@ -9,6 +9,7 @@
  - Candidate: replace individual doubles by std::array<double,7>
  - MatchVeloMuon: reshuffle loops
  - MatchVeloMuon, HltVeloIsMuon: store Candidate-s by value instead of pointer to new-ed memory
+ - MatchVeloMuon, HltVeloIsMuon: make magnethit a std::unique_ptr
 
 ! 2014-06-06 - Gerhard Raven
  - optimize away Hlt1MuonRegion
