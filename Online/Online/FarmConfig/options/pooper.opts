@@ -9,7 +9,7 @@ ApplicationMgr.ExtSvc               += {
                                         "RateSvc/HLTRater"
                                        };
 ApplicationMgr.ExtSvc               += {
-					"GenStatSvc/EVTProd",
+//					"GenStatSvc/EVTProd",
 					"GenStatSvc/DiskWR"
                                        };
 ApplicationMgr.ExtSvc               += {
@@ -36,25 +36,27 @@ HistogramPersistencySvc.Warnings   = false;
 
 MEPrxCountPub.MyName              = "<part>_X_MEPrx";
 MEPrxCountPub.PartitionName       = @OnlineEnv.PartitionName;
-MEPrxCountPub.TaskPattern         = "<part>_HLT01_PartAdder_(.*)";
+MEPrxCountPub.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
 MEPrxCountPub.ServicePattern      = "MON_<part>_MEPRx_00/Counter/";
 MEPrxCountPub.AdderClass          = "Counter";
 MEPrxCountPub.InDNS               = "mona08";
 MEPrxCountPub.Tell1List=@OnlineEnv.Tell1Boards;
 MEPrxCountPub.TrendingOn          = true;
+MEPrxCountPub.OutDNS = "mona08";
 
 HLTRater.MyName              = "<part>_X_Rater";
 HLTRater.PartitionName       = @OnlineEnv.PartitionName;
-HLTRater.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+HLTRater.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
 HLTRater.ServicePattern      = "MON_<part>_Moore1_00/Counter/";
 HLTRater.AdderClass          = "Counter";
 HLTRater.InDNS               = "mona08";
 HLTRater.TrendingOn          = true;
+HLTRater.OutDNS = "mona08";
 
 //EVTProd.MyName              = "<part>_X_EVTProd";
 //EVTProd.ServicePrefix       = "Stat/<part>_X_EVTProd";
 //EVTProd.PartitionName       = @OnlineEnv.PartitionName;
-//EVTProd.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+//EVTProd.TaskPattern         = "<part>_HLT01_PartAdder_(.*)";
 //EVTProd.ServicePattern      = "MON_<part>_evtprod_00/Counter/";
 //EVTProd.AdderClass          = "Counter";
 //EVTProd.InDNS               = "mona08";
@@ -62,26 +64,29 @@ HLTRater.TrendingOn          = true;
 DiskWR.MyName              = "<part>_X_DiskWR";
 DiskWR.ServicePrefix       = "Stat/<part>_X_DiskWR";
 DiskWR.PartitionName       = @OnlineEnv.PartitionName;
-DiskWR.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+DiskWR.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
 DiskWR.ServicePattern      = "MON_<part>_Sender_00/Counter/";
 //DiskWR.AdderClass          = "Counter";
 DiskWR.InDNS               = "mona08";
+DiskWR.OutDNS              = "mona08";
 
 BusyPub.MyName              = "<part>_X_BusyPub";
 BusyPub.PartitionName       = @OnlineEnv.PartitionName;
-BusyPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+BusyPub.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
 BusyPub.ServicePattern      = "MON_<part>_Busy_00/Counter/";
 BusyPub.AdderClass          = "Counter";
 BusyPub.InDNS               = "mona08";
 BusyPub.TrendingOn          = true;
+BusyPub.OutDNS              = "mona08";
 
 DiskWrPub.MyName              = "<part>_X_DiskWrPub";
 DiskWrPub.PartitionName       = @OnlineEnv.PartitionName;
-DiskWrPub.TaskPattern         = "PART[0-9][0-9]_Adder_(.*)";
+DiskWrPub.TaskPattern         = "MON_<part>_HLT01_PartAdder_(.*)";
 DiskWrPub.ServicePattern      = "MON_<part>_Sender_00/Counter/";
 DiskWrPub.AdderClass          = "Counter";
 DiskWrPub.InDNS               = "mona08";
 DiskWrPub.TrendingOn          = true;
+DiskWrPub.OutDNS              = "mona08";
 
 //OvrPub.MyName              = "<part>_X_OvrPub";
 //OvrPub.PartitionName       = @OnlineEnv.PartitionName;

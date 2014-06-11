@@ -48,7 +48,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             svc = s+"HistAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
-            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n")
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 3;\n")
@@ -58,7 +58,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             svc = s+"CountAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
-            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n")
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n")
             f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 2;\n")
@@ -172,6 +172,9 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write(svc+".SaveRootDir = \"/hist/Savesets\";\n");
+            f.write(svc+".IsSaver = true;\n");
+            f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
             f.write("\n")
 
         for s in cntsvc:

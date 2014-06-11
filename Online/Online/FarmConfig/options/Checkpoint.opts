@@ -1,1 +1,13 @@
-// Leave empty!
+// These are the defaults on the HLT farm
+CheckpointSvc.Partition           = @OnlineEnv.PartitionName;
+CheckpointSvc.FirstChild          = 0;
+CheckpointSvc.ChildSleep          = 100;
+CheckpointSvc.TaskType            = "$TASK_TYPE";
+CheckpointSvc.UtgidPattern        = "%P_%NN_%T_%02d";
+CheckpointSvc.UseCores            = false;
+CheckpointSvc.DumpFiles           = false;
+CheckpointSvc.PrintLevel          = 4;
+CheckpointSvc.OutputLevel         = @OnlineEnv.OutputLevel;
+// If the number of instances < 0: take the true number from the environment
+// Value is overwritten for restart after checkpoint.
+CheckpointSvc.NumberOfInstances    = -1;

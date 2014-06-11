@@ -1,108 +1,140 @@
-import os
+import os, sys, imp
 
 sep = '/'
 checkpoint_dir = '/group/online/dataflow/cmtuser/checkpoints'
-shared_memory = '/dev/shm'
-
-def copyNewFile(checkpoint_loc,checkpoint_file):
-  checkpoint = checkpoint_loc+sep+checkpoint_file
-  print 'echo "  [INFO] Copy new checkpoint:'+checkpoint+'.gz to RAM.";'
-  print checkpoint_dir+'/cmds/copy_torrent '+checkpoint+';'
-  print 'export CHECKPOINT_FILE='+shared_memory+sep+checkpoint_file+';'
-  print 'export CHECKPOINT_TORRENT='+checkpoint_file+'.gz.torrent;'
+checkpoint_local_area = '/dev/shm'
+checkpoint_local_area = '/localdisk/checkpoints'
 
 #=========================================================================================
 def configureForRunning():
-  import OnlineEnvBase as Online
-  CFG   = Online.HLTType
-  DD    = Online.DDDBTag
-  COND  = Online.CondDBTag
-  App   = Online.MooreVersion
-  Mode  = Online.MooreStartupMode
+  runinfo = os.environ['RUNINFO']
+  dir,fname = os.path.split(runinfo)
+  nam,ext = os.path.splitext(fname)
+  sys.path.insert(1,dir)
+  mod = imp.find_module(nam,None)
+  Online=imp.load_module(nam,mod[0],mod[1],mod[2])
+  
+  OnlVSN = Online.OnlineVersion
+  CFG    = Online.HltArchitecture
+  DD     = Online.DDDBTag
+  COND   = Online.CondDBTag
+  App    = Online.HLTType
+  Mode   = Online.MooreStartupMode
 
-  directory  = checkpoint_dir+sep+'Moore'+sep+App+sep+CFG+sep+COND+sep+DD
-  checkpoint_loc  = None
-  checkpoint_file = None
-  if Mode > 1:
+  if Online.MooreVersion == "":
+    checkpoint_reloc = sep+Online.HltArchitecture+sep+Online.OnlineVersion+sep+Online.HLTType
+  else:
+    app_name = os.environ['TASK_TYPE']
+    checkpoint_reloc = sep+'Moore'+sep+Online.MooreOnlineVersion+sep+\
+                       Online.HLTType+sep+Online.CondDBTag+sep+Online.DDDBTag+sep+app_name
+
+  directory  = checkpoint_dir+checkpoint_reloc
+  checkpoint_torrent = None
+  ##Mode = 0
+  if Mode >= 1:
     try:
       for i in os.listdir(directory):
         idx=i.find('.data')
         if idx>0 and idx==len(i)-5:
-          checkpoint_loc  = directory
-          checkpoint_file = i
+          checkpoint_reloc   = checkpoint_reloc+sep+i
+          checkpoint_path    = checkpoint_local_area+checkpoint_reloc
+          checkpoint_torrent = checkpoint_dir+checkpoint_reloc
           break
     except Exception,X:
       if Mode > 1:
         Mode = 1
-        print 'echo "[ERROR] Checkpointing requested, but no checkpoint present.";'
+        print 'echo "[ERROR] Checkpointing '+checkpoint_reloc+' requested, but no checkpoint present.";'
+        print 'exit 1;'
 
   startup    = "-normal"
 
   if Mode==0:
-    startup="-normal"
+    print 'export APP_STARTUP_OPTS=-normal;'
+    print 'unset CHECKPOINT_DIR;'
+    print 'unset CHECKPOINT_FILE;'
+    print 'unset MOORESTARTUP_MODE;'
   elif Mode==1:
-    startup="-forking"
+    print 'export APP_STARTUP_OPTS=-forking;'
+    print 'unset CHECKPOINT_DIR;'
+    print 'unset CHECKPOINT_FILE;'
+    print 'unset MOORESTARTUP_MODE;'
+    # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
+    print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so;'
   elif Mode==2:
-    startup="-restore"
-  elif Mode==100:
-    startup="-checkpoint"
+    print 'export APP_STARTUP_OPTS=-restore;'
 
-  if os.environ.has_key('CREATE_CHECKPOINT'):
-    startup="-checkpoint"
-    Mode = 100
-  elif os.environ.has_key('TEST_CHECKPOINT'):
-    print 'echo "[ERROR] Startup mode:TEST_CHECKPOINT='+str(os.environ['TEST_CHECKPOINT'])+' - '+str(Mode)+'";'
-    startup="-restore"
 
-  print 'echo "[INFO] Startup mode:'+str(startup)+' - '+str(Mode)+'";'
-  if Mode==2 and not os.environ.has_key('TEST_CHECKPOINT'):
-    md5 = ''
-    shm_md5 = ''
-    try:
-      md5 = open(checkpoint_loc+sep+checkpoint_file+".md5","r").read()
-      shm_md5 = open(''+shared_memory+sep+checkpoint_file+'.md5').read()
-      if shm_md5 == md5:
-        print 'echo "  [INFO] Checkpoint file is up to date";'
-      else:
-        copyNewFile(checkpoint_loc,checkpoint_file)
-    except Exception,X:
-      copyNewFile(checkpoint_loc,checkpoint_file)
-    print 'export CHECKPOINT_DIR=/dev/shm;'
-    print 'export CHECKPOINT_FILE='+shared_memory+sep+checkpoint_file+';'
-  elif Mode > 1:
-    print 'export CHECKPOINT_DIR='+checkpoint_loc+';'
-    print 'export CHECKPOINT_FILE='+checkpoint_loc+sep+checkpoint_file+';'
-
-  print 'export NUM_CORES='+str(os.environ['NBOFSLAVES'])+';'
-  print 'export APP_STARTUP_OPTS='+startup+';'
+  print 'export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Checkpoint.opts;'
+  print 'export CHECKPOINT_RESTART_OPTIONS=${FARMCONFIGROOT}/options/CheckpointRestart.opts;'
+  print 'export PYTHONPATH=/group/online/dataflow/options/'+Online.PartitionName+'/HLT:${PYTHONPATH};'
+  
+  if Mode > 0:
+    print 'export NUM_CORES='+str(os.environ['NBOFSLAVES'])+';'
+  if Mode > 1:
+    print 'export CHECKPOINT_DIR='+os.path.dirname(checkpoint_path)+';'
+    print 'export CHECKPOINT_FILE='+checkpoint_path+';'
+    print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+    if not os.environ.has_key('TEST_CHECKPOINT'):
+      print 'echo "[INFO] Copy checkpoint:'+checkpoint_path+'";'
+      print 'bash '+checkpoint_dir+'/cmds/copy_torrent '+checkpoint_reloc+';'
+    print 'if test ! -f "${CHECKPOINT_FILE}";then'
+    print '  echo "[FATAL] =============================================================================";'
+    print '  echo "[FATAL] == CHECKPOINT FILE ${CHECKPOINT_FILE} DOES NOT EXIST!";'
+    print '  echo "[FATAL] =============================================================================";'
+    print '  exit 1;'
+    print 'fi;'
 
 #=========================================================================================
 def configureForCheckpoint():
-  print 'echo "Running in checkkpoint PRODUCTION mode....";'
-  print 'export APP_STARTUP_OPTS=-checkpoint;'
+  print 'echo "[ERROR] Running in checkkpoint PRODUCTION mode....";'
+  print 'export APP_STARTUP_OPTS="-checkpoint -auto";'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
+  print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
+  print 'export MBM_SETUP_OPTIONS='+checkpoint_dir+'/cmds/MBM_setup.opts;'
+  print 'export CHECKPOINT_SETUP_OPTIONS='+checkpoint_dir+'/cmds/Checkpoint.opts;'
+  print 'echo "=============================================================================";'
+  print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "== Producing CHECKPOINT file......Please be patient.";'
+  print 'echo "=============================================================================";'
+  # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
+  print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so;'
 
 #=========================================================================================
 def configureForTest():
-  print 'echo "Running in checkkpoint TESTING mode....";'
+  print 'echo "[ERROR] Running in checkpoint TESTING mode....";'
   print 'export APP_STARTUP_OPTS=-restore;'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
-
+  print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+  print 'echo "=============================================================================";'
+  print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "== Testing CHECKPOINT file......Please be patient.";'
+  print 'echo "=============================================================================";'
+  print 'if test ! -f "${CHECKPOINT_FILE}";then'
+  print '  echo "[FATAL] =============================================================================";'
+  print '  echo "[FATAL] == CHECKPOINT FILE ${CHECKPOINT_FILE} DOES NOT EXIST!";'
+  print '  echo "[FATAL] =============================================================================";'
+  print '  exit 1;'
+  print 'fi;'
+  
 #=========================================================================================
 def doIt():
   try:
+    mode = os.environ['MOORESTARTUP_MODE']
+    print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/${CMTCONFIG};'
     if os.environ.has_key('TEST_CHECKPOINT'):
       configureForTest()
     elif os.environ.has_key('CREATE_CHECKPOINT'):
       configureForCheckpoint()
-    else:
-      # Running in production mode in the HLT
+    else:  # Running in production mode in the HLT
       configureForRunning()
+    print 'echo "=============================================================================";'
+    print 'echo "== STARTUP MODE = '+mode+' Opts:${APP_STARTUP_OPTS} Directory:${CHECKPOINT_DIR} ";'
+    print 'echo "=============================================================================";'
 
   except Exception,X:
-    print 'echo "Checkpoint production mode:'+str(X)+'";'
-    configureForCheckpoint()
+    print 'echo "[ERROR] Exception(ConfigureShell): Checkpoint production mode:'+str(X)+'";'
+    print 'exit 1;'
 
 #=========================================================================================
 if __name__ == '__main__':

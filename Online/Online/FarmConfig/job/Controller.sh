@@ -9,13 +9,13 @@
 #
 # =========================================================================
 #
-#    -print=${OUTPUT_LEVEL} \
-#    -sleep=20 \
+# Output:   -print=${OUTPUT_LEVEL} \
+# Debug:    -sleep=20 \
 #
 #
 export PRINT_LEVEL=4;
 #export PRINT_LEVEL=2;
-exec -a ${UTGID} ${CONTROLLERROOT}/${CMTCONFIG}/fsm_ctrl.exe \
+exec -a ${UTGID} fsm_ctrl.exe \
     -print=${PRINT_LEVEL} -sleep=0 \
     -partition=${PARTITION_NAME} \
     -runinfo=${RUNINFO} \
