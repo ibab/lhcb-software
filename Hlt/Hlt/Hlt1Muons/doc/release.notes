@@ -6,6 +6,7 @@
 ! 2014-06-11 - Gerhard Raven
  - IsMuonTool: replace std::vector by std::array
  - remove obsolete Hlt1MuonRegion.h
+ - Candidate.h: replace individual doubles by std::array<double,7>
 
 ! 2014-06-06 - Gerhard Raven
  - optimize away Hlt1MuonRegion

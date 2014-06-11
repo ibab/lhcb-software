@@ -32,14 +32,8 @@ class Candidate final
     {
         const LHCb::State* state = track->stateAt( LHCb::State::EndVelo );
         if ( !state ) state = &( track->closestState( 5000 ) );
-        m_x = state->x();
-        m_y = state->y();
-        m_z = state->z();
-        m_tx = state->tx();
-        m_ty = state->ty();
-
-        m_errTx2 = state->errTx2();
-        m_errTy2 = state->errTy2();
+        m_params = { state->x(),  state->y(), state->z(), state->tx(), state->ty(),
+                     state->errTx2(), state->errTy2() };
     }
 
     Candidate( const LHCb::Track* track, const Hlt1MuonHits& hits )
@@ -60,41 +54,41 @@ class Candidate final
 
     void xStraight( const double z, double& x, double& errX ) const
     {
-        double dz = z - m_z;
-        x = m_x + dz * m_tx;
-        errX = dz * sqrt( m_errTx2 );
+        double dz = z - m_params[2];
+        x = m_params[0] + dz * m_params[3];
+        errX = dz * sqrt( m_params[5] );
     }
 
     void yStraight( const double z, double& y, double& errY ) const
     {
-        double dz = z - m_z;
-        y = m_y + dz * m_ty;
-        errY = dz * sqrt( m_errTy2 );
+        double dz = z - m_params[2];
+        y = m_params[1] + dz * m_params[4];
+        errY = dz * sqrt( m_params[6] );
     }
 
     double tx() const
     {
-        return m_tx;
+        return m_params[3];
     }
     double ty() const
     {
-        return m_ty;
+        return m_params[4];
     }
     double errTx2() const
     {
-        return m_errTx2;
+        return m_params[5];
     }
     double errTy2() const
     {
-        return m_errTy2;
+        return m_params[6];
     }
     double tx2() const
     {
-        return m_tx * m_tx;
+        return m_params[3] * m_params[3];
     }
     double ty2() const
     {
-        return m_ty * m_ty;
+        return m_params[4] * m_params[4];
     }
 
     double sinTrack() const
@@ -198,14 +192,7 @@ class Candidate final
 
   private:
     const LHCb::Track* m_track;
-    double m_x;
-    double m_y;
-    double m_z;
-    double m_tx;
-    double m_ty;
-
-    double m_errTx2;
-    double m_errTy2;
+    std::array<double,7> m_params;
 
     double m_slope = 0;
     double m_p = 0;
