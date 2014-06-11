@@ -109,16 +109,5 @@ void Hlt1MuonStation::setHits( Hlt1MuonHits hts )
     }
     assert( *id == std::end(m_hits) );
     assert( std::distance( std::begin(m_index), id ) == m_index.size() );
-
-#if 0
-    for( unsigned i = 0; i< nRegions() ; ++i ) {
-        Hlt1MuonRegion r = region(i);
-        std::cout << "region " << r.id() << " x:[" << r.xmin() << ","<<r.xmax() << "] y:["<< r.ymin() <<"," << r.ymax() <<"]\n";
-        for ( const auto& h : hits(i) ) {
-            std::cout << "  ( " << h->x() << ", " << h->y() << " )" ;
-        }
-        std::cout << std::endl;
-    }
-#endif
 }
 

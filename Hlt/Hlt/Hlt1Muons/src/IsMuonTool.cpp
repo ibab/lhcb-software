@@ -41,7 +41,6 @@ IsMuonTool::IsMuonTool( const string& type, const string& name,
                         const IInterface* parent )
     : GaudiTool( type, name, parent )
     , m_foiFactor( 1. )
-    , m_occupancy( nStations, 0 )
 {
     declareInterface<ITracksFromTrack>( this );
 }
@@ -115,16 +114,12 @@ StatusCode IsMuonTool::initialize()
 StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track& track,
                                         std::vector<LHCb::Track*>& tracks )
 {
-    // Clear temporary storage
-    m_track.clear();
-
     // do the track extrapolations
     extrapolateTrack( track );
 
     // track is in acceptance? Track has minimum momentum?
     if ( !preSelection( track ) ) return StatusCode::SUCCESS;
 
-    m_occupancy.assign( nStations, 0 );
     // find the coordinates in the fields of interest
     auto hits = findHits( track );
 
@@ -149,8 +144,8 @@ void IsMuonTool::extrapolateTrack( const LHCb::Track& track )
     // Project the state into the muon stations
     for ( unsigned int station = 0; station < nStations; ++station ) {
         // x(z') = x(z) + (dx/dz * (z' - z))
-        m_track.emplace_back( state.x() + state.tx() * ( m_stationZ[station] - state.z() ) ,
-                              state.y() + state.ty() * ( m_stationZ[station] - state.z() ) );
+        m_track[station] = {  state.x() + state.tx() * ( m_stationZ[station] - state.z() ) ,
+                              state.y() + state.ty() * ( m_stationZ[station] - state.z() ) };
     }
 }
 
@@ -218,6 +213,7 @@ Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
     };
 
     Hlt1ConstMuonHits hits;
+    m_occupancy[0] = 0;
     // Start from 1 because M1 does not matter for IsMuon
     for ( unsigned int s = 1; s < nStations; ++s ) {
         // prepare the predicates for this station (and current track)

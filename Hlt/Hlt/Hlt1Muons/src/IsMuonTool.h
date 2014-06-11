@@ -53,7 +53,7 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     // Tools
     Hlt1MuonHitManager* m_hitManager;
 
-    mutable std::vector<std::pair<double,double>> m_track; // position of track in x(mm),y(mm) in each station
+    mutable std::array<std::pair<double,double>,nStations> m_track; // position of track in x(mm),y(mm) in each station
 
     std::array<double,nStations> m_stationZ;
 
@@ -77,7 +77,7 @@ class IsMuonTool : public GaudiTool, virtual public ITracksFromTrack
     std::vector<double> m_momentumCuts; // vector of momentum ranges
 
     // number of hits in the FOI found in the muon stations
-    std::vector<unsigned int> m_occupancy;
+    std::array<unsigned int,nStations> m_occupancy;
 
     // Helper methods
     void extrapolateTrack( const LHCb::Track& track );

@@ -3,6 +3,10 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-06-11 - Gerhard Raven
+ - IsMuonTool: replace std::vector by std::array
+ - remove obsolete Hlt1MuonRegion.h
+
 ! 2014-06-06 - Gerhard Raven
  - optimize away Hlt1MuonRegion
  - add interface for left-right symmetric search windows
