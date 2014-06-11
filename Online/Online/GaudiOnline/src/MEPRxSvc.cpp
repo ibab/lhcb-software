@@ -1020,6 +1020,11 @@ StatusCode MEPRxSvc::run()
         m_rxPkt[srcid]++; // recieved packets per source
         int rc = (*rxit)->addMEP(m_dataSock, mephdr, srcid, tsc, m_tLastRx);
         if ((*rxit)->m_runNumber != m_runNumber) {
+            if (m_runNumber != 0)
+            {
+              m_monSvc->updateSvc("this",m_runNumber,this);
+              m_monSvc->resetHistos(0);
+            }
             m_runNumber = (*rxit)->m_runNumber;
             log << MSG::DEBUG << "run-change detected - new run# " << m_runNumber
                 << endmsg;
@@ -1460,7 +1465,11 @@ StatusCode MEPRxSvc::finalize()
 {
     MsgStream log(msgSvc(), "MEPRx");
     log << MSG::INFO << "Entering finalize....." << endmsg;
-    
+    if (m_monSvc)
+    {
+            m_monSvc->updateSvc("this",m_runNumber,this);
+            m_monSvc->resetHistos(0);
+    }
     if (m_mepRQCommand) {
       delete m_mepRQCommand;
       m_mepRQCommand = 0;

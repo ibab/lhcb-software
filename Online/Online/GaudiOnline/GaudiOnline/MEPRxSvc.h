@@ -31,6 +31,7 @@
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/DAQError.h"
 #include "dis.hxx"
+#include "Gaucho/IGauchoMonitorSvc.h"
 
 // Forward declarations
 class MsgStream;
@@ -141,7 +142,8 @@ public:
     OverflowStatSvc             *m_overflowStatSvc;
     //SourceStatService           *m_statService;
     IIncidentSvc*               m_incidentSvc;
-    IMonitorSvc*                m_monSvc;
+//    IMonitorSvc*                m_monSvc;
+    IGauchoMonitorSvc*                m_monSvc;
     IHistogramSvc*              m_histSvc;
     int                         m_sourceID;
     u_int32_t                   m_ownAddress;
