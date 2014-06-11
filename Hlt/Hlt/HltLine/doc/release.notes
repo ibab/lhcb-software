@@ -5,8 +5,11 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-06-11 - Gerhard Raven
+ - attempt to fix fall-out from changes to DAQSys related to track decoding
+
 !========================= HltLine v7r1 2014-04-22 =========================
-! 2014-Mar-04 - Patrick Spradlin
+! 2014-03-04 - Patrick Spradlin
   - Modifications to HltLine/HltLine.py for use of NnBodyDecays
     . Hlt2Member.__init__: list of recognized configurable class names
       expanded to include DaVinci__N3BodyDecays, etc.

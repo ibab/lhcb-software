@@ -34,7 +34,8 @@ DecodeL0FullCALO = __convert( 'L0CaloFull')
 DecodeL0DU       = __convert( 'L0DU' )
 DecodeVELO       = __convertName("DecodeVeloRawBuffer/createVeloLiteClusters")
 #... ^^ only do the VeloLite clusters, all that's needed for Moore
-DecodeTRACK      = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/Hlt1TrackReportsDecoder"].setup()])
+DecodeTRACK      = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/VeloDecoder"].setup()])
+DecodeFORWARDTRACK = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/ForwardDecoder"].setup()])
 DecodeTT         = __convert( 'TT' )
 DecodeIT         = __convert( 'IT' )
 DecodeOT         = __convert( 'OT' )
@@ -50,7 +51,7 @@ DecodeHCAL       = __convert( 'Hcal' )
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
           , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
           , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL'
-          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK' )
+          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK', 'DecodeFORWARDTRACK' )
 
 # ==============================================================================
 # Register symbols for streamer framework:
@@ -76,6 +77,7 @@ _factory.Lines += [
     "decodeMUON   = %s " % _names ( DecodeMUON   ) ,
     "decodeRICH   = %s " % _names ( DecodeRICH   ) ,
     "decodeTRACK  = %s " % _names ( DecodeTRACK  ) ,
+    "decodeFORWARDTRACK  = %s " % _names ( DecodeFORWARDTRACK  ) ,
     
     ]
 
