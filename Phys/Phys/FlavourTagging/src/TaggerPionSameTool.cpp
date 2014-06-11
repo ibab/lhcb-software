@@ -46,10 +46,17 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   //declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 );
   //declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 );
   //declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
+
   // Last value from D*munu analysis with 10% B+ background
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.4049 );
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.83   );
-  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -1.99  );
+  //declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.4049 );
+  //declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.83   );
+  //declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -1.99  );
+  //declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.3908 );
+
+  // Last value from Bd2JpsiK* Reco14 analysis
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.4493 );
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.7794 );
+  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -1.8686  );
   declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.3908 );
 
   declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );

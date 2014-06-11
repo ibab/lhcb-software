@@ -33,6 +33,11 @@ tunings = {
         "CombineTaggersProbability.P1_Cal_OS" : 0.899,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.365,
 
+        # calibration for combination with nnetOSK 
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.4353,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 0.948,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.4356,
+
         "TaggerMuonTool.Muon_Pt_cut" :     1100.0,
         "TaggerMuonTool.Muon_P_cut" :         0.0,
         "TaggerMuonTool.Muon_lcs_cut" :       3.0,
@@ -108,8 +113,8 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
         "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.6,
         "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.5,
-        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4352, #+/- 0.0016
-        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.1330, #+/- 0.0292
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4349, #+/- 0.0016
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.074, #+/- 0.0292
         "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4350,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
@@ -156,9 +161,9 @@ tunings = {
         "TaggerPionSameTool.PionSame_distPhi_cut" : 0.005,
         "TaggerPionSameTool.PionSame_ProbMin" : 0.56,
         "TaggerPionSameTool.PionSame_AverageOmega" : 0.41,
-        "TaggerPionSameTool.PionSame_P0_Cal" : 0.4049,
-        "TaggerPionSameTool.PionSame_P1_Cal" : 0.83,
-        "TaggerPionSameTool.PionSame_P2_Cal" : -1.99,
+        "TaggerPionSameTool.PionSame_P0_Cal" : 0.4493,
+        "TaggerPionSameTool.PionSame_P1_Cal" : 0.7794,
+        "TaggerPionSameTool.PionSame_P2_Cal" : -1.8686,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,
 
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
@@ -244,6 +249,11 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
+
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1200,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -451,6 +461,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1200,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -775,6 +789,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" :  0.4004,
         "CombineTaggersProbability.P1_Cal_OS" : 0.8476,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.3892,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" :     1100.0,
         "TaggerMuonTool.Muon_P_cut" :         0.0,
@@ -982,6 +1000,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" :  0.4004,
         "CombineTaggersProbability.P1_Cal_OS" : 0.8476,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.3892,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" :     1100.0,
         "TaggerMuonTool.Muon_P_cut" :         0.0,
@@ -1183,6 +1205,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.921, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS" : 0.363,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1200,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1305,6 +1331,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.376,
         "CombineTaggersProbability.P1_Cal_OS" : 0.928,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.354,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1200,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1422,6 +1452,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.376,
         "CombineTaggersProbability.P1_Cal_OS" : 0.928,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.354,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1200,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1536,6 +1570,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.366,
         "CombineTaggersProbability.P1_Cal_OS" : 0.933,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.339,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1100,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1638,6 +1676,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.363,
         "CombineTaggersProbability.P1_Cal_OS" : 1.09,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.335,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1100,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1740,6 +1782,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.,
         "CombineTaggersProbability.P1_Cal_OS" : 1.,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1100,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1842,6 +1888,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.374,
         "CombineTaggersProbability.P1_Cal_OS" : 1.08,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.355,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1100,
         "TaggerMuonTool.Muon_P_cut" : 0.0,
@@ -1944,6 +1994,10 @@ tunings = {
         "CombineTaggersProbability.P0_Cal_OS" : 0.,
         "CombineTaggersProbability.P1_Cal_OS" : 1.,
         "CombineTaggersProbability.Eta_Cal_OS" : 0.,
+        # calibration for combination with nnetOSK  -- no calibration
+        "CombineTaggersProbability.P0_Cal_OSnnet" : 0.,
+        "CombineTaggersProbability.P1_Cal_OSnnet" : 1.,
+        "CombineTaggersProbability.Eta_Cal_OSnnet" : 0.,
 
         "TaggerMuonTool.Muon_Pt_cut" : 1100,
         "TaggerMuonTool.Muon_P_cut" : 0.0,

@@ -30,10 +30,14 @@ DECLARE_TOOL_FACTORY( CombineTaggersProbability )
   //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
   //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953);
   //declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.362);
-  // Tuning for Reco14
+  // Tuning for Reco14 -- Combination of mu,e,K,Vtx cut based taggers
   declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.390);
   declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.899);
   declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.365);
+  // Tuning for Reco14 -- Combination of mu,e,nnetK,Vtx 
+  declareProperty( "P0_Cal_OSnnet",   m_P0_Cal_OSnnet   = 0.4168);
+  declareProperty( "P1_Cal_OSnnet",   m_P1_Cal_OSnnet   = 0.838);
+  declareProperty( "Eta_Cal_OSnnet",  m_Eta_Cal_OSnnet  = 0.3962);
   
 }
 
@@ -91,7 +95,16 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     debug() << " Before pn="<< pnsum <<" w="<<1-pnsum<<endreq;
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
-  pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
+  if(!flag_nnetTaggers && !flag_CharmTagger)  
+    pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
+  if(flag_nnetTaggers && !flag_CharmTagger)  
+    pnsum = 1 - m_P0_Cal_OSnnet - m_P1_Cal_OSnnet * ( (1-pnsum)-m_Eta_Cal_OSnnet);
+  else 
+  {
+  if ( msgLevel(MSG::INFO) )
+    info() << " WARNING: fix the calibration parameters for this configuration of combination nnetTaggers="<<flag_nnetTaggers<<" flagCharmTagger="<<flag_CharmTagger<< endreq;
+  }
+  
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << " OS pn="<< pnsum <<" w="<<1-pnsum<<endreq;

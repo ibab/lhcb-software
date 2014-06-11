@@ -33,6 +33,7 @@ private:
 
   double m_ProbMin, m_ProbMin_OS;
   double m_P0_Cal_OS, m_P1_Cal_OS, m_Eta_Cal_OS;
+  double m_P0_Cal_OSnnet, m_P1_Cal_OSnnet, m_Eta_Cal_OSnnet;
 
 };
 #endif // COMBINETAGGERSPROBABILITY_H
