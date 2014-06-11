@@ -7,14 +7,8 @@
 #need to cd in case script is launched outside the taskmanager
 #get online version
 
-export CMTCONFIG=$CMTDEB
-SetupOnline v5r8
-
-export UTGID=FileTest
-export DIM_DNS_NODE=localhost
-export OPTS=/home/beat/cmtuser/myOnline/Online/Gaucho
-cd /home/beat/cmtuser/myOnline/Online/DefHLTUtils/cmt
-source setup.sh
+export CMTCONFIG=x86_64-slc6-gcc48-dbg
 #export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/Online/DefHLTUtils/$CMTCONFIG:$LD_LIBRARY_PATH
-#export LD_PRELOAD=/home/beat/cmtuser/myOnline/Online/DefHLTUtils/$CMTCONFIG/libDefUtil.so
-$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -options=/home/beat/cmtuser/myOnline/Online/DefHLTUtils/options/FileTest.opts -main=$GAUDIONLINEROOT/options/Main.opts
+. /group/online/dataflow/cmtuser/Online_v5r8/MyOnline/cmt/setup.${CMTCONFIG}.vars
+export LD_PRELOAD=/group/online/dataflow/cmtuser/Online_v5r8/InstallArea/${CMTCONFIG}/lib/libDefUtil.so
+$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -options=../options/FileTest.opts -main=$GAUDIONLINEROOT/options/Main.opts
