@@ -69,6 +69,7 @@ class MatchVeloMuon : public GaudiHistoTool, virtual public ITracksFromTrack
 
     // Temporary storage
     Hlt1MuonHit* m_magnetHit;
+    // TODO: replace m_seeds with vector of values, not pointers
     Candidates m_seeds;
 
     // Helper methods

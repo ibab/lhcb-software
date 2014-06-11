@@ -100,41 +100,43 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     clean();
 
     // Make a Candidate from the track
-    auto veloSeed = std::unique_ptr<Candidate>{new Candidate{&seed}};
+    Candidate veloSeed{ &seed }; 
 
     unsigned int seedStation = order[0] - 1;
-    findSeeds( *veloSeed, seedStation );
-    if ( produceHistos() ) plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
+    findSeeds( veloSeed, seedStation );
+
+    for ( Candidate* c : m_seeds ) addHits( *c );
 
     if ( msgLevel( MSG::DEBUG ) ) {
         debug() << "Found " << m_seeds.size() << " seeds." << endmsg;
-    }
-
-    ConstCandidates goodCandidates;
-
-    for ( Candidate* c : m_seeds ) {
-        addHits( *c );
-        if ( msgLevel( MSG::DEBUG ) ) {
+        for ( Candidate* c : m_seeds ) {
             debug() << "Found candidate with chi2/DoF " << c->chi2DoF() << endmsg;
         }
-        if ( produceHistos() ) plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
-        if ( !m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
-            // There is a good enough candidate, put the seed into the output
-            // unmidified.
-            tracks.push_back( const_cast<LHCb::Track*>( &seed ) );
-            break;
-        } else if ( m_setQOverP && ( c->chi2DoF() < m_maxChi2DoFX ) ) {
-            goodCandidates.push_back( c );
+    }
+
+    if ( produceHistos() ) {
+        plot( m_seeds.size(), "NSeedHits", -0.5, 50.5, 51 );
+        for ( Candidate* c : m_seeds ) {
+            plot( c->chi2DoF(), "Chi2DoFX", 0, 100, 100 );
         }
     }
 
-    if ( m_setQOverP ) {
+    if ( !m_setQOverP ) {
+        // in this case, we only care whether a good seed exists for the specified track...
+        if ( std::any_of( std::begin(m_seeds), std::end(m_seeds), [=](const Candidate* c) {
+            return c->chi2DoF() < m_maxChi2DoFX ;
+        }) ) {
+            // There is a good enough candidate, put the seed into the output
+            // unmodified.
+            tracks.push_back( const_cast<LHCb::Track*>( &seed ) );
+        }
+    } else {
         auto best =
-            std::min_element( std::begin(goodCandidates), std::end(goodCandidates),
+            std::min_element( std::begin(m_seeds), std::end(m_seeds),
                               []( const Candidate* lhs, const Candidate* rhs ) {
                 return lhs->chi2DoF() < rhs->chi2DoF();
             } );
-        if ( best != std::end(goodCandidates) ) {
+        if ( best != std::end(m_seeds) && (*best)->chi2DoF() < m_maxChi2DoFX ) {
             std::unique_ptr<LHCb::Track> out{seed.clone()};
             out->addToAncestors( seed );
             const Candidate* c = *best;
@@ -199,20 +201,8 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
     for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
         if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue; //TODO: push into loop control -- request from station to a range of regions to loop over...
 
-        // Get hits
-        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
-
-        if ( msgLevel( MSG::DEBUG ) ) {
-            debug() << "Hits in seed region " << r << ":" << endmsg;
-            for ( Hlt1MuonHit* hit : hits ) {
-                debug() << hit->x() << " " << hit->y() << endmsg;
-            }
-        }
-
-        if ( hits.empty() ) continue;
-
-        // add seed hits to container
-        for ( Hlt1MuonHit* hit : hits ) {
+        // get hits, and add seed hits to container
+        for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
             if ( hit->y() > yMax || hit->y() < yMin ) continue;
             Candidate* seed = new Candidate{veloSeed};
             seed->addHit( m_magnetHit );
