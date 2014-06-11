@@ -92,7 +92,7 @@ namespace FiniteStateMachine {
     /// Transition container definition
     typedef std::set<const Transition*> Transitions;
     typedef std::vector<When*>           Whens;
-
+    enum { REGULAR = 0, FAIL = 1, STARTUP = 2 };
   protected:
     /// Set of enter transitions to the current state
     Transitions  m_incoming;
@@ -102,14 +102,17 @@ namespace FiniteStateMachine {
     Whens        m_when;
     /// Flag for a transient state
     int          m_transient;
+    /// Flag for a failure, startup,... state
+    int          m_flg;
 
   public:
     /** Class Constructor
      *
-     * @arg nam [string, read-only] State name
-     * @arg typ [string, read-only] FSM type
+     * @arg nam  [string, read-only] State name
+     * @arg typ  [string, read-only] FSM type
+     * @arg fail [bool,   read-only] State is a FAIL state. Slaves go to SLAVE_FAILED
      */
-    State(const Type *typ, const std::string& nam);
+    State(const Type *typ, const std::string& nam, int flag=REGULAR);
     /// Standatrd destructor
     virtual ~State();    
     /** Return Pointer to FSM transition object leading to the requested target state
@@ -128,25 +131,28 @@ namespace FiniteStateMachine {
      */
     const Transition* findTransByName (const std::string&  transition)  const;
     /// Set the state to be transient 
-    void setTransient ()                { m_transient = 1;         }
+    void setTransient ()                { m_transient = 1;            }
     /// Return flag if the state is transient
-    int isTransient () const            { return m_transient != 0; }
-
-    /// Access the when clauses
-    const Whens& when() const           { return m_when;           }
+    int isTransient () const            { return m_transient != 0;    }
+    /// Is this a FAILURE state ?
+    bool isFailure () const             { return (m_flg&FAIL) != 0;   }
+    /// Is this a FAILURE state ?
+    bool isStartup () const             { return (m_flg&STARTUP) != 0;}
+    /// Access the when clauses 
+    const Whens& when() const           { return m_when;              }
     /// Add when clause to state object
     const When* when(const std::pair<When::Multiplicity,When::States>& p1, 
 		     const State* target, 
 		     Rule::Direction direction = Rule::SLAVE2MASTER) const;
 
     /// Return reference to set of leave transitions (CONST)
-    const Transitions& outgoing() const { return m_outgoing;       }
+    const Transitions& outgoing() const { return m_outgoing;          }
     /// Return reference to set of enter transitions (CONST)
-    const Transitions& incoming() const { return m_incoming;       }
+    const Transitions& incoming() const { return m_incoming;          }
     /// Return reference to set of leave transitions
-    Transitions& outgoing()             { return m_outgoing;       }
+    Transitions& outgoing()             { return m_outgoing;          }
     /// Return reference to set of enter transitions
-    Transitions& incoming()             { return m_incoming;       }
+    Transitions& incoming()             { return m_incoming;          }
 
   };   //  End class State
 

@@ -65,11 +65,11 @@ Type::ConstTransitions Type::transitionsByName(const std::string& nam)  const  {
 }
 
 /// Add a new state to the FSM type
-const State* Type::addState(const std::string& nam)  {
+const State* Type::addState(const std::string& nam, int flag)  {
   if ( !nam.empty() )  {
     States::const_iterator i = m_states.find(nam);
     if ( i == m_states.end() )  {
-      return m_states[nam] = new State(this,nam);
+      return m_states[nam] = new State(this,nam,flag);
     }
     throw runtime_error("Type::addState> Already existing state:"+nam);
   }

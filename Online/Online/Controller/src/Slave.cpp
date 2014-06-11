@@ -259,16 +259,18 @@ void Slave::handleState(const string& msg)  {
   const State* state = type()->state(m);
   const Transition* transition = (state && m_state) ? m_state->findTrans(state) : 0;
   // After fork slaves do not answer with OFFLINE of NOT_READY!
-  starting &= (m == "OFFLINE");// || m == "NOT_READY");
+  starting &= (m == "OFFLINE");
 
-  display(DEBUG,c_name(),"Received new message %s starting:%s state:%s transition:%s",
+  display(DEBUG,c_name(),"Received message %s starting:%s state:%s transition:%s",
 	  m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
-  if ( m == "ERROR" ) {
+  if ( state && state->isFailure() ) {
     lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
   }
 
   if ( starting )
     iamHere();
+  else if ( state && state->isFailure() )
+    transitionFailed();
   else if ( transition )
     transitionDone(state);
   else if ( state )

@@ -84,7 +84,7 @@ namespace FiniteStateMachine   {
     /// Access to transition groups with the same name
     ConstTransitions transitionsByName(const std::string& name)  const;
     /// Add a new state to the FSM type
-    const State*      addState(const std::string& nam);
+    const State*      addState(const std::string& nam, int flag=0);
     /// Add a new Transition to the FSM type. Intrinsic transition - no command sent to slaves
     Transition*       addTransition(const State* from, const State* to, unsigned int flags=Transition::CHECK);
     /// Add a new Transition to the FSM type

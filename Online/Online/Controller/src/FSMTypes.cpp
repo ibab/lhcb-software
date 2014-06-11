@@ -24,11 +24,11 @@ using namespace std;
 static Type* defineDAQType()    {
   typedef Transition Tr;
   Type *daq = new Type("DAQ");
-  const State* offline   = daq->addState(ST_NAME_OFFLINE);
+  const State* offline   = daq->addState(ST_NAME_OFFLINE, State::STARTUP);
   const State* not_ready = daq->addState(ST_NAME_NOT_READY);
   const State* ready     = daq->addState(ST_NAME_READY);
   const State* running   = daq->addState(ST_NAME_RUNNING);
-  const State* error     = daq->addState(ST_NAME_ERROR);
+  const State* error     = daq->addState(ST_NAME_ERROR, State::FAIL);
   const State* paused    = daq->addState(ST_NAME_PAUSED);
 
   daq->setInitialState(offline);
@@ -182,12 +182,12 @@ static Type* defineDAQSteerType() {
   typedef Transition Tr;
   Type* daq = fsm_type("DAQ");
   Type *typ = new Type("DAQSteer");
-  const State* unknown   = typ->addState(ST_NAME_UNKNOWN);
+  const State* unknown   = typ->addState(ST_NAME_UNKNOWN, State::STARTUP);
   const State* offline   = typ->addState(ST_NAME_OFFLINE);
   const State* not_ready = typ->addState(ST_NAME_NOT_READY);
   const State* ready     = typ->addState(ST_NAME_READY);
   const State* running   = typ->addState(ST_NAME_RUNNING);
-  const State* error     = typ->addState(ST_NAME_ERROR);
+  const State* error     = typ->addState(ST_NAME_ERROR, State::FAIL);
   const State* paused    = typ->addState(ST_NAME_PAUSED);
   typ->setInitialState(unknown);
 

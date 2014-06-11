@@ -60,8 +60,8 @@ StateActions& StateActions::setOutAction(const Callback& cb)   {
 }
 
 /// Class Constructor
-State::State(const Type *typ, const string& nam)
-  : TypedObject(typ,nam), m_transient(0)
+State::State(const Type *typ, const string& nam, int flg)
+  : TypedObject(typ,nam), m_transient(0), m_flg(flg)
 {
 }
 
