@@ -1,6 +1,21 @@
+2014-06-11  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-517: Merge compatible stacks
+	LBCORE-515: Fix case of project names
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
+2014-06-06  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-514: Add list of required platforms to the stacks to release
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2014-06-05  Ben Couturier <Ben.Couturier@cern.ch>
+	
 	LBCORE-511: Add JSON output to lb-sdb-query for the list of staks to release
 	* * python/LbRelease/SoftConfDB/LbSdbQuery.py
+
 
 	LBCORE-446: Integrated Software Configuration DB with Ariadne DB.
 	* python/LbRelease/SoftConfDB/SoftConfDB.py

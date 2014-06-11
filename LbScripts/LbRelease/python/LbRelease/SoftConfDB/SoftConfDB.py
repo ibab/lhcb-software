@@ -126,7 +126,28 @@ class SoftConfDB(object):
             stack = self.listReleaseStackFromPV(stp, stv)
             stacks.append(stack)
 
-        return stacks
+        # Now filter all the stacks
+        filteredstacks = []
+        import itertools
+        for s in stacks:
+            ismerged = False
+            for i, fs in enumerate(filteredstacks):
+                intersec = s & fs
+                if len(intersec) > 0:
+                    union = s | fs
+                    # Make sure we don't have the same project with two different versions
+                    # This is not suported by the nightlies
+                    import collections
+                    duplicateProjs = [x for x, y in collections.Counter([p for (p,v) in union]).items() if y > 1]
+                    # If there are no duplicate projects, we can use the union of the stacks
+                    if len(duplicateProjs) == 0:
+                        filteredstacks[i] = union
+                        ismerged = True
+                    break
+            if not ismerged:
+                filteredstacks.append(s)
+
+        return filteredstacks
 
     def listVersions(self, project):
         ''' List the number of versions known for a given project '''
