@@ -36,11 +36,6 @@ class Candidate final
                      state->errTx2(), state->errTy2() };
     }
 
-    Candidate( const LHCb::Track* track, const Hlt1MuonHits& hits )
-        : Candidate(track, Hlt1ConstMuonHits( std::begin(hits), std::end(hits) ) ) 
-    {
-    }
-
     Candidate( const LHCb::Track* track )
         : Candidate( track, Hlt1ConstMuonHits() )
     {

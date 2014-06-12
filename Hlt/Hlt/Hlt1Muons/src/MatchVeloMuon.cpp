@@ -31,7 +31,7 @@ DECLARE_TOOL_FACTORY( MatchVeloMuon )
 
 using std::vector;
 using std::less;
-const std::array<unsigned int,4> order{{ 3u, 4u, 5u, 2u }};
+const std::array<unsigned int,4> order{{ 2u, 3u, 4u, 1u }};
 
 //=============================================================================
 MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
@@ -62,12 +62,6 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
 }
 
 //=============================================================================
-MatchVeloMuon::~MatchVeloMuon()
-{
-    boost::singleton_pool<Candidate, sizeof( Candidate )>::release_memory();
-}
-
-//=============================================================================
 StatusCode MatchVeloMuon::initialize()
 {
     StatusCode sc = GaudiHistoTool::initialize();
@@ -87,7 +81,6 @@ StatusCode MatchVeloMuon::initialize()
 StatusCode MatchVeloMuon::finalize()
 {
     clean();
-    boost::singleton_pool<Candidate, sizeof( Candidate )>::release_memory();
     return GaudiHistoTool::finalize();
 }
 
@@ -101,7 +94,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
     // Make a Candidate from the track
     Candidate veloSeed{ &seed }; 
 
-    unsigned int seedStation = order[0] - 1;
+    unsigned int seedStation = order[0] ;
     findSeeds( veloSeed, seedStation );
 
     for ( Candidate& c : m_seeds ) addHits( c );
@@ -130,6 +123,7 @@ StatusCode MatchVeloMuon::tracksFromTrack( const LHCb::Track& seed,
             tracks.push_back( const_cast<LHCb::Track*>( &seed ) );
         }
     } else {
+        //TODO: instead of the best, shouldn't we take everything below m_maxChiDoFX??
         auto best =
             std::min_element( std::begin(m_seeds), std::end(m_seeds),
                               []( const Candidate& lhs, const Candidate& rhs ) {
@@ -161,7 +155,7 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
     veloSeed.yStraight( zMagnet, yMagnet, errYMagnet );
 
     LHCb::MuonTileID id;
-    m_magnetHit.reset(  new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. ) );
+    m_magnetHit.reset( new Hlt1MuonHit( id, xMagnet, errXMagnet, yMagnet, errYMagnet, zMagnet, 0. ) );
 
     double dSlope = dtx( m_minMomentum );
     const Hlt1MuonStation& station = m_hitManager->station( seedStation );
@@ -221,9 +215,9 @@ void MatchVeloMuon::addHits( Candidate& seed )
     double xMagnet = m_magnetHit->x();
 
     unsigned int nMissed = 0;
-    for ( unsigned int i = 1; i < order.size(); ++i ) {
+    for ( unsigned int i = 1; i < order.size() && nMissed <= m_maxMissed; ++i ) {
         // find candidate hits
-        unsigned int s = order[i] - 1;
+        unsigned int s = order[i] ;
 
         // Get the station we're looking at.
         const Hlt1MuonStation& station = m_hitManager->station( s );
@@ -232,7 +226,7 @@ void MatchVeloMuon::addHits( Candidate& seed )
         // Calculate window in x and y for this station
         double yMuon = 0., yRange = 0;
         seed.yStraight( zStation, yMuon, yRange );
-        yRange = m_yWindow;
+        yRange = m_yWindow; // TODO: isn't this supposed to by yRange += m_yWindow ??
 
         const double yMin = yMuon - yRange;
         const double yMax = yMuon + yRange;
@@ -246,14 +240,15 @@ void MatchVeloMuon::addHits( Candidate& seed )
         // Look for the closest hit inside the search window
         const Hlt1MuonHit* closest = nullptr;
         double minDist2 = 0;
+
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             if ( !station.overlaps(r, xMin, xMax, yMin, yMax ) ) continue;
-
             for ( const Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax,  s, r ) ) {
                 if ( hit->y() > yMax || hit->y() < yMin ) continue;
 
-                double dist2 = ( xMuon - hit->x() ) * ( xMuon - hit->x() ) +
-                               ( yMuon - hit->y() ) * ( yMuon - hit->y() );
+                auto dx = xMuon - hit->x();
+                auto dy = yMuon - hit->y();
+                double dist2 = dx * dx + dy * dy;
                 if ( !closest || dist2 < minDist2 ) {
                     closest = hit;
                     minDist2 = dist2;
@@ -266,7 +261,6 @@ void MatchVeloMuon::addHits( Candidate& seed )
         } else {
             ++nMissed;
         }
-        if ( nMissed > m_maxMissed ) break;
     }
     // If a new candidate is good, fit it.
     if ( nMissed <= m_maxMissed ) fitCandidate( seed );

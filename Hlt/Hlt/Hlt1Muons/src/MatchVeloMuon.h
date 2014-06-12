@@ -34,14 +34,12 @@ class MatchVeloMuon : public GaudiHistoTool, virtual public ITracksFromTrack
     MatchVeloMuon( const std::string& type, const std::string& name,
                    const IInterface* parent );
 
-    virtual ~MatchVeloMuon(); ///< Destructor
 
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
+    StatusCode finalize() override;
 
-    virtual StatusCode finalize();
-
-    virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
-                                        std::vector<LHCb::Track*>& tracks );
+    StatusCode tracksFromTrack( const LHCb::Track& seed,
+                                std::vector<LHCb::Track*>& tracks ) override;
 
   private:
     // Properties

@@ -3,6 +3,11 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-06-12 - Gerhard Raven
+ - Hlt1MuonHit: replace individual doubles by std::array<double,6>
+ - Candidate: remove unused constructor
+ - MatchVeloMuon: remove unused singleton_pool of Candidates
+
 ! 2014-06-11 - Gerhard Raven
  - IsMuonTool: replace std::vector by std::array
  - remove obsolete Hlt1MuonRegion.h

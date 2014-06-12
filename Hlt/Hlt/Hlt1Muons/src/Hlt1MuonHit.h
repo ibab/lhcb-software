@@ -22,7 +22,7 @@ class Hlt1MuonHit final // please do not inherit from this class...
 
     Hlt1MuonHit( const LHCb::MuonTileID& tile, double x, double dx, double y,
                  double dy, double z, double dz )
-        : m_x{x}, m_y{y}, m_dx{dx}, m_z{z}, m_dy{dy}, m_dz{dz}, m_tile{tile}
+        : m_params{x,y,dx,z,dy,dz}, m_tile{tile}
     {
     }
 
@@ -36,27 +36,27 @@ class Hlt1MuonHit final // please do not inherit from this class...
     }
     double x() const
     {
-        return m_x;
+        return m_params[0];
     }
     double dx() const
     {
-        return m_dx;
+        return m_params[2];
     }
     double y() const
     {
-        return m_y;
+        return m_params[1];
     }
     double dy() const
     {
-        return m_dy;
+        return m_params[4];
     }
     double z() const
     {
-        return m_z;
+        return m_params[3];
     }
     double dz() const
     {
-        return m_dz;
+        return m_params[5];
     }
 
     /// operator new
@@ -77,13 +77,7 @@ class Hlt1MuonHit final // please do not inherit from this class...
     }
 
   private:
-    double m_x;
-    double m_y;
-    double m_dx;
-
-    double m_z;
-    double m_dy;
-    double m_dz;
+    std::array<double,6> m_params;
     LHCb::MuonTileID m_tile;
 };
 
