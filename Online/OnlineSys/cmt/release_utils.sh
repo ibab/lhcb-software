@@ -3,7 +3,7 @@ make_tag()
 {
     if test "$1" != "";
     then
-	echo "+++ Package name = $1";
+	echo "+++ Package name = Online/$1";
     else
 	echo "+++ The first argument to make_tag must be the package name";
     fi;
@@ -46,7 +46,7 @@ remove_tag()
 {
     if test "$1" != "";
     then
-	echo "+++ Package name = $1";
+	echo "+++ Package name = Online/$1";
     else
 	echo "+++ The first argument to make_tag must be the package name";
     fi;
