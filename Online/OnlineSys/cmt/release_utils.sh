@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "+++"
+echo "+++ Define macro \$> make_tag <Package-without-hat> <version> "
 make_tag()
 {
     if test "$1" != "";
@@ -41,7 +43,8 @@ make_tag()
     tag_package Online/$1 $2;
     cd ${ONLINESYSROOT}/cmt;
 }
-
+echo "+++"
+echo "+++ Define macro \$> remove_tag <Package-without-hat> <version> "
 remove_tag()
 {
     if test "$1" != "";
@@ -80,3 +83,4 @@ remove_tag()
     echo "+++ Removing tag from package: Online/$1 $2 ";
     svn rm -m "Need to remove tag Online/$1 version $2" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/Online/${1}/${2};
 }
+echo "+++"

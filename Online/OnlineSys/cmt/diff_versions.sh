@@ -8,7 +8,8 @@ setup.
 cleanup.
 .history
 x86_64-slc5-gcc
-x86_64-slc5-gcc
+x86_64-slc6-gcc
+version.cmt
 .pyc
 .ph
 .pp
