@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-06-11 - Heinrich Schindler
+ - Change content of PixelPositionInfo struct.
+
 !========================= LHCbKernel v15r2 2014-05-12 ========================
 ! 2014-05-03 - Heinrich Schindler
  - Add file VPConstants.h.

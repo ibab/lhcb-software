@@ -11,6 +11,8 @@ static const unsigned int NColumns = 256;
 static const unsigned int NSensorColumns = NColumns * NChipsPerSensor; 
 static const unsigned int NPixelsPerSensor = NSensorColumns * NRows;
 
+static const double Pitch = 0.055;
+
 }
 
 #endif
