@@ -4,6 +4,9 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+! 2014-06-11 - Heinrich Schindler
+ - Simplified error parameterisation based on cluster size.
+
 !========================= VPTools v2r3 2014-05-13 =========================
 ! 2014-04-01 - Heinrich Schindler
  - Remove VPClusterPosition::position functions with VPLiteCluster as argument
