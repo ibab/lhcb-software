@@ -165,7 +165,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
-            f.write(svc+".MyName  = \"<part>_"+s+"_00\";\n")
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
