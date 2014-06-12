@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-06-12 - Gerhard Raven
+ - remove unused parts of TrackingOnly settings
+
 ! 2014-04-28 - Sebastian Neubert
  - Add Hlt1_ and Hlt2_ versions of TrackingOnly settings
 
