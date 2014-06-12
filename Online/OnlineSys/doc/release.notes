@@ -6,7 +6,25 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v5r5>2014-04-14 OnlineSys v5r8</A></H1>
+
+<H1><A NAME=v5r9>2014-06-12 OnlineSys v5r9</A></H1>
+<PRE>
+  Use new Gaudi v25r2
+  Updated/new packages:	
+     Camera              v1r26    Online
+     Controller          v0r11    Online
+     DefHLTUtils         v1r8     Online
+     EventBuilder        v0r1     Online (NEW)
+     FarmConfig          v0r6     Online
+     GauchoAppl          v1r14    Online
+     GaudiCheckpointing  v0r16    Online
+     GaudiOnline         v2r70    Online
+     GaudiSerialize      v0r13    Online
+     OnlineBase          v1r22    Online
+     ROMon               v1r46    Online
+</PRE>
+
+<H1><A NAME=v5r8>2014-04-14 OnlineSys v5r8</A></H1>
 <PRE>
   Use new Gaudi v25r1
   This release is compatible with the cmake build
@@ -23,7 +41,7 @@
      XML                 v0r4     Online
 </PRE>
 
-<H1><A NAME=v5r5>2014-02-21 OnlineSys v5r7</A></H1>
+<H1><A NAME=v5r7>2014-02-21 OnlineSys v5r7</A></H1>
 <PRE>
   Use new Gaudi v25r0
   This release is compatible with the cmake build
@@ -67,7 +85,7 @@
      XML                 v0r3     Online
 </PRE>
 
-<H1><A NAME=v5r5>2013-06-12 OnlineSys v5r6</A></H1>
+<H1><A NAME=v5r6>2013-06-12 OnlineSys v5r6</A></H1>
 <PRE>
   Use new Gaudi v24r2
   Updated/new packages:	
