@@ -97,7 +97,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   if(!flag_nnetTaggers && !flag_CharmTagger)  
     pnsum = 1 - m_P0_Cal_OS - m_P1_Cal_OS * ( (1-pnsum)-m_Eta_Cal_OS);
-  if(flag_nnetTaggers && !flag_CharmTagger)  
+  else if(flag_nnetTaggers && !flag_CharmTagger)  
     pnsum = 1 - m_P0_Cal_OSnnet - m_P1_Cal_OSnnet * ( (1-pnsum)-m_Eta_Cal_OSnnet);
   else 
   {

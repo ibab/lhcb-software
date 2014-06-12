@@ -6,6 +6,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-06-12 - Stefania Vecchi
+ - fix printouts
 ! 2014-06-11 - Stefania Vecchi
  - updated Reco14 calibration for SSpion, nnetOSK and OS combination with nnetOSK 
 
