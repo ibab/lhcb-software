@@ -11,6 +11,8 @@
 <PRE>
   Use new Gaudi v25r2
   Updated/new packages:	
+     DAQEvent            v9r15    Event
+     GaudiObjDesc        v11r20
      Camera              v1r26    Online
      Controller          v0r11    Online
      DefHLTUtils         v1r8     Online
