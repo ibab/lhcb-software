@@ -4,6 +4,9 @@
 ! Purpose     : Interfaces previously in TrackInterfaces but needed in Lbcom
 !-----------------------------------------------------------------------------
 
+! 2014-06-06 - Heinrich Schindler
+ - Adapt IVPClusterInterface to modified PixelPositionInfo format (r173748).
+
 !========================= LHCbTrackInterfaces v2r1 2014-05-12 ===================
 ! 2014-04-01 - Heinrich Schindler
  - Remove functions using VPLiteCluster from IVPClusterPosition interface.
