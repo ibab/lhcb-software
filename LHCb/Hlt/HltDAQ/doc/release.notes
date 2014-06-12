@@ -4,6 +4,17 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-12 - Gerhard Raven
+ - change policy on warning messages from HltTrackReportsWriter: if the
+   configures TES location doesn't exist, keep score but don't print a
+   warning i.e.  'nothing in' => 'nothing out and shut up'.
+   Underlying reason for this policy is that the HltTrackReportsWriter runs
+   in the EndSequence, blind to the various trigger line decisions. Hence
+   sometimes, depending on the lines firing, there may not be any tracks
+   reconstructed, and in other case there may. Hence absence of input TES
+   location is not always a sign of a misconfiguration, and thus needs to
+   be dealt with 'silently'.
+
 !========================= HltDAQ v4r4 2014-06-10 =========================
 ! 2014-06-06 - Gerhard Raven
  - better use of IANNSvc interface

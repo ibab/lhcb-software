@@ -70,7 +70,7 @@ StatusCode HltLumiWriter::execute() {
 
   int totDataSize = 0;
 
-  LHCb::RawEvent* rawEvent = 0;
+  LHCb::RawEvent* rawEvent = nullptr;
   auto iLoc = m_rawEventLocations.begin();
   for ( ; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
     //    try RootInTES independent path first

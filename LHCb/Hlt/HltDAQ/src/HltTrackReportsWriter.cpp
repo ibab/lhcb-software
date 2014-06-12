@@ -62,8 +62,6 @@ StatusCode HltTrackReportsWriter::initialize() {
     m_sourceID = m_sourceID & kSourceID_Max;
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
   }
-
-
   return StatusCode::SUCCESS;
 }
 
@@ -76,16 +74,16 @@ StatusCode HltTrackReportsWriter::execute() {
   ++m_callcount;
 
   // get input
-  if( !exist<LHCb::Tracks>(m_inputHltTrackLocation) ){    
-    return Warning( " No tracks at " + m_inputHltTrackLocation.value(), StatusCode::SUCCESS, 20 );
+  const LHCb::Tracks* inputTracks = getIfExists<LHCb::Tracks>( m_inputHltTrackLocation ); 
+  if( !inputTracks ) {
+    return Warning( " No tracks at " + m_inputHltTrackLocation.value(), StatusCode::SUCCESS, 0 );
   }  
-  const LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputHltTrackLocation ); 
 
   // get output
-  if( !exist<RawEvent>(m_outputRawEventLocation) ){    
+  RawEvent* rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
+  if( !rawEvent ) {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
   
   
 
@@ -163,4 +161,3 @@ StatusCode HltTrackReportsWriter::execute() {
 
   return StatusCode::SUCCESS;
 }
-
