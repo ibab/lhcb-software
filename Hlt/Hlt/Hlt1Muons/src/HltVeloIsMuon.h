@@ -41,8 +41,6 @@ class HltVeloIsMuon : public extends1<GaudiHistoTool, ITracksFromTrack>
     HltVeloIsMuon( const std::string& type, const std::string& name,
                    const IInterface* parent );
 
-    ~HltVeloIsMuon() override; ///< Destructor
-
     StatusCode initialize() override;
     StatusCode finalize() override;
     StatusCode tracksFromTrack( const LHCb::Track& seed,

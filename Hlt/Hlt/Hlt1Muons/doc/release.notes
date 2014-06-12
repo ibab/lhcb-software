@@ -7,6 +7,9 @@
  - Hlt1MuonHit: replace individual doubles by std::array<double,6>
  - Candidate: remove unused constructor
  - MatchVeloMuon: remove unused singleton_pool of Candidates
+ - Utilize move semantics to Keep the original Hlt1MuonHit-s by 
+   value in vector in HitManager & MuonStation for simpler/better
+   memory managment / layout
 
 ! 2014-06-11 - Gerhard Raven
  - IsMuonTool: replace std::vector by std::array

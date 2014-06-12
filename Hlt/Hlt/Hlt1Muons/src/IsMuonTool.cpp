@@ -127,7 +127,7 @@ StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track& track,
         // Add found hits to track
         LHCb::Track* output = track.clone();
         tracks.push_back( output );
-        for ( const Hlt1MuonHit* hit : hits ) {
+        for ( const auto& hit : hits ) {
             output->addToLhcbIDs( LHCb::LHCbID{hit->tile()} );
         }
     }
@@ -197,11 +197,11 @@ Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
                                    p.first *= sf ; p.second *= sf; 
                 } );
             }
-        bool operator()(const Hlt1MuonHit* hit) const {
-                auto region = hit->tile().region();
+        bool operator()(const Hlt1MuonHit& hit) const {
+                auto region = hit.tile().region();
                 assert(region<4);
-                return ( fabs( hit->x() - m_center.first  ) < m_foi[region].first ) &&
-                       ( fabs( hit->y() - m_center.second ) < m_foi[region].second ) ;
+                return ( fabs( hit.x() - m_center.first  ) < m_foi[region].first ) &&
+                       ( fabs( hit.y() - m_center.second ) < m_foi[region].second ) ;
         }
     };
 
@@ -222,9 +222,9 @@ Hlt1ConstMuonHits IsMuonTool::findHits( const LHCb::Track& track )
         const auto& station = m_hitManager->station( s );
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             auto hr =  m_hitManager->hits( -m_regionOuter[s].first, s, r ); // TODO: no xMax?? +m_regionOuter[s].first ?? Maybe drop xMin???
-            std::copy_if( std::begin(hr), std::end(hr),
-                          std::back_inserter(hits),
-                          predicate );
+            std::for_each( std::begin(hr), std::end(hr), [&](const Hlt1MuonHit& hit) {
+                if (predicate(hit)) hits.push_back(&hit);
+            } );
         }  // region
         m_occupancy[s] = hits.size(); // at this point: cumulative over stations upto s
     } // station

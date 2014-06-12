@@ -59,29 +59,12 @@ class Hlt1MuonHit final // please do not inherit from this class...
         return m_params[5];
     }
 
-    /// operator new
-    static void* operator new( size_t size )
-    {
-        return (
-            sizeof( Hlt1MuonHit ) == size
-                ? boost::singleton_pool<Hlt1MuonHit, sizeof( Hlt1MuonHit )>::malloc()
-                : ::operator new( size ) );
-    }
-
-    /// operator delete
-    static void operator delete( void* p )
-    {
-        boost::singleton_pool<Hlt1MuonHit, sizeof( Hlt1MuonHit )>::is_from( p )
-            ? boost::singleton_pool<Hlt1MuonHit, sizeof( Hlt1MuonHit )>::free( p )
-            : ::operator delete( p );
-    }
-
   private:
     std::array<double,6> m_params;
     LHCb::MuonTileID m_tile;
 };
 
-typedef std::vector<Hlt1MuonHit*> Hlt1MuonHits;
+typedef std::vector<Hlt1MuonHit> Hlt1MuonHits;
 typedef std::vector<const Hlt1MuonHit*> Hlt1ConstMuonHits;
 typedef const Gaudi::Range_<Hlt1MuonHits> Hlt1MuonHitRange;
 typedef const Gaudi::Range_<Hlt1ConstMuonHits> Hlt1ConstMuonHitRange;

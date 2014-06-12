@@ -65,12 +65,6 @@ Hlt::HltVeloIsMuon::HltVeloIsMuon( const std::string& type, const std::string& n
 }
 
 //=============================================================================
-Hlt::HltVeloIsMuon::~HltVeloIsMuon()
-{
-    boost::singleton_pool<Candidate, sizeof( Candidate )>::release_memory();
-}
-
-//=============================================================================
 StatusCode Hlt::HltVeloIsMuon::initialize()
 {
     StatusCode sc = GaudiHistoTool::initialize();
@@ -246,8 +240,17 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
-            for ( Hlt1MuonHit* hit : hits ) {
-                debug() << hit->x() << " " << hit->y() << endmsg;
+            for ( const auto& hit : hits ) {
+                debug() << hit.x() << " " << hit.y() << endmsg;
+            }
+        }
+        for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
+            if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue;
+            // Get hits
+            auto hits = m_hitManager->hits( xMin, xMax, seedStation, r );
+            debug() << "Hits in seed region " << r << ":" << endmsg;
+            for ( const auto& hit : hits ) {
+                debug() << hit.x() << " " << hit.y() << endmsg;
             }
         }
     }
@@ -255,28 +258,16 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
     for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
         if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue;
 
-        // Get hits
-        Hlt1MuonHitRange hits = m_hitManager->hits( xMin, xMax, seedStation, r );
-        if ( msgLevel( MSG::DEBUG ) ) {
-            debug() << "Hits in seed region " << r << ":" << endmsg;
-            for ( Hlt1MuonHit* hit : hits ) {
-                debug() << hit->x() << " " << hit->y() << endmsg;
-            }
-        }
-
-        if ( hits.empty() ) continue;
-
         // add seed hits to container
-        for ( Hlt1MuonHit* hit : hits ) {
-            if ( hit->y() > yMax || hit->y() < yMin ) continue;
+        for ( const auto& hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
+            if ( hit.y() > yMax || hit.y() < yMin ) continue;
 
             m_seeds.emplace_back(  veloSeed );
             Candidate& seed = m_seeds.back();
             seed.addHit( m_magnetHit.get() );
-            seed.addHit( hit );
-            seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
+            seed.addHit( &hit );
+            seed.slope() = ( hit.x() - xMagnet ) / ( hit.z() - zMagnet );
             seed.p() = momentum( seed.slope() - seed.tx() );
-
         }
     }
 }
@@ -325,16 +316,16 @@ void Hlt::HltVeloIsMuon::addHits( Candidate& seed )
         double minDist2 = 0;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             if ( !station.overlaps( r,  xMin, xMax, yMin, yMax ) ) continue; // TODO: move into loop control...
-            for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, s, r ) ) {
+            for ( const auto& hit : m_hitManager->hits( xMin, xMax, s, r ) ) {
                 // Take the actual FoI into account
-                unsigned int r = hit->tile().region();
-                auto dx = hit->x()-xMuon;
-                auto dy = hit->y()-yMuon;
+                unsigned int r = hit.tile().region();
+                auto dx = hit.x()-xMuon;
+                auto dy = hit.y()-yMuon;
                 if ( fabs(dx) > m_regionFoIX[r] ||
                      fabs(dy) > m_regionFoIY[r]  ) continue;
                 auto dist2 = dx*dx + dy*dy ; 
                 if ( !closest || dist2 < minDist2 ) {
-                    closest = hit;
+                    closest = &hit;
                     minDist2 = dist2;
                 }
             }

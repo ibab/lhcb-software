@@ -49,8 +49,8 @@ Hlt1MuonStation::~Hlt1MuonStation()
 Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 {
     auto first = std::find_if( m_index[region], m_index[region+1],
-                          [=]( const Hlt1MuonHit* hit ) {
-                            return ( hit->x() + hit->dx() / 2. ) > xmin;
+                          [=]( const Hlt1MuonHit& hit ) {
+                            return ( hit.x() + hit.dx() / 2. ) > xmin;
     } );
     return { first, m_index[region+1] } ;
 }
@@ -59,13 +59,13 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, double xmax, unsigned int region ) const
 {
     auto first = std::find_if( m_index[region], m_index[region+1],
-                          [=]( const Hlt1MuonHit* hit ) {
-                            return ( hit->x() + hit->dx() / 2. ) > xmin;
+                          [=]( const Hlt1MuonHit& hit ) {
+                            return ( hit.x() + hit.dx() / 2. ) > xmin;
     } );
-    auto last = std::find_if( first, m_index[region+1], [=]( const Hlt1MuonHit* hit) {
+    auto last = std::find_if( first, m_index[region+1], [=]( const Hlt1MuonHit& hit) {
                             //TODO: this weird asymmetry between first, last is for historical reasons...
-                            return hit->x() > xmax;
-                            // return ( hit->x() - hit->dx() / 2.) > xmax;
+                            return hit.x() > xmax;
+                            // return ( hit.x() - hit.dx() / 2.) > xmax;
     } );
     return { first, last };
 }
@@ -78,20 +78,19 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( unsigned int region ) const
 //=============================================================================
 void Hlt1MuonStation::clearHits()
 {
-    for ( Hlt1MuonHit* hit : m_hits ) delete hit;
     m_hits.clear();
 }
 
 //=============================================================================
-void Hlt1MuonStation::setHits( Hlt1MuonHits hts )
+void Hlt1MuonStation::setHits( std::vector<Hlt1MuonHit>&& hts )
 {
     m_hits = std::move(hts);
 
     //TODO: first get rid of invalid hits ( x < xlow, y<ymin, y>ymax )
     // m_hits.erase( std::remove_if( std::begin(m_hits), std::end(m_hits), ... ) );
-    auto by_x = [](const Hlt1MuonHit* lhs, const Hlt1MuonHit* rhs) { return lhs->x() < rhs->x(); };
-    auto y_lt_ = [](double ymax) { return [=]( const Hlt1MuonHit *h ) { return h->y() < ymax; }; };
-    auto x_lt_ = [](double xmax) { return [=]( const Hlt1MuonHit *h ) { return h->x() < xmax; }; };
+    auto by_x = [](const Hlt1MuonHit& lhs, const Hlt1MuonHit& rhs) { return lhs.x() < rhs.x(); };
+    auto y_lt_ = [](double ymax) { return [=]( const Hlt1MuonHit &h ) { return h.y() < ymax; }; };
+    auto x_lt_ = [](double xmax) { return [=]( const Hlt1MuonHit &h ) { return h.x() < xmax; }; };
 
     auto id = std::begin(m_index);
     *id = std::begin(m_hits);
@@ -110,4 +109,3 @@ void Hlt1MuonStation::setHits( Hlt1MuonHits hts )
     assert( *id == std::end(m_hits) );
     assert( std::distance( std::begin(m_index), id ) == m_index.size() );
 }
-

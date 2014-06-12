@@ -183,8 +183,8 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
                 << yMax << ")" << endmsg;
         debug() << "Hits in seed station:" << endmsg;
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
-            for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
-                debug() << hit->x() << " " << hit->y() << endmsg;
+            for ( const auto& hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
+                debug() << hit.x() << " " << hit.y() << endmsg;
             }
         }
     }
@@ -193,14 +193,14 @@ void MatchVeloMuon::findSeeds( const Candidate& veloSeed,
         if ( !station.overlaps( r, xMin, xMax, yMin, yMax ) ) continue; //TODO: push into loop control -- request from station to a range of regions to loop over...
 
         // get hits, and add seed hits to container
-        for ( Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
-            if ( hit->y() > yMax || hit->y() < yMin ) continue;
+        for (const auto& hit : m_hitManager->hits( xMin, xMax, seedStation, r ) ) {
+            if ( hit.y() > yMax || hit.y() < yMin ) continue;
             m_seeds.emplace_back ( veloSeed );
             Candidate& seed = m_seeds.back();
             seed.addHit( m_magnetHit.get() );
-            seed.addHit( hit );
+            seed.addHit( &hit );
 
-            seed.slope() = ( hit->x() - xMagnet ) / ( hit->z() - zMagnet );
+            seed.slope() = ( hit.x() - xMagnet ) / ( hit.z() - zMagnet );
             seed.p() = momentum( seed.slope() - seed.tx() );
 
         }
@@ -243,14 +243,14 @@ void MatchVeloMuon::addHits( Candidate& seed )
 
         for ( unsigned int r = 0; r < station.nRegions(); ++r ) {
             if ( !station.overlaps(r, xMin, xMax, yMin, yMax ) ) continue;
-            for ( const Hlt1MuonHit* hit : m_hitManager->hits( xMin, xMax,  s, r ) ) {
-                if ( hit->y() > yMax || hit->y() < yMin ) continue;
+            for ( const auto& hit : m_hitManager->hits( xMin, xMax,  s, r ) ) {
+                if ( hit.y() > yMax || hit.y() < yMin ) continue;
 
-                auto dx = xMuon - hit->x();
-                auto dy = yMuon - hit->y();
+                auto dx = xMuon - hit.x();
+                auto dy = yMuon - hit.y();
                 double dist2 = dx * dx + dy * dy;
                 if ( !closest || dist2 < minDist2 ) {
-                    closest = hit;
+                    closest = &hit;
                     minDist2 = dist2;
                 }
             }

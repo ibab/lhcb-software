@@ -62,7 +62,7 @@ class Hlt1MuonStation final
   private:
     friend class Hlt1MuonHitManager;
 
-    void setHits( Hlt1MuonHits hts ); // assumes ownership of pointers in vector
+    void setHits( std::vector<Hlt1MuonHit>&&  hts ); // assumes ownership of pointers in vector
 
     inline double dy() const { return 2 * m_ymax / nRegionsY; }
     inline double ymin() const { return -m_ymax; }
@@ -70,8 +70,8 @@ class Hlt1MuonStation final
     void clearHits();
 
     const std::vector<double>  m_xboundaries;
-    Hlt1MuonHits  m_hits; 
-    std::vector<Hlt1MuonHits::iterator> m_index; // indices into m_hits
+    std::vector<Hlt1MuonHit>  m_hits; 
+    std::vector<typename std::vector<Hlt1MuonHit>::iterator> m_index; // indices into m_hits
 
     double m_z;
     double m_ymax;
