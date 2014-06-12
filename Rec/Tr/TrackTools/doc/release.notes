@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-06-12 - Heinrich Schindler
+ - VPMeasurementProvider: follow change in VPMeasurement constructor (r173751).
+
 !========================= TrackTools v5r2 2014-05-13 =========================
 ! 2014-05-07 - Heinrich Schindler
  - VPExpectation: follow change in DeVPSensor::isInActiveArea return type 

@@ -1,3 +1,4 @@
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -5,23 +6,32 @@
 #include "GaudiKernel/IIncidentSvc.h"
 
 #include "TrackInterfaces/IMeasurementProvider.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"
 
-#include "Event/Measurement.h"
-#include "Event/VPMeasurement.h"
-#include "Event/VPCluster.h"
-#include "Event/StateVector.h"
-#include "Event/TrackParameters.h"
-#include "TrackInterfaces/IVPClusterPosition.h"
-#include "TrackKernel/ZTrajectory.h"
+// LHCb
+// Det/VPDet
 #include "VPDet/DeVP.h"
+// Event/DigiEvent
+#include "Event/VPCluster.h"
+// Event/TrackEvent
+#include "Event/Measurement.h"
+#include "Event/StateVector.h"
+// #include "Event/TrackParameters.h"
+// Tr/LHCbTrackInterfaces
+#include "TrackInterfaces/IVPClusterPosition.h"
+
+// Rec
+// Tr/TrackFitEvent
+#include "Event/VPMeasurement.h"
+// Tr/TrackKernel
+#include "TrackKernel/ZTrajectory.h"
 
 /** @class VPMeasurementProvider VPMeasurementProvider.cpp
  *
  * Implementation of VPMeasurementProvider tool
  * see interface header for description
  *
- *  @author Victor Coco based on Wouter Hulsbergen + Stefania Vecchi MuonMeasurmentProvider
+ *  @author Victor Coco 
+ *          based on Wouter Hulsbergen, Stefania Vecchi MuonMeasurementProvider
  *  @date   12/02/2010
  */
 
@@ -42,6 +52,7 @@ public:
 
   /// Measurement for single hits
   LHCb::Measurement* measurement(const LHCb::LHCbID& id, bool localY) const; 
+  /// Measurement for single hits with known trajectory
   LHCb::Measurement* measurement(const LHCb::LHCbID& id, 
                                  const LHCb::ZTrajectory& ref, bool localY) const;
   double nominalZ(const LHCb::LHCbID& id) const;
@@ -57,10 +68,12 @@ public:
 
 private:
 
+  /// On-demand access to clusters.
   const LHCb::VPClusters* clusters() const;
 
+  /// Pointer to detector element
   mutable DeVP* m_det;
-  ToolHandle<IVPClusterPosition> m_positiontool;
+  ToolHandle<IVPClusterPosition> m_positionTool;
   std::string m_clusterLocation;
   mutable LHCb::VPClusters* m_clusters;
 
@@ -69,16 +82,19 @@ private:
 DECLARE_TOOL_FACTORY(VPMeasurementProvider)
 
 //=============================================================================
-/// Standard constructor, initializes variables
+// Standard constructor, initializes variables
 //=============================================================================
 VPMeasurementProvider::VPMeasurementProvider(const std::string& type,
                                              const std::string& name,
-                                            const IInterface* parent) :
+                                             const IInterface* parent) :
     GaudiTool(type, name, parent),
     m_det(NULL),
-    m_positiontool("VPClusterPosition") {
+    m_positionTool("VPClusterPosition"),
+    m_clusters(NULL) {
+
   declareInterface<IMeasurementProvider>(this);
-  declareProperty("ClusterLocation", m_clusterLocation = LHCb::VPClusterLocation::Default);
+  declareProperty("ClusterLocation", 
+                  m_clusterLocation = LHCb::VPClusterLocation::Default);
 
 }
 
@@ -90,8 +106,8 @@ StatusCode VPMeasurementProvider::initialize() {
   if (sc.isFailure()) {
     return Error("Failed to initialize!", sc);
   }
-  // Retrieve the postion tool
-  sc = m_positiontool.retrieve();
+  // Retrieve the position tool
+  sc = m_positionTool.retrieve();
   if (sc.isFailure()) { 
     return Error("Failed to initialize position tool!", sc); 
   }
@@ -108,7 +124,7 @@ StatusCode VPMeasurementProvider::initialize() {
 //=============================================================================
 void VPMeasurementProvider::handle(const Incident& incident) {
 
-  if (IncidentType::BeginEvent == incident.type()) m_clusters = 0;
+  if (IncidentType::BeginEvent == incident.type()) m_clusters = NULL;
 
 }
 
@@ -127,7 +143,7 @@ const LHCb::VPClusters* VPMeasurementProvider::clusters() const {
 //=============================================================================
 LHCb::Measurement* VPMeasurementProvider::measurement(const LHCb::LHCbID& id, bool localY) const {
 
-  LHCb::Measurement* meas(0);
+  LHCb::Measurement* meas(NULL);
   if (!id.isVP()) {
     error() << "Not a VP measurement" << endmsg;
     return meas;
@@ -136,11 +152,12 @@ LHCb::Measurement* VPMeasurementProvider::measurement(const LHCb::LHCbID& id, bo
   if (cluster) {
     LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
       LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
-    meas = new LHCb::VPMeasurement(*m_det, *cluster, *m_positiontool, dir);
+    LHCb::VPPositionInfo info = m_positionTool->position(cluster);
+    meas = new LHCb::VPMeasurement(*cluster, info, dir);
   } else {
     error() << "Cannot find cluster for id " << id << endmsg ;
   }
-  return meas ;
+  return meas;
 
 }
 
@@ -161,8 +178,9 @@ LHCb::Measurement* VPMeasurementProvider::measurement(const LHCb::LHCbID& id,
     LHCb::VPMeasurement::VPMeasurementType dir = localY ? 
       LHCb::VPMeasurement::Y : LHCb::VPMeasurement::X;
     double z = nominalZ(id);
-    LHCb::StateVector refvector = ref.stateVector(z);
-    meas = new LHCb::VPMeasurement(*m_det, *cluster, *m_positiontool, dir, refvector);
+    LHCb::StateVector sv = ref.stateVector(z);
+    LHCb::VPPositionInfo info = m_positionTool->position(cluster, sv.position(), sv.tx(), sv.ty());
+    meas = new LHCb::VPMeasurement(*cluster, info, dir);
   } else {
     error() << "Cannot find cluster for id " << id << endmsg ;
   }
