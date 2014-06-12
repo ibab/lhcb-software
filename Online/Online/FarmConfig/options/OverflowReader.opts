@@ -10,7 +10,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 //
 EventLoopMgr.Wait                    = 1;
 //
-Runable.Buffer                       = @OnlineEnv.MEPRx_Output;
+Runable.Buffer                       = @OnlineEnv.MEPrx_Output;
 Runable.DeleteFiles                  =  true;
 Runable.Directory                    = "/localdisk/overflow";
 Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
@@ -18,7 +18,7 @@ Runable.BrokenHosts                  = "/group/online/dataflow/brokendisks";
 //
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
-MEPManager.Buffers                   = @OnlineEnv.MEPRx_Buffers;
+MEPManager.Buffers                   = @OnlineEnv.MEPrx_Buffers;
 MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
 MEPManager.ConnectWhen               = "initialize";
 //

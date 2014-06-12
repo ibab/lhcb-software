@@ -43,12 +43,12 @@ OverflowAdder.AdderClass             = "Counter";
 
 MEPrxHistAdder.MyName                = "<node>_MEPrx";
 MEPrxHistAdder.ServicePattern        = "MON_<node>_MEPrx_(.*)/Histos/";
-MEPrxHistAdder.TaskPattern           = "<node>_MEPRx_";
+MEPrxHistAdder.TaskPattern           = "<node>_MEPrx_";
 MEPrxHistAdder.AdderClass            = "hists";
 
 MEPrxCountAdder.MyName               = "<node>_MEPrx";
 MEPrxCountAdder.ServicePattern       = "MON_<node>_MEPrx_(.*)/Counter/";
-MEPrxCountAdder.TaskPattern          = "<node>_MEPRx_";
+MEPrxCountAdder.TaskPattern          = "<node>_MEPrx_";
 MEPrxCountAdder.AdderClass           = "Counter";
 
 EVTProdCountAdder.MyName             = "<node>_EVTProd";

@@ -1,5 +1,5 @@
 #pragma print off
-#include "$FARMCONFIG_OPTIONS/MEPRx.opts"
+#include "$FARMCONFIG_OPTIONS/MEPrx.opts"
 Runable.nameLiveBuf       = "Events";
 Runable.overflow          = false;        //  do not use overflow 
 Runable.sockBuf           = 67108864;
