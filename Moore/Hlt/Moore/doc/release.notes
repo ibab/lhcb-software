@@ -4,6 +4,11 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-06-12 - Gerhard Raven
+ - revert change as to which file defines the default threshold 
+   used in hlt1only.qmt and hlt2after1.qmt as the relevant python
+   files do not exist
+
 ! 2014-06-05 - Sebastian Neubert
  - added scripts to create a local HLT1 tck for tests
  - When creating a tck Moore takes the thresholds from HltConf now
