@@ -36,7 +36,7 @@ class MooreExpert(LHCbConfigurableUser):
         , 'WriteFSR'    :  True #copy FSRs as required
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
-        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite'
+        , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
         , "Hlt2Independent" : False #"Gerhard's Sledgehammer", auto pass all TOS links from HLT1->HLT2 when run alone, and also turn off HLT1 track decoding
         , "DisableMonitors" : False #Disable HLT monitoring
         }
@@ -718,28 +718,20 @@ class Moore(LHCbConfigurableUser):
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
             # TODO: shunt lumi nano events...
-            # globally prepend Decoders for Hlt1...
+            # globally prepend Decoders for Hlt1... 
+            # TODO: this MUST move into HltConf...
             # TODO: find a better way of doing this... ditto for L0 decoding...I should have been able to suppress this stuff! 
-            from DAQSys.Decoders import DecoderDB
-            
-            dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
-            decAlg=dec.setup()
-            seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), decAlg )
-            
-            if not MooreExpert().getProp("Hlt2Independent"):
-                tr=DecoderDB["HltTrackReportsDecoder/VeloDecoder"]
-                tr.active = True
-                trAlg=tr.setup()
-                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), trAlg )
-                forwardDec=DecoderDB["HltTrackReportsDecoder/ForwardDecoder"]
-                forwardDec.active = True
-                forwardDecAlg=tr.setup()
-                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), forwardDecAlg )
-            
-            sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
-            selAlg=sel.setup()
-            seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), selAlg )
-                
+            def appendDecoder(decoder) :
+                from DAQSys.Decoders import DecoderDB
+                dc = DecoderDB[ decoder ]
+                dc.active = True
+                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), dc.setup() )
+
+            decoders = [ "HltSelReportsDecoder/Hlt1SelReportsDecoder", "HltDecReportsDecoder/Hlt1DecReportsDecoder" ]
+            if not MooreExpert().getProp("Hlt2Independent") :
+                decoders += [ "HltTrackReportsDecoder/VeloDecoder", "HltTrackReportsDecoder/ForwardDecoder" ] 
+            for decoder in decoders : appendDecoder( decoder )
+
             # shunt Hlt1 decreports
             from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
