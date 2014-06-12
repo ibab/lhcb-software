@@ -354,6 +354,9 @@ class Moore(LHCbConfigurableUser):
         if method == 'zipfile' :
             from Configurables import ConfigZipFileAccessSvc
             return ConfigZipFileAccessSvc( File = TCKData +'/config.zip' )
+        if method == 'cdb' :
+            from Configurables import ConfigCDBAccessSvc
+            return ConfigCDBAccessSvc( File = TCKData +'/config.cdb' )
         raise TypeError("invalid TCK persistency '%s'"%method)
 
     def addAuditor(self,x) :
@@ -581,7 +584,7 @@ class Moore(LHCbConfigurableUser):
         settings = Name2Threshold(HltConf().getProp('ThresholdSettings'))
         svcs = MooreExpert().getProp("configServices")
         algs = MooreExpert().getProp("configAlgorithms")
-        if MooreExpert().getProp('TCKpersistency').lower() == 'tarfile' :
+        if MooreExpert().getProp('TCKpersistency').lower() in [ 'tarfile', 'zipfile', 'cdb' ] :
             self.getConfigAccessSvc().Mode = 'ReadWrite'
             #self.getConfigAccessSvc().OutputLevel = 1
         

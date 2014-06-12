@@ -9,6 +9,7 @@
    used in hlt1only.qmt and hlt2after1.qmt as the relevant python
    files do not exist
  - streamline insertion of Hlt1 decoders when running Hlt2 only
+ - add 'cdb' as TCK persistence technology
 
 ! 2014-06-05 - Sebastian Neubert
  - added scripts to create a local HLT1 tck for tests
