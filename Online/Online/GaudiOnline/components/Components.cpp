@@ -16,8 +16,6 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPOverflowWriterSvc)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMCnvSvc)
 #include "GaudiOnline/NetworkEvtSelector.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,NetworkEvtSelector)
-#include "GaudiOnline/SLICEReaderSvc.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,SLICEReaderSvc)
 #include "GaudiOnline/MEPManager.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPManager)
 #include "GaudiOnline/DimErrorLogger.h"
@@ -48,15 +46,9 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFSender)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MemMonitorSvc)
 #include "GaudiOnline/GaudiTask.h"
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
-#include "GaudiOnline/MEPRxSvc.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPRxSvc)
 #include "GaudiOnline/OnlineRunable.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 #include "GaudiOnline/PanoramixSim.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PanoramixSim)
 #include "GaudiOnline/GaudiDeamon.h"
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiDeamon)
-#include "GaudiOnline/MEPErrorAdder.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPErrorAdder)
-#include "GaudiOnline/PublishSvc.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PublishSvc)

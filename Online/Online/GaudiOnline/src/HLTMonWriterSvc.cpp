@@ -14,7 +14,6 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiOnline/HLTMonWriterSvc.h"
 #include "GaudiOnline/MEPManager.h"
-#include "GaudiOnline/DAQError.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "Event/ODIN.h"
