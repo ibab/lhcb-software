@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-13 - Gerhard Raven
+ - implement same policy on warning messages in HltTrackReportsDecoder
+ - use more STL in HltTrackReportsDecoder
+
 ! 2014-06-12 - Gerhard Raven
  - change policy on warning messages from HltTrackReportsWriter: if the
    configures TES location doesn't exist, keep score but don't print a

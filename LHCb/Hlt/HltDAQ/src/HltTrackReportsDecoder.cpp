@@ -112,66 +112,57 @@ StatusCode HltTrackReportsDecoder::execute() {
   // ----------------------------------------------------------
   // get the bank from RawEvent
   // ----------------------------------------------------------
-
-  const std::vector<RawBank*> hltTrackReportsRawBanks = rawEvent->banks( RawBank::HltTrackReports);
-  if( !hltTrackReportsRawBanks.size() ){
-    return Warning( " No HltTrackReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
-  }
-
-  // collect possibly split up banks
-  unsigned int bankCounterMax = 0;
-  unsigned int bankSize =0; // this will be the total size of the bank
-  // store the pieces of the bank with the correct major sourceID in an ordered list:
-  std::vector<const RawBank*> orderedBanks(hltTrackReportsRawBanks.size(),(const RawBank*)0);
-  for( RawBank* trbank : hltTrackReportsRawBanks ){    
-    RawBank* bank = trbank;
-
-    int sourceID = bank->sourceID() >> HltTrackReportsWriter::kSourceID_BitShift;
-    if( m_sourceID != sourceID )continue; // Not our major SourceID a.k.a different tracks
-
-    if( bank->magic() != RawBank::MagicPattern ){
-      Error(" HltTrackReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
-      continue;
-    }
-
-    // which piece of the bank is that?
-    unsigned int bankCounter = bank->sourceID() & HltTrackReportsWriter::kSourceID_MinorMask;
-    if( bankCounter < hltTrackReportsRawBanks.size() ){
-      orderedBanks[bankCounter]= bank;
-      if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
-    } else {
-      Error( " Illegal Source ID HltTrackReports bank skipped ", StatusCode::SUCCESS, 20 );
-    }
-    bankSize += bank->size();
-  }
-  if( !bankSize ){
-    return Warning( " No HltTrackReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  std::vector<RawBank*> hltTrackReportsRawBanks = rawEvent->banks( RawBank::HltTrackReports );
+  hltTrackReportsRawBanks.erase( std::remove_if( std::begin( hltTrackReportsRawBanks ), std::end( hltTrackReportsRawBanks ),
+                                                 [&](const RawBank* bank) {
+                int sourceID = bank->sourceID() >> HltTrackReportsWriter::kSourceID_BitShift;
+                if( m_sourceID != sourceID ) return false; // Not our major SourceID a.k.a different tracks
+                if( bank->magic() != RawBank::MagicPattern ){
+                  Error(" HltTrackReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+                  return false;
+                }
+                return true;
+                                                 }),
+                                 std::end(hltTrackReportsRawBanks) );
+  // collect possibly split up banks -- first put them into the right order
+  std::sort( std::begin(hltTrackReportsRawBanks), std::end(hltTrackReportsRawBanks), 
+             []( const RawBank* lhs, const RawBank* rhs) {
+    auto c1 = lhs->sourceID() & HltTrackReportsWriter::kSourceID_MinorMask;
+    auto c2 = rhs->sourceID() & HltTrackReportsWriter::kSourceID_MinorMask;
+    return c1 < c2 ;
+  });
+  // verify all present in expected order...
+  bool ok = true;
+  std::accumulate( std::begin(hltTrackReportsRawBanks), std::end(hltTrackReportsRawBanks), 0u, 
+                              [&ok] (unsigned int i, const RawBank* b ) {  
+     ok = ok && ( i == ( b->sourceID() & HltTrackReportsWriter::kSourceID_MinorMask ) );
+     return ++i;
+                              } );
+  if (!ok) return Error("Missing HltTrackReports RawBank part - quiting.", StatusCode::SUCCESS, 100 );
+  
+  // figure out the total size
+  unsigned int bankSize = std::accumulate( std::begin(hltTrackReportsRawBanks), std::end(hltTrackReportsRawBanks), 0u,
+                                           [](unsigned int s, const RawBank* bank) {
+                                               return s+bank->size();
+                                           } );
+                
+  if( bankSize==0 ){
+    return Warning( " No HltTrackReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 0 );
   }    
   bankSize = (bankSize+3)/4; // from bytes to words
-  // need to copy it to local array 
-  unsigned int* pBank = new unsigned int[bankSize];
-  unsigned int* completeBank=pBank;
-  ++bankCounterMax; // increase by one to get entries from max index
-  for( unsigned int iBank=0; iBank<bankCounterMax; ++iBank){
-    const RawBank* bank = orderedBanks[iBank];
-    if( bank == NULL ){
-      delete pBank;
-      return Error("Missing HltTrackReports RawBank part - quiting.", StatusCode::SUCCESS, 100 );
-    }
-    unsigned int bankSize1 =  (bank->size()+3)/4; // from bytes to words
-    for(unsigned int i=0; i!=bankSize1; ++i){
-      (*pBank) = bank->data()[i]; ++pBank;
-    }
-  }
+  // concatenate banks into a local array -- TODO: avoid copy if there is only a single bank (which should be the most likely case)
+  std::unique_ptr<unsigned int> completeBank{ new unsigned int[bankSize] };
+  std::accumulate( std::begin(hltTrackReportsRawBanks), std::end(hltTrackReportsRawBanks), completeBank.get(),
+                   [](unsigned int *p, const RawBank* bank) {
+                        return std::copy( bank->begin<unsigned int>(),  bank->end<unsigned int>(), p );
+                   }
+  );
 
    // -------------------------------------------------------
    // do the actual decoding: see HltTrackingCoder.cpp
    // -------------------------------------------------------
 
-  decodeTracks(completeBank,bankSize,outputTracks);
-  
-  delete completeBank;
-  
+  decodeTracks(completeBank.get(),bankSize,outputTracks);
   
    // for debug purposes print the contents of the outputLocation
    if( msgLevel(MSG::VERBOSE) )
