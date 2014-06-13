@@ -9,7 +9,7 @@
     <text>../options/hlt2_trackingonly-threshold.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
     <text>--option</text>
-    <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1_track.raw' ]; Moore().EnableTimer="physics.tracking.hlt2.csv";</text>
+    <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1_track.raw' ]; Moore().EnableTimer="physics.tracking.hlt2.csv";  from Configurables import HltConf ; HltConf().PruneHltANNSvc = False</text>
   </set></argument>
   <!--<argument name="prerequisites"><set>
     <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
