@@ -88,6 +88,7 @@ class HltConf(LHCbConfigurableUser):
                 , "AdditionalHlt2Lines"            : []         # must be configured
                 , "ExpressStreamRateLimit"         : 50         # Hz
                 , "NanoBanks"                      : ['ODIN','HltLumiSummary','HltRoutingBits','DAQ']
+                , "PruneHltANNSvc"                    : True
                   }
 
     __settings__ = None 
@@ -411,20 +412,22 @@ class HltConf(LHCbConfigurableUser):
         # TODO: add Hlt2 to this list, and remove the hardwired numbers from the Hlt2 lines...
 
 
-        # prune all Decisions which are not members of Htl1 or Hlt2...
-        def genName( c ) :
-            if type(c) != str : c = c.name()
-            return '%sDecision'%c                  
+        if self.getProp('PruneHltANNSvc') :
+            # prune all Decisions which are not members of Htl1 or Hlt2...
+            def genName( c ) :
+                if type(c) != str : c = c.name()
+                return '%sDecision'%c                  
+            
+            hlt1decnames = [  genName(i) for i in Sequence('Hlt1').Members ]
+            hlt2decnames = [  genName(i) for i in Sequence('Hlt2').Members ]
+            # remove 'stale' entries
+            hlt1extradecnames = [ i for i in HltANNSvc().Hlt1SelectionID.keys() if i.endswith('Decision') and i not in hlt1decnames ]
+            hlt2extradecnames = [ i for i in HltANNSvc().Hlt2SelectionID.keys() if i.endswith('Decision') and i not in hlt2decnames ]
+            #print 'stale Hlt1 entries : %s ' % hlt1extradecnames
+            #print 'stale Hlt2 entries : %s ' % hlt2extradecnames
+            for i in hlt1extradecnames : del HltANNSvc().Hlt1SelectionID[i]
+            for i in hlt2extradecnames : del HltANNSvc().Hlt2SelectionID[i]
 
-        hlt1decnames = [  genName(i) for i in Sequence('Hlt1').Members ]
-        hlt2decnames = [  genName(i) for i in Sequence('Hlt2').Members ]
-        # remove 'stale' entries
-        hlt1extradecnames = [ i for i in HltANNSvc().Hlt1SelectionID.keys() if i.endswith('Decision') and i not in hlt1decnames ]
-        hlt2extradecnames = [ i for i in HltANNSvc().Hlt2SelectionID.keys() if i.endswith('Decision') and i not in hlt2decnames ]
-        #print 'stale Hlt1 entries : %s ' % hlt1extradecnames
-        #print 'stale Hlt2 entries : %s ' % hlt2extradecnames
-        for i in hlt1extradecnames : del HltANNSvc().Hlt1SelectionID[i]
-        for i in hlt2extradecnames : del HltANNSvc().Hlt2SelectionID[i]
 
         # given that both Hlt1 and Hlt2 end up in the same rawbank, and thus
         # effectively 'share a namespace' we MUST make sure that there is no overlap
@@ -677,15 +680,8 @@ class HltConf(LHCbConfigurableUser):
         if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
-            #  TODO: check not explicitly set if so, provide warning....
             for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrackReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
-            #self.EnableHltGlobalMonitor   = ( 'EnableHltGlobalMonitor'   in strip )
-            #self.EnableHltL0GlobalMonitor = ( 'EnableHltL0GlobalMonitor' in strip )
-            #self.EnableBeetleSyncMonitor  = ( 'EnableBeetleSyncMonitor'  in strip )
-            #self.EnableHltSelReports      = ( 'EnableHltSelReports'      in strip )
-            #self.EnableHltVtxReports      = ( 'EnableHltVtxReports'      in strip )
-            #self.EnableLumiEventWriting   = ( 'EnableLumiEventWriting'   in strip )
 
         # Setup the beetle sync sequence
         BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
@@ -735,16 +731,17 @@ class HltConf(LHCbConfigurableUser):
             else:
                 Hlt2Conf().setProp("Hlt1TrackOption","Encode-Decode")
         
-        # List of track types that should be persisted into the TrackReports in HLT1
-        # Map TrackLocations to SourceIDs for the TrackReports 
-        # link source IDs, WriterName and TES locations:
-        trackingSources = [ (1,"VeloWriter","Hlt/Track/Velo"),(3,"ForwardWriter","Hlt1/Track/PestiForward") ] 
-        # this will pickup the forward tracks 
-        # with VeloTT momentum estimate
             
             
-        # Add the TrackReports
+        # Add the TrackReports if so requested
         if self.getProp("EnableHltTrackReports") :
+            # List of track types that should be persisted into the TrackReports in HLT1
+            # Map TrackLocations to SourceIDs for the TrackReports 
+            # link source IDs, WriterName and TES locations:
+            trackingSources = [ ( 1, 'VeloWriter',    'Hlt/Track/Velo' ),
+                                ( 3, 'ForwardWriter', 'Hlt1/Track/PestiForward' ) ]
+            # this will pickup the forward tracks 
+            # with VeloTT momentum estimate
             # We will have one Writer per track stage
             # add and configure the Writers                                                       
             EndMembers += [ HltTrackReportsWriter(name, SourceID=sID, InputHltTrackLocation=inLocation) for sID, name, inLocation in trackingSources ]
@@ -769,7 +766,7 @@ class HltConf(LHCbConfigurableUser):
                                       ])
                           ]
         if self.getProp( 'RequireL0ForEndSequence') :
-            from Configurables import LoKi__L0Filter    as L0Filter
+            from Configurables import LoKi__L0Filter as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
             EndMembers.insert(1,  L0accept )  # after routing bits

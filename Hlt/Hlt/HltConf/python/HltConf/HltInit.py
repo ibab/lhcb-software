@@ -294,3 +294,5 @@ HltANNSvc().InfoID = {
     'HltUnit/Hlt1VertexDisplVertexStreamer'      : 6700,
     'HltUnit/Hlt1VertexDisplVertexPSStreamer'    : 6701
 }
+
+print HltANNSvc()
