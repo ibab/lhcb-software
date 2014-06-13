@@ -80,5 +80,6 @@ private:
   void updatePreambulo ( Property& );
 
   bool m_useCondDB;
+  bool m_updateBank;
 };
 #endif // HLTROUTINGBITSWRITER_H

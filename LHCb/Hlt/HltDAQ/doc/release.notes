@@ -10,6 +10,7 @@
  - update warning message in case TCK=0 
  - empty (but present) track rawbank is not an error
  - run clang-format
+ - add option to update 3rd word (Hlt2) of existing RoutingBits rawbank
  
 
 ! 2014-06-12 - Gerhard Raven
