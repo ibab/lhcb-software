@@ -764,7 +764,7 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsMaker   = 'InputHltDecReportsLocation'
                                    , HltGlobalMonitor     = 'HltDecReports'
                                    )
-                             , dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+                             , DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
                              )
             
             # shunt selreports
@@ -814,11 +814,9 @@ class Moore(LHCbConfigurableUser):
             Funcs._mergeTransform(transdep)
             
             #always transform
-            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
-            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
-            hlt2selrep_location = dec3.listOutputs()[0]
-            hlt2decrep_location = dec2.listOutputs()[0]
-            dec3alg=dec3.setup()
+            hlt2selrep_location = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
+            hlt2decrep_location = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+            #dec3alg=dec3.setup()
             
             transall={}
             transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '[^/]*/HltL0GlobalMonitor'" : '' 
