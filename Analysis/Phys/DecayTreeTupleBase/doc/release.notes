@@ -4,6 +4,11 @@
 ! Purpose     : Base classes for the DecayTreeTuples
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleBase v1r3p1 2014-06-13 =========================
+
+! 2014-06-13 - Patrick Koppenburg
+ - Improve a doxygen comment.
+
 !========================= DecayTreeTupleBase v1r3 2013-10-29 =========================
 
 ! 2013-10-22 - Patrick Koppenburg
