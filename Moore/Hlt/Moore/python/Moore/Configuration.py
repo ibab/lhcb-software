@@ -698,7 +698,10 @@ class Moore(LHCbConfigurableUser):
         def hlt1_only() :
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt2 = {}
-            ##
+
+            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
+            from Configurables import HltRoutingBitWriter
+            HltRoutingBitsWriter().Hlt2DecReportsLocation = ''
 
         def hlt1_only_tck() :
             #this fills the HltDecisionSequence with "Hlt1" only
@@ -713,6 +716,9 @@ class Moore(LHCbConfigurableUser):
             #  make sure SourceID is properly set
             trans['Hlt(Sel|Dec)ReportsWriter/.*']={ 'SourceID' : { '^.*$' : '1' } }
             Funcs._mergeTransform(trans)
+
+            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
+            trans['HltRoutingBitsWriter/.*']={ 'Hlt2DecReportsLocation' : { '^.*$' : '' } }
 
             # remove lumi stripper...
             trans['GaudiSequencer/HltEndSequence']={ 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
@@ -894,8 +900,7 @@ class Moore(LHCbConfigurableUser):
                                                     , "Conditions/Rich2/Alignment"
                                                     , "Conditions/Rich2/Environment" ]
             print "Hlt2 -- using following RunChangeHandlerConditions: " , CondDB().RunChangeHandlerConditions
-            
-        
+
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
         return self.getProp(prop) == value

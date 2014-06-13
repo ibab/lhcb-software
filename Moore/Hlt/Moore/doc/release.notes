@@ -8,6 +8,8 @@
  - fix shunting of decreports which got broken in previous commit...
  - do not prune HltANNSvc in hlt2trackingonly.qmt test
  - fix configuration of 'magicnumber' test
+ - make sure that in Hlt1-only mode, routing bits writer doesn't
+   try to find the Hlt2 decisions
 
 ! 2014-06-12 - Gerhard Raven
  - revert change as to which file defines the default threshold 
