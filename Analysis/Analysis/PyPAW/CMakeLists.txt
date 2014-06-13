@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PyPAW
 ################################################################################
-gaudi_subdir(PyPAW v1r3)
+gaudi_subdir(PyPAW v1r4)
 
 gaudi_depends_on_subdirs(Phys/AnalysisPython
                          Analysis/PyAna)

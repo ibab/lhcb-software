@@ -9,14 +9,16 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
-! 2014-06-09 - Vanya Belyaev
- - more functions 
+!========================= PyPAW v1r4 2014-06-13 =========================
 
 ! 2014-06-09 - Vanya Belyaev
- - add the test for reweighting procedure 
+ - More functions 
+
+! 2014-06-09 - Vanya Belyaev
+ - Add the test for reweighting procedure 
 
 ! 2014-06-08 - Vanya Belyaev
- - add the simplest linear 2D-decorrelator 
+ - Add the simplest linear 2D-decorrelator 
 
 ! 2014-06-07 - Vanya Belyaev
  - few minor fixes 
