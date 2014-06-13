@@ -10,6 +10,7 @@
  - fix configuration of 'magicnumber' test
  - make sure that in Hlt1-only mode, routing bits writer doesn't
    try to find the Hlt2 decisions
+ - in tckgen tests, set ForceSingleL0Configuration to true
 
 ! 2014-06-12 - Gerhard Raven
  - revert change as to which file defines the default threshold 
