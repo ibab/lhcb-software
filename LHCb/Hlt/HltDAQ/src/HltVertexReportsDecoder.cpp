@@ -149,10 +149,8 @@ StatusCode HltVertexReportsDecoder::execute() {
   }
 
   if ( msgLevel(MSG::VERBOSE) ){
-
     verbose() << " ======= HltVertexReports size= " << outputSummary->size() << endmsg;
     verbose() << *outputSummary << endmsg;
-
   }
   return StatusCode::SUCCESS;
 }
