@@ -63,5 +63,5 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.getProp('PostScale')
                         )
 
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2HighPtJetsDecision" : 50295 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2HighPtJetsDecision" : 50280 } )
         

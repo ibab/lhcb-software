@@ -237,7 +237,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , algos = [ PV3D(), BiKalmanFittedMuons, BiKalmanFittedPions, combine]
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackDecision" : 50400 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackDecision" : 50198 } )
         
         #---------------------------------------------------
         # mu+track NoIP
@@ -259,4 +259,4 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , algos = [BiKalmanFittedMuons, BiKalmanFittedPions, combine_noip]
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackNoIPDecision" : 50401 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackNoIPDecision" : 50197 } )
