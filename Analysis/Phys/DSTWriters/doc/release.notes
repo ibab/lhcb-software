@@ -4,8 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r15 2014-06-13 =========================
+
 ! 2014-05-24 - Anton Poluektov 
- - Add RelatedInfo structures
+ - Add RelatedInfo structures.
 
 !========================= DSTWriters v4r14 2014-05-19 =========================
 
