@@ -17,8 +17,8 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
-#count error lines, shouldn't be any warnings or errors, ideally
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+#count error lines, shouldn't be any warnings or errors, ideally -- expect 3 warnings due to 'TCK in rawbank seems to be 0'
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":3})
 
 </text></argument>
 </extension>
