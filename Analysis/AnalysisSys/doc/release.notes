@@ -3,6 +3,35 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v12r3>2014-06-13 Analysis v12r3</A></H1><PRE>
+New development release, built against Phys v18r3.
+
+- Packages Updated :-
+   PyPAW, MicroDSTAlgorithm, MicroDSTBase,  AnalysisPython,
+   DSTWriters, DecayTreeTupleBase, FlavourTaggingChecker
+
+In PyPAW :
+ . Add the simplest linear 2D-decorrelator
+ . Various other minor fixes. See package release notes. 
+
+In MicroDSTAlgorithm :
+ . Move RelatedInfoMap to LHCb namespace.
+ . Add CopyParticle2RelatedInfo.
+
+In MicroDSTBase :
+ . Move RelatedInfoMap to LHCb namespace.
+ . Add RelatedInfoMap for the list of valid structures.
+
+In AnalysisPython :
+ . Make use of weighted statistics. 
+
+In DSTWriters :
+ . Add RelatedInfo structures.
+
+In FlavourTaggingChecker :
+ . Stored one additional variable in BTA tuple for SS-BDT taggers.
+ . Updated SinglelCandidate.tar with latest cuts in D*munu selection.
+
 </PRE><H1><A NAME=v12r2>2014-05-19 Analysis v12r2</A></H1><PRE>
 New development release, built against Phys v18r2.
 
@@ -16,7 +45,6 @@ In PyPAW :
  . Update cmoparison utilities, add qmtest  
  . Add few utilities for semi-automatic reweighting
  . A few fixes in 2D-fit models. Add qmtest.
- . Improve models, add qmtest.
  . Improve models, add qmtest.
  . Minor reshuffling of code.
  . Fix "bernstain" and "positive" parameterisation of histograms.
