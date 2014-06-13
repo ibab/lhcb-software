@@ -6,11 +6,13 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTBase v3r4 2014-06-13 =========================
+
 ! 2014-06-08 - Anton Poluektov 
- - Move RelatedInfoMap to LHCb namespace
+ - Move RelatedInfoMap to LHCb namespace.
 
 ! 2014-05-24 - Anton Poluektov 
- - Add RelatedInfoMap for the list of valud structures
+ - Add RelatedInfoMap for the list of valid structures.
 
 !========================= MicroDSTBase v3r3p1 2013-05-07 =========================
 
