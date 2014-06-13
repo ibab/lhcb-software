@@ -5,15 +5,15 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
-! 2014-05-22 - Vanya Belyaev
- - *DOCA* - add an explici ttretamtn of "the same" particles 
-
+!========================= LoKiPhys v10r18 2014-06-13 =========================
 
 ! 2014-05-22 - Vanya Belyaev
- - Phys.py 
-   minor fix: 
-	 save/backup "old/C++" definition of LHCb::Particle::daughters 
-	 add __nonzero__ operator for some smart references 
+ - *DOCA* - Add an explicit treatment of "the same" particles. 
+
+! 2014-05-22 - Vanya Belyaev
+ - Phys.py - minor fix: 
+        Save/backup "old/C++" definition of LHCb::Particle::daughters 
+	Add __nonzero__ operator for some smart references 
 
 !========================= LoKiPhys v10r17p1 2014-04-02 =========================
 
