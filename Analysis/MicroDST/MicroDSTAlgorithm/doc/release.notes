@@ -3,11 +3,13 @@
 ! Responsible : Juan Palacios
 !==============================================================================
 
+!========================= MicroDSTAlgorithm v5r9 2014-06-13 =========================
+
 ! 2014-06-08 - Anton Poluektov 
- - Move RelatedInfoMap to LHCb namespace
+ - Move RelatedInfoMap to LHCb namespace.
 
 ! 2014-05-24 - Anton Poluektov 
- - Add CopyParticle2RelatedInfo
+ - Add CopyParticle2RelatedInfo.
 
 !========================= MicroDSTAlgorithm v5r8 2013-06-13 =========================
 
