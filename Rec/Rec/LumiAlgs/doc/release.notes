@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-06-13 - Jaap Panman
+- Expose ILumiIntegrator interface to python 
+  This makes it possible to get lumi and mu values per run in gaudipython job.
+
 !========================= LumiAlgs v9r3 2014-06-10 =========================
 ! 2014-06-04 - Jaap Panman
  - Configuration for Brunel: prepare for 25 ns filling schemes in 2015 and beyond

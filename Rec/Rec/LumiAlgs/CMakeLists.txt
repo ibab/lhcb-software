@@ -26,5 +26,14 @@ gaudi_add_module(LumiAlgs
 
 gaudi_install_python_modules()
 
+gaudi_add_dictionary(LumiAlgs
+                     dict/LumiAlgsDict.h
+                     dict/LumiAlgsDict.xml
+                     LINK_LIBRARIES LumiEvent
+                     OPTIONS "-U__MINGW32__")
+
+gaudi_install_headers(LumiAlgs)
+
+
 
 gaudi_add_test(QMTest QMTEST)

@@ -11,7 +11,7 @@
 #include "Event/TimeSpanFSR.h"
 #include "Event/LumiIntegral.h"
 
-#include "ILumiIntegrator.h"            // Interface
+#include "LumiAlgs/ILumiIntegrator.h"            // Interface
 
 
 /** @class LumiIntegrator LumiIntegrator.h

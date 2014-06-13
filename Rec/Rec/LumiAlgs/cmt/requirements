@@ -8,7 +8,7 @@ version           v9r3
 #=====================================================================
 # Structure, i.e. directories to process. 
 #=====================================================================
-branches          cmt doc src python job options tests
+branches          cmt doc dict src LumiAlgs python job options tests 
 #=====================================================================
 # Used packages
 #=====================================================================
@@ -25,6 +25,9 @@ use GaudiAlg        v*
 use GaudiConf       v*
 use HltInterfaces   v* Kernel
 use Boost           v* LCG_Interfaces
+
+use  RecInterfaces       v*   Rec
+
 
 # Decoding
 use   DAQSys               v*    DAQ
@@ -50,14 +53,26 @@ macro_append Boost_linkopts " $(Boost_linkopts_iostreams) "
 #=====================================================================
 # define component library link options
 #=====================================================================
-apply_pattern    component_library library=LumiAlgs
+# apply_pattern    component_library library=LumiAlgs
 
 #=====================================================================
 # Setup Python Configurables
 #=====================================================================
 macro_append LumiAlgsGenConfUser_dependencies LumiAlgsConfDbMerge
+apply_pattern install_more_includes   more=LumiAlgs
 apply_pattern install_python_modules
 
+#================ Produce LCG dictionary =====================================
+apply_pattern      reflex_dictionary                                       \
+                   dictionary=LumiAlgs                                     \
+                   headerfiles=$(LUMIALGSROOT)/dict/LumiAlgsDict.h         \
+                   selectionfile=$(LUMIALGSROOT)/dict/LumiAlgsDict.xml     \
+                   options=" -U__MINGW32__ "
+	        
+macro_append       LumiAlgsDict_dependencies    " LumiAlgs " 
+
+# ================ patterns ===================================================
+apply_pattern      linker_library    library=LumiAlgs
 
 #QM tests
 private
