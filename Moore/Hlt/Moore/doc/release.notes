@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-06-13 - Gerhard Raven
+ - fix shunting of decreports which got broken in previous commit...
+
 ! 2014-06-12 - Gerhard Raven
  - revert change as to which file defines the default threshold 
    used in hlt1only.qmt and hlt2after1.qmt as the relevant python

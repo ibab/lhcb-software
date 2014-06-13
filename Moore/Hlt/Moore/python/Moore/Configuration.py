@@ -724,8 +724,8 @@ class Moore(LHCbConfigurableUser):
             # globally prepend Decoders for Hlt1... 
             # TODO: this MUST move into HltConf...
             # TODO: find a better way of doing this... ditto for L0 decoding...I should have been able to suppress this stuff! 
+            from DAQSys.Decoders import DecoderDB
             def appendDecoder(decoder) :
-                from DAQSys.Decoders import DecoderDB
                 dc = DecoderDB[ decoder ]
                 dc.active = True
                 seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), dc.setup() )
@@ -742,7 +742,7 @@ class Moore(LHCbConfigurableUser):
                                        , TisTosParticleTagger = 'HltDecReportsInputLocation'
                                        , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
                                        )
-                               , dec.listOutputs()[0]
+                               , DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
                                )
             
             
@@ -756,7 +756,6 @@ class Moore(LHCbConfigurableUser):
             HltGlobalMonitor().DecToGroupHlt1 = {}
             
             # shunt Hlt2 decreports
-            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
                              , dict( Hlt__Line            = 'HltDecReportsLocation'
@@ -765,15 +764,14 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsMaker   = 'InputHltDecReportsLocation'
                                    , HltGlobalMonitor     = 'HltDecReports'
                                    )
-                             , dec2.listOutputs()[0]
+                             , dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
                              )
             
             # shunt selreports
-            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
             _updateProperties( gs('Hlt')
                              , dict( HltSelReportsMaker   = 'OutputHltSelReportsLocation'
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
-                             ,  dec3.listOutputs()[0]
+                             , DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
                              )
 
             #  make sure SourceID is properly set
