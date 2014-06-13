@@ -8,7 +8,8 @@ New development release, built against Phys v18r3.
 
 - Packages Updated :-
    PyPAW, MicroDSTAlgorithm, MicroDSTBase,  AnalysisPython,
-   DSTWriters, DecayTreeTupleBase, FlavourTaggingChecker
+   DSTWriters, DecayTreeTupleBase, DecayTreeTupleTrigger,
+   FlavourTaggingChecker
 
 In PyPAW :
  . Add the simplest linear 2D-decorrelator
@@ -27,6 +28,9 @@ In AnalysisPython :
 
 In DSTWriters :
  . Add RelatedInfo structures.
+
+In DecayTreeTupleTrigger :
+ . TupleToolL0Calo: improve ntuple.
 
 In FlavourTaggingChecker :
  . Stored one additional variable in BTA tuple for SS-BDT taggers.
