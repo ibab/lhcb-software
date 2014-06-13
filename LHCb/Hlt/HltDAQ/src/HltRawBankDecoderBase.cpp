@@ -65,7 +65,7 @@ HltRawBankDecoderBase::selectRawBanks( LHCb::RawBank::BankType reqType ) const
         return sourceID == HltRawBankDecoderBase::kSourceID_Hlt; 
       } );
   }
-    return mybanks;
+  return mybanks;
 }
 
 unsigned int 
@@ -101,7 +101,7 @@ HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
         bool doHlt1 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 || m_sourceID == 0);
         bool doHlt2 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 || m_sourceID == 0);
         if (tck==0) {
-           warning() << "TCK from rawbanks seems to be 0 -- assuming that the current HltANNSvc has the proper mapping configured. Proceed at your own risk..." << endmsg;
+           warning() << "TCK in rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
            append0(Hlt1SelectionID,doHlt1);
            append0(Hlt2SelectionID,doHlt2);
         } else {

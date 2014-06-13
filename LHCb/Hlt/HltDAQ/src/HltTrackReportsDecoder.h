@@ -1,15 +1,11 @@
-// $Id: HltTrackReportsDecoder.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id$
 #ifndef HLTTRACKREPORTSDECODER_H 
 #define HLTTRACKREPORTSDECODER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
 #include "DAQKernel/DecoderAlgBase.h"
-
-//#include "Kernel/IANNSvc.h"
-
 
 /** @class HltTrackReportsDecoder HltTrackReportsDecoder.h
  *  
@@ -28,24 +24,16 @@ public:
   /// Standard constructor
   HltTrackReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltTrackReportsDecoder( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-  static float floatFromInt(unsigned int i);
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
 
   /// location of output
   StringProperty m_outputLocation;
   
-  /// location of HltTrackReports (will not be used unless ANNSvc not working) 
+  /// location of HltTrackReports 
   StringProperty m_HltTrackReportsLocation;
-
-  /// HltANNSvc for making selection names to int selection ID
-  //IANNSvc* m_hltANNSvc;
 
   /// SourceID to decode. source ids are linked to track stages in TrackNames.trackingSources 
   IntegerProperty m_sourceID;
