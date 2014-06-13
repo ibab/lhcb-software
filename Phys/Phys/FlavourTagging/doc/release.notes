@@ -6,17 +6,21 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v13r7 2014-06-13 =========================
+
 ! 2014-06-12 - Stefania Vecchi
  - fix printouts
+
 ! 2014-06-11 - Stefania Vecchi
- - updated Reco14 calibration for SSpion, nnetOSK and OS combination with nnetOSK 
+ - Updated Reco14 calibration for SSpion, nnetOSK and OS combination with nnetOSK.
 
 ! 2014-05-26 - Stefania Vecchi
- - changed to DEBUG level some useful printouts in BDT Taggers
+ - Changed to DEBUG level some useful printouts in BDT Taggers
  - Add a flag to enable the CharmTagger in the OS combination (default=disabled)
  - Fix BDT taggers: dQ and CosTheta calculation
- - SSProtonBDT: removed preselection cut in CosTheta 
-    --> see presentations at FT meeting 8 and 15/05/2014 
+ - SSProtonBDT: Removed preselection cut in CosTheta 
+                --> See presentations at FT meeting 8 and 15/05/2014
+ 
 !========================= FlavourTagging v13r6 2014-04-02 =========================
 
 ! 2014-03-10 - Chris Jones

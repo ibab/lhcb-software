@@ -1,10 +1,10 @@
 #============================================================================
 # Created    : 2002-05-22
-# Maintainer : Marc Grabalosa
+# Maintainer : Stefania Vecchi
 #
 #============================================================================
 package      FlavourTagging
-version      v13r6
+version      v13r7
 
 # Structure, i.e. directories to process.
 #============================================================================
