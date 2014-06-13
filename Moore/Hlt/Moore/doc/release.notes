@@ -7,6 +7,7 @@
 ! 2014-06-13 - Gerhard Raven
  - fix shunting of decreports which got broken in previous commit...
  - do not prune HltANNSvc in hlt2trackingonly.qmt test
+ - fix configuration of 'magicnumber' test
 
 ! 2014-06-12 - Gerhard Raven
  - revert change as to which file defines the default threshold 
