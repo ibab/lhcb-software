@@ -5,6 +5,8 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r31 2014-06-13 =========================
+
 ! 2014-06-09 - Vanya Belyaev
  - more functions 
 
@@ -12,7 +14,7 @@
  - fix qmtest 
 
 ! 2014-06-08 - Vanya Belyaev
- - make use of weighted statistics 
+ - Make use of weighted statistics. 
 
 ! 2014-06-07 - Vanya Belyaev
  - few minor fixes 

@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 # =============================================================================
 package           AnalysisPython
-version           v2r30
+version           v2r31
 
 # =============================================================================
 # Structure, i.e. directories to process.
