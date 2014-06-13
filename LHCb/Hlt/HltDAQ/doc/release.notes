@@ -11,6 +11,8 @@
  - empty (but present) track rawbank is not an error
  - run clang-format
  - add option to update 3rd word (Hlt2) of existing RoutingBits rawbank
+ - make it possible to skip setting Hlt2 routing bits (needed when 
+   running Hlt1 only)
  
 
 ! 2014-06-12 - Gerhard Raven

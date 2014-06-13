@@ -258,8 +258,9 @@ StatusCode HltRoutingBitsWriter::execute() {
     }
   }
 
-  // bits 32--95 are for HLT
+  // bits 32 -- 63 are Hlt1, 64 -- 95 for Hlt2
   for (unsigned j=1;j<3;++j) {
+    if ( m_hlt_location[j-1].empty() ) continue;
     LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( m_hlt_location[j-1] );
     for (unsigned i=0;i<32;++i) {
         auto* eval = m_hlt_evaluators[ (j-1)*32+i ].predicate;
@@ -270,8 +271,6 @@ StatusCode HltRoutingBitsWriter::execute() {
         if ( result ) bits[j] |= (0x01UL << i); 
     }
   }
-  //TODO: if we're Hlt2, we should _update_ the pre-existing routing bits bank
-  //      and check that we're a pure superset of the existing bits...
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
 
   if (m_updateBank) {
