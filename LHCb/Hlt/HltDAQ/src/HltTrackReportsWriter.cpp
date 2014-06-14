@@ -97,7 +97,6 @@ StatusCode HltTrackReportsWriter::execute()
             verbose() << *Tr << endmsg;
             // also dump IDs
             verbose() << "LHCbIDs: [\n";
-            unsigned int nhits = Tr->nLHCbIDs();
             for ( const auto& id : Tr->lhcbIDs() ) {
                 verbose() << id << ",\n";
             }
