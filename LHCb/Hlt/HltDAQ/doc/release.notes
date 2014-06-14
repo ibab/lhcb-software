@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-14 - Gerhard Raven
+ - silence warning about pre-existing HltRoutingBits RawBank
+
 ! 2014-06-13 - Gerhard Raven
  - implement same policy on warning messages in HltTrackReportsDecoder
  - use more STL in HltTrackReportsDecoder

@@ -295,9 +295,9 @@ StatusCode HltRoutingBitsWriter::execute() {
         }
         data[2] = bits[2];
   } else {
-        if (! rawEvent->banks( LHCb::RawBank::HltRoutingBits ).empty() ) {
-                Warning( " Pre-existing RoutingBits bank in the event...:",
-                         StatusCode::SUCCESS, 20 ).ignore();
+        if ( !rawEvent->banks( LHCb::RawBank::HltRoutingBits ).empty() ) {
+                Warning( " Pre-existing RoutingBits bank in the event...",
+                         StatusCode::SUCCESS, 0 ).ignore();
         }
         rawEvent->addBank(0,LHCb::RawBank::HltRoutingBits,0,bits);
   }
