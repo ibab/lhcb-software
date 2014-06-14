@@ -22,7 +22,7 @@ class Hlt1MuonHit final // please do not inherit from this class...
 
     Hlt1MuonHit( const LHCb::MuonTileID& tile, double x, double dx, double y,
                  double dy, double z, double dz )
-        : m_params{x,y,dx,z,dy,dz}, m_tile{tile}
+        : m_params{{x,y,dx,z,dy,dz}}, m_tile{tile}
     {
     }
 
