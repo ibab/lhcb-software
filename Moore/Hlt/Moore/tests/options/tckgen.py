@@ -20,7 +20,9 @@ f=open("../options/Moore-LocalTCKData.py")
 configdest=f.read().split("'")[1]
 f.close()
 
-commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().ForceSingleL0Configuration = True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False;'"
+commandoptions  = "from Configurables import Moore; Moore().generateConfig=True; Moore().ForceSingleL0Configuration = True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\""+label+"\"; print \""+releaseString+"\", Moore().getRelease(); print \""+thresholdString+"\", Moore().ThresholdSettings; Moore().EnableTimer=False;"
+commandoptions += "from Configurables import HltConf; HltConf().L0TCK = \"0x%s\"" % targetTCK[-4:]
+commandoptions = "'%s'"%commandoptions
 
 if mysplit=="Hlt1":
     commandoptions.replace("import Moore;","import Moore; Moore().ThresholdSettings=\"Hlt1_\"+Moore().ThresholdSettings;")

@@ -6,6 +6,7 @@
 
 ! 2014-06-14 - Gerhard Raven
  - fix typo
+ - explicitly set L0TCK to lower 16 bits of target TCK in tckgen tests 
 
 ! 2014-06-13 - Gerhard Raven
  - fix shunting of decreports which got broken in previous commit...
