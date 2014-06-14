@@ -2196,6 +2196,34 @@ ROOT.TH1 . maxv    = _h_maxv_
 ROOT.TH1 . minmax  = _h_minmax_
 
 # ============================================================================
+## get x-range for the function:
+def _f_xminmax ( self ) :
+    """
+    Get x-range for the function
+
+    >>> f = ...
+    >>> xmn,xmx = f.xminmax()
+    """
+    return self.GetXmin(),self.GetXmax()
+
+# ============================================================================
+## get minmax-range for the function:
+def _f_minmax ( self ) :
+    """
+    Get minmax-range for the function
+
+    >>> f = ...
+    >>> mn,mx = f.minmax()
+    """
+    return self.GetMinimum(),self.GetMaximum()
+
+
+ROOT.TF1 .  minv    =  lambda s : s.GetMinimum()
+ROOT.TF1 .  maxv    =  lambda s : s.GetMaximum()
+ROOT.TF1 .  minmax  = _f_minmax_
+ROOT.TF1 . xminmax  = _f_xminmax_
+
+# ============================================================================
 ## get the minimum value for X-axis 
 def _ax_min_ ( self ) :
     """
