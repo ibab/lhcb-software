@@ -98,8 +98,8 @@ def _h1_cmp_fit_ ( h1              ,
 
     if 0 != rf.Status() :
         logger.warning("Can't fit with function " % rf.Status() )
-        return None 
-    
+        return None
+            
     return rf
 
 ROOT.TH1D.cmp_fit = _h1_cmp_fit_
@@ -119,9 +119,8 @@ def _h1_cmp_chi2_ ( h1              ,
     >>> chi2ndf,prob  = h1.cmp_chi2 ( h2 )
     
     """
-    
     if rescale :
-        h1 = h1.rescale_bins ( 1.0 ) 
+        h1 = h1.rescale_bins ( 1.0 )
         h2 = h2.rescale_bins ( 1.0 )
         
         hmean  = h1.mean()             ## normalization point
