@@ -23,7 +23,8 @@ namespace Gaudi {
               s << " ]";
               return s;
         }
-}; };
+} 
+}
 
 
 

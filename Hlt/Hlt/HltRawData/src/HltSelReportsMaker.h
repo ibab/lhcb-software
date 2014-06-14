@@ -128,7 +128,7 @@ private:
   IANNSvc* m_hltANNSvc;  
   Hlt::IData* m_hltSvc;
   Hlt::IRegister* m_regSvc;
-  Hlt::IInspector* m_inspectionSvc;;
+  Hlt::IInspector* m_inspectionSvc;
 
   // from info id to its name
   GaudiUtils::VectorMap< int, std::string > m_infoIntToName;

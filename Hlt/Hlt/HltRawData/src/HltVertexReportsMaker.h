@@ -11,7 +11,7 @@
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
 
-namespace LHCb { class HltVertexReports; };
+namespace LHCb { class HltVertexReports; }
 
 /** @class HltvertexReportsMaker HltvertexReportsMaker.h
  *  

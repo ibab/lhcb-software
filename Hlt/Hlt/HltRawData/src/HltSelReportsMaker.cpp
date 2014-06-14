@@ -51,7 +51,7 @@ namespace {
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltSelReportsMaker );
+DECLARE_ALGORITHM_FACTORY( HltSelReportsMaker )
 
 
 //=============================================================================

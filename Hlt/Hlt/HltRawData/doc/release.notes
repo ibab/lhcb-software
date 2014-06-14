@@ -4,6 +4,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2014-06-14 - Gerhard Raven
+ - fix 'pedantic' compiler warnings
 
 !========================= HltRawData v4r0p1 2014-02-20 =========================
 ! 2014-01-08 - Marco Clemencic
