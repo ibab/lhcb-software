@@ -10,6 +10,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-06-14 - Vanya Belyaev
+ - add more qmtests 
+
+! 2014-06-14 - Vanya Belyaev
  - add a bit modified verison of Data.py from ``Ostap'' by Alexander BARANOV
 
 ! 2014-06-14 - Vanya Belyaev
