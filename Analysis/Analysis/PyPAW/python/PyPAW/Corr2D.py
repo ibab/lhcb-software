@@ -5,7 +5,7 @@
 # =============================================================================
 ## @file Corr2D.py 
 #
-#  Simle 2D-decorrelation transformation 
+#  Simple 2D-decorrelation transformation 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-08
@@ -15,7 +15,7 @@
 #  by                $Author$
 # =============================================================================
 """
-Simle 2D-decorrelation transformation 
+Simple 2D-decorrelation transformation 
 """
 # =============================================================================
 __version__ = "$Revision$"
@@ -225,6 +225,20 @@ class Corr2D(object) :
         return result
 
     __str__ = __repr__ 
+
+
+# =============================================================================
+if '__main__' == __name__ :
+    
+    print 80*'*'
+    print __doc__
+    print ' Author  : ' , __author__
+    print ' Version : ' , __version__
+    print ' Date    : ' , __date__    
+    print ' Symbols : ' , __all__    
+    print 80*'*'
+
+
 
 # =============================================================================
 # The END 
