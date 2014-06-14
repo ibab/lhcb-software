@@ -71,16 +71,30 @@ from PyPAW.Corr2D import Corr2D
 logger.info( 'Elimininate the leading correlations')
 o2 = Corr2D ( dataset , 'x' , 'y' )
 
-
 logger.info( 'Check the remaining correlations')
 o3 = Corr2D ( dataset , o2.nvar1 , o2.nvar2 ) 
 
 logger.info( 'Check the remaining correlations once more ')
 o4 = Corr2D ( dataset , o3.nvar1 , o3.nvar2 ) 
 
-## dataset.draw( o2.qvar1 )
-## dataset.draw( o2.qvar1 + ' : ' + o2.qvar2 , '' , 'box' )
+if not ROOT.gROOT.IsBatch() :
+    
+    dataset.draw ( o2.qvar1 )
+    dataset.draw ( o2.qvar1 + ' : ' + o2.qvar2 , '' , 'box' )
 
+
+tree  = dataset.store().tree()
+f1    = o2.fvar1()
+f2    = o2.fvar2()
+fun2D = o2.fun2D() 
+h2    = ROOT.TH2D ('h2','test 2D-historam [#1]',55,-1.1,1.1,55,-1.1,1.1)
+h3    = ROOT.TH2D ('h3','test 2D-historam [#2]',55,-1.1,1.1,55,-1.1,1.1)
+for e in tree :
+
+    h2.Fill ( f1 ( e ) , f2 (e ) )
+    h3.Fill ( *fun2D ( e )       )
+    
+    
 # =============================================================================
 # The END 
 # =============================================================================

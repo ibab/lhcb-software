@@ -2197,7 +2197,7 @@ ROOT.TH1 . minmax  = _h_minmax_
 
 # ============================================================================
 ## get x-range for the function:
-def _f_xminmax ( self ) :
+def _f_xminmax_ ( self ) :
     """
     Get x-range for the function
 
@@ -2208,7 +2208,7 @@ def _f_xminmax ( self ) :
 
 # ============================================================================
 ## get minmax-range for the function:
-def _f_minmax ( self ) :
+def _f_minmax_ ( self ) :
     """
     Get minmax-range for the function
 

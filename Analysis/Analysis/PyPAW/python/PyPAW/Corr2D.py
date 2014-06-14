@@ -30,7 +30,31 @@ from   PyPAW.PyRoUts         import cpp,WSE, Gaudi
 # =============================================================================
 from   AnalysisPython.Logger import getLogger 
 logger = getLogger( __name__ )
-
+# =============================================================================
+## get error-function 
+if  not hasattr ( math , 'erf' ) :
+    try :
+        import scipy.special
+        math.erf = scipy.special.erf
+        logger.debug ( 'scipy.special.erf is added to math' )        
+    except:
+        math.erf = ROOT.TMath.Erf
+        logger.debug ( 'ROOT.TMath.Erf    is added to math' )
+# =============================================================================
+## error function
+#  @see http://en.wikipedia.org/wiki/Error_function
+erf = math.erf
+if not hasattr ( math , 'gauss_cdf' ) :    
+    ## CDF for gaussian distribution 
+    def gauss_cdf ( x ) :
+        """
+        CDF for Gaussian distribution
+        """
+        return 0.5* ( 1.0 + erf ( x ) )
+    math.gauss_cdf = gauss_cdf
+    logger.debug ( 'gauss_cdf         is added to math' )
+# =============================================================================
+gauss_cdf = math.gauss_cdf
 # =============================================================================
 ## simple 2D-decorrelation transformation 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -120,7 +144,7 @@ class Corr2D(object) :
         logger.info ( 'The 1st decorrelated variable:\n %s ' % self.nvar1 )
         logger.info ( 'The 2nd decorrelated variable:\n %s ' % self.nvar2 )
 
-        ## normalize eigenvectors fro 1/sqrt(2), just for convinency of erf. 
+        ## normalize eigenvectors for 1/sqrt(2), just for convinency of erf. 
         sqr2i         = math.sqrt(0.5) 
         self.nvct0    = Gaudi.Vector2() 
         self.nvct1    = Gaudi.Vector2()
@@ -130,12 +154,45 @@ class Corr2D(object) :
         self.nvct1[0] = self.vct1[0]*sqr2i
         self.nvct1[1] = self.vct1[1]*sqr2i
 
-        self.qvar1 = "TMath::Erf( %+g*((%s)%+g) %+g*((%s)%+g) )" % ( self.nvct0[0] , self.var1 , self.m1 , self.nvct0[1] , self.var2 , self.m2 ) 
-        self.qvar2 = "TMath::Erf( %+g*((%s)%+g) %+g*((%s)%+g) )" % ( self.nvct1[0] , self.var1 , self.m1 , self.nvct1[1] , self.var2 , self.m2 ) 
+        self.qvar1 = "0.5+0.5*TMath::Erf( %+g*((%s)%+g) %+g*((%s)%+g) )" % ( self.nvct0[0] , self.var1 , self.m1 , self.nvct0[1] , self.var2 , self.m2 ) 
+        self.qvar2 = "0.5+0.5*TMath::Erf( %+g*((%s)%+g) %+g*((%s)%+g) )" % ( self.nvct1[0] , self.var1 , self.m1 , self.nvct1[1] , self.var2 , self.m2 ) 
 
         logger.info ( 'The 1st decorrelated normalized variable:\n %s ' % self.qvar1 )
         logger.info ( 'The 2nd decorrelated normalized variable:\n %s ' % self.qvar2 )
 
+    
+    def   fvar1   ( self ) :
+        #
+        v1 = str ( self.qvar1 )
+        v1 = v1.replace ( '0.5+0.5*TMath::Erf' , 'gauss_cdf' )
+        v1 = v1.replace ( self.var1    ,  's.' + self.var1   )
+        v1 = v1.replace ( self.var2    ,  's.' + self.var2   )
+        #
+        return eval ( 'lambda s: ' + v1 )
+    
+    def   fvar2   ( self ) :
+        #
+        v2 = str ( self.qvar2 )
+        v2 = v2.replace ( '0.5+0.5*TMath::Erf' , 'gauss_cdf' )
+        v2 = v2.replace ( self.var1    ,  's.' + self.var1   )
+        v2 = v2.replace ( self.var2    ,  's.' + self.var2   )
+        #
+        return eval ( 'lambda s: ' + v2 )
+    
+    def   fun2D  ( self ) :
+        #
+        v1 = str ( self.qvar1 )
+        v1 = v1.replace ( '0.5+0.5*TMath::Erf' , 'gauss_cdf' )
+        v1 = v1.replace ( self.var1    ,  's.' + self.var1   )
+        v1 = v1.replace ( self.var2    ,  's.' + self.var2   )
+        #
+        v2 = str ( self.qvar2 )
+        v2 = v2.replace ( '0.5+0.5*TMath::Erf' , 'gauss_cdf' )
+        v2 = v2.replace ( self.var1    ,  's.' + self.var1   )
+        v2 = v2.replace ( self.var2    ,  's.' + self.var2   )
+        #        #
+        return eval ( 'lambda s: ( ' + v1 + ',' + v2 + ' ) ' )
+    
     def __repr__ ( self ) :
 
         result  =   'Events                       %s'       % self.num
@@ -159,7 +216,7 @@ class Corr2D(object) :
         result += '\nThe first  eigenvector %s '                      % self.vct0
         result += '\nThe second eigenvector %s '                      % self.vct1
 
-        result += '\nThe 1st decorrelated varibale:\n %s '            % self.nvar1 
+        result += '\nThe 1st decorrelated variable:\n %s '            % self.nvar1 
         result += '\nThe 2nd decorrelated variable:\n %s '            % self.nvar2 
         
         result += '\nThe 1st decorrelated normalized variable:\n %s ' % self.qvar1 
