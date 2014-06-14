@@ -23,7 +23,6 @@ public:
 
   /// Standard constructor
   HltSelReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
-  ~HltSelReportsDecoder( ) override = default; ///< Destructor
 
   StatusCode execute   () override;    ///< Algorithm execution
 
@@ -31,13 +30,6 @@ private:
 
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
-
-  /// location of HltDecReports (will not be used unless ANNSvc not working) 
-  StringProperty m_HltDecReportsLocation;
-
-  /// HltANNSvc for making selection names to int selection ID
-  IANNSvc* m_hltANNSvc;
-
 
 };
 

@@ -90,10 +90,10 @@ void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBan
             // --> in principle we can put 2 covs in one uint
 
             // get errors for scaling
-            std::array<double, 5> err = {
+            std::array<double, 5> err { 
                 std::sqrt( state->errX2() ),     std::sqrt( state->errY2() ),
                 std::sqrt( state->errTx2() ),    std::sqrt( state->errTy2() ),
-                std::sqrt( state->errQOverP2() )};
+                std::sqrt( state->errQOverP2() ) };
             // first store the diagonal then row wise the rest
             rawBank.push_back( pac.position( err[0] ) );
             rawBank.push_back( pac.position( err[1] ) );
@@ -175,7 +175,7 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
             Gaudi::TrackSymMatrix stateCov;
 
             //== Fill covariance matrix
-            std::array<double, 5> err = {
+            std::array<double, 5> err {
                 pac.position( (int)rawit[k++] ), pac.position( (int)rawit[k++] ),
                 pac.slope( (int)rawit[k++] ), pac.slope( (int)rawit[k++] ),
                 pac.energy( (int)rawit[k++] ) * fabs( par[4] ) * 1.e-5 // par[4]=1/p
