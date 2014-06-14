@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-06-14 - Gerhard Raven
+ - fix typo
+
 ! 2014-06-13 - Gerhard Raven
  - fix shunting of decreports which got broken in previous commit...
  - do not prune HltANNSvc in hlt2trackingonly.qmt test

@@ -700,7 +700,7 @@ class Moore(LHCbConfigurableUser):
             HltGlobalMonitor().DecToGroupHlt2 = {}
 
             #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
-            from Configurables import HltRoutingBitWriter
+            from Configurables import HltRoutingBitsWriter
             HltRoutingBitsWriter().Hlt2DecReportsLocation = ''
 
         def hlt1_only_tck() :
