@@ -5,7 +5,7 @@
 # =============================================================================
 ## @file PyPaw.py
 #
-#  Simple PyPaw-analysis environment pt provide access to zillions
+#  Simple PyPaw-analysis environment to provide access to zillions
 #  useful decorators for ROOT (and not only ROOT) objects&classes  
 # 
 #  This file is a part of 
@@ -31,22 +31,18 @@
 # =============================================================================
 """
 
-Simple PyPaw-analysis environment pt provide access to zillions
+ooooooooo.               ooooooooo.                              
+`888   `Y88.             `888   `Y88.                            
+ 888   .d88' oooo    ooo  888   .d88'  .oooo.   oooo oooo    ooo 
+ 888ooo88P'   `88.  .8'   888ooo88P'  `P  )88b   `88. `88.  .8'  
+ 888           `88..8'    888          .oP\"888    `88..]88..8'   
+ 888            `888'     888         d8(  888     `888'`888'    
+o888o            .8'     o888o        `Y888\"\"8o     `8'  `8'     
+             .o..P'                                              
+             `Y8P'
+
+Simple PyPaw-analysis environment to provide access to zillions
    useful decorators for ROOT (and not only ROOT) objects&classes  
-
-This file is a part of BENDER project:
-
-  ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
-
-The project has been designed with the kind help from Pere MATO and Andrey TSAREGORODTSEV. 
-
-And it is based on the LoKi project:
- 
-   ``C++ ToolKit for Smart and Friendly Physics Analysis''
-
-By usage of this code one clearly states the disagreement with the smear campaign of Dr.O.Callot et al.:
-
-   ``No Vanya's lines are allowed in LHCb/Gaudi software''
 
 """
 # =============================================================================
@@ -65,7 +61,7 @@ if '__main__' == _my_name_ : _my_name_ = 'PyPAW'
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
 logger = getLogger( _my_name_ )
-logger.info ( "Welcome to PyPAW" )
+logger.info ( "Welcome to PyPAW\n" + __doc__ )
 # =============================================================================
 ## 1) load LHCb-style file
 # =============================================================================
