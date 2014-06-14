@@ -60,9 +60,10 @@ class Weight(object) :
         ## open database 
         with ZipShelve.open ( dbase , 'r' ) as db : ## READONLY
             
-            ## db.ls ()
             for k in db :
-                logger.info( 'DBASE "%.15s" key "%.15s" #%d' % ( dbase ,  k, len( db[k] ) ) ) 
+                e = db[k]
+                if hasattr ( e , '__len__' ) :  
+                    logger.info( 'DBASE "%.15s" key "%.15s" #%d' % ( dbase ,  k, len( e ) ) ) 
                 
             ## loop over the weighting factors and build the function
             for f in factors :
@@ -82,12 +83,13 @@ class Weight(object) :
                 if merge and functions : 
                 
                     single_func = functions[0]
-                
-                    for fun in functions [ 1: ] : single_func *= fun
-                
+                    
+                    for fun in functions [ 1: ] :
+                        single_func *= fun
+                            
                     functions  = [ single_func ]
                     
-                self.vars += [ ( funname , funval , functions ) ]  
+                self.vars += [ ( funname , funval , functions , SE() ) ]  
 
 
     ## get the statistic of weights 
@@ -110,23 +112,31 @@ class Weight(object) :
         ## initialize the weight 
         weight  = VE(1,0) 
 
-        ## lop over functions 
+        ## loop over functions 
         for i in self.vars :
             
             funval    = i[1] ## accessor 
             functions = i[2] ## the functions 
 
-            ##  get the valuet for given event 
+            ##  get the weight arguments for given event 
             v       = funval ( s )
+
+            ww = VE(1.0)
             
             for f in functions :
 
                 if isinstance ( v , tuple ) : w = f ( *v )
                 else                        : w = f (  v )
 
-                weight *= w # update the weigth factor 
+                ww *= w # update the weight factor 
 
-                
+            ## keep the statistics
+            cnt  = i[3]
+            cnt += ww.value()
+
+            ## update the global weight 
+            weight *= ww
+            
         vw = weight.value()
         
         self._counter += vw 
@@ -142,8 +152,11 @@ class Weight(object) :
 def makeWeights  ( dataset                 ,
                    plots    = []           ,
                    database = "weights.db" ,
-                   compare  = None         ,
-                   delta    = 0.001        ) : ## delta for weigth variance 
+                   compare  = None         ,    ## comparison function 
+                   delta    = 0.001        ,    ## delta for weigth variance 
+                   debug    = True         ) :  ## save intermediate information in DB 
+
+
 
     more = False 
     ## loop over plots 
@@ -170,7 +183,12 @@ def makeWeights  ( dataset                 ,
         ## make a plot on (MC) data with the weight
         # 
         dataset.project ( hmc0 , what , how )
-        
+
+        st   = hmc0.stat()
+        mnmx = st.minmax()
+        if iszero ( mnmx[0] ) :
+            logger.warning ( 'Statistic goes to zero %s/"%s"' % ( st , address ) ) 
+            
         #
         ## black magic to take into account the difference in bins and normalizations
         # 
@@ -182,10 +200,15 @@ def makeWeights  ( dataset                 ,
         else                             : hmc /= hmc (  hmean )
 
         #
-        ## calculate  the reweigting factor : a bit conservative
-        #  this is the only important line 
-        w = ( ( 1.0 / hmc ) * hdata ) ** ( 1.0 / ( len ( plots ) ) )  
-
+        ## calculate  the reweighting factor : a bit conservative (?)
+        power = min ( 2.0 , len ( plots ) )                   ## NB!
+        #  this is the only important line
+        #  try to explot finer bining if possible 
+        if len ( hmc ) >= len( hdata )  : 
+            w     = ( ( 1.0   / hmc ) * hdata ) ** ( 1.0 / power )  ## NB!
+        else :
+            w     = ( ( hdata / hmc )         ) ** ( 1.0 / power )  ## NB!
+            
         #
         ## 
         # 
@@ -202,15 +225,15 @@ def makeWeights  ( dataset                 ,
         cnt  = w.stat()
         #
         wvar = cnt.rms()/cnt.mean()
-        logger.info ( 'Reweighting "%-.15s: Mean/rms/minmax:%s/%.4f/(%.4f,%.4f) Vars:%s[%%]' %
+        logger.info ( 'Reweighting "%-.15s: Mean/minmax:%s/(%.4f,%.4f) Vars:%s[%%]' %
                       ( address    ,
-                        cnt.mean() , cnt.rms(),
+                        cnt.mean() ,
                         cnt.minmax()[0] ,
                         cnt.minmax()[1] , wvar * 100 ) ) 
         #
         ## make decision based on variance of weights 
         # 
-        if wvar.value() <= delta :
+        if wvar.value() <= delta / len ( plots ) :
             save = False
             logger.info("No more reweighting for %s [%.3f%%]" %  ( address , wvar * 100 ) ) 
         else            :
@@ -222,12 +245,17 @@ def makeWeights  ( dataset                 ,
         if compare :
             compare ( hdata0 , hmc0 , address )
         
-        
         ## update dat abase 
         if save and database and address :
             with ZipShelve.open ( database ) as db :
+                
                 db[address] = db.get( address , [] ) + [ w ]
-
+                
+                if debug :
+                    addr        = address + ':REWEIGHTING'
+                    entry       = ( hdata0 , hmc0 , hdata , hmc , w ) 
+                    db [ addr ] = db.get ( addr , [] ) + [ entry ]
+                    
         ## 
         more = more or save
 

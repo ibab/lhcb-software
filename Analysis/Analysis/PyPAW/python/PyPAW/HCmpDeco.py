@@ -220,14 +220,13 @@ def _h1_cmp_dist_ ( h1              ,
         h1 = h1.rescale_bins ( 1.0 )
         h2 = h2.rescale_bins ( 1.0 )
 
-    if spline :
-        f1 = h1.asSpline ()
+    if spline  :
+        f1 = h1.asSpline ()        
         f2 = h2.asSpline ()
     else :
         f1 = h1.asFunc   ()
         f2 = h2.asFunc   ()
 
-    
     import warnings 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
