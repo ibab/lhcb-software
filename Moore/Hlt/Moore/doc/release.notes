@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-06-15 - Gerhard Raven
+ - fix inconsistencies in Hlt2-only qmtests
+
 ! 2014-06-14 - Gerhard Raven
  - fix typo
  - explicitly set L0TCK to lower 16 bits of target TCK in tckgen tests 

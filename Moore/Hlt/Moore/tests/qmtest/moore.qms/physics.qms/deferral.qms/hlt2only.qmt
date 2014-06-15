@@ -20,10 +20,10 @@
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/Moore_NoTosDeferral.py</text>
-    <text>../options/default-threshold.py</text>
+    <text>../options/default-hlt2-threshold.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt2only.csv"; Moore().ThresholdSettings="Hlt2_"+Moore().ThresholdSettings;</text>
+    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt2only.csv"; from Configurables import HltConf ; HltConf().PruneHltANNSvc = False</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
