@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-06-15 - Heinrich Schindler
+ - Add HC RawBank type
+
 !========================= DAQEvent v9r15 2014-06-10 =========================
 ! 2014-06-02 - Marco Cattaneo
  - Remove definition of (obsolete) VPDigit RawBank
