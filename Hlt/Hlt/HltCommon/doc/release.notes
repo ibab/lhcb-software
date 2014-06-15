@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2014-06-15 - Gerhard Raven
+ - remove unused TarFileAccess, IDirectoryAccess
 
 !========================= HltCommon v10r0 2014-02-20 =========================
 ! 2014-02-11 - Gerhard Raven
