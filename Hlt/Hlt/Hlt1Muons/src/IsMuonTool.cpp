@@ -1,7 +1,4 @@
 // $Id: $
-// STL
-#include <set>
-
 // boost
 #include <boost/foreach.hpp>
 
@@ -28,16 +25,12 @@
 // 2011-01-19 : Roel Aaij
 //-----------------------------------------------------------------------------
 
-using std::vector;
-using std::set;
-using std::string;
-
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( IsMuonTool )
 
 
 //=============================================================================
-IsMuonTool::IsMuonTool( const string& type, const string& name,
+IsMuonTool::IsMuonTool( const std::string& type, const std::string& name,
                         const IInterface* parent )
     : GaudiTool( type, name, parent )
     , m_foiFactor( 1. )

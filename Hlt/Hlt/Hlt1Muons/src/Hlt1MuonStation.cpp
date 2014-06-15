@@ -82,7 +82,7 @@ void Hlt1MuonStation::clearHits()
 }
 
 //=============================================================================
-void Hlt1MuonStation::setHits( std::vector<Hlt1MuonHit>&& hts )
+void Hlt1MuonStation::setHits( Hlt1MuonHits&& hts )
 {
     m_hits = std::move(hts);
 

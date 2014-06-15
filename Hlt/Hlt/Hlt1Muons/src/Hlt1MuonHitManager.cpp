@@ -154,7 +154,7 @@ void Hlt1MuonHitManager::prepareHits( unsigned int station )
 {
     if ( !m_loaded ) loadCoords();
 
-    std::vector<Hlt1MuonHit>  hits; hits.reserve( m_coords[station].size() );
+    Hlt1MuonHits hits; hits.reserve( m_coords[station].size() );
     for ( const auto& coord : m_coords[station] ) {
         double x = 0., dx = 0., y = 0., dy = 0., z = 0., dz = 0.;
         StatusCode sc = m_muonDet->Tile2XYZ( coord->key(), x, dx, y, dy, z, dz );
@@ -165,7 +165,7 @@ void Hlt1MuonHitManager::prepareHits( unsigned int station )
         hits.emplace_back( coord->key(), x, dx, y, dy, z, dz );
     }
     // Put the hits in the station
-    m_stations[station].setHits( std::move(hits) ); // transfer ownership
+    m_stations[station].setHits( std::move(hits) );
     m_prepared.set(station,true);
 }
 
