@@ -5,6 +5,8 @@
 !----------------------------------------------------------------------------
 ! 2014-06-15 - Gerhard Raven
  - remove unused TarFileAccess, IDirectoryAccess
+ - fix -Wpedantic in HltIncidentFilter, MooreInitSvc
+ - C++11 changes in HltSelectTracksForSwimming,ConfigTreeEditor
 
 !========================= HltCommon v10r0 2014-02-20 =========================
 ! 2014-02-11 - Gerhard Raven

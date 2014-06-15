@@ -29,11 +29,6 @@ HltIncidentFilter::HltIncidentFilter( const string& name, ISvcLocator* pSvcLocat
     declareProperty( "HltAcceptIncident", s_incident = "RequestHltAccept" );
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-HltIncidentFilter::~HltIncidentFilter() {};
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode HltIncidentFilter::initialize()
@@ -53,7 +48,7 @@ StatusCode HltIncidentFilter::initialize()
                      name() );
 
     return StatusCode::SUCCESS;
-};
+}
 //=============================================================================
 // Finalization
 //=============================================================================
@@ -78,7 +73,7 @@ StatusCode HltIncidentFilter::execute()
         debug() << "HltIncidentFilter: " << ( m_keep ? "accept" : "reject" )
                 << endmsg;
     return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Incident handler

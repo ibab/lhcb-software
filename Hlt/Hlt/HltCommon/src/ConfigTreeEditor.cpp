@@ -23,7 +23,6 @@ using namespace boost;
 
 namespace
 {
-static const std::string empty{};
 }
 
 /////////Utility class for easy manipulation of
@@ -118,19 +117,18 @@ class ConfigTree
     // lookup table which is 'global' to the tree -- so we put
     // it into the 'root' node.
     ConfigTree( const ConfigTreeNode::digest_type& in, IPropertyConfigSvc& r,
-                const std::string& label = empty )
+                std::string label = {} )
         : m_lookup( new ConfigTree::Lookup( r ) )
         , m_ownedLeaf{nullptr}
         , m_root( this )
         , m_leaf{nullptr}
         , m_origDigest( in )
+        , m_label{ std::move(label) }
     {
         addParent( (ConfigTree*)0 );
         addLeaf();
-        if ( !label.empty() )
-            m_label = label; // update label!
-        else {
-            m_label += " ( mutation of " + in.str() + " )";
+        if ( m_label.empty() ) {
+            m_label = " ( mutation of " + in.str() + " )";
         }
         addDeps();
     }
@@ -157,11 +155,11 @@ class ConfigTree
     void addLeaf()
     {
         auto c = lookupConfigTreeNode( m_origDigest );
-        assert( c != 0 );
+        assert( c );
         m_label = c->label();
         if ( !c->leaf().invalid() ) {
             m_leaf = lookupPropertyConfig( c->leaf() );
-            assert( m_leaf != 0 );
+            assert( m_leaf );
         }
     }
 
@@ -186,7 +184,7 @@ class ConfigTree
     {
         visitor.pre( *this );
         if ( visitor.descend( *this ) ) {
-            for_each( m_deps.begin(), m_deps.end(),
+            for_each( std::begin(m_deps), std::end(m_deps),
                       [&]( const ConfigTree* tree ) { tree->visit( visitor ); } );
         }
         visitor.post( *this );
@@ -195,9 +193,9 @@ class ConfigTree
     ConfigTreeNode::digest_type write( IConfigAccessSvc& w )
     {
         ConfigTreeNode::LeafRef lr =
-            ( m_leaf == 0 ? ConfigTreeNode::digest_type::createInvalid()
-                          : w.writePropertyConfig( *m_leaf ) );
-        assert( m_leaf == 0 || !lr.invalid() );
+            ( m_leaf  ?  w.writePropertyConfig( *m_leaf ) 
+                      : ConfigTreeNode::digest_type::createInvalid());
+        assert( !m_leaf || !lr.invalid() );
         ConfigTreeNode::NodeRefs nr;
         std::transform( std::begin( m_deps ), std::end( m_deps ),
                         std::back_inserter( nr ), [&]( ConfigTree* tree ) {
@@ -206,7 +204,7 @@ class ConfigTree
             return d;
         } );
         const ConfigTreeNode* c = lookupConfigTreeNode( m_origDigest );
-        assert( c != 0 );
+        assert( c );
         unique_ptr<ConfigTreeNode> nc{c->clone( lr, nr, m_label )};
         return w.writeConfigTreeNode( *nc );
     }
@@ -234,7 +232,7 @@ class ConfigTree
             ConfigTree* f = i->findNodeWithLeaf( name );
             if ( f ) return f;
         }
-        return 0;
+        return nullptr;
     }
 
     const PropertyConfig* leaf() const
@@ -246,7 +244,7 @@ class ConfigTree
     bool updateLeaf( const T& key2value )
     { // T::value_type must be pair<string,string>, representing (key,value)
         PropertyConfig update =
-            m_leaf->copyAndModify( key2value.begin(), key2value.end() );
+            m_leaf->copyAndModify( std::begin(key2value), std::end(key2value) );
         if ( !update.digest().valid() ) return false;
         m_ownedLeaf.reset( new PropertyConfig{update} );
         m_leaf = m_ownedLeaf.get();
@@ -322,9 +320,8 @@ ConfigTreeNode::digest_type ConfigTreeEditor::updateAndWrite(
     const string& label ) const
 {
     ConfigTree tree( in, *m_propertyConfigSvc, label );
-    typedef multimap<string, pair<string, string>> map_t;
-    auto i = updates.begin();
-    while ( i != updates.end() ) {
+    auto i = std::begin(updates);
+    while ( i != std::end(updates) ) {
         ConfigTree* node = tree.findNodeWithLeaf( i->first );
         if ( !node ) {
             error() << " could not locate requested leaf with name " << i->first
@@ -340,7 +337,7 @@ ConfigTreeNode::digest_type ConfigTreeEditor::updateAndWrite(
                 return mod.second;
             } );
         i = j;
-        node->updateLeaf( mods );
+        node->updateLeaf( std::move(mods) );
     }
     return tree.write( *m_configAccessSvc );
 }
@@ -352,7 +349,8 @@ ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
 {
 
     multimap<string, pair<string, string>> mm;
-    for ( auto& i : updates ) {
+    std::transform( std::begin(updates), std::end(updates), 
+                    std::inserter(mm, std::end(mm)),[&](const std::string& i) {
         // TODO: use common code in PropertyConfig for parsing updates...
         auto c = i.find( ':' );
         Assert( c != string::npos );
@@ -361,8 +359,8 @@ ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
         auto d = lhs.rfind( '.' );
         auto comp = lhs.substr( 0, d );
         auto key = lhs.substr( d + 1, string::npos );
-        mm.insert( {comp, {key, rhs}} );
-    }
+        return std::make_pair(comp, std::make_pair(key, rhs));
+    } );
     return updateAndWrite( in, mm, label );
 }
 
@@ -374,14 +372,15 @@ ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
 
     multimap<string, pair<string, string>> mm;
     for ( auto& i : updates ) {
-        for ( auto& j : i.second ) {
+        std::transform( std::begin(i.second), std::end(i.second),
+                        std::inserter(mm, std::end(mm)), [&]( const std::string& j ) {
             // TODO: use common code in PropertyConfig for parsing updates...
             auto c = j.find( ':' );
             Assert( c != string::npos );
             auto key = j.substr( 0, c );
             auto value = j.substr( c + 1, string::npos );
-            mm.insert( make_pair( i.first, make_pair( key, value ) ) );
-        }
+            return  std::make_pair( i.first, std::make_pair( key, value ));
+        });
     }
     return updateAndWrite( in, mm, label );
 }

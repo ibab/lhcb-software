@@ -26,13 +26,11 @@ class HltIncidentFilter : public GaudiHistoAlg, virtual public IIncidentListener
     /// Standard constructor
     HltIncidentFilter( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~HltIncidentFilter(); ///< Destructor
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
+    StatusCode finalize() override;   ///< Algorithm finalization
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
-    virtual StatusCode finalize();   ///< Algorithm finalization
-
-    void handle( const Incident& incident );
+    void handle( const Incident& incident ) override;
 
   private:
     struct stat

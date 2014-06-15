@@ -24,10 +24,9 @@ class MooreInitSvc : public virtual extends1<Service, IIncidentListener>
   public:
     MooreInitSvc( const std::string& name,
                   ISvcLocator* pSvcLocator ); ///< Standard constructor
-    virtual ~MooreInitSvc();                  ///< Destructor
-    virtual StatusCode initialize();          ///< Service initialization
-    virtual StatusCode finalize();            ///< Service finalization
-    virtual void handle( const Incident& );
+    StatusCode initialize() override;          ///< Service initialization
+    StatusCode finalize() override;            ///< Service finalization
+    void handle( const Incident& ) override;
 
   private:
     std::vector<long int> getSeeds( unsigned int seed1, ulonglong seed2 );

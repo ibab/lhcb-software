@@ -31,11 +31,6 @@ MooreInitSvc::MooreInitSvc( const std::string& name, ISvcLocator* pSvcLocator )
 {
 }
 //=============================================================================
-// Destructor
-//=============================================================================
-MooreInitSvc::~MooreInitSvc() {};
-
-//=============================================================================
 // Initialization
 //=============================================================================
 StatusCode MooreInitSvc::initialize()
@@ -126,10 +121,10 @@ std::vector<long int> MooreInitSvc::getSeeds( unsigned int seed1, ulonglong seed
 StatusCode MooreInitSvc::initRndm( std::vector<long int>& seeds )
 {
     // Get the random number engine if not already done
-    IRndmGenSvc* rndSvc( 0 );
+    IRndmGenSvc* rndSvc{ nullptr };
     if ( !service( "RndmGenSvc", rndSvc ).isSuccess() ) return StatusCode::FAILURE;
     IRndmEngine* engine = rndSvc->engine();
-    if ( 0 == engine ) return StatusCode::FAILURE;
+    if ( !engine ) return StatusCode::FAILURE;
     StatusCode sc = engine->setSeeds( seeds );
     if ( sc.isFailure() ) return sc;
     debug() << "using seeds " << seeds << endmsg;

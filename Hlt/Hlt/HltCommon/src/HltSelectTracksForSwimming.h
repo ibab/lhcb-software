@@ -21,11 +21,10 @@ class HltSelectTracksForSwimming : public HltAlgorithm
     /// Standard constructor
     HltSelectTracksForSwimming( const std::string& name, ISvcLocator* pSvcLocator );
 
-    virtual ~HltSelectTracksForSwimming(); ///< Destructor
+    ~HltSelectTracksForSwimming() override; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
-    virtual StatusCode finalize();   ///< Algorithm finalization
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     StatusCode filter_Tracks();

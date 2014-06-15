@@ -189,6 +189,7 @@ bool HltL0MuonCandidates::checkClone( const L0MuonCandidate* muon )
     for ( auto t : *m_selection.output() ) {
         const auto& ids = t->lhcbIDs();
 
+        //TODO: only checks the first hit in the station...
         auto oldTileM1 =
             std::find_if( ids.begin(), ids.end(), isInMuonStation( 0 ) );
         if ( oldTileM1 == ids.end() || !( *oldTileM1 == tileM1 ) )

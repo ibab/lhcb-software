@@ -25,8 +25,7 @@ HltSelectTracksForSwimming::HltSelectTracksForSwimming( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
     : HltAlgorithm( name, pSvcLocator ), m_selections( *this )
 {
-    declareProperty( "OfflineTrackIDs",
-                     m_offlineTrackIDs = std::vector<unsigned int>( 1, 0 ) );
+    declareProperty( "OfflineTrackIDs", m_offlineTrackIDs = { 1, 0 } );
     m_selections.declareProperties();
 }
 
@@ -42,13 +41,10 @@ HltSelectTracksForSwimming::~HltSelectTracksForSwimming()
 //=============================================================================
 StatusCode HltSelectTracksForSwimming::initialize()
 {
-
     StatusCode sc = HltAlgorithm::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
-
     m_selections.retrieveSelections();
     m_selections.registerSelection();
-
     return sc;
 }
 
@@ -105,9 +101,7 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks()
         // Make a dummy vector
         std::vector<unsigned int> oneTrackIDs;
         oneTrackIDs.clear();
-        for ( std::vector<unsigned int>::const_iterator iTT =
-                  m_offlineTrackIDs.begin();
-              iTT != m_offlineTrackIDs.end(); ++iTT ) {
+        for ( auto iTT = m_offlineTrackIDs.begin(); iTT != m_offlineTrackIDs.end(); ++iTT ) {
             if ( *iTT == 0 ) {
                 if ( tracksMatchInVelo( iT, oneTrackIDs ) ) {
                     trackmatchfound = true;
@@ -117,8 +111,9 @@ StatusCode HltSelectTracksForSwimming::filter_Tracks()
                     verbose() << "No match found... better luck next time!"
                               << endmsg;
                 oneTrackIDs.clear();
-            } else
+            } else {
                 oneTrackIDs.push_back( *iTT );
+            }
         }
         if ( trackmatchfound ) m_selections.output()->push_back( iT );
     }
@@ -138,24 +133,18 @@ bool HltSelectTracksForSwimming::tracksMatchInVelo( const LHCb::Track* t1,
 
     const std::vector<LHCbID>& ids1 = t1->lhcbIDs(); // Get the LHCbIDs of the track
 
-    for ( std::vector<LHCbID>::const_iterator id = ids1.begin(); id != ids1.end();
-          ++id ) {
+    for ( const auto& id : ids1 ) {
 
         // verbose() << "The current hit on Track 1 is " << *id << endmsg;
 
-        if ( !( *id ).isVelo() ) continue; // If it is not a VELO hit, ignore it
+        if ( ! id.isVelo() ) continue; // If it is not a VELO hit, ignore it
         ++totalnumberofhits;
-        for ( std::vector<unsigned int>::const_iterator id2 = ids2.begin();
-              id2 != ids2.end(); ++id2 ) {
-
-            // verbose() << "The current hit on Track 2 is " << *id2 << endmsg;
-
+        if ( std::any_of( std::begin(ids2), std::end(ids2), [&](unsigned int id2) {
             // It is critical that we only pass Velo hits to the tool
-            if ( ( *id ).lhcbID() == *id2 ) {
+            return id.lhcbID() == id2;
+        }) ) {
                 // verbose() << "And they match! Praise the Lord!" << endmsg;
                 ++numberofmatchedhits;
-                break;
-            }
         }
     }
 
@@ -167,22 +156,5 @@ bool HltSelectTracksForSwimming::tracksMatchInVelo( const LHCb::Track* t1,
               << (double)numberofmatchedhits / totalnumberofhits << endmsg;
 
     double matchlevel = (double)numberofmatchedhits / totalnumberofhits;
-    if ( matchlevel > 0.7 )
-        return true; // The usual 70% requirement
-    else
-        return false;
+    return ( matchlevel > 0.7 ); // The usual 70% requirement
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelectTracksForSwimming::finalize()
-{
-
-    StatusCode sc = HltAlgorithm::finalize(); // must be executed first
-    if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
-
-    debug() << "==> Finalize" << endmsg;
-
-    return StatusCode::SUCCESS;
-}
-

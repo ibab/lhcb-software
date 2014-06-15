@@ -85,7 +85,7 @@ class TrackFilter : public HltAlgorithm
             , m_counterCand( 0 )
         {
         }
-        const Predicate& predicate()
+        const Predicate& predicate() const
         {
             return m_predicate;
         }
@@ -120,37 +120,6 @@ class TrackFilter : public HltAlgorithm
 // ==========================================================================
 } //                                                       end of namespace Hlt
 // ============================================================================
-namespace
-{
-// ==========================================================================
-template <typename T>
-class adaptor_
-{
-  public:
-    // ========================================================================
-    typedef typename T::result_type result_type;
-    typedef typename T::argument_type argument_type;
-    adaptor_( T& t ) : m_t( t )
-    {
-    }
-    result_type operator()( argument_type x ) const
-    {
-        return !m_t( x );
-    }
-    // ========================================================================
-  private:
-    // ========================================================================
-    T& m_t;
-    // ========================================================================
-};
-// ==========================================================================
-template <typename T>
-adaptor_<T> adapt( T& t )
-{
-    return adaptor_<T>( t );
-}
-// ==========================================================================
-}
 // ============================================================================
 // constructor
 // ============================================================================
@@ -188,23 +157,16 @@ StatusCode Hlt::TrackFilter::initialize()
 // ============================================================================
 StatusCode Hlt::TrackFilter::execute()
 {
-
     Hlt::TSelection<LHCb::Track>* out = m_selection.output();
-
     assert( out->empty() );
     *m_selection.input<1>() >> *out;
-    for ( std::vector<Filter>::iterator i = m_predicates.begin();
-          i != m_predicates.end(); ++i ) {
+    for ( auto& i : m_predicates ) {
         out->erase(
-            std::remove_if( out->begin(), out->end(),
-                            adapt( i->predicate() ) ) // move adapt into *i... write
-                                                      // an apply for this
-                                                      // erase/remove_if construct
-            ,
-            out->end() );
-        i->counterPass() += !out->empty();
+            std::remove_if( std::begin(*out), std::end(*out), std::not1( std::cref(i.predicate()) ) )
+            , std::end(*out) );
+        i.counterPass() += !out->empty();
         if ( out->empty() ) break;
-        i->counterCand() += out->size();
+        i.counterCand() += out->size();
     }
     setFilterPassed( !out->empty() );
     return StatusCode::SUCCESS;
@@ -226,8 +188,7 @@ StatusCode Hlt::TrackFilter::decode()
     //
     m_predicates.clear();
     m_predicates.reserve( m_code.size() );
-    for ( std::vector<std::string>::const_iterator i = m_code.begin();
-          i != m_code.end(); ++i ) {
+    for ( auto i = m_code.begin(); i != m_code.end(); ++i ) {
         //
         LoKi::TrackTypes::TrCut cut =
             LoKi::BasicFunctors<const LHCb::Track*>::BooleanConstant( false );
