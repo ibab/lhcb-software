@@ -1,0 +1,20 @@
+package           HCDigitisation
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#=====================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages
+#=====================================================================
+use  LHCbKernel    v*  Kernel
+use  MCEvent       v*  Event
+use  DAQEvent      v*  Event
+use  GaudiAlg      v*
+
+# Component library building rule
+#=====================================================================
+library          HCDigitisation      ../src/*.cpp -import=AIDA
+apply_pattern component_library library=HCDigitisation

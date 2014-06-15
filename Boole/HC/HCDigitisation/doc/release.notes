@@ -1,0 +1,9 @@
+!--------------------------------------------------------------------------
+! Package     : HC/HCDigitisation
+! Responsible : 
+! Purpose     : Simulation of digitisation for Herschel counters 
+!--------------------------------------------------------------------------
+
+! 2014-06-15 - Heinrich Schindler
+ - Initial import.
+
