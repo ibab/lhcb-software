@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : HC/HCDAQ
+! Responsible : 
+! Purpose     : Decoding of Herschel raw banks
+!-----------------------------------------------------------------------------
+
+! 2014-06-15 - Heinrich Schindler
+ - Initial import.
+

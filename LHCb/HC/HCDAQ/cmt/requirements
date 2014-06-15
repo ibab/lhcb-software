@@ -1,0 +1,23 @@
+package           HCDAQ
+version           v1r0
+
+# Structure, i.e. directories to process.
+#=====================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages
+#=====================================================================
+use  LHCbKernel    v*  Kernel
+use  DigiEvent     v*  Event
+use  GaudiAlg      v*
+use  DAQEvent      v*  Event
+use  DAQKernel     v*  DAQ
+use  DAQUtils      v*  DAQ
+use  AIDA          v*  LCG_Interfaces -no_auto_imports
+
+# Component library building rule
+#=====================================================================
+library          HCDAQ      ../src/*.cpp -import=AIDA
+apply_pattern component_library library=HCDAQ
