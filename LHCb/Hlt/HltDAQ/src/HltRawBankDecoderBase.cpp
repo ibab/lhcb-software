@@ -130,7 +130,7 @@ HltRawBankDecoderBase::fetch_info2string(unsigned int tck) const
         };
 
         if (tck==0) {
-           warning() << "TCK from rawbanks seems to be 0 -- assuming that the current HltANNSvc has the proper mapping configured. Proceed at your own risk..." << endmsg;
+           warning() << "TCK in rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
            append0(InfoID);
         } else {
            append1(InfoID);

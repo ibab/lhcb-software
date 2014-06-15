@@ -5,6 +5,9 @@
 !------------------------------------------------------------------------------
 
 ! 2014-06-14 - Gerhard Raven
+ - various minor tweaks...
+
+! 2014-06-14 - Gerhard Raven
  - silence warning about pre-existing HltRoutingBits RawBank
  - fix various clang warnings
 

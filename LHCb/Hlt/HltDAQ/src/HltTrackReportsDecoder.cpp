@@ -175,6 +175,7 @@ StatusCode HltTrackReportsDecoder::execute()
     if ( msgLevel( MSG::VERBOSE ) ) {
         verbose() << "----------------------------------------\n";
         verbose() << "Decoded event " << m_callcount << endmsg;
+        verbose() << "Decoding source id " << m_sourceID << " into TES " << m_outputLocation <<endmsg;
         verbose() << outputTracks->size() << " Resurrected tracks: \n";
         counter( "#Tracks" ) += outputTracks->size();
         for ( const auto& Tr : *outputTracks ) {

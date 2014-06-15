@@ -34,50 +34,47 @@ const StandardPacker pac;
 
 void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBank )
 {
-
+    auto out = std::back_inserter(rawBank);
     // std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
     for ( const LHCb::Track* Tr : *tracks ) {
-
         // write meta information
         // flags
-        rawBank.push_back( Tr->flags() );
-
+        *out++ =  Tr->flags();
         //
         unsigned int nhits = Tr->nLHCbIDs();
-        rawBank.push_back( nhits );
+        *out++ =  nhits;
 
         // write LHCbIDs
         // behold the awesomness of C++11 functional programming
         // here use the C++ "map" functional transform to fill the LHCbIDs into the bank
         assert( nhits == Tr->lhcbIDs().size() );
-        std::transform( std::begin( Tr->lhcbIDs() ), std::end( Tr->lhcbIDs() ),
-                        std::back_inserter( rawBank ),
-                        std::mem_fn( &LHCb::LHCbID::lhcbID ) );
-
+        out = std::transform( std::begin( Tr->lhcbIDs() ), std::end( Tr->lhcbIDs() ),
+                              out,
+                              std::mem_fn( &LHCb::LHCbID::lhcbID ) );
         // write states
         // check number of states on track
         const std::vector<LHCb::State*>& states = Tr->states();
         unsigned int nstates = states.size();
         assert( nstates < 1000 );
-        rawBank.push_back( nstates );
+        *out++ =  nstates ;
         // loop over states and encode locations, parameters and covs
         for ( unsigned int is = 0; is < nstates; ++is ) {
             LHCb::State* state = states[is];
-            // store the state location
-            rawBank.push_back( state->location() );
+            // store the state location -- a bit of overkill to store this as 32 bit int...
+            *out++ = state->location();
             // store z
-            rawBank.push_back( pac.position( state->z() ) );
+            *out++ = pac.position( state->z() );
             // store the parameters
             Gaudi::TrackVector& par = state->stateVector();
-            rawBank.push_back( pac.position( par[0] ) );
-            rawBank.push_back( pac.position( par[1] ) );
-            rawBank.push_back( pac.slope( par[2] ) );
-            rawBank.push_back( pac.slope( par[3] ) );
+            *out++ = pac.position( par[0] );
+            *out++ = pac.position( par[1] );
+            *out++ = pac.slope( par[2] );
+            *out++ = pac.slope( par[3] );
 
             double p = state->qOverP();
             if (p!=0) p = 1./p;
             auto pp = pac.energy(p);
-            rawBank.push_back( pp );
+            *out++ =  pp;
             //== Get the coded value in case of saturation, to pack the momentum error
             //consistently later
             p = pac.energy( pp );
@@ -90,26 +87,22 @@ void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBan
             // --> in principle we can put 2 covs in one uint
 
             // get errors for scaling
-            std::array<double, 5> err { 
+            std::array<double, 5> err {
                 std::sqrt( state->errX2() ),     std::sqrt( state->errY2() ),
                 std::sqrt( state->errTx2() ),    std::sqrt( state->errTy2() ),
                 std::sqrt( state->errQOverP2() ) };
             // first store the diagonal then row wise the rest
-            rawBank.push_back( pac.position( err[0] ) );
-            rawBank.push_back( pac.position( err[1] ) );
-            rawBank.push_back( pac.slope( err[2] ) );
-            rawBank.push_back( pac.slope( err[3] ) );
-            rawBank.push_back(
-                pac.energy( 1.e5 * fabs( p ) * err[4] ) ); //== 1.e5 * dp/p (*1.e2)
+            *out++ = pac.position( err[0] );
+            *out++ = pac.position( err[1] );
+            *out++ = pac.slope( err[2] );
+            *out++ = pac.slope( err[3] );
+            *out++ = pac.energy( 1.e5 * fabs( p ) * err[4] ); //== 1.e5 * dp/p (*1.e2)
             for ( unsigned i = 1; i < 5; ++i )
                 for ( unsigned j = 0; j < i; ++j ) {
-                    rawBank.push_back(
-                        pac.fraction( state->covariance()( i, j ) / err[i] / err[j] ) );
+                    *out++ =
+                        pac.fraction( state->covariance()( i, j ) / err[i] / err[j] );
                 } //  end loop over states
         }
-        // rawBank.push_back(0);
-        // std::copy(rawBank.begin(), rawBank.end(), std::ostream_iterator<unsigned
-        // int>(std::cout, " "));
     }
 }
 
@@ -123,23 +116,19 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
     // std::cout << "RawBank size = " << nentries << std::endl;
     unsigned int k = 0;
     while ( k < nentries ) {
+        // Start a new track
+        std::unique_ptr<Track> track{ new Track() };
         // read flags; this also contains the type
-        unsigned int flags = rawit[k++];
+        track->setFlags( rawit[k++] );
 
         // read number of IDs in track
-        unsigned int nid = rawit[k++];
-        // std::cout << "Nids in track: " <<  nid << std::endl;
-        // Start a new track
-        Track* track = new Track();
-        track->setFlags( flags );
-
+        auto nid = rawit[k++];
         for ( unsigned int i = 0; i < nid; i++ ) {
             track->addToLhcbIDs( LHCbID{ rawit[k++] } );
         }
 
         // read number of states
-        unsigned int nstates = rawit[k];
-        // std::cout << "Nstates in track: " <<  nstates << std::endl;
+        auto nstates = rawit[k];
         if ( k + nstates * 22 > nentries ) {
             std::cout << "TOO MANY STATES IN TRACK. ABORTING DECODING. " << std::endl;
             std::cout << "This happens at track " << tracks->size() << " in the event"
@@ -159,9 +148,8 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
         }
         ++k;
         for ( unsigned int istate = 0; istate < nstates; ++istate ) {
-
             // add location
-            LHCb::State::Location loc = LHCb::State::Location( rawit[k++] );
+            LHCb::State::Location loc{ static_cast<LHCb::State::Location>(rawit[k++]) };
             // z coordinate
             double z = pac.position( int(rawit[k++]) );
             // add parameters
@@ -175,24 +163,23 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
             Gaudi::TrackSymMatrix stateCov;
 
             //== Fill covariance matrix
-            std::array<double, 5> err {
-                pac.position( (int)rawit[k++] ), pac.position( (int)rawit[k++] ),
-                pac.slope( (int)rawit[k++] ), pac.slope( (int)rawit[k++] ),
-                pac.energy( (int)rawit[k++] ) * fabs( par[4] ) * 1.e-5 // par[4]=1/p
-            };
+            std::array<double, 5> err;
+            err[0] = pac.position( (int)rawit[k++] );
+            err[1] = pac.position( (int)rawit[k++] );
+            err[2] = pac.slope( (int)rawit[k++] ); 
+            err[3] = pac.slope( (int)rawit[k++] );
+            err[4] = pac.energy( (int)rawit[k++] ) * fabs( par[4] ) * 1.e-5; // par[4]=1/p
 
-            for ( unsigned i = 0; i < 5; ++i ) stateCov( i, i ) = err[i] * err[i];
-            for ( unsigned i = 1; i < 5; ++i )
-                for ( unsigned j = 0; j < i; ++j )
+            for ( unsigned i = 0; i < 5; ++i ) {
+                for ( unsigned j = 0; j < i; ++j ) {
                     stateCov( i, j ) =
                         err[i] * err[j] * pac.fraction( (short int)rawit[k++] );
-
-            track->addToStates( LHCb::State( par, stateCov, z, loc ) );
+                }
+                stateCov( i, i ) = err[i] * err[i];
+            }
+            track->addToStates( LHCb::State{ par, stateCov, z, loc } );
         } // end loop over states
-
-        tracks->add( track );
-        // std::cout << "RawBank entry counter k= " << k << std::endl;
-        // std::cout << "Decoded track: \n" << *track << std::endl;
+        tracks->add( track.release() );
     }
     return tracks->size();
 }

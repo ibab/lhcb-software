@@ -121,13 +121,10 @@ StatusCode HltTrackReportsWriter::execute()
     }
     for ( int iBank = 0; iBank < nBank; ++iBank ) {
         int ioff = iBank * 16300;
-        int isize = bankBody.size() - ioff;
-        if ( isize > 16300 ) isize = 16300;
-        std::vector<unsigned int> bankBodyPiece( &( bankBody[ioff] ),
-                                                 &( bankBody[ioff + isize] ) );
-        int sourceID = iBank | ( m_sourceID << kSourceID_BitShift );
-        rawEvent->addBank( sourceID, RawBank::HltTrackReports, kVersionNumber,
-                           bankBodyPiece );
+        auto isize = std::min( bankBody.size() - ioff, 16300ul );
+        rawEvent->addBank( iBank | ( m_sourceID << kSourceID_BitShift ),
+                           RawBank::HltTrackReports, kVersionNumber,
+                           { &bankBody[ioff], &bankBody[ioff + isize] } );
     }
     if ( nBank > 1 ) {
         if ( msgLevel( MSG::DEBUG ) )
