@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================= HltCommon v10r1 2014-06-16 =========================
+
 ! 2014-06-15 - Gerhard Raven
  - remove unused TarFileAccess, IDirectoryAccess
  - fix -Wpedantic in HltIncidentFilter, MooreInitSvc
