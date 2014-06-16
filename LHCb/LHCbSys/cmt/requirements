@@ -143,7 +143,9 @@ use LHCbTrackInterfaces   v2r1    Tr      # Marco Cattaneo
 
 use VeloDAQ               v6r11   Velo    # Kurt Rinnert
 
-use VPDAQ                 v2r7    VP      # Marcin Kucharczyk
+use VPDAQ                 v2r7    VP      # Kurt Rinnert
+
+use HCDAQ                 v1r0    HC      # Heinrich Schindler 
 
 # Declare this as a container package
 apply_pattern container_package
