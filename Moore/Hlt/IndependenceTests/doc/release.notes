@@ -2,6 +2,11 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+!========================= IndependenceTests v1r8 2014-06-16 =========================
+
+! 2014-05-26 - Sean Benson
+ - Fixed the independence nigtlies test (deprecation warning about DB snapshot etc)
+
 !========================= IndependenceTests v1r7 2014-04-29 =========================
 
 
