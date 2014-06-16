@@ -25,9 +25,15 @@
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
-"""
-The helper module for Bender application.
-It applies some last-moment (version-dependent) fixes
+"""Apply some last-moment (version-dependent) fixes
+
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -54,34 +60,33 @@ __all__     = ()
 from Bender.Logger import getLogger 
 logger = getLogger(__name__)
 # =============================================================================
-logger.info ( '*** Fix some "features"' ) 
+if '__main__' == __name__ : logger = getLogger ( 'Bender.Fixes' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 #
 # =============================================================================
 ## "at-exit action 
 def _bender_at_exit_ () :
     """
-    
     At-Exit action
-    
     """
-    logger.info ( '*'*120 ) 
-    logger.info ( 'custom "atexit" handler is being invoked' ) 
-    logger.info ( '*'*120 ) 
+    logger.debug ( '*'*120 ) 
+    logger.debug ( 'custom "atexit" handler is being invoked' ) 
+    logger.debug ( '*'*120 ) 
     
     from GaudiPython.Bindings import _gaudi 
     if _gaudi :
-        logger.info( 'AppMgr.exit() is being invoked' ) 
-        _gaudi.exit()
+        logger.debug ( 'AppMgr.exit() is being invoked' ) 
+        _gaudi.exit  ()
 
-    logger.info ( '*'*120 ) 
-    logger.info ( 'custom "atexit" handler has been invoked' ) 
-    logger.info ( '*'*120 ) 
+    logger.debug ( '*'*120 ) 
+    logger.debug ( 'custom "atexit" handler has been invoked' ) 
+    logger.debug ( '*'*120 ) 
 
 
 import atexit
 atexit.register( _bender_at_exit_ )
-logger.info( 'add custom "atexit" handler' ) 
+logger.debug ( 'add custom "atexit" handler' ) 
 
 # =============================================================================
 ## Other fixes:
@@ -91,13 +96,15 @@ import Bender.Fixes_LoKi
 
 # =============================================================================
 if __name__ == '__main__' :
-    print '*'*120
-    print                      __doc__
-    print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
-    print '*'*120
 
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
+    
 # =============================================================================
 # The END 
 # =============================================================================

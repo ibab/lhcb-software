@@ -19,15 +19,22 @@
 #  with the smear campaign of Dr.O.Callot et al.: 
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 #
-#  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
+#  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
 #  @date   2006-10-08
 #
 #                    $Revision$
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
-"""
-This is a trivial startup script for python Bender session
+"""This is a trivial startup script for python Bender session
+
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -44,10 +51,16 @@ with the smear campaign of Dr.O.Callot et al.:
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV belyaev@physics.syr.edu'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2006-10-08"
 __version__ = "$Revision$"
 __all__     = () 
+# =============================================================================
+## logging
+# =============================================================================
+from Bender.Logger import getLogger 
+if '__main__' == __name__ : logger = getLogger ( 'Bender.Startup' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 
 try:
@@ -69,13 +82,12 @@ try:
 
     ## write history at the end 
     def _prnt_() :
-        print 'BENDER history file: %s' % __history__
+        logger.info ( 'BENDER history file: %s' % __history__ ) 
         
     ## line completer 
     import rlcompleter
     import readline
     readline.parse_and_bind("tab: complete")
-
 
     import atexit
     atexit.register ( readline.write_history_file , __history__ )
@@ -90,12 +102,14 @@ except:
     
 # =============================================================================
 if __name__ == '__main__' :
-    print '*'*120
-    print                      __doc__
-    print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
-    print '*'*120
+
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
 
 # =============================================================================
 # The END 

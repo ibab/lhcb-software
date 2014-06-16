@@ -19,15 +19,21 @@
 #  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
 # 
 #  @date   2011-10-21
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
 #                    $Revision$
 #  Last modification $Date$
 #                 by $Author$ 
 # =============================================================================
-"""
-The helper module for Bender application.
-It applies some last-moment (version-dependent) fixes
+""" Apply some last-moment (version-dependent) fixes
+
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
 
 This file is a part of BENDER project:
 ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -44,7 +50,7 @@ with the smear campaign of Dr.O.Callot et al.:
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-21"
 __version__ = '$Revision$'
 __all__     = ()
@@ -52,7 +58,8 @@ __all__     = ()
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Fixes_Gaudi' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 logger.info ( '*** Fix some Gaudi features' ) 
 # =============================================================================
@@ -130,11 +137,11 @@ if not hasattr ( _EvtSel , '_openNew_') :
 
     _EvtSel._openNew_ = _openNew_
     _EvtSel.open      = _openNew_
-    logger.info  ( 'decorate iEventSelector to deal with RAW/MDF & CASTOR -files' ) 
+    logger.debug ( 'decorate iEventSelector to deal with RAW/MDF & CASTOR -files' ) 
 
 ## Decorate iDataSvc with proper dir/ls methods '
 import AnalysisPython.Dir 
-logger.info ( 'decorate iDataSvc with proper "dir/ls" methods ')
+logger.debug ( 'decorate iDataSvc with proper "dir/ls" methods ')
 
 ## decorate the algorhtms with the proper dumpHistos methods
 import GaudiPython.Bindings 
@@ -142,7 +149,7 @@ _iAlgorithm = GaudiPython.Bindings.iAlgorithm          ##    Algorithm interface
 _iAlgTool   = GaudiPython.Bindings.iAlgTool            ##         Tool interface
 for _t in ( _iAlgorithm , _iAlgTool ) :
     if not hasattr ( _t , 'dumpHistos' ) :
-        logger.info ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
+        logger.debug ( 'decorate iAlgoritm/iAlgTool with "dumpHistos" method') 
         ## dump all histogram from the given component 
         def _dumpHistos ( cmp , *args ) :
             """
@@ -160,11 +167,11 @@ for _t in ( _iAlgorithm , _iAlgTool ) :
         _t.dumpHistos = _dumpHistos 
 
 if not hasattr ( _iAlgorithm , 'isEnabled' ) :
-    logger.info ( 'decorate iAlgoritm with "isEnabled" method')
+    logger.debug ( 'decorate iAlgoritm with "isEnabled" method')
     _iAlgorithm.isEnabled = lambda self : self.__call_interface_method__("_ialg","isEnabled")
 
 if not hasattr ( _iAlgorithm , 'setEnabled' ) :
-    logger.info( 'decorate iAlgoritm with "setEnabled" method' )
+    logger.debug ( 'decorate iAlgoritm with "setEnabled" method' )
     ## enable/disbale 
     def __set_Enabled_ ( self , value ) :
         self.Enable = True if value else False
@@ -180,8 +187,7 @@ def _iadd_new_ (s,v) :
     return _iadd_old_(s,v)
 _SE.__iadd__ = _iadd_new_
 _SE.__str__  = _SE.toString 
-logger.info ( 'decorate StatEntity operator += ')
-
+logger.debug ( 'decorate StatEntity operator += ')
 
 _AppMgr = GaudiPython.Bindings.AppMgr
 if not hasattr ( _AppMgr , '_new_topAlg_' ) :
@@ -222,7 +228,7 @@ if not hasattr ( _AppMgr , '_new_topAlg_' ) :
 
     _AppMgr._new_topAlg_ = __top_Algs_
     _AppMgr.topAlgs      = __top_Algs_
-    logger.info ( 'decorate AppMgr.topAlgs() ' )
+    logger.debug ( 'decorate AppMgr.topAlgs() ' )
 
 ##
 if not hasattr ( _AppMgr , '_new_allAlg_' ) :
@@ -243,7 +249,7 @@ if not hasattr ( _AppMgr , '_new_allAlg_' ) :
 
     _AppMgr._new_allAlg_ = __all_Algs_
     _AppMgr.allAlgs      = __all_Algs_
-    logger.info ( 'decorate AppMgr.allAlgs() ' ) 
+    logger.debug ( 'decorate AppMgr.allAlgs() ' ) 
 
 ##
 if not hasattr ( _AppMgr , '_disable_Tops_' ) :
@@ -251,9 +257,7 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
     ## get the list of all algorithms 
     def __disable_Top_ ( self ) :
         """
-        
         Disable all top-level algorithms
-        
         """
         _tops     = self.topAlgs()
         _disabled = []
@@ -266,7 +270,7 @@ if not hasattr ( _AppMgr , '_disable_Tops_' ) :
 
     _AppMgr._disable_Tops_   = __disable_Top_ 
     _AppMgr.disableTopAlgs   = __disable_Top_ 
-    logger.info ( 'decorate AppMgr.disableTopAlgs() ' ) 
+    logger.debug ( 'decorate AppMgr.disableTopAlgs() ' ) 
 
 ## 
 if not hasattr ( _AppMgr , '_disable_All_' ) :
@@ -287,7 +291,7 @@ if not hasattr ( _AppMgr , '_disable_All_' ) :
 
     _AppMgr._disable_All_   = __disable_All_ 
     _AppMgr.disableAllAlgs  = __disable_All_ 
-    logger.info ( 'decorate AppMgr.disableAllAlgs() ' ) 
+    logger.debug ( 'decorate AppMgr.disableAllAlgs() ' ) 
 
 
 ## decorate Incident Service 
@@ -335,7 +339,7 @@ if not hasattr ( _AppMgr , 'incSvc' ) :
         return iIncSvc(name, svc)
     
     _AppMgr. incSvc = _incSvc_
-    logger.info( 'decorate AppMgr.incSvc() ' ) 
+    logger.debug ( 'decorate AppMgr.incSvc() ' ) 
 
 ## decorate Context Service 
 if not hasattr ( _AppMgr , 'cntxSvc' ) : 
@@ -410,7 +414,7 @@ if not hasattr ( _AppMgr , 'cntxSvc' ) :
     
     _AppMgr.   cntxSvc = _cntxSvc_
     _AppMgr. contexSvc = _cntxSvc_
-    logger.info ( 'decorate AppMgr.cntxSvc() ' ) 
+    logger.debug ( 'decorate AppMgr.cntxSvc() ' ) 
 
 
 ## decorate Event Collection service
@@ -430,7 +434,7 @@ if not hasattr ( _AppMgr , 'evtColSvc' ) :
 
     _AppMgr. evtcolSvc = _evtcolsvc_
     _AppMgr. evtColSvc = _evtcolsvc_
-    logger.info ( 'decorate AppMgr.evtColSvc() ' ) 
+    logger.debug ( 'decorate AppMgr.evtColSvc() ' ) 
 
 # =============================================================================
 ## get the links from data object  
@@ -453,12 +457,14 @@ def _links_ ( self ) :
 cpp.DataObject.links = _links_
 # =============================================================================
 if __name__ == '__main__' :
-    print '*'*120
-    print                      __doc__
-    print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
-    print '*'*120
+    
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
 
 # =============================================================================
 # The END 
