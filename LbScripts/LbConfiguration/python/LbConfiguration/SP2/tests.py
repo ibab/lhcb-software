@@ -324,7 +324,7 @@ def test_lookup():
 
     path[:] = bk_path
 
-def test_profiling():
+def _test_profiling():
     from LbConfiguration.SP2 import profiling
 
     from StringIO import StringIO
@@ -368,3 +368,24 @@ def test_profiling():
 
     cProfile.Profile = bk1
     profile.Profile = bk2
+
+def test_LBCORE_522():
+    '''LBCORE-522: lb-run does not expand some variables when falling back on SetupProject
+    https://its.cern.ch/jira/browse/LBCORE-522'''
+    from LbConfiguration.SP2.compatibility import expandAllVars
+
+    original = {'MYDATA': '${DATA}/subdir', 'DATA': '/main/path'}
+    expected = {'MYDATA': '/main/path/subdir', 'DATA': '/main/path'}
+    assert expandAllVars(original) == expected
+
+    try:
+        expandAllVars({'A': '${B}'})
+        assert False, 'exception expected'
+    except KeyError:
+        pass
+
+    try:
+        expandAllVars({'A': '${B}/x', 'B': '${A}/y'})
+        assert False, 'exception expected'
+    except ValueError:
+        pass

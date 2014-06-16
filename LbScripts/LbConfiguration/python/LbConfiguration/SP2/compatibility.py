@@ -15,6 +15,25 @@ __author__ = 'Marco Clemencic <marco.clemencic@cern.ch>'
 
 import sys
 
+def expandAllVars(env, iterations=10):
+    '''
+    Expand all variables in the environment dict.
+
+    >>> env = {'MYDATA': '${DATA}/subdir', 'DATA': '/main/path'}
+    >>> expandAllVars(env)
+    {'MYDATA': '/main/path/subdir', 'DATA': '/main/path'}
+    '''
+    from string import Template
+    new_env = dict((key, Template(value).substitute(env))
+                   for key, value in env.iteritems())
+    if new_env !=  env: # we did some change
+        if iterations > 0:
+            # let's see if there is something more to change
+            return expandAllVars(new_env, iterations-1)
+        else:
+            raise ValueError('failed to resolve all the variables (loop?)')
+    return new_env
+
 def getOldEnvironment(args):
     from LbConfiguration.SetupProject import SetupProject
     class Comp(SetupProject):
@@ -42,4 +61,4 @@ def getOldEnvironment(args):
     rc = comp.main(['--shell', 'sh'] + args)
     if rc:
         sys.exit(rc)
-    return dict(comp.environment.items())
+    return expandAllVars(dict(comp.environment.items()))
