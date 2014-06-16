@@ -26,9 +26,6 @@ use GaudiConf       v*
 use HltInterfaces   v* Kernel
 use Boost           v* LCG_Interfaces
 
-use  RecInterfaces       v*   Rec
-
-
 # Decoding
 use   DAQSys               v*    DAQ
 
