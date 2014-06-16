@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v12r1 2014-06-16 =========================
+
 ! 2014-06-09 - Sebastian Neubert
  - Intelligent configuration extended to Forward tracks 
 
