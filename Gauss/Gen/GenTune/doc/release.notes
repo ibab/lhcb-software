@@ -10,6 +10,8 @@
  - corrected typo in Python files in options, options/example
  - added exec_prefix variable in environment as work-around Rivet 1.9.0 helper
    script bug
+! 2014-06-16 - Alex Grecu
+ - released a new version of scripts/lhcbLFT2StdMap.py
 
 !========================== GenTune v2r0p2 2013-10-10 ========================
 ! 2013-09-23 - Marco Clemencic
