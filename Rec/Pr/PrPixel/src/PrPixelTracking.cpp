@@ -124,24 +124,16 @@ StatusCode PrPixelTracking::execute() {
   }
   m_hitManager->sortByX();
 
-  if (m_isDebug) {
-    for (unsigned int i = m_hitManager->firstModule();
-         m_hitManager->lastModule() >= i; ++i) {
-      PrPixelHits::const_iterator ith;
-      for (ith = m_hitManager->hits(i).begin();
-           m_hitManager->hits(i).end() != ith; ++ith) {
-        printHit(*ith);
-      }
+  if (m_isDebug || 0 <= m_wantedKey) {
+    if (0 <= m_wantedKey) {
+      info() << "--- Looking for track " << m_wantedKey << endmsg;
     }
-  }
-  if (0 <= m_wantedKey) {
-    info() << "--- Looking for track " << m_wantedKey << endmsg;
-    for (unsigned int i = m_hitManager->firstModule();
-         m_hitManager->lastModule() >= i; ++i) {
-      PrPixelHits::const_iterator ith;
-      for (ith = m_hitManager->hits(i).begin();
-           m_hitManager->hits(i).end() != ith; ++ith) {
-        if (matchKey(*ith)) printHit(*ith);
+    const unsigned int firstModule = m_hitManager->firstModule();
+    const unsigned int lastModule = m_hitManager->lastModule();
+    for (unsigned int i = firstModule; i <= lastModule; ++i) {
+      const PrPixelHits& hits = m_hitManager->hits(i);
+      for (auto it = hits.cbegin(), end = hits.cend(); it != end; ++it) { 
+        if (m_isDebug || matchKey(*it)) printHit(*it);
       }
     }
   }
@@ -284,9 +276,9 @@ void PrPixelTracking::searchByPair() {
     const int sens1 = sens0 - 2;
     PrPixelModule *module0 = m_hitManager->module(sens0);
     PrPixelModule *module1 = m_hitManager->module(sens1);
-    double z0 = module0->z();
-    double z1 = module1->z();
-    double dz = z0 - z1;
+    const double z0 = module0->z();
+    const double z1 = module1->z();
+    const double dz = z0 - z1;
 #ifdef DEBUG_HISTO
     plot(dz, "SeedPairDeltaZ",
          "Separation in Z [mm] between the seed pair modules", -200.0, +200.0,
@@ -296,10 +288,10 @@ void PrPixelTracking::searchByPair() {
     const double dxMax = m_maxXSlope * fabs(dz);
     const double dyMax = m_maxYSlope * fabs(dz);
     // Loop over hits in the first module (larger Z) in the pair.
-    PrPixelHits::const_iterator ith0;
-    PrPixelHits::const_iterator last0 = module0->hits().end();
-    PrPixelHits::const_iterator first1 = module1->hits().begin();
-    for (ith0 = module0->hits().begin(); last0 != ith0; ++ith0) {
+    auto end0 = module0->hits().cend();
+    auto end1 = module1->hits().cend();
+    auto first1 = module1->hits().cbegin();
+    for (auto ith0 = module0->hits().cbegin(); end0 != ith0; ++ith0) {
       // Skip hits already assigned to tracks.
       if ((*ith0)->isUsed()) continue;
       const double x0 = (*ith0)->x();
@@ -312,9 +304,7 @@ void PrPixelTracking::searchByPair() {
         printHit(*ith0, "St0");
       }
       // Loop over hits in the second module (smaller Z) in the pair.
-      PrPixelHits::const_iterator ith1;
-      PrPixelHits::const_iterator last1 = module1->hits().end();
-      for (ith1 = first1; last1 != ith1; ++ith1) {
+      for (auto ith1 = first1; end1 != ith1; ++ith1) {
         const double x1 = (*ith1)->x();
         // Skip hits below the X-pos. limit.
         if (x1 < xMin) {
@@ -344,11 +334,12 @@ void PrPixelTracking::searchByPair() {
         m_track.set(*ith0, *ith1);
         // Extend the seed track towards smaller Z.
         extendTrack(*ith0, *ith1);
-        if (m_track.hits().size() < 3) continue;
+        const unsigned int nHits = m_track.hits().size();
+        if (nHits < 3) continue;
 
         // Final checks
-        if (m_track.hits().size() == 3) {
-          // If only 3 hits, all should be unused and chi2 good.
+        if (nHits == 3) {
+          // In case of short tracks, all three hits should be unused.
           if (m_track.nbUnused() != 3) {
             if (m_debug) {
               info() << "  -- reject, only " << m_track.nbUnused()
@@ -357,6 +348,8 @@ void PrPixelTracking::searchByPair() {
             }
             continue;
           }
+          // Fit the track and apply a cut on the chi2.
+          m_track.fit();
           if (m_track.chi2() > m_maxChi2Short) {
             if (m_debug) {
               info() << " -- reject, chi2 " << m_track.chi2() << " too high."
@@ -366,7 +359,7 @@ void PrPixelTracking::searchByPair() {
             continue;
           }
         } else {
-          if (m_track.nbUnused() < m_fractionUnused * m_track.hits().size()) {
+          if (m_track.nbUnused() < m_fractionUnused * nHits) {
             if (m_debug) {
               info() << "  -- reject, only " << m_track.nbUnused() << "/"
                      << m_track.hits().size() << " hits are unused." << endmsg;
@@ -381,7 +374,7 @@ void PrPixelTracking::searchByPair() {
           info() << "=== Store track Nb " << m_tracks.size() << endmsg;
           printTrack(m_track);
         }
-        if (m_track.hits().size() > 3) {
+        if (nHits > 3) {
           m_track.tagUsedHits();
           break;
         }
@@ -403,10 +396,14 @@ void PrPixelTracking::makeLHCbTracks() {
   LHCb::Tracks *outputTracks = new LHCb::Tracks();
   put(outputTracks, m_outputLocation);
   unsigned int key = 0;
-  PrPixelTracks::iterator itt;
-  for (itt = m_tracks.begin(); m_tracks.end() != itt; ++itt) {
+  auto endTracks = m_tracks.end(); 
+  for (auto itt = m_tracks.begin(); itt != endTracks; ++itt) {
     // Skip 3-hit tracks with double-used hits.
-    if ((*itt).hits().size() == 3 && (*itt).nbUnused() != 3) continue;
+    if ((*itt).hits().size() == 3) {
+      if ((*itt).nbUnused() != 3) continue;
+    } else {
+      (*itt).fit();
+    }
     // Create a new LHCb track.
     LHCb::Track *newTrack = new LHCb::Track(key++);
     newTrack->setType(LHCb::Track::Velo);
@@ -421,8 +418,8 @@ void PrPixelTracking::makeLHCbTracks() {
     // Loop over the hits, add their LHCbIDs to the LHCb track and
     // find the highest Z.
     double zMax = -1.e9;
-    PrPixelHits::iterator ith;
-    for (ith = (*itt).hits().begin(); (*itt).hits().end() != ith; ++ith) {
+    auto endHits = (*itt).hits().cend();
+    for (auto ith = (*itt).hits().cbegin(); ith != endHits; ++ith) {
       newTrack->addToLhcbIDs((*ith)->id());
       if ((*ith)->z() > zMax) zMax = (*ith)->z();
     }
@@ -548,11 +545,12 @@ void PrPixelTracking::makeLHCbTracks() {
 }
 
 //=========================================================================
-//  Add hits from the specified module to the track
+// Add hits from the specified module to the track
 //=========================================================================
-PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, double xTol,
-                                     double maxScatter, const PrPixelHit *h1,
-                                     const PrPixelHit *h2) {
+PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, const double xTol,
+                                     const double maxScatter, 
+                                     const PrPixelHit *h1,
+                                     const PrPixelHit *h2) const {
   if (module->empty()) return NULL;
   const double x1 = h1->x();
   const double x2 = h2->x();
@@ -640,7 +638,8 @@ PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, double xTol,
 //=========================================================================
 // Debug the content of a hit
 //=========================================================================
-void PrPixelTracking::printHit(const PrPixelHit *hit, std::string title) {
+void PrPixelTracking::printHit(const PrPixelHit *hit, 
+                               const std::string& title) const {
   info() << title;
   info() << format(" module%3d x%8.3f y%8.3f z%8.2f used%2d", hit->module(),
                    hit->x(), hit->y(), hit->z(), hit->isUsed());
@@ -654,19 +653,20 @@ void PrPixelTracking::printHit(const PrPixelHit *hit, std::string title) {
 }
 
 //=========================================================================
-// Print a track, with distance and chi2
+// Print all hits on a track.
 //=========================================================================
-void PrPixelTracking::printTrack(PrPixelTrack &track) {
-  PrPixelHits::const_iterator ith;
-  for (ith = track.hits().begin(); track.hits().end() != ith; ++ith) {
-    printHit(*ith);
+void PrPixelTracking::printTrack(PrPixelTrack& track) const {
+  auto end = track.hits().cend();
+  for (auto it = track.hits().cbegin(); it != end; ++it) {
+    printHit(*it);
   }
 }
 
 //=========================================================================
 // Print a hit on a track, with its distance.
 //=========================================================================
-void PrPixelTracking::printHitOnTrack(PrPixelHit *hit, bool ifMatch) {
+void PrPixelTracking::printHitOnTrack(const PrPixelHit* hit, 
+                                      const bool ifMatch) const {
   bool isMatching = matchKey(hit);
   isMatching = (isMatching && ifMatch) || (!isMatching && !ifMatch);
   if (isMatching) printHit(hit, "   ");

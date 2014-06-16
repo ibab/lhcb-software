@@ -45,22 +45,23 @@ class PrPixelTracking : public GaudiAlgorithm {
   /// Extrapolate a seed track and try to add further hits.
   void extendTrack(const PrPixelHit *h1, const PrPixelHit *h2);
   /// Try to add a matching hit on a given module.
-  PrPixelHit *bestHit(PrPixelModule *module, double xTol, double maxScatter,
-                      const PrPixelHit *h1, const PrPixelHit *h2);
+  PrPixelHit *bestHit(PrPixelModule* module, const double xTol, 
+                      const double maxScatter,
+                      const PrPixelHit* h1, const PrPixelHit* h2) const;
   /// Produce LHCb::Track list understandable to other LHCb applications.
   void makeLHCbTracks();
 
   /// Debugging methods
-  bool matchKey(const PrPixelHit *hit) {
+  bool matchKey(const PrPixelHit *hit) const {
     if (m_debugTool) {
       LHCb::LHCbID id = hit->id();
       return m_debugTool->matchKey(id, m_wantedKey);
     }
     return false;
   }
-  void printHit(const PrPixelHit *hit, std::string title = "");
-  void printTrack(PrPixelTrack &track);
-  void printHitOnTrack(PrPixelHit *hit, bool ifMatch = true);
+  void printHit(const PrPixelHit* hit, const std::string& title = "") const;
+  void printTrack(PrPixelTrack& track) const;
+  void printHitOnTrack(const PrPixelHit* hit, const bool ifMatch = true) const;
 
   /// Location of output container
   std::string m_outputLocation;

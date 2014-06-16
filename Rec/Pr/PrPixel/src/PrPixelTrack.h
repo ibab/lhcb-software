@@ -25,42 +25,38 @@ class PrPixelTrack {
   /// Destructor
   virtual ~PrPixelTrack() {}
   /// Start a seed track from the two given hits
-  void set(PrPixelHit *h1, PrPixelHit *h2);
-  // Set(clear) "a-backward-track" flag
-  void setBackward(const bool flag) { m_backward = flag; }
-  bool backward() const { return m_backward; }
+  void set(PrPixelHit *h1, PrPixelHit *h2) {
+    m_hits.clear();
+    m_hits.push_back(h1);
+    m_hits.push_back(h2);
+  }
 
-  // Return the list of hits on this track.
+  /// Return the list of hits on this track.
   PrPixelHits &hits() { return m_hits; }
-  // Add a given hit to this track
-  void addHit(PrPixelHit *hit);
+  /// Add a given hit to this track
+  void addHit(PrPixelHit *hit) { m_hits.push_back(hit); }
+
   // Mark the hits of this track as being associated
   void tagUsedHits() {
-    PrPixelHits::iterator ith;
-    for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
-      (*ith)->setUsed(true);
+    for (auto it = m_hits.begin(), end = m_hits.end(); it != end; ++it) {
+      (*it)->setUsed(true);
     }
   }
   // Count unassociated hits for this track
   unsigned int nbUnused() const {
     unsigned int nn = 0;
-    PrPixelHits::const_iterator ith;
-    for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
-      if (!(*ith)->isUsed()) ++nn;
+    for (auto it = m_hits.cbegin(), end = m_hits.cend(); it != end; ++it) {
+      if (!(*it)->isUsed()) ++nn;
     }
     return nn;
   }
-
-  int firstModule() const { return m_hits.front()->module(); }
-  int lastModule() const { return m_hits.back()->module(); }
 
   /// Chi2 / degrees-of-freedom of straight-line fit
   double chi2() const {
     double ch = 0.;
     int nDoF = -4;
-    PrPixelHits::const_iterator ith;
-    for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
-      ch += chi2(*ith);
+    for (auto it = m_hits.cbegin(), end = m_hits.cend(); it != end; ++it) {
+      ch += chi2(*it);
       nDoF += 2;
     }
     return ch / nDoF;
@@ -90,18 +86,19 @@ class PrPixelTrack {
     return -(m_x0 * m_tx + m_y0 * m_ty) / (m_tx * m_tx + m_ty * m_ty);
   }
 
-  Gaudi::TrackSymMatrix covariance(double z);
+  Gaudi::TrackSymMatrix covariance(const double z) const;
 
+  /// Perform a straight-line fit.
+  void fit();
+ 
   /// Fit with a K-filter with scattering. Return the chi2
   double fitKalman(LHCb::State &state, int direction,
                    double noisePerLayer) const;
 
   // Number of hits assigned to the track
-  int size(void) const { return m_hits.size(); }
+  unsigned int size(void) const { return m_hits.size(); }
 
  private:
-  /// Backward or forward track
-  bool m_backward;
   /// List of pointers to hits
   PrPixelHits m_hits;
   /// Straight-line fit parameters
@@ -122,8 +119,6 @@ class PrPixelTrack {
   double m_uyz;
   double m_uz2;
 
-  /// Calculate the fit from the x/y-slope sums
-  void solve();
 };
 
 typedef std::vector<PrPixelTrack> PrPixelTracks;  // vector of tracks
