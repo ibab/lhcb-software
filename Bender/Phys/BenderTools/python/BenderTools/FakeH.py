@@ -3,7 +3,7 @@
 # =============================================================================
 # @file BenderTools/FakeH.py
 #
-#  Helper utulities to substitute PID for the basic particle
+#  Helper utulity to substitute PID for the basic particle
 #  @code
 #
 #  mass = DTF_FUN ( M , True , 'J/psi(1S)') ## calculate the mass with constrains
@@ -42,10 +42,9 @@
 # Last modification $Date: 2014-03-09 14:25:30 +0100 (Sun, 09 Mar 2014) $
 #                by $Author: ibelyaev $
 # =============================================================================
-"""
-Helper utulities to substitute PID for the basic particle
+""" Helper utulity to substitute PID for the basic particle
 
-#  @code
+# *****************************************************************************
 #
 #  mass = DTF_FUN ( M , True , 'J/psi(1S)') ## calculate the mass with constrains
 #  for B in container :
@@ -57,12 +56,18 @@ Helper utulities to substitute PID for the basic particle
 #      with FakeKaon ( pion ) :
 #         mass_fake = mass ( B ) ## calculate the mass after pion -> kaon change
 #  
-#  @endcode
+# *****************************************************************************
 
-Thanks Wouter    HULSBERGEN and Alexander BARANOV
+Thanks to Wouter    HULSBERGEN and Alexander BARANOV
 
-
-
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
+                                                                 
 This file is a part of BENDER project:
     ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
@@ -108,6 +113,12 @@ logger = getLogger( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp, LHCb, LoKi 
 import PartProp.decorators 
+# =============================================================================
+# logging 
+# =============================================================================
+from AnalysisPython.Logger import getLogger 
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.FakeH' )
+else                      : logger = getLogger ( __name__ )
 # ==============================================================================
 ## @class FakeH
 #  Helper class to substitute PID for the basic particle
@@ -211,16 +222,16 @@ def _make_pids_ ( name ) :
     #    
     return result 
 # =============================================================================
-_to_kaon      =          _make_list_ ( 'K+'  )
-_to_kaon      . update ( _make_list_ ( 'K-'  ) ) 
-_to_pion      =          _make_list_ ( 'pi+' )
-_to_pion      . update ( _make_list_ ( 'pi-' ) ) 
-_to_proton    =          _make_list_ ( 'p+'  )
-_to_proton    . update ( _make_list_ ( 'p~-' ) ) 
-_to_electron  =          _make_list_ ( 'e+'  )
-_to_electron  . update ( _make_list_ ( 'e-'  ) ) 
-_to_muon      =          _make_list_ ( 'mu+' )
-_to_muon      . update ( _make_list_ ( 'mu-' ) )
+_to_kaon      =          _make_pids_ ( 'K+'  )
+_to_kaon      . update ( _make_pids_ ( 'K-'  ) ) 
+_to_pion      =          _make_pids_ ( 'pi+' )
+_to_pion      . update ( _make_pids_ ( 'pi-' ) ) 
+_to_proton    =          _make_pids_ ( 'p+'  )
+_to_proton    . update ( _make_pids_ ( 'p~-' ) ) 
+_to_electron  =          _make_pids_ ( 'e+'  )
+_to_electron  . update ( _make_pids_ ( 'e-'  ) ) 
+_to_muon      =          _make_pids_ ( 'mu+' )
+_to_muon      . update ( _make_pids_ ( 'mu-' ) )
 # =============================================================================
 class FakeKaon     (FakeH) :
     def __init__ ( self , particle ) : FakeH.__init__( self, particle , _to_kaon     )
@@ -265,19 +276,19 @@ def validatePIDs ( parts = _particles_ ) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-    print ' Particle -> KAON     :' , _to_kaon
-    print ' Particle -> PION     :' , _to_pion
-    print ' Particle -> PROTON   :' , _to_proton
-    print ' Particle -> ELECTRON :' , _to_electron
-    print ' Particle -> MUON     :' , _to_muon
-    
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
+    logger.info ( ' Particle -> KAON     : %s ' % _to_kaon     )
+    logger.info ( ' Particle -> PION     : %s ' % _to_pion     )
+    logger.info ( ' Particle -> PROTON   : %s ' % _to_proton   )
+    logger.info ( ' Particle -> MUON     : %s ' % _to_muon     )
+    logger.info ( ' Particle -> ELECTRON : %s ' % _to_electron )
+    logger.info ( 80*'*'  ) 
     
 # =============================================================================
 # The END 

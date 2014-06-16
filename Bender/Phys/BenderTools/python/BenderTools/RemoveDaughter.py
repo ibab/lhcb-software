@@ -46,8 +46,9 @@
 # Last modification $Date: 2014-03-09 14:25:30 +0100 (Sun, 09 Mar 2014) $
 #                by $Author: ibelyaev $
 # =============================================================================
-"""
-Helper utulity for temporary removal of daughter particle form decay tree
+""" Helper utulity for temporary removal of daughter particle form decay tree
+
+# *****************************************************************************
 #
 #  mass = DTF_FUN ( M , True , 'J/psi(1S)') ## calculate the mass with constrains
 #  for B in container :
@@ -63,6 +64,16 @@ Helper utulity for temporary removal of daughter particle form decay tree
 #         mass_prime = mass ( B ) ## calculate the mass after removal of photon
 #      print 'after:', B.decay()
 #
+# *****************************************************************************
+
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
+                                                                 
 This file is a part of BENDER project:
     ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
 
@@ -81,12 +92,13 @@ __version__ = "$Revision: 169835 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-05-12"
 # =============================================================================
-__all__     = ( 'RemoveDaughter' )
+__all__     = ( 'RemoveDaughter',  )
 # =============================================================================
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.RemoveDaughter' )
+else                      : logger = getLogger ( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp,LHCb
 import LoKiPhys.Phys 
@@ -188,14 +200,14 @@ class RemoveDaughter ( object ) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
+    
     
     ##
     ## simple check
@@ -217,8 +229,8 @@ if '__main__' == __name__ :
     except AssertionError  as e :
         print e
 
-    print 80*'*'
-        
+    logger.info ( 80*'*'  ) 
+
 # =============================================================================
 # The END 
 # =============================================================================

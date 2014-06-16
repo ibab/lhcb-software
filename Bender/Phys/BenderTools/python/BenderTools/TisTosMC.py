@@ -28,8 +28,8 @@
 # Last modification $Date$
 #                by $Author$
 # =============================================================================
-"""
-Decorate the algorithm with helper methods for TisTosTob'ing 
+""" Decorate the algorithm with helper methods for TisTosTob'ing 
+
 
 This file is a part of BENDER project:
     ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -58,7 +58,8 @@ __all__= (
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.TisTosMC' )
+else                      : logger = getLogger ( __name__ )
 # ==============================================================================
 from   LoKiCore.basic  import cpp
 from   Bender.MainMC   import SUCCESS, AlgoMC 
@@ -80,13 +81,13 @@ AlgoMC.tisTos_finalize   = TT._tisTosFini
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
     
 # =============================================================================
 # The END 

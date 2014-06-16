@@ -26,9 +26,15 @@
 # Last modification $Date: 2013-05-26 12:47:48 +0200 (Sun, 26 May 2013) $
 #                by $Author: ibelyaev $
 # =============================================================================
-"""
+"""Few pure technical utilities
 
-Few pure technical utilities 
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
 
 This file is a part of BENDER project:
 
@@ -51,13 +57,14 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2013-06-11"
 # =============================================================================
 __all__= (
-    'silence'   ## suppress some unnesessary printout from Gaudi 
+    'silence',    ## suppress some unnesessary printout from Gaudi 
     )
 # ==============================================================================
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.Utils' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 
 # ==============================================================================
@@ -96,13 +103,14 @@ def silence ( lst = [ 'HcalDet.Quality'          ,
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    logger.info ( 80*'*'  ) 
+    logger.info ( __doc__ ) 
+    logger.info ( ' Author  : %s ' %  __author__  ) 
+    logger.info ( ' Version : %s ' %  __version__ ) 
+    logger.info ( ' Date    : %s ' %  __date__    ) 
+    logger.info ( ' Symbols : %s ' %  list ( __all__ ) ) 
+    logger.info ( 80*'*'  ) 
+    
 
 # ==============================================================================
 # The END 

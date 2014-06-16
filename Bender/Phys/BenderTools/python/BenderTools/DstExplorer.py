@@ -62,9 +62,16 @@
 #  Last modification $Date$
 #                 by $Author$
 # =============================================================================
-"""
-Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
+"""Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs
 
+oooooooooo.                              .o8                     
+`888'   `Y8b                            \"888                     
+ 888     888  .ooooo.  ooo. .oo.    .oooo888   .ooooo.  oooo d8b 
+ 888oooo888' d88' `88b `888P\"Y88b  d88' `888  d88' `88b `888\"\"8P 
+ 888    `88b 888ooo888  888   888  888   888  888ooo888  888     
+ 888    .88P 888    .o  888   888  888   888  888    .o  888     
+o888bood8P'  `Y8bod8P' o888o o888o `Y8bod88P\" `Y8bod8P' d888b    
+                                                                 
 This file is a part of BENDER project:
 
   ``Python-based Interactive Environment for Smart and Friendly Physics Analysis''
@@ -124,7 +131,8 @@ __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' == __name__ : logger = getLogger ( 'BenderTools.DstExplorer' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 ## configure the application from parser data  
 def configure ( options , arguments ) :
@@ -336,11 +344,10 @@ def configure ( options , arguments ) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 120*'*'
-    
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
+    logger.info ( 100*'*')
+    logger.info ( ' Author  : %s ' % __author__   ) 
+    logger.info ( ' Version : %s ' % __version__  ) 
+    logger.info ( ' Date    : %s ' % __date__     )
     
     from BenderTools.Parser import makeParser
     parser = makeParser  ( usage = __usage__   ,
@@ -360,9 +367,9 @@ if '__main__' == __name__ :
 
     print 120*'*'
     if options.Quiet :
-        print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
+        logger.info ( ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs ')
     else :
-        print __doc__
+        logger.info ( __doc__ ) 
 
     ## Files must be specfied are mandatory!
     if not arguments : parser.error ( 'No input files are specified' ) 
@@ -388,17 +395,52 @@ if '__main__' == __name__ :
     
     ## initialize and read the first event
     run ( 1 )
-    
-    ## execute the py-files, defined as arguments
-    for a in pyfiles :
-        if not os.path.exists ( a ) :
-            logger.warning   ('No py-file is found "%s"' % a )
-        else : 
+
+    ## execute the files, defined as arguments
+    if pyfiles :
+        
+        from   copy import deepcopy
+        _myself = sys.modules[ __name__ ] 
+        _mykeys = deepcopy ( dir( _myself ) ) 
+        _copied = set() 
+        _skept  = set() 
+        
+        for a in pyfiles : 
+            
+            p     = a.find( '.py' )
+            if p <= 0          : continue 
+            if len(a) != p + 3 : continue  
+            if not os.path.exists ( a ) :
+                logger.warning   ('No file is found  "%s"' % a )
+                continue 
+            logger.info  ('Try    to execute "%s"' % a )
             try :
-                logger.info  ('Try to execute      "%s"' % a )
-                execfile ( a )
-            except:
-                logger.error ('Unable to execute   "%s"' % a )
+                myvars =  {} 
+                execfile ( a , myvars )
+                for k,val in myvars.iteritems() : 
+                ## do not redefine already defined symbols!  
+                    if k in _mykeys : 
+                        # do not redefine local symbols [ needed? ] 
+                        _skept.add ( k )
+                        continue
+                    ## copy symbol into the local namespace  
+                    setattr ( _myself , k , val ) 
+                    _copied.add ( k ) 
+            except :
+                logger.error ('Unable to execute "%s"'     % a    )
+                logger.error ('Exception: %s' % sys.exc_info()[0] ) 
+                import traceback 
+                print  traceback.format_exc() 
+                
+        if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
+        if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  
+        
+        ## do not pollute the namespace 
+        del _copied
+        del _skept
+        del _mykeys 
+        del _myself 
+        
 
 # =============================================================================
 # The END 
