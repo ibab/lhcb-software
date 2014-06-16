@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-06-16 - Jaap Panman
+- add example for gaudipython usage of mu calculation in jobs directory
+
+! 2014-06-16 - Jaap Panman
 - revert to create a component library
 
 ! 2014-06-13 - Jaap Panman
