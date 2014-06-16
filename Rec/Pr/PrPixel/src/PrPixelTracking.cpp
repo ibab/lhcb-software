@@ -278,7 +278,7 @@ void PrPixelTracking::searchByPair() {
   // Get the range of modules to start search on,
   // starting with the one at largest Z.
   const int lastModule = m_hitManager->lastModule();
-  const int firstModule = m_hitManager->firstModule() + 2;
+  const int firstModule = m_hitManager->firstModule() + 4;
   for (int sens0 = lastModule; firstModule <= sens0; sens0 -= 1) {
     // Pick-up the "paired" module one station backwards
     const int sens1 = sens0 - 2;
@@ -287,8 +287,6 @@ void PrPixelTracking::searchByPair() {
     double z0 = module0->z();
     double z1 = module1->z();
     double dz = z0 - z1;
-// Does it make sense to skip pairs very far apart ?
-// if( fabs(dz) > 60.0) continue;
 #ifdef DEBUG_HISTO
     plot(dz, "SeedPairDeltaZ",
          "Separation in Z [mm] between the seed pair modules", -200.0, +200.0,
