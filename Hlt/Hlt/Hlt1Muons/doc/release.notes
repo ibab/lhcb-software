@@ -3,6 +3,9 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+!========================= Hlt1Muons v1r8 2014-06-16 =========================
+
 ! 2014-06-12 - Gerhard Raven
  - Hlt1MuonHit: replace individual doubles by std::array<double,6>
  - Candidate: remove unused constructor
