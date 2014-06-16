@@ -2,7 +2,7 @@
 
 # Suggested acrontab entry:
 #
-# 00 20 * * * lxbuild157 /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/buildGeneralDoc
+# 00 20 * * * lxbuild173 /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/prod/InstallArea/scripts/buildGeneralDoc
 #
 # The user running the script must be able to create AFS volumes in the $LHCBDOC
 # directory.
@@ -16,8 +16,13 @@ function logmsg() {
 }
 
 function logcmd() {
-	logmsg cmd: "$@"
-	"$@" >>$outlog 2>&1
+    logmsg cmd: "$@"
+    "$@" >>$outlog 2>&1
+    xc=$?
+    if [ $xc != 0 ] ; then
+        logmsg FAILED: exit code = $xc
+        return $xc
+    fi
 }
 
 logmsg Starting $0
@@ -42,7 +47,10 @@ if [ ! -e $DOCROOT/stop_cron ] ; then
     # Fine tuning of the environment
     logcmd . SetupProject.sh LbScripts --no-user --runtime LCGCMT graphviz
     # Run the main script
-    logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused --timeout 23 >>$outlog 2>&1
+    logcmd python -m LbRelease.LHCbDoc --debug --clean-archived --remove-unused --timeout 23
+    if [ $? != 0 ] ; then
+        echo Failure in $0
+    fi
 else
     logmsg "Doc generation disabled ($DOCROOT/stop_cron)"
 fi

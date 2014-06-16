@@ -1,3 +1,8 @@
+2014-06-16  Marco Clemencic <Marco.Clemencic@cern.ch>
+
+	Improved doc build wrapper script to correctly report failures.
+	* scripts/buildGeneralDoc
+
 2014-06-11  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-517: Merge compatible stacks
