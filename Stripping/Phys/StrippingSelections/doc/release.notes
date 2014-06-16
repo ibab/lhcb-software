@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r35 2014-06-16 =========================
+
 ! 2014-06-10 - Mika Vesterinen
  - Further optimisation of StrippingB2DMuNuX.py
 
@@ -17,7 +19,7 @@
  - Updates to semileptonic tests. Add tests/TestB2DMuNu.py
 
 ! 2014-06-02 - Vanya Belyaev
- - PsiX0: fix a stupid bug with units 
+ - PsiX0: fix a stupid bug with units
 
 ! 2014-06-02 - Mika Vesterinen
  - Updates to tests/TestSemileptonicsOnRealData.py for Stripping21rX
@@ -32,10 +34,10 @@
 
  - PromptCharm
    fix stypud typo in Lambda_c selection.
-   Unfortunately it means that Lambda_c  and 
-   related selection (Sigma_c, Xi_c, lambda_c**, ...)  
-   from this module from the incremental stripping v20r*p3 
-   are wrong and can't be used.. :-( 
+   Unfortunately it means that Lambda_c  and
+   related selection (Sigma_c, Xi_c, lambda_c**, ...)
+   from this module from the incremental stripping v20r*p3
+   are wrong and can't be used.. :-(
 
 !========================= StrippingSelections v3r34 2014-05-19 =========================
 
