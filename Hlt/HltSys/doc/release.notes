@@ -5,6 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+
+</PRE><H1><A NAME=v22r2>2014-04-22 HltSys v22r2</A></H1><PRE>
+
+For HLT commissioning week June 2014, to catch up with stack v37r3. Depends on Rec v16r3 via Phys v18r3. Based on Gaudi v25r2
+
+Main changes:
+	IsMuon optimised.
+	Speed-up of hit partitioning and sorting in Hlt1MuonStation.
+	Definition and implementation of forward tracking sequence that re-uses Hlt1 tracks.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v22r2
+
 </PRE><H1><A NAME=v22r1>2014-04-22 HltSys v22r1</A></H1><PRE>
 Moore/HLT LS1 development version, to catch up with LHCb stack v37r1. Depends on Rec v17r1 via Phys v18r1. Based on Gaudi v25r1. 
 
