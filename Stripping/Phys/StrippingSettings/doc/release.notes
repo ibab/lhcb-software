@@ -4,9 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r31 2014-06-16 =========================
+
 ! 2014-06-06 - Lucio Anderlini (BandQ)
  - Removed lines Xibc2XicJpsi, Xibc2JpsiKp, XibcLb2JpsiKp
- - Added Bc3h module 
+ - Added Bc3h module
  - Fixed typo in XicHHH line modifying the name of the Stripping lines
 
 ! 2014-06-05 - Lucio Anderlini (BandQ)
@@ -42,11 +44,11 @@
 ! 2014-01-23 - Thomas Blake
  - Commit of RD lines
 
-! 2014-01-22 - Anton Poluektov 
+! 2014-01-22 - Anton Poluektov
   - Copy Stripping20r0p3 config for B2OC to Stripping20r1p3
 
-! 2014-01-22 - Anton Poluektov 
-  - Modification of python/Utils.py to avoid storing any objects in the 
+! 2014-01-22 - Anton Poluektov
+  - Modification of python/Utils.py to avoid storing any objects in the
     config database other than configuration dictionaries
 
 ! 2014-22-01 - Ronan Wallace
@@ -82,8 +84,8 @@
 ! 2014-01-17 - Lucio Anderlini (BandQ)
  - New dictionaries for XibStar and CC2DD lines
 
-! 2014-01-17 - Anton Poluektov 
- - Update B2OC config 
+! 2014-01-17 - Anton Poluektov
+ - Update B2OC config
 
 ! 2014-01-17 - Lucio Anderlini (BandQ)
  - Config for BandQ lines
@@ -92,7 +94,7 @@
   . CC2DD (Andrea Bizzeti)
  - dbase updated for testing
 
-! 2014-01-12 - Anton Poluektov 
+! 2014-01-12 - Anton Poluektov
  - Config for B2OC WG (in Stripping20r0p3)
 
 ! 2014-01-06 - Lucio Anderlini
@@ -119,14 +121,14 @@
 
 ! 2013-09-10 - Konstantinos A. Petridis
   - Stripping20r0p2/LineConfigDictionaries_B2OC.py, changes to the 'BB' (ps-Topo) dictionary
-	  where the cos(dphi) cut is tightened to -0.866, and additional selections placed due to 
+	  where the cos(dphi) cut is tightened to -0.866, and additional selections placed due to
     the new ConeJetProxy tool, (ConeSize of 0.5 and pT min of 10GeV)
 
 ! 2013-09-06 - Ronan Wallace
  - The changes below are made to both Stripping20r{0,1}p2.
  - Moved HighPtTopoJets from EW to BhadronCompleteEvent stream.
  - Changed TrkSumPt cut to 10 in WeJets config.
- - Changed prescales in Bjets and HighPtTopoJets control lines. 
+ - Changed prescales in Bjets and HighPtTopoJets control lines.
 
 ! 2013-09-04 - Stefano Perazzini
  - Updated LineConfigDictionaries_Charmless.py for Stripping20r{0,1}p2
@@ -150,20 +152,20 @@
 ! 2013-08-29 - Ronan Wallace
  - Specified LowMult lines in config dictionaries for Stripping20r{0,1}p2.
  - Removed StrippingHighPtTopo40000 and StrippingHighPtTopo20000.
- - Moved Bjets from EW to BhadronCompleteEvent stream. 
+ - Moved Bjets from EW to BhadronCompleteEvent stream.
 
 ! 2013-08-29 - Thomas Blake
- - Updated dictionaries for RD lines 
+ - Updated dictionaries for RD lines
 
 ! 2013-08-28 - Lucio Anderlini (BandQ)
- - Updated configuration dictionaries for BandQ Stripping20r{0,1}p2 
+ - Updated configuration dictionaries for BandQ Stripping20r{0,1}p2
   . New dictionary to reduce retention on Betac2PhiP line
  - Database updated
 
 ! 2013-08-28 - Thomas Blake
  - Update of the RD line configuration with
    * New control modes for XMuMu
-	 * B --> K* X inflaton lines 
+	 * B --> K* X inflaton lines
 
 ! 2013-08-28 - Mika Vesterinen
  - Tighter prescale for V->KK control modes in Stripping20r{0,1}p2 settings for Semileptonic WG
@@ -201,10 +203,10 @@
  - Updates of Stripping20r{0,1}p2 settings for B2CC WG (new values of prescales).
 
 ! 2013-08-24 - Andrea Contu
- - Configuration for Stripping20r{0,1}p2 settings for Charm WG 
+ - Configuration for Stripping20r{0,1}p2 settings for Charm WG
 
 ! 2013-08-24 - Lucio Anderlini (BandQ)
- - Configuration for Stripping20r{0,1}p2 settings for BandQ WG 
+ - Configuration for Stripping20r{0,1}p2 settings for BandQ WG
    (Xibc, pentaquark, Xic)
 
 ! 2013-08-23 - Philip Hunt
@@ -247,8 +249,8 @@
 
 ! 2013-06-27 - Ronan Wallace
  - Changed prescales and Hlt filters in *ForXSec.py lines updated in Stripping20r3 configuration.
- - Parameters for pA MinBias lines added to Stripping20r3 configuration. 
- 
+ - Parameters for pA MinBias lines added to Stripping20r3 configuration.
+
 
 ! 2013-06-19 - Ronan Wallace
  - Added ProtonIonMinBias configuration dictionary to Stripping20r3.
@@ -262,17 +264,17 @@
  - Corrected Stripping20r2 dbase
 
 ! 2013-06-12 - Lucio Anderlini (BandQ)
- - Added a looser version of the DiMuonForXsection as used in Stripping18 for the 
-   ICHEP stream to Stripping20r2 dictionaries. Cuts: 
+ - Added a looser version of the DiMuonForXsection as used in Stripping18 for the
+   ICHEP stream to Stripping20r2 dictionaries. Cuts:
     (MINTREE('mu+'==ABSID,PT)>0.5*GeV) & (VFASPF(VCHI2PDOF)<20) & (MM>2.9*GeV)
 
 ! 2013-06-07 - Philip Hunt
- - Added PID calibration lines for kaons, pion, protons, muons and electrons to the 
+ - Added PID calibration lines for kaons, pion, protons, muons and electrons to the
    Stripping20r3 dictionary.
-   * Prescales are currently set to those used in Stripping20r1. These will need to 
+   * Prescales are currently set to those used in Stripping20r1. These will need to
      be updated once Reco14 proton-ion test samples are available.
-   * In addition to the S20r1 RICH PID lines (D*, Lam0 and KS0), the inclusive 
-     phi->KK line has been included as an alternative source of no-PID kaons for 
+   * In addition to the S20r1 RICH PID lines (D*, Lam0 and KS0), the inclusive
+     phi->KK line has been included as an alternative source of no-PID kaons for
      open charm cross-section measurements.
 
 !========================= StrippingSettings v2r25 2013-05-22 =========================
@@ -297,10 +299,10 @@
 ! 2013-05-16 - Stefano Perazzini
  - Modified prescale for StrippingStrangeBaryons in Stripping20r2. Updated dbases
 
-! 2013-05-16 - Anton Poluektov 
+! 2013-05-16 - Anton Poluektov
   - Fix name of line builder for Stripping20r2 and Stripping20r3, update dbases
 
-! 2013-05-16 - Anton Poluektov 
+! 2013-05-16 - Anton Poluektov
   - Update dbase for Stripping20r2 and Stripping20r3
 
 ! 2013-May-15 - Patrick Spradlin
@@ -317,34 +319,34 @@
 
 !========================= StrippingSettings v2r23p1 2013-05-07 =========================
 
-! 2013-05-08 - Anton Poluektov 
+! 2013-05-08 - Anton Poluektov
   - Revert modification of dbase/stripping20r1p1
 
 ! 2013-05-08 - Ronan Wallace
- - Added QEE lines to LineConfigDictionaries_ALL.py in Stripping20r3 for pA data.                       
+ - Added QEE lines to LineConfigDictionaries_ALL.py in Stripping20r3 for pA data.
 
-! 2013-05-07 - Anton Poluektov 
+! 2013-05-07 - Anton Poluektov
   - Revert modification of Stripping20r1p1 config
-  - Move Betac line to Charm stream (from CharmCompleteEvent) in Stripping20r0p1 
+  - Move Betac line to Charm stream (from CharmCompleteEvent) in Stripping20r0p1
     and update stripping20r0p1 dbase
 
 ! 2013-05-06 - Lucio Anderlini (BandQ)
   - Fixed the zero-retention bug in Betac pentaquark lines (Yury Shch.)
   - Corrected the name of HeavyBaryons lines back to HeavyBaryon (Raphael)
 
-! 2013-05-06 - Anton Poluektov 
+! 2013-05-06 - Anton Poluektov
  - Added prelimitary configuration of Stripping20r2 (2.76 TeV stripping)
    and empty placeholder for Stripping20r3 (pA-Ap stripping)
 
 !========================= StrippingSettings v2r23 2013-04-22 =========================
 
-! 2013-04-22 - Anton Poluektov 
+! 2013-04-22 - Anton Poluektov
  - Final update of stripping20r0p1 and stripping20r1p1 dbases
 
-! 2013-04-19 - Anton Poluektov 
+! 2013-04-19 - Anton Poluektov
  - Remove D0ppbarFULLDST line from B2OC requests, add D0ppbar microDST line to Stripping20r0p1
 
-! 2013-04-19 - Anton Poluektov 
+! 2013-04-19 - Anton Poluektov
  - Prescaled DiMuonIncLowPT by 0.2 (additional factor 2.5)
  - Remove B02D0KPiFULLDST line from B2OC config in Stripping20r0p1
 
@@ -360,10 +362,10 @@
  - Dictionaries updated
 
 ! 2013-04-16 - Mika Vesterinen
- - Tighter cuts for Lb2pMu in Stripping 20r0p1 and 20r1p1 
+ - Tighter cuts for Lb2pMu in Stripping 20r0p1 and 20r1p1
 
 ! 2013-04-16 - Thomas Blake
- - Updated radiative lines for Stripping 20r0p1 and 20r1p1 
+ - Updated radiative lines for Stripping 20r0p1 and 20r1p1
 
 ! 2013-04-16 - Lucio Anderlini
  - Harder cuts to ChiC lines (BandQ dicts) for S20r0p1 and S20r1p1
@@ -378,11 +380,11 @@
 ! 2013-04-13 - Mika Vesterinen
  - Changes to B2XTauNu lines in Semileptonic dictionaries for 20r0p1 and 20r1p1
 
-! 2013-04-12 - Anton Poluektov 
+! 2013-04-12 - Anton Poluektov
  - Tighten proton PID in D0PPbarFULLDST in B2OC
 
 ! 2013-04-11 - Thomas Blake
- - Updated RD lines for Stripping 20r0p1 and 20r1p1 
+ - Updated RD lines for Stripping 20r0p1 and 20r1p1
 
 ! 2013-04-10 - Mika Vesterinen
  - Updates to Semileptonic dictionaries for 20r0p1 and 20r1p1
@@ -391,7 +393,7 @@
   - run all lines for B2XTauNu for 20r0p1, but remove altogether from 20r1p1
 
 ! 2013-04-10 - Ronan Wallace
- - Updated LineConfigDictionaries_QEE.py in stripping20r0p1. 
+ - Updated LineConfigDictionaries_QEE.py in stripping20r0p1.
  - Harsher cuts in HighPtGamma dictionary.
  - Inclusion of StrangeBaryon dictionary.
 
@@ -399,7 +401,7 @@
  - Updated LineConfigDictionaries_B2CC.py in stripping20r0p1 and stripping20r1p1
 
 ! 2013-04-08 - Lucio Anderlini
- - Harder pT cut to ChiCConv Lines for BandQ (pT from 400 to 580 MeV) 
+ - Harder pT cut to ChiCConv Lines for BandQ (pT from 400 to 580 MeV)
    as discussed with Edwige (author)
 
 ! 2013-04-07 - Andrea Contu
@@ -408,7 +410,7 @@
 
 !========================= StrippingSettings v2r22 2013-04-05 =========================
 
-! 2013-04-05 - Anton Poluektov 
+! 2013-04-05 - Anton Poluektov
  - Update dbase
 
 ! 2013-04-05 - Lucio Anderlini
@@ -421,22 +423,22 @@
  - Add hyperon and KS -> eepipi lines to CharmCompleteEvent for v20r0p1 (only)
 
 ! 2013-04-04 - Lucio Anderlini
- - BW reduction for B&Q. Modified 20r0p1 and 20r1p1 dictionaries for: 
+ - BW reduction for B&Q. Modified 20r0p1 and 20r1p1 dictionaries for:
     . Xic2HHH
     . DiMuon
- - dbase updated 
+ - dbase updated
 
 ! 2013-04-04 - Mika Vesterinen
  - CharmFromBSemiForHadronAsy was wrongly in Charm stream for 20r0p1 and 20r1p1 (Semileptonic dict). Now moved to Semileptonic stream.
 
-! 2013-04-02 - Anton Poluektov 
+! 2013-04-02 - Anton Poluektov
  - Update dbase for stripping20r0p1 and stripping20r1p1
 
 ! 2013-04-02 - Mika Vesterinen
- - Updates to Semileptonics for stripping20r0p1 and stripping20r1p1 
+ - Updates to Semileptonics for stripping20r0p1 and stripping20r1p1
 
-! 2013-04-01 - Anton Poluektov 
- - Create dbase for first tests of stripping20r0p1 and stripping20r1p1 
+! 2013-04-01 - Anton Poluektov
+ - Create dbase for first tests of stripping20r0p1 and stripping20r1p1
 
 ! 2013-04-01 - Lucio Anderlini
  - Included StrippingMicroDSTDiMuonDiMuonPrescaledLine to 20r1p1 for Ronan McNulty
@@ -459,7 +461,7 @@
 ! 2013-03-30 - Jibo He
  - Added Bd->eeKstar(and BDT) lines to v20r0p1, v20r1p1
 
-! 2013-03-29 - Anton Poluektov 
+! 2013-03-29 - Anton Poluektov
  - Update Semileptonic dict (B2DHHH line config, add missing keys)
 
 ! 2013-03-29 - Philip Hunt
@@ -476,9 +478,9 @@
  - Added dictionaries for the QEE WG (Stripping20r0p1 and Stripping20r1p1)
 
 ! 2013-03-29 - Lucio Anderlini
- - Added dictionaries for the BandQ WG (Stripping20r0p1 and 20r1p1) 
+ - Added dictionaries for the BandQ WG (Stripping20r0p1 and 20r1p1)
 
-! 2013-03-28 - Anton Poluektov 
+! 2013-03-28 - Anton Poluektov
  - Fix SL dictionary in Stripping20r0p1
 
 ! 2013-03-28 - Mika Vesterinen
@@ -490,32 +492,32 @@
 ! 2013-03-28 - Thomas Blake
  - Added dictionaries for the RD group for Stripping20r0p1 and Stripping20r1p1.
 
-! 2013-03-28 - Edmund Smith (LHCb 2010) 
+! 2013-03-28 - Edmund Smith (LHCb 2010)
  - Added LineConfigDictionaries for B2OC WG for Stripping20r0p1 and Stripping20r1p1.
 
 ! 2013-03-27 - Francesca Dordei
  - Add B2CC ConfigDictionaries for Stripping20r0p1 (2012) and Stripping20r1p1 (2011)
 
-! 2013-03-21 - Anton Poluektov 
- - Add placeholders for Stripping20r0p1 (2012) and Stripping20r1p1 (2011) incremental 
+! 2013-03-21 - Anton Poluektov
+ - Add placeholders for Stripping20r0p1 (2012) and Stripping20r1p1 (2011) incremental
    strippings
 
 !========================= StrippingSettings v2r21 2013-02-21 =========================
 
-! 2013-02-08 - Anton Poluektov 
+! 2013-02-08 - Anton Poluektov
  - Remove non-ascii characters from the comments in QEE dictionaries
 
 !========================= StrippingSettings v2r20 2012-12-20 =========================
 
-! 2012-12-20 - Anton Poluektov 
+! 2012-12-20 - Anton Poluektov
  - Updated Stripping20r1/LineConfigDictionaries_MiniBias.py
-   * New option added, prescale changed. 
+   * New option added, prescale changed.
 
 ! 2012-12-17 - Thomas Blake
  - Updated Stripping20r1/LineConfigDictionaries_RD.py
 	 * Removed Tau2LambdaMu lines
 
-! 2012-12-18 - Anton Poluektov 
+! 2012-12-18 - Anton Poluektov
  - Update dbase/stripping20r1
 
 ! 2012-12-17 - Ronan Wallace
@@ -528,7 +530,7 @@
  - Updated Stripping20r1/LineConfigDictionaries_RD.py
 	 * Radiative lines
 
-! 2012-12-16 - Anton Poluektov 
+! 2012-12-16 - Anton Poluektov
  - Update Stripping20r1/LineConfigDictionaries_B2OC.py
    * Add new lines in Beauty2Charm builder (FULLDST, Topo, D0PPbar)
    * Add a separate Bs2D0KS0 builder
@@ -539,7 +541,7 @@
  - Update Stripping20r1/LineConfigDictionaries_Calib.py
    - Updated prescales for NoPID DStar and V0 selections
 
-! 2012-12-14 - Anton Poluektov 
+! 2012-12-14 - Anton Poluektov
  - Update Stripping20r1/LineConfigDictionaries_B2OC.py - new configuration of Beauty2Charm builder
  - Update Stripping20r1/LineConfigDictionaries_RD.py - Changes in B2XMumu configuration
  - Update dbase/stripping20r1
@@ -556,16 +558,16 @@
   - Change the prescale in following lines:
 	StrippingBetaSBs2JpsiPhiPrescaledLine
 	StrippingBetaSBd2JpsiKstarPrescaledLine
-	StrippingBetaSBd2JpsiKsPrescaledLine. 
+	StrippingBetaSBd2JpsiKsPrescaledLine.
 
 ! 2012-12-13 - Ronan Wallace
  - Update control line prescale in WMu dict of LineConfigDictionaries_QEE
 
-! 2012-12-10 - Anton Poluektov 
+! 2012-12-10 - Anton Poluektov
  - Update LineConfigDictionaries_QEE (new dict for DisplVertices)
  - Update dbase/stripping20r1
 
-! 2012-12-07 - Anton Poluektov 
+! 2012-12-07 - Anton Poluektov
  - Update dbase/stripping20r1
 
 ! 2012-12-05 - Mat Charles
@@ -573,44 +575,44 @@
 
 !========================= StrippingSettings v2r19 2012-11-30 =========================
 
-! 2012-11-30 - Anton Poluektov 
+! 2012-11-30 - Anton Poluektov
  - Update Beauty2Charm settings for Stripping20r1
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
-! 2012-11-15 - Anton Poluektov 
+! 2012-11-15 - Anton Poluektov
  - Revert the change in BandQ Stripping20, include Xistar window back
    (Stripping20r1 dict is already correct, no need to change it)
 
-! 2012-11-13 - Anton Poluektov 
+! 2012-11-13 - Anton Poluektov
  - Add Stripping20r1 dictionary, copy from Stripping20 with modifed Beauty2XGamma config
 
 !========================= StrippingSettings v2r18 2012-09-14 =========================
 
-! 2012-09-14 - Anton Poluektov 
+! 2012-09-14 - Anton Poluektov
  - Update Stripping20/LineConfigDictionaries_Semileptonic.py with changes by Stefania Vecchi
  - Update stripping20 dbase
 
 ! 2012-09-10 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
-   . Included changes in dictionary from bug patch in StrippingStrangeBaryons.py 
+   . Included changes in dictionary from bug patch in StrippingStrangeBaryons.py
 
 !========================= StrippingSettings v2r17 2012-09-08 =========================
 
-! 2012-09-08 - Anton Poluektov 
+! 2012-09-08 - Anton Poluektov
  - Update stripping20 dbase
 
 ! 2012-09-07 - Mat Charles
  - Stripping20/LineConfigDictionaries_Charm.py
   . Expanded TIS/TOS definition for Lc -> p h h lines to pick up new inclusive trigger.
 
-! 2012-09-08 - Anton Poluektov 
+! 2012-09-08 - Anton Poluektov
  - Update B2OC dict to use GP cut in B2nbody
 
-! 2012-09-07 - Anton Poluektov 
+! 2012-09-07 - Anton Poluektov
  - Correct small typo in StrippingB2HHPi0 line names (Charmless dict)
- - Update D02KPiPi0 dict in Calib 
+ - Update D02KPiPi0 dict in Calib
  - Update stripping20 dbase
 
 ! 2012-09-07 - Andrea Contu
@@ -651,7 +653,7 @@
 
 ! 2012-08-31 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
-   . Updated conf dict of DisplVertices. 
+   . Updated conf dict of DisplVertices.
 
 ! 2012-08-31 - Mat Charles
  - Stripping20/LineConfigDictionaries_Charm.py:
@@ -660,13 +662,13 @@
 
 ! 2012-08-31 - Will Barter
  - Stripping20/LineConfigDictionaries_QEE.py
-   . Updated conf dict of InclbJets and HighPtTopo to increase prescales. 
+   . Updated conf dict of InclbJets and HighPtTopo to increase prescales.
 
 ! 2012-08-31 - Jibo He
  - Stripping20/LineConfigDictionaries_RD.py
-   . Updated conf dict of Bd2eeKstarBDT line 
+   . Updated conf dict of Bd2eeKstarBDT line
 
-! 2012-08-30 - Anton Poluektov 
+! 2012-08-30 - Anton Poluektov
  - Fix line names in Charmless dict
  - Update B2OC dict (remove many DstarUP lines)
 
@@ -675,30 +677,30 @@
 
 ! 2012-08-30 - Stefano Perazzini
  - New version of configuration dictionary for Charmless WG for Stripping20: some lines moved to microDST
- 
-! 2012-08-29 - Anton Poluektov 
+
+! 2012-08-29 - Anton Poluektov
  - Tighten ghost prob cut in B2OC to 0.3, update Stripping20 dict
 
 ! 2012-08-29 - Jibo He
  - Stripping20/LineConfigDictionaries_Semileptonic.py
    . Updated conf dict of Bd2DstarMuNu
- - Updated stripping20 dbase 
+ - Updated stripping20 dbase
 
-! 2012-08-28 - Anton Poluektov 
+! 2012-08-28 - Anton Poluektov
  - Update B2OC dict for Stripping20 (move some lines between Bhadron and BhadronCompleteEvent streams)
 
 ! 2012-08-28 - Stefano Perazzini
- - Update dictionary for Charmless WG for Stripping20 
+ - Update dictionary for Charmless WG for Stripping20
 
 ! 2012-08-28 - Thomas Blake
  - Fixed Bhadron -> BhadronCompleteEvent for B2XTau
 
 
-! 2012-08-25 - Anton Poluektov 
+! 2012-08-25 - Anton Poluektov
  - Add StrippingDstarD02KShhForTrackingEff to Calib dict
  - Enable DisplVertices
 
-! 2012-08-25 - Anton Poluektov 
+! 2012-08-25 - Anton Poluektov
  - Update TriggerValidation dict in Calib (add missing keys)
  - Update B2OC dict
  - Update MiniBias dict (add missing keys)
@@ -714,30 +716,30 @@
 ! 2012-08-24 Konstantinos A. Petridis
   - Update Stripping20/LineConfigDictionaries_RD.py:
     - In B2XMuMu:
-   	  - Changed 'B_Comb_MassLow' from 4800 to 4600.0 
-      - Changed 'B_MassLow'      from 4900 to 4600.0 
+   	  - Changed 'B_Comb_MassLow' from 4800 to 4600.0
+      - Changed 'B_MassLow'      from 4900 to 4600.0
         This was done to enlarge region for part reco
         determination in Pi0MuMu lines due to worse B mass resolution
-    
+
 ! 2012-08-24 Francesca Dordei
  - Update Stripping20/LineConfigDictionaries_B2CC.py:
      - update config dictionary for B2Psi2SXConf
      - update config dictionary for Bs2Psi2SPhiMuMuConf and B2JpsiKShhConf
      - new config dictionary for B2CharmoniumX_6HAllLinesConf
-     - remove config dictionary for Bs2JpsieePhiConf  
+     - remove config dictionary for Bs2JpsieePhiConf
 
 ! 2012-08-24 - Mika Vesterinen
  - Update of SL lines for Stripping20
 
 ! 2012-08-24 - Will Barter
- - First commit of QEE lines for Stripping20 
+ - First commit of QEE lines for Stripping20
  - (Additional update to include minor change to Z02MuMu cuts)
 
 ! 2012-08-24 - Thomas Blake
  - Updated RD lines for Stripping20
 
 ! 2012-08-24 - Thomas Blake
- - First commit of RD lines for Stripping20 
+ - First commit of RD lines for Stripping20
 
 
 ! 2012-08-22 - Mat Charles
@@ -750,9 +752,9 @@
   . Added D02hh TIS lines to full DST with a 10% prescale for trigger studies at Vava's request
   . Better HLT1 TOS requirement in D02hh
 
-! 2012-08-23 - Anton Poluektov 
-  - Remove StrippingDev dictionary to avoid confusion. 
-  - Modify Stripping20/B2OC dictionary to use ghost probability cut. 
+! 2012-08-23 - Anton Poluektov
+  - Remove StrippingDev dictionary to avoid confusion.
+  - Modify Stripping20/B2OC dictionary to use ghost probability cut.
 
 ! 2012-08-23 - Andrea Contu
  - Stripping20/LineConfigDictionaries_Charm.py
@@ -788,12 +790,12 @@
 
 !========================= StrippingSettings v2r15 2012-07-28 =========================
 
-! 2012-07-28 - Anton Poluektov 
- - Add dbase/stripping19c forgotten in the previous commit 
+! 2012-07-28 - Anton Poluektov
+ - Add dbase/stripping19c forgotten in the previous commit
 
-! 2012-07-27 - Anton Poluektov 
- - Stripping19c configuration. 
- - StrippingDev is a copy of Stripping19c, to be used as a base for Stripping20 
+! 2012-07-27 - Anton Poluektov
+ - Stripping19c configuration.
+ - StrippingDev is a copy of Stripping19c, to be used as a base for Stripping20
 
 !======================= StrippingSettings v2r14 2012-06-28 ===================
 
@@ -815,7 +817,7 @@
 ! 2012-06-26 - Jibo He
  - Updated dbase of Stripping19b to include updates of B2OC.
 
-! 2012-06-26 - Anton Poluektov 
+! 2012-06-26 - Anton Poluektov
  - Stripping19b/LineConfigDictionaries_B2OC.py
   . Tighten GEC from 500 to 250 long lines
 
@@ -826,7 +828,7 @@
   . Updated conf dicts of ChiCJPsiGammaConv, Bc2JpsiHDetached, Ccbar2Phi
   . Added Betac2PhiP
  - dbase/stripping19b
-  . First version of working dbase 
+  . First version of working dbase
 
 ! 2012-06-26 - Will Barter
  - Stripping19b/LineConfidDictionaries_QEE.py
@@ -846,13 +848,13 @@
 
 ! 2012-06-25 - Jibo He
  - Stripping19b/LineConfigDictionaries_BandQ.py
-  . Updated conf dict for CharmAssociative 
+  . Updated conf dict for CharmAssociative
 
 ! 2012-06-25 - Mika Vesterinen
  - Updated LineConfigDictionaries_Semileptonic for 19b (added semi-inclusive J/psi line)
 
 ! 2012-06-25 - Thomas Blake
- - Updated radiative decay dict. 
+ - Updated radiative decay dict.
 
 ! 2012-06-24 - Flavio Archilli
  - Stripping19b: Updated LFVLines in LineConfigDictionaries_RD
@@ -861,7 +863,7 @@
  - Removed one set of redundant Charm lines in 19b (DstarPromptWithD02HH)
 
 ! 2012-06-22 - Thomas Blake
- - First commit of RD lines for 19b 
+ - First commit of RD lines for 19b
 
 
 !======================= StrippingSettings v2r13p1 2012-05-03 ===================
@@ -872,7 +874,7 @@
 
 !========================= StrippingSettings v2r13 2012-04-27 ===================
 
-! 2012-04-27 - Anton Poluektov 
+! 2012-04-27 - Anton Poluektov
  - Fix StrippingDev and retag as v2r13
 
 ! 2012-04-27 - Thomas Blake
@@ -882,7 +884,7 @@
  - Stripping19/LineConfigDictionaries_BandQ.py
    . Update conf dict of B2psiX
    . Comment out TwoBodyPrompt
- - Updated Stripping19 dbase 
+ - Updated Stripping19 dbase
 
 ! 2012-04-26 - Thomas Blake
  - Update to K1 mu mu dictionary in LineConfigDictionaries_RD
@@ -928,8 +930,8 @@
     + Set prescale of D*-tagged KSKK and KSpipi on full DST to 1.
       Needed to debug new trigger lines (and these are low rate).
 
-! 2012-04-24 - Anton Poluektov 
- - Stripping19: 
+! 2012-04-24 - Anton Poluektov
+ - Stripping19:
     * Tighen Beauty2Charm in LineConfigDictionaries_B2OC.py
     * Fix missing keys in LineConfigDictionaries_RD.py
       and LineConfigDictionaries_Calib.py
@@ -942,7 +944,7 @@
 
 ! 2012-04-19 - Jibo He
  - Stripping19
-  . Removed lines of ICEHP stream 
+  . Removed lines of ICEHP stream
 
 !========================= StrippingSettings v2r12 2012-04-01 ===================
 ! 2012-04-01 - Jibo He
@@ -950,31 +952,31 @@
  - Produced stripping18b dbase
 
 ! 2012-04-01 - Jibo He
- - Included BandQXsec, CharmXsec SemileptonicXsec into Stripping18 
+ - Included BandQXsec, CharmXsec SemileptonicXsec into Stripping18
  - Updated dbase of Stripping18 and copied to StrippingDev
 
 ! 2012-03-30 - Jibo He
  - Stripping18/LineConfigDictionaries_BandQXsec.py
    . DiMuon lines for 8 TeV cross-section measurements
- - Stripping18/LineConfigDictionaries_RD.py 
+ - Stripping18/LineConfigDictionaries_RD.py
    . Updated conf dict of Beauty2Gamma line, as requested by A. Puig
  - Updated dbase, copied to dev
 
 ! 2012-Mar-29 - Patrick Spradlin
  - Added configuration dictionary for open charm cross-section lines in
    ICHEP stripping:
-   + python/StrippingSettings/Stripping18/LineConfigDictionaries_CharmXsec.py 
+   + python/StrippingSettings/Stripping18/LineConfigDictionaries_CharmXsec.py
 
 ! 2012-03-29 - Eduardo Rodrigues
  - StrippingB2PPbar settings replaced by StrippingB2TwoBaryons settings
    (following the replacement of the stripping selection)
 
-! 2012-03-28 - Anton Poluektov 
+! 2012-03-28 - Anton Poluektov
  - Fix StrippingDev dictionary (add property to StrippingCharmFromBSemi)
 
 ! 2012-03-28 - Jibo He
- - Stripping18/LineConfigDictionaries_Calib 
-   . Updated conf dict of MuonIDCalib  
+ - Stripping18/LineConfigDictionaries_Calib
+   . Updated conf dict of MuonIDCalib
 
 ! 2012-03-27 - Jibo He
  - Stripping18/LineConfigDictionaries_BandQ
@@ -986,7 +988,7 @@
 ! 2012-03-27 - Mika Vesterinen
   - Add variable for CharmFromBSemi (wider prefit D* mass window for D0->HHPi0) for Stripping18
 
-! 2012-03-26 - Anton Poluektov 
+! 2012-03-26 - Anton Poluektov
  - Update StrippingDev with dictionaries from Stripping18
 
 ! 2012-03-25 - Jibo He
@@ -996,7 +998,7 @@
  - Stripping18/LineConfigDictionaries_Charm
    . Moved D2HHLTUnbiased to CharmCompleteEvent, and Charm WG
  - Stripping18/LineConfigDictionaries_MiniBias
-   . Updated conf dict, as said in 
+   . Updated conf dict, as said in
      https://savannah.cern.ch/bugs/?92254
  - A working verion of stripping18 dbase
 
@@ -1007,7 +1009,7 @@
  - Updated Stripping18/LineConfigDictionaries_RD.py
 
 
-! 2012-03-23 - Anton Poluektov 
+! 2012-03-23 - Anton Poluektov
    . Update Stripping18/LineConfigDictionaries_B2OC.py (new lines in Beauty2Charm)
 
 ! 2012-03-23 - Will Barter
@@ -1020,7 +1022,7 @@
 
 ! 2012-03-20 - Sam Gregson
    . Updated D2KS0H (Stripping18/LineConfigDictionaries_Charm.py) with new KS0LL MINIPCHI2 cut
-  
+
 ! 2012-03-19 - Mat Charles
  - Stripping18/LineConfigDictionaries_Charm.py
    . Patch to DstarD2KShh to allow for small tail below threshold in delta mass.
@@ -1037,8 +1039,8 @@
    . Included changes proposed.
  - Updated dbase of PreStripping18 and copied it to StrippingDev
 
-! 2012-03-01 - Anton Poluektov 
-  - Update Semileptonic dictionary in StrippingDev to fix nightlies. 
+! 2012-03-01 - Anton Poluektov
+  - Update Semileptonic dictionary in StrippingDev to fix nightlies.
 
 !========================= StrippingSettings v2r10 2012-02-28 ===================
 
@@ -1062,11 +1064,11 @@
 ! 2012-02-28 - Jibo He
  - PreStripping18/LineConfigDictionaries_BHQ.py
    Moved more lines to MicroDST
-   Removed WG lines from new added lines. 
+   Removed WG lines from new added lines.
 
 ! 2012-02-27 - Jibo He
  - PreStripping18/LineConfigDictionaries_BHQ.py
-   Corrected some WG names from PSWG to BHQ   
+   Corrected some WG names from PSWG to BHQ
 
 ! 2012-02-25 - Jibo He
  - Included Minibias
@@ -1076,13 +1078,13 @@
    Included B2psiXForBHQ
  - PreStripping18/LineConfigDictionaries_EWWG.py
    Removed.
- - dbase updated 
+ - dbase updated
 
-! 2012-02-24 - Anton Poluektov 
- - Fix Stripping17b/LineConfigDictionaries_B2OC.py and update dbase. 
-   Added '*KsPi*' lines and LT unbiased line. 
+! 2012-02-24 - Anton Poluektov
+ - Fix Stripping17b/LineConfigDictionaries_B2OC.py and update dbase.
+   Added '*KsPi*' lines and LT unbiased line.
 
-! 2012-02-24 - Anton Poluektov 
+! 2012-02-24 - Anton Poluektov
  - Add lines to PreStripping18/LineConfigDictionaries_B2OC.py
  - Update dbase
 
@@ -1094,9 +1096,9 @@
  - PreStripping18/LineConfigDictionaries_BHQ.py
    Merged Stripping17 and Stripping17
    Added several new exclusive lines
- - dbase generated 
+ - dbase generated
 
-! 2012-02-23 - Anton Poluektov 
+! 2012-02-23 - Anton Poluektov
  - Modify PreStripping18/LineConfigDictionaries_B2OC.py
  - Fix bug in PreStripping18/LineConfigDictionaries_Calib.py (missing units)
 
@@ -1124,7 +1126,7 @@
 
 
 ! 2012-02-21 - Andrew Powell
- - Incorporated RICH & MUON PID lines in LineConfigDictionaries_Calib.py for the 
+ - Incorporated RICH & MUON PID lines in LineConfigDictionaries_Calib.py for the
    PID stream. No attempt to incorporate any lines for the Calibration stream.
 
 ! 2012-02-21 - Will Barter
@@ -1134,7 +1136,7 @@
 ! 2012-02-14 - Jibo He
  - Stripping17b/LineConfigDictionaries_Charm.py
    Added DstarD2KShh, D2hhhMicroKKPi
- - dbase updated 
+ - dbase updated
 
 ! 2012-02-14 - Jibo He
  - Stripping17b/LineConfigDictionaries_Semileptonic.py
@@ -1154,11 +1156,11 @@
    Tighten B2MuMuGamma* lines, as requested by K. A. Petridis
    Tighten Bd2MuMuKPiBDTLine
 
-! 2012-02-09 - Anton Poluektov 
+! 2012-02-09 - Anton Poluektov
  - Fixed duplicate name in B2CC dictionary
 
 ! 2012-02-09 - Jibo He
- - To make dimuon stream complete, added missing lines of B2CC, BHQ, RD WG. 
+ - To make dimuon stream complete, added missing lines of B2CC, BHQ, RD WG.
  - dbase updated
 
 ! 2012-02-07 - Jibo He
@@ -1167,7 +1169,7 @@
 
 ! 2012-02-07 - Jibo He
  - Stripping17b/LineConfigDictionaries_B2OC.py
-   Updated conf dict of Beauty2Charm, as requested by M. Williams 
+   Updated conf dict of Beauty2Charm, as requested by M. Williams
  - Stripping17b/LineConfigDictionaries_RD.py
    Added Beauty2XGamma, Bd2KstarMuMu, B2XMuMu, Bs2MuMuLines, LFVLines,
    BuToK1MuMu
@@ -1178,14 +1180,14 @@
  - Stripping17/LineConfigDictionaries_RDWG.py
    Removed duplicated B2XTau to aviod confusion, dbase untouched
 
-! 2012-02-07 - Anton Poluektov 
+! 2012-02-07 - Anton Poluektov
  - Added B2JpsiKShhConf dict to Stripping17b/LineConfigDictionaries_B2CC.py
 
 ! 2012-02-04 - Jibo He
  - Draft of Stripping17b, both conf dicts and dbase, almost working
 
-! 2011-12-12 - Anton Poluektov 
- - Fixed config dictionary for StrippingChiCJPsiGammaConversion. 
+! 2011-12-12 - Anton Poluektov
+ - Fixed config dictionary for StrippingChiCJPsiGammaConversion.
 
 !========================= StrippingSettings v2r8 2011-09-30 ===================
 ! 2011-09-30 - Jibo He
@@ -1196,7 +1198,7 @@
 ! 2011-09-29 - Mat Charles
  - Bugfix to D2HHLTUnbiased in Stripping17/LineConfigDictionaries_Charm.py
 
-! 2011-09-29 - Anton Poluektov 
+! 2011-09-29 - Anton Poluektov
  - Updated Beauty2Charm dictionary in Stripping17/LineConfigDictionaries_GTWG.py
 
 ! 2011-09-15 - Rob Lambert
@@ -1204,10 +1206,10 @@
 
 !========================= StrippingSettings v2r7 2011-09-18 ===================
 ! 2011-09-09 - T Blake
- - Updated stripping17 dbase 
+ - Updated stripping17 dbase
 
 ! 2011-09-09 - T Blake
- - Reverted accidental changes to Stripping 16 to the previous tagged version. 
+ - Reverted accidental changes to Stripping 16 to the previous tagged version.
 
 ! 2011-09-09 - T Blake
  - Updated LineConfigDictionaries_RDWG.py (and dbase)
@@ -1219,11 +1221,11 @@
 ! 2011-09-01 - Jibo He
  - LineConfigDictionaries_Charm.py
   . Removed some pre-scales in DstarD02xx, as requested by W. Bonivento
- - LineConfigDictionaries_BetaS.py 
+ - LineConfigDictionaries_BetaS.py
   . Added Bs2Kst_0Kst_0 (BetaSBs2K0stK0st), as requested by P. A. Cartelle
  - LineConfigDictionaries_Semileptonic.py
   . Tightened Phi mass window from 60 MeV to 50 MeV in B2DMuNu, as requested by A. Borgia
- - Stripping17/dev dbase updated 
+ - Stripping17/dev dbase updated
 
 ! 2011-08-30 - Jibo He
  - Moved all lines in "Dielectron" stream to "Radiative" stream
@@ -1239,14 +1241,14 @@
    . Included DisplVertices
 
 ! 2011-08-28 - Jibo He
- - Copied StrippingDev to Stripping17 
+ - Copied StrippingDev to Stripping17
  - LineConfigDictionaries_RDWG.py
    . Updated all conf dict acording to (r3)
-     https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/RareDecayStripping17#Configuration 
+     https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/RareDecayStripping17#Configuration
    . Added KS02MuMu, Tau2PMuMu
    . Updated Bs2MuMuLines
  - LineConfigDictionaries_GTWG.py
-   . Updated B->2,3,4 body config, i.e., adding MaxLong cut, instead of pre-scaling 
+   . Updated B->2,3,4 body config, i.e., adding MaxLong cut, instead of pre-scaling
    . Updated Bu2D0h_D02KShh_NoPID, Bu2D0h_D02KShh_NoPID_WS
    . Commented out Beauty2Charm temporarily
  - LineConfigDictionaries_MiniBias.py
@@ -1266,12 +1268,12 @@
  - Updated RICH- and MUON-ID line prescales in StrippingDev/LineConfigDictionaries_Calib.py
 
 ! 2011-08-27 - Jibo He
- - Updated StrippingDev/LineConfigDictionaries_PSWG.py 
+ - Updated StrippingDev/LineConfigDictionaries_PSWG.py
 
 ! 2011-08-27 - Will Barter
  - Updated StrippingDev/LineConfigDictionaries_EWWG.py
 
-! 2011-08-27 - Anton Poluektov 
+! 2011-08-27 - Anton Poluektov
   - Updated StrippingDev/LineConfigDictionaries_GTWG.py
 
 ! 2011-08-26 - Ulrich Kerzel
@@ -1292,25 +1294,25 @@
 
 ! 2011-08-04 - Thomas Blake
  - Added Ks 2 mu mu lines missing from LineConfigDictionaris_RDWG
- - Added ntrack cut in B2nbody lines from LineConfigDictionaries_GTWG 
+ - Added ntrack cut in B2nbody lines from LineConfigDictionaries_GTWG
 
 !========================= StrippingSettings v2r6 2011-08-03 =========================
 ! 2011-08-03 - Jibo He
  - LineConfigDictionaries_GTWG.py
-   . Updated B->2,3,4 boday conf dict, and pre-scaled them by 0.5. 
+   . Updated B->2,3,4 boday conf dict, and pre-scaled them by 0.5.
  - LineConfigDictionaries_PSWG.py
    . Moved Ccbar2Ppar to Charm mDST
    . Corrected the stream of ChiCJPsiGammaConversion from "DiMuon" to "Dimuon".
- - Updated dbase of Stripping16 
- - Copied conf dict in Stripping16 to StrippingDev  
+ - Updated dbase of Stripping16
+ - Copied conf dict in Stripping16 to StrippingDev
 
-! 2011-08-02 - Anton Poluektov 
+! 2011-08-02 - Anton Poluektov
  - LineConfigDictionaries_GTWG.py
    . Prescale of Unbiased line in B2DX is back to 0.1
 
 ! 2011-08-02 - Jibo He
  - LineConfigDictionaries_GTWG.py
-   . Pre-scale all B2DX, B2D3H lines by a factor of 10 further. 
+   . Pre-scale all B2DX, B2D3H lines by a factor of 10 further.
 
 ! 2011-08-02 - Jibo He
  - LineConfigDictionaries_GLWG.py
@@ -1320,7 +1322,7 @@
 ! 2011-07-29 - Jibo He
  - Moved b->2,3,4 body from PSWG to GTWG
 
-! 2011-07-28 - Anton Poluektov 
+! 2011-07-28 - Anton Poluektov
  - Update Stripping16/LineConfigDictionaries_GTWG.py
    . Only b2twobody for now (need to add 3, 4-body)
 
@@ -1339,7 +1341,7 @@
  - Updated configuration for TrackEffDownMuon for Stripping 16
 
 ! 2011-07-28 - Thomas Blake
- - Updated Calibration stream definition for RICH group. 
+ - Updated Calibration stream definition for RICH group.
 
 
 !========================= StrippingSettings v2r5 2011-07-26 =========================
@@ -1372,7 +1374,7 @@
   . Update HyperCP
  - LineConfigDictionaries_Calib.py
   . Update TrackEffMuonTT
- - dbase/stripping16 updated 
+ - dbase/stripping16 updated
 
 ! 2011-07-20 - Jibo He
  - python/StrippingSettings/Stripping16
@@ -1391,7 +1393,7 @@
 ! 2011-06-28 - Jibo He
  - python/StrippingSettings/Stripping15/LineConfigDictionaries_PSWG.py
   . Remove CharmAssociative from Stripping15 due to the "configured twice" problem
-  . dbase/stripping15 updated 
+  . dbase/stripping15 updated
 
 ! 2011-06-26 - Jibo He
  - Move Stripping15 conf dicts from StrippingDev to Stripping15
@@ -1408,7 +1410,7 @@
 ! 2011-06-23 - Jibo He
  - LineConfigDictionaries_Charm.py
    . DstarD02xx, prescales updated
- - LineConfigDictionaries_PSWG.py 
+ - LineConfigDictionaries_PSWG.py
    . Ccbar2Ppbar, cuts tightened
 
 ! 2011-06-20 - Jibo He
@@ -1421,12 +1423,12 @@
 ! 2011-06-16 - Jibo He
  - Prescale TrackEffDownMuonValidationLine and NeuroBayesMuMuJPsiNBLine by a factor of 10
  - dbase/strippingdev updated as well
- 
+
 ! 2011-06-16 - Thomas Blake
  - Merged CharmControl and CharmCompleteEvent
 
-! 2011-06-16 - Anton Poluektov 
- - Add HLT filter to GWT B2DX config, tighten Pt(B) cut to 1500 MeV. 
+! 2011-06-16 - Anton Poluektov
+ - Add HLT filter to GWT B2DX config, tighten Pt(B) cut to 1500 MeV.
 
 ! 2011-06-16 - Jibo He
  - Move NeuroBayesMuMuMuMuNBLine to Leptonic MicroDST stream
@@ -1439,7 +1441,7 @@
    Removed duplicate DstarPromptWithD02HHHH and DstarD02KKpipiNoPID
 
 ! 2011-06-15 - Jibo He
- - dbase/strippingdev updated 
+ - dbase/strippingdev updated
 
 ! 2011-Jun-15 - Patrick Spradlin
  - StrippingDev/LineConfigDictionaries_Charm.py
@@ -1457,12 +1459,12 @@
    . Updated HighPtJets
  - LineConfigDictionaries_GLWG.py
    . Updated B2hhh
- 
-! 2011-06-15 - Anton Poluektov 
+
+! 2011-06-15 - Anton Poluektov
  - Updated B2Kshh cuts (for David Dossett)
 
-! 2011-06-15 - Anton Poluektov 
- - Updated B2DX cuts in GWT config. 
+! 2011-06-15 - Anton Poluektov
+ - Updated B2DX cuts in GWT config.
 
 ! 2011-06-15 - Greig Cowan
  - Tightend beta_s JpsiX lines.
@@ -1479,8 +1481,8 @@
    Updated configurations of D2hh and Xicc.
 
 ! 2011-06-14 - Jibo He
- - LineConfigDictionaries_Calib.py 
-   + Re-included tracking lines and updated all conf dict 
+ - LineConfigDictionaries_Calib.py
+   + Re-included tracking lines and updated all conf dict
  - LineConfigDictionaries_Semileptonic.py
    . Updated DForBSemi, D0ForBXX
  - LineConfigDictionaries_RDWG.py
@@ -1490,17 +1492,17 @@
  - LineConfigDictionaries_BetaS.py
    + Added Bs2Q2Body4pi
 
-! 2011-06-09 - Anton Poluektov 
+! 2011-06-09 - Anton Poluektov
  - Added BDT stripping config to StrippingDev/LineConfigDictionaries_GTWG.py
 
-! 2011-06-09 - Anton Poluektov 
- - StrippingDev/LineConfigDictionaries_GTWG.py 
+! 2011-06-09 - Anton Poluektov
+ - StrippingDev/LineConfigDictionaries_GTWG.py
    Prepared config for Stripping15
 
 ! 2011-Jun-09 - Patrick Spradlin
  - StrippingDev/LineConfigDictionaries_Charm.py
    Changed STREAMS for Xicc to 'CharmCompleteEvent'.
- 
+
 ! 2011-06-09 - Jibo He
  - Added stripping lines of Beta_s WG to StrippingDev for Stripping15
 
@@ -1513,7 +1515,7 @@
  - python/StrippingSettings/StrippingDev/LineConfigDictionaries_EWWG.py
    . remove "units." which cause trouble in genrating database
  - python/StrippingSettings/StrippingDev/LineConfigDictionaries_Charm.py
-   . comment out "PromptCharm" 
+   . comment out "PromptCharm"
 
 ! 2011-06-06 - Thomas Blake
  - Added RD lines to StrippingDev for Stripping15
@@ -1536,7 +1538,7 @@
    . StrippingDev/LineConfigDictionaries_CharmXsec.py
 
 ! 2011-06-02 - Will Barter
- - Inserted Electroweak Line Dictionaries into Stripping 15 LineConfigDictionaries_EWWG.py  
+ - Inserted Electroweak Line Dictionaries into Stripping 15 LineConfigDictionaries_EWWG.py
 
 
 !========================= StrippingSettings v2r3p2 2011-05-25 =========================
@@ -1560,16 +1562,16 @@
    dbase updated
 
 ! 2011-05-19 - Jibo He
- - Stripping1Point4TeV finalized, dbase updated  
+ - Stripping1Point4TeV finalized, dbase updated
  - Stripping14
-   + Added lines for BetaS, Gamma with Tree/Loop, FWG, EW  
-  
+   + Added lines for BetaS, Gamma with Tree/Loop, FWG, EW
+
 ! 2011-05-19 - Jibo He
- - Stripping1Point4TeV definition reviewed 
+ - Stripping1Point4TeV definition reviewed
  - Added first draft of dbase
 
 ! 2011-05-19 - Thomas Blake
- - Added Stripping14 dictionaries for 2010 re-stripping 
+ - Added Stripping14 dictionaries for 2010 re-stripping
  - Added first draft of dbase
 
 ! 2011-05-16 - Jibo He
@@ -1579,14 +1581,14 @@
 ! 2011-05-15 - Thomas Blake
  - Commit of Stripping13b dbase with B2DX modification
 
-! 2011-05-15 - Anton Poluektov 
+! 2011-05-15 - Anton Poluektov
  - Removed the IP chi2 cut in StrippingB2DX config dictionary in Stripping13b
-   for D->hhh and D->Ksh selections. Needed for lifetime-unbiased B0->D(hhh)Pi line. 
-   Effect on StrippingB2DX retention is 2.42% -> 2.57% 
+   for D->hhh and D->Ksh selections. Needed for lifetime-unbiased B0->D(hhh)Pi line.
+   Effect on StrippingB2DX retention is 2.42% -> 2.57%
    (30000 events on 2011 test sample)
 
 ! 2011-05-15 - Thomas Blake
- - Added copy of Stripping13 as Stripping13b. 
+ - Added copy of Stripping13 as Stripping13b.
 
 ! 2011-05-13 T. Blake
  - Reverted change below (2011-05-13 S.Blusk)
@@ -1595,13 +1597,13 @@
  - Added prescale & postscale to new lines in StrippingB2D3H module, in Stripping13
 
 ! 2011-05-11 - Thomas Blake
- - Added Stripping13Calib to contain all Calibration stream lines including 
-   the tracking effciency lines for Reco10-Stripping13. 
- 
+ - Added Stripping13Calib to contain all Calibration stream lines including
+   the tracking effciency lines for Reco10-Stripping13.
+
 ! ======================== StrippingSettings v2r3 2011-04-29 ================
 ! 2011-04-20 - Vanya Belyaev
 
- - add HyperCPX-strripping at the end of  StrippingDev 
+ - add HyperCPX-strripping at the end of  StrippingDev
 
 
 ! ======================== StrippingSettings v2r2p2 2011-04-14 ================
@@ -1613,7 +1615,7 @@
 
 ! 2011-04-11 - Thomas Blake
  - Temporary removal of MuonTT efficiency lines from the line config
-	 dictionary and dbase. 
+	 dictionary and dbase.
 
 ! 2011-04-02 - Sebastian Schleich
  - fixed Bs2PhiPhi pt cuts
@@ -1621,13 +1623,13 @@
 ! ======================== StrippingSettings v2r2 2011-03-29 ==================
 
 ! 2011-03-29 - Thomas Blake
- - Added utility functions to Utils.py to print line properties 
+ - Added utility functions to Utils.py to print line properties
 	 from the db.
 
 
 ! 2011-03-29 - Thomas Blake
  - Updated the dictionary for stripping13
- - Removed duplicate import from makeDB.py and renamed 
+ - Removed duplicate import from makeDB.py and renamed
    default to stripping.tmp
  - Removed duplicate line from line config for semileptonic WG
  - Removed LineConfigDictionaries.py from python/StrippingSettings/Stripping13
@@ -1663,7 +1665,7 @@
  - Updated many line configurations and the Stripping13 database.
 
 ! 2011-03-15 - Thomas Blake
- - Updated line config dictionaries and dbase 
+ - Updated line config dictionaries and dbase
 
 ! 2011-03-11 - Thomas Blake
  - Updated line dictionary for displaced vertices, BdKstMuMu and TriMuons
@@ -1701,7 +1703,7 @@
  - Added line config dictionaries by WG
 
 ! 2011-03-02 - Greig Cowan
- - Added more beta_s lines to stripping13 dimuon stream and to the 
+ - Added more beta_s lines to stripping13 dimuon stream and to the
    list of dictionaries.
  - Added RD and FWG lines to dimuon stream and more config dictionaries.
  - Added many more streams for stripping13. Still more lines to add.
@@ -1718,7 +1720,7 @@
  - Added dictionaries for PID Calibration lines:
 	 . NoPIDDstarWithD02RSKPi
 	 . InclPhi
-   . V0ForPID 
+   . V0ForPID
 
 ! 2011-02-28 - Greig Cowan
  - Added dictionaries for the beta_s lines to StrippingDev.
@@ -1741,7 +1743,7 @@
     print lb.lines()
 
  - Change structure of development dictionaries. Dictionary now is
-   { <builder instance name> : { 'BUILDERTYPE' : <builder type name>, 'CONFIG' : <config name> 
+   { <builder instance name> : { 'BUILDERTYPE' : <builder type name>, 'CONFIG' : <config name>
  - Add configuration for B-> N body stripping.
 
 ! 2011-02-10 - Juan Palacios
@@ -1750,12 +1752,12 @@
  - Add development database.
  - Add function StrippingSettings.lineBuilders(), retuns dictionary of all
    line builders registered in StrippingSelection. Dicitonary is {class name : class}
- 
+
 ! 2011-02-09 - Juan Palacios
  - Add dbase/stripping11, dbase/stripping12
   . Databases for stripping11, stripping12 configuration dictionaries.
  - Add python/StrippingSettings/Utils.py
-  . Contains helper functions for accessing configuration dictionaries, 
+  . Contains helper functions for accessing configuration dictionaries,
     for registering dictionaries to a data base, and for creating a new
     database out of all the dictionaries in a module.
 
@@ -1768,7 +1770,7 @@
 
 ! 2010-11-29 - Juan Palacios
  - Add tests/test_stripping12_instantiation.py
-  . Tests that Stripping12 lines can be instantiated and passed on to 
+  . Tests that Stripping12 lines can be instantiated and passed on to
     a StrippingConf.
  - Add QM test suite.
  - Increase to v1r4
@@ -1776,7 +1778,7 @@
 ! 2010-11-12 - Greig Cowan
  - Added function to __init__ of Stripping11 and 12 to contain the stream
    definitions. Note that these definitions are not necessarily what runs in
-   production due to the ability to modify things in AppConfig. 
+   production due to the ability to modify things in AppConfig.
 
 ! ========================== StrippingSettings v1r3 2010-11-10 ================
 
@@ -1798,19 +1800,19 @@
  - Updated Stripping12 definitions
 
 ! 2010-10-29 - Greig Cowan
- - Initial commit of the stream definitions for Stripping12. Still lots to 
+ - Initial commit of the stream definitions for Stripping12. Still lots to
    do regarding the organisation of the microDST streams and the corresponding
-   full DST streams. I expect some stream names will have to change. We will 
-   need to review the definitions of the streams according to what the WGs have 
+   full DST streams. I expect some stream names will have to change. We will
+   need to review the definitions of the streams according to what the WGs have
    approved.
 
 ! ========================== StrippingSettings v1r2 2010-10-07 ================
 
 ! 2010-10-07 - Thomas Blake
- - Added velo-muon and downstream-muon lines to Calibration stream 
+ - Added velo-muon and downstream-muon lines to Calibration stream
 
 ! 2010-10-07 - Thomas Blake
- - Updated definition of Charm stream for Stripping11 
+ - Updated definition of Charm stream for Stripping11
 
 ! 2010-10-06 - Thomas Blake
  - Udpated stream definitions for Stripping 11
@@ -1826,26 +1828,26 @@
  - Some last minute changes to the stream definitions
 
 ! 2010-09-07 - Greig Cowan
-  - Added definitions of the stripping streams for the September processing 
+  - Added definitions of the stripping streams for the September processing
 
 ! 2010-06-02 - Greig Cowan
   - Added options for running the RecoStripping-04 stripping.
 
-! 2010-06-02 - Anton Poluektov 
-  - Removed puthon/ 
+! 2010-06-02 - Anton Poluektov
+  - Removed puthon/
 
 ! 2010-06-02 - Anton Poluektov
 
-  - Default.py and tests/ modified to conform the current state of StrippingConf. 
-    Options moved from python/ to options/. 
+  - Default.py and tests/ modified to conform the current state of StrippingConf.
+    Options moved from python/ to options/.
     Default.py includes prescale configuration for one StrippingDstarD02xxConf line
-    as an example. 
+    as an example.
 
 ! 2010-02-13  Anton Poluektov
 
   - Initial release. Only one Default set of settings that configures StrippingPass lines.
-  - tests/ options are moved to this package from StrippingSelections. 
+  - tests/ options are moved to this package from StrippingSelections.
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

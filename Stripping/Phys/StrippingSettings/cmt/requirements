@@ -2,9 +2,9 @@
 # Maintainer : Stripping coordinators
 
 package           StrippingSettings
-version           v2r30
+version           v2r31
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc options python
 include_path      none
