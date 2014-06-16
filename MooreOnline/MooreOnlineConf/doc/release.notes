@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r2 2014-06-16 =========================
+
 ! 2014-06-07 - Eric van Herwijnen
  - decode MEPS for Hlt1, not for Hlt2. Depends on Hlt2 appearing in the
  HltArchitecture name.
