@@ -1,9 +1,19 @@
 <PRE>
 Package     : MooreOnlineSys
-Package Coordinator : R. Lambert
+Package Coordinator : S. Benson
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v22r2>2014-06-16 MooreOnlineSys v22r2</A></H1><PRE>
+
+Moore Online depends on Moore v22r2 and Online v5r9.
+
+Main changes:
+- New python script for check-pointing
+- runOnline.py reads MEPS and Hlt2 MDF files.
+
 </PRE><H1><A NAME=v22r1>2014-04-29 MooreOnlineSys v22r1</A></H1><PRE>
+
+Moore Online depends on Moore v22r1 and Online v5r8.
 
 - Forward RunChangeHandlerConditions
 - Modifications to remove instantiations of HltConf online
