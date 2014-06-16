@@ -4,6 +4,8 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================= HltBase v15r1 2014-06-16 =========================
+
 ! 2014-06-06 - Gerhard Raven
  - HltAlgorithm: fix use after move 
  - C++11 updates..
