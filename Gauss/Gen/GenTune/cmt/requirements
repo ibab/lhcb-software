@@ -31,6 +31,9 @@ use ROOT              v*     LCG_Interfaces -no_auto_imports
 #apply_tag ignore_installarea
 use rivet             v*     LCG_GeneratorsInterfaces -auto_imports
 
+#Patch to address bug in Rivet 1.9.0 - to be tested and removed in further versions
+set exec_prefix  "$(rivet_home)"
+
 #============================================================================
 # Component library building rule
 #============================================================================

@@ -5,6 +5,12 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+!========================== GenTune v2r0p3 2014-06-16 ========================
+! 2014-06-15 - Alex Grecu
+ - corrected typo in Python files in options, options/example
+ - added exec_prefix variable in environment as work-around Rivet 1.9.0 helper
+   script bug
+
 !========================== GenTune v2r0p2 2013-10-10 ========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
@@ -15,7 +21,8 @@
    partial analysis names; also very nice example of using the Rivet/Python
    interface
  - corrected qmtests and optimized number of generated events for speed
- - negative invariant mass particles are detected and reported only at DEBUG level
+ - negative invariant mass particles are detected and reported only at DEBUG 
+   level
  - cross-section values provided by user in option files need units and are 
    automatically converted to picobarns (default unit in HepMC)
  - RivetAnalysisHandler promptly detects and reports number of collision in 

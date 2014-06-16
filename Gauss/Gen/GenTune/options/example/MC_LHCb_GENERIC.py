@@ -51,7 +51,7 @@ rivet.AnalysisPath += [os.path.abspath('.'),]
 # (mostly necessary if/when using HepMC 2.04)
 rivet.forceXSection = False
 #rivet.forceXSection = True
-rivet.xSectionValue = 32.123 units.millibarn
+rivet.xSectionValue = 32.123 * units.millibarn
 # instruct the algorithm to correct the particle status IDs and 
 # apply the crossing angle correction when necessary
 rivet.CorrectStatusID = True
