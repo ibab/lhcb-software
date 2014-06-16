@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================= HltConf v11r2 2014-06-16 =========================
+
 ! 2014-06-13 - Gerhard Raven
  - add option to disable pruning of 'inactive' entries in HltANNSvc
 
