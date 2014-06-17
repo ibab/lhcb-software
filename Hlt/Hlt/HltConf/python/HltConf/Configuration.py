@@ -211,6 +211,11 @@ class HltConf(LHCbConfigurableUser):
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
+        if self.getProp("Split")=="Hlt1" or not activehlt2lines :
+            #  make sure the routingbits writer doesn't look for the Hlt2 decisions
+            from Configurables import HltRoutingBitsWriter
+            HltRoutingBitsWriter().Hlt2DecReportsLocation = ''
+
         #fix input locations, for the moment do with a post-config action,
         #TODO: in the future set in Hlt1 and Hlt2 separately
         
@@ -595,6 +600,12 @@ class HltConf(LHCbConfigurableUser):
         from HltLine.HltLine     import hlt1Lines
         from HltLine.HltLine     import hlt2Lines
         activeHlt1Lines, activeHlt2Lines = self._runHltLines()
+
+        if self.getProp('Split') :
+            if self.getProp('Split') == 'Hlt1' : activeHlt2Lines = []
+            if self.getProp('Split') == 'Hlt2' : activeHlt1Lines = []
+            if self.getProp('Split') not in [ 'Hlt1','Hlt2','' ] :
+                raise KeyError('bad value for property split: %s' % self.getProp('Split'))
         
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         # print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
