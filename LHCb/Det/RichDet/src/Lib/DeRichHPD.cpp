@@ -161,13 +161,6 @@ StatusCode DeRichHPD::initialize ( )
   updMgrSvc()->registerCondition( this, m_deSiSensor->geometry(),
                                   &DeRichHPD::updateGeometry );
 
-  //if(m_UseRandomBField) init_mm();
-  //msg << MSG::DEBUG<< "Current set is UseBFieldTestMap="<<m_UseBFieldTestMap
-  //    << " LongitudinalBField="<<m_LongitudinalBField
-  //<< " UseRandomBField="<<m_UseRandomBField
-  //<< " within:"<<m_RandomBFieldMinimum<<"-"<<m_RandomBFieldMaximum
-  //<< endmsg;
-
   m_demagConds.clear();
   if ( hasCondition("DemagParametersFieldNegative") &&
        hasCondition("DemagParametersFieldPositive") )
@@ -426,7 +419,9 @@ StatusCode DeRichHPD::updateGeometry()
   // from silicon sensor to HPD including misalignment
   m_SiSensorToHPDMatrix = m_deSiSensor->geometry()->ownMatrix().Inverse();
 
-  return StatusCode::SUCCESS;
+  // With new MDMS V1 updates that depend on Image radius, update
+  // must be triggered if alignment of HPD and HPD sensor changes
+  return DeRichHPD::updateDemagProperties();
 }
 
 //=================================================================================
@@ -442,7 +437,7 @@ StatusCode DeRichHPD::updateDemagProperties()
   {
     // Initialise the demagnifcation
     sc = fillHpdDemagTable(field);
-    if (sc.isFailure())
+    if ( sc.isFailure() )
     {
       fatal() << "Could not initialise demagnification table for HPD:"
               << m_number <<endmsg;
@@ -451,7 +446,7 @@ StatusCode DeRichHPD::updateDemagProperties()
 
     // Initialise the magnification
     sc = fillHpdMagTable(field);
-    if (sc.isFailure())
+    if ( sc.isFailure() )
     {
       fatal() << "Could not initialise magnification table for HPD:"
               << m_number << endmsg;
@@ -475,7 +470,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
   detLoc << XmlHpdDemagPath << "Sim_" << m_number;
   SmartDataPtr<TabulatedProperty> dem ( dataSvc(), detLoc.str() );
 
-  if (!dem)
+  if ( !dem )
   {
     error() << "Could not load "<<(XmlHpdDemagPath+"Sim_")<<m_number<<endmsg;
     return StatusCode::FAILURE;
@@ -486,10 +481,9 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
-  //tableR.clear();
-  //tablePhi.clear();
 
-  if (coeff_sim.size() < 8)
+  // Read the MDMS parameters
+  if ( coeff_sim.size() < 8 )
   {
     error() << "coeff_sim.size()<8"<<endmsg;
     return StatusCode::FAILURE;
@@ -517,7 +511,7 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
   for ( int i = 0; i < totbins+1; ++i )
   {
 
-    double r_anode = 0, phi_anode = 0;
+    double r_anode(0), phi_anode(0);
     const double r_cathode = m_activeRadius/totbins * (double)i;
 
     if ( m_UseBFieldTestMap )
@@ -563,30 +557,77 @@ StatusCode DeRichHPD::fillHpdDemagTable(const unsigned int field)
 StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 {
 
-  std::ostringstream paraLoc;
-  paraLoc << "hpd" << m_number << "_rec";
-  const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
+  // MDMS version
   m_MDMS_version[field] = ( m_demagConds[field]->exists("version") ?
                             m_demagConds[field]->param<int>("version") : 0 );
   if ( msgLevel(MSG::DEBUG) )
     debug() << " -> Field " << field << " MDMS version = " << m_MDMS_version[field] << endmsg;
+  if ( m_MDMS_version[field] < 0 || m_MDMS_version[field] > 2 )
+  {
+    error() << "Unknown MDMS version " << m_MDMS_version[field] << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  // Load the MDMS parameters
+  std::ostringstream paraLoc;  
+  paraLoc << "hpd" << m_number << "_rec";
+  const std::vector<double>& coeff_rec = m_demagConds[field]->paramVect<double>(paraLoc.str());
+
+  // Expected size of the MDMS parameters vector
+  const unsigned int nMDMSParams = ( 0 == m_MDMS_version[field] ? 8  :
+                                     1 == m_MDMS_version[field] ? 9  : 
+                                     2 == m_MDMS_version[field] ? 12 : 
+                                     8 );
+
+  // Check the size of the MDMS parameters
+  if ( coeff_rec.size() < nMDMSParams )
+  {
+    error() << "MDMS Version " << m_MDMS_version[field] << " requires " 
+            << nMDMSParams << " parameters. Found only " << coeff_rec.size() 
+            << "..." << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // working data tables, used to initialise the interpolators
   std::map<double,double> tableR, tablePhi;
 
-  if ( coeff_rec.size() < 8 )
+  // Read the MDMS parameters
+  const double r_a0   = coeff_rec.at(0);
+  double       r_a1   = coeff_rec.at(1);
+  const double r_a2   = coeff_rec.at(2);
+  const double r_a3   = coeff_rec.at(3);
+  const double phi_a0 = coeff_rec.at(4);
+  const double phi_a1 = coeff_rec.at(5);
+  const double phi_a2 = coeff_rec.at(6);
+  const double phi_a3 = coeff_rec.at(7);
+
+  // If MDMS V1, scale the r1 values
+  if ( 1 == m_MDMS_version[field] )
   {
-    error() << "coeff_rec.size()<8" << endmsg;
-    return StatusCode::FAILURE;
+
+    // HPD image radius from data
+    const Condition * siAlignCond = ( m_deSiSensor->geometry() ? 
+                                      m_deSiSensor->geometry()->alignmentCondition() : NULL );
+    if ( !siAlignCond )
+    {
+      error() << "Failed to load SiSensor alignment Condition !" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    const double R_data = ( siAlignCond->exists("ImageRadius") ? 
+                            siAlignCond->param<double>("ImageRadius") : -999 );
+
+    // reference HPD image size from MDMS
+    const double R_MDMS = coeff_rec.at(8);
+
+    // Scale r1
+    const double Rscale = ( R_data > 0.1 && R_MDMS > 0.1 ? R_data / R_MDMS : 1.0 );
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "R_data = " << R_data << " R_MDMS = " << R_MDMS 
+              << " Scale = " << Rscale 
+              << endmsg;
+    r_a1 *= Rscale;
+
   }
-  const double& r_a0   = coeff_rec.at(0);
-  const double& r_a1   = coeff_rec.at(1);
-  const double& r_a2   = coeff_rec.at(2);
-  const double& r_a3   = coeff_rec.at(3);
-  const double& phi_a0 = coeff_rec.at(4);
-  const double& phi_a1 = coeff_rec.at(5);
-  const double& phi_a2 = coeff_rec.at(6);
-  const double& phi_a3 = coeff_rec.at(7);
 
   // Reconstruction from anode->cathode
   for ( int i = 0; i < totbins+1; ++i )
@@ -594,12 +635,12 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
 
     const double r_anode =
       std::min(m_siliconHalfLengthX,m_siliconHalfLengthY)/totbins * (double)i;
-    double r_cathode = 0, phi_cathode = 0;
+    double r_cathode(0), phi_cathode(0);
 
     if ( m_UseBFieldTestMap )
     {
       //calculate r_cathode and deltaphi from hpd test data
-      r_cathode   =        mag( r_anode, 0 );
+      r_cathode   =        mag( r_anode,   0 );
       phi_cathode = -Delta_Phi( r_cathode, 0 );
 
     }
@@ -610,7 +651,7 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
       const double rAnode2 = r_anode * r_anode ;
       const double rAnode3 = rAnode2 * r_anode ;
 
-      r_cathode   = r_a0
+      r_cathode = r_a0
         + ( r_a1 * r_anode )
         + ( r_a2 * rAnode2 )
         + ( r_a3 * rAnode3 );
@@ -621,7 +662,7 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
         + ( phi_a3 * rAnode3 );
     }
 
-    tableR[ r_anode ]   = r_cathode;
+    tableR  [ r_anode ] = r_cathode;
     tablePhi[ r_anode ] = phi_cathode;
 
   } // bins
@@ -629,14 +670,8 @@ StatusCode DeRichHPD::fillHpdMagTable( const unsigned int field )
   m_magMapR[field]   -> initInterpolator( tableR   );
   m_magMapPhi[field] -> initInterpolator( tablePhi );
 
-  if ( m_MDMS_version[field] > 0 )
+  if ( UNLIKELY( 2 == m_MDMS_version[field] ) )
   {
-    if ( coeff_rec.size() < 12 )
-    {
-      error() << "MDMS_version = " << m_MDMS_version[field] << "and coeff_rec.size() = "
-              << coeff_rec.size() << endmsg;
-      return StatusCode::FAILURE;
-    }
     m_MDMSRotCentre = Gaudi::XYZVector( coeff_rec[8], coeff_rec[9], 0.0 );
     m_magnificationCoef1 = coeff_rec[10];
     m_magnificationCoef2 = coeff_rec[11];
@@ -660,15 +695,16 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
 {
   const unsigned int field = ( magSvc()->isDown() ? 0 : 1 );
 
-  detectPoint = ( m_MDMS_version[field] == 0              ?
-                  m_SiSensorToHPDMatrix * detectPoint     :
-                  detectPoint           - m_MDMSRotCentre );
+  // Only versions 0, 1 or 2 possible
+  detectPoint = ( 2 > m_MDMS_version[field] ?
+                  m_SiSensorToHPDMatrix * detectPoint  :
+                  detectPoint - m_MDMSRotCentre );
   detectPoint.SetZ(0.0);
   
   const double rAnode = detectPoint.R();
 
   double rCathode(0);
-  if ( UNLIKELY( m_MDMS_version[field] != 0 ) )
+  if ( UNLIKELY( 2 == m_MDMS_version[field] ) )
   {
     detectPoint = m_SiSensorToHPDMatrix * detectPoint;
     detectPoint.SetZ(0.0);
@@ -689,11 +725,7 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   if ( !photoCathodeSide ) rCathode += extraRadiusForRefraction(rCathode);
   
   // calculate angle phi
-  // Full slow libm
-  //double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
-  // fast VDT implementation
   double anodePhi = vdt::fast_atan2( detectPoint.Y(), detectPoint.X() );
-
   if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
 
   const double result_phi = magnification_RtoPhi(field)->value( rAnode );
@@ -704,12 +736,8 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   const double& winRadius = ( photoCathodeSide ? m_winInR : m_winOutR );
   if ( winRadius < rCathode ) return StatusCode::FAILURE;
 
-  // Full libm
-  //const double xWindow = rCathode * std::cos(new_phi);
-  //const double yWindow = rCathode * std::sin(new_phi);
-  // fast VDT
   double vdtsin(0), vdtcos(0);
-  vdt::fast_sincos(new_phi,vdtsin,vdtcos); // Compute both at once via VDT
+  vdt::fast_sincos(new_phi,vdtsin,vdtcos);
   const double xWindow = rCathode * vdtcos;
   const double yWindow = rCathode * vdtsin;
 

@@ -18,6 +18,9 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
 
+// VDT
+#include "vdt/sincos.h"
+#include "vdt/atan2.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DeRichPMT
@@ -90,8 +93,7 @@ StatusCode DeRichPMT::initialize ( )
     return StatusCode::FAILURE;
   }
 
-  sc = sc &&  getPMTParameters();
-
+  sc = sc && getPMTParameters();
 
   updMgrSvc()->registerCondition( this, geometry(),
                                   &DeRichPMT::updateGeometry );
@@ -153,9 +155,9 @@ StatusCode DeRichPMT::getPMTParameters()
   m_QwToAnodeZDist= deRich->param<double> ( "RichPmtQWToSiMaxDist" );
 
   m_Rich2PmtArrayConfig=0;
-  
+
   if(deRich->exists ("Rich2PMTArrayConfig") ) {
-    
+
     m_Rich2PmtArrayConfig = deRich->param<int>  ("Rich2PMTArrayConfig");
     if( deRich->exists ("RichGrandPmtAnodeXSize" ) ){
       m_GrandPmtAnodeXSize = deRich->param<double> ("RichGrandPmtAnodeXSize" );
@@ -171,43 +173,39 @@ StatusCode DeRichPMT::getPMTParameters()
       m_GrandPmtEdgePixelXDiff= m_GrandPmtEdgePixelXSize - m_GrandPmtPixelXSize;
       m_GrandPmtEdgePixelYDiff= m_GrandPmtEdgePixelYSize - m_GrandPmtPixelYSize;
       m_GrandPmtAnodeHalfThickness = m_GrandPmtAnodeZSize/2.0;
-      
-      
+
+
     }
-    
+
   }
   m_Rich2UseGrandPmt =false;
   if(m_Rich2PmtArrayConfig >= 1 ) {
     m_Rich2UseGrandPmt = true;
     if(m_Rich2PmtArrayConfig == 2) {
-      m_Rich2UseMixedPmt = true;       
+      m_Rich2UseMixedPmt = true;
     }
-    
+
   }
   m_Rich1Rich2ZDivideLimit = 6000.0;
-  
 
-  if(exists("RichPmtLensMagnficationFactor")) {
-       m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
-  }else {
-       m_PmtLensMagnificationRatio=1.0;
-       
+
+  if ( exists("RichPmtLensMagnficationFactor") ) 
+  {
+    m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
   }
-  
-     
+  else
+  {
+    m_PmtLensMagnificationRatio=1.0;
+  }
 
-  if(exists("RichPmtLensRadiusofCurvature") ) {
-    
+  if(exists("RichPmtLensRadiusofCurvature") )
+  {
     m_PmtLensRoc =deRich->param<double> ("RichPmtLensRadiusofCurvature" );
-  }else {
-    m_PmtLensRoc =100000.0;
-    
   }
-  
-  
-  
-  
-
+  else 
+  {
+    m_PmtLensRoc =100000.0;
+  }
 
   return sc;
 }
@@ -247,12 +245,12 @@ StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
   // First find which RichDetector this point is in
   const Gaudi::XYZPoint atestPoint = Gaudi::XYZPoint (0.0,0.0,0.0);
   const Gaudi::XYZPoint atestGlobalPoint = geometry()->toGlobalMatrix() *atestPoint ;
-  bool aGrandPmtUse = ( atestGlobalPoint.z()> m_Rich1Rich2ZDivideLimit ) &&  (m_PmtIsGrand);  
- 
-  const Gaudi::XYZPoint aLocalHit = 
-   aGrandPmtUse ? getAnodeHitCoordFromGrandPixelNum( fracPixelCol,fracPixelRow ):
-                  getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
-                                          
+  bool aGrandPmtUse = ( atestGlobalPoint.z()> m_Rich1Rich2ZDivideLimit ) &&  (m_PmtIsGrand);
+
+  const Gaudi::XYZPoint aLocalHit =
+    aGrandPmtUse ? getAnodeHitCoordFromGrandPixelNum( fracPixelCol,fracPixelRow ):
+    getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
+
   const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
   const double zQwExt = zPh + m_PmtQwZSize;
 
@@ -262,35 +260,37 @@ StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
   // detectPoint  =  geometry()->toGlobalMatrix() * aPhCathHit ; // not used since the
   // output is expected to be in the PMT coord system.
   // for now assume negligible refraction effect at the QW.
-  const Gaudi::XYZPoint  aDetPlanePointFromPhCath = 
-      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
-  const Gaudi::XYZPoint  aDetPlanePointFromQW = 
-      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
+  const Gaudi::XYZPoint  aDetPlanePointFromPhCath =
+    (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
+  const Gaudi::XYZPoint  aDetPlanePointFromQW =
+    (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
 
-  
+
   detectPoint = photoCathodeSide ? aDetPlanePointFromPhCath : aDetPlanePointFromQW ;
 
   return sc;
 }
-Gaudi::XYZPoint DeRichPMT::RichPmtLensReconFromPhCath(  const Gaudi::XYZPoint & aPhCathCoord  ) const
+
+Gaudi::XYZPoint 
+DeRichPMT::RichPmtLensReconFromPhCath(  const Gaudi::XYZPoint & aPhCathCoord  ) const
 {
 
-   double aPhCaRsq_Coord =
+  const double aPhCaRsq_Coord =
     (aPhCathCoord.x() * aPhCathCoord.x() + aPhCathCoord.y() * aPhCathCoord.y() );
-   double  aPhCaR_Coord =  (aPhCaRsq_Coord>0.0) ? sqrt(aPhCaRsq_Coord) : 0.0;
-   double aPhCaRsq_Phi = atan(  aPhCathCoord.y()/aPhCathCoord.x());
-   double aXSignLocal= (( aPhCathCoord.x()) > 0) ? 1 : -1;
-   double aYSignLocal= (( aPhCathCoord.y()) > 0) ? 1 : -1;
+  const double aPhCaR_Coord =  (aPhCaRsq_Coord>0.0) ? std::sqrt(aPhCaRsq_Coord) : 0.0;
+  const double aPhCaRsq_Phi = vdt::fast_atan2( aPhCathCoord.y(), aPhCathCoord.x() );
+  const double aXSignLocal= (( aPhCathCoord.x()) > 0) ? 1 : -1;
+  const double aYSignLocal= (( aPhCathCoord.y()) > 0) ? 1 : -1;
 
-   double aLensRecXLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*cos( aPhCaRsq_Phi ))* aXSignLocal;
-   double aLensRecYLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*sin( aPhCaRsq_Phi ))* aYSignLocal;
-   double Rsq= (aPhCaR_Coord*m_PmtLensMagnificationRatio )*(aPhCaR_Coord*m_PmtLensMagnificationRatio);
-   
-   double aLensRecZStd =  aPhCathCoord.z()+sqrt((m_PmtLensRoc*m_PmtLensRoc)- Rsq );
+  double sinphi(0), cosphi(0);
+  vdt::fast_sincos( aPhCaRsq_Phi, sinphi, cosphi );
+  const double aLensRecXLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*cosphi)* aXSignLocal;
+  const double aLensRecYLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*sinphi)* aYSignLocal;
+  double Rsq= (aPhCaR_Coord*m_PmtLensMagnificationRatio )*(aPhCaR_Coord*m_PmtLensMagnificationRatio);
 
-   return  Gaudi::XYZPoint(aLensRecXLocal,aLensRecYLocal,aLensRecZStd);
-  
-  
+  const double aLensRecZStd =  aPhCathCoord.z()+std::sqrt((m_PmtLensRoc*m_PmtLensRoc)- Rsq );
+
+  return  Gaudi::XYZPoint(aLensRecXLocal,aLensRecYLocal,aLensRecZStd);
 }
 
 //=============================================================================
@@ -311,13 +311,10 @@ StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
   // for now assume negligible refraction effect at the QW.
 
 
-  const Gaudi::XYZPoint  aDetPlanePointFromPhCath = 
-      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
-  const Gaudi::XYZPoint  aDetPlanePointFromQW = 
-      (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
-
-
-
+  const Gaudi::XYZPoint  aDetPlanePointFromPhCath =
+    (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath(aPhCathHit):  aPhCathHit;
+  const Gaudi::XYZPoint  aDetPlanePointFromQW =
+    (m_PmtLensFlag  ) ? RichPmtLensReconFromPhCath( aQWExtHit ): aQWExtHit ;
 
   detectPoint = ( photoCathodeSide ?
                   geometry()->toGlobalMatrix() * aDetPlanePointFromPhCath  :
@@ -345,13 +342,13 @@ DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
 //============================================================================================
 Gaudi::XYZPoint
 DeRichPMT::getAnodeHitCoordFromGrandPixelNum( const double fracPixelCol,
-                                         const double fracPixelRow ) const
+                                              const double fracPixelRow ) const
 {
-  double aXEffPixel = 
+  double aXEffPixel =
     ((fracPixelCol==0) || (fracPixelCol==( m_PmtNumPixCol-1)) ) ?  m_GrandPmtEdgePixelXSize : m_GrandPmtEffectivePixelXSize;
-  double aYEffPixel = 
+  double aYEffPixel =
     ((fracPixelRow==0) || (fracPixelRow==( m_PmtNumPixRow-1)) ) ?  m_GrandPmtEdgePixelYSize : m_GrandPmtEffectivePixelYSize;
-  
+
   const double xh = ( fracPixelCol - (m_PmtNumPixCol-1) * 0.5 ) * aXEffPixel;
   const double yh = ( fracPixelRow - (m_PmtNumPixRow-1) * 0.5 ) * aYEffPixel;
   const double zh = m_GrandPmtAnodeHalfThickness;
@@ -366,18 +363,18 @@ DeRichPMT::getAnodeHitCoordFromMultTypePixelNum( const double fracPixelCol,
                                                  const LHCb::RichSmartID smartID ) const
 {
   Gaudi::XYZPoint aP = Gaudi::XYZPoint(0.0,0.0,0.0);
-  
+
   if( (smartID.rich()== Rich::Rich2) && ( m_PmtIsGrand ) ) {
-   aP = getAnodeHitCoordFromGrandPixelNum(fracPixelCol , fracPixelRow);
-      
+    aP = getAnodeHitCoordFromGrandPixelNum(fracPixelCol , fracPixelRow);
+
   } else {
-   aP = getAnodeHitCoordFromPixelNum( fracPixelCol , fracPixelRow );
-    
+    aP = getAnodeHitCoordFromPixelNum( fracPixelCol , fracPixelRow );
+
   }
   const Gaudi::XYZPoint aPC = aP;
-  
+
   return aPC;
-  
+
 }
 //===============================================================================================
 Gaudi::XYZPoint DeRichPMT::detPointOnAnode ( const LHCb::RichSmartID smartID ) const
