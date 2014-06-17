@@ -23,10 +23,10 @@ namespace {
     Gaudi::NamedRange_<LHCb::Particle::ConstVector> _i5 ;
     Gaudi::Range_<LHCb::Particle::ConstVector>      _i6 ;    
 
-    LHCb::RelatedInfoMap _i7 ;
+    LHCb::RelatedInfoMap      _i7 ;
+    LHCb::RelatedInfoMap::MAP _i8 ;
     
     // end instantiations
   };
 }
-
 #endif // PHYSEVENT_LCGDICT_H
