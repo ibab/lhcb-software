@@ -80,6 +80,14 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append((x[0], x[1])))
         return projects
 
+    def listCMakeBuiltProjects(self):
+        ''' List the applications to be released '''
+        
+        query = 'start n=node:Lbadmin(Type="CMAKE") match n-[:BUILDTOOL]-m  return distinct m.project, m.version'
+        projects = []
+        self.runCypher(query, lambda x: projects.append((x[0], x[1])))
+        return projects
+
 
     def listReleaseStackFromPV(self, project, version):
         query = 'start n=node:Lbadmin(Type="RELEASE"), m=node:ProjectVersion(ProjectVersion="%s_%s")  '  % (project, version)
@@ -381,6 +389,10 @@ class SoftConfDB(object):
                                                                         "Type",
                                                                         "RELEASE",
                                                                         {"type": "RELEASE"})
+            self.node_cmake =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                                      "Type",
+                                                                      "CMAKE",
+                                                                      {"type": "CMAKE"})
 
             self.setupDone = True
 
@@ -545,7 +557,7 @@ class SoftConfDB(object):
         self.setupDB()
 
         node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
-
+                                                
                                                            "ProjectVersion",
                                                            project + "_" + version)
         if node_pv is None:
@@ -580,13 +592,40 @@ class SoftConfDB(object):
                 if r.is_type("APPLICATION"):
                     r.delete()
 
+
+    def setCMakeBuild(self, project, version):
+        ''' Set the link to indicate that a project was built with CMake '''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
+
+        if not self.node_cmake.has_relationship_with(node_pv):
+            rels = self.mNeoDB.get_or_create_relationships((self.node_cmake, "BUILDTOOL", node_pv))
+            for r in rels:
+                props = r.get_properties()
+                import datetime
+                props["DATE"] = str(datetime.datetime.now())
+                r.set_properties(props)
+                
+    def unsetCMakeBuild(self, project, version):
+        ''' Unset the link to indicate that a project was built with CMake '''
+        self.setupDB()
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
+
+        if self.node_cmake.has_relationship_with(node_pv):
+            for r in node_pv.get_relationships():
+                if r.is_type("BUILDTOOL"):
+                    r.delete()
+
     def setReleaseFlag(self, project, version):
         ''' Set the link to indicate that a release was requested '''
         self.setupDB()
-        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
-                                                           "ProjectVersion",
-                                                           project + "_" + version,
-                                                           {"project": project, "version": version})
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
 
         if not self.node_release.has_relationship_with(node_pv):
             rels = self.mNeoDB.get_or_create_relationships((self.node_release, "RELEASEREQ", node_pv))
@@ -599,10 +638,9 @@ class SoftConfDB(object):
     def unsetReleaseFlag(self, project, version):
         ''' unset the link indicated that a release was requested '''
         self.setupDB()
-        node_pv =  self.mNeoDB.get_or_create_indexed_node("ProjectVersion",
-                                                           "ProjectVersion",
-                                                           project + "_" + version,
-                                                           {"project": project, "version": version})
+        node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+                                                "ProjectVersion",
+                                                project + "_" + version)
 
         if self.node_release.has_relationship_with(node_pv):
             for r in node_pv.get_relationships():

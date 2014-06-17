@@ -93,6 +93,12 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listReleaseReqs()):
             print "%s\t%s" % p
 
+    def cmdlistCMake(self, args):
+        ''' List the projects built with CMake '''
+        for p in sorted(self.mConfDB.listCMakeBuiltProjects()):
+            print "%s\t%s" % p
+
+
     def _sanitizeProjectName(sel, pname):
         ''' Puts back the correct case in display '''
         ret = pname
@@ -314,8 +320,9 @@ if __name__=='__main__':
   %prog listActiveReferences[s] <project> <version>        : Like above only considering the ones that are active (on disk)
   %prog checkUnused <project> <version>                    : Check for unused projects/version
   %prog show <project> <version>                           : Show all properties and relationships of a project/version node
-  %prog listReleases                                       : List projects flagged to be RELEASEd
-  %prog listReleaseStacks                                  : List projects flagged to be RELEASEd grouping by stack with platforms
+  %prog listReleases                                       : List projects flagged to be RELEASED
+  %prog listReleaseStacks                                  : List projects flagged to be RELEASED grouping by stack with platforms
+  %prog listCMake                                          : List projects built with CMake
 
       """
     s = LbSdbQuery(usage=sUsage)
