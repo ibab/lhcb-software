@@ -87,10 +87,10 @@ void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBan
             // --> in principle we can put 2 covs in one uint
 
             // get errors for scaling
-            std::array<double, 5> err {
+            std::array<double, 5> err { {
                 std::sqrt( state->errX2() ),     std::sqrt( state->errY2() ),
                 std::sqrt( state->errTx2() ),    std::sqrt( state->errTy2() ),
-                std::sqrt( state->errQOverP2() ) };
+                std::sqrt( state->errQOverP2() ) } };
             // first store the diagonal then row wise the rest
             *out++ = pac.position( err[0] );
             *out++ = pac.position( err[1] );
