@@ -36,7 +36,7 @@ def getNightlyExtraPath(path, slot, day):
     confSumm_file = os.path.join(path, 'confSummary.py')
     config_file = os.path.join(path, 'configuration.xml')
     if os.path.exists(confSumm_file): # Try with the python digested version
-        data = {}
+        data = {'__file__': confSumm_file}
         exec open(confSumm_file).read() in data #IGNORE:W0122
         # Get the list and convert it to strings
         extra_path = filter(str, data.get('cmtProjectPathList',[]))
