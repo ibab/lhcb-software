@@ -118,13 +118,13 @@ namespace LoKi
       , m_jetID        ( 98  )
       //
       , m_type         ( 0   )  
-      , m_recom        ( 1   )
+      , m_recom        ( fastjet::E_scheme   )
       , m_r            ( 0.7 )
       , m_ptmin        ( 0   )
       //
       , m_sort         ( 2   )
       //
-      , m_strat        (  0  )
+      , m_strat        ( fastjet::Best  )
       //
       , m_combinerName ( "MomentumCombiner"  )
       , m_combiner     ( 0   )
