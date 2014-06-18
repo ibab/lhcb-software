@@ -3,6 +3,35 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v35r1>2014-06-18 DaVinci v35r1</A></H1><PRE>
+
+New development release based on the LHCb v37r3 stack.
+
+Executive Summary of notable Phys, Analysis and Stripping changes :-
+
+Flavour Tagging :
+ . Updated Reco14 calibration for SSpion, nnetOSK and OS combination with nnetOSK.
+ . Add a flag to enable the CharmTagger in the OS combination (default=disabled)
+ . Fix BDT taggers: dQ and CosTheta calculation
+ . SSProtonBDT: Removed preselection cut in CosTheta 
+                see presentations at FT meeting 8 and 15/05/2014
+ . Stored one additional variable in BTA tuple for SS-BDT taggers.
+ . Updated SinglelCandidate.tar with latest cuts in D*munu selection.
+
+LoKi :
+ . Distance calculators : Add the explicit treatment of distances between the
+                          same particles, same vertcies and the same tracks.
+
+DecayTreeTuple :
+ . TupleToolL0Calo : Improvements to the ntuple.
+
+Stripping Selection :
+ . Added a modification of an existing line (Bs2JpsiKstarWideLine)
+   for analysis purposes, StrippingBs2JpsiKstNoPID (Bs2JpsiKstarWideLineNoPID).
+ . CharmFromBSemiForHadronAsy Bug fix: Add charge conjugate decays to
+                                       LbToLcStarMuLcToKpi{RS,WS} lines.
+ . PromptCharm : Fix typo in Lambda_c selection.
+
 </PRE><H1><A NAME=v35r0>2014-05-19 DaVinci v35r0</A></H1><PRE>
 
 New development release based on the LHCb v37r2 stack.
@@ -10,7 +39,7 @@ New major release version, due to backwards incompatible changes to FT support.
 
 New Package : KaliCalo
 
-Executive Summary of notable Phys, Analysis and Stripping changes 
+Executive Summary of notable Phys, Analysis and Stripping changes :-
 
 Vertex Fitting :
  . PVReFitterAlg : Change the default refitting tool from 
