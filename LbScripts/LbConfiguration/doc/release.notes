@@ -1,3 +1,6 @@
+2014-06-19 Joel Closier <Joel.Closier@cern.ch>
+        * add the EOS_HOME variable setting
+
 2014-06-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: minor fix to handle changes introduced with LBCORE-523
