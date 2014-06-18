@@ -3,6 +3,8 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-06-18 - Gerhard Raven
+ - remove use of importOptions($STDOPTS/DecodeRawEvent.py)
 
 !========================= HltTracking v12r1 2014-06-16 =========================
 
