@@ -27,10 +27,6 @@ use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
 
 #temporary
 
-#pick up new types of tests with timing tables
-use GaudiConf           v19r2   
-use LHCbAlgs            v3r2    Kernel 
-
 #suppress warnings in HltDAQ and pick up timing improvements from Gerhard
 use HltDAQ              v4r5    Hlt
 
