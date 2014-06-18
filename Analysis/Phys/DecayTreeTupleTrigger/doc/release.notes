@@ -4,6 +4,8 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleTrigger v1r5 2014-06-18 =========================
+
 ! 2014-06-18 Tomasz Skwarnicki	
 - TupleToolTISTOS fix Hlt2Phy_TIS,TOS->Hlt2Global_TIS,TOS typo
                   be smarter in copying offline hits from Hlt to L0 TriggerTisTos tool 
