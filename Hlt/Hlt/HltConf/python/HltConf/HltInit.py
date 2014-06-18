@@ -98,6 +98,15 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1DiMuonNoPV2L0Decision"             :  131,
     "Hlt1DiMuonNoPVL0SegDecision"           :  132,
     "Hlt1DiMuonIPCL0GECDecision"            :  133,
+    "Hlt1DiMuonHighMassDecision"            : 140,
+    "Hlt1DiMuonLowMassDecision"             : 141,
+    "Hlt1DiProtonDecision"                  : 142,
+    "Hlt1DiProtonLowMultDecision"           : 143,
+    "Hlt1MultiMuonNoIPDecision" : 1009,
+    "Hlt1SingleMuonHighPTDecision" : 1010,
+    "Hlt1SingleMuonNoIPDecision" : 1011,
+
+
     # HA Hl1(Single,Di)Hadron.*Decision
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
@@ -109,6 +118,10 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1TrackAllL0TightDecision"           :  206,
     "Hlt1TrackMuonDecision"                 :  204,
     "Hlt1TrackPhotonDecision"               :  205,  
+    "Hlt1TrackAllL0LifetimeUnbiasedDecision" : 1012,
+    "Hlt1TrackForwardPassThroughDecision" : 1013,
+    "Hlt1TrackForwardPassThroughLooseDecision" : 1014,
+
     # PH
     "Hlt1PhotonDecision"                    :  300,
     "Hlt1PhoFromEleDecision"                :  301,
@@ -149,9 +162,16 @@ HltANNSvc().Hlt1SelectionID = {
     'Hlt1MBMiniBiasDecision'                :  510,
     'Hlt1MBNoBiasDecision'                  :  511,
     'Hlt1MBMicroBiasLowMultVeloDecision'    :  513,
+    "Hlt1MBMicroBiasTStationRateLimitedDecision" : 514,
+    "Hlt1MBMicroBiasVeloDecision" : 515,
+    "Hlt1MBMicroBiasVeloRateLimitedDecision" : 516,
+    "Hlt1VeloClosingMicroBiasDecision" : 1015,
+
+
     # DV
     "Hlt1VertexDisplVertexDecision"         :  600,
     "Hlt1VertexDisplVertexPSDecision"       :  601,
+
 
     #pA
     'Hlt1ActivitySPDDecision'               :  610,
