@@ -398,7 +398,9 @@ class LbLoginScript(SourceScript):
                 if not ev.has_key("CASTOR_HOME") and ev.has_key("HOME") :
                     if ev["HOME"].startswith("/afs/") :
                         ev["CASTOR_HOME"] = ev["HOME"].replace("/afs/", "/castor/")
-
+                if not ev.has_key( "EOS_HOME" ) and ev.has_key( "HOME" ) :
+                    if ev["HOME"].startswith( "/afs/" ) :
+                        ev["EOS_HOME"] = ev["HOME"].replace( "/afs/cern.ch/", "/eos/lhcb/" )
 
 #-----------------------------------------------------------------------------------
 # Core CMT business
