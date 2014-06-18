@@ -12,13 +12,6 @@ use  HltMonitor          v1r4	    Hlt   # Diego Martinez
 use  Swimming            v3r0p2     Phys  # Nick Torr
 use  L0App               v2r2       L0    # Rob Lambert
 
-# Bug fixes on top of LHCb v36r4 release stack
-
-#temporary for new features
-use HltServices              v2r1      Hlt
-use HltInterfaces            v5r0p1    Kernel
-use DetCond                  v12r35    Det
-
 # Declare this as a container package
 apply_pattern container_package
 
