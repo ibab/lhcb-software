@@ -29,6 +29,7 @@ use EventPacker         v*    Event
 use DAQKernel           v*    DAQ
 use LoKiHlt             v*    Phys
 use HltServices         v*    Hlt
+use LumiEvent           v*    Event
 
 #### for CORAL access
 use DetCond             v*      Det

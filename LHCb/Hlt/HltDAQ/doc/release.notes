@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-06-18 - Gerhard Raven
+ - add dependency on LumiEvent
+
 ! 2014-06-17 - Gerhard Raven
  - fix brace-elision problem under clang (brace elision will be
    in C++14, not C++11, and while gcc accepts it already, clang 
