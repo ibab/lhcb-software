@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-06-17 - Anton Poluektov 
+ - Add more structures from RelatedInfoMap to dictionary. 
+
 !========================= PhysEvent v11r25 2014-06-10 ========================
 ! 2014-06-07 - Anton Poluektov 
  - Fix dictionaries broken due to RelatedInfoMap moved to LHCb namespace. 
