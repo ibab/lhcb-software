@@ -4,7 +4,7 @@
 // local
 #include "GenXiccProduction.h"
 #include "LbGenXicc/GenXicc.h"
-#include "LbGenXicc/QQqBaryons.h"
+#include "MCInterfaces/QQqBaryons.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"

@@ -2,6 +2,11 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!========================= LbGenXicc v3r1 2014-06-18 =========================
+! 2014-06-18 - Gloria Corti
+ - Moved QQqBaryons header to Kernel/MCInterfaces package since needed by 
+   a class in GenCuts. Adapted classes that used it to pick it up from there.
+
 ! 2014-02-11 - Liang Zhong
  - Add the interface to set the mass of Xicc baryon in GenXiccProduction.cpp
    A new variable, ichange, is added. If ichange is set to 0, then the default

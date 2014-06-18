@@ -2,7 +2,7 @@
 #define LBGENXICC_GENXICCPRODUCTION_H 1
 
 // Include files
-#include "LbGenXicc/QQqBaryons.h"
+#include "MCInterfaces/QQqBaryons.h"
 #include "LbPythia/PythiaProduction.h"
 
 /** @class GenXiccProduction GenXiccProduction.h 
