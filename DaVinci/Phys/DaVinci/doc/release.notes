@@ -8,8 +8,15 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v35r1 2014-06-18 ===========================
+
 ! 2014-05-26 - Chris Jones
  - Set the compression level for ROOT ntuples. Default is LZMA:6.
+   Configurable via the DaVinci() configurable using the 'RootCompressionLevel'
+   option. For instance, to switch to ZLIB level 1 compression use :-
+
+      from Configurables import DaVinci
+      DaVinci().RootCompressionLevel = "ZLIB:1"
 
 ! 2014-05-21 - Ben Couturier
  - Fixed CMake configuration file to remove data packages specified as 
