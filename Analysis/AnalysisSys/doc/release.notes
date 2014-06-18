@@ -31,6 +31,9 @@ In DSTWriters :
 
 In DecayTreeTupleTrigger :
  . TupleToolL0Calo: improve ntuple.
+ . TupleToolTISTOS: Fix Hlt2Phy_TIS,TOS->Hlt2Global_TIS,TOS typo.
+                    Be smarter in copying offline hits from Hlt to 
+                    L0 TriggerTisTos tool.
 
 In FlavourTaggingChecker :
  . Stored one additional variable in BTA tuple for SS-BDT taggers.
