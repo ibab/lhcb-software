@@ -9,6 +9,14 @@ New development release based on the LHCb v37r3 stack.
 
 Executive Summary of notable Phys, Analysis and Stripping changes :-
 
+Core DaVinci :
+ . Set the compression level for ROOT ntuples. Default is LZMA:6.
+   Configurable via the DaVinci() configurable using the 'RootCompressionLevel'
+   option. For instance, to switch to ZLIB level 1 compression use :-
+
+      from Configurables import DaVinci
+      DaVinci().RootCompressionLevel = "ZLIB:1"
+
 Flavour Tagging :
  . Updated Reco14 calibration for SSpion, nnetOSK and OS combination with nnetOSK.
  . Add a flag to enable the CharmTagger in the OS combination (default=disabled)
