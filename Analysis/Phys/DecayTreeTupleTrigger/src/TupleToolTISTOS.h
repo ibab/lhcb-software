@@ -92,6 +92,9 @@ private:
 
 private:
 
+  // copied from TisTosTobbing/TisTos/TisTos.h to avoid dependence 
+  enum HitType {kVelo=0,kAllHits=kVelo,kOTIT,kTT,kMuon,kEcal,kHcal,nHitTypes,kNotUsed=nHitTypes};
+
   std::vector<int> m_pidList; 
   bool checkPID;
   std::string m_hlt1Phys;

@@ -128,9 +128,18 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
     if(m_doL0)
     {
 
-      //       m_L0TriggerTisTosTool->setOfflineInput(*P);
-      // much faster to copy hits
-      m_L0TriggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
+      if( ( m_TriggerTisTosTool->getTOSFrac( kMuon ) <= 0 ) || 
+          ( m_TriggerTisTosTool->getTOSFrac( kEcal ) <= 0 ) ||
+          ( m_TriggerTisTosTool->getTOSFrac( kHcal ) <= 0 ) )
+      {
+        // Hlt TisTosTool was reconfigured not to use hits which are essential for L0 TisTos; have to reanalyze offline input
+        m_L0TriggerTisTosTool->setOfflineInput(*P);
+      }
+      else
+      {
+        // much faster to copy hits
+        m_L0TriggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
+      }      
       m_L0TriggerTisTosTool->setTriggerInput("L0.*Decision");
       //classifiedDec = m_L0TriggerTisTosTool->triggerTisTos();
       classifiedDec = m_L0TriggerTisTosTool->tisTosTobTrigger();
@@ -203,10 +212,10 @@ StatusCode TupleToolTISTOS::fillBasic( const LHCb::Particle* top
       //      classifiedDec = triggerTisTosTool->triggerTisTos();
       classifiedDec = triggerTisTosTool->tisTosTobTrigger();
       tuple->column( prefix+"_Hlt2Phys_Dec", classifiedDec.decision());
-      if(m_TIS)tuple->column( prefix+"_Hlt2Global_TIS", classifiedDec.tis());
-      if(m_TOS)tuple->column( prefix+"_Hlt2Global_TOS", classifiedDec.tos());
-      if(m_TUS)tuple->column( prefix+"_Hlt2Global_TUS", classifiedDec.tus());
-      if(m_TPS)tuple->column( prefix+"_Hlt2Global_TPS", classifiedDec.tps());
+      if(m_TIS)tuple->column( prefix+"_Hlt2Phys_TIS", classifiedDec.tis());
+      if(m_TOS)tuple->column( prefix+"_Hlt2Phys_TOS", classifiedDec.tos());
+      if(m_TUS)tuple->column( prefix+"_Hlt2Phys_TUS", classifiedDec.tus());
+      if(m_TPS)tuple->column( prefix+"_Hlt2Phys_TPS", classifiedDec.tps());
     }
     /*
       if(m_doStripping)
@@ -253,8 +262,18 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
 
   if( m_verboseL0 )
   {
-    // m_L0TriggerTisTosTool->setOfflineInput(*P);
-    m_L0TriggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
+      if( ( m_TriggerTisTosTool->getTOSFrac( kMuon ) <= 0 ) || 
+          ( m_TriggerTisTosTool->getTOSFrac( kEcal ) <= 0 ) ||
+          ( m_TriggerTisTosTool->getTOSFrac( kHcal ) <= 0 ) )
+      {
+        // Hlt TisTosTool was reconfigured not to use hits which are essential for L0 TisTos; have to reanalyze offline input
+        m_L0TriggerTisTosTool->setOfflineInput(*P);
+      }
+      else
+      {
+        // much faster to copy hits
+        m_L0TriggerTisTosTool->setOfflineInput(m_TriggerTisTosTool->offlineLHCbIDs() );
+      }      
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=m_l0.begin();s!= m_l0.end();++s){
 
