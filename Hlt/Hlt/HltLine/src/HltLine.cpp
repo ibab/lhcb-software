@@ -1,3 +1,4 @@
+#include "boost/algorithm/string/predicate.hpp"
 #include "Kernel/SelectionLine.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
@@ -5,6 +6,11 @@
 #include "HltBase/IHltInspector.h"
 #include "HltBase/IHltRegister.h"
 #include "HltBase/HltSelection.h"
+
+namespace {
+    const Gaudi::StringKey major1{ "Hlt1SelectionID" };
+    const Gaudi::StringKey major2{ "Hlt2SelectionID" };
+}
 
 namespace Hlt
 {
@@ -121,25 +127,22 @@ std::pair<std::string, unsigned> Hlt::Line::id() const
 
 std::pair<std::string, unsigned> Hlt::Line::SetupID()
 {
-    // TODO: do this during initialize, 'lock' updates after initialize...
-    static const Gaudi::StringKey major1{ "Hlt1SelectionID" };
-    static const Gaudi::StringKey major2{ "Hlt2SelectionID" };
-    const Gaudi::StringKey* major{ nullptr };
-    if ( decisionName().find( "Hlt1" ) != std::string::npos ) {
-        major = &major1;
-    } else if ( decisionName().find( "Hlt2" ) != std::string::npos ) {
-        major = &major2;
-    } else {
-        error() << " Could not find Hlt1/Hlt2 in decision " << decisionName()
+    const Gaudi::StringKey *major = ( boost::algorithm::starts_with(decisionName(), "Hlt1" ) ) ? &major1
+                                  : ( boost::algorithm::starts_with(decisionName(), "Hlt2" ) ) ? &major2 
+                                  :   nullptr;
+    if (!major)  {
+        error() << " Decision does not start with Hlt1 or Hlt2 " << decisionName()
                 << " ???? " << endmsg;
-        return { std::string{}, 0 }; 
+        return { std::string{}, 0 };
     }
+
     auto key = annSvc().value( *major, decisionName() );
 
     if ( !key ) {
         error() << " DecisionName=" << decisionName() << " not known under major "
                   << *major << endmsg;
-        return {std::string{}, 0};
+        return { std::string{}, 0 };
     }
+
     return *key;
 }

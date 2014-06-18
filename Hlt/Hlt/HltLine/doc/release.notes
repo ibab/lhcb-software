@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-06-18 - Gerhard Raven
+ - force Hlt1 and Hlt2 line names to start with either Hlt1 or Hlt2 -- 
+   previously lines had only to have Hlt1 or Hlt2 somewhere in there name...
 
 !========================= HltLine v7r2 2014-06-16 =========================
 
