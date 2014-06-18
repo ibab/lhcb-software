@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef LBGENXICC_QQQBARYONS_H 
-#define LBGENXICC_QQQBARYONS_H 1
+#ifndef MCINTERFACES_QQQBARYONS_H 
+#define MCINTERFACES_QQQBARYONS_H 1
 
 #include <string>
 #include <map>
@@ -32,4 +32,4 @@ protected:
     m_mapBaryon["Omega_bb-"]=Omegabbm;       m_mapBaryonPID["Omega_bb-"]=5532;
   }
 };
-#endif // LBGENXICC_QQQBARYONS_H
+#endif // MCINTERFACES_QQQBARYONS_H

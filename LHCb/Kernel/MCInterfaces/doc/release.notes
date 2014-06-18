@@ -4,6 +4,12 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!========================= MCInterfaces v1r18 2014-06-18 =========================
+! 2014-06-18 - Gloria Corti
+ - Move here QQqBaryons.h from LbGenXicc since it is just a class with enum and
+   a map of strings and int to provide information about cc or bc barions. It
+   is needed by GenCuts. Modified IF/ENDIF for new location. 
+
 !========================= MCInterfaces v1r17 2013-06-03 =========================
 ! 2012-05-01 - Paul Seyfert
  - introduce return values in ghost classification tools
