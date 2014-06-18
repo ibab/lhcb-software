@@ -3,6 +3,7 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+!========================= HltDAQ v4r5 2014-06-18 =========================
 
 ! 2014-06-18 - Gerhard Raven
  - add dependency on LumiEvent
@@ -11,8 +12,6 @@
  - fix brace-elision problem under clang (brace elision will be
    in C++14, not C++11, and while gcc accepts it already, clang 
    does not)
-
-!========================= HltDAQ v4r5 2014-06-16 =========================
 
 ! 2014-06-14 - Gerhard Raven
  - various minor tweaks...
