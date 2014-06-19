@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v3r9 2014-06-18 ========================== 
+! 2014-06-19 - Gloria Corti
+ - Adapt to move of QQqBaryons header file into MCInterfaces package
+ 
 ! 2014-02-08 - Liang Zhong
  - Change XiccDaughtersInLHCb.cpp and XiccDaughtersInLHCbAndWithMinPT.cpp to
    generate other doubly heavy baryons

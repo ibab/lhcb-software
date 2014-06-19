@@ -2,12 +2,13 @@
 #define GENERATORS_XICCDAUGHTERSINLHCBANDWITHMINPT_H 1
 
 // Include files
-#include "LbGenXicc/QQqBaryons.h"
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Transform4DTypes.h"
 
 #include "MCInterfaces/IGenCutTool.h"
+#include "MCInterfaces/QQqBaryons.h"
 
 // Forward declaration
 class IDecayTool ;
