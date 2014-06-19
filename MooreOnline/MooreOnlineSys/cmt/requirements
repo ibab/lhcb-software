@@ -6,7 +6,7 @@ branches doc cmt tests
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts  v1r2
+use  MooreScripts  v1r3
 use  MooreOnlineConf  v1r2
 
 # Bug fixes on top of LHCb v36r1 release stack
