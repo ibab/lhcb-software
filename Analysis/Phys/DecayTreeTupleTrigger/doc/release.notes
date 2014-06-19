@@ -4,6 +4,9 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2014-06-19 Tomasz Skwarnicki	
+- TupleToolTISTOS propagate customization of TisTosFrac to Hlt1,Hlt2 tools
+
 !========================= DecayTreeTupleTrigger v1r5 2014-06-18 =========================
 
 ! 2014-06-18 Tomasz Skwarnicki	

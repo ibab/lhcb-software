@@ -79,6 +79,12 @@ StatusCode TupleToolTISTOS::initialize( )
   m_Hlt2TriggerTisTosTool   = tool<ITriggerTisTos>( m_Hlt2TriggerTisTosName,"Hlt2TriggerTisTos",this );
   m_L0TriggerTisTosTool = tool<ITriggerTisTos>( m_L0TriggerTisTosName,"L0TriggerTisTos",this);
 
+  // copy setting of TriggerTisTos to settings of Hlt1, Hlt2 
+  m_Hlt1TriggerTisTosTool->setTISFrac( m_TriggerTisTosTool->getTISFrac() );
+  m_Hlt1TriggerTisTosTool->setTOSFrac( m_TriggerTisTosTool->getTOSFrac() );
+  m_Hlt2TriggerTisTosTool->setTISFrac( m_TriggerTisTosTool->getTISFrac() );
+  m_Hlt2TriggerTisTosTool->setTOSFrac( m_TriggerTisTosTool->getTOSFrac() );
+
   return sc;
 }
 
@@ -326,6 +332,7 @@ StatusCode TupleToolTISTOS::fillVerbose( const LHCb::Particle* top
       if(m_TOS)tuple->column( prefix+"_"+name+"_TOS", classifiedDec.tos());
       if(m_TUS)tuple->column( prefix+"_"+name+"_TUS", classifiedDec.tus());
       if(m_TPS)tuple->column( prefix+"_"+name+"_TPS", classifiedDec.tps());
+      
     }
   }
 
