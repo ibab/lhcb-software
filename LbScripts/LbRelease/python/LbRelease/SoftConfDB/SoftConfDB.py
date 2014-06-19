@@ -91,10 +91,12 @@ class SoftConfDB(object):
 
     def listReleaseStackFromPV(self, project, version):
         query = 'start n=node:Lbadmin(Type="RELEASE"), m=node:ProjectVersion(ProjectVersion="%s_%s")  '  % (project, version)
-        query += ' match p = n-[:RELEASEREQ]->m-[:REQUIRES*]->o<-[:RELEASEREQ]-n return distinct p'
+        query += ' match p = n-[:RELEASEREQ]->m-[:REQUIRES*]->o<-[:RELEASEREQ]-n '
+        query += ' return extract(x in nodes(p) | x.project + "_" + x.version)'
+
         paths = []
         self.runCypher(query, lambda x: paths.append(x))
-
+        
         stack = set()
 
         # If no deps are found the stack consists of the project only
@@ -102,15 +104,15 @@ class SoftConfDB(object):
             stack.add((project, version))
             return stack
 
+        self.log.debug("Iterating on nodes on the project %s %s" % (project, version))
         # Now iterate through all paths returned and add the nodes to the set
         # (the set takes care of deduplicating)
         rpaths = []
         for p in paths:
             for pp in p:
-                for n in pp.nodes:
-                    if n["type"] != "RELEASE":
-                        stack.add((n["project"], n["version"] ))
-
+                for n in pp:
+                    if n != "NONE_NONE":
+                        stack.add(tuple(n.split("_")))
         return stack
                         
     def listReleaseStackTops(self):
@@ -126,13 +128,16 @@ class SoftConfDB(object):
     def listReleaseStacks(self):
         ''' List the applications to be released '''
 
+        self.log.debug("Starting listReleaseStacks");
         # First, find the top of the various stacks
         stackTops = self.listReleaseStackTops()
         stacks = []
-
+        
         for (stp, stv) in stackTops:
+            self.log.debug("Listing projects in stack for %s %s" % (stp, stv))
             stack = self.listReleaseStackFromPV(stp, stv)
             stacks.append(stack)
+            self.log.debug("Listed projects in stack for %s %s" % (stp, stv))
 
         # Now filter all the stacks
         filteredstacks = []
@@ -388,7 +393,10 @@ class SoftConfDB(object):
             self.node_release =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                         "Type",
                                                                         "RELEASE",
-                                                                        {"type": "RELEASE"})
+                                                                        {"type": "RELEASE",
+                                                                         "project": "NONE",
+                                                                         "version":"NONE"})
+            self.node_release
             self.node_cmake =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                       "Type",
                                                                       "CMAKE",

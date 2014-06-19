@@ -19,14 +19,6 @@ class LbSdbQuery(Script):
     def defineOpts(self):
         """ Script specific options """
         parser = self.parser
-        parser.add_option("-d",
-                          dest = "debug",
-                          action = "store_true",
-                          help = "Display debug output")
-        parser.add_option("-v",
-                          dest = "verbose",
-                          action = "store_true",
-                          help = "Verbose command output")
         parser.add_option("--json",
                           dest = "json",
                           default = False,
@@ -39,7 +31,7 @@ class LbSdbQuery(Script):
         self.log = logging.getLogger()
         opts = self.options
         args = self.args
-        if opts.debug:
+        if opts.log_level == 'DEBUG':
             self.log.setLevel(logging.DEBUG)
         else:
             self.log.setLevel(logging.WARNING)
@@ -51,7 +43,11 @@ class LbSdbQuery(Script):
 
         # Initializing the ConfDB interface
         self.mConfDB = SoftConfDB()
-
+        if opts.log_level == 'DEBUG':
+            self.mConfDB.log.setLevel(logging.DEBUG)
+        else:
+            self.mConfDB.log.setLevel(logging.WARNING)
+            
         # Locating the command...
         cmdShort = { 'l':'listProjects', 'i':'listApplications', 'v':'listVersions', 'sp':'listStackPlatforms',
                     'p':'listPlatforms', 'd':'listDependencies', 'r':'listReferences',

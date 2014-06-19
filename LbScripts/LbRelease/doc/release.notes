@@ -1,3 +1,9 @@
+2014-06-19  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-529: Optimized listReleaseStacks query in SoftConfDB
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2014-06-16  Marco Clemencic <Marco.Clemencic@cern.ch>
 
 	Improved doc build wrapper script to correctly report failures.
