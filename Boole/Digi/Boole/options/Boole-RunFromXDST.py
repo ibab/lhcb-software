@@ -83,3 +83,9 @@ xdstHandler = GaudiSequencer("XDSTLoverHandler")
 xdstHandler.Members += [ xdstLoader, xdstKiller ]
 xdstHandler.IgnoreFilterPassed = True # keep going
 initBoole.Members += [ xdstHandler ]
+
+
+from GaudiConf import IOHelper
+def patch(): 
+	OutputStream("DigiWriter").ItemList += ["/Event/Link/MC#1"] 
+appendPostConfigAction(patch)

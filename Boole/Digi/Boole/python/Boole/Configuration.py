@@ -31,6 +31,7 @@ class Boole(LHCbConfigurableUser):
         ,"TAENext"             : 0
         ,"TAESubdets"          : [ "Calo", "Muon" ]
         ,"Outputs"             : [ "DIGI" ]
+        ,"InputDataType"       :  "SIM"         
         ,"DigiType"            : "Default"
         ,"Histograms"          : "Default"
         ,"NoWarnings"          : False
@@ -67,6 +68,7 @@ class Boole(LHCbConfigurableUser):
        ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
        ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI'] (default 'DIGI') """
+       ,'InputDataType': """ Input Data Type 'XDST' (default 'SIM') """
        ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default','Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
@@ -796,7 +798,17 @@ class Boole(LHCbConfigurableUser):
             histosName += '-histos.root'
             HistogramPersistencySvc().OutputFile = histosName
     
+    def defineInput(self):
+          """
+          Setup input data type can be SIM or XDST
+          """
+          if self.getProp("InputDataType") == "XDST" :
+
+              importOptions("$BOOLEROOT/options/Boole-RunFromXDST.py")
+
+
     def defineOutput(self):
+
         """
         Set up output stream according to output data type
         """
@@ -1040,6 +1052,7 @@ class Boole(LHCbConfigurableUser):
         return seq
 
     def __apply_configuration__(self):
+        self.defineInput()
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.defineDB()
         self.setLHCbAppDetectors()
