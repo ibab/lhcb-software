@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2014-06-19 - Gerhard Raven
+ - OOPS: fix logic in HltTrackReportsDecoder 
+
 !========================= HltDAQ v4r5 2014-06-18 =========================
 
 ! 2014-06-18 - Gerhard Raven

@@ -97,13 +97,13 @@ StatusCode HltTrackReportsDecoder::execute()
         std::remove_if( std::begin( hltTrackReportsRawBanks ),
                         std::end( hltTrackReportsRawBanks ), [=]( const RawBank* bank ) {
             if ( m_sourceID != sourceID( *bank ) )
-                return false; // Not our major SourceID i.e. different tracks
+                return true; // Not our major SourceID i.e. different tracks
             if ( bank->magic() != RawBank::MagicPattern ) {
                 Error( " HltTrackReports RawBank has wrong magic number. Skipped ",
                        StatusCode::SUCCESS, 20 );
-                return false;
+                return true;
             }
-            return true;
+            return false;
         } ),
         std::end( hltTrackReportsRawBanks ) );
     // collect possibly split up banks -- first put them into the right order
