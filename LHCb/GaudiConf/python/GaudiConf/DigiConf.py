@@ -170,7 +170,8 @@ class DigiConf(LHCbConfigurableUser):
         if 'OT' in dets :
             writer.ItemList += ["/Event/Link/Raw/OT/Times2MCHits#1"]
         if 'FT' in dets :
-            pass
+            writer.ItemList += ["/Event/Link/Raw/FT/Clusters2MCHits#1"]
+            
             
 
     def _defineOutputData( self, dType, writer ):
