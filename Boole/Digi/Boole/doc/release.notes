@@ -3,16 +3,16 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - Y.Amhis 06-20-2014 
-   . Updated Boole-RunFromXDST.py
- - Y.Amhis 06-19-2014 
-  . Added files for reprocessing xdst for the upgrade :
-    boole-reprocess-xdst.qmt
-    boole-reprocess-xdst.ref 
-    boole-upgrade-reprocessing-xdst.py
-    modify Boole-RunFromXDST.py
-  . Add new InputDataType in Configuration.py 
- 
+</PRE><H1><A NAME=v28r2>2014-06-20 Boole v28r2</A></H1><PRE>
+
+- New functionality
+  . Added possibility to reprocess from XDST, steered by new option 
+    Boole().InputDataType. Currently this is configured by
+    options/Boole-RunFromXDST.py, called by Configuration.py
+
+- QMTest changes
+  . Added boole-reprocess-xdst test
+
 </PRE><H1><A NAME=v28r1>2014-06-10 Boole v28r1</A></H1><PRE>
 
 - Changes to references to follow changes in underlying packages
