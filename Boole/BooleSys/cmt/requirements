@@ -23,7 +23,7 @@ use CaloMoniDigi        v2r6p1  Calo     # Olivier Deschamps
 use FTDigitisation      v2r2    FT       # Eric Cogneras
 
 # Herschel 
-#use HCDigitisation      v1r0    HC       # Heinrich Schindler
+use HCDigitisation      v1r0    HC       # Heinrich Schindler
 
 # Muon
 use MuonAlgs            v6r13   Muon     # Alessia Satta
@@ -55,4 +55,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use GaudiConf v19r3
