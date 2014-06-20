@@ -113,6 +113,15 @@ class RichRecSysConf(RichConfigurableUser):
         # Get the DataType
         dataType = self.getProp("DataType")
 
+        # For Run II
+        if ( dataType == "2015" or
+             dataType == "2016" or
+             dataType == "2017" ) :
+            
+            # No Aerogel in Run II
+            if not self.isPropertySet("Radiators") :
+                self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
+
         # Tweaks for the Upgrade
         if dataType == "Upgrade" :
 

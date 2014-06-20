@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2014-06-20 - Chris Jones
+ - Disable Aerogel for Run II DataTypes (2015 onwards).
+
 !========================= RichRecSys v5r2 2014-05-13 =========================
 ! 2014-05-08 - Chris Jones
  - Add new OnlineMode property. Tunes the reconstruction as appropriate for
