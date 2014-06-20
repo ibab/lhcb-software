@@ -2,7 +2,7 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
-!========================= LbGenXicc v3r1 2014-06-18 =========================
+!========================= LbGenXicc v4r0 2014-06-20 =========================
 ! 2014-06-18 - Gloria Corti
  - Moved QQqBaryons header to Kernel/MCInterfaces package since needed by 
    a class in GenCuts. Adapted classes that used it to pick it up from there.
