@@ -1,5 +1,7 @@
 2014-06-20  Ben Couturier <Ben.Couturier@cern.ch>
 
+	LBCORE-534: Make import-installarea more resilient to filesystem errors
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py 
 	LBCORE-533: New command to copy RPMs to YUM repository
 	* python/LbRelease/RpmRelease.py
 	* scripts/lb-release-rpm

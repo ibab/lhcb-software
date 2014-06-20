@@ -169,18 +169,21 @@ class LbSdbImportFIA(Script):
         """ Iterate though the projects directories
         newer than nbdays (-1 means all...)"""
         ret = []
-        now = datetime.now()
-        delta =timedelta (days = nbdays)
-        for pver in os.listdir(path):
-            # Checking if this corresponds to an existing project...
-            m = re.match("%s_([\d\w]+)" % project, pver)
-            if m != None:
-                version = m.group(1)
-                then = datetime.fromtimestamp(os.path.getctime(os.path.join(path, pver)))
-                if (now - then) <  delta or nbdays < 0:
-                    self.log.info("Found project %s %s" % (project, version))
-                    ret.append((project, version))
+        try:
+            now = datetime.now()
+            delta =timedelta (days = nbdays)
+            for pver in os.listdir(path):
+                # Checking if this corresponds to an existing project...
+                m = re.match("%s_([\d\w]+)" % project, pver)
+                if m != None:
+                    version = m.group(1)
+                    then = datetime.fromtimestamp(os.path.getctime(os.path.join(path, pver)))
+                    if (now - then) <  delta or nbdays < 0:
+                        self.log.info("Found project %s %s" % (project, version))
+                        ret.append((project, version))
                     #print "%s -- %s -- %s" % (project, m.group(1), time.ctime(os.path.getctime(os.path.join(path, pver))))
+        except Exception as e:
+            print "Caught Exception: ", e
         return ret
 
 
