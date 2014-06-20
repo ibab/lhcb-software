@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2014-06-20 - Michel De Cian
+ - Change link location for FTClusters<->MCHits to (standard) /Event/Link/Raw/FT/Clusters2MCHits
+
 !========================= FTDigitisation v2r1 2014-06-10 =======================
 ! 2014-06-06 - Eric Cogneras
  - Undo last changes (keep (MCParticle,Cluster) linker)

@@ -164,7 +164,7 @@ StatusCode FTClusterCreator::execute(){
   LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> mcToClusterLink( evtSvc(), msgSvc(),(m_outputLocation));
 
   // Create a link between the FTCluster and the MCHit
-  LinkerWithKey<LHCb::MCHit,LHCb::FTCluster> hitToClusterLink( evtSvc(), msgSvc(),(m_outputLocation + "/2MCHits"));
+  LinkerWithKey<LHCb::MCHit,LHCb::FTCluster> hitToClusterLink( evtSvc(), msgSvc(),(m_outputLocation + "2MCHits"));
 
 
   // DEBUG : print Digit content : should be sorted
