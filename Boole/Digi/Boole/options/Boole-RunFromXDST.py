@@ -3,7 +3,29 @@ from Boole.Configuration import *
 boole = Boole() # call to ensure Boole is setup 
 
 # kill xdst stuff
-xdstPaths = [             
+xdstPaths = [ 
+        #added by Brunel:
+    "/Event/Trigger",
+    "/Event/Rich",
+    "/Event/Calo",
+    "/Event/Muon",
+    "/Event/Other",
+    "/Event/Rec",
+    "/Event/pRec",
+    #added by Boole
+    "/Event/Link/Raw",
+    "/Event/DAQ",
+    "/Event/pSim/Rich/DigitSummaries",
+    "/Event/MC/TrackInfo",
+    "/Event/MC/Muon",
+    "/Event/MC/DigiHeader",
+    #not always there, depends on the DataType and format
+    "/Event/Link/Trig",
+    "/Event/MC/Rich/DigitSummaries",
+    "/Event/Prev/DAQ",
+    "/Event/PrevPrev/DAQ",
+    "/Event/Next/DAQ",
+    "/Event/NextNext/DAQ"            
     '/Event/MC/DigiHeader',
     '/Event/MC/Muon',
     '/Event/MC/Muon/DigitsInfo',

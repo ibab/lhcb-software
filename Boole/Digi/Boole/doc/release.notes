@@ -3,7 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-
+ - Y.Amhis 06-20-2014 
+   . Updated Boole-RunFromXDST.py
  - Y.Amhis 06-19-2014 
   . Added files for reprocessing xdst for the upgrade :
     boole-reprocess-xdst.qmt
