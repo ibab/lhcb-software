@@ -247,6 +247,10 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     config = deepcopy(config)
     if name.find('B02') >= 0 or name.find('NoIP') >= 0:
         config['AM_MAX'] = '6000*MeV'
+    if name.find('B02DPiD2HHHBeauty2Charm') >=0 or name.find('B02DKD2HHHBeauty2Charm') >=0 :
+         config['AM_MAX'] = '7000*MeV'
+    if name.find('B02DPiD2Pi0HHHResolvedBeauty2Charm') >=0 or name.find('B02DKD2Pi0HHHResolvedBeauty2Charm') >=0 :
+         config['AM_MAX'] = '7000*MeV'
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
     flightCuts = ['BPVLTIME','DZ1','DZ2']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
