@@ -143,7 +143,7 @@ def configureEarlyDataAlignment( fixQOverPBias = True ) :
     surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]
 
 # Alignment scenario used for 2012 data
-def configure2012DataAlignment( fixQOverPBias = False ) :
+def configure2012DataAlignment( fixQOverPBias = False, surveyVer = 'latest' ) :
     TAlignment().WriteCondSubDetList += ['Velo','TT','IT','OT','MUON']
   
     # define the alignment elements
@@ -171,9 +171,10 @@ def configure2012DataAlignment( fixQOverPBias = False ) :
     # want to do this if you use D0 in the alignment
     if fixQOverPBias:
         constraints.append("OT3X : OT/T3X1U.Side : Tx")
- 
+
+    if surveyVer == None: return
     # tweak the survey a little bit to fix the z-scale to survey
     surveyconstraints = SurveyConstraints()
-    surveyconstraints.All()
+    surveyconstraints.All(surveyVer)
     # make sure we fix the z-scale
     surveyconstraints.XmlUncertainties += ["OT/T3X1U : 0.5 0.5 0.00001 0.0001 0.0001 0.0001" ]

@@ -2,6 +2,23 @@ from Gaudi.Configuration  import *
 from Configurables import LHCbConfigurableUser
 #from Configurables import Al__AlignChisqConstraintTool as AlignChisqConstraintTool
 
+# Dictionary with all the available XMLfiles
+XmlFilesDict = { 'Velo': {'latest': ['Modules', 'Detectors']},
+                 'OT': {'latest': ['Elements_OTSurvey2011StationYCorrected'],
+                        '2010': [],
+                        'old': ['Elements', 'ElementsBowingCorrected']},
+                 'IT': {'latest': ['Detectors_ITSurvey_MagOn_2012ZSurvey2011YBoxBilayerCorrected'],
+                        '2012-off': ['Detectors_ITSurvey_MagOff_2012ZSurvey2011YBoxBilayerCorrected'],
+                        '2011': ['Detectors_ITSurvey2011YBoxBilayerCorrected'],
+                        '2010': ['ITSurvey2010BoxYCorrected'],
+                        '2009': ['ITBoxSurvey2009'],
+                        '2008': ['ITSurvey2008'],
+                        'metrology': ['metrology_onlysensors'],
+                        'old': ['Detectors']},
+                 'TT': {'latest': ['Detectors_TTSurvey2011SystemYCorrected', 'TTSensorSurvey2011', 'Modules'],
+                        '2010': ['Detectors', 'TTSurvey2010YCorrected', 'Modules'],
+                        'old': ['Detectors', 'Sensors', 'Modules'] } }
+
 class SurveyConstraints( LHCbConfigurableUser ):
     
     __slots__ = {
@@ -18,16 +35,26 @@ class SurveyConstraints( LHCbConfigurableUser ):
             rc = os.getenv("TALIGNMENTROOT") + "/surveyxml/"
         return rc
 
-    def Velo( self ) :
-        self.XmlFiles  += [ self.defaultSurveyDir() + "Velo/Modules.xml",
-                            self.defaultSurveyDir() + "Velo/Detectors.xml" ]
+    def Velo( self, ver='latest' ) :
+        if not ver in XmlFilesDict['Velo'].keys():
+            print 'WARNING(SurveyConstraints): Survey constraint version '+ver+' not found for Velo. Using \'latest\''
+            ver = 'latest'
+        for f in XmlFilesDict['Velo'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "Velo/"+f+".xml" ]
         self.XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.0002 0.0002 0.0002",
                                   "Detector(PU|)..-.. : 0.005 0.005 0.005 0.0001 0.0001 0.0001" ]
         self.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.001",
                               "Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ]
         
-    def OT( self ) :
-        # we don't load OT xml yet. there is no usefull info, since it doesn't have the right structures in geometry.
+    def OT( self, ver='latest' ) :
+        # we don't load OT xml yet. there is no usefull info, since it doesn't have the right structures in geometry. (solved in 2011 - do not use old file)
+        if not ver in XmlFilesDict['OT'].keys():
+            print 'WARNING(SurveyConstraints): Survey constraint version '+ver+' not found for OT. Using \'latest\''
+            ver = 'latest'
+        for f in XmlFilesDict['OT'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "OT/"+f+".xml" ]
+        self.XmlUncertainties += [ "OT/T.(X1U|VX2) : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
+                                   "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
+                                   "OT : 0.5 0.5 0.5 0.001 0.001 0.001",
+                                   "OT/T. : 0.5 0.0001 0.5 0.0001 0.0001 0.0001"]
                 
         # modules
         self.Constraints += [ "OT/.*?M. : 0 0 0 0 0 0 : 0.05 0.05 0.05 0.00001 0.001 0.00001" ]
@@ -56,17 +83,12 @@ class SurveyConstraints( LHCbConfigurableUser ):
         #self.append("OT/T2VX2 : -0.83 -2.2 -3.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
         #self.append("OT/T3X1U : -0.78 -2.5  0.0  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
         #self.append("OT/T3VX2 : -0.65 -2.9 -2.5  0.0 0.0 0.0 : 0.5 0.5 0.5 0.0001 0.0001 0.0001")
-
-        self.XmlFiles += [ self.defaultSurveyDir() + "OT/Elements_OTSurvey2011StationYCorrected.xml" ]
-        self.XmlUncertainties += [ "OT/T.(X1U|VX2) : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
-                                   "OT/T.(X1U|VX2).Side : 0.5 0.5 0.5 0.0001 0.0001 0.0001",
-                                   "OT : 0.5 0.5 0.5 0.001 0.001 0.001",
-                                   "OT/T. : 0.5 0.0001 0.5 0.0001 0.0001 0.0001"]
         
-    def TT( self ) :
-        self.XmlFiles += [ self.defaultSurveyDir() + "TT/Detectors_TTSurvey2011SystemYCorrected.xml",
-                           self.defaultSurveyDir() + "TT/Modules.xml",
-                           self.defaultSurveyDir() + "TT/TTSensorSurvey2011.xml" ]
+    def TT( self, ver='latest' ) :
+        if not ver in XmlFilesDict['TT'].keys():
+            print 'WARNING(SurveyConstraints): Survey constraint version '+ver+' not found for TT. Using \'latest\''
+            ver = 'latest'
+        for f in XmlFilesDict['TT'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "TT/"+f+".xml" ]
         self.XmlUncertainties += [ "TTSystem             : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "TT.                  : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
                                    "TT..Layer            : 0.1 0.1 0.1 0.0005 0.0005 0.0005",
@@ -78,9 +100,11 @@ class SurveyConstraints( LHCbConfigurableUser ):
         self.Constraints += [ "TTASide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001",
                               "TTCSide : 0 0 0 0 0 0 : 0.2 0.2 0.2 0.001 0.001 0.001" ]
  
-    def IT( self ) :
-        #        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey2011YBoxBilayerCorrected.xml" ]
-        self.XmlFiles += [ self.defaultSurveyDir() + "IT/Detectors_ITSurvey_MagOn_2012ZSurvey2011YBoxBilayerCorrected.xml" ]
+    def IT( self, ver='latest' ) :
+        if not ver in XmlFilesDict['IT'].keys():
+            print 'WARNING(SurveyConstraints): Survey constraint version '+ver+' not found for IT. Using \'latest\''
+            ver = 'latest'
+        for f in XmlFilesDict['IT'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "IT/"+f+".xml" ]
         self.XmlUncertainties += [ "ITSystem                   : 1 1 1 0.01 0.01 0.01",
                                    "ITT.                       : 0.5 0.5 0.5 0.001 0.001 0.001",
                                    "ITT.*?Box                  : 0.5 0.5 0.5 0.001 0.001 0.001",
@@ -101,11 +125,11 @@ class SurveyConstraints( LHCbConfigurableUser ):
             "Muon/M5/M5ASide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001",
             "Muon/M5/M5CSide : 0 0 0 0 0 0 : 1 1 3 0.001 0.005 0.001" ]
 
-    def All( self ) :
-        self.Velo()
-        self.TT()
-        self.IT()
-        self.OT()
+    def All( self, ver='latest' ) :
+        self.Velo(ver)
+        self.TT(ver)
+        self.IT(ver)
+        self.OT(ver)
         self.MUON()
         self.Constraints += [ "Tracker : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1",
                               "TStations : 0 0 0 0 0 0 : 10 10 10 0.1 0.1 0.1" ]
