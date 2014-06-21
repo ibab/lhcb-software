@@ -231,7 +231,6 @@ def _zip_getitem (self, key):
     GET_ITEM = 'SELECT value FROM %s WHERE key = ?' % self.tablename
     item = self.conn.select_one(GET_ITEM, (key,))
     if item is None: raise KeyError(key)
-
     
     f     = StringIO ( zlib.decompress ( str ( item[0] ) ) ) 
     value = Unpickler(f).load()
