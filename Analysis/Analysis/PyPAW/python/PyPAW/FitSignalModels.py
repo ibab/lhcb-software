@@ -470,8 +470,8 @@ class BifurcatedGauss_pdf(Mass_pdf) :
                              fixMass , fixSigma ) 
         
         self.asym = makeVar ( asymmetry                 ,
-                              'asymmetry_%s'     % name ,
-                              'sigma_{asym}(%s)' % name ,
+                              'asym_g_%s'         % name ,
+                              '#sigma_{asym}(%s)' % name ,
                               fixAsym , -1 , 1  ) 
         
         self._lst_R = ROOT.RooArgList ( self.sigma , self.asym ) 
@@ -812,14 +812,14 @@ class BifurcatedStudentT_pdf(Mass_pdf) :
                    mn               ,
                    mx               ,
                    fixMass   = None ,
-                   fixSigmaL = None ,
-                   fixSigmaR = None ,
+                   fixSigma  = None ,
+                   fixAsym   = None ,
                    fixNL     = None , 
                    fixNR     = None , 
                    mass      = None ,
                    mean      = None ,
-                   sigmaL    = None ,
-                   sigmaR    = None ,
+                   sigma     = None ,
+                   asymmetry = None ,
                    nL        = None , 
                    nR        = None ) :
         #
@@ -828,18 +828,27 @@ class BifurcatedStudentT_pdf(Mass_pdf) :
         Mass_pdf.__init__  ( self    , name , mn , mx ,
                              mass    ,
                              mean    ,
-                             sigmaL  ,
-                             fixMass , fixSigmaL )
+                             sigma   ,
+                             fixMass , fixSigma )
         
-        self.sigmaL = self.sigma
-        if hasattr ( self , 'sigma' ) : delattr ( self , 'sigma' )
-        self.sigmaR = makeVar ( sigmaR    ,
-                                'sigmaR_BST_%s'      % name ,
-                                '#sigma_{R,BST}(%s)' % name ,
-                                fixSigmaR ,
-                                self.sigmaL.getVal () ,
-                                self.sigmaL.getMin () ,
-                                self.sigmaL.getMax () ) 
+        self.asym = makeVar ( asymmetry                 ,
+                              'asym_stt_%s'       % name ,
+                              '#sigma_{asym}(%s)' % name ,
+                              fixAsym , -1 , 1  ) 
+        
+        self._lst_R = ROOT.RooArgList ( self.sigma , self.asym ) 
+        self.sigmaR = ROOT.RooFormulaVar (
+            "sigmaR_stt_%s"     % name   ,
+            "sigma_{R}(%s)" % name   ,
+            "%s*(1+%s)"     % ( self.sigma.GetName() , self.asym.GetName() ) ,
+            self._lst_R   )
+        
+        self._lst_L = ROOT.RooArgList ( self.sigma , self.asym ) 
+        self.sigmaL = ROOT.RooFormulaVar (
+            "sigmaL_stt_%s"     % name   ,
+            "sigma_{L}(%s)" % name   ,
+            "%s*(1-%s)"     % ( self.sigma.GetName() , self.asym.GetName() ) ,
+            self._lst_L   )
         
         # 
         self.nL =  makeVar ( nL                    ,

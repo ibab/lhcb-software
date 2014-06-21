@@ -430,8 +430,8 @@ if 0 != result.status() or 3 != result.covQual() :
 else : 
     print 'Signal & Background are: ', result ( 'S' )[0] , result( 'B' )[0]
     print 'Mean                is: ' , result ( model_bstudent.signal.mean  .GetName() )[0] 
-    print 'Sigma(L)            is: ' , result ( model_bstudent.signal.sigmaL.GetName() )[0] 
-    print 'Sigma(R)            is: ' , result ( model_bstudent.signal.sigmaR.GetName() )[0] 
+    print 'Sigma               is: ' , result ( model_bstudent.signal.sigma .GetName() )[0] 
+    print 'Asymmetry           is: ' , result ( model_bstudent.signal.asym  .GetName() )[0] 
     print 'n(L)                is: ' , result ( model_bstudent.signal.nL    .GetName() )[0] 
     print 'n(R)                is: ' , result ( model_bstudent.signal.nR    .GetName() )[0] 
     
