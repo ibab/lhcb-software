@@ -44,7 +44,8 @@ __all__     = (
     'useLL'           , ## use LL for histogram fit?
     'allInts'         , ## natural histogram with natural entries?
     'SE'              , ## StatEntity
-    'WSE'             , ## StatEntity with weights 
+    'WSE'             , ## StatEntity with weights
+    'iszero'          , ## is almost zero ?
     #
     'binomEff'        , ## calculate binomial efficiency
     'binomEff2'       , ## calculate binomial efficiency
