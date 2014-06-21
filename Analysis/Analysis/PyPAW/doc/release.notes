@@ -9,6 +9,12 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-06-21 - Vanya Belyaev
+
+ - add SQLiteShelve 
+   simple sqlite-based store for pickled objects.
+   it appears to be more compact than ZipShelve  
+
 ! 2014-06-14 - Vanya Belyaev
  - add more qmtests 
 

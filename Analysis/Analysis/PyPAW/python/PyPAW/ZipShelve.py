@@ -75,9 +75,7 @@
 #  Last Modification $Date$
 #                 by $Author$
 # =============================================================================
-"""
-
-This is zip-version of shelve database.
+""" This is zip-version of shelve database.
 
 Keeping the same interface and functionlity as shelve data base,
 ZipShelf allows much more compact file size through the on-flight
@@ -97,7 +95,7 @@ The module has been developed and used with great success in
  Create new DB:
 
  >>> import ZipShelve  ## import the ZipShelve module 
- >>> db = zipShelve.open ('a_db', 'n')    ## create new DB
+ >>> db = ZipShelve.open ('a_db', 'n')    ## create new DB
  ...
  >>> abcde = ...
  >>> db['some_key'] =  abcde              ## add information to DB
@@ -107,7 +105,7 @@ The module has been developed and used with great success in
  Access to DB in read-only mode :
 
  >>> import ZipShelve  ## import the ZipShelve module 
- >>> db = zipShelve.open ('a_db' , 'r' )    ## access existing dbase in read-only mode
+ >>> db = SipShelve.open ('a_db' , 'r' )    ## access existing dbase in read-only mode
  ...
  >>> for key in db : print key
  ...
@@ -116,17 +114,17 @@ The module has been developed and used with great success in
  Access existing DB in update mode :
 
  >>> import ZipShelve  ## import the ZipShelve module 
- >>> db = zipShelve.open ('a_db' )    ## access existing dbase in update mode
+ >>> db = ZipShelve.open ('a_db' )    ## access existing dbase in update mode
  ...
  >>> for key in db : print key
  ...
  >>> abcd = db['some_key']
-
- In case DB-name has extention 'gz', the whole data base will be gzipped
+ 
+ In case DB-name has extension 'gz', the whole data base will be gzipped
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-04-30"
 __version__ = "$Revision$" 
 # =============================================================================
@@ -140,8 +138,9 @@ __all__ = (
 # if not logger.handlers : logging.basicConfig()
 # logger.setLevel(logging.INFO)
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+from AnalysisPython.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'PyPAW.ZipShelve' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 try:
     from cPickle import Pickler, Unpickler, HIGHEST_PROTOCOL
@@ -484,13 +483,14 @@ import AnalysisPython.shelve_ext
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 100*'*'
-    print __doc__
-    print 100*'*'
-    print ' Author  : ' , __author__
-    print ' Date    : ' , __date__
-    print ' Version : ' , __version__
-    print 100*'*'
+    logger.info ( 100*'*' ) 
+    logger.info ( __doc__ ) 
+    logger.info ( 100*'*' ) 
+    logger.info ( ' Author  : %s ' %        __author__    ) 
+    logger.info ( ' Date    : %s ' %        __date__      ) 
+    logger.info ( ' Version : %s ' %        __version__   ) 
+    logger.info ( ' Logger  : %s ' % list ( __all__     ) ) 
+    logger.info ( 100*'*' ) 
     
 # =============================================================================
 # The END 
