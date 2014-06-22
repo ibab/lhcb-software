@@ -340,9 +340,12 @@ def _rrv_as_H1_ ( v , bins = 100 , double = True ) :
     >>> histo = variable.histo ( 100 )
     
     """
-    _hT = ROOT.TH1D if double else ROOT.TH1F 
+    from PyPAW.PyRoUts import hID
+    
+    _hT = ROOT.TH1D if double else ROOT.TH1F
     _h  = _hT ( hID() , v.GetTitle() , bins , v.getMin()  , v.getMax() )
     _h.Sumw2()
+    
     return _h 
 
 ROOT.RooRealVar   . histo = _rrv_as_H1_

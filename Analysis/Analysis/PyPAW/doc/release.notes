@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-06-22 - Vanya Belyaev
+ - tiny fix in RooFitDeco 
+
 ! 2014-06-21 - Vanya Belyaev
  - add zlib-compression to SQLite storage 
    add test to compare SQLiteShelve vs ZipShelve 
