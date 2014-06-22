@@ -87,6 +87,7 @@ __all__ = (
     'Lc_pdf'  , ## PDF for Lambda_c+ : Gauss
     #
     'B0_pdf'  , ## pdf for B0        : double-sided Crystal Ball 
+    'Bd_pdf'  , ## pdf for B0        : double-sided Crystal Ball 
     'Bu_pdf'  , ## pdf for B+        : double-sided Crystal Ball 
     'Bs_pdf'  , ## pdf for Bs        : double-sided Crystal Ball 
     'Bc_pdf'  , ## pdf for Bc+       : double-sided Crystal Ball 

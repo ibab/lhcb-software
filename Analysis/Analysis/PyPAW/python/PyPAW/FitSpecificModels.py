@@ -21,7 +21,22 @@ A set of predefined ready-to-use shapes and PDFs
 __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-07-25"
-__all__     = ()
+__all__     = (
+    #
+    'D0_pdf'  , ## PDF for D0        : Bukin 
+    'Dp_pdf'  , ## PDF for D+        : Bukin
+    'Ds_pdf'  , ## PDF for Ds+       : Bukin 
+    'Lc_pdf'  , ## PDF for Lambda_c+ : Gauss
+    #
+    'Bd_pdf'  , ## pdf for B0        : double-sided Crystal Ball 
+    'B0_pdf'  , ## pdf for B0        : double-sided Crystal Ball 
+    'Bu_pdf'  , ## pdf for B+        : double-sided Crystal Ball 
+    'Bs_pdf'  , ## pdf for Bs        : double-sided Crystal Ball 
+    'Bc_pdf'  , ## pdf for Bc+       : double-sided Crystal Ball 
+    #
+    'Manca_pdf'            , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    #
+    )
 # =============================================================================
 import ROOT, math
 from   PyPAW.PyRoUts             import VE,cpp
@@ -82,6 +97,7 @@ class Bd_pdf(CB2_pdf) :
                            nL               ,
                            nR               )
 
+B0_pdf = Bd_pdf 
 # =============================================================================
 ## @class Bu_pdf
 #  simple wrapper over CB2-pdf
