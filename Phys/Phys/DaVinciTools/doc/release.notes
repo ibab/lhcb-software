@@ -3,6 +3,15 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-06-23 - Anton Poluektov 
+ - Add more RelatedInfo tools: 
+    * RelInfoConeVariablesForEW
+    * RelInfoVertexIsolation
+   both calculate the same information as ConeVariablesForEW and VertexIsolation, 
+   but inherit from IRelatedInfoTool interface. 
+ - RelatedInfoNamed.h is the RelatedInfoMap structure with named fields 
+   (to be used for LoKi functors etc). 
+
 !========================= DaVinciTools v23r14 2014-06-13 =========================
 
 ! 2014-06-07 - Anton Poluektov 
