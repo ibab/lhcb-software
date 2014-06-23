@@ -140,6 +140,16 @@ void AddRelatedInfo::fill(const Particle* top, Particle* c, int level) {
       
       RelatedInfoMap* map = (*iTool)->getInfo(); 
       
+      if (msgLevel(MSG::DEBUG)) {
+        debug() << "Got RelatedInfoMap, contents as follows: " << endreq;
+        RelatedInfoMap::iterator i; 
+        for (i = map->begin(); i != map->end(); i++) {
+          short key = (*i).first;
+          float val = (*i).second; 
+          debug() << "  Key = " << key << ", val = " << val << endreq; 
+        }
+      }
+      
       relation->i_relate(c, *map); 
 
     }

@@ -1,5 +1,5 @@
-#ifndef CONEVARIABLES_H 
-#define CONEVARIABLES_H 1
+#ifndef RELINFOCONEVARIABLES_H 
+#define RELINFOCONEVARIABLES_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -54,6 +54,8 @@ public:
   RelInfoConeVariables( const std::string& type,
                         const std::string& name,
                         const IInterface* parent );
+
+  virtual StatusCode initialize(void); 
 
   /// Loop over differnt conesizes and fill the variables into the tuple
   virtual StatusCode calculateRelatedInfo( const LHCb::Particle*

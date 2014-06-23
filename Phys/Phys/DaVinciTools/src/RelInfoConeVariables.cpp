@@ -6,7 +6,7 @@
 
 // local
 #include "RelInfoConeVariables.h"
-#include "ConeInfo.h"
+#include "RelatedInfoNamed.h"
 
 #include <string>
 
@@ -23,7 +23,7 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariables )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
+RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent) : GaudiTool ( type, name , parent )
 {
@@ -37,24 +37,30 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariables )
   declareProperty( "Variables", m_variables, 
                    "List of variables to store (store all if empty)");
 
-  m_keys.clear(); 
-
-  std::vector<std::string>::const_iterator ivar; 
-  for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-    short int key = ConeInfo::indexByName( *ivar ); 
-    if (key != ConeInfo::Unknown) {
-      m_keys.push_back( key );
-    } else {
-      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
-    }
-  }
-
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 RelInfoConeVariables::~RelInfoConeVariables() {}
+
+StatusCode RelInfoConeVariables::initialize(void) {
+
+  m_keys.clear(); 
+
+  std::vector<std::string>::const_iterator ivar; 
+  for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
+    short int key = RelatedInfoNamed::indexByName( *ivar ); 
+    if (key != RelatedInfoNamed::UNKNOWN) {
+      m_keys.push_back( key );
+      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg; 
+    } else {
+      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
+    }
+  }
+
+  return StatusCode::SUCCESS; 
+}
 
 //=============================================================================
 // Fill Cone Info structure
@@ -146,21 +152,24 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
       
       float value = 0;
       switch (*ikey) {
-        case ConeInfo::Angle : value = m_coneAngle; break;
-        case ConeInfo::Mult  : value = m_mult; break;
-        case ConeInfo::PX    : value = m_px; break;
-        case ConeInfo::PY    : value = m_py; break;
-        case ConeInfo::PZ    : value = m_pz; break;
-        case ConeInfo::P     : value = m_p; break;
-        case ConeInfo::PT    : value = m_pt; break;
-        case ConeInfo::PXAsym   : value = m_pxasy; break;
-        case ConeInfo::PYAsym   : value = m_pyasy; break;
-        case ConeInfo::PZAsym   : value = m_pzasy; break;
-        case ConeInfo::PAsym    : value = m_pasy; break;
-        case ConeInfo::PTAsym   : value = m_ptasy; break;
-        case ConeInfo::DeltaEta : value = m_deltaEta; break;
-        case ConeInfo::DeltaPhi : value = m_deltaPhi; break;
+        case RelatedInfoNamed::CONEANGLE : value = m_coneAngle; break;
+        case RelatedInfoNamed::CONEMULT  : value = m_mult; break;
+        case RelatedInfoNamed::CONEPX    : value = m_px; break;
+        case RelatedInfoNamed::CONEPY    : value = m_py; break;
+        case RelatedInfoNamed::CONEPZ    : value = m_pz; break;
+        case RelatedInfoNamed::CONEP     : value = m_p; break;
+        case RelatedInfoNamed::CONEPT    : value = m_pt; break;
+        case RelatedInfoNamed::CONEPXASYM   : value = m_pxasy; break;
+        case RelatedInfoNamed::CONEPYASYM   : value = m_pyasy; break;
+        case RelatedInfoNamed::CONEPZASYM   : value = m_pzasy; break;
+        case RelatedInfoNamed::CONEPASYM    : value = m_pasy; break;
+        case RelatedInfoNamed::CONEPTASYM   : value = m_ptasy; break;
+        case RelatedInfoNamed::CONEDELTAETA : value = m_deltaEta; break;
+        case RelatedInfoNamed::CONEDELTAPHI : value = m_deltaPhi; break;
+        default: value = 0.; break;
       }
+      
+      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
     
       m_map.insert( std::make_pair( *ikey, value) );
     }
