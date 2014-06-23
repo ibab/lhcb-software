@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-06-23 - Anton Poluektov 
+ - Modifications for RelatedInfo storage
+
 ! 2014-06-23 - Vanya Belyaev
  - minor tuning to (optionally) keep information on number of tracks in PV 
 

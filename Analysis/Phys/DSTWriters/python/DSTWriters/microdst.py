@@ -55,7 +55,7 @@ def stripMicroDSTElements( pack=True              ,
         FindDuplicates(),
         CloneParticleTrees(),
         CloneBTaggingInfo( CloneTaggerParticles = False ),
-        CloneRelatedInfo( ),
+        CloneRelatedInfo( extensions = [ "Particle2CV1Relations", "Particle2CV2Relations" ] ),
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
                           RecVertexCloner = _vpv_cloner_ )

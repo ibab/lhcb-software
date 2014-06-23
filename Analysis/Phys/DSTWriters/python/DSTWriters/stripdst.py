@@ -33,7 +33,7 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
                                                     "/Event/Rec/Calo/MergedPi0s",
                                                     "/Event/Rec/Calo/SplitPhotons"] ),
                  CloneBTaggingInfo( CloneTaggerParticles = True ),
-                 CloneRelatedInfo( ), 
+                 CloneRelatedInfo( extensions = [ "Particle2CV1Relations", "Particle2CV2Relations" ] ), 
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )

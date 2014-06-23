@@ -375,14 +375,23 @@ class CloneBackCat(MicroDSTElement) :
 class CloneRelatedInfo(MicroDSTElement) :
     """
     Generator for list of CopyParticle2RelatedInfo.
-    Used for 
     """
+    def __init__(self, branch = '', extensions = [ 'Particle2CV1Relations' ] ) :
+        MicroDSTElement.__init__(self, branch)
+        self.extensions = list(extensions)
+
     def __call__(self, sel) :
         from Configurables import CopyParticle2RelatedInfo 
-        cloner = CopyParticle2RelatedInfo(self.personaliseName(sel,'CopyP2RelInfo'))
-        cloner.InputLocations = self.dataLocations(sel,"Particles")
-        self.setOutputPrefix(cloner)
-        return [cloner]
+        
+        cloners = []
+        for ext in self.extensions : 
+    	    cloner = CopyParticle2RelatedInfo(self.personaliseName(sel,'CopyP2RelInfo_' + ext))
+    	    cloner.InputLocations = self.dataLocations(sel, 'Particles')
+    	    cloner.RelationsBaseName = '/' + ext
+    	    self.setOutputPrefix(cloner)
+    	    cloners += [ cloner ]
+
+        return cloners
 
 
 class CloneLHCbIDs(MicroDSTElement) :
