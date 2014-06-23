@@ -26,7 +26,7 @@ static const std::string s_presenterVersion("v2r4");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_configToken(";");
 
-static const std::string s_histdb("HISTDB");
+static const std::string s_histdb("lhcbonr_hist");
 static const std::string s_histReader("HIST_READER");
 static const std::string s_histWriter("HIST_WRITER");
 static const std::string s_histReaderPair("HIST_READER:reader");
