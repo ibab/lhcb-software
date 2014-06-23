@@ -3,7 +3,7 @@
 # Maintainer : F. Zhang
 #============================================================================
 package           GenXiccData
-version           v2r0
+version           v3r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

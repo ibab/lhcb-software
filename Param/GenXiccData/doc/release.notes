@@ -3,6 +3,8 @@
 ! Responsible : Feng Zhang
 ! Purpose     : Provides the grade data required by GenXicc
 !-----------------------------------------------------------------------------
+
+!======================== GenXiccData v3r0 2014-06-23 ========================
 ! 2014-02-17 - Liang Zhong
  - Added grade files for Xi_cc++ at an energy of 7 TeV
  - Update grade files for Xi_cc++ at energies of 8, 13, 14 TeV, since the 
