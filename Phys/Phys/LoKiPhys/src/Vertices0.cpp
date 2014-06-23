@@ -339,7 +339,12 @@ LoKi::Vertices::NumberOfTracks::operator()
     return 0 ;                                           // RETURN 
   }
   //
-  return rv ->tracks().size() ;                            // RETURN 
+  const unsigned int n1 = rv -> tracks  () . size () ;
+  if ( 0 != n1 ) { return n1 ; }
+  const unsigned int n2 = rv -> weights () . size () ;
+  if ( 0 != n2 ) { return n2 ; }
+  //
+  return  0.5 * ( 3 + rv->nDoF() ) ;
 }
 // ============================================================================
 std::ostream& 
@@ -481,4 +486,3 @@ LoKi::Vertices::Cov2::fillStream ( std::ostream& s ) const
 // ============================================================================
 // The END 
 // ============================================================================
-

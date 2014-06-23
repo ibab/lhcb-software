@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-23 - Vanya Belyaev
+ - adjust NTRACKS to to extract #tracks from empty vertices 
+
 !========================= LoKiPhys v10r18 2014-06-13 =========================
 
 ! 2014-05-22 - Vanya Belyaev
