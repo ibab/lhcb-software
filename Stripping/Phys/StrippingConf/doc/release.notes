@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-06-23 - Anton Poluektov 
+ - Add an option "UseRelatedInfo" to StrippingLine constructor to use the new 
+   RelatedInfo persistency instead of ExtraInfo. For now is set to FALSE. 
+
 !========================= StrippingConf v4r10 2014-01-22 =========================
 
 ! 2014-01-16 - Anton Poluektov 

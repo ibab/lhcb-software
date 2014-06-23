@@ -325,6 +325,7 @@ class StrippingLine(object):
                    ExtraInfoDaughters = None,    # Daughter selections for which store ExtraInfo. If None, use only the top selection.
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
+                   UseRelatedInfo = False,       # Use new persistency of ExtraInfo (now called RelatedInfo)
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -368,6 +369,7 @@ class StrippingLine(object):
         self.ExtraInfoSelections = ExtraInfoSelections
         self.ExtraInfoDaughters = ExtraInfoDaughters
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
+        self.UseRelatedInfo = UseRelatedInfo
 
         line = self.subname()
 
@@ -486,8 +488,12 @@ class StrippingLine(object):
 
 	# Add extra info tools if needed
 	if self.ExtraInfoTools : 
-	    from Configurables import AddExtraInfo
-	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
+	    if (self.UseRelatedInfo) : 
+	        from Configurables import AddRelatedInfo
+	        extraInfoAlg = AddRelatedInfo('RelatedInfo_' + self.name())
+	    else : 
+	        from Configurables import AddExtraInfo
+	        extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
 	    if self.ExtraInfoSelections : 
     		extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
     	    else : 
@@ -498,11 +504,15 @@ class StrippingLine(object):
             else : 
         	extraInfoAlg.MaxLevel = 0
         	
+#    	    extraInfoAlg.OutputLevel = DEBUG
+        	
             toolNames = []
             toolNum = 0
             for itool in self.ExtraInfoTools : 
         	toolNum += 1
         	toolType = itool["Type"]
+        	if self.UseRelatedInfo : 
+        	    toolType = "RelInfo" + toolType
         	toolName = "Tool%d" % toolNum
         	module = __import__("Configurables", globals(), locals(), [ toolType ] )
         	toolClass = getattr( module, toolType )
