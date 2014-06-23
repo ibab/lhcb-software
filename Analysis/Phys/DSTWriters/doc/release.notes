@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-06-23 - Vanya Belyaev
+ - minor tuning to (optionally) keep information on number of tracks in PV 
+
 !========================= DSTWriters v4r15 2014-06-13 =========================
 
 ! 2014-05-24 - Anton Poluektov 

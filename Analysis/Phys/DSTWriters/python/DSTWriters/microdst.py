@@ -32,13 +32,25 @@ from microdstelements import ( CloneRecHeader,
                                PrintTESContents,
                                FindDuplicates )
 
-def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit = False) :
+def stripMicroDSTElements( pack=True              ,
+                           saveTrackClusters=True ,
+                           isMC     = False       ,
+                           refit    = False       ,
+                           notracks = True        ) :
     '''
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
     '''
-    elements = [
-        ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
+    #
+    if notracks :
+        _vpv_cloner_ = "VertexBaseFromRecVertexClonerNoTracks"
+        _rpv_cloner_ = "RecVertexClonerNoTracks"
+    else        :
+        _vpv_cloner_ = "VertexBaseFromRecVertexCloner"
+        _rpv_cloner_ = "RecVertexCloner"
+    #
+    elements    = [
+        ClonePVs( RecVertexCloner = _rpv_cloner_ ,
                   ClonePVWeights  = False ),
         FindDuplicates(),
         CloneParticleTrees(),
@@ -46,11 +58,11 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit
         CloneRelatedInfo( ),
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
-                          RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" )
+                          RecVertexCloner = _vpv_cloner_ )
         ]
 
     if refit : 
-        elements += [ ReFitAndClonePVs( RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ) ] 
+        elements += [ ReFitAndClonePVs( RecVertexCloner = _vpv_cloner_ ) ] 
 
     if isMC :
         elements += [ CloneParticleMCInfo(),
