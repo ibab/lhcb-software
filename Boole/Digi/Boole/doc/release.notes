@@ -12,6 +12,7 @@ Purpose: LHCb Digitization program
 
 - QMTest changes
   . Added boole-reprocess-xdst test
+  . Updated boole-sim08-xdst reference to follow above change
 
 </PRE><H1><A NAME=v28r1>2014-06-10 Boole v28r1</A></H1><PRE>
 
