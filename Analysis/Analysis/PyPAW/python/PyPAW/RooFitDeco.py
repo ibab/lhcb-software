@@ -318,14 +318,34 @@ def _rel_par_ ( var )  :
     #
     return var.ve()
 
+# ==============================================================================
+## Convert RooRealVar into ValueWithError 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-23
+def _rrv_ve_ ( var ) :
+    """
+    Convert RooRealVar into ValueWithError
+    
+    >>> par = ...
+    >>> ve  = par.ve()
+    
+    """
+    v  =      var.getVal()
+    e2 = 0 if var.isConstant() else var.getError()**2
+    #
+    return VE ( v , e2 ) 
 # =============================================================================
 ## decorate RooRealVar:
-ROOT.RooRealVar   . as_VE   = lambda s :  VE( s.getVal () , s.getError()**2 )
-ROOT.RooRealVar   . ve      = lambda s :      s.as_VE  () 
-ROOT.RooRealVar   . fix     = _fix_par_
-ROOT.RooRealVar   . Fix     = _fix_par_
-ROOT.RooRealVar   . release = _rel_par_
-ROOT.RooRealVar   . Release = _rel_par_
+ROOT.RooRealVar   . as_VE     = _rrv_ve_ 
+ROOT.RooRealVar   . ve        = _rrv_ve_
+ROOT.RooRealVar   . fix       = _fix_par_
+ROOT.RooRealVar   . Fix       = _fix_par_
+ROOT.RooRealVar   . release   = _rel_par_
+ROOT.RooRealVar   . Release   = _rel_par_
+## convert to float 
+ROOT.RooRealVar   . __float__ = lambda s : s.getVal()
+## print it in more suitable form 
+ROOT.RooRealVar   . __repr__  = lambda s : "'%s' : %s " % ( s.GetName() , s.ve() )
 
 # ============================================================================
 ## make a histogram for RooRealVar
