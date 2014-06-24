@@ -1,3 +1,51 @@
+2014-06-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r0p1
+
+	LbConfiguration
+	* add the EOS_HOME variable setting
+	* lb-dev: minor fix to handle changes introduced with LBCORE-523
+
+	LbRelease
+	LBCORE-534: Make import-installarea more resilient to filesystem errors
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py 
+	LBCORE-533: New command to copy RPMs to YUM repository
+	* python/LbRelease/RpmRelease.py
+	* scripts/lb-release-rpm
+	LBCORE-529: Optimized listReleaseStacks query in SoftConfDB
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	Improved doc build wrapper script to correctly report failures.
+	* scripts/buildGeneralDoc
+	LBCORE-517: Merge compatible stacks
+	LBCORE-515: Fix case of project names
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	LBCORE-514: Add list of required platforms to the stacks to release
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	LBCORE-511: Add JSON output to lb-sdb-query for the list of staks to release
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	LBCORE-446: Integrated Software Configuration DB with Ariadne DB.
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* scripts/lb-sdb-clear
+	* scripts/lb-sdb-addplatform
+	* scripts/lb-sdb-clearenv.sh
+	* scripts/lb-sdb-update
+	* scripts/lb-sdb-importallsvn
+	* scripts/lb-sdb-checkrevision
+	* scripts/lb-sdb-query
+	* scripts/lb-sdb-importinstallarea
+	* scripts/lb-sdb-env.sh
+	* scripts/lb-sdb-importsvn
+	* scripts/lb-sdb-deletepv
+	* scripts/lb-sdb-release
+	* scripts/lb-sdb-setallappsused
+	* scripts/lb-sdb-setapp
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v8r0p1
+
 2014-05-30 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r0
