@@ -6,13 +6,19 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+!======================== LbOniaPairs v2r1 2014-06-24 =========================
+! 2014-06-24 - Gloria Corti
+ - Add OniaPairs.py options to switch on this generator in production. In this
+   case it is only foreseen for the Special sampling method, so force to use it.
+   Here only 'generic options' are set
+ 
 ! 2014-05-15 - Vanya Belyaev
  - minor reshulffling of files
    move the header fikle for production tool form 
    "public" area to internal area 
 
-! 2014-03-20 
-Added Psi1S1S.py opts file in /options/ subfolder
+! 2014-03-20 - Alexey Novoselov
+ - Added Psi1S1S.py opts file in /options/ subfolder
 
 !======================== LbOniaPairs v2r0 2014-02-03 =========================
 ! 2013-12-20 - Marco Clemencic
