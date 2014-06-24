@@ -31,7 +31,7 @@ RelInfoVertexIsolation::RelInfoVertexIsolation( const std::string& type,
                   "List of containers to check for extra particle vertexing") ;
   declareProperty("MaxChi2", m_chi2 = 9.0,
                   "Maximum chi2 for compatible particles") ;
-  declareProperty("Variables", m_variables, 
+  declareProperty("Variables", m_variables,
                   "List of variables to store (store all if empty)");
 }
 
@@ -66,16 +66,16 @@ StatusCode RelInfoVertexIsolation::initialize()
     m_inputParticles.push_back("/Event/Phys/StdNoPIDsPions") ;
   }
 
-  m_keys.clear(); 
+  m_keys.clear();
 
-  std::vector<std::string>::const_iterator ivar; 
+  std::vector<std::string>::const_iterator ivar;
   for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-    short int key = RelatedInfoNamed::indexByName( *ivar ); 
+    short int key = RelatedInfoNamed::indexByName( *ivar );
     if (key != RelatedInfoNamed::UNKNOWN) {
       m_keys.push_back( key );
-      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg; 
+      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg;
     } else {
-      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
+      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
     }
   }
 
@@ -199,7 +199,6 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   }
 
   // Save values
-  m_nPartDeltaChi2Win              = isolationOneTrack.nCompatibleDeltaChi2 ;
   m_nPartChi2Win                   = isolationOneTrack.nCompatibleChi2 ;
   m_smallestDeltaChi2OneTrack      = isolationOneTrack.smallestDeltaChi2;
   m_smallestChi2OneTrack           = isolationOneTrack.smallestChi2;
@@ -209,20 +208,20 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   m_smallestDeltaChi2MassTwoTracks = smallestMassTwoTracks;
 
   m_map.clear();
-    
-  std::vector<short int>::const_iterator ikey; 
+
+  std::vector<short int>::const_iterator ikey;
   for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
 
       float value = 0;
       switch (*ikey) {
         case RelatedInfoNamed::VTXISONUMVTX            : value = (float) m_nPartChi2Win; break;
-        case RelatedInfoNamed::VTXISODCHI2ONETRACK     : value = m_smallestDeltaChi2OneTrack; break;  
-        case RelatedInfoNamed::VTXISODCHI2MASSONETRACK : value = m_smallestDeltaChi2MassOneTrack; break; 
-        case RelatedInfoNamed::VTXISODCHI2TWOTRACK     : value = m_smallestDeltaChi2TwoTracks; break; 
-        case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : value = m_smallestDeltaChi2MassTwoTracks; break; 
+        case RelatedInfoNamed::VTXISODCHI2ONETRACK     : value = m_smallestDeltaChi2OneTrack; break;
+        case RelatedInfoNamed::VTXISODCHI2MASSONETRACK : value = m_smallestDeltaChi2MassOneTrack; break;
+        case RelatedInfoNamed::VTXISODCHI2TWOTRACK     : value = m_smallestDeltaChi2TwoTracks; break;
+        case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : value = m_smallestDeltaChi2MassTwoTracks; break;
         default: value = 0.; break;
       }
-      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
+      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
       m_map.insert( std::make_pair( *ikey, value) );
 
   }
@@ -239,7 +238,6 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
 RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
                                                                 LHCb::Particle::ConstVector &extraParticles )
 {
-  int             nCompatibleDeltaChi2 = 0 ;
   int             nCompatibleChi2      = 0 ;
   double          smallestChi2         = -1 ;
   double          smallestDeltaChi2    = -1 ;
@@ -281,7 +279,6 @@ RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( co
   }
   IsolationResult res ;
   res.nCompatibleChi2      = nCompatibleChi2 ;
-  res.nCompatibleDeltaChi2 = nCompatibleDeltaChi2 ;
   res.smallestChi2         = smallestChi2 ;
   res.smallestDeltaChi2    = smallestDeltaChi2 ;
   res.bestParticle         = bestParticle ;
@@ -316,11 +313,11 @@ void RelInfoVertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
 }
 
 LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void) {
-  return &m_map; 
+  return &m_map;
 }
 
 std::string RelInfoVertexIsolation::infoPath(void) {
   std::stringstream ss;
   ss << std::string("Particle2VIRelations");
-  return ss.str(); 
+  return ss.str();
 }

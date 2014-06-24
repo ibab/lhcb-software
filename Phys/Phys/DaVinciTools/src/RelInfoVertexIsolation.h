@@ -77,9 +77,8 @@ private:
 private:
 
   std::vector<std::string> m_variables;
-  std::vector<short int> m_keys; 
+  std::vector<short int> m_keys;
 
-  int    m_nPartDeltaChi2Win ;
   int    m_nPartChi2Win ;
   double m_smallestDeltaChi2OneTrack ;
   double m_smallestChi2OneTrack ;
@@ -99,7 +98,7 @@ private:
   const IVertexFit*          m_pVertexFit;
   double                     m_chi2 ;
 
-  LHCb::RelatedInfoMap       m_map; 
+  LHCb::RelatedInfoMap       m_map;
 
 public:
 
@@ -107,11 +106,11 @@ public:
   struct IsolationResult
   {
     // Constructor with defaults
-    IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0),
+    IsolationResult() :  nCompatibleChi2(0),
                          smallestChi2(-1), smallestDeltaChi2(-1),
                          bestParticle(NULL) {}
     // Members
-    int             nCompatibleDeltaChi2, nCompatibleChi2 ;
+    int             nCompatibleChi2 ;
     double          smallestChi2, smallestDeltaChi2 ;
     LHCb::Particle *bestParticle ;
   };
