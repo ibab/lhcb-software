@@ -1,3 +1,8 @@
+2014-06-24  Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v6r0p1
+        * python/LbLegacy/install_project.py:  release of LbScripts version v8r0p1
+
 2014-05-30  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v6r0
@@ -5,8 +10,8 @@
 
 2014-04-14  Ben Couturier  <Ben.Couturier@cern.ch>
 
-				* scripts/mkLCGCMTtar: Fix to avoid using LCG_release_area
-				which now contains twos directories separeted by a colon.
+        * scripts/mkLCGCMTtar: Fix to avoid using LCG_release_area
+        which now contains twos directories separeted by a colon.
 
 2014-03-24  Ben Couturier  <Ben.Couturier@cern.ch>
 
