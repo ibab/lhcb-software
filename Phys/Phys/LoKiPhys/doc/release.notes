@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-24 - Albert Puig
+ - add the MTDOCA and MTDOCACHI2 functors
+
 ! 2014-06-23 - Vanya Belyaev
  - adjust NTRACKS to to extract #tracks from empty vertices 
 

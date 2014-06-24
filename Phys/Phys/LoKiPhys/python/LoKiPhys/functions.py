@@ -1020,6 +1020,17 @@ CORRM       = LoKi.Particles.MCorrected
 ## @see LoKi::Cuts::BPVCORRM
 BPVCORRM    = LoKi.Particles.MCorrectedWithBestVertex ()  
 
+# =============================================================================
+## Collection of functions for 'mother-trajectory DOCA' by Jason Andrews,
+#  coded by Albert Puig.
+#  see <a
+#  href="https://indico.cern.ch/event/257864/session/8/"> Jason's slides at
+#  LHCb Analysis and Software Week on April 10th, 2014</a>
+#  @see LoKi::Cuts::MTDOCA
+#  @see LoKi::Cuts::MTDOCACHI2
+# =============================================================================
+MTDOCA     = LoKi.Particles.MTDOCA
+MTDOCACHI2 = LoKi.Particles.MTDOCAChi2
 
 # =============================================================================
 ## Tis/Tos stuff 

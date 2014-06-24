@@ -557,6 +557,199 @@ std::ostream& LoKi::Particles::ChildIPChi2::fillStream ( std::ostream& s ) const
 { return s << " CHILDIPCHI( " << m_index <<",'" << toolName () << "')" ; }
 // ============================================================================
 
+
+
+
+
+
+// ============================================================================
+// constructor from one index and the tool
+// ============================================================================
+LoKi::Particles::MTDOCA::MTDOCA
+( const size_t               idaughter  ,
+  const IDistanceCalculator* dc    )
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function()
+  , m_eval   ( s_PARTICLE , dc , false )
+  , m_index  ( idaughter )
+  , m_nick   ("")
+{}
+// ============================================================================
+// constructor from one index and the tool
+// ============================================================================
+LoKi::Particles::MTDOCA::MTDOCA
+( const size_t                                 idaughter  ,
+  const LoKi::Interface<IDistanceCalculator>&  dc    )
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function()
+  , m_eval   ( s_PARTICLE , dc , false )
+  , m_index  ( idaughter )
+  , m_nick   ( "" )
+{}
+// ============================================================================
+// constructor from one index and the tool nickname
+// ============================================================================
+LoKi::Particles::MTDOCA::MTDOCA
+( const size_t       idaughter  ,
+  const std::string& nick  )
+  : LoKi::AuxDesktopBase()
+  , LoKi::BasicFunctors<const LHCb::Particle*>::Function()
+  , m_eval   ( s_PARTICLE , s_TOOL , false )
+  , m_index  ( idaughter )
+  , m_nick   ( nick )
+{}
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Particles::MTDOCA::result_type
+LoKi::Particles::MTDOCA::operator()
+  ( LoKi::Particles::MTDOCA::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ("Invalid particle, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;
+  }
+  /// get the daughter
+  const LHCb::Particle* daughter = LoKi::Child::child( p , getIndex() ) ;
+  if ( 0 == daughter )
+  {
+    Error ("Invalid daughter particle, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;
+  }
+
+  // tool is valid?
+  if ( !tool() ) { loadTool() ; }
+
+  // clone the mother and move it to the PV
+  std::auto_ptr<LHCb::Particle> tempMother = moveMother( p , daughter ) ;
+
+  // evaluate the result
+  return doca ( tempMother.get() , daughter ) ;
+
+}
+// ============================================================================
+// Move the mother particle to the best PV of the daughter
+// ============================================================================
+std::auto_ptr<LHCb::Particle> LoKi::Particles::MTDOCA::moveMother
+  ( const LHCb::Particle *mother , const LHCb::Particle *daughter ) const
+{
+  // clone the mother and move it to the PV
+  std::auto_ptr<LHCb::Particle> tempMother ( mother->clone() ) ;
+
+  const LHCb::VertexBase *aPV = bestVertex( daughter );
+  // Update the position errors
+  tempMother->setReferencePoint( aPV->position() );
+  tempMother->setPosCovMatrix( aPV->covMatrix() );
+
+  // Cleanup and return
+  //delete aPV ;
+  return tempMother ;
+
+}
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& LoKi::Particles::MTDOCA::fillStream ( std::ostream& s ) const
+{  return s << "MTDOCA("     << getIndex() << ",'"
+            << toolName () << "')" ;
+}
+// ============================================================================
+// get toolname
+// ============================================================================
+std::string LoKi::Particles::MTDOCA::toolName() const
+{ return ::toolName ( tool() , nickname() ) ; }
+// ============================================================================
+StatusCode LoKi::Particles::MTDOCA::loadTool () const
+{
+  // tool is valid?
+  if ( !tool() )
+  {
+    const IDistanceCalculator* dc =
+      LoKi::GetTools::distanceCalculator ( *this , nickname() ) ;
+    /// finally set the tool
+    setTool ( dc ) ;
+  }
+  Assert( !(!tool()) , "Unable to locate tool!" ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+
+
+
+
+// ============================================================================
+// constructor from one index and the tool
+// ============================================================================
+LoKi::Particles::MTDOCAChi2::MTDOCAChi2
+( const size_t               idaughter  ,
+  const IDistanceCalculator* dc    )
+  : LoKi::Particles::MTDOCA( idaughter , dc )
+{}
+// ============================================================================
+// constructor from one index and the tool
+// ============================================================================
+LoKi::Particles::MTDOCAChi2::MTDOCAChi2
+( const size_t                           idaughter  ,
+  const LoKi::Interface<IDistanceCalculator>& dc    )
+  : LoKi::Particles::MTDOCA( idaughter , dc )
+{}
+// ============================================================================
+// constructor from one index and the tool nickname
+// ============================================================================
+LoKi::Particles::MTDOCAChi2::MTDOCAChi2
+( const size_t       idaughter  ,
+  const std::string& nick  )
+  : LoKi::Particles::MTDOCA( idaughter , nick )
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::MTDOCAChi2::~MTDOCAChi2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::MTDOCAChi2*
+LoKi::Particles::MTDOCAChi2::clone() const
+{ return new LoKi::Particles::MTDOCAChi2(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method
+// ============================================================================
+LoKi::Particles::MTDOCAChi2::result_type
+LoKi::Particles::MTDOCAChi2::operator()
+  ( LoKi::Particles::MTDOCAChi2::argument p ) const
+{
+  if ( 0 == p )
+  {
+    Error ("Invalid particle, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;
+  }
+  /// get the daughter
+  const LHCb::Particle* daughter = LoKi::Child::child( p , getIndex() ) ;
+  if ( 0 == daughter )
+  {
+    Error ("Invalid daughter particle, return 'InvalidDistance'") ;
+    return LoKi::Constants::InvalidDistance ;
+  }
+
+  // tool is valid?
+  if ( !tool() ) { loadTool() ; }
+
+  // clone the mother and move it to the PV
+  std::auto_ptr<LHCb::Particle> tempMother = moveMother( p , daughter ) ;
+
+  // evaluate the result
+  return chi2 ( tempMother.get() , daughter ) ;
+
+}
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& LoKi::Particles::MTDOCAChi2::fillStream ( std::ostream& s ) const
+{  return s << "MTDOCACHI2("     << getIndex() << ",'"
+            << toolName () << "')" ;
+}
+
 // ============================================================================
 // The END 
 // ============================================================================

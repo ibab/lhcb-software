@@ -5,9 +5,12 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <memory>
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
+#include "LoKi/AuxDesktopBase.h"
 #include "LoKi/Particles3.h"
 #include "LoKi/Particles4.h"
 // ============================================================================
@@ -395,6 +398,132 @@ namespace LoKi
       // ======================================================================
     }; 
     // ========================================================================
+
+
+
+    // ========================================================================
+    /** @class MTDOCA
+     *  simple evaluator of Mother-Trajectory Distance of Closest Approach
+     *  @see LoKi::Cuts::MTDOCA
+     *  @author Albert Puig (albert.puig@cern.ch)
+     *  @date   2014-06-19
+     */
+    class GAUDI_API MTDOCA
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+      , public virtual LoKi::AuxDesktopBase
+    {
+    public:
+      // ======================================================================
+      /// constructor from one index and the tool
+      MTDOCA ( const size_t                              idaughter ,
+             const IDistanceCalculator*                  dc = 0    ) ;
+      /// constructor from one index and the tool
+      MTDOCA ( const size_t                               idaughter ,
+             const LoKi::Interface<IDistanceCalculator>&  dc        ) ;
+      /// constructor from one index and the tool nick-name
+      MTDOCA ( const size_t       idaughter    ,
+             const std::string&   nick         ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~MTDOCA() {} ;
+      // MANDATORY: clone method ('virtual constructor')
+      virtual  MTDOCA* clone() const { return new MTDOCA(*this) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the doca
+      inline double doca
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const
+      { return m_eval.distance_  ( p1 , p2 ) ; }
+      // ======================================================================
+      /// evaluate the chi2
+      inline double chi2
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const
+      { return m_eval.chi2_      ( p1 , p2 ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the tool
+      const LoKi::Interface<IDistanceCalculator>& tool () const
+      { return m_eval ; }
+      /// cast to the tool
+      operator const LoKi::Interface<IDistanceCalculator>& () const
+      { return tool() ; }
+      // ======================================================================
+      const std::string& nickname() const { return m_nick ; }
+      // ======================================================================
+      void setIndex  ( const size_t index ) const { m_index  = index ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set the tool
+      void setTool ( const IDistanceCalculator* t ) const
+      { m_eval.setTool ( t ) ; }
+      /// set the tool
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const
+      { m_eval.setTool ( t ) ; }
+      // ======================================================================
+      size_t getIndex  () const { return m_index  ; }
+      // ======================================================================
+      StatusCode loadTool () const ;
+      // ======================================================================
+      /// get the tool name
+      std::string toolName() const ;
+      // ======================================================================
+      // Move the mother particle to the best PV of the daughter
+      std::auto_ptr<LHCb::Particle> moveMother
+          ( const LHCb::Particle*, const LHCb::Particle*) const ;
+    private:
+      // ======================================================================
+      /// the default constructor is disabled
+      MTDOCA() ; //                                        no default constructor
+      // ======================================================================
+    private:
+      // ======================================================================
+      LoKi::Particles::ClosestApproach m_eval ;
+      /// the daughter index
+      mutable size_t m_index  ; // the daughter index
+      /// the tool nick
+      std::string  m_nick     ; // the tool nick
+      // ======================================================================
+    } ;
+    class GAUDI_API MTDOCAChi2 : public MTDOCA
+    {
+    public:
+      // ======================================================================
+      /// Constructor from the daughter index & tool
+      MTDOCAChi2 ( const size_t               index     ,
+                   const IDistanceCalculator* tool  = 0 ) ;
+      /// Constructor from the daughter index & tool
+      MTDOCAChi2 ( const size_t                                index     ,
+                   const LoKi::Interface<IDistanceCalculator>& tool      ) ;
+      /// Constructor from the daughter index & nick
+      MTDOCAChi2 ( const size_t                                index     ,
+                   const std::string&                          nick      ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~MTDOCAChi2 () ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  MTDOCAChi2*  clone() const ;
+      /// MANDATORY: the only one essential method
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled
+      MTDOCAChi2 () ;                       // default constructor is disabled
+      // ======================================================================
+    };
+    // ========================================================================
+
+
+    // ========================================================================
   } //                                         end of namespace LoKi::Particles 
   // ==========================================================================
 } //                                                      end of namespace LoKi
@@ -569,6 +698,45 @@ namespace LoKi
      *  @date 2009-11-06
      */
     typedef LoKi::Particles::ChildIPChi2                          CHILDIPCHI2 ;
+    // ========================================================================
+    /** @typedef MTDOCA
+     *  simple evaluator of mother trajectory distance of closest approach
+     *
+     *  @code
+     *
+     *  const MTDOCA doca = MTDOCA ( 1 , tool ) ;
+     *
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  cound double dist = doca ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Particles::MTDOCA
+     *  @author Albert Puig (albert.puig@cern.ch)
+     *  @date   2014-06-19
+     */
+    typedef LoKi::Particles::MTDOCA                                    MTDOCA ;
+    // ========================================================================
+    /** @typedef MTDOCACHI2
+     *  simple evaluator of the chi2 of mother trajectory distance of closest
+     *  approach
+     *
+     *  @code
+     *
+     *  const MTDOCACHI2 docachi2 = MTDOCACHI2 ( 1 , tool ) ;
+     *
+     *  const LHCb::Particle* B = ... ;
+     *
+     *  cound double distchi2 = docachi2 ( B ) ;
+     *
+     *  @endcode
+     *
+     *  @see LoKi::Particles::MTDOCAChi2
+     *  @author Albert Puig (albert.puig@cern.ch)
+     *  @date   2014-06-19
+     */
+    typedef LoKi::Particles::MTDOCAChi2                            MTDOCACHI2 ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
   // ==========================================================================
