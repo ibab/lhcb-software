@@ -123,6 +123,9 @@ class B2DXBuilder(object):
         self._makeB02DHHH('D2HHHPID',self.d.hhh_pid)   # B+- -> D(HHH)  H+H-H+
         #Tighter selection Full DST lines
         self._makeB02DHHH_FULLDST('D2HHHFULLDST',self.d.ds_hhh_pid_custom)
+
+	self._makeB2D0ppbarH('D2HH', self.d.hh)
+	self._makeB02DppbarH('D2HHH', self.d.hhh)
         
         # B+- -> D0(HH)  H+H-H+
         self._makeB02DstHHH('Dstar2D0PiPID',self.dst.d0pi_pid)
@@ -544,6 +547,26 @@ class B2DXBuilder(object):
         inputs = {'B2D0PiPiPi': d2x+pipipi,'B2D0KPiPi': d2x+kpipi, 'B2D0KKPi': d2x+kkpi}
         b2d03h = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d03h,1.0))
+
+    def _makeB2D0ppbarH(self, dname, d2x) : 
+	'''Makes B+ -> D0 p pbar h+ (h=pi,K) + c.c.'''
+	ppbarpi = self.hhh.ppbarpi
+	ppbark = self.hhh.ppbark
+        decays = {'B2D0ppbarPi': ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"],
+                  'B2D0ppbarK' : ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"] }
+        inputs = {'B2D0ppbarPi': d2x+ppbarpi,'B2D0ppbarK': d2x+ppbark }
+        b2d0ppbarh = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d0ppbarh,1.0))
+
+    def _makeB02DppbarH(self, dname, d2x) : 
+	'''Makes B0 -> D- p pbar h+ (h=pi,K) + c.c.'''
+	ppbarpi = self.hhh.ppbarpi
+	ppbark = self.hhh.ppbark
+        decays = {'B02DppbarPi': ["[B0 -> D- a_1(1260)+]cc"],
+                  'B02DppbarK' : ["[B0 -> D- a_1(1260)+]cc"] }
+        inputs = {'B02DppbarPi': d2x+ppbarpi,'B02DppbarK': d2x+ppbark }
+        b02dppbarh = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b02dppbarh,1.0))
 
     def _makeB2D0HHH_FULLDST(self,dname,d2x):
         '''Makes RS B+ -> D0 h+h-h+ (h=pi,K) + c.c.'''

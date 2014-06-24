@@ -4,10 +4,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!========================= StrippingSelections v3r35 2014-06-16 =========================
+! 2014-06-24 - Anton Poluektov 
+ - Add new selections to Beauty2Charm: 
+    * B->D0ppbarH, B0->DppbarH (H=K,pi)
+    * B0->Lc pbar pbar p
 
 ! 2014-06-20 - Wenbin Qian
    Change AM_MAX cut from 6GeV to 7GeV on B02DHD2HHH and B02DHD2Pi0HHHResolved in Beauty2Charm_Utlis.py
+
+!========================= StrippingSelections v3r35 2014-06-16 =========================
 
 ! 2014-06-10 - Mika Vesterinen
  - Further optimisation of StrippingB2DMuNuX.py

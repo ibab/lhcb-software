@@ -31,6 +31,7 @@ class HHHBuilder(object):
         
         self.ppbarpi = [self._makeppbarPi()]
         self.ppbark = [self._makeppbarK()]
+        self.pppbar = [self._makepppbar()]
 
         self.ppipi = [self._makepPiPi()]
         self.pkpi  = [self._makepKPi()]
@@ -86,6 +87,13 @@ class HHHBuilder(object):
         return self._makeX2HHH('X2ppbarK',['[a_1(1260)+ -> p+ p~- K+]cc'],
                               massWindow,self.config,
                               [self.kaons,self.protons])
+
+    def _makepppbar(self):
+        '''Makes X -> p p pbar- + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PPH'])
+        return self._makeX2HHH('X2pppbar',['[a_1(1260)+ -> p+ p+ p~-]cc'],
+                              massWindow,self.config,
+                              [self.protons])
 
     def _makepKPi(self):
         '''Makes X- -> p K-pi- + c.c.'''
