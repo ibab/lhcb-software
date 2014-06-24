@@ -29,7 +29,7 @@ gaudi_install_python_modules()
 gaudi_add_dictionary(LumiAlgs
                      dict/LumiAlgsDict.h
                      dict/LumiAlgsDict.xml
-                     LINK_LIBRARIES LumiEvent
+                     LINK_LIBRARIES Boost GaudiKernel
                      OPTIONS "-U__MINGW32__")
 
 gaudi_install_headers(LumiAlgs)
