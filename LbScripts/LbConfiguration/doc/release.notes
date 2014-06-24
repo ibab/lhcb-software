@@ -1,4 +1,9 @@
+2014-06-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r0p1
+
 2014-06-19 Joel Closier <Joel.Closier@cern.ch>
+
         * add the EOS_HOME variable setting
 
 2014-06-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
