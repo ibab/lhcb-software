@@ -23,6 +23,13 @@ using namespace boost;
 
 namespace
 {
+
+    constexpr struct select2nd_t {
+        template<typename U, typename V>
+        const V& operator()(const std::pair<U,V>& p) const { return p.second; }
+        template<typename U, typename V>
+        V& operator()(std::pair<U,V>& p) const { return p.second; }
+    } select2nd {};
 }
 
 /////////Utility class for easy manipulation of
@@ -123,13 +130,11 @@ class ConfigTree
         , m_root( this )
         , m_leaf{nullptr}
         , m_origDigest( in )
-        , m_label{ std::move(label) }
     {
-        addParent( (ConfigTree*)0 );
-        addLeaf();
-        if ( m_label.empty() ) {
-            m_label = " ( mutation of " + in.str() + " )";
-        }
+        addParent( nullptr );
+        addLeaf(); // unconditionally copies label from 'in' into m_label...
+        m_label = std::move(label);
+        if ( m_label.empty() ) m_label = " ( mutation of " + in.str() + " )";
         addDeps();
     }
 
@@ -205,7 +210,7 @@ class ConfigTree
         } );
         const ConfigTreeNode* c = lookupConfigTreeNode( m_origDigest );
         assert( c );
-        unique_ptr<ConfigTreeNode> nc{c->clone( lr, nr, m_label )};
+        unique_ptr<ConfigTreeNode> nc{ c->clone( lr, nr, m_label ) };
         return w.writeConfigTreeNode( *nc );
     }
 
@@ -331,11 +336,7 @@ ConfigTreeNode::digest_type ConfigTreeEditor::updateAndWrite(
         // grab entire range matching this one
         auto j = updates.upper_bound( i->first );
         vector<pair<string, string>> mods;
-        std::transform(
-            i, j, std::back_inserter( mods ),
-            []( const multimap<string, pair<string, string>>::value_type& mod ) {
-                return mod.second;
-            } );
+        std::transform( i, j, std::back_inserter( mods ), select2nd );
         i = j;
         node->updateLeaf( std::move(mods) );
     }
@@ -347,7 +348,6 @@ ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
                                   const vector<string>& updates,
                                   const string& label ) const
 {
-
     multimap<string, pair<string, string>> mm;
     std::transform( std::begin(updates), std::end(updates), 
                     std::inserter(mm, std::end(mm)),[&](const std::string& i) {
