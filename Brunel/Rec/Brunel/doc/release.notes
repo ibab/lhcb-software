@@ -6,6 +6,10 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v46r1
   . New DDDB global tag for 2010
   . Fix unprotected debugs in FileRecordCnvSvc
+  . Minor changes to VP pattern recognition (PrPixel, VPTools) 
+
+- Changes to QMTests
+  . Move all upgrade test files to TestFileDB and CERN-SWTEST-EOS
 
 </PRE><H1><A NAME=v46r1>2014-06-10 Brunel v46r1</A></H1><PRE>
 This version uses projects LHCb v37r3, Lbcom v15r2p1,

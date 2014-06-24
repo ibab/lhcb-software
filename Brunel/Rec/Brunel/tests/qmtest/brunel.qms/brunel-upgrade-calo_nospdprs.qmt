@@ -3,7 +3,6 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Brunel/Default.py</text>
     <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
     <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-Reference.py</text>
     <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-NoSPDPRS.py</text>
@@ -11,7 +10,7 @@
     <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
     </set></argument>
   <argument name="options">
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Calo_NoSpdPrs/Calo_NoSpdPrs.xdigi'"];from Configurables import Brunel; Brunel().DataType  = "Upgrade"; Brunel().Monitors = ["SC","FPE"]</text>
+    <text>from Configurables import Brunel; Brunel().DataType = "Upgrade"; Brunel().Monitors = ["SC","FPE"]; from PRConfig import TestFileDB; TestFileDB.test_file_db['upgrade-calo_nospdprs-xdigi'].run();</text>
   </argument>
   <argument name="reference"><text>../refs/brunel-upgrade-calo_nospdprs.ref</text></argument>
   <argument name="error_reference"><text>../refs/brunel-upgrade-err.ref</text></argument>
