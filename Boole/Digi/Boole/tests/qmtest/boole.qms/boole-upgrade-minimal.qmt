@@ -2,7 +2,6 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Boole/Default.py</text>
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Reference.py</text>
     <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     </set></argument>

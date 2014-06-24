@@ -2,11 +2,10 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Boole/Default.py</text>
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Baseline-20131029.py</text>
     <text>$APPCONFIGOPTS/Boole/EnableSpillover.py</text>
     </set></argument>
-  <argument name="options"><text>from Configurables import Boole; Boole().Monitors = ["SC", "FPE"]; from PRConfig import TestFileDB; TestFileDB.test_file_db['upgrade-baseline-25ns-sim'].run();</text></argument>
+  <argument name="options"><text>from Configurables import Boole; Boole().DataType="Upgrade"; Boole().Monitors = ["SC", "FPE"]; from PRConfig import TestFileDB; TestFileDB.test_file_db['upgrade-baseline-25ns-sim'].run();</text></argument>
   <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-baseline-25ns.ref</text></argument>
   <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
