@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- QMTest changes
+  . Move all upgrade tests to use TestFileDB for input data
+
 </PRE><H1><A NAME=v28r2>2014-06-20 Boole v28r2</A></H1><PRE>
 
 - New functionality

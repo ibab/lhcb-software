@@ -6,7 +6,7 @@
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Reference.py</text>
     <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     </set></argument>
-  <argument name="options"><text>from Boole.Configuration import *; Boole().Monitors = ["SC", "FPE"]; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Minimal/Minimal.sim'"];</text></argument>
+  <argument name="options"><text>from Configurables import Boole; Boole().Monitors = ["SC", "FPE"]; from PRConfig import TestFileDB; TestFileDB.test_file_db['upgrade-minimal-sim'].run();</text></argument>
   <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-minimal.ref</text></argument>
   <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
