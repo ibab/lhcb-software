@@ -25,7 +25,8 @@ class StrippingConf ( object ) :
                   BadEventSelection = None, 
                   AcceptBadEvents = True,
                   MaxCandidates = None, 
-                  MaxCombinations = None ) :
+                  MaxCombinations = None, 
+                  UseRelatedInfo = False ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -42,7 +43,11 @@ class StrippingConf ( object ) :
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
+        
         for stream in Streams :
+    	    for line in stream.lines : 
+    		line.updateRelatedInfoFlag(UseRelatedInfo)
+        
             self.appendStream(stream)
 
 	self.checkAppendedLines()

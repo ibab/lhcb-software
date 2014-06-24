@@ -325,7 +325,8 @@ class StrippingLine(object):
                    ExtraInfoDaughters = None,    # Daughter selections for which store ExtraInfo. If None, use only the top selection.
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
-                   UseRelatedInfo = False,       # Use new persistency of ExtraInfo (now called RelatedInfo)
+                   UseRelatedInfo = None,        # Use new persistency of ExtraInfo (now called RelatedInfo)
+                                                 # If None, follow the setting in StrippingConf
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -428,6 +429,10 @@ class StrippingLine(object):
         # register into the local storage of all created Lines
         _add_to_stripping_lines_( self ) 
 
+    def updateRelatedInfoFlag(self, useRelatedInfo) : 
+        if self.UseRelatedInfo == None : 
+    	    self.UseRelatedInfo = useRelatedInfo
+
     def selection(self) :
         return self._selection
         
@@ -508,6 +513,7 @@ class StrippingLine(object):
         	
             toolNames = []
             toolNum = 0
+            
             for itool in self.ExtraInfoTools : 
         	toolNum += 1
         	toolType = itool["Type"]
