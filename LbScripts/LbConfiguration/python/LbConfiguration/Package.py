@@ -58,7 +58,8 @@ package_names = ['XmlDDDB',
                  'RawEventFormat',
                  'LHAPDFSets',
                  'BNoCConfig',
-                 'HLTConfig']
+                 'HLTConfig',
+                 'PGunsData']
 
 class PackageConfException(Exception):
     pass
@@ -363,4 +364,7 @@ BNoCConfig.setProject("DBASE")#IGNORE:E0602$
 
 HLTConfig.setHat("WG")#IGNORE:E0602$
 HLTConfig.setProject("DBASE")#IGNORE:E0602$
+
+PGunsData.setHat("Gen")#IGNORE:E0602$
+PGunsData.setProject("DBASE")#IGNORE:E0602$
 
