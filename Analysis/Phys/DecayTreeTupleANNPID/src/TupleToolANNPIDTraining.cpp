@@ -37,7 +37,6 @@ StatusCode TupleToolANNPIDTraining::initialize()
 
 //=============================================================================
 
-
 StatusCode TupleToolANNPIDTraining::fill( const LHCb::Particle*
                                           , const LHCb::Particle* P
                                           , const std::string& head
@@ -45,13 +44,11 @@ StatusCode TupleToolANNPIDTraining::fill( const LHCb::Particle*
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  const std::string prefix = fullName(head);
+  //const std::string prefix = fullName(head);
 
   // Fill the ANNPID variables
   // Note, prefix is not used here, so can only use this tool on a single particle at a time...
   sc = sc && m_tuple->fill( tuple, P );
 
-
   return sc;
 }
-
