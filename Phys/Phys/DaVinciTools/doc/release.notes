@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-06-25 - Albert Puig
+ - Ported previous changes to VertexIsolation.
+
 ! 2014-06-24 - Albert Puig
  - Removed unused variable in RelInfoVertexIsolation.
 

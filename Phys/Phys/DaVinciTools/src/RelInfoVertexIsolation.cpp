@@ -260,8 +260,8 @@ RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( co
     }
     else
     {
-      //second check:....  (CRJ - Floating point comparisons are not a good idea...)
-      if ( vtxWithExtraTrack.chi2() == 0 ) continue;
+      // Check again
+      if ( 0 == vtxWithExtraTrack.chi2() ) continue;
 
       const double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
       if ( msgLevel(MSG::DEBUG) )

@@ -78,7 +78,6 @@ private:
 
 private:
 
-  int    m_nPartDeltaChi2Win ;
   int    m_nPartChi2Win ;
   double m_smallestDeltaChi2OneTrack ;
   double m_smallestChi2OneTrack ;
@@ -104,11 +103,11 @@ public:
   struct IsolationResult
   {
     // Constructor with defaults
-    IsolationResult() :  nCompatibleDeltaChi2(0), nCompatibleChi2(0),
+    IsolationResult() :  nCompatibleChi2(0),
                          smallestChi2(-1), smallestDeltaChi2(-1),
                          bestParticle(NULL) {}
     // Members
-    int             nCompatibleDeltaChi2, nCompatibleChi2 ;
+    int             nCompatibleChi2 ;
     double          smallestChi2, smallestDeltaChi2 ;
     LHCb::Particle *bestParticle ;
   };

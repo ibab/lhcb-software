@@ -183,7 +183,6 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   }
 
   // Save values
-  m_nPartDeltaChi2Win              = isolationOneTrack.nCompatibleDeltaChi2 ;
   m_nPartChi2Win                   = isolationOneTrack.nCompatibleChi2 ;
   m_smallestDeltaChi2OneTrack      = isolationOneTrack.smallestDeltaChi2;
   m_smallestChi2OneTrack           = isolationOneTrack.smallestChi2;
@@ -204,7 +203,6 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
 VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double originalVtxChi2,
                                                                 LHCb::Particle::ConstVector &extraParticles )
 {
-  int             nCompatibleDeltaChi2 = 0 ;
   int             nCompatibleChi2      = 0 ;
   double          smallestChi2         = -1 ;
   double          smallestDeltaChi2    = -1 ;
@@ -227,8 +225,8 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
     }
     else
     {
-      //second check:....  (CRJ - Floating point comparisons are not a good idea...)
-      if ( vtxWithExtraTrack.chi2() == 0 ) continue;
+      // Check again
+      if ( 0 == vtxWithExtraTrack.chi2() ) continue;
 
       const double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
       if ( msgLevel(MSG::DEBUG) )
@@ -246,7 +244,6 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
   }
   IsolationResult res ;
   res.nCompatibleChi2      = nCompatibleChi2 ;
-  res.nCompatibleDeltaChi2 = nCompatibleDeltaChi2 ;
   res.smallestChi2         = smallestChi2 ;
   res.smallestDeltaChi2    = smallestDeltaChi2 ;
   res.bestParticle         = bestParticle ;
