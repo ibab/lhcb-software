@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-06-26 - Gerhard Raven
+ - fix split qmtest...
+
 !========================= Moore v22r2 2014-06-16 =========================
 
 ! 2014-06-15 - Gerhard Raven
