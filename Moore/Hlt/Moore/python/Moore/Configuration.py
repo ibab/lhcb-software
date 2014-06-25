@@ -804,7 +804,7 @@ class Moore(LHCbConfigurableUser):
             dec4Alg=dec4.setup()
             hlt1decrep_location = dec.listOutputs()[0]
             if not MooreExpert().getProp("Hlt2Independent"):
-                hlt1traoder_name="HltTrackReportsDecoder/Hlt1TrackReportsDecoder"
+                hlt1traoder_name='HltTrackReportsDecoder/VeloDecoder'
                 tr=DecoderDB[hlt1traoder_name]
                 tr.active = True
                 trAlg=tr.setup()
