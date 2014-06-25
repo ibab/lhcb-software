@@ -32,8 +32,8 @@ class Candidate final
     {
         const LHCb::State* state = track->stateAt( LHCb::State::EndVelo );
         if ( !state ) state = &( track->closestState( 5000 ) );
-        m_params = { state->x(),  state->y(), state->z(), state->tx(), state->ty(),
-                     state->errTx2(), state->errTy2() };
+        m_params = {{ state->x(),  state->y(), state->z(), state->tx(), state->ty(),
+                      state->errTx2(), state->errTy2() }};
     }
 
     Candidate( const LHCb::Track* track )
