@@ -50,7 +50,7 @@ private:
   IANNSvc* m_hltANNSvc;  
   Hlt::IData* m_hltSvc;
   Hlt::IRegister* m_regSvc;
-  Hlt::IInspector* m_inspectionSvc;;
+  Hlt::IInspector* m_inspectionSvc;
 
   /// location of vertices
   std::string  m_PVLocation;

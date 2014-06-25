@@ -21,7 +21,7 @@ namespace LHCb {
   class CaloCluster;  
   class Particle;
   class RecVertex;
-};
+}
 
 
 /** @class HltSelReportsMaker HltSelReportsMaker.h
