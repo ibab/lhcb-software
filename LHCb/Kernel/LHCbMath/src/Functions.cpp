@@ -7293,7 +7293,6 @@ Gaudi::Math::GenGammaDist::GenGammaDist
   , m_theta ( std::abs ( theta ) ) 
   , m_p     ( std::abs ( p     ) ) 
   , m_low   ( low ) 
-  , m_aux   ( 0   ) 
 {}
 // ============================================================================
 // destructor 
@@ -7389,7 +7388,6 @@ Gaudi::Math::Amoroso::Amoroso
   , m_theta ( theta              ) 
   , m_alpha ( std::abs ( alpha ) ) 
   , m_beta  (            beta    ) 
-  , m_aux   ( 0 ) 
 {
 }
 // ============================================================================
@@ -7631,7 +7629,6 @@ Gaudi::Math::LogGamma::LogGamma
   , m_nu     ( nu     ) 
   , m_lambda ( lambda ) 
   , m_alpha  ( std::abs ( alpha ) ) 
-  , m_aux    ( 0 ) 
 {
 }
 // ============================================================================

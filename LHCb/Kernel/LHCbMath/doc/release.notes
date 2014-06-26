@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-06-26 - Marco Cattaneo
+ - fix some clang33 compilation warnings (unused variables)
+
 !========================= LHCbMath v3r48 2014-06-10 =========================
 ! 2014-06-10 - Vanya Belyaev
  - fix compilation warning
