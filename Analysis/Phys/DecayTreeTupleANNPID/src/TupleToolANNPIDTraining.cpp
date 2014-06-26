@@ -39,7 +39,7 @@ StatusCode TupleToolANNPIDTraining::initialize()
 
 StatusCode TupleToolANNPIDTraining::fill( const LHCb::Particle*
                                           , const LHCb::Particle* P
-                                          , const std::string& head
+                                          , const std::string& /* head */
                                           , Tuples::Tuple& tuple )
 {
   StatusCode sc = StatusCode::SUCCESS;
