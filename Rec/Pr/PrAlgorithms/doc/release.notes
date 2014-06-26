@@ -4,6 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-06-26 - Yasmine Amhis 
+  - Add Histograms in PrSeedingXLayers.
+    Uncomment #DEBUG_HISTO in PrSeedingXLayers.h and recompile before running. 
+
 !========================= PrAlgorithms v1r12 2014-06-10 =======================
 ! 2014-05-21 - Michel De Cian
  - Introduce flag in 'buildGeometry' of PrFTHitManager that ensures that the geometry is only built once. 

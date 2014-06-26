@@ -23,7 +23,12 @@ DECLARE_ALGORITHM_FACTORY( PrSeedingXLayers )
 //=============================================================================
 PrSeedingXLayers::PrSeedingXLayers( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ),
+: 
+#ifdef DEBUG_HISTO
+  GaudiTupleAlg(name, pSvcLocator),
+#else
+  GaudiAlgorithm ( name, pSvcLocator),
+#endif
   m_hitManager(nullptr),
   m_geoTool(nullptr),
   m_debugTool(nullptr),
@@ -114,7 +119,9 @@ StatusCode PrSeedingXLayers::initialize() {
            << "========================================"             << endmsg;
   }
   
-
+#ifdef DEBUG_HISTO 
+  setHistoTopDir("FT/");
+#endif 
 
 
   return StatusCode::SUCCESS;
@@ -124,7 +131,6 @@ StatusCode PrSeedingXLayers::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PrSeedingXLayers::execute() {
-  //always () << "Welcome to quick and dirty fix from Olivier " << endmsg; 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   if ( m_doTiming ) {
     m_timerTool->start( m_timeTotal );
@@ -137,11 +143,12 @@ StatusCode PrSeedingXLayers::execute() {
   // -- This is only needed if the seeding is the first algorithm using the FT
   // -- As the Forward normally runs first, it's off per default
   if( m_decodeData ) m_hitManager->decodeData();   
-
+  int multiplicity = 0;
   for ( unsigned int zone = 0; m_hitManager->nbZones() > zone; ++zone ) {
     for ( PrHits::const_iterator itH = m_hitManager->hits( zone ).begin();
           m_hitManager->hits( zone ).end() != itH; ++itH ) {
       (*itH)->setUsed( false );
+     multiplicity++;
     }
   }
 
@@ -179,11 +186,11 @@ StatusCode PrSeedingXLayers::execute() {
           PrHitZone* zone = m_hitManager->zone(zoneNb);
           // -- The hits are sorted according to LHCbID, we can therefore use a lower bound to speed up the search
           PrHits::iterator itH = std::lower_bound(  zone->hits().begin(),  zone->hits().begin(), *itId, lowerBoundLHCbID() );
-                    
+	  
           for ( ; zone->hits().end() != itH; ++itH ) {
             if( *itId < (*itH)->id() ) break;
-            if ( (*itH)->id() == *itId ) (*itH)->setUsed( true );
-          }
+            if ( (*itH)->id() == *itId ) (*itH)->setUsed( true ); 
+	  }
           ids.push_back( *itId );
         }
       }
@@ -196,12 +203,12 @@ StatusCode PrSeedingXLayers::execute() {
       seed->addToStates( (*itT)->closestState( 9000. ) );
       result->insert( seed );
     }
-
     // -- sort hits according to x
-    for(int i = 0; i < 24; i++){
-      PrHitZone* zone = m_hitManager->zone(i);
-      std::stable_sort( zone->hits().begin(),  zone->hits().end(), compX());
-    }
+   for(int i = 0; i < 24; i++){
+    PrHitZone* zone = m_hitManager->zone(i); 
+    std::stable_sort( zone->hits().begin(),  zone->hits().end(), compX());
+    
+   }
 
 
 
@@ -240,10 +247,15 @@ StatusCode PrSeedingXLayers::execute() {
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeFinal);
     float tot = m_timerTool->stop( m_timeTotal );
-    info() << format( "                                            Time %8.3f ms", tot )
-           << endmsg;
+    debug() << format( "                                            Time %8.3f ms", tot )<< endmsg;
+    #ifdef DEBUG_HISTO
+    plot2D(multiplicity, tot, "timing", "timing", 0, 10000, 0, 1000, 100, 100) ;
+    #endif 
+
   }
 
+
+  
   return StatusCode::SUCCESS;
 }
 
@@ -273,7 +285,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
     PrHits& fHits = fZone->hits();
     PrHits& lHits = lZone->hits();
     
-        
+   
     float zRatio =  lZone->z(0.) / fZone->z(0.);
     
   
@@ -295,7 +307,7 @@ void PrSeedingXLayers::findXProjections( unsigned int part ){
       if ( 0 != iCase && (*itF)->isUsed() ) continue;
       float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
       float maxXl = (*itF)->x() * zRatio + m_maxIpAtZero * ( zRatio - 1 );
-  
+    
 
       if ( matchKey( *itF ) ) info() << "Search from " << minXl << " to " << maxXl << endmsg;
       
@@ -789,11 +801,16 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     PrHits& fHits = fZone->hits();
     PrHits& lHits = lZone->hits();
     
-        
+    
     float zRatio =  lZone->z(0.) / fZone->z(0.);
     
-  
-
+    #ifdef DEBUG_HISTO
+    plot(zRatio, "zRatio", "zRatio", 0., 2, 100);
+    plot(fZone->hits().size(), "NumberOfHitsInFirstZone","NumberOfHitsInFirstZone", 0., 600., 100);
+    plot(lZone->hits().size(), "NumberOfHitsInLastZone","NumberOfHitsInLastZone", 0., 600., 100);
+    #endif
+    
+    
     
     std::vector<PrHitZone*> xZones;
     xZones.reserve(12);
@@ -808,16 +825,22 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
     iterators.reserve(24);
     
     for ( PrHits::iterator itF = fHits.begin(); fHits.end() != itF; ++itF ) {
+      
       if ( 0 != iCase && (*itF)->isUsed() ) continue;
+      
+      
       float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
       float maxXl = (*itF)->x() * zRatio + m_maxIpAtZero * ( zRatio - 1 );
-  
-
+      #ifdef DEBUG_HISTO
+      plot(minXl, "minXl", "minXl", -6000, 6000, 100); 
+      plot(maxXl, "maxXl", "maxXl", -6000, 6000, 100);
+      #endif
       if ( matchKey( *itF ) ) info() << "Search from " << minXl << " to " << maxXl << endmsg;
       
       itLBeg = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX() );
       while ( itLBeg != lHits.end() && (*itLBeg)->x() < minXl ) {
-        ++itLBeg;
+	
+	++itLBeg;
         if ( lHits.end() == itLBeg ) break;
       }
 
@@ -834,7 +857,11 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         
         float tx = ((*itL)->x() - (*itF)->x()) / (lZone->z() - fZone->z() );
         float x0 = (*itF)->x() - (*itF)->z() * tx;
-      
+	
+	#ifdef DEBUG_HISTO
+	plot(tx, "tx", "tx", -1.,1., 100 );
+	plot(x0, "x0", "x0", 0., 6000., 100.);
+	#endif
         PrHits parabolaSeedHits;
         parabolaSeedHits.clear();
         parabolaSeedHits.reserve(5);
@@ -842,37 +869,41 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         // -- loop over first two x zones
         // --------------------------------------------------------------------------------
         unsigned int counter = 0; 
-
         bool skip = true;
         if( iCase != 0 ) skip = false;
-        
-        
-        for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
-        
-          ++counter;
-
+	for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
+	  ++counter;
           // -- to make sure, in case = 0, only x layers of the 2nd T station are used
           if(skip){
             skip = false;
             continue;
           }
-          
-          
-          if( iCase == 0){
+	  if( iCase == 0){
             if(counter > 3) break;
           }else{
             if(counter > 2) break;
           }
           
-          
-          
-          float xP   = x0 + (*itZ)->z() * tx;
+	  float xP   = x0 + (*itZ)->z() * tx;
           float xMax = xP + 2*fabs(tx)*m_tolXSup + 1.5;
           float xMin = xP - m_tolXInf;
-        
+
+          #ifdef DEBUG_HISTO
+	  plot(xP, "xP_x0pos", "xP_x0pos", -10000., 10000., 100); 
+	  plot(xMax, "xMax_x0pos", "xMax_x0pos", -10000., 10000., 100);
+	  plot(xMin, "xMin_x0pos", "xMax_x0pos", -10000., 10000., 100);
+	  #endif
+
+	  
           if ( x0 < 0 ) {
             xMin = xP - 2*fabs(tx)*m_tolXSup - 1.5;
             xMax = xP + m_tolXInf;
+            #ifdef DEBUG_HISTO
+	    plot(xP, "xP_x0neg", "xP_x0neg", -10000., 10000., 100); 
+	    plot(xMax, "xMax_x0neg", "xMax_x0neg", -10000., 10000., 100);
+	    plot(xMin, "xMin_x0neg", "xMax_x0neg", -10000., 10000., 100);
+            #endif
+	    
           }
          
           PrHits::iterator itH = std::lower_bound( (*itZ)->hits().begin(), (*itZ)->hits().end(), xMin, lowerBoundX() );
@@ -887,6 +918,10 @@ void PrSeedingXLayers::findXProjections2( unsigned int part ){
         // --------------------------------------------------------------------------------
 
         debug() << "We have " << parabolaSeedHits.size() << " hits to seed the parabolas" << endmsg;
+	#ifdef DEBUG_HISTO
+	plot(parabolaSeedHits.size() , "HitsToSeedParabolas", "HitsToSeedParabolas", 0., 20., 20 );
+         #endif 
+
 
         std::vector<PrHits> xHitsLists;
         xHitsLists.clear();
@@ -1219,6 +1254,7 @@ void PrSeedingXLayers::solveParabola(const PrHit* hit1, const PrHit* hit2, const
   const float x1 = hit1->x();
   const float x2 = hit2->x();
   const float x3 = hit3->x();
+  
   
   const float det = (z1*z1)*z2 + z1*(z3*z3) + (z2*z2)*z3 - z2*(z3*z3) - z1*(z2*z2) - z3*(z1*z1);
   

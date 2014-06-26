@@ -3,7 +3,15 @@
 
 // Include files
 // from Gaudi
+
+//#define DEBUG_HISTO 
+//uncomment this line if you want to print monitoring histograms
+
+#ifdef DEBUG_HISTO 
+#include "GaudiAlg/GaudiTupleAlg.h"
+#else
 #include "GaudiAlg/GaudiAlgorithm.h"
+#endif
 #include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "PrKernel/IPrDebugTool.h"
@@ -38,11 +46,14 @@
  *
  *  @author Olivier Callot
  *  @date   2013-02-14
- *  2013-03-21 : Yasmine Amhis Modification
+ *  2014-06-26 : Yasmine Amhis Modification
  *  2014-02-12 : Michel De Cian (TDR version) 
  */
-
+#ifdef DEBUG_HISTO 
+class PrSeedingXLayers : public GaudiTupleAlg {
+#else 
 class PrSeedingXLayers : public GaudiAlgorithm {
+#endif
 public:
   /// Standard constructor
   PrSeedingXLayers( const std::string& name, ISvcLocator* pSvcLocator );
