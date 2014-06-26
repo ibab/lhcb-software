@@ -6083,27 +6083,6 @@ namespace
 {
   // ==========================================================================
   // De Casteljau's algorithm
-  double _casteljau_
-  ( const std::vector<double>& beta ,
-    const double               t0   ,
-    const double               t1   )
-  {
-    // the trivial cases
-    if      ( beta.empty()     ) { return 0       ; }
-    else if ( 1 == beta.size() ) { return beta[0] ; }
-    else if ( 2 == beta.size() ) { return beta[0]*t1 + beta[1]*t0 ; }
-    //
-    // prepare recursion
-    const std::size_t N = beta.size() - 1 ;
-    std::vector<double> beta_prime ( N , 0 ) ;
-    for ( std::size_t i = 0 ; i < N ; ++i )
-    { beta_prime[i] = beta [ i ] * t1 + beta [ i+1 ] * t0 ; }
-    //
-    // recursion
-    return _casteljau_ ( beta_prime , t0 , t1 ) ;
-  }
-  // ==========================================================================
-  // De Casteljau's algorithm
   template <class ITERATOR>
   double _casteljau_
   ( ITERATOR first ,
@@ -6331,54 +6310,6 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   std::vector<double> dcj ( m_pars ) ;
   return _casteljau_ ( dcj.begin() , dcj.end() , t0 , t1 ) ;
 }
-// ============================================================================
-namespace
-{
-  // ==========================================================================
-  /// calcluate the intial phase for  unite vecor 
-  inline void _phi0_ ( std::vector<double>& phi0 )
-  {
-    const std::size_t N = phi0.size() ;
-    for ( std::size_t i = 0 ; i < N ; ++i )
-    {
-      const long double ni = N - i ;
-      phi0[i] = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;
-    }
-  }
-  // ==========================================================================
-  /// calculate the binomial coefficients 
-  inline long double binomial
-  ( const unsigned short n , 
-    const unsigned short k ) 
-  {
-    //
-    return 
-      (  0 == k || 1 == n ) ? 1.0                    :
-      (  k > n - k )        ? binomial ( n , n - k ) : 
-      n * binomial ( n - 1 , k - 1 ) / k  ;
-  }
-  /// get the binomial coefficient 
-  inline unsigned long long _binomial_ 
-  ( const unsigned short n , 
-    const unsigned short k ) 
-  {
-    //
-    if ( k > n) { return 0; }
-    //
-    unsigned long long r   = 1 ;    
-    unsigned short     n1  = n ;
-    //
-    for ( unsigned short d = 1; d <= k; ++d ) 
-    {
-      r *= n1 ;
-      r /= d  ;
-      --n1    ;
-    }
-    //
-    return r;
-  } 
-  // ==========================================================================
-} //                                          end of local anopnymos namesapace  
 // ============================================================================
 // constructor from the order
 // ============================================================================
