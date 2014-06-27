@@ -69,9 +69,9 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableBeetleSyncMonitor"        : False
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
-                , "EnableHltVtxReports"            : True
+                , "EnableHltVtxReports"            : False
+                , "EnableHltTrkReports"            : True
                 , "EnableHltRoutingBits"           : True
-                , "EnableHltTrackReports"          : True
                 , "EnableLumiEventWriting"         : True
                 , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
                 , "SlowHlt1Threshold"              : 500000     # microseconds
@@ -173,18 +173,46 @@ class HltConf(LHCbConfigurableUser):
         
         # obtain list of lines,
         activehlt1lines,activehlt2lines=self._runHltLines()
+
+        print 'a-priori hlt1lines: ',activehlt1lines
+        print 'a-priori hlt2lines: ',activehlt1lines
+        # depending on split, mask out lines -- todo: at some point, 'Split' should be retired, and we just rely on the setting
+        if self.getProp("Split")=="Hlt1" :  activehlt2lines = []
+        if self.getProp("Split")=="Hlt2" :  activehlt1lines = []
+        print 'a-posteriori hlt1lines: ',activehlt1lines
+        print 'a-posteriori hlt2lines: ',activehlt1lines
         
         Dec=Sequence('HltDecisionSequence',Members=[])
-        if self.getProp("Split")!="Hlt2" and len(activehlt1lines):
+        #
+        # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
+        #
+        if activehlt1lines:
             Dec.Members.append(Sequence("Hlt1"))
+            Dec.Members.append(Sequence("Hlt1Postamble"))
+            Hlt1Conf()
+            Hlt1Conf().ThresholdSettings = ThresholdSettings
+            from DAQSys.Decoders import DecoderDB
+            decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            decoder.setup().Enable = False
         
-        if self.getProp("Split")!="Hlt1" and len(activehlt2lines):
+        #
+        # dispatch Hlt2 configuration
+        #
+        # don't do this if there are no HLT2 lines
+        if activehlt2lines:
             Dec.Members.append(Sequence("Hlt2"))
+            Dec.Members.append(Sequence("Hlt2Postamble"))
+            Hlt2Conf()
+            self.setOtherProps(Hlt2Conf(),[ "DataType" ])
+            Hlt2Conf().ThresholdSettings = ThresholdSettings
+            if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
+                Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
+
         
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
-                                    , Sequence('HltEndSequence') 
-                                    ] 
+                                   , Sequence('HltEndSequence') 
+                                   ] 
                        )
         if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
             from Configurables import HltRoutingBitsFilter
@@ -194,27 +222,6 @@ class HltConf(LHCbConfigurableUser):
             Sequence("HltDecisionSequence").Members.insert(0,filter)
             Sequence("HltEndSequence").Members.insert(0,filter)
         
-        #
-        # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
-        #
-        if activehlt1lines:
-            Hlt1Conf()
-            Hlt1Conf().ThresholdSettings = ThresholdSettings
-        #
-        # dispatch Hlt2 configuration
-        #
-        # don't do this if there are no HLT2 lines, or if the split is Hlt1
-        if self.getProp("Split")!="Hlt1" and activehlt2lines:
-            Hlt2Conf()
-            self.setOtherProps(Hlt2Conf(),[ "DataType" ])
-            Hlt2Conf().ThresholdSettings = ThresholdSettings
-            if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
-                Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
-
-        if self.getProp("Split")=="Hlt1" or not activehlt2lines :
-            #  make sure the routingbits writer doesn't look for the Hlt2 decisions
-            from Configurables import HltRoutingBitsWriter
-            HltRoutingBitsWriter().Hlt2DecReportsLocation = ''
 
         #fix input locations, for the moment do with a post-config action,
         #TODO: in the future set in Hlt1 and Hlt2 separately
@@ -323,7 +330,8 @@ class HltConf(LHCbConfigurableUser):
                       , 92 : "HLT_PASS_RE('Hlt2.*Charm.*_Baryon.*hhX.*Decision')"
                       , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"    
                          }
-        HltRoutingBitsWriter().RoutingBits = routingBits
+        HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
+        HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
         ## and record the settings in the ANN service
         from Configurables       import HltANNSvc 
@@ -670,7 +678,7 @@ class HltConf(LHCbConfigurableUser):
     
     def endSequence(self):
         """
-        define end sequence (mostly for persistence + monitoring)
+        define end sequence (persistence + monitoring)
         """
         from Configurables        import GaudiSequencer as Sequence
         from Configurables        import HltGlobalMonitor, HltL0GlobalMonitor
@@ -691,8 +699,18 @@ class HltConf(LHCbConfigurableUser):
         if sets and hasattr(sets, 'StripEndSequence') and getattr(sets,'StripEndSequence'):
             log.warning('### Setting requests stripped down HltEndSequence ###')
             strip = getattr(sets,'StripEndSequence')
-            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrackReports','EnableLumiEventWriting']:
+            for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
+
+        
+        #pass split defaults to Hlt2Conf to deal with track reports
+        activehlt1lines,activehlt2lines=self._runHltLines()
+        
+        
+        # only switch on TrackReports in a split scenario in Hlt1
+        if self.getProp("Split") != "Hlt1" and len(activehlt2lines): 
+            self.setProp("EnableHltTrkReports", False)
+            
 
         # Setup the beetle sync sequence
         BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
@@ -706,58 +724,50 @@ class HltConf(LHCbConfigurableUser):
 
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
-        from Configurables import Hlt__Line as Line
-        _list = ( ( "EnableHltRoutingBits",     [ HltRoutingBitsWriter ] )
-                , ( "EnableHltGlobalMonitor",   [ HltGlobalMonitor ] )
-                , ( "EnableHltL0GlobalMonitor", [ HltL0GlobalMonitor ] )
-                , ( "EnableBeetleSyncMonitor",  [ lambda : BeetleMonitorAccept ] )
-                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : Sequence('HltDecisionSequence') ] )
-                # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
-                , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
-                , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
-                , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )
-                )
+        _endlist = ( # ( "RequireL0ForEndSequence",  )
+                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  { } ),
+                     ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', { } ),
+                     ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
+                   )
+
+        ### store the BDT response (and a bit more) through ExtraInfo on particles:
+        sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
+
+        # make sure we encode from the locations the decoders will use...
+        from DAQSys.Decoders import DecoderDB
+        hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
+        hlt2_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
+        hlt1_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
+        hlt2_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
+        hlt_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
+
+
+        _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,'Hlt2DecReportsLocation' : '',  } )
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 'InputHltDecReportsLocation' : hlt1_decrep_loc } )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
+                                                                                                            , OutputHltSelReportsLocation = hlt1_selrep_loc
+                                                                                                            , **sel_rep_opts )  )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 'InputHltSelReportsLocation': hlt1_selrep_loc } )
+                         , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {} )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc 
+                                                                                                        ,'SourceID' : 1 } )
+                         )
+        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 
+                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc } ) 
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'InputHltDecReportsLocation' : hlt2_decrep_loc } ) 
+                         , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
+                                                                                                           OutputHltSelReportsLocation = hlt2_selrep_loc,
+                                                                                                           **sel_rep_opts  ) )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter', { 'InputHltSelReportsLocation': hlt2_selrep_loc,
+                                                                                                       'SourceID' : 2 } )
+                         )
         
-        End = Sequence( 'HltEndSequence' )
-        EndMembers = End.Members
-        # make sure we only instantiate if we actually use it...
-        for i in [ v for (k,v) in _list if self.getProp(k) ] :
-            EndMembers += [ c() for c in i ]
         
-        #pass split defaults to Hlt2Conf to deal with track reports
-        activehlt1lines,activehlt2lines=self._runHltLines()
-        
-        # only switch on TrackReports in a split scenario in Hlt1
-        if self.getProp("Split") != "Hlt1" and len(activehlt2lines): 
-            self.setProp("EnableHltTrackReports", False)
-            #don't need to print a warning here.
-            #Warning("Disabling HltTrackReports Writers")
-        
-        #only instantiate Hlt2Conf if we need it!
-        if self.getProp("Split") == "Hlt1" or len(activehlt2lines)==0:
-            pass
-        elif not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
-            if self.getProp("Split") == "Hlt2" or len(activehlt1lines)==0:
-                Hlt2Conf().setProp("Hlt1TrackOption","Decode")
-            else:
-                Hlt2Conf().setProp("Hlt1TrackOption","Encode-Decode")
-        
-            
-            
-        # Add the TrackReports if so requested
-        if self.getProp("EnableHltTrackReports") :
-            # List of track types that should be persisted into the TrackReports in HLT1
-            # Map TrackLocations to SourceIDs for the TrackReports 
-            # link source IDs, WriterName and TES locations:
-            trackingSources = [ ( 1, 'VeloWriter',    'Hlt/Track/Velo' ),
-                                ( 3, 'ForwardWriter', 'Hlt1/Track/PestiForward' ) ]
-            # this will pickup the forward tracks 
-            # with VeloTT momentum estimate
-            # We will have one Writer per track stage
-            # add and configure the Writers                                                       
-            EndMembers += [ HltTrackReportsWriter(name, SourceID=sID, InputHltTrackLocation=inLocation) for sID, name, inLocation in trackingSources ]
-            
-        # endif EnableHltTrackReports        
+        # make sure we only instantiate members which are used...
+        End           = Sequence('HltEndSequence', Members = [ tp( name, **props ) for (gate,tp,name,props) in _endlist       if self.getProp(gate) ]  )
+        Hlt1PostAmble = Sequence('Hlt1Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt1postamble if self.getProp(gate) ]  )
+        Hlt2PostAmble = Sequence('Hlt2Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt2postamble if self.getProp(gate) ]  )
 
             
         if (self.getProp("EnableLumiEventWriting")) :
@@ -769,25 +779,23 @@ class HltConf(LHCbConfigurableUser):
             if self.isPropertySet('NanoBanks') :
                     log.warning('Using non-default NanoBanks = %s.' % (self.getProp('NanoBanks')))
                 
-            EndMembers += [ HltLumiWriter()
+            from DAQSys.Decoders import DecoderDB
+            decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            End.Members += [ HltLumiWriter()
                           , Sequence( 'LumiStripper' , Members = 
-                                      [ HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate')  ) 
+                                      [ decoder.setup()
+                                      , HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
                                       , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                       ])
                           ]
+
         if self.getProp( 'RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION_PHYSICS" )])
             EndMembers.insert(1,  L0accept )  # after routing bits
 
-        ### store the BDT response (and a bit more) through ExtraInfo on particles:
-        HltSelReportsMaker().InfoLevelDecision = 3
-        HltSelReportsMaker().InfoLevelTrack = 3
-        HltSelReportsMaker().InfoLevelRecVertex = 3
-        HltSelReportsMaker().InfoLevelCaloCluster = 3
-        HltSelReportsMaker().InfoLevelParticle = 3
 
 ##################################################################################
     def __apply_configuration__(self):

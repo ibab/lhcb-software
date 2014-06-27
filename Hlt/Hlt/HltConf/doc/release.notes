@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-06-27 - Gerhard Raven
+ - major change: by default, setup Hlt1 and Hlt2 for 'split' mode, and treat
+   running together as a special case -- instead of the other way around
+
 !========================= HltConf v11r2 2014-06-18 =========================
 
 ! 2014-06-18 - Gerhard Raven
