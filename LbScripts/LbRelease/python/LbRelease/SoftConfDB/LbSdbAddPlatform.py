@@ -1,4 +1,4 @@
-start n=node:Lbadmin(Type="PROJECT_PARENT") match n-[:TYPE]-m  return distinct m.project#!/usr/bin/env python
+#!/usr/bin/env python
 """
 A script to add a project to the Software Configuration DB
 
