@@ -65,8 +65,8 @@ HltL0GlobalMonitor::HltL0GlobalMonitor( const std::string& name,
     : HltBaseAlg( name, pSvcLocator ), m_events( 0 ), m_lastL0TCK( 0 )
 {
     declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
-    declareProperty( "HltDecReports", m_HltDecReportsLocation =
-                                          LHCb::HltDecReportsLocation::Default );
+    declareProperty( "Hlt1DecReports", m_Hlt1DecReportsLocation = LHCb::HltDecReportsLocation::Default );
+    declareProperty( "Hlt2DecReports", m_Hlt2DecReportsLocation = LHCb::HltDecReportsLocation::Default );
     declareProperty( "L0DUReport",
                      m_L0DUReportLocation = LHCb::L0DUReportLocation::Default );
     declareProperty( "Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
@@ -206,12 +206,16 @@ void HltL0GlobalMonitor::monitorL0DU( const LHCb::L0DUReport* l0du )
     if ( !odin ) return;
 
     // now check HLT decisions for rejected events after Hlt
-    LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
-    bool hlt1 = false, hlt2 = false;
-    if ( hlt ) {
-        const LHCb::HltDecReport* report = hlt->decReport( m_hlt1Decision );
+    bool hlt1 = false;
+    LHCb::HltDecReports* hlt1dec = (!m_Hlt1DecReportsLocation.empty()) ? fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation ) : nullptr;
+    if ( hlt1dec ) {
+        const LHCb::HltDecReport* report = hlt1dec->decReport( m_hlt1Decision );
         if ( report ) hlt1 = report->decision();
-        report = hlt->decReport( m_hlt2Decision );
+    }
+    bool hlt2 = false;
+    LHCb::HltDecReports* hlt2dec = (!m_Hlt2DecReportsLocation.empty()) ? fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation ) : nullptr;
+    if ( hlt2dec ) {
+        const LHCb::HltDecReport* report = hlt2dec->decReport( m_hlt2Decision );
         if ( report ) hlt2 = report->decision();
     } // end if hlt
 

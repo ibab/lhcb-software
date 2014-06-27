@@ -4,6 +4,8 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2014-06-27 - Gerhard Raven
+ - changes for split HLT
 
 !========================= HltGlobalMonitor v4r2 2014-02-20 =========================
 ! 2014-01-31 - Gerhard Raven
