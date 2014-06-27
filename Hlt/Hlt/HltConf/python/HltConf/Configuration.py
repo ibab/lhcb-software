@@ -166,22 +166,10 @@ class HltConf(LHCbConfigurableUser):
                 log.warning( '####################################################################################' )
             L0TCK = self.getProp('L0TCK')
         self.defineL0Channels( L0TCK )
-        #
-        #  main HLT sequencer
-        #
-        #sensitive to the split scenario
         
         # obtain list of lines,
         activehlt1lines,activehlt2lines=self._runHltLines()
 
-        print 'a-priori hlt1lines: ',activehlt1lines
-        print 'a-priori hlt2lines: ',activehlt1lines
-        # depending on split, mask out lines -- todo: at some point, 'Split' should be retired, and we just rely on the setting
-        if self.getProp("Split")=="Hlt1" :  activehlt2lines = []
-        if self.getProp("Split")=="Hlt2" :  activehlt1lines = []
-        print 'a-posteriori hlt1lines: ',activehlt1lines
-        print 'a-posteriori hlt2lines: ',activehlt1lines
-        
         Dec=Sequence('HltDecisionSequence',Members=[])
         #
         # dispatch Hlt1 configuration, don't do this if there are no HLT1 lines
@@ -596,6 +584,12 @@ class HltConf(LHCbConfigurableUser):
         activeHlt1Lines = unique( activeHlt1Lines )
         activeHlt2Lines = unique( activeHlt2Lines )
 
+        if self.getProp('Split') :
+            if self.getProp('Split') == 'Hlt1' : activeHlt2Lines = []
+            if self.getProp('Split') == 'Hlt2' : activeHlt1Lines = []
+            if self.getProp('Split') not in [ 'Hlt1','Hlt2','' ] :
+                raise KeyError('bad value for property split: %s' % self.getProp('Split'))
+
         return activeHlt1Lines, activeHlt2Lines
     
     def postConfigAction(self) : 
@@ -609,23 +603,15 @@ class HltConf(LHCbConfigurableUser):
         from HltLine.HltLine     import hlt2Lines
         activeHlt1Lines, activeHlt2Lines = self._runHltLines()
 
-        if self.getProp('Split') :
-            if self.getProp('Split') == 'Hlt1' : activeHlt2Lines = []
-            if self.getProp('Split') == 'Hlt2' : activeHlt1Lines = []
-            if self.getProp('Split') not in [ 'Hlt1','Hlt2','' ] :
-                raise KeyError('bad value for property split: %s' % self.getProp('Split'))
-        
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         # print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
         awol1 = set( activeHlt1Lines ) - set( [ i.name() for i in hlt1Lines() ] )
-        if awol1 : 
-            log.fatal(' # some requested Hlt1 lines are absent : %s ' % awol1 )
+        if awol1 : log.fatal(' # some requested Hlt1 lines are absent : %s ' % awol1 )
 
         print '# List of requested Hlt2Lines : %s ' % activeHlt2Lines 
         # print '# List of available Hlt2Lines : %s ' % [ i.name() for i in hlt2Lines() ] 
         awol2 = set( activeHlt2Lines ) - set( [ i.name() for i in hlt2Lines() ] )
-        if awol2 : 
-            log.fatal(' # some requested Hlt2 lines are absent : %s ' % awol2 )
+        if awol2 : log.fatal(' # some requested Hlt2 lines are absent : %s ' % awol2 )
 
         if awol1 or awol2 :
             raise RuntimeError, ' # some requested lines are absent;\n Hlt1: %s\n Hlt2: %s' % ( awol1 , awol2 )
@@ -659,7 +645,6 @@ class HltConf(LHCbConfigurableUser):
 
         if self.getProp("Verbose") : print Sequence('Hlt') 
          
-
 ##################################################################################
 #
 # end sequence
@@ -703,12 +688,10 @@ class HltConf(LHCbConfigurableUser):
                 self._safeSet(option, (option in strip))
 
         
-        #pass split defaults to Hlt2Conf to deal with track reports
         activehlt1lines,activehlt2lines=self._runHltLines()
         
-        
         # only switch on TrackReports in a split scenario in Hlt1
-        if self.getProp("Split") != "Hlt1" and len(activehlt2lines): 
+        if activehlt1lines and not activehlt2lines :
             self.setProp("EnableHltTrkReports", False)
             
 
@@ -741,7 +724,6 @@ class HltConf(LHCbConfigurableUser):
         hlt2_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
         hlt_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
 
-
         _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,'Hlt2DecReportsLocation' : '',  } )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 'InputHltDecReportsLocation' : hlt1_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
@@ -763,7 +745,6 @@ class HltConf(LHCbConfigurableUser):
                                                                                                        'SourceID' : 2 } )
                          )
         
-        
         # make sure we only instantiate members which are used...
         End           = Sequence('HltEndSequence', Members = [ tp( name, **props ) for (gate,tp,name,props) in _endlist       if self.getProp(gate) ]  )
         Hlt1PostAmble = Sequence('Hlt1Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt1postamble if self.getProp(gate) ]  )
@@ -782,13 +763,13 @@ class HltConf(LHCbConfigurableUser):
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             End.Members += [ HltLumiWriter()
-                          , Sequence( 'LumiStripper' , Members = 
-                                      [ decoder.setup()
-                                      , HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
-                                      , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                      , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
-                                      ])
-                          ]
+                           , Sequence( 'LumiStripper' , Members = 
+                                       [ decoder.setup()
+                                       , HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
+                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
+                                       , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
+                                       ] )
+                           ]
 
         if self.getProp( 'RequireL0ForEndSequence') :
             from Configurables import LoKi__L0Filter as L0Filter
