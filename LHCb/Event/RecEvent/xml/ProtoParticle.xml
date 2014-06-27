@@ -65,16 +65,16 @@
         <enumval name="CaloChargedSpd"     value="313"  desc="Spd Digits (0,1) associated to CaloHypo (charged)"/>
         <enumval name="CaloChargedPrs"     value="314"  desc="Prs Digits (0,sum) associated to CaloHypo (charged)"/>        
         <enumval name="CaloChargedEcal"    value="315"  desc="Cluster  energy associated to CaloHypo (charged)"/>        
-        <enumval name="CaloChargedID"    value="316"  desc="Hcal/Ecal energy ratio associated to CaloHypo (charged)"/>        
+        <enumval name="CaloChargedID"      value="316"  desc="CellID.all() associated to CaloHypo seed (neutral)"/>        
         <enumval name="CaloDepositID"      value="320"  desc="CaloID estimator : Spd/Prs deposit (neutral)"/>
         <enumval name="ShowerShape"        value="321"  desc="CaloID estimator : 2nd order moment of the cluster (neutral) "/>
         <enumval name="ClusterMass"        value="322"  desc="CaloID estimator : MergedPi0Alg cluster Mass (neutral)"/>
-        <enumval name="CaloNeutralSpd"     value="323"  desc="Spd Digits (0,1) associated to CaloHypo (neutral)"/>
+        <enumval name="CaloNeutralSpd"     value="323"  desc="Spd Digits (0,N) associated to CaloHypo (neutral)"/>
         <enumval name="CaloNeutralPrs"     value="324"  desc="Prs Digits (0,sum) associated to CaloHypo (neutral)"/>        
         <enumval name="CaloNeutralEcal"    value="325"  desc="Cluster energy associated to CaloHypo (neutral)"/>        
         <enumval name="CaloNeutralHcal2Ecal"    value="326"  desc="Hcal/Ecal energy ratio associated to CaloHypo (neutral)"/>        
-        <enumval name="CaloNeutralE49"    value="327"  desc="2x2/3x3 energy ratio associated to CaloHypo (neutral)"/>        
-        <enumval name="CaloNeutralID"    value="328"  desc="CellID.all() associated to CaloHypo seed (neutral)"/>        
+        <enumval name="CaloNeutralE49"     value="327"  desc="2x2/3x3 energy ratio associated to CaloHypo (neutral)"/>        
+        <enumval name="CaloNeutralID"      value="328"  desc="CellID.all() associated to CaloHypo seed (neutral)"/>        
         <enumval name="CaloSpdE"           value="330"  desc="CaloID estimator : Spd  hit (charged)"/>
         <enumval name="CaloPrsE"           value="331"  desc="CaloID estimator : Prs  energy deposit (charged)"/>
         <enumval name="CaloEcalE"          value="332"  desc="CaloID estimator : Ecal energy deposit (charged)"/>
@@ -84,14 +84,34 @@
         <enumval name="CaloClusChi2"       value="336"  desc="CaloID estimator : currently equivalent to CaloTrMatch"/>
         <enumval name="CaloTrajectoryL"    value="337"  desc="CaloID estimator : Longitudinal parameter of Ecal Shower"/>
         <enumval name="CaloEoverP"         value="338"  desc="Electron e/p"/>
+        <enumval name="CaloNeutralE19"        value="339"  desc="seed/3x3 ecal energy ratio associated to CaloHypo - input to neutralID (neutral)"/>        
+        <enumval name="CaloPrsNeutralE19"     value="340"  desc="Seed/3x3 prs energy ratio associated to CaloHypo - input to neutralID (neutral)"/>        
+        <enumval name="CaloPrsNeutralE49"     value="341"  desc="2x2/3x3 prs energy ratio associated to CaloHypo - input to neutralID  (neutral)"/>        
+        <enumval name="CaloPrsNeutralE4max"   value="342"  desc="Max 2x2 prs energy  associated to CaloHypo - input to neutralID (neutral)"/>        
+        <enumval name="CaloNeutralPrsM"       value="343"  desc="Prs multiplicity (0,N) associated to CaloHypo - input to neutralID (neutral)"/>        
+        <enumval name="CaloShapeFr2r4"        value="344"  desc="Cluster Fr2r4 shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloShapeKappa"       value="345"  desc="Cluster Fkappa shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloShapeAsym"        value="346"  desc="Cluster Fasym shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloShapeE1"           value="347"  desc="Cluster E1/Ecl variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloShapeE2"           value="348"  desc="Cluster E2/Ecl variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsShapeE2"        value="349"  desc="Cluster EPrs2/E variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsShapeEmax"      value="350"  desc="Cluster max(EPrs)/E variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsShapeFr2"       value="351"  desc="Cluster Fr2 shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsShapeAsym"     value="352"  desc="Cluster Fasym shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsM"              value="353"  desc="Prs mult (>0) shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsM15"            value="354"  desc="Prs mult (>15) shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsM30"            value="355"  desc="Prs mult (>30) shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsM45"            value="356"  desc="Prs mult (>45) shape variable - input to gamma/pi0 separation (neutral)"/>        
         <enumval name="EcalPIDe"        value="360"  desc="Ecal-based DLL for electron-ID (charged)"/>
         <enumval name="PrsPIDe"         value="361"  desc="Prs-based  DLL for electron-ID (charged)"/>
         <enumval name="BremPIDe"        value="362"  desc="Brem-based DLL for electron-ID (charged)"/>
         <enumval name="HcalPIDe"        value="363"  desc="Hcal-based DLL for electron-ID (charged)"/>
         <enumval name="HcalPIDmu"       value="364"  desc="Hcal-based DLL for muon-ID DLL (charged)"/>
         <enumval name="EcalPIDmu"       value="365"  desc="Ecal-based DLL for muon-ID DLL (charged)"/>
-        <enumval name="PhotonID"        value="380"  desc="Combined PDF for photonID (neutral)"/>
+        <enumval name="PhotonID"        value="380"  desc="Combined PDF for photonID - OBSOLETE DLL-based neutralID (neutral)"/>
         <enumval name="IsPhoton"        value="381"  desc="Gamma/Pi0 separation variable (neutral)"/>
+        <enumval name="IsNotE"          value="382"  desc="MLP-based neutralID - anti-electron ID (neutral)"/>
+        <enumval name="IsNotH"          value="383"  desc="MLP-based neutralID - anti-hadron ID   (neutral)"/>
 
         <enumval name="VeloCharge"      value="400"  desc="The dE/dx charge from the VELO system"/>
 
