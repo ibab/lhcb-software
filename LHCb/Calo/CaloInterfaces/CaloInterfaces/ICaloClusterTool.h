@@ -9,7 +9,7 @@
 #include "GaudiKernel/IAlgTool.h"
 // forward declarations
 namespace LHCb{
-  class     CaloCluster                ; 
+  class     CaloCluster                ;
 }
 const InterfaceID IID_ICaloClusterTool( "ICaloClusterTool" , 3 , 0 );
 
@@ -45,14 +45,14 @@ class ICaloClusterTool:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode process    ( LHCb::CaloCluster* cluster ) const = 0 ;
+  virtual StatusCode process    ( LHCb::CaloCluster* cluster)const =0;
   
   /** The main processing method (functor interface) 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( LHCb::CaloCluster* cluster ) const = 0 ;
-  
+  virtual StatusCode operator() ( LHCb::CaloCluster* cluster)const =0;
+
  protected:
   
   

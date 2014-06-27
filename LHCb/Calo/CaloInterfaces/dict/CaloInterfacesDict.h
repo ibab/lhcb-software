@@ -2,8 +2,8 @@
 #ifndef DICT_CALOINTERFACESDICT_H 
 #define DICT_CALOINTERFACESDICT_H 1
 
-#include "CaloInterfaces/ICaloClusterization.h"     
 #include "CaloInterfaces/ICaloClusterSelector.h"     
+#include "CaloInterfaces/ICaloClusterization.h"     
 #include "CaloInterfaces/ICaloClusterTool.h"         
 #include "CaloInterfaces/ICaloCorrection.h"          
 #include "CaloInterfaces/ICaloCosmicsTool.h"
@@ -27,5 +27,7 @@
 #include "CaloInterfaces/ICaloHypoEstimator.h"
 #include "CaloInterfaces/IGammaPi0SeparationTool.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
+#include "CaloInterfaces/INeutralIDTool.h"
+#include "CaloInterfaces/ICaloShowerOverlapTool.h"
 
 #endif //DICT_CALOINTERFACESDICT_H 

@@ -28,6 +28,7 @@ public:
   virtual StatusCode finalize()=0;
 
   virtual double isPhoton(const LHCb::CaloHypo* hypo)=0;
+  virtual double isPhoton(const double* v)=0;
   virtual void ClusterVariables(const LHCb::CaloCluster *cluster,
                         double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot,
                         double& Eseed, double& E2, int& area)=0;
@@ -38,6 +39,7 @@ public:
 
   virtual double inputData(std::string data)=0;
   virtual std::map<std::string,double> inputDataMap()=0;
+  virtual std::map<std::string,double> inputPrsDataMap()=0;
   
 protected:
 

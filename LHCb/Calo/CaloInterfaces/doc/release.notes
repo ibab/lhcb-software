@@ -3,6 +3,12 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =========================================================================
 
+! 2014-05-22 - Olivier Deschamps
+ - IneutralIDTool     : new interface for MLP-based neutralID
+ - ICaloShowerOverlapTool : new interface for Shower Overlap correction
+ - ICaloHypoEstimator : add neutralID input/output
+ - ICaloSubClusterTag.h : add new virtual method to set/get cluster mask
+
 !========================= CaloInterfaces v8r7 2013-10-23 =========================
 ! 2013-10-09 - Olivier Deschamps
  - ICaloGetterTool : new virtual method to access the sub-detectors mask (increment release number)

@@ -48,6 +48,8 @@ class ICaloHypoTool:
    *  @return status code 
    */  
   virtual StatusCode operator() ( LHCb::CaloHypo* hypo  ) const = 0 ;
+
+
   
   
 };

@@ -12,35 +12,39 @@
 #include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypo2Calo.h"
 
-static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 2, 0 );
+static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 3, 0 );
 
 
 
 
 namespace CaloDataType{
-  enum DataType  {  HypoE     = 0,  // hypo energy
-                    HypoEt      ,     // hypo Et
-                    HypoM       ,     // hypo Mass
-                    HypoPrsE    ,     // Prs extra-digit E
-                    HypoPrsM    ,     // Prs extra-digit Multiplicity
-                    HypoSpdM    ,     // Spd extra-digit Multiplicity
-                    ClusterE    ,  // cluster energy
-                    ToPrsE      ,  // Prs deposit in front (using local setting of CaloHypo2Calo)
-                    ToHcalE     ,  // Hcal deposit in front (using local setting of CaloHypo2Calo)
-                    ToPrsM    ,  // Prs multiplicity
-                    ToSpdM    ,  // Spd multiplicity
-                    E1        ,  // cluster seed energy
-                    E19       ,  // E1/ClusterE
-                    E1Hypo    ,  // E1/HypoE
-                    E4        ,  // max (2x2) energy within 3x3 
-                    E49       ,  // E4/ClusterE
-                    CellID    ,  // cluster-seed id
-                    Hcal2Ecal ,  // ToHcalE/ClusterE
-                    ClusterMatch , // chi2(2D)
-                    ElectronMatch,  // chi2(e)
-                    BremMatch    ,  // chi2(brem)
-                    NeutralID    ,  // neutral pid
-                    Spread       ,  // cluster spread
+
+  static const double Default = -1.e+06;  // default value
+
+  enum DataType  {  HypoE     = 0,   //0 hypo energy
+                    HypoEt       ,   //1 hypo Et
+                    HypoM        ,   //2 hypo Mass
+                    HypoPrsE     ,   //3 Prs extra-digit E
+                    HypoPrsM     ,   //4 Prs extra-digit Multiplicity
+                    HypoSpdM     ,   //5 Spd extra-digit Multiplicity
+                    ClusterE     ,   //6 cluster energy  ( = E9 for 3x3 cluster evaluation)
+                    ToPrsE       ,   //7 Prs deposit in front (using local setting of CaloHypo2Calo)
+                    ToHcalE      ,   //8 Hcal deposit in front (using local setting of CaloHypo2Calo)
+                    ToPrsM       ,   //9 Prs multiplicity
+                    ToSpdM       ,   //10 Spd multiplicity
+                    E1           ,   // cluster seed energy
+                    E9           ,   // 3x3 area cluster 
+                    E19          ,   // E1/E9
+                    E1Hypo       ,   // E1/HypoE
+                    E4           ,   // max (2x2) energy within 3x3 
+                    E49          ,   // E4/E9
+                    CellID       ,   // cluster-seed id
+                    Hcal2Ecal    ,   // ToHcalE/ClusterE
+                    ClusterMatch ,   // chi2(2D)
+                    ElectronMatch,   //20 chi2(e)
+                    BremMatch    ,   // chi2(brem)
+                    NeutralID    ,   // neutral pid
+                    Spread       ,   // cluster spread
                     TrajectoryL  ,
                     PrsE19,
                     PrsE49,
@@ -48,7 +52,7 @@ namespace CaloDataType{
                     PrsE1,
                     PrsE2,
                     PrsE3,
-                    PrsE4,
+                    PrsE4,//30
                     PrsE5,
                     PrsE6,
                     PrsE7,
@@ -58,21 +62,33 @@ namespace CaloDataType{
                     isPhotonEcl,
                     isPhotonFr2,
                     isPhotonFr2r4,
-                    isPhotonAsym,
+                    isPhotonAsym,//40
                     isPhotonKappa,
                     isPhotonEseed,
                     isPhotonE2,
-                    Last // dummy end (36)
+                    isPhotonPrsFr2,
+                    isPhotonPrsAsym,
+                    isPhotonPrsM,
+                    isPhotonPrsM15,
+                    isPhotonPrsM30,
+                    isPhotonPrsM45,
+                    isPhotonPrsEmax,//50
+                    isPhotonPrsE2,
+                    isNotH,
+                    isNotE,
+                    Last // dummy end (54)
   };                
 
   static const  int TypeMask[Last] ={  // 0x1 : neutral ; 0x2 : charged ; 0x3 : both
-    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,
-    0x2,0x2,0x1,0x3,0x2,
-    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,
-    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3
+    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,    // 20
+    0x2,0x2,0x1,0x3,0x2,  // 5
+    0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3, // 12
+    0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,  // 8  Gamma/Pi0 input (Ecal-based)
+    0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,  // 8  Gamma/Pi0 input (Prs-based)  
+    0x1,0x1 //2
   };
   static const  std::string Name[Last] = {
-    "HypoE"     ,
+    "HypoE"     , // 0
     "HypoEt"    ,     
     "HypoM"     ,     
     "HypoPrsE"  ,     
@@ -81,9 +97,10 @@ namespace CaloDataType{
     "ClusterE"  ,  
     "ToPrsE"    ,  
     "ToHcalE"   ,  
-    "ToPrsM"    ,  
-    "ToSpdM"    ,  
+    "ToPrsM"    ,   
+    "ToSpdM"    , //10 
     "E1"        ,  
+    "E9"        ,  
     "E19"       ,  
     "E1Hypo"    ,  
     "E4"        ,  
@@ -91,7 +108,7 @@ namespace CaloDataType{
     "CellID"    ,  
     "Hcal2Ecal" ,  
     "ClusterMatch" , 
-    "ElectronMatch",  
+    "ElectronMatch", //20 
     "BremMatch"    ,  
     "NeutralID"    ,  
     "Spread"       ,  
@@ -101,7 +118,7 @@ namespace CaloDataType{
     "PrsE4Max" ,
     "PrsE1" , 
     "PrsE2" , 
-    "PrsE3" , 
+    "PrsE3" , //30
     "PrsE4" , 
     "PrsE5" , 
     "PrsE6" , 
@@ -111,11 +128,21 @@ namespace CaloDataType{
     "isPhoton",
     "isPhoton_Ecl",
     "isPhoton_Fr2",
-    "isPhoton_Fr2r4",
+    "isPhoton_Fr2r4",//40
     "isPhoton_Asym",
     "isPhoton_Kappa",
     "isPhoton_Eseed",
-    "isPhoton_E2"
+    "isPhoton_E2",
+    "isPhoton_PrsFr2",
+    "isPhoton_PrsAsym",
+    "isPhoton_PrsM",
+    "isPhoton_PrsM15",
+    "isPhoton_PrsM30",
+    "isPhoton_PrsM45",//50
+    "isPhoton_PrsEmax",
+    "isPhoton_PrsE2",
+    "isNotH",
+    "isNotE"
   };
 }
 

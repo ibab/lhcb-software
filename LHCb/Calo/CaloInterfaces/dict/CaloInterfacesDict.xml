@@ -25,6 +25,8 @@
   <class name    = "ICaloHypoEstimator"       />
   <class name    = "IGammaPi0SeparationTool"  />
   <class name    = "ICaloRelationsGetter"     />
+  <class name    = "INeutralIDTool"           />
+  <class name    = "ICaloShowerOverlapTool"   />
 </lcgdict>
 
 
