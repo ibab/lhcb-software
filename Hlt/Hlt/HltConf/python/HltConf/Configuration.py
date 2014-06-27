@@ -483,7 +483,7 @@ class HltConf(LHCbConfigurableUser):
         ## and tell the monitoring what it should expect..
         # the keys are the Labels for the Histograms in the GUI
         # the values are the Pattern Rules to for the Decisions contributing 
-        from Configurables import HltGlobalMonitor
+        from Configurables import HltGlobalMonitor,HltL0GlobalMonitor
         HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( [ i.decision() for i in lines1 ],
                                 [ ("L0"         , "Hlt1L0.*Decision"),
                                   ("LumiBeamGas", "Hlt1(Lumi|BeamGas).*Decision"),
@@ -516,8 +516,12 @@ class HltConf(LHCbConfigurableUser):
                                  )
 
         # don't look for things that won't be there...
-        if not lines1 : HltGlobalMonitor().Hlt1DecReports = ""
-        if not lines2 : HltGlobalMonitor().Hlt2DecReports = ""
+        if not lines1 : 
+            HltGlobalMonitor().Hlt1DecReports = ""
+            HltL0GlobalMonitor().Hlt1DecReports = ""
+        if not lines2 : 
+            HltGlobalMonitor().Hlt2DecReports = ""
+            HltL0GlobalMonitor().Hlt2DecReports = ""
         # Configure vertex monitoring
         HltGlobalMonitor().VertexLocations = __onlinePV__()
 
