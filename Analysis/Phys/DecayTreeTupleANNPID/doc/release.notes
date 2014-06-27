@@ -4,6 +4,10 @@
 ! Purpose     : ABBPID training tuple tools.
 !-----------------------------------------------------------------------------
 
+! 2014-06-27 - Chris Jones
+ - Add a new TupleTool that fills the ANNPID variables for a given list 
+   of MVA tunes.
+
 !========================= DecayTreeTupleANNPID v1r0 2014-04-02 =========================
 
 ! 2014-04-01 - Chris Jones
