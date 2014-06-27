@@ -112,10 +112,10 @@ private:
 
   std::string m_outputData;
   std::string m_inputData;
-  std::string m_detData;
   std::string m_condition;
   std::vector<std::string>          m_taggerE  ;  
   std::vector<std::string>          m_taggerP  ;  
+  std::string m_detData;
   const DeCalorimeter* m_detector;
   // collection of known cluster shapes
   std::map<std::string , std::string> m_clusterShapes;  
