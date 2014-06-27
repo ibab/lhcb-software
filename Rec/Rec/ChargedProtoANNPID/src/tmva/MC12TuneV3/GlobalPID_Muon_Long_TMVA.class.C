@@ -1730,8 +1730,7 @@ inline void ReadMuon_Long_TMVA::Transform_1( std::vector<double>& iv, int cls) c
       indicesPut.push_back( 26);
    } 
 
-   static std::vector<double> dv;
-   dv.resize(nVar);
+   static std::vector<double> dv(nVar);
    for (int ivar=0; ivar<nVar; ivar++) dv[ivar] = iv[indicesGet.at(ivar)];
    for (int ivar=0;ivar<27;ivar++) {
       double offset = fMin_1[cls][ivar];

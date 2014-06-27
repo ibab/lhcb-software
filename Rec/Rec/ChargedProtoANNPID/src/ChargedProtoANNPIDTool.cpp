@@ -54,7 +54,7 @@ double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
                                        const LHCb::ParticleID pid,
                                        const std::string& annPIDTune ) const
 {
-  double annPID(-1);
+  double annPID(-2);
 
   // are we charged ....
   if ( proto->track() ) 

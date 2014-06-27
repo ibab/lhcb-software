@@ -2566,8 +2566,7 @@ inline void ReadElectron_Long_TMVA::Transform_1( std::vector<double>& iv, int cl
       indicesPut.push_back( 34);
    } 
 
-   static std::vector<double> dv;
-   dv.resize(nVar);
+   static std::vector<double> dv(nVar);
    for (int ivar=0; ivar<nVar; ivar++) dv[ivar] = iv[indicesGet.at(ivar)];
    for (int ivar=0;ivar<35;ivar++) {
       double offset = fMin_1[cls][ivar];
