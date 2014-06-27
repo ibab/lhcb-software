@@ -22,9 +22,6 @@ L0Conf().EnsureKnownTCK=False
 
 #from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
-#stupid thing with HltTrackReports endocers when running pass-through settings!
-HltConf().EnableHltTrackReports=False
-
 ############# prepend a "killHltSeq" ############
 
 #copied from Swimming/Configuration.py line 214
