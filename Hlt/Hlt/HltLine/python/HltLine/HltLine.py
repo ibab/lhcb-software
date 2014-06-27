@@ -1237,6 +1237,8 @@ class Hlt2Member ( object ) :
         for key in Args :
             if  key not in Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
+        if Type == TisTosParticleTagger :
+            Args['Context'] = "" # make sure context is NOT Hlt...
 
         ## (1) "clone" all agruments
         self.Type  = deepcopy ( Type  )

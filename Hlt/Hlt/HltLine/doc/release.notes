@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 ! 2014-06-27 - Gerhard Raven
  - add Hlt1 decreports decoding to Hlt2 lines which do Hlt1 filtering
+ - make sure that in Hlt2Lines the _offline_ configuration for the 
+   TISTOS tagger configuration is used
+
 ! 2014-06-18 - Gerhard Raven
  - force Hlt1 and Hlt2 line names to start with either Hlt1 or Hlt2 -- 
    previously lines had only to have Hlt1 or Hlt2 somewhere in there name...
