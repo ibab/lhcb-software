@@ -44,14 +44,18 @@ private:
 
   DeCalorimeter* m_calo;
   /// techniques for CL evaluation
-  bool          m_useCaloTrMatch   ;
-  bool          m_useCaloDepositID ;
-  bool          m_useShowerShape   ;
-  bool          m_useClusterMass   ;
+  bool m_useCaloTrMatch   ;
+  bool m_useClusterMass   ;
+  bool m_useIsNotH        ;
+  bool m_useIsNotE        ;
+  bool m_useIsPhoton      ;
+  bool m_usePhotonDLL     ;
+  
   /// Filters
-  double   m_clCut      ;
-  double   m_gPtCut     ;
-  double   m_ggDistCut  ;
+  double m_clCut      ;
+  double m_gPtCut     ;
+  double m_ggDistCut  ;
+  double m_chi2Cut    ;
   std::vector<double> m_parMas;
 
 };

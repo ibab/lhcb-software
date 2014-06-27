@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-02-16 - O. Deschamps
+ - PhotonMaker    : CHANGE DEFAULT CL DEFINITION : isNotH from NN-based neutralID 
+ - MergedPi0Maker : CHANGE DEFAULT CL DEFINITION : 1-isPhoton
+
 !========================= ParticleMaker v6r9 2014-02-20 =========================
 
 ! 2014-02-16 - O. Deschamps

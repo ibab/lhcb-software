@@ -48,10 +48,10 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   , m_pointErr         ()
 // PID technque
   , m_useCaloTrMatch   ()
-  , m_useCaloDepositID ()
-  , m_useShowerShape   ()
-  , m_useClusterMass   ()
-  , m_usePhotonID      ()
+  , m_useIsNotH        ()
+  , m_useIsNotE        ()
+  , m_useIsPhoton      ()
+  , m_usePhotonDLL     ()
 // Filters
   , m_clCut            ()
   , m_ptCut            ()
@@ -61,11 +61,11 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   declareProperty ( "Input"                      , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
   declareProperty ( "Particle"                   , m_part="gamma");
   //
-  declareProperty ( "UseCaloTrMatch"             , m_useCaloTrMatch   = false) ;
-  declareProperty ( "UseCaloDepositID"           , m_useCaloDepositID = false) ;
-  declareProperty ( "UseShowerShape"             , m_useShowerShape   = false) ;
-  declareProperty ( "UseClusterMass"             , m_useClusterMass   = false) ;
-  declareProperty ( "UsePhotonID"                , m_usePhotonID      = true ) ;
+  declareProperty ( "UseCaloTrMatch"             , m_useCaloTrMatch   = false ) ;
+  declareProperty ( "UseIsNotH"                  , m_useIsNotH        = true  ) ;
+  declareProperty ( "UseIsNotE"                  , m_useIsNotE        = false ) ;
+  declareProperty ( "UseIsPhoton"                , m_useIsPhoton      = false ) ;
+  declareProperty ( "UsePhotonDLL"               , m_usePhotonDLL     = false ) ;
   //
   declareProperty ( "ConfLevelCut"               , m_clCut       = -1.0   ) ;
   declareProperty ( "PtCut"                      , m_ptCut       = 150.0  ) ;
@@ -115,37 +115,25 @@ StatusCode PhotonMaker::initialize    ()
 
   // CL techniques
   debug() << " Following techniques will be used for CL evaluation : " << endmsg;
-  if( m_useCaloTrMatch    )
-  { debug() << "  CaloTrMatch : matching with reconstructed tracks " << endmsg ; }
-  if( m_useCaloDepositID  )
-  { debug() << " CaloDepositID: Spd/Prs combined analysis          " << endmsg ; }
-  if( m_useShowerShape  )
-  { debug() << " ShowerShape  : Ecal Cluster shape/size            " << endmsg ; }
-  if( m_useClusterMass  )
-  { debug() << " ClusterMass  : Ecal Cluster pi0 mass              " << endmsg ; }
-  if( m_usePhotonID     )
-  { debug() << " PhotonID     : Tracking/CALO combined Photon id   " << endmsg ; }
+  if( m_useCaloTrMatch)debug() << "CL uses CaloTrMatch : matching with reconstructed tracks " << endmsg ; 
+  if( m_useIsNotH   )debug() << "CL uses IsNotH    : Tracking/CALO NN-based combined Photon ID (anti-h)   " << endmsg ; 
+  if( m_useIsNotE   )debug() << "CL uses IsNotE    : Tracking/CALO NN-based combined Photon ID (anti-e)   " << endmsg ; 
+  if( m_useIsPhoton   )debug() << "CL uses IsPhoton separation variable " << endmsg;
+  if( m_usePhotonDLL  )debug() << "CL uses PhotonDLL   : Tracking/CALO DLL-based combined Photon id   " << endmsg ; 
 
   if( !m_useCaloTrMatch   &&
-      !m_useCaloDepositID &&
-      !m_useShowerShape   &&
-      !m_useClusterMass   &&
-      !m_usePhotonID     )
+      !m_useIsNotH        &&
+      !m_useIsNotE        &&
+      !m_useIsPhoton      &&
+      !m_usePhotonDLL      )
   { Warning(" No PID techniques are selected for CL evaluation" ) ; }
 
   if( m_useCaloTrMatch    ){ debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)"<< endmsg; }
-  if( m_useCaloDepositID  ){ debug()<< "      CaloDepositID is not implemented yet " <<endmsg ; }
-  if( m_useShowerShape    ){ debug()<< "      ShowerShape   is not implemented yet " << endmsg ; }
-  if( m_useClusterMass    ){ debug()<< "  For ClusterMass assume exponential distribution (wrong?)"<<endmsg; }
 
-  if( m_converted && m_unconverted)
-  {debug()<< "BOTH converted (SPD) and unconverted (no SPD) photons are to be created"<< endmsg;  }
-  else if ( m_converted )
-  {debug()<< "ONLY converted (SPD) photons are to be created"<< endmsg;}
-  else if ( m_unconverted )
-  {debug()<< "ONLY unconverted (no SPD) photons are to be created"<< endmsg;}
-  else
-  {warning()<<" BOTH converted and unconverted photon are to be skipped !!!" << endmsg; }
+  if( m_converted && m_unconverted){debug()<< "BOTH converted (SPD) and unconverted (no SPD) photons are to be created"<< endmsg;}
+  else if ( m_converted ){debug()<< "ONLY converted (SPD) photons are to be created"<< endmsg;}
+  else if ( m_unconverted ){debug()<< "ONLY unconverted (no SPD) photons are to be created"<< endmsg;}
+  else {warning()<<" BOTH converted and unconverted photon are to be skipped !!!" << endmsg; }
 
   return StatusCode::SUCCESS ;
 }
@@ -194,65 +182,56 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   m_count[0] += 1;
 
   // Loop over PP
-  for ( LHCb::ProtoParticles::const_iterator ipp = pps->begin() ;
-        pps->end() != ipp ; ++ipp )
-  {
-
+  for ( LHCb::ProtoParticles::const_iterator ipp = pps->begin() ;pps->end() != ipp ; ++ipp ){
+    
     const LHCb::ProtoParticle* pp = *ipp ;
 
-    // skip invalid and charged
+    //  ---- skip invalid and charged
     if ( 0 == pp || 0 != pp->track() )   { continue ; }
-
     const SmartRefVector<LHCb::CaloHypo>& hypos  = pp->calo() ;
     if ( hypos.empty() ) { continue ; }
 
-    // Check the hypothesis
+    //  ---- Check the hypothesis
     const LHCb::CaloHypo*   hypo  = *(hypos.begin());
-
     if ( 0 == hypo || LHCb::CaloHypo::Photon != hypo->hypothesis() ) { continue ; }
-
-    // skip negative energy
+    
+    // ---- skip negative energy
     if( hypo->e() <= 0 ) continue;
 
-    // Photon conversion (Spd-based for late conversion after magnet)
-    bool cnv = ( pp->info(LHCb::ProtoParticle::CaloDepositID,0.) < 0 ) ;  // temporary re-definition of conversion
-    //    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ; // failed due to bug in NeutralProtoPAlg
-
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " Conversion " << cnv << " " << pp->info(LHCb::ProtoParticle::CaloDepositID,0.) << endmsg;
-
-    // selected (un)converted photons
+    // == Evaluate Photon conversion (Spd-based for late conversion after magnet)
+    bool cnv = ( pp->info(LHCb::ProtoParticle::CaloDepositID,0.) < 0 ) ;  
+    //    bool cnv = (bool) pp->info(LHCb::ProtoParticle::CaloNeutralSpd, 0.) ;
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << " Conversion "
+                                                  << cnv << " " << pp->info(LHCb::ProtoParticle::CaloDepositID,0.) << endmsg;
+    
+    // ---- selected (un)converted photons
     if( !cnv && !m_unconverted  ) { continue ; }
     if( cnv  && !m_converted    ) { continue ; }
+
+    // ---- apply Prs filter
     double ePrs =  pp->info(LHCb::ProtoParticle::CaloNeutralPrs,0);
     if( m_minPrs >= 0 && ePrs < m_minPrs )continue;
     if( m_maxPrs >= 0 && ePrs > m_maxPrs )continue;
     cnv ? ++nConverted : ++nUnconverted;
 
-    // evaluate the Confidence Level
-    const double CL = confLevel( pp );
-    if ( CL  < m_clCut                      ) continue ;
-
-    // Hcal energy
+    // ---- apply Hcal filter
     double eHcal=pp->info(LHCb::ProtoParticle::CaloNeutralHcal2Ecal,0);
     if( m_maxHcal >=0 && eHcal/(1.+eHcal) > m_maxHcal)continue;
     if( m_minHcal >=0 && eHcal/(1.+eHcal) < m_minHcal)continue;
 
-    //Kinematical properties
+    // == evaluate kinematical properties
     LHCb::CaloMomentum momentum(pp , m_point , m_pointErr);
     if ( 0 != momentum.status()  ) { continue ; }
-
     double pT = momentum.pt();
     double E  = momentum.e();
     double px = momentum.px();
     double py = momentum.py();
     double pz = momentum.pz();
     double p  = E;
-    // Massive object or Hcal correction
-    if ( m_addHcal || m_mas > 0 )
-    {
-      if( m_addHcal )
-      {
+
+    // -- apply hcal correction if requested
+    if ( m_addHcal || m_mas > 0 ){
+      if( m_addHcal ){
         E *= ( 1. + eHcal );
         px *= (1. + eHcal);
         py *= (1. + eHcal);
@@ -260,8 +239,7 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
         pT *= (1. + eHcal);
         p  = E;
       }
-      if ( m_mas > 0 )
-      {
+      if ( m_mas > 0 ){
         p  = std::sqrt( E*E - m_mas*m_mas );
         px *= (p/E);
         py *= (p/E);
@@ -270,30 +248,33 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
       }
     }
     if ( pT < m_ptCut ) { continue; }
+
+    // ---- apply CL filter (must be after pT cut to match neutralID definition range)
+    const double CL = confLevel( pp );
+    if ( CL  < m_clCut ) continue ;
     cnv ? ++nSelConverted : ++nSelUnconverted;
 
-    // create new particle and fill it
+    // ===== create new particle and fill it
     LHCb::Particle* particle = new LHCb::Particle( ); // photon constructor
     particle -> setParticleID( LHCb::ParticleID (m_Id) );
     particle -> setProto( pp ) ;
 
-    // mass and mass uncertainties
+    // === set  mass and mass uncertainties
     particle -> setMeasuredMass( m_mas   ) ;
     particle -> setMeasuredMassErr( 0   ) ; // the mass is EXACT zero!
 
-    // confidence level
+    // === set confidence level
     particle  -> setConfLevel  ( CL    ) ;
 
-    // fill photon parameters (4-momentum, vertex and correlations)
+    // === set photon parameters (4-momentum, vertex and correlations)
     LHCb::CaloParticle calopart(particle, m_point , m_pointErr);
     calopart.updateParticle();
 
-    // Massive object or Hcal correction
+    // ===  Massive object or Hcal correction
     // Warning : covariant matrix should be modified accordingly -> to be included in CaloParticle ...
     if( m_addHcal || m_mas > 0 )particle->setMomentum( Gaudi::LorentzVector(px,py,pz,E) );
 
-    if ( calopart.status() !=0 )
-    {
+    if ( calopart.status() !=0 ){
       delete particle ;
       ++nSkip;
       warning() << "Unable to fill photon parameters, skip particle [" << nSkip << "]"<< endmsg;
@@ -302,9 +283,8 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
       continue ;
     }
 
-    //
-    if (msgLevel(MSG::VERBOSE))
-    {
+    // === printout
+    if (msgLevel(MSG::VERBOSE)){
       verbose() << "----- Single "<<m_part << " found [" << nSelConverted+nSelUnconverted << "]"<<endmsg;
       verbose() << "Pt : " << momentum.pt() << endmsg;
       verbose() << "CL : " << CL << endmsg;
@@ -316,7 +296,7 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
       verbose() << " "<< endmsg;
     }
 
-    // add the particle to the container
+    // === push the particle into the container
     particles.push_back( particle );
   }
   m_count[1] += nSelUnconverted ;
@@ -325,8 +305,8 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   counter("Created unConverted photons")+= nSelUnconverted;
 
 
-  if (msgLevel(MSG::DEBUG) )
-  {
+  // === debug
+  if (msgLevel(MSG::DEBUG) ){
     debug() << " " << endmsg;
     debug() << "-----------------------" << endmsg;
     debug() << " Filtered and created :" << endmsg;
@@ -339,86 +319,76 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     debug() << " Skipped : " << nSkip << endmsg;
     debug() << "-----------------------" << endmsg;
   }
-
   return StatusCode::SUCCESS ;
 }
 
 // ============================================================================
-double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
-{
-  if( 0 == pp )
-  { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
+double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const{
+  if( 0 == pp ){ Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 
   double CL = 1.0 ;
 
   // track matching
-  if ( m_useCaloTrMatch )
-  {
-    if ( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) )
-    {
+  if ( m_useCaloTrMatch ){
+    if ( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) ){
       // assume gaussian distribution (it is wrong!)
       CL *= ( 1.0 - std::exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
-    }
-    else
-    {
-      Warning("confLevel(): CaloTrMatch is not available" ) ; 
-    }
-  }
-
-  // CaloDepositID
-  if ( m_useCaloDepositID )
-  {
-    if( pp->hasInfo(LHCb::ProtoParticle::CaloDepositID) )
-    {
-      Warning("confLevel(): usage of CaloDepositID is not implemented");
-    }   // Update CL
-    else
-    {
-      Warning("confLevel(): CaloDepositID is not available" ) ; 
+    }else{
+      CL = 1.; //
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "confLevel(): CaloTrMatch is not available " << endmsg ; 
     }
   }
 
-  // ShowerShape
-  if ( m_useShowerShape )
-  {
-    if( pp->hasInfo(LHCb::ProtoParticle::ShowerShape ) )
-    {
-      Warning("confLevel(): usage of CaloShowerShape is not implemented");
-    }   // Update CL
-    else
-    {
-      Warning("confLevel(): CaloShowerShape is not available" ) ;
+  // NN-based photonID (IsNotH)
+  if( m_useIsNotH ){
+    if( pp->hasInfo(LHCb::ProtoParticle::IsNotH )){
+      double v = pp->info(LHCb::ProtoParticle::IsNotH , 0. );
+      if( v > 1. ) v=1.;
+      if( v < 0. ) v=0.;
+      CL *= v;
+    }else{
+      Warning("confLevel(): NN-based PhotonID IsNotE is not available" ) ;
+      counter("unavailable IsNotH") += 1;
     }
   }
 
-  // Cluster Mass
-  if( m_useClusterMass )
-  {
-    if ( pp->hasInfo(LHCb::ProtoParticle::ClusterMass) )
-    {
-      // assume exponential distribution (it is wrong!)
-      CL *= std::exp( -0.5 * pp->info(LHCb::ProtoParticle::ClusterMass,0.)
-                      / ( 25 * Gaudi::Units::MeV ) ) ;
-    }  // Update CL
-    else
-    {
-      Warning("confLevel(): ClusterMass is not available" ) ; 
+  // NN-based photonID (IsNotE)
+  if( m_useIsNotE ){
+    if( pp->hasInfo(LHCb::ProtoParticle::IsNotE )){
+      double v = pp->info(LHCb::ProtoParticle::IsNotE , 0. );
+      if( v > 1. ) v=1.;
+      if( v < 0. ) v=0.;
+      CL *= v;
+    }else{
+      Warning("confLevel(): NN-based PhotonID IsNotE is not available" ) ;
+      counter("unavailable IsNotE") += 1;
     }
   }
 
-  // PhotonID estimator
-  if( m_usePhotonID )
-  {
-    if ( pp->hasInfo(LHCb::ProtoParticle::PhotonID) ) 
-    {
-      double pid = pp->info(LHCb::ProtoParticle::PhotonID, 1.  ) ;
+  // IsPhoton
+  if( m_useIsPhoton ){
+    if( pp->hasInfo(LHCb::ProtoParticle::IsPhoton )){
+      double v =  pp->info(LHCb::ProtoParticle::IsPhoton,+1.);
+      if( v > 1. ) v = 1.;
+      if( v < 0. ) v = 0.;
+      CL *= (1-v);
+    }else{
+      Warning("confLevel(): NN-based IsPhoton is not available" ) ;
+      counter("unavailable IsPhoton") += 1;
+    }    
+  }
+
+  //(obsolete) DLL-based photonID
+  if( m_usePhotonDLL ){
+    if ( pp->hasInfo(LHCb::ProtoParticle::PhotonID) ){
+      double pid = pp->info(LHCb::ProtoParticle::PhotonID, -1.  ) ;
       CL *= 0.5*(std::tanh(pid)+1);
-    }
+  }
     else
-    {
-      Warning("confLevel(): PhotonID is not available" ) ; 
-    }
+      Warning("confLevel(): DLL-based PhotonID is not available" ) ;
+      counter("unavailable PhotonDLL") += 1;
   }
 
+  // return
   return CL ;
 }
