@@ -376,19 +376,26 @@ NetConfig( const std::string & tkType,
   if ( netVersion.empty() )
   { parent->Error( "No NetVersion specified" ).ignore(); m_OK = false; }
 
-  // ParamFile root
+  // Config file name
+  const std::string configFile = "GlobalPID_" + pidType + "_" + tkType + "_ANN.txt";
+
+  // Determine where to load the data files from.
+  // First try via env var.
   const std::string paramEnv = "CHARGEDPROTOANNPIDROOT";
   if ( !getenv(paramEnv.c_str()) ) parent->Error( "$"+paramEnv+" not set" ).ignore();
-  const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
-                                  "/data/" + netVersion + "/" );
-
-  // configuration file path
-  const std::string configFile = ( paramRoot +
-                                   "GlobalPID_" + pidType + "_" + tkType +
-                                   "_ANN.txt" );
+  std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
+                            "/data/" + netVersion + "/" );
+  std::ifstream config( (paramRoot+configFile).c_str() );
+  if ( !config.is_open() )
+  {
+    // That failed. So try as a local file (i.e. in Ganga).
+    parent -> Warning( "Failed to open " + paramRoot+configFile +
+                       ".. Trying local file..." ).ignore();
+    paramRoot = "data/" + netVersion + "/";
+    config.open( (paramRoot+configFile).c_str() );
+  }
 
   // Open the config file
-  std::ifstream config( configFile.c_str() );
   if ( config.is_open() )
   {
     // Read the particle type
@@ -566,7 +573,7 @@ NetConfig( const std::string & tkType,
     if ( parent->msgLevel(MSG::DEBUG) )
     {
       parent->debug() << "Network type     = " << annType << endmsg
-                      << "ConfigFile       = " << configFile << endmsg
+                      << "ConfigFile       = " << paramRoot << configFile << endmsg
                       << "ParamFile        = " << paramFileName << endmsg
                       << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
                       << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
@@ -577,7 +584,7 @@ NetConfig( const std::string & tkType,
   else
   {
     m_OK = false;
-    parent->Error( "Failed to open configuration file '"+configFile+"'" ).ignore();
+    parent->Error( "Failed to open configuration file '"+paramRoot+configFile+"'" ).ignore();
   }
 
   // Close the config file
