@@ -18,6 +18,7 @@
 #include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypoEstimator.h"            // Interface
 #include "CaloInterfaces/IGammaPi0SeparationTool.h"
+#include "CaloInterfaces/INeutralIDTool.h"
 #include "CaloUtils/ICaloElectron.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
 
@@ -40,8 +41,8 @@ public:
   virtual StatusCode finalize();
   virtual ~CaloHypoEstimator( ); ///< Destructor
 
-  virtual double data(const LHCb::CaloCluster* cluster ,CaloDataType::DataType type, double def = 0.);
-  virtual double data(const LHCb::CaloHypo* hypo ,CaloDataType::DataType type, double def = 0);
+  virtual double data(const LHCb::CaloCluster* cluster ,CaloDataType::DataType type, double def = CaloDataType::Default);
+  virtual double data(const LHCb::CaloHypo* hypo ,CaloDataType::DataType type, double def = CaloDataType::Default);
 
   virtual void handle(const Incident&  ) { 
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
@@ -93,6 +94,7 @@ private:
   bool m_status;
   ICaloElectron * m_electron;
   IGammaPi0SeparationTool* m_GammaPi0; 
+  INeutralIDTool* m_neutralID;
   ICaloRelationsGetter*    m_tables;
 };
 #endif // CALOHYPOESTIMATOR_H

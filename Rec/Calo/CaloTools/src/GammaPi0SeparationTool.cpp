@@ -33,12 +33,13 @@ DECLARE_TOOL_FACTORY( GammaPi0SeparationTool )
 GammaPi0SeparationTool::GammaPi0SeparationTool( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_ecal(NULL),
-    m_prs(NULL),
-    m_vertex(),
-    m_planePrs(),
-    m_data(){
+: GaudiTool ( type, name , parent ),
+  m_ecal(NULL),
+  m_prs(NULL),
+  m_vertex(),
+  m_planePrs(),
+  m_data(),
+  m_def(-1.e+06){
   declareInterface<IGammaPi0SeparationTool>(this);
   declareProperty("MinPt", m_minPt = 2000.);
 }
@@ -116,8 +117,8 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug()<<"Inside isPhoton ------"<<endmsg;
   m_data.clear();
-
-  double tmva_output = -9999.;
+  m_prsdata.clear();
+  double tmva_output = m_def;
   if( NULL == m_prs || NULL==m_ecal)return tmva_output;
 
   double pt = LHCb::CaloMomentum(hypo).pt();
@@ -148,7 +149,7 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
     int multiPS30 = 0;
     int multiPS45 = 0;
 
-    const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo , false);        
+    const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );   // OD 2014/05 - change to Split Or Main  cluster
     if (cluster!=0){
       ClusterVariables(cluster, fr2, fasym, fkappa, fr2r4, Ecl, Eseed, E2, area);
       PrsVariables(cluster, r2PS, asymPS, kappaPS, r2r4PS, eSumPS, ePrs, eMaxPS, e2ndPS, ecornerPS, multiPS, multiPS15, 
@@ -158,11 +159,11 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
                                        r2PS, asymPS, eMaxPS, e2ndPS, multiPS, multiPS15, multiPS30, multiPS45);
     }//cluster exists
     else{
-      tmva_output = -9999; 
+      tmva_output = m_def; 
     }		
   } 
   else{
-    tmva_output = -9999;
+    tmva_output = m_def;
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug()<<"Outside range of pt"<<endmsg;
   }   
@@ -187,8 +188,12 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   
   double xmean = cluster->position().x();
   double ymean = cluster->position().y();
-  etot = cluster->e(); //same as position.e
-  
+
+
+  // OD : WARNING cluster->e() is cluster-shape dependent (3x3 / 2x2 ...) RE-EVALUATE E3x3 instead for back. compatibility
+  // etot = cluster->e(); //same as position.e  
+  etot = 0.;
+
   const Gaudi::XYZPoint position (xmean, ymean,cluster->position().z());
   
   double r4 = 0.;
@@ -198,12 +203,16 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   double secondE = 0.;
 
   const LHCb::CaloCluster::Entries& entries = cluster->entries() ;
-  for ( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ;
-        entries.end() != entry ; ++entry ){
+  for ( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ; entries.end() != entry ; ++entry ){
     const LHCb::CaloDigit* digit = entry->digit()  ;
     if ( 0 == digit ) { continue ; }
     const double fraction = entry->fraction();
     const double energy   = digit->e() * fraction ;
+
+    if( abs( digit->cellID().col() - cluster->seed().col() ) <= 1 && 
+        abs( digit->cellID().row() - cluster->seed().row() ) <= 1 &&
+        digit->cellID().area() == cluster->seed().area() )etot += energy;
+
     
     const Gaudi::XYZPoint& pos =  m_ecal->cellCenter( digit->cellID() );
     const double x =  pos.x() ;
@@ -228,12 +237,18 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
     ncells++;
   }//loop cluster cells
   
-  
-  r4 /= etot;
-  fr2r4 = (r4 !=0) ? (r4 - fr2*fr2)/r4 : 0.;
-  
-  E2 = (secondE+Eseed)/etot;
-  Eseed = Eseed/etot;
+  if( etot != 0. ){
+    r4 /= etot;
+    fr2r4 = (r4 !=0) ? (r4 - fr2*fr2)/r4 : 0.;
+    E2 = (secondE+Eseed)/etot;
+    Eseed = Eseed/etot;    
+  }else{
+    // should never happen
+    r4 = 0;
+    fr2r4 = 0.;
+    E2 = 0.;
+    Eseed = 0.;
+  }
   
   m_data["Ecl"]   = etot;
   m_data["Fr2"]   = fr2;
@@ -250,6 +265,7 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
                                           int& multiPS, int& multiPS15, int& multiPS30, int& multiPS45) {
   
   //PS info
+  m_prsdata.clear();
   
   int colPS = 0;
   int rowPS = 0;
@@ -387,6 +403,17 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
       
     }//of E_PS!=0
   }//PS cell exists
+
+  m_prsdata["PrsFr2"]     = r2PS;
+  m_prsdata["PrsAsym"]    = asymPS;
+  m_prsdata["PrsM"]       = double(multiPS);
+  m_prsdata["PrsM15"]     = double(multiPS15);
+  m_prsdata["PrsM30"]     = double(multiPS30);
+  m_prsdata["PrsM45"]     = double(multiPS45);
+  m_prsdata["PrsEmax"]    = eMaxPS;
+  m_prsdata["PrsE2"]      = e2ndPS;
+
+
 }
 
 
@@ -413,11 +440,14 @@ double GammaPi0SeparationTool::photonDiscriminant(int area,
         input.push_back(multiPS15);
         input.push_back(multiPS30);
         input.push_back(multiPS45);
+
+        
+
         
         double value = -1e10;
         if(area ==0 ) value = m_reader0->GetMvaValue(input);
         if(area ==1 ) value = m_reader1->GetMvaValue(input);
         if(area ==2 ) value = m_reader2->GetMvaValue(input);
-
+        //info() << " INPUT TO GAMMA/PI0 : NN[" << input << "]= " << value << " (area="<<area<<")"<< endmsg;
         return value;
 }

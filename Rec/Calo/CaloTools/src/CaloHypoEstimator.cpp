@@ -32,6 +32,7 @@ CaloHypoEstimator::CaloHypoEstimator( const std::string& type,
   , m_status(true)
   , m_electron(NULL)
   , m_GammaPi0(NULL)
+  , m_neutralID(NULL)
   , m_tables(NULL)
 {
   declareInterface<ICaloHypoEstimator>(this);
@@ -75,8 +76,10 @@ StatusCode CaloHypoEstimator::initialize() {
   hypo2Calo()->_setProperty("Seed", seed).ignore();
   hypo2Calo()->_setProperty("PhotonLine", line).ignore();
   hypo2Calo()->_setProperty("AddNeighbors", neig).ignore();
+
   m_electron = tool<ICaloElectron>("CaloElectron","CaloElectron",this);
-  m_GammaPi0 = tool<IGammaPi0SeparationTool>("GammaPi0SeparationTool" , "GammaPi0SeparationTool", this);
+  m_GammaPi0  = tool<IGammaPi0SeparationTool>("GammaPi0SeparationTool" , "GammaPi0SeparationTool", this);
+  m_neutralID = tool<INeutralIDTool>("NeutralIDTool" , "NeutralIDTool", this);
 
   clean();
   m_status = true;
@@ -104,6 +107,7 @@ double CaloHypoEstimator::data(const LHCb::CaloCluster* cluster,CaloDataType::Da
   }
   caloDataType::iterator it = m_data.find( type );
   if( it != m_data.end() )val = m_data[type];  
+  if( val == CaloDataType::Default)return def;
   return val;
   
 }
@@ -121,6 +125,7 @@ double CaloHypoEstimator::data(const LHCb::CaloHypo* hypo,CaloDataType::DataType
   }
   caloDataType::iterator it = m_data.find( type );
   if( it != m_data.end() )val = m_data[type];  
+  if( val == CaloDataType::Default)return def;
   return val;  
 }
 
@@ -155,8 +160,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
   
   // electron matching
   if( !m_skipC ){
-    double chi2e = 9999;
-    double trajL = 9999;
+    double chi2e = CaloDataType::Default;
+    double trajL = CaloDataType::Default;
     const LHCb::Track* etrack = NULL;
     //LHCb::Calo2Track::ITrHypoTable2D* etable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
     LHCb::Calo2Track::ITrHypoTable2D* etable = m_tables->getTrHypoTable2D( m_emLoc);
@@ -183,7 +188,7 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     m_data[TrajectoryL]= trajL;
 
     // brem matching
-    double chi2b = 9999;
+    double chi2b = CaloDataType::Default;
     const LHCb::Track* btrack = NULL;
     //LHCb::Calo2Track::ITrHypoTable2D* btable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
     LHCb::Calo2Track::ITrHypoTable2D* btable = m_tables->getTrHypoTable2D(m_bmLoc);
@@ -304,6 +309,9 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     
   // gamma/pi0 separation
   m_data[isPhoton]= m_GammaPi0->isPhoton( hypo );
+
+
+  // 1- Ecal variables :
   std::map<std::string,double> isPhotonData = m_GammaPi0->inputDataMap();
   for(   std::map<std::string,double>::iterator idata = isPhotonData.begin() ; isPhotonData.end() != idata; ++idata){
     std::string name = "isPhoton_"+idata->first;
@@ -318,10 +326,31 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     }
     if( !ok )Warning("DataType '" + name + "' is undefined",StatusCode::SUCCESS).ignore();
   }
-  
+  // 2- Prs variables :
+  std::map<std::string,double> isPhotonPrsData = m_GammaPi0->inputPrsDataMap();
+  for(   std::map<std::string,double>::iterator idata = isPhotonPrsData.begin() ; isPhotonPrsData.end() != idata; ++idata){
+    std::string name = "isPhoton_"+idata->first;
+    double val = idata->second;
+    bool ok =false;
+    for( int i = 0; i < Last ; ++i){
+      if( Name[i] == name){
+        m_data[(DataType)i]=val;
+        ok=true;
+        break;
+      }
+    }
+    if( !ok )Warning("DataType '" + name + "' is undefined",StatusCode::SUCCESS).ignore();
+  }
   //
-  if( 0 != cluster )return estimator( cluster , hypo);
-  return false;
+  bool ok =  ( 0 != cluster ) ? estimator( cluster , hypo) : false;
+  
+
+  // Estimator MUST be at the end (after all inputs are loaded)
+  m_data[isNotH]= m_neutralID->isNotH( hypo,this );
+  m_data[isNotE]= m_neutralID->isNotE( hypo,this );
+
+
+  return ok;
 }
 
 // ------------ FROM CLUSTER
@@ -351,7 +380,6 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     m_data[E1]  = seed->e();
     caloDataType::iterator it = m_data.find( HypoE );
     double eHypo = ( it != m_data.end() ) ? m_data[HypoE] : 0;
-    m_data[E19] = m_data[ClusterE] > 0. ? (seed->e()) / m_data[ClusterE] : -1.;
     m_data[E1Hypo] = eHypo > 0. ? (seed->e()) / eHypo : -1.;
     LHCb::CaloCellID sid = seed->cellID();
     m_data[CellID] = (double) sid.all();
@@ -363,15 +391,18 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     e4s.push_back(0);
     e4s.push_back(0);
     e4s.push_back(0);
+    double e9 = 0.;
     for( LHCb::CaloCluster::Entries::const_iterator ie = cluster->entries().begin() ; cluster->entries().end() != ie ; ++ie){
       const LHCb::CaloDigit* dig = (*ie).digit();
+      double ecel = dig->e()*(*ie).fraction();
       if( NULL == dig)continue;
       LHCb::CaloCellID id = dig->cellID();
       if( id.area() != sid.area() || abs((int)id.col() - (int)sid.col()) > 1 ||  abs((int)id.row() - (int)sid.row()) > 1)continue;
-      if(id.col() <= sid.col() && id.row() >= sid.row() )e4s[0] += dig->e()*(*ie).fraction();
-      if(id.col() >= sid.col() && id.row() >= sid.row() )e4s[1] += dig->e()*(*ie).fraction();
-      if(id.col() >= sid.col() && id.row() <= sid.row() )e4s[2] += dig->e()*(*ie).fraction();
-      if(id.col() <= sid.col() && id.row() <= sid.row() )e4s[3] += dig->e()*(*ie).fraction();    
+      if(id.col() <= sid.col() && id.row() >= sid.row() )e4s[0] += ecel;
+      if(id.col() >= sid.col() && id.row() >= sid.row() )e4s[1] += ecel;
+      if(id.col() >= sid.col() && id.row() <= sid.row() )e4s[2] += ecel;
+      if(id.col() <= sid.col() && id.row() <= sid.row() )e4s[3] += ecel;    
+      e9 += ecel;
     }
     
     double e4max = 0;
@@ -379,7 +410,9 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
       if( *ih >= e4max)e4max=*ih;
     }
     m_data[E4]  = e4max;
-    m_data[E49] = (m_data[ClusterE]>0) ? e4max /m_data[ClusterE] : 0.;
+    m_data[E9]  = e9;
+    m_data[E49] = (e9>0.) ? e4max /e9 : 0.;
+    m_data[E19] = (e9>0.) ? seed->e() / e9 : -1.;
 
     
     
@@ -400,7 +433,7 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     // special trick for split cluster : use full cluster matching
     if (NULL != fromHypo && fromHypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0)
       clus = LHCb::CaloAlgUtils::ClusterFromHypo( fromHypo , false); // get the main cluster
-    double chi2 = 9999;    const LHCb::Track* ctrack = NULL;
+    double chi2 = CaloDataType::Default;    const LHCb::Track* ctrack = NULL;
     //LHCb::Calo2Track::IClusTrTable* ctable = getIfExists<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
     LHCb::Calo2Track::IClusTrTable* ctable = m_tables->getClusTrTable( m_cmLoc );
     if ( NULL != ctable ) {

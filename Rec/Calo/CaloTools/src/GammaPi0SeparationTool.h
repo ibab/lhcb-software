@@ -57,14 +57,26 @@ public:
                     int& multiPS, int& multiPS15, int& multiPS30, int& multiPS45);
 
   double inputData(std::string data){
+    // try ecal data
     std::map<std::string,double>::iterator it = m_data.find(data);
     if( it != m_data.end() )return it->second;
+    // else try prs data :
+    std::map<std::string,double>::iterator itp = m_prsdata.find(data);
+    if( itp != m_prsdata.end() )return itp->second;
+    // yapa
     return 0.;
   }
   std::map<std::string,double> inputDataMap(){return m_data;}
-  
-  
-  
+  std::map<std::string,double> inputPrsDataMap(){return m_prsdata;}
+  double isPhoton(const double* v){
+    return photonDiscriminant(int(v[0]),
+                              v[1],v[2],v[3],
+                              v[4],v[5],v[6],
+                              v[7],v[8],v[9],v[10],
+                              int(v[11]),int(v[12]),int(v[13]),int(v[14]));
+  }
+
+
 protected:
 
 private:
@@ -88,5 +100,7 @@ private:
                             int multiPS, int multiPS15, int multiPS30, int multiPS45); 
 
   std::map<std::string,double> m_data;
+  std::map<std::string,double> m_prsdata;
+  double m_def;
 };
 #endif // GAMMAPI0SEPARATIONTOOL_H
