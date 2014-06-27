@@ -560,57 +560,51 @@ namespace ClusterFunctors
    *  @date   01/04/2002
    */
   
-  template< class EVALUATOR>
-  inline StatusCode tagTheSubCluster
-  ( LHCb::CaloCluster*                   cluster   , 
-    const EVALUATOR&               evaluator , 
-    const bool                     modify    ,
-    const LHCb::CaloDigitStatus::Status& tag       )
-  {
+  template< class EVALUATOR>  inline StatusCode tagTheSubCluster( LHCb::CaloCluster*                   cluster   , 
+                                                                  const EVALUATOR&               evaluator , 
+                                                                  const bool                     modify    ,
+                                                                  const LHCb::CaloDigitStatus::Status&  status  ,
+                                                                  const LHCb::CaloDigitStatus::Status&  tag ){
     // check the arguments 
     if( 0 == cluster               ) { return StatusCode( 225 ) ; }
     // get all entries
     LHCb::CaloCluster::Entries& entries = cluster->entries() ;
     // find seed digit
-    LHCb::CaloCluster::Entries::iterator seedEntry = 
-      locateDigit( entries.begin ()          , 
-                   entries.end   ()          , 
-                   CaloDigitStatus::SeedCell );
+    LHCb::CaloCluster::Entries::iterator seedEntry = locateDigit( entries.begin () , entries.end(),CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
     const LHCb::CaloDigit* seed = seedEntry->digit() ;
     if( 0             == seed      ) { return StatusCode( 227 ) ; }
-    // loop over all entried 
-    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ; 
-         entries.end() != entry ; ++entry )
-      {
-        // reset existing statuses 
-        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
-        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForPosition   ) ;
-        entry -> removeStatus  ( LHCb::CaloDigitStatus::UseForCovariance ) ;
-        // remove the tag
-        entry -> removeStatus  ( tag ) ;
-        // skip invalid digits 
-        const LHCb::CaloDigit* digit = entry->digit() ;
-        if( 0 == digit    )                         { continue ; } // CONTINUE  
-        // evaluate the fraction 
-        const double fraction = evaluator( seed->cellID() , digit->cellID() );
-        if( 0 >= fraction )                         { continue ; } // CONTINUE
-        // update statuses
-        entry->addStatus ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
-        entry->addStatus ( LHCb::CaloDigitStatus::UseForPosition   ) ;
-        entry->addStatus ( LHCb::CaloDigitStatus::UseForCovariance ) ;
-        if( ! modify      )                         { continue ; } // CONTINUE 
-        // modify the fractions 
-        entry->setFraction( entry->fraction() * fraction         ) ;
-        entry->addStatus  ( tag ) ;
-      }
+    // loop over all entries
+
+    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ; entries.end() != entry ; ++entry ){
+      // reset existing statuses 
+      //std::cout << entry->digit()->cellID() << " initial status " << entry->status() << std::endl;
+      entry -> removeStatus  ( tag ) ;
+      entry -> removeStatus  ( status );
+      //std::cout << " removing status " << tag << " & " << status << " -> " << entry->status() << std::endl;
+      
+      // skip invalid digits 
+      const LHCb::CaloDigit* digit = entry->digit() ;
+      if( 0 == digit    )                         { continue ; } 
+      // evaluate the fraction 
+      const double fraction = evaluator( seed->cellID() , digit->cellID() );
+      if( 0 >= fraction )                         { continue ; } 
+      // update statuses
+      entry->addStatus ( status     ) ;
+      //std::cout << " New status " << entry->status() << std::endl;
+
+      if( ! modify      )                         { continue ; } 
+      // modify the fractions 
+      entry->setFraction( entry->fraction() * fraction         ) ;
+      entry->addStatus  ( tag ) ;
+    }
     ///
     return StatusCode::SUCCESS;
   }
 
   /** Helpful function to untag the sub cluster according to the 
-   *  fractionc evaluated by "evaluator"
+   *  fraction evaluated by "evaluator"
    * 
    *  Error codes 
    * 
@@ -650,9 +644,7 @@ namespace ClusterFunctors
     const LHCb::CaloDigit* seed = seedEntry->digit() ;
     if( 0             == seed      ) { return StatusCode( 227 ) ; }
     // loop over all entries 
-    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ; 
-         entries.end() != entry ; ++entry )
-      {
+    for( LHCb::CaloCluster::Entries::iterator entry = entries.begin() ;entries.end() != entry ; ++entry ){
         // reset existing statuses 
         entry -> addStatus  ( LHCb::CaloDigitStatus::UseForEnergy     ) ;
         entry -> addStatus  ( LHCb::CaloDigitStatus::UseForPosition   ) ;

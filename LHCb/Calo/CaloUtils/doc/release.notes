@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2014-06-27 - Olivier Deschamps
+	- CovarianceEstimator.cpp     : prepare for different cluster masking for energy and position
+	- CaloUtils/ClusterFunctors.h : update tagTheSubCluster() method 
+
 !========================= CaloUtils v10r3 2014-02-17 =========================
 ! 2013-10-30 - Marco Clemencic
  - Minor fix in Calo2Track.h (needed only when not using Reflex, e.g. ROOT 6).

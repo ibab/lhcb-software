@@ -119,9 +119,7 @@ StatusCode SpreadEstimator::operator() ( LHCb::CaloCluster* cluster ) const
   bool   first         = true  ;
   
   const LHCb::CaloCluster::Entries& entries = cluster->entries() ;
-  for ( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ;
-        entries.end() != entry ; ++entry ) 
-  {
+  for ( LHCb::CaloCluster::Entries::const_iterator entry = entries.begin() ; entries.end() != entry ; ++entry ){
     const LHCb::CaloDigit* digit = entry->digit()  ;
     if ( 0 == digit ) { continue ; }
     ///    
@@ -132,8 +130,7 @@ StatusCode SpreadEstimator::operator() ( LHCb::CaloCluster* cluster ) const
     const Gaudi::XYZPoint& pos =
       detector()->cellCenter ( digit->cellID() );
     ///
-    if ( entry->status() & LHCb::CaloDigitStatus::SeedCell )
-    { cellsize = detector()->cellSize( digit->cellID() ) ; }
+    if ( entry->status() & LHCb::CaloDigitStatus::SeedCell )cellsize = detector()->cellSize( digit->cellID() ) ; 
     ///
     eall += energy ;
     ///
