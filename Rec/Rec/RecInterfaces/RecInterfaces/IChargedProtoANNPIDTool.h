@@ -10,7 +10,6 @@
 
 // Event Model
 #include "Event/ProtoParticle.h"
-//#include "Event/Particle.h"
 
 static const InterfaceID IID_IChargedProtoANNPIDTool ( "IChargedProtoANNPIDTool", 1, 0 );
 
@@ -19,10 +18,10 @@ namespace ANNGlobalPID
 
   /** @class IChargedProtoANNPIDTool RecInterfaces/IChargedProtoANNPIDTool.h
    *
-   *  Interface to tool to fill the ANN PID variables into a tuple
+   *  Interface to tool to access the ANN PID information
    *
    *  @author Chris Jones
-   *  @date   2011-02-04
+   *  @date   2014-06027
    */
   class IChargedProtoANNPIDTool : virtual public IAlgTool
   {
@@ -36,8 +35,8 @@ namespace ANNGlobalPID
 
     /** Fill the tuple tool with information for the given ProtoParticle
      *  @param proto Pointer to the ProtoParticle to fill into the tuple
-     *  @param pdgCode The PID to assume for this ProtoParticle
-     *  @return StatusCode indicating if the ProtoParticle information was successfully filled
+     *  @param pid The PID to assume for this ProtoParticle
+     *  @param annPIDTune The ANNPID tune to use
      */
     virtual double annPID( const LHCb::ProtoParticle * proto,
                            const LHCb::ParticleID pid,
