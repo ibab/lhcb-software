@@ -28,7 +28,7 @@ StatusCode TupleToolANNPID::initialize()
 
   m_pidTool =
     tool<ANNGlobalPID::IChargedProtoANNPIDTool>( "ANNGlobalPID::ChargedProtoANNPIDTool",
-                                                 "ANNPID", this );
+                                                 "ChargedProtoANNPID" );
 
   return sc;
 }
