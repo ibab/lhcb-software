@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2014-06-27 - Olivier Deschamps
+ - NeutralIDTool.{cpp,h}       : (new) implementation for MLP-based neutralID
+ - CaloHypoEstimator.h, GammaPi0SeparationTool.h : update against reco changes
+
+
 !========================= CaloTools v6r8 2014-06-10 =========================
 ! 2014-05-23 - Olivier Deschamps
  - GammaPi0SeparationTool.cpp : fix FPE
