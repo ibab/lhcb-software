@@ -200,6 +200,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         ### TODO: this is a way to generic a name -- danger of collisions!
         from Configurables import TisTosParticleTagger
         _tosfilter = TisTosParticleTagger(name)
+        _tosfilter.Context = ""
         _tosfilter.TisTosSpecs = { line : 0 }
         _tosfilter.ProjectTracksToCalo = False
         _tosfilter.CaloClustForCharged = False

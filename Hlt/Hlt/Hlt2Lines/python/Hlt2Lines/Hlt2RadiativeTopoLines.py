@@ -108,6 +108,7 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
     from Configurables import TisTosParticleTagger
     from HltLine.HltLine import Hlt2Member,bindMembers
     TOSParticleTagger = TisTosParticleTagger(name+"Tagger")
+    TOSParticleTagger.Context = ""
     TOSParticleTagger.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
     TOSParticleTagger.NoRegex = True
     TOSParticleTagger.ProjectTracksToCalo = False

@@ -382,6 +382,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Configurables import TisTosParticleTagger, FilterDesktop
         from HltLine.HltLine import Hlt2Member,bindMembers
         TOSParticleTagger = TisTosParticleTagger(name+"Tagger")
+        TOSParticleTagger.Context = ""
         TOSParticleTagger.TisTosSpecs = {"Hlt1TrackAllL0Decision%TOS":0,
                                          "Hlt1TrackAllL0TightDecision%TOS":0,
                                          "Hlt1TrackMuonDecision%TOS":0,

@@ -101,6 +101,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         # TODO: make this an Hlt2Member...
         from Configurables import TisTosParticleTagger
         TUSInputParticlesFilter = TisTosParticleTagger("Hlt2B2DXTUSFilter")
+        TUSInputParticlesFilter.Context = ""
         TUSInputParticlesFilter.TisTosSpecs = { "Hlt1.*Hadron.*Decision%TUS":0 }
         TUSInputParticlesFilter.ProjectTracksToCalo = False
         TUSInputParticlesFilter.CaloClustForCharged = False

@@ -196,6 +196,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import bindMembers
         from Configurables import TisTosParticleTagger
 	filterTOS = TisTosParticleTagger('Hlt2'+name+"Hlt1TOSFilter")
+	filterTOS.Context = ""
 	filterTOS.TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
 	filterTOS.Inputs = [ input.outputSelection() ]
 	filterTOS.Output = "/Event/Hlt2/Hlt2"+name+"Hlt1TOSFilter/Particles"
