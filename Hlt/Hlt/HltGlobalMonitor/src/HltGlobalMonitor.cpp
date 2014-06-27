@@ -93,8 +93,8 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
     , m_gpstimesec( 0 )
 {
     declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
-    declareProperty( "HltDecReports", m_HltDecReportsLocation =
-                                          LHCb::HltDecReportsLocation::Default );
+    declareProperty( "Hlt1DecReports", m_Hlt1DecReportsLocation = LHCb::HltDecReportsLocation::Default );
+    declareProperty( "Hlt2DecReports", m_Hlt2DecReportsLocation = LHCb::HltDecReportsLocation::Default );
     declareProperty( "TimeSize", m_timeSize = 120 ); // number of minutes of history
                                                      // (half an hour)
     declareProperty( "TimeInterval", m_timeInterval = 1 ); // binwidth in minutes
@@ -472,11 +472,12 @@ StatusCode HltGlobalMonitor::initialize()
 StatusCode HltGlobalMonitor::execute()
 {
 
-    LHCb::HltDecReports* hlt = fetch<LHCb::HltDecReports>( m_HltDecReportsLocation );
+    LHCb::HltDecReports* hlt1 = fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation );
+    LHCb::HltDecReports* hlt2 = fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation );
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
-    monitorODIN( odin, hlt );
-    monitorHLT( odin, hlt );
+    monitorODIN( odin, hlt1, hlt2 );
+    monitorHLT( odin, hlt1, hlt2 );
     monitorVertices();
     monitorTrends();
     monitorResolverpositions();
@@ -543,9 +544,10 @@ StatusCode HltGlobalMonitor::updateCondition()
 
 //==============================================================================
 void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
-                                    const LHCb::HltDecReports* hlt )
+                                    const LHCb::HltDecReports* hlt1,
+                                    const LHCb::HltDecReports* hlt2 )
 {
-    if ( odin == 0 ) return;
+    if ( !odin ) return;
     unsigned long long gpstime = odin->gpsTime();
     if ( msgLevel( MSG::DEBUG ) ) debug() << "gps time" << gpstime << endmsg;
     m_gpstimesec =
@@ -555,64 +557,65 @@ void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
     fill( m_odin, odin->triggerType(), 1. );
 
     // now check HLT decisions for rejected events after Hlt
-    if ( hlt != 0 ) {
-        const LHCb::HltDecReport* report = hlt->decReport( m_hlt1Decision );
-        if ( report != 0 ) fill( m_odinHLT1, odin->triggerType(), 1. );
+    const LHCb::HltDecReport* report = hlt1 ? hlt1->decReport( m_hlt1Decision ) : nullptr;
+    if ( report && report->decision() ) fill( m_odinHLT1, odin->triggerType(), 1. );
 
-        report = hlt->decReport( m_hlt2Decision );
-        if ( report != 0 ) fill( m_odinHLT2, odin->triggerType(), 1. );
+    report = hlt2 ? hlt2->decReport( m_hlt2Decision ) : nullptr;
+    if ( report && report->decision() ) fill( m_odinHLT2, odin->triggerType(), 1. );
 
-    } // end if hlt
-
-    return;
 }
 
 //==============================================================================
 void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
-                                   const LHCb::HltDecReports* hlt )
+                                   const LHCb::HltDecReports* hlt1 ,
+                                   const LHCb::HltDecReports* hlt2 )
 {
-    if ( hlt == 0 ) return;
-
-    std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), unsigned( 0 ) );
-    std::vector<unsigned> nAcc2Alley( m_hlt2Alleys.size(), unsigned( 0 ) );
-
-    for ( auto& i : *hlt ) {
-        if ( !i.second.decision() ) continue;
-
-        if ( i.first.compare( 0, 4, "Hlt1" ) == 0 ) {
-            auto j = m_hlt1Line2AlleyBin.find( i.first );
-            if ( j != m_hlt1Line2AlleyBin.end() ) {
-                assert( j->second.first < nAcc1Alley.size() );
-                ++nAcc1Alley[j->second.first];
-                fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
-            }
-        } else if ( i.first.compare( 0, 4, "Hlt2" ) == 0 ) {
-            auto j = m_hlt2Line2AlleyBin.find( i.first );
-            if ( j != m_hlt2Line2AlleyBin.end() ) {
-                assert( j->second.first < nAcc2Alley.size() );
-                ++nAcc2Alley[j->second.first];
-                fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
-            }
-        } else {
-            warning() << "got unexpected decision name " << i.first << endmsg;
-        }
-    }
-
     // filling the histograms for the alleys instead of the lines
-    for ( unsigned i = 0; i < m_DecToGroup1.size(); i++ ) {
-        *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
-        fill( m_hlt1Alley, i, ( nAcc1Alley[i] > 0 ) );
-        if ( nAcc1Alley[i] == 0 ) continue;
-        for ( unsigned j = 0; j < m_DecToGroup1.size(); ++j ) {
-            fill( m_hlt1AlleysCorrelations, i, j, ( nAcc1Alley[j] > 0 ) );
+
+    if (hlt1) {
+        std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), unsigned( 0 ) );
+        for ( auto& i : *hlt1 ) {
+            if ( !i.second.decision() ) continue;
+
+            if ( i.first.compare( 0, 4, "Hlt1" ) == 0 ) {
+                auto j = m_hlt1Line2AlleyBin.find( i.first );
+                if ( j != m_hlt1Line2AlleyBin.end() ) {
+                    assert( j->second.first < nAcc1Alley.size() );
+                    ++nAcc1Alley[j->second.first];
+                    fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
+                }
+            } 
+        }
+        for ( unsigned i = 0; i < m_DecToGroup1.size(); i++ ) {
+            *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
+            fill( m_hlt1Alley, i, ( nAcc1Alley[i] > 0 ) );
+            if ( nAcc1Alley[i] == 0 ) continue;
+            for ( unsigned j = 0; j < m_DecToGroup1.size(); ++j ) {
+                fill( m_hlt1AlleysCorrelations, i, j, ( nAcc1Alley[j] > 0 ) );
+            }
         }
     }
-    for ( unsigned i = 0; i < m_DecToGroup2.size(); ++i ) {
-        *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
-        fill( m_hlt2Alley, i, ( nAcc2Alley[i] > 0 ) );
-        if ( nAcc2Alley[i] == 0 ) continue;
-        for ( unsigned j = 0; j < m_DecToGroup2.size(); ++j ) {
-            fill( m_hlt2AlleysCorrelations, i, j, ( nAcc2Alley[j] > 0 ) );
+        
+    if (hlt2) {
+        std::vector<unsigned> nAcc2Alley( m_hlt2Alleys.size(), unsigned( 0 ) );
+        for ( auto& i : *hlt2 ) {
+            if ( !i.second.decision() ) continue;
+            if ( i.first.compare( 0, 4, "Hlt2" ) == 0 ) {
+                auto j = m_hlt2Line2AlleyBin.find( i.first );
+                if ( j != m_hlt2Line2AlleyBin.end() ) {
+                    assert( j->second.first < nAcc2Alley.size() );
+                    ++nAcc2Alley[j->second.first];
+                    fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
+                }
+            }
+        }
+        for ( unsigned i = 0; i < m_DecToGroup2.size(); ++i ) {
+            *m_hlt2AlleyRates[i] += ( nAcc2Alley[i] > 0 );
+            fill( m_hlt2Alley, i, ( nAcc2Alley[i] > 0 ) );
+            if ( nAcc2Alley[i] == 0 ) continue;
+            for ( unsigned j = 0; j < m_DecToGroup2.size(); ++j ) {
+                fill( m_hlt2AlleysCorrelations, i, j, ( nAcc2Alley[j] > 0 ) );
+            }
         }
     }
 }

@@ -44,8 +44,8 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
   private:
     size_t rawEvtLength( const LHCb::RawEvent* evt );
     size_t rawEvtLength( const std::vector<LHCb::RawBank*>& banks );
-    void monitorODIN( const LHCb::ODIN*, const LHCb::HltDecReports* );
-    void monitorHLT( const LHCb::ODIN*, const LHCb::HltDecReports* );
+    void monitorODIN( const LHCb::ODIN*, const LHCb::HltDecReports*,  const LHCb::HltDecReports* );
+    void monitorHLT( const LHCb::ODIN*, const LHCb::HltDecReports*,  const LHCb::HltDecReports* );
     void monitorVertices();
     void monitorTrends();
     void monitorResolverpositions();
@@ -53,7 +53,8 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     template <typename T>
     T* fetch( const std::string& location )
     {
-        T* t = this->exist<T>( location ) ? this->get<T>( location ) : nullptr;
+        if (location.empty()) return nullptr;
+        T* t = this->getIfExists<T>( location );
         if ( !t && this->msgLevel( MSG::WARNING ) ) {
             Warning( " could not retrieve " + location, StatusCode::SUCCESS, 10 );
         }
@@ -72,7 +73,8 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     std::vector<StatEntity*> m_hlt1AlleyRates;
     std::vector<StatEntity*> m_hlt2AlleyRates;
 
-    std::string m_HltDecReportsLocation;
+    std::string m_Hlt1DecReportsLocation;
+    std::string m_Hlt2DecReportsLocation;
     std::string m_ODINLocation;
     std::string m_hlt1Decision;
     std::string m_hlt2Decision;
