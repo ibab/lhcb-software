@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+! 2014-06-27 - Marco Clemencic
+ - Fixed problem with a change in the API of COOL.
+
 !========================= CondDBUI v3r28 2014-05-12 =========================
 ! 2014-03-26 - Liang Sun
  - Extend the support for tagging a new CondDB partition 'CALIBOFF'

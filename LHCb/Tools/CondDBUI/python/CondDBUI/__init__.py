@@ -1415,19 +1415,20 @@ class CondDB(object):
             except Exception, details:
                 raise Exception, "Impossible to create the folderset: %s"%details
         else:
-            if versionMode == 'MULTI':
-                folderSpec = cool.FolderSpecification(cool.FolderVersioning.MULTI_VERSION)
-            else:
-                folderSpec = cool.FolderSpecification(cool.FolderVersioning.SINGLE_VERSION)
+            recordSpec = cool.RecordSpecification()
             if type(storageKeys) is list:
                 d = {}
                 for k in storageKeys:
                     d[k] = "String16M"
                 storageKeys = d
             for key in storageKeys:
-                folderSpec.payloadSpecification().extend(key,
-                                                         getattr(cool.StorageType,
-                                                                 storageKeys[key]))
+                recordSpec.extend(key,
+                                  getattr(cool.StorageType, storageKeys[key]))
+            
+            if versionMode == 'MULTI':
+                folderSpec = cool.FolderSpecification(cool.FolderVersioning.MULTI_VERSION, recordSpec)
+            else:
+                folderSpec = cool.FolderSpecification(cool.FolderVersioning.SINGLE_VERSION, recordSpec)
 
             # WARNING: this folderdesc stuff is VERY important for LHCb: it tells the CondDB conversion
             #          service which type of converter to call. In this case (storage_type = 7), it calls
