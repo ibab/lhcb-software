@@ -142,8 +142,7 @@ StatusCode CaloBremMatch::match
   
   if ( !use( trObj ) ) { return Error ( "match(): track is not OK"  ) ; }
   
-  if ( m_position != caloObj ) 
-  {
+  if ( m_position != caloObj ){
     // update the position
     StatusCode sc = fillBrem ( *caloObj , m_caloMatch ) ;
     if ( sc.isFailure() ) 

@@ -195,7 +195,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
         StatusCode sc = matcher->match ( position ( calo ) , track , chi2 ) ;
         if ( sc.isFailure() ){ 
           if(msgLevel(MSG::DEBUG)) debug() << "Failure from Tool::match, skip" << endmsg ;
-          counter("# ailure from Tool::match") += 1;
+          counter("# failure from Tool::match") += 1;
           continue ;                                            // CONTINUE 
         }
         if ( m_threshold < chi2  ) { ++nOverflow ; continue  ; } // CONTINUE 
