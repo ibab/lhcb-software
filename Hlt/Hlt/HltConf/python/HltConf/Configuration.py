@@ -515,6 +515,9 @@ class HltConf(LHCbConfigurableUser):
                                  ]
                                  )
 
+        # don't look for things that won't be there...
+        if not lines1 : HltGlobalMonitor().Hlt1DecReports = ""
+        if not lines2 : HltGlobalMonitor().Hlt2DecReports = ""
         # Configure vertex monitoring
         HltGlobalMonitor().VertexLocations = __onlinePV__()
 
