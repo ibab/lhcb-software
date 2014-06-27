@@ -745,9 +745,8 @@ class Moore(LHCbConfigurableUser):
             from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
                                , dict( LoKi__HDRFilter      = 'Location'
-                                       , TisTosParticleTagger = 'HltDecReportsInputLocation'
-                                       , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
-                                       )
+                                     , TisTosParticleTagger = 'HltDecReportsInputLocation'
+                                     )
                                , DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
                                )
             
@@ -764,28 +763,9 @@ class Moore(LHCbConfigurableUser):
             # shunt Hlt2 decreports
             from Funcs import _updateProperties
             _updateProperties( gs('Hlt')
-                             , dict( Hlt__Line            = 'HltDecReportsLocation'
-                                   , HltRoutingBitsWriter = 'Hlt2DecReportsLocation'
-                                   , HltDecReportsWriter  = 'InputHltDecReportsLocation'
-                                   , HltSelReportsMaker   = 'InputHltDecReportsLocation'
-                                   , HltGlobalMonitor     = 'HltDecReports'
+                             , dict( HltGlobalMonitor     = 'HltDecReports'
                                    )
                              , DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-                             )
-            
-            # shunt selreports
-            _updateProperties( gs('Hlt')
-                             , dict( HltSelReportsMaker   = 'OutputHltSelReportsLocation'
-                                   , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
-                             , DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
-                             )
-
-            #  make sure SourceID is properly set
-            _updateProperties( gs('Hlt')
-                             , dict( HltDecReportsWriter  = 'SourceID'
-                                   , HltSelReportsWriter  = 'SourceID' 
-                                   , HltVertexReportsWriter  = 'SourceID' ) 
-                             , 2
                              )
             
         
@@ -812,17 +792,13 @@ class Moore(LHCbConfigurableUser):
             
             #this is replacing the HltDecisionSequence with some other things
             transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/HltDecisionSequence"  } }
-            transdep['GaudiSequencer/HltDecisionSequence$']={ 'Members' : { '^.*$' : "['GaudiSequencer/Hlt2']"  } }
-            transdep['.*HDRFilter/.*' ]= { 'Location'                   : { '^.*$' : hlt1decrep_location } }
-            transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
+            ### replace all algorithms starting with Hlt1
+            transdep['GaudiSequencer/HltDecisionSequence$']={ 'Members' : { "'[^/]*/Hlt1[^']*' *," : ""  } }
             transdep['TisTosParticleTagger/.*']={ 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
-            transdep['.*/HltRoutingBitsWriter']={ 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } }
             Funcs._mergeTransform(transdep)
             
             #always transform
-            hlt2selrep_location = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
             hlt2decrep_location = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-            #dec3alg=dec3.setup()
             
             transall={}
             transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '[^/]*/HltL0GlobalMonitor'" : '' 
@@ -831,22 +807,12 @@ class Moore(LHCbConfigurableUser):
             
             transall['HltGlobalMonitor/HltGlobalMonitor' ]= { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
             
-            transall['.*/HltRoutingBitsWriter']={ 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
-            
-            transall2={'Hlt::Line/.*'                        : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
-                       , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                       , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                       , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
-                       , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
-                       , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
-                       }
+            transall2={ 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
+                      }
             
             Funcs._mergeTransform(transall)
             Funcs._mergeTransform(transall2)
 
-            #  make sure SourceID is properly set
-            transSID = { 'Hlt(Dec|Sel)ReportsWriter/.*' : { 'SourceID' : { '^.*$' : '2' } } }
-            Funcs._mergeTransform(transSID)
                     
         def gerhardsSledgehammer() :
             from Configurables import GaudiSequencer as gs

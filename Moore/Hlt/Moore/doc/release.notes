@@ -3,6 +3,8 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-06-27 - Gerhard Raven
+ - following changes in HltConf pertaining the split configuration
 
 ! 2014-06-26 - Gerhard Raven
  - fix split qmtest...
