@@ -44,7 +44,7 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   declareProperty ( "UseCondDB"    , m_useCondDB   = true);
   declareProperty ( "ConditionName", m_conditionName = "none" ) ;
   declareProperty ( "Parameters"   , m_optParams);
-  declareProperty ( "Corrections"  , m_corrections); // expect usage
+  declareProperty ( "Corrections"  , m_corrections); // expert usage
   declareProperty ( "Hypotheses"   , m_hypos_   ) ;
   declareProperty ( "ClusterMatchLocation"   , m_cmLoc );
 
@@ -154,9 +154,11 @@ StatusCode CaloCorrectionBase::setDBParams(){
 }
 // ============================================================================
 StatusCode CaloCorrectionBase::setOptParams(){
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug() << "Get params from options - no condition '" << m_conditionName << "'" << endmsg;
-  if( m_optParams.empty() )return Warning("No parameters - no correction to be applied",StatusCode::SUCCESS);
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "Get params from options " << endmsg;
+  if( m_optParams.empty() && m_conditionName != "none"  ){
+    info()<< "No default options parameters defined"<<endmsg;
+    return StatusCode::SUCCESS;
+  }
   m_params.clear();
   for(std::map<std::string, std::vector<double> >::iterator p = m_optParams.begin() ; m_optParams.end() != p ; ++p){
     std::string name = (*p).first;
@@ -208,8 +210,10 @@ CaloCorrection::Parameters CaloCorrectionBase::getParams(CaloCorrection::Type ty
   int func = (int) pars[0];
   int dim  = (int) pars[1];
   std::vector<double> v;
-  int pos = 2 + id.area();
-  int narea = 3;
+  int narea = ( func != CaloCorrection::GlobalParamList ) ? 3         : 1;
+  int shift = ( func != CaloCorrection::GlobalParamList ) ? id.area() : 0;
+  int pos = 2 + shift;  
+
   for( int i = 0 ; i< dim ; ++ i){
     v.push_back( pars[ pos ] );
     pos += narea;
@@ -231,6 +235,12 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   // compute correction 
   double cor = def; 
   if( pars.first == CaloCorrection::Unknown ||  pars.second.empty() ) return cor; 
+
+  // list accessor - not correction :
+  if( pars.first == CaloCorrection::ParamList || pars.first == CaloCorrection::GlobalParamList){
+    warning() << " Param accessor is a fake function - no correction to be applied - return default value" << endmsg;
+    return def;
+  }
 
   // polynomial correction 
   std::vector<double> temp = pars.second;
@@ -268,12 +278,14 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   }
 
   // Sshape function
-  if( pars.first == CaloCorrection::Sshape ){
+  if( pars.first == CaloCorrection::Sshape || pars.first == CaloCorrection::SshapeMod ){
     if( temp.size() == 1){
       double b = temp[0];
       double delta = 0.5;
       if( b > 0 ) {
-        double arg = var/delta * cosh( delta/b );
+        double arg = var/delta ;
+        if( pars.first == CaloCorrection::SshapeMod) arg *= sinh(delta/b);
+        else if(pars.first==CaloCorrection::Sshape)  arg *= cosh(delta/b);        
         cor = b * log (arg + sqrt( arg*arg + 1. ));
       }
     }
@@ -298,7 +310,18 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
       Warning("The ShowerProfile function must have 10 parameters").ignore();
     }  
   }
-
+  
+  // Sinusoidal function
+  if( pars.first == CaloCorrection::Sinusoidal ){
+    if( temp.size() == 1){
+      double A = temp[0];
+      double pi=acos(-1.);
+      cor = A*sin(2*pi*var);
+    }
+    else{
+      Warning("The Sinusoidal function must have 1 parameter").ignore();
+    }
+  }
   
   counter(name + " correction processing (" + id.areaName() + ")") += cor;
   return cor;
@@ -332,7 +355,8 @@ void CaloCorrectionBase::checkParams(){
       func = (int) vec[0];
       dim  = (int) vec[1];
       if( func >= CaloCorrection::Unknown )ok = false;
-      if( 3*dim+2 != (int) vec.size())ok=false;    
+      int narea = ( func != CaloCorrection::GlobalParamList ) ? 3         : 1;
+      if( narea*dim+2 != (int) vec.size())ok=false;    
       if( dim <= 0 ) ok = false;
     }
     if( !ok ){

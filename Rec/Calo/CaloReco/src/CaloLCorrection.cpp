@@ -133,6 +133,7 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   // Account for the tilt
   ROOT::Math::Plane3D plane = m_det->plane(CaloPlane::Front); // Ecal Front-Plane
   const LHCb::CaloPosition* pos = hypo->position() ;
+
   double  xg = pos->x() - m_origin.X();
   double  yg = pos->y() - m_origin.Y();
   Gaudi::XYZVector normal=plane.Normal();

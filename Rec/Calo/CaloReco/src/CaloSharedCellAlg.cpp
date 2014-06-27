@@ -66,7 +66,6 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
   // set default data as a function of detector
   m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
-
 }
 
 // ============================================================================

@@ -143,13 +143,30 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double Asx   = - ( xBar - seedPos.x() ) / CellSize ;
   double Asy   = - ( yBar - seedPos.y() ) / CellSize ;
 
-
+  // Sshape correction :
   Asx = getCorrection(CaloCorrection::shapeX , cellID , Asx , Asx );
   Asy = getCorrection(CaloCorrection::shapeY , cellID , Asy , Asy );
+
+  // Angular correction (if any) [ NEW  - inserted between Sshape and residual correction ]
+  double z  = position.z();
+  double xs = seedPos.x() - Asx * CellSize; // xscor
+  double ys = seedPos.y() - Asy * CellSize; // yscor
+  double thx = atan( xs / z);
+  double thy = atan( ys / z);
+  double daX = getCorrection(CaloCorrection::angularX   , cellID , thx , 0.);
+  double daY = getCorrection(CaloCorrection::angularY   , cellID , thy , 0.);
+  Asx -= daX;
+  Asy -= daY;
+
+  // residual correction (if any):
   double dcX = getCorrection(CaloCorrection::residual  , cellID , Asx , 0.);
+  if( dcX == 0.)dcX = getCorrection(CaloCorrection::residualX  , cellID , Asx , 0.); // check X-specific correction
   double dcY = getCorrection(CaloCorrection::residual  , cellID , Asy , 0.);
+  if( dcY == 0.)dcY = getCorrection(CaloCorrection::residualY  , cellID , Asy , 0.); // check Y-specific correction
   Asx -= dcX;
   Asy -= dcY;
+
+  // left/right - up/down asymmetries correction (if any) :
   double ddcX = (xBar < 0 ) ? 
     getCorrection(CaloCorrection::asymM , cellID , Asx , 0.): 
     getCorrection(CaloCorrection::asymP , cellID , Asx , 0.);
@@ -164,7 +181,6 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double yCor = seedPos.y() - Asy * CellSize;
 
   const LHCb::CaloPosition* pos = hypo->position() ;
-
 
   if ( msgLevel( MSG::DEBUG) ){  
     debug() << "Calo Hypothesis :" << hypo->hypothesis() << endmsg;

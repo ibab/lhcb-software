@@ -152,7 +152,8 @@ CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
   // eTcut
   declareProperty ( "withET" , m_withET ) ;
   declareProperty ( "ETcut" , m_ETcut ) ;
-  declareProperty ( "CellSelectorForEnergy" , m_used = "3x3");
+  declareProperty ( "CellSelectorForEnergy"   , m_usedE = "3x3");
+  declareProperty ( "CellSelectorForPosition" , m_usedP = "3x3");
   declareProperty ( "MaxIteration" , m_passMax = 10);
 
   declareInterface<ICaloClusterization>(this);
@@ -177,8 +178,10 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
                                                 const unsigned int                     m_neig_level ){
 
   //
-  m_cellSelector.setSelector(m_used);
-  m_cellSelector.setDet(m_detector);
+  m_cellSelectorE.setSelector(m_usedE);
+  m_cellSelectorP.setSelector(m_usedP);
+  m_cellSelectorE.setDet(m_detector);
+  m_cellSelectorP.setDet(m_detector);
   m_release = false;
   bool useData = false;
   //
@@ -345,9 +348,9 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
 
 
 
-  LHCb::CaloDigitStatus::Status used   = LHCb::CaloDigitStatus::UseForEnergy  | LHCb::CaloDigitStatus::UseForPosition |
-    LHCb::CaloDigitStatus::UseForCovariance  ;
-  LHCb::CaloDigitStatus::Status seed   = LHCb::CaloDigitStatus::SeedCell | LHCb::CaloDigitStatus::LocalMaximum | used ;
+  LHCb::CaloDigitStatus::Status usedForE = LHCb::CaloDigitStatus::UseForEnergy   | LHCb::CaloDigitStatus::UseForCovariance  ;
+  LHCb::CaloDigitStatus::Status usedForP = LHCb::CaloDigitStatus::UseForPosition | LHCb::CaloDigitStatus::UseForCovariance  ;    
+  LHCb::CaloDigitStatus::Status seed = LHCb::CaloDigitStatus::SeedCell |LHCb::CaloDigitStatus::LocalMaximum | usedForP | usedForE;
 
 
   itTagLastClustered = std::stable_partition( itTagLastSeed                    ,
@@ -369,30 +372,34 @@ StatusCode CaloClusterizationTool::_clusterize( std::vector<LHCb::CaloCluster*>&
     LHCb::CaloCellID seedID = (*itTagSeed)->cellID();
     LHCb::CaloCluster* cluster = new  LHCb::CaloCluster();
 
+    // set seed
     cluster->entries().push_back( LHCb::CaloClusterEntry( digit , seed ) );
     cluster->setSeed( digit->cellID() );
 
-    itTagClustered2 = std::stable_partition( itTagClustered1                       ,
-                                             itTagLastClustered                    ,
+    itTagClustered2 = std::stable_partition( itTagClustered1 , 
+                                             itTagLastClustered , 
                                              TaggedCellFunctor::isWithSeed(seedID) ) ;
+
     // Owned cells
     for (  ; itTagClustered1 != itTagClustered2 ; ++itTagClustered1 ){
       LHCb::CaloCellID  cellID = (*itTagClustered1)->cellID();
       const LHCb::CaloDigit* digit = (*itTagClustered1)->digit() ;
       LHCb::CaloDigitStatus::Status owned  = LHCb::CaloDigitStatus::OwnedCell ;
-      if( m_cellSelector( seedID, cellID) > 0.)owned |= used;
+      if( m_cellSelectorE( seedID, cellID) > 0.)owned |= usedForE;
+      if( m_cellSelectorP( seedID, cellID) > 0.)owned |= usedForP;
       cluster->entries().push_back( LHCb::CaloClusterEntry( digit , owned ) );
     }
     // Shared cells
     SeqVector::iterator itTagFirstEdge = itTagLastClustered ;
-    SeqVector::iterator itTagLastEdge  = std::stable_partition( itTagLastClustered                     ,
-                                                                taggedCellsSeq.end()                   ,
+    SeqVector::iterator itTagLastEdge  = std::stable_partition( itTagLastClustered , 
+                                                                taggedCellsSeq.end() , 
                                                                 TaggedCellFunctor::isWithSeed (seedID) ) ;
     for(  ; itTagFirstEdge != itTagLastEdge ; ++itTagFirstEdge  ){
       const LHCb::CaloDigit* digit = (*itTagFirstEdge)->digit() ;
       LHCb::CaloCellID  cellID = (*itTagFirstEdge)->cellID();
       LHCb::CaloDigitStatus::Status shared = LHCb::CaloDigitStatus::SharedCell;
-      if( m_cellSelector( seedID, cellID) > 0.)shared |= used;
+      if( m_cellSelectorE( seedID, cellID) > 0.)shared |= usedForE;
+      if( m_cellSelectorP( seedID, cellID) > 0.)shared |= usedForP;
       cluster->entries().push_back( LHCb::CaloClusterEntry( digit , shared ) );
     };
 

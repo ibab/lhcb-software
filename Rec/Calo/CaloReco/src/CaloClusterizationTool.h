@@ -118,8 +118,10 @@ private:
   bool m_withET ;
   double m_ETcut;
   bool m_release;
-  std::string m_used;
-  CellSelector m_cellSelector;
+  std::string m_usedE;
+  std::string m_usedP;
+  CellSelector m_cellSelectorE;
+  CellSelector m_cellSelectorP;
   unsigned int m_pass;
   int m_passMax;
 };

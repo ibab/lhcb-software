@@ -33,16 +33,18 @@ SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool  ( type, name , parent ) 
-  , m_modify  ( false               )
+  , m_mask(defaultStatus)
+  , m_modify  ( false)
   , m_detData   ( DeCalorimeterLocation::Ecal )
-  , m_det(0)
-{
+  , m_det(0){
   /// declare the available interfaces
   declareInterface<ICaloClusterTool>   ( this )    ;
   declareInterface<ICaloSubClusterTag> ( this )    ;
   /// 
   declareProperty ( "ModifyFractions" , m_modify ) ;
   declareProperty( "Detector"         , m_detData  );
+  
+
 }
 // ============================================================================
 
@@ -85,8 +87,10 @@ StatusCode SubClusterSelectorBase::initialize ()
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::process     ( LHCb::CaloCluster* cluster ) const 
-{ return tag ( cluster ) ; }  
+StatusCode SubClusterSelectorBase::process     ( LHCb::CaloCluster* cluster ) const{ 
+  return tag ( cluster ) ; 
+}  
+
 // ============================================================================
 
 // ============================================================================
@@ -97,7 +101,8 @@ StatusCode SubClusterSelectorBase::process     ( LHCb::CaloCluster* cluster ) co
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::operator() ( LHCb::CaloCluster* cluster ) const  
-{ return tag ( cluster ) ; }  
+StatusCode SubClusterSelectorBase::operator() ( LHCb::CaloCluster* cluster ) const{ 
+  return tag ( cluster ) ; 
+}  
 // ============================================================================
 

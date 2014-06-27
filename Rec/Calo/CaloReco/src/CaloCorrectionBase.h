@@ -19,6 +19,7 @@
 #include "CaloUtils/Calo2Track.h"
 #include "Relations/IRelationWeighted2D.h"
 #include "Event/Track.h"
+#include "CaloCorrectionBase.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
 static const InterfaceID IID_CaloCorrectionBase ( "CaloCorrectionBase", 1, 0 );
 
@@ -45,17 +46,21 @@ namespace CaloCorrectionUtils{
     int m_calo ;
   };
 }
-
+// DO NOT CHANGE THE FUNCTION ORDER FOR BACKWARD COMPATIBILITY WITH EXISTING CONDITIONS
 namespace CaloCorrection {
   enum  Function{
-    InversPolynomial=0,
-    Polynomial,
-    ExpPolynomial,
-    ReciprocalPolynomial,
-    Sigmoid,
-    Sshape,
-    ShowerProfile,
-    Unknown  // MUST be the last item 
+    InversPolynomial    =0,
+    Polynomial          =1,
+    ExpPolynomial       =2,  
+    ReciprocalPolynomial=3,
+    Sigmoid             =4,
+    Sshape              =5,
+    ShowerProfile       =6,
+    SshapeMod           =7,
+    Sinusoidal          =8,
+    ParamList           =9, // simple parameter access (by area)
+    GlobalParamList     =10, // simple parameter access (ind. of area)
+    Unknown // MUST be the last item  
   };
   typedef std::pair<CaloCorrection::Function , std::vector<double> > Parameters;
   enum Type{
@@ -70,6 +75,7 @@ namespace CaloCorrection {
     globalC,   // global factor for converted photons
     globalT,   // global(Theta) function of incidence angle
     offsetT,   // offset(Theta) function of incidence angle
+    ClusterCovariance, // parameters for cluster covariance estimation
     // L-Correction parameters
     gamma0,
     delta0,
@@ -79,25 +85,32 @@ namespace CaloCorrection {
     shapeX,
     shapeY,
     residual,
+    residualX,
+    residualY,
     asymP,
     asymM,
+    angularX,
+    angularY,
     // ShowerShape profile
     profile,
     profileC, // for converted photons
-    lastType  // MUST BE THE LAST LINE
+    // Cluster masking
+    EnergyMask,
+    PositionMask,
+    lastType  // MUST BE THE LAST LINE 
   };
   static const int nT = lastType+1;
   static const int nF = Unknown+1;
-  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","beta","betaC","globalC","globalT"
-                                            ,"offsetT"
-                                            ,"gamma0","delta0","gammaP","deltaP"
-                                            ,"shapeX","shapeY","residual","asymP","asymM"
-                                            ,"profile","profileC"
+  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","beta","betaC","globalC","globalT" ,"offsetT","ClusterCovariance"  // E-corrections
+                                            ,"gamma0","delta0","gammaP","deltaP"                                                                      // L-Corrections
+                                            ,"shapeX","shapeY","residual","residualX","residualY","asymP","asymM","angularX","angularY"               // S-Corrections
+                                            ,"profile","profileC"                                                                                     // Profile shape
+                                            ,"EnergyMask","PositionMask"
                                             ,"Unknown"};    
-  static const std::string funcName[nF] = { "InversPolynomial", "Polynomial","ExpPolynomial","ReciprocalPolynomial","Sigmoid"
-                                            ,"Sshape","ShowerProfile","Unknown"};  
-}
 
+  static const std::string funcName[nF] = { "InversPolynomial", "Polynomial","ExpPolynomial","ReciprocalPolynomial","Sigmoid"
+                                            ,"Sshape","ShowerProfile","SshapeMod","Sinusoidal","ParamList","GlobalParamList","Unknown"};  
+}
 
 class CaloCorrectionBase : public GaudiTool {
 public: 
@@ -117,20 +130,35 @@ public:
 
   void setOrigin(Gaudi::XYZPoint origin){m_origin = origin;}
   StatusCode updParams();
-  StatusCode setConditionParams(std::string cond,bool force=false){
+  StatusCode setConditionParams(std::string cond,bool force=false){ // force = true : forcing access via condDB only
     if(cond != m_conditionName)m_conditionName = cond;
-    if(force)m_useCondDB = true;
-    // get parameters from DB or options
-    if ( !existDet<DataObject>( m_conditionName)  ){
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << "Initialize :  Condition '" << m_conditionName
-                << "' not found -- apply options parameters !" << endmsg; 
-      m_useCondDB = false;
+
+    // get parameters from options  :
+    if( !m_useCondDB && !force )return setOptParams();
+
+    // get from DB if exists :
+    if( !existDet<DataObject>( m_conditionName)  ){
+      if(force){
+        if( m_conditionName != "none" )info() << "Condition '"<< m_conditionName << "' has not been found " << endmsg; 
+        return StatusCode::SUCCESS;
+      }else{
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " Condition '" << m_conditionName << "' has not found -- try options parameters !" << endmsg;
+        return setOptParams();
+      }
     }
-    return m_useCondDB ? setDBParams() : setOptParams();
+    return setDBParams();
+  };
+  
+
+  // accessors
+  CaloCorrection::Parameters getParams(CaloCorrection::Type type, const LHCb::CaloCellID id=LHCb::CaloCellID()) const;
+  std::vector<double> getParamVector(CaloCorrection::Type type, 
+                                     const LHCb::CaloCellID id=LHCb::CaloCellID()) const{return getParams(type,id).second;}
+  double getParameter(CaloCorrection::Type type, unsigned int i, 
+                      const LHCb::CaloCellID id=LHCb::CaloCellID(),double def=0.) const{
+ 		const std::vector<double> params =    getParams(type,id).second;
+    return (i < params.size()) ? params[i] : def;
   }
-
-
 
   double getCorrection(CaloCorrection::Type type, const LHCb::CaloCellID id , double var = 0.,double def = 1.) const;
   double incidence(const LHCb::CaloHypo* hypo,bool straight=false) const;
@@ -146,7 +174,7 @@ public:
 
   ICaloDigitFilterTool* pileup(){ return m_pileup;}
   
-    
+  
   
 protected:
   std::string m_conditionName;
@@ -178,7 +206,6 @@ private:
   
   StatusCode setOptParams();
   StatusCode setDBParams();
-  CaloCorrection::Parameters getParams(CaloCorrection::Type type, const LHCb::CaloCellID id) const;
   void checkParams();
   
   
@@ -190,7 +217,4 @@ private:
   std::string m_cmLoc;
   ICaloRelationsGetter*    m_tables;
 };
-
-
-
 #endif // CALOCORRECTIONBASE_H

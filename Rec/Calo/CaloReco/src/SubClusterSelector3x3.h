@@ -1,36 +1,8 @@
 // $Id: SubClusterSelector3x3.h,v 1.5 2010-03-08 01:19:40 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2008/06/30 15:36:33  odescham
-// prepare for HLT processing
-//
-// Revision 1.3  2006/05/30 09:42:06  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.2  2005/11/07 12:12:43  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.3  2002/04/07 18:15:02  ibelyaev
-//  preliminary version ('omega'-release)
-//
-// Revision 1.2  2001/11/08 20:07:05  ibelyaev
-//  new tools are added into  the package
-//
-// Revision 1.1  2001/11/08 10:58:34  ibelyaev
-//  new tools are added for selection of subclusters within the cluster
-// 
-// ============================================================================
 #ifndef CALORECO_SUBCLUSTERSELECTOR3x3_H 
 #define CALORECO_SUBCLUSTERSELECTOR3x3_H 1
 // Include files
-// CaloTools 
 #include "SubClusterSelectorBase.h"
-// CaloUtils 
 #include "CaloUtils/CellMatrix3x3.h"
 
 /** @class SubClusterSelector3x3 SubClusterSelector3x3.h
@@ -43,21 +15,11 @@
  *  @date   07/11/2001
  */
 
-class SubClusterSelector3x3
-  : public SubClusterSelectorBase  
-{
-  /// frined factory for instantiation
+class SubClusterSelector3x3  : public SubClusterSelectorBase{
   friend class ToolFactory<SubClusterSelector3x3>;
   
 public:
 
-  /** standard initiliazation 
-   *  @see SubClusterSelectorBase 
-   *  @see CaloTool 
-   *  @see  AlgTool 
-   *  @see IAlgTool 
-   *  @return status code 
-   */
   virtual StatusCode initialize(); 
   
   /** The main processing method
@@ -76,7 +38,8 @@ public:
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode tag        ( LHCb::CaloCluster* cluster ) const ;
+
+  virtual StatusCode tag ( LHCb::CaloCluster* cluster) const ;
   
   /** The main method - "undo" of tagging from "tag" method  
    *  @see ICaloSubClusterTag
@@ -106,8 +69,4 @@ private:
   
 };
 
-// ============================================================================
-// The End 
-// ============================================================================
 #endif // SUBCLUSTERSELECTOR3x3_H
-// ============================================================================

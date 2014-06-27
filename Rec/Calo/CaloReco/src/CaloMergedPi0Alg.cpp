@@ -56,55 +56,55 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
   CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
                                       ISvcLocator*       svcloc  )
     : GaudiAlgorithm ( name , svcloc )
-                                    //
-    , m_inputData  (LHCb::CaloClusterLocation::Ecal   )
-    , m_outputData (LHCb::CaloHypoLocation::MergedPi0s)
-    , m_detData    (DeCalorimeterLocation::Ecal       )
-    , m_ntupleLUN           ( "FILE1"                             )
-    , m_nameOfSplitPhotons  ( LHCb::CaloHypoLocation::    SplitPhotons  )
-    , m_nameOfSplitClusters ( LHCb::CaloClusterLocation:: EcalSplit     )
-    , m_toolTypeNames       ()
-    , m_tools               ()
-    , m_pi0tools               ()
-    , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
-    , m_mX_Iter ( 16         )
-    , m_a                  ( 0.10                          )
-    , m_gainErr            ( 0.01                          )
-    , m_noiseIn            ( 1.20                          ) 
-    , m_noiseCo            ( 0.30                          ) {
-  /// NTuple directory
+//
+  , m_inputData  (LHCb::CaloClusterLocation::Ecal   )
+  , m_outputData (LHCb::CaloHypoLocation::MergedPi0s)
+  , m_detData    (DeCalorimeterLocation::Ecal       )
+  , m_ntupleLUN           ( "FILE1"                             )
+  , m_nameOfSplitPhotons  ( LHCb::CaloHypoLocation::    SplitPhotons  )
+  , m_nameOfSplitClusters ( LHCb::CaloClusterLocation:: EcalSplit     )
+  , m_toolTypeNames       ()
+  , m_tools               ()
+  , m_pi0tools               ()
+  , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
+  , m_mX_Iter ( 16         )
+  , m_a                  ( 0.10                          )
+  , m_gainErr            ( 0.01                          )
+  , m_noiseIn            ( 1.20                          ) 
+  , m_noiseCo            ( 0.30                          ) {
+    /// NTuple directory
   declareProperty ( "NTupleDirectory"        , m_ntupleLUN           ) ;
   declareProperty ( "SplitPhotons"           , m_nameOfSplitPhotons  ) ;
   declareProperty ( "SplitClusters"          , m_nameOfSplitClusters ) ;
   // tool to be apllyed to all hypos
   declareProperty ( "Tools"                 , m_toolTypeNames       ) ;
   declareProperty ( "Pi0Tools"              , m_pi0toolTypeNames       ) ;
-
-  // added by V.B. 2004-10-27
+  
+    // added by V.B. 2004-10-27
   declareProperty ( "EtCut"                 , m_eT_Cut  ) ;
   declareProperty ( "MaxIterations"         , m_mX_Iter ) ;
-
+  
   declareProperty ( "InputData"         , m_inputData    ) ;
   declareProperty ( "OutputData"        , m_outputData   ) ;
   declareProperty ( "Detector"          , m_detData      ) ;
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
-
+  
   // covariance parameters
   declareProperty( "Resolution"       , m_a            ) ;
   declareProperty( "GainError"        , m_gainErr      ) ;
   declareProperty( "NoiseIncoherent"  , m_noiseIn      ) ;
   declareProperty( "NoiseCoherent"    , m_noiseCo      ) ;
-
-
+  
+  
   // default context-dependent locations
   m_inputData  = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , context()  );
   m_outputData = LHCb::CaloAlgUtils::CaloHypoLocation("MergedPi0s", context() );
   m_nameOfSplitPhotons  = LHCb::CaloAlgUtils::CaloHypoLocation("SplitPhotons", context() );
   m_nameOfSplitClusters = LHCb::CaloAlgUtils::CaloSplitClusterLocation(context() );
-
-
+  
+  
   setProperty ( "PropertiesPrint" , true ) ;
-
+  
 }
 // ============================================================================
 // destructor
@@ -644,9 +644,11 @@ StatusCode CaloMergedPi0Alg::execute()
         if ( msgLevel ( MSG::DEBUG ) ){
           debug() << "==> Lcorr " << SubZ[is] << endmsg;
         }
+        
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()  << "Iteration " << iterat << " - Cluster "<< is 
+               << " (E,X,Y,Z) = (" << Ene3x3[is] << "," << SubX[is] << "," << SubY[is] << "," << SubZ[is] <<")"<<endmsg;
       }
       // Reconstructing Overlap
-
 
       for(int is=0;is<2;++is){
         int js = 0 ;
@@ -786,6 +788,8 @@ StatusCode CaloMergedPi0Alg::execute()
     if ( 0 < RecPi0Masq){
       RecPi0Mas=std::sqrt(RecPi0Masq);
     }
+
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "------ MERGEDPI0ALG : RECONSTRUCTED MASS : " << RecPi0Mas << endmsg;
 
 
     const LHCb::CaloDigit*  seedig   = SubClus[0][1][1];;

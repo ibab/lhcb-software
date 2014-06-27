@@ -57,14 +57,16 @@ def digitsReco  ( context            ,
 
 ## ============================================================================
 ## define the recontruction of Ecal clusters
-def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False,noSpdPrs=False) :
+def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False,
+                  noSpdPrs=False , masksE=[] , masksP=[] ) :
     """
     Define the recontruction of Ecal Clusters
     """
     
     from Configurables import ( CaloDigitFilterAlg       ,
                                 CellularAutomatonAlg     ,
-                                CaloSharedCellAlg        ,
+                                CaloShowerOverlap        ,
+                                # CaloSharedCellAlg        , # obsolete
                                 CaloClusterCovarianceAlg ,
                                 CaloClusterizationTool) 
 
@@ -92,8 +94,15 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
         filter.SpdFilter=0
 
     clust = getAlgo ( CellularAutomatonAlg     , "EcalClust"  , context )
-    share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  
+#   share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )   # obsolete
+    share = getAlgo ( CaloShowerOverlap        , "EcalShare"  , context )  
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
+
+    if masksE != [] :
+        covar.EnergyMasks = masksE
+    if masksP != [] :
+        share.PositionMasks = masksP
+        covar.PositionMasks = masksP
 
     if external != '' :                  # use non-default clusters 
         share.InputData = external
@@ -150,8 +159,8 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     from Configurables import ( CaloExtraDigits ,
                                 CaloECorrection , 
                                 CaloSCorrection , 
-                                CaloLCorrection ,
-                                CaloCorrectionBase) 
+                                CaloLCorrection )
+                                 
     
     
     ## build the context-dependent sequence (  TrackMatch + SinglePhotonRec )
@@ -212,19 +221,9 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     ecorr = alg.ECorrection
     scorr = alg.SCorrection
     lcorr = alg.LCorrection
-    
-    alg.CorrectionTools2 = [ ecorr ,
-                             scorr ,
-                             lcorr
-                             ]
 
-
-    # temporary : will be from condDB
-    from Corrections import eCorrection, sCorrection, lCorrection
-    ecorr = eCorrection ( ecorr )
-    scorr = sCorrection ( scorr )
-    lcorr = lCorrection ( lcorr )
-                      
+    # tool configuration via condDB only (remove default configuration)
+    alg.CorrectionTools2 = [ ecorr , scorr , lcorr ]                      
 
     # update the sequence
     addAlgs ( seq , alg ) 
@@ -332,18 +331,11 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     scorr = alg.SCorrection
     lcorr = alg.LCorrection
 
+    # tool configuration via condDB (remove default configuration)
     alg.CorrectionTools2 = [ ecorr , scorr , lcorr ]
-
-    # temporary : will be from condDB
-    from CaloReco.Corrections import eCorrection, sCorrection, lCorrection
-    ecorr = eCorrection ( ecorr )
-    scorr = sCorrection ( scorr )
-    lcorr = lCorrection ( lcorr )
-
     
     ## update the sequence
     addAlgs ( seq , alg ) 
-
 
     # global context 
     setTheProperty ( seq , 'Context' , context )
@@ -359,19 +351,21 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
 # =============================================================================
 ## define the reconstruction of Merged Pi0s Hypos 
 def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True,
-                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '',noSpdPrs=False) :
+                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '',noSpdPrs=False,
+                    masksE=[] , masksP=[] ) :
+
     """
     Define the recontruction of Merged Pi0s
     """
 
-    from Configurables import   CaloMergedPi0Alg 
+    from Configurables import   CaloMergedPi0 # CaloMergedPi0Alg is obsolete (replaced by CaloMergedPi0)
     from Configurables import   CaloHypoAlg 
 
     from Configurables import ( CaloExtraDigits ,
                                 CaloECorrection , 
                                 CaloSCorrection , 
-                                CaloLCorrection ,
-                                CaloCorrectionBase) 
+                                CaloLCorrection 
+                                ) 
 
 
     # build the sequences
@@ -380,11 +374,16 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         
     ## Merged Pi0
     if clusterOnly :
-        pi0 = getAlgo ( CaloMergedPi0Alg , 'SplitClustersRec', context )
+        pi0 = getAlgo ( CaloMergedPi0 , 'SplitClustersRec', context )
         pi0.CreateSplitClustersOnly = True
         sseq.Members=[pi0]
     else :
-        pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
+        pi0 = getAlgo ( CaloMergedPi0 , 'MergedPi0Rec', context )        
+
+    if masksE != [] :
+        pi0.EnergyMasks = masksE
+    if masksP != [] :
+        pi0.PositionMasks = masksP
 
     if external  != '' :
         pi0.InputData = external
@@ -392,17 +391,6 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     pi0.PropertiesPrint = False
     
     pi0.EtCut    = mergedPi0Pt
-    # default setting (possibly updated from condDB)
-    pi0.addTool( CaloCorrectionBase, 'ShowerProfile')
-    pi0.addTool( CaloCorrectionBase, 'Pi0SCorrection')
-    pi0.addTool( CaloCorrectionBase, 'Pi0LCorrection')
-    shower = pi0.ShowerProfile
-    pSCorr = pi0.Pi0SCorrection
-    pLCorr = pi0.Pi0LCorrection
-    from Corrections import eCorrection, sCorrection, lCorrection,showerProfile
-    shower  = showerProfile( shower )
-    pSCorr  = sCorrection( pSCorr  )
-    pLCorr  = lCorrection( pLCorr  )    
 
     if clusterOnly :
         setTheProperty ( sseq , 'Context' , context )
@@ -419,27 +407,19 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     if not noSpdPrs :
         pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraS' )
         pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraM' )
-    ## correction tools
+    ## Pi0 correction tools
     pi0.addTool ( CaloECorrection , 'ECorrection' )
     pi0.addTool ( CaloSCorrection , 'SCorrection' )
     pi0.addTool ( CaloLCorrection , 'LCorrection' )
-    ecorr = pi0.ECorrection
-    scorr = pi0.SCorrection
-    lcorr = pi0.LCorrection
-    
-    ## temporary : will be from condDB
-    ecorr = eCorrection ( ecorr )
-    scorr = sCorrection ( scorr )
-    lcorr = lCorrection ( lcorr )
-    if not noSpdPrs :
-        pi0.Tools = [ pi0.SpdPrsExtraS ,  ecorr , scorr , lcorr ]
-        pi0.Pi0Tools = [ pi0.SpdPrsExtraM ]
-    else :       
-        pi0.Tools = [ ecorr , scorr , lcorr ]
 
+    # tool configuration via condDB only (remove default configuration)
+    if not noSpdPrs :
+        pi0.PhotonTools = [ pi0.SpdPrsExtraS , pi0.ECorrection,pi0.SCorrection, pi0.LCorrection ]
+        pi0.Pi0Tools    = [ pi0.SpdPrsExtraM ]
+    else :       
+        pi0.Tools = [ pi0.ECorrection,pi0.SCorrection, pi0.LCorrection ]
 
     seq.Members=[pi0]
-#    addAlgs ( seq , splitg ) 
     
     ## 3/ (PhotonFrom)MergedID
     if neutralID : 
@@ -448,7 +428,6 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         mID =  MergedID ( context,enableRecoOnDemand, useTracks )
         pmID =  PhotonFromMergedID( context, enableRecoOnDemand, useTracks )
         idSeq.Members = [ mID, pmID ]  
-        #idSeq.Members = [ mID ]  
         addAlgs ( seq , idSeq ) 
 
     # propagate the context

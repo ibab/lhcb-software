@@ -93,6 +93,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'ClusterPt'           : 0.
         , 'MakeExternalClustersWithTag': ''
         , 'NoSpdPrs'            : False
+        , 'ClusterEnergyMasks'   : []
+        , 'ClusterPositionMasks' : []
         ,'Verbose'              : False
         ##
         }
@@ -129,6 +131,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'ClusterPt'          : """ Cluster Pt """
         , 'MakeExternalClustersWithTag'   :""" Build tagged external clusters in the sequence (only if ExternalClusters != '')"""
         , 'NoSpdPrs'           : """ Upgrade configuration without Prs/Spd - implies UsePrs/Spd = False """
+        , 'ClusterEnergyMasks'  : """ Set the cluster mask for energy   evaluation (default : set from DB) """
+        , 'ClusterPositionMasks': """ Set the cluster mask for position evaluation (default : set from DB) """
         ,'Verbose'             : """ Verbose printout"""
         ##
     }
@@ -171,7 +175,9 @@ class CaloRecoConf(LHCbConfigurableUser):
                               self.getProp('FastReco')            ,
                               self.getProp('ExternalClusters')    ,
                               self.getProp('MakeExternalClustersWithTag'),
-                              self.getProp('NoSpdPrs')
+                              self.getProp('NoSpdPrs'),
+                              self.getProp('ClusterEnergyMasks'),
+                              self.getProp('ClusterPositionMasks')
                               )
         _log.info ('Configured Ecal Clusters Reco : %s ' % cmp.name()  )
         
@@ -282,7 +288,9 @@ class CaloRecoConf(LHCbConfigurableUser):
                               self.getProp('MergedPi0Pt')         ,
                               self.getProp('FastReco')            ,
                               self.getProp('ExternalClusters'),
-                              self.getProp('NoSpdPrs')
+                              self.getProp('NoSpdPrs'),
+                              self.getProp('ClusterEnergyMasks'),
+                              self.getProp('ClusterPositionMasks')
                               )
         
 
@@ -588,6 +596,18 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
         _log.info ('Apply CaloProcessor configuration for %s and %s',  self.getProp('RecList'), self.getProp('PIDList'))
         
         self.printConf()
+
+
+        knownMasks = ['3x3','2x2','SwissCross'] 
+
+        for tag in self.getProp('ClusterEnergyMasks') :
+            if tag not in knownMasks :
+                raise AttributeError,'ClusterEnergyMasks contains unknown tag'+tag+' -should be in' + knownMasks
+        for tag in self.getProp('ClusterPositionMasks') :
+            if tag not in knownMasks :
+                raise AttributeError,'PositionEnergyMasks contains unknown tag '+tag+' -should be in' + knownMasks
+            
+
             
         from Configurables import ( GaudiSequencer,
                                     ChargedProtoParticleAddEcalInfo,

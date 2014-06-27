@@ -8,19 +8,19 @@
 // CaloUtils 
 #include "CaloUtils/ClusterFunctors.h"
 // local
-#include "SubClusterSelector3x3.h"
+#include "SubClusterSelectorSwissCross.h"
 
 // ============================================================================
-/** @file SubClusterSelector3x3.cpp
+/** @file SubClusterSelectorSwissCross.cpp
  *  
- *  Implementation file for class : SubClusterSelector3x3
+ *  Implementation file for class : SubClusterSelectorSwissCross
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 07/11/2001 
  */
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( SubClusterSelector3x3 )
+DECLARE_TOOL_FACTORY( SubClusterSelectorSwissCross )
 
 // ============================================================================
 /** Standard Tool Constructor
@@ -30,7 +30,7 @@ DECLARE_TOOL_FACTORY( SubClusterSelector3x3 )
  */
 // ============================================================================
 
-SubClusterSelector3x3::SubClusterSelector3x3( const std::string& type,
+SubClusterSelectorSwissCross::SubClusterSelectorSwissCross( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : SubClusterSelectorBase ( type, name , parent ) 
@@ -41,14 +41,14 @@ SubClusterSelector3x3::SubClusterSelector3x3( const std::string& type,
 /** destructor 
  */
 // ============================================================================
-SubClusterSelector3x3::~SubClusterSelector3x3() {}
+SubClusterSelectorSwissCross::~SubClusterSelectorSwissCross() {}
 
 // ============================================================================
 /** standard initiliazation 
  *  @return status code 
  */
 // ============================================================================
-StatusCode SubClusterSelector3x3::initialize()
+StatusCode SubClusterSelectorSwissCross::initialize()
 {
   /// initliaze the base class 
   StatusCode sc = SubClusterSelectorBase::initialize() ;
@@ -68,14 +68,14 @@ StatusCode SubClusterSelector3x3::initialize()
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelector3x3::tag ( LHCb::CaloCluster* cluster ) const{
+StatusCode SubClusterSelectorSwissCross::tag ( LHCb::CaloCluster* cluster ) const{
 
 
   StatusCode sc = LHCb::ClusterFunctors::tagTheSubCluster( cluster  , 
                                                            m_matrix , 
                                                            modify() , 
-                                                           mask()   ,
-                                                           LHCb::CaloDigitStatus::ModifiedBy3x3Tagger) ;
+                                                           mask(),
+                                                           LHCb::CaloDigitStatus::ModifiedBySwissCrossTagger) ;
   //
   if( sc.isFailure() ){ return Error( "Error from 'tagTheSubCluster()'" , sc ); }
   //
@@ -88,12 +88,12 @@ StatusCode SubClusterSelector3x3::tag ( LHCb::CaloCluster* cluster ) const{
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelector3x3::untag ( LHCb::CaloCluster* cluster ) const{
+StatusCode SubClusterSelectorSwissCross::untag ( LHCb::CaloCluster* cluster ) const{
   StatusCode sc = 
     LHCb::ClusterFunctors::
     untagTheSubCluster( cluster  , 
                         m_matrix , 
-                        LHCb::CaloDigitStatus::ModifiedBy3x3Tagger );
+                        LHCb::CaloDigitStatus::ModifiedBySwissCrossTagger );
   //
   if( sc.isFailure() ) 
     { return Error( "Error from 'untagTheSubCluster()'" , sc ); }

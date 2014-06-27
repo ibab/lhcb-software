@@ -9,7 +9,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 class ICaloClusterTool   ;
-class ICaloSubClusterTag ;
+class SubClusterSelectorTool ;
 
 /** @class CaloClusterCovarianceAlg CaloClusterCovarianceAlg.h
  *  
@@ -64,13 +64,12 @@ public:
    */
   virtual StatusCode finalize   () ;
   
-protected:
+protected:  
   
-  inline ICaloSubClusterTag* tagger () const { return m_tagger ; }
-  
-  inline ICaloClusterTool*   cov    () const { return m_cov    ; }
-  
-  inline ICaloClusterTool*   spread () const { return m_spread ; }
+  inline ICaloClusterTool*       cov    () const { return m_cov    ; }
+  inline ICaloClusterTool*       spread () const { return m_spread ; }
+  inline SubClusterSelectorTool* tagger () const { return m_tagger ; }
+    
   
 private:
   
@@ -99,15 +98,12 @@ private:
   double               m_noiseIn     ; ///< incoherent noise 
   double               m_noiseCo     ; ///< coherent noise
   
-  // tool used for subcluster selections    
-  std::string          m_taggerType  ;  ///< type 
-  std::string          m_taggerName  ;  ///< name 
-  ICaloSubClusterTag*  m_tagger      ;  ///< tool
   
   // tool used for covariance matrix calculation    
   std::string          m_covType     ; ///< type 
   std::string          m_covName     ; ///< name 
   ICaloClusterTool*    m_cov         ; ///< tool 
+  SubClusterSelectorTool* m_tagger   ;
   
   // tool used for cluster spread estimation 
   std::string          m_spreadType  ;  ///< type 
@@ -117,9 +113,12 @@ private:
   std::string m_outputData;
   std::string m_inputData;
   std::string m_detData;
-  
+  std::string m_condition;
+  std::vector<std::string>          m_taggerE  ;  
+  std::vector<std::string>          m_taggerP  ;  
+  const DeCalorimeter* m_detector;
+  // collection of known cluster shapes
+  std::map<std::string , std::string> m_clusterShapes;  
 };
 
-/// ===========================================================================
 #endif // CALORECO_CALOCLUSTERCOVARIANCEALG_H
-/// ===========================================================================

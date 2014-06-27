@@ -4,6 +4,23 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-27 - Olivier Deschamps
+	- add new specific ClusterSelector's : SubClusterSelector2x2 , SubClusterSelectorSwissCross.h
+  - and a generic tool to access condDB and tag the clusters  : SubClusterSelectorTool.h
+  - src/CaloShowerOverlapTool : new tool to substract overlap energy in cluster pair (note : CaloSharedCellAlg.cpp is now obsolete)
+  - src/CaloMergedPi0 & CaloShowerOverlap  : mergePi0 reconstruction and ClusterOverlap based on the above tool (note : CaloMergedPi0Alg is now obsolete)
+
+  - adapt to change in cluster masking : CaloClusterizationTool, SubClusterSelectorBase, CaloClusterCovarianceAlg, SubClusterSelector3x3, ClusterCovarianceMatrixTool
+  - CaloCorrectionBase  : map new corrections and implement generic DB access for cluster masks                   
+  - CaloSCorrection.cpp : add new Alexis' correction
+
+  - python/CaloReco/Configuration.py  : new slots to select cluster masks :  ClusterEnergyMasks and ClusterPositionMasks (default : get mask setting from DB) 
+  - python/CaloReco/Reconstruction.py : propagate masks to ClusterCovariance , ClusterOverlap & MergedPi0
+                                      : use CaloMergedPi0     (replacing the now obsolete CaloMergedPi0Alg)
+                                      : use CaloShowerOverlap (replacing the now obsolete CaloSharedCellAlg)  
+
+
+
 !========================= CaloReco v5r19 2014-03-18 =========================
 ! 2014-03-06 - Olivier Deschamps
  -  python/Configuration.py : propagate OutputLevel value to calo sequences only when the property is explicity set
