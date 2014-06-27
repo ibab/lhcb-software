@@ -76,12 +76,12 @@ double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
     NetConfig * ann = getANN( trackType, pidType, annPIDTune );
     
     // Get the value of the ANN PID
-    annPID = ( ann ? ann->netHelper()->getOutput(proto) : -1 );
-
+    annPID = ( ann && ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -1 );
+    
     if ( msgLevel(MSG::DEBUG) )
       debug() << annPIDTune << " " << trackType << " " << pidType << " " << annPID 
               << endmsg;
-
+    
   }
   
   // return the value
