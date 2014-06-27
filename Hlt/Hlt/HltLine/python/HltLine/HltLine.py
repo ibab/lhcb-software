@@ -938,8 +938,8 @@ class Hlt1Line(object):
         # 3) decision: (pre)set to None, and assign once we're successfully completed ourselfs...
         self._decision  = None 
         
-        # check for forbidden attributes
         mdict = {} 
+        # check for forbidden attributes
         for key in args :
             if key in _protected_ :
                 raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
@@ -989,9 +989,12 @@ class Hlt1Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
+        from DAQSys.Decoders import DecoderDB
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
         mdict.update( DecisionName = decisionName ( line ) 
                     , Prescale     = _createScalar( prescalerName(line), self._prescale  )
                     , Postscale    = _createScalar( postscalerName(line),self._postscale )
+                    , HltDecReportsLocation = decoder.listOutputs()[0]
                     )
         if ODIN : 
             odict = { 'Code' : self._ODIN }
@@ -1004,7 +1007,8 @@ class Hlt1Line(object):
                                )
             mdict.update( L0DU = _s )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
-        if HLT  : mdict.update( HLT = HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) )
+        if HLT  : 
+            mdict.update( HLT = HDRFilter  ( hltentryName ( line ) , Code = self._HLT, Location = mdict['HltDecReportsLocation']  ) )
         if _members : 
             if len(_members)==1 :
                 mdict.update( Filter1 = _members[0] )
@@ -1448,9 +1452,12 @@ class Hlt2Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
+        from DAQSys.Decoders import DecoderDB
+        decoder = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
         mdict.update( DecisionName = decisionName ( line, 'Hlt2' ) 
                     , Prescale     = _createScalar( prescalerName(line,'Hlt2'), self._prescale)
                     , Postscale    = _createScalar( postscalerName(line,'Hlt2'),self._postscale)
+                    , HltDecReportsLocation = decoder.listOutputs()[0]
                     )
         if self._ODIN : mdict.update( ODIN = ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN ) )
         if self._L0DU : 
@@ -1463,7 +1470,14 @@ class Hlt2Line(object):
         if self._HLT  : 
             # TODO: insert Hlt1 decreports decoding... -- but this should ONLY be done in the split scenario!!!!
             #  so we need to make it optional...
-            mdict.update( HLT = HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) )
+            #  Note: do it the 'other way around': always insert, and, if NOT split, globally remove the decoder ;-)
+            from DAQSys.Decoders import DecoderDB
+            decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            decoder.active = True
+            _s = GaudiSequencer( hltentryName( line, 'Hlt2') + 'Sequence' 
+                               , Members = [ decoder.setup(), HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT , Location = decoder.listOutputs()[0]  )  ]
+                               ) 
+            mdict.update( HLT =  _s )
         from Configurables import LoKi__VoidFilter
         if self._VoidFilter : 
             mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )

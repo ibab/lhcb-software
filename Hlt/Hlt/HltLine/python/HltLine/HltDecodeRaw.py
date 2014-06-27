@@ -8,8 +8,7 @@ from GaudiKernel.ProcessJobOptions import importOptions
 from HltLine import bindMembers
 from DAQSys import Decoders, DecoderClass
 from DAQSys.Decoders import DecoderDB
-from DAQSys.DecoderClass import decoderToLocation, decodersForBank
-#importOptions('$STDOPTS/DecodeRawEvent.py')
+from DAQSys.DecoderClass import decodersForBank
 
 def _convert(db,bank) :
     algs=[d.setup() for d in decodersForBank(db,bank)]
@@ -34,7 +33,7 @@ DecodeL0FullCALO = __convert( 'L0CaloFull')
 DecodeL0DU       = __convert( 'L0DU' )
 DecodeVELO       = __convertName("DecodeVeloRawBuffer/createVeloLiteClusters")
 #... ^^ only do the VeloLite clusters, all that's needed for Moore
-DecodeTRACK      = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/VeloDecoder"].setup()])
+DecodeTRACK      =   bindMembers(None, [DecoderDB["HltTrackReportsDecoder/VeloDecoder"].setup()])
 DecodeFORWARDTRACK = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/ForwardDecoder"].setup()])
 DecodeTT         = __convert( 'TT' )
 DecodeIT         = __convert( 'IT' )
@@ -42,8 +41,8 @@ DecodeOT         = __convert( 'OT' )
 DecodeMUON       = __convert( 'Muon' )
 DecodeRICH       = __convert( 'Rich' )
 DecodeECAL       = __convert( 'Ecal' )
-DecodeSPD        = __convertName("CaloDigitsFromRaw/SpdFromRaw")
-DecodePRS        = __convertName("CaloDigitsFromRaw/PrsFromRaw")
+DecodeSPD        = __convertName('CaloDigitsFromRaw/SpdFromRaw')
+DecodePRS        = __convertName('CaloDigitsFromRaw/PrsFromRaw')
 DecodeHCAL       = __convert( 'Hcal' )
 
 
