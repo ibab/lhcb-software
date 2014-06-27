@@ -71,7 +71,8 @@ class ChargedProtoANNPIDConf(LHCbConfigurableUser):
                 nn = ANNGlobalPID__ChargedProtoANNPIDAlg(nameroot+track+pid)
 
                 # Set configuration for this track and PID combination
-                nn.Configuration = "GlobalPID_"+pid+"_"+track+"_ANN.txt"
+                nn.TrackType = track
+                nn.PIDType   = pid
 
                 # Network version
                 nn.NetworkVersion = annVersion

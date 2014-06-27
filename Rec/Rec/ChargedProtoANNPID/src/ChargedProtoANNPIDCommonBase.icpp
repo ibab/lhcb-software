@@ -2,8 +2,14 @@
 // local
 #include "ChargedProtoANNPIDCommonBase.h"
 
-// Boost
-#include "boost/assign/list_of.hpp"
+// FPE exception protection
+#include "Kernel/FPEGuard.h"
+
+// boost
+#include "boost/regex.hpp"
+#include "boost/algorithm/string.hpp"
+#include "boost/format.hpp"
+#include "boost/lexical_cast.hpp"
 
 //=============================================================================
 // Constructor initialisation
@@ -104,16 +110,13 @@ ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::recSummary() const
 
 //=============================================================================
 template <class PBASE>
-typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::ConstVector 
+typename ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::Input::ConstVector
 ANNGlobalPID::
 ChargedProtoANNPIDCommonBase<PBASE>::getInputs( const StringInputs& names ) const
 {
   typename Input::ConstVector inputs;
   inputs.reserve(names.size());
-  for ( StringInputs::const_iterator i = names.begin(); i != names.end(); ++i )
-  {
-    inputs.push_back( getInput(*i) );
-  }
+  for ( const auto& name : names ) { inputs.push_back( getInput(name) ); }
   return inputs;
 }
 //=============================================================================
@@ -142,7 +145,7 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
 
   // Rich Variables
   else if ( "RichUsedAero"     == name ) { input = new InRichUsedAerogel(); }
-  else if ( "RichUsedR1Gas"    == name ) { input = new InRichUsedR1Gas(); }  
+  else if ( "RichUsedR1Gas"    == name ) { input = new InRichUsedR1Gas(); }
   else if ( "RichUsedR2Gas"    == name ) { input = new InRichUsedR2Gas(); }
   else if ( "RichAboveElThres" == name ) { input = new InRichAboveElThres(); }
   else if ( "RichAboveMuThres" == name ) { input = new InRichAboveMuThres(); }
@@ -199,3 +202,406 @@ ChargedProtoANNPIDCommonBase<PBASE>::getInput( const std::string& name ) const
   return input;
 }
 //=============================================================================
+
+//=============================================================================
+// Cut constructor
+//=============================================================================
+template <class PBASE>
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::
+Cut::Cut( const std::string& desc,
+          const ChargedProtoANNPIDCommonBase<PBASE> * parent )
+  : m_desc(desc),
+    m_OK(false),
+    m_variable(NULL),
+    m_cut(0),
+    m_delim(UNDEFINED)
+{
+  // Cuts must have a precise form. Either
+  //    variable > value
+  // or
+  //    variable < value
+
+  // Parse the cut string
+  boost::regex re("\\s+");
+  boost::sregex_token_iterator i( desc.begin(), desc.end(), re, -1 );
+  boost::sregex_token_iterator j;
+  std::vector<std::string> matches;
+  while ( i != j ) { matches.push_back( *i++ ); }
+  if ( matches.size() == 3 )
+  {
+    // Get the variable from its name
+    m_variable = parent->getInput( matches[0] );
+
+    // Delimitor
+    m_OK = setDelim( matches[1] );
+
+    // The cut value
+    m_cut = boost::lexical_cast<double>( matches[2] );
+  }
+
+  // Remove spaces from the cached description string
+  boost::erase_all( m_desc, " " );
+}
+
+#ifdef _ENABLE_NEUROBAYES
+//=============================================================================
+// Get ANN output for NeuroBayes network helper
+//=============================================================================
+template <class PBASE>
+double
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::
+NeuroBayesANN::getOutput( const LHCb::ProtoParticle * proto )
+  const
+{
+  // Fill the array of network inputs
+  {
+    unsigned int i = 0;
+    for ( const auto * input : this->inputs() )
+    {
+      m_inArray[i++] = static_cast<float>( input->value(proto) );
+    }
+  }
+
+  // FPE Guard for NB call
+  FPE::Guard guard(true);
+
+  // NeuroBayes seems to sporadically send mysterious std messages which we
+  // cannot control... So forcibly intercept them all here and send to /dev/null
+  int original_stdout(0), original_stderr(0);
+  if ( m_suppressPrintout )
+  {
+    original_stdout = dup(fileno(stdout));
+    fflush(stdout);
+    freopen("/dev/null","w",stdout);
+    original_stderr = dup(fileno(stderr));
+    fflush(stderr);
+    freopen("/dev/null","w",stderr);
+  }
+
+  // get the NN output, rescaled to the range 0 to 1
+  const double nnOut = 0.5 * ( 1.0 + (double)m_expert->nb_expert(m_inArray) );
+
+  // put std back to normal
+  if ( m_suppressPrintout )
+  {
+    fflush(stdout);
+    dup2(original_stdout,fileno(stdout));
+    close(original_stdout);
+    fflush(stderr);
+    dup2(original_stderr,fileno(stderr));
+    close(original_stderr);
+  }
+
+  // return final output
+  return nnOut;
+}
+#endif
+
+//=============================================================================
+// Get ANN output for TMVA Reader helper
+//=============================================================================
+template <class PBASE>
+double
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::
+TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto )
+  const
+{
+  // Fill the array of network inputs
+  {
+    unsigned int i = 0;
+    for ( const auto * input : this->inputs() )
+    {
+      m_inArray[i++] = static_cast<float>( input->value(proto) );
+    }
+  }
+
+  // get the output
+  double mvaOut = m_reader->EvaluateMVA("PID");
+
+  // Final sanity check
+  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
+  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
+
+  // return
+  return mvaOut;
+}
+
+//=============================================================================
+// Get ANN output for TMVA Imp helper
+//=============================================================================
+template <class PBASE>
+double
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::TMVAImpANN::
+getOutput( const LHCb::ProtoParticle * proto )
+  const
+{
+  // Fill the array of network inputs
+  {
+    unsigned int i = 0;
+    for ( const auto * input : this->inputs() )
+    {
+      m_vars[i++] = input->value(proto);
+    }
+  }
+
+  // get the output
+  double mvaOut = m_reader->GetMvaValue(m_vars);
+
+  // Final sanity check
+  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
+  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
+
+  // return
+  return mvaOut;
+}
+
+//=============================================================================
+// Get ANN output for TMVA Imp helper
+//=============================================================================
+template <class PBASE>
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::
+NetConfig( const std::string & tkType,
+           const std::string & pidType,
+           const std::string & netVersion,
+           const bool suppressANNPrintout,
+           const ChargedProtoANNPIDCommonBase<PBASE> * parent )
+  : m_OK(true), m_netHelper(NULL)
+{
+
+  // Check the configuration
+  if ( tkType.empty() )
+  { parent->Error( "No TrackType specified" ).ignore(); m_OK = false; }
+  if ( pidType.empty() )
+  { parent->Error( "No PIDType specified" ).ignore(); m_OK = false; }
+  if ( netVersion.empty() )
+  { parent->Error( "No NetVersion specified" ).ignore(); m_OK = false; }
+
+  // ParamFile root
+  const std::string paramEnv = "CHARGEDPROTOANNPIDROOT";
+  if ( !getenv(paramEnv.c_str()) ) parent->Error( "$"+paramEnv+" not set" ).ignore();
+  const std::string paramRoot = ( std::string(getenv(paramEnv.c_str())) +
+                                  "/data/" + netVersion + "/" );
+
+  // configuration file path
+  const std::string configFile = ( paramRoot +
+                                   "GlobalPID_" + pidType + "_" + tkType +
+                                   "_ANN.txt" );
+
+  // Open the config file
+  std::ifstream config( configFile.c_str() );
+  if ( config.is_open() )
+  {
+    // Read the particle type
+    config >> m_particleType;
+    // if ( m_particleType != pidType )
+    // {
+    //   m_OK = false;
+    //   parent -> Error( "Mis-match in particle types " + m_particleType +
+    //                    " != " + pidType ).ignore();
+    // }
+
+    // Read the track Type
+    config >> m_trackType;
+    if ( m_trackType != tkType )
+    {
+      m_OK = false;
+      parent -> Error( "Mis-match in track types " + m_trackType +
+                       " != " + tkType ).ignore();
+    }
+
+    // Track selection cuts file name
+    std::string cutsFile;
+    config >> cutsFile;
+
+    // Check if this string ends with .txt ?
+    if ( cutsFile.find(".txt") != std::string::npos )
+    {
+      // New style cuts file(s), so read from file(s)
+
+      // Split up files seperated by comma
+      std::vector<std::string> files;
+      boost::split( files, cutsFile, boost::is_any_of(",") );
+      for ( const auto & file : files )
+      {
+
+        const std::string fullFile = paramRoot + file;
+        std::ifstream cuts(fullFile.c_str());
+        if ( !cuts.is_open() )
+        {
+          m_OK = false;
+          parent -> Error( "Track Selection cuts file '" +
+                           fullFile + "' cannot be opened" ).ignore();
+        }
+        else
+        {
+
+          // Read the cuts and create a cut object for each
+          std::string cut;
+          while ( std::getline(cuts,cut) )
+          {
+            // Skip empty lines or comments
+            if ( !cut.empty() && cut.find("#") == std::string::npos )
+            {
+              // try and make a cut for this string
+              m_cuts.push_back( new Cut(cut,parent) );
+              if ( !m_cuts.back()->isOK() )
+              {
+                m_OK = false;
+                parent -> Error( "Failed to decode selection cut '" + cut + "'" ).ignore(); 
+              }
+            }
+          }
+
+          // close the file
+          cuts.close();
+
+        }
+
+      } // loop over cuts file
+
+    }
+    else
+    {
+
+      // Old style, so last line and the next few are cut values themselves
+      std::string minP,minPt,maxChiSq,minLikeli,maxGhostProb,trackPreSel;
+      minP = cutsFile;
+      config >> minPt;
+      config >> maxChiSq;
+      config >> minLikeli;
+      config >> maxGhostProb;
+      config >> trackPreSel;
+
+      // Create cut objects
+      bool ok = true;
+      m_cuts.push_back( new Cut( "TrackP                > "+minP,         parent ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackPt               > "+minPt,        parent ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackChi2PerDof       < "+maxChiSq,     parent ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackLikelihood       > "+minLikeli,    parent ) );
+      ok &= m_cuts.back()->isOK();
+      m_cuts.push_back( new Cut( "TrackGhostProbability < "+maxGhostProb, parent ) );
+      ok &= m_cuts.back()->isOK();
+      if ( trackPreSel == "TrackPreSelIsMuon" )
+      {
+        m_cuts.push_back( new Cut( "MuonIsMuon > 0.5", parent ) );
+        ok &= m_cuts.back()->isOK();
+      }
+      if ( !ok ) 
+      {
+        m_OK = false;
+        parent -> Error( "Failed to decode old style track cuts" ).ignore();
+      }
+
+    }
+
+    // Read the network type
+    std::string annType;
+    config >> annType;
+
+    // Read network parameters file name
+    std::string paramFileName;
+    config >> paramFileName;
+    paramFileName = paramRoot+paramFileName;
+    std::ifstream netparamtest(paramFileName.c_str());
+    if ( !netparamtest.is_open() ) 
+    {
+      parent -> Error( "Network parameters file '" +
+                       paramFileName + "' cannot be opened" ).ignore();
+      m_OK = false;
+    }
+    netparamtest.close();
+
+    // Read the list of inputs
+    std::string input;
+    StringInputs inputs;
+    while ( config >> input )
+    {
+      // Skip empty lines and comments
+      if ( !input.empty() && input.find("#") == std::string::npos )
+      {
+        inputs.push_back(input);
+      }
+    }
+
+    // Load the network helper object
+    if ( "TMVA" == annType )
+    {
+      // First see if we have a built in C++ implementation for this case
+      m_netHelper = new TMVAImpANN( netVersion, particleType(), trackType(),
+                                    inputs, parent );
+      if ( !m_netHelper->isOK() )
+      {
+        // No, so try again with a TMVA Reader
+        parent -> warning() << "Compiled TMVA implementation not available for "
+                            << netVersion << " " << particleType() << " " << trackType()
+                            << " -> Reverting to XML Reader"
+                            << endmsg;
+        delete m_netHelper;
+        m_netHelper = new TMVAReaderANN( paramFileName, inputs, parent );
+      }
+    }
+#ifdef _ENABLE_NEUROBAYES
+    else if ( "NeuroBayes" == annType )
+    {
+      if ( parent->msgLevel(MSG::DEBUG) )
+        parent->debug() << "Using NeuroBayes Expert implementation" << endmsg;
+      // FPE Guard for NB call
+      FPE::Guard guard(true);
+      m_netHelper = new NeuroBayesANN( paramFileName, inputs, parent,
+                                       suppressANNPrintout );
+    }
+#endif
+    else
+    {
+      parent -> Error( "Unknown ANN type '"+annType+"'" );
+      m_OK = false;
+    }
+
+    // print a summary of the configuration
+    const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
+    parent->info() << boost::format(sF) % netVersion % trackType() % particleType() << endmsg;
+    if ( parent->msgLevel(MSG::DEBUG) )
+    {
+      parent->debug() << "Network type     = " << annType << endmsg
+                      << "ConfigFile       = " << configFile << endmsg
+                      << "ParamFile        = " << paramFileName << endmsg
+                      << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg
+                      << "Preselection Cuts (" << m_cuts.size() << ") = " << m_cuts
+                      << endmsg;
+    }
+
+  }
+  else
+  {
+    m_OK = false;
+    parent->Error( "Failed to open configuration file '"+configFile+"'" ).ignore();
+  }
+
+  // Close the config file
+  config.close();
+
+}
+
+template <class PBASE>
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::~NetConfig() 
+{ 
+  delete m_netHelper; 
+  for ( auto * cut : m_cuts ) { delete cut; }
+  m_cuts.clear();
+}
+
+template <class PBASE>
+bool
+ANNGlobalPID::ChargedProtoANNPIDCommonBase<PBASE>::NetConfig::
+passCuts( const LHCb::ProtoParticle * proto ) const
+{
+  bool ok = true;
+  for ( auto * cut : m_cuts )
+  {
+    if ( !cut->isSatisfied(proto) ) { ok = false; break; }
+  }
+  return ok;
+}
