@@ -37,7 +37,7 @@ class MooreExpert(LHCbConfigurableUser):
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile', 'zipfile', 'cdb' and 'sqlite'
-        , "Hlt2Independent" : False #"Gerhard's Sledgehammer", auto pass all TOS links from HLT1->HLT2 when run alone, and also turn off HLT1 track decoding
+        , "Hlt2Independent" : False #turn off HLT1 track decoding
         , "DisableMonitors" : False #Disable HLT monitoring
         }
 
@@ -699,41 +699,32 @@ class Moore(LHCbConfigurableUser):
         def hlt1_only_tck() :
             # remove items starting with Hlt2
             # enable track reports writers
-            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
             # remove lumi stripper...
             trans = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
-                    , 'HltTrackReportsWriter/.*'           : { 'Enable' : { "^.*$" : 'True' } }
-                    , 'HltRoutingBitsWriter/.*'            : { 'Hlt2DecReportsLocation' : { '^.*$' : '' } }
+                    , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
                     , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
             }
             Funcs._mergeTransform(trans)
 
         def hlt2_only_tck() :
+            ### remove all algorithms starting with Hlt1
+            ### enable various reports decoders
+            ### TODO: if running 'independent' somehow replace track decoder with velo reco ...
+            trans = { 'GaudiSequencer/HltDecisionSequence$' : { 'Members' : { "'[^/]*/Hlt1[^']*'[^,]*," : ""  } }
+                    , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } } 
+                    , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
+                    , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
+                    }
+            ### FIXME/TODO/BAD HACK ALERT
+            ###    add the selreports decoder prior to Hlt2 to running...
+            ###    this has to move into Hlt2Line somehow, but it doesn't really know
+            ###    about TISTOS linking -- so it must check for TisTosParticleTagger...
             from DAQSys.Decoders import DecoderDB
-            #dependent transform, if HLT1 has run before, now add HLT1 decoding, track decoding etc.
-            #if not MooreExpert().getProp("Hlt2Independent"):
-            trinsertion=""
-            transdep={}
-            if not MooreExpert().getProp("Hlt2Independent"):
-                hlt1traoder_name='HltTrackReportsDecoder/VeloDecoder'
-                tr=DecoderDB[hlt1traoder_name]
-                tr.active = True
-                trAlg=tr.setup()
-                trinsertion="', '"+hlt1traoder_name
-            
-            ### replace all algorithms starting with Hlt1
-            transdep['GaudiSequencer/HltDecisionSequence$']={ 'Members' : { "'[^/]*/Hlt1[^']*' *," : ""  } }
+            DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup()
+            trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { "^" : " 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } } )
+
             Funcs._mergeTransform(transdep)
                     
-        def gerhardsSledgehammer() :
-            from Configurables import GaudiSequencer as gs
-            from Funcs import _updateProperties
-            _updateProperties( gs('Hlt2') , dict( TisTosParticleTagger = 'PassOnAll' ) , True)
-        
-        def gerhardsSledgehammer_tck() : 
-            trans = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
-            Funcs._mergeTransform(trans)
-        
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
         split=self.getProp("Split")
@@ -741,23 +732,10 @@ class Moore(LHCbConfigurableUser):
             raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
         if useTCK :
             splitter = { 'Hlt1'     : hlt1_only_tck 
-                         , 'Hlt2'     : hlt2_only_tck
-                         , ''         : False }
+                       , 'Hlt2'     : hlt2_only_tck
+                       , ''         : False }
             action = splitter[ split ]
-            if  MooreExpert().getProp("Hlt2Independent"): gerhardsSledgehammer_tck()
             if action : action()
-        else :
-            splitter = { 'Hlt1'     : False
-                         , 'Hlt2'     : hlt2_only
-                         , ''         : False }
-            action = splitter[ split ]
-            
-            from Gaudi.Configuration import appendPostConfigAction
-            if action :
-                appendPostConfigAction( action )
-            
-            if  MooreExpert().getProp("Hlt2Independent"):
-                appendPostConfigAction( gerhardsSledgehammer )
         
         #check/set WriterRequires, not really needed since now the content of Hlt1/2 is modified in the HltDecisionSequence
         if self.isPropertySet('WriterRequires'):
