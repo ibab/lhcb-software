@@ -179,15 +179,22 @@ class HltConf(LHCbConfigurableUser):
             Dec.Members.append(Sequence("Hlt1Postamble"))
             Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
+            # disable the Hlt1 decoders in case Hlt1 is actually running...
+            #  TODO: what about the trackig decoders??
             from DAQSys.Decoders import DecoderDB
-            decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
-            decoder.setup().Enable = False
+            for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
+                       "HltSelReportsDecoder/Hlt1SelReportsDecoder"] :
+                decoder = DecoderDB[n]
+                decoder.setup().Enable = False
         
         #
         # dispatch Hlt2 configuration
         #
         # don't do this if there are no HLT2 lines
         if activehlt2lines:
+            ## TODO/FIXME/BAD HACK: this needs to be combined with the TISTOS tagger inside Hlt2Line...
+            if not activehlt1lines : 
+                    Dec.members.append( DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup() )
             Dec.Members.append(Sequence("Hlt2"))
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
@@ -753,6 +760,7 @@ class HltConf(LHCbConfigurableUser):
                          )
         
         # make sure we only instantiate members which are used...
+        ### TODO/FIXME: insure that these always 'pass'
         End           = Sequence('HltEndSequence', Members = [ tp( name, **props ) for (gate,tp,name,props) in _endlist       if self.getProp(gate) ]  )
         Hlt1PostAmble = Sequence('Hlt1Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt1postamble if self.getProp(gate) ]  )
         Hlt2PostAmble = Sequence('Hlt2Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt2postamble if self.getProp(gate) ]  )
