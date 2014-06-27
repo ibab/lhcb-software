@@ -705,17 +705,6 @@ class HltConf(LHCbConfigurableUser):
                                  + DecodeIT.members() + [ HltBeetleSyncMonitor() ]
         BeetleMonitorAccept.Members = [ BeetleMonitor, Filter( 'ForceAccept', Code = 'FALL' ) ]
 
-        # note: the following is a list and not a dict, as we depend on the
-        # order of iterating through it!!!
-        _endlist = ( # ( "RequireL0ForEndSequence",  )
-                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  { } ),
-                     ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', { } ),
-                     ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
-                   )
-
-        ### store the BDT response (and a bit more) through ExtraInfo on particles:
-        sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
-
         # make sure we encode from the locations the decoders will use...
         from DAQSys.Decoders import DecoderDB
         hlt1_decrep_loc = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
@@ -723,6 +712,17 @@ class HltConf(LHCbConfigurableUser):
         hlt1_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
         hlt2_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
         hlt_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
+        # note: the following is a list and not a dict, as we depend on the
+        # order of iterating through it!!!
+        _endlist = ( # ( "RequireL0ForEndSequence",  )
+                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  { } ),
+                     ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
+                     ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
+                   )
+
+        ### store the BDT response (and a bit more) through ExtraInfo on particles:
+        sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
+
 
         _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,'Hlt2DecReportsLocation' : '',  } )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 'InputHltDecReportsLocation' : hlt1_decrep_loc } )
