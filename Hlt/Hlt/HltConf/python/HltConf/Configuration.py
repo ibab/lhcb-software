@@ -715,7 +715,7 @@ class HltConf(LHCbConfigurableUser):
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
         _endlist = ( # ( "RequireL0ForEndSequence",  )
-                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  { } ),
+                     ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
                      ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
                      ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
                    )
