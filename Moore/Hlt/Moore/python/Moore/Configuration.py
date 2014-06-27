@@ -695,94 +695,25 @@ class Moore(LHCbConfigurableUser):
             LHCbApp().setProp("Persistency","MDF")
     
     def _split(self, useTCK ): 
-        def hlt1_only() :
-            from Configurables import HltGlobalMonitor
-            HltGlobalMonitor().DecToGroupHlt2 = {}
-
-            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
-            from Configurables import HltRoutingBitsWriter
-            HltRoutingBitsWriter().Hlt2DecReportsLocation = ''
 
         def hlt1_only_tck() :
-            #this fills the HltDecisionSequence with "Hlt1" only
-            trans = { 'GaudiSequencer/HltDecisionSequence' :               { 'Members' : { '^.*$' : "['GaudiSequencer/Hlt1']" } } 
-                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
-                      }
-            #configure and add the tracking encoder
-            from Configurables import HltTrackReportsWriter
-            HltTrackReportsWriter()
-            trans['GaudiSequencer/HltEndSequence']={ 'Members' : { "DecReportsWriter'": "DecReportsWriter', 'HltTrackReportsWriter'" } }
-
-            #  make sure SourceID is properly set
-            trans['Hlt(Sel|Dec)ReportsWriter/.*']={ 'SourceID' : { '^.*$' : '1' } }
+            # remove items starting with Hlt2
+            # enable track reports writers
+            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
+            # remove lumi stripper...
+            trans = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
+                    , 'HltTrackReportsWriter/.*'           : { 'Enable' : { "^.*$" : 'True' } }
+                    , 'HltRoutingBitsWriter/.*'            : { 'Hlt2DecReportsLocation' : { '^.*$' : '' } }
+                    , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
+            }
             Funcs._mergeTransform(trans)
 
-            #  make sure that in Hlt1-only, the routing bits writer skips the Hlt2 bits
-            trans['HltRoutingBitsWriter/.*']={ 'Hlt2DecReportsLocation' : { '^.*$' : '' } }
-
-            # remove lumi stripper...
-            trans['GaudiSequencer/HltEndSequence']={ 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
-
-        def hlt2_only() :
-            from Configurables import GaudiSequencer as gs
-            seq = gs('Hlt')
-            # TODO: shunt lumi nano events...
-            # globally prepend Decoders for Hlt1... 
-            # TODO: this MUST move into HltConf...
-            # TODO: find a better way of doing this... ditto for L0 decoding...I should have been able to suppress this stuff! 
-            from DAQSys.Decoders import DecoderDB
-            def appendDecoder(decoder) :
-                dc = DecoderDB[ decoder ]
-                dc.active = True
-                seq.Members.insert( seq.Members.index(gs('HltDecisionSequence')), dc.setup() )
-
-            decoders = [ "HltSelReportsDecoder/Hlt1SelReportsDecoder", "HltDecReportsDecoder/Hlt1DecReportsDecoder" ]
-            if not MooreExpert().getProp("Hlt2Independent") :
-                decoders += [ "HltTrackReportsDecoder/VeloDecoder", "HltTrackReportsDecoder/ForwardDecoder" ] 
-            for decoder in decoders : appendDecoder( decoder )
-
-            # shunt Hlt1 decreports
-            from Funcs import _updateProperties
-            _updateProperties( gs('Hlt')
-                               , dict( LoKi__HDRFilter      = 'Location'
-                                     , TisTosParticleTagger = 'HltDecReportsInputLocation'
-                                     )
-                               , DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
-                               )
-            
-            
-            # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
-            # remove LumuWriter, LumiStripper
-            end = gs('HltEndSequence')
-            end.Members = Funcs._remove( ( 'HltL0GlobalMonitor','Hlt1Global','HltLumiWriter','LumiStripper'), end.Members )
-            
-            ## adapt HltGlobalMonitor for Hlt2 only...
-            from Configurables import HltGlobalMonitor
-            HltGlobalMonitor().DecToGroupHlt1 = {}
-            
-            # shunt Hlt2 decreports
-            from Funcs import _updateProperties
-            _updateProperties( gs('Hlt')
-                             , dict( HltGlobalMonitor     = 'HltDecReports'
-                                   )
-                             , DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-                             )
-            
-        
         def hlt2_only_tck() :
             from DAQSys.Decoders import DecoderDB
             #dependent transform, if HLT1 has run before, now add HLT1 decoding, track decoding etc.
             #if not MooreExpert().getProp("Hlt2Independent"):
-            #Todo, route out all the errors here, I should have been able to suppress this stuff!
             trinsertion=""
             transdep={}
-            hlt1decoder_name="HltDecReportsDecoder/Hlt1DecReportsDecoder"
-            dec=DecoderDB[hlt1decoder_name]
-            decAlg=dec.setup()
-            hlt1seloder_name="HltSelReportsDecoder/Hlt1SelReportsDecoder"
-            dec4=DecoderDB[hlt1seloder_name]
-            dec4Alg=dec4.setup()
-            hlt1decrep_location = dec.listOutputs()[0]
             if not MooreExpert().getProp("Hlt2Independent"):
                 hlt1traoder_name='HltTrackReportsDecoder/VeloDecoder'
                 tr=DecoderDB[hlt1traoder_name]
@@ -790,29 +721,9 @@ class Moore(LHCbConfigurableUser):
                 trAlg=tr.setup()
                 trinsertion="', '"+hlt1traoder_name
             
-            #this is replacing the HltDecisionSequence with some other things
-            transdep['GaudiSequencer/Hlt$']={ 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+trinsertion+"', 'GaudiSequencer/HltDecisionSequence"  } }
             ### replace all algorithms starting with Hlt1
             transdep['GaudiSequencer/HltDecisionSequence$']={ 'Members' : { "'[^/]*/Hlt1[^']*' *," : ""  } }
-            transdep['TisTosParticleTagger/.*']={ 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
             Funcs._mergeTransform(transdep)
-            
-            #always transform
-            hlt2decrep_location = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-            
-            transall={}
-            transall['GaudiSequencer/HltEndSequence']={ 'Members' : { ", '[^/]*/HltL0GlobalMonitor'" : '' 
-                                                                    , ", '[^/]*/Hlt1Global'"         : ''
-                                                                    , ", '[^/]*/HltLumiWriter'"      : '' } }
-            
-            transall['HltGlobalMonitor/HltGlobalMonitor' ]= { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
-            
-            transall2={ 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
-                      }
-            
-            Funcs._mergeTransform(transall)
-            Funcs._mergeTransform(transall2)
-
                     
         def gerhardsSledgehammer() :
             from Configurables import GaudiSequencer as gs
@@ -836,7 +747,7 @@ class Moore(LHCbConfigurableUser):
             if  MooreExpert().getProp("Hlt2Independent"): gerhardsSledgehammer_tck()
             if action : action()
         else :
-            splitter = { 'Hlt1'     : hlt1_only 
+            splitter = { 'Hlt1'     : False
                          , 'Hlt2'     : hlt2_only
                          , ''         : False }
             action = splitter[ split ]
