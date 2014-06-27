@@ -81,16 +81,13 @@ ChargedProtoParticleMapper::algorithmForPath( const std::string & path )
         joSvc()->addPropertyToCatalogue( name, StringProperty("VersionRegex",m_regex) );
         algs.push_back( "ApplicationVersionFilter/" + name );
       }
-      for ( std::vector<std::string>::const_iterator iT = m_tkTypes.begin();
-            iT != m_tkTypes.end(); ++iT )
+      for ( const auto& tkType : m_tkTypes )
       {
-        for ( std::vector<std::string>::const_iterator iP = m_pidTypes.begin();
-              iP != m_pidTypes.end(); ++iP )
+        for ( const auto& pidType : m_pidTypes )
         {
-          const std::string name = "ANNPID" + (*iT) + (*iP) + "_" + baseName;
-          joSvc()->addPropertyToCatalogue( name, 
-                                           StringProperty("Configuration",
-                                                          "GlobalPID_"+*iP+"_"+*iT+"_ANN.txt") );
+          const std::string name = "ANNPID" + tkType + pidType + "_" + baseName;
+          joSvc()->addPropertyToCatalogue( name, StringProperty("TrackType",tkType) );
+          joSvc()->addPropertyToCatalogue( name, StringProperty("PIDType",pidType) );
           joSvc()->addPropertyToCatalogue( name, StringProperty("NetworkVersion",m_pidTune) );
           joSvc()->addPropertyToCatalogue( name, StringProperty("ProtoParticleLocation",
                                                                 protoLocation(streamRoot(path))) );
