@@ -58,20 +58,21 @@ public:
 protected:
   /// use"light" mode? ( suitable fo recalibration purposes)
   inline bool lightMode() const { return m_light_mode ; }
+  void pushData(LHCb::ProtoParticle*,LHCb::ProtoParticle::additionalInfo,const LHCb::CaloHypo*,
+                CaloDataType::DataType,double def=CaloDataType::Default,bool force=false);
+  double getMass(int cellCode );
 private:// method  
 
 private:// data
   // ==========================================================================
   std::string               m_protoLocation     ;
   std::vector<std::string>  m_hyposLocations    ;
-  double                    m_caloTrMatch_bad   ;
-  double                    m_caloDepositID_bad ;
-  double                    m_showerShape_bad   ;
-  double                    m_clusterMass_bad   ;
-  double                    m_photonID_bad      ;
+  double                    m_bad   ;
   /// flag to indicate "light/calibration" mode 
   bool  m_light_mode ;
   ICaloHypoEstimator* m_estimator ;
+  std::map<int,double> m_mass;
+  bool m_setMass;
 };
 #endif // GLOBALRECO_NEUTRALPROTOPALG_H
 

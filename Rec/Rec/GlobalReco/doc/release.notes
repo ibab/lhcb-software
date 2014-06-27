@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2014-06-27 - O. Deschamps
+ - NeutralProtoPAlg : add new neutralID I/O to neutral info - reorganize additionalInfo() storage
+ - NeutralProtoParticleAddNeutralID.{cpp,h} : new algorithm to re-evaluate the NN-based neutralID directly using protoP info (to be used in DV)
+
+
 !========================= GlobalReco v6r47 2014-05-13 ========================
 ! 2014-04-03 - Chris Jones
  - Adapt to changes in the ANNPID tuple monitor.
