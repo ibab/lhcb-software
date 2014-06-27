@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+! 2014-06-27 - Chris Jones
+ - Add a new tool interface that provides access to the ANNPID variables.
+
 !========================= RecInterfaces v1r2 2014-05-13 ========================
 ! 2014-04-01 - Chris Jones
  - Rework the tool interface, to allow it to be used by a DecayTreeTuple tool.
