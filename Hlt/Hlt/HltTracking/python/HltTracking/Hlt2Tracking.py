@@ -836,6 +836,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             chargedProtosOutputLocation = self.__protosLocation(Hlt2ChargedProtoParticleSuffix) + "/" + outputLocation
             charged_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedProtoPAlg'
             charged      = ChargedProtoParticleMaker(charged_name)
+            charged.TrackSelectorType = "TrackSelector"
             charged.addTool(TrackSelector,name="TrackSelector")
             ts=charged.TrackSelector
             cuts=self.getProp("TrackCuts")
@@ -858,6 +859,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                     "/" + outputLocation
             charged_secondLoop_name = self.__pidAlgosAndToolsPrefix()+outputLocation.replace("/","")+'ChargedSecondLoopProtoPAlg'
             charged_secondLoop      = ChargedProtoParticleMaker(charged_secondLoop_name)
+            charged_secondLoop.TrackSelectorType = "TrackSelector"
             charged_secondLoop.addTool(TrackSelector,name="TrackSelector")
             ts=charged_secondLoop.TrackSelector
             cuts=self.getProp("TrackCuts")
@@ -1502,6 +1504,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             bm_output = '/Event/'+caloName+'LowElectron/ProtoP/Charged'
             chargedName = self.__pidAlgosAndToolsPrefix()+bm_output.replace("/","")+'ChargedProtoPAlg'
             charged     = ChargedProtoParticleMaker(chargedName)
+            charged.TrackSelectorType = "TrackSelector"
             charged.addTool(TrackSelector,name="TrackSelector")
             ts=charged.TrackSelector
             cuts=self.getProp("TrackCuts")

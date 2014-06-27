@@ -3,6 +3,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-06-27 - Gerhard Raven
+ - do not rely on context to get consistent TrackSelector
+
 ! 2014-06-18 - Gerhard Raven
  - remove use of importOptions($STDOPTS/DecodeRawEvent.py)
 
