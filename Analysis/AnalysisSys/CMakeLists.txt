@@ -4,6 +4,7 @@
 gaudi_subdir(AnalysisSys v12r3)
 
 gaudi_depends_on_subdirs(Analysis/PyAna
+                         Analysis/Ostap
                          Ex/LoKiExample
                          Ex/MicroDSTExample
                          Hlt/HltSelChecker
