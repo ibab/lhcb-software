@@ -127,6 +127,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                         )
 
         from Configurables import TisTosParticleTagger
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
         TOSInputMuonsFilter = Hlt2Member(TisTosParticleTagger
                                          ,"TOSInputMuonsFilter"
                                          , TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
@@ -154,7 +155,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , HLT =self.getProp("SingleMuHLT1Filter")
                         , algos = [ PV3D(), BiKalmanFittedMuons, 
-                                    Hlt2SelSingleMuonFilter,TOSInputMuonsFilter, 
+                                    Hlt2SelSingleMuonFilter,DecodeHlt1SelRep,TOSInputMuonsFilter, 
                                     Hlt2SelSingleMuonMoni ]
                         , postscale = self.postscale
                         )

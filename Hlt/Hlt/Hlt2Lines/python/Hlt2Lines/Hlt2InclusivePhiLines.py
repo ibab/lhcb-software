@@ -137,14 +137,14 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
     def __filterHlt1TOS(self, name, inputComb) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
 
         filterTOS = Hlt2Member(TisTosParticleTagger
                                ,'Hlt1TOSFilter'
                                ,Inputs = [inputComb.outputSelection()]
                                ,TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
                               )
-        filterTOSSeq = bindMembers(name, [inputComb, filterTOS])
-        return filterTOSSeq
+        return bindMembers(name, [inputComb, DecodeHlt1SelRep, filterTOS])
         
     def __tightenMass(self, name, inputSeq):
       from HltLine.HltLine import Hlt2Member, bindMembers

@@ -208,7 +208,6 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
-        from Configurables import TisTosParticleTagger
         
         modules = CoreFactory('CoreFactory').Modules
         

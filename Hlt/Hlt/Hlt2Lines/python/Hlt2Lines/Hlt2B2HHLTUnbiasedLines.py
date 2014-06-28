@@ -71,12 +71,13 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                Code    = childCutNoPID)
         nopidAlgos = [ BiKalmanFittedKaons, filterAll ]
         ## HLT1 TIS Filter
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
         HLT1TISFilter = Hlt2Member ( TisTosParticleTagger
                                      , 'HLT1TISFilter'
                                      , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
                                      , Inputs = [ filterAll ]
                                      )
-        nopidAlgos += [ HLT1TISFilter ]
+        nopidAlgos += [DecodeHlt1SelRep,  HLT1TISFilter ]
         
 
         ##
@@ -139,7 +140,8 @@ class Hlt2B2HHLTUnbiasedLinesConf(HltLinesConfigurableUser) :
                                         , TisTosSpecs = { "Hlt1.*Decision%TIS":0 }
                                         , Inputs = [ filterRich ],
                                         )
-        richpidAlgos +=  [ HLT1TISRichFilter ]
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+        richpidAlgos +=  [ DecodeHlt1SelRep, HLT1TISRichFilter ]
 
         ##
         ## prepare the candidates

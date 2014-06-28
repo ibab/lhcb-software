@@ -52,7 +52,7 @@ class Hlt2InclusiveDiPhiLinesConf(HltLinesConfigurableUser):
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import HltANNSvc
-        from Configurables import FilterDesktop, CombineParticles, TisTosParticleTagger
+        from Configurables import FilterDesktop, CombineParticles
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiPhiDecision" : self.getProp('HltANNSvcID')['DiPhi'] } )
 

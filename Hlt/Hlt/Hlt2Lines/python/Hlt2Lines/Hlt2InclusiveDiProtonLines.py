@@ -290,7 +290,7 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                                       , Inputs = [ ProtonsForDiProton ]
                                                       )
 
-        Hlt1TISProtonsForDiProton = bindMembers("Hlt1TISProtonsForDiProton", [ ProtonsForDiProton,
+        Hlt1TISProtonsForDiProton = bindMembers("Hlt1TISProtonsForDiProton", [ ProtonsForDiProton, DecodeHlt1SelRep,
                                                                                TaggerHlt1TISProtonsForDiProton ])
         """                                        
         
@@ -328,8 +328,8 @@ class Hlt2InclusiveDiProtonLinesConf(HltLinesConfigurableUser):
                                                           , TisTosSpecs = { self.getProp("DiProton_Hlt1TIS") : 0 }
                                                           , Inputs = [ RichProtonsForDiProton ]
                                                           )
-        
-        Hlt1TISRichProtonsForDiProton = bindMembers("Hlt1TISRichProtonsForDiProton", [ RichProtonsForDiProton,
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+        Hlt1TISRichProtonsForDiProton = bindMembers("Hlt1TISRichProtonsForDiProton", [ RichProtonsForDiProton, DecodeHlt1SelRep,
                                                                                        TaggerHlt1TISRichProtonsForDiProton ])
         
         TFRichCombine = Hlt2Member( CombineParticles
