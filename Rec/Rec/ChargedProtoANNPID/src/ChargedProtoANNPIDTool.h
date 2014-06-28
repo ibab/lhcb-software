@@ -41,22 +41,24 @@ namespace ANNGlobalPID
 
   public:
 
+    // Compute the ANNPID value
     virtual double annPID( const LHCb::ProtoParticle * proto,
-                           const LHCb::ParticleID pid,
+                           const LHCb::ParticleID& pid,
                            const std::string& annPIDTune ) const;
 
   private:
 
-    /// Access the ANNCOnfig object for a given configuration
-    NetConfig * getANN( const std::string & trackType,
-                        const std::string & pidType,
-                        const std::string & netVersion ) const;
+    /// Access the NetConfig object for a given configuration
+    const NetConfig * getANN( const std::string & trackType,
+                              const std::string & pidType,
+                              const std::string & netVersion ) const;
 
   private:
 
+    /// Mapping type to link confgurations to NetConfig instances
     typedef std::map< std::string, NetConfig * > Networks;
 
-    // Networks for a given configuration
+    /// Networks for a given ANNPID configuration
     mutable Networks m_annNets;
 
   };

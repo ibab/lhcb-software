@@ -49,15 +49,14 @@ StatusCode ChargedProtoANNPIDTool::finalize()
 
 //=============================================================================
 
-
 double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
-                                       const LHCb::ParticleID pid,
+                                       const LHCb::ParticleID& pid,
                                        const std::string& annPIDTune ) const
 {
   double annPID(-2);
 
   // are we charged ....
-  if ( proto->track() ) 
+  if ( proto && proto->track() ) 
   {
 
     // Get the track type
@@ -73,7 +72,7 @@ double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
                                   "UNDEFINED" );
     
     // Get the ANN for the given configuration
-    NetConfig * ann = getANN( trackType, pidType, annPIDTune );
+    const NetConfig * ann = getANN( trackType, pidType, annPIDTune );
     
     // Get the value of the ANN PID
     annPID = ( ann && ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -1 );
@@ -90,12 +89,11 @@ double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
 
 //=============================================================================
 
-ChargedProtoANNPIDTool::NetConfig * 
+const ChargedProtoANNPIDTool::NetConfig * 
 ChargedProtoANNPIDTool::getANN( const std::string & trackType,
                                 const std::string & pidType,
                                 const std::string & netVersion ) const
 {
- 
   // ANN key
   const std::string key = trackType+pidType+netVersion;
 
