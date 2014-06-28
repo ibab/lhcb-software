@@ -144,7 +144,7 @@ from Ostap.Fit2DModels       import *
 logger.debug ('Import specialized models from FitSpecificModels')
 from Ostap.FitSpecificModels import * 
 logger.debug ('Import ``other''   models from FitOtherModels')
-from OStap.FitOtherModels    import *
+from Ostap.FitOtherModels    import *
 
 # =============================================================================
 if '__main__' == __name__ :

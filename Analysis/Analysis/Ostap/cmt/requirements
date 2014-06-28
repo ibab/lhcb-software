@@ -11,7 +11,7 @@ package       Ostap
 version       v1r0
 
 # =========== structure =======================================================
-branches      cmt doc python scripts 
+branches      cmt doc python scripts tests
 
 # =========== dependencies ====================================================
 use           AnalysisPython v* Phys 
@@ -22,9 +22,6 @@ use           PyAna          v* Analysis
 apply_pattern install_python_modules
 apply_pattern install_scripts
 apply_pattern QMTest                  
-
-# =========== aliases ========================================================
-alias         pypaw        "ostap"
 
 # ============================================================================
 # The END 
