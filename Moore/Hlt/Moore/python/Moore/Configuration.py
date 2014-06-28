@@ -722,7 +722,6 @@ class Moore(LHCbConfigurableUser):
             from DAQSys.Decoders import DecoderDB
             DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup()
             trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { '[\[]' : "[ 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } )
-            print trans[ 'GaudiSequencer/HltDecisionSequence$']['Members']
 
             Funcs._mergeTransform(trans)
                     
