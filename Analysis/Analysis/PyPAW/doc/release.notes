@@ -9,6 +9,11 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+!========================= PyPAW v1r5 2014-06-28 =========================
+
+! 2014-06-28 - Vanya Belyaev
+ - tag as v1r5 before moval of all stuff into Analysis/Ostap package 
+
 ! 2014-06-28 - Vanya Belyaev
  - fix tiny bug in rebinNumbes method 
 
