@@ -20,12 +20,11 @@
 #  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-Set of useful PDFs for varous 1D and 2D fits
+""" Set of useful PDFs for various 1D and 2D fits
 
-It includes
+It includes:
 
-Empricial PDFs to describe narrow peaks
+Empricial PDFs to describe narrow peaks : 
 
   - Gauss 
   - Crystal Ball
@@ -41,18 +40,21 @@ Empricial PDFs to describe narrow peaks
   - Student-T
   - bifurcated Student-T
 
-PDF to describe ``wide'' peaks
+PDF to describe ``wide'' peaks : 
 
- - BreitWigner
- - LASS
- - Bugg
- - Flatter
- - ...
-- some useful PDFs to describe smooth background in 1D
- - phase space 
- - expo times polynomial
- - phase space times polynomial
- - ... 
+  - BreitWigner
+  - LASS
+  - Bugg
+  - Flatter
+  - ...
+ 
+- some useful PDFs to describe smooth background in 1D : 
+
+  - phase space 
+  - expo times polynomial
+  - phase space times polynomial
+  - ...
+  
 - set of smooth non-facrorizeable model for 2D fits 
 - ...  
 """
@@ -149,13 +151,16 @@ from Ostap.FitOtherModels    import *
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 

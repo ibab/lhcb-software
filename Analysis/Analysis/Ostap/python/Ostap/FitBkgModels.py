@@ -14,9 +14,7 @@
 #  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-Set of useful smooth 1D-models to describe background distribtions
-"""
+"""Set of useful smooth 1D-models to describe background distributions"""
 # =============================================================================
 __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -40,6 +38,8 @@ from   Ostap.FitBasic            import makeVar, Fit1DBase
 from   AnalysisPython.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBkgModels' )
 else                       : logger = getLogger ( __name__             )
+# =============================================================================
+logger.debug ( __doc__ ) 
 # =============================================================================
 ## @class  Bkg_pdf
 #  The exponential modified with the positive polynomial 
@@ -378,14 +378,17 @@ class PS23L_pdf(Fit1DBase) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*'   )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
+    
 # =============================================================================
 # The END 
 # =============================================================================

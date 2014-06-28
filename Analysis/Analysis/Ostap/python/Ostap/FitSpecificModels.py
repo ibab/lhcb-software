@@ -14,9 +14,7 @@
 #  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-A set of predefined ready-to-use shapes and PDFs 
-"""
+"""A set of predefined ready-to-use shapes and PDFs"""
 # =============================================================================
 __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -844,13 +842,16 @@ class Manca2_pdf (Fit1DBase) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 

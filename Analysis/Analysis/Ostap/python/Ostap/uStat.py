@@ -34,9 +34,7 @@
 #                by $Author: ibelyaev $
 #
 # ============================================================================
-"""
-
-Helper module to get ``U-statistics'' useful for ``Goodness-Of-Fit'' tests
+""" ``U-statistics'' useful for ``Goodness-Of-Fit'' tests
 
 This is a simple translation of
   the original C++ lines written by Greig Cowan into Python
@@ -277,14 +275,16 @@ def uPlot ( pdf            ,
 
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # ===========================================================================
 # The END 

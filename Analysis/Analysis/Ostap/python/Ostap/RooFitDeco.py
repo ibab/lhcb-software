@@ -14,11 +14,7 @@
 #  Last modification $Date: 2014-06-23 13:03:54 +0200 (Mon, 23 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-
-Module with decoration of some RooFit objects for efficient use in python
-
-"""
+"""Decoration of some RooFit objects for efficient use in python"""
 # =============================================================================
 __version__ = "$Revision: 174141 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -33,9 +29,10 @@ VE  = cpp.Gaudi.Math.ValueWithError
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.RooFitDeco' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
-logger.info ( 'Some useful decorations for RooFit objects')
+logger.debug( 'Some useful decorations for RooFit objects')
 # =============================================================================
 ## iterator for RooArgList 
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -727,13 +724,16 @@ ROOT.RooDataHist.__len__  = lambda s : s.numEntries()
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

@@ -4,7 +4,7 @@
 # $Id: Corr2D.py 173872 2014-06-14 13:03:26Z ibelyaev $
 # =============================================================================
 ## @file Corr2D.py 
-#
+#  
 #  Simple 2D-decorrelation transformation 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -14,9 +14,7 @@
 #  Last modification $Date: 2014-06-14 15:03:26 +0200 (Sat, 14 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-Simple 2D-decorrelation transformation 
-"""
+""" Simple 2D-decorrelation transformation """
 # =============================================================================
 __version__ = "$Revision: 173872 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -230,16 +228,18 @@ class Corr2D(object) :
 
 # =============================================================================
 if '__main__' == __name__ :
+        
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-
-
 # =============================================================================
 # The END 
 # =============================================================================

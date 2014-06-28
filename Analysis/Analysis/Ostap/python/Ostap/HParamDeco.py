@@ -13,9 +13,7 @@
 #  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-Module with utilities for parameterization of historgams 
-"""
+"""Module with utilities for parameterization of historgams"""
 # =============================================================================
 __version__ = "$Revision: 173561 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -30,11 +28,10 @@ VE  = cpp.Gaudi.Math.ValueWithError
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HParamDeco' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
-logger.info ( 'Some parameterization utilities for Histo objects')
-# =============================================================================
-
+logger.debug ( 'Some parameterization utilities for Histo objects')
 # =============================================================================
 ## @class BernsteinFIT
 #  simple function to fit/represent the histogram with sum of bernstein polynominals
@@ -632,14 +629,17 @@ ROOT.TFitResultPtr.__len__      = lambda s : len( s.Parameters() )
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
-    
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
+
 # =============================================================================
 # The END 
 # =============================================================================

@@ -55,9 +55,8 @@
 #  Last Modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-Helper module to fix a problems in communication of
-TTree/TChain::Process and TPySelector.
+"""Helper module to fix a problems in communication of TTree/TChain::Process and TPySelector.
+
 In PyROOT some of original C++ methods are disable.
 The module provides the 'recovery' for missing methods
 
@@ -661,13 +660,16 @@ class SelectorWithVars(SelectorWithCuts) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 100*'*'
-    print __doc__
-    print 100*'*'
-    print ' Author  : ' , __author__
-    print ' Date    : ' , __date__
-    print ' Version : ' , __version__
-    print 100*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

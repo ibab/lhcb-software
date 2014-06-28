@@ -39,8 +39,8 @@
 #  Last modification $Date: 2014-06-14 14:12:37 +0200 (Sat, 14 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-""" Simple intractive PyRoot-based analysis environment to provide access
-    to zillions useful decorators for ROOT (and not only ROOT) objects&classes
+""" Simple interactive PyRoot-based analysis environment
+to provide access to zillions useful decorators for ROOT (and not only ROOT) objects&classes
     
     This file is a part of BENDER project:
 
@@ -64,16 +64,15 @@ __version__ = '$Revision: 173871 $'
 # =============================================================================
 import ROOT, os, sys
 # =============================================================================
-# local name 
-# =============================================================================
-_my_name_ = __name__
-if '__main__' == _my_name_ : _my_name_ = 'Ostap Bender'
-# =============================================================================
 # logging 
 # =============================================================================
-from AnalysisPython.Logger import getLogger 
-logger = getLogger( _my_name_ )
-logger.info ( "Welcome to Ostap\n" + __doc__ )
+from AnalysisPython.Logger import getLogger
+if '__main__' == __name__ : logger = getLogger ( 'Ostap Bender' )
+else                      : logger = getLogger ( __name__       ) 
+# =============================================================================
+import ostapline
+logger.info ( "Welcome to Ostap\n" + ostapline.line )
+logger.info ( __doc__ )
 # =============================================================================
 ## 1) load LHCb-style file
 # =============================================================================
@@ -124,12 +123,11 @@ VE  = PyRoUts.VE
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 120*'*'
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
-    print 120*'*'
-
+    logger.info ( 80*'*' ) 
+    logger.info ( ' Author  : %s' %  __author__  ) 
+    logger.info ( ' Version : %s' %  __version__ ) 
+    logger.info ( ' Date    : %s' %  __date__    )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 

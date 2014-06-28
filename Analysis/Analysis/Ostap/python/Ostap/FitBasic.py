@@ -12,9 +12,7 @@
 #  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-Set of useful basic utilities to build various fit models 
-"""
+"""Set of useful basic utilities to build various fit models"""
 # =============================================================================
 __version__ = "$Revision:"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -42,8 +40,6 @@ from   Ostap.Utils               import RooSilent, NoContext
 # =============================================================================
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBasic' )
 else                       : logger = getLogger ( __name__         )
-# =============================================================================
-
 # =============================================================================
 _nemax = 80000  ## number of events per CPU-core 
 _ncmax =     6  ## maximal number of CPUs: there are some problems with >= 7
@@ -1019,13 +1015,16 @@ class Adjust1D(object) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__ + '\n' + ostapline.line  )
+    logger.info ( 80*'*' )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 

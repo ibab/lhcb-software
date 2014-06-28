@@ -15,12 +15,7 @@
 #  Last modification $Date: 2014-04-29 16:02:06 +0200 (Tue, 29 Apr 2014) $
 #  by                $Author: albarano $
 # =============================================================================
-"""
-
-Module with decoration of histo&text objects for efficient use in python
-including HEPDATA format 
-
-"""
+""" Module with decoration of histo&text objects for efficient use in python, including HEPDATA format """
 # =============================================================================
 __version__ = "$Revision: 172094 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -35,9 +30,10 @@ VE  = cpp.Gaudi.Math.ValueWithError
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HTextDeco' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
-logger.info ( 'Some useful decorations for Histo&Text objects')
+logger.debug ( 'Some useful decorations for Histo&Text objects')
 # =============================================================================
 ## further decoration
 try : 
@@ -231,13 +227,16 @@ for t in ( ROOT.TH2D ,
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

@@ -13,9 +13,7 @@
 #  Last modification $Date: 2014-06-14 10:32:45 +0200 (Sat, 14 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-Module with utilities for specific comparion of histograms/functions/shapes 
-"""
+"""Module with utilities for specific comparison of histograms/functions/shapes"""
 # =============================================================================
 __version__ = "$Revision: 173861 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -30,9 +28,10 @@ from   Ostap.PyRoUts     import hID,VE
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.HCmpDeco' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
-logger.info ( 'Some specific comparison of histo-objects')
+logger.debug ( 'Some specific comparison of histo-objects')
 # =============================================================================
 ## Can 1D-histogram can be considered as ``constant'' ?  
 def _h1_constant_ ( h1 , mn , mx , prob = 0.90 , delta = 0.001 ) :
@@ -289,13 +288,16 @@ ROOT.TH1F.cmp_prnt = _h1_cmp_prnt_
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

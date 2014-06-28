@@ -522,14 +522,15 @@ for t in ( PolyPos2D_pdf    ,
            
 # =============================================================================
 if '__main__' == __name__ :
-    
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+         
+    import ostapline
+    logger.info ( __file__ + '\n' + ostapline.line  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 

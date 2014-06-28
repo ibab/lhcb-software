@@ -35,8 +35,7 @@
 #  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
 #                 by $Author: ibelyaev $ 
 # =============================================================================
-"""
-Python interface to two major TMVA classes :
+""" Python interface to two major TMVA classes
 
 -  Trainer
 -  Reader 
@@ -70,7 +69,8 @@ __all__     = (
 # =============================================================================
 import ROOT
 from   AnalysisPython.Logger  import getLogger
-logger = getLogger( 'PyTMVA' )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.PyTMVA' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
 ## get the direct access to various TMVA macros&scripts 
 try :
@@ -427,12 +427,16 @@ def tmvaGUI ( filename , new_canvas = True ) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print '*'*120
-    print                      __doc__
-    print ' Author  : %s ' %   __author__    
-    print ' Version : %s ' %   __version__
-    print ' Date    : %s ' %   __date__
-    print '*'*120
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

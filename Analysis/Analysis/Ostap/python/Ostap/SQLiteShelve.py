@@ -119,7 +119,7 @@ from AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'SQLiteShelve' )
 else                      : logger = getLogger ( __name__ )
 # =============================================================================
-from .sqlitedict import SqliteDict
+from   Ostap.sqlitedict import SqliteDict
 import zlib 
 # =============================================================================
 ## @class SQLiteShelf
@@ -267,14 +267,16 @@ def open(*args, **kwargs):
 # =============================================================================
 if '__main__' == __name__ :
 
-    logger.info ( 100*'*' ) 
-    logger.info ( __doc__ ) 
-    logger.info ( 100*'*' ) 
-    logger.info ( ' Author  : %s ' %        __author__    ) 
-    logger.info ( ' Date    : %s ' %        __date__      ) 
-    logger.info ( ' Version : %s ' %        __version__   ) 
-    logger.info ( ' Logger  : %s ' % list ( __all__     ) ) 
-    logger.info ( 100*'*' ) 
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

@@ -14,9 +14,7 @@
 #  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-
-Module with decoration of some ROOT objects for efficient use in python
+"""Decoration of some ROOT objects for efficient use in python
 
 Many native  root classes are equipped with new useful methods and operators,
 in particular TH1(x) , TH2(x) , TAxis, TGraph(Errors), etc...
@@ -4859,13 +4857,17 @@ import Ostap.MiscDeco
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+        
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

@@ -10,9 +10,7 @@
 # Last modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
 #                by $Author: ibelyaev $
 # =============================================================================
-"""
-LHCb Style for ROOT-plots 
-"""
+"""LHCb Style for ROOT-plots"""
 # =============================================================================
 import ROOT
 __all__ = (
@@ -25,7 +23,8 @@ __all__ = (
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger(__name__)
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.LHCbStyle' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
 
 ## font 
@@ -205,6 +204,17 @@ def printLHCb ( LR     = "L"     ,
     lhcbName . Draw() 
 
     return lhcbName 
+
+# =============================================================================
+if '__main__' == __name__ :
+    
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

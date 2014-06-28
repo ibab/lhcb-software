@@ -13,9 +13,7 @@
 #  Last modification $Date: 2014-06-14 10:23:06 +0200 (Sat, 14 Jun 2014) $
 #  by                $Author: ibelyaev $
 # =============================================================================
-"""
-Module with utilities for reweighting 
-"""
+"""Module with utilities for reweighting"""
 # =============================================================================
 __version__ = "$Revision: 173860 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
@@ -282,13 +280,16 @@ def hCompare ( data , mc , title = '' , spline = True ) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author  : ' , __author__
-    print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
-    print ' Symbols : ' , __all__    
-    print 80*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

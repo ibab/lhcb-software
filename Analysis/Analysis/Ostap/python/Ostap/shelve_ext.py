@@ -24,9 +24,7 @@
 #  Last Modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-This is small extension for standars shelve module to allow more
-flexible treatment for the data base 
+"""Small extension for standars shelve module to allow more flexible treatment for the data base 
 
 >>> db1 = shelve.open ('$HOME/newdb'  , 'n')    ## create new DB
 >>> db2 = shelve.open ('../dir/newdb' , 'n')    ## create new DB
@@ -41,7 +39,8 @@ __version__ = "$Revision: 171923 $"
 __all__     = ()   ## nothing to import 
 # =============================================================================
 from AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
+if '__main__' ==  __name__ : logger = getLogger( 'Ostap.shelve_ext' )
+else                       : logger = getLogger( __name__ )
 # =============================================================================
 # 
 import shelve
@@ -97,13 +96,16 @@ if not hasattr ( shelve.Shelf, 'ls' ) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 100*'*'
-    print __doc__
-    print 100*'*'
-    print ' Author  : ' , __author__
-    print ' Date    : ' , __date__
-    print ' Version : ' , __version__
-    print 100*'*'
+    import ostapline
+    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 
