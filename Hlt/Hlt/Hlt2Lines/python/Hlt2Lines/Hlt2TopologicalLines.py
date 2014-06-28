@@ -394,8 +394,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         TOSParticleTagger.TOSFrac = {4:0.0,5:0.0 }
         TOSParticleTagger.Inputs = [input.outputSelection()]
         TOSParticleTagger.Output = 'Hlt2/%s/Particles'%(name+'Tagger')
-        filter = bindMembers(name+'ParticleFilter',[input,TOSParticleTagger])
-        return filter
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+        return  bindMembers(name+'ParticleFilter',[input,DecodeHlt1SelRep,TOSParticleTagger])
 
     def __makeLines(self,name,seqs,electron=False):
         '''Makes the lines.'''

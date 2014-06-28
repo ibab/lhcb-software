@@ -98,7 +98,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
 
         bindPrelim = bindMembers('bindPrelim', [PV3D()] + inputContainers + [filterPrelim])
         
-        # TODO: make this an Hlt2Member...
+
         from Configurables import TisTosParticleTagger
         TUSInputParticlesFilter = TisTosParticleTagger("Hlt2B2DXTUSFilter")
         TUSInputParticlesFilter.Context = ""
@@ -111,7 +111,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         TUSInputParticlesFilter.Inputs = [ bindPrelim.outputSelection() ]
         TUSInputParticlesFilter.Output = 'Hlt2/Hlt2B2DXTUSFilter/Particles'
 
-        return bindMembers(name, [bindPrelim, TUSInputParticlesFilter])
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+
+        return bindMembers(name, [ bindPrelim, DecodeHlt1SelRep, TUSInputParticlesFilter ] )
 
     ############################################################
     # Function to perform a filter on the KS0 input particles after the

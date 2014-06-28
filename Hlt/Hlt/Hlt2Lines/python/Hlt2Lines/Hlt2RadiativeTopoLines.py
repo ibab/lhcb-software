@@ -117,7 +117,8 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
     TOSParticleTagger.TOSFrac = {4:0.0,5:0.0 }
     TOSParticleTagger.Inputs = [inputComb.outputSelection()]
     TOSParticleTagger.Output = 'Hlt2/%s/Particles'%(name+'Tagger')
-    return bindMembers(name+'ParticleFilter', [inputComb,TOSParticleTagger])
+    from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+    return bindMembers(name+'ParticleFilter', [inputComb,DecodeHlt1SelRep, TOSParticleTagger])
 
   def __filterMaxTrackPt(self, name, inputTracks, cutProp):
     from HltLine.HltLine import Hlt2Member, bindMembers

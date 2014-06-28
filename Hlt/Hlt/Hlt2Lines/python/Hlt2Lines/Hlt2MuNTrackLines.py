@@ -218,7 +218,8 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
         #                                        , TOSFrac = { 4:0.0, 5:0.0 }
         #                                        , Inputs = inputSeq ) 
         from HltLine.HltLine import bindMembers
-        return bindMembers(name, inputSeq+[_tosfilter])
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+        return bindMembers(name, inputSeq+[ DecodeHlt1SelRep, _tosfilter])
 
     def __inputParticleFilter(self, name, inputSeq):
         '''Filters input particles for all mu + n track lines.'''

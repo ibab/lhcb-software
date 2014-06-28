@@ -9,6 +9,7 @@
 !----------------------------------------------------------------------------
 ! 2014-06-27 - Gerhard Raven
  - make sure TisTosParticleTaggers are configured in offline mode
+ - add symbol for Hlt1SelReportsDecoder
 
 !========================= Hlt2Lines v9r2 2014-06-16 =========================
 
