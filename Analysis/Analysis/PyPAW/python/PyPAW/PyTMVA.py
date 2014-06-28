@@ -62,7 +62,11 @@ with the smear campain of Dr.O.Callot et al.:
 __author__  = 'Vanya BELYAEV  Ivan.Belyaev@itep.ru'
 __date__    = "2013-10-02"
 __version__ = '$Revision$'
-__all__     = ( "Trainer" , "Reader" )
+__all__     = (
+    "Trainer" ,
+    "Reader"  ,
+    "tmvaGUI"
+    )
 # =============================================================================
 import ROOT
 from   AnalysisPython.Logger  import getLogger
@@ -72,17 +76,20 @@ logger = getLogger( 'PyTMVA' )
 try :
     ##
     import os 
-    mpath  = ROOT.gEnv.GetValue("Unix.*.Root.MacroPath",'')
+    mpath  = ROOT.gROOT.GetMacroPath() 
     mpath  = mpath.split(':')
-    mpath += [ '$ROOTSYS/tmva/test' ]
-    for i in range(0,len(mpath) ) :
-        mpath[i] = os.path.expandvars ( mpath[i] )
-        mpath[i] = os.path.expandvars ( mpath[i] )
-        mpath[i] = os.path.expandvars ( mpath[i] )
+    mpath += [ '$ROOTSYS/tmva/test'        ,
+               '$ROOTSYS/../src/tmva/test' ]
+    
+    # for i in range(0,len(mpath) ) :
+    #    mpath[i] = os.path.expandvars ( mpath[i] )
+    #    mpath[i] = os.path.expanduser ( mpath[i] )
+    #    mpath[i] = os.path.expandvars ( mpath[i] )
         
     mpath = ':'.join( mpath )
     mpath = mpath.replace('::',':')
-    ROOT.gEnv.SetValue("Unix.*.Root.MacroPath",mpath)
+    ## 
+    ROOT.gROOT.SetMacroPath ( mpath ) 
     ##
     logger.info    ( 'Update MacroPath to get the direct access to TMVA macros')
     ## 
@@ -399,6 +406,22 @@ class Reader(object)  :
             
         ## evaluate TMVA 
         return self.reader.EvaluateMVA( self.name ) 
+
+_canvas = []
+# =============================================================================
+## start TMVA gui 
+def tmvaGUI ( filename , new_canvas = True ) :
+    """
+    Start TMVA-GUI
+    """
+    ROOT.gROOT.LoadMacro('TMVAGui.C')
+    if new_canvas :
+        _c = ROOT.TCanvas ( 'TMVA', __name__ , 1000 , 800 )
+        global _canvas 
+        _canvas += [ _c ]
+    #
+    ## start GUI
+    ROOT.TMVAGui( filename )
 
 
 # =============================================================================

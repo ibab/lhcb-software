@@ -34,7 +34,8 @@ __all__     = (
     'Bs_pdf'  , ## pdf for Bs        : double-sided Crystal Ball 
     'Bc_pdf'  , ## pdf for Bc+       : double-sided Crystal Ball 
     #
-    'Manca_pdf'            , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'Manca_pdf'  , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'Manca2_pdf' , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
     #
     )
 # =============================================================================
@@ -47,6 +48,7 @@ logger = getLogger ( __name__ )
 # =============================================================================
 # Specializations of double-sided Crystal Ball function 
 # =============================================================================
+from   PyPAW.FitBasic            import Fit1DBase
 from   PyPAW.FitSignalModels     import CB2_pdf
 # =============================================================================
 ## @class Bd_pdf
@@ -399,12 +401,10 @@ class Lc_pdf(Bukin_pdf) :
                              rhor     ) 
         
 # =============================================================================
-from   PyPAW.FitBasic            import makeVar, Fit1DBase  
-from   PyPAW.FitBkgModels        import Bkg_pdf
-from   PyPAW.FitSignalModels     import Needham_pdf
-# =============================================================================
 ## @class Manca_pdf 
-#  the final full PDF for Y->mu+mu- fit 
+#  the final full PDF for Y->mu+mu- fit
+#  This is physuically weell-motivated function for fist in narrow
+#  bins in pt and rapidity  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-08-02
 class Manca_pdf (Fit1DBase) :
@@ -433,6 +433,10 @@ class Manca_pdf (Fit1DBase) :
         # 
         self.mass = mass
 
+        # =====================================================================
+        from   PyPAW.FitBasic            import makeVar, Fit1DBase  
+        from   PyPAW.FitBkgModels        import Bkg_pdf
+        from   PyPAW.FitSignalModels     import Needham_pdf
         # =====================================================================
         ## Y(1S)
         # =====================================================================
@@ -612,6 +616,229 @@ class Manca_pdf (Fit1DBase) :
     def alpha_2S ( self ) : return self.Y2S.pdf.alpha ()
     def alpha_3S ( self ) : return self.Y3S.pdf.alpha ()
 
+
+# =============================================================================
+## @class Manca2_pdf 
+#  the final full PDF for Y->mu+mu- fit
+#  This is an effective function for fit in global bin, without pt/y-binning 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-06-24
+class Manca2_pdf (Fit1DBase) :
+    """
+    The final full PDF for Y->mu+mu- fit
+    
+    This is an effective function for fit in global bin, without pt/y-binning
+    
+    """
+    def __init__ ( self          ,
+                   mass          ,
+                   name   = 'Y'  ,
+                   power  = 0    ) :
+        
+        if     mass.getMin() <  9.460 and   9.60  <= mass.getMax()  : gev_ =    1
+        elif   mass.getMin() < 10.    and  10.500 <= mass.getMax()  : gev_ =    1
+        elif   mass.getMin() < 10.0   and  10.200 <= mass.getMax()  : gev_ =    1
+        elif   mass.getMin() <  9460  and  10355  <= mass.getMax()  : gev_ = 1000
+        elif   mass.getMin() < 10000  and  10500  <= mass.getMax()  : gev_ = 1000
+        elif   mass.getMin() < 10000  and  10200  <= mass.getMax()  : gev_ = 1000
+        else : raise TypeError ( "Illegal mass range %s<m<%s"
+                                 % ( mass.getMin() , mass.getMax() ) ) 
+        
+        m_y1s  =  9.46030     * gev_ 
+        s_y1s  =  4.3679e-02  * gev_ 
+        dm_y2s = 10.02326     * gev_ - m_y1s
+        dm_y3s = 10.3552      * gev_ - m_y1s
+
+        # 
+        self.mass = mass
+
+        # =====================================================================
+        from   PyPAW.FitBasic            import makeVar, Fit1DBase  
+        from   PyPAW.FitBkgModels        import Bkg_pdf
+        from   PyPAW.FitSignalModels     import CB2_pdf
+                
+        # =====================================================================
+        ## Y(1S)
+        # =====================================================================
+        self.aL    = makeVar ( None                    ,
+                               "aL_%s"          % name ,
+                               "#alpha_{L}(%s)" % name , 1.52 , 1.52 , 0 , 10 )
+        self.nL    = makeVar ( None                    ,                     
+                               "nL_%s"          % name ,
+                               "n_{L}(%s)"      % name , 1.35 , 1.35 , 0 , 10 )
+        self.aR    = makeVar ( None                    ,
+                               "aR_%s"          % name ,
+                               "#alpha_{R}(%s)" % name , 1.76 , 1.76 , 0 , 10 )
+        self.nR    = makeVar ( None                    ,
+                               "nR_%s"          % name ,
+                               "n_{R}(%s)"      % name , 9    , 9    , 0 , 15 )
+        
+        self.Y1S  = CB2_pdf (
+            name + '1S'           ,
+            mass.getMin()         ,
+            mass.getMax()         ,
+            fixMass  = m_y1s      ,
+            fixSigma = s_y1s      ,
+            mass     = self.mass  ,
+            mean     = None       ,
+            sigma    = None       ,
+            alphaL   = self.aL    ,
+            alphaR   = self.aR    ,
+            nL       = self.nL    ,
+            nR       = self.nR    )
+        
+        #
+        ## adjust a bit the values
+        #
+        self.m1s  = self.Y1S.mean
+        self.m1s.release   ()
+        self.m1s.setVal    ( m_y1s                )
+        self.m1s.setMin    ( m_y1s - 0.15 * s_y1s )
+        self.m1s.setMax    ( m_y1s + 0.15 * s_y1s )
+        #
+        self.sigma = self.Y1S.sigma
+        self.sigma.release () 
+        self.sigma.setVal  (       s_y1s )
+        self.sigma.setMin  ( 0.3 * s_y1s )
+        self.sigma.setMax  ( 3.5 * s_y1s )
+        self.s1s  = self.sigma
+
+        # =====================================================================
+        ## Y(2S)
+        # =====================================================================
+        self.dm2s  = makeVar ( None ,
+                               "dm2s"      + name ,
+                               "dm2s(%s)"  % name    ,
+                               dm_y2s                ,
+                               dm_y2s - 0.20 * s_y1s , 
+                               dm_y2s + 0.20 * s_y1s )
+        
+        self.aset11 = ROOT.RooArgList ( self.m1s , self.dm2s )
+        self.m2s    = ROOT.RooFormulaVar (
+            "m_" + name + '2S'   ,
+            "m2s(%s)"  % name    ,
+            "%s+%s" % ( self.m1s.GetName() , self.dm2s.GetName()  ) , 
+            self.aset11       )
+        
+        self.aset12 = ROOT.RooArgList ( self.sigma , self.m1s , self.m2s ) 
+        self.s2s    = ROOT.RooFormulaVar (
+            "sigma_"  + name + '2S'    ,
+            "#sigma_{Y2S}(%s)" % name  ,
+            "%s*(%s/%s)"  % ( self.sigma.GetName() ,
+                              self.m2s  .GetName() ,
+                              self.m1s  .GetName() ) ,
+            self.aset12  )
+        
+        self.Y2S  = CB2_pdf (
+            name + '2S'           ,
+            mass.getMin()         ,
+            mass.getMax()         ,
+            fixMass  = None       ,
+            fixSigma = None       ,
+            mass     = self.mass  ,
+            mean     = self.m2s   ,
+            sigma    = self.s2s   ,
+            alphaL   = self.aL    ,
+            alphaR   = self.aR    ,
+            nL       = self.nL    ,
+            nR       = self.nR    )
+                
+        # =====================================================================
+        ## Y(3S)
+        # =====================================================================
+        self.dm3s  = makeVar ( None ,
+                               "dm3s"      + name ,
+                               "dm3s(%s)"  % name    ,
+                               dm_y3s                ,
+                               dm_y3s - 0.20 * s_y1s , 
+                               dm_y3s + 0.20 * s_y1s )
+        
+        self.aset21 = ROOT.RooArgList ( self.m1s , self.dm3s )
+        self.m3s    = ROOT.RooFormulaVar (
+            "m_"       + name + '(3S)' ,
+            "m3s(%s)"  % name          ,
+            "%s+%s" % ( self.m1s.GetName() , self.dm3s.GetName() ) ,
+            self.aset21       )
+        
+        
+        self.aset22 = ROOT.RooArgList ( self.sigma , self.m1s , self.m3s ) 
+        self.s3s    = ROOT.RooFormulaVar (
+            "sigma_"  + name + '3S'    ,
+            "#sigma_{Y3S}(%s)" % name  ,
+            "%s*(%s/%s)"  % ( self.sigma.GetName() ,
+                              self.m3s  .GetName() ,
+                              self.m1s  .GetName() ) , 
+            self.aset22       )
+        
+        self.Y3S  = CB2_pdf (
+            name + '3S'           ,
+            mass.getMin()         ,
+            mass.getMax()         ,
+            fixMass  = None       ,
+            fixSigma = None       ,
+            mass     = self.mass  ,
+            mean     = self.m3s   ,
+            sigma    = self.s3s   ,
+            alphaL   = self.aL    ,
+            alphaR   = self.aR    ,
+            nL       = self.nL    ,
+            nR       = self.nR    )
+        
+        #
+        ## the actual signal PDFs
+        # 
+        self.y1s   = self.Y1S.pdf
+        self.y2s   = self.Y2S.pdf
+        self.y3s   = self.Y3S.pdf
+        
+        
+        self.background = Bkg_pdf  ( 'Bkg%s' % name , self.mass , power = power )
+        
+        self.n1s = makeVar ( None ,
+                             "N1S" + name  ,
+                             "Signal(Y1S)" ,  None , 1000 ,  0 ,  1.e+7 )
+        self.n2s = makeVar ( None ,
+                             "N2S" + name  ,
+                             "Signal(Y2S)" ,  None ,  300 ,  0 ,  1.e+6 )
+        self.n3s = makeVar ( None ,
+                             "N3S" + name  ,
+                             "Signal(Y3S)" ,  None ,  100 ,  0 ,  1.e+6 )
+        self.b   = makeVar ( None ,
+                             "B"   + name  ,
+                             "Background"  ,  None ,  100 ,  0 ,  1.e+8 )
+        
+        self.alist1 = ROOT.RooArgList ( self.y1s , self.y2s , self.y3s ) 
+        self.alist2 = ROOT.RooArgList ( self.n1s , self.n2s , self.n3s ) 
+        
+        self.alist1 . add ( self.background.pdf )
+        self.alist2 . add ( self.b              )
+        
+        self.pdf  = ROOT.RooAddPdf  (
+            "manca_%s"  % name ,
+            "manca(%s)" % name ,
+            self.alist1 ,
+            self.alist2 )
+        
+        self.dm2s.setConstant ( True )
+        self.dm3s.setConstant ( True )
+        
+        self._splots = []
+        
+        self.s1_name = self.n1s.GetName ()
+        self.s2_name = self.n2s.GetName ()
+        self.s3_name = self.n3s.GetName ()
+
+        #
+        ## finally initialize the base
+        # 
+        Fit1DBase.__init__ ( self ,
+                             ROOT.RooArgSet ( self.y1s , self.y2s , self.y3s) ,
+                             ROOT.RooArgSet ( self.background.pdf           ) )
+        
+
+
+
+        
 
 # =============================================================================
 if '__main__' == __name__ :

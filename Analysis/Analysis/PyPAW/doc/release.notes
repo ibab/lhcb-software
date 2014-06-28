@@ -9,6 +9,9 @@
 !                 by $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-06-28 - Vanya Belyaev
+ - fix tiny bug in rebinNumbes method 
+
 ! 2014-06-23 - Vanya Belyaev
  - minor imporvement for RooRealVar prints and conversions  
 

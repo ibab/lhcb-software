@@ -92,7 +92,8 @@ __all__ = (
     'Bs_pdf'  , ## pdf for Bs        : double-sided Crystal Ball 
     'Bc_pdf'  , ## pdf for Bc+       : double-sided Crystal Ball 
     #
-    'Manca_pdf'            , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'Manca_pdf'   , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'Manca2_pdf'  , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 

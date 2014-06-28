@@ -3437,7 +3437,7 @@ def _bin_overlap_1D_ ( x1 , x2 ) :
     #
     if xmin >= xmax      : return 0         ## RETURN 
     #
-    return ( xmax - xmin ) / 2.0 / x1e
+    return ( xmax - xmin ) / ( 2.0 * x1e ) 
 # =============================================================================
 ## get the overlap for 2D-bins 
 def _bin_overlap_2D_ ( x1 , y1 , x2 , y2 ) :
@@ -3476,12 +3476,12 @@ def _bin_overlap_2D_ ( x1 , y1 , x2 , y2 ) :
     xmax = min ( xmax_1 , xmax_2 )
     if xmin >= xmax      : return 0         ## RETURN 
     #
-    ymin = max ( ymin_1 , xmin_2 )
-    ymax = min ( ymax_1 , xmax_2 )
+    ymin = max ( ymin_1 , ymin_2 )
+    ymax = min ( ymax_1 , ymax_2 )
     if ymin >= ymax      : return 0         ## RETURN 
     #
     #
-    return ( xmax - xmin ) * ( ymax - ymin ) / 4.0 / x1e / y1e 
+    return ( xmax - xmin ) * ( ymax - ymin ) / ( 4.0 * x1e * y1e )
 
 # ==============================================================================
 ## rebin 1D-histogram with NUMBERS 
@@ -3508,8 +3508,9 @@ def _rebin_nums_1D_ ( h1 , template ) :
         xbv = xb.value ()
         xbe = xb.error ()
         
-        bl = h1.findBin ( xbv - xbe ) - 1 
-        bh = h1.findBin ( xbv + xbe ) + 1 
+        bl = h1.findBin ( xbv - xbe ) - 1
+        bh = h1.findBin ( xbv + xbe ) + 1
+        
         for i1 in h1.iteritems( bl , bh + 1 ) :
             
             o = _bin_overlap_1D_ ( i1[1] , i2[1] )
@@ -3541,7 +3542,8 @@ def _rebin_func_1D_ ( h1 , template ) :
         xbe = xb.error ()
         
         bl = h1.findBin ( xbv - xbe ) - 1  
-        bh = h1.findBin ( xbv + xbe ) + 1 
+        bh = h1.findBin ( xbv + xbe ) + 1
+        
         for i1 in h1.iteritems( bl , bh + 1 ) :
 
             o = _bin_overlap_1D_ ( i2[1] , i1[1] ) ## NOTE THE ORDER!!! 
@@ -3574,7 +3576,7 @@ def _rebin_nums_2D_ ( h1 , template ) :
             
             o = _bin_overlap_2D_ ( i1[2] , i1[3] , i2[2] , i2[3] )
             
-            h2 [ (i2[0],i2[1]) ] +=  o * i1[4] 
+            h2 [ i2[0] , i2[1] ] +=  o * i1[4] 
             
     return h2 
 # =============================================================================
@@ -3600,7 +3602,7 @@ def _rebin_func_2D_ ( h1 , template ) :
             
             o = _bin_overlap_1D_ ( i2[2] , i2[3] , i1[2] , i2[3] ) ## NOTE THE ORDER!!! 
             
-            h2 [ i2[0] ] +=  o * i1[4]
+            h2 [ i2[0] , i2[1] ] +=  o * i1[4]
             
     return h2 
 
