@@ -724,16 +724,16 @@ namespace ANNGlobalPID
       ~NetConfig();
 
       /// Status
-      bool isOK() const { return m_OK; }
+      inline bool isOK() const { return m_OK; }
 
       /// Access the Network object
-      ANNHelper * netHelper() const { return m_netHelper; }
+      inline const ANNHelper * netHelper() const { return m_netHelper; }
 
       /// Access the track type
-      const std::string& trackType() const { return m_trackType; }
+      inline const std::string& trackType() const { return m_trackType; }
 
       /// Access the particle type
-      const std::string& particleType() const { return m_particleType; }
+      inline const std::string& particleType() const { return m_particleType; }
 
       /// Check a ProtoParticle against the configured cuts
       bool passCuts( const LHCb::ProtoParticle * proto ) const;
