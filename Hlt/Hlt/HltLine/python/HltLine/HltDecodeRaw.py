@@ -44,13 +44,16 @@ DecodeECAL       = __convert( 'Ecal' )
 DecodeSPD        = __convertName('CaloDigitsFromRaw/SpdFromRaw')
 DecodePRS        = __convertName('CaloDigitsFromRaw/PrsFromRaw')
 DecodeHCAL       = __convert( 'Hcal' )
+DecodeHlt1SelRep = bindMembers(None, [ DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup(),
+                                       DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup() ] ).ignoreOutputSelection()
 
 
 #and export explicit (configured!) decoders:
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
           , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
           , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL'
-          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK', 'DecodeFORWARDTRACK' )
+          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK', 'DecodeFORWARDTRACK'
+          , 'DecodeHlt1SelRep' )
 
 # ==============================================================================
 # Register symbols for streamer framework:

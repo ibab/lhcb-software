@@ -1238,6 +1238,7 @@ class Hlt2Member ( object ) :
             if  key not in Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
         if Type == TisTosParticleTagger :
+            ### TODO/FIXME How to insert the Hlt1SelRep decoder just prior to the TisTosParticleTagger???
             Args['Context'] = "" # make sure context is NOT Hlt...
 
         ## (1) "clone" all agruments
