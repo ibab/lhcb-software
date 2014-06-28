@@ -475,7 +475,7 @@ def open ( filename                                   ,
 
 
 # ============================================================================
-logger.info ( "Simple generic (c)Pickle-based ``zipped''-database")
+logger.debug ( "Simple generic (c)Pickle-based ``zipped''-database")
 # =============================================================================
 ## a bit more decorations for shelve  (optional)
 import AnalysisPython.shelve_ext

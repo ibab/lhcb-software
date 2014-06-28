@@ -86,12 +86,12 @@ def _ls_ ( self )  :
 if not hasattr  ( shelve , '_new_open_' ) :
     shelve._new_open_ = _new_shelve_open_
     shelve.     open  = _new_shelve_open_
-    logger.info ( 'Decorate shelve.open method') 
+    logger.debug ( 'Decorate shelve.open method') 
 
 ## add method to Shelve, if not done yet
 if not hasattr ( shelve.Shelf, 'ls' ) : 
     shelve.Shelf.ls = _ls_
-    logger.info ( "Add 'ls' method for shelve.Shelf class") 
+    logger.debug ( "Add 'ls' method for shelve.Shelf class") 
 
 # =============================================================================
 if '__main__' == __name__ :

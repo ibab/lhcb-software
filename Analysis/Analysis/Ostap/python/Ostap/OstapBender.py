@@ -67,8 +67,7 @@ import ROOT, os, sys
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-if '__main__' == __name__ : logger = getLogger ( 'Ostap Bender' )
-else                      : logger = getLogger ( __name__       ) 
+logger = getLogger ( 'Ostap Bender' )
 # =============================================================================
 import ostapline
 logger.info ( "Welcome to Ostap\n" + ostapline.line )
@@ -84,10 +83,10 @@ if ROOT.gROOT.IsBatch() :
 # =============================================================================
 # The Heart 
 # =============================================================================
-logger.info ( "Create the default canvas" )
+logger.debug ( "Create the default canvas" )
 cWidth  = 1000
 cHeight =  800 
-canvas  = ROOT.TCanvas ( 'glCanvas', _my_name_ , cWidth , cHeight )
+canvas  = ROOT.TCanvas ( 'glCanvas', 'Ostap' , cWidth , cHeight )
 if not ROOT.gROOT.IsBatch() :
     ## adjust canvas
     ## @see http://root.cern.ch/root/html/TCanvas.html#TCanvas:TCanvas@4
@@ -114,7 +113,7 @@ from Ostap.Utils import *
 # ============================================================================= 
 ## prepend the path 
 if '.' not in sys.path :
-    logger.info('Prepend sys.path with $PWD')
+    logger.debug('Prepend sys.path with $PWD')
     sys.path = ['.'] + sys.path 
 
 # =============================================================================

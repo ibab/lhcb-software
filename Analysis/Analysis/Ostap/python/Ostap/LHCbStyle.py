@@ -74,7 +74,7 @@ def LHCbStyle ( name      = "LHCbStyle"                 ,
         i   += 1
         
     style = ROOT.TStyle ( nam , desc )
-    logger.info ('New style %s is created' % style.GetName() )
+    logger.debug ('New style %s is created' % style.GetName() )
     
     ## use plain black on white colors
     style . SetFrameBorderMode  ( 0 )
@@ -149,7 +149,7 @@ def LHCbStyle ( name      = "LHCbStyle"                 ,
     style . SetNdivisions    ( 510 , "y" )
     
     if force : 
-        logger.info ('The style %s is forced' % style.GetName() )
+        logger.debug ('The style %s is forced' % style.GetName() )
         ROOT.gROOT.SetStyle   ( style.GetName()  )
         ROOT.gROOT.ForceStyle ()
     

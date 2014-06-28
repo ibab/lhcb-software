@@ -38,7 +38,7 @@ logger.debug ( 'Some useful decorations for Histo&Text objects')
 ## further decoration
 try : 
     import GaudiPython.HistoUtils
-    logger.info    ( 'Histogram utilities from GaudiPython.HistoUtils' )
+    logger.debug   ( 'Histogram utilities from GaudiPython.HistoUtils' )
 except:
     logger.warning ( 'Histogram utilities from GaudiPython.HistoUtils are not loaded' )
     
