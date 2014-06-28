@@ -332,6 +332,7 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
     def __filterHlt1TOS(self, name, input) : # {
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
 
         filterTOS = Hlt2Member( TisTosParticleTagger
                                 , 'Hlt1TOSFilter'
@@ -339,7 +340,7 @@ class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
                                 , TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
                               )
 
-        return bindMembers(name, [ input, filterTOS ])
+        return bindMembers(name, [ input, DecodeHlt1SelRep, filterTOS ])
     # }
 
 ##

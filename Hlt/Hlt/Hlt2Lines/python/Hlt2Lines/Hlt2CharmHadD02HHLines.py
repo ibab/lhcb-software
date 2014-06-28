@@ -152,7 +152,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
     # }
 
 
-    def __filter(self, name, inputSeq, extracode = None) : # {
+    def __filter(self, name, inputSeq, extracode = None) :
         "Filter combinatorics.  Returns a bindMembers."
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import FilterDesktop, CombineParticles
@@ -169,14 +169,13 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                              , PreMonitor  =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_in',nbins=101) 
                              , PostMonitor =  Hlt2Monitor( "M","M(K#pi)",1865.,50,'M_out',nbins=101)   
                            )
-        filterSeq = bindMembers( name, inputSeq + [ filter ] )
-        return filterSeq
-    # }
+        return bindMembers( name, inputSeq + [ filter ] )
 
 
-    def __filterHlt1TOS(self, name, input) : # {
+    def __filterHlt1TOS(self, name, input) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
 
         filterTOS = Hlt2Member( TisTosParticleTagger
                                 , 'Hlt1TOSFilter'
@@ -184,8 +183,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                                 , TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
                               )
 
-        return bindMembers(name, [ input, filterTOS ])
-    # }
+        return bindMembers(name, [ input, DecodeHlt1SelRep, filterTOS ])
 
 
     def __combineInc(self, name, inputSeq, decayDesc, extracuts = None) : # {

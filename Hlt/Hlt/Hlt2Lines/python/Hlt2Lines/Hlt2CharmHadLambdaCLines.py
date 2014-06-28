@@ -161,6 +161,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
 
         ## TOS to the Hlt1Track lines.
         ## ####################################################################
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
         filterTOS_LC2KPPi = Hlt2Member( TisTosParticleTagger
                                 , 'Hlt1TOSFilter'
                                 , Inputs = [ Hlt2CharmHadLambdaC2KPPi_Rich ]
@@ -187,6 +188,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2KPPi
                                                , BiKalmanFittedRichLowPTProtons
                                                , Hlt2CharmHadLambdaC2KPPi_Rich
+                                               , DecodeHlt1SelRep
                                                , filterTOS_LC2KPPi ] )
         seqKPK = bindMembers( modeNameKPK, [ PV3D()
                                                , BiKalmanFittedKaons
@@ -194,6 +196,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2KPK
                                                , BiKalmanFittedRichLowPTProtons
                                                , Hlt2CharmHadLambdaC2KPK_Rich
+                                               , DecodeHlt1SelRep
                                                , filterTOS_LC2KPK ] )
         seqPiPPi = bindMembers( modeNamePiPPi, [ PV3D()
                                                , BiKalmanFittedPions
@@ -201,6 +204,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2PiPPi
                                                , BiKalmanFittedRichLowPTProtons
                                                , Hlt2CharmHadLambdaC2PiPPi_Rich
+                                               , DecodeHlt1SelRep
                                                , filterTOS_LC2PiPPi ] )
         seqPiPK = bindMembers( modeNamePiPK, [ PV3D()
                                                , BiKalmanFittedPions
@@ -209,6 +213,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2PiPK
                                                , BiKalmanFittedRichLowPTProtons
                                                , Hlt2CharmHadLambdaC2PiPK_Rich
+                                               , DecodeHlt1SelRep
                                                , filterTOS_LC2PiPK ] )
 
         _sigMassWinCut = "in_range( %(SigMass_M_MIN)s, M, %(SigMass_M_MAX)s )" % self.getProps()

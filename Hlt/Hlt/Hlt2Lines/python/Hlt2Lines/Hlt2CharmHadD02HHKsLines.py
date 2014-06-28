@@ -242,6 +242,8 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
     def __filterRequiringTOS(self,name,input) :
         from HltLine.HltLine import Hlt2Member, bindMembers
         from Configurables import TisTosParticleTagger
+        from HltLine.HltDecodeRaw import DecodeHlt1SelRep
+
 
         filterTOS = Hlt2Member( TisTosParticleTagger
                                 , 'TOSFilter'
@@ -249,7 +251,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                 , Inputs = [ input.outputSelection() ]
                                 , TisTosSpecs = self.getProp('TisTosParticleTaggerSpecs')
                               )
-        return bindMembers(name, [ input, filterTOS ])
+        return bindMembers(name, [ input, DecodeHlt1SelRep, filterTOS ])
 
 
     ###################################################################
