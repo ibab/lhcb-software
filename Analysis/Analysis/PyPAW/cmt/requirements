@@ -8,25 +8,19 @@
 #                by $Author:$
 # =============================================================================
 package       PyPAW
-version       v1r5
+version       v2r0
 
 # =========== structure =======================================================
 branches      cmt doc python scripts 
 
 # =========== dependencies ====================================================
-use           AnalysisPython v* Phys 
-use           ROOT           v* LCG_Interfaces 
-use           PyAna          v* Analysis
+use           Ostap          v* Analysis 
 
 # =========== patterns ========================================================
 apply_pattern install_python_modules
-apply_pattern install_scripts
-apply_pattern QMTest                  
 
 # =========== aliases ========================================================
-alias         pypaw        "pyPAW"
-alias         pyroot       "pyPAW"
-
+alias         pypaw        "ostap"
 
 # ============================================================================
 # The END 
