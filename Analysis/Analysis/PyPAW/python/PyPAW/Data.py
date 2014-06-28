@@ -69,125 +69,18 @@ __all__     = ( 'Data', 'DataAndLumi' )
 # =============================================================================
 import ROOT
 # =============================================================================
-# logging 
+import warnings
+warnings.warn (
+    """PyPAW:
+    Use 'Ostap.Data' module instead of 'PyPAW.Data'""",
+    DeprecationWarning ,
+    stacklevel   = 3
+    )
 # =============================================================================
-from   AnalysisPython.Logger import getLogger 
-logger = getLogger( __name__ )
-# =============================================================================
-## @class Data
-#  Simple utility to access to certain chain in the set of ROOT-files
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @author Alexander BARANOV a.baranov@cern.ch
-#  @date   2014-06-08  
-class Data(object):
-    """
-    
-    Simple utility to access to certain chain in the set of ROOT-files
-    
-    >>> data  = Data('Bc/MyTree', '*.root' )
-    >>> chain = data.chain
-    >>> flist = data.files 
-    """
-    
-    def __init__( self           ,
-                  chain          ,
-                  files  = []    ,
-                  useglob = True ):
-        
-        self.chain = ROOT.TChain ( chain )
-        # 
-        self.files = [] 
-        if files :
-            self.add_files ( files , useglob )
-            
-    def add_files ( self, patterns , useglob ):
-        
-        pats = patterns
-        if isinstance ( pats , str ) : pats = [ pats ]
-        
-        if useglob :
-            
-            import glob
-            for p in pats :
-                for f in glob.iglob ( p ) :
-                    self.files .append ( f ) 
-                    self.chain .Add    ( f )
-        else :
-            
-            for f in files :
-                self.files.append ( f ) 
-                self.chain.Add    ( f )
+## the actual import 
+from Ostap.Data import *
 
-                
-    def __str__(self):
-        
-        ret = "<#files: {}; Entries: {}>".format(len(self.files), self.chain.GetEntries() )
-        
-        return ret
 
-# =============================================================================
-## @class DataAndLumi
-#  Simple utility to access to certain chain in the set of ROOT-files
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @author Alexander BARANOV a.baranov@cern.ch
-#  @date   2014-06-08  
-class DataAndLumi(Data):
-    """
-    Simple utility to access to certain chain in the set of ROOT-files
-    
-    >>> data  = DataAndLumi('Bc/MyTree', '*.root' )
-    >>> chain = data.chain
-    >>> flist = data.files 
-    >>> lumi  = data.lumi
-    >>> print data.getLumi() 
-    """
-
-    def __init__( self               ,
-                  chain              ,
-                  files       = []   ,
-                  useglob     = True ,
-                  lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) :
-
-        self.lumi = ROOT.TChain( lumi_chain )  
-        Data.__init__ ( self , chain , files , useglob ) 
-        
-    #
-    def add_files ( self, patterns , useglob ):
-        
-        pats = patterns
-        if isinstance ( pats , str ) : pats = [ pats ]
-        
-        if useglob :
-            
-            import glob
-            for p in pats :
-                for f in glob.iglob ( p ) :
-                    self.files.append ( f ) 
-                    self.chain.Add    ( f )
-                    self.lumi .Add    ( f )
-        else :
-            
-            for f in files :
-                
-                self.files.append ( f ) 
-                self.chain.Add    ( f )
-                self.lumi .Add    ( f )
-
-    ## get the luminosity 
-    def getLumi ( self ):
-        """
-        Get the luminosity from the 
-        """
-        from   PyPAW.GetLumi import getLumi
-        return getLumi(self.lumi)
-
-    def __str__(self):
-        ret = "<"
-        ret += "Luminosity: {}pb-1; #files: {}; ".format(self.getLumi(), len(self.files))
-        ret += "Entries: {}>".format( self.chain.GetEntries() )
-
-        return ret
-           
 # =============================================================================
 if '__main__' == __name__ :
     

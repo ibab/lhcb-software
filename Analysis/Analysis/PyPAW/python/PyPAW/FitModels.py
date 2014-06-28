@@ -125,25 +125,20 @@ __all__ = (
     'Fit2D'   , ## generic model for 2D-fit
     )
 # =============================================================================
-import ROOT, math
-from   AnalysisPython.Logger     import getLogger
-from   PyPAW.PyRoUts             import VE, hID, allInts, cpp, rootID
-from   PyPAW.Utils               import RooSilent, NoContext 
-from   GaudiKernel.SystemOfUnits import GeV 
+import ROOT
 # =============================================================================
-logger = getLogger ( __name__ ) 
+import warnings
+warnings.warn (
+    """PyPAW:
+    Use 'Ostap.FitModels' module instead of 'PyPAW.FitModels'""",
+    DeprecationWarning ,
+    stacklevel   = 3
+    )
 # =============================================================================
-from PyPAW.FitBasic          import *
-logger.debug ('Import signal models from FitSignalModels')
-from PyPAW.FitSignalModels   import * 
-logger.debug ('Import background  models from FitBkgModels')
-from PyPAW.FitBkgModels      import * 
-logger.debug ('Import 2D background models from Fit2DModels')
-from PyPAW.Fit2DModels       import * 
-logger.debug ('Import specialized models from FitSpecificModels')
-from PyPAW.FitSpecificModels import * 
-logger.debug ('Import ``other'' models from FitOtherModels')
-from PyPAW.FitOtherModels    import *
+## the actual import 
+from Ostap.FitModels import *
+
+
 
 # =============================================================================
 if '__main__' == __name__ :

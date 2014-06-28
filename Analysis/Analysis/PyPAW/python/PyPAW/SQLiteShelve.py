@@ -115,166 +115,28 @@ __all__ = (
     'open'            ## helper function to hide the actual DB
     )
 # =============================================================================
-from AnalysisPython.Logger import getLogger
-if '__main__' == __name__ : logger = getLogger ( 'PyPAW.SQLiteShelve' )
-else                      : logger = getLogger ( __name__ )
+import warnings
+warnings.warn (
+    """PyPAW:
+    Use 'Ostap.SQLiteShelve' module instead of 'PyPAW.SQLiteShelve'""",
+    DeprecationWarning ,
+    stacklevel   = 3
+    )
 # =============================================================================
-from .sqlitedict import SqliteDict
-import zlib 
-# =============================================================================
-## @class SQLiteShelf
-#  SQLite-based ``shelve-like'' database with compressed content. 
-#  
-class SQLiteShelf(SqliteDict):
-    """
-    """
-    def __init__ ( self                     ,
-                   filename       = None      ,
-                   mode           = 'c'       ,
-                   tablename      = 'PyPaw'   ,
-                   writeback      = True      , ## original name: "autocommit"
-                   compress_level = zlib.Z_BEST_COMPRESSION , 
-                   journal_mode   = "DELETE"  ) :
-        """
-        Initialize a thread-safe sqlite-backed dictionary.
-        The dictionary will be a table ``tablename`` in database file
-        ``filename``. A single file (=database) may contain multiple tables.
-        
-        If no ``filename`` is given, a random file in temp will be used
-        (and deleted from temp once the dict is closed/deleted).
-        
-        If you enable ``writeback/autocommit`` changes will be committed
-        after each operation (more inefficient but safer).
-        Otherwise, changes are committed on
-        ``self.commit()``,
-        ``self.clear()`` and
-        ``self.close()``.
-        
-        Set ``journal_mode`` to ``OFF``
-        if you're experiencing sqlite I/O problems
-        or if you need performance and don't care about crash-consistency.
-        
-        The `flag` parameter:
-        - 'c': default mode, open for read/write, creating the db/table if necessary.
-        - 'w': open for r/w, but drop `tablename` contents first (start with empty table)
-        - 'n': create a new database (erasing any existing tables, not just `tablename`!).
-        
-        """
-        if not filename is None :
-            import os 
-            filename  = os.path.expandvars ( filename )
-            filename  = os.path.expanduser ( filename )
-            filename  = os.path.expandvars ( filename )
-            
-        SqliteDict.__init__ ( self                        ,
-                              filename     = filename     ,
-                              tablename    = tablename    ,
-                              flag         = mode         ,
-                              autocommit   = writeback    ,
-                              journal_mode = journal_mode )
-        
-        self.compression = compress_level 
-
-    ## list the avilable keys 
-    def __dir ( self , pattern = '' ) :
-        """
-        List the avilable keys (patterns included).
-        Pattern matching is performed accoriding to
-        fnmatch/glob/shell rules [it is not regex!] 
-        
-        >>> db = ...
-        >>> db.ls() ## all keys
-        >>> db.ls ('*MC*')
-        
-        """
-        keys_ = self.keys()
-        keys_.sort()
-        if pattern :
-            import fnmatch
-            _keys = [ k for k in keys_ if fnmatch.fnmatchcase ( k , pattern ) ]
-            keys_ = _keys
-        #
-        for key in keys_ : print key
-        
-    ## list the avilable keys 
-    def ls    ( self , pattern = '' ) :
-        """
-        List the avilable keys (patterns included).
-        Pattern matching is performed accoriding to
-        fnmatch/glob/shell rules [it is not regex!] 
-
-        >>> db = ...
-        >>> db.ls() ## all keys
-        >>> db.ls ('*MC*')        
-        
-        """
-        return self.__dir( pattern )
-
-
-# =============================================================================
-try:
-    from cPickle import Pickler, Unpickler, HIGHEST_PROTOCOL
-except ImportError:
-    from  pickle import Pickler, Unpickler, HIGHEST_PROTOCOL 
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from  StringIO import StringIO
- 
-# =============================================================================
-## ``get-and-uncompress-item'' from dbase 
-def _zip_getitem (self, key):
-    """
-    ``get-and-uncompress-item'' from dbase 
-    """
-    GET_ITEM = 'SELECT value FROM %s WHERE key = ?' % self.tablename
-    item = self.conn.select_one(GET_ITEM, (key,))
-    if item is None: raise KeyError(key)
-    
-    f     = StringIO ( zlib.decompress ( str ( item[0] ) ) ) 
-    value = Unpickler(f).load()
-
-    return value
-
-import sqlite3
-# =============================================================================
-## ``set-and-compress-item'' to dbase 
-def _zip_setitem ( self , key , value ) :
-    """
-    ``set-and-compress-item'' to dbase 
-    """
-    ADD_ITEM = 'REPLACE INTO %s (key, value) VALUES (?,?)' % self.tablename
-    
-    f     = StringIO()
-    p     = Pickler(f, HIGHEST_PROTOCOL  )
-    p.dump(value)
-    blob  = f.getvalue() 
-    zblob = zlib.compress ( blob , self.compression ) 
-    self.conn.execute(ADD_ITEM, (key, sqlite3.Binary( zblob ) ) )
-
-                      
-SQLiteShelf.__setitem__ = _zip_setitem
-SQLiteShelf.__getitem__ = _zip_getitem
-
-
-# =============================================================================
-## open new SQLiteShelve data base
-def open(*args, **kwargs):
-    """See documentation of the SQLiteShelf class."""
-    return SQLiteShelf(*args, **kwargs)
+## the actual import 
+from Ostap.SQLiteShelve import *
 
 # =============================================================================
 if '__main__' == __name__ :
 
-    logger.info ( 100*'*' ) 
-    logger.info ( __doc__ ) 
-    logger.info ( 100*'*' ) 
-    logger.info ( ' Author  : %s ' %        __author__    ) 
-    logger.info ( ' Date    : %s ' %        __date__      ) 
-    logger.info ( ' Version : %s ' %        __version__   ) 
-    logger.info ( ' Logger  : %s ' % list ( __all__     ) ) 
-    logger.info ( 100*'*' ) 
+    
+    print '*'*120
+    print                      __doc__
+    print ' Author  : %s ' %   __author__    
+    print ' Version : %s ' %   __version__
+    print ' Date    : %s ' %   __date__
+    print ' Symbols : %s'  %  list (  __all__ ) 
+    print '*'*120
     
 # =============================================================================
 # The END 

@@ -50,65 +50,19 @@ __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
 __version__ = '$Revision$'
 # =============================================================================
-import ROOT, os, sys
+import ROOT
 # =============================================================================
-# local name 
+import warnings
+warnings.warn (
+    """PyPAW:
+    Use 'Ostap.OstapBender' module instead of 'PyPAW.PyPaw'""",
+    DeprecationWarning ,
+    stacklevel   = 3
+    )
 # =============================================================================
-_my_name_ = __name__
-if '__main__' == _my_name_ : _my_name_ = 'PyPAW'
-# =============================================================================
-# logging 
-# =============================================================================
-from AnalysisPython.Logger import getLogger 
-logger = getLogger( _my_name_ )
-logger.info ( "Welcome to PyPAW\n" + __doc__ )
-# =============================================================================
-## 1) load LHCb-style file
-# =============================================================================
-import PyPAW.LHCbStyle 
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
-# =============================================================================
-# The Heart 
-# =============================================================================
-logger.info ( "Create the default canvas" )
-cWidth  = 1000
-cHeight =  800 
-canvas  = ROOT.TCanvas ( 'glCanvas', _my_name_ , cWidth , cHeight )
-if not ROOT.gROOT.IsBatch() :
-    ## adjust canvas
-    ## @see http://root.cern.ch/root/html/TCanvas.html#TCanvas:TCanvas@4
-    dw = cWidth  - canvas.GetWw()
-    dh = cHeight - canvas.GetWh()
-    canvas.SetWindowSize ( cWidth + dw , cHeight + dh )
-    
-## load zillions of decorations for ROOT-objects 
-import PyPAW.PyRoUts   as PyRoUts     ## NB: the most important line!
-import PyPAW.ZipShelve as ZipShelve 
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
+## the actual import 
+from Ostap.OstapBender import *
 
-# =============================================================================
-## minor decoration for shelve module 
-from PyPAW.shelve_ext import shelve 
-
-# =============================================================================
-## import useful context managers
-from PyPAW.Utils import *
-
-# ============================================================================= 
-## prepend the path 
-if '.' not in sys.path :
-    logger.info('Prepend sys.path with $PWD')
-    sys.path = ['.'] + sys.path 
-
-# =============================================================================
-cpp = PyRoUts.cpp
-VE  = PyRoUts.VE
 # =============================================================================
 if '__main__' == __name__ :
     
