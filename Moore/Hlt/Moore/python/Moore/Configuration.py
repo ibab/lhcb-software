@@ -721,7 +721,8 @@ class Moore(LHCbConfigurableUser):
             ###    about TISTOS linking -- so it must check for TisTosParticleTagger...
             from DAQSys.Decoders import DecoderDB
             DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup()
-            trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { "^" : " 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } )
+            trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { '[\[]' : "[ 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } )
+            print trans[ 'GaudiSequencer/HltDecisionSequence$']['Members']
 
             Funcs._mergeTransform(trans)
                     
