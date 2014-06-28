@@ -723,7 +723,7 @@ class Moore(LHCbConfigurableUser):
             DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup()
             trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { "^" : " 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } } )
 
-            Funcs._mergeTransform(transdep)
+            Funcs._mergeTransform(trans)
                     
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
