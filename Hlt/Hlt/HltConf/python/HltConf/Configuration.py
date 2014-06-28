@@ -194,7 +194,8 @@ class HltConf(LHCbConfigurableUser):
         if activehlt2lines:
             ## TODO/FIXME/BAD HACK: this needs to be combined with the TISTOS tagger inside Hlt2Line...
             if not activehlt1lines : 
-                    Dec.members.append( DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup() )
+                    from DAQSys.Decoders import DecoderDB
+                    Dec.Members.append( DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup() )
             Dec.Members.append(Sequence("Hlt2"))
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()
@@ -760,11 +761,13 @@ class HltConf(LHCbConfigurableUser):
                          )
         
         # make sure we only instantiate members which are used...
-        ### TODO/FIXME: insure that these always 'pass'
-        End           = Sequence('HltEndSequence', Members = [ tp( name, **props ) for (gate,tp,name,props) in _endlist       if self.getProp(gate) ]  )
-        Hlt1PostAmble = Sequence('Hlt1Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt1postamble if self.getProp(gate) ]  )
-        Hlt2PostAmble = Sequence('Hlt2Postamble',  Members = [ tp( name, **props ) for (gate,tp,name,props) in _hlt2postamble if self.getProp(gate) ]  )
-
+        instantiate = lambda name, cfg : Sequence( name, 
+                                                   IgnoreFilterPassed = True, 
+                                                   Members = [ tp( nm, **props ) for (gate,tp,nm,props) in cfg if self.getProp(gate) ]  )
+        End           = instantiate( 'HltEndSequence',_endlist )
+        Hlt1PostAmble = instantiate( 'Hlt1Postamble',_hlt1postamble )
+        Hlt2PostAmble = instantiate( 'Hlt2Postamble',_hlt2postamble )
+        
             
         if (self.getProp("EnableLumiEventWriting")) :
             if sets and hasattr(sets, 'NanoBanks') :
