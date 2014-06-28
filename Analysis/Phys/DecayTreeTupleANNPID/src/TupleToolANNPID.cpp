@@ -42,8 +42,10 @@ StatusCode TupleToolANNPID::fill( const LHCb::Particle*
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  if ( !P || !P->proto() ) return sc;
+  // Only run on charged stable particles
+  if ( !P || !P->proto() || !P->proto()->track() ) return sc;
 
+  // get the prefix
   const std::string prefix = fullName(head);
 
   // Loop over PID tunes
@@ -64,6 +66,7 @@ StatusCode TupleToolANNPID::fill( const LHCb::Particle*
                               m_pidTool->annPID(P->proto(),LHCb::ParticleID(0),pidTune) ); 
   }
   
+  // return
   return sc;
 }
 
