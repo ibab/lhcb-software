@@ -96,20 +96,19 @@ ProtoParticlePacker::pack( const DataVector & protos,
     newPart.firstExtra = pprotos.extras().size();
     const double high = boost::numeric::bounds<float>::highest();
     const double low  = boost::numeric::bounds<float>::lowest();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = part->extraInfo().begin();
-          part->extraInfo().end() != itE; ++itE )
+    for ( const auto einfo : part->extraInfo() )
     {
-      double info = (*itE).second;
+      double info = einfo.second;
       if ( info > high || info < low )
       {
         std::ostringstream s;
-        s << (LHCb::ProtoParticle::additionalInfo)(*itE).first;
+        s << (LHCb::ProtoParticle::additionalInfo)einfo.first;
         parent().Warning( "ExtraInfo '" + s.str() + 
                           "' out of floating point range. Truncating value." ).ignore();
         // if      ( info > high ) { info = high; }
         // else if ( info < low  ) { info = low;  }
       }
-      pprotos.extras().push_back( std::pair<int,int>((*itE).first,m_pack.fltPacked(info)) );
+      pprotos.extras().push_back( std::make_pair(einfo.first,m_pack.fltPacked(info)) );
     }
     newPart.lastExtra = pprotos.extras().size();
 
