@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2014-06-29 - Olivier Deschamps
+  - fix default parameters for Covariance estimation
+
 ! 2014-06-29 - Olivier Deschamps
   - fix FPE's, compilation warnings & verbosity excess
 

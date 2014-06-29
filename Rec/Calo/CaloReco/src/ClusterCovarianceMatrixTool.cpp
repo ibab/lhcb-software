@@ -125,16 +125,17 @@ StatusCode ClusterCovarianceMatrixTool::initialize (){
       iN = m_det->incoherentNoise();
       cN = m_det->coherentNoise();
     }
-    if( a <= 0. && gE <= 0. && iN <= 0. && cN <= 0. )ok = false;
+
+    if( a <= 0. || gE <= 0. )ok = false; // check stochastic term & gainError (noises are always defined in gain for digitization)
     if( ok ){
       flag = " from DB " + source;
-      m_a       = (a  >= 0. ) ? a  : 0.;
-      m_gainErr = (gE >= 0. ) ? gE : 0.;
+      m_a       = a  ;  
+      m_gainErr = gE ;
       m_noiseIn = (iN >= 0. ) ? iN : 0.;
       m_noiseCo = (cN >= 0. ) ? cN : 0.;
     }else warning()<<"No parameters for covariance in DB - use options values"<<endmsg;
   }
-
+  // else use inherited property
   m_estimator.setDetector( m_det     ) ;
   m_estimator.setA       ( m_a       ) ;
   m_estimator.setGainS   ( m_gainErr ) ;
