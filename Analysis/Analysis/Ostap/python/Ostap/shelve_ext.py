@@ -94,6 +94,36 @@ if not hasattr ( shelve.Shelf, 'ls' ) :
     logger.debug ( "Add 'ls' method for shelve.Shelf class") 
 
 # =============================================================================
+## add context-manager functionality to shelve 
+def _shelf_enter_ ( self ) :
+    """ Context-manager
+    
+    ## with shelve.open('A.db') as db :
+    ##    ....
+    
+    """
+    return self
+def _shelf_exit_ ( self , *_ ) :
+    """ Context-manager
+    
+    ## with shelve.open('A.db') as db :
+    ##    ....
+    
+    """
+    try :
+        self.close()
+    except: pass
+    
+    return self
+
+## add method to Shelve, if not done yet
+if hasattr ( shelve.Shelf, '__enter__' ) and hasattr ( shelve.Shelf, '__exit__' ) : pass 
+else :    
+    shelve.Shelf.__enter__ = _shelf_enter_
+    shelve.Shelf.__exit__  = _shelf_exit_
+    logger.debug ( "Add 'enter/exit' methods for shelve.Shelf class") 
+
+# =============================================================================
 if '__main__' == __name__ :
 
     import ostapline

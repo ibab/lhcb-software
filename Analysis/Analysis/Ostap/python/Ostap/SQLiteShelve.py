@@ -165,6 +165,7 @@ class SQLiteShelf(SqliteDict):
             filename  = os.path.expandvars ( filename )
             filename  = os.path.expanduser ( filename )
             filename  = os.path.expandvars ( filename )
+            filename  = os.path.abspath    ( filename )
             
         SqliteDict.__init__ ( self                        ,
                               filename     = filename     ,
@@ -257,6 +258,14 @@ def _zip_setitem ( self , key , value ) :
 SQLiteShelf.__setitem__ = _zip_setitem
 SQLiteShelf.__getitem__ = _zip_getitem
 
+def _sql_enter_ ( self      ) : return self
+def _sql_exit_  ( self , *_ ) :
+    try :
+        os.close()
+    except : pass
+
+SQLiteShelf.__enter__ = _sql_enter_
+SQLiteShelf.__exit__  = _sql_exit_ 
 
 # =============================================================================
 ## open new SQLiteShelve data base

@@ -167,7 +167,7 @@ class ZipShelf(shelve.Shelf):
     def __init__(
         self                                   ,
         filename                               ,
-        flag      = 'c'                        , 
+        mode      = 'c'                        , 
         protocol  = HIGHEST_PROTOCOL           , 
         compress  = zlib.Z_BEST_COMPRESSION    ,
         writeback = False                      ,
@@ -191,7 +191,7 @@ class ZipShelf(shelve.Shelf):
         
         if filename.rfind ( '.gz' ) + 3 == len ( filename ) :
             
-            if os.path.exists ( filename ) and 'r' == flag :
+            if os.path.exists ( filename ) and 'r' == mode :
                 ## gunzip into temporary location
                 filename_ = self._gunzip ( filename ) 
                 if not os.path.exists ( filename_ ) :
@@ -203,7 +203,7 @@ class ZipShelf(shelve.Shelf):
                 filename        = filename_ 
                 self.__filename = filename_
                 self.__remove   = True
-            elif os.path.exists ( filename ) and 'r' != flag :
+            elif os.path.exists ( filename ) and 'r' != mode :
                 ## unzip in place
                 filename_     = filename[:-3]
                 # remove existing file (if needed) 
@@ -230,7 +230,7 @@ class ZipShelf(shelve.Shelf):
         import anydbm
         shelve.Shelf.__init__ (
             self                                   ,
-            anydbm.open ( self.__filename , flag ) ,
+            anydbm.open ( self.__filename , mode ) ,
             protocol                               ,
             writeback                              )
         
@@ -448,7 +448,7 @@ ZipShelf.__setitem__ = _zip_setitem
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2010-04-30
 def open ( filename                                   ,
-           flag          = 'c'                        ,
+           mode          = 'c'                        ,
            protocol      = HIGHEST_PROTOCOL           ,
            compresslevel = zlib.Z_BEST_COMPRESSION    , 
            writeback     = False                      ,
@@ -467,7 +467,7 @@ def open ( filename                                   ,
     """
     
     return ZipShelf ( filename      ,
-                      flag          ,
+                      mode          ,
                       protocol      ,
                       compresslevel ,
                       writeback     ,

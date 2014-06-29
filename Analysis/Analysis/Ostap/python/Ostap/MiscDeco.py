@@ -62,7 +62,32 @@ ROOT.TFile.name        = ROOT.TFile.GetName
 ROOT.TFile.__getitem__ = ROOT.TFile.Get 
 ROOT.TFile.__getattr__ = ROOT.TFile.Get 
 
+## use ROOT-file with context-manager 
+def _rf_enter_ ( self      ) :
+    """
+    Use ROOT-file with the context manager
+    
+    >>> with ROOT.TFile('ququ') as f : f.ls() 
+    """ 
+    return self
 
+## use ROOT-file with context-manager 
+def _rf_exit_  ( self , *_ ) :
+    """
+    Use ROOT-file with the context manager
+    
+    >>> with ROOT.TFile('ququ') as f : f.ls()
+    """
+    try :
+        self.Close()
+    except: pass
+    
+
+if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) : pass
+else :
+    ROOT.TFile.__enter__ = _rf_enter_
+    ROOT.TFile.__exit__  = _rf_exit_
+    
 # =============================================================================
 ## define simplified print for TCanvas 
 def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'png' , 'eps', 'C' ] ) :

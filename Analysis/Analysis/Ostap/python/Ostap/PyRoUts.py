@@ -125,6 +125,35 @@ def hID     () : return histoID ( )
 def dsID    () : return rootID  ( 'ds_' )
 
 # =============================================================================
+## a bit modified 'Clone' function for histograms
+#  - it automaticlaly assign unique ID
+#  - it ensures that cloned historgam is not going to die with
+#    accidentally opened file/directory
+def _new_clone_ ( self , id = '' ) :
+    """
+    Modifiled Clone-function
+    - it automaticlaly assign unique ID
+    - it ensures that cloned historgam is not going to die with
+    the accidentally opened file/directory
+    """
+    if not id : id = hID()
+    nh = self._old_clone_ ( id )
+    # 
+    nh.SetDirectory ( 0 )
+    # 
+    return nh
+
+for h in ( ROOT.TH1F , ROOT.TH1D ,
+           ROOT.TH2F , ROOT.TH2D ,
+           ROOT.TH3F , ROOT.TH3D ) :
+    
+    if hasattr ( h , '_new_clone_' ) and hasattr ( h , '_old_clone_' ) : pass
+    else : 
+        h._old_clone_ = h.Clone
+        h._new_clone_ = _new_clone_
+        h.Clone       = _new_clone_
+         
+# =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
     #
     if isinstance  ( ve , ( int , long ) ) : return True
