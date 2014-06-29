@@ -21,11 +21,12 @@ using namespace Gaudi ;
 //=============================================================================
 DecayTreeTuple::DecayTreeTuple( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : DecayTreeTupleBase ( name , pSvcLocator )
+  : DecayTreeTupleBase ( name, pSvcLocator )
 {
   // fill some default value
   m_toolList.push_back( "TupleToolKinematic" );
   m_toolList.push_back( "TupleToolPid" );
+  m_toolList.push_back( "TupleToolANNPID" );
   m_toolList.push_back( "TupleToolGeometry" );
   m_toolList.push_back( "TupleToolEventInfo" );
   declareProperty( "ToolList", m_toolList );
