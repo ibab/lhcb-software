@@ -9,9 +9,6 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
 
-// Boost
-//#include <boost/numeric/conversion/bounds.hpp>
-
 //---------------------------------------------------------------------------
 /** @class StandardPacker StandardPacker.h Event/StandardPacker.h
  *
@@ -99,12 +96,7 @@ public:
   /** returns an int containing the float value of the double */
   int fltPacked( const double& x ) const
   {
-    //const double high = boost::numeric::bounds<float>::highest();
-    //const double low  = boost::numeric::bounds<float>::lowest();
     union fltInt { int i; float f; } convert;
-    //convert.f = (float) ( x > high ? high :
-    //                      x < low  ? low  :
-    //                      x );
     convert.f = (float)x;
     return convert.i;
   }
