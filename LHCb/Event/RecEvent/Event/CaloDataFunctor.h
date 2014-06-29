@@ -639,8 +639,7 @@ namespace LHCb
                          DE de     ,
                          double& e ,
                          double& x ,
-                         double& y  )
-    {
+                         double& y  ){
       // reset initial parameters
       e = 0 ;  x = 0 ; y = 0 ;
       // use counter
@@ -652,27 +651,22 @@ namespace LHCb
       // empty sequence
       if( 0 == de || begin == end ) { return StatusCode( 201 )   ; }
       // explicit loop over all entries
-      for( ; begin != end ; ++begin )
-      {
+      for( ; begin != end ; ++begin ){
         // extract the digit
         const LHCb::CaloDigit*       digit  = begin->digit() ;
         // skip nulls
         if( 0 == digit                           ) { continue ; }
-        // skip useless statuses
-        if( !( begin->status() &
-               LHCb::CaloDigitStatus::UseForEnergy   ) ) { continue ; }
-        // accumulate digit energy
         double eDigit = digit->e() * begin->fraction() ;
-        e += eDigit    ;
-        // skip useless statuses
-        if( !( begin->status() &
-               LHCb::CaloDigitStatus::UseForPosition ) ) { continue ; }
-        epos += eDigit ;
-        ///
-        ++num ;
-        const Gaudi::XYZPoint pos = de->cellCenter( digit->cellID() );
-        x += eDigit * pos.x() ;
-        y += eDigit * pos.y() ;
+        if( ( begin->status() & LHCb::CaloDigitStatus::UseForEnergy   ) !=0 ){
+          e += eDigit    ;        // accumulate digit energy
+        }  
+        if( ( begin->status() & LHCb::CaloDigitStatus::UseForPosition ) != 0 ) { 
+          epos += eDigit ;        // accumulate digit energy for position
+          ++num ;
+          const Gaudi::XYZPoint pos = de->cellCenter( digit->cellID() );
+          x += eDigit * pos.x() ;
+          y += eDigit * pos.y() ;
+        }        
       }
       // at least one useful digit ?
       if( 0 == num               ) { return StatusCode( 202 ) ; }

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2014-05-29 - O. Deschamps
+ - CaloDataFunctor : fix cluster evaluation
+
 ! 2014-05-22 - O. Deschamps
  - ProtoParticle.xml : map new neutralID info
 
