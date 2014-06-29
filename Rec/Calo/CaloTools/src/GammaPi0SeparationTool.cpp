@@ -135,7 +135,7 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
     double Ecl = 0;
     int area =0;
 
-    double r2PS = 0;
+    double r2PS = 0.;
     double r2r4PS = 0;
     double asymPS = 0;
     double kappaPS = 0;
@@ -176,19 +176,15 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
                                                    double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot, 
                                               double& Eseed, double& E2, int& area) {
   m_data.clear();
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug()<<"Inside ClusterVariables ------"<<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug()<<"Inside ClusterVariables ------"<<endmsg;
   fr2 = cluster->position().spread()(0,0)+cluster->position().spread()(1,1);
-  fasym = (cluster->position().spread()(0,1))/
-    (sqrt( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) ));
+  fasym = (cluster->position().spread()(0,1))/(sqrt( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) ));
   fkappa = sqrt( 1-4*( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) - 
                        (cluster->position().spread()(0,1))*(cluster->position().spread()(1,0)) )
                  /( (cluster->position().spread()(0,0) + cluster->position().spread()(1,1)) * 
-                    (cluster->position().spread()(0,0) + cluster->position().spread()(1,1))  ) );
-  
+                    (cluster->position().spread()(0,0) + cluster->position().spread()(1,1))  ) );  
   double xmean = cluster->position().x();
   double ymean = cluster->position().y();
-
 
   // OD : WARNING cluster->e() is cluster-shape dependent (3x3 / 2x2 ...) RE-EVALUATE E3x3 instead for back. compatibility
   // etot = cluster->e(); //same as position.e  
@@ -232,12 +228,13 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
     const double weight = energy > 0.0 ? energy : 0.0 ;
     
     double rr = (x-xmean)*(x-xmean) + (y-ymean)*(y-ymean);
+    if( entries.size() <= 1 || rr < 1.e-10 )rr=0; // to avoid huge unphysical value due to machine precision
     r4 += weight * rr*rr;
     
     ncells++;
   }//loop cluster cells
   
-  if( etot != 0. ){
+  if( etot > 0. ){
     r4 /= etot;
     fr2r4 = (r4 !=0) ? (r4 - fr2*fr2)/r4 : 0.;
     E2 = (secondE+Eseed)/etot;
@@ -341,7 +338,7 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
       }
     }
     
-    if (eSumPS>0.0){
+    if (eSumPS > 0.0){
       xmeanPS = xmeanPS/eSumPS;
       ymeanPS = ymeanPS/eSumPS;
       
@@ -446,8 +443,8 @@ double GammaPi0SeparationTool::photonDiscriminant(int area,
         
         double value = -1e10;
         if(area ==0 ) value = m_reader0->GetMvaValue(input);
-        if(area ==1 ) value = m_reader1->GetMvaValue(input);
-        if(area ==2 ) value = m_reader2->GetMvaValue(input);
+        else if(area ==1 ) value = m_reader1->GetMvaValue(input);
+        else if(area ==2 ) value = m_reader2->GetMvaValue(input);
         //info() << " INPUT TO GAMMA/PI0 : NN[" << input << "]= " << value << " (area="<<area<<")"<< endmsg;
         return value;
 }
