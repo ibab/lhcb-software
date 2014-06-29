@@ -29,8 +29,8 @@ CaloShowerOverlap::CaloShowerOverlap( const std::string& name,
   declareProperty("DistanceThreshold"      , m_dMin        = 4);
   declareProperty("MinEtThreshold"         , m_etMin = 50.  ); // ( ET1 > x && ET2 > x)
   declareProperty("MaxEtThreshold"         , m_etMin2 = 150. ); // ( ET2 > y || ET2 > y)
-  declareProperty("Iterations"       , m_iter = 5);
-  declareProperty("Input"            , m_input= LHCb::CaloClusterLocation::Ecal) ;  
+  declareProperty("Iterations"             , m_iter = 5);
+  declareProperty("InputData"              , m_input= LHCb::CaloClusterLocation::Ecal) ;  
   // following properties are inherited by the selector tool :
   declareProperty( "TagCondition" , m_condition    ) ,
   declareProperty( "PositionTags" , m_taggerP      ) ;
