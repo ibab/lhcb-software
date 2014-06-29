@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2014-06-29 - O. Deschamps
+  - NeutralProtoPAlg : always store a neutral PID's value (default value = -1 when not available)
+
 ! 2014-06-27 - O. Deschamps
  - NeutralProtoPAlg : add new neutralID I/O to neutral info - reorganize additionalInfo() storage
  - NeutralProtoParticleAddNeutralID.{cpp,h} : new algorithm to re-evaluate the NN-based neutralID directly using protoP info (to be used in DV)

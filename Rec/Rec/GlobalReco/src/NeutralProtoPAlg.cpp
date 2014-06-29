@@ -167,8 +167,6 @@ StatusCode NeutralProtoPAlg::execute(){
           m_setMass=true;
           m_mass[cellCode] = m_estimator->data(hypo, HypoM );
         }
-            
-
 
         pushData(proto, LHCb::ProtoParticle::CaloNeutralPrs, hypo, HypoPrsE );
         pushData(proto, LHCb::ProtoParticle::CaloNeutralEcal,hypo, ClusterE );
@@ -182,8 +180,8 @@ StatusCode NeutralProtoPAlg::execute(){
         dep *= m_estimator->data(hypo,  ToPrsE );
         proto -> addInfo ( LHCb::ProtoParticle::CaloDepositID   , dep ) ;     // ** input to neutralID toPrsE=|caloDepositID|
 
-        // DLL-based neutralID (obsolete)  :
-        pushData(proto, LHCb::ProtoParticle::PhotonID , hypo, NeutralID    ); // old DLL-based neutral-ID
+        // DLL-based neutralID (to be obsolete)  :
+        pushData(proto, LHCb::ProtoParticle::PhotonID , hypo, NeutralID , -1. ,true    ); // old DLL-based neutral-ID // FORCE
                 
         // isNotX  inputs :
         pushData(proto, LHCb::ProtoParticle::CaloNeutralE49   , hypo, E49 );
@@ -193,8 +191,8 @@ StatusCode NeutralProtoPAlg::execute(){
         pushData(proto, LHCb::ProtoParticle::CaloPrsNeutralE4max,hypo, PrsE4Max); // ** input to neutralID
         pushData(proto, LHCb::ProtoParticle::CaloNeutralPrsM  , hypo, HypoPrsM);  // ** input to neutralID
         // isNotX output :
-        pushData(proto, LHCb::ProtoParticle::IsNotH   , hypo, isNotH       ); // new NN-based neutral-ID (anti-H)
-        pushData(proto, LHCb::ProtoParticle::IsNotE   , hypo, isNotE       ); // new NN-based neutral-ID (anti-E)
+        pushData(proto, LHCb::ProtoParticle::IsNotH   , hypo, isNotH  , -1. , true     ); // new NN-based neutral-ID (anti-H) // FORCE
+        pushData(proto, LHCb::ProtoParticle::IsNotE   , hypo, isNotE  , -1. , true     ); // new NN-based neutral-ID (anti-E) // FORCE
 
         // isPhoton inputs (photon & mergedPi0 only)
         if( hypo -> hypothesis() != LHCb::CaloHypo::PhotonFromMergedPi0 ){
@@ -212,7 +210,7 @@ StatusCode NeutralProtoPAlg::execute(){
           pushData(proto, LHCb::ProtoParticle::CaloPrsM30         ,hypo, isPhotonPrsM30);    // -- input to isPhoton
           pushData(proto, LHCb::ProtoParticle::CaloPrsM45         ,hypo, isPhotonPrsM45);    // -- input to isPhoton
           // isPhoton output :
-          pushData(proto, LHCb::ProtoParticle::IsPhoton , hypo, isPhoton     ); // NN-based neutral-ID (anti-pi0)
+          pushData(proto, LHCb::ProtoParticle::IsPhoton , hypo, isPhoton , -1. , true    ); // NN-based neutral-ID (anti-pi0) // FORCE
         }        
       }// lightmode      
     } // loop over CaloHypos

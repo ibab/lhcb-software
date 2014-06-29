@@ -90,7 +90,8 @@ StatusCode NeutralProtoParticleAddNeutralID::execute() {
       if ( m_isNotE && nOk ){ 
         double temp=proto->info(LHCb::ProtoParticle::IsNotE,-1.);
         proto->eraseInfo(LHCb::ProtoParticle::IsNotE);
-        if( pt > m_isNotE_Pt ) proto->addInfo(LHCb::ProtoParticle::IsNotE,m_neutralID->isNotE(nnV) );
+        double val = ( pt > m_isNotE_Pt ) ? m_neutralID->isNotE(nnV) : -1. ;
+        proto->addInfo(LHCb::ProtoParticle::IsNotE,val );
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()  << "UPDATING IsNotE : "
                                                         << temp << " ---> " << proto->info(LHCb::ProtoParticle::IsNotE,-1.) 
                                                         << " (" << proto->hasInfo(LHCb::ProtoParticle::IsNotE ) << ")" << endmsg;
@@ -98,7 +99,8 @@ StatusCode NeutralProtoParticleAddNeutralID::execute() {
       if ( m_isNotH && nOk){
         double temp=proto->info(LHCb::ProtoParticle::IsNotH,-1.);
         proto->eraseInfo(LHCb::ProtoParticle::IsNotH);
-        if(  pt > m_isNotH_Pt)proto->addInfo(LHCb::ProtoParticle::IsNotH, m_neutralID->isNotH(nnV) );
+        double val = (  pt > m_isNotH_Pt) ?  m_neutralID->isNotH(nnV) : -1.;
+        proto->addInfo(LHCb::ProtoParticle::IsNotH, val );
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "UPDATING IsNotH : " 
                                                        << temp << " ---> " << proto->info(LHCb::ProtoParticle::IsNotH,-1.) 
                                                        << " (" << proto->hasInfo(LHCb::ProtoParticle::IsNotH ) << ")" << endmsg;
@@ -129,7 +131,8 @@ StatusCode NeutralProtoParticleAddNeutralID::execute() {
       if ( m_isPhoton && pOk ){ 
         double temp=proto->info(LHCb::ProtoParticle::IsPhoton,-1.);
         proto->eraseInfo(LHCb::ProtoParticle::IsPhoton);
-        if( pt > m_isPhoton_Pt ) proto->addInfo(LHCb::ProtoParticle::IsPhoton,m_gammaPi0->isPhoton(ppV) );
+        double val = ( pt > m_isPhoton_Pt ) ? m_gammaPi0->isPhoton(ppV) : -1.;
+        proto->addInfo(LHCb::ProtoParticle::IsPhoton, val );
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "UPDATING IsPhoton : " 
                                                        << temp << " ---> " << proto->info(LHCb::ProtoParticle::IsPhoton,-1.) 
                                                        << " (" << proto->hasInfo(LHCb::ProtoParticle::IsPhoton ) << ")" << endmsg;
