@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-30 - Olivier Deschamps
+  - fix electronPt/photonPt cluster thresholds for CaloHypo production
+
 ! 2014-06-29 - Olivier Deschamps
   - fix default parameters for Covariance estimation
 

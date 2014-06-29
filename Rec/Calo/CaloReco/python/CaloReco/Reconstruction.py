@@ -141,7 +141,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 # ============================================================================
 ## define the recontruction of  Single Photons
 def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True,
-                 photonPt=150.*MeV, fastReco = False, external = '',noSpdPrs=False) :
+                 photonPt=50.*MeV, fastReco = False, external = '',noSpdPrs=False) :
     """
     Define the recontruction of Single Photon Hypo
     """
@@ -184,7 +184,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     ### a/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster  , "PhotonCluster" )
     alg.SelectionTools = [ alg.PhotonCluster ]
-    alg.PhotonCluster.MinEnergy = photonPt
+    alg.PhotonCluster.MinEt = photonPt
     
     ### b/ Neutral cluster (track-based and/or Spd/Prs-based)    
     if   useTracks     :
@@ -247,7 +247,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
 # ============================================================================
 ## define the recontruction of Electorn Hypos
 def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ,
-                   electronPt=150.*MeV , fastReco = False, external = '' ,noSpdPrs=False) :
+                   electronPt=50.*MeV , fastReco = False, external = '' ,noSpdPrs=False) :
     """
     Define the reconstruction of
     """
@@ -289,7 +289,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     ## 1/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster               , "ElectronCluster" )
     alg.SelectionTools = [ alg.ElectronCluster ]
-    alg.ElectronCluster.MinEnergy = electronPt
+    alg.ElectronCluster.MinEt = electronPt
 
     ## 2/  hits in Spd
     if useSpdE : 
