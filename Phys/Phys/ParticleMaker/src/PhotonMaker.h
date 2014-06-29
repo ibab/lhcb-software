@@ -51,7 +51,7 @@ public:
 protected:
 
   // confidence level evaluator
-  double confLevel        ( const LHCb::ProtoParticle* pp ) const ;
+  double confLevel        ( const LHCb::ProtoParticle* pp, bool useSwitch=false ) const ;
   // setters
 
 private:
@@ -64,11 +64,10 @@ private:
   Gaudi::SymMatrix3x3                m_pointErr         ;
 
   // techniques for CL evaluation
-  bool                               m_useCaloTrMatch   ;
-  bool                               m_useIsNotH        ;
-  bool                               m_useIsNotE        ;
-  bool                               m_useIsPhoton      ;
-  bool                               m_usePhotonDLL     ;
+  std::vector<std::string> m_clBase   ;
+  std::vector<std::string> m_clSwitch;
+  std::vector<std::string> m_knownCLs;
+
   // Filters
   double                             m_clCut            ;
   double                             m_ptCut            ;
@@ -82,7 +81,7 @@ private:
   double m_minHcal;
   double m_maxPrs;
   double m_mas;
-
+  bool clFind(std::string technique, bool useSwitch) const;
 };
 
 #endif // PHOTONMAKER_H

@@ -3,7 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
-! 2014-02-16 - O. Deschamps
+! 2014-06-29 - O. Deschamps
+  - Photon & MergedPi0Maker : improve CL technique setting
+
+! 2014-06-25 - O. Deschamps
  - PhotonMaker    : CHANGE DEFAULT CL DEFINITION : isNotH from NN-based neutralID 
  - MergedPi0Maker : CHANGE DEFAULT CL DEFINITION : 1-isPhoton
 

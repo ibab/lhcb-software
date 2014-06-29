@@ -38,26 +38,23 @@ protected:
    */
 
   // confidence level evaluator
-  double confLevel        ( const LHCb::ProtoParticle* pp ) const ;
+  double confLevel        ( const LHCb::ProtoParticle* pp , bool useSwitch=false) const ;
 
 private:
 
   DeCalorimeter* m_calo;
   /// techniques for CL evaluation
-  bool m_useCaloTrMatch   ;
-  bool m_useClusterMass   ;
-  bool m_useIsNotH        ;
-  bool m_useIsNotE        ;
-  bool m_useIsPhoton      ;
-  bool m_usePhotonDLL     ;
-  
+  std::vector<std::string> m_clBase   ;
+  std::vector<std::string> m_clSwitch;
+  std::vector<std::string> m_knownCLs;
+
   /// Filters
   double m_clCut      ;
   double m_gPtCut     ;
   double m_ggDistCut  ;
   double m_chi2Cut    ;
   std::vector<double> m_parMas;
-
+  bool clFind(std::string technique, bool useSwitch) const;
 };
 
 #endif // MERGEDPI0PARTICLEPARTICLEMAKER_H

@@ -46,12 +46,9 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
 // Origin vertex
   , m_point            ()
   , m_pointErr         ()
-// PID technque
-  , m_useCaloTrMatch   ()
-  , m_useIsNotH        ()
-  , m_useIsNotE        ()
-  , m_useIsPhoton      ()
-  , m_usePhotonDLL     ()
+// PID techniques
+  , m_clBase           ()
+  , m_clSwitch         ()
 // Filters
   , m_clCut            ()
   , m_ptCut            ()
@@ -61,13 +58,10 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   declareProperty ( "Input"                      , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
   declareProperty ( "Particle"                   , m_part="gamma");
   //
-  declareProperty ( "UseCaloTrMatch"             , m_useCaloTrMatch   = false ) ;
-  declareProperty ( "UseIsNotH"                  , m_useIsNotH        = true  ) ;
-  declareProperty ( "UseIsNotE"                  , m_useIsNotE        = false ) ;
-  declareProperty ( "UseIsPhoton"                , m_useIsPhoton      = false ) ;
-  declareProperty ( "UsePhotonDLL"               , m_usePhotonDLL     = false ) ;
+  declareProperty ( "ConfidenceLevelBase"        , m_clBase   ) ;
+  declareProperty ( "ConfidenceLevelSwitch"      , m_clSwitch ) ;
   //
-  declareProperty ( "ConfLevelCut"               , m_clCut       = -1.0   ) ;
+  declareProperty ( "ConfLevelCut"               , m_clCut       = -99.   ) ;
   declareProperty ( "PtCut"                      , m_ptCut       = 150.0  ) ;
   declareProperty ( "ConvertedPhotons"           , m_converted   = true   ) ;
   declareProperty ( "UnconvertedPhotons"         , m_unconverted = true   ) ;
@@ -77,7 +71,19 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   declareProperty ( "MaxHcalRatio"               , m_maxHcal = -1.);
   declareProperty ( "MinHcalRatio"               , m_minHcal = -1.);
   declareProperty ( "MaxPrsEnergy"               , m_maxPrs  = -1.);
-  // declare new interface
+ 
+  // Confidence level techniques
+  m_clBase.push_back("IsNotH");
+  m_clSwitch.push_back("PhotonDLL");
+
+  // allowed techniques :
+  m_knownCLs.push_back("IsNotH");
+  m_knownCLs.push_back("IsNotE");
+  m_knownCLs.push_back("IsPhoton");
+  m_knownCLs.push_back("PhotonDLL");
+  m_knownCLs.push_back("CaloTrMatch");
+
+ // declare new interface
   declareInterface<ICaloParticleMaker> (this);
 }
 // ============================================================================
@@ -113,22 +119,25 @@ StatusCode PhotonMaker::initialize    ()
 
 
 
-  // CL techniques
-  debug() << " Following techniques will be used for CL evaluation : " << endmsg;
-  if( m_useCaloTrMatch)debug() << "CL uses CaloTrMatch : matching with reconstructed tracks " << endmsg ; 
-  if( m_useIsNotH   )debug() << "CL uses IsNotH    : Tracking/CALO NN-based combined Photon ID (anti-h)   " << endmsg ; 
-  if( m_useIsNotE   )debug() << "CL uses IsNotE    : Tracking/CALO NN-based combined Photon ID (anti-e)   " << endmsg ; 
-  if( m_useIsPhoton   )debug() << "CL uses IsPhoton separation variable " << endmsg;
-  if( m_usePhotonDLL  )debug() << "CL uses PhotonDLL   : Tracking/CALO DLL-based combined Photon id   " << endmsg ; 
+  // CL techniques  
+  for(std::vector<std::string>::const_iterator b = m_clBase.begin(); m_clBase.end() != b ; ++b){
+    bool ok = false;
+    for(std::vector<std::string>::const_iterator it = m_knownCLs.begin(); m_knownCLs.end() != it ; ++it){
+      if( *b == *it){ok=true;break;}
+    }
+    if( !ok )return Error("Unknown CL technique is required",StatusCode::FAILURE);
+  }
+  for(std::vector<std::string>::const_iterator b = m_clSwitch.begin(); m_clSwitch.end() != b ; ++b){
+    bool ok = false;
+    for(std::vector<std::string>::const_iterator it = m_knownCLs.begin(); m_knownCLs.end() != it ; ++it){
+      if( *b == *it){ok=true;break;}
+    }
+    if( !ok )return Error("Unknown CL switch is required",StatusCode::FAILURE);
+  }
 
-  if( !m_useCaloTrMatch   &&
-      !m_useIsNotH        &&
-      !m_useIsNotE        &&
-      !m_useIsPhoton      &&
-      !m_usePhotonDLL      )
-  { Warning(" No PID techniques are selected for CL evaluation" ) ; }
-
-  if( m_useCaloTrMatch    ){ debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)"<< endmsg; }
+  info() << " Following technique(s) will be used for CL evaluation : " << m_clBase << endmsg;
+  info() << " Switch to " << m_clSwitch << " if one technique is not available " << endmsg;
+  if( m_clBase.empty() )Warning(" No PID techniques are selected for CL evaluation" ) ;
 
   if( m_converted && m_unconverted){debug()<< "BOTH converted (SPD) and unconverted (no SPD) photons are to be created"<< endmsg;}
   else if ( m_converted ){debug()<< "ONLY converted (SPD) photons are to be created"<< endmsg;}
@@ -250,8 +259,9 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     if ( pT < m_ptCut ) { continue; }
 
     // ---- apply CL filter (must be after pT cut to match neutralID definition range)
-    const double CL = confLevel( pp );
+    const double CL = confLevel( pp ,false);
     if ( CL  < m_clCut ) continue ;
+    counter("Confidence Level") += CL;
     cnv ? ++nSelConverted : ++nSelUnconverted;
 
     // ===== create new particle and fill it
@@ -322,73 +332,92 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
   return StatusCode::SUCCESS ;
 }
 
+
+bool PhotonMaker::clFind(const std::string technique, bool useSwitch)const {  
+  const std::vector<std::string> list = (useSwitch) ? m_clSwitch : m_clBase;
+  for(std::vector<std::string>::const_iterator it = list.begin(); list.end() != it ; ++it){
+    if( *it == technique)return true;
+  }
+  return false;
+}
+
+
+
+
 // ============================================================================
-double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const{
+double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp, bool useSwitch ) const{
+
+
   if( 0 == pp ){ Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 
   double CL = 1.0 ;
+  bool hasCL=true;
 
   // track matching
-  if ( m_useCaloTrMatch ){
+  if ( clFind("CaloTrMatch",useSwitch) ){
     if ( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) ){
-      // assume gaussian distribution (it is wrong!)
       CL *= ( 1.0 - std::exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
     }else{
-      CL = 1.; //
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "confLevel(): CaloTrMatch is not available " << endmsg ; 
-    }
+      Warning("confLevel(): CaloTrMatch is not available",StatusCode::SUCCESS,1).ignore();
+      hasCL= false;
+    } 
   }
 
   // NN-based photonID (IsNotH)
-  if( m_useIsNotH ){
+  if( clFind("IsNotH",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::IsNotH )){
-      double v = pp->info(LHCb::ProtoParticle::IsNotH , 0. );
-      if( v > 1. ) v=1.;
+      double v = pp->info(LHCb::ProtoParticle::IsNotH , 0. ); 
+      if( v > 1. ) v=1.; 
       if( v < 0. ) v=0.;
       CL *= v;
     }else{
-      Warning("confLevel(): NN-based PhotonID IsNotE is not available" ) ;
-      counter("unavailable IsNotH") += 1;
+      hasCL= false;
+      Warning("confLevel(): IsNotE is not available",StatusCode::SUCCESS,1).ignore();
     }
   }
-
+  
   // NN-based photonID (IsNotE)
-  if( m_useIsNotE ){
+  if( clFind("IsNotE",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::IsNotE )){
       double v = pp->info(LHCb::ProtoParticle::IsNotE , 0. );
       if( v > 1. ) v=1.;
       if( v < 0. ) v=0.;
       CL *= v;
     }else{
-      Warning("confLevel(): NN-based PhotonID IsNotE is not available" ) ;
-      counter("unavailable IsNotE") += 1;
+      hasCL=false;
+      Warning("confLevel(): IsNotE is not available",StatusCode::SUCCESS,1).ignore();
     }
   }
 
   // IsPhoton
-  if( m_useIsPhoton ){
+  if( clFind("IsPhoton",useSwitch )){
     if( pp->hasInfo(LHCb::ProtoParticle::IsPhoton )){
       double v =  pp->info(LHCb::ProtoParticle::IsPhoton,+1.);
       if( v > 1. ) v = 1.;
       if( v < 0. ) v = 0.;
       CL *= (1-v);
     }else{
-      Warning("confLevel(): NN-based IsPhoton is not available" ) ;
-      counter("unavailable IsPhoton") += 1;
+      hasCL=false;
+      Warning("confLevel(): IsPhoton is not available",StatusCode::SUCCESS,1).ignore() ;
     }    
   }
 
-  //(obsolete) DLL-based photonID
-  if( m_usePhotonDLL ){
+  //(obsolete) DLL-based photonID : 
+  if( clFind("PhotonDLL",useSwitch)){
     if ( pp->hasInfo(LHCb::ProtoParticle::PhotonID) ){
       double pid = pp->info(LHCb::ProtoParticle::PhotonID, -1.  ) ;
       CL *= 0.5*(std::tanh(pid)+1);
+    }else{
+      hasCL=false;
+      Warning("confLevel(): PhotonDLL is not available",StatusCode::SUCCESS,1).ignore() ;
+    }
   }
-    else
-      Warning("confLevel(): DLL-based PhotonID is not available" ) ;
-      counter("unavailable PhotonDLL") += 1;
+  if( !hasCL && !useSwitch ){
+    Warning("CL base is not available - switch to alternative CL",StatusCode::SUCCESS,1).ignore();
+    counter("Switch to alternative CL") += 1;
+    return confLevel(pp,true); // try alternative CL
   }
-
+  if( !hasCL )return -1.;
   // return
   return CL ;
 }

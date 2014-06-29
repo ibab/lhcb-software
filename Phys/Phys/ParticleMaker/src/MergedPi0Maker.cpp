@@ -36,20 +36,32 @@ DECLARE_ALGORITHM_FACTORY( MergedPi0Maker )
 MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator )
 : Pi0MakerBase ( name , pSvcLocator ),
   m_calo       ( NULL )
+// PID techniques
+  , m_clBase           ()
+  , m_clSwitch         ()
 {
   declareProperty ( "Input" , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
   //
-  declareProperty ( "UseCaloTrMatch"             , m_useCaloTrMatch   = false ) ;
-  declareProperty ( "UseClusterMass"             , m_useClusterMass   = false ) ;
-  declareProperty ( "UseIsNotH"                  , m_useIsNotH        = false ) ;
-  declareProperty ( "UseIsNotE"                  , m_useIsNotE        = false ) ;
-  declareProperty ( "UsePhotonDLL"               , m_usePhotonDLL     = false ) ;
-  declareProperty ( "UseIsPhoton"                , m_useIsPhoton      = true  ) ;
+  declareProperty ( "ConfidenceLevelBase"        , m_clBase   ) ;
+  declareProperty ( "ConfidenceLevelSwitch"      , m_clSwitch ) ;
   // Filter
-  declareProperty( "ConfLevelCut"      , m_clCut = -1     ) ; 
+  declareProperty( "ConfLevelCut"      , m_clCut = -99.     ) ; 
+  declareProperty( "PtCut"             , m_PtCut = 2000. * Gaudi::Units::MeV );
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV );
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
   declareProperty( "Chi2Cut"           , m_chi2Cut   = 1.  );
+
+ // Confidence level techniques
+  m_clBase.push_back("IsPhoton");
+  m_clSwitch.push_back("CaloTrMatch");
+
+  // allowed techniques :
+  m_knownCLs.push_back("IsNotH");
+  m_knownCLs.push_back("IsNotE");
+  m_knownCLs.push_back("IsPhoton");
+  m_knownCLs.push_back("PhotonDLL");
+  m_knownCLs.push_back("CaloTrMatch");
+  m_knownCLs.push_back("ClusterMass");
 }
 // ============================================================================
 
@@ -68,28 +80,26 @@ StatusCode MergedPi0Maker::initialize    ()
   // DeCalorimeter
   m_calo =  getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ) ;
 
-  // check vectors of paramters
-  // CL techniques
-  if ( msgLevel(MSG::DEBUG)){
-    debug() << " Following techniques will be used for CL evaluation : " << endmsg;
-    if( m_useCaloTrMatch    )debug() << "CL uses CaloTrMatch  : matching with reconstructed tracks " << endmsg ; 
-    if( m_useClusterMass    )debug() << "CL uses ClusterMass  : Ecal Cluster  mass              " << endmsg ; 
-    if( m_useIsNotH         )debug() << "CL uses IsNotH       : Tracking/CALO NN-based combined  photon id   " << endmsg ; 
-    if( m_useIsNotE         )debug() << "CL uses IsNotE       : Tracking/CALO NN-based combined  photon id   " << endmsg ; 
-    if( m_usePhotonDLL      )debug() << "CL uses PhotonDLL    : Tracking/CALO DLL-based combined photon id   " << endmsg ;
-    if( m_useIsPhoton       )debug() << "CL uses IsPhoton separation variable" << endmsg;
+  // CL techniques  
+  for(std::vector<std::string>::const_iterator b = m_clBase.begin(); m_clBase.end() != b ; ++b){
+    bool ok = false;
+    for(std::vector<std::string>::const_iterator it = m_knownCLs.begin(); m_knownCLs.end() != it ; ++it){
+      if( *b == *it){ok=true;break;}
+    }
+    if( !ok )return Error("Unknown CL technique is required",StatusCode::FAILURE);
+  }
+  for(std::vector<std::string>::const_iterator b = m_clSwitch.begin(); m_clSwitch.end() != b ; ++b){
+    bool ok = false;
+    for(std::vector<std::string>::const_iterator it = m_knownCLs.begin(); m_knownCLs.end() != it ; ++it){
+      if( *b == *it){ok=true;break;}
+    }
+    if( !ok )return Error("Unknown CL switch is required",StatusCode::FAILURE);
   }
 
-  if( !m_useCaloTrMatch   &&
-      !m_useClusterMass   &&
-      !m_useIsPhoton      &&
-      !m_useIsNotH      &&
-      !m_usePhotonDLL      ){ Warning(" No PID techniques are selected for CL evaluation" ).ignore() ; }
+  info() << " Following technique(s) will be used for CL evaluation : " << m_clBase << endmsg;
+  info() << " Switch to " << m_clSwitch << " if one technique is not available " << endmsg;
+  if( m_clBase.empty() )Warning(" No PID techniques are selected for CL evaluation" ) ;
 
-  if ( msgLevel(MSG::DEBUG)){
-    if( m_useCaloTrMatch    )debug()<< "  For CaloTrMatch assume Gauss distribution (wrong?)" << endmsg;
-    if( m_useClusterMass    )debug()<< "  For ClusterMass assume exponential distribution (wrong?)"<< endmsg; 
-  }
   return sc ;
 }
 
@@ -144,9 +154,6 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     const double chi2 = pp->info(LHCb::ProtoParticle::CaloTrMatch,+1.e+06);
     if ( m_chi2Cut >= 0 && chi2          < m_chi2Cut                ){continue;}
 
-    // ---- apply CL cut 
-    const double CL = confLevel( pp );
-    if ( m_clCut >= 0 && CL          < m_clCut                ){continue;}
 
     // == extract SplitPhotons hypos
     const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
@@ -177,6 +184,12 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     double epi0     =  pi0Momentum.e();
     double dmin     =  ( epi0 * CellSize > 0 ) ? zpos * 2. * m_Mass / epi0 / CellSize : +9999.; // rare FPE ( hypo outside Calo acceptance ?)
     if ( m_ggDistCut < dmin                 ){continue;}
+
+    // ---- apply CL cut 
+    const double CL = confLevel( pp,false );
+    if ( m_clCut >= 0 && CL          < m_clCut                ){continue;}
+    counter("Confidence Level") += CL;
+
 
     ++nSelPp;
 
@@ -232,90 +245,102 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
 }
 
 // ============================================================================
-double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
-{
-  if( 0 == pp )
-  { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
+bool MergedPi0Maker::clFind(const std::string technique, bool useSwitch)const {  
+  const std::vector<std::string> list = (useSwitch) ? m_clSwitch : m_clBase;
+  for(std::vector<std::string>::const_iterator it = list.begin(); list.end() != it ; ++it){
+    if( *it == technique)return true;
+  }
+  return false;
+}
+
+double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp, bool useSwitch ) const{
+  if( 0 == pp ){ Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 
   double CL = 1.0 ;
-
-  // track matching
-  if( m_useCaloTrMatch  ){
-    if( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) ){
-      // assume gaussian distribution (it is wrong!)
-      CL *= ( 1.0 - std::exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
-    }
-    else{
-      CL *= 1.;
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "confLevel(): CaloTrMatch is not available - assume above threshold" << endmsg ; 
-    }
-  }
+  bool hasCL = true;
 
   // Cluster Mass
-  if( m_useClusterMass ){
+  if( clFind("ClusterMass",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::ClusterMass)){
       // assume exponential distribution (it is wrong!)
       CL *= ( std::exp( -0.5 * pp->info(LHCb::ProtoParticle::ClusterMass,0.)
                         / ( 25 * Gaudi::Units::MeV ) ) );
     }  // Update CL
     else{
-      Warning("confLevel(): ClusterMass is not available" ).ignore() ; 
-      counter("unavailable ClusterMass") += 1;
-    }
-    
+      hasCL=false;
+      Warning("confLevel(): ClusterMass is not available",StatusCode::SUCCESS,1 ).ignore() ; 
+    }    
   }
 
   // NN-based PhotonID IsNotH
-  if( m_useIsNotH ){
+  if( clFind("IsNotH",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::IsNotH )){
       double v= pp->info(LHCb::ProtoParticle::IsNotH , 0. );
       if( v > 1.) v=1.;
       if( v < 0.) v=0.;
       CL *= v;
     }else{
-      Warning("confLevel(): NN-based PhotonID IsNotH is not available" ) ;
-      counter("unavailable IsNotE") += 1;
+      hasCL=false;
+      Warning("confLevel(): IsNotH is not available",StatusCode::SUCCESS,1 ).ignore() ;
     }    
   }
 
   // NN-based PhotonID IsNotE
-  if( m_useIsNotE ){
+  if( clFind("IsNotE",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::IsNotE )){
       double v= pp->info(LHCb::ProtoParticle::IsNotE , 0. );
       if( v > 1.) v=1.;
       if( v < 0.) v=0.;
       CL *= v;
     }else{
-      Warning("confLevel(): NN-based PhotonID IsNotE is not available" ) ;
-      counter("unavailable IsNotE") += 1;
+      hasCL=false;
+      Warning("confLevel(): IsNotE is not available",StatusCode::SUCCESS,1 ).ignore() ;
     }    
   }
 
   // IsPhoton
-  if( m_useIsPhoton ){
+  if( clFind("IsPhoton",useSwitch) ){
     if( pp->hasInfo(LHCb::ProtoParticle::IsPhoton )){
       double v =  pp->info(LHCb::ProtoParticle::IsPhoton,+1.);
       if( v > 1. ) v = 1.;
       if( v < 0. ) v = 0.;
       CL *= (1-v);
     }else{
-      Warning("confLevel(): NN-based IsPhoton is not available" ) ;
-      counter("unavailable IsPhoton") += 1;
-    }    
+      hasCL=false;
+      Warning("confLevel(): IsPhoton is not available",StatusCode::SUCCESS,1 ).ignore() ;
+    }
   }
 
 
-    //(obsolete) DLL-based photonID
-  if( m_usePhotonDLL ){
+  //(obsolete) DLL-based photonID
+  if( clFind("PhotonDLL",useSwitch) ){
     if ( pp->hasInfo(LHCb::ProtoParticle::PhotonID) ){
       double pid = pp->info(LHCb::ProtoParticle::PhotonID, -1.  ) ;
       CL *= 0.5*(std::tanh(pid)+1);
+    }else{
+      hasCL=false;
+      Warning("confLevel() : PhotonDLL is not available",StatusCode::SUCCESS,1 ).ignore() ;
+    }
   }
-    else
-      Warning("confLevel(): DLL-based PhotonID is not available" ) ;
-      counter("unavailable PhotonDLL") += 1;
+  
+  // track matching
+  if( clFind("CaloTrMatch",useSwitch)  ){
+    if( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) ){
+      // assume gaussian distribution (it is wrong!)
+      CL *= ( 1.0 - std::exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
+    }else{
+      hasCL=false;
+      Warning("confLevel() : CaloTrMatch is not available",StatusCode::SUCCESS,1 ).ignore() ;
+    }
   }
 
+  if( !hasCL && !useSwitch ){
+    Warning("CL base is not available - switch to alternative CL",StatusCode::SUCCESS,1).ignore();
+    counter("Switch to alternative CL") += 1;
+    return confLevel(pp,true); // try alternative CL
+  }
+  if( !hasCL )return -1.;
+  
 
   return CL ;
 }
