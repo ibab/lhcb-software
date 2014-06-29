@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-06-29 - Chris Jones
+ - Add protection to StandardPacker::fltPacked against overflows or underflows
+   in double to float conversions.
+
 ! 2014-06-27 - Chris Jones
  - Adapt to changes in the job options of the ChargedProtoANNPID algorithm.
 
