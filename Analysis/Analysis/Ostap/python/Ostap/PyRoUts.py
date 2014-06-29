@@ -128,7 +128,7 @@ def dsID    () : return rootID  ( 'ds_' )
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
 #  - it ensures that cloned historgam is not going to die with
-#    accidentally opened file/directory
+#    the accidentally opened file/directory
 def _new_clone_ ( self , id = '' ) :
     """
     Modifiled Clone-function

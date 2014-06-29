@@ -56,11 +56,16 @@ def _rf_print_ ( rfile , opts = '') :
     #
     return rfile.GetName()
     
-ROOT.TFile.__repr__    = _rf_print_
+## write the object to ROOT-file 
+def _rf_setitem_ ( rfile , name , tobj ) :
+    """
+    Write the object to ROOT-file
 
-ROOT.TFile.name        = ROOT.TFile.GetName
-ROOT.TFile.__getitem__ = ROOT.TFile.Get 
-ROOT.TFile.__getattr__ = ROOT.TFile.Get 
+    >>> f['myhisto'] = h1
+    
+    """
+    return rfile.WriteTObject( tobj , name , 'WriteDelete' )
+
 
 ## use ROOT-file with context-manager 
 def _rf_enter_ ( self      ) :
@@ -82,6 +87,11 @@ def _rf_exit_  ( self , *_ ) :
         self.Close()
     except: pass
     
+ROOT.TFile.__repr__    = _rf_print_
+ROOT.TFile.  name      = ROOT.TFile.GetName
+ROOT.TFile.__getitem__ = ROOT.TFile.Get 
+ROOT.TFile.__getattr__ = ROOT.TFile.Get 
+ROOT.TFile.__setitem__ = _rf_setitem_ 
 
 if hasattr ( ROOT.TFile , '__enter__' ) and hasattr ( ROOT.TFile , '__exit__' ) : pass
 else :
