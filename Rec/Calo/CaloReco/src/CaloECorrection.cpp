@@ -41,7 +41,8 @@ CaloECorrection::CaloECorrection( const std::string& type   ,
   else if (  uName.find( "PHOTON" ) ){
     m_conditionName = "Conditions/Reco/Calo/PhotonECorrection"; 
   }
-  
+  info() << "Condition name : " << m_conditionName << endmsg;
+    
   declareInterface<ICaloHypoTool> ( this ) ;  
 }
 // ============================================================================
@@ -85,7 +86,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   if( eSpd >  0 && (m_sFilt & 0x2) == 0)return StatusCode::SUCCESS;
   if( ePrs == 0 && (m_pFilt & 0x1) == 0)return StatusCode::SUCCESS;
   if( ePrs >  0 && (m_pFilt & 0x2) == 0)return StatusCode::SUCCESS;
-  if ( msgLevel( MSG::DEBUG) )
+  if ( UNLIKELY(msgLevel( MSG::DEBUG) ))
     debug() << " Accepted  spd/prs : " << (int) (eSpd > 0 )<< " / " << (int) (ePrs > 0) << endmsg;
   
   // get cluster  (special case for SplitPhotons)
@@ -207,7 +208,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double eCor  = ( alpha * eEcal + beta *ePrs ) * gC * gT + dT;
 
   // revoir le debug
-  if ( msgLevel( MSG::DEBUG) ){
+  if ( UNLIKELY(msgLevel( MSG::DEBUG) )){
     debug() << "Calo hypothesis : " << hypo->hypothesis() << endmsg;
     debug() << "cellID          : " << cellID << endmsg;
     debug() << "eSpd : "  << eSpd <<  " "    << "ePrs : "  << ePrs  <<  endmsg;

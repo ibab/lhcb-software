@@ -197,7 +197,7 @@ StatusCode SubClusterSelector2x2::choice2x2 (
     //             << e[0] << " " << e[1] << " " << e[2] << " " << e[3]
     //             << " --> " << energy << "[" << type << "]" << std::endl;
     return StatusCode::SUCCESS;
-};
+}
 
 
 // ============================================================================

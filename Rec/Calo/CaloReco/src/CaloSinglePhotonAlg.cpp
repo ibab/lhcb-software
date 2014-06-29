@@ -300,7 +300,7 @@ CaloSinglePhotonAlg::execute()
     hypos->insert ( hypo.release() ) ;  
   } // end of the loop over all clusters
   
-  if(msgLevel(MSG::DEBUG))debug() << " # of created Photon  Hypos is  " << hypos->size()  << "/" << clusters->size()<< endmsg ;
+  if(UNLIKELY(msgLevel(MSG::DEBUG)))debug() << " # of created Photon  Hypos is  " << hypos->size()  << "/" << clusters->size()<< endmsg ;
   counter ( m_inputData + "=>" + m_outputData  ) += hypos->size() ;  
   return StatusCode::SUCCESS;
 }

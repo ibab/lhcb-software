@@ -52,7 +52,7 @@ bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   LHCb::CaloMomentum moment = LHCb::CaloMomentum(cluster);
   double et = moment.momentum().Pt();
   int m = cluster->entries().size();
-  if ( msgLevel( MSG::DEBUG) )debug() << "Cluster has " << m << " entries " 
+  if ( UNLIKELY(msgLevel( MSG::DEBUG) ))debug() << "Cluster has " << m << " entries " 
                                       << " for a total energy of " << e <<  "(Et = " << et << ")" << endmsg;
 
   bool sel =  (e>m_cut) && (m<m_mult) && (et>m_etCut);

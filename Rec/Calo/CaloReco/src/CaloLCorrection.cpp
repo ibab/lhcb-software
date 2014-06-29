@@ -40,7 +40,8 @@ CaloLCorrection::CaloLCorrection
   else if (  uName.find( "PHOTON" ) ){
     m_conditionName = "Conditions/Reco/Calo/PhotonLCorrection"; 
   }
-
+  info() << "Condition name : " << m_conditionName << endmsg;
+  
   /// interafces 
   declareInterface<ICaloHypoTool> ( this ) ;  
 }
@@ -165,13 +166,11 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   counter("<gamma> " + cellID.areaName() ) += g ;  
   counter("<delta> " + cellID.areaName() ) += d ;
 
-  double tgfps = g * log(energy/Gaudi::Units::GeV) + d ;
+  double tgfps = (energy > 0.) ? g * log(energy/Gaudi::Units::GeV) + d : 0.;
 
   tth = tth / ( 1. + tgfps * cth / zg ) ;
   cth= cos( atan( tth ) ) ;
   double dzfps = cth * tgfps ;
-
-  
 
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;

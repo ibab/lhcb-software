@@ -62,6 +62,8 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   declareProperty( "EnergyTags"   , m_taggerE      ) ;
   declareProperty( "PositionTags" , m_taggerP      ) ;
   declareProperty( "Detector"     , m_det) ;
+  declareProperty( "SplitClusterMinEnergy", m_eClusterMin=0.);
+  
   
   // default context-dependent locations
   m_clusters  = LHCb::CaloAlgUtils::CaloClusterLocation ( "Ecal"     , context()    );  // input : neutral CaloCluster's
@@ -87,6 +89,9 @@ StatusCode CaloMergedPi0::initialize(){
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() )return Error("Could not initialize the base class!",sc);
 
+  // Always skip negative-energy clusters :
+  if(m_eClusterMin<0.)m_eClusterMin=0.;
+  
   if(m_createClusterOnly)info() << "Producing SplitClusters only" << endmsg;
 
   // get detectorElement
@@ -96,7 +101,7 @@ StatusCode CaloMergedPi0::initialize(){
   //==== get tools
   
   // - main tool :
-  m_oTool=tool<ICaloShowerOverlapTool>("CaloShowerOverlapTool","PhotonShowerOverlap",this);
+  m_oTool=tool<ICaloShowerOverlapTool>("CaloShowerOverlapTool","SplitPhotonShowerOverlap",this);
 
   // - cluster  tools 
   m_cov     = tool<ICaloClusterTool>  (    "ClusterCovarianceMatrixTool" , "Covariance"     , this ) ;  
@@ -278,6 +283,11 @@ StatusCode CaloMergedPi0::execute(){
     
     // == apply the mergedPi0 tool : subtract shower overlap
     m_oTool->process(cl1,cl2, spd1*10+spd2, m_iter,true); // 'true' means the initial entries weight is propagated
+    if( cl1->e() < m_eClusterMin || cl2->e() < m_eClusterMin ){ // skip negative energy "clusters"
+      delete cl1;
+      delete cl2;
+      continue;
+    }    
 
     // == prepare outputs :
 

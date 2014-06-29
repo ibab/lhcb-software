@@ -107,7 +107,8 @@ StatusCode ClusterCovarianceMatrixTool::initialize (){
     bool ok = true;
     // first check if parameters exists in reconstruction conditions
     m_dbAccessor = tool<CaloCorrectionBase>("CaloCorrectionBase","DBAccessor",this);
-    m_dbAccessor->setConditionParams(m_conditionName,true);// force access via DB - if not exist will return empty params
+    StatusCode scc=m_dbAccessor->setConditionParams(m_conditionName,true);// force access via DB - if not exist will return empty params
+    if( scc.isFailure() )return Error("Cannot access DB",StatusCode::FAILURE);
     std::vector<double> params=m_dbAccessor->getParams(CaloCorrection::ClusterCovariance).second; 
     std::string source;
     if( params.size() == 4 ){

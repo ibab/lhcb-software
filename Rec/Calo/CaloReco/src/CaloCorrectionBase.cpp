@@ -68,7 +68,7 @@ StatusCode CaloCorrectionBase::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( UNLIKELY (msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   // check the setting
 
@@ -95,7 +95,6 @@ StatusCode CaloCorrectionBase::initialize() {
     for( Hypotheses::const_iterator it = m_hypos.begin() ; m_hypos.end() != it ; ++it ){ 
       debug ()  <<  " -->" << *it  << endmsg ; 
     }
-
     for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
       debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
     }
@@ -114,7 +113,7 @@ StatusCode CaloCorrectionBase::initialize() {
 //=============================================================================
 StatusCode CaloCorrectionBase::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Finalize" << endmsg;
 
   if( m_corrections.size() > 1 || *(m_corrections.begin()) != "All" ){
     for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
@@ -122,11 +121,14 @@ StatusCode CaloCorrectionBase::finalize() {
     }
   }
   if( m_corrections.size() == 0)warning() << "All corrections have been disabled for " <<  name() << endmsg;
+  
+    if( m_cond == NULL )
+      warning() << " Applied corrections configured via options for  " << name() <<endmsg;
+    else if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << " Applied corrections configured via condDB  ('" << m_conditionName << "') for " 
+                                                       << name() << endmsg;
+    
 
-  if( m_cond == NULL )
-    info() << " Applied corrections configured via options for  " << name() <<endmsg;
-  else
-    info() << " Applied corrections configured via condDB  ('" << m_conditionName << "') for " << name() << endmsg;
+
   for(  std::map<std::string, std::vector<double> >::iterator it = m_params.begin() ; m_params.end() != it ; ++it ){    
     std::string type = (*it).first;
     std::vector<double> vec = (*it).second;
@@ -227,7 +229,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   CaloCorrection::Parameters pars = getParams( type , id );
 
   std::string name =  CaloCorrection::typeName[ type ];
-  if ( msgLevel( MSG::DEBUG) ) 
+  if ( UNLIKELY(msgLevel( MSG::DEBUG) ) )
     debug() << "Correction type " << name << " to be applied on cluster (seed = " << id << ") is a '" 
             << CaloCorrection::funcName[ pars.first ] << "' function with params = " << pars.second << endmsg;
 

@@ -33,6 +33,7 @@ protected:
 private:
   int m_dMin;
   double m_etMin;
+  double m_etMin2;
   int m_iter;
   std::string m_input;
   std::string m_condition;

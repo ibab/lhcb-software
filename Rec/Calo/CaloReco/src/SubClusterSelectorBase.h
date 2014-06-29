@@ -23,11 +23,11 @@ public:
   virtual StatusCode operator()(LHCb::CaloCluster* cluster)const;
   virtual void setMask(const LHCb::CaloDigitStatus::Status mask)const{
     m_mask=mask;
-    debug() << "The default status tag is changed to " << m_mask 
-              << " -> use for Energy   : " << ((mask & LHCb::CaloDigitStatus::UseForEnergy) != 0) 
-              << " | for Position : " << ((mask & LHCb::CaloDigitStatus::UseForPosition) != 0) 
-              << " | for Covariance : " << ((mask & LHCb::CaloDigitStatus::UseForCovariance) != 0)
-              << endmsg;
+    if ( UNLIKELY(msgLevel(MSG::DEBUG)) )debug() << "The default status tag is changed to " << m_mask 
+                                                 << " -> use for Energy   : " << ((mask & LHCb::CaloDigitStatus::UseForEnergy) != 0) 
+                                                 << " | for Position : " << ((mask & LHCb::CaloDigitStatus::UseForPosition) != 0) 
+                                                 << " | for Covariance : " << ((mask & LHCb::CaloDigitStatus::UseForCovariance) != 0)
+                                                 << endmsg;
   }
   virtual unsigned int mask()const {return m_mask;};
   

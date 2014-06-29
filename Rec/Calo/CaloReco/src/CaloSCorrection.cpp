@@ -39,7 +39,8 @@ CaloSCorrection::CaloSCorrection( const std::string& type   ,
   else if (  uName.find( "PHOTON" ) ){
     m_conditionName = "Conditions/Reco/Calo/PhotonSCorrection"; 
   }
-
+  info() << "Condition name : " << m_conditionName << endmsg;
+  
   declareInterface<ICaloHypoTool> ( this ) ;
 }
 // ============================================================================
@@ -182,7 +183,7 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
   const LHCb::CaloPosition* pos = hypo->position() ;
 
-  if ( msgLevel( MSG::DEBUG) ){  
+  if (UNLIKELY( msgLevel( MSG::DEBUG)) ){  
     debug() << "Calo Hypothesis :" << hypo->hypothesis() << endmsg;
     debug() << "cellID          : " << cellID << endmsg;
     debug() << "Hypo E :  " << hypo->position ()->e()   <<  " "  <<cellID << endmsg;

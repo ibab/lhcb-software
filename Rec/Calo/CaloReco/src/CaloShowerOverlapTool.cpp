@@ -49,7 +49,7 @@ CaloShowerOverlapTool::CaloShowerOverlapTool( const std::string& type,
 StatusCode CaloShowerOverlapTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Initialize" << endmsg;
   m_det = getDet<DeCalorimeter> ( m_detLoc );
 
   m_shape = tool<CaloCorrectionBase>("CaloCorrectionBase","ShowerProfile",this);
@@ -211,7 +211,8 @@ void CaloShowerOverlapTool::subtract(LHCb::CaloCluster* cl1, LHCb::CaloCluster* 
 
   // re-evaluate cluster2 accordingly
   evaluate(cl2);
-  
+  if( cl2->e() < 0)return; // skip negative energy "clusters"
+
   //info() << "     --- 2nd cluster overlap ----- " << cl2->seed() << endmsg;
   // cluster2  -> cluster1 spillover
   for( LHCb::CaloCluster::Entries::iterator i1 = cl1->entries().begin() ; cl1->entries().end() != i1 ; ++i1 ){
@@ -266,6 +267,11 @@ double CaloShowerOverlapTool::showerFraction(double d3d, unsigned int area ,int 
 
 void CaloShowerOverlapTool::evaluate(LHCb::CaloCluster* cluster,bool hypoCorrection){
 
+
+  // 0 - reset z-position of cluster
+  LHCb::ClusterFunctors::ZPosition zPosition( m_det );
+  cluster->position().setZ( zPosition( cluster )  );
+
   // 1 - 3x3 energy and energy-weighted barycenter
   double E, X, Y;
   StatusCode sc = LHCb::ClusterFunctors::calculateEXY( cluster->entries().begin() ,
@@ -277,11 +283,10 @@ void CaloShowerOverlapTool::evaluate(LHCb::CaloCluster* cluster,bool hypoCorrect
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = Y ;
   }
   else
-    Error( " E,X and Y of cluster could not be evaluated!",sc).ignore();
+    Warning( " E,X and Y of cluster could not be evaluated!",StatusCode::SUCCESS,1).ignore();
   
-  // reset z-position of cluster
-  LHCb::ClusterFunctors::ZPosition zPosition( m_det );
-  cluster->position().setZ( zPosition( cluster )  );
+
+  if( cluster->e() < 0)return; // skip correction for negative energy "clusters"
 
   //-------------------------------------------------------------------
   if( !hypoCorrection ) return; // do not apply 'photon' hypo correction  
@@ -300,14 +305,14 @@ void CaloShowerOverlapTool::evaluate(LHCb::CaloCluster* cluster,bool hypoCorrect
     cluster->position().parameters()( LHCb::CaloPosition::X ) = hypo->position()->parameters()( LHCb::CaloPosition::X) ;
     cluster->position().parameters()( LHCb::CaloPosition::Y ) = hypo->position()->parameters()( LHCb::CaloPosition::Y) ;
   }else
-    Error(" SCorrection could not be evaluated!",sc).ignore();
+    Error(" SCorrection could not be evaluated!",sc,1).ignore();
   
   // Apply longitudinal correction
   sc=m_ltool->process(hypo);
   if( sc.isSuccess() ){
     cluster->position().setZ( hypo->position()->z() );
   }  else
-    Error(" LCorrection could not be evaluated!",sc).ignore();
+    Error(" LCorrection could not be evaluated!",sc,1).ignore();
 
   // cleanup
   delete hypo;

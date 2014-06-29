@@ -26,8 +26,9 @@ CaloShowerOverlap::CaloShowerOverlap( const std::string& name,
   , m_condition          ("")
   , m_taggerP            ( 1 , "useDB") 
   , m_det (DeCalorimeterLocation::Ecal){
-  declareProperty("DistanceThreshold", m_dMin = 4);
-  declareProperty("EtThreshold"      , m_etMin= 150.);
+  declareProperty("DistanceThreshold"      , m_dMin        = 4);
+  declareProperty("MinEtThreshold"         , m_etMin = 50.  ); // ( ET1 > x && ET2 > x)
+  declareProperty("MaxEtThreshold"         , m_etMin2 = 150. ); // ( ET2 > y || ET2 > y)
   declareProperty("Iterations"       , m_iter = 5);
   declareProperty("Input"            , m_input= LHCb::CaloClusterLocation::Ecal) ;  
   // following properties are inherited by the selector tool :
@@ -65,7 +66,7 @@ StatusCode CaloShowerOverlap::initialize() {
 //=============================================================================
 StatusCode CaloShowerOverlap::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG) ) )debug() << "==> Execute" << endmsg;
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT(m_detector);
 
   // locate data
@@ -76,11 +77,13 @@ StatusCode CaloShowerOverlap::execute() {
 
   for( LHCb::CaloClusters::iterator i1 = clusters->begin() ; clusters->end() != i1 ; ++i1 ){
     double et1 = eT( *i1 );
+    if( et1 < m_etMin )continue; // neglect overlap from/to low ET clusters
     const LHCb::CaloCellID id1=(*i1)->seed();     
     const LHCb::CaloDigit* spd1 = (spds == NULL) ? NULL : spds->object( (*i1)->seed() );
     for( LHCb::CaloClusters::iterator i2 = i1+1 ; clusters->end() != i2 ; ++i2 ){
       double et2=eT( *i2 );
-      if( et1 < m_etMin && et2 < m_etMin )continue;
+      if(  et2 < m_etMin )continue; // neglect overlap from/to low ET clusters
+      if(  et1 < m_etMin2 && et2 < m_etMin2 )continue; // require at least one cluster above threshold (speed-up)
       const LHCb::CaloCellID id2=(*i2)->seed();    
       if( id1.area() != id2.area() ) continue;
       if( abs( id1.col() - id2.col() ) > m_dMin || abs( id1.row() - id2.row() ) > m_dMin )continue; 
@@ -104,7 +107,7 @@ StatusCode CaloShowerOverlap::execute() {
       StatusCode sc;
       sc = m_tagger->tagPosition(  cl1  ) ;
       sc = m_tagger->tagPosition(  cl2  ) ;
-
+      if( sc.isFailure() )Warning("Cluster tagging failed - keep the initial 3x3 tagging").ignore();
       // correct entry weight for shower overlap (assuming EM cluster)
       m_oTool->process(*i1,*i2, s1*10+s2, m_iter);
     }
@@ -117,7 +120,7 @@ StatusCode CaloShowerOverlap::execute() {
 //=============================================================================
 StatusCode CaloShowerOverlap::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG) )) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

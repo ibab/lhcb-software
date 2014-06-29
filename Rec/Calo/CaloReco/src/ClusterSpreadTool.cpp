@@ -71,7 +71,7 @@ StatusCode ClusterSpreadTool::initialize ()
 // ============================================================================
 StatusCode ClusterSpreadTool::finalize   ()
 {  
-  if ( msgLevel ( MSG::DEBUG ) ) 
+  if ( UNLIKELY(msgLevel ( MSG::DEBUG ) ) )
   {
     debug () << " Corrected Clusters, Ratio : " 
              << m_estimator.invalidRatio  () << endmsg ;

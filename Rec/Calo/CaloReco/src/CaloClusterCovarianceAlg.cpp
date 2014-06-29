@@ -101,7 +101,6 @@ StatusCode CaloClusterCovarianceAlg::initialize(){
   // locate the detector
   m_detector = getDet<DeCalorimeter> ( m_detData   );
   if( 0 == m_detector ) { return Error("DeCalorimeter error",StatusCode::FAILURE) ; }
-  unsigned int narea = m_detector->numberOfAreas();
 
   // locate the tagger (inherit from relevant properties)
   m_tagger = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , "ClusterTag" , this );

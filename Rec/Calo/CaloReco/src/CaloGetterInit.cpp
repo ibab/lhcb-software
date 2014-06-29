@@ -38,7 +38,7 @@ StatusCode CaloGetterInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
 
   m_getter = tool<ICaloGetterTool>("CaloGetterTool", m_name );
@@ -51,7 +51,7 @@ StatusCode CaloGetterInit::initialize() {
 //=============================================================================
 StatusCode CaloGetterInit::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG) ) ) debug() << "==> Execute" << endmsg;
 
   m_getter->update();
 
@@ -63,7 +63,7 @@ StatusCode CaloGetterInit::execute() {
 //=============================================================================
 StatusCode CaloGetterInit::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+  if ( UNLIKELY(msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

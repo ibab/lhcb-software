@@ -94,8 +94,7 @@ StatusCode CaloExtraDigits::operator() ( LHCb::CaloHypo* hypo  ) const
       ++count;
     }
     //
-    if ( msgLevel( MSG::DEBUG) ) 
-    { debug() << "Adding " << count << " digits from "<< *idet << endmsg; }
+    if (UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "Adding " << count << " digits from "<< *idet << endmsg; 
     //
     counter ( toCalo ) += count ;
   }

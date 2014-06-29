@@ -176,7 +176,7 @@ StatusCode CellularAutomatonAlg::execute()
   counter ( "#clusters => '" + m_outputData + "'" ) += output->size() ;
   counter ( "Clusterisation pass") += m_tool->iterations();
  
-  if ( msgLevel( MSG::DEBUG) ){
+  if (UNLIKELY( msgLevel( MSG::DEBUG) )){
     debug() << "Built " << clusters.size() <<" cellular automaton clusters  with " 
             << m_tool->iterations() << " iterations" <<endmsg;
     debug() << " ----------------------- Cluster List : " << endmsg;

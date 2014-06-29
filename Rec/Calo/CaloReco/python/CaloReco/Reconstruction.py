@@ -417,7 +417,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pi0.PhotonTools = [ pi0.SpdPrsExtraS , pi0.ECorrection,pi0.SCorrection, pi0.LCorrection ]
         pi0.Pi0Tools    = [ pi0.SpdPrsExtraM ]
     else :       
-        pi0.Tools = [ pi0.ECorrection,pi0.SCorrection, pi0.LCorrection ]
+        pi0.PhotonTools = [ pi0.ECorrection,pi0.SCorrection, pi0.LCorrection ]
 
     seq.Members=[pi0]
     

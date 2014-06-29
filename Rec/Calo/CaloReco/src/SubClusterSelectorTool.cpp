@@ -119,8 +119,8 @@ StatusCode SubClusterSelectorTool::set(DeCalorimeter* detector,
   unsigned int narea = detector->numberOfAreas();
   LHCb::CaloCellID fake = LHCb::CaloCellID(m_detector->caloName(), 0 ,0,0);
   if( m_condition == "" )m_condition = "Conditions/Reco/Calo/"+fake.caloName() + "ClusterMasks"; // default condition path
-  m_dbAccessor->setConditionParams(m_condition,true);// force access via DB - if not exist will return empty params
-
+  StatusCode sc = m_dbAccessor->setConditionParams(m_condition,true);// force access via DB - if not exist will return empty params
+  if(sc.isFailure())return Warning("Cannot access DB",StatusCode::FAILURE);
   // extend tagger per area when needed
   if( tagE.size() == 1)tagE = std::vector<std::string>(narea , tagE[0]);
   if( tagP.size() == 1)tagP = std::vector<std::string>(narea , tagP[0]);
@@ -170,8 +170,8 @@ StatusCode SubClusterSelectorTool::set(DeCalorimeter* detector,
     m_tagP.push_back( tP  );    
 
     // printout
-    debug()   << areaName << " Energy tagger   : " << nameE << " (" << tagE << ")"  << endmsg;
-    debug()   << areaName << " Position tagger : " << nameP << " (" << tagP << ")"  << endmsg;
+    if ( UNLIKELY(msgLevel(MSG::DEBUG)))debug()   << areaName << " Energy tagger   : " << nameE << " (" << tagE << ")"  << endmsg;
+    if ( UNLIKELY(msgLevel(MSG::DEBUG)))debug()   << areaName << " Position tagger : " << nameP << " (" << tagP << ")"  << endmsg;
   }
   info() << "Tagger -  Energy : " << tagE << " - Position :  " << tagP;
   if(fromDB) info() << " (from DB)" ;
