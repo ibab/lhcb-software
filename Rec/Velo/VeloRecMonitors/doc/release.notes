@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2014-06-30 - David Hutchcroft
+ - Fix divide by 0 FPE in VeloTrackMonitorNT
+
 !========================= VeloRecMonitors v2r28 2014-02-19 =====================
 ! 2014-02-16 - Chris Jones
  - Fix divide by 0 FPE in VeloTrackMonitor.

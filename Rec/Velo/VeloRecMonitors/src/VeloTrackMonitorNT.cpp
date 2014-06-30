@@ -955,7 +955,7 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track,
       }
       if( msgLevel(MSG::DEBUG) )  
         debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
-      pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
+      pseudoEfficiency_sens = N_exp[i+64] != 0 ? N_rec[i+64] / N_exp[i+64] : 0.;
       if( msgLevel(MSG::DEBUG) )  
         debug()<<i+64<<" ==> pseudoefficiency "<<pseudoEfficiency_sens<<endmsg;
     }//loop on sensors
