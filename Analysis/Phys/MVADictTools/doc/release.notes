@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-06-30 - Chris Jones
+ - Make MVADictTools headers public.
+
 !========================= MVADictTools v1r4 2014-02-20 =========================
 
 ! 2014-02-12 - Andrey Ustyuzhanin
