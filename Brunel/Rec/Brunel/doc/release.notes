@@ -11,6 +11,8 @@ Purpose: LHCb reconstruction program
 
 - Changes to QMTests
   . Move all upgrade test files to TestFileDB and CERN-SWTEST-EOS
+  . Added brunel-cheatedpr test: checks ideal PR tracking and 
+    VELO montoring tuples
 
 </PRE><H1><A NAME=v46r1>2014-06-10 Brunel v46r1</A></H1><PRE>
 This version uses projects LHCb v37r3, Lbcom v15r2p1,
