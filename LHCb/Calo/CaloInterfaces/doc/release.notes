@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =========================================================================
 
+! 2014-05-30 - Olivier Deschamps
+ - IGammaPi0SeparatioTool : change method signature
+
 ! 2014-05-22 - Olivier Deschamps
  - IneutralIDTool     : new interface for MLP-based neutralID
  - ICaloShowerOverlapTool : new interface for Shower Overlap correction
