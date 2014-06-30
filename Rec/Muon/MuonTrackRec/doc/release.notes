@@ -11,6 +11,7 @@
 ! 2014-06-30 - G Graziani
  - New tool MuonPadFromCoord(IMuonPadRec) to bypass the need for raw data banks
    in MuonPad object reconstruction
+ - init MuonTrackMomRec tool at each start of run
  - adding more missing formal initializers
 
 

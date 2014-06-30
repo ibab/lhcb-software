@@ -1,5 +1,6 @@
 // Include files 
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/PhysicalConstants.h" 
 #include "Kernel/IBIntegrator.h"
 
@@ -42,8 +43,7 @@ MuonTrackMomRec::MuonTrackMomRec( const std::string& type,
   m_muonDetector  ( NULL ),
   m_zCenter       ( 0    ),
   m_bdlX          ( 0    ),
-  m_FieldPolarity ( 0    ),
-  m_BdlwasInit    ( false )
+  m_FieldPolarity ( 0    )
 {
   declareInterface<IMuonTrackMomRec>(this);
 
@@ -60,6 +60,14 @@ MuonTrackMomRec::MuonTrackMomRec( const std::string& type,
 
 MuonTrackMomRec::~MuonTrackMomRec() {} 
 
+void MuonTrackMomRec::handle ( const Incident& incident )
+{ 
+  if ( IncidentType::BeginRun == incident.type() ) {
+    if ( msgLevel(MSG::DEBUG) )debug() << "Run change: reinit field maps "<<endmsg;
+    initBdl();
+  } 
+}
+
 
 
 StatusCode MuonTrackMomRec::initialize()
@@ -73,7 +81,7 @@ StatusCode MuonTrackMomRec::initialize()
   m_bIntegrator = tool<IBIntegrator>( "BIntegrator" );
   if(!m_bIntegrator) return StatusCode::FAILURE;
 
-  m_BdlwasInit = false;
+  initBdl();
 
   return sc;
 }
@@ -108,11 +116,6 @@ StatusCode MuonTrackMomRec::finalize  ()
 StatusCode MuonTrackMomRec::recMomentum(MuonTrack* track, 
                                         LHCb::Track* lbtrack)
 {
-
-  if (!m_BdlwasInit) {
-    initBdl();
-    m_BdlwasInit=true;
-  }
 
   StatusCode sc =  StatusCode::SUCCESS;
   double Zfirst = m_muonDetector->getStationZ(0);

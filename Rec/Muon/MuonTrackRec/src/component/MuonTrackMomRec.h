@@ -6,6 +6,7 @@
 #include <vector>
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "MuonInterfaces/IMuonTrackMomRec.h"            // Interface
 
 class IBIntegrator;
@@ -22,7 +23,7 @@ class DeMuonDetector;
  *
  *
  */
-class MuonTrackMomRec : public GaudiTool, virtual public IMuonTrackMomRec {
+class MuonTrackMomRec : public GaudiTool, virtual public IMuonTrackMomRec , virtual public IIncidentListener {
 public: 
   /// Standard constructor
   MuonTrackMomRec( const std::string& type, 
@@ -41,6 +42,9 @@ public:
   virtual double getBdl() {return m_bdlX;}
   virtual double getZcenter() {return m_zCenter;}
 
+  // from IIncidentListener
+  virtual void handle ( const Incident& incident );   
+
 private:
   
   std::vector<double> m_ParabolicCorrection;
@@ -54,7 +58,6 @@ private:
   double m_zCenter; // Bx field center position in z
   double m_bdlX;    // integrated Bx field
   int m_FieldPolarity;
-  bool m_BdlwasInit; // flag to see if B field was initialized
 
 };
 #endif // COMPONENT_MUONTRACKMOMREC_H
