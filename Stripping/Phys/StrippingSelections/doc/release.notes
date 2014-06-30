@@ -4,8 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2014-06-24 - Anton Poluektov 
- - Add new selections to Beauty2Charm: 
+! 2014-06-30 - Stefano Perazzini
+ - Removed obsolete datasets from tests/data
+
+! 2014-06-24 - Anton Poluektov
+ - Add new selections to Beauty2Charm:
     * B->D0ppbarH, B0->DppbarH (H=K,pi)
     * B0->Lc pbar pbar p
 
