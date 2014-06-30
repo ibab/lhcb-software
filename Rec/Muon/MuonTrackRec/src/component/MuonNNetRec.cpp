@@ -37,8 +37,14 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_decTool(NULL),  
+    m_padTool(NULL),  
+    m_clusterTool(NULL),  
     m_momentumTool(NULL),    
-    m_muonDetector(NULL)
+    m_muonDetector(NULL),
+    m_recDone(false),
+    m_recOK(false),
+    m_tooManyHits(false)
 {
   declareInterface<IMuonTrackRec>(this);
 

@@ -19,7 +19,10 @@ DECLARE_TOOL_FACTORY( MuonHitDecode )
   MuonHitDecode::MuonHitDecode( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : GaudiTool ( type, name , parent ), m_hitsDecoded(false)
+    : GaudiTool ( type, name , parent ), 
+      m_recTool(NULL),
+      m_muonDetector(NULL),
+      m_hitsDecoded(false)   
 {
   declareInterface<IMuonHitDecode>(this);
   declareProperty( "NumberRawLocations", m_TAENum = 1 );

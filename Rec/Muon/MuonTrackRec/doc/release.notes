@@ -8,6 +8,12 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2014-06-30 - G Graziani
+ - New tool MuonPadFromCoord(IMuonPadRec) to bypass the need for raw data banks
+   in MuonPad object reconstruction
+ - adding more missing formal initializers
+
+
 !========================= MuonTrackRec v3r10 2013-10-24 =========================
 ! 2013-10-09 - Chris Jones
  - Adding missing constructor data member initializers in MuonTrackMomRec

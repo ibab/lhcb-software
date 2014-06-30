@@ -128,7 +128,7 @@ private:
   std::vector<float> m_xFOIs;
   std::vector<float> m_yFOIs;
 
-  float m_zStations[5];
+  std::vector<float> m_zStations;
   
   std::vector< MuonHit* > m_trackhits;
   std::vector< MuonTrack* > m_tracks;

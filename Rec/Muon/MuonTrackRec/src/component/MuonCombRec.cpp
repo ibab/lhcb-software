@@ -53,7 +53,22 @@ MuonCombRec::MuonCombRec( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_muonDetector(NULL), m_hitsDone(0), m_sortDone(0)
+    m_decTool(NULL),  
+    m_padTool(NULL),  
+    m_clusterTool(NULL),  
+    m_momentumTool(NULL), 
+    m_muonDetector(NULL), 
+    m_recDone(false),
+    m_recOK(false),
+    m_hitsDone(false), 
+    m_sortDone(false),
+    m_nStation(5),
+    m_nRegion(4),
+    m_timer(NULL),
+    m_timeLoad(0.),
+    m_timePad(0.),
+    m_timeMuon(0.),
+    m_timeMuonStore(0.)
 {
   declareInterface<IMuonTrackRec>(this);
   declareProperty( "MeasureTime"      , m_measureTime = true );
@@ -229,7 +244,7 @@ StatusCode MuonCombRec::initialize() {
   
   // get the z position of stations
   for ( int station=0;station<m_nStation;station++){
-    m_zStations[station] = (float) (m_muonDetector->getStationZ(station));
+    m_zStations.push_back( (float) (m_muonDetector->getStationZ(station)) );
     debug()<<"Z of station M"<<station+1<<": "<<m_zStations[station]<<endmsg;
   }
   // <---

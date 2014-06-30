@@ -28,12 +28,13 @@ MuonPadRec::MuonPadRec( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
   : GaudiTool ( type, name , parent ), m_TileVeto(0),
-     m_padsReconstructed(false)
+    m_padsReconstructed(false),
+    m_muonDetector(NULL)
 {
   declareInterface<IMuonPadRec>(this);
   declareProperty( "TileVeto", m_TileVeto);
   declareProperty( "FirstComeFirstServed", m_getfirsthit = false);
-  m_pads.clear(); m_pads.reserve(1000);
+  m_pads.clear(); m_pads.reserve(1000);  
 }
 
 MuonPadRec::~MuonPadRec() {
