@@ -166,12 +166,14 @@ bool GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloHypo* hypo,
   if( NULL == cluster)return false;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug()<<"Inside ClusterVariables ------"<<endmsg;
-  fr2 = cluster->position().spread()(0,0)+cluster->position().spread()(1,1);
-  fasym = (cluster->position().spread()(0,1))/(sqrt( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) ));
-  fkappa = sqrt( 1-4*( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) - 
-                       (cluster->position().spread()(0,1))*(cluster->position().spread()(1,0)) )
-                 /( (cluster->position().spread()(0,0) + cluster->position().spread()(1,1)) * 
-                    (cluster->position().spread()(0,0) + cluster->position().spread()(1,1))  ) );  
+
+  double cxx = cluster->position().spread()(0,0);
+  double cyy = cluster->position().spread()(1,1);
+  double cxy = cluster->position().spread()(0,1);
+  fr2 = cxx + cyy ;
+  fasym = (cxx > 0 && cyy > 0) ? cxy /std::sqrt( cxx*cyy ) : 0;
+  fkappa = (fr2 > 0. ) ? std::sqrt( 1. - 4.* ( cxx*cyy - cxy*cxy ) / fr2 / fr2  ) : 0;
+
   double xmean = cluster->position().x();
   double ymean = cluster->position().y();
 
@@ -320,9 +322,9 @@ bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
   yPs = yPs/eSumPS;
 
   // spread and related shape variables
-  double covxxPS = 0.;
-  double covyyPS = 0.;
-  double covxyPS = 0.;
+  double cxxPS = 0.;
+  double cyyPS = 0.;
+  double cxyPS = 0.;
   double r4PS    = 0.;
   double c1 = 0.0;
   double c2 = 0.0;
@@ -343,9 +345,9 @@ bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
     // spread
     double dxPS = (xPs - double(dcol));
     double dyPS = (yPs - double(drow));
-    covxxPS += dxPS * dxPS * e;
-    covyyPS += dyPS * dyPS * e;
-    covxyPS += dxPS * dyPS * e;    
+    cxxPS += dxPS * dxPS * e;
+    cyyPS += dyPS * dyPS * e;
+    cxyPS += dxPS * dyPS * e;    
 
     // shape variables
     r4PS += e * ( dxPS * dxPS + dyPS * dyPS) * ( dxPS * dxPS + dyPS * dyPS);
@@ -360,15 +362,15 @@ bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
     if(dcol== 1 && drow== 0 ){ c2 += e; c4 += e;}
     if(dcol== 1 && drow==-1 ){ c4 += e;}        
   }   
-  covxxPS = covxxPS/eSumPS;
-  covxyPS = covxyPS/eSumPS;
-  covyyPS = covyyPS/eSumPS;
-  if( covxxPS != 0.0 && covyyPS != 0.0)asymPS = covxyPS/sqrt( covxxPS * covyyPS);
-  if( covxxPS != 0.0 || covyyPS != 0.0)
-    kappaPS = sqrt( 1.0 - 4.0 * ( (covxxPS * covyyPS) - ( covxyPS * covxyPS)) / (( covxxPS + covyyPS) * (covxxPS + covyyPS)));
-  r2PS = covxxPS + covyyPS;    
+  cxxPS = cxxPS/eSumPS;
+  cxyPS = cxyPS/eSumPS;
+  cyyPS = cyyPS/eSumPS;
+  r2PS    = cxxPS + cyyPS;
+  asymPS  = ( cxxPS > 0.0 && cyyPS > 0.0) ? cxyPS/std::sqrt( cxxPS * cyyPS) : 0.;
+  kappaPS = (r2PS > 0.0) ? std::sqrt( 1.0 - 4.0 *  (cxxPS * cyyPS - cxyPS * cxyPS) / r2PS / r2PS ) : 0;
   r4PS = r4PS/eSumPS;
   if( r4PS!=0.0) r2r4PS = ( r4PS - r2PS * r2PS) /r4PS;
+
   ecornerPS = MAX(c1, MAX( c2, MAX(c3, c4) ) );
   eMaxPS = eMaxPS/eSumPS;
   e2ndPS = e2ndPS/eSumPS;
