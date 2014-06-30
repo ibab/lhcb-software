@@ -46,6 +46,7 @@ class MooreOnline(LHCbConfigurableUser):
         , 'Simulation': False
         , 'DataType' : '2012'
         , "CheckOdin" : True
+	, "HltLevel" : 'Hlt1'
         }
     
     def _configureDBSnapshot(self):
@@ -103,6 +104,7 @@ class MooreOnline(LHCbConfigurableUser):
                 self._configureOnlineForking()
             elif OnlineEnv.MooreStartupMode == 2:
                 self._configureOnlineCheckpointing()
+		
             
             importOptions('$MBM_SETUP_OPTIONS')
             mbm_setup = allConfigurables['OnlineEnv']
@@ -121,11 +123,9 @@ class MooreOnline(LHCbConfigurableUser):
             app.ExtSvc.append(mepMgr)
             evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
             evtMerger.DataType = OnlineEnv.MDF_BANKS
-	    HLT2 = 0
-	    if 'HLT2' in OnlineEnv.HltArchitecture :
-	       HLT2 = 1
+	    
             if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-	    elif HLT2 : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
+	    elif self.getProp('HltLevel') =="Hlt2" : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
             else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=True)  
             app.ExtSvc.append(eventSelector)
 
