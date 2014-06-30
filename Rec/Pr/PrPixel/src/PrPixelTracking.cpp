@@ -153,65 +153,6 @@ StatusCode PrPixelTracking::execute() {
     m_timerTool->stop(m_timeTotal);
   }
 
-#ifdef DEBUG_HISTO
-  for (unsigned int i = m_hitManager->firstModule();
-       i < m_hitManager->lastModule(); ++i) {
-    PrPixelHits::iterator ith;
-    for (ith = m_hitManager->hits(i).begin();
-         ith != m_hitManager->hits(i).end(); ++ith) {
-      PrPixelHit *iC = *ith;
-      const double x = iC->x();
-      const double y = iC->y();
-      const double z = iC->z();
-      const double r = sqrt(x * x + y * y);
-      if (!iC->isUsed()) {
-        plot3D(x, y, z, "UnusedHits3D", "Distribution of UnusedHits", -50.0,
-               50.0, -50.0, 50.0, -500.0, 800.0, 100, 100, 200);
-        plot2D(r, z, "UnusedHits_rz", "Distribution of Unused Hits", 0.0, 60.0,
-               -500.0, 800.0, 100, 100);
-        plot2D(x, y, "UnusedHits2D", "Distribution of Unused Hits", -50.0, 50.0,
-               -50.0, 50.0, 100, 100);
-      }
-      plot3D(x, y, z, "Hits_3D", "3D Distribution of Hits", -50.0, 50.0, -50.0,
-             50.0, -500.0, 800.0, 100, 100, 200);
-      plot2D(r, z, "Hits_RZ", "RZ Distribution of Hits", 0.0, 60.0, -500.0,
-             800.0, 100, 100);
-      plot2D(x, y, "Hits_2D", "2D Distribution of Hits", -50.0, 50.0, -50.0,
-             50.0, 100, 100);
-    }
-  }
-
-  const unsigned int nbHits = m_hitManager->nbHits();
-  plot(nbHits, "HitsPerEvent", "Number of hits per event", 0.0, 8000.0, 80);
-  plot(m_tracks.size(), "TracksPerEvent", "Number of tracks per event", 0.0,
-       800.0, 80);
-  if (nbHits > 0) {
-    const unsigned int nbHitsUsed = m_hitManager->nbHitsUsed();
-    plot((100.0 * nbHitsUsed) / nbHits, "PercentUsedHitsPerEvent",
-         "Percent of hits assigned to tracks", 0.0, 100.0, 100);
-  }
-  for (PrPixelTracks::const_iterator itT = m_tracks.begin();
-       itT != m_tracks.end(); ++itT) {
-    if ((*itT).size() <= 3) continue;
-    // Calculate radius at first and last hit (assume that hits are sorted by
-    // module)
-    const double x1 = (*itT).hits.front()->x();
-    const double y1 = (*itT).hits.front()->y();
-    const double r1 = sqrt(x1 * x1 + y1 * y1);
-    const double x2 = (*itT).hits.back()->x();
-    const double y2 = (*itT).hits.back()->y();
-    const double r2 = sqrt(x2 * x2 + y2 * y2);
-    const double minR = r1 > r2 ? r2 : r1;
-    const double maxR = r1 > r2 ? r1 : r2;
-    plot(minR, "MinHitRadiusPerTrack",
-         "Smallest hit radius [mm] per track (of 4 or more hits)", 0.0, 50.0,
-         100);
-    plot(maxR, "MaxHitRadiusPerTrack",
-         "Largest hit radius [mm] per track (of 4 or more hits)", 0.0, 50.0,
-         100);
-  }
-#endif
-
   return StatusCode::SUCCESS;
 }
 
@@ -279,11 +220,6 @@ void PrPixelTracking::searchByPair() {
     const double z0 = module0->z();
     const double z1 = module1->z();
     const double dz = z0 - z1;
-#ifdef DEBUG_HISTO
-    plot(dz, "SeedPairDeltaZ",
-         "Separation in Z [mm] between the seed pair modules", -200.0, +200.0,
-         400);
-#endif
     // Calculate the search window from the slope limits.
     const double dxMax = m_maxXSlope * fabs(dz);
     const double dyMax = m_maxYSlope * fabs(dz);
@@ -388,11 +324,6 @@ void PrPixelTracking::searchByPair() {
 //=========================================================================
 void PrPixelTracking::makeLHCbTracks() {
 
-#ifdef DEBUG_HISTO
-  unsigned int nFwd = 0;
-  unsigned int nBwd = 0;
-#endif
-
   LHCb::Tracks *outputTracks = new LHCb::Tracks();
   put(outputTracks, m_outputLocation);
   unsigned int key = 0;
@@ -491,57 +422,9 @@ void PrPixelTracking::makeLHCbTracks() {
     newTrack->setChi2PerDoF((*itt).chi2());
     // Add the LHCb track to the list.
     outputTracks->insert(newTrack);
-
-#ifdef DEBUG_HISTO
-    const unsigned int nHitsPerTrack = (*itt).hits().size();
-    if (backward) {
-      plot(nHitsPerTrack, "Bwd_HitsPerTrack",
-           "Number of hits per backward track", 0.5, 40.5, 40);
-      plot(newTrack->chi2PerDoF(), "Bwd_Chi2PerTrack",
-           "Chi2/DoF of backward tracks", 0.0, 10.0, 50);
-      plot(newTrack->pseudoRapidity(), "Bwd_EtaOfTracks",
-           "pseudoRapidity of backward tracks", 1.0, 6.0, 50);
-      plot(newTrack->phi() * (180.0 / M_PI), "Bwd_PhiOfTracks",
-           "Phi-angle of backward tracks", -180.0, 180.0, 60);
-      plot2D(newTrack->pseudoRapidity(), nHitsPerTrack, "Bwd_HitsPerTrackVsEta",
-             "hits/track vs pseudoRapidity of backward tracks", 1.0, 6.0, 0.5,
-             15.5, 50, 15);
-      plot2D(newTrack->pseudoRapidity(), newTrack->chi2PerDoF(),
-             "Bwd_Chi2VsEta", "Chi2/DoF vs pseudoRapidity of backward tracks",
-             1.0, 6.0, 0.0, 10.0, 50, 20);
-      plot2D(nHitsPerTrack, newTrack->chi2PerDoF(), "Bwd_Chi2VsHitsPerTrack",
-             "Chi2/DoF vs hits/backward track", 0.5, 15.5, 0.0, 10.0, 15, 20);
-      nBwd++;
-    } else {
-      plot(nHitsPerTrack, "Fwd_HitsPerTrack",
-           "Number of hits per forward track", 0.5, 40.5, 40);
-      plot(newTrack->chi2PerDoF(), "Fwd_Chi2PerTrack",
-           "Chi2/DoF of forward tracks", 0.0, 10.0, 50);
-      plot(newTrack->pseudoRapidity(), "Fwd_EtaOfTracks",
-           "pseudoRapidity of forward tracks", 1.0, 6.0, 50);
-      plot(newTrack->phi() * (180.0 / M_PI), "Fwd_PhiOfTracks",
-           "Phi-angle of forward tracks", -180.0, 180.0, 60);
-      plot2D(newTrack->pseudoRapidity(), nHitsPerTrack, "Fwd_HitsPerTrackVsEta",
-             "hits/track vs pseudoRapidity of forward tracks", 1.0, 6.0, 0.5,
-             15.5, 50, 15);
-      plot2D(newTrack->pseudoRapidity(), newTrack->chi2PerDoF(),
-             "Fwd_Chi2VsEta", "Chi2/DoF vs pseudoRapidity of forward tracks",
-             1.0, 6.0, 0.0, 10.0, 50, 20);
-      plot2D(nHitsPerTrack, newTrack->chi2PerDoF(), "Fwd_Chi2VsHitsPerTrack",
-             "Chi2/DoF vs hits/forward track", 0.5, 15.5, 0.0, 10.0, 15, 20);
-      nFwd++;
-    }
-#endif
   }
-
-#ifdef DEBUG_HISTO
-  plot(nFwd, "Fwd_TracksPerEvent", "Number of forward tracks per event", 0.0,
-       400.0, 40);
-  plot(nBwd, "Bwd_TracksPerEvent", "Number of backward tracks per event", 0.0,
-       400.0, 40);
-#endif
-
   m_tracks.clear();
+
 }
 
 //=========================================================================
@@ -663,7 +546,7 @@ void PrPixelTracking::printTrack(PrPixelTrack& track) const {
 }
 
 //=========================================================================
-// Print a hit on a track, with its distance.
+// Print a hit on a track.
 //=========================================================================
 void PrPixelTracking::printHitOnTrack(const PrPixelHit* hit, 
                                       const bool ifMatch) const {
