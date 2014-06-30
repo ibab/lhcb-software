@@ -21,8 +21,8 @@ export HOME=/home/$(/usr/bin/whoami)
 #
 export LOGFIFO=/tmp/logGaudi.fifo
 #Fixme: to be removed!
-export LD_LIBRArY_PATH=/group/online/dataflow/cmtuser/Online_v5r8/InstallArea/x86_64-slc6-gcc48-dbg/lib:$LD_LIBRARY_PATH;
-export FARMCONFIGROOT=/group/online/dataflow/cmtuser/Online_v5r8/Online/FarmConfig;
+#export LD_LIBRArY_PATH=/group/online/dataflow/cmtuser/Online_v5r9/InstallArea/x86_64-slc6-gcc48-dbg/lib:$LD_LIBRARY_PATH;
+#export FARMCONFIGROOT=/group/online/dataflow/cmtuser/Online_v5r9/Online/FarmConfig;
 #
 ## python ${FARMCONFIGROOT}/job/ConfigureShell.py;
 eval `python ${FARMCONFIGROOT}/job/ConfigureShell.py`;
@@ -36,7 +36,7 @@ else
     exec -a ${UTGID} GaudiCheckpoint.exe libGaudiOnline.so OnlineTask \
 	-msgsvc=LHCb::FmcMessageSvc -tasktype=LHCb::Class1Task \
 	-main=/group/online/dataflow/templates/options/Main.opts \
-	-opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = 'Hlt2', WriterRequires = [ 'Hlt2' ] )" \
+	-opt=command="import MooreScripts.runOnline; MooreScripts.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s  )" \\
 	${APP_STARTUP_OPTS};
 fi;
     """%({'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )

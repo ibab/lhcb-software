@@ -20,8 +20,20 @@ def start(**kwargs) :
     from MooreOnlineConf.Configuration import MooreOnline
     import OnlineEnv 
     
+    if kwargs.get('Split','')  == 'Hlt1' :
+       HltLevel = 'Hlt1'
+    elif kwargs.get('Split','')  == 'Hlt2' :
+       HltLevel = 'Hlt2'   
+    else :
+       HltLevel = ''
+    
+    
     moore = Moore()
+    
+    
     mooreOnline = MooreOnline()
+
+    mooreOnline.HltLevel = HltLevel
 
     mooreOnline.RunOnline = True
 
@@ -75,12 +87,14 @@ def start(**kwargs) :
     c.AcceptRate = OnlineEnv.AcceptRate
 
     if OnlineEnv.PartitionName == 'LHCb1' :
-        if kwargs.get('Split','')  == 'Hlt1' :
+        if HltLevel == 'Hlt1' :
             print '#WARNING: Enabling run nr & GPS time hack'
-            from Configurables import  HackRunNrAndGPSSvc, ApplicationMgr
+            from Configurables import ApplicationMgr
+	    from MooreHacksConf import HackRunNrAndGPSSvc
             ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
-        mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
+	elif HltLevel == 'Hlt2' :     
+            mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
 
     OnlineEnv.end_config(False)

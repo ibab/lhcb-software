@@ -4,6 +4,11 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-06-30 - Eric van Herwijnen
+ - Previous version of CreateRunEFF.py was corrupted
+ - Fix some bugs in runOnline.py 
+
+
 !========================= MooreScripts v1r3 2014-06-19 =========================
 
 ! 2014-06-07 - Eric van Herwijnen
