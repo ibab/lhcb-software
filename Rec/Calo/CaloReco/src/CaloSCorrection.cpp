@@ -39,7 +39,6 @@ CaloSCorrection::CaloSCorrection( const std::string& type   ,
   else if (  uName.find( "PHOTON" ) ){
     m_conditionName = "Conditions/Reco/Calo/PhotonSCorrection"; 
   }
-  info() << "Condition name : " << m_conditionName << endmsg;
   
   declareInterface<ICaloHypoTool> ( this ) ;
 }
@@ -64,6 +63,9 @@ StatusCode CaloSCorrection::initialize (){
   StatusCode sc = CaloCorrectionBase::initialize();
   if( sc.isFailure() ) 
     { return Error ( "Unable initialize the base class CaloCorrectionBase!" , sc ) ; }  
+  if (UNLIKELY( msgLevel( MSG::DEBUG)) )
+    debug() << "Condition name : " << m_conditionName << endmsg;
+
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
