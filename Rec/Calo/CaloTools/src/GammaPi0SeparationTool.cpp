@@ -114,68 +114,57 @@ StatusCode GammaPi0SeparationTool::finalize() {
 
 
 double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug()<<"Inside isPhoton ------"<<endmsg;
+
+  // clear all data
   m_data.clear();
   m_prsdata.clear();
-  double tmva_output = m_def;
-  if( NULL == m_prs || NULL==m_ecal)return tmva_output;
 
-  double pt = LHCb::CaloMomentum(hypo).pt();
+  if( NULL == m_prs || NULL==m_ecal)return m_def;
+  if ( LHCb::CaloMomentum(hypo).pt() < m_minPt)return m_def;
 
+  double fr2 = 0;
+  double fasym = 0;
+  double fkappa = 0;
+  double fr2r4 = 0;
+  double Eseed = 0;
+  double E2 = 0;
+  double Ecl = 0;
+  int area =0;
   
-  if (pt>m_minPt){  
+  double r2PS = 0.;
+  double r2r4PS = 0;
+  double asymPS = 0;
+  double kappaPS = 0;
+  double ePrs = 0;
+  double eMaxPS = 0;
+  double e2ndPS = 0;
+  double ecornerPS = 0;
+  double eSumPS = 0.;
+  int multiPS = 0;
+  int multiPS15 = 0;
+  int multiPS30 = 0;
+  int multiPS45 = 0;
 
-    double fr2 = 0;
-    double fasym = 0;
-    double fkappa = 0;
-    double fr2r4 = 0;
-    double Eseed = 0;
-    double E2 = 0;
-    double Ecl = 0;
-    int area =0;
-
-    double r2PS = 0.;
-    double r2r4PS = 0;
-    double asymPS = 0;
-    double kappaPS = 0;
-    double ePrs = 0;
-    double eMaxPS = 0;
-    double e2ndPS = 0;
-    double ecornerPS = 0;
-    double eSumPS = 0.;
-    int multiPS = 0;
-    int multiPS15 = 0;
-    int multiPS30 = 0;
-    int multiPS45 = 0;
-
-    const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );   // OD 2014/05 - change to Split Or Main  cluster
-    if (cluster!=0){
-      ClusterVariables(cluster, fr2, fasym, fkappa, fr2r4, Ecl, Eseed, E2, area);
-      PrsVariables(cluster, r2PS, asymPS, kappaPS, r2r4PS, eSumPS, ePrs, eMaxPS, e2ndPS, ecornerPS, multiPS, multiPS15, 
-                   multiPS30, multiPS45);
-      
-      tmva_output = photonDiscriminant(area, fr2, fr2r4, fasym, fkappa, Eseed, E2, 
-                                       r2PS, asymPS, eMaxPS, e2ndPS, multiPS, multiPS15, multiPS30, multiPS45);
-    }//cluster exists
-    else{
-      tmva_output = m_def; 
-    }		
-  } 
-  else{
-    tmva_output = m_def;
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-      debug()<<"Outside range of pt"<<endmsg;
-  }   
-  
-  return tmva_output;
+  // evaluate the NN inputs 
+  bool ecalV = ClusterVariables(hypo, fr2, fasym, fkappa, fr2r4, Ecl, Eseed, E2, area);
+  bool prsV  = PrsVariables(hypo, r2PS, asymPS, kappaPS, r2r4PS, eSumPS, ePrs, eMaxPS, e2ndPS, ecornerPS, 
+                            multiPS, multiPS15, multiPS30, multiPS45);
+  if( !ecalV || !prsV )return m_def;      
+  // return NN output
+  return photonDiscriminant(area, fr2, fr2r4, fasym, fkappa, Eseed, E2, 
+                            r2PS, asymPS, eMaxPS, e2ndPS, multiPS, multiPS15, multiPS30, multiPS45);
 }
 
 
-void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
-                                                   double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot, 
+bool GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloHypo* hypo,
+                                              double& fr2, double& fasym, double& fkappa, double& fr2r4, double& etot, 
                                               double& Eseed, double& E2, int& area) {
   m_data.clear();
+
+  if( NULL == hypo)return false;
+  const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );   // OD 2014/05 - change to Split Or Main  cluster
+  if( NULL == cluster)return false;
+
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug()<<"Inside ClusterVariables ------"<<endmsg;
   fr2 = cluster->position().spread()(0,0)+cluster->position().spread()(1,1);
   fasym = (cluster->position().spread()(0,1))/(sqrt( (cluster->position().spread()(0,0))*(cluster->position().spread()(1,1)) ));
@@ -254,37 +243,39 @@ void GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloCluster *cluster,
   m_data["Kappa"] = fkappa;
   m_data["Eseed"] = Eseed;
   m_data["E2"]    = E2;
+  return true;
 }
 
-void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
+bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
                                           double& r2PS, double& asymPS, double& kappaPS, double& r2r4PS, 
                                           double& eSumPS, double& ePrs, double& eMaxPS, double& e2ndPS, double& ecornerPS, 
                                           int& multiPS, int& multiPS15, int& multiPS30, int& multiPS45) {
   
-  //PS info
-  m_prsdata.clear();
-  
-  int colPS = 0;
-  int rowPS = 0;
-  int col_i = 0;
-  int row_i = 0;
-  double e_i = 0.0;
-  double xmeanPS = 0.0;
-  double ymeanPS = 0.0;
-  double covxxPS = 0.0;
-  double covyyPS = 0.0;
-  double covxyPS = 0.0;
-  double r4PS = 0.0;
-  double c1 = 0.0;
-  double c2 = 0.0;
-  double c3 = 0.0;
-  double c4 = 0.0;
-  
-  // point in the detector
+  // clear prs data
+  m_prsdata.clear();  
+  e2ndPS = 0.;
+  ePrs = 0.;
+  eSumPS=0.;
+  eMaxPS=0.;
+  multiPS=0;
+  multiPS15=0;
+  multiPS30=0;
+  multiPS45=0;  
+  asymPS=0.;
+  r2PS=0.;
+  kappaPS=0.;
+  r2r4PS=0.;
+  ecornerPS=0.;
+
+  if( NULL == hypo)return false;
+  const LHCb::CaloCluster* cluster = LHCb::CaloAlgUtils::ClusterFromHypo( hypo );   
+  if( NULL == cluster)return false;
+
+
+  // get reference position
   const Gaudi::XYZPoint position (cluster->position().x(), cluster->position().y(), cluster->position().z());
   Gaudi::XYZPoint prsPoint;
-  const Gaudi::XYZVector direction = position - m_vertex;
-  
+  const Gaudi::XYZVector direction = position - m_vertex;  
   typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
   const LineType line =  LineType(m_vertex , direction );
   double mu=0;
@@ -292,115 +283,98 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
     warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endreq;
   const LHCb::CaloCellID cellPrs = m_prs->Cell( prsPoint );
 
-  if( !exist<CaloDigits>( CaloDigitLocation::Prs ) ){
-    debug() << "No Table container found at " << CaloDigitLocation::Prs << endreq;
-    //return StatusCode::SUCCESS;
-  }
-  CaloDigits* digitsPrs = getIfExists<CaloDigits>(CaloDigitLocation::Prs);
-  if( NULL == digitsPrs ){
-    Warning("Data missing at "+CaloDigitLocation::Prs,StatusCode::SUCCESS).ignore();
-    return;
-  }
-  
+  if( LHCb::CaloCellID() == cellPrs  )return true; // no valid Prs info
 
-  if( !(LHCb::CaloCellID() == cellPrs)  ) { // valid cell!
-    // Determine which cells have a hit
-    
-    const CaloNeighbors& neighPS = m_prs->zsupNeighborCells(cellPrs);
-    LHCb::CaloDigit::Vector NeighbordigitsPrs;
-    
-    
-    for(CaloDigits::iterator idig = digitsPrs->begin() ; digitsPrs->end() !=  idig ; idig++){
-      if ( NULL == *idig )continue;
-      if ((*idig)->cellID()==cellPrs) {
-        ePrs=(*idig)->e();
-        eSumPS += ePrs;
-        colPS = cellPrs.col();
-        rowPS = cellPrs.row();
-        NeighbordigitsPrs.push_back(*idig);
-        
-      }
-    }
-    
-    for(CaloDigits::iterator idig = digitsPrs->begin() ; digitsPrs->end() !=  idig ; idig++){  
-      for (CaloNeighbors::const_iterator neighIt = neighPS.begin(); neighIt != neighPS.end(); neighIt++){
-        if ((*neighIt) == (*idig)->cellID()){
-          
-          eSumPS += (*idig)->e();
-          
-          row_i =  (*neighIt).row();
-          col_i = (*neighIt).col();
-          e_i = (*idig)->e();
-          xmeanPS += (col_i - colPS) * e_i;
-          ymeanPS += (row_i - rowPS) * e_i;
-          NeighbordigitsPrs.push_back(*idig);
-        }
-      }
-    }
-    
-    if (eSumPS > 0.0){
-      xmeanPS = xmeanPS/eSumPS;
-      ymeanPS = ymeanPS/eSumPS;
-      
-      for(LHCb::CaloDigit::Vector::iterator ip = NeighbordigitsPrs.begin(); ip != NeighbordigitsPrs.end(); ip++) {
-        e_i = (*ip)->e();
-        if(e_i>0.0) multiPS++;
-        if(e_i>15.0) multiPS15++;
-        if(e_i>30.0) multiPS30++;
-        if(e_i>45.0) multiPS45++;
-        if (e_i > eMaxPS) eMaxPS = e_i;
-        col_i = (*ip)->cellID().col();
-        row_i = (*ip)->cellID().row();
-        double dxPS = (xmeanPS - ( col_i - colPS));
-        double dyPS = (ymeanPS - ( row_i - rowPS));
-        
-        covxxPS += dxPS * dxPS * e_i;
-        covyyPS += dyPS * dyPS * e_i;
-        covxyPS += dxPS * dyPS * e_i;	
-        
-        r4PS += e_i * ( dxPS * dxPS + dyPS * dyPS) * ( dxPS * dxPS + dyPS * dyPS);
-        
-        if((col_i-colPS)==-1 && (row_i-rowPS)==1) c1 += e_i;
-        if((col_i-colPS)==-1 && (row_i-rowPS)==0){ c1 += e_i; c3 += e_i;}
-        if((col_i-colPS)==-1 && (row_i-rowPS)==-1) c3 += e_i;
-        if((col_i-colPS)==0 && (row_i-rowPS)==1){ c1 += e_i; c2 += e_i;}
-        if((col_i-colPS)==0 && (row_i-rowPS)==-1){ c3 += e_i; c4 += e_i;}
-        if((col_i-colPS)==1 && (row_i-rowPS)==1) c2 += e_i;
-        if((col_i-colPS)==1 && (row_i-rowPS)==0){ c2 += e_i; c4 += e_i;}
-        if((col_i-colPS)==1 && (row_i-rowPS)==-1) c4 += e_i;
-        
-      }
-      for(LHCb::CaloDigit::Vector::iterator ip = NeighbordigitsPrs.begin(); ip != NeighbordigitsPrs.end(); ip++) { 
-        e_i = (*ip)->e();
-        if(e_i>e2ndPS && e_i<eMaxPS) e2ndPS = e_i;
-      }
-      
-      covxxPS = covxxPS/eSumPS;
-      covxyPS = covxyPS/eSumPS;
-      covyyPS = covyyPS/eSumPS;
-      
-      if( covxxPS != 0.0 && covyyPS != 0.0) {
-        asymPS = covxyPS/sqrt( covxxPS * covyyPS);
-      }
-      if( covxxPS != 0.0 || covyyPS != 0.0) {
-        kappaPS = sqrt( 1.0 - 4.0 * ( (covxxPS * covyyPS) - ( covxyPS * covxyPS)) / (( covxxPS + covyyPS) * (covxxPS + covyyPS)));
-      }
-    
-      r2PS = covxxPS + covyyPS;
-      
-      if( r4PS!=0.0){
-        r4PS = r4PS/eSumPS;
-        r2r4PS = ( r4PS - r2PS * r2PS) /r4PS;
-        
-      }
-      
-      ecornerPS = MAX(c1, MAX( c2, MAX(c3, c4) ) );
-      eMaxPS = eMaxPS/eSumPS;
-      e2ndPS = e2ndPS/eSumPS;
-      
-    }//of E_PS!=0
-  }//PS cell exists
+  // compute energy sum / max / ...
+  const LHCb::CaloHypo::Digits& digits = hypo->digits();
+  double xPs = 0.;
+  double yPs = 0.;
+  for( LHCb::CaloHypo::Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
+    const LHCb::CaloDigit* digit = *d;
+    if     ( digit == 0     ) continue           ; 
+    if ((int) digit->cellID().calo() != 1 )continue;  // select Prs digits
+    int dcol = int(digit->cellID().col()) - int(cellPrs.col());
+    int drow = int(digit->cellID().row()) - int(cellPrs.row());
+    if( abs(dcol) > 1 || abs(drow)> 1 )continue; // keep only neighbors
 
+
+    double e = digit->e();
+
+    // energy
+    eSumPS  += e ; 
+    if( cellPrs == digit->cellID() )ePrs = e ;
+
+    // barycenter
+    xPs += double(dcol) * digit->e();
+    yPs += double(drow) * digit->e();
+
+    // multiplicities
+    if( e > eMaxPS ) eMaxPS = e;
+    if( e > 0.0    ) multiPS++;
+    if( e > 15.0   ) multiPS15++;
+    if( e > 30.0   ) multiPS30++;
+    if( e > 45.0   ) multiPS45++;
+  }
+  if(  eSumPS <= 0. )return true;
+  xPs = xPs/eSumPS;
+  yPs = yPs/eSumPS;
+
+  // spread and related shape variables
+  double covxxPS = 0.;
+  double covyyPS = 0.;
+  double covxyPS = 0.;
+  double r4PS    = 0.;
+  double c1 = 0.0;
+  double c2 = 0.0;
+  double c3 = 0.0;
+  double c4 = 0.0;
+  for( LHCb::CaloHypo::Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ){ 
+    const LHCb::CaloDigit* digit = *d;
+    if     ( digit == 0     ) continue           ; 
+    if ((int) digit->cellID().calo() != 1 )continue;  // select Prs digits
+    int dcol = ( int(digit->cellID().col()) - int(cellPrs.col()) );
+    int drow = ( int(digit->cellID().row()) - int(cellPrs.row()) );
+    if( abs(dcol) > 1 || abs(drow)> 1 )continue; // keep only neighbors
+
+    // 2Nd max
+    double e = digit->e();
+    if( e > e2ndPS && e < eMaxPS )e2ndPS = e;
+
+    // spread
+    double dxPS = (xPs - double(dcol));
+    double dyPS = (yPs - double(drow));
+    covxxPS += dxPS * dxPS * e;
+    covyyPS += dyPS * dyPS * e;
+    covxyPS += dxPS * dyPS * e;    
+
+    // shape variables
+    r4PS += e * ( dxPS * dxPS + dyPS * dyPS) * ( dxPS * dxPS + dyPS * dyPS);
+
+    // corner energy
+    if(dcol==-1 && drow== 1 ){ c1 += e;}
+    if(dcol==-1 && drow== 0 ){ c1 += e; c3 += e;}
+    if(dcol==-1 && drow==-1 ){ c3 += e;}
+    if(dcol== 0 && drow== 1 ){ c1 += e; c2 += e;}
+    if(dcol== 0 && drow==-1 ){ c3 += e; c4 += e;}
+    if(dcol== 1 && drow== 1 ){ c2 += e;}
+    if(dcol== 1 && drow== 0 ){ c2 += e; c4 += e;}
+    if(dcol== 1 && drow==-1 ){ c4 += e;}        
+  }   
+  covxxPS = covxxPS/eSumPS;
+  covxyPS = covxyPS/eSumPS;
+  covyyPS = covyyPS/eSumPS;
+  if( covxxPS != 0.0 && covyyPS != 0.0)asymPS = covxyPS/sqrt( covxxPS * covyyPS);
+  if( covxxPS != 0.0 || covyyPS != 0.0)
+    kappaPS = sqrt( 1.0 - 4.0 * ( (covxxPS * covyyPS) - ( covxyPS * covxyPS)) / (( covxxPS + covyyPS) * (covxxPS + covyyPS)));
+  r2PS = covxxPS + covyyPS;    
+  r4PS = r4PS/eSumPS;
+  if( r4PS!=0.0) r2r4PS = ( r4PS - r2PS * r2PS) /r4PS;
+  ecornerPS = MAX(c1, MAX( c2, MAX(c3, c4) ) );
+  eMaxPS = eMaxPS/eSumPS;
+  e2ndPS = e2ndPS/eSumPS;
+
+
+  // === store the data
   m_prsdata["PrsFr2"]     = r2PS;
   m_prsdata["PrsAsym"]    = asymPS;
   m_prsdata["PrsM"]       = double(multiPS);
@@ -409,8 +383,7 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
   m_prsdata["PrsM45"]     = double(multiPS45);
   m_prsdata["PrsEmax"]    = eMaxPS;
   m_prsdata["PrsE2"]      = e2ndPS;
-
-
+  return true;
 }
 
 

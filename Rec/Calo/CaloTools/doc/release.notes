@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2014-06-30 - Olivier Deschamps
+  - GammaPi0SeparationTool : improve & speed-up the evaluation of Prs-related variables 
+                             protect against unphysical value
+
 ! 2014-06-29 - Olivier Deschamps
   - fix FPE's, compilation warnings & verbosity excess
 
