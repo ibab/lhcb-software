@@ -67,7 +67,7 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-08"
 __all__     = ( 'Data', 'DataAndLumi' )
 # =============================================================================
-import ROOT
+import ROOT, glob 
 # =============================================================================
 # logging 
 # =============================================================================
@@ -75,12 +75,51 @@ from   AnalysisPython.Logger import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Data' )
 else                       : logger = getLogger ( __name__     )
 # =============================================================================
+if not hasattr ( ROOT.TTree , '__len__' ) :  
+    ROOT.TTree. __len__ = lambda s : s.GetEntries()
+# =============================================================================
+## @class Files
+#  Simple utility to pickup the list of files 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @author Alexander BARANOV a.baranov@cern.ch
+#  @date   2014-06-08  
+class Files(object):
+    """
+    Simple utility to pickup the list of files 
+    
+    >>> data  = Files( '*.root' )
+    >>> files = data.files 
+    """    
+    def __init__( self , files ) :  
+        
+        self.files   = []
+        # 
+        if isinstance ( files , str ) : files = [ files ]
+        # 
+        for pattern in files :
+            
+            for f in glob.iglob ( pattern ) :
+                
+                self.treatFile  ( f )
+                
+    ## the specific action for each file 
+    def treatFile ( self, the_file ) :
+        self.files.append ( the_file )
+        
+    ## printout 
+    def __str__(self):
+        """
+        The specific prentout
+        """
+        return "<#files: {}>".format( len ( self.files ) )
+    
+# =============================================================================
 ## @class Data
 #  Simple utility to access to certain chain in the set of ROOT-files
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
-class Data(object):
+class Data(Files):
     """
     Simple utility to access to certain chain in the set of ROOT-files
     
@@ -91,40 +130,25 @@ class Data(object):
     
     def __init__( self           ,
                   chain          ,
-                  files  = []    ,
-                  useglob = True ):
+                  files  = []    ) :
+
         
         self.chain = ROOT.TChain ( chain )
-        # 
-        self.files = [] 
-        if files :
-            self.add_files ( files , useglob )
+        Files.__init__( self , files )
             
-    def add_files ( self, patterns , useglob ):
+    ## the specific action for each file 
+    def treatFile ( self, the_file ) :
+        """
+        Add the file to TChain
+        """
+        Files.treatFile ( self , the_file ) 
+        self.chain.Add         ( the_file ) 
         
-        pats = patterns
-        if isinstance ( pats , str ) : pats = [ pats ]
-        
-        if useglob :
-            
-            import glob
-            for p in pats :
-                for f in glob.iglob ( p ) :
-                    self.files .append ( f ) 
-                    self.chain .Add    ( f )
-        else :
-            
-            for f in files :
-                self.files.append ( f ) 
-                self.chain.Add    ( f )
-
-                
+    ## printout 
     def __str__(self):
-        
-        ret = "<#files: {}; Entries: {}>".format(len(self.files), self.chain.GetEntries() )
-        
-        return ret
-
+        return  "<#files: {}; Entries: {}>".format( len( self.files ) ,
+                                                    len( self.chain ) )
+    
 # =============================================================================
 ## @class DataAndLumi
 #  Simple utility to access to certain chain in the set of ROOT-files
@@ -145,33 +169,18 @@ class DataAndLumi(Data):
     def __init__( self               ,
                   chain              ,
                   files       = []   ,
-                  useglob     = True ,
                   lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) :
 
         self.lumi = ROOT.TChain( lumi_chain )  
-        Data.__init__ ( self , chain , files , useglob ) 
+        Data.__init__ ( self , chain , files ) 
         
-    #
-    def add_files ( self, patterns , useglob ):
-        
-        pats = patterns
-        if isinstance ( pats , str ) : pats = [ pats ]
-        
-        if useglob :
-            
-            import glob
-            for p in pats :
-                for f in glob.iglob ( p ) :
-                    self.files.append ( f ) 
-                    self.chain.Add    ( f )
-                    self.lumi .Add    ( f )
-        else :
-            
-            for f in files :
-                
-                self.files.append ( f ) 
-                self.chain.Add    ( f )
-                self.lumi .Add    ( f )
+    ## the specific action for each file 
+    def treatFile ( self, the_file ) :
+        """
+        Add the file to TChain
+        """
+        Data.treatFile ( self , the_file )
+        self.lumi.Add         ( the_file ) 
 
     ## get the luminosity 
     def getLumi ( self ):
@@ -179,15 +188,16 @@ class DataAndLumi(Data):
         Get the luminosity from the 
         """
         from   Ostap.GetLumi import getLumi
-        return getLumi(self.lumi)
+        return getLumi( self.lumi)
 
+    ## printout 
     def __str__(self):
-        ret = "<"
-        ret += "Luminosity: {}pb-1; #files: {}; ".format(self.getLumi(), len(self.files))
-        ret += "Entries: {}>".format( self.chain.GetEntries() )
-
-        return ret
-           
+        
+        return "<Luminosity: {}pb-1; #files: {}; Entries: {}>".format(
+            self.getLumi()     ,
+            len ( self.files ) ,
+            len ( self.chain ) ) 
+    
 # =============================================================================
 if '__main__' == __name__ :
     
