@@ -42,5 +42,6 @@ private:
   double m_cut;
   double m_etCut;
   int m_mult;
+  int m_multMin;
 };
 #endif // CALORECO_CALOSELECTCLUSTER_H

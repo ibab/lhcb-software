@@ -53,5 +53,6 @@ private:
   CaloCorrectionBase* m_shape;
   std::map<const LHCb::CaloCellID,double> m_weights;
   bool m_verbose;
+  unsigned int m_minSize;
 };
 #endif // CALOSHOWEROVERLAPTOOL_H

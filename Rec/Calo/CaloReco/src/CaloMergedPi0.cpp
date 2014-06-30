@@ -47,7 +47,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   , m_taggerP            ( 1 , "useDB") 
   , m_det (DeCalorimeterLocation::Ecal){
 
-  declareProperty ( "Clusters"                , m_clusters    ) ;
+  declareProperty ( "InputData"               , m_clusters    ) ;
   declareProperty ( "MergedPi0s"              , m_mergedPi0s   ) ;
   declareProperty ( "SplitPhotons"            , m_splitPhotons  ) ;
   declareProperty ( "SplitClusters"           , m_splitClusters ) ;
@@ -74,8 +74,8 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
 
 bool CaloMergedPi0::isNeighbor(LHCb::CaloCellID id0 , LHCb::CaloCellID id1){
   if( id0 == LHCb::CaloCellID() || id1 == LHCb::CaloCellID() )return false;
-  if( abs(id0.row() - id1.row() ) > 1 )return false;
-  if( abs(id0.col() - id1.col() ) > 1 )return false;
+  if( abs(int(id0.row()) - int(id1.row()) ) > 1 )return false;
+  if( abs(int(id0.col()) - int(id1.col()) ) > 1 )return false;
   return true;
 }
 

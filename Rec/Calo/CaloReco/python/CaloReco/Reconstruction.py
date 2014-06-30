@@ -184,7 +184,8 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     ### a/ generic selection (energy/multiplicity)
     alg.addTool ( CaloSelectCluster  , "PhotonCluster" )
     alg.SelectionTools = [ alg.PhotonCluster ]
-    alg.PhotonCluster.MinEt = photonPt
+    alg.PhotonCluster.MinEt     = photonPt
+    alg.PhotonCluster.MinDigits = 2  # skip single-cell clusters
     
     ### b/ Neutral cluster (track-based and/or Spd/Prs-based)    
     if   useTracks     :
@@ -290,6 +291,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     alg.addTool ( CaloSelectCluster               , "ElectronCluster" )
     alg.SelectionTools = [ alg.ElectronCluster ]
     alg.ElectronCluster.MinEt = electronPt
+    alg.ElectronCluster.MinDigits = 2 # skip single-cell clusters
 
     ## 2/  hits in Spd
     if useSpdE : 

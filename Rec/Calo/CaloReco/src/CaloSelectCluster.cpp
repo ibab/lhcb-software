@@ -19,6 +19,7 @@ CaloSelectCluster::CaloSelectCluster
   declareProperty ("MinEnergy"        , m_cut  = 0. ) ;
   declareProperty ("MinEt"            , m_etCut  = 0. ) ;
   declareProperty ("MaxDigits"        , m_mult = 9999 ) ;
+  declareProperty ("MinDigits"        , m_multMin = -9999 ) ;
 }
 // ============================================================================
 
@@ -55,7 +56,9 @@ bool CaloSelectCluster::operator()( const LHCb::CaloCluster* cluster   ) const{
   if ( UNLIKELY(msgLevel( MSG::DEBUG) ))debug() << "Cluster has " << m << " entries " 
                                       << " for a total energy of " << e <<  "(Et = " << et << ")" << endmsg;
 
-  bool sel =  (e>m_cut) && (m<m_mult) && (et>m_etCut);
+  bool sel =  (e>m_cut) && (m<m_mult) && (et>m_etCut) && (m>m_multMin);
+
+
   counter("selected clusters") += (int) sel;
   return sel ;
 }

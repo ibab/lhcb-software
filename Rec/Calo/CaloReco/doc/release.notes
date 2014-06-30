@@ -4,6 +4,11 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-06-30 - Olivier Deschamps
+  - Reconstruction.py : skip single-cell "clusters" for CaloHypo building
+  - CaloSelectCluster : add a cut on entries.size()
+  - CaloMergedPi0 : fix property name causing a crash in Moore 
+
 ! 2014-06-30 - Marco Cattaneo
   - fix verbosity of Calo{L,E,S}Correction.cpp constructor
 

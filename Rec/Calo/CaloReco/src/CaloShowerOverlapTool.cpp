@@ -33,11 +33,13 @@ CaloShowerOverlapTool::CaloShowerOverlapTool( const std::string& type,
   m_s1(0),
   m_s2(0),
   m_detLoc(DeCalorimeterLocation::Ecal),
-  m_weights(){
+  m_weights(),
+  m_minSize(2){
   declareInterface<ICaloShowerOverlapTool>(this);
   declareProperty("Detector",m_detLoc=DeCalorimeterLocation::Ecal);
   declareProperty("Profile",m_pcond="Conditions/Reco/Calo/PhotonShowerProfile");
   declareProperty("Verbose",m_verbose=false);
+  declareProperty("ClusterMinSize",m_minSize = 2); // skip single-cell "clusters"
 
   // define type from instance name
   const std::string uName ( LHCb::CaloAlgUtils::toUpper( name ) ) ;
@@ -110,6 +112,9 @@ double CaloShowerOverlapTool::getInitialWeight(const LHCb::CaloCellID id){
 
 void CaloShowerOverlapTool::process(const LHCb::CaloCluster* cl1 , const LHCb::CaloCluster* cl2 , 
                                     int spd, int niter,bool propagateInitialWeights){
+
+
+  if( cl1->entries().size() < m_minSize || cl2->entries().size() < m_minSize )return;  // skip small clusters
 
   m_a1=cl1->seed().area();
   m_a2=cl2->seed().area();

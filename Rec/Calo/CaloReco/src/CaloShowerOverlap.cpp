@@ -86,7 +86,7 @@ StatusCode CaloShowerOverlap::execute() {
       if(  et1 < m_etMin2 && et2 < m_etMin2 )continue; // require at least one cluster above threshold (speed-up)
       const LHCb::CaloCellID id2=(*i2)->seed();    
       if( id1.area() != id2.area() ) continue;
-      if( abs( id1.col() - id2.col() ) > m_dMin || abs( id1.row() - id2.row() ) > m_dMin )continue; 
+      if( abs( int(id1.col()) - int(id2.col()) ) > m_dMin || abs( int(id1.row()) - int(id2.row()) ) > m_dMin )continue; 
       const LHCb::CaloDigit* spd2 = (spds == NULL) ? NULL : spds->object( (*i2)->seed() );
       int  s1= (spd1 == NULL) ? 0 : int(spd1->e() > 0.) ;
       int  s2= (spd2 == NULL) ? 0 : int(spd2->e() > 0.) ;
