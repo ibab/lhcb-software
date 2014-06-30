@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to references to follow changes in underlying packages
+  . Update SIMCOND global tag for 2010 to include Velo motor positions for Sim08 
+
 - QMTest changes
   . Move all upgrade tests to use TestFileDB for input data
 
