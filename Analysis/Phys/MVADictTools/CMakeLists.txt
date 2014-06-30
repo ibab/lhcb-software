@@ -6,7 +6,7 @@ gaudi_subdir(MVADictTools v1r4)
 gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
                          Phys/DaVinciInterfaces)
 
-find_package(ROOT COMPONENTS TMVA)y
+find_package(ROOT COMPONENTS TMVA)
 
 gaudi_add_library(MVADictToolsLib
                   src/lib/*.cpp
