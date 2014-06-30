@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2014-06-30 - David Hutchcroft
+ - Prevent FPE when refitting a cheated PR track
+
 !========================= PatVelo v3r30 2013-10-01 =========================
 ! 2013-09-18 - Marco Cattaneo
  - Fix again clang32 warnings

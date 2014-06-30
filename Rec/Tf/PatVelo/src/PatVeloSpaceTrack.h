@@ -245,6 +245,14 @@ namespace Tf {
       it1 = itCurr;
       if( GSL_SIGN(dz1) != GSL_SIGN(dz2) ) break; // points bracket z
     }
+    // in case z is the same (cheated PR only) skip to next sensor
+    while( (*it1)->z() == (*it2)->z() && it1 != (cont.end()-1) ) {
+      ++it1;
+    }
+    while( (*it1)->z() == (*it2)->z() && it2 != (cont.begin()+1) ) {
+      --it2;
+    }
+    
     return std::pair<const HIT*,const HIT*>(*it1,*it2);
   }
 
