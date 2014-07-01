@@ -23,6 +23,9 @@ class ICentipede : virtual public IMillepede {
   // Retrieve Interface ID
   static const InterfaceID& interfaceID() { return IID_ICentipede;};
 
+  /// Virtual destructor
+  virtual ~ICentipede() {}
+
   //  virtual StatusCode initialize() = 0;
   //virtual StatusCode finalize() = 0;
   
