@@ -174,8 +174,6 @@ def _stat_var_ ( tree , expression , *cuts ) :
 ROOT.TTree  . statVar = _stat_var_
 ROOT.TChain . statVar = _stat_var_
 
-
-
 # =============================================================================
 ## get the leaves for the given tree/chain
 #  @see TTree

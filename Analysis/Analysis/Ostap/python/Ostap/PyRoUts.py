@@ -124,23 +124,30 @@ def hID     () : return histoID ( )
 ## global ROOT identified for dataset objects 
 def dsID    () : return rootID  ( 'ds_' )
 
+## ROOT.TH1.AddDirectory( False )
+
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
-#  - it ensures that cloned historgam is not going to die with
+#  - it ensures that cloned histogram is not going to die with
 #    the accidentally opened file/directory
-def _new_clone_ ( self , id = '' ) :
+def _new_clone_ ( self , hid = '' ) :
     """
     Modifiled Clone-function
     - it automaticlaly assign unique ID
-    - it ensures that cloned historgam is not going to die with
+    - it ensures that cloned histogram is not going to die with
     the accidentally opened file/directory
     """
-    if not id : id = hID()
-    nh = self._old_clone_ ( id )
+    print 'I AM NEW CLONE! #%s# ' % self.GetName()
+    
+    if not hid :
+        hid = hID()
+        print 'NAME CREATED: #%s#' % hid 
     # 
-    nh.SetDirectory ( 0 )
+    nh = self._old_clone_ ( hid )
     # 
+    print 'NEW NAME: #%s#' % nh.GetName()
+    #
     return nh
 
 for h in ( ROOT.TH1F , ROOT.TH1D ,
@@ -1247,6 +1254,50 @@ ROOT.TH2F . colz = _h2_colz_
 ROOT.TH2D . colz = _h2_colz_
 ROOT.TH2F . Colz = _h2_colz_
 ROOT.TH2D . Colz = _h2_colz_
+
+## change locally the default text format 
+class TxtFmt(object):
+    """Change locally the default text format"""
+    def __init__  ( self , fmt = '.2f' ) :
+        self.old_fmt = str ( ROOT.gStyle.GetPaintTextFormat() )
+        self.new_fmt = fmt
+        
+    def __enter__ ( self ) :
+        ROOT.gStyle.SetPaintTextFormat ( self.new_fmt )        
+        return self
+    
+    def __exit__  ( self , *_ ) :
+        ROOT.gStyle.SetPaintTextFormat ( self.old_fmt )
+        
+# =============================================================================
+## Draw 2D-histogram as 'text'
+def _h2_text_ ( h2 , opts = '' , fmt = '.2f') :
+    """
+    Draw 2D-histogram as 'text'
+    
+    >>> h2.text( fmt = '5.3f')
+    
+    """
+    with TxtFmt( fmt ) :
+        return h2.Draw ( 'text ' + opts )
+    
+ROOT.TH2F . text = _h2_text_
+ROOT.TH2D . text = _h2_text_
+
+# =============================================================================
+## Draw 2D-histogram as 'text'
+def _h2_texte_ ( h2 , opts = '' , fmt = '.2f' ) :
+    """
+    Draw 2D-histogram as 'texte'
+    
+    >>> h2.texte( fmt = '5.2f')
+    
+    """
+    with TxtFmt( fmt ) :
+        return h2.Draw ( 'texte ' + opts )
+    
+ROOT.TH2F . texte = _h2_texte_
+ROOT.TH2D . texte = _h2_texte_
 
 # =============================================================================
 ## get the guess for three major parameters of the histogram:
@@ -3208,9 +3259,66 @@ def _h2_transform_ ( h2 , func ) :
 ROOT.TH2F. transform = _h2_transform_ 
 ROOT.TH2D. transform = _h2_transform_ 
 
+# =============================================================================
+# Few "specific" transformations
+# =============================================================================
 
 # =============================================================================
-## rescale the historgam for effective uniform bins
+## transform the histogram into "precision" histogram 
+def _h1_precision_ ( self ) :
+    """
+    Make precsion histogram, each bin constains ``precision''
+
+    >>> h =
+    >>> p = h.precision()
+    
+    """
+    return _h1_transform_ ( self ,  lambda x,y  : y.precision() )
+# =============================================================================
+## transform the histogram into "precision" histogram 
+def _h2_precision_ ( self ) :
+    """
+    Make precsion histogram, each bin constains ``precision''
+
+    >>> h =
+    >>> p = h.precision()
+    
+    """
+    return _h2_transform_ ( self ,  lambda x,y,z: z.precision() )
+# =============================================================================
+## transform the histogram into "B/S" histogram 
+def _h1_b2s_       ( self ) :
+    """
+    Make B/S histogram, each bin constains ``B/S''
+
+    >>> h    =
+    >>> btos = h.b2s()
+    
+    """
+    return _h1_transform_ ( self ,  lambda x,y  : y.b2s () )
+# =============================================================================
+## transform the histogram into "B/S" histogram 
+def _h2_b2s_       ( self ) :
+    """
+    Make B/S histogram, each bin constains ``B/S''
+
+    >>> h    =
+    >>> btos = h.b2s()
+    
+    """
+    return _h2_transform_ ( self ,  lambda x,y,z: z.b2s () )
+
+ROOT.TH1F. precision = _h1_precision_
+ROOT.TH1D. precision = _h1_precision_
+ROOT.TH2F. precision = _h2_precision_
+ROOT.TH2D. precision = _h2_precision_
+ROOT.TH1F. b2s       = _h1_b2s_
+ROOT.TH1D. b2s       = _h1_b2s_
+ROOT.TH2F. b2s       = _h2_b2s_
+ROOT.TH2D. b2s       = _h2_b2s_
+
+# =============================================================================
+## rescale the histogram for effective uniform bins
 #  new_content = old_content * factor / bin_width
 #  @code
 #  >>> h1 = ...
@@ -3220,7 +3328,7 @@ ROOT.TH2D. transform = _h2_transform_
 #  @date   2014-03-19   
 def _h1_rescale_ ( h1 , factor = 1 ) :
     """
-    Rescale the historgam for effective uniform bins : 
+    Rescale the histogram for effective uniform bins : 
     
     new_bin_content = old_bin_content * factor / bin_width
 
@@ -3235,7 +3343,7 @@ ROOT.TH1D. rescale_bins = _h1_rescale_
 
 
 # =============================================================================
-## rescale the historgam for effective uniform bins
+## rescale the histogram for effective uniform bins
 #  new_content = old_content * factor / bin_area
 #  @code
 #  >>> h2 = ...
@@ -3245,7 +3353,7 @@ ROOT.TH1D. rescale_bins = _h1_rescale_
 #  @date   2014-03-19   
 def _h2_rescale_ ( h2 , factor = 1 ) :
     """
-    Rescale the historgam for effective uniform bins : 
+    Rescale the histogram for effective uniform bins : 
     
     new_bin_content = old_bin_content * factor / bin_area
 
@@ -3516,7 +3624,7 @@ def _rebin_nums_1D_ ( h1 , template ) :
     """
     Rebin 1D-histogram assuming it is a histogram with *NUMBERS*
 
-    >>> horig    = ...  ## the original historgam 
+    >>> horig    = ...  ## the original histogram 
     >>> template = ...  ## the template with binnings
 
     >>> h = horig.rebinNumbers ( template ) 
@@ -3551,7 +3659,7 @@ def _rebin_func_1D_ ( h1 , template ) :
     """
     Rebin 1D-histogram assuming it is a FUNCTION
 
-    >>> horig    = ...  ## the original historgam 
+    >>> horig    = ...  ## the original histogram 
     >>> template = ...  ## the template with binnings
 
     >>> h = horig.rebinFunction ( template ) 
@@ -3585,7 +3693,7 @@ def _rebin_nums_2D_ ( h1 , template ) :
     """
     Rebin 2D-histogram assuming it is a histogram with *NUMBERS*
 
-    >>> horig    = ...  ## the original historgam 
+    >>> horig    = ...  ## the original histogram 
     >>> template = ...  ## the template with binnings
 
     >>> h = horig.rebinNumbers ( template ) 
@@ -3612,7 +3720,7 @@ def _rebin_func_2D_ ( h1 , template ) :
     """
     Rebin 2D-histogram assuming it is a FUNCTION
 
-    >>> horig    = ...  ## the original historgam 
+    >>> horig    = ...  ## the original histogram 
     >>> template = ...  ## the template with binnings
 
     >>> h = horig.rebinFunction ( template ) 
@@ -4278,7 +4386,7 @@ def _h_scale_ ( histo , val = 1.0 ) :
 #  @date   2011-06-07
 def _h1_shift_ ( h , bias ) :
     """
-    Simple shift of the historgam :
+    Simple shift of the histogram :
     
     >>> h = ... # the histogram
     >>> h2 = h.shift ( -5 * MeV )
@@ -4303,7 +4411,7 @@ def _h1_shift_ ( h , bias ) :
 #  @date   2011-06-07
 def _h1_ishift_ ( h , ibias ) :
     """
-    Simple shift of the historgam :
+    Simple shift of the histogram :
     
     >>> h = ...      # the histogram
     >>> h2 = h >> 5  # shift for 5 bins right 
@@ -4476,9 +4584,8 @@ for h in ( ROOT.TH1F , ROOT.TH1D ) :
     h.nEff           = h.GetEffectiveEntries 
 
 
-
 # =============================================================================
-## get some statistic infomration on the histogram content
+## get some statistic information on the histogram content
 #  @code 
 #  >>> histo = ... 
 #  >>> stat  = histo.stat()
@@ -4499,6 +4606,31 @@ def _h_stat_ ( h ) :
     return cnt
 
 ROOT.TH1.stat = _h_stat_
+
+# =============================================================================
+## get some (weighted) statistic information on the histogram content
+#  @code 
+#  >>> histo = ... 
+#  >>> wstat = histo.wstat()
+#  >>> print wstat
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-03-26
+def _h_wstat_ ( h ) :
+    """
+    Get some weighted statistic infomration on the histogram content
+
+    >>> histo = ... 
+    >>> wstat  = histo.wstat()
+    >>> print wstat 
+    """
+    cnt = WSE() 
+    for i in h :
+        v = h[i]
+        cnt.add ( v.value() , 1.0/v.cov2() ) 
+    return cnt
+
+ROOT.TH1.wstat = _h_wstat_
 
 # =============================================================================
 ## adjust the "efficiency"
@@ -4567,18 +4699,42 @@ def _color_ ( self , color = 2 ,marker = 20 ) :
 ## set color attributes  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-01-21 
-def _red_  ( self , marker = 20 ) : return _color_( self , 2 , marker ) 
+def _red_  ( self , marker   = 20 ) : return _color_( self , 2 , marker ) 
 # =============================================================================
 ## set color attributes  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-01-21 
-def _blue_ ( self , marker = 25 ) : return _color_( self , 4 , marker ) 
+def _blue_ ( self , marker   = 25 ) : return _color_( self , 4 , marker )
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _magenta_ ( self , marker = 22 ) : return _color_( self , 6 , marker ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _cyan_    ( self , marker = 23 ) : return _color_( self , 7 , marker ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _green_   ( self , marker = 33 ) : return _color_( self , 8 , marker ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _yellow_  ( self , marker = 34 ) : return _color_( self , 92 , marker ) 
 
-for _t in  ( ROOT.TH1D   , ROOT.TH1F , ROOT.TGraph , ROOT.TGraphErrors ) :
+for _t in  ( ROOT.TH1D , ROOT.TH1F , ROOT.TGraph , ROOT.TGraphErrors ) :
     
-    _t . color = _color_
-    _t . red   = _red_
-    _t . blue  = _blue_
+    _t . color   = _color_
+    _t . red     = _red_
+    _t . blue    = _blue_
+    _t . magenta = _magenta_
+    _t . cyan    = _cyan_
+    _t . green   = _green_
+    _t . yellow  = _yellow_
 
 # =============================================================================
 ## make the solution for equation   h(x)=v
@@ -4711,7 +4867,7 @@ ROOT.TH1D . equal_edges = _equal_edges_
 # =============================================================================
 # slices
 # =============================================================================
-## define 2D slice for 2D-historgam
+## define 2D slice for 2D-histogram
 def _h2_get_slice_ ( h2 , axis , ibins ) :
     """
     Get 1D-slice for 2D-histogram
@@ -4742,7 +4898,7 @@ def _h2_get_slice_ ( h2 , axis , ibins ) :
     else :
         raise TypeError, 'Illegal axis index %s' % axis 
 
-    ## fill the slice historgam
+    ## fill the slice histogram
     for i in h2 :
         
         ix = i[0]
@@ -4762,7 +4918,7 @@ ROOT.TH2D . sliceX = lambda s , ibin : _h2_get_slice_ ( s , 1 , ibin )
 ROOT.TH2D . sliceY = lambda s , ibin : _h2_get_slice_ ( s , 2 , ibin ) 
 
 # =============================================================================
-## define 2D slice for 3D-historgam
+## define 2D slice for 3D-histogram
 def _h3_get_slice_ ( h2 , axis , ibins ) :
     """
     Get 2D-slice for 3D-histogram
@@ -4805,7 +4961,7 @@ def _h3_get_slice_ ( h2 , axis , ibins ) :
     else :
         raise TypeError, 'Illegal axis index %s' % axis 
 
-    ## fill the slice historgam
+    ## fill the slice histogram
     for i in h3 :
         
         ix = i[0]

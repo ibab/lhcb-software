@@ -39,7 +39,8 @@ __all__     = (
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
     'rooSilent'      , ## control RooFit verbosity
-    'NoContext'      , ## empty context manager 
+    'NoContext'      , ## empty context manager
+    'RooSilent'      , ## control RooFit verbosity 
     )
 # =============================================================================
 import ROOT, cppyy, time, os,sys ## attention here!!

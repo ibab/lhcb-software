@@ -91,8 +91,9 @@ class Files(object):
     >>> files = data.files 
     """    
     def __init__( self , files ) :  
-        
-        self.files   = []
+        #
+        self.files    = []
+        self.patterns = files  
         # 
         if isinstance ( files , str ) : files = [ files ]
         # 
@@ -109,9 +110,11 @@ class Files(object):
     ## printout 
     def __str__(self):
         """
-        The specific prentout
+        The specific printout
         """
         return "<#files: {}>".format( len ( self.files ) )
+    
+    def __repr__( self )  : return self.__str__()
     
 # =============================================================================
 ## @class Data
@@ -150,12 +153,50 @@ class Data(Files):
                                                     len( self.chain ) )
     
 # =============================================================================
+## @class Data2
+#  Simple utility to access two chains in the set of ROOT-files
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @author Alexander BARANOV a.baranov@cern.ch
+#  @date   2014-06-08  
+class Data2(Data):
+    """
+    Simple utility to access to certain chain in the set of ROOT-files
+    
+    >>> data  = Data('Bc/MyTree', '*.root' )
+    >>> chain = data.chain
+    >>> flist = data.files 
+    """
+    
+    def __init__( self           ,
+                  chain1         ,
+                  chain2         , 
+                  files  = []    ) :
+        
+        self.chain2 = ROOT.TChain ( chain2 )
+        Data.__init__( self , chain1 , files )
+        self.chain1 = self.chain 
+            
+    ## the specific action for each file 
+    def treatFile ( self, the_file ) :
+        """
+        Add the file to TChain
+        """
+        Data.treatFile ( self , the_file ) 
+        self.chain2.Add       ( the_file ) 
+        
+    ## printout 
+    def __str__(self):
+        return  "<#files: {}; Entries1: {}; Entries2: {}>".format ( len ( self.files  ) ,
+                                                                    len ( self.chain1 ) ,
+                                                                    len ( self.chain2 ) )
+    
+# =============================================================================
 ## @class DataAndLumi
 #  Simple utility to access to certain chain in the set of ROOT-files
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08  
-class DataAndLumi(Data):
+class DataAndLumi(Data2):
     """
     Simple utility to access to certain chain in the set of ROOT-files
     
@@ -171,17 +212,9 @@ class DataAndLumi(Data):
                   files       = []   ,
                   lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) :
 
-        self.lumi = ROOT.TChain( lumi_chain )  
-        Data.__init__ ( self , chain , files ) 
+        Data2.__init__ ( chain , lumi_chain , files ) 
+        self.lumi = self.chain2 
         
-    ## the specific action for each file 
-    def treatFile ( self, the_file ) :
-        """
-        Add the file to TChain
-        """
-        Data.treatFile ( self , the_file )
-        self.lumi.Add         ( the_file ) 
-
     ## get the luminosity 
     def getLumi ( self ):
         """

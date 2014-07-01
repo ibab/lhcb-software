@@ -105,8 +105,7 @@ def LHCbStyle ( name      = "LHCbStyle"                 ,
     style . SetTitleSize         ( 0.06 , "x" )
     style . SetTitleSize         ( 0.06 , "y" )
     style . SetTitleSize         ( 0.06 , "z" ) 
-    
-    
+        
     ## use bold lines and markers
     style . SetLineWidth         ( lineWidth )
     style . SetFrameLineWidth    ( lineWidth )
@@ -116,6 +115,32 @@ def LHCbStyle ( name      = "LHCbStyle"                 ,
     style . SetLineStyleString   ( 2 , "[12 12]" ) ##  postscript dashes
     style . SetMarkerStyle       ( 20  )
     style . SetMarkerSize        ( 1.2 )
+
+    ## ## colors for 2D
+    ## from array import array
+    ## NRGBs =   4
+    ## NCont = 999
+    ## #
+    ## stops_ = array ( 'd' , [ 0.00 , 0.33 , 0.66 , 1.0 ] ) 
+    ## red_   = array ( 'd' , [ 0.00 , 0.00 , 0.4  , 1.0 ] )  
+    ## green_ = array ( 'd' , [ 0.00 , 0.00 , 1.0  , 1.0 ] )
+    ## blue_  = array ( 'd' , [ 0.00 , 1.00 , 0.4  , 0.6 ] )
+    ## ROOT.TColor.CreateGradientColorTable ( NRGBs  ,
+    ##                                        stops_ ,
+    ##                                        red_   ,
+    ##                                        green_ ,
+    ##                                        blue_  ,
+    ##                                        NCont  )
+    ## style.SetNumberContours ( NCont ) 
+    
+    # const Int_t NRGBs = 4;
+    # const Int_t NCont = 999;
+    # Double_t stops[NRGBs] = { 0.00,0.33,0.66,1.0};
+    # Double_t red[NRGBs]     = {0.0,0.00,0.4,1.0};
+    # Double_t green[NRGBs] = { 0.0,0.00,1.0,1.0};
+    # Double_t blue[NRGBs] = { 0.0,1.00,0.4,0.6};
+    # TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue , NCont);
+    # gStyle->SetNumberContours(NCont);
     
     ## label offsets
     style . SetLabelOffset(0.015);
