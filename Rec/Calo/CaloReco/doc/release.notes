@@ -4,9 +4,13 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Olivier Deschamps
+  - CaloShowerOverlapTool : add protection in case of missing ShowerProfile
+  - CaloMergedPi0 : add minimal ET cut on splitPhoton (applied to both cluster and corrected CaloHypo)
+  - CaloXCorrection : skip correction in case of negative energy
+
 ! 2014-07-01 - Olivier Deschamps
   - Photon/Electron/MergedPi0 CaloHypos : skip CaloHypos with negative energy (if any) 
-
 
 ! 2014-06-30 - Olivier Deschamps
   - Reconstruction.py : skip single-cell "clusters" for CaloHypo building

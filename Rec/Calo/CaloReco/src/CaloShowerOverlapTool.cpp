@@ -114,7 +114,13 @@ void CaloShowerOverlapTool::process(const LHCb::CaloCluster* cl1 , const LHCb::C
                                     int spd, int niter,bool propagateInitialWeights){
 
 
-  if( cl1->entries().size() < m_minSize || cl2->entries().size() < m_minSize )return;  // skip small clusters
+
+
+
+  if( cl1->entries().size() < m_minSize || cl2->entries().size() < m_minSize ){
+    counter("Overlap correction skipped due to cluster size") += 1;
+    return;  // skip small clusters
+  }
 
   m_a1=cl1->seed().area();
   m_a2=cl2->seed().area();
@@ -131,6 +137,12 @@ void CaloShowerOverlapTool::process(const LHCb::CaloCluster* cl1 , const LHCb::C
   LHCb::CaloCluster* w2 = (LHCb::CaloCluster*) cl2;
   evaluate(w1);
   evaluate(w2);
+
+  if( w1->e() <= 0. || w2->e() <= 0){
+    counter("Overlap correction skipped due to cluster energy") += 1;
+    return;
+  }
+
 
   if( m_verbose ){
     info() << " ======== Shower Overlap =======" << endmsg;
@@ -262,8 +274,8 @@ double CaloShowerOverlapTool::showerFraction(double d3d, unsigned int area ,int 
   double frac = 0;
   LHCb::CaloCellID cellID(2,area,0,0); //fake cell
   frac = (spd) ?
-    m_shape->getCorrection( CaloCorrection::profileC      , cellID , d3d ) :
-    m_shape->getCorrection( CaloCorrection::profile       , cellID , d3d ) ;
+    m_shape->getCorrection( CaloCorrection::profileC      , cellID , d3d ,0.) :
+    m_shape->getCorrection( CaloCorrection::profile       , cellID , d3d ,0.) ;
   if( 0. > frac ) { frac=0.; }
   if( 1. < frac ) { frac=1.; }
   return frac ;

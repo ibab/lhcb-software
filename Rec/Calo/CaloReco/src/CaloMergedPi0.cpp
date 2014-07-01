@@ -153,12 +153,12 @@ StatusCode CaloMergedPi0::execute(){
     setOutputLevel(MSG::ALWAYS);   // suppress FATAL message
     put(splitclusters, m_splitClusters ); 
   } catch(GaudiException &exc ) {
-    setOutputLevel(level);         // reset outputLevel
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
     delete splitclusters;
     splitclusters=get<LHCb::CaloClusters>( m_splitClusters );
     splitclusters->clear();
   }
+  setOutputLevel(level);         // reset outputLevel
   
   //- pi0s & SPlitPhotons
   LHCb::CaloHypos* pi0s = new LHCb::CaloHypos();
@@ -191,7 +191,7 @@ StatusCode CaloMergedPi0::execute(){
     LHCb::CaloCluster* cluster = *icluster ;
     if( 0 == cluster )                { continue ; }   
     if ( 0 < m_etCut &&  m_etCut > eT( cluster ) ) { continue ; }
-
+    
     // -- remove small clusters :
     if( 1 >=  cluster->entries().size() )continue;
 
@@ -201,16 +201,16 @@ StatusCode CaloMergedPi0::execute(){
     LHCb::CaloDigit* dig1 = iSeed->digit() ;
     if( 0 == dig1) continue ; 
     LHCb::CaloCellID  seed1 = dig1->cellID() ;
-
+    
     double seede  = dig1->e();
-
+    
     // -- get spd hit in front of seed1
     int spd1 = 0 ;
     const LHCb::CaloDigit* spddigit1 = (spds == NULL) ? NULL : spds->object( dig1->key() );
     if( NULL != spddigit1 )spd1 = (spddigit1->e() > 0.) ? 1 : 0 ; 
-
+    
     // -- locate seed2
-    double sube   = -1 * Gaudi::Units::TeV ;
+    double sube   = 0. ; // 2nd seed should must have a positive energy !
     LHCb::CaloDigit*  dig2  = NULL;
     for( LHCb::CaloCluster::Digits::iterator it =cluster->entries().begin() ; cluster->entries().end() != it ; ++it ){
       LHCb::CaloDigit* dig = it->digit() ;    
@@ -222,19 +222,19 @@ StatusCode CaloMergedPi0::execute(){
         dig2=dig;
       } 
     }
-
+    
     if ( NULL == dig2 ){
-      Warning("Cluster without 2nd seed is found, skip it").ignore() ; 
+      counter("Cluster without 2nd seed found") += 1;
       continue ; 
     }
-
+    
     LHCb::CaloCellID  seed2 = dig2->cellID() ;
     // -- get spd hit in front of seed2
     int spd2 = 0 ;
     const LHCb::CaloDigit* spddigit2 = (spds == NULL) ? NULL : spds->object( dig2->key() );
     if( NULL != spddigit2 ) { spd2 = (spddigit2->e() > 0.) ? 1 : 0 ; }
-
-
+    
+    
     // -- create and fill sub-cluster
     LHCb::CaloCluster* cl1 = new LHCb::CaloCluster();
     cl1->setSeed( seed1 );
@@ -242,13 +242,13 @@ StatusCode CaloMergedPi0::execute(){
     LHCb::CaloCluster* cl2 = new LHCb::CaloCluster();
     cl2->setSeed( seed2 );
     cl2->setType( LHCb::CaloCluster::Area3x3);
-
+    
     for( LHCb::CaloCluster::Digits::const_iterator it2 =cluster->entries().begin() ; cluster->entries().end() != it2 ; ++it2 ){
       const LHCb::CaloDigit* dig = it2->digit() ;
       if( 0 == dig)continue ;
       const LHCb::CaloCellID  id = dig->cellID() ;
       double fraction = it2->fraction();
-
+      
       // -- tag 3x3 area for energy and position
       if ( isNeighbor( seed1, id ) ){
         LHCb::CaloDigitStatus::Status status = ( seed1 == id ) ? seed : used;
@@ -269,6 +269,7 @@ StatusCode CaloMergedPi0::execute(){
         cl2->entries().push_back(LHCb::CaloClusterEntry( dig , status,weight2 ));
       }
     }
+    
 
     // --  apply position tagger (possibly replacing the 3x3 already set)
     // --  needed to apply hypo S/L-corrections with correct parameters internally 
@@ -280,7 +281,7 @@ StatusCode CaloMergedPi0::execute(){
     
     // == apply the mergedPi0 tool : subtract shower overlap
     m_oTool->process(cl1,cl2, spd1*10+spd2, m_iter,true); // 'true' means the initial entries weight is propagated
-    if( LHCb::CaloMomentum(cl1).pt() < m_minET || LHCb::CaloMomentum(cl2).pt() < m_minET ){ // skip negative energy "clusters"
+    if( LHCb::CaloMomentum(cl1).pt() <= m_minET || LHCb::CaloMomentum(cl2).pt() <= m_minET ){ // skip negative energy "clusters"
       delete cl1;
       delete cl2;
       continue;
@@ -296,7 +297,8 @@ StatusCode CaloMergedPi0::execute(){
     if  (m_cov   -> process( cl1 ).isFailure() )counter("Fails to set covariance (1)")+=1;
     if  (m_cov   -> process( cl2 ).isFailure() )counter("Fails to set covariance (2)")+=1;
     if  (m_spread-> process( cl1 ).isFailure() )counter("Fails to set spread (1)")    +=1;
-    if  (m_spread-> process( cl2 ).isFailure() )counter("Fails to set spread (2)")    +=1;       
+    if  (m_spread-> process( cl2 ).isFailure() )counter("Fails to set spread (2)")    +=1;
+    
 
     // == insert splitClusters into their container
     splitclusters->insert( cl1 ) ;

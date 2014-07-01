@@ -73,12 +73,18 @@ StatusCode CaloECorrection::operator() ( LHCb::CaloHypo* hypo  ) const{
 StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   
   // check arguments 
-  if( 0 == hypo )return Warning( " CaloHypo* points to NULL!",StatusCode::SUCCESS ) ; 
+  if( 0 == hypo )return Warning( " CaloHypo* points to NULL!",StatusCode::SUCCESS ) ;
 
   // check the Hypo
   Hypotheses::const_iterator h = std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
-  if( m_hypos.end() == h )
-    return Error ( "Invalid hypothesis -> no correction applied" ,StatusCode::FAILURE) ;
+  if( m_hypos.end() == h )return Error ( "Invalid hypothesis -> no correction applied" ,StatusCode::SUCCESS) ;
+
+  // No correction for negative energy :
+  if( hypo->e() < 0.){
+    counter("Skip negative energy correction") += 1;
+    return StatusCode::SUCCESS;
+  }
+
 
   // get Prs/Spd
   double ePrs = 0 ;
