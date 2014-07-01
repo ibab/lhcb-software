@@ -450,46 +450,25 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
   } //end of loop over LHCbIDs.
 
   int station;
-  int hits[42];
+  int hits[42]{};
   //int nStrips[84];
-  double r[42];
-  double r_e[42];
+  double r[42]{};
+  double r_e[42]{};
   //double r_s[84];
-  double phi[42];
-  double phi_e[42];
-  double phi_s[84];
-  double x_meas[42];
-  double y_meas[42];
-  double z_meas[42];
-  double x_err[42];
-  double y_err[42];
+  double phi[42]{};
+  double phi_e[42]{};
+  double phi_s[84]{};
+  double x_meas[42]{};
+  double y_meas[42]{};
+  double z_meas[42]{};
+  double x_err[42]{};
+  double y_err[42]{};
   //double z_err[42];
-  int    active[42];  // array to point to active modules
+  int    active[42]{};  // array to point to active modules
   int    last_active = -1; // counter to point at index of last active module
 
   // set everything to 0
-  for (int j=0; j<42; j++)
-  {
-    hits[j]         = 0;
-    //nStrips[2*j]    = 0;
-    //nStrips[2*j+1]  = 0; 
-    r[j]            = 0.0;
-    phi[j]          = 0.0;
-    phi[j]          = 0.0;
-    //r_s[2*j]        = 0.0;
-    phi_s[2*j]      = 0.0;
-    //r_s[2*j+1]      = 0.0;
-    r_e[2*j]        = 0.0;
-    phi_s[2*j+1]    = 0.0;
-    phi_e[2*j]      = 0.0;
-    x_meas[j]       = 0.0;
-    y_meas[j]       = 0.0;
-    z_meas[j]       = 0.0;
-    x_err[j]       = 0.0;
-    y_err[j]       = 0.0;
-    //z_err[j]       = 0.0;
-    active[j]      = -1;
-  }
+  for (int j=0; j<42; j++) active[j] = -1;
 
   // check which modules have hits on both sensors and store track states at every sensor as well as cluster positions
   for(itClus=cluster_container.begin(); itClus!=cluster_container.end();++itClus) {
