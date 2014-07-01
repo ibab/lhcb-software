@@ -17,6 +17,7 @@
 #include "CaloInterfaces/ICaloHypoTool.h"
 #include  "CaloUtils/CaloAlgUtils.h"
 #include "CaloSinglePhotonAlg.h"
+#include "CaloUtils/CaloMomentum.h"
 #include "boost/lexical_cast.hpp"
 // ============================================================================
 /** @file
@@ -42,7 +43,7 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   ISvcLocator*       pSvc )
   : GaudiAlgorithm ( name , pSvc )  
   //
-  , m_eTcut ( -10 * Gaudi::Units::GeV )
+  , m_eTcut ( 0. )
   //
   , m_selectorsTypeNames    () 
   , m_selectors             ()
@@ -59,46 +60,20 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   , m_detData      ( DeCalorimeterLocation:: Ecal      )
   , m_det(0)
 {
-  m_selectorsTypeNames.push_back 
-    ( "CaloSelectCluster/PhotonCluster"                   ) ;
-  
-  m_selectorsTypeNames.push_back 
-    ( "CaloSelectNeutralClusterWithTracks/NeutralCluster" ) ;
-  
-  declareProperty 
-    ( "SelectionTools"      , 
-      m_selectorsTypeNames  ,
-      "List of tools for selection of clusters") ;
-  
-  declareProperty 
-    ( "CorrectionTools"       , 
-      m_correctionsTypeNames  , 
-      "List of tools for primary corrections") ;
-  
+  m_selectorsTypeNames.push_back( "CaloSelectCluster/PhotonCluster"                   ) ;
+  m_selectorsTypeNames.push_back( "CaloSelectNeutralClusterWithTracks/NeutralCluster" ) ;
+  declareProperty( "SelectionTools"  , m_selectorsTypeNames    ,"List of tools for selection of clusters") ;
+  declareProperty( "CorrectionTools" , m_correctionsTypeNames  ,"List of tools for primary corrections") ;  
+  declareProperty ( "HypoTools" , m_hypotoolsTypeNames  , "List of generic Hypo-tools to apply to newly created hypos") ;
+
   m_hypotoolsTypeNames .push_back ( "CaloExtraDigits/SpdPrsExtraG" ) ;  
-  declareProperty 
-    ( "HypoTools"           , 
-      m_hypotoolsTypeNames  , 
-      "List of generic Hypo-tools to apply to newly created hypos") ;
-  
   m_correctionsTypeNames2.push_back ( "CaloECorrection/ECorrection" ) ;
   m_correctionsTypeNames2.push_back ( "CaloSCorrection/SCorrection" ) ;
   m_correctionsTypeNames2.push_back ( "CaloLCorrection/LCorrection" ) ;
   
-  declareProperty 
-    ( "CorrectionTools2"       , 
-      m_correctionsTypeNames2  , 
-      "List of tools for 'fine-corrections' " ) ;
-  
-  declareProperty 
-    ( "HypoTools2"          , 
-      m_hypotoolsTypeNames2 ,
-      "List of generic Hypo-tools to apply to corrected hypos") ;
-  //
-  declareProperty 
-    ( "EtCut"   , 
-      m_eTcut   , 
-      "Et-Cut to apply for clusters" ) ;
+  declareProperty ( "CorrectionTools2" , m_correctionsTypeNames2 , "List of tools for 'fine-corrections' " ) ;  
+  declareProperty ( "HypoTools2" , m_hypotoolsTypeNames2 , "List of generic Hypo-tools to apply to corrected hypos") ;
+  declareProperty ( "EtCut"   , m_eTcut , "Threshold on cluster & hypo ET" ) ;
   //
   declareProperty ( "InputData"         , m_inputData     ) ;  
   declareProperty ( "OutputData"        , m_outputData     ) ;  
@@ -127,65 +102,46 @@ StatusCode CaloSinglePhotonAlg::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class GaudiAlgorithm!",sc);}
-  // check the geometry information 
-  const DeCalorimeter* det = getDet<DeCalorimeter>( m_detData) ;
-  if( 0 == det ) { return Error("Detector information is not available!");}
-  
-  if ( 0 < m_eTcut ) 
-  { Warning ( " Et Cut of " + 
-              boost::lexical_cast<std::string>( m_eTcut / Gaudi::Units::GeV )  +
-              " GeV is applied " ).ignore() ; }
-  
-  { // locate selector tools
-    for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
-         m_selectorsTypeNames.end() != item ; ++item )
-    {
-      ICaloClusterSelector* selector   = 
-        tool<ICaloClusterSelector>( *item , this );
-      m_selectors.push_back( selector );
-    }
-    if ( m_selectors.empty() ){ info() << "No Cluster Selection     tools are specified!" << endmsg ; }
-  }
-  { // locate correction tools
-    for( Names::const_iterator item = m_correctionsTypeNames.begin() ;
-         m_correctionsTypeNames.end() != item ; ++item )
-    {
-      ICaloHypoTool*  correction       = 
-        tool<ICaloHypoTool>( *item , this );
-      m_corrections.push_back( correction );
-    }
-    if ( m_corrections.empty() ){ info() << "No Hypo    Correction(1) tools are specified!" << endmsg ; }
-  }
-  { // locate other hypo  tools
-    for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
-         m_hypotoolsTypeNames.end() != item ; ++item )
-    {
-      ICaloHypoTool*  hypotool         = 
-        tool<ICaloHypoTool>( *item , this );
-      m_hypotools.push_back(  hypotool  );
-    }
-    if ( m_hypotools.empty() ){ info() << "No Hypo    Processing(1) tools are specified!" << endmsg ; }
-  }
-  { // locate correction tools
-    for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
-         m_correctionsTypeNames2.end() != item ; ++item )
-    {
-      ICaloHypoTool*  correction       = 
-        tool<ICaloHypoTool>( *item , this );
-      m_corrections2.push_back( correction );
-    }
-    if ( m_corrections2.empty() ){ info() << "No Hypo    Correction(2) tools are specified!" << endmsg ; }
-  }
-  { // locate other hypo  tools
-    for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;m_hypotoolsTypeNames2.end() != item ; ++item ){
-      ICaloHypoTool*  hypotool         = 
-        tool<ICaloHypoTool>( *item , this );
-      m_hypotools2.push_back(  hypotool  );
-    }
-    if ( m_hypotools2.empty() ){ info () << "No Hypo    Processing(2) tools are specified!" << endmsg ; }
-  }
 
+  // check the geometry information 
   m_det = getDet<DeCalorimeter>( m_detData ) ; 
+  if( 0 == m_det )return Error("Detector information is not available!");
+  
+  
+  // locate selector tools
+  for( Names::const_iterator item = m_selectorsTypeNames.begin() ; m_selectorsTypeNames.end() != item ; ++item ){
+    ICaloClusterSelector* selector   = tool<ICaloClusterSelector>( *item , this );
+      m_selectors.push_back( selector );
+  }
+  if ( m_selectors.empty() )info() << "No Cluster Selection tools are specified!" << endmsg ; 
+  
+  // locate correction tools
+  for( Names::const_iterator item = m_correctionsTypeNames.begin() ; m_correctionsTypeNames.end() != item ; ++item ) {
+      ICaloHypoTool*  correction = tool<ICaloHypoTool>( *item , this );
+      m_corrections.push_back( correction );
+  }
+  if ( m_corrections.empty() )info() << "No Hypo    Correction(1) tools are specified!" << endmsg ; 
+  
+  // locate other hypo  tools
+  for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ; m_hypotoolsTypeNames.end() != item ; ++item ){
+      ICaloHypoTool*  hypotool = tool<ICaloHypoTool>( *item , this );
+      m_hypotools.push_back(  hypotool  );
+  }
+  if ( m_hypotools.empty() )info() << "No Hypo    Processing(1) tools are specified!" << endmsg ; 
+  
+  // locate correction tools
+  for( Names::const_iterator item = m_correctionsTypeNames2.begin() ; m_correctionsTypeNames2.end() != item ; ++item ){
+      ICaloHypoTool*  correction = tool<ICaloHypoTool>( *item , this );
+      m_corrections2.push_back( correction );
+  }
+  if ( m_corrections2.empty() )info() << "No Hypo    Correction(2) tools are specified!" << endmsg ; 
+  
+  // locate other hypo  tools
+  for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;m_hypotoolsTypeNames2.end() != item ; ++item ){
+    ICaloHypoTool*  hypotool = tool<ICaloHypoTool>( *item , this );
+    m_hypotools2.push_back(  hypotool  );
+  }
+  if ( m_hypotools2.empty() )info () << "No Hypo    Processing(2) tools are specified!" << endmsg ;
 
   ///
   return StatusCode::SUCCESS;
@@ -218,8 +174,7 @@ CaloSinglePhotonAlg::finalize()
  */
 // ============================================================================
 StatusCode 
-CaloSinglePhotonAlg::execute()
-{
+CaloSinglePhotonAlg::execute(){
   using namespace  LHCb::CaloDataFunctor;
   // avoid long names 
   typedef LHCb::CaloClusters             Clusters ;
@@ -237,7 +192,7 @@ CaloSinglePhotonAlg::execute()
   
   // loop over clusters 
   for( iterator cluster = clusters->begin() ;clusters->end() != cluster ; ++cluster ){
-    if ( m_eTcut > 0 && eT( *cluster ) < m_eTcut ) { continue ; }
+    if ( eT( *cluster ) < m_eTcut )  continue ; 
     
     bool select = true ;
     // loop over all selectors 
@@ -296,8 +251,13 @@ CaloSinglePhotonAlg::execute()
       Error ( "Error from Other Hypo Tool 2, skip the cluster" , sc ).ignore(); 
       continue ;                                    // CONTINUE !
     }
-    /// add the hypo into container of hypos 
-    hypos->insert ( hypo.release() ) ;  
+
+    // check momentum after all corrections :
+    if( LHCb::CaloMomentum( hypo.get() ).pt() < m_eTcut )
+      hypo.release();
+    else
+      hypos->insert ( hypo.release() ) ;  /// add the hypo into container of hypos 
+    
   } // end of the loop over all clusters
   
   if(UNLIKELY(msgLevel(MSG::DEBUG)))debug() << " # of created Photon  Hypos is  " << hypos->size()  << "/" << clusters->size()<< endmsg ;

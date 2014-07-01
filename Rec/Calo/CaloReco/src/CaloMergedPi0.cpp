@@ -62,7 +62,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   declareProperty( "EnergyTags"   , m_taggerE      ) ;
   declareProperty( "PositionTags" , m_taggerP      ) ;
   declareProperty( "Detector"     , m_det) ;
-  declareProperty( "SplitClusterMinEnergy", m_eClusterMin=0.);
+  declareProperty( "SplitPhotonMinET", m_minET=0.);
   
   
   // default context-dependent locations
@@ -90,7 +90,7 @@ StatusCode CaloMergedPi0::initialize(){
   if( sc.isFailure() )return Error("Could not initialize the base class!",sc);
 
   // Always skip negative-energy clusters :
-  if(m_eClusterMin<0.)m_eClusterMin=0.;
+  if(m_minET<0.)m_minET=0.;
   
   if(m_createClusterOnly)info() << "Producing SplitClusters only" << endmsg;
 
@@ -154,9 +154,6 @@ StatusCode CaloMergedPi0::execute(){
     put(splitclusters, m_splitClusters ); 
   } catch(GaudiException &exc ) {
     setOutputLevel(level);         // reset outputLevel
-    //std::stringstream o("");
-    //o<<"Caught Exception :" << exc;
-    //Warning(o.str(),StatusCode::SUCCESS).ignore();
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
     delete splitclusters;
     splitclusters=get<LHCb::CaloClusters>( m_splitClusters );
@@ -283,7 +280,7 @@ StatusCode CaloMergedPi0::execute(){
     
     // == apply the mergedPi0 tool : subtract shower overlap
     m_oTool->process(cl1,cl2, spd1*10+spd2, m_iter,true); // 'true' means the initial entries weight is propagated
-    if( cl1->e() < m_eClusterMin || cl2->e() < m_eClusterMin ){ // skip negative energy "clusters"
+    if( LHCb::CaloMomentum(cl1).pt() < m_minET || LHCb::CaloMomentum(cl2).pt() < m_minET ){ // skip negative energy "clusters"
       delete cl1;
       delete cl2;
       continue;
@@ -313,14 +310,12 @@ StatusCode CaloMergedPi0::execute(){
       g1 -> addToClusters( cluster )                ;
       g1 -> addToClusters( cl1       )                ;
       g1 -> setPosition( new LHCb::CaloPosition( cl1->position()) );
-      phots ->insert( g1  ) ;
 
       LHCb::CaloHypo* g2   = new LHCb::CaloHypo() ;
       g2 -> setHypothesis( LHCb::CaloHypo::PhotonFromMergedPi0 ) ;
       g2 -> addToClusters( cluster )                ;
       g2 -> addToClusters( cl2       )                ;
       g2 -> setPosition( new LHCb::CaloPosition( cl2->position() ) );
-      phots ->insert( g2  ) ;        
 
       // new CaloHypo for mergedPi0
       LHCb::CaloHypo* pi0 = new LHCb::CaloHypo();
@@ -328,12 +323,6 @@ StatusCode CaloMergedPi0::execute(){
       pi0 -> addToClusters( cluster );
       pi0 -> addToHypos ( g2 );
       pi0 -> addToHypos ( g1 );
-      pi0s -> insert( pi0 ) ;
-      if( m_verbose ){
-        LHCb::CaloMomentum momentum;
-        momentum.addCaloPosition( pi0 );
-        info() << " >> Hypo Mass : "  << momentum.mass() << endmsg;
-      }
 
       //--  Apply hypo tools : E/S/L-corrections
       int i = 0;
@@ -358,6 +347,19 @@ StatusCode CaloMergedPi0::execute(){
         StatusCode sc         = StatusCode::SUCCESS ;
         sc                    = (*t) ( pi0 ) ;
         if( sc.isFailure() )Error("Error from 'Tool' for pi0 " , sc ).ignore() ;
+      }
+
+
+      // skip negative energy CaloHypos
+      if( LHCb::CaloMomentum(g1).pt() < m_minET || LHCb::CaloMomentum(g2).pt() < m_minET ){
+        delete g1;
+        delete g2;
+        delete pi0;
+      } else {
+        if( m_verbose )info() << " >> MergedPi0 hypo Mass : "  << LHCb::CaloMomentum(pi0).mass() << endmsg;
+        phots ->insert( g1  ) ;
+        phots ->insert( g2  ) ;        
+        pi0s -> insert( pi0 ) ;
       }
     }
   }

@@ -69,7 +69,7 @@ private:
   std::string m_det;
   DeCalorimeter* m_detector;
   bool m_verbose;
-  double m_eClusterMin;
+  double m_minET;
 };
 // ============================================================================
 #endif // CALOMERGEDPI0_H

@@ -53,45 +53,18 @@ public:
   
 public:
 
-  /**  standard Algorithm initialization
-   *   @see CaloAlgorithm
-   *   @see     Algorithm
-   *   @see    IAlgorithm
-   *   @return status code 
-   */
   virtual StatusCode initialize ();  
-  
-  /**  standard Algorithm execution
-   *   @see     Algorithm
-   *   @see    IAlgorithm
-   *   @return status code 
-   */
   virtual StatusCode execute    ();  
-  
-  /**  standard Algorithm finalization
-   *   @see CaloAlgorithm
-   *   @see     Algorithm
-   *   @see    IAlgorithm
-   *   @return status code 
-   */
   virtual StatusCode finalize   ();
   
 protected:
   
-  /** Standard constructor
-   *  @param name algorithm name 
-   *  @param pSvc service locator 
-   */
-  CaloSinglePhotonAlg
-  ( const std::string&  name , 
-    ISvcLocator*        pSvc );
-  
+  CaloSinglePhotonAlg( const std::string&  name , ISvcLocator*        pSvc );  
   /// destructor (protected and virtual)
   virtual ~CaloSinglePhotonAlg();
   
 private:
   
-  // fast cut on transverse energy 
   double       m_eTcut                     ;
 
   // cluster selectors 
@@ -118,8 +91,6 @@ private:
   std::string m_outputData;
   std::string m_detData   ;
   const DeCalorimeter*  m_det;
-  
-
 };
 // ============================================================================
 #endif // CALOSINGLEPHOTONALG_H

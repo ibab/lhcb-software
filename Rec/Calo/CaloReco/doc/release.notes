@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-01 - Olivier Deschamps
+  - Photon/Electron/MergedPi0 CaloHypos : skip CaloHypos with negative energy (if any) 
+
+
 ! 2014-06-30 - Olivier Deschamps
   - Reconstruction.py : skip single-cell "clusters" for CaloHypo building
   - CaloSelectCluster : add a cut on entries.size()

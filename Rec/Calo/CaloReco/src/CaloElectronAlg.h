@@ -35,6 +35,7 @@
 #include <string>
 #include <memory>
 // from GaudiAlg
+#include "CaloDet/DeCalorimeter.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 // forward delcarations 
 class ICaloClusterSelector ;
@@ -127,6 +128,8 @@ private:
   std::string m_inputData ;
   std::string m_outputData;
   std::string m_detData   ;
+  const DeCalorimeter*  m_det;
+  double m_eTcut;
 };
 
 // ============================================================================
