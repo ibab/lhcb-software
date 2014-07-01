@@ -204,8 +204,8 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
   
     // does energy have a reasonable value? 
   LHCb::CaloPosition::Parameters& parameters = cluster->position().parameters();
-  if( 0 >= eTE )parameters( LHCb::CaloPosition::E ) =  -1 * Gaudi::Units::TeV ;
-  if( 0 >= eTP ){
+  if( 0. >= eTE )parameters( LHCb::CaloPosition::E ) =  0.;
+  if( 0. >= eTP ){
     parameters( LHCb::CaloPosition::X ) =  -1 * Gaudi::Units::km  ;
     parameters( LHCb::CaloPosition::Y ) =  -1 * Gaudi::Units::km  ;
   }

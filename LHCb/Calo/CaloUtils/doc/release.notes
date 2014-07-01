@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2014-07-02 - Olivier Deschamps
+	- CovarianceEstimator.cpp  : set default energy to 0 in case of evaluation failure (no more huge negative value !)
+
 ! 2014-06-27 - Olivier Deschamps
 	- CovarianceEstimator.cpp     : prepare for different cluster masking for energy and position
 	- CaloUtils/ClusterFunctors.h : update tagTheSubCluster() method 
