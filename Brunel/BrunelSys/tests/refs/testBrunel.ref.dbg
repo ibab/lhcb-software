@@ -1,5 +1,5 @@
-# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform@5/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform@12/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform@12/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -101,7 +101,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v46r1
-                                          running on lxbuild159.cern.ch on Thu Jun 12 10:10:00 2014
+                                          running on lxbuild173.cern.ch on Tue Jul  1 05:49:08 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -110,7 +110,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.49 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.87 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -317,18 +317,21 @@ RichOfflineGPID...   INFO Maximum track changes per event iteration = 5
 RecoCALOSeq          INFO Member list: GaudiSequencer/CaloProcessorCaloSeq, with context 'Offline'
 CaloProcessorCa...   INFO Member list: GaudiSequencer/CaloRecoForCaloProcessor, GaudiSequencer/CaloPIDsCaloPIDsForCaloProcessor, with context 'Offline'
 CaloRecoForCalo...   INFO Member list: GaudiSequencer/CaloDigits, GaudiSequencer/ClusterReco, GaudiSequencer/PhotonReco, GaudiSequencer/MergedPi0Reco, GaudiSequencer/ElectronReco, with context 'Offline'
-ClusterReco          INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloSharedCellAlg/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
+ClusterReco          INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloShowerOverlap/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
+EcalShare.Clust...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
+EcalShare.Clust...   INFO Tagger -  Energy : [3x3, 3x3, 3x3] - Position :  [3x3, 3x3, 3x3] (from DB)
+EcalCovar.Clust...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
+EcalCovar.Clust...   INFO Tagger -  Energy : [3x3, 3x3, 3x3] - Position :  [3x3, 3x3, 3x3] (from DB)
+EcalCovar.EcalC...   INFO Condition 'Conditions/Reco/Calo/Covariance' has not been found
 EcalCovar.EcalC...   INFO  Has initialized with parameters:
 EcalCovar.EcalC...   INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
-EcalCovar.EcalC...   INFO  	 'Resolution'       = ' 'Resolution':0.10000000' from DB
-EcalCovar.EcalC...   INFO  	 'GainError'        = ' 'GainError':0.010000000' from DB
-EcalCovar.EcalC...   INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.2000000' from DB
-EcalCovar.EcalC...   INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000' from DB
+EcalCovar.EcalC...   INFO  	 ==  Parameters for covariance estimation ==
+EcalCovar.EcalC...   INFO  	   from DB using 'Gain' Condition
 EcalCovar.EcalC...   INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
 EcalCovar.EcalC...   INFO    Resolution       is 0.1
 EcalCovar.EcalC...   INFO    Sigma Gain       is 0.01
 EcalCovar.EcalC...   INFO    Coherent Noise   is 0.3
-EcalCovar.EcalC...   INFO    InCoherent Noise is 1.2
+EcalCovar.EcalC...   INFO    Incoherent Noise is 1.2
 EcalCovar.EcalC...   INFO
 PhotonReco           INFO Member list: GaudiSequencer/CaloTrackMatch, CaloSinglePhotonAlg/SinglePhotonRec, with context 'Offline'
 CaloTrackMatch       INFO Member list: InEcalAcceptanceAlg/InECAL, PhotonMatchAlg/ClusterMatch, with context 'Offline'
@@ -336,19 +339,20 @@ InECAL               INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 ClusterMatch         INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
 SinglePhotonRec      INFO No Hypo    Correction(1) tools are specified!
 SinglePhotonRec      INFO No Hypo    Processing(2) tools are specified!
-MergedPi0Reco        INFO Member list: CaloMergedPi0Alg/MergedPi0Rec, with context 'Offline'
+MergedPi0Reco        INFO Member list: CaloMergedPi0/MergedPi0Rec, with context 'Offline'
+MergedPi0Rec.Co...   INFO Condition 'Conditions/Reco/Calo/Covariance' has not been found
 MergedPi0Rec.Co...   INFO  Has initialized with parameters:
 MergedPi0Rec.Co...   INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
-MergedPi0Rec.Co...   INFO  	 'Resolution'       = ' 'Resolution':0.10000000' from DB
-MergedPi0Rec.Co...   INFO  	 'GainError'        = ' 'GainError':0.010000000' from DB
-MergedPi0Rec.Co...   INFO  	 'NoiseIncoherent'  = ' 'NoiseIncoherent':1.2000000' from DB
-MergedPi0Rec.Co...   INFO  	 'NoiseCoherent'    = ' 'NoiseCoherent':0.30000000' from DB
+MergedPi0Rec.Co...   INFO  	 ==  Parameters for covariance estimation ==
+MergedPi0Rec.Co...   INFO  	   from DB using 'Gain' Condition
 MergedPi0Rec.Co...   INFO  	 Estimator is           Cluster Covariance Estimator:  Detector is VALID
 MergedPi0Rec.Co...   INFO    Resolution       is 0.1
 MergedPi0Rec.Co...   INFO    Sigma Gain       is 0.01
 MergedPi0Rec.Co...   INFO    Coherent Noise   is 0.3
-MergedPi0Rec.Co...   INFO    InCoherent Noise is 1.2
+MergedPi0Rec.Co...   INFO    Incoherent Noise is 1.2
 MergedPi0Rec.Co...   INFO
+MergedPi0Rec.Cl...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
+MergedPi0Rec.Cl...   INFO Tagger -  Energy : [3x3, 3x3, 3x3] - Position :  [3x3, 3x3, 3x3] (from DB)
 ElectronReco         INFO Member list: GaudiSequencer/CaloTrackMatch, CaloElectronAlg/SingleElectronRec, with context 'Offline'
 SingleElectronRec    INFO No Hypo    Correction(1) tools are specified!
 SingleElectronRec    INFO No Hypo    Processing(2) tools are specified!
@@ -422,8 +426,8 @@ ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Par
 ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=proton
 ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=ghost
 NeutralProtoPar...   INFO Member list: NeutralProtoPAlg/NeutralProtoPMaker, with context 'Offline'
-NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/Photons
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/MergedPi0s
+NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/Photons
 NeutralProtoPMaker   INFO  Hypothesis loaded from Rec/Calo/SplitPhotons
 RecoSUMMARYSeq       INFO Member list: RecSummaryAlg/RecSummary, with context 'Offline'
 Moni                 INFO Member list: GaudiSequencer/MoniCALOSeq, GaudiSequencer/MoniRICHSeq, GaudiSequencer/MoniMUONSeq, GaudiSequencer/MoniVELOSeq, GaudiSequencer/MoniOTSeq, GaudiSequencer/MoniSTSeq, GaudiSequencer/MoniGENERALSeq, GaudiSequencer/MoniTrSeq, GaudiSequencer/MoniPROTOSeq, GaudiSequencer/MoniHltSeq, with context 'Offline'
@@ -686,24 +690,17 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
 FileRecordCnvSvc     INFO Disconnected data IO:008610A7-3964-E111-A3C7-001E4F3D8360 [Brunel.dst]
 ToolSvc              INFO Removing all tools created by ToolSvc
-SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronLCorrection') for SingleElectronRec.LCorrection
-SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronSCorrection') for SingleElectronRec.SCorrection
-SingleElectronR...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/ElectronECorrection') for SingleElectronRec.ECorrection
-MergedPi0Rec.Pi...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonLCorrection') for MergedPi0Rec.Pi0LCorrection
-MergedPi0Rec.Pi...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonSCorrection') for MergedPi0Rec.Pi0SCorrection
-MergedPi0Rec.Sh...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/PhotonShowerProfile') for MergedPi0Rec.ShowerProfile
-MergedPi0Rec.LC...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonLCorrection') for MergedPi0Rec.LCorrection
-MergedPi0Rec.SC...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonSCorrection') for MergedPi0Rec.SCorrection
-MergedPi0Rec.EC...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/SplitPhotonECorrection') for MergedPi0Rec.ECorrection
-SinglePhotonRec...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/PhotonLCorrection') for SinglePhotonRec.LCorrection
-SinglePhotonRec...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/PhotonSCorrection') for SinglePhotonRec.SCorrection
-SinglePhotonRec...   INFO  Applied corrections configured via condDB  ('Conditions/Reco/Calo/PhotonECorrection') for SinglePhotonRec.ECorrection
+MergedPi0Rec.Cl...WARNING  Applied corrections configured via options for  MergedPi0Rec.ClusterTag.DBAccessor
+MergedPi0Rec.Co...WARNING  Applied corrections configured via options for  MergedPi0Rec.Covariance.DBAccessor
+EcalCovar.EcalC...WARNING  Applied corrections configured via options for  EcalCovar.EcalCovarTool.DBAccessor
+EcalCovar.Clust...WARNING  Applied corrections configured via options for  EcalCovar.ClusterTag.DBAccessor
+EcalShare.Clust...WARNING  Applied corrections configured via options for  EcalShare.ClusterTag.DBAccessor
 ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.49 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.87 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
