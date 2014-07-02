@@ -4,6 +4,21 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Anton Poluektov 
+ - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar : 
+     'StrippingB02LcpbarKKLc2PKPiBeauty2CharmLine', 
+     'StrippingB02LcpbarPiPiLc2PKPiBeauty2CharmLine', 
+     'StrippingB02LcpbarKPiLc2PKPiBeauty2CharmLine', 
+     'StrippingB02LcpbarPiPiWSLc2PKPiBeauty2CharmLine', 
+     'StrippingB02LcpbarKKWSLc2PKPiBeauty2CharmLine', 
+     'StrippingB02LcpbarKPiWSLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarKSSLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarPiSSLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarKWSLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarPiWSLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarLc2PKPiBeauty2CharmLine', 
+     'StrippingB2LcpbarWSLc2PKPiBeauty2CharmLine', 
+
 ! 2014-06-30 - Stefano Perazzini
  - Removed obsolete datasets from tests/data
 

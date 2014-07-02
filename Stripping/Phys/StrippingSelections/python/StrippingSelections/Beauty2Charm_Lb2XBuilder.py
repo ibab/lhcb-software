@@ -168,6 +168,8 @@ class Lb2XBuilder(object):
         self._makeXib2LcDsK()
         ### Xb- -> Lc+ Ds- K- Pi+
         self._makeXib02LcDsKPi()
+        ### B- -> Lc+ Ds- pbar
+        self._makeB2LcDspbar()
 
         # Sb+- -> D0(HH) p+-
         self._makeSb2D0P()
@@ -208,6 +210,11 @@ class Lb2XBuilder(object):
         self._makeLb2DpHH()
         # Xib -> D0 p h- h-
         self._makeXib2D0pHH()
+        
+        # B -> Lc pbar h-
+        self._makeB2LcpbarH()
+        # B-> Lc pbar
+        self._makeB2Lcpbar()
 
     def _makeLb2LcH(self):
         '''Make RS and WS Lb -> Lc H (H=pi,K) + cc.'''
@@ -233,6 +240,20 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
         self.lines.append(ProtoLine(noip,1.0))
         self.lines.append(ProtoLine(noip_ws,0.1))
+
+    def _makeB2Lcpbar(self):
+        '''Make RS and WS B -> Lc pbar + cc.'''
+        protons = self.protons
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '4750.*MeV'
+        decays = {'B2Lcpbar': ["[B0 -> Lambda_c+ p~-]cc"] }
+        inputs = {'B2Lcpbar': self.lc+protons }
+        rs = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
+        decays = {'B2LcpbarWS': ["[B0 -> Lambda_c+ p+]cc"]}
+        inputs = {'B2LcpbarWS':self.lc+protons }
+        ws = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
+        self.lines.append(ProtoLine(rs,1.0))
+        self.lines.append(ProtoLine(ws,0.1))
 
     def _makeLb2XicH(self):
         '''Make RS and WS Lb -> Xi_c+ H (H=pi,K) + cc.''' 
@@ -331,34 +352,62 @@ class Lb2XBuilder(object):
         ppbark = self.hhh.ppbark
         pppbar = self.hhh.pppbar
         
+        ppipi = self.hhh.ppipiOS
+        pkpi = self.hhh.pkpiOS
+        pkk = self.hhh.pkkOS
+        
         decays = {'Lb2LcPiPiPi'   : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
                   'Lb2LcKPiPi'    : ["[Lambda_b0 -> Lambda_c+ K_1(1270)-]cc"],
                   'Lb2LcppbarPi'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
                   'Lb2LcppbarK'   : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"],
-                  'Lb2LcKKPi'     : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"], 
-                  'B02Lcpbarpbarp': ["[B0 -> Lambda_c+ a_1(1260)-]cc"] }
+                  'Lb2LcKKPi'     : ["[Lambda_b0 -> Lambda_c+ a_1(1260)-]cc"]}
         inputs = {'Lb2LcPiPiPi'   : self.lc_pid+pipipi,
                   'Lb2LcKPiPi'    : self.lc_pid+kpipi,
                   'Lb2LcppbarPi'  : self.lc_pid+ppbarpi,
                   'Lb2LcppbarK'   : self.lc_pid+ppbark,
-                  'Lb2LcKKPi'     : self.lc_pid+kkpi, 
-                  'B02Lcpbarpbarp': self.lc_pid+pppbar}
+                  'Lb2LcKKPi'     : self.lc_pid+kkpi}
         rs = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
         decays = {'Lb2LcPiPiPiWS'   : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
                   'Lb2LcKPiPiWS'    : ["[Lambda_b0 -> Lambda_c+ K_1(1270)+]cc"],
                   'Lb2LcppbarPiWS'  : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
                   'Lb2LcppbarKWS'   : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"],
-                  'Lb2LcKKPiWS'     : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"], 
-                  'B02LcpbarpbarpWS': ["[B0 -> Lambda_c+ a_1(1260)+]cc"] }
+                  'Lb2LcKKPiWS'     : ["[Lambda_b0 -> Lambda_c+ a_1(1260)+]cc"]}
         inputs = {'Lb2LcPiPiPiWS'   : self.lc_pid+pipipi,
                   'Lb2LcKPiPiWS'    : self.lc_pid+kpipi,
                   'Lb2LcppbarPiWS'  : self.lc_pid+ppbarpi,
                   'Lb2LcppbarKWS'   : self.lc_pid+ppbark,
-                  'Lb2LcKKPiWS'     : self.lc_pid+kkpi, 
-                  'B02LcpbarpbarpWS': self.lc_pid+pppbar}
+                  'Lb2LcKKPiWS'     : self.lc_pid+kkpi}
         ws = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
         self.lines.append(ProtoLine(ws,0.1))
+
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '4750.*MeV'
+        decays = {'B02Lcpbarpbarp': ["[B0 -> Lambda_c+ a_1(1260)-]cc"], 
+                  'B02LcpbarPiPi':  ["[B0 -> Lambda_c+ a_1(1260)-]cc"], 
+                  'B02LcpbarKPi':   ["[B0 -> Lambda_c+ a_1(1260)-]cc"], 
+                  'B02LcpbarKK':    ["[B0 -> Lambda_c+ a_1(1260)-]cc"] 
+                 }
+        inputs = {'B02Lcpbarpbarp': self.lc_pid+pppbar, 
+                  'B02LcpbarPiPi': self.lc_pid+ppipi, 
+                  'B02LcpbarKPi': self.lc_pid+pkpi, 
+                  'B02LcpbarKK': self.lc_pid+pkk, 
+                 }
+        rs = makeB2XSels(decays,'Lc2PKPi',inputs,config)
+        decays = {'B02LcpbarpbarpWS': ["[B0 -> Lambda_c+ a_1(1260)+]cc"], 
+                  'B02LcpbarPiPiWS':  ["[B0 -> Lambda_c+ a_1(1260)+]cc"], 
+                  'B02LcpbarKPiWS':   ["[B0 -> Lambda_c+ a_1(1260)+]cc"], 
+                  'B02LcpbarKKWS':    ["[B0 -> Lambda_c+ a_1(1260)+]cc"], 
+                 }
+        inputs = {'B02LcpbarpbarpWS': self.lc_pid+pppbar, 
+                  'B02LcpbarPiPiWS':  self.lc_pid+ppipi, 
+                  'B02LcpbarKPiWS':   self.lc_pid+pkpi, 
+                  'B02LcpbarKKWS':    self.lc_pid+pkk, 
+                  }
+        ws = makeB2XSels(decays,'Lc2PKPi',inputs,config)
+        self.lines.append(ProtoLine(rs,1.0))
+        self.lines.append(ProtoLine(ws,0.1))
+
 
     def _makeLb2D0PH(self):
         '''Makes RS Lb -> D0(HH) p+- H-+ + c.c. and WS lines'''
@@ -481,6 +530,30 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
 
+    def _makeB2LcpbarH(self):
+        '''Makes RS + WS B- -> Lc+ pbar- h- + c.c.'''
+        pions = self.pions
+        kaons = self.kaons
+        protons = self.protons
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '4750.*MeV'
+        decays = {'B2LcpbarPiSS': ["[B- -> Lambda_c+ p~- pi-]cc"],
+                  'B2LcpbarKSS':  ["[B- -> Lambda_c+ p~- K-]cc"],
+                  }
+        inputs = {'B2LcpbarPiSS': self.lc_pid+pions+protons,
+                  'B2LcpbarKSS':  self.lc_pid+kaons+protons}
+        rs = makeB2XSels(decays,'Lc2PKPi',inputs,config)
+        self.lines.append(ProtoLine(rs,1.0))
+
+        decays = {'B2LcpbarPiWS': ["[B+ -> Lambda_c+ p~- pi+]cc", "[B+ -> Lambda_c+ p+ pi-]cc"],
+                  'B2LcpbarKWS':  ["[B+ -> Lambda_c+ p~- K+]cc", "[B+ -> Lambda_c+ p+ K-]cc"],
+                  }
+        inputs = {'B2LcpbarPiWS': self.lc_pid+pions+protons,
+                  'B2LcpbarKWS':  self.lc_pid+kaons+protons}
+        ws = makeB2XSels(decays,'Lc2PKPi',inputs,config)
+        self.lines.append(ProtoLine(ws,0.1))
+
+
     def _makeX2LcKPiPiPi(self):
         '''Makes RS + WS Xib -> Lc HH + c.c.'''
         pions = self.pions
@@ -549,6 +622,19 @@ class Lb2XBuilder(object):
         ws = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
         self.lines.append(ProtoLine(ws,0.1))
 
+    def _makeB2LcDspbar(self):
+        '''Makes RS + WS B- -> Lc+ Ds- pbar- + c.c.'''
+        protons = self.protons
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '4750.*MeV'
+        decays = {'B2LcDspbar': ["[B- -> Lambda_c+ D- p~-]cc"]}
+        inputs = {'B2LcDspbar': self.lc_pid+self.d.hhh_pid+protons}
+        rs = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs, config)
+        self.lines.append(ProtoLine(rs,1.0))
+        decays = {'B2LcDspbarWS': ["[B- -> Lambda_c+ D+ p~-]cc"]}
+        inputs = {'B2LcDspbarWS': self.lc_pid+self.d.hhh_pid+protons}
+        ws = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
+        self.lines.append(ProtoLine(ws,0.1))
         
     def _makeX02XiccH(self):
         '''Make RS and WS Xi_bcd -> Xi_cc+ H (H=pi,K) + cc.'''

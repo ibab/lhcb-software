@@ -153,6 +153,7 @@ class B2DXBuilder(object):
         self._makeB2D0st2460D0K()
         # B -> D D K*
         self._makeB02D0D0Kst()
+        self._makeB02DDKst()
         # B -> D D KS
         self._makeB02DDKS('DD')   
         self._makeB2D0DKS('DD') 
@@ -764,7 +765,15 @@ class B2DXBuilder(object):
         '''Makes the RS B0 -> D0 D0 K*'''
         decays = {'B02D0D0Kst':["B0 -> D0 D0 K*(892)0",
                                 "B0 -> D0 D0 K*(892)~0"]}
-        inputs = {'B02D0D0Kst':self.d.d0_cf_pid+self.hh.kstar0}
+        inputs = {'B02D0D0Kst':self.d.d0_cf_pid+self.hh.kpi}
+        b2ddkst = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2ddkst,1.0))
+
+    def _makeB02DDKst(self):
+        '''Makes the RS B0 -> D+ D- K*'''
+        decays = {'B02DDKst':["B0 -> D+ D- K*(892)0",
+                              "B0 -> D+ D- K*(892)~0"]}
+        inputs = {'B02DDKst':self.d.hhh_cf_pid+self.hh.kpi}
         b2ddkst = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2ddkst,1.0))
 
