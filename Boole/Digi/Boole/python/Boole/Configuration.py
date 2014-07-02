@@ -802,10 +802,11 @@ class Boole(LHCbConfigurableUser):
           """
           Setup input data type can be SIM or XDST
           """
-          if self.getProp("InputDataType") == "XDST" :
+          if self.getProp("InputDataType") == "XDST"  :
 
               importOptions("$BOOLEROOT/options/Boole-RunFromXDST.py")
-
+          if self.getProp("InputDataType") == "XDIGI" :
+              importOptions("$BOOLEROOT/options/Boole-RunFromXDIGI.py") 
 
     def defineOutput(self):
 

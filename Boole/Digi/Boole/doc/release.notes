@@ -1,8 +1,16 @@
 <PRE>
 Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
+
 Purpose: LHCb Digitization program
 
+- QMTest changes  
+  . add new test boole-reprocess-xdigi.qmt
+- Configuration changes 
+    Added possibility to reprocess from XDIGI, steered by new option
+    Boole().InputDataType. Currently this is configured by  
+    options/Boole-RunFromXDIGI.py, called by Configuration.py
+    
 - Changes to references to follow changes in underlying packages
   . Update SIMCOND global tag for 2010 to include Velo motor positions for Sim08 
 
