@@ -103,9 +103,13 @@ def rootID ( prefix = 'o_') :
     _root_ID = 1000
     
     _id = _fun ( _root_ID ) 
-    while ROOT.gROOT.FindObject ( _id ) :
+    while ROOT.gROOT.FindObject         ( _id ) or \
+          ROOT.gROOT.FindObjectAny      ( _id ) or \
+          ROOT.gDirectory.FindObject    ( _id ) or \
+          ROOT.gDirectory.FindObjectAny ( _id )    :
+
         _root_ID += 10 
-        _id = _fun ( _root_ID ) 
+        _id       = _fun ( _root_ID ) 
 
     return _id                 ## RETURN
 # =============================================================================
@@ -124,30 +128,27 @@ def hID     () : return histoID ( )
 ## global ROOT identified for dataset objects 
 def dsID    () : return rootID  ( 'ds_' )
 
-## ROOT.TH1.AddDirectory( False )
-
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
 #  - it ensures that cloned histogram is not going to die with
 #    the accidentally opened file/directory
+#  @attention clone is always goes to ROOT main memory!
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
 def _new_clone_ ( self , hid = '' ) :
     """
     Modifiled Clone-function
     - it automaticlaly assign unique ID
     - it ensures that cloned histogram is not going to die with
-    the accidentally opened file/directory
+      the accidentally opened file/directory
     """
-    print 'I AM NEW CLONE! #%s# ' % self.GetName()
-    
-    if not hid :
-        hid = hID()
-        print 'NAME CREATED: #%s#' % hid 
+    if not hid : hid = hID()
     # 
     nh = self._old_clone_ ( hid )
+    ## 
+    nh.SetDirectory ( ROOT.gROOT ) ## ATTENTION! 
     # 
-    print 'NEW NAME: #%s#' % nh.GetName()
-    #
     return nh
 
 for h in ( ROOT.TH1F , ROOT.TH1D ,
@@ -159,6 +160,7 @@ for h in ( ROOT.TH1F , ROOT.TH1D ,
         h._old_clone_ = h.Clone
         h._new_clone_ = _new_clone_
         h.Clone       = _new_clone_
+        h.clone       = _new_clone_
          
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :

@@ -8,6 +8,11 @@
 !  by                $Author:$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Vanya Belyaev
+ - improve a bit histogram cloning: 
+      - no need to specify ID
+      - cloned historgam is always stays in ROOT.gROOT
+
 ! 2014-07-01 - Vanya Belyaev
  - minor update
 
