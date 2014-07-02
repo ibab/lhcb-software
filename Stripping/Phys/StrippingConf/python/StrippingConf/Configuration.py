@@ -58,10 +58,7 @@ class StrippingConf ( object ) :
 	appendPostConfigAction ( defaultToolConfigCheck )
 
     def checkRawEventRequests(self) :
-        from StrippingLine import strippingLines
-        for line in strippingLines() :
-            if line.RequiredRawEvents != None :
-                log.warning("Line "+line.name()+" requests RawEvents : "+str(line.RequiredRawEvents))
+        for stream in self.activeStreams() : stream.checkRawEventRequests()
 
     def checkAppendedLines (self) : 
         """

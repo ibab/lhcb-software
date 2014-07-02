@@ -60,7 +60,6 @@ class StrippingStream ( object ) :
 	for line in lines : 
 	    self.lines.append(line)
 	    line.declareAppended()
-	    
 
     def createConfigurables(self) :
         from Configurables import StrippingCheck
@@ -197,3 +196,18 @@ class StrippingStream ( object ) :
 	    for i in lineMembers : 
 		if i not in _members : _members.append(i) 
 	return _members
+
+
+    def getRequiredRawEvents(self) :
+        rawEvents = { }
+        for line in self.lines : 
+            if ( line.RequiredRawEvents != None ) :
+                rawEvents[line.name()] = [ "/Event/"+r+"/RawEvent#1" for r in line.RequiredRawEvents ]
+        return rawEvents
+
+
+    def checkRawEventRequests(self) :
+        for line in self.lines : 
+            if line.RequiredRawEvents != None :
+                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                            "' Requests RawEvents "+str(line.RequiredRawEvents))

@@ -8,7 +8,7 @@
  - Add a new Property to the StrippingLine object, that allows lines to
    optionally declare a dependency on various parts of the RawEvent.
    This information can then be used, if enabled in the stream writer
-   configuration that the line is included in, to selectively only writer out
+   configuration that the line is included in, to selectively only write out
    the parts of the Raw Event that lines require, and only in the events that
    those lines fire in. 
    The new option is 'RequiredRawEvents' which should be set to a list of
@@ -18,7 +18,7 @@
 
    to depend on the Calo and Muon raw events. The full valid list is
 
-     ["Muon","Calo","Rich","Velo","Other"]    ( "Other" == tracking banks).
+     ["Muon","Calo","Rich","Velo","Other"]    ( "Other" == tracking banks ).
 
    Note that lines do not need to declare a dependency on the "Trigger" banks,
    as these are always automatically saved for all events in both DST and uDST
