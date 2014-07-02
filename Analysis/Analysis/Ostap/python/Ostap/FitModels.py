@@ -112,10 +112,16 @@ __all__ = (
     #
     ## 2D non-factorazeable models
     #
+    'PolyPos2D_pdf'   , ## A positive polynomial in 2D  
+    'PSPol2D_pdf'     , ## Product of phase spaces, modulated with 2D polynomial
+    'ExpoPSPol2D_pdf' , ## Exponential times  phase space times positive 2D-polynomial
+    'ExpoPol2D_pdf'   , ## Product of exponents times positive 2D-polynomial
     #
     ## 2D non-factorazeable symmetric models
     #
-    #
+    'PolyPos2Dsym_pdf', ## A positive symmetric polynomial in 2D
+    'PSPol2Dsym_pdf'  , ## Symmetric product of phase spaces, modulated with 2D polynomial
+    'ExpoPol2Dsym_pdf', ## Symmetric version of above
     ## helpers
     #
     'H1D_dset'             , ## convertor of 1D-histogram to dataset 
