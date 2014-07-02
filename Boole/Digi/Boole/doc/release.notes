@@ -4,6 +4,8 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb Digitization program
 
+- Cleanup 
+    Remove commented out containers from options/Boole-RunFromXDIGI.py 
 - QMTest changes  
   . add new test boole-reprocess-xdigi.qmt
 - Configuration changes 
