@@ -52,7 +52,8 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
 
 def stripDSTStreamConf( pack = True,
                         vetoItems = [ ], 
-                        stripPrefix = 'Strip' ) :
+                        stripPrefix = 'Strip',
+                        selectiveRawEvent = False ) :
     eItems = [ '/Event/DAQ/RawEvent#1' ] # For backwards compatibility with sDSTs
     phys = 'Phys'
     if pack :
@@ -64,6 +65,18 @@ def stripDSTStreamConf( pack = True,
     else : 
       eItems += [ '/Event/%s/%s/DecReports#1' % (stripPrefix, phys) ]
 
+    localVetoItems = vetoItems
+    if selectiveRawEvent :
+        # Add the Raw Event locations to the veto list, as in this mode
+        # They are only saved when a line explicitly requests them
+        # To Do : Find a way to avoid having to maintain a RawEvent list here ...
+        localVetoItems = vetoItems + [ "/Event/Velo/RawEvent",
+                                       "/Event/Rich/RawEvent",
+                                       "/Event/Calo/RawEvent",
+                                       "/Event/Muon/RawEvent",
+                                       "/Event/Other/RawEvent" ]
+
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,
-                             vetoItems  = vetoItems )
+                             vetoItems  = localVetoItems,
+                             selectiveRawEvent = selectiveRawEvent )

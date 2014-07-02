@@ -80,7 +80,7 @@ def stripMicroDSTElements( pack=True              ,
         #elements += [ PrintTESContents() ] # For debugging
     return elements
 
-def stripMicroDSTStreamConf( pack=True, isMC=False ) :
+def stripMicroDSTStreamConf( pack=True, isMC=False, selectiveRawEvent=False ) :
     eItems = [ '/Event/Rec/Header#1',
                '/Event/Rec/Status#1',
                '/Event/Rec/Summary#1',
@@ -95,7 +95,8 @@ def stripMicroDSTStreamConf( pack=True, isMC=False ) :
                    "/Event/Gen/Header#1"]
     return OutputStreamConf( streamType    = OutputStream,
                              fileExtension = '.mdst',
-                             extraItems    = eItems )
+                             extraItems    = eItems,
+                             selectiveRawEvent = selectiveRawEvent )
 
 def stripCalibMicroDSTStreamConf( pack=True, isMC=False ) :
     conf = stripMicroDSTStreamConf(pack,isMC)

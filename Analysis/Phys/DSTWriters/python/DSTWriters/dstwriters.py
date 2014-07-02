@@ -26,7 +26,7 @@ class DSTWriterSelectionSequence(object) :
         
         from GaudiConf import IOHelper
         
-        outputStreamConfiguration.name=selSequence.name()
+        outputStreamConfiguration.name = selSequence.name()
         
         #self.stream = outputStream(outputStreamConfiguration)
         #self.fsrStream = fsrStream(outputStreamConfiguration)
@@ -53,7 +53,19 @@ class DSTWriterSelectionSequence(object) :
         if extras is not None:
             for _algs in [x(selSequence) for x in extras] :
                 self.algos += _algs
-        
+
+        # Extract Raw Events to keep for this stream, line by line.
+        if outputStreamConfiguration.selectiveRawEvent :
+            rawEvents = { }
+            for line in selSequence.lines :
+                if ( line.RequiredRawEvents != None ) :
+                    rawEvents[line.name()] = [ "/Event/"+r+"/RawEvent#1" for r in line.RequiredRawEvents ]
+            rawEvPropName = 'AlgDependentItemList'
+            if hasattr(writer,rawEvPropName) :
+                writer.setProp(rawEvPropName,rawEvents)
+            else:
+                print "WARNING : Output Writer does not have property", rawEvPropName
+
         from Configurables import FixInputCopyStream
         self.algos.append( FixInputCopyStream() )
         

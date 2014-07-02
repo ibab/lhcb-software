@@ -12,12 +12,14 @@ class OutputStreamConf(object) :
                  filePrefix = 'Sel',
                  fileExtension = '.dst',
                  extraItems = [],
-                 vetoItems  = []) :
+                 vetoItems  = [],
+                 selectiveRawEvent = False ) :
         self.streamType = streamType
         self.filePrefix = filePrefix
         self.extension  = fileExtension
         self.extraItems = copy(extraItems)
         self.vetoItems  = vetoItems
+        self.selectiveRawEvent = selectiveRawEvent
         self.name = ''
 
     def __str__(self) :
