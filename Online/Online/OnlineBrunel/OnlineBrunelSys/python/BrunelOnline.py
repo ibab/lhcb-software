@@ -11,6 +11,9 @@ import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
 from GaudiKernel.ProcessJobOptions import PrintOff,InstallRootLoggingHandler,logging
+from Configurables import CondDB, GaudiSequencer, EventPersistencySvc, \
+    HistogramPersistencySvc, EventLoopMgr, OutputStream, Gaudi__SerializeCnvSvc, \
+    DstConf
 
 #PrintOff(999)
 InstallRootLoggingHandler(level=logging.CRITICAL)
@@ -30,6 +33,8 @@ MSG_WARNING = 4
 MSG_ERROR   = 5
 MSG_FATAL   = 6
 MSG_ALWAYS  = 7
+
+configureBrunelOutput = None
 
 #============================================================================================================
 def packDST(self,items):
@@ -60,17 +65,49 @@ def packDST(self,items):
   ##print 'Warning: Packing of TES DST data .... commissioned....'
   sys.stdout.flush()
 
+def dstconf_write_root( self, items, optItems ):
+  print '[ERROR] Configure DstConf output ....'
+  sys.stdout.flush()
+  writer = OutputStream("DstWriter")
+  writer.Preload = False
+  writer.ItemList += items
+  writer.OptItemList += optItems
+  writer.Output = "DATAFILE='root.buffers' SVC='Gaudi::SerializeCnvSvc' OPT='RECREATE'"
+
 #============================================================================================================
 def configureOutput(self, dstType, withMC, handleLumi):
-  pass
+  global configureBrunelOutput
+  print '[ERROR] Configure Brunel output ....'
+  sys.stdout.flush()
+  if configureBrunelOutput:
+    import OnlineEnv as Online
+    print '[ERROR] Configure Brunel output sequence ....'
+    sys.stdout.flush()
+    Configs.DstConf._doWriteROOT=dstconf_write_root
+    configureBrunelOutput(self, dstType, withMC, handleLumi)
+    ser = Gaudi__SerializeCnvSvc('Gaudi::SerializeCnvSvc')
+    ser.Banks = '/Event/GaudiSerialize'
+    ser.OutputLevel = 1
+    EventPersistencySvc().CnvServices.append(ser)
+    writer = Online.evtMerger(buffer='Output',name='BankWriter',location='/Event/GaudiSerialize',routing=0x100)
+    writer.OutputLevel = 1
+    seq = GaudiSequencer('Output')
+    seq.Members += [OutputStream('DstWriter'),writer]
+    Gaudi.ApplicationMgr().OutStream = [seq]
 
-def configureForking(appMgr, numChildren):
+def configureForking(appMgr):
   import OnlineEnv
   from Configurables import LHCb__CheckpointSvc
+  numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
+  if os.environ.has_key('NBOFSLAVES'):
+    numChildren = int(os.environ['NBOFSLAVES'])
+  
+  print '++++ configure Brunel for forking with ',numChildren,' children.'
+  sys.stdout.flush()
   forker = LHCb__CheckpointSvc("CheckpointSvc")
   forker.NumberOfInstances   = numChildren
   forker.Partition           = OnlineEnv.PartitionName
-  forker.TaskType            = 'Brunel'
+  forker.TaskType            = os.environ['TASK_TYPE']
   forker.UseCores            = False
   forker.ChildSessions       = False
   forker.FirstChild          = 0
@@ -79,7 +116,7 @@ def configureForking(appMgr, numChildren):
   forker.UtgidPattern        = "%P_%NN_%T_%02d";
   forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
   forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
-  appMgr.ExtSvc.append(forker)
+  appMgr.ExtSvc.insert(0,forker)
 
 #============================================================================================================
 def patchBrunel(true_online_version):
@@ -90,11 +127,10 @@ def patchBrunel(true_online_version):
   """
   import GaudiConf.DstConf
   import Brunel.Configuration
-  from Configurables import CondDB, DstConf, HistogramPersistencySvc, EventLoopMgr
   import OnlineEnv as Online
   
   brunel = Brunel.Configuration.Brunel()
-  """
+
   try:
     brunel.DDDBtag    = Online.DDDBTag
   except:
@@ -108,14 +144,12 @@ def patchBrunel(true_online_version):
   conddb = CondDB()
   conddb.IgnoreHeartBeat = True
 
-  """
   brunel.WriteFSR  = False # This crashes Jaap's stuff
   brunel.DataType = "2013"
 
   EventLoopMgr().OutputLevel = MSG_DEBUG #ERROR
   EventLoopMgr().Warnings    = False
 
-  """
   from Configurables import EventClockSvc
   EventClockSvc().InitialTime = 1322701200000000000
 
@@ -126,29 +160,34 @@ def patchBrunel(true_online_version):
   from Configurables import RichRecSysConf
   rConf = RichRecSysConf("RichOfflineRec")
   rConf.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,-0.001,0 ] 
-  """
   if true_online_version:
     brunel.OutputLevel       = MSG_ERROR
-#    brunel.OutputLevel       = MSG_INFO
+    brunel.OutputLevel       = MSG_WARNING
     brunel.PrintFreq         = -1
 
-  if True: ####processingType == 'Reprocessing':
+  if processingType == 'Reprocessing':
     GaudiConf.DstConf.DstConf._doWriteMDF = packDST
     brunel.PackType   = 'MDF'
     brunel.OutputType = 'RDST'
     brunel.WriteLumi  = True
-    brunel.Histograms = 'None'
-    print '[WARN] Running brunel with histogram settings:None'
+    brunel.Histograms = 'Online'
     sys.stdout.flush()
   else:
-    #print '[WARN]  Running GaudiSerialize!'
-    from Configurables import Serialisation, ProcessPhase
+    global configureBrunelOutput
     brunel.WriteLumi = False
     brunel.Histograms = 'Online'
-    ##print '[WARN] Running brunel with histogram settings:Online'
-    sys.stdout.flush()
     Brunel.Configuration.Brunel.configureOutput = dummy
     """
+    configureBrunelOutput = Brunel.Configuration.Brunel.configureOutput
+    Brunel.Configuration.Brunel.configureOutput = configureOutput
+    brunel.setProp( 'DatasetName', 'GaudiSerialize' )
+    brunel.OutputType = 'DST'
+    brunel.PackType = 'TES'
+    """
+
+    """ This does no longer work:
+    ##from Configurables import DstConf, Serialisation, ProcessPhase
+    print '[WARN]  Running GaudiSerialize!'
     ProcessPhase("Output").DetectorList += [ 'DST' ]
     brunel.setProp( 'DatasetName', 'GaudiSerialize' )
     DstConf().Writer       = 'DstWriter'
@@ -162,7 +201,6 @@ def patchBrunel(true_online_version):
   HistogramPersistencySvc().OutputLevel = MSG_ERROR
 
   print brunel
-
   return brunel
 
 #============================================================================================================
@@ -175,23 +213,16 @@ def setupOnline():
   import OnlineEnv as Online
 
   buffs = ['Events','Output']
-  if processingType == 'Reprocessing':
-    buffs = ['Input','Output']
-
   app=Gaudi.ApplicationMgr()
   app.AppName = ''
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
-  numChildren = os.sysconf('SC_NPROCESSORS_ONLN')
-  if os.environ.has_key('NBOFSLAVES'):
-    numChildren = int(os.environ['NBOFSLAVES'])
-  configureForking(app,numChildren)
   mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
   mep.ConnectWhen = "start";
   sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False,event_type=2)
   if requirement:
-    print 'Setting requirements:',requirement
+    print '++++ Warning: Setting requirements:',requirement
     sel.REQ1 = requirement
   app.EvtSel  = sel
   app.Runable = Online.evtRunable(mep)
@@ -203,8 +234,9 @@ def setupOnline():
   Configs.MonitorSvc().OutputLevel = MSG_ERROR
   Configs.MonitorSvc().UniqueServiceNames = 1
   Configs.RootHistCnv__PersSvc("RootHistSvc").OutputLevel = MSG_ERROR
-  app.OutputLevel = MSG_DEBUG #WARNING
-  #app.OutputLevel = MSG_INFO
+  app.OutputLevel = MSG_INFO
+  if Online.RecoStartupMode>0:      ### os.environ.has_key('NBOFSLAVES'):
+    configureForking(app)
 
 #============================================================================================================
 def patchMessages():
@@ -224,9 +256,7 @@ def patchMessages():
   msg.fifoPath      = os.environ['LOGFIFO']
   msg.LoggerOnly    = True
   msg.doPrintAlways = False
-  #  msg.OutputLevel   = MSG_WARNING
-  #  msg.OutputLevel   = Online.OutputLevel
-  msg.OutputLevel   = MSG_INFO
+  msg.OutputLevel   = MSG_INFO # Online.OutputLevel
 
 #============================================================================================================
 def start():
@@ -258,7 +288,9 @@ debug = not true_online
 
 if not true_online:
   print '\n            Running terminal version 1.1 of Brunel ONLINE\n\n'  
-  requirement = "EvType=1;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0x0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+  requirement = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0x300;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+
+  ##requirement = "EvType=1;TriggerMask=0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF;VetoMask=0,0,0,0x0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 br = patchBrunel(true_online)
 setupOnline()
 if true_online: patchMessages()

@@ -3,13 +3,15 @@
 export UTGID
 export LOGFIFO
 export PARTITION;
-export NBOFSLAVES
 #
 cd `dirname $0`/../cmt
 #
+echo $*
 TASK_CLASS_TYPE=${2}
-export TASK_TYPE=${3}
+TASK_TYPE=${3}
 export DIM_DNS_NODE=${4}
+STARTUP_OPT=${5}
+echo "++++ TASK_CLASS_TYPE:${TASK_CLASS_TYPE} TASK_TYPE:${TASK_TYPE} DIM_DNS_NODE:${DIM_DNS_NODE}"
 #
 export CMTCONFIG=x86_64-slc6-gcc48-dbg
 export CMTCONFIG=x86_64-slc6-gcc48-opt
@@ -17,12 +19,13 @@ export CMTCONFIG=x86_64-slc6-gcc48-opt
 . setup.${CMTCONFIG}.vars
 BASE=`cd ..;dirname $PWD`
 
-export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:${BASE}/InstallArea/python:${PYTHONPATH}
+#export PYTHONPATH=/group/online/dataflow/options/${PARTITION}/RECONSTRUCTION:${BASE}/InstallArea/python:${PYTHONPATH}
+export PYTHONPATH=/home/frankm/cmtuser/Online_v5r8/Online/MooreStandalone/options:${BASE}/InstallArea/python:${PYTHONPATH}
 export DATAINTERFACE=`python /group/online/dataflow/scripts/getDataInterface.py`
 export TAN_PORT=YES
 export TAN_NODE=${DATAINTERFACE}
 export ONLINETASKS=/group/online/dataflow/templates
-export PARTITIONOPTS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts;
+#export PARTITIONOPTS=/group/online/dataflow/options/${PARTITION}/${PARTITION}_Info.opts;
 #
 ulimit -d 2097152
 ulimit -m 2097152
@@ -104,7 +107,8 @@ else
     ## Normal running, nothing special
     echo "[INFO] +++ Starting BRUNEL ${UTGID} of class ${TASKCLASS} ${TASK_TYPE} with DNS:${DIM_DNS_NODE} Version:${BRUNELROOT}"
     export LD_PRELOAD=${CHECKPOINTINGROOT}/${CMTCONFIG}/libCheckpointing.so
-    exec -a ${UTGID} `which GaudiCheckpoint.exe` libGaudiOnline.so OnlineTask \
+    exec -a ${UTGID} \
+	`which GaudiCheckpoint.exe` libGaudiOnline.so OnlineTask \
 	-msgsvc=LHCb::FmcMessageSvc \
 	-tasktype=LHCb::${TASK_CLASS_TYPE}Task \
 	-main=$ONLINETASKS/options/Main.opts \
@@ -112,6 +116,6 @@ else
 import Gaudi,GaudiKernel.ProcessJobOptions;\
 from Gaudi.Configuration import importOptions;\
 GaudiKernel.ProcessJobOptions.printing_level=999;\
-importOptions('../python/BrunelOnline.py');"
+importOptions('../python/BrunelOnline.py');"  ${STARTUP_OPT}
 
 fi;
