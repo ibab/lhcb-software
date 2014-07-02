@@ -100,13 +100,20 @@ __date__    = "2010-04-30"
 __version__ = "$Revision: 171923 $" 
 # =============================================================================
 __all__ = (
-'Selector'         ,     ## The ``fixed'' TPySelector
-'Selector2'        ,     ## The ``fixed'' TPySelector
-'SelectorWithCuts' ,     ## The ``fixed'' TPySelector with TTree-formula 
-'SelectorWithVars'       ## Generic slector to fill RooDataSet form TTree/TChain
+'Selector'         ,        ## The ``fixed'' TPySelector
+'Selector2'        ,        ## The ``fixed'' TPySelector
+'SelectorWithCuts' ,        ## The ``fixed'' TPySelector with TTree-formula 
+'SelectorWithVars' ,        ## Generic selctor to fill RooDataSet form TTree/TChain       
+'SelectorWithVarsCached'    ## Generic selector with cache   
 )
 # =============================================================================
+import os
+import hashlib
+
 import ROOT, cppyy
+
+from . import workdir
+from .ZipShelve import ZipShelf
 # construct the global C++ namespace 
 cpp       = cppyy.makeNamespace('')
 Analysis  = cpp.Analysis
@@ -655,6 +662,84 @@ class SelectorWithVars(SelectorWithCuts) :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
         #
+ 
+
+# ==============================================================================
+## Generic selector which loads already loaded datasets from cache
+#
+#  @date   2014-07-02
+#  @author Sasha Baranov a.baranov@cern.ch
+#  @thanks Vanya BELYAEV
+class SelectorWithVarsCached(SelectorWithVars) :
+    """
+    Create and fill the basic dataset for RooFit. Or just load it from cache.
+
+    BEWARE! Changing `cuts` in __init__ or access functions for variables is ignored by caching.
+
+    """
+    ## constructor 
+    def __init__ ( self                           ,
+                   variables                      ,  ## list of variables  
+                   selection                      ,  ## Tree-selection 
+                   cuts         = lambda s : True ,
+                   name         = ''              ,
+                   fullname     = ''              ) : 
+
+        SelectorWithVars.__init__(self, variables, selection, cuts, name, fullname)
+
+        self.__selection = selection
+        self.__cuts = cuts
+
+        # Try load from cache
+        self._loaded_from_cache = False
+        self._cachepath = self._compute_cache_name()
+
+        if self._loadcache():
+            self.Process = lambda entry: 1
+            self._loaded_from_cache = True
+
+    def _compute_cache_name(self):
+        " Computes dataset cache path(SHA512) "
+        h = "" # Actual hash
+        for var , vdesc , vmin , vmax , vfun in self._variables:
+            h += var.GetName() + vdesc + str(vmin) + str(vmax)
+
+        h += str(self.__selection)
+
+        filename = hashlib.sha512(h).hexdigest() + ".shelve"
+        return os.path.join(workdir, "cache", filename)
+
+    def _loadcache(self):
+        " Loads cache from ZipShelf. Returns `True` on success, `False` othervise"
+        if not os.path.exists(self._cachepath):
+            return False
+
+        z = ZipShelf(self._cachepath)
+        self.data = z['data']
+        z.close()
+
+        return True
+
+    def _savecache(self):
+        " Saves cache to file. "
+        z = ZipShelf(self._cachepath)
+        z['data'] = self.data
+        z.close()
+
+        return True
+    
+    #
+    def Terminate ( self  ) :
+        if not self._loaded_from_cache:
+            SelectorWithVars.Terminate(self)
+
+            if len(self.data):
+                self._savecache()
+
+        else:
+            self._logger.info('Loaded from cache!')
+
+        return 1
  
 
 # =============================================================================

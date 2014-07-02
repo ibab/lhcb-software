@@ -8,6 +8,10 @@
 !  by                $Author:$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Sasha Baranov
+ - Added ~/.ostap(or $OSTAP_DIR) working directory support
+ - Added selector with caching
+
 
 ! ========================= Ostap v1r0 2014-07-02 =========================
 

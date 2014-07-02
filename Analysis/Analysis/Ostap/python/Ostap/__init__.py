@@ -47,6 +47,7 @@ __author__  = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__    = "2014-03-10"
 __version__ = "$Revision: 172094 $"
 # =============================================================================
+import os
 import ROOT
 #
 try:
@@ -62,6 +63,18 @@ cpp = cppyy.makeNamespace('')
 if not hasattr ( ROOT    , 'ostream' ) :
     print "# Ostap WARNING: force loading of <ostream>"
     ROOT.gROOT.ProcessLine("#include <ostream>")
+
+
+# =============================================================================
+workdir = os.environ.get('OSTAP_DIR') or '$HOME/.ostap'
+workdir = os.path.expandvars(workdir)
+
+if not os.path.exists(workdir):
+    os.mkdir(workdir)
+    os.mkdir(os.path.join(workdir, "cache"))
+
+
+
 
 # =============================================================================
 if __name__ == '__main__' :
