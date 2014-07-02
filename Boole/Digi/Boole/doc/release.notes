@@ -4,20 +4,19 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb Digitization program
 
-- Cleanup 
-    Remove commented out containers from options/Boole-RunFromXDIGI.py 
-- QMTest changes  
-  . add new test boole-reprocess-xdigi.qmt
-- Configuration changes 
-    Added possibility to reprocess from XDIGI, steered by new option
-    Boole().InputDataType. Currently this is configured by  
-    options/Boole-RunFromXDIGI.py, called by Configuration.py
+</PRE><H1><A NAME=v28r2p1>2014-07-02 Boole v28r2p1</A></H1><PRE>
+
+- New functionality 
+    Added possibility to reprocess from XDIGI, steered by Boole().InputDataType.
+    Currently this is configured by options/Boole-RunFromXDIGI.py, called by
+    Configuration.py
     
 - Changes to references to follow changes in underlying packages
   . Update SIMCOND global tag for 2010 to include Velo motor positions for Sim08 
 
 - QMTest changes
   . Move all upgrade tests to use TestFileDB for input data
+  . Add new test boole-reprocess-xdigi.qmt
 
 </PRE><H1><A NAME=v28r2>2014-06-20 Boole v28r2</A></H1><PRE>
 
