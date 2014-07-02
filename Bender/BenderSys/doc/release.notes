@@ -23,6 +23,13 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v24r2>   2014-07-02 Bender v24r2 based on the DaVinci v35r1</A>
+<ul>
+<li>Similar to v24r1
+<li>Based on the DaVinci v35r1</li>
+<li>Keep local verisons of <code>Analysis/Ostap</code> and <code>Analysis/PyPAW</code> </li>
+</ul>
+
 <A NAME=v24r1>   2014-06-20 Bender v24r1 based on the DaVinci v35r1</A>
 <ul>
 <li>Similar to v24r0
