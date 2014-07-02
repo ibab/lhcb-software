@@ -2,10 +2,10 @@
 #include "Event/Particle.h"
 // kernel
 #include "GaudiKernel/PhysicalConstants.h"
+#include "Kernel/RelatedInfoNamed.h"
 
 // local
 #include "RelInfoVertexIsolation.h"
-#include "RelatedInfoNamed.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RelInfoVertexIsolation

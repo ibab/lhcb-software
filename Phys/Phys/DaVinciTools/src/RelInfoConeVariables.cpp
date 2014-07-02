@@ -3,10 +3,10 @@
 #include "Event/RelatedInfoMap.h"
 // kernel
 #include "GaudiKernel/PhysicalConstants.h"
+#include "Kernel/RelatedInfoNamed.h"
 
 // local
 #include "RelInfoConeVariables.h"
-#include "RelatedInfoNamed.h"
 
 #include <string>
 

@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-07-02 - Anton Poluektov 
+ - Move RelatedInfoNamed to Phys/DaVinciTypes, update RelInfo... tools accordingly
+
 ! 2014-06-25 - Albert Puig
  - Ported previous changes to VertexIsolation.
 

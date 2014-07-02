@@ -3,10 +3,10 @@
 
 // kernel
 #include "GaudiKernel/PhysicalConstants.h"
+#include "Kernel/RelatedInfoNamed.h"
 
 // local
 #include "RelInfoConeVariablesForEW.h"
-#include "RelatedInfoNamed.h"
 //#include "Event/RecVertex.h"
 //#include <Kernel/GetIDVAlgorithm.h>
 //#include <Kernel/IDVAlgorithm.h>
