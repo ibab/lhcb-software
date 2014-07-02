@@ -5,6 +5,10 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-07-02 - Anton Poluektov 
+ - Move RelatedInfoNamed.h in this package from DaVinciTools, 
+   so that it becomes visible to LoKiPhys
+
 !========================= DaVinciTypes v2r6p2 2013-06-13 =========================
 
 ! 2013-05-13 - Chris Jones
