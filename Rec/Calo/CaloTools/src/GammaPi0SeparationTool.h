@@ -88,10 +88,7 @@ private:
   std::auto_ptr<IClassifierReader> m_reader2;
 
   const DeCalorimeter* m_ecal;
-  const DeCalorimeter* m_prs;
 
-  Gaudi::XYZPoint m_vertex;
-  Gaudi::Plane3D m_planePrs;
 
   double photonDiscriminant(int area,  
                             double r2, double r2r4, double asym, 

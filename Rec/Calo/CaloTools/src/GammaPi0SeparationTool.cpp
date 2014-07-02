@@ -35,9 +35,6 @@ GammaPi0SeparationTool::GammaPi0SeparationTool( const std::string& type,
                                                 const IInterface* parent )
 : GaudiTool ( type, name , parent ),
   m_ecal(NULL),
-  m_prs(NULL),
-  m_vertex(),
-  m_planePrs(),
   m_data(),
   m_def(-1.e+06){
   declareInterface<IGammaPi0SeparationTool>(this);
@@ -60,11 +57,6 @@ StatusCode GammaPi0SeparationTool::initialize() {
 
   /// Retrieve geometry of detector
   m_ecal = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-  m_prs  = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs );
-
-  // IP and prs middle plane
-  m_vertex = Gaudi::XYZPoint(0.,0.,0.);
-  if(m_prs)m_planePrs = m_prs->plane(CaloPlane::Middle);
 
   // TMVA discriminant
   std::vector<std::string> inputVars;
@@ -119,7 +111,7 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
   m_data.clear();
   m_prsdata.clear();
 
-  if( NULL == m_prs || NULL==m_ecal)return m_def;
+  if( NULL==m_ecal)return m_def;
   if ( LHCb::CaloMomentum(hypo).pt() < m_minPt)return m_def;
 
   double fr2 = 0;
@@ -184,7 +176,6 @@ bool GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloHypo* hypo,
   const Gaudi::XYZPoint position (xmean, ymean,cluster->position().z());
   
   double r4 = 0.;
-  //  double cellsize = 0.;
   area = -1;
   int ncells = 0;
   double secondE = 0.;
@@ -206,7 +197,6 @@ bool GammaPi0SeparationTool::ClusterVariables(const LHCb::CaloHypo* hypo,
     const double y =  pos.y() ;
     
     if ( entry->status() & LHCb::CaloDigitStatus::SeedCell ){ 
-      //      cellsize = m_ecal->cellSize( digit->cellID() );
       area = digit->cellID().area();
       Eseed = energy;
     }else{
@@ -274,16 +264,8 @@ bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
   if( NULL == cluster)return false;
 
 
-  // get reference position
-  const Gaudi::XYZPoint position (cluster->position().x(), cluster->position().y(), cluster->position().z());
-  Gaudi::XYZPoint prsPoint;
-  const Gaudi::XYZVector direction = position - m_vertex;  
-  typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
-  const LineType line =  LineType(m_vertex , direction );
-  double mu=0;
-  if( !Gaudi::Math::intersection<LineType,Gaudi::Plane3D, Gaudi::XYZPoint>( line , m_planePrs , prsPoint , mu) )
-    warning() << " CAN NOT EXTRAPOLATE TO THE Prs PLANE " << endreq;
-  const LHCb::CaloCellID cellPrs = m_prs->Cell( prsPoint );
+  LHCb::CaloCellID cellPrs = cluster->seed();  // use cluster seed projection (mostly the same as line projection + faster access)
+  cellPrs.setCalo(1);
 
   if( LHCb::CaloCellID() == cellPrs  )return true; // no valid Prs info
 
@@ -317,6 +299,8 @@ bool GammaPi0SeparationTool::PrsVariables(const LHCb::CaloHypo* hypo,
     if( e > 30.0   ) multiPS30++;
     if( e > 45.0   ) multiPS45++;
   }
+
+
   if(  eSumPS <= 0. )return true;
   xPs = xPs/eSumPS;
   yPs = yPs/eSumPS;

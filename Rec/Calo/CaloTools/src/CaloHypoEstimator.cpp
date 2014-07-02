@@ -280,8 +280,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
           if(id2.col() <= idseed.col() && id2.row() <= idseed.row() )Prse4s[3] += (*id)->e();
           // Select the 3X3 cluster
           // 
-          int dcol = id2.col()-idseed.col()+1;
-          int drow = id2.row()-idseed.row()+1;
+          int dcol = (int)id2.col()-(int)idseed.col()+1;
+          int drow = (int)id2.row()-(int)idseed.row()+1;
           int indexPrs = drow*3+dcol; 
           Prse9[indexPrs] += (*id)->e();
         }
