@@ -3,14 +3,14 @@
 Runable.Input                = @OnlineEnv.PassThrough_Input;
 Runable.Output               = @OnlineEnv.PassThrough_Output;
 //
-Runable.FifoPath             = "/tmp/logTest.fifo";
+Runable.FifoPath             = "$LOGFIFO";
 Runable.NumberOfSlaves       = 10;               // Number of slaves to be forked.
 Runable.MonitorProcess       = "_PassThrough_";  // Name match of the processes to be monitored
-Runable.MeasuementStartDelay = 15;  // Duration of the warmup phase in seconds without measurement
+Runable.MeasuementStartDelay = 10;  // Duration of the warmup phase in seconds without measurement
 Runable.MeasurementIntervall = 5;   // Interval in seconds between two measurement outputs
-Runable.MeasurementDuration  = 110; // Interated duration of the entire measurement in seconds
+Runable.MeasurementDuration  = 30; // Interated duration of the entire measurement in seconds
 //
-Runable.MonitorScript        = "../job/runHLT.sh";        // Startup script for the Moore process
+Runable.MonitorScript        = "../job/runPassThrough.sh";        // Startup script for the Moore process
 Runable.ReaderOptions        = "../options/Reader.opts";  // Options for file reader process
 //
 ApplicationMgr.ExtSvc       += {"LHCb::MooreFileMonitor/FileLogger"};

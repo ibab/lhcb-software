@@ -1,8 +1,7 @@
 #pragma print off
 OnlineEnv.OutputLevel               = 4;
 OnlineEnv.PartitionID               = 333;
-OnlineEnv.PartitionName             = "LHCb";
-ApplicationMgr.SvcOptMapping       += { "LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+OnlineEnv.PartitionName             = "$USER";
 MessageSvc.OutputLevel              = @OnlineEnv.OutputLevel;
 OnlineEnv.DeferredRuns              = { "*" };
 OnlineEnv.passThroughDelay          = 0;

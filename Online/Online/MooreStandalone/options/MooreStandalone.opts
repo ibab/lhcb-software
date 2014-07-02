@@ -1,0 +1,25 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+// ================================================================================================
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.Runable               = "LHCb::MooreTestSvc/Runable";
+MessageSvc.OutputLevel               = 3;
+//
+Runable.PartitionID          = @OnlineEnv.PartitionID;
+Runable.PartitionName        = @OnlineEnv.PartitionName;
+Runable.PartitionBuffers     = @OnlineEnv.PartitionBuffers;
+//
+Runable.FifoPath             = "$LOGFIFO";
+Runable.MeasuementStartDelay = 15;  // Duration of the warmup phase in seconds without measurement
+Runable.MeasurementIntervall = 5;   // Interval in seconds between two measurement outputs
+Runable.MeasurementDuration  = 110; // Interated duration of the entire measurement in seconds
+Runable.Auto                 = 0;
+//
+Runable.MonitorScript        = "../job/runHLT.sh";        // Startup script for the Moore process
+Runable.MainOptions          = "../options/Main.opts";    // Options of 1rst. stage Gaudi
+Runable.MBMOptions           = "../options/Buffers.opts"; // Options for MBM setup process
+Runable.ReaderOptions        = "../options/Reader.opts";  // Options for file reader process
+//
+ApplicationMgr.ExtSvc        = {"LHCb::MooreFileMonitor/StdoutLogger"};
+// ================================================================================================

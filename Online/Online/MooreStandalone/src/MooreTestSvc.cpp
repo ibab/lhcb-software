@@ -458,7 +458,7 @@ StatusCode MooreTestSvc::mapProcesses()   {
       info("+++++ All Clients of type '"+m_procName+"' are now mapped....continue....");	
       return StatusCode::SUCCESS;
     }
-    info("+++++ Waiting for MBM clients of type '%s' being ready.... [%d seconds]",m_procName.c_str(),++seconds);
+    info("+++++ Waiting for MBM clients of type '%s' being ready.... [%d seconds] Input:%d Output:%d",m_procName.c_str(),++seconds,inputCount,outputCount);
     ::lib_rtl_sleep(1000);
   }
   return StatusCode::FAILURE;
