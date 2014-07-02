@@ -212,7 +212,7 @@ class DataAndLumi(Data2):
                   files       = []   ,
                   lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) :
 
-        Data2.__init__ ( chain , lumi_chain , files ) 
+        Data2.__init__ ( self , chain , lumi_chain , files ) 
         self.lumi = self.chain2 
         
     ## get the luminosity 
