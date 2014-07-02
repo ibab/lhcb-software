@@ -18,7 +18,7 @@
 
    to depend on the Calo and Muon raw events. The full valid list is
 
-     ["Muon","Calo","Rich","Velo","Other"]    ( "Other" == tracking banks ).
+     ["Muon","Calo","Rich","Other"]    ( "Other" == all tracking banks )
 
    Note that lines do not need to declare a dependency on the "Trigger" banks,
    as these are always automatically saved for all events in both DST and uDST

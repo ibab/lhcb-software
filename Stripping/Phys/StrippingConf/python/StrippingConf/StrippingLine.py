@@ -372,6 +372,12 @@ class StrippingLine(object):
         self.ExtraInfoDaughters = ExtraInfoDaughters
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
         self.UseRelatedInfo = UseRelatedInfo
+
+        validRawBanks = ["Trigger","Muon","Calo","Rich","Other"] # hard coded list, should really come from elsewhere....
+        if RequiredRawEvents != None :
+            for bank in RequiredRawEvents :
+                if bank not in validRawBanks :
+                    raise Exception("RawBank "+bank+" is not a known type")
         self.RequiredRawEvents = RequiredRawEvents
 
         line = self.subname()

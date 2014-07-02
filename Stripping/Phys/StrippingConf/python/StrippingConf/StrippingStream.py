@@ -139,8 +139,8 @@ class StrippingStream ( object ) :
             	    # If the bad event condition passes, the stream sequencer will not run
 
         	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
-                                          OutputLevel = WARNING, 
-        	                          Members = [ self.eventSelectionLine.configurable(), lineSeq ] )
+                                              OutputLevel = WARNING, 
+                                              Members = [ self.eventSelectionLine.configurable(), lineSeq ] )
             	    self.seq.ModeOR = True 
         	    self.seq.ShortCircuit = True
         	    
@@ -163,10 +163,10 @@ class StrippingStream ( object ) :
         	    from Configurables import LoKi__VoidFilter as Filter 
         	    
         	    goodEventFilter = Filter( "StrippingGoodEventCondition"+self.name() , 
-        	        Code      = " ALG_EXECUTED('%s') & ~ALG_PASSED('%s') " 
-        	                  % (self.eventSelectionLine.name(), self.eventSelectionLine.name()) ,
-        	        Preambulo = [ "from LoKiHlt.algorithms import *" ] 
-        	    )
+                                              Code      = " ALG_EXECUTED('%s') & ~ALG_PASSED('%s') " 
+                                              % (self.eventSelectionLine.name(), self.eventSelectionLine.name()) ,
+                                              Preambulo = [ "from LoKiHlt.algorithms import *" ] 
+                                              )
         	    
         	    # Finally, the AND sequencer that will run the bad event selection (its result will 
         	    # be ignored since it's wrapped into a GaudiSequencer with IgnoreFilterPassed), 
@@ -174,8 +174,8 @@ class StrippingStream ( object ) :
         	    # then the stream sequence. 
         	    
         	    self.seq = GaudiSequencer("StrippingSequenceStream" + self.name(), 
-                                          OutputLevel = WARNING, 
-        	                          Members = [ badEventSeq, goodEventFilter, lineSeq ] )
+                                              OutputLevel = WARNING, 
+                                              Members = [ badEventSeq, goodEventFilter, lineSeq ] )
 
         return self.seq
 
