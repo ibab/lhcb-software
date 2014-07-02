@@ -62,7 +62,7 @@ StatusCode DecayTreeTuple::initialize()
 StatusCode DecayTreeTuple::execute()
 {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
-  counter("Event")++;
+  ++counter("Event");
 
   LHCb::Particle::ConstVector heads;
   bool found = false;
