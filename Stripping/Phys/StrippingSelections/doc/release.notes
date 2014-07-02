@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-07-02 - Anton Poluektov 
+ - Remove unnecessary StrippingMember imports 
+
+! 2014-07-02 - Anton Poluektov 
  - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar : 
      'StrippingB02LcpbarKKLc2PKPiBeauty2CharmLine', 
      'StrippingB02LcpbarPiPiLc2PKPiBeauty2CharmLine', 
