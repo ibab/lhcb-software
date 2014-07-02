@@ -3,6 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v28r2p1>2014-07-02 Boole v28r2p1</A></H1><PRE>
+This version uses projects:
+ LCGCMT 68 (Root 5.34.18), Gaudi v25r2, LHCb v37r3, Lbcom v15r2p1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- New functionality 
+    Added possibility to reprocess from XDIGI, steered by Boole().InputDataType.
+
+- QMTest changes
+  . Move all upgrade tests to use TestFileDB for input data
+  . Add new test boole-reprocess-xdigi.qmt
+  . Updated boole-2010.ref to follow latest SIMCOND global tag for 2010 to
+    include Velo motor positions for Sim08 
+
 </PRE><H1><A NAME=v28r2>2014-06-20 Boole v28r2</A></H1><PRE>
 This version uses projects:
  LCGCMT 68 (Root 5.34.18), Gaudi v25r2, LHCb v37r3, Lbcom v15r2p1
@@ -18,8 +32,6 @@ This version uses projects:
 
 - QMTest changes
   . Added boole-reprocess-xdst test
-
-
 
 </PRE><H1><A NAME=v28r1>2014-06-10 Boole v28r1</A></H1><PRE>
 This version uses projects:

@@ -1,5 +1,5 @@
 package BooleSys
-version v28r2
+version v28r2p1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                      # Maintainer  
-use Boole               v28r2   Digi     # Marco Cattaneo
+use Boole               v28r2p1 Digi     # Marco Cattaneo
 use BooleUMC            v3r0    Digi     # Tomasz Skwarnicki
 use DigiAlg             v5r2    Digi     # Marco Cattaneo
 
@@ -23,7 +23,7 @@ use CaloMoniDigi        v2r6p1  Calo     # Olivier Deschamps
 use FTDigitisation      v2r2    FT       # Eric Cogneras
 
 # Herschel 
-use HCDigitisation      v1r0    HC       # Heinrich Schindler
+#use HCDigitisation      v1r0    HC       # Heinrich Schindler
 
 # Muon
 use MuonAlgs            v6r13   Muon     # Alessia Satta
@@ -55,3 +55,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use GaudiConf v19r3
