@@ -5,7 +5,6 @@
 #
 
 __all__ = ( 
-	    'StrippingMember',
 	    'StrippingLine', 
 	    'strippingLines' 
 	  )
@@ -43,11 +42,6 @@ def prescalerName  ( line, level = 'Stripping' ) :
 def postscalerName ( line , level = 'Stripping') :
     """ Convention: the name of 'PostScaler' algorithm inside StrippingLine """
     return '%s%sPostScaler' % (level, line)
-
-## Convention: the generic name of 'member' algorithm inside StrippingLine 
-def memberName     ( member, line, level='Stripping' ) :
-    """ Convention: the generic name of 'member' algorithm inside StrippingLine """
-    return '%s%s%s'%(level,line,member.subname())
 
 ## Convention: the name of 'ODINFilter' algorithm inside StrippingLine
 def odinentryName    ( line, level = 'Stripping' ) :
@@ -101,7 +95,7 @@ def strippingLines () :
 
 class bindMembers (object) :
     """
-    Simple class to represent a set of StrippingMembers which are bound to a line
+    Simple class to represent a set of StrippingLine members which are bound to a line
     """
     __slots__ = ('_members', '_outputloc', '_selection')
 
@@ -183,11 +177,6 @@ class bindMembers (object) :
         # add a flag to allow to skip this (when set to None?)
         if alg.outputLocation() : self._outputloc = alg.outputLocation()
 
-    def _handle_StrippingMember( self, line, alg ) :
-        if line == None: raise AttributeError, 'Must have a line name to bind to'
-        alg = alg.createConfigurable( line, **alg.Args )
-        return self._handle_Configurable( line,  alg )
-
     def __init__( self, line, algos ) :
 
         self._members = []
@@ -204,102 +193,7 @@ class bindMembers (object) :
                 handle(line,alg)
 
 
-class StrippingTool (object ) :  
 
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
-
-    ### The standard constructor to create an StrippingTool instance:
-    def __init__ ( self        ,    ## ...
-                   type = None ,    ## the type of the (configurable corresponding to the) tool
-                   name = ''   ,    ## the instance name of the tool
-                   tools = []  ,    ## tools used by this tool
-                   **Args      ) :  ## other arguments 
-        if type  == None : raise AttributeError, "Tool must have a type"
-        self.Type = type
-        self.Name = name if name else type().getType()
-        self.Args = Args
-        self.Tools = tools
-    
-    def createConfigurable( self, parent ) :
-        parent.addTool( self.Type, name = self.Name  ) 
-        instance = getattr( parent, self.Name )
-        for k,v in self.Args.iteritems() : setattr(instance,k,v)
-        for tool in self.Tools :
-                if type(tool) is not StrippingTool : 
-                    raise AttributeError, "The type %s is not an StrippingTool"%type(tool)
-                tool.createConfigurable( instance )
-
-
-
-
-class StrippingMember ( object ) :
-
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools', 'InputLocations' )
-    
-    def __init__ ( self       ,    
-                   Type       ,   
-                   name  = '' ,   
-#                   InputLocations = None, 
-                   tools = [] ,   
-                   **Args     ) :
-
-        from Configurables import FilterDesktop, CombineParticles, ConjugateNeutralPID 
-
-        if Type not in [ FilterDesktop, CombineParticles, ConjugateNeutralPID ] :
-            raise AttributeError, "The type  %s is not known for StrippingMember"%Type
-        for key in Args :
-            if  key not in Type.__slots__  :
-                raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
-
-        self.Type  = deepcopy ( Type  )
-        self.Name  = deepcopy ( name  )
-        self.Args  = deepcopy ( Args  )
-        self.Tools = deepcopy ( tools )
-#        self.InputLocations = deepcopy ( InputLocations )
-
-    def subtype( self )        :
-        " Return the 'subtype' of the member "
-        return self.Type.__name__
-
-    def name   ( self , line ) :
-        " Return the full name of the member "
-        return memberName ( self , line, level = 'Stripping' ) 
-
-    def id     ( self )        :
-        " Return the ID of the member "        
-        return self.subtype() + self.Name
-
-    def subname( self )        :
-        " Return the specific part of the name "
-#        return self.id()
-        return self.Name   # Unlike Hlt case, this will not include type name of the member. 
-
-    def _InputLocations( self, line ) :
-        _input = []
-        for i in  self.Args['InputLocations'] :
-            if type(i) is bindMembers : i = i.outputLocation() 
-            if i : 
-        	if i[0] == '%' : i = 'Stripping' + line + i[1:]
-        	_input += [ i ]
-        return _input
-
-
-    def createConfigurable( self, line, **args ) :
-
-        ## clone the arguments
-        line = deepcopy ( line )
-        args = deepcopy ( args ) 
-        _name = self.name( line )
-        # see if alg has any special Tool requests...
-
-        if 'InputLocations' in self.Args :
-            args['InputLocations'] = self._InputLocations(line)
-
-        instance =  self.Type( _name, **args)
-
-        for tool in self.Tools : tool.createConfigurable( instance )
-
-        return instance
 
 # =============================================================================
 ## @class StrippingLine
@@ -671,19 +565,6 @@ class StrippingLine(object):
             copy._deepcopy_dispatch[types.MethodType] = origMethod 
         else :
             del copy._deepcopy_dispatch[types.MethodType]
-
-        # Check the parameters, reponsible for reconfiguration:
-        for alg in [ i for i in __algos if type(i) is StrippingMember ] :
-            id = alg.id()
-            if id in _other :
-        	 print "Updating StrippingMember arg: %s to %s" % (id, _other[id])
-        	 print "Before update: "
-        	 print alg.Args
-                 alg.Args.update( _other [id] ) 
-        	 print "After update: "
-        	 print alg.Args
-        	 print "\n"
-                 del _other [id]
 
         # unknown parameters/arguments 
         if _other :

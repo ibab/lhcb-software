@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Anton Poluektov 
+ - Remove support for outdated StrippingMember and StrippingTool
+
 ! 2014-07-02 - Chris Jones
  - Add a new Property to the StrippingLine object, that allows lines to
    optionally declare a dependency on various parts of the RawEvent.
