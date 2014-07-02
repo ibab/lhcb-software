@@ -56,10 +56,7 @@ class DSTWriterSelectionSequence(object) :
 
         # Extract Raw Events to keep for this stream, line by line.
         if outputStreamConfiguration.selectiveRawEvent :
-            rawEvents = { }
-            for line in selSequence.lines :
-                if ( line.RequiredRawEvents != None ) :
-                    rawEvents[line.name()] = [ "/Event/"+r+"/RawEvent#1" for r in line.RequiredRawEvents ]
+            rawEvents = selSequence.getRequiredRawEvents()
             rawEvPropName = 'AlgDependentItemList'
             if hasattr(writer,rawEvPropName) :
                 writer.setProp(rawEvPropName,rawEvents)

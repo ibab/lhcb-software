@@ -10,12 +10,12 @@
      must declare a dependency on the various parts of the RawEvent they rely on,
      either to run, or for subsequent analysis.
   . The output stream configuration methods are given a new option 
-    'selectiveRawEvent' (Default False) which if set to True, when then only save 
-    to that stream the parts of the raw Event the lines in that stream have 
+    'selectiveRawEvent' (Default False) which if set to True, will then only save 
+    to that stream the parts of the Raw Event the lines in that stream have 
     declared a dependency on, and only in events where that line has fired. e.g.
 
-      udstStreamConf = stripMicroDSTStreamConf(selectiveRawEvent=selRawEv)
-      dstStreamConf  = stripDSTStreamConf(selectiveRawEvent=selRawEv)
+      udstStreamConf = stripMicroDSTStreamConf(selectiveRawEvent=True)
+      dstStreamConf  = stripDSTStreamConf(selectiveRawEvent=True)
 
     If selectiveRawEvent=False, the default mode, then the (u)DST will be as
     before. So full Raw Event on DSTs, no RawEvent (other than Trigger...) on
