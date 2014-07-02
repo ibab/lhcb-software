@@ -327,6 +327,7 @@ class StrippingLine(object):
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
                    UseRelatedInfo = None,        # Use new persistency of ExtraInfo (now called RelatedInfo)
                                                  # If None, follow the setting in StrippingConf
+                   RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -371,6 +372,7 @@ class StrippingLine(object):
         self.ExtraInfoDaughters = ExtraInfoDaughters
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
         self.UseRelatedInfo = UseRelatedInfo
+        self.RequiredRawEvents = RequiredRawEvents
 
         line = self.subname()
 

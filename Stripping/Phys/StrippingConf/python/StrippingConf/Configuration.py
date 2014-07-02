@@ -47,14 +47,21 @@ class StrippingConf ( object ) :
         for stream in Streams :
     	    for line in stream.lines : 
     		line.updateRelatedInfoFlag(UseRelatedInfo)
-        
             self.appendStream(stream)
 
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
 
+        self.checkRawEventRequests()
+
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )
+
+    def checkRawEventRequests(self) :
+        from StrippingLine import strippingLines
+        for line in strippingLines() :
+            if line.RequiredRawEvents != None :
+                log.warning("Line "+line.name()+" requests RawEvents : "+str(line.RequiredRawEvents))
 
     def checkAppendedLines (self) : 
         """
