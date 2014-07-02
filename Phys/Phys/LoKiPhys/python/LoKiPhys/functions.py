@@ -1032,6 +1032,9 @@ BPVCORRM    = LoKi.Particles.MCorrectedWithBestVertex ()
 MTDOCA     = LoKi.Particles.MTDOCA
 MTDOCACHI2 = LoKi.Particles.MTDOCAChi2
 
+
+RELINFO    = LoKi.Particles.RelatedInfo
+
 # =============================================================================
 ## Tis/Tos stuff 
 # =============================================================================

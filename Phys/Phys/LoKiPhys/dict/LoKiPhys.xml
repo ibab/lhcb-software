@@ -127,6 +127,11 @@
   
   <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*Particle*>"   />
   <class pattern   = "LoKi::ExtraInfo::GetSmartInfo<*VertexBase*>"  />
+
+  <class name ="LoKi::Particles::RelatedInfo">
+    <field  name="m_table" transient="true" />
+  </class>
+    
     
   <exclusion>
     
@@ -222,6 +227,12 @@
       <method name="=" />
       <field  name="m_distance" />
     </class>
+
+    <class name ="LoKi::Particles::RelatedInfo">
+      <field  name="m_table" />
+    </class>
+
+    <class name ="LoKi::Particles::RelatedInfo::IMAP"/>
     
   </exclusion>
   
