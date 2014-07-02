@@ -3,9 +3,13 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+
+#include "Kernel/RelatedInfoNamed.h"
+
 // local
 #include "LoKi/Particles45.h"
 #include "LoKi/ILoKiSvc.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particles45
@@ -23,6 +27,22 @@ LoKi::Particles::RelatedInfo::RelatedInfo
   , m_bad      ( bad      ) 
   , m_table    ( 0        ) 
 {}
+//
+LoKi::Particles::RelatedInfo::RelatedInfo 
+( const std::string& location , 
+  const std::string& variable , 
+  const double       bad      ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
+  , m_location ( location ) 
+  , m_bad      ( bad      ) 
+  , m_table    ( 0        ) 
+{
+  short index = RelatedInfoNamed::indexByName( variable ); 
+  if ( index == RelatedInfoNamed::UNKNOWN ) {
+    Warning("RelatedInfo variable " + variable + " unknown"); 
+  }
+  m_index = index;
+}
 //
 LoKi::Particles::RelatedInfo::RelatedInfo 
 ( const LoKi::Particles::RelatedInfo& right ) 

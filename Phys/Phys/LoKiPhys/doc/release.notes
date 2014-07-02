@@ -5,6 +5,39 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-02 - Vanya Belyaev for Anton Poluektov 
+ - Add RELINFO functor to access RelatedInfo structures in the DST. Usage: 
+     RELINFO ( AbsoluteRelatedInfoLocation', Index, ErrorValue )
+  or (better)
+     RELINFO ( AbsoluteRelatedInfoLocation', Variable, ErrorValue )
+
+
+   where
+     AbsoluteRelatedInfoLocation: 
+       The location (starting from '/Event/Stream/Phys/...')
+       of the RelatedInfo object. Possible values now used are: 
+         'Particle2CV1Relations', 'Particle2CV2Relations', ... - cone variables 
+           saved by RelInfoConeVariables tool, for cone numbers 1, 2, etc.
+         'Particle2CVEW1Relations', 'Particle2CVEW2Relations', ... - cone variables 
+           saved by RelInfoConeVariablesForEW tool, for cone numbers 1, 2, etc.
+         'Particles2VIRelations' - vertex isolation information saved by 
+           RelInfoVertexIsolation tool
+
+     Index: 
+       Variable index, see Phys/DaVinciTypes/Kernel/RelatedInfoNamed.h enum for 
+       index values
+
+     Variable: 
+       Variable name, see Phys/DaVinciTypes/Kernel/RelatedInfoNamed.h enum for 
+       available variable names
+
+     ErrorValue: 
+       Value to return in case of error (no particle in the map, incorrect location etc.)
+
+   Example: 
+     CONEMULT   = RELINFO('/Event/Charm/Phys/DstarPromptWithD02HHMuMuLine/Particle2CV1Relations','CONEMULT',-1000.)
+     CONEPRASYM = RELINFO('/Event/Charm/Phys/DstarPromptWithD02HHMuMuLine/Particle2CV1Relations','CONEPTASYM',-1000.)
+
 ! 2014-06-24 - Albert Puig
  - add the MTDOCA and MTDOCACHI2 functors
 

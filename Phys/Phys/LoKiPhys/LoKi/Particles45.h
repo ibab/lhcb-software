@@ -57,6 +57,10 @@ namespace LoKi
       RelatedInfo ( const std::string& location        , 
                     const short        index           , 
                     const double       bad     = -1000 ) ;
+
+      RelatedInfo ( const std::string& location        , 
+                    const std::string& variable        , 
+                    const double       bad     = -1000 ) ;
       /// copy constructor  
       RelatedInfo ( const RelatedInfo& ) ;
       /// MANDATORY: virtual destructor
