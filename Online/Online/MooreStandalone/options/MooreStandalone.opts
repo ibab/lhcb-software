@@ -1,5 +1,7 @@
+// ================================================================================================
 #include "$INFO_OPTIONS"
 #include "$MBM_SETUP_OPTIONS"
+//
 // ================================================================================================
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";

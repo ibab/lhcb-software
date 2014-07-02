@@ -1,0 +1,5 @@
+Runable.MeasurementDuration = 1;
+Runable.Auto                = 1;
+ApplicationMgr.ExtSvc       = { "LHCb::MooreFileMonitor/FileLogger" };
+FileLogger.Output           = "$MOORESTANDALONE_FILE_OUTPUT";
+MessageSvc.LoggerFunction   = "log_write_message";

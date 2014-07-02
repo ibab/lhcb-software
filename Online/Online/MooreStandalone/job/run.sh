@@ -13,8 +13,10 @@ else
     export JOBOPTSEARCHPATH=${MOORESTANDALONEROOT}/options;
     export INFO_OPTIONS=${MOORESTANDALONEROOT}/options/InfoOpts.opts;
     export MBM_SETUP_OPTIONS=${MOORESTANDALONEROOT}/options/MBM_setup.opts;
-    export $MOORESTANDALONE_OPTIONS=${MOORESTANDALONEROOT}/options/MooreStandalone.opts;
+    export MOORESTANDALONE_UI_OPTS=${MOORESTANDALONEROOT}/options/MooreTestConsole.opts;
+    export MOORESTANDALONE_OPTIONS=${MOORESTANDALONEROOT}/options/MooreStandalone.opts;
     export DATA_DIRECTORY=${MOORESTANDALONEROOT}/cmt/BrunelData;
+    export DATA_DIRECTORY=${MOORESTANDALONEROOT}/cmt/MEPData;
     export GaudiOnlineExe=`which GaudiOnlineExe.exe`;
     export DIM_DNS_NODE=`hostname -s`;
     export LOGFIFO=/tmp/log${USER}.fifo;
@@ -30,9 +32,11 @@ else
 	case $key in
 	    -u|--upi)
 		GUI=upi
+		export MOORESTANDALONE_UI_OPTS=${MOORESTANDALONEROOT}/options/MooreTestUPI.opts;
 		shift
 		;;
 	    -g|--gui)
+		export MOORESTANDALONE_UI_OPTS=${MOORESTANDALONEROOT}/options/MooreTestUPI.opts;
 		GUI=upi
 		shift
 		;;
@@ -65,7 +69,6 @@ else
 	echo "";
     elif test "$GUI" = "upi";
     then
-	OPTS=../options/MooreUPI.opts;
 	echo "Running Moore Benchmark application in UPI mode.";
 	`which gentest.exe` libMooreStandalone.so moore_standalone -options=${OPTS};
     else

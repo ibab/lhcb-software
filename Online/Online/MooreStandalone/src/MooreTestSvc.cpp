@@ -77,6 +77,8 @@ namespace LHCb {
     std::string m_input;
     /// Property: Name of the output buffer of the process class to be sampled
     std::string m_output;
+    /// Property: Name of the data directory needed by the reader
+    std::string m_dataDir;
     /// Property: The task name to be sampled
     std::string m_procName;
     /// Property: Filename of the online "main" property options
@@ -298,6 +300,7 @@ MooreTestSvc::MooreTestSvc(const std::string& nam, ISvcLocator* svcLoc)
   declareProperty("MeasurementIntervall",       m_intervall   = 5);
   declareProperty("MeasurementDuration",        m_duration    = 300);
   declareProperty("MooreOnlineVersion",         m_mooreVsn    = "");
+  declareProperty("DataDirectory",              m_dataDir     = "");
   declareProperty("Auto",                       m_autoRun     = 1);
   declareProperty("MainOptions",                m_mainOpts    = "../options/Main.opts");
   declareProperty("MBMOptions",                 m_mbmOpts     = "../options/Buffers.opts");
@@ -337,6 +340,10 @@ StatusCode MooreTestSvc::initialize()   {
   if ( m_partitionBuffers )  {
     m_input  += "_"+m_partition;
     m_output += "_"+m_partition;
+  }
+  if ( !m_dataDir.empty() )  {
+    ::setenv("DATA_DIRECTORY",m_dataDir.c_str(),1);
+    info("+++++ Data directory is: %s",m_dataDir.c_str());
   }
   return StatusCode::SUCCESS;
 }
@@ -636,7 +643,7 @@ StatusCode MooreTestSvc::run()   {
 			   0};
 
   Process::setDebug(true);  
-  Process* mepTask = new Process("MEPInit_0",  command(),mepinit,out.c_str());
+  Process* mepTask = new Process("MEPInit_0", command(), mepinit,out.c_str());
   mepTask->start(true);
 
   /// Wait until the buffers are mapped, then continue
@@ -644,14 +651,14 @@ StatusCode MooreTestSvc::run()   {
 
   /// Start the Moore process(es) using a bash script
   ::lib_rtl_sleep(1000);
-  Process* monTask = new Process("Moore_0",   "/bin/bash",moore,out.c_str());
+  Process* monTask = new Process("Moore_0", "/bin/bash", moore,out.c_str());
   monTask->start(true);
 
   /// Wait until all Moore processes are mapped. Then continue
   mapProcesses().ignore();
 
   info("+++++ Starting producer ...... ");
-  Process* prodTask=new Process("Prod_0",command(),aprod,out.c_str());
+  Process* prodTask=new Process("Prod_0", command(), aprod,out.c_str());
   prodTask->start(true);
 
   int i;

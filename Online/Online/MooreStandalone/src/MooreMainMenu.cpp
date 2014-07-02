@@ -359,6 +359,8 @@ bool MooreMainMenu::startExecution()   {
   if ( ::strlen(m_logFile) > 0 )  {
     m_log = ::fopen(m_logFile,"w");
   }
+  ::setenv("MOORESTANDALONE_LOGGER_OUTPUT",m_logFile,1);
+  ::setenv("MOORESTANDALONE_FILE_OUTPUT",m_resFile,1);
   int ret = ::lib_rtl_start_thread(run,this,&m_exec);
   if ( !lib_rtl_is_success(ret) ) {
     string err = RTL::errorString();

@@ -1,5 +1,6 @@
 #include "MooreStandalone.opts"
 //
+Runable.DataDirectory        = "./MEPData";
 Runable.Input                = @OnlineEnv.PassThrough_Input;
 Runable.Output               = @OnlineEnv.PassThrough_Output;
 //
@@ -15,3 +16,4 @@ Runable.ReaderOptions        = "../options/Reader.opts";  // Options for file re
 //
 ApplicationMgr.ExtSvc       += {"LHCb::MooreFileMonitor/FileLogger"};
 FileLogger.Output            = "MooreStats.txt";
+#include "$MOORESTANDALONE_UI_OPTS"
