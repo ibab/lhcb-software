@@ -61,7 +61,7 @@ class DSTWriterSelectionSequence(object) :
             if hasattr(writer,rawEvPropName) :
                 writer.setProp(rawEvPropName,rawEvents)
             else:
-                print "WARNING : Output Writer does not have property", rawEvPropName
+                print "WARNING : Output Writer", writer.name(), "does not have property", rawEvPropName
 
         from Configurables import FixInputCopyStream
         self.algos.append( FixInputCopyStream() )
