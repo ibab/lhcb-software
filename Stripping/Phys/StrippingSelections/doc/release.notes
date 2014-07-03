@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-03 - Lucio Anderlini
+ - Add TIS Line to StrippingDiMuonNew
+ - Updated StrippingDiMuonNew configuration dictionary (with the new convention)
+
 ! 2014-07-02 - Anton Poluektov 
  - Remove unnecessary StrippingMember imports 
 

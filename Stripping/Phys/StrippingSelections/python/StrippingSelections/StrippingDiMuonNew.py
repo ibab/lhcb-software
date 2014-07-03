@@ -51,10 +51,12 @@ __version__= '$Revision: 1.0 $'
 
 __all__ = (
     'DiMuonConf'
-    )
+    , 'default_config'
+  )
 
 
-FullDSTDiMuon = {
+default_config = {
+    'NAME'              : 'FullDSTDiMuon',
     'BUILDERTYPE'       :       'DiMuonConf',
     'CONFIG'    : {
         'MicroDST'                                 :  False   ,
@@ -71,6 +73,14 @@ FullDSTDiMuon = {
         'DiMuon_MaxMass'                           :  1.0e+8  ,  # MeV
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV, no cut now 
+
+        # DiMuonTIS line
+        'DiMuonTIS_Prescale'                       :     1.   ,
+        'DiMuonTIS_Postscale'                      :     1.   ,
+        'DiMuonTIS_checkPV'                        : False    ,  
+        'DiMuonTIS_TisTosSpecs'                    : { "L0(Muon|DiMuon|Electron|Photon|Hadron).*Decision%TIS":0,
+                                                       "Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision%TIS" : 0,
+                                                       "Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision%TIS" : 0 },
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05  ,
@@ -236,6 +246,14 @@ MicroDSTDiMuon = {
         'DiMuon_VCHI2PDOF'                         :    20.   , 
         'DiMuon_PT'                                : -1000.   ,  # MeV
 
+        # DiMuonTIS line
+        'DiMuonTIS_Prescale'                       :     1.   ,
+        'DiMuonTIS_Postscale'                      :     1.   ,
+        'DiMuonTIS_checkPV'                        : False    ,  
+        'DiMuonTIS_TisTosSpecs'                    : { "L0(Muon|DiMuon|Electron|Photon|Hadron).*Decision%TIS":0,
+                                                       "Hlt1(?!ODIN)(?!L0)(?!Lumi)(?!Tell1)(?!MB)(?!NZS)(?!Velo)(?!BeamGas)(?!Incident).*Decision%TIS" : 0,
+                                                       "Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision%TIS" : 0 },
+
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale'                  :     0.05 ,
         'DiMuonSameSign_Postscale'                 :     1.   ,
@@ -376,7 +394,7 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_MassWindow'                      :   120.   ,  # MeV
         'Psi2MuMuDetached_VCHI2PDOF'                       :    20.   ,
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
-        'Psi2MuMuDetached_LTCuts'                          :   " & ((BPVDLS>5) | (BPVDLS<-3))"    
+        'Psi2MuMuDetached_LTCuts'                          :   " & ((BPVDLS>3) | (BPVDLS<-3))"    
         }, 
     'STREAMS' : [ 'Leptonic' ] ,
     'WGs'    : [ 'BandQ' ]
@@ -408,6 +426,12 @@ class DiMuonConf(LineBuilder):
         'DiMuon_VCHI2PDOF',
         'DiMuon_PT',
 #        'DiMuon_PT_oldTh',
+
+        # DiMuonTIS line
+        'DiMuonTIS_Prescale',
+        'DiMuonTIS_Postscale',
+        'DiMuonTIS_TisTosSpecs',
+        'DiMuonTIS_checkPV',
 
         # DiMuon Same Sign line
         'DiMuonSameSign_Prescale',
@@ -623,6 +647,21 @@ class DiMuonConf(LineBuilder):
                                                  )
 
         """
+        DiMuonTIS
+        """
+        self.DiMuonTISSel = filterTisTos( name + "TISDiMuon",
+                                          DiMuonInput = self.SelDiMuon,
+                                          myTisTosSpecs = config['DiMuonTIS_TisTosSpecs']
+                                          )
+        
+        self.DiMuonTISLine = StrippingLine( name + 'DiMuonTIS' + 'Line',
+                                               prescale  = config['Jpsi2MuMu_Prescale'],
+                                               postscale = config['Jpsi2MuMu_Postscale'],
+                                               checkPV   = config['Jpsi2MuMu_checkPV'],
+                                               selection = self.DiMuonTISSel
+                                               )
+        
+        """
         DiMuonPrescaled line
         """
         self.SelDiMuonPrescaled = filterDiMuonWMax( name + 'DiMuonPrescaled',
@@ -784,7 +823,7 @@ class DiMuonConf(LineBuilder):
                                                checkPV   = config['Jpsi2MuMu_checkPV'],
                                                selection = self.TOSJpsi2MuMu
                                                )
-        
+
         """
         Psi(2S)->mumu tight line
         """
@@ -937,11 +976,12 @@ class DiMuonConf(LineBuilder):
 
         if config['MicroDST']:
             self.registerLine( self.DiMuonLine )
-            self.registerLine( self.DiMuonLowPTLine )
+            #self.registerLine( self.DiMuonLowPTLine ) ## line merged to DiMuonLine
             self.registerLine( self.DiMuonSameSignLine )
-            # self.registerLine( self.DiMuonPrescaledLine )
+            # self.registerLine( self.DiMuonPrescaledLine ) ## line covered by DiMuonLine
             self.registerLine( self.Jpsi2MuMuLine )
             self.registerLine( self.Psi2MuMuLine )
+            self.registerLine( self.DiMuonTISLine )
 
         else:    
             #self.registerLine( self.DiMuonExclusiveLine )
