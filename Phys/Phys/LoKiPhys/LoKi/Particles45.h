@@ -58,6 +58,8 @@ namespace LoKi
                     const short        index           , 
                     const double       bad     = -1000 ) ;
 
+      // ======================================================================
+      /// constructor from 
       RelatedInfo ( const std::string& location        , 
                     const std::string& variable        , 
                     const double       bad     = -1000 ) ;

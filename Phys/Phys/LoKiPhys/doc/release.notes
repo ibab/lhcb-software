@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-03 - Anton Poluektov 
+ - Fix warning in dictionary generation
+
 ! 2014-07-02 - Vanya Belyaev for Anton Poluektov 
  - Add RELINFO functor to access RelatedInfo structures in the DST. Usage: 
      RELINFO ( AbsoluteRelatedInfoLocation', Index, ErrorValue )
