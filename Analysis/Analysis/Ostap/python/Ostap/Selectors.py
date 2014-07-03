@@ -681,6 +681,7 @@ class SelectorWithVarsCached(SelectorWithVars) :
     def __init__ ( self                           ,
                    variables                      ,  ## list of variables  
                    selection                      ,  ## Tree-selection 
+                   files                          ,  ## List of files
                    cuts         = lambda s : True ,
                    name         = ''              ,
                    fullname     = ''              ) : 
@@ -688,7 +689,8 @@ class SelectorWithVarsCached(SelectorWithVars) :
         SelectorWithVars.__init__(self, variables, selection, cuts, name, fullname)
 
         self.__selection = selection
-        self.__cuts = cuts
+        self.__cuts      = cuts
+        self.__filelist  = files
 
         # Try load from cache
         self._loaded_from_cache = False
@@ -700,7 +702,7 @@ class SelectorWithVarsCached(SelectorWithVars) :
 
     def _compute_cache_name(self):
         " Computes dataset cache path(SHA512) "
-        h = "" # Actual hash
+        h = ";".join(sorted(self.__filelist)) # Actual hash
         for var , vdesc , vmin , vmax , vfun in self._variables:
             h += var.GetName() + vdesc + str(vmin) + str(vmax)
 
