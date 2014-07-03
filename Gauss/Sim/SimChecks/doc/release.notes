@@ -4,6 +4,22 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
+!========================== SimChecks v1r2 2014-07-03 ========================
+! 2014-05-13 - Luca Pescatore
+ - Added folder with code for post production analysis and option file which
+   launches it automatically after producting events
+
+! 2014-02-14 - Luca Pescatore
+ - Added option files to run radiation length scans. RadLengthAna.py for all
+   detector except VELO, RadLengthAna_VELO.py for VELO only and 
+   Run_RadLengthScan.py to run them automatically in sequance and merge outputs
+
+! 2014-02-10 - Luca Pescatore
+ - Updated all python options for Single and Multiple taget. Untested Ganga 
+   functionalities are removed and scripts are reorganizied to make them easier
+   to use.
+
 !========================== SimChecks v1r1 2014-02-02 ========================
 ! 2014-01-20 - Sajan Easo
  - Added the options files to test the Target studies of Luca Pescatore
