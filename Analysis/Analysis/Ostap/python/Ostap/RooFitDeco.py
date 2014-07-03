@@ -368,6 +368,8 @@ def _rrv_as_H1_ ( v , bins = 100 , double = True ) :
 ROOT.RooRealVar   . histo = _rrv_as_H1_
 ROOT.RooRealVar   . asH1  = _rrv_as_H1_
 
+_RRV_ = ROOT.RooRealVar
+
 # ============================================================================
 ## Addition of RooRealVar and ``number''
 def _rrv_add_ ( s , o ) :
@@ -379,8 +381,12 @@ def _rrv_add_ ( s , o ) :
     >>> res = var + num
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() + o
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return v + o
 
 ## Subtraction  of RooRealVar and ``number''
 def _rrv_sub_ ( s , o ) :
@@ -392,8 +398,12 @@ def _rrv_sub_ ( s , o ) :
     >>> res = var - num
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() - o
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return v - o
 
 ## Multiplication of RooRealVar and ``number''
 def _rrv_mul_ ( s , o ) :
@@ -405,8 +415,12 @@ def _rrv_mul_ ( s , o ) :
     >>> res = var * num
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() * o
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return v * o
 
 ## Division of RooRealVar and ``number''
 def _rrv_div_ ( s , o ) :
@@ -418,9 +432,12 @@ def _rrv_div_ ( s , o ) :
     >>> res = var / num
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() / o
-
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return v / o
 
 ## (right) Addition of RooRealVar and ``number''
 def _rrv_radd_ ( s , o ) :
@@ -432,8 +449,12 @@ def _rrv_radd_ ( s , o ) :
     >>> res = num + var 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o + s.getVal()
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return o + v 
 
 ## (right) subtraction  of RooRealVar and ``number''
 def _rrv_rsub_ ( s , o ) :
@@ -445,8 +466,12 @@ def _rrv_rsub_ ( s , o ) :
     >>> res = num - var 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o - s.getVal()
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return o - v 
 
 ## (right) multiplication of RooRealVar and ``number''
 def _rrv_rmul_ ( s , o ) :
@@ -458,8 +483,12 @@ def _rrv_rmul_ ( s , o ) :
     >>> res = num * var 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o * s.getVal()
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return o * v 
 
 ## (right) Division of RooRealVar and ``number''
 def _rrv_rdiv_ ( s , o ) :
@@ -471,8 +500,12 @@ def _rrv_rdiv_ ( s , o ) :
     >>> res = num / var 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o / s.getVal() 
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return o / v 
 
 ## pow of RooRealVar and ``number''
 def _rrv_pow_ ( s , o ) :
@@ -484,8 +517,12 @@ def _rrv_pow_ ( s , o ) :
     >>> res = var ** num 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return s.getVal() ** o  
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return v**o  
 
 ## (right) pow of RooRealVar and ``number''
 def _rrv_rpow_ ( s , o ) :
@@ -497,8 +534,12 @@ def _rrv_rpow_ ( s , o ) :
     >>> res = num ** var 
     
     """
-    if hasattr ( o , 'getVal' ) : o = o.getVal()
-    return o ** s.getVal() 
+    if   isinstance ( o , _RRV_    ) and not o.isConstant() : o = o.ve     () 
+    elif hasattr    ( o , 'getVal' )                        : o = o.getVal ()
+    #
+    v = s.getVal() if s.isConstant() else s.ve()
+    #
+    return o**v   
 
 
 ROOT.RooRealVar . __add__   = _rrv_add_
@@ -558,6 +599,8 @@ def _rrv_gt_ ( s , o ) :
     """
     return o < s.getVal()
 
+# ==========================================
+_is_equal_ = cpp.LHCb.Math.equal_to_double 
 ## (compare RooRealVar and "number"
 def _rrv_eq_ ( s , o ) :
     """
@@ -567,7 +610,7 @@ def _rrv_eq_ ( s , o ) :
     >>> num = ...
     >>> iv var == num : print ' ok! '
     """
-    return o == s.getVal()
+    return    _is_equal_ ( o , s.getVal() ) 
 
 ## (compare RooRealVar and "number"
 def _rrv_ne_ ( s , o ) :
@@ -578,7 +621,7 @@ def _rrv_ne_ ( s , o ) :
     >>> num = ...
     >>> iv var != num : print ' ok! '
     """
-    return o != s.getVal()
+    return not _is_equal_ ( o , s.getVal() ) 
 
 ROOT.RooRealVar . __lt__   = _rrv_lt_
 ROOT.RooRealVar . __gt__   = _rrv_gt_
@@ -603,7 +646,6 @@ def _pdf_mul_ ( pdf1 , pdf2 ) :
                                                                  pdf2.GetTitle () ) ,
                                          pdf1 , pdf2 )
 ROOT.RooAbsPdf . __mul__  = _pdf_mul_ 
-
 
 # =============================================================================
 ## Helper project method for RooDataSet
