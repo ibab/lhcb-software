@@ -31,7 +31,7 @@ TrackIsoVariables::TrackIsoVariables( const std::string& type,
         ( "MVATransform" , m_transformName ,
           "path/name of the DictTransform tool"); 
     declareProperty
-        ( "WeightsFile" , m_weightsName ,
+        ( "WeightsFile" , m_weightsName = "trackiso.xml" ,
           "weights parameter file"); 
     declareProperty(    "PVInputLocation"       , m_PVInputLocation = LHCb::RecVertexLocation::Primary);
 
@@ -76,20 +76,20 @@ StatusCode TrackIsoVariables::initialize() {
     }*/
 
     m_optmap["Name"] = "bdtval" ;
-    m_optmap["XMLFILE"] = System::getEnv("ISOLATIONTOOLSROOT") + "files/trackiso.xml" ;
-    m_tmva.init( m_optmap , info() ) ; //
-    instance of IParticleDicttool
-    m_varmap = tool<IParticleDictTool>(m_transformname) ;
-    if(m_varmap == NULL) {
-        Error("Unable to configure IParticleDictTool") ;
-        return StatusCode::FAILURE;
-    }
-    //set up map of variables
-    m_varmap.DICT["PVdist"]=0.0 ;
-    m_varmap.DICT["SVdist"]=0.0 ;
-    m_varmap.DICT["angle"]=0.0 ;
-    m_varmap.DICT["doca"]=0.0 ;
-    m_varmap.DICT["fc"]=0.0 ;
+    m_optmap["XMLFILE"] = System::getEnv("ISOLATIONTOOLSROOT") + "files/" + m_weightsName ;
+    m_tmva.Init( m_optmap , info().stream() ) ; //
+    //instance of IParticleDicttool
+    //m_varmap = tool<IParticleDictTool>(m_transformname) ;
+    //if(m_varmap == NULL) {
+    //    Error("Unable to configure IParticleDictTool") ;
+    //    return StatusCode::FAILURE;
+    //}
+    //set up map of variables - doesn't work with GaudiVEctorMap!!!
+    //m_varmap["PVdist"]=0.0 ;
+    //m_varmap["SVdist"]=0.0 ;
+    //m_varmap["angle"]=0.0 ;
+    //m_varmap["doca"]=0.0 ;
+    //m_varmap["fc"]=0.0 ;
     return StatusCode::SUCCESS;   
 
 }
@@ -313,9 +313,16 @@ bool TrackIsoVariables::calcBDTValue( const LHCb::Particle * part
         var_PVdist = pvDistGeometric ;
         var_SVdist = svDistGeometric ;
         //
+        m_varmap.clear()    ;
+        //make this more generic??
+        m_varmap.insert( "PVdist", var_PVdist ) ;
+        m_varmap.insert( "SVdist", var_SVdist ) ;
+        m_varmap.insert( "angle", var_angle ) ;
+        m_varmap.insert( "doca", var_log_doca ) ;
+        m_varmap.insert( "fc", var_fc ) ;
         
         m_tmva(m_varmap,m_out) ;
-        bdtval = m_out[m_transformName]
+        bdtval = m_out[m_transformName];
         //bdtval = m_Reader->EvaluateMVA( "BDT method" ) ;
         //verbose() << "before: " << bdtval << '\t' <<  m_bdt1 << '\t' << m_bdt2 << '\t' << m_bdt3 << endmsg ;
         //is this really the most efficient??

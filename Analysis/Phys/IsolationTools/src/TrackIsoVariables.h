@@ -90,8 +90,8 @@ class TrackIsoVariables : public GaudiTool, virtual public IExtraInfoTool {
 
         TMVATransform m_tmva ;
         TMVATransform::optmap m_optmap ;
-        const IParticleDictTool m_varmap ; 
-        const IParticleDictTool m_out ; 
+        IParticleDictTool::DICT m_varmap ; 
+        IParticleDictTool::DICT m_out ; 
 
 
         //save the vertices
