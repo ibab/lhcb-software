@@ -12,7 +12,10 @@
  - Remove unnecessary StrippingMember imports 
 
 ! 2014-07-02 - Anton Poluektov 
- - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar : 
+ - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar, Lc Ds pbar, DDK* : 
+     'StrippingB02DDKstBeauty2CharmLine', 
+     'StrippingB2LcDspbarLc2PKPiDs2KKPiBeauty2CharmLine', 
+     'StrippingB2LcDspbarWSLc2PKPiDs2KKPiBeauty2CharmLine', 
      'StrippingB02LcpbarKKLc2PKPiBeauty2CharmLine', 
      'StrippingB02LcpbarPiPiLc2PKPiBeauty2CharmLine', 
      'StrippingB02LcpbarKPiLc2PKPiBeauty2CharmLine', 
