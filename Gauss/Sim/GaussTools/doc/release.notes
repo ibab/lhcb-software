@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v19r1 2014-07-03 ========================
 ! 2014-05-09 - Heinrich Schindler
  - Add GiGaMagFieldSpecial class by Marius Bjornstad.
 
