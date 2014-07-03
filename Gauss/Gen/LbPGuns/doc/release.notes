@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v5r0 2014-07-03 ==========================
+! 2014-07-03 - Gloria Corti
+ - Use new data package with v*. Exact version to be set in Gauss itself.
+
 !========================== LbPGuns v4r3 2014-06-23 ==========================
 ! 2014-06-06 - Victor Coco
  - Modified MomentumSpectrum so that GetRandom from the TH2D and TH3D gets a 
