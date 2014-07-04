@@ -52,7 +52,7 @@ DECLARE_ALGORITHM_FACTORY( TrackMonitor )
 //=============================================================================
 TrackMonitor::TrackMonitor(const std::string& name,
                            ISvcLocator* pSvcLocator ) :
-  TrackMonitorBase( name , pSvcLocator )
+TrackMonitorBase( name , pSvcLocator )
 {
   // FIXME: remove this unused flag
   declareProperty( "UseUT"       , m_useUT =  false );
@@ -74,9 +74,9 @@ StatusCode TrackMonitor::initialize()
 
   m_ttExpectation = 
     getDetIfExists<DeSTDetector>(DeSTDetLocation::location("TT")) ? tool<IHitExpectation>("TTHitExpectation") : 
-    (getDetIfExists<DeSTDetector>(DeSTDetLocation::location("UT")) ? tool<IHitExpectation>("UTHitExpectation") : 0) ;
-  m_itExpectation = getDetIfExists<DeSTDetector>(DeSTDetLocation::location("IT")) ? tool<IHitExpectation>("ITHitExpectation") : 0 ;
-  m_otExpectation = getDetIfExists<DeOTDetector>(DeOTDetectorLocation::Default) ? tool<IHitExpectation>("OTHitExpectation") : 0 ;
+    (getDetIfExists<DeSTDetector>(DeSTDetLocation::location("UT")) ? tool<IHitExpectation>("UTHitExpectation") : 0);
+  m_itExpectation = getDetIfExists<DeSTDetector>(DeSTDetLocation::location("IT")) ? tool<IHitExpectation>("ITHitExpectation") : 0;
+  m_otExpectation = getDetIfExists<DeOTDetector>(DeOTDetectorLocation::Default) ? tool<IHitExpectation>("OTHitExpectation") : 0;
   
   return StatusCode::SUCCESS;
 }
@@ -152,8 +152,8 @@ namespace {
       
     case LHCb::Measurement::VP:
       {
-	const LHCb::VPMeasurement* vpmeas = dynamic_cast<const LHCb::VPMeasurement*>(&meas);
-	rc = vpmeas && vpmeas->projection() == LHCb::VPMeasurement::X ? VPX : VPY;
+        const LHCb::VPMeasurement* vpmeas = dynamic_cast<const LHCb::VPMeasurement*>(&meas);
+        rc = vpmeas && vpmeas->projection() == LHCb::VPMeasurement::X ? VPX : VPY;
       }
       break;
     case LHCb::Measurement::VeloLiteR:
@@ -250,11 +250,11 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
           // discard extremely small fraction of hits with zero error
           // on residual. (e.g. a downstream track with only one
           // active TT hit)
-          && (*inode)->errResidual2() > TrackParameters::lowTolerance
-	  && (mtype = hittypemap( (*inode)->measurement() ) )!=HitTypeUnknown ) {
+          && (*inode)->errResidual2() > TrackParameters::lowTolerance 
+          && (mtype = hittypemap( (*inode)->measurement() ) )!=HitTypeUnknown )  {
 	
-	const std::string& name = HitTypeName[ mtype ] ;
-	const double resmax    = HitTypeMaxRes[ mtype ] ;
+        const std::string& name = HitTypeName[ mtype ] ;
+        const double resmax    = HitTypeMaxRes[ mtype ] ;
 	
         // factor for unbiasing the rms (not the mean!)
         double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
@@ -283,26 +283,26 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
                  type+"/"+name+"residualVsR",name+" residual vs R",
                  10,42,-resmax,resmax, 16, 50);
 
-	  if( m_veloDet) {
-	    // now get the pitch ...
-	    double pitch(1) ;
-	    if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
-		(*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
-	      const LHCb::VeloCluster* clus = 
-		static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
-	      const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
-	      pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
-	    } else {
-	      const LHCb::VeloCluster* clus = 
-		static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
-	      const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
-	      pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
-	    }
-	    plot2D(pitch,(*inode)->residual()*f/cosalpha,
-		   type+"/"+name+"residualVsPitch",name+" residual vs pitch",
-		   0.04,0.100,-resmax,resmax, 12, 50);
-	  }
-	}
+          if( m_veloDet) {
+            // now get the pitch ...
+            double pitch(1) ;
+            if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ||
+                (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi) {
+              const LHCb::VeloCluster* clus = 
+                static_cast<LHCb::VeloPhiMeasurement&>((*inode)->measurement()).cluster() ;
+              const DeVeloPhiType* phiDet = m_veloDet->phiSensor( clus->channelID().sensor() );
+              pitch = r * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
+            } else {
+              const LHCb::VeloCluster* clus = 
+                static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
+              const DeVeloRType* rDet = m_veloDet->rSensor( clus->channelID().sensor() );
+              pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
+            }
+            plot2D(pitch,(*inode)->residual()*f/cosalpha,
+                   type+"/"+name+"residualVsPitch",name+" residual vs pitch",
+                   0.04,0.100,-resmax,resmax, 12, 50);
+          }
+        }
       } else if( (*inode)->type() == LHCb::Node::Outlier ) {
         ++numoutliers ;
       }
@@ -323,13 +323,13 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     double mom = track.p()/Gaudi::Units::GeV ;
     if( kalfit->chi2Velo().nDoF() > 0 ) 
       profile1D( mom, kalfit->chi2Velo().prob(), type+"/chi2ProbVeloVsMom",
-		 "chi2 prob for velo segment versus momentum",0,30,30) ;
+                 "chi2 prob for velo segment versus momentum",0,30,30) ;
     if( kalfit->chi2Downstream().nDoF() > 0 ) 
       profile1D( mom, kalfit->chi2Downstream().prob(), type+"/chi2ProbDownstreamVsMom",
-		 "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
+                 "chi2 prob for T(muon) segment versus momentum",0,30,30) ;
     if( kalfit->chi2Match().nDoF() > 0 )
       profile1D(mom, kalfit->chi2Match().prob(),type+"/chi2ProbMatchVsMom",
-		"chi2 prob upstream-downstream match versus momentum",0,30,30) ;
+                "chi2 prob upstream-downstream match versus momentum",0,30,30) ;
     if( kalfit->chi2().nDoF() > 0 ) {
       profile1D(mom, kalfit->chi2().prob(),type+"/chi2ProbVsMom","chi2 prob versus momentum",0,50,50) ;
       profile1D(track.pseudoRapidity(), kalfit->chi2().prob(),type+"/chi2ProbVsEta","chi2 prob versus eta",2,5,30) ;
@@ -389,22 +389,23 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 
       // compare to what we expected
       if (expHitPattern.numOTHits() > 0 ){
-	plot(nOTHits  - expHitPattern.numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
+        plot(nOTHits  - expHitPattern.numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
       }
       
       // compare to what we expected
       if (expHitPattern.numITHits() > 0){
-	plot(nITHits  - expHitPattern.numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
+        plot(nITHits  - expHitPattern.numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
       }
       
       // compare to what we expected
       if (expHitPattern.numTTHits() > 0){
-	plot(nTTHits - expHitPattern.numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
+        plot(nTTHits - expHitPattern.numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
       }
       
       // compare to what we expected
       if (expHitPattern.numVeloR() + expHitPattern.numVeloPhi() > 0){
-	plot(nVeloHits - expHitPattern.numVeloR() - expHitPattern.numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+        plot(nVeloHits - expHitPattern.numVeloR() - expHitPattern.numVeloPhi(), 
+             type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
       }
     }
 
@@ -428,13 +429,13 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     if ( NULL != pvcontainer ) {
       for( LHCb::RecVertices::const_iterator ipv = pvcontainer->begin() ;
            ipv != pvcontainer->end(); ++ipv ) {
-	// Note: this is all already done in trackvertexmonitor!
+        // Note: this is all already done in trackvertexmonitor!
         const LHCb::State* aState = track.stateAt( LHCb::State::ClosestToBeam ) ;
-	if(!aState) aState = &(track.firstState()) ;
-	double dz = (*ipv)->position().z() - aState->z() ;
+        if(!aState) aState = &(track.firstState()) ;
+        double dz = (*ipv)->position().z() - aState->z() ;
         double dx  = aState->x() + dz * aState->tx() - (*ipv)->position().x();
         double dy  = aState->y() + dz * aState->ty() - (*ipv)->position().y();
-	plot( dx,type+"/IPx","IPx", -1.0, 1.0, 100);
+        plot( dx,type+"/IPx","IPx", -1.0, 1.0, 100);
         plot( dy,type+"/IPy","IPy", -1.0, 1.0, 100);
       }
     }

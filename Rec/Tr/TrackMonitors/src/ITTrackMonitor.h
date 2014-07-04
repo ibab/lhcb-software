@@ -44,6 +44,9 @@ class ITTrackMonitor : public TrackMonitorBase {
   void fillHistograms(const LHCb::Track& track, 
                       const std::string& type,
                       const std::vector<LHCb::LHCbID>& itIDs) const ;
+
+  double ProjectedAngle() const;
+  
   double m_refZ;
   double m_xMax;
   double m_yMax;
@@ -53,6 +56,9 @@ class ITTrackMonitor : public TrackMonitorBase {
   bool m_plotsByLayer;  
 
   std::string m_clusterLocation;
+
+  bool m_plotsBySector;//< individual plots by sector
+  bool m_hitsOnTrack;//< plot only hits on tracks
 
 };
 

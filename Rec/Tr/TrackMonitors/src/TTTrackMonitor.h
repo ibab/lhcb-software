@@ -44,12 +44,17 @@ class TTTrackMonitor : public TrackMonitorBase {
 
   unsigned int histoBin(const LHCb::STChannelID& chan) const;
 
+  double ProjectedAngle() const;
+
   double m_refZ;
   double m_xMax;
   double m_yMax;
 
   unsigned int m_minNumTTHits;
   std::string m_clusterLocation;
+  
+  bool m_plotsBySector;//< individual plots by sector
+  bool m_hitsOnTrack;//< plot only hits on tracks
   
 };
 

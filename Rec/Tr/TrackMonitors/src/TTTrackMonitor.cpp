@@ -36,12 +36,14 @@ DECLARE_ALGORITHM_FACTORY( TTTrackMonitor )
 // Standard constructor, initializes variables
 //=============================================================================
 TTTrackMonitor::TTTrackMonitor(const std::string& name,
-                           ISvcLocator* pSvcLocator ) :
+                               ISvcLocator* pSvcLocator ) :
 TrackMonitorBase( name , pSvcLocator ){
 
   declareProperty("ReferenceZ", m_refZ = 2500.0); // midpoint of IT 
-  declareProperty("minNumITHits", m_minNumTTHits = 2u); 
+  declareProperty("minNumTTHits", m_minNumTTHits = 2u); 
   declareProperty("InputData" , m_clusterLocation = STClusterLocation::TTClusters);
+  declareProperty("plotsBySector", m_plotsBySector = false);// residual and signal to noise plots for each sector
+  declareProperty("HitsOnTrack", m_hitsOnTrack = false);// use only hits on tracks (a la track monitor)
   setSplitByType(false) ;
   // dummy intialization, redone in initialize
   m_xMax = 0.;
@@ -98,7 +100,7 @@ StatusCode TTTrackMonitor::execute()
       
       // insert into tmp container
       BOOST_FOREACH( LHCb::LHCbID id, ids ){
-	usedIDs.push_back(id.stID());
+        usedIDs.push_back(id.stID());
       } // for each
       
       fillHistograms(*track,ids,type);
@@ -123,8 +125,8 @@ namespace
 }
 
 void TTTrackMonitor::fillHistograms(const LHCb::Track& track, 
-				    const std::vector<LHCb::LHCbID>& itIds, 
-				    const std::string& type) const
+                                    const std::vector<LHCb::LHCbID>& itIds, 
+                                    const std::string& type) const
 {
 
   // track parameters at some reference z
@@ -132,7 +134,7 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
   StatusCode sc = extrapolator()->propagate(track, m_refZ,aState );
   if( fullDetail() ) {
     plot2D(aState.x()/Gaudi::Units::cm,
-	   aState.y()/Gaudi::Units::cm, "xy", "x vs y", 
+           aState.y()/Gaudi::Units::cm, "xy", "x vs y", 
            -m_xMax,m_xMax, -m_yMax, m_yMax, 50, 50);
   }
   plot(aState.tx(),"tx","tx", -0.2,0.2, 200);
@@ -153,6 +155,8 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
     const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
     
     if ( fNode->hasMeasurement() == false ||  fNode->measurement().type() != LHCb::Measurement::TT) continue;
+    if( m_hitsOnTrack && ( (*iNodes)->type() != LHCb::Node::HitOnTrack ) ) continue;
+    if( (*iNodes)->errResidual2() <= TrackParameters::lowTolerance ) continue;
     
     // monitor overlapping tracks
     const LHCb::Measurement& measurement = (**iNodes).measurement();
@@ -168,24 +172,37 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       const STMeasurement* hit = dynamic_cast<const STMeasurement*>(&fNode->measurement());
       plot(fNode->unbiasedResidual(),"unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),"biasedResidual","biasedResidual",  -2., 2., 200 );
+ 
       // rms unbiased residual. that's the one you want to look at.
       double residual = fNode->residual() * std::sqrt(fNode->errMeasure2()/fNode->errResidual2()) ;
-      plot(residual, layerName + "/Residual","Residual (rms unbiased)",-0.5,0.5,100) ;
-
+      plot(residual, "Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
+      plot(residual, layerName + "/Residual","Residual (rms-unbiased)",-0.5,0.5,100) ;
+      if ( m_plotsBySector ) {
+        std::string sectorName = hit->cluster()->sectorName();
+        plot(residual, "BySector/Residual_"+sectorName, "Residual (rms-unbiased)", -0.5, 0.5, 100);
+        plot(fNode->unbiasedResidual(), "BySector/UnbiasedResidual_"+sectorName, "Residual (unbiased)", -0.5, 0.5, 100);
+      }
+      
       // 2D plots in full detail mode
       if( fullDetail() ) {
-	const unsigned int bin = histoBin(chan);
-	plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
-	       "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
-	plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
-	       "/biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+        const unsigned int bin = histoBin(chan);
+        plot2D(bin, residual, "unbiasedResRMSCorrSector"+layerName ,
+               "unbiasedResRMSCorrSector (rms-corrected)", 99.5, 500.5, -2., 2.,401 , 200  );
+        plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
+               "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+        plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
+               "biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
 	
-	double noise = hit->sector().noise(chan) ;
-	if(noise>0) {
-	  const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
-	  plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
-	  plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
-	}
+        double noise = hit->sector().noise(chan) ;
+        if(noise>0) {
+          const double signalToNoise = hit->totalCharge()/noise;
+          plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
+          plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
+          if(m_plotsBySector) {
+            std::string sectorName = hit->cluster()->sectorName();
+            plot(signalToNoise, "BySector/SignalToNoise_"+sectorName, "Signal-to-noise", -0.5, 200.5, 200);
+          }
+        }
       }
 
       // get the measurement and plot ST related quantities
@@ -196,7 +213,7 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       Gaudi::XYZVector dir = fNode->state().slopes() ;
       profile1D(dir.x() , hit->size(), "cluster size vs tx", "cluster size vs tx", -0.3, 0.3 ) ;
       profile1D(std::sqrt( dir.x() * dir.x() + dir.y() * dir.y() )/ dir.z(),
-		hit->totalCharge(), "cluster charge vs slope", "cluster charge vs local slope",0,0.4) ;
+                hit->totalCharge(), "cluster charge vs slope", "cluster charge vs local slope",0,0.4) ;
       
       if (hit->highThreshold() ) ++nHigh;
       measVector.push_back(hit);
@@ -216,51 +233,53 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
     std::string prefix = std::string(layname[ilay]) + "/" ;
     if( !type.empty() ) prefix.insert(0,type + "/") ;
     plot( nodesByTTLayer[ilay].size(), prefix + "Number of hits", "Number of hits",
-	  -0.5,5.5) ;
+          -0.5,5.5) ;
 
     if( nodesByTTLayer[ilay].size() == 2 ) {
       const LHCb::FitNode* firstnode = nodesByTTLayer[ilay].front() ;
       const LHCb::FitNode* secondnode = nodesByTTLayer[ilay].back() ;
       
       if( firstnode->measurement().detectorElement() != 
-	  secondnode->measurement().detectorElement() ) {
+          secondnode->measurement().detectorElement() ) {
 
-	if( firstnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() >
-	    secondnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() )
-	  std::swap( firstnode, secondnode ) ;
+        if( firstnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() >
+            secondnode->measurement().detectorElement()->geometry()->toGlobal(Gaudi::XYZPoint()).x() )
+          std::swap( firstnode, secondnode ) ;
 	
-	int firstsign = firstnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
-	int secondsign = secondnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
-	double firstresidual  = firstsign * firstnode->residual() ;
-	double secondresidual =  secondsign * secondnode->residual() ;
+        int firstsign = firstnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
+        int secondsign = secondnode->measurement().trajectory().direction(0).y() >0 ? 1 : -1 ;
+        double firstresidual  = firstsign * firstnode->residual() ;
+        double secondresidual =  secondsign * secondnode->residual() ;
 
-	double diff = firstresidual - secondresidual ;
+        double diff = firstresidual - secondresidual ;
 	
-	// let's still make the correction for the track angle, such that we really look in the wafer plane.
-	Gaudi::XYZVector localdir = 
-	  firstnode->measurement().detectorElement()->geometry()->toLocal( firstnode->state().slopes() ) ;
-	double localTx  = localdir.x()/localdir.z() ;
-	diff *= std::sqrt( 1+localTx*localTx) ;
+        // let's still make the correction for the track angle, such that we really look in the wafer plane.
+        Gaudi::XYZVector localdir = 
+          firstnode->measurement().detectorElement()->geometry()->toLocal( firstnode->state().slopes() ) ;
+        double localTx  = localdir.x()/localdir.z() ;
+        diff *= std::sqrt( 1+localTx*localTx) ;
 
-	const std::string layerName = TTNames().UniqueLayerToString(firstnode->measurement().lhcbID().stID());
-	plot( diff, prefix + "Overlap residual",std::string("Overlap residuals in ") + layerName, -1.0, 1.0 ,100);
-	plot( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2()),
-	      prefix + "Residuals in overlaps (left)", std::string("Residuals in overlaps (left) in ")+ layerName , -0.5, 0.5, 100) ;
-	plot( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2()),
-	      prefix + "Residuals in overlaps (right)", std::string("Residuals in overlaps (right) in ") + layerName, -0.5, 0.5, 100) ;
+        const std::string layerName = TTNames().UniqueLayerToString(firstnode->measurement().lhcbID().stID());
+        plot( diff, prefix + "Overlap residual",std::string("Overlap residuals in ") + layerName, -1.0, 1.0 ,100);
+        plot( firstresidual * std::sqrt(firstnode->errMeasure2()/firstnode->errResidual2()),
+              prefix + "Residuals in overlaps (left)", std::string("Residuals in overlaps (left) in ")+ layerName , 
+              -0.5, 0.5, 100) ;
+        plot( secondresidual * std::sqrt(secondnode->errMeasure2()/secondnode->errResidual2()),
+              prefix + "Residuals in overlaps (right)", std::string("Residuals in overlaps (right) in ") + layerName, 
+              -0.5, 0.5, 100) ;
 
-	// this needs to be fixed: can we somehow can a consecutive ladder ID?
-	size_t sectorID = ttUniqueSectorID( firstnode->measurement().lhcbID().stID()) ;
-	profile1D( double(sectorID), diff,
-		   prefix + "Overlap residual versus sector ID",
-		   "Average overlap residual versus sector ID",-0.5,47.5,48) ;
+        // this needs to be fixed: can we somehow can a consecutive ladder ID?
+        size_t sectorID = ttUniqueSectorID( firstnode->measurement().lhcbID().stID()) ;
+        profile1D( double(sectorID), diff,
+                   prefix + "Overlap residual versus sector ID",
+                   "Average overlap residual versus sector ID",-0.5,47.5,48) ;
 	
-	if(fullDetail()) {
-	  std::string firstname = firstnode->measurement().detectorElement()->name().substr(55,10) ;
-	  std::string secondname = secondnode->measurement().detectorElement()->name().substr(55,10) ;
-	  plot( diff, prefix + "Overlap residual for " + firstname + " and " + secondname,
-		"Overlap residual for " + firstname + " and " + secondname,-1.0, 1.0 ,50);
-	}
+        if(fullDetail()) {
+          std::string firstname = firstnode->measurement().detectorElement()->name().substr(55,10) ;
+          std::string secondname = secondnode->measurement().detectorElement()->name().substr(55,10) ;
+          plot( diff, prefix + "Overlap residual for " + firstname + " and " + secondname,
+                "Overlap residual for " + firstname + " and " + secondname,-1.0, 1.0 ,50);
+        }
       }
     }
   }
@@ -275,3 +294,8 @@ unsigned int TTTrackMonitor::histoBin(const LHCb::STChannelID& chan) const {
 }
 
 
+// Projected angle
+double TTTrackMonitor::ProjectedAngle() const {
+  // placeholder for new method
+  return 0.;
+}
