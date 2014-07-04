@@ -8,8 +8,11 @@
 !  by                $Author:$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-04 - Vanya Belyaev
+ - minor fix 
+
 ! 2014-07-03 - Vanya Belyaev
- - improve comvension machinery for ROOT.RooRealVar 
+ - improve conversion machinery for ROOT.RooRealVar and corresponding operations  
 
 ! 2014-07-02 - Sasha Baranov
  - Added filelist dependency for SelectorWithVarsCached

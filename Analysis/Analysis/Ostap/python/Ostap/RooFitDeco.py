@@ -599,36 +599,38 @@ def _rrv_gt_ ( s , o ) :
     """
     return o < s.getVal()
 
-# ==========================================
-_is_equal_ = cpp.LHCb.Math.equal_to_double 
-## (compare RooRealVar and "number"
-def _rrv_eq_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var == num : print ' ok! '
-    """
-    return    _is_equal_ ( o , s.getVal() ) 
-
-## (compare RooRealVar and "number"
-def _rrv_ne_ ( s , o ) :
-    """
-    compare RooRealVal and ``number''
-    
-    >>> var = ...
-    >>> num = ...
-    >>> iv var != num : print ' ok! '
-    """
-    return not _is_equal_ ( o , s.getVal() ) 
-
 ROOT.RooRealVar . __lt__   = _rrv_lt_
 ROOT.RooRealVar . __gt__   = _rrv_gt_
 ROOT.RooRealVar . __le__   = _rrv_le_
 ROOT.RooRealVar . __ge__   = _rrv_ge_
-ROOT.RooRealVar . __eq__   = _rrv_eq_
-ROOT.RooRealVar . __ne__   = _rrv_ne_
+
+## # ==========================================
+## _is_equal_ = cpp.LHCb.Math.equal_to_double 
+## ## (compare RooRealVar and "number"
+## def _rrv_eq_ ( s , o ) :
+##     """
+##     compare RooRealVal and ``number''
+    
+##     >>> var = ...
+##     >>> num = ...
+##     >>> iv var == num : print ' ok! '
+##     """
+##     return    _is_equal_ ( o , s.getVal() ) 
+
+## ## (compare RooRealVar and "number"
+## def _rrv_ne_ ( s , o ) :
+##     """
+##     compare RooRealVal and ``number''
+    
+##     >>> var = ...
+##     >>> num = ...
+##     >>> iv var != num : print ' ok! '
+##     """
+##     return not _is_equal_ ( o , s.getVal() ) 
+
+
+## ROOT.RooRealVar . __eq__   = _rrv_eq_
+## ROOT.RooRealVar . __ne__   = _rrv_ne_
 
 ## product of two PDFs 
 def _pdf_mul_ ( pdf1 , pdf2 ) :
