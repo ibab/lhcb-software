@@ -190,3 +190,19 @@ def getLineBuildersFromModule(confModule) :
             lineBuilderDict[lb.__name__] = lb
     return lineBuilderDict
 
+def getBuilderConfFromModule(confModule) :
+    """
+    Extract all the line builders from a given module.
+    Return as a class name : class dictionary.
+    """
+    lbs = [getattr( confModule, x) for x in confModule.__dict__.keys()]
+    lbs = filter(lambda lb : inspect.isclass(lb), lbs)
+    lbs = filter(lambda lb : issubclass(lb, LineBuilder), lbs)
+    builderConfDict = {}
+    for lb in lbs :
+      if confModule.__dict__.has_key('default_config'):
+        tmpKeys = confModule.default_config.keys()
+        tmpKeys.sort(key=lambda x: x[0])
+        if not tmpKeys == ['BUILDERTYPE', 'CONFIG', 'NAME', 'STREAMS', 'WGs']: continue
+        builderConfDict[confModule.default_config['NAME']] = confModule.default_config 
+    return builderConfDict
