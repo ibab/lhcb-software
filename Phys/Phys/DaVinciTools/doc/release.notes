@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-07-03 - O. Deschamps
+ - BremAdder : store number of added brems in HasBremAdded particle::info()   (replace binary information)
+
 ! 2014-07-02 - Anton Poluektov 
  - Move RelatedInfoNamed to Phys/DaVinciTypes, update RelInfo... tools accordingly
 

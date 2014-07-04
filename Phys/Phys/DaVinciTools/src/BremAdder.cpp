@@ -120,16 +120,7 @@ bool BremAdder::addBrem2Pair( LHCb::Particle* p1, LHCb::Particle* p2 , bool forc
 
 //---- indicate whether the particle has a brem added or not
 bool BremAdder::hasBrem(const LHCb::Particle* particle){
-  return (particle->info(LHCb::Particle::HasBremAdded,0.) == 1.);
-  /*
-    const LHCb::ProtoParticle* proto = particle ->proto();
-    if( NULL == proto) return false;
-    if( NULL == proto->track() )return false;
-    const LHCb::State*  state = usedState( proto->track() );
-    double eps = 1E-4;
-    if( fabs( particle->momentum().P() - state->p()) > eps )return true ;
-    return false;
-  */
+  return (particle->info(LHCb::Particle::HasBremAdded,0.) > 0.);
 }
 
 //---- get the associate Brem vector
@@ -287,7 +278,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
 
   // add flag
   particle->eraseInfo(LHCb::Particle::HasBremAdded);
-  particle->addInfo(LHCb::Particle::HasBremAdded,1.);
+  particle->addInfo(LHCb::Particle::HasBremAdded,double(brems.size()) );
 
   // update covariance matrices
   (Gaudi::SymMatrix4x4&)particle->momCovMatrix() += bremPhoton.momCovMatrix();
@@ -302,6 +293,7 @@ bool BremAdder::brem4particle( LHCb::Particle* particle,
   }
   return true;
 }
+
 
 //----
 const std::pair<Gaudi::XYZPoint,Gaudi::SymMatrix3x3>
