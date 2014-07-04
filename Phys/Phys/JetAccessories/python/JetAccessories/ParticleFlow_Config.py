@@ -214,24 +214,13 @@ class ParticleFlowConf:
     def setupHCAL(self):
        ## Create Sequencer
         ## Call the cluster creation
-        hcalClus = CellularAutomatonAlg('HcalClusterization')
-        hcalClus.OutputData = 'Rec/Calo/HcalClusters'
-        hcalClus.addTool(CaloClusterizationTool,name="CaloClusterizationTool")
-        hcalClus.CaloClusterizationTool.CellSelectorForEnergy = '2x2'
+        hcalClus = CellularAutomatonAlg('HcalClusterization')  # name is enough to setup I/O
         self.PFSeq.Members += [hcalClus]
         ## Get the covariance matrix
         clustCov = CaloClusterCovarianceAlg('HcalCov')
-        clustCov.InputData =  'Rec/Calo/HcalClusters'
-        clustCov.Resolution = 0.7
-        clustCov.GainError = 0.1
-        clustCov.Detector = '/dd/Structure/LHCb/DownstreamRegion/Hcal'
-        clustCov.CovarianceName = 'HcalCovarTool'
-        clustCov.SpreadName = 'HcalSpreadTool'
-        clustCov.addTool(ClusterSpreadTool,name ='HcalSpreadTool' )
-        clustCov.HcalSpreadTool.Detector= '/dd/Structure/LHCb/DownstreamRegion/Hcal'
-        clustCov.addTool(ClusterCovarianceMatrixTool,name ='HcalCovarTool' )
-        clustCov.HcalCovarTool.Detector= '/dd/Structure/LHCb/DownstreamRegion/Hcal'
-        #clustCov.SubClusterType = "SubClusterSelector3x3"
+        clustCov.EnergyTags = [ '2x2' ]
+        clustCov.CovarianceParameters["Stochastic"] = [0.7]  
+        clustCov.CovarianceParameters["GainError"]  = [0.1]
         self.PFSeq.Members += [clustCov]
         
         ## Get Association to tracks
