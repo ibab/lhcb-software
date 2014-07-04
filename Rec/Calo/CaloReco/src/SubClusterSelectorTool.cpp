@@ -23,40 +23,44 @@ SubClusterSelectorTool::SubClusterSelectorTool( const std::string& type,
                                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_condition          ("")
-  , m_taggerE            ( 1 , "useDB") 
-  , m_taggerP            ( 1 , "useDB") 
+  , m_taggerE            ()
+  , m_taggerP            ()
   , m_tagE               ()
   , m_tagP               ()
-  , m_det(DeCalorimeterLocation::Ecal){
+  , m_det                ()
+  , m_energyStatus  (LHCb::CaloDigitStatus::UseForEnergy   |  LHCb::CaloDigitStatus::UseForCovariance)
+  , m_positionStatus(LHCb::CaloDigitStatus::UseForPosition |  LHCb::CaloDigitStatus::UseForCovariance){
   declareInterface<SubClusterSelectorTool>(this);
   StringArrayProperty eTags( "EnergyTags"     , m_taggerE      ) ;
   StringArrayProperty pTags( "PositionTags"   , m_taggerP      ) ;
-  StringProperty      det  ( "Detector"       , m_det          ) ;  
-  StringProperty      cond ( "TagCondition"   , m_condition    ) ;  
   
   // inherit properties from parents
-  if( 0 != parent ){ const IProperty* prop = dynamic_cast<const IProperty*> ( parent );
+  if( 0 != parent ){ 
+    const IProperty* prop = dynamic_cast<const IProperty*> ( parent );
     if( 0 != prop ){
       StatusCode sc;
-      sc=prop->getProperty( &cond       );
       sc=prop->getProperty( &eTags      );
       sc=prop->getProperty( &pTags      );
-      sc=prop->getProperty( &det        );
-      if(sc.isFailure())warning()<<"Unable to get properties"<<endmsg;
-      else{
+      if( sc.isSuccess() ){
         m_taggerE   = eTags.value();
         m_taggerP   = pTags.value();
-        m_det       = det.value();
-        m_condition = cond.value();
       } 
     }
   }
-
+  
   // declare Properties
   declareProperty("EnergyTags"    , m_taggerE   );
   declareProperty("PositionTags"  , m_taggerP   );
   declareProperty("Detector"      , m_det       );
-  declareProperty("TagCondition"  , m_condition );
+  declareProperty("ConditionName", m_condition );
+  
+  // define calo-dependent property
+  m_det       = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_condition = "Conditions/Reco/Calo/"+ LHCb::CaloAlgUtils::CaloNameFromAlg( name ) + "ClusterMasks";
+
+  // apply local default setting if not defined by parent
+  if(m_taggerE.size() == 0)m_taggerE = std::vector<std::string>(1,"useDB");
+  if(m_taggerP.size() == 0)m_taggerP = std::vector<std::string>(1,"useDB");
 
   // associate known cluster mask to tagger tool
   declareProperty("ClusterTaggers" , m_clusterTaggers);
@@ -65,7 +69,6 @@ SubClusterSelectorTool::SubClusterSelectorTool( const std::string& type,
   m_clusterTaggers[ "3x3"]        =  "SubClusterSelector3x3";
   m_clusterTaggers[ "2x2"]        =  "SubClusterSelector2x2";
   m_clusterTaggers[ "SwissCross"] =  "SubClusterSelectorSwissCross";
-
 }
 //=============================================================================
 // Destructor
@@ -79,14 +82,35 @@ StatusCode SubClusterSelectorTool::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  // DB accessor tool
-  m_dbAccessor = tool<CaloCorrectionBase>("CaloCorrectionBase","DBAccessor",this);
+  // register to incident service
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
 
   // get detector element
   m_detector = getDet<DeCalorimeter> ( m_det   );
+  if( NULL == m_detector)return Error("Cannot access DetectorElement at '"+m_det,StatusCode::FAILURE);
 
-  // set
-  return set(m_detector , m_taggerE , m_taggerP );
+  // setup DB accessor tool
+  m_dbAccessor = tool<CaloCorrectionBase>("CaloCorrectionBase","DBAccessor",this);
+  sc = m_dbAccessor->setConditionParams(m_condition,true);// force access via DB - if not exist will return empty params
+  if(sc.isFailure())return Warning("Cannot access DB",StatusCode::FAILURE);
+  m_DBtaggerE=std::vector<std::string>(m_detector->numberOfAreas(),"unset");
+  m_DBtaggerP=std::vector<std::string>(m_detector->numberOfAreas(),"unset");
+  m_sourceE=" (none)";
+  m_sourceP=" (none)";
+
+  // always set options parameters first
+  sc=getParamsFromOptions();
+  if( sc.isFailure())return Error("Cannot setup initial parameters",StatusCode::FAILURE);
+
+
+  // then possibly update from DB 
+  updateParamsFromDB();
+
+  info() << " Energy   mask : " << m_DBtaggerE << m_sourceE << endmsg;
+  info() << " Position mask : " << m_DBtaggerP << m_sourceP << endmsg;
+
+  return sc;
 }
 
 
@@ -97,6 +121,7 @@ StatusCode SubClusterSelectorTool::tagEnergy( LHCb::CaloCluster* cluster ){
   if( NULL == tagger )return Warning( "Tagger not found" , StatusCode::FAILURE);
   return tagger->tag(cluster);
 }
+
 StatusCode SubClusterSelectorTool::tagPosition( LHCb::CaloCluster* cluster ){
   // get the tagger
   LHCb::CaloCellID id = cluster->seed();
@@ -104,6 +129,7 @@ StatusCode SubClusterSelectorTool::tagPosition( LHCb::CaloCluster* cluster ){
   if( NULL == tagger )return Warning( "Tagger not found" , StatusCode::FAILURE);
   return tagger->tag(cluster);
 }
+
 StatusCode SubClusterSelectorTool::tag( LHCb::CaloCluster* cluster ){
   StatusCode sc;
   sc = tagEnergy( cluster);
@@ -112,71 +138,94 @@ StatusCode SubClusterSelectorTool::tag( LHCb::CaloCluster* cluster ){
 }
 
 
-
-StatusCode SubClusterSelectorTool::set(DeCalorimeter* detector, 
-                                        std::vector<std::string> tagE, std::vector<std::string> tagP){
-  // first check if parameters exists in reconstruction conditions
-  unsigned int narea = detector->numberOfAreas();
-  LHCb::CaloCellID fake = LHCb::CaloCellID(m_detector->caloName(), 0 ,0,0);
-  if( m_condition == "" )m_condition = "Conditions/Reco/Calo/"+fake.caloName() + "ClusterMasks"; // default condition path
-  StatusCode sc = m_dbAccessor->setConditionParams(m_condition,true);// force access via DB - if not exist will return empty params
-  if(sc.isFailure())return Warning("Cannot access DB",StatusCode::FAILURE);
-  // extend tagger per area when needed
-  if( tagE.size() == 1)tagE = std::vector<std::string>(narea , tagE[0]);
-  if( tagP.size() == 1)tagP = std::vector<std::string>(narea , tagP[0]);
-  if( tagE.size() != detector->numberOfAreas() || tagP.size() != detector->numberOfAreas())
-    return Error("You must define the tagger for each calo area");
-
-  using namespace LHCb::CaloDigitStatus; 
-  LHCb::CaloDigitStatus::Status forEnergy   = UseForEnergy   | UseForCovariance;
-  LHCb::CaloDigitStatus::Status forPosition = UseForPosition | UseForCovariance;
+void SubClusterSelectorTool::updateParamsFromDB(){
 
   using namespace CaloClusterMask;
-  bool fromDB = false;
-  // == Define Energy tagger per area
+  unsigned int narea = m_detector->numberOfAreas();
   for( unsigned int area = 0 ; area < narea ; ++area){
-    std::string nameE = tagE[area] ;
-    std::string nameP = tagP[area] ;
-    std::string  flagE = "From User";
-    std::string  flagP = "From User";
-
-    // fake cell
     LHCb::CaloCellID id = LHCb::CaloCellID(m_detector->caloName(), area ,0,0);
-    if( nameE == "useDB" ){
-      fromDB = true;
-      CaloClusterMask::Mask maskE = (CaloClusterMask::Mask) m_dbAccessor->getParameter(CaloCorrection::EnergyMask ,0, id , 0.); // default is 3x3 when no DB
-      nameE=maskName[maskE];
-      tagE[area] = nameE;
-    }
-    if( nameP == "useDB" ){
-      fromDB = true;
-      CaloClusterMask::Mask maskP = (CaloClusterMask::Mask) m_dbAccessor->getParameter(CaloCorrection::PositionMask,0, id , 0.); // default is 3x3 when no DB
-      nameP=maskName[maskP];
-      tagP[area] = nameP;
-    }
-    std::string taggerE   = (m_clusterTaggers.find(nameE) != m_clusterTaggers.end()) ? m_clusterTaggers[nameE]  : "";
-    if(taggerE == "")return Error("Cannot find a  '"+nameE+"' tagger - You must select or define a known tagging method",
-                                  StatusCode::FAILURE);
-    std::string taggerP   = (m_clusterTaggers.find(nameP) != m_clusterTaggers.end()) ? m_clusterTaggers[nameP]  : ""; 
-    if(taggerP == "")return Error("Cannot find a  '"+nameP+"' tagger - You must select or define a known tagging method",
-                                  StatusCode::FAILURE);
-    std::string areaName = id.areaName();
-    ICaloSubClusterTag* tE = tool<ICaloSubClusterTag>(taggerE,areaName+"EnergyTagger",this);
-    tE->setMask(forEnergy); 
-    m_tagE.push_back( tE  );
 
-    ICaloSubClusterTag* tP= tool<ICaloSubClusterTag>(taggerP,areaName+"PositionTagger",this);
-    tP->setMask(forPosition);    
-    m_tagP.push_back( tP  );    
+    if( m_taggerE[area] == "useDB"){
+      m_sourceE=" (from DB) ";
+      Mask maskE = (Mask) m_dbAccessor->getParameter(CaloCorrection::EnergyMask ,0, id , 0.); // default is 3x3 when no DB
+      std::string nameE=maskName[maskE];
+      if( nameE != m_DBtaggerE[area] ){  // DB has changed ! update !      
+        std::string taggerE   = (m_clusterTaggers.find(nameE) != m_clusterTaggers.end()) ? m_clusterTaggers[nameE]  : "";
+        if(taggerE != ""){
+          ICaloSubClusterTag* tE = tool<ICaloSubClusterTag>(taggerE,id.areaName()+"EnergyTagger",this);
+          tE->setMask(m_energyStatus); 
+          m_tagE.push_back( tE  );
+          m_DBtaggerE[area] = nameE;
+        }else
+          Warning("Cannot update energy mask from DB",StatusCode::FAILURE).ignore();
+      }
+    }    
 
-    // printout
-    if ( UNLIKELY(msgLevel(MSG::DEBUG)))debug()   << areaName << " Energy tagger   : " << nameE << " (" << tagE << ")"  << endmsg;
-    if ( UNLIKELY(msgLevel(MSG::DEBUG)))debug()   << areaName << " Position tagger : " << nameP << " (" << tagP << ")"  << endmsg;
+    if( m_taggerP[area] == "useDB"){
+      m_sourceP=" (from DB) ";
+      Mask maskP = (Mask) m_dbAccessor->getParameter(CaloCorrection::PositionMask ,0, id , 0.); // default is 3x3 when no DB
+      std::string nameP=maskName[maskP];
+      if( nameP != m_DBtaggerP[area] ){  // DB has changed ! update !      
+        std::string taggerP   = (m_clusterTaggers.find(nameP) != m_clusterTaggers.end()) ? m_clusterTaggers[nameP]  : "";
+        if(taggerP != ""){
+          ICaloSubClusterTag* tP = tool<ICaloSubClusterTag>(taggerP,id.areaName()+"PositionTagger",this);
+          tP->setMask(m_positionStatus); 
+          m_tagP.push_back( tP  );
+          m_DBtaggerP[area] = nameP;
+        }else
+          Warning("Cannot update position mask from DB",StatusCode::FAILURE).ignore();
+      }
+    }
   }
-  info() << "Tagger -  Energy : " << tagE << " - Position :  " << tagP;
-  if(fromDB) info() << " (from DB)" ;
-  info() << endmsg;
+}
+
   
+
+  
+StatusCode SubClusterSelectorTool::getParamsFromOptions(){
+  
+  unsigned int narea = m_detector->numberOfAreas();
+  LHCb::CaloCellID fake = LHCb::CaloCellID(m_detector->caloName(), 0 ,0,0);
+
+  // extend tagger per area when needed
+  if( m_taggerE.size() == 1)m_taggerE = std::vector<std::string>(narea , m_taggerE[0]);
+  if( m_taggerP.size() == 1)m_taggerP = std::vector<std::string>(narea , m_taggerP[0]);
+  if( m_taggerE.size() != m_detector->numberOfAreas() || m_taggerP.size() != m_detector->numberOfAreas())
+    return Error("You must define the tagger for each calo area");
+
+
+  using namespace CaloClusterMask;
+  // == Define Energy tagger per area
+  m_DBtaggerE=std::vector<std::string>(narea,"unset");
+  m_DBtaggerP=std::vector<std::string>(narea,"unset");
+  for( unsigned int area = 0 ; area < narea ; ++area){
+    LHCb::CaloCellID id = LHCb::CaloCellID(m_detector->caloName(), area ,0,0); // fake cell
+    std::string areaName = id.areaName();
+
+    std::string nameE = m_taggerE[area] ;
+    if( nameE != "useDB" ){
+      m_sourceE=" (from options) ";
+      std::string taggerE   = (m_clusterTaggers.find(nameE) != m_clusterTaggers.end()) ? m_clusterTaggers[nameE]  : "";
+      if(taggerE == "")
+        return Error("Cannot find a  '"+nameE+"' tagger - You must select or define a known tagging method",StatusCode::FAILURE);
+      ICaloSubClusterTag* tE = tool<ICaloSubClusterTag>(taggerE,areaName+"EnergyTagger",this);
+      tE->setMask(m_energyStatus); 
+      m_tagE.push_back( tE  );
+      m_DBtaggerE[area]=nameE;
+    }
+
+    std::string nameP = m_taggerP[area] ;
+    if( nameP != "useDB" ){
+      m_sourceP=" (from options) ";
+      std::string taggerP   = (m_clusterTaggers.find(nameP) != m_clusterTaggers.end()) ? m_clusterTaggers[nameP]  : ""; 
+      if(taggerP == "")
+        return Error("Cannot find a  '"+nameP+"' tagger - You must select or define a known tagging method",StatusCode::FAILURE);
+      ICaloSubClusterTag* tP= tool<ICaloSubClusterTag>(taggerP,areaName+"PositionTagger",this);
+      tP->setMask(m_positionStatus);    
+      m_tagP.push_back( tP  );    
+    }    
+  }
+
   return StatusCode::SUCCESS;
 }
 

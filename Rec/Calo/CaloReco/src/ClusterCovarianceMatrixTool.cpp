@@ -2,6 +2,7 @@
 // Include files
 #include "GaudiKernel/ToolFactory.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloUtils/CaloAlgUtils.h"
 #include "Event/CaloCluster.h"
 #include "ClusterCovarianceMatrixTool.h"
 
@@ -12,6 +13,7 @@
  *
  *  @date 02/11/2001 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  modified 02/07/2014 by O. Deschamps
  */
 // ============================================================================
 
@@ -30,169 +32,201 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   const IInterface*  parent )
   : GaudiTool( type , name , parent )
   , m_estimator (      ) 
-  , m_a         ( "", 0.10 )
-  , m_gainErr   ( "", 0.01 )
-  , m_noiseIn   ( "", 1.2  ) 
-  , m_noiseCo   ( "", 0.3  )
-  , m_detData   ( DeCalorimeterLocation::Ecal )
+  , m_parameters ( )
+  , m_detData    ( )
   , m_det(0)
-  , m_useDB(true){
+  , m_useDB(true)
+  , m_source(){
   // interface!
   declareInterface<ICaloClusterTool> (this);
-  // try to get properties from the parent 
-  DoubleProperty resolution      ( "Resolution"      , m_a       ) ;
-  DoubleProperty gainError       ( "GainError"       , m_gainErr ) ;
-  DoubleProperty noiseIncoherent ( "NoiseIncoherent" , m_noiseIn ) ;
-  DoubleProperty noiseCoherent   ( "NoiseCoherent"   , m_noiseCo ) ;
-  StringProperty detData         ( "Detector"        , m_detData ) ;
 
-  // Inherit properties from parent algorithm
-  if( 0 != parent ){
-      const IProperty* prop = 
-        dynamic_cast<const IProperty*> ( parent );
-      if( 0 != prop ){
-          StatusCode sc;
-          sc=prop->getProperty( &resolution      );
-          sc=prop->getProperty( &gainError       );
-          sc=prop->getProperty( &noiseIncoherent );
-          sc=prop->getProperty( &noiseCoherent   );
-          sc=prop->getProperty( &detData         );
-          if(sc.isFailure())warning()<<"Unable to get properties"<<endmsg;
-        }
+  // properties :
+  declareProperty( "Parameters"       , m_parameters   );
+  declareProperty( "UseDBParameters"  , m_useDB=true   );
+  declareProperty( "ConditionName"    , m_conditionName);
+  declareProperty( "Detector"         , m_detData      );
+
+  // set default configuration as a function of detector
+  using namespace CaloCovariance;
+  m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  std::string caloName =  LHCb::CaloAlgUtils::CaloNameFromAlg( name );
+  m_conditionName = "Conditions/Reco/Calo/"+caloName+"Covariance";
+
+
+  // get parameters from parent property when defined
+  ParameterProperty p("CovarianceParameters", m_parameters);
+  if( 0 != parent ){ const IProperty* prop = dynamic_cast<const IProperty*> ( parent );
+    if( 0 != prop ){
+      if( prop->getProperty( &p ).isSuccess() &&  p.value().size() != 0 ){
+        m_parameters = p.value();
+        m_useDB = false ;  // parent settings win !
+      }
     }
-  ///
-  m_a       = resolution      .value() ;
-  m_gainErr = gainError       .value() ;
-  m_noiseIn = noiseIncoherent .value() ;
-  m_noiseCo = noiseCoherent   .value() ;
-  m_detData = detData         .value() ;
-  ///
-  declareProperty( "Resolution"       , m_a       );
-  declareProperty( "GainError"        , m_gainErr );
-  declareProperty( "NoiseIncoherent"  , m_noiseIn );
-  declareProperty( "NoiseCoherent"    , m_noiseCo );
-  declareProperty( "Detector"         , m_detData  );
-  declareProperty( "UseDBParameters"  , m_useDB=true);
-  declareProperty( "ConditionName"    , m_conditionName ="Conditions/Reco/Calo/Covariance");
+  }
+
+  // apply local parameters if not defined in parent algorithm
+  if(caloName == "Ecal"){
+    if(m_parameters.find(ParameterName[Stochastic])     ==m_parameters.end())m_parameters[ParameterName[Stochastic]]     .push_back( 0.10);
+    if(m_parameters.find(ParameterName[GainError])      ==m_parameters.end())m_parameters[ParameterName[GainError]]      .push_back( 0.01 );
+    if(m_parameters.find(ParameterName[IncoherentNoise])==m_parameters.end())m_parameters[ParameterName[IncoherentNoise]].push_back( 1.20 );
+    if(m_parameters.find(ParameterName[CoherentNoise])  ==m_parameters.end())m_parameters[ParameterName[CoherentNoise]]  .push_back( 0.30 );
+    if(m_parameters.find(ParameterName[ConstantE])      ==m_parameters.end())m_parameters[ParameterName[ConstantE]]      .push_back( 0. );
+    if(m_parameters.find(ParameterName[ConstantX])      ==m_parameters.end())m_parameters[ParameterName[ConstantX]]      .push_back( 0. );
+    if(m_parameters.find(ParameterName[ConstantY])      ==m_parameters.end())m_parameters[ParameterName[ConstantY]]      .push_back( 0. );
+  }else if( caloName == "Hcal"){
+    if(m_parameters.find(ParameterName[Stochastic])     ==m_parameters.end())m_parameters[ParameterName[Stochastic]]     .push_back( 0.70 );
+    if(m_parameters.find(ParameterName[GainError])      ==m_parameters.end())m_parameters[ParameterName[GainError]]      .push_back( 0.10 );
+    if(m_parameters.find(ParameterName[IncoherentNoise])==m_parameters.end())m_parameters[ParameterName[IncoherentNoise]].push_back( 1.20 );
+    if(m_parameters.find(ParameterName[CoherentNoise])  ==m_parameters.end())m_parameters[ParameterName[CoherentNoise]]  .push_back( 0.30 );
+    if(m_parameters.find(ParameterName[ConstantE])      ==m_parameters.end())m_parameters[ParameterName[ConstantE]]      .push_back( 0. );
+    if(m_parameters.find(ParameterName[ConstantX])      ==m_parameters.end())m_parameters[ParameterName[ConstantX]]      .push_back( 0. );
+    if(m_parameters.find(ParameterName[ConstantY])      ==m_parameters.end())m_parameters[ParameterName[ConstantY]]      .push_back( 0. );
+  }
 }
-// ============================================================================
-/// destructor, virtual and protected 
-// ============================================================================
+
 ClusterCovarianceMatrixTool::~ClusterCovarianceMatrixTool() {}
 
-// ============================================================================
-/** standard initialization method 
- *  @return status code 
- */
-// ============================================================================
+//==========
+StatusCode ClusterCovarianceMatrixTool::getParamsFromOptions(){
+  m_source.clear();
+  unsigned int nareas = m_det->numberOfAreas();  
+  for(CaloCovariance::ParameterMap::const_iterator imap = m_parameters.begin() ; m_parameters.end() != imap ; ++imap){
+    const std::vector<double>& pars = imap->second;
+    if( pars.size()    == 1)m_parameters[imap->first] = std::vector<double>( nareas , pars[0]   );
+    if( pars.size() != nareas )return Error("Parameters must be set for each calo area",StatusCode::FAILURE);
+  }
+  // check all expected parameters are defined
+  using namespace CaloCovariance;
+  for(unsigned int index = 0 ; index < CaloCovariance::Last ; ++index){
+    if( m_parameters.find(ParameterName[index]) == m_parameters.end() )
+      return Error("No default value for parameter '"+ParameterName[index]+"'", StatusCode::FAILURE);
+    m_source[index]="from options";
+  }
+  return StatusCode::SUCCESS;
+}
 
+//------
+StatusCode ClusterCovarianceMatrixTool::getParamsFromDB(){
 
+  unsigned int nareas = m_det->numberOfAreas();
+  // overwrite m_parameters using DB value
+  if( !m_useDB )return StatusCode::SUCCESS;
+  m_source.clear();
+  using namespace CaloCovariance; 
+  ParameterMap parameters;
+  for( unsigned int area = 0 ; area < nareas ; ++area){  // loop over calo area
+    const LHCb::CaloCellID id(m_det->caloName(),area,0,0); // fake cell
+    const std::vector<double>& params = m_dbAccessor->getParamVector(CaloCorrection::ClusterCovariance,id);
+    if( params.size() > CaloCovariance::Last )
+      Warning("Parameters vector exceeds the number of known parameters - only "
+              +Gaudi::Utils::toString(Last)+" parameters will be applied",StatusCode::SUCCESS).ignore();
+    for(unsigned int index = 0 ; index < CaloCovariance::Last ; ++index){
+      if( index < params.size() ){
+        parameters[ParameterName[index]].push_back( params[index] );
+        m_source[index]="from Covariance DB";
+      }else{
+        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+          debug() << "Parameter '"<<ParameterName[index] << "' not found in DB - use default options value"<<endmsg;
+        if( m_parameters.find(ParameterName[index]) == m_parameters.end() )
+          return Error("No default value for parameter '"+ParameterName[ index ]+"'", StatusCode::FAILURE);
+        parameters[ParameterName[index]].push_back( m_parameters[ParameterName[index]][area] );
+        m_source[index]="from options";
+      }      
+    }
+  }
+  m_parameters=parameters;
+  if( m_parameters.size() == 0)return StatusCode::FAILURE; // no parameters set
+  return StatusCode::SUCCESS;
+}
+
+//-------
+void ClusterCovarianceMatrixTool::setEstimatorParams(){  
+
+  // update DB parameters
+  if( m_useDB && getParamsFromDB().isFailure() ){
+    Error("Failed updating the covariance parameters from DB",StatusCode::FAILURE).ignore(); // update DB parameters
+    return;
+  }
+  using namespace CaloCovariance;
+  m_estimator.setStochastic      ( m_parameters[ParameterName[Stochastic]]      ) ;
+  m_estimator.setGainError       ( m_parameters[ParameterName[GainError]]       ) ;
+  m_estimator.setIncoherentNoise ( m_parameters[ParameterName[IncoherentNoise]] ) ;
+  m_estimator.setCoherentNoise   ( m_parameters[ParameterName[CoherentNoise]]   ) ;
+  m_estimator.setConstantE       ( m_parameters[ParameterName[ConstantE]]       ) ;
+  m_estimator.setConstantX       ( m_parameters[ParameterName[ConstantX]]       ) ;
+  m_estimator.setConstantY       ( m_parameters[ParameterName[ConstantY]]       ) ;  
+}
+
+//---------
 StatusCode ClusterCovarianceMatrixTool::initialize (){
   StatusCode sc = GaudiTool::initialize ();
-  /// 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class!") ; }
+  if( sc.isFailure() ){ return Error("Could not initialize the base class!") ; }
+
+
+  // register to incident service
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
 
   // get detector
-  m_det = getDet<DeCalorimeter>( m_detData) ;
+  m_det = getDet<DeCalorimeter>( m_detData ) ;
 
+  // set DB accessor
+  m_dbAccessor = tool<CaloCorrectionBase>("CaloCorrectionBase","DBAccessor",this);
+  if( m_useDB && (m_conditionName == "" || m_dbAccessor->setConditionParams(m_conditionName,true).isFailure()) )
+    return Error("Cannot access DB",StatusCode::FAILURE);
 
-  std::string flag = " from options";  
-  // get parameters from DB when available  
-  if( m_useDB ){
-    double a =0.;
-    double gE=0.;
-    double iN=0.;
-    double cN=0.;
-    bool ok = true;
-    // first check if parameters exists in reconstruction conditions
-    m_dbAccessor = tool<CaloCorrectionBase>("CaloCorrectionBase","DBAccessor",this);
-    StatusCode scc=m_dbAccessor->setConditionParams(m_conditionName,true);// force access via DB - if not exist will return empty params
-    if( scc.isFailure() )return Error("Cannot access DB",StatusCode::FAILURE);
-    std::vector<double> params=m_dbAccessor->getParams(CaloCorrection::ClusterCovariance).second; 
-    std::string source;
-    if( params.size() == 4 ){
-      source="using 'Reco' Condition";
-      a  = params[0];
-      gE = params[1];
-      iN = params[2];
-      cN = params[3];
-    }else{
-    // if not - use parameters as is 'gain' condition (i.e. detector intrinsic parameters as used for the digitization - may not be adapted)
-      source="using 'Gain' Condition";
-      a  = m_det->stochasticTerm();
-      gE = m_det->gainError();
-      iN = m_det->incoherentNoise();
-      cN = m_det->coherentNoise();
+  // always set default parameters from options (will be updated by DB when requested)
+  sc= getParamsFromOptions();
+
+  // check the consistency
+  for(CaloCovariance::ParameterMap::const_iterator imap = m_parameters.begin() ; m_parameters.end() != imap ; ++imap){
+    std::string name = imap->first;
+    bool ok = false;
+    for(unsigned int index = 0 ; index < CaloCovariance::Last ; ++index){
+      if( CaloCovariance::ParameterName[index] == name ){ ok = true; break;}
     }
-
-    if( a <= 0. || gE <= 0. )ok = false; // check stochastic term & gainError (noises are always defined in gain for digitization)
-    if( ok ){
-      flag = " from DB " + source;
-      m_a       = a  ;  
-      m_gainErr = gE ;
-      m_noiseIn = (iN >= 0. ) ? iN : 0.;
-      m_noiseCo = (cN >= 0. ) ? cN : 0.;
-    }else warning()<<"No parameters for covariance in DB - use options values"<<endmsg;
+    if( !ok )return Error("Parameter type '"+name+"' is unknown",StatusCode::FAILURE);
   }
-  // else use inherited property
-  m_estimator.setDetector( m_det     ) ;
-  m_estimator.setA       ( m_a       ) ;
-  m_estimator.setGainS   ( m_gainErr ) ;
-  m_estimator.setNoiseIn ( m_noiseIn ) ;
-  m_estimator.setNoiseCo ( m_noiseCo ) ;
   
+
+
+  // configure estimator (will update parameters from DB when requested)
+  m_estimator.setDetector( m_det ) ;
+  setEstimatorParams();
+
   info()      << " Has initialized with parameters: "              << endmsg 
               << " \t 'Detector'         = '" << m_detData << "'"  << endmsg 
-              << " \t ==  Parameters for covariance estimation ==" << endmsg
-              << " \t  "<< flag <<  endmsg
-  //              << " \t   - Stochastic term    =  " << m_a         << endmsg 
-  //            << " \t   - Gain error         =  " << m_gainErr   << endmsg 
-  //            << " \t   - Incoherent noise   =  " << m_noiseIn   << endmsg 
-  //            << " \t   - Coherent   noise   =  " << m_noiseCo   << endmsg 
-              << " \t Estimator is          " << m_estimator << endmsg ;
-  return StatusCode::SUCCESS ;
+    //            << " \t Estimator is          " << m_estimator       << endmsg;
+              << " \t ==  Parameters for covariance estimation ==" << endmsg;
+  using namespace CaloCovariance;
+  for(unsigned int index = 0 ; index < CaloCovariance::Last ; ++index){
+    info() << CaloCovariance::ParameterName[index] << " \t : " 
+           << m_parameters[ParameterName[index]] 
+           << " " << ParameterUnit[index]
+           << "\t : "<< m_source[index]<<""<< endmsg;
+  }
+  return sc;
 }
 // ============================================================================
-
-// ============================================================================
-/** standard finalization method 
- *  @return status code 
- */
-// ============================================================================
-StatusCode ClusterCovarianceMatrixTool::finalize   ()
-{  
+StatusCode ClusterCovarianceMatrixTool::finalize   (){  
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc ) { inc -> removeListener  ( this ) ; }
   return GaudiTool::finalize ();
 }
-// ============================================================================
 
 // ============================================================================
-/** The main processing method (functor interface) 
- *  @param cluster pointer to CaloCluster object to be processed
- *  @return status code 
- */  
-// ============================================================================
 StatusCode 
-ClusterCovarianceMatrixTool::operator() ( LHCb::CaloCluster* cluster ) const 
-{
+ClusterCovarianceMatrixTool::operator() ( LHCb::CaloCluster* cluster ) const{
   /// check the argument 
-  if( 0 == cluster                ) 
-    { return Error( "CaloCluster*   points to NULL!") ; }
-  if( 0 == m_estimator.detector() ) 
-    { return Error( "DeCalorimeter* points to NULL!") ; }
+  if( 0 == cluster                )return Error( "CaloCluster*   points to NULL!") ; 
+  if( 0 == m_estimator.detector() )return Error( "DeCalorimeter* points to NULL!") ; 
   /// apply the estimator 
   return m_estimator( cluster );
 }
 // ============================================================================
 
-// ============================================================================
-/** The main processing method 
- *  @param cluster pointer to CaloCluster object to be processed
- *  @return status code 
- */  
-// ============================================================================
-StatusCode 
-ClusterCovarianceMatrixTool::process ( LHCb::CaloCluster* cluster ) const 
-{ return (*this)( cluster ); }
+StatusCode ClusterCovarianceMatrixTool::process ( LHCb::CaloCluster* cluster ) const { 
+  return (*this)( cluster ); 
+}
 // ============================================================================
 

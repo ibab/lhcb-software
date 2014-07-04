@@ -36,8 +36,7 @@ private:
   double m_etMin2;
   int m_iter;
   std::string m_input;
-  std::string m_condition;
-  std::vector<std::string>          m_taggerP  ;  
+  std::vector<std::string> m_taggerP  ;  
   std::string m_det;
   const DeCalorimeter* m_detector;
   ICaloShowerOverlapTool* m_oTool;

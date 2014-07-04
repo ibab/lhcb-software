@@ -4,6 +4,11 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-03 - Olivier Deschamps
+  - ClusterCovarianceMatrixTool : allow for covariance parametrization per Calo area - improve DB access
+  - SubClusterSelectorTool      : improve DB access
+  - add Hcal default settings for Jet-related reconstruction
+  
 ! 2014-07-02 - Olivier Deschamps
   - CaloShowerOverlapTool : add protection in case of missing ShowerProfile
   - CaloMergedPi0 : add minimal ET cut on splitPhoton (applied to both cluster and corrected CaloHypo)

@@ -90,14 +90,7 @@ private:
 
 private:
   
-  bool                 m_copy      ;  /// copy flag 
-  
-  /// configuration of covarinace tool 
-  double               m_a           ; ///< calorimeter resolution
-  double               m_gainErr     ; ///< error in gain 
-  double               m_noiseIn     ; ///< incoherent noise 
-  double               m_noiseCo     ; ///< coherent noise
-  
+  bool                 m_copy      ;  /// copy flag  
   
   // tool used for covariance matrix calculation    
   std::string          m_covType     ; ///< type 
@@ -112,13 +105,12 @@ private:
 
   std::string m_outputData;
   std::string m_inputData;
-  std::string m_condition;
   std::vector<std::string>          m_taggerE  ;  
   std::vector<std::string>          m_taggerP  ;  
-  std::string m_detData;
-  const DeCalorimeter* m_detector;
+  std::string          m_tagName;
   // collection of known cluster shapes
   std::map<std::string , std::string> m_clusterShapes;  
+  std::map<std::string,std::vector<double> > m_covParams;
 };
 
 #endif // CALORECO_CALOCLUSTERCOVARIANCEALG_H

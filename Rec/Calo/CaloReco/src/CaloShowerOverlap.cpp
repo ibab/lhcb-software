@@ -23,19 +23,16 @@ CaloShowerOverlap::CaloShowerOverlap( const std::string& name,
                                       ISvcLocator* pSvcLocator)
 : GaudiAlgorithm ( name , pSvcLocator )
   , m_input( LHCb::CaloClusterLocation::Ecal )
-  , m_condition          ("")
-  , m_taggerP            ( 1 , "useDB") 
+  , m_taggerP            () 
   , m_det (DeCalorimeterLocation::Ecal){
   declareProperty("DistanceThreshold"      , m_dMin        = 4);
   declareProperty("MinEtThreshold"         , m_etMin = 50.  ); // ( ET1 > x && ET2 > x)
   declareProperty("MaxEtThreshold"         , m_etMin2 = 150. ); // ( ET2 > y || ET2 > y)
   declareProperty("Iterations"             , m_iter = 5);
   declareProperty("InputData"              , m_input= LHCb::CaloClusterLocation::Ecal) ;  
-  // following properties are inherited by the selector tool :
-  declareProperty( "TagCondition" , m_condition    ) ,
+  declareProperty("Detector"               , m_det) ;
+  // following properties are inherited by the selector tool when defined :
   declareProperty( "PositionTags" , m_taggerP      ) ;
-  declareProperty( "Detector"     , m_det) ;
-
 
   m_input = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
   m_det   = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
@@ -55,7 +52,7 @@ StatusCode CaloShowerOverlap::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
   m_oTool   = tool<ICaloShowerOverlapTool>("CaloShowerOverlapTool","PhotonShowerOverlap",this);
-  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , "ClusterTag" , this );
+  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , "EcalClusterTag" , this );
 
   m_detector  = getDet<DeCalorimeter> ( m_det );
   return StatusCode::SUCCESS;

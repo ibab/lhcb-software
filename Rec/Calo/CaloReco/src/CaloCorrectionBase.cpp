@@ -166,8 +166,7 @@ StatusCode CaloCorrectionBase::setOptParams(){
     std::string name = (*p).first;
     std::vector<double> vec = (*p).second;
     if( accept( name ) )m_params[name] = vec;
-  }
-  
+  }  
   checkParams();
   return StatusCode::SUCCESS;
 }

@@ -9,6 +9,7 @@
 """
 The major building blocks of Calorimeter Reconstruction
 """
+
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $"

@@ -3,7 +3,6 @@
 #include <numeric>
 #include <algorithm>
 #include <cmath>
-
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/CaloDataFunctor.h"
 #include "CaloDet/DeCalorimeter.h"
@@ -42,10 +41,10 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   , m_oTool (NULL)
   , m_cov   (NULL)
   , m_spread(NULL)
-  , m_condition          ("")
-  , m_taggerE            ( 1 , "useDB") 
-  , m_taggerP            ( 1 , "useDB") 
-  , m_det (DeCalorimeterLocation::Ecal){
+  , m_taggerE()
+  , m_taggerP()
+  , m_det (DeCalorimeterLocation::Ecal)
+  , m_covParams() {
 
   declareProperty ( "InputData"               , m_clusters    ) ;
   declareProperty ( "MergedPi0s"              , m_mergedPi0s   ) ;
@@ -57,13 +56,15 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   declareProperty ( "MaxIterations"           , m_iter ) ;  
   declareProperty ( "CreateSplitClustersOnly" , m_createClusterOnly = false) ;
   declareProperty ( "Verbose"                 , m_verbose  = false );
-  // following properties are inherited by the selector tool :
-  declareProperty( "TagCondition" , m_condition    ) ,
+  declareProperty ( "SplitPhotonMinET"        , m_minET=0.);
+  declareProperty ( "Detector"                , m_det) ;
+
+  // following properties are inherited by the selector tool when defined:
   declareProperty( "EnergyTags"   , m_taggerE      ) ;
   declareProperty( "PositionTags" , m_taggerP      ) ;
-  declareProperty( "Detector"     , m_det) ;
-  declareProperty( "SplitPhotonMinET", m_minET=0.);
-  
+
+  // following properties are be inherited by the covariance tool
+  declareProperty( "CovarianceParameters" , m_covParams    ) ; // KEEP IT UNSET ! INITIAL VALUE WOULD BYPASS DB ACCESS
   
   // default context-dependent locations
   m_clusters  = LHCb::CaloAlgUtils::CaloClusterLocation ( "Ecal"     , context()    );  // input : neutral CaloCluster's
@@ -104,9 +105,9 @@ StatusCode CaloMergedPi0::initialize(){
   m_oTool=tool<ICaloShowerOverlapTool>("CaloShowerOverlapTool","SplitPhotonShowerOverlap",this);
 
   // - cluster  tools 
-  m_cov     = tool<ICaloClusterTool>  (    "ClusterCovarianceMatrixTool" , "Covariance"     , this ) ;  
-  m_spread  = tool<ICaloClusterTool>  (    "ClusterSpreadTool"           , "Spread"         , this ) ;
-  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , "ClusterTag" , this );
+  m_cov     = tool<ICaloClusterTool>      ( "ClusterCovarianceMatrixTool" , "EcalCovariance"     , this ) ;  
+  m_spread  = tool<ICaloClusterTool>      ( "ClusterSpreadTool"           , "EcalSpread"         , this ) ;
+  m_tagger  = tool<SubClusterSelectorTool>( "SubClusterSelectorTool"      , "EcalClusterTag"     , this ); 
 
   // - hypo tools
   for ( std::vector<std::string>::const_iterator it = m_photonTools.begin() ;m_photonTools.end() != it ; ++it ){
@@ -145,14 +146,13 @@ StatusCode CaloMergedPi0::execute(){
   //- split clusters (check it does not exist first)
   LHCb::CaloClusters* splitclusters;
 
-
-  //  if( exist<LHCb::CaloClusters>( m_splitClusters ) ){
   splitclusters = new LHCb::CaloClusters();
   int level = outputLevel();     // store outputLevel
   try{ 
     setOutputLevel(MSG::ALWAYS);   // suppress FATAL message
     put(splitclusters, m_splitClusters ); 
   } catch(GaudiException &exc ) {
+    setOutputLevel(level);         // reset outputLevel
     Warning("Existing SplitCluster container at "+ m_splitClusters + " found -> will replace",StatusCode::SUCCESS,1).ignore();
     delete splitclusters;
     splitclusters=get<LHCb::CaloClusters>( m_splitClusters );

@@ -63,13 +63,13 @@ private:
   ICaloClusterTool*       m_cov     ; 
   ICaloClusterTool*       m_spread  ;  
   SubClusterSelectorTool* m_tagger  ;
-  std::string m_condition;
   std::vector<std::string>          m_taggerE  ;  
   std::vector<std::string>          m_taggerP  ;  
   std::string m_det;
   DeCalorimeter* m_detector;
   bool m_verbose;
   double m_minET;
+  std::map<std::string,std::vector<double> > m_covParams;
 };
 // ============================================================================
 #endif // CALOMERGEDPI0_H

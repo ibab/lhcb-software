@@ -7,6 +7,7 @@
 """
 Configurable for Calorimeter Reconstruction
 """
+
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $"
@@ -596,7 +597,6 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
         _log.info ('Apply CaloProcessor configuration for %s and %s',  self.getProp('RecList'), self.getProp('PIDList'))
         
         self.printConf()
-
 
         knownMasks = ['3x3','2x2','SwissCross'] 
 

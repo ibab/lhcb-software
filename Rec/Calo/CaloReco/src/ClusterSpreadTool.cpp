@@ -1,16 +1,8 @@
 // ============================================================================
 // Include files
-// ============================================================================
-// GaudiKernel
-// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
-// ============================================================================
-// CaloDet 
-// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
-// ============================================================================
-// local
-// ============================================================================
+#include "CaloUtils/CaloAlgUtils.h"
 #include "ClusterSpreadTool.h"
 // ============================================================================
 /** @file ClusterSpreadTool.cpp
@@ -36,9 +28,13 @@ ClusterSpreadTool::ClusterSpreadTool
   : GaudiTool    ( type , name , parent )
   , m_estimator (      )
   , m_detData   ( DeCalorimeterLocation::Ecal )
-  , m_det(0)
-{
+  , m_det(0){
   declareProperty( "Detector"        , m_detData  );
+
+  // setup calo-dependent property
+  m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+
+
   /// declare available interafces 
   declareInterface<ICaloClusterTool>(this);
 }

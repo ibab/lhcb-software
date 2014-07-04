@@ -5,6 +5,9 @@
 // Include files
 // from Gaudi
 #include  "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Incident.h"
 #include  "CaloDet/DeCalorimeter.h"
 #include  "Event/CaloCluster.h"
 #include  "CaloCorrectionBase.h"
@@ -31,7 +34,7 @@ static const InterfaceID IID_SubClusterSelectorTool ( "SubClusterSelectorTool", 
  *  @author Olivier Deschamps
  *  @date   2014-06-20
  */
-class SubClusterSelectorTool : public GaudiTool {
+class SubClusterSelectorTool : public GaudiTool, virtual public IIncidentListener {
 public: 
 
   // Return the interface ID
@@ -46,8 +49,14 @@ public:
   virtual StatusCode finalize();
   virtual ~SubClusterSelectorTool( ); ///< Destructor
 
+  virtual void handle(const Incident&  ) { 
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << "IIncident Svc reset" << endmsg; 
+    updateParamsFromDB();
+  }
 
-  StatusCode set(DeCalorimeter* detector, std::vector<std::string> taggerE, std::vector<std::string> taggerP);
+  StatusCode getParamsFromOptions();
+  void updateParamsFromDB();
+
   StatusCode tag(LHCb::CaloCluster* cluster);
   StatusCode tagEnergy(LHCb::CaloCluster* cluster);
   StatusCode tagPosition(LHCb::CaloCluster* cluster);
@@ -67,5 +76,11 @@ private:
 
   DeCalorimeter*                    m_detector;
   CaloCorrectionBase*               m_dbAccessor;
+  std::vector<std::string>          m_DBtaggerE  ;   
+  std::vector<std::string>          m_DBtaggerP  ;  
+  LHCb::CaloDigitStatus::Status     m_energyStatus;
+  LHCb::CaloDigitStatus::Status     m_positionStatus;
+  std::string m_sourceE;
+  std::string m_sourceP;
 };
 #endif // SUBCLUSTERSELECTORTOOL_H

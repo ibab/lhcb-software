@@ -47,6 +47,7 @@
 
 DECLARE_ALGORITHM_FACTORY( CaloMergedPi0Alg )
 
+
 // ============================================================================
 /** Standard constructor
  *  @param   name   algorithm name

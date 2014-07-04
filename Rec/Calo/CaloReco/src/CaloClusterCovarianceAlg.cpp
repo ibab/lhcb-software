@@ -4,7 +4,6 @@
 // Include files
 // from Gaudi
 #include  "GaudiKernel/AlgFactory.h"
-#include  "CaloDet/DeCalorimeter.h" 
 #include  "Event/CaloCluster.h"
 #include  "CaloInterfaces/ICaloClusterTool.h"
 #include  "SubClusterSelectorTool.h"
@@ -39,41 +38,38 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm        ( name , pSvcLocator            ) 
   , m_copy               ( false                         )
-  , m_a                  ( 0.10                          )
-  , m_gainErr            ( 0.01                          )
-  , m_noiseIn            ( 1.20                          ) 
-  , m_noiseCo            ( 0.30                          )
   , m_covType            ( "ClusterCovarianceMatrixTool" )
-  , m_covName            ( "EcalCovarTool"               )
+  , m_covName            ()
   , m_cov                ( NULL                          ) 
   , m_spreadType         ( "ClusterSpreadTool"           )
-  , m_spreadName         ( "EcalSpreadTool"              )
+  , m_spreadName         ()
   , m_spread             ( NULL                          )
-  , m_inputData ( )
-  , m_condition ("")
-  , m_taggerE            ( 1 , "useDB") 
-  , m_taggerP            ( 1 , "useDB") 
-  , m_detData            (  DeCalorimeterLocation::Ecal ){
-  declareProperty( "Resolution"       , m_a            ) ;
-  declareProperty( "GainError"        , m_gainErr      ) ;
-  declareProperty( "NoiseIncoherent"  , m_noiseIn      ) ;
-  declareProperty( "NoiseCoherent"    , m_noiseCo      ) ;
-  declareProperty( "CovarianceType"   , m_covType      ) ;
-  declareProperty( "CovarianceName"   , m_covName      ) ;
-  declareProperty( "SpreadType"       , m_spreadType   ) ;
-  declareProperty( "SpreadName"       , m_spreadName   ) ;
-  declareProperty ( "InputData"       , m_inputData    = LHCb::CaloClusterLocation::Ecal) ;  
-  declareProperty ( "OutputData"      , m_outputData   ) ;  
+  , m_inputData ()
+  , m_taggerE   ()
+  , m_taggerP   ()
+  , m_covParams() {
+  declareProperty( "CovarianceType"   , m_covType       ) ;
+  declareProperty( "CovarianceName"   , m_covName       ) ;
+  declareProperty( "SpreadType"       , m_spreadType    ) ;
+  declareProperty( "SpreadName"       , m_spreadName    ) ;
+  declareProperty( "TaggerName"       , m_tagName       ) ;
+  declareProperty( "InputData"        , m_inputData     ) ;  
+  declareProperty( "OutputData"       , m_outputData    ) ;  
 
-  // following properties are inherited by the selector tool :
-  declareProperty( "TagCondition" , m_condition    ) ;
-  declareProperty( "EnergyTags"   , m_taggerE      ) ;
-  declareProperty( "PositionTags" , m_taggerP      ) ;
-  declareProperty( "Detector"     , m_detData      ) ;
+  // following properties are inherited by the selector tool when defined:
+  declareProperty( "EnergyTags"   , m_taggerE      ) ; 
+  declareProperty( "PositionTags" , m_taggerP      ) ; 
+
+  // following properties might be inherited by the covariance tool
+  declareProperty( "CovarianceParameters" , m_covParams    ) ; // KEEP IT UNSET ! INITIAL VALUE WOULD BYPASS DB ACCESS
 
   // set default data as a function of detector
-  m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
   m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
+
+  std::string caloName =  LHCb::CaloAlgUtils::CaloNameFromAlg( name );
+  m_covName    = caloName + "CovarTool" ;
+  m_spreadName = caloName + "SpreadTool";
+  m_tagName    = caloName + "ClusterTag";
 }
 // ===========================================================================
 
@@ -95,15 +91,10 @@ StatusCode CaloClusterCovarianceAlg::initialize(){
   // try to initialize base class   
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() )
-    { return Error("Could not initialize the base class GaudiAlgorithm"); }
-  
-  
-  // locate the detector
-  m_detector = getDet<DeCalorimeter> ( m_detData   );
-  if( 0 == m_detector ) { return Error("DeCalorimeter error",StatusCode::FAILURE) ; }
+    { return Error("Could not initialize the base class GaudiAlgorithm"); }  
 
   // locate the tagger (inherit from relevant properties)
-  m_tagger = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , "ClusterTag" , this );
+  m_tagger = tool<SubClusterSelectorTool>( "SubClusterSelectorTool" , m_tagName , this );
 
   // locate the tool for covariance matrix calculations 
   m_cov    = m_covName.empty() ?
@@ -193,3 +184,4 @@ StatusCode CaloClusterCovarianceAlg::execute(){
   counter ( "#Clusters from '" + m_inputData  + "'") += clusters->size() ;
   return StatusCode::SUCCESS ;
 }
+
