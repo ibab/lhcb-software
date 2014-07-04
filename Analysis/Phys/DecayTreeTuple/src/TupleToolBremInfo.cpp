@@ -93,7 +93,7 @@ StatusCode TupleToolBremInfo::fill(const Particle*,
   filltuple &= tuple->column( prefix+"_BremMultiplicity",  P->info(LHCb::Particle::HasBremAdded,0.)); // replace the multiplicity() method that need fullDST
   //brem info from rerunning the BremAdder, looking at the photons
   //This is not correct when running on an mDST - you look at a subset of the total photons in the event.
-  if((int)  P->info(LHCb::Particle::HasBremAdded,0.) != brem.multiplicity() )
+  if((int)  P->info(LHCb::Particle::HasBremAdded,0.) != (int)brem.multiplicity() )
     Warning("TupleToolBremInfo requires fullDST -  BremP and BremOrigin might not be reliable (Multiplicity is OK)",StatusCode::SUCCESS,5);
   filltuple &= tuple->column( prefix+"_BremP"           , brem.momentum());  // need fullDST 
   filltuple &= tuple->column( prefix+"_BremOrigin"      , brem.referencePoint()); // need fullDST
