@@ -31,7 +31,7 @@ class StrippingJpsippForD0MuMuConf(LHCbConfigurableUser):
 
 
     def ForD0mumu_Line(self):
-        from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+        from StrippingConf.StrippingLine import StrippingLine
         StripJpsippForD0mumu = self.combineJpsippForD0mumu()
         return StrippingLine('JpsippForD0mumu', prescale = self.getProps()[ "Prescale_JpsippForD0mumu" ] ,  algos = [ StripJpsippForD0mumu ] )
    

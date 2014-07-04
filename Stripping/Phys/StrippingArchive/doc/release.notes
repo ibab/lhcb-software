@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-04 - Anton Poluektov 
+ - Remove imports of StrippingMember
+
 !========================= StrippingArchive v1r22 2014-03-03 =========================
 
 ! 2014-02-22 - Stefano Perazzini

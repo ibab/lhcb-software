@@ -29,7 +29,7 @@ __all__     = ('CharmedAndCharmedStrangeSpectroscopyConf',
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StrippingConf.StrippingLine import StrippingLine, StrippingMember
+from StrippingConf.StrippingLine import StrippingLine
 from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence, MergedSelection
 from Configurables import LoKi__VoidFilter as VoidFilter
 from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
