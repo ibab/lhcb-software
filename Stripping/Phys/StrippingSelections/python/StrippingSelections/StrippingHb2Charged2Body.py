@@ -10,7 +10,8 @@ __date__ = '21/08/2012'
 __version__ = '$Revision: 1.5 $'
 
 __all__ = ('Hb2Charged2BodyLines',
-           'makeB2Charged2Body')
+           'makeB2Charged2Body',
+           'default_confis')
 
 from Gaudi.Configuration import *
 
@@ -24,25 +25,39 @@ from Configurables               import SubstitutePID, FilterDesktop
 
 
 default_config = {
-           'PrescaleB2Charged2Body'   : 1,
-           'MinPTB2Charged2Body'      : 1100,
-           'MinIPB2Charged2Body'      : 0.15,
-           'MinIPChi2B2Charged2Body'  : 100, 
-           'TrChi2'                   : 3,
-           'TrGhostProb'              : 1,
-           'MaxPTB2Charged2Body'      : 2700, 
-           'MaxIPB2Charged2Body'      : 0.27,
-           'MaxIPChi2B2Charged2Body'  : 200,  
-           'CombMassLow'              : 4600,
-           'CombMassHigh'             : 6000,
-           'DOCA'                     : 0.08,
-           'BPT'                      : 1200,
-           'BIP'                      : 0.08,
-           'BIPChi2B2Charged2Body'    : 12,  
-           'BTAU'                     : 0.0006,
-           'MassLow'                  : 4800,
-           'MassHigh'                 : 5800
-           }
+    'NAME'        : 'Hb2Charged2Body',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Hb2Charged2BodyLines',
+    'CONFIG'      : {'PrescaleB2Charged2Body'  : 1,
+                     'MinPTB2Charged2Body'     : 1100,
+                     'MinIPB2Charged2Body'     : 0.15,
+                     'MinIPChi2B2Charged2Body' : 100,
+                     'TrChi2'                  : 3,
+                     'TrGhostProb'             : 0.8,
+                     'MaxPTB2Charged2Body'     : 2700,
+                     'MaxIPB2Charged2Body'     : 0.27,
+                     'MaxIPChi2B2Charged2Body' : 200,
+                     'CombMassLow'             : 4600,
+                     'CombMassHigh'            : 6000,
+                     'DOCA'                    : 0.08,
+                     'BPT'                     : 1200,
+                     'BIP'                     : 0.08,
+                     'BIPChi2B2Charged2Body'   : 12,
+                     'BTAU'                    : 0.0006,
+                     'MassLow'                 : 4800,
+                     'MassHigh'                : 5800
+                    },
+    'STREAMS'     : { 'Bhadron' : [],
+                      'BhadronCompleteEvent' : [ 'StrippingHb2Charged2BodyB2Charged2BodyLine',
+                                                 'StrippingHb2Charged2BodyB2KPlusPiMinusLine',
+                                                 'StrippingHb2Charged2BodyB2PiPlusKMinusLine',
+                                                 'StrippingHb2Charged2BodyBs2KPlusKMinusLine',
+                                                 'StrippingHb2Charged2BodyLb2PPlusPiMinusLine',
+                                                 'StrippingHb2Charged2BodyLb2PiPlusPMinusLine',
+                                                 'StrippingHb2Charged2BodyLb2PPlusKMinusLine',
+                                                 'StrippingHb2Charged2BodyLb2KPlusPMinusLine']
+                    }
+    }
 
 ## Change decay descriptor and re-fit decay tree
 def subPID(name, input, mother, plusD, minusD):

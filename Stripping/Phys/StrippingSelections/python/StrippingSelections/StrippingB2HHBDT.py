@@ -9,9 +9,10 @@ __author__ = ['Stefano Perazzini']
 __date__ = '21/08/2012'
 __version__ = '$Revision: 1.5 $'
 
-__all__ = ('B2HHBDTLines',
-           'makeB2HHBDT',
-           'applyBDT')
+#__all__ = ('B2HHBDTLines',
+#           'makeB2HHBDT',
+#           'applyBDT',
+#           'default_config')
 
 from Gaudi.Configuration import *
 
@@ -24,22 +25,27 @@ from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 
 default_config = {
-           'PrescaleB2HHBDT' : 1.,
-           'MinPT'           : 1000,
-           'MinIP'           : 0.12,
-           'TrChi2'          : 3,
-           'TrGhostProb'     : 0.5,
-           'CombMassLow'     : 4600,
-           'CombMassHigh'    : 6400,
-           'DOCA'            : 0.1,
-           'BPT'             : 1200,
-           'BIP'             : 0.12,
-           'BTAU'            : 0.0006,
-           'MassLow'         : 4800,
-           'MassHigh'        : 6200,
-           'BDTCut'          : -0.3,
-           'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
-           }
+    'NAME'        : 'B2HHBDT',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2HHBDTLines',
+    'CONFIG'      : { 'PrescaleB2HHBDT' : 1.,
+                      'MinPT'           : 1000,
+                      'MinIP'           : 0.12,
+                      'TrChi2'          : 3,
+                      'TrGhostProb'     : 0.5,
+                      'CombMassLow'     : 4600,
+                      'CombMassHigh'    : 6400,
+                      'DOCA'            : 0.1,
+                      'BPT'             : 1200,
+                      'BIP'             : 0.12,
+                      'BTAU'            : 0.0006,
+                      'MassLow'         : 4800,
+                      'MassHigh'        : 6200,
+                      'BDTCut'          : -0.3,
+                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
+                    },
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHBDTLine']}
+    }
 
 ## Change decay descriptor and re-fit decay tree
 
