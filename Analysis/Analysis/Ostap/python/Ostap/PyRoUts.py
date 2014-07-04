@@ -1257,46 +1257,32 @@ ROOT.TH2D . colz = _h2_colz_
 ROOT.TH2F . Colz = _h2_colz_
 ROOT.TH2D . Colz = _h2_colz_
 
-## change locally the default text format 
-class TxtFmt(object):
-    """Change locally the default text format"""
-    def __init__  ( self , fmt = '.2f' ) :
-        self.old_fmt = str ( ROOT.gStyle.GetPaintTextFormat() )
-        self.new_fmt = fmt
-        
-    def __enter__ ( self ) :
-        ROOT.gStyle.SetPaintTextFormat ( self.new_fmt )        
-        return self
-    
-    def __exit__  ( self , *_ ) :
-        ROOT.gStyle.SetPaintTextFormat ( self.old_fmt )
-        
 # =============================================================================
 ## Draw 2D-histogram as 'text'
-def _h2_text_ ( h2 , opts = '' , fmt = '.2f') :
+def _h2_text_ ( h2 , opts = '' , fmt = '' ) :
     """
     Draw 2D-histogram as 'text'
     
     >>> h2.text( fmt = '5.3f')
     
     """
-    with TxtFmt( fmt ) :
-        return h2.Draw ( 'text ' + opts )
+    if fmt : ROOT.gStyle.SetPaintTextFormat ( fmt )        
+    return h2.Draw ( 'text ' + opts )
     
 ROOT.TH2F . text = _h2_text_
 ROOT.TH2D . text = _h2_text_
 
 # =============================================================================
 ## Draw 2D-histogram as 'text'
-def _h2_texte_ ( h2 , opts = '' , fmt = '.2f' ) :
+def _h2_texte_ ( h2 , opts = '' , fmt = '' ) :
     """
     Draw 2D-histogram as 'texte'
     
     >>> h2.texte( fmt = '5.2f')
     
     """
-    with TxtFmt( fmt ) :
-        return h2.Draw ( 'texte ' + opts )
+    if fmt : ROOT.gStyle.SetPaintTextFormat ( fmt )        
+    return h2.Draw ( 'texte ' + opts )
     
 ROOT.TH2F . texte = _h2_texte_
 ROOT.TH2D . texte = _h2_texte_
