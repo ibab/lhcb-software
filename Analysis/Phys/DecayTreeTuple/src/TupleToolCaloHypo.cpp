@@ -40,6 +40,7 @@ DECLARE_TOOL_FACTORY( TupleToolCaloHypo )
 
 StatusCode TupleToolCaloHypo::initialize() {
   if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
+
   m_estimator = tool<ICaloHypoEstimator>("CaloHypoEstimator","CaloHypoEstimator",this);
 
   info() << "Caution : this TupleTool may trigger part of Calo reconstruction - ONLY WORK ON DST" << endmsg;
@@ -53,6 +54,7 @@ StatusCode TupleToolCaloHypo::fill(const Particle* , const Particle* P
                                    ,Tuples::Tuple& tuple ){
 
   const std::string prefix=fullName(head);
+
 
   if( NULL == P )return StatusCode::SUCCESS;
   if( NULL == P->proto() )return StatusCode::SUCCESS;
@@ -84,7 +86,7 @@ StatusCode TupleToolCaloHypo::fill(const Particle* , const Particle* P
   for( int id = 0 ; id < Last ; ++id){
     int mask = ( P->charge() == 0 ) ? 0x1 : 0x2;
     if( useData( id , mask ) ){
-      double val  =  (NULL != hypo && hasCalo)    ? m_estimator->data(hypo, (DataType) id ,0.) : 0.;
+      double val  =  (NULL != hypo && hasCalo)    ? m_estimator->data(hypo, (DataType) id ,0.) : 0.;      
       filltuple &= tuple->column( prefix+"_CaloHypo_"+Name[id], val );
     }
     if( P->charge() != 0 && m_brem && useData( id , 0x1 ) ){

@@ -8,6 +8,7 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 #include "Event/Particle.h"
+#include "CaloUtils/CaloMomentum.h"
 #include "GaudiKernel/IRegistry.h" //
 
 //-----------------------------------------------------------------------------
@@ -53,8 +54,26 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
         Type= 2; //for the  resolved pi0s
       }
       else Type  = 1; //for the merged pi0s
+
       filltuple &= tuple->column( prefix+"_Type", Type );
       filltuple &= tuple->column( prefix+"_CL"  , P->confLevel() );
+
+      // daughter info in case of merged pi0
+      if( Type == 1){        
+        const LHCb::CaloHypo*   hypo  = *( (P->proto()->calo()).begin() );
+        if(LHCb::CaloHypo::Pi0Merged != hypo->hypothesis() ){
+          // == extract SplitPhotons hypos
+          const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+          const LHCb::CaloHypo* g1 = *(hypos.begin() );
+          const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+          LHCb::CaloMomentum g1Momentum( g1 ); 
+          LHCb::CaloMomentum g2Momentum( g2 ); 
+          filltuple &= tuple->column( prefix+"_gamma0_PT"  , g1Momentum.pt() );
+          filltuple &= tuple->column( prefix+"_gamma1_PT"  , g2Momentum.pt() );
+        } 
+      }
+      
+
 
 
       if(m_RequireMCTruth == true){
