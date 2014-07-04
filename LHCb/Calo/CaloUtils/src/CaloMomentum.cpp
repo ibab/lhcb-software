@@ -354,20 +354,17 @@ bool LHCb::CaloMomentum::evaluate(int param)
   
   for ( LHCb::CaloMomentum::CaloPositions::const_iterator 
           icalo = m_caloPositions.begin() ;
-        icalo != m_caloPositions.end() ; ++icalo ) 
-  {
+        icalo != m_caloPositions.end() ; ++icalo ){
     
     LHCb::CaloPosition calo = *icalo;
     
     // Evaluate the 4-momentum
-    if ( 0 != ( LHCb::CaloMomentum::Momentum & param ) )
-    { 
-      p4 += Calo::Kinematics::momentum ( calo , m_point ) ;
+    if ( 0 != ( LHCb::CaloMomentum::Momentum & param ) ){ 
+      if(calo.e() >= 0.) p4 += Calo::Kinematics::momentum ( calo , m_point ) ;
     }
     
     // Evaluate everithing the covariance
-    if( 0 != ( LHCb::CaloMomentum::Covariance & param ) ) 
-    {
+    if( 0 != ( LHCb::CaloMomentum::Covariance & param ) ){
       
       //  vector of "old" parameters 
       //    vold( 1 ) = pos   -> x () ;   // x-position in Calorimeter 
@@ -463,14 +460,12 @@ bool LHCb::CaloMomentum::evaluate(int param)
     }    
   }    
   
-  if( 0 != ( LHCb::CaloMomentum::Momentum & param ) )
-  {
+  if( 0 != ( LHCb::CaloMomentum::Momentum & param ) ){
     m_momentum = p4 ;
     m_flag |= LHCb::CaloMomentum::MomentumEvaluated;
   }
   
-  if ( 0 != ( LHCb::CaloMomentum::Covariance & param ) )
-  {
+  if ( 0 != ( LHCb::CaloMomentum::Covariance & param ) ){
     m_momCovMatrix      = C11 ;
     m_momPointCovMatrix = C12 ;
     m_flag |= LHCb::CaloMomentum::CovarianceEvaluated;

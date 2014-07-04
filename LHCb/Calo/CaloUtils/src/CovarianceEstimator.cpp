@@ -1,6 +1,7 @@
 // ============================================================================
 /// Include files
 #include<cmath>
+#include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/MsgStream.h"
 #include "CaloDet/DeCalorimeter.h"
@@ -22,26 +23,10 @@
 /** explicit standard constructor
  *
  *  @param  det pointer to DeCalorimeter object 
- *  @param  ares  calorimeter resolution (stochastic) per sqrt(GeV) 
- *  @param  corr should one take into account shower correlations?
- *  @param  flsf safety factor to be applied to intrinsic shower fluctuation
- *  @param  insf safety factor to be apply to incoherent noise flustuation
- *  @param  cnsf safety factor to be apply to coherent noise fluctuation
  */
 // ============================================================================
-CovarianceEstimator::CovarianceEstimator( const DeCalorimeter* Detector ,
-  const double         ResA     ,
-  const double         GainS    ,
-  const double         NoiseIn  ,  
-  const double         NoiseCo  ,
-  const double         ResB     )
-  : m_detector     ( Detector             ) 
-  , m_a2GeV        ( ResA    * ResA * Gaudi::Units::GeV )
-  , m_b2           ( ResB    * ResB       )
-  , m_s2gain       ( GainS   * GainS      )
-  , m_s2incoherent ( NoiseIn * NoiseIn    )  
-  , m_s2coherent   ( NoiseCo * NoiseCo    )
-{}
+CovarianceEstimator::CovarianceEstimator( const DeCalorimeter* Detector ): 
+  m_detector     ( Detector             ){}
 
 // ============================================================================
 // (virtual) destructor 
@@ -58,12 +43,8 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
   // ignore trivial cases 
   if( 0 == cluster               ) { return StatusCode::SUCCESS ; }
   if( cluster->entries().empty() ) { return StatusCode::SUCCESS ; }
-  // the detector information is not available
   if( 0 == detector()            ) { return StatusCode(221)     ; }
   
-  // avoid long names 
-  //  typedef LHCb::CaloCluster::Entries::iterator       iterator;
-  //  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
   
   LHCb::CaloCluster::Entries entries = cluster->entries();
   const unsigned int size = entries.size() ;
@@ -86,50 +67,53 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
   double eX  = 0 ; 
   double eY  = 0 ;
 
+  const LHCb::CaloCellID seedID = cluster->seed();
   // the matrices:
-  double See = 0 ;
-  double Sex = 0 ; double Sxx = 0 ;
-  double Sey = 0 ; double Sxy = 0 ; double Syy = 0 ;
-  double SeeP = 0 ;
-  double SexEP = 0 ; double SeyEP=0 ; double SeeEP=0;
+  double See   = s2E( seedID ); // add constant term to global cov(EE)
+  double Sex   = 0 ; 
+  double Sxx   = s2X( seedID ); // cov(XX)_0
+  double Sey   = 0 ; 
+  double Sxy   = 0 ; 
+  double Syy   = s2Y( seedID ); // cov(YY)_0
+  double SeeP  = s2E( seedID );
+  double SexEP = 0 ; 
+  double SeyEP = 0 ; 
+  double SeeEP = s2E( seedID );
   using namespace LHCb::CaloDigitStatus;
 
   int i=0;
   for( LHCb::CaloCluster::Entries::iterator it = entries.begin() ; entries.end() != it ; ++ it ){    
-    const LHCb::CaloDigit* digit  = it->digit() ;
-    
-    
+    const LHCb::CaloDigit* digit  = it->digit() ;    
     /// check the status 
+
     if( 0 == digit )continue;
     if((it->status() & LHCb::CaloDigitStatus::UseForEnergy ) || ( it->status() & LHCb::CaloDigitStatus::UseForPosition))
       it->addStatus    ( LHCb::CaloDigitStatus::UseForCovariance   );
     else    
-      it->removeStatus ( LHCb::CaloDigitStatus::UseForCovariance   );
-    
-    
+      it->removeStatus ( LHCb::CaloDigitStatus::UseForCovariance   );    
     if( (it->status() & UseForCovariance) == 0 ) { continue; }
     
-    const double       fraction = it->fraction()  ;
-    const double       energy   = digit->e() * fraction   ;
+
+    const LHCb::CaloCellID id     = digit->cellID();
+    const double fraction = it->fraction()  ;
+    const double energy   = digit->e() * fraction   ;
     const double e_i  =   energy  ;
     
     // get cell position 
-    const Gaudi::XYZPoint& pos = detector()->cellCenter( digit->cellID() ) ;
+    const Gaudi::XYZPoint& pos = detector()->cellCenter( id ) ;
     const double x_i  =   pos.x() ;
     const double y_i  =   pos.y() ;
     
     // intrinsic resolution 
-    double s2 = fabs( energy )  * a2GeV() ; 
-    if( 0 != b2     () )s2 += energy * energy * b2     () ;  
-    
+    double s2 = fabs( energy )  * a2GeV(id ) ;
     //  gain fluctuation
-    if( 0 != s2gain () ) s2 += energy * energy * s2gain () ; 
+    if( 0 != s2gain (id) ) s2 += energy * energy * s2gain (id) ; 
     
     //  noise (both coherent and incoherent) 
     double g = 0;
-    if( 0 != s2noise() ){ 
+    if( 0 != s2noise( id ) ){ 
       g   = detector()->cellGain( digit->cellID() ); 
-      s2 += s2noise() * g * g ; 
+      s2 += s2noise( id ) * g * g ; 
     }
     
     bool forE = (it->status() & UseForEnergy    ) != 0;
@@ -162,7 +146,7 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
     }
     
     // second loop if there exist correlations 
-    if( 0 == s2coherent() ) { continue ; } ///<  CONTINUE  
+    if( 0 == s2coherent( id ) ) { continue ; } ///<  CONTINUE  
     x    [i] = x_i ;
     y    [i] = y_i ;
     gain [i] = g ;
@@ -176,7 +160,7 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
       const double y_j  =   y[j] ;
       
       // covariance between cell "i" and "j"
-      const double s_ij = s2coherent() * gain[i] * gain[j] ;
+      const double s_ij = s2coherent( id ) * gain[i] * gain[j] ;
       
       
       bool jforE = (jt->status() & UseForEnergy    ) != 0;
@@ -206,8 +190,8 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const{
   LHCb::CaloPosition::Parameters& parameters = cluster->position().parameters();
   if( 0. >= eTE )parameters( LHCb::CaloPosition::E ) =  0.;
   if( 0. >= eTP ){
-    parameters( LHCb::CaloPosition::X ) =  -1 * Gaudi::Units::km  ;
-    parameters( LHCb::CaloPosition::Y ) =  -1 * Gaudi::Units::km  ;
+    parameters( LHCb::CaloPosition::X ) =  0. ;
+    parameters( LHCb::CaloPosition::Y ) =  0. ;
   }
   if( 0 >= eTE || 0 >= eTP )return StatusCode(223)     ; 
       
@@ -276,13 +260,13 @@ MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const{
   log << " Cluster Covariance Estimator: " 
       << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
       << endmsg 
-      << "   Resolution       is " << ( sqrt( a2GeV() / Gaudi::Units::GeV ) ) 
+      << "   Resolution       is [" << ( m_A  ) << "]" 
       << endmsg 
-      << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
+      << "   Sigma Gain       is [" << ( m_GainError              )  << "]" 
       << endmsg 
-      << "   Coherent Noise   is " << ( sqrt( s2coherent   ()       ) ) 
+      << "   Incoherent Noise   is " << ( m_IncoherentNoise      )  << "]"
       << endmsg 
-      << "   Incoherent Noise is " << ( sqrt( s2incoherent ()       ) )
+      << "   Coherent Noise is " << ( m_CoherentNoise     )  << "]"
       << endmsg ;
   ///
   return log ;
@@ -300,16 +284,11 @@ MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const{
 std::ostream& CovarianceEstimator::printOut ( std::ostream& log ) const 
 {
   log << " Cluster Covariance Estimator: " 
-      << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
-      << std::endl 
-      << "   Resolution       is " << ( sqrt( a2GeV() /  Gaudi::Units::GeV ) ) 
-      << std::endl 
-      << "   Sigma Gain       is " << ( sqrt( s2gain       ()       ) ) 
-      << std::endl 
-      << "   Coherent Noise   is " << ( sqrt( s2coherent   ()       ) ) 
-      << std::endl 
-      << "   InCoherent Noise is " << ( sqrt( s2incoherent ()       ) )
-      << std::endl ;
+      << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" ) << std::endl 
+      << "   Resolution        is " <<  Gaudi::Utils::toString(m_A)               << "" << std::endl 
+      << "   Sigma Gain        is " <<  Gaudi::Utils::toString(m_GainError)       << "" << std::endl 
+      << "   Coherent Noise    is " <<  Gaudi::Utils::toString(m_CoherentNoise)   << "" << std::endl 
+      << "   InCoherent Noise  is " <<  Gaudi::Utils::toString(m_IncoherentNoise) << "" << std::endl ;
   ///
   return log ;
 }

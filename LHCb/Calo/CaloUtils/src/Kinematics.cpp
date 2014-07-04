@@ -21,8 +21,7 @@
  *                 by $Author$
  */
 // ============================================================================
-namespace 
-{
+namespace{
   // ==========================================================================
   /** evaluate the jacobians
    *  @param calo   (INPUT)  input CaloPosition
@@ -33,12 +32,10 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2010-08--29
    */
-  Gaudi::LorentzVector  _jacobians_ 
-  ( const LHCb::CaloPosition& calo   , 
-    const Gaudi::XYZPoint&    origin ,  
-    Gaudi::Matrix4x3*         F11    , 
-    Gaudi::Matrix4x3*         F12    ) 
-  {
+  Gaudi::LorentzVector  _jacobians_( const LHCb::CaloPosition& calo   , 
+                                     const Gaudi::XYZPoint&    origin ,  
+                                     Gaudi::Matrix4x3*         F11    , 
+                                     Gaudi::Matrix4x3*         F12    ){
     //
     const double dx        = calo.x() - origin.x() ;
     const double dy        = calo.y() - origin.y() ;
@@ -73,8 +70,7 @@ namespace
     // 
     // Jacobian-I:   d(px,py,pz,E)/d(xc,yc,E)
     // 
-    if ( 0 != F11 ) 
-    {
+    if ( 0 != F11 )    {
       
       Gaudi::Matrix4x3& f11 = *F11 ;
       
@@ -120,8 +116,7 @@ namespace
     // Jacobian-II:   d(px,py,pz,E)/d(xv,yv,zv) 
     // 
     
-    if ( 0 != F12 ) 
-    {
+    if ( 0 != F12 ){
       
       Gaudi::Matrix4x3& f12 = *F12 ;
       
@@ -171,11 +166,10 @@ namespace
     }
     
     // 4-momentum:
-    return  Gaudi::LorentzVector 
-      ( e * gamma * sx ,
-        e * gamma * sy ,
-        e * gamma * sz ,
-        e              ) ; 
+    return  Gaudi::LorentzVector( e * gamma * sx ,
+                                  e * gamma * sy ,
+                                  e * gamma * sz ,
+                                  e              ) ; 
   }
   // ==========================================================================
 } //                                                end of anonymous namespace 
@@ -189,10 +183,8 @@ namespace
  *  @date 2010-08--29
  */
 // ============================================================================
-Gaudi::LorentzVector Calo::Kinematics::momentum 
-( const LHCb::CaloPosition& calo   , 
-  const Gaudi::XYZPoint&    origin ) 
-{
+Gaudi::LorentzVector Calo::Kinematics::momentum( const LHCb::CaloPosition& calo   , 
+                                                 const Gaudi::XYZPoint&    origin ){
   return _jacobians_ ( calo , origin , 0 , 0 ) ;
 }
 // ============================================================================
@@ -205,11 +197,9 @@ Gaudi::LorentzVector Calo::Kinematics::momentum
  *  @date 2010-08--29
  */
 // ============================================================================
-void Calo::Kinematics::momentum 
-( const LHCb::CaloPosition& calo   , 
-  const Gaudi::XYZPoint&    origin , 
-  Gaudi::LorentzVector&     output ) 
-{ 
+void Calo::Kinematics::momentum( const LHCb::CaloPosition& calo   , 
+                                 const Gaudi::XYZPoint&    origin , 
+                                 Gaudi::LorentzVector&     output ){ 
   output = _jacobians_ ( calo , origin , 0 , 0 ) ; 
 }
 // ============================================================================
@@ -223,12 +213,10 @@ void Calo::Kinematics::momentum
  *  @date 2010-08--29
  */
 // ============================================================================
-void Calo::Kinematics::momentum 
-( const LHCb::CaloPosition& calo   , 
-  const Gaudi::XYZPoint&    origin , 
-  Gaudi::LorentzVector&     output , 
-  Gaudi::SymMatrix4x4&      matrix ) 
-{
+void Calo::Kinematics::momentum( const LHCb::CaloPosition& calo   , 
+                                 const Gaudi::XYZPoint&    origin , 
+                                 Gaudi::LorentzVector&     output , 
+                                 Gaudi::SymMatrix4x4&      matrix ){
   //
   // covariance matrix for (xc,yx,E):
   //
@@ -260,11 +248,9 @@ void Calo::Kinematics::momentum
  *  @date 2010-08--29
  */
 // ============================================================================
-void Calo::Kinematics::momentum 
-( const LHCb::CaloPosition&            calo   , 
-  const Gaudi::XYZPoint&               origin , 
-  Gaudi::Math::LorentzVectorWithError& output ) 
-{
+void Calo::Kinematics::momentum( const LHCb::CaloPosition&            calo   , 
+                                 const Gaudi::XYZPoint&               origin , 
+                                 Gaudi::Math::LorentzVectorWithError& output ){
   momentum ( calo   , 
              origin , 
              output , 

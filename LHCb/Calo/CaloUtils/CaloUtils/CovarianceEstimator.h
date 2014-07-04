@@ -140,8 +140,7 @@ class  MsgStream      ;
  *  @date   06/07/2001
  */
 class CovarianceEstimator:
-  public std::unary_function<LHCb::CaloCluster*,StatusCode>
-{
+  public std::unary_function<LHCb::CaloCluster*,StatusCode>{
 public:
 
   typedef DeCalorimeter* DET;
@@ -155,12 +154,7 @@ public:
    *  @param  ResB     intrinsic additions to the constant term 
    *                   (nonuniformities, leakages)  
    */
-  CovarianceEstimator( const DeCalorimeter* Det     = 0    ,
-                       const double         A       = 0.10 ,
-                       const double         GainS   = 0.01 ,
-                       const double         NoiseIn = 0.0  ,
-                       const double         NoiseCo = 0.0  , 
-                       const double         ResB    = 0.01 );
+  CovarianceEstimator( const DeCalorimeter* Det     = 0 );
   
   /// (virtual) Destructor
   virtual ~CovarianceEstimator();
@@ -180,87 +174,119 @@ public:
    *  @param cluster pointer to cluster
    *   @return status code
    */
-  inline StatusCode calculateCovarianceMatrix ( LHCb::CaloCluster* cluster ) const
-  { return (*this)( cluster ); }
+  inline StatusCode calculateCovarianceMatrix ( LHCb::CaloCluster* cluster ) const  { 
+    return (*this)( cluster ); 
+  }
   
   
   /** set new value for calorimeter 
    *  @param Det pointer to calorimeter detector 
    */
-  inline void setDetector( const DeCalorimeter* Det ) 
-  { m_detector = Det ; }
+  inline void setDetector( const DeCalorimeter* Det ){ 
+    m_detector = Det ; 
+  }
   
   /** simple accessor to DeCalorimeter object
    *  @return pointer to detector 
    */
-  inline const DeCalorimeter* detector    () const
-  { return m_detector    ; }
+  inline const DeCalorimeter* detector    () const{ 
+    return m_detector    ; 
+  }
   
   /** set new resolution parameter
    *  @param A calorimeter resolution 
    */
-  inline void setA ( const double A ) 
-  { m_a2GeV = A * A * Gaudi::Units::GeV ; }
-  
+  inline void setStochastic ( const std::vector<double> A ){ 
+    m_A = A ;
+  }
+
+
   /** calorimeter resolution (A*A*GeV)
    *  @return A*A*GeV resolution parameter 
    */
-  inline double a2GeV        () const
-  { return m_a2GeV  ; }
+  inline double a2GeV        (const LHCb::CaloCellID id) const { 
+    if( id.area() >= m_A.size() )return 0.;
+    return m_A[id.area()]*m_A[id.area()]* Gaudi::Units::GeV  ; 
+  }
 
-  /** set new resolution parameter
-   *  @param B calorimeter resolution 
-   */
-  inline void setB ( const double B ) 
-  { m_b2  = B * B ; }
-  
-  /** calorimeter resolution (B*B)
-   *  @return B*B resolution parameter 
-   */
-  inline double b2           () const
-  { return m_b2   ; }
 
   /** set error in gain 
    *  @param GainS error in relative gain 
    */
-  inline void  setGainS( const double GainS ) 
-  { m_s2gain = GainS * GainS ; }
+  inline void  setGainError( const std::vector<double> GainS ){ 
+    m_GainError = GainS ; 
+  }
 
   /** get dispersion  of relative gain error
    *  @return dispersion of relative gain error 
    */
-  inline double s2gain       () const
-  { return m_s2gain ; }
+  inline double s2gain       (const LHCb::CaloCellID id) const{ 
+    if( id.area() >= m_GainError.size() )return 0.;
+    return m_GainError[id.area()]* m_GainError[id.area()] ; 
+}
 
   /** get  dispersion of noise (both coherent and incoherent
    *  @return overall noise dispersion 
    */
-  inline double s2noise      () const
-  { return ( m_s2coherent + m_s2incoherent ) ; }
+  inline double s2noise(const LHCb::CaloCellID id) const{ 
+    return  s2incoherent(id) + s2coherent(id);
+  }
   
   /** set new error in incoherent noise 
    *  @param NoiseIn error in incoherent noise 
    */
-  inline void setNoiseIn( const double NoiseIn ) 
-  { m_s2incoherent = NoiseIn * NoiseIn ;}
+  inline void setIncoherentNoise( const std::vector<double> NoiseIn ){ 
+    m_IncoherentNoise = NoiseIn;
+  }
   
   /** get the dispersion of incoherent noise
    *  @return dispersion of incoherent noise
    */ 
-  inline double s2incoherent () const
-  { return m_s2incoherent ; }
+  inline double s2incoherent (const LHCb::CaloCellID id) const{ 
+    if( id.area() >= m_IncoherentNoise.size() )return 0.;
+    return m_IncoherentNoise[id.area()]*m_IncoherentNoise[id.area()] ; 
+  }
 
   /** set new error in coherent noise 
    *  @param NoiseCo error in incoherent noise 
    */
-  inline void setNoiseCo( const double NoiseCo ) 
-  { m_s2coherent = NoiseCo * NoiseCo ;}
+  inline void setCoherentNoise( const std::vector<double> NoiseCo ){ 
+    m_CoherentNoise = NoiseCo;
+  }
   
   /**  dispersion of coherent  noise
    *  @return dispersion of coherent noise
    */   
-  inline double s2coherent   () const
-  { return m_s2coherent   ; }
+  inline double s2coherent   (const LHCb::CaloCellID id) const{
+    if( id.area() >= m_CoherentNoise.size() )return 0.;
+    return m_CoherentNoise[id.area()]*m_CoherentNoise[id.area()]   ; 
+  }
+
+  inline void setConstantE( const std::vector<double> constE ){ 
+    m_ConstantE = constE;
+  }
+  inline double s2E(const LHCb::CaloCellID id) const{
+    if( id.area() >= m_ConstantE.size() )return 0.;
+    return m_ConstantE[id.area()]*m_ConstantE[id.area()]   ;
+  }
+  
+  inline void setConstantX( const std::vector<double> constX ){ 
+    m_ConstantX = constX;
+  }
+  inline double s2X(const LHCb::CaloCellID id) const{
+    if( id.area() >= m_ConstantX.size() )return 0.;
+    return m_ConstantX[id.area()]*m_ConstantX[id.area()]   ;
+  }
+  
+  inline void setConstantY( const std::vector<double> constY ){ 
+    m_ConstantY = constY;
+  }
+  inline double s2Y(const LHCb::CaloCellID id) const{
+    if( id.area() >= m_ConstantY.size() )return 0.;
+    return m_ConstantY[id.area()]*m_ConstantY[id.area()]   ;
+  }
+  
+
   
   /** printout to standard gaudi stream 
    *  @see MsgStream 
@@ -277,12 +303,14 @@ public:
   
 private:
   
-  const DeCalorimeter* m_detector ; ///< pointer to DeCalorimeter object
-  double m_a2GeV                  ; ///< calorimeter resolution ((A**2)*GeV)
-  double m_b2                     ; ///< calorimeter resolution ((B**2))
-  double m_s2gain                 ; ///< relative gain dispersion
-  double m_s2incoherent           ; ///< incoherent noise dispersion
-  double m_s2coherent             ; ///< coherent noise dispersion
+  const DeCalorimeter* m_detector          ; ///< pointer to DeCalorimeter object
+  std::vector<double> m_A                  ; ///< calorimeter resolution ((A**2)*GeV)
+  std::vector<double> m_GainError          ; ///< relative gain dispersion
+  std::vector<double> m_IncoherentNoise    ; ///< incoherent noise dispersion
+  std::vector<double> m_CoherentNoise      ; ///< coherent noise dispersion
+  std::vector<double> m_ConstantE ; // global constant term to Cov(EE)
+  std::vector<double> m_ConstantX ; // global constant term to Cov(EE)
+  std::vector<double> m_ConstantY ; // global constant term to Cov(EE)
   
 };
 
@@ -293,8 +321,9 @@ private:
  *  @return the reference to the standard stream 
  */
 inline MsgStream&    operator<<( MsgStream&                 stream , 
-                                 const CovarianceEstimator& object ) 
-{ return object.printOut( stream );}
+                                 const CovarianceEstimator& object ){ 
+return object.printOut( stream );
+}
 
 /** printout operator to standard gaudi stream 
  *  @param stream the reference to the standard stream 
@@ -302,8 +331,9 @@ inline MsgStream&    operator<<( MsgStream&                 stream ,
  *  @return the reference to the standard stream 
  */
 inline std::ostream& operator<<( std::ostream&              stream , 
-                                 const CovarianceEstimator& object ) 
-{ return object.printOut( stream );}
+                                 const CovarianceEstimator& object ){ 
+return object.printOut( stream );
+}
 
 // ===========================================================================
 #endif ///< CALOALGS_COVARIANCEESTIMATOR_H
