@@ -18,11 +18,14 @@ from StrippingConf.StrippingStream import StrippingStream
 stream = StrippingStream("Test")
 
 # Append your line
-from StrippingSelections.StrippingDiMuonForXsection import DiMuonForXsectionConf
-from StrippingSelections.StrippingDiMuonForXsection import config_default
-
-DiMuonBuilder = DiMuonForXsectionConf( name="DiMuonForXsection", config=config_default )
-stream.appendLines( DiMuonBuilder.lines() )
+# NOTE: this will work only if you inserted correctly the 
+# default_config dictionary in the code where your LineBuilder 
+# is defined. StrippingDiMuonNew.py is a good example to follow
+from StrippingSelections import buildersConf
+confs = buildersConf()
+from StrippingSelections.Utils import lineBuilder
+builder = lineBuilder(confs,'FullDSTDiMuon')
+stream.appendLines( builder.lines() )
 
 
 # Standard configuration of Stripping, do NOT change them

@@ -10,9 +10,13 @@ DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
 from StrippingSelections import buildersConf
 confs = buildersConf()
 
+## If you want to test the entire WGs lines
 #from StrippingSelections.Utils import buildStreams
 #streams = buildStreams(confs,WGs=['Charmless'])
 
+## If you want to test a single LineBuilder. The string put
+## in the lineBuilder function has to be the same
+## specified in the default_config['NAME'] 
 from StrippingSelections.Utils import lineBuilder
 line = lineBuilder(confs,'B2HHBDT')
 from StrippingConf.StrippingStream import StrippingStream

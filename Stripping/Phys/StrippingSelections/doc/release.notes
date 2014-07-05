@@ -6,6 +6,13 @@
 
 ! 2014-07-05 - Stefano Perazzini
  - Updated tests/test_stream_output_locations.py
+           tests/TestMyStrippingLineOn2011Data_Reco14.py
+           tests/TestMyStrippingLineOn2012Data_Reco14.py
+ - Removed tests/TestMyStrippingLineOn2012Data.py
+           tests/TestMyStrippingLineOn2012Data_Timing.py
+           tests/TestMyStrippingLineOn2012Data_Reco13e.py
+           tests/TestMyStrippingLineOn2011Data.py
+           tests/TestMyStrippingLineOn2012Data_Reco13c.py
 
 ! 2014-07-04 - Stefano Perazzini
  - created buildersConf function in StrippingSelections.__init__.py in order 
