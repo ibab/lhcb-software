@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-05 - Stefano Perazzini
+ - Updated tests/test_stream_output_locations.py
+
 ! 2014-07-04 - Stefano Perazzini
  - created buildersConf function in StrippingSelections.__init__.py in order 
    to configure the LineBuilders from the default configuration.

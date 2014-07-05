@@ -3,9 +3,11 @@
 import sys
 
 from StrippingConf.Configuration import StrippingConf
+from StrippingSelections import buildersConf
 from StrippingSelections.Utils import buildStreams
 
-allStreams = buildStreams('stripping20r0p3')
+confs = buildersConf()
+allStreams = buildStreams(confs)
 #allStreams = buildStreams('stripping20r1p3')
 
 
