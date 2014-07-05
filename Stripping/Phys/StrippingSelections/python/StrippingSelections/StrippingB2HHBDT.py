@@ -9,10 +9,10 @@ __author__ = ['Stefano Perazzini']
 __date__ = '21/08/2012'
 __version__ = '$Revision: 1.5 $'
 
-#__all__ = ('B2HHBDTLines',
-#           'makeB2HHBDT',
-#           'applyBDT',
-#           'default_config')
+__all__ = ('B2HHBDTLines',
+           'makeB2HHBDT',
+           'applyBDT',
+           'default_config')
 
 from Gaudi.Configuration import *
 
