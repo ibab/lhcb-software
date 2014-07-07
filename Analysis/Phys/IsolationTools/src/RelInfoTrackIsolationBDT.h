@@ -1,5 +1,5 @@
-#ifndef TRACKISOVARIABLES_H 
-#define TRACKISOVARIABLES_H 1
+#ifndef RELINFOTRACKISOVARIABLES_H 
+#define RELINFOTRACKISOVARIABLES_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -16,7 +16,7 @@
 #include "IsolationInfo.h"
 
 
-/** @class TrackIsoVariables TrackIsoVariables.h
+/** @class RelInfoTrackIsolationBDT RelInfoTrackIsolationBDT.h
  *
  * \brief Calculate track isolation.
  *    Compare daughter
@@ -40,10 +40,10 @@ class IDVAlgorithm;
 class IDistanceCalculator;
 class IParticleDictTool ;
 
-class TrackIsoVariables : public GaudiTool, virtual public IRelatedInfoTool {
+class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool {
     public:
         /// Standard constructor
-        TrackIsoVariables( const std::string& type,
+        RelInfoTrackIsolationBDT( const std::string& type,
                 const std::string& name,
                 const IInterface* parent );
 
@@ -56,7 +56,7 @@ class TrackIsoVariables : public GaudiTool, virtual public IRelatedInfoTool {
   
         virtual std::string infoPath(void);
 
-        virtual ~TrackIsoVariables( ); ///< Destructor
+        virtual ~RelInfoTrackIsolationBDT( ); ///< Destructor
 
     protected:
 

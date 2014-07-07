@@ -34,12 +34,11 @@ use  MVADictTools          v* Phys
 
 # Component library building rule
 #============================================================================
-library          IsolationTools    ../src/*.cpp -import=AIDA
+library          IsolationTools    ../src/*.cpp #-import=AIDA
 # define link options
 #============================================================================
 #
 macro_append Boost_linkopts " $(Boost_linkopts_regex)"
-macro_append ROOT_linkopts ' -lTMVA '
 
 # standard patterns (order is essential!)
 #============================================================================

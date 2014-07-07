@@ -1,18 +1,18 @@
 #include "GaudiKernel/ToolFactory.h"
-#include "VertexIsolationBDT.h"
+#include "RelInfoVertexIsolationBDT.h"
 //-----------------------------------------------------------------------------
-// Implementation file for class : VertexIsolationBDT
-// Converted from VertexIsolationBDT (from Greg Ciezerak and Albert Puig) 
+// Implementation file for class : RelInfoVertexIsolationBDT
+// Converted from RelInfoVertexIsolationBDT (from Greg Ciezerak and Albert Puig) 
 // by Alex Shires
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( VertexIsolationBDT )
+DECLARE_TOOL_FACTORY( RelInfoVertexIsolationBDT )
 
     //=============================================================================
     // Standard constructor, initializes variables
     //=============================================================================
-VertexIsolationBDT::VertexIsolationBDT( const std::string& type,
+RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
         const std::string& name,
         const IInterface* parent)
     : GaudiTool ( type, name , parent )
@@ -43,12 +43,12 @@ VertexIsolationBDT::VertexIsolationBDT( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-VertexIsolationBDT::~VertexIsolationBDT() {}
+RelInfoVertexIsolationBDT::~RelInfoVertexIsolationBDT() {}
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode VertexIsolationBDT::initialize()
+StatusCode RelInfoVertexIsolationBDT::initialize()
 {
     const StatusCode sc = GaudiTool::initialize();
     if ( sc.isFailure() ) return sc;
@@ -102,7 +102,7 @@ StatusCode VertexIsolationBDT::initialize()
 //=============================================================================
 // Fill VertexIsolation information
 //=============================================================================
-StatusCode VertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
+StatusCode RelInfoVertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
         const LHCb::Particle *part )
 {
 
@@ -217,11 +217,11 @@ StatusCode VertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
 
 //rel infor methods
 
-LHCb::RelatedInfoMap* VertexIsolationBDT::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoVertexIsolationBDT::getInfo(void) {
     return &m_map; 
 }
 
-std::string VertexIsolationBDT::infoPath(void) {
+std::string RelInfoVertexIsolationBDT::infoPath(void) {
     std::stringstream ss;
     ss << std::string("Particle2VertexIsolationRelations");
     return ss.str(); 
@@ -230,7 +230,7 @@ std::string VertexIsolationBDT::infoPath(void) {
 //=============================================================================
 // Get (recursively) the particles to vertex in the decay chain
 //=============================================================================
-bool VertexIsolationBDT::getIsolation( const LHCb::Particle *part 
+bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part 
         , LHCb::Particle::ConstVector &extraParticles  
         , const LHCb::Vertex* v  
         , const LHCb::RecVertex::Range PVs
@@ -338,7 +338,7 @@ bool VertexIsolationBDT::getIsolation( const LHCb::Particle *part
 //=============================================================================
 // Get (recursively) the particles to vertex in the decay chain
 //=============================================================================
-void VertexIsolationBDT::findDaughters2Vertex( const LHCb::Particle *top )
+void RelInfoVertexIsolationBDT::findDaughters2Vertex( const LHCb::Particle *top )
 {
     // -- Get the daughters of the top particle
     const LHCb::Particle::ConstVector & daughters = top->daughtersVector();
@@ -365,7 +365,7 @@ void VertexIsolationBDT::findDaughters2Vertex( const LHCb::Particle *top )
 //=============================================================================
 // MINIPCHI2 for a track
 //=============================================================================
-double VertexIsolationBDT::getminipchi(const LHCb::Particle* track, const LHCb::RecVertex::Range PVs) const {
+double RelInfoVertexIsolationBDT::getminipchi(const LHCb::Particle* track, const LHCb::RecVertex::Range PVs) const {
 
     double minchi2 = -1 ;
     if ( !PVs.empty() ){
@@ -388,7 +388,7 @@ double VertexIsolationBDT::getminipchi(const LHCb::Particle* track, const LHCb::
     return minchi2;
 }
 
-double VertexIsolationBDT::getfdchi2(const LHCb::Track* track
+double RelInfoVertexIsolationBDT::getfdchi2(const LHCb::Track* track
         , LHCb::Vertex Vtx
         , const LHCb::RecVertex::Range PVs
         ) const
@@ -418,7 +418,7 @@ double VertexIsolationBDT::getfdchi2(const LHCb::Track* track
 //=============================================================================
 // Opening angle for a track and particle
 //=============================================================================
-double VertexIsolationBDT::getopening(const LHCb::Track* track,const  LHCb::Particle* P) const {
+double RelInfoVertexIsolationBDT::getopening(const LHCb::Track* track,const  LHCb::Particle* P) const {
     Gaudi::XYZVector A = P->momentum().Vect();
     Gaudi::XYZVector B = track->momentum();
     double cosopening = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );

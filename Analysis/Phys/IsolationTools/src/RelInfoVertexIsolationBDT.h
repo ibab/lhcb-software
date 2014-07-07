@@ -1,5 +1,5 @@
-#ifndef VERTEXISOLATIONBDT_H
-#define VERTEXISOLATIONBDT_H 1
+#ifndef RELINFOVERTEXISOLATIONBDT_H
+#define RELINFOVERTEXISOLATIONBDT_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -30,7 +30,7 @@ namespace LHCb {
 //class IVertexFit;
 //class LHCb::CaloParticle ;
 
-/** @class VertexIsolationBDT VertexIsolationBDT.h
+/** @class RelInfoVertexIsolationBDT RelInfoVertexIsolationBDT.h
  *
  * \brief Calculate vertex isolation using a BDT.
  *    Take vertexed particle and add other tracks of the
@@ -46,13 +46,13 @@ namespace LHCb {
  *
  */
 
-class VertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool
+class RelInfoVertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool
 {
 
     public:
 
         /// Standard constructor
-        VertexIsolationBDT( const std::string& type,
+        RelInfoVertexIsolationBDT( const std::string& type,
                 const std::string& name,
                 const IInterface* parent );
 
@@ -65,7 +65,7 @@ class VertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool
 
         virtual std::string infoPath(void);
 
-        virtual ~VertexIsolationBDT( ); ///< Destructor
+        virtual ~RelInfoVertexIsolationBDT( ); ///< Destructor
 
     private:
 

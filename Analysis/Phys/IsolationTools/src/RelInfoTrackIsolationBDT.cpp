@@ -1,20 +1,20 @@
 #include "GaudiKernel/ToolFactory.h"
-#include "TrackIsoVariables.h"
+#include "RelInfoTrackIsolationBDT.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackIsoVariables
+// Implementation file for class : RelInfoTrackIsolationBDT
 // Converted from ConeVariables by A. Shires
 //
 // 2014-06-18 : Alex Shires
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TrackIsoVariables )
+DECLARE_TOOL_FACTORY( RelInfoTrackIsolationBDT )
 
     //=============================================================================
     // Standard constructor, initializes variables
     //=============================================================================
-TrackIsoVariables::TrackIsoVariables( const std::string& type,
+RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
         const std::string& name,
         const IInterface* parent) : GaudiTool ( type, name , parent )
 {
@@ -53,13 +53,13 @@ TrackIsoVariables::TrackIsoVariables( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackIsoVariables::~TrackIsoVariables() {}
+RelInfoTrackIsolationBDT::~RelInfoTrackIsolationBDT() {}
 
 
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode TrackIsoVariables::initialize() {
+StatusCode RelInfoTrackIsolationBDT::initialize() {
     StatusCode sc = GaudiTool::initialize() ;
     if ( sc.isFailure() ) return sc ;
 
@@ -110,7 +110,7 @@ StatusCode TrackIsoVariables::initialize() {
 //=============================================================================
 // Fill Extra Info structure
 //=============================================================================
-StatusCode TrackIsoVariables::calculateRelatedInfo( const LHCb::Particle *top,
+StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
         const LHCb::Particle *part )
 {
 
@@ -199,11 +199,11 @@ StatusCode TrackIsoVariables::calculateRelatedInfo( const LHCb::Particle *top,
 
 //rel infor methods
 
-LHCb::RelatedInfoMap* TrackIsoVariables::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoTrackIsolationBDT::getInfo(void) {
     return &m_map; 
 }
 
-std::string TrackIsoVariables::infoPath(void) {
+std::string RelInfoTrackIsolationBDT::infoPath(void) {
     std::stringstream ss;
     ss << std::string("Particle2TrackIsolationRelations");
     return ss.str(); 
@@ -212,7 +212,7 @@ std::string TrackIsoVariables::infoPath(void) {
 //=============================================================================
 // Save the particles in the decay chain (recursive function)
 //=============================================================================
-void TrackIsoVariables::saveDecayParticles( const LHCb::Particle *top)
+void RelInfoTrackIsolationBDT::saveDecayParticles( const LHCb::Particle *top)
 {
 
     // -- Get the daughters of the top particle
@@ -239,7 +239,7 @@ void TrackIsoVariables::saveDecayParticles( const LHCb::Particle *top)
 //=============================================================================
 // Check if the track is already in the decay
 //=============================================================================
-bool TrackIsoVariables::isTrackInDecay(const LHCb::Track* track){
+bool RelInfoTrackIsolationBDT::isTrackInDecay(const LHCb::Track* track){
 
     bool isInDecay = false;
 
@@ -268,7 +268,7 @@ bool TrackIsoVariables::isTrackInDecay(const LHCb::Track* track){
 
 
 
-bool TrackIsoVariables::calcBDTValue( const LHCb::Particle * part
+bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         , const LHCb::Tracks * tracks
         , const LHCb::VertexBase * PV 
         , const LHCb::VertexBase * SV 
@@ -364,7 +364,7 @@ bool TrackIsoVariables::calcBDTValue( const LHCb::Particle * part
 /// calc ips to any PV
 /// ------------------
 
-double TrackIsoVariables::calcIPToAnyPV( const LHCb::Track * track ) 
+double RelInfoTrackIsolationBDT::calcIPToAnyPV( const LHCb::Track * track ) 
 {
     LHCb::RecVertex::Container::const_iterator iv;
     double ips(-1),imp(-1),impchi2(-1);
@@ -395,7 +395,7 @@ double TrackIsoVariables::calcIPToAnyPV( const LHCb::Track * track )
 /// Additionally, a "vertex" is calculated as the mid-point 
 /// on the doca line segment
 ///============================================================================
-void TrackIsoVariables::getPerpFeet(Gaudi::XYZPoint track_pos,
+void RelInfoTrackIsolationBDT::getPerpFeet(Gaudi::XYZPoint track_pos,
         Gaudi::XYZVector track_p,
         Gaudi::XYZPoint mu_pos,
         Gaudi::XYZVector mu_p, 
@@ -445,7 +445,7 @@ void TrackIsoVariables::getPerpFeet(Gaudi::XYZPoint track_pos,
 /// transverse momentum
 ///============================================================================
 
-double TrackIsoVariables::calcFC( Gaudi::XYZVector track_mom, 
+double RelInfoTrackIsolationBDT::calcFC( Gaudi::XYZVector track_mom, 
         Gaudi::XYZVector mu_mom, 
         Gaudi::XYZPoint mu_track_vertex,
         const LHCb::VertexBase* PV)
@@ -464,7 +464,7 @@ double TrackIsoVariables::calcFC( Gaudi::XYZVector track_mom,
 ///--------------------------------------------
 /// calculates angle between two vectors
 ///--------------------------------------------
-double TrackIsoVariables::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
+double RelInfoTrackIsolationBDT::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
     double den      = p1.R()*p2.R();
     double cosAngle = p1.Dot(p2)/den;
     double angle    = acos(fabs(cosAngle));
@@ -474,7 +474,7 @@ double TrackIsoVariables::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVector p2)
     return angle;
 }
 
-double TrackIsoVariables::calcVertexDist(Gaudi::XYZPoint muTrack, const LHCb::VertexBase* v){
+double RelInfoTrackIsolationBDT::calcVertexDist(Gaudi::XYZPoint muTrack, const LHCb::VertexBase* v){
     Gaudi::XYZPoint vertex = v->position();
     return ( (muTrack.z()-vertex.z())/fabs(muTrack.z()-vertex.z())*(muTrack-vertex).R() );
 };
