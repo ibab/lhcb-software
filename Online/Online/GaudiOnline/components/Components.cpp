@@ -52,3 +52,8 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineRunable)
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,PanoramixSim)
 #include "GaudiOnline/GaudiDeamon.h"
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiDeamon)
+#include "GaudiOnline/FileWriteMgr.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FileWriteMgr)
+#include "GaudiOnline/FileWriterSvc.h"
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,FileWriterSvc)
+
