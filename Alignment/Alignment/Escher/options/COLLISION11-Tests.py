@@ -18,5 +18,5 @@ Escher().CondDBtag = 'cond-20130522'
 # Events from run 87968 from fill 1647, on 24th March 2011
 from GaudiConf import IOHelper
 IOHelper('MDF').inputFiles([
-    "mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97121/097121_0000000003.raw"
+    "mdf:root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision11/RAW/00020657/0000/00020657_00000391_1.raw"
     ], clear=True)

@@ -1,13 +1,13 @@
-# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# --> Including file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of RawEventFormatConf
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v37r3/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v37r3/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency    = None
 # |-SkipEvents     = 0
@@ -16,7 +16,7 @@
 # |-Kalman         = True
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x21f48e0>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x1de8140>]
+# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x2212e10>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x23a4300>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
 # |-Incident       = ''
@@ -69,6 +69,7 @@
 # |-Context      = 'Offline'
 # |-RecoSequence = ['Decoding', 'VELO', 'Tr', 'Vertex']  (default: None)
 # |-SpecialData  = []  (default: [])
+# |-OnlineMode   = False
 # \----- (End of User RecSysConf/RecSysConf) ---------------------------------------------------------
 # /***** User TrackSys/TrackSys **********************************************************************
 # |-FilterBeforeFit          = True
@@ -96,6 +97,7 @@
 # |-Simulation   = False
 # |-Context      = 'Offline'
 # |-MoniSequence = ['VELO', 'Tr', 'OT', 'ST']  (default: None)
+# |-OnlineMode   = False
 # |-CheckEnabled = False
 # \----- (End of User RecMoniConf/RecMoniConf) -------------------------------------------------------
 # /***** User TAlignment/TAlignment ******************************************************************
@@ -106,8 +108,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x232ee60>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x232ee60>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x22df908>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x22df908>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 16
@@ -132,8 +134,8 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x1de8140>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x226e500>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x23a4300>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x220b5c0>)
 # |-UsePreconditioning           = True
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
@@ -146,13 +148,12 @@
 # |-Writer              = 'DstWriter'
 # |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
 # |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
-# |-Persistency         = None
 # |-WriteFSR            = True
+# |-SplitRawEventOutput = 2.0
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = []  (default: [])
-# |-SplitRawEventOutput = 2.0
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 ******* calling  TAlignment
@@ -160,12 +161,12 @@
 **** setting the main kalman aligment sequence!
 # No Writer defined for DIGI
 # WARNING: Using default tag dddb-20130503 for partition DDDB
-# WARNING: Using default tag cond-20130522 for partition LHCBCOND
-# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: Using default tag cond-20140425 for partition LHCBCOND
+# WARNING: Using default tag dq-20140428 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Escher version v4r14
-                                          running on lxplus0539 on Wed Dec  4 17:07:01 2013
+                                                   Welcome to Escher version v5r0
+                                          running on lxplus0212.cern.ch on Tue Jul  1 15:51:56 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -173,7 +174,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.25 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -184,7 +185,7 @@ EscherInit        SUCCESS Requested to process 10 events
 EscherInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HltFilterSeq         INFO Member list: HltDecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder, HltDecReportsDecoder/Hlt1DecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
+HltFilterSeq         INFO Member list: HltDecReportsDecoder/Hlt2DecReportsDecoder, HltDecReportsDecoder, HltDecReportsDecoder/Hlt1DecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
 LoKiSvc           SUCCESS
 
 
@@ -216,19 +217,13 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130503"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20130522"
+LHCBCOND             INFO Using TAG "cond-20140425"
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
-createBothVeloC...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
-createTTClusters     INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
-createTTLiteClu...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
-createITLiteClu...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
-createITClusters     INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
 RecoVELOSeq          INFO Member list: FastVeloTracking
 RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
-ToolSvc.OTRawBa...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
@@ -387,7 +382,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.25 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -396,8 +391,8 @@ TimingAuditor.T...   INFO   Init                        |     0.000 |     0.000 
 TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   HltFilterSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    HltCompositionMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    HltErrorFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2014-07-07 - Maurizio Martinelli
+ - Corrected references for QM tests
+ - Updated Collision 11 and 12 test files after migration to EOS
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 
