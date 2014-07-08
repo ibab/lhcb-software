@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2014-07-08 - Chris Jones
+ - Move Phys/MVADictTools to Phys project.
+
 </PRE><H1><A NAME=v12r3>2014-06-13 Analysis v12r3</A></H1><PRE>
 New development release, built against Phys v18r3.
 

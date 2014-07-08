@@ -76,10 +76,6 @@ use  DaVinciTrackScaling        v1r3    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  MVADictTools               v1r4    Phys   # S.Neubert
-
-####################################################################
-
 # Declare this as a container package
 apply_pattern container_package
 
@@ -88,3 +84,4 @@ apply_pattern QMTestSummarize
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
+
