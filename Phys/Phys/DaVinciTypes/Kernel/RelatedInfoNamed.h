@@ -57,7 +57,18 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       VTXISODCHI2ONETRACK     = VTXISONUMVTX+1, // SmallestDeltaChi2OneTrack
       VTXISODCHI2MASSONETRACK = VTXISONUMVTX+2, // SmallestDeltaChi2MassOneTrack
       VTXISODCHI2TWOTRACK     = VTXISONUMVTX+3, // SmallestDeltaChi2OneTrack
-      VTXISODCHI2MASSTWOTRACK = VTXISONUMVTX+4  // SmallestDeltaChi2MassOneTrack
+      VTXISODCHI2MASSTWOTRACK = VTXISONUMVTX+4,  // SmallestDeltaChi2MassOneTrack
+
+      //BDT ISOLATIONS ENUMS
+      VTXISOBDTHARDFIRSTVALUE  = VTXISODCHI2MASSTWOTRACK + 1 ,
+      VTXISOBDTHARDSECONDVALUE = VTXISOBDTHARDFIRSTVALUE + 1 ,
+      VTXISOBDTHARDTHIRDVALUE  = VTXISOBDTHARDFIRSTVALUE + 2 ,
+      VTXISOBDTSOFTFIRSTVALUE  = VTXISOBDTHARDFIRSTVALUE + 3 ,
+      VTXISOBDTSOFTSECONDVALUE = VTXISOBDTHARDFIRSTVALUE + 4 ,
+      VTXISOBDTSOFTTHIRDVALUE  = VTXISOBDTHARDFIRSTVALUE + 5 ,
+      TRKISOBDTFIRSTVALUE      = VTXISOBDTHARDFIRSTVALUE + 6 ,
+      TRKISOBDTSECONDVALUE     = VTXISOBDTHARDFIRSTVALUE + 7 ,
+      TRKISOBDTTHIRDVALUE      = VTXISOBDTHARDFIRSTVALUE + 8 
 
     };
 
@@ -108,13 +119,23 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
         case RelatedInfoNamed::VTXISODCHI2TWOTRACK     : return "VTXISODCHI2TWOTRACK";
         case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : return "VTXISODCHI2MASSTWOTRACK";
 
+        case RelatedInfoNamed::VTXISOBDTHARDFIRSTVALUE : return "VTXISOBDTHARDFIRSTVALUE" ;
+        case RelatedInfoNamed::VTXISOBDTHARDSECONDVALUE : return "VTXISOBDTHARDSECONDVALUE" ;
+        case RelatedInfoNamed::VTXISOBDTHARDTHIRDVALUE : return "VTXISOBDTHARDTHIRDVALUE" ;
+        case RelatedInfoNamed::VTXISOBDTSOFTFIRSTVALUE : return "VTXISOBDTSOFTFIRSTVALUE" ;
+        case RelatedInfoNamed::VTXISOBDTSOFTSECONDVALUE : return "VTXISOBDTSOFTSECONDVALUE" ;
+        case RelatedInfoNamed::VTXISOBDTSOFTTHIRDVALUE : return "VTXISOBDTSOFTTHIRDVALUE" ;
+        case RelatedInfoNamed::TRKISOBDTFIRSTVALUE : return "TRKISOBDTFIRSTVALUE" ;
+        case RelatedInfoNamed::TRKISOBDTSECONDVALUE : return "TRKISOBDTSECONDVALUE" ;
+        case RelatedInfoNamed::TRKISOBDTTHIRDVALUE : return "TRKISOBDTTHIRDVALUE" ;
+
         default : return "UNKNOWN"; 
       }
     }
 
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK; i++) {
+      for (i=0; i<=RelatedInfoNamed::TRKISOBDTTHIRDVALUE; i++) {
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
       return RelatedInfoNamed::UNKNOWN; 

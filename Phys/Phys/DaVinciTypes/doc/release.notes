@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-07-08 - Alex Shires
+ - Add enums for IsolationTools classes to RelatedInfoNamed.h
+
 ! 2014-07-02 - Anton Poluektov 
  - Move RelatedInfoNamed.h in this package from DaVinciTools, 
    so that it becomes visible to LoKiPhys
