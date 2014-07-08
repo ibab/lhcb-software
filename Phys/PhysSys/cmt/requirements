@@ -61,6 +61,10 @@ use JetAccessories              v3r5     Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
+use  MVADictTools               v1r4    Phys   # S.Neubert
+
+#===================================================================
+
 # Temporary MC stuff.
 use DaVinciMCKernel v4r4 Phys
 

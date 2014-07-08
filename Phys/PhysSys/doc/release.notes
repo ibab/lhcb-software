@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2014-07-08 - Chris Jones
+ - Import Phys/MVADictTools from Analysis project.
+
 </PRE><H1><A NAME=v18r3>2014-06-13 Phys v18r3</A></H1><PRE>
 Development release, based on Rec v16r3, LHCb v37r3 and Gaudi v25r2.
 
