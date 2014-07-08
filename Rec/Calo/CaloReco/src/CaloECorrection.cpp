@@ -195,20 +195,27 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double aB  = getCorrection(CaloCorrection::alphaB    , cellID , bDist );  // lateral leakage
   double aX  = getCorrection(CaloCorrection::alphaX    , cellID , Asx   );  // module frame dead material X-direction
   double aY  = getCorrection(CaloCorrection::alphaY    , cellID , Asy   );  // module frame dead material Y-direction
-  double beta= getCorrection(CaloCorrection::beta      , cellID , eEcal , 0 );  
-  double betaC= getCorrection(CaloCorrection::betaC      , cellID , eEcal , 0. );
+  double aP  = getCorrection(CaloCorrection::alphaP    , cellID , ePrs  );  // Prs deposit dependency
 
+  // Prs correction
+  double ratio = (eEcal > 0 ) ? ePrs / eEcal : 0. ;
+  double beta = getCorrection(CaloCorrection::beta , cellID , eEcal  , 0. );    // eEcal dependency if any
+  beta += getCorrection(CaloCorrection::betaP      , cellID , ePrs   , 0. );    // add Eprs dependency if any
+  beta += getCorrection(CaloCorrection::betaPR     , cellID , ratio  , 0. );    // add ePrs/eEcal dependency if any
+
+  // angular correction
   double gT  = getCorrection(CaloCorrection::globalT   , cellID , dtheta );  // incidence angle (delta)
-  double dT  = getCorrection(CaloCorrection::offsetT   , cellID , dtheta );  // incidence angle (delta)
+  double dT  = getCorrection(CaloCorrection::offsetT   , cellID , dtheta , 0. );  // incidence angle (delta)
 
-
+  // - dedicate correction for 'converted photon'
   double gC = 1.;
   if( eSpd > 0){
     gC = getCorrection(CaloCorrection::globalC , cellID ); // global correction factor for converted photons
+    double betaC= getCorrection(CaloCorrection::betaC      , cellID , eEcal , 0.  );
+    betaC += getCorrection(CaloCorrection::betaCP          , cellID , ePrs  , 0.  );
+    betaC += getCorrection(CaloCorrection::betaCPR         , cellID , ratio , 0.  );
     if( betaC != 0.)beta = betaC;
   }
-  
-
   
 
   

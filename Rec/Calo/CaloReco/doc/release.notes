@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-08 - Olivier Deschamps
+  - CaloCorrectionBase/CaloECorrection : add possible non-linear dependency to Prs corrections
+
 ! 2014-07-03 - Olivier Deschamps
   - ClusterCovarianceMatrixTool : allow for covariance parametrization per Calo area - improve DB access
   - SubClusterSelectorTool      : improve DB access

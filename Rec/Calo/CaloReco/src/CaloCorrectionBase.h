@@ -46,7 +46,7 @@ namespace CaloCorrectionUtils{
     int m_calo ;
   };
 }
-// DO NOT CHANGE THE FUNCTION ORDER FOR BACKWARD COMPATIBILITY WITH EXISTING CONDITIONS
+// DO NOT CHANGE THE FUNCTION ORDER FOR BACKWARD COMPATIBILITY WITH EXISTING CONDITIONS DB
 namespace CaloCorrection {
   enum  Function{
     InversPolynomial    =0,
@@ -70,11 +70,17 @@ namespace CaloCorrection {
     alphaB, // alpha(Bary)
     alphaX, // alpha(Dx)
     alphaY, // alpha(Dy) 
-    beta,   // Prs correction
+    alphaP, // alpha(ePrs)
+    beta,   // Prs correction (with possible eEcal dependency)
+    betaP,  // Prs correction  (with possible ePrs dependency)
+    betaPR, //  Prs correction (with possible ePrs/eEcal dependency)
     betaC,   // Prs correction for converted photons (use beta if not defined)
+    betaCP,  // ""
+    betaCPR, // ""
     globalC,   // global factor for converted photons
     globalT,   // global(Theta) function of incidence angle
     offsetT,   // offset(Theta) function of incidence angle
+    //
     ClusterCovariance, // parameters for cluster covariance estimation
     // L-Correction parameters
     gamma0,
@@ -101,7 +107,8 @@ namespace CaloCorrection {
   };
   static const int nT = lastType+1;
   static const int nF = Unknown+1;
-  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","beta","betaC","globalC","globalT" ,"offsetT","ClusterCovariance"  // E-corrections
+  static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","alphaP","beta","betaP","betaPR","betaC","betaCP","betaCPR"          // E-corrections
+                                            ,"globalC","globalT" ,"offsetT","ClusterCovariance"  
                                             ,"gamma0","delta0","gammaP","deltaP"                                                                      // L-Corrections
                                             ,"shapeX","shapeY","residual","residualX","residualY","asymP","asymM","angularX","angularY"               // S-Corrections
                                             ,"profile","profileC"                                                                                     // Profile shape
