@@ -24,7 +24,7 @@ RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
     declareInterface<IRelatedInfoTool>(this);
     declareProperty("InputParticles", m_inputParticles,
             "List of containers to check for extra particle vertexing") ;
-    declareProperty("WeightsFile", m_weightsName = "weightsHard.xml" );
+    declareProperty("WeightsFile", m_weightsName = "VertexIsolationHard.xml" );
     //
     // optional variables to store
     m_keys.clear(); 
@@ -79,7 +79,7 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
 
     //configure MVA
     m_optmap["Name"] = "bdtval" ;
-    m_optmap["XMLFILE"] = System::getEnv("ISOLATIONTOOLSROOT") + "files/" + m_weightsName ;
+    m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
     m_tmva.Init( m_optmap , info().stream() ) ; //
 
     /*m_Reader->AddSpectator( "Track_TYPE",&m_var_type);

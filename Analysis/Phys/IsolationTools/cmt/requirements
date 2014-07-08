@@ -10,7 +10,7 @@ branches          cmt doc src options files
 
 # Used packages. 
 #============================================================================
-#use  Boost                 v* LCG_Interfaces
+use  Boost                 v* LCG_Interfaces
 #use  GaudiConfUtils        v* -no_auto_imports
 use  DaVinciKernel         v* Phys
 use  LoKiPhys              v* Phys

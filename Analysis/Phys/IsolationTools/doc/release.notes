@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-07-07 - Alex Shires
+ - working implementation of RelatedInfo in Track and VertexIsolationBDT
+
 ! 2014-07-03 - Alex Shires
  - working implementation of TMVATransform in TrackIsoVariables
 

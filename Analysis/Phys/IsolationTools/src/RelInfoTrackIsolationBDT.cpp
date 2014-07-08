@@ -26,7 +26,7 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
         ( "MVATransform" , m_transformName ,
           "path/name of the DictTransform tool"); 
     declareProperty
-        ( "WeightsFile" , m_weightsName = "trackiso.xml" ,
+        ( "WeightsFile" , m_weightsName = "TrackIsolation.xml" ,
           "weights parameter file"); 
     declareProperty(    "PVInputLocation"       
             , m_PVInputLocation = LHCb::RecVertexLocation::Primary 
@@ -89,7 +89,7 @@ StatusCode RelInfoTrackIsolationBDT::initialize() {
        }*/
 
     m_optmap["Name"] = "bdtval" ;
-    m_optmap["XMLFILE"] = System::getEnv("ISOLATIONTOOLSROOT") + "files/" + m_weightsName ;
+    m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
     m_tmva.Init( m_optmap , info().stream() ) ; //
     //instance of IParticleDicttool
     //m_varmap = tool<IParticleDictTool>(m_transformname) ;
