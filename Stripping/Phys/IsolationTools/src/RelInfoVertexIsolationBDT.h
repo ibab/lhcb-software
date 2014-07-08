@@ -81,7 +81,9 @@ class RelInfoVertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoT
 
         LHCb::RelatedInfoMap m_map;
         std::vector<std::string> m_variables;
-        std::vector<short int> m_keys; 
+        std::vector<short int> m_keys;
+
+        std::string m_bdttype ;
 
         double m_bdt1 ;
         double m_bdt2 ;

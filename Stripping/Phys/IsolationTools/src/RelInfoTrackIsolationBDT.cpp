@@ -1,5 +1,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "RelInfoTrackIsolationBDT.h"
+#include "Kernel/RelatedInfoNamed.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RelInfoTrackIsolationBDT
@@ -35,15 +36,20 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
 
     //sort these keys out by adding all
     m_keys.clear(); 
-    std::vector<std::string>::const_iterator ivar; 
+/*    std::vector<std::string>::const_iterator ivar; 
     for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-        short int key = IsolationInfo::indexByName( *ivar ); 
-        if (key != IsolationInfo::Unknown) {
+        short int key = RelatedInfoNamed::indexByName( *ivar ); 
+        if (key != RelatedInfoNamed::Unknown) {
             m_keys.push_back( key );
         } else {
             warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
         }
     }
+*/
+    m_keys.push_back( RelatedInfoNamed::TRKISOBDTFIRSTVALUE );
+    m_keys.push_back( RelatedInfoNamed::TRKISOBDTSECONDVALUE );
+    m_keys.push_back( RelatedInfoNamed::TRKISOBDTTHIRDVALUE );
+
 
 
 
@@ -88,7 +94,8 @@ StatusCode RelInfoTrackIsolationBDT::initialize() {
        return StatusCode::FAILURE;
        }*/
 
-    m_optmap["Name"] = "bdtval" ;
+    m_optmap["Name"] = m_transformName ;
+    m_optmap["KeepVars"] = "0" ;
     m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
     m_tmva.Init( m_optmap , info().stream() ) ; //
     //instance of IParticleDicttool
@@ -126,7 +133,7 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
     m_decayParticles.clear();
 
     if ( ! part->isBasicParticle() ) { 
-        if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle" << endmsg;
+        if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
         return StatusCode::SUCCESS ;
     }
 
@@ -177,10 +184,11 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
 
             float value = 0;
             switch (*ikey) {
-                case IsolationInfo::TrackIsoFirstBDTValue : value = m_bdt1; break;
-                case IsolationInfo::TrackIsoSecondBDTValue  : value = m_bdt2; break;
-                case IsolationInfo::TrackIsoThirdBDTValue   : value = m_bdt3; break;
+                case RelatedInfoNamed::TRKISOBDTFIRSTVALUE : value = m_bdt1; break;
+                case RelatedInfoNamed::TRKISOBDTSECONDVALUE  : value = m_bdt2; break;
+                case RelatedInfoNamed::TRKISOBDTTHIRDVALUE   : value = m_bdt3; break;
             }
+            if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
 
             m_map.insert( std::make_pair( *ikey, value) );
         }
@@ -333,10 +341,18 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         m_varmap.insert( "doca", var_log_doca ) ;
         m_varmap.insert( "fc", var_fc ) ;
 
+        if (msgLevel(MSG::VERBOSE)) {
+            verbose() << "PVdist"<<'\t' << var_PVdist <<  endmsg;
+            verbose() << "SVdist"<<'\t' << var_SVdist <<  endmsg;
+            verbose() << "anglet"<<'\t' << var_angle <<  endmsg;
+            verbose() << "doca"<<'\t' << var_log_doca <<  endmsg;
+            verbose() << "fc value"<<'\t' << var_fc <<  endmsg;
+        }
+
         m_tmva(m_varmap,m_out) ;
         bdtval = m_out[m_transformName];
-        //bdtval = m_Reader->EvaluateMVA( "BDT method" ) ;
-        //verbose() << "before: " << bdtval << '\t' <<  m_bdt1 << '\t' << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+        
+        if (msgLevel(MSG::DEBUG)) debug() << m_transformName << " : " << bdtval << endmsg ;
         //is this really the most efficient??
         if (bdtval > m_bdt1) {
             m_bdt3 = m_bdt2 ;
@@ -350,7 +366,6 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         else if (bdtval > m_bdt3) {
             m_bdt3 = bdtval ;
         }
-        //verbose() << "after: " << bdtval << '\t' <<  m_bdt1 << '\t' << m_bdt2 << '\t' << m_bdt3 << endmsg ;
     }
     return true ;
 }
@@ -475,6 +490,7 @@ double RelInfoTrackIsolationBDT::enclosedAngle(Gaudi::XYZVector p1,Gaudi::XYZVec
 }
 
 double RelInfoTrackIsolationBDT::calcVertexDist(Gaudi::XYZPoint muTrack, const LHCb::VertexBase* v){
+    if (v==NULL) return 0 ;
     Gaudi::XYZPoint vertex = v->position();
     return ( (muTrack.z()-vertex.z())/fabs(muTrack.z()-vertex.z())*(muTrack-vertex).R() );
 };

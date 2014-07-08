@@ -1,5 +1,6 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "RelInfoVertexIsolationBDT.h"
+#include "Kernel/RelatedInfoNamed.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : RelInfoVertexIsolationBDT
 // Converted from RelInfoVertexIsolationBDT (from Greg Ciezerak and Albert Puig) 
@@ -25,18 +26,20 @@ RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
     declareProperty("InputParticles", m_inputParticles,
             "List of containers to check for extra particle vertexing") ;
     declareProperty("WeightsFile", m_weightsName = "VertexIsolationHard.xml" );
+    declareProperty("Type", m_bdttype = "Hard", "Use BDT trained on Hard or Soft tracks" );
+    declareProperty("Name", m_transformName = "BDTvalue" );
     //
     // optional variables to store
     m_keys.clear(); 
-    std::vector<std::string>::const_iterator ivar; 
+    /*std::vector<std::string>::const_iterator ivar; 
     for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-        short int key = IsolationInfo::indexByName( *ivar ); 
-        if (key != IsolationInfo::Unknown) {
+        short int key = RelatedInfoNamed::indexByName( *ivar ); 
+        if (key != RelatedInfoNamed::Unknown) {
             m_keys.push_back( key );
         } else {
             warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
         }
-    }
+    }*/
 
 }
 
@@ -77,8 +80,22 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
         //m_inputParticles.push_back("Phys/StdNoPIDsVeloPions");
     }
 
+    //configure keys
+    if ( m_bdttype.compare("Hard") == 0 ) {
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTHARDFIRSTVALUE );
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTHARDSECONDVALUE );
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTHARDTHIRDVALUE );
+    }
+    else {
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTFIRSTVALUE );
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTSECONDVALUE );
+        m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTTHIRDVALUE );
+    }
+
+
     //configure MVA
-    m_optmap["Name"] = "bdtval" ;
+    m_optmap["Name"] = m_transformName ;
+    m_optmap["KeepVars"] = "0" ;
     m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
     m_tmva.Init( m_optmap , info().stream() ) ; //
 
@@ -193,6 +210,7 @@ StatusCode RelInfoVertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle
     m_bdt3 = -1;
     //BDT isolation code
     bool done = getIsolation(part,partsToCheck, vtx, PVs ) ;
+    if (msgLevel(MSG::DEBUG)) debug() << "BDTvals : " <<  m_bdt1 << '\t' << m_bdt2 << '\t' << m_bdt3 << endmsg ;
     // Save values
     //
     m_map.clear();
@@ -202,14 +220,19 @@ StatusCode RelInfoVertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle
 
         float value = 0;
         switch (*ikey) {
-            case IsolationInfo::VertexIsoFirstBDTValue : value = m_bdt1; break;
-            case IsolationInfo::VertexIsoSecondBDTValue  : value = m_bdt2; break;
-            case IsolationInfo::VertexIsoThirdBDTValue   : value = m_bdt3; break;
+            case RelatedInfoNamed::VTXISOBDTHARDFIRSTVALUE : value = m_bdt1; break;
+            case RelatedInfoNamed::VTXISOBDTHARDSECONDVALUE  : value = m_bdt2; break;
+            case RelatedInfoNamed::VTXISOBDTHARDTHIRDVALUE   : value = m_bdt3; break;
+            case RelatedInfoNamed::VTXISOBDTSOFTFIRSTVALUE : value = m_bdt1; break;
+            case RelatedInfoNamed::VTXISOBDTSOFTSECONDVALUE  : value = m_bdt2; break;
+            case RelatedInfoNamed::VTXISOBDTSOFTTHIRDVALUE   : value = m_bdt3; break;
+
         }
 
+        if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
         m_map.insert( std::make_pair( *ikey, value) );
     }
-
+    
     // We're done!
     return StatusCode::SUCCESS ;
 }
@@ -280,9 +303,14 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
             // 3 : Calculate new FDChi2
             newfdchi2 = getfdchi2(newpart->proto()->track(),vtxWithExtraTrack, PVs);
             // 4 : Calculate old FDChi2
-            oldfdchi2 = getfdchi2(newpart->proto()->track(),vtxWithExtraTrack, PVs);
+            oldfdchi2 = getfdchi2(newpart->proto()->track(),*v, PVs);
+            //oldfdchi2 = getfdchi2(newpart->proto()->track(),vtxWithExtraTrack, PVs);
             // 5 : Delta FD Chi2
-            deltafd = log10(newfdchi2-oldfdchi2); 
+            debug() << "New FD: " << newfdchi2 << " Old FD: " << oldfdchi2 << endmsg ;
+            deltafd = log10(fabs(newfdchi2-oldfdchi2)) -7  ; 
+            if (newfdchi2-oldfdchi2 < 0) deltafd *= -1.;
+            //take log of fdchi2
+            newfdchi2 = log10(newfdchi2);
             // 7 : Track PT
             if(newpart->proto()->track()->type() == 1) pt = newpart->proto()->track()->momentum().z();
             else pt = newpart->proto()->track()->pt();
@@ -301,18 +329,32 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
             //BDT value
    
             m_varmap.clear();
+            m_varmap.insert( "Track_TYPE", m_var_type ) ;
             m_varmap.insert( "Track_MINIPCHI2", m_var_minipchi2 ) ;
             m_varmap.insert( "Track_PT", m_var_trackpt ) ;
             m_varmap.insert( "Track_OPENING", m_var_opening ) ;
             m_varmap.insert( "Track_IPCHI", m_var_trackipchi2 ) ;
             m_varmap.insert( "Track_FLIGHT", m_var_newfdchi2 ) ;
             m_varmap.insert( "Track_DELTALFLIGHT", m_var_deltafd ) ;
+            
+
+            if (msgLevel(MSG::VERBOSE)) {
+                verbose() << "track type " <<'\t'<< type << endmsg ;
+                verbose() << "track minipchi2" <<'\t'<< minipchi2 << endmsg ; 
+                verbose() << "track py" <<'\t'<< pt << endmsg ;
+                verbose() << "track opening" <<'\t' << opening << endmsg ;
+                verbose() << "track newfdchi2"<<'\t' << newfdchi2 << endmsg ;
+                verbose() << "track ipchi2" <<'\t'  << ipchi2 << endmsg ;
+                verbose() << "delta fd " << '\t' << deltafd << endmsg ;
+            }
+            //check map
 
             //
             m_tmva(m_varmap,m_out) ;
             bdtval = m_out[m_transformName];
-            //bdtval = m_Reader->EvaluateMVA( "BDT method" );
-            //bestParticle = (LHCb::Particle*) (*iExtraPart) ;
+
+
+            if (msgLevel(MSG::DEBUG)) debug() << m_transformName << " : " << bdtval << endmsg ;
 
             //pick best and swap
             if (bdtval > m_bdt1 ) {
@@ -329,9 +371,6 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
             }
         }
     }
-    //IsolationResult res ;
-    //res.bdtval = bdtval ;
-    //res.bestParticle = part ;
     return true ;
 }
 
