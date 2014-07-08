@@ -15,6 +15,9 @@
 #define TFTOOLS_TSTATIONHITMANAGER_H 1
 
 // Include files
+#include <functional>
+#include <memory>
+#include "boost/iterator/transform_iterator.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolHandle.h"
@@ -22,6 +25,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 
 // Tf framework
+#include "TfKernel/IndexedHitContainer.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
@@ -121,12 +125,12 @@ namespace Tf
   {
 
   public:
-
-    /// Type for container of Hits
-    typedef std::vector< Hit* > Hits;
-
+    typedef  IndexedHitContainer< Tf::RegionID::OTIndex::kNStations, 
+                                  Tf::RegionID::OTIndex::kNLayers, 
+                                  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions, 
+                                  Hit* > Hits;
     /// range object for Hits
-    typedef Gaudi::Range_<Hits> HitRange;
+    typedef typename Hits::HitRange HitRange;
 
   public:
 
@@ -190,8 +194,7 @@ namespace Tf
                           const TRegionID  region ) const
     {
       if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
-      return HitRange( m_hits[sta][lay][region].begin(),
-                       m_hits[sta][lay][region].end() );
+      return m_hits.range( sta,lay, region );
     }
 
     /** Load the hits for a given region of interest
@@ -205,8 +208,7 @@ namespace Tf
                           const TLayerID   lay ) const
     {
       if ( !allHitsPrepared(sta,lay) ) { prepareHits(sta,lay); }
-      return HitRange( m_hits_layers[sta][lay].begin(),
-                       m_hits_layers[sta][lay].end() );
+      return m_hits.range(sta,lay) ; 
     }
 
     /** Load the hits for a given region of interest
@@ -218,8 +220,7 @@ namespace Tf
     inline HitRange hits( const TStationID sta ) const
     {
       if ( !allHitsPrepared(sta) ) { prepareHits(sta); }
-      return HitRange( m_hits_stations[sta].begin(),
-                       m_hits_stations[sta].end() );
+      return m_hits.range(sta);
     }
 
     /** Load the all hits
@@ -228,8 +229,7 @@ namespace Tf
     inline HitRange hits( ) const
     {
       if ( !allHitsPrepared() ) { prepareHits(); }
-      return HitRange( m_hits_all.begin(),
-                       m_hits_all.end() );
+      return m_hits.range();
     }
 
     // Not clear to me if these following methods  should be in the common interface
@@ -251,11 +251,11 @@ namespace Tf
                                   const TRegionID  region ) const
     {
       if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
-      return HitRange( std::lower_bound( m_hits[sta][lay][region].begin(),
-                                         m_hits[sta][lay][region].end(),
+      HitRange range = m_hits.range(sta,lay,region);
+      return HitRange( std::lower_bound( range.begin(), range.end(),
                                          xMin,
                                          Tf::compByX_LB< Hit >() ),
-                       m_hits[sta][lay][region].end() );
+                       range.end()); 
     }
 
     /** Retrieve the Region for a certain IT or OT region ID. The region
@@ -296,35 +296,8 @@ namespace Tf
                           const TLayerID   lay,
                           const TRegionID  region ) const
     {
-      std::sort ( m_hits[sta][lay][region].begin(), m_hits[sta][lay][region].end(), SORTER() );
-    }
-
-    /** Sort the hits in a given station and layer
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     */
-    template < typename SORTER >
-    inline void sortHits( const TStationID sta,
-                          const TLayerID   lay ) const
-    {
-      std::sort ( m_hits_layers[sta][lay].begin(), m_hits_layers[sta][lay].end(), SORTER() );
-    }
-
-    /** Sort the hits in a given station
-     *  @param[in] sta    Station ID
-     */
-    template < typename SORTER >
-    inline void sortHits( const TStationID sta ) const
-    {
-      std::sort ( m_hits_stations[sta].begin(), m_hits_stations[sta].end(), SORTER() );
-    }
-
-    /** Sort the all the hits
-     */
-    template < typename SORTER >
-    inline void sortHits( ) const
-    {
-      std::sort ( m_hits_all.begin(), m_hits_all.end(), SORTER() );
+      std::pair<typename Hits::iterator,typename Hits::iterator>  rng = m_hits.range_(sta,lay,region);
+      std::sort ( rng.first, rng.second, SORTER() );
     }
 
     
@@ -415,34 +388,18 @@ namespace Tf
     /// The underlying IT hit creator
     inline const Tf::IITHitCreator * itHitCreator() const { return &*m_ithitcreator; }
 
-    /** Add a hit to the container
-     *  @param hit Pointer to the hit to add
-     *  @param[in] sta    The station number
-     *  @param[in] lay    The layer number
-     *  @param[in] region The region number
-     */
-    inline void addHit( Hit * hit,
-                        const TStationID sta,
-                        const TLayerID   lay,
-                        const TRegionID  region ) const
-    {
-      m_hits[sta][lay][region].push_back(hit);
-      // temporary hack, to get things working. Needs to be done better
-      m_hits_layers[sta][lay].push_back(hit);
-      m_hits_stations[sta].push_back(hit);
-      m_hits_all.push_back(hit);
-    }
+  protected:
 
     /// Access the maximum number of stations
-    inline TStationID maxStations()   const { return TStationID(m_nSta);   }
+    inline TStationID maxStations()   const { return TStationID(Tf::RegionID::OTIndex::kNStations);   }
     /// Access the maximum number of layers
-    inline TLayerID maxLayers()       const { return TLayerID(m_nLay);     }
+    inline TLayerID maxLayers()       const { return TLayerID(Tf::RegionID::OTIndex::kNLayers);     }
     /// Access the maximum number of OT regions
-    inline OTRegionID maxOTRegions()  const { return OTRegionID(m_nOTReg); }
+    inline OTRegionID maxOTRegions()  const { return OTRegionID(Tf::RegionID::OTIndex::kNRegions); }
     /// Access the maximum number of IT regions
-    inline ITRegionID maxITRegions()  const { return ITRegionID(m_nITReg); }
+    inline ITRegionID maxITRegions()  const { return ITRegionID(Tf::RegionID::ITIndex::kNRegions); }
     /// Access the maximum number of regions
-    inline TRegionID maxRegions()     const { return TRegionID(m_nReg);    }
+    inline TRegionID maxRegions()     const { return TRegionID( Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions );    }
 
     /// Initialise the IT hits for the current event using the given selector object
     void prepareITHitsInWindow( const IStationSelector & selector );
@@ -565,12 +522,7 @@ namespace Tf
     /// The ST hit cleaner
     Tf::ISTHitCleaner * m_itCleaner;
 
-    mutable Hits m_hits[m_nSta][m_nLay][m_nReg]; ///< Hits in individual regions
-    // CRJ : This is ugly but just a first bash to provide *something* that works
-    //       Need to try and find a neater way to handle these different pointer containers
-    mutable Hits m_hits_layers[m_nSta][m_nLay];  ///< Hits in individual layers
-    mutable Hits m_hits_stations[m_nSta];        ///< Hits in individual stations
-    mutable Hits m_hits_all;                     ///< All hits
+    mutable Hits m_hits;
 
     // Flags to indicate which hits are ready
     mutable bool m_hits_ready[m_nSta][m_nLay][m_nReg]; ///< Flags to indicate which regions have hits ready
@@ -586,15 +538,18 @@ namespace Tf
 
   };
 
+#ifndef __GCCXML__
+
   template<class Hit>
   TStationHitManager<Hit>::TStationHitManager( const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent) :
     GaudiTool (type, name, parent),
-    m_othitcreator ( "Tf::OTHitCreator/OTHitCreator" ),
-    m_ithitcreator ( "Tf::STHitCreator<Tf::IT>/ITHitCreator" ),
-    m_otCleaner    ( NULL ),
-    m_itCleaner    ( NULL )
+    m_othitcreator { "Tf::OTHitCreator/OTHitCreator" },
+    m_ithitcreator { "Tf::STHitCreator<Tf::IT>/ITHitCreator" },
+    m_otCleaner    { nullptr },
+    m_itCleaner    { nullptr },
+    m_hits         { 16384 } // initial capacity of container...
   {
     declareInterface<TStationHitManager<Hit> >(this);
     declareProperty( "CleanOTHits", m_cleanOTHits = false );
@@ -635,28 +590,22 @@ namespace Tf
   template<class Hit>
   inline void TStationHitManager<Hit>::clearHits() const
   {
-    m_hits_all.clear();
     this->setAllHitsPrepared(false);
     for(TStationID s=0; s<maxStations(); ++s)
     {
       this->setAllHitsPrepared(s,false);
-      m_hits_stations[s].clear();
       for (TLayerID l=0; l<maxLayers(); ++l)
       {
         this->setAllHitsPrepared(s,l,false);
-        m_hits_layers[s][l].clear();
         for (TRegionID t=0; t<maxRegions(); ++t)
         {
           this->setAllHitsPrepared(s,l,t,false);
-          for ( typename Hits::iterator iHit = m_hits[s][l][t].begin();
-                iHit != m_hits[s][l][t].end(); ++iHit )
-          {
-            delete *iHit;
-          }
-          m_hits[s][l][t].clear();
         }
       }
     }
+    HitRange rng = m_hits.range();
+    std::for_each( rng.begin(), rng.end(), std::default_delete<Hit>() ) ; 
+    m_hits.clear();
   }
 
   template<class Hit>
@@ -682,21 +631,18 @@ namespace Tf
       // clean hits
       Tf::OTHits selectedhits;
       m_otCleaner->cleanHits( othits, selectedhits );
+      
       // convert only those selected
-      for ( OTHits::const_iterator itOTH = selectedhits.begin();
-            itOTH != selectedhits.end(); ++itOTH )
-      {
-        this -> addHit ( this->createHit(**itOTH), sta, lay, region );
-      }
-    }
-    else
-    {
+      auto fun = [&](Tf::OTHits::const_reference hit) { return this->createHit(*hit); };
+      auto b =  boost::make_transform_iterator(std::begin(selectedhits), std::cref(fun));
+      auto e =  boost::make_transform_iterator(std::end(selectedhits), std::cref(fun));
+      m_hits.insert( sta, lay, region, b, e );
+    } else {
       // no cleaning, so just convert everything
-      for ( OTHitRange::const_iterator itOTH = othits.begin();
-            itOTH < othits.end(); ++itOTH )
-      {
-        this -> addHit ( this->createHit(**itOTH), sta, lay, region );
-      }
+      auto fun = [&](Tf::OTHitRange::const_reference hit) { return this->createHit(*hit); };
+      auto b =  boost::make_transform_iterator(std::begin(othits), std::cref(fun));
+      auto e =  boost::make_transform_iterator(std::end(othits), std::cref(fun));
+      m_hits.insert( sta, lay, region, b, e );
     }
   }
 
@@ -706,26 +652,21 @@ namespace Tf
                                                      const TLayerID   lay,
                                                      const TRegionID  region ) const
   {
-    if ( cleanITHits() )
-    {
+    if ( cleanITHits() ) {
       // clean hits
       Tf::STHits selectedhits;
       m_itCleaner->cleanHits( sthits, selectedhits );
       // convert only those selected
-      for ( STHits::const_iterator itSTH = selectedhits.begin();
-            itSTH != selectedhits.end(); ++itSTH )
-      {
-        this -> addHit ( this->createHit(**itSTH), sta, lay, region );
-      }
-    }
-    else
-    {
+      auto fun = [&](Tf::STHits::const_reference hit) { return this->createHit(*hit); };
+      auto b =  boost::make_transform_iterator(std::begin(selectedhits), std::cref(fun));
+      auto e =  boost::make_transform_iterator(std::end(selectedhits),   std::cref(fun));
+      m_hits.insert( sta, lay, region, b, e );
+    } else {
       // no cleaning, so just convert everything
-      for ( STHitRange::const_iterator itSTH = sthits.begin();
-            itSTH < sthits.end(); ++itSTH )
-      {
-        this -> addHit ( this->createHit(**itSTH), sta, lay, region );
-      }
+      auto fun = [&](Tf::STHitRange::const_reference hit) { return this->createHit(*hit); };
+      auto b   = boost::make_transform_iterator(std::begin(sthits), std::cref(fun));
+      auto e   = boost::make_transform_iterator(std::end(sthits),   std::cref(fun));
+      m_hits.insert( sta, lay, region, b, e );
     }
   }
 
@@ -840,7 +781,7 @@ namespace Tf
           Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,it,
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
-	  processRange ( sthits, sta, lay, it + this->maxOTRegions() );
+          processRange ( sthits, sta, lay, it + this->maxOTRegions() );
         }
       }// layer
     } // station
@@ -867,11 +808,12 @@ namespace Tf
           Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,ot,
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
-	  processRange ( othits, sta, lay, ot );
+          processRange ( othits, sta, lay, ot );
         }
       }// layer
     } // station
   }
+#endif
 
 } // end Tf namespace
 
