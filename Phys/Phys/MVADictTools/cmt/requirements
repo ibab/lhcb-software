@@ -1,0 +1,63 @@
+#============================================================================
+# Created    : 2013-04-08
+# Maintainer : Sebastian Neubert
+#============================================================================
+package           MVADictTools
+version           v1r4
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt doc src tests options python
+include_path      none
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   DaVinciInterfaces  v*    Phys
+use   LoKiPhys           v*    Phys
+use   LoKiArrayFunctors  v*    Phys
+use   ROOT               v*    LCG_Interfaces -no_auto_imports
+use   Boost              v*    LCG_Interfaces -no_auto_imports
+
+#============================================================================
+# Public incudes
+#============================================================================
+apply_pattern install_more_includes more=MVADictTools
+
+#============================================================================
+# building rules
+#============================================================================
+library          MVADictToolsLib -import=ROOT ../src/lib/*.cpp 
+apply_pattern    linker_library  library=MVADictToolsLib
+
+library          MVADictTools -import=ROOT ../src/component/*.cpp 
+apply_pattern    component_library  library=MVADictTools
+macro_append     MVADictTools_dependencies " MVADictToolsLib "
+
+application      utesttmva     ../src/applications/utesttmva.cxx
+macro_append     utesttmva_dependencies " MVADictToolsLib "
+
+#============================================================================
+# Python
+#============================================================================
+apply_pattern    install_python_modules
+
+#============================================================================
+# private build options
+#============================================================================
+private
+macro_append ROOT_linkopts " -lTMVA "
+macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version} "
+# Note: libgslcblas is needed by libgsl, but the link is missing.
+macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
+	            Darwin ""
+macro_append  GSL_linkopts " -Wl,--as-needed " \
+	            Darwin "" \
+                target-icc ""
+end_private
+
+#============================================================================
+# Test Suite
+#============================================================================
+apply_pattern QMTest
