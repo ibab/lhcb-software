@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-07-08 - Sean Benson
+ - Patch to UpgradeTools to avoid rare # of upgraded tracks mismatch
+
 !========================= LoKiTrigger v15r1 2014-04-22 =========================
 ! 2014-04-21 - Gerhard Raven
  - follow changes in Cache interface to use Gaudi::StringKey throughout

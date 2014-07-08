@@ -125,7 +125,34 @@ namespace
     // ========================================================================
   } ;  
   // ==========================================================================
-} //                                                end of anonynmous namespace
+	/** is direct ancestor  ?
+	*  simple structure to check the direct ancestor
+	*/
+	struct IsDirectAncestor : public std::unary_function<const LHCb::Track*,bool>
+	{
+		// ========================================================================
+		/// the default constructor is disabled 
+		IsDirectAncestor() = delete;
+		// ========================================================================
+		/// constructor form the seed 
+		IsDirectAncestor ( const LHCb::Track* seed ) : m_seed ( seed ) {}
+		// ========================================================================
+		bool operator() ( const LHCb::Track* track ) 
+		{ 
+			if ( !track ) { return false ; }
+			auto& ancestors = track->ancestors() ;
+			return !ancestors.empty() && ancestors.back().target() == m_seed; 
+		}
+		// ========================================================================
+		private:
+		// ========================================================================
+		/// the seed 
+		const LHCb::Track* m_seed ;
+		// ========================================================================
+	} ;  
+} 
+// ==========================================================================
+//                                                end of anonynmous namespace
 // ============================================================================
 // find the tracks within the recontructed 
 // ============================================================================
@@ -141,7 +168,7 @@ size_t LoKi::Hlt1::UpgradeTool::find
   }
   const size_t ntracks = tracks.size() ;
   std::copy_if( std::begin(*otracks), std::end(*otracks),
-                std::back_inserter( tracks ) , IsAncestor{ seed }   ) ;
+                std::back_inserter( tracks ) , IsDirectAncestor{ seed }   ) ;
   return tracks.size() - ntracks ;
 }
 // ============================================================================
