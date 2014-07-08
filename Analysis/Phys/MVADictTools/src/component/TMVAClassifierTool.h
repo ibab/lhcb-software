@@ -1,6 +1,0 @@
-#ifndef TMVACLASSIFIERTOOL_H
-#define TMVACLASSIFIERTOOL_H
-
-#include "MVADictTools/TMVATransform.h"
-
-#endif // TMVACLASSIFIERTOOL_H
