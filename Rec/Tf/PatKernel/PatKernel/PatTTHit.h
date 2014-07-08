@@ -13,8 +13,12 @@
    *  @date   2007-06-019
    **/
 
-  class PatTTHit : public Tf::HitExtension<Tf::LineHit>,
-                   public LHCb::MemPoolAlloc<PatTTHit>
+  class PatTTHit 
+#ifndef __GCCXML__
+  final 
+#endif
+                       : public Tf::HitExtension<Tf::LineHit>,
+                         public LHCb::MemPoolAlloc<PatTTHit>
   {
 
   public:
@@ -26,9 +30,6 @@
       m_z(stHit.zMid()),
       m_projection(-999),
       m_planeCode( 2 * stHit.station() + (stHit.layer()%2) ) { }
-
-    /// Desctructor
-    ~PatTTHit() { }
 
     /// Accessors
     double x()             const { return m_x; }
