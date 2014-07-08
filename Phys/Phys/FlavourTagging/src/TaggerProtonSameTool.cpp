@@ -141,15 +141,16 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
   //select protonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest BDT response
   const Particle * iprotonS = NULL;
-  double bestBDT = -99.0, ncand=0;
+  double bestBDT = -99.0;
+  unsigned int ncand=0;
   Particle::ConstVector::const_iterator ipart, jpart;
   for ( ipart = vtags.begin(); ipart != vtags.end(); ++ipart )
   {
     //PID cuts to select the proton
     const ProtoParticle* proto = (*ipart)->proto();
     const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
-    const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
 
+    const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
     if ( msgLevel(MSG::DEBUG) )
       debug()<<" Proton PIDp="<< PIDp <<" cut is >"<<m_PIDp_cut_protonS<<" Proton PIDk="<< PIDk<<" (no cut)"<<" n. of candidates="<<vtags.size()<<endreq;
 
@@ -245,6 +246,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
 
     ++ncand;
     std::vector<double> values;
+    values.reserve(10);
     values.push_back(dQ);
     values.push_back(log((ptot_B+ptot_pS).Pt()));  // lab0=B**
     values.push_back(log(ptot_pS.Pt())); // lab1=SSp
@@ -260,7 +262,6 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
       debug() << " BDT computation for candidate "<<ncand<<" ";
       for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";
     }
-
 
     const double BDT = m_myBDT_reader->GetMvaValue(values);
 
