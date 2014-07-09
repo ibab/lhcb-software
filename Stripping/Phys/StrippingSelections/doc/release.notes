@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-10 - Carlos Vazquez Sierra
+ - StrippingBs2JpsiKstNoPID updated (new line added for MC analysis purposes).
+
 ! 2014-07-05 - Stefano Perazzini
  - Updated tests/test_stream_output_locations.py
            tests/TestMyStrippingLineOn2011Data_Reco14.py
