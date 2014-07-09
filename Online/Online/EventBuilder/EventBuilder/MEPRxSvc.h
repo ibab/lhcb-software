@@ -195,6 +195,8 @@ public:
     virtual StatusCode initialize();
     /// Service overload: finalize()
     virtual StatusCode finalize();
+    /// Service overload: stop()
+    virtual StatusCode stop();
     /// IRunable implementation: Run the object
     virtual StatusCode run();
 

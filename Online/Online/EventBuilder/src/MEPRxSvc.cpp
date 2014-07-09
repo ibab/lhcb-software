@@ -1406,7 +1406,17 @@ void MEPRxSvc::handle(const Incident& inc)
         m_ebState = RUNNING;
     }
 }
-
+StatusCode MEPRxSvc::stop()
+{
+   StatusCode sc;
+   if (m_monSvc)
+   {
+     m_monSvc->updateSvc("this",m_runNumber,this);
+     m_monSvc->resetHistos(0);
+   }
+   sc = Service::stop();
+   return sc;
+}
 StatusCode MEPRxSvc::initialize()
 {
     StatusCode sc = Service::initialize();
@@ -1468,11 +1478,6 @@ StatusCode MEPRxSvc::finalize()
 {
     MsgStream log(msgSvc(), "MEPRx");
     log << MSG::INFO << "Entering finalize....." << endmsg;
-    if (m_monSvc)
-    {
-            m_monSvc->updateSvc("this",m_runNumber,this);
-            m_monSvc->resetHistos(0);
-    }
     if (m_mepRQCommand) {
       delete m_mepRQCommand;
       m_mepRQCommand = 0;
