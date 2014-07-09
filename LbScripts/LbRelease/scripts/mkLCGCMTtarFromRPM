@@ -69,7 +69,7 @@ class BuildLCGTarScript(Script):
                           dest = "explicit_deps",
                           action = "store_true",
                           default = False,
-                          help = "Restrict to the packages explicitely mentione din teh project")
+                          help = "Restrict to the packages explicitely mentioned in the project")
 
     def main(self):
         log = logging.getLogger()

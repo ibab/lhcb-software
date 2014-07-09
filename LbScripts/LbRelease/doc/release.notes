@@ -1,3 +1,7 @@
+2014-07-10  Ben Couturier <Ben.Couturier@cern.ch>
+	
+        * python/LbRelease/LCGRpmExtractor.py: Fix for release of LCG 69
+
 2014-06-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r0p1

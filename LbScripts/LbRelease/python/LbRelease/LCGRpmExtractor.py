@@ -133,7 +133,9 @@ class LCGRpmInstaller(object):
         if packageList != None:
             packfiles = packageList
             actuallist = self.checkInstallArea(packageList)
-            
+        else:
+            actuallist = packfiles
+   
         str = "tar zcf " + targetfile
         str += ' --exclude "*/InstallArea*" '
         str += ' --exclude "*.tar.gz" '
@@ -150,6 +152,10 @@ class LCGRpmInstaller(object):
             self.log.warning("Tar file creation successful, now creating md5sum file")
         else:
             raise Exception("Problem creating tar file")
-      
-
  
+    def isAreaEmpty(self):
+        '''
+        Check whether an install was already done or not
+        '''
+        isEmpty = False
+        return (len(os.listdir(self._siterootBase)) == 0)
