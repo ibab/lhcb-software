@@ -284,11 +284,20 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
         {
             //second check:.... sufficiently small
             if ( vtxWithExtraTrack.chi2() < 1E-5 ) continue;
+
+            ghostprob = newpart->proto()->track()->ghostProbability();
+            //ghost prob restrictuoin
+            if(ghostprob > 0.5){
+                if (msgLevel(MSG::VERBOSE)) 
+                    verbose() << "skipping track with type " << ghostprob << endmsg ;
+                continue;
+            }
             //BDT variables
             // 1 : Calculate opening angle
             opening = getopening(newpart->proto()->track(),part);
             // 6 : Track type
             type = newpart->proto()->track()->type();
+            
             // min requirements on pointing
             if( ( type == 3 && (opening < 0.994 )) ///long 
                     || (type == 4 && (opening < 0.98)) //
@@ -317,7 +326,6 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
             // 8 : Track IP chi2 ??
             StatusCode distsc = m_dist->distance(newpart,v,ip,ipchi2);
             //debug() << ghostprob << '\t' << type << '\t' << opening << endmsg ;
-            //if(ghostprob > 0.5){continue;}
             //assign
             m_var_type = type ;
             m_var_minipchi2 = minipchi2 ;
@@ -327,7 +335,8 @@ bool RelInfoVertexIsolationBDT::getIsolation( const LHCb::Particle *part
             m_var_trackipchi2 = ipchi2 ;
             m_var_deltafd = deltafd ;
             //BDT value
-   
+
+
             m_varmap.clear();
             m_varmap.insert( "Track_TYPE", m_var_type ) ;
             m_varmap.insert( "Track_MINIPCHI2", m_var_minipchi2 ) ;
