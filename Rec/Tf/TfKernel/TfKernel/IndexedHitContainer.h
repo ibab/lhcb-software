@@ -97,7 +97,7 @@ public:
     template <typename I>
     void insert( unsigned station, unsigned layer, unsigned region, I&& b, I&& e) {
           auto n = std::distance(b,e);
-          assert( m_hits.size() + n < std::numberic_limits<offset_t>::max()  );
+          // assert( m_hits.size() + n < std::numeric_limits<offset_t>::max()  );
           // std::cout << " size: " << m_hits.size() << " capacity: " << m_hits.capacity() << " growing to " << m_hits.size()+n << " requires realloc: " << ( m_hits.size()+n<= m_hits.capacity() ? " no " : " yes " ) << std::endl;
           // std::cout << " insertion of " << n << " entries at offset " << std::distance(std::begin(m_hits),begin(station,layer,region)) << " atEnd: " << ( begin(station,layer,region)==std::end(m_hits) ? " yes " : " no " )<< std::endl;
           m_hits.reserve( m_hits.size() + n );
