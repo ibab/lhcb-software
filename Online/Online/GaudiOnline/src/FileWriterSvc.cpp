@@ -77,7 +77,7 @@ FileWriterSvc::FileWriterSvc(const string& nam, ISvcLocator* svc) :
   OnlineService(nam, svc), m_mepMgr(0), m_consumer(0),
       m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
 {
-  m_mepIn =  m_mepOut = m_minAlloc = 0;
+  m_mepIn =  m_mepOut = m_minAlloc = m_EvIn = m_EvOut= 0;
 //  declareProperty("Input", m_input="None");
   declareProperty("PrintFreq", m_freq = 0.);
   declareProperty("Requirements", m_req);
@@ -156,6 +156,8 @@ StatusCode FileWriterSvc::initialize()
         incidentSvc()->addListener(this, "DAQ_ENABLE");
         declareInfo("MEPsIn", m_mepIn = 0, "Number of MEPs received.");
         declareInfo("MEPsOut", m_mepOut = 0, "Number of MEPs written.");
+        declareInfo("EvtsIn", m_EvIn = 0, "Number of Events received.");
+        declareInfo("EvtsOut", m_EvOut = 0, "Number of Events written.");
         declareInfo("BytesOut",m_BytesOut=0,"Number of Bytes Writte to File");
         declareInfo("NumberofFiles",m_NumFiles=0,"Total Number of Files");
         this->m_SizeLimit *= 1024*1024;
@@ -211,6 +213,23 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
 //  ulonglong prtCount = fabs(m_freq) > 1. / ULONGLONG_MAX ? ulonglong(1.0/ m_freq) : ULONGLONG_MAX;
   m_receiveEvts = true;
   {
+    switch (e.type)
+    {
+      case EVENT_TYPE_MEP:
+      {
+        m_mepIn++;
+        break;
+      }
+      case EVENT_TYPE_EVENT:
+      {
+        m_EvIn++;
+        break;
+      }
+      default:
+      {
+        break;
+      }
+    }
     if (!matchRequirements(e)) return StatusCode::SUCCESS;
     if (m_numev >= m_maxevts) return StatusCode::SUCCESS;
     m_numev++;
@@ -322,7 +341,7 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
         {
           m_BytesOut += towrite;
           r->m_MEPs++;
-          m_mepOut++;
+          m_EvOut++;
           m_FileDesc->m_BytesWritten += towrite;
           r->m_BytesWritten += towrite;
           if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
