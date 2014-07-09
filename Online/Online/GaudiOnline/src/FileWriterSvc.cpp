@@ -300,7 +300,6 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
       {
         RawBank *ev = (RawBank*)e.data;
         MDFHeader *mdf = (MDFHeader*)ev->data();
-        m_EvIn++;
         unsigned int runnr = mdf->subHeader().H1->runNumber();
         if (m_RunNumber == 0)
         {
