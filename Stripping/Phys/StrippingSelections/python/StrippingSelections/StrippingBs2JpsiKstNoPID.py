@@ -1,8 +1,8 @@
 __author__ = ['Carlos Vazquez Sierra']
-__date__ = '04/06/2014'
+__date__ = '10/07/2014'
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Stripping line for BsJpsiK* analysis: MC PIDCalib purposes. 
-# Line name: Bs2JpsiKstarWideLineNoPID
+# Lines: Bs2JpsiKstarWideLineNoPID, Bs2JpsiKstarWideLineNoCuts.
 # -----------------------------------------------------------------------------------------------------------------------------------------
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -11,6 +11,8 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdNoPIDsKaons
+from StandardParticles import StdLoosePions
+from StandardParticles import StdLooseKaons
 from GaudiKernel.SystemOfUnits import MeV
 # -----------------------------------------------------------------------------------------------------------------------------------------
 default_config = {} # Empty dictionary, just because of code requirements.
@@ -33,7 +35,12 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                                               PreVertexCuts = "(in_range(750,AM,1900))  & (ADOCACHI2CUT(30, ''))",
                                                               PostVertexCuts = "(VFASPF(VCHI2) < 25)",
                                                               ReFitPVs = False )
+        self.KstarWideListNoCuts = self.createCombinationsSel( OutputList = "KstarWideListNoCutsForBsJpsiKstarWideNoCuts",
+                                                              DaughterLists = [ StdLooseKaons, StdLoosePions ],
+                                                              DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
+                                                              ReFitPVs = False )
         self.makeBs2JpsiKstarWideNoPID() # Making the line.
+        self.makeBs2JpsiKstarWideNoCuts() # Making the line.
     # ---------------------------------------------------------------------------------------------------------------------------------
     def createSubSel( self, OutputList, InputList, Cuts ) :
         '''create a selection using a FilterDesktop'''
@@ -85,4 +92,10 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
         Bs2JpsiKstarWideLineNoPID = StrippingLine( "Bs2JpsiKstarWideLineNoPID", algos = [Bs2JpsiKstarWideNoPID])
         self.registerLine(Bs2JpsiKstarWideLineNoPID)
     # ---------------------------------------------------------------------------------------------------------------------------------
-
+    def makeBs2JpsiKstarWideNoCuts( self ): # Line maker.
+        Bs2JpsiKstarWideNoCuts = self.createCombinationSel( OutputList = "Bs2JpsiKstarWideNoCuts",
+                                DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
+                                DaughterLists  = [ self.WideJpsiList, self.KstarWideListNoCuts ],
+        Bs2JpsiKstarWideLineNoCuts = StrippingLine( "Bs2JpsiKstarWideLineNoCuts", algos = [Bs2JpsiKstarWideNoCuts])
+        self.registerLine(Bs2JpsiKstarWideLineNoCuts)
+    # ---------------------------------------------------------------------------------------------------------------------------------
