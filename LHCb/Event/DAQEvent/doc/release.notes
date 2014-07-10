@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-07-10 - Marco Clemencic
+ - Added the method isFlagging() to ODIN to check it the trigger flagging bit is
+   set.
+
 ! 2014-06-15 - Heinrich Schindler
  - Add HC RawBank type
 
@@ -20,12 +24,12 @@
 
 !========================= DAQEvent v9r13 2013-09-30 =========================
 ! 2013-09-25 - Tim Evans
- - Add VPDigit RawBank to RawBank types 
+ - Add VPDigit RawBank to RawBank types
 
 !========================= DAQEvent v9r12p1 2013-06-03 =========================
 ! 2013-05-23 - Marco Cattaneo
  - Updated comment on ODIN::triggerConfigurationKey to alert users that this is
-   the requested value but not necessarily the value actually used by Moore, 
+   the requested value but not necessarily the value actually used by Moore,
    which is in LHCb::HltDecReports::configuredTCK
 
 !========================= DAQEvent v9r12 2012-11-26 =========================
@@ -45,7 +49,7 @@
 
 !========================= DAQEvent v9r8 2012-06-25 =========================
 ! 2012-06-16 - Heinrich Schindler
- - Add VL to RawBank types 
+ - Add VL to RawBank types
 
 ! 2012-06-15 - Marco Cattaneo
  - Add RawEventLocation::Calo to RawEvent locations
@@ -115,7 +119,7 @@
    match the value of the bits, since from now the ODIN object is not stored
    anymore.
 
-! 2009-10-16 - 
+! 2009-10-16 -
  - componenet : add new ODINTimeFilter (GPS time, EventID, BCID filtering)
 
 !================ DAQEvent v8r1 2009-10-16 ===================================
@@ -141,10 +145,10 @@
 !================ DAQEvent v7r20 2009-05-06 ===========================
 ! 2009-04-14 - Marco Cattaneo
  - src/components/OdinTypesFilter : put back printout of number of selected evts
- - replace obsolescent endreq by endmsg 
+ - replace obsolescent endreq by endmsg
 
 ! 2009-04-06 - Deschamps Olivier
- - src/components/OdinTypesFilter : improve finalize printout 
+ - src/components/OdinTypesFilter : improve finalize printout
 
 !================ DAQEvent v7r19 2009-03-09 ===========================
 ! 2009-02-25 - Deschamps Olivier
@@ -176,8 +180,8 @@
 ! 2008-10-28 - Marco Cattaneo
  - Add missing include for gcc 4.3
 
-! 2008-10-28 - Olivier Deschamps 
- - new component algorithm 'OdinBCIDFilter' : allow to filter on BCID 
+! 2008-10-28 - Olivier Deschamps
+ - new component algorithm 'OdinBCIDFilter' : allow to filter on BCID
    - default : filter odd-parity BCID (can be inverted to even-parity setting
                the 'Revert' property to 'true')
    - to be used for Prs/Spd to monitor separatly the Very Front-End parities
@@ -198,21 +202,21 @@
 
 !================ DAQEvent v7r14 2008-09-03 ===========================
 ! 2008-08-25 - Jaap Panman
- - component/bankKiller : can now work in exclusion mode, 
+ - component/bankKiller : can now work in exclusion mode,
    i.e. kill all that is not specified
 
 ! 2008-08-25 - Jaap Panman
- - component/OdinTypeFilter : 
+ - component/OdinTypeFilter :
    small correction needed when comparing to negative TAE limits
 
 ! 2008-08-21 - Olivier Deschamps
- - componenet/OdinTypeFilter : 
+ - componenet/OdinTypeFilter :
    extend OdinTypeFiltering to ReadoutType and TAEWindow
 
 !================ DAQEvent v7r13 2008-07-29 ===========================
 ! 2008-07-28 - Tomasz Skwarnicki
  - Added RawBank::HltLumiSummary bank type on Jaap Panman's request
-   renamed HLT,HltSelCandidates,HltPrimaryVertex to HltDecReports, 
+   renamed HLT,HltSelCandidates,HltPrimaryVertex to HltDecReports,
    HltSelReports and HltVertexReports respectively
 
 ! 2008-07-24 - Marco Clemencic
@@ -256,11 +260,11 @@
    Available since version 4 of ODIN bank.
 
 ! 2008-04-01 - Olivier Deschamps
- - RawBankSizeMonitor : produce profile1D histogram by default 
+ - RawBankSizeMonitor : produce profile1D histogram by default
   (2D histo can be activated via options RawBankSizeMonitor.Profile = false;)
 
 ! 2008-03-26 - Olivier Deschamps
- - New monitoring algorithm : RawBankSizeMonitor : 
+ - New monitoring algorithm : RawBankSizeMonitor :
    produce 2d histo bankSize.vs.sourceID
 
 ! 2008-03-14 - Beat Jost
@@ -283,7 +287,7 @@
 
 !================ DAQEvent v7r8 2008-01-30 ============================
 ! 2008-01-30 - Marco Clemencic
- - Fixed compilation warnings in ODIN.xml on Win32.  
+ - Fixed compilation warnings in ODIN.xml on Win32.
 
 ! 2008-01-23 - Olivier Deschamps
  - Add new algorithm RawBankReadoutStatusMonitor : monitoring of ReadoutStatus
@@ -292,7 +296,7 @@
 
 ! 2008-01-22 - Olivier Deschamps
  - Add new RawBankReadoutStatus ("NonUnique" when several banks with identical
-   sourceID in the same rawEvent)  
+   sourceID in the same rawEvent)
 
 ! 2007-12-14 - Markus Frank
  - Add numbers to bank type enum.
@@ -303,7 +307,7 @@
  - Added an enum in ODIN to define the meaning of the Trigger Type.
 
 ! 2007-12-12 Olivier Deschamps
- - protect bankKiller against annoying printout 
+ - protect bankKiller against annoying printout
 
 !================ DAQEvent v7r7 2007-12-12 ============================
 ! 2007-12-12 - Olivier Callot
@@ -315,11 +319,11 @@
  - Add the status 'UNKNOWN' in RawBankReadoutStatus::Status enum
 
 ! 2007-12-07 Marco Clemencic
- - Updated the ODIN class to version 3 of the ODIN bank format 
+ - Updated the ODIN class to version 3 of the ODIN bank format
    (added CalibrationStep and TriggerConfigurationKey).
  - Modified the tests to comply to the Gaudi QMTest infrastructure and added
    a very simple test (to be reviewed).
- 
+
 ! 2007-12-05 Olivier Deschamps
  - Bug fix in RawBankReadoutStatus.xml
 
@@ -331,7 +335,7 @@
 ! 2007-11-12 - Marco Cattaneo
  - Add explicit dependency of library on generated header files
 
-! 2007-10-31 - Olivier Deschamps 	
+! 2007-10-31 - Olivier Deschamps
  - add the possibility to remove L0 banks in bankKiller.cpp
 
 !================ DAQEvent v7r6 2007-10-10 ============================
@@ -360,8 +364,8 @@
 
 !================ DAQEvent v7r3 2007-04-19 ============================
 ! 2007-04-19 - Chris Jones
- - Add complete copy constructor for ODIN. 
-   NB : Please remember to update this constructor if the data members of 
+ - Add complete copy constructor for ODIN.
+   NB : Please remember to update this constructor if the data members of
    the class are ever extended in the future.
 
 ! 2007-04-19 - Marco Cattaneo
@@ -390,7 +394,7 @@
 
 !================ DAQEvent v6r8 2006-11-15 ============================
 ! 2006-11-14 - Markus Frank
- - Delete bank memory if it is owned by the mirror array 
+ - Delete bank memory if it is owned by the mirror array
    ie. the bank got added with RawEvent::adoptBank.
 
 !================ DAQEvent v6r7p1 2006-10-20 ==========================
@@ -405,7 +409,7 @@
    time to EventClockSvc.
 
 ! 2006-09-07 - Olivier Deschamps
- - Add src/component/bankKiller{.cpp,.h} algorithm 
+ - Add src/component/bankKiller{.cpp,.h} algorithm
 
 !================ DAQEvent v6r6 2006-08-30 ============================
 ! 2006-08-21 - Markus Frank
@@ -415,8 +419,8 @@
 ! 2006-08-15 - Markus Frank
  - Add the possibility to remove banks from the RawEvent structure.
    The bank to be removed must be passed by pointer.
-   Note: If no other bank of the category of the bank (Banktype)to 
-   be removed is anymore present in the raw event, also the category 
+   Note: If no other bank of the category of the bank (Banktype)to
+   be removed is anymore present in the raw event, also the category
    is removed. See also RawEvent.h
 
 !================ DAQEvent v6r5 2006-06-27 ============================
@@ -446,7 +450,7 @@
  - Add accessor totalSize to RawBank returning the full padded length
 
 ! 2006-02-09 - Markus Frank
- - Add flag in requirements to correctly process RawEvent dictionary 
+ - Add flag in requirements to correctly process RawEvent dictionary
 
 ! 2006-02-07 - Matt Needham
  - Add some protection against 0 size banks in BankWriter
@@ -460,7 +464,7 @@
 
 ! 2006-01-10 - Markus Frank
  - Add End marker to bank types
- - Add static function to retrieve integer aligned padded bank size from 
+ - Add static function to retrieve integer aligned padded bank size from
    raw byte aligned bank size
 
 ! 2005-12-06 - Marco Cattaneo
@@ -485,7 +489,7 @@
 ! 2005-10-18 - Marco Cattaneo
  - Internal representation of Bank is unsigned int
    . RawEvent->addBank method takes std::vector<unsigned int>
-   . Removed data_type_t typedef, use native type directly, to decouple 
+   . Removed data_type_t typedef, use native type directly, to decouple
      Root from lcgdict
 
 ! 2005-10-18 - M. Needham
@@ -498,7 +502,7 @@
      Due to non-standard tricks needed both to make these classes persistent
      and to create them in the online farm, they are not described in XML.
      The header files and LCG dictionary selection files are hand made.
-   . BankType enum now defined in RawBank. Added TTFull and ITFull. 
+   . BankType enum now defined in RawBank. Added TTFull and ITFull.
    . In component library:
      - add RawEventDump
      - remove CreateRawEvent (will be reimplemented in Boole project)
@@ -523,7 +527,7 @@
 
 !================ DAQEvent v5r2p1 2005-06-24 ==========================
 ! 2005-06-24 - Marco Cattaneo
- - In CreateL1Event,CreateRawEvent, do not attempt to create if already existing 
+ - In CreateL1Event,CreateRawEvent, do not attempt to create if already existing
 
 !================ DAQEvent v5r2 2005-06-02 ============================
 ! 2005-06-02 - Marco Cattaneo
@@ -545,12 +549,12 @@
 ! 2005-03-08 - Marco Cattaneo
  - Backwards incompatible changes to RawBank header, to reflect EDMS 565851
  - Add L0 and DAQ bank types, and L0SourceID, DAQSourceID enums to L1Buffer.
-   The specific L0Calo, L0DU L0Muon bank types have been removed, use the 
+   The specific L0Calo, L0DU L0Muon bank types have been removed, use the
    source ID to distinguish between different L0 (and DAQ) sources
  - Add DAQ and ODIN bank types to RawBuffer, remove Header bank type
  - Modify CreateRawBuffer and EventHeaderFromRaw to use DAQ bank type for
    event and run number
- - Modify CreateL1Buffer to create a DAQ SFC bank 
+ - Modify CreateL1Buffer to create a DAQ SFC bank
 
 !================ DAQEvent v4r6 2005-02-24 ============================
 ! 2005-02-24 - Daniela Lunesu
@@ -622,7 +626,7 @@
  - Rename HltBank, HltBuffer and HltEvent to RawBank, RawBuffer and RawEvent
  - Change data-type hlt_int to raw_int
  - Only one Velo Raw bank type (instead of VeloR and VeloPhi)
- - Use a "CaloMap" instead of std::map in L1Event and RawEvent, to fix 
+ - Use a "CaloMap" instead of std::map in L1Event and RawEvent, to fix
    Win VC6 map problem (to be removed when we go to VC7)
 
 !=============== DAQEvent v2r1 2003-11-10 =============================
@@ -648,12 +652,12 @@
  - Add constructors HLTEvent( HLTBuffer& ) and L1Event( L1Buffer& )
 
 !=============== DAQEvent v1r0 22-09-2003 =============================
-  - DAQTypes.h: Header file with typedef's for hlt_int (32 bits) and l1_int 
+  - DAQTypes.h: Header file with typedef's for hlt_int (32 bits) and l1_int
                 (16 bits) types.
 
   - L1Buffer:   Holds event size(s) information and a buffer(raw array of l1_int)
-                with the data for L1 trigger. Serialize and fillStream methods 
-                not implemented yet. Header word with source (7 bits), class 
+                with the data for L1 trigger. Serialize and fillStream methods
+                not implemented yet. Header word with source (7 bits), class
                 (2 bits) and size (7 bits) info for each data bank.
 
   - L1Event:    Scan the L1 buffer and save a std::vector of L1Banks for each
@@ -664,13 +668,13 @@
 
   - HLTBuffer:  Holds event size(s) information and a buffer(raw array of hlt_int)
                 with the data for HLT, following the Online Data Format prescription
-                (LHCb note 2001-097). Should be filled at the end of the 
-                digitization phase for each detector sub-system. Serialize and 
+                (LHCb note 2001-097). Should be filled at the end of the
+                digitization phase for each detector sub-system. Serialize and
                 fillStream methods not implemented yet. Transport header and tail
                 not implemented.
-      
+
   - HLTEvent:   Scan the HLT buffer and makes a std::vector of HLTBanks for each
-                different class_ID found. 
-	      
+                different class_ID found.
+
   - HLTBank:    Holds the size and the pointer to the data in HLT buffer for each
                 data bank

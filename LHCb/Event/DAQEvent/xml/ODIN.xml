@@ -9,7 +9,7 @@
 <!-- ****************************************************************
      * ODIN                                                         *
      ****************************************************************-->
-    <class 
+    <class
       author="Marco Clemencic"
       name="ODIN"
       desc="Class for the decoding of the ODIN RawBank."
@@ -17,7 +17,7 @@
       id="1005"
       allocator="NO"
       >
-      
+
       <enum
         name   = 'Data'
         desc   = 'Fields in the ODIN bank'
@@ -44,7 +44,8 @@
         name   = 'EventTypeMasks'
         desc   = ''
         value  = 'EventTypeMask       = 0x0000FFFF,
-                  CalibrationStepMask = 0xFFFF0000'
+                  CalibrationStepMask = 0xFFFF0000,
+                  FlaggingModeMask    = 0x00008000'
         access = 'PUBLIC' />
 
 <!--
@@ -89,7 +90,7 @@
                   BXTypeBits          = 22,
                   BunchCurrentBits    = 24'
         access = 'PUBLIC' />
-        
+
       <enum
         name   = 'Word8Masks'
         desc   = ''
@@ -113,7 +114,7 @@
         desc   = 'Provided for backward compatibility'
         value  = 'ReadoutTypeMask  = 0x00180000'
         access = 'PUBLIC' />
-      
+
       <enum
         name   = 'ReadoutTypes'
         desc   = ''
@@ -264,9 +265,9 @@
         desc="Calibration Type (@see enum LHCb::ODIN::CalibrationTypes). Meaningful only if bank version &gt;= 5."
         type="CalibrationTypes"
         init="A" />
-        
-	<constructor 
-		desc     = "Copy constructor. Creates a new ODIN object with the same information" 
+
+	<constructor
+		desc     = "Copy constructor. Creates a new ODIN object with the same information"
 		initList = "DataObject(), m_runNumber(odin.runNumber()), m_eventType(odin.eventType()), m_orbitNumber(odin.orbitNumber()), m_eventNumber(odin.eventNumber()), m_gpsTime(odin.gpsTime()), m_detectorStatus(odin.detectorStatus()), m_errorBits(odin.errorBits()), m_bunchId(odin.bunchId()), m_triggerType(odin.triggerType()), m_readoutType(odin.readoutType()), m_forceBit(odin.forceBit()), m_bunchCrossingType(odin.bunchCrossingType()), m_bunchCurrent(odin.bunchCurrent()), m_version(odin.version()), m_calibrationStep(odin.calibrationStep()), m_triggerConfigurationKey(odin.triggerConfigurationKey()), m_timeAlignmentEventWindow(odin.timeAlignmentEventWindow()), m_calibrationType(odin.calibrationType())">
                 <arg const="TRUE" name="odin" type="LHCb::ODIN"/>
                 <code/>
@@ -285,6 +286,12 @@
         argList="const Gaudi::Time time" const="FALSE">
       	<code>
       	  setGpsTime(time.ns()/1000);
+        </code>
+      </method>
+      <method type="bool" name="isFlagging" const="TRUE"
+      	desc="">
+      	<code>
+      	  return eventType() &amp; FlaggingModeMask;
         </code>
       </method>
     </class>
