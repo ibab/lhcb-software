@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-07-10 - Marco Cattaneo
+ - Fix untested StatusCode in LbAppInit.cpp
+
 ! 2014-06-11 - Heinrich Schindler
  - Change content of PixelPositionInfo struct.
 

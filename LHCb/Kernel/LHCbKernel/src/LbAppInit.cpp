@@ -148,7 +148,7 @@ StatusCode LbAppInit::execute()
         std::ostringstream mess;
         mess << "Memory exceeds limit of " << m_memPurgeLimit
              << " KB -> Purging pools";
-        Info( mess.str(), StatusCode::SUCCESS, 1 );
+        Info( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
         releaseMemoryPools();
         mem = System::virtualMemory();
       }
