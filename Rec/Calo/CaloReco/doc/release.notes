@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-07-08 - Olivier Deschamps
+  - CaloECorrection :  fix unapplied correction
+
+! 2014-07-08 - Olivier Deschamps
   - CaloCorrectionBase/CaloECorrection : add possible non-linear dependency to Prs corrections
 
 ! 2014-07-03 - Olivier Deschamps

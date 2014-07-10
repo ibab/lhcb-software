@@ -220,7 +220,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
   
   // Apply Ecal leakage corrections
-  double alpha = aG * aE * aB * aX * aY  ;
+  double alpha = aG * aE * aB * aX * aY  * aP;
   double eCor  = ( alpha * eEcal + beta *ePrs ) * gC * gT + dT;
 
   // revoir le debug
