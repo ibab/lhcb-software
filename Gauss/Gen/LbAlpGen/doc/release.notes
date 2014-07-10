@@ -5,9 +5,13 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-13 - Gloria Corti
+ - Redefine macro alpgen_author_dir to be compatible with new structure of 
+   alpgen library and sources in LCGCMT68
+
 !========================= LbAlpGen v3r1p1 2014-01-23 =========================
 ! 2014-01-13 - Stephane Tourneur
-- Fix for Gaussv45rx : Fix the way files were opened and closed in alpsho.F
+ - Fix for Gaussv45rx : Fix the way files were opened and closed in alpsho.F
 
 !========================== LbAlpGen v3r1 2013-10-10 ==========================
 ! 2013-09-23 - Marco Clemencic

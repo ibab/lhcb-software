@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LbAlpGen
-version           v3r1p1
+version           v4r0
 
 # =============== structure ===================================================
 branches          cmt doc src options scripts 
@@ -23,7 +23,7 @@ use               alpgen       v* LCG_GeneratorsInterfaces
 use               LbPythia     v* Gen 
 use               Boost        v* LCG_Interfaces -no_auto_import
 
-macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
+macro alpgen_author_dir $(alpgen_home)/share/alpgen-author
 
 # =============== constituents ================================================
 library           LbAlpGenRead       component/ReadAlpGen.cpp
