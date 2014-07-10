@@ -12,6 +12,7 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartIF.h"
+#include "XmlTools/IXmlParserSvc.h"
 
 #include <list>
 
@@ -83,6 +84,11 @@ private:
     return getService("ApplicationMgr", m_evtProc);
   }
 
+  /// Get pointer to the detector data service.
+  inline SmartIF<IXmlParserSvc>& xmlParser() const {
+    return getService("XmlParserSvc", m_xmlParser);
+  }
+
   /// Class to simplify handling of the objects to modify.
   struct CondData {
     CondData(IDataProviderSvc* pService,
@@ -128,6 +134,10 @@ private:
   /// Pointer to the event processor in order to be able to stop the run if
   /// something goes wrong during the incident handling.
   mutable SmartIF<IEventProcessor> m_evtProc;
+
+  /// Pointer to the XML parser service, used to clear the cache of parsed XML
+  /// files when we get a RunChangeIncident without actual run change.
+  mutable SmartIF<IXmlParserSvc> m_xmlParser;
 
 };
 

@@ -105,7 +105,8 @@ void RunChangeHandlerSvc::handle(const Incident &inc) {
       DEBUG_MSG << "Change of run number detected " << m_currentRun;
       DEBUG_MSG << "->" << rci->runNumber() << endmsg;
     } else {
-      DEBUG_MSG << "Update requested without change of run." << endmsg;
+      DEBUG_MSG << "Update requested without change of run (flushing XML cache)." << endmsg;
+      xmlParser()->clearCache();
     }
   }
   m_currentRun = rci->runNumber();

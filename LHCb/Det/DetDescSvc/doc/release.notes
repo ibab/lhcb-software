@@ -5,6 +5,10 @@
 ! =============================================================================
 
 ! 2014-07-10 - Marco Clemencic
+ - Modified RunChangeHandlerSvc to clean the XmlParserSvc cache if it gets a
+   RunChangeIncident without a change of run number.
+
+! 2014-07-10 - Marco Clemencic
  - Modified RunChangeHandlerSvc to trigger an update on every RunChange incident
    and not only if there is a real change in the run number.
 

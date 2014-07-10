@@ -11,6 +11,9 @@ use DetDesc       v*   Det
 use GaudiAlg      v*
 use GaudiKernel   v*
 
+# this is needed only for IXmlParserSvc
+use XmlTools      v*   Tools
+
 # ============================================================================
 # Component library building rule
 # ============================================================================
@@ -25,5 +28,5 @@ use Boost v* LCG_Interfaces
 end_private
 
 # ============================================================================
-# The END 
+# The END
 # ============================================================================
