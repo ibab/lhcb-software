@@ -212,6 +212,16 @@ namespace LoKi
       ( const LHCb::Track*         seed    , 
         LHCb::Track::ConstVector& tracks  , 
         LHCb::Track::Container*    otracks ) const ;
+      /** same as find, but for direct ancestors
+       *  @param seed   the seed to be upgraded 
+       *  @param tracks container of output tracks (cumulative)
+       *  @param otracks TES-container 
+       *  @return number of added tracks 
+       */
+      size_t findDirect
+      ( const LHCb::Track*         seed    , 
+        LHCb::Track::ConstVector& tracks  , 
+        LHCb::Track::Container*    otracks ) const ;
       // ======================================================================
     private:
       // ======================================================================      

@@ -168,6 +168,25 @@ size_t LoKi::Hlt1::UpgradeTool::find
   }
   const size_t ntracks = tracks.size() ;
   std::copy_if( std::begin(*otracks), std::end(*otracks),
+                std::back_inserter( tracks ) , IsAncestor{ seed }   ) ;
+  return tracks.size() - ntracks ;
+}
+// ============================================================================
+// find the tracks within the recontructed using direct ancestor
+// (only called when normal find does not work)
+// ============================================================================
+size_t LoKi::Hlt1::UpgradeTool::findDirect 
+( const LHCb::Track*         seed    , 
+  LHCb::Track::ConstVector&  tracks  ,
+  LHCb::Track::Container*    otracks ) const 
+{
+  //
+  if ( !otracks ) { 
+    Error ("find(): LHCb::Track::Container* points to NULL!") ;
+    return 0 ;
+  }
+  const size_t ntracks = tracks.size() ;
+  std::copy_if( std::begin(*otracks), std::end(*otracks),
                 std::back_inserter( tracks ) , IsDirectAncestor{ seed }   ) ;
   return tracks.size() - ntracks ;
 }
@@ -301,10 +320,15 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
      size_t n = find ( seed , output , otracks ) ;
      if ( size_t(info + 0.5) != n )
      {
-        std::stringstream msg;
-        msg << trTool() << ": Number of previously upgraded tracks: " << size_t(info + 0.5) 
-            << " does not match number of found tracks: " << n << ".";
-        Assert( false, msg.str() ) ;
+	// If unexpected number found check again using direct ancestors
+	size_t n2 = findDirect ( seed , output , otracks ) ;
+	if ( size_t(info + 0.5) != n2 )
+	{
+        	std::stringstream msg;
+        	msg << trTool() << ": Number of previously upgraded tracks: " << size_t(info + 0.5) 
+        	    << " does not match number of found tracks: " << n << ".";
+		Assert( false, msg.str() ) ;
+	}
      }
   }
   return StatusCode::SUCCESS ;

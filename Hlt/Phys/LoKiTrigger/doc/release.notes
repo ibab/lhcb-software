@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-07-10 - Sean Benson
+ - Make patch more conservative
 ! 2014-07-08 - Sean Benson
  - Patch to UpgradeTools to avoid rare # of upgraded tracks mismatch
 
