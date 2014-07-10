@@ -1,0 +1,75 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import DetCondTest__TestConditionAlg as TestAlg
+from Configurables import LHCbAlgsTests__TestTimeDecoderOdin as TimeDecoder
+from Configurables import LHCbAlgsTests__CopyFileAlg as CopyFile
+from Configurables import ( EventClockSvc, RunChangeHandlerSvc, XmlCnvSvc )
+
+EventClockSvc().addTool(TimeDecoder, "EventTimeDecoder")
+EventClockSvc().EventTimeDecoder.RunNumberStep = 0
+
+detDataSvc = DetectorDataSvc( UsePersistency = True,
+                              DetDbRootName = "dd",
+                              DetDbLocation = "../data/runchangehandler/lhcb.xml",
+                              DetStorageType = 7 )
+xmlCnvSvc = XmlCnvSvc(AllowGenericConversion = True)
+DetectorPersistencySvc( CnvServices = [ xmlCnvSvc ] )
+
+rch = RunChangeHandlerSvc()
+rch.Conditions = {"Condition": "./data%d.xml"}
+# prepare dummy file
+import shutil
+shutil.copy('../data/runchangehandler/structure.dtd', 'structure.dtd')
+shutil.copy('../data/runchangehandler/dummy.xml', 'data1.xml')
+
+testAlg = TestAlg("TestCond")
+testAlg.Conditions = [ "Condition" ]
+
+app = ApplicationMgr()
+app.TopAlg = [ TestAlg("TestCond"),
+               CopyFile('OverwriteXML',
+                        Source='../data/runchangehandler/real.xml',
+                        Destination='data1.xml') ]
+
+ApplicationMgr().ExtSvc += [ detDataSvc, rch ]
+app.EvtSel = "NONE"
+app.EvtMax = 2
+
+EventDataSvc(ForceLeaves = True)
+MessageSvc(OutputLevel = DEBUG)
+
+</text></argument>
+<argument name="validator"><text>
+## 2nd check: find data
+expected = [
+    'TestCond             INFO Requested Conditions:',
+    '--- Condition',
+    'Validity: 0.0 -> 9223372036.854775807',
+    '(std::string) data = dummy',
+    'TestCond             INFO Requested Conditions:',
+    '--- Condition',
+    'Validity: 0.0 -> 9223372036.854775807',
+    '(std::string) data = real',
+    ]
+
+regexp = r"^---|^Validity|^\(std::string\) data|.*Requested Conditions"
+outputlines = [ l.rstrip() for l in stdout.splitlines() ]
+
+# grep
+import re
+exp = re.compile(regexp)
+outputlines = [ l for l in outputlines if exp.match(l) ]
+
+result["GaudiTest.output.expected"] = result.Quote("\n".join(expected))
+result["GaudiTest.output.regexp"] = result.Quote(regexp)
+if outputlines != expected:
+    causes.append("output")
+    result["GaudiTest.output.found"] = result.Quote("\n".join(outputlines))
+</text></argument>
+</extension>

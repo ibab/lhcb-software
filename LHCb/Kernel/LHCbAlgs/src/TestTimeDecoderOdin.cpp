@@ -30,10 +30,11 @@ using namespace LHCbAlgsTests;
 TestTimeDecoderOdin::TestTimeDecoderOdin( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_currentRun(0)
+  : GaudiTool ( type, name , parent )
 {
   declareInterface<IEventTimeDecoder>(this);
+  declareProperty("FirstRunNumber", m_currentRun=1);
+  declareProperty("RunNumberStep", m_runNumberStep=1);
 }
 
 //=============================================================================
@@ -52,18 +53,27 @@ Gaudi::Time TestTimeDecoderOdin::getTime ( ) const {
     return Gaudi::Time::epoch();
 
   static Gaudi::Time last_time(0);
+  static bool first = true;
 
   LHCb::ODIN *odin = new LHCb::ODIN();
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
-            << m_currentRun;
-  odin->setRunNumber(++m_currentRun);
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug() << ", new run=" << m_currentRun << endmsg;
+
+  if (first) {
+    odin->setRunNumber(m_currentRun);
+    first = false;
+  }
+  else {
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
+              << m_currentRun;
+    m_currentRun += m_runNumberStep;
+    odin->setRunNumber(m_currentRun);
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug() << ", new run=" << m_currentRun << endmsg;
+  }
 
   put(odin,LHCb::ODINLocation::Default);
 
-  incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
+  incSvc()->fireIncident(RunChangeIncident(name(), m_currentRun));
 
   last_time = odin->eventTime();
 

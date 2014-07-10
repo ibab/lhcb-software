@@ -46,6 +46,8 @@ private:
   /// Used to remember the run number and spot a change of run number.
   mutable unsigned int m_currentRun;
 
+  /// How much to increase the run number at every call (default 1).
+  bool m_runNumberStep;
 };
 }
 #endif // ODINTIMEDECODER_H

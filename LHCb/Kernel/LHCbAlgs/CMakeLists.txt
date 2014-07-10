@@ -16,7 +16,7 @@ gaudi_depends_on_subdirs(Det/DDDB
                          Kernel/LHCbKernel
                          Kernel/XMLSummaryKernel)
 
-find_package(Boost)
+find_package(Boost COMPONENTS filesystem)
 
 find_package(CASTOR) # runtime, only for the tests
 

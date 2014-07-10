@@ -21,7 +21,7 @@ use DAQKernel        v* DAQ
 use RecEvent         v* Event
 use DetDesc          v* Det
 use HltInterfaces    v* Kernel -no_auto_imports
-use DDDB             v* Det               # needed for LHCbApp imports 
+use DDDB             v* Det               # needed for LHCbApp imports
 use XMLSummaryKernel v* Kernel            # needed for LHCbApp imports
 
 use HltEvent            v*    Event
@@ -29,7 +29,7 @@ use TrackEvent          v*    Event
 use L0Event             v*    Event
 use Boost               v*    LCG_Interfaces
 
-macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+macro_append Boost_linkopts " $(Boost_linkopts_regex) $(Boost_linkopts_filesystem) "
 
 #=====================================================================
 # Component library building rule

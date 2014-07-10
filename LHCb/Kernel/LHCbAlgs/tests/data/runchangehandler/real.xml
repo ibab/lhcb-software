@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "structure.dtd">
+<DDDB>
+  <condition name="Condition">
+    <param name="data" type="string">real</param>
+  </condition>
+</DDDB>
