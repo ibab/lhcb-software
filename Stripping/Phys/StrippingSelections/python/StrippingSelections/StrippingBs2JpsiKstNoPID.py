@@ -116,7 +116,7 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                 DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
                                 DaughterLists  = [ self.WideJpsiList, self.KstarWideListNoCuts ],
                                 DaughterCuts = { "J/psi(1S)" : " mcMatch('[B_s~0 -> ^J/psi(1S) K*(892)0]cc') ",
-                                                 "K*(892)0"  : " mcMatch('[B_s~0 -> J/psi(1S) ^K*(892)0]cc') "},
+                                                 "K*(892)0"  : " mcMatch('[B_s~0 -> J/psi(1S) ^K*(892)0]cc') "})
         Bs2JpsiKstarWideLineNoCuts = StrippingLine( "Bs2JpsiKstarWideLineNoCuts", algos = [Bs2JpsiKstarWideNoCuts])
         self.registerLine(Bs2JpsiKstarWideLineNoCuts)
     # ---------------------------------------------------------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                 DaughterLists  = [ self.WideJpsiList, self.KstarWideListNoBCuts ],
                                 # I should remove these matching lines...
                                 DaughterCuts = { "J/psi(1S)" : " mcMatch('[B_s~0 -> ^J/psi(1S) K*(892)0]cc') ",
-                                                 "K*(892)0"  : " mcMatch('[B_s~0 -> J/psi(1S) ^K*(892)0]cc') "},
+                                                 "K*(892)0"  : " mcMatch('[B_s~0 -> J/psi(1S) ^K*(892)0]cc') "})
         Bs2JpsiKstarWideLineNoBCuts = StrippingLine( "Bs2JpsiKstarWideLineNoBCuts", algos = [Bs2JpsiKstarWideNoBCuts])
         self.registerLine(Bs2JpsiKstarWideLineNoBCuts)
     # ---------------------------------------------------------------------------------------------------------------------------------
