@@ -38,6 +38,8 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
         self.KstarWideListNoCuts = self.createCombinationsSel( OutputList = "KstarWideListNoCutsForBsJpsiKstarWideNoCuts",
                                                               DaughterLists = [ StdLooseKaons, StdLoosePions ],
                                                               DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
+                                                              DaughterCuts = { "pi-" : " mcMatch('[K*(892)0 -> K+ ^pi-]cc') ",
+                                                                               "K+"  : " mcMatch('[K*(892)0 -> ^K+ pi-]cc') "},
                                                               ReFitPVs = False )
         self.makeBs2JpsiKstarWideNoPID() # Making the line.
         self.makeBs2JpsiKstarWideNoCuts() # Making the line.
@@ -96,6 +98,8 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
         Bs2JpsiKstarWideNoCuts = self.createCombinationSel( OutputList = "Bs2JpsiKstarWideNoCuts",
                                 DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
                                 DaughterLists  = [ self.WideJpsiList, self.KstarWideListNoCuts ],
+                                DaughterCuts = { "J/psi(1S)" : " mcMatch('[B_s~0 -> ^J/psi(1S) K*(892)0]cc') ",
+                                                 "K*(892)0"  : " mcMatch('[B_s~0 -> J/psi(1S) ^K*(892)0]cc') "},
         Bs2JpsiKstarWideLineNoCuts = StrippingLine( "Bs2JpsiKstarWideLineNoCuts", algos = [Bs2JpsiKstarWideNoCuts])
         self.registerLine(Bs2JpsiKstarWideLineNoCuts)
     # ---------------------------------------------------------------------------------------------------------------------------------
