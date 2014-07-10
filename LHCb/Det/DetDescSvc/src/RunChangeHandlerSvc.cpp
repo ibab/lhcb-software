@@ -13,6 +13,10 @@
 
 DECLARE_SERVICE_FACTORY( RunChangeHandlerSvc )
 
+#define ON_DEBUG if (msgLevel(MSG::DEBUG))
+#define DEBUG_MSG ON_DEBUG debug()
+
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : RunChangeHandlerSvc
 //
@@ -23,9 +27,8 @@ DECLARE_SERVICE_FACTORY( RunChangeHandlerSvc )
 // Standard constructor, initializes variables
 //=============================================================================
 RunChangeHandlerSvc::RunChangeHandlerSvc(const std::string &name, ISvcLocator *svcLoc):
-  Service(name,svcLoc),
-  m_currentRun(0),
-  m_evtSvc(0),m_detSvc(0),m_incSvc(0),m_ums(0),m_evtProc(0)
+  base_class(name,svcLoc),
+  m_currentRun(0)
 {
   declareProperty("Conditions", m_condDesc,
    "Map defining what to use to replace the location of the source XML files.");
@@ -37,28 +40,15 @@ RunChangeHandlerSvc::RunChangeHandlerSvc(const std::string &name, ISvcLocator *s
 RunChangeHandlerSvc::~RunChangeHandlerSvc() {}
 
 //=============================================================================
-// IInterface implementation
-//=============================================================================
-StatusCode RunChangeHandlerSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IIncidentListener::interfaceID().versionMatch(riid) ) {
-    *ppvUnknown = (IIncidentListener*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
-}
-
-//=============================================================================
 // Initialize
 //=============================================================================
 StatusCode RunChangeHandlerSvc::initialize(){
   // base class initialization
   StatusCode sc = Service::initialize();
   if (!sc.isSuccess()) return sc;
+
   // local initialization
-  MsgStream log(msgSvc(),name());
-  if( log.level() <= MSG::DEBUG )
-    log << MSG::DEBUG << "--- initialize ---" << endmsg;
+  DEBUG_MSG << "--- initialize ---" << endmsg;
 
   incidentSvc()->addListener(this, IncidentType::RunChange);
   // ensure that we can call evtProc() and updMgrSvc() while in handle
@@ -81,19 +71,17 @@ StatusCode RunChangeHandlerSvc::initialize(){
 //=============================================================================
 StatusCode RunChangeHandlerSvc::finalize(){
   // local finalization
-  MsgStream log(msgSvc(),name());
-  if( log.level() <= MSG::DEBUG )
-    log << MSG::DEBUG << "--- finalize ---" << endmsg;
+  DEBUG_MSG << "--- finalize ---" << endmsg;
 
   if (m_incSvc)
     incidentSvc()->removeListener(this, IncidentType::RunChange);
 
   // release acquired interfaces
-  release(m_evtSvc);
-  release(m_detSvc);
-  release(m_incSvc);
-  release(m_ums);
-  release(m_evtProc);
+  m_evtSvc.reset();
+  m_detSvc.reset();
+  m_incSvc.reset();
+  m_ums.reset();
+  m_evtProc.reset();
 
   // base class finalization
   return Service::finalize();
@@ -103,34 +91,38 @@ StatusCode RunChangeHandlerSvc::finalize(){
 // Handle RunChange incident
 //=========================================================================
 void RunChangeHandlerSvc::handle(const Incident &inc) {
-  MsgStream log( msgSvc(), name() );
-  if( log.level() <= MSG::DEBUG )
-    log << MSG::DEBUG << inc.type() << " incident received" << endmsg;
+  DEBUG_MSG << inc.type() << " incident received" << endmsg;
 
   const RunChangeIncident* rci = dynamic_cast<const RunChangeIncident*>(&inc);
   if (!rci) {
-    log << MSG::ERROR << "Cannot dynamic_cast the incident to RunChangeIncident, "
-                         " run change ignored" << endmsg;
+    error() << "Cannot dynamic_cast the incident to RunChangeIncident, "
+               "run change ignored" << endmsg;
     return;
   }
-  
-  if (m_currentRun != rci->runNumber()) {
-    if( log.level() <= MSG::DEBUG )
-      log << MSG::DEBUG << "Change of run number detected " << m_currentRun;
-    m_currentRun = rci->runNumber();
-    if( log.level() <= MSG::DEBUG )
-      log << "->" << m_currentRun << endmsg;
 
-    // loop over the object to update
-    Conditions::iterator cond;
-    for (cond = m_conditions.begin(); cond != m_conditions.end(); ++cond) {
-      update(*cond);
+  ON_DEBUG {
+    if (m_currentRun != rci->runNumber()) {
+      DEBUG_MSG << "Change of run number detected " << m_currentRun;
+      DEBUG_MSG << "->" << rci->runNumber() << endmsg;
+    } else {
+      DEBUG_MSG << "Update requested without change of run." << endmsg;
     }
   }
+  m_currentRun = rci->runNumber();
+  // update objects
+  update();
 }
 
 //=========================================================================
-// Handle RunChange incident
+// Flag for update all conditions
+//=========================================================================
+void RunChangeHandlerSvc::update(){
+  std::for_each(m_conditions.begin(), m_conditions.end(),
+                [this](CondData &cond) {this->update(cond);});
+}
+
+//=========================================================================
+// Flag for update one condition
 //=========================================================================
 void RunChangeHandlerSvc::update(CondData &cond){
   // get the object and its registry

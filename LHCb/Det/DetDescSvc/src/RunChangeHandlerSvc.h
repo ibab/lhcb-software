@@ -11,6 +11,7 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartIF.h"
 
 #include <list>
 
@@ -23,8 +24,7 @@
  *  @date   2008-07-24
  */
 class RunChangeHandlerSvc:
-  public Service,
-  public virtual IIncidentListener {
+  public extends1<Service, IIncidentListener> {
 
 public:
 
@@ -32,12 +32,6 @@ public:
   RunChangeHandlerSvc(const std::string& name, ISvcLocator* svcloc);
 
   virtual ~RunChangeHandlerSvc(); ///< Destructor
-
-  /** Query interfaces (\see{IInterface})
-      @param riid       ID of Interface to be retrieved
-      @param ppvUnknown Pointer to Location for interface pointer
-  */
-  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
   /// Initialize Service
   virtual StatusCode initialize();
@@ -53,49 +47,40 @@ private:
 
   /// Helper function to retrieve a service and cache the pointer to it.
   template <class I>
-  inline I * getService(const std::string &name, I *&ptr) const {
-    if (0 == ptr) {
-      StatusCode sc = service(name, ptr, true);
-      if( sc.isFailure() ) {
-        throw GaudiException("Service ["+name+"] not found", this->name(), sc);
+  inline SmartIF<I>& getService(const std::string &name, SmartIF<I> &ptr) const {
+    if (UNLIKELY( !ptr.isValid() )) {
+      ptr = serviceLocator()->service(name, true);
+      if(UNLIKELY( !ptr.isValid() )) {
+        throw GaudiException("Service ["+name+"] not found", this->name(),
+            StatusCode::FAILURE);
       }
     }
     return ptr;
   }
 
-  using Service::release;
-  /// Helper function to release acquired interfaces.
-  template <class I>
-  inline void release(I *&ptr) const {
-    if (ptr) {
-      ptr->release();
-      ptr = 0;
-    }
-  }
-
   /// Get pointer to the event data service.
-  inline IDataProviderSvc *eventSvc() const {
-    return getService("EventDataSvc",m_evtSvc);
+  inline SmartIF<IDataProviderSvc>& eventSvc() const {
+    return getService("EventDataSvc", m_evtSvc);
   }
 
   /// Get pointer to the detector data service.
-  inline IDataProviderSvc *detectorSvc() const {
-    return getService("DetectorDataSvc",m_detSvc);
+  inline SmartIF<IDataProviderSvc>& detectorSvc() const {
+    return getService("DetectorDataSvc", m_detSvc);
   }
 
   /// Get pointer to the incident service.
-  inline IIncidentSvc *incidentSvc() const {
-    return getService("IncidentSvc",m_incSvc);
+  inline SmartIF<IIncidentSvc>& incidentSvc() const {
+    return getService("IncidentSvc", m_incSvc);
   }
 
   /// Get pointer to the detector data service.
-  inline IUpdateManagerSvc *updMgrSvc() const {
-    return getService("UpdateManagerSvc",m_ums);
+  inline SmartIF<IUpdateManagerSvc>& updMgrSvc() const {
+    return getService("UpdateManagerSvc", m_ums);
   }
 
   /// Get pointer to the detector data service.
-  inline IEventProcessor *evtProc() const {
-    return getService("ApplicationMgr",m_evtProc);
+  inline SmartIF<IEventProcessor>& evtProc() const {
+    return getService("ApplicationMgr", m_evtProc);
   }
 
   /// Class to simplify handling of the objects to modify.
@@ -109,8 +94,11 @@ private:
     std::string pathTemplate;
   };
 
-  /// Modify the object opaque address.
+  /// Modify the object opaque address (flag for update).
   void update(CondData &cond);
+
+  /// Flag for update all the registered objects.
+  void update();
 
   typedef GaudiUtils::Map<std::string,std::string> CondDescMap;
   CondDescMap m_condDesc;
@@ -122,21 +110,24 @@ private:
   /// Current run number.
   unsigned long m_currentRun;
 
+  /// Current flagging state.
+  bool m_flagging;
+
   /// EventDataSvc, for ODIN
-  mutable IDataProviderSvc *m_evtSvc;
+  mutable SmartIF<IDataProviderSvc> m_evtSvc;
 
   /// SetectorDataSvc, for the objects to invalidate
-  mutable IDataProviderSvc *m_detSvc;
+  mutable SmartIF<IDataProviderSvc> m_detSvc;
 
   /// Incident service, to register as listener
-  mutable IIncidentSvc *m_incSvc;
+  mutable SmartIF<IIncidentSvc> m_incSvc;
 
   /// UpdateMangerSvc, to invalidate objects
-  mutable IUpdateManagerSvc *m_ums;
+  mutable SmartIF<IUpdateManagerSvc> m_ums;
 
   /// Pointer to the event processor in order to be able to stop the run if
   /// something goes wrong during the incident handling.
-  mutable IEventProcessor  *m_evtProc;
+  mutable SmartIF<IEventProcessor> m_evtProc;
 
 };
 
