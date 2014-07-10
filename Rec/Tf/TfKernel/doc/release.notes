@@ -8,6 +8,8 @@
    replace 3D,2D and 1D arrays of vectors by single vector + arrays of
    indices. This improves timing of eg. PatForward by something in between
    5% and 10%.
+ - fix off-by-one beyond-bounds bug when zero-ing the indices (identified
+   very clearly by clang!)
 
 !========================= TfKernel v2r24p1 2013-06-03 =======================
 ! 2013-05-06 - Marco Cattaneo
