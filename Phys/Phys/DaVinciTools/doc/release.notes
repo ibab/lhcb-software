@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+
+! 2014-07-08 - O. Deschamps
+ - BremAdder : replace photonID cut with photonCL cut
+
 ! 2014-07-03 - O. Deschamps
  - BremAdder : store number of added brems in HasBremAdded particle::info()   (replace binary information)
 

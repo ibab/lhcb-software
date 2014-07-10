@@ -42,7 +42,7 @@ BremAdder::BremAdder( const std::string& type,
 
   // Method 2 :  looking for brem candidate(s) from a photon container  (active if m_bInput is not empty)
   declareProperty("BremInput"   , m_bInput = "/Event/Phys/StdVeryLooseAllPhotons/Particles");
-  declareProperty("PhotonID"    , m_bremid = -0.5);        //  brem photon ID lower threshold
+  declareProperty("PhotonCL"    , m_bremid = 0.005);        //  brem photon ID lower threshold
   declareProperty("PhotonPT"    , m_ptg =75.);
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty ("PosTolerance" , m_stol =2.);
@@ -410,9 +410,9 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
       }
 
       const LHCb::ProtoParticle* phproto = ph->proto();
-      //-->ET add cut on photon ID for brem
-      double photID=phproto->info( LHCb::ProtoParticle::PhotonID,-999.);
-      if (photID < m_bremid ) continue;
+      //-->ET add cut on photon CL for brem
+      // double photID=phproto->info( LHCb::ProtoParticle::PhotonID,-999.); // obsolete DLL based photonID 
+      if (ph->confLevel() < m_bremid ) continue;
 
 
       const SmartRefVector<LHCb::CaloHypo>& calovect=phproto->calo();
@@ -452,7 +452,7 @@ const std::vector<const LHCb::CaloHypo*> BremAdder::getBrem(const LHCb::Particle
                  << " spreadY " << std::sqrt(spry+sprye)
                  << " VeloY= " << pfromVelo.Y()
                  << " TTY= "   << pfromTT.Y()
-                 <<" ID "<<photID
+                 <<" CL "<< ph->confLevel()
                  <<endmsg;
       }
       nb++;
