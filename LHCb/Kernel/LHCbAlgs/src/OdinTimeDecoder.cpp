@@ -29,6 +29,8 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( OdinTimeDecoder )
 
+#define ON_DEBUG if ( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+#define DEBUG_MSG ON_DEBUG debug()
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -38,7 +40,7 @@ OdinTimeDecoder::OdinTimeDecoder( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_odinDecoder("ODINDecodeTool",this),
-    m_currentRun(0)
+    m_currentRun(0), m_flaggingMode(true)
 {
   declareInterface<IEventTimeDecoder>(this);
 }
@@ -75,6 +77,7 @@ LHCb::ODIN *OdinTimeDecoder::getODIN() const
   return 0;
 }
 
+
 //=========================================================================
 //  Return the time of current event
 //=========================================================================
@@ -85,18 +88,24 @@ Gaudi::Time OdinTimeDecoder::getTime ( ) const {
   LHCb::ODIN *odin = getODIN();
 
   if (odin) {
-    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-      debug() << "GPS Time = " << odin->gpsTime() << endmsg;
+    DEBUG_MSG << "GPS Time = " << odin->gpsTime() << endmsg;
 
-    // Check the run number in ODIN
-    if (m_currentRun != odin->runNumber()) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
-                << m_currentRun;
+    // We need to trigger a RunChange incident if the run number changes or
+    // we switch from flagging mode to filtering mode.
+    if ((m_currentRun != odin->runNumber()) ||
+        (m_flaggingMode && !odin->isFlagging()) ) {
+      ON_DEBUG {
+        debug() << "Firing " << IncidentType::RunChange << " incident. ";
+        if (m_currentRun != odin->runNumber())
+          debug() << " Run change " << m_currentRun
+                  << " -> " << odin->runNumber();
+        else
+          debug() << " Switched from flagging to filtering mode.";
+        debug() << endmsg;
+      }
       m_currentRun = odin->runNumber();
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << ", new run=" << m_currentRun << endmsg;
-      incSvc()->fireIncident(RunChangeIncident(name(),m_currentRun));
+      m_flaggingMode = odin->isFlagging();
+      incSvc()->fireIncident(RunChangeIncident(name(), m_currentRun));
     }
     try {
       last_time = odin->eventTime();

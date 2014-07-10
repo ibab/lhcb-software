@@ -25,7 +25,7 @@ namespace LHCbAlgsTests {
  *  @author Marco CLEMENCIC
  *  @date   2008-07-24
  */
-class RunChangeTest : public GaudiAlgorithm, public IIncidentListener {
+class RunChangeTest : public GaudiAlgorithm, virtual public IIncidentListener {
 public:
   /// Standard constructor
   RunChangeTest( const std::string& name, ISvcLocator* pSvcLocator );
@@ -37,13 +37,14 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   /// Handle the ChangeRun incident
-  virtual void handle(const Incident&incident);
+  virtual void handle(const Incident& incident);
 
 protected:
 
 private:
 
-  unsigned int m_runNumber;
+  /// used to count the number of calls to decide which case to test
+  size_t m_counter;
   IEventTimeDecoder *m_eventTimeDecoder;
   IIncidentSvc *m_incSvc;
 };

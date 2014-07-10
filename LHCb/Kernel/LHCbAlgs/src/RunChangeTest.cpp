@@ -29,7 +29,7 @@ using namespace LHCbAlgsTests;
 RunChangeTest::RunChangeTest( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-  m_runNumber(0),
+  m_counter(0),
   m_eventTimeDecoder(NULL),
   m_incSvc(NULL)
 {
@@ -63,8 +63,54 @@ StatusCode RunChangeTest::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+  std::vector<std::string> test_cases {
+    "Define initial condition.",
+    "Test: same run, flagging -> filtering",               // 1->2
+    "Test: new run,  always filtering",                    // 2->3
+    "Test: new run,  filtering -> flagging",               // 3->4
+    "Test: new run,  always flagging",                     // 4->5
+    "Test: new run,  flagging -> filtering",               // 5->6
+    "Test: same run, filtering -> flagging (no trigger)",  // 6->7 FIXME: correct?
+    "Test: same run, filtering (stable, no trigger)",      // 7->
+  };
+
   ODIN* odin = new ODIN();
-  odin->setRunNumber(++m_runNumber);
+  info() << test_cases[std::min(m_counter, test_cases.size()-1)] << endmsg;
+  switch (++m_counter) {
+  case 1: // run 1, flagging
+    odin->setRunNumber(1);
+    odin->setEventType(ODIN::FlaggingModeMask);
+    break;
+  case 2: // run 1, filtering
+    odin->setRunNumber(1);
+    odin->setEventType(0x0000);
+    break;
+  case 3: // run 2, filtering
+    odin->setRunNumber(2);
+    odin->setEventType(0x0000);
+    break;
+  case 4: // run 3, flagging
+    odin->setRunNumber(3);
+    odin->setEventType(ODIN::FlaggingModeMask);
+    break;
+  case 5: // run 4, flagging
+    odin->setRunNumber(4);
+    odin->setEventType(ODIN::FlaggingModeMask);
+    break;
+  case 6: // run 5, filtering
+    odin->setRunNumber(5);
+    odin->setEventType(0x0000);
+    break;
+  case 7: // run 5, flagging
+    odin->setRunNumber(5);
+    odin->setEventType(ODIN::FlaggingModeMask);
+    break;
+  default: // run 5, filtering
+    odin->setRunNumber(5);
+    odin->setEventType(0x0000); // FIXME
+    break;
+  }
+
   put(evtSvc(), odin, ODINLocation::Default);
 
   // will not try to decode the ODIN bank, but issue a ChangeRun
@@ -94,7 +140,9 @@ StatusCode RunChangeTest::finalize() {
 void RunChangeTest::handle(const Incident& incident) {
   info() << incident.type() << " incident received from " << incident.source()
          << endmsg;
-  info() << "Run number:" << get<ODIN>(ODINLocation::Default)->runNumber() << endmsg;
+  ODIN* odin = get<ODIN>(ODINLocation::Default);
+  info() << "Run " << odin->runNumber() << ", "
+         << (odin->isFlagging() ? "flagging" : "filtering") << endmsg;
 }
 
 //=============================================================================

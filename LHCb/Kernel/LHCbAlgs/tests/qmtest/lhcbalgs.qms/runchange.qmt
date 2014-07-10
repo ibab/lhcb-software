@@ -11,7 +11,7 @@ from Configurables import LHCbAlgsTests__RunChangeTest as TestAlg
 app = ApplicationMgr()
 app.TopAlg = [ TestAlg("RunChangeTest") ]
 app.EvtSel = "NONE"
-app.EvtMax = 2
+app.EvtMax = 10
 
 EventDataSvc(ForceLeaves = True)
 #MessageSvc(OutputLevel = DEBUG)
@@ -19,10 +19,28 @@ EventDataSvc(ForceLeaves = True)
 </text></argument>
 <argument name="validator"><text>
 reference_block = """
+RunChangeTest        INFO Define initial condition.
 RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
-RunChangeTest        INFO Run number:1
+RunChangeTest        INFO Run 1, flagging
+RunChangeTest        INFO Test: same run, flagging -> filtering
 RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
-RunChangeTest        INFO Run number:2
+RunChangeTest        INFO Run 1, filtering
+RunChangeTest        INFO Test: new run,  always filtering
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run 2, filtering
+RunChangeTest        INFO Test: new run,  filtering -> flagging
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run 3, flagging
+RunChangeTest        INFO Test: new run,  always flagging
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run 4, flagging
+RunChangeTest        INFO Test: new run,  flagging -> filtering
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run 5, filtering
+RunChangeTest        INFO Test: same run, filtering -> flagging (no trigger)
+RunChangeTest        INFO Test: same run, filtering (stable, no trigger)
+RunChangeTest        INFO Test: same run, filtering (stable, no trigger)
+RunChangeTest        INFO Test: same run, filtering (stable, no trigger)
 """
 findReferenceBlock(reference_block, stdout, result, causes)
 </text></argument>

@@ -52,6 +52,9 @@ private:
   // --- local data ---
   /// Used to remember the run number and spot a change of run number.
   mutable unsigned int m_currentRun;
+  /// Used to detect if we switch from flagging to filtering mode (which implies
+  /// a "run change" without actually changing the run number).
+  mutable bool m_flaggingMode;
 
 };
 #endif // ODINTIMEDECODER_H
