@@ -8,6 +8,8 @@ from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
+from LoKiPhysMC.decorators import *
+from LoKiPhysMC.functions import mcMatch
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdNoPIDsKaons
