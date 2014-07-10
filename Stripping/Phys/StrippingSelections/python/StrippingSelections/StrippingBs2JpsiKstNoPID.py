@@ -56,8 +56,8 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                                                                "K+"  : " mcMatch('[K*(892)0 -> ^K+ pi-]cc') "},
                                                               ReFitPVs = False )
 
-        #self.makeBs2JpsiKstarWideNoPID() # Making the line.
-        #self.makeBs2JpsiKstarWideNoCuts() # Making the line.
+        self.makeBs2JpsiKstarWideNoPID() # Making the line.
+        self.makeBs2JpsiKstarWideNoCuts() # Making the line.
         self.makeBs2JpsiKstarWideNoBCuts()
 
     # ---------------------------------------------------------------------------------------------------------------------------------
