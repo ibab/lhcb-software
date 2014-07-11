@@ -25,17 +25,18 @@ DetailedTrSegMakerFromRecoTracks::
 DetailedTrSegMakerFromRecoTracks( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : BaseTrSegMakerFromRecoTracks ( type, name, parent   ),
-    m_rayTracing         ( NULL                         ),
-    m_richPartProp       ( NULL                         ),
-    m_radTool            ( NULL                         ),
-    m_nomZstates         ( 2*Rich::NRiches,      0      ),
-    m_trExt1             ( NULL                         ),
-    m_trExt2             ( NULL                         ),
-    m_trExt1Name         ( ""                           ),
-    m_trExt2Name         ( ""                           ),
-    m_extrapFromRef      ( false                        ),
-    m_minZmove           ( 1 * Gaudi::Units::mm         )
+  : BaseTrSegMakerFromRecoTracks ( type, name, parent ),
+    m_rayTracing         ( NULL                       ),
+    m_richPartProp       ( NULL                       ),
+    m_radTool            ( NULL                       ),
+    m_trStateP           ( NULL                       ),
+    m_nomZstates         ( 2*Rich::NRiches,    0      ),
+    m_trExt1             ( NULL                       ),
+    m_trExt2             ( NULL                       ),
+    m_trExt1Name         ( ""                         ),
+    m_trExt2Name         ( ""                         ),
+    m_extrapFromRef      ( false                      ),
+    m_minZmove           ( 1 * Gaudi::Units::mm       )
 {
   using namespace Gaudi::Units;
 
@@ -86,6 +87,13 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
 
   // min path length
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
+
+  // Flag to use the state provider
+  declareProperty( "UseStateProvider", m_useStateProvider = true );
+
+  // Radiators to skip by track type, when using the track provider tool
+  m_radsToSkip[LHCb::Track::Ttrack]   = { Rich::Aerogel, Rich::Rich1Gas };
+  m_radsToSkip[LHCb::Track::Upstream] = { Rich::Rich2Gas };
 
   // Debug messages
   //setProperty( "OutputLevel", 1 );
@@ -200,10 +208,7 @@ constructSegments( const ContainedObject * obj,
 
     // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << " Considering radiator " << rad << endmsg;
-    }
+    _ri_verbo << " Considering radiator " << rad << endmsg;
 
     // choose appropriate z start position for initial track states for this radiator
     const double zStart = ( Rich::Rich2Gas == rad ? m_nomZstates[2] : m_nomZstates[0] );
@@ -221,28 +226,36 @@ constructSegments( const ContainedObject * obj,
     //    richHisto1D( HID("rawEntryTol",rad), "Entry Tolerance", -3000, 3000, nBins1D() )->fill(entryTol);
     if ( fabs(entryTol) > m_zTolerance[rad] )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "  -> Entry State : Requested z=" << zStart << " found z="
-                  << entryPStateRaw->z() << " failed tolerance check dz="
-                  << m_zTolerance[rad] << endmsg;
-      }
+      _ri_verbo << "  -> Entry State : Requested z=" << zStart << " found z="
+                << entryPStateRaw->z() << " failed tolerance check dz="
+                << m_zTolerance[rad] << endmsg;
+
 //       richHisto1D(  HID("entryZ",rad), "Entry Z Failed Tolerance", 
 //                     -2000, 10000, nBins1D() )->fill(entryPStateRaw->z());
 //       richHisto2D( HID("rawEntryFailedTolCheck",rad), "Raw State Entry failed tolerence check",
 //                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
 //                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPStateRaw->x(),
 //                                                                    entryPStateRaw->y() );
-      continue;
+      entryPStateRaw = NULL;
     }
+
+    // Failed to find the state, so try with the state provider....
+    if ( !entryPStateRaw && m_useStateProvider && !skipByType(track,rad) )
+    {
+      const StatusCode sc = stateProvider()->state( m_states[0], *track, zStart, m_zTolerance[rad] );
+      if ( sc.isSuccess() )
+      {
+        entryPStateRaw = &m_states[0];
+        _ri_verbo << "   -> Found state via StateProvider" << endmsg;
+      }
+    }
+    // if still no state, skip this track
+    if ( !entryPStateRaw ) continue;
 
     // check above electron threshold
     if ( m_richPartProp->thresholdMomentum(Rich::Electron,rad) > entryPStateRaw->p() )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "  -> Below electron cherenkov threshold -> reject" << endmsg;
-      }
+      _ri_verbo << "  -> Below electron cherenkov threshold -> reject" << endmsg;
       continue;
     }
 
@@ -264,20 +277,31 @@ constructSegments( const ContainedObject * obj,
     //    richHisto1D( HID("rawExitTol",rad), "Exit Tolerance", -3000, 3000, nBins1D() )->fill(exitTol);
     if ( fabs(exitTol) > m_zTolerance[rad] )
     {
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "  -> Exit State  : Requested z=" << zEnd << " found z="
-                  << exitPStateRaw->z() << " failed tolerance check dz="
-                  << m_zTolerance[rad] << endmsg;
-      }
+      _ri_verbo << "  -> Exit State  : Requested z=" << zEnd << " found z="
+                << exitPStateRaw->z() << " failed tolerance check dz="
+                << m_zTolerance[rad] << endmsg;
+
 //       richHisto1D(  HID("exitZ",rad), "Exit Z Failed Tolerance", 
 //                     -2000, 10000, nBins1D() )->fill(exitPStateRaw->z());
 //       richHisto2D( HID("rawExit",rad), "Raw State Exit failed tolerance check",
 //                    -xRadExitGlo[rad], xRadExitGlo[rad], 200,
 //                    -yRadExitGlo[rad], yRadExitGlo[rad], 200 )->fill( exitPStateRaw->x(),
 //                                                                      exitPStateRaw->y() );
-      continue;
+      exitPStateRaw = NULL;
     }
+
+    // Failed to find the state, so try with the state provider....
+    if ( !exitPStateRaw && m_useStateProvider && !skipByType(track,rad) )
+    {
+      const StatusCode sc = stateProvider()->state( m_states[1], *track, zEnd, m_zTolerance[rad] );
+      if ( sc.isSuccess() )
+      {
+        exitPStateRaw = &m_states[1];
+        _ri_verbo << "   -> Found state via StateProvider" << endmsg;
+      }
+    }
+    // if still no state, skip this track
+    if ( !exitPStateRaw ) continue;
 
     // Check for strange states
     checkState( entryPStateRaw, rad, "initial entry state" );
@@ -292,18 +316,15 @@ constructSegments( const ContainedObject * obj,
                                  entryPStateRaw->clone() : exitPStateRaw->clone() );
     if ( !exitPState ) { Warning("Failed to clone State").ignore(); delete entryPState; continue; }
 
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "  Found appropriate initial start/end States" << endmsg
-                << "   EntryPos : "
-                << entryPState->position() << endmsg
-                << "   EntryDir : "
-                << entryPState->slopes() << endmsg
-                << "   ExitPos  : "
-                << exitPState->position() << endmsg
-                << "   ExitDir  : "
-                << exitPState->slopes() << endmsg;
-    }
+    _ri_verbo << "  Found appropriate initial start/end States" << endmsg
+              << "   EntryPos : "
+              << entryPState->position() << endmsg
+              << "   EntryDir : "
+              << entryPState->slopes() << endmsg
+              << "   ExitPos  : "
+              << exitPState->position() << endmsg
+              << "   ExitDir  : "
+              << exitPState->slopes() << endmsg;
 
 //     richHisto2D( HID("initialEntry",rad), "Initial Entry",
 //                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
@@ -336,16 +357,15 @@ constructSegments( const ContainedObject * obj,
           {
             entryStateOK = true;
             entryPoint1 = intersects1.front().entryPoint();
-            if ( msgLevel(MSG::VERBOSE) )
-              verbose() << "      Entry state rad intersection points "
-                        << intersects1 << endmsg;
+            _ri_verbo << "      Entry state rad intersection points "
+                      << intersects1 << endmsg;
           }
         }
       }
     }
-    else if ( msgLevel(MSG::VERBOSE) )
+    else
     {
-      verbose() << "Failed to intersect entry state" << endmsg;
+      _ri_verbo << "Failed to intersect entry state" << endmsg;
     }
 
     // If gas radiator try and use exit state to get exit point more precisely
@@ -372,16 +392,15 @@ constructSegments( const ContainedObject * obj,
             {
               exitStateOK = true;
               entryPoint2 = intersects2.front().entryPoint();
-              if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "      Exit state rad intersection points "
-                          << intersects2 << endmsg;
+              _ri_verbo << "      Exit state rad intersection points "
+                        << intersects2 << endmsg;
             }
           }
         }
       }
-      else if ( msgLevel(MSG::VERBOSE) )
+      else
       {
-        verbose() << "Failed to intersect exit state" << endmsg;
+        _ri_verbo << "Failed to intersect exit state" << endmsg;
       }
     } // end !aerogel if
 
@@ -404,26 +423,23 @@ constructSegments( const ContainedObject * obj,
     bool sc = false;
     if ( entryStateOK && exitStateOK )
     {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
-                                            << " Zexit=" << intersects2.back().exitPoint().z()
-                                            << endmsg;
+      _ri_verbo << "  Both states OK : Zentry=" << entryPoint1.z()
+                << " Zexit=" << intersects2.back().exitPoint().z()
+                << endmsg;
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endmsg;
+      _ri_verbo << "  Checking entry point is at final z=" << entryPoint1.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z()
-                  << endmsg;
+      _ri_verbo << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z()
+                << endmsg;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
     else if ( entryStateOK )
     {
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Entry state OK : Zentry=" << entryPoint1.z()
-                  << " Zexit=" << intersects1.back().exitPoint().z() << endmsg;
+      _ri_verbo << "  Entry state OK : Zentry=" << entryPoint1.z()
+                << " Zexit=" << intersects1.back().exitPoint().z() << endmsg;
 
       if ( Rich::Aerogel != rad )
       {
@@ -434,21 +450,18 @@ constructSegments( const ContainedObject * obj,
       }
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endmsg;
+      _ri_verbo << "  Checking entry point is at final z= " << entryPoint1.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z()
-                  << endmsg;
+      _ri_verbo << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z()
+                << endmsg;
       const bool sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
     }
     else if ( exitStateOK )
     {
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Exit state OK  : Zentry=" << entryPoint2.z()
-                  << " Zexit=" << intersects2.back().exitPoint().z() << endmsg;
+      _ri_verbo << "  Exit state OK  : Zentry=" << entryPoint2.z()
+                << " Zexit=" << intersects2.back().exitPoint().z() << endmsg;
 
       // delete current entry state and replace with clone of raw entrance state
       delete entryPState;
@@ -456,12 +469,10 @@ constructSegments( const ContainedObject * obj,
       if ( !entryPState ) { Warning("Failed to clone State").ignore(); delete exitPState; continue; }
 
       // make sure at current z positions
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endmsg;
+      _ri_verbo << "  Checking entry point is at final z= " << entryPoint2.z() << endmsg;
       const bool sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z()
-                  << endmsg;
+      _ri_verbo << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z()
+                << endmsg;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -471,7 +482,7 @@ constructSegments( const ContainedObject * obj,
       // no valid extrapolations, so quit skip this track/radiator
       delete entryPState;
       delete exitPState;
-      if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states failed" << endmsg;
+      _ri_verbo << "  Both states failed" << endmsg;
       continue;
     }
 
@@ -480,8 +491,7 @@ constructSegments( const ContainedObject * obj,
     {
       delete entryPState;
       delete exitPState;
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "    --> Failed to use state information. Quitting." << endmsg;
+      _ri_verbo << "    --> Failed to use state information. Quitting." << endmsg;
 //       richHisto2D( HID("entryStateFailedToUseState",rad), "Entry State Failed to use state information",
 //                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
 //                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
@@ -513,20 +523,17 @@ constructSegments( const ContainedObject * obj,
       const DeRichBeamPipe::BeamPipeIntersectionType intType
         = deBeam(rad)->intersectionPoints( entryPState->position(), vect, inter1, inter2 );
 
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "  --> Beam Intersects : " << intType << " : "
-                  << inter1 << " " << inter2 << endmsg;
+      _ri_verbo << "  --> Beam Intersects : " << intType << " : "
+                << inter1 << " " << inter2 << endmsg;
 
       sc = true;
       if ( intType == DeRichBeamPipe::NoIntersection )
       {
-        if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> No beam intersections -> No corrections needed" << endmsg;
+        _ri_verbo << "   --> No beam intersections -> No corrections needed" << endmsg;
       }
       else if ( intType == DeRichBeamPipe::FrontAndBackFace )
       {
-        if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Inside beam pipe -> Reject segment" << endmsg;
+        _ri_verbo << "   --> Inside beam pipe -> Reject segment" << endmsg;
 //         richHisto2D( HID("entryStateInsideBeamPipe",rad), "Entry State Inside beampipe",
 //                      -xRadEntGlo[rad], xRadEntGlo[rad], 200,
 //                      -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
@@ -542,24 +549,21 @@ constructSegments( const ContainedObject * obj,
       else if ( intType == DeRichBeamPipe::FrontFaceAndCone )
       {
         // Update entry point to exit point on cone
-        if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Correcting entry point to point on cone" << endmsg;
+        _ri_verbo << "   --> Correcting entry point to point on cone" << endmsg;
         sc = moveState( entryPState, inter2.z(), entryPStateRaw );
       }
       else if ( intType == DeRichBeamPipe::BackFaceAndCone )
       {
         // Update exit point to entry point on cone
-        if (msgLevel(MSG::VERBOSE))
-          verbose() << "   --> Correcting exit point to point on cone" << endmsg;
+        _ri_verbo << "   --> Correcting exit point to point on cone" << endmsg;
         sc = moveState( exitPState, inter1.z(), exitPStateRaw );
       }
       if ( !sc )
       {
         delete entryPState;
         delete exitPState;
-        if (msgLevel(MSG::VERBOSE))
-          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting."
-                    << endmsg;
+        _ri_verbo << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting."
+                  << endmsg;
 //         richHisto2D( HID("entryStateErrFixRadForBeamP",rad),
 //                      "Entry State Error fixing radiator entry/exit points for beam-pipe",
 //                      -xRadEntGlo[rad], xRadEntGlo[rad], 200,
@@ -637,8 +641,7 @@ constructSegments( const ContainedObject * obj,
     //---------------------------------------------------------------------------------------------
     if ( (exitPState->position()-entryPState->position()).Mag2() < m_minRadLength[rad]*m_minRadLength[rad] )
     {
-      if (msgLevel(MSG::VERBOSE))
-        verbose() << "    --> Path length too short -> rejecting segment" << endmsg;
+      _ri_verbo << "    --> Path length too short -> rejecting segment" << endmsg;
 //       richHisto2D( HID("entryTooShortZ",rad), "Entry Too SHort In Z",
 //                    -xRadEntGlo[rad], xRadEntGlo[rad], 200,
 //                    -yRadEntGlo[rad], yRadEntGlo[rad], 200 )->fill( entryPState->x(),
@@ -693,14 +696,11 @@ constructSegments( const ContainedObject * obj,
     checkState( exitPState,  rad, "final exit state"  );
 
     // print out final points
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "  Found final points :-" << endmsg
-                << "   Entry : Pnt=" << entryPoint << " Mom=" << entryStateMomentum
-                << " Ptot=" << std::sqrt(entryStateMomentum.Mag2()) << endmsg
-                << "   Exit  : Pnt=" << exitPoint  << " Mom=" << exitStateMomentum
-                << " Ptot=" << std::sqrt(exitStateMomentum.Mag2()) << endmsg;
-    }
+    _ri_verbo << "  Found final points :-" << endmsg
+              << "   Entry : Pnt=" << entryPoint << " Mom=" << entryStateMomentum
+              << " Ptot=" << std::sqrt(entryStateMomentum.Mag2()) << endmsg
+              << "   Exit  : Pnt=" << exitPoint  << " Mom=" << exitStateMomentum
+              << " Ptot=" << std::sqrt(exitStateMomentum.Mag2()) << endmsg;
 
 //     richHisto2D( HID("selectedEntry",rad), "Selected Entry",
 //                  -xRadEntGlo[rad], xRadEntGlo[rad], 200,
@@ -805,8 +805,7 @@ createMiddleInfo( const Rich::RadiatorType rad,
                   Gaudi::XYZVector & midMomentum,
                   LHCb::RichTrackSegment::StateErrors & errors ) const
 {
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << "   --> Creating middle point information" << endmsg;
+  _ri_verbo << "   --> Creating middle point information" << endmsg;
 
   // middle point z position
   const double midZ = (fState->position().z()+lState->position().z())/2;
@@ -913,7 +912,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State *& state,
       const Gaudi::XYZPoint & aerogelExitPoint = intersections.back().exitPoint();
       if ( aerogelExitPoint.z() > state->z() )
       {
-        if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endmsg;
+        _ri_verbo << "   Correcting Rich1Gas entry point" << endmsg;
         const bool sc = moveState( state, aerogelExitPoint.z(), refState );
         if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" ).ignore();
       }
@@ -928,8 +927,7 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
                                                         LHCb::State *& state,
                                                         const LHCb::State * refState ) const
 {
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << "   --> Attempting Correction to exit point for spherical mirror" << endmsg;
+  _ri_verbo << "   --> Attempting Correction to exit point for spherical mirror" << endmsg;
 
   bool sc = true;
 
@@ -940,8 +938,7 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   const double initialZ = state->z();
 
   // move state to be on the inside of the mirror
-  if (msgLevel(MSG::VERBOSE))
-    verbose() << "    --> Moving state first to be inside mirror" << endmsg;
+  _ri_verbo << "    --> Moving state first to be inside mirror" << endmsg;
   sc = sc && moveState( state, state->z() - m_mirrShift[rich], refState );
   bool correct = false;
 
@@ -963,14 +960,12 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
   // finally, update state
   if ( correct )
   {
-    if (msgLevel(MSG::VERBOSE))
-      verbose() << "    --> Found correction is needed" << endmsg;
+    _ri_verbo << "    --> Found correction is needed" << endmsg;
     sc = sc && moveState( state, intersection.z(), refState );
   }
   else
   {
-    if (msgLevel(MSG::VERBOSE))
-      verbose() << "    --> Found correction not needed. Moving back to original position" << endmsg;
+    _ri_verbo << "    --> Found correction not needed. Moving back to original position" << endmsg;
     sc = sc && moveState( state, initialZ, refState );
   }
 
@@ -985,26 +980,20 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
                                              const LHCb::State * refState ) const
 {
   // Check if requested move is big enough to bother with
-  if ( fabs(stateToMove->z() - z) > m_minZmove )
+  if ( fabs( stateToMove->z() - z ) > m_minZmove )
   {
 
     // verbose printout
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "    --> Extrapolating state from "
-                << stateToMove->position() << endmsg;
-    }
+    _ri_verbo << "    --> Extrapolating state from "
+              << stateToMove->position() << endmsg;
 
     if ( m_extrapFromRef && refState )
     {
       // Delete current working state and start fresh from reference state
       delete stateToMove;
       stateToMove = refState->clone();
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "      --> Using reference state  "
-                  << stateToMove->position() << endmsg;
-      }
+      _ri_verbo << "      --> Using reference state  "
+                << stateToMove->position() << endmsg;
     }
 
     // try first with the primary extrapolator
@@ -1026,11 +1015,8 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
     }
 
     // verbose printout
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << "                            to   "
-                << stateToMove->position() << endmsg;
-    }
+    _ri_verbo << "                            to   "
+              << stateToMove->position() << endmsg;
 
   }
 

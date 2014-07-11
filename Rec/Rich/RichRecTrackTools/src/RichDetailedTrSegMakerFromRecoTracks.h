@@ -22,8 +22,9 @@
 #include "RichKernel/IRichRadiatorTool.h"
 #include "RichKernel/RichTrackSegment.h"
 
-// Track Extrapolator
+// Track Interfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/ITrackStateProvider.h"
 
 // histogramming numbers
 //#include "RichRecBase/RichDetParams.h"
@@ -155,7 +156,25 @@ namespace Rich
                              const LHCb::State * lStateRef,
                              Gaudi::XYZPoint & midPoint,
                              Gaudi::XYZVector & midMomentum,
-                             LHCb::RichTrackSegment::StateErrors & errors ) const;      
+                             LHCb::RichTrackSegment::StateErrors & errors ) const;    
+
+      /// Access track state provider tool on-demand
+      inline ITrackStateProvider * stateProvider() const
+      {
+        if ( !m_trStateP ) 
+        { m_trStateP = tool<ITrackStateProvider>( "TrackStateProvider", "StateProvider", this ); }
+        return m_trStateP;
+      }
+
+      /// Check if a track type should be skipped in a given radiator, when using the State Provider tool
+      bool skipByType( const LHCb::Track * track, const Rich::RadiatorType rad ) const
+      {
+        TrackTypesRads::const_iterator iT = m_radsToSkip.find(track->type());
+        return ( iT != m_radsToSkip.end() ? 
+                 std::find( iT->second.begin(), iT->second.end(), rad ) != iT->second.end() :
+                 false );
+      }
+      
     private: // data
 
       /// Ray tracing tool
@@ -166,6 +185,9 @@ namespace Rich
 
       /// Pointer to the radiator intersections tool
       const IRadiatorTool * m_radTool;
+
+      /// Track state provider
+      mutable ITrackStateProvider * m_trStateP;
 
       /// Rich1 and Rich2 detector elements
       DeRich* m_rich[Rich::NRiches];
@@ -207,6 +229,16 @@ namespace Rich
 
       /// Min radius at exit for each radiator (temp hack)
       std::vector<double> m_minRadLength;
+
+      /// Locally cached states for the TrackStateProvider
+      mutable LHCb::State m_states[2];
+
+      /// Flag to turn on/off the use of the TrackStateProvider
+      bool m_useStateProvider;
+
+      /// Radiators to skip, by track type
+      typedef std::map< LHCb::Track::Types, Rich::Radiators > TrackTypesRads;
+      TrackTypesRads m_radsToSkip;
 
     };
 

@@ -4,6 +4,15 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Chris Jones
+ - Retire the (incomplete and never used) class
+   RichDetailedTrSegMakerFromRecoTracksStateProvider.
+ - Extend the class RichDetailedTrSegMakerFromRecoTracks to dynamically use an
+   instance of the TrackStateProvider tool to create missing track states as
+   needed. Restores the ability of the RICH reconstruction to run in tracks
+   saved to DSTs, which was broken when the DST format was updated to purge
+   the tracks of states not needed downstream.
+
 !========================= RichRecTrackTools v1r36 2014-02-19 ====================
 ! 2014-02-08 - Chris Jones
  - Clean up the last commit a little (really needs to be properly reviewed)
