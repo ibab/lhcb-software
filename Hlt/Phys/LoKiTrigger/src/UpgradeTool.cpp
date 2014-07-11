@@ -320,6 +320,7 @@ StatusCode LoKi::Hlt1::UpgradeTool::iupgrade
      size_t n = find ( seed , output , otracks ) ;
      if ( size_t(info + 0.5) != n )
      {
+	output.erase( std::prev( std::end(output), n ), std::end(output) );
 	// If unexpected number found check again using direct ancestors
 	size_t n2 = findDirect ( seed , output , otracks ) ;
 	if ( size_t(info + 0.5) != n2 )
