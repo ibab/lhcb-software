@@ -207,6 +207,12 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   double gT  = getCorrection(CaloCorrection::globalT   , cellID , dtheta );  // incidence angle (delta)
   double dT  = getCorrection(CaloCorrection::offsetT   , cellID , dtheta , 0. );  // incidence angle (delta)
 
+  // Energy offset 
+  double sinT  =  m_det->cellSine( cellID );
+  double offset = ( eSpd == 0) ? 
+    getCorrection(CaloCorrection::offset, cellID , sinT , 0.) :
+    getCorrection(CaloCorrection::offsetC, cellID , sinT , 0.) ;  
+
   // - dedicate correction for 'converted photon'
   double gC = 1.;
   if( eSpd > 0){
@@ -221,7 +227,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   
   // Apply Ecal leakage corrections
   double alpha = aG * aE * aB * aX * aY  * aP;
-  double eCor  = ( alpha * eEcal + beta *ePrs ) * gC * gT + dT;
+  double eCor  = ( alpha * eEcal + beta *ePrs ) * gC * gT + dT + offset;
 
   // revoir le debug
   if ( UNLIKELY(msgLevel( MSG::DEBUG) )){

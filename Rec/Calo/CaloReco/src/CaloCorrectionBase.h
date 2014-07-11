@@ -78,8 +78,10 @@ namespace CaloCorrection {
     betaCP,  // ""
     betaCPR, // ""
     globalC,   // global factor for converted photons
-    globalT,   // global(Theta) function of incidence angle
-    offsetT,   // offset(Theta) function of incidence angle
+    globalT,   // global(DeltaTheta) function of incidence angle
+    offsetT,   // offset(DeltaTheta) function of incidence angle
+    offset,   // offset( sinTheta ) energy (or ET ) offset
+    offsetC,   // offset( sinTheta ) energy (or ET ) offset for converted photons
     //
     ClusterCovariance, // parameters for cluster covariance estimation
     // L-Correction parameters
@@ -108,7 +110,7 @@ namespace CaloCorrection {
   static const int nT = lastType+1;
   static const int nF = Unknown+1;
   static const std::string typeName[nT] = { "alphaG", "alphaE","alphaB","alphaX","alphaY","alphaP","beta","betaP","betaPR","betaC","betaCP","betaCPR"          // E-corrections
-                                            ,"globalC","globalT" ,"offsetT","ClusterCovariance"  
+                                            ,"globalC","globalT" ,"offsetT","offset","offsetC","ClusterCovariance"  
                                             ,"gamma0","delta0","gammaP","deltaP"                                                                      // L-Corrections
                                             ,"shapeX","shapeY","residual","residualX","residualY","asymP","asymM","angularX","angularY"               // S-Corrections
                                             ,"profile","profileC"                                                                                     // Profile shape
