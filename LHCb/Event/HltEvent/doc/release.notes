@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 !========================= HltEvent v9r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
@@ -14,7 +17,7 @@
 
 !========================= HltEvent v9r2 2011-02-22 =========================
 ! 2011-02-12 - Chris Jones
- - Fix coverity defects with fillstream methods + move them to a linker 
+ - Fix coverity defects with fillstream methods + move them to a linker
    library (since they are too big to realistically get inlined anyway).
 
 !========================= HltEvent v9r1 2011-01-31 =========================
@@ -24,7 +27,7 @@
 !======================== HltEvent v9r0 2010-01-20 ===========================
 ! 2009-12-21 - Tomasz Skwarnicki
  - new access methods in HltSelReports to deal with PV info
- - print cov matrix in HltVertexReport printout 
+ - print cov matrix in HltVertexReport printout
 
 !======================== HltEvent v8r19 2009-11-13 ==========================
 ! 2009-11-13 - Marco Cattaneo
@@ -35,7 +38,7 @@
 
 !======================== HltEvent v8r18 2009-06-16 ==========================
 ! 2009-06-11 - Juan PALACIOS
- - Remove operators == and < for HltDecReport and HltObjectSummary, and 
+ - Remove operators == and < for HltDecReport and HltObjectSummary, and
    exclude them from the reflex dictionaries.
  - Add std::pair<std::string, T> and std::vector<std::pair<std::string,T> >
    to dictionaries.
@@ -52,13 +55,13 @@
 
 !======================== HltEvent v8r17 2009-05-28 ==========================
 ! 2009-05-28 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-05-26 - Gerhard Raven
- - reassign bits in HltDecReports to create more 'stages' and 
+ - reassign bits in HltDecReports to create more 'stages' and
    less dynamic range on # of candidates
  - rename 'selectionID' to 'decisionID', but keep backwards compatibility
-   accessor function. 
+   accessor function.
    (selectionID will become computable from decisionID + stageID)
  - add configuredTCK in HltDecReports, and reserve one 32 bit word
    to identify the task in the online farm
@@ -94,11 +97,11 @@
 
 !======================== HltEvent v8r11 2008-07-29 ==========================
 ! 2008-07-28 - Tomasz Skwarnicki
- - Added HltDecReports and HltSelReports, containers of Hlt decisions and 
+ - Added HltDecReports and HltSelReports, containers of Hlt decisions and
    selections respectively - keyed with string, thus cannot rely on standard
    containers.
  - Added HltObjectSummary, summaries to get restored to a standard container.
- - See detailed description in 
+ - See detailed description in
    <a href="http://indico.cern.ch/materialDisplay.py?contribId=0&materialId=slides&confId=33043">talk at T-Rec on 2009-07-28</a>
 
 ! 2008-07-28 - Jaap Panman
@@ -180,7 +183,7 @@
 
 ! 2007-05-29 - Patrick Koppenburg
  - Added an enum entry HltSelEntry=1000 which is always stored
-   in HltSummary when HltSelections are reached. 
+   in HltSummary when HltSelections are reached.
 
 !======================== HltEvent v8r1 2007-05-14 ===========================
 ! 2007-05-14 - Marco Cattaneo
@@ -190,9 +193,9 @@
  - Added a list of exclusive selections to HltSummary.xml
 
 ! 2007-05-11 - Jose A. Hernando
- - xml/HltSummary.xml 
+ - xml/HltSummary.xml
 	 . adding decision types offset for the enums of the selections
- - cmt/requirements 
+ - cmt/requirements
    . action trigger python executable to create header file HltNames
      with the conversion HltEnums <-> strings
 
@@ -206,15 +209,15 @@
 
 ! 2006-12-14 - Jose A. Hernando
 	- Event/HltSummaryFunctor.h :
-	   -- adding functor to retrieve (tracks,vertices) in a simpler way 
+	   -- adding functor to retrieve (tracks,vertices) in a simpler way
 
 !======================== HltEvent v7r1 2006-11-03 ========================
 ! 2006-10-18 - Jose A. Hernando
-	- xml/HltSummay.xml : 
+	- xml/HltSummay.xml :
        -- renaming HltSummaryBox to HltSelectionSummary
        -- adding particles in the HltSelectionSummary
           adding ContainedObject to have a polimorfic container.
-	- xml/HltSummay.xml : adding CaloEt info 
+	- xml/HltSummay.xml : adding CaloEt info
   - python/translateEnums.py : python to translate enums into HltNames.h file
 
 !======================== HltEvent v7r0 2006-09-26 ========================
@@ -241,7 +244,7 @@
     HltSummary stores the list of HltSummaryBoxes and final information of the trigger
 
 ! 2006-01-12 - Jose A. Hernando
-	- cleaning the package to be use for the 1 MHz readout 
+	- cleaning the package to be use for the 1 MHz readout
 
 !===========================================================================
 
@@ -267,8 +270,8 @@
  - use more recent GaudiObjDesc
 
 ! 2003-06-13 - Olivier Callot
- - Add two new members, chargeInVelo and particleID to store the relevant 
-	information.  
+ - Add two new members, chargeInVelo and particleID to store the relevant
+	information.
 
 !======================== HltEvent v2r0 2003-06-03 ===========================
 ! 2003-06-03 - Marco Cattaneo
@@ -280,7 +283,7 @@
 !======================== HltEvent v1r1 2003-04-24 ===========================
 ! 2003-04-24 - Olivier Callot
  - changed 'momentum' to 'qDivP', 'velo' to 'type' and 'unique' to 'status'
- - added an 'ancestor' to allow a pointer to the track this track was made 
+ - added an 'ancestor' to allow a pointer to the track this track was made
    from.
 
 ! 2003-04-10 - Olivier Callot
