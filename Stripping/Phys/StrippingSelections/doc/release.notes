@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-11 - Pablo Ruiz Valls
+ - StrippingBeauty2XGamma updated to comply with default_config / Chris' Raw banks tool
+ - Created StrippingBeauty2XGammaExclusive with two lines
+
 ! 2014-07-10 - Carlos Vazquez Sierra
  - StrippingBs2JpsiKstNoPID updated (new line added for MC analysis purposes).
 
