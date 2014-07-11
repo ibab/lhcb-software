@@ -12,6 +12,9 @@
 #ifndef RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H
 #define RICHRECTRACKTOOLS_RichDetailedTrSegMakerFromRecoTracks_H 1
 
+// STL
+#include <sstream>
+
 // base class
 #include "RichBaseTrSegMakerFromRecoTracks.h"
 

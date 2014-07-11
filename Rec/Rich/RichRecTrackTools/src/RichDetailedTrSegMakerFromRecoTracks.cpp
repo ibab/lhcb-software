@@ -242,11 +242,13 @@ constructSegments( const ContainedObject * obj,
     // Failed to find the state, so try with the state provider....
     if ( !entryPStateRaw && m_useStateProvider && !skipByType(track,rad) )
     {
-      const StatusCode sc = stateProvider()->state( m_states[0], *track, zStart, m_zTolerance[rad] );
+      const StatusCode sc = stateProvider()->state( m_states[0], *track, zStart );
       if ( sc.isSuccess() )
       {
         entryPStateRaw = &m_states[0];
-        _ri_verbo << "   -> Found state via StateProvider" << endmsg;
+        std::ostringstream mess;
+        mess << "Found entry state at z=" << zStart << "mm via StateProvider";
+        Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
       }
     }
     // if still no state, skip this track
@@ -293,11 +295,13 @@ constructSegments( const ContainedObject * obj,
     // Failed to find the state, so try with the state provider....
     if ( !exitPStateRaw && m_useStateProvider && !skipByType(track,rad) )
     {
-      const StatusCode sc = stateProvider()->state( m_states[1], *track, zEnd, m_zTolerance[rad] );
+      const StatusCode sc = stateProvider()->state( m_states[1], *track, zEnd );
       if ( sc.isSuccess() )
       {
         exitPStateRaw = &m_states[1];
-        _ri_verbo << "   -> Found state via StateProvider" << endmsg;
+        std::ostringstream mess;
+        mess << "Found exit state at z=" << zEnd << "mm via StateProvider";
+        Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
       }
     }
     // if still no state, skip this track
