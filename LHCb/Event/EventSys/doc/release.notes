@@ -2,6 +2,9 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 !========================= EventSys v26r0 2013-04-29 =========================
 ! 2013-04-10 - Marco Cattaneo
  - Remove Event/PackedEvent dependency (obsolete package)
@@ -85,7 +88,7 @@
 !======================== EventSys v23r10 2007-11-13 =====================
 ! 2007-11-13 - Marco Cattaneo
  - Fix copy_relax_rootmap pattern for Windows backslashes
- 
+
 ! 2007-11-09 - Marco Cattaneo
  - Use DAQEvent v7r6p1, L0Event v16r6, MCEvent v2r5p1, PhysEvent v11r4,
        RecEvent v2r7, TrackEvent v4r8
@@ -96,7 +99,7 @@
 
 !======================== EventSys v23r8 2007-09-18 ======================
 ! 2007-09-18 - Marco Cattaneo
- - Use DAQEvent v7r5, HltEvent v8r4, LinkerEvent v3r2, L0Event v16r5, 
+ - Use DAQEvent v7r5, HltEvent v8r4, LinkerEvent v3r2, L0Event v16r5,
        MCEvent v2r5, RecEvent v2r6, PhysEvent v11r3, TrackEvent v4r6,
        VeloEvent v16r0
 
@@ -104,17 +107,17 @@
  - requirements: added actions to copy rootmap files from RELAX into the LHCB
    install area rootmap file to enable auto-loading for RELAX dictionaries.
    NOTE that the actual copy/merge pattern will need to be changed (simplified)
-   to accomodate to new versions of RELAX. 
+   to accomodate to new versions of RELAX.
 
 !======================== EventSys v23r7 2007-07-11 ======================
 ! 2007-07-11 - Marco Cattaneo
- - Use TrackEvent v4r5, RecEvent v2r5, HltEvent v8r3, L0Event v16r4, 
+ - Use TrackEvent v4r5, RecEvent v2r5, HltEvent v8r3, L0Event v16r4,
        EventAssoc v4r2
 
 !======================== EventSys v23r6 2007-06-08 ======================
 ! 2007-06-08 - Marco Cattaneo
- - Use DAQEvent v7r4, DigiEvent v2r2, EventBase v2r4, GenEvent v5r1, 
-       HltEvent v8r2, L0Event v16r3, LinkerEvent v3r1, MCEvent v2r4, 
+ - Use DAQEvent v7r4, DigiEvent v2r2, EventBase v2r4, GenEvent v5r1,
+       HltEvent v8r2, L0Event v16r3, LinkerEvent v3r1, MCEvent v2r4,
        PackedEvent v6r2, PhysEvent v11r2, RecEvent v2r4, TrackEvent v4r4,
        VeloEvent v15r1
 
@@ -200,7 +203,7 @@
 
 !======================== EventSys v21r5 2006-05-09 ========================
 ! 2006-05-09 - Marco Cattaneo
- - Use PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, LinkerEvent v2r2, 
+ - Use PhysEvent v9r4, MCEvent v1r3, DAQEvent v6r4, LinkerEvent v2r2,
        L0Event v15r2, TrackEvent v2r5, DigiEvent v1r2, EventBase v1r2,
        RecEvent v1r3
 
@@ -229,7 +232,7 @@
  - Obsolete packages removed: Event, DC04Hacks, TrEvent, TrgEvent, ITEvent
      CaloEvent, RichEvent, OTEvent, MuonEvent, EventUtils
  - Packages added: EventBase v1r1, MCEvent v1r1, DigiEvent v1r0, RecEvent v1r0
- - Packages modified: DAQEvent v6r2, GenEvent v4r1, L0Event v15r0, 
+ - Packages modified: DAQEvent v6r2, GenEvent v4r1, L0Event v15r0,
      LinkerEvent v2r0, TrackEvent v2r0, PhysEvent v9r0, EventAssoc v3r0,
      VeloEvent v14r0
  - Packages temporarily disabled: PackedEvent
@@ -424,7 +427,7 @@ Built on v18r2b2 branch
    . Remove EventKernel (Keyed containers now in GaudiKernel)
    . Remove DbCnv (Keyed containers converters now in GaudiDb)
    . Modify Event v4r0, VeloEvent v13r0, ITEvent v13r0, OTEvent v13r0,
-            TrEvent v13r0, RichEvent v7r0, CaloEvent v13r0, MuonEvent v3r0, 
+            TrEvent v13r0, RichEvent v7r0, CaloEvent v13r0, MuonEvent v3r0,
             L0Event v14r0, L1Event v12r0, PhysEvent v8r0, HltEvent v5r0,
             DAQEvent v4r0
  - Added GenEvent v3r0 (previously not part of EventSys)
@@ -471,7 +474,7 @@ Built on v18r2b2 branch
 
 !======================== EventSys v14r0 2003-06-17 ========================
 ! 2003-06-17 - Marco Cattaneo
- - Use EventKernel v2r3, Event v3r3, VeloEvent v12r1, ITEvent v12r1, 
+ - Use EventKernel v2r3, Event v3r3, VeloEvent v12r1, ITEvent v12r1,
        OTEvent v12r1, TrEvent v12r1, RichEvent v4r4, CaloEvent v11r6,
        MuonEvent v2r4, L0Event v13r2, L1Event v11r7, PhysEvent v7r5,
        HltEvent v3r0, DbCnv v7r1
