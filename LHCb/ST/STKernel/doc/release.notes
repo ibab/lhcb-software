@@ -3,6 +3,9 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Minor fix to a header guard macro.
+
 !========================= STKernel v2r13 2013-09-30 =========================
 ! 2013-09-18 - Jianchun Wang
  - Support DB mapping of UT board vs TELL1 ID.

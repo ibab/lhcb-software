@@ -12,8 +12,8 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef STKERNEL_STHISTOTOOLBASE_H
-#define STKERNEL_STHISTOTOOLBASE_H 1
+#ifndef STKERNEL_STTUPLETOOLBASE_H
+#define STKERNEL_STTUPLETOOLBASE_H 1
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleTool.h"
@@ -39,15 +39,15 @@ namespace ST
   {
 
   public:
-    
+
     /// Standard constructor
-    TupleToolBase(const std::string& type, 
+    TupleToolBase(const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
       : ST::CommonBase<GaudiTupleTool> ( type, name, parent ) { }
-    
+
   };
-  
+
 }
 
 
