@@ -1,23 +1,26 @@
 !----------------------------------------------------------------------------
-! Package     : PhysEvent 
+! Package     : PhysEvent
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
-! 2014-06-17 - Anton Poluektov 
- - Add more structures from RelatedInfoMap to dictionary. 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
+! 2014-06-17 - Anton Poluektov
+ - Add more structures from RelatedInfoMap to dictionary.
 
 !========================= PhysEvent v11r25 2014-06-10 ========================
-! 2014-06-07 - Anton Poluektov 
- - Fix dictionaries broken due to RelatedInfoMap moved to LHCb namespace. 
+! 2014-06-07 - Anton Poluektov
+ - Fix dictionaries broken due to RelatedInfoMap moved to LHCb namespace.
 
-! 2014-06-06 - Anton Poluektov 
+! 2014-06-06 - Anton Poluektov
  - Fix of RelatedInfoMap (add dictionaries for Bender, move it to LHCb namespace)
 
 ! 2014-06-02 - Marco Clemencic
  - Fixed CMake configuration.
 
-! 2014-05-23 - Anton Poluektov 
- - Add VectorMap<short,float> typedefs for RelatedInfo structure 
+! 2014-05-23 - Anton Poluektov
+ - Add VectorMap<short,float> typedefs for RelatedInfo structure
    (new persistency for cone variables etc.)
 
 !========================= PhysEvent v11r24 2014-02-17 ========================
@@ -59,20 +62,20 @@
  - Added CMake configuration file.
 
 !========================= PhysEvent v11r18 2012-09-28 ========================
-! 2012-09-20 - Anton Poluektov 
-  - Update enums in Particle.h related to cone variables to match what is written 
+! 2012-09-20 - Anton Poluektov
+  - Update enums in Particle.h related to cone variables to match what is written
     by DaVinciTools/ConeVariables
 
 !========================= PhysEvent v11r17 2012-06-25 ========================
 ! 2012-06-21 - Olivier Deschamps
   - Add enum 'HasBremAdded' to Particle.xml to flag particle with brem-corrected momentum
 
-! 2012-06-20 - Anton Poluektov 
+! 2012-06-20 - Anton Poluektov
  - Add enums for cone variables to Particle.xml
 
 !========================= PhysEvent v11r16 2012-05-02 ========================
 ! 2012-04-26 - Chris Jones
- - Provide a custom fillStream method for the Particle and Vertex class, 
+ - Provide a custom fillStream method for the Particle and Vertex class,
    improving on the default G.O.D. generated ones.
 
 ! 2012-04-24 - Chris Jones
@@ -82,15 +85,15 @@
  - Add some divide by zero protection to Particle::slopes
 
 !========================= PhysEvent v11r15 2012-02-28 ========================
-! 2012-02-24 - Anton Poluektov 
+! 2012-02-24 - Anton Poluektov
  - add enums for EW isolation, up to 4 cone sizes
 
-! 2012-02-20 - Anton Poluektov 
- - add enums related to isolation information to Particle extraInfo. 
+! 2012-02-20 - Anton Poluektov
+ - add enums related to isolation information to Particle extraInfo.
 
 !========================= PhysEvent v11r14 2011-06-14 ========================
 ! 2011-06-04 - Vanya Belyaev
- - add LHCb::Particle::Selection into dictionary 
+ - add LHCb::Particle::Selection into dictionary
    it helps with GaudiPython/Bender
 
 ! 2011-04-27 - Patrick Koppenburg
@@ -119,8 +122,8 @@
     add typedefs:
 
       1. Selection  for container of shared particles (wihtout ownership)
-      2. Range      for uniform access to underlying containers of particles 
-                    ( KeyedContainer or SharedContainer ) 
+      2. Range      for uniform access to underlying containers of particles
+                    ( KeyedContainer or SharedContainer )
 
 
 ! 2010-01-03 - Vanya BELYAEV
@@ -128,17 +131,17 @@
     add typedefs:
 
       1. Selection  for container of shared particles (wihtout ownership)
-      2. Range      for uniform access to underlying containers of particles 
-                    ( KeyedContainer or SharedContainer ) 
+      2. Range      for uniform access to underlying containers of particles
+                    ( KeyedContainer or SharedContainer )
 
  - cmt/requirements
-     
-     version increment to v11r11 
+
+     version increment to v11r11
 
 !======================== PhysEvent v11r10 2009-11-15 =======================
 ! 2009-11-15 - Marco Musy
  - modified xml/Tagger.xml to store a SmartRef instead of a raw pointer vector
-   of particles used to decide the tagging. 
+   of particles used to decide the tagging.
    The reason for the change is to allow ROOT persistency.
 
 !======================== PhysEvent v11r9 2009-06-16 ========================
@@ -161,15 +164,15 @@
 
 ! 2008-02-24 - Vanya BELYAEV
  - Particle.xml
-     : add predefined enum Chi2OfVertexConstrainedFit 
-     : add predefined enum Chi2OfParticleReFitter 
+     : add predefined enum Chi2OfVertexConstrainedFit
+     : add predefined enum Chi2OfParticleReFitter
 
 ! 2008-02-19 - Vanya BELYAEV
  - Particle.xml
      : add predefined enum Chi2OfDirectionConstrainedFit
 
 ! 2008-02-15 - Marco Cattaneo
- - Add generation of custom dictionary and make dict for 
+ - Add generation of custom dictionary and make dict for
    std::vector<const LHCb::Particle*>, previously in LoKiPhys
 
 !======================== PhysEvent v11r5 2008-01-24 ========================
@@ -185,7 +188,7 @@
 
 ! 2007-10-24 - Vanya BELYAEV
  - xml/Particle.xml
-      1) Allocate the range of indices [9500,9699] for jet-related information   
+      1) Allocate the range of indices [9500,9699] for jet-related information
       2) add few named enum-values for jet-relates studies.
       3) activate "strTypeConv" attribute for AdditionalInfo enums
 
@@ -193,7 +196,7 @@
 ! 2007-08-23 - Juan PALACIOS
  - xml/Particle.xml
    . Remove new method setKeyedObjectKey(int key).
-   . Add constructor Particle(const ParticleID& pid, const int key) 
+   . Add constructor Particle(const ParticleID& pid, const int key)
  -cmt/requirements
    . increase version to v11r3
 
@@ -251,12 +254,12 @@
 
 ! 2006-07-20 - Juan PALACIOS
   - xml/Vertex.xml
-    . Add typedefs for KeyedContainer of Vertex. Was not generated 
+    . Add typedefs for KeyedContainer of Vertex. Was not generated
       automatically as Vertex no longer inherits directly from KeyedObject.
 
 ! 2006-07-19 - Juan PALACIOS
   - xml/Vertex.xml
-    . New class, inheriting from VertexBase (RecEvent). Public interface 
+    . New class, inheriting from VertexBase (RecEvent). Public interface
 			remains the same as in previous Vertex class.
 
   - xml/PrimVertex.xml
@@ -270,13 +273,13 @@
     . Increase version number to 10r0
 
 !======================= PhysEvent v9r6 2006-07-07 ==========================
-! 2006-07-04 - Juan PALACIOS	
+! 2006-07-04 - Juan PALACIOS
   - Move SelResult to RecEvent. Remove xml/SelResult.xml.
 
 ! 2006-06-09 - Juan PALACIOS
-  - xml/Particle.xml: Add explicit single argument constructor from key. 
+  - xml/Particle.xml: Add explicit single argument constructor from key.
                       Add default value initialization to single argument
-                          constructor from PID and make explicit. 
+                          constructor from PID and make explicit.
 
 ! 2006-06-06 - Juan PALACIOS
   - xml/FilterCriterionResult.xml: Add copy constructor + assignment operator
@@ -284,7 +287,7 @@
     xml/SelResult.xml: Add copy constructor + assignment operator
 
 ! 2006-06-02 - Juan PALACIOS
-  - src/Particle.cpp: 
+  - src/Particle.cpp:
     . Fix copy constructor and assignment operator to copy vector of daughters,
       and SmartRefs to end vertex and protoparticle.
   - xml/Vertex.xml, src/Vertex.cpp
@@ -292,12 +295,12 @@
 
 !======================= PhysEvent v9r5 2006-05-31 ==========================
 ! 2006-05-31 - Juan PALACIOS
-  - src/Particle.cpp: Use new LHCbMath/MatrixManip.h instead of one in 
+  - src/Particle.cpp: Use new LHCbMath/MatrixManip.h instead of one in
     Kernel/LHCbDefinitios Kernel directory.
     Change corresponding namespace from LHCb::MatrixManip to Gaudi::Math
 
 ! 2006-05-23 - Juan PALACIOS
- - xml/Particle.xml: Remove duplicate Container typedef. 
+ - xml/Particle.xml: Remove duplicate Container typedef.
                      Remove ConstContainer typedef
 
 !======================= PhysEvent v9r4 2006-05-16 ==========================
@@ -334,7 +337,7 @@
 
 !======================= PhysEvent v9r1 2006-03-16 ==========================
 ! 2006-03-15 - Juan Palacios
- - xml/Particle.xml: add typedefs for KeyedContainers of Particle and 
+ - xml/Particle.xml: add typedefs for KeyedContainers of Particle and
    const Particle. LHCb::Particle::Container, LHCb::Particle::ConstContainer.
    These should be generated automatically by GOD from Gaudi v18r3 onwards.
 
@@ -346,7 +349,7 @@
  - xml/Vertex.xml
  - xml/PrimVertex.xml
    . More elegant way of getting the same result without the internal variable.
-   
+
 ! 2006-02-16 - P. Koppenburg
  - xml/Particle.xml
    . Default weight is +1, not -1.
@@ -354,22 +357,22 @@
  - xml/PrimVertex.xml
    . Use internal variable isPrimary to know if vertex is primary or not.
      This way the following code:
-   
+
   // Test
   PrimVertex PV ;
   PrimVertex* pPV = &PV;
   Vertex* pV =  &PV;
-  info() << "PrimVertex is primary? " << pPV->isPrimary() << " " << pV->isPrimary() << endmsg 
+  info() << "PrimVertex is primary? " << pPV->isPrimary() << " " << pV->isPrimary() << endmsg
 
   Vertex V ;
   pV =  &V;
   info() << "    Vertex is primary? " << pV->isPrimary() << endmsg ;
 
     returns:
-    
+
 DC06Tests  INFO PrimVertex is primary? 1 1
 DC06Tests  INFO     Vertex is primary? 0
-    
+
 ! 2006-02-15 - Marco Cattaneo
  - Remove CaloEvent from requirements
 
@@ -406,24 +409,24 @@ DC06Tests  INFO     Vertex is primary? 0
   . Don't use ROOT TMatrices
 
 ! 2005-09-06 - P. Koppenburg
-  - Many changes: 
+  - Many changes:
     . Use ROOT linear algebra
     . Use LHCb typedefs for momentum, point, matrix.
 
 ! 2005-07-29 - P. Koppenburg
   - Use new MathCore geometry and Lorenz
-  
+
 !==================== PhysEvent v9r0PEMTF0729 2005-07-29 =======================
 ! 2005-07-29 - P. Koppenburg
   Implemented some of the suggestions by Vanya:
   - Corr -> Cov
   - const int& -> int
   - const double& -> double
-  
+
 !==================== PhysEvent v9r0PEMTF0726b 2005-07-29 ======================
 ! 2005-07-29 - P. Koppenburg
   Changes of July 26:
-  - All: Remove Key and Info typedefs, 
+  - All: Remove Key and Info typedefs,
   - Particle: ConfLevel, weight method using info
               Covariance matrix 7x7
 	      Charge is an int
@@ -437,7 +440,7 @@ Minor changes
   PID info in ProtoParticle.
   - src/VctMapTest.cpp
     . Example
-  
+
 ! 2005-07-25 - P. Koppenburg
   First changes from PhysEvent Task Force
   - xml/Particle.xml
@@ -448,25 +451,25 @@ Minor changes
     . slopeX, slopeY methods removed
     . New relation daughters
     . New method isBasicParticle()
-    . charge is an int  
+    . charge is an int
   - xml/ProtoParticle.xml
     . Based on Track and State
     . Merge pIDDetectors and pIDInfo into pIDMeasurements
     . new method probOfTechnique
-    . remove methods pIDLIst, probOfPID, bestPID, probOfBestPID, 
+    . remove methods pIDLIst, probOfPID, bestPID, probOfBestPID,
       detPIDvalue, detPID, minimalStates
-    . charge is an int  
+    . charge is an int
     . firstState becomes firstState
     . pointOnTrack -> referencePoint
   - xml/Vertex.xml
     . products -> outgoingParticles
-  - xml/PrimVertex.xml    
+  - xml/PrimVertex.xml
     . Based on Track and State
-  - xml/V0.xml   
+  - xml/V0.xml
     . Removed
   - src/*.*
     . Modified accordingly
-    
+
 !======================= PhysEvent v8r11 2005-11-11 ==========================
 ! 2005-11-11 - Marco Cattaneo
  - Add a copy constructor to FlavourTag to fix obscure Windows complaint
@@ -475,7 +478,7 @@ Minor changes
 !======================= PhysEvent v8r10 2005-07-25 ==========================
 ! 2005-07-25 - P. Koppenburg
   - xml/Tagger.xml
-    . Restore std::vector<Particle> version for consistency. 
+    . Restore std::vector<Particle> version for consistency.
       To be revised later
 
 ! 2005-07-07 - P. Koppenburg
@@ -497,13 +500,13 @@ Minor changes
 !======================== PhysEvent v8r9 2005-03-11 ========================
 ! 2005-03-11 - Marco Cattaneo
  - Add Kernel directory, for Interfaces closely related to PhysEvent classes
- - Move IParticleTransporter.h to Kernel directory, from DaVinciKernel package 
+ - Move IParticleTransporter.h to Kernel directory, from DaVinciKernel package
 
 !======================== PhysEvent v8r8 2005-02-02 ========================
 ! 2005-02-02 - Marco Cattaneo
  - Add attribute to produce KeyedContainers typedefs in PrimVertex.xml, needed
    by GaudiObjDesc v7r*
- - Put ad hoc fix Particle.xml and Vertex.xml to bypass CLHEP 1.9 
+ - Put ad hoc fix Particle.xml and Vertex.xml to bypass CLHEP 1.9
    HEP_CC_NEED_SUB_WITHOUT_CONST problem
  - Make .xml files standalone, and remove PhysEvent.xml
  - Clean up obsolete includes from xml
@@ -526,11 +529,11 @@ Minor changes
 ! 2004-06-25 - P. Koppenburg for P. Igo-Kemenes
  - xml/EffCheckEvent.xml -> xml/EffCheckResult.xml
    . Renamed and some additions.
-   
+
 ! 2004-06-18 - P. Koppenburg for P. Igo-Kemenes and C. Jacoby
  - xml/EffCheckEvent.xml
    Access to MC particle information for efficiency algorithms
-   
+
 !======================== PhysEvent v8r3 2004-05-03 ========================
 ! 2004-05-03 - Marco Cattaneo
  - Fixes for POOL dictionaries in ProtoParticle.xml and SelResult.xml
@@ -586,7 +589,7 @@ Minor changes
 ! 2003-01-15 - Gloria Corti
  - In Vertex.cpp and Particle.cpp modify copy contructor not to do deep
     copy but keep original SmartRefs
- - In Vertex.cpp fix bug in copy constructor and assignment operator where 
+ - In Vertex.cpp fix bug in copy constructor and assignment operator where
    the NDoF was not copied
 
 !========================= PhysEvent v7r3 2002-12-04 =====================
@@ -610,7 +613,7 @@ Minor changes
 ! 2002-09-08 - Gloria Corti
  - Fix in Particle to extend correlation error between position and momentum
    to include energy elements
- - Increase major version number in requirements file (Particle not 
+ - Increase major version number in requirements file (Particle not
 	 backward compatible)
 
 ! 2002-09-02 - Gloria Corti
@@ -633,12 +636,12 @@ Minor changes
 ! 2002-07-24 - Gloria Corti
  - Introduce copy constructor, clone method and assignment operator to the
    ProtoParticle where in all cases original values are kept but keyed object
-   part is not copied. 
+   part is not copied.
  - Introduce assignment operator in Particle and Vertex class. Note that
    they keep the original SmartRef to the other class and to ProtoParticles
    This fix the problem of exceptions with keyed containers due to using the
    ParticleTransporter on temporary copies of particles with an assigned key.
-   This problem appeared after modifications of the delete of KeyedObject. 
+   This problem appeared after modifications of the delete of KeyedObject.
  - Change copy constructor to use member initialization list in Particle
    and Vertex classes. Note that both clone the Particle and Vertex to which
    they are connected to but keep the original ProtoParticle SmartRef
@@ -656,7 +659,7 @@ Minor changes
 
 ! 2002-07-10 - Gloria Corti
  - Add ProtoParticles and hence uses RichEvent v3r*, CaloEvent v11r*,
-   MuonEvent v2r* 
+   MuonEvent v2r*
 
 !========================= PhysEvent v5r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
@@ -703,16 +706,16 @@ Minor changes
    src/Particle.cpp         - adapt to new ParticleID
    src/PhysSel.cpp          - adapt serializer dropping LHCbEvent dependecie
    src/PhysEvent_load.cpp   - declare AxPartCandidate(s) factories
-   
+
 ! >>>>>>>>>>>>>>>>>>>>>>> PhysEvent v3r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020402 - PhysEvent v3r0 (G.Corti)
 	New event model for Physics Event part.
   Still depend of LHCbEvent v12r2 and SicbCnv v15r1 (uses old ParticleID)
   Introduce separate xml files for various classes.
-  Vertex class uses enum for VertexType. 
+  Vertex class uses enum for VertexType.
   Particle class has variuos short cut methods as well as setter of
   error matrices that are kept consistent (to be updated later for
-  persistency). Temporary implementation of charge method valid for 
+  persistency). Temporary implementation of charge method valid for
   basic particles only.
   Producing the dictionary is switched off at the moment.
 
@@ -749,9 +752,9 @@ Minor changes
 ! 20010709 - PhysEvent v1 (GCorti)
   First release of the package.
   This package is foreseen to contain the event data model for physics
-  analysis. 
+  analysis.
   This first release contains a generic Physis Event class (PhysEvent)
   a generic vertex class (VtxCandidate), and two classes to hold results
   of the Physics Analysis Selection Algorithms (AxSel and AxSelDecay)
-  
+
 ! ======================================================================

@@ -4,16 +4,16 @@
 package           PhysEvent
 version           v11r25
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #=====================================================================
 branches          cmt doc src xml Event
 
-# Used packages. 
+# Used packages.
 #=====================================================================
 use RecEvent        v*  Event
 use LHCbKernel      v*  Kernel
 use LHCbMath        v*  Kernel
-use GaudiKernel     v*  
+use GaudiKernel     v*
 private
 use GaudiObjDesc v* -no_auto_imports
 end_private
@@ -43,3 +43,8 @@ apply_pattern linker_library library=PhysEvent
 private
 # Patch for gccxml bug with assert statement on Windows
 macro_append use_obj2dict_gccxmlflags "" WIN32 " -D __CINT__ "
+
+# work around for a problem with ROOT 6 rootmap files
+private
+  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header .*VectorMap' --exclude-re '^header .*SharedObjects'"
+end_private
