@@ -847,7 +847,7 @@ class Fit2D (object) :
     ## draw the projection over 12nd variable 
     def draw2 ( self , dataset = None , nbins = 100 , silent = True , *args ) :
         """Draw the projection over 2nd variable"""
-        return self.draw ( self.m2 , dataset , 100   , nbins , silent , *args ) 
+        return self.draw ( self.m2 , dataset , nbins   , 20 , silent , *args ) 
 
     ## make 1D-plot 
     def draw ( self           ,

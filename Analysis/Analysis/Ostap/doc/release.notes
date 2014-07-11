@@ -8,6 +8,10 @@
 !  by                $Author:$
 ! -----------------------------------------------------------------------------
 
+
+! 2014-07-11 - Sasha Baranov
+ - Fixed Fit2D.draw2 binning
+
 ! 2014-07-11 - Vanya Belyaev
  - ostap:   
 
