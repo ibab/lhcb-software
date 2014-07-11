@@ -79,18 +79,18 @@ if sys.argv[1:] :
     
     for aa in sys.argv[1:] :
 
-        for a in glob.iglob ( a ) :
+        for a in glob.iglob ( aa ) :
             
             p1     = a.find('.root')
             if 0 < p1 and len ( a ) == p1 + 5 :
                 try : 
                     f = ROOT.TFile( a , 'READ')
-                root_files.append ( f )
-                logger.info ("Open ROOT file '%s'" % a )
-                f.ls()
-                continue 
-            except :
-                logger.info ("Unable to open ROT file '%s'" % a )
+                    root_files.append ( f )
+                    logger.info ("Open ROOT file '%s'" % a )
+                    f.ls()
+                    continue 
+                except :
+                    logger.info ("Unable to open ROT file '%s'" % a )
                 
                 
             p2     = a.find( '.py' )
