@@ -65,45 +65,61 @@ logger.warning ( 'TEMPORARY solution: delete temporary Canvas')
 del ctmp
 # =============================================================================
 ## execute the files, defined as arguments
-import sys,os
+import sys,os, glob 
 if sys.argv[1:] : 
     from   copy import deepcopy
-    _myself = sys.modules[ __name__ ] 
-    _mykeys = deepcopy ( dir( _myself ) ) 
-    ##_mykeys = deepcopy ( globals().keys() ) 
-    _copied = set() 
-    _skept  = set() 
+    _myself    = sys.modules[ __name__ ] 
+    _mykeys    = deepcopy ( dir( _myself ) ) 
+    ##_mykeys  = deepcopy ( globals().keys() ) 
+    _copied    = set() 
+    _skept     = set()
     
-    for a in sys.argv[1:] :
+    root_files = []
+    py_files   = []
+    
+    for aa in sys.argv[1:] :
 
-        p     = a.find( '.py' )
-        if p <= 0          : continue 
-        if len(a) != p + 3 : continue  
-        if not os.path.exists ( a ) :
-            logger.warning   ('No file is found  "%s"' % a )
-            continue 
-        logger.info  ('Try    to execute "%s"' % a )
-        try :
-            myvars =  {} 
-            execfile ( a , myvars )
-            for k,val in myvars.iteritems() : 
+        for a in glob.iglob ( a ) :
+            
+            p1     = a.find('.root')
+            if 0 < p1 and len ( a ) == p1 + 5 :
+                try : 
+                    f = ROOT.TFile( a , 'READ')
+                root_files.append ( f )
+                logger.info ("Open ROOT file '%s'" % a )
+                f.ls()
+                continue 
+            except :
+                logger.info ("Unable to open ROT file '%s'" % a )
+                
+                
+            p2     = a.find( '.py' )
+            if p2 <= 0 or len(a) != p2 + 3 : continue
+                
+            logger.info  ('Try    to execute "%s"' % a )
+            try :
+                myvars =  {} 
+                execfile ( a , myvars )
+                for k,val in myvars.iteritems() : 
                 ## do not redefine already defined symbols!  
-                if k in _mykeys : 
-                    # do not redefine local symbols [ needed? ] 
-                    _skept.add ( k )
-                    continue
+                    if k in _mykeys : 
+                        # do not redefine local symbols [ needed? ] 
+                        _skept.add ( k )
+                        continue
                     ## copy symbol into the local namespace  
-                setattr ( _myself , k , val ) 
-                _copied.add ( k ) 
-        except :
-            logger.error ('Unable to execute "%s"'     % a    )
-            logger.error ('Exception: %s' % sys.exc_info()[0] ) 
-            import traceback 
-            print  traceback.format_exc() 
+                    setattr ( _myself , k , val ) 
+                    _copied.add ( k )
+                py_files.append ( a ) 
+            except :
+                logger.error ('Unable to execute "%s"'     % a    )
+                logger.error ('Exception: %s' % sys.exc_info()[0] ) 
+                import traceback 
+                print  traceback.format_exc() 
 
-    if _copied : logger.info ( 'Copied %d symbols' % len(_copied) )  
-    if _skept  : logger.info ( 'Skept  %d symbols' % len(_skept ) )  
-
+    if _copied    : logger.info ( 'Copied   %d symbols'      % len ( _copied    ) )  
+    if _skept     : logger.info ( 'Skept    %d symbols'      % len ( _skept     ) )  
+    if py_files   : logger.info ( 'Executed %d files'        % len ( py_files   ) )
+    if root_files : logger.info ( 'Opened   %d ROOT files'   % len ( root_files ) )
     ## do not polllute namespace 
     del _copied
     del _skept

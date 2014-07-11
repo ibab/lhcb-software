@@ -8,6 +8,19 @@
 !  by                $Author:$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-11 - Vanya Belyaev
+ - ostap:   
+
+    1. allow to load/open ROOT-files from command line
+
+       ostap a.root b.root c.root 
+
+    2. allow to use globbing for loading of py and root files :
+
+       ostap *.root  abc*.py 
+
+ 
+
 ! 2014-07-04 - Vanya Belyaev
  - really tiny fix 
 
