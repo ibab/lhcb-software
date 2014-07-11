@@ -35,27 +35,18 @@ DetailedTrSegMakerFromRecoTracksStateProvider( const std::string& type,
 {
   using namespace Gaudi::Units;
 
-#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
-#define  init_vect(A, B, C) {A, B, C}
-#define  init_vect2(A, B) {A, B}
-#else
-  using namespace boost::assign;
-#define  init_vect(A, B, C) list_of(A)(B)(C)
-#define  init_vect2(A, B) list_of(A)(B)
-#endif
-
   // context specific defaults
   if ( contextContains("HLT") )
   {
     // Rads                    Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = init_vect(3000*mm , 3000*mm , 4000*mm) ;
-    m_minRadLength = init_vect(0*mm    , 500*mm  , 1500*mm) ;
+    m_zTolerance   = { 3000*mm , 3000*mm , 4000*mm } ;
+    m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
   }
   else // offline
   {
     // Rads                    Aerogel   Rich1Gas  Rich2Gas
-    m_zTolerance   = init_vect(800*mm  , 2000*mm , 3000*mm) ;
-    m_minRadLength = init_vect(0*mm    , 500*mm  , 1500*mm) ;
+    m_zTolerance   = { 800*mm  , 2000*mm , 3000*mm } ;
+    m_minRadLength = { 0*mm    , 500*mm  , 1500*mm } ;
   }
 
   // job options
@@ -73,10 +64,10 @@ DetailedTrSegMakerFromRecoTracksStateProvider( const std::string& type,
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
-  declareProperty( "ZSanityChecks", m_minStateDiff = init_vect(1*mm, 25*mm, 50*mm) );
+  declareProperty( "ZSanityChecks", m_minStateDiff = { 1*mm, 25*mm, 50*mm } );
 
   // shifts for mirror correction
-  declareProperty( "MirrorShiftCorr", m_mirrShift = init_vect2(35*cm, 150*cm) );
+  declareProperty( "MirrorShiftCorr", m_mirrShift = { 35*cm, 150*cm } );
 
   // Type of track segments to create
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
@@ -84,8 +75,6 @@ DetailedTrSegMakerFromRecoTracksStateProvider( const std::string& type,
   // min path length
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
-#undef init_vect
-#undef init_vect2
 }
 
 //=============================================================================
@@ -211,7 +200,7 @@ constructSegments( const ContainedObject * obj,
     }
 
     // check above electron threshold
-    if ( m_richPartProp->thresholdMomentum(Rich::Electron,rad) > entryPStateRaw->p() )
+    if ( m_richPartProp->thresholdMomentum( Rich::Electron,rad) > entryPStateRaw->p() )
     {
       if ( msgLevel(MSG::VERBOSE) )
       {
