@@ -11,33 +11,43 @@ banks = f.readlines()
 opts = g.readlines()
 opts.append("shit")
 newbanks = []
+outopts = []
 f.close()
 #print banks
 #print opts
 print "========= Running WriteOptions.py...."
 #print (len(banks), len(opts))
+for i in range(len(opts)):
+ opts[i] = opts[i].replace("//","")
 for i in range(len(banks)):
   bank = banks[i].split("\n")
   banks[i] = bank[0]
   bank = banks[i].split(" ")
   banks[i] = bank[0];
+  found = False
   for j in range(len(opts)):
     if opts[j].find("//")<0:
       ii=opts[j].find(bank[0])
       if ii>=0:
+        #print ("options for bank "+banks[i]+" found. Adding to outopts")
+        outopts.append(opts[j])
+        opts.remove(opts[j])
+        found = True
         break
-  if j == len(opts)-1:
-    print("No options found for bank ",bank[0]," adding index to newbanks")
-    newbanks.append(i)
+  if found:
+    continue
+  else:
+    print("No options found for bank ",bank[0]," adding default options")
+    outopts.append("RawBankSizes."+banks[i]+"=(100,0.0,10000.0,0,1024,\"Unknown\");"+"\r\n")
 opts.remove("shit") #len(opts)-1)
+for i in range(len(opts)):
+ opts[i] = "//"+opts[i]
 #print newbanks
 
-for i in range(len(newbanks)):
-  print "Adding Default Options for "+banks[newbanks[i]]
-  opts.append("RawBankSizes."+banks[newbanks[i]]+"=(100,0.0,10000.0,0,1024,\"Unknown\");"+"\r\n")
-#print(opts)
-opts.sort()
+outopts.sort()
 #print(opts)
 g.seek(0)
+g.truncate()
+g.writelines(outopts)
 g.writelines(opts)
 g.close()
