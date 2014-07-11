@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Fixed CMake configuration to work with ROOT 6.
+
 !========================= AnalysisPython v2r31 2014-06-13 =========================
 
 ! 2014-06-09 - Vanya Belyaev
