@@ -3,6 +3,10 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 ! 2014-07-08 - Gerhard Raven
  - change hitpointer container layout in T and TT station managers:
    replace 3D,2D and 1D arrays of vectors by single vector + arrays of
