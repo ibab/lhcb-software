@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Removed duplicated dictionary entry.
+
 ! 2014-07-10 - Marco Cattaneo
  - Fix untested StatusCode in LbAppInit.cpp
 
@@ -25,7 +28,7 @@
  - Remove unused functors from VPDataFunctor.
 
 ! 2014-03-20 - Francesco Polci
- - Modified FTChannelID.xml to include mat() and module() and redefined quarter() functions to reflect the present FT geometry. 
+ - Modified FTChannelID.xml to include mat() and module() and redefined quarter() functions to reflect the present FT geometry.
 
 
 ! 2014-03-19 - Marco Clemencic

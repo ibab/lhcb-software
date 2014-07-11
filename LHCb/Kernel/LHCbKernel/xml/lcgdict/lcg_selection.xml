@@ -92,7 +92,6 @@
   <class name = "Gaudi::Counters" id = "00000097-0000-0000-0000-000000000000" />
   <class name = "Gaudi::Numbers"  id = "00000098-0000-0000-0000-000000000000" />
 
-  <class name = "std::pair<std::string,double>"     />
   <class name = "std::pair<std::string,StatEntity>" />
   <class name = "std::vector<std::pair<std::string,double> >"      />
   <class name = "std::vector<std::pair<std::string,StatEntity> > " />
