@@ -7,7 +7,8 @@ Purpose: LHCb reconstruction program
   . New DDDB global tag for 2010
   . Fix unprotected debugs in FileRecordCnvSvc
   . Minor changes to VP pattern recognition (PrPixel, VPTools)
-  . Major changes to Calo reconstruction 
+  . Major changes to Calo reconstruction
+  . Increased memory usage due to Root6
 
 - Changes to QMTests
   . Move all upgrade test files to TestFileDB and CERN-SWTEST-EOS
