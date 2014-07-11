@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Removed duplicate dictionary entries.
+
 ! 2014-07-03 - Anton Poluektov 
  - Fix warning in dictionary generation
 

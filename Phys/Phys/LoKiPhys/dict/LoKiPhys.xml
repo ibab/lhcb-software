@@ -22,8 +22,10 @@
 
 <lcgdict>
   
+  <!--
   <class pattern   = "Gaudi::Range_<*LHCb::Particle*>"      />
   <class pattern   = "Gaudi::NamedRange_<*LHCb::Particle*>" />
+  -->
   <class pattern   = "LoKi::RangeList_<*LHCb::Particle*>"   />
   
   <class name = "LoKi::UniqueKeeper<LHCb::Particle>"      />
@@ -119,7 +121,7 @@
   <class pattern   = "LoKi::ExtraInfo::GetInfo<*>"    />
 
  
-  <class name = "LoKi::AuxFunBase"  />
+  <!-- <class name = "LoKi::AuxFunBase"  /> -->
   <class name = "LoKi::AuxDTFBase"  />
     
   <class pattern   = "LoKi::Particles::*"   />
@@ -155,6 +157,8 @@
     
     <class name="LoKi::Interface<IDataProviderSvc>" /> 
     <class name="LoKi::Interface<LoKi::ILoKiSvc>"   /> 
+    <class name="LoKi::Interface<IChronoSvc>"   /> 
+    <class name="LoKi::Interface<IParticleReFitter>"   /> 
 
     <class pattern="LoKi::Interface&lt;*&gt;">
       <method name="=" />
@@ -230,6 +234,9 @@
 
     <class name ="LoKi::Particles::RelatedInfo::IMAP"/>
     
+    <class pattern   = "LoKi::Constant<Gaudi::Range_*LHCb::Pa*>" />
+    <class pattern   = "LoKi::Functor*<Gaudi::Range_*>" />
+
   </exclusion>
   
 </lcgdict>
