@@ -4,6 +4,9 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 !========================= MicroDst v1r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
@@ -50,7 +53,7 @@
 
 ! 2010-09-27 - Juan Palacios
  - Add Kernel/DataObject2ObjectMap.h
-  . Template class with generic structure for mapping T* to POD or sequence 
+  . Template class with generic structure for mapping T* to POD or sequence
     of POD. Uses GaudiUtils::VectorMap<SmartRef<T>, sequence<POD> > internally,
     with a few specializations.
  - Add Particle2UnsignedInts class, re-code Particle2LHCbIDs in terms of
