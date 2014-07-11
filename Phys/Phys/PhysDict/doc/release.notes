@@ -4,6 +4,9 @@
 ! Purpose     : REFLEX missing dictionaries for various classes
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Removed duplicate dictionary entries.
+
 !========================= PhysDict v4r2p3 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
