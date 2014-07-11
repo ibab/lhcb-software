@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Removed duplicate dictionary entries.
+
 !========================= RichHPDImageAnalysis v1r13p1 2013-06-03 ====================
 ! 2013-05-13 - Chris Jones
  - Fix clang32 unused class data member warnings.

@@ -17,5 +17,4 @@
   <class name="Rich::HPDImage::BoundaryOutlierRejection" />
   <class name="Rich::HPDImage::BoundaryOutlierRejection::FitResult" />
   <class name="Rich::HPDImage::BoundaryOutlierRejection::Params" />
-  <class name="TH2D" />
 </lcgdict>
