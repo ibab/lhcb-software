@@ -14,9 +14,12 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 !========================= LoKiMC v10r12 2014-05-12 =========================
 ! 2014-04-23 - Marco Cattaneo
- - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
+ - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>,
    already defined in LoKiCore
 
 !========================= LoKiMC v10r11 2014-03-17 =========================

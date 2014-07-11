@@ -13,14 +13,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-07-11 - Marco Clemencic
+ - Strip spurious entry from the rootmap (ROOT 6 problem).
+
 !========================= LoKiGen v10r16 2014-05-12 =========================
 ! 2014-04-23 - Marco Cattaneo
- - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>, 
+ - Remove duplicate dictionary for LoKi::Interface<IChronoSvc>,
    already defined in LoKiCore
 
 ! 2014-04-16 - Vanya Belyaev
     add qmtest for JIRA-LBCORE-461
-    it makes seghmentation fault for ROOT6 and runs smoothly for ROOT5 
+    it makes seghmentation fault for ROOT6 and runs smoothly for ROOT5
 
 !========================= LoKiGen v10r15 2014-03-17 =========================
 ! 2014-02-21 - Marco Clemencic
