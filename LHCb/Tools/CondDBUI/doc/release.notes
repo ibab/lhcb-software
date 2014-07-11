@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+! 2014-07-11 - Marco Clemencic
+ - Renamed dict/dictionary.h to avoid problems with ROOT 6.
+
 ! 2014-06-27 - Marco Clemencic
  - Fixed problem with a change in the API of COOL.
 

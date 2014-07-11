@@ -49,7 +49,7 @@ private
 
 use Reflex       v*   LCG_Interfaces
 apply_pattern reflex_dictionary dictionary=CondDBUI \
-                                headerfiles=$(CONDDBUIROOT)/dict/dictionary.h \
+                                headerfiles=$(CONDDBUIROOT)/dict/conddbui_dictionary.h \
                                 selectionfile=$(CONDDBUIROOT)/dict/dictionary.xml \
                                 imports="Python -import=COOL -import=Boost -import=CORAL"
 macro_append CondDBUI_reflex_options ' $(lib_CondDBUIDict_cppflags) '
