@@ -134,9 +134,10 @@ _default_configuration_ = {
 # =============================================================================
 ## the mandatory element for stripping framework 
 default_config = {
-    'NAME'        :   'Bc3h'                ,
-    'WGs'         : [ 'BandQ' ]             ,
-    'BUILDERTYPE' :   'Bc2hConf'            ,
+    'NAME'        :   'Bc3h'                 ,
+    'WGs'         : [ 'BandQ' ]              ,
+    'BUILDERTYPE' :   'Bc2hConf'             ,
+    'CONFIG'      : _default_configuration_  , 
     'STREAMS'     : { 'Bhadron' : [ 'StrippingBc3piForBc3h'   ,
                                     'StrippingBc3kForBc3h'    ,
                                     'StrippingBc3kpiForBc3h'  , 
@@ -524,7 +525,7 @@ if '__main__' == __name__ :
     logger.info ( ' Lines declared in default_config["STREAMS"]["Bhadron"] are' )
     for i in clines : logger.info ( ' - ' + i + '\n' ) 
     logger.info ( ' The output locations for the default configuration: ' ) 
-    _conf = Bc3hConf ( 'Bc3h' , config = {}  )
+    _conf = Bc3hConf ( 'Bc3h' , config = default_config['CONFIG'] )
     _ln   = ' ' + 41*'-' + '+' + 30*'-'
     logger.info ( _ln ) 
     logger.info ( '  %-40s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
@@ -539,8 +540,8 @@ if '__main__' == __name__ :
     logger.info ( _ln ) 
     logger.info ( 80*'*'  ) 
     if clines :
-        raise AttributeError('Undelcared lines: %s' % clines )
-        
+        raise AttributeError('Undeclared lines: %s' % clines )
+    
 # =============================================================================
 # The END 
 # =============================================================================

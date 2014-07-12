@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-07-12 - Vanya Belyaev
+ - adapt StrippingCharmAssociative to new conventions 
+
+! 2014-07-12 - Vanya Belyaev
  - Adapt StrippingBc3h to new conventions 
 
 ! 2014-07-11 - Pablo Ruiz Valls
