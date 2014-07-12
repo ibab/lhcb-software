@@ -26,6 +26,7 @@
 
 // Tf framework
 #include "TfKernel/IndexedHitContainer.h"
+#include "TfKernel/IndexedBitArray.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
@@ -307,12 +308,6 @@ namespace Tf
   
   protected:
 
-
-    /** Set the hits ready flag for all hits
-     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
-     */
-    inline void setAllHitsPrepared( const bool ok ) const { m_hits_all_ready = ok; }
-
     /** Set the hits ready flag for given region
      *  @param[in] sta    Station ID
      *  @param[in] lay    Station layer ID
@@ -321,31 +316,15 @@ namespace Tf
      */
     inline void setAllHitsPrepared( const TStationID sta,
                                     const TLayerID   lay,
-                                    const TRegionID  region,
-                                    const bool ok ) const { m_hits_ready[sta][lay][region] = ok; }
-
-    /** Set the hits ready flag for given layer
-     *  @param[in] sta    Station ID
-     *  @param[in] lay    Station layer ID
-     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
-     */
-    inline void setAllHitsPrepared( const TStationID sta,
-                                    const TLayerID   lay,
-                                    const bool ok ) const { m_hits_layers_ready[sta][lay] = ok; }
-
-    /** Set the hits ready flag for given station
-     *  @param[in] sta    Station ID
-     *  @param[in] ok     The status flag (true means hits ready, false means not ready)
-     */
-    inline void setAllHitsPrepared( const TStationID sta,
-                                    const bool ok ) const { m_hits_stations_ready[sta] = ok; }
+                                    const TRegionID  region
+                                  ) const { m_hits_ready.set(sta,lay,region); }
 
     /** Are all the hits ready
      *  @return boolean indicating if all the hits in the given region are ready or not
      *  @retval TRUE  Hits are ready
      *  @retval FALSE Hits are not ready
      */
-    inline bool allHitsPrepared() const { return m_hits_all_ready; }
+    inline bool allHitsPrepared() const { return m_hits_ready.all(); }
 
     /** Are all the hits ready in the given region
      *  @param[in] sta    Station ID
@@ -358,7 +337,7 @@ namespace Tf
     inline bool allHitsPrepared(const TStationID sta,
                                 const TLayerID   lay,
                                 const TRegionID  region) const
-    { return m_hits_ready[sta][lay][region]; }
+    { return m_hits_ready.test(sta,lay,region); }
 
     /** Are all the hits ready in the given layer
      *  @param[in] sta    Station ID
@@ -369,7 +348,7 @@ namespace Tf
      */
     inline bool allHitsPrepared(const TStationID sta,
                                 const TLayerID   lay) const
-    { return m_hits_layers_ready[sta][lay]; }
+    { return m_hits_ready.all(sta,lay); }
 
     /** Are all the hits ready in the given station
      *  @param[in] sta    Station ID
@@ -378,7 +357,7 @@ namespace Tf
      *  @retval FALSE Hits are not ready
      */
     inline bool allHitsPrepared(const TStationID sta) const
-    { return m_hits_stations_ready[sta]; }
+    { return m_hits_ready.all(sta); }
 
   protected:
 
@@ -498,18 +477,6 @@ namespace Tf
                        const TLayerID   lay,
                        const OTRegionID region) const;
 
-    /// max number of stations
-    static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
-    /// max number of layers
-    static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
-    /// max number of regions in OT
-    static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
-    /// max number of regions in IT
-    static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
-    /// max number of regions
-    static const unsigned int m_nReg = ( Tf::RegionID::OTIndex::kNRegions +
-                                         Tf::RegionID::ITIndex::kNRegions );
-
     /// The underlying OT hit creator
     ToolHandle<Tf::IOTHitCreator> m_othitcreator ;
 
@@ -525,10 +492,10 @@ namespace Tf
     mutable Hits m_hits;
 
     // Flags to indicate which hits are ready
-    mutable bool m_hits_ready[m_nSta][m_nLay][m_nReg]; ///< Flags to indicate which regions have hits ready
-    mutable bool m_hits_layers_ready[m_nSta][m_nLay];  ///< Flag to indicate which layers are ready
-    mutable bool m_hits_stations_ready[m_nSta];        ///< Flag to indicate which stations are ready
-    mutable bool m_hits_all_ready;                     ///< Flag to indicate all hits are ready
+    mutable IndexedBitArray< Tf::RegionID::OTIndex::kNStations, 
+                             Tf::RegionID::OTIndex::kNLayers, 
+                             Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions
+                           >   m_hits_ready; ///< Flags to indicate which regions have hits ready
 
     /// Should OT hit cleaning be performed ?
     bool m_cleanOTHits;
@@ -590,22 +557,10 @@ namespace Tf
   template<class Hit>
   inline void TStationHitManager<Hit>::clearHits() const
   {
-    this->setAllHitsPrepared(false);
-    for(TStationID s=0; s<maxStations(); ++s)
-    {
-      this->setAllHitsPrepared(s,false);
-      for (TLayerID l=0; l<maxLayers(); ++l)
-      {
-        this->setAllHitsPrepared(s,l,false);
-        for (TRegionID t=0; t<maxRegions(); ++t)
-        {
-          this->setAllHitsPrepared(s,l,t,false);
-        }
-      }
-    }
     HitRange rng = m_hits.range();
     std::for_each( rng.begin(), rng.end(), std::default_delete<Hit>() ) ; 
     m_hits.clear();
+    m_hits_ready.clear();
   }
 
   template<class Hit>
@@ -676,8 +631,8 @@ namespace Tf
                                                      const TLayerID   lay,
                                                      const ITRegionID region) const
   {
-    Tf::STHitRange sthits = this->itHitCreator()->hits(sta,lay,region) ;
-    this -> processRange ( sthits, sta, lay, TRegionID(region) );
+    this -> processRange ( this->itHitCreator()->hits(sta,lay,region) , 
+                           sta, lay, TRegionID(region) );
   }
 
   template<class Hit>
@@ -685,33 +640,27 @@ namespace Tf
                                                      const TLayerID   lay,
                                                      const OTRegionID region) const
   {
-    Tf::OTHitRange othits = this->otHitCreator()->hits(sta,lay,region) ;
-    this -> processRange ( othits, sta, lay, TRegionID(region) );
+    this -> processRange ( this->otHitCreator()->hits(sta,lay,region) , 
+                           sta, lay, TRegionID(region) );
   }
 
   template<class Hit>
   void TStationHitManager<Hit>::prepareHits() const
   {
-    if ( !this->allHitsPrepared() )
-    {
-      for ( TStationID sta = 0; sta < this->maxStations(); ++sta )
-      {
+    if ( !this->allHitsPrepared() ) {
+      for ( TStationID sta = 0; sta < this->maxStations(); ++sta ) {
         this->prepareHits(sta);
       }
-      this -> setAllHitsPrepared(true);
     }
   }
 
   template<class Hit>
   void TStationHitManager<Hit>::prepareHits(const TStationID sta) const
   {
-    if ( !this->allHitsPrepared(sta) )
-    {
-      for ( TLayerID lay = 0; lay<this->maxLayers(); ++lay )
-      {
+    if ( !this->allHitsPrepared(sta) ) {
+      for ( TLayerID lay = 0; lay<this->maxLayers(); ++lay ) {
         this->prepareHits(sta,lay);
       }
-      this -> setAllHitsPrepared(sta,true);
     }
   }
 
@@ -719,13 +668,10 @@ namespace Tf
   void TStationHitManager<Hit>::prepareHits(const TStationID sta,
                                             const TLayerID   lay) const
   {
-    if ( !this->allHitsPrepared(sta,lay) )
-    {
-      for ( TRegionID ir = 0; ir < maxRegions(); ++ir )
-      {
+    if ( !this->allHitsPrepared(sta,lay) ) {
+      for ( TRegionID ir = 0; ir < maxRegions(); ++ir ) {
         this->prepareHits(sta,lay,ir);
       }
-      this -> setAllHitsPrepared(sta,lay,true);
     }
   }
 
@@ -734,45 +680,32 @@ namespace Tf
                                             const TLayerID lay,
                                             const TRegionID region) const
   {
-    if ( !this->allHitsPrepared(sta,lay,region) )
-    {
-      if ( region >= this->maxOTRegions() )
-      {
+    if ( !this->allHitsPrepared(sta,lay,region) ) {
+      if ( region >= this->maxOTRegions() ) {
         this->prepareITHits(sta,lay,region.itRegionID());
-      }
-      else
-      {
+      } else {
         this->prepareOTHits(sta,lay,region.otRegionID());
       }
-      this->setAllHitsPrepared(sta,lay,region,true);
+      this->setAllHitsPrepared(sta,lay,region);
     }
   }
 
   //--------------------------------------------------------------------------------------------
 
-  template < class Hit         >
+  template<class Hit>
   void TStationHitManager<Hit>::prepareHitsInWindow( const IStationSelector & selector )
   {
     this->clearHits();             // Clear any previous hits
     this->prepareOTHitsInWindow(selector); // select the OT hits
     this->prepareITHitsInWindow(selector); // select the IT hits
-    // Signifiy all hits for this event are ready - I.e. no decoding on demand
-    this->setAllHitsPrepared(true);
   }
 
-  template < class Hit         >
+  template<class Hit>
   void TStationHitManager<Hit>::prepareITHitsInWindow( const IStationSelector & selector )
   {
-    for (TStationID sta=0; sta < this->maxStations(); ++sta)
-    {
-      this->setAllHitsPrepared(sta,true);
-      for (TLayerID lay=0; lay < this->maxLayers(); ++lay)
-      {
-        this->setAllHitsPrepared(sta,lay,true);
-        for (ITRegionID it=0; it < this->maxITRegions(); ++it)
-        {
-          this->setAllHitsPrepared(sta,lay,it,true);
-
+    for (TStationID sta=0; sta < this->maxStations(); ++sta) {
+      for (TLayerID lay=0; lay < this->maxLayers(); ++lay) {
+        for (ITRegionID it=0; it < this->maxITRegions(); ++it) {
           // The z value for this region
           const double z = this->itHitCreator()->region(sta,lay,it)->z();
           // get the search window
@@ -782,24 +715,18 @@ namespace Tf
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
           processRange ( sthits, sta, lay, it + this->maxOTRegions() );
+          this->setAllHitsPrepared(sta,lay,it);
         }
       }// layer
     } // station
   }
 
-  template < class Hit         >
+  template<class Hit>
   void TStationHitManager<Hit>::prepareOTHitsInWindow( const IStationSelector & selector )
   {
-    for (TStationID sta=0; sta<this->maxStations(); ++sta)
-    {
-      this->setAllHitsPrepared(sta,true);
-      for (TLayerID lay=0; lay<this->maxLayers(); ++lay)
-      {
-        this->setAllHitsPrepared(sta,lay,true);
-        for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot)
-        {
-          this->setAllHitsPrepared(sta,lay,ot,true);
-          
+    for (TStationID sta=0; sta<this->maxStations(); ++sta) {
+      for (TLayerID lay=0; lay<this->maxLayers(); ++lay) {
+        for (OTRegionID ot=0; ot<this->maxOTRegions(); ++ot) {
           // The z value for this region
           const double z = this->otHitCreator()->region(sta,lay,ot)->z();
           // get the search window
@@ -809,6 +736,7 @@ namespace Tf
                                                              win.minX(),win.maxX(),
                                                              win.minY(),win.maxY() );
           processRange ( othits, sta, lay, ot );
+          this->setAllHitsPrepared(sta,lay,ot);
         }
       }// layer
     } // station

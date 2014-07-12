@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2014-07-12 - Gerhard Raven
+ - replace 3D,2D and 1D arrays of bool with a dedicated bit array
 
 ! 2014-07-11 - Marco Clemencic
  - Strip spurious entry from the rootmap (ROOT 6 problem).
