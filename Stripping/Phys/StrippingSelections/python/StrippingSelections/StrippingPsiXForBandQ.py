@@ -23,7 +23,8 @@ __date__    = '2012-02-19'
 __version__ = '$Revision$'
 # =============================================================================
 __all__ = (
-    'PsiX_BQ_Conf' ,
+    'PsiX_BQ_Conf'  ,
+    'default_config'
     )
 # =============================================================================
 
@@ -178,7 +179,44 @@ _default_configuration_ = {
     'B2PsiPPPiPiPiPrescale' : 1.0 ,
     # =========================================================================
     }
-
+## ============================================================================
+## the mandatory element for stripping framework 
+default_config = {
+    #
+    'NAME'        :   'PsiXForBandQ'         ,
+    'WGs'         : [ 'BandQ' ]              ,
+    'CONFIG'      : _default_configuration_  , 
+    'BUILDERTYPE' :   'PsiX_BQ_Conf'         ,
+    'STREAMS'     : { 'Bhadron'    : [ 'StrippingB2PsiPiForPsiX'       ,
+                                       'StrippingB2PsiKForPsiX'        ,                                       
+                                       'StrippingB2Psi2PiForPsiX'      ,
+                                       'StrippingB2Psi2KPiForPsiX'     ,
+                                       'StrippingB2Psi2KForPsiX'       ,
+                                       'StrippingB2Psi3KForPsiX'       ,
+                                       'StrippingB2Psi3PiForPsiX'      ,
+                                       'StrippingB2Psi3KPiForPsiX'     ,
+                                       'StrippingB2Psi4PiForPsiX'      ,
+                                       'StrippingB2Psi4KPiForPsiX'     ,
+                                       'StrippingB2Psi4KForPsiX'       ,
+                                       'StrippingB2Psi5PiForPsiX'      ,
+                                       'StrippingB2Psi5KPiForPsiX'     ,
+                                       'StrippingB2Psi5KForPsiX'       ,
+                                       'StrippingB2Psi6PiForPsiX'      ,
+                                       'StrippingB2Psi6KPiForPsiX'     ,
+                                       'StrippingB2Psi7PiForPsiX'      ,
+                                       'StrippingB2Psi7KPiForPsiX'     ,
+                                       'StrippingLb2PsiPKForPsiX'      ,
+                                       'StrippingLb2PsiPPiForPsiX'     ,
+                                       'StrippingLb2PsiPKPiPiForPsiX'  ,
+                                       'StrippingLb2PsiPPiPiPiForPsiX' ,
+                                       'StrippingB2PsiPPForPsiX'       ,
+                                       'StrippingB2PsiPPPiForPsiX'     ,
+                                       'StrippingB2PsiPPKForPsiX'      , 
+                                       'StrippingB2PsiPPPiPiForPsiX'   ,
+                                       'StrippingB2PsiPPKPiPiForPsiX'  ,
+                                       'StrippingB2PsiPPKPiPiForPsiX'  , 
+                                       'StrippingB2PsiPPPiPiPiForPsiX' ] } 
+    }
 ## ============================================================================
 ## @class  PsiX_BQ_Conf
 #  psi(') X configuration file 
@@ -458,7 +496,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             algos           = [ self.psi_5Kpi ()       ]  ) ,
             #
             StrippingLine (
-            "B2Psi5KFor  "  + self.name()                 ,
+            "B2Psi5KFor"    + self.name()                 ,
             prescale        = self ['B2Psi5KPrescale'   ] , 
             checkPV         = self ['CheckPV']            ,
             FILTER          = self ['FILTER' ]            ,
@@ -2059,20 +2097,40 @@ class PsiX_BQ_Conf(LineBuilder) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print ' The output locations for default configuration: '
-    _conf = PsiX_BQ_Conf ( 'PsiX' , config = {}  )
+    logger.info ( 80*'*'  ) 
+    logger.info (  __doc__ ) 
+    logger.info ( ' Author :  %s' % __author__ ) 
+    logger.info ( ' Date   :  %s' % __date__   )
+    ##
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
+    logger.info ( ' The output locations for the default configuration: ' )
+    ##
+    _conf = PsiX_BQ_Conf ( 'PsiX' , 
+                           config = default_config['CONFIG']  )
+    ##
+    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    logger.info ( _ln ) 
+    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( _ln )
     for l in _conf.lines() :
-        print ' \t ', l.outputLocation  () , l
-    print 80*'*'
-    print 80*'*'
+        lout  = l.outputLocation()
+        lname = l.name() 
+        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        if not lname in clines :
+            raise AttributeError ('Unknown Line %s' % lname )
+        clines.remove ( lname )
+    logger.info ( _ln ) 
+    logger.info ( 80*'*'  ) 
+    if clines :
+        raise AttributeError('Undeclared lines: %s' % clines )
+
         
 # =============================================================================
 # The END 

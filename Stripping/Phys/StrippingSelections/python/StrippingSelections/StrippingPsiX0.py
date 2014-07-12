@@ -23,9 +23,7 @@
 # Last modification $Date: 2012-02-19 15:18:08 +0100 (Sun, 19 Feb 2012) $
 #                by $Author: ibelyaev $
 # =============================================================================
-"""
-The attempt for coherent stripping for B -> psi(') X0 modes,
-where X0 :
+""" The attempt for coherent stripping for B -> psi(') X0 modes, where X0 :
 
 - eta   -> gamma gamma ,
 - eta   -> pi+ pi- pi0 ,
@@ -35,7 +33,7 @@ where X0 :
 
 The cuts correspond to J/psiX0 selection by Dasha Savrina LHCb-ANA-2011-096
 
-Attention: the ``wid'' versions of pi0->2gg  and eta->gg a used
+Attention: the ``wide'' versions of pi0->2gg  and eta->gg a used
            to cure the potential problems with bad ECAL calibration
 
 """
@@ -46,6 +44,7 @@ __version__ = '$Revision$'
 # =============================================================================
 __all__ = (
     'PsiX0Conf'      ,
+    'default_config' , 
     )
 # =============================================================================
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometer 
@@ -205,6 +204,43 @@ _default_configuration_ = {
     # =========================================================================
     }
 ## ============================================================================
+## the mandatory element for stripping framework 
+default_config = {
+    #
+    'NAME'        :   'PsiX0'                ,
+    'WGs'         : [ 'BandQ' ]              ,
+    'CONFIG'      : _default_configuration_  , 
+    'BUILDERTYPE' :   'PsiX0Conf'            ,
+    'STREAMS'     : { 'Bhadron'    : [ 'StrippingB2PsiEtaForPsiX0'          ,
+                                       'StrippingB2PsiEtaPrimeForPsiX0'     ,
+                                       'StrippingB2PsiOmegaForPsiX0'        ,
+                                       'StrippingB2PsiKEtaForPsiX0'         ,
+                                       'StrippingB2PsiPiEtaForPsiX0'        ,
+                                       'StrippingB2PsiKKEtaForPsiX0'        , 
+                                       'StrippingB2PsiKPiEtaForPsiX0'       ,
+                                       'StrippingB2PsiPiPiEtaForPsiX0'      , 
+                                       'StrippingB2PsiKEtaPrimeForPsiX0'    ,
+                                       'StrippingB2PsiPiEtaPrimeForPsiX0'   , 
+                                       'StrippingB2PsiKKEtaPrimeForPsiX0'   , 
+                                       'StrippingB2PsiKPiEtaPrimeForPsiX0'  ,
+                                       'StrippingB2PsiPiPiEtaPrimeForPsiX0' ,
+                                       'StrippingB2PsiKOmegaForPsiX0'       ,
+                                       'StrippingB2PsiPiOmegaForPsiX0'      ,
+                                       'StrippingB2PsiKKOmegaForPsiX0'      ,
+                                       'StrippingB2PsiKPiOmegaForPsiX0'     ,
+                                       'StrippingB2PsiPiPiOmegaForPsiX0'    ,
+                                       'StrippingBu2PsiKstarForPsiX0'       , ## CALIB ? 
+                                       'StrippingBu2PsiKstarMergedForPsiX0' , ## CALIB ?
+                                       'StrippingBc2PsiRhoForPsiX0'         ,
+                                       'StrippingB2ChicKForPsiX0'           ,
+                                       'StrippingB2ChicKKForPsiX0'          ,
+                                       'StrippingB2ChicKPiForPsiX0'         ,
+                                       'StrippingB2ChicKPiPiForPsiX0'       ,
+                                       'StrippingB2ChicPiPiForPsiX0'        ,
+                                       'StrippingBc2ChicPiForPsiX0'         ,
+                                       'StrippingLb2ChicPKForPsiX0'         ] }
+    }
+# =============================================================================
 ## @class  PsiX0Conf
 #  B-> psi(') X0 configuration file 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -2180,11 +2216,41 @@ class PsiX0Conf(LineBuilder) :
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print 80*'*'
+    
+    logger.info ( 80*'*'  ) 
+    logger.info (  __doc__ ) 
+    logger.info ( ' Author :  %s' % __author__ ) 
+    logger.info ( ' Date   :  %s' % __date__   )
+    ##
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
+    logger.info ( ' The output locations for the default configuration: ' )
+    ##
+    _conf = PsiX0Conf ( 'PsiX0' , 
+                        config = default_config['CONFIG']  )
+    ##
+    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    logger.info ( _ln ) 
+    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( _ln )
+    for l in _conf.lines() :
+        lout  = l.outputLocation()
+        lname = l.name() 
+        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        if not lname in clines :
+            raise AttributeError ('Unknown Line %s' % lname )
+        clines.remove ( lname )
+    logger.info ( _ln ) 
+    logger.info ( 80*'*'  ) 
+    if clines :
+        raise AttributeError('Undeclared lines: %s' % clines )
+
         
 
 # =============================================================================
