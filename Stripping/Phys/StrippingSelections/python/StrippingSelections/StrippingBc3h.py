@@ -519,11 +519,15 @@ if '__main__' == __name__ :
     logger.info ( 80*'*'  ) 
     logger.info (  __doc__ ) 
     logger.info ( ' Author :  %s' % __author__ ) 
-    logger.info ( ' Date   :  %s' % __date__   ) 
-    clines = [ i for i in default_config['STREAMS']['Bhadron'] ]
-    clines = set ( clines )
-    logger.info ( ' Lines declared in default_config["STREAMS"]["Bhadron"] are' )
-    for i in clines : logger.info ( ' - ' + i + '\n' ) 
+    logger.info ( ' Date   :  %s' % __date__   )
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
     logger.info ( ' The output locations for the default configuration: ' ) 
     _conf = Bc3hConf ( 'Bc3h' , config = default_config['CONFIG'] )
     _ln   = ' ' + 41*'-' + '+' + 30*'-'

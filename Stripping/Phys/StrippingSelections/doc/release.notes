@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-07-12 - Vanya Belyaev
+ - adapt StrippingPromptCharm to new conventions 
+ 
+! 2014-07-12 - Vanya Belyaev
  - adapt StrippingCharmAssociative to new conventions 
 
 ! 2014-07-12 - Vanya Belyaev

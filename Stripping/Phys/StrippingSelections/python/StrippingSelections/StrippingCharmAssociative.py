@@ -44,8 +44,7 @@
 # Last modification $Date: 2013-01-05 21:21:10 +0100
 #                by $Author$
 # =============================================================================
-"""
-   The attempt for stripping of associative ``onium'' production
+"""The attempt for stripping of associative ``onium'' production
  
      - dimuon + dimuon 
      - dimuon + high-pt gamma
@@ -144,8 +143,8 @@ _default_configuration_ = {
     "psi_prime       = ADAMASS (   'psi(2S)'  ) < 125 * MeV"         ,
     "mu2_tight       = ( chi2vx < 10    ) & ( MINTREE ( 'mu+' == ABSID , PT ) > 900 * MeV ) " ,
     "dimu_tight      = ( PT > 3.0 * GeV ) & mu2_tight " ,
-    "psi_tight       = ( ADMASS ( 'J/psi(1S)' ) < 100 * MeV ) & dimu_tight " ,
-    "psi_prime_tight = ( ADMASS (   'psi(2S)' ) < 100 * MeV ) & dimu_tight " ,
+    "psi_tight       = ( ADMASS ( 'J/psi(1S)' ) < 110 * MeV ) & dimu_tight " ,
+    "psi_prime_tight = ( ADMASS (   'psi(2S)' ) < 110 * MeV ) & dimu_tight " ,
     "dimuon_heavy    = ( M > 4.9 * GeV ) & dimu_tight "                      ,
     "dimuon_tight    = psi_tight | psi_prime_tight | dimuon_heavy " ,
     ] ,
@@ -572,10 +571,15 @@ if '__main__' == __name__ :
     logger.info (  __doc__ ) 
     logger.info ( ' Author :  %s' % __author__ ) 
     logger.info ( ' Date   :  %s' % __date__   ) 
-    clines = [ i for i in default_config['STREAMS']['Leptonic'] ]
-    clines = set ( clines )
-    logger.info ( ' Lines declared in default_config["STREAMS"]["Leptonic"] are' )
-    for i in clines : logger.info ( ' - ' + i + '\n' ) 
+    ##
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
     logger.info ( ' The output locations for the default configuration: ' )
     ##
     _conf = StrippingCharmAssociativeConf ( 'CharmAssociative' ,

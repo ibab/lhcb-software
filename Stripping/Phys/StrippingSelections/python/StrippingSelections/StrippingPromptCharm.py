@@ -90,10 +90,8 @@
 # Last modification $Date: 2013-03-26 18:58:29 +0100
 #                by $Author$
 # =============================================================================
-"""
-
-   The attempt for coherent stripping of all stable charm hadrons :
- 
+"""The attempt for coherent stripping of all stable charm hadrons :
+   
      - D*+       -> ( D0 -> K pi , K K , pi pi, pi K ) pi+
      - D0        -> K pi , K K
      - Ds+/D+    -> ( phi -> K K ) pi
@@ -116,9 +114,7 @@
      - dimuons   & W+
      - chi_(c,b) & W+
 
-
   Usage:
-
 
     >>> stream = ...
 
@@ -176,9 +172,9 @@ __version__ = '$Revision$'
 # =============================================================================
 __all__ = (
     'StrippingPromptCharmConf',
+    'default_config' 
     )
 # =============================================================================
-
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
@@ -309,8 +305,30 @@ _default_configuration_ = {
     ## ========================================================================
     }
 # =============================================================================
-# use a bit faster fitter 
-FITTER = 'LoKi::VertexFitter:PUBLIC'
+## the mandatory element for stripping framework 
+default_config = {
+    #
+    'NAME'        :   'PromptCharm'     ,
+    'WGs'         : [ 'BandQ' ]              ,
+    'CONFIG'      : _default_configuration_  , 
+    'BUILDERTYPE' :   'StrippingPromptCharmConf'            ,
+    'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'         , 
+                                     'StrippingDstarForPromptCharm'          , 
+                                     'StrippingDForPromptCharm'              , 
+                                     'StrippingDsForPromptCharm'             , 
+                                     'StrippingLambdaCForPromptCharm'        ,
+                                     'StrippingLambdaC2pKKForPromptCharm'    ,
+                                     'StrippingSigmaCForPromptCharm'         ,
+                                     'StrippingLambdaCstarForPromptCharm'    ,
+                                     'StrippingDiCharmForPromptCharm'        , ## FullDST ? 
+                                     'StrippingChiAndCharmForPromptCharm'    ,
+                                     'StrippingCharmAndWForPromptCharm'      ,
+                                     'StrippingDiMuonAndCharmForPromptCharm' ] ,
+                      ## 
+                      'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
+                                     'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
+                                     'StrippingChiAndWForPromptCharm'        ] }
+    }
 ## ============================================================================
 ## @class  StrippingPromptCharmConf
 #  Helper class required by Tom & Greig
@@ -1329,15 +1347,39 @@ class StrippingPromptCharmConf(LineBuilder) :
 # =============================================================================
 if '__main__' == __name__ :
 
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print ' The output locations for default configuration: '
-    _conf = StrippingPromptCharmConf ( 'PromptCharm' , config = {}  )
+    logger.info ( 80*'*'  ) 
+    logger.info (  __doc__ ) 
+    logger.info ( ' Author :  %s' % __author__ ) 
+    logger.info ( ' Date   :  %s' % __date__   )
+    ##
+    clines = set() 
+    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    for stream in default_config['STREAMS'] :
+        lines = default_config['STREAMS'][stream] 
+        for l in lines :
+            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            clines.add ( l )
+    ##
+    logger.info ( ' The output locations for the default configuration: ' )
+    ##
+    _conf = StrippingPromptCharmConf ( 'PromptCharm' , 
+                                       config = default_config['CONFIG']  )
+    ##
+    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    logger.info ( _ln ) 
+    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( _ln )
     for l in _conf.lines() :
-        print ' \t ', l.outputLocation  () , l
-    print 80*'*'
+        lout  = l.outputLocation()
+        lname = l.name() 
+        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        if not lname in clines :
+            raise AttributeError ('Unknown Line %s' % lname )
+        clines.remove ( lname )
+    logger.info ( _ln ) 
+    logger.info ( 80*'*'  ) 
+    if clines :
+        raise AttributeError('Undeclared lines: %s' % clines )
 
 # =============================================================================
 # The END
