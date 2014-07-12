@@ -3,19 +3,19 @@
 # $Id: StrippingBc3h.py 154361$
 # =============================================================================
 ## @file
-#
+#  A bit naive way to run strippoing for Bc -> 3h
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
-"""
-A bit naive attempt to make  Bc->3h stripping
+""" A bit naive attempt to make  Bc->3h stripping
 
- |                *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
- |_StrippingGlobal_              |  0.1050|       105|       |  14.896|
- |_StrippingSequenceStreamTest_  |  0.1050|       105|       |  14.892|
- |!StrippingBc3pppiForBc3h       |  0.0110|        11|  1.182|   7.484|
- |!StrippingBc3ppkForBc3h        |  0.0040|         4|  1.000|   1.289|
- |!StrippingBc3piForBc3h         |  0.0430|        43|  1.163|   1.325|
- |!StrippingBc3kForBc3h          |  0.0000|         0|  0.000|   1.284|
- |!StrippingBc3kpiForBc3h        |  0.0670|        67|  1.388|   0.087|
+|                *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+|_StrippingGlobal_              |  0.1050|       105|       |  14.896|
+|_StrippingSequenceStreamTest_  |  0.1050|       105|       |  14.892|
+|!StrippingBc3pppiForBc3h       |  0.0110|        11|  1.182|   7.484|
+|!StrippingBc3ppkForBc3h        |  0.0040|         4|  1.000|   1.289|
+|!StrippingBc3piForBc3h         |  0.0430|        43|  1.163|   1.325|
+|!StrippingBc3kForBc3h          |  0.0000|         0|  0.000|   1.284|
+|!StrippingBc3kpiForBc3h        |  0.0670|        67|  1.388|   0.087|
 
 """
 # =============================================================================
@@ -24,7 +24,8 @@ __date__    = '2010-08-03'
 __version__ = '$Revision: 154361 $'
 # =============================================================================
 __all__ = (
-    'Bc3hConf',
+    'Bc3hConf'       , ## the builder 
+    'default_config' , ## configuration 
     )
 # =============================================================================
 from Gaudi.Configuration import *
@@ -39,13 +40,12 @@ logger.setLevel(logging.INFO)
 # =============================================================================
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometer 
 from StrippingUtils.Utils                  import LineBuilder
-
 # =============================================================================
 # use a bit faster fitter 
 FITTER = 'LoKi::VertexFitter:PUBLIC'
-## ============================================================================
-
-## Define the default configuration 
+# =============================================================================
+## Define the default configuration
+# =============================================================================
 _default_configuration_ = {
     #
     ## PV-requiremens
@@ -131,7 +131,18 @@ _default_configuration_ = {
     'Bc3ppkPrescale'   : 1.0 ,
     # =========================================================================
     }
-
+# =============================================================================
+## the mandatory element for stripping framework 
+default_config = {
+    'NAME'        :   'Bc3h'                ,
+    'WGs'         : [ 'BandQ' ]             ,
+    'BUILDERTYPE' :   'Bc2hConf'            ,
+    'STREAMS'     : { 'Bhadron' : [ 'StrippingBc3piForBc3h'   ,
+                                    'StrippingBc3kForBc3h'    ,
+                                    'StrippingBc3kpiForBc3h'  , 
+                                    'StrippingBc3pppiForBc3h' , 
+                                    'StrippingBc3ppkForBc3h'  ] } 
+    }    
 # =============================================================================
 ## @class  Bc3hConf
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -144,7 +155,7 @@ class Bc3hConf(LineBuilder) :
     
     ## get the default configuration 
     @staticmethod
-    def defaultConfiguration( key = None ) :
+    def defaultConfiguration ( key = None ) :
         """
         Get the default/recommended configurtaion
         
@@ -224,7 +235,49 @@ class Bc3hConf(LineBuilder) :
         self.__selections_[ self.name() ][ nick ] = sel
         
         return sel
-    
+
+    # =========================================================================
+    ## pure technical method for creation of selections
+    # =========================================================================
+    def make_selection ( self      ,
+                         tag       , 
+                         algotype  ,
+                         inputs    , 
+                         *args     ,
+                         **kwargs  ) :
+        """
+        Technical method for creation of 1-step selections 
+        """
+        sel_tag  = '%s_Selection' % tag
+        sel_name = 'Sel%sFor%s'   % ( tag , self.name() )
+        #
+        ## check existing selection
+        #
+        sel      = self._selection ( sel_tag )
+        if sel : return sel 
+        
+        #
+        ## adjust a bit the arguments
+        if not kwargs.has_key ( 'Preambulo'         ) :
+            kwargs ['Preambulo'        ] = self['Preambulo']
+            
+        if not kwargs.has_key ( 'ParticleCombiners' ) :
+            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
+                          
+        # 
+        ## use "simple-selection"
+        #
+        from PhysSelPython.Wrappers import SimpleSelection
+        sel = SimpleSelection (
+            sel_name ,
+            algotype ,
+            inputs   , 
+            *args    ,
+            **kwargs )
+        # 
+        return self._add_selection( sel_tag , sel ) 
+
+ 
     ## get all single charm lines 
     def _lines_Bc   ( self ) :
         """
@@ -294,290 +347,199 @@ class Bc3hConf(LineBuilder) :
     
     ## pions :
     def pions     ( self ) :
-        """
-        Pions for   Bc -> 3pi lines 
-        """        
-        sel = self._selection ( 'Pion_Selection')
-        if sel : return sel
-
+        """ Pions for   Bc -> 3h lines """
+        ##
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        from StandardParticles                     import StdAllNoPIDsPions as inpts 
+        return self.make_selection (
+            'Pion'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
             Code = self['PionCut'] ,
-            ##
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        from StandardParticles       import StdAllNoPIDsPions as input_pions 
-        sel  = Selection (
-            "SelPiFor"         + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ input_pions ]  
-            )
-        
-        return self._add_selection( 'Pion_Selection' , sel ) 
     
     ## kaons :
     def kaons     ( self ) :
-        """
-        Kaons for   Bc -> 3h lines 
-        """
-        sel = self._selection ( 'Kaon_Selection')
-        if sel : return sel
-        
+        """ Kaons for   Bc -> 3h lines """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        from StandardParticles                     import StdAllNoPIDsKaons as inpts  
+        return self.make_selection (
+            'Kaon'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
             Code = self['KaonCut'] ,
-            ##
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        from StandardParticles       import StdAllNoPIDsKaons as input_kaons 
-        sel  = Selection (
-            "SelKFor"      + self.name()       ,
-            Algorithm          =   alg         ,
-            RequiredSelections = [ input_kaons ]  
-            )
-        
-        return self._add_selection( 'Kaon_Selection' , sel ) 
-
+    
     ## protons :
     def protons    ( self ) :
-        """
-        Protons for   Bc -> 3h  lines 
-        """
-        sel = self._selection ( 'Proton_Selection')
-        if sel : return sel
-        
+        """ Protons for   Bc -> 3h  lines  """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        from StandardParticles                     import StdAllNoPIDsProtons as inpts 
+        return self.make_selection (
+            'Proton'                 ,
+            FilterDesktop            ,
+            [ inpts ]                ,
             Code = self['ProtonCut'] ,
-            ##
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        from StandardParticles       import StdAllNoPIDsProtons as input_protons 
-        sel  = Selection (
-            "SelPFor"          +   self.name()   ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ input_protons ]  
-            )
-        
-        return self._add_selection( 'Proton_Selection' , sel ) 
     
     # Bc -> 3 pi 
     def Bc3pi ( self ) :
-        """
-        Bc -> 3 pi
-        """
-        sel = self._selection ( 'Bc3pi_Selection')
-        if sel : return sel
-        
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B_c+ -> pi+ pi- pi+ ]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    )  &
+        """ Bc -> 3 pi """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'Bc3pi'               , ## selection name 
+            DaVinci__N3BodyDecays , ## the algorithm type 
+            [ self.pions() ]      , ## input selections 
+            #
+            ## algorithm configurtaion
+            #
+            DecayDescriptor  = "[B_c+ -> pi+ pi- pi+ ]cc" ,
+            Combination12Cut = """ ( AM < 7 * GeV )
+            & ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """ ( mbp_acut | mbc_acut )
+            & ( ACHI2DOCA(1,3) < 20 ) 
+            & ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            MotherCut        = """
+            ( chi2vx    < 16            ) &
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            , ParticleCombiners = { '' : FITTER }
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        sel  = Selection (
-            "SelBc3piFor"      + self.name()      ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.pions () ] 
-            )
-        
-        return self._add_selection( 'Bc3pi_Selection' , sel ) 
-
+    
     # Bc -> 3 k 
     def Bc3k ( self ) :
-        """
-        Bc -> 3 k
-        """
-        sel = self._selection ( 'Bc3k_Selection')
-        if sel : return sel
-        
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B_c+ -> K+ K- K+]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    )  &
+        """ Bc -> 3 k """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'Bc3k'                , ## selection name 
+            DaVinci__N3BodyDecays , ## the algorithm type 
+            [ self.kaons() ]      , ## input selections 
+            #
+            ## algorithm configurtaion
+            #
+            DecayDescriptor  = "[B_c+ -> K+ K- K+ ]cc" ,
+            Combination12Cut = """ ( AM < 7 * GeV )
+            & ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """ ( mbp_acut | mbc_acut )
+            & ( ACHI2DOCA(1,3) < 20 ) 
+            & ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            MotherCut        = """
+            ( chi2vx    < 16            ) &
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            , ParticleCombiners = { '' : FITTER }
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        sel  = Selection (
-            "SelBc3kFor"      + self.name()      ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.kaons () ] 
-            )
-        
-        return self._add_selection( 'Bc3k_Selection' , sel ) 
 
     # Bc -> 3kpi 
     def Bc3kpi ( self ) :
-        """
-        Bc -> 3 k pi 
-        """
-        sel = self._selection ( 'Bc3kpi_Selection')
-        if sel : return sel
-        
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-        alg  = CombineParticles (
-            ##
+        """ Bc -> 3 k pi """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'Bc3kpi'                         , ## selection name 
+            DaVinci__N3BodyDecays            , ## the algorithm type 
+            [ self.kaons() , self.pions() ]  , ## input selections 
+            #
+            ## algorithm configurtaion
+            #
             DecayDescriptors = [
             "[B_c+ -> K+  K-  pi+ ]cc" ,
             "[B_c+ -> K+  pi- pi+ ]cc" ,
             ] ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    )  &
+            Combination12Cut = """ ( AM < 7 * GeV )
+            & ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """ ( mbp_acut | mbc_acut )
+            & ( ACHI2DOCA(1,3) < 20 ) 
+            & ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            MotherCut        = """
+            ( chi2vx    < 16            ) &
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            , ParticleCombiners = { '' : FITTER }
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        sel  = Selection (
-            "SelBc3kpiFor"     + self.name()       ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Bc3kpi_Selection' , sel ) 
     
     # Bc -> pppi
     def Bc3pppi ( self ) :
-        """
-        Bc -> pppi 
-        """
-        sel = self._selection ( 'Bc3pppi_Selection')
-        if sel : return sel
-        
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B_c+ -> p+  p~- pi+ ]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    )  &
+        """ Bc -> pppi"""
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'Bc3pppi'                         , ## selection name 
+            DaVinci__N3BodyDecays             , ## the algorithm type 
+            [ self.protons() , self.pions() ] , ## input selections 
+            #
+            ## algorithm configurtaion
+            #
+            DecayDescriptor  = "[B_c+ -> p+  p~- pi+ ]cc" ,
+            Combination12Cut = """ ( AM < 7 * GeV )
+            & ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """ ( mbp_acut | mbc_acut )
+            & ( ACHI2DOCA(1,3) < 20 ) 
+            & ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            MotherCut        = """
+            ( chi2vx    < 16            ) &
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            , ParticleCombiners = { '' : FITTER }
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        sel  = Selection (
-            "SelBc3pppiFor"    + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.protons () ,
-                                   self.pions   () ] 
-            )
-
-        
-        return self._add_selection( 'Bc3pppi_Selection' , sel ) 
     
     # Bc -> ppK
     def Bc3ppk ( self ) :
         """
         Bc -> ppK
         """
-        sel = self._selection ( 'Bc3ppk_Selection')
-        if sel : return sel
-        
-        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B_c+ -> p+  p~- K+ ]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    )  &
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'Bc3ppk'                          , ## selection name 
+            DaVinci__N3BodyDecays             , ## the algorithm type 
+            [ self.protons() , self.kaons() ] , ## input selections 
+            #
+            ## algorithm configurtaion
+            #
+            DecayDescriptor  = "[B_c+ -> p+  p~- K+ ]cc" ,
+            Combination12Cut = """ ( AM < 7 * GeV )
+            & ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """ ( mbp_acut | mbc_acut )
+            & ( ACHI2DOCA(1,3) < 20 ) 
+            & ( ACHI2DOCA(2,3) < 20 ) 
+            """ , 
+            MotherCut        = """
+            ( chi2vx    < 16            ) &
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            , ParticleCombiners = { '' : FITTER }
             )
-        
-        from PhysSelPython.Wrappers  import Selection
-        sel  = Selection (
-            "SelBc3ppkFor"     + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.protons () ,
-                                   self.kaons   () ] 
-            )
-        
-        return self._add_selection( 'Bc3ppk_Selection' , sel ) 
-
     
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print 80*'*'
-    print __doc__
-    print ' Author :  %s' % __author__
-    print ' Date   :  %s' % __date__
-    print ' The output locations for default configuration: '
+    logger.info ( 80*'*'  ) 
+    logger.info (  __doc__ ) 
+    logger.info ( ' Author :  %s' % __author__ ) 
+    logger.info ( ' Date   :  %s' % __date__   ) 
+    clines = [ i for i in default_config['STREAMS']['Bhadron'] ]
+    clines = set ( clines )
+    logger.info ( ' Lines declared in default_config["STREAMS"]["Bhadron"] are' )
+    for i in clines : logger.info ( ' - ' + i + '\n' ) 
+    logger.info ( ' The output locations for the default configuration: ' ) 
     _conf = Bc3hConf ( 'Bc3h' , config = {}  )
+    _ln   = ' ' + 41*'-' + '+' + 30*'-'
+    logger.info ( _ln ) 
+    logger.info ( '  %-40s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( _ln )
     for l in _conf.lines() :
-        print ' \t ', l.outputLocation  () , l
-    print 80*'*'
-    print 80*'*'
+        lout  = l.outputLocation()
+        lname = l.name() 
+        logger.info ( '  %-40s| %-30s  ' % ( lout, lname ) )
+        if not lname in clines :
+            raise AttributeError ('Unknown Line %s' % lname )
+        clines.remove ( lname )
+    logger.info ( _ln ) 
+    logger.info ( 80*'*'  ) 
+    if clines :
+        raise AttributeError('Undelcared lines: %s' % clines )
         
 # =============================================================================
 # The END 

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-12 - Vanya Belyaev
+ - Adapt StrippingBc3h to new conventions 
+
 ! 2014-07-11 - Pablo Ruiz Valls
  - StrippingBeauty2XGamma updated to comply with default_config / Chris' Raw banks tool
  - Created StrippingBeauty2XGammaExclusive with two lines
