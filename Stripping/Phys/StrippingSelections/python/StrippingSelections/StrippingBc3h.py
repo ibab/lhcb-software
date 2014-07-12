@@ -520,6 +520,7 @@ if '__main__' == __name__ :
     logger.info (  __doc__ ) 
     logger.info ( ' Author :  %s' % __author__ ) 
     logger.info ( ' Date   :  %s' % __date__   )
+    ##
     clines = set() 
     logger.info ( ' Lines declared in default_config["STREAMS"] are' )
     for stream in default_config['STREAMS'] :
