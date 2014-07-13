@@ -14,8 +14,7 @@
 #  Last modification $Date: 2014-06-09 12:03:52 +0200 (Mon, 09 Jun 2014) $
 #                 by $Author: ibelyaev $
 # =============================================================================
-"""
-Tests for various background fit models  
+"""Tests for various background fit models  
 """
 # =============================================================================
 __version__ = "$Revision:"
@@ -30,10 +29,8 @@ from   Ostap.Utils   import rooSilent
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-if '__main__' == __name__  or '__builtin__' == __name__ : 
-    logger = getLogger ( 'Ostap.TestOther' )
-else : 
-    logger = getLogger ( __name__ )
+if '__main__' == __name__ : logger = getLogger( 'Ostap.TestOther' )
+else                      : logger = getLogger( __name__             )
 # =============================================================================
 logger.info ( 'Test for signal it models from Analysis/Ostap')
 # =============================================================================

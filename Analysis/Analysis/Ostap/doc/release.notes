@@ -9,6 +9,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-07-13 - Vanya Belyaev
+ - add qmtest for weighted fit and model with convolution 
+
+! 2014-07-13 - Vanya Belyaev
  - add method for simplified creation of weighted dataset 
 
 ! 2014-07-13 - Vanya Belyaev
