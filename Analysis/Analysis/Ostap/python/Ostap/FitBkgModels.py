@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: FitBkgModels.py 173561 2014-06-09 10:04:20Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file FitBkgModels.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 # 
-#                    $Revision: 173561 $
-#  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Set of useful smooth 1D-models to describe background distributions"""
 # =============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: Reweighting.py 173860 2014-06-14 08:23:06Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with utilities for reweigting 
@@ -9,13 +9,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-05-10
 #  
-#                    $Revision: 173860 $
-#  Last modification $Date: 2014-06-14 10:23:06 +0200 (Sat, 14 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Module with utilities for reweighting"""
 # =============================================================================
-__version__ = "$Revision: 173860 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (

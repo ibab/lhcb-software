@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: FitOtherModels.py 173561 2014-06-09 10:04:20Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file FitOtherModels.py
 #
@@ -10,9 +10,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 # 
-#                    $Revision: 173561 $
-#  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """A set of various smooth shapes and PDFs"""
 # =============================================================================

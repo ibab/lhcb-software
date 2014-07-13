@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: HParamDeco.py 173561 2014-06-09 10:04:20Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with utilities for parameterization of historgams 
@@ -9,13 +9,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 #  
-#                    $Revision: 173561 $
-#  Last modification $Date: 2014-06-09 12:04:20 +0200 (Mon, 09 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Module with utilities for parameterization of historgams"""
 # =============================================================================
-__version__ = "$Revision: 173561 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = () 

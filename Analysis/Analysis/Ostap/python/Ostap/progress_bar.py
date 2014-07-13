@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# $Id: progress_bar.py 172520 2014-05-10 18:27:44Z ibelyaev $
+# $Id$
 # =============================================================================
 # A Python Library to create a Progress Bar.
 # Copyright (C) 2008  BJ Dierkes <wdierkes@5dollarwhitebox.org>
@@ -25,8 +25,8 @@
 #   http://code.activestate.com/recipes/168639/
 #
 # =============================================================================
-#                   $Revision: 172520 $
-# Last modification $Date: 2014-05-10 20:27:44 +0200 (Sat, 10 May 2014) $
+#                   $Revision$
+# Last modification $Date$
 # =============================================================================
 """Progress-bar
 

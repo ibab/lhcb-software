@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: Corr2D.py 173872 2014-06-14 13:03:26Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file Corr2D.py 
 #  
@@ -10,13 +10,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-08
 #
-#                    $Revision: 173872 $
-#  Last modification $Date: 2014-06-14 15:03:26 +0200 (Sat, 14 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Simple 2D-decorrelation transformation """
 # =============================================================================
-__version__ = "$Revision: 173872 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-08"
 __all__     = ( 'Corr2D', )

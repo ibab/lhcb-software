@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 ## @file Data.py 
 #
@@ -27,9 +27,9 @@
 #  @author Alexander BARANOV a.baranov@cern.ch
 #  @date   2014-06-08
 #
-#                    $Revision: 173870 $
-#  Last modification $Date: 2014-06-14 13:44:41 +0200 (Sat, 14 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """ Useful utilities to get access to datafiles & chains
 
@@ -62,7 +62,7 @@ the original ``Ostap'' code by Alexander BARANOV
 
 """
 # =============================================================================
-__version__ = "$Revision: $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-08"
 __all__     = ( 'Data', 'DataAndLumi' )

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: PyRoUts.py 174344 2014-06-28 12:57:09Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with decoration of many ROOT objects for efficient use in python
@@ -10,9 +10,9 @@
 #  @date   2011-06-07
 #
 #  
-#                    $Revision: 174344 $
-#  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Decoration of some ROOT objects for efficient use in python
 
@@ -22,7 +22,7 @@ in particular TH1(x) , TH2(x) , TAxis, TGraph(Errors), etc...
 see also GaudiPython.HistoUtils 
 """
 # =============================================================================
-__version__ = "$Revision: 174344 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 # =============================================================================

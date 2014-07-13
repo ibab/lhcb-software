@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: GetLumi.py 171923 2014-04-26 13:01:46Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Helper function to extract luminosity 
@@ -19,9 +19,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-10-16
 #  
-#                    $Revision: 171923 $
-#  Last modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Helper function to extract luminosity 
 
@@ -35,7 +35,7 @@ Get lumi :
 
 """
 # =============================================================================
-__version__ = "$Revision: 171923 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2012-10-16"
 # =============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: FitModels.py 174344 2014-06-28 12:57:09Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file FitModels.py
 #
@@ -16,9 +16,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 # 
-#                    $Revision: 174344 $
-#  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """ Set of useful PDFs for various 1D and 2D fits
 

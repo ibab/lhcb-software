@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: Utils.py 172762 2014-05-14 16:13:25Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with some simple but useful utilities
@@ -13,13 +13,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-02-10
 #  
-#                    $Revision: 172762 $
-#  Last modification $Date: 2014-05-14 18:13:25 +0200 (Wed, 14 May 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Module with some simple but useful utilities"""
 # =============================================================================
-__version__ = "$Revision: 172762 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2013-02-10"
 # =============================================================================

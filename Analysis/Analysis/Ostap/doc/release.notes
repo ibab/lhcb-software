@@ -3,11 +3,13 @@
 ! Responsible : Vanya Belyaev
 ! Purpose     : Interactive PyRoot-based environment     
 ! -----------------------------------------------------------------------------
-!                    $Revision:$
-!  Last modification $Date:$
-!  by                $Author:$
+!                    $Revision$
+!  Last modification $Date$
+!  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-13 - Vanya Belyaev
+ - minor fix in Breit-Wigner convolution 
 
 ! 2014-07-11 - Sasha Baranov
  - Fixed Fit2D.draw2 binning

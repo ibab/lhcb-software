@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: Models.py 173567 2014-06-09 16:00:32Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file Models.py
 #
@@ -10,13 +10,13 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-12-01
 #
-#                    $Revision: 173567 $
-#  Last modification $Date: 2014-06-09 18:00:32 +0200 (Mon, 09 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Module with some useful fit-models"""
 # =============================================================================
-__version__ = "$Revision: 173567 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2011-12-01"
 __all__     = ()

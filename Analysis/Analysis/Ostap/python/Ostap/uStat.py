@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ============================================================================
-# $Id: uStat.py 171923 2014-04-26 13:01:46Z ibelyaev $
+# $Id$
 # ============================================================================
 # @file uStat.py
 #
@@ -29,9 +29,9 @@
 # @author Vanya Belyaev Ivan.Belyaev@cern.ch
 # @date 2011-09-21
 #
-#                   $Revision: 171923 $
-# Last modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 #
 # ============================================================================
 """ ``U-statistics'' useful for ``Goodness-Of-Fit'' tests
@@ -55,7 +55,7 @@ Usage is fairly trivial:
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2010-09-21"
-__version__ = "$Revision: 171923 $"
+__version__ = "$Revision$"
 # ============================================================================
 __all__     = (
     "uPlot" ,  ## make  plot of U-statistics 

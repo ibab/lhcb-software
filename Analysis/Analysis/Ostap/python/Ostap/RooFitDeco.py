@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: RooFitDeco.py 174141 2014-06-23 11:03:54Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with decoration of some RooFit objects for efficient use in python
@@ -10,13 +10,13 @@
 #  @date   2011-06-07
 #
 #  
-#                    $Revision: 174141 $
-#  Last modification $Date: 2014-06-23 13:03:54 +0200 (Mon, 23 Jun 2014) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """Decoration of some RooFit objects for efficient use in python"""
 # =============================================================================
-__version__ = "$Revision: 174141 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = () 

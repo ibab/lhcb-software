@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ==========================================================================================
-# $Id: PyTMVA.py 174344 2014-06-28 12:57:09Z ibelyaev $
+# $Id$
 # ==========================================================================================
 ## @file  PyTMVA.py
 #
@@ -31,9 +31,9 @@
 #  @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
 #  @thanks Albert PUIG
 #
-#                    $Revision: 174344 $
-#  Last modification $Date: 2014-06-28 14:57:09 +0200 (Sat, 28 Jun 2014) $
-#                 by $Author: ibelyaev $ 
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$ 
 # =============================================================================
 """ Python interface to two major TMVA classes
 
@@ -60,7 +60,7 @@ with the smear campain of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV  Ivan.Belyaev@itep.ru'
 __date__    = "2013-10-02"
-__version__ = '$Revision: 174344 $'
+__version__ = '$Revision$'
 __all__     = (
     "Trainer" ,
     "Reader"  ,

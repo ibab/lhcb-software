@@ -1,7 +1,7 @@
 #!/usr/bin/env ipython 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file ostapline.py
 #  
@@ -32,13 +32,13 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision: 173871 $
-#  Last modification $Date: 2014-06-14 14:12:37 +0200 (Sat, 14 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
-__version__ = '$Revision: 173871 $'
+__version__ = '$Revision$'
 # =============================================================================
 line = r"""
  

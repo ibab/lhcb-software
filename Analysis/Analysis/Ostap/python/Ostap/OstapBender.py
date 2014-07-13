@@ -1,7 +1,7 @@
 #!/usr/bin/env ipython 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$ 
+# $Id$ 
 # =============================================================================
 ## @file OstapBender.py
 #  
@@ -35,9 +35,9 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision: 173871 $
-#  Last modification $Date: 2014-06-14 14:12:37 +0200 (Sat, 14 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """ Simple interactive PyRoot-based analysis environment
 to provide access to zillions useful decorators for ROOT (and not only ROOT) objects&classes
@@ -60,7 +60,7 @@ of Dr.O.Callot et al.:
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
-__version__ = '$Revision: 173871 $'
+__version__ = '$Revision$'
 # =============================================================================
 import ROOT, os, sys
 # =============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 # @file SQLiteShelve.py
 # 
@@ -63,9 +63,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2010-04-30
 # 
-#                    $Revision: 172762 $
-#  Last Modification $Date: 2014-05-14 18:13:25 +0200 (Wed, 14 May 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """This is SQLite-version of shelve database.
 
@@ -108,7 +108,7 @@ Access to DB in read-only mode :
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-06-19"
-__version__ = "$Revision: 172762 $" 
+__version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
     'SQLiteShelf' ,   ## The DB-itself

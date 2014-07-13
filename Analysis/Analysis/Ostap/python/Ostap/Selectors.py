@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: Selectors.py 171923 2014-04-26 13:01:46Z ibelyaev $
+# $Id$
 # =============================================================================
 # @file Selectors.py
 # 
@@ -51,9 +51,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2010-04-30
 # 
-#                    $Revision: 171923 $
-#  Last Modification $Date: 2014-04-26 15:01:46 +0200 (Sat, 26 Apr 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """Helper module to fix a problems in communication of TTree/TChain::Process and TPySelector.
 
@@ -97,7 +97,7 @@ SelectorWithCuts and SelectorWithVars classes
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
 __date__    = "2010-04-30"
-__version__ = "$Revision: 171923 $" 
+__version__ = "$Revision$" 
 # =============================================================================
 __all__ = (
 'Selector'         ,        ## The ``fixed'' TPySelector

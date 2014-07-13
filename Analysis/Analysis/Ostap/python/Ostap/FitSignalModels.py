@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id: FitSignalModels.py 174117 2014-06-21 13:24:21Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file FitSignalModels.py
 #
@@ -16,9 +16,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
 # 
-#                    $Revision: 174117 $
-#  Last modification $Date: 2014-06-21 15:24:21 +0200 (Sat, 21 Jun 2014) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#                 by $Author$
 # =============================================================================
 """Set of useful PDFs for various 1D and 2D fits
 
@@ -977,12 +977,15 @@ class BreitWigner_pdf(Mass_pdf) :
                 self.cnv_mean  = makeVar (
                     0.0  ,
                     'CnvMean'       + name ,
-                    'cnv_mean (%s)' % name ) 
+                    'cnv_mean (%s)' % name , 
+                    0.0  , 0 ) 
                 self.cnv_sigma = makeVar (
                     None ,
                     'CnvSigma'      + name ,
                     'cnv_sigma(%s)' % name ,
-                    convolution , convolution , 0.25 * convolution , 2.00 * convolution )
+                    convolution ,
+                    convolution ,
+                    0.25 * convolution , 2.00 * convolution )
                 self.cnv_gauss = ROOT.RooGaussian (
                     'CnvGauss'     + name , 
                     'CnvGauss(%s)' % name ,
@@ -998,10 +1001,11 @@ class BreitWigner_pdf(Mass_pdf) :
                                                         'CNV(%s)' % name ,
                                                         self.mass , self.breit , self.convolution )
                 
-            if isinstance ( self.convolution , ROOT.RooGaussian ) :
-                if hasattr ( self , 'cnv_mean' ) and hasattr ( self , 'cnv_sigma' ) :
-                    self.pdf.setConvolutonWindow( self.cnv_mean , self.cnv_sigma , 5 )
-
+            if isinstance ( self.pdf , ROOT.RooNumConvPdf ) : 
+                if isinstance ( self.convolution , ROOT.RooGaussian ) :
+                    if hasattr ( self , 'cnv_mean' ) and hasattr ( self , 'cnv_sigma' ) :
+                        self.pdf.setConvolutonWindow( self.cnv_mean , self.cnv_sigma , 5 )
+                        
                     
 # =============================================================================
 ## @class Flatte_pdf
