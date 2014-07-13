@@ -27,9 +27,9 @@ sS'../../../../Analysis/Ostap/python/Ostap/Models.py'
 p14
 S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/Models.py'
 p15
-sS'../../../../Analysis/Ostap/python/Ostap/Selectors.py'
+sS'../../../../Analysis/Ostap/python/Ostap/HTextDeco.py'
 p16
-S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/Selectors.py'
+S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/HTextDeco.py'
 p17
 sS'../../../../Analysis/Ostap/python/Ostap/LHCbStyle.py'
 p18
@@ -103,9 +103,9 @@ sS'../../../../Analysis/Ostap/python/Ostap/MinuitDeco.py'
 p52
 S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/MinuitDeco.py'
 p53
-sS'../../../../Analysis/Ostap/python/Ostap/HTextDeco.py'
+sS'../../../../Analysis/Ostap/python/Ostap/Selectors.py'
 p54
-S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/HTextDeco.py'
+S'../../../InstallArea/x86_64-slc6-gcc48-opt/python/Ostap/Selectors.py'
 p55
 sS'../../../../Analysis/Ostap/python/Ostap/Utils.py'
 p56
