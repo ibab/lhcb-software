@@ -770,6 +770,40 @@ ROOT.RooDataHist.__repr__ = _ds_print_
 ROOT.RooDataHist.__len__  = lambda s : s.numEntries() 
 
 # =============================================================================
+## make weighted data set form unweighted dataset
+#  @code
+#  >>> dataset = ...
+#  >>> wdata   = dataset.makeWeighted ( 'S_sw' ) 
+#  @endcode
+#  @param wvarname name of weighting variable
+#  @param varset   variables to be used in new dataset
+#  @param cuts     optional cuts to be applied 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' ) :
+    """
+    make weighted data set form unweighted dataset
+    
+    >>> dataset = ...
+    >>> wdata   = dataset.makeWeighted ( 'S_sw' )
+    
+    """
+    if dataset.isWeighted () : 
+        logger.warning ("Dataset '%s/%s' is already weighted!" % ( dataset.GetName  () , dataset.GetTitle () ) ) 
+        
+    #
+    from Ostap.PyRoUts import dsID
+    ## make weighted dataset 
+    return ROOT.RooDataSet ( dsID()                   ,
+                             dataset.GetTitle()       ,
+                             dataset                  ,
+                             varset or dataset.get()  , 
+                             cuts                     ,
+                             wvarname                 )
+
+ROOT.RooDataSet.makeWeighted = _rds_makeWeighted_
+
+# =============================================================================
 if '__main__' == __name__ :
     
     import ostapline
