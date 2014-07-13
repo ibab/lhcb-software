@@ -58,7 +58,7 @@ final
     }
     template <size_t nbits>
     bool all_n( size_t first ) const { return nbits <= NBitsPerWord ? all_n_<nbits>( first, nbits_le_nbitsPerWord{} ) 
-                                                                    : all_n_<nbits>( first, nbits_gt_nbitsPerWord{} ); };
+                                                                    : all_n_<nbits>( first, nbits_gt_nbitsPerWord{} ); }
 #endif
 public:
 
