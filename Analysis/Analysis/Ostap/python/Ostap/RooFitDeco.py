@@ -283,7 +283,7 @@ ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
 ## fix parameter at some value
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-20
-def _fix_par_ ( var , value ) :
+def _fix_par_ ( var , value  = None ) :
     """
     Fix parameter at some value :
 
@@ -292,6 +292,10 @@ def _fix_par_ ( var , value ) :
     
     """
     #
+    if None is value :
+        var.setConstant( True )
+        return var.ve()
+    
     if hasattr ( value , 'value' ) : value = value.value()
     #
     var.setVal      ( value )
