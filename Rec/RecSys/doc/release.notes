@@ -5,6 +5,155 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r0>2014-07-14 RecSys v17r0</A></H1><PRE>
+This version uses Gaudi v25r3, LHCb v38r0 and Lbcom v16r0 (and ROOT v6.00.00)
+
+- Packages modified: Calo/CaloPIDs v5r18p1, Calo/CaloReco v5r20,
+    Calo/CaloTools v6r9, Muon/MuonTrackRec v3r11, Pr/PrAlgorithms v1r13,
+    Pr/PrPixel v1r8, Rec/ChargedProtoANNPID v2r7, Rec/GlobalReco v6r48,
+    Rec/LumiAlgs v9r4, Rec/RecInterfaces v1r3, Rich/RichHPDImageAnalysis v1r14,
+    Rich/RichRecSys v5r3, Rich/RichRecTrackTools v1r37, Tf/PatKernel v2r7,
+    Tf/PatVelo v3r31, Tf/TfKernel v2r25, Tr/TrackFitEvent v6r2,
+    Tr/TrackMonitors v2r3, Tr/TrackTools v5r3, Velo/VeloRecMonitors v2r29
+
+- In Calo/CaloPIDs v5r18p1
+  . Fix minor typo in a printout
+
+- In Calo/CaloReco v5r20
+  . python/CaloReco/Configuration.py  : new slots to select cluster masks :  
+    ClusterEnergyMasks, ClusterPositionMasks (default : get mask setting from DB) 
+  . python/CaloReco/Reconstruction.py :
+    o propagate masks to ClusterCovariance , ClusterOverlap & MergedPi0
+    o use CaloMergedPi0     (replacing the now obsolete CaloMergedPi0Alg)
+    o use CaloShowerOverlap (replacing the now obsolete CaloSharedCellAlg)  
+    o skip single-cell "clusters" for CaloHypo building
+  . CaloECorrection/CaloCorrectionBase :
+    o add energy offset correction (allowing sin(theta) dependency to have
+      transverse energy correction)
+    o add possible non-linear dependency to Prs corrections
+  . CaloXCorrection : skip correction in case of negative energy
+  . ClusterCovarianceMatrixTool :
+    o Allow for covariance parametrization per Calo area
+    o Improve DB access
+  . SubClusterSelectorTool      : improve DB access
+  . add Hcal default settings for Jet-related reconstruction
+  . CaloShowerOverlapTool : add protection in case of missing ShowerProfile
+  . CaloMergedPi0 : 
+    o add minimal ET cut on splitPhoton
+      (applied to both cluster and corrected CaloHypo)
+    o Fix property name causing a crash in Moore 
+  . Photon/Electron/MergedPi0 CaloHypos : skip CaloHypos with negative energy
+  . CaloSelectCluster : add a cut on entries.size()
+  . fix electronPt/photonPt cluster thresholds for CaloHypo production
+  . fix default parameters for Covariance estimation
+	. add new specific ClusterSelector's : 
+    SubClusterSelector2x2 , SubClusterSelectorSwissCross.h
+  . Add a generic tool to access condDB and tag the clusters :
+    SubClusterSelectorTool.h
+  . CaloShowerOverlapTool : new tool to substract overlap energy in cluster pair
+    (note : CaloSharedCellAlg.cpp is now obsolete)
+  . CaloMergedPi0 & CaloShowerOverlap  : mergePi0 reconstruction and 
+    ClusterOverlap based on the above tool (CaloMergedPi0Alg is now obsolete)
+  . Adapt to change in cluster masking : CaloClusterizationTool, 
+    SubClusterSelectorBase, CaloClusterCovarianceAlg, SubClusterSelector3x3,
+    ClusterCovarianceMatrixTool
+  . CaloCorrectionBase  : map new corrections and implement generic DB access for
+    cluster masks                   
+  . CaloSCorrection.cpp : add new Alexis' correction
+
+- In Calo/CaloTools v6r9
+  . NeutralIDTool.{cpp,h}       : (new) implementation for MLP-based neutralID
+  . CaloHypoEstimator.h, GammaPi0SeparationTool.h : update against reco changes
+  . GammaPi0SeparationTool :
+    o improve & speed-up the evaluation of Prs-related variables 
+    o protect against unphysical value
+
+- In Muon/MuonTrackRec v3r11
+  . New tool MuonPadFromCoord(IMuonPadRec) to bypass the need for raw data banks
+    in MuonPad object reconstruction
+  . init MuonTrackMomRec tool at each start of run
+  . adding more missing formal initializers
+
+- In Pr/PrAlgorithms v1r13
+  . Add Histograms in PrSeedingXLayers.
+    Uncomment #DEBUG_HISTO in PrSeedingXLayers.h and recompile before running. 
+
+- In Pr/PrPixel v1r8
+  . Move bulk of debugging histograms from PrPixelTracking to new algorithm 
+    PrPixelMonitor.
+  . Stop search for pairs two stations earlier.
+  . PrPixelTrack: remove unused member m_backward and functions first/lastModule.
+  . Don't recompute straight-line fit parameters progressively for each new hit,
+    but only when requested explicitly (PrPixelTrack::fit).
+  . Use auto iterators.
+
+- In Rec/ChargedProtoANNPID v2r7
+  . Add support for a new MC12TuneV3 network tune. 
+    Default for now is still MC12TuneV2.
+  . Add a new tool that provides access to the ANNPID for a given ProtoParticle.
+
+- In Rec/GlobalReco v6r48
+  . NeutralProtoPAlg :
+    o Always store a neutral PID's value (default value = -1 when not available)
+    o Add new neutralID I/O to neutral info
+    o Reorganize additionalInfo() storage
+  . NeutralProtoParticleAddNeutralID.{cpp,h} : new algorithm to re-evaluate the
+    NN-based neutralID directly using protoP info (to be used in DV)
+
+- In Rec/LumiAlgs v9r4
+  . Expose ILumiIntegrator interface to python 
+    This makes it possible to get lumi and mu values per run in gaudipython job.
+  . Add example for gaudipython usage of mu calculation in jobs directory
+
+- In Rec/RecInterfaces v1r3
+  . Add a new tool interface that provides access to the ANNPID variables.
+
+- In Rich/RichHPDImageAnalysis v1r14
+  . Removed duplicate dictionary entries.
+
+- In Rich/RichRecSys v5r3
+  . Disable Aerogel for Run II DataTypes (2015 onwards).
+
+- In Rich/RichRecTrackTools v1r37
+  . Retire the (incomplete and never used) class
+    RichDetailedTrSegMakerFromRecoTracksStateProvider.
+  . Extend the class RichDetailedTrSegMakerFromRecoTracks to dynamically use an
+    instance of the TrackStateProvider tool to create missing track states as
+    needed. Restores the ability of the RICH reconstruction to run in tracks
+    saved to DSTs, which was broken when the DST format was updated to purge
+    the tracks of states not needed downstream.
+
+- In Tf/PatKernel v2r7
+  . Improve memory layout of PatFwdHit
+
+- In Tf/PatVelo v3r31
+  . Prevent FPE when refitting a cheated PR track
+
+- In Tf/TfKernel v2r25
+  . replace hitpointer containers and bool arrays in UT station manager
+  . replace 3D,2D and 1D arrays of bool with a dedicated bit array
+  . Strip spurious entry from the rootmap (ROOT 6 problem).
+  . Change hitpointer container layout in T and TT station managers: replace
+    3D,2D and 1D arrays of vectors by single vector + arrays of indices.
+    This improves timing of eg. PatForward by something in between 5% and 10%.
+  . Fix off-by-one beyond-bounds bug when zero-ing the indices (identified
+    very clearly by clang!)
+
+- In Tr/TrackFitEvent v6r2
+  . VPMeasurement: modify constructor, passing PixelPositionInfo directly 
+    instead of cluster position tool.
+
+- In Tr/TrackMonitors v2r3
+  . Added extra histrograms to TT(IT)TrackMonitor for resolution studies.
+    Usage controlled by additional flags (false by default).
+  . Renamed minNumITHits property to minNumTTHits in TTTrackMonitor
+
+- In Tr/TrackTools v5r3
+  . VPMeasurementProvider: follow change in VPMeasurement constructor.
+
+- In Velo/VeloRecMonitors v2r29
+  . Fix divide by 0 FPE in VeloTrackMonitorNT
+
 </PRE><H1><A NAME=v16r3>2014-06-10 RecSys v16r3</A></H1><PRE>
 This version uses Gaudi v25r2, LHCb v37r3 and Lbcom v15r2p1
 
