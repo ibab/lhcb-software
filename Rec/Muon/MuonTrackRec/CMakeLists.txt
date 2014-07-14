@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonTrackRec
 ################################################################################
-gaudi_subdir(MuonTrackRec v3r10)
+gaudi_subdir(MuonTrackRec v3r11)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          GaudiAlg

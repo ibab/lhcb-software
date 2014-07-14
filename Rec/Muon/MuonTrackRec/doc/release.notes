@@ -8,33 +8,33 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackRec v3r11 2014-07-14 ======================
 ! 2014-06-30 - G Graziani
  - New tool MuonPadFromCoord(IMuonPadRec) to bypass the need for raw data banks
    in MuonPad object reconstruction
  - init MuonTrackMomRec tool at each start of run
  - adding more missing formal initializers
 
-
-!========================= MuonTrackRec v3r10 2013-10-24 =========================
+!========================= MuonTrackRec v3r10 2013-10-24 ======================
 ! 2013-10-09 - Chris Jones
  - Adding missing constructor data member initializers in MuonTrackMomRec
 
-!========================= MuonTrackRec v3r9p1 2013-07-18 =========================
+!========================= MuonTrackRec v3r9p1 2013-07-18 =====================
 ! 2013-06-10 - Marco Cattaneo
  - Fix clang32 warnings
 
-!========================= MuonTrackRec v3r9 2013-06-05 =========================
+!========================= MuonTrackRec v3r9 2013-06-05 =======================
 ! 2013-06-04 - Giovanni Passaleva
  - Fixed wrong assignment in MuonNNetRec.h
 
-!========================= MuonTrackRec v3r8 2012-11-28 =========================
+!========================= MuonTrackRec v3r8 2012-11-28 =======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= MuonTrackRec v3r7 2012-08-31 =========================
+!========================= MuonTrackRec v3r7 2012-08-31 =======================
 
 ! 2012-08-29 - Chris Jones
  - Fix a few bugs in the last changes ...
@@ -48,24 +48,24 @@
    central location is now looked for. Number of prev/next locations to look for is 
    now a configurable option.
 
-!========================= MuonTrackRec v3r6p1 2011-12-15 =========================
+!========================= MuonTrackRec v3r6p1 2011-12-15 =====================
 ! 2011-11-23 - Marco Cattaneo
  - Fix gcc46 warnings
 
-!========================= MuonTrackRec v3r6 2011-11-08 =========================
+!========================= MuonTrackRec v3r6 2011-11-08 =======================
 ! 2011-10-11 - Marco Cattaneo
  - Fix icc warning and remarks
  - Replace obsolete DeclareFactoryEntries.h by ToolFactory.h
  - Replace obsolete endreq by endmsg
 
-!========================= MuonTrackRec v3r5 2011-04-27 =========================
+!========================= MuonTrackRec v3r5 2011-04-27 =======================
 ! 2011-04-11 - Jeroen Van Tilburg
  - Switch off clone killing when seed station is not M5.
  - Reset shared hit list ("sameM") for each track in clone killing stage.
  - Stop extrapolating beyond M1.
  - When using strong clone killing, switch off normal clone killing.
 
-!========================= MuonTrackRec v3r4p1 2011-02-28 =========================
+!========================= MuonTrackRec v3r4p1 2011-02-28 =====================
 ! 2011-02-21 - Michel De Cian
  - Changed static variable to member variable in MuonTrackMomRec, to allow multiple 
    instances of the tool to work independently
