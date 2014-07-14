@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r13 2014-07-14 =======================
 ! 2014-06-26 - Yasmine Amhis 
   - Add Histograms in PrSeedingXLayers.
     Uncomment #DEBUG_HISTO in PrSeedingXLayers.h and recompile before running. 
