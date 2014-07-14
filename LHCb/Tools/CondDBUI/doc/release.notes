@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+!========================= CondDBUI v3r29 2014-07-14 =========================
 ! 2014-07-11 - Marco Clemencic
  - Renamed dict/dictionary.h to avoid problems with ROOT 6.
 
