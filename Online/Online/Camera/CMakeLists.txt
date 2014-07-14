@@ -9,7 +9,12 @@ gaudi_depends_on_subdirs(GaudiAlg)
 gaudi_depends_on_subdirs(Online/DIM
                          Online/OnlineKernel)
 
-find_package(ROOT COMPONENTS Core Cint Hist Gpad Graf Gui)
+find_package(ROOT)
+if(ROOT_VERSION_MAJOR EQUAL 6)
+  find_package(ROOT COMPONENTS Core Cling Hist Gpad Graf Gui)
+else()
+  find_package(ROOT COMPONENTS Core Cint Hist Gpad Graf Gui)
+endif()
 find_package(Boost COMPONENTS regex)
 
 gaudi_add_library(CameraLib
@@ -43,9 +48,17 @@ cam_exe(CameraWebServer  webserver.C)
 
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/MessagePresenter.h
               ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)
+
+if(ROOT_rootcint_CMD)
+  set(dict_cmd ${ROOT_rootcint_CMD})
+else()
+  # ROOT 6
+  set(dict_cmd ${ROOT_rootcling_CMD})
+endif()
+
 add_custom_command(OUTPUT MessagePresenterDict.h MessagePresenterDict.cpp
                    COMMAND ${env_cmd} --xml ${env_xml}
-                     ${ROOT_rootcint_CMD} -f MessagePresenterDict.cpp -c
+                     ${dict_cmd} -f MessagePresenterDict.cpp -c
                            -inlineInputHeader
                            ${dict_srcs}
                    DEPENDS ${dict_srcs})

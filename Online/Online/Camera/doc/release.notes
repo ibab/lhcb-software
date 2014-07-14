@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2014-07-14 - Marco Clemencic
+ - Fixed CMake configuration to support ROOT 6.
+
 ! 2014-05-07 - Chris Jones
  - Fix sending of 2D histograms, which broke when ROOT decided it was a good 
    idea to break a previously working method with
