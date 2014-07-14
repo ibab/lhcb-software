@@ -164,7 +164,7 @@ prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
 #############################################################################################
 # Define modules for the reconstruction sequence 
 #############################################################################################
-from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeFORWARDTRACK, DecodeTT, DecodeIT
+from HltLine.HltDecodeRaw import DecodeVELO, DecodeTRACK, DecodeTT, DecodeIT
 from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
@@ -175,7 +175,7 @@ MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( r
 RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( recoVelo.OutputTracksName )
 #Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
 
-RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeFORWARDTRACK ])
+RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ])
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias

@@ -3,6 +3,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-07-14 - Gerhard Raven
+ - use DecodeTRACK to do all the tracking decoding
+
 ! 2014-06-27 - Gerhard Raven
  - do not rely on context to get consistent TrackSelector
 
@@ -57,7 +60,6 @@
 
 ! 2014-02-19 - Sebastian Neubert
  - added TrackInitStateAlg for HLT1 tracks resurrected in HLT2
-
 
 !========================= HltTracking v12r0p1 2014-04-28 =======================
 ! 2014-04-28 - Gerhard Raven
