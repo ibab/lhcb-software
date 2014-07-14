@@ -7,6 +7,7 @@ branches         cmt src doc
 
 # =============== explicit dependencies ======================================
 use GiGa         v*        Sim
+use G4UIbasic    v*        Geant4
 use G4useVisUI   v*        Geant4
 use VisSvc       v*        Vis 
 

@@ -5,6 +5,10 @@
 ! Purpose     : GiGa vi1sualisation and UI 
 !-----------------------------------------------------------------------------
 
+! 2014-07-14 - Gloria Corti
+ - Put dependency from G4UIbasic since it was removed from G4UIGAG that was
+   picked up via GiGaVisUI
+
 !======================= GiGaVisUI v6r0 2014-02-02 ===========================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
