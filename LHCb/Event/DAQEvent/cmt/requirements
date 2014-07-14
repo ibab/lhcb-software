@@ -1,5 +1,5 @@
 package           DAQEvent
-version           v9r15
+version           v9r16
 
 use GaudiKernel v*
 branches cmt doc Event src xml
@@ -8,7 +8,7 @@ private
 end_private
 
 # Produce Header-Files from XML description
-#=========================================================================
+# ====================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event
 
