@@ -5,6 +5,132 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r0>2014-07-14 LHCbSys v38r0</A></H1><PRE>
+This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
+
+- Packages added:    HC/HCDAQ v1r0 - Decoding of Herschel raw banks
+- Packages modified: Calo/CaloInterfaces v8r8, Calo/CaloUtils v10r4, 
+    Det/DDDB v1r70, Det/DetDescSvc v3r7, Det/RichDet v16r24, Event/DAQEvent v9r16,
+    Event/EventAssoc v5r5, Event/EventPacker v4r2, Event/EventSys v26r1,
+    Event/HltEvent v9r4, Event/LumiEvent v3r7, Event/MicroDst v1r2,
+    Event/PhysEvent v11r26, Event/RecEvent v2r51, GaudiConf v28r2,
+    Hlt/HltDAQ v4r5, Kernel/LHCbAlgs v3r3, Kernel/LHCbKernel v15r3,
+    Kernel/LHCbMath v3r49, Kernel/MCInterfaces v1r18, Phys/LoKiGen v10r17,
+    Phys/LoKiMC v10r13, ST/STKernel v2r13p1, Tools/CondDBUI v3r29,
+    Tr/LHCbTrackInterfaces v2r2
+
+- In Calo/CaloInterfaces v8r8
+  . IGammaPi0SeparatioTool : change method signature
+  . IneutralIDTool         : new interface for MLP-based neutralID
+  . ICaloShowerOverlapTool : new interface for Shower Overlap correction
+  . ICaloHypoEstimator     : add neutralID input/output
+  . ICaloSubClusterTag.h   : add new virtual method to set/get cluster mask
+
+- In Calo/CaloUtils v10r4
+  . CaloMomentum.cpp    : protect against negative calo energy
+  . CovarianceEstimator : 
+    o Add global term to Cov_ii - add covariance parametrization per calo area
+    o Set default energy to 0 in case of evaluation failure
+      (no more huge negative value !)
+    o Prepare for different cluster masking for energy and position
+	. CaloUtils/ClusterFunctors.h : update tagTheSubCluster() method 
+
+- In Det/DDDB v1r70
+  . Update default database tags to the latest ones:
+    o DDDB,     2010 : dddb-20140610
+    o LHCBCOND, 2010 : cond-20140604
+
+- In Det/DetDescSvc v3r7
+  . RunChangeHandlerSvc: 
+    o Clean the XmlParserSvc cache if it gets a RunChangeIncident without a
+      change of run number.
+    o Trigger an update on every RunChange incident and not only if there is a
+      real change in the run number.
+
+- In Det/RichDet v16r24
+  . Added support to DeRichHPD for MDMS version 1. Implements a per-HPD scaling
+    of the MDMS parameters based on the the per-run HPD image size.
+  . Use the VDT math library in a few more places.
+
+- In Event/DAQEvent v9r16
+  . Added the method isFlagging() to ODIN to check it the trigger flagging bit is
+    set.
+  . Add HC RawBank type
+
+- In Event/EventAssoc v5r5
+  . Restored the changes required for ROOT 6 (reverted by mistake).
+
+- In Event/EventPacker v4r2
+  . Add a check in the ProtoParticle packer to test for over or under flow
+    errors when packing ExtraInfo. 
+  . Adapt to changes in the job options of the ChargedProtoANNPID algorithm.
+
+- In Event/EventSys v26r1, Event/HltEvent v9r4, Event/LumiEvent v3r7,
+     Event/MicroDst v1r2, Event/PhysEvent v11r26, Event/RecEvent v2r51,
+     Phys/LoKiGen v10r17, Phys/LoKiMC v10r13
+  . Strip spurious entry from the rootmap (ROOT 6 problem).
+
+- In Event/PhysEvent v11r26
+  . Add more structures from RelatedInfoMap to dictionary.
+
+- In Event/RecEvent v2r51
+  . CaloDataFunctor : fix cluster evaluation
+  . ProtoParticle.xml : map new neutralID info
+
+- In GaudiConf v28r2
+  . Add location for FT Clusters <-> MCHit links to be written out in DigConf.
+
+- In Hlt/HltDAQ v4r5
+  . Add dependency on LumiEvent
+  . Silence warning about pre-existing HltRoutingBits RawBank
+  . Implement same policy on warning messages in HltTrackReportsDecoder
+  . Use more STL in HltTrackReportsDecoder
+  . Update warning message in case TCK=0 
+  . Empty (but present) track rawbank is not an error
+  . Run clang-format
+  . Add option to update 3rd word (Hlt2) of existing RoutingBits rawbank
+  . Make it possible to skip setting Hlt2 routing bits
+    (needed when running Hlt1 only)
+  . Change policy on warning messages from HltTrackReportsWriter: if the
+    configured TES location doesn't exist, keep score but don't print a
+    warning i.e.  'nothing in' => 'nothing out and shut up'.
+
+- In Kernel/LHCbAlgs v3r3
+  . Added a test to ensure that the RunChangeHandler really triggers a reload of
+    the XML files if it gets triggered without a change of the run number.
+  . Modified OdinTimeDecoder to fire a RunChangeIncident not only when the run
+    number changes, but also when the "trigger flagging" bit in the EventType
+    word goes from flagging to filtering.
+  . Modified the RunChangeTest to check all the possible transitions of run
+    number and flagging bit in ODIN.
+
+- In Kernel/LHCbKernel v15r3
+  . Added patched merge_files.py to allow work-arounds for ROOT 6 runtime
+    warnings.
+  . Removed duplicated dictionary entry.
+  . Fix untested StatusCode in LbAppInit.cpp
+  . Change content of PixelPositionInfo struct.
+
+- In Kernel/LHCbMath v3r49
+  . Remove some local functions (non needed anymore)  
+  . Fix some clang33 compilation warnings (unused variables)
+
+- In Kernel/MCInterfaces v1r18
+  . Move here QQqBaryons.h from LbGenXicc since it is just a class with enum and
+    a map of strings and int to provide information about cc or bc barions. It
+    is needed by GenCuts. Modified IF/ENDIF for new location. 
+
+- In ST/STKernel v2r13p1
+  . Minor fix to a header guard macro.
+
+- In Tools/CondDBUI v3r29
+  . Renamed dict/dictionary.h to avoid problems with ROOT 6.
+  . Fixed problem with a change in the API of COOL.
+
+- In Tr/LHCbTrackInterfaces v2r2
+  . Adapt IVPClusterInterface to modified PixelPositionInfo format
+
+
 </PRE><H1><A NAME=v37r3>2014-06-10 LHCbSys v37r3</A></H1><PRE>
 This version uses Gaudi v25r2 and LCG_68.
 
