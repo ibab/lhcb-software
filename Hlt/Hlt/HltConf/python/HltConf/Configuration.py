@@ -180,10 +180,10 @@ class HltConf(LHCbConfigurableUser):
             Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
             # disable the Hlt1 decoders in case Hlt1 is actually running...
-            #  TODO: what about the trackig decoders??
             from DAQSys.Decoders import DecoderDB
             for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
-                       "HltSelReportsDecoder/Hlt1SelReportsDecoder"] :
+                       "HltSelReportsDecoder/Hlt1SelReportsDecoder",
+                       "HltTrackReportsDecoder"] :
                 decoder = DecoderDB[n]
                 decoder.setup().Enable = False
         
@@ -192,10 +192,6 @@ class HltConf(LHCbConfigurableUser):
         #
         # don't do this if there are no HLT2 lines
         if activehlt2lines:
-            ## TODO/FIXME/BAD HACK: this needs to be combined with the TISTOS tagger inside Hlt2Line...
-            if not activehlt1lines : 
-                    from DAQSys.Decoders import DecoderDB
-                    Dec.Members.append( DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup() )
             Dec.Members.append(Sequence("Hlt2"))
             Dec.Members.append(Sequence("Hlt2Postamble"))
             Hlt2Conf()

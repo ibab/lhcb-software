@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-07-14 - Gerhard Raven
+ - disable HltTrackReportsDecoder in case Hlt1 lines are present
+ - remove HltSelReports hack which is no longer needed
+
 ! 2014-06-27 - Gerhard Raven
  - major change: by default, setup Hlt1 and Hlt2 for 'split' mode, and treat
    running together as a special case -- instead of the other way around
