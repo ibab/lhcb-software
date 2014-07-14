@@ -136,7 +136,7 @@ _default_configuration_ = {
 default_config = {
     'NAME'        :   'Bc3h'                 ,
     'WGs'         : [ 'BandQ' ]              ,
-    'BUILDERTYPE' :   'Bc2hConf'             ,
+    'BUILDERTYPE' :   'Bc3hConf'             ,
     'CONFIG'      : _default_configuration_  , 
     'STREAMS'     : { 'Bhadron' : [ 'StrippingBc3piForBc3h'   ,
                                     'StrippingBc3kForBc3h'    ,

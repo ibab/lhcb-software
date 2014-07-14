@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-14 - Stefano Perazzini
+ - hot fix of StrippingPsiXForBandQ and StrippingBc3h
+
 ! 2014-07-12 - Vanya Belyaev
  - Adapt StrippingPsiXForBandQ for new conventions 
 

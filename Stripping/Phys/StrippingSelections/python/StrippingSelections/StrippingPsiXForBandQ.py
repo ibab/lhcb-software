@@ -183,7 +183,7 @@ _default_configuration_ = {
 ## the mandatory element for stripping framework 
 default_config = {
     #
-    'NAME'        :   'PsiXForBandQ'         ,
+    'NAME'        :   'PsiX'         ,
     'WGs'         : [ 'BandQ' ]              ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'PsiX_BQ_Conf'         ,
