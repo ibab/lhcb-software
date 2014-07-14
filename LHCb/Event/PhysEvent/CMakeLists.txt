@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysEvent
 ################################################################################
-gaudi_subdir(PhysEvent v11r25)
+gaudi_subdir(PhysEvent v11r26)
 
 gaudi_depends_on_subdirs(Event/RecEvent
                          GaudiKernel
