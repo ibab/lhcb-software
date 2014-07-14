@@ -21,6 +21,7 @@ preprocessor = BrunelPreprocessor + \
 validateWithReference(preproc = preprocessor)
 findReferenceBlock("""
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
  | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4248  |   0.054935 | 0.16387    |     4.0647 |     16.635 |
  | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4248  |    0.80686 | 0.28247    |      -1.61 |     1.2413 |
  | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4248  |  0.0099423 | 0.039947   |     13.068 |     219.43 |
