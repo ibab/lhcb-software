@@ -3,6 +3,8 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================= PatKernel v2r7 2014-07-14 =========================
 ! 2014-07-08 - Gerhard Raven
  - improve memory layout of PatFwdHit
 
