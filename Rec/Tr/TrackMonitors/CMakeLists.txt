@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackMonitors
 ################################################################################
-gaudi_subdir(TrackMonitors v2r2)
+gaudi_subdir(TrackMonitors v2r3)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/MCEvent
