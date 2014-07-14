@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTrackTools v1r37 2014-07-14 ====================
 ! 2014-07-11 - Chris Jones
  - Retire the (incomplete and never used) class
    RichDetailedTrSegMakerFromRecoTracksStateProvider.
