@@ -323,21 +323,14 @@ for report in ["Dec","Sel","Vertex"]:
             )
 
 #Also TrackingDecoder, but don't make it active, it's only used during HLT2 stand-alone!
-Decoder("HltTrackReportsDecoder/VeloDecoder",
+Decoder("HltTrackReportsDecoder",
         active=False, banks=["HltTrackReports"],
         inputs = {"RawEventLocations":None},
-        outputs={"OutputLocation" : "Hlt/Track/Velo"},
-        properties={"SourceID" : 1}, #None=default(0)
+        outputs=["Hlt/Track/Velo","Hlt1/Track/PestiForward"],
         conf=DecoderDB
         )
+#outputs={"Output2SourceId": { "Hlt/Track/Velo" : 1, "Hlt1/Track/PestiForward" : 3 }}, set logically in the code, resetting may not work...
 
-Decoder("HltTrackReportsDecoder/ForwardDecoder",
-        active=False, banks=["HltTrackReports"],
-        inputs = {"RawEventLocations":None},
-        outputs={"OutputLocation" : "Hlt2/Track/Forward"},
-        properties={"SourceID" : 3}, #None=default(0)
-        conf=DecoderDB
-        )
 
 #is a Routing bits filter really a decoder? it doesn't create output...
 Decoder("HltRoutingBitsFilter",
