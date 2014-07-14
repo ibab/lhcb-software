@@ -43,6 +43,11 @@ StrippingReport::StrippingReport( const std::string& name,
   declareProperty("HotThreshold", m_hotThreshold = 0.0005);
   declareProperty("NormalizeByGoodEvents", m_normalizeByGoodEvents = true);
   declareProperty("Latex", m_latex = false);
+  declareProperty("StrippingGlobalName", m_strippingGlobalName = "StrippingGlobal");
+  declareProperty("Correlation", m_correlation = false);
+  declareProperty("CorrelationGreenThreshold", m_correlationGreenThreshold=0.02);
+  declareProperty("CorrelationYellowThreshold", m_correlationYellowThreshold=0.05);
+  declareProperty("CorrelationRedThreshold", m_correlationRedThreshold=0.3);
 }
 
 //=============================================================================
@@ -81,6 +86,8 @@ StatusCode StrippingReport::initialize() {
     stat.errors = 0;
     stat.incidents = 0;
     stat.slow_events = 0;
+    if (m_correlation)    //Allocate memory for correlation studies
+      stat.corr.assign(m_selections.size(), 0); //only if needed.
     m_stat.push_back(stat);
   }
 
@@ -206,7 +213,7 @@ StatusCode StrippingReport::execute() {
 
   StatusCode result = StatusCode::SUCCESS;
 
-  std::vector< ReportStat >::iterator i;
+  std::vector< ReportStat >::iterator i,j;
 
   char str[128];
 
@@ -216,6 +223,10 @@ StatusCode StrippingReport::execute() {
     info() << "----------------------------------------------------------------" << endmsg;
     info() << str << endmsg;
   }
+
+  std::vector<int> passedVector;
+  if (m_correlation)
+    passedVector.assign(m_stat.size(), 0);
 
   for (i = m_stat.begin(); i != m_stat.end(); i++) {
 
@@ -255,11 +266,19 @@ StatusCode StrippingReport::execute() {
       // It is a sequencer
       i->candidates = -1;
       i->decisions  += passed;
+
+      if (m_correlation)  //Saves in a vector the decisions for THIS event
+        passedVector[i - m_stat.begin()] = passed;
+
     } else if ( executed ) {
       // Only if the line was executed, i.e. it was not bad event, add to counters
       i->candidates += cand;
       i->decisions += passed;
+
+      if (m_correlation)  //Saves in a vector the decisions for THIS event
+        passedVector[i - m_stat.begin()] = passed;
     }
+
 
     if (m_everyEvent && (passed != 0 || cand < 0 || !m_onlyPositive)) {
       if (cand >= 0) {
@@ -280,6 +299,32 @@ StatusCode StrippingReport::execute() {
 
   m_goodEvent++;
 
+  // Fill correlation info in m_stat
+  // parsing passedVector
+  if (m_correlation)
+    for (i = m_stat.begin(); i != m_stat.end(); i++) 
+    {
+      bool thisEventWasKeptAnyhow = false;
+      const size_t currLineId = i - m_stat.begin();
+      if (passedVector[currLineId]) //line fired
+        for (j = m_stat.begin(); j != m_stat.end(); j++) 
+        {
+          if (j->name == m_strippingGlobalName) continue;
+          const size_t compLineId = j - m_stat.begin();
+          if (compLineId == currLineId) continue; //avoid testing self-correlation
+          if (passedVector[compLineId])
+          { //uses space of self-correlation for OR correlation of all other lines
+            if ((i->candidates >= 0) == (j->candidates >= 0)) //both lines||streams
+              thisEventWasKeptAnyhow = true;
+
+            m_stat[currLineId].corr[compLineId] += passedVector[compLineId];
+          }
+        }
+
+      if (thisEventWasKeptAnyhow)
+        m_stat[currLineId].corr[currLineId] += 1;
+    }
+
   if (m_reportFreq > 0 && (m_goodEvent % m_reportFreq == 0) ) {
     if (m_latex) {
       reportLatex(m_onlyPositive);
@@ -289,6 +334,57 @@ StatusCode StrippingReport::execute() {
   }
 
   return result;
+}
+
+
+void StrippingReport::correlationReport(bool linesNotStreams)
+{
+  std::vector<ReportStat>::iterator i;
+  char line[128], header[128];
+  std::string outReport;
+  info() << "\n | *Line* || *Events* | *Correlated* | *Overlap (%)* | \n";
+  for (i = m_stat.begin(); i != m_stat.end(); i++)
+  {
+    if (i->decisions == 0) continue;
+
+    sprintf(header, " | *!%-59.59s* || %10.1d | %10.1d | %8.1f | \n", 
+                    i->name.data(),             // name of the line 
+                    i->decisions,               // # event selected
+                    i->corr[i-m_stat.begin()],  // # event useless
+                    100.*float(i->corr[i-m_stat.begin()])/i->decisions
+                    );
+
+    const bool iIsLine = (i -> candidates >= 0);
+    if (iIsLine != linesNotStreams) continue;
+    bool atLeastOne = false;
+    for (size_t jId = 0; jId < m_stat.size(); jId++)
+      if ( i->corr[jId] && jId != size_t(i - m_stat.begin())) //it is correlated
+      {                                                // not with itself
+        const bool jIsLine = (m_stat[jId].candidates >= 0);
+        if (jIsLine != linesNotStreams) continue;
+
+        if (atLeastOne == false) 
+          outReport += header;
+        atLeastOne = true;
+
+        const float ratio = float(i->corr[jId]) / i->decisions;
+        std::string color;
+        if (ratio > m_correlationRedThreshold)
+          color = ":red:";
+        else if (ratio > m_correlationYellowThreshold)
+          color = ":yellow:";
+        else if (ratio > m_correlationGreenThreshold)
+          color = ":green:";
+        else 
+          continue;
+
+
+        sprintf(line, " | %-10.10s | !%-49.49s | %10.1d | %-21.21s ||\n", 
+                color.data(), m_stat[jId].name.data(), i->corr[jId], "");
+        outReport += line;
+      }
+  }
+  info() << outReport << endmsg;
 }
 
 //=============================================================================
@@ -361,6 +457,11 @@ StatusCode StrippingReport::finalize() {
     warning() << "-----------------------------------------------------------------" << endmsg;
   }
 
+  if (m_correlation)
+  {
+    correlationReport(false); //For streams
+    correlationReport(true); //For lines
+  }
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }

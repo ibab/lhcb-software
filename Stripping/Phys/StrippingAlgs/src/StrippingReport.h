@@ -30,6 +30,7 @@ class ReportStat {
     int errors;            /// Number of errors produced by the line 
     int incidents;         /// Number of incidents produced by the line (usually, too many candidates per event)
     int slow_events;       /// Number of slow events
+    std::vector<int> corr; /// Number of events also selected by another selection
 }; 
 
 
@@ -53,6 +54,7 @@ private:
 
   void report(bool onlyPositive);
   void reportLatex(bool onlyPositive);
+  void correlationReport(bool linesNotStreams);
 
   std::string m_hdrLocation;     ///< Location of the stripping HltDecReport
   std::vector < std::string > m_selections;  ///< List of selections to report
@@ -64,6 +66,11 @@ private:
   double m_hotThreshold;         ///< Rate threshold for hot lines
   bool m_normalizeByGoodEvents;  ///< If true, use good event number (after pre-filter) to calculate rates
   bool m_latex;                  ///< false for TWiki, true for LaTeX style
+  bool m_correlation;            ///< If true, includes counters for events selected by two lines
+  float m_correlationGreenThreshold;  ///< Threshold on correlation to set a green warning
+  float m_correlationYellowThreshold; ///< Threshold on correlation to set a yellow warning
+  float m_correlationRedThreshold;    ///< Threshold on correlation to set a red warning
+  std::string m_strippingGlobalName;  ///< Name of the StrippingGlobal stream, to avoid meaningless correlation
   
   std::vector < ReportStat > m_stat;
   
