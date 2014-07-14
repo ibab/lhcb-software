@@ -33,8 +33,7 @@ DecodeL0FullCALO = __convert( 'L0CaloFull')
 DecodeL0DU       = __convert( 'L0DU' )
 DecodeVELO       = __convertName("DecodeVeloRawBuffer/createVeloLiteClusters")
 #... ^^ only do the VeloLite clusters, all that's needed for Moore
-DecodeTRACK      =   bindMembers(None, [DecoderDB["HltTrackReportsDecoder/VeloDecoder"].setup()])
-DecodeFORWARDTRACK = bindMembers(None, [DecoderDB["HltTrackReportsDecoder/ForwardDecoder"].setup()])
+DecodeTRACK      =   bindMembers(None, [DecoderDB["HltTrackReportsDecoder"].setup()])
 DecodeTT         = __convert( 'TT' )
 DecodeIT         = __convert( 'IT' )
 DecodeOT         = __convert( 'OT' )
@@ -52,7 +51,7 @@ DecodeHlt1SelRep = bindMembers(None, [ DecoderDB["HltDecReportsDecoder/Hlt1DecRe
 __all__ = ( 'DecodeL0DU', 'DecodeL0MUON', 'DecodeL0CALO'
           , 'DecodeVELO', 'DecodeTT', 'DecodeIT', 'DecodeOT'
           , 'DecodeECAL', 'DecodeSPD', 'DecodePRS', 'DecodeHCAL'
-          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK', 'DecodeFORWARDTRACK'
+          , 'DecodeMUON', 'DecodeRICH', 'DecodeTRACK'
           , 'DecodeHlt1SelRep' )
 
 # ==============================================================================
@@ -79,8 +78,6 @@ _factory.Lines += [
     "decodeMUON   = %s " % _names ( DecodeMUON   ) ,
     "decodeRICH   = %s " % _names ( DecodeRICH   ) ,
     "decodeTRACK  = %s " % _names ( DecodeTRACK  ) ,
-    "decodeFORWARDTRACK  = %s " % _names ( DecodeFORWARDTRACK  ) ,
-    
     ]
 
 # ==============================================================================
