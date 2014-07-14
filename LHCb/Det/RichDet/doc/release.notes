@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r24 2014-07-14 =========================
 ! 2014-06-17 - Chris Jones
  - Added support to DeRichHPD for MDMS version 1. Implements a per-HPD scaling
    pf the MDMS parameters based on the the per-run HPD image size.
