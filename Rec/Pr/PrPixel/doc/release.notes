@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r8 2014-07-14 =========================
 ! 2014-06-30 - Heinrich Schindler
  - Move bulk of debugging histograms from PrPixelTracking to new algorithm 
    PrPixelMonitor.
