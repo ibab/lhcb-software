@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v5r3 2014-07-14 =========================
 ! 2014-06-20 - Chris Jones
  - Disable Aerogel for Run II DataTypes (2015 onwards).
 
