@@ -655,7 +655,7 @@ class Moore(LHCbConfigurableUser):
             hltConf.setProp("Verbose",True)
         
         from Configurables import Hlt2Conf
-        #cannot do this for the TCK right now. Ideally I want a transform which doies the same as this.
+        #cannot do this for the TCK right now. Ideally I want a transform which does the same as this.
         if MooreExpert().getProp("Hlt2Independent") and ("Hlt1TrackOption" in Hlt2Conf().__slots__ or hasattr(Hlt2Conf(),"Hlt1TrackOption")) and not Hlt2Conf().isPropertySet("Hlt1TrackOption"):
             Hlt2Conf().setProp("Hlt1TrackOption","Rerun")
         
@@ -683,6 +683,7 @@ class Moore(LHCbConfigurableUser):
        
         ApplicationMgr().ExtSvc.insert(0,cfg.getFullName())
         # configure services...
+        from Configurables import VFSSvc
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
@@ -714,15 +715,7 @@ class Moore(LHCbConfigurableUser):
                     , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } } 
                     , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
                     , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
-                    }
-            ### FIXME/TODO/BAD HACK ALERT
-            ###    add the selreports decoder prior to Hlt2 to running...
-            ###    this has to move into Hlt2Line somehow, but it doesn't really know
-            ###    about TISTOS linking -- so it must check for TisTosParticleTagger...
-            from DAQSys.Decoders import DecoderDB
-            DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].setup()
-            trans[ 'GaudiSequencer/HltDecisionSequence$']['Members'].update( { '[\[]' : "[ 'HltSelReportsDecoder/Hlt1SelReportsDecoder' ,"  } )
-
+            }
             Funcs._mergeTransform(trans)
                     
         # rather nasty way of doing this.. but it is 'hidden' 

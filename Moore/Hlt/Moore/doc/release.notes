@@ -3,6 +3,9 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-07-14 - Gerhard Raven
+ - remove Hlt1SelReportsDecoder hack which is no longer needed
+
 ! 2014-06-27 - Gerhard Raven
  - following changes in HltConf pertaining the split configuration
 
