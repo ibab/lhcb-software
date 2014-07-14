@@ -4,6 +4,7 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v2r7 2014-07-14 ===================
 ! 2014-06-26 - Chris Jones
  - Add support for a new MC12TuneV3 network tune. 
    Default for now is still MC12TuneV2.
