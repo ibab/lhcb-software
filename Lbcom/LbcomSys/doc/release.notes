@@ -6,6 +6,14 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r0>2014-07-14 LbcomSys v16r0</A></H1><PRE>
+This version uses Gaudi v25r3 and LHCb v38r0 (and ROOT 6.00.00)
+
+- Packages modified: VP/VPTools v2r4
+
+- In VP/VPTools v2r4
+  . Simplified error parameterisation based on cluster size.
+
 </PRE><H1><A NAME=v15r2p1>2014-06-10 LbcomSys v15r2p1</A></H1><PRE>
 This version uses Gaudi v25r2 and LHCb v37r3
 

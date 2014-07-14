@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v15r2p1
+version           v16r0
 
 branches doc cmt tests
 
@@ -52,7 +52,7 @@ use VeloTools         v4r2     Velo      # Tomasz Szumlak
 # Velo Pixel
 use VPAlgorithms      v4r4     VP        # Heinrich Schindler
 use VPAssociators     v2r6     VP        # Heinrich Schindler
-use VPTools           v2r3     VP        # Heinrich Schindler
+use VPTools           v2r4     VP        # Heinrich Schindler
 
 # Declare this as a container package
 apply_pattern container_package
